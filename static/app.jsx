@@ -501,7 +501,7 @@ function VerseStudyRow({ book, chapter, verse, label, entries, onWordClick }) {
         {words === null ? (
           <span style={{ color: "var(--ink-4)", fontSize: "13px" }}>Loading…</span>
         ) : words.map((w, i) => {
-          const entry = matchMap.get(w.strongs_base);
+          const entry = w.is_content !== false ? matchMap.get(w.strongs_base) : null;
           if (entry) {
             return (
               <span key={i} className="study-word match" onClick={() => onWordClick(entry)}>
