@@ -312,6 +312,22 @@ def verse_text(book, chapter, verse):
     return jsonify({"text": " ".join(w["english"] for w in words)})
 
 
+@app.route("/api/strongs-count/<strongs_base>")
+def strongs_count_route(strongs_base):
+    if strongs_base == "*":
+        return jsonify({"count": None})
+    conn = db()
+    try:
+        row = conn.execute(
+            "SELECT COUNT(*) AS cnt FROM words WHERE strongs_base = ?"
+            " AND english IS NOT NULL AND english != ''",
+            (strongs_base,),
+        ).fetchone()
+    finally:
+        conn.close()
+    return jsonify({"count": row["cnt"] if row else 0})
+
+
 @app.route("/api/ai-search")
 @limiter.limit("20 per hour")
 def ai_search():
