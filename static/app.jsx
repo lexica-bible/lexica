@@ -227,6 +227,7 @@ function SearchBar({ q1, setQ1, q2, setQ2, phraseMode, setPhraseMode, onSearch, 
             <button className="chip suggest" onClick={() => setQ2("divine council passages")}>"divine council passages"</button>
             <button className="chip suggest" onClick={() => setQ2("covenant with Abraham")}>"covenant with Abraham"</button>
           </div>
+          <p className="search-morph-note">For detailed grammatical analysis including verb forms and pronoun usage, morphological search coming soon.</p>
         </div>
       </div>
     </section>
