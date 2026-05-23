@@ -34,13 +34,22 @@ _NUMMARK_RE  = re.compile(r'(?<!\d)\d+\s*(?=[A-Za-z])')
 
 # Words that are never the semantic head of a gloss
 _FUNCTION_WORDS = frozenset({
-    'a', 'an', 'the',
+    # articles & particles
+    'a', 'an', 'the', 'o',
+    # pronouns
     'my', 'his', 'her', 'their', 'its', 'our', 'your',
     'he', 'she', 'it', 'they', 'we', 'you', 'i',
+    'this', 'that', 'these', 'those',
+    # prepositions
     'of', 'by', 'in', 'with', 'from', 'to', 'at', 'for',
     'upon', 'over', 'under', 'into', 'on', 'up', 'out',
-    'and', 'or', 'but', 'not', 'no', 'as', 'so',
-    'also', 'even', 'then', 'now',
+    'before', 'after', 'through', 'toward', 'towards',
+    'about', 'against', 'among', 'between', 'within',
+    'without', 'beside', 'beyond', 'except', 'off',
+    # conjunctions & discourse particles
+    'and', 'or', 'but', 'nor', 'yet', 'so', 'as',
+    'not', 'no', 'also', 'even', 'then', 'now',
+    'again', 'thus', 'still', 'therefore', 'however',
 })
 
 
@@ -66,7 +75,7 @@ def _head_word(text: str) -> str | None:
     for tok in reversed(tokens):
         if tok not in _FUNCTION_WORDS:
             return tok
-    return tokens[-1] if tokens else None
+    return None  # gloss is all function words — no searchable head
 
 
 def parse_words(verse_text: str) -> list:
