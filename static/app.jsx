@@ -10,6 +10,8 @@ const api = {
     fetch(`/api/ai-search?q=${encodeURIComponent(q)}`).then(r => r.json()),
   verse: (book, chapter, verse) =>
     fetch(`/api/verse/${encodeURIComponent(book)}/${chapter}/${verse}`).then(r => r.json()),
+  strongsCount: (strongs_base) =>
+    fetch(`/api/strongs-count/${encodeURIComponent(strongs_base)}`).then(r => r.json()),
 };
 
 // ============================================================
@@ -28,7 +30,6 @@ function makeEntry(r, idx) {
     chapter: r.chapter,
     verse: r.verse,
     definition: r.strongs_def || "",
-    kjvGloss: r.kjv_def || "",
     derivation: r.derivation || "",
   };
 }
@@ -50,7 +51,6 @@ function flattenAiResults(verses) {
         chapter: v.chapter,
         verse: v.verse,
         definition: w.strongs_def || "",
-        kjvGloss: w.kjv_def || "",
         derivation: w.derivation || "",
       });
     }
@@ -249,9 +249,10 @@ function ResultCard({ entry, active, onClick, count }) {
 // ============================================================
 // DETAIL PANEL — SIDEBAR / BOTTOM SHEET
 // ============================================================
-function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults }) {
+function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onStrongsSearch }) {
   const [verseText, setVerseText] = useState("");
   const [verseLoading, setVerseLoading] = useState(false);
+  const [abpCount, setAbpCount] = useState(null);
 
   useEffect(() => {
     if (!entry) return;
@@ -270,6 +271,15 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults }) {
       });
     return () => { cancelled = true; };
   }, [entry && entry.id]);
+
+  useEffect(() => {
+    if (!entry || entry.strongs_base === "*") { setAbpCount(null); return; }
+    let cancelled = false;
+    api.strongsCount(entry.strongs_base)
+      .then(d => { if (!cancelled) setAbpCount(d.count ?? null); })
+      .catch(() => { if (!cancelled) setAbpCount(null); });
+    return () => { cancelled = true; };
+  }, [entry && entry.strongs_base]);
 
   if (!entry) return null;
 
@@ -313,10 +323,16 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults }) {
           </section>
         )}
 
-        {entry.kjvGloss && (
+        {abpCount !== null && (
           <section className="detail-section">
-            <h4 className="detail-h">KJV Translation Count</h4>
-            <p className="detail-p mono">{entry.kjvGloss}</p>
+            <h4 className="detail-h">ABP Occurrences</h4>
+            <button
+              className="link-btn"
+              style={{ fontSize: "15px", fontWeight: "600" }}
+              onClick={() => onStrongsSearch(entry.strongs_base)}
+            >
+              <b>{abpCount}</b>× in Genesis–Exodus LXX <Icon.ArrowRight/>
+            </button>
           </section>
         )}
 
@@ -352,7 +368,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults }) {
               <div className="freq-fill" style={{ width: barWidth + "%" }}></div>
             </div>
             <div className="freq-meta">
-              <span><b>{occurrences}</b>× in Genesis–Exodus LXX</span>
+              <span><b>{occurrences}</b>× in current results</span>
             </div>
           </div>
         </section>
@@ -440,9 +456,10 @@ function App() {
     return allResults; // relevance = original order
   }, [allResults, sortBy, countMap]);
 
-  const handleSearch = async () => {
-    const q = q1.trim();
+  const handleSearch = async (overrideQ = null) => {
+    const q = (overrideQ !== null ? overrideQ : q1).trim();
     if (!q) return;
+    if (overrideQ !== null) setQ1(overrideQ);
     setLoading(true);
     setError("");
     setAiMeta(null);
@@ -450,7 +467,7 @@ function App() {
     setSortBy("relevance");
     setActiveEntry(null);
     try {
-      const data = await api.search(q, phraseMode);
+      const data = await api.search(q, overrideQ !== null ? false : phraseMode);
       if (data.error) {
         setError(data.error);
         setAllResults([]);
@@ -463,6 +480,11 @@ function App() {
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleStrongsSearch = (strongs_base) => {
+    if (!strongs_base || strongs_base === "*") return;
+    handleSearch(`G${strongs_base}`);
   };
 
   const handleAiSearch = async () => {
@@ -586,6 +608,7 @@ function App() {
           onClose={() => setActiveEntry(null)}
           occurrences={countMap[activeEntry.strongs_base] || 0}
           totalResults={allResults.length}
+          onStrongsSearch={handleStrongsSearch}
         />
       )}
       {activeEntry && isMobile && (
@@ -597,6 +620,7 @@ function App() {
             onClose={() => setActiveEntry(null)}
             occurrences={countMap[activeEntry.strongs_base] || 0}
             totalResults={allResults.length}
+            onStrongsSearch={handleStrongsSearch}
           />
         </>
       )}
