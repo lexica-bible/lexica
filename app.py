@@ -158,6 +158,46 @@ def _clean_gloss(s: str | None) -> str | None:
     return s.rstrip(" ,;:.!?")
 _ai_cache: dict = {}  # keyed on query string; bump version comment to invalidate: v5
 
+# LSJ-based function word detection
+_LSJ_FUNC_WORD_RE = re.compile(
+    r'^(?:'
+    r'Prep\.|Conj\.|Part(?:icle)?\.|Art(?:icle)?\.|'
+    r'[Pp]reposition\b|[Cc]onjunction\b|[Pp]article\b|[Aa]rticle\b|'
+    r'[Aa]\s+(?:primary\s+)?(?:preposition|particle|conjunction|article)'
+    r')',
+    re.IGNORECASE,
+)
+
+
+def _is_lsj_function_word(def_html: str) -> bool:
+    """Return True if the LSJ entry is a grammatical function word (not a content word)."""
+    text = re.sub(r"<[^>]+>", " ", def_html or "").strip()
+    return bool(_LSJ_FUNC_WORD_RE.match(text[:300]))
+
+
+_FUNCTION_STRONGS: set[str] = set()  # strongs_base values that are function words
+
+
+def _build_function_strongs_cache() -> None:
+    """Classify lexicon entries as content/function using LSJ def_html; runs once at startup."""
+    global _FUNCTION_STRONGS
+    try:
+        conn = db()
+        rows = conn.execute(
+            """SELECT l.strongs, lsj.def_html
+               FROM lexicon l
+               JOIN lsj ON lsj.plain = lower(strip_accents(l.lemma))"""
+        ).fetchall()
+        conn.close()
+        func: set[str] = set()
+        for row in rows:
+            if _is_lsj_function_word(row["def_html"]):
+                func.add(row["strongs"])
+        _FUNCTION_STRONGS = func
+        log.info("Function word cache: %d function words identified via LSJ", len(func))
+    except Exception as e:
+        log.warning("Could not build function word cache (LSJ table may not exist yet): %s", e)
+
 
 _LSJ_TERM_LIMIT = 4  # max LSJ entries per extracted search term
 
@@ -317,6 +357,7 @@ def db_ro():
 
 
 _migrate_db()
+_build_function_strongs_cache()
 
 
 @app.route("/")
@@ -449,6 +490,7 @@ def verse_words(book, chapter, verse):
                 "translit":   w["translit"],
                 "strongs_def": (w["strongs_def"] or "").strip(),
                 "derivation": (w["derivation"] or "").strip(),
+                "is_content": w["strongs_base"] not in _FUNCTION_STRONGS,
             }
             for w in wrows
         ]
