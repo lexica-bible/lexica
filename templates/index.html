@@ -1,0 +1,288 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Bible Word Study — Genesis LXX</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, sans-serif;
+      background: #f5f4f0;
+      color: #1a1a1a;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #2c3e50;
+      color: #fff;
+      padding: 1.25rem 2rem;
+    }
+    header h1 { font-size: 1.25rem; font-weight: 600; }
+    header p  { font-size: 0.8rem; color: #94a3b8; margin-top: 0.2rem; }
+
+    main { max-width: 780px; margin: 0 auto; padding: 2rem 1rem; }
+
+    /* ── Search bar ── */
+    .search-row {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    #q {
+      flex: 1;
+      padding: 0.6rem 0.9rem;
+      font-size: 1rem;
+      border: 1.5px solid #cbd5e1;
+      border-radius: 6px;
+      outline: none;
+      transition: border-color 0.15s;
+    }
+    #q:focus { border-color: #3b82f6; }
+
+    .search-row button {
+      padding: 0.6rem 1.2rem;
+      background: #2c3e50;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+    .search-row button:hover { background: #3b82f6; }
+
+    .options-row {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-top: 0.6rem;
+      font-size: 0.85rem;
+      color: #475569;
+    }
+    .options-row input[type=checkbox] { accent-color: #3b82f6; }
+
+    /* ── Summary ── */
+    #summary {
+      margin: 1.25rem 0 0.75rem;
+      font-size: 0.85rem;
+      color: #64748b;
+      min-height: 1.2em;
+    }
+
+    /* ── Result cards ── */
+    .card {
+      background: #fff;
+      border: 1px solid #e2e8f0;
+      border-radius: 8px;
+      margin-bottom: 0.6rem;
+      overflow: hidden;
+      transition: box-shadow 0.15s;
+    }
+    .card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.07); }
+
+    .card-header {
+      display: flex;
+      align-items: baseline;
+      gap: 0.75rem;
+      padding: 0.75rem 1rem;
+      cursor: pointer;
+      user-select: none;
+    }
+
+    .ref {
+      font-weight: 600;
+      color: #1e3a5f;
+      white-space: nowrap;
+      min-width: 7rem;
+      font-size: 0.9rem;
+    }
+    .strongs-tag {
+      font-size: 0.78rem;
+      background: #eff6ff;
+      color: #1d4ed8;
+      border: 1px solid #bfdbfe;
+      border-radius: 4px;
+      padding: 0.1rem 0.45rem;
+      white-space: nowrap;
+      font-family: monospace;
+    }
+    .greek {
+      font-size: 1rem;
+      color: #334155;
+    }
+    .translit {
+      font-size: 0.8rem;
+      color: #94a3b8;
+      font-style: italic;
+    }
+    .gloss {
+      flex: 1;
+      color: #475569;
+      font-size: 0.9rem;
+    }
+    .toggle-icon {
+      color: #94a3b8;
+      font-size: 0.75rem;
+      transition: transform 0.2s;
+      flex-shrink: 0;
+    }
+    .card.open .toggle-icon { transform: rotate(180deg); }
+
+    /* ── Expanded body ── */
+    .card-body {
+      display: none;
+      border-top: 1px solid #f1f5f9;
+      padding: 1rem 1rem 1rem 1.25rem;
+      background: #fafafa;
+    }
+    .card.open .card-body { display: block; }
+
+    .verse-text {
+      font-size: 0.95rem;
+      line-height: 1.6;
+      color: #1e293b;
+      margin-bottom: 0.9rem;
+      padding: 0.6rem 0.8rem;
+      background: #fff;
+      border-left: 3px solid #3b82f6;
+      border-radius: 0 4px 4px 0;
+    }
+    .verse-text em { color: #64748b; font-style: normal; font-size: 0.8rem; }
+
+    .lex-grid {
+      display: grid;
+      grid-template-columns: max-content 1fr;
+      gap: 0.35rem 0.75rem;
+      font-size: 0.85rem;
+    }
+    .lex-grid dt { color: #64748b; white-space: nowrap; }
+    .lex-grid dd { color: #1e293b; }
+
+    /* ── Empty / loading states ── */
+    #no-results { color: #94a3b8; font-size: 0.9rem; display: none; }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Bible Word Study</h1>
+  <p>Genesis · Apostolic Bible Polyglot (LXX) · Strong's Greek</p>
+</header>
+
+<main>
+  <div class="search-row">
+    <input id="q" type="search" placeholder="Search English gloss (e.g. spirit, breath, light)" autocomplete="off">
+    <button onclick="doSearch()">Search</button>
+  </div>
+  <div class="options-row">
+    <input id="whole-words" type="checkbox">
+    <label for="whole-words">Whole words only</label>
+  </div>
+
+  <div id="summary"></div>
+  <div id="results"></div>
+  <div id="no-results">No matches found.</div>
+</main>
+
+<script>
+  document.getElementById('q').addEventListener('keydown', e => {
+    if (e.key === 'Enter') doSearch();
+  });
+
+  async function doSearch() {
+    const q  = document.getElementById('q').value.trim();
+    const w  = document.getElementById('whole-words').checked ? '1' : '0';
+    const summary = document.getElementById('summary');
+    const resultsEl = document.getElementById('results');
+    const noResults = document.getElementById('no-results');
+
+    if (!q) return;
+
+    summary.textContent = 'Searching…';
+    resultsEl.innerHTML = '';
+    noResults.style.display = 'none';
+
+    const res  = await fetch(`/api/search?q=${encodeURIComponent(q)}&w=${w}`);
+    const data = await res.json();
+
+    if (data.total === 0) {
+      summary.textContent = '';
+      noResults.style.display = 'block';
+      return;
+    }
+
+    const shown = data.results.slice(0, 20);
+    const more  = data.total - shown.length;
+    summary.textContent = `${data.total} occurrence${data.total !== 1 ? 's' : ''} in Genesis` +
+      (more > 0 ? ` · showing first 20 of ${data.total}` : '');
+
+    resultsEl.innerHTML = '';
+    for (const r of shown) {
+      resultsEl.appendChild(makeCard(r));
+    }
+
+    if (more > 0) {
+      const btn = document.createElement('button');
+      btn.textContent = `Show all ${data.total} results`;
+      btn.style.cssText = 'margin-top:0.5rem;padding:0.5rem 1rem;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:6px;cursor:pointer;font-size:0.85rem;width:100%';
+      btn.onclick = () => {
+        for (const r of data.results.slice(20)) resultsEl.appendChild(makeCard(r));
+        btn.remove();
+        summary.textContent = `${data.total} occurrence${data.total !== 1 ? 's' : ''} in Genesis`;
+      };
+      resultsEl.appendChild(btn);
+    }
+  }
+
+  function makeCard(r) {
+    const card = document.createElement('div');
+    card.className = 'card';
+
+    const lemmaHtml = r.lemma
+      ? `<span class="greek">${r.lemma}</span> <span class="translit">${r.translit || ''}</span>`
+      : '';
+
+    const header = document.createElement('div');
+    header.className = 'card-header';
+    header.innerHTML = `
+      <span class="ref">${r.ref}</span>
+      <span class="strongs-tag">G${r.strongs_base}</span>
+      ${lemmaHtml}
+      <span class="gloss">"${r.gloss || ''}"</span>
+      <span class="toggle-icon">▼</span>
+    `;
+
+    const body = document.createElement('div');
+    body.className = 'card-body';
+    body.innerHTML = '<div class="verse-text"><em>Loading verse…</em></div>';
+
+    if (r.strongs_def || r.kjv_def || r.derivation) {
+      const dl = document.createElement('dl');
+      dl.className = 'lex-grid';
+      if (r.strongs_def)  dl.innerHTML += `<dt>Definition</dt><dd>${r.strongs_def}</dd>`;
+      if (r.kjv_def)      dl.innerHTML += `<dt>KJV gloss</dt><dd>${r.kjv_def}</dd>`;
+      if (r.derivation)   dl.innerHTML += `<dt>Derivation</dt><dd>${r.derivation}</dd>`;
+      body.appendChild(dl);
+    }
+
+    let verseLoaded = false;
+    header.addEventListener('click', async () => {
+      card.classList.toggle('open');
+      if (card.classList.contains('open') && !verseLoaded) {
+        verseLoaded = true;
+        const vRes  = await fetch(`/api/verse/${encodeURIComponent(r.book)}/${r.chapter}/${r.verse}`);
+        const vData = await vRes.json();
+        body.querySelector('.verse-text').innerHTML =
+          `<em>${r.ref}</em> &nbsp;${vData.text || '(no text)'}`;
+      }
+    });
+
+    card.appendChild(header);
+    card.appendChild(body);
+    return card;
+  }
+</script>
+</body>
+</html>
