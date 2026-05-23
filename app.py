@@ -12,7 +12,8 @@ from flask import Flask, jsonify, render_template, request
 
 load_dotenv()
 
-logging.basicConfig(level=logging.DEBUG, format="%(levelname)s %(name)s: %(message)s")
+_log_level = getattr(logging, os.environ.get("LOG_LEVEL", "INFO").upper(), logging.INFO)
+logging.basicConfig(level=_log_level, format="%(levelname)s %(name)s: %(message)s")
 log = logging.getLogger("bible")
 
 _AI_SYSTEM = """\
@@ -168,6 +169,11 @@ End:    ORDER BY v.id, w.position   LIMIT 100\
 _STRONGS_RE = re.compile(r'^G?(\d+(?:\.\d+)*)$', re.IGNORECASE)
 _ai_cache: dict = {}
 
+_anthropic_key = os.environ.get("ANTHROPIC_API_KEY")
+if not _anthropic_key:
+    log.warning("ANTHROPIC_API_KEY not set — AI search will be unavailable")
+_anthropic = anthropic.Anthropic(api_key=_anthropic_key) if _anthropic_key else None
+
 
 def _strongs_num(q: str):
     """Return the numeric portion if q looks like a Strong's ref, else None."""
@@ -175,11 +181,18 @@ def _strongs_num(q: str):
     return m.group(1) if m else None
 
 app = Flask(__name__)
-DB = "bible.db"
+DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bible.db")
 
 
 def db():
     conn = sqlite3.connect(DB)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+def db_ro():
+    """Read-only connection for executing AI-generated SQL."""
+    conn = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
     return conn
 
@@ -198,40 +211,42 @@ def search():
         return jsonify({"results": [], "total": 0})
 
     conn = db()
-    snum = _strongs_num(q)
-    if snum:
-        col = "w.strongs" if "." in snum else "w.strongs_base"
-        rows = conn.execute(
-            f"""
-            SELECT w.strongs_base, w.strongs, w.english, w.english_head,
-                   v.id AS verse_id, v.book, v.chapter, v.verse,
-                   l.lemma, l.translit, l.strongs_def, l.kjv_def, l.derivation
-            FROM words w
-            JOIN verses v ON w.verse_id = v.id
-            LEFT JOIN lexicon l ON l.strongs = w.strongs_base
-            WHERE {col} = ?
-              AND w.english IS NOT NULL AND w.english != ''
-            ORDER BY v.id, w.position
-            """,
-            (snum,),
-        ).fetchall()
-    else:
-        search_col = "w.english" if phrase_mode else "w.english_head"
-        rows = conn.execute(
-            f"""
-            SELECT w.strongs_base, w.strongs, w.english, w.english_head,
-                   v.id AS verse_id, v.book, v.chapter, v.verse,
-                   l.lemma, l.translit, l.strongs_def, l.kjv_def, l.derivation
-            FROM words w
-            JOIN verses v ON w.verse_id = v.id
-            LEFT JOIN lexicon l ON l.strongs = w.strongs_base
-            WHERE {search_col} LIKE ? COLLATE NOCASE
-              AND w.english IS NOT NULL AND w.english != ''
-            ORDER BY v.id, w.position
-            """,
-            (f"%{q}%",),
-        ).fetchall()
-    conn.close()
+    try:
+        snum = _strongs_num(q)
+        if snum:
+            col = "w.strongs" if "." in snum else "w.strongs_base"
+            rows = conn.execute(
+                f"""
+                SELECT w.strongs_base, w.strongs, w.english, w.english_head,
+                       v.id AS verse_id, v.book, v.chapter, v.verse,
+                       l.lemma, l.translit, l.strongs_def, l.kjv_def, l.derivation
+                FROM words w
+                JOIN verses v ON w.verse_id = v.id
+                LEFT JOIN lexicon l ON l.strongs = w.strongs_base
+                WHERE {col} = ?
+                  AND w.english IS NOT NULL AND w.english != ''
+                ORDER BY v.id, w.position
+                """,
+                (snum,),
+            ).fetchall()
+        else:
+            search_col = "w.english" if phrase_mode else "w.english_head"
+            rows = conn.execute(
+                f"""
+                SELECT w.strongs_base, w.strongs, w.english, w.english_head,
+                       v.id AS verse_id, v.book, v.chapter, v.verse,
+                       l.lemma, l.translit, l.strongs_def, l.kjv_def, l.derivation
+                FROM words w
+                JOIN verses v ON w.verse_id = v.id
+                LEFT JOIN lexicon l ON l.strongs = w.strongs_base
+                WHERE {search_col} LIKE ? COLLATE NOCASE
+                  AND w.english IS NOT NULL AND w.english != ''
+                ORDER BY v.id, w.position
+                """,
+                (f"%{q}%",),
+            ).fetchall()
+    finally:
+        conn.close()
 
     results = [
         {
@@ -257,19 +272,21 @@ def search():
 @app.route("/api/verse/<book>/<int:chapter>/<int:verse>")
 def verse_text(book, chapter, verse):
     conn = db()
-    row = conn.execute(
-        "SELECT id FROM verses WHERE book=? AND chapter=? AND verse=?",
-        (book, chapter, verse),
-    ).fetchone()
+    try:
+        row = conn.execute(
+            "SELECT id FROM verses WHERE book=? AND chapter=? AND verse=?",
+            (book, chapter, verse),
+        ).fetchone()
 
-    if not row:
-        return jsonify({"error": "verse not found"}), 404
+        if not row:
+            return jsonify({"error": "verse not found"}), 404
 
-    words = conn.execute(
-        "SELECT english FROM words WHERE verse_id=? AND english IS NOT NULL ORDER BY position",
-        (row["id"],),
-    ).fetchall()
-    conn.close()
+        words = conn.execute(
+            "SELECT english FROM words WHERE verse_id=? AND english IS NOT NULL ORDER BY position",
+            (row["id"],),
+        ).fetchall()
+    finally:
+        conn.close()
 
     return jsonify({"text": " ".join(w["english"] for w in words)})
 
@@ -282,19 +299,18 @@ def ai_search():
         if not q:
             return jsonify({"error": "no query"}), 400
 
+        if len(q) > 500:
+            return jsonify({"error": "query too long (max 500 chars)"}), 400
+
         if q in _ai_cache:
             log.debug("ai_search cache hit: q=%r", q)
             return jsonify(_ai_cache[q])
 
-        key = os.environ.get("ANTHROPIC_API_KEY")
-        log.debug("ANTHROPIC_API_KEY present: %s", bool(key))
-        if not key:
-            log.error("ANTHROPIC_API_KEY not set — check .env file")
+        if not _anthropic:
             return jsonify({"error": "ANTHROPIC_API_KEY not set"}), 500
 
         log.debug("Calling Haiku API…")
-        client = anthropic.Anthropic(api_key=key)
-        msg = client.messages.create(
+        msg = _anthropic.messages.create(
             model="claude-haiku-4-5-20251001",
             max_tokens=1024,
             system=_AI_SYSTEM,
@@ -327,14 +343,14 @@ def ai_search():
             log.error("AI returned non-SELECT query: %r", sql)
             return jsonify({"error": "AI returned a non-SELECT query", "sql": sql}), 400
 
-        conn = db()
+        conn = db_ro()
         try:
             rows = conn.execute(sql).fetchall()
         except Exception as e:
-            conn.close()
             log.error("SQL execution error: %s\nSQL: %s", e, sql)
             return jsonify({"error": f"SQL error: {e}", "sql": sql}), 400
-        conn.close()
+        finally:
+            conn.close()
         log.debug("SQL returned %d rows", len(rows))
 
         # Group word-level rows into one entry per verse
