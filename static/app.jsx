@@ -797,8 +797,11 @@ function LibraryView({ nav, onNavChange, onWordClick }) {
           onClick={clickable ? () => onWordClick(makeEntry(w)) : undefined}>
           {showInterlinear && w.lemma && <span className="lib-iw-greek">{w.lemma}</span>}
           <span className="lib-iw-english">{w.english}</span>
-          {showStrongs && w.strongs_base && w.strongs_base !== "*" &&
-            <span className="lib-iw-strongs">G{w.strongs_base}</span>}
+          {showStrongs && (
+            w.strongs_base && w.strongs_base !== "*"
+              ? <span className="lib-iw-strongs">G{w.strongs_base}</span>
+              : <span className="lib-iw-strongs" style={{visibility:"hidden"}}>G0</span>
+          )}
         </span>
       );
     };
@@ -814,8 +817,11 @@ function LibraryView({ nav, onNavChange, onWordClick }) {
             <span className="lib-iw-pos">{w.greek_pos}</span>}
           {showInterlinear && w.lemma && <span className="lib-iw-greek">{w.lemma}</span>}
           <span className="lib-iw-english">{w.english}</span>
-          {showStrongs && w.strongs_base && w.strongs_base !== "*" &&
-            <span className="lib-iw-strongs">G{w.strongs_base}</span>}
+          {showStrongs && (
+            w.strongs_base && w.strongs_base !== "*"
+              ? <span className="lib-iw-strongs">G{w.strongs_base}</span>
+              : <span className="lib-iw-strongs" style={{visibility:"hidden"}}>G0</span>
+          )}
         </span>
       );
     };
