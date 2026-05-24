@@ -738,6 +738,11 @@ def _migrate_db():
             conn.commit()
         except sqlite3.OperationalError:
             pass  # already migrated
+        try:
+            conn.execute("ALTER TABLE books ADD COLUMN sort_order INTEGER")
+            conn.commit()
+        except sqlite3.OperationalError:
+            pass  # column already exists
         # Persistent AI search result cache (survives restarts).
         conn.executescript("""
             CREATE TABLE IF NOT EXISTS ai_search_cache (
