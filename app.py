@@ -157,7 +157,16 @@ a subquery — do not rely on post-filtering:
 When a concept has multiple lexical realizations, write a UNION ALL covering all
 patterns. Each branch should enforce its own co-occurrence via subquery where
 relevant. Every branch must select the same columns above; omit both ORDER BY and
-LIMIT on UNION queries — the server wraps them in a subquery and handles ordering.\
+LIMIT on UNION queries — the server wraps them in a subquery and handles ordering.
+
+AND/OR PRECEDENCE — CRITICAL: AND binds before OR. Never write:
+  WHERE clause_a OR clause_b AND v.book IN (...)  -- WRONG: filter only applies to clause_b
+Always either wrap OR clauses in parentheses:
+  WHERE (clause_a OR clause_b) AND v.book IN (...)  -- CORRECT
+Or use UNION ALL with the book filter in each branch:
+  SELECT ... WHERE clause_a AND v.book IN (...)
+  UNION ALL
+  SELECT ... WHERE clause_b AND v.book IN (...)\
 """
 
 _AI_SYSTEM_BUILT: str | None = None
@@ -503,7 +512,7 @@ _ai_cache_ver: str | None = None  # computed once from prompt template + book li
 
 # Bump this integer whenever server-side search logic changes in a way that
 # affects results but doesn't change _AI_SYSTEM_TMPL (e.g. new fallback steps).
-_CACHE_CODE_VER = 3
+_CACHE_CODE_VER = 4
 
 
 def _get_ai_cache_ver() -> str:
