@@ -111,10 +111,15 @@ End:  ORDER BY v.id, w.position   LIMIT 100
 must_cooccur — strongs_base values that MUST co-occur in the same verse. Set to
 [] for single-concept queries. The server enforces this as a post-filter.
 
-primary_verses — 3–8 verse references (e.g. "Deu 32:8", "Gen 1:26") that most
-directly exemplify the concept being studied. The UI expands only these by
-default; all other results collapse. Choose definitionally important verses, not
-just frequent occurrences.\
+primary_verses — 3–8 verse references (e.g. "Deu 32:8", "Gen 1:26") where the
+queried concept is explicitly named or directly enacted. The UI expands only
+these by default; all other results collapse.
+
+Inclusion test: does this verse directly demonstrate the concept, or does it
+merely contain a related word as background, genealogy, or narrative context?
+Only include verses that pass the first condition. A verse where the word
+appears incidentally in a list, lineage, or scene-setting clause fails the test
+even if the Strong's number matches.\
 """
 
 _AI_SYSTEM_BUILT: str | None = None
@@ -198,7 +203,7 @@ def _clean_gloss(s: str | None) -> str | None:
     if not s:
         return s
     return s.rstrip(" ,;:.!?")
-_ai_cache: dict = {}  # keyed on query string; bump version comment to invalidate: v5
+_ai_cache: dict = {}  # keyed on query string; bump version comment to invalidate: v6
 
 # LSJ part-of-speech detection for function words.
 # LSJ def_html has two POS patterns:
