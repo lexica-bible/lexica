@@ -244,12 +244,15 @@ _DIVINE_COUNCIL_VERSES: frozenset = frozenset({
 })
 
 
+# Triggers the hardcoded divine council corpus injection.
+# Deliberately narrow — only phrases that unambiguously signal a divine council
+# query. Broad terms like "sons of God", "holy ones", "divine being" are excluded
+# because they appear in NT adoption theology, Pauline letters, etc. and should
+# be answered by the normal SQL path, not overridden by the OT corpus.
 _DIVINE_COUNCIL_RE = re.compile(
-    r'\b(?:divine\s+council|sons?\s+of\s+(?:god|the\s+gods?|the\s+most\s+high)|'
-    r'divine\s+being|heavenly\s+assembly|bene\s+[ae]lohim|holy\s+ones?|'
-    r'heavenly\s+court|host\s+of\s+heaven|divine\s+assembly|'
-    r'council\s+of\s+(?:god|the\s+holy)|gods?\s+of\s+the\s+nations?|'
-    r'elohim\s+council|seraphim?|huioi?\s+tou\s+theou)\b',
+    r'\b(?:divine\s+council|heavenly\s+(?:assembly|court)|divine\s+assembly|'
+    r'bene\s+[ae]lohim|elohim\s+council|council\s+of\s+(?:god|the\s+holy)|'
+    r'gods?\s+of\s+the\s+nations?|host\s+of\s+heaven|huioi?\s+tou\s+theou)\b',
     re.IGNORECASE,
 )
 
