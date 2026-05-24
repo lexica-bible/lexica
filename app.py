@@ -155,11 +155,47 @@ Join:   words w JOIN verses v ON w.verse_id = v.id
 End:    ORDER BY v.id, w.position   LIMIT 100\
 """
 
-_STRONGS_RE   = re.compile(r'^G?(\d+(?:\.\d+)*)$', re.IGNORECASE)
-_VERSE_REF_RE = re.compile(
-    r'\b(Gen(?:esis)?|Exo(?:dus)?|Lev(?:iticus)?|Num(?:bers)?|Deu(?:t(?:eronomy)?)?)\s+(\d+):(\d+)\b',
-    re.IGNORECASE,
-)
+_STRONGS_RE = re.compile(r'^G?(\d+(?:\.\d+)*)$', re.IGNORECASE)
+
+# Full-name expansions for known book abbreviations used in AI-generated text.
+# Any DB book not listed here falls back to matching its abbreviation only.
+_BOOK_RE_ALTS = {
+    "Gen": r"Gen(?:esis)?",
+    "Exo": r"Exo(?:dus)?",
+    "Lev": r"Lev(?:iticus)?",
+    "Num": r"Num(?:bers)?",
+    "Deu": r"Deu(?:t(?:eronomy)?)?",
+    "Jos": r"Jos(?:hua)?",
+    "Jdg": r"Jdg|Judg(?:es)?",
+    "Rut": r"Rut(?:h)?",
+    "Psa": r"Psa(?:lms?)?",
+    "Pro": r"Pro(?:verbs?)?",
+    "Isa": r"Isa(?:iah)?",
+    "Jer": r"Jer(?:emiah)?",
+    "Eze": r"Eze(?:kiel)?",
+    "Dan": r"Dan(?:iel)?",
+}
+_VERSE_REF_RE: re.Pattern | None = None
+
+
+def _get_verse_ref_re() -> re.Pattern:
+    global _VERSE_REF_RE
+    if _VERSE_REF_RE is not None:
+        return _VERSE_REF_RE
+    conn = db()
+    try:
+        books = [r[0] for r in conn.execute(
+            "SELECT book FROM (SELECT book, MIN(id) AS first FROM verses GROUP BY book) ORDER BY first"
+        ).fetchall()]
+    finally:
+        conn.close()
+    alts = [_BOOK_RE_ALTS.get(b, re.escape(b)) for b in books]
+    _VERSE_REF_RE = re.compile(
+        r'\b(' + '|'.join(alts) + r')\s+(\d+):(\d+)\b',
+        re.IGNORECASE,
+    )
+    log.debug("Built _VERSE_REF_RE from DB books: %s", books)
+    return _VERSE_REF_RE
 
 
 def _strip_accents(s: str | None) -> str | None:
@@ -748,7 +784,7 @@ def ai_search():
         log.debug("Grouped into %d verses", len(results))
 
         # Fetch any verses explicitly cited in the explanation that SQL missed
-        cited_matches = _VERSE_REF_RE.findall(explanation)
+        cited_matches = _get_verse_ref_re().findall(explanation)
         if cited_matches:
             cited_conn = db_ro()
             new_cited = []
