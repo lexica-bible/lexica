@@ -1,5 +1,11 @@
 const { useState, useEffect, useRef, useMemo } = React;
 
+const _ARTICLE_RE = /^((?:the|a|an|his|her|its|of|my|your|their|our)\s+)+/i;
+function stripArticles(s) {
+  if (!s) return s;
+  return s.replace(_ARTICLE_RE, "").trim() || s;
+}
+
 // ============================================================
 // API LAYER
 // ============================================================
@@ -270,10 +276,10 @@ function ResultCard({ entry, active, onClick, count }) {
       {entry.greek ? (
         <div className="card-greek">{entry.greek}</div>
       ) : (
-        <div className="card-greek" style={{ fontSize: "22px" }}>{entry.gloss}</div>
+        <div className="card-greek" style={{ fontSize: "22px" }}>{stripArticles(entry.gloss)}</div>
       )}
       <div className="card-translit">{entry.translit}</div>
-      <div className="card-gloss">{entry.gloss}</div>
+      <div className="card-gloss">{stripArticles(entry.gloss)}</div>
       <div className="card-foot">
         <span className="card-pos">{BOOK_LABELS[entry.book] || entry.book}</span>
         <span className="card-occ">{count}×</span>
@@ -441,7 +447,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             </button>
             <button className="tool-btn" title="Share"><Icon.Share/></button>
           </div>
-          <div className="detail-gloss">{entry.gloss}</div>
+          <div className="detail-gloss">{stripArticles(entry.gloss)}</div>
         </div>
 
         {(entry.greek || (entry.strongs_raw && entry.strongs_raw.includes('.'))) && (
@@ -1022,12 +1028,12 @@ function GlossGroupings({ groupings, results, variants, onGlossDrill, onStrongsS
             {entry && entry.translit && <span className="gloss-translit">{entry.translit}</span>}
             {glosses.length > 1 && <span className="gloss-also">appears as</span>}
           </span>
-          {glosses.length > 1 && (
+          {glosses.length > 0 && (
             <span className="gloss-chips">
               {glosses.map(g => (
                 <button key={g.gloss} className="gloss-chip"
                   onClick={() => onGlossDrill(sn, entry && (entry.greek || entry.translit), g.gloss)}>
-                  {g.gloss}
+                  {stripArticles(g.gloss)}
                   <span className="gloss-chip-count">{g.count}</span>
                 </button>
               ))}
