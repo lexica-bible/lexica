@@ -113,6 +113,19 @@ both testaments. Key NT equivalents the context block may include:
   G32   angelos — messenger/angel (both testaments)
 Always UNION OT and NT patterns when a concept spans both corpora.
 
+WORD-FORM / TESTAMENT SPLITS — some concepts use a different Strong's number in OT vs NT
+because the ABP tags noun and verb/adjective forms separately:
+  Anointed/Christ: G5547 (Christos, OT: 39 + NT: 565) covers the title "anointed one"
+    in BOTH testaments (LXX kings/priests + NT Christ). G5548 (chrio, OT: 75) is the
+    OT verb "to anoint". For thematic "anointed/messiah" searches, G5547 covers both;
+    to find the anointing action in OT, add G5548.
+  Inheritance/Heir: G2817 (kleronomia/inheritance, OT: 181) vs G2818 (kleronomos/heir,
+    NT: 15). OT uses the noun "inheritance"; NT shifts to the relational "heir". Include
+    both for cross-testament inheritance/heir searches.
+  Darkness (Johannine): G4653 (skotia, NT: 16) is the noun John uses for "darkness";
+    G4652 (skoteinos/dark adj, OT: 13) is OT-heavy. For John's "darkness vs light"
+    theme, G4653 is the correct number.
+
 ─── OUTPUT FORMAT ───────────────────────────────────────────────────────────
 This is a search interface, not a conversation. ALWAYS return the JSON below.
 Never ask the user for clarification. Never explain why you can't answer.
@@ -579,7 +592,7 @@ _ai_cache_ver: str | None = None  # computed once from prompt template + book li
 
 # Bump this integer whenever server-side search logic changes in a way that
 # affects results but doesn't change _AI_SYSTEM_TMPL (e.g. new fallback steps).
-_CACHE_CODE_VER = 10
+_CACHE_CODE_VER = 11
 
 
 def _get_ai_cache_ver() -> str:

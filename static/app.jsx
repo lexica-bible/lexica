@@ -167,6 +167,12 @@ const Icon = {
       <path d="M3 6h18M3 11h18M3 16h12"/>
     </svg>
   ),
+  Panel: (p) => (
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" {...p}>
+      <rect x="3" y="3" width="18" height="18" rx="2"/>
+      <path d="M15 3v18"/>
+    </svg>
+  ),
 };
 
 // ============================================================
@@ -249,8 +255,9 @@ function SearchBar({ q1, setQ1, q2, setQ2, onSearch, onAiSearch, aiLoading }) {
             </button>
           </div>
           <div className="search-chips">
+            <button className="chip suggest" onClick={() => setQ2("Where does pneuma appear in Genesis")}>"Where does pneuma appear in Genesis"</button>
+            <button className="chip suggest" onClick={() => setQ2("Faith in Paul's letters")}>"Faith in Paul's letters"</button>
             <button className="chip suggest" onClick={() => setQ2("divine council passages")}>"divine council passages"</button>
-            <button className="chip suggest" onClick={() => setQ2("covenant with Abraham")}>"covenant with Abraham"</button>
           </div>
           <p className="search-morph-note">For detailed grammatical analysis including verb forms and pronoun usage, morphological search coming soon.</p>
         </div>
@@ -1141,6 +1148,53 @@ function AIAnswer({ query, explanation, entries, onPick }) {
 }
 
 // ============================================================
+// GUIDED TOUR
+// ============================================================
+const TOUR_STEPS = [
+  { icon: "Search",  label: "The Lexicon",   body: "Search by Greek word, transliteration, or Strong's number to find every occurrence across the corpus." },
+  { icon: "Book",    label: "The Library",   body: "Read any book with interlinear display and clickable Strong's badges on every word." },
+  { icon: "Sparkle", label: "Ask the Corpus", body: "Type a question in plain language and the AI searches the full Greek Bible on your behalf." },
+  { icon: "Panel",   label: "Word Sidebar",  body: "Click any word in the results to open its full LSJ lexicon entry and ABP definition." },
+];
+
+function GuidedTour({ onDone }) {
+  const [step, setStep] = useState(0);
+  const cur = TOUR_STEPS[step];
+  const StepIcon = Icon[cur.icon];
+  const isLast = step === TOUR_STEPS.length - 1;
+
+  return (
+    <>
+      <div className="tour-scrim" onClick={onDone} />
+      <div className="tour-modal" role="dialog" aria-modal="true" aria-label="Welcome to Lexica">
+        <button className="tour-skip" onClick={onDone}>Skip</button>
+        <div className="tour-icon-wrap">
+          <StepIcon width="20" height="20" />
+        </div>
+        <div className="tour-step-num">{step + 1} of {TOUR_STEPS.length}</div>
+        <h2 className="tour-title">{cur.label}</h2>
+        <p className="tour-body">{cur.body}</p>
+        <div className="tour-dots">
+          {TOUR_STEPS.map((_, i) => (
+            <button key={i} className={"tour-dot" + (i === step ? " active" : "")} onClick={() => setStep(i)} aria-label={`Step ${i + 1}`} />
+          ))}
+        </div>
+        <div className="tour-nav">
+          {step > 0 && (
+            <button className="tour-btn tour-btn-prev" onClick={() => setStep(s => s - 1)}>Previous</button>
+          )}
+          {isLast ? (
+            <button className="tour-btn tour-btn-done" onClick={onDone}>Get started</button>
+          ) : (
+            <button className="tour-btn tour-btn-next" onClick={() => setStep(s => s + 1)}>Next</button>
+          )}
+        </div>
+      </div>
+    </>
+  );
+}
+
+// ============================================================
 // APP
 // ============================================================
 function App() {
@@ -1201,6 +1255,14 @@ function App() {
     for (const e of allResults) { if (e.is_primary) seen.add(e.ref); }
     return seen.size;
   }, [allResults, mode]);
+
+  const [showTour, setShowTour] = useState(() => {
+    try { return !localStorage.getItem("lexica_tour_seen"); } catch { return false; }
+  });
+  const handleTourDone = () => {
+    try { localStorage.setItem("lexica_tour_seen", "1"); } catch {}
+    setShowTour(false);
+  };
 
   const [libEverVisited, setLibEverVisited] = useState(false);
   const searchScrollRef = useRef(0);
@@ -1491,6 +1553,8 @@ function App() {
           />
         </>
       )}
+      {showTour && <GuidedTour onDone={handleTourDone} />}
+
       {isMobile && (
         <nav className="mobile-tabs">
           <button className={"mobile-tab" + (mainView === "search" ? " active" : "")} onClick={() => handleNavChange("search")}>
