@@ -1124,6 +1124,7 @@ def search():
             "strongs":    r["strongs"],
             "strongs_base": r["strongs_base"],
             "gloss":      _clean_gloss(r["english"]),
+            "gloss_head": r["english_head"] or "",
             "lemma":      r["lemma"],
             "translit":   r["translit"],
             "strongs_def": (r["strongs_def"] or "").strip(),
