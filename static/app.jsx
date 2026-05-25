@@ -966,7 +966,7 @@ function groupForGreekMode(words) {
 // ============================================================
 // LIBRARY VIEW
 // ============================================================
-function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick }) {
+function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTranslationChange }) {
   const [books, setBooks] = useState([]);
   const [selBook, setSelBook] = useState(null);
   const [selChapter, setSelChapter] = useState(1);
@@ -1260,9 +1260,9 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick }) {
           >›</button>
         </div>
         <div className="lib-translation-toggle">
-          <button className={"lib-trans-btn" + (translation === "abp" ? " on" : "")} onClick={() => setTranslation("abp")}>ABP</button>
-          <button className={"lib-trans-btn" + (translation === "kjv" ? " on" : "")} onClick={() => setTranslation("kjv")}>KJV</button>
-          <button className={"lib-trans-btn" + (translation === "parallel" ? " on" : "")} onClick={() => setTranslation("parallel")}>Parallel</button>
+          <button className={"lib-trans-btn" + (translation === "abp" ? " on" : "")} onClick={() => { setTranslation("abp"); onTranslationChange?.("abp"); }}>ABP</button>
+          <button className={"lib-trans-btn" + (translation === "kjv" ? " on" : "")} onClick={() => { setTranslation("kjv"); onTranslationChange?.("kjv"); }}>KJV</button>
+          <button className={"lib-trans-btn" + (translation === "parallel" ? " on" : "")} onClick={() => { setTranslation("parallel"); onTranslationChange?.("parallel"); }}>Parallel</button>
         </div>
         <div className="lib-toggles">
           {(translation === "kjv" || wordOrder === "greek") && <>
@@ -1562,6 +1562,7 @@ function App() {
   const [mainView, setMainView] = useState("search");
   const [libNav, setLibNav] = useState(null);
   const [libCrossRef, setLibCrossRef] = useState(null);
+  const [libTranslation, setLibTranslation] = useState("abp");
   const [groupings, setGroupings] = useState({});
   const [variants, setVariants] = useState({});
   const [breadcrumbs, setBreadcrumbs] = useState([]);
@@ -1793,7 +1794,7 @@ function App() {
         <div className="main-inner">
           {libEverVisited && (
             <div style={{ display: mainView === "library" ? undefined : "none" }}>
-              <LibraryView nav={libNav} onNavChange={setLibNav} onWordClick={(e) => { setLibCrossRef(null); setActiveEntry(e); }} onVerseNumberClick={handleVerseNumberClick} />
+              <LibraryView nav={libNav} onNavChange={setLibNav} onWordClick={(e) => { setLibCrossRef(null); setActiveEntry(e); }} onVerseNumberClick={handleVerseNumberClick} onTranslationChange={setLibTranslation} />
             </div>
           )}
           <div style={{ display: mainView === "library" ? "none" : undefined }}>
@@ -1975,7 +1976,7 @@ function App() {
       {libCrossRef && !isMobile && (
         <CrossRefPanel
           source={libCrossRef}
-          translation={libCrossRef.translation}
+          translation={libTranslation === "kjv" ? "kjv" : "abp"}
           onClose={() => { setLibCrossRef(null); setLibNav(prev => prev ? { ...prev, highlight: null } : prev); }}
           onNavigate={(book, chapter, verse) => {
             setMainView("library");
@@ -1990,7 +1991,7 @@ function App() {
           <div className="sheet-scrim" onClick={() => { setLibCrossRef(null); setLibNav(prev => prev ? { ...prev, highlight: null } : prev); }} />
           <CrossRefPanel
             source={libCrossRef}
-            translation={libCrossRef.translation}
+            translation={libTranslation === "kjv" ? "kjv" : "abp"}
             onClose={() => { setLibCrossRef(null); setLibNav(prev => prev ? { ...prev, highlight: null } : prev); }}
             onNavigate={(book, chapter, verse) => {
               setMainView("library");
