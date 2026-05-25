@@ -236,6 +236,31 @@ You also have access to KJV verse text and word-level Strong's data:
   bdb(strongs_id, lemma, xlit, pronounce, description, part_of_speech)
       Brown-Driver-Briggs Hebrew lexicon, 8,674 entries, H-numbers only.
 
+HEBREW WORD SEARCH — for queries about a specific Hebrew word (by name, transliteration,
+or meaning), find its H-number via bdb then bridge to ABP verses using the books table
+(books.id = kjv_words.book_id = kjv_verses.book_id):
+
+  SELECT w.strongs_base, w.strongs, w.english, w.english_head,
+         v.book, v.chapter, v.verse,
+         l.lemma, l.translit, l.strongs_def, l.kjv_def, l.derivation
+  FROM words w
+  JOIN verses v ON w.verse_id = v.id
+  LEFT JOIN lexicon l ON l.strongs = w.strongs_base
+  JOIN books bk ON bk.abbrev = v.book
+  WHERE (bk.id, v.chapter, v.verse) IN (
+      SELECT kw.book_id, kw.chapter, kw.verse_num
+      FROM kjv_strongs ks
+      JOIN kjv_words kw ON kw.word_id = ks.word_id
+      WHERE ks.strongs_id = (
+          SELECT strongs_id FROM bdb WHERE xlit LIKE '%hesed%' LIMIT 1
+      )
+  )
+  ORDER BY v.id, w.position LIMIT 500
+
+  Substitute the bdb subquery with the relevant transliteration or lemma pattern,
+  or use a known H-number directly (e.g. ks.strongs_id = 'H2617').
+  Use xlit for transliterations (chesed, ruach, shalom), lemma for Hebrew script.
+
   cross_references(id INTEGER, verse_id INTEGER, verse_ref_id INTEGER)
       Torrey's Treasury of Scripture Knowledge — thematic cross-references.
       Both columns reference kjv_verses.verse_id (not ABP verses.id).
@@ -2175,6 +2200,49 @@ def ai_search():
         finally:
             conn.close()
         log.debug("SQL returned %d rows", len(rows))
+
+        # ── Retry with broader query if first SQL returned nothing ────────────
+        if not rows:
+            try:
+                retry_msg = _anthropic.messages.create(
+                    model="claude-haiku-4-5-20251001",
+                    max_tokens=2000,
+                    temperature=0,
+                    system=_get_ai_system(),
+                    messages=[
+                        {"role": "user", "content": user_content},
+                        {"role": "assistant", "content": raw},
+                        {"role": "user", "content": (
+                            "That SQL returned 0 results. Broaden the approach: "
+                            "remove strict co-occurrence subqueries, expand to more "
+                            "Strong's numbers via UNION ALL, or fall back to "
+                            "english LIKE matching. Return the same JSON format."
+                        )},
+                    ],
+                )
+                retry_raw = retry_msg.content[0].text.strip()
+                r_start = retry_raw.find("{")
+                r_end   = retry_raw.rfind("}")
+                if r_start != -1 and r_end > r_start:
+                    retry_parsed = json.loads(retry_raw[r_start:r_end + 1])
+                    retry_sql = _normalize_union_sql(
+                        retry_parsed.get("sql", "").strip()
+                    )
+                    if re.match(r"^\s*SELECT\b", retry_sql, re.IGNORECASE):
+                        retry_conn = db_ro()
+                        try:
+                            retry_rows = retry_conn.execute(retry_sql).fetchall()
+                        except Exception:
+                            retry_rows = []
+                        finally:
+                            retry_conn.close()
+                        if retry_rows:
+                            rows = retry_rows
+                            sql  = retry_sql
+                            explanation = retry_parsed.get("explanation", explanation)
+                            log.debug("Retry SQL returned %d rows", len(rows))
+            except Exception as exc:
+                log.warning("AI search retry failed: %s", exc)
 
         # ── Group word-level rows into one entry per verse ───────────────────
         verse_index = {}
