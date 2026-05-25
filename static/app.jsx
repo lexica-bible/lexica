@@ -53,6 +53,7 @@ function makeEntry(r, idx) {
     greek: r.lemma || "",
     translit: r.translit || "",
     gloss: r.gloss || "",
+    gloss_head: r.gloss_head || "",
     ref: r.ref,
     book: r.book,
     chapter: r.chapter,
@@ -1040,7 +1041,12 @@ function GlossGroupings({ groupings, results, variants, onGlossDrill, onStrongsS
     }
     return order
       .map(sn => {
-        const glosses = groupings[sn] || [];
+        // Only show glosses that appear in the current result set for this strongs number
+        const resultHeads = new Set(results.filter(e => e.strongs_raw === sn).map(e => e.gloss_head).filter(Boolean));
+        const allGlosses = groupings[sn] || [];
+        const glosses = resultHeads.size > 0
+          ? allGlosses.filter(g => resultHeads.has(g.gloss))
+          : allGlosses;
         const base = sn.includes('.') ? sn.split('.')[0] : sn;
         const allVariants = (variants && variants[base]) || [];
         const siblings = sn.includes('.') ? allVariants.filter(v => v !== sn) : [];
@@ -1243,7 +1249,7 @@ function App() {
     if (glossFilter) {
       base = allResults.filter(e =>
         e.strongs_raw === glossFilter.sn &&
-        (e.gloss || "").toLowerCase().includes(glossFilter.gloss.toLowerCase())
+        e.gloss_head.toLowerCase() === glossFilter.gloss.toLowerCase()
       );
     } else if (mode === "search" && !primaryStrongs) {
       base = allResults.filter(e => !e.is_function);
@@ -1460,12 +1466,24 @@ function App() {
               {mode === "search" && (breadcrumbs.length > 0 || glossFilter) && (
                 <SearchBreadcrumb
                   breadcrumbs={glossFilter
-                    ? [...breadcrumbs, { label: searchLabel, q: q1.trim() }]
+                    ? [
+                        ...breadcrumbs,
+                        { label: searchLabel, q: q1.trim() },
+                        { label: `G${glossFilter.sn}`, q: `G${glossFilter.sn}` },
+                      ]
                     : breadcrumbs}
                   currentLabel={glossFilter ? glossFilter.gloss : searchLabel}
                   onNav={(crumb, idx) => {
-                    if (glossFilter && idx === breadcrumbs.length) {
-                      setGlossFilter(null);
+                    const injectedStart = breadcrumbs.length;
+                    if (glossFilter && idx >= injectedStart) {
+                      // clicked "searchLabel" crumb → clear filter only
+                      // clicked "G{sn}" crumb → navigate to that strongs search
+                      if (idx === injectedStart) {
+                        setGlossFilter(null);
+                      } else {
+                        setGlossFilter(null);
+                        handleSearch(crumb.q, [...breadcrumbs, { label: searchLabel, q: q1.trim() }], true);
+                      }
                     } else {
                       setGlossFilter(null);
                       handleBreadcrumbNav(crumb, idx);
