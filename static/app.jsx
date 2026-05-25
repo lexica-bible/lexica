@@ -1498,7 +1498,7 @@ function App() {
     const result = {};
     for (const [sn, glossList] of Object.entries(groupings)) {
       const total = srnCounts[sn] || 0;
-      if (total > 0) result[sn] = [{ ...glossList[0], count: total }];
+      if (total > 0) result[sn] = glossList.map(g => ({ ...g, count: total }));
     }
     return result;
   }, [groupings, corpusFilteredResults, corpusFilter]);
