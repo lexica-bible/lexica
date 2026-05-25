@@ -638,15 +638,9 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   );
 }
 
-// Returns display label for a word in study mode. Shows full gloss for ≤2 words; head word for longer phrases.
 function studyWordLabel(w) {
   const e = w.english || "";
-  if (e) {
-    const words = e.trim().split(/\s+/);
-    if (words.length <= 3) return e;
-    const trailingPunc = e.match(/[.,;:?!—)]+$/)?.[0] || "";
-    return (w.english_head || words[words.length - 1]) + trailingPunc;
-  }
+  if (e) return e;
   const kd = w.kjv_def || "";
   if (kd) {
     const first = kd.split(",").map(t => t.trim()).find(t => !t.startsWith("X ")) || kd.split(",")[0].trim();
@@ -989,12 +983,7 @@ function LibraryView({ nav, onNavChange, onWordClick }) {
 
     const chipLabel = (w) => {
       const e = w.english || "";
-      if (e) {
-        const words = e.trim().split(/\s+/);
-        if (words.length <= 3) return e;
-        const trailingPunc = e.match(/[.,;:?!—)]+$/)?.[0] || "";
-        return (w.english_head || words[words.length - 1]) + trailingPunc;
-      }
+      if (e) return e;
       // Null english: word absorbed into adjacent phrase — derive gloss from lexicon
       const kd = w.kjv_def || "";
       if (!kd) return "";
