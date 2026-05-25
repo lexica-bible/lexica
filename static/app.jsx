@@ -673,16 +673,23 @@ function CrossRefPanel({ source, data, loading, onClose, onNavigate, isMobile, t
     return () => { cancelled = true; };
   }, [data, showAbp]);
 
+  // Clear synthesis immediately when source changes so stale text doesn't linger
   useEffect(() => {
-    if (!source) return;
-    let cancelled = false;
     setSynthesis(null);
+    setSynthLoading(false);
+  }, [source && source.book, source && source.chapter, source && source.verse]);
+
+  // Fire synthesis only after the verse list has loaded — prevents the Haiku call
+  // from blocking the server thread that serves the cross-refs list request
+  useEffect(() => {
+    if (!source || !data.length) return;
+    let cancelled = false;
     setSynthLoading(true);
     api.xrefSynthesis(source.book, source.chapter, source.verse)
       .then(d => { if (!cancelled) { setSynthesis(d.synthesis || null); setSynthLoading(false); } })
       .catch(() => { if (!cancelled) setSynthLoading(false); });
     return () => { cancelled = true; };
-  }, [source && source.book, source && source.chapter, source && source.verse]);
+  }, [source && source.book, source && source.chapter, source && source.verse, !!data.length]);
 
   const verseText = (ref) => showAbp
     ? (abpTexts[ref.ref] || ref.kjv_text)
