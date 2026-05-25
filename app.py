@@ -1470,20 +1470,43 @@ def chapter_text(book, chapter):
     ])
 
 
+# ABP abbreviation → KJV CSV BookID (standard Protestant 1-66).
+# The books table uses ABP auto-increment IDs that include apocrypha, so
+# they don't match KJV BookIDs; we bypass the join entirely.
+_KJV_BOOK_ID: dict[str, int] = {
+    "Gen":  1, "Exo":  2, "Lev":  3, "Num":  4, "Deu":  5,
+    "Jos":  6, "Jdg":  7, "Rth":  8, "1Sa":  9, "2Sa": 10,
+    "1Ki": 11, "2Ki": 12, "1Ch": 13, "2Ch": 14, "Ezr": 15,
+    "Neh": 16, "Est": 17, "Job": 18, "Psa": 19, "Pro": 20,
+    "Ecc": 21, "Son": 22, "Isa": 23, "Jer": 24, "Lam": 25,
+    "Eze": 26, "Dan": 27, "Hos": 28, "Joe": 29, "Amo": 30,
+    "Oba": 31, "Jon": 32, "Mic": 33, "Nah": 34, "Hab": 35,
+    "Zep": 36, "Hag": 37, "Zec": 38, "Mal": 39,
+    "Mat": 40, "Mar": 41, "Luk": 42, "Joh": 43, "Act": 44,
+    "Rom": 45, "1Co": 46, "2Co": 47, "Gal": 48, "Eph": 49,
+    "Php": 50, "Col": 51, "1Th": 52, "2Th": 53, "1Ti": 54,
+    "2Ti": 55, "Tit": 56, "Phm": 57, "Heb": 58, "Jas": 59,
+    "1Pe": 60, "2Pe": 61, "1Jn": 62, "2Jn": 63, "3Jn": 64,
+    "Jud": 65, "Rev": 66,
+}
+
+
 @app.route("/api/kjv/chapter/<book>/<int:chapter>")
 def kjv_chapter(book, chapter):
+    book_id = _KJV_BOOK_ID.get(book)
+    if book_id is None:
+        return jsonify([])
     conn = db_ro()
     try:
         rows = conn.execute("""
             SELECT kw.verse_num, kw.word_id, kw.verse_pos, kw.word, kw.italic,
                    GROUP_CONCAT(ks.strongs_id) AS strongs_ids
             FROM kjv_words kw
-            JOIN books b ON b.id = kw.book_id
             LEFT JOIN kjv_strongs ks ON ks.word_id = kw.word_id
-            WHERE b.abbrev = ? AND kw.chapter = ?
+            WHERE kw.book_id = ? AND kw.chapter = ?
             GROUP BY kw.word_id, kw.verse_num, kw.verse_pos, kw.word, kw.italic
             ORDER BY kw.verse_num, kw.verse_pos
-        """, (book, chapter)).fetchall()
+        """, (book_id, chapter)).fetchall()
     finally:
         conn.close()
     verses: dict[int, dict] = {}
@@ -1506,13 +1529,15 @@ def kjv_chapter(book, chapter):
 
 @app.route("/api/kjv/verse/<book>/<int:chapter>/<int:verse_num>")
 def kjv_verse_text(book, chapter, verse_num):
+    book_id = _KJV_BOOK_ID.get(book)
+    if book_id is None:
+        return jsonify({"error": "not found"}), 404
     conn = db_ro()
     try:
-        row = conn.execute("""
-            SELECT kv.verse_text FROM kjv_verses kv
-            JOIN books b ON b.id = kv.book_id
-            WHERE b.abbrev = ? AND kv.chapter = ? AND kv.verse_num = ?
-        """, (book, chapter, verse_num)).fetchone()
+        row = conn.execute(
+            "SELECT verse_text FROM kjv_verses WHERE book_id = ? AND chapter = ? AND verse_num = ?",
+            (book_id, chapter, verse_num)
+        ).fetchone()
     finally:
         conn.close()
     if not row:
