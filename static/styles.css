@@ -1343,7 +1343,11 @@ input { font-family: inherit; }
   gap: 4px 6px;
 }
 
-.lib-highlight { background: color-mix(in oklab, var(--gold-soft) 80%, transparent); border-radius: 3px; }
+.lib-highlight {
+  background: var(--gold-soft);
+  border-radius: 0 3px 3px 0;
+  box-shadow: inset 3px 0 0 var(--gold);
+}
 .lib-word {
   display: inline-flex;
   flex-direction: column;

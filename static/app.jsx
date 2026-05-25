@@ -1568,6 +1568,7 @@ function App() {
   const handleVerseNumberClick = (book, chapter, verse, translation) => {
     setActiveEntry(null);
     setLibCrossRef({ book, chapter, verse, translation: translation || "abp" });
+    setLibNav(prev => ({ ...(prev || {}), book, chapter, highlight: verse }));
   };
 
   // Corpus-filtered results (OT/NT filter applied before everything else)
@@ -1964,7 +1965,7 @@ function App() {
         <CrossRefPanel
           source={libCrossRef}
           translation={libCrossRef.translation}
-          onClose={() => setLibCrossRef(null)}
+          onClose={() => { setLibCrossRef(null); setLibNav(prev => prev ? { ...prev, highlight: null } : prev); }}
           onNavigate={(book, chapter, verse) => {
             setMainView("library");
             setLibCrossRef(null);
@@ -1975,11 +1976,11 @@ function App() {
       )}
       {libCrossRef && isMobile && (
         <>
-          <div className="sheet-scrim" onClick={() => setLibCrossRef(null)} />
+          <div className="sheet-scrim" onClick={() => { setLibCrossRef(null); setLibNav(prev => prev ? { ...prev, highlight: null } : prev); }} />
           <CrossRefPanel
             source={libCrossRef}
             translation={libCrossRef.translation}
-            onClose={() => setLibCrossRef(null)}
+            onClose={() => { setLibCrossRef(null); setLibNav(prev => prev ? { ...prev, highlight: null } : prev); }}
             onNavigate={(book, chapter, verse) => {
               setMainView("library");
               setLibCrossRef(null);
