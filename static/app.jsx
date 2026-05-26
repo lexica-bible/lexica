@@ -593,6 +593,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
           </section>
         )}
 
+        {entry.book && (
         <section className="detail-section">
           <h4 className="detail-h">
             Verse — {entry.ref}
@@ -629,7 +630,9 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             >Interlinear</button>
           </div>
         </section>
+        )}
 
+        {(occurrences > 0 || totalResults > 0) && (
         <section className="detail-section last">
           <h4 className="detail-h">Frequency</h4>
           <div className="freq">
@@ -641,6 +644,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             </div>
           </div>
         </section>
+        )}
       </div>
     </aside>
   );
