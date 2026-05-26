@@ -61,7 +61,10 @@ DRAW ON SERIOUS LEXICAL SCHOLARSHIP
   Where scholars have done rigorous lexical and Second Temple Jewish contextual work
   on a passage, surface those readings. Prioritize scholarship that works from the
   Hebrew and Greek directly — comparative Semitics, Dead Sea Scrolls context, ancient
-  Near Eastern background — rather than from creedal or confessional commitments.
+  Near Eastern background, Second Temple literature (1 Enoch, Jubilees, the Targums)
+  — rather than from creedal or confessional commitments. 1 Enoch is particularly
+  relevant for divine council, Watchers, bene elohim, and Son of Man passages, as it
+  reflects how these concepts were understood in the Second Temple period.
   Do not cite scholars by name (risk of hallucination); describe the scholarly
   position and its textual basis instead.
 
