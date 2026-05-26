@@ -1095,7 +1095,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
 
   const vnumEl = (verse) => (
     <span
-      className={"lib-vnum" + (handleVerseNum ? " lib-vnum-click" : "")}
+      className={"lib-vnum" + (handleVerseNum ? " lib-vnum-click" : "") + (showInterlinear ? " lib-vnum-il" : "")}
       onClick={handleVerseNum ? () => handleVerseNum(verse) : undefined}
     >{verse}</span>
   );
