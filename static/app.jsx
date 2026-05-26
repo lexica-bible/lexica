@@ -882,7 +882,11 @@ function StudyMode({ allResults, primaryStrongs, showAll, onWordClick, onReadInC
         label:  gMap[gk].label,
         verses: gMap[gk].verseOrder.map(vk => gMap[gk].verseMap[vk]),
       }))
-      .sort((a, b) => b.verses.length - a.verses.length);
+      .sort((a, b) => {
+        const aPrimary = a.verses.filter(v => v.is_primary).length;
+        const bPrimary = b.verses.filter(v => v.is_primary).length;
+        return bPrimary - aPrimary || b.verses.length - a.verses.length;
+      });
   }, [allResults]);
 
   const hasPrimary = allResults.some(e => e.is_primary);
