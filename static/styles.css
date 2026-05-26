@@ -1362,7 +1362,7 @@ input { font-family: inherit; }
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
-  gap: 4px 6px;
+  gap: 4px 3px;
 }
 
 .lib-highlight {
