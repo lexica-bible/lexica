@@ -1428,6 +1428,8 @@ input { font-family: inherit; }
   flex-shrink: 0;
   user-select: none;
 }
+.lib-bracket:first-child { margin-right: -3px; }
+.lib-bracket:last-child  { margin-left:  -3px; }
 /* Bracketed word chip — slightly tighter than the normal chip */
 .lib-word-bracketed {
   padding: 4px 3px 5px;
