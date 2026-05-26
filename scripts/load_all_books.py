@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Load all ABP text files from abp_texts/ into bible.db, skipping books already present.
+Load all ABP text files from abp_ot_texts/ into bible.db, skipping books already present.
 Runs parse_abp.py on each new file, then seed_books.py to refresh book metadata.
 
     python load_all_books.py [path/to/bible.db]
@@ -12,7 +12,7 @@ import sys
 from pathlib import Path
 
 HERE       = Path(__file__).parent
-TEXTS_DIRS = [HERE / "abp_texts", HERE / "abp_nt_texts"]
+TEXTS_DIRS = [HERE / "abp_ot_texts", HERE / "abp_nt_texts"]
 DB         = sys.argv[1] if len(sys.argv) > 1 else str(HERE / "bible.db")
 
 CANONICAL_ORDER = [
