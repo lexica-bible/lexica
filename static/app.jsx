@@ -653,7 +653,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
 // ============================================================
 // CROSS-REFERENCE PANEL
 // ============================================================
-function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation }) {
+function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation, onAiSearch }) {
   const [refs, setRefs] = useState([]);
   const [synthesis, setSynthesis] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -711,6 +711,11 @@ function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation }) {
         ) : synthesis ? (
           <p className="xref-synthesis">{synthesis}</p>
         ) : null}
+        {!loading && onAiSearch && (
+          <button className="xref-ai-btn" onClick={() => { onClose(); onAiSearch(sourceRef); }}>
+            Explore in AI search →
+          </button>
+        )}
         {loading ? (
           <div className="lib-loading">Loading…</div>
         ) : refs.length === 0 ? (
@@ -1790,9 +1795,10 @@ function App() {
     return () => window.removeEventListener("popstate", onPop);
   }, []);
 
-  const handleAiSearch = async () => {
-    const q = q2.trim();
+  const handleAiSearch = async (overrideQ) => {
+    const q = (overrideQ !== undefined ? overrideQ : q2).trim();
     if (!q) return;
+    if (overrideQ !== undefined) setQ2(overrideQ);
     setMainView("search");
     setAiLoading(true);
     setError("");
@@ -2024,6 +2030,7 @@ function App() {
             setLibCrossRef(null);
             setLibNav({ book, chapter, scroll: true, highlight: verse });
           }}
+          onAiSearch={(q) => { setLibCrossRef(null); handleAiSearch(q); }}
           isMobile={false}
         />
       )}
@@ -2039,6 +2046,7 @@ function App() {
               setLibCrossRef(null);
               setLibNav({ book, chapter, scroll: true, highlight: verse });
             }}
+            onAiSearch={(q) => { setLibCrossRef(null); handleAiSearch(q); }}
             isMobile={true}
           />
         </>
