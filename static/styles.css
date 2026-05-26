@@ -1362,7 +1362,7 @@ input { font-family: inherit; }
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
-  gap: 4px 2px;
+  gap: 4px 1px;
 }
 
 .lib-highlight {
@@ -1413,7 +1413,7 @@ input { font-family: inherit; }
 .lib-bracket-group {
   display: inline-flex;
   align-items: flex-end;
-  gap: 1px;
+  gap: 0;
   flex-wrap: nowrap;
 }
 .lib-bracket {
@@ -1422,7 +1422,7 @@ input { font-family: inherit; }
   color: var(--accent);
   line-height: 1;
   padding: 0;
-  align-self: center;
+  align-self: flex-end;
   flex-shrink: 0;
   user-select: none;
 }
