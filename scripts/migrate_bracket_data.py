@@ -2,7 +2,7 @@
 """
 Add greek_pos and bracket_id columns to the words table by re-parsing ABP source files.
 
-Usage: python migrate_bracket_data.py [bible.db] [abp_texts/]
+Usage: python migrate_bracket_data.py [bible.db] [abp_ot_texts/]
 """
 
 import re
@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 
 DB      = sys.argv[1] if len(sys.argv) > 1 else "bible.db"
-ABP_DIR = sys.argv[2] if len(sys.argv) > 2 else "abp_texts"
+ABP_DIR = sys.argv[2] if len(sys.argv) > 2 else "abp_ot_texts"
 
 # ── Re-use parsing logic from parse_abp ──────────────────────────────────────
 STRONGS_RE = re.compile(r'G([\d]+(?:\.[\d]+)*|\*)')

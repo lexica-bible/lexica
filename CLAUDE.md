@@ -127,4 +127,4 @@ scripts/          # one-time import/migration scripts (not needed for runtime)
 - Do not add KJV as a primary study text
 - Do not touch existing ABP tables when adding features
 - Do not commit bible.db to git
-- NEVER run `DELETE FROM words` or `DELETE FROM verses` — NT words (abp_nt_texts/) and OT words (abp_texts/) are both in the words table; clearing it destroys NT data that is hard to recover. If re-parsing is needed, run parse_abp.py directly against bible.db without clearing first (it uses INSERT OR IGNORE and is safe to re-run).
+- NEVER run `DELETE FROM words` or `DELETE FROM verses` — NT words (abp_nt_texts/) and OT words (abp_ot_texts/) are both in the words table; clearing it destroys NT data that is hard to recover. If re-parsing is needed, run parse_abp.py directly against bible.db without clearing first (it uses INSERT OR IGNORE and is safe to re-run).
