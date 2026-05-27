@@ -962,7 +962,7 @@ input { font-family: inherit; }
   display: inline-flex;
   flex-direction: column;
   align-items: center;
-  vertical-align: top;
+  vertical-align: bottom;
   margin-right: 4px;
 }
 .study-word-wrap.match { cursor: pointer; }
@@ -991,7 +991,7 @@ input { font-family: inherit; }
   color: var(--accent);
   letter-spacing: 0.02em;
   line-height: 1;
-  margin-top: 2px;
+  margin-bottom: 2px;
 }
 .word-badge {
   position: absolute;
