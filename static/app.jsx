@@ -55,8 +55,9 @@ const api = {
 // ============================================================
 function strongsTag(snum) {
   if (!snum || snum === "*") return "PN";
-  const n = parseInt(snum, 10);
-  return `${!isNaN(n) && n > 5624 ? "H" : "G"}${snum}`;
+  const bare = String(snum).replace(/^[GH]/i, "");
+  const n = parseInt(bare, 10);
+  return `${!isNaN(n) && n > 5624 ? "H" : "G"}${bare}`;
 }
 
 function makeEntry(r, idx) {
