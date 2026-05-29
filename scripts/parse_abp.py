@@ -161,11 +161,15 @@ def parse_words(verse_text: str) -> list:
                 for j, tok in enumerate(tokens):
                     clean_tok = re.sub(r"[^\w'-]", '', tok)
                     if clean_tok and clean_tok[0].isupper() and clean_tok.lower() not in _PN_STOP:
-                        name = _clean_english(tok)
-                        remainder_tokens = tokens[:j] + tokens[j+1:]
-                        # Strip leading stop words from remainder (e.g. "the said," → "said,")
-                        while remainder_tokens and re.sub(r"[^\w'-]", '', remainder_tokens[0]).lower() in _PN_STOP:
-                            remainder_tokens = remainder_tokens[1:]
+                        # Include any leading stop words before the name (e.g. "the LORD" not just "LORD")
+                        prefix_tokens = []
+                        k = j - 1
+                        while k >= 0 and re.sub(r"[^\w'-]", '', tokens[k]).lower() in _PN_STOP:
+                            prefix_tokens.insert(0, tokens[k])
+                            k -= 1
+                        name_tokens = prefix_tokens + [tok]
+                        name = _clean_english(' '.join(name_tokens))
+                        remainder_tokens = tokens[:k+1] + tokens[j+1:]
                         remainder = ' '.join(remainder_tokens).strip()
                         remainder = _clean_english(remainder) if remainder else None
                         # Swap: name token takes prev position+strongs slot, verb takes current
