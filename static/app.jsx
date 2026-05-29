@@ -60,6 +60,15 @@ const api = {
     fetch(`/api/cross-references/curated/${encodeURIComponent(book)}/${chapter}/${verse}`).then(r => r.json()),
 };
 
+// Extract proper noun name from a multi-word gloss, skipping function words
+const _PN_STOP = new Set(["And","But","Or","The","A","An","In","Of","To","For","With","From","By","At","His","Her","Its","Their","My","Your","Our"]);
+function extractProperName(gloss) {
+  if (!gloss) return "";
+  const clean = gloss.replace(/[^a-zA-Z\s'-]/g, "").trim();
+  const proper = clean.split(/\s+/).find(w => /^[A-Z]/.test(w) && !_PN_STOP.has(w));
+  return proper || clean;
+}
+
 // ============================================================
 // DATA SHAPING
 // ============================================================
@@ -483,8 +492,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   useEffect(() => {
     setPnCount(null);
     if (!entry.gloss) return;
-    const rawName = entry.gloss.replace(/[^a-zA-Z\s'-]/g, "").trim();
-    const name = rawName.split(/\s+/).find(w => /^[A-Z]/.test(w)) || rawName;
+    const name = extractProperName(entry.gloss);
     if (!name || name.length < 2) return;
     let cancelled = false;
     api.pnCount(name)
@@ -512,10 +520,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   useEffect(() => {
     setMetavData(null);
     setMetavType(null);
-    const rawName = (entry.pnName || entry.gloss || "").replace(/[^a-zA-Z\s'-]/g, "").trim();
-    // Find the first capitalized word (e.g. "in Ephesus" → "Ephesus", "Abel became" → "Abel")
-    const capitalWord = rawName.split(/\s+/).find(w => /^[A-Z]/.test(w));
-    const name = capitalWord || rawName;
+    const name = extractProperName(entry.pnName || entry.gloss || "");
     if (!name || name.length < 2) return;
     let cancelled = false;
     setMetavLoading(true);
@@ -621,7 +626,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
           <div className="detail-greek"
                dir={isHebrew ? "rtl" : undefined}
                style={isHebrew ? {fontFamily: "var(--f-serif)", textAlign: "left"} : undefined}>
-            {isHebrew ? (bdbEntry?.lemma || entry.gloss) : (entry.greek || ((isPN || metavData) ? (entry.gloss?.replace(/[^a-zA-Z\s'-]/g, "").trim().split(/\s+/).find(w => /^[A-Z]/.test(w)) || entry.gloss?.replace(/[^a-zA-Z\s'-]/g, "").trim()) : entry.gloss))}
+            {isHebrew ? (bdbEntry?.lemma || entry.gloss) : (entry.greek || ((isPN || metavData) ? extractProperName(entry.gloss) : entry.gloss))}
           </div>
           <div className="detail-translit-row">
             <span className="detail-translit">{isHebrew ? bdbEntry?.xlit : entry.translit}</span>
@@ -634,7 +639,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             </button>
             <button className="tool-btn" title="Share"><Icon.Share/></button>
           </div>
-          <div className="detail-gloss">{stripArticles(((isPN || metavData) ? (entry.gloss?.replace(/[^a-zA-Z\s'-]/g, "").trim().split(/\s+/).find(w => /^[A-Z]/.test(w)) || entry.gloss?.replace(/[^a-zA-Z\s'-]/g, "").trim()) : entry.gloss)?.replace(/[.,;:!?—-]+$/, "").trim())}</div>
+          <div className="detail-gloss">{stripArticles(((isPN || metavData) ? extractProperName(entry.gloss) : entry.gloss)?.replace(/[.,;:!?—-]+$/, "").trim())}</div>
         </div>
 
         {(metavData || metavLoading) && (
@@ -755,7 +760,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
           <section className="detail-section">
             <h4 className="detail-h">ABP Occurrences</h4>
             <button className="link-btn" style={{ fontSize: "15px", fontWeight: "600" }}
-              onClick={() => { const raw = (entry.gloss || "").replace(/[^a-zA-Z\s'-]/g, "").trim(); const name = raw.split(/\s+/).find(w => /^[A-Z]/.test(w)) || raw; onNameSearch(name); }}>
+              onClick={() => onNameSearch(extractProperName(entry.gloss))}>
               <b>{pnCount}</b>× in LXX <Icon.ArrowRight/>
             </button>
           </section>
@@ -1487,8 +1492,8 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
         // For null-english G* tokens, derive PN name from previous word's leading capital
         if (w.strongs_base === "*" && !w.english && !w.english_head && i > 0) {
           const prev = englishWords[i - 1];
-          const capitalWord = (prev.english || "").split(/\s+/).find(wd => /^[A-Z]/.test(wd));
-          if (capitalWord) {
+          const capitalWord = extractProperName(prev.english || "");
+          if (capitalWord && capitalWord !== (prev.english || "").replace(/[^a-zA-Z\s'-]/g, "").trim()) {
             w = { ...w, english: capitalWord, english_head: capitalWord.toLowerCase() };
           }
         }
