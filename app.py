@@ -1783,11 +1783,15 @@ def kjv_chapter(book, chapter):
         rows = conn.execute("""
             SELECT kw.verse_num, kw.word_id, kw.verse_pos, kw.word, kw.italic, kw.punc,
                    GROUP_CONCAT(ks.strongs_id) AS strongs_ids,
-                   kv.verse_text
+                   kv.verse_text,
+                   COALESCE(bdb.lemma, lex.lemma) AS lemma,
+                   COALESCE(bdb.xlit, lex.translit) AS xlit
             FROM kjv_words kw
             LEFT JOIN kjv_strongs ks ON ks.word_id = kw.word_id
             LEFT JOIN kjv_verses kv ON kv.book_id = kw.book_id
                 AND kv.chapter = kw.chapter AND kv.verse_num = kw.verse_num
+            LEFT JOIN bdb ON bdb.strongs_id = ks.strongs_id AND ks.strongs_id LIKE 'H%'
+            LEFT JOIN lexicon lex ON lex.strongs = SUBSTR(ks.strongs_id, 2) AND ks.strongs_id LIKE 'G%'
             WHERE kw.book_id = ? AND kw.chapter = ?
             GROUP BY kw.word_id, kw.verse_num, kw.verse_pos, kw.word, kw.italic, kw.punc, kv.verse_text
             ORDER BY kw.verse_num, kw.verse_pos
@@ -1809,6 +1813,8 @@ def kjv_chapter(book, chapter):
             "italic":    bool(r["italic"]),
             "punc":      r["punc"] or "",
             "strongs_ids": sids,
+            "lemma":     r["lemma"] or "",
+            "xlit":      r["xlit"] or "",
         })
     return jsonify([verses[v] for v in order])
 
