@@ -1260,8 +1260,8 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
       strongs: sid || "",
       strongs_base: sid ? sid.slice(1) : "",
       strongs_raw: sid ? sid.slice(1) : "",
-      greek: "",
-      translit: "",
+      greek: w.lemma || "",
+      translit: w.xlit || "",
       gloss: w.word,
       ref: `${selBook.abbrev} ${selChapter}:${v.verse}`,
       book: selBook.abbrev,
@@ -1278,11 +1278,18 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
           {v.words.map((w, i) => {
             const sid = w.strongs_ids && w.strongs_ids.length ? w.strongs_ids[0] : null;
             const clickable = !!(onWordClick && sid);
+            const isHebrew = sid ? sid.startsWith("H") : false;
             return (
               <span key={i}
                 className={"lib-word lib-kjv-word" + (w.italic ? " lib-kjv-italic" : "") + (clickable ? " lib-word-clickable" : "")}
                 onClick={clickable ? () => onWordClick(makeKjvEntry(w, sid)) : undefined}>
                 <span className="lib-iw-english">{w.word}{w.punc || ""}</span>
+                {showInterlinear && w.lemma && (
+                  <span className="lib-iw-greek" dir={isHebrew ? "rtl" : undefined}
+                    style={isHebrew ? {fontFamily: "var(--f-serif)"} : undefined}>
+                    {w.lemma}
+                  </span>
+                )}
                 {showStrongs && (sid
                   ? <span className="lib-iw-strongs">{sid}</span>
                   : <span className="lib-iw-strongs" style={{visibility:"hidden"}}>G0</span>
