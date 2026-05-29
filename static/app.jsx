@@ -387,6 +387,37 @@ function useSwipeToDismiss(onClose) {
 }
 
 // ============================================================
+// LEAFLET MINI-MAP
+// ============================================================
+function LeafletMap({ lat, lon, name }) {
+  const mapRef = React.useRef(null);
+  const instanceRef = React.useRef(null);
+
+  React.useEffect(() => {
+    if (!mapRef.current || !window.L) return;
+    if (instanceRef.current) {
+      instanceRef.current.remove();
+      instanceRef.current = null;
+    }
+    const map = window.L.map(mapRef.current, {
+      center: [lat, lon],
+      zoom: 7,
+      zoomControl: true,
+      scrollWheelZoom: false,
+      attributionControl: false,
+    });
+    window.L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+      maxZoom: 18,
+    }).addTo(map);
+    window.L.marker([lat, lon]).addTo(map).bindPopup(name).openPopup();
+    instanceRef.current = map;
+    return () => { if (instanceRef.current) { instanceRef.current.remove(); instanceRef.current = null; } };
+  }, [lat, lon, name]);
+
+  return <div ref={mapRef} className="metav-leaflet-map" />;
+}
+
+// ============================================================
 // DETAIL PANEL — SIDEBAR / BOTTOM SHEET
 // ============================================================
 function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onStrongsSearch, onReadInContext, onNameSearch }) {
@@ -613,9 +644,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
                 <h4 className="detail-h">Biblical Place<span className="lsj-badge" style={{background:"var(--gold)", color:"#fff"}}>metaV</span></h4>
                 {metavData.comment && <p className="detail-p" style={{marginTop:"8px"}}>{metavData.comment}</p>}
                 {metavData.lat && metavData.lon && (
-                  <a className="metav-map-link" href={`https://www.google.com/maps?q=${metavData.lat},${metavData.lon}`} target="_blank" rel="noopener noreferrer">
-                    View on map →
-                  </a>
+                  <LeafletMap lat={metavData.lat} lon={metavData.lon} name={metavData.name} />
                 )}
               </div>
             ) : null}

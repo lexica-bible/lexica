@@ -1941,3 +1941,13 @@ input { font-family: inherit; }
   text-decoration: none;
 }
 .metav-map-link:hover { text-decoration: underline; }
+
+/* ── Leaflet mini-map ────────────────────────────────────────── */
+.metav-leaflet-map {
+  width: 100%;
+  height: 200px;
+  border-radius: 8px;
+  margin-top: 12px;
+  border: 1px solid var(--rule);
+  overflow: hidden;
+}
