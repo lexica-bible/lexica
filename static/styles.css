@@ -1311,6 +1311,7 @@ input { font-family: inherit; }
 }
 
 .lib-vnum-il { margin-top: 22px; }
+.lib-vnum-greek { margin-top: 14px; }
 .lib-vnum-click {
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
@@ -1461,7 +1462,7 @@ input { font-family: inherit; }
 /* Bracket group wrapper — inline-flex so [ words ] stay on one visual unit */
 .lib-bracket-group {
   display: inline-flex;
-  align-items: flex-end;
+  align-items: center;
   gap: 0;
   flex-wrap: nowrap;
 }
