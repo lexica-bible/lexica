@@ -806,7 +806,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
           </section>
         )}
 
-        {(isPN || (metavData && metavType === "person")) && pnCount !== null && pnCount > 0 && onNameSearch && (
+        {!entry.isKjv && (isPN || (metavData && metavType === "person")) && pnCount !== null && pnCount > 0 && onNameSearch && (
           <section className="detail-section">
             <h4 className="detail-h">ABP Occurrences</h4>
             <button className="link-btn" style={{ fontSize: "15px", fontWeight: "600" }}
