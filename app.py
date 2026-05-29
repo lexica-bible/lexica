@@ -745,7 +745,7 @@ def _clean_gloss(s: str | None) -> str | None:
     """Strip trailing punctuation that ABP interlinear leaves on phrase-boundary words."""
     if not s:
         return s
-    return s.rstrip(" ,;:.!?")
+    return s.rstrip(" ,;:.!?—-")
 
 
 def _normalize_union_sql(sql: str) -> str:
@@ -1401,9 +1401,8 @@ def search():
                 """SELECT strongs_id FROM bdb
                    WHERE strip_accents(xlit) LIKE ? COLLATE NOCASE
                       OR REPLACE(REPLACE(strip_accents(xlit),'w',''),'W','') LIKE ? COLLATE NOCASE
-                      OR word_boundary(description, ?)
                    LIMIT 10""",
-                (f"{q_plain}%", f"{q_no_w}%", q)
+                (f"{q_plain}%", f"{q_no_w}%")
             ).fetchall():
                 _hebrew_search(conn, hit['strongs_id'], h_rows, h_groupings)
     finally:
