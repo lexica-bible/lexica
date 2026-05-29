@@ -1461,10 +1461,18 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
     }
 
     // Chip mode
+    // Filter redundant G* chips where the name already appears in the preceding word's gloss
+    const wordsFiltered = v.words.filter((w, i, arr) => {
+      if (w.strongs_base !== "*" || !w.english) return true;
+      const name = w.english.replace(/[.,;:!?]/g, "");
+      const prev = arr[i - 1];
+      return !(prev && prev.english && prev.english.includes(name));
+    });
+
     let content;
     if (wordOrder === "greek") {
       // Greek syntactic order with bracket notation — only words with a gloss or lexicon entry
-      const sortedWords = [...v.words].filter(w => w.english || w.strongs_base === "*").sort((a, b) => a.position - b.position);
+      const sortedWords = [...wordsFiltered].filter(w => w.english || w.strongs_base === "*").sort((a, b) => a.position - b.position);
       const groups = groupForGreekMode(sortedWords);
       content = groups.map((g, gi) => {
         if (!g.isBracket) {
@@ -1487,16 +1495,8 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
       });
     } else {
       // English reading order — words with a gloss or lexicon fallback
-      const englishWords = getEnglishOrderWords(v.words).filter(w => w.english || w.english_head);
+      const englishWords = getEnglishOrderWords(wordsFiltered).filter(w => w.english || w.english_head);
       content = englishWords.map((w, i) => {
-        // If this G* chip's name already appears in the preceding chip's gloss,
-        // hide it visually but wire the preceding chip to also do metaV lookup
-        if (w.strongs_base === "*" && w.english && i > 0) {
-          const prev = englishWords[i - 1];
-          if (prev.english && prev.english.includes(w.english.replace(/[.,;:!?]/g, ""))) {
-            return null; // hidden — preceding chip handles metaV via extractProperName
-          }
-        }
         return chip(w, `e${i}`);
       });
     }
