@@ -1322,11 +1322,12 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
 
     // Bracket chip (bracketed word in Greek mode — shows inline position number)
     const bracketChip = (w, key) => {
-      const clickable = !!(onWordClick && w.strongs_base && w.strongs_base !== "*");
+      const isPN = w.strongs_base === "*";
+      const clickable = !!(onWordClick && w.strongs_base && (w.strongs_base !== "*" || w.english));
       return (
         <span key={key}
-          className={"lib-word lib-word-bracketed" + (clickable ? " lib-word-clickable" : "")}
-          onClick={clickable ? () => onWordClick(makeEntry(w)) : undefined}>
+          className={"lib-word lib-word-bracketed" + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "")}
+          onClick={clickable ? () => onWordClick(isPN ? { ...makeEntry(w), isPN: true, pnName: w.english } : makeEntry(w)) : undefined}>
           {w.greek_pos !== null && w.greek_pos !== undefined &&
             <span className="lib-iw-pos">{w.greek_pos}</span>}
           {showInterlinear && w.lemma && <span className="lib-iw-greek">{w.lemma}</span>}
