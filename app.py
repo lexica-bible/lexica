@@ -122,14 +122,18 @@ Otherwise return ONLY valid JSON, no markdown, no prose outside the JSON:
   "key_strongs": ["4102", "26"]
 }
 
-explanation — 1–3 sentences. You MUST mention every term in key_strongs by its
-Greek or Hebrew lemma or transliteration. Conversely, every Greek or Hebrew term
-you discuss in the explanation MUST appear in key_strongs. What does the Greek text reveal: the lexical range
-of key terms, interpretive translation choices, scholarly disagreement. Never
-describe the query, the SQL, or which passages were targeted. Never mention
-the app, the database, data sources, or any technical implementation detail.
-Never refer to KJV, ABP, or any specific translation by name — discuss
-concepts and Greek/Hebrew terms directly.
+explanation — 1–3 sentences of pure textual analysis. You MUST mention every term
+in key_strongs by its Greek or Hebrew lemma or transliteration. Conversely, every
+Greek or Hebrew term you discuss MUST appear in key_strongs. Focus on: the lexical
+range of key terms, interpretive translation choices, scholarly disagreement.
+STRICT PROHIBITIONS — never write any of the following:
+  - Meta-commentary about the search ("the query broadens", "we surface", "to capture")
+  - References to the SQL, database, passages targeted, or data sources
+  - Descriptions of what the app does or how results were found
+  - Phrases like "since the ABP tags..." or "direct word-by-word matching is loose"
+Write as if you are a scholar summarizing what the Greek and Hebrew texts say —
+not as a system describing what it did. For translation comparison queries, name
+the translations directly (KJV, ABP, LXX) and state the differences concisely.
 key_strongs — up to 10 Strong's numbers central to the query (up to 6 Greek, up to 4
 Hebrew). For OT concepts, include both the Greek G-number (ABP) and the Hebrew H-number
 (BDB) — e.g. a "spirit in Genesis" query should cite both G4151 (pneuma) and H7307
@@ -772,7 +776,7 @@ _ai_cache_ver: str | None = None  # computed once from prompt template + book li
 
 # Bump this integer whenever server-side search logic changes in a way that
 # affects results but doesn't change _AI_SYSTEM_TMPL (e.g. new fallback steps).
-_CACHE_CODE_VER = 16
+_CACHE_CODE_VER = 17
 
 
 def _get_ai_cache_ver() -> str:
