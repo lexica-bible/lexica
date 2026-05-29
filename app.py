@@ -1784,8 +1784,8 @@ def kjv_chapter(book, chapter):
             SELECT kw.verse_num, kw.word_id, kw.verse_pos, kw.word, kw.italic, kw.punc,
                    GROUP_CONCAT(ks.strongs_id) AS strongs_ids,
                    kv.verse_text,
-                   COALESCE(bdb.lemma, lex.lemma) AS lemma,
-                   COALESCE(bdb.xlit, lex.translit) AS xlit
+                   MAX(COALESCE(bdb.lemma, lex.lemma)) AS lemma,
+                   MAX(COALESCE(bdb.xlit, lex.translit)) AS xlit
             FROM kjv_words kw
             LEFT JOIN kjv_strongs ks ON ks.word_id = kw.word_id
             LEFT JOIN kjv_verses kv ON kv.book_id = kw.book_id
@@ -2314,8 +2314,13 @@ def ai_search():
         # ── Group word-level rows into one entry per verse ───────────────────
         verse_index = {}
         verse_order = []
+        row_keys = rows[0].keys() if rows else []
+        has_word_cols = all(c in row_keys for c in ("english", "strongs_base", "strongs"))
         for r in rows:
-            key = (r["book"], r["chapter"], r["verse"])
+            try:
+                key = (r["book"], r["chapter"], r["verse"])
+            except IndexError:
+                continue
             if key not in verse_index:
                 verse_index[key] = {
                     "ref":     f"{r['book']} {r['chapter']}:{r['verse']}",
@@ -2325,7 +2330,7 @@ def ai_search():
                     "words":   [],
                 }
                 verse_order.append(key)
-            if not r["english"] or r["strongs_base"] == "*":
+            if not has_word_cols or not r["english"] or r["strongs_base"] == "*":
                 continue
             verse_index[key]["words"].append({
                 "strongs":      r["strongs"],

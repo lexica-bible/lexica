@@ -249,7 +249,7 @@ function Header({ activeView, onNavChange }) {
 // ============================================================
 // SEARCH BAR
 // ============================================================
-function SearchBar({ q1, setQ1, q2, setQ2, onSearch, onAiSearch, aiLoading }) {
+function SearchBar({ q1, setQ1, q2, setQ2, onSearch, onAiSearch, aiLoading, lexLoading }) {
   return (
     <section className="search">
       <div className="search-grid">
@@ -268,7 +268,7 @@ function SearchBar({ q1, setQ1, q2, setQ2, onSearch, onAiSearch, aiLoading }) {
               onChange={(e) => setQ1(e.target.value)}
             />
             <button type="submit" className="search-go" aria-label="Search">
-              <Icon.ArrowRight/>
+              {lexLoading ? <span className="spinner"/> : <Icon.ArrowRight/>}
             </button>
           </form>
         </div>
@@ -1885,6 +1885,7 @@ function App() {
             onSearch={handleSearch}
             onAiSearch={handleAiSearch}
             aiLoading={aiLoading}
+            lexLoading={loading}
           />
 
           {aiNotice && (
