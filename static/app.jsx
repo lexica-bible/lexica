@@ -714,7 +714,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
               <div className="lsj-def" style={{ color: "var(--ink-4)", fontStyle: "italic", padding: "8px 0" }}>Not found in BDB.</div>
             )}
           </section>
-        ) : !isPN && !metavData && metavType !== "place" && (entry.greek || entry.strongs_raw) && (
+        ) : !isPN && metavType !== "person" && (entry.greek || entry.strongs_raw) && (
           <section className="detail-section">
             <div className="lsj-head">
               <h4 className="detail-h" style={{ margin: 0 }}>
