@@ -2165,6 +2165,19 @@ def bdb_lookup(strongs_id):
     })
 
 
+@app.route("/api/pn-count/<path:name>")
+def pn_count(name):
+    conn = db_ro()
+    try:
+        row = conn.execute(
+            "SELECT COUNT(*) AS cnt FROM words WHERE english_head = ? COLLATE NOCASE AND strongs_base = '*'",
+            (name.lower(),)
+        ).fetchone()
+    finally:
+        conn.close()
+    return jsonify({"count": row["cnt"] if row else 0})
+
+
 @app.route("/api/kjv/strongs-count/<strongs_id>")
 def kjv_strongs_count(strongs_id):
     conn = db_ro()
