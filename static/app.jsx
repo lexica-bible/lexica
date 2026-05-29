@@ -1678,19 +1678,12 @@ function App() {
   // Grouping counts recomputed from corpus-filtered results
   const filteredGroupings = useMemo(() => {
     if (corpusFilter === "all") return groupings;
-    const glossCounts = {};
-    for (const e of corpusFilteredResults) {
-      if (e.strongs_raw && e.strongs_raw !== "*" && e.gloss_head) {
-        const key = `${e.strongs_raw}::${e.gloss_head.toLowerCase()}`;
-        glossCounts[key] = (glossCounts[key] || 0) + 1;
-      }
-    }
+    const presentStrongs = new Set(
+      corpusFilteredResults.map(e => e.strongs_raw).filter(s => s && s !== "*")
+    );
     const result = {};
     for (const [sn, glossList] of Object.entries(groupings)) {
-      const filtered = glossList
-        .map(g => ({ ...g, count: glossCounts[`${sn}::${g.gloss.toLowerCase()}`] || 0 }))
-        .filter(g => g.count > 0);
-      if (filtered.length > 0) result[sn] = filtered;
+      if (presentStrongs.has(sn)) result[sn] = glossList;
     }
     return result;
   }, [groupings, corpusFilteredResults, corpusFilter]);
