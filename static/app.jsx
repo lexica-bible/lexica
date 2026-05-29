@@ -48,6 +48,8 @@ const api = {
     fetch(`/api/kjv/verse_words/${encodeURIComponent(book)}/${ch}/${v}`).then(r => r.json()),
   kjvStrongsCount: (strongs_id) =>
     fetch(`/api/kjv/strongs-count/${encodeURIComponent(strongs_id)}`).then(r => r.json()),
+  pnCount: (name) =>
+    fetch(`/api/pn-count/${encodeURIComponent(name)}`).then(r => r.json()),
   metavPerson: (name) =>
     fetch(`/api/metav/person/${encodeURIComponent(name)}`).then(r => r.json()),
   metavPlace: (name) =>
@@ -476,6 +478,20 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   const isHebrew = entry && entry.strongs && entry.strongs.startsWith("H");
   const isPN = entry && (entry.isPN || entry.strongs === "PN" || entry.strongs_base === "*");
 
+  // PN occurrence count (by name, for strongs='*' entries)
+  const [pnCount, setPnCount] = useState(null);
+  useEffect(() => {
+    setPnCount(null);
+    if (!isPN || !entry.gloss) return;
+    const name = entry.gloss.replace(/[^a-zA-Z\s'-]/g, "").trim();
+    if (!name) return;
+    let cancelled = false;
+    api.pnCount(name)
+      .then(d => { if (!cancelled) setPnCount(d.count ?? null); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [entry && entry.id]);
+
   // KJV occurrence count for Hebrew words
   const [kjvCount, setKjvCount] = useState(null);
   useEffect(() => {
@@ -734,6 +750,15 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             >
               <b>{abpCount}</b>× in LXX <Icon.ArrowRight/>
             </button>
+          </section>
+        )}
+
+        {isPN && pnCount !== null && pnCount > 0 && (
+          <section className="detail-section">
+            <h4 className="detail-h">ABP Occurrences</h4>
+            <p style={{ fontSize: "15px", fontWeight: "600", margin: 0 }}>
+              <b>{pnCount}</b>× in LXX
+            </p>
           </section>
         )}
 
