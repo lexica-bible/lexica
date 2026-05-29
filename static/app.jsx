@@ -758,12 +758,13 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
           </section>
         )}
 
-        {isPN && pnCount !== null && pnCount > 0 && (
+        {isPN && pnCount !== null && pnCount > 0 && onNameSearch && (
           <section className="detail-section">
             <h4 className="detail-h">ABP Occurrences</h4>
-            <p style={{ fontSize: "15px", fontWeight: "600", margin: 0 }}>
-              <b>{pnCount}</b>× in LXX
-            </p>
+            <button className="link-btn" style={{ fontSize: "15px", fontWeight: "600" }}
+              onClick={() => onNameSearch(entry.gloss.replace(/[^a-zA-Z\s'-]/g, "").trim())}>
+              <b>{pnCount}</b>× in LXX <Icon.ArrowRight/>
+            </button>
           </section>
         )}
 
