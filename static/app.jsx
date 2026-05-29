@@ -1740,7 +1740,8 @@ function App() {
     );
     const result = {};
     for (const [sn, glossList] of Object.entries(groupings)) {
-      if (presentStrongs.has(sn)) result[sn] = glossList;
+      const base = sn.includes('.') ? sn.split('.')[0] : sn;
+      if (presentStrongs.has(sn) || presentStrongs.has(base)) result[sn] = glossList;
     }
     return result;
   }, [groupings, corpusFilteredResults, corpusFilter]);
