@@ -552,7 +552,8 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   useEffect(() => {
     setAiDescription(null);
     if (metavLoading) return;
-    if (metavData) return; // metaV has data, no need for AI
+    if (metavData && metavType === "person") return; // person bio replaces AI
+    if (metavData && metavType === "place" && metavData.strongs_g) return; // place has LSJ
     if (!isPN && !entry.isKjv) return; // only for proper nouns
     const name = extractProperName(entry.pnName || entry.gloss || "");
     if (!name || name.length < 2) return;
@@ -725,7 +726,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
 
         {(aiDescription || aiDescLoading) && (
           <section className="detail-section">
-            <h4 className="detail-h">Biblical Person<span className="lsj-badge" style={{background:"var(--accent)", color:"#fff"}}>AI</span></h4>
+            <h4 className="detail-h">{metavType === "place" ? "Biblical Place" : "Biblical Person"}<span className="lsj-badge" style={{background:"var(--accent)", color:"#fff"}}>AI</span></h4>
             {aiDescLoading
               ? <div className="lsj-def" style={{color:"var(--ink-4)", fontStyle:"italic", padding:"8px 0"}}>Looking up…</div>
               : <p className="detail-p" style={{marginTop:"8px"}}>{aiDescription}</p>
