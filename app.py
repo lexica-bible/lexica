@@ -252,25 +252,24 @@ or meaning), find its H-number via bdb then bridge to ABP verses using the books
 TRANSLATION COMPARISON queries:
   To compare KJV vs ABP renderings of a concept or word:
   1. Find the relevant Strong's number(s) from the lexicon table.
-  2. Query kjv_strongs to find where that number appears in KJV and what
-     English word was used.
-  3. Query words to find the same Strong's number in ABP.
-  4. Compare renderings and explain any differences based on the lexicon
-     definition. Always anchor the comparison in the source word — the
-     Strong's number is the bridge; the question is what the original word
-     means and how each translation chose to render it.
+  2. Join kjv_strongs + kjv_words to filter to verses where the KJV rendering
+     differs from ABP, using LOWER(w.english_head) != LOWER(kw.word).
+  3. Always return the standard column set — the server requires these exact
+     columns to display results. Use the KJV word as a JOIN filter, not a
+     selected column.
+  Put the comparison analysis in the explanation field, not the SQL shape.
 
   For open-ended comparison queries (e.g. "what stands out as differences
   in Acts KJV vs ABP"): find where the same Strong's numbers produced
   different English words, surface patterns, and flag anything theologically
   significant. Use this join pattern:
 
-  SELECT v.book, v.chapter, v.verse,
-         w.strongs_base,
-         w.english_head AS abp_gloss,
-         kw.word        AS kjv_word
+  SELECT w.strongs_base, w.strongs, w.english, w.english_head,
+         v.book, v.chapter, v.verse,
+         l.lemma, l.translit, l.strongs_def, l.kjv_def, l.derivation
   FROM words w
   JOIN verses v ON w.verse_id = v.id
+  LEFT JOIN lexicon l ON l.strongs = w.strongs_base
   JOIN kjv_strongs ks ON ks.strongs_id = 'G' || w.strongs_base
   JOIN kjv_words kw
     ON kw.word_id = ks.word_id
@@ -278,9 +277,9 @@ TRANSLATION COMPARISON queries:
    AND kw.chapter = v.chapter
    AND kw.verse_num = v.verse
   WHERE v.book = 'Act'
-    AND w.strongs_base NOT IN ('3588','2532','1161','846','3778','1722')
+    AND (w.strongs_base = '4151' OR w.strongs_base = 'G4151')
     AND LOWER(w.english_head) != LOWER(kw.word)
-  LIMIT 60
+  ORDER BY v.id, w.position LIMIT 500
 
   For OT questions involving Hebrew: use kjv_strongs to get the H-number,
   then look it up in bdb for the Hebrew definition and lemma.\
