@@ -1371,7 +1371,7 @@ def search():
         elif not snum:
             for hit in conn.execute(
                 """SELECT strongs_id FROM bdb
-                   WHERE xlit LIKE ? COLLATE NOCASE
+                   WHERE strip_accents(xlit) LIKE ? COLLATE NOCASE
                       OR description LIKE ? COLLATE NOCASE
                    LIMIT 10""",
                 (f"%{q_plain}%", f"%{q}%")
