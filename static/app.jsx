@@ -1529,6 +1529,13 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
     // Chip mode
     let content;
     if (wordOrder === "greek") {
+      // Pre-compute bracket group positions from full word list (before English filter)
+      const bracketGroupPos = {};
+      for (const w of v.words) {
+        if (w.bracket_id != null && w.greek_pos != null && !(w.bracket_id in bracketGroupPos)) {
+          bracketGroupPos[w.bracket_id] = w.greek_pos;
+        }
+      }
       // Greek syntactic order with bracket notation — only words with a gloss or lexicon entry
       const sortedWords = [...v.words].filter(w => w.english || w.strongs_base === "*").sort((a, b) => a.position - b.position);
       const groups = groupForGreekMode(sortedWords);
@@ -1536,6 +1543,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
         if (!g.isBracket) {
           return chip(g.word, `g${gi}`);
         }
+        const groupPos = bracketGroupPos[g.bid] ?? null;
         const bracketChar = (ch, k) => (
           <span key={k} className="lib-bracket">
             {showInterlinear && <span className="lib-iw-greek" style={{visibility:"hidden"}}>x</span>}
@@ -1546,10 +1554,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
         return (
           <span key={`bg${gi}`} className="lib-bracket-group">
             {bracketChar("[", "bl")}
-            {(() => {
-              const groupPos = g.words.find(w => w.greek_pos != null)?.greek_pos ?? null;
-              return g.words.map((w, wi) => bracketChip(w, `bg${gi}w${wi}`, wi === 0 ? groupPos : null));
-            })()}
+            {g.words.map((w, wi) => bracketChip(w, `bg${gi}w${wi}`, wi === 0 ? groupPos : null))}
             {bracketChar("]", "br")}
           </span>
         );
