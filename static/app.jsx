@@ -2208,14 +2208,8 @@ function App() {
   };
 
   const handleGlossDrill = (sn, gloss) => {
-    const hasMatch = allResults.some(
-      e => e.strongs_raw === sn && e.gloss_head.toLowerCase() === gloss.toLowerCase()
-    );
-    if (hasMatch) {
-      setGlossFilter({ sn, gloss });
-      return;
-    }
-    // Gloss not in current results — search the full strongs entry, then apply filter
+    // Always do a full strongs search to ensure all results are fetched
+    // (grouping count is from full corpus, allResults may be truncated)
     const crumbsWithCurrent = [...breadcrumbs, { label: searchLabel, q: q1.trim() }];
     handleSearch(strongsTag(sn), crumbsWithCurrent, true).then(() => setGlossFilter({ sn, gloss }));
   };
