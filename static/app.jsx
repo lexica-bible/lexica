@@ -1795,6 +1795,7 @@ function GlossGroupings({ groupings, results, variants, onGlossDrill, onStrongsS
       }
     }
     return order
+      .filter(sn => groupings[sn]?.length > 0) // only strongs with actual groupings
       .map(sn => {
         const glosses = groupings[sn] || [];
         const base = sn.includes('.') ? sn.split('.')[0] : sn;
@@ -1804,7 +1805,7 @@ function GlossGroupings({ groupings, results, variants, onGlossDrill, onStrongsS
         return { sn, glosses, siblings, entry };
       })
       .filter(({ glosses, siblings, entry }) =>
-        (glosses.length > 1 || siblings.length > 0) && !(entry && entry.is_function));
+        glosses.length > 1 && !(entry && entry.is_function));
   }, [groupings, results, variants]);
 
   if (rows.length === 0) return null;
