@@ -1466,6 +1466,16 @@ def search():
         for r in rows
     ]
 
+    # Apply same 10% threshold to Hebrew groupings for text searches
+    if not snum:
+        filtered_h_groupings = {}
+        for h_id, glosses in h_groupings.items():
+            total = sum(g["count"] for g in glosses)
+            match = sum(g["count"] for g in glosses if g["gloss"].lower() == q.lower())
+            if total > 0 and match / total >= 0.10:
+                filtered_h_groupings[h_id] = glosses
+        h_groupings = filtered_h_groupings
+
     results.extend(h_rows)
     groupings.update(h_groupings)
     return jsonify({"results": results, "total": len(results), "groupings": groupings, "variants": variants})
