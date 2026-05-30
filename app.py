@@ -1365,7 +1365,7 @@ def search():
                        FROM words
                        WHERE strongs IS NOT NULL AND strongs != '*'
                        GROUP BY strongs
-                       HAVING m >= 3 AND m * 10 >= COUNT(*)
+                       HAVING m >= 10 AND m * 10 >= COUNT(*)
                        ORDER BY m DESC
                        LIMIT 4""",
                     (q,),
