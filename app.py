@@ -1430,16 +1430,16 @@ def search():
             # Add Hebrew groupings from KJV direct matches
             for h_id in hebrew_strongs:
                 _hebrew_search(conn, h_id, h_rows, h_groupings)
-            # Also search BDB by transliteration
+            # Also search BDB by transliteration only (not description)
             q_no_w = q_plain.replace('w', '').replace('W', '')
             for hit in conn.execute(
                 """SELECT strongs_id FROM bdb
                    WHERE strip_accents(xlit) LIKE ? COLLATE NOCASE
                       OR REPLACE(REPLACE(strip_accents(xlit),'w',''),'W','') LIKE ? COLLATE NOCASE
-                   LIMIT 10""",
+                   LIMIT 5""",
                 (f"{q_plain}%", f"{q_no_w}%")
             ).fetchall():
-                if hit['strongs_id'] not in {r for r in hebrew_strongs}:
+                if hit['strongs_id'] not in set(hebrew_strongs):
                     _hebrew_search(conn, hit['strongs_id'], h_rows, h_groupings)
     finally:
         conn.close()
