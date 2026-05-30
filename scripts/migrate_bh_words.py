@@ -32,7 +32,7 @@ SLUG_TO_ABBREV = {
     "1_samuel": "1Sa", "2_samuel": "2Sa", "1_kings": "1Ki", "2_kings": "2Ki",
     "1_chronicles": "1Ch", "2_chronicles": "2Ch", "ezra": "Ezr", "nehemiah": "Neh",
     "esther": "Est", "job": "Job", "psalms": "Psa", "proverbs": "Pro",
-    "ecclesiastes": "Ecc", "song_of_solomon": "Son", "isaiah": "Isa",
+    "ecclesiastes": "Ecc", "songs": "Son", "isaiah": "Isa",
     "jeremiah": "Jer", "lamentations": "Lam", "ezekiel": "Eze", "daniel": "Dan",
     "hosea": "Hos", "joel": "Joe", "amos": "Amo", "obadiah": "Oba",
     "jonah": "Jon", "micah": "Mic", "nahum": "Nah", "habakkuk": "Hab",

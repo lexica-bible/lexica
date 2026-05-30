@@ -105,7 +105,7 @@ BOOKS = [
     ("psalms",           "Psa", 150),
     ("proverbs",         "Pro",  31),
     ("ecclesiastes",     "Ecc",  12),
-    ("song_of_solomon",  "Son",   8),
+    ("songs",            "Son",   8),
     ("isaiah",           "Isa",  66),
     ("jeremiah",         "Jer",  52),
     ("lamentations",     "Lam",   5),
