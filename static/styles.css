@@ -1450,17 +1450,16 @@ input { font-family: inherit; }
 .lib-iw-pos-english {
   display: flex;
   flex-direction: row;
-  align-items: flex-end;
+  align-items: baseline;
   gap: 1px;
 }
 .lib-iw-pos {
   font-family: var(--f-mono);
   font-size: 8.5px;
-  font-weight: 700;
+  font-weight: 600;
   color: #c0392b;
   letter-spacing: 0.02em;
   line-height: 1;
-  padding-bottom: 1px;
 }
 .lib-iw-greek {
   font-family: var(--f-greek);
@@ -1505,7 +1504,7 @@ input { font-family: inherit; }
 }
 /* Bracketed word chip — slightly tighter than the normal chip */
 .lib-word-bracketed {
-  padding: 4px 3px 5px;
+  padding: 2px 3px 5px;
 }
 
 /* Interlinear in detail panel */
