@@ -326,7 +326,7 @@ def run(bible_db: str, scrape_db: str) -> None:
     print(f"  Verses skipped: {skipped:,}")
 
 
-def run_test(scrape_db: str, book_abbrev: str = "Gen", chapter: int = 1) -> None:
+def run_test(scrape_db: str, book_abbrev: str = "Gen", chapter: int = 1, verse: int = None) -> None:
     """
     Dry-run: parse one chapter from ABP zip + BH index and print results.
     Does NOT write to bible.db. Useful for verifying word order, italic logic,
@@ -351,6 +351,8 @@ def run_test(scrape_db: str, book_abbrev: str = "Gen", chapter: int = 1) -> None
 
     print(f"=== {book_abbrev} {chapter} ===\n")
     for vs in sorted(verses):
+        if verse is not None and vs != verse:
+            continue
         abp_words = verses[vs]
         bh_rows   = bh_index.get((slug, chapter, vs), [])
         word_rows = build_verse_words(abp_words, bh_rows)
@@ -384,13 +386,15 @@ def main():
                         help="ABP book abbreviation for --test (default: Gen)")
     parser.add_argument("--chapter", type=int, default=1,
                         help="Chapter number for --test (default: 1)")
+    parser.add_argument("--verse",   type=int, default=None,
+                        help="Single verse for --test (default: all verses in chapter)")
     args = parser.parse_args()
 
     if args.test:
         if not Path(args.scrape_db).exists():
             print(f"ERROR: {args.scrape_db} not found.")
             sys.exit(1)
-        run_test(args.scrape_db, args.book, args.chapter)
+        run_test(args.scrape_db, args.book, args.chapter, args.verse)
     else:
         for path in (args.bible_db, args.scrape_db):
             if not Path(path).exists():
