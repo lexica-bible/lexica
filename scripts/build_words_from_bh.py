@@ -24,6 +24,7 @@ Run on PythonAnywhere:
 
 import re
 import sys
+import shutil
 import sqlite3
 from pathlib import Path
 
@@ -258,7 +259,7 @@ def run(bible_db: str, scrape_db: str) -> None:
 
     ans = input(
         "\nThis will DELETE all rows from words and rebuild from BH data.\n"
-        "Back up bible.db first if you haven't.  Type 'rebuild' to confirm: "
+        "Type 'rebuild' to confirm: "
     ).strip()
     if ans != "rebuild":
         print("Aborted.")
@@ -266,6 +267,11 @@ def run(bible_db: str, scrape_db: str) -> None:
         return
 
     main = sqlite3.connect(bible_db)
+
+    bak = Path(bible_db).with_suffix(".db.bak")
+    print(f"Backing up {bible_db} → {bak} …")
+    shutil.copy2(bible_db, bak)
+    print("Backup done.")
 
     lex = _load_lexicon(main)
     print(f"Lexicon entries loaded: {len(lex):,}")
@@ -332,18 +338,81 @@ def run(bible_db: str, scrape_db: str) -> None:
     print(f"  Verses skipped: {skipped:,}")
 
 
-def main():
-    bible_db  = sys.argv[1] if len(sys.argv) > 1 else "bible.db"
-    scrape_db = sys.argv[2] if len(sys.argv) > 2 else "bh_scrape.db"
+def run_test(bible_db: str, scrape_db: str, book: str = "genesis", chapter: int = 1) -> None:
+    """
+    Dry-run: process one chapter through the full pipeline and print results.
+    Does NOT write to bible.db.  Use to verify compound matching and italic logic.
 
-    for path in (bible_db, scrape_db):
+    Default: genesis chapter 1 — covers "God made" (compound), "the beginning"
+    (leading italic), and "dry land" (trailing italic) test cases.
+    """
+    scrape = sqlite3.connect(scrape_db)
+    main   = sqlite3.connect(bible_db)
+
+    lex = _load_lexicon(main)
+    print(f"Lexicon entries: {len(lex):,}\n")
+
+    verses = scrape.execute(
+        "SELECT DISTINCT verse FROM bh_words WHERE book=? AND chapter=? ORDER BY verse",
+        (book, chapter),
+    ).fetchall()
+
+    if not verses:
+        print(f"No data found for {book} chapter {chapter} in {scrape_db}.")
+        return
+
+    abbrev = SLUG_TO_ABBREV.get(book, book)
+    for (verse,) in verses:
+        bh_rows = scrape.execute(
+            "SELECT strongs, english, italic_words, greek_pos FROM bh_words"
+            " WHERE book=? AND chapter=? AND verse=? ORDER BY position",
+            (book, chapter, verse),
+        ).fetchall()
+
+        word_rows = build_verse_words(bh_rows, lex)
+        print(f"{abbrev} {chapter}:{verse}")
+        for (wpos, eng, head, strongs, sbase, gpos, bid, italic) in word_rows:
+            iw = next(
+                (r[2] for r in bh_rows
+                 if r[0] and strongs and r[0].split("-")[0].split(".")[0] == sbase),
+                ""
+            )
+            flag = f"  italic_src={iw!r}" if iw else ""
+            print(
+                f"  [{wpos:2}] {strongs or '*':12}  "
+                f"eng={str(eng):15}  head={str(head):12}  italic={italic}{flag}"
+            )
+        print()
+
+    scrape.close()
+    main.close()
+
+
+def main():
+    import argparse
+    parser = argparse.ArgumentParser(description="Rebuild words table from bh_scrape.db")
+    parser.add_argument("bible_db",  nargs="?", default="bible.db")
+    parser.add_argument("scrape_db", nargs="?", default="bh_scrape.db")
+    parser.add_argument("--test",    action="store_true",
+                        help="Dry-run genesis ch.1 to verify compound+italic logic")
+    parser.add_argument("--book",    default="genesis",
+                        help="Book slug for --test (default: genesis)")
+    parser.add_argument("--chapter", type=int, default=1,
+                        help="Chapter for --test (default: 1)")
+    args = parser.parse_args()
+
+    for path in (args.bible_db, args.scrape_db):
         if not Path(path).exists():
             print(f"ERROR: {path} not found.")
             sys.exit(1)
 
-    print(f"bible.db:  {bible_db}")
-    print(f"scrape db: {scrape_db}\n")
-    run(bible_db, scrape_db)
+    print(f"bible.db:  {args.bible_db}")
+    print(f"scrape db: {args.scrape_db}\n")
+
+    if args.test:
+        run_test(args.bible_db, args.scrape_db, args.book, args.chapter)
+    else:
+        run(args.bible_db, args.scrape_db)
 
 
 if __name__ == "__main__":
