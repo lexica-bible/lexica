@@ -337,6 +337,9 @@ def build_verse_words(abp_words: list, bh_rows: list, lex: dict = None) -> list:
         ))
         pos += 1
 
+    if lex:
+        _split_compounds(rows, lex)
+
     return rows
 
 
@@ -382,6 +385,10 @@ def run(bible_db: str, scrape_db: str) -> None:
     )}
     print(f"ABP verse map: {len(verse_map):,}")
 
+    print("Loading lexicon …")
+    lex = load_lexicon(main)
+    print(f"Lexicon entries: {len(lex):,}")
+
     print("Loading BH index …")
     bh_index = load_bh_verse_index(scrape)
     print(f"BH verse keys: {len(bh_index):,}\n")
@@ -400,7 +407,7 @@ def run(bible_db: str, scrape_db: str) -> None:
 
         slug     = ABBREV_TO_SLUG.get(abbrev)
         bh_rows  = bh_index.get((slug, chapter, verse), []) if slug else []
-        word_rows = build_verse_words(abp_words, bh_rows)
+        word_rows = build_verse_words(abp_words, bh_rows, lex)
 
         main.executemany(
             "INSERT INTO words"
@@ -458,7 +465,7 @@ def run_test(scrape_db: str, book_abbrev: str = "Gen", chapter: int = 1,
             continue
         abp_words = verses[vs]
         bh_rows   = bh_index.get((slug, chapter, vs), [])
-        word_rows = build_verse_words(abp_words, bh_rows)
+        word_rows = build_verse_words(abp_words, bh_rows, lex)
 
         print(f"{book_abbrev} {chapter}:{vs}  (BH rows: {len(bh_rows)})")
         for (p, eng, head, sn, sb, gpos, bid, italic, iw, sw) in word_rows:
