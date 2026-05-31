@@ -1442,6 +1442,60 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
 }
 
 // ============================================================
+// MOBILE BOOK PICKER — full-screen, two-screen (book grid → chapter grid)
+// ============================================================
+function MobileBookPicker({ books, onDone, onClose }) {
+  const [screen, setScreen] = useState("book");
+  const [pickedBook, setPickedBook] = useState(null);
+
+  const otBooks = books.filter(b => !NT_BOOKS.has(b.abbrev));
+  const ntBooks = books.filter(b => NT_BOOKS.has(b.abbrev));
+
+  if (screen === "chapter") {
+    return (
+      <div className="mpick">
+        <div className="mpick-head">
+          <button className="mpick-back" onClick={() => setScreen("book")}>‹ Books</button>
+          <span className="mpick-title">{pickedBook.name}</span>
+          <button className="mpick-x" onClick={onClose}>✕</button>
+        </div>
+        <div className="mpick-scroll">
+          <div className="mpick-grid">
+            {Array.from({ length: pickedBook.chapters }, (_, i) => i + 1).map(n => (
+              <button key={n} className="mpick-btn" onClick={() => onDone(pickedBook, n)}>{n}</button>
+            ))}
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="mpick">
+      <div className="mpick-head">
+        <span className="mpick-head-spacer" />
+        <span className="mpick-title">Books</span>
+        <button className="mpick-x" onClick={onClose}>✕</button>
+      </div>
+      <div className="mpick-scroll">
+        {[["OT", otBooks], ["NT", ntBooks]].map(([label, bks]) => (
+          <div key={label} className="mpick-section">
+            <div className="mpick-sec-label">{label}</div>
+            <div className="mpick-grid">
+              {bks.map(b => (
+                <button key={b.abbrev} className="mpick-btn" onClick={() => { setPickedBook(b); setScreen("chapter"); }}>
+                  {b.abbrev.toUpperCase()}
+                </button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ============================================================
 // LIBRARY VIEW
 // ============================================================
 function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTranslationChange }) {
@@ -1825,18 +1879,11 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
         />
       )}
       {!navVisible && mobileNavOpen && (
-        <>
-          <div className="nav-scrim" onClick={() => setMobileNavOpen(false)} />
-          <LibNavPanel
-            books={books}
-            selBook={selBook}
-            setSelBook={setSelBook}
-            selChapter={selChapter}
-            setSelChapter={setSelChapter}
-            isOverlay={true}
-            onClose={() => setMobileNavOpen(false)}
-          />
-        </>
+        <MobileBookPicker
+          books={books}
+          onDone={(b, n) => { setSelBook(b); setSelChapter(n); setMobileNavOpen(false); }}
+          onClose={() => setMobileNavOpen(false)}
+        />
       )}
       <div>
       {navVisible ? (
