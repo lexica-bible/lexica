@@ -1516,7 +1516,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
       return (
         <span key={key}
           className={"lib-word" + (w.italic ? " lib-abp-italic" : "") + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "")}
-          onClick={clickable ? () => onWordClick(isPN ? { ...makeEntry(w), isPN: true, pnName: w.english || w.english_head } : makeEntry(w)) : undefined}>
+          onClick={clickable ? () => onWordClick(isPN ? { ...makeEntry(w), isPN: true, pnName: label, gloss: label } : makeEntry(w)) : undefined}>
           {showInterlinear && w.lemma && <span className="lib-iw-greek">{w.lemma}</span>}
           <span className="lib-iw-english">{label}</span>
           {showStrongs && (
@@ -1576,7 +1576,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
       return (
         <span key={key}
           className={"lib-word lib-word-bracketed" + (w.italic ? " lib-abp-italic" : "") + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "")}
-          onClick={clickable ? () => onWordClick(isPN ? { ...makeEntry(w), isPN: true, pnName: w.english || w.english_head } : makeEntry(w)) : undefined}>
+          onClick={clickable ? () => onWordClick(isPN ? { ...makeEntry(w), isPN: true, pnName: label, gloss: label } : makeEntry(w)) : undefined}>
           {w.greek_pos !== null && w.greek_pos !== undefined &&
             <span className="lib-iw-pos">{w.greek_pos}</span>}
           {showInterlinear && w.lemma && <span className="lib-iw-greek">{w.lemma}</span>}
