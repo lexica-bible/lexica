@@ -2,32 +2,73 @@
 
 ## Advanced Workspace Layout (major feature)
 
-Desktop-only multi-panel workspace mode, alongside the existing single-focus layout. Three modes total:
-- **Mobile** — current Lexica (reader + tap-to-open sidebar). No changes needed.
-- **Desktop basic** — current Lexica. Default.
-- **Desktop advanced** — resizable multi-panel workspace. Minimum viewport width gate.
+### Spec
 
-Panels for advanced mode (based on eSword reference layout):
-- Book/chapter navigator (persistent left sidebar, currently a dropdown)
-- Bible text panel (center, full interlinear with inline Strong's)
-- Cross-references panel (top right)
-- Dictionary/lexicon panel (bottom right, currently opens as overlay sidebar)
-- Notes panel (personal study notes per verse — new feature, needs DB table)
+**Three layout modes:**
+- **Mobile** — current Lexica unchanged. Tap-to-open sidebar overlay.
+- **Desktop basic** — current Lexica unchanged. Default for desktop.
+- **Desktop advanced** — multi-panel workspace. Opt-in via toggle in the header. Minimum viewport width gate (e.g. 1100px). User-resizable panels via draggable dividers (clean implementation only).
 
-Draft a written spec of panel combinations and behavior before implementing. Feed spec + styles.css + app.jsx to Claude for design/implementation plan.
+**Panel layout:**
 
-## Quick Wins
+```
+┌─────────┬──────────────────────────┬────────────────────────┐
+│ Books   │                          │  Cross-refs / Search / │
+│ (left)  │   Library (center)       │  Notes  (top right)    │
+│         │                          ├────────────────────────┤
+│         │                          │  Word Study            │
+│         │                          │  LSJ / BDB / MetaV     │
+│         │                          │  (bottom right)        │
+└─────────┴──────────────────────────┴────────────────────────┘
+```
 
-### Cross-Reference Count Badge
-Show a small ref count on each verse in Library so heavily cross-referenced verses (Isaiah 53, Psalm 22, etc.) are visible at a glance. Data already in `cross_references` table — just needs a count query and a UI badge.
+**Left panel — Book/Chapter Navigator:**
+- Always-visible book list (replaces dropdown)
+- Click a book → chapter numbers expand inline below it (accordion)
+- Only one book expanded at a time
+- Collapsible on desktop (narrows to icons or hides) to reclaim center width
+- On mobile: hidden, existing dropdown stays
+
+**Center panel — Library:**
+- ABP / KJV / Parallel toggle, all existing chip/interlinear controls
+- Word click → updates Word Study panel in place (no overlay)
+- Verse number click → opens Cross-refs tab in top-right panel
+- Full height, scrollable
+- **Reading modes:**
+  - *Chip mode* — current default, all words individually clickable
+  - *Prose mode* — dense reading view, inline Strong's superscripts (eSword-style), no stacked interlinear
+  - Interlinear toggle (Greek row on/off) available in chip mode
+- **Parallel mode** — auto-collapses left nav to give center panel full width; user can re-expand manually
+
+**Top-right panel — tabs: Cross-refs | Search | Notes**
+- **Cross-refs**: existing TSK curated panel (currently opens as overlay)
+- **Search**: lexicon browse + AI search combined, toggle between them inside the tab
+- **Notes**: personal study notes per verse (future — needs `notes` DB table)
+- Default tab: Cross-refs
+
+**Bottom-right panel — Word Study:**
+- Always live, updates on word click from Library
+- LSJ, BDB, MetaV — same content as current sidebar
+- Replaces the overlay sidebar entirely in advanced mode
+
+**Resizing:**
+- Draggable vertical divider between left nav and center
+- Draggable vertical divider between center and right panels
+- Draggable horizontal divider between top-right and bottom-right
+- Sizes persist in localStorage
+
+**Toggle:**
+- Header button (e.g. ⊞ icon) switches between basic and advanced
+- State persists in localStorage
+- Only shown above minimum viewport width
 
 ## Planned Features
 
+### Prose Reading Mode
+Flowing text view for the Library — no chip borders or padding, Strong's numbers as small superscripts, words still clickable but no visual widget feel. Complements chip mode (focused word study) with a clean reading experience. Implement after the advanced workspace layout, as part of the center panel reading modes.
+
 ### Morphology Display
 Show grammatical parsing (case, tense, number, etc.) in the word click sidebar in plain English: "Verb · Aorist · Active · Indicative · 3rd Person · Singular". Morphological data source: MorphGNT (NT) + CATSS/CCAT (LXX OT) — needs import into a `morph` column on the `words` table.
-
-### Parallel Mode Synchronized Scrolling
-In Parallel mode, the ABP and KJV columns scroll independently. Synchronized scrolling would keep both columns aligned by verse as the user scrolls.
 
 ### Parallel Mode Versification Alignment
 ABP follows LXX verse numbering (Psalms especially can be off by 1 from KJV). In Parallel mode, mismatched verses currently show blank on one side. Need to: (1) audit how bad the mismatch is in practice, (2) decide whether to offset-map or leave gaps.
