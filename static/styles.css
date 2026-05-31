@@ -1450,15 +1450,17 @@ input { font-family: inherit; }
 .lib-iw-pos-english {
   display: flex;
   flex-direction: row;
-  align-items: baseline;
+  align-items: flex-end;
   gap: 1px;
 }
 .lib-iw-pos {
   font-family: var(--f-mono);
   font-size: 8.5px;
+  font-weight: 700;
   color: #c0392b;
   letter-spacing: 0.02em;
-  line-height: 1.3;
+  line-height: 1;
+  padding-bottom: 1px;
 }
 .lib-iw-greek {
   font-family: var(--f-greek);
