@@ -22,6 +22,7 @@ Run on PythonAnywhere:
     python scripts/build_words_from_bh.py [bible.db] [bh_scrape.db]
 """
 
+import re
 import sys
 import sqlite3
 from pathlib import Path
@@ -85,13 +86,94 @@ def _base(s: str | None) -> str | None:
     return s.split(".")[0]
 
 
+# ── Lexicon-assisted compound word matching ───────────────────────────────────
+
+# Articles, conjunctions, prepositions that contribute no English gloss word.
+# Excluded from the elimination step so they don't consume an unmatched word.
+_SKIP_STRONGS = frozenset({
+    '3588', '3739', '846',           # the / who-which / he-she-it
+    '1161', '2532', '3767', '1063',  # and-but / and-also / therefore / for
+    '1510', '2258',                  # is-am-are / was-were (copula)
+    '3303',                          # truly-but
+})
+
+
+def _load_lexicon(conn) -> dict[str, set[str]]:
+    """Return {bare_strongs_base: set_of_lowercase_def_words} from the lexicon table."""
+    lex: dict[str, set[str]] = {}
+    for strongs, kjv_def, strongs_def in conn.execute(
+        "SELECT strongs, kjv_def, strongs_def FROM lexicon"
+    ):
+        base = strongs.lstrip("GH").split(".")[0]
+        text = " ".join(filter(None, [kjv_def, strongs_def]))
+        words = set(re.sub(r"[^\w\s]", " ", text).lower().split())
+        lex[base] = words
+    return lex
+
+
+def _match_compound(components: list, english: str, lex: dict) -> dict[int, str]:
+    """
+    Match English gloss words to compound strongs components via lexicon defs.
+
+    Returns {component_index: word_string}.  Components absent from the result
+    get no english gloss (articles, conjunctions, unmatched extensions).
+
+    Algorithm:
+      Pass 1 — exact: for each meaningful component, find the gloss word whose
+               lowercase form appears in the component's lexicon def word set.
+      Pass 2 — eliminate: if the count of unmatched meaningful components equals
+               the count of unmatched gloss words, assign them positionally.
+               This catches "made" → G4160 when "make" is in the def but the
+               inflected form "made" is not.
+    """
+    if not english or len(components) <= 1:
+        return {0: english} if english else {}
+
+    orig_words = english.split()
+    if len(orig_words) == 1:
+        return {0: orig_words[0]}
+
+    bases = [_base(c) for c in components]
+    assignment: dict[int, str] = {}
+    used: set[int] = set()
+
+    # Pass 1: exact lexicon match
+    for i, base in enumerate(bases):
+        if not base or base in _SKIP_STRONGS:
+            continue
+        def_words = lex.get(base, set())
+        for j, word in enumerate(orig_words):
+            if j in used:
+                continue
+            if word.lower() in def_words:
+                assignment[i] = word
+                used.add(j)
+                break
+
+    # Pass 2: elimination
+    unmatched_comps = [
+        i for i, base in enumerate(bases)
+        if i not in assignment and base and base not in _SKIP_STRONGS
+    ]
+    unmatched_words = [orig_words[j] for j in range(len(orig_words)) if j not in used]
+
+    if len(unmatched_comps) == len(unmatched_words):
+        for i, word in zip(unmatched_comps, unmatched_words):
+            assignment[i] = word
+
+    return assignment
+
+
 # ── Core verse builder ────────────────────────────────────────────────────────
 
-def build_verse_words(bh_rows):
+def build_verse_words(bh_rows, lex: dict | None = None):
     """
     Convert one verse's bh_words rows into INSERT-ready tuples.
 
     bh_rows: list of (strongs, english, italic_words, greek_pos) ordered by position.
+    lex:     optional {strongs_base: def_word_set} from _load_lexicon(); when
+             provided, compound strongs get per-component English via lexicon
+             matching rather than all gloss text landing on the first component.
 
     Returns list of (position, english, english_head, strongs, strongs_base,
                      greek_pos, bracket_id, italic).
@@ -115,7 +197,13 @@ def build_verse_words(bh_rows):
         components = expand_strongs(bh_strongs)
         italic_set = set(bh_italic_words.split(",")) if bh_italic_words else set()
 
+        if lex and len(components) > 1:
+            word_map = _match_compound(components, bh_english, lex)
+        else:
+            word_map = {0: bh_english} if bh_english else {}
+
         for i, comp in enumerate(components):
+            # bracket_id and in_bracket only advance on the first component of each BH cell
             if i == 0:
                 if bh_greek_pos is not None:
                     if not in_bracket:
@@ -125,18 +213,16 @@ def build_verse_words(bh_rows):
                 else:
                     bracket_id = None
                     in_bracket = False
-                english      = bh_english
-                english_head = _head_word(bh_english) if bh_english else None
-                greek_pos    = bh_greek_pos
-                display_word = english_head or (english if english and " " not in english else None)
-                italic       = 1 if display_word and display_word.lower() in italic_set else 0
+                greek_pos = bh_greek_pos
             else:
-                # compound extension: no bracket, no gloss, no greek_pos
-                bracket_id   = None
-                english      = None
-                english_head = None
-                greek_pos    = None
-                italic       = 0
+                bracket_id = None
+                greek_pos  = None
+                # in_bracket intentionally unchanged for extension rows
+
+            english      = word_map.get(i)
+            english_head = _head_word(english) if english else None
+            display_word = english_head or (english if english and " " not in english else None)
+            italic       = 1 if display_word and display_word.lower() in italic_set else 0
 
             if comp is None:
                 strongs      = "*"
@@ -181,6 +267,9 @@ def run(bible_db: str, scrape_db: str) -> None:
 
     main = sqlite3.connect(bible_db)
 
+    lex = _load_lexicon(main)
+    print(f"Lexicon entries loaded: {len(lex):,}")
+
     verse_map = {}
     for row in main.execute("SELECT id, book, chapter, verse FROM verses"):
         verse_map[(row[1], row[2], row[3])] = row[0]
@@ -218,7 +307,7 @@ def run(bible_db: str, scrape_db: str) -> None:
             skipped += 1
             continue
 
-        word_rows = build_verse_words(bh_rows)
+        word_rows = build_verse_words(bh_rows, lex)
 
         main.executemany(
             "INSERT INTO words"
