@@ -385,6 +385,8 @@ def run_test(bible_db: str, scrape_db: str, book: str = "genesis", chapter: int 
         print(f"{abbrev} {chapter}:{verse}")
         for (wpos, eng, head, strongs, sbase, gpos, bid, italic, iw, sw) in word_rows:
             flags = ""
+            if gpos is not None: flags += f"  gpos={gpos}"
+            if bid  is not None: flags += f"  bid={bid}"
             if iw: flags += f"  italic_words={iw!r}"
             if sw: flags += f"  smcap_words={sw!r}"
             print(
