@@ -10,7 +10,7 @@ syntactic order; ABP text files use correct English reading order.
 
 Run on PythonAnywhere:
     python scripts/build_words_from_abp.py [bible.db] [bh_scrape.db]
-    python scripts/build_words_from_abp.py --test [--book Gen] [--chapter 1]
+    python scripts/build_words_from_abp.py --test [--book Gen] [--chapter 1] [--verse 1]
 """
 
 import re
@@ -70,7 +70,7 @@ ABBREV_TO_SLUG = {
 _STRONGS_RE  = re.compile(r"(G\*|G\d+(?:\.\d+)*)")
 _VERSE_RE    = re.compile(r"^\((\w+)\s+(\d+):(\d+)\)\s+(.*)")
 _STRIP_PUNCT = re.compile(r"[^\w\s]")
-_LEAD_NUM    = re.compile(r"^\d+")
+_WORD_NUM    = re.compile(r"(?<!\w)\d+")  # digits at word boundaries (position numbers)
 
 
 # ── Parsing ───────────────────────────────────────────────────────────────────
@@ -82,13 +82,16 @@ def normalize(text: str) -> str:
 def clean_english(text: str) -> str:
     """Strip ABP bracket chars and position numbers from a gloss token.
 
+    'let [3appear'  → 'let appear'   (internal bracket + position number)
     '[6come together' → 'come together'
-    '1the'            → 'the'
-    '5heaven]'        → 'heaven'
-    'God said,'       → 'God said,'   (unchanged)
+    '1the'          → 'the'
+    '5heaven]'      → 'heaven'
+    'God said,'     → 'God said,'    (unchanged)
     """
-    t = text.strip().lstrip("[").rstrip("]").strip()
-    return _LEAD_NUM.sub("", t).strip()
+    t = text.strip()
+    t = t.replace("[", "").replace("]", "")   # remove all bracket chars
+    t = _WORD_NUM.sub("", t)                  # remove position numbers at word boundaries
+    return t.strip()
 
 
 def parse_abp_line(line: str):
@@ -96,12 +99,6 @@ def parse_abp_line(line: str):
     Parse one ABP text line.
     Returns (abbrev, chapter, verse, words) or None.
     words = [(english_text, strongs_raw_or_None), ...]
-
-    Examples:
-      'Paul,G*'          → ('Paul,', 'G*')
-      'a chosenG2822'    → ('a chosen', 'G2822')
-      ' G3588'           → ('', 'G3588')     ← standalone strongs, no gloss
-      'tail text'        → ('tail text', None) ← no strongs
     """
     m = _VERSE_RE.match(line.strip())
     if not m:
@@ -161,7 +158,6 @@ def load_bh_verse_index(scrape: sqlite3.Connection) -> dict:
                 index[cur_key] = cur_rows
             cur_key = key
             cur_rows = []
-        # First component of compound strongs: "4160-1096" → "4160", "1510.6" → "1510"
         base = strongs.split("-")[0].split(".")[0] if strongs else "*"
         cur_rows.append((base, normalize(english or ""), gpos, iw or "", sw or ""))
 
@@ -188,19 +184,101 @@ def bh_lookup(bh_rows: list, used: set, abp_base: str, abp_norm: str):
     return None, "", ""
 
 
+# ── Lexicon helpers ───────────────────────────────────────────────────────────
+
+def load_lexicon(conn: sqlite3.Connection) -> dict:
+    """Return {strongs_base: set_of_lowercase_def_words} from the lexicon table."""
+    lex: dict = {}
+    for strongs, kjv_def, strongs_def in conn.execute(
+        "SELECT strongs, kjv_def, strongs_def FROM lexicon"
+    ):
+        base = strongs.lstrip("GH").split(".")[0]
+        text = " ".join(filter(None, [kjv_def, strongs_def]))
+        lex[base] = set(re.sub(r"[^\w\s]", " ", text).lower().split())
+    return lex
+
+
+def _split_compounds(rows: list, lex: dict) -> None:
+    """
+    Redistribute words from compound ABP glosses to subsequent empty-english slots
+    using lexicon evidence. Modifies rows in-place.
+
+    Example: 'God made' on G4160 + empty G3588, G2316
+      → G4160 = 'made'  (in G4160 lex: make/do)
+      → G3588 = ''      (no match for either word)
+      → G2316 = 'God'   (in G2316 lex: God/deity)
+
+    Only redistributes a word when the target slot's lex def contains it AND the
+    current slot's lex def does not — avoids moving words that genuinely belong.
+    """
+    _NORM = re.compile(r"[^\w]")
+
+    for i in range(len(rows)):
+        pos, eng, head, strongs, sbase, gpos, bid, italic, iw, sw = rows[i]
+        if not eng or " " not in eng:
+            continue
+        if not sbase or sbase in ("*", ""):
+            continue
+
+        own_def = lex.get(sbase, set())
+        gloss_words = eng.split()
+
+        # Collect subsequent empty-english slots (stop at first non-empty)
+        ahead = []
+        for j in range(i + 1, len(rows)):
+            slot_eng = rows[j][1]
+            if slot_eng:          # non-empty english — stop looking
+                break
+            slot_base = rows[j][4]
+            if slot_base and slot_base not in ("*", ""):
+                ahead.append((j, slot_base, lex.get(slot_base, set())))
+
+        if not ahead:
+            continue
+
+        # Assign each gloss word: foreign words move to first matching ahead slot
+        slot_taken: set = set()
+        assignments: dict = {}   # word_index → ahead_slot_index j
+
+        for wi, word in enumerate(gloss_words):
+            norm = _NORM.sub("", word).lower()
+            if not norm:
+                continue
+            if norm in own_def:  # belongs here — don't move
+                continue
+            for j, slot_base, slot_def in ahead:
+                if j in slot_taken:
+                    continue
+                if slot_def and norm in slot_def:
+                    assignments[wi] = j
+                    slot_taken.add(j)
+                    break
+
+        if not assignments:
+            continue
+
+        # Apply: move foreign words to their target slots
+        for wi, j in assignments.items():
+            word = gloss_words[wi]
+            slot = rows[j]
+            rows[j] = (slot[0], word, _head_word(word) or word,
+                       slot[3], slot[4], slot[5], slot[6], slot[7], slot[8], slot[9])
+
+        remaining = [w for wi, w in enumerate(gloss_words) if wi not in assignments]
+        new_eng  = " ".join(remaining) if remaining else None
+        new_head = _head_word(new_eng) if new_eng else None
+        rows[i]  = (pos, new_eng, new_head, strongs, sbase, gpos, bid, italic, iw, sw)
+
+
 # ── Verse builder ─────────────────────────────────────────────────────────────
 
-def build_verse_words(abp_words: list, bh_rows: list) -> list:
+def build_verse_words(abp_words: list, bh_rows: list, lex: dict = None) -> list:
     """
     Combine ABP word list (order + glosses) with BH metadata (italic, greek_pos).
+    If lex is provided, compound glosses are split across subsequent empty slots.
 
     Returns list of (pos, english, english_head, strongs, strongs_base,
                      greek_pos, bracket_id, italic, italic_words, smcap_words).
-
-    bracket_id: contiguous runs of words that have greek_pos share an id (same
-    logic as build_words_from_bh.py — groups translator-addition brackets).
-    italic: 1 when the display word (english_head or single-word english) is in
-    italic_words — avoids marking "beginning" italic because "the" is italic.
     """
     used: set = set()
     rows: list = []
@@ -252,6 +330,9 @@ def build_verse_words(abp_words: list, bh_rows: list) -> list:
         ))
         pos += 1
 
+    if lex:
+        _split_compounds(rows, lex)
+
     return rows
 
 
@@ -284,7 +365,7 @@ def run(bible_db: str, scrape_db: str) -> None:
     shutil.copy2(bible_db, bak)
     print("Backup done.")
 
-    # Ensure italic_words / smcap_words columns exist (added in prior migration)
+    # Ensure italic_words / smcap_words columns exist
     main_cols = {r[1] for r in main.execute("PRAGMA table_info(words)")}
     for col in ("italic_words", "smcap_words"):
         if col not in main_cols:
@@ -296,6 +377,10 @@ def run(bible_db: str, scrape_db: str) -> None:
         "SELECT id, book, chapter, verse FROM verses"
     )}
     print(f"ABP verse map: {len(verse_map):,}")
+
+    print("Loading lexicon …")
+    lex = load_lexicon(main)
+    print(f"Lexicon entries: {len(lex):,}")
 
     print("Loading BH index …")
     bh_index = load_bh_verse_index(scrape)
@@ -315,7 +400,7 @@ def run(bible_db: str, scrape_db: str) -> None:
 
         slug     = ABBREV_TO_SLUG.get(abbrev)
         bh_rows  = bh_index.get((slug, chapter, verse), []) if slug else []
-        word_rows = build_verse_words(abp_words, bh_rows)
+        word_rows = build_verse_words(abp_words, bh_rows, lex)
 
         main.executemany(
             "INSERT INTO words"
@@ -339,21 +424,26 @@ def run(bible_db: str, scrape_db: str) -> None:
     print(f"  Verses skipped: {skipped:,}")
 
 
-def run_test(scrape_db: str, book_abbrev: str = "Gen", chapter: int = 1, verse: int = None) -> None:
+def run_test(scrape_db: str, book_abbrev: str = "Gen", chapter: int = 1,
+             verse: int = None, bible_db: str = None) -> None:
     """
-    Dry-run: parse one chapter from ABP zip + BH index and print results.
-    Does NOT write to bible.db. Useful for verifying word order, italic logic,
-    and BH match rates before running the full rebuild.
-
-    Default: Gen 1 — verifies "In the beginning God made" word order fix.
+    Dry-run: parse one chapter (or single verse) and print results.
+    Pass bible_db to enable lexicon-based compound splitting.
+    Does NOT write to bible.db.
     """
-    scrape = sqlite3.connect(scrape_db)
+    scrape   = sqlite3.connect(scrape_db)
     bh_index = load_bh_verse_index(scrape)
     scrape.close()
 
-    slug     = ABBREV_TO_SLUG.get(book_abbrev, book_abbrev.lower())
-    verses   = {}
+    lex  = None
+    if bible_db and Path(bible_db).exists():
+        conn = sqlite3.connect(bible_db)
+        lex  = load_lexicon(conn)
+        conn.close()
+        print(f"Lexicon: {len(lex):,} entries\n")
 
+    slug   = ABBREV_TO_SLUG.get(book_abbrev, book_abbrev.lower())
+    verses = {}
     for abbrev, ch, vs, words in iter_verses(ABP_OT_ZIP, ABP_NT_ZIP):
         if abbrev == book_abbrev and ch == chapter:
             verses[vs] = words
@@ -368,10 +458,9 @@ def run_test(scrape_db: str, book_abbrev: str = "Gen", chapter: int = 1, verse: 
             continue
         abp_words = verses[vs]
         bh_rows   = bh_index.get((slug, chapter, vs), [])
-        word_rows = build_verse_words(abp_words, bh_rows)
-        bh_match  = sum(1 for r in word_rows if r[5] is not None or (r[4] and r[4] != "*"))
+        word_rows = build_verse_words(abp_words, bh_rows, lex)
 
-        print(f"{book_abbrev} {chapter}:{vs}  (BH rows: {len(bh_rows)}, matched: {bh_match})")
+        print(f"{book_abbrev} {chapter}:{vs}  (BH rows: {len(bh_rows)})")
         for (p, eng, head, sn, sb, gpos, bid, italic, iw, sw) in word_rows:
             flags = ""
             if gpos   is not None: flags += f"  gpos={gpos}"
@@ -391,10 +480,10 @@ def main():
         description="Rebuild words table from ABP text files + BH scrape metadata"
     )
     parser.add_argument("bible_db",  nargs="?", default="bible.db",
-                        help="Path to bible.db (not needed for --test)")
+                        help="Path to bible.db")
     parser.add_argument("scrape_db", nargs="?", default="bh_scrape.db")
     parser.add_argument("--test",    action="store_true",
-                        help="Dry-run one chapter; does not write to bible.db")
+                        help="Dry-run one chapter/verse; does not write to bible.db")
     parser.add_argument("--book",    default="Gen",
                         help="ABP book abbreviation for --test (default: Gen)")
     parser.add_argument("--chapter", type=int, default=1,
@@ -407,7 +496,8 @@ def main():
         if not Path(args.scrape_db).exists():
             print(f"ERROR: {args.scrape_db} not found.")
             sys.exit(1)
-        run_test(args.scrape_db, args.book, args.chapter, args.verse)
+        bible_db = args.bible_db if Path(args.bible_db).exists() else None
+        run_test(args.scrape_db, args.book, args.chapter, args.verse, bible_db)
     else:
         for path in (args.bible_db, args.scrape_db):
             if not Path(path).exists():
