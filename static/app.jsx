@@ -1505,6 +1505,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
       }
 
       const rawLabel = w.english || chipLabel(w);
+      if (!rawLabel) return null;
       const label = (isPN && rawLabel) ? rawLabel[0].toUpperCase() + rawLabel.slice(1) : rawLabel;
       const isSmcap = w.smcap_words ? new Set(w.smcap_words.split(',')).has(label.replace(/[^\w]/g, '').toLowerCase()) : false;
       return (
@@ -1565,6 +1566,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
       }
 
       const rawLabel = w.english || chipLabel(w);
+      if (!rawLabel) return null;
       const label = (isPN && rawLabel) ? rawLabel[0].toUpperCase() + rawLabel.slice(1) : rawLabel;
       const isSmcap = w.smcap_words ? new Set(w.smcap_words.split(',')).has(label.replace(/[^\w]/g, '').toLowerCase()) : false;
       return (
