@@ -126,8 +126,14 @@ input { font-family: inherit; }
 ============================================================ */
 .main { flex: 1; min-width: 0; }
 .main-inner {
-  padding: 36px 28px 80px calc(max(28px, (100vw - 460px - 960px) / 2));
-  max-width: calc(100vw - 460px);
+  padding: 36px 28px 80px 28px;
+  max-width: 100%;
+}
+@media (min-width: 1100px) {
+  .has-detail .main-inner {
+    padding: 36px 28px 80px calc(max(28px, (100vw - 460px - 960px) / 2));
+    max-width: calc(100vw - 460px);
+  }
 }
 
 /* ============================================================
@@ -967,7 +973,7 @@ input { font-family: inherit; }
   display: flex;
   flex-wrap: wrap;
   align-items: flex-end;
-  gap: 4px 2px;
+  gap: 5px 3px;
   flex: 1;
 }
 .study-word-wrap {
@@ -975,13 +981,14 @@ input { font-family: inherit; }
   flex-direction: column;
   align-items: center;
   gap: 2px;
-  padding: 3px 2px 4px;
+  padding: 3px 4px 4px;
+  border: 1px solid var(--rule);
   border-radius: 5px;
-  transition: background 0.12s;
+  transition: background 0.12s, border-color 0.12s;
 }
 .study-word-wrap.match { cursor: pointer; }
-.study-word-wrap.match:hover { background: var(--accent-soft); }
-.study-word-wrap.cited { background: var(--gold-soft); border-radius: 5px; }
+.study-word-wrap.match:hover { background: var(--accent-soft); border-color: color-mix(in oklab, var(--accent) 25%, var(--rule)); }
+.study-word-wrap.cited { background: var(--gold-soft); border-color: color-mix(in oklab, var(--gold) 45%, transparent); border-radius: 5px; }
 .study-word-wrap.cited:hover { background: oklch(0.88 0.06 75); }
 .study-bracket-group {
   display: inline-flex;
