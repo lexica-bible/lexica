@@ -106,6 +106,20 @@ Could be a fourth nav tab or a browse mode within Search.
 
 **Implementation order:** use MetaV topic-to-verse mappings as-is for POC — validate the UX and feature usage first. Once proven, swap in our own Strong's-driven verse selection and Haiku synthesis. No point building the full pipeline before the feature is validated.
 
+## Map Tab
+
+Biblical geography as a dedicated tab. Three modes worth exploring:
+
+- **Passage-driven** — follows library navigation; shows relevant places for the current chapter
+- **Search-driven** — search a place name, map zooms and pins every verse that mentions it
+- **Exploration mode** — full map of the biblical world; click a region/city to get the MetaV sidebar with verse references
+
+**Data:** MetaV coordinates already exist and Leaflet is already imported for the MetaV place sidebar — the jump to a full tab is smaller than it looks.
+
+**Interesting angle:** tie it to the text, not just static geography. E.g. plot all places mentioned in Paul's letters across his journeys. Nothing else does this well.
+
+**Placement:** fourth nav tab, or a view toggle inside Library alongside Chip/Prose.
+
 ## Library Expansion (texts + morphology)
 
 ### Morphology Data Sources
