@@ -69,8 +69,6 @@ input { font-family: inherit; }
   z-index: 30;
 }
 .hdr-inner {
-  max-width: 1400px;
-  margin: 0 auto;
   padding: 14px 28px;
   display: flex;
   align-items: center;
