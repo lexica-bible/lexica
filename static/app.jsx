@@ -1992,8 +1992,8 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
             <span className="mbar-loc-ch">{selChapter}</span>
             <svg className="mbar-loc-cv" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
           </button>
-          <button className="mbar-btn" onClick={() => setModesOpen(true)} aria-label="Reading options">
-            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round"><path d="M5 8h9M19 8h0M5 16h0M10 16h9"/><circle cx="16" cy="8" r="2.4"/><circle cx="7.5" cy="16" r="2.4"/></svg>
+          <button className="mbar-trans" onClick={() => setModesOpen(true)} aria-label="Reading options">
+            {translation === "parallel" ? "Parallel" : translation.toUpperCase()}
           </button>
         </div>
       )}
