@@ -81,7 +81,7 @@ A−/A+ in desktop lib-bar and mobile modes sheet. `--lib-font-size` CSS custom 
 ## Planned Features
 
 ### ✓ Prose Reading Mode — DONE
-Chip/Prose toggle live. Prose renders clickable inline word spans, no chip borders. Further work (continuous flow, poetry detection) tracked in Text Structure Session above.
+Chip/Prose toggle live. Prose renders clickable inline word spans, no chip borders. Continuous flow and poetry detection complete (Text Structure Session).
 
 ### Morphology Display
 Show grammatical parsing (case, tense, number, etc.) in the word click sidebar in plain English: "Verb · Aorist · Active · Indicative · 3rd Person · Singular". Morphological data source: MorphGNT (NT) + CATSS/CCAT (LXX OT) — needs import into a `morph` column on the `words` table.
