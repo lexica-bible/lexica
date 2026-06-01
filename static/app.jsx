@@ -2024,9 +2024,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
       )}
 
       <div className="lib-reading">
-        <h2 className="lib-heading">
-          {selBook ? selBook.name : "—"} <span className="lib-chap-num">{selChapter}</span>
-        </h2>
+
         {translation === "parallel" ? (
           <div className="lib-parallel">
             <div className="lib-parallel-header">
