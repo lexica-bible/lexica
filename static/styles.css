@@ -1329,7 +1329,7 @@ input { font-family: inherit; }
 }
 .pericope-heading:first-child { margin-top: 0.5rem; }
 @media (min-width: 1100px) {
-  .lib-text-words:not(.lib-prose-flow) .pericope-heading { margin-left: 45px; }
+  .lib-text-words:not(.lib-prose-flow) .pericope-heading { margin-left: 37px; }
 }
 
 /* Prose continuous flow (non-poetry) */
