@@ -779,6 +779,7 @@ input { font-family: inherit; }
 }
 .lsj-def b { color: var(--ink); font-weight: 600; }
 .lsj-def i { font-style: italic; }
+.lsj-def p { margin: 0; }
 
 /* ============================================================
    DETAIL PANEL — library upgrade classes (coexist with existing)
