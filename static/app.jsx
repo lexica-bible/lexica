@@ -2481,6 +2481,19 @@ function App() {
       (BOOK_ORDER[a.book] ?? 99) - (BOOK_ORDER[b.book] ?? 99) || a.chapter - b.chapter || a.verse - b.verse);
   }, [corpusFilteredResults, countMap, mode, primaryStrongs, glossFilter]);
 
+  // One representative entry per unique strongs_base — used as the initial browse view
+  // for word text searches. Returns null when there's only one strongs (direct G/H search)
+  // so occurrence cards show instead.
+  const summaryEntries = useMemo(() => {
+    if (mode !== "search" || glossFilter || primaryStrongs) return null;
+    const seen = new Map();
+    for (const r of corpusFilteredResults) {
+      if (r.strongs_base && r.strongs_base !== "*" && !r.is_function && !seen.has(r.strongs_base))
+        seen.set(r.strongs_base, r);
+    }
+    return seen.size > 1 ? [...seen.values()] : null;
+  }, [corpusFilteredResults, mode, glossFilter, primaryStrongs]);
+
   // Strongs number being searched directly (null in AI/text modes)
   const primaryStrongs = useMemo(() => {
     if (mode === "ai") {
@@ -2557,7 +2570,7 @@ function App() {
     setError("");
     setAiMeta(null);
     setMode("search");
-    setViewMode("browse");
+    setViewMode(/^[GgHh]\d/i.test(q) || /^\d+$/.test(q) ? "study" : "browse");
     setActiveEntry(null);
     setAbpGroupings({});
     setKjvGroupings({});
@@ -2808,12 +2821,14 @@ function App() {
                 <StudyMode allResults={corpusFilteredResults} primaryStrongs={primaryStrongs} citedStrongs={citedStrongsApp} showAll={showAllAi} onWordClick={(e) => setActiveEntry(e)} onReadInContext={handleReadInContext} studySort={studySort} textMode={studyTextMode} />
               ) : (
                 <div className="results">
-                  {displayed.map((entry) => (
+                  {(summaryEntries || displayed).map((entry) => (
                     <ResultCard
-                      key={entry.id}
+                      key={summaryEntries ? entry.strongs_base : entry.id}
                       entry={entry}
-                      active={activeEntry && activeEntry.id === entry.id}
-                      onClick={() => setActiveEntry(entry)}
+                      active={!summaryEntries && activeEntry && activeEntry.id === entry.id}
+                      onClick={summaryEntries
+                        ? () => handleStrongsSearch(entry.strongs_base)
+                        : () => setActiveEntry(entry)}
                       count={countMap[entry.strongs_raw] || 0}
                     />
                   ))}
