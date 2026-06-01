@@ -2079,7 +2079,7 @@ input { font-family: inherit; }
 }
 .mpick-btn:hover { color: var(--ink); }
 .mpick-btn:active { color: var(--accent); }
-.mpick-btn.on { color: var(--navy); font-weight: 800; font-size: 15px; }
+.mpick-btn.on { color: oklch(0.5 0.18 240); font-weight: 800; font-size: 15px; }
 
 .nav {
   border-right: 1px solid var(--rule);
