@@ -2182,12 +2182,12 @@ input { font-family: inherit; }
   border-radius: 5px;
   font-family: var(--f-mono);
   font-size: 11.5px;
-  color: var(--ink-2);
-  background: #fff;
-  border: 1px solid var(--rule);
+  color: var(--ink-3);
+  background: none;
+  border: none;
 }
-.ch-chip:hover { border-color: var(--ink-3); color: var(--ink); }
-.ch-chip.on { background: var(--accent); border-color: var(--accent); color: #fff; }
+.ch-chip:hover { color: var(--ink); }
+.ch-chip.on { color: var(--accent); font-weight: 600; }
 
 /* ============================================================
    READING TOOLBAR (new bar — desktop library, ≥1024px only)
