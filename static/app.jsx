@@ -1797,9 +1797,23 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
         );
         return (
           <span key={`bg${gi}`} className="lib-bracket-group">
-            {bracketChar("[", "bl")}
-            {g.words.map((w, wi) => bracketChip(w, `bg${gi}w${wi}`))}
-            {bracketChar("]", "br")}
+            {g.words.length === 1 ? (
+              <span className="lib-bracket-unit">
+                {bracketChar("[", "bl")}
+                {bracketChip(g.words[0], `bg${gi}w0`)}
+                {bracketChar("]", "br")}
+              </span>
+            ) : (<>
+              <span className="lib-bracket-unit">
+                {bracketChar("[", "bl")}
+                {bracketChip(g.words[0], `bg${gi}w0`)}
+              </span>
+              {g.words.slice(1, -1).map((w, wi) => bracketChip(w, `bg${gi}w${wi + 1}`))}
+              <span className="lib-bracket-unit">
+                {bracketChip(g.words[g.words.length - 1], `bg${gi}w${g.words.length - 1}`)}
+                {bracketChar("]", "br")}
+              </span>
+            </>)}
           </span>
         );
       });
