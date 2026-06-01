@@ -1270,7 +1270,9 @@ input { font-family: inherit; }
 .lib-order-btn.on { color: var(--ink); background: #fff; box-shadow: var(--shadow-sm); }
 
 .lib-reading { width: 100%; padding: 16px; font-family: var(--f-serif); }
-.has-detail .lib-reading { padding-right: calc(460px + 16px); }
+@media (min-width: 1024px) {
+  .has-detail .lib-reading { padding-right: calc(460px + 16px); }
+}
 
 .lib-heading {
   font-family: var(--f-serif);
