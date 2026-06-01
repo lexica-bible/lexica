@@ -2408,7 +2408,7 @@ function App() {
   const [langFilter, setLangFilter] = useState("all"); // "all" | "greek" | "hebrew"
   const [studySort, setStudySort] = useState("curated"); // "curated" | "canonical"
   const [studyTextMode, setStudyTextMode] = useState("abp"); // "abp" | "kjv"
-  const [isMobile, setIsMobile] = useState(false);
+  const [isMobile, setIsMobile] = useState(() => window.innerWidth < 1100);
   const [mainView, setMainView] = useState("search");
   const [libNav, setLibNav] = useState(null);
   const [libCrossRef, setLibCrossRef] = useState(null);
@@ -2422,7 +2422,6 @@ function App() {
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 1100);
-    check();
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
   }, []);
