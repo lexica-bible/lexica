@@ -1482,6 +1482,12 @@ input { font-family: inherit; }
   flex-wrap: nowrap;
   max-width: 100%;
 }
+.lib-bracket-unit {
+  display: inline-flex;
+  align-items: baseline;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
 .lib-bracket {
   display: inline-flex;
   flex-direction: column;
@@ -1599,6 +1605,7 @@ input { font-family: inherit; }
   .lib-heading { display: none; }
   .lib-reading { overflow-x: hidden; max-width: 100%; }
   .library { overflow-x: hidden; }
+  .lib-bracket-group { flex-wrap: wrap; }
 }
 .mbar-btn { width: 42px; height: 42px; border-radius: 10px; display: grid; place-items: center; color: var(--ink-2); flex: 0 0 auto; }
 .mbar-btn:active { background: rgba(15,27,45,0.06); }
