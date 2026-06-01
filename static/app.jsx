@@ -1989,9 +1989,9 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
           </button>
           <button className="lib-modes-btn" onClick={() => setModesOpen(true)} aria-label="Reading options">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-              <line x1="3" y1="6" x2="21" y2="6"/><circle cx="8" cy="6" r="2.5" fill="var(--bg)" stroke="currentColor"/>
-              <line x1="3" y1="12" x2="21" y2="12"/><circle cx="16" cy="12" r="2.5" fill="var(--bg)" stroke="currentColor"/>
-              <line x1="3" y1="18" x2="21" y2="18"/><circle cx="10" cy="18" r="2.5" fill="var(--bg)" stroke="currentColor"/>
+              <line x1="3" y1="6" x2="21" y2="6"/><circle cx="8" cy="6" r="2.5" fill="none" stroke="currentColor"/>
+              <line x1="3" y1="12" x2="21" y2="12"/><circle cx="16" cy="12" r="2.5" fill="none" stroke="currentColor"/>
+              <line x1="3" y1="18" x2="21" y2="18"/><circle cx="10" cy="18" r="2.5" fill="none" stroke="currentColor"/>
             </svg>
           </button>
         </div>
