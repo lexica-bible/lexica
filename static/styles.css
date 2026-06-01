@@ -1601,7 +1601,7 @@ input { font-family: inherit; }
   display: none;
 }
 @media (max-width: 1099px) {
-  .main-inner { padding: 0 16px calc(80px + env(safe-area-inset-bottom, 0px)); max-width: 100%; }
+  .main-inner { padding: calc(16px + env(safe-area-inset-top, 0px)) 16px calc(80px + env(safe-area-inset-bottom, 0px)); max-width: 100%; }
   .search { padding-top: 20px; }
   .mobile-tabs {
     display: flex;
