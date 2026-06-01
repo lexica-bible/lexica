@@ -12,7 +12,7 @@ from html.parser import HTMLParser
 
 import anthropic
 from dotenv import load_dotenv
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, Response, jsonify, render_template, request
 from flask_limiter import Limiter
 from flask_limiter.util import get_remote_address
 
@@ -1365,7 +1365,7 @@ def search():
 
     cache_key = f"v3|{q}|{phrase_mode}"
     if cache_key in _search_cache:
-        return jsonify(_search_cache[cache_key])
+        return Response(_search_cache[cache_key], mimetype="application/json")
 
     conn = db()
     groupings: dict = {}
@@ -1389,6 +1389,7 @@ def search():
                   AND w.english IS NOT NULL AND w.english != ''
                   AND w.strongs_base != '*'
                 ORDER BY v.id, w.position
+                LIMIT 1000
                 """,
                 (snum, f"G{snum}", f"H{snum}"),
             ).fetchall()
@@ -1413,6 +1414,7 @@ def search():
                       AND w.english IS NOT NULL AND w.english != ''
                       AND w.strongs_base != '*'
                     ORDER BY v.id, w.position
+                    LIMIT 1000
                     """,
                     (q, q_plain),
                 ).fetchall()
@@ -1435,6 +1437,7 @@ def search():
                       AND w.english IS NOT NULL AND w.english != ''
                       AND w.strongs_base != '*'
                     ORDER BY v.id, w.position
+                    LIMIT 1000
                     """,
                     (q, q, q_plain, q_plain),
                 ).fetchall()
@@ -1552,6 +1555,16 @@ def search():
     finally:
         conn.close()
 
+    # Deduplicate to one entry per (strongs_base, verse) — study mode renders
+    # verse-level anyway, so word-level duplicates are wasted payload.
+    seen_verse_keys = set()
+    deduped_rows = []
+    for r in rows:
+        k = (r["strongs_base"], r["book"], r["chapter"], r["verse"])
+        if k not in seen_verse_keys:
+            seen_verse_keys.add(k)
+            deduped_rows.append(r)
+
     abp_results = [
         {
             "ref":        f"{r['book']} {r['chapter']}:{r['verse']}",
@@ -1570,7 +1583,7 @@ def search():
             "is_function": r["strongs_base"] in _FUNCTION_STRONGS,
             "source":     "abp",
         }
-        for r in rows
+        for r in deduped_rows
     ]
 
     payload = {
@@ -1580,9 +1593,10 @@ def search():
         "kjv_groupings": kjv_groupings,
         "variants":      variants,
     }
+    json_str = json.dumps(payload)
     if len(_search_cache) < 200:
-        _search_cache[cache_key] = payload
-    return jsonify(payload)
+        _search_cache[cache_key] = json_str
+    return Response(json_str, mimetype="application/json")
 
 
 @app.route("/api/verse/<book>/<int:chapter>/<int:verse>")
