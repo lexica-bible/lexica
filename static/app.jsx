@@ -1765,8 +1765,13 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
               const text = w.english || "";
               if (!text) return null;
               const isPunct = /^[.,;:?!—)]/.test(text);
+              const allSubItalic = w.italic_words && text.includes(' ') && (() => {
+                const iset = new Set(w.italic_words.split(','));
+                return text.split(' ').every(p => iset.has(p.replace(/[^\w]/g,'').toLowerCase()));
+              })();
+              const isItalic = !isPunct && (!!w.italic || !!allSubItalic);
               return (
-                <span key={i} className={!isPunct && w.italic ? "lib-prose-italic" : undefined}>
+                <span key={i} className={isItalic ? "lib-prose-italic" : undefined}>
                   {isPunct ? text : text + " "}
                 </span>
               );

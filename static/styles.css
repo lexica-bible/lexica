@@ -1191,18 +1191,17 @@ input { font-family: inherit; }
 /* Parallel view */
 .lib-parallel { display: flex; flex-direction: column; gap: 0; }
 .lib-parallel-header {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: flex;
   gap: 24px;
-  padding: 2px 0 4px;
+  padding: 5px 0;
   border-bottom: 1px solid var(--rule);
   margin-bottom: 6px;
   align-items: center;
 }
 .lib-parallel-label {
-  display: block;
-  width: fit-content;
-  margin: 0 auto;
+  flex: 1;
+  display: flex;
+  justify-content: center;
   font-size: 10px;
   font-weight: 600;
   letter-spacing: 0.1em;
