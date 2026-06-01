@@ -20,7 +20,7 @@
   --navy-2: #182842;
   --navy-edge: #0a1424;
 
-  --accent: var(--accent);      /* vivid blue */
+  --accent: oklch(0.5 0.18 240);  /* vivid blue */
   --accent-soft: oklch(0.92 0.025 240);
   --gold: oklch(0.58 0.09 75);
   --gold-soft: oklch(0.93 0.04 75);
