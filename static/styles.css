@@ -1593,10 +1593,15 @@ input { font-family: inherit; }
 }
 @media (max-width: 1023px) {
   .hdr { display: none; }
-  .lib-toolbar { top: 0; height: 44px; padding: 0 16px; margin-bottom: 12px; flex-wrap: nowrap; justify-content: space-between; background: var(--bg); border-bottom: 1px solid var(--rule); }
-  .lib-book-btn { color: var(--ink); }
-  .lib-modes-btn { color: var(--ink-3); }
+  .lib-toolbar { top: 0; height: 48px; padding: 0 6px; margin-bottom: 12px; flex-wrap: nowrap; justify-content: space-between; background: color-mix(in oklab, var(--bg) 84%, #fff); border-bottom: 1px solid var(--rule); gap: 4px; }
 }
+.mbar-btn { width: 42px; height: 42px; border-radius: 10px; display: grid; place-items: center; color: var(--ink-2); flex: 0 0 auto; }
+.mbar-btn:active { background: rgba(15,27,45,0.06); }
+.mbar-loc { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 7px; height: 42px; border-radius: 10px; padding: 0 12px; }
+.mbar-loc:active { background: rgba(15,27,45,0.05); }
+.mbar-loc-name { font-size: 16px; font-weight: 600; color: var(--ink); letter-spacing: -0.01em; }
+.mbar-loc-ch { font-family: var(--f-mono); font-size: 15px; color: var(--accent); font-weight: 500; }
+.mbar-loc-cv { color: var(--ink-4); }
 
 /* ============================================================
    MODES SHEET (mobile reading options)

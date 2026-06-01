@@ -1984,15 +1984,16 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
         </div>
       ) : (
         <div className="lib-toolbar">
-          <button className="lib-book-btn" onClick={() => setMobileNavOpen(true)}>
-            {selBook ? selBook.name : "Select book"} ›
+          <button className="mbar-btn" onClick={() => setMobileNavOpen(true)} aria-label="Books">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
           </button>
-          <button className="lib-modes-btn" onClick={() => setModesOpen(true)} aria-label="Reading options">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round">
-              <line x1="3" y1="6" x2="21" y2="6"/><circle cx="8" cy="6" r="2.5" fill="none" stroke="currentColor"/>
-              <line x1="3" y1="12" x2="21" y2="12"/><circle cx="16" cy="12" r="2.5" fill="none" stroke="currentColor"/>
-              <line x1="3" y1="18" x2="21" y2="18"/><circle cx="10" cy="18" r="2.5" fill="none" stroke="currentColor"/>
-            </svg>
+          <button className="mbar-loc" onClick={() => setMobileNavOpen(true)}>
+            <span className="mbar-loc-name">{selBook ? selBook.name : "Select book"}</span>
+            <span className="mbar-loc-ch">{selChapter}</span>
+            <svg className="mbar-loc-cv" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+          </button>
+          <button className="mbar-btn" onClick={() => setModesOpen(true)} aria-label="Reading options">
+            <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.9" strokeLinecap="round"><path d="M5 8h9M19 8h0M5 16h0M10 16h9"/><circle cx="16" cy="8" r="2.4"/><circle cx="7.5" cy="16" r="2.4"/></svg>
           </button>
         </div>
       )}
