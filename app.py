@@ -1389,7 +1389,7 @@ def search():
                   AND w.english IS NOT NULL AND w.english != ''
                   AND w.strongs_base != '*'
                 ORDER BY v.id, w.position
-                LIMIT 1000
+                LIMIT 500
                 """,
                 (snum, f"G{snum}", f"H{snum}"),
             ).fetchall()
@@ -1414,7 +1414,7 @@ def search():
                       AND w.english IS NOT NULL AND w.english != ''
                       AND w.strongs_base != '*'
                     ORDER BY v.id, w.position
-                    LIMIT 1000
+                    LIMIT 500
                     """,
                     (q, q_plain),
                 ).fetchall()
@@ -1437,7 +1437,7 @@ def search():
                       AND w.english IS NOT NULL AND w.english != ''
                       AND w.strongs_base != '*'
                     ORDER BY v.id, w.position
-                    LIMIT 1000
+                    LIMIT 500
                     """,
                     (q, q, q_plain, q_plain),
                 ).fetchall()
