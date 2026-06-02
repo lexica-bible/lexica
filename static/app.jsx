@@ -66,8 +66,8 @@ const api = {
     fetch(`/api/cross-references/curated/${encodeURIComponent(book)}/${chapter}/${verse}`).then(r => r.json()),
   lexiconLookup: (q) =>
     fetch(`/api/lexicon/lookup?q=${encodeURIComponent(q)}`).then(r => r.json()),
-  lexiconProfile: (strongs) =>
-    fetch(`/api/lexicon/profile/${encodeURIComponent(strongs)}`).then(r => r.json()),
+  lexiconProfile: (strongs, corpus) =>
+    fetch(`/api/lexicon/profile/${encodeURIComponent(strongs)}${corpus ? `?corpus=${corpus}` : ""}`).then(r => r.json()),
 };
 
 // Extract proper noun name from a multi-word gloss, skipping function words
@@ -2422,22 +2422,38 @@ const _STRONGS_RE = /^[GgHh]?\d+(\.\d+)?$/;
 
 function LexiconView({ onNavigateToSearch }) {
   const [query, setQuery] = useState("");
-  const [matches, setMatches] = useState(null);   // disambiguation list
-  const [profile, setProfile] = useState(null);   // word profile
+  const [matches, setMatches] = useState(null);
+  const [profile, setProfile] = useState(null);
+  const [corpus, setCorpus] = useState("abp");
   const [selectedBook, setSelectedBook] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const loadProfile = async (strongs) => {
+  const loadProfile = async (strongs, corpusOverride) => {
     setLoading(true);
     setError(null);
     setMatches(null);
     setSelectedBook(null);
+    const isHeb = /^H/i.test(strongs) || (!(/^[GgHh]/.test(strongs)) && parseInt(strongs) > 5624);
+    const c = corpusOverride ?? (isHeb ? "kjv" : "abp");
+    setCorpus(c);
     try {
-      const data = await api.lexiconProfile(strongs);
+      const data = await api.lexiconProfile(strongs, c);
       if (data.error) setError("Word not found.");
       else setProfile(data);
     } catch { setError("Failed to load word profile."); }
+    finally { setLoading(false); }
+  };
+
+  const switchCorpus = async (c) => {
+    if (!profile || loading) return;
+    setCorpus(c);
+    setLoading(true);
+    setSelectedBook(null);
+    try {
+      const data = await api.lexiconProfile(profile.strongs, c);
+      if (!data.error) setProfile(data);
+    } catch {}
     finally { setLoading(false); }
   };
 
@@ -2502,6 +2518,10 @@ function LexiconView({ onNavigateToSearch }) {
             <span className="lexicon-translit">{profile.translit}</span>
             <span className="lexicon-strongs-tag">{profile.strongs}</span>
             <span className="lexicon-total">{profile.total} occurrences</span>
+            <div className="lexicon-corpus-toggle">
+              <button className={"lct-btn" + (corpus === "abp" ? " on" : "")} onClick={() => switchCorpus("abp")}>ABP</button>
+              <button className={"lct-btn" + (corpus === "kjv" ? " on" : "")} onClick={() => switchCorpus("kjv")}>KJV</button>
+            </div>
           </div>
           <p className="lexicon-definition">{profile.definition}</p>
 

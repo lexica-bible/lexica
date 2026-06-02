@@ -1980,17 +1980,32 @@ def lexicon_profile(strongs):
             lemma = row["lemma"] or ""
             translit = row["translit"] or ""
             definition = row["strongs_def"] or row["kjv_def"] or ""
-        # Occurrence distribution by book (ABP)
-        dist = conn.execute("""
-            SELECT v.book, COUNT(*) AS cnt
-            FROM words w JOIN verses v ON w.verse_id = v.id
-            WHERE w.strongs_base = ? OR w.strongs_base = ? OR w.strongs_base = ?
-            GROUP BY v.book ORDER BY cnt DESC
-        """, (snum, f"G{snum}", f"H{snum}")).fetchall()
+        # Corpus: default H→kjv, G→abp; override via ?corpus=
+        corpus = request.args.get("corpus", "kjv" if is_heb else "abp")
         book_names = {r["abbrev"]: r["name"] for r in conn.execute("SELECT abbrev, name FROM books").fetchall()}
-        total = sum(r["cnt"] for r in dist)
-        books = [{"book": r["book"], "name": book_names.get(r["book"], r["book"]), "count": r["cnt"]} for r in dist]
-        return jsonify({"strongs": strongs_id, "lemma": lemma, "translit": translit, "definition": definition, "total": total, "books": books})
+        if corpus == "kjv":
+            dist = conn.execute("""
+                SELECT kw.book_id, COUNT(*) AS cnt
+                FROM kjv_strongs ks
+                JOIN kjv_words kw ON kw.word_id = ks.word_id
+                WHERE ks.strongs_id = ? OR ks.strongs_id = ? OR ks.strongs_id = ?
+                GROUP BY kw.book_id ORDER BY cnt DESC
+            """, (f"G{snum}", f"H{snum}", snum)).fetchall()
+            abbrev_by_id = {v: k for k, v in _KJV_BOOK_ID.items()}
+            books = []
+            for r in dist:
+                abbrev = abbrev_by_id.get(r["book_id"], "")
+                books.append({"book": abbrev, "name": book_names.get(abbrev, abbrev), "count": r["cnt"]})
+        else:
+            dist = conn.execute("""
+                SELECT v.book, COUNT(*) AS cnt
+                FROM words w JOIN verses v ON w.verse_id = v.id
+                WHERE w.strongs_base = ? OR w.strongs_base = ? OR w.strongs_base = ?
+                GROUP BY v.book ORDER BY cnt DESC
+            """, (snum, f"G{snum}", f"H{snum}")).fetchall()
+            books = [{"book": r["book"], "name": book_names.get(r["book"], r["book"]), "count": r["cnt"]} for r in dist]
+        total = sum(b["count"] for b in books)
+        return jsonify({"strongs": strongs_id, "lemma": lemma, "translit": translit, "definition": definition, "total": total, "books": books, "corpus": corpus})
     finally:
         conn.close()
 
