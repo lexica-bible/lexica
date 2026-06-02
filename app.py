@@ -1973,10 +1973,13 @@ def lexicon_english():
         out = {}
         for r in rows:
             sn = r["strongs_base"]
+            g = r["english_head"]
+            if " " in g:
+                continue
             if sn not in out:
                 out[sn] = []
             if len(out[sn]) < 5:
-                out[sn].append(r["english_head"])
+                out[sn].append(g)
         return out
 
     def _top_glosses_heb(snums):
