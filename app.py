@@ -1954,49 +1954,75 @@ def lexicon_lookup():
 @app.route("/api/lexicon/english")
 def lexicon_english():
     q = request.args.get("q", "").strip()
-    corpus = request.args.get("corpus", "abp")
     if not q:
         return jsonify([])
     conn = db_ro()
 
-    def _parse_glosses(raw):
-        seen, out = set(), []
-        for g in (raw or "").split(","):
-            g = g.strip().strip(".,;:!?")
-            if not g or g.lower() in seen or len(g.split()) > 3:
-                continue
-            seen.add(g.lower())
-            out.append(g)
-            if len(out) == 5:
-                break
+    def _top_glosses_abp(snums):
+        if not snums:
+            return {}
+        placeholders = ",".join("?" * len(snums))
+        rows = conn.execute(f"""
+            SELECT strongs_base, english_head, COUNT(*) AS cnt
+            FROM words
+            WHERE strongs_base IN ({placeholders})
+              AND english_head IS NOT NULL AND english_head != ''
+            GROUP BY strongs_base, english_head
+            ORDER BY strongs_base, cnt DESC
+        """, snums).fetchall()
+        out = {}
+        for r in rows:
+            sn = r["strongs_base"]
+            if sn not in out:
+                out[sn] = []
+            if len(out[sn]) < 5:
+                out[sn].append(r["english_head"])
+        return out
+
+    def _top_glosses_heb(snums):
+        if not snums:
+            return {}
+        placeholders = ",".join("?" * len(snums))
+        rows = conn.execute(f"""
+            SELECT ks.strongs_id, kw.word, COUNT(*) AS cnt
+            FROM kjv_words kw
+            JOIN kjv_strongs ks ON ks.word_id = kw.word_id
+            WHERE ks.strongs_id IN ({placeholders})
+              AND (kw.italic IS NULL OR kw.italic = 0)
+            GROUP BY ks.strongs_id, kw.word
+            ORDER BY ks.strongs_id, cnt DESC
+        """, snums).fetchall()
+        out = {}
+        for r in rows:
+            sn = r["strongs_id"]
+            if sn not in out:
+                out[sn] = []
+            if len(out[sn]) < 5:
+                out[sn].append(r["word"])
         return out
 
     try:
-        # ABP Greek: search by english_head in words table
+        # ABP Greek: match by english_head
         abp_rows = conn.execute("""
             SELECT w.strongs_base AS sbase,
-                   l.lemma AS g_lemma, l.translit AS g_translit,
-                   COUNT(*) AS cnt,
-                   GROUP_CONCAT(DISTINCT w.english) AS glosses
+                   l.lemma AS lemma, l.translit AS translit,
+                   COUNT(*) AS cnt
             FROM words w
-            LEFT JOIN lexicon l ON w.strongs_base LIKE 'G%'
-                  AND l.strongs = SUBSTR(w.strongs_base, 2)
+            LEFT JOIN lexicon l ON l.strongs = SUBSTR(w.strongs_base, 2)
             WHERE w.english_head = ? COLLATE NOCASE
               AND w.strongs_base IS NOT NULL
               AND w.strongs_base != '*'
               AND w.strongs_base LIKE 'G%'
-              AND w.english IS NOT NULL
             GROUP BY w.strongs_base
             ORDER BY cnt DESC
             LIMIT 20
         """, (q,)).fetchall()
 
-        # KJV Hebrew: search by word in kjv_words, H-strongs only
+        # KJV Hebrew: match by word
         heb_rows = conn.execute("""
             SELECT ks.strongs_id AS sbase,
-                   b.lemma AS h_lemma, b.xlit AS h_translit,
-                   COUNT(*) AS cnt,
-                   GROUP_CONCAT(DISTINCT kw.word) AS glosses
+                   b.lemma AS lemma, b.xlit AS translit,
+                   COUNT(*) AS cnt
             FROM kjv_words kw
             JOIN kjv_strongs ks ON ks.word_id = kw.word_id
             JOIN bdb b ON b.strongs_id = ks.strongs_id
@@ -2008,51 +2034,28 @@ def lexicon_english():
             LIMIT 10
         """, (q,)).fetchall()
 
+        abp_snums = [r["sbase"] for r in abp_rows]
+        heb_snums = [r["sbase"] for r in heb_rows]
+        abp_glosses = _top_glosses_abp(abp_snums)
+        heb_glosses = _top_glosses_heb(heb_snums)
+
         results = []
         for r in abp_rows:
             results.append({
                 "strongs": r["sbase"],
-                "lemma": r["g_lemma"] or "",
-                "translit": r["g_translit"] or "",
+                "lemma": r["lemma"] or "",
+                "translit": r["translit"] or "",
                 "count": r["cnt"],
-                "glosses": _parse_glosses(r["glosses"]),
+                "glosses": abp_glosses.get(r["sbase"], []),
             })
         for r in heb_rows:
             results.append({
                 "strongs": r["sbase"],
-                "lemma": r["h_lemma"] or "",
-                "translit": r["h_translit"] or "",
+                "lemma": r["lemma"] or "",
+                "translit": r["translit"] or "",
                 "count": r["cnt"],
-                "glosses": _parse_glosses(r["glosses"]),
+                "glosses": heb_glosses.get(r["sbase"], []),
             })
-
-        if corpus == "kjv":
-            # KJV mode: also include Greek from KJV corpus
-            kjv_grk = conn.execute("""
-                SELECT ks.strongs_id AS sbase,
-                       l.lemma AS g_lemma, l.translit AS g_translit,
-                       COUNT(*) AS cnt,
-                       GROUP_CONCAT(DISTINCT kw.word) AS glosses
-                FROM kjv_words kw
-                JOIN kjv_strongs ks ON ks.word_id = kw.word_id
-                JOIN lexicon l ON ks.strongs_id LIKE 'G%'
-                      AND l.strongs = SUBSTR(ks.strongs_id, 2)
-                WHERE LOWER(kw.word) = LOWER(?)
-                  AND (kw.italic IS NULL OR kw.italic = 0)
-                GROUP BY ks.strongs_id
-                ORDER BY cnt DESC
-                LIMIT 20
-            """, (q,)).fetchall()
-            # replace abp results with kjv greek results
-            results = [r for r in results if r["strongs"].startswith("H")]
-            for r in kjv_grk:
-                results.insert(0, {
-                    "strongs": r["sbase"],
-                    "lemma": r["g_lemma"] or "",
-                    "translit": r["g_translit"] or "",
-                    "count": r["cnt"],
-                    "glosses": _parse_glosses(r["glosses"]),
-                })
 
         results.sort(key=lambda x: -x["count"])
         return jsonify(results)
