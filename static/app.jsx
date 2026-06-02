@@ -2092,7 +2092,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
         </div>
       )}
 
-      <div className="lib-reading" style={{...(translation === "parallel" ? {paddingTop: 0} : {}), "--lib-font-size": libFontSize + "px"}}>
+      <div className={"lib-reading" + (showInterlinear ? " lib-interlinear-on" : "")} style={{...(translation === "parallel" ? {paddingTop: 0} : {}), "--lib-font-size": libFontSize + "px"}}>
 
         {translation === "parallel" ? (
           <div className="lib-parallel">

@@ -1656,6 +1656,7 @@ input { font-family: inherit; }
   color: var(--ink);
   line-height: 1.3;
 }
+.lib-interlinear-on .lib-iw-english { color: var(--ink-2); }
 .lib-iw-strongs {
   font-family: var(--f-mono);
   font-size: 8.5px;
