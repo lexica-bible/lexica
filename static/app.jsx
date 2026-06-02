@@ -2620,26 +2620,15 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, onWordClick, pen
                   ? <div key={i} className="lexicon-verse-loading" style={{color:"red"}}>{v.error}</div>
                   : <div key={i} className="lexicon-verse-row">
                       <span className="lexicon-verse-ref">{selectedBook} {v.chapter}:{v.verse}</span>
-                      <span className="lexicon-verse-text">
-                        {v.text ? (() => {
-                          const hlWords = selectedGloss
-                            ? [selectedGloss]
-                            : (bookGlosses || profile.glosses || []).map(g => g.gloss);
-                          if (!hlWords.length) return v.text;
-                          const esc = hlWords.map(w => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
-                          const pat = new RegExp(`(\\b(?:${esc.join("|")})\\b)`, "gi");
-                          const set = new Set(hlWords.map(w => w.toLowerCase()));
-                          return v.text.split(pat).map((part, pi) =>
-                            set.has(part.toLowerCase())
-                              ? <span key={pi} className="lex-hl">{part}</span>
-                              : <span key={pi}>{part}</span>
-                          );
-                        })()
-                          : v.words
-                            ? v.words.map((w, wi) => (
-                                <span key={wi} className={w.h ? "lex-hl" : undefined}>{w.w}{" "}</span>
-                              ))
-                            : null}
+                      <span className="lexicon-verse-text lib-verse-chips">
+                        {v.words
+                          ? v.words.map((w, wi) => (
+                              <span key={wi} className={"lib-word" + (w.h ? " cited" : "") + (w.i ? " lib-abp-italic" : "")}>
+                                <span className="lib-iw-english">{w.w}</span>
+                                <span className="lib-iw-strongs" style={{visibility:"hidden"}}>G0</span>
+                              </span>
+                            ))
+                          : v.text}
                       </span>
                       {onNavigateToLibrary && (
                         <button className="lexicon-verse-lib-link" onClick={() => onNavigateToLibrary(selectedBook, v.chapter, v.verse)}>

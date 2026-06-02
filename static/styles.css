@@ -268,13 +268,12 @@ input { font-family: inherit; }
 .lexicon-verse-list-title { font-size: 13px; font-weight: 600; color: var(--ink); }
 .lexicon-verse-close { background: none; border: none; cursor: pointer; color: var(--ink-3); font-size: 14px; padding: 0 2px; }
 .lexicon-verse-loading { padding: 16px; font-size: 13px; color: var(--ink-3); }
-.lexicon-verse-row { display: grid; grid-template-columns: 100px 1fr auto; gap: 12px; align-items: baseline; padding: 8px 14px; border-bottom: 1px solid var(--rule-2, var(--rule)); font-size: 14px; line-height: 1.5; }
+.lexicon-verse-row { display: grid; grid-template-columns: 100px 1fr auto; gap: 12px; align-items: flex-start; padding: 8px 14px; border-bottom: 1px solid var(--rule-2, var(--rule)); font-size: 14px; }
 .lexicon-verse-row:last-child { border-bottom: none; }
-.lexicon-verse-ref { color: var(--gold); font-weight: 600; font-size: 12px; padding-top: 1px; white-space: nowrap; }
-.lexicon-verse-text { color: var(--ink-2); }
-.lexicon-verse-lib-link { background: none; border: none; color: var(--accent, #6b82c8); font-size: 11px; font-weight: 500; cursor: pointer; padding: 0; white-space: nowrap; opacity: 0.7; }
+.lexicon-verse-ref { color: var(--gold); font-weight: 600; font-size: 12px; padding-top: 6px; white-space: nowrap; }
+.lexicon-verse-text { min-width: 0; }
+.lexicon-verse-lib-link { background: none; border: none; color: var(--accent, #6b82c8); font-size: 11px; font-weight: 500; cursor: pointer; padding: 0; white-space: nowrap; opacity: 0.7; padding-top: 6px; }
 .lexicon-verse-lib-link:hover { opacity: 1; text-decoration: underline; }
-.lex-hl { font-weight: 700; color: var(--gold, #b8860b); }
 
 .search-cell { display: flex; flex-direction: column; gap: 10px; }
 .search-label { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; }
