@@ -196,6 +196,43 @@ input { font-family: inherit; }
 .lexicon-match-translit { font-size: 13px; color: var(--ink-2); font-style: italic; }
 .lexicon-match-gloss { font-size: 13px; color: var(--ink-2); }
 
+/* English corpus groupings */
+.lexicon-groupings { margin-top: 20px; display: flex; flex-direction: column; gap: 2px; }
+.lexicon-groupings-label { font-size: 12px; color: var(--ink-3); letter-spacing: 0.02em; margin-bottom: 8px; }
+.lexicon-group-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  padding: 10px 12px;
+  border: 1px solid var(--rule);
+  border-radius: var(--r-sm);
+  background: var(--paper);
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+}
+.lexicon-group-row:hover { background: var(--gold-soft); border-color: var(--gold); }
+.lexicon-group-lemma { font-family: var(--f-greek); font-size: 20px; color: var(--ink); flex-shrink: 0; }
+.lexicon-group-translit { font-size: 13px; color: var(--ink-2); font-style: italic; flex-shrink: 0; }
+.lexicon-group-strongs { font-size: 11px; color: var(--ink-4); font-family: var(--f-mono); flex-shrink: 0; }
+.lexicon-group-glosses { flex: 1; font-size: 13px; color: var(--ink-3); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.lexicon-group-count { font-size: 12px; color: var(--ink-3); font-family: var(--f-mono); margin-left: auto; flex-shrink: 0; }
+
+/* Back link from profile to groupings */
+.lexicon-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 13px;
+  color: var(--ink-3);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0 0 12px;
+  transition: color 0.12s;
+}
+.lexicon-back:hover { color: var(--ink); }
+
 /* Word profile */
 .lexicon-profile { margin-top: 28px; }
 .lexicon-profile-header {
