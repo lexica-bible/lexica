@@ -2108,27 +2108,42 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
               <div className="lib-loading">Loading…</div>
             ) : (() => {
               const kjvMap = Object.fromEntries(kjvVerses.map(v => [v.verse, v]));
-              return verses.map(abpV => {
+              // Build display items, lifting section headings above any preceding ABP-only verse
+              const items = [];
+              for (let i = 0; i < verses.length; i++) {
+                const abpV = verses[i];
                 const kjvV = kjvMap[abpV.verse];
                 const heading = abpV.heading || (kjvV && kjvV.heading);
+                if (heading) {
+                  const prev = items[items.length - 1];
+                  if (prev && prev.type === 'verse' && !prev.kjvV) {
+                    items.splice(items.length - 1, 0, { type: 'heading', heading, key: `h-${abpV.verse}` });
+                  } else {
+                    items.push({ type: 'heading', heading, key: `h-${abpV.verse}` });
+                  }
+                }
+                items.push({ type: 'verse', abpV, kjvV });
+              }
+              return items.map(item => {
+                if (item.type === 'heading') {
+                  return <div key={item.key} className="lib-parallel-section-heading"><div className="pericope-heading">{item.heading}</div></div>;
+                }
+                const { abpV, kjvV } = item;
                 return (
-                  <React.Fragment key={abpV.verse}>
-                    {heading && <div className="lib-parallel-section-heading"><div className="pericope-heading">{heading}</div></div>}
-                    <div className="lib-parallel-verse">
-                      <div className="lib-parallel-vnum">{vnumEl(abpV.verse)}</div>
-                      <div className="lib-parallel-col">
-                        {renderVerse(abpV, true)}
-                      </div>
-                      <div className="lib-parallel-col">
-                        {kjvV
-                          ? kjvWordMode
-                            ? renderKjvVerse(kjvV, true, true)
-                            : renderKjvProse(kjvV, true, true)
-                          : null
-                        }
-                      </div>
+                  <div key={abpV.verse} className="lib-parallel-verse">
+                    <div className="lib-parallel-vnum">{vnumEl(abpV.verse)}</div>
+                    <div className="lib-parallel-col">
+                      {renderVerse(abpV, true)}
                     </div>
-                  </React.Fragment>
+                    <div className="lib-parallel-col">
+                      {kjvV
+                        ? kjvWordMode
+                          ? renderKjvVerse(kjvV, true, true)
+                          : renderKjvProse(kjvV, true, true)
+                        : null
+                      }
+                    </div>
+                  </div>
                 );
               });
             })()}
