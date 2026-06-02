@@ -69,11 +69,11 @@ scripts/          # one-time import/migration scripts (not needed for runtime)
 - No systematic theology imported — text speaks first (Berean approach)
 - Function words (171-word set) are filtered from search results
 
-## strongs_base inconsistency
-- Some rows store bare numbers ('4151'), others store prefixed ('G4151')
-- Always match both in SQL: WHERE (w.strongs_base = '4151' OR w.strongs_base = 'G4151')
-- The AI system prompt instructs Haiku to do the same
-- Search endpoint already handles this with triple-match params (snum, G{snum}, H{snum})
+## strongs_base format
+- `words.strongs_base` is fully G/H prefixed ('G4151', 'H7307') — normalized 2026-06-01
+- `kjv_strongs.strongs_id` is also fully prefixed (was always so)
+- Always use single-match in SQL: WHERE w.strongs_base = 'G4151'
+- AI system prompt may still reference old triple-match — update if issues arise
 
 ## Book Abbreviations
 - ABP verses table uses: Mar (Mark), Joh (John), Php (Philippians), Jas (James), Heb (Hebrews)
@@ -105,6 +105,18 @@ scripts/          # one-time import/migration scripts (not needed for runtime)
 - Step 2: Haiku generates 3-sentence synthesis anchored in ABP source vocabulary
 - Cached in ai_search_cache with key prefix `xref_cur:` and ver_key="xref"
 - TSK cache is preserved when _CACHE_CODE_VER bumps (NOT LIKE 'xref%' exclusion)
+
+## Lexicon Tab
+- Dedicated word study tab — separate from AI Search
+- Flow: search box → word profile → gloss chips → book distribution → verse list
+- Smart search: detects Strong's (G4151, H7307), Greek, Hebrew, English
+- Endpoints: `/api/lexicon/lookup`, `/api/lexicon/profile/<strongs>`, `/api/lexicon/verses/<strongs>/<book>`
+- `lexicon_verses` response: `{verses: [{chapter, verse, words: [{w, h, i?}]}], glosses: [{gloss, count}]}`
+  - `h=true` marks the target word in each verse (rendered highlighted in gold)
+  - `glosses` = per-book rendering breakdown (chips update when a book is selected)
+  - Optional `?gloss=spirit` param filters verse list to a specific rendering
+- Corpus toggle: ABP (LXX OT+NT, G-numbers) | KJV (NT G-numbers, OT H-numbers)
+- LexiconView is always-mounted (display:none) so state survives tab switches
 
 ## Search Tab
 - Left input: lexicon/Strong's search; Right input: AI natural language query
