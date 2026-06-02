@@ -1261,7 +1261,7 @@ input { font-family: inherit; }
   gap: 24px;
   padding: 3px 0;
   line-height: 1.7;
-  font-size: 18px;
+  font-size: var(--lib-font-size, 18px);
 }
 .lib-parallel-col { color: var(--ink); }
 .lib-parallel-vnum { display: none; }
