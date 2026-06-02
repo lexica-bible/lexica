@@ -1950,6 +1950,28 @@ def lexicon_lookup():
     finally:
         conn.close()
 
+_GLOSS_FUNC = {
+    'a','an','the','my','his','her','your','their','our','its',
+    'of','in','by','as','to','with','for','from','at','on','into',
+    'is','are','was','were','be','been',
+    'there','this','that','these','those',
+    'and','or','not','no',
+    'i','he','she','we','they','it',
+    'up','out','off','over','under',
+}
+
+def _normalize_gloss(raw):
+    import re
+    s = re.sub(r'^[^\w]+|[^\w]+$', '', raw.strip()).lower()
+    words = s.split()
+    if not words:
+        return ''
+    while len(words) > 1 and words[0] in _GLOSS_FUNC:
+        words.pop(0)
+    while len(words) > 1 and words[-1] in _GLOSS_FUNC:
+        words.pop()
+    return ' '.join(words)
+
 
 @app.route("/api/lexicon/profile/<strongs>")
 def lexicon_profile(strongs):
@@ -2013,18 +2035,25 @@ def lexicon_profile(strongs):
         total = sum(b["count"] for b in books)
         if corpus == "kjv":
             gr = conn.execute("""
-                SELECT TRIM(kw.word, '.,;:!? ') AS gloss, COUNT(*) AS cnt
+                SELECT kw.word AS gloss, COUNT(*) AS cnt
                 FROM kjv_strongs ks JOIN kjv_words kw ON kw.word_id = ks.word_id
                 WHERE ks.strongs_id = ?
-                GROUP BY TRIM(kw.word, '.,;:!? ') ORDER BY cnt DESC
+                GROUP BY kw.word ORDER BY cnt DESC
             """, (f"H{snum}",) if is_heb else (f"G{snum}",)).fetchall()
         else:
             gr = conn.execute("""
-                SELECT TRIM(english, '.,;:!? ') AS gloss, COUNT(*) AS cnt FROM words
+                SELECT english AS gloss, COUNT(*) AS cnt FROM words
                 WHERE strongs_base = ? AND english IS NOT NULL AND english != '' AND english != '*'
-                GROUP BY TRIM(english, '.,;:!? ') ORDER BY cnt DESC
+                GROUP BY english ORDER BY cnt DESC
             """, (f"H{snum}",) if is_heb else (f"G{snum}",)).fetchall()
-        glosses = [{"gloss": r["gloss"], "count": r["cnt"]} for r in gr if r["gloss"] and r["gloss"] not in ("*", "")]
+        norm_counts = {}
+        for r in gr:
+            if not r["gloss"] or r["gloss"] in ("*", ""):
+                continue
+            key = _normalize_gloss(r["gloss"])
+            if key:
+                norm_counts[key] = norm_counts.get(key, 0) + r["cnt"]
+        glosses = [{"gloss": g, "count": c} for g, c in sorted(norm_counts.items(), key=lambda x: -x[1])]
         return jsonify({"strongs": strongs_id, "lemma": lemma, "translit": translit, "definition": definition, "total": total, "books": books, "corpus": corpus, "glosses": glosses})
     except Exception:
         return jsonify({"error": "Server error"}), 500
