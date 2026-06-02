@@ -2601,29 +2601,31 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, onWordClick, pen
       {groupings && (
         <div className="lexicon-groupings">
           <div className="lexicon-groupings-label">rendered as "{query.trim()}"</div>
-          <div className="lexicon-group-chips">
-            {groupings.map(g => (
-              <button key={g.strongs}
-                className={"lexicon-group-chip" + (profile?.strongs === g.strongs ? " active" : "")}
-                onClick={() => {
-                  loadProfile(g.strongs);
-                  onWordClick?.({
-                    id: `lex-${g.strongs}`,
-                    strongs: g.strongs,
-                    strongs_base: g.strongs,
-                    strongs_raw: g.strongs.replace(/^[GH]/i, ''),
-                    greek: g.lemma || '',
-                    translit: g.translit || '',
-                    gloss: (g.glosses[0] || {}).gloss || '',
-                    ref: '', book: '', chapter: '', verse: '',
-                    definition: '', derivation: '', is_function: false,
-                    isHebrew: g.strongs.startsWith('H'),
-                  });
-                }}>
-                {g.strongs}{g.translit ? <span className="lexicon-group-chip-translit"> {g.translit}</span> : null}
-              </button>
-            ))}
-          </div>
+          {groupings.map(g => {
+            const entry = {
+              id: `lex-${g.strongs}`, strongs: g.strongs, strongs_base: g.strongs,
+              strongs_raw: g.strongs.replace(/^[GH]/i, ''), greek: g.lemma || '',
+              translit: g.translit || '', gloss: (g.glosses[0] || {}).gloss || '',
+              ref: '', book: '', chapter: '', verse: '',
+              definition: '', derivation: '', is_function: false,
+              isHebrew: g.strongs.startsWith('H'),
+            };
+            return (
+              <div key={g.strongs} className="lexicon-group-row">
+                <button className={"lexicon-group-sn" + (profile?.strongs === g.strongs ? " active" : "")}
+                  onClick={() => { loadProfile(g.strongs); onWordClick?.(entry); }}>
+                  {g.strongs}{g.translit ? <span className="lexicon-group-sn-translit"> {g.translit}</span> : null}
+                </button>
+                <span className="lexicon-group-appears">appears as</span>
+                {(g.glosses || []).map(({gloss, count}) => (
+                  <button key={gloss} className="lexicon-group-chip"
+                    onClick={() => { loadProfile(g.strongs); setPendingGloss(gloss); onWordClick?.(entry); }}>
+                    {gloss} <span className="lexicon-group-chip-count">{count}</span>
+                  </button>
+                ))}
+              </div>
+            );
+          })}
         </div>
       )}
 

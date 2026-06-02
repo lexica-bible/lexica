@@ -197,23 +197,36 @@ input { font-family: inherit; }
 .lexicon-match-gloss { font-size: 13px; color: var(--ink-2); }
 
 /* English corpus groupings */
-.lexicon-groupings { margin-top: 20px; }
-.lexicon-groupings-label { font-size: 12px; color: var(--ink-3); letter-spacing: 0.02em; margin-bottom: 8px; }
-.lexicon-group-chips { display: flex; flex-wrap: wrap; gap: 6px; }
-.lexicon-group-chip {
+.lexicon-groupings { margin-top: 20px; display: flex; flex-direction: column; gap: 8px; }
+.lexicon-groupings-label { font-size: 12px; color: var(--ink-3); letter-spacing: 0.02em; margin-bottom: 2px; }
+.lexicon-group-row { display: flex; flex-wrap: wrap; align-items: center; gap: 5px; }
+.lexicon-group-sn {
   font-family: var(--f-mono);
-  font-size: 12px;
+  font-size: 11.5px;
   font-weight: 600;
-  padding: 3px 9px;
+  color: var(--gold);
+  border: 1.5px solid var(--gold);
+  border-radius: 5px;
+  padding: 1px 6px;
+  background: transparent;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+@media (hover: hover) { .lexicon-group-sn:hover { background: var(--gold-soft); } }
+.lexicon-group-sn.active { background: var(--gold-soft); }
+.lexicon-group-sn-translit { font-style: italic; font-weight: 400; color: var(--ink-3); font-family: var(--f-serif); margin-left: 2px; }
+.lexicon-group-appears { font-size: 11px; color: var(--ink-4); }
+.lexicon-group-chip {
+  font-size: 12px;
+  padding: 2px 8px;
   border-radius: 20px;
   border: 1px solid var(--rule);
   background: var(--bg);
   color: var(--ink-2);
   cursor: pointer;
 }
-.lexicon-group-chip:hover { border-color: var(--rule-2); color: var(--ink); }
-.lexicon-group-chip.active { border-color: var(--gold); background: var(--gold-soft); color: var(--ink); }
-.lexicon-group-chip-translit { font-style: italic; color: var(--ink-3); font-family: var(--f-serif); }
+@media (hover: hover) { .lexicon-group-chip:hover { border-color: var(--rule-2); color: var(--ink); } }
+.lexicon-group-chip-count { color: var(--ink-4); font-size: 11px; margin-left: 2px; }
 
 /* Back link from profile to groupings */
 .lexicon-back {
