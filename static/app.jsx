@@ -2435,7 +2435,7 @@ function AboutView() {
 // ============================================================
 const _STRONGS_RE = /^[GgHh]?\d+(\.\d+)?$/;
 
-function LexiconView({ onNavigateToSearch, onNavigateToLibrary, pendingStrongs, onPendingStrongsConsumed }) {
+function LexiconView({ onNavigateToSearch, onNavigateToLibrary, onWordClick, pendingStrongs, onPendingStrongsConsumed }) {
   const [query, setQuery] = useState("");
   const [matches, setMatches] = useState(null);
   const [profile, setProfile] = useState(null);
@@ -2602,19 +2602,23 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, pendingStrongs, 
         <div className="lexicon-groupings">
           <div className="lexicon-groupings-label">rendered as "{query.trim()}"</div>
           <div className="lexicon-group-chips">
-            {groupings.map(g => {
-              const isSelected = profile?.strongs === g.strongs;
-              return (
-                <button key={g.strongs}
-                  className={"lexicon-group-chip" + (isSelected ? " active" : "")}
-                  onClick={() => {
-                    if (isSelected) { setProfile(null); setSelectedBook(null); setVerseList(null); setPendingGloss(null); }
-                    else { setPendingGloss(null); loadProfile(g.strongs); }
-                  }}>
-                  {g.strongs}
-                </button>
-              );
-            })}
+            {groupings.map(g => (
+              <button key={g.strongs} className="lexicon-group-chip"
+                onClick={() => onWordClick?.({
+                  id: `lex-${g.strongs}`,
+                  strongs: g.strongs,
+                  strongs_base: g.strongs,
+                  strongs_raw: g.strongs.replace(/^[GH]/i, ''),
+                  greek: g.lemma || '',
+                  translit: g.translit || '',
+                  gloss: (g.glosses[0] || {}).gloss || '',
+                  ref: '', book: '', chapter: '', verse: '',
+                  definition: '', derivation: '', is_function: false,
+                  isHebrew: g.strongs.startsWith('H'),
+                })}>
+                {g.strongs}
+              </button>
+            ))}
           </div>
         </div>
       )}
@@ -3051,6 +3055,7 @@ function App() {
               setLibEverVisited(true);
               setMainView("library");
             }}
+            onWordClick={(e) => setActiveEntry(e)}
             pendingStrongs={lexiconPendingStrongs}
             onPendingStrongsConsumed={() => setLexiconPendingStrongs(null)}
           />
