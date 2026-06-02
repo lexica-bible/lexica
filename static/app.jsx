@@ -293,6 +293,12 @@ function SearchBar({ q2, setQ2, onAiSearch, aiLoading }) {
   return (
     <section className="search">
       <div className="search-cell">
+        <label className="search-label">
+          <span className="search-eyebrow ai">
+            <span className="ai-dot"></span>
+            Ask the corpus
+          </span>
+        </label>
         <form className="search-field ai-field" onSubmit={(e) => { e.preventDefault(); onAiSearch(); }}>
           <Icon.Sparkle className="search-icon"/>
           <input
