@@ -1072,7 +1072,6 @@ function CorpusVerseRow({ book, chapter, verse, label, allResults, onWordClick, 
                   <span key={i} className={"lib-word" + (sid ? " lib-word-clickable" : "") + (w.italic ? " lib-kjv-italic" : "") + (isCited ? " cited" : "")}
                     onClick={kjvEntry && onWordClick ? () => onWordClick(kjvEntry) : undefined}>
                     <span className="lib-iw-english">{w.word}{w.punc || ""}</span>
-                    <span className="lib-iw-strongs" style={{visibility:"hidden"}}>G0</span>
                   </span>
                 );
               })
@@ -1117,7 +1116,6 @@ function CorpusVerseRow({ book, chapter, verse, label, allResults, onWordClick, 
                       <span key={pi} className={"lib-word" + (!isItal && clickable ? " lib-word-clickable" : "") + (isItal ? " lib-abp-italic" : "") + (!isItal && isCited ? " cited" : "")}
                             onClick={!isItal && clickable ? () => onWordClick(entry) : undefined}>
                         <span className="lib-iw-english">{word}</span>
-                        <span className="lib-iw-strongs" style={{visibility:"hidden"}}>G0</span>
                       </span>
                     );
                   })}
@@ -1131,7 +1129,6 @@ function CorpusVerseRow({ book, chapter, verse, label, allResults, onWordClick, 
                   {hasPos && <span className="lib-iw-pos">{w.greek_pos}</span>}
                   <span className="lib-iw-english">{label}</span>
                 </span>
-                <span className="lib-iw-strongs" style={{visibility:"hidden"}}>G0</span>
               </span>
             );
           }
@@ -1141,7 +1138,6 @@ function CorpusVerseRow({ book, chapter, verse, label, allResults, onWordClick, 
             const corpusBracketChar = (ch, k) => (
               <span key={k} className="lib-word">
                 <span className="lib-bracket-glyph">{ch}</span>
-                <span className="lib-iw-strongs" style={{visibility:"hidden"}}>G0</span>
               </span>
             );
             return (
@@ -2238,7 +2234,7 @@ function AIAnswer({ query, explanation, keyStrongs, onPick }) {
               book: "", chapter: 0, verse: 0,
               definition: ks.definition || "", derivation: ks.derivation || "",
             })}>
-              {ks.strongs} {ks.lemma}
+              {ks.strongs} {ks.translit || ks.lemma}
             </button>
           ))}
         </div>
@@ -2625,7 +2621,6 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, onWordClick, pen
                           ? v.words.map((w, wi) => (
                               <span key={wi} className={"lib-word" + (w.h ? " cited" : "") + (w.i ? " lib-abp-italic" : "")}>
                                 <span className="lib-iw-english">{w.w}</span>
-                                <span className="lib-iw-strongs" style={{visibility:"hidden"}}>G0</span>
                               </span>
                             ))
                           : v.text}
