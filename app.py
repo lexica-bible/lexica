@@ -1950,6 +1950,73 @@ def lexicon_lookup():
     finally:
         conn.close()
 
+
+@app.route("/api/lexicon/english")
+def lexicon_english():
+    q = request.args.get("q", "").strip()
+    corpus = request.args.get("corpus", "abp")
+    if not q:
+        return jsonify([])
+    conn = db_ro()
+    try:
+        if corpus == "kjv":
+            rows = conn.execute("""
+                SELECT ks.strongs_id AS sbase,
+                       l.lemma AS g_lemma, l.translit AS g_translit,
+                       b.lemma AS h_lemma, b.xlit AS h_translit,
+                       COUNT(*) AS cnt,
+                       GROUP_CONCAT(DISTINCT kw.word) AS glosses
+                FROM kjv_words kw
+                JOIN kjv_strongs ks ON ks.word_id = kw.id
+                LEFT JOIN lexicon l ON ks.strongs_id LIKE 'G%'
+                      AND l.strongs = SUBSTR(ks.strongs_id, 2)
+                LEFT JOIN bdb b ON ks.strongs_id LIKE 'H%'
+                      AND b.strongs_id = ks.strongs_id
+                WHERE LOWER(kw.word) = LOWER(?)
+                  AND ks.strongs_id IS NOT NULL
+                  AND (kw.italic IS NULL OR kw.italic = 0)
+                GROUP BY ks.strongs_id
+                ORDER BY cnt DESC
+                LIMIT 20
+            """, (q,)).fetchall()
+        else:
+            rows = conn.execute("""
+                SELECT w.strongs_base AS sbase,
+                       l.lemma AS g_lemma, l.translit AS g_translit,
+                       b.lemma AS h_lemma, b.xlit AS h_translit,
+                       COUNT(*) AS cnt,
+                       GROUP_CONCAT(DISTINCT w.english) AS glosses
+                FROM words w
+                LEFT JOIN lexicon l ON w.strongs_base LIKE 'G%'
+                      AND l.strongs = SUBSTR(w.strongs_base, 2)
+                LEFT JOIN bdb b ON w.strongs_base LIKE 'H%'
+                      AND b.strongs_id = w.strongs_base
+                WHERE w.english_head = ? COLLATE NOCASE
+                  AND w.strongs_base IS NOT NULL
+                  AND w.strongs_base != '*'
+                  AND w.english IS NOT NULL
+                GROUP BY w.strongs_base
+                ORDER BY cnt DESC
+                LIMIT 20
+            """, (q,)).fetchall()
+        results = []
+        for r in rows:
+            lemma = r["g_lemma"] or r["h_lemma"] or ""
+            translit = r["g_translit"] or r["h_translit"] or ""
+            raw = r["glosses"] or ""
+            glosses = [g.strip() for g in raw.split(",") if g.strip()][:5]
+            results.append({
+                "strongs": r["sbase"],
+                "lemma": lemma,
+                "translit": translit,
+                "count": r["cnt"],
+                "glosses": glosses,
+            })
+        return jsonify(results)
+    finally:
+        conn.close()
+
+
 _GLOSS_FUNC = {
     'a','an','the','my','his','her','your','their','our','its',
     'of','in','by','as','to','with','for','from','at','on','into',

@@ -72,6 +72,8 @@ const api = {
     fetch(`/api/lexicon/verses/${encodeURIComponent(strongs)}/${encodeURIComponent(book)}?corpus=${corpus}${gloss ? `&gloss=${encodeURIComponent(gloss)}` : ""}`).then(r => r.json()),
   lexiconBooks: (strongs, corpus, gloss) =>
     fetch(`/api/lexicon/books/${encodeURIComponent(strongs)}?corpus=${corpus}${gloss ? `&gloss=${encodeURIComponent(gloss)}` : ""}`).then(r => r.json()),
+  lexiconEnglish: (q, corpus) =>
+    fetch(`/api/lexicon/english?q=${encodeURIComponent(q)}&corpus=${encodeURIComponent(corpus)}`).then(r => r.json()),
 };
 
 // Extract proper noun name from a multi-word gloss, skipping function words
@@ -2447,6 +2449,7 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, pendingStrongs, 
   const [selectedGloss, setSelectedGloss] = useState(null);
   const [bookGlosses, setBookGlosses] = useState(null);
   const [filteredBooks, setFilteredBooks] = useState(null);
+  const [groupings, setGroupings] = useState(null);
 
   useEffect(() => {
     if (!pendingStrongs) return;
@@ -2523,25 +2526,34 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, pendingStrongs, 
     if (selectedBook) await fetchVerses(selectedBook, next);
   };
 
+  const _isGreekHebrew = (s) => /[Ͱ-Ͽἀ-῿֐-׿]/.test(s);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const q = query.trim();
     if (!q) return;
+    setProfile(null);
+    setMatches(null);
+    setGroupings(null);
+    setError(null);
     if (_STRONGS_RE.test(q)) {
       const normalized = /^[GgHh]/i.test(q) ? q.toUpperCase() : q;
-      setProfile(null);
       loadProfile(normalized);
       return;
     }
     setLoading(true);
-    setError(null);
-    setProfile(null);
-    setMatches(null);
     try {
-      const data = await api.lexiconLookup(q);
-      if (!data.length) setError("No matches found.");
-      else if (data.length === 1) loadProfile(data[0].strongs);
-      else setMatches(data);
+      if (_isGreekHebrew(q)) {
+        const data = await api.lexiconLookup(q);
+        if (!data.length) setError("No matches found.");
+        else if (data.length === 1) loadProfile(data[0].strongs);
+        else setMatches(data);
+      } else {
+        const data = await api.lexiconEnglish(q, corpus);
+        if (!data.length) setError("No matches found for \"" + q + "\".");
+        else if (data.length === 1) loadProfile(data[0].strongs);
+        else setGroupings(data);
+      }
     } catch { setError("Search failed."); }
     finally { setLoading(false); }
   };
@@ -2577,8 +2589,26 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, pendingStrongs, 
         </div>
       )}
 
+      {groupings && (
+        <div className="lexicon-groupings">
+          <div className="lexicon-groupings-label">{groupings.length} lemma{groupings.length !== 1 ? "s" : ""} rendered as "{query.trim()}"</div>
+          {groupings.map(g => (
+            <button key={g.strongs} className="lexicon-group-row" onClick={() => loadProfile(g.strongs)}>
+              <span className="lexicon-group-lemma">{g.lemma || g.strongs}</span>
+              {g.translit && <span className="lexicon-group-translit">{g.translit}</span>}
+              <span className="lexicon-group-strongs">{g.strongs}</span>
+              <span className="lexicon-group-glosses">{g.glosses.join(" · ")}</span>
+              <span className="lexicon-group-count">{g.count}×</span>
+            </button>
+          ))}
+        </div>
+      )}
+
       {profile && (
         <div className="lexicon-profile">
+          {groupings && (
+            <button className="lexicon-back" onClick={() => setProfile(null)}>← "{query.trim()}"</button>
+          )}
           <div className="lexicon-profile-header">
             <span className="lexicon-lemma">{profile.lemma}</span>
             <span className="lexicon-translit">{profile.translit}</span>
