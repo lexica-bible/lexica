@@ -259,6 +259,7 @@ input { font-family: inherit; }
 .lexicon-gloss-chip:hover { background: var(--bg-3, #e8e8e8); }
 .lexicon-gloss-chip.selected { background: var(--navy); color: #fff; border-color: var(--navy); }
 .lexicon-gloss-count { font-size: 11px; opacity: 0.65; margin-left: 3px; }
+.lex-hl { font-weight: 700; color: var(--gold, #b8860b); }
 .search-grid {
   display: grid;
   grid-template-columns: minmax(180px, 320px) 1px 1fr;

@@ -2443,6 +2443,7 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, pendingStrongs, 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [selectedGloss, setSelectedGloss] = useState(null);
+  const [bookGlosses, setBookGlosses] = useState(null);
 
   useEffect(() => {
     if (!pendingStrongs) return;
@@ -2456,6 +2457,7 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, pendingStrongs, 
     setMatches(null);
     setSelectedBook(null);
     setSelectedGloss(null);
+    setBookGlosses(null);
     const isHeb = /^H/i.test(strongs) || (!(/^[GgHh]/.test(strongs)) && parseInt(strongs) > 5624);
     const c = corpusOverride ?? (isHeb ? "kjv" : "abp");
     setCorpus(c);
@@ -2475,6 +2477,7 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, pendingStrongs, 
     setVerseList(null);
     setTestament("all");
     setSelectedGloss(null);
+    setBookGlosses(null);
     try {
       const data = await api.lexiconProfile(profile.strongs, c);
       if (!data.error) setProfile(data);
@@ -2487,14 +2490,18 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, pendingStrongs, 
     setVerseLoading(true);
     try {
       const data = await api.lexiconVerses(profile.strongs, book, corpus, gloss);
-      if (data.error) setVerseList([{ error: data.error }]);
-      else setVerseList(data);
+      if (data.error) {
+        setVerseList([{ error: data.error }]);
+      } else {
+        setVerseList(data.verses || []);
+        setBookGlosses(data.glosses && data.glosses.length ? data.glosses : null);
+      }
     } catch (e) { setVerseList([{ error: String(e) }]); }
     finally { setVerseLoading(false); }
   };
 
   const selectBook = async (book) => {
-    if (selectedBook === book) { setSelectedBook(null); setVerseList(null); return; }
+    if (selectedBook === book) { setSelectedBook(null); setVerseList(null); setBookGlosses(null); return; }
     setSelectedBook(book);
     await fetchVerses(book, selectedGloss);
   };
@@ -2573,11 +2580,11 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, pendingStrongs, 
           </div>
           <p className="lexicon-definition">{profile.definition}</p>
 
-          {profile.glosses && profile.glosses.length > 0 && (
+          {(bookGlosses || profile.glosses) && (bookGlosses || profile.glosses).length > 0 && (
             <div className="lexicon-glosses">
-              <div className="lexicon-gloss-label">Rendered as</div>
+              <div className="lexicon-gloss-label">{selectedBook ? "In this book" : "Rendered as"}</div>
               <div className="lexicon-gloss-chips">
-                {profile.glosses.map(g => (
+                {(bookGlosses || profile.glosses).map(g => (
                   <button
                     key={g.gloss}
                     className={"lexicon-gloss-chip" + (selectedGloss === g.gloss ? " selected" : "")}
@@ -2632,7 +2639,13 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, pendingStrongs, 
                   ? <div key={i} className="lexicon-verse-loading" style={{color:"red"}}>{v.error}</div>
                   : <div key={i} className="lexicon-verse-row">
                       <span className="lexicon-verse-ref">{selectedBook} {v.chapter}:{v.verse}</span>
-                      <span className="lexicon-verse-text">{v.text}</span>
+                      <span className="lexicon-verse-text">
+                        {v.words
+                          ? v.words.map((w, wi) => (
+                              <span key={wi} className={w.h ? "lex-hl" : undefined}>{w.w}{" "}</span>
+                            ))
+                          : v.text}
+                      </span>
                       {onNavigateToLibrary && (
                         <button className="lexicon-verse-lib-link" onClick={() => onNavigateToLibrary(selectedBook, v.chapter, v.verse)}>
                           Read →
