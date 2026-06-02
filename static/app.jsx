@@ -1378,7 +1378,7 @@ const _BOOK_DIV = {
   Jud:"General Epistles",Rev:"Apocalyptic",
 };
 
-function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, isOverlay, onClose }) {
+function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, isOverlay, onClose, navBookRef }) {
   const [query, setQuery] = useState("");
 
   const filtered = useMemo(() => {
@@ -1966,6 +1966,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
           setSelBook={setSelBook}
           selChapter={selChapter}
           setSelChapter={setSelChapter}
+          navBookRef={navBookRef}
         />
       )}
       {!navVisible && mobileNavOpen && (
