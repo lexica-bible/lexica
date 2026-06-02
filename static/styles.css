@@ -1696,7 +1696,7 @@ input { font-family: inherit; }
   .lib-toolbar-navy .mbar-trans { color: #7eb8e8; }
   .lib-toolbar-navy .mbar-trans:active { background: rgba(255,255,255,0.06); }
   .lib-toolbar-navy .mbar-loc:active { background: rgba(255,255,255,0.06); }
-  .mbar-logo-btn { display: flex; align-items: center; gap: 7px; color: #cfd6e3; flex: 0 0 auto; padding: 0 6px; }
+  .mbar-logo-btn { display: flex; align-items: center; justify-content: center; color: #cfd6e3; flex: 0 0 42px; }
   .mbar-logo-name { font-family: var(--f-serif); font-weight: 600; font-size: 17px; letter-spacing: -0.01em; color: #f6f7fa; }
   .mobile-brand-bar { display: flex; align-items: center; gap: 8px; background: var(--navy); color: #cfd6e3; padding: 0 16px; height: 56px; position: sticky; top: 0; z-index: 20; border-bottom: 1px solid var(--navy-edge, #1e3050); }
   .mobile-brand-name { font-family: var(--f-serif); font-weight: 600; font-size: 17px; letter-spacing: -0.01em; color: #f6f7fa; }
