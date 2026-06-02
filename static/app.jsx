@@ -2728,7 +2728,6 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, onWordClick, pen
 // APP
 // ============================================================
 function App() {
-  const [q1, setQ1] = useState("");
   const [q2, setQ2] = useState("");
   const [allResults, setAllResults] = useState([]);
   const [aiMeta, setAiMeta] = useState(null);
@@ -2739,10 +2738,7 @@ function App() {
   const [error, setError] = useState("");
   const [aiNotice, setAiNotice] = useState("");
   const [activeEntry, setActiveEntry] = useState(null);
-  const [viewMode, setViewMode] = useState("browse");
-  const [browseTranslation, setBrowseTranslation] = useState("all"); // "abp" | "kjv" | "all"
   const [corpusFilter, setCorpusFilter] = useState("all"); // "all" | "ot" | "nt"
-  const [langFilter, setLangFilter] = useState("all"); // "all" | "greek" | "hebrew"
   const [studySort, setStudySort] = useState("curated"); // "curated" | "canonical"
   const [studyTextMode, setStudyTextMode] = useState("abp"); // "abp" | "kjv"
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 1100);
@@ -2754,9 +2750,6 @@ function App() {
   const [abpGroupings, setAbpGroupings] = useState({});
   const [kjvGroupings, setKjvGroupings] = useState({});
   const [variants, setVariants] = useState({});
-  const [breadcrumbs, setBreadcrumbs] = useState([]);
-  const [glossFilter, setGlossFilter] = useState(null); // { sn, gloss, label } | null
-  const searchFnRef = useRef(null);
 
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 1100);
@@ -2771,22 +2764,15 @@ function App() {
     setLibNav(prev => ({ ...(prev || {}), book, chapter, highlight: verse }));
   };
 
-  // Source-filtered results based on browseTranslation mode
+  // Corpus-filtered AI results (OT/NT filter)
   const corpusFilteredResults = useMemo(() => {
     let r = allResults;
-    if (mode === "search") {
-      if (browseTranslation === "abp") r = r.filter(e => e.source === "abp" || !e.source);
-      else if (browseTranslation === "kjv") r = r.filter(e => e.source === "kjv");
-      else if (browseTranslation === "all") r = r.filter(e => e.source === "abp" || !e.source || (e.source === "kjv" && e.isHebrew));
-    }
     if (corpusFilter === "ot") r = r.filter(e => !NT_BOOKS.has(e.book));
     if (corpusFilter === "nt") r = r.filter(e => NT_BOOKS.has(e.book));
-    if (langFilter === "greek") r = r.filter(e => e.strongs && !String(e.strongs).startsWith("H"));
-    if (langFilter === "hebrew") r = r.filter(e => e.strongs && String(e.strongs).startsWith("H"));
     return r;
-  }, [allResults, browseTranslation, mode, corpusFilter, langFilter]);
+  }, [allResults, corpusFilter]);
 
-  // Count occurrences per strongs across displayed results
+  // Count occurrences per strongs across AI results
   const countMap = useMemo(() => {
     const map = {};
     for (const e of corpusFilteredResults) {
@@ -2796,54 +2782,12 @@ function App() {
     return map;
   }, [corpusFilteredResults]);
 
-  // Active groupings based on mode
-  const activeGroupings = useMemo(() => {
-    if (mode !== "search") return abpGroupings;
-    if (browseTranslation === "kjv") return kjvGroupings;
-    if (browseTranslation === "all") return { ...abpGroupings, ...kjvGroupings };
-    return abpGroupings;
-  }, [abpGroupings, kjvGroupings, browseTranslation, mode]);
-
-  // Sorted display list
-  const displayed = useMemo(() => {
-    let base;
-    if (glossFilter) {
-      base = corpusFilteredResults.filter(e =>
-        (e.strongs_raw === glossFilter.sn || e.strongs_base === glossFilter.sn) &&
-        (glossFilter.gloss === null || e.gloss_head === glossFilter.gloss)
-      );
-    } else if (mode === "search" && !primaryStrongs) {
-      base = corpusFilteredResults.filter(e => !e.is_function);
-    } else {
-      base = corpusFilteredResults;
-    }
-    return [...base].sort((a, b) =>
-      (BOOK_ORDER[a.book] ?? 99) - (BOOK_ORDER[b.book] ?? 99) || a.chapter - b.chapter || a.verse - b.verse);
-  }, [corpusFilteredResults, countMap, mode, primaryStrongs, glossFilter]);
-
-  // One representative entry per unique strongs_base — used as the initial browse view
-  // for word text searches. Returns null when there's only one strongs (direct G/H search)
-  // so occurrence cards show instead.
-  const summaryEntries = useMemo(() => {
-    if (mode !== "search" || glossFilter || primaryStrongs) return null;
-    const seen = new Map();
-    for (const r of corpusFilteredResults) {
-      if (r.strongs_base && r.strongs_base !== "*" && !r.is_function && !seen.has(r.strongs_base))
-        seen.set(r.strongs_base, r);
-    }
-    return seen.size > 1 ? [...seen.values()] : null;
-  }, [corpusFilteredResults, mode, glossFilter, primaryStrongs]);
-
-  // Strongs number being searched directly (null in AI/text modes)
+  // Key strongs from AI search
   const primaryStrongs = useMemo(() => {
-    if (mode === "ai") {
-      if (aiMeta && aiMeta.keyStrongs && aiMeta.keyStrongs.length > 0) return aiMeta.keyStrongs;
-      return null;
-    }
-    if (mode !== "search") return null;
-    const m = /^[Gg]([\d.]+)$/.exec(q1.trim());
-    return m ? [{ strongs_base: m[1], strongs: `G${m[1]}` }] : null;
-  }, [mode, q1, aiMeta]);
+    if (mode === "ai" && aiMeta && aiMeta.keyStrongs && aiMeta.keyStrongs.length > 0)
+      return aiMeta.keyStrongs;
+    return null;
+  }, [mode, aiMeta]);
 
   // Compute citedStrongs at App level — single source of truth, no prop-threading issues
   const citedStrongsApp = useMemo(() => {
