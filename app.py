@@ -2137,7 +2137,7 @@ def lexicon_verses(strongs, book):
             if not book_id:
                 conn.close()
                 return jsonify({"verses": [], "glosses": []})
-            word_rows = conn.execute(f"""
+            word_rows = conn.execute("""
                 SELECT kw.chapter, kw.verse_num AS verse, kw.word, kw.italic,
                        CASE WHEN ks2.strongs_id IS NOT NULL THEN 1 ELSE 0 END AS hl
                 FROM kjv_words kw
@@ -2146,10 +2146,10 @@ def lexicon_verses(strongs, book):
                     SELECT 1 FROM kjv_words kw2
                     JOIN kjv_strongs ks ON ks.word_id = kw2.word_id
                     WHERE kw2.book_id = kw.book_id AND kw2.chapter = kw.chapter
-                      AND kw2.verse_num = kw.verse_num AND ks.strongs_id = ?{" AND kw2.word = ?" if gloss else ""}
+                      AND kw2.verse_num = kw.verse_num AND ks.strongs_id = ?
                 )
                 ORDER BY kw.chapter, kw.verse_num, kw.verse_pos
-            """, (sid, book_id, sid) + ((gloss,) if gloss else ())).fetchall()
+            """, (sid, book_id, sid)).fetchall()
         else:
             word_rows = conn.execute("""
                 SELECT v.chapter, v.verse, v.text AS prose, w.english AS word,
