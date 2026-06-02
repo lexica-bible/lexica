@@ -1694,7 +1694,7 @@ input { font-family: inherit; }
   /* Chip: smaller word size to fit more per line */
   .lib-iw-strongs { font-size: 9px; }
   /* Parallel: stack columns vertically */
-  .lib-parallel-verse { grid-template-columns: 1fr; gap: 0; font-size: 15px; line-height: 1.65; border-bottom: none; }
+  .lib-parallel-verse { grid-template-columns: 1fr; gap: 0; font-size: var(--lib-font-size, 15px); line-height: 1.65; border-bottom: none; }
   .lib-parallel-header { border-bottom: none; }
   .lib-parallel-vnum {
     display: flex;
@@ -1748,7 +1748,8 @@ input { font-family: inherit; }
 .mseg-b { flex: 1; text-align: center; font-size: 14.5px; color: var(--ink-3); padding: 10px 0; border-radius: 8px; transition: background 0.1s, color 0.1s; }
 .mseg-b.on { background: #fff; color: var(--ink); font-weight: 600; box-shadow: var(--shadow-sm); }
 .mseg-b:active:not(.on) { background: rgba(0,0,0,0.08); color: var(--ink); }
-.font-size-lbl { font-size: 12px; color: var(--ink-3); min-width: 22px; text-align: center; align-self: center; user-select: none; pointer-events: none; }
+.font-size-lbl { font-size: 12px; color: var(--ink-3); flex: 1; text-align: center; align-self: center; user-select: none; pointer-events: none; }
+.font-picker .mseg-b { flex: 0 0 44px; }
 .mtog { display: flex; flex-direction: column; }
 .mtog-row { display: flex; align-items: center; justify-content: space-between; gap: 14px; padding: 12px 0; }
 .mtog-row + .mtog-row { border-top: 1px solid var(--rule); }
