@@ -1967,7 +1967,7 @@ def lexicon_english():
                        COUNT(*) AS cnt,
                        GROUP_CONCAT(DISTINCT kw.word) AS glosses
                 FROM kjv_words kw
-                JOIN kjv_strongs ks ON ks.word_id = kw.id
+                JOIN kjv_strongs ks ON ks.word_id = kw.word_id
                 LEFT JOIN lexicon l ON ks.strongs_id LIKE 'G%'
                       AND l.strongs = SUBSTR(ks.strongs_id, 2)
                 LEFT JOIN bdb b ON ks.strongs_id LIKE 'H%'
