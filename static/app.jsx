@@ -2598,6 +2598,23 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, onWordClick, pen
         </div>
       )}
 
+      {(groupings || profile) && (
+        <div className="lexicon-header-controls">
+          <div className="lexicon-corpus-toggle">
+            <button className={"lct-btn" + (corpus === "abp" ? " on" : "")} onClick={() => switchCorpus("abp")}>ABP</button>
+            <button className={"lct-btn" + (corpus === "kjv" ? " on" : "")} onClick={() => switchCorpus("kjv")}>KJV</button>
+          </div>
+          <div className="lexicon-corpus-toggle">
+            {["all","ot","nt"].map(t => (
+              <button key={t} className={"lct-btn" + (testament === t ? " on" : "")}
+                onClick={() => { setTestament(t); setSelectedBook(null); setVerseList(null); }}>
+                {t === "all" ? "All" : t.toUpperCase()}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
       {groupings && (
         <div className="lexicon-groupings">
           <div className="lexicon-groupings-label">rendered as "{query.trim()}"</div>
@@ -2636,39 +2653,8 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, onWordClick, pen
             {!groupings && <span className="lexicon-translit">{profile.translit}</span>}
             {!groupings && <span className="lexicon-strongs-tag">{profile.strongs}</span>}
             <span className="lexicon-total">{profile.total} occurrences</span>
-            <div className="lexicon-header-controls">
-              <div className="lexicon-corpus-toggle">
-                <button className={"lct-btn" + (corpus === "abp" ? " on" : "")} onClick={() => switchCorpus("abp")}>ABP</button>
-                <button className={"lct-btn" + (corpus === "kjv" ? " on" : "")} onClick={() => switchCorpus("kjv")}>KJV</button>
-              </div>
-              <div className="lexicon-corpus-toggle">
-                {["all","ot","nt"].map(t => (
-                  <button key={t} className={"lct-btn" + (testament === t ? " on" : "")}
-                    onClick={() => { setTestament(t); setSelectedBook(null); setVerseList(null); }}>
-                    {t === "all" ? "All" : t.toUpperCase()}
-                  </button>
-                ))}
-              </div>
-            </div>
           </div>
           {!groupings && <p className="lexicon-definition">{profile.definition}</p>}
-
-          {(bookGlosses || profile.glosses) && (bookGlosses || profile.glosses).length > 0 && (
-            <div className="lexicon-glosses">
-              <div className="lexicon-gloss-label">{selectedBook ? "In this book" : "Rendered as"}</div>
-              <div className="lexicon-gloss-chips">
-                {(bookGlosses || profile.glosses).map(g => (
-                  <button
-                    key={g.gloss}
-                    className={"lexicon-gloss-chip" + (selectedGloss === g.gloss ? " selected" : "")}
-                    onClick={() => selectGloss(g.gloss)}
-                  >
-                    {g.gloss} <span className="lexicon-gloss-count">{g.count}</span>
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
 
           <div className="lexicon-distribution">
             <div className="lexicon-dist-header">
