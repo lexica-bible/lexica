@@ -1136,7 +1136,7 @@ function CorpusVerseRow({ book, chapter, verse, label, allResults, onWordClick, 
           return groups.map((g, gi) => {
             if (!g.isBracket) return renderCorpusWord(g.word, `g${gi}`);
             const corpusBracketChar = (ch, k) => (
-              <span key={k} className="lib-word">
+              <span key={k} className="lib-bracket">
                 <span className="lib-bracket-glyph">{ch}</span>
               </span>
             );
@@ -2016,7 +2016,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
             </div>
             <div className="mode-sec">
               <div className="mode-lbl">Font Size</div>
-              <div className="mseg">
+              <div className="mseg font-picker">
                 <button className="mseg-b" onClick={() => changeFontSize(-1)}>A−</button>
                 <span className="font-size-lbl">{libFontSize}</span>
                 <button className="mseg-b" onClick={() => changeFontSize(+1)}>A+</button>
