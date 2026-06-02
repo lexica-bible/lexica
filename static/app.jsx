@@ -2114,7 +2114,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
           <div className="mbar-center">
             <button className="mbar-ch-nav" disabled={selChapter <= 1} onClick={() => { const c = Math.max(1, selChapter - 1); setSelChapter(c); onNavChange?.({ ...nav, chapter: c, highlight: null }); }} aria-label="Previous chapter">‹</button>
             <button className="mbar-loc" onClick={() => setMobileNavOpen(true)}>
-              <span className="mbar-loc-name">{selBook ? selBook.name : "Select book"}</span>
+              <span className="mbar-loc-name">{selBook ? selBook.name : ""}</span>
               <span className="mbar-loc-ch">{selChapter}</span>
               <svg className="mbar-loc-cv" width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
             </button>
