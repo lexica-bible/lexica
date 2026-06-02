@@ -2454,6 +2454,8 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, pendingStrongs, 
   useEffect(() => {
     if (!pendingStrongs) return;
     onPendingStrongsConsumed?.();
+    setGroupings(null);
+    setMatches(null);
     loadProfile(pendingStrongs);
   }, [pendingStrongs]);
 
@@ -2591,23 +2593,27 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, pendingStrongs, 
       {groupings && (
         <div className="lexicon-groupings">
           <div className="lexicon-groupings-label">{groupings.length} lemma{groupings.length !== 1 ? "s" : ""} rendered as "{query.trim()}"</div>
-          {groupings.map(g => (
-            <button key={g.strongs} className="lexicon-group-row" onClick={() => loadProfile(g.strongs)}>
-              <span className="lexicon-group-lemma">{g.lemma || g.strongs}</span>
-              {g.translit && <span className="lexicon-group-translit">{g.translit}</span>}
-              <span className="lexicon-group-strongs">{g.strongs}</span>
-              <span className="lexicon-group-glosses">{g.glosses.join(" · ")}</span>
-              <span className="lexicon-group-count">{g.count}×</span>
-            </button>
-          ))}
+          {groupings.map(g => {
+            const isSelected = profile?.strongs === g.strongs;
+            return (
+              <button key={g.strongs}
+                className={"lexicon-group-row" + (isSelected ? " selected" : "")}
+                onClick={() => {
+                  if (isSelected) { setProfile(null); setSelectedBook(null); setVerseList(null); }
+                  else loadProfile(g.strongs);
+                }}>
+                <span className="lexicon-group-lemma">{g.lemma || g.strongs}</span>
+                {g.translit && <span className="lexicon-group-translit">{g.translit}</span>}
+                <span className="lexicon-group-strongs">{g.strongs}</span>
+                <span className="lexicon-group-count">{g.count}×</span>
+              </button>
+            );
+          })}
         </div>
       )}
 
       {profile && (
         <div className="lexicon-profile">
-          {groupings && (
-            <button className="lexicon-back" onClick={() => setProfile(null)}>← "{query.trim()}"</button>
-          )}
           <div className="lexicon-profile-header">
             <span className="lexicon-lemma">{profile.lemma}</span>
             <span className="lexicon-translit">{profile.translit}</span>
