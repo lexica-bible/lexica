@@ -351,6 +351,70 @@ def apply_pronoun_corrections(abp_words: list, corrections: list,
     return out
 
 
+# ── Pronoun-compound redistribution (symptom #2) ───────────────────────────────
+
+_PRONOUN_BASES = frozenset({
+    "846", "4675", "4771", "4571", "4674", "4671",
+    "5210", "5216", "5213", "5209", "2249", "2257", "2254", "2248",
+})
+_ARTICLE_BASE = "3588"
+
+
+def _redistribute_pronoun_compounds(rows: list, lex: dict) -> None:
+    """Symptom #2: ABP bundles a verb's English onto a PRONOUN slot, leaving the
+    verb's own slot glossless — e.g. Gen 3:15 "will give heed to your" sits on
+    σου/G4675 while τηρέω/G5083 is empty. Keep the pronoun's own word ("your") on
+    the pronoun; move the rest ("will give heed to") to the adjacent empty slot;
+    put the two into a NEW 2-word bracket so PROSE reads verb-then-pronoun
+    (greek_pos order) while CHIP keeps Greek/source order (position order).
+
+    SURGICAL: fires only for a known-pronoun slot with a multi-word gloss whose
+    very next slot is empty, real-Strong's, non-article, and (like the pronoun)
+    currently bracket-free. Touches english/english_head/greek_pos/bracket_id
+    ONLY — never strongs/strongs_base/is_pn. Runs AFTER _split_compounds, so it
+    only sees the cases the lexicon-evidence pass left unredistributed.
+
+    Row tuple (11 elts): 0:pos 1:eng 2:head 3:strongs 4:sbase 5:gpos 6:bid
+                         7:italic 8:iw 9:sw 10:abp_pos
+    """
+    _NORM = re.compile(r"[^\w]")
+    existing = [r[6] for r in rows if r[6] is not None]
+    next_bid = (max(existing) + 1) if existing else 1
+
+    for i in range(len(rows) - 1):
+        eng, sbase = rows[i][1], rows[i][4]
+        if sbase not in _PRONOUN_BASES or not eng or " " not in eng:
+            continue
+        if rows[i][6] is not None:                 # pronoun already bracketed → defer
+            continue
+        j = i + 1
+        if rows[j][1]:                             # next slot must be empty
+            continue
+        sbj = rows[j][4]
+        if not sbj or sbj in ("*", "") or sbj == _ARTICLE_BASE or rows[j][6] is not None:
+            continue
+
+        own = lex.get(sbase, set())
+        keep, move = [], []
+        for word in eng.split():
+            norm = _NORM.sub("", word).lower()
+            (keep if norm and norm in own else move).append(word)
+        if not keep or not move:
+            continue
+
+        keep_eng, move_eng = " ".join(keep), " ".join(move)
+        bid = next_bid
+        next_bid += 1
+
+        ri, rj = rows[i], rows[j]
+        # pronoun keeps its word, English-SECOND (greek_pos 2); joins the bracket
+        rows[i] = (ri[0], keep_eng, _head_word(keep_eng), ri[3], ri[4],
+                   2, bid, ri[7], ri[8], ri[9], ri[10])
+        # verb gets the moved phrase, English-FIRST (greek_pos 1); joins the bracket
+        rows[j] = (rj[0], move_eng, _head_word(move_eng), rj[3], rj[4],
+                   1, bid, rj[7], rj[8], rj[9], rj[10])
+
+
 def build_verse_words(abp_words: list, bh_rows: list, lex: dict = None) -> list:
     """
     Combine ABP word list with BH metadata.
@@ -419,6 +483,7 @@ def build_verse_words(abp_words: list, bh_rows: list, lex: dict = None) -> list:
 
     if lex:
         _split_compounds(rows, lex)
+        _redistribute_pronoun_compounds(rows, lex)
 
     # Strip temporary abp_pos field before returning
     return [r[:10] for r in rows]
