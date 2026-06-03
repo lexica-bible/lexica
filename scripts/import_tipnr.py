@@ -244,7 +244,12 @@ def main():
         "edomites":      "H130",   "nethinim":     "H5411",
         "ezion":         "H6100",  "helkiah":      "H2518",
         "hilkiah":       "H2518",  "jabesh":       "H3003",
-        "jabish":        "H3003",
+        "jabish":        "H3003",   "hor":          "H2023",
+        "aholiab":       "H171",    "nazarene":     "G3480",
+        "hormah":        "H2767",   "jaalam":       "H3281",
+        "josedech":      "H3087",   "jehozadak":    "H3087",
+        "hadarezer":     "H1928",   "pashur":       "H6583",
+        "netophah":      "H5199",
     }
 
     # Gentilics and common variants not stored under their ABP form in TIPNR
@@ -272,11 +277,21 @@ def main():
         "midianite":     "midian",     "midianites":    "midian",
         "edomite":       "edom",       "edomites":      "edom",
         "baalim":        "baal",
-        # Spelling variants (ABP vs ESV)
-        "michaiah":      "micaiah",    "abijah":        "abijah",
-        "nabuzaradan":   "nebuzaradan","nabuzar-adan":  "nebuzaradan",
-        "jabish":        "jabesh",     "jabesh":        "jabesh",
-        "helkiah":       "hilkiah",
+        # Spelling variants (ABP/LXX vs ESV/Hebrew forms)
+        "michaiah":      "micaiah",    "nabuzaradan":   "nebuzaradan",
+        "nabuzar-adan":  "nebuzaradan","jabish":        "jabesh",
+        "helkiah":       "hilkiah",    "pharez":        "perez",
+        "zarah":         "zerah",      "bezaleel":      "bezalel",
+        "urijah":        "uriah",      "neriah":        "neriah",
+        "maachah":       "maacah",     "josedech":      "jehozadak",
+        "tizrah":        "tirzah",     "baldad":        "bildad",
+        "nethaneel":     "nethanel",   "netophathite":  "netophah",
+        "netophathites": "netophah",   "hadarezer":     "hadadezer",
+        "nazarene":      "nazareth",   "elias":         "elijah",
+        "elisaios":      "elisha",     "esaias":        "isaiah",
+        "jeremias":      "jeremiah",   "ezechias":      "hezekiah",
+        "ozias":         "uzziah",     "josias":        "josiah",
+        "jechonias":     "jehoiachin", "joatham":       "jotham",
     }
 
     def find_entry(english):
@@ -286,7 +301,9 @@ def main():
             return re.sub(r"[\s,.:;!?'\"–\-]+$", "", s).strip()
 
         def _strip_lead(s):
-            for prefix in ("of the ", "of ", "to ", "in ", "O ", "o "):
+            for prefix in ("land of the ", "land of ", "of the ", "of ", "to ",
+                           "in the ", "in ", "for ", "both ", "and ", "the ",
+                           "a ", "O ", "o "):
                 if s.lower().startswith(prefix):
                     return s[len(prefix):]
             return s
