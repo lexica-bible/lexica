@@ -207,7 +207,7 @@ def main():
     # ── Match words ───────────────────────────────────────────────────
     print("Matching words.strongs_base='*'...")
     word_rows = conn.execute("""
-        SELECT w.rowid, w.english, v.book
+        SELECT w.rowid AS word_id, w.english, v.book
         FROM words w
         JOIN verses v ON v.id = w.verse_id
         WHERE w.strongs_base = '*'
@@ -235,7 +235,7 @@ def main():
             strongs = entry["g"] or entry["h"]
 
         if strongs:
-            matched.append((strongs, row["rowid"]))
+            matched.append((strongs, row["word_id"]))
         else:
             unmatched_cnt[english] += 1
 
