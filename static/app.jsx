@@ -572,7 +572,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     setAiDescription(null);
     setAiDescLoading(false);
     if (metavLoading) return;
-    if (metavData && metavType === "person") return; // person bio replaces AI
+    if (metavData && metavType === "person" && !isGentilic) return; // rich person bio replaces AI; groups still get the summary
     if (metavData && metavType === "place" && metavData.strongs_g?.length > 0) return; // place has LSJ via strongs_g
     if (isHebrew) return; // BDB covers Hebrew words
     if (!isPN) return; // only for proper nouns
@@ -737,7 +737,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
               </div>
             ) : metavType === "place" && metavData ? (
               <div className="metav-place">
-                <h4 className="sec-head"><span className="sec-t">Biblical Place</span><span className="lsj-badge lsj-badge--gold">metaV</span></h4>
+                <h4 className="sec-head"><span className="sec-t">{isGentilic ? "Homeland" : "Biblical Place"}</span><span className="lsj-badge lsj-badge--gold">metaV</span></h4>
                 {metavData.comment && <p className="detail-p detail-p--meta">{metavData.comment}</p>}
                 {metavData.lat && metavData.lon
                   ? <LeafletMap lat={metavData.lat} lon={metavData.lon} name={metavData.name} />
