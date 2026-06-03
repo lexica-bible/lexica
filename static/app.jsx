@@ -125,7 +125,7 @@ function flattenAiResults(verses) {
   let idx = 0;
   for (const v of verses) {
     for (const w of (v.words || [])) {
-      const snum = w.strongs_base === "*" ? "*" : (w.strongs || w.strongs_base);
+      const snum = w.strongs_base === "*" ? "*" : (w.strongs && w.strongs !== "*" ? w.strongs : w.strongs_base);
       entries.push({
         id: `ai-${v.book}-${v.chapter}-${v.verse}-${snum}-${idx++}`,
         strongs: strongsTag(snum),
@@ -1095,7 +1095,7 @@ function CorpusVerseRow({ book, chapter, verse, label, allResults, onWordClick, 
             if (!label) return null;
             const isPN = !!(w.is_pn || w.strongs_base === "*");
             const clickable = !!(w.strongs_base && (w.strongs_base !== "*" || w.english));
-            const wnum = w.strongs || w.strongs_base;
+            const wnum = (w.strongs && w.strongs !== "*") ? w.strongs : w.strongs_base;
             const foundEntry = !isPN && clickable && entryMap.get(wnum);
             const entry = clickable && (foundEntry
               ? { ...foundEntry, gloss: w.english || foundEntry.gloss }
@@ -1321,8 +1321,34 @@ function getEnglishOrderWords(words) {
       bracketMap[bid].push(w);
     }
   }
+  // Trailing punctuation marks a clause boundary in the SOURCE order. After a
+  // bracket group is reordered into English order, that punctuation must float
+  // to the last word of the reordered group (Greek "were-completed ... earth,"
+  // -> English "... earth were-completed,") instead of stranding on "earth".
+  const TRAIL = /[.,;:!?·]+$/;
   for (const bid in bracketMap) {
-    bracketMap[bid].sort((a, b) => (a.greek_pos ?? 999) - (b.greek_pos ?? 999));
+    let trailing = "";
+    const cleaned = [];
+    for (const w of bracketMap[bid]) {
+      const eng = (w.english || "").trim();
+      if (eng && eng.replace(TRAIL, "") === "") {        // pure-punctuation token
+        trailing += eng;
+        continue;
+      }
+      const m = eng.match(TRAIL);
+      if (m) {
+        trailing += m[0];
+        cleaned.push({ ...w, english: eng.slice(0, eng.length - m[0].length).trimEnd() });
+      } else {
+        cleaned.push(w);
+      }
+    }
+    cleaned.sort((a, b) => (a.greek_pos ?? 999) - (b.greek_pos ?? 999));
+    if (trailing && cleaned.length) {
+      const last = cleaned[cleaned.length - 1];
+      cleaned[cleaned.length - 1] = { ...last, english: (last.english || "") + trailing };
+    }
+    bracketMap[bid] = cleaned;
   }
   const result = [];
   const seen = new Set();
@@ -1689,7 +1715,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
     const isHighlight = nav && nav.highlight === v.verse;
 
     const makeEntry = (w) => {
-      const snum = w.strongs_base === "*" ? "*" : (w.strongs || w.strongs_base);
+      const snum = w.strongs_base === "*" ? "*" : (w.strongs && w.strongs !== "*" ? w.strongs : w.strongs_base);
       return {
       id: `lib-${selBook.abbrev}-${selChapter}-${v.verse}-${w.position}`,
       strongs: strongsTag(snum),
@@ -1705,6 +1731,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
       definition: "",
       derivation: "",
       is_function: false,
+      is_pn: !!w.is_pn,
       };
     };
 
