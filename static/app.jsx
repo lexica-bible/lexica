@@ -544,6 +544,14 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       const personOk = !pd.error && (pd.birth_year || pd.death_year || pd.relationships?.length >= 2);
       if (personOk) setMetavPersonData(pd);
       if (!ld.error) setMetavPlaceData(ld);
+      // Smart default tab (only matters when BOTH exist): prefer the type the
+      // word's own strongs indicates. A place whose strongs_g matches this word's
+      // strongs is definitive; otherwise fall back to the word's tipnr pn_type.
+      const bareSb = (entry.strongs_base || "").replace(/^[GH]/i, "");
+      const placeStrongsMatch = !ld.error && ld.strongs_g && bareSb &&
+        ld.strongs_g.replace(/^[GH]/i, "") === bareSb;
+      const preferPlace = !ld.error && (placeStrongsMatch || entry.pn_type === "place");
+      setMetavTab(preferPlace ? "place" : "person");
       setMetavLoading(false);
     }).catch(() => { if (!cancelled) setMetavLoading(false); });
     return () => { cancelled = true; };
@@ -1735,6 +1743,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
       derivation: "",
       is_function: false,
       is_pn: !!w.is_pn,
+      pn_type: w.pn_type || null,
       };
     };
 
