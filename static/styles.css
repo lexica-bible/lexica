@@ -171,8 +171,8 @@ input { font-family: inherit; }
   padding: 10px 20px;
   font-size: 14px;
   font-weight: 600;
-  background: var(--navy);
-  color: #fff;
+  background: var(--ink);
+  color: #f4f6fa;
   border: none;
   border-radius: var(--r-md);
   cursor: pointer;
@@ -238,7 +238,7 @@ input { font-family: inherit; }
 .lexicon-toolbar { display: flex; gap: 8px; align-items: center; margin: 10px 0 4px; }
 .lexicon-corpus-toggle { display: flex; gap: 2px; background: var(--rule); border-radius: 6px; padding: 2px; }
 .lct-btn { padding: 3px 10px; font-size: 12px; font-weight: 600; border: none; border-radius: 4px; cursor: pointer; background: transparent; color: var(--ink-2); }
-.lct-btn.on { background: var(--paper); color: var(--navy); box-shadow: 0 1px 3px rgba(0,0,0,.1); }
+.lct-btn.on { background: var(--paper); color: var(--ink); box-shadow: 0 1px 3px rgba(0,0,0,.1); }
 .lexicon-definition { font-size: 15px; color: var(--ink-2); line-height: 1.6; margin-bottom: 24px; }
 
 /* Distribution */
@@ -332,11 +332,11 @@ input { font-family: inherit; }
 .search-go {
   width: 34px; height: 34px;
   border-radius: 6px;
-  background: var(--navy);
-  color: #fff;
+  background: var(--ink);
+  color: #f4f6fa;
   display: grid; place-items: center;
 }
-.search-go:hover { background: var(--navy-2); }
+.search-go:hover { opacity: 0.85; }
 .spinner {
   width: 14px; height: 14px;
   border-radius: 50%;
@@ -1993,7 +1993,7 @@ input { font-family: inherit; }
 .metav-type-tabs { display: flex; gap: 4px; margin-bottom: 10px; }
 .metav-type-tab { flex: 1; padding: 5px 0; font-size: 12px; border-radius: 6px; color: var(--ink-3); border: 1px solid var(--rule); background: var(--paper); transition: background 0.1s, color 0.1s; }
 .metav-type-tab:hover { color: var(--ink); border-color: var(--ink-3); }
-.metav-type-tab.on { background: var(--navy); border-color: var(--navy); color: #f4f6fa; font-weight: 500; }
+.metav-type-tab.on { background: #fff; border-color: var(--ink-2); color: var(--ink); font-weight: 500; }
 .metav-meta { display: flex; flex-wrap: wrap; gap: 6px; }
 .metav-tag {
   font-size: 11px;
@@ -2169,7 +2169,7 @@ input { font-family: inherit; }
   text-align: left;
 }
 .nav-book:hover { color: var(--ink); }
-.nav-book.on { background: var(--navy); color: #f4f6fa; border-radius: 5px; }
+.nav-book.on { background: var(--bg-sunk); color: var(--ink); font-weight: 600; border-radius: 5px; }
 .nav-book-name { letter-spacing: -0.005em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 
 .nav-chips {
@@ -2189,7 +2189,7 @@ input { font-family: inherit; }
   border: none;
 }
 .ch-chip:hover { color: var(--ink); }
-.ch-chip.on { background: var(--navy); color: #f4f6fa; font-weight: 600; }
+.ch-chip.on { color: var(--ink); font-weight: 700; }
 
 /* ============================================================
    READING TOOLBAR (new bar — desktop library, ≥1100px only)
