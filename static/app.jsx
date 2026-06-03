@@ -2653,20 +2653,20 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, onWordClick, pen
       )}
 
 
-      {groupings && (
+      {groupings && !profile && (
         <div style={{marginTop: '20px', display: 'flex', flexDirection: 'column', gap: '10px'}}>
           <div className="lexicon-dist-label">rendered as "{query.trim()}"</div>
           {groupings.map(g => (
             <div key={g.strongs} className="lexicon-dist-grid">
-              <button className={"lexicon-dist-book" + (profile?.strongs === g.strongs ? " selected" : "")}
-                onClick={() => loadProfile(g.strongs)}>
+              <button className="lexicon-dist-book"
+                onClick={() => loadProfile(g.strongs, corpus === "all" ? undefined : corpus)}>
                 <span className="lexicon-match-strongs">{g.strongs}</span>
                 {g.translit && <span className="lexicon-match-translit"> {g.translit}</span>}
                 <span className="lexicon-dist-count">{g.count}</span>
               </button>
               {(g.glosses || []).map(({gloss, count}) => (
                 <button key={gloss} className="lexicon-dist-book"
-                  onClick={() => { loadProfile(g.strongs); setPendingGloss(gloss); }}>
+                  onClick={() => { loadProfile(g.strongs, corpus === "all" ? undefined : corpus); setPendingGloss(gloss); }}>
                   <span className="lexicon-dist-name">{gloss}</span>
                   <span className="lexicon-dist-count">{count}</span>
                 </button>
@@ -2678,21 +2678,25 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, onWordClick, pen
 
       {profile && (
         <div className="lexicon-profile">
-          {!groupings && (
-            <div className="lexicon-profile-header">
-              <span className="lexicon-lemma">{profile.lemma}</span>
-              <span className="lexicon-translit">{profile.translit}</span>
-              <span className="lexicon-strongs-tag">{profile.strongs}</span>
-              <span className="lexicon-total">{
-                testament === "all"
-                  ? profile.total
-                  : (filteredBooks || profile.books)
-                      .filter(b => (b.testament || "").toLowerCase() === testament)
-                      .reduce((s, b) => s + b.count, 0)
-              } occurrences</span>
-            </div>
+          {groupings && (
+            <button className="lexicon-back-link"
+              onClick={() => { setProfile(null); setSelectedBook(null); setVerseList(null); }}>
+              ← Back to "{query.trim()}" results
+            </button>
           )}
-          {!groupings && profile.definition && (
+          <div className="lexicon-profile-header">
+            <span className="lexicon-lemma">{profile.lemma}</span>
+            <span className="lexicon-translit">{profile.translit}</span>
+            <span className="lexicon-strongs-tag">{profile.strongs}</span>
+            <span className="lexicon-total">{
+              testament === "all"
+                ? profile.total
+                : (filteredBooks || profile.books)
+                    .filter(b => (b.testament || "").toLowerCase() === testament)
+                    .reduce((s, b) => s + b.count, 0)
+            } occurrences</span>
+          </div>
+          {profile.definition && (
             <div className="lexicon-def-section">
               <button className="lexicon-def-toggle" onClick={() => setShowDef(v => !v)}>
                 Definition {showDef ? "▲" : "▼"}
