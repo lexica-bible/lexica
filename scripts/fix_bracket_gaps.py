@@ -12,6 +12,26 @@ import sqlite3
 
 DB      = "bible.db"
 BH_DB   = "bh_scrape.db"
+
+# bh_scrape.db uses full lowercase names; bible.db uses ABP abbreviations
+BH_BOOK = {
+    "Gen":"genesis","Exo":"exodus","Lev":"leviticus","Num":"numbers","Deu":"deuteronomy",
+    "Jos":"joshua","Jdg":"judges","Rth":"ruth","1Sa":"1_samuel","2Sa":"2_samuel",
+    "1Ki":"1_kings","2Ki":"2_kings","1Ch":"1_chronicles","2Ch":"2_chronicles",
+    "Ezr":"ezra","Neh":"nehemiah","Est":"esther","Job":"job","Psa":"psalms",
+    "Pro":"proverbs","Ecc":"ecclesiastes","Sol":"songs","Isa":"isaiah",
+    "Jer":"jeremiah","Lam":"lamentations","Eze":"ezekiel","Dan":"daniel",
+    "Hos":"hosea","Joe":"joel","Amo":"amos","Oba":"obadiah","Jon":"jonah",
+    "Mic":"micah","Nah":"nahum","Hab":"habakkuk","Zep":"zephaniah",
+    "Hag":"haggai","Zec":"zechariah","Mal":"malachi",
+    "Mat":"matthew","Mar":"mark","Luk":"luke","Joh":"john","Act":"acts",
+    "Rom":"romans","1Co":"1_corinthians","2Co":"2_corinthians","Gal":"galatians",
+    "Eph":"ephesians","Php":"philippians","Col":"colossians",
+    "1Th":"1_thessalonians","2Th":"2_thessalonians","1Ti":"1_timothy","2Ti":"2_timothy",
+    "Tit":"titus","Phm":"philemon","Heb":"hebrews","Jas":"james",
+    "1Pe":"1_peter","2Pe":"2_peter","1Jo":"1_john","2Jo":"2_john","3Jo":"3_john",
+    "Jud":"jude","Rev":"revelation",
+}
 DRY_RUN = "--dry-run" in sys.argv
 
 args = [a for a in sys.argv[1:] if not a.startswith("--")]
@@ -73,12 +93,13 @@ for gv in gap_verses[:10]:  # inspect top 10
     missing  = sorted(all_pos - have_pos)
     print(f"  Have greek_pos: {sorted(have_pos)}  Missing: {missing}")
 
-    # What bh_scrape.db has for this verse
+    # What bh_scrape.db has for this verse (uses full book names)
+    bh_book = BH_BOOK.get(book, book.lower())
     bh = bh_conn.execute("""
         SELECT position, english, greek_pos, strongs
         FROM bh_words WHERE book=? AND chapter=? AND verse=?
         ORDER BY position
-    """, (book, ch, vs)).fetchall()
+    """, (bh_book, ch, vs)).fetchall()
     print(f"  bh_scrape has {len(bh)} words for this verse:")
     for w in bh:
         flag = " ← MISSING" if w['greek_pos'] in missing else ""
