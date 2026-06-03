@@ -1647,9 +1647,11 @@ def verse_words(book, chapter, verse):
             """SELECT w.position, w.english, w.english_head, w.greek_pos, w.bracket_id, w.italic,
                       COALESCE(w.italic_words, '') AS italic_words,
                       w.strongs_base, w.strongs, w.is_pn,
-                      l.lemma, l.translit, l.kjv_def, l.strongs_def, l.derivation
+                      l.lemma, l.translit, l.kjv_def, l.strongs_def, l.derivation,
+                      t.entity_type AS pn_type
                FROM words w
                LEFT JOIN lexicon l ON l.strongs = SUBSTR(w.strongs_base, 2)
+               LEFT JOIN tipnr t ON t.strongs = w.strongs_base
                WHERE w.verse_id = ?
                ORDER BY w.position""",
             (row["id"],),
@@ -1674,6 +1676,7 @@ def verse_words(book, chapter, verse):
                 "strongs_def": (w["strongs_def"] or "").strip(),
                 "derivation": (w["derivation"] or "").strip(),
                 "is_pn":      bool(w["is_pn"] or 0),
+                "pn_type":    w["pn_type"],
                 "is_content": w["strongs_base"] not in _FUNCTION_STRONGS,
             }
             for w in wrows
