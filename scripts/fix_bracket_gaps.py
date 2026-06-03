@@ -63,16 +63,25 @@ for gv in gap_verses[:10]:  # inspect top 10
     print(f"--- {book} {ch}:{vs} bracket_id={bid} "
           f"(cnt={gv['cnt']} max_pos={gv['max_pos']} gap={gv['gap']}) ---")
 
-    # Current words in bible.db for this verse
-    cur = main_conn.execute("""
-        SELECT position, english, greek_pos, strongs_base, bracket_id
-        FROM words WHERE verse_id=? ORDER BY position
-    """, (gv['verse_id'],)).fetchall()
-    print("  Current bible.db words:")
-    for w in cur:
-        marker = " ← GAP?" if (w['bracket_id'] == bid and w['greek_pos'] is None and
-                                any(x['bracket_id'] == bid for x in cur)) else ""
-        print(f"    pos={w['position']} greek_pos={w['greek_pos']} "
-              f"bracket={w['bracket_id']} strongs={w['strongs_base']} "
-              f"english={w['english']!r}{marker}")
+    # Current words in bible.db for this bracket group
+    cur_bracket = main_conn.execute("""
+        SELECT position, english, greek_pos, strongs_base
+        FROM words WHERE verse_id=? AND bracket_id=? ORDER BY greek_pos
+    """, (gv['verse_id'], bid)).fetchall()
+    have_pos = {w['greek_pos'] for w in cur_bracket if w['greek_pos']}
+    all_pos  = set(range(1, gv['max_pos'] + 1))
+    missing  = sorted(all_pos - have_pos)
+    print(f"  Have greek_pos: {sorted(have_pos)}  Missing: {missing}")
+
+    # What bh_scrape.db has for this verse
+    bh = bh_conn.execute("""
+        SELECT position, english, greek_pos, strongs
+        FROM bh_words WHERE book=? AND chapter=? AND verse=?
+        ORDER BY position
+    """, (book, ch, vs)).fetchall()
+    print(f"  bh_scrape has {len(bh)} words for this verse:")
+    for w in bh:
+        flag = " ← MISSING" if w['greek_pos'] in missing else ""
+        print(f"    bh_pos={w['position']} greek_pos={w['greek_pos']} "
+              f"strongs={w['strongs']} english={w['english']!r}{flag}")
     print()
