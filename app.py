@@ -1219,6 +1219,20 @@ def _migrate_db():
             CREATE INDEX IF NOT EXISTS idx_ai_cache_ver ON ai_search_cache(ver_key);
         """)
         conn.commit()
+        # KJV tables (kjv_words ~790k rows) shipped without indexes, making every
+        # Lexicon/KJV strongs lookup, join, and word match a full scan. These make
+        # them index-backed. Idempotent; wrapped in case a partial DB lacks the tables.
+        try:
+            conn.executescript("""
+                CREATE INDEX IF NOT EXISTS idx_kjv_strongs_word    ON kjv_strongs(word_id);
+                CREATE INDEX IF NOT EXISTS idx_kjv_strongs_strongs ON kjv_strongs(strongs_id);
+                CREATE INDEX IF NOT EXISTS idx_kjv_words_bcv        ON kjv_words(book_id, chapter, verse_num);
+                CREATE INDEX IF NOT EXISTS idx_kjv_words_word       ON kjv_words(word COLLATE NOCASE);
+                CREATE INDEX IF NOT EXISTS idx_kjv_verses_bcv       ON kjv_verses(book_id, chapter, verse_num);
+            """)
+            conn.commit()
+        except sqlite3.OperationalError:
+            pass  # KJV tables not present in this DB
     finally:
         conn.close()
 
@@ -2071,7 +2085,7 @@ def lexicon_english():
                 FROM kjv_words kw
                 JOIN kjv_strongs ks ON ks.word_id = kw.word_id
                 JOIN bdb b ON b.strongs_id = ks.strongs_id
-                WHERE LOWER(kw.word) = LOWER(?)
+                WHERE kw.word = ? COLLATE NOCASE
                   AND ks.strongs_id LIKE 'H%'
                   AND (kw.italic IS NULL OR kw.italic = 0)
                 GROUP BY ks.strongs_id
