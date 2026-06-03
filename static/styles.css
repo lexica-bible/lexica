@@ -2253,5 +2253,5 @@ input { font-family: inherit; }
     border: 1px solid var(--rule); background: #fff;
   }
   .lib-toggle:hover { color: var(--ink); border-color: var(--ink-3); }
-  .lib-toggle.on { background: var(--navy); border-color: var(--navy); color: #f4f6fa; }
+  .lib-toggle.on { background: #fff; border-color: var(--ink-3); color: var(--ink); font-weight: 500; }
 }
