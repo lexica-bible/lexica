@@ -194,6 +194,118 @@ class RahlfsLXX:
         return out
 
 
+# ── TAGNT (STEPBible) New-Testament source ──────────────────────────────────
+# STEPBible "Translators Amalgamated Greek NT" (CC-BY 4.0). Tab-separated; the
+# two fields we use are:
+#   field 1: 'Jhn.1.1#01=NKO'              → book.ch.vs # word = editions
+#   field 4: '<dStrong>=<RobinsonMorph>'   e.g. 'G0846=P-GSM', 'G3056=N-NSM'
+#
+# CRITICAL difference from Rahlfs: TAGNT's dStrong is LEMMA-collapsed for the
+# personal pronouns — σύ AND ὑμεῖς both = G4771, and ALL 1st-person obliques +
+# 1st PLURAL = G3165 — with the case/person/number living in the morph. Reading
+# the raw number would tag σου as G4771 (not G4675) and ἡμεῖς as G3165 (a 1st-
+# SINGULAR number → "me"), contradicting the OT fix + the app's lexicon (both
+# use the case-split Strong's: σου=G4675, ὑμῶν=G5216, ἡμεῖς=G2249…). So verse()
+# CONVERTS (lemma#, morph) → the same case-split numbers the OT produced; αὐτός
+# is G846 across cases in BOTH schemes and passes straight through. After the
+# conversion, correct_verse + both guards + the identity sets work UNCHANGED —
+# this class fully absorbs the TAGNT quirk.
+
+# ABP NT abbrev → TAGNT (OSIS) abbrev. Identical for 25 of 27 books; only Mark
+# (Mar→Mrk) and John (Joh→Jhn) differ (verified vs the ABP NT txt prefixes).
+_ABP_TO_TAGNT = {
+    "Mat":"Mat", "Mar":"Mrk", "Luk":"Luk", "Joh":"Jhn", "Act":"Act", "Rom":"Rom",
+    "1Co":"1Co", "2Co":"2Co", "Gal":"Gal", "Eph":"Eph", "Php":"Php", "Col":"Col",
+    "1Th":"1Th", "2Th":"2Th", "1Ti":"1Ti", "2Ti":"2Ti", "Tit":"Tit", "Phm":"Phm",
+    "Heb":"Heb", "Jas":"Jas", "1Pe":"1Pe", "2Pe":"2Pe", "1Jn":"1Jn", "2Jn":"2Jn",
+    "3Jn":"3Jn", "Jud":"Jud", "Rev":"Rev",
+}
+
+# (person, case, number) → case-split Strong's (the OT-fix convention). αὐτός is
+# handled separately (G846, never case-split). Vocative is folded into nominative.
+_PRON_CASESPLIT = {
+    ("2","N","S"):"4771", ("2","G","S"):"4675", ("2","D","S"):"4671", ("2","A","S"):"4571",  # σύ
+    ("2","N","P"):"5210", ("2","G","P"):"5216", ("2","D","P"):"5213", ("2","A","P"):"5209",  # ὑμεῖς
+    ("1","N","S"):"1473", ("1","G","S"):"3450", ("1","D","S"):"3427", ("1","A","S"):"3165",  # ἐγώ  (keep)
+    ("1","N","P"):"2249", ("1","G","P"):"2257", ("1","D","P"):"2254", ("1","A","P"):"2248",  # ἡμεῖς (split)
+}
+# Person-augmented PERSONAL pronoun morph only: P-1GS, P-2NP… Reflexive (F-) and
+# possessive (S-) are NOT converted — they own distinct Strong's (σεαυτοῦ G4572,
+# ἑαυτοῦ G1438, ἐμός G1699…) and must not be remapped onto the personal numbers;
+# they pass through on their own dStrong (→ flagged, never mis-fixed). 3rd-person
+# αὐτός is 'P-GSM' (no person digit) and is handled by the G846 short-circuit.
+_TAGNT_PRON_RE = re.compile(r"^P-([12])([NVGDA])([SP])")
+
+def _tagnt_casesplit(dbase, morph):
+    """TAGNT lemma-collapsed dStrong + morph → case-split Strong's (bare).
+    αὐτός→846; a person-augmented personal pronoun → looked up by (person, case,
+    number); anything else passes through on its own number so NW anchoring still
+    works and non-target pronouns flag rather than mis-fix."""
+    if dbase == "846":
+        return "846"
+    m = _TAGNT_PRON_RE.match(morph or "")
+    if not m:
+        return dbase
+    person, case, num = m.group(1), m.group(2), m.group(3)
+    if case == "V":
+        case = "N"
+    return _PRON_CASESPLIT.get((person, case, num), dbase)
+
+def _tagnt_is_pron(morph):
+    """Personal/reflexive/possessive pronoun — the classes ABP's mis-tagged
+    G1473 can legitimately align to (for the NW pronoun-aware scoring). Excludes
+    the article (T-), demonstratives (D-), relatives (R-), and PREP (the '-'
+    check rejects 'PREP' despite its leading P)."""
+    return bool(morph) and morph[0] in "PFS" and morph[1:2] == "-"
+
+
+class TAGNTSource:
+    """STEPBible TAGNT NT — mirrors RahlfsLXX's interface for correct_verse.
+    booknum(abp_abbrev) returns the TAGNT book abbrev (str) or None (scope gate);
+    verse() returns [(strong_base_casesplit, morph, is_pron), …] in text order."""
+
+    _REF_RE = re.compile(r"^([0-9A-Za-z]+)\.(\d+)\.(\d+)#")
+    _F4_RE  = re.compile(r"^(G\d+)=([A-Za-z0-9-]+)")   # first 'G####=MORPH' (ignores '+ G..' crasis tail)
+
+    # SCOPE GATE (correction): only books here are corrected at build time. Start
+    # with John for the proof; extend after --dump validation (MISMATCH stays 0).
+    # (--dump-nt bypasses this via _ABP_TO_TAGNT so any book can be inspected.)
+    SCOPE = {"Joh"}
+
+    def __init__(self, tagnt_paths):
+        self._verses = {}        # (tagnt_book, ch, vs) -> [(strong, morph, is_pron)]
+        for p in tagnt_paths:
+            self._load(p)
+
+    def _load(self, path):
+        with open(path, encoding="utf-8-sig", errors="replace") as f:
+            for line in f:
+                if not line or line[0] in "#\r\n":          # legend + verse-comment headers
+                    continue
+                parts = line.rstrip("\n").split("\t")
+                if len(parts) < 4:
+                    continue
+                mref = self._REF_RE.match(parts[0])
+                if not mref:
+                    continue
+                mf4 = self._F4_RE.match(parts[3].strip())
+                if not mf4:
+                    continue
+                dbase = base(mf4.group(1)).lstrip("0") or "0"   # 'G0846' -> '846'
+                morph = mf4.group(2)
+                self._verses.setdefault(
+                    (mref.group(1), int(mref.group(2)), int(mref.group(3))), []
+                ).append((_tagnt_casesplit(dbase, morph), morph, _tagnt_is_pron(morph)))
+
+    def booknum(self, abp_abbrev):
+        if abp_abbrev not in self.SCOPE:
+            return None
+        return _ABP_TO_TAGNT.get(abp_abbrev)
+
+    def verse(self, tagnt_book, chapter, vs):
+        return self._verses.get((tagnt_book, chapter, vs), [])
+
+
 # ── pronoun-aware Needleman–Wunsch global alignment ─────────────────────────
 def align(a_bases, b_bases, b_pron, MATCH=3, MIS=-1, GAP=-2):
     """
@@ -481,12 +593,113 @@ def _dump(abp_abbrev, abp_txt, rahlfs_dir, sample=12):
             print(f"     {ref:<12} '{gw}'  morph={mo}")
 
 
+# ── NT (TAGNT) probe / dump — same logic as the OT ones, TAGNT source ────────
+def _probe_nt(abp_abbrev, abp_txt, tagnt_paths):
+    src  = TAGNTSource(tagnt_paths)
+    bnum = _ABP_TO_TAGNT.get(abp_abbrev)        # inspection: bypass SCOPE gate
+    if not bnum:
+        print(f"No TAGNT book mapping for {abp_abbrev}"); return
+
+    verse_re = re.compile(r"^\((\w+)\s+(\d+):(\d+)\)\s+(.*)")
+    cats = {"αὐτός": 0, "σύ": 0, "ὑμεῖς": 0, "ἡμεῖς": 0, "ἐγώ": 0}
+    n1473 = flag = 0
+    flag_reasons = {}
+    for line in open(abp_txt, encoding="utf-8", errors="replace"):
+        m = verse_re.match(line.strip())
+        if not m or m.group(1) != abp_abbrev:
+            continue
+        ch, vs = int(m.group(2)), int(m.group(3))
+        abp_raw = _STRONGS_RE.findall(m.group(4))
+        corrs = correct_verse(abp_raw, src.verse(bnum, ch, vs), _verse_glosses(m.group(4)))
+        for c in corrs:
+            if c.action in ("fix", "keep"):
+                n1473 += 1; cats[c.reason] = cats.get(c.reason, 0) + 1
+            elif c.action == "flag":
+                n1473 += 1; flag += 1
+                flag_reasons[c.reason.split(":")[0]] = flag_reasons.get(c.reason.split(":")[0], 0) + 1
+    resolved = n1473 - flag
+    print(f"\n══ lxx_align NT self-probe: {abp_abbrev} → {bnum} ══")
+    print(f"  total ABP G1473 slots : {n1473}")
+    for k in ("αὐτός", "σύ", "ὑμεῖς", "ἡμεῖς", "ἐγώ"):
+        print(f"    → {k:<6} : {cats.get(k,0)}")
+    print(f"    → FLAG  : {flag}  {dict(sorted(flag_reasons.items(), key=lambda x:-x[1]))}")
+    print(f"  RESOLVED : {resolved}/{n1473} = {100*resolved/(n1473 or 1):.1f}%")
+
+
+def _dump_nt(abp_abbrev, abp_txt, tagnt_paths, sample=12):
+    bnum = _ABP_TO_TAGNT.get(abp_abbrev)        # inspection: bypass SCOPE gate
+    if not bnum:
+        print(f"No TAGNT mapping for {abp_abbrev}"); return
+    src = TAGNTSource(tagnt_paths)
+    verse_re = re.compile(r"^\((\w+)\s+(\d+):(\d+)\)\s+(.*)")
+    mism = []           # (ref, gloss_word, cat, morph, en_bucket, cat_bucket)
+    okeng = {}          # cat -> [(ref, gloss_word, morph)]
+    morph_only = fixes = guard_flags = gloss_flags = 0
+    for line in open(abp_txt, encoding="utf-8", errors="replace"):
+        m = verse_re.match(line.strip())
+        if not m or m.group(1) != abp_abbrev:
+            continue
+        ch, vs = int(m.group(2)), int(m.group(3))
+        text = m.group(4)
+        abp_raw = _STRONGS_RE.findall(text)
+        glosses = _verse_glosses(text)
+        corrs = correct_verse(abp_raw, src.verse(bnum, ch, vs), glosses)
+        ref = f"{abp_abbrev} {ch}:{vs}"
+        for i, c in enumerate(corrs):
+            if c.action == "flag" and c.reason == "low-confidence-verse":
+                guard_flags += 1
+                continue
+            if c.action == "flag" and c.reason.startswith("gloss-mismatch"):
+                gloss_flags += 1
+                continue
+            if c.action not in ("fix", "keep"):
+                continue
+            fixes += 1
+            cat = c.reason                       # αὐτός / σύ / ὑμεῖς / ἡμεῖς / ἐγώ
+            gword = _last_en_word(glosses[i] if i < len(glosses) else "")
+            ebkt = _EN_BUCKET.get(gword)
+            cbkt = _CAT_BUCKET.get(cat)
+            if gword.endswith("self") or gword.endswith("selves"):
+                ebkt = cbkt                      # intensive/reflexive: never flag
+            if ebkt is None:
+                morph_only += 1                  # blank/non-pronoun gloss → rely on morph
+            elif ebkt == cbkt:
+                okeng.setdefault(cat, []).append((ref, gword, c.morph))
+            else:
+                mism.append((ref, gword, cat, c.morph, ebkt, cbkt))
+    print(f"\n══ lxx_align --dump-nt: {abp_abbrev} → {bnum} ══")
+    print(f"  corrected (fix+keep) slots : {fixes}")
+    print(f"  guard-flagged (low-conf)   : {guard_flags}")
+    print(f"  gloss-flagged (person≠ABP) : {gloss_flags}")
+    print(f"  English gloss CONFIRMS     : {sum(len(v) for v in okeng.values())}")
+    print(f"  no English cue (morph only): {morph_only}")
+    print(f"  *** MISMATCH (should be 0) : {len(mism)} ***")
+    if mism:
+        print("\n  ── MISMATCHES (english gloss contradicts assigned number) ──")
+        for ref, gw, cat, mo, eb, cb in mism[:80]:
+            print(f"    {ref:<12} gloss '{gw}' ({eb}) → assigned {cat} ({cb})  morph={mo}")
+    print("\n  ── sample CONFIRMED corrections (english agrees with number) ──")
+    for cat in ("αὐτός", "σύ", "ὑμεῖς", "ἡμεῖς", "ἐγώ"):
+        rows = okeng.get(cat, [])
+        if not rows:
+            continue
+        print(f"   {cat} ({len(rows)}):")
+        for ref, gw, mo in rows[:sample]:
+            print(f"     {ref:<12} '{gw}'  morph={mo}")
+
+
 if __name__ == "__main__":
     if len(sys.argv) >= 5 and sys.argv[1] == "--probe":
         _probe(sys.argv[2], sys.argv[3], sys.argv[4])
     elif len(sys.argv) >= 5 and sys.argv[1] == "--dump":
         _dump(sys.argv[2], sys.argv[3], sys.argv[4])
+    elif len(sys.argv) >= 5 and sys.argv[1] == "--probe-nt":
+        _probe_nt(sys.argv[2], sys.argv[3], sys.argv[4:])
+    elif len(sys.argv) >= 5 and sys.argv[1] == "--dump-nt":
+        _dump_nt(sys.argv[2], sys.argv[3], sys.argv[4:])
     else:
         print(__doc__)
-        print("Usage: python3 scripts/lxx_align.py --probe <ABP_ABBREV> <abp_book.txt> <rahlfs_dir>")
-        print("       python3 scripts/lxx_align.py --dump  <ABP_ABBREV> <abp_book.txt> <rahlfs_dir>")
+        print("Usage: python3 scripts/lxx_align.py --probe   <ABP_ABBREV> <abp_book.txt> <rahlfs_dir>")
+        print("       python3 scripts/lxx_align.py --dump    <ABP_ABBREV> <abp_book.txt> <rahlfs_dir>")
+        print("       python3 scripts/lxx_align.py --probe-nt <ABP_ABBREV> <abp_book.txt> <tagnt_file...>")
+        print("       python3 scripts/lxx_align.py --dump-nt  <ABP_ABBREV> <abp_book.txt> <tagnt_file...>")
