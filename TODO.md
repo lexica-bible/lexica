@@ -29,6 +29,57 @@ Full detail + bug evidence in memory `project_architecture_rework.md`. **#1 and 
 - `dedup_words.py` — remove exact-duplicate rows
 - All have `--dry-run`. Post-rebuild checklist is in CLAUDE.md.
 
+## Full Corpus Audit — verify the whole text output (queued 2026-06-04)
+
+GOAL: a single rigorous audit report over all ~624k word rows — Strong's tags, interlinear
+Greek lemmas, English glosses, and word order. PRINCIPLE (learned from the αὐτός/G1473 fix):
+you can't audit a corpus against itself — audit by TRIANGULATION against independent witnesses.
+Now newly possible because the `morph` + `lemma` columns exist (rebuild #6). Run when the
+active feature work is settled, NOT mid-change. Output is ONE report = near-clean bill of
+health on numbers/lemmas (objective) + a prioritized SUSPECT list for English (subjective).
+
+HONEST CEILING (state this up front so nobody expects a clean "all-correct" on English):
+- **Strong's tags + Greek lemmas** → highly auditable; independent ground truth exists
+  (Rahlfs OT, TAGNT NT) + internal cross-checks. Can approach a verifiable verdict.
+- **English correctness + word order** → only PARTIALLY auditable. The English is ABP's own
+  human translation; there is NO machine ground truth for "is this gloss right / in the right
+  order." Can verify STRUCTURE (ordering invariants, orphan slots) and FLAG semantic suspects
+  (LLM), but cannot mechanically PROVE the translation correct. Ceiling = human review.
+
+### Tier 1 — internal consistency (no external data, pure SQL, ~seconds; do FIRST)
+Highest value per effort; extends `health_check.py`. The four signals on each word must agree:
+- **Strong's ↔ lemma**: compare `words.lemma` vs `lexicon[SUBSTR(strongs_base,2)].lemma`
+  (G-words) — a mismatch is exactly the αὐτός/ἐγώ defect, now catchable for EVERY word,
+  zero external files. (This single check would have caught the original corruption instantly.)
+- **Strong's ↔ morph**: verb-number with a noun morph (or vice-versa) → flag.
+- **Slot integrity**: Greek+Strong's present but empty English; English with no source word
+  (beyond known italic/supplied); orphan brackets; greek_pos gaps. (Some already in health_check.)
+
+### Tier 2 — external alignment (Rahlfs OT / TAGNT NT; refs + aligner already on PA)
+`lxx_align.py` already aligns ABP↔reference by position — the pronoun fix used it on G1473
+slots only. A full audit = the SAME run in "report everything" mode (new `--audit` mode):
+diff EVERY word's Strong's and lemma vs its aligned reference token. Partition the flags:
+- number/lemma **contradicts ABP's own English gloss** → likely REAL error (reuse the
+  gloss-consistency guard that drove pronoun MISMATCH to 0),
+- **textual divergence** (ABP=Vaticanus/Sixtine vs Rahlfs=eclectic) → expected, NOT an error,
+- **alignment gap** → needs a look.
+The partition is the whole trick — separates "bug" from "legitimately different text."
+Est. a focused session; reuses existing files (~/LXX-Rahlfs-1935, ~/TAGNT_*.txt).
+
+### Tier 3 — semantic English pass (LLM-assisted, fuzzy; decide separately if worth the spend)
+- Batch each word's (lemma, Strong's gloss, ABP English) through Haiku: "does this English
+  plausibly render this Greek word?" → flags gross mismatches (e.g. a noun gloss on a verb).
+  Produces a SUSPECT list, never "all correct." At 624k rows it's a real cost/time call —
+  run on suspect CLASSES first (e.g. only Tier-1/2 flagged rows), not the whole corpus blind.
+- Word order: mostly the structural ordering checks (symptom #2 class); true faithfulness
+  needs sampling + human/LLM review. Inherently judgment, not pass/fail.
+
+DELIVERABLES: extend `health_check.py` (Tier 1) + add an `audit_align.py` / `lxx_align --audit`
+mode (Tier 2); Tier 3 is an optional `audit_english_llm.py` gated on a go/no-go on cost.
+Would make this the most rigorously-audited ABP digital edition in existence — nobody
+downstream of ABP audits the source at all (see the αὐτós saga, memory
+`project_pronoun_strongs_corruption`).
+
 ## _split_compounds demonstrative over-reach — "this/that of X" (queued 2026-06-04)
 
 `_split_compounds` pulls a word out of an already-correct multi-word gloss into a
