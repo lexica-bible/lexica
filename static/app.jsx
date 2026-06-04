@@ -98,6 +98,115 @@ function strongsTag(snum) {
   return `${!isNaN(n) && n > 5624 ? "H" : "G"}${bare}`;
 }
 
+// ---- Morphology decoder (words.morph) -----------------------------------
+// OT = CATSS dotted (V.AAI3S, N.GSM, RP.GS, bare C/P/D/X); NT = Robinson
+// hyphen (V-PAI-3S, N-ASF, P-1GS, PRT-N, CONJ). Verbs start V in both, but
+// the rest CONFLICTS by scheme (CATSS perfect=X/imperative=D; Robinson
+// perfect=R/imperative=M) → separate tables. Returns e.g.
+// "Verb · Aorist · Active · Indicative · 3rd person · Singular", or "" when
+// morph is null/unmappable (caller hides the line — never shows "unknown").
+const _CASE = { N:"Nominative", V:"Vocative", G:"Genitive", D:"Dative", A:"Accusative" };
+const _NUM  = { S:"Singular", P:"Plural", D:"Dual" };
+const _GEN  = { M:"Masculine", F:"Feminine", N:"Neuter" };
+const _PERS = { "1":"1st person", "2":"2nd person", "3":"3rd person" };
+
+const _CATSS_POS = { N:"Noun", A:"Adjective", RA:"Article", RP:"Pronoun",
+  RD:"Demonstrative pronoun", RR:"Relative pronoun", RI:"Interrogative pronoun",
+  RX:"Indefinite pronoun", V:"Verb", C:"Conjunction", P:"Preposition",
+  D:"Adverb", X:"Particle", M:"Numeral", I:"Interjection" };
+const _CATSS_TENSE = { P:"Present", I:"Imperfect", F:"Future", A:"Aorist", X:"Perfect", Y:"Pluperfect" };
+const _CATSS_VOICE = { A:"Active", M:"Middle", P:"Passive" };
+const _CATSS_MOOD  = { I:"Indicative", D:"Imperative", S:"Subjunctive", O:"Optative", N:"Infinitive", P:"Participle" };
+
+const _ROB_POS = { N:"Noun", A:"Adjective", T:"Article", P:"Pronoun",
+  R:"Relative pronoun", D:"Demonstrative pronoun", K:"Correlative pronoun",
+  I:"Interrogative pronoun", X:"Indefinite pronoun", Q:"Correlative pronoun",
+  F:"Reflexive pronoun", S:"Possessive pronoun", C:"Reciprocal pronoun",
+  V:"Verb", CONJ:"Conjunction", PREP:"Preposition", ADV:"Adverb",
+  PRT:"Particle", COND:"Conditional", INJ:"Interjection", HEB:"Hebrew", ARAM:"Aramaic" };
+const _ROB_TENSE = { P:"Present", I:"Imperfect", F:"Future", A:"Aorist", R:"Perfect", L:"Pluperfect" };
+const _ROB_VOICE = { A:"Active", M:"Middle", P:"Passive", E:"Middle/Passive",
+  D:"Middle deponent", O:"Passive deponent", N:"Middle/Passive deponent" };
+const _ROB_MOOD  = { I:"Indicative", S:"Subjunctive", O:"Optative", M:"Imperative", N:"Infinitive", P:"Participle" };
+
+function _decodeCNG(s) {            // case + number + (optional) gender, by position
+  const out = [];
+  if (s[0] && _CASE[s[0]]) out.push(_CASE[s[0]]);
+  if (s[1] && _NUM[s[1]])  out.push(_NUM[s[1]]);
+  if (s[2] && _GEN[s[2]])  out.push(_GEN[s[2]]);
+  return out;
+}
+
+function decodeMorph(morph) {
+  if (!morph) return "";
+  const m = morph.trim();
+  let parts = [];
+  try {
+    if (m.indexOf(".") >= 0) {                         // ---- CATSS (OT) ----
+      const dot = m.indexOf(".");
+      const pos = m.slice(0, dot), p = m.slice(dot + 1);
+      if (pos === "V") {
+        parts = ["Verb"];
+        if (_CATSS_TENSE[p[0]]) parts.push(_CATSS_TENSE[p[0]]);
+        if (_CATSS_VOICE[p[1]]) parts.push(_CATSS_VOICE[p[1]]);
+        if (_CATSS_MOOD[p[2]])  parts.push(_CATSS_MOOD[p[2]]);
+        const rest = p.slice(3);
+        if (p[2] === "P")      parts.push(..._decodeCNG(rest));      // participle
+        else if (p[2] !== "N" && rest) {                            // finite (N = infinitive)
+          if (_PERS[rest[0]]) parts.push(_PERS[rest[0]]);
+          if (_NUM[rest[1]])  parts.push(_NUM[rest[1]]);
+        }
+      } else {
+        const label = _CATSS_POS[pos];
+        if (!label) return "";
+        parts = [label, ..._decodeCNG(p)];
+      }
+    } else if (m.indexOf("-") >= 0) {                  // ---- Robinson (NT) ----
+      const seg = m.split("-");
+      const pos = seg[0];
+      if (pos === "V") {
+        let tvm = seg[1] || "";
+        if (/^[23]/.test(tvm)) tvm = tvm.slice(1);     // 2nd aorist/perfect
+        parts = ["Verb"];
+        if (_ROB_TENSE[tvm[0]]) parts.push(_ROB_TENSE[tvm[0]]);
+        if (_ROB_VOICE[tvm[1]]) parts.push(_ROB_VOICE[tvm[1]]);
+        if (_ROB_MOOD[tvm[2]])  parts.push(_ROB_MOOD[tvm[2]]);
+        const rest = seg[2] || "";
+        if (rest) {
+          if (tvm[2] === "P") parts.push(..._decodeCNG(rest));      // participle
+          else {
+            if (_PERS[rest[0]]) parts.push(_PERS[rest[0]]);
+            if (_NUM[rest[1]])  parts.push(_NUM[rest[1]]);
+          }
+        }
+      } else if (pos === "PRT") {
+        parts = ["Particle"];
+        if (seg[1] === "N") parts.push("Negative");
+        else if (seg[1] === "I") parts.push("Interrogative");
+      } else {
+        const label = _ROB_POS[pos];
+        if (!label) return "";
+        const p = seg[1] || "";
+        if (p === "PRI") return "Proper noun (indeclinable)";
+        if (p === "NUI") return "Numeral (indeclinable)";
+        parts = [label];
+        if (pos === "P" && /^[123]/.test(p)) {         // personal pron: person·case·number
+          if (_PERS[p[0]]) parts.push(_PERS[p[0]]);
+          if (_CASE[p[1]]) parts.push(_CASE[p[1]]);
+          if (_NUM[p[2]])  parts.push(_NUM[p[2]]);
+        } else {
+          parts.push(..._decodeCNG(p));                // incl. αὐτός P-GSM, drops trailing -T
+        }
+      }
+    } else {                                           // ---- bare POS token ----
+      const label = (m.length === 1 ? _CATSS_POS[m] : _ROB_POS[m]);
+      if (!label) return "";
+      parts = [label];
+    }
+  } catch (e) { return ""; }
+  return parts.filter(Boolean).join(" · ");
+}
+
 function makeEntry(r, idx) {
   const snum = r.strongs_base === "*" ? "*" : (r.strongs || r.strongs_base);
   return {
@@ -657,6 +766,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   if (!entry) return null;
 
   const barWidth = Math.min(100, (occurrences / Math.max(1, totalResults)) * 100);
+  const morphLine = (entry.greek && !isHebrew) ? decodeMorph(entry.morph) : "";
   const { handleProps, sheetStyle } = useSwipeToDismiss(onClose);
 
   return (
@@ -687,6 +797,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
           {!(isPN && !entry.greek && !isHebrew) && !(isHebrew && (bdbEntry?.xlit || entry.translit) && entry.gloss) && (
             <div className="detail-gloss">{stripArticles(((isPN || metavData) ? extractProperName(entry.gloss) : (entry.greek && (entry.gloss || "").trim().split(/\s+/).length > 2 ? entry.english_head : entry.gloss))?.replace(/[.,;:!?—-]+$/, "").trim())}</div>
           )}
+          {morphLine && <div className="detail-morph">{morphLine}</div>}
         </div>
 
         {(metavLoading || metavPersonData || metavPlaceData) && (
@@ -1771,6 +1882,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
       strongs_raw: snum,
       greek: w.lemma || "",
       translit: w.translit || "",
+      morph: w.morph || "",
       gloss: w.english || "",
       ref: `${selBook.abbrev} ${selChapter}:${v.verse}`,
       book: selBook.abbrev,
