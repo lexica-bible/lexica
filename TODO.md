@@ -219,13 +219,37 @@ Live on `bible.db` = rebuild #6 (rollback `bible_pre_morph_20260604.db`). Detail
 ### ✓ Prose Reading Mode — DONE
 Chip/Prose toggle live. Prose renders clickable inline word spans, no chip borders. Continuous flow and poetry detection complete (Text Structure Session).
 
-### Morphology Display (data DONE 2026-06-04 · display PENDING)
-The `morph` column is now imported, populated, and serialized to the frontend (`w.morph`) —
-rebuild #6, CATSS/Rahlfs (OT) + Robinson/TAGNT (NT), 78% coverage; `words.lemma` stored too.
-REMAINING = the DISPLAY: render the parsing in the word-click sidebar in plain English, e.g.
-"Verb · Aorist · Active · Indicative · 3rd Person · Singular". Decode two morph schemes:
-CATSS dotted (`V.AAI3S`, `N.ASN`, `RA.ASN`…) for OT, Robinson hyphen (`V-AAI-3S`, `N-NSM`,
-`T-NSM`…) for NT.
+### ★ Morphology Display — KICKOFF (data DONE 2026-06-04 · display PENDING · NEXT SESSION)
+
+GOAL: when a Greek word is clicked, show its grammatical parsing in plain English in the
+word-detail sidebar, e.g. **"Verb · Aorist · Active · Indicative · 3rd person · Singular"**
+or **"Noun · Genitive · Singular · Feminine"**. Pure display feature — NO rebuild, NO DB
+writes, frontend-only (+ maybe a tiny serialization confirm). This cashes in rebuild #6's
+`morph` column, which today only facet (c) reads internally.
+
+STATE (already done, don't redo):
+- `words.morph` populated (rebuild #6, ~78%; NULL where the source was blank — just hide the
+  line then). `words.lemma` also populated.
+- `morph` is ALREADY serialized to the frontend as `w.morph` in BOTH word endpoints:
+  `chapter_text` (app.py ~L2486) and the verse-words endpoint (app.py ~L1697). Verify it
+  reaches the detail panel; if `makeEntry`/detail-entry construction drops it, add `morph: w.morph`.
+
+THE WORK = a decoder + sidebar render:
+1. **Enumerate the real codes first** (frequency-ordered, cover the bulk):
+   - OT/CATSS (dotted): `sqlite3 bible.db "SELECT morph,COUNT(*) FROM words WHERE morph LIKE '%.%' GROUP BY 1 ORDER BY 2 DESC LIMIT 80;"`
+   - NT/Robinson (hyphen): `sqlite3 bible.db "SELECT morph,COUNT(*) FROM words WHERE morph LIKE '%-%' GROUP BY 1 ORDER BY 2 DESC LIMIT 80;"`
+2. **Write `decodeMorph(morph)` → string** (pure JS, app.jsx). Detect scheme: contains '.' = CATSS, '-' = Robinson, else single-letter POS (C/X/D/P…). Two morph schemes (verbs start `V` in both):
+   - **CATSS** `POS.PARSE`: nominals `N./A./RA./RD./RP.` + `‹case›‹number›‹gender›` (case NVGDA = Nom/Voc/Gen/Dat/Acc; number S/P/D; gender M/F/N). Verbs `V.` + `‹tense›‹voice›‹mood›` then person+number, or +`‹case/num/gen›` for participles. Tense P/I/F/A/X/Y (pres/impf/fut/aor/perf/plup), voice A/M/P, mood I/D/S/O/N/P (ind/impv/subj/opt/inf/ptcp). Singles: C=conjunction, X=particle, D=adverb, P=preposition, I=interjection.
+   - **Robinson (TAGNT)**: `POS-PARSE`. `N-NSM`/`A-ASF`/`T-NSM`/`P-GSM` = `‹case›‹number›‹gender›`. `V-AAI-3S` = tense-voice-mood then person-number (note leading `2` = second aorist, e.g. `V-2AMS`). Word-POS tags: `CONJ`/`PREP`/`ADV`/`PRT`/`COND`/`INJ`. **The TAGNT source files have a legend in their header `#` lines** — read it for the authoritative Robinson key.
+   - Build from the frequency list so the top ~40 codes/scheme cover most of the corpus; degrade gracefully (show raw code or skip) on anything unmapped.
+3. **Render** in the word-detail sidebar near the lemma/Strong's (the LSJ panel — see `api.lsj`
+   call ~app.jsx:633 and the hero render ~app.jsx:679). One muted line under the headword.
+   ABP G-words only (KJV/Hebrew/`*` proper-noun slots have no `morph` → omit cleanly).
+
+GOTCHAS: ~22% NULL morph (hide, don't show "unknown"); the P/A/etc. letters are
+POSITION-dependent in CATSS (P = present OR passive OR participle by slot); don't confuse the
+display `morph` with facet (c)'s anchor use. Reference legends: TAGNT header lines (Robinson),
+CCAT/CATSS morphology codes (Rahlfs repo `03a_morphology…`).
 
 ### ✓ Parallel Mode Versification Alignment — DONE
 Audited: ABP and KJV both use MT-style verse numbering, so they align in Parallel mode — no
