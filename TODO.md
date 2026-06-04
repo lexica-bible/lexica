@@ -48,17 +48,28 @@ beneficial re-separation of "the"/"their"/"her"/"my" determiners corpus-wide ("t
 article/possessive). Target-POS can't tell "front determiner (split it)" from "middle
 word after a preposition (don't front it)". Commits 924f53c+bdd11d4 reverted.
 
-REAL FIX (next attempt): key on **gloss word-order**, not target POS — only redistribute
-+front a word that is the LEADING run of the gloss (no kept "own" word precedes it). That
-allows "the LORD"/"their X" (determiner first) and blocks "of **this** possession" / "he
-**is** a prophet" (kept word precedes). CAVEATS to validate before trusting it: (a) I did
-NOT fully verify `_split_compounds`'s swap direction during attempt 1 — STUDY the swap
-(L~299) + how it inherits src_bid/greek_pos before changing it; (b) check object-fronting
-cases (object glossed at END, e.g. "[²hatred ¹I will put]") aren't regressed; (c) MANDATORY
-build-to-`bible_test.db` + diff-vs-live + eyeball (the 11k blast radius makes --test on a
-few verses insufficient). Live (rebuild #6) is correct and untouched — this is the only
-remaining symptom-#2 facet. Also relates to the ABP eSword re-source idea
-(project_abp_esword_fidelity) since the source itself bundles these glosses.
+REAL FIX (next attempt): key on **gloss word-order**, not target POS — candidate is the
+"leading-run" rule: only redistribute+front a word with no kept "own" word before it, so
+"the LORD"/"their X" (determiner first) still split but "of **this** possession" / "he
+**is** a prophet" stay whole. BUT this is UNCONFIRMED — see caveats.
+
+CRITICAL METHOD FIXES (attempt 1's mistakes, do NOT repeat):
+- **The diff must be POSITION-INDEPENDENT.** Attempt 1 compared `english` at the same
+  (verse_id, position) old-vs-new; redistribution shifts positions, so one real change
+  cascades into many spurious per-position diffs. The "11,036 verses / 34,032 slots" figure
+  is therefore INFLATED/unreliable — it does NOT mean 11k regressions. Re-measure by
+  comparing, per verse, the position-INDEPENDENT `(strongs_base → english)` mapping (sorted
+  by strongs, or a multiset) — that isolates real redistribution changes from shuffles.
+- **First TRACE `_split_compounds` on real rows** until the swap (L~312) is fully understood.
+  Open question attempt 1 could not resolve: for "the LORD", is the article the HEAD (own,
+  bears the bundled gloss) or the TARGET (taken)? That determines whether the leading-run
+  rule preserves the split or bundles it. Print rows before/after for a "the LORD" verse.
+- Then: build-to-`bible_test.db` + position-independent diff + eyeball, before any swap.
+- Watch object-fronting (object glossed at END, "[²hatred ¹I will put]") for regressions.
+
+Live (rebuild #6) is correct and untouched — this is the only remaining symptom-#2 facet.
+Relates to the ABP eSword re-source idea (project_abp_esword_fidelity) — the source bundles
+these glosses, so a re-source may dissolve the problem.
 
 ## LSJ coverage audit — generalize the pronoun-stub fix (queued 2026-06-04)
 
