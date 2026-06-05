@@ -136,7 +136,26 @@ def norm_lemma(s):
     s = unicodedata.normalize("NFD", s)
     s = "".join(c for c in s if unicodedata.category(c) != "Mn")  # strip accents
     s = s.lower().replace("ς", "σ")                     # final ς → σ
+    s = s.replace("ῳ", "ω").replace("ῃ", "η").replace("ᾳ", "α")   # drop iota subscr.
     return "".join(c for c in s if c.isalpha())                   # drop punct/space
+
+
+def share_root(a, b, frac=0.6, floor=4):
+    """True if two normalised lemmas are the SAME word inflected/spelled
+    differently (shared leading root) rather than genuinely different words.
+    Catches γῆρας/γῆρος, διαλέγομαι/διαλέγω, διασώζω/διασῴζω; NOT σύ/ὑμῖν
+    (suppletive — those are caught instead by the PRON-POS partition)."""
+    a, b = norm_lemma(a), norm_lemma(b)
+    if not a or not b:
+        return False
+    if a.startswith(b) or b.startswith(a):
+        return True
+    common = 0
+    for ca, cb in zip(a, b):
+        if ca != cb:
+            break
+        common += 1
+    return common >= floor and common >= frac * min(len(a), len(b))
 
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -157,6 +176,24 @@ print(f"    db={DB}  lemma_col={'yes' if HAS_LEMMA else 'MISSING'}  "
 
 total_g = scalar("SELECT count(*) FROM words WHERE strongs_base LIKE 'G%'")
 total_all = scalar("SELECT count(*) FROM words")
+
+# ── morph → coarse-POS aggregation per G-base (shared by Class A1 refine + B) ──
+pos_counts = defaultdict(lambda: defaultdict(int))   # sb -> family -> n
+modal_pos = {}                                       # sb -> dominant family
+morph_unmappable = 0
+if HAS_MORPH:
+    for r in conn.execute(
+            """SELECT strongs_base AS sb, morph, COUNT(*) AS n
+               FROM words
+               WHERE strongs_base LIKE 'G%' AND morph IS NOT NULL AND morph != ''
+               GROUP BY strongs_base, morph"""):
+        fam = coarse_pos(r["morph"])
+        if fam is None:
+            morph_unmappable += r["n"]
+            continue
+        pos_counts[r["sb"]][fam] += r["n"]
+    for sb, fams in pos_counts.items():
+        modal_pos[sb] = max(fams.items(), key=lambda kv: kv[1])[0]
 
 # ──────────────────────────────────────────────────────────────────────────────
 # CLASS A — Strong's ↔ lemma  (the headline check)
@@ -201,14 +238,42 @@ if HAS_LEMMA:
             a1_rows += n
 
     a1.sort(key=lambda t: -t[3])
+    # ── REFINE: split the raw A1 mismatches into known-benign vs genuine ──
+    # pron/art POS  → dictionary-lemma vs Strong's case-headword (σύ/ὑμῖν) → benign
+    # shared root   → orthographic/declension variant (γῆρας/γῆρος)        → benign
+    # else          → GENUINE different-root mismatch = the real defect class
+    PRONART = {"PRON", "ART"}
+    a1_pron_rows = a1_ortho_rows = a1_genuine_rows = a1_unkpos_rows = 0
+    a1_genuine = []
+    for sb, wlem, llem, n in a1:
+        pos = modal_pos.get(sb)
+        if pos in PRONART:
+            a1_pron_rows += n
+        elif share_root(wlem, llem):
+            a1_ortho_rows += n
+        elif pos is None:
+            # no morph to judge; still check root similarity already failed
+            a1_unkpos_rows += n
+            a1_genuine.append((sb, wlem, llem, n, "?POS"))
+        else:
+            a1_genuine_rows += n
+            a1_genuine.append((sb, wlem, llem, n, pos))
+
+    a1_genuine.sort(key=lambda t: -t[3])
     a1_samples = []
-    for sb, wlem, llem, n in a1[:SAMPLES]:
+    for sb, wlem, llem, n, pos in a1_genuine[:SAMPLES]:
         refs = sample_refs("w.strongs_base = ?", (sb,), n=1)
         ref = refs[0] if refs else "?"
-        a1_samples.append(f"{ref}  {sb}: words.lemma={wlem!r} vs lexicon={llem!r}  (×{n})")
-    add(0, "A1 · Strong's↔lemma MISMATCH (different word)", a1_rows,
-        "HIGH", "words.lemma ≠ lexicon.lemma after accent-strip — the αὐτός/ἐγώ defect class",
-        a1_samples)
+        a1_samples.append(f"{ref}  {sb} ({pos}): words.lemma={wlem!r} vs lexicon={llem!r}  (×{n})")
+    add(0, "A1 · GENUINE Strong's↔lemma mismatch (different root)", a1_genuine_rows + a1_unkpos_rows,
+        "HIGH", f"raw A1={a1_rows} rows; after removing pron/art case-headwords "
+                f"({a1_pron_rows}) + orthographic variants ({a1_ortho_rows}), residue "
+                f"= {a1_genuine_rows} content-POS + {a1_unkpos_rows} no-morph. THIS is the αὐτός class",
+        a1_samples or ["(none — no genuine different-root mismatches)"])
+    partition.append(("A1-raw · pron/art lemma-vs-case-headword (σύ/ὑμῖν)", a1_pron_rows,
+                      "dictionary lemma vs Strong's case-specific headword — by-design, not a defect"))
+    partition.append(("A1-raw · orthographic/declension variant (shared root)", a1_ortho_rows,
+                      "γῆρας/γῆρος, διασώζω/διασῴζω etc. — same word, spelling variant"))
 
     # A3 — same G-base mapping to >1 distinct lemma in words
     a3 = {sb: lems for sb, lems in lemma_by_sb.items() if len(lems) > 1}
@@ -237,21 +302,7 @@ else:
 # versa) in an otherwise-uniform G-base is the signal.
 # ──────────────────────────────────────────────────────────────────────────────
 if HAS_MORPH:
-    rows = conn.execute(
-        """SELECT strongs_base AS sb, morph, COUNT(*) AS n
-           FROM words
-           WHERE strongs_base LIKE 'G%' AND morph IS NOT NULL AND morph != ''
-           GROUP BY strongs_base, morph""").fetchall()
-
-    pos_counts = defaultdict(lambda: defaultdict(int))   # sb -> family -> n
-    unmappable = 0
-    for r in rows:
-        fam = coarse_pos(r["morph"])
-        if fam is None:
-            unmappable += r["n"]
-            continue
-        pos_counts[r["sb"]][fam] += r["n"]
-
+    unmappable = morph_unmappable           # reuse the hoisted aggregation
     b_flagged_bases = 0
     b_flagged_rows = 0
     b_detail = []   # (sb, mode_fam, mode_n, minority_fam, minority_n)
@@ -306,8 +357,12 @@ C1_BASE = ("(strongs_base LIKE 'G%' OR strongs_base LIKE 'H%') AND strongs_base 
            "AND (english IS NULL OR TRIM(english) = '') "
            "AND bracket_id IS NULL AND COALESCE(italic,0) = 0")
 c1_total = scalar(f"SELECT count(*) FROM words WHERE {C1_BASE}") or 0
-# refine to content-POS in Python (high-confidence)
-c1_content_rows = 0
+# refine to content-POS in Python (high-confidence). G1510 εἰμί (copula) is
+# routinely left unglossed in ABP — partition it out so the genuine dropped-
+# gloss residue (nouns/other verbs) is visible.
+COPULA = "G1510"
+c1_content_rows = 0           # content-POS, copula EXCLUDED = the real watch list
+c1_copula_rows = 0           # content-POS but εἰμί = expected ellipsis
 c1_content_samples = []
 if HAS_MORPH and c1_total:
     pulled = conn.execute(
@@ -317,13 +372,19 @@ if HAS_MORPH and c1_total:
         f"WHERE {C1_BASE} LIMIT 200000").fetchall()
     for r in pulled:
         if coarse_pos(r["morph"]) in CONTENT:
+            if r["sb"] == COPULA:
+                c1_copula_rows += 1
+                continue
             c1_content_rows += 1
             if len(c1_content_samples) < SAMPLES:
                 c1_content_samples.append(f"{r['ref']}  {r['sb']}  (morph {r['morph']})")
-add(1, "C1 · real Strong's + EMPTY English, content-word (non-bracket)", c1_content_rows,
+add(1, "C1 · real Strong's + EMPTY English, content-word, NON-copula (non-bracket)", c1_content_rows,
     "MED", f"Greek/Hebrew source word with a noun/verb/adj morph but no gloss — "
-           f"likely dropped gloss. ({c1_total} total empty-gloss non-bracket slots incl. function words)",
+           f"likely dropped gloss. (raw {c1_total} empty-gloss non-bracket slots; "
+           f"{c1_copula_rows} of the content ones are εἰμί/G1510 copula = expected, excluded)",
     c1_content_samples)
+partition.append(("C1 · εἰμί/G1510 copula, empty-gloss content slot", c1_copula_rows,
+                  "Greek copula routinely unrendered in ABP — expected ellipsis, not a defect"))
 
 C2 = ("english GLOB '*[A-Za-z]*' "
       "AND (strongs_base IS NULL OR TRIM(strongs_base) = '') "
