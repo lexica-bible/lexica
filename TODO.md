@@ -114,9 +114,16 @@ when no kept "own" word precedes it AND the head slot is non-bracketed (`bid is 
 - KNOWN RESIDUAL (spawned as separate tasks — all PRE-EXISTING, NOT regressions): (1) content-
   noun chip bundled onto a neighbor verb loses its own chip in non-bracketed cases (reading
   correct, click less granular) — restore later via bracket+abp_pos dual-ordering; (2) complex-
-  bracket reorder garbles with tangled/missing abp_pos ("the and LORD", 1Ch 15:13); (3)
-  punctuation riding the wrong token ("mourned many, days", 1Ch 7:22). Leading-run does NOT
-  touch (2)/(3) — they live in the bracketed/abp_pos layer.
+  bracket reorder garbles with tangled/missing abp_pos/greek_pos. **Subject-pronoun SUBSET FIXED
+  2026-06-05** (fix_subject_reorder + fix_mat25_37 + fix_supplied_attach — see memory
+  [[project_bracket_punct_fix]]). GENERAL multi-word garble STILL OPEN — larger brackets whose
+  ordering is tangled: 1Ch 15:13 "the and LORD", Exo 19:4, Gal 4:12, Job 21:22 "it he", Eze 40:3
+  "set he them" (last two surfaced by audit_order_mismatch but left under our source-bracket
+  gate — re-examine here). Tackle during the Full Corpus Audit; may want the insert-row machinery
+  (below). (3) ✓ DONE 2026-06-04/05: punctuation riding the wrong token ("mourned many, days")
+  — fix_bracket_punct.py (365 verses, data) + chip renders clause punct OUTSIDE the "]" (d0a2456).
+  TOOLING CAVEAT: audit_order_mismatch.py greedy-matches the wrong "you"/"we" in repeated-word
+  verses → ~63 false positives; benign unless reused, then fix the matching first.
 
 ---
 
