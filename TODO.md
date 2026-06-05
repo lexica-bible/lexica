@@ -38,7 +38,46 @@ the repair script idempotently re-insert post-rebuild). Judged not worth it now 
 the CORRECT anchor; reading is right). Revisit after the Full Corpus Audit below — same
 insert-row machinery may be wanted elsewhere. Context: memory [[project_bracket_punct_fix]].
 
-## Full Corpus Audit — verify the whole text output (queued 2026-06-04)
+## Full Corpus Audit — ✓ TIER 1 + TIER 2 DONE + LIVE (2026-06-05)
+
+STATUS: Tier 1 (internal) and Tier 2 (external alignment) both built, run, and triaged.
+Verdict = **the corpus is sound**; one genuine fixable class found and fixed.
+
+- **Tier 1 — `scripts/audit_corpus_tier1.py`** (read-only, mode=ro; ranked report, sibling to
+  health_check). Result: ZERO αὐτός-class corruption across 595k Greek rows. The scary raw
+  counts collapsed under partitioning — A1 8509→0 genuine (all pron case-headwords σύ/ὑμῖν,
+  crasis, edit≤2 orthographic variants + the G3924 παρεμβάλλω ABP-LXX convention); C1 empty-
+  English content slots all render via a sibling (the known chip-granularity residual), 0
+  visible drops; B/A3 = legit dual-POS + crasis. Genuine internal error ≈ 0.
+- **Tier 2 — `scripts/audit_corpus_tier2.py`** (read-only; reuses lxx_align Rahlfs/TAGNT loaders
+  + NW aligner). Headline: **92.10% content-word Strong's agreement vs Rahlfs/TAGNT.** The ~8%
+  gap is NOT error — it's (a) PN H↔G cross-numbering (13,243: ABP Hebrew# vs ref Greek# for the
+  SAME name — TIPNR, expected), (b) same-word conventions (τις/τίς, εἴδω/ὁράω, ἅγιον/ἅγιος,
+  ἐσθίω/φάγω) + textual divergence (κύριος/θεός; ABP=Vaticanus/Sixtine vs Rahlfs eclectic),
+  (c) alignment gaps/versification (Dan 64%/Psa 70% = different edition, NOT 36% errors).
+  CEILING IS TEXTUAL: 100% would mean rewriting ABP into Rahlfs — do NOT chase it.
+  KEY PARTITION FIX during the run: the real-error bucket must compare gloss vs ABP's OWN
+  number (internal), NOT vs the reference (that flags textual divergence as error). And is_pn/
+  H-number slots must be audited separately (different numbering system).
+- **GENUINE ERROR FOUND + FIXED — `scripts/fix_g1473_gloss.py`** (applied 2026-06-05, rollback
+  `bible_pre_g1473gloss_20260605.db`): residual G1473 (ἐγώ) slots glossed 3rd-person ("he/him/
+  it/them") = un-fixed tail of the αὐτός corruption. ABP gloss decides PERSON, morph gives
+  CASE+NUMBER. **Applied 1,724 → G846/αὐτός** (3P; lemma αὐτός; morph untouched). health_check
+  0/0, strongs_base invariant 0, no new contradictions (verified: only 3P-glossed slots touched).
+  Bucket(a) 2,532→1,069. Agreement 92.08→92.10% (small — these were Rahlfs-unconfirmable slots;
+  the win is INTERNAL gloss↔number consistency, user-visible in the sidebar). Idempotent;
+  add to post-rebuild checklist AFTER import_tipnr.
+- **RESIDUAL (1,069, NOT chased — diminishing returns + delicate):** (1) ~1,012 G1473 glossed
+  2P "you/your" or 1P "us" with NULL morph → English can't give number (σου vs ὑμῶν), guessing
+  would create errors; (2) a smaller mirror class — G846 slots glossed 1S/2P (possible slight
+  over-corrections from the 2026-06-04 Rahlfs pass). Both blocked on case-split without morph.
+  Logged as known bounded residual. Tier 3 (LLM English) NOT started — not warranted yet.
+- **Both audit scripts are read-only and belong in the post-rebuild checklist** alongside
+  health_check (Tier 1 every rebuild; Tier 2 when refs are handy).
+
+---
+
+### Original brief (kept for history — queued 2026-06-04)
 
 GOAL: a single rigorous audit report over all ~624k word rows — Strong's tags, interlinear
 Greek lemmas, English glosses, and word order. PRINCIPLE (learned from the αὐτός/G1473 fix):
