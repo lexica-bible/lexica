@@ -224,10 +224,13 @@ the real rebuild. The build also makes its own `bible.db.bak`. Keep a dated roll
 4. Repair chain — ORDER MATTERS (these WRITE by default; `--dry-run` previews):
    `fix_bracket_punct` → `fix_subject_reorder` → `fix_mat25_37` → `fix_supplied_attach` →
    `fix_g1473_gloss bible.db --apply` (note: this one needs `--apply`) →
-   `fix_lord_subject` (dual-ordering pilot #1; runs LAST so it sees clean data + bracket_punct
-   has already run on source brackets). Sanity counts: bracket_punct ~331v, subject_reorder 20,
-   supplied_attach 5, g1473 ~1724, lord_subject ~795. After lord_subject, verify
-   `audit_lord_strongs.py bible.db` shows WRONG-SLOT REPAIRABLE = 0 (was ~795).
+   `fix_lord_subject` (dual-ordering pilot #1) →
+   `fix_funcword_subject` (dual-ordering #2 round 1; both run LAST so they see clean data +
+   bracket_punct has already run on source brackets). Sanity counts: bracket_punct ~331v,
+   subject_reorder 20, supplied_attach 5, g1473 ~1724, lord_subject ~795, funcword_subject ~21.
+   After lord_subject, verify `audit_lord_strongs.py bible.db` shows WRONG-SLOT REPAIRABLE = 0
+   (was ~795). After funcword_subject, `audit_funcword_wrongslot.py bible.db --preps` REPAIRABLE-
+   NOUN drops ~21 (idioms G4383/G5034 + ~5 bracketed stragglers remain by design — round 2).
 5. Gap-fixers (clear the standard post-rebuild health warnings; `--dry-run` first):
    `dedup_words` (exact-dup rows) → `fix_greek_pos_gaps` (bracketed NULL greek_pos).
 6. Invariant (MUST be 0): `SELECT count(*) FROM words WHERE strongs_base GLOB '[0-9]*'`
