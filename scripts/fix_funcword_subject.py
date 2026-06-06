@@ -178,7 +178,12 @@ for c in cands:
     nb, delta, base = chosen
 
     moved_eng = c["english"]
+    # english_head: prefer the build's _head_word (keeps God/LORD case), but if it
+    # lands on a trailing function word (_head_word's stop set is narrower than ours,
+    # e.g. "in front of me," -> "me"), fall back to the content head we matched on.
     new_head = _head_word(moved_eng)
+    if not new_head or bare(new_head) in SKIP_HEADS:
+        new_head = head
     ref = f"{c['book']} {c['chapter']}:{c['verse']}"
     print(f"  {ref:12} host[{ph}]{c['strongs_base']:7} -> noun[{nb['position']}]"
           f"{nb['strongs_base']:7} ({'after' if delta > 0 else 'before'})")
