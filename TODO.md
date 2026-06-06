@@ -39,9 +39,20 @@ slots split: "the LORD" → its own κύριος/G2962 chip (greek_pos=1), verb 
 bound in a new bracket. CHIP stays Greek order, PROSE reads "the LORD <verb>". audit REPAIRABLE 795→0,
 OK +795, health 0/0, audit_bracket_order at baseline, idempotent. Rollback `bible_pre_lordsubj_20260605.db`.
 Added to the CLAUDE.md post-rebuild repair chain (runs last). **The dual-ordering mechanism is PROVEN.**
-REMAINING (separate session): #2 split brackets by abp_pos (safest next), then #3 wrapped verb-gloss
-INSERT (1Pe 5:10 / Joh 4:51 / the ~90 "May the LORD add" jussives in the OTHER bucket — the one case
-needing an inserted row). Below is the original kickoff brief (kept for #2/#3 context).
+✅ **#2 ROUND 1 (function-word nouns) DONE + LIVE 2026-06-06** — `scripts/fix_funcword_subject.py`,
+applied 21. Concrete nouns (God/judgment/heart/name/riches/city/part/side/east-north-west…) bundled
+onto an adjacent function-word slot (article G3588 / preposition) with the noun's OWN slot empty beside
+it → clicking the noun opened the article/prep. Fix RELOCATES the English onto the noun's empty adjacent
+slot + blanks the function word; one slot always empty ⇒ word order UNCHANGED, no brackets/greek_pos/
+reorder (can't garble). health 0/0, bracket_order baseline, idempotent. Rollback `bible_pre_funcword_
+20260606.db`. In the CLAUDE.md repair chain after fix_lord_subject. Slice A (bracket-internal collapse)
+was confirmed EMPTY (audit_bracket_collapse.py GENUINE-COLLAPSE=0 — subsumed by 0a4b146). Read-only
+scopers added: `audit_funcword_wrongslot.py`, `audit_bracket_collapse.py`.
+REMAINING: **#2 ROUND 2** = `fix_funcword_subject.py --include-idioms` (the held-back κατὰ πρόσωπον "in
+front" G4383 ~54 + ἐν τάχει "quickly" G5034 ~8) + 5 bracketed stragglers + ~90 REPAIRABLE-OTHER adj/
+particle gray zone + ~15 plural/synonym NOMATCH misses. Then **#3** wrapped verb-gloss INSERT (1Pe 5:10 /
+Joh 4:51 / the ~90 "May the LORD add" jussives — the one case needing an inserted row). Below is the
+original kickoff brief (kept for #2/#3 context).
 
 🔎 **BIGGEST WRONG-SLOT SOURCE — function-word slots (G3588 article, prepositions)** (flagged
 2026-06-06 via the Lexicon "rendered as" panel). G3588 ὁ "renders as" a huge list: most is LEGIT
