@@ -137,10 +137,12 @@ def orphan_ok(nb):
     if not sb or sb in ("*", "", ARTICLE_BASE) or sb in HOSTS:
         return None
     base = sb.lstrip("GH").split(".")[0]
+    if base in IDIOM_ORPHANS:
+        # πρόσωπον "in front/person/face" + τάχος "quickly" are known nouns — the
+        # POS gate is redundant here (and catches the morph-NULL stragglers too).
+        return base if INCLUDE_IDIOMS else None
     is_noun = (pos_of(nb["morph"]) == "N") or (HAS_PN and nb["is_pn"] == 1)
     if not is_noun:
-        return None
-    if not INCLUDE_IDIOMS and base in IDIOM_ORPHANS:
         return None
     return base
 
