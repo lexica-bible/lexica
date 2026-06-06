@@ -30,12 +30,11 @@ def bare(s):
 
 
 def anchor_index(parts, italic_set, morph, head):
-    """Mirror of strongsAnchorIndex(parts, italicSet, w) in app.jsx."""
+    """Mirror of strongsAnchorIndex(parts, italicSet, w) in app.jsx (post-2026-06-05:
+    anchors on english_head whenever present, no longer gated on morph)."""
     first_non_italic = next((i for i, w in enumerate(parts)
                              if bare(w) not in italic_set), 0)
-    m = morph or ""
-    is_content = bool(m) and m[0] in ("V", "N", "A")
-    if is_content and head:
+    if head:
         hb = bare(head)
         for i, w in enumerate(parts):
             if bare(w) == hb and bare(w) not in italic_set:
