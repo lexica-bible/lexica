@@ -9,63 +9,63 @@ highest-VOLUME instance of it (G3588 ὁ is the commonest word in the corpus).
 
 WHY THIS NEEDS A PARTITION (not a blanket rule):
   G3588 legitimately "renders as" a huge list and NONE of these may be touched:
-    * the article itself ("the");
-    * the SUBSTANTIVAL article ("he/she/it/this/that/who/one/ones/things/both" —
-      real Koine ὁ/οἱ/τά, ὁ δέ "but he");
-    * the OBLIQUE-case article carrying the case's English preposition (τοῦ→"of",
-      τῷ→"to/in the") — the big to/in/with/of/for/by/against counts, an
-      interlinear convention.
-  A blanket "article = only 'the'" rule would DESTROY real Greek. So we partition
-  legit-vs-artifact using the DATA, never a wordlist.
+  the article "the"; the SUBSTANTIVAL article (he/she/it/this/that/who/one/ones/
+  things/both); the OBLIQUE-case article carrying the case's English preposition
+  (τοῦ→"of", τῷ→"to/in the"). A blanket "article = only 'the'" rule would DESTROY
+  real Greek. So we partition legit-vs-artifact using the DATA, never a wordlist.
 
-DISCRIMINATOR — ARTIFACT-REPAIRABLE requires ALL THREE (no guessing):
-  1. the function-word slot has a NON-NULL english_head — i.e. a CONTENT word is
-     bundled on it. (_head_word returns None for a pure 'the'/'of the' gloss, so
-     legit article/oblique-prep slots are auto-excluded at the source.)
+DISCRIMINATOR — a candidate must clear ALL of:
+  1. the function-word slot's bundled head (re-derived here, NOT trusted from the
+     stale english_head column) is a CONTENT word — i.e. NOT in the build's own
+     _FUNCTION_WORDS / _HEAD_STOP / object-pronoun / substantival sets. (This drops
+     the false positives where the gloss is itself just "the"/"to"/"in"/"me".)
   2. an ADJACENT slot is EMPTY (no english) yet carries a REAL content Strong's
      (not G3588, not '*', not '') — that is the orphaned Greek word's own slot.
-  3. the orphan slot's LEXICON definition CONTAINS the bundled english_head
-     (head 'god' ∈ def(G2316 θεός); 'son' ∈ def(G5207 υἱός)). This is the SAME
-     lexicon-evidence test the build's _split_compounds uses (norm in slot_def),
-     so it ties the leaked noun to its real empty Greek slot with no heuristic.
+  3. the orphan slot's LEXICON definition CONTAINS that head (head 'god' ∈
+     def(G2316 θεός); 'name' ∈ def(G3686 ὄνομα)). Same kjv_def/strongs_def
+     evidence test the build's _split_compounds uses — ties the leaked noun to its
+     real empty Greek slot with no heuristic.
 
-  Substantival 'things'/'ones' and the genealogical 'son of X' (where the genitive
-  name is a '*' proper-noun slot, NOT an empty content slot) have no empty content
-  neighbour → they fall to NO-ORPHAN and are left untouched.
+  The matched set is then split by the ORPHAN's part of speech (its morph column):
+  NOUN orphans are the high-value concrete/proper-noun leaks (God, name, heart,
+  judgment, midst, riches…); ADJ/ADV/other orphans (own, whole, all, quickly,
+  alone — real Greek words too, but adverbial/quantifier) are shown apart so the
+  fix can be prioritised or scoped.
 
-BUCKETS (per function-word slot whose english_head is non-null):
-  ARTIFACT-REPAIRABLE  empty adjacent content slot + lexicon-gloss match
-                       -> THE #2/#3 target (give the noun its own clickable slot)
-  ARTIFACT-PN          empty adjacent slot is a PROPER NOUN (is_pn=1) — leaked too,
-                       but confirmed by name, not lexicon gloss (reported apart;
-                       'jesus'/'israel'/'uriah' class)
-  ORPHAN-NOMATCH       empty adjacent content slot but its gloss does NOT contain
-                       the head — review (different orphan / ambiguous)
-  NO-ORPHAN            content head but NO empty content neighbour (supplied
-                       'son of X', substantival use, etc.) — NOT a target
-  LEGIT-SUBSTANTIVAL   head is a known substantival/pronominal word — never a target
+BUCKETS:
+  REPAIRABLE-NOUN   content head + empty orphan + gloss-match + orphan is a NOUN
+                    (or is_pn) -> the high-value #2/#3 target
+  REPAIRABLE-OTHER  same, but orphan is adj/adv/quantifier/pronoun (gray zone)
+  ORPHAN-NOMATCH    empty orphan but its gloss does NOT contain the head — review
+  NO-ORPHAN         content head, no empty content neighbour (supplied 'son of X',
+                    substantival) — NOT a target
+  SKIPPED-FUNC-HEAD the bundled head is itself a function/pronoun word — not a target
 
 READ-ONLY (mode=ro). Run on PA from the repo root (needs bible.db only):
   python3 scripts/audit_funcword_wrongslot.py bible.db
-  python3 scripts/audit_funcword_wrongslot.py bible.db --preps     # add preposition hosts
-  python3 scripts/audit_funcword_wrongslot.py bible.db --book 1Sa  # filter one book
-  python3 scripts/audit_funcword_wrongslot.py bible.db --show-nomatch
+  python3 scripts/audit_funcword_wrongslot.py bible.db --preps        # add prep hosts
+  python3 scripts/audit_funcword_wrongslot.py bible.db --dump-all      # list every hit
+  python3 scripts/audit_funcword_wrongslot.py bible.db --book 1Sa
 """
+import os
 import re
 import sqlite3
 import sys
 from collections import Counter
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+try:
+    from parse_abp import _FUNCTION_WORDS, _HEAD_STOP
+except Exception:                                       # pragma: no cover
+    _FUNCTION_WORDS, _HEAD_STOP = frozenset(), frozenset()
+
 ARGS = sys.argv[1:]
 DB = next((a for a in ARGS if not a.startswith("--")), "bible.db")
 WITH_PREPS = "--preps" in ARGS
-SHOW_NOMATCH = "--show-nomatch" in ARGS
+DUMP_ALL = "--dump-all" in ARGS
 BOOK_FILTER = ARGS[ARGS.index("--book") + 1] if "--book" in ARGS else None
 
 ARTICLE_BASE = "G3588"
-# Curated common Greek prepositions (bare bases -> G-prefixed). Function-word hosts
-# that, like the article, legitimately carry only a preposition gloss (english_head
-# None) — a non-null head on them is the same bundling artifact.
 PREP_BASES = {
     "G1722", "G1519", "G1537", "G575", "G4314", "G1909", "G2596", "G3326",
     "G1223", "G5259", "G5228", "G3844", "G4012", "G1799", "G1715", "G3694",
@@ -73,44 +73,68 @@ PREP_BASES = {
 }
 HOSTS = {ARTICLE_BASE} | (PREP_BASES if WITH_PREPS else set())
 
-# Substantival / pronominal article renderings — real Koine, never split.
-SUBSTANTIVAL = {
-    "he", "she", "it", "they", "them", "him", "her", "this", "that", "these",
-    "those", "who", "whom", "which", "what", "one", "ones", "thing", "things",
-    "both", "other", "others", "same", "such", "whoever", "whatever", "anyone",
+# Object/possessive pronouns + substantival renderings the build's set misses —
+# these as the "head" are never a concrete-noun leak.
+_EXTRA_FUNC = {
+    "me", "him", "them", "us", "thee", "thy", "thine", "mine", "whom", "whose",
+    "one", "ones", "thing", "things", "both", "who", "which", "what", "all",
+    "any", "some", "each", "every", "other", "others", "same", "such",
+    "whoever", "whatever", "anyone", "none",
 }
+SKIP_HEADS = set(_FUNCTION_WORDS) | set(_HEAD_STOP) | _EXTRA_FUNC
 
 
 def bare(s):
     return re.sub(r"[^\w]", "", s or "").lower()
 
 
+def derive_head(english):
+    """Re-derive the content head from the gloss (last word not in SKIP_HEADS),
+    independent of the possibly-stale english_head column. None if all function."""
+    for tok in reversed((english or "").split()):
+        b = bare(tok)
+        if b and b not in SKIP_HEADS:
+            return b
+    return None
+
+
+def pos_of(morph):
+    """Coarse part-of-speech letter from the morph code (CATSS OT / Robinson NT
+    both lead with the POS letter). 'N'=noun, 'A'=adjective, 'V'=verb, etc."""
+    if not morph:
+        return None
+    c = morph.lstrip("-")[:1].upper()
+    return c if c.isalpha() else None
+
+
 conn = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)
 conn.row_factory = sqlite3.Row
 
-# Replicate build_words_from_abp.load_lexicon: base -> set of definition words.
-lex = {}
+lex, lex_text = {}, {}
 for strongs, kjv_def, strongs_def in conn.execute(
         "SELECT strongs, kjv_def, strongs_def FROM lexicon"):
     base = (strongs or "").lstrip("GH").split(".")[0]
     text = " ".join(filter(None, [kjv_def, strongs_def]))
     lex[base] = set(re.sub(r"[^\w\s]", " ", text).lower().split())
+    lex_text[base] = (kjv_def or strongs_def or "")[:32]
 
 WCOLS = {r[1] for r in conn.execute("PRAGMA table_info(words)")}
 HAS_PN = "is_pn" in WCOLS
+HAS_MORPH = "morph" in WCOLS
 PN_SEL = "w2.is_pn" if HAS_PN else "0 AS is_pn"
+MORPH_SEL = "w2.morph" if HAS_MORPH else "NULL AS morph"
 
 
 def neighbour(verse_id, position, delta):
     return conn.execute(
-        f"SELECT w2.position, w2.english, w2.strongs_base, w2.bracket_id, {PN_SEL} "
+        f"SELECT w2.english, w2.strongs_base, w2.bracket_id, {PN_SEL}, {MORPH_SEL} "
         f"FROM words w2 WHERE w2.verse_id=? AND w2.position=?",
         (verse_id, position + delta)).fetchone()
 
 
 def find_orphan(verse_id, position):
-    """Adjacent EMPTY slot with a real content Strong's. Prefer the +1 slot
-    (article precedes its noun: ὁ υἱός), then -1. Returns the row or None."""
+    """Adjacent EMPTY slot with a real content Strong's. Prefer +1 (article
+    precedes its noun: ὁ υἱός), then -1."""
     for delta in (1, -1):
         nb = neighbour(verse_id, position, delta)
         if nb and (nb["english"] or "").strip() == "":
@@ -122,92 +146,92 @@ def find_orphan(verse_id, position):
 
 host_label = "G3588 + preps" if WITH_PREPS else "G3588 (article)"
 q = (
-    "SELECT w.verse_id, w.position, w.english, w.english_head, w.strongs_base, "
-    "       w.bracket_id, v.book, v.chapter, v.verse "
+    "SELECT w.verse_id, w.position, w.english, w.strongs_base, w.bracket_id, "
+    "       v.book, v.chapter, v.verse "
     "FROM words w JOIN verses v ON v.id = w.verse_id "
-    "WHERE w.strongs_base IN (%s) AND w.english_head IS NOT NULL "
+    "WHERE w.strongs_base IN (%s) AND w.english IS NOT NULL AND w.english != '' "
     "ORDER BY w.verse_id, w.position" % ",".join("?" * len(HOSTS))
 )
 cands = conn.execute(q, tuple(HOSTS)).fetchall()
 
 buckets = Counter()
-per_host = Counter()                    # host base -> ARTIFACT-REPAIRABLE count
-art_heads = Counter()                   # repairable head -> count
-samples = {k: [] for k in
-           ("ARTIFACT-REPAIRABLE", "ARTIFACT-PN", "ORPHAN-NOMATCH", "NO-ORPHAN")}
+per_host = Counter()             # REPAIRABLE-NOUN by host
+pos_tally = Counter()            # all gloss-matched orphans by POS
+art_heads = Counter()           # REPAIRABLE-NOUN head -> count
+hits = {"REPAIRABLE-NOUN": [], "REPAIRABLE-OTHER": [],
+        "ORPHAN-NOMATCH": [], "ARTIFACT-PN": []}
 
 for c in cands:
     if BOOK_FILTER and c["book"] != BOOK_FILTER:
         continue
-    head = c["english_head"]
-    hb = bare(head)
+    hb = derive_head(c["english"])
     if not hb:
-        buckets["LEGIT-SUBSTANTIVAL"] += 1     # head was all punctuation -> ignore
-        continue
-    if hb in SUBSTANTIVAL:
-        buckets["LEGIT-SUBSTANTIVAL"] += 1
+        buckets["SKIPPED-FUNC-HEAD"] += 1
         continue
 
     orphan, delta = find_orphan(c["verse_id"], c["position"])
     ref = f"{c['book']} {c['chapter']}:{c['verse']}"
     if orphan is None:
         buckets["NO-ORPHAN"] += 1
-        if len(samples["NO-ORPHAN"]) < 12:
-            samples["NO-ORPHAN"].append((ref, c["strongs_base"], head, c["english"], "-"))
         continue
 
     obase = (orphan["strongs_base"] or "").lstrip("GH").split(".")[0]
-    odetail = f"orphan[{delta:+d}]={orphan['strongs_base']}"
+    opos = pos_of(orphan["morph"])
+    gloss = lex_text.get(obase, "")
+    odetail = (f"orphan[{delta:+d}]={orphan['strongs_base']} "
+               f"pos={opos or '?'} def={gloss!r}")
+    rec = (ref, c["strongs_base"], hb, c["english"], odetail)
+
     if HAS_PN and orphan["is_pn"] == 1:
-        tag = "ARTIFACT-PN"
+        buckets["ARTIFACT-PN"] += 1
+        hits["ARTIFACT-PN"].append(rec)
     elif hb in lex.get(obase, set()):
-        tag = "ARTIFACT-REPAIRABLE"
-        per_host[c["strongs_base"]] += 1
-        art_heads[hb] += 1
+        pos_tally[opos or "?"] += 1
+        is_noun = (opos == "N") or (HAS_PN and orphan["is_pn"] == 1)
+        if is_noun:
+            buckets["REPAIRABLE-NOUN"] += 1
+            per_host[c["strongs_base"]] += 1
+            art_heads[hb] += 1
+            hits["REPAIRABLE-NOUN"].append(rec)
+        else:
+            buckets["REPAIRABLE-OTHER"] += 1
+            hits["REPAIRABLE-OTHER"].append(rec)
     else:
-        tag = "ORPHAN-NOMATCH"
-    buckets[tag] += 1
-    if len(samples[tag]) < 15:
-        samples[tag].append((ref, c["strongs_base"], head, c["english"], odetail))
+        buckets["ORPHAN-NOMATCH"] += 1
+        hits["ORPHAN-NOMATCH"].append(rec)
 
 conn.close()
 
 # ── report ──────────────────────────────────────────────────────────────────
-order = ["ARTIFACT-REPAIRABLE", "ARTIFACT-PN", "ORPHAN-NOMATCH",
-         "NO-ORPHAN", "LEGIT-SUBSTANTIVAL"]
+order = ["REPAIRABLE-NOUN", "REPAIRABLE-OTHER", "ARTIFACT-PN",
+         "ORPHAN-NOMATCH", "NO-ORPHAN", "SKIPPED-FUNC-HEAD"]
 total = sum(buckets.values())
 print(f"READ-ONLY function-word WRONG-SLOT audit -> {DB}")
-print(f"  hosts: {host_label}   candidate slots (host + non-null english_head): {total:,}")
-print(f"  (a non-null english_head means a CONTENT word is bundled on the function word;")
-print(f"   pure 'the'/'of the' glosses have english_head NULL and are not even candidates.)\n")
+print(f"  hosts: {host_label}   candidate function-word slots (with english): {total:,}")
+print(f"  (head re-derived from the gloss, NOT the stale english_head column)\n")
 for k in order:
-    star = "  <-- #2/#3 TARGET" if k == "ARTIFACT-REPAIRABLE" else ""
-    print(f"  {k:20}: {buckets[k]:6,}{star}")
+    star = "  <-- #2/#3 TARGET" if k == "REPAIRABLE-NOUN" else ""
+    print(f"  {k:18}: {buckets[k]:6,}{star}")
 print()
+print(f"  matched-orphan POS breakdown (N=noun A=adj V=verb '?'=no morph): "
+      f"{dict(pos_tally.most_common())}")
 if per_host:
-    print("  ARTIFACT-REPAIRABLE by host strongs_base:")
-    for hb_, n in per_host.most_common():
-        print(f"      {hb_:8}: {n:,}")
-    print()
+    print(f"\n  REPAIRABLE-NOUN by host: {dict(per_host.most_common())}")
 if art_heads:
-    print(f"  top REPAIRABLE leaked nouns: {art_heads.most_common(20)}\n")
+    print(f"  top REPAIRABLE-NOUN leaked words: {art_heads.most_common(25)}")
+print()
 
-label = {
-    "ARTIFACT-REPAIRABLE": "ref | host | english_head | host english | orphan",
-    "ARTIFACT-PN": "ref | host | english_head | host english | orphan (proper noun)",
-    "ORPHAN-NOMATCH": "ref | host | english_head | host english | orphan (gloss no-match)",
-    "NO-ORPHAN": "ref | host | english_head | host english | (no empty content nbr)",
-}
-to_show = ["ARTIFACT-REPAIRABLE", "ARTIFACT-PN"]
-if SHOW_NOMATCH:
-    to_show += ["ORPHAN-NOMATCH", "NO-ORPHAN"]
-for k in to_show:
-    if samples[k]:
-        print(f"  --- {k} samples ({label[k]}) ---")
-        for ref, sb, head, eng, det in samples[k]:
-            print(f"      {ref:12} | {sb:7} | {head!r:14} | {(eng or '')!r:30} | {det}")
+show = ["REPAIRABLE-NOUN", "REPAIRABLE-OTHER", "ARTIFACT-PN"]
+if DUMP_ALL:
+    show += ["ORPHAN-NOMATCH"]
+for k in show:
+    rows = hits[k] if DUMP_ALL else hits[k][:15]
+    if rows:
+        print(f"  --- {k} ({len(hits[k])}) — ref | host | head | host english | orphan ---")
+        for ref, sb, head, eng, det in rows:
+            print(f"      {ref:12} | {sb:7} | {head!r:12} | {(eng or '')!r:24} | {det}")
         print()
 
-print("ARTIFACT-REPAIRABLE is the partitioned target count. Report it before proposing")
-print("a repair. (Same UPDATE-only dual-ordering as fix_lord_subject.py: move the noun")
-print("onto its empty content slot, position=Greek order, greek_pos=reading order.)")
+print("REPAIRABLE-NOUN is the partitioned, high-value target. REPAIRABLE-OTHER is the")
+print("adverb/quantifier gray zone (real Greek too, lower priority). Report both before")
+print("a repair (UPDATE-only dual-ordering like fix_lord_subject.py).")
