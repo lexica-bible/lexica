@@ -23,11 +23,17 @@ Refactoring ~7,000 lines with no tests + deploy-and-eyeball is how regressions s
   baseline captured from live in `tests/snapshots/` (pre-refactor). `--compare` verified 25/25 OK.
   Pairs with existing `health_check.py` (data) + the browser perf-trace/screenshot (frontend).
   NOTE: with no local server, this verifies POST-deploy (catch + roll back), not pre-deploy.
-- [ ] **0b — DECISION: local read-only DB copy?** The only way to test backend refactors BEFORE
-  deploying. The "no local DB" rule was about not making DATA changes locally / not trusting a
-  stale copy — a read-only copy for code testing is a different thing. Trade-off below; needs the
-  user's call. If yes: pre-deploy snapshot diffs become possible (much safer refactors).
+- [x] **0b — local read-only DB copy** — DONE 2026-06-06. User chose this (safest). bible.db (251MB)
+  downloaded to repo root (git-ignored via *.db). Local env: `.venv` (Flask + deps, git-ignored),
+  app runs `python app.py` on localhost:5000, boots fine with NO Anthropic key (AI endpoints just
+  return 500, not tested). **Loop PROVEN: local app vs live golden = 25/25 byte-identical.** So
+  refactors are now verified BEFORE deploy. GUARDRAILS: never upload the local DB; never run
+  rebuild/`fix_*` scripts against it; re-download only if PA data changes. (The startup migration
+  is an idempotent no-op on a current DB — that's why the file isn't OS-locked.)
 - Risk: none (read-only).
+- **Pre-deploy verify loop (use for every later phase):** edit code → (app.py auto-reloads in debug)
+  → `.venv\Scripts\python scripts/snapshot_endpoints.py --base http://127.0.0.1:5000 --compare`
+  → 0 diffs → push → deploy → `--compare` against live to confirm.
 
 ## Phase 1 — Centralize Strong's handling  *(backlog #1 — the headline)*
 The fragile pattern behind 4+ past bugs: `SUBSTR(strongs_base, 2)` joins + hardcoded `G{...}`.
