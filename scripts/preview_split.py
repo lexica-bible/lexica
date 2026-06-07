@@ -25,7 +25,8 @@ from build_words_from_abp import (            # noqa: E402
 )
 import sqlite3                                # noqa: E402
 
-# Default set = the 8 verses fix_article_noun_swaps.py band-aids.
+# Default set = the 7 number-reversal verses now self-corrected at build by
+# _fix_backwards_pairing() (+ Act 19:4, split by _split_pn_article_lump()).
 KNOWN = [
     ("1Sa", 5, 2), ("Rom", 8, 34), ("Act", 19, 4), ("1Pe", 5, 12),
     ("2Co", 8, 10), ("Eph", 3, 3), ("Mat", 26, 44), ("Zec", 8, 13),
@@ -119,6 +120,46 @@ src_index = {}
 for abbrev, ch, vs, words in iter_verses(*_abp_sources()):
     src_index[(abbrev, ch, vs)] = words
 
+if "--p2" in sys.argv:
+    # Problem 2 scope: a chip that lumps [content/proper-noun + a trailing function
+    # word] in REVERSED order ("Jesus the" — Greek is "the Jesus"), with the
+    # function word's real slot left empty. From SOURCE: a function slot (article/
+    # prep) whose gloss does NOT start with a function/determiner word but ENDS with
+    # one, next to an empty real slot. (Problem 1 was the opposite: gloss STARTS with
+    # the function word, "of God" — English order already matched Greek.)
+    TRAIL_FW = {"the", "a", "an"}
+    CONJ = {"for", "but", "and", "or", "nor", "so", "yet", "indeed", "now",
+            "then", "also", "therefore", "moreover", "wherefore", "thus"}
+    n = 0
+    for (bk, ch, vs), abp_words in src_index.items():
+        for k, (eng, raw, ap, ob, cb) in enumerate(abp_words):
+            if not raw or not raw.startswith("G") or raw == "G*":
+                continue
+            base = raw[1:].split(".")[0]
+            if base not in FUNCTION:
+                continue
+            toks = (eng or "").split()
+            if len(toks) < 2:
+                continue
+            last = _bare(toks[-1])
+            first = _bare(toks[0])
+            if last not in TRAIL_FW or first in DET or first in CONJ \
+                    or first in SKIP_HEADS:
+                continue
+            # the empty home must be a PROPER-NOUN slot (G*) — the "Jesus the" shape
+            nbr = abp_words[k + 1] if k + 1 < len(abp_words) else None
+            prv = abp_words[k - 1] if k > 0 else None
+            empty_nbr = None
+            for cand in (nbr, prv):
+                if cand and not (cand[0] or "").strip() and cand[1] == "G*":
+                    empty_nbr = cand
+            if not empty_nbr:
+                continue
+            n += 1
+            print(f"  {bk} {ch}:{vs:<3} G{base:<5} eng={eng!r:<22} empty-nbr=G*")
+    print(f"\nProblem-2 'PN + trailing article' lumped chips (from source): {n}")
+    sys.exit(0)
+
 if "--lumps" in sys.argv:
     # List every function-word SOURCE slot holding a multi-word gloss that is
     # followed by empty real-Strong's slots — the shape the positional fix acts
@@ -190,5 +231,6 @@ for bk, ch, vs in targets:
     for (p, eng, head, sn, sb, gpos, bid, italic, iw, sw, morph, lemma) in rows:
         if eng or (sb and sb not in ("", "*")):
             flag = f"  bid={bid}" if bid is not None else ""
+            flag += f"  gpos={gpos}" if gpos is not None else ""
             print(f"    [{p:2}] {str(sb or '-'):7} eng={str(eng or ''):22} head={head or '-'}{flag}")
     print()
