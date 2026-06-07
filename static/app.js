@@ -4023,10 +4023,12 @@ function LexiconView({
   return /*#__PURE__*/React.createElement("div", {
     className: "lexicon-view"
   }, /*#__PURE__*/React.createElement("form", {
-    className: "lexicon-search-form",
+    className: "search-field",
     onSubmit: handleSubmit
-  }, /*#__PURE__*/React.createElement("input", {
-    className: "lexicon-search-input",
+  }, /*#__PURE__*/React.createElement(Icon.Search, {
+    className: "search-icon"
+  }), /*#__PURE__*/React.createElement("input", {
+    className: "search-input",
     type: "text",
     value: query,
     onChange: e => setQuery(e.target.value),
@@ -4034,9 +4036,12 @@ function LexiconView({
     autoFocus: true
   }), /*#__PURE__*/React.createElement("button", {
     type: "submit",
-    className: "lexicon-search-btn",
+    className: "search-go",
+    "aria-label": "Search",
     disabled: loading
-  }, loading ? "…" : "Search")), /*#__PURE__*/React.createElement("div", {
+  }, loading ? /*#__PURE__*/React.createElement("span", {
+    className: "spinner"
+  }) : /*#__PURE__*/React.createElement(Icon.ArrowRight, null))), /*#__PURE__*/React.createElement("div", {
     className: "lexicon-toolbar"
   }, /*#__PURE__*/React.createElement("div", {
     className: "lexicon-corpus-toggle"
