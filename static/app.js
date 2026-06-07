@@ -3300,52 +3300,58 @@ function LibraryView({
   // exactly like Bible ABP. The readable English appears ONLY in Parallel — same
   // two-column layout as Bible parallel (Greek interlinear | English). No bracket /
   // ordering machinery; chips stay in natural Greek order. Word click → word-study.
-  const didChips = v => v.words.map((w, i) => {
-    const label = w.english || "";
-    if (!label) return null;
-    const clickable = !!(onWordClick && w.strongs_base);
-    const entry = {
-      id: `extra-${corpus}-${selChapter}-${v.verse}-${w.position}`,
-      strongs: w.strongs ? strongsTag(w.strongs) : "",
-      strongs_base: w.strongs_base || "",
-      strongs_raw: w.strongs || "",
-      greek: w.lemma || w.greek || "",
-      translit: "",
-      morph: "",
-      gloss: label,
-      ref: `${nonCanon ? nonCanon.name : "Extra"} ${selChapter}:${v.verse}`,
-      book: corpus,
-      chapter: selChapter,
-      verse: v.verse,
-      definition: "",
-      derivation: "",
-      is_function: false,
-      is_pn: false,
-      pn_type: null,
-      pn_types: null
-    };
-    return /*#__PURE__*/React.createElement("span", {
-      key: `d${i}`,
-      className: "lib-word" + (clickable ? " lib-word-clickable" : ""),
-      onClick: clickable ? () => onWordClick(entry) : undefined
-    }, showInterlinear && (w.lemma ? /*#__PURE__*/React.createElement("span", {
-      className: "lib-iw-greek"
-    }, w.lemma) : /*#__PURE__*/React.createElement("span", {
-      className: "lib-iw-greek",
-      style: {
-        visibility: "hidden"
-      }
-    }, "x")), /*#__PURE__*/React.createElement("span", {
-      className: "lib-iw-english"
-    }, label), showStrongs && (w.strongs ? /*#__PURE__*/React.createElement("span", {
-      className: "lib-iw-strongs"
-    }, "G" + w.strongs) : /*#__PURE__*/React.createElement("span", {
-      className: "lib-iw-strongs",
-      style: {
-        visibility: "hidden"
-      }
-    }, "G0")));
-  });
+  let _didCapNext = true; // reset per verse below; capitalize sentence-initial glosses
+  const didChips = v => {
+    _didCapNext = true;
+    return v.words.map((w, i) => {
+      const raw = w.english || "";
+      if (!raw) return null;
+      const label = _didCapNext ? raw.charAt(0).toUpperCase() + raw.slice(1) : raw;
+      _didCapNext = /[.!?][")'\]]*$/.test(raw); // next gloss starts a new sentence?
+      const clickable = !!(onWordClick && w.strongs_base);
+      const entry = {
+        id: `extra-${corpus}-${selChapter}-${v.verse}-${w.position}`,
+        strongs: w.strongs ? strongsTag(w.strongs) : "",
+        strongs_base: w.strongs_base || "",
+        strongs_raw: w.strongs || "",
+        greek: w.lemma || w.greek || "",
+        translit: "",
+        morph: "",
+        gloss: label,
+        ref: `${nonCanon ? nonCanon.name : "Extra"} ${selChapter}:${v.verse}`,
+        book: corpus,
+        chapter: selChapter,
+        verse: v.verse,
+        definition: "",
+        derivation: "",
+        is_function: false,
+        is_pn: false,
+        pn_type: null,
+        pn_types: null
+      };
+      return /*#__PURE__*/React.createElement("span", {
+        key: `d${i}`,
+        className: "lib-word" + (clickable ? " lib-word-clickable" : ""),
+        onClick: clickable ? () => onWordClick(entry) : undefined
+      }, showInterlinear && (w.lemma ? /*#__PURE__*/React.createElement("span", {
+        className: "lib-iw-greek"
+      }, w.lemma) : /*#__PURE__*/React.createElement("span", {
+        className: "lib-iw-greek",
+        style: {
+          visibility: "hidden"
+        }
+      }, "x")), /*#__PURE__*/React.createElement("span", {
+        className: "lib-iw-english"
+      }, label), showStrongs && (w.strongs ? /*#__PURE__*/React.createElement("span", {
+        className: "lib-iw-strongs"
+      }, "G" + w.strongs) : /*#__PURE__*/React.createElement("span", {
+        className: "lib-iw-strongs",
+        style: {
+          visibility: "hidden"
+        }
+      }, "G0")));
+    });
+  };
 
   // Single view: Greek interlinear only (mirrors Bible ABP).
   const renderDidacheVerse = v => /*#__PURE__*/React.createElement("div", {
@@ -3356,6 +3362,16 @@ function LibraryView({
   }, v.verse), /*#__PURE__*/React.createElement("span", {
     className: "lib-verse-content lib-verse-chips"
   }, didChips(v)));
+
+  // Prose view: our readable English as flowing text with verse numbers.
+  const renderDidacheProse = () => /*#__PURE__*/React.createElement("div", {
+    className: "lib-text-words lib-prose-flow"
+  }, didVerses.map(v => /*#__PURE__*/React.createElement("span", {
+    className: "lib-flow-verse",
+    key: v.verse
+  }, /*#__PURE__*/React.createElement("sup", {
+    className: "lib-flow-vnum"
+  }, v.verse), (v.english || "") + " ")));
 
   // Parallel view: Greek interlinear | readable English (same shape as Bible parallel).
   const renderDidacheParallelVerse = v => /*#__PURE__*/React.createElement("div", {
@@ -3704,9 +3720,9 @@ function LibraryView({
     className: "lib-parallel-label"
   }, nonCanon.name, " \xB7 Greek"), /*#__PURE__*/React.createElement("span", {
     className: "lib-parallel-label"
-  }, "English")), didVerses.map(renderDidacheParallelVerse)) : /*#__PURE__*/React.createElement("div", {
+  }, "English")), didVerses.map(renderDidacheParallelVerse)) : chipMode ? /*#__PURE__*/React.createElement("div", {
     className: "lib-text-words lib-did-text"
-  }, didVerses.map(renderDidacheVerse)) : translation === "parallel" ? /*#__PURE__*/React.createElement("div", {
+  }, didVerses.map(renderDidacheVerse)) : renderDidacheProse() : translation === "parallel" ? /*#__PURE__*/React.createElement("div", {
     className: "lib-parallel"
   }, /*#__PURE__*/React.createElement("div", {
     className: "lib-parallel-header"

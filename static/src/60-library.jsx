@@ -896,9 +896,14 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
   // exactly like Bible ABP. The readable English appears ONLY in Parallel — same
   // two-column layout as Bible parallel (Greek interlinear | English). No bracket /
   // ordering machinery; chips stay in natural Greek order. Word click → word-study.
-  const didChips = (v) => v.words.map((w, i) => {
-    const label = w.english || "";
-    if (!label) return null;
+  let _didCapNext = true;   // reset per verse below; capitalize sentence-initial glosses
+  const didChips = (v) => {
+    _didCapNext = true;
+    return v.words.map((w, i) => {
+    const raw = w.english || "";
+    if (!raw) return null;
+    const label = _didCapNext ? raw.charAt(0).toUpperCase() + raw.slice(1) : raw;
+    _didCapNext = /[.!?][")'\]]*$/.test(raw);   // next gloss starts a new sentence?
     const clickable = !!(onWordClick && w.strongs_base);
     const entry = {
       id: `extra-${corpus}-${selChapter}-${v.verse}-${w.position}`,
@@ -926,13 +931,26 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
           : <span className="lib-iw-strongs" style={{ visibility: "hidden" }}>G0</span>)}
       </span>
     );
-  });
+    });
+  };
 
   // Single view: Greek interlinear only (mirrors Bible ABP).
   const renderDidacheVerse = (v) => (
     <div className="lib-verse-row lib-did-row" key={v.verse}>
       <span className="lib-vnum">{v.verse}</span>
       <span className="lib-verse-content lib-verse-chips">{didChips(v)}</span>
+    </div>
+  );
+
+  // Prose view: our readable English as flowing text with verse numbers.
+  const renderDidacheProse = () => (
+    <div className="lib-text-words lib-prose-flow">
+      {didVerses.map(v => (
+        <span className="lib-flow-verse" key={v.verse}>
+          <sup className="lib-flow-vnum">{v.verse}</sup>
+          {(v.english || "") + " "}
+        </span>
+      ))}
     </div>
   );
 
@@ -1151,10 +1169,12 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
               </div>
               {didVerses.map(renderDidacheParallelVerse)}
             </div>
-          ) : (
+          ) : chipMode ? (
             <div className="lib-text-words lib-did-text">
               {didVerses.map(renderDidacheVerse)}
             </div>
+          ) : (
+            renderDidacheProse()
           )
         ) : translation === "parallel" ? (
           <div className="lib-parallel">
