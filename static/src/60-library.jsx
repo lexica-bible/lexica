@@ -379,11 +379,12 @@ function ModesSheet({
 // book list, search, and lexicon counts. Each rides its own backend route + tables.
 // Add future early-church / apocryphal texts here.
 const NONCANON = [
-  { id: "didache", name: "Didache", chapters: 16 },
+  // abbr = short label for the mobile toolbar pill (standard scholarly short forms).
+  { id: "didache", name: "Didache", abbr: "Did", chapters: 16 },
   // englishOnly: no Greek interlinear survives in our pipeline, so the reader stays
   // in Prose (chip / parallel-Greek views would be blank). Drop the flag once a
   // tagged Greek file is added (e.g. 1 Enoch ch 1–32 from the Akhmim papyrus).
-  { id: "enoch", name: "1 Enoch", chapters: 108, englishOnly: true },
+  { id: "enoch", name: "1 Enoch", abbr: "1En", chapters: 108, englishOnly: true },
 ];
 
 // ============================================================
@@ -1210,7 +1211,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
             <button className="mbar-ch-nav" disabled={selChapter >= maxChap} onClick={() => { const c = Math.min(maxChap, selChapter + 1); setSelChapter(c); onNavChange?.({ ...nav, book: selBook?.abbrev, chapter: c, highlight: null }); }} aria-label="Next chapter">›</button>
           </div>
           <button className="mbar-trans" onClick={() => setModesOpen(true)} aria-label="Reading options">
-            {proseLocked ? "Prose" : translation === "parallel" ? "Par" : nonCanon ? "Grk" : translation.toUpperCase()}
+            {nonCanon ? (nonCanon.abbr || nonCanon.name) : translation === "parallel" ? "Par" : translation.toUpperCase()}
           </button>
         </div>
       )}
