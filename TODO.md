@@ -80,6 +80,35 @@ already builds them. (Strong's numbers are already hidden on AI results — that
 
 ---
 
+## Didache — add to Library (IN PROGRESS, started 2026-06-07)
+
+Adding the Didache (early-church text) as a **non-canonical corpus inside the Library tab** — its
+own labeled pick next to ABP/KJV, reusing the existing reader, walled off from Bible search and
+word counts. ABP stays the anchor.
+
+**DONE + pushed (all in `scripts/didache_proof/`):**
+- Whole Didache (16 ch) tagged: each Greek word → dictionary form → Strong's → gloss. Greek =
+  Tauber's corrected Lake text (CC-BY-SA). Per-chapter files + combined `didache_tagged_full.json`
+  (2199 words, 2147 linked to Strong's, 52 genuinely non-biblical, **zero bad numbers** — all
+  verified against the live lexicon by `check_didache_tags.py`, read-only).
+- `load_didache.py` — loader that creates TWO NEW tables only (`didache_words`, `didache_verses`),
+  never touches words/verses/lexicon, safe to re-run. Needs the English file (below) before it runs.
+- `build_proof.py` + `didache_ch1_proof.html` — standalone proof page (reading + interlinear).
+
+**REMAINING (next session — say "build the Didache into Library"):**
+1. **English, all 16 ch.** Write our OWN plain translation from the tagged Greek (the auto-fetcher
+   balked on copyright; our own text avoids it). Save as `didache_english.json` ({"1.1":"...", ...}).
+   ch1 English already exists inside build_proof.py.
+2. **Run the loader** on PA: `python3 scripts/didache_proof/load_didache.py bible.db`.
+3. **Backend route** — serve a Didache chapter in the shape the Library reader wants.
+   `code: new route alongside views_library.py`
+4. **Frontend** — add Didache as a Library corpus pick, render via the existing reader, keep it OUT
+   of search + lexicon counts; then `npm run build`. Read the Library view code first.
+   `code: static/src/60-library.jsx (corpus toggle/render); 00-core.jsx book lists`
+5. **Deploy** on PA (user runs): git pull + touch wsgi.
+- Design notes: NO brackets/ordering machinery (Didache chips stay in natural Greek order; the
+  English column carries readability). Decisions confirmed with user this session.
+
 ## Bigger features (someday / ideas)
 
 ### Advanced desktop workspace
