@@ -25,19 +25,45 @@ _GLOSS_FUNC = {
     'up','out','off','over','under',
 }
 
-def _normalize_gloss(raw, keep_leading=False):
+# For function-word renderings the meaningful label is the connector inside the
+# phrase, not the content word. STRONG = prepositions / negatives / conjunctions
+# (the actual sense of ἐν, οὐ, καί…); WEAK = articles / copulas / pronouns, used
+# only when no strong connector is present.
+_GLOSS_STRONG = {
+    'in', 'into', 'by', 'with', 'to', 'unto', 'for', 'from', 'at', 'on', 'upon',
+    'over', 'under', 'through', 'throughout', 'within', 'against', 'among',
+    'amongst', 'near', 'onto', 'toward', 'towards', 'before', 'after', 'behind',
+    'beside', 'about', 'concerning', 'during', 'of', 'off', 'out', 'around',
+    'between', 'up', 'down',
+    'not', 'no', 'nor', 'and', 'or', 'but', 'if', 'that', 'because', 'when',
+    'while', 'as', 'than', 'so', 'then', 'therefore', 'lest', 'until', 'though',
+    'yet',
+}
+_GLOSS_WEAK = {
+    'a', 'an', 'the', 'is', 'are', 'was', 'were', 'be', 'been', 'being', 'am',
+    'he', 'she', 'it', 'they', 'we', 'i', 'you', 'me', 'him', 'her', 'them', 'us',
+    'this', 'these', 'those', 'my', 'his', 'your', 'their', 'our', 'its',
+}
+
+
+def _normalize_gloss(raw, is_func=False):
     import re
     s = re.sub(r"'s\b", '', re.sub(r'^[^\w]+|[^\w]+$', '', raw.strip()).lower())
     words = s.split()
     if not words:
         return ''
-    if keep_leading:
-        # Function-word Strong's (prepositions, articles, conjunctions): the
-        # meaningful rendering IS the leading function token. ABP often glosses
-        # the token as a phrase ("in blessing", "by means"); the default rule
-        # below would strip the preposition and surface the trailing noun,
-        # producing a long count-1 noise tail. Keep the leading word instead so
-        # "in blessing" -> "in" and folds into the real count.
+    if is_func:
+        # ABP lumps extra English onto a function word ("baked in", "in the way",
+        # "shall not be"). The real rendering is the connector, not the content
+        # word english_head would pick. Prefer a strong connector, then a weak
+        # one; fall back to the first word only when the phrase has no connector
+        # at all (a rare genuine ABP mis-alignment, dropped later as a singleton).
+        for w in words:
+            if w in _GLOSS_STRONG:
+                return w
+        for w in words:
+            if w in _GLOSS_WEAK:
+                return w
         return words[0]
     while len(words) > 1 and words[0] in _GLOSS_FUNC:
         words.pop(0)
@@ -353,15 +379,14 @@ def lexicon_profile(strongs):
             gloss_rows += _abp_gloss_rows()
         if corpus in ("kjv", "all"):
             gloss_rows += _kjv_gloss_rows()
-        # Function-word Strong's (ἐν, the article, conjunctions…): keep the
-        # leading token so copula/preposition glosses ("is in" → "is") report the
-        # function word rather than collapsing to a trailing noun.
+        # Function-word Strong's (ἐν, the article, οὐ, καί…): label by the
+        # connector inside the phrase, not the content word english_head picked.
         is_func = (not is_heb) and snum in _FUNCTION_STRONGS
         norm_counts = {}
         for r in gloss_rows:
             if not r["gloss"] or r["gloss"] in ("*", ""):
                 continue
-            key = _normalize_gloss(r["gloss"], keep_leading=is_func)
+            key = _normalize_gloss(r["gloss"], is_func=is_func)
             if key:
                 norm_counts[key] = norm_counts.get(key, 0) + r["cnt"]
         items = sorted(norm_counts.items(), key=lambda x: -x[1])
@@ -403,6 +428,7 @@ def lexicon_books(strongs):
                      for r in conn.execute("SELECT abbrev, name FROM books").fetchall()}
         abbrev_by_id = {v: k for k, v in _KJV_BOOK_ID.items()}
         sid = f"H{snum}" if is_heb else f"G{snum}"
+        is_func = (not is_heb) and snum.split('.')[0] in _FUNCTION_STRONGS
         book_counts = {}  # corpus=all merges ABP + KJV per book (gloss-filtered)
         if corpus in ("abp", "all"):
             for r in conn.execute("""
@@ -411,7 +437,7 @@ def lexicon_books(strongs):
                 WHERE w.strongs_base = ?
                 GROUP BY v.book, w.english
             """, (sid,)).fetchall():
-                if gloss and _normalize_gloss(r["english"] or "") != gloss:
+                if gloss and _normalize_gloss(r["english"] or "", is_func=is_func) != gloss:
                     continue
                 book_counts[r["book"]] = book_counts.get(r["book"], 0) + r["cnt"]
         if corpus in ("kjv", "all"):
@@ -421,7 +447,7 @@ def lexicon_books(strongs):
                 WHERE ks.strongs_id = ?
                 GROUP BY kw.book_id, kw.word
             """, (sid,)).fetchall():
-                if gloss and _normalize_gloss(r["english"] or "") != gloss:
+                if gloss and _normalize_gloss(r["english"] or "", is_func=is_func) != gloss:
                     continue
                 abbrev = abbrev_by_id.get(r["book_id"], "")
                 if abbrev:
@@ -446,6 +472,7 @@ def lexicon_verses(strongs, book):
     is_heb = prefix == 'H' or (not prefix and int(snum) > 5624)
     corpus = request.args.get("corpus", "kjv" if is_heb else "abp")
     gloss = request.args.get("gloss", "").strip()
+    is_func = (not is_heb) and snum in _FUNCTION_STRONGS
     conn = db_ro()
     try:
         sid = f"H{snum}" if is_heb else f"G{snum}"
@@ -504,12 +531,12 @@ def lexicon_verses(strongs, book):
                                     "i": 1 if r["italic"] else 0,
                                     "punc": r["punc"] or ""})
                 if hl and word:
-                    norm = _normalize_gloss(word)
+                    norm = _normalize_gloss(word, is_func=is_func)
                     if norm:
                         gloss_counts[norm] = gloss_counts.get(norm, 0) + 1
             if gloss:
                 verse_order = [k for k in verse_order
-                               if any(e["h"] and _normalize_gloss(e["w"]) == gloss for e in verses[k])]
+                               if any(e["h"] and _normalize_gloss(e["w"], is_func=is_func) == gloss for e in verses[k])]
             result_verses = [{"chapter": k[0], "verse": k[1], "words": verses[k]} for k in verse_order]
         else:
             verses = {}
@@ -523,12 +550,12 @@ def lexicon_verses(strongs, book):
                     verse_order.append(key)
                 verses[key].append({"w": word, "h": hl, "i": r["italic"] or 0})
                 if hl and word:
-                    norm = _normalize_gloss(word)
+                    norm = _normalize_gloss(word, is_func=is_func)
                     if norm:
                         gloss_counts[norm] = gloss_counts.get(norm, 0) + 1
             if gloss:
                 verse_order = [k for k in verse_order
-                               if any(e["h"] and _normalize_gloss(e["w"]) == gloss for e in verses[k])]
+                               if any(e["h"] and _normalize_gloss(e["w"], is_func=is_func) == gloss for e in verses[k])]
             result_verses = [{"chapter": k[0], "verse": k[1], "words": verses[k], "text": verse_prose.get(k)} for k in verse_order]
         result_glosses = sorted([{"gloss": g, "count": c} for g, c in gloss_counts.items()], key=lambda x: -x["count"])
         conn.close()
