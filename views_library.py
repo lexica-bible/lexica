@@ -50,7 +50,7 @@ def verse_words(book, chapter, verse):
                       COALESCE(w.italic_words, '') AS italic_words,
                       w.strongs_base, w.strongs, w.is_pn, w.morph,
                       l.lemma, l.translit, l.kjv_def, l.strongs_def, l.derivation,
-                      t.entity_type AS pn_type
+                      t.entity_type AS pn_type, t.entity_types AS pn_types
                FROM words w
                LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base
                LEFT JOIN tipnr t ON t.strongs = w.strongs_base
@@ -70,6 +70,7 @@ def verse_words(book, chapter, verse):
                 "strongs_def": (w["strongs_def"] or "").strip(),
                 "derivation":  (w["derivation"] or "").strip(),
                 "pn_type":     w["pn_type"],
+                "pn_types":    w["pn_types"],
                 "is_content":  w["strongs_base"] not in _FUNCTION_STRONGS,
             }
             for w in wrows
@@ -102,7 +103,7 @@ def chapter_text(book, chapter):
                       l.lemma, l.translit, l.kjv_def, w.greek_pos, w.bracket_id, w.italic, w.is_pn, w.morph,
                       COALESCE(w.italic_words, '') AS italic_words,
                       COALESCE(w.smcap_words,  '') AS smcap_words,
-                      t.entity_type AS pn_type,
+                      t.entity_type AS pn_type, t.entity_types AS pn_types,
                       p.heading
                FROM verses v
                JOIN words w ON w.verse_id = v.id
@@ -129,6 +130,7 @@ def chapter_text(book, chapter):
             "morph":        r["morph"],
             "smcap_words":  r["smcap_words"],
             "pn_type":      r["pn_type"],
+            "pn_types":     r["pn_types"],
         })
     return jsonify([
         {
