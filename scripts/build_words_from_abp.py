@@ -436,6 +436,60 @@ def _fix_backwards_pairing(rows: list, lex: dict) -> None:
                 break
 
 
+# ── Lumped proper-noun + article split (Problem 2) ─────────────────────────────
+_TRAIL_ARTICLE = frozenset({"the", "a", "an"})
+_LEAD_SKIP = _DET_FW | _SKIP_HEAD_FW | frozenset({
+    "for", "but", "yet", "nor", "indeed", "now", "also", "therefore",
+    "moreover", "wherefore", "thus", "even",
+})
+
+
+def _split_pn_article_lump(rows: list) -> None:
+    """ABP lumps a proper noun and a trailing article into ONE chip on the article
+    slot ("Jesus the" on ὁ/G3588) and leaves the proper-noun slot (G* → '*') empty
+    — Greek order is "the Jesus", English "Jesus the". eSword shows two clickable
+    words. Split into two chips: the article keeps "the" (G3588); the leading
+    proper-noun word(s) move to the empty '*' slot. They go into a new 2-word
+    bracket with greek_pos set so PROSE reads proper-noun-then-article (English
+    order) while CHIP keeps Greek/source position order — same dual-order trick as
+    _redistribute_pronoun_compounds. Rare (Act 19:4 is the only corpus case) but
+    built-in, not a per-verse patch. Replaces the fix_article_noun_swaps band-aid.
+
+    Touches only the pair's english/head/greek_pos/bracket_id; the Greek tags stay
+    (article G3588; the '*' slot stays '*' for import_tipnr to fill). Runs last."""
+    existing = [r[6] for r in rows if r[6] is not None]
+    next_bid = (max(existing) + 1) if existing else 1
+    by_pos = {r[0]: i for i, r in enumerate(rows)}
+
+    for idx, r in enumerate(rows):
+        if r[4] != _ARTICLE_FW or r[6] is not None:        # article slot, unbracketed
+            continue
+        toks = (r[1] or "").split()
+        if len(toks) < 2 or _bare_fw(toks[-1]) not in _TRAIL_ARTICLE:
+            continue
+        if _bare_fw(toks[0]) in _LEAD_SKIP:
+            continue
+        nidx = by_pos.get(r[0] + 1)
+        if nidx is None:
+            nidx = by_pos.get(r[0] - 1)
+        if nidx is None:
+            continue
+        nb = rows[nidx]
+        if (nb[1] and nb[1].strip()) or nb[4] != "*" or nb[6] is not None:
+            continue
+        art_eng = toks[-1]                  # "the"
+        pn_eng  = " ".join(toks[:-1])       # "Jesus"
+        bid = next_bid
+        next_bid += 1
+        a, b = rows[idx], rows[nidx]
+        # article keeps "the", English-SECOND (greek_pos 2); joins the bracket
+        rows[idx]  = (a[0], art_eng, _head_word(art_eng), a[3], a[4], 2, bid,
+                      a[7], a[8], a[9], a[10], a[11], a[12])
+        # proper-noun slot gets the name, English-FIRST (greek_pos 1); joins bracket
+        rows[nidx] = (b[0], pn_eng, _head_word(pn_eng), b[3], b[4], 1, bid,
+                      b[7], b[8], b[9], b[10], b[11], b[12])
+
+
 # ── Bracket sorting ───────────────────────────────────────────────────────────
 
 def _sort_brackets(rows: list) -> None:
@@ -647,6 +701,7 @@ def build_verse_words(abp_words: list, bh_rows: list, lex: dict = None) -> list:
     if lex:
         _split_compounds(rows, lex)
         _fix_backwards_pairing(rows, lex)
+    _split_pn_article_lump(rows)
 
     # Strip temporary abp_pos (idx 10); keep morph (11) + lemma (12) as the last two columns.
     return [r[:10] + (r[11], r[12]) for r in rows]
