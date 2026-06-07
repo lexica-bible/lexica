@@ -959,14 +959,16 @@ def ai_search():
 
         if not re.match(r"^\s*SELECT\b", sql, re.IGNORECASE):
             log.error("AI returned non-SELECT query: %r", sql)
-            return jsonify({"error": "AI returned a non-SELECT query", "sql": sql}), 400
+            # Don't echo the generated SQL back to the client (info disclosure).
+            return jsonify({"error": "The generated query was invalid — please rephrase and try again."}), 400
 
         conn = db_ro()
         try:
             rows = conn.execute(sql).fetchall()
         except Exception as e:
+            # Log the SQL + DB error server-side only; never return them to the client.
             log.error("SQL execution error: %s\nSQL: %s", e, sql)
-            return jsonify({"error": f"SQL error: {e}", "sql": sql}), 400
+            return jsonify({"error": "The search query could not be run — please rephrase and try again."}), 400
         finally:
             conn.close()
         log.debug("SQL returned %d rows", len(rows))
