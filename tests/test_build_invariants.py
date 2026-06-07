@@ -23,9 +23,10 @@ import os
 import sqlite3
 import sys
 
-# import the real parser from scripts/import_tipnr.py (no DB / network at import)
+# import the real code from scripts/ (no DB / network at import)
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "scripts"))
 import import_tipnr  # noqa: E402
+import build_words_from_abp  # noqa: E402
 
 
 _FAILS = []
@@ -114,6 +115,26 @@ def test_parse_tipnr_aggregates_shared_strongs():
     check("parse: H1035 stays place", by_strongs["H1035"][3], "place")
 
 
+# ── 5. the build's own INSERT-time guards (_prefix_base) ─────────────────────
+def test_prefix_base_guards():
+    # Word-row tuple layout fed to _prefix_base (before verse_id is prepended):
+    #  0 position  1 english  2 english_head  3 strongs  4 strongs_base
+    #  5 greek_pos 6 bracket_id 7 italic 8 italic_words 9 smcap_words 10 morph 11 lemma
+    def _w(strongs_base, greek_pos="3", bracket_id=None):
+        return (0, "x", "x", "2206", strongs_base, greek_pos, bracket_id, 0, "", "", "", "")
+
+    pb = build_words_from_abp._prefix_base
+    # (1) the G-prefix guard — the 592k regression
+    check("bare strongs_base gets 'G'", pb(_w("2206"))[4], "G2206")
+    check("dotted bare gets 'G'", pb(_w("2206.1"))[4], "G2206.1")
+    check("already-prefixed unchanged", pb(_w("G2206"))[4], "G2206")
+    check("'*' placeholder untouched", pb(_w("*"))[4], "*")
+    check("empty strongs_base untouched", pb(_w(""))[4], "")
+    # (2) the orphan-greek_pos guard
+    check("non-bracket greek_pos nulled", pb(_w("2206", "3", None))[5], None)
+    check("in-bracket greek_pos kept", pb(_w("2206", "3", 5))[5], "3")
+
+
 def main():
     try:
         sys.stdout.reconfigure(encoding="utf-8")
@@ -125,6 +146,8 @@ def main():
     test_tipnr_typeset_join_is_one_to_one()
     print("== parse_tipnr aggregation ==")
     test_parse_tipnr_aggregates_shared_strongs()
+    print("== build _prefix_base guards ==")
+    test_prefix_base_guards()
 
     if _FAILS:
         print("\n" + "\n".join(_FAILS))

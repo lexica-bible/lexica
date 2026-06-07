@@ -511,7 +511,7 @@ def build_verse_words(abp_words: list, bh_rows: list, lex: dict = None) -> list:
         else:
             # Keep strongs/sbase BARE here — bh_lookup() and the lexicon index
             # match on bare numbers. The 'G' prefix is re-applied to strongs_base
-            # at INSERT time (see _prefix_base in main). Do NOT prefix here or the
+            # at INSERT time (see module-level _prefix_base). Do NOT prefix here or the
             # internal matching against lex/bh bare keys breaks.
             strongs = raw_strongs[1:]
             sbase   = strongs.split(".")[0]
@@ -561,6 +561,33 @@ def build_verse_words(abp_words: list, bh_rows: list, lex: dict = None) -> list:
 
 
 # ── Run / test ────────────────────────────────────────────────────────────────
+
+def _prefix_base(w):
+    """Restore the 'G' on strongs_base, and drop orphan greek_pos, at INSERT.
+
+    Module-level + pure so it can be unit-tested (tests/test_build_invariants.py):
+    these are the two guards that historically broke a rebuild.
+
+    (1) The ABP source is Greek-only; the parser strips the 'G' so internal
+    lex/BH matching can compare bare numbers. The DB invariant, however, is
+    that words.strongs_base is fully G-prefixed (e.g. 'G2206') — a BARE base
+    makes the lexicon join shave a *digit* and resolve the wrong lemma (the
+    592k regression). The bare `strongs` column (idx 3) is intentionally left
+    as-is (frontend renders it as G{strongs}). '*' (proper-noun placeholder)
+    and '' (no strongs) pass through untouched.
+
+    (2) greek_pos (idx 5) is an ABP reorder number meaningful only WITHIN a
+    bracket. bh_lookup can hand one to a NON-bracket word (bracket_id, idx 6,
+    is None); that orphan number renders as a stray superscript in the corpus
+    view. Null it for non-bracket words.
+    """
+    w = list(w)
+    if len(w) > 4 and w[4] and w[4][0].isdigit():
+        w[4] = "G" + w[4]
+    if len(w) > 6 and w[6] is None:
+        w[5] = None
+    return tuple(w)
+
 
 def run(bible_db: str, scrape_db: str) -> None:
     scrape = sqlite3.connect(scrape_db)
@@ -629,29 +656,6 @@ def run(bible_db: str, scrape_db: str) -> None:
     main.commit()
 
     inserted = skipped = 0
-
-    def _prefix_base(w):
-        """Restore the 'G' on strongs_base, and drop orphan greek_pos, at INSERT.
-
-        (1) The ABP source is Greek-only; the parser strips the 'G' so internal
-        lex/BH matching can compare bare numbers. The DB invariant, however, is
-        that words.strongs_base is fully G-prefixed (e.g. 'G2206') — the lexicon
-        join does SUBSTR(strongs_base, 2), which shaves a *digit* off a bare
-        number and resolves the wrong lemma. The bare `strongs` column (idx 3)
-        is intentionally left as-is (frontend renders it as G{strongs}). '*'
-        (proper-noun placeholder) and '' (no strongs) pass through untouched.
-
-        (2) greek_pos (idx 5) is an ABP reorder number meaningful only WITHIN a
-        bracket. bh_lookup can hand one to a NON-bracket word (bracket_id, idx 6,
-        is None); that orphan number renders as a stray superscript in the corpus
-        view. Null it for non-bracket words.
-        """
-        w = list(w)
-        if len(w) > 4 and w[4] and w[4][0].isdigit():
-            w[4] = "G" + w[4]
-        if len(w) > 6 and w[6] is None:
-            w[5] = None
-        return tuple(w)
 
     for abbrev, chapter, verse, abp_words in iter_verses(*_abp_sources()):
         verse_id = verse_map.get((abbrev, chapter, verse))
