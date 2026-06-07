@@ -16,7 +16,7 @@ import os
 import re
 import sqlite3
 
-from flask import Flask, jsonify, render_template, url_for
+from flask import Flask, jsonify, render_template, request, url_for
 
 from core import log, DB, db, limiter, _FUNCTION_STRONGS
 
@@ -154,6 +154,15 @@ from ai import bp as ai_bp, _load_ai_cache_from_db
 
 app = Flask(__name__)
 limiter.init_app(app)
+
+
+# Static assets (app.js, self-hosted React, CSS) load several per page view —
+# exempt them so the site-wide default limit only guards the dynamic DB + AI
+# routes and never trips on a normal page load (incl. shared/NAT IPs).
+@limiter.request_filter
+def _exempt_static():
+    return request.endpoint == "static"
+
 
 app.register_blueprint(metav_bp)
 app.register_blueprint(crossref_bp)

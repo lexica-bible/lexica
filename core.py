@@ -34,7 +34,12 @@ if not _anthropic_key:
 _anthropic = anthropic.Anthropic(api_key=_anthropic_key) if _anthropic_key else None
 
 # Created without an app; app.py wires it with limiter.init_app(app).
-limiter = Limiter(get_remote_address, default_limits=[], storage_uri="memory://")
+# default_limits is a per-endpoint, per-IP backstop against flooding the DB/SQLite
+# routes (a flood is thousands/min, so 300/min stops abuse with huge headroom for
+# real use — even many users behind one shared/NAT IP). The paid AI endpoints set
+# their own tighter @limiter.limit("200 per hour"), which overrides this default;
+# static asset loads are exempted in app.py so a normal page view never trips it.
+limiter = Limiter(get_remote_address, default_limits=["300 per minute"], storage_uri="memory://")
 
 # strongs_base values that are function words. Declared empty here; populated IN
 # PLACE at startup by app.py's _build_function_strongs_cache (see module docstring).
