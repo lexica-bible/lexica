@@ -228,20 +228,27 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, onWordClick, pen
 
   return (
     <div className="lexicon-view">
-      <form className="search-field" onSubmit={handleSubmit}>
-        <Icon.Search className="search-icon"/>
-        <input
-          className="search-input"
-          type="text"
-          value={query}
-          onChange={e => setQuery(e.target.value)}
-          placeholder="Greek, Hebrew, English, or Strong's (G4151, H7307)…"
-          autoFocus
-        />
-        <button type="submit" className="search-go" aria-label="Search" disabled={loading}>
-          {loading ? <span className="spinner"/> : <Icon.ArrowRight/>}
-        </button>
-      </form>
+      <section className="search">
+        <div className="search-cell">
+          <label className="search-label">
+            <span className="search-eyebrow">Word lookup</span>
+          </label>
+          <form className="search-field" onSubmit={handleSubmit}>
+            <Icon.Search className="search-icon"/>
+            <input
+              className="search-input"
+              type="text"
+              value={query}
+              onChange={e => setQuery(e.target.value)}
+              placeholder="Greek, Hebrew, English, or Strong's (G4151, H7307)…"
+              autoFocus
+            />
+            <button type="submit" className="search-go" aria-label="Search" disabled={loading}>
+              {loading ? <span className="spinner"/> : <Icon.ArrowRight/>}
+            </button>
+          </form>
+        </div>
+      </section>
 
       <div className="lexicon-toolbar">
         <div className="lexicon-corpus-toggle">
