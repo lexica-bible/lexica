@@ -302,6 +302,11 @@ the real rebuild. The build also makes its own `bible.db.bak`. Keep a dated roll
    WRONG-SLOT REPAIRABLE = 0 (was ~795). After funcword_subject, `audit_funcword_wrongslot.py bible.db
    --preps` REPAIRABLE-NOUN drops to ~0 (only the REPAIRABLE-OTHER adj/particle gray zone remains by
    design). The in-bracket relocations carry greek_pos → audit_bracket_order stays at baseline.
+   Then `fix_theos_filler_tags bible.db --apply` — repairs 2 rows where θεός/G2316
+   landed on a filler word in the ABP source (Lam 3:16 "and" → καί/G2532; 1Pe 1:23
+   genitive split "of God living" → move "God" onto the θεός chip). Pinned to exact
+   verse+position+value, so safe to re-run. Verify with
+   `scan_content_filler_tags.py bible.db` (G2316 → 0 rows).
 5. Gap-fixers (clear the standard post-rebuild health warnings; `--dry-run` first):
    `dedup_words` (exact-dup rows) → `fix_greek_pos_gaps` (bracketed NULL greek_pos).
 6. Invariant (MUST be 0): `SELECT count(*) FROM words WHERE strongs_base GLOB '[0-9]*'`
