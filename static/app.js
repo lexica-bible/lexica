@@ -4011,7 +4011,15 @@ function LexiconView({
   };
   return /*#__PURE__*/React.createElement("div", {
     className: "lexicon-view"
-  }, /*#__PURE__*/React.createElement("form", {
+  }, /*#__PURE__*/React.createElement("section", {
+    className: "search"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "search-cell"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "search-label"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "search-eyebrow"
+  }, "Word lookup")), /*#__PURE__*/React.createElement("form", {
     className: "search-field",
     onSubmit: handleSubmit
   }, /*#__PURE__*/React.createElement(Icon.Search, {
@@ -4030,7 +4038,7 @@ function LexiconView({
     disabled: loading
   }, loading ? /*#__PURE__*/React.createElement("span", {
     className: "spinner"
-  }) : /*#__PURE__*/React.createElement(Icon.ArrowRight, null))), /*#__PURE__*/React.createElement("div", {
+  }) : /*#__PURE__*/React.createElement(Icon.ArrowRight, null))))), /*#__PURE__*/React.createElement("div", {
     className: "lexicon-toolbar"
   }, /*#__PURE__*/React.createElement("div", {
     className: "lexicon-corpus-toggle"
