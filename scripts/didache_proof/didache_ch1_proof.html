@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Didache 1 — tagging proof</title>
+<style>
+  :root{ --ink:#221e18; --ink-2:#4a4338; --paper:#faf7f1; --line:#e3ddd0;
+         --gold:#b8860b; --gold-bg:#fff7e0; --miss:#b04a3a; }
+  *{ box-sizing:border-box; }
+  body{ margin:0; background:var(--paper); color:var(--ink);
+        font:16px/1.6 Georgia, "Times New Roman", serif; }
+  .wrap{ max-width:860px; margin:0 auto; padding:28px 20px 80px; }
+  h1{ font-size:22px; margin:0 0 2px; }
+  .sub{ color:var(--ink-2); font-size:13px; margin:0 0 18px;
+        font-family:system-ui, sans-serif; }
+  .bar{ display:flex; gap:8px; margin:0 0 20px; font-family:system-ui,sans-serif; }
+  .bar button{ border:1px solid var(--line); background:#fff; color:var(--ink);
+        padding:6px 14px; border-radius:6px; cursor:pointer; font-size:13px; }
+  .bar button.on{ background:var(--ink); color:#fff; border-color:var(--ink); }
+
+  /* chip view */
+  #chip{ display:flex; flex-wrap:wrap; gap:6px; }
+  .chip{ border:1px solid var(--line); border-radius:7px; background:#fff;
+         padding:5px 9px 6px; text-align:center; cursor:pointer; min-width:42px; }
+  .chip:hover{ border-color:var(--gold); background:var(--gold-bg); }
+  .chip .gk{ font-size:17px; display:block; }
+  .chip .en{ font-size:11px; color:var(--ink-2); display:block;
+             font-family:system-ui,sans-serif; }
+  .chip .sg{ font-size:10px; color:var(--gold); display:block;
+             font-family:system-ui,sans-serif; letter-spacing:.3px; }
+  .chip.miss .sg{ color:var(--miss); }
+
+  /* prose view */
+  #prose{ display:none; font-size:19px; line-height:1.9; }
+  #prose .w{ cursor:pointer; border-radius:4px; padding:0 1px; }
+  #prose .w:hover{ background:var(--gold-bg); }
+  #prose .w.miss{ color:var(--miss); }
+
+  /* detail */
+  #det{ position:fixed; right:0; top:0; height:100%; width:280px; background:#fff;
+        border-left:1px solid var(--line); padding:22px 20px; transform:translateX(100%);
+        transition:transform .15s; font-family:system-ui,sans-serif; }
+  #det.show{ transform:none; }
+  #det .gk{ font:26px Georgia, serif; }
+  #det .lem{ color:var(--ink-2); margin:2px 0 14px; }
+  #det .row{ display:flex; justify-content:space-between; padding:7px 0;
+             border-top:1px solid var(--line); font-size:14px; }
+  #det .row span:first-child{ color:var(--ink-2); }
+  #det .sgval{ color:var(--gold); font-weight:600; }
+  #det .sgval.miss{ color:var(--miss); }
+  #det .x{ position:absolute; top:12px; right:14px; cursor:pointer; color:var(--ink-2); }
+  .legend{ margin-top:26px; font-family:system-ui,sans-serif; font-size:12px;
+           color:var(--ink-2); }
+  .legend b{ color:var(--miss); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Didache 1 — the Two Ways</h1>
+  <p class="sub">Auto-tagging proof &middot; Greek = corrected Lake text (Tauber, CC&#8209;BY&#8209;SA) &middot;
+     each word matched to its dictionary form &rarr; Strong&rsquo;s. Click any word.</p>
+  <div class="bar">
+    <button id="bChip" class="on" onclick="setView('chip')">Chip</button>
+    <button id="bProse" onclick="setView('prose')">Prose</button>
+  </div>
+  <div id="chip"></div>
+  <div id="prose"></div>
+  <p class="legend">Words in <b>red</b> have no Strong&rsquo;s number (genuinely non-biblical vocabulary) &mdash;
+     they read as plain Greek with no lexicon link. Everything else matched automatically.</p>
+</div>
+
+<div id="det">
+  <span class="x" onclick="hide()">&times;</span>
+  <div class="gk" id="dGk"></div>
+  <div class="lem" id="dLem"></div>
+  <div class="row"><span>Strong&rsquo;s</span><span class="sgval" id="dSg"></span></div>
+  <div class="row"><span>Meaning</span><span id="dEn"></span></div>
+  <div class="row"><span>Dictionary form</span><span id="dLem2"></span></div>
+</div>
+
+<script>
+// token = [greek, lemma, strongs|null, gloss]
+const T = [
+ ["Ὁδοὶ","ὁδός","G3598","ways"],["δύο","δύο","G1417","two"],["εἰσί","εἰμί","G1510","are"],
+ ["μία","εἷς","G1520","one"],["τῆς","ὁ","G3588","the"],["ζωῆς","ζωή","G2222","of life"],
+ ["καὶ","καί","G2532","and"],["μία","εἷς","G1520","one"],["τοῦ","ὁ","G3588","of the"],
+ ["θανάτου","θάνατος","G2288","of death"],["διαφορὰ","διαφορά",null,"difference"],
+ ["δὲ","δέ","G1161","but"],["πολλὴ","πολύς","G4183","great"],["μεταξὺ","μεταξύ","G3342","between"],
+ ["τῶν","ὁ","G3588","the"],["δύο","δύο","G1417","two"],["ὁδῶν","ὁδός","G3598","ways"],
+ ["Ἡ","ὁ","G3588","the"],["μὲν","μέν","G3303","indeed"],["οὖν","οὖν","G3767","therefore"],
+ ["ὁδὸς","ὁδός","G3598","way"],["τῆς","ὁ","G3588","of"],["ζωῆς","ζωή","G2222","life"],
+ ["ἐστιν","εἰμί","G1510","is"],["αὕτη","οὗτος","G3778","this"],["πρῶτον","πρῶτος","G4413","first"],
+ ["ἀγαπήσεις","ἀγαπάω","G25","you shall love"],["τὸν","ὁ","G3588","the"],["θεὸν","θεός","G2316","God"],
+ ["τὸν","ὁ","G3588","the"],["ποιήσαντά","ποιέω","G4160","who made"],["σε","σύ","G4771","you"],
+ ["δεύτερον","δεύτερος","G1208","second"],["τὸν","ὁ","G3588","the"],["πλησίον","πλησίον","G4139","neighbor"],
+ ["σου","σύ","G4771","of you"],["ὡς","ὡς","G5613","as"],["σεαυτόν","σεαυτοῦ","G4572","yourself"],
+ ["πάντα","πᾶς","G3956","all things"],["δὲ","δέ","G1161","and"],["ὅσα","ὅσος","G3745","whatever"],
+ ["ἐὰν","ἐάν","G1437","if"],["θελήσῃς","θέλω","G2309","you wish"],["μὴ","μή","G3361","not"],
+ ["γίνεσθαί","γίνομαι","G1096","to happen"],["σοι","σύ","G4771","to you"],["καὶ","καί","G2532","also"],
+ ["σὺ","σύ","G4771","you"],["ἄλλῳ","ἄλλος","G243","to another"],["μὴ","μή","G3361","not"],
+ ["ποίει","ποιέω","G4160","do"]
+];
+
+const chip=document.getElementById('chip'), prose=document.getElementById('prose');
+T.forEach((t,i)=>{
+  const miss = !t[2];
+  const c=document.createElement('div');
+  c.className='chip'+(miss?' miss':'');
+  c.innerHTML=`<span class="gk">${t[0]}</span><span class="en">${t[3]}</span>`+
+              `<span class="sg">${t[2]||'—'}</span>`;
+  c.onclick=()=>show(i); chip.appendChild(c);
+  const w=document.createElement('span');
+  w.className='w'+(miss?' miss':''); w.textContent=t[0]+' ';
+  w.onclick=()=>show(i); prose.appendChild(w);
+});
+
+function setView(v){
+  chip.style.display = v==='chip'?'flex':'none';
+  prose.style.display= v==='prose'?'block':'none';
+  bChip.classList.toggle('on',v==='chip');
+  bProse.classList.toggle('on',v==='prose');
+}
+function show(i){ const t=T[i], miss=!t[2];
+  dGk.textContent=t[0]; dLem.textContent=t[1]+' (dictionary form)';
+  dSg.textContent=t[2]||'no Strong’s'; dSg.className='sgval'+(miss?' miss':'');
+  dEn.textContent=t[3]; dLem2.textContent=t[1];
+  document.getElementById('det').classList.add('show');
+}
+function hide(){ document.getElementById('det').classList.remove('show'); }
+
+// quick stats in the console
+const hit=T.filter(t=>t[2]).length;
+console.log(`tagged ${T.length} words, ${hit} matched Strong's, ${T.length-hit} miss `+
+            `(${Math.round(hit/T.length*100)}%)`);
+</script>
+</body>
+</html>
