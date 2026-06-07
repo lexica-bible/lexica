@@ -203,8 +203,16 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, onWordClick, pen
         else setMatches(data);
       } else {
         const data = await api.lexiconEnglish(q, corpus, testament);
-        if (!data.length) setError("No matches found for \"" + q + "\".");
-        else setGroupings(data);
+        if (data.length) { setGroupings(data); }
+        else {
+          // No English meaning matched — the input may be a Greek/Hebrew word
+          // typed in Latin letters (e.g. "pneuma"). Fall back to the lookup,
+          // which matches transliterations accent-insensitively.
+          const alt = await api.lexiconLookup(q);
+          if (!alt.length) setError("No matches found for \"" + q + "\".");
+          else if (alt.length === 1) loadProfile(alt[0].strongs);
+          else setMatches(alt);
+        }
       }
     } catch { setError("Search failed."); }
     finally { setLoading(false); }

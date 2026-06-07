@@ -10,7 +10,7 @@ import re
 
 from flask import Blueprint, jsonify, request
 
-from core import db_ro, _KJV_BOOK_ID, _FUNCTION_STRONGS
+from core import db_ro, _KJV_BOOK_ID, _FUNCTION_STRONGS, _strip_accents
 
 bp = Blueprint("lexicon", __name__)
 
@@ -76,16 +76,27 @@ def lexicon_lookup():
                 if row:
                     return jsonify([{"strongs": f"G{row['strongs']}", "lemma": row["lemma"] or "", "translit": row["translit"] or "", "gloss": row["strongs_def"] or ""}])
             return jsonify([])
-        # English/transliteration search — Greek lexicon + Hebrew BDB
+        # English/transliteration search — Greek lexicon + Hebrew BDB. The
+        # lemma/translit/xlit matches are accent-insensitive (strip_accents on
+        # both sides) so a Latin transliteration ("pneuma") matches the stored
+        # accented form ("pneûma"), and Greek/Hebrew typed without accents/points
+        # still matches. Definition matches keep the raw query.
+        qn = (_strip_accents(q) or q).lower()
         grk = conn.execute(
             """SELECT strongs, lemma, translit, strongs_def FROM lexicon
-               WHERE strongs_def LIKE ? OR kjv_def LIKE ? OR translit LIKE ? OR lemma LIKE ?
+               WHERE strongs_def LIKE ? OR kjv_def LIKE ?
+                  OR strip_accents(lower(translit)) LIKE ?
+                  OR strip_accents(lower(lemma)) LIKE ?
                LIMIT 15""",
-            (f"%{q}%", f"%{q}%", f"%{q}%", f"%{q}%")
+            (f"%{q}%", f"%{q}%", f"%{qn}%", f"%{qn}%")
         ).fetchall()
         heb = conn.execute(
-            "SELECT strongs_id, lemma, xlit, description FROM bdb WHERE description LIKE ? OR lemma LIKE ? LIMIT 10",
-            (f"%{q}%", f"%{q}%")
+            """SELECT strongs_id, lemma, xlit, description FROM bdb
+               WHERE description LIKE ?
+                  OR strip_accents(lower(lemma)) LIKE ?
+                  OR strip_accents(lower(xlit)) LIKE ?
+               LIMIT 10""",
+            (f"%{q}%", f"%{qn}%", f"%{qn}%")
         ).fetchall()
         results = [{"strongs": f"G{r['strongs']}", "lemma": r["lemma"] or "", "translit": r["translit"] or "", "gloss": r["strongs_def"] or ""} for r in grk]
         results += [{"strongs": r["strongs_id"], "lemma": r["lemma"] or "", "translit": r["xlit"] or "", "gloss": r["description"] or ""} for r in heb]

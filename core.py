@@ -111,6 +111,8 @@ def db_ro():
     """Read-only connection for executing AI-generated SQL."""
     conn = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
+    conn.create_function("strip_accents", 1, _strip_accents)
+    conn.create_function("word_boundary", 2, _word_boundary_match)
     return conn
 
 
