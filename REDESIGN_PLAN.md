@@ -103,8 +103,13 @@ every step gated by local `--compare` 0 diffs + the app still booting.
 5. The 3 leftover `SUBSTR` examples in the AI prompt move with `ai.py` (still the Phase-1 follow-up).
 
 ### Execution order (incremental — commit + `--compare` 0-diff after EACH)
-1. Create `core.py`, move the shared layer, app.py imports it (incl. the `_FUNCTION_STRONGS` in-place fix). Boot + 28/28.
-2. Extract leaf domains first (least entangled → confidence): **metav → crossref → lsj/bdb → kjv → lexicon → library → search → ai**. One blueprint per commit, `--compare` each.
+1. [x] **DONE 2026-06-06** — Created `core.py` (DB, db/db_ro, limiter [init_app], _anthropic, log,
+   _strip_accents, _word_boundary_match, _strongs_num + _STRONGS_RE, _serialize_word_core, _clean_gloss,
+   _FUNCTION_STRONGS set). app.py imports from core; `_build_function_strongs_cache` now mutates the
+   set IN PLACE (clear+update). Booted + 28/28 byte-identical. (Startup fns _migrate_db /
+   _build_function_strongs_cache / _load_ai_cache_from_db kept in app.py — only primitives moved.)
+2. [ ] Extract leaf domains first (least entangled → confidence): **metav → crossref → lsj/bdb → kjv →
+   lexicon → library → search → ai**. One blueprint per commit, `--compare` each. (Not started.)
 - Est: ~8–10 small verified commits; a focused session.
 - Why: half of "the jumble"; done after 1+2 so we file away clean code.
 - Risk: low logic risk but wide — snapshots + local boot verify every step.

@@ -2,7 +2,6 @@
 from collections import Counter
 import hashlib
 import json
-import logging
 import os
 import re
 import sqlite3
@@ -10,17 +9,13 @@ import time
 import traceback
 from html.parser import HTMLParser
 
-import anthropic
-from dotenv import load_dotenv
 from flask import Flask, Response, jsonify, render_template, request, url_for
-from flask_limiter import Limiter
-from flask_limiter.util import get_remote_address
 
-load_dotenv()
-
-_log_level = getattr(logging, os.environ.get("LOG_LEVEL", "INFO").upper(), logging.INFO)
-logging.basicConfig(level=_log_level, format="%(levelname)s %(name)s: %(message)s")
-log = logging.getLogger("bible")
+from core import (
+    log, DB, db, db_ro, limiter, _anthropic, _anthropic_key, _FUNCTION_STRONGS,
+    _STRONGS_RE, _strip_accents, _word_boundary_match, _strongs_num,
+    _serialize_word_core, _clean_gloss,
+)
 
 # @@CORPUS_LIST@@  — comma-separated full book names, e.g. "Genesis, Exodus, …"
 # @@SCHEMA_BOOKS@@ — schema comment listing abbrev→name pairs
@@ -339,8 +334,6 @@ def _get_ai_system() -> str:
     log.debug("Built AI system prompt for books: %s", abbrevs)
     return _AI_SYSTEM_BUILT
 
-_STRONGS_RE = re.compile(r'^[GH]?(\d+(?:\.\d+)*)$', re.IGNORECASE)
-
 # Words that start with a capital but are NOT proper nouns for the english LIKE fallback.
 # Theological terms with Strong's numbers (God, Lord, Jesus, Christ) are excluded because
 # they appear in thousands of verses and are already handled by the AI's strongs_base SQL.
@@ -432,54 +425,6 @@ def _get_verse_ref_re() -> re.Pattern:
     )
     log.debug("Built _VERSE_REF_RE from books table: %s", alts)
     return _VERSE_REF_RE
-
-
-def _strip_accents(s: str | None) -> str | None:
-    """Remove combining diacritical marks so 'pneuma' matches 'pneûma'."""
-    if not s:
-        return s
-    import unicodedata
-    return "".join(
-        c for c in unicodedata.normalize("NFD", s)
-        if unicodedata.category(c) != "Mn"
-    )
-
-
-_WORD_BOUNDARY_RE_CACHE: dict[str, re.Pattern] = {}
-
-
-def _word_boundary_match(haystack: str | None, needle: str | None) -> bool:
-    """SQLite custom function: True if needle appears as a complete word in haystack."""
-    if not haystack or not needle:
-        return False
-    pat = _WORD_BOUNDARY_RE_CACHE.get(needle)
-    if pat is None:
-        pat = re.compile(r'(?<!\w)' + re.escape(needle) + r'(?!\w)', re.IGNORECASE)
-        _WORD_BOUNDARY_RE_CACHE[needle] = pat
-    return bool(pat.search(haystack))
-
-
-def _serialize_word_core(row) -> dict:
-    """Canonical core fields for an ABP words+lexicon row, built ONE way so the
-    three word serializers (chapter_text / verse_words / _fetch_verse_words) can't
-    drift — drift is what caused the is_pn-in-chapter bug. Each caller spreads this
-    and adds its own extras (position, morph, pn_type, smcap_words, strongs_def,
-    derivation, gloss, is_function/is_content, and italic's int-vs-bool form).
-    Requires the row to expose: english, english_head, strongs, strongs_base,
-    greek_pos, bracket_id, italic_words, lemma, translit, kjv_def, is_pn."""
-    return {
-        "english":      row["english"],
-        "english_head": row["english_head"],
-        "strongs":      row["strongs"],
-        "strongs_base": row["strongs_base"],
-        "greek_pos":    row["greek_pos"],
-        "bracket_id":   row["bracket_id"],
-        "italic_words": row["italic_words"],
-        "lemma":        row["lemma"],
-        "translit":     row["translit"],
-        "kjv_def":      row["kjv_def"],
-        "is_pn":        bool(row["is_pn"] or 0),
-    }
 
 
 def _fetch_verse_words(conn, verse_id: int) -> list[dict]:
@@ -779,11 +724,6 @@ def _enrich_explanation_with_cross_refs(
         return explanation
 
 
-def _clean_gloss(s: str | None) -> str | None:
-    """Strip trailing punctuation that ABP interlinear leaves on phrase-boundary words."""
-    if not s:
-        return s
-    return s.strip(" ,;:.!?—-)(][")
 
 
 def _normalize_union_sql(sql: str) -> str:
@@ -921,8 +861,6 @@ def _is_lsj_function_word(def_html: str) -> bool:
     return bool(_LSJ_FUNC_WORD_RE.search(text[:200]))
 
 
-_FUNCTION_STRONGS: set[str] = set()  # strongs_base values that are function words
-
 # Hardcoded function words the LSJ POS detector misses (pronouns, negative particles,
 # and common conjunctions/prepositions whose LSJ entries don't join the lsj table).
 _FUNCTION_STRONGS_OVERRIDE: frozenset[str] = frozenset({
@@ -992,8 +930,9 @@ _FUNCTION_STRONGS_OVERRIDE: frozenset[str] = frozenset({
 
 
 def _build_function_strongs_cache() -> None:
-    """Classify lexicon entries as content/function using LSJ def_html; runs once at startup."""
-    global _FUNCTION_STRONGS
+    """Classify lexicon entries as content/function using LSJ def_html; runs once at startup.
+    Populates core._FUNCTION_STRONGS IN PLACE (clear+update, never reassign) so that
+    `from core import _FUNCTION_STRONGS` references in the view modules stay valid."""
     try:
         conn = db()
         rows = conn.execute(
@@ -1007,7 +946,8 @@ def _build_function_strongs_cache() -> None:
             if _is_lsj_function_word(row["def_html"]):
                 func.add(row["strongs"])
         func |= _FUNCTION_STRONGS_OVERRIDE
-        _FUNCTION_STRONGS = func
+        _FUNCTION_STRONGS.clear()
+        _FUNCTION_STRONGS.update(func)
         log.info("Function word cache: %d function words identified via LSJ", len(func))
     except Exception as e:
         log.warning("Could not build function word cache (LSJ table may not exist yet): %s", e)
@@ -1157,19 +1097,8 @@ class _SectionParser(HTMLParser):
             self._sections.append((self._cur_marker, text))
         return self._sections
 
-_anthropic_key = os.environ.get("ANTHROPIC_API_KEY")
-if not _anthropic_key:
-    log.warning("ANTHROPIC_API_KEY not set — AI search will be unavailable")
-_anthropic = anthropic.Anthropic(api_key=_anthropic_key) if _anthropic_key else None
-
-
-def _strongs_num(q: str):
-    """Return the numeric portion if q looks like a Strong's ref, else None."""
-    m = _STRONGS_RE.match(q.strip())
-    return m.group(1) if m else None
-
 app = Flask(__name__)
-limiter = Limiter(get_remote_address, app=app, default_limits=[], storage_uri="memory://")
+limiter.init_app(app)
 
 
 @app.context_processor
@@ -1264,22 +1193,6 @@ def _migrate_db():
 @app.errorhandler(429)
 def rate_limit_handler(e):
     return jsonify({"error": f"Rate limit exceeded — {e.description}"}), 429
-DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), "bible.db")
-
-
-def db():
-    conn = sqlite3.connect(DB)
-    conn.row_factory = sqlite3.Row
-    conn.create_function("strip_accents", 1, _strip_accents)
-    conn.create_function("word_boundary", 2, _word_boundary_match)
-    return conn
-
-
-def db_ro():
-    """Read-only connection for executing AI-generated SQL."""
-    conn = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)
-    conn.row_factory = sqlite3.Row
-    return conn
 
 
 _migrate_db()
