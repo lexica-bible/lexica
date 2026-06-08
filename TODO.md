@@ -30,9 +30,13 @@ Still open:
    rework. They do almost the same thing slightly differently — the kind of drift that caused a
    couple of past bugs. Not broken; worth merging in a dedicated tidy-up.
    `code: makeEntry / flattenAiResults in static/src/00-core.jsx + the inline makeEntry in 60-library.jsx`
-3. **More automated checks (optional).** The test net now covers broken pages (snapshot harness) and
-   the dangerous data invariants (strongs prefix, tipnr type-set, the build's guards). More rebuild
-   guardrails could still be added. `code: scripts/health_check.py, scripts/snapshot_endpoints.py, tests/`
+3. **More automated checks (mostly done).** The test net now covers broken pages (snapshot harness) and
+   the dangerous data invariants (strongs prefix, tipnr type-set, the build's guards). 2026-06-07 added
+   the automation layer: GitHub auto-runs the tests + frontend build-check on every push (CI), a
+   pre-commit hook runs the same checks locally, `scripts/deploy.sh` is a one-command tested deploy, and
+   Dependabot watches outside packages. STILL OPEN here: a nightly `health_check.py` email on PA (needs a
+   PA scheduled task + email login) — the only piece that has to run against the real database.
+   `code: scripts/health_check.py, scripts/snapshot_endpoints.py, tests/, .github/, scripts/githooks/, scripts/deploy.sh`
 
 ---
 

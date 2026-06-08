@@ -57,9 +57,28 @@ Pick effort by task TYPE. When in doubt, lean higher — the plan affords it.
 - All db changes must be made on PythonAnywhere
 
 ## Deployment
-- Deploy command (UNCHANGED): `cd ~/bible-db && git pull && touch /var/www/appssanding720_pythonanywhere_com_wsgi.py`
+- Preferred deploy (added 2026-06-07): `bash ~/bible-db/scripts/deploy.sh` — one command that
+  pulls, runs the invariant tests, loads the non-canonical books, and reloads the site ONLY if the
+  tests pass. Stops before reload if a test fails, so a broken build never goes live.
+- Manual fallback (still valid): `cd ~/bible-db && git pull && touch /var/www/appssanding720_pythonanywhere_com_wsgi.py`
 - PythonAnywhere git is configured: `pull.rebase false`, `merge.autoedit no` (no prompts)
 - Database is NOT in git (too large) — managed directly on PythonAnywhere
+- After a `requirements.txt` change: on PA, `workon bible-env` THEN `pip install -r requirements.txt`
+  (NO `--user` inside the venv — the venv is `/home/appssanding720/.virtualenvs/bible-env`, Python 3.11).
+  Then reload. A `--user` install lands in the wrong place (system 3.13 user dir) and the site ignores it.
+
+## CI / automation (added 2026-06-07)
+- **GitHub Actions** (`.github/workflows/ci.yml`) — runs on every push/PR: (1) the invariant tests
+  (`tests/test_strongs_join.py` + `test_build_invariants.py`; they build their own in-memory data, no
+  bible.db needed), (2) rebuilds `app.js` and FAILS if the committed copy is stale. Repo is public; check
+  the Actions tab or query `api.github.com/repos/jonathan-pernice/lexica/actions/runs`. `gh` CLI NOT installed locally.
+- **Pre-commit hook** (`scripts/githooks/pre-commit`, wired via `git config core.hooksPath scripts/githooks`)
+  — local twin of CI: rebuilds+stages app.js if a `static/src/*.jsx` is staged, then runs the tests and
+  blocks the commit on failure. LOCAL DEV MACHINE ONLY — on PA it was unset (`git config --unset
+  core.hooksPath`) because PA has no Node. Bypass once with `git commit --no-verify`.
+- **Dependabot** (`.github/dependabot.yml`) — weekly; opens PRs for pip/npm/actions updates. They're
+  suggestions, not auto-applied; merge on GitHub, then `pip install` on PA for pip ones.
+- PENDING (not done): nightly `health_check.py` email on PA — needs PA scheduled task + email creds.
 
 ## Frontend build step (added 2026-06-06)
 - The SOURCE is `static/src/*.jsx` — per-view files, concatenated (filename order;
