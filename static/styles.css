@@ -1837,9 +1837,10 @@ input { font-family: inherit; }
      clearance for all tabs. The Library bottom cockpit adds its own bottom
      clearance (see the view-library block below). */
   .main { padding-top: calc(56px + env(safe-area-inset-top, 0px)); padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
-  .main-inner { padding: 8px 16px 24px; max-width: 100%; }
+  /* a little breathing room below the fixed tab bar before the search box */
+  .main-inner { padding: 28px 16px 24px; max-width: 100%; }
   /* match .main-inner so the lexicon "Word lookup" box lines up with the Search box */
-  .lexicon-view { padding: 8px 16px 24px; max-width: 100%; }
+  .lexicon-view { padding: 28px 16px 24px; max-width: 100%; }
   .search { padding-top: 20px; }
   .mobile-tabs {
     display: flex;
