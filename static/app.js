@@ -3247,6 +3247,16 @@ const NONCANON = [
   englishOnly: true,
   group: "Pseudepigrapha"
 },
+// Letter of Aristeas (H.T. Andrews, Charles APOT, public domain) -- one letter, cited by
+// section 1-322 (loaded as a single chapter whose verses are the section numbers).
+{
+  id: "aristeas",
+  name: "Letter of Aristeas",
+  abbr: "Arist",
+  chapters: 1,
+  englishOnly: true,
+  group: "Pseudepigrapha"
+},
 // Testaments of the Twelve Patriarchs (R.H. Charles, APOT) -- twelve short books,
 // each cited on its own (T. Reuben 1:1 ...), so each is a separate entry.
 {
