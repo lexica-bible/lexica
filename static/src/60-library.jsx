@@ -276,8 +276,13 @@ function MobileBookPicker({ books, selBook, selChapter, nonCanon, nonCanonList, 
   // the Bible books, stranding you on whatever Bible book was last selected).
   const [screen, setScreen] = useState(nonCanon ? "chapter" : "book");
   const [pickedBook, setPickedBook] = useState(nonCanon || null);
-  // non-canonical groups start collapsed (long list); the active text's group opens.
-  const [openGroups, setOpenGroups] = useState(() => new Set(nonCanon ? [nonCanon.group] : []));
+  // Every section (OT, NT, and each non-canonical group) starts collapsed EXCEPT the
+  // one you're currently reading: the testament of the open Bible book, or the active
+  // non-canonical text's group.
+  const [openGroups, setOpenGroups] = useState(() => new Set([
+    nonCanon ? nonCanon.group
+             : (selBook && NT_BOOKS.has(selBook.abbrev) ? "NT" : "OT"),
+  ]));
   const toggleGroup = (g) => setOpenGroups(s => {
     const n = new Set(s);
     n.has(g) ? n.delete(g) : n.add(g);
@@ -312,18 +317,27 @@ function MobileBookPicker({ books, selBook, selChapter, nonCanon, nonCanonList, 
             })}
           </div>
         ) : (
-          [["OT", otBooks], ["NT", ntBooks]].map(([label, bks]) => (
-            <div key={label} className="mpick-section">
-              <div className="mpick-sec-label">{label}</div>
-              <div className="mpick-grid">
-                {bks.map(b => (
-                  <button key={b.abbrev} className={"mpick-btn" + (isActive(b) ? " on" : "")} onClick={() => { setPickedBook(b); setScreen("chapter"); }}>
-                    {b.abbrev.toUpperCase()}
-                  </button>
-                ))}
+          [["OT", otBooks], ["NT", ntBooks]].map(([label, bks]) => {
+            const open = openGroups.has(label);
+            return (
+              <div key={label} className="mpick-section">
+                <button className={"mpick-sec-label mpick-sec-btn" + (open ? " open" : "")} onClick={() => toggleGroup(label)} aria-expanded={open}>
+                  <span className="mpick-sec-caret">▸</span>
+                  <span className="mpick-sec-name">{label}</span>
+                  <span className="mpick-sec-count">{bks.length}</span>
+                </button>
+                {open && (
+                  <div className="mpick-grid">
+                    {bks.map(b => (
+                      <button key={b.abbrev} className={"mpick-btn" + (isActive(b) ? " on" : "")} onClick={() => { setPickedBook(b); setScreen("chapter"); }}>
+                        {b.abbrev.toUpperCase()}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
-            </div>
-          )).concat((nonCanonList || []).length ? nonCanonGroups(nonCanonList).map(grp => {
+            );
+          }).concat((nonCanonList || []).length ? nonCanonGroups(nonCanonList).map(grp => {
             const open = openGroups.has(grp.group);
             return (
               <div key={grp.group} className="mpick-section">
@@ -690,7 +704,9 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
     };
     raf = requestAnimationFrame(tryScroll);
     return () => cancelAnimationFrame(raf);
-  }, [nav?.scroll, nav?.highlight, nav?.chapter, verses, loading, selChapter]);
+    // kjvVerses is in the deps so a KJV-mode jump re-runs once the KJV rows render
+    // (the highlight ref lives on those rows, which load separately from the ABP set).
+  }, [nav?.scroll, nav?.highlight, nav?.chapter, verses, kjvVerses, loading, selChapter]);
 
   const maxChap = nonCanon ? nonCanon.chapters : (selBook ? selBook.chapters : 1);
 
@@ -1111,6 +1127,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
   };
 
   const renderKjvVerse = (v, showVerseNum = true, skipHeading = false) => {
+    const isHighlight = nav && nav.highlight === v.verse && (nav.chapter == null || nav.chapter === selChapter);
     const makeKjvEntry = (w, sid) => ({
       id: `kjv-${selBook.abbrev}-${selChapter}-${v.verse}-${w.word_id}`,
       strongs: sid || "",
@@ -1130,7 +1147,8 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
     return (
       <React.Fragment key={v.verse}>
         {!skipHeading && v.heading && <div className="lib-verse-row pericope-row"><span className="lib-vnum" aria-hidden="true"/><div className="pericope-heading">{v.heading}</div></div>}
-        <div className="lib-verse-row">
+        <div ref={isHighlight ? highlightRef : null}
+          className={"lib-verse-row" + (isHighlight ? " lib-highlight" : "")}>
         {showVerseNum && vnumEl(v.verse)}
         <span className="lib-verse-content lib-verse-chips">
           {v.words.map((w, i) => {
@@ -1163,10 +1181,12 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
   };
 
   const renderKjvProse = (v, showVerseNum = true, skipHeading = false) => {
+    const isHighlight = nav && nav.highlight === v.verse && (nav.chapter == null || nav.chapter === selChapter);
     return (
       <React.Fragment key={v.verse}>
         {!skipHeading && v.heading && <div className="lib-verse-row pericope-row"><span className="lib-vnum" aria-hidden="true"/><div className="pericope-heading">{v.heading}</div></div>}
-        <div className="lib-verse-row">
+        <div ref={isHighlight ? highlightRef : null}
+          className={"lib-verse-row" + (isHighlight ? " lib-highlight" : "")}>
           {showVerseNum && vnumEl(v.verse)}
           <span className="lib-verse-content">
             {v.words.map((w, i) => (

@@ -2778,8 +2778,10 @@ function MobileBookPicker({
   // the Bible books, stranding you on whatever Bible book was last selected).
   const [screen, setScreen] = useState(nonCanon ? "chapter" : "book");
   const [pickedBook, setPickedBook] = useState(nonCanon || null);
-  // non-canonical groups start collapsed (long list); the active text's group opens.
-  const [openGroups, setOpenGroups] = useState(() => new Set(nonCanon ? [nonCanon.group] : []));
+  // Every section (OT, NT, and each non-canonical group) starts collapsed EXCEPT the
+  // one you're currently reading: the testament of the open Bible book, or the active
+  // non-canonical text's group.
+  const [openGroups, setOpenGroups] = useState(() => new Set([nonCanon ? nonCanon.group : selBook && NT_BOOKS.has(selBook.abbrev) ? "NT" : "OT"]));
   const toggleGroup = g => setOpenGroups(s => {
     const n = new Set(s);
     n.has(g) ? n.delete(g) : n.add(g);
@@ -2829,21 +2831,32 @@ function MobileBookPicker({
       className: "mpick-btn" + (active ? " on" : ""),
       onClick: () => onDone(pickedBook, n)
     }, n);
-  })) : [["OT", otBooks], ["NT", ntBooks]].map(([label, bks]) => /*#__PURE__*/React.createElement("div", {
-    key: label,
-    className: "mpick-section"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "mpick-sec-label"
-  }, label), /*#__PURE__*/React.createElement("div", {
-    className: "mpick-grid"
-  }, bks.map(b => /*#__PURE__*/React.createElement("button", {
-    key: b.abbrev,
-    className: "mpick-btn" + (isActive(b) ? " on" : ""),
-    onClick: () => {
-      setPickedBook(b);
-      setScreen("chapter");
-    }
-  }, b.abbrev.toUpperCase()))))).concat((nonCanonList || []).length ? nonCanonGroups(nonCanonList).map(grp => {
+  })) : [["OT", otBooks], ["NT", ntBooks]].map(([label, bks]) => {
+    const open = openGroups.has(label);
+    return /*#__PURE__*/React.createElement("div", {
+      key: label,
+      className: "mpick-section"
+    }, /*#__PURE__*/React.createElement("button", {
+      className: "mpick-sec-label mpick-sec-btn" + (open ? " open" : ""),
+      onClick: () => toggleGroup(label),
+      "aria-expanded": open
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "mpick-sec-caret"
+    }, "\u25B8"), /*#__PURE__*/React.createElement("span", {
+      className: "mpick-sec-name"
+    }, label), /*#__PURE__*/React.createElement("span", {
+      className: "mpick-sec-count"
+    }, bks.length)), open && /*#__PURE__*/React.createElement("div", {
+      className: "mpick-grid"
+    }, bks.map(b => /*#__PURE__*/React.createElement("button", {
+      key: b.abbrev,
+      className: "mpick-btn" + (isActive(b) ? " on" : ""),
+      onClick: () => {
+        setPickedBook(b);
+        setScreen("chapter");
+      }
+    }, b.abbrev.toUpperCase()))));
+  }).concat((nonCanonList || []).length ? nonCanonGroups(nonCanonList).map(grp => {
     const open = openGroups.has(grp.group);
     return /*#__PURE__*/React.createElement("div", {
       key: grp.group,
@@ -3656,7 +3669,9 @@ function LibraryView({
     };
     raf = requestAnimationFrame(tryScroll);
     return () => cancelAnimationFrame(raf);
-  }, [nav?.scroll, nav?.highlight, nav?.chapter, verses, loading, selChapter]);
+    // kjvVerses is in the deps so a KJV-mode jump re-runs once the KJV rows render
+    // (the highlight ref lives on those rows, which load separately from the ABP set).
+  }, [nav?.scroll, nav?.highlight, nav?.chapter, verses, kjvVerses, loading, selChapter]);
   const maxChap = nonCanon ? nonCanon.chapters : selBook ? selBook.chapters : 1;
 
   // Pick a non-canonical text (from the "Other" menu / nav): switch the reader to it and
@@ -4173,6 +4188,7 @@ function LibraryView({
     }, content)));
   };
   const renderKjvVerse = (v, showVerseNum = true, skipHeading = false) => {
+    const isHighlight = nav && nav.highlight === v.verse && (nav.chapter == null || nav.chapter === selChapter);
     const makeKjvEntry = (w, sid) => ({
       id: `kjv-${selBook.abbrev}-${selChapter}-${v.verse}-${w.word_id}`,
       strongs: sid || "",
@@ -4201,7 +4217,8 @@ function LibraryView({
     }), /*#__PURE__*/React.createElement("div", {
       className: "pericope-heading"
     }, v.heading)), /*#__PURE__*/React.createElement("div", {
-      className: "lib-verse-row"
+      ref: isHighlight ? highlightRef : null,
+      className: "lib-verse-row" + (isHighlight ? " lib-highlight" : "")
     }, showVerseNum && vnumEl(v.verse), /*#__PURE__*/React.createElement("span", {
       className: "lib-verse-content lib-verse-chips"
     }, v.words.map((w, i) => {
@@ -4236,6 +4253,7 @@ function LibraryView({
     }))));
   };
   const renderKjvProse = (v, showVerseNum = true, skipHeading = false) => {
+    const isHighlight = nav && nav.highlight === v.verse && (nav.chapter == null || nav.chapter === selChapter);
     return /*#__PURE__*/React.createElement(React.Fragment, {
       key: v.verse
     }, !skipHeading && v.heading && /*#__PURE__*/React.createElement("div", {
@@ -4246,7 +4264,8 @@ function LibraryView({
     }), /*#__PURE__*/React.createElement("div", {
       className: "pericope-heading"
     }, v.heading)), /*#__PURE__*/React.createElement("div", {
-      className: "lib-verse-row"
+      ref: isHighlight ? highlightRef : null,
+      className: "lib-verse-row" + (isHighlight ? " lib-highlight" : "")
     }, showVerseNum && vnumEl(v.verse), /*#__PURE__*/React.createElement("span", {
       className: "lib-verse-content"
     }, v.words.map((w, i) => /*#__PURE__*/React.createElement("span", {
