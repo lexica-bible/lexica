@@ -69,7 +69,9 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, onWordClick, pen
   const loadProfile = async (strongs, corpusOverride) => {
     setLoading(true);
     setError(null);
-    setMatches(null);
+    // NOTE: keep `matches`/`groupings` alive so the profile's back button can
+    // return to whichever result list we drilled in from. handleSubmit clears
+    // both before every new search, so a stale list can't linger.
     setSelectedBook(null);
     setSelectedGloss(null);
     setBookGlosses(null);
@@ -284,7 +286,7 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, onWordClick, pen
 
       {error && <p className="lexicon-error">{error}</p>}
 
-      {matches && (
+      {matches && !profile && (
         <div className="lexicon-matches">
           {matches.map(m => (
             <button key={m.strongs} className="lexicon-match-row" onClick={() => loadProfile(m.strongs)}>
@@ -322,7 +324,7 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, onWordClick, pen
       {profile && (
         <div className="lexicon-profile">
           <div className="lexicon-profile-header">
-            {groupings && (
+            {(groupings || matches) && (
               <button className="lexicon-back-btn" title={`Back to "${query.trim()}" results`}
                 onClick={() => { setProfile(null); setSelectedBook(null); setVerseList(null); }}>←</button>
             )}

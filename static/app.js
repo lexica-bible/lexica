@@ -4969,7 +4969,9 @@ function LexiconView({
   const loadProfile = async (strongs, corpusOverride) => {
     setLoading(true);
     setError(null);
-    setMatches(null);
+    // NOTE: keep `matches`/`groupings` alive so the profile's back button can
+    // return to whichever result list we drilled in from. handleSubmit clears
+    // both before every new search, so a stale list can't linger.
     setSelectedBook(null);
     setSelectedGloss(null);
     setBookGlosses(null);
@@ -5209,7 +5211,7 @@ function LexiconView({
     onClick: () => switchTestament(t)
   }, t === "all" ? "All" : t.toUpperCase())))), error && /*#__PURE__*/React.createElement("p", {
     className: "lexicon-error"
-  }, error), matches && /*#__PURE__*/React.createElement("div", {
+  }, error), matches && !profile && /*#__PURE__*/React.createElement("div", {
     className: "lexicon-matches"
   }, matches.map(m => /*#__PURE__*/React.createElement("button", {
     key: m.strongs,
@@ -5248,7 +5250,7 @@ function LexiconView({
     className: "lexicon-profile"
   }, /*#__PURE__*/React.createElement("div", {
     className: "lexicon-profile-header"
-  }, groupings && /*#__PURE__*/React.createElement("button", {
+  }, (groupings || matches) && /*#__PURE__*/React.createElement("button", {
     className: "lexicon-back-btn",
     title: `Back to "${query.trim()}" results`,
     onClick: () => {
