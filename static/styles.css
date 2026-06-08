@@ -2421,7 +2421,7 @@ input { font-family: inherit; }
    Sized to the reading toolbar so its underline lines up with the toolbar's. */
 .nav-top:empty { display: none; }   /* desktop: drop the empty overlay-X row so the source bar starts at the top */
 .nav-source {
-  display: flex; align-items: center; gap: 8px;
+  display: flex; align-items: center; justify-content: center; gap: 8px;
   padding: 0 10px;
   height: 59px; box-sizing: border-box;
   border-bottom: 1px solid var(--rule);
