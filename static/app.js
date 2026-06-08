@@ -2623,9 +2623,7 @@ function LibNavPanel({
   }, "ABP"), /*#__PURE__*/React.createElement("button", {
     className: "seg-b" + (!nonCanon && translation === "kjv" ? " on" : ""),
     onClick: () => pickBible("kjv")
-  }, "KJV"), nonCanonList && nonCanonList.length > 0 && /*#__PURE__*/React.createElement("div", {
-    className: "lib-other-wrap nav-other-wrap"
-  }, /*#__PURE__*/React.createElement("button", {
+  }, "KJV"), nonCanonList && nonCanonList.length > 0 && /*#__PURE__*/React.createElement("button", {
     className: "seg-b nav-other-seg" + (nonCanon ? " on" : ""),
     onClick: () => setOtherOpen(o => !o),
     "aria-expanded": otherOpen
@@ -2633,11 +2631,8 @@ function LibNavPanel({
     className: "nav-other-lbl"
   }, nonCanon ? nonCanon.abbr || nonCanon.name : "Other"), /*#__PURE__*/React.createElement("span", {
     className: "nav-other-caret" + (otherOpen ? " open" : "")
-  }, "\u25BE")), otherOpen && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
-    className: "lib-other-scrim",
-    onClick: () => setOtherOpen(false)
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "lib-other-menu"
+  }, "\u25BE")))), otherOpen && nonCanonList && nonCanonList.length > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "nav-other-inline"
   }, nonCanonGroups(nonCanonList).map(grp => {
     const open = openGroups.has(grp.group);
     return /*#__PURE__*/React.createElement(React.Fragment, {
@@ -2661,7 +2656,7 @@ function LibNavPanel({
         if (isOverlay) onClose();
       }
     }, t.name)));
-  })))))), /*#__PURE__*/React.createElement("div", {
+  })), /*#__PURE__*/React.createElement("div", {
     className: "nav-scroll"
   }, nonCanon && nonCanonActive, !nonCanon && groups.map(g => /*#__PURE__*/React.createElement("div", {
     className: "nav-group",
