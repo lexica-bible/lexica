@@ -33,6 +33,7 @@ BOOKS = [
     "adameve",    # Life of Adam and Eve / Vita Adae et Evae (Charles) -- 51 chapters
     "psolomon",   # Psalms of Solomon (Gray, Charles APOT) -- 18 psalms
     "aristeas",   # Letter of Aristeas (Andrews, Charles APOT) -- 1 ch, sections 1-322
+    "ascisaiah",  # Ascension of Isaiah (Charles) -- 11 chapters
     # Testaments of the Twelve Patriarchs (R.H. Charles) -- 12 separate books
     "treuben", "tsimeon", "tlevi", "tjudah", "tissachar", "tzebulun",
     "tdan", "tnaphtali", "tgad", "tasher", "tjoseph", "tbenjamin",

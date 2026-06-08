@@ -3257,6 +3257,15 @@ const NONCANON = [
   englishOnly: true,
   group: "Pseudepigrapha"
 },
+// Ascension of Isaiah (R.H. Charles, public domain) -- Martyrdom (1-5) + Vision (6-11).
+{
+  id: "ascisaiah",
+  name: "Ascension of Isaiah",
+  abbr: "AscIsa",
+  chapters: 11,
+  englishOnly: true,
+  group: "Pseudepigrapha"
+},
 // Testaments of the Twelve Patriarchs (R.H. Charles, APOT) -- twelve short books,
 // each cited on its own (T. Reuben 1:1 ...), so each is a separate entry.
 {
