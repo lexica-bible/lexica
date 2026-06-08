@@ -2831,7 +2831,7 @@ function ModesSheet({
   } = useSwipeToDismiss(onClose);
   const activeNonCanon = nonCanonList.find(t => t.id === corpus) || null;
   const proseLocked = !!(activeNonCanon && activeNonCanon.englishOnly); // English-only: no Greek toggles
-  const [otherShown, setOtherShown] = useState(!!activeNonCanon);
+  const [otherShown, setOtherShown] = useState(false);
   // groups start collapsed (long list); the active text's group opens
   const [openGroups, setOpenGroups] = useState(() => new Set(activeNonCanon ? [activeNonCanon.group] : []));
   const toggleGroup = g => setOpenGroups(s => {
