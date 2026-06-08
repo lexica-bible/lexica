@@ -23,6 +23,7 @@ sys.path.insert(0, str(HERE.parent))   # so "import load_extra" finds scripts/lo
 import load_extra  # noqa: E402
 
 BOOKS = [
+    "esdras2",    # 2 Esdras / 4 Ezra (WEB Apocrypha, public domain) -- 16 chapters
     "jubilees",
     "enoch2",     # 2 Enoch (Slavonic, Morfill) -- 68 chapters
     "baruch2",    # 2 Baruch (Syriac Apocalypse, Charles) -- 85 chapters

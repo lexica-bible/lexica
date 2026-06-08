@@ -3112,7 +3112,16 @@ const NONCANON = [
   group: "Septuagint Apocrypha"
 },
 // Pseudepigrapha — Second Temple Jewish texts (R.H. Charles et al., public domain).
+// 2 Esdras (= 4 Ezra) is the great Jewish apocalypse; not in the Greek LXX, so it sits
+// here rather than with the Septuagint Apocrypha. WEB Apocrypha (public domain) English.
 {
+  id: "esdras2",
+  name: "2 Esdras (4 Ezra)",
+  abbr: "2Esd",
+  chapters: 16,
+  englishOnly: true,
+  group: "Pseudepigrapha"
+}, {
   id: "enoch",
   name: "1 Enoch",
   abbr: "1En",

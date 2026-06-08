@@ -490,6 +490,9 @@ const NONCANON = [
   { id: "manasseh",   name: "Prayer of Manasseh",  abbr: "PrMan", chapters: 1,  englishOnly: true, group: "Septuagint Apocrypha" },
 
   // Pseudepigrapha — Second Temple Jewish texts (R.H. Charles et al., public domain).
+  // 2 Esdras (= 4 Ezra) is the great Jewish apocalypse; not in the Greek LXX, so it sits
+  // here rather than with the Septuagint Apocrypha. WEB Apocrypha (public domain) English.
+  { id: "esdras2", name: "2 Esdras (4 Ezra)", abbr: "2Esd", chapters: 16, englishOnly: true, group: "Pseudepigrapha" },
   { id: "enoch", name: "1 Enoch", abbr: "1En", chapters: 108, englishOnly: true, group: "Pseudepigrapha" },
   { id: "enoch2", name: "2 Enoch", abbr: "2En", chapters: 68, englishOnly: true, group: "Pseudepigrapha" },
   { id: "jubilees", name: "Jubilees", abbr: "Jub", chapters: 50, englishOnly: true, group: "Pseudepigrapha" },
