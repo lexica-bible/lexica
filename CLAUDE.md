@@ -58,8 +58,10 @@ Pick effort by task TYPE. When in doubt, lean higher — the plan affords it.
 
 ## Deployment
 - Preferred deploy (added 2026-06-07): `bash ~/bible-db/scripts/deploy.sh` — one command that
-  pulls, runs the invariant tests, loads the non-canonical books, and reloads the site ONLY if the
-  tests pass. Stops before reload if a test fails, so a broken build never goes live.
+  pulls, runs the invariant tests, loads any non-canonical books WHOSE FILES THE PULL CHANGED
+  (it diffs old..new HEAD and runs only the loaders for touched folders — a plain code deploy
+  loads nothing), and reloads the site ONLY if the tests pass. A loader hiccup warns but never
+  blocks the reload. So adding a new book just needs a normal deploy — no loader to run by hand.
 - Manual fallback (still valid): `cd ~/bible-db && git pull && touch /var/www/appssanding720_pythonanywhere_com_wsgi.py`
 - PythonAnywhere git is configured: `pull.rebase false`, `merge.autoedit no` (no prompts)
 - Database is NOT in git (too large) — managed directly on PythonAnywhere
@@ -133,10 +135,22 @@ scripts/          # build-frontend.js + one-time import/migration scripts
 - `kjv_strongs` — KJV word → Strong's number mapping
 - `bdb` — Brown-Driver-Briggs Hebrew lexicon (H-numbers)
 - `pericopes` — section headings (book, chapter, verse, heading); populated from bh_scrape.db.bh_headings; display wiring pending
-- `<book>_words` / `<book>_verses` — non-canonical texts (Didache, 1 Enoch), each in its OWN
-  two tables, walled off from the Bible's tables and from search/word counts. Built by
-  `scripts/load_extra.py`; served by `/api/extra/<book>/chapter/<n>`. English-only texts (no
-  Greek) load with an empty words table. See TODO.md "Non-canonical texts" + memory
+- `<book>_words` / `<book>_verses` — non-canonical texts, each in its OWN two tables, walled off
+  from the Bible's tables and from search/word counts. Built by `scripts/load_extra.py`; served by
+  `/api/extra/<book>/chapter/<n>`. English-only texts (no Greek) load with an empty words table.
+  Now LIVE (built by the per-group loaders under `scripts/`; all wired in the `NONCANON` array in
+  static/src/60-library.jsx and auto-loaded by deploy.sh):
+    * Septuagint Apocrypha — 16 Brenton books, English-only (`scripts/apocrypha/load_apocrypha.py`)
+    * Pseudepigrapha — 1 Enoch, 2 Enoch, Jubilees, 2 Baruch, Apocalypse of Abraham, Assumption of
+      Moses, all English-only (`scripts/apocrypha/load_pseudepigrapha.py` + `scripts/enoch/`)
+    * Testaments of the Twelve Patriarchs — 12 separate English-only books (load_pseudepigrapha.py)
+    * Apostolic Fathers — 14 books with FULL GREEK INTERLINEAR (not englishOnly): Didache,
+      1-2 Clement, 7 Ignatian letters, Polycarp, Martyrdom of Polycarp, Barnabas, Diognetus,
+      Shepherd of Hermas. Built by `scripts/apfathers/build_af.py` (+ `build_hermas.py` for Hermas)
+      and loaded by `scripts/apfathers/load_apfathers.py`. Greek+lemma from Brannan/Lake (CC-BY-SA),
+      Strong's mapped via openscriptures + Dodson glosses, English from Lightfoot. See memory
+      `project_noncanonical_texts` for the pipeline + the build_af raw/ inputs (gitignored).
+  See TODO.md "Non-canonical texts" + memory
   `project_noncanonical_texts`.
 
 ## Key Design Decisions
