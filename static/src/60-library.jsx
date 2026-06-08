@@ -502,6 +502,8 @@ const NONCANON = [
   { id: "assummoses", name: "Assumption of Moses", abbr: "AsMos", chapters: 12, englishOnly: true, group: "Pseudepigrapha" },
   // Latin Vita Adae et Evae (Charles APOT, public domain) -- 51 chapters.
   { id: "adameve", name: "Life of Adam and Eve", abbr: "LAE", chapters: 51, englishOnly: true, group: "Pseudepigrapha" },
+  // Psalms of Solomon (G.B. Gray, Charles APOT, public domain) -- 18 psalms.
+  { id: "psolomon", name: "Psalms of Solomon", abbr: "PsSol", chapters: 18, englishOnly: true, group: "Pseudepigrapha" },
 
   // Testaments of the Twelve Patriarchs (R.H. Charles, APOT) -- twelve short books,
   // each cited on its own (T. Reuben 1:1 ...), so each is a separate entry.

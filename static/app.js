@@ -3229,6 +3229,15 @@ const NONCANON = [
   englishOnly: true,
   group: "Pseudepigrapha"
 },
+// Psalms of Solomon (G.B. Gray, Charles APOT, public domain) -- 18 psalms.
+{
+  id: "psolomon",
+  name: "Psalms of Solomon",
+  abbr: "PsSol",
+  chapters: 18,
+  englishOnly: true,
+  group: "Pseudepigrapha"
+},
 // Testaments of the Twelve Patriarchs (R.H. Charles, APOT) -- twelve short books,
 // each cited on its own (T. Reuben 1:1 ...), so each is a separate entry.
 {
