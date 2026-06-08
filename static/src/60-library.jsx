@@ -196,40 +196,37 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
           <button className={"seg-b" + (!nonCanon && translation === "abp" ? " on" : "")} onClick={() => pickBible("abp")}>ABP</button>
           <button className={"seg-b" + (!nonCanon && translation === "kjv" ? " on" : "")} onClick={() => pickBible("kjv")}>KJV</button>
           {nonCanonList && nonCanonList.length > 0 && (
-            <div className="lib-other-wrap nav-other-wrap">
-              <button className={"seg-b nav-other-seg" + (nonCanon ? " on" : "")} onClick={() => setOtherOpen(o => !o)} aria-expanded={otherOpen}>
-                <span className="nav-other-lbl">{nonCanon ? (nonCanon.abbr || nonCanon.name) : "Other"}</span>
-                <span className={"nav-other-caret" + (otherOpen ? " open" : "")}>▾</span>
-              </button>
-              {otherOpen && (
-                <>
-                  <div className="lib-other-scrim" onClick={() => setOtherOpen(false)} />
-                  <div className="lib-other-menu">
-                    {nonCanonGroups(nonCanonList).map(grp => {
-                      const open = openGroups.has(grp.group);
-                      return (
-                        <React.Fragment key={grp.group}>
-                          <button className={"lib-other-head lib-other-head-btn" + (open ? " open" : "")}
-                            onClick={() => toggleGroup(grp.group)} aria-expanded={open}>
-                            <span className="lib-other-head-caret">▸</span>
-                            <span className="lib-other-head-lbl">{grp.group}</span>
-                            <span className="lib-other-head-count">{grp.items.length}</span>
-                          </button>
-                          {open && grp.items.map(t => (
-                            <button key={t.id}
-                              className={"lib-other-item" + (nonCanon && nonCanon.id === t.id ? " on" : "")}
-                              onClick={() => { onPickNonCanon(t); setOtherOpen(false); if (isOverlay) onClose(); }}>{t.name}</button>
-                          ))}
-                        </React.Fragment>
-                      );
-                    })}
-                  </div>
-                </>
-              )}
-            </div>
+            <button className={"seg-b nav-other-seg" + (nonCanon ? " on" : "")} onClick={() => setOtherOpen(o => !o)} aria-expanded={otherOpen}>
+              <span className="nav-other-lbl">{nonCanon ? (nonCanon.abbr || nonCanon.name) : "Other"}</span>
+              <span className={"nav-other-caret" + (otherOpen ? " open" : "")}>▾</span>
+            </button>
           )}
         </div>
       </div>
+      {/* "Other" books open INLINE in the panel (pushes the book list down) so the
+          menu never floats over the reading text. */}
+      {otherOpen && nonCanonList && nonCanonList.length > 0 && (
+        <div className="nav-other-inline">
+          {nonCanonGroups(nonCanonList).map(grp => {
+            const open = openGroups.has(grp.group);
+            return (
+              <React.Fragment key={grp.group}>
+                <button className={"lib-other-head lib-other-head-btn" + (open ? " open" : "")}
+                  onClick={() => toggleGroup(grp.group)} aria-expanded={open}>
+                  <span className="lib-other-head-caret">▸</span>
+                  <span className="lib-other-head-lbl">{grp.group}</span>
+                  <span className="lib-other-head-count">{grp.items.length}</span>
+                </button>
+                {open && grp.items.map(t => (
+                  <button key={t.id}
+                    className={"lib-other-item" + (nonCanon && nonCanon.id === t.id ? " on" : "")}
+                    onClick={() => { onPickNonCanon(t); setOtherOpen(false); if (isOverlay) onClose(); }}>{t.name}</button>
+                ))}
+              </React.Fragment>
+            );
+          })}
+        </div>
+      )}
       <div className="nav-scroll">
         {nonCanon && nonCanonActive}
         {!nonCanon && groups.map(g => (

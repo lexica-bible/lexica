@@ -2393,9 +2393,17 @@ input { font-family: inherit; }
   position: sticky;
   top: 64px;
   height: calc(100vh - 64px);
-  /* visible (not hidden) so the "Other" dropdown can open past the panel edge over
-     the reading column; the book list scrolls on its own (.nav-scroll). */
-  overflow: visible;
+  overflow: hidden;
+}
+/* "Other" books list, inline in the panel (pushes .nav-scroll down; its own scroll) */
+.nav-other-inline {
+  flex: 0 0 auto;
+  max-height: 48vh;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  background: var(--paper);
+  border-bottom: 1px solid var(--rule-2);
+  padding: 6px 6px 8px;
 }
 .nav-top {
   display: flex; align-items: center; justify-content: space-between;
