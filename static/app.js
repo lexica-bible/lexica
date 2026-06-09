@@ -5516,7 +5516,7 @@ function LexiconView({
     className: "lexicon-glosses"
   }, /*#__PURE__*/React.createElement("div", {
     className: "lexicon-gloss-label"
-  }, selectedBook ? "In this book" : "Rendered as"), /*#__PURE__*/React.createElement("div", {
+  }, selectedBook ? "In this book" : profileCorpus === "kjv" ? "KJV renders this as" : "ABP renders this as"), /*#__PURE__*/React.createElement("div", {
     className: "lexicon-dist-list"
   }, (bookGlosses || profile.glosses).map((g, i) => /*#__PURE__*/React.createElement(React.Fragment, {
     key: g.gloss

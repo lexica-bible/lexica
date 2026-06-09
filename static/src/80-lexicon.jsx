@@ -370,7 +370,7 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, onWordClick, pen
 
           {(bookGlosses || profile.glosses) && (bookGlosses || profile.glosses).length > 0 && (
             <div className="lexicon-glosses">
-              <div className="lexicon-gloss-label">{selectedBook ? "In this book" : "Rendered as"}</div>
+              <div className="lexicon-gloss-label">{selectedBook ? "In this book" : (profileCorpus === "kjv" ? "KJV renders this as" : "ABP renders this as")}</div>
               <div className="lexicon-dist-list">
                 {(bookGlosses || profile.glosses).map((g, i) => (
                   <React.Fragment key={g.gloss}>
