@@ -987,7 +987,9 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
     const bookName = nonCanon ? nonCanon.name : (selBook ? selBook.name : "");
     if (!bookId) return;
     // Snippet = the verse's words. Chip rows pack words with no spaces, so pull
-    // the visible English of each chip; otherwise read the verse text.
+    // the visible English of each chip; otherwise read the verse text (works for
+    // both the verse-row layout and the running-prose flow span, after dropping
+    // the verse number + note marker).
     let snippet = "";
     const row = fromEl && fromEl.closest("[data-note-verse]");
     if (row) {
@@ -997,8 +999,9 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
         chips.forEach(el => { const eng = el.querySelector(".lib-iw-english"); const t = (eng ? eng.textContent : el.textContent).trim(); if (t) parts.push(t); });
         snippet = parts.join(" ");
       } else {
-        const content = row.querySelector(".lib-verse-content");
-        snippet = (content ? content.textContent : "").trim();
+        const clone = row.cloneNode(true);
+        clone.querySelectorAll(".lib-vnum, .lib-flow-vnum, .lib-note-dot").forEach(el => el.remove());
+        snippet = (clone.textContent || "").trim();
       }
     }
     const note = NotesStore.create({
