@@ -336,8 +336,42 @@ function AuthModal({ mode, onClose }) {
   const [pass, setPass] = useState("");
   const [err, setErr] = useState("");
   const [busy, setBusy] = useState(false);
+  const [gid, setGid] = useState(null);     // Google Client ID, if configured
   const emailRef = useRef(null);
+  const gbtnRef = useRef(null);
   useEffect(() => { requestAnimationFrame(() => emailRef.current && emailRef.current.focus()); }, []);
+
+  // Is "Sign in with Google" turned on for this site?
+  useEffect(() => {
+    fetch("/api/auth/config").then(r => r.json()).then(d => setGid(d.google_client_id || null)).catch(() => {});
+  }, []);
+
+  // Load Google's button + wire the callback (only when configured).
+  useEffect(() => {
+    if (!gid) return;
+    let cancelled = false;
+    const init = () => {
+      if (cancelled || !window.google || !window.google.accounts || !gbtnRef.current) return;
+      window.google.accounts.id.initialize({
+        client_id: gid,
+        callback: (resp) => {
+          NotesStore.googleLogin(resp.credential).then(r => { if (r.ok) onClose(); else setErr(r.error); });
+        },
+      });
+      gbtnRef.current.innerHTML = "";
+      window.google.accounts.id.renderButton(gbtnRef.current, { theme: "outline", size: "large", width: 300, text: m === "signup" ? "signup_with" : "signin_with" });
+    };
+    if (window.google && window.google.accounts) { init(); return () => { cancelled = true; }; }
+    let s = document.getElementById("gsi-script");
+    if (!s) {
+      s = document.createElement("script");
+      s.src = "https://accounts.google.com/gsi/client";
+      s.async = true; s.defer = true; s.id = "gsi-script";
+      document.head.appendChild(s);
+    }
+    s.addEventListener("load", init);
+    return () => { cancelled = true; s && s.removeEventListener("load", init); };
+  }, [gid, m]);
 
   const submit = async () => {
     if (busy) return;
@@ -357,6 +391,12 @@ function AuthModal({ mode, onClose }) {
           <button className="detail-close" onClick={onClose} aria-label="Close"><Icon.Close/></button>
         </div>
         <p className="auth-modal-sub">Sync your notes across devices.</p>
+        {gid && (
+          <>
+            <div className="auth-google" ref={gbtnRef} />
+            <div className="auth-or"><span>or</span></div>
+          </>
+        )}
         <input ref={emailRef} className="auth-input" type="email" placeholder="Email" autoComplete="username"
           value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") submit(); }} />
         <input className="auth-input" type="password" placeholder="Password"

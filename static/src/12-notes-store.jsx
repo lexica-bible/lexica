@@ -197,6 +197,23 @@ const NotesStore = (function () {
     authInfo() { const a = getAuth(); return { email: a && a.email, token: a && a.token, syncing, last: lastSync }; },
     signup(email, password) { return authPost("/api/auth/signup", email, password); },
     login(email, password) { return authPost("/api/auth/login", email, password); },
+    // Sign in with the signed token Google handed the browser.
+    async googleLogin(credential) {
+      try {
+        const res = await fetch("/api/auth/google", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ credential }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) return { ok: false, error: data.error || "Google sign-in failed." };
+        setAuth({ token: data.token, email: data.email });
+        syncNow();
+        return { ok: true, email: data.email };
+      } catch (e) {
+        return { ok: false, error: "Network error." };
+      }
+    },
     logout() {
       const a = getAuth();
       if (a && a.token) {

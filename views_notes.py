@@ -26,6 +26,7 @@ Endpoints:
 Two-way last-write-wins merge by note id; deletes carry a tombstone.
 """
 import json
+import os
 import re
 import secrets
 import sqlite3
@@ -37,6 +38,22 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from core import notes_db, limiter
 
 bp = Blueprint("notes", __name__)
+
+# Optional "Sign in with Google" — only turns on when the Client ID is in the
+# environment AND the google-auth library is installed. Both checked lazily so a
+# code deploy before `pip install` (or before the env var is set) never breaks
+# the site; the Google button just stays hidden until it's ready.
+GOOGLE_CLIENT_ID = os.environ.get("GOOGLE_CLIENT_ID")
+
+
+def _google_ready():
+    if not GOOGLE_CLIENT_ID:
+        return False
+    try:
+        import google.oauth2.id_token  # noqa: F401
+        return True
+    except Exception:
+        return False
 
 _EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 _MAX_NOTES = 5000            # per account
@@ -157,6 +174,57 @@ def logout():
         finally:
             conn.close()
     return jsonify({"ok": True})
+
+
+@bp.route("/api/auth/config", methods=["GET"])
+def auth_config():
+    # Tells the frontend whether to show the Google button (and which Client ID).
+    return jsonify({"google_client_id": GOOGLE_CLIENT_ID if _google_ready() else None})
+
+
+@bp.route("/api/auth/google", methods=["POST"])
+@limiter.limit("60 per hour")
+def google_auth():
+    if not _google_ready():
+        return jsonify({"error": "Google sign-in isn't set up."}), 503
+    from google.oauth2 import id_token as g_id_token
+    from google.auth.transport import requests as g_requests
+    try:
+        body = json.loads(request.get_data(cache=False) or b"{}")
+    except (ValueError, TypeError):
+        return jsonify({"error": "bad request"}), 400
+    cred = (body or {}).get("credential")
+    if not isinstance(cred, str) or not cred:
+        return jsonify({"error": "bad request"}), 400
+    try:
+        info = g_id_token.verify_oauth2_token(cred, g_requests.Request(), GOOGLE_CLIENT_ID)
+    except Exception:
+        return jsonify({"error": "Google sign-in failed."}), 401
+    email = (info.get("email") or "").strip().lower()
+    if not email or not info.get("email_verified"):
+        return jsonify({"error": "No verified email on that Google account."}), 401
+    _ensure_tables()
+    conn = notes_db()
+    try:
+        # Find-or-create by email — a Google login and an email/password login with
+        # the same address are the same account (Google verified they own it).
+        row = conn.execute("SELECT id FROM users WHERE email = ?", (email,)).fetchone()
+        if row:
+            uid = row["id"]
+        else:
+            cur = conn.execute(
+                "INSERT INTO users (email, pass_hash, created) VALUES (?,?,?)",
+                # No usable password for a Google-only account; a random hash blocks
+                # password login until they set one.
+                (email, generate_password_hash(secrets.token_urlsafe(16)), _now()),
+            )
+            uid = cur.lastrowid
+        token = secrets.token_urlsafe(24)
+        conn.execute("INSERT INTO tokens (token, user_id, created) VALUES (?,?,?)", (token, uid, _now()))
+        conn.commit()
+    finally:
+        conn.close()
+    return jsonify({"token": token, "email": email})
 
 
 @bp.route("/api/auth/me", methods=["GET"])

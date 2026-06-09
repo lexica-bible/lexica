@@ -2830,6 +2830,10 @@ input { font-family: inherit; }
 .auth-modal-head { display: flex; align-items: center; justify-content: space-between; }
 .auth-modal-title { font-size: 19px; font-weight: 700; color: var(--ink); margin: 0; }
 .auth-modal-sub { font-size: 13px; color: var(--ink-3); margin: 2px 0 16px; }
+.auth-google { display: flex; justify-content: center; margin-bottom: 12px; min-height: 40px; }
+.auth-or { display: flex; align-items: center; text-align: center; color: var(--ink-4); font-size: 12px; margin: 4px 0 12px; }
+.auth-or::before, .auth-or::after { content: ""; flex: 1; height: 1px; background: var(--rule); }
+.auth-or span { padding: 0 10px; }
 .auth-input {
   width: 100%; box-sizing: border-box; border: 1px solid var(--rule); border-radius: 9px;
   padding: 11px 13px; font: inherit; font-size: 15px; background: var(--bg); color: var(--ink);

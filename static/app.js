@@ -1076,6 +1076,39 @@ const NotesStore = function () {
     login(email, password) {
       return authPost("/api/auth/login", email, password);
     },
+    // Sign in with the signed token Google handed the browser.
+    async googleLogin(credential) {
+      try {
+        const res = await fetch("/api/auth/google", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            credential
+          })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) return {
+          ok: false,
+          error: data.error || "Google sign-in failed."
+        };
+        setAuth({
+          token: data.token,
+          email: data.email
+        });
+        syncNow();
+        return {
+          ok: true,
+          email: data.email
+        };
+      } catch (e) {
+        return {
+          ok: false,
+          error: "Network error."
+        };
+      }
+    },
     logout() {
       const a = getAuth();
       if (a && a.token) {
@@ -2767,10 +2800,61 @@ function AuthModal({
   const [pass, setPass] = useState("");
   const [err, setErr] = useState("");
   const [busy, setBusy] = useState(false);
+  const [gid, setGid] = useState(null); // Google Client ID, if configured
   const emailRef = useRef(null);
+  const gbtnRef = useRef(null);
   useEffect(() => {
     requestAnimationFrame(() => emailRef.current && emailRef.current.focus());
   }, []);
+
+  // Is "Sign in with Google" turned on for this site?
+  useEffect(() => {
+    fetch("/api/auth/config").then(r => r.json()).then(d => setGid(d.google_client_id || null)).catch(() => {});
+  }, []);
+
+  // Load Google's button + wire the callback (only when configured).
+  useEffect(() => {
+    if (!gid) return;
+    let cancelled = false;
+    const init = () => {
+      if (cancelled || !window.google || !window.google.accounts || !gbtnRef.current) return;
+      window.google.accounts.id.initialize({
+        client_id: gid,
+        callback: resp => {
+          NotesStore.googleLogin(resp.credential).then(r => {
+            if (r.ok) onClose();else setErr(r.error);
+          });
+        }
+      });
+      gbtnRef.current.innerHTML = "";
+      window.google.accounts.id.renderButton(gbtnRef.current, {
+        theme: "outline",
+        size: "large",
+        width: 300,
+        text: m === "signup" ? "signup_with" : "signin_with"
+      });
+    };
+    if (window.google && window.google.accounts) {
+      init();
+      return () => {
+        cancelled = true;
+      };
+    }
+    let s = document.getElementById("gsi-script");
+    if (!s) {
+      s = document.createElement("script");
+      s.src = "https://accounts.google.com/gsi/client";
+      s.async = true;
+      s.defer = true;
+      s.id = "gsi-script";
+      document.head.appendChild(s);
+    }
+    s.addEventListener("load", init);
+    return () => {
+      cancelled = true;
+      s && s.removeEventListener("load", init);
+    };
+  }, [gid, m]);
   const submit = async () => {
     if (busy) return;
     setBusy(true);
@@ -2797,7 +2881,12 @@ function AuthModal({
     "aria-label": "Close"
   }, /*#__PURE__*/React.createElement(Icon.Close, null))), /*#__PURE__*/React.createElement("p", {
     className: "auth-modal-sub"
-  }, "Sync your notes across devices."), /*#__PURE__*/React.createElement("input", {
+  }, "Sync your notes across devices."), gid && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "auth-google",
+    ref: gbtnRef
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "auth-or"
+  }, /*#__PURE__*/React.createElement("span", null, "or"))), /*#__PURE__*/React.createElement("input", {
     ref: emailRef,
     className: "auth-input",
     type: "email",
