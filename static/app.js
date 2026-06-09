@@ -2570,8 +2570,7 @@ function NotesView({
     n.has(key) ? n.delete(key) : n.add(key);
     return n;
   });
-  const [email, setEmail] = useState("");
-  const [pass, setPass] = useState("");
+  const [authOpen, setAuthOpen] = useState(null); // null | "login" | "signup"
   const acct = NotesStore.authInfo();
   const fileRef = useRef(null);
   let notes = NotesStore.search(q); // already newest-first
@@ -2693,43 +2692,14 @@ function NotesView({
   }, acct.syncing ? "Syncing…" : "Sync now"), /*#__PURE__*/React.createElement("button", {
     className: "notes-tool-btn",
     onClick: () => NotesStore.logout()
-  }, "Log out")) : /*#__PURE__*/React.createElement("form", {
-    className: "notes-auth",
-    onSubmit: e => e.preventDefault()
-  }, /*#__PURE__*/React.createElement("input", {
-    className: "notes-sync-input",
-    type: "email",
-    placeholder: "Email",
-    autoComplete: "username",
-    value: email,
-    onChange: e => setEmail(e.target.value)
-  }), /*#__PURE__*/React.createElement("input", {
-    className: "notes-sync-input",
-    type: "password",
-    placeholder: "Password",
-    autoComplete: "current-password",
-    value: pass,
-    onChange: e => setPass(e.target.value)
-  }), /*#__PURE__*/React.createElement("button", {
+  }, "Log out")) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", {
+    className: "notes-sync-label"
+  }, "Sync across devices:"), /*#__PURE__*/React.createElement("button", {
     className: "notes-tool-btn",
-    onClick: async () => {
-      const r = await NotesStore.login(email, pass);
-      setMsg(r.ok ? "Signed in — syncing." : r.error);
-      if (r.ok) {
-        setEmail("");
-        setPass("");
-      }
-    }
+    onClick: () => setAuthOpen("login")
   }, "Log in"), /*#__PURE__*/React.createElement("button", {
     className: "notes-tool-btn",
-    onClick: async () => {
-      const r = await NotesStore.signup(email, pass);
-      setMsg(r.ok ? "Account created — syncing." : r.error);
-      if (r.ok) {
-        setEmail("");
-        setPass("");
-      }
-    }
+    onClick: () => setAuthOpen("signup")
   }, "Sign up"))), acct.email ? /*#__PURE__*/React.createElement("div", {
     className: "notes-sync-hint"
   }, "Your notes sync to this account on every device you log into.") : /*#__PURE__*/React.createElement("div", {
@@ -2781,7 +2751,94 @@ function NotesView({
     }, s.items.map(renderItem)));
   }) : /*#__PURE__*/React.createElement("ul", {
     className: "notes-list"
-  }, notes.map(renderItem)));
+  }, notes.map(renderItem)), authOpen && /*#__PURE__*/React.createElement(AuthModal, {
+    mode: authOpen,
+    onClose: () => setAuthOpen(null)
+  }));
+}
+
+// Centered login / sign-up dialog.
+function AuthModal({
+  mode,
+  onClose
+}) {
+  const [m, setM] = useState(mode);
+  const [email, setEmail] = useState("");
+  const [pass, setPass] = useState("");
+  const [err, setErr] = useState("");
+  const [busy, setBusy] = useState(false);
+  const emailRef = useRef(null);
+  useEffect(() => {
+    requestAnimationFrame(() => emailRef.current && emailRef.current.focus());
+  }, []);
+  const submit = async () => {
+    if (busy) return;
+    setBusy(true);
+    setErr("");
+    const r = m === "signup" ? await NotesStore.signup(email, pass) : await NotesStore.login(email, pass);
+    setBusy(false);
+    if (r.ok) onClose();else setErr(r.error || "Something went wrong.");
+  };
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "auth-scrim",
+    onClick: onClose
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "auth-modal",
+    role: "dialog",
+    "aria-modal": "true",
+    "aria-label": m === "signup" ? "Sign up" : "Log in"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "auth-modal-head"
+  }, /*#__PURE__*/React.createElement("h3", {
+    className: "auth-modal-title"
+  }, m === "signup" ? "Create account" : "Log in"), /*#__PURE__*/React.createElement("button", {
+    className: "detail-close",
+    onClick: onClose,
+    "aria-label": "Close"
+  }, /*#__PURE__*/React.createElement(Icon.Close, null))), /*#__PURE__*/React.createElement("p", {
+    className: "auth-modal-sub"
+  }, "Sync your notes across devices."), /*#__PURE__*/React.createElement("input", {
+    ref: emailRef,
+    className: "auth-input",
+    type: "email",
+    placeholder: "Email",
+    autoComplete: "username",
+    value: email,
+    onChange: e => setEmail(e.target.value),
+    onKeyDown: e => {
+      if (e.key === "Enter") submit();
+    }
+  }), /*#__PURE__*/React.createElement("input", {
+    className: "auth-input",
+    type: "password",
+    placeholder: "Password",
+    autoComplete: m === "signup" ? "new-password" : "current-password",
+    value: pass,
+    onChange: e => setPass(e.target.value),
+    onKeyDown: e => {
+      if (e.key === "Enter") submit();
+    }
+  }), m === "signup" && /*#__PURE__*/React.createElement("div", {
+    className: "auth-fine"
+  }, "At least 8 characters."), err && /*#__PURE__*/React.createElement("div", {
+    className: "auth-err"
+  }, err), /*#__PURE__*/React.createElement("button", {
+    className: "auth-submit",
+    onClick: submit,
+    disabled: busy
+  }, busy ? "…" : m === "signup" ? "Create account" : "Log in"), /*#__PURE__*/React.createElement("div", {
+    className: "auth-switch"
+  }, m === "signup" ? /*#__PURE__*/React.createElement(React.Fragment, null, "Already have an account? ", /*#__PURE__*/React.createElement("button", {
+    onClick: () => {
+      setM("login");
+      setErr("");
+    }
+  }, "Log in")) : /*#__PURE__*/React.createElement(React.Fragment, null, "New here? ", /*#__PURE__*/React.createElement("button", {
+    onClick: () => {
+      setM("signup");
+      setErr("");
+    }
+  }, "Sign up")))));
 }
 
 // ============================================================

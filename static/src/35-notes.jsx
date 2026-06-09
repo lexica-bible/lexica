@@ -181,8 +181,7 @@ function NotesView({ onOpen }) {
   const [group, setGroup] = useState(false);      // group by book
   const [collapsed, setCollapsed] = useState(() => new Set());   // collapsed book keys
   const toggleSection = (key) => setCollapsed(s => { const n = new Set(s); n.has(key) ? n.delete(key) : n.add(key); return n; });
-  const [email, setEmail] = useState("");
-  const [pass, setPass] = useState("");
+  const [authOpen, setAuthOpen] = useState(null);   // null | "login" | "signup"
   const acct = NotesStore.authInfo();
   const fileRef = useRef(null);
   let notes = NotesStore.search(q);               // already newest-first
@@ -272,12 +271,11 @@ function NotesView({ onOpen }) {
               <button className="notes-tool-btn" onClick={() => NotesStore.logout()}>Log out</button>
             </>
           ) : (
-            <form className="notes-auth" onSubmit={(e) => e.preventDefault()}>
-              <input className="notes-sync-input" type="email" placeholder="Email" autoComplete="username" value={email} onChange={(e) => setEmail(e.target.value)} />
-              <input className="notes-sync-input" type="password" placeholder="Password" autoComplete="current-password" value={pass} onChange={(e) => setPass(e.target.value)} />
-              <button className="notes-tool-btn" onClick={async () => { const r = await NotesStore.login(email, pass); setMsg(r.ok ? "Signed in — syncing." : r.error); if (r.ok) { setEmail(""); setPass(""); } }}>Log in</button>
-              <button className="notes-tool-btn" onClick={async () => { const r = await NotesStore.signup(email, pass); setMsg(r.ok ? "Account created — syncing." : r.error); if (r.ok) { setEmail(""); setPass(""); } }}>Sign up</button>
-            </form>
+            <>
+              <span className="notes-sync-label">Sync across devices:</span>
+              <button className="notes-tool-btn" onClick={() => setAuthOpen("login")}>Log in</button>
+              <button className="notes-tool-btn" onClick={() => setAuthOpen("signup")}>Sign up</button>
+            </>
           )}
         </div>
         {acct.email
@@ -326,6 +324,55 @@ function NotesView({ onOpen }) {
       ) : (
         <ul className="notes-list">{notes.map(renderItem)}</ul>
       )}
+      {authOpen && <AuthModal mode={authOpen} onClose={() => setAuthOpen(null)} />}
     </div>
+  );
+}
+
+// Centered login / sign-up dialog.
+function AuthModal({ mode, onClose }) {
+  const [m, setM] = useState(mode);
+  const [email, setEmail] = useState("");
+  const [pass, setPass] = useState("");
+  const [err, setErr] = useState("");
+  const [busy, setBusy] = useState(false);
+  const emailRef = useRef(null);
+  useEffect(() => { requestAnimationFrame(() => emailRef.current && emailRef.current.focus()); }, []);
+
+  const submit = async () => {
+    if (busy) return;
+    setBusy(true); setErr("");
+    const r = m === "signup" ? await NotesStore.signup(email, pass) : await NotesStore.login(email, pass);
+    setBusy(false);
+    if (r.ok) onClose();
+    else setErr(r.error || "Something went wrong.");
+  };
+
+  return (
+    <>
+      <div className="auth-scrim" onClick={onClose} />
+      <div className="auth-modal" role="dialog" aria-modal="true" aria-label={m === "signup" ? "Sign up" : "Log in"}>
+        <div className="auth-modal-head">
+          <h3 className="auth-modal-title">{m === "signup" ? "Create account" : "Log in"}</h3>
+          <button className="detail-close" onClick={onClose} aria-label="Close"><Icon.Close/></button>
+        </div>
+        <p className="auth-modal-sub">Sync your notes across devices.</p>
+        <input ref={emailRef} className="auth-input" type="email" placeholder="Email" autoComplete="username"
+          value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") submit(); }} />
+        <input className="auth-input" type="password" placeholder="Password"
+          autoComplete={m === "signup" ? "new-password" : "current-password"}
+          value={pass} onChange={(e) => setPass(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") submit(); }} />
+        {m === "signup" && <div className="auth-fine">At least 8 characters.</div>}
+        {err && <div className="auth-err">{err}</div>}
+        <button className="auth-submit" onClick={submit} disabled={busy}>
+          {busy ? "…" : (m === "signup" ? "Create account" : "Log in")}
+        </button>
+        <div className="auth-switch">
+          {m === "signup"
+            ? <>Already have an account? <button onClick={() => { setM("login"); setErr(""); }}>Log in</button></>
+            : <>New here? <button onClick={() => { setM("signup"); setErr(""); }}>Sign up</button></>}
+        </div>
+      </div>
+    </>
   );
 }
