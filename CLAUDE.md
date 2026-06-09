@@ -253,8 +253,11 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   lets `kind:"journal"` through without an anchor; `all()` keeps journals OUT of the verse-note list.
   Server per-page cap is bigger for journals (`_MAX_JOURNAL_BYTES` 64KB vs notes' 8KB).
 - **Copy + send-verse-to-journal from the reader.** The drag-select bar AND the verse-number menu both
-  carry Copy (verse text to clipboard) + Journal (appends `ref — text` to the OPEN journal page; if
-  none is open it flashes "Open a journal page first"). A small `lib-flash` toast confirms.
+  carry Copy (verse text to clipboard) + Journal (appends `Genesis 1:8 (ABP) — text` — full book name +
+  the reading text tagged; parallel reads `ABP/KJV`, non-canon gets no tag — via `journalLine()` in
+  60-library.jsx, to the OPEN journal page; if none is open it flashes "Open a journal page first").
+  A small `lib-flash` toast confirms. Both menus share ONE left-to-right order — colors · Note · Journal ·
+  Copy (· Bookmark on the verse menu only) — keep them aligned if you touch either.
 - Files: `static/src/12-notes-store.jsx` (`NotesStore` + sync/auth + journal helpers + `NOTE_COLORS`/
   `NOTE_COLOR_CSS` + `useNotesVersion`), `static/src/35-notes.jsx` (`NoteAddPopover`, `VerseNoteMenu`,
   `NoteColorRow`, `NotesPanel` editor, `JournalView`/`JournalEditor`, `NotesView` tab, `AuthModal`).
