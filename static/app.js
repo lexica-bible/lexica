@@ -5503,10 +5503,12 @@ function LexiconView({
   }, g.translit), /*#__PURE__*/React.createElement("span", {
     className: "lexicon-result-preview"
   }, renderRowPreview(g)), /*#__PURE__*/React.createElement("span", {
+    className: "lexicon-result-end"
+  }, /*#__PURE__*/React.createElement("span", {
     className: "lexicon-result-count"
   }, g.count), /*#__PURE__*/React.createElement("span", {
     className: "lexicon-result-chev"
-  }, "\u203A")))), profile && /*#__PURE__*/React.createElement("div", {
+  }, "\u203A"))))), profile && /*#__PURE__*/React.createElement("div", {
     className: "lexicon-profile"
   }, /*#__PURE__*/React.createElement("div", {
     className: "lexicon-profile-header"

@@ -361,8 +361,10 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, onWordClick, pen
               {g.lemma && <span className="lexicon-match-lemma" dir={g.strongs[0] === "H" ? "rtl" : undefined}>{g.lemma}</span>}
               {g.translit && <span className="lexicon-match-translit">{g.translit}</span>}
               <span className="lexicon-result-preview">{renderRowPreview(g)}</span>
-              <span className="lexicon-result-count">{g.count}</span>
-              <span className="lexicon-result-chev">›</span>
+              <span className="lexicon-result-end">
+                <span className="lexicon-result-count">{g.count}</span>
+                <span className="lexicon-result-chev">›</span>
+              </span>
             </button>
           ))}
         </div>

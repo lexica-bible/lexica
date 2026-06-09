@@ -221,11 +221,12 @@ input { font-family: inherit; }
   font-family: var(--f-mono); font-size: 10px; color: var(--ink-2);
   background: var(--bg-sunk); border-radius: 3px; padding: 0 4px; margin-right: 6px;
 }
+.lexicon-result-end { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
 .lexicon-result-count { font-family: var(--f-mono); font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
 .lexicon-result-chev { color: var(--ink-3); font-size: 16px; line-height: 1; }
-/* Mobile: scroll the WHOLE results table sideways as one block — one swipe
-   moves every row together (strongs, Greek, renderings, count), instead of
-   truncating each row at the screen edge. */
+/* Mobile: scroll the WHOLE results table sideways — one swipe moves every row
+   together (strongs, Greek, renderings). The count + chevron stay PINNED to
+   the right edge (sticky) so they're always visible while the row scrolls. */
 @media (max-width: 1099px) {
   .lexicon-results {
     align-items: flex-start;
@@ -235,6 +236,10 @@ input { font-family: inherit; }
   .lexicon-result-row { width: max-content; min-width: 100%; }
   .lexicon-result-preview { flex: 0 0 auto; }
   .lex-prev-line { overflow: visible; text-overflow: clip; width: max-content; }
+  .lexicon-result-end {
+    position: sticky; right: 0; background: var(--bg); padding-left: 12px;
+    box-shadow: -10px 0 8px -6px rgba(0, 0, 0, 0.06);
+  }
 }
 
 
