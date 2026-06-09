@@ -3,7 +3,7 @@
 // ============================================================
 const _STRONGS_RE = /^[GgHh]?\d+(\.\d+)?$/;
 
-function LexiconView({ onNavigateToSearch, onNavigateToLibrary, onWordClick, pendingStrongs, onPendingStrongsConsumed }) {
+function LexiconView({ onNavigateToSearch, onNavigateToLibrary, onWordClick, pendingStrongs, onPendingStrongsConsumed, isMobile }) {
   const [query, setQuery] = useState("");
   const [matches, setMatches] = useState(null);
   const [profile, setProfile] = useState(null);
@@ -312,7 +312,7 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, onWordClick, pen
               {g.lemma && <span className="lexicon-match-lemma" dir={g.strongs[0] === "H" ? "rtl" : undefined}>{g.lemma}</span>}
               {g.translit && <span className="lexicon-match-translit">{g.translit}</span>}
               <span className="lexicon-result-preview">
-                {(g.glosses || []).slice(0, 3).map(x => x.gloss).join(", ")}
+                {(g.glosses || []).slice(0, isMobile ? 3 : 6).map(x => x.gloss).join(", ")}
               </span>
               <span className="lexicon-result-count">{g.count}</span>
               <span className="lexicon-result-chev">›</span>

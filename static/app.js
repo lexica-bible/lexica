@@ -5109,7 +5109,8 @@ function LexiconView({
   onNavigateToLibrary,
   onWordClick,
   pendingStrongs,
-  onPendingStrongsConsumed
+  onPendingStrongsConsumed,
+  isMobile
 }) {
   const [query, setQuery] = useState("");
   const [matches, setMatches] = useState(null);
@@ -5456,7 +5457,7 @@ function LexiconView({
     className: "lexicon-match-translit"
   }, g.translit), /*#__PURE__*/React.createElement("span", {
     className: "lexicon-result-preview"
-  }, (g.glosses || []).slice(0, 3).map(x => x.gloss).join(", ")), /*#__PURE__*/React.createElement("span", {
+  }, (g.glosses || []).slice(0, isMobile ? 3 : 6).map(x => x.gloss).join(", ")), /*#__PURE__*/React.createElement("span", {
     className: "lexicon-result-count"
   }, g.count), /*#__PURE__*/React.createElement("span", {
     className: "lexicon-result-chev"
@@ -5825,7 +5826,8 @@ function App() {
     },
     onWordClick: e => setActiveEntry(e),
     pendingStrongs: lexiconPendingStrongs,
-    onPendingStrongsConsumed: () => setLexiconPendingStrongs(null)
+    onPendingStrongsConsumed: () => setLexiconPendingStrongs(null),
+    isMobile: isMobile
   })), /*#__PURE__*/React.createElement("div", {
     className: "main-inner",
     style: {

@@ -197,6 +197,7 @@ function App() {
             onWordClick={(e) => setActiveEntry(e)}
             pendingStrongs={lexiconPendingStrongs}
             onPendingStrongsConsumed={() => setLexiconPendingStrongs(null)}
+            isMobile={isMobile}
           />
         </div>
         <div className="main-inner" style={{ display: (mainView === "library" || mainView === "about" || mainView === "lexicon") ? "none" : undefined }}>
