@@ -4825,6 +4825,12 @@ function LibraryView({
     clearTimeout(flashT.current);
     flashT.current = setTimeout(() => setFlashMsg(""), 1600);
   };
+  // The line a verse becomes when sent to the journal: "Genesis 1:8 (ABP) — text".
+  // No translation tag for non-canon texts (their book name already says it all).
+  const journalLine = a => {
+    const tag = nonCanon ? "" : translation === "parallel" ? "ABP/KJV" : (translation || "").toUpperCase();
+    return a.refLabel + (tag ? " (" + tag + ")" : "") + " — " + a.snippet;
+  };
   useNotesVersion(); // re-render markers when notes change
 
   useEffect(() => {
@@ -5270,7 +5276,7 @@ function LibraryView({
       flash("Open a journal page first");
       return;
     }
-    NotesStore.appendToJournal(id, a.refLabel + " — " + a.snippet);
+    NotesStore.appendToJournal(id, journalLine(a));
     flash("Added to journal");
   };
   // Mobile: the browser owns the touch-select gesture, so our touch handlers may
@@ -5457,7 +5463,7 @@ function LibraryView({
       flash("Open a journal page first");
       return;
     }
-    NotesStore.appendToJournal(id, a.refLabel + " — " + a.snippet);
+    NotesStore.appendToJournal(id, journalLine(a));
     flash("Added to journal");
   };
   // Shared press handlers for a verse number: right-click + mobile long-press.
