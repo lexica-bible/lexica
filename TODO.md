@@ -38,6 +38,18 @@ Still open:
    Dependabot watches outside packages. STILL OPEN here: a nightly `health_check.py` email on PA (needs a
    PA scheduled task + email login) — the only piece that has to run against the real database.
    `code: scripts/health_check.py, scripts/snapshot_endpoints.py, tests/, .github/, scripts/githooks/, scripts/deploy.sh`
+4. **Unify the AI synthesis caches onto one prompt-fingerprint scheme.** Each AI cache versions
+   itself differently: AI search already does the good way (hashes its prompt into the cache tag, so
+   editing the prompt auto-refreshes — `ai.py` ~760), but the summary cache (`views_summary.py`,
+   hand-bumped `_SUMMARY_VER`) and the xref cache (`views_crossref.py`, fixed keys) use a cruder
+   manual number you must remember to bump. MetaV (`pn:`) and LSJ are similar. GOAL: one shared helper
+   so every synthesis tags rows as `category:hash-of-its-own-prompt`; editing any prompt auto-refreshes
+   just that synthesis, no manual bump, each category cleans only its own stale rows. LANDMINE: AI
+   search's cleanup (`ai.py` ~782) spares xref+summary BY NAME — switching their tag format means you
+   MUST update that delete rule or it wipes them. Paid-cache logic: verify cache still hits (no cost
+   spike) via the local read-only test loop before pushing. (Surfaced 2026-06-08 — the Gen 6 summary
+   got stuck because summaries lacked auto-refresh; added a manual `_SUMMARY_VER` as a stopgap.)
+   `code: ai.py ~741-805, views_summary.py cache helpers, views_crossref.py ~94-285`
 
 ---
 
