@@ -39,19 +39,17 @@ Still open:
    PA scheduled task + email login) — the only piece that has to run against the real database.
    `code: scripts/health_check.py, scripts/snapshot_endpoints.py, tests/, .github/, scripts/githooks/, scripts/deploy.sh`
 4. **Unify the AI prompt STYLE into one shared "house style" snippet.** (The cache-fingerprint half
-   of this item is DONE 2026-06-09 — see TODO_ARCHIVE.md. This is the leftover paired half.) Every
-   blurb should share one house-style snippet (plain language, short one-idea sentences, no run-ons,
-   no jargon; NEVER cap by sentence count — that makes Haiku cram events into run-ons; instead let
-   LENGTH FIT THE CONTENT — short/simple gets a sentence or two, dense gets more — and don't pad or
-   cram). Put the snippet in `core.py`; each prompt = its own task + its own soft CEILING (not a fixed
-   target: chapter ~150w, xref shorter, person/place shorter still) + the shared snippet. Now that the
-   caches are fingerprinted, editing the shared snippet auto-refreshes every cache for free — that's why
-   this was paired with the cache work. DONE 2026-06-09: cross-ref moved off the "3-sentence" cap to
-   adaptive length (and onto Sonnet — see memory project_ai_synthesis_quality), and the chapter summary
-   was further tightened (track the arc, not a line per section; ~150w / never >200). STILL OPEN:
-   person/place ("1-2 sentences") still caps by sentence count, and the central SHARED snippet in core.py
-   was never built — xref and chapter each carry their own adaptive wording. Next lever if huge chapter
-   summaries still run long on Haiku: move the chapter summary to Sonnet too (same one-line swap as xref).
+   of this item is DONE 2026-06-09 — see TODO_ARCHIVE.md. This is the leftover paired half.) CORRECTED 2026-06-09 (see memory project_ai_synthesis_quality): the original plan — drop sentence-count
+   caps and let LENGTH FIT THE CONTENT (adaptive) everywhere — is only right for SONNET. Haiku does NOT
+   honor a soft adaptive cap: on a maximal chapter (Sibylline Bk 1) it marched every section and overran
+   the token ceiling (got chopped mid-word). New rule: share the VOICE only (plain language, short
+   one-idea sentences, no run-ons, no jargon, no moralizing) in one core.py snippet; keep LENGTH control
+   split by MODEL — HARD sentence-counts on the Haiku prompts, SOFT adaptive (~Nw ceiling) on the Sonnet
+   ones. DONE: xref write-up and chapter summary both moved to adaptive length AND onto Sonnet (33742e8;
+   b98517f then 5f38d25); the AI-search xref enrichment is on Sonnet too (21aa95a). STILL OPEN: (a) the
+   shared VOICE snippet in core.py was never built — xref/chapter carry their own wording; (b) person/place
+   (`_PN_SYSTEM`, Haiku, "1-2 sentences") is CORRECT as a hard cap — leave it, do NOT convert to adaptive;
+   (c) glance at the LSJ word-study blurb (Haiku) to confirm it's hard-capped, not soft.
    NOTE: changing these prompts is exactly what the
    new fingerprint scheme watches, so each edit will lazily refresh that category's cache (expected).
    `code: shared snippet in core.py; views_crossref.py system prompts; views_metav.py _PN_SYSTEM;
