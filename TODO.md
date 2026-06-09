@@ -26,10 +26,11 @@ Still open:
    safety-check slice is in — the build's own guards are now unit-tested — but the actual one-clean-
    pass rewrite remains. Best done the next time a rebuild is genuinely needed, copy-first.)
    `code: scripts/build_words_from_abp.py + the fix_*.py chain (checklist in CLAUDE.md)`
-2. **Two near-identical "build a word entry" functions on the front end.** Leftover from the Phase-4
-   rework. They do almost the same thing slightly differently — the kind of drift that caused a
-   couple of past bugs. Not broken; worth merging in a dedicated tidy-up.
-   `code: makeEntry / flattenAiResults in static/src/00-core.jsx + the inline makeEntry in 60-library.jsx`
+2. ~~**Two near-identical "build a word entry" functions on the front end.**~~ **DONE 2026-06-08**
+   (commit `007446c`). The three copy-pasted builders now share one core: `entrySnum()` +
+   `wordEntryCore()` in static/src/00-core.jsx; makeEntry, flattenAiResults, and the library
+   makeEntry each spread the core and add only their own id + extras. No behavior change. Closes
+   the frontend half of refactor backlog #3.
 3. **More automated checks (mostly done).** The test net now covers broken pages (snapshot harness) and
    the dangerous data invariants (strongs prefix, tipnr type-set, the build's guards). 2026-06-07 added
    the automation layer: GitHub auto-runs the tests + frontend build-check on every push (CI), a
