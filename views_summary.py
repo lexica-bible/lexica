@@ -30,6 +30,14 @@ bp = Blueprint("summary", __name__)
 _BOOK_RE = re.compile(r"^[A-Za-z0-9_]+$")      # route guard: canonical abbrevs are mixed-case (Gen, Joh)
 _EXTRA_BOOK_RE = re.compile(r"^[a-z0-9_]+$")   # stricter: table-name safe, used only when building <book>_verses
 
+# Model per summary kind. The book blurb is tiny + bounded (1-2 sentences, fed only the
+# opening) so Haiku keeps it tight. The chapter summary runs on Sonnet: it honors the
+# length cap, while Haiku overruns (and gets truncated) on huge chapters like the
+# Sibylline Oracles. _CHAP_MODEL is part of the cache fingerprint below, so swapping it
+# refreshes cached chapter summaries.
+_HAIKU_MODEL = "claude-haiku-4-5-20251001"
+_CHAP_MODEL = "claude-sonnet-4-6"
+
 # Traditionally recognized author per book, fed to Haiku so it names the writer
 # instead of hedging ("an apostolic witness…"). Only books with a well-established
 # attribution are listed; genuinely anonymous books (Job, Esther, Hebrews, the
@@ -105,7 +113,7 @@ _CHAP_PROMPT_TMPL = (
 # summary lazily refreshes. Rows carry a per-book author suffix (see _summary_ver),
 # so editing one book's author in _BOOK_AUTHORS refreshes only that book.
 _SUMMARY_TPL_BASE = ai_fingerprint(
-    "summary", _SUMMARY_SYSTEM, _AUTHOR_LINE_TMPL, _BOOK_PROMPT_TMPL, _CHAP_PROMPT_TMPL
+    "summary", _SUMMARY_SYSTEM, _AUTHOR_LINE_TMPL, _BOOK_PROMPT_TMPL, _CHAP_PROMPT_TMPL, _CHAP_MODEL
 )
 
 
@@ -123,11 +131,14 @@ def prune_cache() -> int:
     return ai_cache_prune("summary", _SUMMARY_TPL_BASE)
 
 
-def _haiku(system: str, user: str, max_tokens: int) -> str | None:
-    """One Haiku call; returns clean text or None on any failure."""
+def _summarize(system: str, user: str, max_tokens: int,
+               model: str = _HAIKU_MODEL) -> str | None:
+    """One summary call; returns clean text or None on any failure. Defaults to Haiku
+    (the book blurb); the chapter summary passes Sonnet, which holds the length cap that
+    Haiku overruns on huge chapters."""
     try:
         msg = _anthropic.messages.create(
-            model="claude-haiku-4-5-20251001",
+            model=model,
             max_tokens=max_tokens,
             temperature=0,
             system=system,
@@ -135,7 +146,7 @@ def _haiku(system: str, user: str, max_tokens: int) -> str | None:
         )
         return re.sub(r"^#+\s*[^:\n]*:\s*", "", msg.content[0].text.strip())
     except Exception as exc:
-        log.warning("Summary Haiku call failed: %s", exc)
+        log.warning("Summary AI call failed: %s", exc)
         return None
 
 
@@ -263,7 +274,7 @@ def reading_summary(book, chapter):
     # Book blurb — generate if not already cached.
     if book_payload is None:
         if opening:
-            text = _haiku(
+            text = _summarize(
                 _SUMMARY_SYSTEM,
                 _BOOK_PROMPT_TMPL.format(name=name, author_line=author_line, opening=opening),
                 max_tokens=160,
@@ -277,10 +288,11 @@ def reading_summary(book, chapter):
     # Chapter summary — pericope-aware, generate if not already cached.
     if chap_payload is None:
         if chap_block:
-            text = _haiku(
+            text = _summarize(
                 _SUMMARY_SYSTEM,
                 _CHAP_PROMPT_TMPL.format(name=name, author_line=author_line, chap_block=chap_block),
-                max_tokens=480,   # room for up to 5 sentences (3-4 @ 320 truncated long chapters)
+                max_tokens=480,   # headroom; Sonnet keeps it to ~150-200 words
+                model=_CHAP_MODEL,
             )
         else:
             text = None
