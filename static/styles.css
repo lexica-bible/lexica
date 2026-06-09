@@ -2682,17 +2682,43 @@ input { font-family: inherit; }
    ============================================================ */
 /* Floating "Add note" bar above a text selection */
 .note-popover {
-  background: var(--ink); color: #fff; border-radius: 8px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.25); padding: 2px;
+  display: flex; align-items: center; gap: 4px;
+  background: var(--ink); color: #fff; border-radius: 9px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25); padding: 5px 7px;
+}
+.note-swatches { display: flex; align-items: center; gap: 5px; }
+.note-swatch {
+  width: 22px; height: 22px; border-radius: 50%; padding: 0; cursor: pointer;
+  border: 2px solid rgba(255,255,255,0.55); box-shadow: 0 0 0 1px rgba(0,0,0,0.12);
 }
 .note-popover-btn {
-  display: inline-flex; align-items: center; gap: 6px;
-  background: none; border: none; color: #fff; cursor: pointer;
-  font-size: 13px; font-weight: 600; padding: 7px 12px; border-radius: 6px;
+  display: inline-flex; align-items: center; gap: 5px;
+  background: rgba(255,255,255,0.1); border: none; color: #fff; cursor: pointer;
+  font-size: 13px; font-weight: 600; padding: 7px 11px; border-radius: 6px;
+  margin-left: 3px;
 }
-.note-popover-btn:hover { background: rgba(255,255,255,0.12); }
-.note-popover-mobile { box-shadow: 0 4px 24px rgba(0,0,0,0.35); }
-.note-popover-mobile .note-popover-btn { font-size: 15px; padding: 11px 22px; }
+.note-popover-btn:hover { background: rgba(255,255,255,0.2); }
+.note-popover-mobile { box-shadow: 0 4px 24px rgba(0,0,0,0.35); padding: 8px 10px; }
+.note-popover-mobile .note-swatch { width: 28px; height: 28px; }
+.note-popover-mobile .note-popover-btn { font-size: 15px; padding: 9px 16px; }
+
+/* Highlight paint on words / verses (matched in the same reading text) */
+.lib-hi { border-radius: 3px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }
+.lib-hi-yellow { background: #ffe89e; }
+.lib-hi-green  { background: #bdeec0; }
+.lib-hi-blue   { background: #bfe0ff; }
+.lib-hi-pink   { background: #ffcfe1; }
+.lib-hi-orange { background: #ffd6a6; }
+
+/* Editor color row */
+.note-color-row { display: flex; align-items: center; gap: 8px; }
+.note-color-row .note-swatch { width: 26px; height: 26px; border: 2px solid var(--rule); box-shadow: none; }
+.note-color-row .note-swatch.on { border-color: var(--ink); }
+.note-swatch-none {
+  background: var(--paper); color: var(--ink-3);
+  display: inline-flex; align-items: center; justify-content: center; font-size: 12px;
+}
+.notes-item-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
 
 /* Per-verse note marker — sits inline as the FIRST thing in the verse text, so
    it indents only the first line; wrapped lines fall back to the left edge. */

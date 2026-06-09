@@ -11,26 +11,49 @@
 // the selection. On MOBILE the OS floats its own copy/share toolbar right there,
 // so ours is pinned to the bottom of the screen (above the tab bar) to avoid the
 // collision.
-function NoteAddPopover({ rect, isMobile, onAdd }) {
+function NoteAddPopover({ rect, isMobile, onAdd, onColor }) {
   if (!rect) return null;
   let style;
   if (isMobile) {
     style = { position: "fixed", left: "50%", transform: "translateX(-50%)", bottom: 72, zIndex: 1000 };
   } else {
-    const W = 118;
+    const W = 232;
     style = {
       position: "fixed",
-      top: Math.max(8, rect.top - 46),
+      top: Math.max(8, rect.top - 48),
       left: Math.min(window.innerWidth - W - 8, Math.max(8, rect.left + rect.width / 2 - W / 2)),
       zIndex: 1000,
     };
   }
-  // preventDefault on mousedown so pressing the button doesn't clear the selection
+  // preventDefault on mousedown so pressing a button doesn't clear the selection
   return (
     <div className={"note-popover" + (isMobile ? " note-popover-mobile" : "")} style={style} onMouseDown={(e) => e.preventDefault()}>
+      <div className="note-swatches">
+        {NOTE_COLORS.map(c => (
+          <button key={c} className="note-swatch" style={{ background: NOTE_COLOR_CSS[c] }}
+            title={"Highlight " + c} aria-label={"Highlight " + c} onClick={() => onColor(c)} />
+        ))}
+      </div>
       <button className="note-popover-btn" onClick={onAdd}>
-        <Icon.Bookmark/> Add note
+        <Icon.Bookmark/> Note
       </button>
+    </div>
+  );
+}
+
+// A row of color swatches + a clear button, for the editor.
+function NoteColorRow({ value, onPick }) {
+  return (
+    <div className="note-color-row">
+      {NOTE_COLORS.map(c => (
+        <button key={c}
+          className={"note-swatch" + (value === c ? " on" : "")}
+          style={{ background: NOTE_COLOR_CSS[c] }}
+          title={"Highlight " + c} aria-label={"Highlight " + c}
+          onClick={() => onPick(value === c ? null : c)} />
+      ))}
+      <button className={"note-swatch note-swatch-none" + (!value ? " on" : "")}
+        title="No highlight" aria-label="No highlight" onClick={() => onPick(null)}>✕</button>
     </div>
   );
 }
@@ -39,22 +62,24 @@ function NoteAddPopover({ rect, isMobile, onAdd }) {
 function NotesPanel({ noteId, isMobile, onClose }) {
   const note = NotesStore.get(noteId);
   const [body, setBody] = useState(note ? (note.body || "") : "");
+  const [color, setColor] = useState(note ? (note.color || null) : null);
   const taRef = useRef(null);
 
   useEffect(() => {
     setBody(note ? (note.body || "") : "");
+    setColor(note ? (note.color || null) : null);
     // Desktop: focus the box right away. Mobile: DON'T — auto-popping the
     // on-screen keyboard covers a freshly opened sheet. The user taps to type.
     if (!isMobile) requestAnimationFrame(() => taRef.current && taRef.current.focus());
   }, [noteId]);
 
-  const save = () => { NotesStore.update(noteId, { body }); onClose(); };
+  const save = () => { NotesStore.update(noteId, { body, color }); onClose(); };
   const del = () => { NotesStore.remove(noteId); onClose(); };
-  // Closing without ever typing discards the empty draft (the id was minted on
-  // "Add note" — id-at-creation — so a thrown-away draft shouldn't linger).
+  // Closing a record that's both blank AND uncolored discards it (the id was
+  // minted on create — id-at-creation — so a thrown-away draft shouldn't linger).
   const close = () => {
-    if (!body.trim() && !(note.body || "").trim()) NotesStore.remove(noteId);
-    else if (body !== note.body) NotesStore.update(noteId, { body });
+    if (!body.trim() && !color) NotesStore.remove(noteId);
+    else NotesStore.update(noteId, { body, color });
     onClose();
   };
   // Swipe-down-to-close on mobile (same hook the word / xref / summary sheets use).
@@ -73,6 +98,7 @@ function NotesPanel({ noteId, isMobile, onClose }) {
   const content = (
     <div className="detail-body note-edit-body" ref={isMobile ? scrollRef : undefined}>
       {note.snippet && <blockquote className="note-snippet">“{note.snippet}”</blockquote>}
+      <NoteColorRow value={color} onPick={setColor} />
       <textarea
         ref={taRef}
         className="note-textarea"
@@ -134,7 +160,10 @@ function NotesView({ onOpen }) {
         <ul className="notes-list">
           {notes.map(n => (
             <li key={n.id} className="notes-item" onClick={() => onOpen(n)}>
-              <div className="notes-item-ref">{n.refLabel || (n.book + " " + n.chapter)}</div>
+              <div className="notes-item-ref">
+                {n.color && <span className="notes-item-dot" style={{ background: NOTE_COLOR_CSS[n.color] }} />}
+                {n.refLabel || (n.book + " " + n.chapter)}
+              </div>
               {n.snippet && <div className="notes-item-snippet">“{n.snippet}”</div>}
               <div className="notes-item-body">
                 {n.body ? n.body : <span className="notes-item-empty">(empty)</span>}

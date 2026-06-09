@@ -939,6 +939,13 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
     if (window.getSelection) window.getSelection().removeAllRanges();   // dismiss the OS selection toolbar
     onOpenNote && onOpenNote(note.id);
   };
+  // A color swatch in the popover → make a highlight (no editor; the paint is it).
+  const addHighlightFromSelection = (color) => {
+    if (!noteSel) return;
+    NotesStore.create({ ...noteSel.anchor, color });
+    setNoteSel(null);
+    if (window.getSelection) window.getSelection().removeAllRanges();
+  };
   // Mobile: the browser owns the touch-select gesture, so our touch handlers may
   // not fire. Watch for a settled selection and show the bottom "Add note" bar.
   const resolveRef = useRef(resolveSelection);
@@ -970,6 +977,23 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
   const chapterNotes = NotesStore.forChapter(corpus, nonCanon ? nonCanon.id : (selBook ? selBook.abbrev : null), selChapter);
   const noteForVerse = (verse) =>
     chapterNotes.find(n => verse >= n.start.verse && verse <= ((n.end && n.end.verse) || n.start.verse));
+  // Highlight paint: the color (if any) for a given word, matched within the same
+  // reading text. A verse-level highlight (no word-spot) paints the whole verse.
+  const hiForWord = (verse, pos) => {
+    for (const n of chapterNotes) {
+      if (!n.color) continue;
+      if (n.translation && translation && n.translation !== translation) continue;
+      const sv = n.start.verse, ev = (n.end && n.end.verse) || sv;
+      if (verse < sv || verse > ev) continue;
+      const sp = n.start.pos, ep = n.end ? n.end.pos : null;
+      if (sp == null || pos == null) return n.color;        // whole-verse highlight
+      if (verse === sv && pos < sp) continue;
+      if (verse === ev && ep != null && pos > ep) continue;
+      return n.color;
+    }
+    return null;
+  };
+  const hiClass = (verse, pos) => { const c = hiForWord(verse, pos); return c ? " lib-hi lib-hi-" + c : ""; };
   const noteMarker = (verse) => {
     const n = noteForVerse(verse);
     if (!n) return null;
@@ -1095,7 +1119,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
         }
         return <span key={i}>{text + " "}</span>;
       }
-      return <span key={i} data-note-pos={w.position} className={!!w.italic ? "lib-prose-italic" : undefined}>{text + " "}</span>;
+      return <span key={i} data-note-pos={w.position} className={(!!w.italic ? "lib-prose-italic" : "") + hiClass(v.verse, w.position)}>{text + " "}</span>;
     });
   };
 
@@ -1163,7 +1187,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
       const isSmcap = w.smcap_words ? new Set(w.smcap_words.split(',')).has(label.replace(/[^\w]/g, '').toLowerCase()) : false;
       return (
         <span key={key} data-note-pos={w.position}
-          className={"lib-word" + (w.italic ? " lib-abp-italic" : "") + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "")}
+          className={"lib-word" + (w.italic ? " lib-abp-italic" : "") + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "") + hiClass(v.verse, w.position)}
           onClick={clickable ? () => onWordClick(isPN ? { ...makeEntry(w), isPN: true, pnName: label, gloss: label } : makeEntry(w)) : undefined}>
           {showInterlinear && (w.lemma ? <span className="lib-iw-greek">{w.lemma}</span> : <span className="lib-iw-greek" style={{visibility:"hidden"}}>x</span>)}
           <span className="lib-iw-english">{label}</span>
@@ -1231,7 +1255,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
       const isSmcap = w.smcap_words ? new Set(w.smcap_words.split(',')).has(label.replace(/[^\w]/g, '').toLowerCase()) : false;
       return (
         <span key={key} data-note-pos={w.position}
-          className={"lib-word lib-word-bracketed" + (w.italic ? " lib-abp-italic" : "") + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "")}
+          className={"lib-word lib-word-bracketed" + (w.italic ? " lib-abp-italic" : "") + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "") + hiClass(v.verse, w.position)}
           onClick={clickable ? () => onWordClick(isPN ? { ...makeEntry(w), isPN: true, pnName: label, gloss: label } : makeEntry(w)) : undefined}>
           {showInterlinear && (w.lemma
             ? <span className="lib-iw-greek">{w.lemma}</span>
@@ -1386,7 +1410,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
             const isHebrew = sid ? sid.startsWith("H") : false;
             return (
               <span key={i}
-                className={"lib-word lib-kjv-word" + (w.italic ? " lib-kjv-italic" : "") + (clickable ? " lib-word-clickable" : "")}
+                className={"lib-word lib-kjv-word" + (w.italic ? " lib-kjv-italic" : "") + (clickable ? " lib-word-clickable" : "") + hiClass(v.verse, null)}
                 onClick={clickable ? () => onWordClick(makeKjvEntry(w, sid)) : undefined}>
                 {showInterlinear && (w.lemma
                   ? <span className="lib-iw-greek" dir={isHebrew ? "rtl" : undefined}
@@ -1420,7 +1444,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
           <span className="lib-verse-content">
             {showVerseNum && noteMarker(v.verse)}
             {v.words.map((w, i) => (
-              <span key={i} className={w.italic ? "lib-prose-italic" : undefined}>
+              <span key={i} className={(w.italic ? "lib-prose-italic" : "") + hiClass(v.verse, null)}>
                 {w.word}{w.punc || ""}{" "}
               </span>
             ))}
@@ -1439,7 +1463,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
         <div ref={isHighlight ? highlightRef : null} data-note-verse={v.verse}
           className={"lib-verse-row" + (isHighlight ? " lib-highlight" : "")}>
           {vnumEl(v.verse)}
-          <span className="lib-verse-content">{noteMarker(v.verse)}{v.verse_text}</span>
+          <span className="lib-verse-content">{noteMarker(v.verse)}<span className={"lib-bsb-text" + hiClass(v.verse, null)}>{v.verse_text}</span></span>
         </div>
       </React.Fragment>
     );
@@ -1839,7 +1863,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
         )}
       </div>
       </div>
-      {noteSel && <NoteAddPopover rect={noteSel.rect} isMobile={isMobile} onAdd={addNoteFromSelection} />}
+      {noteSel && <NoteAddPopover rect={noteSel.rect} isMobile={isMobile} onAdd={addNoteFromSelection} onColor={addHighlightFromSelection} />}
       {showSummary && (selBook || nonCanon) && (
         <SummaryPanel
           book={nonCanon ? nonCanon.id : selBook.abbrev}

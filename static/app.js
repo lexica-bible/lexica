@@ -765,6 +765,15 @@ const Icon = {
 // Highlighting (color + painting the marks) is the NEXT phase; `color` is
 // stored blank now so it's already there when that lands.
 // ============================================================
+// Highlight palette — ids map to CSS classes (.lib-hi-<id>) + swatch colors.
+const NOTE_COLORS = ["yellow", "green", "blue", "pink", "orange"];
+const NOTE_COLOR_CSS = {
+  yellow: "#ffe89e",
+  green: "#bdeec0",
+  blue: "#bfe0ff",
+  pink: "#ffcfe1",
+  orange: "#ffd6a6"
+};
 const NotesStore = function () {
   const KEY = "lexica.notes.v1";
   const DEVKEY = "lexica.device.v1";
@@ -2088,7 +2097,8 @@ function DetailPanel({
 function NoteAddPopover({
   rect,
   isMobile,
-  onAdd
+  onAdd,
+  onColor
 }) {
   if (!rect) return null;
   let style;
@@ -2101,23 +2111,58 @@ function NoteAddPopover({
       zIndex: 1000
     };
   } else {
-    const W = 118;
+    const W = 232;
     style = {
       position: "fixed",
-      top: Math.max(8, rect.top - 46),
+      top: Math.max(8, rect.top - 48),
       left: Math.min(window.innerWidth - W - 8, Math.max(8, rect.left + rect.width / 2 - W / 2)),
       zIndex: 1000
     };
   }
-  // preventDefault on mousedown so pressing the button doesn't clear the selection
+  // preventDefault on mousedown so pressing a button doesn't clear the selection
   return /*#__PURE__*/React.createElement("div", {
     className: "note-popover" + (isMobile ? " note-popover-mobile" : ""),
     style: style,
     onMouseDown: e => e.preventDefault()
-  }, /*#__PURE__*/React.createElement("button", {
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "note-swatches"
+  }, NOTE_COLORS.map(c => /*#__PURE__*/React.createElement("button", {
+    key: c,
+    className: "note-swatch",
+    style: {
+      background: NOTE_COLOR_CSS[c]
+    },
+    title: "Highlight " + c,
+    "aria-label": "Highlight " + c,
+    onClick: () => onColor(c)
+  }))), /*#__PURE__*/React.createElement("button", {
     className: "note-popover-btn",
     onClick: onAdd
-  }, /*#__PURE__*/React.createElement(Icon.Bookmark, null), " Add note"));
+  }, /*#__PURE__*/React.createElement(Icon.Bookmark, null), " Note"));
+}
+
+// A row of color swatches + a clear button, for the editor.
+function NoteColorRow({
+  value,
+  onPick
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "note-color-row"
+  }, NOTE_COLORS.map(c => /*#__PURE__*/React.createElement("button", {
+    key: c,
+    className: "note-swatch" + (value === c ? " on" : ""),
+    style: {
+      background: NOTE_COLOR_CSS[c]
+    },
+    title: "Highlight " + c,
+    "aria-label": "Highlight " + c,
+    onClick: () => onPick(value === c ? null : c)
+  })), /*#__PURE__*/React.createElement("button", {
+    className: "note-swatch note-swatch-none" + (!value ? " on" : ""),
+    title: "No highlight",
+    "aria-label": "No highlight",
+    onClick: () => onPick(null)
+  }, "\u2715"));
 }
 
 // Write / edit / delete a single note. Reuses the .detail shell.
@@ -2128,16 +2173,19 @@ function NotesPanel({
 }) {
   const note = NotesStore.get(noteId);
   const [body, setBody] = useState(note ? note.body || "" : "");
+  const [color, setColor] = useState(note ? note.color || null : null);
   const taRef = useRef(null);
   useEffect(() => {
     setBody(note ? note.body || "" : "");
+    setColor(note ? note.color || null : null);
     // Desktop: focus the box right away. Mobile: DON'T — auto-popping the
     // on-screen keyboard covers a freshly opened sheet. The user taps to type.
     if (!isMobile) requestAnimationFrame(() => taRef.current && taRef.current.focus());
   }, [noteId]);
   const save = () => {
     NotesStore.update(noteId, {
-      body
+      body,
+      color
     });
     onClose();
   };
@@ -2145,11 +2193,12 @@ function NotesPanel({
     NotesStore.remove(noteId);
     onClose();
   };
-  // Closing without ever typing discards the empty draft (the id was minted on
-  // "Add note" — id-at-creation — so a thrown-away draft shouldn't linger).
+  // Closing a record that's both blank AND uncolored discards it (the id was
+  // minted on create — id-at-creation — so a thrown-away draft shouldn't linger).
   const close = () => {
-    if (!body.trim() && !(note.body || "").trim()) NotesStore.remove(noteId);else if (body !== note.body) NotesStore.update(noteId, {
-      body
+    if (!body.trim() && !color) NotesStore.remove(noteId);else NotesStore.update(noteId, {
+      body,
+      color
     });
     onClose();
   };
@@ -2175,7 +2224,10 @@ function NotesPanel({
     ref: isMobile ? scrollRef : undefined
   }, note.snippet && /*#__PURE__*/React.createElement("blockquote", {
     className: "note-snippet"
-  }, "\u201C", note.snippet, "\u201D"), /*#__PURE__*/React.createElement("textarea", {
+  }, "\u201C", note.snippet, "\u201D"), /*#__PURE__*/React.createElement(NoteColorRow, {
+    value: color,
+    onPick: setColor
+  }), /*#__PURE__*/React.createElement("textarea", {
     ref: taRef,
     className: "note-textarea",
     value: body,
@@ -2242,7 +2294,12 @@ function NotesView({
     onClick: () => onOpen(n)
   }, /*#__PURE__*/React.createElement("div", {
     className: "notes-item-ref"
-  }, n.refLabel || n.book + " " + n.chapter), n.snippet && /*#__PURE__*/React.createElement("div", {
+  }, n.color && /*#__PURE__*/React.createElement("span", {
+    className: "notes-item-dot",
+    style: {
+      background: NOTE_COLOR_CSS[n.color]
+    }
+  }), n.refLabel || n.book + " " + n.chapter), n.snippet && /*#__PURE__*/React.createElement("div", {
     className: "notes-item-snippet"
   }, "\u201C", n.snippet, "\u201D"), /*#__PURE__*/React.createElement("div", {
     className: "notes-item-body"
@@ -4352,6 +4409,16 @@ function LibraryView({
     if (window.getSelection) window.getSelection().removeAllRanges(); // dismiss the OS selection toolbar
     onOpenNote && onOpenNote(note.id);
   };
+  // A color swatch in the popover → make a highlight (no editor; the paint is it).
+  const addHighlightFromSelection = color => {
+    if (!noteSel) return;
+    NotesStore.create({
+      ...noteSel.anchor,
+      color
+    });
+    setNoteSel(null);
+    if (window.getSelection) window.getSelection().removeAllRanges();
+  };
   // Mobile: the browser owns the touch-select gesture, so our touch handlers may
   // not fire. Watch for a settled selection and show the bottom "Add note" bar.
   const resolveRef = useRef(resolveSelection);
@@ -4396,6 +4463,28 @@ function LibraryView({
   // Note markers in the verse margin: notes anchored in the current chapter.
   const chapterNotes = NotesStore.forChapter(corpus, nonCanon ? nonCanon.id : selBook ? selBook.abbrev : null, selChapter);
   const noteForVerse = verse => chapterNotes.find(n => verse >= n.start.verse && verse <= (n.end && n.end.verse || n.start.verse));
+  // Highlight paint: the color (if any) for a given word, matched within the same
+  // reading text. A verse-level highlight (no word-spot) paints the whole verse.
+  const hiForWord = (verse, pos) => {
+    for (const n of chapterNotes) {
+      if (!n.color) continue;
+      if (n.translation && translation && n.translation !== translation) continue;
+      const sv = n.start.verse,
+        ev = n.end && n.end.verse || sv;
+      if (verse < sv || verse > ev) continue;
+      const sp = n.start.pos,
+        ep = n.end ? n.end.pos : null;
+      if (sp == null || pos == null) return n.color; // whole-verse highlight
+      if (verse === sv && pos < sp) continue;
+      if (verse === ev && ep != null && pos > ep) continue;
+      return n.color;
+    }
+    return null;
+  };
+  const hiClass = (verse, pos) => {
+    const c = hiForWord(verse, pos);
+    return c ? " lib-hi lib-hi-" + c : "";
+  };
   const noteMarker = verse => {
     const n = noteForVerse(verse);
     if (!n) return null;
@@ -4548,7 +4637,7 @@ function LibraryView({
       return /*#__PURE__*/React.createElement("span", {
         key: i,
         "data-note-pos": w.position,
-        className: !!w.italic ? "lib-prose-italic" : undefined
+        className: (!!w.italic ? "lib-prose-italic" : "") + hiClass(v.verse, w.position)
       }, text + " ");
     });
   };
@@ -4641,7 +4730,7 @@ function LibraryView({
       return /*#__PURE__*/React.createElement("span", {
         key: key,
         "data-note-pos": w.position,
-        className: "lib-word" + (w.italic ? " lib-abp-italic" : "") + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : ""),
+        className: "lib-word" + (w.italic ? " lib-abp-italic" : "") + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "") + hiClass(v.verse, w.position),
         onClick: clickable ? () => onWordClick(isPN ? {
           ...makeEntry(w),
           isPN: true,
@@ -4743,7 +4832,7 @@ function LibraryView({
       return /*#__PURE__*/React.createElement("span", {
         key: key,
         "data-note-pos": w.position,
-        className: "lib-word lib-word-bracketed" + (w.italic ? " lib-abp-italic" : "") + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : ""),
+        className: "lib-word lib-word-bracketed" + (w.italic ? " lib-abp-italic" : "") + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "") + hiClass(v.verse, w.position),
         onClick: clickable ? () => onWordClick(isPN ? {
           ...makeEntry(w),
           isPN: true,
@@ -4935,7 +5024,7 @@ function LibraryView({
       const isHebrew = sid ? sid.startsWith("H") : false;
       return /*#__PURE__*/React.createElement("span", {
         key: i,
-        className: "lib-word lib-kjv-word" + (w.italic ? " lib-kjv-italic" : "") + (clickable ? " lib-word-clickable" : ""),
+        className: "lib-word lib-kjv-word" + (w.italic ? " lib-kjv-italic" : "") + (clickable ? " lib-word-clickable" : "") + hiClass(v.verse, null),
         onClick: clickable ? () => onWordClick(makeKjvEntry(w, sid)) : undefined
       }, showInterlinear && (w.lemma ? /*#__PURE__*/React.createElement("span", {
         className: "lib-iw-greek",
@@ -4979,7 +5068,7 @@ function LibraryView({
       className: "lib-verse-content"
     }, showVerseNum && noteMarker(v.verse), v.words.map((w, i) => /*#__PURE__*/React.createElement("span", {
       key: i,
-      className: w.italic ? "lib-prose-italic" : undefined
+      className: (w.italic ? "lib-prose-italic" : "") + hiClass(v.verse, null)
     }, w.word, w.punc || "", " ")))));
   };
 
@@ -5001,7 +5090,9 @@ function LibraryView({
       className: "lib-verse-row" + (isHighlight ? " lib-highlight" : "")
     }, vnumEl(v.verse), /*#__PURE__*/React.createElement("span", {
       className: "lib-verse-content"
-    }, noteMarker(v.verse), v.verse_text)));
+    }, noteMarker(v.verse), /*#__PURE__*/React.createElement("span", {
+      className: "lib-bsb-text" + hiClass(v.verse, null)
+    }, v.verse_text))));
   };
 
   // Non-canonical reader (Didache, etc.). The Greek interlinear is the normal reading,
@@ -5522,7 +5613,8 @@ function LibraryView({
   }, /*#__PURE__*/React.createElement(Icon.Bookmark, null)), renderProseWords(v))))))), noteSel && /*#__PURE__*/React.createElement(NoteAddPopover, {
     rect: noteSel.rect,
     isMobile: isMobile,
-    onAdd: addNoteFromSelection
+    onAdd: addNoteFromSelection,
+    onColor: addHighlightFromSelection
   }), showSummary && (selBook || nonCanon) && /*#__PURE__*/React.createElement(SummaryPanel, {
     book: nonCanon ? nonCanon.id : selBook.abbrev,
     chapter: selChapter,

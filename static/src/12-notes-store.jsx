@@ -12,6 +12,12 @@
 // Highlighting (color + painting the marks) is the NEXT phase; `color` is
 // stored blank now so it's already there when that lands.
 // ============================================================
+// Highlight palette — ids map to CSS classes (.lib-hi-<id>) + swatch colors.
+const NOTE_COLORS = ["yellow", "green", "blue", "pink", "orange"];
+const NOTE_COLOR_CSS = {
+  yellow: "#ffe89e", green: "#bdeec0", blue: "#bfe0ff", pink: "#ffcfe1", orange: "#ffd6a6",
+};
+
 const NotesStore = (function () {
   const KEY = "lexica.notes.v1";
   const DEVKEY = "lexica.device.v1";
