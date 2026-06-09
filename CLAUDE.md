@@ -68,6 +68,15 @@ Pick effort by task TYPE. When in doubt, lean higher — the plan affords it.
 - After a `requirements.txt` change: on PA, `workon bible-env` THEN `pip install -r requirements.txt`
   (NO `--user` inside the venv — the venv is `/home/appssanding720/.virtualenvs/bible-env`, Python 3.11).
   Then reload. A `--user` install lands in the wrong place (system 3.13 user dir) and the site ignores it.
+- **Env vars / secrets live in the WSGI file, NOT a `.env`.** `/var/www/appssanding720_pythonanywhere_com_wsgi.py`
+  sets them with `os.environ['KEY'] = '...'` (ANTHROPIC_API_KEY, GOOGLE_CLIENT_ID). `core.load_dotenv()`
+  does NOT reliably find a `.env` under the PA web app, so a `.env` there is empty/ignored — don't rely on it.
+  The `os.environ[...]` lines MUST sit ABOVE the app import in the WSGI (module-level reads like
+  `GOOGLE_CLIENT_ID = os.environ.get(...)` happen at import). Edit the WSGI, then reload (touch it).
+- **Notes accounts (`google-auth`) — DONE + LIVE 2026-06-09:** `pip install -r requirements.txt` (adds
+  `google-auth`) + `GOOGLE_CLIENT_ID` in the WSGI + the Google consent screen Published. Google sign-in
+  degrades safely (button hidden) if any piece is missing, so a code-only deploy never breaks.
+  `notes.db` is gitignored (`*.db`) like bible.db — it holds user accounts/notes, managed on PA.
 
 ## CI / automation (added 2026-06-07)
 - **GitHub Actions** (`.github/workflows/ci.yml`) — runs on every push/PR: (1) the invariant tests
@@ -200,32 +209,43 @@ scripts/          # build-frontend.js + one-time import/migration scripts
 - Clicking a verse number opens the TSK Cross-Reference Panel
 - Both word detail panel and xref panel trigger `has-detail` on `.app` → compacts `lib-reading` on desktop (desktop only, scoped to `min-width: 1100px`)
 
-## Notes & Highlights (study notes — LIVE 2026-06-09)
-- **Browser-only, NO database, NO server route, NO login.** Notes live in the visitor's browser
-  (`localStorage` key `lexica.notes.v1`). bible.db is untouched. Do NOT add a notes table / backend
-  route unless we build accounts/sync (separate future feature). Memory: `project_notes_highlights`.
-- One record = a word-position anchor + optional text + optional color. So a "note" and a
-  "highlight" are the SAME record: color set = highlight, text set = note, both = both. Shape is the
-  EXACT shape a future login/sync will use (migration = a straight copy): `{id, device, corpus,
-  translation, book, bookName, chapter, start:{verse,pos}, end:{verse,pos}, snippet, body, color,
-  created, updated}`. `id` is minted AT CREATION (clean device-merge later).
-- Files (all frontend): `static/src/12-notes-store.jsx` (the `NotesStore` localStorage store +
-  `NOTE_COLORS`/`NOTE_COLOR_CSS` palette + `useNotesVersion` hook), `static/src/35-notes.jsx`
-  (`NoteAddPopover`, `NoteColorRow`, `NotesPanel` editor, `NotesView` browse tab). Wiring lives in
-  `60-library.jsx` (selection capture, paint, markers) and `90-app.jsx` (`activeNote` state + panel
-  render + the Notes tab). Tab added to `20-shared-components.jsx` Header + mobile tabs in 90-app.
-- **Gestures — they DO NOT fight the existing clicks** (word-click = lexicon, verse-number = TSK):
-  drag-select text → floating "Add note" bar + 5 color swatches (a drag is suppressed from firing a
-  word-click); right-click a verse number (desktop) or long-press it (mobile) = whole-verse note.
-  On mobile the "Add note" bar is pinned to the screen bottom (clear of the OS copy/share toolbar)
-  and a `selectionchange` backstop drives it. A bookmark marker sits inline at the start of any
-  verse that has a record (indents only the first line); click it to reopen.
-- Anchoring/painting is PER READING TEXT: ABP captures exact word-spots (`data-note-pos` on word
-  spans, `data-note-verse` on rows); KJV/BSB anchor at the whole verse. Highlights paint only in the
-  text they were made in (matched on `translation`); verse-level ones paint the whole verse. Adding a
-  note/highlight on the SAME anchor reuses the existing record (no duplicates) via `NotesStore.findAnchor`.
-- Notes tab: list + text search + Export/Import (JSON backup; merge-by-id so re-import is safe — the
-  file IS the migration format). Non-canon texts can't take notes yet (verses there aren't tagged).
+## Notes, Highlights, Bookmarks + Accounts (study notes — LIVE 2026-06-09)
+Full detail: memory `project_notes_highlights`. The headline facts:
+- **Browser-local first; accounts are OPT-IN.** Notes live in the browser (`localStorage`
+  `lexica.notes.v1`) and the app is fully usable with NO account. Signing in (below) syncs them
+  across devices. One record = a word-position anchor + optional text + optional color + optional
+  bookmark flag — a note, highlight, and bookmark are the SAME record:
+  `{id, device, corpus, translation, book, bookName, chapter, start:{verse,pos}, end:{verse,pos},
+  snippet, body, color, bookmark, deleted, created, updated}`. `id` minted AT CREATION. Delete is a
+  SOFT delete (`deleted:true` tombstone) so deletes propagate through sync/import.
+- **Accounts / sync — `notes.db`, the FIRST + ONLY visitor-write path on the site.** Kept OUT of
+  bible.db (corpus is rebuilt; user data must survive). `core.notes_db()`; tables `users`, `tokens`,
+  `notes` (one row per note, keyed by `code = "u<user_id>"`). `views_notes.py` blueprint:
+  `/api/auth/signup|login|logout|me|config|google` + `/api/notes/sync` (Bearer token). Passwords
+  one-way hashed (werkzeug, ships with Flask). Stay-logged-in = random bearer token in `tokens` +
+  browser `localStorage` `lexica.auth.v1`; logout deletes it. Sync = two-way last-write-wins by id.
+  Guards: rate limits, size/count caps, parameterized SQL. Tables auto-create (deploy is a normal pull).
+  NO email verification, NO password reset yet (reset needs SMTP on PA — not set up).
+- **Google sign-in (optional).** `/api/auth/google` verifies Google's signed token (`google-auth`)
+  and finds-or-creates the account by email. Shows only when `GOOGLE_CLIENT_ID` is set AND
+  `google-auth` is importable — both checked LAZILY in `_google_ready()` so a deploy before setup
+  can't break the site (button just stays hidden). See Deployment for the PA setup (it's done + live).
+- Gestures (do NOT fight word-click=lexicon / verse-number=TSK): drag-select text → bar with 5 color
+  swatches + "Note"; right-click (desktop) / long-press (mobile) a verse number → menu
+  (Bookmark · Note · 5 colors). Mobile "Add note" bar pins to screen bottom (clear of the OS
+  copy/share toolbar); `selectionchange` backstop. Inline bookmark marker at the start of any verse
+  with a record (indents first line only).
+- Anchoring/painting is PER READING TEXT and NOW covers non-canon texts too. ABP captures exact
+  word-spots (`data-note-pos` on spans, `data-note-verse` on rows); KJV/BSB anchor at the whole
+  verse. Highlights paint only in the text they were made in (`translation` match); square corners +
+  flush chips make a multi-word highlight one continuous bar. Same-anchor reuse (no dupes) via
+  `NotesStore.findAnchor`.
+- Files: `static/src/12-notes-store.jsx` (`NotesStore` + sync/auth + `NOTE_COLORS`/`NOTE_COLOR_CSS`
+  + `useNotesVersion`), `static/src/35-notes.jsx` (`NoteAddPopover`, `VerseNoteMenu`, `NoteColorRow`,
+  `NotesPanel` editor, `NotesView` tab, `AuthModal`). Wiring in `60-library.jsx` (selection, paint,
+  markers, verse menu) + `90-app.jsx` (`activeNote` + panel + Notes tab). Notes tab: text search +
+  filters (All/Bookmarks/Highlights/Notes) + sort (Recent/Reference) + collapsible group-by-book +
+  Export/Import (JSON backup; merge-by-id) + the sign-in / sync row.
 
 ## TSK Cross-Reference Panel
 - Endpoint: GET /api/cross-references/curated/<book>/<chapter>/<verse>

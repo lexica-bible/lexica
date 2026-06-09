@@ -61,12 +61,13 @@ Still open:
 
 ## New features
 
-- ~~**Notes feature.**~~ **DONE 2026-06-09** (notes + highlights). Browser-only study notes &
-  color highlights in the Library; drag-select or right-click/long-press a verse number; Notes tab
-  with search + Export/Import backup. Browser-local (`localStorage`), no DB/login — built in the
-  migration-ready shape for a future account. See TODO_ARCHIVE + memory `project_notes_highlights`.
-  Open follow-ups: cross-translation highlight paint, word-level highlights in KJV/BSB, notes on the
-  non-canon texts, Notes-tab filters (color/book).
+- ~~**Notes feature.**~~ **DONE 2026-06-09** (notes + highlights + bookmarks + accounts). Study
+  notes, color highlights, and bookmarks in the Library (drag-select, or a verse-number menu);
+  Notes tab with search + filters + sort + collapsible group-by-book + Export/Import backup.
+  Browser-local first, with **opt-in accounts (email/password OR Google) for cross-device sync** —
+  the first server-write path, in its own `notes.db` (NOT bible.db). See TODO_ARCHIVE + memory
+  `project_notes_highlights`. Open follow-ups: cross-translation highlight paint, word-level
+  highlights in KJV/BSB, **password reset / set-password (needs SMTP — see below)**, Apple sign-in (if wanted).
 - ~~**BSB (Berean Standard Bible).**~~ **DONE 2026-06-08.** Public-domain modern reading text
   alongside ABP/KJV. Loaded by `scripts/load_bsb.py` into `bsb_verses`; served by `views_bsb.py`
   (`/api/bsb/chapter`). Added as a third reading text in the Library toggle (commit `4c88501`), and
@@ -176,20 +177,22 @@ kept below.
 - **Toggle:** header button switches basic/advanced, remembered in the browser, only shown on wide screens.
 </details>
 
-### Highlighting + notes (Logos-style) — CORE DONE 2026-06-09, follow-ups open
-Notes + color highlights are LIVE (browser-local, word-position anchor, drag-select + verse-number
-gestures, Export/Import backup). See TODO_ARCHIVE + memory `project_notes_highlights`. What's left:
+### Highlighting + notes (Logos-style) — DONE 2026-06-09, two paint follow-ups open
+Notes + highlights + bookmarks LIVE, plus opt-in accounts/sync (see archive + memory
+`project_notes_highlights`). Non-canon notes, Notes-tab filters/sort/group, Export/Import all DONE.
+Still open:
 - **Cross-translation paint** — a highlight made in ABP doesn't show in KJV/BSB (word positions
   differ per text). Today paint is matched to the text it was made in.
 - **Word-level highlights in KJV/BSB** — they anchor at the whole verse for now (no `data-note-pos`).
-- **Notes on the non-canon texts** (Enoch, Didache…) — their verse rows aren't tagged yet.
-- **Notes-tab filters** — by color and by book; maybe group-by-book.
 
-### Free user accounts
-Sign-up-yourself free accounts. Main payoff is syncing highlights/notes across a reader's devices, and
-it opens the door to an email campaign later (announcements, reading plans). We're currently a no-login
-public app, so this is real new plumbing (sign-up, login, password reset, a users store) — bigger lift,
-worth it once Notes proves people want their work saved. Keep the app fully usable without an account.
+### Free user accounts — MOSTLY DONE 2026-06-09 (reset pending)
+LIVE: email/password + Google sign-in, opt-in, syncing notes across devices via `notes.db`
+(see archive + memory). App stays fully usable with no account. STILL OPEN:
+- **Password reset + set-password** — needs the site to SEND email (SMTP on PA, not configured). A
+  Google-only account currently can't use the password form (no password set). Same SMTP blocker as
+  the nightly health_check email below — wire SMTP once, both unlock.
+- **Apple sign-in** — only if wanted (needs a paid Apple Developer account; heavier than Google).
+- Email campaign / reading plans (the original "reach" payoff) — once SMTP + accounts are proven.
 
 ### Broader AI search — meaning-based passage search
 Logos feels "broader" for two reasons: it reads their whole paid library (commentaries, dictionaries),

@@ -6,6 +6,35 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Notes accounts + sync (email + Google) — DONE 2026-06-09
+
+Built right after the notes feature, same session. Notes started browser-only; the user weighed a
+"sync code" (decided too clunky to copy around) and went with real **email + password accounts**,
+then added **Google sign-in** too. Because the notes were already stored in the migration-ready
+shape (each note has its own id from creation), turning on accounts was a straight copy — nothing
+from the browser-only build was wasted.
+
+- It's the **first time the site stores anything a visitor creates** — everything before was
+  read-only/no-login. User data lives in its OWN file, `notes.db`, kept separate from the Bible
+  database so a corpus rebuild can't touch it.
+- Accounts are **opt-in**: the app stays fully usable with no login (notes just stay on that one
+  browser). Sign in and your notes follow you to any device.
+- Passwords are stored scrambled one-way (never readable). Staying logged in uses a random token,
+  not the password. Sync merges by each note's id, newest edit wins; deletes leave a marker so they
+  spread instead of coming back.
+- Google sign-in is wired so the button only appears once it's fully set up — a half-finished deploy
+  can't break the site.
+- **Not done:** "forgot password" / set-a-password — that needs the site to send email, which isn't
+  set up on PythonAnywhere yet. So a Google-only account has no password to fall back on for now.
+
+Lessons that cost time (in memory `project_notes_highlights`): the site's secrets/keys live in the
+**WSGI file** (`os.environ[...]`), not a `.env` — the `.env` on PA was empty and ignored, so the
+Google ID had to go in the WSGI file, above the app import, then reload. Diagnose a missing Google
+button with `curl <site>/api/auth/config`. And `google-auth` needs a `pip install` in the venv after
+pulling (it's in requirements.txt).
+
+---
+
 ## Notes & highlights (study notes) — DONE 2026-06-09
 
 Readers can now write study notes and paint color highlights right in the Library, and find them
