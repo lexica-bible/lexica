@@ -2461,6 +2461,7 @@ function VerseNoteMenu({
   onBookmark,
   onNote,
   onColor,
+  onCopy,
   onJournal,
   onClose
 }) {
@@ -2490,16 +2491,7 @@ function VerseNoteMenu({
     className: "note-popover" + (isMobile ? " note-popover-mobile" : ""),
     style: style,
     onMouseDown: e => e.preventDefault()
-  }, /*#__PURE__*/React.createElement("button", {
-    className: "note-popover-btn",
-    onClick: onBookmark
-  }, /*#__PURE__*/React.createElement(Icon.Bookmark, null), " Bookmark"), /*#__PURE__*/React.createElement("button", {
-    className: "note-popover-btn",
-    onClick: onNote
-  }, "\u270E Note"), onJournal && /*#__PURE__*/React.createElement("button", {
-    className: "note-popover-btn",
-    onClick: onJournal
-  }, "Journal"), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("div", {
     className: "note-swatches"
   }, NOTE_COLORS.map(c => /*#__PURE__*/React.createElement("button", {
     key: c,
@@ -2510,7 +2502,19 @@ function VerseNoteMenu({
     title: "Highlight " + c,
     "aria-label": "Highlight " + c,
     onClick: () => onColor(c)
-  })))));
+  }))), /*#__PURE__*/React.createElement("button", {
+    className: "note-popover-btn",
+    onClick: onNote
+  }, "\u270E Note"), /*#__PURE__*/React.createElement("button", {
+    className: "note-popover-btn",
+    onClick: onBookmark
+  }, /*#__PURE__*/React.createElement(Icon.Bookmark, null), " Bookmark"), onCopy && /*#__PURE__*/React.createElement("button", {
+    className: "note-popover-btn",
+    onClick: onCopy
+  }, "Copy"), onJournal && /*#__PURE__*/React.createElement("button", {
+    className: "note-popover-btn",
+    onClick: onJournal
+  }, "Journal")));
 }
 
 // A row of color swatches + a clear button, for the editor.
@@ -5453,6 +5457,16 @@ function LibraryView({
     });
     setVerseMenu(null);
   };
+  // Copy the whole verse text to the clipboard.
+  const vmCopy = () => {
+    const a = verseAnchor(verseMenu.verse, verseMenu.el);
+    if (!a) return setVerseMenu(null);
+    setVerseMenu(null);
+    try {
+      if (navigator.clipboard) navigator.clipboard.writeText(a.snippet || "");
+    } catch (e) {}
+    flash("Copied");
+  };
   // Send the whole verse to the journal page currently open in the Notes tab.
   const vmJournal = () => {
     const a = verseAnchor(verseMenu.verse, verseMenu.el);
@@ -6579,9 +6593,10 @@ function LibraryView({
   }, flashMsg), verseMenu && /*#__PURE__*/React.createElement(VerseNoteMenu, {
     rect: verseMenu.rect,
     isMobile: isMobile,
-    onBookmark: vmBookmark,
-    onNote: vmNote,
     onColor: vmColor,
+    onNote: vmNote,
+    onBookmark: vmBookmark,
+    onCopy: vmCopy,
     onJournal: vmJournal,
     onClose: () => setVerseMenu(null)
   }), showSummary && (selBook || nonCanon) && /*#__PURE__*/React.createElement(SummaryPanel, {

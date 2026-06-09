@@ -44,7 +44,7 @@ function NoteAddPopover({ rect, isMobile, onAdd, onColor, onCopy, onJournal }) {
 }
 
 // Menu shown when you right-click / long-press a verse number: Bookmark · Note · colors.
-function VerseNoteMenu({ rect, isMobile, onBookmark, onNote, onColor, onJournal, onClose }) {
+function VerseNoteMenu({ rect, isMobile, onBookmark, onNote, onColor, onCopy, onJournal, onClose }) {
   if (!rect) return null;
   let style;
   if (isMobile) {
@@ -62,15 +62,16 @@ function VerseNoteMenu({ rect, isMobile, onBookmark, onNote, onColor, onJournal,
     <>
       <div className="note-menu-scrim" onClick={onClose} />
       <div className={"note-popover" + (isMobile ? " note-popover-mobile" : "")} style={style} onMouseDown={(e) => e.preventDefault()}>
-        <button className="note-popover-btn" onClick={onBookmark}><Icon.Bookmark/> Bookmark</button>
-        <button className="note-popover-btn" onClick={onNote}>✎ Note</button>
-        {onJournal && <button className="note-popover-btn" onClick={onJournal}>Journal</button>}
         <div className="note-swatches">
           {NOTE_COLORS.map(c => (
             <button key={c} className="note-swatch" style={{ background: NOTE_COLOR_CSS[c] }}
               title={"Highlight " + c} aria-label={"Highlight " + c} onClick={() => onColor(c)} />
           ))}
         </div>
+        <button className="note-popover-btn" onClick={onNote}>✎ Note</button>
+        <button className="note-popover-btn" onClick={onBookmark}><Icon.Bookmark/> Bookmark</button>
+        {onCopy && <button className="note-popover-btn" onClick={onCopy}>Copy</button>}
+        {onJournal && <button className="note-popover-btn" onClick={onJournal}>Journal</button>}
       </div>
     </>
   );

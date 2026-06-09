@@ -1095,6 +1095,13 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
     if (ex) NotesStore.update(ex.id, { color }); else NotesStore.create({ ...a, color });
     setVerseMenu(null);
   };
+  // Copy the whole verse text to the clipboard.
+  const vmCopy = () => {
+    const a = verseAnchor(verseMenu.verse, verseMenu.el); if (!a) return setVerseMenu(null);
+    setVerseMenu(null);
+    try { if (navigator.clipboard) navigator.clipboard.writeText(a.snippet || ""); } catch (e) {}
+    flash("Copied");
+  };
   // Send the whole verse to the journal page currently open in the Notes tab.
   const vmJournal = () => {
     const a = verseAnchor(verseMenu.verse, verseMenu.el); if (!a) return setVerseMenu(null);
@@ -1956,7 +1963,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
       </div>
       {noteSel && <NoteAddPopover rect={noteSel.rect} isMobile={isMobile} onAdd={addNoteFromSelection} onColor={addHighlightFromSelection} onCopy={copySelection} onJournal={journalFromSelection} />}
       {flashMsg && <div className="lib-flash">{flashMsg}</div>}
-      {verseMenu && <VerseNoteMenu rect={verseMenu.rect} isMobile={isMobile} onBookmark={vmBookmark} onNote={vmNote} onColor={vmColor} onJournal={vmJournal} onClose={() => setVerseMenu(null)} />}
+      {verseMenu && <VerseNoteMenu rect={verseMenu.rect} isMobile={isMobile} onColor={vmColor} onNote={vmNote} onBookmark={vmBookmark} onCopy={vmCopy} onJournal={vmJournal} onClose={() => setVerseMenu(null)} />}
       {showSummary && (selBook || nonCanon) && (
         <SummaryPanel
           book={nonCanon ? nonCanon.id : selBook.abbrev}
