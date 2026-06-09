@@ -181,6 +181,9 @@ function NotesView({ onOpen }) {
   const [group, setGroup] = useState(false);      // group by book
   const [collapsed, setCollapsed] = useState(() => new Set());   // collapsed book keys
   const toggleSection = (key) => setCollapsed(s => { const n = new Set(s); n.has(key) ? n.delete(key) : n.add(key); return n; });
+  const [codeInput, setCodeInput] = useState("");
+  const [showEnter, setShowEnter] = useState(false);
+  const sync = NotesStore.syncInfo();
   const fileRef = useRef(null);
   let notes = NotesStore.search(q);               // already newest-first
   if (filter === "bookmark") notes = notes.filter(n => n.bookmark);
@@ -260,6 +263,34 @@ function NotesView({ onOpen }) {
           </div>
         </div>
         {msg && <div className="notes-msg">{msg}</div>}
+        <div className="notes-sync">
+          {sync.code ? (
+            <>
+              <span className="notes-sync-label">Sync on:</span>
+              <code className="notes-sync-code">{sync.code}</code>
+              <button className="notes-tool-btn" onClick={() => { try { navigator.clipboard && navigator.clipboard.writeText(sync.code); setMsg("Code copied."); } catch (e) {} }}>Copy</button>
+              <button className="notes-tool-btn" onClick={() => NotesStore.syncNow()} disabled={sync.syncing}>{sync.syncing ? "Syncing…" : "Sync now"}</button>
+              <button className="notes-tool-btn" onClick={() => { if (confirm("Turn off sync on this device? Your notes stay here; they just stop syncing.")) NotesStore.clearCode(); }}>Turn off</button>
+            </>
+          ) : showEnter ? (
+            <>
+              <input className="notes-sync-input" placeholder="Paste your sync code" value={codeInput} onChange={(e) => setCodeInput(e.target.value)} />
+              <button className="notes-tool-btn" onClick={async () => {
+                const r = await NotesStore.setCode(codeInput);
+                if (r && r.reason === "bad") setMsg("That code doesn't look right.");
+                else { setShowEnter(false); setCodeInput(""); setMsg("Connected — syncing."); }
+              }}>Connect</button>
+              <button className="notes-tool-btn" onClick={() => { setShowEnter(false); setCodeInput(""); }}>Cancel</button>
+            </>
+          ) : (
+            <>
+              <span className="notes-sync-label">Sync across devices:</span>
+              <button className="notes-tool-btn" onClick={() => NotesStore.setCode(NotesStore.genCode())}>Turn on</button>
+              <button className="notes-tool-btn" onClick={() => setShowEnter(true)}>Enter a code</button>
+            </>
+          )}
+        </div>
+        {sync.code && <div className="notes-sync-hint">Open this code on another device to see the same notes. Keep it safe — it’s the only key, and lost codes can’t be recovered.</div>}
         <input
           className="notes-search"
           type="text"

@@ -119,6 +119,18 @@ def db_ro():
     return conn
 
 
+# User study notes live in their OWN file, NOT bible.db — bible.db is the corpus
+# (rebuilt/regenerated) and stays read-only-ish; user data must survive a rebuild
+# and stay isolated. This is the ONLY place the site stores visitor-created data.
+NOTES_DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), "notes.db")
+
+
+def notes_db():
+    conn = sqlite3.connect(NOTES_DB)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
 # ── Unified AI-synthesis result cache ────────────────────────────────────────
 # Every Haiku-backed synthesis (search, summary, xref, metav person/place) stores
 # its rows in ai_search_cache with ver_key = "<category>:<fingerprint>", the
