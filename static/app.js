@@ -49,6 +49,8 @@ const api = {
   extraChapter: (book, ch) => fetch(`/api/extra/${encodeURIComponent(book)}/chapter/${ch}`).then(r => r.json()),
   extraStrongsCount: (book, strongs) => fetch(`/api/extra/${encodeURIComponent(book)}/strongs-count/${encodeURIComponent(strongs)}`).then(r => r.json()),
   kjvChapter: (book, ch) => fetch(`/api/kjv/chapter/${encodeURIComponent(book)}/${ch}`).then(r => r.json()),
+  bsbChapter: (book, ch) => fetch(`/api/bsb/chapter/${encodeURIComponent(book)}/${ch}`).then(r => r.json()),
+  bsbSearch: (q, mode, book) => fetch(`/api/bsb/search?q=${encodeURIComponent(q)}&mode=${encodeURIComponent(mode || "phrase")}` + (book ? `&book=${encodeURIComponent(book)}` : "")).then(r => r.json()),
   summary: (book, ch) => fetch(`/api/summary/${encodeURIComponent(book)}/${ch}`).then(r => r.json()),
   kjvVerse: (book, ch, v) => fetch(`/api/kjv/verse/${encodeURIComponent(book)}/${ch}/${v}`).then(r => r.json()),
   kjvVerseWords: (book, ch, v) => fetch(`/api/kjv/verse_words/${encodeURIComponent(book)}/${ch}/${v}`).then(r => r.json()),
@@ -2706,7 +2708,10 @@ function LibNavPanel({
   }, "ABP"), /*#__PURE__*/React.createElement("button", {
     className: "seg-b" + (!nonCanon && translation === "kjv" ? " on" : ""),
     onClick: () => pickBible("kjv")
-  }, "KJV"), nonCanonList && nonCanonList.length > 0 && /*#__PURE__*/React.createElement("button", {
+  }, "KJV"), /*#__PURE__*/React.createElement("button", {
+    className: "seg-b" + (!nonCanon && translation === "bsb" ? " on" : ""),
+    onClick: () => pickBible("bsb")
+  }, "BSB"), nonCanonList && nonCanonList.length > 0 && /*#__PURE__*/React.createElement("button", {
     className: "seg-b nav-other-seg" + (nonCanon ? " on" : ""),
     onClick: () => setOtherOpen(o => !o),
     "aria-expanded": otherOpen
@@ -2925,7 +2930,7 @@ function ModesSheet({
     scrollRef
   } = useSwipeToDismiss(onClose);
   const activeNonCanon = nonCanonList.find(t => t.id === corpus) || null;
-  const proseLocked = !!(activeNonCanon && activeNonCanon.englishOnly); // English-only: no Greek toggles
+  const proseLocked = !!(activeNonCanon && activeNonCanon.englishOnly) || translation === "bsb"; // English-only / BSB: no Greek toggles
   const [otherShown, setOtherShown] = useState(false);
   // groups start collapsed (long list); the active text's group opens
   const [openGroups, setOpenGroups] = useState(() => new Set(activeNonCanon ? [activeNonCanon.group] : []));
@@ -2974,7 +2979,10 @@ function ModesSheet({
   }, "ABP"), /*#__PURE__*/React.createElement("button", {
     className: "mseg-b" + (corpus === "bible" && translation === "kjv" ? " on" : ""),
     onClick: () => pickBible("kjv")
-  }, "KJV")), /*#__PURE__*/React.createElement("div", {
+  }, "KJV"), /*#__PURE__*/React.createElement("button", {
+    className: "mseg-b" + (corpus === "bible" && translation === "bsb" ? " on" : ""),
+    onClick: () => pickBible("bsb")
+  }, "BSB")), /*#__PURE__*/React.createElement("div", {
     className: "mseg text-par"
   }, /*#__PURE__*/React.createElement("button", {
     className: "mseg-b" + (translation === "parallel" ? " on" : ""),
@@ -3536,8 +3544,10 @@ function LibraryView({
   const [selChapter, setSelChapter] = useState(1);
   const [verses, setVerses] = useState([]);
   const [kjvVerses, setKjvVerses] = useState([]);
+  const [bsbVerses, setBsbVerses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [kjvLoading, setKjvLoading] = useState(false);
+  const [bsbLoading, setBsbLoading] = useState(false);
   const [libOptions, setLibOptions] = useState({
     viewMode: "chip",
     showStrongs: false,
@@ -3605,6 +3615,7 @@ function LibraryView({
       // chapter (otherwise it can fire on a stale same-numbered verse and burn its flag)
       setVerses([]);
       setKjvVerses([]);
+      setBsbVerses([]);
       setSelBook(b);
       setSelChapter(nav.chapter || 1);
       if (nav.translation) {
@@ -3666,6 +3677,25 @@ function LibraryView({
       cancelled = true;
     };
   }, [selBook && selBook.abbrev, selChapter, translation, corpus]);
+
+  // BSB chapter loader — only when the BSB reading text is active.
+  useEffect(() => {
+    if (!selBook || nonCanon || translation !== "bsb") return;
+    let cancelled = false;
+    setBsbLoading(true);
+    setBsbVerses([]);
+    api.bsbChapter(selBook.abbrev, selChapter).then(data => {
+      if (!cancelled) {
+        setBsbVerses(data);
+        setBsbLoading(false);
+      }
+    }).catch(() => {
+      if (!cancelled) setBsbLoading(false);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [selBook && selBook.abbrev, selChapter, translation, corpus]);
   useEffect(() => {
     if (!nav?.scroll || loading || !verses.length) return;
     // Don't scroll while the requested chapter's verses are still the OLD chapter's —
@@ -3691,7 +3721,7 @@ function LibraryView({
     return () => cancelAnimationFrame(raf);
     // kjvVerses is in the deps so a KJV-mode jump re-runs once the KJV rows render
     // (the highlight ref lives on those rows, which load separately from the ABP set).
-  }, [nav?.scroll, nav?.highlight, nav?.chapter, verses, kjvVerses, loading, selChapter]);
+  }, [nav?.scroll, nav?.highlight, nav?.chapter, verses, kjvVerses, bsbVerses, loading, selChapter]);
   const maxChap = nonCanon ? nonCanon.chapters : selBook ? selBook.chapters : 1;
 
   // Pick a non-canonical text (from the "Other" menu / nav): switch the reader to it and
@@ -3702,7 +3732,7 @@ function LibraryView({
     setCorpus(t.id);
     setSelChapter(1);
     setOtherOpen(false);
-    if (translation === "kjv") {
+    if (translation === "kjv" || translation === "bsb") {
       setTranslation("abp");
       onTranslationChange?.("abp");
     }
@@ -3738,7 +3768,8 @@ function LibraryView({
   // English-only non-canonical texts (e.g. 1 Enoch) have no Greek, so the reader is
   // locked to Prose and the Greek-only toggles (Strong's / Interlinear / Parallel /
   // Chip) are disabled and grayed out.
-  const proseLocked = !!(nonCanon && nonCanon.englishOnly);
+  const bsbMode = translation === "bsb";
+  const proseLocked = !!(nonCanon && nonCanon.englishOnly) || bsbMode;
   const chipMode = !proseLocked && (viewMode === "chip" || showStrongs || showInterlinear);
   const wordMode = chipMode;
   const kjvWordMode = chipMode;
@@ -4284,6 +4315,26 @@ function LibraryView({
     }, w.word, w.punc || "", " ")))));
   };
 
+  // BSB reader — plain English reading text (one string per verse, no word data).
+  const renderBsbVerse = v => {
+    const isHighlight = nav && nav.highlight === v.verse && (nav.chapter == null || nav.chapter === selChapter);
+    return /*#__PURE__*/React.createElement(React.Fragment, {
+      key: v.verse
+    }, v.heading && /*#__PURE__*/React.createElement("div", {
+      className: "lib-verse-row pericope-row"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "lib-vnum",
+      "aria-hidden": "true"
+    }), /*#__PURE__*/React.createElement("div", {
+      className: "pericope-heading"
+    }, v.heading)), /*#__PURE__*/React.createElement("div", {
+      ref: isHighlight ? highlightRef : null,
+      className: "lib-verse-row" + (isHighlight ? " lib-highlight" : "")
+    }, vnumEl(v.verse), /*#__PURE__*/React.createElement("span", {
+      className: "lib-verse-content"
+    }, v.verse_text)));
+  };
+
   // Non-canonical reader (Didache, etc.). The Greek interlinear is the normal reading,
   // exactly like Bible ABP. The readable English appears ONLY in Parallel — same
   // two-column layout as Bible parallel (Greek interlinear | English). No bracket /
@@ -4698,7 +4749,11 @@ function LibraryView({
     className: "lib-text-words"
   }, kjvVerses.map(v => renderKjvVerse(v))) : /*#__PURE__*/React.createElement("div", {
     className: "lib-text-words"
-  }, kjvVerses.map(v => renderKjvProse(v))) : loading ? /*#__PURE__*/React.createElement("div", {
+  }, kjvVerses.map(v => renderKjvProse(v))) : translation === "bsb" ? bsbLoading ? /*#__PURE__*/React.createElement("div", {
+    className: "lib-loading"
+  }, "Loading\u2026") : /*#__PURE__*/React.createElement("div", {
+    className: "lib-text-words"
+  }, bsbVerses.map(renderBsbVerse)) : loading ? /*#__PURE__*/React.createElement("div", {
     className: "lib-loading"
   }, "Loading\u2026") : wordMode ? /*#__PURE__*/React.createElement("div", {
     className: "lib-text-words"

@@ -194,6 +194,7 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
         <div className="seg nav-source-seg">
           <button className={"seg-b" + (!nonCanon && translation === "abp" ? " on" : "")} onClick={() => pickBible("abp")}>ABP</button>
           <button className={"seg-b" + (!nonCanon && translation === "kjv" ? " on" : "")} onClick={() => pickBible("kjv")}>KJV</button>
+          <button className={"seg-b" + (!nonCanon && translation === "bsb" ? " on" : "")} onClick={() => pickBible("bsb")}>BSB</button>
           {nonCanonList && nonCanonList.length > 0 && (
             <button className={"seg-b nav-other-seg" + (nonCanon ? " on" : "")} onClick={() => setOtherOpen(o => !o)} aria-expanded={otherOpen}>
               <span className="nav-other-lbl">{nonCanon ? (nonCanon.abbr || nonCanon.name) : "Other"}</span>
@@ -374,7 +375,7 @@ function ModesSheet({
 }) {
   const { sheetRef, scrollRef } = useSwipeToDismiss(onClose);
   const activeNonCanon = nonCanonList.find(t => t.id === corpus) || null;
-  const proseLocked = !!(activeNonCanon && activeNonCanon.englishOnly);   // English-only: no Greek toggles
+  const proseLocked = !!(activeNonCanon && activeNonCanon.englishOnly) || translation === "bsb";   // English-only / BSB: no Greek toggles
   const [otherShown, setOtherShown] = useState(false);
   // groups start collapsed (long list); the active text's group opens
   const [openGroups, setOpenGroups] = useState(() => new Set(activeNonCanon ? [activeNonCanon.group] : []));
@@ -396,6 +397,7 @@ function ModesSheet({
               <div className="mseg text-ed">
                 <button className={"mseg-b"+(corpus==="bible"&&translation==="abp"?" on":"")} onClick={()=>pickBible("abp")}>ABP</button>
                 <button className={"mseg-b"+(corpus==="bible"&&translation==="kjv"?" on":"")} onClick={()=>pickBible("kjv")}>KJV</button>
+                <button className={"mseg-b"+(corpus==="bible"&&translation==="bsb"?" on":"")} onClick={()=>pickBible("bsb")}>BSB</button>
               </div>
               <div className="mseg text-par">
                 <button className={"mseg-b"+(translation==="parallel"?" on":"")} disabled={proseLocked} style={gray} onClick={()=>!proseLocked&&toggleParallel()}>Parallel</button>
@@ -587,8 +589,10 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
   const [selChapter, setSelChapter] = useState(1);
   const [verses, setVerses] = useState([]);
   const [kjvVerses, setKjvVerses] = useState([]);
+  const [bsbVerses, setBsbVerses] = useState([]);
   const [loading, setLoading] = useState(false);
   const [kjvLoading, setKjvLoading] = useState(false);
+  const [bsbLoading, setBsbLoading] = useState(false);
   const [libOptions, setLibOptions] = useState({
     viewMode: "chip", showStrongs: false, showInterlinear: false,
   });
@@ -651,6 +655,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
       // chapter (otherwise it can fire on a stale same-numbered verse and burn its flag)
       setVerses([]);
       setKjvVerses([]);
+      setBsbVerses([]);
       setSelBook(b);
       setSelChapter(nav.chapter || 1);
       if (nav.translation) { setTranslation(nav.translation); onTranslationChange?.(nav.translation); }
@@ -691,6 +696,18 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
     return () => { cancelled = true; };
   }, [selBook && selBook.abbrev, selChapter, translation, corpus]);
 
+  // BSB chapter loader — only when the BSB reading text is active.
+  useEffect(() => {
+    if (!selBook || nonCanon || translation !== "bsb") return;
+    let cancelled = false;
+    setBsbLoading(true);
+    setBsbVerses([]);
+    api.bsbChapter(selBook.abbrev, selChapter)
+      .then(data => { if (!cancelled) { setBsbVerses(data); setBsbLoading(false); } })
+      .catch(() => { if (!cancelled) setBsbLoading(false); });
+    return () => { cancelled = true; };
+  }, [selBook && selBook.abbrev, selChapter, translation, corpus]);
+
   useEffect(() => {
     if (!nav?.scroll || loading || !verses.length) return;
     // Don't scroll while the requested chapter's verses are still the OLD chapter's —
@@ -709,7 +726,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
     return () => cancelAnimationFrame(raf);
     // kjvVerses is in the deps so a KJV-mode jump re-runs once the KJV rows render
     // (the highlight ref lives on those rows, which load separately from the ABP set).
-  }, [nav?.scroll, nav?.highlight, nav?.chapter, verses, kjvVerses, loading, selChapter]);
+  }, [nav?.scroll, nav?.highlight, nav?.chapter, verses, kjvVerses, bsbVerses, loading, selChapter]);
 
   const maxChap = nonCanon ? nonCanon.chapters : (selBook ? selBook.chapters : 1);
 
@@ -721,7 +738,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
     setCorpus(t.id);
     setSelChapter(1);
     setOtherOpen(false);
-    if (translation === "kjv") { setTranslation("abp"); onTranslationChange?.("abp"); }
+    if (translation === "kjv" || translation === "bsb") { setTranslation("abp"); onTranslationChange?.("abp"); }
   };
   // Picking a Bible book from the nav returns to the Bible text.
   const selectBook = (b) => {
@@ -751,7 +768,8 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
   // English-only non-canonical texts (e.g. 1 Enoch) have no Greek, so the reader is
   // locked to Prose and the Greek-only toggles (Strong's / Interlinear / Parallel /
   // Chip) are disabled and grayed out.
-  const proseLocked = !!(nonCanon && nonCanon.englishOnly);
+  const bsbMode     = translation === "bsb";
+  const proseLocked = !!(nonCanon && nonCanon.englishOnly) || bsbMode;
   const chipMode    = !proseLocked && (viewMode === "chip" || showStrongs || showInterlinear);
   const wordMode    = chipMode;
   const kjvWordMode = chipMode;
@@ -1187,6 +1205,21 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
     );
   };
 
+  // BSB reader — plain English reading text (one string per verse, no word data).
+  const renderBsbVerse = (v) => {
+    const isHighlight = nav && nav.highlight === v.verse && (nav.chapter == null || nav.chapter === selChapter);
+    return (
+      <React.Fragment key={v.verse}>
+        {v.heading && <div className="lib-verse-row pericope-row"><span className="lib-vnum" aria-hidden="true"/><div className="pericope-heading">{v.heading}</div></div>}
+        <div ref={isHighlight ? highlightRef : null}
+          className={"lib-verse-row" + (isHighlight ? " lib-highlight" : "")}>
+          {vnumEl(v.verse)}
+          <span className="lib-verse-content">{v.verse_text}</span>
+        </div>
+      </React.Fragment>
+    );
+  };
+
   // Non-canonical reader (Didache, etc.). The Greek interlinear is the normal reading,
   // exactly like Bible ABP. The readable English appears ONLY in Parallel — same
   // two-column layout as Bible parallel (Greek interlinear | English). No bracket /
@@ -1478,6 +1511,14 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
           ) : (
             <div className="lib-text-words">
               {kjvVerses.map(v => renderKjvProse(v))}
+            </div>
+          )
+        ) : translation === "bsb" ? (
+          bsbLoading ? (
+            <div className="lib-loading">Loading…</div>
+          ) : (
+            <div className="lib-text-words">
+              {bsbVerses.map(renderBsbVerse)}
             </div>
           )
         ) : loading ? (
