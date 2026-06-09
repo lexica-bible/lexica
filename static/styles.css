@@ -1497,6 +1497,7 @@ input { font-family: inherit; }
   gap: var(--lib-row-gap);
   margin-bottom: 4px;
   padding-left: var(--lib-row-pl);
+  position: relative;   /* anchor for the absolute note marker */
 }
 
 .lib-vnum {
@@ -2683,14 +2684,18 @@ input { font-family: inherit; }
 .note-popover-mobile { box-shadow: 0 4px 24px rgba(0,0,0,0.35); }
 .note-popover-mobile .note-popover-btn { font-size: 15px; padding: 11px 22px; }
 
-/* Per-verse note marker in the reading margin */
+/* Per-verse note marker — pulled out of the text flow into the left margin so
+   it never shifts the verse's wrapped lines. */
 .lib-note-dot {
-  background: none; border: none; cursor: pointer; padding: 0 4px;
-  color: var(--gold); line-height: 1; vertical-align: baseline;
+  position: absolute; left: -11px; top: 6px; z-index: 3;
+  background: none; border: none; cursor: pointer; padding: 0;
+  color: var(--gold); line-height: 1;
   display: inline-flex; align-items: center;
 }
+.lib-note-dot svg { width: 12px; height: 12px; }
 .lib-note-dot:hover { color: var(--ink); }
-.lib-note-dot-inline { margin: 0 2px; }
+/* The running-prose marker stays inline — it flows with the text there. */
+.lib-note-dot-inline { position: static; margin: 0 2px; }
 
 /* Note editor (reuses .detail shell) */
 .note-edit-body { display: flex; flex-direction: column; gap: 12px; }
