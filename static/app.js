@@ -5496,15 +5496,15 @@ function LexiconView({
   }, /*#__PURE__*/React.createElement("span", {
     className: "lexicon-result-head"
   }, /*#__PURE__*/React.createElement("span", {
+    className: "lexicon-result-headtop"
+  }, /*#__PURE__*/React.createElement("span", {
     className: "lexicon-match-strongs"
-  }, g.strongs), /*#__PURE__*/React.createElement("span", {
-    className: "lexicon-result-word"
-  }, g.lemma && /*#__PURE__*/React.createElement("span", {
+  }, g.strongs), g.translit && /*#__PURE__*/React.createElement("span", {
+    className: "lexicon-match-translit"
+  }, g.translit)), g.lemma && /*#__PURE__*/React.createElement("span", {
     className: "lexicon-match-lemma",
     dir: g.strongs[0] === "H" ? "rtl" : undefined
-  }, g.lemma), g.translit && /*#__PURE__*/React.createElement("span", {
-    className: "lexicon-match-translit"
-  }, g.translit))), /*#__PURE__*/React.createElement("span", {
+  }, g.lemma)), /*#__PURE__*/React.createElement("span", {
     className: "lexicon-result-preview"
   }, renderRowPreview(g)), /*#__PURE__*/React.createElement("span", {
     className: "lexicon-result-end"
