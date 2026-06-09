@@ -5313,18 +5313,20 @@ function LibraryView({
   // Note markers in the verse margin: notes anchored in the current chapter.
   const chapterNotes = NotesStore.forChapter(corpus, nonCanon ? nonCanon.id : selBook ? selBook.abbrev : null, selChapter);
   const noteForVerse = verse => chapterNotes.find(n => verse >= n.start.verse && verse <= (n.end && n.end.verse || n.start.verse));
-  // Highlight paint: the color (if any) for a given word, matched within the same
-  // reading text. A verse-level highlight (no word-spot) paints the whole verse.
+  // Highlight paint: the color (if any) for a given word. Highlights show in
+  // EVERY translation (verses always line up). In the text where the highlight
+  // was made we paint the exact words; in a DIFFERENT translation we can't line
+  // up word-for-word, so a partial highlight rounds up to the whole verse.
   const hiForWord = (verse, pos) => {
     for (const n of chapterNotes) {
       if (!n.color) continue;
-      if (n.translation && translation && n.translation !== translation) continue;
       const sv = n.start.verse,
         ev = n.end && n.end.verse || sv;
       if (verse < sv || verse > ev) continue;
+      const sameText = !n.translation || !translation || n.translation === translation;
       const sp = n.start.pos,
         ep = n.end ? n.end.pos : null;
-      if (sp == null || pos == null) return n.color; // whole-verse highlight
+      if (!sameText || sp == null || pos == null) return n.color; // whole-verse paint
       if (verse === sv && pos < sp) continue;
       if (verse === ev && ep != null && pos > ep) continue;
       return n.color;
