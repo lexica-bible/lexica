@@ -11,6 +11,34 @@ function stripArticles(s) {
   return s.replace(_ARTICLE_RE, "").trim() || s;
 }
 
+// The Haiku-written blurbs (cross-ref synthesis, book/chapter summaries, person/
+// place descriptions, LSJ word study) routinely mark transliterated Greek/Hebrew in
+// markdown — *italic* and occasionally **bold**. Rendered as plain text the markers
+// leak as literal asterisks, so turn them into <em>/<strong> here. Asterisks only
+// (the form the model actually emits); a lone/unpaired * is left as text.
+// Require non-space hugging the markers (the real markdown rule), so a stray or
+// unpaired "*" — or "2*3" arithmetic — is never mistaken for emphasis.
+const _INLINE_MD_RE = /\*\*(\S(?:[^*]*\S)?)\*\*|\*(\S(?:[^*]*\S)?)\*/g;
+function renderInlineMd(text) {
+  if (!text || typeof text !== "string" || text.indexOf("*") === -1) return text;
+  const nodes = [];
+  let last = 0,
+    m,
+    key = 0;
+  while ((m = _INLINE_MD_RE.exec(text)) !== null) {
+    if (m.index > last) nodes.push(text.slice(last, m.index));
+    if (m[1] != null) nodes.push(/*#__PURE__*/React.createElement("strong", {
+      key: key++
+    }, m[1]));else nodes.push(/*#__PURE__*/React.createElement("em", {
+      key: key++
+    }, m[2]));
+    last = _INLINE_MD_RE.lastIndex;
+  }
+  _INLINE_MD_RE.lastIndex = 0;
+  if (last < text.length) nodes.push(text.slice(last));
+  return nodes;
+}
+
 // ============================================================
 // API LAYER
 // ============================================================
@@ -899,7 +927,7 @@ function LsjSummary({
   }, "No definition available.");
   return /*#__PURE__*/React.createElement("p", {
     className: "lsj-synthesis"
-  }, data.summary);
+  }, renderInlineMd(data.summary));
 }
 
 // Google-Maps-style bottom-sheet dismissal: drag the WHOLE card down to close.
@@ -1146,13 +1174,13 @@ function SummaryPanel({
     className: "detail-h"
   }, "About"), /*#__PURE__*/React.createElement("p", {
     className: "detail-p"
-  }, bookText)), !loading && chapText && /*#__PURE__*/React.createElement("div", {
+  }, renderInlineMd(bookText))), !loading && chapText && /*#__PURE__*/React.createElement("div", {
     className: "detail-section last"
   }, /*#__PURE__*/React.createElement("div", {
     className: "detail-h"
   }, "This chapter"), /*#__PURE__*/React.createElement("p", {
     className: "detail-p"
-  }, chapText)), nothing && /*#__PURE__*/React.createElement("div", {
+  }, renderInlineMd(chapText))), nothing && /*#__PURE__*/React.createElement("div", {
     className: "summary-loading"
   }, "No overview available for this passage."));
 
@@ -1665,7 +1693,7 @@ function DetailPanel({
           className: "lsj-def lsj-def--loading"
         }, "Looking up\u2026") : /*#__PURE__*/React.createElement("p", {
           className: "detail-p detail-p--meta"
-        }, aiDescription));
+        }, renderInlineMd(aiDescription)));
       case "bdb":
         return /*#__PURE__*/React.createElement("section", {
           key: "bdb",
@@ -2011,7 +2039,7 @@ function CrossRefPanel({
     className: "xref-synthesis-loading"
   }, "Selecting relevant passages\u2026") : synthesis ? /*#__PURE__*/React.createElement("p", {
     className: "xref-synthesis"
-  }, synthesis) : null, !loading && onAiSearch && /*#__PURE__*/React.createElement("button", {
+  }, renderInlineMd(synthesis)) : null, !loading && onAiSearch && /*#__PURE__*/React.createElement("button", {
     className: "xref-ai-btn",
     onClick: () => {
       onClose();

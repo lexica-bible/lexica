@@ -63,7 +63,7 @@ function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation, onA
         {loading ? (
           <p className="xref-synthesis-loading">Selecting relevant passages…</p>
         ) : synthesis ? (
-          <p className="xref-synthesis">{synthesis}</p>
+          <p className="xref-synthesis">{renderInlineMd(synthesis)}</p>
         ) : null}
         {!loading && onAiSearch && (
           <button className="xref-ai-btn" onClick={() => { onClose(); onAiSearch(sourceRef); }}>

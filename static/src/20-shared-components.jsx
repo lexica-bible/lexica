@@ -119,7 +119,7 @@ function LsjSummary({ data, loading }) {
     return <div className="lsj-def" style={{ color: "var(--muted)", fontStyle: "italic" }}>Summarizing…</div>;
   if (!data?.summary)
     return <div className="lsj-def" style={{ color: "var(--muted)" }}>No definition available.</div>;
-  return <p className="lsj-synthesis">{data.summary}</p>;
+  return <p className="lsj-synthesis">{renderInlineMd(data.summary)}</p>;
 }
 
 // Google-Maps-style bottom-sheet dismissal: drag the WHOLE card down to close.

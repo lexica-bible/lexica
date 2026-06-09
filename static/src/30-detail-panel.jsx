@@ -44,13 +44,13 @@ function SummaryPanel({ book, chapter, bookLabel, isMobile, onClose }) {
       {!loading && bookText && (
         <div className="detail-section">
           <div className="detail-h">About</div>
-          <p className="detail-p">{bookText}</p>
+          <p className="detail-p">{renderInlineMd(bookText)}</p>
         </div>
       )}
       {!loading && chapText && (
         <div className="detail-section last">
           <div className="detail-h">This chapter</div>
-          <p className="detail-p">{chapText}</p>
+          <p className="detail-p">{renderInlineMd(chapText)}</p>
         </div>
       )}
       {nothing && (
@@ -473,7 +473,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
         <h4 className="sec-head"><span className="sec-t">{metavType === "place" ? "Biblical Place" : "Biblical Reference"}</span><span className="lsj-badge lsj-badge--accent">AI</span></h4>
         {aiDescLoading
           ? <div className="lsj-def lsj-def--loading">Looking up…</div>
-          : <p className="detail-p detail-p--meta">{aiDescription}</p>
+          : <p className="detail-p detail-p--meta">{renderInlineMd(aiDescription)}</p>
         }
       </section>
     );
