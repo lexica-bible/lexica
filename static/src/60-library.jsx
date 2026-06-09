@@ -634,6 +634,9 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
   // Drag-select-to-note: the floating "Add note" bar + the captured anchor.
   const [noteSel, setNoteSel] = useState(null);   // { rect, anchor } | null
   const justSelectedRef = useRef(false);            // suppress the click that follows a drag
+  const [flashMsg, setFlashMsg] = useState("");     // tiny confirmation toast ("Copied", etc.)
+  const flashT = useRef(null);
+  const flash = (m) => { setFlashMsg(m); clearTimeout(flashT.current); flashT.current = setTimeout(() => setFlashMsg(""), 1600); };
   useNotesVersion();                                // re-render markers when notes change
 
   useEffect(() => {
@@ -950,6 +953,26 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
     else NotesStore.create({ ...noteSel.anchor, color });
     setNoteSel(null);
     if (window.getSelection) window.getSelection().removeAllRanges();
+  };
+  // Copy the selected verse text to the clipboard (also clears the OS bar on mobile).
+  const copySelection = () => {
+    if (!noteSel) return;
+    const txt = noteSel.anchor.snippet || "";
+    try { if (navigator.clipboard) navigator.clipboard.writeText(txt); } catch (e) {}
+    setNoteSel(null);
+    if (window.getSelection) window.getSelection().removeAllRanges();
+    flash("Copied");
+  };
+  // Drop "reference — verse text" into the journal page currently open in the Notes tab.
+  const journalFromSelection = () => {
+    if (!noteSel) return;
+    const id = NotesStore.getActiveJournal();
+    const a = noteSel.anchor;
+    setNoteSel(null);
+    if (window.getSelection) window.getSelection().removeAllRanges();
+    if (!id) { flash("Open a journal page first"); return; }
+    NotesStore.appendToJournal(id, a.refLabel + " — " + a.snippet);
+    flash("Added to journal");
   };
   // Mobile: the browser owns the touch-select gesture, so our touch handlers may
   // not fire. Watch for a settled selection and show the bottom "Add note" bar.
@@ -1914,7 +1937,8 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
         )}
       </div>
       </div>
-      {noteSel && <NoteAddPopover rect={noteSel.rect} isMobile={isMobile} onAdd={addNoteFromSelection} onColor={addHighlightFromSelection} />}
+      {noteSel && <NoteAddPopover rect={noteSel.rect} isMobile={isMobile} onAdd={addNoteFromSelection} onColor={addHighlightFromSelection} onCopy={copySelection} onJournal={journalFromSelection} />}
+      {flashMsg && <div className="lib-flash">{flashMsg}</div>}
       {verseMenu && <VerseNoteMenu rect={verseMenu.rect} isMobile={isMobile} onBookmark={vmBookmark} onNote={vmNote} onColor={vmColor} onClose={() => setVerseMenu(null)} />}
       {showSummary && (selBook || nonCanon) && (
         <SummaryPanel

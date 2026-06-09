@@ -778,6 +778,7 @@ const NotesStore = function () {
   const KEY = "lexica.notes.v1";
   const DEVKEY = "lexica.device.v1";
   const AUTHKEY = "lexica.auth.v1"; // { token, email } when signed in
+  const JKEY = "lexica.journal.active.v1"; // id of the journal page you last opened
   const listeners = new Set();
   let cache = null;
 
@@ -1005,6 +1006,31 @@ const NotesStore = function () {
       load().push(page);
       persist();
       return page;
+    },
+    // The journal page you last opened — what "send verse to journal" targets.
+    // Validated: returns null if the page was since deleted.
+    getActiveJournal() {
+      let id = null;
+      try {
+        id = localStorage.getItem(JKEY);
+      } catch (e) {}
+      if (!id) return null;
+      const n = load().find(x => x.id === id);
+      return n && live(n) && n.kind === "journal" ? id : null;
+    },
+    setActiveJournal(id) {
+      try {
+        id ? localStorage.setItem(JKEY, id) : localStorage.removeItem(JKEY);
+      } catch (e) {}
+    },
+    // Append text to a journal page (blank line between blocks). Returns the page.
+    appendToJournal(id, text) {
+      const n = this.get(id);
+      if (!n || n.kind !== "journal") return null;
+      const sep = n.body && n.body.trim() ? "\n\n" : "";
+      return this.update(id, {
+        body: (n.body || "") + sep + text
+      });
     },
     get(id) {
       const n = load().find(x => x.id === id);
@@ -2377,7 +2403,9 @@ function NoteAddPopover({
   rect,
   isMobile,
   onAdd,
-  onColor
+  onColor,
+  onCopy,
+  onJournal
 }) {
   if (!rect) return null;
   let style;
@@ -2390,7 +2418,7 @@ function NoteAddPopover({
       zIndex: 1000
     };
   } else {
-    const W = 232;
+    const W = 360;
     style = {
       position: "fixed",
       top: Math.max(8, rect.top - 48),
@@ -2417,7 +2445,13 @@ function NoteAddPopover({
   }))), /*#__PURE__*/React.createElement("button", {
     className: "note-popover-btn",
     onClick: onAdd
-  }, /*#__PURE__*/React.createElement(Icon.Bookmark, null), " Note"));
+  }, /*#__PURE__*/React.createElement(Icon.Bookmark, null), " Note"), onCopy && /*#__PURE__*/React.createElement("button", {
+    className: "note-popover-btn",
+    onClick: onCopy
+  }, "Copy"), onJournal && /*#__PURE__*/React.createElement("button", {
+    className: "note-popover-btn",
+    onClick: onJournal
+  }, "Journal"));
 }
 
 // Menu shown when you right-click / long-press a verse number: Bookmark · Note · colors.
@@ -2622,6 +2656,11 @@ function JournalEditor({
   const saveTimer = useRef(null);
   const first = useRef(true);
 
+  // This is now the page that "send verse to journal" (in the reader) targets.
+  useEffect(() => {
+    NotesStore.setActiveJournal(pageId);
+  }, [pageId]);
+
   // Autosave ~0.8s after you stop typing. Skip the very first run so just
   // opening a page doesn't re-stamp it as edited.
   useEffect(() => {
@@ -2679,7 +2718,7 @@ function JournalEditor({
     value: body,
     maxLength: JOURNAL_MAX,
     onChange: e => setBody(e.target.value),
-    placeholder: "Write freely \u2014 thoughts, an outline, a sermon, a study\u2026"
+    placeholder: "Write freely \u2014 thoughts, questions, an outline, a study\u2026"
   }), /*#__PURE__*/React.createElement("div", {
     className: "journal-count" + (near ? " warn" : "")
   }, body.length.toLocaleString(), " characters", near ? " — near the page limit; start a new page for more" : ""));
@@ -4775,6 +4814,13 @@ function LibraryView({
   // Drag-select-to-note: the floating "Add note" bar + the captured anchor.
   const [noteSel, setNoteSel] = useState(null); // { rect, anchor } | null
   const justSelectedRef = useRef(false); // suppress the click that follows a drag
+  const [flashMsg, setFlashMsg] = useState(""); // tiny confirmation toast ("Copied", etc.)
+  const flashT = useRef(null);
+  const flash = m => {
+    setFlashMsg(m);
+    clearTimeout(flashT.current);
+    flashT.current = setTimeout(() => setFlashMsg(""), 1600);
+  };
   useNotesVersion(); // re-render markers when notes change
 
   useEffect(() => {
@@ -5197,6 +5243,31 @@ function LibraryView({
     });
     setNoteSel(null);
     if (window.getSelection) window.getSelection().removeAllRanges();
+  };
+  // Copy the selected verse text to the clipboard (also clears the OS bar on mobile).
+  const copySelection = () => {
+    if (!noteSel) return;
+    const txt = noteSel.anchor.snippet || "";
+    try {
+      if (navigator.clipboard) navigator.clipboard.writeText(txt);
+    } catch (e) {}
+    setNoteSel(null);
+    if (window.getSelection) window.getSelection().removeAllRanges();
+    flash("Copied");
+  };
+  // Drop "reference — verse text" into the journal page currently open in the Notes tab.
+  const journalFromSelection = () => {
+    if (!noteSel) return;
+    const id = NotesStore.getActiveJournal();
+    const a = noteSel.anchor;
+    setNoteSel(null);
+    if (window.getSelection) window.getSelection().removeAllRanges();
+    if (!id) {
+      flash("Open a journal page first");
+      return;
+    }
+    NotesStore.appendToJournal(id, a.refLabel + " — " + a.snippet);
+    flash("Added to journal");
   };
   // Mobile: the browser owns the touch-select gesture, so our touch handlers may
   // not fire. Watch for a settled selection and show the bottom "Add note" bar.
@@ -6475,8 +6546,12 @@ function LibraryView({
     rect: noteSel.rect,
     isMobile: isMobile,
     onAdd: addNoteFromSelection,
-    onColor: addHighlightFromSelection
-  }), verseMenu && /*#__PURE__*/React.createElement(VerseNoteMenu, {
+    onColor: addHighlightFromSelection,
+    onCopy: copySelection,
+    onJournal: journalFromSelection
+  }), flashMsg && /*#__PURE__*/React.createElement("div", {
+    className: "lib-flash"
+  }, flashMsg), verseMenu && /*#__PURE__*/React.createElement(VerseNoteMenu, {
     rect: verseMenu.rect,
     isMobile: isMobile,
     onBookmark: vmBookmark,

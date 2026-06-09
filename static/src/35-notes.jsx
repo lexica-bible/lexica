@@ -11,13 +11,13 @@
 // the selection. On MOBILE the OS floats its own copy/share toolbar right there,
 // so ours is pinned to the bottom of the screen (above the tab bar) to avoid the
 // collision.
-function NoteAddPopover({ rect, isMobile, onAdd, onColor }) {
+function NoteAddPopover({ rect, isMobile, onAdd, onColor, onCopy, onJournal }) {
   if (!rect) return null;
   let style;
   if (isMobile) {
     style = { position: "fixed", left: "50%", transform: "translateX(-50%)", bottom: 72, zIndex: 1000 };
   } else {
-    const W = 232;
+    const W = 360;
     style = {
       position: "fixed",
       top: Math.max(8, rect.top - 48),
@@ -37,6 +37,8 @@ function NoteAddPopover({ rect, isMobile, onAdd, onColor }) {
       <button className="note-popover-btn" onClick={onAdd}>
         <Icon.Bookmark/> Note
       </button>
+      {onCopy && <button className="note-popover-btn" onClick={onCopy}>Copy</button>}
+      {onJournal && <button className="note-popover-btn" onClick={onJournal}>Journal</button>}
     </div>
   );
 }
@@ -181,6 +183,9 @@ function JournalEditor({ pageId, onBack }) {
   const saveTimer = useRef(null);
   const first = useRef(true);
 
+  // This is now the page that "send verse to journal" (in the reader) targets.
+  useEffect(() => { NotesStore.setActiveJournal(pageId); }, [pageId]);
+
   // Autosave ~0.8s after you stop typing. Skip the very first run so just
   // opening a page doesn't re-stamp it as edited.
   useEffect(() => {
@@ -221,7 +226,7 @@ function JournalEditor({ pageId, onBack }) {
         value={body}
         maxLength={JOURNAL_MAX}
         onChange={(e) => setBody(e.target.value)}
-        placeholder="Write freely — thoughts, an outline, a sermon, a study…"
+        placeholder="Write freely — thoughts, questions, an outline, a study…"
       />
       <div className={"journal-count" + (near ? " warn" : "")}>
         {body.length.toLocaleString()} characters{near ? " — near the page limit; start a new page for more" : ""}

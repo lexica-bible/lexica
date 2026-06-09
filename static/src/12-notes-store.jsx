@@ -22,6 +22,7 @@ const NotesStore = (function () {
   const KEY = "lexica.notes.v1";
   const DEVKEY = "lexica.device.v1";
   const AUTHKEY = "lexica.auth.v1";   // { token, email } when signed in
+  const JKEY = "lexica.journal.active.v1";   // id of the journal page you last opened
   const listeners = new Set();
   let cache = null;
 
@@ -152,6 +153,25 @@ const NotesStore = (function () {
       load().push(page);
       persist();
       return page;
+    },
+    // The journal page you last opened — what "send verse to journal" targets.
+    // Validated: returns null if the page was since deleted.
+    getActiveJournal() {
+      let id = null;
+      try { id = localStorage.getItem(JKEY); } catch (e) {}
+      if (!id) return null;
+      const n = load().find(x => x.id === id);
+      return (n && live(n) && n.kind === "journal") ? id : null;
+    },
+    setActiveJournal(id) {
+      try { id ? localStorage.setItem(JKEY, id) : localStorage.removeItem(JKEY); } catch (e) {}
+    },
+    // Append text to a journal page (blank line between blocks). Returns the page.
+    appendToJournal(id, text) {
+      const n = this.get(id);
+      if (!n || n.kind !== "journal") return null;
+      const sep = (n.body && n.body.trim()) ? "\n\n" : "";
+      return this.update(id, { body: (n.body || "") + sep + text });
     },
     get(id) { const n = load().find(x => x.id === id); return n && live(n) ? n : null; },
     // An existing (non-deleted) record on the exact same words, so we reuse it
