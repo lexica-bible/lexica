@@ -68,6 +68,22 @@ Still open:
   the first server-write path, in its own `notes.db` (NOT bible.db). See TODO_ARCHIVE + memory
   `project_notes_highlights`. Open follow-ups: cross-translation highlight paint, word-level
   highlights in KJV/BSB, **password reset / set-password (needs SMTP — see below)**, Apple sign-in (if wanted).
+
+- **Notes — next-session follow-ups (one place to start from).** Memory `project_notes_highlights`
+  has the full design + gotchas. Three threads queued:
+  1. **Email / SMTP on PA — unlocks several things at once.** Get the site able to SEND mail, then:
+     password **reset** (mail a reset link), **set-a-password** for Google-only accounts (so they
+     aren't locked out of the email form), the nightly `health_check.py` email, and later the
+     announcements / reading-plan campaign. All blocked on this one piece. (PA SMTP creds + a small
+     send helper.)
+  2. **Free-form journal / notebook (e-Sword-style), as a SECOND note mode.** Our notes are *anchored*
+     to a verse (margin marker, jump-back) — great for "on this verse," weaker for a long essay that
+     spans passages. e-Sword's style is a big open editable page (a journal); Logos does anchored
+     notes organized into "notebooks" + tags + rich text. Plan: KEEP anchored notes, ADD an optional
+     free-form page (per-topic or one journal) that syncs the same way. Decide: plain text vs rich
+     text; one journal vs many notebooks; how it sits in the Notes tab.
+  3. **Highlight paint reach:** cross-translation (ABP highlight showing in KJV/BSB — word positions
+     differ, needs a verse+offset mapping) + word-level highlights in KJV/BSB (today verse-level only).
 - ~~**BSB (Berean Standard Bible).**~~ **DONE 2026-06-08.** Public-domain modern reading text
   alongside ABP/KJV. Loaded by `scripts/load_bsb.py` into `bsb_verses`; served by `views_bsb.py`
   (`/api/bsb/chapter`). Added as a third reading text in the Library toggle (commit `4c88501`), and
