@@ -41,6 +41,18 @@ Still open:
 
 ---
 
+## New features
+
+- **Notes feature.** Let the user write and save their own study notes (per verse / passage),
+  viewable and searchable later. Design + storage TBD — next session.
+- **BSB frontend (backend done, 2026-06-08, commit `35ba610`).** Berean Standard Bible reading
+  text + plain-text search are loaded and served (`scripts/load_bsb.py`, `views_bsb.py`,
+  `/api/bsb/chapter` + `/api/bsb/search`). STILL OPEN: wire BSB into the Library corpus toggle
+  (read + parallel) and add the eSword-style text-search UI to the Search tab.
+  `code: static/src/60-library.jsx (toggle), static/src/70-search.jsx (text find)`
+
+---
+
 ## Word click-targets — the article wrong-slot cleanup
 
 Background: this is a precision upgrade, **not a bug** — every verse reads correctly. The issue is
