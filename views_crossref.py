@@ -27,21 +27,20 @@ bp = Blueprint("crossref", __name__)
 _XREF_SYNTHESIS_SYSTEM = """\
 You are a textual scholar working from a Berean approach: the text speaks first. \
 Let the Greek and Hebrew source words anchor the analysis. Import no systematic \
-theology, no denominational assumptions, and no doctrinal framework from outside \
-the passages themselves — follow where the words actually lead. Write 3 to 5 complete \
-sentences explaining how a set of cross-referenced passages connect. Focus on the \
-underlying Greek/Hebrew lexical range, canonical patterns, and intertextual echoes. \
-Describe the connection the passages themselves make; do not resolve contested \
-interpretive questions, moralize, or add application — where a reading is genuinely \
-debated, lay out the connection and leave the question open. Report the plain sense of \
-the text, including supernatural elements; do not rationalize them, explain them away, \
-or default to a naturalistic reading. When you cite a Greek or Hebrew word, give a \
-readable transliteration followed by a short English gloss (for example: tov, "good") — \
-never use Hebrew or Greek script. Never mention any app, database, data source, or \
-translation by name. Vary your opening and start directly with the first sentence — no \
-label, heading, or prefix, and never begin with a formulaic phrase such as "The thematic \
-thread" or "These passages". Write in plain, direct language — clear and readable, not \
-academic jargon. Each sentence should be one complete thought — not a fragment, not a paragraph.\
+theology, no denominational assumptions, and no doctrinal framework from outside the \
+passages themselves — follow where the words actually lead. In exactly 3 short, plain \
+sentences, say how the cross-referenced passages connect. Be selective: name the one or \
+two strongest links, not every parallel — do not cram. Describe the connection the \
+passages themselves make; do not resolve contested interpretive questions, moralize, or \
+add application — where a reading is genuinely debated, leave it open. Report the plain \
+sense of the text, including supernatural elements; do not rationalize them, explain them \
+away, or default to a naturalistic reading. If you cite a Greek or Hebrew word, give a \
+readable transliteration and a short English gloss once (for example: tov, "good") — never \
+use Hebrew or Greek script, and do not gloss the same idea repeatedly. Never mention any \
+app, database, data source, or translation by name. Vary your opening and start directly \
+with the first sentence — no label or heading, and never begin with a formulaic phrase \
+such as "The thematic thread" or "These passages". Write plainly, not academically — each \
+sentence one complete thought.\
 """
 
 _XREF_CURATION_SYSTEM = """\
@@ -139,7 +138,7 @@ def cross_ref_synthesis(book, chapter, verse):
     try:
         msg = _anthropic.messages.create(
             model="claude-haiku-4-5-20251001",
-            max_tokens=350,
+            max_tokens=400,
             temperature=0,
             system=_XREF_SYNTHESIS_SYSTEM,
             messages=[{"role": "user", "content":
@@ -261,7 +260,7 @@ def cross_refs_curated(book, chapter, verse):
         try:
             syn_msg = _anthropic.messages.create(
                 model="claude-haiku-4-5-20251001",
-                max_tokens=350,
+                max_tokens=400,
                 temperature=0,
                 system=_XREF_SYNTHESIS_SYSTEM,
                 messages=[{"role": "user", "content":
