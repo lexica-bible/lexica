@@ -201,54 +201,26 @@ input { font-family: inherit; }
 /* Compact results list — one scannable row per strongs, glosses live in profile */
 .lexicon-results { display: flex; flex-direction: column; margin-top: 20px; }
 .lexicon-results .lexicon-dist-label { margin-bottom: 8px; }
+/* Card row: word info (Strong's, Greek/Hebrew, translit) on the top line, the
+   English renderings on their own line(s) below at full width. */
 .lexicon-result-row {
-  display: flex; align-items: center; gap: 10px; width: 100%;
-  padding: 10px 10px; background: transparent; border: none;
+  display: flex; flex-direction: column; align-items: stretch; gap: 6px; width: 100%;
+  padding: 10px; background: transparent; border: none;
   border-bottom: 1px solid var(--rule); cursor: pointer; text-align: left;
   transition: background .12s;
 }
 .lexicon-result-row:first-of-type { border-top: 1px solid var(--rule); }
 .lexicon-result-row:hover { background: var(--bg-sunk); }
-.lexicon-result-row .lexicon-match-strongs { flex-shrink: 0; }
-.lexicon-result-row .lexicon-match-lemma { flex-shrink: 0; }
-.lexicon-result-row .lexicon-match-translit { flex-shrink: 0; }
-.lexicon-result-preview {
-  flex: 1; min-width: 0; color: var(--ink-3); font-size: 13px;
-  display: flex; flex-direction: column; gap: 2px;
-}
-.lex-prev-line { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
+.lexicon-result-topbar { display: flex; align-items: center; gap: 10px; }
+.lexicon-result-head { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; min-width: 0; }
+.lexicon-result-end { display: flex; align-items: center; gap: 10px; flex-shrink: 0; margin-left: auto; }
+.lexicon-result-count { font-family: var(--f-mono); font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
+.lexicon-result-chev { color: var(--ink-3); font-size: 16px; line-height: 1; }
+.lexicon-result-preview { display: flex; flex-direction: column; gap: 2px; color: var(--ink-3); font-size: 13px; }
+.lex-prev-line { min-width: 0; }
 .lex-prev-tag {
   font-family: var(--f-mono); font-size: 10px; color: var(--ink-2);
   background: var(--bg-sunk); border-radius: 3px; padding: 0 4px; margin-right: 6px;
-}
-/* Strong's number + translit on top, the Greek/Hebrew word underneath —
-   keeps the left side compact so the renderings get the width. */
-.lexicon-result-head { display: flex; flex-direction: column; align-items: flex-start; gap: 2px; flex-shrink: 0; }
-.lexicon-result-headtop { display: inline-flex; align-items: center; gap: 10px; }
-.lexicon-result-end { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-.lexicon-result-count { font-family: var(--f-mono); font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
-.lexicon-result-chev { color: var(--ink-3); font-size: 16px; line-height: 1; }
-/* Mobile: scroll the WHOLE results table sideways — one swipe moves every row
-   together (strongs, Greek, renderings). The count + chevron stay PINNED to
-   the right edge (sticky) so they're always visible while the row scrolls. */
-@media (max-width: 1099px) {
-  .lexicon-results {
-    align-items: flex-start;
-    overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none;
-  }
-  .lexicon-results::-webkit-scrollbar { display: none; }
-  .lexicon-result-row { width: max-content; min-width: 100%; }
-  .lexicon-result-preview { flex: 0 0 auto; }
-  .lex-prev-line { overflow: visible; text-overflow: clip; width: max-content; }
-  .lexicon-result-end {
-    position: sticky; right: 0; align-self: stretch;
-    background: var(--bg); padding-left: 12px;
-    box-shadow: -10px 0 8px -6px rgba(0, 0, 0, 0.06);
-  }
-  /* Keep the "rendered as …" label put at the left while the table scrolls. */
-  .lexicon-results .lexicon-dist-label {
-    position: sticky; left: 0; background: var(--bg); padding-right: 8px;
-  }
 }
 
 

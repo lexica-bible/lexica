@@ -5494,25 +5494,25 @@ function LexiconView({
     className: "lexicon-result-row",
     onClick: () => loadProfile(g.strongs, corpus === "all" ? undefined : corpus)
   }, /*#__PURE__*/React.createElement("span", {
+    className: "lexicon-result-topbar"
+  }, /*#__PURE__*/React.createElement("span", {
     className: "lexicon-result-head"
   }, /*#__PURE__*/React.createElement("span", {
-    className: "lexicon-result-headtop"
-  }, /*#__PURE__*/React.createElement("span", {
     className: "lexicon-match-strongs"
-  }, g.strongs), g.translit && /*#__PURE__*/React.createElement("span", {
-    className: "lexicon-match-translit"
-  }, g.translit)), g.lemma && /*#__PURE__*/React.createElement("span", {
+  }, g.strongs), g.lemma && /*#__PURE__*/React.createElement("span", {
     className: "lexicon-match-lemma",
     dir: g.strongs[0] === "H" ? "rtl" : undefined
-  }, g.lemma)), /*#__PURE__*/React.createElement("span", {
-    className: "lexicon-result-preview"
-  }, renderRowPreview(g)), /*#__PURE__*/React.createElement("span", {
+  }, g.lemma), g.translit && /*#__PURE__*/React.createElement("span", {
+    className: "lexicon-match-translit"
+  }, g.translit)), /*#__PURE__*/React.createElement("span", {
     className: "lexicon-result-end"
   }, /*#__PURE__*/React.createElement("span", {
     className: "lexicon-result-count"
   }, g.count), /*#__PURE__*/React.createElement("span", {
     className: "lexicon-result-chev"
-  }, "\u203A"))))), profile && /*#__PURE__*/React.createElement("div", {
+  }, "\u203A"))), /*#__PURE__*/React.createElement("span", {
+    className: "lexicon-result-preview"
+  }, renderRowPreview(g))))), profile && /*#__PURE__*/React.createElement("div", {
     className: "lexicon-profile"
   }, /*#__PURE__*/React.createElement("div", {
     className: "lexicon-profile-header"
