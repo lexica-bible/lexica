@@ -2081,22 +2081,37 @@ function DetailPanel({
 // every saved note and jumps back to its verse.
 // ============================================================
 
-// Small bar that appears above a text selection in the reader.
+// "Add note" affordance for a text selection. On DESKTOP it floats just above
+// the selection. On MOBILE the OS floats its own copy/share toolbar right there,
+// so ours is pinned to the bottom of the screen (above the tab bar) to avoid the
+// collision.
 function NoteAddPopover({
   rect,
+  isMobile,
   onAdd
 }) {
   if (!rect) return null;
-  const W = 118;
-  const style = {
-    position: "fixed",
-    top: Math.max(8, rect.top - 46),
-    left: Math.min(window.innerWidth - W - 8, Math.max(8, rect.left + rect.width / 2 - W / 2)),
-    zIndex: 1000
-  };
+  let style;
+  if (isMobile) {
+    style = {
+      position: "fixed",
+      left: "50%",
+      transform: "translateX(-50%)",
+      bottom: 72,
+      zIndex: 1000
+    };
+  } else {
+    const W = 118;
+    style = {
+      position: "fixed",
+      top: Math.max(8, rect.top - 46),
+      left: Math.min(window.innerWidth - W - 8, Math.max(8, rect.left + rect.width / 2 - W / 2)),
+      zIndex: 1000
+    };
+  }
   // preventDefault on mousedown so pressing the button doesn't clear the selection
   return /*#__PURE__*/React.createElement("div", {
-    className: "note-popover",
+    className: "note-popover" + (isMobile ? " note-popover-mobile" : ""),
     style: style,
     onMouseDown: e => e.preventDefault()
   }, /*#__PURE__*/React.createElement("button", {
@@ -4325,9 +4340,26 @@ function LibraryView({
     if (!noteSel) return;
     const note = NotesStore.create(noteSel.anchor);
     setNoteSel(null);
-    if (window.getSelection) window.getSelection().removeAllRanges();
+    if (window.getSelection) window.getSelection().removeAllRanges(); // dismiss the OS selection toolbar
     onOpenNote && onOpenNote(note.id);
   };
+  // Mobile: the browser owns the touch-select gesture, so our touch handlers may
+  // not fire. Watch for a settled selection and show the bottom "Add note" bar.
+  const resolveRef = useRef(resolveSelection);
+  resolveRef.current = resolveSelection;
+  useEffect(() => {
+    if (!isMobile) return;
+    let t;
+    const onSel = () => {
+      clearTimeout(t);
+      t = setTimeout(() => resolveRef.current(), 200);
+    };
+    document.addEventListener("selectionchange", onSel);
+    return () => {
+      document.removeEventListener("selectionchange", onSel);
+      clearTimeout(t);
+    };
+  }, [isMobile]);
   // One handler set on the reading area: swipe (mobile) + selection (all).
   const readingHandlers = {
     ...swipeHandlers,
@@ -5477,6 +5509,7 @@ function LibraryView({
     }
   }, /*#__PURE__*/React.createElement(Icon.Bookmark, null)), renderProseWords(v))))))), noteSel && /*#__PURE__*/React.createElement(NoteAddPopover, {
     rect: noteSel.rect,
+    isMobile: isMobile,
     onAdd: addNoteFromSelection
   }), showSummary && (selBook || nonCanon) && /*#__PURE__*/React.createElement(SummaryPanel, {
     book: nonCanon ? nonCanon.id : selBook.abbrev,

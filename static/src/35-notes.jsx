@@ -7,19 +7,27 @@
 // every saved note and jumps back to its verse.
 // ============================================================
 
-// Small bar that appears above a text selection in the reader.
-function NoteAddPopover({ rect, onAdd }) {
+// "Add note" affordance for a text selection. On DESKTOP it floats just above
+// the selection. On MOBILE the OS floats its own copy/share toolbar right there,
+// so ours is pinned to the bottom of the screen (above the tab bar) to avoid the
+// collision.
+function NoteAddPopover({ rect, isMobile, onAdd }) {
   if (!rect) return null;
-  const W = 118;
-  const style = {
-    position: "fixed",
-    top: Math.max(8, rect.top - 46),
-    left: Math.min(window.innerWidth - W - 8, Math.max(8, rect.left + rect.width / 2 - W / 2)),
-    zIndex: 1000,
-  };
+  let style;
+  if (isMobile) {
+    style = { position: "fixed", left: "50%", transform: "translateX(-50%)", bottom: 72, zIndex: 1000 };
+  } else {
+    const W = 118;
+    style = {
+      position: "fixed",
+      top: Math.max(8, rect.top - 46),
+      left: Math.min(window.innerWidth - W - 8, Math.max(8, rect.left + rect.width / 2 - W / 2)),
+      zIndex: 1000,
+    };
+  }
   // preventDefault on mousedown so pressing the button doesn't clear the selection
   return (
-    <div className="note-popover" style={style} onMouseDown={(e) => e.preventDefault()}>
+    <div className={"note-popover" + (isMobile ? " note-popover-mobile" : "")} style={style} onMouseDown={(e) => e.preventDefault()}>
       <button className="note-popover-btn" onClick={onAdd}>
         <Icon.Bookmark/> Add note
       </button>

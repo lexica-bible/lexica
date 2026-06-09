@@ -936,9 +936,20 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
     if (!noteSel) return;
     const note = NotesStore.create(noteSel.anchor);
     setNoteSel(null);
-    if (window.getSelection) window.getSelection().removeAllRanges();
+    if (window.getSelection) window.getSelection().removeAllRanges();   // dismiss the OS selection toolbar
     onOpenNote && onOpenNote(note.id);
   };
+  // Mobile: the browser owns the touch-select gesture, so our touch handlers may
+  // not fire. Watch for a settled selection and show the bottom "Add note" bar.
+  const resolveRef = useRef(resolveSelection);
+  resolveRef.current = resolveSelection;
+  useEffect(() => {
+    if (!isMobile) return;
+    let t;
+    const onSel = () => { clearTimeout(t); t = setTimeout(() => resolveRef.current(), 200); };
+    document.addEventListener("selectionchange", onSel);
+    return () => { document.removeEventListener("selectionchange", onSel); clearTimeout(t); };
+  }, [isMobile]);
   // One handler set on the reading area: swipe (mobile) + selection (all).
   const readingHandlers = {
     ...swipeHandlers,
@@ -1827,7 +1838,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
         )}
       </div>
       </div>
-      {noteSel && <NoteAddPopover rect={noteSel.rect} onAdd={addNoteFromSelection} />}
+      {noteSel && <NoteAddPopover rect={noteSel.rect} isMobile={isMobile} onAdd={addNoteFromSelection} />}
       {showSummary && (selBook || nonCanon) && (
         <SummaryPanel
           book={nonCanon ? nonCanon.id : selBook.abbrev}

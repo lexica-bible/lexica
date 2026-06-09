@@ -2680,6 +2680,8 @@ input { font-family: inherit; }
   font-size: 13px; font-weight: 600; padding: 7px 12px; border-radius: 6px;
 }
 .note-popover-btn:hover { background: rgba(255,255,255,0.12); }
+.note-popover-mobile { box-shadow: 0 4px 24px rgba(0,0,0,0.35); }
+.note-popover-mobile .note-popover-btn { font-size: 15px; padding: 11px 22px; }
 
 /* Per-verse note marker in the reading margin */
 .lib-note-dot {
