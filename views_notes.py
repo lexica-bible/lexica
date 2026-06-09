@@ -57,7 +57,8 @@ def _google_ready():
 
 _EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 _MAX_NOTES = 5000            # per account
-_MAX_NOTE_BYTES = 8000       # one note's JSON
+_MAX_NOTE_BYTES = 8000       # one anchored note's JSON
+_MAX_JOURNAL_BYTES = 64000   # one free-form journal page's JSON (long essays)
 _MAX_BODY_BYTES = 4_000_000  # whole request
 _MIN_PASSWORD = 8
 
@@ -280,7 +281,8 @@ def notes_sync():
             if not isinstance(nid, str) or not nid or not isinstance(upd, str):
                 continue
             blob = json.dumps(n, separators=(",", ":"))
-            if len(blob) > _MAX_NOTE_BYTES:
+            cap = _MAX_JOURNAL_BYTES if n.get("kind") == "journal" else _MAX_NOTE_BYTES
+            if len(blob) > cap:
                 continue
             if nid not in existing or upd > existing[nid]:
                 conn.execute(

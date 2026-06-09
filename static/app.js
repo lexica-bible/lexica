@@ -843,7 +843,8 @@ const NotesStore = function () {
       updated = 0,
       skipped = 0;
     for (const n of incoming) {
-      if (!n || !n.id || !n.start) {
+      // journal pages have no verse anchor (no .start) — let them through too
+      if (!n || !n.id || n.kind !== "journal" && !n.start) {
         skipped++;
         continue;
       }
@@ -981,9 +982,29 @@ const NotesStore = function () {
     }
   }
   return {
-    // newest-edited first (tombstones hidden)
+    // newest-edited first (tombstones hidden). Journal pages are a separate
+    // free-form mode — they live in journals(), not the anchored-note list.
     all() {
-      return load().filter(live).sort((a, b) => (b.updated || "").localeCompare(a.updated || ""));
+      return load().filter(n => live(n) && n.kind !== "journal").sort((a, b) => (b.updated || "").localeCompare(a.updated || ""));
+    },
+    // Free-form journal pages (kind:"journal"), newest-edited first.
+    journals() {
+      return load().filter(n => live(n) && n.kind === "journal").sort((a, b) => (b.updated || "").localeCompare(a.updated || ""));
+    },
+    createJournal() {
+      const now = new Date().toISOString();
+      const page = {
+        id: newId(),
+        device: deviceId(),
+        kind: "journal",
+        title: "",
+        body: "",
+        created: now,
+        updated: now
+      };
+      load().push(page);
+      persist();
+      return page;
     },
     get(id) {
       const n = load().find(x => x.id === id);
@@ -1031,6 +1052,7 @@ const NotesStore = function () {
       if (!n) return;
       Object.assign(n, {
         deleted: true,
+        title: "",
         body: "",
         color: null,
         bookmark: false,
@@ -2587,6 +2609,126 @@ function NotesPanel({
   }, head, content);
 }
 
+// One free-form journal page (plain text). No verse anchor — a title + a big
+// box you type into. Autosaves as you write; rides the same store/sync as notes.
+const JOURNAL_MAX = 60000; // chars; stays safely under the server's 64KB page cap
+function JournalEditor({
+  pageId,
+  onBack
+}) {
+  const page = NotesStore.get(pageId);
+  const [title, setTitle] = useState(page ? page.title || "" : "");
+  const [body, setBody] = useState(page ? page.body || "" : "");
+  const saveTimer = useRef(null);
+  const first = useRef(true);
+
+  // Autosave ~0.8s after you stop typing. Skip the very first run so just
+  // opening a page doesn't re-stamp it as edited.
+  useEffect(() => {
+    if (first.current) {
+      first.current = false;
+      return;
+    }
+    clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(() => {
+      NotesStore.update(pageId, {
+        title,
+        body
+      });
+    }, 800);
+    return () => clearTimeout(saveTimer.current);
+  }, [title, body]);
+  const back = () => {
+    clearTimeout(saveTimer.current);
+    // A page never given a title or any text is a thrown-away draft — discard it.
+    if (!title.trim() && !body.trim()) NotesStore.remove(pageId);else NotesStore.update(pageId, {
+      title,
+      body
+    });
+    onBack();
+  };
+  const del = () => {
+    clearTimeout(saveTimer.current);
+    NotesStore.remove(pageId);
+    onBack();
+  };
+  if (!page) {
+    onBack();
+    return null;
+  }
+  const near = body.length > JOURNAL_MAX - 2000;
+  return /*#__PURE__*/React.createElement("div", {
+    className: "journal-editor"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "journal-editor-bar"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "notes-tool-btn",
+    onClick: back
+  }, "\u2039 Back"), /*#__PURE__*/React.createElement("button", {
+    className: "note-del",
+    onClick: del
+  }, "Delete")), /*#__PURE__*/React.createElement("input", {
+    className: "journal-title-input",
+    type: "text",
+    value: title,
+    maxLength: 200,
+    onChange: e => setTitle(e.target.value),
+    placeholder: "Page title"
+  }), /*#__PURE__*/React.createElement("textarea", {
+    className: "journal-textarea",
+    value: body,
+    maxLength: JOURNAL_MAX,
+    onChange: e => setBody(e.target.value),
+    placeholder: "Write freely \u2014 thoughts, an outline, a sermon, a study\u2026"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "journal-count" + (near ? " warn" : "")
+  }, body.length.toLocaleString(), " characters", near ? " — near the page limit; start a new page for more" : ""));
+}
+
+// The Journal side of the Notes tab — a list of free-form pages + an editor.
+function JournalView() {
+  useNotesVersion();
+  const [editing, setEditing] = useState(null);
+  const pages = NotesStore.journals();
+  if (editing) return /*#__PURE__*/React.createElement(JournalEditor, {
+    pageId: editing,
+    onBack: () => setEditing(null)
+  });
+  const fmtDate = iso => {
+    try {
+      return new Date(iso).toLocaleDateString();
+    } catch (e) {
+      return "";
+    }
+  };
+  const newPage = () => {
+    const p = NotesStore.createJournal();
+    setEditing(p.id);
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    className: "journal-view"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "journal-toolbar"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "notes-tool-btn on",
+    onClick: newPage
+  }, "+ New page")), pages.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "notes-empty"
+  }, "No journal pages yet. Tap \u201CNew page\u201D to start writing \u2014 free-form, not tied to any verse.") : /*#__PURE__*/React.createElement("ul", {
+    className: "journal-list"
+  }, pages.map(p => /*#__PURE__*/React.createElement("li", {
+    key: p.id,
+    className: "journal-item",
+    onClick: () => setEditing(p.id)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "journal-item-title"
+  }, (p.title || "").trim() || "Untitled page"), (p.body || "").trim() && /*#__PURE__*/React.createElement("div", {
+    className: "journal-item-preview"
+  }, p.body.trim().slice(0, 160)), /*#__PURE__*/React.createElement("div", {
+    className: "journal-item-date"
+  }, fmtDate(p.updated))))));
+}
+
 // The Notes tab — list + search of every saved note.
 function NotesView({
   onOpen
@@ -2604,6 +2746,7 @@ function NotesView({
     return n;
   });
   const [authOpen, setAuthOpen] = useState(null); // null | "login" | "signup"
+  const [mode, setMode] = useState("notes"); // notes | journal
   const acct = NotesStore.authInfo();
   const fileRef = useRef(null);
   let notes = NotesStore.search(q); // already newest-first
@@ -2698,7 +2841,7 @@ function NotesView({
   }, /*#__PURE__*/React.createElement("button", {
     className: "notes-tool-btn",
     onClick: doExport,
-    disabled: NotesStore.all().length === 0
+    disabled: NotesStore.all().length === 0 && NotesStore.journals().length === 0
   }, "Export"), /*#__PURE__*/React.createElement("button", {
     className: "notes-tool-btn",
     onClick: () => fileRef.current && fileRef.current.click()
@@ -2737,7 +2880,15 @@ function NotesView({
     className: "notes-sync-hint"
   }, "Your notes sync to this account on every device you log into.") : /*#__PURE__*/React.createElement("div", {
     className: "notes-sync-hint"
-  }, "Optional \u2014 sign in to sync your notes across devices. Notes work fine without an account."), /*#__PURE__*/React.createElement("input", {
+  }, "Optional \u2014 sign in to sync your notes across devices. Notes work fine without an account."), /*#__PURE__*/React.createElement("div", {
+    className: "notes-mode seg"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "seg-b" + (mode === "notes" ? " on" : ""),
+    onClick: () => setMode("notes")
+  }, "Verse notes"), /*#__PURE__*/React.createElement("button", {
+    className: "seg-b" + (mode === "journal" ? " on" : ""),
+    onClick: () => setMode("journal")
+  }, "Journal")), mode === "notes" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("input", {
     className: "notes-search",
     type: "text",
     placeholder: "Search your notes\u2026",
@@ -2762,7 +2913,7 @@ function NotesView({
   }, "Reference")), /*#__PURE__*/React.createElement("button", {
     className: "notes-tool-btn" + (group ? " on" : ""),
     onClick: () => setGroup(g => !g)
-  }, "Group by book"))), notes.length === 0 ? /*#__PURE__*/React.createElement("div", {
+  }, "Group by book")))), mode === "journal" ? /*#__PURE__*/React.createElement(JournalView, null) : notes.length === 0 ? /*#__PURE__*/React.createElement("div", {
     className: "notes-empty"
   }, q || filter !== "all" ? "Nothing matches that." : "No notes yet. In the Library, select some text in a verse and choose “Add note.”") : group ? sections.map(s => {
     const open = !collapsed.has(s.key);

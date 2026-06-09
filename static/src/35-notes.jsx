@@ -171,6 +171,98 @@ function NotesPanel({ noteId, isMobile, onClose }) {
   );
 }
 
+// One free-form journal page (plain text). No verse anchor — a title + a big
+// box you type into. Autosaves as you write; rides the same store/sync as notes.
+const JOURNAL_MAX = 60000;   // chars; stays safely under the server's 64KB page cap
+function JournalEditor({ pageId, onBack }) {
+  const page = NotesStore.get(pageId);
+  const [title, setTitle] = useState(page ? (page.title || "") : "");
+  const [body, setBody] = useState(page ? (page.body || "") : "");
+  const saveTimer = useRef(null);
+  const first = useRef(true);
+
+  // Autosave ~0.8s after you stop typing. Skip the very first run so just
+  // opening a page doesn't re-stamp it as edited.
+  useEffect(() => {
+    if (first.current) { first.current = false; return; }
+    clearTimeout(saveTimer.current);
+    saveTimer.current = setTimeout(() => { NotesStore.update(pageId, { title, body }); }, 800);
+    return () => clearTimeout(saveTimer.current);
+  }, [title, body]);
+
+  const back = () => {
+    clearTimeout(saveTimer.current);
+    // A page never given a title or any text is a thrown-away draft — discard it.
+    if (!title.trim() && !body.trim()) NotesStore.remove(pageId);
+    else NotesStore.update(pageId, { title, body });
+    onBack();
+  };
+  const del = () => { clearTimeout(saveTimer.current); NotesStore.remove(pageId); onBack(); };
+
+  if (!page) { onBack(); return null; }
+  const near = body.length > JOURNAL_MAX - 2000;
+
+  return (
+    <div className="journal-editor">
+      <div className="journal-editor-bar">
+        <button className="notes-tool-btn" onClick={back}>‹ Back</button>
+        <button className="note-del" onClick={del}>Delete</button>
+      </div>
+      <input
+        className="journal-title-input"
+        type="text"
+        value={title}
+        maxLength={200}
+        onChange={(e) => setTitle(e.target.value)}
+        placeholder="Page title"
+      />
+      <textarea
+        className="journal-textarea"
+        value={body}
+        maxLength={JOURNAL_MAX}
+        onChange={(e) => setBody(e.target.value)}
+        placeholder="Write freely — thoughts, an outline, a sermon, a study…"
+      />
+      <div className={"journal-count" + (near ? " warn" : "")}>
+        {body.length.toLocaleString()} characters{near ? " — near the page limit; start a new page for more" : ""}
+      </div>
+    </div>
+  );
+}
+
+// The Journal side of the Notes tab — a list of free-form pages + an editor.
+function JournalView() {
+  useNotesVersion();
+  const [editing, setEditing] = useState(null);
+  const pages = NotesStore.journals();
+
+  if (editing) return <JournalEditor pageId={editing} onBack={() => setEditing(null)} />;
+
+  const fmtDate = (iso) => { try { return new Date(iso).toLocaleDateString(); } catch (e) { return ""; } };
+  const newPage = () => { const p = NotesStore.createJournal(); setEditing(p.id); };
+
+  return (
+    <div className="journal-view">
+      <div className="journal-toolbar">
+        <button className="notes-tool-btn on" onClick={newPage}>+ New page</button>
+      </div>
+      {pages.length === 0 ? (
+        <div className="notes-empty">No journal pages yet. Tap “New page” to start writing — free-form, not tied to any verse.</div>
+      ) : (
+        <ul className="journal-list">
+          {pages.map(p => (
+            <li key={p.id} className="journal-item" onClick={() => setEditing(p.id)}>
+              <div className="journal-item-title">{(p.title || "").trim() || "Untitled page"}</div>
+              {(p.body || "").trim() && <div className="journal-item-preview">{p.body.trim().slice(0, 160)}</div>}
+              <div className="journal-item-date">{fmtDate(p.updated)}</div>
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
 // The Notes tab — list + search of every saved note.
 function NotesView({ onOpen }) {
   useNotesVersion();
@@ -182,6 +274,7 @@ function NotesView({ onOpen }) {
   const [collapsed, setCollapsed] = useState(() => new Set());   // collapsed book keys
   const toggleSection = (key) => setCollapsed(s => { const n = new Set(s); n.has(key) ? n.delete(key) : n.add(key); return n; });
   const [authOpen, setAuthOpen] = useState(null);   // null | "login" | "signup"
+  const [mode, setMode] = useState("notes");        // notes | journal
   const acct = NotesStore.authInfo();
   const fileRef = useRef(null);
   let notes = NotesStore.search(q);               // already newest-first
@@ -256,7 +349,7 @@ function NotesView({ onOpen }) {
         <div className="notes-view-titlerow">
           <h2 className="notes-view-title">My Notes</h2>
           <div className="notes-tools">
-            <button className="notes-tool-btn" onClick={doExport} disabled={NotesStore.all().length === 0}>Export</button>
+            <button className="notes-tool-btn" onClick={doExport} disabled={NotesStore.all().length === 0 && NotesStore.journals().length === 0}>Export</button>
             <button className="notes-tool-btn" onClick={() => fileRef.current && fileRef.current.click()}>Import</button>
             <input ref={fileRef} type="file" accept="application/json,.json" style={{ display: "none" }} onChange={doImport} />
           </div>
@@ -281,6 +374,11 @@ function NotesView({ onOpen }) {
         {acct.email
           ? <div className="notes-sync-hint">Your notes sync to this account on every device you log into.</div>
           : <div className="notes-sync-hint">Optional — sign in to sync your notes across devices. Notes work fine without an account.</div>}
+        <div className="notes-mode seg">
+          <button className={"seg-b" + (mode === "notes" ? " on" : "")} onClick={() => setMode("notes")}>Verse notes</button>
+          <button className={"seg-b" + (mode === "journal" ? " on" : "")} onClick={() => setMode("journal")}>Journal</button>
+        </div>
+        {mode === "notes" && <>
         <input
           className="notes-search"
           type="text"
@@ -300,8 +398,9 @@ function NotesView({ onOpen }) {
           </div>
           <button className={"notes-tool-btn" + (group ? " on" : "")} onClick={() => setGroup(g => !g)}>Group by book</button>
         </div>
+        </>}
       </div>
-      {notes.length === 0 ? (
+      {mode === "journal" ? <JournalView/> : notes.length === 0 ? (
         <div className="notes-empty">
           {q || filter !== "all"
             ? "Nothing matches that."

@@ -68,7 +68,8 @@ const NotesStore = (function () {
     const byId = new Map(cur.map(n => [n.id, n]));
     let added = 0, updated = 0, skipped = 0;
     for (const n of incoming) {
-      if (!n || !n.id || !n.start) { skipped++; continue; }
+      // journal pages have no verse anchor (no .start) — let them through too
+      if (!n || !n.id || (n.kind !== "journal" && !n.start)) { skipped++; continue; }
       const ex = byId.get(n.id);
       if (!ex) { cur.push(n); byId.set(n.id, n); added++; }
       else if ((n.updated || "") > (ex.updated || "")) { Object.assign(ex, n); updated++; }
@@ -135,9 +136,22 @@ const NotesStore = (function () {
   }
 
   return {
-    // newest-edited first (tombstones hidden)
+    // newest-edited first (tombstones hidden). Journal pages are a separate
+    // free-form mode — they live in journals(), not the anchored-note list.
     all() {
-      return load().filter(live).sort((a, b) => (b.updated || "").localeCompare(a.updated || ""));
+      return load().filter(n => live(n) && n.kind !== "journal").sort((a, b) => (b.updated || "").localeCompare(a.updated || ""));
+    },
+    // Free-form journal pages (kind:"journal"), newest-edited first.
+    journals() {
+      return load().filter(n => live(n) && n.kind === "journal")
+        .sort((a, b) => (b.updated || "").localeCompare(a.updated || ""));
+    },
+    createJournal() {
+      const now = new Date().toISOString();
+      const page = { id: newId(), device: deviceId(), kind: "journal", title: "", body: "", created: now, updated: now };
+      load().push(page);
+      persist();
+      return page;
     },
     get(id) { const n = load().find(x => x.id === id); return n && live(n) ? n : null; },
     // An existing (non-deleted) record on the exact same words, so we reuse it
@@ -173,7 +187,7 @@ const NotesStore = (function () {
     remove(id) {
       const n = load().find(x => x.id === id);
       if (!n) return;
-      Object.assign(n, { deleted: true, body: "", color: null, bookmark: false, updated: new Date().toISOString() });
+      Object.assign(n, { deleted: true, title: "", body: "", color: null, bookmark: false, updated: new Date().toISOString() });
       persist();
     },
     search(text) {
