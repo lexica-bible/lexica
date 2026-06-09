@@ -4368,6 +4368,74 @@ function LibraryView({
       }
     }, /*#__PURE__*/React.createElement(Icon.Bookmark, null));
   };
+  // Whole-verse note: right-click the verse number (desktop) or long-press it
+  // (mobile). Left-click / tap stays cross-references.
+  const makeVerseNote = (verse, fromEl) => {
+    const bookId = nonCanon ? nonCanon.id : selBook ? selBook.abbrev : null;
+    const bookName = nonCanon ? nonCanon.name : selBook ? selBook.name : "";
+    if (!bookId) return;
+    // Snippet = the verse's words. Chip rows pack words with no spaces, so pull
+    // the visible English of each chip; otherwise read the verse text.
+    let snippet = "";
+    const row = fromEl && fromEl.closest("[data-note-verse]");
+    if (row) {
+      const chips = row.querySelectorAll(".lib-word, .lib-kjv-word");
+      if (chips.length) {
+        const parts = [];
+        chips.forEach(el => {
+          const eng = el.querySelector(".lib-iw-english");
+          const t = (eng ? eng.textContent : el.textContent).trim();
+          if (t) parts.push(t);
+        });
+        snippet = parts.join(" ");
+      } else {
+        const content = row.querySelector(".lib-verse-content");
+        snippet = (content ? content.textContent : "").trim();
+      }
+    }
+    const note = NotesStore.create({
+      corpus,
+      translation,
+      book: bookId,
+      bookName,
+      chapter: selChapter,
+      start: {
+        verse,
+        pos: null
+      },
+      end: {
+        verse,
+        pos: null
+      },
+      snippet: snippet.slice(0, 300),
+      refLabel: bookName + " " + selChapter + ":" + verse
+    });
+    onOpenNote && onOpenNote(note.id);
+  };
+  // Shared press handlers for a verse number: right-click + mobile long-press.
+  const vnumPressRef = useRef({
+    timer: null,
+    fired: false
+  });
+  const vnumNoteHandlers = verse => ({
+    onContextMenu: e => {
+      e.preventDefault();
+      makeVerseNote(verse, e.currentTarget);
+    },
+    onTouchStart: e => {
+      const el = e.currentTarget;
+      const st = vnumPressRef.current;
+      st.fired = false;
+      clearTimeout(st.timer);
+      st.timer = setTimeout(() => {
+        st.fired = true;
+        makeVerseNote(verse, el);
+        if (navigator.vibrate) navigator.vibrate(12);
+      }, 500);
+    },
+    onTouchMove: () => clearTimeout(vnumPressRef.current.timer),
+    onTouchEnd: () => clearTimeout(vnumPressRef.current.timer)
+  });
   const changeFontSize = delta => {
     setLibFontSize(prev => {
       const next = Math.min(24, Math.max(13, prev + delta));
@@ -4376,10 +4444,17 @@ function LibraryView({
     });
   };
   const handleVerseNum = onVerseNumberClick && selBook ? verse => onVerseNumberClick(selBook.abbrev, selChapter, verse, translation) : null;
-  const vnumEl = verse => /*#__PURE__*/React.createElement("span", {
+  const vnumEl = verse => /*#__PURE__*/React.createElement("span", _extends({
     className: "lib-vnum" + (handleVerseNum ? " lib-vnum-click" : "") + (showInterlinear ? " lib-vnum-il" : ""),
-    onClick: handleVerseNum ? () => handleVerseNum(verse) : undefined
-  }, verse);
+    title: handleVerseNum ? "Click: cross-references · Right-click / long-press: add a note" : undefined,
+    onClick: handleVerseNum ? () => {
+      if (vnumPressRef.current.fired) {
+        vnumPressRef.current.fired = false;
+        return;
+      }
+      handleVerseNum(verse);
+    } : undefined
+  }, vnumNoteHandlers(verse)), verse);
   const joinProse = words => {
     const tokens = words.map(w => w.english).filter(Boolean);
     return tokens.reduce((acc, tok, i) => {
@@ -5381,10 +5456,17 @@ function LibraryView({
   }, v.heading), /*#__PURE__*/React.createElement("span", {
     className: "lib-flow-verse",
     "data-note-verse": v.verse
-  }, /*#__PURE__*/React.createElement("sup", {
+  }, /*#__PURE__*/React.createElement("sup", _extends({
     className: "lib-flow-vnum",
-    onClick: handleVerseNum ? () => handleVerseNum(v.verse) : undefined
-  }, v.verse), noteForVerse(v.verse) && /*#__PURE__*/React.createElement("button", {
+    title: handleVerseNum ? "Click: cross-references · Right-click / long-press: add a note" : undefined,
+    onClick: handleVerseNum ? () => {
+      if (vnumPressRef.current.fired) {
+        vnumPressRef.current.fired = false;
+        return;
+      }
+      handleVerseNum(v.verse);
+    } : undefined
+  }, vnumNoteHandlers(v.verse)), v.verse), noteForVerse(v.verse) && /*#__PURE__*/React.createElement("button", {
     className: "lib-note-dot lib-note-dot-inline",
     title: "Open note",
     "aria-label": "Open note",
