@@ -18,7 +18,7 @@ import sqlite3
 
 from flask import Flask, jsonify, render_template, request, url_for
 
-from core import log, DB, db, limiter, _FUNCTION_STRONGS
+from core import log, DB, db, limiter, _FUNCTION_STRONGS, ai_cache_drop_legacy
 
 # LSJ part-of-speech detection for function words.
 # LSJ def_html has two POS patterns:
@@ -143,15 +143,15 @@ def _build_function_strongs_cache() -> None:
         log.warning("Could not build function word cache (LSJ table may not exist yet): %s", e)
 
 
-from views_metav import bp as metav_bp
-from views_crossref import bp as crossref_bp
+from views_metav import bp as metav_bp, prune_cache as _prune_metav_cache
+from views_crossref import bp as crossref_bp, prune_cache as _prune_xref_cache
 from views_lsj import bp as lsj_bp
 from views_kjv import bp as kjv_bp
 from views_bsb import bp as bsb_bp
 from views_lexicon import bp as lexicon_bp
 from views_library import bp as library_bp
 from views_search import bp as search_bp
-from views_summary import bp as summary_bp
+from views_summary import bp as summary_bp, prune_cache as _prune_summary_cache
 from ai import bp as ai_bp, _load_ai_cache_from_db
 
 app = Flask(__name__)
@@ -290,7 +290,14 @@ def rate_limit_handler(e):
 
 _migrate_db()
 _build_function_strongs_cache()
+# AI result cache (ai_search_cache): one-time sweep of pre-unification rows, then
+# each synthesis category loads/prunes only its own. _load_ai_cache_from_db handles
+# the 'search' category (bulk preload + prune); the others just prune their stale rows.
+ai_cache_drop_legacy()
 _load_ai_cache_from_db()
+_prune_summary_cache()
+_prune_xref_cache()
+_prune_metav_cache()
 
 
 @app.route("/")

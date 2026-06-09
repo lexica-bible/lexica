@@ -204,8 +204,8 @@ scripts/          # build-frontend.js + one-time import/migration scripts
 - Endpoint: GET /api/cross-references/curated/<book>/<chapter>/<verse>
 - Step 1: Haiku selects 8-10 strongest refs from full TSK list
 - Step 2: Haiku generates 3-sentence synthesis anchored in ABP source vocabulary
-- Cached in ai_search_cache with key prefix `xref_cur:` and ver_key="xref"
-- TSK cache is preserved when _CACHE_CODE_VER bumps (NOT LIKE 'xref%' exclusion)
+- Cached in ai_search_cache, key prefix `xref_cur:`/`xref_synth:`, ver_key=`xref:<hash>`
+  (fingerprint of the two xref prompts — see "AI result cache" below)
 
 ## Lexicon Tab
 - Dedicated word study tab — separate from AI Search
@@ -236,7 +236,30 @@ scripts/          # build-frontend.js + one-time import/migration scripts
 - key_strongs: up to 10 chips (6 Greek + 4 Hebrew max)
 - Empty-result retry: Haiku broadens SQL automatically if first query returns 0 rows
 - Hebrew word bridge: BDB → kjv_strongs → ABP verses
-- Cached in ai_search_cache; _CACHE_CODE_VER invalidates AI cache but preserves xref cache
+- Cached in ai_search_cache, ver_key=`search:<hash>` (fingerprint of system prompt + book list +
+  `_CACHE_CODE_VER` salt). See "AI result cache" below.
+
+## AI result cache (ai_search_cache) — unified prompt-fingerprint scheme (2026-06-09)
+- ALL four Haiku-backed syntheses cache here with `ver_key = "<category>:<sha1-of-its-own-prompt>"`:
+  `search:` (ai.py), `summary:` (views_summary.py), `xref:` (views_crossref.py), `pn:` (views_metav.py).
+  Editing a prompt changes only its category's hash, so just that cache lazily refreshes — no manual
+  version bump. (Replaced the old hand-bumped `_SUMMARY_VER` + fixed `"xref"`/`"pn"` literal tags.)
+- Shared helpers in core.py: `ai_fingerprint(category, *prompt_parts)`, `ai_cache_get(query, ver_key)`
+  (matches on ver_key, so an old-prompt row misses → regenerates), `ai_cache_put`, and
+  `ai_cache_prune(category, keep_prefix)` (deletes ONLY that category's stale rows). Each category
+  prunes its own at startup (app.py, next to `_load_ai_cache_from_db`).
+- The row KEY (`query`) is stable and unique (it's the table's primary key), so regenerating OVERWRITES
+  the stale row in place — no parallel old/new rows pile up.
+- LANDMINE (fixed): search's startup cleanup used to delete every non-search row except xref/summary BY
+  NAME. It's now scoped to `search:%` only — it never touches the other caches. If you add a new AI
+  cache category, give it its own `<category>:<hash>` tag + its own startup prune; don't widen another
+  category's delete.
+- summary rows carry a per-book author suffix: `summary:<tpl-hash>:<author-hash>`. Editing the prompt
+  wording refreshes all summaries; editing one book's author in `_BOOK_AUTHORS` refreshes only that book.
+- LSJ summaries are NOT in this table (they live in `lsj.summary_json`/`abp_ext.summary_json`), so the
+  scheme deliberately skips them.
+- One-time deploy note: the first run after this change sweeps the old-format (colon-less) rows via
+  `ai_cache_drop_legacy()`, so all previously cached summaries/xrefs/pn/search lazily regenerate once.
 
 ## BibleHub ABP Scrape — status
 - Scraper: `scripts/scrape_biblehub_abp.py` — captures strongs, greek_pos, italic (last-word heuristic), strips `[ ]` brackets

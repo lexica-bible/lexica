@@ -7,9 +7,27 @@ strongs. Depends only on core (DB + the Anthropic client) — a true leaf domain
 """
 from flask import Blueprint, jsonify
 
-from core import db, db_ro, _anthropic, log
+from core import (
+    db, db_ro, _anthropic, log,
+    ai_fingerprint, ai_cache_get, ai_cache_put, ai_cache_prune,
+)
 
 bp = Blueprint("metav", __name__)
+
+# AI person/place blurb (the 'pn' cache). Prompts kept as named constants so the
+# fingerprint below covers them — editing either auto-refreshes only this cache.
+_PN_SYSTEM = (
+    "You are a concise biblical reference. Answer in 1-2 sentences only. "
+    "State who the person is, their role, key relationships, and main passages. "
+    "No speculation, no theology — text first. No markdown."
+)
+_PN_USER_TMPL = "Describe {name} in the Bible in 1-2 sentences — person, place, or group."
+_PN_VER = ai_fingerprint("pn", _PN_SYSTEM, _PN_USER_TMPL)
+
+
+def prune_cache() -> int:
+    """Startup: drop pn rows tagged with an older prompt fingerprint."""
+    return ai_cache_prune("pn", _PN_VER)
 
 
 @bp.route("/api/pn-count/<path:name>")
@@ -123,28 +141,17 @@ def metav_ai_description(name):
         return jsonify({"error": "AI not available"}), 503
 
     cache_key = f"pn:{name.lower()}"
-    conn = db_ro()
-    try:
-        cached = conn.execute(
-            "SELECT result_json FROM ai_search_cache WHERE query = ? AND ver_key = 'pn'",
-            (cache_key,)
-        ).fetchone()
-    finally:
-        conn.close()
-
-    if cached:
-        import json as _json
-        return jsonify(_json.loads(cached["result_json"]))
+    cached = ai_cache_get(cache_key, _PN_VER)
+    if cached is not None:
+        return jsonify(cached)
 
     try:
         msg = _anthropic.messages.create(
             model="claude-haiku-4-5-20251001",
             max_tokens=120,
             temperature=0,
-            system="You are a concise biblical reference. Answer in 1-2 sentences only. "
-                   "State who the person is, their role, key relationships, and main passages. "
-                   "No speculation, no theology — text first. No markdown.",
-            messages=[{"role": "user", "content": f"Describe {name} in the Bible in 1-2 sentences — person, place, or group."}],
+            system=_PN_SYSTEM,
+            messages=[{"role": "user", "content": _PN_USER_TMPL.format(name=name)}],
         )
         description = msg.content[0].text.strip() if msg.content else ""
     except Exception as e:
@@ -152,17 +159,7 @@ def metav_ai_description(name):
         return jsonify({"error": "AI unavailable"}), 500
 
     payload = {"name": name, "description": description}
-    conn2 = db()
-    try:
-        import json as _json2, time as _time
-        conn2.execute(
-            "INSERT OR REPLACE INTO ai_search_cache (query, result_json, ver_key, created_at) VALUES (?,?,?,?)",
-            (cache_key, _json2.dumps(payload), "pn", _time.time())
-        )
-        conn2.commit()
-    finally:
-        conn2.close()
-
+    ai_cache_put(cache_key, payload, _PN_VER)
     return jsonify(payload)
 
 

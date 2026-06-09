@@ -9,16 +9,21 @@ text (ABP `verses.text`, or a non-canonical text's `<book>_verses.english`).
 Both halves are cached independently in ai_search_cache:
   - book blurb     →  query="summary_book:<book>"
   - chapter summary→  query="summary_ch:<book>:<chapter>"
-with ver_key="summary" so a code-version cache bump preserves them (same treatment
-as the 'xref' caches). Endpoint is rate-limited like the other paid AI routes.
+The ver_key is the unified prompt fingerprint (core.ai_fingerprint): a shared hash
+of the system + user prompt templates, with a per-book author suffix. So editing the
+prompt wording auto-refreshes every summary, while editing one book's author in
+_BOOK_AUTHORS refreshes only that book (its blurb + its chapter summaries). No manual
+version bump. Endpoint is rate-limited like the other paid AI routes.
 """
-import json
+import hashlib
 import re
-import time
 
 from flask import Blueprint, jsonify
 
-from core import db, db_ro, _anthropic, limiter, log, _ai_cache
+from core import (
+    db_ro, _anthropic, limiter, log, _ai_cache,
+    ai_fingerprint, ai_cache_get, ai_cache_put, ai_cache_prune,
+)
 
 bp = Blueprint("summary", __name__)
 
@@ -47,12 +52,6 @@ _BOOK_AUTHORS = {
 }
 
 
-# Bump when the summary PROMPT or wording changes — it's baked into the cache
-# keys, so a bump makes every cached summary miss and lazily regenerate on next
-# view (old rows just go unreferenced; nothing is wiped). v2: tell Haiku not to
-# skip a chapter's distinctive/unusual events (Gen 6 sons of God / Nephilim).
-_SUMMARY_VER = 7
-
 _SUMMARY_SYSTEM = """\
 You are a textual scholar working from a Berean approach: the text speaks first. \
 Let the actual words of the passage anchor everything you write. Import no \
@@ -69,6 +68,60 @@ or prefix of any kind — start directly with the first sentence. Write in plain
 direct, readable language — not academic jargon. Each sentence must be one complete \
 thought.\
 """
+
+# The user-message skeletons. Kept as named templates (not inline f-strings) so the
+# cache fingerprint below covers the instruction wording too — historically the part
+# that actually changed (the "don't skip the opening" / "name strange events" tweaks).
+_AUTHOR_LINE_TMPL = (
+    'The traditionally recognized author of this book is {author} — '
+    'name them by name as the writer (do not hedge as "an unnamed writer" or '
+    '"an apostolic witness"), even though the text itself may not name them. '
+)
+_BOOK_PROMPT_TMPL = (
+    'Below is the opening of the book "{name}". {author_line}In 1 to 2 '
+    'sentences, orient a reader to what this book is, its author and '
+    'intended audience, and its overall concern. Do not retell the opening '
+    'verses.\n\nOpening text:\n{opening}'
+)
+_CHAP_PROMPT_TMPL = (
+    'Below is one chapter of "{name}". {author_line}The lines marked '
+    '"[Section: ...]" are the natural section breaks in this chapter — '
+    'let your summary follow those sections in order rather than fighting '
+    'the chapter boundary. Summarize what happens in this chapter, '
+    'anchored in the text. Let the length fit the chapter — a short or '
+    'simple chapter needs only a sentence or two; a long, eventful one '
+    'can run a short paragraph (up to about 150 words). Do not pad to '
+    'reach a length, and do not cram to save space. Use plain, short '
+    'sentences, one idea each; never force several events into one long '
+    'run-on sentence. Cover the chapter '
+    'from its very first section onward — do not skip the opening or '
+    'collapse it into a generic line. Name the specific notable people, '
+    'beings, and events the text actually records, including any that '
+    'are strange or supernatural; report them plainly rather than '
+    'softening or omitting them. When you refer to the writer, use the '
+    "author's name.\n\n{chap_block}"
+)
+
+# Shared template fingerprint: editing any prompt above changes this, so every
+# summary lazily refreshes. Rows carry a per-book author suffix (see _summary_ver),
+# so editing one book's author in _BOOK_AUTHORS refreshes only that book.
+_SUMMARY_TPL_BASE = ai_fingerprint(
+    "summary", _SUMMARY_SYSTEM, _AUTHOR_LINE_TMPL, _BOOK_PROMPT_TMPL, _CHAP_PROMPT_TMPL
+)
+
+
+def _summary_ver(book: str) -> str:
+    """ver_key for this book's summaries: the shared template hash plus a short hash
+    of the book's own author string. The row's query key stays stable, so changing an
+    author overwrites that book's row in place rather than orphaning it."""
+    author = _BOOK_AUTHORS.get(book, "")
+    return f"{_SUMMARY_TPL_BASE}:{hashlib.sha1(author.encode('utf-8')).hexdigest()[:8]}"
+
+
+def prune_cache() -> int:
+    """Startup: drop summary rows from an OLD template version. Per-book author
+    changes self-heal via in-place overwrite, so the keeper is the template prefix."""
+    return ai_cache_prune("summary", _SUMMARY_TPL_BASE)
 
 
 def _haiku(system: str, user: str, max_tokens: int) -> str | None:
@@ -87,38 +140,19 @@ def _haiku(system: str, user: str, max_tokens: int) -> str | None:
         return None
 
 
-def _cache_get(cache_key: str):
-    """In-memory first, then the DB cache table. Returns payload dict or None."""
+def _cache_get(cache_key: str, ver_key: str):
+    """In-memory first, then the DB cache table (matched on ver_key, so an entry from
+    an older prompt misses and regenerates). Returns payload dict or None."""
     if cache_key in _ai_cache:
         return _ai_cache[cache_key]
-    conn = db_ro()
-    try:
-        row = conn.execute(
-            "SELECT result_json FROM ai_search_cache WHERE query=?", (cache_key,)
-        ).fetchone()
-    finally:
-        conn.close()
-    if row:
-        try:
-            payload = json.loads(row["result_json"])
-            _ai_cache[cache_key] = payload
-            return payload
-        except Exception:
-            return None
-    return None
+    payload = ai_cache_get(cache_key, ver_key)
+    if payload is not None:
+        _ai_cache[cache_key] = payload
+    return payload
 
 
-def _cache_put(cache_key: str, payload: dict) -> None:
-    conn = db()
-    try:
-        conn.execute(
-            "INSERT OR REPLACE INTO ai_search_cache"
-            " (query, result_json, ver_key, created_at) VALUES (?,?,?,?)",
-            (cache_key, json.dumps(payload), "summary", time.time()),
-        )
-        conn.commit()
-    finally:
-        conn.close()
+def _cache_put(cache_key: str, payload: dict, ver_key: str) -> None:
+    ai_cache_put(cache_key, payload, ver_key)
     _ai_cache[cache_key] = payload
 
 
@@ -203,11 +237,12 @@ def reading_summary(book, chapter):
     if not _anthropic:
         return jsonify({"book_summary": None, "chapter_summary": None})
 
-    book_key = f"summary_book:v{_SUMMARY_VER}:{book}"
-    chap_key = f"summary_ch:v{_SUMMARY_VER}:{book}:{chapter}"
+    ver = _summary_ver(book)
+    book_key = f"summary_book:{book}"
+    chap_key = f"summary_ch:{book}:{chapter}"
 
-    book_payload = _cache_get(book_key)
-    chap_payload = _cache_get(chap_key)
+    book_payload = _cache_get(book_key, ver)
+    chap_payload = _cache_get(chap_key, ver)
     if book_payload is not None and chap_payload is not None:
         return jsonify({
             "book_summary": book_payload.get("text"),
@@ -224,57 +259,35 @@ def reading_summary(book, chapter):
         conn.close()
 
     author = _BOOK_AUTHORS.get(book)
-    author_line = (
-        f'The traditionally recognized author of this book is {author} — '
-        f'name them by name as the writer (do not hedge as "an unnamed writer" or '
-        f'"an apostolic witness"), even though the text itself may not name them. '
-    ) if author else ""
+    author_line = _AUTHOR_LINE_TMPL.format(author=author) if author else ""
 
     # Book blurb — generate if not already cached.
     if book_payload is None:
         if opening:
             text = _haiku(
                 _SUMMARY_SYSTEM,
-                f'Below is the opening of the book "{name}". {author_line}In 1 to 2 '
-                f'sentences, orient a reader to what this book is, its author and '
-                f'intended audience, and its overall concern. Do not retell the opening '
-                f'verses.\n\nOpening text:\n{opening}',
+                _BOOK_PROMPT_TMPL.format(name=name, author_line=author_line, opening=opening),
                 max_tokens=160,
             )
         else:
             text = None
         book_payload = {"text": text}
         if text:
-            _cache_put(book_key, book_payload)
+            _cache_put(book_key, book_payload, ver)
 
     # Chapter summary — pericope-aware, generate if not already cached.
     if chap_payload is None:
         if chap_block:
             text = _haiku(
                 _SUMMARY_SYSTEM,
-                f'Below is one chapter of "{name}". {author_line}The lines marked '
-                f'"[Section: ...]" are the natural section breaks in this chapter — '
-                f'let your summary follow those sections in order rather than fighting '
-                f'the chapter boundary. Summarize what happens in this chapter, '
-                f'anchored in the text. Let the length fit the chapter — a short or '
-                f'simple chapter needs only a sentence or two; a long, eventful one '
-                f'can run a short paragraph (up to about 150 words). Do not pad to '
-                f'reach a length, and do not cram to save space. Use plain, short '
-                f'sentences, one idea each; never force several events into one long '
-                f'run-on sentence. Cover the chapter '
-                f'from its very first section onward — do not skip the opening or '
-                f'collapse it into a generic line. Name the specific notable people, '
-                f'beings, and events the text actually records, including any that '
-                f'are strange or supernatural; report them plainly rather than '
-                f'softening or omitting them. When you refer to the writer, use the '
-                f'author\'s name.\n\n{chap_block}',
+                _CHAP_PROMPT_TMPL.format(name=name, author_line=author_line, chap_block=chap_block),
                 max_tokens=480,   # room for up to 5 sentences (3-4 @ 320 truncated long chapters)
             )
         else:
             text = None
         chap_payload = {"text": text}
         if text:
-            _cache_put(chap_key, chap_payload)
+            _cache_put(chap_key, chap_payload, ver)
 
     return jsonify({
         "book_summary": book_payload.get("text"),

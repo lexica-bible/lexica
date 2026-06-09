@@ -4,20 +4,21 @@
 Torrey's Treasury of Scripture Knowledge cross-references for a verse, plus the
 two Haiku-backed endpoints that synthesise / curate them. Cross-ref payloads are
 cached in core._ai_cache (in-memory) and in the ai_search_cache table with
-ver_key='xref' (preserved across AI-cache version bumps).
+ver_key=_XREF_VER — the unified prompt fingerprint (core.ai_fingerprint over the two
+xref system prompts). Editing either prompt auto-refreshes this cache and nothing else.
 
 _XREF_SYNTHESIS_SYSTEM is also imported by the AI blueprint (the cross-ref
 enrichment helper), so it lives here with its primary consumer.
 """
 import json
 import re
-import time
 
 from flask import Blueprint, jsonify
 
 from core import (
-    db, db_ro, _anthropic, limiter, log, _ai_cache,
+    db_ro, _anthropic, limiter, log, _ai_cache,
     _KJV_BOOK_ID, _KJV_BOOK_ID_REV,
+    ai_fingerprint, ai_cache_get, ai_cache_put, ai_cache_prune,
 )
 
 bp = Blueprint("crossref", __name__)
@@ -44,6 +45,15 @@ canonical echoes. Exclude weak matches that share only common vocabulary with no
 deeper connection. Return ONLY a JSON array of the selected 1-based numbers, \
 e.g. [1,3,7,12]. No prose, no explanation — only the array.\
 """
+
+# One fingerprint for both xref endpoints (they share a category). Editing either
+# system prompt above changes it, so cached synthesis/curation lazily refreshes.
+_XREF_VER = ai_fingerprint("xref", _XREF_CURATION_SYSTEM, _XREF_SYNTHESIS_SYSTEM)
+
+
+def prune_cache() -> int:
+    """Startup: drop xref rows tagged with an older prompt fingerprint."""
+    return ai_cache_prune("xref", _XREF_VER)
 
 
 @bp.route("/api/cross-references/<book>/<int:chapter>/<int:verse>")
@@ -94,15 +104,12 @@ def cross_ref_synthesis(book, chapter, verse):
     cache_key = f"xref_synth:{book}:{chapter}:{verse}"
     if cache_key in _ai_cache:
         return jsonify(_ai_cache[cache_key])
+    cached = ai_cache_get(cache_key, _XREF_VER)
+    if cached is not None:
+        _ai_cache[cache_key] = cached
+        return jsonify(cached)
     conn = db_ro()
     try:
-        cached = conn.execute(
-            "SELECT result_json FROM ai_search_cache WHERE query=?", (cache_key,)
-        ).fetchone()
-        if cached:
-            payload = json.loads(cached["result_json"])
-            _ai_cache[cache_key] = payload
-            return jsonify(payload)
         src = conn.execute(
             "SELECT verse_id, verse_text FROM kjv_verses"
             " WHERE book_id=? AND chapter=? AND verse_num=?",
@@ -135,16 +142,7 @@ def cross_ref_synthesis(book, chapter, verse):
         log.warning("Cross-ref synthesis failed: %s", exc)
         return jsonify({"synthesis": None})
     payload = {"synthesis": synthesis}
-    conn = db()
-    try:
-        conn.execute(
-            "INSERT OR REPLACE INTO ai_search_cache"
-            " (query, result_json, ver_key, created_at) VALUES (?,?,?,?)",
-            (cache_key, json.dumps(payload), "xref", time.time()),
-        )
-        conn.commit()
-    finally:
-        conn.close()
+    ai_cache_put(cache_key, payload, _XREF_VER)
     _ai_cache[cache_key] = payload
     return jsonify(payload)
 
@@ -161,17 +159,13 @@ def cross_refs_curated(book, chapter, verse):
     cache_key = f"xref_cur:{book}:{chapter}:{verse}"
     if cache_key in _ai_cache:
         return jsonify(_ai_cache[cache_key])
+    cached = ai_cache_get(cache_key, _XREF_VER)
+    if cached is not None:
+        _ai_cache[cache_key] = cached
+        return jsonify(cached)
 
     conn = db_ro()
     try:
-        cached = conn.execute(
-            "SELECT result_json FROM ai_search_cache WHERE query=?", (cache_key,)
-        ).fetchone()
-        if cached:
-            payload = json.loads(cached["result_json"])
-            _ai_cache[cache_key] = payload
-            return jsonify(payload)
-
         src = conn.execute(
             "SELECT verse_id, verse_text FROM kjv_verses"
             " WHERE book_id=? AND chapter=? AND verse_num=?",
@@ -272,15 +266,6 @@ def cross_refs_curated(book, chapter, verse):
             log.warning("Cross-ref synthesis failed: %s", exc)
 
     payload = {"refs": refs, "synthesis": synthesis}
-    conn = db()
-    try:
-        conn.execute(
-            "INSERT OR REPLACE INTO ai_search_cache"
-            " (query, result_json, ver_key, created_at) VALUES (?,?,?,?)",
-            (cache_key, json.dumps(payload), "xref", time.time()),
-        )
-        conn.commit()
-    finally:
-        conn.close()
+    ai_cache_put(cache_key, payload, _XREF_VER)
     _ai_cache[cache_key] = payload
     return jsonify(payload)

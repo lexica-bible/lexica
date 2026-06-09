@@ -38,29 +38,20 @@ Still open:
    Dependabot watches outside packages. STILL OPEN here: a nightly `health_check.py` email on PA (needs a
    PA scheduled task + email login) — the only piece that has to run against the real database.
    `code: scripts/health_check.py, scripts/snapshot_endpoints.py, tests/, .github/, scripts/githooks/, scripts/deploy.sh`
-4. **Unify the AI synthesis caches onto one prompt-fingerprint scheme.** Each AI cache versions
-   itself differently: AI search already does the good way (hashes its prompt into the cache tag, so
-   editing the prompt auto-refreshes — `ai.py` ~760), but the summary cache (`views_summary.py`,
-   hand-bumped `_SUMMARY_VER`) and the xref cache (`views_crossref.py`, fixed keys) use a cruder
-   manual number you must remember to bump. MetaV (`pn:`) and LSJ are similar. GOAL: one shared helper
-   so every synthesis tags rows as `category:hash-of-its-own-prompt`; editing any prompt auto-refreshes
-   just that synthesis, no manual bump, each category cleans only its own stale rows. LANDMINE: AI
-   search's cleanup (`ai.py` ~782) spares xref+summary BY NAME — switching their tag format means you
-   MUST update that delete rule or it wipes them. Paid-cache logic: verify cache still hits (no cost
-   spike) via the local read-only test loop before pushing. (Surfaced 2026-06-08 — the Gen 6 summary
-   got stuck because summaries lacked auto-refresh; added a manual `_SUMMARY_VER` as a stopgap.)
-   `code: ai.py ~741-805, views_summary.py cache helpers, views_crossref.py ~94-285`
-   **PAIR WITH:** unify the AI prompt STYLE too. Every blurb should share one "house style" snippet
-   (plain language, short one-idea sentences, no run-ons, no jargon; NEVER cap by sentence count — that
-   makes Haiku cram events into run-ons; instead let LENGTH FIT THE CONTENT — short/simple gets a
-   sentence or two, dense gets more — and don't pad or cram). Put the snippet in `core.py`; each prompt =
-   its own task + its own soft CEILING (not a fixed target: chapter ~150w, xref shorter, person/place
-   shorter still) + the shared snippet. This belongs WITH the cache-fingerprint work because once prompts
-   are fingerprinted, editing the shared style auto-refreshes every cache (otherwise you bump N versions
-   by hand). Chapter summary already does adaptive length + short sentences (`views_summary.py`,
-   `_SUMMARY_VER=7`); the cross-ref ("3-sentence synthesis") and person/place ("1-2 sentences") prompts
-   still cap by sentence count and should move to the shared snippet.
-   `code: + views_crossref.py system prompt, ai.py metav/lsj prompts, new shared snippet in core.py`
+4. **Unify the AI prompt STYLE into one shared "house style" snippet.** (The cache-fingerprint half
+   of this item is DONE 2026-06-09 — see TODO_ARCHIVE.md. This is the leftover paired half.) Every
+   blurb should share one house-style snippet (plain language, short one-idea sentences, no run-ons,
+   no jargon; NEVER cap by sentence count — that makes Haiku cram events into run-ons; instead let
+   LENGTH FIT THE CONTENT — short/simple gets a sentence or two, dense gets more — and don't pad or
+   cram). Put the snippet in `core.py`; each prompt = its own task + its own soft CEILING (not a fixed
+   target: chapter ~150w, xref shorter, person/place shorter still) + the shared snippet. Now that the
+   caches are fingerprinted, editing the shared snippet auto-refreshes every cache for free — that's why
+   this was paired with the cache work. Chapter summary already does adaptive length + short sentences;
+   the cross-ref ("3-sentence synthesis") and person/place ("1-2 sentences") prompts still cap by
+   sentence count and should move to the shared snippet. NOTE: changing these prompts is exactly what the
+   new fingerprint scheme watches, so each edit will lazily refresh that category's cache (expected).
+   `code: shared snippet in core.py; views_crossref.py system prompts; views_metav.py _PN_SYSTEM;
+   views_summary.py _SUMMARY_SYSTEM/_*_TMPL; ai.py LSJ prompt in views_lsj.py`
 
 ---
 

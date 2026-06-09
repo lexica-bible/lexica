@@ -6,6 +6,34 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## AI result cache — unified prompt-fingerprint scheme — DONE 2026-06-09
+
+The four Haiku-backed caches (AI search, reading summaries, TSK cross-refs, person/place blurbs) all
+live in the one `ai_search_cache` table but each versioned itself differently: search hashed its own
+prompt (good — edit the prompt, the cache auto-refreshes), but summaries used a hand-bumped number you
+had to remember to change, and the cross-ref + person/place caches never refreshed on a prompt edit at
+all. Fixed: every cache now tags its rows `category:hash-of-its-own-prompt`. Edit any prompt and only
+that cache refreshes, lazily, with no manual bump.
+
+- One shared set of helpers in `core.py` (`ai_fingerprint`, `ai_cache_get/put`, `ai_cache_prune`,
+  plus a one-time `ai_cache_drop_legacy` sweep). Each cache prunes only its OWN stale rows at startup.
+- **The landmine, handled:** search's old startup cleanup deleted every other cache's rows except the
+  ones it spared by name. Switching the other caches to the new tag would have made that delete wipe
+  them. It's now scoped to search's own rows only. Proven with a focused test (search prune leaves the
+  others untouched, and each cache prunes only its own).
+- **Per-book authors (the user's call):** a summary's row key stays stable, the author goes only in the
+  tag — so editing one book's author refreshes just that book, while editing the prompt wording refreshes
+  all summaries.
+- LSJ was deliberately left out — it stores its summaries in the lexicon tables, not this cache table.
+- One-time cost: the first run after deploy clears the old-format rows, so everything cached before
+  regenerates once on next view. Unavoidable when changing the tagging scheme.
+- Verified locally without touching the real database: logic test on a throwaway copy + a full app boot
+  against a copy of the database (startup cleanup ran clean). Closes refactor backlog #4's cache half;
+  the paired prompt-STYLE cleanup is still open in TODO.md.
+  `code: core.py helpers, ai.py ~741-805, views_summary.py, views_crossref.py, views_metav.py, app.py startup`
+
+---
+
 ## Word click-targets ("dual-ordering") — mostly done
 
 The goal: when one slot bundled several English words, give each its own clickable chip while

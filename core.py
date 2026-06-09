@@ -10,10 +10,13 @@ The `_FUNCTION_STRONGS` set is declared here but POPULATED IN PLACE at startup b
 app.py's `_build_function_strongs_cache` (clear()+update(), never reassigned) so
 that `from core import _FUNCTION_STRONGS` references stay valid after the rebuild.
 """
+import hashlib
+import json
 import logging
 import os
 import re
 import sqlite3
+import time
 
 import anthropic
 from dotenv import load_dotenv
@@ -114,6 +117,97 @@ def db_ro():
     conn.create_function("strip_accents", 1, _strip_accents)
     conn.create_function("word_boundary", 2, _word_boundary_match)
     return conn
+
+
+# ── Unified AI-synthesis result cache ────────────────────────────────────────
+# Every Haiku-backed synthesis (search, summary, xref, metav person/place) stores
+# its rows in ai_search_cache with ver_key = "<category>:<fingerprint>", the
+# fingerprint being a hash of THAT synthesis's own prompt text. Editing a prompt
+# changes only its category's fingerprint, so only that cache lazily refreshes, and
+# each category prunes only its own stale rows. The row KEY (`query`) stays stable,
+# so a regenerate OVERWRITES the stale row in place (it's the PRIMARY KEY) instead
+# of leaving parallel old/new rows behind.
+
+def ai_fingerprint(category: str, *parts) -> str:
+    """'<category>:<16-hex sha1 of parts>'. `parts` = the prompt material that, when
+    edited, should invalidate this category's cache (system prompt + instruction
+    templates, plus any manual code-version salt for non-prompt logic changes)."""
+    raw = "|".join(str(p) for p in parts)
+    return f"{category}:{hashlib.sha1(raw.encode('utf-8')).hexdigest()[:16]}"
+
+
+def ai_cache_get(query: str, ver_key: str):
+    """Cached payload for (query, ver_key), or None. A row written under a DIFFERENT
+    ver_key (an older prompt) deliberately misses here so it regenerates."""
+    conn = db_ro()
+    try:
+        row = conn.execute(
+            "SELECT result_json FROM ai_search_cache WHERE query=? AND ver_key=?",
+            (query, ver_key),
+        ).fetchone()
+    finally:
+        conn.close()
+    if row:
+        try:
+            return json.loads(row["result_json"])
+        except Exception:
+            return None
+    return None
+
+
+def ai_cache_put(query: str, payload: dict, ver_key: str) -> None:
+    """Write one cache row (fire-and-forget; errors are logged only)."""
+    try:
+        conn = db()
+        conn.execute(
+            "INSERT OR REPLACE INTO ai_search_cache"
+            " (query, result_json, ver_key, created_at) VALUES (?,?,?,?)",
+            (query, json.dumps(payload), ver_key, time.time()),
+        )
+        conn.commit()
+        conn.close()
+    except Exception as exc:
+        log.warning("Could not persist %s cache entry: %s", ver_key.split(":", 1)[0], exc)
+
+
+def ai_cache_prune(category: str, keep_prefix: str) -> int:
+    """Delete this category's STALE rows — ver_key starting '<category>:' but not
+    under `keep_prefix` — and nothing else. `keep_prefix` is the current ver_key for
+    a single-version category (search/xref/pn), or the shared template prefix
+    'summary:<tpl>' for summaries (whose rows carry a per-book author suffix)."""
+    try:
+        conn = db()
+        n = conn.execute(
+            "DELETE FROM ai_search_cache"
+            " WHERE ver_key LIKE ? AND ver_key NOT LIKE ?",
+            (f"{category}:%", f"{keep_prefix}%"),
+        ).rowcount
+        conn.commit()
+        conn.close()
+        return n
+    except Exception as exc:
+        log.warning("Could not prune %s cache: %s", category, exc)
+        return 0
+
+
+def ai_cache_drop_legacy() -> int:
+    """One-time sweep of pre-unification rows. Every legacy ver_key is colonless
+    (bare-hex search hashes + the literals 'summary'/'xref'/'pn'); every new ver_key
+    is '<category>:<hash>'. So 'has no colon' cleanly identifies all old rows. They
+    would otherwise linger forever — get() filters on the new ver_key so they're
+    never served, and ai_cache_prune only matches '<category>:%'. Harmless to re-run
+    once they're gone (matches nothing)."""
+    try:
+        conn = db()
+        n = conn.execute(
+            "DELETE FROM ai_search_cache WHERE ver_key NOT LIKE '%:%'"
+        ).rowcount
+        conn.commit()
+        conn.close()
+        return n
+    except Exception as exc:
+        log.warning("Could not drop legacy cache rows: %s", exc)
+        return 0
 
 
 def _strongs_num(q: str):

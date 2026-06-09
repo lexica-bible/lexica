@@ -14,10 +14,8 @@ output + busts the prompt cache (the Phase-1 SUBSTR removal's separate follow-up
 Imports _lsj_concept_lookup/_format_lsj_context from views_lsj and
 _XREF_SYNTHESIS_SYSTEM from views_crossref (their primary-consumer homes).
 """
-import hashlib
 import json
 import re
-import time
 import traceback
 
 from flask import Blueprint, jsonify, request
@@ -25,6 +23,7 @@ from flask import Blueprint, jsonify, request
 from core import (
     log, db, db_ro, _anthropic, limiter, _FUNCTION_STRONGS,
     _serialize_word_core, _clean_gloss, _ai_cache, _KJV_BOOK_ID,
+    ai_fingerprint, ai_cache_put, ai_cache_prune,
 )
 from views_lsj import _lsj_concept_lookup, _format_lsj_context
 from views_crossref import _XREF_SYNTHESIS_SYSTEM
@@ -742,10 +741,11 @@ _CACHE_CODE_VER = 25
 
 
 def _get_ai_cache_ver() -> str:
-    """SHA1 of (system prompt template + book list + code version).
+    """'search:<hash>' over (system prompt template + book list + code version).
 
-    Automatically invalidates DB cache when books are added, the system
-    prompt changes, or _CACHE_CODE_VER is bumped.
+    Automatically invalidates the DB cache when books are added, the system
+    prompt changes, or _CACHE_CODE_VER is bumped. The 'search:' prefix is the
+    unified scheme (core.ai_fingerprint) so each category prunes only its own rows.
     """
     global _ai_cache_ver
     if _ai_cache_ver is not None:
@@ -757,8 +757,9 @@ def _get_ai_cache_ver() -> str:
         )
     finally:
         conn.close()
-    raw = _AI_SYSTEM_TMPL + f"|books={abbrevs}|cv={_CACHE_CODE_VER}"
-    _ai_cache_ver = hashlib.sha1(raw.encode()).hexdigest()[:16]
+    _ai_cache_ver = ai_fingerprint(
+        "search", _AI_SYSTEM_TMPL, f"books={abbrevs}", f"cv={_CACHE_CODE_VER}"
+    )
     return _ai_cache_ver
 
 
@@ -775,15 +776,11 @@ def _load_ai_cache_from_db() -> None:
                 _ai_cache[r["query"]] = json.loads(r["result_json"])
             except Exception:
                 pass
-        # Prune stale AI-search entries only; preserve named caches (e.g. "xref",
-        # "summary" — book/chapter blurbs that rarely change and are costly to redo).
-        deleted = conn.execute(
-            "DELETE FROM ai_search_cache"
-            " WHERE ver_key != ? AND ver_key NOT LIKE 'xref%' AND ver_key != 'summary'",
-            (ver,)
-        ).rowcount
-        conn.commit()
         conn.close()
+        # Prune ONLY this category's stale rows. Each other synthesis (summary, xref,
+        # pn) prunes its own at startup, so we no longer carve them out by name here —
+        # that old NOT-LIKE list is exactly what would wipe them under the new tags.
+        deleted = ai_cache_prune("search", ver)
         log.info(
             "AI cache: loaded %d entries (ver=%s), pruned %d stale",
             len(rows), ver, deleted,
@@ -794,19 +791,7 @@ def _load_ai_cache_from_db() -> None:
 
 def _persist_ai_cache(query: str, payload: dict) -> None:
     """Write a single cache entry to the DB (fire-and-forget; errors are logged only)."""
-    ver = _get_ai_cache_ver()
-    try:
-        conn = db()
-        conn.execute(
-            """INSERT OR REPLACE INTO ai_search_cache
-               (query, result_json, ver_key, created_at)
-               VALUES (?, ?, ?, ?)""",
-            (query, json.dumps(payload), ver, time.time()),
-        )
-        conn.commit()
-        conn.close()
-    except Exception as exc:
-        log.warning("Could not persist AI cache entry: %s", exc)
+    ai_cache_put(query, payload, _get_ai_cache_ver())
 
 
 @bp.route("/api/ai-search")
