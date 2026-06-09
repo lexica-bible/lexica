@@ -272,21 +272,21 @@ def lexicon_english():
                             and not (r["sbase"].startswith("G")
                                      and r["sbase"][1:] in _FUNCTION_STRONGS)]
 
-        abp_snums = [r["sbase"] for r in abp_rows]
-        heb_snums = [r["sbase"] for r in heb_rows]
-        abp_glosses = _top_glosses_abp(abp_snums)
-        heb_glosses = _top_glosses_heb(heb_snums)
+        all_snums = [r["sbase"] for r in abp_rows] + [r["sbase"] for r in heb_rows]
+        # Row COUNT stays native-per-corpus (Greek from ABP, Hebrew from KJV — we
+        # do NOT sum those; summing double-counts the shared Greek NT). But the
+        # row's rendering PREVIEW merges BOTH Bibles' wordings for that number
+        # (ABP "phantom" + KJV "spirit") so each row shows the full sense at a
+        # glance. Counts here only order the preview; they're not displayed. The
+        # ABP/KJV filters stay single-Bible — only 'all' merges both maps.
+        abp_gmap = _top_glosses_abp(all_snums) if corpus in ("abp", "all") else {}
+        kjv_gmap = _top_glosses_heb(all_snums) if corpus in ("kjv", "all") else {}
 
-        # Native-per-strongs: each number counts from its own corpus (Greek from
-        # ABP, Hebrew from KJV). In 'all' the two lists are disjoint (ABP Greek +
-        # KJV Hebrew), so we do NOT sum — summing would double-count the Greek NT,
-        # which appears in both ABP and the KJV. Glosses are normalized so
-        # case/whitespace/punct variants collapse to one.
         results = []
-        def _emit(rows, gmap):
+        def _emit(rows):
             for r in rows:
                 gl = {}
-                for g in gmap.get(r["sbase"], []):
+                for g in abp_gmap.get(r["sbase"], []) + kjv_gmap.get(r["sbase"], []):
                     key = _normalize_gloss(g["gloss"])
                     if key:
                         gl[key] = gl.get(key, 0) + g["count"]
@@ -295,8 +295,8 @@ def lexicon_english():
                 results.append({"strongs": r["sbase"], "lemma": r["lemma"] or "",
                                 "translit": r["translit"] or "", "count": r["cnt"],
                                 "glosses": glosses})
-        _emit(abp_rows, abp_glosses)
-        _emit(heb_rows, heb_glosses)
+        _emit(abp_rows)
+        _emit(heb_rows)
         results.sort(key=lambda x: -x["count"])
         return jsonify(results)
     finally:
