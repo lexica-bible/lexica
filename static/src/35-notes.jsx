@@ -43,10 +43,10 @@ function NotesPanel({ noteId, isMobile, onClose }) {
 
   useEffect(() => {
     setBody(note ? (note.body || "") : "");
-    requestAnimationFrame(() => taRef.current && taRef.current.focus());
+    // Desktop: focus the box right away. Mobile: DON'T — auto-popping the
+    // on-screen keyboard covers a freshly opened sheet. The user taps to type.
+    if (!isMobile) requestAnimationFrame(() => taRef.current && taRef.current.focus());
   }, [noteId]);
-
-  if (!note) return null;
 
   const save = () => { NotesStore.update(noteId, { body }); onClose(); };
   const del = () => { NotesStore.remove(noteId); onClose(); };
@@ -57,6 +57,10 @@ function NotesPanel({ noteId, isMobile, onClose }) {
     else if (body !== note.body) NotesStore.update(noteId, { body });
     onClose();
   };
+  // Swipe-down-to-close on mobile (same hook the word / xref / summary sheets use).
+  const { sheetRef, scrollRef } = useSwipeToDismiss(close);
+
+  if (!note) return null;
 
   const head = (
     <div className="detail-head">
@@ -67,7 +71,7 @@ function NotesPanel({ noteId, isMobile, onClose }) {
     </div>
   );
   const content = (
-    <div className="detail-body note-edit-body">
+    <div className="detail-body note-edit-body" ref={isMobile ? scrollRef : undefined}>
       {note.snippet && <blockquote className="note-snippet">“{note.snippet}”</blockquote>}
       <textarea
         ref={taRef}
@@ -87,7 +91,7 @@ function NotesPanel({ noteId, isMobile, onClose }) {
     return (
       <>
         <div className="sheet-scrim" onClick={close}/>
-        <aside className="detail detail-sheet note-sheet" role="dialog" aria-label="Note">
+        <aside ref={sheetRef} className="detail detail-sheet note-sheet" role="dialog" aria-label="Note">
           <div className="sheet-drag-zone" aria-hidden="true"><div className="sheet-handle"></div></div>
           {head}
           {content}

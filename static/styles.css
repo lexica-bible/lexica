@@ -2723,6 +2723,13 @@ input { font-family: inherit; }
   background: var(--paper);
 }
 .note-textarea:focus { outline: none; border-color: var(--gold); }
+/* Mobile: tall sheet with the writing box filling the top, so the on-screen
+   keyboard (which rises from the bottom) doesn't cover it. */
+@media (max-width: 1099px) {
+  .note-sheet { height: 80dvh; }
+  .note-sheet .note-edit-body { flex: 1; display: flex; flex-direction: column; }
+  .note-sheet .note-textarea { flex: 1; min-height: 120px; }
+}
 .note-actions { display: flex; gap: 8px; }
 .note-save, .note-del {
   border: none; border-radius: 8px; cursor: pointer;
