@@ -3,7 +3,8 @@
 *.db-wal
 __pycache__/
 *.pyc
-.claude/
+.claude/*
+!.claude/commands/
 .env
 assets/figma-design/
 assets/
