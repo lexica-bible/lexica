@@ -217,8 +217,11 @@ input { font-family: inherit; }
 .lexicon-result-count { font-family: var(--f-mono); font-size: 13px; color: var(--ink-2); font-variant-numeric: tabular-nums; }
 .lexicon-result-chev { color: var(--ink-3); font-size: 16px; line-height: 1; }
 .lexicon-result-preview { display: flex; flex-direction: column; gap: 2px; color: var(--ink-3); font-size: 13px; }
-.lex-prev-line { min-width: 0; }
+/* Flex row so a wrapped second line lines up under the renderings (not under
+   the ABP/KJV tag). */
+.lex-prev-line { display: flex; align-items: baseline; min-width: 0; }
 .lex-prev-tag {
+  flex-shrink: 0;
   font-family: var(--f-mono); font-size: 10px; color: var(--ink-2);
   background: var(--bg-sunk); border-radius: 3px; padding: 0 4px; margin-right: 6px;
 }
