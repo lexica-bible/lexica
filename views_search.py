@@ -23,9 +23,10 @@ bp = Blueprint("search", __name__)
 
 _search_cache: dict = {}        # in-memory lexicon search cache (q → payload)
 
-# Per-corpus verse-text tables for the Library plain-text search. ABP keeps the
-# verse text in `verses` (Greek) keyed by book abbreviation; KJV/BSB keep English
-# verse text keyed by the 1-66 book_id.
+# Per-corpus verse-text tables for the Library plain-text search. All three hold
+# the readable ENGLISH verse text: ABP's `verses.text` is the clean English prose
+# (populated by scripts/load_abp_prose.py), keyed by book abbreviation; KJV/BSB
+# keep their English verse text keyed by the 1-66 book_id.
 _TEXT_CORPORA = {
     # corpus: (table, book_col, chapter_col, verse_col, text_col, book_is_id)
     "abp": ("verses",     "book",    "chapter", "verse",     "text",       False),
@@ -43,8 +44,8 @@ def text_search():
     """eSword-style plain-text verse search over a single reading text.
 
     q       — the search text
-    corpus  — 'bsb' (default) | 'kjv' | 'abp', OR a non-canonical text id
-              (e.g. 'enoch', 'didache') — searches that text's English line
+    corpus  — 'bsb' (default) | 'kjv' | 'abp' (all search English verse text),
+              OR a non-canonical text id (e.g. 'enoch') — its English line
     mode    — 'phrase' (default: words together) | 'all' (every word, any order)
     book    — optional book abbreviation (e.g. 'Joh') to limit to one book
               (ignored for non-canonical texts, which are a single book)
