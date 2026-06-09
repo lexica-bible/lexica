@@ -1091,35 +1091,36 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
     return englishWords.map((w, i) => {
       const text = w.english || "";
       if (!text) return null;
+      const hc = hiClass(v.verse, w.position);   // highlight paint for this word
       const isPunct = /^[.,;:?!—)]/.test(text);
-      if (isPunct) return <span key={i}>{text}</span>;
+      if (isPunct) return <span key={i} data-note-pos={w.position} className={hc || undefined}>{text}</span>;
       if (text.includes(' ')) {
         if (w.italic_words) {
           const iset = new Set(w.italic_words.split(','));
           return (
-            <React.Fragment key={i}>
+            <span key={i} data-note-pos={w.position} className={hc || undefined}>
               {text.split(' ').filter(Boolean).map((word, pi) => {
                 const bare = word.replace(/[^\w]/g,'').toLowerCase();
                 return <span key={pi} className={iset.has(bare) ? "lib-prose-italic" : undefined}>{word}{" "}</span>;
               })}
-            </React.Fragment>
+            </span>
           );
         }
         if (w.italic) {
           const headBare = w.english_head ? w.english_head.replace(/[^\w]/g,'').toLowerCase() : null;
           return (
-            <React.Fragment key={i}>
+            <span key={i} data-note-pos={w.position} className={hc || undefined}>
               {text.split(' ').filter(Boolean).map((word, pi) => {
                 const bare = word.replace(/[^\w]/g,'').toLowerCase();
                 const isItalic = !headBare || bare === headBare;
                 return <span key={pi} className={isItalic ? "lib-prose-italic" : undefined}>{word}{" "}</span>;
               })}
-            </React.Fragment>
+            </span>
           );
         }
-        return <span key={i}>{text + " "}</span>;
+        return <span key={i} data-note-pos={w.position} className={hc || undefined}>{text + " "}</span>;
       }
-      return <span key={i} data-note-pos={w.position} className={(!!w.italic ? "lib-prose-italic" : "") + hiClass(v.verse, w.position)}>{text + " "}</span>;
+      return <span key={i} data-note-pos={w.position} className={(!!w.italic ? "lib-prose-italic" : "") + hc}>{text + " "}</span>;
     });
   };
 
@@ -1148,6 +1149,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
         const italicSet = new Set(w.italic_words.split(','));
         const smcapSet  = w.smcap_words ? new Set(w.smcap_words.split(',')) : new Set();
         const parts = w.english.split(' ');
+        const hc = hiClass(v.verse, w.position);
         return (
           <React.Fragment key={key}>
             {(() => {
@@ -1155,7 +1157,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
               return parts.map((word, pi) => {
                 const bare = word.replace(/[^\w]/g, '').toLowerCase();
                 if (italicSet.has(bare)) {
-                  return <span key={`${key}-p${pi}`} className={"lib-word lib-abp-italic" + (smcapSet.has(bare) ? " lib-smcap" : "")}>
+                  return <span key={`${key}-p${pi}`} className={"lib-word lib-abp-italic" + (smcapSet.has(bare) ? " lib-smcap" : "") + hc}>
                     {showInterlinear && <span className="lib-iw-greek" style={{visibility:"hidden"}}>x</span>}
                     <span className="lib-iw-english">{word}</span>
                     {showStrongs && <span className="lib-iw-strongs" style={{visibility:"hidden"}}>G0</span>}
@@ -1164,7 +1166,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
                 const isSmcap = smcapSet.has(bare);
                 return (
                   <span key={`${key}-p${pi}`}
-                    className={"lib-word" + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "")}
+                    className={"lib-word" + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "") + hc}
                     onClick={clickable ? () => onWordClick(isPN ? { ...makeEntry(w), isPN: true, pnName: w.english || w.english_head } : makeEntry(w)) : undefined}>
                     {showInterlinear && (pi === anchorIdx && w.lemma
                       ? <span className="lib-iw-greek">{w.lemma}</span>
@@ -1211,12 +1213,13 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
         const smcapSet  = w.smcap_words ? new Set(w.smcap_words.split(',')) : new Set();
         const parts = w.english.split(' ');
         const anchorIdx = strongsAnchorIndex(parts, italicSet, w);
+        const hc = hiClass(v.verse, w.position);
         return (
           <React.Fragment key={key}>
             {parts.map((word, pi) => {
               const bare = word.replace(/[^\w]/g, '').toLowerCase();
               if (italicSet.has(bare)) {
-                return <span key={`${key}-p${pi}`} className={"lib-word lib-word-bracketed lib-abp-italic" + (smcapSet.has(bare) ? " lib-smcap" : "")}>
+                return <span key={`${key}-p${pi}`} className={"lib-word lib-word-bracketed lib-abp-italic" + (smcapSet.has(bare) ? " lib-smcap" : "") + hc}>
                   {showInterlinear && <span className="lib-iw-greek" style={{visibility:"hidden"}}>x</span>}
                   <span className="lib-iw-pos-english">
                     {pi === 0 && w.greek_pos !== null && w.greek_pos !== undefined &&
@@ -1229,7 +1232,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
               const isSmcap = smcapSet.has(bare);
               return (
                 <span key={`${key}-p${pi}`}
-                  className={"lib-word lib-word-bracketed" + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "")}
+                  className={"lib-word lib-word-bracketed" + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "") + hc}
                   onClick={clickable ? () => onWordClick(isPN ? { ...makeEntry(w), isPN: true, pnName: w.english || w.english_head } : makeEntry(w)) : undefined}>
                   {showInterlinear && (pi === anchorIdx && w.lemma
                     ? <span className="lib-iw-greek">{w.lemma}</span>

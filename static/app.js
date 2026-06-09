@@ -4600,15 +4600,20 @@ function LibraryView({
     return englishWords.map((w, i) => {
       const text = w.english || "";
       if (!text) return null;
+      const hc = hiClass(v.verse, w.position); // highlight paint for this word
       const isPunct = /^[.,;:?!—)]/.test(text);
       if (isPunct) return /*#__PURE__*/React.createElement("span", {
-        key: i
+        key: i,
+        "data-note-pos": w.position,
+        className: hc || undefined
       }, text);
       if (text.includes(' ')) {
         if (w.italic_words) {
           const iset = new Set(w.italic_words.split(','));
-          return /*#__PURE__*/React.createElement(React.Fragment, {
-            key: i
+          return /*#__PURE__*/React.createElement("span", {
+            key: i,
+            "data-note-pos": w.position,
+            className: hc || undefined
           }, text.split(' ').filter(Boolean).map((word, pi) => {
             const bare = word.replace(/[^\w]/g, '').toLowerCase();
             return /*#__PURE__*/React.createElement("span", {
@@ -4619,8 +4624,10 @@ function LibraryView({
         }
         if (w.italic) {
           const headBare = w.english_head ? w.english_head.replace(/[^\w]/g, '').toLowerCase() : null;
-          return /*#__PURE__*/React.createElement(React.Fragment, {
-            key: i
+          return /*#__PURE__*/React.createElement("span", {
+            key: i,
+            "data-note-pos": w.position,
+            className: hc || undefined
           }, text.split(' ').filter(Boolean).map((word, pi) => {
             const bare = word.replace(/[^\w]/g, '').toLowerCase();
             const isItalic = !headBare || bare === headBare;
@@ -4631,13 +4638,15 @@ function LibraryView({
           }));
         }
         return /*#__PURE__*/React.createElement("span", {
-          key: i
+          key: i,
+          "data-note-pos": w.position,
+          className: hc || undefined
         }, text + " ");
       }
       return /*#__PURE__*/React.createElement("span", {
         key: i,
         "data-note-pos": w.position,
-        className: (!!w.italic ? "lib-prose-italic" : "") + hiClass(v.verse, w.position)
+        className: (!!w.italic ? "lib-prose-italic" : "") + hc
       }, text + " ");
     });
   };
@@ -4670,6 +4679,7 @@ function LibraryView({
         const italicSet = new Set(w.italic_words.split(','));
         const smcapSet = w.smcap_words ? new Set(w.smcap_words.split(',')) : new Set();
         const parts = w.english.split(' ');
+        const hc = hiClass(v.verse, w.position);
         return /*#__PURE__*/React.createElement(React.Fragment, {
           key: key
         }, (() => {
@@ -4679,7 +4689,7 @@ function LibraryView({
             if (italicSet.has(bare)) {
               return /*#__PURE__*/React.createElement("span", {
                 key: `${key}-p${pi}`,
-                className: "lib-word lib-abp-italic" + (smcapSet.has(bare) ? " lib-smcap" : "")
+                className: "lib-word lib-abp-italic" + (smcapSet.has(bare) ? " lib-smcap" : "") + hc
               }, showInterlinear && /*#__PURE__*/React.createElement("span", {
                 className: "lib-iw-greek",
                 style: {
@@ -4697,7 +4707,7 @@ function LibraryView({
             const isSmcap = smcapSet.has(bare);
             return /*#__PURE__*/React.createElement("span", {
               key: `${key}-p${pi}`,
-              className: "lib-word" + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : ""),
+              className: "lib-word" + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "") + hc,
               onClick: clickable ? () => onWordClick(isPN ? {
                 ...makeEntry(w),
                 isPN: true,
@@ -4767,6 +4777,7 @@ function LibraryView({
         const smcapSet = w.smcap_words ? new Set(w.smcap_words.split(',')) : new Set();
         const parts = w.english.split(' ');
         const anchorIdx = strongsAnchorIndex(parts, italicSet, w);
+        const hc = hiClass(v.verse, w.position);
         return /*#__PURE__*/React.createElement(React.Fragment, {
           key: key
         }, parts.map((word, pi) => {
@@ -4774,7 +4785,7 @@ function LibraryView({
           if (italicSet.has(bare)) {
             return /*#__PURE__*/React.createElement("span", {
               key: `${key}-p${pi}`,
-              className: "lib-word lib-word-bracketed lib-abp-italic" + (smcapSet.has(bare) ? " lib-smcap" : "")
+              className: "lib-word lib-word-bracketed lib-abp-italic" + (smcapSet.has(bare) ? " lib-smcap" : "") + hc
             }, showInterlinear && /*#__PURE__*/React.createElement("span", {
               className: "lib-iw-greek",
               style: {
@@ -4796,7 +4807,7 @@ function LibraryView({
           const isSmcap = smcapSet.has(bare);
           return /*#__PURE__*/React.createElement("span", {
             key: `${key}-p${pi}`,
-            className: "lib-word lib-word-bracketed" + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : ""),
+            className: "lib-word lib-word-bracketed" + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "") + hc,
             onClick: clickable ? () => onWordClick(isPN ? {
               ...makeEntry(w),
               isPN: true,
