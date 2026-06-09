@@ -85,6 +85,36 @@ def _normalize_gloss(raw, is_func=False):
     return words[0]
 
 
+def _fold_glosses(pairs, is_func=False, drop_singletons=False, limit=None):
+    """Normalize + merge (gloss, count) pairs into a sorted rendering list.
+
+    Shared by the search list and the word page. `pairs` is any iterable of
+    (raw_gloss, count). `is_func` routes function-word normalization;
+    `drop_singletons` trims one-off filler renderings (word page only — see the
+    inline notes); `limit` caps the list (search list shows a preview, the word
+    page shows all).
+    """
+    counts = {}
+    for gloss, cnt in pairs:
+        key = _normalize_gloss(gloss, is_func=is_func)
+        if key:
+            counts[key] = counts.get(key, 0) + cnt
+    items = sorted(counts.items(), key=lambda x: -x[1])
+    if drop_singletons:
+        if is_func:
+            # Function word used thousands of times: a one-off rendering is noise.
+            items = [(g, c) for g, c in items if c > 1]
+        else:
+            # Content word: drop a one-off that is ITSELF only a filler word
+            # (a mis-tagged row with no content English to fall back to); keep
+            # genuine rare content renderings.
+            _filler = _GLOSS_FUNC | _GLOSS_STRONG | _GLOSS_WEAK
+            items = [(g, c) for g, c in items if not (c == 1 and g in _filler)]
+    if limit is not None:
+        items = items[:limit]
+    return [{"gloss": g, "count": c} for g, c in items]
+
+
 @bp.route("/api/lexicon/lookup")
 def lexicon_lookup():
     q = request.args.get("q", "").strip()
@@ -280,22 +310,16 @@ def lexicon_english():
         abp_gmap = _top_glosses_abp(all_snums) if corpus in ("abp", "all") else {}
         kjv_gmap = _top_glosses_heb(all_snums) if corpus in ("kjv", "all") else {}
 
-        def _norm_list(rows):
-            gl = {}
-            for g in rows:
-                key = _normalize_gloss(g["gloss"])
-                if key:
-                    gl[key] = gl.get(key, 0) + g["count"]
-            return sorted(({"gloss": k, "count": c} for k, c in gl.items()),
-                          key=lambda x: -x["count"])[:8]
+        def _fold(gmap, sbase):
+            return _fold_glosses(((g["gloss"], g["count"]) for g in gmap.get(sbase, [])), limit=8)
 
         results = []
         def _emit(rows):
             for r in rows:
                 results.append({"strongs": r["sbase"], "lemma": r["lemma"] or "",
                                 "translit": r["translit"] or "", "count": r["cnt"],
-                                "abp_glosses": _norm_list(abp_gmap.get(r["sbase"], [])),
-                                "kjv_glosses": _norm_list(kjv_gmap.get(r["sbase"], []))})
+                                "abp_glosses": _fold(abp_gmap, r["sbase"]),
+                                "kjv_glosses": _fold(kjv_gmap, r["sbase"])})
         _emit(abp_rows)
         _emit(heb_rows)
         results.sort(key=lambda x: -x["count"])
@@ -396,34 +420,14 @@ def lexicon_profile(strongs):
         # connector inside the phrase, not the content word english_head picked.
         is_func = (not is_heb) and snum in _FUNCTION_STRONGS
 
-        def _norm_glosses(gloss_rows):
-            norm_counts = {}
-            for r in gloss_rows:
-                if not r["gloss"] or r["gloss"] in ("*", ""):
-                    continue
-                key = _normalize_gloss(r["gloss"], is_func=is_func)
-                if key:
-                    norm_counts[key] = norm_counts.get(key, 0) + r["cnt"]
-            items = sorted(norm_counts.items(), key=lambda x: -x[1])
-            # A few function-word rows carry a stray bare content gloss
-            # ("blessing") from bracket/gloss mis-splits. In a word used
-            # thousands of times a one-off rendering is noise, so drop
-            # singletons for function words. Content words keep everything —
-            # a rare rendering there is meaningful. (A one-off rendering that
-            # is ITSELF nothing but a filler word comes from a mis-tagged row
-            # with no content English to fall back to — drop those too.)
-            if is_func:
-                items = [(g, c) for g, c in items if c > 1]
-            else:
-                _filler = _GLOSS_FUNC | _GLOSS_STRONG | _GLOSS_WEAK
-                items = [(g, c) for g, c in items if not (c == 1 and g in _filler)]
-            return [{"gloss": g, "count": c} for g, c in items]
-
         # Each Bible's own renderings, so the word page can show both at once
         # (ABP says "phantom", KJV says "spirit"). The active toggle still drives
         # `glosses` (the interactive list). Profile corpus is only ever abp/kjv.
-        abp_glosses = _norm_glosses(_abp_gloss_rows())
-        kjv_glosses = _norm_glosses(_kjv_gloss_rows())
+        def _fold(rows):
+            return _fold_glosses(((r["gloss"], r["cnt"]) for r in rows),
+                                 is_func=is_func, drop_singletons=True)
+        abp_glosses = _fold(_abp_gloss_rows())
+        kjv_glosses = _fold(_kjv_gloss_rows())
         glosses = abp_glosses if corpus == "abp" else kjv_glosses
         # Which corpora actually have this strongs (so the UI can gray unavailable
         # toggles). Checks real data — so backfilled proper-noun Hebrew (which DO
