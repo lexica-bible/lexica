@@ -25,6 +25,27 @@ bp = Blueprint("summary", __name__)
 _BOOK_RE = re.compile(r"^[A-Za-z0-9_]+$")      # route guard: canonical abbrevs are mixed-case (Gen, Joh)
 _EXTRA_BOOK_RE = re.compile(r"^[a-z0-9_]+$")   # stricter: table-name safe, used only when building <book>_verses
 
+# Traditionally recognized author per book, fed to Haiku so it names the writer
+# instead of hedging ("an apostolic witness…"). Only books with a well-established
+# attribution are listed; genuinely anonymous books (Job, Esther, Hebrews, the
+# Samuel–Kings histories) are intentionally omitted so nothing is fabricated.
+_BOOK_AUTHORS = {
+    "Gen": "Moses", "Exo": "Moses", "Lev": "Moses", "Num": "Moses", "Deu": "Moses",
+    "Jos": "Joshua", "Ezr": "Ezra", "Neh": "Nehemiah",
+    "Psa": "David and other psalmists", "Pro": "Solomon", "Ecc": "Solomon", "Son": "Solomon",
+    "Isa": "Isaiah", "Jer": "Jeremiah", "Lam": "Jeremiah", "Eze": "Ezekiel", "Dan": "Daniel",
+    "Hos": "Hosea", "Joe": "Joel", "Amo": "Amos", "Oba": "Obadiah", "Jon": "Jonah",
+    "Mic": "Micah", "Nah": "Nahum", "Hab": "Habakkuk", "Zep": "Zephaniah",
+    "Hag": "Haggai", "Zec": "Zechariah", "Mal": "Malachi",
+    "Mat": "Matthew", "Mar": "Mark", "Luk": "Luke", "Joh": "the apostle John",
+    "Act": "Luke", "Rom": "Paul", "1Co": "Paul", "2Co": "Paul", "Gal": "Paul",
+    "Eph": "Paul", "Php": "Paul", "Col": "Paul", "1Th": "Paul", "2Th": "Paul",
+    "1Ti": "Paul", "2Ti": "Paul", "Tit": "Paul", "Phm": "Paul",
+    "Jas": "James", "1Pe": "Peter", "2Pe": "Peter",
+    "1Jn": "the apostle John", "2Jn": "the apostle John", "3Jn": "the apostle John",
+    "Jud": "Jude", "Rev": "the apostle John",
+}
+
 
 _SUMMARY_SYSTEM = """\
 You are a textual scholar working from a Berean approach: the text speaks first. \
@@ -196,17 +217,22 @@ def reading_summary(book, chapter):
     finally:
         conn.close()
 
+    author = _BOOK_AUTHORS.get(book)
+    author_line = (
+        f'The traditionally recognized author of this book is {author} — '
+        f'name them by name as the writer (do not hedge as "an unnamed writer" or '
+        f'"an apostolic witness"), even though the text itself may not name them. '
+    ) if author else ""
+
     # Book blurb — generate if not already cached.
     if book_payload is None:
         if opening:
             text = _haiku(
                 _SUMMARY_SYSTEM,
-                f'Below is the opening of the book "{name}". In 1 to 2 sentences, '
-                f'orient a reader to what this book is and its overall concern. Where '
-                f'it is well established, name the traditionally recognized author and '
-                f'intended audience (for example, the apostle John, or Paul writing to a '
-                f'church), even though the opening text may not name them. Do not retell '
-                f'the opening verses.\n\nOpening text:\n{opening}',
+                f'Below is the opening of the book "{name}". {author_line}In 1 to 2 '
+                f'sentences, orient a reader to what this book is, its author and '
+                f'intended audience, and its overall concern. Do not retell the opening '
+                f'verses.\n\nOpening text:\n{opening}',
                 max_tokens=160,
             )
         else:
@@ -220,11 +246,12 @@ def reading_summary(book, chapter):
         if chap_block:
             text = _haiku(
                 _SUMMARY_SYSTEM,
-                f'Below is one chapter of "{name}". The lines marked '
+                f'Below is one chapter of "{name}". {author_line}The lines marked '
                 f'"[Section: ...]" are the natural section breaks in this chapter — '
                 f'let your summary follow those sections in order rather than fighting '
                 f'the chapter boundary. Write 3 to 4 sentences summarizing what '
-                f'happens in this chapter, anchored in the text.\n\n{chap_block}',
+                f'happens in this chapter, anchored in the text. When you refer to the '
+                f'writer, use the author\'s name.\n\n{chap_block}',
                 max_tokens=320,
             )
         else:
