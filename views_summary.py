@@ -51,7 +51,7 @@ _BOOK_AUTHORS = {
 # keys, so a bump makes every cached summary miss and lazily regenerate on next
 # view (old rows just go unreferenced; nothing is wiped). v2: tell Haiku not to
 # skip a chapter's distinctive/unusual events (Gen 6 sons of God / Nephilim).
-_SUMMARY_VER = 4
+_SUMMARY_VER = 5
 
 _SUMMARY_SYSTEM = """\
 You are a textual scholar working from a Berean approach: the text speaks first. \
@@ -263,7 +263,7 @@ def reading_summary(book, chapter):
                 f'are strange or supernatural; report them plainly rather than '
                 f'softening or omitting them. When you refer to the writer, use the '
                 f'author\'s name.\n\n{chap_block}',
-                max_tokens=320,
+                max_tokens=480,   # room for up to 5 sentences (3-4 @ 320 truncated long chapters)
             )
         else:
             text = None
