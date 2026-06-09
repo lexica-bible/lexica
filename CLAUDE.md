@@ -203,7 +203,10 @@ scripts/          # build-frontend.js + one-time import/migration scripts
 ## TSK Cross-Reference Panel
 - Endpoint: GET /api/cross-references/curated/<book>/<chapter>/<verse>
 - Step 1: Haiku selects 8-10 strongest refs from full TSK list
-- Step 2: Haiku generates 3-sentence synthesis anchored in ABP source vocabulary
+- Step 2: Sonnet (claude-sonnet-4-6) writes the synthesis — adaptive length (~100-word soft
+  ceiling, runs longer for a rich link), anchored in ABP source vocabulary. Prompt carries a
+  worked example. (Moved off Haiku 2026-06-09 — ONLY the synthesis is Sonnet; the Step-1 picker
+  and every other AI feature stay on Haiku.)
 - Cached in ai_search_cache, key prefix `xref_cur:`/`xref_synth:`, ver_key=`xref:<hash>`
   (fingerprint of the two xref prompts — see "AI result cache" below)
 
