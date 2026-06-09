@@ -45,11 +45,11 @@ Still open:
 
 - **Notes feature.** Let the user write and save their own study notes (per verse / passage),
   viewable and searchable later. Design + storage TBD — next session.
-- **BSB frontend (backend done, 2026-06-08, commit `35ba610`).** Berean Standard Bible reading
-  text + plain-text search are loaded and served (`scripts/load_bsb.py`, `views_bsb.py`,
-  `/api/bsb/chapter` + `/api/bsb/search`). STILL OPEN: wire BSB into the Library corpus toggle
-  (read + parallel) and add the eSword-style text-search UI to the Search tab.
-  `code: static/src/60-library.jsx (toggle), static/src/70-search.jsx (text find)`
+- ~~**BSB (Berean Standard Bible).**~~ **DONE 2026-06-08.** Public-domain modern reading text
+  alongside ABP/KJV. Loaded by `scripts/load_bsb.py` into `bsb_verses`; served by `views_bsb.py`
+  (`/api/bsb/chapter`). Added as a third reading text in the Library toggle (commit `4c88501`), and
+  an eSword-style in-text search box in the Library that searches whichever text you're reading via
+  the generic `/api/text-search` (commit `05fe6d5`). No word-level/Strong's data by design.
 
 ---
 
