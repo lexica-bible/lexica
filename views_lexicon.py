@@ -243,11 +243,7 @@ def lexicon_english():
                         if r["sbase"][1:] not in _FUNCTION_STRONGS]
 
         if corpus in ("kjv", "all"):
-            # KJV words → strongs. In 'kjv' mode include BOTH NT Greek (G) and OT
-            # Hebrew (H). In 'all' mode restrict to Hebrew (H) — the ABP rows above
-            # already carry the Greek (LXX OT + Greek NT), and the KJV NT is the
-            # SAME Greek text, so including G here would double-count it.
-            kjv_filter = "AND ks.strongs_id LIKE 'H%'" if corpus == "all" else ""
+            # KJV words → strongs: BOTH NT Greek (G) and OT Hebrew (H).
             heb_rows = conn.execute(f"""
                 SELECT ks.strongs_id AS sbase,
                        COALESCE(l.lemma, b.lemma)   AS lemma,
@@ -260,11 +256,21 @@ def lexicon_english():
                 WHERE kw.word = ? COLLATE NOCASE
                   AND (kw.italic IS NULL OR kw.italic = 0)
                   {_kjv_where}
-                  {kjv_filter}
                 GROUP BY ks.strongs_id
                 ORDER BY cnt DESC
                 LIMIT 10
             """, (q,)).fetchall()
+            if corpus == "all":
+                # ABP already carries Greek via its own english_head (LXX OT + NT,
+                # counted natively). Drop KJV Greek numbers ABP already listed so a
+                # word never appears twice, but KEEP KJV Greek whose ABP gloss
+                # differs (e.g. G4352 προσκυνέω — ABP head isn't "worship") so 'All'
+                # is a true superset. Also drop Greek function words, as ABP does.
+                abp_set = {r["sbase"] for r in abp_rows}
+                heb_rows = [r for r in heb_rows
+                            if r["sbase"] not in abp_set
+                            and not (r["sbase"].startswith("G")
+                                     and r["sbase"][1:] in _FUNCTION_STRONGS)]
 
         abp_snums = [r["sbase"] for r in abp_rows]
         heb_snums = [r["sbase"] for r in heb_rows]
