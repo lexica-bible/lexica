@@ -4774,9 +4774,9 @@ function LibraryView({
         ref: isHighlight ? highlightRef : null,
         "data-note-verse": v.verse,
         className: "lib-verse-row" + (isHighlight ? " lib-highlight" : "")
-      }, vnumEl(v.verse), noteMarker(v.verse), /*#__PURE__*/React.createElement("span", {
+      }, vnumEl(v.verse), /*#__PURE__*/React.createElement("span", {
         className: "lib-verse-content"
-      }, renderProseWords(v))));
+      }, noteMarker(v.verse), renderProseWords(v))));
     }
 
     // Chip mode — always Greek syntactic order with bracket notation
@@ -4878,9 +4878,9 @@ function LibraryView({
       ref: isHighlight ? highlightRef : null,
       "data-note-verse": v.verse,
       className: "lib-verse-row" + (isHighlight ? " lib-highlight" : "")
-    }, vnumEl(v.verse), noteMarker(v.verse), /*#__PURE__*/React.createElement("span", {
+    }, vnumEl(v.verse), /*#__PURE__*/React.createElement("span", {
       className: "lib-verse-content lib-verse-chips"
-    }, content)));
+    }, noteMarker(v.verse), content)));
   };
   const renderKjvVerse = (v, showVerseNum = true, skipHeading = false) => {
     const isHighlight = nav && nav.highlight === v.verse && (nav.chapter == null || nav.chapter === selChapter);
@@ -4915,9 +4915,9 @@ function LibraryView({
       ref: isHighlight ? highlightRef : null,
       "data-note-verse": v.verse,
       className: "lib-verse-row" + (isHighlight ? " lib-highlight" : "")
-    }, showVerseNum && vnumEl(v.verse), showVerseNum && noteMarker(v.verse), /*#__PURE__*/React.createElement("span", {
+    }, showVerseNum && vnumEl(v.verse), /*#__PURE__*/React.createElement("span", {
       className: "lib-verse-content lib-verse-chips"
-    }, v.words.map((w, i) => {
+    }, showVerseNum && noteMarker(v.verse), v.words.map((w, i) => {
       const sid = w.strongs_ids && w.strongs_ids.length ? w.strongs_ids[0] : null;
       const clickable = !!(onWordClick && sid);
       const isHebrew = sid ? sid.startsWith("H") : false;
@@ -4963,9 +4963,9 @@ function LibraryView({
       ref: isHighlight ? highlightRef : null,
       "data-note-verse": v.verse,
       className: "lib-verse-row" + (isHighlight ? " lib-highlight" : "")
-    }, showVerseNum && vnumEl(v.verse), showVerseNum && noteMarker(v.verse), /*#__PURE__*/React.createElement("span", {
+    }, showVerseNum && vnumEl(v.verse), /*#__PURE__*/React.createElement("span", {
       className: "lib-verse-content"
-    }, v.words.map((w, i) => /*#__PURE__*/React.createElement("span", {
+    }, showVerseNum && noteMarker(v.verse), v.words.map((w, i) => /*#__PURE__*/React.createElement("span", {
       key: i,
       className: w.italic ? "lib-prose-italic" : undefined
     }, w.word, w.punc || "", " ")))));
@@ -4987,9 +4987,9 @@ function LibraryView({
       ref: isHighlight ? highlightRef : null,
       "data-note-verse": v.verse,
       className: "lib-verse-row" + (isHighlight ? " lib-highlight" : "")
-    }, vnumEl(v.verse), noteMarker(v.verse), /*#__PURE__*/React.createElement("span", {
+    }, vnumEl(v.verse), /*#__PURE__*/React.createElement("span", {
       className: "lib-verse-content"
-    }, v.verse_text)));
+    }, noteMarker(v.verse), v.verse_text)));
   };
 
   // Non-canonical reader (Didache, etc.). The Greek interlinear is the normal reading,

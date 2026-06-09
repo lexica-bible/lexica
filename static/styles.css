@@ -2684,18 +2684,20 @@ input { font-family: inherit; }
 .note-popover-mobile { box-shadow: 0 4px 24px rgba(0,0,0,0.35); }
 .note-popover-mobile .note-popover-btn { font-size: 15px; padding: 11px 22px; }
 
-/* Per-verse note marker — pulled out of the text flow into the left margin so
-   it never shifts the verse's wrapped lines. */
+/* Per-verse note marker — sits inline as the FIRST thing in the verse text, so
+   it indents only the first line; wrapped lines fall back to the left edge. */
 .lib-note-dot {
-  position: absolute; left: -11px; top: 6px; z-index: 3;
-  background: none; border: none; cursor: pointer; padding: 0;
-  color: var(--gold); line-height: 1;
+  background: none; border: none; cursor: pointer; padding: 2px 5px 2px 0;
+  color: var(--gold); line-height: 1; vertical-align: -2px;
   display: inline-flex; align-items: center;
 }
-.lib-note-dot svg { width: 12px; height: 12px; }
+.lib-note-dot svg { width: 13px; height: 13px; }
 .lib-note-dot:hover { color: var(--ink); }
-/* The running-prose marker stays inline — it flows with the text there. */
-.lib-note-dot-inline { position: static; margin: 0 2px; }
+.lib-note-dot-inline { margin: 0 2px; }
+@media (max-width: 1099px) {
+  .lib-note-dot { padding: 4px 8px 4px 2px; }   /* bigger tap target on phones */
+  .lib-note-dot svg { width: 15px; height: 15px; }
+}
 
 /* Note editor (reuses .detail shell) */
 .note-edit-body { display: flex; flex-direction: column; gap: 12px; }

@@ -1254,8 +1254,8 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
           <div ref={isHighlight ? highlightRef : null} data-note-verse={v.verse}
             className={"lib-verse-row" + (isHighlight ? " lib-highlight" : "")}>
             {vnumEl(v.verse)}
-            {noteMarker(v.verse)}
             <span className="lib-verse-content">
+              {noteMarker(v.verse)}
               {renderProseWords(v)}
             </span>
           </div>
@@ -1345,8 +1345,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
         <div ref={isHighlight ? highlightRef : null} data-note-verse={v.verse}
           className={"lib-verse-row" + (isHighlight ? " lib-highlight" : "")}>
           {vnumEl(v.verse)}
-          {noteMarker(v.verse)}
-          <span className="lib-verse-content lib-verse-chips">{content}</span>
+          <span className="lib-verse-content lib-verse-chips">{noteMarker(v.verse)}{content}</span>
         </div>
       </React.Fragment>
     );
@@ -1376,8 +1375,8 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
         <div ref={isHighlight ? highlightRef : null} data-note-verse={v.verse}
           className={"lib-verse-row" + (isHighlight ? " lib-highlight" : "")}>
         {showVerseNum && vnumEl(v.verse)}
-        {showVerseNum && noteMarker(v.verse)}
         <span className="lib-verse-content lib-verse-chips">
+          {showVerseNum && noteMarker(v.verse)}
           {v.words.map((w, i) => {
             const sid = w.strongs_ids && w.strongs_ids.length ? w.strongs_ids[0] : null;
             const clickable = !!(onWordClick && sid);
@@ -1415,8 +1414,8 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
         <div ref={isHighlight ? highlightRef : null} data-note-verse={v.verse}
           className={"lib-verse-row" + (isHighlight ? " lib-highlight" : "")}>
           {showVerseNum && vnumEl(v.verse)}
-          {showVerseNum && noteMarker(v.verse)}
           <span className="lib-verse-content">
+            {showVerseNum && noteMarker(v.verse)}
             {v.words.map((w, i) => (
               <span key={i} className={w.italic ? "lib-prose-italic" : undefined}>
                 {w.word}{w.punc || ""}{" "}
@@ -1437,8 +1436,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
         <div ref={isHighlight ? highlightRef : null} data-note-verse={v.verse}
           className={"lib-verse-row" + (isHighlight ? " lib-highlight" : "")}>
           {vnumEl(v.verse)}
-          {noteMarker(v.verse)}
-          <span className="lib-verse-content">{v.verse_text}</span>
+          <span className="lib-verse-content">{noteMarker(v.verse)}{v.verse_text}</span>
         </div>
       </React.Fragment>
     );
