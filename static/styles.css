@@ -1914,7 +1914,14 @@ input { font-family: inherit; }
   .mobile-brand-name { font-family: var(--f-serif); font-weight: 600; font-size: 17px; letter-spacing: -0.01em; color: #f6f7fa; }
   .mobile-brand-sub { font-size: 11px; color: #8a9ab8; letter-spacing: 0.01em; margin-left: 2px; }
   .lib-heading { display: none; }
-  .lib-reading { overflow-x: hidden; max-width: 100%; padding: 10px 12px; }
+  /* Fill the screen below the top chrome (section tabs 56px + lib toolbar 56px)
+     so a short chapter's empty space below the text is still part of the
+     page-turn swipe zone. */
+  .lib-reading {
+    overflow-x: hidden; max-width: 100%; padding: 10px 12px;
+    min-height: calc(100vh - 112px);
+    min-height: calc(100dvh - 112px);
+  }
   .lib-text-words { line-height: 1.65; }
   .lib-verse-row { margin-bottom: 3px; }
   .pericope-heading { text-align: center; }
