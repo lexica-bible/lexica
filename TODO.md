@@ -26,6 +26,52 @@ Still open:
    safety-check slice is in — the build's own guards are now unit-tested — but the actual one-clean-
    pass rewrite remains. Best done the next time a rebuild is genuinely needed, copy-first.)
    `code: scripts/build_words_from_abp.py + the fix_*.py chain (checklist in CLAUDE.md)`
+
+   **MODEL/EFFORT for this one (2026-06-09):** highest-stakes script in the repo — use Opus 4.8 at
+   HIGH effort. Do NOT hand a data rebuild to Fable 5 (newest ≠ safest for this). The safety is the
+   copy-first discipline + the audit gates, not the model. Ready-to-paste prompt for a fresh session:
+
+   ```
+   TASK: Rewrite the words-table rebuild so it gets the data right in ONE clean pass,
+   instead of the current "wipe everything, then run a long chain of fix_*.py patches to
+   repair it." This is refactor backlog #1 / code-health #1. The build is the riskiest
+   code in the repo — a bad run silently corrupts hundreds of thousands of word rows.
+
+   BEFORE WRITING ANY CODE, read and absorb:
+   - CLAUDE.md → the full "Words rebuild checklist" section (the canonical step order +
+     the exact fix_*.py chain and what each one does), the "strongs_base format — CRITICAL
+     INVARIANT" section, and the "Do Not" section.
+   - memory project_architecture_rework (#2 = this task), project_parser_number_reversal,
+     project_bracket_order_fix, project_corpus_audit, project_pronoun_fix_path_c.
+   - scripts/build_words_from_abp.py (the builder) and every fix_*.py the checklist names.
+
+   HARD CONSTRAINTS (violating any of these is a failure):
+   - COPY-FIRST ALWAYS. All work happens on PythonAnywhere against a COPY:
+     `cp bible.db bible_test.db`. NEVER run the rebuild against the live bible.db.
+     Never `DELETE FROM words` or `DELETE FROM verses` on the real DB.
+   - strongs_base MUST stay fully G/H-prefixed. After any build:
+     `SELECT count(*) FROM words WHERE strongs_base GLOB '[0-9]*'` MUST be 0.
+   - The single pass must reproduce the SAME end state as today's build+patch chain.
+     Some fixes are already folded into the build (the checklist marks which); some are
+     intentionally kept as data-patches (e.g. fix_split_merges, lord_oath, kyrios_mistags)
+     because doing them globally regresses other verses — DECIDE per fix whether it folds
+     into the one pass or must stay a patch, and justify each call.
+   - Validate ONLY with the existing read-only audits, at their known baselines:
+     health_check.py (≤ minor warnings), audit_bracket_order.py (CHIP genuine ≈ 0),
+     audit_corpus_tier1.py (A1 ≈ 176), audit_corpus_tier2.py (~92%),
+     scan_strongs_cross.py (FUNCTION-anchor 0), plus tests/test_build_invariants.py and
+     test_strongs_join.py. Counts to expect are in the checklist.
+
+   DELIVERABLE ORDER:
+   1. A written PLAN first (read-only): which patches fold into the build, which stay as
+      data-patches and why, the new single-pass step order, and the before/after validation
+      plan. Get it reviewed before touching code.
+   2. Only then implement, on bible_test.db, copy-first, validating against the audits at
+      each step. Keep a dated rollback copy. Do not deploy or touch the live DB.
+
+   Communication: plain English, no dev jargon (the user is a data-center engineer, not a
+   programmer). Show code before changing it. Ask before any large or destructive step.
+   ```
 2. ~~**Two near-identical "build a word entry" functions on the front end.**~~ **DONE 2026-06-08**
    (commit `007446c`). The three copy-pasted builders now share one core: `entrySnum()` +
    `wordEntryCore()` in static/src/00-core.jsx; makeEntry, flattenAiResults, and the library
