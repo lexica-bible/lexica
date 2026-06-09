@@ -21,6 +21,20 @@ function App() {
   const [libCrossRef, setLibCrossRef] = useState(null);
   const [lexiconPendingStrongs, setLexiconPendingStrongs] = useState(null);
   const [libTranslation, setLibTranslation] = useState("abp");
+  const [activeNote, setActiveNote] = useState(null);   // note id being edited
+
+  // Open a note's editor — closes the word / cross-ref panels so one panel owns the slot.
+  const openNote = (id) => { setActiveEntry(null); setLibCrossRef(null); setActiveNote(id); };
+  // From the Notes tab: jump to the verse in the Library, then open the editor.
+  const openNoteFromList = (n) => {
+    if (n.corpus === "bible") {
+      searchScrollRef.current = window.scrollY;
+      setLibEverVisited(true);
+      setMainView("library");
+      setLibNav({ book: n.book, chapter: n.chapter, highlight: n.start.verse, scroll: true, translation: n.translation === "kjv" ? "kjv" : "abp" });
+    }
+    openNote(n.id);
+  };
 
 
   useEffect(() => {
@@ -32,6 +46,7 @@ function App() {
 
   const handleVerseNumberClick = (book, chapter, verse, translation) => {
     setActiveEntry(null);
+    setActiveNote(null);
     setLibCrossRef({ book, chapter, verse, translation: translation || "abp" });
     setLibNav(prev => ({ ...(prev || {}), book, chapter, highlight: verse }));
   };
@@ -163,10 +178,10 @@ function App() {
   // book/chapter overview (SummaryPanel). It fills the same slot the word-study
   // and xref panels use, so `has-detail` stays on and the reading column keeps
   // its condensed (three-column) measure. Mobile never shows the summary.
-  const showLibSummary = !isMobile && mainView === "library" && !activeEntry && !libCrossRef;
+  const showLibSummary = !isMobile && mainView === "library" && !activeEntry && !libCrossRef && !activeNote;
 
   return (
-    <div className={"app view-" + mainView + " " + ((activeEntry || libCrossRef || showLibSummary) ? "has-detail" : "")}>
+    <div className={"app view-" + mainView + " " + ((activeEntry || libCrossRef || activeNote || showLibSummary) ? "has-detail" : "")}>
       <Header activeView={mainView} onNavChange={handleNavChange}/>
       {isMobile && mainView !== "library" && (
         <div className="mobile-brand-bar">
@@ -181,10 +196,11 @@ function App() {
       <main className="main">
         {libEverVisited && (
           <div style={{ display: mainView === "library" ? undefined : "none" }}>
-            <LibraryView nav={libNav} onNavChange={setLibNav} onWordClick={(e) => { setLibCrossRef(null); setActiveEntry(e); }} onVerseNumberClick={handleVerseNumberClick} onTranslationChange={setLibTranslation} isMobile={isMobile} showSummary={showLibSummary} />
+            <LibraryView nav={libNav} onNavChange={setLibNav} onWordClick={(e) => { setLibCrossRef(null); setActiveNote(null); setActiveEntry(e); }} onVerseNumberClick={handleVerseNumberClick} onOpenNote={openNote} onTranslationChange={setLibTranslation} isMobile={isMobile} showSummary={showLibSummary} />
           </div>
         )}
         {mainView === "about" && <AboutView />}
+        {mainView === "notes" && <NotesView onOpen={openNoteFromList} />}
         <div style={{ display: mainView === "lexicon" ? undefined : "none" }}>
           <LexiconView
             onNavigateToSearch={(q) => { handleNavChange("search"); setQ2(q); }}
@@ -200,7 +216,7 @@ function App() {
             isMobile={isMobile}
           />
         </div>
-        <div className="main-inner" style={{ display: (mainView === "library" || mainView === "about" || mainView === "lexicon") ? "none" : undefined }}>
+        <div className="main-inner" style={{ display: (mainView === "library" || mainView === "about" || mainView === "lexicon" || mainView === "notes") ? "none" : undefined }}>
           <><SearchBar
             q2={q2} setQ2={setQ2}
             onAiSearch={handleAiSearch}
@@ -315,6 +331,13 @@ function App() {
           />
         </>
       )}
+      {activeNote && (
+        <NotesPanel
+          noteId={activeNote}
+          isMobile={isMobile}
+          onClose={() => setActiveNote(null)}
+        />
+      )}
       {libCrossRef && !isMobile && (
         <CrossRefPanel
           source={libCrossRef}
@@ -362,6 +385,10 @@ function App() {
           <button className={"mobile-tab" + (mainView === "search" ? " active" : "")} onClick={() => handleNavChange("search")}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
             Search
+          </button>
+          <button className={"mobile-tab" + (mainView === "notes" ? " active" : "")} onClick={() => handleNavChange("notes")}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M6 3h12v18l-6-4-6 4z"/></svg>
+            Notes
           </button>
           <button className={"mobile-tab" + (mainView === "about" ? " active" : "")} onClick={() => handleNavChange("about")}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="8.5"/><line x1="12" y1="12" x2="12" y2="16"/></svg>

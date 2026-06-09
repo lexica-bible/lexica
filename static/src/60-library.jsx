@@ -602,7 +602,7 @@ function nonCanonGroups(list) {
 // ============================================================
 // LIBRARY VIEW
 // ============================================================
-function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTranslationChange, isMobile, showSummary }) {
+function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpenNote, onTranslationChange, isMobile, showSummary }) {
   const [books, setBooks] = useState([]);
   const [selBook, setSelBook] = useState(null);
   const [selChapter, setSelChapter] = useState(1);
@@ -630,6 +630,11 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
   const nonCanon = NONCANON.find(t => t.id === corpus) || null;
   const highlightRef = useRef(null);
   const navBookRef = useRef(null);
+  const readingRef = useRef(null);
+  // Drag-select-to-note: the floating "Add note" bar + the captured anchor.
+  const [noteSel, setNoteSel] = useState(null);   // { rect, anchor } | null
+  const justSelectedRef = useRef(false);            // suppress the click that follows a drag
+  useNotesVersion();                                // re-render markers when notes change
 
   useEffect(() => {
     if (!nav?.book || !navBookRef.current || nav.book !== selBook?.abbrev) return;
@@ -848,6 +853,8 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
     },
     onTouchEnd: (e) => {
       if (!swipeRef.current) return;
+      // If the touch produced a text selection (note-making), don't turn the page.
+      if (window.getSelection && String(window.getSelection()).trim()) { swipeRef.current = null; return; }
       const dx = e.changedTouches[0].clientX - swipeRef.current.x;
       const dy = e.changedTouches[0].clientY - swipeRef.current.y;
       swipeRef.current = null;
@@ -864,6 +871,88 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
       }
     },
   } : {};
+
+  // --- Drag-select → note ---------------------------------------------------
+  // Walk up from a selection edge to the nearest tagged verse row / word span.
+  const _attrUp = (node, attr) => {
+    let el = node && node.nodeType === 1 ? node : (node ? node.parentElement : null);
+    while (el && el !== readingRef.current && !(el.getAttribute && el.hasAttribute(attr))) el = el.parentElement;
+    return el && el.getAttribute ? el.getAttribute(attr) : null;
+  };
+  const resolveSelection = () => {
+    const sel = window.getSelection && window.getSelection();
+    if (!sel || sel.isCollapsed || !sel.rangeCount) { setNoteSel(null); return; }
+    const text = sel.toString().trim();
+    if (!text) { setNoteSel(null); return; }
+    const range = sel.getRangeAt(0);
+    if (!readingRef.current || !readingRef.current.contains(range.commonAncestorContainer)) { setNoteSel(null); return; }
+    const aV = _attrUp(range.startContainer, "data-note-verse");
+    const bV = _attrUp(range.endContainer, "data-note-verse");
+    if (aV == null && bV == null) { setNoteSel(null); return; }
+    let startV = parseInt(aV != null ? aV : bV, 10);
+    let endV = parseInt(bV != null ? bV : aV, 10);
+    const aP = _attrUp(range.startContainer, "data-note-pos");
+    const bP = _attrUp(range.endContainer, "data-note-pos");
+    let startP = aP != null ? parseInt(aP, 10) : null;
+    let endP = bP != null ? parseInt(bP, 10) : null;
+    if (startV > endV || (startV === endV && (startP || 0) > (endP || 0))) {
+      [startV, endV] = [endV, startV];
+      [startP, endP] = [endP, startP];
+    }
+    const bookId = nonCanon ? nonCanon.id : (selBook ? selBook.abbrev : null);
+    const bookName = nonCanon ? nonCanon.name : (selBook ? selBook.name : "");
+    if (!bookId) { setNoteSel(null); return; }
+    const refLabel = bookName + " " + selChapter + ":" + startV + (endV !== startV ? "–" + endV : "");
+    const r = range.getBoundingClientRect();
+    justSelectedRef.current = true;
+    setNoteSel({
+      rect: { top: r.top, left: r.left, width: r.width, height: r.height },
+      anchor: {
+        corpus, translation,
+        book: bookId, bookName, chapter: selChapter,
+        start: { verse: startV, pos: startP },
+        end: { verse: endV, pos: endP },
+        snippet: text.slice(0, 300), refLabel,
+      },
+    });
+  };
+  const addNoteFromSelection = () => {
+    if (!noteSel) return;
+    const note = NotesStore.create(noteSel.anchor);
+    setNoteSel(null);
+    if (window.getSelection) window.getSelection().removeAllRanges();
+    onOpenNote && onOpenNote(note.id);
+  };
+  // One handler set on the reading area: swipe (mobile) + selection (all).
+  const readingHandlers = {
+    ...swipeHandlers,
+    // A fresh press starts a new interaction: drop any open popover + the suppress flag.
+    onMouseDown: () => { if (noteSel) setNoteSel(null); justSelectedRef.current = false; },
+    onMouseUp: () => resolveSelection(),
+    onTouchEnd: (e) => {
+      if (swipeHandlers.onTouchEnd) swipeHandlers.onTouchEnd(e);
+      setTimeout(resolveSelection, 0);   // let the browser settle the selection first
+    },
+    onClickCapture: (e) => {
+      if (justSelectedRef.current) { justSelectedRef.current = false; e.stopPropagation(); e.preventDefault(); return; }
+      if (swipeHandlers.onClickCapture) swipeHandlers.onClickCapture(e);
+    },
+  };
+
+  // Note markers in the verse margin: notes anchored in the current chapter.
+  const chapterNotes = NotesStore.forChapter(corpus, nonCanon ? nonCanon.id : (selBook ? selBook.abbrev : null), selChapter);
+  const noteForVerse = (verse) =>
+    chapterNotes.find(n => verse >= n.start.verse && verse <= ((n.end && n.end.verse) || n.start.verse));
+  const noteMarker = (verse) => {
+    const n = noteForVerse(verse);
+    if (!n) return null;
+    return (
+      <button className="lib-note-dot" title="Open note" aria-label="Open note"
+        onClick={(e) => { e.stopPropagation(); onOpenNote && onOpenNote(n.id); }}>
+        <Icon.Bookmark/>
+      </button>
+    );
+  };
 
   const changeFontSize = (delta) => {
     setLibFontSize(prev => {
@@ -925,7 +1014,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
         }
         return <span key={i}>{text + " "}</span>;
       }
-      return <span key={i} className={!!w.italic ? "lib-prose-italic" : undefined}>{text + " "}</span>;
+      return <span key={i} data-note-pos={w.position} className={!!w.italic ? "lib-prose-italic" : undefined}>{text + " "}</span>;
     });
   };
 
@@ -992,7 +1081,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
       const label = (isPN && rawLabel && !rawLabel.includes(' ')) ? rawLabel[0].toUpperCase() + rawLabel.slice(1) : rawLabel;
       const isSmcap = w.smcap_words ? new Set(w.smcap_words.split(',')).has(label.replace(/[^\w]/g, '').toLowerCase()) : false;
       return (
-        <span key={key}
+        <span key={key} data-note-pos={w.position}
           className={"lib-word" + (w.italic ? " lib-abp-italic" : "") + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "")}
           onClick={clickable ? () => onWordClick(isPN ? { ...makeEntry(w), isPN: true, pnName: label, gloss: label } : makeEntry(w)) : undefined}>
           {showInterlinear && (w.lemma ? <span className="lib-iw-greek">{w.lemma}</span> : <span className="lib-iw-greek" style={{visibility:"hidden"}}>x</span>)}
@@ -1060,7 +1149,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
       const label = (isPN && rawLabel && !rawLabel.includes(' ')) ? rawLabel[0].toUpperCase() + rawLabel.slice(1) : rawLabel;
       const isSmcap = w.smcap_words ? new Set(w.smcap_words.split(',')).has(label.replace(/[^\w]/g, '').toLowerCase()) : false;
       return (
-        <span key={key}
+        <span key={key} data-note-pos={w.position}
           className={"lib-word lib-word-bracketed" + (w.italic ? " lib-abp-italic" : "") + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "")}
           onClick={clickable ? () => onWordClick(isPN ? { ...makeEntry(w), isPN: true, pnName: label, gloss: label } : makeEntry(w)) : undefined}>
           {showInterlinear && (w.lemma
@@ -1084,9 +1173,10 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
       return (
         <React.Fragment key={v.verse}>
           {!skipHeading && v.heading && <div className="lib-verse-row pericope-row"><span className="lib-vnum" aria-hidden="true"/><div className="pericope-heading">{v.heading}</div></div>}
-          <div ref={isHighlight ? highlightRef : null}
+          <div ref={isHighlight ? highlightRef : null} data-note-verse={v.verse}
             className={"lib-verse-row" + (isHighlight ? " lib-highlight" : "")}>
             {vnumEl(v.verse)}
+            {noteMarker(v.verse)}
             <span className="lib-verse-content">
               {renderProseWords(v)}
             </span>
@@ -1174,9 +1264,10 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
     return (
       <React.Fragment key={v.verse}>
         {!skipHeading && v.heading && <div className="lib-verse-row pericope-row"><span className="lib-vnum" aria-hidden="true"/><div className="pericope-heading">{v.heading}</div></div>}
-        <div ref={isHighlight ? highlightRef : null}
+        <div ref={isHighlight ? highlightRef : null} data-note-verse={v.verse}
           className={"lib-verse-row" + (isHighlight ? " lib-highlight" : "")}>
           {vnumEl(v.verse)}
+          {noteMarker(v.verse)}
           <span className="lib-verse-content lib-verse-chips">{content}</span>
         </div>
       </React.Fragment>
@@ -1204,9 +1295,10 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
     return (
       <React.Fragment key={v.verse}>
         {!skipHeading && v.heading && <div className="lib-verse-row pericope-row"><span className="lib-vnum" aria-hidden="true"/><div className="pericope-heading">{v.heading}</div></div>}
-        <div ref={isHighlight ? highlightRef : null}
+        <div ref={isHighlight ? highlightRef : null} data-note-verse={v.verse}
           className={"lib-verse-row" + (isHighlight ? " lib-highlight" : "")}>
         {showVerseNum && vnumEl(v.verse)}
+        {showVerseNum && noteMarker(v.verse)}
         <span className="lib-verse-content lib-verse-chips">
           {v.words.map((w, i) => {
             const sid = w.strongs_ids && w.strongs_ids.length ? w.strongs_ids[0] : null;
@@ -1242,9 +1334,10 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
     return (
       <React.Fragment key={v.verse}>
         {!skipHeading && v.heading && <div className="lib-verse-row pericope-row"><span className="lib-vnum" aria-hidden="true"/><div className="pericope-heading">{v.heading}</div></div>}
-        <div ref={isHighlight ? highlightRef : null}
+        <div ref={isHighlight ? highlightRef : null} data-note-verse={v.verse}
           className={"lib-verse-row" + (isHighlight ? " lib-highlight" : "")}>
           {showVerseNum && vnumEl(v.verse)}
+          {showVerseNum && noteMarker(v.verse)}
           <span className="lib-verse-content">
             {v.words.map((w, i) => (
               <span key={i} className={w.italic ? "lib-prose-italic" : undefined}>
@@ -1263,9 +1356,10 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
     return (
       <React.Fragment key={v.verse}>
         {v.heading && <div className="lib-verse-row pericope-row"><span className="lib-vnum" aria-hidden="true"/><div className="pericope-heading">{v.heading}</div></div>}
-        <div ref={isHighlight ? highlightRef : null}
+        <div ref={isHighlight ? highlightRef : null} data-note-verse={v.verse}
           className={"lib-verse-row" + (isHighlight ? " lib-highlight" : "")}>
           {vnumEl(v.verse)}
+          {noteMarker(v.verse)}
           <span className="lib-verse-content">{v.verse_text}</span>
         </div>
       </React.Fragment>
@@ -1535,7 +1629,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
         </>
       )}
 
-      <div className={"lib-reading" + (showInterlinear ? " lib-interlinear-on" : "")} style={{...(translation === "parallel" ? {paddingTop: 0} : {}), "--lib-font-size": libFontSize + "px"}} {...swipeHandlers}>
+      <div ref={readingRef} className={"lib-reading" + (showInterlinear ? " lib-interlinear-on" : "")} style={{...(translation === "parallel" ? {paddingTop: 0} : {}), "--lib-font-size": libFontSize + "px"}} {...readingHandlers}>
 
         {nonCanon ? (
           didLoading ? (
@@ -1642,11 +1736,17 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
             {verses.map(v => (
               <React.Fragment key={v.verse}>
                 {v.heading && <div className="pericope-heading">{v.heading}</div>}
-                <span className="lib-flow-verse">
+                <span className="lib-flow-verse" data-note-verse={v.verse}>
                   <sup className="lib-flow-vnum"
                        onClick={handleVerseNum ? () => handleVerseNum(v.verse) : undefined}>
                     {v.verse}
                   </sup>
+                  {noteForVerse(v.verse) && (
+                    <button className="lib-note-dot lib-note-dot-inline" title="Open note" aria-label="Open note"
+                      onClick={(e) => { e.stopPropagation(); const n = noteForVerse(v.verse); onOpenNote && onOpenNote(n.id); }}>
+                      <Icon.Bookmark/>
+                    </button>
+                  )}
                   {renderProseWords(v)}
                 </span>
               </React.Fragment>
@@ -1655,6 +1755,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onTran
         )}
       </div>
       </div>
+      {noteSel && <NoteAddPopover rect={noteSel.rect} onAdd={addNoteFromSelection} />}
       {showSummary && (selBook || nonCanon) && (
         <SummaryPanel
           book={nonCanon ? nonCanon.id : selBook.abbrev}

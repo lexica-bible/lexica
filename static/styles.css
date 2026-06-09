@@ -2665,3 +2665,73 @@ input { font-family: inherit; }
 .lib-search-hit-text { display: block; color: var(--ink-2); font-size: 14px; line-height: 1.4; }
 .lib-search-mark { background: #ffe6a3; color: var(--ink); font-weight: 600; border-radius: 2px; padding: 0 1px; }
 .mbar-search { margin-left: 2px; }
+
+/* ============================================================
+   NOTES — drag-select popover, editor panel, browse tab, markers
+   ============================================================ */
+/* Floating "Add note" bar above a text selection */
+.note-popover {
+  background: var(--ink); color: #fff; border-radius: 8px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.25); padding: 2px;
+}
+.note-popover-btn {
+  display: inline-flex; align-items: center; gap: 6px;
+  background: none; border: none; color: #fff; cursor: pointer;
+  font-size: 13px; font-weight: 600; padding: 7px 12px; border-radius: 6px;
+}
+.note-popover-btn:hover { background: rgba(255,255,255,0.12); }
+
+/* Per-verse note marker in the reading margin */
+.lib-note-dot {
+  background: none; border: none; cursor: pointer; padding: 0 4px;
+  color: var(--gold); line-height: 1; vertical-align: baseline;
+  display: inline-flex; align-items: center;
+}
+.lib-note-dot:hover { color: var(--ink); }
+.lib-note-dot-inline { margin: 0 2px; }
+
+/* Note editor (reuses .detail shell) */
+.note-edit-body { display: flex; flex-direction: column; gap: 12px; }
+.note-snippet {
+  margin: 0; padding: 8px 12px; border-left: 3px solid var(--gold);
+  background: var(--bg-sunk); color: var(--ink-2);
+  font-style: italic; font-size: 14px; border-radius: 0 6px 6px 0;
+}
+.note-textarea {
+  width: 100%; min-height: 180px; resize: vertical; box-sizing: border-box;
+  border: 1px solid var(--rule); border-radius: 8px; padding: 10px 12px;
+  font: inherit; font-size: 15px; line-height: 1.5; color: var(--ink);
+  background: var(--paper);
+}
+.note-textarea:focus { outline: none; border-color: var(--gold); }
+.note-actions { display: flex; gap: 8px; }
+.note-save, .note-del {
+  border: none; border-radius: 8px; cursor: pointer;
+  font-size: 14px; font-weight: 600; padding: 9px 16px;
+}
+.note-save { background: var(--ink); color: #fff; }
+.note-save:hover { background: var(--accent); }
+.note-del { background: none; color: var(--ink-3); }
+.note-del:hover { color: #b91c1c; }
+
+/* Notes browse tab */
+.notes-view { max-width: 760px; margin: 0 auto; padding: 24px 20px 80px; }
+.notes-view-head { margin-bottom: 16px; }
+.notes-view-title { font-size: 22px; font-weight: 700; color: var(--ink); margin: 0 0 12px; }
+.notes-search {
+  width: 100%; box-sizing: border-box; border: 1px solid var(--rule);
+  border-radius: 10px; padding: 10px 14px; font: inherit; font-size: 15px;
+  background: var(--paper); color: var(--ink);
+}
+.notes-search:focus { outline: none; border-color: var(--gold); }
+.notes-empty { color: var(--ink-3); font-size: 15px; padding: 32px 4px; text-align: center; }
+.notes-list { list-style: none; margin: 0; padding: 0; }
+.notes-item {
+  border: 1px solid var(--rule); border-radius: 10px; padding: 12px 14px;
+  margin-bottom: 10px; cursor: pointer; background: var(--paper);
+}
+.notes-item:hover { border-color: var(--gold); background: var(--bg-sunk); }
+.notes-item-ref { font-weight: 700; color: var(--ink); font-size: 14px; margin-bottom: 3px; }
+.notes-item-snippet { color: var(--ink-2); font-style: italic; font-size: 13px; margin-bottom: 4px; }
+.notes-item-body { color: var(--ink-2); font-size: 14px; line-height: 1.45; white-space: pre-wrap; }
+.notes-item-empty { color: var(--ink-3); font-style: italic; }

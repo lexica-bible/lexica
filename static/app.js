@@ -752,6 +752,126 @@ const Icon = {
 };
 
 // ============================================================
+// NOTES STORE — browser-local, migration-ready
+// ------------------------------------------------------------
+// v1 keeps study notes in the browser only (no login, no bible.db write).
+// The shape here is the EXACT shape a future server/account will use, so
+// moving notes up later is a straight copy, not a rewrite:
+//   - each note gets its OWN id the moment it's created (clean device-merge
+//     / re-upload later)
+//   - the anchor is a word-position range (corpus, which text, book, chapter,
+//     start verse+word-spot, end verse+word-spot) so a future highlight layer
+//     can paint the exact words
+// Highlighting (color + painting the marks) is the NEXT phase; `color` is
+// stored blank now so it's already there when that lands.
+// ============================================================
+const NotesStore = function () {
+  const KEY = "lexica.notes.v1";
+  const DEVKEY = "lexica.device.v1";
+  const listeners = new Set();
+  let cache = null;
+  function load() {
+    if (cache) return cache;
+    try {
+      cache = JSON.parse(localStorage.getItem(KEY)) || [];
+    } catch (e) {
+      cache = [];
+    }
+    if (!Array.isArray(cache)) cache = [];
+    return cache;
+  }
+  function persist() {
+    try {
+      localStorage.setItem(KEY, JSON.stringify(cache));
+    } catch (e) {/* storage full / blocked */}
+    listeners.forEach(fn => {
+      try {
+        fn();
+      } catch (e) {}
+    });
+  }
+  function newId() {
+    if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+    return "n_" + Date.now().toString(36) + "_" + Math.random().toString(36).slice(2, 10);
+  }
+  // A stable per-browser id, made once — harmless now, helps a future account
+  // merge tell this device's notes apart.
+  function deviceId() {
+    let d = null;
+    try {
+      d = localStorage.getItem(DEVKEY);
+    } catch (e) {}
+    if (!d) {
+      d = newId();
+      try {
+        localStorage.setItem(DEVKEY, d);
+      } catch (e) {}
+    }
+    return d;
+  }
+  return {
+    // newest-edited first
+    all() {
+      return load().slice().sort((a, b) => (b.updated || "").localeCompare(a.updated || ""));
+    },
+    get(id) {
+      return load().find(n => n.id === id) || null;
+    },
+    // notes whose anchor lands in this chapter of this text
+    forChapter(corpus, book, chapter) {
+      return load().filter(n => n.corpus === corpus && n.book === book && n.chapter === chapter);
+    },
+    // anchor = { corpus, translation, book, bookName, chapter,
+    //            start:{verse,pos}, end:{verse,pos}, snippet, refLabel }
+    create(anchor) {
+      const now = new Date().toISOString();
+      const note = {
+        id: newId(),
+        device: deviceId(),
+        body: "",
+        color: null,
+        // highlight phase fills this
+        created: now,
+        updated: now,
+        ...anchor
+      };
+      load().push(note);
+      persist();
+      return note;
+    },
+    update(id, fields) {
+      const n = this.get(id);
+      if (!n) return null;
+      Object.assign(n, fields, {
+        updated: new Date().toISOString()
+      });
+      persist();
+      return n;
+    },
+    remove(id) {
+      cache = load().filter(n => n.id !== id);
+      persist();
+    },
+    search(text) {
+      const t = (text || "").toLowerCase().trim();
+      const list = this.all();
+      if (!t) return list;
+      return list.filter(n => (n.body || "").toLowerCase().includes(t) || (n.snippet || "").toLowerCase().includes(t) || (n.refLabel || "").toLowerCase().includes(t));
+    },
+    subscribe(fn) {
+      listeners.add(fn);
+      return () => listeners.delete(fn);
+    }
+  };
+}();
+
+// Re-render a component whenever the note store changes.
+function useNotesVersion() {
+  const [, force] = useState(0);
+  useEffect(() => NotesStore.subscribe(() => force(v => v + 1)), []);
+}
+
+// ============================================================
 // HEADER
 // ============================================================
 function Header({
@@ -801,6 +921,9 @@ function Header({
     className: "hdr-link " + (activeView === "search" ? "active" : ""),
     onClick: () => onNavChange("search")
   }, "Search"), /*#__PURE__*/React.createElement("button", {
+    className: "hdr-link " + (activeView === "notes" ? "active" : ""),
+    onClick: () => onNavChange("notes")
+  }, "Notes"), /*#__PURE__*/React.createElement("button", {
     className: "hdr-link " + (activeView === "about" ? "active" : ""),
     onClick: () => onNavChange("about")
   }, "About"))));
@@ -1947,6 +2070,161 @@ function DetailPanel({
   }, hero.standaloneGloss), hero.morph && /*#__PURE__*/React.createElement("div", {
     className: "detail-morph"
   }, hero.morph)), sections.map(renderSection)));
+}
+
+// ============================================================
+// NOTES UI — add popover, editor panel, browse view
+// ------------------------------------------------------------
+// Drag-select text in the Library reader → a small "Add note" bar pops by the
+// selection → opens the editor panel (same right-sidebar / bottom-sheet slot
+// the word-study and cross-ref panels use). The Notes tab lists & searches
+// every saved note and jumps back to its verse.
+// ============================================================
+
+// Small bar that appears above a text selection in the reader.
+function NoteAddPopover({
+  rect,
+  onAdd
+}) {
+  if (!rect) return null;
+  const W = 118;
+  const style = {
+    position: "fixed",
+    top: Math.max(8, rect.top - 46),
+    left: Math.min(window.innerWidth - W - 8, Math.max(8, rect.left + rect.width / 2 - W / 2)),
+    zIndex: 1000
+  };
+  // preventDefault on mousedown so pressing the button doesn't clear the selection
+  return /*#__PURE__*/React.createElement("div", {
+    className: "note-popover",
+    style: style,
+    onMouseDown: e => e.preventDefault()
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "note-popover-btn",
+    onClick: onAdd
+  }, /*#__PURE__*/React.createElement(Icon.Bookmark, null), " Add note"));
+}
+
+// Write / edit / delete a single note. Reuses the .detail shell.
+function NotesPanel({
+  noteId,
+  isMobile,
+  onClose
+}) {
+  const note = NotesStore.get(noteId);
+  const [body, setBody] = useState(note ? note.body || "" : "");
+  const taRef = useRef(null);
+  useEffect(() => {
+    setBody(note ? note.body || "" : "");
+    requestAnimationFrame(() => taRef.current && taRef.current.focus());
+  }, [noteId]);
+  if (!note) return null;
+  const save = () => {
+    NotesStore.update(noteId, {
+      body
+    });
+    onClose();
+  };
+  const del = () => {
+    NotesStore.remove(noteId);
+    onClose();
+  };
+  // Closing without ever typing discards the empty draft (the id was minted on
+  // "Add note" — id-at-creation — so a thrown-away draft shouldn't linger).
+  const close = () => {
+    if (!body.trim() && !(note.body || "").trim()) NotesStore.remove(noteId);else if (body !== note.body) NotesStore.update(noteId, {
+      body
+    });
+    onClose();
+  };
+  const head = /*#__PURE__*/React.createElement("div", {
+    className: "detail-head"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "detail-head-l"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "detail-pos"
+  }, note.refLabel || note.book + " " + note.chapter)), /*#__PURE__*/React.createElement("button", {
+    className: "detail-close",
+    onClick: close,
+    "aria-label": "Close"
+  }, /*#__PURE__*/React.createElement(Icon.Close, null)));
+  const content = /*#__PURE__*/React.createElement("div", {
+    className: "detail-body note-edit-body"
+  }, note.snippet && /*#__PURE__*/React.createElement("blockquote", {
+    className: "note-snippet"
+  }, "\u201C", note.snippet, "\u201D"), /*#__PURE__*/React.createElement("textarea", {
+    ref: taRef,
+    className: "note-textarea",
+    value: body,
+    onChange: e => setBody(e.target.value),
+    placeholder: "Write your note\u2026"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "note-actions"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "note-save",
+    onClick: save
+  }, "Save"), /*#__PURE__*/React.createElement("button", {
+    className: "note-del",
+    onClick: del
+  }, "Delete")));
+  if (isMobile) {
+    return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+      className: "sheet-scrim",
+      onClick: close
+    }), /*#__PURE__*/React.createElement("aside", {
+      className: "detail detail-sheet note-sheet",
+      role: "dialog",
+      "aria-label": "Note"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "sheet-drag-zone",
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "sheet-handle"
+    })), head, content));
+  }
+  return /*#__PURE__*/React.createElement("aside", {
+    className: "detail detail-side note-side",
+    role: "complementary",
+    "aria-label": "Note"
+  }, head, content);
+}
+
+// The Notes tab — list + search of every saved note.
+function NotesView({
+  onOpen
+}) {
+  useNotesVersion();
+  const [q, setQ] = useState("");
+  const notes = NotesStore.search(q);
+  return /*#__PURE__*/React.createElement("div", {
+    className: "notes-view"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "notes-view-head"
+  }, /*#__PURE__*/React.createElement("h2", {
+    className: "notes-view-title"
+  }, "My Notes"), /*#__PURE__*/React.createElement("input", {
+    className: "notes-search",
+    type: "text",
+    placeholder: "Search your notes\u2026",
+    value: q,
+    onChange: e => setQ(e.target.value)
+  })), notes.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "notes-empty"
+  }, q ? "No notes match that." : "No notes yet. In the Library, select some text in a verse and choose “Add note.”") : /*#__PURE__*/React.createElement("ul", {
+    className: "notes-list"
+  }, notes.map(n => /*#__PURE__*/React.createElement("li", {
+    key: n.id,
+    className: "notes-item",
+    onClick: () => onOpen(n)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "notes-item-ref"
+  }, n.refLabel || n.book + " " + n.chapter), n.snippet && /*#__PURE__*/React.createElement("div", {
+    className: "notes-item-snippet"
+  }, "\u201C", n.snippet, "\u201D"), /*#__PURE__*/React.createElement("div", {
+    className: "notes-item-body"
+  }, n.body ? n.body : /*#__PURE__*/React.createElement("span", {
+    className: "notes-item-empty"
+  }, "(empty)"))))));
 }
 
 // ============================================================
@@ -3605,6 +3883,7 @@ function LibraryView({
   onNavChange,
   onWordClick,
   onVerseNumberClick,
+  onOpenNote,
   onTranslationChange,
   isMobile,
   showSummary
@@ -3638,6 +3917,12 @@ function LibraryView({
   const nonCanon = NONCANON.find(t => t.id === corpus) || null;
   const highlightRef = useRef(null);
   const navBookRef = useRef(null);
+  const readingRef = useRef(null);
+  // Drag-select-to-note: the floating "Add note" bar + the captured anchor.
+  const [noteSel, setNoteSel] = useState(null); // { rect, anchor } | null
+  const justSelectedRef = useRef(false); // suppress the click that follows a drag
+  useNotesVersion(); // re-render markers when notes change
+
   useEffect(() => {
     if (!nav?.book || !navBookRef.current || nav.book !== selBook?.abbrev) return;
     requestAnimationFrame(() => {
@@ -3914,6 +4199,11 @@ function LibraryView({
     },
     onTouchEnd: e => {
       if (!swipeRef.current) return;
+      // If the touch produced a text selection (note-making), don't turn the page.
+      if (window.getSelection && String(window.getSelection()).trim()) {
+        swipeRef.current = null;
+        return;
+      }
       const dx = e.changedTouches[0].clientX - swipeRef.current.x;
       const dy = e.changedTouches[0].clientY - swipeRef.current.y;
       swipeRef.current = null;
@@ -3940,6 +4230,128 @@ function LibraryView({
       }
     }
   } : {};
+
+  // --- Drag-select → note ---------------------------------------------------
+  // Walk up from a selection edge to the nearest tagged verse row / word span.
+  const _attrUp = (node, attr) => {
+    let el = node && node.nodeType === 1 ? node : node ? node.parentElement : null;
+    while (el && el !== readingRef.current && !(el.getAttribute && el.hasAttribute(attr))) el = el.parentElement;
+    return el && el.getAttribute ? el.getAttribute(attr) : null;
+  };
+  const resolveSelection = () => {
+    const sel = window.getSelection && window.getSelection();
+    if (!sel || sel.isCollapsed || !sel.rangeCount) {
+      setNoteSel(null);
+      return;
+    }
+    const text = sel.toString().trim();
+    if (!text) {
+      setNoteSel(null);
+      return;
+    }
+    const range = sel.getRangeAt(0);
+    if (!readingRef.current || !readingRef.current.contains(range.commonAncestorContainer)) {
+      setNoteSel(null);
+      return;
+    }
+    const aV = _attrUp(range.startContainer, "data-note-verse");
+    const bV = _attrUp(range.endContainer, "data-note-verse");
+    if (aV == null && bV == null) {
+      setNoteSel(null);
+      return;
+    }
+    let startV = parseInt(aV != null ? aV : bV, 10);
+    let endV = parseInt(bV != null ? bV : aV, 10);
+    const aP = _attrUp(range.startContainer, "data-note-pos");
+    const bP = _attrUp(range.endContainer, "data-note-pos");
+    let startP = aP != null ? parseInt(aP, 10) : null;
+    let endP = bP != null ? parseInt(bP, 10) : null;
+    if (startV > endV || startV === endV && (startP || 0) > (endP || 0)) {
+      [startV, endV] = [endV, startV];
+      [startP, endP] = [endP, startP];
+    }
+    const bookId = nonCanon ? nonCanon.id : selBook ? selBook.abbrev : null;
+    const bookName = nonCanon ? nonCanon.name : selBook ? selBook.name : "";
+    if (!bookId) {
+      setNoteSel(null);
+      return;
+    }
+    const refLabel = bookName + " " + selChapter + ":" + startV + (endV !== startV ? "–" + endV : "");
+    const r = range.getBoundingClientRect();
+    justSelectedRef.current = true;
+    setNoteSel({
+      rect: {
+        top: r.top,
+        left: r.left,
+        width: r.width,
+        height: r.height
+      },
+      anchor: {
+        corpus,
+        translation,
+        book: bookId,
+        bookName,
+        chapter: selChapter,
+        start: {
+          verse: startV,
+          pos: startP
+        },
+        end: {
+          verse: endV,
+          pos: endP
+        },
+        snippet: text.slice(0, 300),
+        refLabel
+      }
+    });
+  };
+  const addNoteFromSelection = () => {
+    if (!noteSel) return;
+    const note = NotesStore.create(noteSel.anchor);
+    setNoteSel(null);
+    if (window.getSelection) window.getSelection().removeAllRanges();
+    onOpenNote && onOpenNote(note.id);
+  };
+  // One handler set on the reading area: swipe (mobile) + selection (all).
+  const readingHandlers = {
+    ...swipeHandlers,
+    // A fresh press starts a new interaction: drop any open popover + the suppress flag.
+    onMouseDown: () => {
+      if (noteSel) setNoteSel(null);
+      justSelectedRef.current = false;
+    },
+    onMouseUp: () => resolveSelection(),
+    onTouchEnd: e => {
+      if (swipeHandlers.onTouchEnd) swipeHandlers.onTouchEnd(e);
+      setTimeout(resolveSelection, 0); // let the browser settle the selection first
+    },
+    onClickCapture: e => {
+      if (justSelectedRef.current) {
+        justSelectedRef.current = false;
+        e.stopPropagation();
+        e.preventDefault();
+        return;
+      }
+      if (swipeHandlers.onClickCapture) swipeHandlers.onClickCapture(e);
+    }
+  };
+
+  // Note markers in the verse margin: notes anchored in the current chapter.
+  const chapterNotes = NotesStore.forChapter(corpus, nonCanon ? nonCanon.id : selBook ? selBook.abbrev : null, selChapter);
+  const noteForVerse = verse => chapterNotes.find(n => verse >= n.start.verse && verse <= (n.end && n.end.verse || n.start.verse));
+  const noteMarker = verse => {
+    const n = noteForVerse(verse);
+    if (!n) return null;
+    return /*#__PURE__*/React.createElement("button", {
+      className: "lib-note-dot",
+      title: "Open note",
+      "aria-label": "Open note",
+      onClick: e => {
+        e.stopPropagation();
+        onOpenNote && onOpenNote(n.id);
+      }
+    }, /*#__PURE__*/React.createElement(Icon.Bookmark, null));
+  };
   const changeFontSize = delta => {
     setLibFontSize(prev => {
       const next = Math.min(24, Math.max(13, prev + delta));
@@ -4000,6 +4412,7 @@ function LibraryView({
       }
       return /*#__PURE__*/React.createElement("span", {
         key: i,
+        "data-note-pos": w.position,
         className: !!w.italic ? "lib-prose-italic" : undefined
       }, text + " ");
     });
@@ -4092,6 +4505,7 @@ function LibraryView({
       const isSmcap = w.smcap_words ? new Set(w.smcap_words.split(',')).has(label.replace(/[^\w]/g, '').toLowerCase()) : false;
       return /*#__PURE__*/React.createElement("span", {
         key: key,
+        "data-note-pos": w.position,
         className: "lib-word" + (w.italic ? " lib-abp-italic" : "") + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : ""),
         onClick: clickable ? () => onWordClick(isPN ? {
           ...makeEntry(w),
@@ -4193,6 +4607,7 @@ function LibraryView({
       const isSmcap = w.smcap_words ? new Set(w.smcap_words.split(',')).has(label.replace(/[^\w]/g, '').toLowerCase()) : false;
       return /*#__PURE__*/React.createElement("span", {
         key: key,
+        "data-note-pos": w.position,
         className: "lib-word lib-word-bracketed" + (w.italic ? " lib-abp-italic" : "") + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : ""),
         onClick: clickable ? () => onWordClick(isPN ? {
           ...makeEntry(w),
@@ -4234,8 +4649,9 @@ function LibraryView({
         className: "pericope-heading"
       }, v.heading)), /*#__PURE__*/React.createElement("div", {
         ref: isHighlight ? highlightRef : null,
+        "data-note-verse": v.verse,
         className: "lib-verse-row" + (isHighlight ? " lib-highlight" : "")
-      }, vnumEl(v.verse), /*#__PURE__*/React.createElement("span", {
+      }, vnumEl(v.verse), noteMarker(v.verse), /*#__PURE__*/React.createElement("span", {
         className: "lib-verse-content"
       }, renderProseWords(v))));
     }
@@ -4337,8 +4753,9 @@ function LibraryView({
       className: "pericope-heading"
     }, v.heading)), /*#__PURE__*/React.createElement("div", {
       ref: isHighlight ? highlightRef : null,
+      "data-note-verse": v.verse,
       className: "lib-verse-row" + (isHighlight ? " lib-highlight" : "")
-    }, vnumEl(v.verse), /*#__PURE__*/React.createElement("span", {
+    }, vnumEl(v.verse), noteMarker(v.verse), /*#__PURE__*/React.createElement("span", {
       className: "lib-verse-content lib-verse-chips"
     }, content)));
   };
@@ -4373,8 +4790,9 @@ function LibraryView({
       className: "pericope-heading"
     }, v.heading)), /*#__PURE__*/React.createElement("div", {
       ref: isHighlight ? highlightRef : null,
+      "data-note-verse": v.verse,
       className: "lib-verse-row" + (isHighlight ? " lib-highlight" : "")
-    }, showVerseNum && vnumEl(v.verse), /*#__PURE__*/React.createElement("span", {
+    }, showVerseNum && vnumEl(v.verse), showVerseNum && noteMarker(v.verse), /*#__PURE__*/React.createElement("span", {
       className: "lib-verse-content lib-verse-chips"
     }, v.words.map((w, i) => {
       const sid = w.strongs_ids && w.strongs_ids.length ? w.strongs_ids[0] : null;
@@ -4420,8 +4838,9 @@ function LibraryView({
       className: "pericope-heading"
     }, v.heading)), /*#__PURE__*/React.createElement("div", {
       ref: isHighlight ? highlightRef : null,
+      "data-note-verse": v.verse,
       className: "lib-verse-row" + (isHighlight ? " lib-highlight" : "")
-    }, showVerseNum && vnumEl(v.verse), /*#__PURE__*/React.createElement("span", {
+    }, showVerseNum && vnumEl(v.verse), showVerseNum && noteMarker(v.verse), /*#__PURE__*/React.createElement("span", {
       className: "lib-verse-content"
     }, v.words.map((w, i) => /*#__PURE__*/React.createElement("span", {
       key: i,
@@ -4443,8 +4862,9 @@ function LibraryView({
       className: "pericope-heading"
     }, v.heading)), /*#__PURE__*/React.createElement("div", {
       ref: isHighlight ? highlightRef : null,
+      "data-note-verse": v.verse,
       className: "lib-verse-row" + (isHighlight ? " lib-highlight" : "")
-    }, vnumEl(v.verse), /*#__PURE__*/React.createElement("span", {
+    }, vnumEl(v.verse), noteMarker(v.verse), /*#__PURE__*/React.createElement("span", {
       className: "lib-verse-content"
     }, v.verse_text)));
   };
@@ -4836,6 +5256,7 @@ function LibraryView({
   }, corpus === "bible" ? BOOK_LABELS[r.book] || r.book : searchName, " ", r.chapter, ":", r.verse), /*#__PURE__*/React.createElement("span", {
     className: "lib-search-hit-text"
   }, highlightTerm(r.text, searchTerm)))))))), /*#__PURE__*/React.createElement("div", _extends({
+    ref: readingRef,
     className: "lib-reading" + (showInterlinear ? " lib-interlinear-on" : ""),
     style: {
       ...(translation === "parallel" ? {
@@ -4843,7 +5264,7 @@ function LibraryView({
       } : {}),
       "--lib-font-size": libFontSize + "px"
     }
-  }, swipeHandlers), nonCanon ? didLoading ? /*#__PURE__*/React.createElement("div", {
+  }, readingHandlers), nonCanon ? didLoading ? /*#__PURE__*/React.createElement("div", {
     className: "lib-loading"
   }, "Loading\u2026") : nonCanon.englishOnly ? renderDidacheProse() : translation === "parallel" ? /*#__PURE__*/React.createElement("div", {
     className: "lib-parallel"
@@ -4942,11 +5363,24 @@ function LibraryView({
   }, v.heading && /*#__PURE__*/React.createElement("div", {
     className: "pericope-heading"
   }, v.heading), /*#__PURE__*/React.createElement("span", {
-    className: "lib-flow-verse"
+    className: "lib-flow-verse",
+    "data-note-verse": v.verse
   }, /*#__PURE__*/React.createElement("sup", {
     className: "lib-flow-vnum",
     onClick: handleVerseNum ? () => handleVerseNum(v.verse) : undefined
-  }, v.verse), renderProseWords(v))))))), showSummary && (selBook || nonCanon) && /*#__PURE__*/React.createElement(SummaryPanel, {
+  }, v.verse), noteForVerse(v.verse) && /*#__PURE__*/React.createElement("button", {
+    className: "lib-note-dot lib-note-dot-inline",
+    title: "Open note",
+    "aria-label": "Open note",
+    onClick: e => {
+      e.stopPropagation();
+      const n = noteForVerse(v.verse);
+      onOpenNote && onOpenNote(n.id);
+    }
+  }, /*#__PURE__*/React.createElement(Icon.Bookmark, null)), renderProseWords(v))))))), noteSel && /*#__PURE__*/React.createElement(NoteAddPopover, {
+    rect: noteSel.rect,
+    onAdd: addNoteFromSelection
+  }), showSummary && (selBook || nonCanon) && /*#__PURE__*/React.createElement(SummaryPanel, {
     book: nonCanon ? nonCanon.id : selBook.abbrev,
     chapter: selChapter,
     bookLabel: nonCanon ? nonCanon.name : BOOK_LABELS[selBook.abbrev] || selBook.abbrev
@@ -5690,6 +6124,30 @@ function App() {
   const [libCrossRef, setLibCrossRef] = useState(null);
   const [lexiconPendingStrongs, setLexiconPendingStrongs] = useState(null);
   const [libTranslation, setLibTranslation] = useState("abp");
+  const [activeNote, setActiveNote] = useState(null); // note id being edited
+
+  // Open a note's editor — closes the word / cross-ref panels so one panel owns the slot.
+  const openNote = id => {
+    setActiveEntry(null);
+    setLibCrossRef(null);
+    setActiveNote(id);
+  };
+  // From the Notes tab: jump to the verse in the Library, then open the editor.
+  const openNoteFromList = n => {
+    if (n.corpus === "bible") {
+      searchScrollRef.current = window.scrollY;
+      setLibEverVisited(true);
+      setMainView("library");
+      setLibNav({
+        book: n.book,
+        chapter: n.chapter,
+        highlight: n.start.verse,
+        scroll: true,
+        translation: n.translation === "kjv" ? "kjv" : "abp"
+      });
+    }
+    openNote(n.id);
+  };
   useEffect(() => {
     const check = () => setIsMobile(window.innerWidth < 1100);
     window.addEventListener("resize", check);
@@ -5697,6 +6155,7 @@ function App() {
   }, []);
   const handleVerseNumberClick = (book, chapter, verse, translation) => {
     setActiveEntry(null);
+    setActiveNote(null);
     setLibCrossRef({
       book,
       chapter,
@@ -5851,9 +6310,9 @@ function App() {
   // book/chapter overview (SummaryPanel). It fills the same slot the word-study
   // and xref panels use, so `has-detail` stays on and the reading column keeps
   // its condensed (three-column) measure. Mobile never shows the summary.
-  const showLibSummary = !isMobile && mainView === "library" && !activeEntry && !libCrossRef;
+  const showLibSummary = !isMobile && mainView === "library" && !activeEntry && !libCrossRef && !activeNote;
   return /*#__PURE__*/React.createElement("div", {
-    className: "app view-" + mainView + " " + (activeEntry || libCrossRef || showLibSummary ? "has-detail" : "")
+    className: "app view-" + mainView + " " + (activeEntry || libCrossRef || activeNote || showLibSummary ? "has-detail" : "")
   }, /*#__PURE__*/React.createElement(Header, {
     activeView: mainView,
     onNavChange: handleNavChange
@@ -5890,13 +6349,17 @@ function App() {
     onNavChange: setLibNav,
     onWordClick: e => {
       setLibCrossRef(null);
+      setActiveNote(null);
       setActiveEntry(e);
     },
     onVerseNumberClick: handleVerseNumberClick,
+    onOpenNote: openNote,
     onTranslationChange: setLibTranslation,
     isMobile: isMobile,
     showSummary: showLibSummary
-  })), mainView === "about" && /*#__PURE__*/React.createElement(AboutView, null), /*#__PURE__*/React.createElement("div", {
+  })), mainView === "about" && /*#__PURE__*/React.createElement(AboutView, null), mainView === "notes" && /*#__PURE__*/React.createElement(NotesView, {
+    onOpen: openNoteFromList
+  }), /*#__PURE__*/React.createElement("div", {
     style: {
       display: mainView === "lexicon" ? undefined : "none"
     }
@@ -5924,7 +6387,7 @@ function App() {
   })), /*#__PURE__*/React.createElement("div", {
     className: "main-inner",
     style: {
-      display: mainView === "library" || mainView === "about" || mainView === "lexicon" ? "none" : undefined
+      display: mainView === "library" || mainView === "about" || mainView === "lexicon" || mainView === "notes" ? "none" : undefined
     }
   }, /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(SearchBar, {
     q2: q2,
@@ -6045,7 +6508,11 @@ function App() {
     totalResults: allResults.length,
     onNavigateToLexicon: handleNavigateToLexicon,
     onReadInContext: handleReadInContext
-  })), libCrossRef && !isMobile && /*#__PURE__*/React.createElement(CrossRefPanel, {
+  })), activeNote && /*#__PURE__*/React.createElement(NotesPanel, {
+    noteId: activeNote,
+    isMobile: isMobile,
+    onClose: () => setActiveNote(null)
+  }), libCrossRef && !isMobile && /*#__PURE__*/React.createElement(CrossRefPanel, {
     source: libCrossRef,
     translation: libTranslation === "kjv" ? "kjv" : "abp",
     onClose: () => {
@@ -6158,6 +6625,20 @@ function App() {
     x2: "21",
     y2: "21"
   })), "Search"), /*#__PURE__*/React.createElement("button", {
+    className: "mobile-tab" + (mainView === "notes" ? " active" : ""),
+    onClick: () => handleNavChange("notes")
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M6 3h12v18l-6-4-6 4z"
+  })), "Notes"), /*#__PURE__*/React.createElement("button", {
     className: "mobile-tab" + (mainView === "about" ? " active" : ""),
     onClick: () => handleNavChange("about")
   }, /*#__PURE__*/React.createElement("svg", {
