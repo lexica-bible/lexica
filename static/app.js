@@ -2392,6 +2392,12 @@ function NotesView({
   const [filter, setFilter] = useState("all"); // all | bookmark | highlight | note
   const [sort, setSort] = useState("recent"); // recent | ref
   const [group, setGroup] = useState(false); // group by book
+  const [collapsed, setCollapsed] = useState(() => new Set()); // collapsed book keys
+  const toggleSection = key => setCollapsed(s => {
+    const n = new Set(s);
+    n.has(key) ? n.delete(key) : n.add(key);
+    return n;
+  });
   const fileRef = useRef(null);
   let notes = NotesStore.search(q); // already newest-first
   if (filter === "bookmark") notes = notes.filter(n => n.bookmark);else if (filter === "highlight") notes = notes.filter(n => n.color);else if (filter === "note") notes = notes.filter(n => n.body && n.body.trim());
@@ -2526,14 +2532,25 @@ function NotesView({
     onClick: () => setGroup(g => !g)
   }, "Group by book"))), notes.length === 0 ? /*#__PURE__*/React.createElement("div", {
     className: "notes-empty"
-  }, q || filter !== "all" ? "Nothing matches that." : "No notes yet. In the Library, select some text in a verse and choose “Add note.”") : group ? sections.map(s => /*#__PURE__*/React.createElement("div", {
-    key: s.key,
-    className: "notes-group"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "notes-group-head"
-  }, s.label), /*#__PURE__*/React.createElement("ul", {
-    className: "notes-list"
-  }, s.items.map(renderItem)))) : /*#__PURE__*/React.createElement("ul", {
+  }, q || filter !== "all" ? "Nothing matches that." : "No notes yet. In the Library, select some text in a verse and choose “Add note.”") : group ? sections.map(s => {
+    const open = !collapsed.has(s.key);
+    return /*#__PURE__*/React.createElement("div", {
+      key: s.key,
+      className: "notes-group"
+    }, /*#__PURE__*/React.createElement("button", {
+      className: "notes-group-head" + (open ? " open" : ""),
+      onClick: () => toggleSection(s.key),
+      "aria-expanded": open
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "notes-group-caret"
+    }, "\u25B8"), /*#__PURE__*/React.createElement("span", {
+      className: "notes-group-label"
+    }, s.label), /*#__PURE__*/React.createElement("span", {
+      className: "notes-group-count"
+    }, s.items.length)), open && /*#__PURE__*/React.createElement("ul", {
+      className: "notes-list"
+    }, s.items.map(renderItem)));
+  }) : /*#__PURE__*/React.createElement("ul", {
     className: "notes-list"
   }, notes.map(renderItem)));
 }

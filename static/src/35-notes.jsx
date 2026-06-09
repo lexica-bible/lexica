@@ -179,6 +179,8 @@ function NotesView({ onOpen }) {
   const [filter, setFilter] = useState("all");   // all | bookmark | highlight | note
   const [sort, setSort] = useState("recent");     // recent | ref
   const [group, setGroup] = useState(false);      // group by book
+  const [collapsed, setCollapsed] = useState(() => new Set());   // collapsed book keys
+  const toggleSection = (key) => setCollapsed(s => { const n = new Set(s); n.has(key) ? n.delete(key) : n.add(key); return n; });
   const fileRef = useRef(null);
   let notes = NotesStore.search(q);               // already newest-first
   if (filter === "bookmark") notes = notes.filter(n => n.bookmark);
@@ -285,12 +287,19 @@ function NotesView({ onOpen }) {
             : "No notes yet. In the Library, select some text in a verse and choose “Add note.”"}
         </div>
       ) : group ? (
-        sections.map(s => (
-          <div key={s.key} className="notes-group">
-            <div className="notes-group-head">{s.label}</div>
-            <ul className="notes-list">{s.items.map(renderItem)}</ul>
-          </div>
-        ))
+        sections.map(s => {
+          const open = !collapsed.has(s.key);
+          return (
+            <div key={s.key} className="notes-group">
+              <button className={"notes-group-head" + (open ? " open" : "")} onClick={() => toggleSection(s.key)} aria-expanded={open}>
+                <span className="notes-group-caret">▸</span>
+                <span className="notes-group-label">{s.label}</span>
+                <span className="notes-group-count">{s.items.length}</span>
+              </button>
+              {open && <ul className="notes-list">{s.items.map(renderItem)}</ul>}
+            </div>
+          );
+        })
       ) : (
         <ul className="notes-list">{notes.map(renderItem)}</ul>
       )}
