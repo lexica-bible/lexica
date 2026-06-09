@@ -51,7 +51,7 @@ _BOOK_AUTHORS = {
 # keys, so a bump makes every cached summary miss and lazily regenerate on next
 # view (old rows just go unreferenced; nothing is wiped). v2: tell Haiku not to
 # skip a chapter's distinctive/unusual events (Gen 6 sons of God / Nephilim).
-_SUMMARY_VER = 5
+_SUMMARY_VER = 6
 
 _SUMMARY_SYSTEM = """\
 You are a textual scholar working from a Berean approach: the text speaks first. \
@@ -255,8 +255,10 @@ def reading_summary(book, chapter):
                 f'Below is one chapter of "{name}". {author_line}The lines marked '
                 f'"[Section: ...]" are the natural section breaks in this chapter — '
                 f'let your summary follow those sections in order rather than fighting '
-                f'the chapter boundary. Write 3 to 5 sentences summarizing what '
-                f'happens in this chapter, anchored in the text. Cover the chapter '
+                f'the chapter boundary. Write a short summary — roughly 90 to 140 '
+                f'words — of what happens in this chapter, anchored in the text. Use '
+                f'plain, short sentences, one idea each; do not cram several events '
+                f'into one long run-on sentence. Cover the chapter '
                 f'from its very first section onward — do not skip the opening or '
                 f'collapse it into a generic line. Name the specific notable people, '
                 f'beings, and events the text actually records, including any that '
