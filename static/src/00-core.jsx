@@ -97,6 +97,21 @@ const api = {
   esvAudio: (book, ch) =>
     fetch(`/api/esv/audio/${encodeURIComponent(book)}/${ch}`, { headers: _authHeaders() })
       .then(r => r.ok ? r.json() : { url: null }).catch(() => ({ url: null })),
+  // Visitor stats — count this visit (owner's own visits are skipped server-side),
+  // ask if the logged-in user is the owner (drives the Stats tab), and fetch the
+  // owner-only dashboard numbers.
+  statsHit: () =>
+    fetch(`/api/stats/hit`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ..._authHeaders() },
+      body: JSON.stringify({ ref: document.referrer || "" }),
+    }).catch(() => {}),
+  statsOwner: () =>
+    fetch(`/api/stats/owner`, { headers: _authHeaders() })
+      .then(r => r.json()).catch(() => ({ owner: false })),
+  stats: () =>
+    fetch(`/api/stats`, { headers: _authHeaders() })
+      .then(r => r.ok ? r.json() : null).catch(() => null),
   textSearch: (q, corpus, mode, book) =>
     fetch(`/api/text-search?q=${encodeURIComponent(q)}&corpus=${encodeURIComponent(corpus || "bsb")}` +
           `&mode=${encodeURIComponent(mode || "phrase")}` +

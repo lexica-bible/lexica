@@ -29,14 +29,10 @@ import urllib.request
 
 from flask import Blueprint, jsonify, request
 
-from core import db_ro, esv_db, notes_db, _KJV_BOOK_ID, _USFM_BOOK
+from core import db_ro, esv_db, _KJV_BOOK_ID, _USFM_BOOK
+from views_notes import is_owner as _is_owner   # shared site-owner gate (OWNER_EMAIL)
 
 bp = Blueprint("esv", __name__)
-
-# The owner is identified by email, set in the WSGI env (os.environ['ESV_OWNER_EMAIL']
-# = 'you@example.com'). Unset -> the feature is simply off for everyone (safe before
-# setup). Compared case-insensitively against the account email in notes.db.
-ESV_OWNER_EMAIL = (os.environ.get("ESV_OWNER_EMAIL") or "").strip().lower()
 
 # Bible Brain (FCBH) audio. Key + filesets in the WSGI env. ENGESVN2DA is
 # ENG / ESV / New Testament / multi-voice + background music / audio, so it's
@@ -48,35 +44,6 @@ ESV_FILESET_NT = os.environ.get("ESV_AUDIO_FILESET_NT", "ENGESVN2DA")
 ESV_FILESET_OT = os.environ.get("ESV_AUDIO_FILESET_OT")   # optional
 
 _USFM = _USFM_BOOK   # app book-abbrev -> USFM code (what FCBH expects)
-
-
-def _is_owner():
-    """True ONLY when the request carries a valid bearer token whose account email
-    matches ESV_OWNER_EMAIL. No env owner set, no/blank token, unknown token, or a
-    different account -> False. This is the gate every route leans on."""
-    if not ESV_OWNER_EMAIL:
-        return False
-    auth = request.headers.get("Authorization", "")
-    if not auth.startswith("Bearer "):
-        return False
-    token = auth[7:].strip()
-    if not token:
-        return False
-    try:
-        conn = notes_db()
-    except sqlite3.Error:
-        return False
-    try:
-        row = conn.execute(
-            "SELECT u.email AS email FROM tokens t JOIN users u ON u.id = t.user_id"
-            " WHERE t.token = ?",
-            (token,),
-        ).fetchone()
-    except sqlite3.Error:
-        return False
-    finally:
-        conn.close()
-    return bool(row) and (row["email"] or "").strip().lower() == ESV_OWNER_EMAIL
 
 
 @bp.route("/api/esv/status")

@@ -149,6 +149,7 @@ from views_lsj import bp as lsj_bp
 from views_kjv import bp as kjv_bp
 from views_bsb import bp as bsb_bp
 from views_esv import bp as esv_bp
+from views_stats import bp as stats_bp
 from views_lexicon import bp as lexicon_bp
 from views_library import bp as library_bp
 from views_search import bp as search_bp
@@ -174,6 +175,7 @@ app.register_blueprint(lsj_bp)
 app.register_blueprint(kjv_bp)
 app.register_blueprint(bsb_bp)
 app.register_blueprint(esv_bp)
+app.register_blueprint(stats_bp)
 app.register_blueprint(lexicon_bp)
 app.register_blueprint(library_bp)
 app.register_blueprint(search_bp)
@@ -306,10 +308,7 @@ _prune_metav_cache()
 
 @app.route("/")
 def index():
-    # GoatCounter visitor stats — privacy-friendly, no cookies. Off unless the site
-    # code is set in the WSGI env (os.environ['GOATCOUNTER_CODE'] = 'yourcode'); the
-    # template only emits the tag when it's present, so a deploy before setup is safe.
-    return render_template("index.html", goatcounter=os.environ.get("GOATCOUNTER_CODE"))
+    return render_template("index.html")
 
 
 if __name__ == "__main__":

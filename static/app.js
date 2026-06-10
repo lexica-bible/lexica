@@ -114,6 +114,27 @@ const api = {
   }).catch(() => ({
     url: null
   })),
+  // Visitor stats — count this visit (owner's own visits are skipped server-side),
+  // ask if the logged-in user is the owner (drives the Stats tab), and fetch the
+  // owner-only dashboard numbers.
+  statsHit: () => fetch(`/api/stats/hit`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ..._authHeaders()
+    },
+    body: JSON.stringify({
+      ref: document.referrer || ""
+    })
+  }).catch(() => {}),
+  statsOwner: () => fetch(`/api/stats/owner`, {
+    headers: _authHeaders()
+  }).then(r => r.json()).catch(() => ({
+    owner: false
+  })),
+  stats: () => fetch(`/api/stats`, {
+    headers: _authHeaders()
+  }).then(r => r.ok ? r.json() : null).catch(() => null),
   textSearch: (q, corpus, mode, book) => fetch(`/api/text-search?q=${encodeURIComponent(q)}&corpus=${encodeURIComponent(corpus || "bsb")}` + `&mode=${encodeURIComponent(mode || "phrase")}` + (book ? `&book=${encodeURIComponent(book)}` : "")).then(r => r.json()),
   summary: (book, ch) => fetch(`/api/summary/${encodeURIComponent(book)}/${ch}`).then(r => r.json()),
   kjvVerse: (book, ch, v) => fetch(`/api/kjv/verse/${encodeURIComponent(book)}/${ch}/${v}`).then(r => r.json()),
@@ -1271,7 +1292,8 @@ function useNotesVersion() {
 // ============================================================
 function Header({
   activeView,
-  onNavChange
+  onNavChange,
+  owner
 }) {
   return /*#__PURE__*/React.createElement("header", {
     className: "hdr"
@@ -1321,7 +1343,10 @@ function Header({
   }, "Notes"), /*#__PURE__*/React.createElement("button", {
     className: "hdr-link " + (activeView === "about" ? "active" : ""),
     onClick: () => onNavChange("about")
-  }, "About"))));
+  }, "About"), owner && /*#__PURE__*/React.createElement("button", {
+    className: "hdr-link " + (activeView === "stats" ? "active" : ""),
+    onClick: () => onNavChange("stats")
+  }, "Stats"))));
 }
 
 // ============================================================
@@ -7954,6 +7979,99 @@ function LexiconView({
 }
 
 // ============================================================
+// STATS — owner-only visitor dashboard (in-house, from notes.db)
+// ============================================================
+function StatCard({
+  n,
+  label
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "stats-card"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stats-card-n"
+  }, n != null ? n.toLocaleString() : "—"), /*#__PURE__*/React.createElement("div", {
+    className: "stats-card-l"
+  }, label));
+}
+function StatsView() {
+  const [data, setData] = useState(null);
+  const [err, setErr] = useState(false);
+  useEffect(() => {
+    let cancelled = false;
+    api.stats().then(d => {
+      if (cancelled) return;
+      if (d) setData(d);else setErr(true);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+  if (err) return /*#__PURE__*/React.createElement("div", {
+    className: "stats-view"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stats-empty"
+  }, "Couldn't load stats."));
+  if (!data) return /*#__PURE__*/React.createElement("div", {
+    className: "stats-view"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stats-empty"
+  }, "Loading\u2026"));
+  const maxV = Math.max(1, ...data.by_day.map(d => d.views));
+  return /*#__PURE__*/React.createElement("div", {
+    className: "stats-view"
+  }, /*#__PURE__*/React.createElement("h1", {
+    className: "stats-title"
+  }, "Visitors"), /*#__PURE__*/React.createElement("div", {
+    className: "stats-sub"
+  }, "Your own visits aren't counted. No cookies, no IPs stored."), /*#__PURE__*/React.createElement("div", {
+    className: "stats-cards"
+  }, /*#__PURE__*/React.createElement(StatCard, {
+    n: data.unique_visitors,
+    label: "Unique visitors"
+  }), /*#__PURE__*/React.createElement(StatCard, {
+    n: data.total_views,
+    label: "Total views"
+  }), /*#__PURE__*/React.createElement(StatCard, {
+    n: data.today,
+    label: "Today"
+  }), /*#__PURE__*/React.createElement(StatCard, {
+    n: data.last7,
+    label: "Last 7 days"
+  }), /*#__PURE__*/React.createElement(StatCard, {
+    n: data.last30,
+    label: "Last 30 days"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "stats-section-title"
+  }, "Views \u2014 last 30 days"), data.by_day.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "stats-empty"
+  }, "No visits yet.") : /*#__PURE__*/React.createElement("div", {
+    className: "stats-bars"
+  }, data.by_day.map(d => /*#__PURE__*/React.createElement("div", {
+    key: d.day,
+    className: "stats-bar-col",
+    title: `${d.day} · ${d.views} views · ${d.uniques} unique`
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stats-bar",
+    style: {
+      height: Math.max(2, Math.round(d.views / maxV * 100)) + "%"
+    }
+  })))), /*#__PURE__*/React.createElement("div", {
+    className: "stats-section-title"
+  }, "Top referrers"), data.top_ref.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "stats-empty"
+  }, "None yet.") : /*#__PURE__*/React.createElement("div", {
+    className: "stats-refs"
+  }, data.top_ref.map(r => /*#__PURE__*/React.createElement("div", {
+    key: r.ref,
+    className: "stats-ref-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "stats-ref-name"
+  }, r.ref), /*#__PURE__*/React.createElement("span", {
+    className: "stats-ref-n"
+  }, r.n.toLocaleString())))));
+}
+
+// ============================================================
 // APP
 // ============================================================
 function App() {
@@ -8086,6 +8204,32 @@ function App() {
   };
   const [libEverVisited, setLibEverVisited] = useState(true);
   const searchScrollRef = useRef(0);
+
+  // Visitor stats: count this page load once (the server skips the owner's own
+  // visits), and figure out whether the logged-in user is the owner so we can show
+  // the private Stats tab. Re-check only when the signed-in email actually changes.
+  const [owner, setOwner] = useState(false);
+  useEffect(() => {
+    api.statsHit();
+  }, []);
+  useEffect(() => {
+    let last;
+    const check = () => {
+      let email = null;
+      try {
+        email = (NotesStore.authInfo() || {}).email || null;
+      } catch (e) {}
+      if (email === last) return;
+      last = email;
+      api.statsOwner().then(d => setOwner(!!(d && d.owner)));
+    };
+    check();
+    return NotesStore.subscribe(check); // setAuth notifies on login/logout
+  }, []);
+  // If the owner signs out while on the Stats tab, bounce back to the Library.
+  useEffect(() => {
+    if (!owner && mainView === "stats") setMainView("library");
+  }, [owner, mainView]);
   const handleReadInContext = (book, chapter, verse) => {
     searchScrollRef.current = window.scrollY;
     setLibNav({
@@ -8167,7 +8311,8 @@ function App() {
     className: "app view-" + mainView + " " + (activeEntry || libCrossRef || activeNote || showLibSummary ? "has-detail" : "")
   }, /*#__PURE__*/React.createElement(Header, {
     activeView: mainView,
-    onNavChange: handleNavChange
+    onNavChange: handleNavChange,
+    owner: owner
   }), isMobile && mainView !== "library" && /*#__PURE__*/React.createElement("div", {
     className: "mobile-brand-bar"
   }, /*#__PURE__*/React.createElement("svg", {
@@ -8209,7 +8354,7 @@ function App() {
     onTranslationChange: setLibTranslation,
     isMobile: isMobile,
     showSummary: showLibSummary
-  })), mainView === "about" && /*#__PURE__*/React.createElement(AboutView, null), mainView === "notes" && /*#__PURE__*/React.createElement(NotesView, {
+  })), mainView === "about" && /*#__PURE__*/React.createElement(AboutView, null), mainView === "stats" && owner && /*#__PURE__*/React.createElement(StatsView, null), mainView === "notes" && /*#__PURE__*/React.createElement(NotesView, {
     onOpen: openNoteFromList
   }), /*#__PURE__*/React.createElement("div", {
     style: {
@@ -8515,6 +8660,20 @@ function App() {
     y1: "12",
     x2: "12",
     y2: "16"
-  })), "About")));
+  })), "About"), owner && /*#__PURE__*/React.createElement("button", {
+    className: "mobile-tab" + (mainView === "stats" ? " active" : ""),
+    onClick: () => handleNavChange("stats")
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.8",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M4 20V10M10 20V4M16 20v-7M22 20H2"
+  })), "Stats")));
 }
 ReactDOM.createRoot(document.getElementById("root")).render(/*#__PURE__*/React.createElement(App, null));

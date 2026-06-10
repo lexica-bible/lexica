@@ -111,6 +111,28 @@ function App() {
   const [libEverVisited, setLibEverVisited] = useState(true);
   const searchScrollRef = useRef(0);
 
+  // Visitor stats: count this page load once (the server skips the owner's own
+  // visits), and figure out whether the logged-in user is the owner so we can show
+  // the private Stats tab. Re-check only when the signed-in email actually changes.
+  const [owner, setOwner] = useState(false);
+  useEffect(() => { api.statsHit(); }, []);
+  useEffect(() => {
+    let last;
+    const check = () => {
+      let email = null;
+      try { email = (NotesStore.authInfo() || {}).email || null; } catch (e) {}
+      if (email === last) return;
+      last = email;
+      api.statsOwner().then(d => setOwner(!!(d && d.owner)));
+    };
+    check();
+    return NotesStore.subscribe(check);   // setAuth notifies on login/logout
+  }, []);
+  // If the owner signs out while on the Stats tab, bounce back to the Library.
+  useEffect(() => {
+    if (!owner && mainView === "stats") setMainView("library");
+  }, [owner, mainView]);
+
   const handleReadInContext = (book, chapter, verse) => {
     searchScrollRef.current = window.scrollY;
     setLibNav({ book, chapter, highlight: verse, scroll: true });
@@ -182,7 +204,7 @@ function App() {
 
   return (
     <div className={"app view-" + mainView + " " + ((activeEntry || libCrossRef || activeNote || showLibSummary) ? "has-detail" : "")}>
-      <Header activeView={mainView} onNavChange={handleNavChange}/>
+      <Header activeView={mainView} onNavChange={handleNavChange} owner={owner}/>
       {isMobile && mainView !== "library" && (
         <div className="mobile-brand-bar">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -200,6 +222,7 @@ function App() {
           </div>
         )}
         {mainView === "about" && <AboutView />}
+        {mainView === "stats" && owner && <StatsView />}
         {mainView === "notes" && <NotesView onOpen={openNoteFromList} />}
         <div style={{ display: mainView === "lexicon" ? undefined : "none" }}>
           <LexiconView
@@ -394,6 +417,12 @@ function App() {
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="8.5"/><line x1="12" y1="12" x2="12" y2="16"/></svg>
             About
           </button>
+          {owner && (
+            <button className={"mobile-tab" + (mainView === "stats" ? " active" : "")} onClick={() => handleNavChange("stats")}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></svg>
+              Stats
+            </button>
+          )}
         </nav>
       )}
     </div>

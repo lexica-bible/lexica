@@ -102,6 +102,37 @@ def _user_for_token(conn):
     return row["user_id"] if row else None
 
 
+# The site OWNER — one person (you), identified by email in the WSGI env. Used to
+# gate owner-only features (visitor stats, the ESV reading text). Falls back to the
+# older ESV_OWNER_EMAIL so a single var (OWNER_EMAIL) can cover both. Unset -> no one
+# is the owner (features stay off), so a deploy before setup is safe.
+OWNER_EMAIL = (os.environ.get("OWNER_EMAIL") or os.environ.get("ESV_OWNER_EMAIL") or "").strip().lower()
+
+
+def email_for_token(conn):
+    """Account email for the request's bearer token, or None."""
+    uid = _user_for_token(conn)
+    if uid is None:
+        return None
+    row = conn.execute("SELECT email FROM users WHERE id = ?", (uid,)).fetchone()
+    return row["email"] if row else None
+
+
+def is_owner():
+    """True only when the request carries a valid bearer token whose account email
+    matches OWNER_EMAIL. The gate behind every owner-only feature."""
+    if not OWNER_EMAIL:
+        return False
+    conn = notes_db()
+    try:
+        email = email_for_token(conn)
+    except sqlite3.Error:
+        return False
+    finally:
+        conn.close()
+    return bool(email) and email.strip().lower() == OWNER_EMAIL
+
+
 def _read_creds():
     try:
         body = json.loads(request.get_data(cache=False) or b"{}")
