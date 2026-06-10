@@ -2585,6 +2585,15 @@ input { font-family: inherit; }
 .nav-passage:hover { color: var(--ink); }
 .nav-passage.on { background: var(--bg-sunk); color: var(--ink); font-weight: 600; border-radius: 5px; }
 
+/* Chronological: a small chapter divider between the chapters a passage spans */
+.lib-chrono-chapmark {
+  display: inline-block; margin: 16px 0 9px;
+  font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  color: var(--gold); background: var(--gold-soft);
+  padding: 3px 9px; border-radius: 4px;
+}
+.lib-chrono-chapmark:first-child { margin-top: 2px; }
+
 /* ============================================================
    READING TOOLBAR (new bar — desktop library, ≥1100px only)
 ============================================================ */

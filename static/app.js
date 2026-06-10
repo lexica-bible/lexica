@@ -4887,6 +4887,8 @@ function LibraryView({
   const [orderMode, setOrderMode] = useState("canonical"); // "canonical" | "chronological"
   const [chrono, setChrono] = useState(null); // { eras, passages } | null
   const [chronoPos, setChronoPos] = useState(1); // current passage position (1-based)
+  const [chronoData, setChronoData] = useState(null); // loaded span: { pos, byCh:{ch:{abp,kjv,bsb}} }
+  const [chronoLoading, setChronoLoading] = useState(false);
   const nonCanon = NONCANON.find(t => t.id === corpus) || null;
   const chronoOn = orderMode === "chronological" && !nonCanon && !!chrono;
   const curPassage = chronoOn ? chrono.passages[chronoPos - 1] || null : null;
@@ -5031,7 +5033,7 @@ function LibraryView({
     }
   }, [nav, books]);
   useEffect(() => {
-    if (!selBook || nonCanon) return; // non-canonical texts load via their own effect below
+    if (!selBook || nonCanon || chronoOn) return; // non-canon + chronological load via their own effects below
     let cancelled = false;
     setLoading(true);
     setVerses([]);
@@ -5046,7 +5048,44 @@ function LibraryView({
     return () => {
       cancelled = true;
     };
-  }, [selBook && selBook.abbrev, selChapter, corpus]);
+  }, [selBook && selBook.abbrev, selChapter, corpus, chronoOn]);
+
+  // Chronological span loader: fetch every chapter the current passage covers, for
+  // the active text(s). One state object keyed by chapter; the render trims each
+  // chapter to the passage's verse window and stitches them with chapter markers.
+  useEffect(() => {
+    if (!chronoOn || !curPassage || !selBook) return;
+    let cancelled = false;
+    setChronoLoading(true);
+    const {
+      book,
+      start_ch,
+      end_ch
+    } = curPassage;
+    const chs = [];
+    for (let c = start_ch; c <= end_ch; c++) chs.push(c);
+    const need = translation === "parallel" ? ["abp", "kjv"] : [translation];
+    const fetchChapter = c => {
+      const jobs = [];
+      if (need.includes("abp")) jobs.push(api.chapter(book, c).then(d => ["abp", d]));
+      if (need.includes("kjv")) jobs.push(api.kjvChapter(book, c).then(d => ["kjv", d]));
+      if (need.includes("bsb")) jobs.push(api.bsbChapter(book, c).then(d => ["bsb", d]));
+      return Promise.all(jobs).then(pairs => [c, Object.fromEntries(pairs)]);
+    };
+    Promise.all(chs.map(fetchChapter)).then(entries => {
+      if (cancelled) return;
+      setChronoData({
+        pos: curPassage.pos,
+        byCh: Object.fromEntries(entries)
+      });
+      setChronoLoading(false);
+    }).catch(() => {
+      if (!cancelled) setChronoLoading(false);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [chronoOn, chronoPos, translation, corpus]);
 
   // Non-canonical text loader (Didache, etc.) — keyed on the active text id + chapter.
   useEffect(() => {
@@ -5067,7 +5106,7 @@ function LibraryView({
     };
   }, [corpus, selChapter]);
   useEffect(() => {
-    if (!selBook || nonCanon || translation !== "kjv" && translation !== "parallel") return;
+    if (!selBook || nonCanon || chronoOn || translation !== "kjv" && translation !== "parallel") return;
     let cancelled = false;
     setKjvLoading(true);
     setKjvVerses([]);
@@ -5082,11 +5121,11 @@ function LibraryView({
     return () => {
       cancelled = true;
     };
-  }, [selBook && selBook.abbrev, selChapter, translation, corpus]);
+  }, [selBook && selBook.abbrev, selChapter, translation, corpus, chronoOn]);
 
   // BSB chapter loader — only when the BSB reading text is active.
   useEffect(() => {
-    if (!selBook || nonCanon || translation !== "bsb") return;
+    if (!selBook || nonCanon || chronoOn || translation !== "bsb") return;
     let cancelled = false;
     setBsbLoading(true);
     setBsbVerses([]);
@@ -5101,7 +5140,7 @@ function LibraryView({
     return () => {
       cancelled = true;
     };
-  }, [selBook && selBook.abbrev, selChapter, translation, corpus]);
+  }, [selBook && selBook.abbrev, selChapter, translation, corpus, chronoOn]);
   useEffect(() => {
     if (!nav?.scroll || loading || !verses.length) return;
     // Don't scroll while the requested chapter's verses are still the OLD chapter's —
@@ -5217,6 +5256,57 @@ function LibraryView({
   const kjvWordMode = chipMode;
   const POETRY_BOOKS = new Set(["Psa", "Pro", "Job", "Son", "Lam", "Ecc"]);
   const isPoetry = POETRY_BOOKS.has(selBook?.abbrev);
+
+  // ---- Chronological span assembly --------------------------------------
+  // Pull the active text(s) for the current passage out of the loaded span,
+  // trim each chapter to the passage's verse window, and tag every verse with
+  // its chapter (_ch). The renderers read _ch (defaulting to selChapter), so
+  // canonical reading is unchanged — _ch is simply absent there.
+  const chronoReady = chronoOn && chronoData && chronoData.pos === chronoPos;
+  const flattenSpan = key => {
+    if (!chronoReady || !curPassage) return [];
+    const {
+      start_ch,
+      end_ch,
+      start_v,
+      end_v
+    } = curPassage;
+    const out = [];
+    for (let c = start_ch; c <= end_ch; c++) {
+      const arr = chronoData.byCh[c] && chronoData.byCh[c][key] || [];
+      const lo = c === start_ch ? start_v : 1;
+      const hi = c === end_ch ? end_v : Infinity;
+      arr.forEach(v => {
+        if (v.verse >= lo && v.verse <= hi) out.push({
+          ...v,
+          _ch: c
+        });
+      });
+    }
+    return out;
+  };
+  const abpView = chronoOn ? flattenSpan("abp") : verses;
+  const kjvView = chronoOn ? flattenSpan("kjv") : kjvVerses;
+  const bsbView = chronoOn ? flattenSpan("bsb") : bsbVerses;
+  // Drop a chapter divider each time _ch changes; a plain map for canonical (no _ch).
+  const withMarks = (arr, renderFn) => {
+    const out = [];
+    let lastCh = null;
+    arr.forEach(v => {
+      if (v._ch != null && v._ch !== lastCh) {
+        out.push(/*#__PURE__*/React.createElement("div", {
+          key: `cm-${v._ch}`,
+          className: "lib-chrono-chapmark"
+        }, selBook ? selBook.name : "", " ", v._ch));
+        lastCh = v._ch;
+      }
+      out.push(renderFn(v));
+    });
+    return out;
+  };
+  const abpShowLoading = chronoOn ? chronoLoading || !chronoReady : loading;
+  const kjvShowLoading = chronoOn ? chronoLoading || !chronoReady : kjvLoading;
+  const bsbShowLoading = chronoOn ? chronoLoading || !chronoReady : bsbLoading;
   const swipeRef = React.useRef(null);
   const tapMovedRef = React.useRef(false);
   const swipeHandlers = isMobile ? {
@@ -5319,7 +5409,10 @@ function LibraryView({
       setNoteSel(null);
       return;
     }
-    const refLabel = bookName + " " + selChapter + ":" + startV + (endV !== startV ? "–" + endV : "");
+    // The chapter the selection sits in — from the row (chronological spans several
+    // chapters), falling back to the single canonical chapter.
+    const selCh = parseInt(_attrUp(range.startContainer, "data-note-chapter") || selChapter, 10);
+    const refLabel = bookName + " " + selCh + ":" + startV + (endV !== startV ? "–" + endV : "");
     // In chip mode each word is its own chip with no space characters between
     // them, so the raw selected text runs together ("Inthebeginning"). Rebuild
     // the snippet from the visible English of the touched word chips instead;
@@ -5350,7 +5443,7 @@ function LibraryView({
         translation,
         book: bookId,
         bookName,
-        chapter: selChapter,
+        chapter: selCh,
         start: {
           verse: startV,
           pos: startP
@@ -5453,15 +5546,23 @@ function LibraryView({
     }
   };
 
-  // Note markers in the verse margin: notes anchored in the current chapter.
-  const chapterNotes = NotesStore.forChapter(corpus, nonCanon ? nonCanon.id : selBook ? selBook.abbrev : null, selChapter);
-  const noteForVerse = verse => chapterNotes.find(n => verse >= n.start.verse && verse <= (n.end && n.end.verse || n.start.verse));
+  // Notes/highlights are looked up per chapter. Canonical reading is one chapter
+  // (ch defaults to selChapter); chronological spans several, so every note helper
+  // takes the verse's chapter. A small per-render cache avoids re-querying the
+  // store for each verse in a chapter.
+  const noteBookId = nonCanon ? nonCanon.id : selBook ? selBook.abbrev : null;
+  const _chNoteCache = {};
+  const chapterNotesFor = ch => {
+    if (!(ch in _chNoteCache)) _chNoteCache[ch] = NotesStore.forChapter(corpus, noteBookId, ch);
+    return _chNoteCache[ch];
+  };
+  const noteForVerse = (verse, ch = selChapter) => chapterNotesFor(ch).find(n => verse >= n.start.verse && verse <= (n.end && n.end.verse || n.start.verse));
   // Highlight paint: the color (if any) for a given word. Highlights show in
   // EVERY translation (verses always line up). In the text where the highlight
   // was made we paint the exact words; in a DIFFERENT translation we can't line
   // up word-for-word, so a partial highlight rounds up to the whole verse.
-  const hiForWord = (verse, pos) => {
-    for (const n of chapterNotes) {
+  const hiForWord = (verse, pos, ch = selChapter) => {
+    for (const n of chapterNotesFor(ch)) {
       if (!n.color) continue;
       const sv = n.start.verse,
         ev = n.end && n.end.verse || sv;
@@ -5476,12 +5577,12 @@ function LibraryView({
     }
     return null;
   };
-  const hiClass = (verse, pos) => {
-    const c = hiForWord(verse, pos);
+  const hiClass = (verse, pos, ch = selChapter) => {
+    const c = hiForWord(verse, pos, ch);
     return c ? " lib-hi lib-hi-" + c : "";
   };
-  const noteMarker = verse => {
-    const n = noteForVerse(verse);
+  const noteMarker = (verse, ch = selChapter) => {
+    const n = noteForVerse(verse, ch);
     if (!n) return null;
     return /*#__PURE__*/React.createElement("button", {
       className: "lib-note-dot",
@@ -5494,7 +5595,7 @@ function LibraryView({
     }, /*#__PURE__*/React.createElement(Icon.Bookmark, null));
   };
   // Build the whole-verse anchor (incl. a readable snippet) for a verse number.
-  const verseAnchor = (verse, fromEl) => {
+  const verseAnchor = (verse, fromEl, ch = selChapter) => {
     const bookId = nonCanon ? nonCanon.id : selBook ? selBook.abbrev : null;
     const bookName = nonCanon ? nonCanon.name : selBook ? selBook.name : "";
     if (!bookId) return null;
@@ -5525,7 +5626,7 @@ function LibraryView({
       translation,
       book: bookId,
       bookName,
-      chapter: selChapter,
+      chapter: ch,
       start: {
         verse,
         pos: null
@@ -5535,13 +5636,13 @@ function LibraryView({
         pos: null
       },
       snippet: snippet.slice(0, 300),
-      refLabel: bookName + " " + selChapter + ":" + verse
+      refLabel: bookName + " " + ch + ":" + verse
     };
   };
   // Right-click / long-press a verse number opens a small menu (Bookmark · Note ·
   // colors). Left-click / tap stays cross-references.
   const [verseMenu, setVerseMenu] = useState(null); // { rect, verse, el } | null
-  const openVerseMenu = (verse, el) => {
+  const openVerseMenu = (verse, el, ch = selChapter) => {
     const r = el.getBoundingClientRect();
     setVerseMenu({
       rect: {
@@ -5551,11 +5652,12 @@ function LibraryView({
         height: r.height
       },
       verse,
-      el
+      el,
+      ch
     });
   };
   const vmBookmark = () => {
-    const a = verseAnchor(verseMenu.verse, verseMenu.el);
+    const a = verseAnchor(verseMenu.verse, verseMenu.el, verseMenu.ch);
     if (!a) return setVerseMenu(null);
     const ex = NotesStore.findAnchor(a);
     if (ex) NotesStore.update(ex.id, {
@@ -5567,7 +5669,7 @@ function LibraryView({
     setVerseMenu(null);
   };
   const vmNote = () => {
-    const a = verseAnchor(verseMenu.verse, verseMenu.el);
+    const a = verseAnchor(verseMenu.verse, verseMenu.el, verseMenu.ch);
     if (!a) return setVerseMenu(null);
     const ex = NotesStore.findAnchor(a);
     const note = ex || NotesStore.create(a);
@@ -5575,7 +5677,7 @@ function LibraryView({
     onOpenNote && onOpenNote(note.id);
   };
   const vmColor = color => {
-    const a = verseAnchor(verseMenu.verse, verseMenu.el);
+    const a = verseAnchor(verseMenu.verse, verseMenu.el, verseMenu.ch);
     if (!a) return setVerseMenu(null);
     const ex = NotesStore.findAnchor(a);
     if (ex) NotesStore.update(ex.id, {
@@ -5588,7 +5690,7 @@ function LibraryView({
   };
   // Copy the whole verse text to the clipboard.
   const vmCopy = () => {
-    const a = verseAnchor(verseMenu.verse, verseMenu.el);
+    const a = verseAnchor(verseMenu.verse, verseMenu.el, verseMenu.ch);
     if (!a) return setVerseMenu(null);
     setVerseMenu(null);
     try {
@@ -5598,7 +5700,7 @@ function LibraryView({
   };
   // Send the whole verse to the journal page currently open in the Notes tab.
   const vmJournal = () => {
-    const a = verseAnchor(verseMenu.verse, verseMenu.el);
+    const a = verseAnchor(verseMenu.verse, verseMenu.el, verseMenu.ch);
     if (!a) return setVerseMenu(null);
     setVerseMenu(null);
     const id = NotesStore.getActiveJournal();
@@ -5614,10 +5716,10 @@ function LibraryView({
     timer: null,
     fired: false
   });
-  const vnumNoteHandlers = verse => ({
+  const vnumNoteHandlers = (verse, ch = selChapter) => ({
     onContextMenu: e => {
       e.preventDefault();
-      openVerseMenu(verse, e.currentTarget);
+      openVerseMenu(verse, e.currentTarget, ch);
     },
     onTouchStart: e => {
       const el = e.currentTarget;
@@ -5626,7 +5728,7 @@ function LibraryView({
       clearTimeout(st.timer);
       st.timer = setTimeout(() => {
         st.fired = true;
-        openVerseMenu(verse, el);
+        openVerseMenu(verse, el, ch);
         if (navigator.vibrate) navigator.vibrate(12);
       }, 500);
     },
@@ -5640,8 +5742,8 @@ function LibraryView({
       return next;
     });
   };
-  const handleVerseNum = onVerseNumberClick && selBook ? verse => onVerseNumberClick(selBook.abbrev, selChapter, verse, translation) : null;
-  const vnumEl = verse => /*#__PURE__*/React.createElement("span", _extends({
+  const handleVerseNum = onVerseNumberClick && selBook ? (verse, ch = selChapter) => onVerseNumberClick(selBook.abbrev, ch, verse, translation) : null;
+  const vnumEl = (verse, ch = selChapter) => /*#__PURE__*/React.createElement("span", _extends({
     className: "lib-vnum" + (handleVerseNum ? " lib-vnum-click" : "") + (showInterlinear ? " lib-vnum-il" : ""),
     title: handleVerseNum ? "Click: cross-references · Right-click / long-press: add a note" : undefined,
     onClick: handleVerseNum ? () => {
@@ -5649,9 +5751,9 @@ function LibraryView({
         vnumPressRef.current.fired = false;
         return;
       }
-      handleVerseNum(verse);
+      handleVerseNum(verse, ch);
     } : undefined
-  }, vnumNoteHandlers(verse)), verse);
+  }, vnumNoteHandlers(verse, ch)), verse);
 
   // Verse number for non-canonical texts: opens the note menu on right-click /
   // long-press, but no cross-references (those texts have none). Left-click is a no-op
@@ -5671,11 +5773,12 @@ function LibraryView({
     }, "");
   };
   const renderProseWords = v => {
+    const ch = v._ch ?? selChapter;
     const englishWords = getEnglishOrderWords(v.words);
     return englishWords.map((w, i) => {
       const text = w.english || "";
       if (!text) return null;
-      const hc = hiClass(v.verse, w.position); // highlight paint for this word
+      const hc = hiClass(v.verse, w.position, ch); // highlight paint for this word
       const isPunct = /^[.,;:?!—)]/.test(text);
       if (isPunct) return /*#__PURE__*/React.createElement("span", {
         key: i,
@@ -5726,13 +5829,14 @@ function LibraryView({
     });
   };
   const renderVerse = (v, skipHeading = false) => {
-    const isHighlight = nav && nav.highlight === v.verse && (nav.chapter == null || nav.chapter === selChapter);
+    const ch = v._ch ?? selChapter; // chronological rides the chapter on the verse
+    const isHighlight = nav && nav.highlight === v.verse && (nav.chapter == null || nav.chapter === ch);
     const makeEntry = w => ({
-      id: `lib-${selBook.abbrev}-${selChapter}-${v.verse}-${w.position}`,
+      id: `lib-${selBook.abbrev}-${ch}-${v.verse}-${w.position}`,
       ...wordEntryCore(w, {
-        ref: `${selBook.abbrev} ${selChapter}:${v.verse}`,
+        ref: `${selBook.abbrev} ${ch}:${v.verse}`,
         book: selBook.abbrev,
-        chapter: selChapter,
+        chapter: ch,
         verse: v.verse,
         gloss: w.english
       }),
@@ -5754,7 +5858,7 @@ function LibraryView({
         const italicSet = new Set(w.italic_words.split(','));
         const smcapSet = w.smcap_words ? new Set(w.smcap_words.split(',')) : new Set();
         const parts = w.english.split(' ');
-        const hc = hiClass(v.verse, w.position);
+        const hc = hiClass(v.verse, w.position, ch);
         return /*#__PURE__*/React.createElement(React.Fragment, {
           key: key
         }, (() => {
@@ -5815,7 +5919,7 @@ function LibraryView({
       return /*#__PURE__*/React.createElement("span", {
         key: key,
         "data-note-pos": w.position,
-        className: "lib-word" + (w.italic ? " lib-abp-italic" : "") + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "") + hiClass(v.verse, w.position),
+        className: "lib-word" + (w.italic ? " lib-abp-italic" : "") + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "") + hiClass(v.verse, w.position, ch),
         onClick: clickable ? () => onWordClick(isPN ? {
           ...makeEntry(w),
           isPN: true,
@@ -5852,7 +5956,7 @@ function LibraryView({
         const smcapSet = w.smcap_words ? new Set(w.smcap_words.split(',')) : new Set();
         const parts = w.english.split(' ');
         const anchorIdx = strongsAnchorIndex(parts, italicSet, w);
-        const hc = hiClass(v.verse, w.position);
+        const hc = hiClass(v.verse, w.position, ch);
         return /*#__PURE__*/React.createElement(React.Fragment, {
           key: key
         }, parts.map((word, pi) => {
@@ -5918,7 +6022,7 @@ function LibraryView({
       return /*#__PURE__*/React.createElement("span", {
         key: key,
         "data-note-pos": w.position,
-        className: "lib-word lib-word-bracketed" + (w.italic ? " lib-abp-italic" : "") + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "") + hiClass(v.verse, w.position),
+        className: "lib-word lib-word-bracketed" + (w.italic ? " lib-abp-italic" : "") + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "") + hiClass(v.verse, w.position, ch),
         onClick: clickable ? () => onWordClick(isPN ? {
           ...makeEntry(w),
           isPN: true,
@@ -5949,7 +6053,7 @@ function LibraryView({
     };
     if (!wordMode) {
       return /*#__PURE__*/React.createElement(React.Fragment, {
-        key: v.verse
+        key: `${ch}-${v.verse}`
       }, !skipHeading && v.heading && /*#__PURE__*/React.createElement("div", {
         className: "lib-verse-row pericope-row"
       }, /*#__PURE__*/React.createElement("span", {
@@ -5960,10 +6064,11 @@ function LibraryView({
       }, v.heading)), /*#__PURE__*/React.createElement("div", {
         ref: isHighlight ? highlightRef : null,
         "data-note-verse": v.verse,
+        "data-note-chapter": ch,
         className: "lib-verse-row" + (isHighlight ? " lib-highlight" : "")
-      }, vnumEl(v.verse), /*#__PURE__*/React.createElement("span", {
+      }, vnumEl(v.verse, ch), /*#__PURE__*/React.createElement("span", {
         className: "lib-verse-content"
-      }, noteMarker(v.verse), renderProseWords(v))));
+      }, noteMarker(v.verse, ch), renderProseWords(v))));
     }
 
     // Chip mode — always Greek syntactic order with bracket notation
@@ -6053,7 +6158,7 @@ function LibraryView({
       });
     }
     return /*#__PURE__*/React.createElement(React.Fragment, {
-      key: v.verse
+      key: `${ch}-${v.verse}`
     }, !skipHeading && v.heading && /*#__PURE__*/React.createElement("div", {
       className: "lib-verse-row pericope-row"
     }, /*#__PURE__*/React.createElement("span", {
@@ -6064,24 +6169,26 @@ function LibraryView({
     }, v.heading)), /*#__PURE__*/React.createElement("div", {
       ref: isHighlight ? highlightRef : null,
       "data-note-verse": v.verse,
+      "data-note-chapter": ch,
       className: "lib-verse-row" + (isHighlight ? " lib-highlight" : "")
-    }, vnumEl(v.verse), /*#__PURE__*/React.createElement("span", {
+    }, vnumEl(v.verse, ch), /*#__PURE__*/React.createElement("span", {
       className: "lib-verse-content lib-verse-chips"
-    }, noteMarker(v.verse), content)));
+    }, noteMarker(v.verse, ch), content)));
   };
   const renderKjvVerse = (v, showVerseNum = true, skipHeading = false) => {
-    const isHighlight = nav && nav.highlight === v.verse && (nav.chapter == null || nav.chapter === selChapter);
+    const ch = v._ch ?? selChapter;
+    const isHighlight = nav && nav.highlight === v.verse && (nav.chapter == null || nav.chapter === ch);
     const makeKjvEntry = (w, sid) => ({
-      id: `kjv-${selBook.abbrev}-${selChapter}-${v.verse}-${w.word_id}`,
+      id: `kjv-${selBook.abbrev}-${ch}-${v.verse}-${w.word_id}`,
       strongs: sid || "",
       strongs_base: sid ? sid.slice(1) : "",
       strongs_raw: sid ? sid.slice(1) : "",
       greek: w.lemma || "",
       translit: w.xlit || "",
       gloss: w.word,
-      ref: `${selBook.abbrev} ${selChapter}:${v.verse}`,
+      ref: `${selBook.abbrev} ${ch}:${v.verse}`,
       book: selBook.abbrev,
-      chapter: selChapter,
+      chapter: ch,
       verse: v.verse,
       definition: "",
       derivation: "",
@@ -6090,7 +6197,7 @@ function LibraryView({
       isHebrew: sid ? sid.startsWith("H") : false
     });
     return /*#__PURE__*/React.createElement(React.Fragment, {
-      key: v.verse
+      key: `${ch}-${v.verse}`
     }, !skipHeading && v.heading && /*#__PURE__*/React.createElement("div", {
       className: "lib-verse-row pericope-row"
     }, /*#__PURE__*/React.createElement("span", {
@@ -6101,16 +6208,17 @@ function LibraryView({
     }, v.heading)), /*#__PURE__*/React.createElement("div", {
       ref: isHighlight ? highlightRef : null,
       "data-note-verse": v.verse,
+      "data-note-chapter": ch,
       className: "lib-verse-row" + (isHighlight ? " lib-highlight" : "")
-    }, showVerseNum && vnumEl(v.verse), /*#__PURE__*/React.createElement("span", {
+    }, showVerseNum && vnumEl(v.verse, ch), /*#__PURE__*/React.createElement("span", {
       className: "lib-verse-content lib-verse-chips"
-    }, showVerseNum && noteMarker(v.verse), v.words.map((w, i) => {
+    }, showVerseNum && noteMarker(v.verse, ch), v.words.map((w, i) => {
       const sid = w.strongs_ids && w.strongs_ids.length ? w.strongs_ids[0] : null;
       const clickable = !!(onWordClick && sid);
       const isHebrew = sid ? sid.startsWith("H") : false;
       return /*#__PURE__*/React.createElement("span", {
         key: i,
-        className: "lib-word lib-kjv-word" + (w.italic ? " lib-kjv-italic" : "") + (clickable ? " lib-word-clickable" : "") + hiClass(v.verse, null),
+        className: "lib-word lib-kjv-word" + (w.italic ? " lib-kjv-italic" : "") + (clickable ? " lib-word-clickable" : "") + hiClass(v.verse, null, ch),
         onClick: clickable ? () => onWordClick(makeKjvEntry(w, sid)) : undefined
       }, showInterlinear && (w.lemma ? /*#__PURE__*/React.createElement("span", {
         className: "lib-iw-greek",
@@ -6136,9 +6244,10 @@ function LibraryView({
     }))));
   };
   const renderKjvProse = (v, showVerseNum = true, skipHeading = false) => {
-    const isHighlight = nav && nav.highlight === v.verse && (nav.chapter == null || nav.chapter === selChapter);
+    const ch = v._ch ?? selChapter;
+    const isHighlight = nav && nav.highlight === v.verse && (nav.chapter == null || nav.chapter === ch);
     return /*#__PURE__*/React.createElement(React.Fragment, {
-      key: v.verse
+      key: `${ch}-${v.verse}`
     }, !skipHeading && v.heading && /*#__PURE__*/React.createElement("div", {
       className: "lib-verse-row pericope-row"
     }, /*#__PURE__*/React.createElement("span", {
@@ -6149,20 +6258,22 @@ function LibraryView({
     }, v.heading)), /*#__PURE__*/React.createElement("div", {
       ref: isHighlight ? highlightRef : null,
       "data-note-verse": v.verse,
+      "data-note-chapter": ch,
       className: "lib-verse-row" + (isHighlight ? " lib-highlight" : "")
-    }, showVerseNum && vnumEl(v.verse), /*#__PURE__*/React.createElement("span", {
+    }, showVerseNum && vnumEl(v.verse, ch), /*#__PURE__*/React.createElement("span", {
       className: "lib-verse-content"
-    }, showVerseNum && noteMarker(v.verse), v.words.map((w, i) => /*#__PURE__*/React.createElement("span", {
+    }, showVerseNum && noteMarker(v.verse, ch), v.words.map((w, i) => /*#__PURE__*/React.createElement("span", {
       key: i,
-      className: (w.italic ? "lib-prose-italic" : "") + hiClass(v.verse, null)
+      className: (w.italic ? "lib-prose-italic" : "") + hiClass(v.verse, null, ch)
     }, w.word, w.punc || "", " ")))));
   };
 
   // BSB reader — plain English reading text (one string per verse, no word data).
   const renderBsbVerse = v => {
-    const isHighlight = nav && nav.highlight === v.verse && (nav.chapter == null || nav.chapter === selChapter);
+    const ch = v._ch ?? selChapter;
+    const isHighlight = nav && nav.highlight === v.verse && (nav.chapter == null || nav.chapter === ch);
     return /*#__PURE__*/React.createElement(React.Fragment, {
-      key: v.verse
+      key: `${ch}-${v.verse}`
     }, v.heading && /*#__PURE__*/React.createElement("div", {
       className: "lib-verse-row pericope-row"
     }, /*#__PURE__*/React.createElement("span", {
@@ -6173,11 +6284,12 @@ function LibraryView({
     }, v.heading)), /*#__PURE__*/React.createElement("div", {
       ref: isHighlight ? highlightRef : null,
       "data-note-verse": v.verse,
+      "data-note-chapter": ch,
       className: "lib-verse-row" + (isHighlight ? " lib-highlight" : "")
-    }, vnumEl(v.verse), /*#__PURE__*/React.createElement("span", {
+    }, vnumEl(v.verse, ch), /*#__PURE__*/React.createElement("span", {
       className: "lib-verse-content"
-    }, noteMarker(v.verse), /*#__PURE__*/React.createElement("span", {
-      className: "lib-bsb-text" + hiClass(v.verse, null)
+    }, noteMarker(v.verse, ch), /*#__PURE__*/React.createElement("span", {
+      className: "lib-bsb-text" + hiClass(v.verse, null, ch)
     }, v.verse_text))));
   };
 
@@ -6626,15 +6738,26 @@ function LibraryView({
     className: "lib-parallel-label"
   }, "ABP"), /*#__PURE__*/React.createElement("span", {
     className: "lib-parallel-label"
-  }, "KJV")), loading || kjvLoading ? /*#__PURE__*/React.createElement("div", {
+  }, "KJV")), abpShowLoading || kjvShowLoading ? /*#__PURE__*/React.createElement("div", {
     className: "lib-loading"
   }, "Loading\u2026") : (() => {
-    const kjvMap = Object.fromEntries(kjvVerses.map(v => [v.verse, v]));
+    // Key by chapter+verse so a chronological span (verse numbers repeat
+    // across chapters) pairs ABP↔KJV correctly; canonical has one chapter.
+    const cv = v => `${v._ch ?? selChapter}-${v.verse}`;
+    const kjvMap = Object.fromEntries(kjvView.map(v => [cv(v), v]));
     // Build display items, lifting section headings above any preceding ABP-only verse
     const items = [];
-    for (let i = 0; i < verses.length; i++) {
-      const abpV = verses[i];
-      const kjvV = kjvMap[abpV.verse];
+    let lastCh = null;
+    for (let i = 0; i < abpView.length; i++) {
+      const abpV = abpView[i];
+      if (abpV._ch != null && abpV._ch !== lastCh) {
+        items.push({
+          type: 'chap',
+          ch: abpV._ch
+        });
+        lastCh = abpV._ch;
+      }
+      const kjvV = kjvMap[cv(abpV)];
       const heading = abpV.heading || kjvV && kjvV.heading;
       if (heading) {
         const prev = items[items.length - 1];
@@ -6642,13 +6765,13 @@ function LibraryView({
           items.splice(items.length - 1, 0, {
             type: 'heading',
             heading,
-            key: `h-${abpV.verse}`
+            key: `h-${cv(abpV)}`
           });
         } else {
           items.push({
             type: 'heading',
             heading,
-            key: `h-${abpV.verse}`
+            key: `h-${cv(abpV)}`
           });
         }
       }
@@ -6659,6 +6782,12 @@ function LibraryView({
       });
     }
     return items.map(item => {
+      if (item.type === 'chap') {
+        return /*#__PURE__*/React.createElement("div", {
+          key: `cm-${item.ch}`,
+          className: "lib-chrono-chapmark"
+        }, selBook ? selBook.name : "", " ", item.ch);
+      }
       if (item.type === 'heading') {
         return /*#__PURE__*/React.createElement("div", {
           key: item.key,
@@ -6671,62 +6800,67 @@ function LibraryView({
         abpV,
         kjvV
       } = item;
+      const ach = abpV._ch ?? selChapter;
       return /*#__PURE__*/React.createElement("div", {
-        key: abpV.verse,
+        key: cv(abpV),
         className: "lib-parallel-verse"
       }, /*#__PURE__*/React.createElement("div", {
         className: "lib-parallel-vnum"
-      }, vnumEl(abpV.verse)), /*#__PURE__*/React.createElement("div", {
+      }, vnumEl(abpV.verse, ach)), /*#__PURE__*/React.createElement("div", {
         className: "lib-parallel-col"
       }, renderVerse(abpV, true)), /*#__PURE__*/React.createElement("div", {
         className: "lib-parallel-col"
       }, kjvV ? kjvWordMode ? renderKjvVerse(kjvV, true, true) : renderKjvProse(kjvV, true, true) : null));
     });
-  })()) : translation === "kjv" ? kjvLoading ? /*#__PURE__*/React.createElement("div", {
+  })()) : translation === "kjv" ? kjvShowLoading ? /*#__PURE__*/React.createElement("div", {
     className: "lib-loading"
   }, "Loading\u2026") : kjvWordMode ? /*#__PURE__*/React.createElement("div", {
     className: "lib-text-words"
-  }, kjvVerses.map(v => renderKjvVerse(v))) : /*#__PURE__*/React.createElement("div", {
+  }, withMarks(kjvView, v => renderKjvVerse(v))) : /*#__PURE__*/React.createElement("div", {
     className: "lib-text-words"
-  }, kjvVerses.map(v => renderKjvProse(v))) : translation === "bsb" ? bsbLoading ? /*#__PURE__*/React.createElement("div", {
+  }, withMarks(kjvView, v => renderKjvProse(v))) : translation === "bsb" ? bsbShowLoading ? /*#__PURE__*/React.createElement("div", {
     className: "lib-loading"
   }, "Loading\u2026") : /*#__PURE__*/React.createElement("div", {
     className: "lib-text-words"
-  }, bsbVerses.map(renderBsbVerse)) : loading ? /*#__PURE__*/React.createElement("div", {
+  }, withMarks(bsbView, renderBsbVerse)) : abpShowLoading ? /*#__PURE__*/React.createElement("div", {
     className: "lib-loading"
   }, "Loading\u2026") : wordMode ? /*#__PURE__*/React.createElement("div", {
     className: "lib-text-words"
-  }, verses.map(v => renderVerse(v))) : isPoetry ? /*#__PURE__*/React.createElement("div", {
+  }, withMarks(abpView, v => renderVerse(v))) : isPoetry ? /*#__PURE__*/React.createElement("div", {
     className: "lib-text-words"
-  }, verses.map(v => renderVerse(v))) : /*#__PURE__*/React.createElement("div", {
+  }, withMarks(abpView, v => renderVerse(v))) : /*#__PURE__*/React.createElement("div", {
     className: "lib-text-words lib-prose-flow"
-  }, verses.map(v => /*#__PURE__*/React.createElement(React.Fragment, {
-    key: v.verse
-  }, v.heading && /*#__PURE__*/React.createElement("div", {
-    className: "pericope-heading"
-  }, v.heading), /*#__PURE__*/React.createElement("span", {
-    className: "lib-flow-verse",
-    "data-note-verse": v.verse
-  }, /*#__PURE__*/React.createElement("sup", _extends({
-    className: "lib-flow-vnum",
-    title: handleVerseNum ? "Click: cross-references · Right-click / long-press: add a note" : undefined,
-    onClick: handleVerseNum ? () => {
-      if (vnumPressRef.current.fired) {
-        vnumPressRef.current.fired = false;
-        return;
+  }, withMarks(abpView, v => {
+    const ch = v._ch ?? selChapter;
+    return /*#__PURE__*/React.createElement(React.Fragment, {
+      key: `${ch}-${v.verse}`
+    }, v.heading && /*#__PURE__*/React.createElement("div", {
+      className: "pericope-heading"
+    }, v.heading), /*#__PURE__*/React.createElement("span", {
+      className: "lib-flow-verse",
+      "data-note-verse": v.verse,
+      "data-note-chapter": ch
+    }, /*#__PURE__*/React.createElement("sup", _extends({
+      className: "lib-flow-vnum",
+      title: handleVerseNum ? "Click: cross-references · Right-click / long-press: add a note" : undefined,
+      onClick: handleVerseNum ? () => {
+        if (vnumPressRef.current.fired) {
+          vnumPressRef.current.fired = false;
+          return;
+        }
+        handleVerseNum(v.verse, ch);
+      } : undefined
+    }, vnumNoteHandlers(v.verse, ch)), v.verse), noteForVerse(v.verse, ch) && /*#__PURE__*/React.createElement("button", {
+      className: "lib-note-dot lib-note-dot-inline",
+      title: "Open note",
+      "aria-label": "Open note",
+      onClick: e => {
+        e.stopPropagation();
+        const n = noteForVerse(v.verse, ch);
+        onOpenNote && onOpenNote(n.id);
       }
-      handleVerseNum(v.verse);
-    } : undefined
-  }, vnumNoteHandlers(v.verse)), v.verse), noteForVerse(v.verse) && /*#__PURE__*/React.createElement("button", {
-    className: "lib-note-dot lib-note-dot-inline",
-    title: "Open note",
-    "aria-label": "Open note",
-    onClick: e => {
-      e.stopPropagation();
-      const n = noteForVerse(v.verse);
-      onOpenNote && onOpenNote(n.id);
-    }
-  }, /*#__PURE__*/React.createElement(Icon.Bookmark, null)), renderProseWords(v))))))), noteSel && /*#__PURE__*/React.createElement(NoteAddPopover, {
+    }, /*#__PURE__*/React.createElement(Icon.Bookmark, null)), renderProseWords(v)));
+  })))), noteSel && /*#__PURE__*/React.createElement(NoteAddPopover, {
     rect: noteSel.rect,
     isMobile: isMobile,
     onAdd: addNoteFromSelection,
