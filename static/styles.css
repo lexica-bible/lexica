@@ -2559,7 +2559,7 @@ input { font-family: inherit; }
 
 /* Chronological: a small chapter divider between the chapters a passage spans */
 .lib-chrono-chapmark {
-  display: inline-block; margin: 16px 0 9px;
+  display: block; width: fit-content; margin: 16px 0 9px;
   font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
   color: var(--gold); background: var(--gold-soft);
   padding: 3px 9px; border-radius: 4px;
