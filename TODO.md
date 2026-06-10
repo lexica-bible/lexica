@@ -232,21 +232,13 @@ category *names* (renamed to drop loaded framing); generate the actual verses an
 Berean-style. Build a quick proof-of-concept with the off-the-shelf topic→verse mappings first to see
 if people use it, then swap in our own verse selection. Could be a new tab or a mode inside Search.
 
-### Chronological reading mode (works with ANY version)
-Read the Bible in historical/event order instead of book order — like the ESV Chronological Bible
-(interleaves Psalms with Kings/Samuel, prophets with their history, etc.). The key win: this is just
-a different READING ORDER, not a different text, so ONE chronological list drives ABP, KJV, AND BSB
-alike — every version already shares the same book/chapter/verse addresses, so the app just pulls
-each passage range from whichever version is selected. Version-agnostic by design.
-- **The one real piece of work = the passage list** (~1,000–1,200 chunks, each = book + verse range
-  + an era label like "Creation"/"United Kingdom"/"Exile"). Claude can generate a standard ESV-style
-  arrangement as that list — this is the blocking step; do it first, read-only, before any app code.
-- Then: a small route that serves "passage #N" + next/prev (pulling text from the existing version
-  tables), and a new tab with era-based navigation instead of book/chapter dropdowns. Separate tab,
-  not a Library toggle. Touches NO existing ABP/KJV/BSB data — sits entirely on top.
-- Sources to check first for a ready passage sequence: github.com/lifegems/bible-timeline,
-  github.com/BennyThadikaran/bible (365-day plan). See memory `project_chronological_tab`.
-`code: new chronological_sequence list + a serve-by-position route + a new tab`
+### ~~Chronological reading mode~~ — DONE + LIVE 2026-06-09 (desktop + mobile)
+Read the Bible in event order, works with ANY version (ABP/KJV/BSB). Shipped as a reading-ORDER
+toggle in the Library (Canonical | Clock icon = Chronological), NOT a separate tab. Data is a static
+`static/chronological.json` (1,102 passages, 13 eras) built by `scripts/chronological/
+build_chronological.py` — no database, no backend route. Exact-range reader trims + spans chapters.
+Full record in memory `project_chronological_tab`. Possible polish only: suppress the chapter divider
+on single-chapter passages if it ever feels redundant.
 
 ### Read-along audio (play a chapter while you read)
 Like eSword's ESV/KJV audio — a play button that reads the chapter aloud. Scoped 2026-06-09.
