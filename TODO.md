@@ -20,58 +20,16 @@ minor info leak closed, dead code removed, an unbounded cache capped, an endpoin
 
 Still open:
 
-1. **Rebuild script is messy.** When the word table is rebuilt, the script wipes everything and
-   then runs a long chain of patch scripts to fix it back up. It should be one clean pass that
-   gets it right the first time. This is the riskiest part of the codebase to run. (Partly done: the
-   safety-check slice is in — the build's own guards are now unit-tested — but the actual one-clean-
-   pass rewrite remains. Best done the next time a rebuild is genuinely needed, copy-first.)
-   `code: scripts/build_words_from_abp.py + the fix_*.py chain (checklist in CLAUDE.md)`
-
-   **MODEL/EFFORT for this one (2026-06-09):** highest-stakes script in the repo — use Opus 4.8 at
-   HIGH effort. Do NOT hand a data rebuild to Fable 5 (newest ≠ safest for this). The safety is the
-   copy-first discipline + the audit gates, not the model. Ready-to-paste prompt for a fresh session:
-
-   ```
-   TASK: Rewrite the words-table rebuild so it gets the data right in ONE clean pass,
-   instead of the current "wipe everything, then run a long chain of fix_*.py patches to
-   repair it." This is refactor backlog #1 / code-health #1. The build is the riskiest
-   code in the repo — a bad run silently corrupts hundreds of thousands of word rows.
-
-   BEFORE WRITING ANY CODE, read and absorb:
-   - CLAUDE.md → the full "Words rebuild checklist" section (the canonical step order +
-     the exact fix_*.py chain and what each one does), the "strongs_base format — CRITICAL
-     INVARIANT" section, and the "Do Not" section.
-   - memory project_architecture_rework (#2 = this task), project_parser_number_reversal,
-     project_bracket_order_fix, project_corpus_audit, project_pronoun_fix_path_c.
-   - scripts/build_words_from_abp.py (the builder) and every fix_*.py the checklist names.
-
-   HARD CONSTRAINTS (violating any of these is a failure):
-   - COPY-FIRST ALWAYS. All work happens on PythonAnywhere against a COPY:
-     `cp bible.db bible_test.db`. NEVER run the rebuild against the live bible.db.
-     Never `DELETE FROM words` or `DELETE FROM verses` on the real DB.
-   - strongs_base MUST stay fully G/H-prefixed. After any build:
-     `SELECT count(*) FROM words WHERE strongs_base GLOB '[0-9]*'` MUST be 0.
-   - The single pass must reproduce the SAME end state as today's build+patch chain.
-     Some fixes are already folded into the build (the checklist marks which); some are
-     intentionally kept as data-patches (e.g. fix_split_merges, lord_oath, kyrios_mistags)
-     because doing them globally regresses other verses — DECIDE per fix whether it folds
-     into the one pass or must stay a patch, and justify each call.
-   - Validate ONLY with the existing read-only audits, at their known baselines:
-     health_check.py (≤ minor warnings), audit_bracket_order.py (CHIP genuine ≈ 0),
-     audit_corpus_tier1.py (A1 ≈ 176), audit_corpus_tier2.py (~92%),
-     scan_strongs_cross.py (FUNCTION-anchor 0), plus tests/test_build_invariants.py and
-     test_strongs_join.py. Counts to expect are in the checklist.
-
-   DELIVERABLE ORDER:
-   1. A written PLAN first (read-only): which patches fold into the build, which stay as
-      data-patches and why, the new single-pass step order, and the before/after validation
-      plan. Get it reviewed before touching code.
-   2. Only then implement, on bible_test.db, copy-first, validating against the audits at
-      each step. Keep a dated rollback copy. Do not deploy or touch the live DB.
-
-   Communication: plain English, no dev jargon (the user is a data-center engineer, not a
-   programmer). Show code before changing it. Ask before any large or destructive step.
-   ```
+1. ~~**Rebuild script is messy.**~~ **DONE 2026-06-09** — folded the six shape-keyed cleanup scripts
+   into one self-correcting build pass; proven BYTE-IDENTICAL to the old build+14-patch chain
+   (`compare_words.py`, on a copy of live). Committed 815c1c6, deployed. Full record + the kept-as-
+   patch list in [TODO_ARCHIVE.md](TODO_ARCHIVE.md).
+   **STANDING LEVER that's left** (only if these last scripts ever bug you): the word-splitter GUESSES
+   which English word pairs with which Greek word by matching the dictionary — that leaky guess is what
+   the 237-verse `fix_split_merges` patch cleans up. Real word-by-word alignment (the Rahlfs/TAGNT data
+   already used for the pronoun fix) could drive the splitter and retire that patch. Big + risky (the
+   splitter is load-bearing) — a deliberate future effort, copy-first, only when wanted.
+   `code: _split_compounds in scripts/build_words_from_abp.py + scripts/split_merge_fixes.json`
 2. ~~**Two near-identical "build a word entry" functions on the front end.**~~ **DONE 2026-06-08**
    (commit `007446c`). The three copy-pasted builders now share one core: `entrySnum()` +
    `wordEntryCore()` in static/src/00-core.jsx; makeEntry, flattenAiResults, and the library
@@ -270,6 +228,43 @@ category *names* (renamed to drop loaded framing); generate the actual verses an
 Berean-style. Build a quick proof-of-concept with the off-the-shelf topic→verse mappings first to see
 if people use it, then swap in our own verse selection. Could be a new tab or a mode inside Search.
 
+### Chronological reading mode (works with ANY version)
+Read the Bible in historical/event order instead of book order — like the ESV Chronological Bible
+(interleaves Psalms with Kings/Samuel, prophets with their history, etc.). The key win: this is just
+a different READING ORDER, not a different text, so ONE chronological list drives ABP, KJV, AND BSB
+alike — every version already shares the same book/chapter/verse addresses, so the app just pulls
+each passage range from whichever version is selected. Version-agnostic by design.
+- **The one real piece of work = the passage list** (~1,000–1,200 chunks, each = book + verse range
+  + an era label like "Creation"/"United Kingdom"/"Exile"). Claude can generate a standard ESV-style
+  arrangement as that list — this is the blocking step; do it first, read-only, before any app code.
+- Then: a small route that serves "passage #N" + next/prev (pulling text from the existing version
+  tables), and a new tab with era-based navigation instead of book/chapter dropdowns. Separate tab,
+  not a Library toggle. Touches NO existing ABP/KJV/BSB data — sits entirely on top.
+- Sources to check first for a ready passage sequence: github.com/lifegems/bible-timeline,
+  github.com/BennyThadikaran/bible (365-day plan). See memory `project_chronological_tab`.
+`code: new chronological_sequence list + a serve-by-position route + a new tab`
+
+### Read-along audio (play a chapter while you read)
+Like eSword's ESV/KJV audio — a play button that reads the chapter aloud. Scoped 2026-06-09.
+Plan: EVERY reading text gets audio EXCEPT ABP (no recording exists for it).
+- **BSB — cleanest option.** The official Berean Standard Bible audio (narrators Souer/Hays/Gilbert)
+  is **public domain (CC0)** — no terms, no key, no non-commercial limit. We can download the mp3s and
+  host them ourselves. Trade-off: PLAIN narration, **no background music/dramatization.**
+- **KJV — dramatized (music + sound effects)** like eSword comes from Faith Comes By Hearing's "Bible
+  Brain" API (formerly Bible.is). Free for non-commercial use but stays on THEIR terms + THEIR server
+  (register for a key). Also simpler free KJV-with-soft-music recordings exist (AudioTreasure, Internet
+  Archive) if plain narration is fine.
+- **ESV — dramatized, but PRIVATE.** FCBH Bible Brain has ESV audio with background music (fileset
+  e.g. `ENGESVN2DA`). Rides along with the login-gated ESV text above — owner-only, server-enforced,
+  so the spoken ESV words match the ESV text on screen. See the ESV item under "More texts" below.
+- **ABP — none exists** (niche LXX Greek interlinear; no recordings). The primary Greek text stays
+  audio-less; KJV/BSB/ESV all get it.
+- **The catch = alignment.** Audio is per-CHAPTER, not timed per verse, so the basic version is a
+  per-chapter play button that highlights the whole chapter. Verse-by-verse follow-along (karaoke
+  style) needs per-verse timing data — a much bigger lift, not always available.
+- Realistic first cut: a per-chapter play button on KJV/BSB using CC0 BSB audio. Easy + free.
+`code: new audio route/static mp3s + a play control in the Library reader`
+
 ### Map tab
 Biblical geography as its own tab. Three angles: follow the current chapter and show its places;
 search a place and pin every verse that mentions it; or a free-explore world map where clicking a
@@ -284,7 +279,18 @@ place for the existing place sidebar, so this is smaller than it looks.
 - **Textus Receptus Greek NT:** add as a second NT text next to ABP. Same Strong's numbering, so it
   plugs in easily, and showing where the two Greek texts differ is genuinely rare and useful.
 - **More English translations** (ASV, YLT, Darby, Geneva) as comparison texts — all public domain.
-  (ESV is likely licensed — check before importing.)
+- **ESV — PERSONAL, LOGIN-GATED TO THE OWNER ONLY (plan set 2026-06-09).** ESV is Crossway-copyrighted,
+  so it CANNOT be a public reading text like KJV/BSB. But the owner owns ESV copies (bought several of
+  their books) and wants it for his OWN study — that's personal use, not publishing. So the plan: load
+  the ESV text (chapter-per-file source exists, e.g. github.com/lguenth/mdbible) AND wire up ESV audio,
+  but show BOTH only to the owner's account.
+  - **HARD RULE: enforce the gate on the SERVER, not just hide the toggle.** The ESV text route AND the
+    audio embed must check "is this the owner's account?" server-side and refuse everyone else — hiding
+    the button is not enough (the address must not work for anyone else). Reuse the existing accounts/
+    login (notes.db bearer token) to identify the owner.
+  - Keep it GENUINELY single-user. Opening ESV to other logged-in users = publishing again = not allowed.
+  - ESV audio is on FCBH's Bible Brain API (dramatized fileset exists, e.g. `ENGESVN2DA`); fine for
+    private non-commercial use, streamed from their server on their terms.
 - **Extra-biblical texts** referenced in scripture (1 Enoch, cited in Jude; Dead Sea Scrolls variants)
   as a separate "Apocrypha" section, never mixed into the canon. Research good digital sources first.
 

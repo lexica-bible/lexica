@@ -6,6 +6,44 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Words-table rebuild → one self-correcting pass (refactor backlog #2) — DONE 2026-06-09
+
+The rebuild used to be: wipe the word table, rebuild from source, then run a long chain of ~14 patch
+scripts in an exact order to fix it back up — the riskiest job in the repo. Now the build fixes
+itself. The six shape-keyed, re-runnable cleanup steps run INSIDE the build, per verse
+(bracket_punct, g1473_gloss, lord_subject, funcword_subject, lord_oath, greek_pos backfill), in the
+same order the old chain used. Only the genuine per-verse patches that a blanket rule would break
+stay behind, run by one tail script (`scripts/finish_rebuild.sh`) plus a final punctuation pass.
+
+- **Proven, not hoped.** Built it BOTH ways on a copy of the live database — old way (build + all 14
+  patches) and new way (the one self-correcting pass) — and compared every word: **byte-identical**
+  (same 624,575 rows, same fingerprint). Tools: `scripts/compare_words.py` (whole-table compare),
+  `tests/test_folded_fixes.py` (now in CI + the commit hook).
+- **Validated locally first**, on copies in a folder OUTSIDE the repo (`C:\Users\JP\lexica-val`:
+  bible.db + bh_scrape.db + the Rahlfs/TAGNT alignment files). The live database was never touched.
+  Committed `815c1c6`, pushed, CI green, deployed to PA.
+- **Bonus, the one place the new build beats the old chain:** the final punctuation pass also tidies
+  ~202 spots where a comma sat on the verb instead of the last word shown in the LORD-subject
+  brackets ("said · the LORD,").
+- **Kept as small pinned patches (can't fold):** split_merges (237 — a general splitter rule
+  regresses ~85 other verses), subject_reorder / mat25_37 / supplied_attach (hand-listed reorder
+  verses), theos_filler_tags + kyrios_mistags (a few SOURCE mis-tags you can't rebuild away — e.g.
+  Greek "Cyrus" looks like "of the lord"), merge_misses. ~270 verses out of 31,000 — small and stable.
+- vs the LIVE database there were 17,498 differences, ALL pre-existing drift (older head-word
+  handling + a newer proper-noun list + 3 Cyrus fixes live never got) — none from the fold; the
+  old-way rebuild showed the same drift. The standalone fix_*.py scripts are KEPT as re-appliers; on
+  a fresh build they find 0 to do.
+
+**THE STANDING LEVER (if these last scripts ever bug you):** the word-splitter GUESSES which English
+word goes with which Greek word by matching the dictionary — that leaky guess is what the 237-verse
+`fix_split_merges` patch cleans up. We already have real word-by-word alignment data (the Rahlfs/TAGNT
+files used for the pronoun fix). Feeding that into the splitter (`_split_compounds`) to replace the
+guess could retire split_merges entirely. Big, risky project — the splitter is load-bearing — so a
+deliberate future effort, copy-first, only when wanted. See memory `project_architecture_rework` (#2)
+and `project_parser_number_reversal`.
+
+---
+
 ## Notes accounts + sync (email + Google) — DONE 2026-06-09
 
 Built right after the notes feature, same session. Notes started browser-only; the user weighed a
