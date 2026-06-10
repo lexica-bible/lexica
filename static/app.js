@@ -4906,89 +4906,6 @@ function nonCanonGroups(list) {
 }
 
 // ============================================================
-// AUDIO PLAYER — chapter read-along (BSB + ESV). Custom controls so ff/rw and the
-// progress bar look the same in every browser. Plays whatever mp3 `src` it's given;
-// the chapter audio is one file (no per-verse timing), so this is whole-chapter.
-// ============================================================
-function fmtTime(s) {
-  if (!isFinite(s) || s < 0) s = 0;
-  s = Math.floor(s);
-  return Math.floor(s / 60) + ":" + String(s % 60).padStart(2, "0");
-}
-function AudioPlayer({
-  src
-}) {
-  const ref = useRef(null);
-  const [playing, setPlaying] = useState(false);
-  const [cur, setCur] = useState(0);
-  const [dur, setDur] = useState(0);
-  // New chapter: reload + start playing (the user already pressed Listen).
-  useEffect(() => {
-    const a = ref.current;
-    if (!a) return;
-    setCur(0);
-    setDur(0);
-    a.load();
-    a.play().then(() => setPlaying(true)).catch(() => setPlaying(false));
-  }, [src]);
-  const toggle = () => {
-    const a = ref.current;
-    if (!a) return;
-    if (a.paused) a.play().catch(() => {});else a.pause();
-  };
-  const skip = d => {
-    const a = ref.current;
-    if (!a) return;
-    const max = a.duration || dur || 0;
-    a.currentTime = Math.min(Math.max(0, a.currentTime + d), max);
-  };
-  const seek = e => {
-    const a = ref.current;
-    if (!a) return;
-    const v = Number(e.target.value);
-    a.currentTime = v;
-    setCur(v);
-  };
-  return /*#__PURE__*/React.createElement("div", {
-    className: "lib-audio"
-  }, /*#__PURE__*/React.createElement("audio", {
-    ref: ref,
-    src: src,
-    preload: "metadata",
-    onLoadedMetadata: e => setDur(e.target.duration || 0),
-    onTimeUpdate: e => setCur(e.target.currentTime || 0),
-    onPlay: () => setPlaying(true),
-    onPause: () => setPlaying(false),
-    onEnded: () => setPlaying(false)
-  }), /*#__PURE__*/React.createElement("button", {
-    className: "lib-audio-btn",
-    onClick: () => skip(-15),
-    "aria-label": "Back 15 seconds"
-  }, "\u23EA"), /*#__PURE__*/React.createElement("button", {
-    className: "lib-audio-btn lib-audio-play",
-    onClick: toggle,
-    "aria-label": playing ? "Pause" : "Play"
-  }, playing ? "⏸" : "▶"), /*#__PURE__*/React.createElement("button", {
-    className: "lib-audio-btn",
-    onClick: () => skip(15),
-    "aria-label": "Forward 15 seconds"
-  }, "\u23E9"), /*#__PURE__*/React.createElement("span", {
-    className: "lib-audio-time"
-  }, fmtTime(cur)), /*#__PURE__*/React.createElement("input", {
-    className: "lib-audio-bar",
-    type: "range",
-    min: "0",
-    max: dur || 0,
-    step: "0.1",
-    value: Math.min(cur, dur || 0),
-    onChange: seek,
-    "aria-label": "Seek"
-  }), /*#__PURE__*/React.createElement("span", {
-    className: "lib-audio-time"
-  }, fmtTime(dur)));
-}
-
-// ============================================================
 // LIBRARY VIEW
 // ============================================================
 function LibraryView({
@@ -5020,6 +4937,10 @@ function LibraryView({
   const [audioUrl, setAudioUrl] = useState(null);
   const [audioKey, setAudioKey] = useState(null);
   const [audioBusy, setAudioBusy] = useState(false);
+  const [audioPlaying, setAudioPlaying] = useState(false);
+  const [audioCur, setAudioCur] = useState(0);
+  const [audioDur, setAudioDur] = useState(0);
+  const audioRef = useRef(null);
   const [libOptions, setLibOptions] = useState({
     viewMode: "chip",
     showStrongs: false,
@@ -5351,7 +5272,17 @@ function LibraryView({
     setAudioUrl(null);
     setAudioKey(null);
     setAudioBusy(false);
+    setAudioPlaying(false);
+    setAudioCur(0);
+    setAudioDur(0);
   }, [selBook && selBook.abbrev, selChapter, translation, chronoPos]);
+  // New mp3 loaded: start playing (the user already pressed Listen).
+  useEffect(() => {
+    const a = audioRef.current;
+    if (!a || !audioUrl) return;
+    a.load();
+    a.play().catch(() => {});
+  }, [audioUrl]);
   const loadAudio = (book, ch) => {
     if (!book) return;
     setAudioBusy(true);
@@ -5366,6 +5297,23 @@ function LibraryView({
       setAudioBusy(false);
       flash("Audio unavailable");
     });
+  };
+  // The Listen button doubles as play/pause: first press fetches + plays; once this
+  // chapter is loaded, the same button pauses/resumes it.
+  const toggleListen = (book, ch) => {
+    const a = audioRef.current;
+    if (audioKey === book + "-" + ch && a) {
+      if (a.paused) a.play().catch(() => {});else a.pause();
+    } else {
+      loadAudio(book, ch);
+    }
+  };
+  const seekAudio = e => {
+    const a = audioRef.current;
+    if (!a) return;
+    const v = Number(e.target.value);
+    a.currentTime = v;
+    setAudioCur(v);
   };
   useEffect(() => {
     if (!nav?.scroll || loading || !verses.length) return;
@@ -5562,16 +5510,36 @@ function LibraryView({
     className: "lib-audio-picks"
   }, audioChapters.map(a => {
     const key = a.book + "-" + a.ch;
+    const active = audioKey === key;
+    // ▶ to start/resume, ⏸ while this chapter is playing.
+    const icon = active && audioPlaying ? "⏸" : "▶";
     return /*#__PURE__*/React.createElement("button", {
       key: key,
-      className: "lib-esv-listen" + (audioKey === key ? " on" : ""),
+      className: "lib-esv-listen" + (active ? " on" : ""),
       disabled: audioBusy,
-      onClick: () => loadAudio(a.book, a.ch)
-    }, "▶ Listen" + (a.label ? " — " + a.label : ""));
+      onClick: () => toggleListen(a.book, a.ch),
+      "aria-label": active && audioPlaying ? "Pause" : "Play"
+    }, icon + (a.label ? " " + a.label : active ? "" : " Listen"));
   }), audioBusy && /*#__PURE__*/React.createElement("span", {
     className: "lib-audio-loading"
-  }, "Loading audio\u2026")), audioUrl && /*#__PURE__*/React.createElement(AudioPlayer, {
-    src: audioUrl
+  }, "Loading audio\u2026")), audioUrl && /*#__PURE__*/React.createElement("input", {
+    className: "lib-audio-bar",
+    type: "range",
+    min: "0",
+    max: audioDur || 0,
+    step: "0.1",
+    value: Math.min(audioCur, audioDur || 0),
+    onChange: seekAudio,
+    "aria-label": "Audio position"
+  }), /*#__PURE__*/React.createElement("audio", {
+    ref: audioRef,
+    src: audioUrl || undefined,
+    preload: "metadata",
+    onLoadedMetadata: e => setAudioDur(e.target.duration || 0),
+    onTimeUpdate: e => setAudioCur(e.target.currentTime || 0),
+    onPlay: () => setAudioPlaying(true),
+    onPause: () => setAudioPlaying(false),
+    onEnded: () => setAudioPlaying(false)
   }));
   const swipeRef = React.useRef(null);
   const tapMovedRef = React.useRef(false);

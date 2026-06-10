@@ -1469,36 +1469,12 @@ input { font-family: inherit; }
 .lib-esv-listen:disabled { opacity: 0.5; cursor: default; }
 .lib-audio-loading { font-size: 13px; color: var(--ink-4); }
 
-/* Custom player: skip-back / play / skip-fwd, time, draggable progress bar */
-.lib-audio {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-top: 10px;
-  max-width: 520px;
-}
-.lib-audio-btn {
-  font: inherit;
-  font-size: 15px;
-  line-height: 1;
-  color: var(--ink);
-  background: var(--bg-2, #f0ece4);
-  border: 1px solid var(--line, #ddd6c8);
-  border-radius: 6px;
-  padding: 6px 9px;
-  cursor: pointer;
-}
-.lib-audio-btn:hover { background: var(--bg-3, #e7e1d6); }
-.lib-audio-play { min-width: 38px; }
-.lib-audio-time {
-  font-size: 12px;
-  color: var(--ink-4);
-  font-variant-numeric: tabular-nums;
-  min-width: 34px;
-  text-align: center;
-}
+/* Just the draggable progress bar (the Listen button is the play/pause) */
 .lib-audio-bar {
-  flex: 1;
+  display: block;
+  width: 100%;
+  max-width: 520px;
+  margin-top: 10px;
   accent-color: var(--ink);
   cursor: pointer;
 }
