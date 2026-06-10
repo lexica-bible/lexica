@@ -6,6 +6,38 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## ESV (owner-only) + read-along audio + visitor stats — DONE 2026-06-10
+
+A big session. All on master, deployed. Full detail: memory `project_esv_audio` + `project_visitor_stats`.
+
+- **ESV reading text — owner-only, server-gated, LIVE.** Crossway-copyright → not public. Gated to the
+  owner's notes.db login on the SERVER (404 to everyone else, not just a hidden toggle). Own `esv.db`
+  (gitignored, PA-only), loaded by `scripts/load_esv.py` from github.com/lguenth/mdbible (`by_book/NN_Name.md`;
+  31,104 verses). `views_esv.py`. Reads like BSB (plain, proseLocked).
+- **Read-along audio.** BSB is LIVE for everyone — public-domain openbible.com Souer mp3s (no key, no
+  self-host). ESV audio built (FCBH Bible Brain, NT-only fileset) but waits on `FCBH_API_KEY`. Shared
+  `core._USFM_BOOK` + `usfm_titlecase()` (FCBH wants UPPERCASE, openbible title-case).
+- **Player evolved through several user passes** (lessons): custom player with skip buttons → then
+  "Listen button = play/pause + just a bar" → then moved into the TOOLBAR (icon) → chrono got inline
+  per-chapter controls, which were CLUNKY on mobile and got REVERTED to one scroll-aware toolbar button
+  (plays the chapter at ~45% mid-screen; bar inline only at the playing chapter in chrono). KEY BUG FIX:
+  the play/pause icon must reflect ONLY whether audio is playing (`showPause = audioPlaying`) — tying it
+  to the in-view chapter made it flip on scroll ("doesn't catch up").
+- **KJV/BSB/ESV now read as continuous PROSE** (`renderFlowVerse`, `.lib-prose-flow`) like ABP — they used
+  to render one block per verse everywhere (most obvious in chrono). Word/chip + parallel modes unchanged.
+- **Visitor stats — owner-only, in-house.** Tried GoatCounter (one script tag) then REMOVED it for a
+  private counter in `notes.db` (`visits` table; daily IP+UA hash, referrer, no cookies/IPs, owner's own
+  visits skipped). `views_stats.py`; About → **About|Stats toggle** (not a separate tab; `85-stats.jsx`).
+- **One shared site-owner gate:** `views_notes.is_owner()` (`OWNER_EMAIL`, falls back to `ESV_OWNER_EMAIL`)
+  — set ONE env var to gate both ESV + Stats. views_esv dropped its local copy. GOTCHA confirmed again:
+  the env line must sit ABOVE the app import in the WSGI + reload (module-level read at import).
+- Smaller wins: tab remembered across refresh (`localStorage` `lexica.view.v1`); distinct verse-marker
+  icons (bookmark ribbon vs note/highlight pencil); desktop chapter label dropped from the toolbar;
+  source picker compacted so the owner's 5th button (ESV) fits; verse-menu Note icon-only on mobile;
+  all scrollable popouts got `overscroll-behavior: contain` so they don't bleed-scroll the reader.
+
+---
+
 ## Words-table rebuild → one self-correcting pass (refactor backlog #2) — DONE 2026-06-09
 
 The rebuild used to be: wipe the word table, rebuild from source, then run a long chain of ~14 patch

@@ -77,6 +77,15 @@ Pick effort by task TYPE. When in doubt, lean higher — the plan affords it.
   `google-auth`) + `GOOGLE_CLIENT_ID` in the WSGI + the Google consent screen Published. Google sign-in
   degrades safely (button hidden) if any piece is missing, so a code-only deploy never breaks.
   `notes.db` is gitignored (`*.db`) like bible.db — it holds user accounts/notes, managed on PA.
+- **Owner-only features (ESV text + audio, visitor stats) — code LIVE 2026-06-10.** ONE site-owner
+  gate: `views_notes.is_owner()` checks the login bearer token's email against `OWNER_EMAIL` (WSGI
+  env; falls back to the older `ESV_OWNER_EMAIL`). Set `OWNER_EMAIL = '<your-owner-email>'` in the
+  WSGI (above the import) + reload — that one var gates BOTH the ESV reader and the Stats dashboard.
+  Owner sign-in shows: a private **Stats** view (About → About|Stats toggle; counter in `notes.db`,
+  no 3rd party) and the **ESV** reading text. ESV text is **LOADED + LIVE 2026-06-10** (`scripts/load_esv.py`
+  from github.com/lguenth/mdbible → `esv.db` = 31,104 verses, all 66 books; `esv.db` gitignored, PA-only).
+  ESV AUDIO still needs `FCBH_API_KEY` in the WSGI (Bible Brain key, pending as of 2026-06-10); **BSB
+  audio is public-domain and needs no setup**. Memory `project_esv_audio` + `project_visitor_stats`.
 
 ## CI / automation (added 2026-06-07)
 - **GitHub Actions** (`.github/workflows/ci.yml`) — runs on every push/PR: (1) the invariant tests
@@ -144,6 +153,10 @@ scripts/          # build-frontend.js + one-time import/migration scripts
 - `kjv_strongs` — KJV word → Strong's number mapping
 - `bdb` — Brown-Driver-Briggs Hebrew lexicon (H-numbers)
 - `pericopes` — section headings (book, chapter, verse, heading); populated from bh_scrape.db.bh_headings; display wiring pending
+- `bsb_verses` — Berean Standard Bible verse text (public domain), mirrors kjv_verses on 1-66 book ids
+- **Separate DB files (NOT bible.db, both gitignored + PA-only):** `notes.db` — user accounts/notes/
+  highlights/journals + a `visits` table (owner-only visitor stats: day + daily IP+UA hash + referrer).
+  `esv.db` — owner-only ESV text (`esv_verses`), loaded by `scripts/load_esv.py`. See "Owner-only features".
 - `<book>_words` / `<book>_verses` — non-canonical texts, each in its OWN two tables, walled off
   from the Bible's tables and from search/word counts. Built by `scripts/load_extra.py`; served by
   `/api/extra/<book>/chapter/<n>`. English-only texts (no Greek) load with an empty words table.

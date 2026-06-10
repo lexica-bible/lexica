@@ -68,6 +68,10 @@ Still open:
   2. **Highlight paint reach** — cross-translation DONE 2026-06-09 (a highlight now shows in ABP/KJV/BSB;
      exact words in its home text, rounds up to whole verse elsewhere). STILL OPEN (optional, lower
      value): word-level highlights *within* KJV/BSB (today those two only paint a whole verse).
+  3. **Small UI follow-ups offered 2026-06-10 (not built):** (a) show the bookmark/note/highlight icons
+     in the Notes-TAB list per item too (the in-reader markers already differ — ribbon vs pencil);
+     (b) remember the Library book/chapter on refresh (the active TAB is already remembered via
+     `localStorage` `lexica.view.v1`, but Library still opens at Genesis 1).
 
 ---
 
@@ -240,35 +244,17 @@ build_chronological.py` — no database, no backend route. Exact-range reader tr
 Full record in memory `project_chronological_tab`. Possible polish only: suppress the chapter divider
 on single-chapter passages if it ever feels redundant.
 
-### Read-along audio (play a chapter while you read)
-Like eSword's ESV/KJV audio — a play button that reads the chapter aloud. Scoped 2026-06-09.
-Plan: EVERY reading text gets audio EXCEPT ABP (no recording exists for it).
-**BSB audio DONE + PUSHED 2026-06-10** (commit 039ed32) — see the shared `▶ Listen` player below.
-ESV audio built but waiting on the FCBH key (~1 week).
-- **BSB — DONE.** Per-chapter `▶ Listen` button in the BSB reader. We DON'T self-host — `/api/bsb/audio`
-  hands the browser the public-domain (CC0) Souer mp3 straight from openbible.com
-  (`/audio/souer/BSB_<NN>_<Abbr>_<CCC>.mp3`; verified resolving). PLAIN narration, no music. The same
-  player serves ESV (owner-only). openbible also has gilbert/hays/david + _music variants if wanted.
-- **KJV — dramatized (music + sound effects)** like eSword comes from Faith Comes By Hearing's "Bible
-  Brain" API (formerly Bible.is). Free for non-commercial use but stays on THEIR terms + THEIR server
-  (register for a key). Also simpler free KJV-with-soft-music recordings exist (AudioTreasure, Internet
-  Archive) if plain narration is fine.
-- **ESV — dramatized, PRIVATE, owner-only — BUILT 2026-06-10, waiting on the key.** `/api/esv/audio`
-  fetches the FCBH Bible Brain signed mp3 server-side (key stays in the WSGI), behind the same owner
-  gate as the ESV text. Default fileset `ENGESVN2DA` is dramatized ESV **NT only**; OT needs a separate
-  fileset (`ESV_AUDIO_FILESET_OT`). Goes live once `FCBH_API_KEY` is set on PA (key requested 2026-06-10).
-- **ABP — none exists** (niche LXX Greek interlinear; no recordings). The primary Greek text stays
-  audio-less; KJV/BSB/ESV all get it.
-- **The catch = alignment.** Audio is per-CHAPTER, not timed per verse, so the basic version is a
-  per-chapter play button that highlights the whole chapter. Verse-by-verse follow-along (karaoke
-  style) needs per-verse timing data — a much bigger lift, not always available.
-- **Audio in CHRONOLOGICAL reading — DONE 2026-06-10** (commit 5bbd482). Since the mp3 is one file per
-  whole chapter, a chrono passage shows a Listen button per chapter in its `start_ch..end_ch` span (each
-  plays that full chapter — can't slice to the exact verse range without per-verse timing). Same for BSB
-  (live) + ESV (when the key lands). Also added a custom player (skip ⏪/⏩ 15s + draggable progress bar).
-  `code: AudioPlayer + audioControl/audioChapters in 60-library.jsx`
-- Realistic first cut: a per-chapter play button on KJV/BSB using CC0 BSB audio. Easy + free.
-`code: new audio route/static mp3s + a play control in the Library reader`
+### Read-along audio — DONE + LIVE 2026-06-10 (BSB live for all; ESV waits on a key)
+Per-chapter audio on KJV/BSB/ESV (ABP has no recording). Full record: memory `project_esv_audio` +
+TODO_ARCHIVE. **BSB is live for everyone** — public-domain openbible.com Souer mp3s, no key, no
+self-hosting (`/api/bsb/audio`). Control = a play/pause ICON in the toolbar + a draggable progress
+bar (desktop + mobile); chrono is scroll-aware (plays the chapter at ~45% mid-screen, bar inline at
+that chapter, auto-advances). Audio is per WHOLE chapter (no per-verse timing). STILL OPEN:
+- **ESV audio** — built (FCBH Bible Brain, `ENGESVN2DA` = NT-only), owner-gated; waits on `FCBH_API_KEY`
+  in the WSGI (key requested 2026-06-10). OT needs a separate fileset (`ESV_AUDIO_FILESET_OT`).
+- **KJV audio** — not built; FCBH dramatized or free plain recordings exist if wanted.
+- **Verse-by-verse karaoke** — needs per-verse timing data; bigger lift, parked.
+`code: views_bsb.bsb_audio + views_esv.esv_audio; audio player in 60-library.jsx`
 
 ### Map tab
 Biblical geography as its own tab. Three angles: follow the current chapter and show its places;
@@ -284,14 +270,10 @@ place for the existing place sidebar, so this is smaller than it looks.
 - **Textus Receptus Greek NT:** add as a second NT text next to ABP. Same Strong's numbering, so it
   plugs in easily, and showing where the two Greek texts differ is genuinely rare and useful.
 - **More English translations** (ASV, YLT, Darby, Geneva) as comparison texts — all public domain.
-- **ESV — PERSONAL, LOGIN-GATED — BUILT + PUSHED 2026-06-10** (commits dd7a73f, 039ed32; memory
-  `project_esv_audio`). Owner-only ESV reading text, gate enforced on the SERVER (404 to everyone
-  else, not just a hidden toggle): `views_esv.py` checks the notes.db bearer token's account email
-  against `ESV_OWNER_EMAIL` (WSGI env). Text in its own `esv.db` (out of bible.db + git), loaded by
-  `scripts/load_esv.py` from the mdbible by_book source. ESV audio = FCBH Bible Brain (`ENGESVN2DA`,
-  NT-only), owner-gated, key fetched server-side. **To activate on PA:** deploy → load esv.db →
-  set `ESV_OWNER_EMAIL` (+ `FCBH_API_KEY` for audio) in the WSGI → reload. (FCBH key requested
-  2026-06-10, ~1 week.) Done as part of the audio item below.
+- **ESV — PERSONAL, LOGIN-GATED — DONE + LIVE 2026-06-10** (memory `project_esv_audio`). Owner-only ESV
+  reader, server-gated via the shared `views_notes.is_owner()` (`OWNER_EMAIL` live; toggle shows for the
+  owner). Text LOADED on PA (`load_esv.py` → `esv.db` = 31,104 verses, all 66 books). Only ESV AUDIO is
+  still open — waits on `FCBH_API_KEY` (see audio item).
 - **Extra-biblical texts** referenced in scripture (1 Enoch, cited in Jude; Dead Sea Scrolls variants)
   as a separate "Apocrypha" section, never mixed into the canon. Research good digital sources first.
 
