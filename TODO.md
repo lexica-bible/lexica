@@ -262,6 +262,12 @@ ESV audio built but waiting on the FCBH key (~1 week).
 - **The catch = alignment.** Audio is per-CHAPTER, not timed per verse, so the basic version is a
   per-chapter play button that highlights the whole chapter. Verse-by-verse follow-along (karaoke
   style) needs per-verse timing data — a much bigger lift, not always available.
+- **OPEN: audio in CHRONOLOGICAL reading.** The player is currently hidden in chrono mode (`!chronoOn`
+  in 60-library.jsx) because a chrono passage is often a partial chapter or spans two, while the mp3 is
+  one-per-whole-chapter — so we can only play the whole chapter(s) the passage touches, not the exact
+  verse slice. Plan: in chrono, show a Listen button per chapter in the passage's `start_ch..end_ch`
+  span (each plays that full chapter). Works the same for BSB (live) + ESV (once the key lands).
+  `code: chrono branch + audioControl in 60-library.jsx`
 - Realistic first cut: a per-chapter play button on KJV/BSB using CC0 BSB audio. Easy + free.
 `code: new audio route/static mp3s + a play control in the Library reader`
 
