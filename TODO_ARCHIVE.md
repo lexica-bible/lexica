@@ -6,6 +6,32 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## NIV text + multi-text Compare + reader UI tweaks — DONE 2026-06-10
+
+All on master, deployed. Detail: memory `project_esv_audio` (NIV) + `project_pericopes_parallel` (Compare).
+
+- **NIV — 2nd owner-only text, mirrors ESV exactly.** `views_niv.py`, own `niv.db` (gitignored, PA-only),
+  `core.niv_db`, NIV toggle next to ESV. TEXT-ONLY — checked FCBH and it doesn't carry NIV audio (commercially
+  licensed), so no audio route. Source = aruljohn/Bible-niv (66 JSON files, `book/chapters/verses`); loaded by
+  `scripts/load_niv.py ~/Bible-niv ~/bible-db/niv.db` (maps book name → 1-66 id, ~31,104 verses). The loader
+  fixes the source's backtick-for-apostrophe quirk (`God`s` → `God's`); validated the format against the real
+  repo before loading. No WSGI change — the existing `OWNER_EMAIL` gate covers it.
+- **"Parallel" → multi-text COMPARE (pick 2–4).** Choose any 2–4 of ABP/KJV/BSB/ESV/NIV side by side.
+  Desktop = N columns (`.lib-cmp-2/3/4`); mobile = stacked, one labeled line per text (user picked
+  "stack per verse" over side-scroll). `compareSel` array holds the picks; per-text loaders fire when their
+  id is selected; render = ordered UNION of verse keys (chapter+verse) so a missing verse leaves a blank cell.
+  BSB/ESV/NIV inherit the Psalm alignment for free (all English = MT numbering). Notes/highlights SHARED across
+  columns (plain columns got the anchor + whole-verse highlight paint + note dot; ABP/KJV inherit theirs).
+  LESSON: in compare the home-text exact-WORD highlight paint rounds up to whole-verse (translation is
+  "parallel", matches no note's home text) — left as-is on purpose (reads clean in narrow columns).
+- **Reader UI tweaks (same session):** mobile note/journal/copy bar is icon-only (reused the existing
+  `note-btn-lbl` span that CSS already hides on mobile; desktop keeps the text); mobile prose verse number
+  kept `inline` instead of `inline-block` — that was the cause of the number dangling at a line end (an
+  inline-block creates a wrap point after it; inline doesn't). Book selector left as-is (the translation
+  buttons live in the left nav, not the toolbar, so columns don't crowd it).
+
+---
+
 ## ESV (owner-only) + read-along audio + visitor stats — DONE 2026-06-10
 
 A big session. All on master, deployed. Full detail: memory `project_esv_audio` + `project_visitor_stats`.

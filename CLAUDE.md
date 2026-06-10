@@ -82,8 +82,12 @@ Pick effort by task TYPE. When in doubt, lean higher — the plan affords it.
   env; falls back to the older `ESV_OWNER_EMAIL`). Set `OWNER_EMAIL = '<your-owner-email>'` in the
   WSGI (above the import) + reload — that one var gates BOTH the ESV reader and the Stats dashboard.
   Owner sign-in shows: a private **Stats** view (About → About|Stats toggle; counter in `notes.db`,
-  no 3rd party) and the **ESV** reading text. ESV text is **LOADED + LIVE 2026-06-10** (`scripts/load_esv.py`
+  no 3rd party) and the **ESV + NIV** reading texts. ESV text is **LOADED + LIVE 2026-06-10** (`scripts/load_esv.py`
   from github.com/lguenth/mdbible → `esv.db` = 31,104 verses, all 66 books; `esv.db` gitignored, PA-only).
+  **NIV = a 2nd owner-only text mirroring ESV exactly (LIVE 2026-06-10): `views_niv.py`, own `niv.db`,
+  NIV toggle next to ESV; TEXT-ONLY (no NIV audio — FCBH doesn't carry it). Loaded by
+  `scripts/load_niv.py ~/Bible-niv ~/bible-db/niv.db` from the aruljohn/Bible-niv repo (66 JSON files,
+  ~31,104 verses). No WSGI change — `OWNER_EMAIL` already gates it.**
   ESV AUDIO still needs `FCBH_API_KEY` in the WSGI (Bible Brain key, pending as of 2026-06-10); **BSB
   audio is public-domain and needs no setup**. Memory `project_esv_audio` + `project_visitor_stats`.
 
@@ -156,7 +160,8 @@ scripts/          # build-frontend.js + one-time import/migration scripts
 - `bsb_verses` — Berean Standard Bible verse text (public domain), mirrors kjv_verses on 1-66 book ids
 - **Separate DB files (NOT bible.db, both gitignored + PA-only):** `notes.db` — user accounts/notes/
   highlights/journals + a `visits` table (owner-only visitor stats: day + daily IP+UA hash + referrer).
-  `esv.db` — owner-only ESV text (`esv_verses`), loaded by `scripts/load_esv.py`. See "Owner-only features".
+  `esv.db` — owner-only ESV text (`esv_verses`), loaded by `scripts/load_esv.py`. `niv.db` — owner-only
+  NIV text (`niv_verses`), loaded by `scripts/load_niv.py`. Both See "Owner-only features".
 - `<book>_words` / `<book>_verses` — non-canonical texts, each in its OWN two tables, walled off
   from the Bible's tables and from search/word counts. Built by `scripts/load_extra.py`; served by
   `/api/extra/<book>/chapter/<n>`. English-only texts (no Greek) load with an empty words table.
@@ -210,8 +215,14 @@ scripts/          # build-frontend.js + one-time import/migration scripts
 - CSS: `@media (max-width: 1099px)` / `@media (min-width: 1100px)` — no other breakpoints except 520px for very small phones
 
 ## Library Tab
-- Desktop toolbar (lib-bar): [‹ Ch input ›] | [ABP] [KJV] [Parallel] | [Strong's] [Interlinear] | [Chip] [Prose]
+- Desktop toolbar (lib-bar): [‹ Ch input ›] | [Compare ▾] | [Strong's] [Interlinear] | [Chip] [Prose]
+  (text source — ABP/KJV/BSB/ESV*/NIV* — lives in the LEFT NAV's nav-source seg, not the toolbar; * = owner only)
 - Mobile toolbar (lib-toolbar): [☰] [‹] [Book Ch ▾] [›] [ABP/KJV/Par] — sticky, fixed height 56px
+- **Compare (was "Parallel"): pick 2–4 of ABP/KJV/BSB/ESV/NIV to read side by side.** `translation === "parallel"`
+  is the mode; `compareSel` (array) = which texts. Desktop = N columns (`.lib-cmp-2/3/4`); mobile = stacked,
+  one labeled line per text. Desktop picker = checkbox dropdown on the Compare button; mobile = a "Compare"
+  row in ModesSheet. Rows are the ordered UNION of every selected text's verses (keyed chapter+verse), so a
+  missing verse leaves a blank cell. Notes/highlights are SHARED across columns (whole-verse paint in compare).
 - Chip mode: all words individually clickable with interlinear stack (Greek → English → Strong's)
 - Prose mode: clickable inline word spans, no chip borders — reading-first view
 - KJV mode locks Prose to English only (no Greek available)

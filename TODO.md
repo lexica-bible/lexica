@@ -77,7 +77,10 @@ Still open:
      else is blocked by it.
   2. **Highlight paint reach** — cross-translation DONE 2026-06-09 (a highlight now shows in ABP/KJV/BSB;
      exact words in its home text, rounds up to whole verse elsewhere). STILL OPEN (optional, lower
-     value): word-level highlights *within* KJV/BSB (today those two only paint a whole verse).
+     value): word-level highlights *within* KJV/BSB (today those two only paint a whole verse). Also, in
+     the new multi-text COMPARE view a highlight paints WHOLE-VERSE in every column (even its home text) —
+     intentional for now; exact-word paint in compare would need the column's own translation id threaded
+     into `hiForWord` (today it reads the global `translation`, which is "parallel" in compare).
   3. **Small UI follow-ups offered 2026-06-10 (not built):** (a) show the bookmark/note/highlight icons
      in the Notes-TAB list per item too (the in-reader markers already differ — ribbon vs pencil);
      (b) remember the Library book/chapter on refresh (the active TAB is already remembered via
@@ -279,11 +282,18 @@ place for the existing place sidebar, so this is smaller than it looks.
   Some of this already shows for ABP Greek; this would extend coverage. `code: morph column on words`
 - **Textus Receptus Greek NT:** add as a second NT text next to ABP. Same Strong's numbering, so it
   plugs in easily, and showing where the two Greek texts differ is genuinely rare and useful.
-- **More English translations** (ASV, YLT, Darby, Geneva) as comparison texts — all public domain.
+- **Multi-text COMPARE — DONE + LIVE 2026-06-10** (memory `project_pericopes_parallel`). The old 2-column
+  "Parallel" is now a picker for **2–4 of ABP/KJV/BSB/ESV/NIV** side by side (desktop columns, mobile stacked
+  labeled lines); notes/highlights shared across columns. This is the vehicle for comparison texts.
+- **More English translations** (ASV, YLT, Darby, Geneva) — all public domain; would slot straight into
+  the Compare picker as new toggles + their own loader/db (like BSB). Not started.
 - **ESV — PERSONAL, LOGIN-GATED — DONE + LIVE 2026-06-10** (memory `project_esv_audio`). Owner-only ESV
   reader, server-gated via the shared `views_notes.is_owner()` (`OWNER_EMAIL` live; toggle shows for the
   owner). Text LOADED on PA (`load_esv.py` → `esv.db` = 31,104 verses, all 66 books). Only ESV AUDIO is
   still open — waits on `FCBH_API_KEY` (see audio item).
+- **NIV — PERSONAL, OWNER-ONLY — DONE + LIVE 2026-06-10** (memory `project_esv_audio`). Mirrors ESV exactly:
+  `views_niv.py`, own `niv.db`, NIV toggle. TEXT-ONLY (FCBH has no NIV audio). Loaded by `scripts/load_niv.py
+  ~/Bible-niv ~/bible-db/niv.db` from aruljohn/Bible-niv. No WSGI change needed.
 - **Extra-biblical texts** referenced in scripture (1 Enoch, cited in Jude; Dead Sea Scrolls variants)
   as a separate "Apocrypha" section, never mixed into the canon. Research good digital sources first.
 
