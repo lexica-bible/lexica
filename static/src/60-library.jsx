@@ -1152,10 +1152,10 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
       {showPause ? <Icon.Pause/> : <Icon.Play/>}
     </button>
   ) : null;
-  // Chrono: track which chapter is scrolled to the top, so the toolbar play button
-  // targets the chapter you're reading (no per-chapter buttons, no drill-down menu).
+  // Chrono: track which chapter is scrolled into view (~just above mid-screen), so the
+  // toolbar play button AND the chapter overview both follow the chapter you're reading.
   useEffect(() => {
-    if (!chronoOn || !audioCapable) { setViewCh(null); return; }
+    if (!chronoOn) { setViewCh(null); return; }
     const compute = () => {
       const root = readingRef.current; if (!root) return;
       const marks = root.querySelectorAll(".lib-chrono-chapmark[data-ch]");
@@ -1173,6 +1173,12 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
     window.addEventListener("scroll", onScroll, true);   // capture: also catches a nested scroll panel
     return () => { window.removeEventListener("scroll", onScroll, true); if (raf) cancelAnimationFrame(raf); };
   }, [chronoOn, audioCapable, chronoPos, translation, chronoReady, curPassage && curPassage.start_ch]);
+
+  // Chapter overview target — in chrono it follows the chapter scrolled into view
+  // (same cutoff as the audio); otherwise the open chapter.
+  const sumBook = nonCanon ? nonCanon.id : (chronoOn && curPassage ? curPassage.book : (selBook && selBook.abbrev));
+  const sumChapter = (chronoOn && curPassage) ? (viewCh || curPassage.start_ch) : selChapter;
+  const sumLabel = nonCanon ? nonCanon.name : (BOOK_LABELS[sumBook] || sumBook);
 
   const swipeRef = React.useRef(null);
   const tapMovedRef = React.useRef(false);
@@ -2403,18 +2409,18 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
       {verseMenu && <VerseNoteMenu rect={verseMenu.rect} isMobile={isMobile} onColor={vmColor} onNote={vmNote} onBookmark={vmBookmark} onCopy={vmCopy} onJournal={vmJournal} onClose={() => setVerseMenu(null)} />}
       {showSummary && (selBook || nonCanon) && (
         <SummaryPanel
-          book={nonCanon ? nonCanon.id : selBook.abbrev}
-          chapter={selChapter}
-          bookLabel={nonCanon ? nonCanon.name : (BOOK_LABELS[selBook.abbrev] || selBook.abbrev)}
+          book={sumBook}
+          chapter={sumChapter}
+          bookLabel={sumLabel}
         />
       )}
       {isMobile && summaryOpen && (selBook || nonCanon) && (
         <SummaryPanel
           isMobile
           onClose={() => setSummaryOpen(false)}
-          book={nonCanon ? nonCanon.id : selBook.abbrev}
-          chapter={selChapter}
-          bookLabel={nonCanon ? nonCanon.name : (BOOK_LABELS[selBook.abbrev] || selBook.abbrev)}
+          book={sumBook}
+          chapter={sumChapter}
+          bookLabel={sumLabel}
         />
       )}
     </div>

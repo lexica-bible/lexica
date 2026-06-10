@@ -5580,10 +5580,10 @@ function LibraryView({
     "aria-pressed": showPause,
     onClick: onToolbarAudio
   }, showPause ? /*#__PURE__*/React.createElement(Icon.Pause, null) : /*#__PURE__*/React.createElement(Icon.Play, null)) : null;
-  // Chrono: track which chapter is scrolled to the top, so the toolbar play button
-  // targets the chapter you're reading (no per-chapter buttons, no drill-down menu).
+  // Chrono: track which chapter is scrolled into view (~just above mid-screen), so the
+  // toolbar play button AND the chapter overview both follow the chapter you're reading.
   useEffect(() => {
-    if (!chronoOn || !audioCapable) {
+    if (!chronoOn) {
       setViewCh(null);
       return;
     }
@@ -5616,6 +5616,12 @@ function LibraryView({
       if (raf) cancelAnimationFrame(raf);
     };
   }, [chronoOn, audioCapable, chronoPos, translation, chronoReady, curPassage && curPassage.start_ch]);
+
+  // Chapter overview target — in chrono it follows the chapter scrolled into view
+  // (same cutoff as the audio); otherwise the open chapter.
+  const sumBook = nonCanon ? nonCanon.id : chronoOn && curPassage ? curPassage.book : selBook && selBook.abbrev;
+  const sumChapter = chronoOn && curPassage ? viewCh || curPassage.start_ch : selChapter;
+  const sumLabel = nonCanon ? nonCanon.name : BOOK_LABELS[sumBook] || sumBook;
   const swipeRef = React.useRef(null);
   const tapMovedRef = React.useRef(false);
   const swipeHandlers = isMobile ? {
@@ -7227,15 +7233,15 @@ function LibraryView({
     onJournal: vmJournal,
     onClose: () => setVerseMenu(null)
   }), showSummary && (selBook || nonCanon) && /*#__PURE__*/React.createElement(SummaryPanel, {
-    book: nonCanon ? nonCanon.id : selBook.abbrev,
-    chapter: selChapter,
-    bookLabel: nonCanon ? nonCanon.name : BOOK_LABELS[selBook.abbrev] || selBook.abbrev
+    book: sumBook,
+    chapter: sumChapter,
+    bookLabel: sumLabel
   }), isMobile && summaryOpen && (selBook || nonCanon) && /*#__PURE__*/React.createElement(SummaryPanel, {
     isMobile: true,
     onClose: () => setSummaryOpen(false),
-    book: nonCanon ? nonCanon.id : selBook.abbrev,
-    chapter: selChapter,
-    bookLabel: nonCanon ? nonCanon.name : BOOK_LABELS[selBook.abbrev] || selBook.abbrev
+    book: sumBook,
+    chapter: sumChapter,
+    bookLabel: sumLabel
   }));
 }
 
