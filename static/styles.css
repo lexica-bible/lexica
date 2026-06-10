@@ -2496,11 +2496,17 @@ input { font-family: inherit; }
   height: 59px; box-sizing: border-box;
   border-bottom: 1px solid var(--rule);
 }
-/* One unified segmented control [ ABP | KJV | BSB | (ESV) | Other ] for the
-   mutually-exclusive text sources. Compact padding so 5 buttons (with the owner's
-   ESV) still fit the fixed-width nav instead of overflowing off-screen. */
+/* One unified segmented control [ ABP | KJV | BSB | (ESV) | (NIV) | Other ] for the
+   mutually-exclusive text sources. Compact padding so the public 3-4 buttons stay a
+   tidy centered pill. */
 .nav-source-seg { flex: 0 0 auto; }
 .nav-source-seg .seg-b { padding: 5px 7px; font-size: 12px; }
+/* With the owner's extra texts (ESV/NIV) the row holds up to 6 buttons — let it span
+   the full nav width and share space evenly so nothing crowds or runs off-screen. The
+   "Other" dropdown keeps its natural width so its label/caret never gets clipped. */
+.nav-source-seg--wide { flex: 1 1 auto; width: 100%; }
+.nav-source-seg--wide .seg-b { flex: 1 1 0; min-width: 0; padding: 5px 3px; }
+.nav-source-seg--wide .nav-other-seg { flex: 0 0 auto; padding-left: 6px; padding-right: 6px; }
 .nav-other-wrap { position: relative; display: inline-flex; }
 .nav-other-seg { display: inline-flex; align-items: center; gap: 4px; }
 .nav-other-lbl { white-space: nowrap; }

@@ -222,7 +222,7 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
       </div>
       {/* Text-source picker — ABP / KJV + non-canonical "Other" menu */}
       <div className="nav-source">
-        <div className="seg nav-source-seg">
+        <div className={"seg nav-source-seg" + ((esvOwner || nivOwner) ? " nav-source-seg--wide" : "")}>
           <button className={"seg-b" + (!nonCanon && translation === "abp" ? " on" : "")} onClick={() => pickBible("abp")}>ABP</button>
           <button className={"seg-b" + (!nonCanon && translation === "kjv" ? " on" : "")} onClick={() => pickBible("kjv")}>KJV</button>
           <button className={"seg-b" + (!nonCanon && translation === "bsb" ? " on" : "")} onClick={() => pickBible("bsb")}>BSB</button>
@@ -462,13 +462,17 @@ function MobileBookPicker({ books, selBook, selChapter, nonCanon, nonCanonList, 
 function ModesSheet({
   corpus, translation, pickBible, esvOwner, nivOwner, toggleParallel, nonCanonList,
   compareAvail, compareActive, toggleCompare,
-  showStrongs, showInterlinear, setOpt, chipMode, libFontSize, changeFontSize, onClose,
+  showStrongs, showInterlinear, setOpt, chipMode, viewMode, libFontSize, changeFontSize, onClose,
   chrono, orderMode, setOrder,
 }) {
   const { sheetRef, scrollRef } = useSwipeToDismiss(onClose);
   const activeNonCanon = nonCanonList.find(t => t.id === corpus) || null;
   const proseLocked = !!(activeNonCanon && activeNonCanon.englishOnly) || translation === "bsb" || translation === "esv" || translation === "niv";   // English-only / BSB / ESV / NIV: no Greek toggles
   const gray = proseLocked ? { opacity: 0.35, cursor: "default" } : undefined;
+  // English-only "other books": Greek toggles stay locked, but line-vs-flow is allowed.
+  const extraEnglish = !!(activeNonCanon && activeNonCanon.englishOnly);
+  const layoutLocked = proseLocked && !extraEnglish;
+  const viewChipOn   = extraEnglish ? viewMode === "chip" : chipMode;
   return (
     <>
       <div className="sheet-scrim" onClick={onClose} />
@@ -537,8 +541,8 @@ function ModesSheet({
             <div className="mode-lbl">Display</div>
             <div className="display-row">
               <div className="mseg mseg-view">
-                <button className={"mseg-b"+(chipMode?" on":"")} disabled={proseLocked} style={gray} title="Chip view" aria-label="Chip view" aria-pressed={chipMode} onClick={()=>!proseLocked&&setOpt("viewMode","chip")}><Icon.Grid/></button>
-                <button className={"mseg-b"+(!chipMode?" on":"")} disabled={!proseLocked&&(showStrongs||showInterlinear)} style={!proseLocked&&(showStrongs||showInterlinear)?{opacity:0.35}:undefined} title="Prose view" aria-label="Prose view" aria-pressed={!chipMode} onClick={()=>!showStrongs&&!showInterlinear&&setOpt("viewMode","prose")}><Icon.Lines/></button>
+                <button className={"mseg-b"+(viewChipOn?" on":"")} disabled={layoutLocked} style={layoutLocked?{opacity:0.35,cursor:"default"}:undefined} title={extraEnglish?"Line-by-line view":"Chip view"} aria-label={extraEnglish?"Line-by-line view":"Chip view"} aria-pressed={viewChipOn} onClick={()=>!layoutLocked&&setOpt("viewMode","chip")}><Icon.Grid/></button>
+                <button className={"mseg-b"+(!viewChipOn?" on":"")} disabled={!extraEnglish&&!proseLocked&&(showStrongs||showInterlinear)} style={!extraEnglish&&!proseLocked&&(showStrongs||showInterlinear)?{opacity:0.35}:undefined} title="Prose view" aria-label="Prose view" aria-pressed={!viewChipOn} onClick={()=>{ if(extraEnglish){setOpt("viewMode","prose");return;} if(!showStrongs&&!showInterlinear)setOpt("viewMode","prose"); }}><Icon.Lines/></button>
               </div>
               <div className="mseg font-picker">
                 <button className="mseg-b" onClick={() => changeFontSize(-1)}>A−</button>
@@ -1110,6 +1114,13 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
   const chipMode    = !proseLocked && (viewMode === "chip" || showStrongs || showInterlinear);
   const wordMode    = chipMode;
   const kjvWordMode = chipMode;
+  // English-only "other books" have no Greek interlinear, so the Strong's / Interlinear
+  // toggles stay locked — but they CAN switch between a verse-per-line layout (the
+  // "chip" slot) and flowing prose. layoutLocked = can't even pick line vs flow.
+  const extraEnglish  = !!(nonCanon && nonCanon.englishOnly);
+  const extraLineMode = extraEnglish && viewMode === "chip";
+  const layoutLocked  = proseLocked && !extraEnglish;
+  const viewChipOn    = extraEnglish ? viewMode === "chip" : chipMode;
 
   const POETRY_BOOKS = new Set(["Psa", "Pro", "Job", "Son", "Lam", "Ecc"]);
   const isPoetry = POETRY_BOOKS.has(selBook?.abbrev);
@@ -2086,6 +2097,27 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
     </div>
   );
 
+  // Verse-per-line view for English-only "other books": each verse on its own row
+  // with its number, like the Bible's verse layout — but plain reading text, no
+  // clickable word chips (these texts have no Greek interlinear). Notes + highlights
+  // ride the whole verse, same as the flowing-prose view.
+  const renderExtraLines = () => (
+    <div className="lib-text-words">
+      {didVerses.map(v => (
+        <React.Fragment key={v.verse}>
+          {v.heading && <div className="lib-verse-row pericope-row"><span className="lib-vnum" aria-hidden="true"/><div className="pericope-heading">{v.heading}</div></div>}
+          <div className="lib-verse-row" data-note-verse={v.verse}>
+            {noteVnum(v.verse)}
+            <span className="lib-verse-content">
+              {noteMarker(v.verse)}
+              <span className={hiClass(v.verse, null) || undefined}>{v.english || ""}</span>
+            </span>
+          </div>
+        </React.Fragment>
+      ))}
+    </div>
+  );
+
   // Parallel view: Greek interlinear | readable English (same shape as Bible parallel).
   const renderDidacheParallelVerse = (v) => (
     <React.Fragment key={v.verse}>
@@ -2160,6 +2192,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
           showInterlinear={showInterlinear}
           setOpt={setOpt}
           chipMode={chipMode}
+          viewMode={viewMode}
           libFontSize={libFontSize}
           changeFontSize={changeFontSize}
           chrono={chrono}
@@ -2220,22 +2253,22 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
             <span className="lib-bar-sep" aria-hidden="true"/>
             <div className="seg lib-view-seg">
               <button
-                className={"seg-b" + (chipMode ? " on" : "")}
-                disabled={proseLocked}
-                title="Chip view"
-                aria-label="Chip view"
-                aria-pressed={chipMode}
-                style={proseLocked ? { opacity: 0.35, cursor: "default" } : undefined}
-                onClick={() => !proseLocked && setOpt("viewMode", "chip")}
+                className={"seg-b" + (viewChipOn ? " on" : "")}
+                disabled={layoutLocked}
+                title={extraEnglish ? "Line-by-line view" : "Chip view"}
+                aria-label={extraEnglish ? "Line-by-line view" : "Chip view"}
+                aria-pressed={viewChipOn}
+                style={layoutLocked ? { opacity: 0.35, cursor: "default" } : undefined}
+                onClick={() => !layoutLocked && setOpt("viewMode", "chip")}
               ><Icon.Grid/></button>
               <button
-                className={"seg-b" + (!chipMode ? " on" : "")}
-                disabled={!proseLocked && (showStrongs || showInterlinear)}
+                className={"seg-b" + (!viewChipOn ? " on" : "")}
+                disabled={!extraEnglish && !proseLocked && (showStrongs || showInterlinear)}
                 title="Prose view"
                 aria-label="Prose view"
-                aria-pressed={!chipMode}
-                style={!proseLocked && (showStrongs || showInterlinear) ? { opacity: 0.35, cursor: "default" } : undefined}
-                onClick={() => !showStrongs && !showInterlinear && setOpt("viewMode", "prose")}
+                aria-pressed={!viewChipOn}
+                style={!extraEnglish && !proseLocked && (showStrongs || showInterlinear) ? { opacity: 0.35, cursor: "default" } : undefined}
+                onClick={() => { if (extraEnglish) { setOpt("viewMode", "prose"); return; } if (!showStrongs && !showInterlinear) setOpt("viewMode", "prose"); }}
               ><Icon.Lines/></button>
             </div>
             <span className="lib-bar-sep" aria-hidden="true"/>
@@ -2348,7 +2381,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
           didLoading ? (
             <div className="lib-loading">Loading…</div>
           ) : nonCanon.englishOnly ? (
-            renderDidacheProse()
+            extraLineMode ? renderExtraLines() : renderDidacheProse()
           ) : translation === "parallel" ? (
             <div className="lib-parallel">
               <div className="lib-parallel-header">
