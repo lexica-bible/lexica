@@ -7522,7 +7522,7 @@ const TOUR_STEPS = [{
 }, {
   icon: "Book",
   label: "The Library",
-  body: "Read in ABP, KJV, or parallel. Enable Strong's badges or go fully interlinear — Hebrew script appears above OT words, Greek above NT. Click any word to open its lexicon entry. Click any verse number for cross-references."
+  body: "Read in ABP Greek, KJV, or the Berean Standard Bible — on their own, in parallel, or compare them side by side. Switch between plain reading and a full interlinear (Hebrew over OT words, Greek over NT), follow the text in chronological order, or listen with read-along audio. Click any word for its lexicon entry; click any verse number for cross-references. Beyond the canon you'll also find the Apocrypha, 1 Enoch, and the Apostolic Fathers."
 }, {
   icon: "Panel",
   label: "Cross-References",
@@ -7531,6 +7531,10 @@ const TOUR_STEPS = [{
   icon: "Sparkle",
   label: "Ask the Corpus",
   body: "Ask in plain language: 'Where does pneuma appear in Genesis?' or 'Differences in how KJV and ABP render spirit in the OT.' The AI searches Greek and Hebrew simultaneously and cites specific passages."
+}, {
+  icon: "Note",
+  label: "Notes & Highlights",
+  body: "Highlight verses in five colors, write notes on any word or verse, drop bookmarks, and keep a free-form journal. It all saves in your browser automatically — no account required. Sign in with email or Google to sync everything across your devices."
 }, {
   icon: "Book",
   label: "Support Lexica",
@@ -7629,7 +7633,13 @@ function AboutView({
     className: "about-p"
   }, "Lexica lets you trace any English word in the Bible back to its Greek or Hebrew source and explore its full meaning \u2014 not just the translation choice made by one committee. Every word links to the Liddell-Scott-Jones Greek lexicon (LSJ) or Brown-Driver-Briggs Hebrew lexicon (BDB), the two most comprehensive scholarly references available."), /*#__PURE__*/React.createElement("p", {
     className: "about-p"
-  }, "The primary text is the ", /*#__PURE__*/React.createElement("b", null, "Apostolic Bible Polyglot (ABP)"), " \u2014 a word-for-word Greek interlinear covering both the Septuagint (OT) and New Testament. The ", /*#__PURE__*/React.createElement("b", null, "King James Version (KJV)"), " is available in parallel and interlinear modes for comparison. Cross-references come from Torrey's Treasury of Scripture Knowledge."), /*#__PURE__*/React.createElement("h2", {
+  }, "The primary text is the ", /*#__PURE__*/React.createElement("b", null, "Apostolic Bible Polyglot (ABP)"), " \u2014 a word-for-word Greek interlinear covering both the Septuagint (OT) and New Testament. The ", /*#__PURE__*/React.createElement("b", null, "King James Version"), " and the ", /*#__PURE__*/React.createElement("b", null, "Berean Standard Bible"), " read alongside it \u2014 on their own, in parallel, or compared side by side \u2014 with read-along audio and an optional chronological reading order. Cross-references come from Torrey's Treasury of Scripture Knowledge."), /*#__PURE__*/React.createElement("p", {
+    className: "about-p"
+  }, "Beyond the canon, Lexica includes a library of related texts: the Septuagint Apocrypha, the Pseudepigrapha (1 Enoch, Jubilees, and more), and the Apostolic Fathers with full Greek interlinear."), /*#__PURE__*/React.createElement("h2", {
+    className: "about-h2"
+  }, "Your study, saved"), /*#__PURE__*/React.createElement("p", {
+    className: "about-p"
+  }, "Highlight verses, write notes on any word or verse, set bookmarks, and keep a free-form journal. Everything saves in your browser automatically \u2014 no account needed. Create a free account (email or Google) and your notes sync across every device. The app stays fully usable with no sign-in at all."), /*#__PURE__*/React.createElement("h2", {
     className: "about-h2"
   }, "The Berean approach"), /*#__PURE__*/React.createElement("p", {
     className: "about-p"
@@ -7639,7 +7649,7 @@ function AboutView({
     className: "about-h2"
   }, "Methodology"), /*#__PURE__*/React.createElement("ul", {
     className: "about-ul"
-  }, /*#__PURE__*/React.createElement("li", null, "Strong's numbers are the bridge between English, Greek, and Hebrew"), /*#__PURE__*/React.createElement("li", null, "Greek definitions draw from LSJ \u2014 the standard classical Greek reference"), /*#__PURE__*/React.createElement("li", null, "Hebrew definitions draw from BDB \u2014 the standard OT Hebrew reference"), /*#__PURE__*/React.createElement("li", null, "AI search generates SQL against the full lexicon corpus \u2014 not a summary or paraphrase"), /*#__PURE__*/React.createElement("li", null, "Translation comparisons surface where KJV and ABP make different rendering choices for the same source word")), /*#__PURE__*/React.createElement("h2", {
+  }, /*#__PURE__*/React.createElement("li", null, "Strong's numbers are the bridge between English, Greek, and Hebrew"), /*#__PURE__*/React.createElement("li", null, "Greek definitions draw from LSJ \u2014 the standard classical Greek reference"), /*#__PURE__*/React.createElement("li", null, "Hebrew definitions draw from BDB \u2014 the standard OT Hebrew reference"), /*#__PURE__*/React.createElement("li", null, "AI search generates SQL against the full lexicon corpus \u2014 not a summary or paraphrase"), /*#__PURE__*/React.createElement("li", null, "Translation comparisons surface where ABP, KJV, and the BSB make different rendering choices for the same source word")), /*#__PURE__*/React.createElement("h2", {
     className: "about-h2"
   }, "Support Lexica"), /*#__PURE__*/React.createElement("p", {
     className: "about-p"
