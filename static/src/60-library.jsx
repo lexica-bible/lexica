@@ -1879,36 +1879,48 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
     );
   };
 
-  // BSB reader — plain English reading text (one string per verse, no word data).
-  const renderBsbVerse = (v) => {
+  // KJV / BSB / ESV read as continuous prose (paragraphs), the same flow ABP prose
+  // uses — NOT one block per verse. Each verse is an inline run with a superscript
+  // number; `inner` is that verse's text/words.
+  const renderFlowVerse = (v, inner) => {
     const ch = v._ch ?? selChapter;
     const isHighlight = nav && nav.highlight === v.verse && (nav.chapter == null || nav.chapter === ch);
     return (
       <React.Fragment key={`${ch}-${v.verse}`}>
-        {v.heading && <div className="lib-verse-row pericope-row"><span className="lib-vnum" aria-hidden="true"/><div className="pericope-heading">{v.heading}</div></div>}
-        <div ref={isHighlight ? highlightRef : null} data-note-verse={v.verse} data-note-chapter={ch}
-          className={"lib-verse-row" + (isHighlight ? " lib-highlight" : "")}>
-          {vnumEl(v.verse, ch)}
-          <span className="lib-verse-content">{noteMarker(v.verse, ch)}<span className={"lib-bsb-text" + hiClass(v.verse, null, ch)}>{v.verse_text}</span></span>
-        </div>
+        {v.heading && <div className="pericope-heading">{v.heading}</div>}
+        <span ref={isHighlight ? highlightRef : null} className="lib-flow-verse"
+          data-note-verse={v.verse} data-note-chapter={ch}>
+          <sup className="lib-flow-vnum"
+               title={handleVerseNum ? "Click: cross-references · Right-click / long-press: add a note" : undefined}
+               onClick={handleVerseNum ? () => {
+                 if (vnumPressRef.current.fired) { vnumPressRef.current.fired = false; return; }
+                 handleVerseNum(v.verse, ch);
+               } : undefined}
+               {...vnumNoteHandlers(v.verse, ch)}>
+            {v.verse}
+          </sup>
+          {noteForVerse(v.verse, ch) && (
+            <button className="lib-note-dot lib-note-dot-inline" title="Open note" aria-label="Open note"
+              onClick={(e) => { e.stopPropagation(); const n = noteForVerse(v.verse, ch); onOpenNote && onOpenNote(n.id); }}>
+              <Icon.Bookmark/>
+            </button>
+          )}
+          {inner}
+        </span>
       </React.Fragment>
     );
   };
-
-  // ESV reader — plain English, owner-only (same shape as BSB; no Greek/Strong's).
-  const renderEsvVerse = (v) => {
+  // Plain-text verse (BSB + ESV).
+  const plainFlowInner = (v) => {
     const ch = v._ch ?? selChapter;
-    const isHighlight = nav && nav.highlight === v.verse && (nav.chapter == null || nav.chapter === ch);
-    return (
-      <React.Fragment key={`${ch}-${v.verse}`}>
-        {v.heading && <div className="lib-verse-row pericope-row"><span className="lib-vnum" aria-hidden="true"/><div className="pericope-heading">{v.heading}</div></div>}
-        <div ref={isHighlight ? highlightRef : null} data-note-verse={v.verse} data-note-chapter={ch}
-          className={"lib-verse-row" + (isHighlight ? " lib-highlight" : "")}>
-          {vnumEl(v.verse, ch)}
-          <span className="lib-verse-content">{noteMarker(v.verse, ch)}<span className={"lib-bsb-text" + hiClass(v.verse, null, ch)}>{v.verse_text}</span></span>
-        </div>
-      </React.Fragment>
-    );
+    return <span className={"lib-bsb-text" + hiClass(v.verse, null, ch)}>{v.verse_text}{" "}</span>;
+  };
+  // KJV word list (keeps italic-addition styling), run together as prose.
+  const kjvFlowInner = (v) => {
+    const ch = v._ch ?? selChapter;
+    return v.words.map((w, i) => (
+      <span key={i} className={(w.italic ? "lib-prose-italic" : "") + hiClass(v.verse, null, ch)}>{w.word}{w.punc || ""}{" "}</span>
+    ));
   };
 
   // Non-canonical reader (Didache, etc.). The Greek interlinear is the normal reading,
@@ -2315,24 +2327,24 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
               {withMarks(kjvView, v => renderKjvVerse(v))}
             </div>
           ) : (
-            <div className="lib-text-words">
-              {withMarks(kjvView, v => renderKjvProse(v))}
+            <div className="lib-text-words lib-prose-flow">
+              {withMarks(kjvView, v => renderFlowVerse(v, kjvFlowInner(v)))}
             </div>
           )
         ) : translation === "bsb" ? (
           bsbShowLoading ? (
             <div className="lib-loading">Loading…</div>
           ) : (
-            <div className="lib-text-words">
-              {withMarks(bsbView, renderBsbVerse)}
+            <div className="lib-text-words lib-prose-flow">
+              {withMarks(bsbView, v => renderFlowVerse(v, plainFlowInner(v)))}
             </div>
           )
         ) : translation === "esv" ? (
           esvShowLoading ? (
             <div className="lib-loading">Loading…</div>
           ) : (
-            <div className="lib-text-words">
-              {withMarks(esvView, renderEsvVerse)}
+            <div className="lib-text-words lib-prose-flow">
+              {withMarks(esvView, v => renderFlowVerse(v, plainFlowInner(v)))}
             </div>
           )
         ) : abpShowLoading ? (

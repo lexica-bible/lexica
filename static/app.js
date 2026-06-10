@@ -6559,54 +6559,56 @@ function LibraryView({
     }, w.word, w.punc || "", " ")))));
   };
 
-  // BSB reader — plain English reading text (one string per verse, no word data).
-  const renderBsbVerse = v => {
+  // KJV / BSB / ESV read as continuous prose (paragraphs), the same flow ABP prose
+  // uses — NOT one block per verse. Each verse is an inline run with a superscript
+  // number; `inner` is that verse's text/words.
+  const renderFlowVerse = (v, inner) => {
     const ch = v._ch ?? selChapter;
     const isHighlight = nav && nav.highlight === v.verse && (nav.chapter == null || nav.chapter === ch);
     return /*#__PURE__*/React.createElement(React.Fragment, {
       key: `${ch}-${v.verse}`
     }, v.heading && /*#__PURE__*/React.createElement("div", {
-      className: "lib-verse-row pericope-row"
-    }, /*#__PURE__*/React.createElement("span", {
-      className: "lib-vnum",
-      "aria-hidden": "true"
-    }), /*#__PURE__*/React.createElement("div", {
       className: "pericope-heading"
-    }, v.heading)), /*#__PURE__*/React.createElement("div", {
+    }, v.heading), /*#__PURE__*/React.createElement("span", {
       ref: isHighlight ? highlightRef : null,
+      className: "lib-flow-verse",
       "data-note-verse": v.verse,
-      "data-note-chapter": ch,
-      className: "lib-verse-row" + (isHighlight ? " lib-highlight" : "")
-    }, vnumEl(v.verse, ch), /*#__PURE__*/React.createElement("span", {
-      className: "lib-verse-content"
-    }, noteMarker(v.verse, ch), /*#__PURE__*/React.createElement("span", {
-      className: "lib-bsb-text" + hiClass(v.verse, null, ch)
-    }, v.verse_text))));
+      "data-note-chapter": ch
+    }, /*#__PURE__*/React.createElement("sup", _extends({
+      className: "lib-flow-vnum",
+      title: handleVerseNum ? "Click: cross-references · Right-click / long-press: add a note" : undefined,
+      onClick: handleVerseNum ? () => {
+        if (vnumPressRef.current.fired) {
+          vnumPressRef.current.fired = false;
+          return;
+        }
+        handleVerseNum(v.verse, ch);
+      } : undefined
+    }, vnumNoteHandlers(v.verse, ch)), v.verse), noteForVerse(v.verse, ch) && /*#__PURE__*/React.createElement("button", {
+      className: "lib-note-dot lib-note-dot-inline",
+      title: "Open note",
+      "aria-label": "Open note",
+      onClick: e => {
+        e.stopPropagation();
+        const n = noteForVerse(v.verse, ch);
+        onOpenNote && onOpenNote(n.id);
+      }
+    }, /*#__PURE__*/React.createElement(Icon.Bookmark, null)), inner));
   };
-
-  // ESV reader — plain English, owner-only (same shape as BSB; no Greek/Strong's).
-  const renderEsvVerse = v => {
+  // Plain-text verse (BSB + ESV).
+  const plainFlowInner = v => {
     const ch = v._ch ?? selChapter;
-    const isHighlight = nav && nav.highlight === v.verse && (nav.chapter == null || nav.chapter === ch);
-    return /*#__PURE__*/React.createElement(React.Fragment, {
-      key: `${ch}-${v.verse}`
-    }, v.heading && /*#__PURE__*/React.createElement("div", {
-      className: "lib-verse-row pericope-row"
-    }, /*#__PURE__*/React.createElement("span", {
-      className: "lib-vnum",
-      "aria-hidden": "true"
-    }), /*#__PURE__*/React.createElement("div", {
-      className: "pericope-heading"
-    }, v.heading)), /*#__PURE__*/React.createElement("div", {
-      ref: isHighlight ? highlightRef : null,
-      "data-note-verse": v.verse,
-      "data-note-chapter": ch,
-      className: "lib-verse-row" + (isHighlight ? " lib-highlight" : "")
-    }, vnumEl(v.verse, ch), /*#__PURE__*/React.createElement("span", {
-      className: "lib-verse-content"
-    }, noteMarker(v.verse, ch), /*#__PURE__*/React.createElement("span", {
+    return /*#__PURE__*/React.createElement("span", {
       className: "lib-bsb-text" + hiClass(v.verse, null, ch)
-    }, v.verse_text))));
+    }, v.verse_text, " ");
+  };
+  // KJV word list (keeps italic-addition styling), run together as prose.
+  const kjvFlowInner = v => {
+    const ch = v._ch ?? selChapter;
+    return v.words.map((w, i) => /*#__PURE__*/React.createElement("span", {
+      key: i,
+      className: (w.italic ? "lib-prose-italic" : "") + hiClass(v.verse, null, ch)
+    }, w.word, w.punc || "", " "));
   };
 
   // Non-canonical reader (Didache, etc.). The Greek interlinear is the normal reading,
@@ -7144,16 +7146,16 @@ function LibraryView({
   }, "Loading\u2026") : kjvWordMode ? /*#__PURE__*/React.createElement("div", {
     className: "lib-text-words"
   }, withMarks(kjvView, v => renderKjvVerse(v))) : /*#__PURE__*/React.createElement("div", {
-    className: "lib-text-words"
-  }, withMarks(kjvView, v => renderKjvProse(v))) : translation === "bsb" ? bsbShowLoading ? /*#__PURE__*/React.createElement("div", {
+    className: "lib-text-words lib-prose-flow"
+  }, withMarks(kjvView, v => renderFlowVerse(v, kjvFlowInner(v)))) : translation === "bsb" ? bsbShowLoading ? /*#__PURE__*/React.createElement("div", {
     className: "lib-loading"
   }, "Loading\u2026") : /*#__PURE__*/React.createElement("div", {
-    className: "lib-text-words"
-  }, withMarks(bsbView, renderBsbVerse)) : translation === "esv" ? esvShowLoading ? /*#__PURE__*/React.createElement("div", {
+    className: "lib-text-words lib-prose-flow"
+  }, withMarks(bsbView, v => renderFlowVerse(v, plainFlowInner(v)))) : translation === "esv" ? esvShowLoading ? /*#__PURE__*/React.createElement("div", {
     className: "lib-loading"
   }, "Loading\u2026") : /*#__PURE__*/React.createElement("div", {
-    className: "lib-text-words"
-  }, withMarks(esvView, renderEsvVerse)) : abpShowLoading ? /*#__PURE__*/React.createElement("div", {
+    className: "lib-text-words lib-prose-flow"
+  }, withMarks(esvView, v => renderFlowVerse(v, plainFlowInner(v)))) : abpShowLoading ? /*#__PURE__*/React.createElement("div", {
     className: "lib-loading"
   }, "Loading\u2026") : wordMode ? /*#__PURE__*/React.createElement("div", {
     className: "lib-text-words"
