@@ -306,7 +306,10 @@ _prune_metav_cache()
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    # GoatCounter visitor stats — privacy-friendly, no cookies. Off unless the site
+    # code is set in the WSGI env (os.environ['GOATCOUNTER_CODE'] = 'yourcode'); the
+    # template only emits the tag when it's present, so a deploy before setup is safe.
+    return render_template("index.html", goatcounter=os.environ.get("GOATCOUNTER_CODE"))
 
 
 if __name__ == "__main__":
