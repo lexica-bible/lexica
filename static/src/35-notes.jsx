@@ -34,9 +34,9 @@ function NoteAddPopover({ rect, isMobile, onAdd, onColor, onCopy, onJournal }) {
             title={"Highlight " + c} aria-label={"Highlight " + c} onClick={() => onColor(c)} />
         ))}
       </div>
-      <button className="note-popover-btn" onClick={onAdd}>✎ Note</button>
-      {onJournal && <button className="note-popover-btn" onClick={onJournal}>Journal</button>}
-      {onCopy && <button className="note-popover-btn" onClick={onCopy}>Copy</button>}
+      <button className="note-popover-btn" onClick={onAdd}><Icon.Note/><span className="note-btn-lbl">Note</span></button>
+      {onJournal && <button className="note-popover-btn" onClick={onJournal}><Icon.Book/><span className="note-btn-lbl">Journal</span></button>}
+      {onCopy && <button className="note-popover-btn" onClick={onCopy}><Icon.Copy/><span className="note-btn-lbl">Copy</span></button>}
     </div>
   );
 }
@@ -67,8 +67,8 @@ function VerseNoteMenu({ rect, isMobile, onBookmark, onNote, onColor, onCopy, on
           ))}
         </div>
         <button className="note-popover-btn" onClick={onNote}><Icon.Note/><span className="note-btn-lbl">Note</span></button>
-        {onJournal && <button className="note-popover-btn" onClick={onJournal}>Journal</button>}
-        {onCopy && <button className="note-popover-btn" onClick={onCopy}>Copy</button>}
+        {onJournal && <button className="note-popover-btn" onClick={onJournal}><Icon.Book/><span className="note-btn-lbl">Journal</span></button>}
+        {onCopy && <button className="note-popover-btn" onClick={onCopy}><Icon.Copy/><span className="note-btn-lbl">Copy</span></button>}
         <button className="note-popover-btn" onClick={onBookmark}><Icon.Bookmark/><span className="note-btn-lbl">Bookmark</span></button>
       </div>
     </>

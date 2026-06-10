@@ -114,6 +114,15 @@ const api = {
   }).catch(() => ({
     url: null
   })),
+  // NIV is the owner's personal text too (same gate as ESV; text-only, no audio).
+  nivStatus: () => fetch(`/api/niv/status`, {
+    headers: _authHeaders()
+  }).then(r => r.json()).catch(() => ({
+    owner: false
+  })),
+  nivChapter: (book, ch) => fetch(`/api/niv/chapter/${encodeURIComponent(book)}/${ch}`, {
+    headers: _authHeaders()
+  }).then(r => r.ok ? r.json() : []).catch(() => []),
   // Visitor stats — count this visit (owner's own visits are skipped server-side),
   // ask if the logged-in user is the owner (drives the Stats tab), and fetch the
   // owner-only dashboard numbers.
@@ -2562,13 +2571,19 @@ function NoteAddPopover({
   }))), /*#__PURE__*/React.createElement("button", {
     className: "note-popover-btn",
     onClick: onAdd
-  }, "\u270E Note"), onJournal && /*#__PURE__*/React.createElement("button", {
+  }, /*#__PURE__*/React.createElement(Icon.Note, null), /*#__PURE__*/React.createElement("span", {
+    className: "note-btn-lbl"
+  }, "Note")), onJournal && /*#__PURE__*/React.createElement("button", {
     className: "note-popover-btn",
     onClick: onJournal
-  }, "Journal"), onCopy && /*#__PURE__*/React.createElement("button", {
+  }, /*#__PURE__*/React.createElement(Icon.Book, null), /*#__PURE__*/React.createElement("span", {
+    className: "note-btn-lbl"
+  }, "Journal")), onCopy && /*#__PURE__*/React.createElement("button", {
     className: "note-popover-btn",
     onClick: onCopy
-  }, "Copy"));
+  }, /*#__PURE__*/React.createElement(Icon.Copy, null), /*#__PURE__*/React.createElement("span", {
+    className: "note-btn-lbl"
+  }, "Copy")));
 }
 
 // Menu shown when you right-click / long-press a verse number: Bookmark · Note · colors.
@@ -2627,10 +2642,14 @@ function VerseNoteMenu({
   }, "Note")), onJournal && /*#__PURE__*/React.createElement("button", {
     className: "note-popover-btn",
     onClick: onJournal
-  }, "Journal"), onCopy && /*#__PURE__*/React.createElement("button", {
+  }, /*#__PURE__*/React.createElement(Icon.Book, null), /*#__PURE__*/React.createElement("span", {
+    className: "note-btn-lbl"
+  }, "Journal")), onCopy && /*#__PURE__*/React.createElement("button", {
     className: "note-popover-btn",
     onClick: onCopy
-  }, "Copy"), /*#__PURE__*/React.createElement("button", {
+  }, /*#__PURE__*/React.createElement(Icon.Copy, null), /*#__PURE__*/React.createElement("span", {
+    className: "note-btn-lbl"
+  }, "Copy")), /*#__PURE__*/React.createElement("button", {
     className: "note-popover-btn",
     onClick: onBookmark
   }, /*#__PURE__*/React.createElement(Icon.Bookmark, null), /*#__PURE__*/React.createElement("span", {
@@ -3997,6 +4016,7 @@ function LibNavPanel({
   corpus,
   pickBible,
   esvOwner,
+  nivOwner,
   otherOpen,
   setOtherOpen,
   chrono,
@@ -4109,7 +4129,10 @@ function LibNavPanel({
   }, "BSB"), esvOwner && /*#__PURE__*/React.createElement("button", {
     className: "seg-b" + (!nonCanon && translation === "esv" ? " on" : ""),
     onClick: () => pickBible("esv")
-  }, "ESV"), nonCanonList && nonCanonList.length > 0 && /*#__PURE__*/React.createElement("button", {
+  }, "ESV"), nivOwner && /*#__PURE__*/React.createElement("button", {
+    className: "seg-b" + (!nonCanon && translation === "niv" ? " on" : ""),
+    onClick: () => pickBible("niv")
+  }, "NIV"), nonCanonList && nonCanonList.length > 0 && /*#__PURE__*/React.createElement("button", {
     className: "seg-b nav-other-seg" + (nonCanon ? " on" : ""),
     onClick: () => setOtherOpen(o => !o),
     "aria-expanded": otherOpen
@@ -4379,8 +4402,12 @@ function ModesSheet({
   translation,
   pickBible,
   esvOwner,
+  nivOwner,
   toggleParallel,
   nonCanonList,
+  compareAvail,
+  compareActive,
+  toggleCompare,
   showStrongs,
   showInterlinear,
   setOpt,
@@ -4397,7 +4424,7 @@ function ModesSheet({
     scrollRef
   } = useSwipeToDismiss(onClose);
   const activeNonCanon = nonCanonList.find(t => t.id === corpus) || null;
-  const proseLocked = !!(activeNonCanon && activeNonCanon.englishOnly) || translation === "bsb" || translation === "esv"; // English-only / BSB / ESV: no Greek toggles
+  const proseLocked = !!(activeNonCanon && activeNonCanon.englishOnly) || translation === "bsb" || translation === "esv" || translation === "niv"; // English-only / BSB / ESV / NIV: no Greek toggles
   const gray = proseLocked ? {
     opacity: 0.35,
     cursor: "default"
@@ -4444,14 +4471,20 @@ function ModesSheet({
   }, "BSB"), esvOwner && /*#__PURE__*/React.createElement("button", {
     className: "mseg-b" + (corpus === "bible" && translation === "esv" ? " on" : ""),
     onClick: () => pickBible("esv")
-  }, "ESV")), !activeNonCanon && /*#__PURE__*/React.createElement("div", {
-    className: "mseg text-par"
-  }, /*#__PURE__*/React.createElement("button", {
-    className: "mseg-b" + (translation === "parallel" ? " on" : ""),
-    disabled: proseLocked,
-    style: gray,
-    onClick: () => !proseLocked && toggleParallel()
-  }, "Parallel")))), chrono && !activeNonCanon && /*#__PURE__*/React.createElement("div", {
+  }, "ESV"), nivOwner && /*#__PURE__*/React.createElement("button", {
+    className: "mseg-b" + (corpus === "bible" && translation === "niv" ? " on" : ""),
+    onClick: () => pickBible("niv")
+  }, "NIV")))), !activeNonCanon && /*#__PURE__*/React.createElement("div", {
+    className: "mode-sec"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mode-lbl"
+  }, "Compare"), /*#__PURE__*/React.createElement("div", {
+    className: "mseg text-cmp"
+  }, compareAvail.map(id => /*#__PURE__*/React.createElement("button", {
+    key: id,
+    className: "mseg-b" + (compareActive.includes(id) ? " on" : ""),
+    onClick: () => toggleCompare(id)
+  }, id.toUpperCase())))), chrono && !activeNonCanon && /*#__PURE__*/React.createElement("div", {
     className: "mode-sec"
   }, /*#__PURE__*/React.createElement("div", {
     className: "mode-lbl"
@@ -4997,6 +5030,10 @@ function LibraryView({
   const [esvLoading, setEsvLoading] = useState(false);
   // ESV is the owner's personal text: esvOwner (set by the server) gates the toggle.
   const [esvOwner, setEsvOwner] = useState(false);
+  // NIV — same owner gate as ESV, text-only (no audio).
+  const [nivVerses, setNivVerses] = useState([]);
+  const [nivLoading, setNivLoading] = useState(false);
+  const [nivOwner, setNivOwner] = useState(false);
   // Chapter audio (BSB = public-domain openbible; ESV = owner-only FCBH), once "Listen" is pressed.
   // audioKey = the "book-chapter" currently loaded (so the right Listen button highlights in chrono,
   // where a passage can span chapters and each chapter is its own file).
@@ -5018,7 +5055,11 @@ function LibraryView({
     if (stored) return parseInt(stored, 10);
     return isMobile ? 15 : 18;
   });
-  const [translation, setTranslation] = useState("abp"); // layout: "abp" | "kjv" | "parallel"
+  const [translation, setTranslation] = useState("abp"); // layout: "abp" | "kjv" | "bsb" | "esv" | "niv" | "parallel"
+  // Compare (parallel): translation === "parallel" is the mode; compareSel is WHICH
+  // texts (2-4) sit side by side. ESV/NIV only offered to the owner.
+  const [compareSel, setCompareSel] = useState(["abp", "kjv"]);
+  const [compareOpen, setCompareOpen] = useState(false);
   const [corpus, setCorpus] = useState("bible"); // which text: "bible" | a non-canonical id (e.g. "didache")
   const [didVerses, setDidVerses] = useState([]);
   const [didLoading, setDidLoading] = useState(false);
@@ -5052,7 +5093,7 @@ function LibraryView({
   // The line a verse becomes when sent to the journal: "Genesis 1:8 (ABP) — text".
   // No translation tag for non-canon texts (their book name already says it all).
   const journalLine = a => {
-    const tag = nonCanon ? "" : translation === "parallel" ? "ABP/KJV" : (translation || "").toUpperCase();
+    const tag = nonCanon ? "" : translation === "parallel" ? compareSel.map(s => s.toUpperCase()).join("/") : (translation || "").toUpperCase();
     return a.refLabel + (tag ? " (" + tag + ")" : "") + " — " + a.snippet;
   };
   useNotesVersion(); // re-render markers when notes change
@@ -5070,18 +5111,25 @@ function LibraryView({
     api.esvStatus().then(d => {
       if (!cancelled) setEsvOwner(!!(d && d.owner));
     });
+    api.nivStatus().then(d => {
+      if (!cancelled) setNivOwner(!!(d && d.owner));
+    });
     return () => {
       cancelled = true;
     };
   }, [authEmail]);
-  // If the owner signs out (or it's revoked) while reading ESV, fall back to ABP
+  // If the owner signs out (or it's revoked) while reading ESV/NIV, fall back to ABP
   // so they're never stuck on a now-forbidden text showing blank.
   useEffect(() => {
     if (!esvOwner && translation === "esv") {
       setTranslation("abp");
       onTranslationChange?.("abp");
     }
-  }, [esvOwner, translation]);
+    if (!nivOwner && translation === "niv") {
+      setTranslation("abp");
+      onTranslationChange?.("abp");
+    }
+  }, [esvOwner, nivOwner, translation]);
   useEffect(() => {
     if (!nav?.book || !navBookRef.current || nav.book !== selBook?.abbrev) return;
     requestAnimationFrame(() => {
@@ -5233,13 +5281,14 @@ function LibraryView({
     } = curPassage;
     const chs = [];
     for (let c = start_ch; c <= end_ch; c++) chs.push(c);
-    const need = translation === "parallel" ? ["abp", "kjv"] : [translation];
+    const need = translation === "parallel" ? compareSel : [translation];
     const fetchChapter = c => {
       const jobs = [];
       if (need.includes("abp")) jobs.push(api.chapter(book, c).then(d => ["abp", d]));
       if (need.includes("kjv")) jobs.push(api.kjvChapter(book, c).then(d => ["kjv", d]));
       if (need.includes("bsb")) jobs.push(api.bsbChapter(book, c).then(d => ["bsb", d]));
       if (need.includes("esv")) jobs.push(api.esvChapter(book, c).then(d => ["esv", d]));
+      if (need.includes("niv")) jobs.push(api.nivChapter(book, c).then(d => ["niv", d]));
       return Promise.all(jobs).then(pairs => [c, Object.fromEntries(pairs)]);
     };
     Promise.all(chs.map(fetchChapter)).then(entries => {
@@ -5255,7 +5304,7 @@ function LibraryView({
     return () => {
       cancelled = true;
     };
-  }, [chronoOn, chronoPos, translation, corpus]);
+  }, [chronoOn, chronoPos, translation, corpus, compareSel]);
 
   // Non-canonical text loader (Didache, etc.) — keyed on the active text id + chapter.
   useEffect(() => {
@@ -5276,7 +5325,8 @@ function LibraryView({
     };
   }, [corpus, selChapter]);
   useEffect(() => {
-    if (!selBook || nonCanon || chronoOn || translation !== "kjv" && translation !== "parallel") return;
+    if (!selBook || nonCanon || chronoOn) return;
+    if (translation !== "kjv" && !(translation === "parallel" && compareSel.includes("kjv"))) return;
     let cancelled = false;
     setKjvLoading(true);
     setKjvVerses([]);
@@ -5291,11 +5341,12 @@ function LibraryView({
     return () => {
       cancelled = true;
     };
-  }, [selBook && selBook.abbrev, selChapter, translation, corpus, chronoOn]);
+  }, [selBook && selBook.abbrev, selChapter, translation, corpus, chronoOn, compareSel]);
 
-  // BSB chapter loader — only when the BSB reading text is active.
+  // BSB chapter loader — when BSB is the reading text OR a selected compare column.
   useEffect(() => {
-    if (!selBook || nonCanon || chronoOn || translation !== "bsb") return;
+    if (!selBook || nonCanon || chronoOn) return;
+    if (translation !== "bsb" && !(translation === "parallel" && compareSel.includes("bsb"))) return;
     let cancelled = false;
     setBsbLoading(true);
     setBsbVerses([]);
@@ -5310,12 +5361,13 @@ function LibraryView({
     return () => {
       cancelled = true;
     };
-  }, [selBook && selBook.abbrev, selChapter, translation, corpus, chronoOn]);
+  }, [selBook && selBook.abbrev, selChapter, translation, corpus, chronoOn, compareSel]);
 
   // ESV chapter loader — owner-only reading text. Each fetch carries the login
   // token; the server returns 404 (and api.esvChapter yields []) for non-owners.
   useEffect(() => {
-    if (!selBook || nonCanon || chronoOn || translation !== "esv" || !esvOwner) return;
+    if (!selBook || nonCanon || chronoOn || !esvOwner) return;
+    if (translation !== "esv" && !(translation === "parallel" && compareSel.includes("esv"))) return;
     let cancelled = false;
     setEsvLoading(true);
     setEsvVerses([]);
@@ -5330,7 +5382,27 @@ function LibraryView({
     return () => {
       cancelled = true;
     };
-  }, [selBook && selBook.abbrev, selChapter, translation, corpus, chronoOn, esvOwner]);
+  }, [selBook && selBook.abbrev, selChapter, translation, corpus, chronoOn, esvOwner, compareSel]);
+
+  // NIV chapter loader — owner-only reading text (same as ESV, text only).
+  useEffect(() => {
+    if (!selBook || nonCanon || chronoOn || !nivOwner) return;
+    if (translation !== "niv" && !(translation === "parallel" && compareSel.includes("niv"))) return;
+    let cancelled = false;
+    setNivLoading(true);
+    setNivVerses([]);
+    api.nivChapter(selBook.abbrev, selChapter).then(data => {
+      if (!cancelled) {
+        setNivVerses(data);
+        setNivLoading(false);
+      }
+    }).catch(() => {
+      if (!cancelled) setNivLoading(false);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [selBook && selBook.abbrev, selChapter, translation, corpus, chronoOn, nivOwner, compareSel]);
 
   // Reset the chapter audio when the reading changes — the old mp3 is for the
   // previous chapter/passage. Press Listen to fetch the new one. (chronoPos covers
@@ -5407,7 +5479,7 @@ function LibraryView({
     setCorpus(t.id);
     setSelChapter(1);
     setOtherOpen(false);
-    if (translation === "kjv" || translation === "bsb" || translation === "esv" || translation === "parallel") {
+    if (translation === "kjv" || translation === "bsb" || translation === "esv" || translation === "niv" || translation === "parallel") {
       setTranslation("abp");
       onTranslationChange?.("abp");
     }
@@ -5425,19 +5497,44 @@ function LibraryView({
     onTranslationChange?.(edition);
     if (selBook && selChapter > selBook.chapters) setSelChapter(selBook.chapters);
   };
-  // Parallel is its own toggle: on shows two columns (Bible ABP|KJV); off returns
-  // to the single view. Bible only — non-canonical texts don't offer Parallel.
+  // Compare (parallel): pick 2-4 texts to show side by side. The picker's "active"
+  // set is the parallel selection when on, else just the current single edition (so
+  // opening the menu pre-checks what you're reading). Checking a 2nd text turns
+  // compare ON; dropping below 2 falls back to a single view. Bible only.
+  const COMPARE_ORDER = ["abp", "kjv", "bsb", "esv", "niv"];
+  const compareAvail = COMPARE_ORDER.filter(id => id === "esv" ? esvOwner : id === "niv" ? nivOwner : true);
+  const compareActive = translation === "parallel" ? compareSel.filter(id => compareAvail.includes(id)) : COMPARE_ORDER.includes(translation) ? [translation] : ["abp"];
+  const toggleCompare = id => {
+    const set = compareActive.includes(id) ? compareActive.filter(x => x !== id) : [...compareActive, id];
+    const ordered = COMPARE_ORDER.filter(x => set.includes(x) && compareAvail.includes(x));
+    setCompareSel(ordered);
+    if (ordered.length >= 2) {
+      setTranslation("parallel");
+      onTranslationChange?.("parallel");
+    } else {
+      const fb = ordered[0] || "abp";
+      setTranslation(fb);
+      onTranslationChange?.(fb);
+    }
+  };
+  // Plain on/off toggle (used by the mobile sheet header + as a quick flip). Turning
+  // on keeps the current compareSel if it already has 2+, else defaults to ABP|KJV.
   const toggleParallel = () => {
-    const next = translation === "parallel" ? "abp" : "parallel";
-    setTranslation(next);
-    onTranslationChange?.(next);
+    if (translation === "parallel") {
+      setTranslation("abp");
+      onTranslationChange?.("abp");
+    } else {
+      setCompareSel(prev => prev.filter(id => compareAvail.includes(id)).length >= 2 ? prev : ["abp", "kjv"]);
+      setTranslation("parallel");
+      onTranslationChange?.("parallel");
+    }
   };
   // In-text search: which text to search. Bible → the active edition (Parallel
   // searches the English/KJV column); a non-canonical reader → that text's id.
   const readCorpus = corpus === "bible" ? translation === "parallel" ? "kjv" : translation : corpus;
   // ESV has no plain-text search route (owner-only reading text), so the reader's
   // in-text find is off for it — every other text supports it.
-  const canSearch = !!readCorpus && translation !== "esv";
+  const canSearch = !!readCorpus && translation !== "esv" && translation !== "niv";
   const searchName = corpus === "bible" ? readCorpus.toUpperCase() : nonCanon ? nonCanon.name : "";
   const runTextSearch = () => {
     const q = searchQ.trim();
@@ -5483,7 +5580,8 @@ function LibraryView({
   // Chip) are disabled and grayed out.
   const bsbMode = translation === "bsb";
   const esvMode = translation === "esv";
-  const proseLocked = !!(nonCanon && nonCanon.englishOnly) || bsbMode || esvMode;
+  const nivMode = translation === "niv";
+  const proseLocked = !!(nonCanon && nonCanon.englishOnly) || bsbMode || esvMode || nivMode;
   const chipMode = !proseLocked && (viewMode === "chip" || showStrongs || showInterlinear);
   const wordMode = chipMode;
   const kjvWordMode = chipMode;
@@ -5522,6 +5620,7 @@ function LibraryView({
   const kjvView = chronoOn ? flattenSpan("kjv") : kjvVerses;
   const bsbView = chronoOn ? flattenSpan("bsb") : bsbVerses;
   const esvView = chronoOn ? flattenSpan("esv") : esvVerses;
+  const nivView = chronoOn ? flattenSpan("niv") : nivVerses;
   // Drop a chapter divider each time _ch changes; a plain map for canonical (no _ch).
   const withMarks = (arr, renderFn) => {
     const out = [];
@@ -5550,6 +5649,7 @@ function LibraryView({
   const kjvShowLoading = chronoOn ? chronoLoading || !chronoReady : kjvLoading;
   const bsbShowLoading = chronoOn ? chronoLoading || !chronoReady : bsbLoading;
   const esvShowLoading = chronoOn ? chronoLoading || !chronoReady : esvLoading;
+  const nivShowLoading = chronoOn ? chronoLoading || !chronoReady : nivLoading;
   // Chapter audio (BSB + ESV only). Audio is one file per WHOLE chapter. ONE play/pause
   // icon in the toolbar + a progress bar under the toolbar (desktop AND mobile, same
   // spot). The button targets the chapter you're reading: canonical = the open chapter;
@@ -6822,6 +6922,7 @@ function LibraryView({
     corpus: corpus,
     pickBible: pickBible,
     esvOwner: esvOwner,
+    nivOwner: nivOwner,
     otherOpen: otherOpen,
     setOtherOpen: setOtherOpen,
     chrono: chrono,
@@ -6853,7 +6954,11 @@ function LibraryView({
     translation: translation,
     pickBible: pickBible,
     esvOwner: esvOwner,
+    nivOwner: nivOwner,
     toggleParallel: toggleParallel,
+    compareAvail: compareAvail,
+    compareActive: compareActive,
+    toggleCompare: toggleCompare,
     nonCanonList: NONCANON,
     showStrongs: showStrongs,
     showInterlinear: showInterlinear,
@@ -6947,18 +7052,30 @@ function LibraryView({
       cursor: "default"
     } : undefined,
     onClick: () => !proseLocked && setOpt("showInterlinear", !showInterlinear)
-  }, /*#__PURE__*/React.createElement(Icon.Interlinear, null)), !nonCanon && /*#__PURE__*/React.createElement("button", {
+  }, /*#__PURE__*/React.createElement(Icon.Interlinear, null)), !nonCanon && /*#__PURE__*/React.createElement("div", {
+    className: "lib-other-wrap"
+  }, /*#__PURE__*/React.createElement("button", {
     className: "lib-toggle lib-toggle-icon" + (translation === "parallel" ? " on" : ""),
-    disabled: proseLocked,
-    title: "Parallel (ABP + KJV)",
-    "aria-label": "Parallel",
+    title: "Compare translations",
+    "aria-label": "Compare translations",
     "aria-pressed": translation === "parallel",
-    style: proseLocked ? {
-      opacity: 0.35,
-      cursor: "default"
-    } : undefined,
-    onClick: () => !proseLocked && toggleParallel()
-  }, /*#__PURE__*/React.createElement(Icon.Columns, null)), /*#__PURE__*/React.createElement("span", {
+    "aria-expanded": compareOpen,
+    onClick: () => setCompareOpen(o => !o)
+  }, /*#__PURE__*/React.createElement(Icon.Columns, null)), compareOpen && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "lib-other-scrim",
+    onClick: () => setCompareOpen(false)
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "lib-other-menu lib-compare-menu"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "lib-compare-title"
+  }, "Compare (pick 2\u20134)"), compareAvail.map(id => /*#__PURE__*/React.createElement("label", {
+    key: id,
+    className: "lib-compare-opt"
+  }, /*#__PURE__*/React.createElement("input", {
+    type: "checkbox",
+    checked: compareActive.includes(id),
+    onChange: () => toggleCompare(id)
+  }), /*#__PURE__*/React.createElement("span", null, id.toUpperCase())))))), /*#__PURE__*/React.createElement("span", {
     className: "lib-bar-sep",
     "aria-hidden": "true"
   }), /*#__PURE__*/React.createElement("div", {
@@ -7119,89 +7236,141 @@ function LibraryView({
     className: "lib-parallel-label"
   }, "English")), didVerses.map(renderDidacheParallelVerse)) : chipMode ? /*#__PURE__*/React.createElement("div", {
     className: "lib-text-words lib-did-text"
-  }, didVerses.map(renderDidacheVerse)) : renderDidacheProse() : translation === "parallel" ? /*#__PURE__*/React.createElement("div", {
-    className: "lib-parallel"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "lib-parallel-header"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "lib-parallel-label"
-  }, "ABP"), /*#__PURE__*/React.createElement("span", {
-    className: "lib-parallel-label"
-  }, "KJV")), abpShowLoading || kjvShowLoading ? /*#__PURE__*/React.createElement("div", {
-    className: "lib-loading"
-  }, "Loading\u2026") : (() => {
-    // Key by chapter+verse so a chronological span (verse numbers repeat
-    // across chapters) pairs ABP↔KJV correctly; canonical has one chapter.
-    const cv = v => `${v._ch ?? selChapter}-${v.verse}`;
-    const kjvMap = Object.fromEntries(kjvView.map(v => [cv(v), v]));
-    // Build display items, lifting section headings above any preceding ABP-only verse
-    const items = [];
-    let lastCh = null;
-    for (let i = 0; i < abpView.length; i++) {
-      const abpV = abpView[i];
-      if (abpV._ch != null && abpV._ch !== lastCh) {
-        items.push({
-          type: 'chap',
-          ch: abpV._ch
-        });
-        lastCh = abpV._ch;
+  }, didVerses.map(renderDidacheVerse)) : renderDidacheProse() : translation === "parallel" ? (() => {
+    // Compare: render the selected texts (2-4) side by side. Each column
+    // knows how to draw its own verse + its own number (shown on desktop,
+    // hidden on mobile where the shared number sits above the stack).
+    // Plain English columns (BSB/ESV/NIV) carry their own verse number too
+    // (the shared one is mobile-only), so every desktop column shows it.
+    const plainCol = v => /*#__PURE__*/React.createElement(React.Fragment, null, vnumEl(v.verse, v._ch ?? selChapter), /*#__PURE__*/React.createElement("span", {
+      className: "lib-bsb-text"
+    }, v.verse_text));
+    const colDefs = {
+      abp: {
+        label: "ABP",
+        view: abpView,
+        loading: abpShowLoading,
+        render: v => renderVerse(v, true)
+      },
+      kjv: {
+        label: "KJV",
+        view: kjvView,
+        loading: kjvShowLoading,
+        render: v => kjvWordMode ? renderKjvVerse(v, true, true) : renderKjvProse(v, true, true)
+      },
+      bsb: {
+        label: "BSB",
+        view: bsbView,
+        loading: bsbShowLoading,
+        render: plainCol
+      },
+      esv: {
+        label: "ESV",
+        view: esvView,
+        loading: esvShowLoading,
+        render: plainCol
+      },
+      niv: {
+        label: "NIV",
+        view: nivView,
+        loading: nivShowLoading,
+        render: plainCol
       }
-      const kjvV = kjvMap[cv(abpV)];
-      const heading = abpV.heading || kjvV && kjvV.heading;
-      if (heading) {
-        const prev = items[items.length - 1];
-        if (prev && prev.type === 'verse' && !prev.kjvV) {
-          items.splice(items.length - 1, 0, {
-            type: 'heading',
-            heading,
-            key: `h-${cv(abpV)}`
-          });
-        } else {
-          items.push({
-            type: 'heading',
-            heading,
-            key: `h-${cv(abpV)}`
+    };
+    const cols = compareSel.filter(id => colDefs[id] && compareAvail.includes(id)).map(id => ({
+      id,
+      ...colDefs[id]
+    }));
+    const n = Math.max(cols.length, 1);
+    return /*#__PURE__*/React.createElement("div", {
+      className: "lib-parallel lib-cmp-" + n
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "lib-parallel-header"
+    }, cols.map(c => /*#__PURE__*/React.createElement("span", {
+      key: c.id,
+      className: "lib-parallel-label"
+    }, c.label))), cols.some(c => c.loading) ? /*#__PURE__*/React.createElement("div", {
+      className: "lib-loading"
+    }, "Loading\u2026") : (() => {
+      // Key by chapter+verse so a chronological span (verse numbers repeat
+      // across chapters) lines the texts up; canonical has one chapter.
+      const cv = v => `${v._ch ?? selChapter}-${v.verse}`;
+      const maps = {};
+      cols.forEach(c => {
+        maps[c.id] = Object.fromEntries(c.view.map(v => [cv(v), v]));
+      });
+      // Ordered union of every verse present in any selected text.
+      const seen = new Set();
+      const order = [];
+      cols.forEach(c => c.view.forEach(v => {
+        const k = cv(v);
+        if (!seen.has(k)) {
+          seen.add(k);
+          order.push({
+            k,
+            ch: v._ch ?? selChapter,
+            verse: v.verse
           });
         }
-      }
-      items.push({
-        type: 'verse',
-        abpV,
-        kjvV
+      }));
+      order.sort((a, b) => a.ch - b.ch || a.verse - b.verse);
+      const items = [];
+      let lastCh = null;
+      order.forEach(o => {
+        if (chronoOn && o.ch !== lastCh) {
+          items.push({
+            type: 'chap',
+            ch: o.ch
+          });
+          lastCh = o.ch;
+        }
+        let heading = null;
+        for (const c of cols) {
+          const vv = maps[c.id][o.k];
+          if (vv && vv.heading) {
+            heading = vv.heading;
+            break;
+          }
+        }
+        if (heading) items.push({
+          type: 'heading',
+          heading,
+          key: `h-${o.k}`
+        });
+        items.push({
+          type: 'verse',
+          o
+        });
       });
-    }
-    return items.map(item => {
-      if (item.type === 'chap') {
-        return /*#__PURE__*/React.createElement("div", {
+      return items.map(item => {
+        if (item.type === 'chap') return /*#__PURE__*/React.createElement("div", {
           key: `cm-${item.ch}`,
           className: "lib-chrono-chapmark"
         }, selBook ? selBook.name : "", " ", item.ch);
-      }
-      if (item.type === 'heading') {
-        return /*#__PURE__*/React.createElement("div", {
+        if (item.type === 'heading') return /*#__PURE__*/React.createElement("div", {
           key: item.key,
           className: "lib-parallel-section-heading"
         }, /*#__PURE__*/React.createElement("div", {
           className: "pericope-heading"
         }, item.heading));
-      }
-      const {
-        abpV,
-        kjvV
-      } = item;
-      const ach = abpV._ch ?? selChapter;
-      return /*#__PURE__*/React.createElement("div", {
-        key: cv(abpV),
-        className: "lib-parallel-verse"
-      }, /*#__PURE__*/React.createElement("div", {
-        className: "lib-parallel-vnum"
-      }, vnumEl(abpV.verse, ach)), /*#__PURE__*/React.createElement("div", {
-        className: "lib-parallel-col"
-      }, renderVerse(abpV, true)), /*#__PURE__*/React.createElement("div", {
-        className: "lib-parallel-col"
-      }, kjvV ? kjvWordMode ? renderKjvVerse(kjvV, true, true) : renderKjvProse(kjvV, true, true) : null));
-    });
-  })()) : translation === "kjv" ? kjvShowLoading ? /*#__PURE__*/React.createElement("div", {
+        const o = item.o;
+        return /*#__PURE__*/React.createElement("div", {
+          key: o.k,
+          className: "lib-parallel-verse"
+        }, /*#__PURE__*/React.createElement("div", {
+          className: "lib-parallel-vnum"
+        }, vnumEl(o.verse, o.ch)), cols.map(c => {
+          const vv = maps[c.id][o.k];
+          return /*#__PURE__*/React.createElement("div", {
+            key: c.id,
+            className: "lib-parallel-col"
+          }, /*#__PURE__*/React.createElement("span", {
+            className: "lib-parallel-col-lbl"
+          }, c.label), vv ? c.render(vv) : null);
+        }));
+      });
+    })());
+  })() : translation === "kjv" ? kjvShowLoading ? /*#__PURE__*/React.createElement("div", {
     className: "lib-loading"
   }, "Loading\u2026") : kjvWordMode ? /*#__PURE__*/React.createElement("div", {
     className: "lib-text-words"
@@ -7215,7 +7384,11 @@ function LibraryView({
     className: "lib-loading"
   }, "Loading\u2026") : /*#__PURE__*/React.createElement("div", {
     className: "lib-text-words lib-prose-flow"
-  }, withMarks(esvView, v => renderFlowVerse(v, plainFlowInner(v)))) : abpShowLoading ? /*#__PURE__*/React.createElement("div", {
+  }, withMarks(esvView, v => renderFlowVerse(v, plainFlowInner(v)))) : translation === "niv" ? nivShowLoading ? /*#__PURE__*/React.createElement("div", {
+    className: "lib-loading"
+  }, "Loading\u2026") : /*#__PURE__*/React.createElement("div", {
+    className: "lib-text-words lib-prose-flow"
+  }, withMarks(nivView, v => renderFlowVerse(v, plainFlowInner(v)))) : abpShowLoading ? /*#__PURE__*/React.createElement("div", {
     className: "lib-loading"
   }, "Loading\u2026") : wordMode ? /*#__PURE__*/React.createElement("div", {
     className: "lib-text-words"

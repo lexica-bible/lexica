@@ -1361,8 +1361,18 @@ input { font-family: inherit; }
 }
 .lib-parallel-col { color: var(--ink); }
 .lib-parallel-vnum { display: none; }
+.lib-parallel-col-lbl { display: none; }   /* desktop: the header row carries the labels */
 .lib-parallel-section-heading { padding: 12px 0 4px; text-align: center; }
 .lib-parallel-section-heading .pericope-heading { margin: 0; }
+/* Compare with 3-4 texts: more columns, tighter gutter. */
+.lib-cmp-3 .lib-parallel-header, .lib-cmp-3 .lib-parallel-verse { grid-template-columns: 1fr 1fr 1fr; gap: 16px; }
+.lib-cmp-4 .lib-parallel-header, .lib-cmp-4 .lib-parallel-verse { grid-template-columns: 1fr 1fr 1fr 1fr; gap: 14px; }
+/* Compare picker dropdown (desktop toolbar). */
+.lib-compare-menu { min-width: 132px; padding: 7px 6px; }
+.lib-compare-title { font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); padding: 2px 8px 6px; }
+.lib-compare-opt { display: flex; align-items: center; gap: 8px; padding: 5px 8px; font-size: 13px; cursor: pointer; border-radius: 6px; }
+.lib-compare-opt:hover { background: rgba(0,0,0,0.05); }
+.lib-compare-opt input { cursor: pointer; margin: 0; }
 
 /* BDB (Hebrew) sidebar */
 .bdb-badge {
@@ -1504,12 +1514,13 @@ input { font-family: inherit; }
 }
 .lib-flow-vnum:hover { color: var(--accent); }
 @media (max-width: 1099px) {
-  /* Bigger, reliable tap / long-press target for the prose verse number. */
+  /* Bigger tap / long-press target for the prose verse number. Stays `inline`
+     (NOT inline-block) so a line never breaks right after the number, leaving it
+     dangling at the end of a line — inline padding still enlarges the hit area. */
   .lib-flow-vnum {
     font-size: 0.66em;
-    display: inline-block;
     padding: 6px 8px;
-    margin: -6px 0 -6px -4px;   /* pad the hit area without moving the text */
+    margin-left: -4px;
     touch-action: manipulation;
   }
 }
@@ -1951,9 +1962,12 @@ input { font-family: inherit; }
   .pericope-heading { text-align: center; }
   /* Chip: smaller word size to fit more per line */
   .lib-iw-strongs { font-size: 9px; }
-  /* Parallel: stack columns vertically */
-  .lib-parallel-verse { grid-template-columns: 1fr; gap: 0; font-size: var(--lib-font-size, 15px); line-height: 1.65; border-bottom: none; }
-  .lib-parallel-header { border-bottom: none; }
+  /* Compare: stack the chosen texts vertically, one labeled line each. */
+  .lib-parallel-verse,
+  .lib-cmp-2 .lib-parallel-verse, .lib-cmp-3 .lib-parallel-verse, .lib-cmp-4 .lib-parallel-verse {
+    grid-template-columns: 1fr; gap: 0; font-size: var(--lib-font-size, 15px); line-height: 1.65; border-bottom: none;
+  }
+  .lib-parallel-header { display: none; }   /* stacked: the per-line label names each text */
   .lib-parallel-vnum {
     display: flex;
     justify-content: center;
@@ -1963,8 +1977,14 @@ input { font-family: inherit; }
   }
   .lib-parallel-vnum .lib-vnum { font-size: 9px; }
   .lib-parallel-verse:first-child .lib-parallel-vnum { border-top: none; margin-top: 0; }
-  .lib-parallel-col:last-child { padding-top: 4px; margin-top: 2px; }
+  .lib-parallel-col { padding-top: 3px; }
   .lib-parallel-col .lib-vnum { display: none; }
+  /* The small text label (ABP/KJV/BSB/ESV/NIV) before each stacked line. */
+  .lib-parallel-col-lbl {
+    display: inline-block;
+    font-size: 9px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--gold); margin-right: 6px; vertical-align: 1px;
+  }
 }
 .mbar-center { flex: 1; display: flex; align-items: center; justify-content: center; gap: 18px; }
 .mbar-loc { display: inline-flex; align-items: center; justify-content: center; gap: 7px; height: 42px; border-radius: 10px; padding: 0 12px; }

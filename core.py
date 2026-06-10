@@ -180,6 +180,22 @@ def esv_db():
     return conn
 
 
+# The NIV is a PERSONAL, owner-only reading text too (Biblica/Zondervan-
+# copyrighted — NEVER a public corpus like KJV/BSB). Same setup as the ESV above:
+# its text lives in its OWN file, niv.db, kept OUT of bible.db and OUT of git, and
+# loaded on PythonAnywhere only by scripts/load_niv.py. The owner gate in
+# views_niv.py decides who may read it; this helper just opens the file read-only.
+NIV_DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), "niv.db")
+
+
+def niv_db():
+    """Read-only connection to niv.db. Raises sqlite3.OperationalError if the file
+    isn't there yet (niv.db not loaded) — callers catch that and return empty."""
+    conn = sqlite3.connect(f"file:{NIV_DB}?mode=ro", uri=True)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
 # ── Unified AI-synthesis result cache ────────────────────────────────────────
 # Every Haiku-backed synthesis (search, summary, xref, metav person/place) stores
 # its rows in ai_search_cache with ver_key = "<category>:<fingerprint>", the

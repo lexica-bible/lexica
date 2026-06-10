@@ -97,6 +97,13 @@ const api = {
   esvAudio: (book, ch) =>
     fetch(`/api/esv/audio/${encodeURIComponent(book)}/${ch}`, { headers: _authHeaders() })
       .then(r => r.ok ? r.json() : { url: null }).catch(() => ({ url: null })),
+  // NIV is the owner's personal text too (same gate as ESV; text-only, no audio).
+  nivStatus: () =>
+    fetch(`/api/niv/status`, { headers: _authHeaders() })
+      .then(r => r.json()).catch(() => ({ owner: false })),
+  nivChapter: (book, ch) =>
+    fetch(`/api/niv/chapter/${encodeURIComponent(book)}/${ch}`, { headers: _authHeaders() })
+      .then(r => r.ok ? r.json() : []).catch(() => []),
   // Visitor stats — count this visit (owner's own visits are skipped server-side),
   // ask if the logged-in user is the owner (drives the Stats tab), and fetch the
   // owner-only dashboard numbers.
