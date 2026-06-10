@@ -388,11 +388,13 @@ Full detail: memory `project_notes_highlights`. The headline facts:
 
 ## Refactor backlog (status 2026-06-07 — redesign Phases 0–6 done)
 - See memory `project_architecture_rework.md` and TODO.md. DONE: #1 centralize Strong's handling (Phase 1 —
-  `lexicon.strongs_g` join key + frontend `strongsBare`/`strongsTag`); #3 backend DRY serialization (Phase 2,
-  `_serialize_word_core`); #4 detail-panel state (Phase 4, `{hero, sections[]}`); #5 tipnr PK collision
-  (Phase 6, `entity_types` type-set). REMAINING: #2 destructive-rebuild→patch pipeline → idempotent single
-  pass (only the CI-lock slice done — `_prefix_base` lifted + tested; the upsert/patch-fold needs a copy-first
-  PA rebuild to validate) and the frontend half of #3 (makeEntry/flattenAiResults dedup).
+  `lexicon.strongs_g` join key + frontend `strongsBare`/`strongsTag`); #2 patch-fold (2026-06-09 — the six
+  shape-keyed cleanup scripts now run INSIDE build_words_from_abp.py as one self-correcting pass; proven
+  byte-identical to the old build+14-patch chain via compare_words.py; see "Words rebuild checklist"); #3
+  backend DRY serialization (Phase 2, `_serialize_word_core`); #4 detail-panel state (Phase 4,
+  `{hero, sections[]}`); #5 tipnr PK collision (Phase 6, `entity_types` type-set). REMAINING: the
+  destructive-DELETE half of #2 stays (copy-first neutralises it — user's call 2026-06-09) and the frontend
+  half of #3 (makeEntry/flattenAiResults dedup).
 
 ## Do Not
 - Do not add KJV as the sole primary study text — ABP remains the anchor
@@ -405,69 +407,64 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   after ANY run you MUST re-run `import_tipnr.py` and verify the strongs_base invariant above.
 
 ## Words rebuild checklist (if you ever rebuild the words table)
-COPY-FIRST: validate on a `cp bible.db bible_test.db` build + `audit_bracket_order.py` BEFORE
-the real rebuild. The build also makes its own `bible.db.bak`. Keep a dated rollback copy.
-1. Rollback copy: `cp bible.db bible_pre_<reason>_<date>.db`
-2. Rebuild: `python3 scripts/build_words_from_abp.py bible.db bh_scrape.db` (type 'rebuild';
-   re-applies the 'G' prefix at INSERT). Needs Rahlfs + TAGNT present for pronoun correction.
-   Confirm `Words inserted: ~624,591`, `Verses skipped: 0`.
-3. Restore proper nouns (rebuild CLEARS is_pn + PN Strong's): `import_tipnr.py bible.db` (~94%)
-4. Repair chain — ORDER MATTERS (these WRITE by default; `--dry-run` previews):
-   `fix_bracket_punct` → `fix_subject_reorder` → `fix_mat25_37` → `fix_supplied_attach` →
-   `fix_g1473_gloss bible.db --apply` (note: this one needs `--apply`) →
-   `fix_lord_subject` (dual-ordering pilot #1) →
-   `fix_funcword_subject bible.db --include-idioms --include-bracketed` (dual-ordering #2 rounds
-   1+2+3; both run LAST so they see clean data + bracket_punct has already run on source brackets).
-   RETIRED: `fix_article_noun_swaps.py` (deleted) — both jobs are now done AT BUILD inside
-   build_words_from_abp.py: `_fix_backwards_pairing()` self-corrects the 7 number-reversal verses
-   (God↔θεός 1Sa 5:2/Rom 8:34 + 5 "a <noun>" prep cases 1Pe 5:12/2Co 8:10/Eph 3:3/Mat 26:44/Zec 8:13;
-   evidence-driven over the scan_strongs_cross fingerprint), and `_split_pn_article_lump()` splits the
-   Act 19:4 "Jesus the" lump into two chips ("Jesus" on the `*` slot + "the" on G3588, dual-order
-   bracket). Both validated to touch exactly their target verses corpus-wide and nothing else; no manual
-   step needed. Verify with `scan_strongs_cross.py bible.db` (FUNCTION-anchor 0) and
-   `preview_split.py Act 19 4`.
-   Sanity counts: bracket_punct ~331v, subject_reorder 20, supplied_attach 5, g1473 ~1724,
-   lord_subject ~795, funcword_subject ~108 (21 nouns + 75 idiom + 12 plural/in-bracket; without the
-   flags it's just the 21). After lord_subject, verify `audit_lord_strongs.py bible.db` shows
-   WRONG-SLOT REPAIRABLE = 0 (was ~795). After funcword_subject, `audit_funcword_wrongslot.py bible.db
-   --preps` REPAIRABLE-NOUN drops to ~0 (only the REPAIRABLE-OTHER adj/particle gray zone remains by
-   design). The in-bracket relocations carry greek_pos → audit_bracket_order stays at baseline.
-   Then `fix_theos_filler_tags bible.db --apply` — repairs 2 rows where θεός/G2316
-   landed on a filler word in the ABP source (Lam 3:16 "and" → καί/G2532; 1Pe 1:23
-   genitive split "of God living" → move "God" onto the θεός chip). Pinned to exact
-   verse+position+value, so safe to re-run. Verify with
-   `scan_content_filler_tags.py bible.db` (G2316 → 0 rows).
-   Then `fix_split_merges bible.db --apply` — repairs ~237 reorder-MERGE garbles
-   where two source words got crammed on one chip and the verb's chip left blank
-   ("I see magistrates" with ὁράω/G3708 empty → "I see"|"magistrates"; "they know
-   not" → verb freed). Applies the VETTED list in scripts/split_merge_fixes.json,
-   each pinned to verse+position+strongs+english (safe to re-run). WHY a data-patch
-   not a build fix: the splitter assigns English by lexicon-text match, too leaky to
-   fix this class globally without regressing ~85 verses (article/copula). The fix
-   logic exists in _split_compounds behind `carry=` (DEFAULT False — a rebuild is
-   unchanged); only scripts/_gen_split_candidates.py runs it with carry=True to
-   REGENERATE the json (then keeps only provably-clean results). Regenerate the json
-   after a rebuild, then apply.
-   Then `fix_lord_oath bible.db --apply` — repairs the 29 "As the LORD lives" oath
-   verses (chay-YHWH) where the reorder put "As" on κύριος/G2962 and "the LORD
-   lives" on ζάω/G2198. Moves "the LORD" onto κύριος (→ "As the LORD" | "lives,").
-   Detects the pattern in-DB (no list), pinned to it, safe to re-run.
-   Then `fix_kyrios_mistags bible.db --apply` — 3 stray κύριος/G2962 source mistags:
-   Dan 4:19 "and" → καί/G2532; "of Cyrus" (Dan 11:1, Ezr 5:13) → H3566 proper noun
-   (Κύρου looks like κυρίου). Pinned, safe to re-run.
-   Then `fix_merge_misses bible.db --apply` — hand-verified merge fixes the auto
-   generator can't catch (verb in a word-FORM the lexicon match misses, e.g. Dan
-   9:10 "hearkened" vs dict "hearken"). Embedded list, added one at a time, pinned.
-5. Gap-fixers (clear the standard post-rebuild health warnings; `--dry-run` first):
-   `dedup_words` (exact-dup rows) → `fix_greek_pos_gaps` (bracketed NULL greek_pos).
-6. Invariant (MUST be 0): `SELECT count(*) FROM words WHERE strongs_base GLOB '[0-9]*'`
-7. Audits (the gates): `health_check.py` (≤ minor warnings) → `audit_bracket_order.py`
-   (CHIP genuine ≈ 0; ~8 twin-bracket WORDSET false positives are a KNOWN audit-matcher
-   limitation, not garbles) → `audit_corpus_tier1.py` (A1 ≈ 176 baseline) →
-   `audit_corpus_tier2.py bible.db --rahlfs ~/LXX-Rahlfs-1935 --tagnt ~/TAGNT_*.txt` (~92%).
-8. Spot-check: Greek (Eze 31:9 "were jealous of" → ζηλόω), proper noun (1Chr 1:1 "Adam" →
-   H121, opens metaV), bracket order (1Ch 15:13 chip → "cut through · and the LORD · our God").
-9. Deploy (touch wsgi).
+THE REBUILD IS A SINGLE SELF-CORRECTING PASS (2026-06-09, refactor backlog #2). The build now
+applies the six former cleanup scripts ITSELF, per verse, inside build_words_from_abp.py —
+bracket_punct → g1473_gloss → lord_subject → funcword_subject → lord_oath → greek_pos backfill
+(same relative order the old chain used). On a fresh build those six standalone scripts find 0 to
+do. Only the fixes that CAN'T fold (per-verse corrections a global rule would regress, or pinned
+source mistags) remain, and they run from ONE tail script. PROVEN: an old-way rebuild (build + the
+full 14-patch chain) and the new single pass produced a BYTE-IDENTICAL words table
+(`compare_words.py`), validated locally on a copy of live 2026-06-09. See memory
+`project_architecture_rework`.
+
+COPY-FIRST, ALWAYS — build on a `cp bible.db bible_test.db` copy; the live bible.db is never the
+one rebuilt (DELETE only ever hits the copy). The build also makes its own `bible.db.bak`.
+
+1. Rollback copy: `cp bible.db bible_pre_<reason>_<date>.db`; `cp bible.db bible_test.db`.
+2. Rebuild (self-correcting): `python3 scripts/build_words_from_abp.py bible_test.db bh_scrape.db`
+   (type 'rebuild'; re-applies the 'G' prefix at INSERT). Needs Rahlfs + TAGNT for pronoun
+   correction + morph. Confirm `Words inserted: ~624,575`, `Verses skipped: 0`, ~6,872 flagged.
+   FOLDED INTO THIS PASS (no longer separate): bracket_punct (~331v), g1473_gloss (~1,724),
+   lord_subject (~795), funcword_subject (~108), lord_oath (29), greek_pos backfill. Already at
+   build from before: pronoun correction (Rahlfs/TAGNT), _redistribute_pronoun_compounds,
+   _split_compounds, _fix_backwards_pairing (7 number-reversal verses), _split_pn_article_lump
+   (Act 19:4). RETIRED long ago: fix_article_noun_swaps.py (deleted).
+3. Tail — one command: `bash scripts/finish_rebuild.sh bible_test.db`. Restores proper nouns
+   (import_tipnr, ~27,965 matched — the build CLEARS is_pn + PN Strong's) then the PINNED
+   data-patches that can't fold, then a final punctuation float. Each only touches its own named
+   verses, safe to re-run:
+   - fix_subject_reorder (20) / fix_mat25_37 (1) / fix_supplied_attach (5): hand-listed
+     synthetic-bracket verses needing per-verse English rewrites no general rule produces.
+   - fix_theos_filler_tags (2): Lam 3:16 "and"→καί, 1Pe 1:23 "of God living" split. Pinned.
+   - fix_split_merges (237): reorder-MERGE garbles. STAYS A PATCH — the general splitter
+     (carry=True in _split_compounds) regresses ~85 other verses, so the provably-clean subset is
+     frozen in scripts/split_merge_fixes.json. Regenerate with `_gen_split_candidates.py` ONLY if
+     _split_compounds itself changes (it didn't → committed json applies 237/0-skipped).
+   - fix_kyrios_mistags (3): Dan 4:19 "and"→καί; "of Cyrus" Dan 11:1/Ezr 5:13 → H3566. Pinned.
+   - fix_merge_misses (1): Dan 9:10 hand-verified merge the auto generator misses. Pinned.
+   - dedup_words (0 now — Hab 3:14 fixed at source) → fix_bracket_punct ONCE MORE (~202 cells):
+     floats a trailing comma left on the verb onto the last chip of the LORD-subject brackets made
+     in the pass (e.g. "said · the LORD,"). Runs LAST so it tidies brackets created above; re-run
+     settles to 0.
+4. PROVE IT (the gate): `python3 scripts/compare_words.py bible.db --compare bible_test.db`.
+   Keyed by verse+position over all display columns, bracket-numbering normalised. Expect a small,
+   EXPLAINABLE diff vs live (live is older code/data: ~17k english_head head-word drift +
+   ~32 newer-TIPNR proper-noun numbers + the 3 Cyrus fixes live lacks — none are errors). For a
+   clean [IDENTICAL] readout, compare against an OLD-WAY rebuild instead (stash the build edits,
+   rebuild + run the full chain) — that isolates any genuine change introduced by a code edit.
+5. Invariant (MUST be 0): `SELECT count(*) FROM words WHERE strongs_base GLOB '[0-9]*'`
+6. Audits (the gates), all on bible_test.db: `health_check.py` (0 warnings) → `audit_bracket_order.py`
+   (CHIP genuine ≈ 2 = the known Jon 4:9 twin-bracket FPs, not garbles) → `scan_strongs_cross.py`
+   (FUNCTION-anchor 0) → `audit_lord_strongs.py` (WRONG-SLOT REPAIRABLE 0) →
+   `audit_funcword_wrongslot.py --preps` (REPAIRABLE-NOUN ≈ 0) → `scan_content_filler_tags.py`
+   (G2316 0) → `audit_corpus_tier1.py` (A1 ≈ 176) → `audit_corpus_tier2.py bible_test.db --rahlfs
+   ~/LXX-Rahlfs-1935 --tagnt ~/TAGNT_*.txt` (~92%).
+7. Spot-check: Greek (Eze 31:9 "were jealous of" → ζηλόω), proper noun (1Chr 1:1 "Adam" → H121,
+   opens metaV), LORD dual-order (1Ch 13:10 chip → "<verb> · the LORD").
+8. Swap + deploy: `mv bible.db bible_pre_<reason>_<date>.db; mv bible_test.db bible.db`; touch wsgi.
+LOCAL HARNESS (no PA / no live DB): `tests/test_folded_fixes.py` exercises the six folds on synthetic
+rows; `test_build_invariants.py` + `test_strongs_join.py` lock the Strong's invariants (all in CI +
+the pre-commit hook). The full rebuild + both-way compare ran locally on a copy 2026-06-09.
 FIXED (2026-06-05): Hab 3:14 double-insert. ROOT CAUSE was the ABP source — two byte-identical
 `(Hab 3:14)` lines in `abp_texts/abp_ot_texts/abp_habakkuk.txt` (the ONLY duplicated verse marker
 in the whole corpus); `iter_verses()`/the build have no per-verse-key dedup, so every rebuild

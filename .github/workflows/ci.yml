@@ -20,6 +20,7 @@ jobs:
         run: |
           python tests/test_strongs_join.py
           python tests/test_build_invariants.py
+          python tests/test_folded_fixes.py
 
   frontend:
     runs-on: ubuntu-latest

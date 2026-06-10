@@ -23,9 +23,11 @@ from pathlib import Path
 
 try:
     sys.path.insert(0, str(Path(__file__).parent))
-    from parse_abp import _head_word
+    from parse_abp import _head_word, _FUNCTION_WORDS, _HEAD_STOP
 except ImportError:
     _ARTICLES = frozenset({"the", "a", "an"})
+    _FUNCTION_WORDS = frozenset()
+    _HEAD_STOP = frozenset()
 
     def _head_word(text):
         if not text:
@@ -39,8 +41,11 @@ except ImportError:
 
 try:
     from lxx_align import RahlfsLXX, TAGNTSource, correct_verse
+    # _EN_BUCKET (gloss-person table) + _last_en_word power the g1473-gloss fold below
+    from lxx_align import _EN_BUCKET as _G1473_BUCKET, _last_en_word as _g1473_last
 except ImportError:
     RahlfsLXX = TAGNTSource = None
+    _G1473_BUCKET = _g1473_last = None
 
 BASE_DIR    = Path(__file__).parent.parent
 ABP_OT_ZIP  = BASE_DIR / "abp_ot_texts.zip"
@@ -656,6 +661,391 @@ def _redistribute_pronoun_compounds(rows: list) -> None:
                    1, bid, rj[7], rj[8], rj[9], rj[10], rj[11], rj[12])
 
 
+# ── Folded post-build repairs (the former fix_*.py chain) ──────────────────────
+# These six transforms used to run as standalone scripts AFTER the rebuild (see the
+# CLAUDE.md "Words rebuild checklist"). Each is a per-verse, shape-keyed, re-runnable
+# repair, so it folds into the single build pass here — applied in the SAME relative
+# order the checklist used. The standalone scripts are kept as idempotent re-appliers
+# and read-only audit twins; on a fresh build they now find 0 rows to change (that 0
+# is itself the faithfulness check). strongs_base is still BARE at this stage (the 'G'
+# prefix is added by _prefix_base at INSERT), so these match on bare numbers.
+#
+# Row tuple (13 elements here): 0:pos 1:english 2:english_head 3:strongs 4:strongs_base
+#   5:greek_pos 6:bracket_id 7:italic 8:italic_words 9:smcap_words 10:abp_pos 11:morph 12:lemma
+
+_TRAIL_PUNCT = re.compile(r"[.,;:!?·]+$")
+
+
+def _italic_flag(head, iw_str):
+    """italic=1 iff the head/display word is in the italic_words set (mirrors
+    build_verse_words + fix_lord_subject.italic_flag)."""
+    iset = {x for x in (iw_str or "").split(",") if x}
+    return 1 if head and head.lower() in iset else 0
+
+
+def _bracket_punct_float(rows: list) -> None:
+    """Fold of fix_bracket_punct.py — float trailing clause punctuation within each
+    bracket group onto the group's position-last displayed word, so chip mode reads
+    cleanly ('[you? scrutinizes]' -> 'you scrutinizes?'). english column only."""
+    by_bid: dict = {}
+    for r in rows:
+        if r[6] is not None:
+            by_bid.setdefault(r[6], []).append(r[0])
+    pos_to_idx = {r[0]: i for i, r in enumerate(rows)}
+    for positions in by_bid.values():
+        members = [rows[pos_to_idx[p]] for p in sorted(positions)]
+        ti = None
+        for k in range(len(members) - 1, -1, -1):
+            t = (members[k][1] or "").strip()
+            if t and _TRAIL_PUNCT.sub("", t) != "":
+                ti = k
+                break
+        if ti is None:
+            continue
+        trailing = ""
+        pending: dict = {}                 # position -> new english
+        for k, w in enumerate(members):
+            if k == ti:
+                continue
+            t = (w[1] or "").strip()
+            if not t:
+                continue
+            if _TRAIL_PUNCT.sub("", t) == "":           # standalone punct token
+                trailing += t
+                pending[w[0]] = ""
+                continue
+            m = _TRAIL_PUNCT.search(t)
+            if m:
+                trailing += m.group()
+                pending[w[0]] = t[: m.start()].rstrip()
+        if not trailing:
+            continue
+        tw = members[ti]
+        pending[tw[0]] = (tw[1] or "").rstrip() + trailing
+        for p, new_eng in pending.items():
+            i = pos_to_idx[p]
+            rows[i] = (rows[i][0], new_eng) + rows[i][2:]
+
+
+# ── g1473-gloss retag (fold of fix_g1473_gloss.py) ─────────────────────────────
+_SU_SING = {"N": "4771", "V": "4771", "G": "4675", "D": "4671", "A": "4571"}   # σύ
+_SU_PLUR = {"N": "5210", "G": "5216", "D": "5213", "A": "5209"}                # ὑμεῖς
+_HEMEIS  = {"N": "2249", "G": "2257", "D": "2254", "A": "2248"}                # ἡμεῖς
+
+
+def _g1473_case_num(morph):
+    """(case, number) from a pronoun morph — CATSS 'RP.GS' / Robinson 'P-2GS'."""
+    if not morph:
+        return (None, None)
+    m = morph.strip()
+    if "." in m:
+        tail = m.split(".", 1)[1]
+    elif "-" in m:
+        seg = m.split("-")
+        tail = seg[1] if len(seg) > 1 else ""
+        if tail[:1] in "123":
+            tail = tail[1:]
+    else:
+        return (None, None)
+    case = tail[0] if tail and tail[0] in "NVGDA" else None
+    num = tail[1] if len(tail) > 1 and tail[1] in "SPD" else None
+    return (case, num)
+
+
+def _g1473_is_pron_morph(morph):
+    """True/False if the morph denotes a pronoun (CATSS R*, Robinson P-/F-/S-);
+    None if unknown."""
+    if not morph:
+        return None
+    m = morph.strip()
+    if "." in m:
+        return m[0] == "R"
+    if "-" in m:
+        return m[0] in "PFS"
+    return m and m[0] in "RPFS"
+
+
+def _g1473_target(gloss_bucket, morph):
+    """ABP gloss person (contradicting 1st-singular) + morph case/number -> the
+    case-split (new_bare_base, lemma) or (None, None)."""
+    case, num = _g1473_case_num(morph)
+    if gloss_bucket == "3P":                            # αὐτός, all cases
+        return ("846", "αὐτός")
+    if gloss_bucket == "2P":                            # σύ (sing) / ὑμεῖς (plur)
+        if case is None or num is None:
+            return (None, None)
+        n = (_SU_PLUR if num == "P" else _SU_SING).get(case)
+        return (n, "σύ") if n else (None, None)
+    if gloss_bucket == "1P":                            # ἡμεῖς
+        if case is None:
+            return (None, None)
+        n = _HEMEIS.get(case)
+        return (n, "ἐγώ") if n else (None, None)
+    return (None, None)
+
+
+def _g1473_gloss_retag(rows: list) -> None:
+    """Fold of fix_g1473_gloss.py — residual ἐγώ/1473 slots whose ABP gloss is a
+    DIFFERENT person (he/you/we) get the correct case-split number from gloss+morph
+    (the un-fixed tail of pronoun correction). A consistent 'I/me/my', a reflexive
+    '-self', or a 1P/2P slot with no parseable morph case+number is left untouched —
+    never guessed. Touches strongs / strongs_base / lemma only."""
+    if _G1473_BUCKET is None:                           # lxx_align unavailable
+        return
+    for i, r in enumerate(rows):
+        if r[4] != "1473":
+            continue
+        gw = _g1473_last(r[1] or "")
+        if gw.endswith("self") or gw.endswith("selves"):
+            continue
+        eb = _G1473_BUCKET.get(gw)
+        if eb is None or eb == "1S":                    # no cue, or consistent → leave
+            continue
+        if _g1473_is_pron_morph(r[11]) is False:        # morph says not a pronoun → suspect
+            continue
+        new_base, lemma = _g1473_target(eb, r[11])
+        if new_base is None:
+            continue
+        # strongs (3) + strongs_base (4) -> bare new number; lemma (12) -> new lemma
+        rows[i] = r[:3] + (new_base, new_base) + r[5:12] + (lemma,)
+
+
+# ── LORD-subject dual-ordering (fold of fix_lord_subject.py) ───────────────────
+_LS_ARTICLES = ("the", "a", "an")
+
+
+def _ls_bare(s):
+    return re.sub(r"[^\w]", "", s or "").lower()
+
+
+def _ls_prefix_split(eng):
+    """'(the) LORD <rest...>' (LORD at the head, >=1 word after) -> (move, keep);
+    else None (incl. wrapped 'May the LORD add' — a word before LORD)."""
+    parts = eng.split()
+    i = 0
+    while i < len(parts) and _ls_bare(parts[i]) in _LS_ARTICLES:
+        i += 1
+    if i >= len(parts) or _ls_bare(parts[i]) != "lord":
+        return None
+    move, keep = parts[: i + 1], parts[i + 1:]
+    if not keep:
+        return None
+    return " ".join(move), " ".join(keep)
+
+
+def _lord_subject_split(rows: list) -> None:
+    """Fold of fix_lord_subject.py (dual-ordering pilot #1) — '(the) LORD <verb...>'
+    bundled on the verb with an adjacent EMPTY, bracket-free κύριος/2962 slot: move
+    'the LORD' to the κύριος slot (greek_pos 1, reads first), keep the verb on its
+    slot (greek_pos 2), bind both in a NEW per-verse bracket. Positions never move,
+    so CHIP = verb · the LORD (source order, LORD clickable -> 2962) and PROSE =
+    the LORD verb. Mirrors _redistribute_pronoun_compounds. Touches english / head /
+    greek_pos / bracket_id / italic / italic_words only."""
+    pos_to_idx = {r[0]: i for i, r in enumerate(rows)}
+    existing = [r[6] for r in rows if r[6] is not None]
+    next_bid = (max(existing) + 1) if existing else 1
+    for i, r in enumerate(rows):
+        eng = r[1] or ""
+        if r[6] is not None or " " not in eng or "lord" not in eng.lower():
+            continue
+        if r[4] == "2962":
+            continue
+        split = _ls_prefix_split(eng)
+        if not split:
+            continue
+        move, keep = split
+        bj = pos_to_idx.get(r[0] + 1)                   # adjacent next slot
+        if bj is None:
+            continue
+        b = rows[bj]
+        if (b[1] or "").strip() != "" or b[4] != "2962" or b[6] is not None:
+            continue
+        src_iw = {_ls_bare(x) for x in (r[8] or "").split(",") if x}
+        b_iw = ",".join(w for w in move.split() if _ls_bare(w) in src_iw)   # "the" rides w/ LORD
+        a_iw = ",".join(w for w in keep.split() if _ls_bare(w) in src_iw)
+        b_head, a_head = _head_word(move), _head_word(keep)
+        bid = next_bid
+        next_bid += 1
+        # κύριος slot (b): "the LORD", reads first
+        rows[bj] = (b[0], move, b_head, b[3], b[4], 1, bid,
+                    _italic_flag(b_head, b_iw), b_iw) + b[9:]
+        # verb slot (r): keeps the verb gloss, reads second
+        rows[i] = (r[0], keep, a_head, r[3], r[4], 2, bid,
+                   _italic_flag(a_head, a_iw), a_iw) + r[9:]
+
+
+# ── function-word noun-relocate (fold of fix_funcword_subject.py, all rounds) ──
+_FW_PREP = {
+    "1722", "1519", "1537", "575", "4314", "1909", "2596", "3326", "1223",
+    "5259", "5228", "3844", "4012", "1799", "1715", "3694", "561", "1726",
+    "630", "1838", "3936",
+}
+_FW_HOSTS = {"3588"} | _FW_PREP
+_FW_IDIOM_ORPHANS = {"4383", "5034"}      # πρόσωπον "in front", τάχος "quickly"
+_FW_EXTRA = {
+    "me", "him", "them", "us", "thee", "thy", "thine", "mine", "whom", "whose",
+    "one", "ones", "thing", "things", "both", "who", "which", "what", "all",
+    "any", "some", "each", "every", "other", "others", "same", "such",
+    "whoever", "whatever", "anyone", "none",
+}
+_FW_SKIP_HEADS = set(_FUNCTION_WORDS) | set(_HEAD_STOP) | _FW_EXTRA
+
+
+def _fw_singular(w):
+    if len(w) > 4 and w.endswith("ies"):
+        return w[:-3] + "y"
+    if len(w) > 4 and w.endswith(("ses", "xes", "zes", "ches", "shes")):
+        return w[:-2]
+    if len(w) > 3 and w.endswith("s") and not w.endswith("ss"):
+        return w[:-1]
+    return w
+
+
+def _fw_derive_head(english):
+    for tok in reversed((english or "").split()):
+        b = _ls_bare(tok)
+        if b and b not in _FW_SKIP_HEADS:
+            return b
+    return None
+
+
+def _fw_pos(morph):
+    if not morph:
+        return None
+    c = morph.lstrip("-")[:1].upper()
+    return c if c.isalpha() else None
+
+
+def _funcword_noun_relocate(rows: list, lex: dict) -> None:
+    """Fold of fix_funcword_subject.py (rounds 1-3: --include-idioms
+    --include-bracketed) — a real noun's English bundled onto an adjacent
+    function-word slot (article/preposition) while the noun's OWN slot sits empty:
+    relocate the English onto the noun slot, blank the function word. One of the two
+    adjacent slots is always empty, so the visible word sequence is unchanged — only
+    WHICH Strong's each word attaches to. In a shared bracket, carry the host's
+    greek_pos to the noun so prose order holds. english / head / italic /
+    italic_words (+ greek_pos in-bracket) only.
+
+    NOTE vs the standalone script: at build time a proper-noun orphan is still '*'
+    (import_tipnr runs later), so the script's is_pn fallback can never fire here —
+    its concrete-noun targets are morph POS=N, so the morph test alone is faithful."""
+    pos_to_idx = {r[0]: i for i, r in enumerate(rows)}
+
+    def orphan_base(nb, host_bid):
+        if not nb or (nb[1] or "").strip() != "":       # must be empty
+            return None
+        if nb[6] != host_bid:                            # same bracket context
+            return None
+        sb = nb[4]
+        if not sb or sb in ("*", "", "3588") or sb in _FW_HOSTS:
+            return None
+        base = sb.split(".")[0]
+        if base in _FW_IDIOM_ORPHANS:                    # known nouns (morph gate redundant)
+            return base
+        if _fw_pos(nb[11]) == "N":
+            return base
+        return None
+
+    for i, r in enumerate(rows):
+        if r[4] not in _FW_HOSTS or not (r[1] and r[1].strip()):
+            continue
+        head = _fw_derive_head(r[1])
+        if not head:
+            continue
+        host_bid = r[6]
+        chosen = None
+        for delta in (1, -1):
+            nj = pos_to_idx.get(r[0] + delta)
+            if nj is None:
+                continue
+            nb = rows[nj]
+            base = orphan_base(nb, host_bid)
+            d = lex.get(base, set()) if base else set()
+            if base and (head in d or _fw_singular(head) in d):
+                chosen = (nj, nb)
+                break
+        if not chosen:
+            continue
+        nj, nb = chosen
+        moved = r[1]
+        new_head = _head_word(moved)
+        if not new_head or _ls_bare(new_head) in _FW_SKIP_HEADS:
+            new_head = head
+        if host_bid is not None:                         # in-bracket: carry host greek_pos
+            rows[nj] = (nb[0], moved, new_head, nb[3], nb[4], r[5], nb[6],
+                        r[7], r[8]) + nb[9:]
+        else:
+            rows[nj] = (nb[0], moved, new_head, nb[3], nb[4], nb[5], nb[6],
+                        r[7], r[8]) + nb[9:]
+        # function-word slot goes empty (keeps its OWN strongs + greek_pos + bracket_id)
+        rows[i] = (r[0], None, None, r[3], r[4], r[5], r[6], 0, "") + r[9:]
+
+
+# ── LORD-oath formula (fold of fix_lord_oath.py) ───────────────────────────────
+_OATH_RE = re.compile(r"^(the [Ll][Oo][Rr][Dd])\s+(.*)$")
+
+
+def _oath_head(eng):
+    for w in re.sub(r"[^\w ]", " ", eng or "").split():
+        if w.lower() not in ("the", "a", "an", "as"):
+            return w
+    return (eng or "").split()[0] if eng else None
+
+
+def _lord_oath_fix(rows: list) -> None:
+    """Fold of fix_lord_oath.py — 'As the LORD lives' oath (chay-YHWH): the reorder
+    put 'As' on κύριος/2962 and 'the LORD lives' on ζάω/2198. Move 'the LORD' onto
+    the κύριος chip -> 'As the LORD' | 'lives,'. Reading order + positions unchanged.
+    english / head only."""
+    pos_to_idx = {r[0]: i for i, r in enumerate(rows)}
+    for i, r in enumerate(rows):
+        if r[4] != "2962" or (r[1] or "").strip().lower() != "as":
+            continue
+        nj = pos_to_idx.get(r[0] + 1)
+        if nj is None:
+            continue
+        nb = rows[nj]
+        if nb[4] != "2198":
+            continue
+        m = _OATH_RE.match(nb[1] or "")
+        if not m:
+            continue
+        det, remainder = m.group(1), m.group(2)          # "the LORD", "lives,"
+        new_kyrios = f"{r[1].strip()} {det}"               # "As the LORD"
+        rows[i] = (r[0], new_kyrios, det.split()[1]) + r[3:]
+        rows[nj] = (nb[0], remainder, _oath_head(remainder)) + nb[3:]
+
+
+# ── greek_pos backfill (fold of fix_greek_pos_gaps.py) ─────────────────────────
+def _greek_pos_backfill(rows: list) -> None:
+    """Fold of fix_greek_pos_gaps.py — a bracketed gloss word with NULL greek_pos
+    inherits the nearest PRECEDING numbered word's greek_pos (else the next), so
+    prose keeps it next to the word it was split from. greek_pos column only."""
+    by_bid: dict = {}
+    pos_to_idx = {r[0]: i for i, r in enumerate(rows)}
+    for r in rows:
+        if r[6] is not None:
+            by_bid.setdefault(r[6], []).append(r[0])
+    updates: dict = {}                     # position -> new greek_pos
+    for positions in by_bid.values():
+        members = [rows[pos_to_idx[p]] for p in sorted(positions)]
+        last = None
+        for w in members:
+            if w[5] is not None:
+                last = w[5]
+            elif (w[1] or "").strip() and last is not None:
+                updates[w[0]] = last
+        nxt = None
+        for w in reversed(members):
+            if w[5] is not None:
+                nxt = w[5]
+            elif (w[1] or "").strip() and w[0] not in updates and nxt is not None:
+                updates[w[0]] = nxt
+    for p, gp in updates.items():
+        i = pos_to_idx[p]
+        rows[i] = rows[i][:5] + (gp,) + rows[i][6:]
+
+
 def build_verse_words(abp_words: list, bh_rows: list, lex: dict = None) -> list:
     """
     Combine ABP word list with BH metadata.
@@ -739,6 +1129,18 @@ def build_verse_words(abp_words: list, bh_rows: list, lex: dict = None) -> list:
         _split_compounds(rows, lex)
         _fix_backwards_pairing(rows, lex)
     _split_pn_article_lump(rows)
+
+    # Folded post-build repairs (formerly the fix_*.py chain), in the CLAUDE.md
+    # checklist's relative order: bracket_punct first, then g1473 -> LORD-subject ->
+    # funcword, then LORD-oath, and greek_pos backfill LAST. Each is shape-keyed and
+    # re-runnable; together they make the single pass self-correcting.
+    _bracket_punct_float(rows)
+    _g1473_gloss_retag(rows)
+    _lord_subject_split(rows)
+    if lex:
+        _funcword_noun_relocate(rows, lex)
+    _lord_oath_fix(rows)
+    _greek_pos_backfill(rows)
 
     # Strip temporary abp_pos (idx 10); keep morph (11) + lemma (12) as the last two columns.
     return [r[:10] + (r[11], r[12]) for r in rows]

@@ -25,4 +25,5 @@ fi
 echo "pre-commit: running invariant tests..."
 python tests/test_strongs_join.py >/dev/null
 python tests/test_build_invariants.py >/dev/null
+python tests/test_folded_fixes.py >/dev/null
 echo "pre-commit: all checks passed."
