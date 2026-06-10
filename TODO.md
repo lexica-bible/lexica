@@ -26,6 +26,10 @@ Still open:
    pre-commit hook runs the same checks locally, `scripts/deploy.sh` is a one-command tested deploy, and
    Dependabot watches outside packages. STILL OPEN here: a nightly `health_check.py` email on PA (needs a
    PA scheduled task + email login) — the only piece that has to run against the real database.
+   Also note (flagged by the 2026-06-10 code read): CI itself auto-runs only the data-invariant
+   tests; the endpoint snapshot harness + browser click-through are MANUAL (run against a DB copy
+   during dev), so web routes / click behavior aren't checked on every push. That's the main
+   test-coverage gap if you ever want to close it.
    `code: scripts/health_check.py, scripts/snapshot_endpoints.py, tests/, .github/, scripts/githooks/, scripts/deploy.sh`
 2. **Unify the AI prompt STYLE into one shared "house style" snippet.** (The cache-fingerprint half
    of this item is DONE 2026-06-09 — see TODO_ARCHIVE.md. This is the leftover paired half.) CORRECTED 2026-06-09 (see memory project_ai_synthesis_quality): the original plan — drop sentence-count
@@ -43,6 +47,12 @@ Still open:
    new fingerprint scheme watches, so each edit will lazily refresh that category's cache (expected).
    `code: shared snippet in core.py; views_crossref.py system prompts; views_metav.py _PN_SYSTEM;
    views_summary.py _SUMMARY_SYSTEM/_*_TMPL; ai.py LSJ prompt in views_lsj.py`
+3. **Split the one oversized front-end file.** `static/src/60-library.jsx` is ~2,470 lines — by far
+   the biggest, clean inside, but it carries the reader + chip/prose + notes wiring + audio + chrono
+   all at once. Worth carving into smaller view files like the rest of `static/src/` (the build just
+   concatenates them in filename order, so a split costs nothing at runtime). Low urgency — flagged
+   by the 2026-06-10 code read (memory `project_code_quality`).
+   `code: static/src/60-library.jsx; build = scripts/build-frontend.js`
 
 ---
 
