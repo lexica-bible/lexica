@@ -10,6 +10,7 @@ assets/figma-design/
 assets/
 node_modules/
 .venv/
+_commitmsg.txt
 # Chronological build input (third-party reading-plan order; we commit only our
 # generated source_oneyear.txt + static/chronological.json, not this raw input)
 scripts/chronological/_source_raw.json
