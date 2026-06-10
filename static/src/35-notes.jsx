@@ -314,8 +314,10 @@ function NotesView({ onOpen }) {
   const renderItem = (n) => (
     <li key={n.id} className="notes-item" onClick={() => onOpen(n)}>
       <div className="notes-item-ref">
+        {(n.body || n.bookmark) && (
+          <span className="notes-item-type" aria-hidden="true">{n.body ? <Icon.Note/> : <Icon.Bookmark/>}</span>
+        )}
         {n.color && <span className="notes-item-dot" style={{ background: NOTE_COLOR_CSS[n.color] }} />}
-        {n.bookmark && <span className="notes-item-bm">★</span>}
         {n.refLabel || (n.book + " " + n.chapter)}
       </div>
       {n.snippet && <div className="notes-item-snippet">“{n.snippet}”</div>}

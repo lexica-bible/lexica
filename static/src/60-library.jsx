@@ -811,9 +811,31 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
   useEffect(() => {
     api.books().then(data => {
       setBooks(data);
-      if (data.length) setSelBook(data[0]);
+      if (!data.length) return;
+      // Restore the last reading spot from a previous visit (book/chapter/translation, or an
+      // open non-canonical text); fall back to Genesis. An explicit verse jump (nav.book — a
+      // click from Search/cross-refs) runs in its own effect and overrides this afterward.
+      let saved = null;
+      try { saved = JSON.parse(localStorage.getItem("lexica.lib.v1") || "null"); } catch (e) {}
+      const savedBook = saved && saved.book ? data.find(b => b.abbrev === saved.book) : null;
+      setSelBook(savedBook || data[0]);
+      if (saved) {
+        if (saved.chapter > 0) setSelChapter(saved.chapter);
+        const t = saved.translation;
+        if (t === "abp" || t === "kjv" || t === "bsb" || (t === "esv" && esvOwner) || (t === "niv" && nivOwner)) setTranslation(t);
+        if (saved.corpus && saved.corpus !== "bible" && NONCANON.some(x => x.id === saved.corpus)) setCorpus(saved.corpus);
+      }
     });
   }, []);
+  // Remember the reading spot so a refresh returns you here instead of Genesis 1.
+  useEffect(() => {
+    if (!selBook && corpus === "bible") return;   // nothing settled yet
+    try {
+      localStorage.setItem("lexica.lib.v1", JSON.stringify({
+        corpus, book: selBook ? selBook.abbrev : null, chapter: selChapter, translation,
+      }));
+    } catch (e) {}
+  }, [corpus, selBook, selChapter, translation]);
 
   // Load the chronological passage list once (a small static file). If it fails,
   // chronoOn stays false and the Order toggle simply never appears.

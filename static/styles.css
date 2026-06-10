@@ -2819,7 +2819,7 @@ input { font-family: inherit; }
   display: inline-flex; align-items: center; justify-content: center; font-size: 12px;
 }
 .notes-item-dot { display: inline-block; width: 10px; height: 10px; border-radius: 50%; margin-right: 6px; vertical-align: middle; }
-.notes-item-bm { color: var(--gold); margin-right: 5px; }
+.notes-item-type { display: inline-flex; vertical-align: middle; color: var(--ink-3); margin-right: 5px; position: relative; top: -1px; }
 
 /* Verse-number menu: dismiss scrim + Note button in the dark popover */
 .note-menu-scrim { position: fixed; inset: 0; z-index: 999; }
