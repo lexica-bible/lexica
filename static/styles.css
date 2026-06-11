@@ -1716,6 +1716,31 @@ input { font-family: inherit; }
   letter-spacing: 0.02em;
 }
 
+/* ----- Hebrew OT interlinear: right-to-left reading (Westminster Leningrad Codex) ----- */
+/* The verse row flips so the number sits on the right and the chips flow right-to-left;
+   each chip keeps its vertical stack (Hebrew word over English gloss over H-number). */
+.lib-heb-row { direction: rtl; }
+.lib-heb-content { direction: rtl; text-align: right; }
+.lib-heb-word { margin: 0 3px; padding-top: 4px; }
+.lib-iw-heb {
+  font-family: "SBL Hebrew", "Ezra SIL", "Times New Roman", var(--f-serif);
+  font-size: 1.4em;
+  line-height: 1.5;
+  color: var(--ink);
+  direction: rtl;
+}
+/* gloss + Strong's number are Latin script — keep them left-to-right inside the rtl chip */
+.lib-heb-word .lib-iw-english {
+  direction: ltr;
+  font-size: 0.6em;
+  line-height: 1.25;
+  color: var(--ink-2);
+  margin-top: 1px;
+  max-width: 12ch;
+  text-align: center;
+}
+.lib-heb-word .lib-iw-strongs { direction: ltr; }
+
 /* ----- "Other" non-canonical texts picker (desktop lib bar popup) ----- */
 .lib-other-wrap { position: relative; display: inline-flex; }
 .lib-other-scrim { position: fixed; inset: 0; z-index: 90; }

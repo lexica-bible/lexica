@@ -150,7 +150,7 @@ const _BOOK_DIV = {
   Jud:"General Epistles",Rev:"Apocalyptic",
 };
 
-function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, isOverlay, onClose, navBookRef, nonCanon, nonCanonList, onPickNonCanon, translation, corpus, pickBible, esvOwner, nivOwner, otherOpen, setOtherOpen, chrono, orderMode, setOrder, chronoPos, onPickPassage }) {
+function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, isOverlay, onClose, navBookRef, nonCanon, nonCanonList, onPickNonCanon, translation, corpus, pickBible, esvOwner, nivOwner, hebPickable, otherOpen, setOtherOpen, chrono, orderMode, setOrder, chronoPos, onPickPassage }) {
   const [query, setQuery] = useState("");
   const chronoMode = orderMode === "chronological" && chrono && !nonCanon;
   // The era a passage belongs to, so the active passage's era starts expanded.
@@ -215,38 +215,55 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
     </div>
   ) : null;
 
+  // "More" button: ABP/KJV/BSB stay one-click; ESV/NIV/HEB + the non-canon books live
+  // in this menu, so the row stays at four buttons no matter how many texts exist.
+  const extraActive = !nonCanon && (translation === "esv" || translation === "niv" || translation === "heb");
+  const moreActive = !!nonCanon || extraActive;
+  const moreLabel = nonCanon ? (nonCanon.abbr || nonCanon.name)
+    : translation === "esv" ? "ESV"
+    : translation === "niv" ? "NIV"
+    : translation === "heb" ? "HEB" : "More";
+
   return (
     <nav className={"nav" + (isOverlay ? " nav-overlay" : "")} aria-label="Books">
       <div className="nav-top">
         {isOverlay && <button className="nav-x" onClick={onClose} aria-label="Close">✕</button>}
       </div>
-      {/* Text-source picker — ABP / KJV + non-canonical "Other" menu */}
+      {/* Text-source picker — ABP/KJV/BSB one-click; ESV/NIV/HEB + non-canon in "More" */}
       <div className="nav-source">
-        <div className={"seg nav-source-seg" + ((esvOwner || nivOwner) ? " nav-source-seg--wide" : "")}>
+        <div className="seg nav-source-seg">
           <button className={"seg-b" + (!nonCanon && translation === "abp" ? " on" : "")} onClick={() => pickBible("abp")}>ABP</button>
           <button className={"seg-b" + (!nonCanon && translation === "kjv" ? " on" : "")} onClick={() => pickBible("kjv")}>KJV</button>
           <button className={"seg-b" + (!nonCanon && translation === "bsb" ? " on" : "")} onClick={() => pickBible("bsb")}>BSB</button>
-          {esvOwner && (
-            <button className={"seg-b" + (!nonCanon && translation === "esv" ? " on" : "")} onClick={() => pickBible("esv")}>ESV</button>
-          )}
-          {nivOwner && (
-            <button className={"seg-b" + (!nonCanon && translation === "niv" ? " on" : "")} onClick={() => pickBible("niv")}>NIV</button>
-          )}
-          {nonCanonList && nonCanonList.length > 0 && (
-            <button className={"seg-b nav-other-seg" + (nonCanon ? " on" : "")} onClick={() => setOtherOpen(o => !o)} aria-expanded={otherOpen}>
-              <span className="nav-other-lbl">{nonCanon ? (nonCanon.abbr || nonCanon.name) : "Other"}</span>
-              <span className={"nav-other-caret" + (otherOpen ? " open" : "")}>▾</span>
-            </button>
-          )}
+          <button className={"seg-b nav-other-seg" + (moreActive ? " on" : "")} onClick={() => setOtherOpen(o => !o)} aria-expanded={otherOpen}>
+            <span className="nav-other-lbl">{moreLabel}</span>
+            <span className={"nav-other-caret" + (otherOpen ? " open" : "")}>▾</span>
+          </button>
         </div>
       </div>
       {/* Reading-order toggle (Canonical | Chronological) lives in the top toolbar.
           The nav just reflects orderMode: era→passage list when chronological. */}
       {/* "Other" books open INLINE in the panel (pushes the book list down) so the
           menu never floats over the reading text. */}
-      {otherOpen && nonCanonList && nonCanonList.length > 0 && (
+      {otherOpen && (
         <div className="nav-other-inline">
-          {nonCanonGroups(nonCanonList).map(grp => {
+          {(esvOwner || nivOwner || hebPickable) && (
+            <div className="nav-more-bibles">
+              {esvOwner && (
+                <button className={"lib-other-item" + (!nonCanon && translation === "esv" ? " on" : "")}
+                  onClick={() => { pickBible("esv"); setOtherOpen(false); if (isOverlay) onClose(); }}>ESV</button>
+              )}
+              {nivOwner && (
+                <button className={"lib-other-item" + (!nonCanon && translation === "niv" ? " on" : "")}
+                  onClick={() => { pickBible("niv"); setOtherOpen(false); if (isOverlay) onClose(); }}>NIV</button>
+              )}
+              {hebPickable && (
+                <button className={"lib-other-item" + (!nonCanon && translation === "heb" ? " on" : "")}
+                  onClick={() => { pickBible("heb"); setOtherOpen(false); if (isOverlay) onClose(); }}>Hebrew OT (interlinear)</button>
+              )}
+            </div>
+          )}
+          {nonCanonList && nonCanonList.length > 0 && nonCanonGroups(nonCanonList).map(grp => {
             const open = openGroups.has(grp.group);
             return (
               <React.Fragment key={grp.group}>
@@ -460,7 +477,7 @@ function MobileBookPicker({ books, selBook, selChapter, nonCanon, nonCanonList, 
 // Compacted to three groups: Text · Study layer · Display.
 // ============================================================
 function ModesSheet({
-  corpus, translation, pickBible, esvOwner, nivOwner, toggleParallel, nonCanonList,
+  corpus, translation, pickBible, esvOwner, nivOwner, hebPickable, toggleParallel, nonCanonList,
   compareAvail, compareActive, toggleCompare,
   showStrongs, showInterlinear, setOpt, chipMode, viewMode, libFontSize, changeFontSize, onClose,
   chrono, orderMode, setOrder,
@@ -530,6 +547,12 @@ function ModesSheet({
                     ? <><Icon.Columns width="14" height="14"/><span>Comparing {compareActive.length} — {compareActive.map(x=>x.toUpperCase()).join(" · ")} side by side</span></>
                     : <><Icon.Book width="14" height="14"/><span>Reading {(compareActive[0]||"abp").toUpperCase()}</span></>}
                 </div>
+                {hebPickable && (
+                  <button className={"mseg-b text-heb" + (translation === "heb" ? " on" : "")} aria-pressed={translation === "heb"}
+                    onClick={() => { pickBible("heb"); onClose && onClose(); }} style={{ marginTop: 6, width: "100%" }}>
+                    {translation === "heb" && <span className="mseg-chk" aria-hidden="true">✓</span>}Hebrew OT (interlinear)
+                  </button>
+                )}
               </>
             )}
           </div>
@@ -707,6 +730,13 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
   const [nivVerses, setNivVerses] = useState([]);
   const [nivLoading, setNivLoading] = useState(false);
   const [nivOwner, setNivOwner] = useState(false);
+  // Hebrew OT interlinear (PUBLIC, public-domain). hebOwner gates the toggle's
+  // VISIBILITY during rollout; hebAvail = heb.db is loaded (flip the gate to that to
+  // go fully public). Single-read mode for now (not in compare/chronological yet).
+  const [hebVerses, setHebVerses] = useState([]);
+  const [hebLoading, setHebLoading] = useState(false);
+  const [hebOwner, setHebOwner] = useState(false);
+  const [hebAvail, setHebAvail] = useState(false);
   // Chapter audio (BSB = public-domain openbible; ESV = owner-only FCBH), once "Listen" is pressed.
   // audioKey = the "book-chapter" currently loaded (so the right Listen button highlights in chrono,
   // where a passage can span chapters and each chapter is its own file).
@@ -771,6 +801,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
     let cancelled = false;
     api.esvStatus().then(d => { if (!cancelled) setEsvOwner(!!(d && d.owner)); });
     api.nivStatus().then(d => { if (!cancelled) setNivOwner(!!(d && d.owner)); });
+    api.hebStatus().then(d => { if (!cancelled) { setHebOwner(!!(d && d.owner)); setHebAvail(!!(d && d.available)); } });
     return () => { cancelled = true; };
   }, [authEmail]);
   // If the owner signs out (or it's revoked) while reading ESV/NIV, fall back to ABP
@@ -778,7 +809,10 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
   useEffect(() => {
     if (!esvOwner && translation === "esv") { setTranslation("abp"); onTranslationChange?.("abp"); }
     if (!nivOwner && translation === "niv") { setTranslation("abp"); onTranslationChange?.("abp"); }
-  }, [esvOwner, nivOwner, translation]);
+    // HEB is OT-only and owner-gated during rollout — bounce back to ABP if either
+    // fails (signed out, or moved to an NT book while reading Hebrew).
+    if (translation === "heb" && (!hebOwner || (selBook && NT_BOOKS.has(selBook.abbrev)))) { setTranslation("abp"); onTranslationChange?.("abp"); }
+  }, [esvOwner, nivOwner, hebOwner, translation, selBook]);
 
   useEffect(() => {
     if (!nav?.book || !navBookRef.current || nav.book !== selBook?.abbrev) return;
@@ -822,7 +856,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
       if (saved) {
         if (saved.chapter > 0) setSelChapter(saved.chapter);
         const t = saved.translation;
-        if (t === "abp" || t === "kjv" || t === "bsb" || (t === "esv" && esvOwner) || (t === "niv" && nivOwner)) setTranslation(t);
+        if (t === "abp" || t === "kjv" || t === "bsb" || (t === "esv" && esvOwner) || (t === "niv" && nivOwner) || (t === "heb" && hebOwner)) setTranslation(t);
         if (saved.corpus && saved.corpus !== "bible" && NONCANON.some(x => x.id === saved.corpus)) setCorpus(saved.corpus);
       }
     });
@@ -1016,6 +1050,20 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
     return () => { cancelled = true; };
   }, [selBook && selBook.abbrev, selChapter, translation, corpus, chronoOn, nivOwner, compareSel]);
 
+  // Hebrew OT interlinear loader — PUBLIC text, OT books only, single-read mode
+  // (not wired into compare / chronological yet).
+  useEffect(() => {
+    if (!selBook || nonCanon || chronoOn) return;
+    if (translation !== "heb" || NT_BOOKS.has(selBook.abbrev)) return;
+    let cancelled = false;
+    setHebLoading(true);
+    setHebVerses([]);
+    api.hebChapter(selBook.abbrev, selChapter)
+      .then(data => { if (!cancelled) { setHebVerses(data); setHebLoading(false); } })
+      .catch(() => { if (!cancelled) setHebLoading(false); });
+    return () => { cancelled = true; };
+  }, [selBook && selBook.abbrev, selChapter, translation, corpus, chronoOn]);
+
   // Reset the chapter audio when the reading changes — the old mp3 is for the
   // previous chapter/passage. Press Listen to fetch the new one. (chronoPos covers
   // moving between chronological passages, which doesn't change selChapter.)
@@ -1170,6 +1218,10 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
 
   const POETRY_BOOKS = new Set(["Psa", "Pro", "Job", "Son", "Lam", "Ecc"]);
   const isPoetry = POETRY_BOOKS.has(selBook?.abbrev);
+
+  // HEB toggle: owner-gated during rollout (flip hebOwner -> hebAvail to go public),
+  // OT books only (no Hebrew NT), and not while a non-canon text is open.
+  const hebPickable = hebOwner && !nonCanon && !!selBook && !NT_BOOKS.has(selBook.abbrev);
 
   // ---- Chronological span assembly --------------------------------------
   // Pull the active text(s) for the current passage out of the loaded span,
@@ -1694,6 +1746,55 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
     });
   };
 
+  // Hebrew OT interlinear verse — right-to-left chips (Hebrew over gloss over H-number).
+  // Its own simple renderer (morphhb is one word = one chip; none of the ABP bracket /
+  // italic / proper-noun machinery applies). Word-click hands a Hebrew entry (strongs
+  // "H####") to the detail panel, which already routes H-numbers to the BDB sidebar.
+  const renderHebVerse = (v) => {
+    const ch = selChapter;
+    const isHighlight = nav && nav.highlight === v.verse && (nav.chapter == null || nav.chapter === ch);
+    const hebEntry = (w) => ({
+      id: `heb-${selBook.abbrev}-${ch}-${v.verse}-${w.pos}`,
+      strongs: w.strongs,             // "H7307" -> isHebrewWord -> BDB fetch
+      strongs_base: w.strongs,
+      strongs_raw: (w.strongs || "").replace(/^H/, ""),
+      greek: "",
+      translit: "",
+      gloss: w.gloss || "",
+      hebrew: w.hebrew,
+      morph: w.morph || "",
+      ref: `${selBook.abbrev} ${ch}:${v.verse}`,
+      book: selBook.abbrev, chapter: ch, verse: v.verse,
+      is_pn: false,
+    });
+    return (
+      <React.Fragment key={`heb-${ch}-${v.verse}`}>
+        {v.heading && <div className="lib-verse-row pericope-row"><span className="lib-vnum" aria-hidden="true"/><div className="pericope-heading">{v.heading}</div></div>}
+        <div ref={isHighlight ? highlightRef : null} data-note-verse={v.verse} data-note-chapter={ch}
+          className={"lib-verse-row lib-heb-row" + (isHighlight ? " lib-highlight" : "")}>
+          {vnumEl(v.verse, ch)}
+          <span className="lib-verse-content lib-heb-content">
+            {noteMarker(v.verse, ch)}
+            {(v.words || []).map(w => {
+              const clickable = !!(onWordClick && w.strongs);
+              return (
+                <span key={w.pos} data-note-pos={w.pos}
+                  className={"lib-word lib-heb-word" + (clickable ? " lib-word-clickable" : "") + hiClass(v.verse, w.pos, ch)}
+                  onClick={clickable ? () => onWordClick(hebEntry(w)) : undefined}>
+                  <span className="lib-iw-heb">{w.hebrew}</span>
+                  <span className="lib-iw-english">{w.gloss}</span>
+                  {showStrongs && (w.strongs
+                    ? <span className="lib-iw-strongs">{w.strongs}</span>
+                    : <span className="lib-iw-strongs" style={{visibility:"hidden"}}>H0</span>)}
+                </span>
+              );
+            })}
+          </span>
+        </div>
+      </React.Fragment>
+    );
+  };
+
   const renderVerse = (v, skipHeading = false) => {
     const ch = v._ch ?? selChapter;   // chronological rides the chapter on the verse
     const isHighlight = nav && nav.highlight === v.verse && (nav.chapter == null || nav.chapter === ch);
@@ -2194,6 +2295,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
           pickBible={pickBible}
           esvOwner={esvOwner}
           nivOwner={nivOwner}
+          hebPickable={hebPickable}
           otherOpen={otherOpen}
           setOtherOpen={setOtherOpen}
           chrono={chrono}
@@ -2229,6 +2331,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
           pickBible={pickBible}
           esvOwner={esvOwner}
           nivOwner={nivOwner}
+          hebPickable={hebPickable}
           toggleParallel={toggleParallel}
           compareAvail={compareAvail}
           compareActive={compareActive}
@@ -2558,6 +2661,14 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
           ) : (
             <div className="lib-text-words lib-prose-flow">
               {withMarks(nivView, v => renderFlowVerse(v, plainFlowInner(v)))}
+            </div>
+          )
+        ) : translation === "heb" ? (
+          hebLoading ? (
+            <div className="lib-loading">Loading…</div>
+          ) : (
+            <div className="lib-text-words lib-heb-text">
+              {hebVerses.map(renderHebVerse)}
             </div>
           )
         ) : abpShowLoading ? (

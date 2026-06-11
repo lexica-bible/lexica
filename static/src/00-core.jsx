@@ -104,6 +104,15 @@ const api = {
   nivChapter: (book, ch) =>
     fetch(`/api/niv/chapter/${encodeURIComponent(book)}/${ch}`, { headers: _authHeaders() })
       .then(r => r.ok ? r.json() : []).catch(() => []),
+  // Hebrew OT interlinear — PUBLIC text (public-domain WLC), no gate on the data.
+  // hebStatus carries the token only to learn if the caller is the owner (the toggle
+  // shows owner-only during rollout); the chapter fetch needs no auth.
+  hebStatus: () =>
+    fetch(`/api/hebrew/status`, { headers: _authHeaders() })
+      .then(r => r.json()).catch(() => ({ available: false, owner: false })),
+  hebChapter: (book, ch) =>
+    fetch(`/api/hebrew/chapter/${encodeURIComponent(book)}/${ch}`)
+      .then(r => r.ok ? r.json() : []).catch(() => []),
   // Visitor stats — count this visit (owner's own visits are skipped server-side),
   // ask if the logged-in user is the owner (drives the Stats tab), and fetch the
   // owner-only dashboard numbers.
