@@ -1759,7 +1759,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
       strongs_base: w.strongs,
       strongs_raw: (w.strongs || "").replace(/^H/, ""),
       greek: "",
-      translit: "",
+      translit: w.translit || "",
       gloss: w.gloss || "",
       hebrew: w.hebrew,
       morph: w.morph || "",
@@ -1782,6 +1782,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
                   className={"lib-word lib-heb-word" + (clickable ? " lib-word-clickable" : "") + hiClass(v.verse, w.pos, ch)}
                   onClick={clickable ? () => onWordClick(hebEntry(w)) : undefined}>
                   <span className="lib-iw-heb">{w.hebrew}</span>
+                  {showInterlinear && w.translit && <span className="lib-iw-translit">{w.translit}</span>}
                   <span className="lib-iw-english">{w.gloss}</span>
                   {showStrongs && (w.strongs
                     ? <span className="lib-iw-strongs">{w.strongs}</span>

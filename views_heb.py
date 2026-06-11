@@ -56,12 +56,19 @@ def hebrew_chapter(book, chapter):
     except sqlite3.OperationalError:
         return jsonify([])                                # heb.db not loaded yet
     try:
-        rows = conn.execute(
-            "SELECT verse, position, hebrew, strongs, morph, gloss"
-            " FROM heb_words WHERE book = ? AND chapter = ?"
-            " ORDER BY verse, position",
-            (book, chapter),
-        ).fetchall()
+        try:
+            rows = conn.execute(
+                "SELECT verse, position, hebrew, strongs, morph, gloss, translit"
+                " FROM heb_words WHERE book = ? AND chapter = ? ORDER BY verse, position",
+                (book, chapter),
+            ).fetchall()
+        except sqlite3.OperationalError:
+            # heb.db built before the translit column existed — read the legacy shape
+            rows = conn.execute(
+                "SELECT verse, position, hebrew, strongs, morph, gloss"
+                " FROM heb_words WHERE book = ? AND chapter = ? ORDER BY verse, position",
+                (book, chapter),
+            ).fetchall()
     except sqlite3.OperationalError:
         return jsonify([])                                # heb_words table missing
     finally:
@@ -95,5 +102,6 @@ def hebrew_chapter(book, chapter):
             "strongs": r["strongs"],
             "morph": r["morph"],
             "gloss": r["gloss"],
+            "translit": (r["translit"] if "translit" in r.keys() else ""),
         })
     return jsonify(verses)

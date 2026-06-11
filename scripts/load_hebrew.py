@@ -8,14 +8,15 @@ file. It NEVER reads or writes bible.db. Safe to re-run: it clears and refills o
 the book(s) you name.
 
 Each Hebrew word keeps its vowel points but has the cantillation (chanting) accents
-stripped, and carries its Strong's H-number, its grammar code, and a short English
-gloss. The gloss comes from the public-domain Strong's Hebrew dictionary (morphhb
-itself has no English). The H-number is what the reader already uses to open the BDB
-lexicon sidebar, so word-clicks light up for free.
+stripped, and carries its Strong's H-number, its grammar code, a short English gloss,
+and a transliteration (pronunciation). The gloss + transliteration come from the
+public-domain Strong's Hebrew dictionary (morphhb itself has no English); common words
+use a curated short gloss so the interlinear reads cleanly instead of dumping the full
+dictionary definition under every word. The H-number drives the existing BDB sidebar.
 
 Run on PythonAnywhere after cloning the data:
     git clone https://github.com/openscriptures/morphhb ~/morphhb
-    # short English glosses (public domain) — openscriptures Strong's Hebrew dict:
+    # short English glosses + transliterations (public domain) — Strong's Hebrew dict:
     wget -O ~/strongs-hebrew.js \
       https://raw.githubusercontent.com/openscriptures/strongs/master/hebrew/strongs-hebrew-dictionary.js
     python3 scripts/load_hebrew.py \
@@ -47,6 +48,54 @@ OSIS_TO_APP = {
     "Zeph": "Zep", "Hag": "Hag", "Zech": "Zec", "Mal": "Mal",
 }
 
+# Short, clean glosses for the most common Hebrew words. The raw Strong's definition
+# for particles/prepositions is explanatory prose ("(by implication) very widely used
+# as a relative conjunction...") — useless as an interlinear gloss — so these override
+# it. These are the highest-frequency words across the OT, so curating them cleans up
+# most of the running text. Everything else falls back to a trimmed definition.
+CURATED_GLOSS = {
+    # particles, prepositions, conjunctions
+    "H853": "[obj]", "H854": "with", "H413": "to, toward", "H5921": "on, over",
+    "H4480": "from", "H3588": "that, because", "H3808": "not", "H408": "do not",
+    "H834": "which, who", "H3605": "all, every", "H3651": "so, thus", "H5704": "until",
+    "H310": "after", "H8478": "under, instead", "H996": "between", "H1571": "also, even",
+    "H389": "surely, only", "H7535": "only", "H518": "if", "H3863": "if only",
+    "H6258": "now", "H8033": "there", "H6311": "here", "H4100": "what", "H4310": "who",
+    "H335": "where", "H3651b": "so", "H1115": "so as not", "H4994": "please, now",
+    "H2009": "behold", "H2005": "behold", "H1887": "behold",
+    # pronouns
+    "H1931": "he, it", "H1932": "she, it", "H1992": "they", "H2007": "they (f)",
+    "H859": "you", "H589": "I", "H595": "I", "H2088": "this", "H2063": "this",
+    "H428": "these", "H4310b": "who",
+    # very common verbs
+    "H1961": "to be", "H559": "to say", "H1696": "to speak", "H6213": "to do, make",
+    "H1980": "to go, walk", "H935": "to come, go in", "H3318": "to go out",
+    "H5927": "to go up", "H3381": "to go down", "H7725": "to return", "H5414": "to give",
+    "H3947": "to take", "H7200": "to see", "H8085": "to hear", "H3045": "to know",
+    "H5375": "to lift, carry", "H7121": "to call", "H5046": "to tell", "H3427": "to dwell, sit",
+    "H5975": "to stand", "H4191": "to die", "H2421": "to live", "H2425": "to live",
+    "H3372": "to fear", "H1288": "to bless", "H6965": "to arise", "H5066": "to draw near",
+    "H4672": "to find", "H398": "to eat", "H8104": "to keep, guard", "H6680": "to command",
+    "H7965": "peace, welfare",
+    # very common nouns + names of God
+    "H430": "God", "H410": "God", "H3068": "the LORD", "H136": "Lord", "H113": "lord, master",
+    "H120": "man, mankind", "H376": "man", "H802": "woman, wife", "H1121": "son",
+    "H1323": "daughter", "H1": "father", "H517": "mother", "H251": "brother",
+    "H5971": "people", "H4428": "king", "H5650": "servant", "H3548": "priest",
+    "H5030": "prophet", "H776": "earth, land", "H8064": "heavens", "H3220": "sea",
+    "H4325": "water", "H5892": "city", "H1004": "house", "H3117": "day", "H3915": "night",
+    "H8141": "year", "H6256": "time", "H3027": "hand", "H7218": "head", "H3820": "heart",
+    "H5315": "soul, life", "H7307": "spirit, wind", "H6963": "voice, sound", "H8034": "name",
+    "H1697": "word, thing", "H1818": "blood", "H6086": "tree, wood", "H68": "stone",
+    "H2416": "living, life", "H7451": "evil, calamity", "H2896": "good", "H1419": "great",
+    "H6635": "host, army", "H6440": "face, before",
+    # Jonah's vocabulary (so the proof book reads clean)
+    "H3124": "Jonah", "H573": "Amittai", "H5210": "Nineveh", "H8659": "Tarshish",
+    "H591": "ship", "H4419": "sailor", "H2904": "to hurl, throw", "H3627": "vessel, article",
+    "H5591": "storm, tempest", "H5590": "to storm", "H1272": "to flee", "H8367": "to be calm",
+    "H2803": "to think, plan", "H5680": "Hebrew", "H3375": "Jonah",
+}
+
 # Cantillation (chanting) accents + structural marks we DROP. We KEEP the niqqud
 # (vowel points U+05B0-05BC, the shin/sin dots U+05C1/05C2, qamats-qatan U+05C7).
 _DROP = set(range(0x0591, 0x05B0))  # te'amim / cantillation accents
@@ -69,16 +118,32 @@ def main_strongs(lemma):
     return ("H" + nums[-1]) if nums else None      # content piece is the last number
 
 
-def load_glosses(path):
-    # Optional. Accepts the openscriptures file either way: a plain .json, or the .js
-    # that wraps it as `var strongsHebrewDictionary = { ... };` (we just slice from the
-    # first "{" to the last "}"). A missing or unreadable file is not fatal — the Hebrew
-    # still loads, just with no English line for now.
+def short_gloss(strongs_def, kjv_def):
+    """Boil a verbose Strong's definition down to a 1-3 word interlinear gloss."""
+    for src in (strongs_def, kjv_def):
+        if not src:
+            continue
+        g = re.split(r"[;(]", src)[0]              # drop the "(by implication…)" tail / clauses after ;
+        g = g.split(",")[0].strip().strip(".")     # first comma-clause
+        g = re.sub(r"\s+", " ", g)
+        if g and len(g) <= 24:
+            return g
+    # nothing short enough — take the head of the definition and cap it
+    g = re.sub(r"\s+", " ", (strongs_def or kjv_def or "").split(";")[0]).strip()
+    return g[:24].rstrip(" ,") if g else ""
+
+
+def load_lexicon(path):
+    """Build {H-number: {gloss, xlit}} from the openscriptures Strong's Hebrew dict.
+    Accepts the file as plain .json or as the .js that wraps it (`var x = { ... };`).
+    gloss = a short interlinear gloss (curated for common words, else a trimmed def);
+    xlit  = the academic transliteration (drives the Interlinear pronunciation line).
+    A missing/unreadable file is not fatal — the Hebrew still loads, bare."""
     if not path:
         return {}
     p = Path(path)
     if not p.exists():
-        print(f"note: gloss file '{path}' not found — loading Hebrew with no English glosses for now")
+        print(f"note: gloss file '{path}' not found — loading Hebrew with no glosses for now")
         return {}
     try:
         text = p.read_text(encoding="utf-8")
@@ -89,16 +154,12 @@ def load_glosses(path):
         return {}
     out = {}
     for key, entry in raw.items():                 # key = "H1", "H430", ...
-        g = (entry.get("strongs_def") or entry.get("kjv_def") or "").strip()
-        g = g.split(";")[0].strip()                # keep the core sense, drop the elaboration
-        if len(g) > 32:                            # ...and trim a long definition to its head word(s)
-            g = g.split(",")[0].strip()
-        if g:
-            out[key] = re.sub(r"\s+", " ", g)
+        gloss = CURATED_GLOSS.get(key) or short_gloss(entry.get("strongs_def"), entry.get("kjv_def"))
+        out[key] = {"gloss": gloss, "xlit": (entry.get("xlit") or "").strip()}
     return out
 
 
-def parse_book(xml_path, glosses):
+def parse_book(xml_path, lex):
     tree = ET.parse(xml_path)
     wtag, vtag = f"{{{OSIS_NS}}}w", f"{{{OSIS_NS}}}verse"
     wrows, vrows = [], []
@@ -119,9 +180,11 @@ def parse_book(xml_path, glosses):
             if not heb:
                 continue
             sn = main_strongs(child.get("lemma", ""))
+            info = lex.get(sn) if sn else None
+            gloss = (info or {}).get("gloss", "")
+            translit = (info or {}).get("xlit", "")
             morph = child.get("morph", "")
-            gloss = glosses.get(sn, "") if sn else ""
-            wrows.append((app_book, ch, vs, pos, heb, sn, morph, gloss))
+            wrows.append((app_book, ch, vs, pos, heb, sn, morph, gloss, translit))
             words.append(heb)
             pos += 1
         vrows.append((app_book, ch, vs, " ".join(words)))
@@ -136,7 +199,7 @@ def main():
     ap.add_argument("books", nargs="*", help="OSIS book names to load (default: all 39)")
     args = ap.parse_args()
 
-    glosses = load_glosses(args.glosses)
+    lex = load_lexicon(args.glosses)
     wlc = Path(args.morphhb)
     books = args.books or list(OSIS_TO_APP.keys())
 
@@ -145,7 +208,7 @@ def main():
     cur.executescript("""
         CREATE TABLE IF NOT EXISTS heb_words (
             book TEXT, chapter INTEGER, verse INTEGER, position INTEGER,
-            hebrew TEXT, strongs TEXT, morph TEXT, gloss TEXT
+            hebrew TEXT, strongs TEXT, morph TEXT, gloss TEXT, translit TEXT
         );
         CREATE TABLE IF NOT EXISTS heb_verses (
             book TEXT, chapter INTEGER, verse INTEGER, hebrew TEXT
@@ -153,6 +216,9 @@ def main():
         CREATE INDEX IF NOT EXISTS idx_heb_words_bcv  ON heb_words(book, chapter, verse);
         CREATE INDEX IF NOT EXISTS idx_heb_verses_bcv ON heb_verses(book, chapter, verse);
     """)
+    # add the translit column to a heb.db that predates it (so re-running upgrades in place)
+    if "translit" not in [r[1] for r in cur.execute("PRAGMA table_info(heb_words)")]:
+        cur.execute("ALTER TABLE heb_words ADD COLUMN translit TEXT")
 
     total = 0
     for osis in books:
@@ -167,8 +233,8 @@ def main():
         # clear just this book in this isolated db, then refill (so re-running is safe)
         cur.execute("DELETE FROM heb_words  WHERE book=?", (app_book,))
         cur.execute("DELETE FROM heb_verses WHERE book=?", (app_book,))
-        wrows, vrows = parse_book(xml_path, glosses)
-        cur.executemany("INSERT INTO heb_words  VALUES (?,?,?,?,?,?,?,?)", wrows)
+        wrows, vrows = parse_book(xml_path, lex)
+        cur.executemany("INSERT INTO heb_words  VALUES (?,?,?,?,?,?,?,?,?)", wrows)
         cur.executemany("INSERT INTO heb_verses VALUES (?,?,?,?)", vrows)
         total += len(wrows)
         print(f"{osis:6} -> {app_book:4}  {len(wrows):6} words  {len(vrows):4} verses")

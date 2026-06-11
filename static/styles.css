@@ -1739,6 +1739,15 @@ input { font-family: inherit; }
   max-width: 12ch;
   text-align: center;
 }
+/* transliteration line — shown only when the Interlinear toggle is on */
+.lib-heb-word .lib-iw-translit {
+  direction: ltr;
+  font-family: var(--f-serif);
+  font-style: italic;
+  font-size: 0.58em;
+  line-height: 1.2;
+  color: var(--ink-3);
+}
 .lib-heb-word .lib-iw-strongs { direction: ltr; }
 
 /* ----- "Other" non-canonical texts picker (desktop lib bar popup) ----- */

@@ -6509,7 +6509,7 @@ function LibraryView({
       strongs_base: w.strongs,
       strongs_raw: (w.strongs || "").replace(/^H/, ""),
       greek: "",
-      translit: "",
+      translit: w.translit || "",
       gloss: w.gloss || "",
       hebrew: w.hebrew,
       morph: w.morph || "",
@@ -6544,7 +6544,9 @@ function LibraryView({
         onClick: clickable ? () => onWordClick(hebEntry(w)) : undefined
       }, /*#__PURE__*/React.createElement("span", {
         className: "lib-iw-heb"
-      }, w.hebrew), /*#__PURE__*/React.createElement("span", {
+      }, w.hebrew), showInterlinear && w.translit && /*#__PURE__*/React.createElement("span", {
+        className: "lib-iw-translit"
+      }, w.translit), /*#__PURE__*/React.createElement("span", {
         className: "lib-iw-english"
       }, w.gloss), showStrongs && (w.strongs ? /*#__PURE__*/React.createElement("span", {
         className: "lib-iw-strongs"
