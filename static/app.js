@@ -5194,12 +5194,15 @@ function LibraryView({
   useEffect(() => {
     if (!nav?.book || !navBookRef.current || nav.book !== selBook?.abbrev) return;
     requestAnimationFrame(() => {
-      // "nearest" so an already-visible book button doesn't scroll at all — "start"
-      // dragged the whole window down (and pushed the verse off-screen) even when the
-      // nav book was right there, e.g. clicking a verse number on a fresh Genesis 1.
-      navBookRef.current?.scrollIntoView({
-        behavior: "smooth",
-        block: "nearest"
+      const el = navBookRef.current;
+      const sc = el && el.closest(".nav-scroll");
+      if (!sc) return;
+      // Scroll ONLY the nav's own book list so the active book rides near the top —
+      // never the whole window (that dragged the verse you jumped to off-screen).
+      const top = el.getBoundingClientRect().top - sc.getBoundingClientRect().top + sc.scrollTop;
+      sc.scrollTo({
+        top: Math.max(0, top - 8),
+        behavior: "smooth"
       });
     });
   }, [nav?.book, selBook?.abbrev]);
