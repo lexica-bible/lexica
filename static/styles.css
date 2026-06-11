@@ -1503,7 +1503,6 @@ input { font-family: inherit; }
 .lib-prose-flow > .pericope-row:first-child .pericope-heading { margin-top: 0; }
 @media (max-width: 1099px) {
   .pericope-row .lib-vnum { display: none; }
-  .pericope-heading { text-align: center; }
 }
 
 /* Prose continuous flow (non-poetry) */
@@ -2005,7 +2004,6 @@ input { font-family: inherit; }
   }
   .lib-text-words { --lib-line-h: 1.65; }
   .lib-verse-row { margin-bottom: 3px; }
-  .pericope-heading { text-align: center; }
   /* Chip: smaller word size to fit more per line */
   .lib-iw-strongs { font-size: 9px; }
   /* Compare: stack the chosen texts vertically, one labeled line each. */
