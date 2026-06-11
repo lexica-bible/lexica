@@ -5752,8 +5752,9 @@ function LibraryView({
           "data-ch": v._ch,
           className: "lib-chrono-chapmark"
         }, selBook ? selBook.name : "", " ", v._ch));
-        // Audio progress bar above the chapter that's currently playing.
-        if (audioCapable && audioUrl && curPassage && audioKey === curPassage.book + "-" + v._ch) {
+        // Audio progress bar above the chapter that's currently playing — DESKTOP only.
+        // On mobile the scrubber docks at the bottom cockpit like every other mode.
+        if (!isMobile && audioCapable && audioUrl && curPassage && audioKey === curPassage.book + "-" + v._ch) {
           out.push(/*#__PURE__*/React.createElement("div", {
             key: `cb-${v._ch}`,
             className: "lib-chrono-audio-bar"
@@ -5799,14 +5800,15 @@ function LibraryView({
   };
   const onAudioEnded = () => {
     setAudioPlaying(false);
-    if (!chronoOn) {
-      setAudioUrl(null);
-      setAudioKey(null);
-      return;
-    } // canonical: chapter done → mobile dock slides out
-    if (!curPassage || !audioKey) return;
-    const cur = parseInt(audioKey.split("-")[1], 10); // chrono: roll into the next chapter of the passage
-    if (cur < curPassage.end_ch) loadAudio(curPassage.book, cur + 1);
+    if (chronoOn && curPassage && audioKey) {
+      const cur = parseInt(audioKey.split("-")[1], 10); // chrono: roll into the next chapter of the passage
+      if (cur < curPassage.end_ch) {
+        loadAudio(curPassage.book, cur + 1);
+        return;
+      }
+    }
+    setAudioUrl(null);
+    setAudioKey(null); // canonical end, or chrono passage finished → scrubber goes away
   };
   // The (invisible) audio element renders once while a chapter is loaded so it can play.
   const audioEl = audioCapable && audioUrl ? /*#__PURE__*/React.createElement("audio", {
@@ -5830,17 +5832,17 @@ function LibraryView({
     "aria-label": "Audio position"
   });
   // Where the visible seek bar sits:
-  //  - chrono: inline above the playing chapter (rendered at its divider in withMarks);
-  //    here we only mount the hidden <audio>.
-  //  - mobile (canonical): a strip docked just above the bottom reading cockpit, sliding
+  //  - mobile (ALL modes): a strip docked just above the bottom reading cockpit, sliding
   //    up when a chapter loads. Play/pause stays in the cockpit; this is only the scrubber.
-  //  - desktop: a row right under the toolbar.
-  const audioBar = !audioEl ? null : chronoOn ? audioEl : isMobile ? /*#__PURE__*/React.createElement("div", {
+  //  - desktop chrono: inline above the playing chapter (rendered at its divider in
+  //    withMarks); here we only mount the hidden <audio>.
+  //  - desktop canonical: a row right under the toolbar.
+  const audioBar = !audioEl ? null : isMobile ? /*#__PURE__*/React.createElement("div", {
     className: "lib-audio-dock"
-  }, audioProgress, audioEl) : /*#__PURE__*/React.createElement("div", {
+  }, audioProgress, audioEl) : chronoOn ? audioEl : /*#__PURE__*/React.createElement("div", {
     className: "lib-audio-bar-row"
   }, audioProgress, audioEl);
-  const audioDockOn = !!audioEl && isMobile && !chronoOn; // drives the reading-list bottom clearance
+  const audioDockOn = !!audioEl && isMobile; // drives the reading-list bottom clearance (all mobile modes)
   const audioBtn = audioCapable ? /*#__PURE__*/React.createElement("button", {
     className: "lib-toggle lib-toggle-icon" + (showPause ? " on" : ""),
     disabled: audioBusy,
