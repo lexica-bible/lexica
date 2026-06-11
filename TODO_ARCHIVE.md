@@ -355,19 +355,19 @@ memory note). Reopen only if a specific word is reported showing the terse gloss
 
 ---
 
-## Reader typeface picker — done (2026-06-11)
+## Reader typeface picker — TRIED + REVERTED (2026-06-11)
 
-A "Reading font" choice — **Source Serif (default) · Cardo · Gentium** — in the text-style menu
-(desktop `Aa ▾` = Size + Typeface; mobile = a row folded into the ModesSheet **Display** group, no
-separate section, leaving room for the upcoming sepia/dark toggle beside it). Overrides
-`--f-serif`/`--f-greek` inline on `.lib-reading` only (side panels keep the app default), remembered
-in `localStorage` `libFont`, defaults to today's Source Serif so nothing changes unless picked.
-Cardo/Gentium bake in a Hebrew fallback (Frank Ruhl Libre) and lazy-load — the font files download
-only when chosen. **Why a picker, not a swap:** the reader was already a quality serif (Source
-Serif 4), so Cardo vs it is taste, not an upgrade — handing readers the choice beat forcing one.
-Sans was considered and dropped (doesn't suit a study Bible). `READ_FONTS` map +
-`changeFont`/`libFont` in static/src/60-library.jsx; the two fonts added to the Google Fonts `<link>`
-in templates/index.html. Memory `project_reader_appearance`.
+Built a "Reading font" picker (Source Serif default · Cardo · Gentium) in the text-style menu, then
+**pulled it the same day** (commits 8a9a635/6a08858 in, f1f96a5 out). **Why it failed:** the reader
+was already on Source Serif 4 — a good serif — so this was a preference toggle, not an upgrade. The
+two alternatives both looked worse on the user's Windows display (Cardo renders thin/rough; Gentium
+also disliked). Replacement candidates (Literata, EB Garamond, Noto Serif) didn't win either, so the
+user scrapped the whole picker rather than keep weaker fonts. **Lesson: don't re-add a serif picker —
+Source Serif is the keeper.** What DID work and is worth remembering if this ever comes back: scope a
+font swap to the reader by overriding `--f-serif`/`--f-greek` inline on `.lib-reading` (custom props
+inherit, so the rest of the app is untouched); Google fonts lazy-load (the binary downloads only when
+a glyph renders); and Cardo/Gentium need a Hebrew fallback (Frank Ruhl Libre) since they carry no
+Hebrew — that fallback DID render cleanly (no boxes). Memory `project_reader_appearance`.
 
 ---
 
