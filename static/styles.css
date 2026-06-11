@@ -1535,6 +1535,11 @@ input { font-family: inherit; }
   padding-left: var(--lib-row-pl);
   position: relative;   /* anchor for the absolute note marker */
 }
+/* A jumped-to verse (search / cross-ref) lands in the upper third, not the very
+   top — scrollIntoView({block:"start"}) stops at this margin. Harmless on rows
+   that are never the scroll target. Covers chip/interlinear/KJV/BSB/Hebrew rows
+   (.lib-verse-row) and the prose flow verse (.lib-flow-verse). */
+.lib-verse-row, .lib-flow-verse { scroll-margin-top: 30vh; }
 
 .lib-vnum {
   font-family: var(--f-mono);
