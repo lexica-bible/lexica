@@ -2136,10 +2136,11 @@ input { font-family: inherit; }
 .mseg-font { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 4px; margin-top: 6px; }
 .mseg-font .mseg-b { flex: none; font-size: 13px; padding: 9px 4px; }
 /* Checkable Text picker (mobile): tick 1 to read, 2-4 to compare side by side. */
-/* Text picker wraps to a 2nd line when there are enough texts (e.g. ABP/KJV/BSB/ESV/NIV
-   + HEB → 3 per row). The pill's own `gap` already spaces the wrapped rows. */
+/* Text picker wraps when there are enough texts. Sized so a NORMAL user's four
+   (ABP/KJV/BSB + HEB) sit on ONE line; the owner's six (+ESV/NIV) wrap to 4 + 2.
+   The pill's own `gap` already spaces the wrapped rows. */
 .text-pick { flex-wrap: wrap; }
-.text-pick .mseg-b { display: inline-flex; align-items: center; justify-content: center; gap: 3px; flex: 1 1 28%; }
+.text-pick .mseg-b { display: inline-flex; align-items: center; justify-content: center; gap: 3px; flex: 1 1 22%; }
 .mseg-chk { font-size: 10px; color: var(--accent); line-height: 1; }
 .switch {
   width: 48px; height: 28px; border-radius: 15px;
