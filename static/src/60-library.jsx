@@ -590,9 +590,6 @@ function ModesSheet({
                 <button className="mseg-b" onClick={() => changeFontSize(+1)}>A+</button>
               </div>
             </div>
-          </div>
-          <div className="mode-sec">
-            <div className="mode-lbl">Reading font</div>
             <div className="mseg mseg-font">
               {Object.keys(READ_FONTS).map(k => (
                 <button key={k} className={"mseg-b" + (libFont === k ? " on" : "")}

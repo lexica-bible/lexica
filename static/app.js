@@ -4609,11 +4609,7 @@ function ModesSheet({
   }, libFontSize), /*#__PURE__*/React.createElement("button", {
     className: "mseg-b",
     onClick: () => changeFontSize(+1)
-  }, "A+")))), /*#__PURE__*/React.createElement("div", {
-    className: "mode-sec"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "mode-lbl"
-  }, "Reading font"), /*#__PURE__*/React.createElement("div", {
+  }, "A+"))), /*#__PURE__*/React.createElement("div", {
     className: "mseg mseg-font"
   }, Object.keys(READ_FONTS).map(k => /*#__PURE__*/React.createElement("button", {
     key: k,
