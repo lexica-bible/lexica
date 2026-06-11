@@ -5073,12 +5073,11 @@ function LibraryView({
   const [nivVerses, setNivVerses] = useState([]);
   const [nivLoading, setNivLoading] = useState(false);
   const [nivOwner, setNivOwner] = useState(false);
-  // Hebrew OT interlinear (PUBLIC, public-domain). hebOwner gates the toggle's
-  // VISIBILITY during rollout; hebAvail = heb.db is loaded (flip the gate to that to
-  // go fully public). Single-read mode for now (not in compare/chronological yet).
+  // Hebrew OT interlinear (PUBLIC, public-domain). Now open to everyone: the toggle
+  // shows whenever hebAvail (heb.db is loaded) — no login needed. Single-read mode for
+  // now (not in compare/chronological yet).
   const [hebVerses, setHebVerses] = useState([]);
   const [hebLoading, setHebLoading] = useState(false);
-  const [hebOwner, setHebOwner] = useState(false);
   const [hebAvail, setHebAvail] = useState(false);
   // Have the owner-status checks come back yet? Until they do, don't bounce a restored
   // ESV/NIV/HEB reading to ABP (a refresh would otherwise drop you off the gated text).
@@ -5162,10 +5161,7 @@ function LibraryView({
     }), api.nivStatus().then(d => {
       if (!cancelled) setNivOwner(!!(d && d.owner));
     }), api.hebStatus().then(d => {
-      if (!cancelled) {
-        setHebOwner(!!(d && d.owner));
-        setHebAvail(!!(d && d.available));
-      }
+      if (!cancelled) setHebAvail(!!(d && d.available));
     })]).finally(() => {
       if (!cancelled) setGatedReady(true);
     });
@@ -5185,13 +5181,13 @@ function LibraryView({
       setTranslation("abp");
       onTranslationChange?.("abp");
     }
-    // HEB is OT-only and owner-gated during rollout — bounce back to ABP if either
-    // fails (signed out, or moved to an NT book while reading Hebrew).
-    if (translation === "heb" && (!hebOwner || selBook && NT_BOOKS.has(selBook.abbrev))) {
+    // HEB is OT-only — bounce back to ABP if it's unavailable, or you moved to an NT
+    // book while reading Hebrew.
+    if (translation === "heb" && (!hebAvail || selBook && NT_BOOKS.has(selBook.abbrev))) {
       setTranslation("abp");
       onTranslationChange?.("abp");
     }
-  }, [esvOwner, nivOwner, hebOwner, translation, selBook, gatedReady]);
+  }, [esvOwner, nivOwner, hebAvail, translation, selBook, gatedReady]);
   useEffect(() => {
     if (!nav?.book || !navBookRef.current || nav.book !== selBook?.abbrev) return;
     requestAnimationFrame(() => {
@@ -5708,9 +5704,9 @@ function LibraryView({
   const POETRY_BOOKS = new Set(["Psa", "Pro", "Job", "Son", "Lam", "Ecc"]);
   const isPoetry = POETRY_BOOKS.has(selBook?.abbrev);
 
-  // HEB toggle: owner-gated during rollout (flip hebOwner -> hebAvail to go public),
-  // OT books only (no Hebrew NT), and not while a non-canon text is open.
-  const hebPickable = hebOwner && !nonCanon && !!selBook && !NT_BOOKS.has(selBook.abbrev);
+  // HEB toggle: public (shows whenever the Hebrew data is loaded), OT books only (no
+  // Hebrew NT), and not while a non-canon text is open.
+  const hebPickable = hebAvail && !nonCanon && !!selBook && !NT_BOOKS.has(selBook.abbrev);
 
   // ---- Chronological span assembly --------------------------------------
   // Pull the active text(s) for the current passage out of the loaded span,
