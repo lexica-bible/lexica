@@ -58,12 +58,12 @@ def hebrew_chapter(book, chapter):
     try:
         try:
             rows = conn.execute(
-                "SELECT verse, position, hebrew, strongs, morph, gloss, translit"
+                "SELECT verse, position, hebrew, strongs, morph, gloss, translit, grammar"
                 " FROM heb_words WHERE book = ? AND chapter = ? ORDER BY verse, position",
                 (book, chapter),
             ).fetchall()
         except sqlite3.OperationalError:
-            # heb.db built before the translit column existed — read the legacy shape
+            # heb.db built before the translit/grammar columns existed — read the legacy shape
             rows = conn.execute(
                 "SELECT verse, position, hebrew, strongs, morph, gloss"
                 " FROM heb_words WHERE book = ? AND chapter = ? ORDER BY verse, position",
@@ -103,5 +103,6 @@ def hebrew_chapter(book, chapter):
             "morph": r["morph"],
             "gloss": r["gloss"],
             "translit": (r["translit"] if "translit" in r.keys() else ""),
+            "grammar": (r["grammar"] if "grammar" in r.keys() else ""),
         })
     return jsonify(verses)
