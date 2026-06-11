@@ -743,6 +743,8 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
   const [audioPlaying, setAudioPlaying] = useState(false);
   const [audioCur, setAudioCur] = useState(0);
   const [audioDur, setAudioDur] = useState(0);
+  const [dockClosing, setDockClosing] = useState(false);  // mobile dock: keep it mounted briefly so it can slide OUT
+  const dockWasShown = useRef(false);
   const audioRef = useRef(null);
   const [viewCh, setViewCh] = useState(null);   // chrono: chapter currently scrolled into view (drives the toolbar play target)
   const [libOptions, setLibOptions] = useState({
@@ -1330,10 +1332,25 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
   //  - desktop chrono: inline above the playing chapter (rendered at its divider in
   //    withMarks); here we only mount the hidden <audio>.
   //  - desktop canonical: a row right under the toolbar.
-  const audioBar = !audioEl ? null
-    : isMobile ? <div className="lib-audio-dock">{audioProgress}{audioEl}</div>
-    : chronoOn ? audioEl
-    : <div className="lib-audio-bar-row">{audioProgress}{audioEl}</div>;
+  const mobileDockShown = isMobile && !!audioEl;
+  // When the mobile dock disappears (chapter/passage ended), keep it mounted one beat so it can
+  // slide OUT instead of vanishing. A re-open cancels the pending close.
+  useEffect(() => {
+    if (mobileDockShown) {
+      dockWasShown.current = true;
+      if (dockClosing) setDockClosing(false);
+    } else if (dockWasShown.current) {
+      dockWasShown.current = false;
+      setDockClosing(true);
+      const t = setTimeout(() => setDockClosing(false), 240);
+      return () => clearTimeout(t);
+    }
+  }, [mobileDockShown]);
+  const audioBar = audioEl
+    ? (isMobile ? <div className="lib-audio-dock">{audioProgress}{audioEl}</div>
+      : chronoOn ? audioEl
+      : <div className="lib-audio-bar-row">{audioProgress}{audioEl}</div>)
+    : (dockClosing ? <div className="lib-audio-dock lib-audio-dock--out">{audioProgress}</div> : null);
   const audioDockOn = !!audioEl && isMobile;   // drives the reading-list bottom clearance (all mobile modes)
   const audioBtn = audioCapable ? (
     <button className={"lib-toggle lib-toggle-icon" + (showPause ? " on" : "")}

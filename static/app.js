@@ -5103,6 +5103,8 @@ function LibraryView({
   const [audioPlaying, setAudioPlaying] = useState(false);
   const [audioCur, setAudioCur] = useState(0);
   const [audioDur, setAudioDur] = useState(0);
+  const [dockClosing, setDockClosing] = useState(false); // mobile dock: keep it mounted briefly so it can slide OUT
+  const dockWasShown = useRef(false);
   const audioRef = useRef(null);
   const [viewCh, setViewCh] = useState(null); // chrono: chapter currently scrolled into view (drives the toolbar play target)
   const [libOptions, setLibOptions] = useState({
@@ -5861,11 +5863,27 @@ function LibraryView({
   //  - desktop chrono: inline above the playing chapter (rendered at its divider in
   //    withMarks); here we only mount the hidden <audio>.
   //  - desktop canonical: a row right under the toolbar.
-  const audioBar = !audioEl ? null : isMobile ? /*#__PURE__*/React.createElement("div", {
+  const mobileDockShown = isMobile && !!audioEl;
+  // When the mobile dock disappears (chapter/passage ended), keep it mounted one beat so it can
+  // slide OUT instead of vanishing. A re-open cancels the pending close.
+  useEffect(() => {
+    if (mobileDockShown) {
+      dockWasShown.current = true;
+      if (dockClosing) setDockClosing(false);
+    } else if (dockWasShown.current) {
+      dockWasShown.current = false;
+      setDockClosing(true);
+      const t = setTimeout(() => setDockClosing(false), 240);
+      return () => clearTimeout(t);
+    }
+  }, [mobileDockShown]);
+  const audioBar = audioEl ? isMobile ? /*#__PURE__*/React.createElement("div", {
     className: "lib-audio-dock"
   }, audioProgress, audioEl) : chronoOn ? audioEl : /*#__PURE__*/React.createElement("div", {
     className: "lib-audio-bar-row"
-  }, audioProgress, audioEl);
+  }, audioProgress, audioEl) : dockClosing ? /*#__PURE__*/React.createElement("div", {
+    className: "lib-audio-dock lib-audio-dock--out"
+  }, audioProgress) : null;
   const audioDockOn = !!audioEl && isMobile; // drives the reading-list bottom clearance (all mobile modes)
   const audioBtn = audioCapable ? /*#__PURE__*/React.createElement("button", {
     className: "lib-toggle lib-toggle-icon" + (showPause ? " on" : ""),

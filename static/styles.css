@@ -2082,11 +2082,17 @@ input { font-family: inherit; }
     border-top: 1px solid var(--rule);
     animation: audio-dock-up 0.26s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
+  /* Chapter ended → slide the strip back down instead of cutting it instantly. */
+  .app.view-library .lib-audio-dock--out {
+    animation: audio-dock-down 0.24s cubic-bezier(0.4, 0, 1, 1) forwards;
+    pointer-events: none;
+  }
   .app.view-library .lib-audio-dock .lib-audio-bar { margin: 0; max-width: none; }
   /* Last verse clears the cockpit + the dock strip while it's showing. */
   .lib-reading--audio { padding-bottom: 52px; }
 }
 @keyframes audio-dock-up { from { transform: translateY(100%); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes audio-dock-down { from { transform: none; opacity: 1; } to { transform: translateY(100%); opacity: 0; } }
 
 /* ============================================================
    MODES SHEET (mobile reading options — Figma spec)
