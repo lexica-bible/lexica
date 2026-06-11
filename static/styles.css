@@ -2062,7 +2062,24 @@ input { font-family: inherit; }
   .app.view-library .mbar-logo-btn { display: none; }  /* pointless in the bottom cockpit */
   /* Bottom clearance for the cockpit; top clearance is global (.main above). */
   .app.view-library .main { padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
+  /* Audio scrubber: a strip that docks just ON TOP of the bottom cockpit and slides up
+     when a chapter loads (play/pause stays in the cockpit; this is only the seek bar).
+     z below the detail/modes sheets (51/220) so an open sheet covers it, above content. */
+  .app.view-library .lib-audio-dock {
+    position: fixed; left: 0; right: 0;
+    bottom: calc(56px + env(safe-area-inset-bottom, 0px));
+    z-index: 49;
+    padding: 8px 16px;
+    background: color-mix(in oklab, var(--bg) 84%, #fff);
+    backdrop-filter: blur(6px);
+    border-top: 1px solid var(--rule);
+    animation: audio-dock-up 0.26s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+  .app.view-library .lib-audio-dock .lib-audio-bar { margin: 0; max-width: none; }
+  /* Last verse clears the cockpit + the dock strip while it's showing. */
+  .lib-reading--audio { padding-bottom: 52px; }
 }
+@keyframes audio-dock-up { from { transform: translateY(100%); opacity: 0; } to { transform: none; opacity: 1; } }
 
 /* ============================================================
    MODES SHEET (mobile reading options — Figma spec)

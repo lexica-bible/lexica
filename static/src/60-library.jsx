@@ -1292,8 +1292,9 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
   };
   const onAudioEnded = () => {
     setAudioPlaying(false);
-    if (!chronoOn || !curPassage || !audioKey) return;   // chrono: roll into the next chapter of the passage
-    const cur = parseInt(audioKey.split("-")[1], 10);
+    if (!chronoOn) { setAudioUrl(null); setAudioKey(null); return; }   // canonical: chapter done → mobile dock slides out
+    if (!curPassage || !audioKey) return;
+    const cur = parseInt(audioKey.split("-")[1], 10);                  // chrono: roll into the next chapter of the passage
     if (cur < curPassage.end_ch) loadAudio(curPassage.book, cur + 1);
   };
   // The (invisible) audio element renders once while a chapter is loaded so it can play.
@@ -1308,12 +1309,17 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
     <input className="lib-audio-bar" type="range" min="0" max={audioDur || 0} step="0.1"
       value={Math.min(audioCur, audioDur || 0)} onChange={seekAudio} aria-label="Audio position" />
   );
-  // Canonical: progress bar under the toolbar. Chrono: the bar moves inline, above the
-  // chapter that's playing (rendered at its divider in withMarks); here we just mount
-  // the hidden player.
-  const audioBar = !audioEl ? null : chronoOn ? audioEl : (
-    <div className="lib-audio-bar-row">{audioProgress}{audioEl}</div>
-  );
+  // Where the visible seek bar sits:
+  //  - chrono: inline above the playing chapter (rendered at its divider in withMarks);
+  //    here we only mount the hidden <audio>.
+  //  - mobile (canonical): a strip docked just above the bottom reading cockpit, sliding
+  //    up when a chapter loads. Play/pause stays in the cockpit; this is only the scrubber.
+  //  - desktop: a row right under the toolbar.
+  const audioBar = !audioEl ? null
+    : chronoOn ? audioEl
+    : isMobile ? <div className="lib-audio-dock">{audioProgress}{audioEl}</div>
+    : <div className="lib-audio-bar-row">{audioProgress}{audioEl}</div>;
+  const audioDockOn = !!audioEl && isMobile && !chronoOn;   // drives the reading-list bottom clearance
   const audioBtn = audioCapable ? (
     <button className={"lib-toggle lib-toggle-icon" + (showPause ? " on" : "")}
       disabled={audioBusy}
@@ -2530,7 +2536,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
         </>
       )}
 
-      <div ref={readingRef} className={"lib-reading" + (showInterlinear ? " lib-interlinear-on" : "")} style={{...(translation === "parallel" ? {paddingTop: 0} : {}), "--lib-font-size": libFontSize + "px"}} {...readingHandlers}>
+      <div ref={readingRef} className={"lib-reading" + (showInterlinear ? " lib-interlinear-on" : "") + (audioDockOn ? " lib-reading--audio" : "")} style={{...(translation === "parallel" ? {paddingTop: 0} : {}), "--lib-font-size": libFontSize + "px"}} {...readingHandlers}>
 
         {nonCanon ? (
           didLoading ? (
