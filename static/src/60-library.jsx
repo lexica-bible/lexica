@@ -353,7 +353,7 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
 // ============================================================
 // MOBILE BOOK PICKER — full-screen, two-screen (book grid → chapter grid)
 // ============================================================
-function MobileBookPicker({ books, selBook, selChapter, nonCanon, nonCanonList, onDone, onClose, chronoOn, chrono, chronoPos, onPickPassage }) {
+function MobileBookPicker({ books, selBook, selChapter, nonCanon, nonCanonList, onDone, onClose, chronoOn, chrono, chronoPos, onPickPassage, translation }) {
   // A non-canonical book is identified by its `id`; a Bible book by its `abbrev`.
   const isNC = b => !!(b && b.id);
   // Chronological: the picker shows eras → passages instead of books → chapters.
@@ -381,8 +381,10 @@ function MobileBookPicker({ books, selBook, selChapter, nonCanon, nonCanonList, 
   // ONE stable root so the refs survive the book→chapter screen switch.
   const { sheetRef, scrollRef } = useSwipeToDismiss(onClose);
 
+  // Hebrew is OT-only (no Hebrew NT), so drop the NT section in HEB mode — mirrors the
+  // desktop nav's `filtered` useMemo.
   const otBooks = books.filter(b => !NT_BOOKS.has(b.abbrev));
-  const ntBooks = books.filter(b => NT_BOOKS.has(b.abbrev));
+  const ntBooks = translation === "heb" ? [] : books.filter(b => NT_BOOKS.has(b.abbrev));
   const onChapter = screen === "chapter";
   const isActive = b => isNC(b) ? (nonCanon && nonCanon.id === b.id)
                                 : (selBook && b.abbrev === selBook.abbrev);
@@ -427,7 +429,7 @@ function MobileBookPicker({ books, selBook, selChapter, nonCanon, nonCanonList, 
             })}
           </div>
         ) : (
-          [["OT", otBooks], ["NT", ntBooks]].map(([label, bks]) => {
+          [["OT", otBooks], ["NT", ntBooks]].filter(([, bks]) => bks.length).map(([label, bks]) => {
             const open = openGroups.has(label);
             return (
               <div key={label} className="mpick-section">
@@ -2322,6 +2324,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
       {!navVisible && mobileNavOpen && (
         <MobileBookPicker
           books={books}
+          translation={translation}
           selBook={selBook}
           selChapter={selChapter}
           nonCanon={nonCanon}

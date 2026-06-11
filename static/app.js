@@ -4284,7 +4284,8 @@ function MobileBookPicker({
   chronoOn,
   chrono,
   chronoPos,
-  onPickPassage
+  onPickPassage,
+  translation
 }) {
   // A non-canonical book is identified by its `id`; a Bible book by its `abbrev`.
   const isNC = b => !!(b && b.id);
@@ -4316,8 +4317,11 @@ function MobileBookPicker({
     sheetRef,
     scrollRef
   } = useSwipeToDismiss(onClose);
+
+  // Hebrew is OT-only (no Hebrew NT), so drop the NT section in HEB mode — mirrors the
+  // desktop nav's `filtered` useMemo.
   const otBooks = books.filter(b => !NT_BOOKS.has(b.abbrev));
-  const ntBooks = books.filter(b => NT_BOOKS.has(b.abbrev));
+  const ntBooks = translation === "heb" ? [] : books.filter(b => NT_BOOKS.has(b.abbrev));
   const onChapter = screen === "chapter";
   const isActive = b => isNC(b) ? nonCanon && nonCanon.id === b.id : selBook && b.abbrev === selBook.abbrev;
   return /*#__PURE__*/React.createElement("div", {
@@ -4377,7 +4381,7 @@ function MobileBookPicker({
       className: "mpick-btn" + (active ? " on" : ""),
       onClick: () => onDone(pickedBook, n)
     }, n);
-  })) : [["OT", otBooks], ["NT", ntBooks]].map(([label, bks]) => {
+  })) : [["OT", otBooks], ["NT", ntBooks]].filter(([, bks]) => bks.length).map(([label, bks]) => {
     const open = openGroups.has(label);
     return /*#__PURE__*/React.createElement("div", {
       key: label,
@@ -7224,6 +7228,7 @@ function LibraryView({
     onPickPassage: pickPassage
   }), !navVisible && mobileNavOpen && /*#__PURE__*/React.createElement(MobileBookPicker, {
     books: books,
+    translation: translation,
     selBook: selBook,
     selChapter: selChapter,
     nonCanon: nonCanon,
