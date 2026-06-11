@@ -174,10 +174,12 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
   });
 
   const filtered = useMemo(() => {
+    // Hebrew is OT-only (no Hebrew NT), so drop the NT books from the list in HEB mode.
+    const base = translation === "heb" ? books.filter(b => !NT_BOOKS.has(b.abbrev)) : books;
     const q = query.trim().toLowerCase();
-    if (!q) return books;
-    return books.filter(b => b.name.toLowerCase().includes(q) || b.abbrev.toLowerCase().includes(q));
-  }, [books, query]);
+    if (!q) return base;
+    return base.filter(b => b.name.toLowerCase().includes(q) || b.abbrev.toLowerCase().includes(q));
+  }, [books, query, translation]);
 
   const groups = useMemo(() => {
     const out = [];
@@ -738,6 +740,9 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
   const [hebLoading, setHebLoading] = useState(false);
   const [hebOwner, setHebOwner] = useState(false);
   const [hebAvail, setHebAvail] = useState(false);
+  // Have the owner-status checks come back yet? Until they do, don't bounce a restored
+  // ESV/NIV/HEB reading to ABP (a refresh would otherwise drop you off the gated text).
+  const [gatedReady, setGatedReady] = useState(false);
   // Chapter audio (BSB = public-domain openbible; ESV = owner-only FCBH), once "Listen" is pressed.
   // audioKey = the "book-chapter" currently loaded (so the right Listen button highlights in chrono,
   // where a passage can span chapters and each chapter is its own file).
@@ -800,20 +805,23 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
   const authEmail = (() => { try { return (NotesStore.authInfo() || {}).email || null; } catch (e) { return null; } })();
   useEffect(() => {
     let cancelled = false;
-    api.esvStatus().then(d => { if (!cancelled) setEsvOwner(!!(d && d.owner)); });
-    api.nivStatus().then(d => { if (!cancelled) setNivOwner(!!(d && d.owner)); });
-    api.hebStatus().then(d => { if (!cancelled) { setHebOwner(!!(d && d.owner)); setHebAvail(!!(d && d.available)); } });
+    Promise.all([
+      api.esvStatus().then(d => { if (!cancelled) setEsvOwner(!!(d && d.owner)); }),
+      api.nivStatus().then(d => { if (!cancelled) setNivOwner(!!(d && d.owner)); }),
+      api.hebStatus().then(d => { if (!cancelled) { setHebOwner(!!(d && d.owner)); setHebAvail(!!(d && d.available)); } }),
+    ]).finally(() => { if (!cancelled) setGatedReady(true); });
     return () => { cancelled = true; };
   }, [authEmail]);
   // If the owner signs out (or it's revoked) while reading ESV/NIV, fall back to ABP
   // so they're never stuck on a now-forbidden text showing blank.
   useEffect(() => {
+    if (!gatedReady) return;   // owner status still loading — don't bounce a just-restored gated text
     if (!esvOwner && translation === "esv") { setTranslation("abp"); onTranslationChange?.("abp"); }
     if (!nivOwner && translation === "niv") { setTranslation("abp"); onTranslationChange?.("abp"); }
     // HEB is OT-only and owner-gated during rollout — bounce back to ABP if either
     // fails (signed out, or moved to an NT book while reading Hebrew).
     if (translation === "heb" && (!hebOwner || (selBook && NT_BOOKS.has(selBook.abbrev)))) { setTranslation("abp"); onTranslationChange?.("abp"); }
-  }, [esvOwner, nivOwner, hebOwner, translation, selBook]);
+  }, [esvOwner, nivOwner, hebOwner, translation, selBook, gatedReady]);
 
   useEffect(() => {
     if (!nav?.book || !navBookRef.current || nav.book !== selBook?.abbrev) return;
@@ -857,7 +865,9 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
       if (saved) {
         if (saved.chapter > 0) setSelChapter(saved.chapter);
         const t = saved.translation;
-        if (t === "abp" || t === "kjv" || t === "bsb" || (t === "esv" && esvOwner) || (t === "niv" && nivOwner) || (t === "heb" && hebOwner)) setTranslation(t);
+        // Restore the saved text optimistically (incl. the gated ESV/NIV/HEB); the
+        // owner-status effect bounces it back to ABP afterward if you're not allowed.
+        if (["abp", "kjv", "bsb", "esv", "niv", "heb"].includes(t)) setTranslation(t);
         if (saved.corpus && saved.corpus !== "bible" && NONCANON.some(x => x.id === saved.corpus)) setCorpus(saved.corpus);
       }
     });
