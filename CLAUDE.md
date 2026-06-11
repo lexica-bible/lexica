@@ -235,6 +235,13 @@ scripts/          # build-frontend.js + one-time import/migration scripts
   (`.lib-audio-dock`; desktop chrono keeps the inline scrubber). It clears when the chapter/passage
   ends. The reading list gets extra bottom room (`lib-reading--audio`) so the last verse clears it.**
 - Mobile toolbar (lib-toolbar): [☰] [‹] [Book Ch ▾] [›] [ABP/KJV/Par] — sticky, fixed height 56px
+- **Toolbar control gray-vs-hide (the user's per-control call, 2026-06-11):** GRAYED (visible, disabled)
+  = a real feature that just doesn't apply here — HEB on a NT book, Search on ESV/NIV (`canSearch` false;
+  desktop tooltip "Search isn't available for this text", mobile grayed only). HIDDEN = Compare and the
+  Canonical/Chronological order toggle on non-canon texts (he prefers them gone, NOT grayed — tried gray,
+  reverted), audio when there's no recording, and owner-only ESV/NIV (copyright gate). It is NOT a blanket
+  rule: PROPOSE gray for inactive-but-applicable, but it's his call per control. See memory
+  `feedback_gray_dont_hide`.
 - Reader font = `--f-serif` (Source Serif 4) on `.lib-reading`; the `Aa ▾` menu (desktop) / ModesSheet
   Display group (mobile) hold ONLY the A−/A+ size control. (A Cardo/Gentium typeface PICKER was tried
   2026-06-11 and reverted — the alt serifs looked worse than Source Serif; see memory
