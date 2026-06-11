@@ -1474,7 +1474,8 @@ input { font-family: inherit; }
 .lib-text-words {
   font-family: var(--f-serif);
   font-size: var(--lib-font-size, 18px);
-  line-height: 1.7;
+  --lib-line-h: 1.7;
+  line-height: var(--lib-line-h);
   color: var(--ink);
   text-align: left;
 }
@@ -1550,7 +1551,7 @@ input { font-family: inherit; }
   /* Center the number on the first text line by tying the offset to the reading font
      size (--lib-font-size) rather than a fixed pixel — so it stays centered at every
      size (desktop 18px, mobile 15px, any Aa setting) instead of drifting low on mobile. */
-  margin-top: calc(var(--lib-font-size, 18px) * 0.6);
+  margin-top: calc(var(--lib-line-h, 1.7) * var(--lib-font-size, 18px) / 2 - 4.3px);
 }
 
 .lib-vnum-click {
@@ -1992,7 +1993,7 @@ input { font-family: inherit; }
     min-height: calc(100vh - 112px);
     min-height: calc(100dvh - 112px);
   }
-  .lib-text-words { line-height: 1.65; }
+  .lib-text-words { --lib-line-h: 1.65; }
   .lib-verse-row { margin-bottom: 3px; }
   .pericope-heading { text-align: center; }
   /* Chip: smaller word size to fit more per line */
