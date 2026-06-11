@@ -299,8 +299,9 @@ bar. **Mobile (2026-06-11): the scrubber docks at the BOTTOM, on a strip just ab
 cockpit, sliding up when a chapter loads — ALL modes incl. chronological (`.lib-audio-dock`); desktop
 chrono keeps the inline bar at the playing chapter.** Chrono is scroll-aware (plays the chapter at
 ~45% mid-screen, auto-advances). Audio is per WHOLE chapter (no per-verse timing). STILL OPEN:
-- **Mobile dock slide-OUT animation** — the bottom scrubber slides UP when it appears but vanishes
-  instantly when the chapter/passage ends (no exit animation). Minor polish if it bugs anyone.
+- ~~**Mobile dock slide-OUT animation**~~ — **DONE 2026-06-11.** The bottom scrubber now eases back
+  DOWN when the chapter/passage ends (`audio-dock-down`), matching its slide-up entry. It stays mounted
+  one beat after the audio clears (`dockClosing` in 60-library.jsx) so the exit can play; a re-open cancels it.
 - **ESV audio** — built (FCBH Bible Brain, `ENGESVN2DA` = NT-only), owner-gated; waits on `FCBH_API_KEY`
   in the WSGI (key requested 2026-06-10). OT needs a separate fileset (`ESV_AUDIO_FILESET_OT`).
 - **KJV audio** — not built; FCBH dramatized or free plain recordings exist if wanted.
