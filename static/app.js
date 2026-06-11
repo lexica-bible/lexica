@@ -2157,11 +2157,13 @@ function DetailPanel({
   if (metavLoading || metavPersonData || metavPlaceData) sections.push("metav");
   if (aiDescription || aiDescLoading) sections.push("aidesc");
   if (isHebrewWord) sections.push("bdb");else if ((!isPN || metavType === "place" && metavData?.strongs_g?.length > 0) && metavType !== "person" && !aiDescription && !aiDescLoading && (entry.greek || entry.strongs_raw || metavData?.strongs_g?.length > 0)) sections.push("lsj");
-  if (!isHebrew && !isPN && !entry.isKjv && abpCount !== null && abpCount > 0) sections.push("abpOcc");
+  // Lexicon occurrence cross-links (LXX + KJV) are hidden for now — bring them back once
+  // Lexicon search is wired to land cleanly. Re-enable: uncomment abpOcc/kjvOcc/hebrewKjvOcc.
+  // if (!isHebrew && !isPN && !entry.isKjv && abpCount !== null && abpCount > 0) sections.push("abpOcc");
   if (entry.isExtra && extraCount !== null && extraCount > 0) sections.push("extraOcc");
-  if (entry.isKjv && !isHebrew && !isPN && kjvCount !== null && kjvCount > 0) sections.push("kjvOcc");
+  // if (entry.isKjv && !isHebrew && !isPN && kjvCount !== null && kjvCount > 0) sections.push("kjvOcc");
   if (!entry.isKjv && isPN && pnCount !== null && pnCount > 0 && onNameSearch) sections.push("pnOcc");
-  if (isHebrew && !entry.isHeb && kjvCount !== null && kjvCount > 0) sections.push("hebrewKjvOcc");
+  // if (isHebrew && !entry.isHeb && kjvCount !== null && kjvCount > 0) sections.push("hebrewKjvOcc");
   if (entry.derivation) sections.push("derivation");
   if (entry.book && !entry.isExtra) sections.push("verse");
   if (occurrences > 0 || totalResults > 0) sections.push("frequency");
@@ -4531,42 +4533,34 @@ function ModesSheet({
   }, /*#__PURE__*/React.createElement("div", {
     className: "mode-lbl"
   }, "Order"), /*#__PURE__*/React.createElement("div", {
-    className: "mseg mseg-icons"
+    className: "mseg"
   }, /*#__PURE__*/React.createElement("button", {
     className: "mseg-b" + (orderMode !== "chronological" ? " on" : ""),
-    title: "Canonical order (books in order)",
-    "aria-label": "Canonical order",
     "aria-pressed": orderMode !== "chronological",
     onClick: () => setOrder("canonical")
-  }, /*#__PURE__*/React.createElement(Icon.Book, null)), /*#__PURE__*/React.createElement("button", {
+  }, "Canonical"), /*#__PURE__*/React.createElement("button", {
     className: "mseg-b" + (orderMode === "chronological" ? " on" : ""),
-    title: "Chronological order (events in sequence)",
-    "aria-label": "Chronological order",
     "aria-pressed": orderMode === "chronological",
     onClick: () => setOrder("chronological")
-  }, /*#__PURE__*/React.createElement(Icon.Clock, null)))), /*#__PURE__*/React.createElement("div", {
+  }, "Chronological"))), /*#__PURE__*/React.createElement("div", {
     className: "mode-sec"
   }, /*#__PURE__*/React.createElement("div", {
     className: "mode-lbl"
   }, "Study layer"), /*#__PURE__*/React.createElement("div", {
-    className: "mseg mseg-icons"
+    className: "mseg"
   }, /*#__PURE__*/React.createElement("button", {
     className: "mseg-b" + (showStrongs ? " on" : ""),
     disabled: proseLocked,
     style: gray,
-    title: "Strong's numbers (tap a word for its lexicon entry)",
-    "aria-label": "Strong's numbers",
     "aria-pressed": showStrongs,
     onClick: () => !proseLocked && setOpt("showStrongs", !showStrongs)
-  }, /*#__PURE__*/React.createElement(Icon.Hash, null)), /*#__PURE__*/React.createElement("button", {
+  }, "Strong's"), /*#__PURE__*/React.createElement("button", {
     className: "mseg-b" + (showInterlinear ? " on" : ""),
     disabled: proseLocked,
     style: gray,
-    title: "Interlinear (stack Greek, transliteration & gloss)",
-    "aria-label": "Interlinear",
     "aria-pressed": showInterlinear,
     onClick: () => !proseLocked && setOpt("showInterlinear", !showInterlinear)
-  }, /*#__PURE__*/React.createElement(Icon.Interlinear, null)))), /*#__PURE__*/React.createElement("div", {
+  }, "Interlinear"))), /*#__PURE__*/React.createElement("div", {
     className: "mode-sec"
   }, /*#__PURE__*/React.createElement("div", {
     className: "mode-lbl"
