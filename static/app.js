@@ -6159,7 +6159,7 @@ function LibraryView({
     onClick: e => {
       if (e.defaultPrevented) return;
       if (window.getSelection && String(window.getSelection())) return;
-      if (e.target.closest && e.target.closest(".lib-word, .lib-vnum-click, .lib-flow-vnum, button, a, input, textarea, [contenteditable]")) return;
+      if (e.target.closest && e.target.closest(".lib-word, .lib-vnum, .lib-flow-vnum, button, a, input, textarea, [contenteditable]")) return;
       toggleFocus();
     }
   };
@@ -6380,8 +6380,14 @@ function LibraryView({
     });
   };
   const handleVerseNum = onVerseNumberClick && selBook ? (verse, ch = selChapter) => onVerseNumberClick(selBook.abbrev, ch, verse, translation) : null;
-  const vnumEl = (verse, ch = selChapter) => /*#__PURE__*/React.createElement("span", _extends({
-    className: "lib-vnum" + (handleVerseNum ? " lib-vnum-click" : ""),
+
+  // Outer span = the alignment gutter (fixed width, not interactive). Inner span =
+  // the actual hit target, sized to the digits, so clicking the empty space beside
+  // the number does nothing (and can't start a verse-wide text selection).
+  const vnumEl = (verse, ch = selChapter) => /*#__PURE__*/React.createElement("span", {
+    className: "lib-vnum"
+  }, /*#__PURE__*/React.createElement("span", _extends({
+    className: "lib-vnum-num" + (handleVerseNum ? " lib-vnum-click" : ""),
     title: handleVerseNum ? "Click: cross-references · Right-click / long-press: add a note" : undefined,
     onClick: handleVerseNum ? () => {
       if (vnumPressRef.current.fired) {
@@ -6390,18 +6396,20 @@ function LibraryView({
       }
       handleVerseNum(verse, ch);
     } : undefined
-  }, vnumNoteHandlers(verse, ch)), verse);
+  }, vnumNoteHandlers(verse, ch)), verse));
 
   // Verse number for non-canonical texts: opens the note menu on right-click /
   // long-press, but no cross-references (those texts have none). Left-click is a no-op
   // (just swallows the click that follows a long-press).
-  const noteVnum = (verse, cls = "lib-vnum") => /*#__PURE__*/React.createElement("span", _extends({
-    className: cls + " lib-vnum-click",
+  const noteVnum = (verse, cls = "lib-vnum") => /*#__PURE__*/React.createElement("span", {
+    className: cls
+  }, /*#__PURE__*/React.createElement("span", _extends({
+    className: "lib-vnum-num lib-vnum-click",
     title: "Right-click / long-press: add a note",
     onClick: () => {
       if (vnumPressRef.current.fired) vnumPressRef.current.fired = false;
     }
-  }, vnumNoteHandlers(verse)), verse);
+  }, vnumNoteHandlers(verse)), verse));
   const joinProse = words => {
     const tokens = words.map(w => w.english).filter(Boolean);
     return tokens.reduce((acc, tok, i) => {

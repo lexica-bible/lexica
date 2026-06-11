@@ -1544,20 +1544,26 @@ input { font-family: inherit; }
   font-family: var(--f-mono);
   font-size: 9px;
   color: var(--ink-4);
-  padding: 1px 4px;
-  border-radius: 3px;
   letter-spacing: 0.04em;
   flex: 0 0 auto;
   min-width: var(--lib-vnum-w);
   text-align: center;
   white-space: nowrap;
   align-self: flex-start;
+  user-select: none;   /* the gutter isn't text — a stray drag here must not select the verse */
   /* Center the number on the first text line by tying the offset to the reading font
      size (--lib-font-size) rather than a fixed pixel — so it stays centered at every
      size (desktop 18px, mobile 15px, any Aa setting) instead of drifting low on mobile. */
   margin-top: calc(var(--lib-line-h, 1.7) * var(--lib-font-size, 18px) / 2 - 4.3px);
 }
 
+/* The hit target — hugs the digits, so the empty alignment space beside the
+   number is inert (no stray click / cross-ref / verse highlight). */
+.lib-vnum-num {
+  display: inline-block;
+  padding: 1px 4px;
+  border-radius: 3px;
+}
 .lib-vnum-click {
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
