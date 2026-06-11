@@ -3104,6 +3104,12 @@ input { font-family: inherit; }
   /* reclaim the space the top tabs + bottom cockpit reserved */
   .app.focus-mode .main { padding-top: env(safe-area-inset-top, 0px) !important; }
   .app.view-library.focus-mode .main { padding-bottom: env(safe-area-inset-bottom, 0px) !important; }
+  /* the bottom cockpit is hidden in focus mode, so the pop-up sheet shouldn't
+     reserve space for it — sit it flush at the bottom and reclaim the height. */
+  .app.view-library.focus-mode .detail-sheet {
+    bottom: env(safe-area-inset-bottom, 0px);
+    max-height: calc(100dvh - 24px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  }
 }
 
 /* --- Desktop: darken the surroundings, spotlight the reading --- */
