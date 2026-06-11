@@ -553,7 +553,6 @@ function ModesSheet({
                   {hebShown && (
                     <button className={"mseg-b"+(translation === "heb" ? " on" : "")} aria-pressed={translation === "heb"}
                       disabled={!hebPickable} style={!hebPickable ? {opacity:0.35,cursor:"default"} : undefined}
-                      title={hebPickable ? "Hebrew OT interlinear" : "Hebrew OT — Old Testament books only"}
                       aria-label="Hebrew OT interlinear"
                       onContextMenu={(e) => e.preventDefault()}
                       onClick={() => { if (hebPickable) pickBible("heb"); }}>

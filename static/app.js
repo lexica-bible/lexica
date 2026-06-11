@@ -4531,7 +4531,6 @@ function ModesSheet({
       opacity: 0.35,
       cursor: "default"
     } : undefined,
-    title: hebPickable ? "Hebrew OT interlinear" : "Hebrew OT — Old Testament books only",
     "aria-label": "Hebrew OT interlinear",
     onContextMenu: e => e.preventDefault(),
     onClick: () => {
