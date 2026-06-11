@@ -165,8 +165,9 @@ scripts/          # build-frontend.js + one-time import/migration scripts
   `heb.db` — **PUBLIC** Hebrew OT interlinear: `heb_words` (per word: hebrew, strongs H-number, morph,
   gloss, translit, grammar) + `heb_verses`, all 39 books from STEP **TAHOT** (Translators Amalgamated
   Hebrew OT, CC BY). Loaded by `scripts/load_hebrew.py`; served by the PUBLIC `views_heb.py`
-  (`core.heb_db()`, no owner gate on the data). Owner-gated in the UI during rollout only — to go public
-  flip `hebPickable`→`hebAvail` in 60-library.jsx. Full record: memory `project_hebrew_ot_interlinear`.
+  (`core.heb_db()`, no owner gate on the data). **PUBLIC for everyone, no login (2026-06-11)** —
+  `hebPickable` gates on `hebAvail` (heb.db loaded), not the old `hebOwner`. Full record: memory
+  `project_hebrew_ot_interlinear`.
 - `<book>_words` / `<book>_verses` — non-canonical texts, each in its OWN two tables, walled off
   from the Bible's tables and from search/word counts. Built by `scripts/load_extra.py`; served by
   `/api/extra/<book>/chapter/<n>`. English-only texts (no Greek) load with an empty words table.
@@ -223,8 +224,13 @@ scripts/          # build-frontend.js + one-time import/migration scripts
 - Desktop toolbar (lib-bar): [‹ Ch input ›] | [Compare ▾] | [Strong's] [Interlinear] | [Chip] [Prose]
   (text source lives in the LEFT NAV's nav-source seg, not the toolbar. CONDENSED 2026-06-11: ABP/KJV/BSB
   stay one-click buttons; ESV*/NIV*/HEB + the non-canon books fold into a **"More ▾"** menu so the row stays
-  at 4. HEB = the public Hebrew OT interlinear (OT books only; the left book list drops the NT books in HEB
-  mode). * = owner only. Hebrew/ESV/NIV survive a refresh now via a `gatedReady` guard on the restore.)
+  at 4. HEB = the public Hebrew OT interlinear (OT books only; the left book list AND the mobile book
+  picker drop the NT books in HEB mode). ESV*/NIV* owner only; HEB is PUBLIC (no login, 2026-06-11).
+  Hebrew/ESV/NIV survive a refresh now via a `gatedReady` guard on the restore.)
+- **Mobile audio (BSB/ESV): the scrubber docks at the BOTTOM, on a strip just above the reading
+  cockpit (where play/pause lives), sliding up when a chapter loads — ALL modes incl. chronological
+  (`.lib-audio-dock`; desktop chrono keeps the inline scrubber). It clears when the chapter/passage
+  ends. The reading list gets extra bottom room (`lib-reading--audio`) so the last verse clears it.**
 - Mobile toolbar (lib-toolbar): [☰] [‹] [Book Ch ▾] [›] [ABP/KJV/Par] — sticky, fixed height 56px
 - **Compare (was "Parallel"): pick 2–4 of ABP/KJV/BSB/ESV/NIV to read side by side.** `translation === "parallel"`
   is the mode; `compareSel` (array) = which texts. Desktop = N columns (`.lib-cmp-2/3/4`); mobile = stacked,
@@ -309,8 +315,15 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   `NoteColorRow`, `NotesPanel` editor, `JournalView`/`JournalEditor`, `NotesView` tab, `AuthModal`).
   Wiring in `60-library.jsx` (selection, paint, markers, verse menu, copy/journal, `flash`) + `90-app.jsx`
   (`activeNote` + panel + Notes tab). Notes tab: text search + filters (All/Bookmarks/Highlights/Notes)
-  + sort (Recent/Reference) + collapsible group-by-book + Export/Import (JSON backup; merge-by-id) +
-  the sign-in / sync row + the Journal toggle.
+  + sort (Recent/Reference) + collapsible group-by-book + the Journal toggle. **Top decluttered
+  2026-06-11: the account email + Log out (or Log in / Sign up) sit in the title row — no "Signed in:"
+  label, no Sync-now button, and the Export/Import buttons were dropped from the UI** (the
+  store/sync code stays; account sync covers cross-device). **Mobile gotcha (fixed 2026-06-11): the
+  base `.seg`/`.seg-b` pill styling was defined ONLY in the `≥1100px` desktop block, so any `.seg`
+  control outside the Library on a phone (Notes mode/filter/sort, the owner About|Stats toggle)
+  rendered as plain run-on text — a mirror rule now lives in the `≤1099px` block.** The mobile
+  reading-options sheet (ModesSheet) shows Order + Study-layer as text labels (chip/prose + font
+  stay icons).
 
 ## TSK Cross-Reference Panel
 - Endpoint: GET /api/cross-references/curated/<book>/<chapter>/<verse>

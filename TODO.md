@@ -62,12 +62,12 @@ We play in the FREE serious-study niche — against Blue Letter Bible, STEP Bibl
 NOT Logos (paid library) or YouVersion (reading + social reach); those aren't the target. Honest
 gaps, worst-first:
 
-1. ~~**No true Hebrew OT interlinear — the one real scholarly gap.**~~ **BUILT + LIVE 2026-06-11**
-   (owner-gated rollout). Real Hebrew OT word-by-word, right-to-left, all 39 books, from **STEP TAHOT**
-   (CC BY): clean contextual glosses + real surface pronunciation + decoded grammar (on the detail card),
-   click → BDB. Own `heb.db` (PUBLIC route `views_heb.py`), `scripts/load_hebrew.py`, `renderHebVerse`.
-   The single biggest gap, CLOSED. Only leftover to fully finish: flip the UI gate public
-   (`hebPickable`→`hebAvail`). Full record: memory `project_hebrew_ot_interlinear`.
+1. ~~**No true Hebrew OT interlinear — the one real scholarly gap.**~~ **BUILT + LIVE + PUBLIC 2026-06-11.**
+   Real Hebrew OT word-by-word, right-to-left, all 39 books, from **STEP TAHOT** (CC BY): clean contextual
+   glosses + real surface pronunciation + decoded grammar (on the detail card), click → BDB. Own `heb.db`
+   (PUBLIC route `views_heb.py`), `scripts/load_hebrew.py`, `renderHebVerse`. The single biggest gap, CLOSED
+   and now public for everyone — no login (`hebPickable` gates on `hebAvail`, not the old owner flag). Full
+   record: memory `project_hebrew_ot_interlinear`.
 2. **Fewer translations** — a handful (ABP/KJV/BSB + owner ESV/NIV) vs BLB's dozens / YouVersion's
    hundreds. Cheap win: add public-domain ones (ASV, YLT, Darby, Geneva) — see "More texts".
 3. **No reading plans / devotionals / social.** That's YouVersion's whole world — deliberately NOT
@@ -160,10 +160,12 @@ Only the genuinely open items are kept below.
   ones if wanted (later).
 
 **Open: wire non-canonical texts into the Lexicon + Search tabs.**
-The word panel already shows an "In the Didache" count, but it isn't clickable and the Lexicon/Search
-tabs only know the Bible corpus. To let people browse every Didache (or future-book) verse where a
-word appears, teach those tabs about the `<book>_words` tables — best done once, generically, as a
-"non-canonical corpus" option rather than per book.
+The non-canon word panel USED to show an "In the [book]" count + an LXX cross-link, but both were
+HIDDEN 2026-06-11 because they dead-ended (`!entry.isExtra` added to abpOcc; the `extraOcc` push
+commented out in 30-detail-panel.jsx). The Lexicon/Search tabs only know the Bible corpus. To let
+people browse every Didache (or future-book) verse where a word appears, teach those tabs about the
+`<book>_words` tables — best done once, generically, as a "non-canonical corpus" option rather than
+per book. Re-show those occurrence links here once it's wired.
 `code: views_lexicon.py + LexiconView (80-lexicon.jsx); views_search.py + Search (70-search.jsx)`
 
 ### KNOWN GAP — Hebrew/Aramaic interlinear for a non-canonical text
@@ -290,8 +292,12 @@ on single-chapter passages if it ever feels redundant.
 Per-chapter audio on KJV/BSB/ESV (ABP has no recording). Full record: memory `project_esv_audio` +
 TODO_ARCHIVE. **BSB is live for everyone** — public-domain openbible.com Souer mp3s, no key, no
 self-hosting (`/api/bsb/audio`). Control = a play/pause ICON in the toolbar + a draggable progress
-bar (desktop + mobile); chrono is scroll-aware (plays the chapter at ~45% mid-screen, bar inline at
-that chapter, auto-advances). Audio is per WHOLE chapter (no per-verse timing). STILL OPEN:
+bar. **Mobile (2026-06-11): the scrubber docks at the BOTTOM, on a strip just above the reading
+cockpit, sliding up when a chapter loads — ALL modes incl. chronological (`.lib-audio-dock`); desktop
+chrono keeps the inline bar at the playing chapter.** Chrono is scroll-aware (plays the chapter at
+~45% mid-screen, auto-advances). Audio is per WHOLE chapter (no per-verse timing). STILL OPEN:
+- **Mobile dock slide-OUT animation** — the bottom scrubber slides UP when it appears but vanishes
+  instantly when the chapter/passage ends (no exit animation). Minor polish if it bugs anyone.
 - **ESV audio** — built (FCBH Bible Brain, `ENGESVN2DA` = NT-only), owner-gated; waits on `FCBH_API_KEY`
   in the WSGI (key requested 2026-06-10). OT needs a separate fileset (`ESV_AUDIO_FILESET_OT`).
 - **KJV audio** — not built; FCBH dramatized or free plain recordings exist if wanted.
