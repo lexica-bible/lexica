@@ -158,10 +158,15 @@ scripts/          # build-frontend.js + one-time import/migration scripts
 - `bdb` — Brown-Driver-Briggs Hebrew lexicon (H-numbers)
 - `pericopes` — section headings (book, chapter, verse, heading); populated from bh_scrape.db.bh_headings; display wiring pending
 - `bsb_verses` — Berean Standard Bible verse text (public domain), mirrors kjv_verses on 1-66 book ids
-- **Separate DB files (NOT bible.db, both gitignored + PA-only):** `notes.db` — user accounts/notes/
+- **Separate DB files (NOT bible.db, all gitignored + PA-only):** `notes.db` — user accounts/notes/
   highlights/journals + a `visits` table (owner-only visitor stats: day + daily IP+UA hash + referrer).
   `esv.db` — owner-only ESV text (`esv_verses`), loaded by `scripts/load_esv.py`. `niv.db` — owner-only
-  NIV text (`niv_verses`), loaded by `scripts/load_niv.py`. Both See "Owner-only features".
+  NIV text (`niv_verses`), loaded by `scripts/load_niv.py`. See "Owner-only features".
+  `heb.db` — **PUBLIC** Hebrew OT interlinear: `heb_words` (per word: hebrew, strongs H-number, morph,
+  gloss, translit, grammar) + `heb_verses`, all 39 books from STEP **TAHOT** (Translators Amalgamated
+  Hebrew OT, CC BY). Loaded by `scripts/load_hebrew.py`; served by the PUBLIC `views_heb.py`
+  (`core.heb_db()`, no owner gate on the data). Owner-gated in the UI during rollout only — to go public
+  flip `hebPickable`→`hebAvail` in 60-library.jsx. Full record: memory `project_hebrew_ot_interlinear`.
 - `<book>_words` / `<book>_verses` — non-canonical texts, each in its OWN two tables, walled off
   from the Bible's tables and from search/word counts. Built by `scripts/load_extra.py`; served by
   `/api/extra/<book>/chapter/<n>`. English-only texts (no Greek) load with an empty words table.
@@ -216,8 +221,10 @@ scripts/          # build-frontend.js + one-time import/migration scripts
 
 ## Library Tab
 - Desktop toolbar (lib-bar): [‹ Ch input ›] | [Compare ▾] | [Strong's] [Interlinear] | [Chip] [Prose]
-  (text source — ABP/KJV/BSB/ESV*/NIV* — lives in the LEFT NAV's nav-source seg, not the toolbar; * = owner only.
-  The seg goes full-width via `nav-source-seg--wide` when the owner's ESV/NIV are present so 6 buttons don't crowd.)
+  (text source lives in the LEFT NAV's nav-source seg, not the toolbar. CONDENSED 2026-06-11: ABP/KJV/BSB
+  stay one-click buttons; ESV*/NIV*/HEB + the non-canon books fold into a **"More ▾"** menu so the row stays
+  at 4. HEB = the public Hebrew OT interlinear (OT books only; the left book list drops the NT books in HEB
+  mode). * = owner only. Hebrew/ESV/NIV survive a refresh now via a `gatedReady` guard on the restore.)
 - Mobile toolbar (lib-toolbar): [☰] [‹] [Book Ch ▾] [›] [ABP/KJV/Par] — sticky, fixed height 56px
 - **Compare (was "Parallel"): pick 2–4 of ABP/KJV/BSB/ESV/NIV to read side by side.** `translation === "parallel"`
   is the mode; `compareSel` (array) = which texts. Desktop = N columns (`.lib-cmp-2/3/4`); mobile = stacked,

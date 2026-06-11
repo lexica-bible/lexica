@@ -62,13 +62,12 @@ We play in the FREE serious-study niche — against Blue Letter Bible, STEP Bibl
 NOT Logos (paid library) or YouVersion (reading + social reach); those aren't the target. Honest
 gaps, worst-first:
 
-1. **No true Hebrew OT interlinear — the one real scholarly gap.** Our OT word-by-word is Greek
-   (LXX/ABP) by design; Hebrew study leans on KJV+Strong's→BDB. BLB and STEP give a real Hebrew
-   interlinear word-for-word. Biggest thing a serious user would notice. Related plumbing already
-   noted: the non-canon "Hebrew/Aramaic interlinear" gap below, and Hebrew morphology under
-   "More texts + word grammar". **PLAN + free data sources (OpenScriptures morphhb / macula-hebrew) +
-   the work breakdown + textual-history notes are now in memory `project_hebrew_ot_interlinear` (2026-06-10)
-   — the kickoff prompt for a future session.** `code: would need BDB/H-number join + right-to-left chips in the reader`
+1. ~~**No true Hebrew OT interlinear — the one real scholarly gap.**~~ **BUILT + LIVE 2026-06-11**
+   (owner-gated rollout). Real Hebrew OT word-by-word, right-to-left, all 39 books, from **STEP TAHOT**
+   (CC BY): clean contextual glosses + real surface pronunciation + decoded grammar (on the detail card),
+   click → BDB. Own `heb.db` (PUBLIC route `views_heb.py`), `scripts/load_hebrew.py`, `renderHebVerse`.
+   The single biggest gap, CLOSED. Only leftover to fully finish: flip the UI gate public
+   (`hebPickable`→`hebAvail`). Full record: memory `project_hebrew_ot_interlinear`.
 2. **Fewer translations** — a handful (ABP/KJV/BSB + owner ESV/NIV) vs BLB's dozens / YouVersion's
    hundreds. Cheap win: add public-domain ones (ASV, YLT, Darby, Geneva) — see "More texts".
 3. **No reading plans / devotionals / social.** That's YouVersion's whole world — deliberately NOT
@@ -307,9 +306,10 @@ letters across his journeys) — nobody does this well. Coordinates and the map 
 place for the existing place sidebar, so this is smaller than it looks.
 
 ### More texts + word grammar (morphology)
-- **Word grammar everywhere:** show part-of-speech/tense/case in plain English for every word, from
-  free scholarly datasets (CATSS for Greek OT, macula-greek for NT, morphhb/macula-hebrew for Hebrew).
-  Some of this already shows for ABP Greek; this would extend coverage. `code: morph column on words`
+- **Word grammar everywhere:** plain-English part-of-speech/tense/case per word. **DONE for the Hebrew OT**
+  (2026-06-11, via STEP TAHOT — shown on the detail card; `decode_morph` in load_hebrew.py) and partly for
+  ABP Greek (~78% morph). Could extend to fuller Greek coverage (CATSS for the LXX OT, macula-greek for the
+  NT). `code: morph column on words; decode_morph in scripts/load_hebrew.py`
 - **Textus Receptus Greek NT:** add as a second NT text next to ABP. Same Strong's numbering, so it
   plugs in easily, and showing where the two Greek texts differ is genuinely rare and useful.
 - **Multi-text COMPARE — DONE + LIVE 2026-06-10** (memory `project_pericopes_parallel`). The old 2-column
