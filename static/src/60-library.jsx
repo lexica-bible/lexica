@@ -1107,8 +1107,24 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
     if (nav.chapter != null && nav.chapter !== selChapter) return;
     let raf, tries = 0;
     const tryScroll = () => {
-      if (highlightRef.current) {
-        highlightRef.current.scrollIntoView({ behavior: "smooth", block: "center" });
+      const el = highlightRef.current;
+      if (el) {
+        // Land the verse in the UPPER THIRD (a little context above, room to read
+        // forward) — not dead center. Scroll whichever box actually scrolls: the
+        // focus-mode page scrolls inside itself, otherwise the whole window.
+        let sc = el.parentElement;
+        while (sc && sc !== document.body) {
+          const oy = getComputedStyle(sc).overflowY;
+          if ((oy === "auto" || oy === "scroll") && sc.scrollHeight > sc.clientHeight + 4) break;
+          sc = sc.parentElement;
+        }
+        if (sc && sc !== document.body) {
+          const top = el.getBoundingClientRect().top - sc.getBoundingClientRect().top + sc.scrollTop;
+          sc.scrollTo({ top: Math.max(0, top - sc.clientHeight * 0.25), behavior: "smooth" });
+        } else {
+          const top = window.scrollY + el.getBoundingClientRect().top - window.innerHeight * 0.28;
+          window.scrollTo({ top: Math.max(0, top), behavior: "smooth" });
+        }
         onNavChange?.({ ...nav, scroll: false });
       } else if (tries++ < 30) {
         raf = requestAnimationFrame(tryScroll); // highlight row not rendered yet — keep waiting
