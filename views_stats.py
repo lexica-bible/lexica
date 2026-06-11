@@ -124,10 +124,24 @@ def stats():
             for r in conn.execute(
                 "SELECT ref, count(*) AS n FROM visits GROUP BY ref ORDER BY n DESC LIMIT 8")
         ]
+        # Registered accounts (notes.db users table, created by views_notes). last_seen
+        # is the newest still-valid login token for that account, or None. Guarded in
+        # case no one has signed up yet and the table doesn't exist.
+        try:
+            accounts = [
+                {"email": r["email"], "created": r["created"], "last_seen": r["last_seen"]}
+                for r in conn.execute(
+                    "SELECT u.email AS email, u.created AS created,"
+                    " (SELECT max(created) FROM tokens t WHERE t.user_id = u.id) AS last_seen"
+                    " FROM users u ORDER BY u.created DESC")
+            ]
+        except sqlite3.Error:
+            accounts = []
     finally:
         conn.close()
     return jsonify({
         "total_views": total, "unique_visitors": uniq,
         "today": v_today, "last7": v7, "last30": v30,
         "by_day": by_day, "top_ref": top_ref,
+        "accounts": accounts,
     })

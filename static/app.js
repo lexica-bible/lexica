@@ -8533,6 +8533,8 @@ function StatsView() {
     className: "stats-empty"
   }, "Loading\u2026"));
   const maxV = Math.max(1, ...data.by_day.map(d => d.views));
+  const accounts = data.accounts || [];
+  const fmtDate = s => s ? String(s).slice(0, 10) : "—";
   return /*#__PURE__*/React.createElement("div", {
     className: "stats-view"
   }, /*#__PURE__*/React.createElement("h1", {
@@ -8556,6 +8558,9 @@ function StatsView() {
   }), /*#__PURE__*/React.createElement(StatCard, {
     n: data.last30,
     label: "Last 30 days"
+  }), /*#__PURE__*/React.createElement(StatCard, {
+    n: accounts.length,
+    label: "Accounts"
   })), /*#__PURE__*/React.createElement("div", {
     className: "stats-section-title"
   }, "Views \u2014 last 30 days"), data.by_day.length === 0 ? /*#__PURE__*/React.createElement("div", {
@@ -8584,7 +8589,21 @@ function StatsView() {
     className: "stats-ref-name"
   }, r.ref), /*#__PURE__*/React.createElement("span", {
     className: "stats-ref-n"
-  }, r.n.toLocaleString())))));
+  }, r.n.toLocaleString())))), /*#__PURE__*/React.createElement("div", {
+    className: "stats-section-title"
+  }, "Accounts"), accounts.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "stats-empty"
+  }, "No accounts yet.") : /*#__PURE__*/React.createElement("div", {
+    className: "stats-refs"
+  }, accounts.map(a => /*#__PURE__*/React.createElement("div", {
+    key: a.email,
+    className: "stats-ref-row",
+    title: `Last sign-in: ${fmtDate(a.last_seen)}`
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "stats-ref-name"
+  }, a.email), /*#__PURE__*/React.createElement("span", {
+    className: "stats-ref-n"
+  }, fmtDate(a.created))))));
 }
 
 // ============================================================
