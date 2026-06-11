@@ -547,11 +547,6 @@ function ModesSheet({
                     );
                   })}
                 </div>
-                <div className="text-mode-note">
-                  {compareActive.length >= 2
-                    ? <><Icon.Columns width="14" height="14"/><span>Comparing {compareActive.length} — {compareActive.map(x=>x.toUpperCase()).join(" · ")} side by side</span></>
-                    : <><Icon.Book width="14" height="14"/><span>Reading {(compareActive[0]||"abp").toUpperCase()}</span></>}
-                </div>
                 {hebPickable && (
                   <button className={"mseg-b text-heb" + (translation === "heb" ? " on" : "")} aria-pressed={translation === "heb"}
                     onClick={() => { pickBible("heb"); onClose && onClose(); }} style={{ marginTop: 6, width: "100%" }}>
@@ -564,29 +559,17 @@ function ModesSheet({
           {chrono && !activeNonCanon && (
             <div className="mode-sec">
               <div className="mode-lbl">Order</div>
-              <div className="mseg">
-                <button className={"mseg-b"+(orderMode!=="chronological"?" on":"")} onClick={()=>setOrder("canonical")}>Canonical</button>
-                <button className={"mseg-b"+(orderMode==="chronological"?" on":"")} onClick={()=>setOrder("chronological")}>Chronological</button>
+              <div className="mseg mseg-icons">
+                <button className={"mseg-b"+(orderMode!=="chronological"?" on":"")} title="Canonical order (books in order)" aria-label="Canonical order" aria-pressed={orderMode!=="chronological"} onClick={()=>setOrder("canonical")}><Icon.Book/></button>
+                <button className={"mseg-b"+(orderMode==="chronological"?" on":"")} title="Chronological order (events in sequence)" aria-label="Chronological order" aria-pressed={orderMode==="chronological"} onClick={()=>setOrder("chronological")}><Icon.Clock/></button>
               </div>
             </div>
           )}
           <div className="mode-sec">
             <div className="mode-lbl">Study layer</div>
-            <div className="mtog">
-              <div className="mtog-row">
-                <div className="mtog-txt">
-                  <div className="mtog-name">Strong's numbers</div>
-                  <div className="mtog-sub">Tap a word for its lexicon entry</div>
-                </div>
-                <button className={"switch"+(showStrongs?" on":"")} disabled={proseLocked} style={gray} onClick={()=>!proseLocked&&setOpt("showStrongs",!showStrongs)} aria-label="Toggle Strong's" aria-pressed={showStrongs} />
-              </div>
-              <div className="mtog-row">
-                <div className="mtog-txt">
-                  <div className="mtog-name">Interlinear</div>
-                  <div className="mtog-sub">Stack Greek, transliteration &amp; gloss</div>
-                </div>
-                <button className={"switch"+(showInterlinear?" on":"")} disabled={proseLocked} style={gray} onClick={()=>!proseLocked&&setOpt("showInterlinear",!showInterlinear)} aria-label="Toggle Interlinear" aria-pressed={showInterlinear} />
-              </div>
+            <div className="mseg mseg-icons">
+              <button className={"mseg-b"+(showStrongs?" on":"")} disabled={proseLocked} style={gray} title="Strong's numbers (tap a word for its lexicon entry)" aria-label="Strong's numbers" aria-pressed={showStrongs} onClick={()=>!proseLocked&&setOpt("showStrongs",!showStrongs)}><Icon.Hash/></button>
+              <button className={"mseg-b"+(showInterlinear?" on":"")} disabled={proseLocked} style={gray} title="Interlinear (stack Greek, transliteration & gloss)" aria-label="Interlinear" aria-pressed={showInterlinear} onClick={()=>!proseLocked&&setOpt("showInterlinear",!showInterlinear)}><Icon.Interlinear/></button>
             </div>
           </div>
           <div className="mode-sec">

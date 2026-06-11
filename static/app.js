@@ -4573,15 +4573,7 @@ function ModesSheet({
       className: "mseg-chk",
       "aria-hidden": "true"
     }, "\u2713"), id.toUpperCase());
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "text-mode-note"
-  }, compareActive.length >= 2 ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Icon.Columns, {
-    width: "14",
-    height: "14"
-  }), /*#__PURE__*/React.createElement("span", null, "Comparing ", compareActive.length, " \u2014 ", compareActive.map(x => x.toUpperCase()).join(" · "), " side by side")) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Icon.Book, {
-    width: "14",
-    height: "14"
-  }), /*#__PURE__*/React.createElement("span", null, "Reading ", (compareActive[0] || "abp").toUpperCase()))), hebPickable && /*#__PURE__*/React.createElement("button", {
+  })), hebPickable && /*#__PURE__*/React.createElement("button", {
     className: "mseg-b text-heb" + (translation === "heb" ? " on" : ""),
     "aria-pressed": translation === "heb",
     onClick: () => {
@@ -4600,50 +4592,42 @@ function ModesSheet({
   }, /*#__PURE__*/React.createElement("div", {
     className: "mode-lbl"
   }, "Order"), /*#__PURE__*/React.createElement("div", {
-    className: "mseg"
+    className: "mseg mseg-icons"
   }, /*#__PURE__*/React.createElement("button", {
     className: "mseg-b" + (orderMode !== "chronological" ? " on" : ""),
+    title: "Canonical order (books in order)",
+    "aria-label": "Canonical order",
+    "aria-pressed": orderMode !== "chronological",
     onClick: () => setOrder("canonical")
-  }, "Canonical"), /*#__PURE__*/React.createElement("button", {
+  }, /*#__PURE__*/React.createElement(Icon.Book, null)), /*#__PURE__*/React.createElement("button", {
     className: "mseg-b" + (orderMode === "chronological" ? " on" : ""),
+    title: "Chronological order (events in sequence)",
+    "aria-label": "Chronological order",
+    "aria-pressed": orderMode === "chronological",
     onClick: () => setOrder("chronological")
-  }, "Chronological"))), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement(Icon.Clock, null)))), /*#__PURE__*/React.createElement("div", {
     className: "mode-sec"
   }, /*#__PURE__*/React.createElement("div", {
     className: "mode-lbl"
   }, "Study layer"), /*#__PURE__*/React.createElement("div", {
-    className: "mtog"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "mtog-row"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "mtog-txt"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "mtog-name"
-  }, "Strong's numbers"), /*#__PURE__*/React.createElement("div", {
-    className: "mtog-sub"
-  }, "Tap a word for its lexicon entry")), /*#__PURE__*/React.createElement("button", {
-    className: "switch" + (showStrongs ? " on" : ""),
+    className: "mseg mseg-icons"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "mseg-b" + (showStrongs ? " on" : ""),
     disabled: proseLocked,
     style: gray,
-    onClick: () => !proseLocked && setOpt("showStrongs", !showStrongs),
-    "aria-label": "Toggle Strong's",
-    "aria-pressed": showStrongs
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "mtog-row"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "mtog-txt"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "mtog-name"
-  }, "Interlinear"), /*#__PURE__*/React.createElement("div", {
-    className: "mtog-sub"
-  }, "Stack Greek, transliteration & gloss")), /*#__PURE__*/React.createElement("button", {
-    className: "switch" + (showInterlinear ? " on" : ""),
+    title: "Strong's numbers (tap a word for its lexicon entry)",
+    "aria-label": "Strong's numbers",
+    "aria-pressed": showStrongs,
+    onClick: () => !proseLocked && setOpt("showStrongs", !showStrongs)
+  }, /*#__PURE__*/React.createElement(Icon.Hash, null)), /*#__PURE__*/React.createElement("button", {
+    className: "mseg-b" + (showInterlinear ? " on" : ""),
     disabled: proseLocked,
     style: gray,
-    onClick: () => !proseLocked && setOpt("showInterlinear", !showInterlinear),
-    "aria-label": "Toggle Interlinear",
-    "aria-pressed": showInterlinear
-  })))), /*#__PURE__*/React.createElement("div", {
+    title: "Interlinear (stack Greek, transliteration & gloss)",
+    "aria-label": "Interlinear",
+    "aria-pressed": showInterlinear,
+    onClick: () => !proseLocked && setOpt("showInterlinear", !showInterlinear)
+  }, /*#__PURE__*/React.createElement(Icon.Interlinear, null)))), /*#__PURE__*/React.createElement("div", {
     className: "mode-sec"
   }, /*#__PURE__*/React.createElement("div", {
     className: "mode-lbl"
