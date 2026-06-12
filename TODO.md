@@ -300,8 +300,13 @@ metaV sidebar (696 name-topics). Verse text = ABP prose (KJV fallback). OPEN:
   each with its own claim + verses; resolution weighs them; Tension bucket dropped for arguments.
   Denominations unchanged. Legacy arguments convert on read (support→A, tension→B).
 - PUBLIC vs admin-only: DECIDED — stays admin-only for now (user's call). Draft/published kept for later.
-- Reader-facing guided WALKTHROUGH view (the stepped topic-reading mockup) — NOT built (next; mock first).
-- Optional: fold MetaV `Writers` in (replace hand `_BOOK_AUTHORS`).
+- Reader WALKTHROUGH view: BUILT + pushed 2026-06-12 (commit 0448147; awaiting deploy). "Walk through"
+  button on a topic → stepped one-subtopic-at-a-time read, long sections auto-split, progress + Back/Next +
+  arrow keys.
+- "Preview as reader" toggle: BUILT (same commit). Admin flips Study into the clean reader view (no Edit/
+  New/drafts, published-only). Side effect: all three types now open to a READ page first (Edit in admin).
+- Optional next: tap a walkthrough verse → jump into the Library reader (not wired). Fold MetaV `Writers`
+  in (replace hand `_BOOK_AUTHORS`).
 `code: views_study.py + static/src/55-study.jsx; scripts/load_study_topics.py (gusheng/MetaV); memory project_study_modules`
 
 ### ~~Chronological reading mode~~ — DONE + LIVE 2026-06-09 (desktop + mobile)
