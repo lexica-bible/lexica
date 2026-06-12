@@ -77,12 +77,23 @@ Pick effort by task TYPE. When in doubt, lean higher — the plan affords it.
   `google-auth`) + `GOOGLE_CLIENT_ID` in the WSGI + the Google consent screen Published. Google sign-in
   degrades safely (button hidden) if any piece is missing, so a code-only deploy never breaks.
   `notes.db` is gitignored (`*.db`) like bible.db — it holds user accounts/notes, managed on PA.
-- **Owner-only features (ESV text + audio, visitor stats) — code LIVE 2026-06-10.** ONE site-owner
-  gate: `views_notes.is_owner()` checks the login bearer token's email against `OWNER_EMAIL` (WSGI
-  env; falls back to the older `ESV_OWNER_EMAIL`). Set `OWNER_EMAIL = '<your-owner-email>'` in the
-  WSGI (above the import) + reload — that one var gates BOTH the ESV reader and the Stats dashboard.
-  Owner sign-in shows: a private **Stats** view (About → About|Stats toggle; counter in `notes.db`,
-  no 3rd party) and the **ESV + NIV** reading texts. ESV text is **LOADED + LIVE 2026-06-10** (`scripts/load_esv.py`
+- **Account roles: nologin / user / berean / admin (LIVE 2026-06-11).** A `role` column on
+  notes.db `users` (default `user`; migrates in on first run). Gates in `views_notes`:
+  `role_for_token()`, `is_admin()`, `is_berean()` (berean OR admin), `is_logged_in()`. The
+  `OWNER_EMAIL` account is ALWAYS admin (bootstrap — resolves to admin even before the column
+  migrates, so a deploy never drops you). `is_owner()` is now just an alias for `is_admin()`
+  (visitor stats unchanged). **What each tier unlocks:** nologin = everything public; **user**
+  (any sign-in) = AI search (`/api/ai-search` is login-gated — it costs API money; 401 + "sign in"
+  to signed-out); **berean** (trusted friends) = the ESV + NIV reading texts (ESV/NIV routes +
+  status now use `is_berean`, not owner); **admin** (you) = visitor Stats + the in-app **Admin**
+  page (About → About|Stats|Admin), which lists accounts and sets each one's role
+  (`/api/admin/users` + `/api/admin/role`, 404 to non-admins; owner row locked to admin).
+  Set `OWNER_EMAIL = '<your-owner-email>'` in the WSGI (above the import) + reload. Promote a
+  friend to berean via the Admin page. Frontend gating rides the status endpoints (stats/owner =
+  admin, esv/niv status = berean) — no role stored client-side. See memory `project_user_roles`.
+- **Owner/berean reading features.** Owner/berean sign-in shows: a private **Stats** view (admin
+  only; About → About|Stats toggle; counter in `notes.db`, no 3rd party) and the **ESV + NIV**
+  reading texts (berean+). ESV text is **LOADED + LIVE 2026-06-10** (`scripts/load_esv.py`
   from github.com/lguenth/mdbible → `esv.db` = 31,104 verses, all 66 books; `esv.db` gitignored, PA-only).
   **NIV = a 2nd owner-only text mirroring ESV exactly (LIVE 2026-06-10): `views_niv.py`, own `niv.db`,
   NIV toggle next to ESV; TEXT-ONLY (no NIV audio — FCBH doesn't carry it). Loaded by
