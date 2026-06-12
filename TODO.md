@@ -289,6 +289,29 @@ category *names* (renamed to drop loaded framing); generate the actual verses an
 Berean-style. Build a quick proof-of-concept with the off-the-shelf topic→verse mappings first to see
 if people use it, then swap in our own verse selection. Could be a new tab or a mode inside Search.
 
+### Study modules — admin-only tab (design done 2026-06-12, not built)
+A new **admin-gated tab** (gate like the Admin page) holding three related study tools that all run on
+ONE shared engine, so it's one build + mostly data entry, not three features:
+- **Guided study (topics)** — pick a topic, get walked through its verses step by step (intro → Step N
+  of M with next/back → verse + plain note + reflection question → related). This is the Topic browser
+  above, made into a guided walk. Topic data = the **MetaV `Topics.csv`** (the same theographic metadata
+  the People/Places sidebars use). NOTE: `scripts/load_metav.py` loads People/Places/Writers but NOT the
+  topics file — pulling that in is step one. The user will author his own, deeper topics on top.
+- **Denomination chart** — what a group believes + the verses behind it; reframed (his call) NOT as
+  "where they're wrong" but the verses that hold it in TENSION and where the middle road / resolution is.
+- **Common arguments** — two sides, what each leans on, implications, where the text lands or stays a mystery.
+
+The shared per-entry shape (one editor builds all three): **position** (the claim) · **support** (verses
+for it) · **tension** (verses against it) · **resolution** (middle road the text points to, OR marked an
+open mystery) · **notes** (private) · **related** (links to other entries). Editor only takes a verse
+REFERENCE — the verse text auto-fills from the corpus, so long verse lists stay cheap to enter. What's
+saved in the editor is what the reader views render. First build step = the data shape + the admin editor
+(content entry stalls everything otherwise; consider AI-drafts-you-correct). Two layout mockups shown
+2026-06-12 (reader walkthrough + admin editor). Intentionally bends the app's "no imposed theology" rule —
+his app, his direction; the tension-verse framing keeps the TEXT as judge. Open: public vs his-eyes-only.
+`code: new admin tab (gate via views_notes is_admin); topics from scripts/load_metav.py + MetaV Topics.csv;
+memory project_study_modules`
+
 ### ~~Chronological reading mode~~ — DONE + LIVE 2026-06-09 (desktop + mobile)
 Read the Bible in event order, works with ANY version (ABP/KJV/BSB). Shipped as a reading-ORDER
 toggle in the Library (Canonical | Clock icon = Chronological), NOT a separate tab. Data is a static
