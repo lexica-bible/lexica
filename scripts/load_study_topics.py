@@ -237,6 +237,9 @@ def main():
 
     conn = sqlite3.connect(db_path)
     ensure_table(conn)
+    if args.replace:
+        cleared = conn.execute("DELETE FROM entries WHERE id GLOB 'metav_*'").rowcount
+        print(f"Cleared {cleared:,} prior MetaV imports (re-importing fresh).")
     now = _now()
     created = skipped = 0
     for main, sections in built:
