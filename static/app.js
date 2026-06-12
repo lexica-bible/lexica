@@ -5838,14 +5838,6 @@ function LibraryView({
             className: "lib-chrono-chapmark"
           }, selBook ? selBook.name : "", " ", v._ch));
         }
-        // Audio progress bar above the chapter that's currently playing — DESKTOP only.
-        // On mobile the scrubber docks at the bottom cockpit like every other mode.
-        if (!isMobile && audioCapable && audioUrl && curPassage && audioKey === curPassage.book + "-" + v._ch) {
-          out.push(/*#__PURE__*/React.createElement("div", {
-            key: `cb-${v._ch}`,
-            className: "lib-chrono-audio-bar"
-          }, audioProgress));
-        }
         lastCh = v._ch;
       }
       out.push(renderFn(v));
@@ -5917,17 +5909,22 @@ function LibraryView({
     onChange: seekAudio,
     "aria-label": "Audio position"
   });
-  // Where the visible seek bar sits:
-  //  - mobile (ALL modes): a strip docked just above the bottom reading cockpit, sliding
-  //    up when a chapter loads. Play/pause stays in the cockpit; this is only the scrubber.
-  //  - desktop chrono: inline above the playing chapter (rendered at its divider in
-  //    withMarks); here we only mount the hidden <audio>.
-  //  - desktop canonical: a row right under the toolbar.
-  const mobileDockShown = isMobile && !!audioEl;
-  // When the mobile dock disappears (chapter/passage ended), keep it mounted one beat so it can
+  // The bottom player only mounts once audio is loaded, so its button just plays/pauses
+  // the current track (nothing to "start" — that's the toolbar/cockpit button's job).
+  const onDockAudio = () => {
+    const a = audioRef.current;
+    if (!a) return;
+    if (a.paused) a.play().catch(() => {});else a.pause();
+  };
+  // ONE self-contained player — play/pause + scrubber — docked at the bottom in every
+  // mode, desktop AND mobile. It floats ABOVE the focus-mode wash so audio stays
+  // controllable in reading mode (where the toolbar play/pause is hidden). Mobile
+  // repositions it just above the bottom cockpit (CSS).
+  const dockShown = !!audioEl;
+  // When the dock disappears (chapter/passage ended), keep it mounted one beat so it can
   // slide OUT instead of vanishing. A re-open cancels the pending close.
   useEffect(() => {
-    if (mobileDockShown) {
+    if (dockShown) {
       dockWasShown.current = true;
       if (dockClosing) setDockClosing(false);
     } else if (dockWasShown.current) {
@@ -5936,15 +5933,21 @@ function LibraryView({
       const t = setTimeout(() => setDockClosing(false), 240);
       return () => clearTimeout(t);
     }
-  }, [mobileDockShown]);
-  const audioBar = audioEl ? isMobile ? /*#__PURE__*/React.createElement("div", {
+  }, [dockShown]);
+  const dockPlayer = /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
+    className: "lib-audio-dock-btn",
+    onClick: onDockAudio,
+    disabled: audioBusy,
+    title: audioPlaying ? "Pause audio" : "Play audio",
+    "aria-label": audioPlaying ? "Pause audio" : "Play audio",
+    "aria-pressed": audioPlaying
+  }, audioPlaying ? /*#__PURE__*/React.createElement(Icon.Pause, null) : /*#__PURE__*/React.createElement(Icon.Play, null)), audioProgress);
+  const audioBar = audioEl ? /*#__PURE__*/React.createElement("div", {
     className: "lib-audio-dock"
-  }, audioProgress, audioEl) : chronoOn ? audioEl : /*#__PURE__*/React.createElement("div", {
-    className: "lib-audio-bar-row"
-  }, audioProgress, audioEl) : dockClosing ? /*#__PURE__*/React.createElement("div", {
+  }, dockPlayer, audioEl) : dockClosing ? /*#__PURE__*/React.createElement("div", {
     className: "lib-audio-dock lib-audio-dock--out"
-  }, audioProgress) : null;
-  const audioDockOn = !!audioEl && isMobile; // drives the reading-list bottom clearance (all mobile modes)
+  }, dockPlayer) : null;
+  const audioDockOn = !!audioEl; // drives the reading-list bottom clearance (desktop + mobile)
   const audioBtn = audioCapable ? /*#__PURE__*/React.createElement("button", {
     className: "lib-toggle lib-toggle-icon" + (showPause ? " on" : ""),
     disabled: audioBusy,

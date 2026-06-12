@@ -1293,11 +1293,6 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
         if (!singleChapterPassage) {
           out.push(<div key={`cm-${v._ch}`} data-ch={v._ch} className="lib-chrono-chapmark">{selBook ? selBook.name : ""} {v._ch}</div>);
         }
-        // Audio progress bar above the chapter that's currently playing — DESKTOP only.
-        // On mobile the scrubber docks at the bottom cockpit like every other mode.
-        if (!isMobile && audioCapable && audioUrl && curPassage && audioKey === (curPassage.book + "-" + v._ch)) {
-          out.push(<div key={`cb-${v._ch}`} className="lib-chrono-audio-bar">{audioProgress}</div>);
-        }
         lastCh = v._ch;
       }
       out.push(renderFn(v));
@@ -1350,17 +1345,21 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
     <input className="lib-audio-bar" type="range" min="0" max={audioDur || 0} step="0.1"
       value={Math.min(audioCur, audioDur || 0)} onChange={seekAudio} aria-label="Audio position" />
   );
-  // Where the visible seek bar sits:
-  //  - mobile (ALL modes): a strip docked just above the bottom reading cockpit, sliding
-  //    up when a chapter loads. Play/pause stays in the cockpit; this is only the scrubber.
-  //  - desktop chrono: inline above the playing chapter (rendered at its divider in
-  //    withMarks); here we only mount the hidden <audio>.
-  //  - desktop canonical: a row right under the toolbar.
-  const mobileDockShown = isMobile && !!audioEl;
-  // When the mobile dock disappears (chapter/passage ended), keep it mounted one beat so it can
+  // The bottom player only mounts once audio is loaded, so its button just plays/pauses
+  // the current track (nothing to "start" — that's the toolbar/cockpit button's job).
+  const onDockAudio = () => {
+    const a = audioRef.current; if (!a) return;
+    if (a.paused) a.play().catch(() => {}); else a.pause();
+  };
+  // ONE self-contained player — play/pause + scrubber — docked at the bottom in every
+  // mode, desktop AND mobile. It floats ABOVE the focus-mode wash so audio stays
+  // controllable in reading mode (where the toolbar play/pause is hidden). Mobile
+  // repositions it just above the bottom cockpit (CSS).
+  const dockShown = !!audioEl;
+  // When the dock disappears (chapter/passage ended), keep it mounted one beat so it can
   // slide OUT instead of vanishing. A re-open cancels the pending close.
   useEffect(() => {
-    if (mobileDockShown) {
+    if (dockShown) {
       dockWasShown.current = true;
       if (dockClosing) setDockClosing(false);
     } else if (dockWasShown.current) {
@@ -1369,13 +1368,21 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
       const t = setTimeout(() => setDockClosing(false), 240);
       return () => clearTimeout(t);
     }
-  }, [mobileDockShown]);
+  }, [dockShown]);
+  const dockPlayer = (
+    <>
+      <button className="lib-audio-dock-btn" onClick={onDockAudio} disabled={audioBusy}
+        title={audioPlaying ? "Pause audio" : "Play audio"}
+        aria-label={audioPlaying ? "Pause audio" : "Play audio"} aria-pressed={audioPlaying}>
+        {audioPlaying ? <Icon.Pause/> : <Icon.Play/>}
+      </button>
+      {audioProgress}
+    </>
+  );
   const audioBar = audioEl
-    ? (isMobile ? <div className="lib-audio-dock">{audioProgress}{audioEl}</div>
-      : chronoOn ? audioEl
-      : <div className="lib-audio-bar-row">{audioProgress}{audioEl}</div>)
-    : (dockClosing ? <div className="lib-audio-dock lib-audio-dock--out">{audioProgress}</div> : null);
-  const audioDockOn = !!audioEl && isMobile;   // drives the reading-list bottom clearance (all mobile modes)
+    ? <div className="lib-audio-dock">{dockPlayer}{audioEl}</div>
+    : (dockClosing ? <div className="lib-audio-dock lib-audio-dock--out">{dockPlayer}</div> : null);
+  const audioDockOn = !!audioEl;   // drives the reading-list bottom clearance (desktop + mobile)
   const audioBtn = audioCapable ? (
     <button className={"lib-toggle lib-toggle-icon" + (showPause ? " on" : "")}
       disabled={audioBusy}

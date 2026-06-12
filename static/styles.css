@@ -1517,17 +1517,37 @@ input { font-family: inherit; }
   padding: 40px 0;
 }
 
-/* Chapter read-along audio (BSB + ESV). Play/pause is a toolbar icon; this is the
-   draggable progress bar that sits just under the toolbar while audio is loaded. */
-.lib-audio-bar-row { padding: 4px 18px 0; }
+/* Chapter read-along audio (BSB/ESV/KJV). A self-contained bottom player — play/pause
+   + draggable scrubber — docked at the bottom in every mode, desktop and mobile. It
+   floats ABOVE the focus-mode wash so it still works in reading mode (where the toolbar
+   play/pause is hidden). Mobile repositions it above the bottom cockpit (mobile block). */
+.lib-audio-dock {
+  position: fixed; left: 0; right: 0; bottom: 0;
+  z-index: 62;                 /* above the focus wash (50), reading sheet (60), arrows (61) */
+  display: flex; align-items: center; gap: 12px;
+  padding: 8px 18px calc(8px + env(safe-area-inset-bottom, 0px));
+  background: color-mix(in oklab, var(--bg) 86%, #fff);
+  backdrop-filter: blur(6px);
+  border-top: 1px solid var(--rule);
+  animation: audio-dock-up 0.26s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.lib-audio-dock--out { animation: audio-dock-down 0.24s cubic-bezier(0.4, 0, 1, 1) forwards; pointer-events: none; }
+.lib-audio-dock-btn {
+  flex: none; display: inline-flex; align-items: center; justify-content: center;
+  width: 34px; height: 34px; padding: 0;
+  border: 1px solid var(--rule); border-radius: 50%;
+  background: var(--ctl-bg); color: var(--ink);
+  cursor: pointer; transition: background 0.15s;
+}
+.lib-audio-dock-btn:hover:not(:disabled) { background: var(--ctl-on); }
+.lib-audio-dock-btn:disabled { opacity: 0.5; cursor: default; }
 .lib-audio-bar {
-  display: block;
-  width: 100%;
-  max-width: 640px;
-  margin: 4px 0 0;
+  flex: 1; display: block; width: 100%; margin: 0;
   accent-color: var(--ink);
   cursor: pointer;
 }
+/* Last verse clears the fixed bottom player while it's showing (desktop). */
+.lib-reading--audio { padding-bottom: 64px; }
 
 /* Verse reading container — all modes */
 .lib-text-words {
@@ -2126,25 +2146,19 @@ input { font-family: inherit; }
   .app.view-library .mbar-logo-btn { display: none; }  /* pointless in the bottom cockpit */
   /* Bottom clearance for the cockpit; top clearance is global (.main above). */
   .app.view-library .main { padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
-  /* Audio scrubber: a strip that docks just ON TOP of the bottom cockpit and slides up
-     when a chapter loads (play/pause stays in the cockpit; this is only the seek bar).
-     z below the detail/modes sheets (51/220) so an open sheet covers it, above content. */
+  /* The bottom player (base styles in the dock block) docks just ON TOP of the bottom
+     cockpit on mobile, not flush at the screen edge. z below the detail/modes sheets
+     (51/220) so an open sheet covers it, above content. */
   .app.view-library .lib-audio-dock {
-    position: fixed; left: 0; right: 0;
     bottom: calc(56px + env(safe-area-inset-bottom, 0px));
     z-index: 49;
     padding: 8px 16px;
-    background: color-mix(in oklab, var(--bg) 84%, #fff);
-    backdrop-filter: blur(6px);
-    border-top: 1px solid var(--rule);
-    animation: audio-dock-up 0.26s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
-  /* Chapter ended → slide the strip back down instead of cutting it instantly. */
-  .app.view-library .lib-audio-dock--out {
-    animation: audio-dock-down 0.24s cubic-bezier(0.4, 0, 1, 1) forwards;
-    pointer-events: none;
-  }
-  .app.view-library .lib-audio-dock .lib-audio-bar { margin: 0; max-width: none; }
+  /* The cockpit already carries play/pause, so the dock is scrubber-only on mobile —
+     except in focus mode, where the cockpit is hidden and the dock button is the
+     only audio control. */
+  .app.view-library .lib-audio-dock-btn { display: none; }
+  .app.view-library.focus-mode .lib-audio-dock-btn { display: inline-flex; }
   /* Last verse clears the cockpit + the dock strip while it's showing. */
   .lib-reading--audio { padding-bottom: 52px; }
 }
@@ -2732,9 +2746,6 @@ input { font-family: inherit; }
 /* Parallel: center the pill between the two columns, don't stretch it full-width */
 .lib-parallel .lib-chrono-chapmark { margin-left: 0; align-self: center; }
 .lib-chrono-chapmark:first-child { margin-top: 2px; }
-/* Chrono: audio progress bar shown above the chapter that's playing */
-.lib-chrono-audio-bar { margin: 2px 0 10px; }
-.lib-chrono-audio-bar .lib-audio-bar { margin: 0; }
 
 /* ============================================================
    STATS — owner-only visitor dashboard
@@ -3175,10 +3186,12 @@ input { font-family: inherit; }
   .app.focus-mode .nav,
   .app.focus-mode .lib-bar,
   .app.focus-mode .mobile-tabs,
-  .app.focus-mode .lib-toolbar,
-  .app.focus-mode .lib-audio-dock,
-  .app.focus-mode .lib-audio-bar-row,
-  .app.focus-mode .lib-chrono-audio-bar { display: none !important; }
+  .app.focus-mode .lib-toolbar { display: none !important; }
+  /* The audio player STAYS in focus mode — it's the only audio control once the cockpit
+     is hidden. Drop it to the very bottom (the cockpit it normally sits above is gone). */
+  .app.view-library.focus-mode .lib-audio-dock {
+    bottom: 0; padding-bottom: calc(8px + env(safe-area-inset-bottom, 0px));
+  }
   /* reclaim the space the top tabs + bottom cockpit reserved */
   .app.focus-mode .main { padding-top: env(safe-area-inset-top, 0px) !important; }
   .app.view-library.focus-mode .main { padding-bottom: env(safe-area-inset-bottom, 0px) !important; }
@@ -3212,6 +3225,8 @@ input { font-family: inherit; }
   }
   /* in focus mode the page is its own frame — don't reserve the side-panel gutter */
   .app.focus-mode.has-detail .lib-reading { padding-right: 46px; }
+  /* when audio's playing, lift the page bottom clear of the docked player below it */
+  .app.focus-mode .lib-reading--audio { bottom: 80px; }
 }
 @keyframes focus-dim-in { from { opacity: 0; } to { opacity: 1; } }
 
