@@ -109,9 +109,10 @@ function AboutView({ owner }) {
           <div className="seg about-owner-seg">
             <button className={"seg-b" + (tab === "about" ? " on" : "")} onClick={() => setTab("about")}>About</button>
             <button className={"seg-b" + (tab === "stats" ? " on" : "")} onClick={() => setTab("stats")}>Stats</button>
+            <button className={"seg-b" + (tab === "admin" ? " on" : "")} onClick={() => setTab("admin")}>Admin</button>
           </div>
         )}
-        {owner && tab === "stats" ? <StatsView /> : (
+        {owner && tab === "stats" ? <StatsView /> : owner && tab === "admin" ? <AdminView /> : (
         <>
         <h1 className="about-title">About Lexica</h1>
         <p className="about-lead">A Greek and Hebrew word study tool for the diligent Berean. No seminary required.</p>

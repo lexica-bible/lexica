@@ -25,7 +25,7 @@ import sqlite3
 from flask import Blueprint, jsonify
 
 from core import db_ro, niv_db, _KJV_BOOK_ID
-from views_notes import is_owner as _is_owner   # shared site-owner gate (OWNER_EMAIL)
+from views_notes import is_berean as _can_niv   # NIV reading text = berean+ (trusted friends)
 
 bp = Blueprint("niv", __name__)
 
@@ -34,12 +34,12 @@ bp = Blueprint("niv", __name__)
 def niv_status():
     """The frontend asks this to decide whether to show the NIV toggle. It's just
     a yes/no — the owner's email never leaves the server."""
-    return jsonify({"owner": _is_owner()})
+    return jsonify({"owner": _can_niv()})
 
 
 @bp.route("/api/niv/chapter/<book>/<int:chapter>")
 def niv_chapter(book, chapter):
-    if not _is_owner():
+    if not _can_niv():
         return jsonify({"error": "not found"}), 404      # opaque to non-owners
     book_id = _KJV_BOOK_ID.get(book)
     if book_id is None:

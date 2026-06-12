@@ -81,6 +81,10 @@ def _ensure_tables():
             " updated TEXT NOT NULL, deleted INTEGER NOT NULL DEFAULT 0,"
             " PRIMARY KEY (code, id))"
         )
+        # Role tier per account (added 2026-06-11). Older dbs predate the column.
+        cols = [r[1] for r in conn.execute("PRAGMA table_info(users)").fetchall()]
+        if "role" not in cols:
+            conn.execute("ALTER TABLE users ADD COLUMN role TEXT NOT NULL DEFAULT 'user'")
         conn.commit()
     finally:
         conn.close()
@@ -118,19 +122,59 @@ def email_for_token(conn):
     return row["email"] if row else None
 
 
-def is_owner():
-    """True only when the request carries a valid bearer token whose account email
-    matches OWNER_EMAIL. The gate behind every owner-only feature."""
-    if not OWNER_EMAIL:
-        return False
+# Account tiers (lowest → highest). A signed-out visitor is "nologin" (not stored).
+#   user   — any signed-in account (the default for a new signup)
+#   berean — trusted friends; unlocks the gated reading texts (ESV / NIV)
+#   admin  — full control incl. visitor stats + role management (that's you)
+# The OWNER_EMAIL account is ALWAYS admin (bootstrap — you can't lock yourself out),
+# whatever its stored role says.
+_ROLES = ("user", "berean", "admin")
+
+
+def role_for_token():
+    """The caller's tier: 'admin' / 'berean' / 'user' when signed in, else 'nologin'."""
     conn = notes_db()
     try:
-        email = email_for_token(conn)
+        uid = _user_for_token(conn)
+        if uid is None:
+            return "nologin"
+        row = conn.execute("SELECT email FROM users WHERE id = ?", (uid,)).fetchone()
+        if not row:
+            return "nologin"
+        # Owner email is always admin (bootstrap) — true even before the role column exists.
+        if OWNER_EMAIL and (row["email"] or "").strip().lower() == OWNER_EMAIL:
+            return "admin"
+        try:
+            rr = conn.execute("SELECT role FROM users WHERE id = ?", (uid,)).fetchone()
+            role = (rr["role"] or "user").strip().lower() if rr else "user"
+        except sqlite3.Error:
+            role = "user"          # role column not migrated yet -> default tier
+        return role if role in _ROLES else "user"
     except sqlite3.Error:
-        return False
+        return "nologin"
     finally:
         conn.close()
-    return bool(email) and email.strip().lower() == OWNER_EMAIL
+
+
+def is_admin():
+    """Full-control tier (visitor stats, role management)."""
+    return role_for_token() == "admin"
+
+
+def is_berean():
+    """Berean+ — unlocks the gated reading texts (ESV / NIV). Admin counts too."""
+    return role_for_token() in ("berean", "admin")
+
+
+def is_logged_in():
+    """Any signed-in account (for login-gated features like AI search)."""
+    return role_for_token() != "nologin"
+
+
+def is_owner():
+    """Back-compat alias: 'owner-only' now means admin (the owner email is always
+    admin). Keeps the visitor-stats gate working unchanged."""
+    return is_admin()
 
 
 def _read_creds():
@@ -272,7 +316,62 @@ def me():
         conn.close()
     if not row:
         return jsonify({"error": "not signed in"}), 401
-    return jsonify({"email": row["email"]})
+    return jsonify({"email": row["email"], "role": role_for_token()})
+
+
+@bp.route("/api/admin/users", methods=["GET"])
+def admin_users():
+    """Admin-only: list accounts + roles for the in-app admin page. 404 otherwise."""
+    if not is_admin():
+        return jsonify({"error": "not found"}), 404
+    _ensure_tables()
+    conn = notes_db()
+    try:
+        rows = conn.execute(
+            "SELECT id, email, role, created FROM users ORDER BY created"
+        ).fetchall()
+    finally:
+        conn.close()
+    out = []
+    for r in rows:
+        is_owner_row = bool(OWNER_EMAIL and (r["email"] or "").strip().lower() == OWNER_EMAIL)
+        out.append({
+            "id": r["id"],
+            "email": r["email"],
+            "role": "admin" if is_owner_row else (r["role"] or "user"),
+            "owner": is_owner_row,          # the owner-email account — role is locked to admin
+            "created": r["created"],
+        })
+    return jsonify({"users": out})
+
+
+@bp.route("/api/admin/role", methods=["POST"])
+@limiter.limit("60 per hour")
+def admin_set_role():
+    """Admin-only: set one account's role (user / berean / admin)."""
+    if not is_admin():
+        return jsonify({"error": "not found"}), 404
+    try:
+        body = json.loads(request.get_data(cache=False) or b"{}")
+    except (ValueError, TypeError):
+        return jsonify({"error": "bad request"}), 400
+    uid = (body or {}).get("user_id")
+    role = ((body or {}).get("role") or "").strip().lower()
+    if role not in _ROLES:
+        return jsonify({"error": "bad role"}), 400
+    _ensure_tables()
+    conn = notes_db()
+    try:
+        row = conn.execute("SELECT email FROM users WHERE id = ?", (uid,)).fetchone()
+        if not row:
+            return jsonify({"error": "no such user"}), 404
+        if OWNER_EMAIL and (row["email"] or "").strip().lower() == OWNER_EMAIL:
+            return jsonify({"error": "The owner account is always admin."}), 400
+        conn.execute("UPDATE users SET role = ? WHERE id = ?", (role, uid))
+        conn.commit()
+    finally:
+        conn.close()
+    return jsonify({"ok": True})
 
 
 @bp.route("/api/notes/sync", methods=["POST"])

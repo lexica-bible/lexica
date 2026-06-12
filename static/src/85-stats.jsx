@@ -86,3 +86,54 @@ function StatsView() {
     </div>
   );
 }
+
+// ============================================================
+// ADMIN — accounts & roles (admin-only; set who's a berean)
+// ============================================================
+function AdminView() {
+  const [users, setUsers] = useState(null);
+  const [err, setErr] = useState(false);
+  const [busy, setBusy] = useState(null);
+  const load = () => {
+    api.adminUsers().then(d => { if (d && d.users) { setUsers(d.users); setErr(false); } else setErr(true); });
+  };
+  useEffect(() => { load(); }, []);
+  const change = (u, role) => {
+    if (role === u.role) return;
+    setBusy(u.id);
+    api.setRole(u.id, role).then(r => {
+      setBusy(null);
+      if (r && r.ok) setUsers(us => us.map(x => (x.id === u.id ? { ...x, role } : x)));
+      else load();
+    });
+  };
+  if (err) return <div className="stats-view"><div className="stats-empty">Couldn't load accounts.</div></div>;
+  if (!users) return <div className="stats-view"><div className="stats-empty">Loading…</div></div>;
+  return (
+    <div className="stats-view">
+      <h1 className="stats-title">Accounts &amp; roles</h1>
+      <div className="stats-sub"><b>user</b> = signed in · <b>berean</b> = ESV/NIV access · <b>admin</b> = everything</div>
+      {users.length === 0 ? (
+        <div className="stats-empty">No accounts yet.</div>
+      ) : (
+        <div className="admin-users">
+          {users.map(u => (
+            <div key={u.id} className="admin-user-row">
+              <span className="admin-user-email">{u.email}{u.owner ? " · you" : ""}</span>
+              {u.owner ? (
+                <span className="admin-user-locked">admin</span>
+              ) : (
+                <select className="admin-role-sel" value={u.role} disabled={busy === u.id}
+                        onChange={e => change(u, e.target.value)}>
+                  <option value="user">user</option>
+                  <option value="berean">berean</option>
+                  <option value="admin">admin</option>
+                </select>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}

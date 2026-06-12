@@ -27,6 +27,7 @@ from core import (
 )
 from views_lsj import _lsj_concept_lookup, _format_lsj_context
 from views_crossref import _XREF_SYNTHESIS_SYSTEM
+from views_notes import is_logged_in   # AI search is login-gated (it costs API money)
 
 bp = Blueprint("ai", __name__)
 
@@ -798,6 +799,8 @@ def _persist_ai_cache(query: str, payload: dict) -> None:
 @limiter.limit("200 per hour")
 def ai_search():
     try:
+        if not is_logged_in():
+            return jsonify({"error": "Sign in to use AI search.", "login": True}), 401
         q = request.args.get("q", "").strip()
         log.debug("ai_search called: q=%r", q)
         if not q:

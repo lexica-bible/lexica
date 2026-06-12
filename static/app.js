@@ -57,7 +57,9 @@ function _authHeaders() {
 }
 const api = {
   search: (q, phrase = false) => fetch(`/api/search?q=${encodeURIComponent(q)}&phrase=${phrase ? 1 : 0}`).then(r => r.json()),
-  aiSearch: q => fetch(`/api/ai-search?q=${encodeURIComponent(q)}`).then(r => r.json()),
+  aiSearch: q => fetch(`/api/ai-search?q=${encodeURIComponent(q)}`, {
+    headers: _authHeaders()
+  }).then(r => r.json()),
   verse: (book, chapter, verse) => fetch(`/api/verse/${encodeURIComponent(book)}/${chapter}/${verse}`).then(r => r.json()),
   verseWords: (book, chapter, verse) => fetch(`/api/verse-words/${encodeURIComponent(book)}/${chapter}/${verse}`).then(r => r.json()),
   strongsCount: strongs_base => fetch(`/api/strongs-count/${encodeURIComponent(strongs_base)}`).then(r => r.json()),
@@ -160,6 +162,25 @@ const api = {
   stats: () => fetch(`/api/stats`, {
     headers: _authHeaders()
   }).then(r => r.ok ? r.json() : null).catch(() => null),
+  // Admin-only: list accounts + set a role (admin page).
+  adminUsers: () => fetch(`/api/admin/users`, {
+    headers: _authHeaders()
+  }).then(r => r.ok ? r.json() : null).catch(() => null),
+  setRole: (userId, role) => fetch(`/api/admin/role`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ..._authHeaders()
+    },
+    body: JSON.stringify({
+      user_id: userId,
+      role
+    })
+  }).then(r => r.ok ? r.json() : {
+    ok: false
+  }).catch(() => ({
+    ok: false
+  })),
   textSearch: (q, corpus, mode, book) => fetch(`/api/text-search?q=${encodeURIComponent(q)}&corpus=${encodeURIComponent(corpus || "bsb")}` + `&mode=${encodeURIComponent(mode || "phrase")}` + (book ? `&book=${encodeURIComponent(book)}` : "")).then(r => r.json()),
   summary: (book, ch) => fetch(`/api/summary/${encodeURIComponent(book)}/${ch}`).then(r => r.json()),
   kjvVerse: (book, ch, v) => fetch(`/api/kjv/verse/${encodeURIComponent(book)}/${ch}/${v}`).then(r => r.json()),
@@ -8034,7 +8055,10 @@ function AboutView({
   }, "About"), /*#__PURE__*/React.createElement("button", {
     className: "seg-b" + (tab === "stats" ? " on" : ""),
     onClick: () => setTab("stats")
-  }, "Stats")), owner && tab === "stats" ? /*#__PURE__*/React.createElement(StatsView, null) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h1", {
+  }, "Stats"), /*#__PURE__*/React.createElement("button", {
+    className: "seg-b" + (tab === "admin" ? " on" : ""),
+    onClick: () => setTab("admin")
+  }, "Admin")), owner && tab === "stats" ? /*#__PURE__*/React.createElement(StatsView, null) : owner && tab === "admin" ? /*#__PURE__*/React.createElement(AdminView, null) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h1", {
     className: "about-title"
   }, "About Lexica"), /*#__PURE__*/React.createElement("p", {
     className: "about-lead"
@@ -8710,6 +8734,76 @@ function StatsView() {
   }, a.email), /*#__PURE__*/React.createElement("span", {
     className: "stats-ref-n"
   }, fmtDate(a.created))))));
+}
+
+// ============================================================
+// ADMIN — accounts & roles (admin-only; set who's a berean)
+// ============================================================
+function AdminView() {
+  const [users, setUsers] = useState(null);
+  const [err, setErr] = useState(false);
+  const [busy, setBusy] = useState(null);
+  const load = () => {
+    api.adminUsers().then(d => {
+      if (d && d.users) {
+        setUsers(d.users);
+        setErr(false);
+      } else setErr(true);
+    });
+  };
+  useEffect(() => {
+    load();
+  }, []);
+  const change = (u, role) => {
+    if (role === u.role) return;
+    setBusy(u.id);
+    api.setRole(u.id, role).then(r => {
+      setBusy(null);
+      if (r && r.ok) setUsers(us => us.map(x => x.id === u.id ? {
+        ...x,
+        role
+      } : x));else load();
+    });
+  };
+  if (err) return /*#__PURE__*/React.createElement("div", {
+    className: "stats-view"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stats-empty"
+  }, "Couldn't load accounts."));
+  if (!users) return /*#__PURE__*/React.createElement("div", {
+    className: "stats-view"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "stats-empty"
+  }, "Loading\u2026"));
+  return /*#__PURE__*/React.createElement("div", {
+    className: "stats-view"
+  }, /*#__PURE__*/React.createElement("h1", {
+    className: "stats-title"
+  }, "Accounts & roles"), /*#__PURE__*/React.createElement("div", {
+    className: "stats-sub"
+  }, /*#__PURE__*/React.createElement("b", null, "user"), " = signed in \xB7 ", /*#__PURE__*/React.createElement("b", null, "berean"), " = ESV/NIV access \xB7 ", /*#__PURE__*/React.createElement("b", null, "admin"), " = everything"), users.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "stats-empty"
+  }, "No accounts yet.") : /*#__PURE__*/React.createElement("div", {
+    className: "admin-users"
+  }, users.map(u => /*#__PURE__*/React.createElement("div", {
+    key: u.id,
+    className: "admin-user-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "admin-user-email"
+  }, u.email, u.owner ? " · you" : ""), u.owner ? /*#__PURE__*/React.createElement("span", {
+    className: "admin-user-locked"
+  }, "admin") : /*#__PURE__*/React.createElement("select", {
+    className: "admin-role-sel",
+    value: u.role,
+    disabled: busy === u.id,
+    onChange: e => change(u, e.target.value)
+  }, /*#__PURE__*/React.createElement("option", {
+    value: "user"
+  }, "user"), /*#__PURE__*/React.createElement("option", {
+    value: "berean"
+  }, "berean"), /*#__PURE__*/React.createElement("option", {
+    value: "admin"
+  }, "admin"))))));
 }
 
 // ============================================================

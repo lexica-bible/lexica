@@ -2757,6 +2757,13 @@ input { font-family: inherit; }
 .stats-ref-n { color: var(--ink-3); font-variant-numeric: tabular-nums; padding-left: 12px; }
 .stats-empty { color: var(--ink-4); font-size: 14px; padding: 18px 0; }
 
+/* Admin — accounts & roles */
+.admin-users { display: flex; flex-direction: column; }
+.admin-user-row { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 9px 2px; border-bottom: 1px solid var(--rule); font-size: 14px; color: var(--ink); }
+.admin-user-email { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.admin-user-locked { color: var(--ink-3); font-size: 13px; font-weight: 600; padding-right: 8px; }
+.admin-role-sel { font: inherit; font-size: 13px; padding: 5px 8px; border-radius: 7px; border: 1px solid var(--rule-2); background: var(--ctl-bg); color: var(--ink); cursor: pointer; }
+
 /* ============================================================
    READING TOOLBAR (new bar — desktop library, ≥1100px only)
 ============================================================ */

@@ -46,7 +46,7 @@ const api = {
   search: (q, phrase = false) =>
     fetch(`/api/search?q=${encodeURIComponent(q)}&phrase=${phrase ? 1 : 0}`).then(r => r.json()),
   aiSearch: (q) =>
-    fetch(`/api/ai-search?q=${encodeURIComponent(q)}`).then(r => r.json()),
+    fetch(`/api/ai-search?q=${encodeURIComponent(q)}`, { headers: _authHeaders() }).then(r => r.json()),
   verse: (book, chapter, verse) =>
     fetch(`/api/verse/${encodeURIComponent(book)}/${chapter}/${verse}`).then(r => r.json()),
   verseWords: (book, chapter, verse) =>
@@ -132,6 +132,16 @@ const api = {
   stats: () =>
     fetch(`/api/stats`, { headers: _authHeaders() })
       .then(r => r.ok ? r.json() : null).catch(() => null),
+  // Admin-only: list accounts + set a role (admin page).
+  adminUsers: () =>
+    fetch(`/api/admin/users`, { headers: _authHeaders() })
+      .then(r => r.ok ? r.json() : null).catch(() => null),
+  setRole: (userId, role) =>
+    fetch(`/api/admin/role`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ..._authHeaders() },
+      body: JSON.stringify({ user_id: userId, role }),
+    }).then(r => r.ok ? r.json() : { ok: false }).catch(() => ({ ok: false })),
   textSearch: (q, corpus, mode, book) =>
     fetch(`/api/text-search?q=${encodeURIComponent(q)}&corpus=${encodeURIComponent(corpus || "bsb")}` +
           `&mode=${encodeURIComponent(mode || "phrase")}` +

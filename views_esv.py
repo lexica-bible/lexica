@@ -33,7 +33,7 @@ import urllib.request
 from flask import Blueprint, jsonify, request
 
 from core import db_ro, esv_db, _KJV_BOOK_ID, _USFM_BOOK
-from views_notes import is_owner as _is_owner   # shared site-owner gate (OWNER_EMAIL)
+from views_notes import is_berean as _can_esv   # ESV reading text = berean+ (trusted friends)
 
 bp = Blueprint("esv", __name__)
 
@@ -109,12 +109,12 @@ def _crossway_audio_url(passage):
 def esv_status():
     """The frontend asks this to decide whether to show the ESV toggle. It's just
     a yes/no — the owner's email never leaves the server."""
-    return jsonify({"owner": _is_owner()})
+    return jsonify({"owner": _can_esv()})
 
 
 @bp.route("/api/esv/chapter/<book>/<int:chapter>")
 def esv_chapter(book, chapter):
-    if not _is_owner():
+    if not _can_esv():
         return jsonify({"error": "not found"}), 404      # opaque to non-owners
     book_id = _KJV_BOOK_ID.get(book)
     if book_id is None:
@@ -161,7 +161,7 @@ def esv_chapter(book, chapter):
 
 @bp.route("/api/esv/audio/<book>/<int:chapter>")
 def esv_audio(book, chapter):
-    if not _is_owner():
+    if not _can_esv():
         return jsonify({"error": "not found"}), 404
     book_id = _KJV_BOOK_ID.get(book)
     if book_id is None:
