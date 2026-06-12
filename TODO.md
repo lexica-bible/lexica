@@ -186,8 +186,11 @@ Loose look-and-feel ideas, parked here so they're not lost. None are scoped yet 
 - ~~**Focus mode**~~ — **DONE + LIVE 2026-06-11** (see TODO_ARCHIVE + memory `project_focus_mode`).
   Tap blank space to strip the chrome. Mobile hides everything; desktop darkens the surround and floats
   the text as a centered "book page" with big ‹ › side arrows. Esc/tap exits.
-- **Parchment / dark themes** — a warm sepia reading skin plus a real dark mode, with a small corner
-  toggle. `code: styles.css theme vars (--ink/--bg/--paper…) + a theme switch`
+- ~~**Parchment / dark themes**~~ — **DONE + LIVE 2026-06-11** (memory `project_reader_appearance`).
+  Light · Sepia · Dark toggle in the reader's Aa menu (desktop) + the mobile reading-options sheet;
+  whole-app re-skin via `data-theme` on `<html>`, remembered across reloads. Buttons are now driven by
+  `--ctl-bg`/`--ctl-on` vars (add a new button with those, not `#fff`). The navy header stays brand
+  navy in every theme.
 - ~~**Greek-friendly typography**~~ — **TRIED + SCRAPPED 2026-06-11.** Shipped a reader font picker
   (Cardo/Gentium beside the default Source Serif), then reverted — the alt serifs looked worse than the
   existing Source Serif on Windows, and the reader was already a good serif, so there's no real win.

@@ -243,9 +243,15 @@ scripts/          # build-frontend.js + one-time import/migration scripts
   rule: PROPOSE gray for inactive-but-applicable, but it's his call per control. See memory
   `feedback_gray_dont_hide`.
 - Reader font = `--f-serif` (Source Serif 4) on `.lib-reading`; the `Aa ▾` menu (desktop) / ModesSheet
-  Display group (mobile) hold ONLY the A−/A+ size control. (A Cardo/Gentium typeface PICKER was tried
-  2026-06-11 and reverted — the alt serifs looked worse than Source Serif; see memory
-  `project_reader_appearance`. Don't re-add one.)
+  (mobile) hold the A−/A+ size control AND the **Light · Sepia · Dark theme toggle** (LIVE 2026-06-11).
+  (A Cardo/Gentium typeface PICKER was tried 2026-06-11 and reverted — the alt serifs looked worse than
+  Source Serif; see memory `project_reader_appearance`. Don't re-add one.)
+- **Reading themes (2026-06-11):** `data-theme` on `<html>` (set in 60-library.jsx, remembered in
+  `localStorage` `lexica.theme.v1`) re-skins the whole app via the color vars at the TOP of styles.css
+  (`:root` = light; `[data-theme="sepia"]`/`[data-theme="dark"]` override). Button/pill surfaces read
+  `--ctl-bg` (idle) / `--ctl-on` (selected) — set per theme in ONE place; **add new buttons with those
+  vars, never hardcoded `#fff`.** Light-on-light is the dark-mode trap: an `--ink`/`--accent` bg flips
+  LIGHT in dark, so pair its text with `var(--paper)`. Navy header stays brand navy in every theme.
 - **Compare (was "Parallel"): pick 2–4 of ABP/KJV/BSB/ESV/NIV to read side by side.** `translation === "parallel"`
   is the mode; `compareSel` (array) = which texts. Desktop = N columns (`.lib-cmp-2/3/4`); mobile = stacked,
   one labeled line per text. Rows are the ordered UNION of every selected text's verses (keyed chapter+verse),
