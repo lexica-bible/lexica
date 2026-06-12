@@ -265,7 +265,10 @@ Still open:
 
 ### Free user accounts — MOSTLY DONE 2026-06-09 (reset pending)
 LIVE: email/password + Google sign-in, opt-in, syncing notes across devices via `notes.db`
-(see archive + memory). App stays fully usable with no account. STILL OPEN:
+(see archive + memory). App stays fully usable with no account.
+**Account ROLES added 2026-06-11 (LIVE): nologin / user / berean / admin** — `role` column on
+notes.db users; ESV/NIV = berean+, Stats + an in-app Admin page (About → Admin) = admin, AI search
+= any login. Owner email is always admin. Full record: memory `project_user_roles`. STILL OPEN:
 - **Password reset + set-password** — needs the site to SEND email (SMTP on PA, not configured). A
   Google-only account currently can't use the password form (no password set). Same SMTP blocker as
   the nightly health_check email below — wire SMTP once, both unlock.

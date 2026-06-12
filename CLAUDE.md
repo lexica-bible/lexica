@@ -102,9 +102,11 @@ Pick effort by task TYPE. When in doubt, lean higher — the plan affords it.
   ESV AUDIO (owner-only) prefers Crossway's OWN ESV API — set `ESV_API_TOKEN` (free, instant
   self-serve at api.esv.org) in the WSGI: whole-Bible Max McLean reading, `views_esv._crossway_audio_url`
   grabs the 302→signed-mp3 URL. FCBH (`FCBH_API_KEY`, NT-only, still pending) is the fallback if only
-  it's set. **KJV AUDIO is LIVE for everyone (public-domain narration + music, audiotreasure.com — no
-  key, see views_kjv.kjv_audio). BSB audio is public-domain and needs no setup. NIV has NO audio source
-  (FCBH doesn't carry it; Biblica won't license it) — dead end.** Memory `project_esv_audio` +
+  it's set. **KJV AUDIO is LIVE for everyone (public-domain, no key, audiotreasure.com — see
+  views_kjv.kjv_audio). Prefers the clearer VOICE-only reading (`KJV_AT`); 6 books the voice set is
+  missing (Job, Song of Solomon, Philemon, 2/3 John, Jude) fall back to the MUSIC reading (`KJV_FF`).
+  BSB audio is public-domain and needs no setup. NIV has NO audio source (FCBH doesn't carry it;
+  Biblica won't license it) — dead end.** Memory `project_esv_audio` +
   `project_visitor_stats`.
 
 ## CI / automation (added 2026-06-07)
