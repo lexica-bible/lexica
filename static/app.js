@@ -4126,6 +4126,8 @@ function TopicPage({
   onDelete,
   onClose,
   onToggleEdit,
+  onWalk,
+  previewReader,
   saving,
   savedAt
 }) {
@@ -4142,10 +4144,15 @@ function TopicPage({
     }, /*#__PURE__*/React.createElement("button", {
       className: "study-back",
       onClick: onClose
-    }, "\u2039 All topics"), /*#__PURE__*/React.createElement("button", {
+    }, "\u2039 ", previewReader ? "Back" : "All topics"), /*#__PURE__*/React.createElement("div", {
+      className: "study-editor-actions"
+    }, onWalk && verseCount > 0 && /*#__PURE__*/React.createElement("button", {
+      className: "study-walk-launch",
+      onClick: onWalk
+    }, "\u25B8 Walk through"), !previewReader && /*#__PURE__*/React.createElement("button", {
       className: "study-edit-btn",
       onClick: onToggleEdit
-    }, "Edit")), /*#__PURE__*/React.createElement("div", {
+    }, "Edit"))), /*#__PURE__*/React.createElement("div", {
       className: "study-eyebrow"
     }, "Topic"), /*#__PURE__*/React.createElement("h1", {
       className: "study-topic-title"
@@ -4310,6 +4317,7 @@ function StudyEditor({
   onSave,
   onDelete,
   onClose,
+  onToggleEdit,
   saving,
   savedAt
 }) {
@@ -4324,8 +4332,8 @@ function StudyEditor({
     className: "study-editor-bar"
   }, /*#__PURE__*/React.createElement("button", {
     className: "study-back",
-    onClick: onClose
-  }, "\u2039 Back"), /*#__PURE__*/React.createElement("div", {
+    onClick: () => entry.id ? onToggleEdit() : onClose()
+  }, "\u2039 ", entry.id ? "Done editing" : "Cancel"), /*#__PURE__*/React.createElement("div", {
     className: "study-editor-actions"
   }, savedAt && !saving && /*#__PURE__*/React.createElement("span", {
     className: "study-saved"
@@ -4530,6 +4538,7 @@ function ArgumentPage({
   onDelete,
   onClose,
   onToggleEdit,
+  previewReader,
   saving,
   savedAt
 }) {
@@ -4554,7 +4563,7 @@ function ArgumentPage({
     }, /*#__PURE__*/React.createElement("button", {
       className: "study-back",
       onClick: onClose
-    }, "\u2039 All arguments"), /*#__PURE__*/React.createElement("button", {
+    }, "\u2039 ", previewReader ? "Back" : "All arguments"), !previewReader && /*#__PURE__*/React.createElement("button", {
       className: "study-edit-btn",
       onClick: onToggleEdit
     }, "Edit")), /*#__PURE__*/React.createElement("div", {
@@ -4742,6 +4751,193 @@ function ArgumentPage({
   }, "Draft = only you. Published is reserved for a future public reader.")));
 }
 
+// ---- Reader views ---------------------------------------------------------
+// Turn a topic into walkthrough STEPS: an intro card (if any), then one step per
+// subtopic SECTION — but a long section is split into parts so no step is a wall.
+function buildSteps(entry, cap) {
+  const per = cap || 6;
+  const steps = [];
+  if (entry.intro && entry.intro.trim()) steps.push({
+    kind: "intro",
+    title: entry.title,
+    text: entry.intro
+  });
+  (entry.sections || []).forEach(sec => {
+    const verses = sec.verses || [];
+    if (!verses.length) {
+      if (sec.heading) steps.push({
+        kind: "section",
+        heading: sec.heading,
+        verses: []
+      });
+      return;
+    }
+    const total = Math.ceil(verses.length / per);
+    for (let i = 0; i < verses.length; i += per) {
+      const partNo = Math.floor(i / per) + 1;
+      steps.push({
+        kind: "section",
+        heading: sec.heading,
+        verses: verses.slice(i, i + per),
+        part: total > 1 ? "(" + partNo + " of " + total + ")" : ""
+      });
+    }
+  });
+  if (!steps.length) steps.push({
+    kind: "section",
+    heading: entry.title,
+    verses: []
+  });
+  return steps;
+}
+
+// The stepped, one-subtopic-at-a-time guided reading of a topic. Reader-facing.
+function WalkthroughView({
+  entry,
+  previewReader,
+  onExit
+}) {
+  const steps = buildSteps(entry, 6);
+  const n = steps.length;
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    const onKey = e => {
+      if (e.key === "ArrowLeft") setI(x => Math.max(0, x - 1));else if (e.key === "ArrowRight") setI(x => Math.min(n - 1, x + 1));
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [n]);
+  const idx = Math.min(i, n - 1);
+  const cur = steps[idx];
+  return /*#__PURE__*/React.createElement("div", {
+    className: "study-walk"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "study-walk-top"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "study-back",
+    onClick: onExit
+  }, "\u2039 ", previewReader ? "Back" : "Close walkthrough"), /*#__PURE__*/React.createElement("span", {
+    className: "study-walk-count"
+  }, "Step ", idx + 1, " of ", n)), /*#__PURE__*/React.createElement("div", {
+    className: "study-walk-bar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "study-walk-bar-fill",
+    style: {
+      width: Math.round((idx + 1) / n * 100) + "%"
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "study-walk-eyebrow"
+  }, entry.title), /*#__PURE__*/React.createElement("div", {
+    className: "study-walk-step"
+  }, cur.kind === "intro" ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("h1", {
+    className: "study-walk-title"
+  }, cur.title), /*#__PURE__*/React.createElement("p", {
+    className: "study-walk-intro"
+  }, cur.text)) : /*#__PURE__*/React.createElement(React.Fragment, null, cur.heading ? /*#__PURE__*/React.createElement("h2", {
+    className: "study-walk-head"
+  }, cur.heading, cur.part ? /*#__PURE__*/React.createElement("span", {
+    className: "study-walk-part"
+  }, " ", cur.part) : null) : null, cur.verses.length ? /*#__PURE__*/React.createElement("div", {
+    className: "study-walk-verses"
+  }, cur.verses.map((v, j) => /*#__PURE__*/React.createElement("div", {
+    className: "study-walk-verse",
+    key: j
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "study-walk-ref"
+  }, v.ref), /*#__PURE__*/React.createElement("div", {
+    className: "study-walk-text"
+  }, v.text || /*#__PURE__*/React.createElement("em", {
+    className: "study-verse-missing"
+  }, "(text not found)"))))) : /*#__PURE__*/React.createElement("div", {
+    className: "study-side-empty"
+  }, "No verses in this section."))), /*#__PURE__*/React.createElement("div", {
+    className: "study-walk-nav"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "study-walk-btn",
+    disabled: idx === 0,
+    onClick: () => setI(x => Math.max(0, x - 1))
+  }, "\u2039 Back"), /*#__PURE__*/React.createElement("div", {
+    className: "study-walk-dots"
+  }, steps.map((_, k) => /*#__PURE__*/React.createElement("span", {
+    key: k,
+    className: "study-walk-dot" + (k === idx ? " on" : "")
+  }))), /*#__PURE__*/React.createElement("button", {
+    className: "study-walk-btn",
+    disabled: idx >= n - 1,
+    onClick: () => setI(x => Math.min(n - 1, x + 1))
+  }, "Next \u203A")));
+}
+
+// A labeled read-only verse list (Support / Tension), for the denomination read view.
+function DenomVerseList({
+  label,
+  items
+}) {
+  if (!items || !items.length) return null;
+  return /*#__PURE__*/React.createElement("div", {
+    className: "study-section"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "study-section-head"
+  }, label), /*#__PURE__*/React.createElement("div", {
+    className: "study-read-verses"
+  }, items.map((v, j) => /*#__PURE__*/React.createElement("div", {
+    className: "study-read-verse",
+    key: j
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "study-verse-ref"
+  }, v.ref), /*#__PURE__*/React.createElement("span", {
+    className: "study-read-text"
+  }, v.text || /*#__PURE__*/React.createElement("em", {
+    className: "study-verse-missing"
+  }, "(text not found)"))))));
+}
+
+// Clean read view of a denomination (position + support/tension + resolution).
+function DenominationRead({
+  entry,
+  onClose,
+  onToggleEdit,
+  previewReader
+}) {
+  const res = entry.resolution || {
+    mode: "middle",
+    text: ""
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    className: "study-topic"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "study-editor-bar"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "study-back",
+    onClick: onClose
+  }, "\u2039 ", previewReader ? "Back" : "All denominations"), !previewReader && /*#__PURE__*/React.createElement("button", {
+    className: "study-edit-btn",
+    onClick: onToggleEdit
+  }, "Edit")), /*#__PURE__*/React.createElement("div", {
+    className: "study-eyebrow"
+  }, "Denomination"), /*#__PURE__*/React.createElement("h1", {
+    className: "study-topic-title"
+  }, entry.title), entry.heldBy && /*#__PURE__*/React.createElement("div", {
+    className: "study-topic-meta"
+  }, "Held by ", entry.heldBy), entry.intro && /*#__PURE__*/React.createElement("p", {
+    className: "study-topic-intro"
+  }, entry.intro), /*#__PURE__*/React.createElement(DenomVerseList, {
+    label: "Support",
+    items: entry.support
+  }), /*#__PURE__*/React.createElement(DenomVerseList, {
+    label: "Tension",
+    items: entry.tension
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "study-arg-res"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "study-arg-res-label"
+  }, res.mode === "mystery" ? "An open mystery" : "Where the text lands"), /*#__PURE__*/React.createElement("p", {
+    className: "study-arg-res-text"
+  }, res.text || /*#__PURE__*/React.createElement("em", {
+    className: "study-verse-missing"
+  }, "(not written yet)"))));
+}
+
 // ---- The Study tab --------------------------------------------------------
 function StudyView({
   pending,
@@ -4751,7 +4947,9 @@ function StudyView({
   const [entries, setEntries] = useState(null);
   const [err, setErr] = useState(false);
   const [editing, setEditing] = useState(null);
-  const [editMode, setEditMode] = useState(false); // topics: read vs edit
+  const [editMode, setEditMode] = useState(false); // read vs edit (read-first for all types)
+  const [previewReader, setPreviewReader] = useState(false); // admin: preview the clean reader view
+  const [walk, setWalk] = useState(null); // a topic entry being read as a stepped walkthrough
   const [saving, setSaving] = useState(false);
   const [savedAt, setSavedAt] = useState(null);
   const [q, setQ] = useState("");
@@ -4826,7 +5024,7 @@ function StudyView({
           related: d.related || [],
           status: d.status || "draft"
         });
-        setEditMode(true);
+        setEditMode(false); // read-first; Edit opens the editor (admin only)
       }
     });
   };
@@ -4906,20 +5104,31 @@ function StudyView({
   }, /*#__PURE__*/React.createElement("div", {
     className: "stats-empty"
   }, "Couldn't load study content. (Admin sign-in required.)"));
+  if (walk) return /*#__PURE__*/React.createElement("div", {
+    className: "study-view"
+  }, /*#__PURE__*/React.createElement(WalkthroughView, {
+    entry: walk,
+    previewReader: previewReader,
+    onExit: () => setWalk(null)
+  }));
   if (editing) {
+    const ro = previewReader || !editMode; // read-only: preview mode, or not actively editing
+    const close = () => {
+      setEditing(null);
+      setSavedAt(null);
+    };
     if (isTopicLike(editing.type)) return /*#__PURE__*/React.createElement("div", {
       className: "study-view"
     }, /*#__PURE__*/React.createElement(TopicPage, {
       entry: editing,
-      editing: editMode,
+      editing: !ro,
       onChange: setEditing,
       onSave: save,
       onDelete: del,
-      onClose: () => {
-        setEditing(null);
-        setSavedAt(null);
-      },
+      onClose: close,
       onToggleEdit: () => setEditMode(m => !m),
+      onWalk: () => setWalk(editing),
+      previewReader: previewReader,
       saving: saving,
       savedAt: savedAt
     }));
@@ -4927,17 +5136,23 @@ function StudyView({
       className: "study-view"
     }, /*#__PURE__*/React.createElement(ArgumentPage, {
       entry: editing,
-      editing: editMode,
+      editing: !ro,
       onChange: setEditing,
       onSave: save,
       onDelete: del,
-      onClose: () => {
-        setEditing(null);
-        setSavedAt(null);
-      },
+      onClose: close,
       onToggleEdit: () => setEditMode(m => !m),
+      previewReader: previewReader,
       saving: saving,
       savedAt: savedAt
+    }));
+    if (ro) return /*#__PURE__*/React.createElement("div", {
+      className: "study-view"
+    }, /*#__PURE__*/React.createElement(DenominationRead, {
+      entry: editing,
+      onClose: close,
+      onToggleEdit: () => setEditMode(true),
+      previewReader: previewReader
     }));
     return /*#__PURE__*/React.createElement("div", {
       className: "study-view"
@@ -4946,10 +5161,8 @@ function StudyView({
       onChange: setEditing,
       onSave: save,
       onDelete: del,
-      onClose: () => {
-        setEditing(null);
-        setSavedAt(null);
-      },
+      onClose: close,
+      onToggleEdit: () => setEditMode(false),
       saving: saving,
       savedAt: savedAt
     }));
@@ -4958,7 +5171,8 @@ function StudyView({
   const moduleName = isTopic ? "Topics" : module === "denomination" ? "Denominations" : "Arguments";
   const newLabel = isTopic ? "topic" : module === "denomination" ? "denomination" : "argument";
   const qs = q.trim().toLowerCase();
-  const shown = (entries || []).filter(e => !qs || (e.title || "").toLowerCase().includes(qs) || (e.heldBy || "").toLowerCase().includes(qs));
+  const pool = (entries || []).filter(e => !previewReader || e.status === "published"); // a reader only sees published
+  const shown = pool.filter(e => !qs || (e.title || "").toLowerCase().includes(qs) || (e.heldBy || "").toLowerCase().includes(qs));
   return /*#__PURE__*/React.createElement("div", {
     className: "study-view"
   }, /*#__PURE__*/React.createElement("div", {
@@ -4967,16 +5181,25 @@ function StudyView({
     key: m.id,
     className: "study-sub-b" + (module === m.id ? " on" : ""),
     onClick: () => pickModule(m.id)
-  }, m.label))), /*#__PURE__*/React.createElement("div", {
+  }, m.label)), /*#__PURE__*/React.createElement("button", {
+    className: "study-preview-toggle" + (previewReader ? " on" : ""),
+    onClick: () => setPreviewReader(p => !p),
+    title: "See exactly what a reader sees \u2014 editing off, drafts hidden"
+  }, previewReader ? "✓ Previewing as reader" : "Preview as reader")), previewReader && /*#__PURE__*/React.createElement("div", {
+    className: "study-preview-note"
+  }, "You're seeing what a reader sees \u2014 editing is off and drafts are hidden.", /*#__PURE__*/React.createElement("button", {
+    className: "study-preview-exit",
+    onClick: () => setPreviewReader(false)
+  }, "Exit preview")), /*#__PURE__*/React.createElement("div", {
     className: "study-list-head"
   }, /*#__PURE__*/React.createElement("h1", {
     className: "stats-title"
-  }, moduleName), /*#__PURE__*/React.createElement("button", {
+  }, moduleName), !previewReader && /*#__PURE__*/React.createElement("button", {
     className: "study-new",
     onClick: newEntry
   }, "+ New ", newLabel)), /*#__PURE__*/React.createElement("div", {
     className: "stats-sub"
-  }, isTopic ? "Browse a subject and its verses, grouped by subtopic. Mostly filled from MetaV — light edits only." : module === "argument" ? "Two sides laid out with their own verses, and where the text lands between them — or stays a mystery." : "A position with its support and tension verses, and where the text resolves it — or stays a mystery."), entries && entries.length > 0 && /*#__PURE__*/React.createElement("input", {
+  }, isTopic ? "Browse a subject and its verses, grouped by subtopic. Mostly filled from MetaV — light edits only." : module === "argument" ? "Two sides laid out with their own verses, and where the text lands between them — or stays a mystery." : "A position with its support and tension verses, and where the text resolves it — or stays a mystery."), pool.length > 0 && /*#__PURE__*/React.createElement("input", {
     className: "study-search-input",
     type: "text",
     value: q,
@@ -4984,11 +5207,9 @@ function StudyView({
     onChange: e => setQ(e.target.value)
   }), entries === null ? /*#__PURE__*/React.createElement("div", {
     className: "stats-empty"
-  }, "Loading\u2026") : entries.length === 0 ? /*#__PURE__*/React.createElement("div", {
+  }, "Loading\u2026") : shown.length === 0 ? /*#__PURE__*/React.createElement("div", {
     className: "stats-empty"
-  }, "Nothing here yet \u2014 start with \u201C+ New ", newLabel, "\u201D.", isTopic ? " (Or import from MetaV.)" : "") : shown.length === 0 ? /*#__PURE__*/React.createElement("div", {
-    className: "stats-empty"
-  }, "No matches for \u201C", q, "\u201D.") : /*#__PURE__*/React.createElement("div", {
+  }, qs ? "No matches for “" + q + "”." : previewReader ? "Nothing published yet — mark an entry Published to show it here." : "Nothing here yet — start with “+ New " + newLabel + "”." + (isTopic ? " (Or import from MetaV.)" : "")) : /*#__PURE__*/React.createElement("div", {
     className: "study-rows"
   }, shown.map(e => /*#__PURE__*/React.createElement("button", {
     className: "study-row",
@@ -5002,7 +5223,7 @@ function StudyView({
     className: "study-row-held"
   }, " \xB7 ", e.heldBy) : null), /*#__PURE__*/React.createElement("span", {
     className: "study-row-n"
-  }, e.n || 0, " ", isTopic ? "verses" : "refs"), e.status === "draft" && /*#__PURE__*/React.createElement("span", {
+  }, e.n || 0, " ", isTopic ? "verses" : "refs"), !previewReader && e.status === "draft" && /*#__PURE__*/React.createElement("span", {
     className: "study-row-draft"
   }, "draft")))));
 }

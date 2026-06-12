@@ -142,7 +142,7 @@ function TopicSectionEdit({ section, idx, count, onChange, onRemove, onMove }) {
   );
 }
 
-function TopicPage({ entry, editing, onChange, onSave, onDelete, onClose, onToggleEdit, saving, savedAt }) {
+function TopicPage({ entry, editing, onChange, onSave, onDelete, onClose, onToggleEdit, onWalk, previewReader, saving, savedAt }) {
   const up = patch => onChange({ ...entry, ...patch });
   const verseCount = entry.sections.reduce((n, s) => n + s.verses.length, 0);
 
@@ -150,8 +150,11 @@ function TopicPage({ entry, editing, onChange, onSave, onDelete, onClose, onTogg
     return (
       <div className="study-topic">
         <div className="study-editor-bar">
-          <button className="study-back" onClick={onClose}>‹ All topics</button>
-          <button className="study-edit-btn" onClick={onToggleEdit}>Edit</button>
+          <button className="study-back" onClick={onClose}>‹ {previewReader ? "Back" : "All topics"}</button>
+          <div className="study-editor-actions">
+            {onWalk && verseCount > 0 && <button className="study-walk-launch" onClick={onWalk}>▸ Walk through</button>}
+            {!previewReader && <button className="study-edit-btn" onClick={onToggleEdit}>Edit</button>}
+          </div>
         </div>
         <div className="study-eyebrow">Topic</div>
         <h1 className="study-topic-title">{entry.title}</h1>
@@ -236,13 +239,13 @@ function StudyRelated({ items, onAdd, onRemove }) {
   );
 }
 
-function StudyEditor({ entry, onChange, onSave, onDelete, onClose, saving, savedAt }) {
+function StudyEditor({ entry, onChange, onSave, onDelete, onClose, onToggleEdit, saving, savedAt }) {
   const up = patch => onChange({ ...entry, ...patch });
   const isDenom = entry.type === "denomination";
   return (
     <div className="study-editor">
       <div className="study-editor-bar">
-        <button className="study-back" onClick={onClose}>‹ Back</button>
+        <button className="study-back" onClick={() => entry.id ? onToggleEdit() : onClose()}>‹ {entry.id ? "Done editing" : "Cancel"}</button>
         <div className="study-editor-actions">
           {savedAt && !saving && <span className="study-saved">Saved ✓</span>}
           {entry.id && <button className="study-del" onClick={onDelete}>Delete</button>}
@@ -338,7 +341,7 @@ function ArgumentSideEdit({ side, label, onChange }) {
 
 // An argument reads/edits like a topic page (read view + Edit toggle), but its body
 // is the two-sided layout (Side A | Side B) plus the resolution that weighs them.
-function ArgumentPage({ entry, editing, onChange, onSave, onDelete, onClose, onToggleEdit, saving, savedAt }) {
+function ArgumentPage({ entry, editing, onChange, onSave, onDelete, onClose, onToggleEdit, previewReader, saving, savedAt }) {
   const up = patch => onChange({ ...entry, ...patch });
   const sides = padSides(entry.sides);
   const res = entry.resolution || { mode: "middle", text: "" };
@@ -349,8 +352,8 @@ function ArgumentPage({ entry, editing, onChange, onSave, onDelete, onClose, onT
     return (
       <div className="study-topic study-arg">
         <div className="study-editor-bar">
-          <button className="study-back" onClick={onClose}>‹ All arguments</button>
-          <button className="study-edit-btn" onClick={onToggleEdit}>Edit</button>
+          <button className="study-back" onClick={onClose}>‹ {previewReader ? "Back" : "All arguments"}</button>
+          {!previewReader && <button className="study-edit-btn" onClick={onToggleEdit}>Edit</button>}
         </div>
         <div className="study-eyebrow">Argument</div>
         <h1 className="study-topic-title">{entry.title}</h1>
@@ -453,13 +456,139 @@ function ArgumentPage({ entry, editing, onChange, onSave, onDelete, onClose, onT
   );
 }
 
+// ---- Reader views ---------------------------------------------------------
+// Turn a topic into walkthrough STEPS: an intro card (if any), then one step per
+// subtopic SECTION — but a long section is split into parts so no step is a wall.
+function buildSteps(entry, cap) {
+  const per = cap || 6;
+  const steps = [];
+  if (entry.intro && entry.intro.trim())
+    steps.push({ kind: "intro", title: entry.title, text: entry.intro });
+  (entry.sections || []).forEach(sec => {
+    const verses = sec.verses || [];
+    if (!verses.length) {
+      if (sec.heading) steps.push({ kind: "section", heading: sec.heading, verses: [] });
+      return;
+    }
+    const total = Math.ceil(verses.length / per);
+    for (let i = 0; i < verses.length; i += per) {
+      const partNo = Math.floor(i / per) + 1;
+      steps.push({
+        kind: "section", heading: sec.heading, verses: verses.slice(i, i + per),
+        part: total > 1 ? "(" + partNo + " of " + total + ")" : "",
+      });
+    }
+  });
+  if (!steps.length) steps.push({ kind: "section", heading: entry.title, verses: [] });
+  return steps;
+}
+
+// The stepped, one-subtopic-at-a-time guided reading of a topic. Reader-facing.
+function WalkthroughView({ entry, previewReader, onExit }) {
+  const steps = buildSteps(entry, 6);
+  const n = steps.length;
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    const onKey = e => {
+      if (e.key === "ArrowLeft") setI(x => Math.max(0, x - 1));
+      else if (e.key === "ArrowRight") setI(x => Math.min(n - 1, x + 1));
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [n]);
+  const idx = Math.min(i, n - 1);
+  const cur = steps[idx];
+  return (
+    <div className="study-walk">
+      <div className="study-walk-top">
+        <button className="study-back" onClick={onExit}>‹ {previewReader ? "Back" : "Close walkthrough"}</button>
+        <span className="study-walk-count">Step {idx + 1} of {n}</span>
+      </div>
+      <div className="study-walk-bar"><div className="study-walk-bar-fill" style={{ width: Math.round(((idx + 1) / n) * 100) + "%" }} /></div>
+      <div className="study-walk-eyebrow">{entry.title}</div>
+
+      <div className="study-walk-step">
+        {cur.kind === "intro" ? (
+          <>
+            <h1 className="study-walk-title">{cur.title}</h1>
+            <p className="study-walk-intro">{cur.text}</p>
+          </>
+        ) : (
+          <>
+            {cur.heading ? <h2 className="study-walk-head">{cur.heading}{cur.part ? <span className="study-walk-part"> {cur.part}</span> : null}</h2> : null}
+            {cur.verses.length ? (
+              <div className="study-walk-verses">
+                {cur.verses.map((v, j) => (
+                  <div className="study-walk-verse" key={j}>
+                    <div className="study-walk-ref">{v.ref}</div>
+                    <div className="study-walk-text">{v.text || <em className="study-verse-missing">(text not found)</em>}</div>
+                  </div>
+                ))}
+              </div>
+            ) : <div className="study-side-empty">No verses in this section.</div>}
+          </>
+        )}
+      </div>
+
+      <div className="study-walk-nav">
+        <button className="study-walk-btn" disabled={idx === 0} onClick={() => setI(x => Math.max(0, x - 1))}>‹ Back</button>
+        <div className="study-walk-dots">{steps.map((_, k) => <span key={k} className={"study-walk-dot" + (k === idx ? " on" : "")} />)}</div>
+        <button className="study-walk-btn" disabled={idx >= n - 1} onClick={() => setI(x => Math.min(n - 1, x + 1))}>Next ›</button>
+      </div>
+    </div>
+  );
+}
+
+// A labeled read-only verse list (Support / Tension), for the denomination read view.
+function DenomVerseList({ label, items }) {
+  if (!items || !items.length) return null;
+  return (
+    <div className="study-section">
+      <div className="study-section-head">{label}</div>
+      <div className="study-read-verses">
+        {items.map((v, j) => (
+          <div className="study-read-verse" key={j}>
+            <span className="study-verse-ref">{v.ref}</span>
+            <span className="study-read-text">{v.text || <em className="study-verse-missing">(text not found)</em>}</span>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// Clean read view of a denomination (position + support/tension + resolution).
+function DenominationRead({ entry, onClose, onToggleEdit, previewReader }) {
+  const res = entry.resolution || { mode: "middle", text: "" };
+  return (
+    <div className="study-topic">
+      <div className="study-editor-bar">
+        <button className="study-back" onClick={onClose}>‹ {previewReader ? "Back" : "All denominations"}</button>
+        {!previewReader && <button className="study-edit-btn" onClick={onToggleEdit}>Edit</button>}
+      </div>
+      <div className="study-eyebrow">Denomination</div>
+      <h1 className="study-topic-title">{entry.title}</h1>
+      {entry.heldBy && <div className="study-topic-meta">Held by {entry.heldBy}</div>}
+      {entry.intro && <p className="study-topic-intro">{entry.intro}</p>}
+      <DenomVerseList label="Support" items={entry.support} />
+      <DenomVerseList label="Tension" items={entry.tension} />
+      <div className="study-arg-res">
+        <div className="study-arg-res-label">{res.mode === "mystery" ? "An open mystery" : "Where the text lands"}</div>
+        <p className="study-arg-res-text">{res.text || <em className="study-verse-missing">(not written yet)</em>}</p>
+      </div>
+    </div>
+  );
+}
+
 // ---- The Study tab --------------------------------------------------------
 function StudyView({ pending, onConsumed }) {
   const [module, setModule] = useState("topic");
   const [entries, setEntries] = useState(null);
   const [err, setErr] = useState(false);
   const [editing, setEditing] = useState(null);
-  const [editMode, setEditMode] = useState(false);   // topics: read vs edit
+  const [editMode, setEditMode] = useState(false);   // read vs edit (read-first for all types)
+  const [previewReader, setPreviewReader] = useState(false);  // admin: preview the clean reader view
+  const [walk, setWalk] = useState(null);            // a topic entry being read as a stepped walkthrough
   const [saving, setSaving] = useState(false);
   const [savedAt, setSavedAt] = useState(null);
   const [q, setQ] = useState("");
@@ -493,7 +622,7 @@ function StudyView({ pending, onConsumed }) {
         setEditing({ id: d.id, type: d.type, title: d.title || "", heldBy: d.heldBy || "", intro: d.intro || "",
           support: d.support || [], tension: d.tension || [], resolution: d.resolution || { mode: "middle", text: "" },
           notes: d.notes || "", related: d.related || [], status: d.status || "draft" });
-        setEditMode(true);
+        setEditMode(false);   // read-first; Edit opens the editor (admin only)
       }
     });
   };
@@ -528,29 +657,46 @@ function StudyView({ pending, onConsumed }) {
 
   if (err) return <div className="stats-view"><div className="stats-empty">Couldn't load study content. (Admin sign-in required.)</div></div>;
 
+  if (walk)
+    return <div className="study-view"><WalkthroughView entry={walk} previewReader={previewReader} onExit={() => setWalk(null)} /></div>;
   if (editing) {
+    const ro = previewReader || !editMode;   // read-only: preview mode, or not actively editing
+    const close = () => { setEditing(null); setSavedAt(null); };
     if (isTopicLike(editing.type))
-      return <div className="study-view"><TopicPage entry={editing} editing={editMode} onChange={setEditing} onSave={save} onDelete={del} onClose={() => { setEditing(null); setSavedAt(null); }} onToggleEdit={() => setEditMode(m => !m)} saving={saving} savedAt={savedAt} /></div>;
+      return <div className="study-view"><TopicPage entry={editing} editing={!ro} onChange={setEditing} onSave={save} onDelete={del} onClose={close} onToggleEdit={() => setEditMode(m => !m)} onWalk={() => setWalk(editing)} previewReader={previewReader} saving={saving} savedAt={savedAt} /></div>;
     if (editing.type === "argument")
-      return <div className="study-view"><ArgumentPage entry={editing} editing={editMode} onChange={setEditing} onSave={save} onDelete={del} onClose={() => { setEditing(null); setSavedAt(null); }} onToggleEdit={() => setEditMode(m => !m)} saving={saving} savedAt={savedAt} /></div>;
-    return <div className="study-view"><StudyEditor entry={editing} onChange={setEditing} onSave={save} onDelete={del} onClose={() => { setEditing(null); setSavedAt(null); }} saving={saving} savedAt={savedAt} /></div>;
+      return <div className="study-view"><ArgumentPage entry={editing} editing={!ro} onChange={setEditing} onSave={save} onDelete={del} onClose={close} onToggleEdit={() => setEditMode(m => !m)} previewReader={previewReader} saving={saving} savedAt={savedAt} /></div>;
+    if (ro)
+      return <div className="study-view"><DenominationRead entry={editing} onClose={close} onToggleEdit={() => setEditMode(true)} previewReader={previewReader} /></div>;
+    return <div className="study-view"><StudyEditor entry={editing} onChange={setEditing} onSave={save} onDelete={del} onClose={close} onToggleEdit={() => setEditMode(false)} saving={saving} savedAt={savedAt} /></div>;
   }
 
   const isTopic = module === "topic";
   const moduleName = isTopic ? "Topics" : (module === "denomination" ? "Denominations" : "Arguments");
   const newLabel = isTopic ? "topic" : (module === "denomination" ? "denomination" : "argument");
   const qs = q.trim().toLowerCase();
-  const shown = (entries || []).filter(e => !qs || (e.title || "").toLowerCase().includes(qs) || (e.heldBy || "").toLowerCase().includes(qs));
+  const pool = (entries || []).filter(e => !previewReader || e.status === "published");   // a reader only sees published
+  const shown = pool.filter(e => !qs || (e.title || "").toLowerCase().includes(qs) || (e.heldBy || "").toLowerCase().includes(qs));
   return (
     <div className="study-view">
       <div className="study-sub">
         {STUDY_MODULES.map(m => (
           <button key={m.id} className={"study-sub-b" + (module === m.id ? " on" : "")} onClick={() => pickModule(m.id)}>{m.label}</button>
         ))}
+        <button className={"study-preview-toggle" + (previewReader ? " on" : "")} onClick={() => setPreviewReader(p => !p)}
+          title="See exactly what a reader sees — editing off, drafts hidden">
+          {previewReader ? "✓ Previewing as reader" : "Preview as reader"}
+        </button>
       </div>
+      {previewReader && (
+        <div className="study-preview-note">
+          You're seeing what a reader sees — editing is off and drafts are hidden.
+          <button className="study-preview-exit" onClick={() => setPreviewReader(false)}>Exit preview</button>
+        </div>
+      )}
       <div className="study-list-head">
         <h1 className="stats-title">{moduleName}</h1>
-        <button className="study-new" onClick={newEntry}>+ New {newLabel}</button>
+        {!previewReader && <button className="study-new" onClick={newEntry}>+ New {newLabel}</button>}
       </div>
       <div className="stats-sub">{isTopic
         ? "Browse a subject and its verses, grouped by subtopic. Mostly filled from MetaV — light edits only."
@@ -558,17 +704,19 @@ function StudyView({ pending, onConsumed }) {
         ? "Two sides laid out with their own verses, and where the text lands between them — or stays a mystery."
         : "A position with its support and tension verses, and where the text resolves it — or stays a mystery."}</div>
 
-      {entries && entries.length > 0 && (
+      {pool.length > 0 && (
         <input className="study-search-input" type="text" value={q}
           placeholder={"Search " + moduleName.toLowerCase() + "…"} onChange={e => setQ(e.target.value)} />
       )}
 
       {entries === null ? (
         <div className="stats-empty">Loading…</div>
-      ) : entries.length === 0 ? (
-        <div className="stats-empty">Nothing here yet — start with “+ New {newLabel}”.{isTopic ? " (Or import from MetaV.)" : ""}</div>
       ) : shown.length === 0 ? (
-        <div className="stats-empty">No matches for “{q}”.</div>
+        <div className="stats-empty">{qs
+          ? "No matches for “" + q + "”."
+          : previewReader
+          ? "Nothing published yet — mark an entry Published to show it here."
+          : "Nothing here yet — start with “+ New " + newLabel + "”." + (isTopic ? " (Or import from MetaV.)" : "")}</div>
       ) : (
         <div className="study-rows">
           {shown.map(e => (
@@ -576,7 +724,7 @@ function StudyView({ pending, onConsumed }) {
               {!isTopic && <span className={"study-badge study-badge--" + e.type}>{STUDY_TYPE_LABEL[e.type] || e.type}</span>}
               <span className="study-row-title">{e.title}{e.heldBy ? <span className="study-row-held"> · {e.heldBy}</span> : null}</span>
               <span className="study-row-n">{e.n || 0} {isTopic ? "verses" : "refs"}</span>
-              {e.status === "draft" && <span className="study-row-draft">draft</span>}
+              {!previewReader && e.status === "draft" && <span className="study-row-draft">draft</span>}
             </button>
           ))}
         </div>
