@@ -2836,8 +2836,8 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
         const canNext = chronoOn ? (chrono && chronoPos < chrono.passages.length) : selChapter < maxChap;
         return (
           <>
-            <button className="lib-focus-arrow lib-focus-arrow-prev" aria-label="Previous" disabled={!canPrev} onClick={() => turnPage(-1)}>‹</button>
-            <button className="lib-focus-arrow lib-focus-arrow-next" aria-label="Next" disabled={!canNext} onClick={() => turnPage(1)}>›</button>
+            <button className={"lib-focus-arrow lib-focus-arrow-prev" + (audioDockOn ? " lib-focus-arrow--audio" : "")} aria-label="Previous" disabled={!canPrev} onClick={() => turnPage(-1)}>‹</button>
+            <button className={"lib-focus-arrow lib-focus-arrow-next" + (audioDockOn ? " lib-focus-arrow--audio" : "")} aria-label="Next" disabled={!canNext} onClick={() => turnPage(1)}>›</button>
           </>
         );
       })()}

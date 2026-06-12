@@ -3244,6 +3244,8 @@ input { font-family: inherit; }
   }
   .lib-focus-arrow:hover { color: #fff; }
   .lib-focus-arrow:disabled { opacity: 0; pointer-events: none; }   /* hide at the first/last */
+  /* audio playing → page bottom lifts to 56px, so its middle rises ~16px; match it */
+  .lib-focus-arrow--audio { top: calc(50% - 16px); }
   /* sit just outside the page edges (page is 760px wide, centered) */
   .lib-focus-arrow-prev { left: calc(50% - 380px); transform: translate(-100%, -50%); }
   .lib-focus-arrow-next { right: calc(50% - 380px); transform: translate(100%, -50%); }

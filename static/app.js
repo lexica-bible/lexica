@@ -7853,12 +7853,12 @@ function LibraryView({
     const canPrev = chronoOn ? chronoPos > 1 : selChapter > 1;
     const canNext = chronoOn ? chrono && chronoPos < chrono.passages.length : selChapter < maxChap;
     return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
-      className: "lib-focus-arrow lib-focus-arrow-prev",
+      className: "lib-focus-arrow lib-focus-arrow-prev" + (audioDockOn ? " lib-focus-arrow--audio" : ""),
       "aria-label": "Previous",
       disabled: !canPrev,
       onClick: () => turnPage(-1)
     }, "\u2039"), /*#__PURE__*/React.createElement("button", {
-      className: "lib-focus-arrow lib-focus-arrow-next",
+      className: "lib-focus-arrow lib-focus-arrow-next" + (audioDockOn ? " lib-focus-arrow--audio" : ""),
       "aria-label": "Next",
       disabled: !canNext,
       onClick: () => turnPage(1)
