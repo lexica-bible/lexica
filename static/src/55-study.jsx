@@ -25,6 +25,21 @@ const isTopicLike = t => t === "topic" || t === "name";
 // Subtopic headings arrive from Nave's as little sentences ("Father.") — drop a
 // trailing period/comma so they read as headings, not sentences.
 const cleanHeading = h => String(h || "").replace(/\s*[.,;:]+\s*$/, "");
+// Split "Leviticus 10:8" -> book "Leviticus" + short ref "10:8", so a section's verses
+// can be grouped (and collapsed) under book headers.
+const _REF_SPLIT = /^(.*?)\s+(\d+:\d+(?:[-–—]\d+(?::\d+)?)?)\s*$/;
+const bookOf = ref => { const m = _REF_SPLIT.exec(String(ref || "")); return m ? m[1] : String(ref || ""); };
+const shortRef = ref => { const m = _REF_SPLIT.exec(String(ref || "")); return m ? m[2] : String(ref || ""); };
+function groupByBook(verses) {
+  const groups = [];
+  (verses || []).forEach(v => {
+    const book = bookOf(v.ref);
+    const last = groups[groups.length - 1];
+    if (last && last.book === book) last.verses.push(v);
+    else groups.push({ book, verses: [v] });
+  });
+  return groups;
+}
 
 function blankTopic() {
   return { id: "", type: "topic", title: "", intro: "", sections: [{ heading: "", verses: [] }], related: [], status: "draft", source: "" };
@@ -171,6 +186,9 @@ function TopicPage({ entry, editing, onChange, onSave, onDelete, onClose, onTogg
   const allOpen = entry.sections.length > 0 && openSecs.size === entry.sections.length;
   const toggleAll = () => setOpenSecs(allOpen ? new Set() : new Set(entry.sections.map((_, i) => i)));
   const toggleSec = i => setOpenSecs(prev => { const n = new Set(prev); n.has(i) ? n.delete(i) : n.add(i); return n; });
+  const [closedBooks, setClosedBooks] = useState(() => new Set());   // big sections group verses by book; this tracks collapsed books
+  useEffect(() => { setClosedBooks(new Set()); }, [entry.id]);
+  const toggleBook = key => setClosedBooks(prev => { const n = new Set(prev); n.has(key) ? n.delete(key) : n.add(key); return n; });
 
   if (!editing) {
     return (
@@ -199,7 +217,33 @@ function TopicPage({ entry, editing, onChange, onSave, onDelete, onClose, onTogg
                     <span className="study-section-head-text">{cleanHeading(s.heading) || "General references"}</span>
                     <span className="study-section-count">{s.verses.length}</span>
                   </button>
-                  {isOpen && (
+                  {isOpen && (s.verses.length > 4 ? (
+                    <div className="study-books">
+                      {groupByBook(s.verses).map((g, gi) => {
+                        const bkey = i + "|" + gi + "|" + g.book;
+                        const bopen = !closedBooks.has(bkey);
+                        return (
+                          <div className="study-book" key={gi}>
+                            <button className="study-book-toggle" onClick={() => toggleBook(bkey)} aria-expanded={bopen}>
+                              <span className="study-book-chevron">{bopen ? "▾" : "▸"}</span>
+                              <span className="study-book-name">{g.book}</span>
+                              <span className="study-book-count">{g.verses.length}</span>
+                            </button>
+                            {bopen && (
+                              <div className="study-book-verses">
+                                {g.verses.map((v, j) => (
+                                  <div className="study-read-verse" key={j}>
+                                    <span className="study-verse-ref">{shortRef(v.ref)}</span>
+                                    <span className="study-read-text">{v.text || <em className="study-verse-missing">(text not found)</em>}</span>
+                                  </div>
+                                ))}
+                              </div>
+                            )}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  ) : (
                     <div className="study-read-verses">
                       {s.verses.map((v, j) => (
                         <div className="study-read-verse" key={j}>
@@ -208,7 +252,7 @@ function TopicPage({ entry, editing, onChange, onSave, onDelete, onClose, onTogg
                         </div>
                       ))}
                     </div>
-                  )}
+                  ))}
                 </div>
               );
             })}

@@ -3895,6 +3895,29 @@ const isTopicLike = t => t === "topic" || t === "name";
 // Subtopic headings arrive from Nave's as little sentences ("Father.") — drop a
 // trailing period/comma so they read as headings, not sentences.
 const cleanHeading = h => String(h || "").replace(/\s*[.,;:]+\s*$/, "");
+// Split "Leviticus 10:8" -> book "Leviticus" + short ref "10:8", so a section's verses
+// can be grouped (and collapsed) under book headers.
+const _REF_SPLIT = /^(.*?)\s+(\d+:\d+(?:[-–—]\d+(?::\d+)?)?)\s*$/;
+const bookOf = ref => {
+  const m = _REF_SPLIT.exec(String(ref || ""));
+  return m ? m[1] : String(ref || "");
+};
+const shortRef = ref => {
+  const m = _REF_SPLIT.exec(String(ref || ""));
+  return m ? m[2] : String(ref || "");
+};
+function groupByBook(verses) {
+  const groups = [];
+  (verses || []).forEach(v => {
+    const book = bookOf(v.ref);
+    const last = groups[groups.length - 1];
+    if (last && last.book === book) last.verses.push(v);else groups.push({
+      book,
+      verses: [v]
+    });
+  });
+  return groups;
+}
 function blankTopic() {
   return {
     id: "",
@@ -4192,6 +4215,15 @@ function TopicPage({
     n.has(i) ? n.delete(i) : n.add(i);
     return n;
   });
+  const [closedBooks, setClosedBooks] = useState(() => new Set()); // big sections group verses by book; this tracks collapsed books
+  useEffect(() => {
+    setClosedBooks(new Set());
+  }, [entry.id]);
+  const toggleBook = key => setClosedBooks(prev => {
+    const n = new Set(prev);
+    n.has(key) ? n.delete(key) : n.add(key);
+    return n;
+  });
   if (!editing) {
     return /*#__PURE__*/React.createElement("div", {
       className: "study-topic"
@@ -4231,7 +4263,37 @@ function TopicPage({
         className: "study-section-head-text"
       }, cleanHeading(s.heading) || "General references"), /*#__PURE__*/React.createElement("span", {
         className: "study-section-count"
-      }, s.verses.length)), isOpen && /*#__PURE__*/React.createElement("div", {
+      }, s.verses.length)), isOpen && (s.verses.length > 4 ? /*#__PURE__*/React.createElement("div", {
+        className: "study-books"
+      }, groupByBook(s.verses).map((g, gi) => {
+        const bkey = i + "|" + gi + "|" + g.book;
+        const bopen = !closedBooks.has(bkey);
+        return /*#__PURE__*/React.createElement("div", {
+          className: "study-book",
+          key: gi
+        }, /*#__PURE__*/React.createElement("button", {
+          className: "study-book-toggle",
+          onClick: () => toggleBook(bkey),
+          "aria-expanded": bopen
+        }, /*#__PURE__*/React.createElement("span", {
+          className: "study-book-chevron"
+        }, bopen ? "▾" : "▸"), /*#__PURE__*/React.createElement("span", {
+          className: "study-book-name"
+        }, g.book), /*#__PURE__*/React.createElement("span", {
+          className: "study-book-count"
+        }, g.verses.length)), bopen && /*#__PURE__*/React.createElement("div", {
+          className: "study-book-verses"
+        }, g.verses.map((v, j) => /*#__PURE__*/React.createElement("div", {
+          className: "study-read-verse",
+          key: j
+        }, /*#__PURE__*/React.createElement("span", {
+          className: "study-verse-ref"
+        }, shortRef(v.ref)), /*#__PURE__*/React.createElement("span", {
+          className: "study-read-text"
+        }, v.text || /*#__PURE__*/React.createElement("em", {
+          className: "study-verse-missing"
+        }, "(text not found)"))))));
+      })) : /*#__PURE__*/React.createElement("div", {
         className: "study-read-verses"
       }, s.verses.map((v, j) => /*#__PURE__*/React.createElement("div", {
         className: "study-read-verse",
@@ -4242,7 +4304,7 @@ function TopicPage({
         className: "study-read-text"
       }, v.text || /*#__PURE__*/React.createElement("em", {
         className: "study-verse-missing"
-      }, "(text not found)"))))));
+      }, "(text not found)")))))));
     })));
   }
   return /*#__PURE__*/React.createElement("div", {
