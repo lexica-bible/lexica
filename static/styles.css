@@ -1524,8 +1524,8 @@ input { font-family: inherit; }
 .lib-audio-dock {
   position: fixed; left: 0; right: 0; bottom: 0;
   z-index: 62;                 /* above the focus wash (50), reading sheet (60), arrows (61) */
-  display: flex; align-items: center; gap: 12px;
-  padding: 8px 18px calc(8px + env(safe-area-inset-bottom, 0px));
+  display: flex; align-items: center; gap: 10px;
+  padding: 5px 16px calc(5px + env(safe-area-inset-bottom, 0px));
   background: color-mix(in oklab, var(--bg) 86%, #fff);
   backdrop-filter: blur(6px);
   border-top: 1px solid var(--rule);
@@ -1534,20 +1534,21 @@ input { font-family: inherit; }
 .lib-audio-dock--out { animation: audio-dock-down 0.24s cubic-bezier(0.4, 0, 1, 1) forwards; pointer-events: none; }
 .lib-audio-dock-btn {
   flex: none; display: inline-flex; align-items: center; justify-content: center;
-  width: 34px; height: 34px; padding: 0;
+  width: 26px; height: 26px; padding: 0;
   border: 1px solid var(--rule); border-radius: 50%;
   background: var(--ctl-bg); color: var(--ink);
   cursor: pointer; transition: background 0.15s;
 }
 .lib-audio-dock-btn:hover:not(:disabled) { background: var(--ctl-on); }
 .lib-audio-dock-btn:disabled { opacity: 0.5; cursor: default; }
+.lib-audio-dock-btn svg { width: 13px; height: 13px; }
 .lib-audio-bar {
-  flex: 1; display: block; width: 100%; margin: 0;
+  flex: 1; display: block; width: 100%; height: 14px; margin: 0;
   accent-color: var(--ink);
   cursor: pointer;
 }
-/* Last verse clears the fixed bottom player while it's showing (desktop). */
-.lib-reading--audio { padding-bottom: 64px; }
+/* Last verse clears the fixed bottom player (~36px tall) while it's showing. */
+.lib-reading--audio { padding-bottom: 48px; }
 
 /* Verse reading container — all modes */
 .lib-text-words {
@@ -3226,7 +3227,7 @@ input { font-family: inherit; }
   /* in focus mode the page is its own frame — don't reserve the side-panel gutter */
   .app.focus-mode.has-detail .lib-reading { padding-right: 46px; }
   /* when audio's playing, lift the page bottom clear of the docked player below it */
-  .app.focus-mode .lib-reading--audio { bottom: 80px; }
+  .app.focus-mode .lib-reading--audio { bottom: 56px; }
 }
 @keyframes focus-dim-in { from { opacity: 0; } to { opacity: 1; } }
 
