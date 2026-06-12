@@ -91,6 +91,9 @@
 :root[data-theme="dark"] .lib-hi-blue,
 :root[data-theme="dark"] .lib-hi-pink,
 :root[data-theme="dark"] .lib-hi-orange { color: #221e18; }
+/* Dark: the Strong's word-order number is a dark red (#c0392b) that sinks into the
+   dark bg — brighten it to a legible coral. */
+:root[data-theme="dark"] .lib-iw-pos { color: #f0726a; }
 
 * { box-sizing: border-box; }
 html, body {
