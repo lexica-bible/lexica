@@ -74,6 +74,12 @@
   --shadow-md: 0 2px 6px rgba(0, 0, 0, 0.45);
   --shadow-lg: 0 12px 32px -8px rgba(0, 0, 0, 0.6);
 }
+/* Dark theme only: the few hardcoded-white control surfaces (toolbar pills + the
+   selected pill in the segmented menus) → raised dark-gray instead of glaring white. */
+:root[data-theme="dark"] .lib-toggle { background: #2a2e36; border-color: var(--rule-2); }
+:root[data-theme="dark"] .lib-toggle.on { background: #363c47; border-color: var(--rule-2); }
+:root[data-theme="dark"] .seg-b.on,
+:root[data-theme="dark"] .mseg-b.on { background: #363c47; box-shadow: none; }
 
 * { box-sizing: border-box; }
 html, body {
