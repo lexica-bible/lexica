@@ -294,12 +294,14 @@ Built + deployed: admin-only **Study** tab, sub-switch **Topics · Denominations
 sectioned browse (MetaV/Nave's, ~1,819 concept topics loaded); denomination/argument = the
 position→support→tension→resolution claim editor; person/place names → a "Nave's topical" block on the
 metaV sidebar (696 name-topics). Verse text = ABP prose (KJV fallback). OPEN:
-- Sidebar "Nave's topical" block is LIVE (the earlier blank was a redeploy/refresh miss). STILL
-  VERIFY: the tap-through — a subtopic header should jump to the Study tab and open that name's
-  sectioned page (`studyPending` → `openEntry`).
-- Reader-facing guided WALKTHROUGH view (the stepped topic-reading mockup) — not built.
-- A real two-sided ARGUMENT layout (v1 reuses the single-position claim editor).
-- Decide PUBLIC vs admin-only for these modules. Optional: fold MetaV `Writers` in (replace hand `_BOOK_AUTHORS`).
+- Sidebar "Nave's topical" block + tap-through: LIVE. Tap-through wired end-to-end (traced; committed
+  app.js in sync) — if the block shows, the name's page always opens. Live click-test still pending.
+- Two-sided ARGUMENT layout: BUILT + pushed 2026-06-12 (commit ae3e584; awaiting deploy). Side A | Side B,
+  each with its own claim + verses; resolution weighs them; Tension bucket dropped for arguments.
+  Denominations unchanged. Legacy arguments convert on read (support→A, tension→B).
+- PUBLIC vs admin-only: DECIDED — stays admin-only for now (user's call). Draft/published kept for later.
+- Reader-facing guided WALKTHROUGH view (the stepped topic-reading mockup) — NOT built (next; mock first).
+- Optional: fold MetaV `Writers` in (replace hand `_BOOK_AUTHORS`).
 `code: views_study.py + static/src/55-study.jsx; scripts/load_study_topics.py (gusheng/MetaV); memory project_study_modules`
 
 ### ~~Chronological reading mode~~ — DONE + LIVE 2026-06-09 (desktop + mobile)
