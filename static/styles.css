@@ -3348,9 +3348,46 @@ input { font-family: inherit; }
 .study-chip-input { font: inherit; font-size: 13px; color: var(--ink); background: none; border: none; padding: 4px 6px; min-width: 120px; }
 .study-chip-input:focus { outline: none; }
 
+/* sub-switch: Topics · Denominations · Arguments */
+.study-sub { display: flex; gap: 4px; margin-bottom: 16px; border-bottom: 1px solid var(--rule); }
+.study-sub-b { font-size: 13.5px; color: var(--ink-3); background: none; border: none; cursor: pointer; padding: 8px 12px; border-bottom: 2px solid transparent; margin-bottom: -1px; }
+.study-sub-b:hover { color: var(--ink); }
+.study-sub-b.on { color: var(--ink); font-weight: 500; border-bottom-color: var(--gold); }
+.study-row-n { flex: none; font-size: 11.5px; color: var(--ink-4); white-space: nowrap; }
+
+/* topic — read (browse) */
+.study-topic { display: flex; flex-direction: column; }
+.study-eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-4); margin-bottom: 3px; }
+.study-topic-title { font-family: var(--f-serif); font-size: 26px; font-weight: 600; color: var(--ink); margin: 0 0 4px; }
+.study-topic-meta { font-size: 12.5px; color: var(--ink-4); margin-bottom: 14px; }
+.study-topic-intro { font-size: 14px; color: var(--ink-2); line-height: 1.6; margin: 0 0 18px; }
+.study-edit-btn { font-size: 12.5px; color: var(--ink); background: var(--ctl-bg); border: 1px solid var(--rule-2); border-radius: 8px; padding: 6px 14px; cursor: pointer; }
+.study-edit-btn:hover { border-color: var(--ink-3); }
+.study-section { margin-bottom: 20px; }
+.study-section-head { font-size: 14px; font-weight: 600; color: var(--ink); margin-bottom: 9px; padding-bottom: 5px; border-bottom: 1px solid var(--rule); }
+.study-read-verses { display: flex; flex-direction: column; gap: 9px; }
+.study-read-verse { display: flex; gap: 12px; align-items: baseline; }
+.study-read-verse .study-verse-ref { flex: none; width: 96px; }
+.study-read-text { flex: 1; min-width: 0; font-family: var(--f-serif); font-size: 15px; line-height: 1.5; color: var(--ink); }
+
+/* topic — edit (sections) */
+.study-section--edit { border: 1px solid var(--rule); border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; background: var(--paper); }
+.study-section-bar { display: flex; gap: 8px; align-items: center; margin-bottom: 8px; }
+.study-section-head-input { flex: 1; min-width: 0; font: inherit; font-size: 13.5px; font-weight: 500; color: var(--ink); background: var(--bg); border: 1px solid var(--rule-2); border-radius: 8px; padding: 7px 10px; }
+.study-section-head-input:focus { outline: none; border-color: var(--accent); }
+.study-section-tools { display: flex; gap: 4px; flex: none; }
+.study-sec-tool { font-size: 13px; line-height: 1; color: var(--ink-3); background: var(--ctl-bg); border: 1px solid var(--rule-2); border-radius: 6px; padding: 6px 9px; cursor: pointer; }
+.study-sec-tool:disabled { opacity: 0.35; cursor: default; }
+.study-sec-tool--del:hover { color: #b3382f; border-color: #b3382f; }
+.study-add-section { align-self: flex-start; font-size: 13px; color: var(--ink-2); background: var(--bg-sunk); border: 1px dashed var(--rule-2); border-radius: 8px; padding: 8px 14px; cursor: pointer; }
+.study-add-section:hover { color: var(--ink); border-color: var(--ink-3); }
+
 @media (max-width: 1099px) {
   .study-view { padding: 14px 14px 90px; }
   .study-editor-bar { position: static; }
   .study-head-row { flex-direction: column; align-items: stretch; gap: 10px; }
   .study-field--held { flex: none; }
+  .study-topic-title { font-size: 22px; }
+  .study-read-verse { flex-direction: column; gap: 2px; }
+  .study-read-verse .study-verse-ref { width: auto; }
 }

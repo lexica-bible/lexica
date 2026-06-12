@@ -284,15 +284,43 @@ def _clean_refs(items):
     return out
 
 
-def _body_from_request(body: dict) -> dict:
-    """Normalize the incoming entry into the stored JSON shape — only the fields we
-    keep, so a client can't smuggle extra keys in."""
+_MAX_SECTIONS = 120
+
+
+def _clean_sections(items):
+    """Topic subtopic sections: [{heading, verses:[ref,...]}], trimmed and capped."""
+    out = []
+    if not isinstance(items, list):
+        return out
+    for s in items:
+        if not isinstance(s, dict):
+            continue
+        heading = str(s.get("heading") or "").strip()[:300]
+        verses = _clean_refs(s.get("verses"))
+        if heading or verses:
+            out.append({"heading": heading, "verses": verses})
+            if len(out) >= _MAX_SECTIONS:
+                break
+    return out
+
+
+def _body_from_request(etype: str, body: dict) -> dict:
+    """Normalize the incoming entry into its stored JSON shape (only fields we keep,
+    so a client can't smuggle extra keys in). A TOPIC carries subtopic SECTIONS; a
+    denomination/argument carries the claim shape (support/tension/resolution)."""
+    related = body.get("related") if isinstance(body.get("related"), list) else []
+    related = [str(x).strip() for x in related if str(x).strip()][:100]
+    if etype == "topic":
+        return {
+            "intro": str(body.get("intro") or "").strip()[:4000],
+            "sections": _clean_sections(body.get("sections")),
+            "related": related,
+            "source": str(body.get("source") or "").strip()[:40],
+        }
     res = body.get("resolution") or {}
     mode = (res.get("mode") or "middle").strip().lower()
     if mode not in _RES_MODES:
         mode = "middle"
-    related = body.get("related") if isinstance(body.get("related"), list) else []
-    related = [str(x).strip() for x in related if str(x).strip()][:100]
     return {
         "heldBy": str(body.get("heldBy") or "").strip()[:200],
         "intro": str(body.get("intro") or "").strip()[:2000],
@@ -304,20 +332,27 @@ def _body_from_request(body: dict) -> dict:
     }
 
 
-def _resolve_body(stored: dict) -> dict:
-    """Expand stored refs into {ref, text} pairs for the client."""
-    def expand(refs):
-        out = []
-        for ref in refs or []:
-            hits = _resolve_ref(ref)
-            if hits:
-                out.append({"ref": ref, "text": " ".join(h["text"] for h in hits)})
-            else:
-                out.append({"ref": ref, "text": ""})   # unresolved — show the ref alone
-        return out
+def _expand_refs(refs):
+    """[ref,...] -> [{ref, text}] with ABP prose resolved (empty text if unresolved)."""
+    out = []
+    for ref in refs or []:
+        hits = _resolve_ref(ref)
+        out.append({"ref": ref, "text": " ".join(h["text"] for h in hits) if hits else ""})
+    return out
+
+
+def _resolve_body(etype: str, stored: dict) -> dict:
+    """Expand stored refs into {ref, text} pairs for the client — inside each section
+    for a topic, in the support/tension buckets for a claim."""
     b = dict(stored)
-    b["support"] = expand(stored.get("support"))
-    b["tension"] = expand(stored.get("tension"))
+    if etype == "topic":
+        b["sections"] = [
+            {"heading": (s or {}).get("heading", ""), "verses": _expand_refs((s or {}).get("verses"))}
+            for s in (stored.get("sections") or [])
+        ]
+    else:
+        b["support"] = _expand_refs(stored.get("support"))
+        b["tension"] = _expand_refs(stored.get("tension"))
     return b
 
 
@@ -353,12 +388,18 @@ def list_entries():
     out = []
     for r in rows:
         try:
-            heldBy = (json.loads(r["json"]) or {}).get("heldBy", "")
+            data = json.loads(r["json"]) or {}
         except (ValueError, TypeError):
+            data = {}
+        if r["type"] == "topic":
+            n = sum(len((s or {}).get("verses") or []) for s in (data.get("sections") or []))
             heldBy = ""
+        else:
+            n = len(data.get("support") or []) + len(data.get("tension") or [])
+            heldBy = data.get("heldBy", "")
         out.append({
             "id": r["id"], "type": r["type"], "title": r["title"],
-            "heldBy": heldBy, "status": r["status"], "updated": r["updated"],
+            "heldBy": heldBy, "n": n, "status": r["status"], "updated": r["updated"],
         })
     return jsonify({"entries": out})
 
@@ -384,7 +425,7 @@ def get_entry(entry_id):
         stored = json.loads(r["json"]) or {}
     except (ValueError, TypeError):
         stored = {}
-    out = _resolve_body(stored)
+    out = _resolve_body(r["type"], stored)
     out.update({
         "id": r["id"], "type": r["type"], "title": r["title"],
         "status": r["status"], "created": r["created"], "updated": r["updated"],
@@ -418,7 +459,7 @@ def save_entry():
     if status not in ("draft", "published"):
         status = "draft"
 
-    stored = _body_from_request(body)
+    stored = _body_from_request(etype, body)
     payload = json.dumps(stored, ensure_ascii=False)
     now = _now()
     _ensure_tables()

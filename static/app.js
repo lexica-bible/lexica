@@ -3798,17 +3798,27 @@ function CorpusResults({
 }
 
 // ============================================================
-// STUDY MODULES — admin-only authored study content (the "engine")
-// One shape, three views: a study TOPIC, a DENOMINATION's belief, or one side of
-// an ARGUMENT. Each entry = a position + support verses + tension verses + a
-// resolution (the middle road, or an open mystery) + notes + related links.
+// STUDY MODULES — admin-only (the "engine")
+// One Study tab with a sub-switch: Topics · Denominations · Arguments.
+//   Topics       — a BROWSE: a subject broken into subtopic SECTIONS, each with its
+//                  verses (mostly filled from MetaV; light editing). Shape:
+//                  {title, intro, sections:[{heading, verses:[{ref,text}]}]}.
+//   Denominations / Arguments — the CLAIM editor: a position with support + tension
+//                  verses and a resolution (middle road / open mystery).
 // Verses are entered as a REFERENCE; the ABP prose text auto-fills from the corpus.
 // Backend: views_study.py (study.db). Every route is admin-gated (404 otherwise).
 // ============================================================
-const STUDY_TYPES = [{
+const STUDY_MODULES = [{
   id: "topic",
-  label: "Topic"
+  label: "Topics"
 }, {
+  id: "denomination",
+  label: "Denominations"
+}, {
+  id: "argument",
+  label: "Arguments"
+}];
+const CLAIM_TYPES = [{
   id: "denomination",
   label: "Denomination"
 }, {
@@ -3820,10 +3830,25 @@ const STUDY_TYPE_LABEL = {
   denomination: "Denomination",
   argument: "Argument"
 };
-function blankStudyEntry(type) {
+function blankTopic() {
   return {
     id: "",
-    type: type || "topic",
+    type: "topic",
+    title: "",
+    intro: "",
+    sections: [{
+      heading: "",
+      verses: []
+    }],
+    related: [],
+    status: "draft",
+    source: ""
+  };
+}
+function blankClaim(type) {
+  return {
+    id: "",
+    type: type || "denomination",
     title: "",
     heldBy: "",
     intro: "",
@@ -3838,14 +3863,20 @@ function blankStudyEntry(type) {
     status: "draft"
   };
 }
+function moveItem(arr, i, dir) {
+  const j = i + dir;
+  if (j < 0 || j >= arr.length) return arr;
+  const a = arr.slice();
+  const t = a[i];
+  a[i] = a[j];
+  a[j] = t;
+  return a;
+}
 
-// One verse bucket (Support or Tension): a list of refs with their auto-filled
-// text, plus an add row that resolves the reference as you type it in.
-function StudyVerseBucket({
-  kind,
-  items,
+// Add a reference: resolves it to ABP prose, then hands {ref, text} up.
+function AddRef({
   onAdd,
-  onRemove
+  placeholder
 }) {
   const [ref, setRef] = useState("");
   const [busy, setBusy] = useState(false);
@@ -3868,41 +3899,13 @@ function StudyVerseBucket({
       }
     });
   };
-  const isSupport = kind === "support";
-  return /*#__PURE__*/React.createElement("div", {
-    className: "study-bucket study-bucket--" + kind
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "study-bucket-head"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "study-bucket-dot",
-    "aria-hidden": "true"
-  }), /*#__PURE__*/React.createElement("span", {
-    className: "study-bucket-name"
-  }, isSupport ? "Support" : "Tension"), /*#__PURE__*/React.createElement("span", {
-    className: "study-bucket-hint"
-  }, isSupport ? "verses used to hold it" : "verses that sit in conflict with it")), items.length > 0 && /*#__PURE__*/React.createElement("div", {
-    className: "study-verse-list"
-  }, items.map((it, i) => /*#__PURE__*/React.createElement("div", {
-    className: "study-verse-row",
-    key: i
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "study-verse-ref"
-  }, it.ref), /*#__PURE__*/React.createElement("span", {
-    className: "study-verse-text"
-  }, it.text || /*#__PURE__*/React.createElement("em", {
-    className: "study-verse-missing"
-  }, "not found \u2014 saved as a reference")), /*#__PURE__*/React.createElement("button", {
-    className: "study-x",
-    onClick: () => onRemove(i),
-    "aria-label": "Remove verse",
-    title: "Remove"
-  }, "\xD7")))), /*#__PURE__*/React.createElement("div", {
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "study-add-row"
   }, /*#__PURE__*/React.createElement("input", {
     className: "study-add-input",
     type: "text",
     value: ref,
-    placeholder: "Add a reference \u2014 e.g. Romans 10:17 (text fills in)",
+    placeholder: placeholder || "Add a reference — e.g. Romans 10:17 (text fills in)",
     onChange: e => {
       setRef(e.target.value);
       if (err) setErr("");
@@ -3922,7 +3925,235 @@ function StudyVerseBucket({
   }, err));
 }
 
-// Free-text chips of related entry/topic names.
+// Editable verse list (with remove).
+function VerseRows({
+  items,
+  onRemove
+}) {
+  if (!items.length) return null;
+  return /*#__PURE__*/React.createElement("div", {
+    className: "study-verse-list"
+  }, items.map((it, i) => /*#__PURE__*/React.createElement("div", {
+    className: "study-verse-row",
+    key: i
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "study-verse-ref"
+  }, it.ref), /*#__PURE__*/React.createElement("span", {
+    className: "study-verse-text"
+  }, it.text || /*#__PURE__*/React.createElement("em", {
+    className: "study-verse-missing"
+  }, "not found \u2014 saved as a reference")), /*#__PURE__*/React.createElement("button", {
+    className: "study-x",
+    onClick: () => onRemove(i),
+    "aria-label": "Remove verse",
+    title: "Remove"
+  }, "\xD7"))));
+}
+
+// ---- Topics ---------------------------------------------------------------
+function TopicSectionEdit({
+  section,
+  idx,
+  count,
+  onChange,
+  onRemove,
+  onMove
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "study-section study-section--edit"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "study-section-bar"
+  }, /*#__PURE__*/React.createElement("input", {
+    className: "study-section-head-input",
+    type: "text",
+    value: section.heading,
+    placeholder: "Section heading (optional)",
+    onChange: e => onChange({
+      ...section,
+      heading: e.target.value
+    })
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "study-section-tools"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "study-sec-tool",
+    disabled: idx === 0,
+    onClick: () => onMove(-1),
+    "aria-label": "Move up",
+    title: "Move up"
+  }, "\u2191"), /*#__PURE__*/React.createElement("button", {
+    className: "study-sec-tool",
+    disabled: idx === count - 1,
+    onClick: () => onMove(1),
+    "aria-label": "Move down",
+    title: "Move down"
+  }, "\u2193"), /*#__PURE__*/React.createElement("button", {
+    className: "study-sec-tool study-sec-tool--del",
+    onClick: onRemove,
+    "aria-label": "Remove section",
+    title: "Remove section"
+  }, "\u2715"))), /*#__PURE__*/React.createElement(VerseRows, {
+    items: section.verses,
+    onRemove: i => onChange({
+      ...section,
+      verses: section.verses.filter((_, j) => j !== i)
+    })
+  }), /*#__PURE__*/React.createElement(AddRef, {
+    onAdd: v => onChange({
+      ...section,
+      verses: [...section.verses, v]
+    }),
+    placeholder: "Add a reference to this section"
+  }));
+}
+function TopicPage({
+  entry,
+  editing,
+  onChange,
+  onSave,
+  onDelete,
+  onClose,
+  onToggleEdit,
+  saving,
+  savedAt
+}) {
+  const up = patch => onChange({
+    ...entry,
+    ...patch
+  });
+  const verseCount = entry.sections.reduce((n, s) => n + s.verses.length, 0);
+  if (!editing) {
+    return /*#__PURE__*/React.createElement("div", {
+      className: "study-topic"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "study-editor-bar"
+    }, /*#__PURE__*/React.createElement("button", {
+      className: "study-back",
+      onClick: onClose
+    }, "\u2039 All topics"), /*#__PURE__*/React.createElement("button", {
+      className: "study-edit-btn",
+      onClick: onToggleEdit
+    }, "Edit")), /*#__PURE__*/React.createElement("div", {
+      className: "study-eyebrow"
+    }, "Topic"), /*#__PURE__*/React.createElement("h1", {
+      className: "study-topic-title"
+    }, entry.title), /*#__PURE__*/React.createElement("div", {
+      className: "study-topic-meta"
+    }, entry.source === "metav" ? "from Nave's · " : "", entry.sections.length, " sections \xB7 ", verseCount, " verses"), entry.intro && /*#__PURE__*/React.createElement("p", {
+      className: "study-topic-intro"
+    }, entry.intro), entry.sections.length === 0 ? /*#__PURE__*/React.createElement("div", {
+      className: "stats-empty"
+    }, "No verses yet \u2014 click Edit to add some.") : entry.sections.map((s, i) => /*#__PURE__*/React.createElement("div", {
+      className: "study-section",
+      key: i
+    }, s.heading && /*#__PURE__*/React.createElement("div", {
+      className: "study-section-head"
+    }, s.heading), /*#__PURE__*/React.createElement("div", {
+      className: "study-read-verses"
+    }, s.verses.map((v, j) => /*#__PURE__*/React.createElement("div", {
+      className: "study-read-verse",
+      key: j
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "study-verse-ref"
+    }, v.ref), /*#__PURE__*/React.createElement("span", {
+      className: "study-read-text"
+    }, v.text || /*#__PURE__*/React.createElement("em", {
+      className: "study-verse-missing"
+    }, "(text not found)"))))))));
+  }
+  return /*#__PURE__*/React.createElement("div", {
+    className: "study-editor"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "study-editor-bar"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "study-back",
+    onClick: () => entry.id ? onToggleEdit() : onClose()
+  }, "\u2039 ", entry.id ? "Done editing" : "Cancel"), /*#__PURE__*/React.createElement("div", {
+    className: "study-editor-actions"
+  }, savedAt && !saving && /*#__PURE__*/React.createElement("span", {
+    className: "study-saved"
+  }, "Saved \u2713"), entry.id && /*#__PURE__*/React.createElement("button", {
+    className: "study-del",
+    onClick: onDelete
+  }, "Delete"), /*#__PURE__*/React.createElement("button", {
+    className: "study-save",
+    onClick: onSave,
+    disabled: saving || !entry.title.trim()
+  }, saving ? "Saving…" : "Save"))), /*#__PURE__*/React.createElement("div", {
+    className: "study-field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "study-label"
+  }, "Topic"), /*#__PURE__*/React.createElement("input", {
+    className: "study-input",
+    type: "text",
+    value: entry.title,
+    placeholder: "Subject \u2014 e.g. Faith",
+    onChange: e => up({
+      title: e.target.value
+    })
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "study-field"
+  }, /*#__PURE__*/React.createElement("label", {
+    className: "study-label"
+  }, "Intro ", /*#__PURE__*/React.createElement("span", {
+    className: "study-label-hint"
+  }, "(optional)")), /*#__PURE__*/React.createElement("textarea", {
+    className: "study-textarea study-textarea--sm",
+    value: entry.intro,
+    placeholder: "A short, plain-English lead-in.",
+    onChange: e => up({
+      intro: e.target.value
+    })
+  })), entry.sections.map((s, i) => /*#__PURE__*/React.createElement(TopicSectionEdit, {
+    key: i,
+    section: s,
+    idx: i,
+    count: entry.sections.length,
+    onChange: ns => up({
+      sections: entry.sections.map((x, j) => j === i ? ns : x)
+    }),
+    onRemove: () => up({
+      sections: entry.sections.filter((_, j) => j !== i)
+    }),
+    onMove: dir => up({
+      sections: moveItem(entry.sections, i, dir)
+    })
+  })), /*#__PURE__*/React.createElement("button", {
+    className: "study-add-section",
+    onClick: () => up({
+      sections: [...entry.sections, {
+        heading: "",
+        verses: []
+      }]
+    })
+  }, "+ Add section"));
+}
+
+// ---- Claims (denomination / argument) -------------------------------------
+function StudyVerseBucket({
+  kind,
+  items,
+  onAdd,
+  onRemove
+}) {
+  const isSupport = kind === "support";
+  return /*#__PURE__*/React.createElement("div", {
+    className: "study-bucket study-bucket--" + kind
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "study-bucket-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "study-bucket-dot",
+    "aria-hidden": "true"
+  }), /*#__PURE__*/React.createElement("span", {
+    className: "study-bucket-name"
+  }, isSupport ? "Support" : "Tension"), /*#__PURE__*/React.createElement("span", {
+    className: "study-bucket-hint"
+  }, isSupport ? "verses used to hold it" : "verses that sit in conflict with it")), /*#__PURE__*/React.createElement(VerseRows, {
+    items: items,
+    onRemove: onRemove
+  }), /*#__PURE__*/React.createElement(AddRef, {
+    onAdd: onAdd
+  }));
+}
 function StudyRelated({
   items,
   onAdd,
@@ -3960,8 +4191,6 @@ function StudyRelated({
     onBlur: add
   }));
 }
-
-// The full entry editor.
 function StudyEditor({
   entry,
   onChange,
@@ -3983,7 +4212,7 @@ function StudyEditor({
   }, /*#__PURE__*/React.createElement("button", {
     className: "study-back",
     onClick: onClose
-  }, "\u2039 All entries"), /*#__PURE__*/React.createElement("div", {
+  }, "\u2039 Back"), /*#__PURE__*/React.createElement("div", {
     className: "study-editor-actions"
   }, savedAt && !saving && /*#__PURE__*/React.createElement("span", {
     className: "study-saved"
@@ -4000,7 +4229,7 @@ function StudyEditor({
     className: "study-label"
   }, "Type"), /*#__PURE__*/React.createElement("div", {
     className: "seg"
-  }, STUDY_TYPES.map(t => /*#__PURE__*/React.createElement("button", {
+  }, CLAIM_TYPES.map(t => /*#__PURE__*/React.createElement("button", {
     key: t.id,
     className: "seg-b" + (entry.type === t.id ? " on" : ""),
     onClick: () => up({
@@ -4028,7 +4257,7 @@ function StudyEditor({
     className: "study-input",
     type: "text",
     value: entry.title,
-    placeholder: isDenom ? "What they hold — e.g. Baptism is required for salvation" : "The topic or claim",
+    placeholder: isDenom ? "What they hold — e.g. Baptism is required for salvation" : "The claim",
     onChange: e => up({
       title: e.target.value
     })
@@ -4038,7 +4267,7 @@ function StudyEditor({
     className: "study-label"
   }, "Intro ", /*#__PURE__*/React.createElement("span", {
     className: "study-label-hint"
-  }, "(optional, one or two lines)")), /*#__PURE__*/React.createElement("textarea", {
+  }, "(optional)")), /*#__PURE__*/React.createElement("textarea", {
     className: "study-textarea study-textarea--sm",
     value: entry.intro,
     placeholder: "A short, plain-English lead-in.",
@@ -4142,15 +4371,19 @@ function StudyEditor({
     className: "study-label-hint"
   }, "Draft = only you. Published is reserved for a future public reader.")));
 }
+
+// ---- The Study tab --------------------------------------------------------
 function StudyView() {
+  const [module, setModule] = useState("topic");
   const [entries, setEntries] = useState(null);
   const [err, setErr] = useState(false);
-  const [filter, setFilter] = useState("all");
   const [editing, setEditing] = useState(null);
+  const [editMode, setEditMode] = useState(false); // topics: read vs edit
   const [saving, setSaving] = useState(false);
   const [savedAt, setSavedAt] = useState(null);
-  const load = () => {
-    api.studyEntries("all").then(d => {
+  const load = mod => {
+    setEntries(null);
+    api.studyEntries(mod).then(d => {
       if (d && d.entries) {
         setEntries(d.entries);
         setErr(false);
@@ -4158,46 +4391,84 @@ function StudyView() {
     });
   };
   useEffect(() => {
-    load();
-  }, []);
+    load(module);
+  }, [module]);
+  const pickModule = m => {
+    if (m === module) return;
+    setEditing(null);
+    setSavedAt(null);
+    setModule(m);
+  };
   const openEntry = id => {
     setSavedAt(null);
     api.studyEntry(id).then(d => {
       if (!d) return;
-      setEditing({
-        id: d.id,
-        type: d.type,
-        title: d.title || "",
-        heldBy: d.heldBy || "",
-        intro: d.intro || "",
-        support: d.support || [],
-        tension: d.tension || [],
-        resolution: d.resolution || {
-          mode: "middle",
-          text: ""
-        },
-        notes: d.notes || "",
-        related: d.related || [],
-        status: d.status || "draft"
-      });
+      if (d.type === "topic") {
+        setEditing({
+          id: d.id,
+          type: "topic",
+          title: d.title || "",
+          intro: d.intro || "",
+          sections: (d.sections || []).map(s => ({
+            heading: s.heading || "",
+            verses: s.verses || []
+          })),
+          related: d.related || [],
+          status: d.status || "draft",
+          source: d.source || ""
+        });
+        setEditMode(false);
+      } else {
+        setEditing({
+          id: d.id,
+          type: d.type,
+          title: d.title || "",
+          heldBy: d.heldBy || "",
+          intro: d.intro || "",
+          support: d.support || [],
+          tension: d.tension || [],
+          resolution: d.resolution || {
+            mode: "middle",
+            text: ""
+          },
+          notes: d.notes || "",
+          related: d.related || [],
+          status: d.status || "draft"
+        });
+        setEditMode(true);
+      }
     });
   };
   const newEntry = () => {
     setSavedAt(null);
-    setEditing(blankStudyEntry("topic"));
+    setEditMode(true);
+    setEditing(module === "topic" ? blankTopic() : blankClaim(module));
   };
   const save = () => {
     if (!editing || !editing.title.trim() || saving) return;
     setSaving(true);
-    const payload = {
-      ...editing,
-      support: editing.support.map(v => ({
-        ref: v.ref
-      })),
-      tension: editing.tension.map(v => ({
-        ref: v.ref
-      }))
-    };
+    let payload;
+    if (editing.type === "topic") {
+      payload = {
+        ...editing,
+        sections: editing.sections.map(s => ({
+          heading: s.heading,
+          verses: s.verses.map(v => ({
+            ref: v.ref
+          }))
+        }))
+      };
+    } else {
+      payload = {
+        ...editing,
+        support: editing.support.map(v => ({
+          ref: v.ref
+        })),
+        tension: editing.tension.map(v => ({
+          ref: v.ref
+        }))
+      };
+    }
     api.studySave(payload).then(d => {
       setSaving(false);
       if (d && d.id) {
@@ -4206,7 +4477,7 @@ function StudyView() {
           id: d.id
         }));
         setSavedAt(Date.now());
-        load();
+        load(module);
       }
     });
   };
@@ -4218,15 +4489,31 @@ function StudyView() {
     if (!window.confirm("Delete this entry?")) return;
     api.studyDelete(editing.id).then(() => {
       setEditing(null);
-      load();
+      load(module);
     });
   };
   if (err) return /*#__PURE__*/React.createElement("div", {
     className: "stats-view"
   }, /*#__PURE__*/React.createElement("div", {
     className: "stats-empty"
-  }, "Couldn't load study entries. (Admin sign-in required.)"));
+  }, "Couldn't load study content. (Admin sign-in required.)"));
   if (editing) {
+    if (editing.type === "topic") return /*#__PURE__*/React.createElement("div", {
+      className: "study-view"
+    }, /*#__PURE__*/React.createElement(TopicPage, {
+      entry: editing,
+      editing: editMode,
+      onChange: setEditing,
+      onSave: save,
+      onDelete: del,
+      onClose: () => {
+        setEditing(null);
+        setSavedAt(null);
+      },
+      onToggleEdit: () => setEditMode(m => !m),
+      saving: saving,
+      savedAt: savedAt
+    }));
     return /*#__PURE__*/React.createElement("div", {
       className: "study-view"
     }, /*#__PURE__*/React.createElement(StudyEditor, {
@@ -4242,41 +4529,45 @@ function StudyView() {
       savedAt: savedAt
     }));
   }
-  const shown = (entries || []).filter(e => filter === "all" || e.type === filter);
+  const isTopic = module === "topic";
+  const moduleName = isTopic ? "Topics" : module === "denomination" ? "Denominations" : "Arguments";
+  const newLabel = isTopic ? "topic" : module === "denomination" ? "denomination" : "argument";
   return /*#__PURE__*/React.createElement("div", {
     className: "study-view"
   }, /*#__PURE__*/React.createElement("div", {
+    className: "study-sub"
+  }, STUDY_MODULES.map(m => /*#__PURE__*/React.createElement("button", {
+    key: m.id,
+    className: "study-sub-b" + (module === m.id ? " on" : ""),
+    onClick: () => pickModule(m.id)
+  }, m.label))), /*#__PURE__*/React.createElement("div", {
     className: "study-list-head"
   }, /*#__PURE__*/React.createElement("h1", {
     className: "stats-title"
-  }, "Study modules"), /*#__PURE__*/React.createElement("button", {
+  }, moduleName), /*#__PURE__*/React.createElement("button", {
     className: "study-new",
     onClick: newEntry
-  }, "+ New entry")), /*#__PURE__*/React.createElement("div", {
+  }, "+ New ", newLabel)), /*#__PURE__*/React.createElement("div", {
     className: "stats-sub"
-  }, "Author topics, denomination beliefs, and arguments \u2014 each as a position with its support and tension verses."), /*#__PURE__*/React.createElement("div", {
-    className: "study-filter seg"
-  }, [["all", "All"], ["topic", "Topics"], ["denomination", "Denominations"], ["argument", "Arguments"]].map(([id, lbl]) => /*#__PURE__*/React.createElement("button", {
-    key: id,
-    className: "seg-b" + (filter === id ? " on" : ""),
-    onClick: () => setFilter(id)
-  }, lbl))), entries === null ? /*#__PURE__*/React.createElement("div", {
+  }, isTopic ? "Browse a subject and its verses, grouped by subtopic. Mostly filled from MetaV — light edits only." : "A position with its support and tension verses, and where the text resolves it — or stays a mystery."), entries === null ? /*#__PURE__*/React.createElement("div", {
     className: "stats-empty"
-  }, "Loading\u2026") : shown.length === 0 ? /*#__PURE__*/React.createElement("div", {
+  }, "Loading\u2026") : entries.length === 0 ? /*#__PURE__*/React.createElement("div", {
     className: "stats-empty"
-  }, entries.length === 0 ? "No entries yet — start with “+ New entry”." : "None of this type yet.") : /*#__PURE__*/React.createElement("div", {
+  }, "Nothing here yet \u2014 start with \u201C+ New ", newLabel, "\u201D.", isTopic ? " (Or import from MetaV.)" : "") : /*#__PURE__*/React.createElement("div", {
     className: "study-rows"
-  }, shown.map(e => /*#__PURE__*/React.createElement("button", {
+  }, entries.map(e => /*#__PURE__*/React.createElement("button", {
     className: "study-row",
     key: e.id,
     onClick: () => openEntry(e.id)
-  }, /*#__PURE__*/React.createElement("span", {
+  }, !isTopic && /*#__PURE__*/React.createElement("span", {
     className: "study-badge study-badge--" + e.type
   }, STUDY_TYPE_LABEL[e.type] || e.type), /*#__PURE__*/React.createElement("span", {
     className: "study-row-title"
   }, e.title, e.heldBy ? /*#__PURE__*/React.createElement("span", {
     className: "study-row-held"
-  }, " \xB7 ", e.heldBy) : null), e.status === "draft" && /*#__PURE__*/React.createElement("span", {
+  }, " \xB7 ", e.heldBy) : null), /*#__PURE__*/React.createElement("span", {
+    className: "study-row-n"
+  }, e.n || 0, " ", isTopic ? "verses" : "refs"), e.status === "draft" && /*#__PURE__*/React.createElement("span", {
     className: "study-row-draft"
   }, "draft")))));
 }

@@ -45,7 +45,8 @@ BOOK_NAMES = [
     "1 John", "2 John", "3 John", "Jude", "Revelation",
 ]
 
-_MAX_VERSES = 300   # cap a single entry's Support bucket (matches the backend cap)
+_MAX_VERSES = 300       # cap verses per SECTION (matches the backend per-bucket cap)
+_MAX_SECTIONS = 120     # cap subtopic sections per topic (matches the backend cap)
 
 
 def _now():
@@ -107,24 +108,42 @@ def make_ref(verses, vid):
     return f"{BOOK_NAMES[book_id - 1]} {ch}:{vnum}"
 
 
-def group_by_main(topics, topic_index, verses):
-    """Merge every subtopic under its main topic into one ordered, de-duped verse
-    list. Returns [(main_topic, [ref, ...]), ...] sorted by main topic."""
-    by_main = {}   # main -> list of (book_id, ch, vnum, ref), to sort canonically
-    for tid, (main, _sub) in topics.items():
-        for vid in topic_index.get(tid, []):
-            loc = verses.get(vid)
-            ref = make_ref(verses, vid)
-            if loc and ref:
-                by_main.setdefault(main, []).append((loc[0], loc[1], loc[2], ref))
+def _section_refs(vids, verses):
+    """Verse ids -> ref strings, canonical order, de-duped."""
+    locs = []
+    for vid in vids:
+        loc = verses.get(vid)
+        ref = make_ref(verses, vid)
+        if loc and ref:
+            locs.append((loc[0], loc[1], loc[2], ref))
+    seen, refs = set(), []
+    for _b, _c, _v, ref in sorted(locs):
+        if ref not in seen:
+            seen.add(ref)
+            refs.append(ref)
+    return refs[:_MAX_VERSES]
+
+
+def build_topics(topics, topic_index, verses):
+    """Group by MAIN topic, keeping each subtopic as its own SECTION (heading +
+    its verses). Returns [(main_topic, [{heading, verses:[ref,...]}, ...]), ...]
+    sorted by main topic; sections keep their natural (TopicID) order."""
+    by_main = {}   # main -> list of (topic_id_int, subtopic, [refs])
+    for tid, (main, sub) in topics.items():
+        refs = _section_refs(topic_index.get(tid, []), verses)
+        if not refs:
+            continue
+        try:
+            tid_num = int(tid)
+        except (ValueError, TypeError):
+            tid_num = 0
+        by_main.setdefault(main, []).append((tid_num, sub, refs))
     out = []
     for main in sorted(by_main, key=lambda s: s.lower()):
-        seen, refs = set(), []
-        for _b, _c, _v, ref in sorted(by_main[main]):
-            if ref not in seen:
-                seen.add(ref)
-                refs.append(ref)
-        out.append((main, refs[:_MAX_VERSES]))
+        secs = sorted(by_main[main], key=lambda x: x[0])
+        sections = [{"heading": sub, "verses": refs} for (_tid, sub, refs) in secs][:_MAX_SECTIONS]
+        if sections:
+            out.append((main, sections))
     return out
 
 
@@ -156,21 +175,21 @@ def main():
     topic_index = load_topic_index(args.csv_dir)
     print(f"Loaded {len(verses):,} verses, {len(topics):,} topic rows, {len(topic_index):,} indexed topics.")
 
-    grouped = group_by_main(topics, topic_index, verses)
-    print(f"Grouped into {len(grouped):,} main topics.")
+    built = build_topics(topics, topic_index, verses)
+    print(f"Built {len(built):,} main topics.")
 
     if args.only.strip():
         wanted = {w.strip().lower() for w in args.only.split(",") if w.strip()}
-        grouped = [g for g in grouped if g[0].lower() in wanted]
+        built = [g for g in built if g[0].lower() in wanted]
     elif args.limit and args.limit > 0:
-        grouped = grouped[:args.limit]
+        built = built[:args.limit]
 
     conn = sqlite3.connect(db_path)
     ensure_table(conn)
     now = _now()
     created = skipped = 0
-    for main, refs in grouped:
-        if not refs:
+    for main, sections in built:
+        if not sections:
             continue
         entry_id = "metav_" + slugify(main)
         exists = conn.execute("SELECT 1 FROM entries WHERE id=?", (entry_id,)).fetchone()
@@ -178,10 +197,8 @@ def main():
             skipped += 1
             continue
         body = json.dumps({
-            "heldBy": "", "intro": "",
-            "support": refs, "tension": [],
-            "resolution": {"mode": "middle", "text": ""},
-            "notes": "", "related": [], "source": "metav",
+            "intro": "", "sections": sections,
+            "related": [], "source": "metav",
         }, ensure_ascii=False)
         if exists:
             conn.execute(
