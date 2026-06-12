@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Search routes (Phase 3 of REDESIGN_PLAN.md).
+"""Search routes.
 
 The /api/search endpoint (study-mode lexicon/Strong's search) plus its KJV
 parallel helpers. Returns ABP + KJV results, gloss groupings, and dotted-variant

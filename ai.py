@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""AI natural-language search (Phase 3 of REDESIGN_PLAN.md).
+"""AI natural-language search.
 
 The two-pass Haiku pipeline behind /api/ai-search: pass 1 generates SQL (with an
 LSJ lexical-context preamble), pass 2 curates the strongest verses. Owns the AI

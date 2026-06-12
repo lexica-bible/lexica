@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""LSJ / BDB lexicon-entry routes (Phase 3 of REDESIGN_PLAN.md).
+"""LSJ / BDB lexicon-entry routes.
 
 Liddell-Scott-Jones Greek entries (with abp_ext + Strong's fallbacks), the
 Haiku-backed LSJ sense summary, and Brown-Driver-Briggs Hebrew entries.

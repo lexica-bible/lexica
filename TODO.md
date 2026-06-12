@@ -9,8 +9,8 @@ spot. You can skip those lines.
 
 ## Code health / cleanup
 
-The big rework is finished — all six phases are done and live (see
-[REDESIGN_PLAN.md](REDESIGN_PLAN.md) and the memory notes). Done: Strong's plumbing centralized +
+The big rework is finished — all six phases are done and live (see the memory notes
+`project_redesign` / `project_architecture_rework`). Done: Strong's plumbing centralized +
 the fragile join gone (Phase 1); shared word-building code de-duplicated (Phase 2); the giant
 `app.py` split into one tidy file per feature (Phase 3); the front end split up and the word pop-up's
 tangle of on/off switches replaced with a "decide once, render simply" model (Phase 4); first-paint

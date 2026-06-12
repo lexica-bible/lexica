@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""KJV parallel-corpus routes (Phase 3 of REDESIGN_PLAN.md).
+"""KJV parallel-corpus routes.
 
 Chapter/verse rendering, per-word strongs lookups, batch verse-word fetch, and
 the KJV strongs count/search endpoints. KJV uses standard Protestant BookIDs

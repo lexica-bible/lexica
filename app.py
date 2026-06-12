@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Lexica Flask entry point (Phase 3 of REDESIGN_PLAN.md).
+"""Lexica Flask entry point.
 
 Thin app shell: builds the Flask app, wires the rate limiter, registers the
 domain blueprints (metav, crossref, lsj, kjv, lexicon, library, search, ai), and

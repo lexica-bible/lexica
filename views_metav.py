@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""MetaV person/place sidebar + proper-noun/strongs counts (Phase 3 of REDESIGN_PLAN.md).
+"""MetaV person/place sidebar + proper-noun/strongs counts.
 
 Routes for the person/place metadata sidebar (metav_* tables) plus the two small
 count endpoints the frontend uses to decide what to show. Looked up by NAME, not

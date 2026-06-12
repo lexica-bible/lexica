@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Lexicon word-study routes (Phase 3 of REDESIGN_PLAN.md).
+"""Lexicon word-study routes.
 
 The Lexicon tab's flow: smart lookup (Strong's/Greek/Hebrew/English) → word
 profile → book distribution → per-book verse list. ABP Greek comes from the

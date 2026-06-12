@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Library (ABP interlinear) reading routes (Phase 3 of REDESIGN_PLAN.md).
+"""Library (ABP interlinear) reading routes.
 
 The ABP primary text: per-verse plain text, per-verse word list (interlinear
 stack), the book list with chapter counts, and the full chapter render (with

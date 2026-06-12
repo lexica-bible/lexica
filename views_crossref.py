@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Cross-reference (TSK) routes (Phase 3 of REDESIGN_PLAN.md).
+"""Cross-reference (TSK) routes.
 
 Torrey's Treasury of Scripture Knowledge cross-references for a verse, plus the
 two Haiku-backed endpoints that synthesise / curate them. Cross-ref payloads are

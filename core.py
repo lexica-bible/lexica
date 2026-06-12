@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Shared core for the Lexica Flask app (Phase 3 of REDESIGN_PLAN.md).
+"""Shared core for the Lexica Flask app.
 
 App-independent layer that the view modules import: DB connections, the rate
 limiter (created WITHOUT an app — app.py calls limiter.init_app(app)), the
