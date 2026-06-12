@@ -4314,7 +4314,25 @@ function TopicPage({
         verses: []
       }]
     })
-  }, "+ Add section"));
+  }, "+ Add section"), /*#__PURE__*/React.createElement("div", {
+    className: "study-field study-status-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "study-label"
+  }, "Visibility"), /*#__PURE__*/React.createElement("div", {
+    className: "seg"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "seg-b" + (entry.status === "draft" ? " on" : ""),
+    onClick: () => up({
+      status: "draft"
+    })
+  }, "Draft"), /*#__PURE__*/React.createElement("button", {
+    className: "seg-b" + (entry.status === "published" ? " on" : ""),
+    onClick: () => up({
+      status: "published"
+    })
+  }, "Published")), /*#__PURE__*/React.createElement("span", {
+    className: "study-label-hint"
+  }, "Draft = only you. Published shows it in Preview as reader (still admin-only for now).")));
 }
 
 // ---- Claims (denomination / argument) -------------------------------------

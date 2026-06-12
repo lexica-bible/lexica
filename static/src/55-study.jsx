@@ -243,6 +243,14 @@ function TopicPage({ entry, editing, onChange, onSave, onDelete, onClose, onTogg
           onMove={dir => up({ sections: moveItem(entry.sections, i, dir) })} />
       ))}
       <button className="study-add-section" onClick={() => up({ sections: [...entry.sections, { heading: "", verses: [] }] })}>+ Add section</button>
+      <div className="study-field study-status-row">
+        <span className="study-label">Visibility</span>
+        <div className="seg">
+          <button className={"seg-b" + (entry.status === "draft" ? " on" : "")} onClick={() => up({ status: "draft" })}>Draft</button>
+          <button className={"seg-b" + (entry.status === "published" ? " on" : "")} onClick={() => up({ status: "published" })}>Published</button>
+        </div>
+        <span className="study-label-hint">Draft = only you. Published shows it in Preview as reader (still admin-only for now).</span>
+      </div>
     </div>
   );
 }
