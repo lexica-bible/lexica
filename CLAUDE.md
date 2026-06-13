@@ -184,7 +184,9 @@ scripts/          # build-frontend.js + one-time import/migration scripts
   gloss, translit, grammar) + `heb_verses`, all 39 books from STEP **TAHOT** (Translators Amalgamated
   Hebrew OT, CC BY). Loaded by `scripts/load_hebrew.py`; served by the PUBLIC `views_heb.py`
   (`core.heb_db()`, no owner gate on the data). **PUBLIC for everyone, no login (2026-06-11)** —
-  `hebPickable` gates on `hebAvail` (heb.db loaded), not the old `hebOwner`. Full record: memory
+  `hebPickable` gates on `hebAvail` (heb.db loaded), not the old `hebOwner`. Routes: `/api/hebrew/status`,
+  `/api/hebrew/chapter/<book>/<ch>`, and `/api/hebrew/verse-words/<book>/<ch>/<v>` (one verse, added
+  2026-06-13 to feed the word-detail side panel's interlinear). Full record: memory
   `project_hebrew_ot_interlinear`.
   `study.db` — **admin-only** authored "study modules" (built 2026-06-12/13): one `entries` table (row
   per topic / denomination / argument / name; `json` body + `type` + `status`). Served by admin-gated
@@ -354,6 +356,20 @@ scripts/          # build-frontend.js + one-time import/migration scripts
   Full record: memory `project_focus_mode`.
 - Word clicks → LSJ sidebar (G-numbers), BDB sidebar (H-numbers), or metaV (proper nouns)
 - KJV word clicks correctly route: common words → LSJ, proper nouns → metaV, Hebrew → BDB
+- **Word-detail side panel — interlinear FOLLOWS the reading text (2026-06-13).** The "Interlinear"
+  toggle under the verse quote shows the breakdown of whatever text you're reading: KJV →
+  `/api/kjv/verse_words`, Hebrew reader → `/api/hebrew/verse-words` (one-verse route added to
+  views_heb.py), else ABP `/api/verse-words` (was always ABP Greek). Greek/Hebrew LEADS (dark, `--ink`),
+  English is the muted helper (`--ink-2`), centred columns — mirrors the reading-pane interlinear. ABP
+  brackets render INLINE on the english word (`.iw-brk`, NOT a separate column — a column drifts off a
+  short word), with the Greek-order number inside (`.iw-pos` = `greek_pos`, which is the ENGLISH reading
+  order — display order is Greek). Trailing clause punctuation lifts OUTSIDE the `]`. Full record +
+  the badges/Nave's polish: memory `project_detail_panel_interlinear`.
+- **Chip-vs-prose render rule (verses shown OUTSIDE the reader).** CHIP = word-study (ABP brackets +
+  punctuation outside the `]`): the reading pane, Search + Lexicon results (both via `CorpusGroup` in
+  50-corpus-results.jsx), the side-card interlinear. PROSE = reading (plain text, no brackets): the TSK
+  cross-ref panel, Study-module verses, the side-card verse quote, the Library in-text "find" list.
+  Keep the split — don't bracket the prose surfaces.
 - Italic words render muted/italic: KJV (italic=1) and ABP (words.italic=1); ABP bracket words `[word]` are also translator additions
 - **Highlight paint over ABP brackets (2026-06-13):** word chips sit flush so their highlight
   backgrounds merge into one bar, but the `[` `]` glyphs + trailing punctuation sit between chips and
