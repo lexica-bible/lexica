@@ -1661,9 +1661,14 @@ input { font-family: inherit; }
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
 }
-.lib-vnum-click:hover {
-  background: var(--gold);
-  color: #fff;
+/* Real-hover devices only — otherwise the gold sticks on the last-tapped number on
+   touch (e.g. it lingers on verse 1 after switching books from the mobile picker).
+   Mirrors the .lib-word hover guard. */
+@media (hover: hover) {
+  .lib-vnum-click:hover {
+    background: var(--gold);
+    color: #fff;
+  }
 }
 
 /* ============================================================
