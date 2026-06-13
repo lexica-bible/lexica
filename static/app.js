@@ -5836,9 +5836,7 @@ function LibNavPanel({
       key: g.key
     }, newTestament && /*#__PURE__*/React.createElement("div", {
       className: "nav-testament"
-    }, /*#__PURE__*/React.createElement("span", {
-      className: "nav-div-t"
-    }, g.t)), /*#__PURE__*/React.createElement("div", {
+    }, g.t === "OT" ? "Old Testament" : "New Testament"), /*#__PURE__*/React.createElement("div", {
       className: "nav-div"
     }, /*#__PURE__*/React.createElement("span", {
       className: "nav-div-n"

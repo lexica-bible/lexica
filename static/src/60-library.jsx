@@ -357,7 +357,7 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
           return (
           <div className={"nav-group" + (newTestament ? " nav-group--tnew" : "") + tClass} key={g.key}>
             {newTestament && (
-              <div className="nav-testament"><span className="nav-div-t">{g.t}</span></div>
+              <div className="nav-testament">{g.t === "OT" ? "Old Testament" : "New Testament"}</div>
             )}
             <div className="nav-div">
               <span className="nav-div-n">{g.div}</span>

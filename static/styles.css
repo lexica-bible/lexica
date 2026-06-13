@@ -2695,12 +2695,21 @@ input { font-family: inherit; }
 /* A touch more air above a new testament block (where the OT/NT tag shows). */
 .nav-group--tnew { margin-top: 10px; }
 .nav-group--tnew:first-child { margin-top: 0; }
-/* #3 — whisper-quiet testament spine down the left: warm for OT, cool for NT, so
-   you sense which testament you're in without it shouting. */
-.nav-group--ot { border-left: 2px solid var(--gold-soft); padding-left: 4px; }
-.nav-group--nt { border-left: 2px solid var(--accent-soft); padding-left: 4px; }
-/* Standalone OT/NT testament header, sitting ABOVE the first category of each. */
-.nav-testament { padding: 4px 10px 4px; }
+/* #3 — testament spine down the left: warm for OT, cool for NT, so you sense which
+   testament you're in. Full accent in light/sepia (the soft tints vanished on
+   parchment); the softer tints stay in dark, where they already read well. */
+.nav-group--ot { border-left: 2px solid var(--gold); padding-left: 6px; }
+.nav-group--nt { border-left: 2px solid var(--accent); padding-left: 6px; }
+:root[data-theme="dark"] .nav-group--ot { border-left-color: var(--gold-soft); }
+:root[data-theme="dark"] .nav-group--nt { border-left-color: var(--accent-soft); }
+/* Standalone OT/NT testament header above the first category — a spelled-out
+   uppercase label colour-matched to its spine (was a floating gold pill). */
+.nav-testament {
+  font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 2px 10px 5px;
+}
+.nav-group--ot .nav-testament { color: var(--gold); }
+.nav-group--nt .nav-testament { color: var(--accent); }
 .nav-div {
   display: flex; align-items: baseline; gap: 6px;
   padding: 8px 10px 3px;
@@ -2723,9 +2732,11 @@ input { font-family: inherit; }
   text-align: left;
 }
 .nav-book { border-radius: 5px; transition: background 0.12s, color 0.12s; }
-.nav-book:hover { color: var(--ink); background: var(--bg-sunk); }
-.nav-book.on { background: var(--bg-sunk); color: var(--ink); font-weight: 600; }
-.nav-book.on:hover { background: var(--rule); }
+/* Darken the page toward the ink so the pill is visible in EVERY theme — the old
+   --bg-sunk was nearly identical to the parchment page in sepia (invisible hover). */
+.nav-book:hover { color: var(--ink); background: color-mix(in oklab, var(--bg) 90%, var(--ink)); }
+.nav-book.on { background: color-mix(in oklab, var(--bg) 82%, var(--ink)); color: var(--ink); font-weight: 600; }
+.nav-book.on:hover { background: color-mix(in oklab, var(--bg) 76%, var(--ink)); }
 .nav-book-name { flex: 1; min-width: 0; letter-spacing: -0.005em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 /* Current chapter shown beside the active book name while its grid is collapsed */
 .nav-book-ch { margin-left: 8px; color: var(--ink-2); font-weight: 600; font-size: 12.5px; flex: none; }
