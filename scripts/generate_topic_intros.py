@@ -32,15 +32,15 @@ from views_study import _draft_intro, _resolve_ref, _INTRO_SONNET   # noqa: E402
 # Matched against the actual topic titles (case-insensitive, exact); a few variants
 # are included so common alternate titles still land. Tell me to add/remove any.
 _COMMON = [
-    "Faith", "Grace", "Grace of God", "Hope", "Love", "Love of God", "Prayer",
-    "Salvation", "Repentance", "Forgiveness", "Sin", "Holy Spirit", "Holy Ghost",
-    "Baptism", "Obedience", "Humility", "Pride", "Joy", "Peace", "Patience",
-    "Wisdom", "Mercy", "Righteousness", "Holiness", "Worship", "Praise",
-    "Thankfulness", "Trust", "Heaven", "Hell", "Resurrection", "Judgment",
-    "Temptation", "Suffering", "Affliction", "Riches", "Wealth", "Money",
-    "Marriage", "Anger", "Truth", "Faithfulness", "Eternal Life", "Atonement",
-    "Redemption", "Sanctification", "Adoption", "Covenant", "Law", "Sabbath",
-    "Angels", "Satan", "Death", "Fear of God", "Children",
+    "Faith", "Grace of God", "Hope", "Love", "Prayer", "Salvation", "Repentance",
+    "Forgiveness of Injuries", "Sin (1)", "Sin (2)", "Holy Spirit", "Baptism",
+    "Obedience", "Humility", "Pride", "Joy", "Peace", "Patience", "Wisdom", "Mercy",
+    "Righteousness", "Holiness", "Worship", "Praise", "Thankfulness", "Trust",
+    "Heaven", "Hell", "Resurrection", "Judgment, the", "Temptation",
+    "Affliction, Consolation Under", "Affliction, Prayer Under", "Riches", "Money",
+    "Marriage", "Anger", "Truth", "Faithfulness", "Life, Eternal", "Atonement",
+    "Redemption", "Sanctification", "Adoption", "Covenant, the", "Trinity, the",
+    "Law", "Sabbath", "Angels", "Devil", "Death", "Fear of God", "Children",
 ]
 
 
