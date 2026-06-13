@@ -6573,8 +6573,13 @@ function ModesSheet({
     onClick: () => setOrder("canonical")
   }, "Canonical"), /*#__PURE__*/React.createElement("button", {
     className: "mseg-b" + (orderMode === "chronological" ? " on" : ""),
+    disabled: translation === "heb",
     "aria-pressed": orderMode === "chronological",
-    onClick: () => setOrder("chronological")
+    style: translation === "heb" ? {
+      opacity: 0.4,
+      cursor: "default"
+    } : undefined,
+    onClick: () => translation !== "heb" && setOrder("chronological")
   }, "Chronological"))), /*#__PURE__*/React.createElement("div", {
     className: "mode-sec"
   }, /*#__PURE__*/React.createElement("div", {
@@ -7280,7 +7285,12 @@ function LibraryView({
   // Per-text reading-plan progress ({ abp:{day,streak,last}, kjv:{...}, ... }).
   const [planProg, setPlanProg] = useState(() => planLoadAll());
   const nonCanon = NONCANON.find(t => t.id === corpus) || null;
-  const chronoOn = orderMode === "chronological" && !nonCanon && !!chrono;
+  const chronoOn = orderMode === "chronological" && !nonCanon && !!chrono && translation !== "heb";
+  // Hebrew OT has no chronological order — keep order canonical whenever Hebrew is the text
+  // (covers both switching to Hebrew from chrono AND restoring an old heb+chrono spot).
+  useEffect(() => {
+    if (translation === "heb" && orderMode === "chronological") setOrderMode("canonical");
+  }, [translation, orderMode]);
   const curPassage = chronoOn ? chrono.passages[chronoPos - 1] || null : null;
   const highlightRef = useRef(null);
   const navBookRef = useRef(null);
@@ -9653,9 +9663,14 @@ function LibraryView({
     onClick: () => setOrder("canonical")
   }, /*#__PURE__*/React.createElement(Icon.Book, null)), /*#__PURE__*/React.createElement("button", {
     className: "seg-b" + (orderMode === "chronological" ? " on" : ""),
-    title: "Chronological order (events in sequence)",
+    disabled: translation === "heb",
+    title: translation === "heb" ? "Chronological isn't available for the Hebrew OT" : "Chronological order (events in sequence)",
     "aria-label": "Chronological order",
-    onClick: () => setOrder("chronological")
+    style: translation === "heb" ? {
+      opacity: 0.35,
+      cursor: "default"
+    } : undefined,
+    onClick: () => translation !== "heb" && setOrder("chronological")
   }, /*#__PURE__*/React.createElement(Icon.Clock, null)))), /*#__PURE__*/React.createElement("span", {
     className: "lib-bar-sep",
     "aria-hidden": "true"

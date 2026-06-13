@@ -642,7 +642,7 @@ function ModesSheet({
               <div className="mode-lbl">Order</div>
               <div className="mseg">
                 <button className={"mseg-b"+(orderMode!=="chronological"?" on":"")} aria-pressed={orderMode!=="chronological"} onClick={()=>setOrder("canonical")}>Canonical</button>
-                <button className={"mseg-b"+(orderMode==="chronological"?" on":"")} aria-pressed={orderMode==="chronological"} onClick={()=>setOrder("chronological")}>Chronological</button>
+                <button className={"mseg-b"+(orderMode==="chronological"?" on":"")} disabled={translation==="heb"} aria-pressed={orderMode==="chronological"} style={translation==="heb"?{opacity:0.4,cursor:"default"}:undefined} onClick={()=>translation!=="heb"&&setOrder("chronological")}>Chronological</button>
               </div>
             </div>
           )}
@@ -926,7 +926,10 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
   // Per-text reading-plan progress ({ abp:{day,streak,last}, kjv:{...}, ... }).
   const [planProg, setPlanProg] = useState(() => planLoadAll());
   const nonCanon = NONCANON.find(t => t.id === corpus) || null;
-  const chronoOn = orderMode === "chronological" && !nonCanon && !!chrono;
+  const chronoOn = orderMode === "chronological" && !nonCanon && !!chrono && translation !== "heb";
+  // Hebrew OT has no chronological order — keep order canonical whenever Hebrew is the text
+  // (covers both switching to Hebrew from chrono AND restoring an old heb+chrono spot).
+  useEffect(() => { if (translation === "heb" && orderMode === "chronological") setOrderMode("canonical"); }, [translation, orderMode]);
   const curPassage = chronoOn ? (chrono.passages[chronoPos - 1] || null) : null;
   const highlightRef = useRef(null);
   const navBookRef = useRef(null);
@@ -2725,7 +2728,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
                 <span className="lib-bar-sep" aria-hidden="true"/>
                 <div className="seg lib-order-seg">
                   <button className={"seg-b" + (orderMode !== "chronological" ? " on" : "")} title="Canonical order (books in order)" aria-label="Canonical order" onClick={() => setOrder("canonical")}><Icon.Book/></button>
-                  <button className={"seg-b" + (orderMode === "chronological" ? " on" : "")} title="Chronological order (events in sequence)" aria-label="Chronological order" onClick={() => setOrder("chronological")}><Icon.Clock/></button>
+                  <button className={"seg-b" + (orderMode === "chronological" ? " on" : "")} disabled={translation === "heb"} title={translation === "heb" ? "Chronological isn't available for the Hebrew OT" : "Chronological order (events in sequence)"} aria-label="Chronological order" style={translation === "heb" ? { opacity: 0.35, cursor: "default" } : undefined} onClick={() => translation !== "heb" && setOrder("chronological")}><Icon.Clock/></button>
                 </div>
               </>
             )}
