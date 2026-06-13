@@ -313,10 +313,31 @@ scripts/          # build-frontend.js + one-time import/migration scripts
 - English-only "other books" (Apocrypha/Enoch/etc.): the Chip toggle gives a VERSE-PER-LINE reading layout
   (`renderExtraLines`, `extraLineMode`) — plain text, one verse per row, no clickable chips (no Greek). Prose =
   the old flowing run-together text. Strong's/Interlinear stay locked. (2026-06-10)
-- **Library remembers your reading spot across reloads:** `localStorage` `lexica.lib.v1` saves
-  book/chapter/translation (+ an open non-canon text) and restores it on load instead of opening at Genesis 1.
-  An explicit verse jump (`nav.book`, e.g. a Search/cross-ref click) overrides it. Compare/chronological are NOT
-  restored (fall back to single/canonical). (2026-06-10)
+- **Library remembers your reading spot across reloads + restores it WITHOUT a flicker:**
+  `localStorage` `lexica.lib.v1` saves book/chapter/translation + an open non-canon text AND
+  (2026-06-13) the reading ORDER (canonical/chronological), the chrono passage position, and the
+  Compare selection. orderMode/translation/compareSel/chronoPos restore SYNCHRONOUSLY in their
+  `useState` initializers (via `readLibSaved()`) so the pickers are right on the FIRST paint — no
+  more canonical→chronological flash; only the book NAME/chapter pop in late (they need the books
+  list to fetch). The reading-display toggles (chip/prose, Strong's, interlinear) persist too under
+  `lexica.opts.v1`. An explicit verse jump (`nav.book`, e.g. Search/cross-ref) still overrides.
+  Other first-paint-restored settings: active tab `lexica.view.v1`, theme `lexica.theme.v1`, font
+  `libFontSize`, Eras/Days `lexica.chronoview.v1`. Full map: memory `project_refresh_persistence`.
+  (2026-06-10, expanded 2026-06-13 — the old "Compare/chronological NOT restored" rule is RETIRED.)
+- **365-day reading plan — the "Days" view of the chronological picker (LIVE 2026-06-13).** An
+  `Eras | Days` toggle (pinned; desktop nav + mobile picker) sits atop the chrono picker. Days = a
+  plan-with-progress over the same chronological passages binned into 365 days — baked into
+  `chronological.json` as a top-level `days` array + `day`/`verses` on each passage by
+  `build_chronological.py` (balanced by verse length via a small DP, never splitting a passage,
+  aligned to era boundaries; ~85 verses/day). Progress is PER READING TEXT (each text keeps its own
+  day + streak + last-read) in `localStorage` `lexica.plan.v1`. "Mark today complete" advances +
+  reads into the next day; "Set as today" on any other day moves your pointer (undo a mis-mark /
+  start mid-plan). Reading reuses the one-passage-at-a-time chrono reader. Component:
+  `static/src/58-dayplan.jsx` (DayPlanView + plan helpers). Full record: memory `project_chronological_tab`.
+- **Wheel over fixed chrome doesn't scroll the reading pane (2026-06-13).** The reading pane rides
+  the window scroll; a scoped non-passive wheel handler in 90-app.jsx blocks the page scroll when
+  the pointer is over `.hdr / .lib-bar / .lib-toolbar / .nav / .detail-side`, after first letting an
+  inner list (book / day / era) consume the wheel if it can still scroll. Every scroll area is independent.
 - **In-text search (the magnifying-glass panel) — eSword-style (2026-06-13).** Searches the reader's
   current text (ABP/KJV/BSB or a non-canon book). Modes Any / All / Phrase (DEFAULT = Any); options
   (in a collapsible "Options ▾") = a book RANGE (preset groups Whole-Bible/OT/NT/Pentateuch…Apocalypse

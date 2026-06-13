@@ -115,7 +115,9 @@ Deliberate NON-targets (listed so we don't mistake them for gaps): no paid comme
      shows the per-item type marker (ribbon `Icon.Bookmark` / pencil `Icon.Note` / color dot), matching
      the reader (`.notes-item-type` in 35-notes.jsx); (b) the Library remembers book/chapter (+ translation
      + open non-canon text) across reloads via `localStorage` `lexica.lib.v1`, restoring instead of
-     Genesis 1 (a `nav.book` jump still overrides). Compare/chronological not restored — fall back.
+     Genesis 1 (a `nav.book` jump still overrides). UPDATE 2026-06-13: order/chrono/compare + the
+     chip/prose/Strong's/interlinear toggles now persist AND restore synchronously too — see the
+     chronological DONE block below + memory `project_refresh_persistence`.
 
 ---
 
@@ -329,6 +331,19 @@ build_chronological.py` — no database, no backend route. Exact-range reader tr
 Full record in memory `project_chronological_tab`. Polish DONE 2026-06-11: the chapter divider is now
 suppressed on single-chapter passages (it just repeated the passage location); multi-chapter passages
 keep their per-chapter dividers (`singleChapterPassage` in 60-library.jsx `withMarks`).
+
+**365-DAY READING PLAN ("Days" view) — DONE + LIVE 2026-06-13.** `Eras | Days` toggle on the chrono
+picker (pinned; desktop nav + mobile picker). `build_chronological.py` now bins the 1,102 passages into
+365 days (balanced by verse length via a small DP, never splitting a passage, era-aligned) and bakes a
+`days` array + `day`/`verses` into `chronological.json`. Per-text progress (`lexica.plan.v1`) in the
+NEW `static/src/58-dayplan.jsx`; "Mark today complete" / "Set as today". DECIDED: keep the source's
+verse-level interleaving (don't hand-reorder). **REFRESH-PERSISTENCE pass (2026-06-13):** reading order
++ chrono position + compare + the chip/prose/Strong's/interlinear toggles now survive a reload,
+restored synchronously (no canonical→chrono flash); the reading pane no longer scrolls when the wheel
+is over fixed chrome (header/toolbar/nav/detail). Full records: memory `project_chronological_tab` +
+`project_refresh_persistence`. DEFERRED (user "looks good for now"): account-sync of plan progress; a
+stitched single-scroll "today's reading"; deeper per-tab persistence (Lexicon/Search/Notes/Study
+last-state + within-chapter scroll position).
 
 ### Read-along audio — DONE + LIVE 2026-06-10 (BSB live for all; ESV waits on a key)
 Per-chapter audio on KJV/BSB/ESV (ABP has no recording). Full record: memory `project_esv_audio` +
