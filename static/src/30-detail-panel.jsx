@@ -670,25 +670,15 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             ) : interlinearWords.length === 0 ? (
               <span style={{ color: "var(--ink-4)", fontSize: "13px" }}>No interlinear for this verse.</span>
             ) : (() => {
-              // Uniform column structure so every cell lines up: reserve the translit /
-              // strongs rows (hidden when a word lacks them) whenever the verse uses
-              // them, and build the "[" / "]" and any lifted punctuation as COLUMNS
-              // with the SAME rows — the glyph living in the english slot — so they
-              // align row-for-row with the words (the reading-pane approach), instead
-              // of a lone glyph floating at the column's centre.
+              // Uniform column structure so the english rows line up: reserve the
+              // translit / strongs rows (hidden when a word lacks them) whenever the
+              // verse uses them. ABP brackets render INLINE on the english word
+              // ("[day" … "second].") — a separate bracket column sits at the column's
+              // EDGE, which drifts away from a short english word (its column is as
+              // wide as the greek/translit above it) while hugging a long one; on the
+              // english text itself the bracket is always tight, on the reading line.
               const hasTranslit = interlinearWords.some(w => w.translit);
               const hasStrongs = interlinearWords.some(w => w.strongs);
-              // The spacer rows reserve HEIGHT (to line the glyph up with the english
-              // row) but iw-spacer zeroes their WIDTH, so the column is only as wide as
-              // the glyph — otherwise the wide "G0" placeholder pads air around "[".
-              const colRows = (mid) => (<>
-                <span className="iw-greek iw-spacer">x</span>
-                {hasTranslit && <span className="iw-translit iw-spacer">x</span>}
-                {mid}
-                {hasStrongs && <span className="iw-strongs iw-spacer">G0</span>}
-              </>);
-              const bracketCol = (glyph, k) => <span key={k} className="iw-bracket">{colRows(<span className="iw-bracket-glyph">{glyph}</span>)}</span>;
-              const trailCol = (txt, k) => <span key={k} className="iw-bracket-trail">{colRows(<span className="iw-english">{txt}</span>)}</span>;
               return interlinearWords.map((w, i) => {
                 // A bracket group = consecutive words sharing bracket_id (same rule as
                 // the reading pane). KJV/Hebrew carry no bracket_id, so they get none.
@@ -700,24 +690,15 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
                 // the "]" (mirror the reading pane: "second.]" -> "second].").
                 let eng = w.english || "—", trail = "";
                 if (close) { const m = (w.english || "").match(/[.,;:!?·]+$/); if (m) { trail = m[0]; eng = (w.english || "").slice(0, m.index) || "—"; } }
-                const cell = (
-                  <div className="iword">
+                return (
+                  <div className="iword" key={i}>
                     <span className={"iw-greek" + (w.he ? " iw-heb" : "")}>{w.top || "—"}</span>
                     {hasTranslit && <span className="iw-translit" style={w.translit ? undefined : { visibility: "hidden" }}>{w.translit || "x"}</span>}
-                    <span className="iw-english">{eng}</span>
+                    <span className="iw-english">
+                      {open && <span className="iw-brk">[</span>}{eng}{close && <span className="iw-brk">]</span>}{trail}
+                    </span>
                     {hasStrongs && <span className="iw-strongs" style={w.strongs ? undefined : { visibility: "hidden" }}>{w.strongs || "G0"}</span>}
                   </div>
-                );
-                // Glue [ to the first word and ] (+ any lifted punctuation) to the last
-                // as one no-break unit, so a wrap can never strand a lone bracket.
-                if (bid == null) return <React.Fragment key={i}>{cell}</React.Fragment>;
-                return (
-                  <span key={i} className="iw-bracket-unit">
-                    {open && bracketCol("[", "bo")}
-                    {cell}
-                    {close && bracketCol("]", "bc")}
-                    {trail && trailCol(trail, "bt")}
-                  </span>
                 );
               });
             })()}

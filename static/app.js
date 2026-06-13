@@ -2621,36 +2621,15 @@ function DetailPanel({
             fontSize: "13px"
           }
         }, "No interlinear for this verse.") : (() => {
-          // Uniform column structure so every cell lines up: reserve the translit /
-          // strongs rows (hidden when a word lacks them) whenever the verse uses
-          // them, and build the "[" / "]" and any lifted punctuation as COLUMNS
-          // with the SAME rows — the glyph living in the english slot — so they
-          // align row-for-row with the words (the reading-pane approach), instead
-          // of a lone glyph floating at the column's centre.
+          // Uniform column structure so the english rows line up: reserve the
+          // translit / strongs rows (hidden when a word lacks them) whenever the
+          // verse uses them. ABP brackets render INLINE on the english word
+          // ("[day" … "second].") — a separate bracket column sits at the column's
+          // EDGE, which drifts away from a short english word (its column is as
+          // wide as the greek/translit above it) while hugging a long one; on the
+          // english text itself the bracket is always tight, on the reading line.
           const hasTranslit = interlinearWords.some(w => w.translit);
           const hasStrongs = interlinearWords.some(w => w.strongs);
-          // The spacer rows reserve HEIGHT (to line the glyph up with the english
-          // row) but iw-spacer zeroes their WIDTH, so the column is only as wide as
-          // the glyph — otherwise the wide "G0" placeholder pads air around "[".
-          const colRows = mid => /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", {
-            className: "iw-greek iw-spacer"
-          }, "x"), hasTranslit && /*#__PURE__*/React.createElement("span", {
-            className: "iw-translit iw-spacer"
-          }, "x"), mid, hasStrongs && /*#__PURE__*/React.createElement("span", {
-            className: "iw-strongs iw-spacer"
-          }, "G0"));
-          const bracketCol = (glyph, k) => /*#__PURE__*/React.createElement("span", {
-            key: k,
-            className: "iw-bracket"
-          }, colRows(/*#__PURE__*/React.createElement("span", {
-            className: "iw-bracket-glyph"
-          }, glyph)));
-          const trailCol = (txt, k) => /*#__PURE__*/React.createElement("span", {
-            key: k,
-            className: "iw-bracket-trail"
-          }, colRows(/*#__PURE__*/React.createElement("span", {
-            className: "iw-english"
-          }, txt)));
           return interlinearWords.map((w, i) => {
             // A bracket group = consecutive words sharing bracket_id (same rule as
             // the reading pane). KJV/Hebrew carry no bracket_id, so they get none.
@@ -2670,8 +2649,9 @@ function DetailPanel({
                 eng = (w.english || "").slice(0, m.index) || "—";
               }
             }
-            const cell = /*#__PURE__*/React.createElement("div", {
-              className: "iword"
+            return /*#__PURE__*/React.createElement("div", {
+              className: "iword",
+              key: i
             }, /*#__PURE__*/React.createElement("span", {
               className: "iw-greek" + (w.he ? " iw-heb" : "")
             }, w.top || "—"), hasTranslit && /*#__PURE__*/React.createElement("span", {
@@ -2681,21 +2661,16 @@ function DetailPanel({
               }
             }, w.translit || "x"), /*#__PURE__*/React.createElement("span", {
               className: "iw-english"
-            }, eng), hasStrongs && /*#__PURE__*/React.createElement("span", {
+            }, open && /*#__PURE__*/React.createElement("span", {
+              className: "iw-brk"
+            }, "["), eng, close && /*#__PURE__*/React.createElement("span", {
+              className: "iw-brk"
+            }, "]"), trail), hasStrongs && /*#__PURE__*/React.createElement("span", {
               className: "iw-strongs",
               style: w.strongs ? undefined : {
                 visibility: "hidden"
               }
             }, w.strongs || "G0"));
-            // Glue [ to the first word and ] (+ any lifted punctuation) to the last
-            // as one no-break unit, so a wrap can never strand a lone bracket.
-            if (bid == null) return /*#__PURE__*/React.createElement(React.Fragment, {
-              key: i
-            }, cell);
-            return /*#__PURE__*/React.createElement("span", {
-              key: i,
-              className: "iw-bracket-unit"
-            }, open && bracketCol("[", "bo"), cell, close && bracketCol("]", "bc"), trail && trailCol(trail, "bt"));
           });
         })()), /*#__PURE__*/React.createElement("div", {
           className: "dverse-tools"
