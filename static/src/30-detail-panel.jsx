@@ -144,6 +144,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
           strongs: (w.strongs_base === "*") ? "" : tag((w.strongs && w.strongs !== "*") ? w.strongs : w.strongs_base),
           he: false,
           bracket_id: w.bracket_id,   // ABP translator-supplied words -> [ ] in the render (KJV/Hebrew leave this undefined)
+          pos: w.greek_pos,           // Greek word-order number, shown inside brackets like the reading pane
         }))))
         .catch(() => done([]));
     }
@@ -695,7 +696,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
                     <span className={"iw-greek" + (w.he ? " iw-heb" : "")}>{w.top || "—"}</span>
                     {hasTranslit && <span className="iw-translit" style={w.translit ? undefined : { visibility: "hidden" }}>{w.translit || "x"}</span>}
                     <span className="iw-english">
-                      {open && <span className="iw-brk">[</span>}{eng}{close && <span className="iw-brk">]</span>}{trail}
+                      {open && <span className="iw-brk">[</span>}{bid != null && w.pos != null && <span className="iw-pos">{w.pos}</span>}{eng}{close && <span className="iw-brk">]</span>}{trail}
                     </span>
                     {hasStrongs && <span className="iw-strongs" style={w.strongs ? undefined : { visibility: "hidden" }}>{w.strongs || "G0"}</span>}
                   </div>

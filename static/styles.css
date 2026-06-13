@@ -1998,8 +1998,7 @@ input { font-family: inherit; }
 .iword {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;   /* left-align so a line never starts indented (the
-                                centred Greek is wider than a short English word) */
+  align-items: center;       /* centred columns, like the reading pane */
   gap: 2px;
 }
 .iw-greek {
@@ -2015,6 +2014,9 @@ input { font-family: inherit; }
    greek/translit stacked above it) — unfixable while it's its own column. Muted,
    a shade off the text colour. */
 .iw-brk { color: var(--ink-2); }   /* match the reading pane's bracket colour */
+/* Greek word-order number inside brackets — mirrors the reading pane's .lib-iw-pos. */
+.iw-pos { font-family: var(--f-mono); font-size: 9.5px; font-weight: 500; color: #c0392b; letter-spacing: 0.02em; vertical-align: 0.15em; margin-right: 1px; }
+:root[data-theme="dark"] .iw-pos { color: #f0726a; }
 .iw-translit {
   font-family: var(--f-serif);
   font-style: italic;

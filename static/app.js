@@ -1966,7 +1966,9 @@ function DetailPanel({
         english: w.english || "",
         strongs: w.strongs_base === "*" ? "" : tag(w.strongs && w.strongs !== "*" ? w.strongs : w.strongs_base),
         he: false,
-        bracket_id: w.bracket_id // ABP translator-supplied words -> [ ] in the render (KJV/Hebrew leave this undefined)
+        bracket_id: w.bracket_id,
+        // ABP translator-supplied words -> [ ] in the render (KJV/Hebrew leave this undefined)
+        pos: w.greek_pos // Greek word-order number, shown inside brackets like the reading pane
       })))).catch(() => done([]));
     }
     return () => {
@@ -2663,7 +2665,9 @@ function DetailPanel({
               className: "iw-english"
             }, open && /*#__PURE__*/React.createElement("span", {
               className: "iw-brk"
-            }, "["), eng, close && /*#__PURE__*/React.createElement("span", {
+            }, "["), bid != null && w.pos != null && /*#__PURE__*/React.createElement("span", {
+              className: "iw-pos"
+            }, w.pos), eng, close && /*#__PURE__*/React.createElement("span", {
               className: "iw-brk"
             }, "]"), trail), hasStrongs && /*#__PURE__*/React.createElement("span", {
               className: "iw-strongs",
