@@ -90,8 +90,10 @@ thought.\
 # that actually changed (the "don't skip the opening" / "name strange events" tweaks).
 _AUTHOR_LINE_TMPL = (
     'The traditionally recognized author of this book is {author} — '
-    'name them by name as the writer (do not hedge as "an unnamed writer" or '
-    '"an apostolic witness"), even though the text itself may not name them. '
+    'name them as the writer (do not hedge as "an unnamed writer" or "an apostolic '
+    'witness"), even though the text itself may not name them. If this ascription is '
+    'debated, still mention it as the traditional view (you may say "traditionally '
+    'attributed to {author}") rather than omitting the author. '
 )
 _BOOK_PROMPT_TMPL = (
     'Below is the opening of the book "{name}". {author_line}In 1 to 2 '
