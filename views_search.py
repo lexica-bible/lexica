@@ -22,6 +22,8 @@ from core import (
 bp = Blueprint("search", __name__)
 
 _search_cache: dict = {}        # in-memory lexicon search cache (q → payload)
+_text_cache: dict = {}          # in-memory Library plain-text search cache (params → payload)
+_TEXT_CACHE_CAP = 256           # keep the last N distinct searches; oldest drops out
 
 # Per-corpus verse-text tables for the Library plain-text search. All three hold
 # the readable ENGLISH verse text: ABP's `verses.text` is the clean English prose
@@ -130,6 +132,14 @@ def text_search():
     # Book range (Bible texts only). Legacy single-book param folds into from=to.
     if book and not (book_from or book_to):
         book_from = book_to = book
+
+    # Reuse an identical earlier search (the controls re-run on every toggle, so the
+    # same params come back often). Same scan + Python tally → same answer.
+    cache_key = (corpus, q, mode, partial, case, exclude, book_from, book_to)
+    cached = _text_cache.get(cache_key)
+    if cached is not None:
+        return jsonify(cached)
+
     lo = _KJV_BOOK_ID.get(book_from)
     hi = _KJV_BOOK_ID.get(book_to)
     if not non_canon and lo:
@@ -182,12 +192,16 @@ def text_search():
             "verse": r["vs"],
             "text": txt,
         })
-    return jsonify({
+    payload = {
         "results": results,
         "verse_count": verse_count,
         "match_count": match_count,
         "capped": capped,
-    })
+    }
+    _text_cache[cache_key] = payload
+    if len(_text_cache) > _TEXT_CACHE_CAP:
+        del _text_cache[next(iter(_text_cache))]   # drop the oldest entry
+    return jsonify(payload)
 
 
 def _kjv_strongs_search(conn, sids, out_rows, out_groupings):

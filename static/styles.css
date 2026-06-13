@@ -89,13 +89,16 @@
   --overlay-bg: #20242b;
 }
 /* Dark: the highlight + search-mark backgrounds are always light pastels, so pin
-   their text dark (the default --ink text is light in dark mode → unreadable). */
+   their text dark (the default --ink text is light in dark mode → unreadable). The
+   `* ` reaches the inner chip spans (Greek/English/Strong's) whose own color would
+   otherwise stay light on the highlight. */
 :root[data-theme="dark"] .lib-search-mark,
-:root[data-theme="dark"] .lib-hi-yellow,
-:root[data-theme="dark"] .lib-hi-green,
-:root[data-theme="dark"] .lib-hi-blue,
-:root[data-theme="dark"] .lib-hi-pink,
-:root[data-theme="dark"] .lib-hi-orange { color: #221e18; }
+:root[data-theme="dark"] :is(.lib-hi-yellow, .lib-hi-green, .lib-hi-blue, .lib-hi-pink, .lib-hi-orange),
+:root[data-theme="dark"] :is(.lib-hi-yellow, .lib-hi-green, .lib-hi-blue, .lib-hi-pink, .lib-hi-orange) * { color: #221e18; }
+/* Dark: gold is a LIGHT tan here, so white text on gold-filled badges/tags is low
+   contrast — pin those dark too. */
+:root[data-theme="dark"] .tag,
+:root[data-theme="dark"] .lsj-badge--gold { color: #221e18; }
 /* Dark: the Strong's word-order number is a dark red (#c0392b) that sinks into the
    dark bg — brighten it to a legible coral. */
 :root[data-theme="dark"] .lib-iw-pos { color: #f0726a; }
