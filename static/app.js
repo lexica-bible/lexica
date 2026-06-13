@@ -7096,6 +7096,16 @@ function nonCanonGroups(list) {
 // ============================================================
 // LIBRARY VIEW
 // ============================================================
+// The saved library spot (lexica.lib.v1), read once. Used by the state initializers so the
+// reading order / text / compare / book-chapter / corpus all restore at the FIRST paint — no
+// default→saved flicker (e.g. the mobile bottom selector flashing chapter "1" before the real one).
+function readLibSaved() {
+  try {
+    return JSON.parse(localStorage.getItem("lexica.lib.v1") || "null");
+  } catch (e) {
+    return null;
+  }
+}
 function LibraryView({
   nav,
   onNavChange,
@@ -7110,7 +7120,10 @@ function LibraryView({
 }) {
   const [books, setBooks] = useState([]);
   const [selBook, setSelBook] = useState(null);
-  const [selChapter, setSelChapter] = useState(1);
+  const [selChapter, setSelChapter] = useState(() => {
+    const s = readLibSaved();
+    return s && s.chapter > 0 ? s.chapter : 1;
+  });
   const [verses, setVerses] = useState([]);
   const [kjvVerses, setKjvVerses] = useState([]);
   const [bsbVerses, setBsbVerses] = useState([]);
@@ -7175,15 +7188,6 @@ function LibraryView({
     if (theme === "light") document.documentElement.removeAttribute("data-theme");else document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("lexica.theme.v1", theme);
   }, [theme]);
-  // The saved library spot (read once) so reading order / text / compare restore at the
-  // FIRST paint — no canonical→chronological (or ABP→saved) flip a moment after load.
-  const readLibSaved = () => {
-    try {
-      return JSON.parse(localStorage.getItem("lexica.lib.v1") || "null");
-    } catch (e) {
-      return null;
-    }
-  };
   const [translation, setTranslation] = useState(() => {
     // "abp"|"kjv"|"bsb"|"esv"|"niv"|"parallel"
     const s = readLibSaved(),
@@ -7197,7 +7201,11 @@ function LibraryView({
     return s && Array.isArray(s.compareSel) && s.compareSel.length >= 2 ? s.compareSel : ["abp", "kjv"];
   });
   const [compareOpen, setCompareOpen] = useState(false);
-  const [corpus, setCorpus] = useState("bible"); // which text: "bible" | a non-canonical id (e.g. "didache")
+  const [corpus, setCorpus] = useState(() => {
+    // "bible" | a non-canonical id (e.g. "didache")
+    const s = readLibSaved();
+    return s && s.corpus && s.corpus !== "bible" && NONCANON.some(x => x.id === s.corpus) ? s.corpus : "bible";
+  });
   const [didVerses, setDidVerses] = useState([]);
   const [didLoading, setDidLoading] = useState(false);
   const [otherOpen, setOtherOpen] = useState(false);
@@ -7380,15 +7388,11 @@ function LibraryView({
         saved = JSON.parse(localStorage.getItem("lexica.lib.v1") || "null");
       } catch (e) {}
       const savedBook = saved && saved.book ? data.find(b => b.abbrev === saved.book) : null;
+      // Everything else — chapter, text, order, chrono position, compare, corpus — restores
+      // synchronously in the state initializers above, so nothing flickers (no chapter "1"
+      // flash on mobile). Only selBook waits here: it must be resolved against the just-loaded
+      // books list. The gated-text bounce (owner status) still drops ESV/NIV/HEB afterward.
       setSelBook(savedBook || data[0]);
-      if (saved) {
-        if (saved.chapter > 0) setSelChapter(saved.chapter);
-        // translation / compareSel / orderMode / chronoPos restore synchronously at
-        // state-init (so the pickers don't flicker). Here we only restore what needs the
-        // just-loaded books list — the open non-canonical text. The gated-text bounce
-        // (owner status) still runs afterward to drop ESV/NIV/HEB if you're not allowed.
-        if (saved.corpus && saved.corpus !== "bible" && NONCANON.some(x => x.id === saved.corpus)) setCorpus(saved.corpus);
-      }
     });
   }, []);
   // Remember the reading spot so a refresh returns you here instead of Genesis 1.
