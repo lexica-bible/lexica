@@ -5545,15 +5545,11 @@ function DayPlanView({
     className: "plan-head"
   }, /*#__PURE__*/React.createElement("div", {
     className: "plan-chips"
-  }, texts.map(t => {
-    const tp = planFor(progAll, t.id);
-    const tpct = Math.round((tp.day - 1) / total * 100);
-    return /*#__PURE__*/React.createElement("button", {
-      key: t.id,
-      className: "plan-chip" + (t.id === curText ? " on" : ""),
-      onClick: () => onPickText(t.id)
-    }, t.label, " \xB7 ", tpct, "%");
-  })), /*#__PURE__*/React.createElement("div", {
+  }, texts.map(t => /*#__PURE__*/React.createElement("button", {
+    key: t.id,
+    className: "plan-chip" + (t.id === curText ? " on" : ""),
+    onClick: () => onPickText(t.id)
+  }, t.label))), /*#__PURE__*/React.createElement("div", {
     className: "plan-sub"
   }, "Each text keeps its own progress."), /*#__PURE__*/React.createElement("div", {
     className: "plan-prog"

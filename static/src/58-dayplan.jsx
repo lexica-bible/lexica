@@ -75,14 +75,10 @@ function DayPlanView({ chrono, curText, texts, progAll, onPickText, onPickPassag
     <div className="plan">
       <div className="plan-head">
         <div className="plan-chips">
-          {texts.map(t => {
-            const tp = planFor(progAll, t.id);
-            const tpct = Math.round((tp.day - 1) / total * 100);
-            return (
-              <button key={t.id} className={"plan-chip" + (t.id === curText ? " on" : "")}
-                onClick={() => onPickText(t.id)}>{t.label} · {tpct}%</button>
-            );
-          })}
+          {texts.map(t => (
+            <button key={t.id} className={"plan-chip" + (t.id === curText ? " on" : "")}
+              onClick={() => onPickText(t.id)}>{t.label}</button>
+          ))}
         </div>
         <div className="plan-sub">Each text keeps its own progress.</div>
         <div className="plan-prog">
