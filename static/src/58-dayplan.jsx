@@ -74,12 +74,6 @@ function DayPlanView({ chrono, curText, texts, progAll, onPickText, onPickPassag
   return (
     <div className="plan">
       <div className="plan-head">
-        <div className="plan-chips">
-          {texts.map(t => (
-            <button key={t.id} className={"plan-chip" + (t.id === curText ? " on" : "")}
-              onClick={() => onPickText(t.id)}>{t.label}</button>
-          ))}
-        </div>
         <div className="plan-sub">Each text keeps its own progress.</div>
         <div className="plan-prog">
           <span className="plan-dayno">Day {curDay} of {total}</span>
