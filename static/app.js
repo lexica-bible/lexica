@@ -767,6 +767,32 @@ const Icon = {
   }), /*#__PURE__*/React.createElement("path", {
     d: "M13 7l4 4"
   })),
+  // Reading-plan: a completed day
+  Check: p => /*#__PURE__*/React.createElement("svg", _extends({
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "2",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, p), /*#__PURE__*/React.createElement("path", {
+    d: "M5 12l5 5L20 6"
+  })),
+  // Reading-plan: streak
+  Flame: p => /*#__PURE__*/React.createElement("svg", _extends({
+    width: "14",
+    height: "14",
+    viewBox: "0 0 24 24",
+    fill: "none",
+    stroke: "currentColor",
+    strokeWidth: "1.75",
+    strokeLinecap: "round",
+    strokeLinejoin: "round"
+  }, p), /*#__PURE__*/React.createElement("path", {
+    d: "M12 3c2.4 3 3.8 5 3.8 7.8A3.8 3.8 0 0 1 8.2 11C8.2 9.6 8.8 8.5 9.7 7.7 9.9 9.3 11 9.6 11 8c0-1.6.4-3.3 1-5z"
+  })),
   Copy: p => /*#__PURE__*/React.createElement("svg", _extends({
     width: "14",
     height: "14",
@@ -5412,6 +5438,184 @@ function StudyView({
 }
 
 // ============================================================
+// READING PLAN — the "Days" view of the chronological picker.
+//
+// A 365-day plan is baked into chronological.json (chrono.days: each entry is a day
+// with its passage positions + verse total). Progress is tracked PER READING TEXT —
+// your ABP day is independent of your KJV day — and lives in the browser
+// (localStorage "lexica.plan.v1"; account sync can layer on later).
+//
+// Reading itself reuses the existing chronological passage reader: tapping a day's
+// passage jumps the reader there; "Mark today complete" advances THIS text's progress
+// to the next day (and continues reading into it).
+// ============================================================
+const PLAN_KEY = "lexica.plan.v1";
+function planLoadAll() {
+  try {
+    return JSON.parse(localStorage.getItem(PLAN_KEY) || "{}") || {};
+  } catch (e) {
+    return {};
+  }
+}
+function planSaveAll(obj) {
+  try {
+    localStorage.setItem(PLAN_KEY, JSON.stringify(obj));
+  } catch (e) {}
+}
+// One text's progress, with sane defaults for a text never started.
+function planFor(all, text) {
+  const p = all && all[text];
+  return {
+    day: p && p.day || 1,
+    streak: p && p.streak || 0,
+    last: p && p.last || null
+  };
+}
+function planYmd(d) {
+  d = d || new Date();
+  return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+}
+function planDayDiff(a, b) {
+  // whole days from ymd a -> ymd b
+  const pa = new Date(a + "T00:00:00"),
+    pb = new Date(b + "T00:00:00");
+  return Math.round((pb - pa) / 86400000);
+}
+// Mark the current day done: bump the streak if it's a fresh calendar day kept up from
+// yesterday (reading several days in one sitting doesn't inflate it), then move the
+// pointer to the next day, capped at the plan length.
+function planAdvance(cur, totalDays) {
+  const today = planYmd();
+  let streak = cur.streak || 0;
+  if (cur.last === today) {
+    // already marked a day today — keep the streak, just move the pointer on
+  } else if (cur.last && planDayDiff(cur.last, today) === 1) {
+    streak += 1;
+  } else {
+    streak = 1;
+  }
+  return {
+    day: Math.min(totalDays, (cur.day || 1) + 1),
+    streak,
+    last: today
+  };
+}
+
+// The plan body — shared by the desktop left nav and the mobile picker.
+function DayPlanView({
+  chrono,
+  curText,
+  texts,
+  progAll,
+  onPickText,
+  onPickPassage,
+  onMarkComplete
+}) {
+  const days = chrono && chrono.days || [];
+  const total = days.length || 365;
+  const prog = planFor(progAll, curText);
+  const curDay = prog.day;
+  const pct = Math.round((curDay - 1) / total * 100); // days COMPLETED / total
+  const [open, setOpen] = useState(() => new Set([curDay]));
+  const todayRef = useRef(null);
+
+  // Switching text (chips) or advancing a day re-centres on the new "today".
+  useEffect(() => {
+    setOpen(new Set([curDay]));
+    requestAnimationFrame(() => todayRef.current && todayRef.current.scrollIntoView({
+      block: "nearest"
+    }));
+  }, [curText, curDay]);
+  const toggle = d => setOpen(s => {
+    const n = new Set(s);
+    n.has(d) ? n.delete(d) : n.add(d);
+    return n;
+  });
+  const jumpToday = () => {
+    setOpen(s => new Set(s).add(curDay));
+    requestAnimationFrame(() => todayRef.current && todayRef.current.scrollIntoView({
+      behavior: "smooth",
+      block: "center"
+    }));
+  };
+  const passagesOf = day => day.pos.map(q => chrono.passages[q - 1]).filter(Boolean);
+  return /*#__PURE__*/React.createElement("div", {
+    className: "plan"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "plan-head"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "plan-chips"
+  }, texts.map(t => {
+    const tp = planFor(progAll, t.id);
+    const tpct = Math.round((tp.day - 1) / total * 100);
+    return /*#__PURE__*/React.createElement("button", {
+      key: t.id,
+      className: "plan-chip" + (t.id === curText ? " on" : ""),
+      onClick: () => onPickText(t.id)
+    }, t.label, " \xB7 ", tpct, "%");
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "plan-sub"
+  }, "Each text keeps its own progress."), /*#__PURE__*/React.createElement("div", {
+    className: "plan-prog"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "plan-dayno"
+  }, "Day ", curDay, " of ", total), /*#__PURE__*/React.createElement("span", {
+    className: "plan-pct"
+  }, pct, "%")), /*#__PURE__*/React.createElement("div", {
+    className: "plan-bar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "plan-bar-fill",
+    style: {
+      width: pct + "%"
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "plan-meta"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "plan-streak"
+  }, prog.streak > 0 ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Icon.Flame, null), " ", prog.streak, "-day streak") : /*#__PURE__*/React.createElement(React.Fragment, null, "Just getting started")), /*#__PURE__*/React.createElement("button", {
+    className: "plan-jump",
+    onClick: jumpToday
+  }, "Jump to today"))), /*#__PURE__*/React.createElement("div", {
+    className: "plan-days"
+  }, days.map(day => {
+    const state = day.day < curDay ? "done" : day.day === curDay ? "today" : "soon";
+    const isOpen = open.has(day.day);
+    return /*#__PURE__*/React.createElement("div", {
+      key: day.day,
+      ref: day.day === curDay ? todayRef : null,
+      className: "plan-day plan-day--" + state + (isOpen ? " open" : "")
+    }, /*#__PURE__*/React.createElement("button", {
+      className: "plan-day-head",
+      onClick: () => toggle(day.day),
+      "aria-expanded": isOpen
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "plan-day-mark"
+    }, state === "done" ? /*#__PURE__*/React.createElement(Icon.Check, null) : state === "today" ? /*#__PURE__*/React.createElement("span", {
+      className: "plan-dot",
+      "aria-hidden": "true"
+    }) : /*#__PURE__*/React.createElement("span", {
+      className: "plan-caret",
+      "aria-hidden": "true"
+    }, "\u25B8")), /*#__PURE__*/React.createElement("span", {
+      className: "plan-day-n"
+    }, "Day ", day.day), state === "today" && /*#__PURE__*/React.createElement("span", {
+      className: "plan-today-tag"
+    }, "Today"), /*#__PURE__*/React.createElement("span", {
+      className: "plan-day-v"
+    }, day.verses, "v")), isOpen && /*#__PURE__*/React.createElement("div", {
+      className: "plan-day-body"
+    }, passagesOf(day).map(p => /*#__PURE__*/React.createElement("button", {
+      key: p.pos,
+      className: "plan-passage",
+      onClick: () => onPickPassage(p)
+    }, p.label)), state === "today" && /*#__PURE__*/React.createElement("button", {
+      className: "plan-complete",
+      onClick: onMarkComplete
+    }, /*#__PURE__*/React.createElement(Icon.Check, null), " Mark today complete")));
+  })));
+}
+
+// ============================================================
 // LIBRARY HELPERS
 // ============================================================
 
@@ -5730,7 +5934,8 @@ function LibNavPanel({
   orderMode,
   setOrder,
   chronoPos,
-  onPickPassage
+  onPickPassage,
+  plan
 }) {
   const [query, setQuery] = useState("");
   const chronoMode = orderMode === "chronological" && chrono && !nonCanon;
@@ -5917,7 +6122,26 @@ function LibNavPanel({
     }, t.name)));
   })), /*#__PURE__*/React.createElement("div", {
     className: "nav-scroll"
-  }, chronoMode && chrono.eras.map(era => {
+  }, chronoMode && plan && /*#__PURE__*/React.createElement("div", {
+    className: "plan-toggle"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "plan-toggle-b" + (plan.view !== "days" ? " on" : ""),
+    onClick: () => plan.setView("eras")
+  }, "Eras"), /*#__PURE__*/React.createElement("button", {
+    className: "plan-toggle-b" + (plan.view === "days" ? " on" : ""),
+    onClick: () => plan.setView("days")
+  }, "Days")), chronoMode && plan && plan.view === "days" && /*#__PURE__*/React.createElement(DayPlanView, {
+    chrono: chrono,
+    curText: plan.curText,
+    texts: plan.texts,
+    progAll: plan.progAll,
+    onPickText: plan.onPickText,
+    onMarkComplete: plan.onMarkComplete,
+    onPickPassage: p => {
+      onPickPassage(p);
+      if (isOverlay) onClose();
+    }
+  }), chronoMode && (!plan || plan.view !== "days") && chrono.eras.map(era => {
     const open = openEras.has(era.id);
     const eraPassages = chrono.passages.filter(p => p.era === era.id);
     return /*#__PURE__*/React.createElement("div", {
@@ -6009,7 +6233,8 @@ function MobileBookPicker({
   chrono,
   chronoPos,
   onPickPassage,
-  translation
+  translation,
+  plan
 }) {
   // A non-canonical book is identified by its `id`; a Bible book by its `abbrev`.
   const isNC = b => !!(b && b.id);
@@ -6072,7 +6297,23 @@ function MobileBookPicker({
   }, "\u2715")), /*#__PURE__*/React.createElement("div", {
     className: "mpick-scroll",
     ref: scrollRef
-  }, chronoOn ? chrono.eras.map(era => {
+  }, chronoOn ? /*#__PURE__*/React.createElement(React.Fragment, null, plan && /*#__PURE__*/React.createElement("div", {
+    className: "plan-toggle"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "plan-toggle-b" + (plan.view !== "days" ? " on" : ""),
+    onClick: () => plan.setView("eras")
+  }, "Eras"), /*#__PURE__*/React.createElement("button", {
+    className: "plan-toggle-b" + (plan.view === "days" ? " on" : ""),
+    onClick: () => plan.setView("days")
+  }, "Days")), plan && plan.view === "days" ? /*#__PURE__*/React.createElement(DayPlanView, {
+    chrono: chrono,
+    curText: plan.curText,
+    texts: plan.texts,
+    progAll: plan.progAll,
+    onPickText: plan.onPickText,
+    onMarkComplete: plan.onMarkComplete,
+    onPickPassage: onPickPassage
+  }) : chrono.eras.map(era => {
     const open = openEras.has(era.id);
     const eraPassages = chrono.passages.filter(p => p.era === era.id);
     return /*#__PURE__*/React.createElement("div", {
@@ -6095,7 +6336,7 @@ function MobileBookPicker({
       className: "mpick-passage" + (p.pos === chronoPos ? " on" : ""),
       onClick: () => onPickPassage(p)
     }, p.label))));
-  }) : onChapter ? /*#__PURE__*/React.createElement("div", {
+  })) : onChapter ? /*#__PURE__*/React.createElement("div", {
     className: "mpick-grid"
   }, Array.from({
     length: pickedBook.chapters
@@ -6969,6 +7210,16 @@ function LibraryView({
   const [chronoPos, setChronoPos] = useState(1); // current passage position (1-based)
   const [chronoData, setChronoData] = useState(null); // loaded span: { pos, byCh:{ch:{abp,kjv,bsb}} }
   const [chronoLoading, setChronoLoading] = useState(false);
+  // Chrono picker view: "eras" (the era→passage browse) or "days" (the 365-day plan).
+  const [chronoView, setChronoView] = useState(() => {
+    try {
+      return localStorage.getItem("lexica.chronoview.v1") === "eras" ? "eras" : "days";
+    } catch (e) {
+      return "days";
+    }
+  });
+  // Per-text reading-plan progress ({ abp:{day,streak,last}, kjv:{...}, ... }).
+  const [planProg, setPlanProg] = useState(() => planLoadAll());
   const nonCanon = NONCANON.find(t => t.id === corpus) || null;
   const chronoOn = orderMode === "chronological" && !nonCanon && !!chrono;
   const curPassage = chronoOn ? chrono.passages[chronoPos - 1] || null : null;
@@ -7117,6 +7368,15 @@ function LibraryView({
       }));
     } catch (e) {}
   }, [corpus, selBook, selChapter, translation]);
+  // Persist reading-plan progress + the Eras/Days choice.
+  useEffect(() => {
+    planSaveAll(planProg);
+  }, [planProg]);
+  useEffect(() => {
+    try {
+      localStorage.setItem("lexica.chronoview.v1", chronoView);
+    } catch (e) {}
+  }, [chronoView]);
 
   // Load the chronological passage list once (a small static file). If it fails,
   // chronoOn stays false and the Order toggle simply never appears.
@@ -7147,6 +7407,44 @@ function LibraryView({
     const next = chronoPos + delta;
     if (next < 1 || next > chrono.passages.length) return;
     pickPassage(chrono.passages[next - 1]);
+  };
+  // Reading-plan ("Days") wiring. Progress is per reading text; the chips switch text.
+  const planTexts = [{
+    id: "abp",
+    label: "ABP"
+  }, {
+    id: "kjv",
+    label: "KJV"
+  }, {
+    id: "bsb",
+    label: "BSB"
+  }, ...(esvOwner ? [{
+    id: "esv",
+    label: "ESV"
+  }] : []), ...(nivOwner ? [{
+    id: "niv",
+    label: "NIV"
+  }] : [])];
+  // Finished today's reading: advance THIS text's progress and continue into the next day.
+  const markDayComplete = () => {
+    if (!chrono || !chrono.days) return;
+    const next = planAdvance(planFor(planProg, translation), chrono.days.length);
+    setPlanProg(prev => ({
+      ...prev,
+      [translation]: next
+    }));
+    const day = chrono.days[next.day - 1];
+    const p = day && day.pos && chrono.passages[day.pos[0] - 1];
+    if (p) pickPassage(p);
+  };
+  const planBundle = {
+    view: chronoView,
+    setView: setChronoView,
+    progAll: planProg,
+    texts: planTexts,
+    curText: translation,
+    onPickText: id => pickBible(id),
+    onMarkComplete: markDayComplete
   };
   // Flip reading order. Entering chronological stashes the canonical spot and jumps
   // to the current passage; leaving restores the stashed canonical spot.
@@ -9156,7 +9454,8 @@ function LibraryView({
     orderMode: orderMode,
     setOrder: setOrder,
     chronoPos: chronoPos,
-    onPickPassage: pickPassage
+    onPickPassage: pickPassage,
+    plan: planBundle
   }), !navVisible && mobileNavOpen && /*#__PURE__*/React.createElement(MobileBookPicker, {
     books: books,
     translation: translation,
@@ -9171,6 +9470,7 @@ function LibraryView({
       pickPassage(p);
       setMobileNavOpen(false);
     },
+    plan: planBundle,
     onDone: (b, n) => {
       // Clear any lingering jump-highlight (a verse reached via Search/cross-ref) —
       // a manual book/chapter pick shouldn't leave an old verse lit. Point nav at the

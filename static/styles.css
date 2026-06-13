@@ -2823,6 +2823,83 @@ input { font-family: inherit; }
 .nav-passage:hover { color: var(--ink); }
 .nav-passage.on { background: var(--bg-sunk); color: var(--ink); font-weight: 600; border-radius: 5px; }
 
+/* ── Reading plan ("Days" view of the chronological picker) ───────────────────
+   Renders inside the left nav (.nav-scroll) and the mobile picker (.mpick-scroll),
+   both on var(--bg-sunk). The per-text progress header pins to the top; the day
+   list flows below. Pills use the theme control vars; gold-soft is theme-aware
+   (light in light/sepia, dark in dark) so var(--ink) text on it is safe everywhere. */
+.plan-toggle { display: flex; gap: 4px; padding: 6px 6px 9px; }
+.plan-toggle-b {
+  flex: 1; padding: 5px 0; font-size: 12px; font-weight: 600; cursor: pointer;
+  color: var(--ink-3); background: var(--ctl-bg, var(--bg));
+  border: 1px solid var(--rule); border-radius: 7px;
+}
+.plan-toggle-b.on { color: var(--ink); background: var(--ctl-on, var(--paper)); border-color: var(--gold); }
+
+.plan-head {
+  position: sticky; top: 0; z-index: 2;
+  background: var(--bg-sunk); padding: 2px 8px 10px; border-bottom: 1px solid var(--rule);
+}
+.plan-chips { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 5px; }
+.plan-chip {
+  padding: 4px 9px; font-size: 11.5px; cursor: pointer; color: var(--ink-3);
+  background: var(--ctl-bg, var(--bg)); border: 1px solid var(--rule); border-radius: 999px;
+}
+.plan-chip.on { color: var(--ink); background: var(--gold-soft); border-color: var(--gold); font-weight: 600; }
+.plan-sub { font-size: 10.5px; color: var(--ink-4); margin-bottom: 11px; }
+.plan-prog { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 5px; }
+.plan-dayno { font-size: 13px; font-weight: 600; color: var(--ink); }
+.plan-pct { font-size: 13px; font-weight: 600; color: var(--gold); }
+.plan-bar {
+  height: 6px; background: var(--bg); border: 1px solid var(--rule);
+  border-radius: 999px; overflow: hidden; margin-bottom: 9px;
+}
+.plan-bar-fill { height: 100%; background: var(--gold); border-radius: 999px; transition: width 0.3s ease; }
+.plan-meta { display: flex; align-items: center; justify-content: space-between; }
+.plan-streak { display: inline-flex; align-items: center; gap: 5px; font-size: 11.5px; color: var(--ink-3); }
+.plan-streak svg { color: var(--gold); }
+.plan-jump {
+  font-size: 11.5px; color: var(--ink-2); cursor: pointer; padding: 4px 9px;
+  background: var(--ctl-bg, var(--bg)); border: 1px solid var(--rule); border-radius: 6px;
+}
+.plan-jump:hover { color: var(--ink); border-color: var(--gold); }
+
+.plan-days { padding: 4px 4px 10px; }
+.plan-day { border-radius: 6px; scroll-margin-top: 150px; }
+.plan-day-head {
+  width: 100%; display: flex; align-items: center; gap: 8px; padding: 7px 8px;
+  text-align: left; cursor: pointer; background: none; border: none;
+  color: var(--ink-2); font-size: 13px;
+}
+.plan-day-head:hover { color: var(--ink); }
+.plan-day-mark { flex: 0 0 16px; display: inline-flex; align-items: center; justify-content: center; color: var(--ink-4); }
+.plan-day--done .plan-day-mark { color: var(--gold); }
+.plan-caret { font-size: 9px; transition: transform 0.12s ease; }
+.plan-day.open .plan-caret { transform: rotate(90deg); }
+.plan-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); }
+.plan-day-n { flex: 1; }
+.plan-day--done .plan-day-n { color: var(--ink-4); }
+.plan-day--today .plan-day-n { color: var(--ink); font-weight: 600; }
+.plan-today-tag {
+  font-size: 10px; font-weight: 600; color: var(--gold);
+  background: var(--gold-soft); border-radius: 999px; padding: 1px 8px;
+}
+.plan-day-v { font-size: 10.5px; color: var(--ink-4); font-family: var(--f-mono); }
+.plan-day--today { background: var(--gold-soft); box-shadow: inset 3px 0 0 var(--gold); border-radius: 0 6px 6px 0; }
+.plan-day-body { padding: 2px 8px 9px 22px; }
+.plan-passage {
+  width: 100%; display: block; text-align: left; padding: 4px 8px; border-radius: 5px;
+  font-size: 12.5px; color: var(--ink-2); background: none; border: none; cursor: pointer;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.plan-passage:hover { color: var(--ink); }
+.plan-complete {
+  margin-top: 7px; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;
+  font-size: 12px; font-weight: 600; cursor: pointer; color: var(--gold);
+  background: var(--gold-soft); border: 1px solid var(--gold); border-radius: 7px;
+}
+.plan-complete:hover { background: var(--gold); color: var(--paper); }
+
 /* Chronological: a small chapter divider between the chapters a passage spans */
 .lib-chrono-chapmark {
   display: block; width: fit-content;

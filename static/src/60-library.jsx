@@ -175,7 +175,7 @@ const _BOOK_DIV = {
   Jud:"General Epistles",Rev:"Apocalyptic",
 };
 
-function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, isOverlay, onClose, navBookRef, nonCanon, nonCanonList, onPickNonCanon, translation, corpus, pickBible, esvOwner, nivOwner, hebShown, hebPickable, otherOpen, setOtherOpen, chrono, orderMode, setOrder, chronoPos, onPickPassage }) {
+function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, isOverlay, onClose, navBookRef, nonCanon, nonCanonList, onPickNonCanon, translation, corpus, pickBible, esvOwner, nivOwner, hebShown, hebPickable, otherOpen, setOtherOpen, chrono, orderMode, setOrder, chronoPos, onPickPassage, plan }) {
   const [query, setQuery] = useState("");
   const chronoMode = orderMode === "chronological" && chrono && !nonCanon;
   // The era a passage belongs to, so the active passage's era starts expanded.
@@ -322,7 +322,18 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
         </div>
       )}
       <div className="nav-scroll">
-        {chronoMode && chrono.eras.map(era => {
+        {chronoMode && plan && (
+          <div className="plan-toggle">
+            <button className={"plan-toggle-b" + (plan.view !== "days" ? " on" : "")} onClick={() => plan.setView("eras")}>Eras</button>
+            <button className={"plan-toggle-b" + (plan.view === "days" ? " on" : "")} onClick={() => plan.setView("days")}>Days</button>
+          </div>
+        )}
+        {chronoMode && plan && plan.view === "days" && (
+          <DayPlanView chrono={chrono} curText={plan.curText} texts={plan.texts} progAll={plan.progAll}
+            onPickText={plan.onPickText} onMarkComplete={plan.onMarkComplete}
+            onPickPassage={(p) => { onPickPassage(p); if (isOverlay) onClose(); }} />
+        )}
+        {chronoMode && (!plan || plan.view !== "days") && chrono.eras.map(era => {
           const open = openEras.has(era.id);
           const eraPassages = chrono.passages.filter(p => p.era === era.id);
           return (
@@ -401,7 +412,7 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
 // ============================================================
 // MOBILE BOOK PICKER — full-screen, two-screen (book grid → chapter grid)
 // ============================================================
-function MobileBookPicker({ books, selBook, selChapter, nonCanon, nonCanonList, onDone, onClose, chronoOn, chrono, chronoPos, onPickPassage, translation }) {
+function MobileBookPicker({ books, selBook, selChapter, nonCanon, nonCanonList, onDone, onClose, chronoOn, chrono, chronoPos, onPickPassage, translation, plan }) {
   // A non-canonical book is identified by its `id`; a Bible book by its `abbrev`.
   const isNC = b => !!(b && b.id);
   // Chronological: the picker shows eras → passages instead of books → chapters.
@@ -450,7 +461,17 @@ function MobileBookPicker({ books, selBook, selChapter, nonCanon, nonCanonList, 
       </div>
       <div className="mpick-scroll" ref={scrollRef}>
         {chronoOn ? (
-          chrono.eras.map(era => {
+          <React.Fragment>
+            {plan && (
+              <div className="plan-toggle">
+                <button className={"plan-toggle-b" + (plan.view !== "days" ? " on" : "")} onClick={() => plan.setView("eras")}>Eras</button>
+                <button className={"plan-toggle-b" + (plan.view === "days" ? " on" : "")} onClick={() => plan.setView("days")}>Days</button>
+              </div>
+            )}
+            {plan && plan.view === "days" ? (
+              <DayPlanView chrono={chrono} curText={plan.curText} texts={plan.texts} progAll={plan.progAll}
+                onPickText={plan.onPickText} onMarkComplete={plan.onMarkComplete} onPickPassage={onPickPassage} />
+            ) : chrono.eras.map(era => {
             const open = openEras.has(era.id);
             const eraPassages = chrono.passages.filter(p => p.era === era.id);
             return (
@@ -469,7 +490,8 @@ function MobileBookPicker({ books, selBook, selChapter, nonCanon, nonCanonList, 
                 )}
               </div>
             );
-          })
+          })}
+          </React.Fragment>
         ) : onChapter ? (
           <div className="mpick-grid">
             {Array.from({ length: pickedBook.chapters }, (_, i) => i + 1).map(n => {
@@ -857,6 +879,12 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
   const [chronoPos, setChronoPos] = useState(1);           // current passage position (1-based)
   const [chronoData, setChronoData] = useState(null);      // loaded span: { pos, byCh:{ch:{abp,kjv,bsb}} }
   const [chronoLoading, setChronoLoading] = useState(false);
+  // Chrono picker view: "eras" (the era→passage browse) or "days" (the 365-day plan).
+  const [chronoView, setChronoView] = useState(() => {
+    try { return localStorage.getItem("lexica.chronoview.v1") === "eras" ? "eras" : "days"; } catch (e) { return "days"; }
+  });
+  // Per-text reading-plan progress ({ abp:{day,streak,last}, kjv:{...}, ... }).
+  const [planProg, setPlanProg] = useState(() => planLoadAll());
   const nonCanon = NONCANON.find(t => t.id === corpus) || null;
   const chronoOn = orderMode === "chronological" && !nonCanon && !!chrono;
   const curPassage = chronoOn ? (chrono.passages[chronoPos - 1] || null) : null;
@@ -970,6 +998,9 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
       }));
     } catch (e) {}
   }, [corpus, selBook, selChapter, translation]);
+  // Persist reading-plan progress + the Eras/Days choice.
+  useEffect(() => { planSaveAll(planProg); }, [planProg]);
+  useEffect(() => { try { localStorage.setItem("lexica.chronoview.v1", chronoView); } catch (e) {} }, [chronoView]);
 
   // Load the chronological passage list once (a small static file). If it fails,
   // chronoOn stays false and the Order toggle simply never appears.
@@ -1000,6 +1031,27 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
     const next = chronoPos + delta;
     if (next < 1 || next > chrono.passages.length) return;
     pickPassage(chrono.passages[next - 1]);
+  };
+  // Reading-plan ("Days") wiring. Progress is per reading text; the chips switch text.
+  const planTexts = [
+    { id: "abp", label: "ABP" }, { id: "kjv", label: "KJV" }, { id: "bsb", label: "BSB" },
+    ...(esvOwner ? [{ id: "esv", label: "ESV" }] : []),
+    ...(nivOwner ? [{ id: "niv", label: "NIV" }] : []),
+  ];
+  // Finished today's reading: advance THIS text's progress and continue into the next day.
+  const markDayComplete = () => {
+    if (!chrono || !chrono.days) return;
+    const next = planAdvance(planFor(planProg, translation), chrono.days.length);
+    setPlanProg(prev => ({ ...prev, [translation]: next }));
+    const day = chrono.days[next.day - 1];
+    const p = day && day.pos && chrono.passages[day.pos[0] - 1];
+    if (p) pickPassage(p);
+  };
+  const planBundle = {
+    view: chronoView, setView: setChronoView,
+    progAll: planProg, texts: planTexts, curText: translation,
+    onPickText: (id) => pickBible(id),
+    onMarkComplete: markDayComplete,
   };
   // Flip reading order. Entering chronological stashes the canonical spot and jumps
   // to the current passage; leaving restores the stashed canonical spot.
@@ -2542,6 +2594,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
           setOrder={setOrder}
           chronoPos={chronoPos}
           onPickPassage={pickPassage}
+          plan={planBundle}
         />
       )}
       {!navVisible && mobileNavOpen && (
@@ -2556,6 +2609,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
           chrono={chrono}
           chronoPos={chronoPos}
           onPickPassage={(p) => { pickPassage(p); setMobileNavOpen(false); }}
+          plan={planBundle}
           onDone={(b, n) => {
             // Clear any lingering jump-highlight (a verse reached via Search/cross-ref) —
             // a manual book/chapter pick shouldn't leave an old verse lit. Point nav at the

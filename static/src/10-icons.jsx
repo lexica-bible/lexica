@@ -43,6 +43,18 @@ const Icon = {
       <path d="M4 20h4L18.5 9.5l-4-4L4 16z"/><path d="M13 7l4 4"/>
     </svg>
   ),
+  // Reading-plan: a completed day
+  Check: (p) => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}>
+      <path d="M5 12l5 5L20 6"/>
+    </svg>
+  ),
+  // Reading-plan: streak
+  Flame: (p) => (
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" {...p}>
+      <path d="M12 3c2.4 3 3.8 5 3.8 7.8A3.8 3.8 0 0 1 8.2 11C8.2 9.6 8.8 8.5 9.7 7.7 9.9 9.3 11 9.6 11 8c0-1.6.4-3.3 1-5z"/>
+    </svg>
+  ),
   Copy: (p) => (
     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.75" strokeLinecap="round" strokeLinejoin="round" {...p}>
       <rect x="8" y="8" width="13" height="13" rx="2"/><path d="M16 8V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h3"/>
