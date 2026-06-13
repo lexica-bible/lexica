@@ -11122,7 +11122,7 @@ function App() {
   // if it still has room to scroll. The reading area and detail panel are untouched.
   useEffect(() => {
     const onWheel = e => {
-      const chrome = e.target.closest && e.target.closest(".hdr, .lib-bar, .lib-toolbar, .nav");
+      const chrome = e.target.closest && e.target.closest(".hdr, .lib-bar, .lib-toolbar, .nav, .detail-side");
       if (!chrome) return;
       const dir = Math.sign(e.deltaY);
       let node = e.target;
