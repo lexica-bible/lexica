@@ -7165,10 +7165,27 @@ function LibraryView({
     if (theme === "light") document.documentElement.removeAttribute("data-theme");else document.documentElement.setAttribute("data-theme", theme);
     localStorage.setItem("lexica.theme.v1", theme);
   }, [theme]);
-  const [translation, setTranslation] = useState("abp"); // layout: "abp" | "kjv" | "bsb" | "esv" | "niv" | "parallel"
+  // The saved library spot (read once) so reading order / text / compare restore at the
+  // FIRST paint — no canonical→chronological (or ABP→saved) flip a moment after load.
+  const readLibSaved = () => {
+    try {
+      return JSON.parse(localStorage.getItem("lexica.lib.v1") || "null");
+    } catch (e) {
+      return null;
+    }
+  };
+  const [translation, setTranslation] = useState(() => {
+    // "abp"|"kjv"|"bsb"|"esv"|"niv"|"parallel"
+    const s = readLibSaved(),
+      t = s && s.translation;
+    return ["abp", "kjv", "bsb", "esv", "niv", "heb", "parallel"].includes(t) ? t : "abp";
+  });
   // Compare (parallel): translation === "parallel" is the mode; compareSel is WHICH
   // texts (2-4) sit side by side. ESV/NIV only offered to the owner.
-  const [compareSel, setCompareSel] = useState(["abp", "kjv"]);
+  const [compareSel, setCompareSel] = useState(() => {
+    const s = readLibSaved();
+    return s && Array.isArray(s.compareSel) && s.compareSel.length >= 2 ? s.compareSel : ["abp", "kjv"];
+  });
   const [compareOpen, setCompareOpen] = useState(false);
   const [corpus, setCorpus] = useState("bible"); // which text: "bible" | a non-canonical id (e.g. "didache")
   const [didVerses, setDidVerses] = useState([]);
@@ -7205,9 +7222,17 @@ function LibraryView({
   // Chronological reading: the same reader, fed passages in event order. The list
   // is a static file (book + verse range pointers, no Bible text). "canonical" =
   // normal book/chapter order; "chronological" = walk `chrono.passages` in order.
-  const [orderMode, setOrderMode] = useState("canonical"); // "canonical" | "chronological"
+  const [orderMode, setOrderMode] = useState(() => {
+    // "canonical" | "chronological"
+    const s = readLibSaved();
+    return s && s.orderMode === "chronological" ? "chronological" : "canonical";
+  });
   const [chrono, setChrono] = useState(null); // { eras, passages } | null
-  const [chronoPos, setChronoPos] = useState(1); // current passage position (1-based)
+  const [chronoPos, setChronoPos] = useState(() => {
+    // current passage position (1-based)
+    const s = readLibSaved();
+    return s && s.chronoPos > 0 ? s.chronoPos : 1;
+  });
   const [chronoData, setChronoData] = useState(null); // loaded span: { pos, byCh:{ch:{abp,kjv,bsb}} }
   const [chronoLoading, setChronoLoading] = useState(false);
   // Chrono picker view: "eras" (the era→passage browse) or "days" (the 365-day plan).
@@ -7348,18 +7373,11 @@ function LibraryView({
       setSelBook(savedBook || data[0]);
       if (saved) {
         if (saved.chapter > 0) setSelChapter(saved.chapter);
-        const t = saved.translation;
-        // Restore the saved text optimistically (incl. the gated ESV/NIV/HEB and the
-        // parallel/compare mode); the owner-status effect bounces gated ones back to
-        // ABP afterward if you're not allowed.
-        if (["abp", "kjv", "bsb", "esv", "niv", "heb", "parallel"].includes(t)) setTranslation(t);
-        if (Array.isArray(saved.compareSel) && saved.compareSel.length >= 2) setCompareSel(saved.compareSel);
+        // translation / compareSel / orderMode / chronoPos restore synchronously at
+        // state-init (so the pickers don't flicker). Here we only restore what needs the
+        // just-loaded books list — the open non-canonical text. The gated-text bounce
+        // (owner status) still runs afterward to drop ESV/NIV/HEB if you're not allowed.
         if (saved.corpus && saved.corpus !== "bible" && NONCANON.some(x => x.id === saved.corpus)) setCorpus(saved.corpus);
-        // Reading order survives a refresh now. selBook/chapter above were saved at the
-        // passage's spot, so once chrono.json loads the passage loader picks it back up
-        // from chronoPos (chronoOn only flips on once chrono is loaded).
-        if (saved.orderMode === "chronological") setOrderMode("chronological");
-        if (saved.chronoPos > 0) setChronoPos(saved.chronoPos);
       }
     });
   }, []);
