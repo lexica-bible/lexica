@@ -1972,6 +1972,11 @@ input { font-family: inherit; }
   font-size: 16px;
   line-height: 1.3;
   color: var(--ink-2);
+  /* The neighbour chip is tucked 3px over the bracket; lift the glyph so a
+     highlighted chip's opaque paint can't cover the bracket's serifs (which left
+     it looking like a thin vertical line). */
+  position: relative;
+  z-index: 1;
 }
 
 /* Interlinear in detail panel */
