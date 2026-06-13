@@ -2913,6 +2913,10 @@ input { font-family: inherit; }
 .nav-plan .plan { flex: 1; display: flex; flex-direction: column; min-height: 0; }
 .nav-plan .plan-head { position: static; flex-shrink: 0; }
 .nav-plan .plan-days { flex: 1; overflow-y: auto; min-height: 0; }
+/* Eras view inside the pinned-toggle wrapper: the era list scrolls, toggle stays. */
+.nav-plan .nav-plan-scroll { flex: 1; min-height: 0; }
+/* Mobile picker: the Eras/Days toggle sits in the fixed chrome (above the scroller). */
+.mpick-toggle { flex-shrink: 0; padding: 8px 14px; border-bottom: 1px solid var(--rule); background: var(--bg-sunk); }
 
 /* Chronological: a small chapter divider between the chapters a passage spans */
 .lib-chrono-chapmark {

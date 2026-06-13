@@ -6114,7 +6114,7 @@ function LibNavPanel({
         if (isOverlay) onClose();
       }
     }, t.name)));
-  })), chronoMode && plan && plan.view === "days" ? /*#__PURE__*/React.createElement("div", {
+  })), chronoMode && plan ? /*#__PURE__*/React.createElement("div", {
     className: "nav-plan"
   }, /*#__PURE__*/React.createElement("div", {
     className: "plan-toggle"
@@ -6124,7 +6124,7 @@ function LibNavPanel({
   }, "Eras"), /*#__PURE__*/React.createElement("button", {
     className: "plan-toggle-b" + (plan.view === "days" ? " on" : ""),
     onClick: () => plan.setView("days")
-  }, "Days")), /*#__PURE__*/React.createElement(DayPlanView, {
+  }, "Days")), plan.view === "days" ? /*#__PURE__*/React.createElement(DayPlanView, {
     chrono: chrono,
     curText: plan.curText,
     texts: plan.texts,
@@ -6136,17 +6136,9 @@ function LibNavPanel({
       onPickPassage(p);
       if (isOverlay) onClose();
     }
-  })) : /*#__PURE__*/React.createElement("div", {
-    className: "nav-scroll"
-  }, chronoMode && plan && /*#__PURE__*/React.createElement("div", {
-    className: "plan-toggle"
-  }, /*#__PURE__*/React.createElement("button", {
-    className: "plan-toggle-b" + (plan.view !== "days" ? " on" : ""),
-    onClick: () => plan.setView("eras")
-  }, "Eras"), /*#__PURE__*/React.createElement("button", {
-    className: "plan-toggle-b" + (plan.view === "days" ? " on" : ""),
-    onClick: () => plan.setView("days")
-  }, "Days")), chronoMode && (!plan || plan.view !== "days") && chrono.eras.map(era => {
+  }) : /*#__PURE__*/React.createElement("div", {
+    className: "nav-scroll nav-plan-scroll"
+  }, chrono.eras.map(era => {
     const open = openEras.has(era.id);
     const eraPassages = chrono.passages.filter(p => p.era === era.id);
     return /*#__PURE__*/React.createElement("div", {
@@ -6177,7 +6169,9 @@ function LibNavPanel({
         }
       }, p.label);
     })));
-  }), !chronoMode && nonCanon && nonCanonActive, !chronoMode && !nonCanon && groups.map((g, gi) => {
+  }))) : /*#__PURE__*/React.createElement("div", {
+    className: "nav-scroll"
+  }, nonCanon && nonCanonActive, !nonCanon && groups.map((g, gi) => {
     // Show the OT/NT tag only when the testament changes (once at the top,
     // once at the OT→NT boundary) — repeating it on every group was noise.
     const newTestament = gi === 0 || groups[gi - 1].t !== g.t;
@@ -6299,18 +6293,18 @@ function MobileBookPicker({
   }, chronoOn ? "Chronological" : onChapter ? pickedBook.name : "Books"), /*#__PURE__*/React.createElement("button", {
     className: "mpick-x",
     onClick: onClose
-  }, "\u2715")), /*#__PURE__*/React.createElement("div", {
-    className: "mpick-scroll",
-    ref: scrollRef
-  }, chronoOn ? /*#__PURE__*/React.createElement(React.Fragment, null, plan && /*#__PURE__*/React.createElement("div", {
-    className: "plan-toggle"
+  }, "\u2715")), chronoOn && plan && /*#__PURE__*/React.createElement("div", {
+    className: "plan-toggle mpick-toggle"
   }, /*#__PURE__*/React.createElement("button", {
     className: "plan-toggle-b" + (plan.view !== "days" ? " on" : ""),
     onClick: () => plan.setView("eras")
   }, "Eras"), /*#__PURE__*/React.createElement("button", {
     className: "plan-toggle-b" + (plan.view === "days" ? " on" : ""),
     onClick: () => plan.setView("days")
-  }, "Days")), plan && plan.view === "days" ? /*#__PURE__*/React.createElement(DayPlanView, {
+  }, "Days")), /*#__PURE__*/React.createElement("div", {
+    className: "mpick-scroll",
+    ref: scrollRef
+  }, chronoOn ? plan && plan.view === "days" ? /*#__PURE__*/React.createElement(DayPlanView, {
     chrono: chrono,
     curText: plan.curText,
     texts: plan.texts,
@@ -6342,7 +6336,7 @@ function MobileBookPicker({
       className: "mpick-passage" + (p.pos === chronoPos ? " on" : ""),
       onClick: () => onPickPassage(p)
     }, p.label))));
-  })) : onChapter ? /*#__PURE__*/React.createElement("div", {
+  }) : onChapter ? /*#__PURE__*/React.createElement("div", {
     className: "mpick-grid"
   }, Array.from({
     length: pickedBook.chapters

@@ -321,25 +321,19 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
           })}
         </div>
       )}
-      {chronoMode && plan && plan.view === "days" ? (
+      {chronoMode && plan ? (
         <div className="nav-plan">
           <div className="plan-toggle">
             <button className={"plan-toggle-b" + (plan.view !== "days" ? " on" : "")} onClick={() => plan.setView("eras")}>Eras</button>
             <button className={"plan-toggle-b" + (plan.view === "days" ? " on" : "")} onClick={() => plan.setView("days")}>Days</button>
           </div>
-          <DayPlanView chrono={chrono} curText={plan.curText} texts={plan.texts} progAll={plan.progAll}
-            onPickText={plan.onPickText} onMarkComplete={plan.onMarkComplete} onSetDay={plan.onSetDay}
-            onPickPassage={(p) => { onPickPassage(p); if (isOverlay) onClose(); }} />
-        </div>
-      ) : (
-      <div className="nav-scroll">
-        {chronoMode && plan && (
-          <div className="plan-toggle">
-            <button className={"plan-toggle-b" + (plan.view !== "days" ? " on" : "")} onClick={() => plan.setView("eras")}>Eras</button>
-            <button className={"plan-toggle-b" + (plan.view === "days" ? " on" : "")} onClick={() => plan.setView("days")}>Days</button>
-          </div>
-        )}
-        {chronoMode && (!plan || plan.view !== "days") && chrono.eras.map(era => {
+          {plan.view === "days" ? (
+            <DayPlanView chrono={chrono} curText={plan.curText} texts={plan.texts} progAll={plan.progAll}
+              onPickText={plan.onPickText} onMarkComplete={plan.onMarkComplete} onSetDay={plan.onSetDay}
+              onPickPassage={(p) => { onPickPassage(p); if (isOverlay) onClose(); }} />
+          ) : (
+            <div className="nav-scroll nav-plan-scroll">
+              {chrono.eras.map(era => {
           const open = openEras.has(era.id);
           const eraPassages = chrono.passages.filter(p => p.era === era.id);
           return (
@@ -364,9 +358,14 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
               )}
             </div>
           );
-        })}
-        {!chronoMode && nonCanon && nonCanonActive}
-        {!chronoMode && !nonCanon && groups.map((g, gi) => {
+              })}
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="nav-scroll">
+        {nonCanon && nonCanonActive}
+        {!nonCanon && groups.map((g, gi) => {
           // Show the OT/NT tag only when the testament changes (once at the top,
           // once at the OT→NT boundary) — repeating it on every group was noise.
           const newTestament = gi === 0 || groups[gi - 1].t !== g.t;
@@ -466,19 +465,18 @@ function MobileBookPicker({ books, selBook, selChapter, nonCanon, nonCanonList, 
         <span className="mpick-title">{chronoOn ? "Chronological" : (onChapter ? pickedBook.name : "Books")}</span>
         <button className="mpick-x" onClick={onClose}>✕</button>
       </div>
+      {chronoOn && plan && (
+        <div className="plan-toggle mpick-toggle">
+          <button className={"plan-toggle-b" + (plan.view !== "days" ? " on" : "")} onClick={() => plan.setView("eras")}>Eras</button>
+          <button className={"plan-toggle-b" + (plan.view === "days" ? " on" : "")} onClick={() => plan.setView("days")}>Days</button>
+        </div>
+      )}
       <div className="mpick-scroll" ref={scrollRef}>
         {chronoOn ? (
-          <React.Fragment>
-            {plan && (
-              <div className="plan-toggle">
-                <button className={"plan-toggle-b" + (plan.view !== "days" ? " on" : "")} onClick={() => plan.setView("eras")}>Eras</button>
-                <button className={"plan-toggle-b" + (plan.view === "days" ? " on" : "")} onClick={() => plan.setView("days")}>Days</button>
-              </div>
-            )}
-            {plan && plan.view === "days" ? (
-              <DayPlanView chrono={chrono} curText={plan.curText} texts={plan.texts} progAll={plan.progAll}
-                onPickText={plan.onPickText} onMarkComplete={plan.onMarkComplete} onSetDay={plan.onSetDay} onPickPassage={onPickPassage} />
-            ) : chrono.eras.map(era => {
+          plan && plan.view === "days" ? (
+            <DayPlanView chrono={chrono} curText={plan.curText} texts={plan.texts} progAll={plan.progAll}
+              onPickText={plan.onPickText} onMarkComplete={plan.onMarkComplete} onSetDay={plan.onSetDay} onPickPassage={onPickPassage} />
+          ) : chrono.eras.map(era => {
             const open = openEras.has(era.id);
             const eraPassages = chrono.passages.filter(p => p.era === era.id);
             return (
@@ -497,8 +495,7 @@ function MobileBookPicker({ books, selBook, selChapter, nonCanon, nonCanonList, 
                 )}
               </div>
             );
-          })}
-          </React.Fragment>
+          })
         ) : onChapter ? (
           <div className="mpick-grid">
             {Array.from({ length: pickedBook.chapters }, (_, i) => i + 1).map(n => {
