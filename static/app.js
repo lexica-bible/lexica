@@ -8652,9 +8652,12 @@ function LibraryView({
             } : w);
           }
         }
-        const trailChar = (txt, k) => /*#__PURE__*/React.createElement("span", {
+        // `hc` carries the highlight paint so the "[", "]" and trailing punctuation
+        // pick up the same color as the word they hug — otherwise the highlight bar
+        // breaks at every bracket (those glyphs sit between the painted word chips).
+        const trailChar = (txt, k, hc = "") => /*#__PURE__*/React.createElement("span", {
           key: k,
-          className: "lib-bracket-trail"
+          className: "lib-bracket-trail" + hc
         }, showInterlinear && /*#__PURE__*/React.createElement("span", {
           className: "lib-iw-greek",
           style: {
@@ -8668,9 +8671,9 @@ function LibraryView({
             visibility: "hidden"
           }
         }, "G0"));
-        const bracketChar = (ch, k) => /*#__PURE__*/React.createElement("span", {
+        const bracketChar = (glyph, k, hc = "") => /*#__PURE__*/React.createElement("span", {
           key: k,
-          className: "lib-bracket"
+          className: "lib-bracket" + hc
         }, showInterlinear && /*#__PURE__*/React.createElement("span", {
           className: "lib-iw-greek",
           style: {
@@ -8678,22 +8681,25 @@ function LibraryView({
           }
         }, "x"), /*#__PURE__*/React.createElement("span", {
           className: "lib-bracket-glyph"
-        }, ch), showStrongs && /*#__PURE__*/React.createElement("span", {
+        }, glyph), showStrongs && /*#__PURE__*/React.createElement("span", {
           className: "lib-iw-strongs",
           style: {
             visibility: "hidden"
           }
         }, "G0"));
+        // Highlight state of the bracket's edge words drives the bracket-glyph paint.
+        const hcOpen = hiClass(v.verse, gwR[0].position, ch);
+        const hcClose = hiClass(v.verse, gwR[gwR.length - 1].position, ch);
         return /*#__PURE__*/React.createElement("span", {
           key: `bg${gi}`,
           className: "lib-bracket-group"
         }, gwR.length === 1 ? /*#__PURE__*/React.createElement("span", {
           className: "lib-bracket-unit"
-        }, bracketChar("[", "bl"), bracketChip(gwR[0], `bg${gi}w0`), bracketChar("]", "br"), bracketTrail && trailChar(bracketTrail, "bt")) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", {
+        }, bracketChar("[", "bl", hcOpen), bracketChip(gwR[0], `bg${gi}w0`), bracketChar("]", "br", hcClose), bracketTrail && trailChar(bracketTrail, "bt", hcClose)) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", {
           className: "lib-bracket-unit"
-        }, bracketChar("[", "bl"), bracketChip(gwR[0], `bg${gi}w0`)), gwR.slice(1, -1).map((w, wi) => bracketChip(w, `bg${gi}w${wi + 1}`)), /*#__PURE__*/React.createElement("span", {
+        }, bracketChar("[", "bl", hcOpen), bracketChip(gwR[0], `bg${gi}w0`)), gwR.slice(1, -1).map((w, wi) => bracketChip(w, `bg${gi}w${wi + 1}`)), /*#__PURE__*/React.createElement("span", {
           className: "lib-bracket-unit"
-        }, bracketChip(gwR[gwR.length - 1], `bg${gi}w${gwR.length - 1}`), bracketChar("]", "br"), bracketTrail && trailChar(bracketTrail, "bt"))));
+        }, bracketChip(gwR[gwR.length - 1], `bg${gi}w${gwR.length - 1}`), bracketChar("]", "br", hcClose), bracketTrail && trailChar(bracketTrail, "bt", hcClose))));
       });
     }
     return /*#__PURE__*/React.createElement(React.Fragment, {

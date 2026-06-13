@@ -2223,39 +2223,45 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
             gwR = gw.map((w, i) => i === li ? { ...w, english: lastEng.slice(0, m.index) } : w);
           }
         }
-        const trailChar = (txt, k) => (
-          <span key={k} className="lib-bracket-trail">
+        // `hc` carries the highlight paint so the "[", "]" and trailing punctuation
+        // pick up the same color as the word they hug — otherwise the highlight bar
+        // breaks at every bracket (those glyphs sit between the painted word chips).
+        const trailChar = (txt, k, hc = "") => (
+          <span key={k} className={"lib-bracket-trail" + hc}>
             {showInterlinear && <span className="lib-iw-greek" style={{visibility:"hidden"}}>x</span>}
             <span className="lib-iw-english">{txt}</span>
             {showStrongs && <span className="lib-iw-strongs" style={{visibility:"hidden"}}>G0</span>}
           </span>
         );
-        const bracketChar = (ch, k) => (
-          <span key={k} className="lib-bracket">
+        const bracketChar = (glyph, k, hc = "") => (
+          <span key={k} className={"lib-bracket" + hc}>
             {showInterlinear && <span className="lib-iw-greek" style={{visibility:"hidden"}}>x</span>}
-            <span className="lib-bracket-glyph">{ch}</span>
+            <span className="lib-bracket-glyph">{glyph}</span>
             {showStrongs && <span className="lib-iw-strongs" style={{visibility:"hidden"}}>G0</span>}
           </span>
         );
+        // Highlight state of the bracket's edge words drives the bracket-glyph paint.
+        const hcOpen = hiClass(v.verse, gwR[0].position, ch);
+        const hcClose = hiClass(v.verse, gwR[gwR.length - 1].position, ch);
         return (
           <span key={`bg${gi}`} className="lib-bracket-group">
             {gwR.length === 1 ? (
               <span className="lib-bracket-unit">
-                {bracketChar("[", "bl")}
+                {bracketChar("[", "bl", hcOpen)}
                 {bracketChip(gwR[0], `bg${gi}w0`)}
-                {bracketChar("]", "br")}
-                {bracketTrail && trailChar(bracketTrail, "bt")}
+                {bracketChar("]", "br", hcClose)}
+                {bracketTrail && trailChar(bracketTrail, "bt", hcClose)}
               </span>
             ) : (<>
               <span className="lib-bracket-unit">
-                {bracketChar("[", "bl")}
+                {bracketChar("[", "bl", hcOpen)}
                 {bracketChip(gwR[0], `bg${gi}w0`)}
               </span>
               {gwR.slice(1, -1).map((w, wi) => bracketChip(w, `bg${gi}w${wi + 1}`))}
               <span className="lib-bracket-unit">
                 {bracketChip(gwR[gwR.length - 1], `bg${gi}w${gwR.length - 1}`)}
-                {bracketChar("]", "br")}
-                {bracketTrail && trailChar(bracketTrail, "bt")}
+                {bracketChar("]", "br", hcClose)}
+                {bracketTrail && trailChar(bracketTrail, "bt", hcClose)}
               </span>
             </>)}
           </span>
