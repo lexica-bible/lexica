@@ -1965,9 +1965,15 @@ input { font-family: inherit; }
   padding: 5px 0 2px;
   user-select: none;
 }
-.lib-bracket:first-child { margin-right: -3px; }
-.lib-bracket:last-child  { margin-left:  -3px; }
-/* close-bracket keeps its leftward tuck even when trailing punctuation follows */
+/* A bracketed phrase sits in the sentence with a normal word-gap on each side: the
+   "[" and "]" keep their tight inward tuck toward their own word, and carry 2px of
+   PADDING on the OUTWARD side so — with the neighbouring word's own 2px padding — the
+   gap before "[" and after "]" matches the 4px any two words sit apart. Padding (not
+   margin) so a verse highlight bar paints straight across the gap. */
+.lib-bracket:first-child { margin-right: -3px; padding-left: 2px; }
+.lib-bracket:last-child  { margin-left:  -3px; padding-right: 2px; }
+/* close-bracket keeps its leftward tuck even when trailing punctuation follows
+   (there the trailing-punct span carries the outward 2px instead) */
 .lib-bracket:has(+ .lib-bracket-trail) { margin-left: -3px; }
 /* Trailing clause punctuation lifted outside the "]": 1px of daylight off the
    bracket on its left, and a normal word-space before the next word on its right.
