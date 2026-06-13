@@ -14,9 +14,15 @@ Nave's+Torrey's **Topics + TopicIndex**. Built an admin-only **Study** tab: sub-
 **Topics · Denominations · Arguments**. Topics = a sectioned browse; denomination/argument = a
 position→support→tension→resolution claim editor. Own `study.db` (gitignored, PA-only),
 `views_study.py`, `static/src/55-study.jsx`. Loader `scripts/load_study_topics.py` imported
-~1,819 concept topics + 696 person/place "name-topics". Open follow-ups (still in TODO.md):
-a live BUG with the Nave's-sidebar block, the reader walkthrough view, the two-sided argument
-layout. Full record: memory `project_study_modules`.
+~1,819 concept topics + 696 person/place "name-topics". Full record: memory `project_study_modules`.
+
+**Follow-on, all SHIPPED 2026-06-12/13:** the Nave's-sidebar tap-through; a real TWO-SIDED argument
+layout (Side A | Side B + resolution, its own `sides` shape); a stepped reader WALKTHROUGH (built then
+DROPPED for collapsible subtopics on the page — same cure, one view) + a BOOK sub-collapse inside big
+subtopics; a "Preview as reader" admin toggle (all types now read-first); AI-drafted text-first Berean
+topic INTROS (Haiku default / Sonnet for the public batch, sharpened prompt; ✦ button + bulk script);
+title comma-flip for display + alphabetical list sort; and a publish/dupe-cleanup script set. Only the
+public "go-live" flip (open published topics to visitors) is left.
 
 Lessons worth keeping:
 - **Topics are NOT claims.** First cut forced every topic into the support/tension/resolution
@@ -32,6 +38,16 @@ Lessons worth keeping:
 - **CSV gotcha:** read MetaV CSVs as `utf-8-sig` — a BOM in the header made every verse link drop
   (the "0 verses" symptom). `--replace` clears prior `metav*` rows first so a re-run is clean.
 - Verse text shown = **ABP prose** (the words' english joined like Prose mode), KJV per-verse fallback.
+- **Walkthrough → collapse (06-13).** A stepped one-at-a-time reader was built first; on small topics it
+  barely differed from the page, so it was dropped for collapsible subtopics (the cleaner fix). Don't re-add.
+- **Nave's titles are index-style** ("Life, Eternal", "Devil"=Satan, "Accusation, False"). Match the
+  curated `_COMMON` hot-list to the REAL titles (`find_topics.py`); flip them for DISPLAY only
+  (`displayTitle`), don't rename the stored data. "X, the" = "The X" (mergeable dupe); "X, <aspect>" is a
+  real subtopic (keep). Merge folds "X, the"→"X" with a dry-run + study.db backup + soft-delete.
+- **Slow topic load was connection churn**, not the ABP word-stitching — `_resolve_body` opened a fresh
+  db connection PER VERSE (~67 for a big topic). One shared connection fixed it (commit 25ad365).
+- **Script API key:** the Anthropic key lives in the WSGI, not the shell — bulk scripts need
+  `export ANTHROPIC_API_KEY=...` first or `core._anthropic` is None and they no-op.
 
 ## Focus mode + reader gesture/scroll fixes — DONE 2026-06-11
 

@@ -289,26 +289,19 @@ category *names* (renamed to drop loaded framing); generate the actual verses an
 Berean-style. Build a quick proof-of-concept with the off-the-shelf topic→verse mappings first to see
 if people use it, then swap in our own verse selection. Could be a new tab or a mode inside Search.
 
-### Study modules — admin Study tab (LIVE 2026-06-12; build details in TODO_ARCHIVE + memory project_study_modules)
-Built + deployed: admin-only **Study** tab, sub-switch **Topics · Denominations · Arguments**. Topics =
-sectioned browse (MetaV/Nave's, ~1,819 concept topics loaded); denomination/argument = the
-position→support→tension→resolution claim editor; person/place names → a "Nave's topical" block on the
-metaV sidebar (696 name-topics). Verse text = ABP prose (KJV fallback). OPEN:
-- Sidebar "Nave's topical" block + tap-through: LIVE. Tap-through wired end-to-end (traced; committed
-  app.js in sync) — if the block shows, the name's page always opens. Live click-test still pending.
-- Two-sided ARGUMENT layout: BUILT + pushed 2026-06-12 (commit ae3e584; awaiting deploy). Side A | Side B,
-  each with its own claim + verses; resolution weighs them; Tension bucket dropped for arguments.
-  Denominations unchanged. Legacy arguments convert on read (support→A, tension→B).
-- PUBLIC vs admin-only: DECIDED — stays admin-only for now (user's call). Draft/published kept for later.
-- Topic READ page: COLLAPSIBLE subtopics (commit afe5e4a, 2026-06-12). A stepped "walkthrough" was built
-  first (0448147) then dropped — on small topics it barely differed from the page. Collapse/expand sections
-  cure the "wall of verses" in one view; multi-section topics start collapsed, single-section open.
-- "Preview as reader" toggle: BUILT 2026-06-12. Admin flips Study into the clean reader view (no Edit/New/
-  drafts, published-only). Side effect: all three types now open to a READ page first (Edit in admin).
-- AI-drafted topic intros: BUILT 2026-06-12 (commit 81b7520). "Draft with AI" button in a topic's editor +
-  scripts/generate_topic_intros.py (one-time bulk on PA; needs ANTHROPIC_API_KEY exported — it's in the WSGI).
-- Optional next: fold MetaV `Writers` in (replace hand `_BOOK_AUTHORS`).
-`code: views_study.py + static/src/55-study.jsx; scripts/load_study_topics.py (gusheng/MetaV); memory project_study_modules`
+### Study modules — admin Study tab (LIVE 2026-06-12/13; full record: memory project_study_modules)
+Admin-only **Study** tab: Topics (sectioned browse — collapsible subtopics + a book sub-collapse,
+alphabetical, comma-flipped display titles) · Denominations (support/tension editor) · Arguments
+(two-sided Side A | Side B + resolution). All types read-first; "Preview as reader" admin toggle;
+AI-drafted Berean topic intros (Haiku default / Sonnet for the public batch, sharpened prompt — ✦ button +
+`scripts/generate_topic_intros.py`). MetaV/Nave's import (~1,819 concepts + 696 name-topics; Nave's-topical
+sidebar block). Publish + dupe scripts: publish_topics, find_topics, find_topic_dupes, merge_the_dupes. OPEN:
+- **PUBLIC "go-live" flip** — open published Study topics to actual visitors (everything's admin-only
+  Preview until then). The big remaining step/decision.
+- Drop the place "Sin" entry (Sin (1)/(2) — one is the Wilderness of Sin) from the `_COMMON` list.
+- Optional: scope the alphabetical list sort to Topics if denom/arg should stay newest-first; fold MetaV
+  `Writers` into `_BOOK_AUTHORS`; the few ambiguous "X, the Y" titles ("God, the Father") stay un-flipped.
+`code: views_study.py + static/src/55-study.jsx; scripts/{load_study_topics,generate_topic_intros,publish_topics,find_topics,find_topic_dupes,merge_the_dupes}.py; memory project_study_modules`
 
 ### ~~Chronological reading mode~~ — DONE + LIVE 2026-06-09 (desktop + mobile)
 Read the Bible in event order, works with ANY version (ABP/KJV/BSB). Shipped as a reading-ORDER

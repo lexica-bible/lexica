@@ -186,13 +186,22 @@ scripts/          # build-frontend.js + one-time import/migration scripts
   (`core.heb_db()`, no owner gate on the data). **PUBLIC for everyone, no login (2026-06-11)** —
   `hebPickable` gates on `hebAvail` (heb.db loaded), not the old `hebOwner`. Full record: memory
   `project_hebrew_ot_interlinear`.
-  `study.db` — **admin-only** authored "study modules" (built 2026-06-12): one `entries` table (row
+  `study.db` — **admin-only** authored "study modules" (built 2026-06-12/13): one `entries` table (row
   per topic / denomination / argument / name; `json` body + `type` + `status`). Served by admin-gated
-  `views_study.py` (`core.study_db()`); the **Study** tab (`static/src/55-study.jsx`). Topics = a
-  sectioned browse; denomination/argument = a position→support→tension→resolution claim editor; verse
-  text shown is ABP prose (KJV fallback). MetaV/Nave's topics imported by
-  `scripts/load_study_topics.py` (concepts → browser; person/place names → a "Nave's topical" block on
-  the metaV sidebar). Full record: memory `project_study_modules`.
+  `views_study.py` (`core.study_db()`); the **Study** tab (`static/src/55-study.jsx`). TOPICS = a
+  sectioned browse (collapsible subtopics + a BOOK sub-collapse, alphabetical, comma-flipped display
+  titles); DENOMINATIONS = a position→support→tension→resolution claim editor; ARGUMENTS = a TWO-SIDED
+  layout (Side A | Side B, each its own claim+verses, + resolution — its own `sides` shape, NOT the
+  denom shape). All types open READ-first (Edit button, admin). A "Preview as reader" admin toggle skins
+  the tab as a visitor would see it (published-only, no editing). Verse text = ABP prose (KJV fallback).
+  Topic INTROS are AI-written, text-first Berean (Haiku default / Sonnet for the public batch,
+  `_draft_intro` + the `_INTRO_SYSTEM` prompt) and STORED on the topic — a "✦ Draft with AI" button +
+  `scripts/generate_topic_intros.py` (`--common`/`--order size`/`--sonnet`; needs `ANTHROPIC_API_KEY`
+  exported, it's in the WSGI not the shell). MetaV/Nave's topics imported by `scripts/load_study_topics.py`
+  (concepts → browser; person/place names → a "Nave's topical" sidebar block). Other scripts:
+  `publish_topics.py` (draft↔published flag), `find_topics.py`, `find_topic_dupes.py`, `merge_the_dupes.py`
+  (folds "X, the"→"X"). Modules are admin-only; opening published topics to the public is a PENDING flip.
+  Full record: memory `project_study_modules`.
 - `<book>_words` / `<book>_verses` — non-canonical texts, each in its OWN two tables, walled off
   from the Bible's tables and from search/word counts. Built by `scripts/load_extra.py`; served by
   `/api/extra/<book>/chapter/<n>`. English-only texts (no Greek) load with an empty words table.
