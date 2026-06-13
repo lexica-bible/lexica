@@ -495,11 +495,14 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   - `_BOOK_AUTHORS` (views_summary.py) lists ONLY well-established authors. Named scribes go inline in
     the value (Jer="Jeremiah, who dictated to his scribe Baruch", Rom="Paul, written down by his scribe
     Tertius"). Only-traditionally-attributed / anonymous books (Job, Esther, Judges, Ruth, the
-    Samuel/Kings/Chronicles histories, Hebrews) are left BLANK on purpose. LESSON (2026-06-13): metaV's
-    Writers list HAS traditional names for those, but FORCING Haiku to name a disputed author makes it
-    over-assert — it claimed "Moses wrote Job" and even leaked "Moses records…" into the chapter
-    summary. Don't hard-push Haiku on shaky facts; let it stay silent. (A live `metav_writers` read AND
-    a "traditionally attributed to X" prompt hedge were both tried and reverted — see TODO_ARCHIVE.)
+    Samuel/Kings/Chronicles histories, Hebrews) are left BLANK on purpose. LESSON (2026-06-13): a bare
+    name in the list is INERT — with the normal wording Haiku just ignored Job=Moses and stayed blank.
+    It was the PROMPT PUSH (a "traditionally attributed to X / don't omit the author" hedge) that forced
+    over-assertion — Haiku then claimed "Moses wrote Job" and even leaked "Moses records…" into the
+    chapter summary. Don't hard-push Haiku on shaky facts; let it stay silent. DECIDED: don't re-add the
+    metaV names — every gap-fill is a disputed attribution, none is "well established", so the curated
+    list stays well-established-only + scribes. (Both a live `metav_writers` read and the prompt hedge
+    were tried and reverted — see TODO_ARCHIVE.)
 - LSJ summaries are NOT in this table (they live in `lsj.summary_json`/`abp_ext.summary_json`), so the
   scheme deliberately skips them.
 - One-time deploy note: the first run after this change sweeps the old-format (colon-less) rows via

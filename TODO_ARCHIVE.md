@@ -25,9 +25,16 @@ wrote this book" and the chapter summary even narrated "Moses records, Job did n
 hedge AND removed all the metaV gap-fills; the anonymous books are blank again.
 
 Lessons worth keeping:
+- **The name in the list is INERT — the prompt push is what broke it.** With normal wording Haiku
+  just ignored Job=Moses and left the blurb blank; only the extra "traditionally attributed to X /
+  don't omit the author" hedge forced it to assert. So a disputed name SITTING in the list is harmless;
+  the danger is instructing Haiku to use it.
 - **Don't hard-push Haiku on shaky facts.** It doesn't do "honest hedge" well — push it to name a
   disputed author and it asserts the claim outright (and leaks it into the chapter narration). Better
   to feed only well-established names and let Haiku stay silent on the rest.
+- **DECIDED: don't re-add the metaV names.** Every gap-fill is a disputed/traditional attribution (the
+  exact reason the curated list omitted them); none is "well established." Without the push Haiku would
+  unpredictably assert some as fact. Curated list stays well-established-only + scribes. Don't re-try.
 - **metaV doesn't fabricate, but it's confident about disputed traditions.** Honest "Unknown" for
   Hebrews, but flat Job→Moses, Esther→Mordecai, Kings→Jeremiah, etc. — fringe/Talmudic, not settled.
   Its data was also looser than ours in two spots (Psalms="David" vs our "David and other psalmists";
