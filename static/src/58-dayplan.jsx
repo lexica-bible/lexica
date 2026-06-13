@@ -49,7 +49,7 @@ function planAdvance(cur, totalDays) {
 }
 
 // The plan body — shared by the desktop left nav and the mobile picker.
-function DayPlanView({ chrono, curText, texts, progAll, onPickText, onPickPassage, onMarkComplete }) {
+function DayPlanView({ chrono, curText, texts, progAll, onPickText, onPickPassage, onMarkComplete, onSetDay }) {
   const days = (chrono && chrono.days) || [];
   const total = days.length || 365;
   const prog = planFor(progAll, curText);
@@ -112,8 +112,10 @@ function DayPlanView({ chrono, curText, texts, progAll, onPickText, onPickPassag
                   {passagesOf(day).map(p => (
                     <button key={p.pos} className="plan-passage" onClick={() => onPickPassage(p)}>{p.label}</button>
                   ))}
-                  {state === "today" && (
+                  {state === "today" ? (
                     <button className="plan-complete" onClick={onMarkComplete}><Icon.Check/> Mark today complete</button>
+                  ) : (
+                    <button className="plan-setday" onClick={() => onSetDay(day.day)}>Set as today</button>
                   )}
                 </div>
               )}

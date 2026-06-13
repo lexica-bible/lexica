@@ -5509,7 +5509,8 @@ function DayPlanView({
   progAll,
   onPickText,
   onPickPassage,
-  onMarkComplete
+  onMarkComplete,
+  onSetDay
 }) {
   const days = chrono && chrono.days || [];
   const total = days.length || 365;
@@ -5598,10 +5599,13 @@ function DayPlanView({
       key: p.pos,
       className: "plan-passage",
       onClick: () => onPickPassage(p)
-    }, p.label)), state === "today" && /*#__PURE__*/React.createElement("button", {
+    }, p.label)), state === "today" ? /*#__PURE__*/React.createElement("button", {
       className: "plan-complete",
       onClick: onMarkComplete
-    }, /*#__PURE__*/React.createElement(Icon.Check, null), " Mark today complete")));
+    }, /*#__PURE__*/React.createElement(Icon.Check, null), " Mark today complete") : /*#__PURE__*/React.createElement("button", {
+      className: "plan-setday",
+      onClick: () => onSetDay(day.day)
+    }, "Set as today")));
   })));
 }
 
@@ -6127,6 +6131,7 @@ function LibNavPanel({
     progAll: plan.progAll,
     onPickText: plan.onPickText,
     onMarkComplete: plan.onMarkComplete,
+    onSetDay: plan.onSetDay,
     onPickPassage: p => {
       onPickPassage(p);
       if (isOverlay) onClose();
@@ -6302,6 +6307,7 @@ function MobileBookPicker({
     progAll: plan.progAll,
     onPickText: plan.onPickText,
     onMarkComplete: plan.onMarkComplete,
+    onSetDay: plan.onSetDay,
     onPickPassage: onPickPassage
   }) : chrono.eras.map(era => {
     const open = openEras.has(era.id);
@@ -7427,6 +7433,22 @@ function LibraryView({
     const p = day && day.pos && chrono.passages[day.pos[0] - 1];
     if (p) pickPassage(p);
   };
+  // Move this text's pointer to a chosen day (undo a mis-mark, or start mid-plan) and
+  // read its first passage. Streak/last-read are left alone — it's a manual jump.
+  const setPlanDay = dayNum => {
+    if (!chrono || !chrono.days) return;
+    const d = Math.max(1, Math.min(chrono.days.length, dayNum));
+    setPlanProg(prev => ({
+      ...prev,
+      [translation]: {
+        ...planFor(prev, translation),
+        day: d
+      }
+    }));
+    const day = chrono.days[d - 1];
+    const p = day && day.pos && chrono.passages[day.pos[0] - 1];
+    if (p) pickPassage(p);
+  };
   const planBundle = {
     view: chronoView,
     setView: setChronoView,
@@ -7434,7 +7456,8 @@ function LibraryView({
     texts: planTexts,
     curText: translation,
     onPickText: id => pickBible(id),
-    onMarkComplete: markDayComplete
+    onMarkComplete: markDayComplete,
+    onSetDay: setPlanDay
   };
   // Flip reading order. Entering chronological stashes the canonical spot and jumps
   // to the current passage; leaving restores the stashed canonical spot.
