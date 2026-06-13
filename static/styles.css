@@ -2013,8 +2013,11 @@ input { font-family: inherit; }
    rows — the glyph in the english slot — so bottom-aligning the unit lines them up
    with the word's english row, not the column's centre. */
 .iw-bracket-unit { display: inline-flex; align-items: flex-end; white-space: nowrap; flex-shrink: 0; gap: 2px; }
-.iw-bracket, .iw-bracket-trail { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; user-select: none; }
+.iw-bracket, .iw-bracket-trail { display: flex; flex-direction: column; align-items: center; gap: 2px; flex-shrink: 0; user-select: none; }
 .iw-bracket-glyph { font-family: var(--f-greek); font-size: 16px; line-height: 1.3; color: var(--ink-4); }
+/* Spacer rows in a bracket/trail column: keep their height (for row alignment) but
+   take no width, so the column hugs the glyph instead of the wide "G0" placeholder. */
+.iw-spacer { visibility: hidden; width: 0; overflow: hidden; }
 .iw-translit {
   font-family: var(--f-serif);
   font-style: italic;

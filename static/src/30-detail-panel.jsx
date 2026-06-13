@@ -678,11 +678,14 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
               // of a lone glyph floating at the column's centre.
               const hasTranslit = interlinearWords.some(w => w.translit);
               const hasStrongs = interlinearWords.some(w => w.strongs);
+              // The spacer rows reserve HEIGHT (to line the glyph up with the english
+              // row) but iw-spacer zeroes their WIDTH, so the column is only as wide as
+              // the glyph — otherwise the wide "G0" placeholder pads air around "[".
               const colRows = (mid) => (<>
-                <span className="iw-greek" style={{ visibility: "hidden" }}>x</span>
-                {hasTranslit && <span className="iw-translit" style={{ visibility: "hidden" }}>x</span>}
+                <span className="iw-greek iw-spacer">x</span>
+                {hasTranslit && <span className="iw-translit iw-spacer">x</span>}
                 {mid}
-                {hasStrongs && <span className="iw-strongs" style={{ visibility: "hidden" }}>G0</span>}
+                {hasStrongs && <span className="iw-strongs iw-spacer">G0</span>}
               </>);
               const bracketCol = (glyph, k) => <span key={k} className="iw-bracket">{colRows(<span className="iw-bracket-glyph">{glyph}</span>)}</span>;
               const trailCol = (txt, k) => <span key={k} className="iw-bracket-trail">{colRows(<span className="iw-english">{txt}</span>)}</span>;

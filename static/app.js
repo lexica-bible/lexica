@@ -2629,21 +2629,15 @@ function DetailPanel({
           // of a lone glyph floating at the column's centre.
           const hasTranslit = interlinearWords.some(w => w.translit);
           const hasStrongs = interlinearWords.some(w => w.strongs);
+          // The spacer rows reserve HEIGHT (to line the glyph up with the english
+          // row) but iw-spacer zeroes their WIDTH, so the column is only as wide as
+          // the glyph — otherwise the wide "G0" placeholder pads air around "[".
           const colRows = mid => /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", {
-            className: "iw-greek",
-            style: {
-              visibility: "hidden"
-            }
+            className: "iw-greek iw-spacer"
           }, "x"), hasTranslit && /*#__PURE__*/React.createElement("span", {
-            className: "iw-translit",
-            style: {
-              visibility: "hidden"
-            }
+            className: "iw-translit iw-spacer"
           }, "x"), mid, hasStrongs && /*#__PURE__*/React.createElement("span", {
-            className: "iw-strongs",
-            style: {
-              visibility: "hidden"
-            }
+            className: "iw-strongs iw-spacer"
           }, "G0"));
           const bracketCol = (glyph, k) => /*#__PURE__*/React.createElement("span", {
             key: k,
