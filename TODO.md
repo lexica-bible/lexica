@@ -43,9 +43,10 @@ Still open:
    shared VOICE snippet in core.py was never built — xref/chapter carry their own wording; (b) person/place
    (`_PN_SYSTEM`, Haiku, "1-2 sentences") is CORRECT as a hard cap — leave it, do NOT convert to adaptive;
    (c) glance at the LSJ word-study blurb (Haiku) to confirm it's hard-capped, not soft.
-   (d) Book-blurb AUTHOR list DONE 2026-06-13 (metaV traditional names baked into `_BOOK_AUTHORS`,
-   scribes named, debated ones hedged "traditionally attributed to" — see archive). OPEN, optional:
-   1 Peter "by Silvanus" (1Pe 5:12) — add Silvanus as scribe? Debated (scribe vs letter-carrier); left out.
+   (d) Book-blurb AUTHOR work DONE 2026-06-13: added the two textually-named scribes (Jeremiah/Baruch,
+   Paul/Tertius). Tried folding metaV's traditional names for the anonymous books (Job=Moses etc.) —
+   REVERTED: forcing Haiku to name a disputed author made it over-assert. See archive. OPEN, optional:
+   1 Peter "by Silvanus" (1Pe 5:12) as a scribe? Debated (scribe vs letter-carrier); left out.
    NOTE: changing these prompts is exactly what the
    new fingerprint scheme watches, so each edit will lazily refresh that category's cache (expected).
    `code: shared snippet in core.py; views_crossref.py system prompts; views_metav.py _PN_SYSTEM;

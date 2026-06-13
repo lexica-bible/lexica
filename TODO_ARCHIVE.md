@@ -6,33 +6,35 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
-## Book-summary author list — folded in metaV Writers + named scribes — DONE 2026-06-13
+## Book-summary author list — added scribes; metaV fold-in TRIED then REVERTED — 2026-06-13
 
-The reading-pane book blurb names the writer from `_BOOK_AUTHORS` (views_summary.py). It used to
-leave the traditionally-anonymous books blank on purpose. Folded in metaV's **Writers** list (the
-same gusheng/MetaV dataset People/Places came from) to fill them: Judges/Ruth/1-2 Samuel = Samuel,
-1-2 Kings = Jeremiah, 1-2 Chronicles = Ezra, Job = Moses, Esther = Mordecai. Hebrews stays blank —
-metaV itself marks it "Unknown" (honest), and a blank means no author line. Also added the two
-scripturally-named scribes inline: Jeremiah/Baruch (Jer 36) and Romans/Tertius (Rom 16:22).
+The reading-pane book blurb names the writer from `_BOOK_AUTHORS` (views_summary.py), which lists
+only well-established authors and leaves the anonymous books blank. SHIPPED: the two scribes that the
+text itself names — Jeremiah/Baruch (Jer 36) and Romans/Tertius (Rom 16:22), added inline to the
+value. Those render cleanly (Jeremiah's blurb opens "Jeremiah… dictated this book to his scribe
+Baruch"). That's the only lasting change.
 
-How: pulled the real Writers.csv off GitHub (couldn't see the live `metav_writers` table — bible.db
-is PA-only), eyeballed every row vs our list. First wired a LIVE read of `metav_writers` (mapped
-book_id 1-66 via core `_KJV_BOOK_ID_REV`), then REVERTED it — baked the names straight into the one
-`_BOOK_AUTHORS` list at the user's call, so there's no second source and no dependency on the table
-being loaded. metaV's data was looser than ours in two spots (Psalms = just "David" vs our "David and
-other psalmists"; John = just "John" vs "the apostle John") — kept ours.
+TRIED AND BACKED OUT: folding metaV's **Writers** list (gusheng/MetaV — same dataset as People/Places)
+into the blank books — Judges/Ruth/1-2 Samuel=Samuel, Kings=Jeremiah, Chronicles=Ezra, Job=Moses,
+Esther=Mordecai (Hebrews metaV honestly marks "Unknown"). First as a LIVE read of `metav_writers`
+(book_id 1-66 → abbrev via core `_KJV_BOOK_ID_REV`), then baked into the one list. Either way Haiku
+WOULDN'T name those disputed authors — the summary SYSTEM prompt only names an author "when well
+established", so it stayed silent (Job showed no writer). So we loosened `_AUTHOR_LINE_TMPL` to license
+a "traditionally attributed to X" hedge — and it OVER-CORRECTED: Job's blurb then flatly said "Moses
+wrote this book" and the chapter summary even narrated "Moses records, Job did not sin." Reverted the
+hedge AND removed all the metaV gap-fills; the anonymous books are blank again.
 
 Lessons worth keeping:
-- **metaV doesn't fabricate, but it's confident about disputed traditions.** It honestly says
-  "Unknown" for Hebrews, but flatly attributes Job→Moses, Esther→Mordecai, etc. — fringe/Talmudic
-  views, not "well established."
-- **Feeding the model a name isn't enough.** The summary SYSTEM prompt only names an author "when
-  well established", so Haiku SILENTLY DROPPED the contested fold-ins (Job showed no writer) while the
-  solid ones (Jeremiah, Paul) worked. Fix was `_AUTHOR_LINE_TMPL`: license a "traditionally attributed
-  to X" hedge for debated ascriptions — honest, and the names now surface. (Commits 870db14 live-read,
-  bbf5148 bake-in, 645c38f the hedge.)
-- Not a cache/wiring bug — Jeremiah picking up Baruch immediately proved the deploy + cache-refresh
-  path worked; only the prompt was holding Job back.
+- **Don't hard-push Haiku on shaky facts.** It doesn't do "honest hedge" well — push it to name a
+  disputed author and it asserts the claim outright (and leaks it into the chapter narration). Better
+  to feed only well-established names and let Haiku stay silent on the rest.
+- **metaV doesn't fabricate, but it's confident about disputed traditions.** Honest "Unknown" for
+  Hebrews, but flat Job→Moses, Esther→Mordecai, Kings→Jeremiah, etc. — fringe/Talmudic, not settled.
+  Its data was also looser than ours in two spots (Psalms="David" vs our "David and other psalmists";
+  John="John" vs "the apostle John"), so a blind total-swap would've been a downgrade.
+- Not a cache/wiring bug — Jeremiah picking up Baruch immediately proved deploy + cache-refresh worked.
+- `metav_writers` table exists (loaded by load_metav.py) but is NOT read anywhere now — dormant.
+- Commits: 870db14 (live-read), bbf5148 (bake-in), 645c38f (hedge), c02ea0f (revert to scribes-only).
 - OPEN, optional: 1 Peter "by Silvanus" (1Pe 5:12) as a scribe — debated (scribe vs carrier), left out.
 
 ---

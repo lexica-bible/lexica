@@ -492,15 +492,14 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   category's delete.
 - summary rows carry a per-book author suffix: `summary:<tpl-hash>:<author-hash>`. Editing the prompt
   wording refreshes all summaries; editing one book's author in `_BOOK_AUTHORS` refreshes only that book.
-  - `_BOOK_AUTHORS` (views_summary.py) is the SINGLE author list fed to the blurb. It includes the
-    traditionally-but-not-textually attributed histories, names BAKED IN from metaV's Writers list
-    (Judges/Ruth/1-2 Samuel=Samuel, Kings=Jeremiah, Chronicles=Ezra, Job=Moses, Esther=Mordecai) — we
-    do NOT read `metav_writers` live (built that way, then reverted to one baked list). Hebrews is left
-    out on purpose (anonymous; metaV marks it "Unknown" → no author line). Named scribes go inline in
+  - `_BOOK_AUTHORS` (views_summary.py) lists ONLY well-established authors. Named scribes go inline in
     the value (Jer="Jeremiah, who dictated to his scribe Baruch", Rom="Paul, written down by his scribe
-    Tertius"). LESSON: feeding a name isn't enough — the summary SYSTEM prompt only names an author when
-    "well established", so Haiku silently DROPPED the contested fold-ins (Job→Moses etc.) until
-    `_AUTHOR_LINE_TMPL` was changed to license a "traditionally attributed to X" hedge for debated ones.
+    Tertius"). Only-traditionally-attributed / anonymous books (Job, Esther, Judges, Ruth, the
+    Samuel/Kings/Chronicles histories, Hebrews) are left BLANK on purpose. LESSON (2026-06-13): metaV's
+    Writers list HAS traditional names for those, but FORCING Haiku to name a disputed author makes it
+    over-assert — it claimed "Moses wrote Job" and even leaked "Moses records…" into the chapter
+    summary. Don't hard-push Haiku on shaky facts; let it stay silent. (A live `metav_writers` read AND
+    a "traditionally attributed to X" prompt hedge were both tried and reverted — see TODO_ARCHIVE.)
 - LSJ summaries are NOT in this table (they live in `lsj.summary_json`/`abp_ext.summary_json`), so the
   scheme deliberately skips them.
 - One-time deploy note: the first run after this change sweeps the old-format (colon-less) rows via
