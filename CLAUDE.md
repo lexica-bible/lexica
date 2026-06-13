@@ -318,8 +318,8 @@ scripts/          # build-frontend.js + one-time import/migration scripts
   (2026-06-13) the reading ORDER (canonical/chronological), the chrono passage position, and the
   Compare selection. orderMode/translation/compareSel/chronoPos restore SYNCHRONOUSLY in their
   `useState` initializers (via `readLibSaved()`) so the pickers are right on the FIRST paint — no
-  more canonical→chronological flash; only the book NAME/chapter pop in late (they need the books
-  list to fetch). The reading-display toggles (chip/prose, Strong's, interlinear) persist too under
+  more canonical→chronological flash; only the book NAME pops in late (selBook must resolve against
+  the just-fetched books list — the chapter NUMBER + corpus are synchronous now too). The reading-display toggles (chip/prose, Strong's, interlinear) persist too under
   `lexica.opts.v1`. An explicit verse jump (`nav.book`, e.g. Search/cross-ref) still overrides.
   Other first-paint-restored settings: active tab `lexica.view.v1`, theme `lexica.theme.v1`, font
   `libFontSize`, Eras/Days `lexica.chronoview.v1`. Full map: memory `project_refresh_persistence`.
