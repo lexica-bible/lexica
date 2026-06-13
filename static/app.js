@@ -7148,10 +7148,20 @@ function LibraryView({
   const audioRef = useRef(null);
   const resumeAudioRef = useRef(false); // page-turn while playing → keep the read-along going on the next page
   const [viewCh, setViewCh] = useState(null); // chrono: chapter currently scrolled into view (drives the toolbar play target)
-  const [libOptions, setLibOptions] = useState({
-    viewMode: "chip",
-    showStrongs: false,
-    showInterlinear: false
+  const [libOptions, setLibOptions] = useState(() => {
+    try {
+      const s = JSON.parse(localStorage.getItem("lexica.opts.v1") || "null");
+      if (s) return {
+        viewMode: s.viewMode || "chip",
+        showStrongs: !!s.showStrongs,
+        showInterlinear: !!s.showInterlinear
+      };
+    } catch (e) {}
+    return {
+      viewMode: "chip",
+      showStrongs: false,
+      showInterlinear: false
+    };
   });
   const [libFontSize, setLibFontSize] = useState(() => {
     const stored = localStorage.getItem("libFontSize");
@@ -7405,6 +7415,12 @@ function LibraryView({
       localStorage.setItem("lexica.chronoview.v1", chronoView);
     } catch (e) {}
   }, [chronoView]);
+  // Reading-display toggles (chip/prose, Strong's, interlinear) stick across reloads.
+  useEffect(() => {
+    try {
+      localStorage.setItem("lexica.opts.v1", JSON.stringify(libOptions));
+    } catch (e) {}
+  }, [libOptions]);
 
   // Load the chronological passage list once (a small static file). If it fails,
   // chronoOn stays false and the Order toggle simply never appears.
