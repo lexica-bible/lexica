@@ -11115,6 +11115,35 @@ function App() {
     window.addEventListener("resize", check);
     return () => window.removeEventListener("resize", check);
   }, []);
+
+  // A wheel over the fixed chrome (header banner, toolbar, left nav / chrono panel)
+  // shouldn't scroll the reading pane (which rides the window). Block the page scroll
+  // there — but first let an inner list (the book / day / era list) consume the wheel
+  // if it still has room to scroll. The reading area and detail panel are untouched.
+  useEffect(() => {
+    const onWheel = e => {
+      const chrome = e.target.closest && e.target.closest(".hdr, .lib-bar, .lib-toolbar, .nav");
+      if (!chrome) return;
+      const dir = Math.sign(e.deltaY);
+      let node = e.target;
+      while (node && node !== chrome.parentElement) {
+        if (node.nodeType === 1) {
+          const oy = getComputedStyle(node).overflowY;
+          if ((oy === "auto" || oy === "scroll") && node.scrollHeight > node.clientHeight) {
+            const atTop = node.scrollTop <= 0;
+            const atBottom = node.scrollTop + node.clientHeight >= node.scrollHeight - 1;
+            if (!(dir < 0 && atTop || dir > 0 && atBottom)) return; // inner list can still scroll
+          }
+        }
+        node = node.parentElement;
+      }
+      e.preventDefault(); // nothing left to scroll in the chrome → don't scroll the page
+    };
+    document.addEventListener("wheel", onWheel, {
+      passive: false
+    });
+    return () => document.removeEventListener("wheel", onWheel);
+  }, []);
   const handleVerseNumberClick = (book, chapter, verse, translation) => {
     setActiveEntry(null);
     setActiveNote(null);
