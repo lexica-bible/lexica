@@ -1975,12 +1975,12 @@ input { font-family: inherit; }
 /* close-bracket keeps its leftward tuck even when trailing punctuation follows
    (there the trailing-punct span carries the outward 2px instead) */
 .lib-bracket:has(+ .lib-bracket-trail) { margin-left: -3px; }
-/* Trailing clause punctuation lifted outside the "]": 1px of daylight off the
+/* Trailing clause punctuation lifted outside the "]": 0.5px of daylight off the
    bracket on its left, and a normal word-space before the next word on its right.
    The right space is PADDING (not margin) so a highlight bar over the verse paints
    straight across it — a margin would leave an unpainted notch. 2px here + the next
    word's own 2px left padding = the same 4px any two words sit apart. */
-.lib-bracket-trail { flex-shrink: 0; margin-left: 1px; padding-right: 2px; }
+.lib-bracket-trail { flex-shrink: 0; margin-left: 0.5px; padding-right: 2px; }
 .lib-bracket-glyph {
   font-family: var(--f-serif);
   font-size: 16px;
