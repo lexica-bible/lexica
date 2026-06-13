@@ -2693,8 +2693,9 @@ input { font-family: inherit; }
 /* One unified segmented control [ ABP | KJV | BSB | (ESV) | (NIV) | Other ] for the
    mutually-exclusive text sources. Compact padding so the public 3-4 buttons stay a
    tidy centered pill. */
-.nav-source-seg { flex: 0 0 auto; }
-.nav-source-seg .seg-b { padding: 5px 7px; font-size: 12px; }
+.nav-source-seg { flex: 1 1 auto; width: 100%; }
+.nav-source-seg .seg-b { flex: 1 1 0; min-width: 0; padding: 5px 4px; font-size: 12px; }
+.nav-source-seg .nav-other-seg { flex: 0 0 auto; padding-left: 8px; padding-right: 8px; }
 /* With the owner's extra texts (ESV/NIV) the row holds up to 6 buttons — let it span
    the full nav width and share space evenly so nothing crowds or runs off-screen. The
    "Other" dropdown keeps its natural width so its label/caret never gets clipped. */
@@ -2828,13 +2829,19 @@ input { font-family: inherit; }
    both on var(--bg-sunk). The per-text progress header pins to the top; the day
    list flows below. Pills use the theme control vars; gold-soft is theme-aware
    (light in light/sepia, dark in dark) so var(--ink) text on it is safe everywhere. */
-.plan-toggle { display: flex; gap: 4px; padding: 6px 6px 9px; flex-shrink: 0; }
-.plan-toggle-b {
-  flex: 1; padding: 5px 0; font-size: 12px; font-weight: 600; cursor: pointer;
-  color: var(--ink-3); background: var(--ctl-bg, var(--bg));
-  border: 1px solid var(--rule); border-radius: 7px;
+/* Eras|Days toggle = the same segmented-control look as the nav source picker
+   (.seg/.seg-b), full-width, so the two stacked control rows match. */
+.plan-toggle {
+  display: flex; flex-shrink: 0; margin: 7px 6px 9px; padding: 2px;
+  background: var(--bg-sunk); border: 1px solid var(--rule); border-radius: 8px;
 }
-.plan-toggle-b.on { color: var(--ink); background: var(--ctl-on, var(--paper)); border-color: var(--gold); }
+.plan-toggle-b {
+  flex: 1 1 0; padding: 5px 4px; font-size: 12px; cursor: pointer;
+  color: var(--ink-3); background: none; border: none; border-radius: 6px;
+  transition: background 0.1s, color 0.1s;
+}
+.plan-toggle-b:hover { color: var(--ink); }
+.plan-toggle-b.on { background: var(--ctl-on); color: var(--ink); box-shadow: var(--shadow-sm); font-weight: 500; }
 
 .plan-head {
   position: sticky; top: 0; z-index: 2;
@@ -2916,7 +2923,7 @@ input { font-family: inherit; }
 /* Eras view inside the pinned-toggle wrapper: the era list scrolls, toggle stays. */
 .nav-plan .nav-plan-scroll { flex: 1; min-height: 0; }
 /* Mobile picker: the Eras/Days toggle sits in the fixed chrome (above the scroller). */
-.mpick-toggle { flex-shrink: 0; padding: 8px 14px; border-bottom: 1px solid var(--rule); background: var(--bg-sunk); }
+.mpick-toggle { margin: 12px 14px 10px; }
 
 /* Chronological: a small chapter divider between the chapters a passage spans */
 .lib-chrono-chapmark {
