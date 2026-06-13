@@ -2629,11 +2629,7 @@ function DetailPanel({
             next = interlinearWords[i + 1];
           const open = bid != null && (!prev || prev.bracket_id !== bid);
           const close = bid != null && (!next || next.bracket_id !== bid);
-          return /*#__PURE__*/React.createElement(React.Fragment, {
-            key: i
-          }, open && /*#__PURE__*/React.createElement("span", {
-            className: "iw-bracket"
-          }, "["), /*#__PURE__*/React.createElement("div", {
+          const cell = /*#__PURE__*/React.createElement("div", {
             className: "iword"
           }, /*#__PURE__*/React.createElement("span", {
             className: "iw-greek" + (w.he ? " iw-heb" : "")
@@ -2643,7 +2639,18 @@ function DetailPanel({
             className: "iw-english"
           }, w.english || "—"), w.strongs && /*#__PURE__*/React.createElement("span", {
             className: "iw-strongs"
-          }, w.strongs)), close && /*#__PURE__*/React.createElement("span", {
+          }, w.strongs));
+          // Glue [ to the first word and ] to the last as one no-break unit, so a
+          // line break can never strand a lone "[" at a line end or "]" at a start.
+          if (bid == null) return /*#__PURE__*/React.createElement(React.Fragment, {
+            key: i
+          }, cell);
+          return /*#__PURE__*/React.createElement("span", {
+            key: i,
+            className: "iw-bracket-unit"
+          }, open && /*#__PURE__*/React.createElement("span", {
+            className: "iw-bracket"
+          }, "["), cell, close && /*#__PURE__*/React.createElement("span", {
             className: "iw-bracket"
           }, "]"));
         })), /*#__PURE__*/React.createElement("div", {
