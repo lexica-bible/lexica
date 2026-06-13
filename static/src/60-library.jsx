@@ -795,10 +795,20 @@ function nonCanonGroups(list) {
 function readLibSaved() {
   try { return JSON.parse(localStorage.getItem("lexica.lib.v1") || "null"); } catch (e) { return null; }
 }
+// The book list is tiny + stable (the canon), so we cache it. Reading it back at init lets the book
+// NAME render on the FIRST paint instead of popping in after api.books() returns; the fetch still
+// runs and refreshes the cache.
+function readCachedBooks() {
+  try { const c = JSON.parse(localStorage.getItem("lexica.books.v1") || "null"); return Array.isArray(c) ? c : []; } catch (e) { return []; }
+}
 
 function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpenNote, onTranslationChange, isMobile, showSummary, focusMode, onToggleFocus }) {
-  const [books, setBooks] = useState([]);
-  const [selBook, setSelBook] = useState(null);
+  const [books, setBooks] = useState(() => readCachedBooks());
+  const [selBook, setSelBook] = useState(() => {
+    const c = readCachedBooks(), s = readLibSaved();
+    if (!c.length) return null;
+    return (s && s.book && c.find(b => b.abbrev === s.book)) || c[0];
+  });
   const [selChapter, setSelChapter] = useState(() => { const s = readLibSaved(); return s && s.chapter > 0 ? s.chapter : 1; });
   const [verses, setVerses] = useState([]);
   const [kjvVerses, setKjvVerses] = useState([]);
@@ -1002,6 +1012,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
     api.books().then(data => {
       setBooks(data);
       if (!data.length) return;
+      try { localStorage.setItem("lexica.books.v1", JSON.stringify(data)); } catch (e) {}
       // Restore the last reading spot from a previous visit (book/chapter/translation, or an
       // open non-canonical text); fall back to Genesis. An explicit verse jump (nav.book — a
       // click from Search/cross-refs) runs in its own effect and overrides this afterward.
