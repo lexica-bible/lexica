@@ -7349,10 +7349,17 @@ function LibraryView({
       if (saved) {
         if (saved.chapter > 0) setSelChapter(saved.chapter);
         const t = saved.translation;
-        // Restore the saved text optimistically (incl. the gated ESV/NIV/HEB); the
-        // owner-status effect bounces it back to ABP afterward if you're not allowed.
-        if (["abp", "kjv", "bsb", "esv", "niv", "heb"].includes(t)) setTranslation(t);
+        // Restore the saved text optimistically (incl. the gated ESV/NIV/HEB and the
+        // parallel/compare mode); the owner-status effect bounces gated ones back to
+        // ABP afterward if you're not allowed.
+        if (["abp", "kjv", "bsb", "esv", "niv", "heb", "parallel"].includes(t)) setTranslation(t);
+        if (Array.isArray(saved.compareSel) && saved.compareSel.length >= 2) setCompareSel(saved.compareSel);
         if (saved.corpus && saved.corpus !== "bible" && NONCANON.some(x => x.id === saved.corpus)) setCorpus(saved.corpus);
+        // Reading order survives a refresh now. selBook/chapter above were saved at the
+        // passage's spot, so once chrono.json loads the passage loader picks it back up
+        // from chronoPos (chronoOn only flips on once chrono is loaded).
+        if (saved.orderMode === "chronological") setOrderMode("chronological");
+        if (saved.chronoPos > 0) setChronoPos(saved.chronoPos);
       }
     });
   }, []);
@@ -7364,10 +7371,13 @@ function LibraryView({
         corpus,
         book: selBook ? selBook.abbrev : null,
         chapter: selChapter,
-        translation
+        translation,
+        orderMode,
+        chronoPos,
+        compareSel
       }));
     } catch (e) {}
-  }, [corpus, selBook, selChapter, translation]);
+  }, [corpus, selBook, selChapter, translation, orderMode, chronoPos, compareSel]);
   // Persist reading-plan progress + the Eras/Days choice.
   useEffect(() => {
     planSaveAll(planProg);
