@@ -2744,8 +2744,9 @@ input { font-family: inherit; }
 .nav-book.on .nav-book-name { flex: 0 1 auto; }
 /* Current chapter shown beside the active book name while its grid is collapsed */
 .nav-book-ch { margin-left: 8px; color: var(--ink-2); font-weight: 600; font-size: 12.5px; flex: none; }
-/* #4 — muted total-chapter count on the right of each (inactive) book row */
-.nav-book-count { margin-left: 8px; flex: none; font-size: 11px; color: var(--ink-4); font-variant-numeric: tabular-nums; }
+/* #4 — muted total-chapter count, right-aligned on every book row (the active book
+   also keeps its current-chapter marker hugging the name). */
+.nav-book-count { margin-left: auto; padding-left: 8px; flex: none; font-size: 11px; color: var(--ink-4); font-variant-numeric: tabular-nums; }
 
 .nav-chips {
   display: grid;
