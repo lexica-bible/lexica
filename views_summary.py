@@ -39,18 +39,18 @@ _HAIKU_MODEL = "claude-haiku-4-5-20251001"
 _CHAP_MODEL = "claude-sonnet-4-6"
 
 # Author per book, fed to the model so it names the writer instead of hedging ("an
-# apostolic witness…"). The traditionally (but not textually) attributed histories are
-# folded in from metaV's Writers list — the standard/Talmudic view: Judges/Ruth/1-2
-# Samuel = Samuel, 1-2 Kings = Jeremiah, 1-2 Chronicles = Ezra, Job = Moses, Esther =
-# Mordecai. Hebrews is left out on purpose (genuinely anonymous — metaV itself marks it
-# "Unknown"). Where a scribe physically wrote the book it's named too (Jeremiah/Baruch,
-# Paul/Tertius).
+# apostolic witness…"). Only WELL-ESTABLISHED authors are listed. The only-traditionally
+# attributed books (Job, Esther, Judges, Ruth, the Samuel/Kings/Chronicles histories) and
+# the genuinely anonymous ones (Hebrews) are left out ON PURPOSE: forcing Haiku to name a
+# disputed writer makes it over-assert — it claimed "Moses wrote Job" and even narrated
+# "Moses records…" in the chapter summary. So we let the model stay silent on them.
+# (metaV's Writers list HAS those traditional names — Job=Moses, Kings=Jeremiah, etc. —
+# but we deliberately don't use them; see TODO_ARCHIVE for why.) Where a scribe is NAMED
+# IN THE TEXT it's added inline (Jeremiah/Baruch per Jer 36, Paul/Tertius per Rom 16:22) —
+# those are well-attested and render cleanly.
 _BOOK_AUTHORS = {
     "Gen": "Moses", "Exo": "Moses", "Lev": "Moses", "Num": "Moses", "Deu": "Moses",
-    "Jos": "Joshua", "Jdg": "Samuel", "Rth": "Samuel",
-    "1Sa": "Samuel", "2Sa": "Samuel", "1Ki": "Jeremiah", "2Ki": "Jeremiah",
-    "1Ch": "Ezra", "2Ch": "Ezra", "Ezr": "Ezra", "Neh": "Nehemiah",
-    "Est": "Mordecai", "Job": "Moses",
+    "Jos": "Joshua", "Ezr": "Ezra", "Neh": "Nehemiah",
     "Psa": "David and other psalmists", "Pro": "Solomon", "Ecc": "Solomon", "Son": "Solomon",
     "Isa": "Isaiah", "Jer": "Jeremiah, who dictated to his scribe Baruch",
     "Lam": "Jeremiah", "Eze": "Ezekiel", "Dan": "Daniel",
@@ -90,10 +90,8 @@ thought.\
 # that actually changed (the "don't skip the opening" / "name strange events" tweaks).
 _AUTHOR_LINE_TMPL = (
     'The traditionally recognized author of this book is {author} — '
-    'name them as the writer (do not hedge as "an unnamed writer" or "an apostolic '
-    'witness"), even though the text itself may not name them. If this ascription is '
-    'debated, still mention it as the traditional view (you may say "traditionally '
-    'attributed to {author}") rather than omitting the author. '
+    'name them by name as the writer (do not hedge as "an unnamed writer" or '
+    '"an apostolic witness"), even though the text itself may not name them. '
 )
 _BOOK_PROMPT_TMPL = (
     'Below is the opening of the book "{name}". {author_line}In 1 to 2 '
