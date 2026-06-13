@@ -703,7 +703,10 @@ function StudyView({ pending, onConsumed }) {
   const newLabel = isTopic ? "topic" : (module === "denomination" ? "denomination" : "argument");
   const qs = q.trim().toLowerCase();
   const pool = (entries || []).filter(e => !previewReader || e.status === "published");   // a reader only sees published
-  const shown = pool.filter(e => !qs || (e.title || "").toLowerCase().includes(qs) || displayTitle(e.title).toLowerCase().includes(qs) || (e.heldBy || "").toLowerCase().includes(qs));
+  const sortKey = e => displayTitle(e.title || "").toLowerCase().replace(/^(?:the|a|an)\s+/, "");
+  const shown = pool
+    .filter(e => !qs || (e.title || "").toLowerCase().includes(qs) || displayTitle(e.title).toLowerCase().includes(qs) || (e.heldBy || "").toLowerCase().includes(qs))
+    .sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
   return (
     <div className="study-view">
       <div className="study-sub">
