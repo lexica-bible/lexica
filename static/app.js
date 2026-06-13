@@ -6021,11 +6021,12 @@ function MobileBookPicker({
     n.has(id) ? n.delete(id) : n.add(id);
     return n;
   });
-  // If a non-canonical text is already open, jump straight to its chapter grid so the
-  // reader can change chapter (this is the bug it fixes: the picker used to show only
-  // the Bible books, stranding you on whatever Bible book was last selected).
-  const [screen, setScreen] = useState(nonCanon ? "chapter" : "book");
-  const [pickedBook, setPickedBook] = useState(nonCanon || null);
+  // Open straight to the chapter grid of whatever you're currently reading — an open
+  // non-canonical text OR the current Bible book — so you can change chapter right away
+  // instead of landing on the generic book list. "‹ Books" steps back to switch books.
+  const startBook = nonCanon || selBook || null;
+  const [screen, setScreen] = useState(startBook ? "chapter" : "book");
+  const [pickedBook, setPickedBook] = useState(startBook);
   // Every section (OT, NT, and each non-canonical group) starts collapsed EXCEPT the
   // one you're currently reading: the testament of the open Bible book, or the active
   // non-canonical text's group.
@@ -9171,7 +9172,19 @@ function LibraryView({
       setMobileNavOpen(false);
     },
     onDone: (b, n) => {
-      if (b.id) pickNonCanon(b);else selectBook(b);
+      // Clear any lingering jump-highlight (a verse reached via Search/cross-ref) —
+      // a manual book/chapter pick shouldn't leave an old verse lit. Point nav at the
+      // newly picked Bible book/chapter so the jump effect sees no change and no-ops.
+      if (b.id) pickNonCanon(b);else {
+        selectBook(b);
+        onNavChange?.({
+          ...(nav || {}),
+          book: b.abbrev,
+          chapter: n,
+          highlight: null,
+          scroll: false
+        });
+      }
       setSelChapter(n);
       setMobileNavOpen(false);
     },
