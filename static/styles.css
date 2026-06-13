@@ -2828,7 +2828,7 @@ input { font-family: inherit; }
    both on var(--bg-sunk). The per-text progress header pins to the top; the day
    list flows below. Pills use the theme control vars; gold-soft is theme-aware
    (light in light/sepia, dark in dark) so var(--ink) text on it is safe everywhere. */
-.plan-toggle { display: flex; gap: 4px; padding: 6px 6px 9px; }
+.plan-toggle { display: flex; gap: 4px; padding: 6px 6px 9px; flex-shrink: 0; }
 .plan-toggle-b {
   flex: 1; padding: 5px 0; font-size: 12px; font-weight: 600; cursor: pointer;
   color: var(--ink-3); background: var(--ctl-bg, var(--bg));
@@ -2905,6 +2905,14 @@ input { font-family: inherit; }
   background: var(--ctl-bg, var(--bg)); border: 1px solid var(--rule); border-radius: 7px;
 }
 .plan-setday:hover { color: var(--ink); border-color: var(--gold); }
+
+/* Desktop nav: the Days view fills the panel height — the toggle + progress header
+   are a fixed block and only the day list scrolls. (Mobile keeps the sticky header
+   inside the picker's single scroller so swipe-to-dismiss still works.) */
+.nav-plan { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.nav-plan .plan { flex: 1; display: flex; flex-direction: column; min-height: 0; }
+.nav-plan .plan-head { position: static; flex-shrink: 0; }
+.nav-plan .plan-days { flex: 1; overflow-y: auto; min-height: 0; }
 
 /* Chronological: a small chapter divider between the chapters a passage spans */
 .lib-chrono-chapmark {

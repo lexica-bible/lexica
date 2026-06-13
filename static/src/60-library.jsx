@@ -321,17 +321,23 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
           })}
         </div>
       )}
+      {chronoMode && plan && plan.view === "days" ? (
+        <div className="nav-plan">
+          <div className="plan-toggle">
+            <button className={"plan-toggle-b" + (plan.view !== "days" ? " on" : "")} onClick={() => plan.setView("eras")}>Eras</button>
+            <button className={"plan-toggle-b" + (plan.view === "days" ? " on" : "")} onClick={() => plan.setView("days")}>Days</button>
+          </div>
+          <DayPlanView chrono={chrono} curText={plan.curText} texts={plan.texts} progAll={plan.progAll}
+            onPickText={plan.onPickText} onMarkComplete={plan.onMarkComplete} onSetDay={plan.onSetDay}
+            onPickPassage={(p) => { onPickPassage(p); if (isOverlay) onClose(); }} />
+        </div>
+      ) : (
       <div className="nav-scroll">
         {chronoMode && plan && (
           <div className="plan-toggle">
             <button className={"plan-toggle-b" + (plan.view !== "days" ? " on" : "")} onClick={() => plan.setView("eras")}>Eras</button>
             <button className={"plan-toggle-b" + (plan.view === "days" ? " on" : "")} onClick={() => plan.setView("days")}>Days</button>
           </div>
-        )}
-        {chronoMode && plan && plan.view === "days" && (
-          <DayPlanView chrono={chrono} curText={plan.curText} texts={plan.texts} progAll={plan.progAll}
-            onPickText={plan.onPickText} onMarkComplete={plan.onMarkComplete} onSetDay={plan.onSetDay}
-            onPickPassage={(p) => { onPickPassage(p); if (isOverlay) onClose(); }} />
         )}
         {chronoMode && (!plan || plan.view !== "days") && chrono.eras.map(era => {
           const open = openEras.has(era.id);
@@ -405,6 +411,7 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
           );
         })}
       </div>
+      )}
     </nav>
   );
 }

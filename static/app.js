@@ -6114,9 +6114,9 @@ function LibNavPanel({
         if (isOverlay) onClose();
       }
     }, t.name)));
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "nav-scroll"
-  }, chronoMode && plan && /*#__PURE__*/React.createElement("div", {
+  })), chronoMode && plan && plan.view === "days" ? /*#__PURE__*/React.createElement("div", {
+    className: "nav-plan"
+  }, /*#__PURE__*/React.createElement("div", {
     className: "plan-toggle"
   }, /*#__PURE__*/React.createElement("button", {
     className: "plan-toggle-b" + (plan.view !== "days" ? " on" : ""),
@@ -6124,7 +6124,7 @@ function LibNavPanel({
   }, "Eras"), /*#__PURE__*/React.createElement("button", {
     className: "plan-toggle-b" + (plan.view === "days" ? " on" : ""),
     onClick: () => plan.setView("days")
-  }, "Days")), chronoMode && plan && plan.view === "days" && /*#__PURE__*/React.createElement(DayPlanView, {
+  }, "Days")), /*#__PURE__*/React.createElement(DayPlanView, {
     chrono: chrono,
     curText: plan.curText,
     texts: plan.texts,
@@ -6136,7 +6136,17 @@ function LibNavPanel({
       onPickPassage(p);
       if (isOverlay) onClose();
     }
-  }), chronoMode && (!plan || plan.view !== "days") && chrono.eras.map(era => {
+  })) : /*#__PURE__*/React.createElement("div", {
+    className: "nav-scroll"
+  }, chronoMode && plan && /*#__PURE__*/React.createElement("div", {
+    className: "plan-toggle"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "plan-toggle-b" + (plan.view !== "days" ? " on" : ""),
+    onClick: () => plan.setView("eras")
+  }, "Eras"), /*#__PURE__*/React.createElement("button", {
+    className: "plan-toggle-b" + (plan.view === "days" ? " on" : ""),
+    onClick: () => plan.setView("days")
+  }, "Days")), chronoMode && (!plan || plan.view !== "days") && chrono.eras.map(era => {
     const open = openEras.has(era.id);
     const eraPassages = chrono.passages.filter(p => p.era === era.id);
     return /*#__PURE__*/React.createElement("div", {
