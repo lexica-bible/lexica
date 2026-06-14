@@ -6032,15 +6032,30 @@ function TimelineStrip({
     className: "dintro-tl-now"
   }), et.marks.map((m, i) => {
     // A dot sitting under the navy "now" bar would vanish (dark dot, dark bar) —
-    // invert it there: white dot with a dark ring so it stays distinct.
+    // invert it there so it stays distinct. Keep it the marker's ELONGATED pill
+    // shape (white fill, dark edge), not a perfect circle, so it reads as the
+    // progress marker inverted. Off the bar it stays a plain round dot.
     const mxx = xOf(m.year);
     const onBar = mxx >= nowX - 1 && mxx <= nowX + nowW + 1;
+    if (onBar) {
+      const w = Math.min(11, Math.max(7, nowW - 2)),
+        h = 6;
+      return /*#__PURE__*/React.createElement("rect", {
+        key: i,
+        x: mxx - w / 2,
+        y: 7 - h / 2,
+        width: w,
+        height: h,
+        rx: h / 2,
+        className: "dintro-tl-dot dintro-tl-dot--on"
+      });
+    }
     return /*#__PURE__*/React.createElement("circle", {
       key: i,
       cx: mxx,
       cy: 7,
       r: 3.5,
-      className: "dintro-tl-dot" + (onBar ? " dintro-tl-dot--on" : "")
+      className: "dintro-tl-dot"
     });
   })), /*#__PURE__*/React.createElement("div", {
     className: "dintro-tl-legend"
