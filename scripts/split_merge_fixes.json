@@ -1064,17 +1064,17 @@
  "Job 31:30": [
   {
    "sbase": "686",
-   "old_pos": 10,
+   "old_pos": 11,
    "old_eng": null,
-   "new_pos": 9,
+   "new_pos": 10,
    "new_eng": "may I then",
    "new_head": "may"
   },
   {
    "sbase": "2362",
-   "old_pos": 9,
+   "old_pos": 10,
    "old_eng": "may I then be a common topic",
-   "new_pos": 10,
+   "new_pos": 11,
    "new_eng": "be a common topic",
    "new_head": "topic"
   }
@@ -1298,17 +1298,17 @@
  "Isa 31:8": [
   {
    "sbase": "3756",
-   "old_pos": 13,
+   "old_pos": 14,
    "old_eng": null,
-   "new_pos": 12,
+   "new_pos": 13,
    "new_eng": "he will not",
    "new_head": "will"
   },
   {
    "sbase": "5343",
-   "old_pos": 12,
+   "old_pos": 13,
    "old_eng": "he will not flee",
-   "new_pos": 13,
+   "new_pos": 14,
    "new_eng": "flee",
    "new_head": "flee"
   }
@@ -1424,17 +1424,17 @@
  "Jer 17:18": [
   {
    "sbase": "846",
-   "old_pos": 9,
+   "old_pos": 10,
    "old_eng": null,
-   "new_pos": 8,
+   "new_pos": 9,
    "new_eng": "May they",
    "new_head": "may"
   },
   {
    "sbase": "4422",
-   "old_pos": 8,
+   "old_pos": 9,
    "old_eng": "May they be terrified,",
-   "new_pos": 9,
+   "new_pos": 10,
    "new_eng": "be terrified,",
    "new_head": "terrified"
   }
@@ -1496,17 +1496,17 @@
  "Jer 37:20": [
   {
    "sbase": "2596",
-   "old_pos": 10,
+   "old_pos": 11,
    "old_eng": null,
-   "new_pos": 9,
+   "new_pos": 10,
    "new_eng": "for",
    "new_head": null
   },
   {
    "sbase": "3450",
-   "old_pos": 9,
+   "old_pos": 10,
    "old_eng": "for me",
-   "new_pos": 10,
+   "new_pos": 11,
    "new_eng": "me",
    "new_head": "me"
   }
