@@ -2942,6 +2942,9 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
 .mpick .plan-day-dot { width: 9px; height: 9px; }
 .mpick .plan-day-hollow { width: 10px; height: 10px; }
 .mpick .plan-passage { font-size: 15px; padding: 9px 8px; }
+/* When a month auto-scrolls to the top, clear the sticky progress bar above it (mobile
+   only — desktop's header is static, outside the scroller). */
+.mpick .plan-month { scroll-margin-top: 84px; }
 .mpick .plan-month-head { padding: 13px 10px; gap: 10px; }
 .mpick .plan-month-name { font-size: 15px; }
 .mpick .plan-month-range { font-size: 12px; }
