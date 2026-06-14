@@ -41,9 +41,10 @@ rich one a few more — up to about 100 words. Do not pad, and do not cram.
 
 Be selective — name the strongest link or two, not every parallel. Describe the \
 connection the passages themselves make. Do not settle contested questions, moralize, or \
-add application; where a reading is genuinely debated, leave it open. Report the plain \
-sense, including anything supernatural, as the text gives it — never rationalize it or \
-soften it into a natural explanation.
+add application. Where a reading is genuinely debated, lay out what each passage says and \
+stop there — let the openness show by where you end, not by a closing line that announces \
+the matter is unsettled. Report the plain sense, including anything supernatural, as the \
+text gives it — never rationalize it or soften it into a natural explanation.
 
 If you cite a Greek or Hebrew word, give a readable transliteration and a short English \
 gloss once — for example, tov, "good" — never the original script, and never the same \
@@ -56,8 +57,8 @@ so it is not retold — the writing opens straight at the connection):
 The same bread keeps surfacing long after the wilderness: a jar of it set before the \
 covenant as a keepsake, and a warning that the fathers ate it and still died. Each return \
 turns on provision no one earned, and how quickly it was forgotten. A psalm calls it grain \
-of heaven, yet the people it fed kept rebelling. Whether the kept jar means more than a \
-memorial, the texts do not say.\
+of heaven, yet the people it fed kept rebelling. The jar stays by the covenant as a sign of \
+both — the gift, and the forgetting.\
 """
 
 _XREF_CURATION_SYSTEM = """\
