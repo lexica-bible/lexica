@@ -1518,17 +1518,28 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
   const bsbView = chronoOn ? flattenSpan("bsb") : bsbVerses;
   const esvView = chronoOn ? flattenSpan("esv") : esvVerses;
   const nivView = chronoOn ? flattenSpan("niv") : nivVerses;
-  // Drop a chapter divider each time _ch changes; a plain map for canonical (no _ch).
-  // Skip the divider entirely on a single-chapter passage — it would just repeat the
-  // passage location you're already reading. (The desktop audio bar anchor stays.)
-  const singleChapterPassage = chronoOn && curPassage && curPassage.start_ch === curPassage.end_ch;
+  // A heading each time the chapter changes within a passage. EVERY chrono passage gets
+  // one now — single-chapter ones too (they were skipped before, which is why Genesis 6
+  // and the like showed no book/chapter label at all). When a passage only covers part of
+  // a chapter, the heading shows the verse range so partial readings are obvious
+  // (e.g. "1 Chronicles 1:1–4", "Genesis 10:1–5").
+  const chronoChapLabel = (c) => {
+    const name = selBook ? selBook.name : "";
+    if (!curPassage) return `${name} ${c}`;
+    const { start_ch, end_ch, start_v, end_v } = curPassage;
+    const primaryKey = translation === "parallel" ? (compareSel[0] || "abp") : translation;
+    const full = (chronoData && chronoData.byCh[c] && chronoData.byCh[c][primaryKey]) || [];
+    const maxV = full.length ? full[full.length - 1].verse : null;   // whole chapter is loaded → last verse = its length
+    const lo = c === start_ch ? start_v : 1;
+    const hi = c === end_ch ? end_v : maxV;
+    const partial = lo > 1 || (maxV != null && hi != null && hi < maxV);
+    return partial && hi != null ? `${name} ${c}:${lo}–${hi}` : `${name} ${c}`;
+  };
   const withMarks = (arr, renderFn) => {
     const out = []; let lastCh = null;
     arr.forEach(v => {
       if (v._ch != null && v._ch !== lastCh) {
-        if (!singleChapterPassage) {
-          out.push(<div key={`cm-${v._ch}`} data-ch={v._ch} className="lib-chrono-chapmark">{selBook ? selBook.name : ""} {v._ch}</div>);
-        }
+        out.push(<div key={`cm-${v._ch}`} data-ch={v._ch} className="lib-chrono-chapmark">{chronoChapLabel(v._ch)}</div>);
         lastCh = v._ch;
       }
       out.push(renderFn(v));

@@ -2913,6 +2913,9 @@ input { font-family: inherit; }
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .plan-passage:hover { color: var(--ink); }
+/* The passage you're currently reading, marked with a bullet + accent. */
+.plan-passage.on { color: var(--ink); font-weight: 600; background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.plan-passage.on::before { content: "•"; color: var(--accent); font-weight: 700; margin-right: 6px; }
 .plan-complete {
   margin-top: 7px; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;
   font-size: 12px; font-weight: 600; cursor: pointer; color: var(--gold);

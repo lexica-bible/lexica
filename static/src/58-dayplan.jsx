@@ -131,7 +131,8 @@ function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, o
               {isOpen && (
                 <div className="plan-day-body">
                   {passagesOf(day).map(p => (
-                    <button key={p.pos} className="plan-passage" onClick={() => onPickPassage(p)}>{p.label}</button>
+                    <button key={p.pos} className={"plan-passage" + (p.pos === chronoPos ? " on" : "")}
+                      onClick={() => onPickPassage(p)}>{p.label}</button>
                   ))}
                   {state === "today" ? (
                     <button className="plan-complete" onClick={onMarkComplete}><Icon.Check/> Mark today complete</button>
