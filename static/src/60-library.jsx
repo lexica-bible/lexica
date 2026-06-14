@@ -191,7 +191,7 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
   }, [chronoMode, chronoPos, curEraId]);
   // "Other" menu groups start collapsed (the list is long) — except the group of the
   // text that's currently open, so the active pick stays visible.
-  const [openGroups, setOpenGroups] = useState(() => new Set(nonCanon ? [nonCanon.group] : []));
+  const [openGroups, setOpenGroups] = useState(() => new Set(["Bibles", ...(nonCanon ? [nonCanon.group] : [])]));
   const toggleGroup = (g) => setOpenGroups(s => {
     const n = new Set(s);
     n.has(g) ? n.delete(g) : n.add(g);
@@ -290,13 +290,13 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
               nivOwner && { id: "niv", name: "NIV" },
               hebShown && { id: "heb", name: "Hebrew OT (interlinear)", disabled: !hebPickable, title: !hebPickable ? "Old Testament books only" : undefined },
             ].filter(Boolean);
-            const open = openGroups.has("Other Bibles");
+            const open = openGroups.has("Bibles");
             return (
               <React.Fragment>
                 <button className={"lib-other-head lib-other-head-btn" + (open ? " open" : "")}
-                  onClick={() => toggleGroup("Other Bibles")} aria-expanded={open}>
+                  onClick={() => toggleGroup("Bibles")} aria-expanded={open}>
                   <span className="lib-other-head-caret">▸</span>
-                  <span className="lib-other-head-lbl">Other Bibles</span>
+                  <span className="lib-other-head-lbl">Bibles</span>
                   <span className="lib-other-head-count">{bibles.length}</span>
                 </button>
                 {open && bibles.map(b => (

@@ -6464,7 +6464,7 @@ function LibNavPanel({
   }, [chronoMode, chronoPos, curEraId]);
   // "Other" menu groups start collapsed (the list is long) — except the group of the
   // text that's currently open, so the active pick stays visible.
-  const [openGroups, setOpenGroups] = useState(() => new Set(nonCanon ? [nonCanon.group] : []));
+  const [openGroups, setOpenGroups] = useState(() => new Set(["Bibles", ...(nonCanon ? [nonCanon.group] : [])]));
   const toggleGroup = g => setOpenGroups(s => {
     const n = new Set(s);
     n.has(g) ? n.delete(g) : n.add(g);
@@ -6590,16 +6590,16 @@ function LibNavPanel({
       disabled: !hebPickable,
       title: !hebPickable ? "Old Testament books only" : undefined
     }].filter(Boolean);
-    const open = openGroups.has("Other Bibles");
+    const open = openGroups.has("Bibles");
     return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
       className: "lib-other-head lib-other-head-btn" + (open ? " open" : ""),
-      onClick: () => toggleGroup("Other Bibles"),
+      onClick: () => toggleGroup("Bibles"),
       "aria-expanded": open
     }, /*#__PURE__*/React.createElement("span", {
       className: "lib-other-head-caret"
     }, "\u25B8"), /*#__PURE__*/React.createElement("span", {
       className: "lib-other-head-lbl"
-    }, "Other Bibles"), /*#__PURE__*/React.createElement("span", {
+    }, "Bibles"), /*#__PURE__*/React.createElement("span", {
       className: "lib-other-head-count"
     }, bibles.length)), open && bibles.map(b => /*#__PURE__*/React.createElement("button", {
       key: b.id,
