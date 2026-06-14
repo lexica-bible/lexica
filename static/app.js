@@ -5611,14 +5611,18 @@ function DayPlanView({
     // One marker on the right edge IS the only clickable mark: a ✓ when the day is
     // read (click to undo), a navy dot when it's the day you're reading (click to
     // mark read). Every other day is bare — no Today gold, no Reading bar.
+    const markClick = e => {
+      e.stopPropagation();
+      onToggleDone(day.day);
+    };
     const mark = done ? /*#__PURE__*/React.createElement("button", {
       className: "plan-day-mark plan-day-mark--done",
-      onClick: () => onToggleDone(day.day),
+      onClick: markClick,
       "aria-label": "Mark Day " + day.day + " unread",
       title: "Read \u2014 click to undo"
     }, /*#__PURE__*/React.createElement(Icon.Check, null)) : isReading ? /*#__PURE__*/React.createElement("button", {
       className: "plan-day-mark plan-day-mark--reading",
-      onClick: () => onToggleDone(day.day),
+      onClick: markClick,
       "aria-label": "Mark Day " + day.day + " read",
       title: "Mark as read"
     }, /*#__PURE__*/React.createElement("span", {
@@ -5636,24 +5640,25 @@ function DayPlanView({
       },
       className: "plan-day" + (done ? " plan-day--done" : "") + (isReading ? " plan-day--reading" : "") + (isOpen ? " open" : "")
     }, /*#__PURE__*/React.createElement("div", {
-      className: "plan-day-head"
-    }, /*#__PURE__*/React.createElement("button", {
-      className: "plan-day-open",
+      className: "plan-day-head",
+      role: "button",
+      tabIndex: 0,
+      "aria-expanded": isOpen,
       onClick: () => toggle(day.day),
-      "aria-expanded": isOpen
+      onKeyDown: e => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          toggle(day.day);
+        }
+      }
     }, /*#__PURE__*/React.createElement("span", {
       className: "plan-day-n"
-    }, "Day ", day.day)), mark, /*#__PURE__*/React.createElement("button", {
-      className: "plan-day-meta",
-      onClick: () => toggle(day.day),
-      tabIndex: -1,
-      "aria-hidden": "true"
-    }, /*#__PURE__*/React.createElement("span", {
+    }, "Day ", day.day), /*#__PURE__*/React.createElement("span", {
       className: "plan-day-v"
-    }, day.verses, "v"), /*#__PURE__*/React.createElement("span", {
+    }, day.verses, "v"), mark, /*#__PURE__*/React.createElement("span", {
       className: "plan-day-caret",
       "aria-hidden": "true"
-    }, "\u25B8"))), isOpen && /*#__PURE__*/React.createElement("div", {
+    }, "\u25B8")), isOpen && /*#__PURE__*/React.createElement("div", {
       className: "plan-day-body"
     }, passagesOf(day).map(p => /*#__PURE__*/React.createElement("button", {
       key: p.pos,

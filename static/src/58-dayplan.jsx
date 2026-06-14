@@ -110,11 +110,12 @@ function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, o
           // One marker on the right edge IS the only clickable mark: a ✓ when the day is
           // read (click to undo), a navy dot when it's the day you're reading (click to
           // mark read). Every other day is bare — no Today gold, no Reading bar.
+          const markClick = (e) => { e.stopPropagation(); onToggleDone(day.day); };
           const mark = done
-            ? <button className="plan-day-mark plan-day-mark--done" onClick={() => onToggleDone(day.day)}
+            ? <button className="plan-day-mark plan-day-mark--done" onClick={markClick}
                 aria-label={"Mark Day " + day.day + " unread"} title="Read — click to undo"><Icon.Check/></button>
             : isReading
-              ? <button className="plan-day-mark plan-day-mark--reading" onClick={() => onToggleDone(day.day)}
+              ? <button className="plan-day-mark plan-day-mark--reading" onClick={markClick}
                   aria-label={"Mark Day " + day.day + " read"} title="Mark as read"><span className="plan-day-dot" aria-hidden="true"></span></button>
               : <span className="plan-day-mark" aria-hidden="true"></span>;
           return (
@@ -124,15 +125,13 @@ function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, o
                 if (day.day === curDay) todayRef.current = el;
               }}
               className={"plan-day" + (done ? " plan-day--done" : "") + (isReading ? " plan-day--reading" : "") + (isOpen ? " open" : "")}>
-              <div className="plan-day-head">
-                <button className="plan-day-open" onClick={() => toggle(day.day)} aria-expanded={isOpen}>
-                  <span className="plan-day-n">Day {day.day}</span>
-                </button>
+              <div className="plan-day-head" role="button" tabIndex={0} aria-expanded={isOpen}
+                onClick={() => toggle(day.day)}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(day.day); } }}>
+                <span className="plan-day-n">Day {day.day}</span>
+                <span className="plan-day-v">{day.verses}v</span>
                 {mark}
-                <button className="plan-day-meta" onClick={() => toggle(day.day)} tabIndex={-1} aria-hidden="true">
-                  <span className="plan-day-v">{day.verses}v</span>
-                  <span className="plan-day-caret" aria-hidden="true">▸</span>
-                </button>
+                <span className="plan-day-caret" aria-hidden="true">▸</span>
               </div>
               {isOpen && (
                 <div className="plan-day-body">

@@ -2836,33 +2836,29 @@ input { font-family: inherit; }
 
 .plan-days { padding: 4px 4px 10px; }
 .plan-day { border-radius: 6px; scroll-margin-top: 150px; }
-.plan-day-head { display: flex; align-items: center; gap: 4px; }
-/* Day name = the open/collapse toggle, flush-left so the whole column lines up. */
-.plan-day-open {
-  flex: 1; min-width: 0; text-align: left; padding: 7px 4px 7px 10px;
-  cursor: pointer; background: none; border: none; color: var(--ink-2); font-size: 13px;
+/* The whole row is the open/collapse toggle; day name flush-left, the count + marker +
+   caret ride inline on the right. The marker is the only separately-clickable bit. */
+.plan-day-head {
+  display: flex; align-items: center; gap: 8px; padding: 7px 8px 7px 10px;
+  cursor: pointer; border-radius: 6px;
 }
-.plan-day-open:hover { color: var(--ink); }
-.plan-day-n { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.plan-day-head:hover .plan-day-n { color: var(--ink); }
+.plan-day-n { flex: 1; min-width: 0; font-size: 13px; color: var(--ink-2); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .plan-day--done .plan-day-n { color: var(--ink-4); }
-.plan-day--reading .plan-day-open { color: var(--ink); }
-/* The ONE status marker, on the right: ✓ read (click to undo) / • reading (click to
-   mark read). No Today gold, no Reading bar — the dot + the open passages say enough. */
+.plan-day--reading .plan-day-n { color: var(--ink); }
+.plan-day-v { flex: 0 0 auto; font-size: 10.5px; color: var(--ink-4); font-family: var(--f-mono); }
+/* The ONE status marker, inline after the count: ✓ read (click to undo) / • reading
+   (click to mark read). No Today gold, no Reading bar — the dot + open passages say enough. */
 .plan-day-mark {
-  flex: 0 0 18px; width: 18px; height: 18px; padding: 0; border: none; background: none;
+  flex: 0 0 16px; width: 16px; height: 16px; padding: 0; border: none; background: none;
   display: inline-flex; align-items: center; justify-content: center;
 }
 button.plan-day-mark { cursor: pointer; border-radius: 50%; transition: background .12s ease; }
 button.plan-day-mark:hover { background: var(--accent-soft); }
 .plan-day-mark--done { color: var(--accent); }
 .plan-day-mark--done svg { width: 13px; height: 13px; }
-.plan-day-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
-.plan-day-meta {
-  flex: 0 0 auto; display: inline-flex; align-items: center; gap: 8px;
-  padding: 7px 8px 7px 2px; background: none; border: none; cursor: pointer;
-}
-.plan-day-v { font-size: 10.5px; color: var(--ink-4); font-family: var(--f-mono); }
-.plan-day-caret { font-size: 9px; color: var(--ink-4); transition: transform 0.12s ease; flex: 0 0 auto; }
+.plan-day-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+.plan-day-caret { flex: 0 0 auto; font-size: 9px; color: var(--ink-4); transition: transform 0.12s ease; }
 .plan-day.open .plan-day-caret { transform: rotate(90deg); }
 .plan-day-body { padding: 2px 8px 9px 12px; }
 .plan-passage {
