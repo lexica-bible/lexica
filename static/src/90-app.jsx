@@ -388,7 +388,7 @@ function App() {
           onReadInContext={handleReadInContext}
           onOpenStudyName={handleOpenStudyName}
           overviewBack={mainView === "library"}
-          backLabel={libDetailBase === "intro" ? "Intro" : "Overview"}
+          backLabel={libCrossRef ? "Cross-references" : (libDetailBase === "intro" ? "Intro" : "Overview")}
         />
       )}
 

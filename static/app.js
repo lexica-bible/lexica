@@ -12782,7 +12782,7 @@ function App() {
     onReadInContext: handleReadInContext,
     onOpenStudyName: handleOpenStudyName,
     overviewBack: mainView === "library",
-    backLabel: libDetailBase === "intro" ? "Intro" : "Overview"
+    backLabel: libCrossRef ? "Cross-references" : libDetailBase === "intro" ? "Intro" : "Overview"
   }), activeEntry && isMobile && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "sheet-scrim",
     onClick: () => setActiveEntry(null)
