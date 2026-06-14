@@ -261,7 +261,10 @@ scripts/          # build-frontend.js + one-time import/migration scripts
   (text source lives in the LEFT NAV's nav-source seg, not the toolbar. CONDENSED 2026-06-11: ABP/KJV/BSB
   stay one-click buttons; ESV*/NIV*/HEB + the non-canon books fold into a **"More ▾"** menu so the row stays
   at 4. HEB = the public Hebrew OT interlinear (OT books only; the left book list AND the mobile book
-  picker drop the NT books in HEB mode). On a non-Hebrew text sitting on a NT book, the HEB selector now
+  picker drop the NT books in HEB mode). HEB also has NO chronological order (2026-06-13): the
+  Chronological button is GRAYED/disabled while reading Hebrew (desktop toolbar + mobile order
+  toggle), an effect flips order back to canonical whenever Hebrew is the text, and `chronoOn` is
+  gated on `translation !== "heb"`. On a non-Hebrew text sitting on a NT book, the HEB selector now
   shows GRAYED/disabled rather than hidden (`hebShown` = heb.db loaded + reading the Bible → visible;
   `hebPickable` = and on an OT book → clickable) — mobile shows just the grayed pill (no tooltip, no
   hover on touch), desktop More menu keeps a hover tooltip. ESV*/NIV* owner only; HEB is PUBLIC (no
@@ -318,8 +321,10 @@ scripts/          # build-frontend.js + one-time import/migration scripts
   (2026-06-13) the reading ORDER (canonical/chronological), the chrono passage position, and the
   Compare selection. orderMode/translation/compareSel/chronoPos restore SYNCHRONOUSLY in their
   `useState` initializers (via `readLibSaved()`) so the pickers are right on the FIRST paint — no
-  more canonical→chronological flash; only the book NAME pops in late (selBook must resolve against
-  the just-fetched books list — the chapter NUMBER + corpus are synchronous now too). The reading-display toggles (chip/prose, Strong's, interlinear) persist too under
+  more canonical→chronological flash; chapter NUMBER + corpus are synchronous too, and the book list
+  is CACHED (`lexica.books.v1`, read back in the `books`/`selBook` initializers via `readCachedBooks()`,
+  refreshed by `api.books()` in the background) so even the book NAME is instant — only a first-EVER
+  visit (empty cache) pops the name in. The reading-display toggles (chip/prose, Strong's, interlinear) persist too under
   `lexica.opts.v1`. An explicit verse jump (`nav.book`, e.g. Search/cross-ref) still overrides.
   Other first-paint-restored settings: active tab `lexica.view.v1`, theme `lexica.theme.v1`, font
   `libFontSize`, Eras/Days `lexica.chronoview.v1`. Full map: memory `project_refresh_persistence`.
