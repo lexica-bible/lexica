@@ -3147,16 +3147,18 @@ button.plan-day-mark:hover { background: var(--accent-soft); }
 .lib-search-go { font-weight: 600; }
 .lib-search-go:hover, .lib-search-x:hover { background: var(--bg); }
 /* Mode seg (Phrase / All words / Any word) + the Options toggle */
-.lib-search-modes { display: flex; gap: 8px; align-items: center; margin: 8px 10px 2px; }
-.lib-search-mode-seg { display: flex; flex: 1; gap: 0; }
+.lib-search-modes { display: flex; gap: 8px; align-items: flex-end; margin: 8px 10px 2px; }
+/* Underline tabs (mirrors the nav source picker / More menu) — no box, a row
+   hairline with a navy underline under the active tab. */
+.lib-search-mode-seg.seg { display: flex; flex: 1; gap: 2px; background: none; border: none; border-radius: 0; padding: 0; border-bottom: 1px solid var(--rule); }
 .lib-search-mode-seg .seg-b {
-  flex: 1; padding: 6px 10px; font-size: 13px; cursor: pointer;
-  border: 1px solid var(--rule); background: var(--ctl-bg); color: var(--ink-2);
+  flex: 1; padding: 6px 8px; font-size: 13px; cursor: pointer; text-align: center;
+  border: none; border-bottom: 2px solid transparent; margin-bottom: -1px; border-radius: 0;
+  background: none; color: var(--ink-2);
 }
-.lib-search-mode-seg .seg-b:first-child { border-radius: 8px 0 0 8px; }
-.lib-search-mode-seg .seg-b:not(:first-child) { border-left: none; }
-.lib-search-mode-seg .seg-b:last-child { border-radius: 0 8px 8px 0; }
-.lib-search-mode-seg .seg-b.on { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.lib-search-mode-seg .seg-b:hover:not(.on) { color: var(--ink); }
+.lib-search-mode-seg .seg-b.on { background: none; box-shadow: none; color: var(--ink); border-bottom-color: var(--accent); font-weight: 600; }
+.lib-search-mode-seg .seg-b:active:not(.on) { background: none; }
 .lib-search-opts-btn {
   padding: 6px 10px; font-size: 13px; cursor: pointer; white-space: nowrap;
   border: 1px solid var(--rule); border-radius: 8px; background: var(--ctl-bg); color: var(--ink-2);

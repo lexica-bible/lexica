@@ -6484,7 +6484,21 @@ function LibNavPanel({
   useEffect(() => {
     if (!otherOpen) return;
     const onDown = e => {
-      if (sourceWrapRef.current && !sourceWrapRef.current.contains(e.target)) setOtherOpen(false);
+      if (sourceWrapRef.current && !sourceWrapRef.current.contains(e.target)) {
+        setOtherOpen(false);
+        // Swallow the dismiss click so it doesn't also land on a word chip behind the menu.
+        const swallow = ev => {
+          ev.stopPropagation();
+          ev.preventDefault();
+        };
+        document.addEventListener("click", swallow, {
+          capture: true,
+          once: true
+        });
+        setTimeout(() => document.removeEventListener("click", swallow, {
+          capture: true
+        }), 350);
+      }
     };
     const onKey = e => {
       if (e.key === "Escape") setOtherOpen(false);
@@ -7780,7 +7794,21 @@ function LibraryView({
   useEffect(() => {
     if (!compareOpen) return;
     const onDown = e => {
-      if (compareWrapRef.current && !compareWrapRef.current.contains(e.target)) setCompareOpen(false);
+      if (compareWrapRef.current && !compareWrapRef.current.contains(e.target)) {
+        setCompareOpen(false);
+        // Swallow the dismiss click so it doesn't also land on a word chip behind the menu.
+        const swallow = ev => {
+          ev.stopPropagation();
+          ev.preventDefault();
+        };
+        document.addEventListener("click", swallow, {
+          capture: true,
+          once: true
+        });
+        setTimeout(() => document.removeEventListener("click", swallow, {
+          capture: true
+        }), 350);
+      }
     };
     const onKey = e => {
       if (e.key === "Escape") setCompareOpen(false);

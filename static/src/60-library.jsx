@@ -203,7 +203,15 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
   const sourceWrapRef = useRef(null);
   useEffect(() => {
     if (!otherOpen) return;
-    const onDown = (e) => { if (sourceWrapRef.current && !sourceWrapRef.current.contains(e.target)) setOtherOpen(false); };
+    const onDown = (e) => {
+      if (sourceWrapRef.current && !sourceWrapRef.current.contains(e.target)) {
+        setOtherOpen(false);
+        // Swallow the dismiss click so it doesn't also land on a word chip behind the menu.
+        const swallow = (ev) => { ev.stopPropagation(); ev.preventDefault(); };
+        document.addEventListener("click", swallow, { capture: true, once: true });
+        setTimeout(() => document.removeEventListener("click", swallow, { capture: true }), 350);
+      }
+    };
     const onKey = (e) => { if (e.key === "Escape") setOtherOpen(false); };
     document.addEventListener("pointerdown", onDown);
     document.addEventListener("keydown", onKey);
@@ -907,7 +915,15 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
   const compareWrapRef = useRef(null);
   useEffect(() => {
     if (!compareOpen) return;
-    const onDown = (e) => { if (compareWrapRef.current && !compareWrapRef.current.contains(e.target)) setCompareOpen(false); };
+    const onDown = (e) => {
+      if (compareWrapRef.current && !compareWrapRef.current.contains(e.target)) {
+        setCompareOpen(false);
+        // Swallow the dismiss click so it doesn't also land on a word chip behind the menu.
+        const swallow = (ev) => { ev.stopPropagation(); ev.preventDefault(); };
+        document.addEventListener("click", swallow, { capture: true, once: true });
+        setTimeout(() => document.removeEventListener("click", swallow, { capture: true }), 350);
+      }
+    };
     const onKey = (e) => { if (e.key === "Escape") setCompareOpen(false); };
     document.addEventListener("pointerdown", onDown);
     document.addEventListener("keydown", onKey);
