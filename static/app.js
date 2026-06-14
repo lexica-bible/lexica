@@ -6818,9 +6818,21 @@ function LibNavPanel({
   // The era a passage belongs to, so the active passage's era starts expanded.
   const curEraId = chrono && chrono.passages[chronoPos - 1] ? chrono.passages[chronoPos - 1].era : null;
   const [openEras, setOpenEras] = useState(() => new Set(curEraId ? [curEraId] : []));
+  const eraRefs = useRef({});
   const toggleEra = id => setOpenEras(s => {
     const n = new Set(s);
-    n.has(id) ? n.delete(id) : n.add(id);
+    const opening = !n.has(id);
+    opening ? n.add(id) : n.delete(id);
+    // On open, scroll the era to the top of the list — only the inner list, never the
+    // page (set scrollTop directly, like the Days month scroll).
+    if (opening) requestAnimationFrame(() => {
+      const el = eraRefs.current[id];
+      const sc = el && el.closest(".nav-scroll, .mpick-scroll");
+      if (el && sc) sc.scrollTo({
+        top: sc.scrollTop + el.getBoundingClientRect().top - sc.getBoundingClientRect().top,
+        behavior: "smooth"
+      });
+    });
     return n;
   });
   const navActiveRef = useRef(null); // the active passage button (scroll into view)
@@ -7073,7 +7085,10 @@ function LibNavPanel({
     const eraPassages = chrono.passages.filter(p => p.era === era.id);
     return /*#__PURE__*/React.createElement("div", {
       className: "nav-group",
-      key: era.id
+      key: era.id,
+      ref: el => {
+        if (el) eraRefs.current[era.id] = el;
+      }
     }, /*#__PURE__*/React.createElement("button", {
       className: "nav-era" + (open ? " open" : ""),
       onClick: () => toggleEra(era.id),
@@ -7169,9 +7184,21 @@ function MobileBookPicker({
   // Chronological: the picker shows eras → passages instead of books → chapters.
   const curEraId = chrono && chrono.passages[chronoPos - 1] ? chrono.passages[chronoPos - 1].era : null;
   const [openEras, setOpenEras] = useState(() => new Set(curEraId ? [curEraId] : []));
+  const eraRefs = useRef({});
   const toggleEra = id => setOpenEras(s => {
     const n = new Set(s);
-    n.has(id) ? n.delete(id) : n.add(id);
+    const opening = !n.has(id);
+    opening ? n.add(id) : n.delete(id);
+    // On open, scroll the era to the top of the list — only the inner list, never the
+    // page (set scrollTop directly, like the Days month scroll).
+    if (opening) requestAnimationFrame(() => {
+      const el = eraRefs.current[id];
+      const sc = el && el.closest(".nav-scroll, .mpick-scroll");
+      if (el && sc) sc.scrollTo({
+        top: sc.scrollTop + el.getBoundingClientRect().top - sc.getBoundingClientRect().top,
+        behavior: "smooth"
+      });
+    });
     return n;
   });
   // Open straight to the chapter grid of whatever you're currently reading — an open
@@ -7248,7 +7275,10 @@ function MobileBookPicker({
     const eraPassages = chrono.passages.filter(p => p.era === era.id);
     return /*#__PURE__*/React.createElement("div", {
       key: era.id,
-      className: "mpick-section"
+      className: "mpick-section",
+      ref: el => {
+        if (el) eraRefs.current[era.id] = el;
+      }
     }, /*#__PURE__*/React.createElement("button", {
       className: "mpick-sec-label mpick-sec-btn" + (open ? " open" : ""),
       onClick: () => toggleEra(era.id),

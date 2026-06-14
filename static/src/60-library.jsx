@@ -181,7 +181,20 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
   // The era a passage belongs to, so the active passage's era starts expanded.
   const curEraId = chrono && chrono.passages[chronoPos - 1] ? chrono.passages[chronoPos - 1].era : null;
   const [openEras, setOpenEras] = useState(() => new Set(curEraId ? [curEraId] : []));
-  const toggleEra = (id) => setOpenEras(s => { const n = new Set(s); n.has(id) ? n.delete(id) : n.add(id); return n; });
+  const eraRefs = useRef({});
+  const toggleEra = (id) => setOpenEras(s => {
+    const n = new Set(s);
+    const opening = !n.has(id);
+    opening ? n.add(id) : n.delete(id);
+    // On open, scroll the era to the top of the list — only the inner list, never the
+    // page (set scrollTop directly, like the Days month scroll).
+    if (opening) requestAnimationFrame(() => {
+      const el = eraRefs.current[id];
+      const sc = el && el.closest(".nav-scroll, .mpick-scroll");
+      if (el && sc) sc.scrollTo({ top: sc.scrollTop + el.getBoundingClientRect().top - sc.getBoundingClientRect().top, behavior: "smooth" });
+    });
+    return n;
+  });
   const navActiveRef = useRef(null);   // the active passage button (scroll into view)
   // Keep the active passage's era open and scroll it into view as you step through.
   useEffect(() => {
@@ -369,7 +382,7 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
           const open = openEras.has(era.id);
           const eraPassages = chrono.passages.filter(p => p.era === era.id);
           return (
-            <div className="nav-group" key={era.id}>
+            <div className="nav-group" key={era.id} ref={el => { if (el) eraRefs.current[era.id] = el; }}>
               <button className={"nav-era" + (open ? " open" : "")} onClick={() => toggleEra(era.id)}
                 aria-expanded={open} title={era.blurb}>
                 <span className="nav-era-name">{era.name}</span>
@@ -456,7 +469,20 @@ function MobileBookPicker({ books, selBook, selChapter, nonCanon, nonCanonList, 
   // Chronological: the picker shows eras → passages instead of books → chapters.
   const curEraId = chrono && chrono.passages[chronoPos - 1] ? chrono.passages[chronoPos - 1].era : null;
   const [openEras, setOpenEras] = useState(() => new Set(curEraId ? [curEraId] : []));
-  const toggleEra = (id) => setOpenEras(s => { const n = new Set(s); n.has(id) ? n.delete(id) : n.add(id); return n; });
+  const eraRefs = useRef({});
+  const toggleEra = (id) => setOpenEras(s => {
+    const n = new Set(s);
+    const opening = !n.has(id);
+    opening ? n.add(id) : n.delete(id);
+    // On open, scroll the era to the top of the list — only the inner list, never the
+    // page (set scrollTop directly, like the Days month scroll).
+    if (opening) requestAnimationFrame(() => {
+      const el = eraRefs.current[id];
+      const sc = el && el.closest(".nav-scroll, .mpick-scroll");
+      if (el && sc) sc.scrollTo({ top: sc.scrollTop + el.getBoundingClientRect().top - sc.getBoundingClientRect().top, behavior: "smooth" });
+    });
+    return n;
+  });
   // Open straight to the chapter grid of whatever you're currently reading — an open
   // non-canonical text OR the current Bible book — so you can change chapter right away
   // instead of landing on the generic book list. "‹ Books" steps back to switch books.
@@ -513,7 +539,7 @@ function MobileBookPicker({ books, selBook, selChapter, nonCanon, nonCanonList, 
             const open = openEras.has(era.id);
             const eraPassages = chrono.passages.filter(p => p.era === era.id);
             return (
-              <div key={era.id} className="mpick-section">
+              <div key={era.id} className="mpick-section" ref={el => { if (el) eraRefs.current[era.id] = el; }}>
                 <button className={"mpick-sec-label mpick-sec-btn" + (open ? " open" : "")} onClick={() => toggleEra(era.id)} aria-expanded={open}>
                   <span className="mpick-sec-caret">▸</span>
                   <span className="mpick-sec-name">{era.name}</span>
