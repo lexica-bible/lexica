@@ -87,7 +87,6 @@ function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, o
   return (
     <div className="plan">
       <div className="plan-head">
-        <div className="plan-sub">Each text keeps its own progress.</div>
         <div className="plan-prog">
           <span className="plan-dayno">Day {curDay} of {total}</span>
           <span className="plan-pct">{pct}%</span>

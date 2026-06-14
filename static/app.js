@@ -5583,8 +5583,6 @@ function DayPlanView({
   }, /*#__PURE__*/React.createElement("div", {
     className: "plan-head"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "plan-sub"
-  }, "Each text keeps its own progress."), /*#__PURE__*/React.createElement("div", {
     className: "plan-prog"
   }, /*#__PURE__*/React.createElement("span", {
     className: "plan-dayno"

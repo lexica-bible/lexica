@@ -2817,7 +2817,6 @@ input { font-family: inherit; }
   background: var(--ctl-bg, var(--bg)); border: 1px solid var(--rule); border-radius: 999px;
 }
 .plan-chip.on { color: var(--ink); background: var(--gold-soft); border-color: var(--gold); font-weight: 600; }
-.plan-sub { font-size: 10.5px; color: var(--ink-4); margin-bottom: 11px; }
 .plan-prog { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 5px; }
 .plan-dayno { font-size: 13px; font-weight: 600; color: var(--ink); }
 .plan-pct { font-size: 13px; font-weight: 600; color: var(--gold); }
@@ -2941,7 +2940,7 @@ input { font-family: inherit; }
   /* line up the pill with where the verse text starts (past the number column) */
   margin: 16px 0 9px calc(var(--lib-row-pl) + var(--lib-vnum-w) + var(--lib-row-gap));
   font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--gold); background: var(--gold-soft);
+  color: var(--accent); background: var(--accent-soft);
   padding: 3px 9px; border-radius: 4px;
 }
 /* Prose flow: text starts at the container edge — no indent */
