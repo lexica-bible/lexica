@@ -114,19 +114,26 @@ html, body {
 }
 body { min-height: 100vh; }
 
-/* Page scrollbar — the reading pane rides the window scroll, so style the document scroller
-   slim to match the inner panels (book list, detail rail) instead of the fat OS default. The
-   stable gutter keeps its space always reserved, so swapping texts/chapters (e.g. ABP ↔ KJV)
-   never shifts the layout — and the right side panel no longer jumps — when the bar would
-   otherwise appear or disappear. Same slim-then-wider-on-hover trick as .nav-scroll. */
+/* Slim scrollbars across the board on DESKTOP — the fat OS default is replaced EVERYWHERE: the
+   page (the reading pane rides the window scroll), the detail rail, search results, the nav, etc.
+   Same slim-then-wider-on-hover trick as .nav-scroll (a fat transparent thumb border with
+   background-clip:padding-box makes the fill look thin; on hover the border shrinks so it grows).
+   Desktop only — mobile keeps its clean overlay scrollbars (styling ::-webkit-scrollbar on touch
+   can force an always-visible bar). The page scroller also gets a STABLE gutter (kept unscoped —
+   harmless on mobile's 0-width overlay bar) so its space is always reserved: swapping
+   texts/chapters (e.g. ABP ↔ KJV) never shifts the layout or jumps the right side panel. */
 html { scrollbar-gutter: stable; }
-html::-webkit-scrollbar { width: 12px; background: transparent; }
-html::-webkit-scrollbar-thumb { background: var(--rule-2); border-radius: 6px; border: 4px solid transparent; background-clip: padding-box; }
-html::-webkit-scrollbar-thumb:hover { border-width: 2px; }
+@media (min-width: 1100px) {
+  ::-webkit-scrollbar { width: 12px; height: 12px; background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--rule-2); border-radius: 6px; border: 4px solid transparent; background-clip: padding-box; }
+  ::-webkit-scrollbar-thumb:hover { border-width: 2px; }
+}
 /* Firefox only (see .nav-scroll note): setting scrollbar-color where Chrome sees it drops the
-   webkit bar above for the fat default. @supports(-moz-appearance) matches Firefox alone. */
+   webkit bars above for the fat default. @supports(-moz-appearance) matches Firefox alone. */
 @supports (-moz-appearance: none) {
-  html { scrollbar-width: thin; scrollbar-color: var(--rule-2) transparent; }
+  @media (min-width: 1100px) {
+    * { scrollbar-width: thin; scrollbar-color: var(--rule-2) transparent; }
+  }
 }
 
 button { font-family: inherit; cursor: pointer; border: 0; background: transparent; color: inherit; padding: 0; }
