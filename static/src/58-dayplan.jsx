@@ -41,14 +41,37 @@ function planDayDiff(a, b) {            // whole days from ymd a -> ymd b
   return Math.round((pb - pa) / 86400000);
 }
 
+// Hebrew months (spring-first) paired with their zodiac constellation. `days` = roughly
+// how long the sun takes to cross that constellation (IAU boundaries) — Virgo the longest
+// stretch, Scorpius the shortest. The Days plan sizes each "month" block by these, scaled
+// to fill the whole plan, so the blocks are deliberately uneven (the themed calendar).
+const ZODIAC = [
+  { heb: "Nisan",    sign: "Aries",       glyph: "♈", days: 25 },
+  { heb: "Iyar",     sign: "Taurus",      glyph: "♉", days: 38 },
+  { heb: "Sivan",    sign: "Gemini",      glyph: "♊", days: 30 },
+  { heb: "Tammuz",   sign: "Cancer",      glyph: "♋", days: 20 },
+  { heb: "Av",       sign: "Leo",         glyph: "♌", days: 37 },
+  { heb: "Elul",     sign: "Virgo",       glyph: "♍", days: 45 },
+  { heb: "Tishrei",  sign: "Libra",       glyph: "♎", days: 23 },
+  { heb: "Cheshvan", sign: "Scorpius",    glyph: "♏", days: 8  },
+  { heb: "Kislev",   sign: "Sagittarius", glyph: "♐", days: 33 },
+  { heb: "Tevet",    sign: "Capricorn",   glyph: "♑", days: 28 },
+  { heb: "Shevat",   sign: "Aquarius",    glyph: "♒", days: 24 },
+  { heb: "Adar",     sign: "Pisces",      glyph: "♓", days: 38 },
+];
+
 // The plan body — shared by the desktop left nav and the mobile picker.
 function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, onPickPassage, onToggleDone, isMobile }) {
   const days = (chrono && chrono.days) || [];
   const total = days.length || 365;
-  // 365 days is too long to scroll as one list, so chunk it into ~12 "month" blocks
-  // (≈31 days each) shown as an accordion — one month open at a time.
-  const monthSize = Math.ceil(total / 12);
-  const monthOf = (d) => Math.floor((d - 1) / monthSize) + 1;
+  // Chunk the plan into 12 "month" blocks (accordion, one open at a time), themed to the
+  // Hebrew months / zodiac: each block is as long, proportionally, as the sun spends
+  // crossing that constellation, scaled to fill the whole plan. So the blocks are uneven.
+  const zSum = ZODIAC.reduce((s, z) => s + z.days, 0);
+  let _acc = 0;
+  const zBounds = ZODIAC.map(z => { _acc += z.days; return Math.round(_acc / zSum * total); });
+  zBounds[zBounds.length - 1] = total;   // last block always reaches the end
+  const monthOf = (d) => { for (let i = 0; i < zBounds.length; i++) if (d <= zBounds[i]) return i + 1; return zBounds.length; };
   const prog = planFor(progAll, curText);
   // Completed days are an independent set now — mark/un-mark any day, skip around freely.
   const doneSet = new Set(prog.done || []);
@@ -181,7 +204,7 @@ function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, o
           return (
             <div key={m.n} className={"plan-month" + (mOpen ? " open" : "") + (hasReading ? " plan-month--reading" : "")}>
               <button className="plan-month-head" onClick={() => toggleMonth(m.n)} aria-expanded={mOpen}>
-                <span className="plan-month-name">Month {m.n}</span>
+                <span className="plan-month-name" title={ZODIAC[m.n - 1].sign}>{ZODIAC[m.n - 1].glyph} {ZODIAC[m.n - 1].heb}</span>
                 <span className="plan-month-range">Days {m.first}–{m.last}</span>
                 <span className="plan-month-done">{doneInMonth}/{m.days.length}</span>
               </button>
