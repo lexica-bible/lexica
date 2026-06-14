@@ -991,14 +991,20 @@ input { font-family: inherit; }
   flex-wrap: wrap;
   margin-bottom: 12px;
 }
+/* SOURCE badge — provenance only ("where this block came from": LSJ, BDB, metaV,
+   Nave's, ABP EXT). Deliberately quiet: a gray outline, NOT a filled pill, so it
+   reads as a caption and never competes with the filled CONTENT tags (Male, Proper
+   Name…) or the gold spotlight. The AI badge (.lsj-badge--accent) is the one loud
+   exception. */
 .lsj-badge {
   font-family: var(--f-sans);
   font-size: 9.5px;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--accent);
-  background: var(--accent-soft);
+  color: var(--ink-3);
+  background: transparent;
+  border: 1px solid var(--rule-2);
   padding: 2px 6px;
   border-radius: 3px;
   vertical-align: middle;
@@ -1010,8 +1016,9 @@ input { font-family: inherit; }
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #1d6fb8;
-  background: #dbeafe;
+  color: var(--ink-3);
+  background: transparent;
+  border: 1px solid var(--rule-2);
   padding: 2px 6px;
   border-radius: 3px;
   vertical-align: middle;
@@ -1119,8 +1126,9 @@ input { font-family: inherit; }
 /* Latin/English proper-noun names render larger than Greek at the same px — size
    them down so a name hero ("Adam") sits at the visual weight of a Greek hero. */
 .detail-greek--latin { font-size: 46px; }
-.lsj-badge--gold { background: var(--accent-soft); color: var(--accent); }
-.lsj-badge--accent { background: var(--accent); color: var(--paper); }
+/* AI source badge — the one LOUD exception: solid navy flags machine-written text
+   (transparency in a Berean app). Overrides the base outline. */
+.lsj-badge--accent { background: var(--accent); color: var(--paper); border-color: var(--accent); }
 .lsj-def--loading { color: var(--ink-4); font-style: italic; padding: 8px 0; }
 .detail-p--meta { margin-top: 8px; }
 .link-btn--strong { font-weight: 600; }
@@ -1462,15 +1470,16 @@ input { font-family: inherit; }
 .bdb-badge {
   display: inline-block;
   font-family: var(--f-sans);
-  /* navy to match the LSJ badge sibling in the same card */
+  /* source badge — quiet gray outline, matches .lsj-badge */
   font-size: 9.5px;
   font-weight: 600;
   letter-spacing: 0.08em;
   text-transform: uppercase;
   padding: 2px 6px;
   border-radius: 3px;
-  background: var(--accent-soft);
-  color: var(--accent);
+  background: transparent;
+  border: 1px solid var(--rule-2);
+  color: var(--ink-3);
   margin-left: 6px;
   vertical-align: middle;
 }

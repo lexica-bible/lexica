@@ -2380,7 +2380,7 @@ function DetailPanel({
         }, /*#__PURE__*/React.createElement("span", {
           className: "sec-t"
         }, isGentilic ? "People / Clan" : "Biblical Person"), /*#__PURE__*/React.createElement("span", {
-          className: "lsj-badge lsj-badge--gold"
+          className: "lsj-badge"
         }, "metaV")), /*#__PURE__*/React.createElement("div", {
           className: "metav-meta"
         }, metavData.gender && /*#__PURE__*/React.createElement("span", {
@@ -2430,7 +2430,7 @@ function DetailPanel({
         }, /*#__PURE__*/React.createElement("span", {
           className: "sec-t"
         }, isGentilic ? "Homeland" : "Biblical Place"), /*#__PURE__*/React.createElement("span", {
-          className: "lsj-badge lsj-badge--gold"
+          className: "lsj-badge"
         }, "metaV")), metavData.comment && /*#__PURE__*/React.createElement("p", {
           className: "detail-p detail-p--meta"
         }, metavData.comment), metavData.lat && metavData.lon ? /*#__PURE__*/React.createElement(LeafletMap, {
