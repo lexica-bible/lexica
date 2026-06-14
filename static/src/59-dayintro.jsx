@@ -126,7 +126,7 @@ function DayIntroPanel({ day, chrono, isMobile, onClose, onPickPassage, onOvervi
   const content = (
     <>
       <div className="detail-hero dintro-hero">
-        <div className="dintro-title">{title}</div>
+        <div className="dintro-meta">Reading {dayNo}{era ? " · " + era.name : ""}</div>
         {dateLine && <div className="dintro-date">{dateLine}</div>}
       </div>
       {win && (
@@ -162,14 +162,11 @@ function DayIntroPanel({ day, chrono, isMobile, onClose, onPickPassage, onOvervi
     </>
   );
 
-  // Header mirrors the word-study / xref panels: a badge + a muted location label,
-  // and the "‹ Overview" toggle in the .detail-back slot (right on desktop; on the
-  // left beside the close X on mobile, matching the overview sheet's "‹ Intro").
-  const headBadge = (
-    <>
-      <span className="card-badge solid">Reading {dayNo}</span>
-      {era && <span className="detail-pos dintro-era-head">{era.name}</span>}
-    </>
+  // Header is just the subject — the day's serif title (the contents make it
+  // obvious it's a reading intro, so no panel-type label). "Reading N" + era move
+  // down into the hero meta line. The "‹ Overview" toggle keeps the .detail-back slot.
+  const headTitle = (
+    <span className="detail-pos summary-pos dintro-era-head">{title}</span>
   );
 
   if (isMobile) {
@@ -181,7 +178,7 @@ function DayIntroPanel({ day, chrono, isMobile, onClose, onPickPassage, onOvervi
           <div className="detail-head">
             <div className="detail-head-l">
               {onOverview && <button className="detail-back" onClick={onOverview} aria-label="Chapter overview">‹ Overview</button>}
-              {headBadge}
+              {headTitle}
             </div>
             <button className="detail-close" onClick={onClose} aria-label="Close"><Icon.Close/></button>
           </div>
@@ -194,7 +191,7 @@ function DayIntroPanel({ day, chrono, isMobile, onClose, onPickPassage, onOvervi
   return (
     <aside className="detail detail-side summary-side dintro-side" role="complementary" aria-label="Reading intro">
       <div className="detail-head">
-        <div className="detail-head-l">{headBadge}</div>
+        <div className="detail-head-l">{headTitle}</div>
         {onOverview && <button className="detail-back" onClick={onOverview} aria-label="Chapter overview">‹ Overview</button>}
       </div>
       <div className="detail-body">{content}</div>

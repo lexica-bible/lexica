@@ -2763,10 +2763,9 @@ function DetailPanel({
   }, /*#__PURE__*/React.createElement("div", {
     className: "detail-head-l"
   }, /*#__PURE__*/React.createElement("span", {
-    className: "card-badge solid"
-  }, entry.strongs), /*#__PURE__*/React.createElement("span", {
-    className: "detail-pos"
-  }, "Word study")), overviewBack && !isMobile ? /*#__PURE__*/React.createElement("button", {
+    className: "detail-pos summary-pos" + (hero.he ? " summary-pos--he" : ""),
+    dir: hero.he ? "rtl" : undefined
+  }, hero.script)), overviewBack && !isMobile ? /*#__PURE__*/React.createElement("button", {
     className: "detail-back",
     onClick: onClose,
     "aria-label": "Back to overview"
@@ -2779,10 +2778,9 @@ function DetailPanel({
     ref: isMobile ? scrollRef : null
   }, /*#__PURE__*/React.createElement("div", {
     className: "detail-hero" + (hero.noGloss ? " no-gloss" : "")
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "detail-greek" + (hero.he ? " detail-greek--he" : ""),
-    dir: hero.he ? "rtl" : undefined
-  }, hero.script), /*#__PURE__*/React.createElement("div", {
+  }, entry.strongs && entry.strongs !== "*" && /*#__PURE__*/React.createElement("span", {
+    className: "detail-strongs-tag"
+  }, entry.strongs), /*#__PURE__*/React.createElement("div", {
     className: "detail-translit-row" + (hero.he ? " detail-translit-row-he" : "")
   }, /*#__PURE__*/React.createElement("span", {
     className: "detail-translit"
@@ -3018,7 +3016,7 @@ function NotesPanel({
   }, /*#__PURE__*/React.createElement("div", {
     className: "detail-head-l"
   }, /*#__PURE__*/React.createElement("span", {
-    className: "detail-pos"
+    className: "detail-pos summary-pos"
   }, note.refLabel || note.book + " " + note.chapter)), /*#__PURE__*/React.createElement("button", {
     className: "note-bm-toggle" + (bookmark ? " on" : ""),
     onClick: () => setBookmark(b => !b),
@@ -3556,13 +3554,7 @@ function CrossRefPanel({
   // source reference + a passage count) then .sec/.sec-head sections — the AI
   // synthesis as "The connection" (Sonnet-written, so it carries the AI badge),
   // and the curated list as "Related passages".
-  const content = /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
-    className: "detail-hero xref-hero"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "xref-hero-ref"
-  }, heroRef), countLine && /*#__PURE__*/React.createElement("div", {
-    className: "xref-hero-sub"
-  }, countLine)), (loading || synthesis) && /*#__PURE__*/React.createElement("section", {
+  const content = /*#__PURE__*/React.createElement(React.Fragment, null, (loading || synthesis) && /*#__PURE__*/React.createElement("section", {
     className: "sec"
   }, /*#__PURE__*/React.createElement("h4", {
     className: "sec-head"
@@ -3586,7 +3578,11 @@ function CrossRefPanel({
     className: "sec-head"
   }, /*#__PURE__*/React.createElement("span", {
     className: "sec-t"
-  }, "Related passages")), loading ? /*#__PURE__*/React.createElement("div", {
+  }, "Related passages", /*#__PURE__*/React.createElement("span", {
+    className: "lsj-badge"
+  }, "TSK")), countLine && !loading && /*#__PURE__*/React.createElement("span", {
+    className: "sec-meta"
+  }, countLine)), loading ? /*#__PURE__*/React.createElement("div", {
     className: "lib-loading"
   }, "Loading\u2026") : refs.length === 0 ? /*#__PURE__*/React.createElement("p", {
     className: "detail-p"
@@ -3616,10 +3612,8 @@ function CrossRefPanel({
   }, /*#__PURE__*/React.createElement("div", {
     className: "detail-head-l"
   }, /*#__PURE__*/React.createElement("span", {
-    className: "card-badge solid"
-  }, "TSK"), /*#__PURE__*/React.createElement("span", {
-    className: "detail-pos"
-  }, "Cross-references")), overviewBack && !isMobile ? /*#__PURE__*/React.createElement("button", {
+    className: "detail-pos summary-pos"
+  }, heroRef)), overviewBack && !isMobile ? /*#__PURE__*/React.createElement("button", {
     className: "detail-back",
     onClick: onClose,
     "aria-label": "Back to overview"
@@ -6010,8 +6004,8 @@ function DayIntroPanel({
   const content = /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "detail-hero dintro-hero"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "dintro-title"
-  }, title), dateLine && /*#__PURE__*/React.createElement("div", {
+    className: "dintro-meta"
+  }, "Reading ", dayNo, era ? " · " + era.name : ""), dateLine && /*#__PURE__*/React.createElement("div", {
     className: "dintro-date"
   }, dateLine)), win && /*#__PURE__*/React.createElement("section", {
     className: "sec"
@@ -6054,14 +6048,12 @@ function DayIntroPanel({
     "aria-hidden": "true"
   }, "\u203A"))))));
 
-  // Header mirrors the word-study / xref panels: a badge + a muted location label,
-  // and the "‹ Overview" toggle in the .detail-back slot (right on desktop; on the
-  // left beside the close X on mobile, matching the overview sheet's "‹ Intro").
-  const headBadge = /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", {
-    className: "card-badge solid"
-  }, "Reading ", dayNo), era && /*#__PURE__*/React.createElement("span", {
-    className: "detail-pos dintro-era-head"
-  }, era.name));
+  // Header is just the subject — the day's serif title (the contents make it
+  // obvious it's a reading intro, so no panel-type label). "Reading N" + era move
+  // down into the hero meta line. The "‹ Overview" toggle keeps the .detail-back slot.
+  const headTitle = /*#__PURE__*/React.createElement("span", {
+    className: "detail-pos summary-pos dintro-era-head"
+  }, title);
   if (isMobile) {
     return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
       className: "sheet-scrim",
@@ -6084,7 +6076,7 @@ function DayIntroPanel({
       className: "detail-back",
       onClick: onOverview,
       "aria-label": "Chapter overview"
-    }, "\u2039 Overview"), headBadge), /*#__PURE__*/React.createElement("button", {
+    }, "\u2039 Overview"), headTitle), /*#__PURE__*/React.createElement("button", {
       className: "detail-close",
       onClick: onClose,
       "aria-label": "Close"
@@ -6101,7 +6093,7 @@ function DayIntroPanel({
     className: "detail-head"
   }, /*#__PURE__*/React.createElement("div", {
     className: "detail-head-l"
-  }, headBadge), onOverview && /*#__PURE__*/React.createElement("button", {
+  }, headTitle), onOverview && /*#__PURE__*/React.createElement("button", {
     className: "detail-back",
     onClick: onOverview,
     "aria-label": "Chapter overview"

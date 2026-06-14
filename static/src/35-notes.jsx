@@ -126,7 +126,7 @@ function NotesPanel({ noteId, isMobile, onClose }) {
   const head = (
     <div className="detail-head">
       <div className="detail-head-l">
-        <span className="detail-pos">{note.refLabel || (note.book + " " + note.chapter)}</span>
+        <span className="detail-pos summary-pos">{note.refLabel || (note.book + " " + note.chapter)}</span>
       </div>
       <button className={"note-bm-toggle" + (bookmark ? " on" : "")} onClick={() => setBookmark(b => !b)}
         title={bookmark ? "Bookmarked" : "Bookmark this"} aria-label="Toggle bookmark" aria-pressed={bookmark}>

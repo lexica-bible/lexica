@@ -53,10 +53,6 @@ function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation, onA
   // and the curated list as "Related passages".
   const content = (
     <>
-      <div className="detail-hero xref-hero">
-        <div className="xref-hero-ref">{heroRef}</div>
-        {countLine && <div className="xref-hero-sub">{countLine}</div>}
-      </div>
       {(loading || synthesis) && (
         <section className="sec">
           <h4 className="sec-head">
@@ -76,7 +72,10 @@ function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation, onA
         </section>
       )}
       <section className="sec">
-        <h4 className="sec-head"><span className="sec-t">Related passages</span></h4>
+        <h4 className="sec-head">
+          <span className="sec-t">Related passages<span className="lsj-badge">TSK</span></span>
+          {countLine && !loading && <span className="sec-meta">{countLine}</span>}
+        </h4>
         {loading ? (
           <div className="lib-loading">Loading…</div>
         ) : refs.length === 0 ? (
@@ -100,8 +99,7 @@ function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation, onA
       {isMobile && <div className="sheet-drag-zone" aria-hidden="true"><div className="sheet-handle"></div></div>}
       <div className="detail-head">
         <div className="detail-head-l">
-          <span className="card-badge solid">TSK</span>
-          <span className="detail-pos">Cross-references</span>
+          <span className="detail-pos summary-pos">{heroRef}</span>
         </div>
         {overviewBack && !isMobile ? (
           <button className="detail-back" onClick={onClose} aria-label="Back to overview">‹ Overview</button>

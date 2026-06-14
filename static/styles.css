@@ -810,6 +810,20 @@ input { font-family: inherit; }
   color: var(--ink);
   letter-spacing: 0;
 }
+/* Hebrew header titles render right-to-left; the serif carries the glyphs. */
+.summary-pos--he { unicode-bidi: plaintext; }
+/* Strong's id, demoted out of the word-study header into the top of the hero. */
+.detail-strongs-tag {
+  display: inline-block;
+  font-family: var(--f-mono);
+  font-size: 11px;
+  color: var(--accent);
+  background: var(--accent-soft);
+  padding: 2px 7px;
+  border-radius: 4px;
+  letter-spacing: 0.02em;
+  margin-bottom: 10px;
+}
 .detail-close {
   width: 32px; height: 32px;
   border-radius: 6px;
@@ -1674,11 +1688,9 @@ input { font-family: inherit; }
 /* ============================================================
    CROSS-REFERENCE PANEL
 ============================================================ */
-/* The xref panel now shares the detail rail: a .detail-hero block + .sec/.sec-head
-   sections (same as the word-study / Reading-intro panels). Hero = the source
-   reference + a passage count, mirroring the word panel's word/gloss hero. */
-.xref-hero-ref { font-family: var(--f-serif); font-size: 23px; font-weight: 600; line-height: 1.18; color: var(--ink); }
-.xref-hero-sub { font-family: var(--f-mono); font-size: 12px; color: var(--ink-2); letter-spacing: 0.01em; margin-top: 8px; }
+/* The xref panel shares the detail rail: a serif title header (the source
+   reference) + .sec/.sec-head sections, same as the word-study / Reading-intro
+   panels. The "TSK" tag rides the "Related passages" section heading. */
 .xref-synthesis-loading {
   font-family: var(--f-serif);
   font-size: 13px;
@@ -2904,8 +2916,8 @@ input { font-family: inherit; }
    (the old --gold marker/pill/hover) is out. */
 .dintro-era-head { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dintro-side .detail-head-l, .dintro-sheet .detail-head-l { min-width: 0; }
-.dintro-title { font-family: var(--f-serif); font-size: 23px; font-weight: 600; line-height: 1.18; color: var(--ink); }
-.dintro-date { font-family: var(--f-mono); font-size: 12px; color: var(--ink-2); letter-spacing: 0.01em; margin-top: 8px; }
+.dintro-meta { font-size: 12.5px; font-weight: 600; letter-spacing: 0.02em; color: var(--accent); }
+.dintro-date { font-family: var(--f-mono); font-size: 12px; color: var(--ink-2); letter-spacing: 0.01em; margin-top: 6px; }
 .dintro-tl { margin: 0; }
 /* Inset by half a list-bullet (3.5px) each side + overflow visible, so the first dot's
    centre lands exactly on the year-list bullet centre (both 3.5px in) at any width. */
