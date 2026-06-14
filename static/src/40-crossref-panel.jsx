@@ -43,8 +43,6 @@ function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation, onA
 
   const sourceRef = `${source.book} ${source.chapter}:${source.verse}`;
   const heroRef = `${BOOK_LABELS[source.book] || source.book} ${source.chapter}:${source.verse}`;
-  const countLine = loading ? null
-    : refs.length ? `${refs.length} related passage${refs.length === 1 ? "" : "s"}` : "No cross-references";
   const { sheetRef, scrollRef } = useSwipeToDismiss(onClose);
 
   // Body shares the word-study / Reading-intro rail: a .detail-hero block (the
@@ -73,8 +71,8 @@ function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation, onA
       )}
       <section className="sec">
         <h4 className="sec-head">
-          <span className="sec-t">Related passages<span className="lsj-badge">TSK</span></span>
-          {countLine && !loading && <span className="sec-meta">{countLine}</span>}
+          <span className="sec-t">Related passages</span>
+          <span className="lsj-badge">TSK</span>
         </h4>
         {loading ? (
           <div className="lib-loading">Loading…</div>

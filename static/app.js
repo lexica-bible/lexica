@@ -3541,7 +3541,6 @@ function CrossRefPanel({
   const verseText = ref => showAbp ? abpTexts[ref.ref] || ref.kjv_text : ref.kjv_text;
   const sourceRef = `${source.book} ${source.chapter}:${source.verse}`;
   const heroRef = `${BOOK_LABELS[source.book] || source.book} ${source.chapter}:${source.verse}`;
-  const countLine = loading ? null : refs.length ? `${refs.length} related passage${refs.length === 1 ? "" : "s"}` : "No cross-references";
   const {
     sheetRef,
     scrollRef
@@ -3575,11 +3574,9 @@ function CrossRefPanel({
     className: "sec-head"
   }, /*#__PURE__*/React.createElement("span", {
     className: "sec-t"
-  }, "Related passages", /*#__PURE__*/React.createElement("span", {
+  }, "Related passages"), /*#__PURE__*/React.createElement("span", {
     className: "lsj-badge"
-  }, "TSK")), countLine && !loading && /*#__PURE__*/React.createElement("span", {
-    className: "sec-meta"
-  }, countLine)), loading ? /*#__PURE__*/React.createElement("div", {
+  }, "TSK")), loading ? /*#__PURE__*/React.createElement("div", {
     className: "lib-loading"
   }, "Loading\u2026") : refs.length === 0 ? /*#__PURE__*/React.createElement("p", {
     className: "detail-p"

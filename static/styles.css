@@ -1072,7 +1072,6 @@ input { font-family: inherit; }
 .sec:first-of-type { border-top: 0; }
 .sec-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin: 0 0 12px; }
 .sec-t { font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; color: var(--ink-3); display: inline-flex; align-items: center; gap: 7px; }
-.sec-meta { font-size: 11px; color: var(--ink-4); }
 
 .fact { display: flex; flex-direction: column; gap: 1px; }
 .fact-row { display: flex; justify-content: space-between; gap: 12px; padding: 8px 0; border-bottom: 1px solid var(--rule); font-size: 13.5px; }
