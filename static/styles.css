@@ -2588,28 +2588,6 @@ input { font-family: inherit; }
 }
 .mpick-passage:active { background: var(--bg-sunk); }
 .mpick-passage.on { color: var(--accent); font-weight: 700; background: var(--bg-sunk); }
-/* Chronological Eras on mobile: same clean language as desktop — navy backbone spine,
-   de-boxed era headers (no peach pill, no caret), gold sub-rib on the open era's
-   passages. Scoped to .mpick-eras so the book picker's section headers are untouched. */
-.mpick-eras { position: relative; padding-left: 6px; }
-.mpick-eras::before {
-  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
-  background: var(--accent); border-radius: 1px;
-}
-:root[data-theme="dark"] .mpick-eras::before { background: var(--accent-soft); }
-.mpick-eras .mpick-section--era { margin-bottom: 2px; }
-.mpick-era-btn {
-  background: none; border-radius: 0; padding: 9px 8px 9px 10px; margin-bottom: 0;
-  font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
-  color: var(--ink-3);
-}
-.mpick-era-btn.open { margin-bottom: 2px; color: var(--ink); }
-.mpick-era-btn .mpick-sec-count {
-  color: var(--ink-4); background: var(--bg-sunk); font-weight: 600;
-}
-.mpick-era-passages { margin: 0 0 4px 6px; border-left: 2px solid var(--gold); padding: 2px 0 4px 12px; }
-:root[data-theme="dark"] .mpick-era-passages { border-left-color: var(--gold-soft); }
-.mpick-era-passages .mpick-passage.on { background: none; }
 /* non-canonical books: full-width rows with the readable name (not a cramped abbr) */
 .mpick-btn-nc {
   grid-column: 1 / -1;
