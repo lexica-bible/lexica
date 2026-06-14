@@ -2471,13 +2471,14 @@ input { font-family: inherit; }
 
 /* ── metaV sidebar ───────────────────────────────────────────── */
 .lib-word-pn { color: var(--ink); }
-/* Person/Place switch — small inline segmented control that replaces the section
-   label when a word matches both a person AND a place. Sits in the heading row
-   (left, where the title would be), with the metaV source badge on the right. */
-.metav-switch { display: inline-flex; gap: 1px; background: var(--bg-sunk); border-radius: 6px; padding: 1px; }
-.metav-switch-b { font-size: 11px; padding: 2px 9px; border-radius: 5px; color: var(--ink-3); transition: color 0.15s, background 0.15s; }
-.metav-switch-b:hover { color: var(--ink); }
-.metav-switch-b.on { background: var(--ctl-on); color: var(--ink); font-weight: 500; box-shadow: var(--shadow-sm); }
+/* Person/Place switch — the section TITLE itself is the toggle when a word matches
+   both ("BIBLICAL PERSON / PLACE"): the active word is dark, the other is muted but
+   clickable. Inherits the .sec-t heading look. Shown only when there's a choice. */
+.metav-titleswitch { font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; color: var(--ink-3); }
+.metav-ts-b { font: inherit; letter-spacing: inherit; text-transform: inherit; background: none; border: none; padding: 0; color: var(--ink-4); cursor: pointer; transition: color 0.15s; }
+.metav-ts-b:hover { color: var(--ink-2); }
+.metav-ts-b.on { color: var(--ink); }
+.metav-ts-sep { color: var(--ink-4); margin: 0 3px; }
 .metav-meta { display: flex; flex-wrap: wrap; gap: 6px; }
 .metav-tag {
   font-size: 11px;

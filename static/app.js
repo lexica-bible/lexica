@@ -2370,12 +2370,14 @@ function DetailPanel({
         }, /*#__PURE__*/React.createElement("h4", {
           className: "sec-head"
         }, metavHasBoth ? /*#__PURE__*/React.createElement("span", {
-          className: "metav-switch"
-        }, /*#__PURE__*/React.createElement("button", {
-          className: "metav-switch-b" + (metavTab === "person" ? " on" : ""),
+          className: "metav-titleswitch"
+        }, "Biblical", " ", /*#__PURE__*/React.createElement("button", {
+          className: "metav-ts-b" + (metavTab === "person" ? " on" : ""),
           onClick: () => setMetavTab("person")
-        }, "Person"), /*#__PURE__*/React.createElement("button", {
-          className: "metav-switch-b" + (metavTab === "place" ? " on" : ""),
+        }, "Person"), /*#__PURE__*/React.createElement("span", {
+          className: "metav-ts-sep"
+        }, "/"), /*#__PURE__*/React.createElement("button", {
+          className: "metav-ts-b" + (metavTab === "place" ? " on" : ""),
           onClick: () => setMetavTab("place")
         }, "Place")) : /*#__PURE__*/React.createElement("span", {
           className: "sec-t"
@@ -2428,12 +2430,14 @@ function DetailPanel({
         }, /*#__PURE__*/React.createElement("h4", {
           className: "sec-head"
         }, metavHasBoth ? /*#__PURE__*/React.createElement("span", {
-          className: "metav-switch"
-        }, /*#__PURE__*/React.createElement("button", {
-          className: "metav-switch-b" + (metavTab === "person" ? " on" : ""),
+          className: "metav-titleswitch"
+        }, "Biblical", " ", /*#__PURE__*/React.createElement("button", {
+          className: "metav-ts-b" + (metavTab === "person" ? " on" : ""),
           onClick: () => setMetavTab("person")
-        }, "Person"), /*#__PURE__*/React.createElement("button", {
-          className: "metav-switch-b" + (metavTab === "place" ? " on" : ""),
+        }, "Person"), /*#__PURE__*/React.createElement("span", {
+          className: "metav-ts-sep"
+        }, "/"), /*#__PURE__*/React.createElement("button", {
+          className: "metav-ts-b" + (metavTab === "place" ? " on" : ""),
           onClick: () => setMetavTab("place")
         }, "Place")) : /*#__PURE__*/React.createElement("span", {
           className: "sec-t"

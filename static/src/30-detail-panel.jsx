@@ -471,9 +471,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
           <div className="metav-person">
             <h4 className="sec-head">
               {metavHasBoth ? (
-                <span className="metav-switch">
-                  <button className={"metav-switch-b"+(metavTab==="person"?" on":"")} onClick={()=>setMetavTab("person")}>Person</button>
-                  <button className={"metav-switch-b"+(metavTab==="place"?" on":"")} onClick={()=>setMetavTab("place")}>Place</button>
+                <span className="metav-titleswitch">
+                  Biblical{" "}
+                  <button className={"metav-ts-b"+(metavTab==="person"?" on":"")} onClick={()=>setMetavTab("person")}>Person</button>
+                  <span className="metav-ts-sep">/</span>
+                  <button className={"metav-ts-b"+(metavTab==="place"?" on":"")} onClick={()=>setMetavTab("place")}>Place</button>
                 </span>
               ) : <span className="sec-t">{isGentilic ? "People / Clan" : "Biblical Person"}</span>}
               <span className="lsj-badge">metaV</span>
@@ -516,9 +518,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
           <div className="metav-place">
             <h4 className="sec-head">
               {metavHasBoth ? (
-                <span className="metav-switch">
-                  <button className={"metav-switch-b"+(metavTab==="person"?" on":"")} onClick={()=>setMetavTab("person")}>Person</button>
-                  <button className={"metav-switch-b"+(metavTab==="place"?" on":"")} onClick={()=>setMetavTab("place")}>Place</button>
+                <span className="metav-titleswitch">
+                  Biblical{" "}
+                  <button className={"metav-ts-b"+(metavTab==="person"?" on":"")} onClick={()=>setMetavTab("person")}>Person</button>
+                  <span className="metav-ts-sep">/</span>
+                  <button className={"metav-ts-b"+(metavTab==="place"?" on":"")} onClick={()=>setMetavTab("place")}>Place</button>
                 </span>
               ) : <span className="sec-t">{isGentilic ? "Homeland" : "Biblical Place"}</span>}
               <span className="lsj-badge">metaV</span>
