@@ -6649,6 +6649,8 @@ function LibNavPanel({
     }
   }) : /*#__PURE__*/React.createElement("div", {
     className: "nav-scroll nav-plan-scroll"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "nav-eras-inner"
   }, chrono.eras.map(era => {
     const open = openEras.has(era.id);
     const eraPassages = chrono.passages.filter(p => p.era === era.id);
@@ -6680,7 +6682,7 @@ function LibNavPanel({
         }
       }, p.label);
     })));
-  }))) : /*#__PURE__*/React.createElement("div", {
+  })))) : /*#__PURE__*/React.createElement("div", {
     className: "nav-scroll"
   }, nonCanon && nonCanonActive, !nonCanon && groups.map((g, gi) => {
     // Show the OT/NT tag only when the testament changes (once at the top,

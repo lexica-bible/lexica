@@ -334,6 +334,7 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
               onPickPassage={(p) => { onPickPassage(p); if (isOverlay) onClose(); }} />
           ) : (
             <div className="nav-scroll nav-plan-scroll">
+              <div className="nav-eras-inner">
               {chrono.eras.map(era => {
           const open = openEras.has(era.id);
           const eraPassages = chrono.passages.filter(p => p.era === era.id);
@@ -360,6 +361,7 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
             </div>
           );
               })}
+              </div>
             </div>
           )}
         </div>
