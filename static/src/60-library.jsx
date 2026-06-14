@@ -2838,7 +2838,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
         <>
           <div className="lib-search-scrim" onClick={() => setSearchOpen(false)} />
           <div className="lib-search-panel">
-            <form className="lib-search-row" onSubmit={(e) => { e.preventDefault(); runTextSearch(); }}>
+            <form className="lib-search-row" onSubmit={(e) => { e.preventDefault(); runTextSearch(); document.activeElement?.blur?.(); }}>
               <input
                 className="lib-search-input"
                 type="text"
@@ -2881,7 +2881,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
                 )}
                 <label className="lib-search-check"><input type="checkbox" checked={!searchPartial} onChange={(e) => setSearchPartial(!e.target.checked)} /> Whole words only</label>
                 <label className="lib-search-check"><input type="checkbox" checked={searchCase} onChange={(e) => setSearchCase(e.target.checked)} /> Case-sensitive</label>
-                <form style={{ display: "contents" }} onSubmit={(e) => { e.preventDefault(); runTextSearch(); }}>
+                <form style={{ display: "contents" }} onSubmit={(e) => { e.preventDefault(); runTextSearch(); document.activeElement?.blur?.(); }}>
                   <input
                     className="lib-search-input lib-search-excl-input"
                     type="text"

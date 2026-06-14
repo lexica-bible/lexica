@@ -128,9 +128,9 @@ book range (preset groups + from/to), any/all/phrase (default Any), whole-word/c
 re-run on setting change, and an in-memory result cache. **Find-bar polish + mobile Enter fix DONE
 2026-06-13** — on mobile it's now a full-width bar that drops flush under the top tab bar (not a
 floating popup; kept top-anchored on purpose, since a bottom sheet would sit under the phone keyboard),
-both desktop/mobile slide in, and the mobile keyboard's Search/Go key now actually runs the search
-(the box + the Exclude box are each in a tiny `<form>`, so the soft-keyboard action key submits —
-a plain Enter handler was unreliable on phones). Full record: memory `project-esword-reference`.
+both desktop/mobile slide in, and the on-screen keyboard now DROPS after the search runs (the box +
+the Exclude box are each in a tiny `<form>`; the submit handler blurs the input so the soft keyboard
+retracts instead of sitting over the results). Full record: memory `project-esword-reference`.
 Open:
 - Optional, only if first-search latency ever bugs you: a real full-text index (FTS5) for speed —
   but it changes the "match inside a word" behavior (default substring he likes) and needs a one-time

@@ -9849,6 +9849,7 @@ function LibraryView({
     onSubmit: e => {
       e.preventDefault();
       runTextSearch();
+      document.activeElement?.blur?.();
     }
   }, /*#__PURE__*/React.createElement("input", {
     className: "lib-search-input",
@@ -9936,6 +9937,7 @@ function LibraryView({
     onSubmit: e => {
       e.preventDefault();
       runTextSearch();
+      document.activeElement?.blur?.();
     }
   }, /*#__PURE__*/React.createElement("input", {
     className: "lib-search-input lib-search-excl-input",

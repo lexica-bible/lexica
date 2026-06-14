@@ -360,8 +360,9 @@ scripts/          # build-frontend.js + one-time import/migration scripts
   floating card; desktop stays a centered 640px card. Both slide in (`@keyframes lib-search-drop` /
   `-drop-m`). The search box + the Exclude box are each wrapped in a `<form onSubmit>` (Go = submit, X =
   type=button; exclude form is `display:contents` so it doesn't disturb the options layout) so the
-  MOBILE keyboard's Search/Go key actually runs the search — a plain keydown-Enter handler was
-  unreliable on phones. `enterKeyHint="search"` labels that key.**
+  MOBILE keyboard's Search/Go key submits, AND the submit handler calls `document.activeElement.blur()`
+  so the on-screen keyboard DROPS after the search runs (else it stays up over the results).
+  `enterKeyHint="search"` labels that key.**
 - **Left-nav book list is an ACCORDION (2026-06-13).** Click a book to open its chapter grid (and
   switch to it); click the open book to collapse it. Starts collapsed — the current chapter shows
   beside the active book name (`.nav-book-ch`). `navOpenBook` in `LibNavPanel`; on the mobile overlay
