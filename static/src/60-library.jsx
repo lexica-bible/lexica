@@ -501,26 +501,29 @@ function MobileBookPicker({ books, selBook, selChapter, nonCanon, nonCanonList, 
             <DayPlanView chrono={chrono} curText={plan.curText} texts={plan.texts} progAll={plan.progAll}
               chronoPos={chronoPos}
               onPickText={plan.onPickText} onToggleDone={plan.onToggleDone} onPickPassage={onPickPassage} />
-          ) : chrono.eras.map(era => {
-            const open = openEras.has(era.id);
-            const eraPassages = chrono.passages.filter(p => p.era === era.id);
-            return (
-              <div key={era.id} className="mpick-section">
-                <button className={"mpick-sec-label mpick-sec-btn" + (open ? " open" : "")} onClick={() => toggleEra(era.id)} aria-expanded={open}>
-                  <span className="mpick-sec-caret">▸</span>
-                  <span className="mpick-sec-name">{era.name}</span>
-                  <span className="mpick-sec-count">{eraPassages.length}</span>
-                </button>
-                {open && (
-                  <div className="mpick-passages">
-                    {eraPassages.map(p => (
-                      <button key={p.pos} className={"mpick-passage" + (p.pos === chronoPos ? " on" : "")} onClick={() => onPickPassage(p)}>{p.label}</button>
-                    ))}
+          ) : (
+            <div className="mpick-eras">
+              {chrono.eras.map(era => {
+                const open = openEras.has(era.id);
+                const eraPassages = chrono.passages.filter(p => p.era === era.id);
+                return (
+                  <div key={era.id} className="mpick-section mpick-section--era">
+                    <button className={"mpick-sec-btn mpick-era-btn" + (open ? " open" : "")} onClick={() => toggleEra(era.id)} aria-expanded={open}>
+                      <span className="mpick-sec-name">{era.name}</span>
+                      <span className="mpick-sec-count">{eraPassages.length}</span>
+                    </button>
+                    {open && (
+                      <div className="mpick-passages mpick-era-passages">
+                        {eraPassages.map(p => (
+                          <button key={p.pos} className={"mpick-passage" + (p.pos === chronoPos ? " on" : "")} onClick={() => onPickPassage(p)}>{p.label}</button>
+                        ))}
+                      </div>
+                    )}
                   </div>
-                )}
-              </div>
-            );
-          })
+                );
+              })}
+            </div>
+          )
         ) : onChapter ? (
           <div className="mpick-grid">
             {Array.from({ length: pickedBook.chapters }, (_, i) => i + 1).map(n => {

@@ -6858,30 +6858,30 @@ function MobileBookPicker({
     onPickText: plan.onPickText,
     onToggleDone: plan.onToggleDone,
     onPickPassage: onPickPassage
-  }) : chrono.eras.map(era => {
+  }) : /*#__PURE__*/React.createElement("div", {
+    className: "mpick-eras"
+  }, chrono.eras.map(era => {
     const open = openEras.has(era.id);
     const eraPassages = chrono.passages.filter(p => p.era === era.id);
     return /*#__PURE__*/React.createElement("div", {
       key: era.id,
-      className: "mpick-section"
+      className: "mpick-section mpick-section--era"
     }, /*#__PURE__*/React.createElement("button", {
-      className: "mpick-sec-label mpick-sec-btn" + (open ? " open" : ""),
+      className: "mpick-sec-btn mpick-era-btn" + (open ? " open" : ""),
       onClick: () => toggleEra(era.id),
       "aria-expanded": open
     }, /*#__PURE__*/React.createElement("span", {
-      className: "mpick-sec-caret"
-    }, "\u25B8"), /*#__PURE__*/React.createElement("span", {
       className: "mpick-sec-name"
     }, era.name), /*#__PURE__*/React.createElement("span", {
       className: "mpick-sec-count"
     }, eraPassages.length)), open && /*#__PURE__*/React.createElement("div", {
-      className: "mpick-passages"
+      className: "mpick-passages mpick-era-passages"
     }, eraPassages.map(p => /*#__PURE__*/React.createElement("button", {
       key: p.pos,
       className: "mpick-passage" + (p.pos === chronoPos ? " on" : ""),
       onClick: () => onPickPassage(p)
     }, p.label))));
-  }) : onChapter ? /*#__PURE__*/React.createElement("div", {
+  })) : onChapter ? /*#__PURE__*/React.createElement("div", {
     className: "mpick-grid"
   }, Array.from({
     length: pickedBook.chapters
