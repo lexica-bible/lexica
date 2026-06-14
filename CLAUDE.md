@@ -113,7 +113,7 @@ Pick effort by task TYPE. When in doubt, lean higher — the plan affords it.
 - **GitHub Actions** (`.github/workflows/ci.yml`) — runs on every push/PR: (1) the invariant tests
   (`tests/test_strongs_join.py` + `test_build_invariants.py`; they build their own in-memory data, no
   bible.db needed), (2) rebuilds `app.js` and FAILS if the committed copy is stale. Repo is public; check
-  the Actions tab or query `api.github.com/repos/jonathan-pernice/lexica/actions/runs`. `gh` CLI NOT installed locally.
+  the Actions tab or query `api.github.com/repos/lexica-bible/lexica/actions/runs`. `gh` CLI NOT installed locally.
 - **Pre-commit hook** (`scripts/githooks/pre-commit`, wired via `git config core.hooksPath scripts/githooks`)
   — local twin of CI: rebuilds+stages app.js if a `static/src/*.jsx` is staged, then runs the tests and
   blocks the commit on failure. LOCAL DEV MACHINE ONLY — on PA it was unset (`git config --unset
@@ -146,7 +146,7 @@ Pick effort by task TYPE. When in doubt, lean higher — the plan affords it.
 - Frontend: React 18 (production UMD), JSX in static/src/*.jsx precompiled via Babel to
   static/app.js (build step — see "Frontend build step" above), HTML/CSS
 - Deployed: PythonAnywhere ($10 Dev tier)
-- Version control: GitHub (repo: jonathan-pernice/lexica)
+- Version control: GitHub (repo: lexica-bible/lexica)
 
 ## Project Structure
 
