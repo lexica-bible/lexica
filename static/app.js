@@ -7768,6 +7768,23 @@ function LibraryView({
     return s && Array.isArray(s.compareSel) && s.compareSel.length >= 2 ? s.compareSel : ["abp", "kjv"];
   });
   const [compareOpen, setCompareOpen] = useState(false);
+  // Close the Compare popout on any click outside it (or Esc) — same as the More menu.
+  const compareWrapRef = useRef(null);
+  useEffect(() => {
+    if (!compareOpen) return;
+    const onDown = e => {
+      if (compareWrapRef.current && !compareWrapRef.current.contains(e.target)) setCompareOpen(false);
+    };
+    const onKey = e => {
+      if (e.key === "Escape") setCompareOpen(false);
+    };
+    document.addEventListener("pointerdown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [compareOpen]);
   const [corpus, setCorpus] = useState(() => {
     // "bible" | a non-canonical id (e.g. "didache")
     const s = readLibSaved();
@@ -10264,7 +10281,8 @@ function LibraryView({
     } : undefined,
     onClick: () => !proseLocked && setOpt("showInterlinear", !showInterlinear)
   }, /*#__PURE__*/React.createElement(Icon.Interlinear, null)), !nonCanon && /*#__PURE__*/React.createElement("div", {
-    className: "lib-other-wrap"
+    className: "lib-other-wrap",
+    ref: compareWrapRef
   }, /*#__PURE__*/React.createElement("button", {
     className: "lib-toggle lib-toggle-icon" + (translation === "parallel" ? " on" : ""),
     title: "Compare translations",
@@ -10273,9 +10291,6 @@ function LibraryView({
     "aria-expanded": compareOpen,
     onClick: () => setCompareOpen(o => !o)
   }, /*#__PURE__*/React.createElement(Icon.Columns, null)), compareOpen && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
-    className: "lib-other-scrim",
-    onClick: () => setCompareOpen(false)
-  }), /*#__PURE__*/React.createElement("div", {
     className: "lib-other-menu lib-compare-menu"
   }, /*#__PURE__*/React.createElement("div", {
     className: "lib-compare-title"

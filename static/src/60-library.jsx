@@ -903,6 +903,16 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
     return s && Array.isArray(s.compareSel) && s.compareSel.length >= 2 ? s.compareSel : ["abp", "kjv"];
   });
   const [compareOpen, setCompareOpen] = useState(false);
+  // Close the Compare popout on any click outside it (or Esc) — same as the More menu.
+  const compareWrapRef = useRef(null);
+  useEffect(() => {
+    if (!compareOpen) return;
+    const onDown = (e) => { if (compareWrapRef.current && !compareWrapRef.current.contains(e.target)) setCompareOpen(false); };
+    const onKey = (e) => { if (e.key === "Escape") setCompareOpen(false); };
+    document.addEventListener("pointerdown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => { document.removeEventListener("pointerdown", onDown); document.removeEventListener("keydown", onKey); };
+  }, [compareOpen]);
   const [corpus, setCorpus] = useState(() => {            // "bible" | a non-canonical id (e.g. "didache")
     const s = readLibSaved();
     return s && s.corpus && s.corpus !== "bible" && NONCANON.some(x => x.id === s.corpus) ? s.corpus : "bible";
@@ -2803,11 +2813,10 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
             <button className={"lib-toggle lib-toggle-icon" + (showStrongs ? " on" : "")} disabled={proseLocked} title="Strong's numbers" aria-label="Strong's numbers" aria-pressed={showStrongs} style={proseLocked ? { opacity: 0.35, cursor: "default" } : undefined} onClick={() => !proseLocked && setOpt("showStrongs", !showStrongs)}><Icon.Hash/></button>
             <button className={"lib-toggle lib-toggle-icon" + (showInterlinear ? " on" : "")} disabled={proseLocked} title="Interlinear" aria-label="Interlinear" aria-pressed={showInterlinear} style={proseLocked ? { opacity: 0.35, cursor: "default" } : undefined} onClick={() => !proseLocked && setOpt("showInterlinear", !showInterlinear)}><Icon.Interlinear/></button>
             {!nonCanon && (
-              <div className="lib-other-wrap">
+              <div className="lib-other-wrap" ref={compareWrapRef}>
                 <button className={"lib-toggle lib-toggle-icon" + (translation === "parallel" ? " on" : "")} title="Compare translations" aria-label="Compare translations" aria-pressed={translation === "parallel"} aria-expanded={compareOpen} onClick={() => setCompareOpen(o => !o)}><Icon.Columns/></button>
                 {compareOpen && (
                   <>
-                    <div className="lib-other-scrim" onClick={() => setCompareOpen(false)} />
                     <div className="lib-other-menu lib-compare-menu">
                       <div className="lib-compare-title">Compare (pick 2–4)</div>
                       {compareAvail.map(id => (
