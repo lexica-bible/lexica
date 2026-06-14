@@ -90,6 +90,7 @@ const api = {
   },
   books: () => fetch("/api/books").then(r => r.json()),
   chronological: () => fetch("/static/chronological.json").then(r => r.json()),
+  chronoIntro: day => fetch(`/api/chrono/intro/${day}`).then(r => r.json()),
   chapter: (book, ch) => fetch(`/api/chapter/${encodeURIComponent(book)}/${ch}`).then(r => r.json()),
   extraChapter: (book, ch) => fetch(`/api/extra/${encodeURIComponent(book)}/chapter/${ch}`).then(r => r.json()),
   extraStrongsCount: (book, strongs) => fetch(`/api/extra/${encodeURIComponent(book)}/strongs-count/${encodeURIComponent(strongs)}`).then(r => r.json()),
@@ -5632,6 +5633,419 @@ function DayPlanView({
 }
 
 // ============================================================
+// DAY INTRO PANEL — the ESV-style "Reading" card for the chronological plan.
+//
+// Shows for whatever chronological day you're reading: the reading number, an
+// AI-written title + Berean summary, the era's dated timeline with your spot marked,
+// and the day's passages. Lives in the right detail panel (desktop) / a bottom sheet
+// (mobile), the same shell the chapter overview uses.
+//
+// Dates: each ERA carries a span + a few dated milestones (curated below; LXX dates
+// for the early eras). A reading's own date is APPROXIMATE — derived from its position
+// in the era's day list and shown as a clearly-marked "c." — so the marker slides
+// correctly without inventing a precise year for all 365 readings.
+// ============================================================
+
+// era id -> { start, end, marks:[{label, year}] }. Year: negative = BC, positive = AD.
+const ERA_TIMELINE = {
+  "primeval-history": {
+    start: -5500,
+    end: -2100,
+    marks: [{
+      label: "Creation",
+      year: -5500
+    }, {
+      label: "The Flood",
+      year: -3300
+    }, {
+      label: "Tower of Babel",
+      year: -3000
+    }]
+  },
+  "the-patriarchs": {
+    start: -2166,
+    end: -1805,
+    marks: [{
+      label: "Abraham's call",
+      year: -2091
+    }, {
+      label: "Isaac & Jacob",
+      year: -2006
+    }, {
+      label: "Joseph in Egypt",
+      year: -1876
+    }]
+  },
+  "the-exodus-wilderness": {
+    start: -1446,
+    end: -1406,
+    marks: [{
+      label: "The Exodus",
+      year: -1446
+    }, {
+      label: "Law at Sinai",
+      year: -1445
+    }, {
+      label: "Wilderness",
+      year: -1420
+    }]
+  },
+  "the-conquest": {
+    start: -1406,
+    end: -1380,
+    marks: [{
+      label: "Jordan crossed",
+      year: -1406
+    }, {
+      label: "Jericho falls",
+      year: -1406
+    }, {
+      label: "Land divided",
+      year: -1399
+    }]
+  },
+  "the-judges": {
+    start: -1380,
+    end: -1050,
+    marks: [{
+      label: "Deborah",
+      year: -1209
+    }, {
+      label: "Gideon",
+      year: -1162
+    }, {
+      label: "Samson",
+      year: -1075
+    }]
+  },
+  "the-united-kingdom": {
+    start: -1100,
+    end: -970,
+    marks: [{
+      label: "Samuel's ministry",
+      year: -1060
+    }, {
+      label: "Saul anointed",
+      year: -1050
+    }, {
+      label: "David is king",
+      year: -1010
+    }]
+  },
+  "the-reign-of-solomon": {
+    start: -970,
+    end: -931,
+    marks: [{
+      label: "Solomon's reign",
+      year: -969
+    }, {
+      label: "Temple built",
+      year: -966
+    }, {
+      label: "Solomon dies",
+      year: -931
+    }]
+  },
+  "the-divided-kingdom": {
+    start: -931,
+    end: -609,
+    marks: [{
+      label: "Kingdom divides",
+      year: -931
+    }, {
+      label: "Israel falls",
+      year: -722
+    }, {
+      label: "Josiah's reforms",
+      year: -622
+    }]
+  },
+  "judah-s-fall-the-exile": {
+    start: -609,
+    end: -538,
+    marks: [{
+      label: "Babylon rises",
+      year: -605
+    }, {
+      label: "Jerusalem falls",
+      year: -586
+    }, {
+      label: "Exiles freed",
+      year: -538
+    }]
+  },
+  "the-return": {
+    start: -538,
+    end: -430,
+    marks: [{
+      label: "Cyrus's decree",
+      year: -538
+    }, {
+      label: "Temple rebuilt",
+      year: -516
+    }, {
+      label: "Ezra & Nehemiah",
+      year: -445
+    }]
+  },
+  "the-gospels": {
+    start: -5,
+    end: 33,
+    marks: [{
+      label: "Jesus born",
+      year: -5
+    }, {
+      label: "Public ministry",
+      year: 27
+    }, {
+      label: "Death & rising",
+      year: 30
+    }]
+  },
+  "the-early-church": {
+    start: 30,
+    end: 68,
+    marks: [{
+      label: "Pentecost",
+      year: 30
+    }, {
+      label: "Paul's missions",
+      year: 47
+    }, {
+      label: "Paul in Rome",
+      year: 60
+    }]
+  },
+  "revelation": {
+    start: 90,
+    end: 96,
+    marks: [{
+      label: "John's vision",
+      year: 95
+    }]
+  }
+};
+
+// "1060 BC" / "AD 30". Years are whole; there is no year 0 in the data.
+function fmtYear(y) {
+  y = Math.round(y);
+  return y < 0 ? -y + " BC" : "AD " + y;
+}
+
+// A reading's approximate date window: interpolate its slot within its era's day list
+// across the era's span. Sparse eras (few days over a long span) give a wide window;
+// dense ones (the monarchy) give a near-point. Returns null if the era has no timeline.
+function readingWindow(day, chrono) {
+  const et = day && ERA_TIMELINE[day.era];
+  if (!et || !chrono || !chrono.days) return null;
+  const eraDays = chrono.days.filter(d => d.era === day.era);
+  const idx = Math.max(0, eraDays.findIndex(d => d.day === day.day));
+  const n = eraDays.length || 1;
+  const span = et.end - et.start;
+  const y0 = et.start + idx / n * span;
+  const y1 = et.start + (idx + 1) / n * span;
+  return {
+    et,
+    y0,
+    y1
+  };
+}
+
+// "c. 968 BC" for a point, "c. 968–948 BC" / "c. AD 30–47" for a span.
+function fmtReadingDate(y0, y1) {
+  const a = Math.round(y0),
+    b = Math.round(y1);
+  if (b - a < 15) return "c. " + fmtYear((a + b) / 2);
+  if (a < 0 && b < 0) return "c. " + -a + "–" + -b + " BC";
+  if (a >= 0 && b >= 0) return "c. AD " + a + "–" + b;
+  return "c. " + fmtYear(a) + " – " + fmtYear(b);
+}
+
+// The dated strip: axis between the era's start/end, milestone dots with year labels,
+// and an oval marking where this reading falls.
+function TimelineStrip({
+  win
+}) {
+  if (!win) return null;
+  const {
+    et,
+    y0,
+    y1
+  } = win;
+  const W = 320,
+    padL = 16,
+    padR = 16,
+    base = 30,
+    innerW = W - padL - padR;
+  const span = et.end - et.start || 1;
+  const xOf = yr => padL + (yr - et.start) / span * innerW;
+  const mx0 = Math.max(padL, xOf(y0)),
+    mx1 = Math.min(W - padR, xOf(y1));
+  const ovalX = Math.min(mx0, mx1) - 5,
+    ovalW = Math.max(10, Math.abs(mx1 - mx0) + 10);
+  return /*#__PURE__*/React.createElement("div", {
+    className: "dintro-tl"
+  }, /*#__PURE__*/React.createElement("svg", {
+    viewBox: `0 0 ${W} 40`,
+    className: "dintro-tl-svg",
+    preserveAspectRatio: "xMidYMid meet",
+    role: "img",
+    "aria-label": "Timeline"
+  }, /*#__PURE__*/React.createElement("line", {
+    x1: padL,
+    y1: base,
+    x2: W - padR,
+    y2: base,
+    className: "dintro-tl-axis"
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: ovalX,
+    y: base - 7,
+    width: ovalW,
+    height: 14,
+    rx: 7,
+    className: "dintro-tl-now"
+  }), et.marks.map((m, i) => /*#__PURE__*/React.createElement("circle", {
+    key: i,
+    cx: xOf(m.year),
+    cy: base,
+    r: 2.6,
+    className: "dintro-tl-dot"
+  })), /*#__PURE__*/React.createElement("text", {
+    x: padL,
+    y: 13,
+    className: "dintro-tl-yr",
+    textAnchor: "start"
+  }, fmtYear(et.start)), /*#__PURE__*/React.createElement("text", {
+    x: W - padR,
+    y: 13,
+    className: "dintro-tl-yr",
+    textAnchor: "end"
+  }, fmtYear(et.end))), /*#__PURE__*/React.createElement("div", {
+    className: "dintro-tl-legend"
+  }, et.marks.map((m, i) => /*#__PURE__*/React.createElement("span", {
+    key: i,
+    className: "dintro-tl-ev"
+  }, /*#__PURE__*/React.createElement("b", null, fmtYear(m.year)), " ", m.label))));
+}
+function DayIntroPanel({
+  day,
+  chrono,
+  isMobile,
+  onClose,
+  onPickPassage
+}) {
+  const dayNo = day ? day.day : null;
+  const [data, setData] = useState(() => dayNo != null && DayIntroPanel._cache[dayNo] || null);
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    if (dayNo == null) return;
+    const cached = DayIntroPanel._cache[dayNo];
+    if (cached) {
+      setData(cached);
+      setLoading(false);
+      return;
+    }
+    let cancelled = false;
+    setLoading(true);
+    setData(null);
+    api.chronoIntro(dayNo).then(d => {
+      if (!cancelled) {
+        DayIntroPanel._cache[dayNo] = d || {};
+        setData(d || {});
+        setLoading(false);
+      }
+    }).catch(() => {
+      if (!cancelled) {
+        setData({});
+        setLoading(false);
+      }
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [dayNo]);
+  const {
+    sheetRef,
+    scrollRef
+  } = useSwipeToDismiss(onClose);
+  const era = chrono && chrono.eras && day ? chrono.eras.find(e => e.id === day.era) : null;
+  const win = day ? readingWindow(day, chrono) : null;
+  const passages = day && chrono && chrono.passages ? day.pos.map(q => chrono.passages[q - 1]).filter(Boolean) : [];
+  const title = data && data.title || (era ? era.name : "Today's reading");
+  const dateLine = win ? fmtReadingDate(win.y0, win.y1) : null;
+  const content = /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "dintro-head-block"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "dintro-reading"
+  }, "Reading ", dayNo, dateLine ? " · " + dateLine : ""), /*#__PURE__*/React.createElement("div", {
+    className: "dintro-title"
+  }, title), era && /*#__PURE__*/React.createElement("div", {
+    className: "dintro-era"
+  }, era.name)), win && /*#__PURE__*/React.createElement(TimelineStrip, {
+    win: win
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "dintro-summary"
+  }, loading ? /*#__PURE__*/React.createElement("div", {
+    className: "summary-loading"
+  }, "Writing today's intro\u2026") : data && data.summary ? /*#__PURE__*/React.createElement("p", {
+    className: "detail-p"
+  }, renderInlineMd(data.summary)) : /*#__PURE__*/React.createElement("div", {
+    className: "summary-loading"
+  }, "No intro available for this reading.")), passages.length > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "dintro-passages"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "detail-h"
+  }, "Today's passages"), passages.map(p => /*#__PURE__*/React.createElement("button", {
+    key: p.pos,
+    className: "dintro-passage",
+    onClick: () => onPickPassage && onPickPassage(p)
+  }, p.label))));
+  if (isMobile) {
+    return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+      className: "sheet-scrim",
+      onClick: onClose
+    }), /*#__PURE__*/React.createElement("aside", {
+      ref: sheetRef,
+      className: "detail detail-sheet summary-sheet dintro-sheet",
+      role: "dialog",
+      "aria-label": "Reading intro"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "sheet-drag-zone",
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "sheet-handle"
+    })), /*#__PURE__*/React.createElement("div", {
+      className: "detail-head"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "detail-head-l"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "detail-pos summary-pos"
+    }, "Reading intro")), /*#__PURE__*/React.createElement("button", {
+      className: "detail-close",
+      onClick: onClose,
+      "aria-label": "Close"
+    }, /*#__PURE__*/React.createElement(Icon.Close, null))), /*#__PURE__*/React.createElement("div", {
+      className: "detail-body",
+      ref: scrollRef
+    }, content)));
+  }
+  return /*#__PURE__*/React.createElement("aside", {
+    className: "detail detail-side summary-side dintro-side",
+    role: "complementary",
+    "aria-label": "Reading intro"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "detail-head"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "detail-head-l"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "detail-pos summary-pos"
+  }, "Reading intro"))), /*#__PURE__*/React.createElement("div", {
+    className: "detail-body"
+  }, content));
+}
+DayIntroPanel._cache = {};
+
+// ============================================================
 // LIBRARY HELPERS
 // ============================================================
 
@@ -8291,6 +8705,9 @@ function LibraryView({
   const sumBook = nonCanon ? nonCanon.id : chronoOn && curPassage ? curPassage.book : selBook && selBook.abbrev;
   const sumChapter = chronoOn && curPassage ? viewCh || curPassage.start_ch : selChapter;
   const sumLabel = nonCanon ? nonCanon.name : BOOK_LABELS[sumBook] || sumBook;
+  // The chronological reading "day" you're in — drives the Reading-intro panel. In
+  // chrono the right panel shows that day's intro instead of the per-chapter overview.
+  const currentDay = chronoOn && chrono && chrono.days ? chrono.days.find(d => d.pos && d.pos.includes(chronoPos)) : null;
 
   // Turn one page: chronological steps a passage, everything else steps a chapter.
   // Shared by the mobile swipe and the desktop arrow keys (focus mode).
@@ -9846,7 +10263,7 @@ function LibraryView({
   }, /*#__PURE__*/React.createElement("button", {
     className: "mbar-overview",
     onClick: () => setSummaryOpen(true),
-    "aria-label": "Chapter overview"
+    "aria-label": chronoOn ? "Reading intro" : "Chapter overview"
   }, /*#__PURE__*/React.createElement(Icon.Info, null)), /*#__PURE__*/React.createElement("button", {
     className: "mbar-overview mbar-search",
     disabled: !canSearch,
@@ -10252,17 +10669,30 @@ function LibraryView({
     onCopy: vmCopy,
     onJournal: vmJournal,
     onClose: () => setVerseMenu(null)
-  }), showSummary && (selBook || nonCanon) && /*#__PURE__*/React.createElement(SummaryPanel, {
+  }), showSummary && chronoOn && currentDay ? /*#__PURE__*/React.createElement(DayIntroPanel, {
+    day: currentDay,
+    chrono: chrono,
+    onPickPassage: pickPassage
+  }) : showSummary && (selBook || nonCanon) ? /*#__PURE__*/React.createElement(SummaryPanel, {
     book: sumBook,
     chapter: sumChapter,
     bookLabel: sumLabel
-  }), isMobile && summaryOpen && (selBook || nonCanon) && /*#__PURE__*/React.createElement(SummaryPanel, {
+  }) : null, isMobile && summaryOpen && chronoOn && currentDay ? /*#__PURE__*/React.createElement(DayIntroPanel, {
+    isMobile: true,
+    day: currentDay,
+    chrono: chrono,
+    onClose: () => setSummaryOpen(false),
+    onPickPassage: p => {
+      pickPassage(p);
+      setSummaryOpen(false);
+    }
+  }) : isMobile && summaryOpen && (selBook || nonCanon) ? /*#__PURE__*/React.createElement(SummaryPanel, {
     isMobile: true,
     onClose: () => setSummaryOpen(false),
     book: sumBook,
     chapter: sumChapter,
     bookLabel: sumLabel
-  }));
+  }) : null);
 }
 
 // ============================================================

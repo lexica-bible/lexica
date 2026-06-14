@@ -1670,6 +1670,10 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
   const sumBook = nonCanon ? nonCanon.id : (chronoOn && curPassage ? curPassage.book : (selBook && selBook.abbrev));
   const sumChapter = (chronoOn && curPassage) ? (viewCh || curPassage.start_ch) : selChapter;
   const sumLabel = nonCanon ? nonCanon.name : (BOOK_LABELS[sumBook] || sumBook);
+  // The chronological reading "day" you're in — drives the Reading-intro panel. In
+  // chrono the right panel shows that day's intro instead of the per-chapter overview.
+  const currentDay = (chronoOn && chrono && chrono.days)
+    ? chrono.days.find(d => d.pos && d.pos.includes(chronoPos)) : null;
 
   // Turn one page: chronological steps a passage, everything else steps a chapter.
   // Shared by the mobile swipe and the desktop arrow keys (focus mode).
@@ -2839,7 +2843,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
         </div>
       ) : (
         <div className="lib-toolbar">
-          <button className="mbar-overview" onClick={() => setSummaryOpen(true)} aria-label="Chapter overview">
+          <button className="mbar-overview" onClick={() => setSummaryOpen(true)} aria-label={chronoOn ? "Reading intro" : "Chapter overview"}>
             <Icon.Info/>
           </button>
           <button className="mbar-overview mbar-search" disabled={!canSearch} style={!canSearch ? { opacity: 0.35 } : undefined} onClick={() => { if (canSearch) setSearchOpen(o => !o); }} aria-label="Search this text">
@@ -3155,14 +3159,23 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
       {noteSel && <NoteAddPopover rect={noteSel.rect} isMobile={isMobile} onAdd={addNoteFromSelection} onColor={addHighlightFromSelection} onCopy={copySelection} onJournal={journalFromSelection} />}
       {flashMsg && <div className="lib-flash">{flashMsg}</div>}
       {verseMenu && <VerseNoteMenu rect={verseMenu.rect} isMobile={isMobile} onColor={vmColor} onNote={vmNote} onBookmark={vmBookmark} onCopy={vmCopy} onJournal={vmJournal} onClose={() => setVerseMenu(null)} />}
-      {showSummary && (selBook || nonCanon) && (
+      {/* Desktop right panel: in chronological it rests on the day's Reading intro;
+          otherwise the per-chapter overview. */}
+      {showSummary && chronoOn && currentDay ? (
+        <DayIntroPanel day={currentDay} chrono={chrono} onPickPassage={pickPassage} />
+      ) : showSummary && (selBook || nonCanon) ? (
         <SummaryPanel
           book={sumBook}
           chapter={sumChapter}
           bookLabel={sumLabel}
         />
-      )}
-      {isMobile && summaryOpen && (selBook || nonCanon) && (
+      ) : null}
+      {/* Mobile overview sheet (ⓘ): chrono shows the Reading intro, else the chapter overview. */}
+      {isMobile && summaryOpen && chronoOn && currentDay ? (
+        <DayIntroPanel isMobile day={currentDay} chrono={chrono}
+          onClose={() => setSummaryOpen(false)}
+          onPickPassage={(p) => { pickPassage(p); setSummaryOpen(false); }} />
+      ) : isMobile && summaryOpen && (selBook || nonCanon) ? (
         <SummaryPanel
           isMobile
           onClose={() => setSummaryOpen(false)}
@@ -3170,7 +3183,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
           chapter={sumChapter}
           bookLabel={sumLabel}
         />
-      )}
+      ) : null}
     </div>
   );
 }
