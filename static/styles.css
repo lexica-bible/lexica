@@ -2880,7 +2880,7 @@ button.plan-day-mark:hover { background: var(--accent-soft); }
 }
 .plan-passage:hover { color: var(--ink); }
 /* The passage you're currently reading, marked with a bullet + accent. */
-.plan-passage.on { color: var(--ink); font-weight: 600; background: color-mix(in srgb, var(--accent) 10%, transparent); }
+.plan-passage.on { color: var(--ink); font-weight: 600; }
 
 /* ---- Day intro panel (chronological "Reading" card) ----
    Shares the detail-rail language: a .detail-hero block + .sec/.sec-head sections,
