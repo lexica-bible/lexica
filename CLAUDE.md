@@ -354,8 +354,13 @@ scripts/          # build-frontend.js + one-time import/migration scripts
   `views_chrono.py` (`GET /api/chrono/intro/<day>`, Haiku, one call for title+summary, cached in
   ai_search_cache); frontend `static/src/59-dayintro.jsx` (`DayIntroPanel` + `TimelineStrip` +
   `ERA_TIMELINE` constant). Era dates use LXX chronology for the early eras; per-reading dates are
-  interpolated within the era and shown "c." (approximate). PENDING: match the panel's look to the
-  other detail-rail panels (word-study/xref) — see memory `project_chronological_tab` "OPEN".
+  interpolated within the era and shown "c." (approximate). RESTYLED 2026-06-13 to match the detail
+  rail (word-study/xref): header = navy "Reading N" badge + era + a `.detail-back` "‹ Overview"
+  toggle (SummaryPanel's "‹ Intro" moved to the same slot); body = `.detail-hero` + `.sec`/`.sec-head`
+  sections. The era TIMELINE is a thin track with a navy "you-are-here" bar whose dots are carved out
+  by a paper ring (so the bar can't swallow a checkpoint) + a lined-up dot·year·label list. NO brown
+  anywhere — marker/hovers use `--accent`, not `--gold` (see memory `feedback_no_brown`). Full record:
+  memory `project_chronological_tab`.
 - **Wheel over fixed chrome doesn't scroll the reading pane (2026-06-13).** The reading pane rides
   the window scroll; a scoped non-passive wheel handler in 90-app.jsx blocks the page scroll when
   the pointer is over `.hdr / .lib-bar / .lib-toolbar / .nav / .detail-side`, after first letting an

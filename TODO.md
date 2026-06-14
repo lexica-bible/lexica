@@ -365,13 +365,22 @@ current verse (`passageForRef`); the toolbar ‹ › carry the audio on a page t
 `turnPage`); single-chapter passages no longer play the WRONG chapter's audio (viewCh pinned to
 `start_ch` when there are no chapter marks); thin scrollbar on the Days list. Full record: memory
 `project_chronological_tab`.
-- **OPEN follow-up (next session, user flagged):** the Reading-intro panel doesn't match the other
-  detail-rail panels. (1) the "return to overview" control must use the shared `.detail-back`
-  "‹ Overview" HEADER link the word-study/xref panels use (`overviewBack` pattern), NOT the custom
-  bottom `.dintro-overview-link` added this session. (2) Align the whole panel's header / eyebrow /
-  type scale / spacing with the word-study (30-detail-panel.jsx) + xref (40-crossref-panel.jsx)
-  panels so the right rail is one consistent surface. A ready-to-paste next-session prompt is in the
-  chat; memory `project_chronological_tab` "OPEN" has the detail.
+- **Reading-intro panel RESTYLED to match the rail — DONE + LIVE 2026-06-13** (commits d0759bd …
+  921fc05). Header = navy "Reading N" badge + era + `.detail-back` "‹ Overview" toggle (the custom
+  bottom link is gone; SummaryPanel's "‹ Intro" moved to the same slot to match); body = `.detail-hero`
+  + `.sec`/`.sec-head` sections; the AI summary carries the navy "AI" tag. TIMELINE reworked: the
+  now-bar carves the dots (paper ring) so it can't swallow a checkpoint, milestones became a lined-up
+  dot·year·label list, first dot aligned under the first bullet. NO brown — marker/hovers → `--accent`
+  (memory `feedback_no_brown`); year weight 500 (JetBrains Mono only loads 400/500, 600 faux-bolds).
+  An HTML fixed-dot timeline rebuild was tried + REVERTED (921fc05) — the SVG strip is live. Full
+  record: memory `project_chronological_tab`.
+- **OPEN follow-up — xref panel consistency (user flagged, NEXT):** the cross-ref panel
+  (40-crossref-panel.jsx) doesn't line up with the word-study (LSJ) panel. The word panel is the gold
+  standard (badge → polished hero); xref leads with the verse ref + a gold `TSK` tag and jumps to a
+  "Related Passages" list with no hero block. Bring xref into the same header/hero rhythm, AND sweep
+  the leftover dark-gold bits to navy/neutral (TSK/LSJ tag text, the gold left-border on quoted verses
+  `.dverse`/`.verse`, the gold verse numbers `.dverse-n`) — confirm each with the user (gray-vs-hide
+  style; mock first). The word hero is the model. memory `project_chronological_tab` "OPEN" + `feedback_no_brown`.
 - PHASE 2 (deferred): exact hand-curated per-reading dates; sub-eras (Saul/David/Solomon) with finer
   timelines; milestone labels ON the timeline track (v1 lists them below).
 
