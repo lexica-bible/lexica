@@ -2365,19 +2365,19 @@ function DetailPanel({
           className: "sec"
         }, metavLoading ? /*#__PURE__*/React.createElement("div", {
           className: "lsj-def lsj-def--loading"
-        }, "Looking up\u2026") : /*#__PURE__*/React.createElement(React.Fragment, null, metavHasBoth && /*#__PURE__*/React.createElement("div", {
-          className: "metav-type-tabs"
-        }, /*#__PURE__*/React.createElement("button", {
-          className: "metav-type-tab" + (metavTab === "person" ? " on" : ""),
-          onClick: () => setMetavTab("person")
-        }, "Person"), /*#__PURE__*/React.createElement("button", {
-          className: "metav-type-tab" + (metavTab === "place" ? " on" : ""),
-          onClick: () => setMetavTab("place")
-        }, "Place")), metavType === "person" && metavData ? /*#__PURE__*/React.createElement("div", {
+        }, "Looking up\u2026") : /*#__PURE__*/React.createElement(React.Fragment, null, metavType === "person" && metavData ? /*#__PURE__*/React.createElement("div", {
           className: "metav-person"
         }, /*#__PURE__*/React.createElement("h4", {
           className: "sec-head"
-        }, /*#__PURE__*/React.createElement("span", {
+        }, metavHasBoth ? /*#__PURE__*/React.createElement("span", {
+          className: "metav-switch"
+        }, /*#__PURE__*/React.createElement("button", {
+          className: "metav-switch-b" + (metavTab === "person" ? " on" : ""),
+          onClick: () => setMetavTab("person")
+        }, "Person"), /*#__PURE__*/React.createElement("button", {
+          className: "metav-switch-b" + (metavTab === "place" ? " on" : ""),
+          onClick: () => setMetavTab("place")
+        }, "Place")) : /*#__PURE__*/React.createElement("span", {
           className: "sec-t"
         }, isGentilic ? "People / Clan" : "Biblical Person"), /*#__PURE__*/React.createElement("span", {
           className: "lsj-badge"
@@ -2427,7 +2427,15 @@ function DetailPanel({
           className: "metav-place"
         }, /*#__PURE__*/React.createElement("h4", {
           className: "sec-head"
-        }, /*#__PURE__*/React.createElement("span", {
+        }, metavHasBoth ? /*#__PURE__*/React.createElement("span", {
+          className: "metav-switch"
+        }, /*#__PURE__*/React.createElement("button", {
+          className: "metav-switch-b" + (metavTab === "person" ? " on" : ""),
+          onClick: () => setMetavTab("person")
+        }, "Person"), /*#__PURE__*/React.createElement("button", {
+          className: "metav-switch-b" + (metavTab === "place" ? " on" : ""),
+          onClick: () => setMetavTab("place")
+        }, "Place")) : /*#__PURE__*/React.createElement("span", {
           className: "sec-t"
         }, isGentilic ? "Homeland" : "Biblical Place"), /*#__PURE__*/React.createElement("span", {
           className: "lsj-badge"

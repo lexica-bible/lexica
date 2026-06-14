@@ -467,15 +467,17 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
         {metavLoading ? (
           <div className="lsj-def lsj-def--loading">Looking up…</div>
         ) : <>
-          {metavHasBoth && (
-            <div className="metav-type-tabs">
-              <button className={"metav-type-tab"+(metavTab==="person"?" on":"")} onClick={()=>setMetavTab("person")}>Person</button>
-              <button className={"metav-type-tab"+(metavTab==="place"?" on":"")} onClick={()=>setMetavTab("place")}>Place</button>
-            </div>
-          )}
           {metavType === "person" && metavData ? (
           <div className="metav-person">
-            <h4 className="sec-head"><span className="sec-t">{isGentilic ? "People / Clan" : "Biblical Person"}</span><span className="lsj-badge">metaV</span></h4>
+            <h4 className="sec-head">
+              {metavHasBoth ? (
+                <span className="metav-switch">
+                  <button className={"metav-switch-b"+(metavTab==="person"?" on":"")} onClick={()=>setMetavTab("person")}>Person</button>
+                  <button className={"metav-switch-b"+(metavTab==="place"?" on":"")} onClick={()=>setMetavTab("place")}>Place</button>
+                </span>
+              ) : <span className="sec-t">{isGentilic ? "People / Clan" : "Biblical Person"}</span>}
+              <span className="lsj-badge">metaV</span>
+            </h4>
             <div className="metav-meta">
               {metavData.gender && <span className="metav-tag">{metavData.gender === "M" ? "Male" : "Female"}</span>}
               {metavData.groups.filter(g => g.startsWith("Tribe")).map(g => (
@@ -512,7 +514,15 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
           </div>
         ) : metavType === "place" && metavData ? (
           <div className="metav-place">
-            <h4 className="sec-head"><span className="sec-t">{isGentilic ? "Homeland" : "Biblical Place"}</span><span className="lsj-badge">metaV</span></h4>
+            <h4 className="sec-head">
+              {metavHasBoth ? (
+                <span className="metav-switch">
+                  <button className={"metav-switch-b"+(metavTab==="person"?" on":"")} onClick={()=>setMetavTab("person")}>Person</button>
+                  <button className={"metav-switch-b"+(metavTab==="place"?" on":"")} onClick={()=>setMetavTab("place")}>Place</button>
+                </span>
+              ) : <span className="sec-t">{isGentilic ? "Homeland" : "Biblical Place"}</span>}
+              <span className="lsj-badge">metaV</span>
+            </h4>
             {metavData.comment && <p className="detail-p detail-p--meta">{metavData.comment}</p>}
             {metavData.lat && metavData.lon
               ? <LeafletMap lat={metavData.lat} lon={metavData.lon} name={metavData.name} />

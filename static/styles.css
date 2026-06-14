@@ -2471,10 +2471,13 @@ input { font-family: inherit; }
 
 /* ── metaV sidebar ───────────────────────────────────────────── */
 .lib-word-pn { color: var(--ink); }
-.metav-type-tabs { display: flex; gap: 4px; margin-bottom: 10px; }
-.metav-type-tab { flex: 1; padding: 5px 0; font-size: 12px; border-radius: 6px; color: var(--ink-3); border: 1px solid var(--rule); background: var(--paper); transition: background 0.1s, color 0.1s; }
-.metav-type-tab:hover { color: var(--ink); border-color: var(--ink-3); }
-.metav-type-tab.on { background: var(--ctl-on); border-color: var(--ink-2); color: var(--ink); font-weight: 500; }
+/* Person/Place switch — small inline segmented control that replaces the section
+   label when a word matches both a person AND a place. Sits in the heading row
+   (left, where the title would be), with the metaV source badge on the right. */
+.metav-switch { display: inline-flex; gap: 1px; background: var(--bg-sunk); border-radius: 6px; padding: 1px; }
+.metav-switch-b { font-size: 11px; padding: 2px 9px; border-radius: 5px; color: var(--ink-3); transition: color 0.15s, background 0.15s; }
+.metav-switch-b:hover { color: var(--ink); }
+.metav-switch-b.on { background: var(--ctl-on); color: var(--ink); font-weight: 500; box-shadow: var(--shadow-sm); }
 .metav-meta { display: flex; flex-wrap: wrap; gap: 6px; }
 .metav-tag {
   font-size: 11px;
