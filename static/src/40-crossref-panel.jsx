@@ -42,34 +42,41 @@ function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation, onA
   const verseText = (ref) => showAbp ? (abpTexts[ref.ref] || ref.kjv_text) : ref.kjv_text;
 
   const sourceRef = `${source.book} ${source.chapter}:${source.verse}`;
+  const heroRef = `${BOOK_LABELS[source.book] || source.book} ${source.chapter}:${source.verse}`;
+  const countLine = loading ? null
+    : refs.length ? `${refs.length} related passage${refs.length === 1 ? "" : "s"}` : "No cross-references";
   const { sheetRef, scrollRef } = useSwipeToDismiss(onClose);
 
-  return (
-    <aside ref={isMobile ? sheetRef : null} className={"xref-panel " + (isMobile ? "detail-sheet" : "detail-side")} role="dialog" aria-label="Related Passages">
-      {isMobile && <div className="sheet-drag-zone" aria-hidden="true"><div className="sheet-handle"></div></div>}
-      <div className="detail-head">
-        <div className="detail-head-l">
-          <span className="detail-pos">{sourceRef}</span>
-          <span className="xref-badge">TSK</span>
-        </div>
-        {overviewBack && !isMobile ? (
-          <button className="detail-back" onClick={onClose} aria-label="Back to overview">‹ Overview</button>
-        ) : (
-          <button className="detail-close" onClick={onClose} aria-label="Close"><Icon.Close/></button>
-        )}
+  // Body shares the word-study / Reading-intro rail: a .detail-hero block (the
+  // source reference + a passage count) then .sec/.sec-head sections — the AI
+  // synthesis as "The connection" (Sonnet-written, so it carries the AI badge),
+  // and the curated list as "Related passages".
+  const content = (
+    <>
+      <div className="detail-hero xref-hero">
+        <div className="xref-hero-ref">{heroRef}</div>
+        {countLine && <div className="xref-hero-sub">{countLine}</div>}
       </div>
-      <div className="xref-body" ref={isMobile ? scrollRef : null}>
-        <h3 className="xref-title">Related Passages</h3>
-        {loading ? (
-          <p className="xref-synthesis-loading">Selecting relevant passages…</p>
-        ) : synthesis ? (
-          <p className="xref-synthesis">{renderInlineMd(synthesis)}</p>
-        ) : null}
-        {!loading && onAiSearch && (
-          <button className="xref-ai-btn" onClick={() => { onClose(); onAiSearch(sourceRef); }}>
-            Explore in the corpus →
-          </button>
-        )}
+      {(loading || synthesis) && (
+        <section className="sec">
+          <h4 className="sec-head">
+            <span className="sec-t">The connection</span>
+            <span className="lsj-badge lsj-badge--accent">AI</span>
+          </h4>
+          {loading ? (
+            <p className="xref-synthesis-loading">Selecting relevant passages…</p>
+          ) : (
+            <p className="detail-p">{renderInlineMd(synthesis)}</p>
+          )}
+          {!loading && onAiSearch && (
+            <button className="xref-ai-btn" onClick={() => { onClose(); onAiSearch(sourceRef); }}>
+              Explore in the corpus →
+            </button>
+          )}
+        </section>
+      )}
+      <section className="sec">
+        <h4 className="sec-head"><span className="sec-t">Related passages</span></h4>
         {loading ? (
           <div className="lib-loading">Loading…</div>
         ) : refs.length === 0 ? (
@@ -84,7 +91,25 @@ function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation, onA
             ))}
           </div>
         )}
+      </section>
+    </>
+  );
+
+  return (
+    <aside ref={isMobile ? sheetRef : null} className={"xref-panel " + (isMobile ? "detail-sheet" : "detail-side")} role="dialog" aria-label="Related Passages">
+      {isMobile && <div className="sheet-drag-zone" aria-hidden="true"><div className="sheet-handle"></div></div>}
+      <div className="detail-head">
+        <div className="detail-head-l">
+          <span className="card-badge solid">TSK</span>
+          <span className="detail-pos">Cross-references</span>
+        </div>
+        {overviewBack && !isMobile ? (
+          <button className="detail-back" onClick={onClose} aria-label="Back to overview">‹ Overview</button>
+        ) : (
+          <button className="detail-close" onClick={onClose} aria-label="Close"><Icon.Close/></button>
+        )}
       </div>
+      <div className="detail-body" ref={isMobile ? scrollRef : null}>{content}</div>
     </aside>
   );
 }

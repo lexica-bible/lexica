@@ -3545,10 +3545,62 @@ function CrossRefPanel({
   }, [refs, showAbp]);
   const verseText = ref => showAbp ? abpTexts[ref.ref] || ref.kjv_text : ref.kjv_text;
   const sourceRef = `${source.book} ${source.chapter}:${source.verse}`;
+  const heroRef = `${BOOK_LABELS[source.book] || source.book} ${source.chapter}:${source.verse}`;
+  const countLine = loading ? null : refs.length ? `${refs.length} related passage${refs.length === 1 ? "" : "s"}` : "No cross-references";
   const {
     sheetRef,
     scrollRef
   } = useSwipeToDismiss(onClose);
+
+  // Body shares the word-study / Reading-intro rail: a .detail-hero block (the
+  // source reference + a passage count) then .sec/.sec-head sections — the AI
+  // synthesis as "The connection" (Sonnet-written, so it carries the AI badge),
+  // and the curated list as "Related passages".
+  const content = /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "detail-hero xref-hero"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "xref-hero-ref"
+  }, heroRef), countLine && /*#__PURE__*/React.createElement("div", {
+    className: "xref-hero-sub"
+  }, countLine)), (loading || synthesis) && /*#__PURE__*/React.createElement("section", {
+    className: "sec"
+  }, /*#__PURE__*/React.createElement("h4", {
+    className: "sec-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "sec-t"
+  }, "The connection"), /*#__PURE__*/React.createElement("span", {
+    className: "lsj-badge lsj-badge--accent"
+  }, "AI")), loading ? /*#__PURE__*/React.createElement("p", {
+    className: "xref-synthesis-loading"
+  }, "Selecting relevant passages\u2026") : /*#__PURE__*/React.createElement("p", {
+    className: "detail-p"
+  }, renderInlineMd(synthesis)), !loading && onAiSearch && /*#__PURE__*/React.createElement("button", {
+    className: "xref-ai-btn",
+    onClick: () => {
+      onClose();
+      onAiSearch(sourceRef);
+    }
+  }, "Explore in the corpus \u2192")), /*#__PURE__*/React.createElement("section", {
+    className: "sec"
+  }, /*#__PURE__*/React.createElement("h4", {
+    className: "sec-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "sec-t"
+  }, "Related passages")), loading ? /*#__PURE__*/React.createElement("div", {
+    className: "lib-loading"
+  }, "Loading\u2026") : refs.length === 0 ? /*#__PURE__*/React.createElement("p", {
+    className: "detail-p"
+  }, "No cross-references found.") : /*#__PURE__*/React.createElement("div", {
+    className: "xref-list"
+  }, refs.map(ref => /*#__PURE__*/React.createElement("div", {
+    key: ref.ref,
+    className: "xref-verse",
+    onClick: () => onNavigate(ref.book, ref.chapter, ref.verse)
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "xref-ref"
+  }, ref.ref), /*#__PURE__*/React.createElement("p", {
+    className: "xref-text"
+  }, verseText(ref)))))));
   return /*#__PURE__*/React.createElement("aside", {
     ref: isMobile ? sheetRef : null,
     className: "xref-panel " + (isMobile ? "detail-sheet" : "detail-side"),
@@ -3564,10 +3616,10 @@ function CrossRefPanel({
   }, /*#__PURE__*/React.createElement("div", {
     className: "detail-head-l"
   }, /*#__PURE__*/React.createElement("span", {
+    className: "card-badge solid"
+  }, "TSK"), /*#__PURE__*/React.createElement("span", {
     className: "detail-pos"
-  }, sourceRef), /*#__PURE__*/React.createElement("span", {
-    className: "xref-badge"
-  }, "TSK")), overviewBack && !isMobile ? /*#__PURE__*/React.createElement("button", {
+  }, "Cross-references")), overviewBack && !isMobile ? /*#__PURE__*/React.createElement("button", {
     className: "detail-back",
     onClick: onClose,
     "aria-label": "Back to overview"
@@ -3576,35 +3628,9 @@ function CrossRefPanel({
     onClick: onClose,
     "aria-label": "Close"
   }, /*#__PURE__*/React.createElement(Icon.Close, null))), /*#__PURE__*/React.createElement("div", {
-    className: "xref-body",
+    className: "detail-body",
     ref: isMobile ? scrollRef : null
-  }, /*#__PURE__*/React.createElement("h3", {
-    className: "xref-title"
-  }, "Related Passages"), loading ? /*#__PURE__*/React.createElement("p", {
-    className: "xref-synthesis-loading"
-  }, "Selecting relevant passages\u2026") : synthesis ? /*#__PURE__*/React.createElement("p", {
-    className: "xref-synthesis"
-  }, renderInlineMd(synthesis)) : null, !loading && onAiSearch && /*#__PURE__*/React.createElement("button", {
-    className: "xref-ai-btn",
-    onClick: () => {
-      onClose();
-      onAiSearch(sourceRef);
-    }
-  }, "Explore in the corpus \u2192"), loading ? /*#__PURE__*/React.createElement("div", {
-    className: "lib-loading"
-  }, "Loading\u2026") : refs.length === 0 ? /*#__PURE__*/React.createElement("p", {
-    className: "detail-p"
-  }, "No cross-references found.") : /*#__PURE__*/React.createElement("div", {
-    className: "xref-list"
-  }, refs.map(ref => /*#__PURE__*/React.createElement("div", {
-    key: ref.ref,
-    className: "xref-verse",
-    onClick: () => onNavigate(ref.book, ref.chapter, ref.verse)
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "xref-ref"
-  }, ref.ref), /*#__PURE__*/React.createElement("p", {
-    className: "xref-text"
-  }, verseText(ref)))))));
+  }, content));
 }
 function corpusWordLabel(w) {
   const e = w.english || "";
