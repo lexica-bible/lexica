@@ -2766,7 +2766,7 @@ function DetailPanel({
     className: "card-badge solid"
   }, entry.strongs), /*#__PURE__*/React.createElement("span", {
     className: "detail-pos"
-  }, BOOK_LABELS[entry.book] || entry.book)), overviewBack && !isMobile ? /*#__PURE__*/React.createElement("button", {
+  }, "Word study")), overviewBack && !isMobile ? /*#__PURE__*/React.createElement("button", {
     className: "detail-back",
     onClick: onClose,
     "aria-label": "Back to overview"

@@ -743,7 +743,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       <div className="detail-head">
         <div className="detail-head-l">
           <span className="card-badge solid">{entry.strongs}</span>
-          <span className="detail-pos">{BOOK_LABELS[entry.book] || entry.book}</span>
+          <span className="detail-pos">Word study</span>
         </div>
         {overviewBack && !isMobile ? (
           <button className="detail-back" onClick={onClose} aria-label="Back to overview">‹ Overview</button>
