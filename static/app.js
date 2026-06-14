@@ -1273,6 +1273,32 @@ const NotesStore = function () {
       syncPlanNow();
     }, 2500);
   }
+  // Clear reading-plan progress: one text (e.g. "abp") or all ("*"). Clears locally AND
+  // on the server (a hard delete there), so the union merge can't bring it back.
+  async function clearPlan(text) {
+    const all = !text || text === "*";
+    const p = planLoadLocal();
+    if (all) Object.keys(p).forEach(k => delete p[k]);else delete p[text];
+    planSaveLocal(p);
+    notify();
+    const a = getAuth();
+    if (a && a.token) {
+      try {
+        await fetch("/api/plan/clear", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + a.token
+          },
+          body: JSON.stringify(all ? {
+            all: true
+          } : {
+            text
+          })
+        });
+      } catch (e) {}
+    }
+  }
 
   // POST to an auth endpoint; on success store {token,email} and push/pull notes.
   async function authPost(path, email, password) {
@@ -1498,7 +1524,8 @@ const NotesStore = function () {
     },
     syncNow,
     syncPlanNow,
-    schedulePlanSync
+    schedulePlanSync,
+    clearPlan
   };
 }();
 
@@ -3325,6 +3352,7 @@ function NotesView({
     return n;
   });
   const [authOpen, setAuthOpen] = useState(null); // null | "login" | "signup"
+  const [acctOpen, setAcctOpen] = useState(false); // account / options panel
   const [mode, setMode] = useState("notes"); // notes | journal
   const acct = NotesStore.authInfo();
   let notes = NotesStore.search(q); // already newest-first
@@ -3389,13 +3417,16 @@ function NotesView({
     className: "notes-view-title"
   }, "My Notes"), /*#__PURE__*/React.createElement("div", {
     className: "notes-acct"
-  }, acct.email ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", {
+  }, acct.email ? /*#__PURE__*/React.createElement("button", {
     className: "notes-acct-email",
-    title: acct.email
-  }, acct.email), /*#__PURE__*/React.createElement("button", {
-    className: "notes-tool-btn",
-    onClick: () => NotesStore.logout()
-  }, "Log out")) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
+    title: "Account & options",
+    onClick: () => setAcctOpen(true)
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "notes-acct-addr"
+  }, acct.email), /*#__PURE__*/React.createElement("span", {
+    className: "notes-acct-caret",
+    "aria-hidden": "true"
+  }, "\u25BE")) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
     className: "notes-tool-btn",
     onClick: () => setAuthOpen("login")
   }, "Log in"), /*#__PURE__*/React.createElement("button", {
@@ -3459,7 +3490,84 @@ function NotesView({
   }, notes.map(renderItem)), authOpen && /*#__PURE__*/React.createElement(AuthModal, {
     mode: authOpen,
     onClose: () => setAuthOpen(null)
+  }), acctOpen && /*#__PURE__*/React.createElement(AccountModal, {
+    onClose: () => setAcctOpen(false)
   }));
+}
+
+// Account / options panel — opened from the signed-in email in the Notes header.
+// Holds account actions (log out) + reading-plan progress management. Built to grow:
+// new account-level options drop in as more .acct-sec blocks.
+const PLAN_TEXT_LABELS = {
+  abp: "ABP",
+  kjv: "KJV",
+  bsb: "BSB",
+  esv: "ESV",
+  niv: "NIV"
+};
+function AccountModal({
+  onClose
+}) {
+  useNotesVersion(); // re-render after a clear (NotesStore.clearPlan notifies)
+  const acct = NotesStore.authInfo();
+  const plan = planLoadAll();
+  const rows = Object.keys(plan).map(k => ({
+    text: k,
+    done: plan[k] && Array.isArray(plan[k].done) ? plan[k].done.length : 0
+  })).filter(r => r.done > 0).sort((a, b) => a.text.localeCompare(b.text));
+  const label = t => PLAN_TEXT_LABELS[t] || t.toUpperCase();
+  const clearOne = t => {
+    if (window.confirm(`Clear your ${label(t)} reading-plan progress?`)) NotesStore.clearPlan(t);
+  };
+  const clearAll = () => {
+    if (window.confirm("Clear ALL reading-plan progress (every text)?")) NotesStore.clearPlan("*");
+  };
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "auth-scrim",
+    onClick: onClose
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "auth-modal",
+    role: "dialog",
+    "aria-modal": "true",
+    "aria-label": "Account and options"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "auth-modal-head"
+  }, /*#__PURE__*/React.createElement("h3", {
+    className: "auth-modal-title"
+  }, "Account"), /*#__PURE__*/React.createElement("button", {
+    className: "detail-close",
+    onClick: onClose,
+    "aria-label": "Close"
+  }, /*#__PURE__*/React.createElement(Icon.Close, null))), /*#__PURE__*/React.createElement("p", {
+    className: "auth-modal-sub"
+  }, acct.email), /*#__PURE__*/React.createElement("div", {
+    className: "acct-sec"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "acct-sec-h"
+  }, "Reading plan progress"), rows.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "acct-empty"
+  }, "No reading-plan progress yet.") : /*#__PURE__*/React.createElement("ul", {
+    className: "acct-plan-list"
+  }, rows.map(r => /*#__PURE__*/React.createElement("li", {
+    key: r.text,
+    className: "acct-plan-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "acct-plan-name"
+  }, label(r.text)), /*#__PURE__*/React.createElement("span", {
+    className: "acct-plan-count"
+  }, r.done, " ", r.done === 1 ? "day" : "days", " read"), /*#__PURE__*/React.createElement("button", {
+    className: "acct-plan-clear",
+    onClick: () => clearOne(r.text)
+  }, "Clear")))), rows.length > 1 && /*#__PURE__*/React.createElement("button", {
+    className: "acct-plan-clearall",
+    onClick: clearAll
+  }, "Clear all progress")), /*#__PURE__*/React.createElement("button", {
+    className: "auth-submit acct-logout",
+    onClick: () => {
+      NotesStore.logout();
+      onClose();
+    }
+  }, "Log out")));
 }
 
 // Centered login / sign-up dialog.

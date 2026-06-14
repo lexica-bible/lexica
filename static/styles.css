@@ -3394,7 +3394,35 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
 /* Account chip lives in the title row now: just the email + Log out (or Log in / Sign
    up). min-width:0 lets a long email truncate instead of shoving the title. */
 .notes-acct { display: flex; align-items: center; gap: 8px; min-width: 0; }
-.notes-acct-email { font-weight: 600; color: var(--ink); font-size: 14px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+/* The email is now a button that opens the account / options panel. */
+.notes-acct-email {
+  display: inline-flex; align-items: center; gap: 5px; min-width: 0;
+  font-weight: 600; color: var(--ink); font-size: 14px;
+  background: none; border: none; padding: 2px 4px; border-radius: 6px; cursor: pointer;
+}
+.notes-acct-email:hover { background: var(--bg-sunk); }
+.notes-acct-addr { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.notes-acct-caret { flex: 0 0 auto; font-size: 10px; color: var(--ink-3); }
+/* Account / options panel (rides the .auth-modal shell). */
+.acct-sec { margin: 4px 0 18px; }
+.acct-sec-h { font-size: 12px; font-weight: 600; letter-spacing: 0.03em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 8px; }
+.acct-empty { font-size: 13px; color: var(--ink-4); }
+.acct-plan-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 4px; }
+.acct-plan-row { display: flex; align-items: center; gap: 10px; padding: 6px 8px; border-radius: 8px; background: var(--bg-sunk); }
+.acct-plan-name { flex: 0 0 auto; font-weight: 600; font-size: 13px; color: var(--ink); min-width: 38px; }
+.acct-plan-count { flex: 1; min-width: 0; font-size: 12.5px; color: var(--ink-3); }
+.acct-plan-clear {
+  flex: 0 0 auto; font-size: 12.5px; color: var(--ink-2); cursor: pointer;
+  background: var(--ctl-bg, var(--paper)); border: 1px solid var(--rule); border-radius: 6px; padding: 4px 10px;
+}
+.acct-plan-clear:hover { color: var(--accent); border-color: var(--accent); }
+.acct-plan-clearall {
+  margin-top: 10px; font-size: 12.5px; color: var(--ink-3); cursor: pointer;
+  background: none; border: none; padding: 4px 2px; text-decoration: underline;
+}
+.acct-plan-clearall:hover { color: var(--accent); }
+.acct-logout { background: var(--ctl-bg, var(--bg-sunk)); color: var(--ink); }
+.acct-logout:hover:not(:disabled) { background: var(--rule); color: var(--ink); }
 
 /* Mobile: compact the Notes-tab header so the list isn't pushed off-screen.
    Smaller title, tighter spacing, the explanation line dropped, and the

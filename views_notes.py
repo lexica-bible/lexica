@@ -520,3 +520,53 @@ def plan_sync():
     finally:
         conn.close()
     return jsonify({"plan": merged, "server_time": int(time.time())})
+
+
+@bp.route("/api/plan/clear", methods=["POST"])
+@limiter.limit("200 per hour")
+def plan_clear():
+    """Clear the account's saved reading-plan progress — one text ({text:"abp"}) or all
+    of it ({all:true}). A hard delete on the server, so the union merge won't bring it
+    back on the next sync."""
+    try:
+        body = json.loads(request.get_data(cache=False) or b"{}")
+    except (ValueError, TypeError):
+        return jsonify({"error": "bad request"}), 400
+    if not isinstance(body, dict):
+        return jsonify({"error": "bad request"}), 400
+
+    _ensure_tables()
+    conn = notes_db()
+    try:
+        uid = _user_for_token(conn)
+        if uid is None:
+            return jsonify({"error": "not signed in"}), 401
+        owner = "u" + str(uid)
+        if body.get("all"):
+            conn.execute("DELETE FROM plan WHERE code = ?", (owner,))
+            conn.commit()
+            return jsonify({"plan": {}})
+        text = body.get("text")
+        if not isinstance(text, str) or not text:
+            return jsonify({"error": "bad request"}), 400
+        row = conn.execute("SELECT json FROM plan WHERE code = ?", (owner,)).fetchone()
+        stored = {}
+        if row:
+            try:
+                stored = json.loads(row["json"])
+            except (ValueError, TypeError):
+                stored = {}
+        if isinstance(stored, dict):
+            stored.pop(text, None)
+        else:
+            stored = {}
+        conn.execute(
+            "INSERT OR REPLACE INTO plan (code, json, updated) VALUES (?,?,?)",
+            (owner, json.dumps(stored, separators=(",", ":")), _now()),
+        )
+        conn.commit()
+        return jsonify({"plan": stored})
+    except sqlite3.Error:
+        return jsonify({"error": "clear failed"}), 500
+    finally:
+        conn.close()

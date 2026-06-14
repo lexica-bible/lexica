@@ -278,6 +278,7 @@ function NotesView({ onOpen }) {
   const [collapsed, setCollapsed] = useState(() => new Set());   // collapsed book keys
   const toggleSection = (key) => setCollapsed(s => { const n = new Set(s); n.has(key) ? n.delete(key) : n.add(key); return n; });
   const [authOpen, setAuthOpen] = useState(null);   // null | "login" | "signup"
+  const [acctOpen, setAcctOpen] = useState(false);  // account / options panel
   const [mode, setMode] = useState("notes");        // notes | journal
   const acct = NotesStore.authInfo();
   let notes = NotesStore.search(q);               // already newest-first
@@ -330,10 +331,10 @@ function NotesView({ onOpen }) {
           <h2 className="notes-view-title">My Notes</h2>
           <div className="notes-acct">
             {acct.email ? (
-              <>
-                <span className="notes-acct-email" title={acct.email}>{acct.email}</span>
-                <button className="notes-tool-btn" onClick={() => NotesStore.logout()}>Log out</button>
-              </>
+              <button className="notes-acct-email" title="Account & options" onClick={() => setAcctOpen(true)}>
+                <span className="notes-acct-addr">{acct.email}</span>
+                <span className="notes-acct-caret" aria-hidden="true">▾</span>
+              </button>
             ) : (
               <>
                 <button className="notes-tool-btn" onClick={() => setAuthOpen("login")}>Log in</button>
@@ -392,7 +393,59 @@ function NotesView({ onOpen }) {
         <ul className="notes-list">{notes.map(renderItem)}</ul>
       )}
       {authOpen && <AuthModal mode={authOpen} onClose={() => setAuthOpen(null)} />}
+      {acctOpen && <AccountModal onClose={() => setAcctOpen(false)} />}
     </div>
+  );
+}
+
+// Account / options panel — opened from the signed-in email in the Notes header.
+// Holds account actions (log out) + reading-plan progress management. Built to grow:
+// new account-level options drop in as more .acct-sec blocks.
+const PLAN_TEXT_LABELS = { abp: "ABP", kjv: "KJV", bsb: "BSB", esv: "ESV", niv: "NIV" };
+function AccountModal({ onClose }) {
+  useNotesVersion();   // re-render after a clear (NotesStore.clearPlan notifies)
+  const acct = NotesStore.authInfo();
+  const plan = planLoadAll();
+  const rows = Object.keys(plan)
+    .map(k => ({ text: k, done: (plan[k] && Array.isArray(plan[k].done)) ? plan[k].done.length : 0 }))
+    .filter(r => r.done > 0)
+    .sort((a, b) => a.text.localeCompare(b.text));
+  const label = (t) => PLAN_TEXT_LABELS[t] || t.toUpperCase();
+  const clearOne = (t) => { if (window.confirm(`Clear your ${label(t)} reading-plan progress?`)) NotesStore.clearPlan(t); };
+  const clearAll = () => { if (window.confirm("Clear ALL reading-plan progress (every text)?")) NotesStore.clearPlan("*"); };
+  return (
+    <>
+      <div className="auth-scrim" onClick={onClose} />
+      <div className="auth-modal" role="dialog" aria-modal="true" aria-label="Account and options">
+        <div className="auth-modal-head">
+          <h3 className="auth-modal-title">Account</h3>
+          <button className="detail-close" onClick={onClose} aria-label="Close"><Icon.Close/></button>
+        </div>
+        <p className="auth-modal-sub">{acct.email}</p>
+
+        <div className="acct-sec">
+          <div className="acct-sec-h">Reading plan progress</div>
+          {rows.length === 0 ? (
+            <div className="acct-empty">No reading-plan progress yet.</div>
+          ) : (
+            <ul className="acct-plan-list">
+              {rows.map(r => (
+                <li key={r.text} className="acct-plan-row">
+                  <span className="acct-plan-name">{label(r.text)}</span>
+                  <span className="acct-plan-count">{r.done} {r.done === 1 ? "day" : "days"} read</span>
+                  <button className="acct-plan-clear" onClick={() => clearOne(r.text)}>Clear</button>
+                </li>
+              ))}
+            </ul>
+          )}
+          {rows.length > 1 && (
+            <button className="acct-plan-clearall" onClick={clearAll}>Clear all progress</button>
+          )}
+        </div>
+
+        <button className="auth-submit acct-logout" onClick={() => { NotesStore.logout(); onClose(); }}>Log out</button>
+      </div>
+    </>
   );
 }
 

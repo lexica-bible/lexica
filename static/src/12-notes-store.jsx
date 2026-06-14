@@ -151,6 +151,24 @@ const NotesStore = (function () {
     clearTimeout(planTimer);
     planTimer = setTimeout(() => { syncPlanNow(); }, 2500);
   }
+  // Clear reading-plan progress: one text (e.g. "abp") or all ("*"). Clears locally AND
+  // on the server (a hard delete there), so the union merge can't bring it back.
+  async function clearPlan(text) {
+    const all = !text || text === "*";
+    const p = planLoadLocal();
+    if (all) Object.keys(p).forEach(k => delete p[k]); else delete p[text];
+    planSaveLocal(p); notify();
+    const a = getAuth();
+    if (a && a.token) {
+      try {
+        await fetch("/api/plan/clear", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": "Bearer " + a.token },
+          body: JSON.stringify(all ? { all: true } : { text }),
+        });
+      } catch (e) {}
+    }
+  }
 
   // POST to an auth endpoint; on success store {token,email} and push/pull notes.
   async function authPost(path, email, password) {
@@ -291,7 +309,7 @@ const NotesStore = (function () {
       setAuth(null);
     },
     syncNow,
-    syncPlanNow, schedulePlanSync,
+    syncPlanNow, schedulePlanSync, clearPlan,
   };
 })();
 
