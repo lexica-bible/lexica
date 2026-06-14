@@ -2862,7 +2862,10 @@ button.plan-day-mark:hover { background: var(--accent-soft); }
 .plan-day-mark--done { color: var(--accent); }
 .plan-day-mark--done svg { width: 13px; height: 13px; }
 .plan-day-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
-.plan-day-body { padding: 2px 8px 9px 12px; }
+/* The open day's readings nest under a GOLD sub-spine — a deliberate spotlight on what
+   you're reading, against the navy backbone. Soft tint in dark, like the nav OT spine. */
+.plan-day-body { margin-left: 6px; border-left: 2px solid var(--gold); padding: 2px 8px 7px 12px; }
+:root[data-theme="dark"] .plan-day-body { border-left-color: var(--gold-soft); }
 .plan-passage {
   width: 100%; display: block; text-align: left; padding: 4px 8px; border-radius: 5px;
   font-size: 13px; color: var(--ink-2); background: none; border: none; cursor: pointer;
