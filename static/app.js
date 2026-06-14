@@ -8606,26 +8606,45 @@ function LibraryView({
   useEffect(() => {
     if (!nav || !nav.book || !books.length) return;
     const b = books.find(b => b.abbrev === nav.book);
-    if (b) {
-      // Only react to a REAL destination change. The scroll-to-highlight step writes a
-      // `scroll: false` self-update back to nav (same book + chapter); without this guard
-      // that re-fires the reset below, wiping the just-loaded verses — and since the book
-      // and chapter didn't change, the chapter loader never refetches → blank chapter.
-      if (corpus === "bible" && selBook?.abbrev === b.abbrev && selChapter === (nav.chapter || 1)) return;
-      setCorpus("bible"); // a verse reference is a Bible verse — leave any open non-canonical text
-      setOtherOpen(false); // close the "Other" picker if it was open
-      // clear the old chapter's verses so the scroll-to-highlight waits for the NEW
-      // chapter (otherwise it can fire on a stale same-numbered verse and burn its flag)
-      setVerses([]);
-      setKjvVerses([]);
-      setBsbVerses([]);
-      setSelBook(b);
-      setSelChapter(nav.chapter || 1);
-      if (nav.translation) {
-        setTranslation(nav.translation);
-        onTranslationChange?.(nav.translation);
-      }
+    if (!b) return;
+    // A verse jump can carry a translation (e.g. a KJV cross-ref) — honor it in either order.
+    if (nav.translation) {
+      setTranslation(nav.translation);
+      onTranslationChange?.(nav.translation);
     }
+
+    // CHRONOLOGICAL mode renders by PASSAGE, not by selChapter — so a verse jump has to move
+    // chronoPos to the passage that holds the target verse, or that verse never renders (and so
+    // never scrolls / highlights, which is the canonical-only bug). passageForRef finds it
+    // (book+chapter, narrowed by the verse when a chapter is split across days). If it's already
+    // in the current passage, do nothing — the scroll effect lands it. The `p.pos !== chronoPos`
+    // guard also stops the scroll:false self-update from re-firing this (chronoPos already matches).
+    if (chronoOn) {
+      const p = passageForRef(b.abbrev, nav.chapter || 1, nav.highlight);
+      if (p && p.pos !== chronoPos) {
+        if (corpus !== "bible") setCorpus("bible");
+        setOtherOpen(false);
+        setChronoPos(p.pos);
+        setSelBook(b);
+        setSelChapter(p.start_ch);
+      }
+      return;
+    }
+
+    // CANONICAL: only react to a REAL destination change. The scroll-to-highlight step writes a
+    // `scroll: false` self-update back to nav (same book + chapter); without this guard that
+    // re-fires the reset below, wiping the just-loaded verses — and since the book and chapter
+    // didn't change, the chapter loader never refetches → blank chapter.
+    if (corpus === "bible" && selBook?.abbrev === b.abbrev && selChapter === (nav.chapter || 1)) return;
+    setCorpus("bible"); // a verse reference is a Bible verse — leave any open non-canonical text
+    setOtherOpen(false); // close the "Other" picker if it was open
+    // clear the old chapter's verses so the scroll-to-highlight waits for the NEW
+    // chapter (otherwise it can fire on a stale same-numbered verse and burn its flag)
+    setVerses([]);
+    setKjvVerses([]);
+    setBsbVerses([]);
+    setSelBook(b);
+    setSelChapter(nav.chapter || 1);
   }, [nav, books]);
   useEffect(() => {
     if (!selBook || nonCanon || chronoOn) return; // non-canon + chronological load via their own effects below
@@ -8853,10 +8872,19 @@ function LibraryView({
     setAudioCur(v);
   };
   useEffect(() => {
-    if (!nav?.scroll || loading || !verses.length) return;
-    // Don't scroll while the requested chapter's verses are still the OLD chapter's —
-    // otherwise we scroll to (and burn the scroll flag on) a wrong same-numbered verse.
-    if (nav.chapter != null && nav.chapter !== selChapter) return;
+    if (!nav?.scroll || loading) return;
+    if (chronoOn) {
+      // Chrono renders by PASSAGE, not by chapter, and leaves `verses` empty — so the
+      // canonical guards below would wrongly bail. Wait until the span holding the target
+      // verse has loaded (chronoData caught up to chronoPos); the retry loop then finds the
+      // highlighted row. (The nav effect above already moved chronoPos to that passage.)
+      if (!chronoData || chronoData.pos !== chronoPos) return;
+    } else {
+      if (!verses.length) return;
+      // Don't scroll while the requested chapter's verses are still the OLD chapter's —
+      // otherwise we scroll to (and burn the scroll flag on) a wrong same-numbered verse.
+      if (nav.chapter != null && nav.chapter !== selChapter) return;
+    }
     let raf,
       tries = 0;
     const tryScroll = () => {
@@ -8879,9 +8907,10 @@ function LibraryView({
     };
     raf = requestAnimationFrame(tryScroll);
     return () => cancelAnimationFrame(raf);
-    // kjvVerses is in the deps so a KJV-mode jump re-runs once the KJV rows render
-    // (the highlight ref lives on those rows, which load separately from the ABP set).
-  }, [nav?.scroll, nav?.highlight, nav?.chapter, verses, kjvVerses, bsbVerses, loading, selChapter]);
+    // kjvVerses is in the deps so a KJV-mode jump re-runs once the KJV rows render (the highlight
+    // ref lives on those rows, which load separately from the ABP set). chronoData re-runs it once
+    // the chronological span finishes loading.
+  }, [nav?.scroll, nav?.highlight, nav?.chapter, verses, kjvVerses, bsbVerses, loading, selChapter, chronoOn, chronoData, chronoPos]);
   const maxChap = nonCanon ? nonCanon.chapters : selBook ? selBook.chapters : 1;
 
   // Pick a non-canonical text (from the "Other" menu / nav): switch the reader to it and
@@ -12465,6 +12494,16 @@ function App() {
     });
     setLibEverVisited(true);
     setMainView("library");
+    // Desktop: pop the verse's cross-references over the chapter-summary card so the jump
+    // lands with its xrefs already showing. Only when the rail is resting on the summary
+    // (no word-study / note panel open) so we don't steal a panel the user has up; mobile
+    // keeps the reader unobstructed (xref is a full bottom sheet there).
+    if (!isMobile && !activeEntry && !activeNote) setLibCrossRef({
+      book,
+      chapter,
+      verse,
+      translation: "abp"
+    });
   };
   const handleNavChange = view => {
     if (view === "library") {
@@ -12616,6 +12655,13 @@ function App() {
       });
       setLibEverVisited(true);
       setMainView("library");
+      // Same as Read-in-context: desktop pops the verse's xrefs over the summary card.
+      if (!isMobile && !activeEntry && !activeNote) setLibCrossRef({
+        book,
+        chapter,
+        verse,
+        translation: corpus === "kjv" ? "kjv" : "abp"
+      });
     },
     onWordClick: e => setActiveEntry(e),
     pendingStrongs: lexiconPendingStrongs,
