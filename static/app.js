@@ -5868,8 +5868,12 @@ function fmtReadingDate(y0, y1) {
   return "c. " + fmtYear(a) + " – " + fmtYear(b);
 }
 
-// The dated strip: axis between the era's start/end, milestone dots with year labels,
-// and an oval marking where this reading falls.
+// The dated strip: a thin track for the era span, a filled "you are here" bar showing
+// how much time this reading covers, and the milestone dots. The bar sits ON the track,
+// but the dots are drawn AFTER it with a thick paper ring, so every checkpoint is carved
+// cleanly out of the bar — the bar can never swallow one. The first dot (era start) sits
+// flush-left so the year list below can line its bullets up under it. Milestone labels
+// live in that list (each tied to its own dot), not floating over the track.
 function TimelineStrip({
   win
 }) {
@@ -5880,60 +5884,54 @@ function TimelineStrip({
     y1
   } = win;
   const W = 320,
-    padL = 14,
-    padR = 14,
-    base = 25,
-    innerW = W - padL - padR;
+    pad = 3.5,
+    innerW = W - pad * 2;
   const span = et.end - et.start || 1;
-  const xOf = yr => padL + (yr - et.start) / span * innerW;
-  const mx0 = Math.max(padL, xOf(y0)),
-    mx1 = Math.min(W - padR, xOf(y1));
+  const xOf = yr => pad + (yr - et.start) / span * innerW;
+  const mx0 = Math.max(pad, xOf(y0)),
+    mx1 = Math.min(W - pad, xOf(y1));
   const nowX = Math.min(mx0, mx1),
-    nowW = Math.max(11, Math.abs(mx1 - mx0));
+    nowW = Math.max(10, Math.abs(mx1 - mx0));
   return /*#__PURE__*/React.createElement("div", {
     className: "dintro-tl"
   }, /*#__PURE__*/React.createElement("svg", {
-    viewBox: `0 0 ${W} 34`,
+    viewBox: `0 0 ${W} 14`,
     className: "dintro-tl-svg",
-    preserveAspectRatio: "xMidYMid meet",
     role: "img",
     "aria-label": "Era timeline"
-  }, /*#__PURE__*/React.createElement("text", {
-    x: padL,
-    y: 9,
-    className: "dintro-tl-yr",
-    textAnchor: "start"
-  }, fmtYear(et.start)), /*#__PURE__*/React.createElement("text", {
-    x: W - padR,
-    y: 9,
-    className: "dintro-tl-yr",
-    textAnchor: "end"
-  }, fmtYear(et.end)), /*#__PURE__*/React.createElement("rect", {
-    x: padL,
-    y: base - 2.5,
-    width: innerW,
-    height: 5,
-    rx: 2.5,
+  }, /*#__PURE__*/React.createElement("rect", {
+    x: 0,
+    y: 5,
+    width: W,
+    height: 4,
+    rx: 2,
     className: "dintro-tl-track"
   }), /*#__PURE__*/React.createElement("rect", {
     x: nowX,
-    y: base - 6,
+    y: 3,
     width: nowW,
-    height: 12,
-    rx: 6,
+    height: 8,
+    rx: 4,
     className: "dintro-tl-now"
   }), et.marks.map((m, i) => /*#__PURE__*/React.createElement("circle", {
     key: i,
     cx: xOf(m.year),
-    cy: base,
-    r: 4,
+    cy: 7,
+    r: 3.5,
     className: "dintro-tl-dot"
   }))), /*#__PURE__*/React.createElement("div", {
     className: "dintro-tl-legend"
-  }, et.marks.map((m, i) => /*#__PURE__*/React.createElement("span", {
+  }, et.marks.map((m, i) => /*#__PURE__*/React.createElement("div", {
     key: i,
     className: "dintro-tl-ev"
-  }, /*#__PURE__*/React.createElement("b", null, fmtYear(m.year)), " ", m.label))));
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "dintro-tl-ev-dot",
+    "aria-hidden": "true"
+  }), /*#__PURE__*/React.createElement("span", {
+    className: "dintro-tl-ev-yr"
+  }, fmtYear(m.year)), /*#__PURE__*/React.createElement("span", {
+    className: "dintro-tl-ev-lbl"
+  }, m.label)))));
 }
 function DayIntroPanel({
   day,

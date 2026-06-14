@@ -2937,16 +2937,21 @@ input { font-family: inherit; }
 .dintro-era-head { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dintro-side .detail-head-l, .dintro-sheet .detail-head-l { min-width: 0; }
 .dintro-title { font-family: var(--f-serif); font-size: 23px; font-weight: 600; line-height: 1.18; color: var(--ink); }
-.dintro-date { font-family: var(--f-mono); font-size: 12px; color: var(--ink-3); letter-spacing: 0.01em; margin-top: 8px; }
+.dintro-date { font-family: var(--f-mono); font-size: 12px; color: var(--ink-2); letter-spacing: 0.01em; margin-top: 8px; }
 .dintro-tl { margin: 0; }
-.dintro-tl-svg { width: 100%; height: auto; display: block; }
+.dintro-tl-svg { width: 100%; height: auto; display: block; margin-bottom: 13px; }
 .dintro-tl-track { fill: var(--rule-2); }
 .dintro-tl-now { fill: var(--accent); }
-.dintro-tl-dot { fill: var(--ink-3); stroke: var(--paper); stroke-width: 2; }
-.dintro-tl-yr { fill: var(--ink-4); font-family: var(--f-mono); font-size: 9px; }
-.dintro-tl-legend { display: flex; flex-direction: column; gap: 3px; margin-top: 9px; }
-.dintro-tl-ev { font-size: 11.5px; color: var(--ink-2); }
-.dintro-tl-ev b { color: var(--ink); font-family: var(--f-mono); font-weight: 600; }
+/* Thick paper ring so each milestone dot is carved cleanly out of the now-bar. */
+.dintro-tl-dot { fill: var(--ink-3); stroke: var(--paper); stroke-width: 2.5; }
+/* Milestone list — a dot · year · label row, each tied to its own dot. The leading dot
+   sits flush-left so it lines up under the first dot on the track; the mono year column
+   has a fixed width so the labels line up. */
+.dintro-tl-legend { display: flex; flex-direction: column; gap: 8px; }
+.dintro-tl-ev { display: flex; align-items: baseline; gap: 10px; }
+.dintro-tl-ev-dot { flex: 0 0 auto; width: 7px; height: 7px; border-radius: 50%; background: var(--ink-3); transform: translateY(-1px); }
+.dintro-tl-ev-yr { flex: 0 0 auto; min-width: 60px; font-family: var(--f-mono); font-size: 11px; font-weight: 600; color: var(--ink); }
+.dintro-tl-ev-lbl { font-size: 12.5px; color: var(--ink-2); }
 .dintro-passages { display: flex; flex-direction: column; gap: 6px; }
 .dintro-passage {
   width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 8px;

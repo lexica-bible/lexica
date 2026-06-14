@@ -59,31 +59,36 @@ function fmtReadingDate(y0, y1) {
   return "c. " + fmtYear(a) + " – " + fmtYear(b);
 }
 
-// The dated strip: axis between the era's start/end, milestone dots with year labels,
-// and an oval marking where this reading falls.
+// The dated strip: a thin track for the era span, a filled "you are here" bar showing
+// how much time this reading covers, and the milestone dots. The bar sits ON the track,
+// but the dots are drawn AFTER it with a thick paper ring, so every checkpoint is carved
+// cleanly out of the bar — the bar can never swallow one. The first dot (era start) sits
+// flush-left so the year list below can line its bullets up under it. Milestone labels
+// live in that list (each tied to its own dot), not floating over the track.
 function TimelineStrip({ win }) {
   if (!win) return null;
   const { et, y0, y1 } = win;
-  const W = 320, padL = 14, padR = 14, base = 25, innerW = W - padL - padR;
+  const W = 320, pad = 3.5, innerW = W - pad * 2;
   const span = et.end - et.start || 1;
-  const xOf = (yr) => padL + ((yr - et.start) / span) * innerW;
-  const mx0 = Math.max(padL, xOf(y0)), mx1 = Math.min(W - padR, xOf(y1));
-  const nowX = Math.min(mx0, mx1), nowW = Math.max(11, Math.abs(mx1 - mx0));
+  const xOf = (yr) => pad + ((yr - et.start) / span) * innerW;
+  const mx0 = Math.max(pad, xOf(y0)), mx1 = Math.min(W - pad, xOf(y1));
+  const nowX = Math.min(mx0, mx1), nowW = Math.max(10, Math.abs(mx1 - mx0));
   return (
     <div className="dintro-tl">
-      <svg viewBox={`0 0 ${W} 34`} className="dintro-tl-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Era timeline">
-        <text x={padL} y={9} className="dintro-tl-yr" textAnchor="start">{fmtYear(et.start)}</text>
-        <text x={W - padR} y={9} className="dintro-tl-yr" textAnchor="end">{fmtYear(et.end)}</text>
-        <rect x={padL} y={base - 2.5} width={innerW} height={5} rx={2.5} className="dintro-tl-track" />
-        {/* where you are — a gold dot for a point, a gold bar for a sweeping reading */}
-        <rect x={nowX} y={base - 6} width={nowW} height={12} rx={6} className="dintro-tl-now" />
+      <svg viewBox={`0 0 ${W} 14`} className="dintro-tl-svg" role="img" aria-label="Era timeline">
+        <rect x={0} y={5} width={W} height={4} rx={2} className="dintro-tl-track" />
+        <rect x={nowX} y={3} width={nowW} height={8} rx={4} className="dintro-tl-now" />
         {et.marks.map((m, i) => (
-          <circle key={i} cx={xOf(m.year)} cy={base} r={4} className="dintro-tl-dot" />
+          <circle key={i} cx={xOf(m.year)} cy={7} r={3.5} className="dintro-tl-dot" />
         ))}
       </svg>
       <div className="dintro-tl-legend">
         {et.marks.map((m, i) => (
-          <span key={i} className="dintro-tl-ev"><b>{fmtYear(m.year)}</b> {m.label}</span>
+          <div key={i} className="dintro-tl-ev">
+            <span className="dintro-tl-ev-dot" aria-hidden="true"></span>
+            <span className="dintro-tl-ev-yr">{fmtYear(m.year)}</span>
+            <span className="dintro-tl-ev-lbl">{m.label}</span>
+          </div>
         ))}
       </div>
     </div>
