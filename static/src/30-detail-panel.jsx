@@ -769,12 +769,14 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
                dir={hero.he ? "rtl" : undefined}>
             {hero.script}
           </div>
-          <div className={"detail-translit-row" + (hero.he ? " detail-translit-row-he" : "")}>
-            <span className="detail-translit">{hero.translit}</span>
-            {heroInlineGloss && (
-              <><span className="detail-sep">·</span><span className="detail-gloss">{hero.standaloneGloss}</span></>
-            )}
-          </div>
+          {(hero.translit || heroInlineGloss) && (
+            <div className={"detail-translit-row" + (hero.he ? " detail-translit-row-he" : "")}>
+              <span className="detail-translit">{hero.translit}</span>
+              {heroInlineGloss && (
+                <><span className="detail-sep">·</span><span className="detail-gloss">{hero.standaloneGloss}</span></>
+              )}
+            </div>
+          )}
           {!hero.noGloss && !heroInlineGloss && (
             <div className="detail-gloss">{hero.standaloneGloss}</div>
           )}
