@@ -1947,8 +1947,9 @@ function SummaryPanel({
     }, title)), onBack && /*#__PURE__*/React.createElement("button", {
       className: "detail-back",
       onClick: onBack,
-      "aria-label": "Back to reading intro"
-    }, "\u2039 Intro")), /*#__PURE__*/React.createElement("div", {
+      "aria-label": "Back to reading intro",
+      title: "Intro"
+    }, "\u2039")), /*#__PURE__*/React.createElement("div", {
       className: "detail-body",
       ref: scrollRef
     }, content)));
@@ -6193,8 +6194,9 @@ function DayIntroPanel({
     }, title)), onOverview && /*#__PURE__*/React.createElement("button", {
       className: "detail-back",
       onClick: onOverview,
-      "aria-label": "Chapter overview"
-    }, "\u2039 Overview")), /*#__PURE__*/React.createElement("div", {
+      "aria-label": "Chapter overview",
+      title: "Overview"
+    }, "\u2039")), /*#__PURE__*/React.createElement("div", {
       className: "detail-body",
       ref: scrollRef
     }, content)));

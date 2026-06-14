@@ -185,7 +185,7 @@ function DayIntroPanel({ day, chrono, isMobile, onClose, onPickPassage, onOvervi
             <div className="detail-head-l">
               <span ref={titleRef} className="detail-pos summary-pos dintro-era-head">{title}</span>
             </div>
-            {onOverview && <button className="detail-back" onClick={onOverview} aria-label="Chapter overview">‹ Overview</button>}
+            {onOverview && <button className="detail-back" onClick={onOverview} aria-label="Chapter overview" title="Overview">‹</button>}
           </div>
           <div className="detail-body" ref={scrollRef}>{content}</div>
         </aside>

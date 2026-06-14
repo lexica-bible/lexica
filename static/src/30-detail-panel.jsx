@@ -76,7 +76,7 @@ function SummaryPanel({ book, chapter, bookLabel, isMobile, onClose, onBack }) {
             <div className="detail-head-l">
               <span ref={titleRef} className="detail-pos summary-pos">{title}</span>
             </div>
-            {onBack && <button className="detail-back" onClick={onBack} aria-label="Back to reading intro">‹ Intro</button>}
+            {onBack && <button className="detail-back" onClick={onBack} aria-label="Back to reading intro" title="Intro">‹</button>}
           </div>
           <div className="detail-body" ref={scrollRef}>{content}</div>
         </aside>
