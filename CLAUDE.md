@@ -267,7 +267,9 @@ scripts/          # build-frontend.js + one-time import/migration scripts
   row (`.nav-source-wrap` + `.nav-other-inline` absolute, sizes to content w/ max-height scroll), no
   longer an inline block that pushed the book list down; ESV/NIV/Hebrew sit under a "Bibles" group
   (default open) alongside the non-canon categories; closes on click-outside / Esc. The Compare ▾ menu
-  also closes on any outside click / Esc (document listener, not a scrim). HEB = the public Hebrew OT interlinear (OT books only; the left book list AND the mobile book
+  also closes on any outside click / Esc (document listener, not a scrim). BOTH (2026-06-14) now SWALLOW
+  the dismiss click (capture-phase one-shot, like the Aa menu) so the outside click that closes the menu
+  doesn't also land on a word chip behind it. HEB = the public Hebrew OT interlinear (OT books only; the left book list AND the mobile book
   picker drop the NT books in HEB mode). HEB also has NO chronological order (2026-06-13): the
   Chronological button is GRAYED/disabled while reading Hebrew (desktop toolbar + mobile order
   toggle), an effect flips order back to canonical whenever Hebrew is the text, and `chronoOn` is
@@ -348,7 +350,12 @@ scripts/          # build-frontend.js + one-time import/migration scripts
   `chronological.json` as a top-level `days` array + `day`/`verses` on each passage by
   `build_chronological.py` (balanced by verse length via a small DP, never splitting a passage,
   aligned to era boundaries; ~85 verses/day). Progress is PER READING TEXT (each text keeps its own
-  day + streak + last-read) in `localStorage` `lexica.plan.v1`. **MARKER MODEL (RESTYLED 2026-06-14):**
+  day + streak + last-read) in `localStorage` `lexica.plan.v1`. **MONTH BLOCKS (2026-06-14):** 365 days
+  is too long to scroll as one list, so `DayPlanView` bins the days into ~12 collapsible **Month**
+  blocks (`monthSize = ceil(total/12)`, accordion — ONE month open at a time, auto-opens to the month
+  you're reading). Each header = `Month N · Days X–Y · done/total` (`.plan-month*` in styles.css).
+  `selectDay`/the focus effect set BOTH `open` (day) and `openMonth`. Applies to desktop nav + mobile
+  alike (shared component). **MARKER MODEL (RESTYLED 2026-06-14):**
   the old per-row left check circle + the gold "Today" highlight + the navy "Reading" row tint are all
   GONE. Each day row is just `Day N … <verses> <marker>` (flush left), with ONE marker on the right:
   a navy ✓ when read (click to undo) / a navy DOT when it's the day you're reading. The marker is
@@ -358,8 +365,10 @@ scripts/          # build-frontend.js + one-time import/migration scripts
   like the book-nav testament spine) with a GOLD sub-rib on the open day's passages (`.plan-day-body`,
   deliberate spotlight). "Jump to today" selects today (collapses the open day + moves the dot).
   **MOBILE Days (`.mpick`):** same select-on-tap behavior but the sheet STAYS open (parent passes a
-  non-closing `onPickPassage`); NO spine, bigger rows/text, and the progress header scrolls with the
-  list (not sticky — pinning left a gap where rows bled through). Component: `static/src/58-dayplan.jsx`
+  non-closing `onPickPassage`); NO spine, bigger rows/text. The progress header IS sticky now (2026-06-14)
+  — pulled out to the sheet edges (cancels `.mpick-scroll`'s padding) so it's a solid full-width bar and
+  no rows bleed through beside/above it (an earlier non-bleed-proof attempt had it `position:static`;
+  that's superseded). Component: `static/src/58-dayplan.jsx`
   (DayPlanView + plan helpers); `toggleDayDone` still does the mark-through/un-mark math. Full record:
   memory `project_chronological_tab`.
 - **Chronological daily "Reading intro" panel (LIVE 2026-06-13).** In chrono mode the right detail
@@ -373,8 +382,13 @@ scripts/          # build-frontend.js + one-time import/migration scripts
   toggle (SummaryPanel's "‹ Intro" moved to the same slot); body = `.detail-hero` + `.sec`/`.sec-head`
   sections. The era TIMELINE is a thin track with a navy "you-are-here" bar whose dots are carved out
   by a paper ring (so the bar can't swallow a checkpoint) + a lined-up dot·year·label list. NO brown
-  anywhere — marker/hovers use `--accent`, not `--gold` (see memory `feedback_no_brown`). Full record:
-  memory `project_chronological_tab`.
+  anywhere — marker/hovers use `--accent`, not `--gold` (see memory `feedback_no_brown`). **MOBILE
+  HEADER (2026-06-14):** on the intro card AND the overview popup (both `.summary-sheet`) the toggle is
+  a compact `‹` chevron inline with the title (NOT the full "‹ Overview"/"‹ Intro" text — that crammed
+  the row); the ✕ is dropped from both (drag handle + tap-outside close them); the title fills the row
+  on ONE line and auto-shrinks via the new `useFitText` hook (20-shared-components.jsx; `useLayoutEffect`
+  added to the 00-core React destructure) so it never wraps or runs off. Desktop keeps the full text
+  toggle. Full record: memory `project_chronological_tab`.
 - **Chronological views cleanup (2026-06-14) — same rail design language.** The in-reader chapter
   marker (`.lib-chrono-chapmark`, shown in chrono mode, reader + Compare) went gold → navy
   (`--accent`/`--accent-soft`). The **Eras picker** matches the Days plan: navy backbone spine + gold
@@ -388,7 +402,9 @@ scripts/          # build-frontend.js + one-time import/migration scripts
   the pointer is over `.hdr / .lib-bar / .lib-toolbar / .nav / .detail-side`, after first letting an
   inner list (book / day / era) consume the wheel if it can still scroll. Every scroll area is independent.
 - **In-text search (the magnifying-glass panel) — eSword-style (2026-06-13).** Searches the reader's
-  current text (ABP/KJV/BSB or a non-canon book). Modes Any / All / Phrase (DEFAULT = Any); options
+  current text (ABP/KJV/BSB or a non-canon book). Modes Any / All / Phrase (DEFAULT = Any) — these are
+  **underline tabs** (2026-06-14), mirroring the More menu / source picker, NOT a filled box
+  (`.lib-search-mode-seg.seg` overrides the base `.seg` pill). Options
   (in a collapsible "Options ▾") = a book RANGE (preset groups Whole-Bible/OT/NT/Pentateuch…Apocalypse
   via `SEARCH_RANGES`, plus from/to pickers), Whole-words-only, Case-sensitive, Exclude words. Shows
   "X verses found, Y matches". Enter or Go runs it; once a search has run, changing any control

@@ -6,6 +6,23 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Days month-grouping + mobile sticky header + intro/overview mobile header — DONE 2026-06-14
+
+Small polish round, all live/pushed. Full record: memory `project_chronological_tab` "SESSION 2026-06-14".
+- **Days list = ~12 collapsible MONTH blocks** (58-dayplan.jsx) — 365 rows was too long to scroll.
+  Accordion, one month open at a time, auto-opens to the month you're reading. `monthSize = ceil(total/12)`.
+- **Mobile Days progress header is now STICKY** (was `position:static` after an earlier bleed-through
+  attempt) — pulled to the sheet edges so it's a solid full-width bar, no rows peek beside/above it.
+- **Mobile intro card + overview popup header = compact `‹` chevron** inline with the title (not the
+  wide "‹ Overview"/"‹ Intro" text), ✕ dropped from both (handle + tap-outside close them), title
+  auto-shrinks to one line via the NEW `useFitText` hook (20-shared-components.jsx; `useLayoutEffect`
+  added to 00-core). The painful path here (stacked-above, reserved-gutter — both rejected) is the
+  lesson in memory `feedback_ui_iteration`: on a fussy visual tweak, shrink the control, don't relayout.
+- **More popout + Compare dropdown swallow their dismiss click** (capture-phase one-shot, like the Aa
+  menu) so the outside click that closes them doesn't also hit a word chip behind.
+- **Search popup mode toggle (Any/All/Phrase) → underline tabs** (was a filled box), mirroring the
+  source picker.
+
 ## Chronological views cleanup — rail design language — DONE 2026-06-14
 
 Gave the chronological views the same look as the detail-rail pass. All live (user deployed as we
