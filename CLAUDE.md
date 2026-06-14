@@ -259,8 +259,15 @@ scripts/          # build-frontend.js + one-time import/migration scripts
 ## Library Tab
 - Desktop toolbar (lib-bar): [‹ Ch input ›] | [Compare ▾] | [Strong's] [Interlinear] | [Chip] [Prose]
   (text source lives in the LEFT NAV's nav-source seg, not the toolbar. CONDENSED 2026-06-11: ABP/KJV/BSB
-  stay one-click buttons; ESV*/NIV*/HEB + the non-canon books fold into a **"More ▾"** menu so the row stays
-  at 4. HEB = the public Hebrew OT interlinear (OT books only; the left book list AND the mobile book
+  stay one-click; ESV*/NIV*/HEB + the non-canon books fold into a **"More ▾"** picker so the row stays
+  at 4. STYLING 2026-06-14: the source row + the Eras/Days toggle are **underline tabs**, NOT boxed
+  segmented controls — the source row is a 4-equal-column GRID (`.nav-source-seg.seg` is
+  `grid repeat(4,1fr)`) so the active "More" label (HEB/ESV/a book name, ellipsised) can't change a
+  tab's width and shove the others. The **"More" menu is a floating POPOUT** anchored under the source
+  row (`.nav-source-wrap` + `.nav-other-inline` absolute, sizes to content w/ max-height scroll), no
+  longer an inline block that pushed the book list down; ESV/NIV/Hebrew sit under a "Bibles" group
+  (default open) alongside the non-canon categories; closes on click-outside / Esc. The Compare ▾ menu
+  also closes on any outside click / Esc (document listener, not a scrim). HEB = the public Hebrew OT interlinear (OT books only; the left book list AND the mobile book
   picker drop the NT books in HEB mode). HEB also has NO chronological order (2026-06-13): the
   Chronological button is GRAYED/disabled while reading Hebrew (desktop toolbar + mobile order
   toggle), an effect flips order back to canonical whenever Hebrew is the text, and `chronoOn` is
@@ -341,13 +348,20 @@ scripts/          # build-frontend.js + one-time import/migration scripts
   `chronological.json` as a top-level `days` array + `day`/`verses` on each passage by
   `build_chronological.py` (balanced by verse length via a small DP, never splitting a passage,
   aligned to era boundaries; ~85 verses/day). Progress is PER READING TEXT (each text keeps its own
-  day + streak + last-read) in `localStorage` `lexica.plan.v1`. Each day has a small CLICK-TO-CHECK
-  mark (the old "Mark complete" / "Set as today" buttons were DROPPED 2026-06-13): click to mark a
-  day read (linear — sets your spot to the next day + bumps the streak on a new calendar day), click
-  a read day to undo. The Days list FOLLOWS your reading spot — the day holding the current passage
-  auto-opens, scrolls in, and gets an accent "Reading" highlight (separate from the gold plan
-  "Today"). Reading reuses the one-passage-at-a-time chrono reader. Component:
-  `static/src/58-dayplan.jsx` (DayPlanView + plan helpers). Full record: memory `project_chronological_tab`.
+  day + streak + last-read) in `localStorage` `lexica.plan.v1`. **MARKER MODEL (RESTYLED 2026-06-14):**
+  the old per-row left check circle + the gold "Today" highlight + the navy "Reading" row tint are all
+  GONE. Each day row is just `Day N … <verses> <marker>` (flush left), with ONE marker on the right:
+  a navy ✓ when read (click to undo) / a navy DOT when it's the day you're reading. The marker is
+  clickable ONLY on the day you're on — un-marking a prior day means selecting it first. ONE-CLICK on a
+  day does everything: collapse the day you had open (accordion), open this one, move the dot, and load
+  its first reading. A navy SPINE runs down the whole list (`.plan-days-inner::before`, bounds the rows
+  like the book-nav testament spine) with a GOLD sub-rib on the open day's passages (`.plan-day-body`,
+  deliberate spotlight). "Jump to today" selects today (collapses the open day + moves the dot).
+  **MOBILE Days (`.mpick`):** same select-on-tap behavior but the sheet STAYS open (parent passes a
+  non-closing `onPickPassage`); NO spine, bigger rows/text, and the progress header scrolls with the
+  list (not sticky — pinning left a gap where rows bled through). Component: `static/src/58-dayplan.jsx`
+  (DayPlanView + plan helpers); `toggleDayDone` still does the mark-through/un-mark math. Full record:
+  memory `project_chronological_tab`.
 - **Chronological daily "Reading intro" panel (LIVE 2026-06-13).** In chrono mode the right detail
   panel (mobile = the ⓘ sheet) shows an ESV-style card for the day: reading number, AI Berean title +
   summary, the era's dated timeline with the reading marked, and the day's passages. Backend
@@ -361,6 +375,14 @@ scripts/          # build-frontend.js + one-time import/migration scripts
   by a paper ring (so the bar can't swallow a checkpoint) + a lined-up dot·year·label list. NO brown
   anywhere — marker/hovers use `--accent`, not `--gold` (see memory `feedback_no_brown`). Full record:
   memory `project_chronological_tab`.
+- **Chronological views cleanup (2026-06-14) — same rail design language.** The in-reader chapter
+  marker (`.lib-chrono-chapmark`, shown in chrono mode, reader + Compare) went gold → navy
+  (`--accent`/`--accent-soft`). The **Eras picker** matches the Days plan: navy backbone spine + gold
+  sub-rib on the open era, de-boxed headers, no caret (desktop `.nav-eras-inner` / mobile `.mpick-eras`).
+  The Reading-intro "Today's passages" + the metaV "Nave's" rows dropped their per-item boxes for plain
+  hover rows. And the word/xref panel **back link follows the panel beneath it** — "‹ Intro" when the
+  chrono day-intro is the rail base, "‹ Overview" otherwise (LibraryView reports `detailBase` →
+  App passes `backLabel` to DetailPanel + CrossRefPanel).
 - **Wheel over fixed chrome doesn't scroll the reading pane (2026-06-13).** The reading pane rides
   the window scroll; a scoped non-passive wheel handler in 90-app.jsx blocks the page scroll when
   the pointer is over `.hdr / .lib-bar / .lib-toolbar / .nav / .detail-side`, after first letting an

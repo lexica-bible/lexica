@@ -6,6 +6,35 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Chronological views cleanup — rail design language — DONE 2026-06-14
+
+Gave the chronological views the same look as the detail-rail pass. All live (user deployed as we
+went). Full record: memory `project_chronological_tab` "CHRONOLOGICAL VIEWS CLEANUP" + `project_side_panel_rail`.
+- **In-reader chapter marker** (`.lib-chrono-chapmark`, reader + Compare): gold → navy; spacing 16/9 →
+  28px top / 5px bottom (heading hugs what it labels).
+- **Days plan rebuilt:** dropped the per-row left check, the gold "Today" highlight, the navy "Reading"
+  tint, and the open/collapse caret. One marker on the RIGHT — navy ✓ (read, click to undo) / navy dot
+  (the day you're reading); clickable only on the day you're on (un-mark a prior day = select it first).
+  One-click on a day = collapse the open day + open this + move the dot + load its first reading. Navy
+  backbone spine (pseudo-element on a full-height inner wrapper, not a border on the scroll box — the
+  border only spanned the visible rows) + a GOLD sub-rib on the open day's passages. Active passage =
+  just bold. "Jump to today" selects today too.
+- **Eras picker** matched Days: navy spine + gold sub-rib on the open era, de-boxed headers, no caret.
+- **Mobile Days:** tap-a-day = same select behavior but the sheet STAYS open (a separate
+  non-closing `onPickPassage`); NO spine; bigger rows/text; progress header `position:static` (sticky
+  pinned below the scroll padding and rows bled through the gap). A mobile-Eras restyle was TRIED then
+  REVERTED — user said Eras-on-mobile is fine, only Days needed work.
+- **Reading-intro "Today's passages" + metaV "Nave's" rows:** dropped per-item boxes → plain hover rows.
+- **Word/xref back-link follows the rail base:** "‹ Intro" over the chrono day-intro, "‹ Overview"
+  otherwise (LibraryView `detailBase` → App `backLabel`).
+- **Source picker + Eras/Days toggle → underline tabs.** The source row is a 4-equal-column GRID so the
+  active "More" label (HEB/ESV/a book name) can't change a tab's width and shove ABP/KJV/BSB — the real
+  "resize" bug (the inline-flex `.seg` was content-sized; flex:1 1 0 didn't equalize). A FIXED-height
+  popout was tried for the menu first and REVERTED — the user only wanted the BUTTON to stop resizing.
+- **More menu → floating popout** (anchored under the source row; ESV/NIV/Hebrew under a default-open
+  "Bibles" group). Both the More popout and the Compare ▾ menu close on click-outside / Esc (document
+  listener; replaced Compare's old z-90 scrim that sat under the toolbar). Picking a row text closes More.
+
 ## Book-summary author list — added scribes; metaV fold-in TRIED then REVERTED — 2026-06-13
 
 The reading-pane book blurb names the writer from `_BOOK_AUTHORS` (views_summary.py), which lists
