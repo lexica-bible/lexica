@@ -6663,8 +6663,6 @@ function LibNavPanel({
       "aria-expanded": open,
       title: era.blurb
     }, /*#__PURE__*/React.createElement("span", {
-      className: "nav-era-caret"
-    }, "\u25B8"), /*#__PURE__*/React.createElement("span", {
       className: "nav-era-name"
     }, era.name), /*#__PURE__*/React.createElement("span", {
       className: "nav-era-count"

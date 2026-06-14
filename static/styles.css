@@ -2771,8 +2771,6 @@ input { font-family: inherit; }
   color: var(--ink-3); text-align: left; background: none; border: none;
 }
 .nav-era:hover { color: var(--ink); }
-.nav-era-caret { font-size: 9px; color: var(--ink-4); flex: 0 0 auto; transition: transform 0.12s ease; }
-.nav-era.open .nav-era-caret { transform: rotate(90deg); }
 .nav-era-name { flex: 1; }
 .nav-era-count {
   font-family: var(--f-mono); font-size: 9.5px; font-weight: 600;

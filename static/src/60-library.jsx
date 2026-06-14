@@ -342,7 +342,6 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
             <div className="nav-group" key={era.id}>
               <button className={"nav-era" + (open ? " open" : "")} onClick={() => toggleEra(era.id)}
                 aria-expanded={open} title={era.blurb}>
-                <span className="nav-era-caret">▸</span>
                 <span className="nav-era-name">{era.name}</span>
                 <span className="nav-era-count">{eraPassages.length}</span>
               </button>
