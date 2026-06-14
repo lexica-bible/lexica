@@ -2939,16 +2939,16 @@ input { font-family: inherit; }
 .dintro-title { font-family: var(--f-serif); font-size: 23px; font-weight: 600; line-height: 1.18; color: var(--ink); }
 .dintro-date { font-family: var(--f-mono); font-size: 12px; color: var(--ink-2); letter-spacing: 0.01em; margin-top: 8px; }
 .dintro-tl { margin: 0; }
-/* Plain-HTML strip: a full-width track with the now-bar + dots positioned by fraction,
-   inset half a 7px dot (3.5px) each side so the end dots line up. Dots are a FIXED 7px —
-   same as the year-list bullets — so the first dot sits exactly over the first bullet at
-   any panel width. */
-.dintro-tl-track { position: relative; height: 4px; border-radius: 2px; background: var(--rule-2); margin: 6px 0 15px; }
-.dintro-tl-now { position: absolute; top: 50%; transform: translateY(-50%); height: 8px; min-width: 12px; border-radius: 4px; background: var(--accent); z-index: 1; }
-/* paper ring carves each dot cleanly out of the now-bar */
-.dintro-tl-dot { position: absolute; top: 50%; transform: translate(-50%, -50%); width: 7px; height: 7px; border-radius: 50%; background: var(--ink-3); box-shadow: 0 0 0 2px var(--paper); z-index: 2; }
+/* Inset by half a list-bullet (3.5px) each side + overflow visible, so the first dot's
+   centre lands exactly on the year-list bullet centre (both 3.5px in) at any width. */
+.dintro-tl-svg { width: calc(100% - 7px); height: auto; display: block; margin: 0 0 13px 3.5px; overflow: visible; }
+.dintro-tl-track { fill: var(--rule-2); }
+.dintro-tl-now { fill: var(--accent); }
+/* Thick paper ring so each milestone dot is carved cleanly out of the now-bar. */
+.dintro-tl-dot { fill: var(--ink-3); stroke: var(--paper); stroke-width: 2.5; }
 /* Milestone list — a dot · year · label row, each tied to its own dot. The leading dot
-   lines up under the first track dot; the fixed-width mono year column aligns the labels. */
+   sits flush-left so it lines up under the first dot on the track; the mono year column
+   has a fixed width so the labels line up. */
 .dintro-tl-legend { display: flex; flex-direction: column; gap: 8px; }
 .dintro-tl-ev { display: flex; align-items: baseline; gap: 10px; }
 .dintro-tl-ev-dot { flex: 0 0 auto; width: 7px; height: 7px; border-radius: 50%; background: var(--ink-3); transform: translateY(-1px); }

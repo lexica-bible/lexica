@@ -5872,12 +5872,11 @@ function fmtReadingDate(y0, y1) {
 // how much time this reading covers, and the milestone dots. The bar sits ON the track,
 // but the dots are drawn AFTER it with a thick paper ring, so every checkpoint is carved
 // cleanly out of the bar — the bar can never swallow one. The first dot (era start) sits
-// The era strip is plain HTML so the track dots are a FIXED 7px — identical to the
-// year-list bullets below — and land at the exact same x (both share one inset: half a
-// 7px dot, 3.5px). So the first dot sits dead-on the first bullet at any panel width.
-// The now-bar sits behind the dots; each dot's paper ring carves it cleanly out of the
-// bar, so the bar can never swallow a checkpoint. Labels live in the list (each tied to
-// its dot), not over the track.
+// flush-left so the year list below can line its bullets up under it. Milestone labels
+// live in that list (each tied to its own dot), not floating over the track.
+// The first dot is at viewBox x=0; the .dintro-tl-svg CSS insets the strip by half a
+// list-bullet (3.5px) and lets the end dots overflow, so that first dot's CENTRE lands
+// exactly on the year-list bullet centre (both 3.5px in) at any panel width.
 function TimelineStrip({
   win
 }) {
@@ -5887,30 +5886,40 @@ function TimelineStrip({
     y0,
     y1
   } = win;
+  const W = 320;
   const span = et.end - et.start || 1;
-  const frac = yr => Math.min(1, Math.max(0, (yr - et.start) / span));
-  const a = Math.min(frac(y0), frac(y1)),
-    b = Math.max(frac(y0), frac(y1));
-  // Map a 0..1 fraction across the track, inset half a 7px dot each side so the end dots
-  // (and the first dot ↔ first bullet) line up. Dots are centred (translateX -50%).
-  const at = f => `calc(3.5px + ${f} * (100% - 7px))`;
+  const xOf = yr => (yr - et.start) / span * W;
+  const mx0 = Math.max(0, xOf(y0)),
+    mx1 = Math.min(W, xOf(y1));
+  const nowX = Math.min(mx0, mx1),
+    nowW = Math.max(10, Math.abs(mx1 - mx0));
   return /*#__PURE__*/React.createElement("div", {
     className: "dintro-tl"
-  }, /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("svg", {
+    viewBox: `0 0 ${W} 14`,
+    className: "dintro-tl-svg",
+    role: "img",
+    "aria-label": "Era timeline"
+  }, /*#__PURE__*/React.createElement("rect", {
+    x: 0,
+    y: 5,
+    width: W,
+    height: 4,
+    rx: 2,
     className: "dintro-tl-track"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "dintro-tl-now",
-    style: {
-      left: at(a),
-      width: `calc(${b - a} * (100% - 7px))`
-    }
-  }), et.marks.map((m, i) => /*#__PURE__*/React.createElement("div", {
+  }), /*#__PURE__*/React.createElement("rect", {
+    x: nowX,
+    y: 3,
+    width: nowW,
+    height: 8,
+    rx: 4,
+    className: "dintro-tl-now"
+  }), et.marks.map((m, i) => /*#__PURE__*/React.createElement("circle", {
     key: i,
-    className: "dintro-tl-dot",
-    style: {
-      left: at(frac(m.year))
-    },
-    "aria-hidden": "true"
+    cx: xOf(m.year),
+    cy: 7,
+    r: 3.5,
+    className: "dintro-tl-dot"
   }))), /*#__PURE__*/React.createElement("div", {
     className: "dintro-tl-legend"
   }, et.marks.map((m, i) => /*#__PURE__*/React.createElement("div", {
