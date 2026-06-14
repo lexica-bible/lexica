@@ -116,12 +116,16 @@ function DayIntroPanel({ day, chrono, isMobile, onClose, onPickPassage, onOvervi
   }, [dayNo]);
 
   const { sheetRef, scrollRef } = useSwipeToDismiss(onClose);
+  const titleRef = useRef(null);
   const era = chrono && chrono.eras && day ? chrono.eras.find(e => e.id === day.era) : null;
   const win = day ? readingWindow(day, chrono) : null;
   const passages = (day && chrono && chrono.passages)
     ? day.pos.map(q => chrono.passages[q - 1]).filter(Boolean) : [];
   const title = (data && data.title) || (era ? era.name : "Today's reading");
   const dateLine = win ? fmtReadingDate(win.y0, win.y1) : null;
+  // Mobile: shrink the title to fit one line beside the corner toggle link (desktop
+  // keeps its inline ellipsis instead).
+  useFitText(titleRef, title, { enabled: isMobile });
 
   const content = (
     <>
@@ -178,7 +182,9 @@ function DayIntroPanel({ day, chrono, isMobile, onClose, onPickPassage, onOvervi
           {/* Same header as desktop: title on the left (wraps), the "‹ Overview" toggle
               on the right pinned to the top. No ✕ — the drag handle + tap-outside close it. */}
           <div className="detail-head">
-            <div className="detail-head-l">{headTitle}</div>
+            <div className="detail-head-l">
+              <span ref={titleRef} className="detail-pos summary-pos dintro-era-head">{title}</span>
+            </div>
             {onOverview && <button className="detail-back" onClick={onOverview} aria-label="Chapter overview">‹ Overview</button>}
           </div>
           <div className="detail-body" ref={scrollRef}>{content}</div>

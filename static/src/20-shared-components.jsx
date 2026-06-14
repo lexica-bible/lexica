@@ -1,4 +1,34 @@
 // ============================================================
+// useFitText — shrink a single-line element's font-size until it fits its slot.
+// Used by the mobile reading-intro / overview card titles so a long title never
+// wraps or runs off (and never collides with the corner toggle link) — it just
+// steps the font down to fit. Pass {enabled:false} to leave the text untouched
+// (e.g. on desktop, where the title sits inline and ellipsises instead).
+// ============================================================
+function useFitText(ref, text, opts) {
+  const o = opts || {};
+  const min = o.min || 13, max = o.max || 20, enabled = o.enabled !== false;
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || !enabled) return;
+    const fit = () => {
+      el.style.fontSize = max + "px";
+      const avail = el.clientWidth;
+      const full = el.scrollWidth;
+      if (!avail || full <= avail) return;          // already fits at full size
+      // One proportional jump gets us close (text width ~ linear in font size),
+      // then nudge down in half-pixels until it clears.
+      let size = Math.max(min, Math.floor((max * avail / full) * 2) / 2);
+      el.style.fontSize = size + "px";
+      while (size > min && el.scrollWidth > avail + 0.5) { size -= 0.5; el.style.fontSize = size + "px"; }
+    };
+    fit();
+    window.addEventListener("resize", fit);
+    return () => window.removeEventListener("resize", fit);
+  }, [text, enabled, min, max]);
+}
+
+// ============================================================
 // HEADER
 // ============================================================
 function Header({ activeView, onNavChange, owner }) {

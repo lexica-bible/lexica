@@ -32,11 +32,14 @@ function SummaryPanel({ book, chapter, bookLabel, isMobile, onClose, onBack }) {
   // Swipe-to-dismiss for the mobile sheet (same hook the word-study / xref sheets
   // use). Harmlessly no-ops on desktop, where sheetRef is never attached.
   const { sheetRef, scrollRef } = useSwipeToDismiss(onClose);
+  const titleRef = useRef(null);
 
   const bookText = data && data.book_summary;
   const chapText = data && data.chapter_summary;
   const nothing = !loading && !bookText && !chapText;
   const title = (bookLabel || book) + (chapter ? " " + chapter : "");
+  // Mobile: shrink the title to fit one line beside the corner "Intro" link.
+  useFitText(titleRef, title, { enabled: isMobile });
 
   const content = (
     <>
@@ -71,7 +74,7 @@ function SummaryPanel({ book, chapter, bookLabel, isMobile, onClose, onBack }) {
               the right pinned to the top. No ✕ — the drag handle + tap-outside close it. */}
           <div className="detail-head">
             <div className="detail-head-l">
-              <span className="detail-pos summary-pos">{title}</span>
+              <span ref={titleRef} className="detail-pos summary-pos">{title}</span>
             </div>
             {onBack && <button className="detail-back" onClick={onBack} aria-label="Back to reading intro">‹ Intro</button>}
           </div>

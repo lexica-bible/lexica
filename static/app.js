@@ -2,6 +2,7 @@ function _extends() { return _extends = Object.assign ? Object.assign.bind() : f
 const {
   useState,
   useEffect,
+  useLayoutEffect,
   useRef,
   useMemo
 } = React;
@@ -1440,6 +1441,41 @@ function useNotesVersion() {
 }
 
 // ============================================================
+// useFitText — shrink a single-line element's font-size until it fits its slot.
+// Used by the mobile reading-intro / overview card titles so a long title never
+// wraps or runs off (and never collides with the corner toggle link) — it just
+// steps the font down to fit. Pass {enabled:false} to leave the text untouched
+// (e.g. on desktop, where the title sits inline and ellipsises instead).
+// ============================================================
+function useFitText(ref, text, opts) {
+  const o = opts || {};
+  const min = o.min || 13,
+    max = o.max || 20,
+    enabled = o.enabled !== false;
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || !enabled) return;
+    const fit = () => {
+      el.style.fontSize = max + "px";
+      const avail = el.clientWidth;
+      const full = el.scrollWidth;
+      if (!avail || full <= avail) return; // already fits at full size
+      // One proportional jump gets us close (text width ~ linear in font size),
+      // then nudge down in half-pixels until it clears.
+      let size = Math.max(min, Math.floor(max * avail / full * 2) / 2);
+      el.style.fontSize = size + "px";
+      while (size > min && el.scrollWidth > avail + 0.5) {
+        size -= 0.5;
+        el.style.fontSize = size + "px";
+      }
+    };
+    fit();
+    window.addEventListener("resize", fit);
+    return () => window.removeEventListener("resize", fit);
+  }, [text, enabled, min, max]);
+}
+
+// ============================================================
 // HEADER
 // ============================================================
 function Header({
@@ -1858,10 +1894,15 @@ function SummaryPanel({
     sheetRef,
     scrollRef
   } = useSwipeToDismiss(onClose);
+  const titleRef = useRef(null);
   const bookText = data && data.book_summary;
   const chapText = data && data.chapter_summary;
   const nothing = !loading && !bookText && !chapText;
   const title = (bookLabel || book) + (chapter ? " " + chapter : "");
+  // Mobile: shrink the title to fit one line beside the corner "Intro" link.
+  useFitText(titleRef, title, {
+    enabled: isMobile
+  });
   const content = /*#__PURE__*/React.createElement(React.Fragment, null, loading && /*#__PURE__*/React.createElement("div", {
     className: "summary-loading"
   }, "Reading the chapter\u2026"), !loading && bookText && /*#__PURE__*/React.createElement("div", {
@@ -1901,6 +1942,7 @@ function SummaryPanel({
     }, /*#__PURE__*/React.createElement("div", {
       className: "detail-head-l"
     }, /*#__PURE__*/React.createElement("span", {
+      ref: titleRef,
       className: "detail-pos summary-pos"
     }, title)), onBack && /*#__PURE__*/React.createElement("button", {
       className: "detail-back",
@@ -6063,11 +6105,17 @@ function DayIntroPanel({
     sheetRef,
     scrollRef
   } = useSwipeToDismiss(onClose);
+  const titleRef = useRef(null);
   const era = chrono && chrono.eras && day ? chrono.eras.find(e => e.id === day.era) : null;
   const win = day ? readingWindow(day, chrono) : null;
   const passages = day && chrono && chrono.passages ? day.pos.map(q => chrono.passages[q - 1]).filter(Boolean) : [];
   const title = data && data.title || (era ? era.name : "Today's reading");
   const dateLine = win ? fmtReadingDate(win.y0, win.y1) : null;
+  // Mobile: shrink the title to fit one line beside the corner toggle link (desktop
+  // keeps its inline ellipsis instead).
+  useFitText(titleRef, title, {
+    enabled: isMobile
+  });
   const content = /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "detail-hero dintro-hero"
   }, /*#__PURE__*/React.createElement("div", {
@@ -6139,7 +6187,10 @@ function DayIntroPanel({
       className: "detail-head"
     }, /*#__PURE__*/React.createElement("div", {
       className: "detail-head-l"
-    }, headTitle), onOverview && /*#__PURE__*/React.createElement("button", {
+    }, /*#__PURE__*/React.createElement("span", {
+      ref: titleRef,
+      className: "detail-pos summary-pos dintro-era-head"
+    }, title)), onOverview && /*#__PURE__*/React.createElement("button", {
       className: "detail-back",
       onClick: onOverview,
       "aria-label": "Chapter overview"
