@@ -425,7 +425,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     script: isHebrew ? (bdbEntry?.lemma || entry.gloss) : (entry.greek || nameOrGloss),
     translit: isHebrew ? bdbEntry?.xlit : entry.translit,
     standaloneGloss: trimTail((isPN || metavData) ? properName
-      : (entry.greek && (entry.gloss || "").trim().split(/\s+/).length > 2 ? entry.english_head : entry.gloss)),
+      : (entry.greek && (entry.gloss || "").trim().split(/\s+/).length > 2 ? (entry.english_head || entry.gloss) : entry.gloss)),
     morph: morphLine,
   };
   // Show "translit · gloss" on one line whenever there's both — same for Greek and

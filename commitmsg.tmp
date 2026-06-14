@@ -1,0 +1,11 @@
+Word popup gloss fix, mobile back button mirror, poetry layout across all texts
+
+- Word popup: show the head English word next to the transliteration for words
+  with a long (3+ word) gloss; fall back to the full phrase if no head word so the
+  English line is never blank (was inconsistent — long glosses showed nothing)
+- Mobile overview/intro sheets: the back "‹" now sits in the exact spot the word
+  tab's ✕ uses (same 32×32 box, same right edge / top padding)
+- Poetry books (Psalms, Proverbs, Job, Song of Solomon, Lamentations, Ecclesiastes)
+  now stay verse-per-line in KJV/BSB/ESV/NIV too, matching ABP (was ABP-only)
+
+Co-Authored-By: Claude Opus 4.8 <noreply@anthropic.com>

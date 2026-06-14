@@ -2954,12 +2954,23 @@ button.plan-day-mark:hover { background: var(--accent-soft); }
    width, so the title doesn't wrap and the header doesn't grow taller. useFitText
    shrinks the title to fit the remaining width on ONE line. No ✕ — the drag handle +
    tap-outside close the sheet. */
-.summary-sheet .detail-head { align-items: center; padding: 14px 12px 14px 20px; gap: 4px; }
+/* Header padding matches the word-study sheet (.detail-head: 18px 24px 14px) so the
+   back "‹" lands in the exact spot the word tab's ✕ does. */
+.summary-sheet .detail-head { align-items: center; padding: 18px 24px 14px; }
 .summary-sheet .detail-head-l { flex: 1; min-width: 0; }
 .summary-sheet .summary-pos, .summary-sheet .dintro-era-head {
   display: block; width: 100%; white-space: nowrap; overflow: hidden; text-overflow: clip;
 }
-.summary-sheet .detail-back { flex: 0 0 auto; font-size: 22px; line-height: 1; padding: 6px 8px; margin-right: 6px; }
+/* Mirror the word tab's ✕ (.detail-close): same 32×32 box, same right edge — only
+   the glyph differs (a back chevron instead of a close cross). */
+.summary-sheet .detail-back {
+  flex: 0 0 auto;
+  width: 32px; height: 32px;
+  border-radius: 6px;
+  display: grid; place-items: center;
+  font-size: 22px; line-height: 1;
+  padding: 0; margin: 0;
+}
 .dintro-meta { font-size: 12.5px; font-weight: 600; letter-spacing: 0.02em; color: var(--accent); }
 .dintro-date { font-family: var(--f-mono); font-size: 12px; color: var(--ink-2); letter-spacing: 0.01em; margin-top: 6px; }
 .dintro-tl { margin: 0; }

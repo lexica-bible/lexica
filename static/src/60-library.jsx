@@ -2233,6 +2233,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
     const makeEntry = (w) => ({
       id: `lib-${selBook.abbrev}-${ch}-${v.verse}-${w.position}`,
       ...wordEntryCore(w, { ref: `${selBook.abbrev} ${ch}:${v.verse}`, book: selBook.abbrev, chapter: ch, verse: v.verse, gloss: w.english }),
+      english_head: w.english_head || "",   // hero shows the head word for a long gloss
       morph: w.morph || "",
       pn_type: w.pn_type || null,
       pn_types: w.pn_types || null,
@@ -2562,6 +2563,27 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
                 {w.word}{w.punc || ""}{" "}
               </span>
             ))}
+          </span>
+        </div>
+      </React.Fragment>
+    );
+  };
+
+  // Plain-text verse-per-line (BSB/ESV/NIV) — the same one-block-per-verse layout
+  // renderKjvProse gives KJV, used for poetry books so every text lines its verses
+  // up the way ABP poetry does (not run together as flowing prose).
+  const renderPlainVerse = (v, showVerseNum = true, skipHeading = false) => {
+    const ch = v._ch ?? selChapter;
+    const isHighlight = nav && nav.highlight === v.verse && (nav.chapter == null || nav.chapter === ch);
+    return (
+      <React.Fragment key={`${ch}-${v.verse}`}>
+        {!skipHeading && v.heading && <div className="lib-verse-row pericope-row"><span className="lib-vnum" aria-hidden="true"/><div className="pericope-heading">{v.heading}</div></div>}
+        <div ref={isHighlight ? highlightRef : null} data-note-verse={v.verse} data-note-chapter={ch}
+          className={"lib-verse-row" + (isHighlight ? " lib-highlight" : "")}>
+          {showVerseNum && vnumEl(v.verse, ch)}
+          <span className="lib-verse-content">
+            {showVerseNum && noteMarker(v.verse, ch)}
+            <span className={"lib-bsb-text" + hiClass(v.verse, null, ch)}>{v.verse_text}</span>
           </span>
         </div>
       </React.Fragment>
@@ -3124,6 +3146,10 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
             <div className="lib-text-words">
               {withMarks(kjvView, v => renderKjvVerse(v))}
             </div>
+          ) : isPoetry ? (
+            <div className="lib-text-words">
+              {withMarks(kjvView, v => renderKjvProse(v))}
+            </div>
           ) : (
             <div className="lib-text-words lib-prose-flow">
               {withMarks(kjvView, v => renderFlowVerse(v, kjvFlowInner(v)))}
@@ -3132,6 +3158,10 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
         ) : translation === "bsb" ? (
           bsbShowLoading ? (
             <div className="lib-loading">Loading…</div>
+          ) : isPoetry ? (
+            <div className="lib-text-words">
+              {withMarks(bsbView, v => renderPlainVerse(v))}
+            </div>
           ) : (
             <div className="lib-text-words lib-prose-flow">
               {withMarks(bsbView, v => renderFlowVerse(v, plainFlowInner(v)))}
@@ -3140,6 +3170,10 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
         ) : translation === "esv" ? (
           esvShowLoading ? (
             <div className="lib-loading">Loading…</div>
+          ) : isPoetry ? (
+            <div className="lib-text-words">
+              {withMarks(esvView, v => renderPlainVerse(v))}
+            </div>
           ) : (
             <div className="lib-text-words lib-prose-flow">
               {withMarks(esvView, v => renderFlowVerse(v, plainFlowInner(v)))}
@@ -3148,6 +3182,10 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
         ) : translation === "niv" ? (
           nivShowLoading ? (
             <div className="lib-loading">Loading…</div>
+          ) : isPoetry ? (
+            <div className="lib-text-words">
+              {withMarks(nivView, v => renderPlainVerse(v))}
+            </div>
           ) : (
             <div className="lib-text-words lib-prose-flow">
               {withMarks(nivView, v => renderFlowVerse(v, plainFlowInner(v)))}

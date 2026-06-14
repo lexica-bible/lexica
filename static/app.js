@@ -2364,7 +2364,7 @@ function DetailPanel({
     noGloss: isPN && !entry.greek && !isHebrew,
     script: isHebrew ? bdbEntry?.lemma || entry.gloss : entry.greek || nameOrGloss,
     translit: isHebrew ? bdbEntry?.xlit : entry.translit,
-    standaloneGloss: trimTail(isPN || metavData ? properName : entry.greek && (entry.gloss || "").trim().split(/\s+/).length > 2 ? entry.english_head : entry.gloss),
+    standaloneGloss: trimTail(isPN || metavData ? properName : entry.greek && (entry.gloss || "").trim().split(/\s+/).length > 2 ? entry.english_head || entry.gloss : entry.gloss),
     morph: morphLine
   };
   // Show "translit · gloss" on one line whenever there's both — same for Greek and
@@ -9639,6 +9639,8 @@ function LibraryView({
         verse: v.verse,
         gloss: w.english
       }),
+      english_head: w.english_head || "",
+      // hero shows the head word for a long gloss
       morph: w.morph || "",
       pn_type: w.pn_type || null,
       pn_types: w.pn_types || null
@@ -10071,6 +10073,33 @@ function LibraryView({
       key: i,
       className: (w.italic ? "lib-prose-italic" : "") + hiClass(v.verse, null, ch)
     }, w.word, w.punc || "", " ")))));
+  };
+
+  // Plain-text verse-per-line (BSB/ESV/NIV) — the same one-block-per-verse layout
+  // renderKjvProse gives KJV, used for poetry books so every text lines its verses
+  // up the way ABP poetry does (not run together as flowing prose).
+  const renderPlainVerse = (v, showVerseNum = true, skipHeading = false) => {
+    const ch = v._ch ?? selChapter;
+    const isHighlight = nav && nav.highlight === v.verse && (nav.chapter == null || nav.chapter === ch);
+    return /*#__PURE__*/React.createElement(React.Fragment, {
+      key: `${ch}-${v.verse}`
+    }, !skipHeading && v.heading && /*#__PURE__*/React.createElement("div", {
+      className: "lib-verse-row pericope-row"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "lib-vnum",
+      "aria-hidden": "true"
+    }), /*#__PURE__*/React.createElement("div", {
+      className: "pericope-heading"
+    }, v.heading)), /*#__PURE__*/React.createElement("div", {
+      ref: isHighlight ? highlightRef : null,
+      "data-note-verse": v.verse,
+      "data-note-chapter": ch,
+      className: "lib-verse-row" + (isHighlight ? " lib-highlight" : "")
+    }, showVerseNum && vnumEl(v.verse, ch), /*#__PURE__*/React.createElement("span", {
+      className: "lib-verse-content"
+    }, showVerseNum && noteMarker(v.verse, ch), /*#__PURE__*/React.createElement("span", {
+      className: "lib-bsb-text" + hiClass(v.verse, null, ch)
+    }, v.verse_text))));
   };
 
   // KJV / BSB / ESV read as continuous prose (paragraphs), the same flow ABP prose
@@ -10845,19 +10874,27 @@ function LibraryView({
     className: "lib-loading"
   }, "Loading\u2026") : kjvWordMode ? /*#__PURE__*/React.createElement("div", {
     className: "lib-text-words"
-  }, withMarks(kjvView, v => renderKjvVerse(v))) : /*#__PURE__*/React.createElement("div", {
+  }, withMarks(kjvView, v => renderKjvVerse(v))) : isPoetry ? /*#__PURE__*/React.createElement("div", {
+    className: "lib-text-words"
+  }, withMarks(kjvView, v => renderKjvProse(v))) : /*#__PURE__*/React.createElement("div", {
     className: "lib-text-words lib-prose-flow"
   }, withMarks(kjvView, v => renderFlowVerse(v, kjvFlowInner(v)))) : translation === "bsb" ? bsbShowLoading ? /*#__PURE__*/React.createElement("div", {
     className: "lib-loading"
-  }, "Loading\u2026") : /*#__PURE__*/React.createElement("div", {
+  }, "Loading\u2026") : isPoetry ? /*#__PURE__*/React.createElement("div", {
+    className: "lib-text-words"
+  }, withMarks(bsbView, v => renderPlainVerse(v))) : /*#__PURE__*/React.createElement("div", {
     className: "lib-text-words lib-prose-flow"
   }, withMarks(bsbView, v => renderFlowVerse(v, plainFlowInner(v)))) : translation === "esv" ? esvShowLoading ? /*#__PURE__*/React.createElement("div", {
     className: "lib-loading"
-  }, "Loading\u2026") : /*#__PURE__*/React.createElement("div", {
+  }, "Loading\u2026") : isPoetry ? /*#__PURE__*/React.createElement("div", {
+    className: "lib-text-words"
+  }, withMarks(esvView, v => renderPlainVerse(v))) : /*#__PURE__*/React.createElement("div", {
     className: "lib-text-words lib-prose-flow"
   }, withMarks(esvView, v => renderFlowVerse(v, plainFlowInner(v)))) : translation === "niv" ? nivShowLoading ? /*#__PURE__*/React.createElement("div", {
     className: "lib-loading"
-  }, "Loading\u2026") : /*#__PURE__*/React.createElement("div", {
+  }, "Loading\u2026") : isPoetry ? /*#__PURE__*/React.createElement("div", {
+    className: "lib-text-words"
+  }, withMarks(nivView, v => renderPlainVerse(v))) : /*#__PURE__*/React.createElement("div", {
     className: "lib-text-words lib-prose-flow"
   }, withMarks(nivView, v => renderFlowVerse(v, plainFlowInner(v)))) : translation === "heb" ? hebLoading ? /*#__PURE__*/React.createElement("div", {
     className: "lib-loading"
