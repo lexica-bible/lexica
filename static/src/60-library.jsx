@@ -834,6 +834,13 @@ function readLibSaved() {
 function readCachedBooks() {
   try { const c = JSON.parse(localStorage.getItem("lexica.books.v1") || "null"); return Array.isArray(c) ? c : []; } catch (e) { return []; }
 }
+// Same idea for the chronological list (a ~255KB static file). Caching it lets the
+// chrono passage label paint on the FIRST frame after a refresh — without it, `chrono`
+// is null until the fetch lands, so chronoOn is briefly false and the mobile toolbar
+// flashes the canonical book/chapter before flipping to the passage label.
+function readCachedChrono() {
+  try { const c = JSON.parse(localStorage.getItem("lexica.chrono.v1") || "null"); return (c && Array.isArray(c.passages)) ? c : null; } catch (e) { return null; }
+}
 
 function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpenNote, onTranslationChange, isMobile, showSummary, focusMode, onToggleFocus, onDetailBaseChange }) {
   const [books, setBooks] = useState(() => readCachedBooks());
@@ -964,7 +971,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
     const s = readLibSaved();
     return s && s.orderMode === "chronological" ? "chronological" : "canonical";
   });
-  const [chrono, setChrono] = useState(null);              // { eras, passages } | null
+  const [chrono, setChrono] = useState(() => readCachedChrono());  // { eras, passages } | null (cached for instant first paint)
   const [chronoPos, setChronoPos] = useState(() => {       // current passage position (1-based)
     const s = readLibSaved();
     return s && s.chronoPos > 0 ? s.chronoPos : 1;
@@ -1100,7 +1107,10 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
   // Load the chronological passage list once (a small static file). If it fails,
   // chronoOn stays false and the Order toggle simply never appears.
   useEffect(() => {
-    api.chronological().then(setChrono).catch(() => {});
+    api.chronological().then(data => {
+      setChrono(data);
+      try { localStorage.setItem("lexica.chrono.v1", JSON.stringify(data)); } catch (e) {}
+    }).catch(() => {});
   }, []);
 
   // Where you were reading in canonical order, so flipping back restores it
