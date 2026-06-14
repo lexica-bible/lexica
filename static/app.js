@@ -2654,8 +2654,8 @@ function DetailPanel({
         }, /*#__PURE__*/React.createElement("span", {
           className: "sec-t"
         }, "Verse \u2014 ", entry.ref), /*#__PURE__*/React.createElement("span", {
-          className: "sec-meta"
-        }, useKjvText ? "KJV" : "LXX (ABP English)")), /*#__PURE__*/React.createElement("blockquote", {
+          className: "lsj-badge"
+        }, useKjvText ? "KJV" : "ABP")), /*#__PURE__*/React.createElement("blockquote", {
           className: "dverse"
         }, /*#__PURE__*/React.createElement("span", {
           className: "dverse-n"

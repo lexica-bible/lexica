@@ -675,7 +675,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       <section key="verse" className="sec">
         <h4 className="sec-head">
           <span className="sec-t">Verse — {entry.ref}</span>
-          <span className="sec-meta">{useKjvText ? "KJV" : "LXX (ABP English)"}</span>
+          <span className="lsj-badge">{useKjvText ? "KJV" : "ABP"}</span>
         </h4>
         <blockquote className="dverse">
           <span className="dverse-n">{entry.verse}</span>
