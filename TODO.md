@@ -201,6 +201,20 @@ so the source language ONLY matters if we want a word-by-word original. For a He
 join on H-numbers in `/api/extra`, BDB/Hebrew routing + right-to-left chips in the reader. Not urgent
 — no Hebrew non-canonical is queued, and any of them can ship English-only today.
 
+## Detail-rail restyle — DONE 2026-06-14; CHRONOLOGICAL views are NEXT
+
+The whole right-side detail rail (word study, cross-references, reading intro, chapter overview,
+note editor) got a consistency pass — one design language now. Full record: memory
+`project_side_panel_rail`. Headline: navy is the accent (gold only where it earns a spotlight);
+headers = the subject title; badges are TIERED (quiet gray outline = source, filled navy square =
+a fact, gold = spotlight, solid navy = AI); metaV Person|Place toggle is the heading itself.
+
+**OPEN — give the CHRONOLOGICAL views the same treatment.** The Days reading-plan, the daily
+Reading-intro panel, and the Eras/Days picker have a few styling bits the user wants cleaned along
+this same theme (badge/label/spacing consistency, gold-vs-navy, sparse-gold-for-spotlight). Not
+scoped yet — walk the views live first, list the specific gripes, propose before applying.
+`code: static/src/58-dayplan.jsx, static/src/59-dayintro.jsx, static/src/60-library.jsx (nav-plan/era picker), styles.css (.plan-*, .dintro-*)`
+
 ## Random redesign ideas (2026-06-09 brainstorm — pick any, nothing committed)
 
 Loose look-and-feel ideas, parked here so they're not lost. None are scoped yet — grab whichever appeals.
