@@ -810,6 +810,15 @@ input { font-family: inherit; }
   color: var(--ink);
   letter-spacing: 0;
 }
+/* Word-study header "topic": the Strong's number, sized like the other panel
+   titles, plain (no chip background). Stays mono — it's a catalog code. */
+.detail-strong-head {
+  font-family: var(--f-mono);
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--ink);
+  letter-spacing: 0.01em;
+}
 .detail-close {
   width: 32px; height: 32px;
   border-radius: 6px;

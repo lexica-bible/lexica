@@ -2763,7 +2763,7 @@ function DetailPanel({
   }, /*#__PURE__*/React.createElement("div", {
     className: "detail-head-l"
   }, /*#__PURE__*/React.createElement("span", {
-    className: "card-badge solid"
+    className: "detail-strong-head"
   }, entry.strongs), /*#__PURE__*/React.createElement("span", {
     className: "detail-pos"
   }, "Word study")), overviewBack && !isMobile ? /*#__PURE__*/React.createElement("button", {

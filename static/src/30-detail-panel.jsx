@@ -742,7 +742,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       {isMobile && <div className="sheet-drag-zone" aria-hidden="true"><div className="sheet-handle"></div></div>}
       <div className="detail-head">
         <div className="detail-head-l">
-          <span className="card-badge solid">{entry.strongs}</span>
+          <span className="detail-strong-head">{entry.strongs}</span>
           <span className="detail-pos">Word study</span>
         </div>
         {overviewBack && !isMobile ? (
