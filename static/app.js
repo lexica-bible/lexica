@@ -8392,6 +8392,7 @@ function LibraryView({
     setCorpus("bible");
     setTranslation(edition);
     onTranslationChange?.(edition);
+    setOtherOpen(false); // picking a row text collapses the "More" menu if it was open
     if (selBook && selChapter > selBook.chapters) setSelChapter(selBook.chapters);
   };
   // Compare (parallel): pick 2-4 texts to show side by side. The picker's "active"
