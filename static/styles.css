@@ -815,7 +815,7 @@ input { font-family: inherit; }
 .detail-strong-head {
   font-family: var(--f-mono);
   font-size: 18px;
-  font-weight: 600;
+  font-weight: 500;
   color: var(--ink);
   letter-spacing: 0.01em;
 }
