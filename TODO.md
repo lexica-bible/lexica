@@ -331,15 +331,20 @@ Read the Bible in event order, works with ANY version (ABP/KJV/BSB). Shipped as 
 toggle in the Library (Canonical | Clock icon = Chronological), NOT a separate tab. Data is a static
 `static/chronological.json` (1,102 passages, 13 eras) built by `scripts/chronological/
 build_chronological.py` — no database, no backend route. Exact-range reader trims + spans chapters.
-Full record in memory `project_chronological_tab`. Polish DONE 2026-06-11: the chapter divider is now
-suppressed on single-chapter passages (it just repeated the passage location); multi-chapter passages
-keep their per-chapter dividers (`singleChapterPassage` in 60-library.jsx `withMarks`).
+Full record in memory `project_chronological_tab`. Polish (2026-06-13, SUPERSEDES the earlier
+single-chapter-divider suppression): EVERY chrono passage now shows a chapter heading
+(`chronoChapLabel` in 60-library.jsx `withMarks`) — single-chapter passages had been showing NO label
+at all — and partial chapters carry the verse range in the heading ("1 Chronicles 1:1–4", "Genesis
+10:1–5", derived from the loaded chapter's last verse).
 
 **365-DAY READING PLAN ("Days" view) — DONE + LIVE 2026-06-13.** `Eras | Days` toggle on the chrono
 picker (pinned; desktop nav + mobile picker). `build_chronological.py` now bins the 1,102 passages into
 365 days (balanced by verse length via a small DP, never splitting a passage, era-aligned) and bakes a
 `days` array + `day`/`verses` into `chronological.json`. Per-text progress (`lexica.plan.v1`) in the
-NEW `static/src/58-dayplan.jsx`; "Mark today complete" / "Set as today". DECIDED: keep the source's
+NEW `static/src/58-dayplan.jsx`; each day is now a small CLICK-TO-CHECK (the "Mark today complete" /
+"Set as today" buttons were DROPPED 2026-06-13 — click the mark to set your spot, click again to undo)
+and the Days list FOLLOWS your reading spot (the day holding the current passage auto-opens + gets a
+"Reading" highlight, separate from the gold plan "Today"). DECIDED: keep the source's
 verse-level interleaving (don't hand-reorder). **REFRESH-PERSISTENCE pass (2026-06-13):** reading order
 + chrono position + compare + the chip/prose/Strong's/interlinear toggles now survive a reload,
 restored synchronously (no canonical→chrono flash); the reading pane no longer scrolls when the wheel
@@ -347,6 +352,28 @@ is over fixed chrome (header/toolbar/nav/detail). Full records: memory `project_
 `project_refresh_persistence`. DEFERRED (user "looks good for now"): account-sync of plan progress; a
 stitched single-scroll "today's reading"; deeper per-tab persistence (Lexicon/Search/Notes/Study
 last-state + within-chapter scroll position).
+
+**CHRONOLOGICAL DAILY "READING INTRO" PANEL — DONE + LIVE 2026-06-13.** ESV-style per-reading card in
+the right detail panel (mobile = the ⓘ sheet) when reading chronologically: reading number, AI Berean
+title + summary, the era's dated timeline with the reading marked by a gold oval, and the day's
+passages. Backend NEW `views_chrono.py` (`GET /api/chrono/intro/<day>`, Haiku one-call title+summary,
+cached in ai_search_cache category `chrono`); frontend NEW `static/src/59-dayintro.jsx` (`DayIntroPanel`
++ `TimelineStrip` + `ERA_TIMELINE` constant). Dates = LXX for the early eras + per-reading interpolated
+"c." (APPROXIMATE on purpose — not the ESV's hand-picked years). Design ported from a show_widget mock
+the user approved. Also this session (all LIVE): switch-INTO-chrono lands on the passage holding your
+current verse (`passageForRef`); the toolbar ‹ › carry the audio on a page turn (route through
+`turnPage`); single-chapter passages no longer play the WRONG chapter's audio (viewCh pinned to
+`start_ch` when there are no chapter marks); thin scrollbar on the Days list. Full record: memory
+`project_chronological_tab`.
+- **OPEN follow-up (next session, user flagged):** the Reading-intro panel doesn't match the other
+  detail-rail panels. (1) the "return to overview" control must use the shared `.detail-back`
+  "‹ Overview" HEADER link the word-study/xref panels use (`overviewBack` pattern), NOT the custom
+  bottom `.dintro-overview-link` added this session. (2) Align the whole panel's header / eyebrow /
+  type scale / spacing with the word-study (30-detail-panel.jsx) + xref (40-crossref-panel.jsx)
+  panels so the right rail is one consistent surface. A ready-to-paste next-session prompt is in the
+  chat; memory `project_chronological_tab` "OPEN" has the detail.
+- PHASE 2 (deferred): exact hand-curated per-reading dates; sub-eras (Saul/David/Solomon) with finer
+  timelines; milestone labels ON the timeline track (v1 lists them below).
 
 **MOBILE TOOLBAR RELOAD "FLASH" — FONT half FIXED 2026-06-13; chrono half DEFERRED.** The chapter/verse
 button flashed on every reload. Diagnosed on the LIVE site (chrome-devtools MCP, instrumented reload):

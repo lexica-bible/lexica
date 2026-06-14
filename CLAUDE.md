@@ -341,10 +341,21 @@ scripts/          # build-frontend.js + one-time import/migration scripts
   `chronological.json` as a top-level `days` array + `day`/`verses` on each passage by
   `build_chronological.py` (balanced by verse length via a small DP, never splitting a passage,
   aligned to era boundaries; ~85 verses/day). Progress is PER READING TEXT (each text keeps its own
-  day + streak + last-read) in `localStorage` `lexica.plan.v1`. "Mark today complete" advances +
-  reads into the next day; "Set as today" on any other day moves your pointer (undo a mis-mark /
-  start mid-plan). Reading reuses the one-passage-at-a-time chrono reader. Component:
+  day + streak + last-read) in `localStorage` `lexica.plan.v1`. Each day has a small CLICK-TO-CHECK
+  mark (the old "Mark complete" / "Set as today" buttons were DROPPED 2026-06-13): click to mark a
+  day read (linear — sets your spot to the next day + bumps the streak on a new calendar day), click
+  a read day to undo. The Days list FOLLOWS your reading spot — the day holding the current passage
+  auto-opens, scrolls in, and gets an accent "Reading" highlight (separate from the gold plan
+  "Today"). Reading reuses the one-passage-at-a-time chrono reader. Component:
   `static/src/58-dayplan.jsx` (DayPlanView + plan helpers). Full record: memory `project_chronological_tab`.
+- **Chronological daily "Reading intro" panel (LIVE 2026-06-13).** In chrono mode the right detail
+  panel (mobile = the ⓘ sheet) shows an ESV-style card for the day: reading number, AI Berean title +
+  summary, the era's dated timeline with the reading marked, and the day's passages. Backend
+  `views_chrono.py` (`GET /api/chrono/intro/<day>`, Haiku, one call for title+summary, cached in
+  ai_search_cache); frontend `static/src/59-dayintro.jsx` (`DayIntroPanel` + `TimelineStrip` +
+  `ERA_TIMELINE` constant). Era dates use LXX chronology for the early eras; per-reading dates are
+  interpolated within the era and shown "c." (approximate). PENDING: match the panel's look to the
+  other detail-rail panels (word-study/xref) — see memory `project_chronological_tab` "OPEN".
 - **Wheel over fixed chrome doesn't scroll the reading pane (2026-06-13).** The reading pane rides
   the window scroll; a scoped non-passive wheel handler in 90-app.jsx blocks the page scroll when
   the pointer is over `.hdr / .lib-bar / .lib-toolbar / .nav / .detail-side`, after first letting an
@@ -531,8 +542,9 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   `_CACHE_CODE_VER` salt). See "AI result cache" below.
 
 ## AI result cache (ai_search_cache) — unified prompt-fingerprint scheme (2026-06-09)
-- ALL four AI syntheses cache here (the xref write-up + chapter summary run on Sonnet; book blurb, search, pn stay Haiku) with `ver_key = "<category>:<sha1-of-its-own-prompt>"`:
-  `search:` (ai.py), `summary:` (views_summary.py), `xref:` (views_crossref.py), `pn:` (views_metav.py).
+- ALL these AI syntheses cache here (the xref write-up + chapter summary run on Sonnet; book blurb, search, pn, chrono intro stay Haiku) with `ver_key = "<category>:<sha1-of-its-own-prompt>"`:
+  `search:` (ai.py), `summary:` (views_summary.py), `xref:` (views_crossref.py), `pn:` (views_metav.py),
+  `chrono:` (views_chrono.py — the chronological daily Reading-intro title+summary, key `chrono_intro:<day>`).
   Editing a prompt changes only its category's hash, so just that cache lazily refreshes — no manual
   version bump. (Replaced the old hand-bumped `_SUMMARY_VER` + fixed `"xref"`/`"pn"` literal tags.)
 - Shared helpers in core.py: `ai_fingerprint(category, *prompt_parts)`, `ai_cache_get(query, ver_key)`
