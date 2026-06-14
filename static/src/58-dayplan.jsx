@@ -52,6 +52,10 @@ function planAdvance(cur, totalDays) {
 function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, onPickPassage, onToggleDone, isMobile }) {
   const days = (chrono && chrono.days) || [];
   const total = days.length || 365;
+  // 365 days is too long to scroll as one list, so chunk it into ~12 "month" blocks
+  // (≈31 days each) shown as an accordion — one month open at a time.
+  const monthSize = Math.ceil(total / 12);
+  const monthOf = (d) => Math.floor((d - 1) / monthSize) + 1;
   const prog = planFor(progAll, curText);
   const curDay = prog.day;
   // The day that holds the passage you're currently reading. The list FOLLOWS this —
@@ -66,6 +70,7 @@ function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, o
   const focusDay = readingDay || curDay;
   const pct = Math.round((curDay - 1) / total * 100);     // days COMPLETED / total
   const [open, setOpen] = useState(() => new Set([focusDay]));
+  const [openMonth, setOpenMonth] = useState(() => monthOf(focusDay));   // which month block is expanded
   const todayRef = useRef(null);    // plan "Today" — target of the Jump button
   const focusRef = useRef(null);    // the day you're reading — auto-scrolled to
 
@@ -74,6 +79,7 @@ function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, o
   // which move readingDay). Also re-centres when you switch reading text.
   useEffect(() => {
     setOpen(new Set([focusDay]));
+    setOpenMonth(monthOf(focusDay));
     requestAnimationFrame(() => focusRef.current && focusRef.current.scrollIntoView({ block: "nearest" }));
   }, [curText, focusDay]);
 
@@ -88,6 +94,7 @@ function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, o
   // on closes), move the reading dot to it, and load its first reading in the pane.
   const selectDay = (day) => {
     setOpen(new Set([day.day]));
+    setOpenMonth(monthOf(day.day));
     const ps = passagesOf(day);
     if (ps[0]) onPickPassage(ps[0]);
   };
@@ -95,6 +102,57 @@ function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, o
   // open this one, and move the reading dot to it. On mobile the sheet stays open (the
   // parent passes a non-closing onPickPassage) so you can keep browsing.
   const onDayTap = (day) => selectDay(day);
+
+  // Bin the days into month blocks (contiguous runs of the same monthOf()).
+  const months = [];
+  days.forEach(d => {
+    const m = monthOf(d.day);
+    let g = months[months.length - 1];
+    if (!g || g.n !== m) { g = { n: m, days: [], first: d.day, last: d.day }; months.push(g); }
+    g.days.push(d); g.last = d.day;
+  });
+  const toggleMonth = (n) => setOpenMonth(cur => (cur === n ? null : n));
+
+  // One day row — rendered only when its month block is open.
+  const renderDay = (day) => {
+    const done = day.day < curDay;
+    const isReading = readingDay != null && day.day === readingDay;
+    const isOpen = open.has(day.day);
+    const markClick = (e) => { e.stopPropagation(); onToggleDone(day.day); };
+    const mark = isReading
+      ? (done
+          ? <button className="plan-day-mark plan-day-mark--done" onClick={markClick}
+              aria-label={"Mark Day " + day.day + " unread"} title="Read — click to undo"><Icon.Check/></button>
+          : <button className="plan-day-mark plan-day-mark--reading" onClick={markClick}
+              aria-label={"Mark Day " + day.day + " read"} title="Mark as read"><span className="plan-day-dot" aria-hidden="true"></span></button>)
+      : done
+        ? <span className="plan-day-mark plan-day-mark--done" aria-hidden="true"><Icon.Check/></span>
+        : <span className="plan-day-mark" aria-hidden="true"></span>;
+    return (
+      <div key={day.day}
+        ref={el => {
+          if (day.day === focusDay) focusRef.current = el;
+          if (day.day === curDay) todayRef.current = el;
+        }}
+        className={"plan-day" + (done ? " plan-day--done" : "") + (isReading ? " plan-day--reading" : "") + (isOpen ? " open" : "")}>
+        <div className="plan-day-head" role="button" tabIndex={0} aria-expanded={isOpen}
+          onClick={() => onDayTap(day)}
+          onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onDayTap(day); } }}>
+          <span className="plan-day-n">Day {day.day}</span>
+          <span className="plan-day-v">{day.verses}v</span>
+          {mark}
+        </div>
+        {isOpen && (
+          <div className="plan-day-body">
+            {passagesOf(day).map(p => (
+              <button key={p.pos} className={"plan-passage" + (p.pos === chronoPos ? " on" : "")}
+                onClick={() => onPickPassage(p)}>{p.label}</button>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="plan">
@@ -116,47 +174,19 @@ function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, o
 
       <div className="plan-days">
         <div className="plan-days-inner">
-        {days.map(day => {
-          const done = day.day < curDay;
-          const isReading = readingDay != null && day.day === readingDay;
-          const isOpen = open.has(day.day);
-          // One marker on the right edge IS the only clickable mark: a ✓ when the day is
-          // read (click to undo), a navy dot when it's the day you're reading (click to
-          // mark read). Every other day is bare — no Today gold, no Reading bar.
-          const markClick = (e) => { e.stopPropagation(); onToggleDone(day.day); };
-          // The marker is only CLICKABLE on the day you're on (the reading day) — un-marking
-          // a prior day means clicking that day first. Other done days show a static ✓.
-          const mark = isReading
-            ? (done
-                ? <button className="plan-day-mark plan-day-mark--done" onClick={markClick}
-                    aria-label={"Mark Day " + day.day + " unread"} title="Read — click to undo"><Icon.Check/></button>
-                : <button className="plan-day-mark plan-day-mark--reading" onClick={markClick}
-                    aria-label={"Mark Day " + day.day + " read"} title="Mark as read"><span className="plan-day-dot" aria-hidden="true"></span></button>)
-            : done
-              ? <span className="plan-day-mark plan-day-mark--done" aria-hidden="true"><Icon.Check/></span>
-              : <span className="plan-day-mark" aria-hidden="true"></span>;
+        {months.map(m => {
+          const mOpen = openMonth === m.n;
+          const doneInMonth = m.days.filter(d => d.day < curDay).length;
+          const hasReading = readingDay != null && readingDay >= m.first && readingDay <= m.last;
           return (
-            <div key={day.day}
-              ref={el => {
-                if (day.day === focusDay) focusRef.current = el;
-                if (day.day === curDay) todayRef.current = el;
-              }}
-              className={"plan-day" + (done ? " plan-day--done" : "") + (isReading ? " plan-day--reading" : "") + (isOpen ? " open" : "")}>
-              <div className="plan-day-head" role="button" tabIndex={0} aria-expanded={isOpen}
-                onClick={() => onDayTap(day)}
-                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onDayTap(day); } }}>
-                <span className="plan-day-n">Day {day.day}</span>
-                <span className="plan-day-v">{day.verses}v</span>
-                {mark}
-              </div>
-              {isOpen && (
-                <div className="plan-day-body">
-                  {passagesOf(day).map(p => (
-                    <button key={p.pos} className={"plan-passage" + (p.pos === chronoPos ? " on" : "")}
-                      onClick={() => onPickPassage(p)}>{p.label}</button>
-                  ))}
-                </div>
-              )}
+            <div key={m.n} className={"plan-month" + (mOpen ? " open" : "") + (hasReading ? " plan-month--reading" : "")}>
+              <button className="plan-month-head" onClick={() => toggleMonth(m.n)} aria-expanded={mOpen}>
+                <span className="plan-month-caret" aria-hidden="true">▸</span>
+                <span className="plan-month-name">Month {m.n}</span>
+                <span className="plan-month-range">Days {m.first}–{m.last}</span>
+                <span className="plan-month-done">{doneInMonth}/{m.days.length}</span>
+              </button>
+              {mOpen && <div className="plan-month-days">{m.days.map(renderDay)}</div>}
             </div>
           );
         })}

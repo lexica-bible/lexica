@@ -175,12 +175,12 @@ function DayIntroPanel({ day, chrono, isMobile, onClose, onPickPassage, onOvervi
         <div className="sheet-scrim" onClick={onClose} />
         <aside ref={sheetRef} className="detail detail-sheet summary-sheet dintro-sheet" role="dialog" aria-label="Reading intro">
           <div className="sheet-drag-zone" aria-hidden="true"><div className="sheet-handle"></div></div>
-          <div className="detail-head">
-            <div className="detail-head-l">
-              {onOverview && <button className="detail-back" onClick={onOverview} aria-label="Chapter overview">‹ Overview</button>}
-              {headTitle}
-            </div>
-            <button className="detail-close" onClick={onClose} aria-label="Close"><Icon.Close/></button>
+          {/* Stacked header: a thin "‹ Overview" back row, then the title on its own
+              full-width line so a long title wraps instead of running off. No ✕ — the
+              drag handle + tap-outside scrim already close the sheet. */}
+          <div className="detail-head dintro-head-m">
+            {onOverview && <button className="detail-back dintro-back-m" onClick={onOverview} aria-label="Chapter overview">‹ Overview</button>}
+            <span className="detail-pos summary-pos dintro-title-m">{title}</span>
           </div>
           <div className="detail-body" ref={scrollRef}>{content}</div>
         </aside>

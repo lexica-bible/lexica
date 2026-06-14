@@ -2905,12 +2905,26 @@ button.plan-day-mark:hover { background: var(--accent-soft); }
 .plan-passage:hover { color: var(--ink); }
 /* The passage you're currently reading, marked with a bullet + accent. */
 .plan-passage.on { color: var(--ink); font-weight: 600; }
+/* Month blocks — the 365 days chunked into ~12 collapsible months (accordion). */
+.plan-month-head {
+  display: flex; align-items: center; gap: 8px; width: 100%; text-align: left;
+  padding: 8px 8px; cursor: pointer; background: none; border: none;
+}
+.plan-month-head:hover .plan-month-name { color: var(--ink); }
+.plan-month-caret { flex: 0 0 auto; font-size: 9px; color: var(--ink-4); transition: transform .12s ease; }
+.plan-month.open .plan-month-caret { transform: rotate(90deg); }
+.plan-month-name { flex: 0 0 auto; font-size: 13px; font-weight: 600; color: var(--ink-2); }
+.plan-month--reading .plan-month-name { color: var(--ink); }
+.plan-month-range { flex: 1; min-width: 0; font-size: 11px; color: var(--ink-4); font-family: var(--f-mono); }
+.plan-month-done { flex: 0 0 auto; font-size: 10.5px; color: var(--ink-4); font-family: var(--f-mono); }
+.plan-month-days { padding-bottom: 4px; }
 
 /* ---- Mobile Days view (inside the .mpick sheet) ----
-   Mobile wants a simpler, thumb-sized list: no spine (navy or gold), bigger text/rows,
-   and the progress header scrolls with the list instead of pinning (the pinned header
-   left a gap above it where rows bled through). The desktop nav keeps the spine. */
-.mpick .plan-head { position: static; }
+   Mobile wants a simpler, thumb-sized list: no spine (navy or gold), bigger text/rows.
+   The progress header IS sticky — pulled out to the sheet edges (cancels .mpick-scroll's
+   16px top / 14px side padding) so it's a solid full-width bar and no day rows bleed
+   through beside or above it as they scroll under. The desktop nav keeps the spine. */
+.mpick .plan-head { position: sticky; top: 0; z-index: 5; margin: -16px -14px 8px; padding: 14px 14px 10px; }
 .mpick .plan-days { margin-left: 0; padding: 4px 2px 10px; }
 .mpick .plan-days-inner { padding-left: 0; }
 .mpick .plan-days-inner::before { display: none; }
@@ -2921,6 +2935,10 @@ button.plan-day-mark:hover { background: var(--accent-soft); }
 .mpick .plan-day-mark { flex-basis: 20px; width: 20px; height: 20px; }
 .mpick .plan-day-dot { width: 9px; height: 9px; }
 .mpick .plan-passage { font-size: 15px; padding: 9px 8px; }
+.mpick .plan-month-head { padding: 13px 10px; gap: 10px; }
+.mpick .plan-month-name { font-size: 15px; }
+.mpick .plan-month-range { font-size: 12px; }
+.mpick .plan-month-done { font-size: 11.5px; }
 
 /* ---- Day intro panel (chronological "Reading" card) ----
    Shares the detail-rail language: a .detail-hero block + .sec/.sec-head sections,
@@ -2930,6 +2948,11 @@ button.plan-day-mark:hover { background: var(--accent-soft); }
    (the old --gold marker/pill/hover) is out. */
 .dintro-era-head { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dintro-side .detail-head-l, .dintro-sheet .detail-head-l { min-width: 0; }
+/* Mobile reading-intro header: stacked, not one cramped row. The "‹ Overview" back
+   bar sits on its own line; the title gets the full width below and wraps. No ✕. */
+.dintro-head-m { flex-direction: column; align-items: stretch; gap: 2px; padding: 2px 20px 12px; }
+.dintro-back-m { align-self: flex-start; padding: 4px 0; }
+.dintro-title-m { white-space: normal; overflow: visible; text-overflow: clip; line-height: 1.25; }
 .dintro-meta { font-size: 12.5px; font-weight: 600; letter-spacing: 0.02em; color: var(--accent); }
 .dintro-date { font-family: var(--f-mono); font-size: 12px; color: var(--ink-2); letter-spacing: 0.01em; margin-top: 6px; }
 .dintro-tl { margin: 0; }

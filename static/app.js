@@ -5542,6 +5542,10 @@ function DayPlanView({
 }) {
   const days = chrono && chrono.days || [];
   const total = days.length || 365;
+  // 365 days is too long to scroll as one list, so chunk it into ~12 "month" blocks
+  // (≈31 days each) shown as an accordion — one month open at a time.
+  const monthSize = Math.ceil(total / 12);
+  const monthOf = d => Math.floor((d - 1) / monthSize) + 1;
   const prog = planFor(progAll, curText);
   const curDay = prog.day;
   // The day that holds the passage you're currently reading. The list FOLLOWS this —
@@ -5556,6 +5560,7 @@ function DayPlanView({
   const focusDay = readingDay || curDay;
   const pct = Math.round((curDay - 1) / total * 100); // days COMPLETED / total
   const [open, setOpen] = useState(() => new Set([focusDay]));
+  const [openMonth, setOpenMonth] = useState(() => monthOf(focusDay)); // which month block is expanded
   const todayRef = useRef(null); // plan "Today" — target of the Jump button
   const focusRef = useRef(null); // the day you're reading — auto-scrolled to
 
@@ -5564,6 +5569,7 @@ function DayPlanView({
   // which move readingDay). Also re-centres when you switch reading text.
   useEffect(() => {
     setOpen(new Set([focusDay]));
+    setOpenMonth(monthOf(focusDay));
     requestAnimationFrame(() => focusRef.current && focusRef.current.scrollIntoView({
       block: "nearest"
     }));
@@ -5582,6 +5588,7 @@ function DayPlanView({
   // on closes), move the reading dot to it, and load its first reading in the pane.
   const selectDay = day => {
     setOpen(new Set([day.day]));
+    setOpenMonth(monthOf(day.day));
     const ps = passagesOf(day);
     if (ps[0]) onPickPassage(ps[0]);
   };
@@ -5589,47 +5596,35 @@ function DayPlanView({
   // open this one, and move the reading dot to it. On mobile the sheet stays open (the
   // parent passes a non-closing onPickPassage) so you can keep browsing.
   const onDayTap = day => selectDay(day);
-  return /*#__PURE__*/React.createElement("div", {
-    className: "plan"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "plan-head"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "plan-prog"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "plan-dayno"
-  }, "Day ", curDay, " of ", total), /*#__PURE__*/React.createElement("span", {
-    className: "plan-pct"
-  }, pct, "%")), /*#__PURE__*/React.createElement("div", {
-    className: "plan-bar"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "plan-bar-fill",
-    style: {
-      width: pct + "%"
+
+  // Bin the days into month blocks (contiguous runs of the same monthOf()).
+  const months = [];
+  days.forEach(d => {
+    const m = monthOf(d.day);
+    let g = months[months.length - 1];
+    if (!g || g.n !== m) {
+      g = {
+        n: m,
+        days: [],
+        first: d.day,
+        last: d.day
+      };
+      months.push(g);
     }
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "plan-meta"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "plan-streak"
-  }, prog.streak > 0 ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Icon.Flame, null), " ", prog.streak, "-day streak") : /*#__PURE__*/React.createElement(React.Fragment, null, "Just getting started")), /*#__PURE__*/React.createElement("button", {
-    className: "plan-jump",
-    onClick: jumpToday
-  }, "Jump to today"))), /*#__PURE__*/React.createElement("div", {
-    className: "plan-days"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "plan-days-inner"
-  }, days.map(day => {
+    g.days.push(d);
+    g.last = d.day;
+  });
+  const toggleMonth = n => setOpenMonth(cur => cur === n ? null : n);
+
+  // One day row — rendered only when its month block is open.
+  const renderDay = day => {
     const done = day.day < curDay;
     const isReading = readingDay != null && day.day === readingDay;
     const isOpen = open.has(day.day);
-    // One marker on the right edge IS the only clickable mark: a ✓ when the day is
-    // read (click to undo), a navy dot when it's the day you're reading (click to
-    // mark read). Every other day is bare — no Today gold, no Reading bar.
     const markClick = e => {
       e.stopPropagation();
       onToggleDone(day.day);
     };
-    // The marker is only CLICKABLE on the day you're on (the reading day) — un-marking
-    // a prior day means clicking that day first. Other done days show a static ✓.
     const mark = isReading ? done ? /*#__PURE__*/React.createElement("button", {
       className: "plan-day-mark plan-day-mark--done",
       onClick: markClick,
@@ -5680,6 +5675,58 @@ function DayPlanView({
       className: "plan-passage" + (p.pos === chronoPos ? " on" : ""),
       onClick: () => onPickPassage(p)
     }, p.label))));
+  };
+  return /*#__PURE__*/React.createElement("div", {
+    className: "plan"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "plan-head"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "plan-prog"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "plan-dayno"
+  }, "Day ", curDay, " of ", total), /*#__PURE__*/React.createElement("span", {
+    className: "plan-pct"
+  }, pct, "%")), /*#__PURE__*/React.createElement("div", {
+    className: "plan-bar"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "plan-bar-fill",
+    style: {
+      width: pct + "%"
+    }
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "plan-meta"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "plan-streak"
+  }, prog.streak > 0 ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(Icon.Flame, null), " ", prog.streak, "-day streak") : /*#__PURE__*/React.createElement(React.Fragment, null, "Just getting started")), /*#__PURE__*/React.createElement("button", {
+    className: "plan-jump",
+    onClick: jumpToday
+  }, "Jump to today"))), /*#__PURE__*/React.createElement("div", {
+    className: "plan-days"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "plan-days-inner"
+  }, months.map(m => {
+    const mOpen = openMonth === m.n;
+    const doneInMonth = m.days.filter(d => d.day < curDay).length;
+    const hasReading = readingDay != null && readingDay >= m.first && readingDay <= m.last;
+    return /*#__PURE__*/React.createElement("div", {
+      key: m.n,
+      className: "plan-month" + (mOpen ? " open" : "") + (hasReading ? " plan-month--reading" : "")
+    }, /*#__PURE__*/React.createElement("button", {
+      className: "plan-month-head",
+      onClick: () => toggleMonth(m.n),
+      "aria-expanded": mOpen
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "plan-month-caret",
+      "aria-hidden": "true"
+    }, "\u25B8"), /*#__PURE__*/React.createElement("span", {
+      className: "plan-month-name"
+    }, "Month ", m.n), /*#__PURE__*/React.createElement("span", {
+      className: "plan-month-range"
+    }, "Days ", m.first, "\u2013", m.last), /*#__PURE__*/React.createElement("span", {
+      className: "plan-month-done"
+    }, doneInMonth, "/", m.days.length)), mOpen && /*#__PURE__*/React.createElement("div", {
+      className: "plan-month-days"
+    }, m.days.map(renderDay)));
   }))));
 }
 
@@ -6093,18 +6140,14 @@ function DayIntroPanel({
     }, /*#__PURE__*/React.createElement("div", {
       className: "sheet-handle"
     })), /*#__PURE__*/React.createElement("div", {
-      className: "detail-head"
-    }, /*#__PURE__*/React.createElement("div", {
-      className: "detail-head-l"
+      className: "detail-head dintro-head-m"
     }, onOverview && /*#__PURE__*/React.createElement("button", {
-      className: "detail-back",
+      className: "detail-back dintro-back-m",
       onClick: onOverview,
       "aria-label": "Chapter overview"
-    }, "\u2039 Overview"), headTitle), /*#__PURE__*/React.createElement("button", {
-      className: "detail-close",
-      onClick: onClose,
-      "aria-label": "Close"
-    }, /*#__PURE__*/React.createElement(Icon.Close, null))), /*#__PURE__*/React.createElement("div", {
+    }, "\u2039 Overview"), /*#__PURE__*/React.createElement("span", {
+      className: "detail-pos summary-pos dintro-title-m"
+    }, title)), /*#__PURE__*/React.createElement("div", {
       className: "detail-body",
       ref: scrollRef
     }, content)));
