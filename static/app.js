@@ -8613,29 +8613,17 @@ function LibraryView({
       onTranslationChange?.(nav.translation);
     }
 
-    // CHRONOLOGICAL mode renders by PASSAGE, not by selChapter — so a verse jump has to move
-    // chronoPos to the passage that holds the target verse, or that verse never renders (and so
-    // never scrolls / highlights, which is the canonical-only bug). passageForRef finds it
-    // (book+chapter, narrowed by the verse when a chapter is split across days). If it's already
-    // in the current passage, do nothing — the scroll effect lands it. The `p.pos !== chronoPos`
-    // guard also stops the scroll:false self-update from re-firing this (chronoPos already matches).
-    if (chronoOn) {
-      const p = passageForRef(b.abbrev, nav.chapter || 1, nav.highlight);
-      if (p && p.pos !== chronoPos) {
-        if (corpus !== "bible") setCorpus("bible");
-        setOtherOpen(false);
-        setChronoPos(p.pos);
-        setSelBook(b);
-        setSelChapter(p.start_ch);
-      }
-      return;
-    }
+    // A verse jump (search / lexicon / cross-ref / note) is a specific reference — show it in its
+    // NORMAL chapter. If we're reading chronologically, drop back to canonical so the verse lands
+    // in context instead of dumped mid-passage. The chrono spot is remembered (chronoPos stays put),
+    // so toggling Chronological back returns you to it.
+    if (chronoOn) setOrderMode("canonical");
 
-    // CANONICAL: only react to a REAL destination change. The scroll-to-highlight step writes a
-    // `scroll: false` self-update back to nav (same book + chapter); without this guard that
-    // re-fires the reset below, wiping the just-loaded verses — and since the book and chapter
-    // didn't change, the chapter loader never refetches → blank chapter.
-    if (corpus === "bible" && selBook?.abbrev === b.abbrev && selChapter === (nav.chapter || 1)) return;
+    // Only react to a REAL destination change. The scroll-to-highlight step writes a `scroll: false`
+    // self-update back to nav (same book + chapter); without this guard that re-fires the reset
+    // below, wiping the just-loaded verses → blank chapter. Skip the guard when we just left chrono:
+    // order flipped, so we must load even if the chapter number happens to match.
+    if (!chronoOn && corpus === "bible" && selBook?.abbrev === b.abbrev && selChapter === (nav.chapter || 1)) return;
     setCorpus("bible"); // a verse reference is a Bible verse — leave any open non-canonical text
     setOtherOpen(false); // close the "Other" picker if it was open
     // clear the old chapter's verses so the scroll-to-highlight waits for the NEW
@@ -8873,18 +8861,13 @@ function LibraryView({
   };
   useEffect(() => {
     if (!nav?.scroll || loading) return;
-    if (chronoOn) {
-      // Chrono renders by PASSAGE, not by chapter, and leaves `verses` empty — so the
-      // canonical guards below would wrongly bail. Wait until the span holding the target
-      // verse has loaded (chronoData caught up to chronoPos); the retry loop then finds the
-      // highlighted row. (The nav effect above already moved chronoPos to that passage.)
-      if (!chronoData || chronoData.pos !== chronoPos) return;
-    } else {
-      if (!verses.length) return;
-      // Don't scroll while the requested chapter's verses are still the OLD chapter's —
-      // otherwise we scroll to (and burn the scroll flag on) a wrong same-numbered verse.
-      if (nav.chapter != null && nav.chapter !== selChapter) return;
-    }
+    // A verse jump flips chronological order back to canonical first (see the nav effect) — wait
+    // for that render so we scroll within the verse's normal chapter, not the chrono passage.
+    if (chronoOn) return;
+    if (!verses.length) return;
+    // Don't scroll while the requested chapter's verses are still the OLD chapter's —
+    // otherwise we scroll to (and burn the scroll flag on) a wrong same-numbered verse.
+    if (nav.chapter != null && nav.chapter !== selChapter) return;
     let raf,
       tries = 0;
     const tryScroll = () => {
@@ -8908,9 +8891,9 @@ function LibraryView({
     raf = requestAnimationFrame(tryScroll);
     return () => cancelAnimationFrame(raf);
     // kjvVerses is in the deps so a KJV-mode jump re-runs once the KJV rows render (the highlight
-    // ref lives on those rows, which load separately from the ABP set). chronoData re-runs it once
-    // the chronological span finishes loading.
-  }, [nav?.scroll, nav?.highlight, nav?.chapter, verses, kjvVerses, bsbVerses, loading, selChapter, chronoOn, chronoData, chronoPos]);
+    // ref lives on those rows, which load separately from the ABP set). chronoOn re-runs it after a
+    // jump flips order back to canonical.
+  }, [nav?.scroll, nav?.highlight, nav?.chapter, verses, kjvVerses, bsbVerses, loading, selChapter, chronoOn]);
   const maxChap = nonCanon ? nonCanon.chapters : selBook ? selBook.chapters : 1;
 
   // Pick a non-canonical text (from the "Other" menu / nav): switch the reader to it and
