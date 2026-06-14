@@ -285,6 +285,12 @@ scripts/          # build-frontend.js + one-time import/migration scripts
   (mobile) hold the A−/A+ size control AND the **Light · Sepia · Dark theme toggle** (LIVE 2026-06-11).
   (A Cardo/Gentium typeface PICKER was tried 2026-06-11 and reverted — the alt serifs looked worse than
   Source Serif; see memory `project_reader_appearance`. Don't re-add one.)
+- **Fonts load `display=optional`, NOT `swap` (templates/index.html, 2026-06-13).** Google Fonts (DM Sans
+  + Source Serif 4 + JetBrains Mono). `optional` = use the fallback only if the real font isn't ready in
+  ~100ms, and NEVER swap mid-view — this killed the mobile toolbar reload "flash" (the chapter number in
+  `--f-mono`/JetBrains Mono painted in fallback then snapped ~0.7s later). Trade-off: a brand-new
+  visitor's FIRST load may show fallback fonts until the next navigation; every reload after is clean.
+  Don't switch it back to `swap` (the flash returns). gstatic preconnect is already in the head.
 - **Reading themes (2026-06-11):** `data-theme` on `<html>` (set in 60-library.jsx, remembered in
   `localStorage` `lexica.theme.v1`) re-skins the whole app via the color vars at the TOP of styles.css
   (`:root` = light; `[data-theme="sepia"]`/`[data-theme="dark"]` override). Button/pill surfaces read

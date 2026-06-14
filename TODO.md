@@ -348,6 +348,16 @@ is over fixed chrome (header/toolbar/nav/detail). Full records: memory `project_
 stitched single-scroll "today's reading"; deeper per-tab persistence (Lexicon/Search/Notes/Study
 last-state + within-chapter scroll position).
 
+**MOBILE TOOLBAR RELOAD "FLASH" — FONT half FIXED 2026-06-13; chrono half DEFERRED.** The chapter/verse
+button flashed on every reload. Diagnosed on the LIVE site (chrome-devtools MCP, instrumented reload):
+two causes. (1) FIXED — the chapter number's font (JetBrains Mono) loaded ~0.7s late so the digit painted
+in a fallback then snapped; one-word fix in templates/index.html, Google-Fonts `display=swap` →
+`display=optional` (commit 1164e5f), verified gone. (2) DEFERRED (user chose to skip, low value) — in
+chronological mode the button shows the canonical label for the beat before `chronological.json` loads,
+then flips to the passage label (`chronoOn` needs the async `chrono`). If ever wanted: save
+`curPassage.label` into `lexica.lib.v1` and show it via a `chronoIntended` fallback until chrono loads.
+`code: templates/index.html (fonts); 60-library.jsx .mbar-loc + curPassage; memory project_refresh_persistence`
+
 ### Read-along audio — DONE + LIVE (BSB + KJV public; ESV live 2026-06-13)
 Per-chapter audio on KJV/BSB/ESV (ABP has no recording). Full record: memory `project_esv_audio` +
 TODO_ARCHIVE. **BSB is live for everyone** — public-domain openbible.com Souer mp3s, no key, no
