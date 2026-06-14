@@ -5585,17 +5585,10 @@ function DayPlanView({
     const ps = passagesOf(day);
     if (ps[0]) onPickPassage(ps[0]);
   };
-  // On mobile the picker is a full-screen sheet, so loading a reading would close it.
-  // There, a day tap just EXPANDS the day (browse its passages); tapping a passage
-  // loads + closes. On desktop the nav stays put, so one tap does everything.
-  const toggleDay = d => setOpen(s => {
-    const n = new Set(s);
-    n.has(d) ? n.delete(d) : n.add(d);
-    return n;
-  });
-  const onDayTap = day => {
-    isMobile ? toggleDay(day.day) : selectDay(day);
-  };
+  // A day tap behaves the same on desktop and mobile: collapse the day you had open,
+  // open this one, and move the reading dot to it. On mobile the sheet stays open (the
+  // parent passes a non-closing onPickPassage) so you can keep browsing.
+  const onDayTap = day => selectDay(day);
   return /*#__PURE__*/React.createElement("div", {
     className: "plan"
   }, /*#__PURE__*/React.createElement("div", {
@@ -6789,6 +6782,7 @@ function MobileBookPicker({
   chrono,
   chronoPos,
   onPickPassage,
+  onPickPassageNoClose,
   translation,
   plan
 }) {
@@ -6870,7 +6864,7 @@ function MobileBookPicker({
     chronoPos: chronoPos,
     onPickText: plan.onPickText,
     onToggleDone: plan.onToggleDone,
-    onPickPassage: onPickPassage
+    onPickPassage: onPickPassageNoClose || onPickPassage
   }) : chrono.eras.map(era => {
     const open = openEras.has(era.id);
     const eraPassages = chrono.passages.filter(p => p.era === era.id);
@@ -10187,6 +10181,7 @@ function LibraryView({
       pickPassage(p);
       setMobileNavOpen(false);
     },
+    onPickPassageNoClose: p => pickPassage(p),
     plan: planBundle,
     onDone: (b, n) => {
       // Clear any lingering jump-highlight (a verse reached via Search/cross-ref) —

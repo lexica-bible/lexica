@@ -2610,11 +2610,11 @@ input { font-family: inherit; }
 /* The source row is the anchor for the floating "More" popout below it. */
 .nav-source-wrap { position: relative; flex: 0 0 auto; z-index: 20; }
 /* "More" texts = a floating popout under the source row (no longer pushes the book
-   list down). FIXED height + its own scroll, so expanding/collapsing a category scrolls
-   inside instead of resizing the menu. Clipped to the nav by .nav's overflow. */
+   list down). Sizes to its content, with a max-height + own scroll for long lists.
+   Clipped to the nav by .nav's overflow. */
 .nav-other-inline {
   position: absolute; top: 100%; left: 6px; right: 6px; z-index: 40;
-  height: 300px; max-height: calc(100vh - var(--hdr-h) - 90px);
+  max-height: calc(100vh - var(--hdr-h) - 90px);
   overflow-y: auto; overscroll-behavior: contain;
   background: var(--paper); border: 1px solid var(--rule-2);
   border-radius: 0 0 10px 10px; box-shadow: var(--shadow-lg);
@@ -2666,8 +2666,11 @@ input { font-family: inherit; }
 /* Source picker = clean underline tabs, NOT a boxed segmented control. Scoped to
    .nav-source-seg so the other .seg controls keep their pill look. Active tab carries a
    navy underline that sits on the row hairline. */
-.nav-source-seg.seg { background: none; border: none; border-radius: 0; padding: 0; border-bottom: 1px solid var(--rule); }
-.nav-source-seg .seg-b { border-radius: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; padding: 6px 4px; }
+/* 4 equal columns (ABP/KJV/BSB/More) so the active "More" label (HEB/ESV/a book name)
+   can never change its tab's width and shove the others. */
+.nav-source-seg.seg { display: grid; grid-template-columns: repeat(4, 1fr); background: none; border: none; border-radius: 0; padding: 0; border-bottom: 1px solid var(--rule); }
+.nav-source-seg .seg-b { border-radius: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; padding: 6px 4px; text-align: center; min-width: 0; }
+.nav-source-seg .nav-other-seg { justify-content: center; }
 .nav-source-seg .seg-b.on { background: none; box-shadow: none; color: var(--ink); border-bottom-color: var(--accent); }
 .nav-source-seg .seg-b:active:not(.on) { background: none; }
 .nav-other-wrap { position: relative; display: inline-flex; }

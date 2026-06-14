@@ -442,7 +442,7 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
 // ============================================================
 // MOBILE BOOK PICKER — full-screen, two-screen (book grid → chapter grid)
 // ============================================================
-function MobileBookPicker({ books, selBook, selChapter, nonCanon, nonCanonList, onDone, onClose, chronoOn, chrono, chronoPos, onPickPassage, translation, plan }) {
+function MobileBookPicker({ books, selBook, selChapter, nonCanon, nonCanonList, onDone, onClose, chronoOn, chrono, chronoPos, onPickPassage, onPickPassageNoClose, translation, plan }) {
   // A non-canonical book is identified by its `id`; a Bible book by its `abbrev`.
   const isNC = b => !!(b && b.id);
   // Chronological: the picker shows eras → passages instead of books → chapters.
@@ -500,7 +500,7 @@ function MobileBookPicker({ books, selBook, selChapter, nonCanon, nonCanonList, 
           plan && plan.view === "days" ? (
             <DayPlanView isMobile chrono={chrono} curText={plan.curText} texts={plan.texts} progAll={plan.progAll}
               chronoPos={chronoPos}
-              onPickText={plan.onPickText} onToggleDone={plan.onToggleDone} onPickPassage={onPickPassage} />
+              onPickText={plan.onPickText} onToggleDone={plan.onToggleDone} onPickPassage={onPickPassageNoClose || onPickPassage} />
           ) : chrono.eras.map(era => {
             const open = openEras.has(era.id);
             const eraPassages = chrono.passages.filter(p => p.era === era.id);
@@ -2740,6 +2740,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
           chrono={chrono}
           chronoPos={chronoPos}
           onPickPassage={(p) => { pickPassage(p); setMobileNavOpen(false); }}
+          onPickPassageNoClose={(p) => pickPassage(p)}
           plan={planBundle}
           onDone={(b, n) => {
             // Clear any lingering jump-highlight (a verse reached via Search/cross-ref) —
