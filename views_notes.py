@@ -81,6 +81,12 @@ def _ensure_tables():
             " updated TEXT NOT NULL, deleted INTEGER NOT NULL DEFAULT 0,"
             " PRIMARY KEY (code, id))"
         )
+        # Chronological reading-plan progress — one small blob per account
+        # ({text: {day, streak, last, done}}). Synced by /api/plan/sync.
+        conn.execute(
+            "CREATE TABLE IF NOT EXISTS plan ("
+            " code TEXT PRIMARY KEY, json TEXT NOT NULL, updated TEXT NOT NULL)"
+        )
         # Role tier per account (added 2026-06-11). Older dbs predate the column.
         cols = [r[1] for r in conn.execute("PRAGMA table_info(users)").fetchall()]
         if "role" not in cols:
@@ -442,3 +448,75 @@ def notes_sync():
         except (ValueError, TypeError):
             continue
     return jsonify({"notes": out, "server_time": int(time.time())})
+
+
+def _merge_plan(stored, incoming):
+    """Union the two reading-plan blobs ({text: {day, streak, last, done}}): combine
+    the completed-day sets, keep the higher streak, the latest last-read date, and the
+    furthest pointer. So reading on two devices never loses a checked day."""
+    if not isinstance(stored, dict):
+        stored = {}
+    if not isinstance(incoming, dict):
+        incoming = {}
+    out = {}
+    for text in set(stored) | set(incoming):
+        a = stored.get(text) if isinstance(stored.get(text), dict) else {}
+        b = incoming.get(text) if isinstance(incoming.get(text), dict) else {}
+        days = set()
+        for src in (a.get("done") or [], b.get("done") or []):
+            if isinstance(src, list):
+                for d in src:
+                    if isinstance(d, (int, float)) and 1 <= d <= 400:
+                        days.add(int(d))
+        out[text] = {
+            "day": max(int(a.get("day") or 1), int(b.get("day") or 1)),
+            "streak": max(int(a.get("streak") or 0), int(b.get("streak") or 0)),
+            "last": (max(a.get("last") or "", b.get("last") or "") or None),
+            "done": sorted(days),
+        }
+    return out
+
+
+@bp.route("/api/plan/sync", methods=["POST"])
+@limiter.limit("200 per hour")
+def plan_sync():
+    raw = request.get_data(cache=False) or b""
+    if len(raw) > 200_000:
+        return jsonify({"error": "too large"}), 413
+    try:
+        body = json.loads(raw or b"{}")
+    except (ValueError, TypeError):
+        return jsonify({"error": "bad request"}), 400
+    if not isinstance(body, dict):
+        return jsonify({"error": "bad request"}), 400
+    incoming = body.get("plan") or {}
+    if not isinstance(incoming, dict) or len(incoming) > 50:
+        return jsonify({"error": "bad plan"}), 400
+
+    _ensure_tables()
+    conn = notes_db()
+    try:
+        uid = _user_for_token(conn)
+        if uid is None:
+            return jsonify({"error": "not signed in"}), 401
+        owner = "u" + str(uid)
+        row = conn.execute("SELECT json FROM plan WHERE code = ?", (owner,)).fetchone()
+        stored = {}
+        if row:
+            try:
+                stored = json.loads(row["json"])
+            except (ValueError, TypeError):
+                stored = {}
+        merged = _merge_plan(stored, incoming)
+        blob = json.dumps(merged, separators=(",", ":"))
+        if len(blob) <= 200_000:
+            conn.execute(
+                "INSERT OR REPLACE INTO plan (code, json, updated) VALUES (?,?,?)",
+                (owner, blob, _now()),
+            )
+            conn.commit()
+    except sqlite3.Error:
+        return jsonify({"error": "sync failed"}), 500
+    finally:
+        conn.close()
+    return jsonify({"plan": merged, "server_time": int(time.time())})

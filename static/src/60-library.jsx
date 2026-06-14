@@ -1099,7 +1099,14 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
     } catch (e) {}
   }, [corpus, selBook, selChapter, translation, orderMode, chronoPos, compareSel]);
   // Persist reading-plan progress + the Eras/Days choice.
-  useEffect(() => { planSaveAll(planProg); }, [planProg]);
+  useEffect(() => { planSaveAll(planProg); NotesStore.schedulePlanSync(); }, [planProg]);
+  // Pull account-synced plan progress back in: when a sync folds the server's copy into
+  // localStorage, NotesStore notifies — re-read it, but only swap state if it actually
+  // changed (so a no-op notify doesn't loop back into another push).
+  useEffect(() => NotesStore.subscribe(() => setPlanProg(prev => {
+    const next = planLoadAll();
+    return JSON.stringify(next) === JSON.stringify(prev) ? prev : next;
+  })), []);
   useEffect(() => { try { localStorage.setItem("lexica.chronoview.v1", chronoView); } catch (e) {} }, [chronoView]);
   // Reading-display toggles (chip/prose, Strong's, interlinear) stick across reloads.
   useEffect(() => { try { localStorage.setItem("lexica.opts.v1", JSON.stringify(libOptions)); } catch (e) {} }, [libOptions]);

@@ -1190,6 +1190,7 @@ const NotesStore = function () {
       merge(data.notes || []); // fold the account's copy back in (no re-schedule)
       applyingRemote = false;
       lastSync = Date.now();
+      syncPlanNow(); // push/pull the reading-plan progress at the same moment
       return {
         ok: true
       };
@@ -1203,6 +1204,76 @@ const NotesStore = function () {
       notify();
     }
   }
+  // --- reading-plan (chrono Days) progress sync ---
+  // The plan blob lives in the SAME localStorage key the Library reads/writes
+  // ("lexica.plan.v1"); we just push/pull it for signed-in users. The server unions
+  // the completed-day sets, so two devices never clobber each other's checkmarks.
+  const PLANKEY = "lexica.plan.v1";
+  function planLoadLocal() {
+    try {
+      return JSON.parse(localStorage.getItem(PLANKEY) || "{}") || {};
+    } catch (e) {
+      return {};
+    }
+  }
+  function planSaveLocal(o) {
+    try {
+      localStorage.setItem(PLANKEY, JSON.stringify(o));
+    } catch (e) {}
+  }
+  let planTimer = null;
+  async function syncPlanNow() {
+    const a = getAuth();
+    if (!a || !a.token) return {
+      ok: false,
+      reason: "off"
+    };
+    try {
+      const res = await fetch("/api/plan/sync", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + a.token
+        },
+        body: JSON.stringify({
+          plan: planLoadLocal()
+        })
+      });
+      if (res.status === 401) {
+        setAuth(null);
+        return {
+          ok: false,
+          reason: "signed-out"
+        };
+      }
+      if (!res.ok) return {
+        ok: false,
+        status: res.status
+      };
+      const data = await res.json();
+      if (data && data.plan) {
+        planSaveLocal(data.plan);
+        notify();
+      } // let the Library re-read
+      return {
+        ok: true
+      };
+    } catch (e) {
+      return {
+        ok: false,
+        error: String(e)
+      };
+    }
+  }
+  function schedulePlanSync() {
+    const a = getAuth();
+    if (applyingRemote || !a || !a.token) return;
+    clearTimeout(planTimer);
+    planTimer = setTimeout(() => {
+      syncPlanNow();
+    }, 2500);
+  }
+
   // POST to an auth endpoint; on success store {token,email} and push/pull notes.
   async function authPost(path, email, password) {
     try {
@@ -1425,7 +1496,9 @@ const NotesStore = function () {
       clearTimeout(syncTimer);
       setAuth(null);
     },
-    syncNow
+    syncNow,
+    syncPlanNow,
+    schedulePlanSync
   };
 }();
 
@@ -8149,7 +8222,15 @@ function LibraryView({
   // Persist reading-plan progress + the Eras/Days choice.
   useEffect(() => {
     planSaveAll(planProg);
+    NotesStore.schedulePlanSync();
   }, [planProg]);
+  // Pull account-synced plan progress back in: when a sync folds the server's copy into
+  // localStorage, NotesStore notifies — re-read it, but only swap state if it actually
+  // changed (so a no-op notify doesn't loop back into another push).
+  useEffect(() => NotesStore.subscribe(() => setPlanProg(prev => {
+    const next = planLoadAll();
+    return JSON.stringify(next) === JSON.stringify(prev) ? prev : next;
+  })), []);
   useEffect(() => {
     try {
       localStorage.setItem("lexica.chronoview.v1", chronoView);
