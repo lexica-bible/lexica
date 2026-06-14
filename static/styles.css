@@ -2779,7 +2779,7 @@ input { font-family: inherit; }
 /* Same chronological-picker language as the Days plan: a navy backbone down the whole
    era list (rides .nav-eras-inner — the full content — not the scroll frame) and a gold
    sub-rib on the OPEN era's passages. Soft tints in dark, like the nav. */
-.nav-eras-inner { position: relative; }
+.nav-eras-inner { position: relative; padding-left: 6px; }
 .nav-eras-inner::before {
   content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
   background: var(--accent); border-radius: 1px;
