@@ -2842,7 +2842,7 @@ input { font-family: inherit; }
 .plan-days { padding: 4px 4px 10px 0; margin-left: 6px; }
 .plan-days-inner { position: relative; padding-left: 6px; }
 .plan-days-inner::before {
-  content: ""; position: absolute; left: 0; top: 6px; bottom: 6px; width: 2px;
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
   background: var(--accent); border-radius: 1px;
 }
 :root[data-theme="dark"] .plan-days-inner::before { background: var(--accent-soft); }
