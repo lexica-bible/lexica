@@ -181,7 +181,6 @@ function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, o
           return (
             <div key={m.n} className={"plan-month" + (mOpen ? " open" : "") + (hasReading ? " plan-month--reading" : "")}>
               <button className="plan-month-head" onClick={() => toggleMonth(m.n)} aria-expanded={mOpen}>
-                <span className="plan-month-caret" aria-hidden="true">▸</span>
                 <span className="plan-month-name">Month {m.n}</span>
                 <span className="plan-month-range">Days {m.first}–{m.last}</span>
                 <span className="plan-month-done">{doneInMonth}/{m.days.length}</span>

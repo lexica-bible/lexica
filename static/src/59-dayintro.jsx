@@ -81,9 +81,16 @@ function TimelineStrip({ win }) {
       <svg viewBox={`0 0 ${W} 14`} className="dintro-tl-svg" role="img" aria-label="Era timeline">
         <rect x={0} y={5} width={W} height={4} rx={2} className="dintro-tl-track" />
         <rect x={nowX} y={3} width={nowW} height={8} rx={4} className="dintro-tl-now" />
-        {et.marks.map((m, i) => (
-          <circle key={i} cx={xOf(m.year)} cy={7} r={3.5} className="dintro-tl-dot" />
-        ))}
+        {et.marks.map((m, i) => {
+          // A dot sitting under the navy "now" bar would vanish (dark dot, dark bar) —
+          // invert it there: white dot with a dark ring so it stays distinct.
+          const mxx = xOf(m.year);
+          const onBar = mxx >= nowX - 1 && mxx <= nowX + nowW + 1;
+          return (
+            <circle key={i} cx={mxx} cy={7} r={3.5}
+              className={"dintro-tl-dot" + (onBar ? " dintro-tl-dot--on" : "")} />
+          );
+        })}
       </svg>
       <div className="dintro-tl-legend">
         {et.marks.map((m, i) => (
@@ -123,9 +130,9 @@ function DayIntroPanel({ day, chrono, isMobile, onClose, onPickPassage, onOvervi
     ? day.pos.map(q => chrono.passages[q - 1]).filter(Boolean) : [];
   const title = (data && data.title) || (era ? era.name : "Today's reading");
   const dateLine = win ? fmtReadingDate(win.y0, win.y1) : null;
-  // Mobile: shrink the title to fit one line beside the corner toggle link (desktop
-  // keeps its inline ellipsis instead).
-  useFitText(titleRef, title, { enabled: isMobile });
+  // Shrink the title to fit one line beside the corner toggle link — same on desktop
+  // and mobile (no ellipsis; it scales down to a floor instead).
+  useFitText(titleRef, title);
 
   const content = (
     <>
@@ -142,7 +149,6 @@ function DayIntroPanel({ day, chrono, isMobile, onClose, onPickPassage, onOvervi
       <section className="sec">
         <h4 className="sec-head">
           <span className="sec-t">About this reading</span>
-          <span className="lsj-badge lsj-badge--accent">AI</span>
         </h4>
         {loading
           ? <div className="summary-loading">Writing today's intro…</div>
@@ -170,7 +176,7 @@ function DayIntroPanel({ day, chrono, isMobile, onClose, onPickPassage, onOvervi
   // obvious it's a reading intro, so no panel-type label). "Reading N" + era move
   // down into the hero meta line. The "‹ Overview" toggle keeps the .detail-back slot.
   const headTitle = (
-    <span className="detail-pos summary-pos dintro-era-head">{title}</span>
+    <span ref={titleRef} className="detail-pos summary-pos dintro-era-head">{title}</span>
   );
 
   if (isMobile) {

@@ -5755,9 +5755,6 @@ function DayPlanView({
       onClick: () => toggleMonth(m.n),
       "aria-expanded": mOpen
     }, /*#__PURE__*/React.createElement("span", {
-      className: "plan-month-caret",
-      "aria-hidden": "true"
-    }, "\u25B8"), /*#__PURE__*/React.createElement("span", {
       className: "plan-month-name"
     }, "Month ", m.n), /*#__PURE__*/React.createElement("span", {
       className: "plan-month-range"
@@ -6044,13 +6041,19 @@ function TimelineStrip({
     height: 8,
     rx: 4,
     className: "dintro-tl-now"
-  }), et.marks.map((m, i) => /*#__PURE__*/React.createElement("circle", {
-    key: i,
-    cx: xOf(m.year),
-    cy: 7,
-    r: 3.5,
-    className: "dintro-tl-dot"
-  }))), /*#__PURE__*/React.createElement("div", {
+  }), et.marks.map((m, i) => {
+    // A dot sitting under the navy "now" bar would vanish (dark dot, dark bar) —
+    // invert it there: white dot with a dark ring so it stays distinct.
+    const mxx = xOf(m.year);
+    const onBar = mxx >= nowX - 1 && mxx <= nowX + nowW + 1;
+    return /*#__PURE__*/React.createElement("circle", {
+      key: i,
+      cx: mxx,
+      cy: 7,
+      r: 3.5,
+      className: "dintro-tl-dot" + (onBar ? " dintro-tl-dot--on" : "")
+    });
+  })), /*#__PURE__*/React.createElement("div", {
     className: "dintro-tl-legend"
   }, et.marks.map((m, i) => /*#__PURE__*/React.createElement("div", {
     key: i,
@@ -6112,11 +6115,9 @@ function DayIntroPanel({
   const passages = day && chrono && chrono.passages ? day.pos.map(q => chrono.passages[q - 1]).filter(Boolean) : [];
   const title = data && data.title || (era ? era.name : "Today's reading");
   const dateLine = win ? fmtReadingDate(win.y0, win.y1) : null;
-  // Mobile: shrink the title to fit one line beside the corner toggle link (desktop
-  // keeps its inline ellipsis instead).
-  useFitText(titleRef, title, {
-    enabled: isMobile
-  });
+  // Shrink the title to fit one line beside the corner toggle link — same on desktop
+  // and mobile (no ellipsis; it scales down to a floor instead).
+  useFitText(titleRef, title);
   const content = /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "detail-hero dintro-hero"
   }, /*#__PURE__*/React.createElement("div", {
@@ -6137,9 +6138,7 @@ function DayIntroPanel({
     className: "sec-head"
   }, /*#__PURE__*/React.createElement("span", {
     className: "sec-t"
-  }, "About this reading"), /*#__PURE__*/React.createElement("span", {
-    className: "lsj-badge lsj-badge--accent"
-  }, "AI")), loading ? /*#__PURE__*/React.createElement("div", {
+  }, "About this reading")), loading ? /*#__PURE__*/React.createElement("div", {
     className: "summary-loading"
   }, "Writing today's intro\u2026") : data && data.summary ? /*#__PURE__*/React.createElement("p", {
     className: "detail-p"
@@ -6168,6 +6167,7 @@ function DayIntroPanel({
   // obvious it's a reading intro, so no panel-type label). "Reading N" + era move
   // down into the hero meta line. The "‹ Overview" toggle keeps the .detail-back slot.
   const headTitle = /*#__PURE__*/React.createElement("span", {
+    ref: titleRef,
     className: "detail-pos summary-pos dintro-era-head"
   }, title);
   if (isMobile) {
