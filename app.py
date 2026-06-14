@@ -16,7 +16,7 @@ import os
 import re
 import sqlite3
 
-from flask import Flask, jsonify, render_template, request, url_for
+from flask import Flask, jsonify, render_template, request, url_for, redirect
 
 from core import log, DB, db, limiter, _FUNCTION_STRONGS, ai_cache_drop_legacy
 
@@ -162,6 +162,15 @@ from ai import bp as ai_bp, _load_ai_cache_from_db
 
 app = Flask(__name__)
 limiter.init_app(app)
+
+
+@app.before_request
+def _force_canonical_domain():
+    # Anyone landing on the old *.pythonanywhere.com address gets sent
+    # to the real domain, same path, permanently (301).
+    host = request.host.split(":")[0]
+    if host.endswith(".pythonanywhere.com"):
+        return redirect("https://www.lexica.bible" + request.full_path.rstrip("?"), code=301)
 
 
 # Static assets (app.js, self-hosted React, CSS) load several per page view —
