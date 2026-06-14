@@ -117,36 +117,50 @@ function DayIntroPanel({ day, chrono, isMobile, onClose, onPickPassage, onOvervi
 
   const content = (
     <>
-      <div className="dintro-eyebrow"><Icon.Clock/> Reading {dayNo}</div>
-      <div className="dintro-title">{title}</div>
-      <div className="dintro-meta">
-        {dateLine && <span className="dintro-date">{dateLine}</span>}
-        {era && <span className="dintro-era">{era.name}</span>}
+      <div className="detail-hero dintro-hero">
+        <div className="dintro-title">{title}</div>
+        {dateLine && <div className="dintro-date">{dateLine}</div>}
       </div>
-      {win && <TimelineStrip win={win} />}
-      <div className="dintro-summary">
+      {win && (
+        <section className="sec">
+          <h4 className="sec-head"><span className="sec-t">Timeline</span></h4>
+          <TimelineStrip win={win} />
+        </section>
+      )}
+      <section className="sec">
+        <h4 className="sec-head">
+          <span className="sec-t">About this reading</span>
+          <span className="lsj-badge lsj-badge--accent">AI</span>
+        </h4>
         {loading
           ? <div className="summary-loading">Writing today's intro…</div>
           : (data && data.summary)
             ? <p className="detail-p">{renderInlineMd(data.summary)}</p>
             : <div className="summary-loading">No intro available for this reading.</div>}
-      </div>
+      </section>
       {passages.length > 0 && (
-        <div className="dintro-passages">
-          <div className="dintro-passages-label">Today's passages</div>
-          {passages.map(p => (
-            <button key={p.pos} className="dintro-passage" onClick={() => onPickPassage && onPickPassage(p)}>
-              <span className="dintro-passage-ref">{p.label}</span>
-              <span className="dintro-passage-go" aria-hidden="true">›</span>
-            </button>
-          ))}
-        </div>
+        <section className="sec">
+          <h4 className="sec-head"><span className="sec-t">Today's passages</span></h4>
+          <div className="dintro-passages">
+            {passages.map(p => (
+              <button key={p.pos} className="dintro-passage" onClick={() => onPickPassage && onPickPassage(p)}>
+                <span className="dintro-passage-ref">{p.label}</span>
+                <span className="dintro-passage-go" aria-hidden="true">›</span>
+              </button>
+            ))}
+          </div>
+        </section>
       )}
-      {onOverview && (
-        <button className="dintro-overview-link" onClick={onOverview}>
-          Chapter overview <span aria-hidden="true">›</span>
-        </button>
-      )}
+    </>
+  );
+
+  // Header mirrors the word-study / xref panels: a badge + a muted location label,
+  // and the "‹ Overview" toggle in the .detail-back slot (right on desktop; on the
+  // left beside the close X on mobile, matching the overview sheet's "‹ Intro").
+  const headBadge = (
+    <>
+      <span className="card-badge solid">Reading {dayNo}</span>
+      {era && <span className="detail-pos dintro-era-head">{era.name}</span>}
     </>
   );
 
@@ -157,7 +171,10 @@ function DayIntroPanel({ day, chrono, isMobile, onClose, onPickPassage, onOvervi
         <aside ref={sheetRef} className="detail detail-sheet summary-sheet dintro-sheet" role="dialog" aria-label="Reading intro">
           <div className="sheet-drag-zone" aria-hidden="true"><div className="sheet-handle"></div></div>
           <div className="detail-head">
-            <div className="detail-head-l"><span className="detail-pos summary-pos">Reading intro</span></div>
+            <div className="detail-head-l">
+              {onOverview && <button className="detail-back" onClick={onOverview} aria-label="Chapter overview">‹ Overview</button>}
+              {headBadge}
+            </div>
             <button className="detail-close" onClick={onClose} aria-label="Close"><Icon.Close/></button>
           </div>
           <div className="detail-body" ref={scrollRef}>{content}</div>
@@ -169,7 +186,8 @@ function DayIntroPanel({ day, chrono, isMobile, onClose, onPickPassage, onOvervi
   return (
     <aside className="detail detail-side summary-side dintro-side" role="complementary" aria-label="Reading intro">
       <div className="detail-head">
-        <div className="detail-head-l"><span className="detail-pos summary-pos">Reading intro</span></div>
+        <div className="detail-head-l">{headBadge}</div>
+        {onOverview && <button className="detail-back" onClick={onOverview} aria-label="Chapter overview">‹ Overview</button>}
       </div>
       <div className="detail-body">{content}</div>
     </aside>

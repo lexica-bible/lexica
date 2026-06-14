@@ -1916,7 +1916,8 @@ function SummaryPanel({
     }, content)));
   }
 
-  // Desktop: resting content of the right sidebar.
+  // Desktop: resting content of the right sidebar. The "‹ Intro" toggle sits in the
+  // .detail-back slot (right), matching the word-study / xref / day-intro headers.
   return /*#__PURE__*/React.createElement("aside", {
     className: "detail detail-side summary-side",
     role: "complementary",
@@ -1925,13 +1926,13 @@ function SummaryPanel({
     className: "detail-head"
   }, /*#__PURE__*/React.createElement("div", {
     className: "detail-head-l"
-  }, onBack && /*#__PURE__*/React.createElement("button", {
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "detail-pos summary-pos"
+  }, title)), onBack && /*#__PURE__*/React.createElement("button", {
     className: "detail-back",
     onClick: onBack,
     "aria-label": "Back to reading intro"
-  }, "\u2039 Intro"), /*#__PURE__*/React.createElement("span", {
-    className: "detail-pos summary-pos"
-  }, title))), /*#__PURE__*/React.createElement("div", {
+  }, "\u2039 Intro")), /*#__PURE__*/React.createElement("div", {
     className: "detail-body"
   }, content));
 }
@@ -5982,30 +5983,42 @@ function DayIntroPanel({
   const title = data && data.title || (era ? era.name : "Today's reading");
   const dateLine = win ? fmtReadingDate(win.y0, win.y1) : null;
   const content = /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
-    className: "dintro-eyebrow"
-  }, /*#__PURE__*/React.createElement(Icon.Clock, null), " Reading ", dayNo), /*#__PURE__*/React.createElement("div", {
+    className: "detail-hero dintro-hero"
+  }, /*#__PURE__*/React.createElement("div", {
     className: "dintro-title"
-  }, title), /*#__PURE__*/React.createElement("div", {
-    className: "dintro-meta"
-  }, dateLine && /*#__PURE__*/React.createElement("span", {
+  }, title), dateLine && /*#__PURE__*/React.createElement("div", {
     className: "dintro-date"
-  }, dateLine), era && /*#__PURE__*/React.createElement("span", {
-    className: "dintro-era"
-  }, era.name)), win && /*#__PURE__*/React.createElement(TimelineStrip, {
+  }, dateLine)), win && /*#__PURE__*/React.createElement("section", {
+    className: "sec"
+  }, /*#__PURE__*/React.createElement("h4", {
+    className: "sec-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "sec-t"
+  }, "Timeline")), /*#__PURE__*/React.createElement(TimelineStrip, {
     win: win
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "dintro-summary"
-  }, loading ? /*#__PURE__*/React.createElement("div", {
+  })), /*#__PURE__*/React.createElement("section", {
+    className: "sec"
+  }, /*#__PURE__*/React.createElement("h4", {
+    className: "sec-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "sec-t"
+  }, "About this reading"), /*#__PURE__*/React.createElement("span", {
+    className: "lsj-badge lsj-badge--accent"
+  }, "AI")), loading ? /*#__PURE__*/React.createElement("div", {
     className: "summary-loading"
   }, "Writing today's intro\u2026") : data && data.summary ? /*#__PURE__*/React.createElement("p", {
     className: "detail-p"
   }, renderInlineMd(data.summary)) : /*#__PURE__*/React.createElement("div", {
     className: "summary-loading"
-  }, "No intro available for this reading.")), passages.length > 0 && /*#__PURE__*/React.createElement("div", {
+  }, "No intro available for this reading.")), passages.length > 0 && /*#__PURE__*/React.createElement("section", {
+    className: "sec"
+  }, /*#__PURE__*/React.createElement("h4", {
+    className: "sec-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "sec-t"
+  }, "Today's passages")), /*#__PURE__*/React.createElement("div", {
     className: "dintro-passages"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "dintro-passages-label"
-  }, "Today's passages"), passages.map(p => /*#__PURE__*/React.createElement("button", {
+  }, passages.map(p => /*#__PURE__*/React.createElement("button", {
     key: p.pos,
     className: "dintro-passage",
     onClick: () => onPickPassage && onPickPassage(p)
@@ -6014,12 +6027,16 @@ function DayIntroPanel({
   }, p.label), /*#__PURE__*/React.createElement("span", {
     className: "dintro-passage-go",
     "aria-hidden": "true"
-  }, "\u203A")))), onOverview && /*#__PURE__*/React.createElement("button", {
-    className: "dintro-overview-link",
-    onClick: onOverview
-  }, "Chapter overview ", /*#__PURE__*/React.createElement("span", {
-    "aria-hidden": "true"
-  }, "\u203A")));
+  }, "\u203A"))))));
+
+  // Header mirrors the word-study / xref panels: a badge + a muted location label,
+  // and the "‹ Overview" toggle in the .detail-back slot (right on desktop; on the
+  // left beside the close X on mobile, matching the overview sheet's "‹ Intro").
+  const headBadge = /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", {
+    className: "card-badge solid"
+  }, "Reading ", dayNo), era && /*#__PURE__*/React.createElement("span", {
+    className: "detail-pos dintro-era-head"
+  }, era.name));
   if (isMobile) {
     return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
       className: "sheet-scrim",
@@ -6038,9 +6055,11 @@ function DayIntroPanel({
       className: "detail-head"
     }, /*#__PURE__*/React.createElement("div", {
       className: "detail-head-l"
-    }, /*#__PURE__*/React.createElement("span", {
-      className: "detail-pos summary-pos"
-    }, "Reading intro")), /*#__PURE__*/React.createElement("button", {
+    }, onOverview && /*#__PURE__*/React.createElement("button", {
+      className: "detail-back",
+      onClick: onOverview,
+      "aria-label": "Chapter overview"
+    }, "\u2039 Overview"), headBadge), /*#__PURE__*/React.createElement("button", {
       className: "detail-close",
       onClick: onClose,
       "aria-label": "Close"
@@ -6057,9 +6076,11 @@ function DayIntroPanel({
     className: "detail-head"
   }, /*#__PURE__*/React.createElement("div", {
     className: "detail-head-l"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "detail-pos summary-pos"
-  }, "Reading intro"))), /*#__PURE__*/React.createElement("div", {
+  }, headBadge), onOverview && /*#__PURE__*/React.createElement("button", {
+    className: "detail-back",
+    onClick: onOverview,
+    "aria-label": "Chapter overview"
+  }, "\u2039 Overview")), /*#__PURE__*/React.createElement("div", {
     className: "detail-body"
   }, content));
 }

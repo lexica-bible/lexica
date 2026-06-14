@@ -82,14 +82,15 @@ function SummaryPanel({ book, chapter, bookLabel, isMobile, onClose, onBack }) {
     );
   }
 
-  // Desktop: resting content of the right sidebar.
+  // Desktop: resting content of the right sidebar. The "‹ Intro" toggle sits in the
+  // .detail-back slot (right), matching the word-study / xref / day-intro headers.
   return (
     <aside className="detail detail-side summary-side" role="complementary" aria-label="Reading overview">
       <div className="detail-head">
         <div className="detail-head-l">
-          {onBack && <button className="detail-back" onClick={onBack} aria-label="Back to reading intro">‹ Intro</button>}
           <span className="detail-pos summary-pos">{title}</span>
         </div>
+        {onBack && <button className="detail-back" onClick={onBack} aria-label="Back to reading intro">‹ Intro</button>}
       </div>
       <div className="detail-body">{content}</div>
     </aside>
