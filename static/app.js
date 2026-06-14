@@ -8237,7 +8237,14 @@ function LibraryView({
       const root = readingRef.current;
       if (!root) return;
       const marks = root.querySelectorAll(".lib-chrono-chapmark[data-ch]");
-      if (!marks.length) return;
+      // A single-chapter passage (e.g. Genesis 6, 1 Chronicles 1:1–4) renders no chapter
+      // headings, so there's nothing to measure — pin to the passage's own chapter instead
+      // of leaving viewCh stuck on the previous passage's chapter (which made the audio +
+      // chapter overview load the wrong chapter, e.g. Genesis 4 while reading Genesis 6).
+      if (!marks.length) {
+        setViewCh(curPassage ? curPassage.start_ch : null);
+        return;
+      }
       // Switch when a chapter heading passes ~just-above the middle of the screen
       // (not the very top), so the "current" chapter matches what you're reading.
       const threshold = (window.innerHeight || 800) * 0.45;
