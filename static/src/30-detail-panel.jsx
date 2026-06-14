@@ -742,7 +742,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       {isMobile && <div className="sheet-drag-zone" aria-hidden="true"><div className="sheet-handle"></div></div>}
       <div className="detail-head">
         <div className="detail-head-l">
-          <span className={"detail-pos summary-pos" + (hero.he ? " summary-pos--he" : "")}
+          <span className={"detail-pos summary-pos" + ((entry.greek || hero.he) ? " summary-pos--lg" : "") + (hero.he ? " summary-pos--he" : "")}
                 dir={hero.he ? "rtl" : undefined}>{hero.script}</span>
         </div>
         {overviewBack && !isMobile ? (

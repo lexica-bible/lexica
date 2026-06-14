@@ -2763,7 +2763,7 @@ function DetailPanel({
   }, /*#__PURE__*/React.createElement("div", {
     className: "detail-head-l"
   }, /*#__PURE__*/React.createElement("span", {
-    className: "detail-pos summary-pos" + (hero.he ? " summary-pos--he" : ""),
+    className: "detail-pos summary-pos" + (entry.greek || hero.he ? " summary-pos--lg" : "") + (hero.he ? " summary-pos--he" : ""),
     dir: hero.he ? "rtl" : undefined
   }, hero.script)), overviewBack && !isMobile ? /*#__PURE__*/React.createElement("button", {
     className: "detail-back",

@@ -812,6 +812,9 @@ input { font-family: inherit; }
 }
 /* Hebrew header titles render right-to-left; the serif carries the glyphs. */
 .summary-pos--he { unicode-bidi: plaintext; }
+/* Greek/Hebrew glyphs read smaller than Latin at the same size — size the word-study
+   title up so it matches the weight of "Genesis 7" / "John 3:16" in the other headers. */
+.summary-pos--lg { font-size: 27px; line-height: 1.05; }
 /* Strong's id, demoted out of the word-study header into the top of the hero. */
 .detail-strongs-tag {
   display: inline-block;
