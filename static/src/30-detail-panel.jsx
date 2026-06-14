@@ -102,7 +102,7 @@ SummaryPanel._cache = {};
 // ============================================================
 // DETAIL PANEL — SIDEBAR / BOTTOM SHEET
 // ============================================================
-function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onStrongsSearch, onReadInContext, onNameSearch, onNavigateToLexicon, onOpenStudyName, overviewBack }) {
+function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onStrongsSearch, onReadInContext, onNameSearch, onNavigateToLexicon, onOpenStudyName, overviewBack, backLabel = "Overview" }) {
   const [verseText, setVerseText] = useState("");
   const [verseLoading, setVerseLoading] = useState(false);
   const [abpCount, setAbpCount] = useState(null);
@@ -743,7 +743,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
           <span className="detail-strong-head">{entry.strongs}</span>
         </div>
         {overviewBack && !isMobile ? (
-          <button className="detail-back" onClick={onClose} aria-label="Back to overview">‹ Overview</button>
+          <button className="detail-back" onClick={onClose} aria-label={"Back to " + backLabel.toLowerCase()}>‹ {backLabel}</button>
         ) : (
           <button className="detail-close" onClick={onClose} aria-label="Close">
             <Icon.Close/>

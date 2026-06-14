@@ -28,6 +28,9 @@ function App() {
   const [lexiconPendingStrongs, setLexiconPendingStrongs] = useState(null);
   const [studyPending, setStudyPending] = useState(null);   // open this name-topic in Study (from the metaV sidebar)
   const [libTranslation, setLibTranslation] = useState("abp");
+  // Which panel is the base of the detail rail ("overview" = chapter summary, "intro" =
+  // chrono day intro) — so a word/xref panel labels its back link to match.
+  const [libDetailBase, setLibDetailBase] = useState("overview");
   const [activeNote, setActiveNote] = useState(null);   // note id being edited
   const [focusMode, setFocusMode] = useState(false);    // distraction-free reading: chrome hidden (library only, not remembered)
 
@@ -257,7 +260,7 @@ function App() {
       <main className="main">
         {libEverVisited && (
           <div style={{ display: mainView === "library" ? undefined : "none" }}>
-            <LibraryView nav={libNav} onNavChange={setLibNav} onWordClick={(e) => { setLibCrossRef(null); setActiveNote(null); setActiveEntry(e); }} onVerseNumberClick={handleVerseNumberClick} onOpenNote={openNote} onTranslationChange={setLibTranslation} isMobile={isMobile} showSummary={showLibSummary} focusMode={focusMode} onToggleFocus={() => setFocusMode(f => !f)} />
+            <LibraryView nav={libNav} onNavChange={setLibNav} onWordClick={(e) => { setLibCrossRef(null); setActiveNote(null); setActiveEntry(e); }} onVerseNumberClick={handleVerseNumberClick} onOpenNote={openNote} onTranslationChange={setLibTranslation} isMobile={isMobile} showSummary={showLibSummary} focusMode={focusMode} onToggleFocus={() => setFocusMode(f => !f)} onDetailBaseChange={setLibDetailBase} />
           </div>
         )}
         {mainView === "about" && <AboutView owner={owner} />}
@@ -377,6 +380,7 @@ function App() {
           onReadInContext={handleReadInContext}
           onOpenStudyName={handleOpenStudyName}
           overviewBack={mainView === "library"}
+          backLabel={libDetailBase === "intro" ? "Intro" : "Overview"}
         />
       )}
 
@@ -415,6 +419,7 @@ function App() {
           onAiSearch={(q) => { setLibCrossRef(null); handleAiSearch(q); }}
           isMobile={false}
           overviewBack={true}
+          backLabel={libDetailBase === "intro" ? "Intro" : "Overview"}
         />
       )}
       {libCrossRef && isMobile && (

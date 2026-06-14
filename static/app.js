@@ -1952,7 +1952,8 @@ function DetailPanel({
   onNameSearch,
   onNavigateToLexicon,
   onOpenStudyName,
-  overviewBack
+  overviewBack,
+  backLabel = "Overview"
 }) {
   const [verseText, setVerseText] = useState("");
   const [verseLoading, setVerseLoading] = useState(false);
@@ -2764,8 +2765,8 @@ function DetailPanel({
   }, entry.strongs)), overviewBack && !isMobile ? /*#__PURE__*/React.createElement("button", {
     className: "detail-back",
     onClick: onClose,
-    "aria-label": "Back to overview"
-  }, "\u2039 Overview") : /*#__PURE__*/React.createElement("button", {
+    "aria-label": "Back to " + backLabel.toLowerCase()
+  }, "\u2039 ", backLabel) : /*#__PURE__*/React.createElement("button", {
     className: "detail-close",
     onClick: onClose,
     "aria-label": "Close"
@@ -3499,7 +3500,8 @@ function CrossRefPanel({
   isMobile,
   translation,
   onAiSearch,
-  overviewBack
+  overviewBack,
+  backLabel = "Overview"
 }) {
   const [refs, setRefs] = useState([]);
   const [synthesis, setSynthesis] = useState(null);
@@ -3610,8 +3612,8 @@ function CrossRefPanel({
   }, heroRef)), overviewBack && !isMobile ? /*#__PURE__*/React.createElement("button", {
     className: "detail-back",
     onClick: onClose,
-    "aria-label": "Back to overview"
-  }, "\u2039 Overview") : /*#__PURE__*/React.createElement("button", {
+    "aria-label": "Back to " + backLabel.toLowerCase()
+  }, "\u2039 ", backLabel) : /*#__PURE__*/React.createElement("button", {
     className: "detail-close",
     onClick: onClose,
     "aria-label": "Close"
@@ -7653,7 +7655,8 @@ function LibraryView({
   isMobile,
   showSummary,
   focusMode,
-  onToggleFocus
+  onToggleFocus,
+  onDetailBaseChange
 }) {
   const [books, setBooks] = useState(() => readCachedBooks());
   const [selBook, setSelBook] = useState(() => {
@@ -8788,6 +8791,13 @@ function LibraryView({
   // The chronological reading "day" you're in — drives the Reading-intro panel. In
   // chrono the right panel shows that day's intro instead of the per-chapter overview.
   const currentDay = chronoOn && chrono && chrono.days ? chrono.days.find(d => d.pos && d.pos.includes(chronoPos)) : null;
+
+  // Tell the app which panel is the current BASE of the detail rail, so a word/xref
+  // panel opened on top of it labels its back link correctly ("‹ Intro" vs "‹ Overview").
+  const detailBase = chronoOn && currentDay && chronoPanel === "intro" ? "intro" : "overview";
+  useEffect(() => {
+    onDetailBaseChange?.(detailBase);
+  }, [detailBase]);
 
   // Turn one page: chronological steps a passage, everything else steps a chapter.
   // Shared by the mobile swipe and the desktop arrow keys (focus mode).
@@ -11742,6 +11752,9 @@ function App() {
   const [lexiconPendingStrongs, setLexiconPendingStrongs] = useState(null);
   const [studyPending, setStudyPending] = useState(null); // open this name-topic in Study (from the metaV sidebar)
   const [libTranslation, setLibTranslation] = useState("abp");
+  // Which panel is the base of the detail rail ("overview" = chapter summary, "intro" =
+  // chrono day intro) — so a word/xref panel labels its back link to match.
+  const [libDetailBase, setLibDetailBase] = useState("overview");
   const [activeNote, setActiveNote] = useState(null); // note id being edited
   const [focusMode, setFocusMode] = useState(false); // distraction-free reading: chrome hidden (library only, not remembered)
 
@@ -12036,7 +12049,8 @@ function App() {
     isMobile: isMobile,
     showSummary: showLibSummary,
     focusMode: focusMode,
-    onToggleFocus: () => setFocusMode(f => !f)
+    onToggleFocus: () => setFocusMode(f => !f),
+    onDetailBaseChange: setLibDetailBase
   })), mainView === "about" && /*#__PURE__*/React.createElement(AboutView, {
     owner: owner
   }), mainView === "notes" && /*#__PURE__*/React.createElement(NotesView, {
@@ -12182,7 +12196,8 @@ function App() {
     onNavigateToLexicon: handleNavigateToLexicon,
     onReadInContext: handleReadInContext,
     onOpenStudyName: handleOpenStudyName,
-    overviewBack: mainView === "library"
+    overviewBack: mainView === "library",
+    backLabel: libDetailBase === "intro" ? "Intro" : "Overview"
   }), activeEntry && isMobile && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "sheet-scrim",
     onClick: () => setActiveEntry(null)
@@ -12224,7 +12239,8 @@ function App() {
       handleAiSearch(q);
     },
     isMobile: false,
-    overviewBack: true
+    overviewBack: true,
+    backLabel: libDetailBase === "intro" ? "Intro" : "Overview"
   }), libCrossRef && isMobile && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "sheet-scrim",
     onClick: () => {

@@ -812,7 +812,7 @@ function readCachedBooks() {
   try { const c = JSON.parse(localStorage.getItem("lexica.books.v1") || "null"); return Array.isArray(c) ? c : []; } catch (e) { return []; }
 }
 
-function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpenNote, onTranslationChange, isMobile, showSummary, focusMode, onToggleFocus }) {
+function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpenNote, onTranslationChange, isMobile, showSummary, focusMode, onToggleFocus, onDetailBaseChange }) {
   const [books, setBooks] = useState(() => readCachedBooks());
   const [selBook, setSelBook] = useState(() => {
     const c = readCachedBooks(), s = readLibSaved();
@@ -1680,6 +1680,11 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
   // chrono the right panel shows that day's intro instead of the per-chapter overview.
   const currentDay = (chronoOn && chrono && chrono.days)
     ? chrono.days.find(d => d.pos && d.pos.includes(chronoPos)) : null;
+
+  // Tell the app which panel is the current BASE of the detail rail, so a word/xref
+  // panel opened on top of it labels its back link correctly ("‹ Intro" vs "‹ Overview").
+  const detailBase = (chronoOn && currentDay && chronoPanel === "intro") ? "intro" : "overview";
+  useEffect(() => { onDetailBaseChange?.(detailBase); }, [detailBase]);
 
   // Turn one page: chronological steps a passage, everything else steps a chapter.
   // Shared by the mobile swipe and the desktop arrow keys (focus mode).

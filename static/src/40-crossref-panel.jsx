@@ -1,7 +1,7 @@
 // ============================================================
 // CROSS-REFERENCE PANEL
 // ============================================================
-function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation, onAiSearch, overviewBack }) {
+function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation, onAiSearch, overviewBack, backLabel = "Overview" }) {
   const [refs, setRefs] = useState([]);
   const [synthesis, setSynthesis] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -100,7 +100,7 @@ function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation, onA
           <span className="detail-pos summary-pos">{heroRef}</span>
         </div>
         {overviewBack && !isMobile ? (
-          <button className="detail-back" onClick={onClose} aria-label="Back to overview">‹ Overview</button>
+          <button className="detail-back" onClick={onClose} aria-label={"Back to " + backLabel.toLowerCase()}>‹ {backLabel}</button>
         ) : (
           <button className="detail-close" onClick={onClose} aria-label="Close"><Icon.Close/></button>
         )}
