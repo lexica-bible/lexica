@@ -2836,45 +2836,35 @@ input { font-family: inherit; }
 
 .plan-days { padding: 4px 4px 10px; }
 .plan-day { border-radius: 6px; scroll-margin-top: 150px; }
-.plan-day-head { display: flex; align-items: center; gap: 6px; }
-/* The small check IS the control now (no Mark-complete / Set-as-today buttons). */
-.plan-day-check {
-  flex: 0 0 18px; width: 18px; height: 18px; margin-left: 6px; padding: 0; border-radius: 50%;
-  border: 2px solid var(--rule-2); background: none; cursor: pointer;
-  display: inline-flex; align-items: center; justify-content: center; color: var(--ink-4);
-  transition: border-color .12s ease, background .12s ease;
-}
-.plan-day-check:hover { border-color: var(--gold); }
-.plan-day-check.done { background: var(--gold); border-color: var(--gold); color: var(--paper); }
-.plan-day-check svg { width: 12px; height: 12px; }
+.plan-day-head { display: flex; align-items: center; gap: 4px; }
+/* Day name = the open/collapse toggle, flush-left so the whole column lines up. */
 .plan-day-open {
-  flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; padding: 7px 8px 7px 2px;
-  text-align: left; cursor: pointer; background: none; border: none; color: var(--ink-2); font-size: 13px;
+  flex: 1; min-width: 0; text-align: left; padding: 7px 4px 7px 10px;
+  cursor: pointer; background: none; border: none; color: var(--ink-2); font-size: 13px;
 }
 .plan-day-open:hover { color: var(--ink); }
-.plan-day-caret { font-size: 9px; color: var(--ink-4); transition: transform 0.12s ease; flex: 0 0 auto; }
-.plan-day.open .plan-day-caret { transform: rotate(90deg); }
-.plan-day-n { flex: 1; }
+.plan-day-n { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .plan-day--done .plan-day-n { color: var(--ink-4); }
-.plan-day--today .plan-day-n { color: var(--ink); font-weight: 600; }
-.plan-today-tag {
-  font-size: 10px; font-weight: 600; color: var(--gold);
-  background: var(--gold-soft); border-radius: 999px; padding: 1px 8px;
+.plan-day--reading .plan-day-open { color: var(--ink); }
+/* The ONE status marker, on the right: ✓ read (click to undo) / • reading (click to
+   mark read). No Today gold, no Reading bar — the dot + the open passages say enough. */
+.plan-day-mark {
+  flex: 0 0 18px; width: 18px; height: 18px; padding: 0; border: none; background: none;
+  display: inline-flex; align-items: center; justify-content: center;
+}
+button.plan-day-mark { cursor: pointer; border-radius: 50%; transition: background .12s ease; }
+button.plan-day-mark:hover { background: var(--accent-soft); }
+.plan-day-mark--done { color: var(--accent); }
+.plan-day-mark--done svg { width: 13px; height: 13px; }
+.plan-day-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+.plan-day-meta {
+  flex: 0 0 auto; display: inline-flex; align-items: center; gap: 8px;
+  padding: 7px 8px 7px 2px; background: none; border: none; cursor: pointer;
 }
 .plan-day-v { font-size: 10.5px; color: var(--ink-4); font-family: var(--f-mono); }
-/* Tint ONLY the header row (not the expanded passages, which were sitting on peach and
-   looking fuzzy); the gold/accent spine still runs the full height of the day block. */
-.plan-day--today { box-shadow: inset 3px 0 0 var(--gold); border-radius: 0 6px 6px 0; }
-.plan-day--today > .plan-day-head { background: var(--gold-soft); border-radius: 0 6px 6px 0; }
-/* "Reading" = the day you're currently in (accent), distinct from the gold plan Today. */
-.plan-day--reading { box-shadow: inset 3px 0 0 var(--accent); border-radius: 0 6px 6px 0; }
-.plan-day--reading > .plan-day-head { background: color-mix(in srgb, var(--accent) 12%, transparent); border-radius: 0 6px 6px 0; }
-.plan-day--reading .plan-day-n { color: var(--ink); font-weight: 600; }
-.plan-reading-tag {
-  font-size: 10px; font-weight: 600; color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 14%, transparent); border-radius: 999px; padding: 1px 8px;
-}
-.plan-day-body { padding: 2px 8px 9px 22px; }
+.plan-day-caret { font-size: 9px; color: var(--ink-4); transition: transform 0.12s ease; flex: 0 0 auto; }
+.plan-day.open .plan-day-caret { transform: rotate(90deg); }
+.plan-day-body { padding: 2px 8px 9px 12px; }
 .plan-passage {
   width: 100%; display: block; text-align: left; padding: 4px 8px; border-radius: 5px;
   font-size: 13px; color: var(--ink-2); background: none; border: none; cursor: pointer;

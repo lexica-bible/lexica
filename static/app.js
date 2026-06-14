@@ -5606,37 +5606,49 @@ function DayPlanView({
     className: "plan-days"
   }, days.map(day => {
     const done = day.day < curDay;
-    const state = done ? "done" : day.day === curDay ? "today" : "soon";
-    // "Reading" highlight only when you're on a day OTHER than your plan Today, so
-    // it never clashes with the gold Today bar (reading your Today keeps the gold).
-    const isReading = readingDay != null && day.day === readingDay && readingDay !== curDay;
+    const isReading = readingDay != null && day.day === readingDay;
     const isOpen = open.has(day.day);
+    // One marker on the right edge IS the only clickable mark: a ✓ when the day is
+    // read (click to undo), a navy dot when it's the day you're reading (click to
+    // mark read). Every other day is bare — no Today gold, no Reading bar.
+    const mark = done ? /*#__PURE__*/React.createElement("button", {
+      className: "plan-day-mark plan-day-mark--done",
+      onClick: () => onToggleDone(day.day),
+      "aria-label": "Mark Day " + day.day + " unread",
+      title: "Read \u2014 click to undo"
+    }, /*#__PURE__*/React.createElement(Icon.Check, null)) : isReading ? /*#__PURE__*/React.createElement("button", {
+      className: "plan-day-mark plan-day-mark--reading",
+      onClick: () => onToggleDone(day.day),
+      "aria-label": "Mark Day " + day.day + " read",
+      title: "Mark as read"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "plan-day-dot",
+      "aria-hidden": "true"
+    })) : /*#__PURE__*/React.createElement("span", {
+      className: "plan-day-mark",
+      "aria-hidden": "true"
+    });
     return /*#__PURE__*/React.createElement("div", {
       key: day.day,
       ref: el => {
         if (day.day === focusDay) focusRef.current = el;
         if (day.day === curDay) todayRef.current = el;
       },
-      className: "plan-day plan-day--" + state + (isReading ? " plan-day--reading" : "") + (isOpen ? " open" : "")
+      className: "plan-day" + (done ? " plan-day--done" : "") + (isReading ? " plan-day--reading" : "") + (isOpen ? " open" : "")
     }, /*#__PURE__*/React.createElement("div", {
       className: "plan-day-head"
     }, /*#__PURE__*/React.createElement("button", {
-      className: "plan-day-check" + (done ? " done" : ""),
-      onClick: () => onToggleDone(day.day),
-      "aria-pressed": done,
-      "aria-label": done ? "Mark Day " + day.day + " unread" : "Mark Day " + day.day + " read",
-      title: done ? "Read — click to undo" : "Mark as read"
-    }, done ? /*#__PURE__*/React.createElement(Icon.Check, null) : null), /*#__PURE__*/React.createElement("button", {
       className: "plan-day-open",
       onClick: () => toggle(day.day),
       "aria-expanded": isOpen
     }, /*#__PURE__*/React.createElement("span", {
       className: "plan-day-n"
-    }, "Day ", day.day), isReading && /*#__PURE__*/React.createElement("span", {
-      className: "plan-reading-tag"
-    }, "Reading"), state === "today" && /*#__PURE__*/React.createElement("span", {
-      className: "plan-today-tag"
-    }, "Today"), /*#__PURE__*/React.createElement("span", {
+    }, "Day ", day.day)), mark, /*#__PURE__*/React.createElement("button", {
+      className: "plan-day-meta",
+      onClick: () => toggle(day.day),
+      tabIndex: -1,
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement("span", {
       className: "plan-day-v"
     }, day.verses, "v"), /*#__PURE__*/React.createElement("span", {
       className: "plan-day-caret",
