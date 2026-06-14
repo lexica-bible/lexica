@@ -90,7 +90,7 @@ function TimelineStrip({ win }) {
   );
 }
 
-function DayIntroPanel({ day, chrono, isMobile, onClose, onPickPassage }) {
+function DayIntroPanel({ day, chrono, isMobile, onClose, onPickPassage, onOverview }) {
   const dayNo = day ? day.day : null;
   const [data, setData] = useState(() => (dayNo != null && DayIntroPanel._cache[dayNo]) || null);
   const [loading, setLoading] = useState(false);
@@ -141,6 +141,11 @@ function DayIntroPanel({ day, chrono, isMobile, onClose, onPickPassage }) {
             </button>
           ))}
         </div>
+      )}
+      {onOverview && (
+        <button className="dintro-overview-link" onClick={onOverview}>
+          Chapter overview <span aria-hidden="true">›</span>
+        </button>
       )}
     </>
   );

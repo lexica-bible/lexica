@@ -1815,7 +1815,8 @@ function SummaryPanel({
   chapter,
   bookLabel,
   isMobile,
-  onClose
+  onClose,
+  onBack
 }) {
   // Remembers fetched summaries across remounts (the panel unmounts whenever a
   // word/verse takes over the slot) so re-opening the same chapter is instant
@@ -1899,7 +1900,11 @@ function SummaryPanel({
       className: "detail-head"
     }, /*#__PURE__*/React.createElement("div", {
       className: "detail-head-l"
-    }, /*#__PURE__*/React.createElement("span", {
+    }, onBack && /*#__PURE__*/React.createElement("button", {
+      className: "detail-back",
+      onClick: onBack,
+      "aria-label": "Back to reading intro"
+    }, "\u2039 Intro"), /*#__PURE__*/React.createElement("span", {
       className: "detail-pos summary-pos"
     }, title)), /*#__PURE__*/React.createElement("button", {
       className: "detail-close",
@@ -1920,7 +1925,11 @@ function SummaryPanel({
     className: "detail-head"
   }, /*#__PURE__*/React.createElement("div", {
     className: "detail-head-l"
-  }, /*#__PURE__*/React.createElement("span", {
+  }, onBack && /*#__PURE__*/React.createElement("button", {
+    className: "detail-back",
+    onClick: onBack,
+    "aria-label": "Back to reading intro"
+  }, "\u2039 Intro"), /*#__PURE__*/React.createElement("span", {
     className: "detail-pos summary-pos"
   }, title))), /*#__PURE__*/React.createElement("div", {
     className: "detail-body"
@@ -5930,7 +5939,8 @@ function DayIntroPanel({
   chrono,
   isMobile,
   onClose,
-  onPickPassage
+  onPickPassage,
+  onOverview
 }) {
   const dayNo = day ? day.day : null;
   const [data, setData] = useState(() => dayNo != null && DayIntroPanel._cache[dayNo] || null);
@@ -6004,7 +6014,12 @@ function DayIntroPanel({
   }, p.label), /*#__PURE__*/React.createElement("span", {
     className: "dintro-passage-go",
     "aria-hidden": "true"
-  }, "\u203A")))));
+  }, "\u203A")))), onOverview && /*#__PURE__*/React.createElement("button", {
+    className: "dintro-overview-link",
+    onClick: onOverview
+  }, "Chapter overview ", /*#__PURE__*/React.createElement("span", {
+    "aria-hidden": "true"
+  }, "\u203A")));
   if (isMobile) {
     return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
       className: "sheet-scrim",
@@ -7699,6 +7714,7 @@ function LibraryView({
     return () => document.removeEventListener("pointerdown", onDoc);
   }, [fontOpen]);
   const [summaryOpen, setSummaryOpen] = useState(false); // mobile: overview sheet
+  const [chronoPanel, setChronoPanel] = useState("intro"); // chrono right panel: "intro" | "overview"
   // Chronological reading: the same reader, fed passages in event order. The list
   // is a static file (book + verse range pointers, no Bible text). "canonical" =
   // normal book/chapter order; "chronological" = walk `chrono.passages` in order.
@@ -10667,15 +10683,28 @@ function LibraryView({
     onCopy: vmCopy,
     onJournal: vmJournal,
     onClose: () => setVerseMenu(null)
-  }), showSummary && chronoOn && currentDay ? /*#__PURE__*/React.createElement(DayIntroPanel, {
+  }), showSummary && chronoOn && currentDay ? chronoPanel === "overview" ? /*#__PURE__*/React.createElement(SummaryPanel, {
+    book: sumBook,
+    chapter: sumChapter,
+    bookLabel: sumLabel,
+    onBack: () => setChronoPanel("intro")
+  }) : /*#__PURE__*/React.createElement(DayIntroPanel, {
     day: currentDay,
     chrono: chrono,
-    onPickPassage: pickPassage
+    onPickPassage: pickPassage,
+    onOverview: () => setChronoPanel("overview")
   }) : showSummary && (selBook || nonCanon) ? /*#__PURE__*/React.createElement(SummaryPanel, {
     book: sumBook,
     chapter: sumChapter,
     bookLabel: sumLabel
-  }) : null, isMobile && summaryOpen && chronoOn && currentDay ? /*#__PURE__*/React.createElement(DayIntroPanel, {
+  }) : null, isMobile && summaryOpen && chronoOn && currentDay ? chronoPanel === "overview" ? /*#__PURE__*/React.createElement(SummaryPanel, {
+    isMobile: true,
+    book: sumBook,
+    chapter: sumChapter,
+    bookLabel: sumLabel,
+    onClose: () => setSummaryOpen(false),
+    onBack: () => setChronoPanel("intro")
+  }) : /*#__PURE__*/React.createElement(DayIntroPanel, {
     isMobile: true,
     day: currentDay,
     chrono: chrono,
@@ -10683,7 +10712,8 @@ function LibraryView({
     onPickPassage: p => {
       pickPassage(p);
       setSummaryOpen(false);
-    }
+    },
+    onOverview: () => setChronoPanel("overview")
   }) : isMobile && summaryOpen && (selBook || nonCanon) ? /*#__PURE__*/React.createElement(SummaryPanel, {
     isMobile: true,
     onClose: () => setSummaryOpen(false),

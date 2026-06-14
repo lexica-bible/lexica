@@ -8,7 +8,7 @@
 // ⓘ button (isMobile + onClose), riding the same .detail-sheet rails as the
 // word-study sheet.
 // ============================================================
-function SummaryPanel({ book, chapter, bookLabel, isMobile, onClose }) {
+function SummaryPanel({ book, chapter, bookLabel, isMobile, onClose, onBack }) {
   // Remembers fetched summaries across remounts (the panel unmounts whenever a
   // word/verse takes over the slot) so re-opening the same chapter is instant
   // instead of flashing the loading line again.
@@ -69,6 +69,7 @@ function SummaryPanel({ book, chapter, bookLabel, isMobile, onClose }) {
           <div className="sheet-drag-zone" aria-hidden="true"><div className="sheet-handle"></div></div>
           <div className="detail-head">
             <div className="detail-head-l">
+              {onBack && <button className="detail-back" onClick={onBack} aria-label="Back to reading intro">‹ Intro</button>}
               <span className="detail-pos summary-pos">{title}</span>
             </div>
             <button className="detail-close" onClick={onClose} aria-label="Close">
@@ -86,6 +87,7 @@ function SummaryPanel({ book, chapter, bookLabel, isMobile, onClose }) {
     <aside className="detail detail-side summary-side" role="complementary" aria-label="Reading overview">
       <div className="detail-head">
         <div className="detail-head-l">
+          {onBack && <button className="detail-back" onClick={onBack} aria-label="Back to reading intro">‹ Intro</button>}
           <span className="detail-pos summary-pos">{title}</span>
         </div>
       </div>

@@ -907,6 +907,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
     return () => document.removeEventListener("pointerdown", onDoc);
   }, [fontOpen]);
   const [summaryOpen, setSummaryOpen] = useState(false);   // mobile: overview sheet
+  const [chronoPanel, setChronoPanel] = useState("intro"); // chrono right panel: "intro" | "overview"
   // Chronological reading: the same reader, fed passages in event order. The list
   // is a static file (book + verse range pointers, no Bible text). "canonical" =
   // normal book/chapter order; "chronological" = walk `chrono.passages` in order.
@@ -3155,30 +3156,33 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
       {noteSel && <NoteAddPopover rect={noteSel.rect} isMobile={isMobile} onAdd={addNoteFromSelection} onColor={addHighlightFromSelection} onCopy={copySelection} onJournal={journalFromSelection} />}
       {flashMsg && <div className="lib-flash">{flashMsg}</div>}
       {verseMenu && <VerseNoteMenu rect={verseMenu.rect} isMobile={isMobile} onColor={vmColor} onNote={vmNote} onBookmark={vmBookmark} onCopy={vmCopy} onJournal={vmJournal} onClose={() => setVerseMenu(null)} />}
-      {/* Desktop right panel: in chronological it rests on the day's Reading intro;
-          otherwise the per-chapter overview. */}
+      {/* Desktop right panel: in chronological it rests on the day's Reading intro
+          (with a link to the per-chapter overview, and back); otherwise the overview. */}
       {showSummary && chronoOn && currentDay ? (
-        <DayIntroPanel day={currentDay} chrono={chrono} onPickPassage={pickPassage} />
+        chronoPanel === "overview" ? (
+          <SummaryPanel book={sumBook} chapter={sumChapter} bookLabel={sumLabel}
+            onBack={() => setChronoPanel("intro")} />
+        ) : (
+          <DayIntroPanel day={currentDay} chrono={chrono} onPickPassage={pickPassage}
+            onOverview={() => setChronoPanel("overview")} />
+        )
       ) : showSummary && (selBook || nonCanon) ? (
-        <SummaryPanel
-          book={sumBook}
-          chapter={sumChapter}
-          bookLabel={sumLabel}
-        />
+        <SummaryPanel book={sumBook} chapter={sumChapter} bookLabel={sumLabel} />
       ) : null}
-      {/* Mobile overview sheet (ⓘ): chrono shows the Reading intro, else the chapter overview. */}
+      {/* Mobile overview sheet (ⓘ): chrono shows the Reading intro (toggle to the chapter overview). */}
       {isMobile && summaryOpen && chronoOn && currentDay ? (
-        <DayIntroPanel isMobile day={currentDay} chrono={chrono}
-          onClose={() => setSummaryOpen(false)}
-          onPickPassage={(p) => { pickPassage(p); setSummaryOpen(false); }} />
+        chronoPanel === "overview" ? (
+          <SummaryPanel isMobile book={sumBook} chapter={sumChapter} bookLabel={sumLabel}
+            onClose={() => setSummaryOpen(false)} onBack={() => setChronoPanel("intro")} />
+        ) : (
+          <DayIntroPanel isMobile day={currentDay} chrono={chrono}
+            onClose={() => setSummaryOpen(false)}
+            onPickPassage={(p) => { pickPassage(p); setSummaryOpen(false); }}
+            onOverview={() => setChronoPanel("overview")} />
+        )
       ) : isMobile && summaryOpen && (selBook || nonCanon) ? (
-        <SummaryPanel
-          isMobile
-          onClose={() => setSummaryOpen(false)}
-          book={sumBook}
-          chapter={sumChapter}
-          bookLabel={sumLabel}
-        />
+        <SummaryPanel isMobile onClose={() => setSummaryOpen(false)}
+          book={sumBook} chapter={sumChapter} bookLabel={sumLabel} />
       ) : null}
     </div>
   );

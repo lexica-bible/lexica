@@ -2883,12 +2883,13 @@ input { font-family: inherit; }
 /* The small check IS the control now (no Mark-complete / Set-as-today buttons). */
 .plan-day-check {
   flex: 0 0 18px; width: 18px; height: 18px; margin-left: 6px; padding: 0; border-radius: 50%;
-  border: 1.5px solid var(--rule-2); background: none; cursor: pointer;
+  border: 2px solid var(--rule-2); background: none; cursor: pointer;
   display: inline-flex; align-items: center; justify-content: center; color: var(--ink-4);
+  transition: border-color .12s ease, background .12s ease;
 }
 .plan-day-check:hover { border-color: var(--gold); }
-.plan-day-check.done { background: var(--gold); border-color: var(--gold); color: #221e18; }
-.plan-day-check svg { width: 11px; height: 11px; }
+.plan-day-check.done { background: var(--gold); border-color: var(--gold); color: var(--paper); }
+.plan-day-check svg { width: 12px; height: 12px; }
 .plan-day-open {
   flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; padding: 7px 8px 7px 2px;
   text-align: left; cursor: pointer; background: none; border: none; color: var(--ink-2); font-size: 13px;
@@ -2904,9 +2905,13 @@ input { font-family: inherit; }
   background: var(--gold-soft); border-radius: 999px; padding: 1px 8px;
 }
 .plan-day-v { font-size: 10.5px; color: var(--ink-4); font-family: var(--f-mono); }
-.plan-day--today { background: var(--gold-soft); box-shadow: inset 3px 0 0 var(--gold); border-radius: 0 6px 6px 0; }
+/* Tint ONLY the header row (not the expanded passages, which were sitting on peach and
+   looking fuzzy); the gold/accent spine still runs the full height of the day block. */
+.plan-day--today { box-shadow: inset 3px 0 0 var(--gold); border-radius: 0 6px 6px 0; }
+.plan-day--today > .plan-day-head { background: var(--gold-soft); border-radius: 0 6px 6px 0; }
 /* "Reading" = the day you're currently in (accent), distinct from the gold plan Today. */
-.plan-day--reading { background: color-mix(in srgb, var(--accent) 12%, transparent); box-shadow: inset 3px 0 0 var(--accent); border-radius: 0 6px 6px 0; }
+.plan-day--reading { box-shadow: inset 3px 0 0 var(--accent); border-radius: 0 6px 6px 0; }
+.plan-day--reading > .plan-day-head { background: color-mix(in srgb, var(--accent) 12%, transparent); border-radius: 0 6px 6px 0; }
 .plan-day--reading .plan-day-n { color: var(--ink); font-weight: 600; }
 .plan-reading-tag {
   font-size: 10px; font-weight: 600; color: var(--accent);
@@ -2915,7 +2920,7 @@ input { font-family: inherit; }
 .plan-day-body { padding: 2px 8px 9px 22px; }
 .plan-passage {
   width: 100%; display: block; text-align: left; padding: 4px 8px; border-radius: 5px;
-  font-size: 12.5px; color: var(--ink-2); background: none; border: none; cursor: pointer;
+  font-size: 13px; color: var(--ink-2); background: none; border: none; cursor: pointer;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .plan-passage:hover { color: var(--ink); }
@@ -2951,6 +2956,11 @@ input { font-family: inherit; }
 .dintro-passage-ref { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dintro-passage-go { color: var(--ink-4); font-size: 16px; line-height: 1; flex: 0 0 auto; }
 .dintro-passage:hover .dintro-passage-go { color: var(--gold); }
+.dintro-overview-link {
+  margin-top: 16px; display: inline-flex; align-items: center; gap: 3px; padding: 4px 0;
+  background: none; border: none; cursor: pointer; font-size: 12.5px; font-weight: 600; color: var(--accent);
+}
+.dintro-overview-link:hover { text-decoration: underline; }
 
 /* Desktop nav: the Days view fills the panel height — the toggle + progress header
    are a fixed block and only the day list scrolls. (Mobile keeps the sticky header
