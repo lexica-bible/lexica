@@ -5873,54 +5873,55 @@ function TimelineStrip({
     y1
   } = win;
   const W = 320,
-    padL = 16,
-    padR = 16,
-    base = 30,
+    padL = 14,
+    padR = 14,
+    base = 25,
     innerW = W - padL - padR;
   const span = et.end - et.start || 1;
   const xOf = yr => padL + (yr - et.start) / span * innerW;
   const mx0 = Math.max(padL, xOf(y0)),
     mx1 = Math.min(W - padR, xOf(y1));
-  const ovalX = Math.min(mx0, mx1) - 5,
-    ovalW = Math.max(10, Math.abs(mx1 - mx0) + 10);
+  const nowX = Math.min(mx0, mx1),
+    nowW = Math.max(11, Math.abs(mx1 - mx0));
   return /*#__PURE__*/React.createElement("div", {
     className: "dintro-tl"
   }, /*#__PURE__*/React.createElement("svg", {
-    viewBox: `0 0 ${W} 40`,
+    viewBox: `0 0 ${W} 34`,
     className: "dintro-tl-svg",
     preserveAspectRatio: "xMidYMid meet",
     role: "img",
-    "aria-label": "Timeline"
-  }, /*#__PURE__*/React.createElement("line", {
-    x1: padL,
-    y1: base,
-    x2: W - padR,
-    y2: base,
-    className: "dintro-tl-axis"
+    "aria-label": "Era timeline"
+  }, /*#__PURE__*/React.createElement("text", {
+    x: padL,
+    y: 9,
+    className: "dintro-tl-yr",
+    textAnchor: "start"
+  }, fmtYear(et.start)), /*#__PURE__*/React.createElement("text", {
+    x: W - padR,
+    y: 9,
+    className: "dintro-tl-yr",
+    textAnchor: "end"
+  }, fmtYear(et.end)), /*#__PURE__*/React.createElement("rect", {
+    x: padL,
+    y: base - 2.5,
+    width: innerW,
+    height: 5,
+    rx: 2.5,
+    className: "dintro-tl-track"
   }), /*#__PURE__*/React.createElement("rect", {
-    x: ovalX,
-    y: base - 7,
-    width: ovalW,
-    height: 14,
-    rx: 7,
+    x: nowX,
+    y: base - 6,
+    width: nowW,
+    height: 12,
+    rx: 6,
     className: "dintro-tl-now"
   }), et.marks.map((m, i) => /*#__PURE__*/React.createElement("circle", {
     key: i,
     cx: xOf(m.year),
     cy: base,
-    r: 2.6,
+    r: 4,
     className: "dintro-tl-dot"
-  })), /*#__PURE__*/React.createElement("text", {
-    x: padL,
-    y: 13,
-    className: "dintro-tl-yr",
-    textAnchor: "start"
-  }, fmtYear(et.start)), /*#__PURE__*/React.createElement("text", {
-    x: W - padR,
-    y: 13,
-    className: "dintro-tl-yr",
-    textAnchor: "end"
-  }, fmtYear(et.end))), /*#__PURE__*/React.createElement("div", {
+  }))), /*#__PURE__*/React.createElement("div", {
     className: "dintro-tl-legend"
   }, et.marks.map((m, i) => /*#__PURE__*/React.createElement("span", {
     key: i,
@@ -5974,12 +5975,14 @@ function DayIntroPanel({
   const title = data && data.title || (era ? era.name : "Today's reading");
   const dateLine = win ? fmtReadingDate(win.y0, win.y1) : null;
   const content = /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
-    className: "dintro-head-block"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "dintro-reading"
-  }, "Reading ", dayNo, dateLine ? " · " + dateLine : ""), /*#__PURE__*/React.createElement("div", {
+    className: "dintro-eyebrow"
+  }, /*#__PURE__*/React.createElement(Icon.Clock, null), " Reading ", dayNo), /*#__PURE__*/React.createElement("div", {
     className: "dintro-title"
-  }, title), era && /*#__PURE__*/React.createElement("div", {
+  }, title), /*#__PURE__*/React.createElement("div", {
+    className: "dintro-meta"
+  }, dateLine && /*#__PURE__*/React.createElement("span", {
+    className: "dintro-date"
+  }, dateLine), era && /*#__PURE__*/React.createElement("span", {
     className: "dintro-era"
   }, era.name)), win && /*#__PURE__*/React.createElement(TimelineStrip, {
     win: win
@@ -5994,12 +5997,17 @@ function DayIntroPanel({
   }, "No intro available for this reading.")), passages.length > 0 && /*#__PURE__*/React.createElement("div", {
     className: "dintro-passages"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "detail-h"
+    className: "dintro-passages-label"
   }, "Today's passages"), passages.map(p => /*#__PURE__*/React.createElement("button", {
     key: p.pos,
     className: "dintro-passage",
     onClick: () => onPickPassage && onPickPassage(p)
-  }, p.label))));
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "dintro-passage-ref"
+  }, p.label), /*#__PURE__*/React.createElement("span", {
+    className: "dintro-passage-go",
+    "aria-hidden": "true"
+  }, "\u203A")))));
   if (isMobile) {
     return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
       className: "sheet-scrim",

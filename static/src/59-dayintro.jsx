@@ -64,23 +64,22 @@ function fmtReadingDate(y0, y1) {
 function TimelineStrip({ win }) {
   if (!win) return null;
   const { et, y0, y1 } = win;
-  const W = 320, padL = 16, padR = 16, base = 30, innerW = W - padL - padR;
+  const W = 320, padL = 14, padR = 14, base = 25, innerW = W - padL - padR;
   const span = et.end - et.start || 1;
   const xOf = (yr) => padL + ((yr - et.start) / span) * innerW;
   const mx0 = Math.max(padL, xOf(y0)), mx1 = Math.min(W - padR, xOf(y1));
-  const ovalX = Math.min(mx0, mx1) - 5, ovalW = Math.max(10, Math.abs(mx1 - mx0) + 10);
+  const nowX = Math.min(mx0, mx1), nowW = Math.max(11, Math.abs(mx1 - mx0));
   return (
     <div className="dintro-tl">
-      <svg viewBox={`0 0 ${W} 40`} className="dintro-tl-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Timeline">
-        <line x1={padL} y1={base} x2={W - padR} y2={base} className="dintro-tl-axis" />
-        {/* the reading's spot */}
-        <rect x={ovalX} y={base - 7} width={ovalW} height={14} rx={7} className="dintro-tl-now" />
+      <svg viewBox={`0 0 ${W} 34`} className="dintro-tl-svg" preserveAspectRatio="xMidYMid meet" role="img" aria-label="Era timeline">
+        <text x={padL} y={9} className="dintro-tl-yr" textAnchor="start">{fmtYear(et.start)}</text>
+        <text x={W - padR} y={9} className="dintro-tl-yr" textAnchor="end">{fmtYear(et.end)}</text>
+        <rect x={padL} y={base - 2.5} width={innerW} height={5} rx={2.5} className="dintro-tl-track" />
+        {/* where you are — a gold dot for a point, a gold bar for a sweeping reading */}
+        <rect x={nowX} y={base - 6} width={nowW} height={12} rx={6} className="dintro-tl-now" />
         {et.marks.map((m, i) => (
-          <circle key={i} cx={xOf(m.year)} cy={base} r={2.6} className="dintro-tl-dot" />
+          <circle key={i} cx={xOf(m.year)} cy={base} r={4} className="dintro-tl-dot" />
         ))}
-        {/* span ends, anchored so they never clip */}
-        <text x={padL} y={13} className="dintro-tl-yr" textAnchor="start">{fmtYear(et.start)}</text>
-        <text x={W - padR} y={13} className="dintro-tl-yr" textAnchor="end">{fmtYear(et.end)}</text>
       </svg>
       <div className="dintro-tl-legend">
         {et.marks.map((m, i) => (
@@ -118,10 +117,11 @@ function DayIntroPanel({ day, chrono, isMobile, onClose, onPickPassage }) {
 
   const content = (
     <>
-      <div className="dintro-head-block">
-        <div className="dintro-reading">Reading {dayNo}{dateLine ? " · " + dateLine : ""}</div>
-        <div className="dintro-title">{title}</div>
-        {era && <div className="dintro-era">{era.name}</div>}
+      <div className="dintro-eyebrow"><Icon.Clock/> Reading {dayNo}</div>
+      <div className="dintro-title">{title}</div>
+      <div className="dintro-meta">
+        {dateLine && <span className="dintro-date">{dateLine}</span>}
+        {era && <span className="dintro-era">{era.name}</span>}
       </div>
       {win && <TimelineStrip win={win} />}
       <div className="dintro-summary">
@@ -133,9 +133,12 @@ function DayIntroPanel({ day, chrono, isMobile, onClose, onPickPassage }) {
       </div>
       {passages.length > 0 && (
         <div className="dintro-passages">
-          <div className="detail-h">Today's passages</div>
+          <div className="dintro-passages-label">Today's passages</div>
           {passages.map(p => (
-            <button key={p.pos} className="dintro-passage" onClick={() => onPickPassage && onPickPassage(p)}>{p.label}</button>
+            <button key={p.pos} className="dintro-passage" onClick={() => onPickPassage && onPickPassage(p)}>
+              <span className="dintro-passage-ref">{p.label}</span>
+              <span className="dintro-passage-go" aria-hidden="true">›</span>
+            </button>
           ))}
         </div>
       )}

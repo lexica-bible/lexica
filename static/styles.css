@@ -2918,28 +2918,33 @@ input { font-family: inherit; }
 .plan-passage.on::before { content: "•"; color: var(--accent); font-weight: 700; margin-right: 6px; }
 
 /* ---- Day intro panel (chronological "Reading" card) ---- */
-.dintro-head-block { margin-bottom: 12px; }
-.dintro-reading { font-family: var(--f-mono); font-size: 10.5px; letter-spacing: 0.04em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 4px; }
-.dintro-title { font-family: var(--f-serif); font-size: 21px; font-weight: 700; line-height: 1.15; color: var(--ink); }
-.dintro-era { font-size: 11.5px; color: var(--accent); margin-top: 3px; font-weight: 600; }
-.dintro-tl { margin: 4px 0 14px; }
+.dintro-eyebrow { display: flex; align-items: center; gap: 6px; font-family: var(--f-mono); font-size: 11px; letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 9px; }
+.dintro-eyebrow svg { width: 13px; height: 13px; }
+.dintro-title { font-family: var(--f-serif); font-size: 22px; font-weight: 700; line-height: 1.14; color: var(--ink); margin-bottom: 9px; }
+.dintro-meta { display: flex; align-items: center; gap: 9px; flex-wrap: wrap; margin-bottom: 18px; }
+.dintro-date { font-family: var(--f-mono); font-size: 12px; font-weight: 600; padding: 3px 10px; border-radius: 999px; background: color-mix(in srgb, var(--gold) 18%, transparent); color: var(--ink); white-space: nowrap; }
+.dintro-era { font-size: 12.5px; color: var(--ink-2); }
+.dintro-tl { margin: 2px 0 16px; }
 .dintro-tl-svg { width: 100%; height: auto; display: block; }
-.dintro-tl-axis { stroke: var(--rule-2); stroke-width: 1.5; }
-.dintro-tl-now { fill: color-mix(in srgb, var(--accent) 22%, transparent); stroke: var(--accent); stroke-width: 1.3; }
-.dintro-tl-dot { fill: var(--ink-3); }
-.dintro-tl-yr { fill: var(--ink-4); font-family: var(--f-mono); font-size: 8px; }
-.dintro-tl-legend { display: flex; flex-wrap: wrap; gap: 3px 12px; margin-top: 6px; }
-.dintro-tl-ev { font-size: 10.5px; color: var(--ink-3); }
-.dintro-tl-ev b { color: var(--ink-2); font-family: var(--f-mono); font-weight: 600; font-size: 9.5px; }
-.dintro-summary { margin-bottom: 14px; }
-.dintro-summary .detail-p { font-family: var(--f-serif); font-size: 14px; line-height: 1.55; color: var(--ink); }
-.dintro-passages .detail-h { margin-bottom: 4px; }
+.dintro-tl-track { fill: var(--rule-2); }
+.dintro-tl-now { fill: var(--gold); }
+.dintro-tl-dot { fill: var(--ink-3); stroke: var(--paper); stroke-width: 2; }
+.dintro-tl-yr { fill: var(--ink-4); font-family: var(--f-mono); font-size: 9px; }
+.dintro-tl-legend { display: flex; flex-direction: column; gap: 3px; margin-top: 9px; }
+.dintro-tl-ev { font-size: 11.5px; color: var(--ink-2); }
+.dintro-tl-ev b { color: var(--ink); font-family: var(--f-mono); font-weight: 600; }
+.dintro-summary { border-top: 1px solid var(--rule); padding-top: 14px; margin-bottom: 16px; }
+.dintro-summary .detail-p { font-family: var(--f-serif); font-size: 14.5px; line-height: 1.6; color: var(--ink); margin: 0; }
+.dintro-passages-label { font-size: 11px; letter-spacing: 0.05em; text-transform: uppercase; color: var(--ink-4); margin-bottom: 8px; }
 .dintro-passage {
-  width: 100%; display: block; text-align: left; padding: 5px 9px; border-radius: 6px;
-  font-size: 13px; color: var(--ink-2); background: var(--ctl-bg, var(--bg)); border: 1px solid var(--rule);
-  cursor: pointer; margin-bottom: 5px;
+  width: 100%; display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  text-align: left; padding: 8px 11px; border-radius: 8px; font-size: 13px; color: var(--ink);
+  background: var(--ctl-bg, var(--bg)); border: 1px solid var(--rule); cursor: pointer; margin-bottom: 6px;
 }
-.dintro-passage:hover { color: var(--ink); border-color: var(--accent); }
+.dintro-passage:hover { border-color: var(--gold); }
+.dintro-passage-ref { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.dintro-passage-go { color: var(--ink-4); font-size: 16px; line-height: 1; flex: 0 0 auto; }
+.dintro-passage:hover .dintro-passage-go { color: var(--gold); }
 .plan-complete {
   margin-top: 7px; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;
   font-size: 12px; font-weight: 600; cursor: pointer; color: var(--gold);
