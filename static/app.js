@@ -5854,7 +5854,6 @@ function DayPlanView({
   const [openMonth, setOpenMonth] = useState(() => monthOf(focusDay)); // which month block is expanded
   const todayRef = useRef(null); // plan "Today" — target of the Jump button
   const focusRef = useRef(null); // the day you're reading — auto-scrolled to
-  const monthRefs = useRef({}); // each month block — to scroll the one you open to the top
 
   // Follow the reading position: keep the day you're in open + scrolled into view as it
   // changes (switching into chrono, turning pages, or marking a day complete — all of
@@ -5906,23 +5905,9 @@ function DayPlanView({
     g.days.push(d);
     g.last = d.day;
   });
-  // Open/collapse a month. When opening, scroll its block to the top of the list so you
-  // land at the START of the month you opened (not stranded partway down it). Desktop
-  // scrolls .plan-days; mobile scrolls .mpick-scroll (a scroll-margin clears the sticky
-  // progress bar there).
-  const toggleMonth = n => setOpenMonth(cur => {
-    const next = cur === n ? null : n;
-    if (next != null) {
-      requestAnimationFrame(() => {
-        const el = monthRefs.current[next];
-        if (el) el.scrollIntoView({
-          block: "start",
-          behavior: "smooth"
-        });
-      });
-    }
-    return next;
-  });
+  // Open/collapse a month — no scrolling, the list stays put. (Selecting a DAY still
+  // loads its passage; that's separate.)
+  const toggleMonth = n => setOpenMonth(cur => cur === n ? null : n);
 
   // One day row — rendered only when its month block is open.
   const renderDay = day => {
@@ -6012,9 +5997,6 @@ function DayPlanView({
     const hasReading = readingDay != null && readingDay >= m.first && readingDay <= m.last;
     return /*#__PURE__*/React.createElement("div", {
       key: m.n,
-      ref: el => {
-        if (el) monthRefs.current[m.n] = el;
-      },
       className: "plan-month" + (mOpen ? " open" : "") + (hasReading ? " plan-month--reading" : "")
     }, /*#__PURE__*/React.createElement("button", {
       className: "plan-month-head",
