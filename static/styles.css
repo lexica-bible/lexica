@@ -2879,17 +2879,23 @@ input { font-family: inherit; }
 
 .plan-days { padding: 4px 4px 10px; }
 .plan-day { border-radius: 6px; scroll-margin-top: 150px; }
-.plan-day-head {
-  width: 100%; display: flex; align-items: center; gap: 8px; padding: 7px 8px;
-  text-align: left; cursor: pointer; background: none; border: none;
-  color: var(--ink-2); font-size: 13px;
+.plan-day-head { display: flex; align-items: center; gap: 6px; }
+/* The small check IS the control now (no Mark-complete / Set-as-today buttons). */
+.plan-day-check {
+  flex: 0 0 18px; width: 18px; height: 18px; margin-left: 6px; padding: 0; border-radius: 50%;
+  border: 1.5px solid var(--rule-2); background: none; cursor: pointer;
+  display: inline-flex; align-items: center; justify-content: center; color: var(--ink-4);
 }
-.plan-day-head:hover { color: var(--ink); }
-.plan-day-mark { flex: 0 0 16px; display: inline-flex; align-items: center; justify-content: center; color: var(--ink-4); }
-.plan-day--done .plan-day-mark { color: var(--gold); }
-.plan-caret { font-size: 9px; transition: transform 0.12s ease; }
-.plan-day.open .plan-caret { transform: rotate(90deg); }
-.plan-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--gold); }
+.plan-day-check:hover { border-color: var(--gold); }
+.plan-day-check.done { background: var(--gold); border-color: var(--gold); color: #221e18; }
+.plan-day-check svg { width: 11px; height: 11px; }
+.plan-day-open {
+  flex: 1; min-width: 0; display: flex; align-items: center; gap: 8px; padding: 7px 8px 7px 2px;
+  text-align: left; cursor: pointer; background: none; border: none; color: var(--ink-2); font-size: 13px;
+}
+.plan-day-open:hover { color: var(--ink); }
+.plan-day-caret { font-size: 9px; color: var(--ink-4); transition: transform 0.12s ease; flex: 0 0 auto; }
+.plan-day.open .plan-day-caret { transform: rotate(90deg); }
 .plan-day-n { flex: 1; }
 .plan-day--done .plan-day-n { color: var(--ink-4); }
 .plan-day--today .plan-day-n { color: var(--ink); font-weight: 600; }
@@ -2945,18 +2951,6 @@ input { font-family: inherit; }
 .dintro-passage-ref { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dintro-passage-go { color: var(--ink-4); font-size: 16px; line-height: 1; flex: 0 0 auto; }
 .dintro-passage:hover .dintro-passage-go { color: var(--gold); }
-.plan-complete {
-  margin-top: 7px; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;
-  font-size: 12px; font-weight: 600; cursor: pointer; color: var(--gold);
-  background: var(--gold-soft); border: 1px solid var(--gold); border-radius: 7px;
-}
-.plan-complete:hover { background: var(--gold); color: var(--paper); }
-.plan-setday {
-  margin-top: 7px; display: inline-flex; align-items: center; padding: 6px 12px;
-  font-size: 12px; font-weight: 600; cursor: pointer; color: var(--ink-2);
-  background: var(--ctl-bg, var(--bg)); border: 1px solid var(--rule); border-radius: 7px;
-}
-.plan-setday:hover { color: var(--ink); border-color: var(--gold); }
 
 /* Desktop nav: the Days view fills the panel height — the toggle + progress header
    are a fixed block and only the day list scrolls. (Mobile keeps the sticky header

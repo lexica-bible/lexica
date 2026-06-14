@@ -49,7 +49,7 @@ function planAdvance(cur, totalDays) {
 }
 
 // The plan body — shared by the desktop left nav and the mobile picker.
-function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, onPickPassage, onMarkComplete, onSetDay }) {
+function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, onPickPassage, onToggleDone }) {
   const days = (chrono && chrono.days) || [];
   const total = days.length || 365;
   const prog = planFor(progAll, curText);
@@ -105,7 +105,8 @@ function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, o
 
       <div className="plan-days">
         {days.map(day => {
-          const state = day.day < curDay ? "done" : day.day === curDay ? "today" : "soon";
+          const done = day.day < curDay;
+          const state = done ? "done" : day.day === curDay ? "today" : "soon";
           // "Reading" highlight only when you're on a day OTHER than your plan Today, so
           // it never clashes with the gold Today bar (reading your Today keeps the gold).
           const isReading = readingDay != null && day.day === readingDay && readingDay !== curDay;
@@ -117,28 +118,27 @@ function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, o
                 if (day.day === curDay) todayRef.current = el;
               }}
               className={"plan-day plan-day--" + state + (isReading ? " plan-day--reading" : "") + (isOpen ? " open" : "")}>
-              <button className="plan-day-head" onClick={() => toggle(day.day)} aria-expanded={isOpen}>
-                <span className="plan-day-mark">
-                  {state === "done" ? <Icon.Check/>
-                    : state === "today" ? <span className="plan-dot" aria-hidden="true" />
-                    : <span className="plan-caret" aria-hidden="true">▸</span>}
-                </span>
-                <span className="plan-day-n">Day {day.day}</span>
-                {isReading && <span className="plan-reading-tag">Reading</span>}
-                {state === "today" && <span className="plan-today-tag">Today</span>}
-                <span className="plan-day-v">{day.verses}v</span>
-              </button>
+              <div className="plan-day-head">
+                <button className={"plan-day-check" + (done ? " done" : "")}
+                  onClick={() => onToggleDone(day.day)} aria-pressed={done}
+                  aria-label={(done ? "Mark Day " + day.day + " unread" : "Mark Day " + day.day + " read")}
+                  title={done ? "Read — click to undo" : "Mark as read"}>
+                  {done ? <Icon.Check/> : null}
+                </button>
+                <button className="plan-day-open" onClick={() => toggle(day.day)} aria-expanded={isOpen}>
+                  <span className="plan-day-n">Day {day.day}</span>
+                  {isReading && <span className="plan-reading-tag">Reading</span>}
+                  {state === "today" && <span className="plan-today-tag">Today</span>}
+                  <span className="plan-day-v">{day.verses}v</span>
+                  <span className="plan-day-caret" aria-hidden="true">▸</span>
+                </button>
+              </div>
               {isOpen && (
                 <div className="plan-day-body">
                   {passagesOf(day).map(p => (
                     <button key={p.pos} className={"plan-passage" + (p.pos === chronoPos ? " on" : "")}
                       onClick={() => onPickPassage(p)}>{p.label}</button>
                   ))}
-                  {state === "today" ? (
-                    <button className="plan-complete" onClick={onMarkComplete}><Icon.Check/> Mark today complete</button>
-                  ) : (
-                    <button className="plan-setday" onClick={() => onSetDay(day.day)}>Set as today</button>
-                  )}
                 </div>
               )}
             </div>

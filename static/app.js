@@ -5511,8 +5511,7 @@ function DayPlanView({
   chronoPos,
   onPickText,
   onPickPassage,
-  onMarkComplete,
-  onSetDay
+  onToggleDone
 }) {
   const days = chrono && chrono.days || [];
   const total = days.length || 365;
@@ -5584,7 +5583,8 @@ function DayPlanView({
   }, "Jump to today"))), /*#__PURE__*/React.createElement("div", {
     className: "plan-days"
   }, days.map(day => {
-    const state = day.day < curDay ? "done" : day.day === curDay ? "today" : "soon";
+    const done = day.day < curDay;
+    const state = done ? "done" : day.day === curDay ? "today" : "soon";
     // "Reading" highlight only when you're on a day OTHER than your plan Today, so
     // it never clashes with the gold Today bar (reading your Today keeps the gold).
     const isReading = readingDay != null && day.day === readingDay && readingDay !== curDay;
@@ -5596,19 +5596,19 @@ function DayPlanView({
         if (day.day === curDay) todayRef.current = el;
       },
       className: "plan-day plan-day--" + state + (isReading ? " plan-day--reading" : "") + (isOpen ? " open" : "")
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "plan-day-head"
     }, /*#__PURE__*/React.createElement("button", {
-      className: "plan-day-head",
+      className: "plan-day-check" + (done ? " done" : ""),
+      onClick: () => onToggleDone(day.day),
+      "aria-pressed": done,
+      "aria-label": done ? "Mark Day " + day.day + " unread" : "Mark Day " + day.day + " read",
+      title: done ? "Read — click to undo" : "Mark as read"
+    }, done ? /*#__PURE__*/React.createElement(Icon.Check, null) : null), /*#__PURE__*/React.createElement("button", {
+      className: "plan-day-open",
       onClick: () => toggle(day.day),
       "aria-expanded": isOpen
     }, /*#__PURE__*/React.createElement("span", {
-      className: "plan-day-mark"
-    }, state === "done" ? /*#__PURE__*/React.createElement(Icon.Check, null) : state === "today" ? /*#__PURE__*/React.createElement("span", {
-      className: "plan-dot",
-      "aria-hidden": "true"
-    }) : /*#__PURE__*/React.createElement("span", {
-      className: "plan-caret",
-      "aria-hidden": "true"
-    }, "\u25B8")), /*#__PURE__*/React.createElement("span", {
       className: "plan-day-n"
     }, "Day ", day.day), isReading && /*#__PURE__*/React.createElement("span", {
       className: "plan-reading-tag"
@@ -5616,19 +5616,16 @@ function DayPlanView({
       className: "plan-today-tag"
     }, "Today"), /*#__PURE__*/React.createElement("span", {
       className: "plan-day-v"
-    }, day.verses, "v")), isOpen && /*#__PURE__*/React.createElement("div", {
+    }, day.verses, "v"), /*#__PURE__*/React.createElement("span", {
+      className: "plan-day-caret",
+      "aria-hidden": "true"
+    }, "\u25B8"))), isOpen && /*#__PURE__*/React.createElement("div", {
       className: "plan-day-body"
     }, passagesOf(day).map(p => /*#__PURE__*/React.createElement("button", {
       key: p.pos,
       className: "plan-passage" + (p.pos === chronoPos ? " on" : ""),
       onClick: () => onPickPassage(p)
-    }, p.label)), state === "today" ? /*#__PURE__*/React.createElement("button", {
-      className: "plan-complete",
-      onClick: onMarkComplete
-    }, /*#__PURE__*/React.createElement(Icon.Check, null), " Mark today complete") : /*#__PURE__*/React.createElement("button", {
-      className: "plan-setday",
-      onClick: () => onSetDay(day.day)
-    }, "Set as today")));
+    }, p.label))));
   })));
 }
 
@@ -6575,8 +6572,7 @@ function LibNavPanel({
     progAll: plan.progAll,
     chronoPos: chronoPos,
     onPickText: plan.onPickText,
-    onMarkComplete: plan.onMarkComplete,
-    onSetDay: plan.onSetDay,
+    onToggleDone: plan.onToggleDone,
     onPickPassage: p => {
       onPickPassage(p);
       if (isOverlay) onClose();
@@ -6756,8 +6752,7 @@ function MobileBookPicker({
     progAll: plan.progAll,
     chronoPos: chronoPos,
     onPickText: plan.onPickText,
-    onMarkComplete: plan.onMarkComplete,
-    onSetDay: plan.onSetDay,
+    onToggleDone: plan.onToggleDone,
     onPickPassage: onPickPassage
   }) : chrono.eras.map(era => {
     const open = openEras.has(era.id);
@@ -7962,33 +7957,29 @@ function LibraryView({
     id: "niv",
     label: "NIV"
   }] : [])];
-  // Finished today's reading: advance THIS text's progress and continue into the next day.
-  const markDayComplete = () => {
+  // The little check on each day IS the control (the old Mark-complete / Set-as-today
+  // buttons are gone). Progress is linear: prog.day = the next day to read, so "done" =
+  // day < prog.day. Checking a not-yet-read day marks read THROUGH it (and bumps the
+  // streak like a completion); checking a done day un-marks from there on. Marking does
+  // NOT yank you to another passage — tap a passage to read.
+  const toggleDayDone = dayNum => {
     if (!chrono || !chrono.days) return;
-    const next = planAdvance(planFor(planProg, translation), chrono.days.length);
-    setPlanProg(prev => ({
-      ...prev,
-      [translation]: next
-    }));
-    const day = chrono.days[next.day - 1];
-    const p = day && day.pos && chrono.passages[day.pos[0] - 1];
-    if (p) pickPassage(p);
-  };
-  // Move this text's pointer to a chosen day (undo a mis-mark, or start mid-plan) and
-  // read its first passage. Streak/last-read are left alone — it's a manual jump.
-  const setPlanDay = dayNum => {
-    if (!chrono || !chrono.days) return;
-    const d = Math.max(1, Math.min(chrono.days.length, dayNum));
-    setPlanProg(prev => ({
-      ...prev,
-      [translation]: {
-        ...planFor(prev, translation),
-        day: d
-      }
-    }));
-    const day = chrono.days[d - 1];
-    const p = day && day.pos && chrono.passages[day.pos[0] - 1];
-    if (p) pickPassage(p);
+    const total = chrono.days.length;
+    setPlanProg(prev => {
+      const cur = planFor(prev, translation);
+      const next = dayNum < cur.day ? {
+        ...cur,
+        day: dayNum
+      } // un-mark from here on
+      : planAdvance({
+        ...cur,
+        day: dayNum
+      }, total); // mark read through dayNum (day -> dayNum+1, streak)
+      return {
+        ...prev,
+        [translation]: next
+      };
+    });
   };
   const planBundle = {
     view: chronoView,
@@ -7997,8 +7988,7 @@ function LibraryView({
     texts: planTexts,
     curText: translation,
     onPickText: id => pickBible(id),
-    onMarkComplete: markDayComplete,
-    onSetDay: setPlanDay
+    onToggleDone: toggleDayDone
   };
   // Flip reading order. Entering chronological stashes the canonical spot and jumps
   // to the current passage; leaving restores the stashed canonical spot.
