@@ -2990,8 +2990,8 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
 .dintro-tl-now { fill: var(--accent); }
 /* Thick paper ring so each milestone dot is carved cleanly out of the now-bar. */
 .dintro-tl-dot { fill: var(--ink-3); stroke: var(--paper); stroke-width: 2.5; }
-/* Carved out by the navy now-bar: flip to a white pill (matching the marker's
-   elongated shape) with a dark edge so it pops without becoming a round dot. */
+/* Under the navy now-bar: same dot, just inverted (white fill, dark ring) so it stays
+   visible instead of vanishing into the bar. Shape never changes. */
 .dintro-tl-dot--on { fill: var(--paper); stroke: var(--ink); stroke-width: 1.5; }
 /* Milestone list — a dot · year · label row, each tied to its own dot. The leading dot
    sits flush-left so it lines up under the first dot on the track; the mono year column
