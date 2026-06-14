@@ -5566,7 +5566,7 @@ function DayPlanView({
     }));
   }, [curText, focusDay]);
   const jumpToday = () => {
-    setOpen(s => new Set(s).add(curDay));
+    setOpen(new Set([curDay])); // open today AND collapse whatever day was open
     requestAnimationFrame(() => todayRef.current && todayRef.current.scrollIntoView({
       behavior: "smooth",
       block: "center"
@@ -5606,6 +5606,8 @@ function DayPlanView({
     onClick: jumpToday
   }, "Jump to today"))), /*#__PURE__*/React.createElement("div", {
     className: "plan-days"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "plan-days-inner"
   }, days.map(day => {
     const done = day.day < curDay;
     const isReading = readingDay != null && day.day === readingDay;
@@ -5669,7 +5671,7 @@ function DayPlanView({
       className: "plan-passage" + (p.pos === chronoPos ? " on" : ""),
       onClick: () => onPickPassage(p)
     }, p.label))));
-  })));
+  }))));
 }
 
 // ============================================================

@@ -2836,13 +2836,16 @@ input { font-family: inherit; }
 
 /* Continuous left spine down the whole day list — same cool accent as the Bible book
    nav's testament spine. A pseudo-element (not a border) so it can start just below the
-   header divider and stop just shy of the bottom. Soft tint in dark, like the nav. */
-.plan-days { position: relative; padding: 4px 4px 10px 6px; margin-left: 6px; }
-.plan-days::before {
-  content: ""; position: absolute; left: 0; top: 6px; bottom: 10px; width: 2px;
+   header divider and stop just shy of the bottom. It rides .plan-days-inner (the full
+   content height) NOT .plan-days (the scroll frame), so it spans all 365 days instead
+   of stopping at the visible edge. Soft tint in dark, like the nav. */
+.plan-days { padding: 4px 4px 10px 0; margin-left: 6px; }
+.plan-days-inner { position: relative; padding-left: 6px; }
+.plan-days-inner::before {
+  content: ""; position: absolute; left: 0; top: 6px; bottom: 6px; width: 2px;
   background: var(--accent); border-radius: 1px;
 }
-:root[data-theme="dark"] .plan-days::before { background: var(--accent-soft); }
+:root[data-theme="dark"] .plan-days-inner::before { background: var(--accent-soft); }
 .plan-day { border-radius: 6px; scroll-margin-top: 150px; }
 /* The whole row is the open/collapse toggle; day name flush-left, the count + marker +
    caret ride inline on the right. The marker is the only separately-clickable bit. */

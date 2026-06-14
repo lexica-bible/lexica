@@ -78,7 +78,7 @@ function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, o
   }, [curText, focusDay]);
 
   const jumpToday = () => {
-    setOpen(s => new Set(s).add(curDay));
+    setOpen(new Set([curDay]));   // open today AND collapse whatever day was open
     requestAnimationFrame(() => todayRef.current && todayRef.current.scrollIntoView({ behavior: "smooth", block: "center" }));
   };
   const passagesOf = (day) => day.pos.map(q => chrono.passages[q - 1]).filter(Boolean);
@@ -109,6 +109,7 @@ function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, o
       </div>
 
       <div className="plan-days">
+        <div className="plan-days-inner">
         {days.map(day => {
           const done = day.day < curDay;
           const isReading = readingDay != null && day.day === readingDay;
@@ -153,6 +154,7 @@ function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, o
             </div>
           );
         })}
+        </div>
       </div>
     </div>
   );
