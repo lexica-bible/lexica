@@ -2893,6 +2893,9 @@ button.plan-day-mark:hover { background: var(--accent-soft); }
 .plan-day-mark--done { color: var(--accent); }
 .plan-day-mark--done svg { width: 13px; height: 13px; }
 .plan-day-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
+/* Unmarked day: a faint ring you can tap to mark done; firms up on hover. */
+.plan-day-hollow { width: 8px; height: 8px; border-radius: 50%; border: 1.5px solid var(--ink-4); opacity: .4; transition: opacity .12s ease; }
+button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
 /* The open day's readings nest under a GOLD sub-spine — a deliberate spotlight on what
    you're reading, against the navy backbone. Soft tint in dark, like the nav OT spine. */
 .plan-day-body { margin-left: 6px; border-left: 2px solid var(--gold); padding: 2px 8px 7px 12px; }
@@ -2922,7 +2925,7 @@ button.plan-day-mark:hover { background: var(--accent-soft); }
    The progress header IS sticky — pulled out to the sheet edges (cancels .mpick-scroll's
    16px top / 14px side padding) so it's a solid full-width bar and no day rows bleed
    through beside or above it as they scroll under. The desktop nav keeps the spine. */
-.mpick .plan-head { position: sticky; top: 0; z-index: 5; margin: -16px -14px 8px; padding: 14px 14px 10px; }
+.mpick .plan-head { position: sticky; top: 0; z-index: 5; margin: -16px -14px 8px; padding: 6px 14px 10px; }
 .mpick .plan-days { margin-left: 0; padding: 4px 2px 10px; }
 .mpick .plan-days-inner { padding-left: 0; }
 .mpick .plan-days-inner::before { display: none; }
@@ -2932,6 +2935,7 @@ button.plan-day-mark:hover { background: var(--accent-soft); }
 .mpick .plan-day-v { font-size: 12px; }
 .mpick .plan-day-mark { flex-basis: 20px; width: 20px; height: 20px; }
 .mpick .plan-day-dot { width: 9px; height: 9px; }
+.mpick .plan-day-hollow { width: 10px; height: 10px; }
 .mpick .plan-passage { font-size: 15px; padding: 9px 8px; }
 .mpick .plan-month-head { padding: 13px 10px; gap: 10px; }
 .mpick .plan-month-name { font-size: 15px; }
@@ -3012,7 +3016,7 @@ button.plan-day-mark:hover { background: var(--accent-soft); }
 /* Eras view inside the pinned-toggle wrapper: the era list scrolls, toggle stays. */
 .nav-plan .nav-plan-scroll { flex: 1; min-height: 0; }
 /* Mobile picker: the Eras/Days toggle sits in the fixed chrome (above the scroller). */
-.mpick-toggle { margin: 12px 14px 10px; }
+.mpick-toggle { margin: 12px 14px 2px; }
 
 /* Chronological: a small chapter divider between the chapters a passage spans */
 .lib-chrono-chapmark {

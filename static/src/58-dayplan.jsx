@@ -19,10 +19,18 @@ function planLoadAll() {
 function planSaveAll(obj) {
   try { localStorage.setItem(PLAN_KEY, JSON.stringify(obj)); } catch (e) {}
 }
-// One text's progress, with sane defaults for a text never started.
+// One text's progress, with sane defaults for a text never started. `done` is the set
+// of completed day numbers (independent — you can skip around). Old saves stored only a
+// linear `day` pointer (everything before it = done); migrate that into the done list so
+// existing progress carries over.
 function planFor(all, text) {
-  const p = all && all[text];
-  return { day: (p && p.day) || 1, streak: (p && p.streak) || 0, last: (p && p.last) || null };
+  const p = (all && all[text]) || {};
+  let done = p.done;
+  if (!Array.isArray(done)) {
+    done = [];
+    for (let i = 1; i < (p.day || 1); i++) done.push(i);   // migrate the old pointer
+  }
+  return { day: p.day || 1, streak: p.streak || 0, last: p.last || null, done };
 }
 function planYmd(d) {
   d = d || new Date();
@@ -31,21 +39,6 @@ function planYmd(d) {
 function planDayDiff(a, b) {            // whole days from ymd a -> ymd b
   const pa = new Date(a + "T00:00:00"), pb = new Date(b + "T00:00:00");
   return Math.round((pb - pa) / 86400000);
-}
-// Mark the current day done: bump the streak if it's a fresh calendar day kept up from
-// yesterday (reading several days in one sitting doesn't inflate it), then move the
-// pointer to the next day, capped at the plan length.
-function planAdvance(cur, totalDays) {
-  const today = planYmd();
-  let streak = cur.streak || 0;
-  if (cur.last === today) {
-    // already marked a day today — keep the streak, just move the pointer on
-  } else if (cur.last && planDayDiff(cur.last, today) === 1) {
-    streak += 1;
-  } else {
-    streak = 1;
-  }
-  return { day: Math.min(totalDays, (cur.day || 1) + 1), streak, last: today };
 }
 
 // The plan body — shared by the desktop left nav and the mobile picker.
@@ -57,18 +50,22 @@ function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, o
   const monthSize = Math.ceil(total / 12);
   const monthOf = (d) => Math.floor((d - 1) / monthSize) + 1;
   const prog = planFor(progAll, curText);
-  const curDay = prog.day;
+  // Completed days are an independent set now — mark/un-mark any day, skip around freely.
+  const doneSet = new Set(prog.done || []);
+  const doneCount = doneSet.size;
+  // "Next to read" = the first day NOT yet done (used for focus + Jump-to-today + header).
+  let curDay = 1; while (curDay <= total && doneSet.has(curDay)) curDay++;
+  if (curDay > total) curDay = total;
   // The day that holds the passage you're currently reading. The list FOLLOWS this —
   // opening, highlighting, and scrolling to it as you switch into chronological or turn
-  // pages — separately from your plan "Today" (curDay), which still owns the streak +
-  // Mark-complete button.
+  // pages — separately from curDay (the next unread day, what Jump-to-today targets).
   const readingDay = (() => {
     if (chronoPos == null) return null;
     const d = days.find(dd => dd.pos && dd.pos.includes(chronoPos));
     return d ? d.day : null;
   })();
   const focusDay = readingDay || curDay;
-  const pct = Math.round((curDay - 1) / total * 100);     // days COMPLETED / total
+  const pct = Math.round(doneCount / total * 100);     // share of all days marked done
   const [open, setOpen] = useState(() => new Set([focusDay]));
   const [openMonth, setOpenMonth] = useState(() => monthOf(focusDay));   // which month block is expanded
   const todayRef = useRef(null);    // plan "Today" — target of the Jump button
@@ -115,19 +112,22 @@ function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, o
 
   // One day row — rendered only when its month block is open.
   const renderDay = (day) => {
-    const done = day.day < curDay;
+    const done = doneSet.has(day.day);
     const isReading = readingDay != null && day.day === readingDay;
     const isOpen = open.has(day.day);
     const markClick = (e) => { e.stopPropagation(); onToggleDone(day.day); };
-    const mark = isReading
-      ? (done
-          ? <button className="plan-day-mark plan-day-mark--done" onClick={markClick}
-              aria-label={"Mark Day " + day.day + " unread"} title="Read — click to undo"><Icon.Check/></button>
-          : <button className="plan-day-mark plan-day-mark--reading" onClick={markClick}
-              aria-label={"Mark Day " + day.day + " read"} title="Mark as read"><span className="plan-day-dot" aria-hidden="true"></span></button>)
-      : done
-        ? <span className="plan-day-mark plan-day-mark--done" aria-hidden="true"><Icon.Check/></span>
-        : <span className="plan-day-mark" aria-hidden="true"></span>;
+    // Every day's marker is its own toggle now — done shows a ✓ (click to undo), the day
+    // you're reading shows a dot, anything else a faint ring you can tap to mark done.
+    const mark = (
+      <button className={"plan-day-mark" + (done ? " plan-day-mark--done" : (isReading ? " plan-day-mark--reading" : ""))}
+        onClick={markClick}
+        aria-label={"Mark Day " + day.day + (done ? " unread" : " read")}
+        title={done ? "Read — click to undo" : "Mark as read"}>
+        {done ? <Icon.Check/>
+          : isReading ? <span className="plan-day-dot" aria-hidden="true"></span>
+          : <span className="plan-day-hollow" aria-hidden="true"></span>}
+      </button>
+    );
     return (
       <div key={day.day}
         ref={el => {
@@ -176,7 +176,7 @@ function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, o
         <div className="plan-days-inner">
         {months.map(m => {
           const mOpen = openMonth === m.n;
-          const doneInMonth = m.days.filter(d => d.day < curDay).length;
+          const doneInMonth = m.days.filter(d => doneSet.has(d.day)).length;
           const hasReading = readingDay != null && readingDay >= m.first && readingDay <= m.last;
           return (
             <div key={m.n} className={"plan-month" + (mOpen ? " open" : "") + (hasReading ? " plan-month--reading" : "")}>

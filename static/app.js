@@ -5528,13 +5528,22 @@ function planSaveAll(obj) {
     localStorage.setItem(PLAN_KEY, JSON.stringify(obj));
   } catch (e) {}
 }
-// One text's progress, with sane defaults for a text never started.
+// One text's progress, with sane defaults for a text never started. `done` is the set
+// of completed day numbers (independent — you can skip around). Old saves stored only a
+// linear `day` pointer (everything before it = done); migrate that into the done list so
+// existing progress carries over.
 function planFor(all, text) {
-  const p = all && all[text];
+  const p = all && all[text] || {};
+  let done = p.done;
+  if (!Array.isArray(done)) {
+    done = [];
+    for (let i = 1; i < (p.day || 1); i++) done.push(i); // migrate the old pointer
+  }
   return {
-    day: p && p.day || 1,
-    streak: p && p.streak || 0,
-    last: p && p.last || null
+    day: p.day || 1,
+    streak: p.streak || 0,
+    last: p.last || null,
+    done
   };
 }
 function planYmd(d) {
@@ -5546,25 +5555,6 @@ function planDayDiff(a, b) {
   const pa = new Date(a + "T00:00:00"),
     pb = new Date(b + "T00:00:00");
   return Math.round((pb - pa) / 86400000);
-}
-// Mark the current day done: bump the streak if it's a fresh calendar day kept up from
-// yesterday (reading several days in one sitting doesn't inflate it), then move the
-// pointer to the next day, capped at the plan length.
-function planAdvance(cur, totalDays) {
-  const today = planYmd();
-  let streak = cur.streak || 0;
-  if (cur.last === today) {
-    // already marked a day today — keep the streak, just move the pointer on
-  } else if (cur.last && planDayDiff(cur.last, today) === 1) {
-    streak += 1;
-  } else {
-    streak = 1;
-  }
-  return {
-    day: Math.min(totalDays, (cur.day || 1) + 1),
-    streak,
-    last: today
-  };
 }
 
 // The plan body — shared by the desktop left nav and the mobile picker.
@@ -5586,18 +5576,23 @@ function DayPlanView({
   const monthSize = Math.ceil(total / 12);
   const monthOf = d => Math.floor((d - 1) / monthSize) + 1;
   const prog = planFor(progAll, curText);
-  const curDay = prog.day;
+  // Completed days are an independent set now — mark/un-mark any day, skip around freely.
+  const doneSet = new Set(prog.done || []);
+  const doneCount = doneSet.size;
+  // "Next to read" = the first day NOT yet done (used for focus + Jump-to-today + header).
+  let curDay = 1;
+  while (curDay <= total && doneSet.has(curDay)) curDay++;
+  if (curDay > total) curDay = total;
   // The day that holds the passage you're currently reading. The list FOLLOWS this —
   // opening, highlighting, and scrolling to it as you switch into chronological or turn
-  // pages — separately from your plan "Today" (curDay), which still owns the streak +
-  // Mark-complete button.
+  // pages — separately from curDay (the next unread day, what Jump-to-today targets).
   const readingDay = (() => {
     if (chronoPos == null) return null;
     const d = days.find(dd => dd.pos && dd.pos.includes(chronoPos));
     return d ? d.day : null;
   })();
   const focusDay = readingDay || curDay;
-  const pct = Math.round((curDay - 1) / total * 100); // days COMPLETED / total
+  const pct = Math.round(doneCount / total * 100); // share of all days marked done
   const [open, setOpen] = useState(() => new Set([focusDay]));
   const [openMonth, setOpenMonth] = useState(() => monthOf(focusDay)); // which month block is expanded
   const todayRef = useRef(null); // plan "Today" — target of the Jump button
@@ -5657,33 +5652,27 @@ function DayPlanView({
 
   // One day row — rendered only when its month block is open.
   const renderDay = day => {
-    const done = day.day < curDay;
+    const done = doneSet.has(day.day);
     const isReading = readingDay != null && day.day === readingDay;
     const isOpen = open.has(day.day);
     const markClick = e => {
       e.stopPropagation();
       onToggleDone(day.day);
     };
-    const mark = isReading ? done ? /*#__PURE__*/React.createElement("button", {
-      className: "plan-day-mark plan-day-mark--done",
+    // Every day's marker is its own toggle now — done shows a ✓ (click to undo), the day
+    // you're reading shows a dot, anything else a faint ring you can tap to mark done.
+    const mark = /*#__PURE__*/React.createElement("button", {
+      className: "plan-day-mark" + (done ? " plan-day-mark--done" : isReading ? " plan-day-mark--reading" : ""),
       onClick: markClick,
-      "aria-label": "Mark Day " + day.day + " unread",
-      title: "Read \u2014 click to undo"
-    }, /*#__PURE__*/React.createElement(Icon.Check, null)) : /*#__PURE__*/React.createElement("button", {
-      className: "plan-day-mark plan-day-mark--reading",
-      onClick: markClick,
-      "aria-label": "Mark Day " + day.day + " read",
-      title: "Mark as read"
-    }, /*#__PURE__*/React.createElement("span", {
+      "aria-label": "Mark Day " + day.day + (done ? " unread" : " read"),
+      title: done ? "Read — click to undo" : "Mark as read"
+    }, done ? /*#__PURE__*/React.createElement(Icon.Check, null) : isReading ? /*#__PURE__*/React.createElement("span", {
       className: "plan-day-dot",
       "aria-hidden": "true"
-    })) : done ? /*#__PURE__*/React.createElement("span", {
-      className: "plan-day-mark plan-day-mark--done",
+    }) : /*#__PURE__*/React.createElement("span", {
+      className: "plan-day-hollow",
       "aria-hidden": "true"
-    }, /*#__PURE__*/React.createElement(Icon.Check, null)) : /*#__PURE__*/React.createElement("span", {
-      className: "plan-day-mark",
-      "aria-hidden": "true"
-    });
+    }));
     return /*#__PURE__*/React.createElement("div", {
       key: day.day,
       ref: el => {
@@ -5745,7 +5734,7 @@ function DayPlanView({
     className: "plan-days-inner"
   }, months.map(m => {
     const mOpen = openMonth === m.n;
-    const doneInMonth = m.days.filter(d => d.day < curDay).length;
+    const doneInMonth = m.days.filter(d => doneSet.has(d.day)).length;
     const hasReading = readingDay != null && readingDay >= m.first && readingDay <= m.last;
     return /*#__PURE__*/React.createElement("div", {
       key: m.n,
@@ -8207,24 +8196,33 @@ function LibraryView({
     id: "niv",
     label: "NIV"
   }] : [])];
-  // The little check on each day IS the control (the old Mark-complete / Set-as-today
-  // buttons are gone). Progress is linear: prog.day = the next day to read, so "done" =
-  // day < prog.day. Checking a not-yet-read day marks read THROUGH it (and bumps the
-  // streak like a completion); checking a done day un-marks from there on. Marking does
-  // NOT yank you to another passage — tap a passage to read.
+  // The little check on each day IS the control. Each day is INDEPENDENT — checking a
+  // day marks just that one done, unchecking clears just that one, so you can skip around
+  // and still keep an accurate count. Marking bumps the daily streak (once per calendar
+  // day). Marking does NOT yank you to another passage — tap a passage to read.
   const toggleDayDone = dayNum => {
     if (!chrono || !chrono.days) return;
-    const total = chrono.days.length;
     setPlanProg(prev => {
       const cur = planFor(prev, translation);
-      const next = dayNum < cur.day ? {
+      const done = new Set(cur.done || []);
+      let {
+        streak,
+        last
+      } = cur;
+      if (done.has(dayNum)) {
+        done.delete(dayNum); // un-mark just this day
+      } else {
+        done.add(dayNum); // mark just this day
+        const today = planYmd();
+        if (cur.last === today) {/* already counted a day today — keep streak */} else if (cur.last && planDayDiff(cur.last, today) === 1) streak = (streak || 0) + 1;else streak = 1;
+        last = today;
+      }
+      const next = {
         ...cur,
-        day: dayNum
-      } // un-mark from here on
-      : planAdvance({
-        ...cur,
-        day: dayNum
-      }, total); // mark read through dayNum (day -> dayNum+1, streak)
+        done: Array.from(done).sort((a, b) => a - b),
+        streak,
+        last
+      };
       return {
         ...prev,
         [translation]: next

@@ -1149,19 +1149,27 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
     ...(esvOwner ? [{ id: "esv", label: "ESV" }] : []),
     ...(nivOwner ? [{ id: "niv", label: "NIV" }] : []),
   ];
-  // The little check on each day IS the control (the old Mark-complete / Set-as-today
-  // buttons are gone). Progress is linear: prog.day = the next day to read, so "done" =
-  // day < prog.day. Checking a not-yet-read day marks read THROUGH it (and bumps the
-  // streak like a completion); checking a done day un-marks from there on. Marking does
-  // NOT yank you to another passage — tap a passage to read.
+  // The little check on each day IS the control. Each day is INDEPENDENT — checking a
+  // day marks just that one done, unchecking clears just that one, so you can skip around
+  // and still keep an accurate count. Marking bumps the daily streak (once per calendar
+  // day). Marking does NOT yank you to another passage — tap a passage to read.
   const toggleDayDone = (dayNum) => {
     if (!chrono || !chrono.days) return;
-    const total = chrono.days.length;
     setPlanProg(prev => {
       const cur = planFor(prev, translation);
-      const next = dayNum < cur.day
-        ? { ...cur, day: dayNum }                                // un-mark from here on
-        : planAdvance({ ...cur, day: dayNum }, total);           // mark read through dayNum (day -> dayNum+1, streak)
+      const done = new Set(cur.done || []);
+      let { streak, last } = cur;
+      if (done.has(dayNum)) {
+        done.delete(dayNum);                                     // un-mark just this day
+      } else {
+        done.add(dayNum);                                        // mark just this day
+        const today = planYmd();
+        if (cur.last === today) { /* already counted a day today — keep streak */ }
+        else if (cur.last && planDayDiff(cur.last, today) === 1) streak = (streak || 0) + 1;
+        else streak = 1;
+        last = today;
+      }
+      const next = { ...cur, done: Array.from(done).sort((a, b) => a - b), streak, last };
       return { ...prev, [translation]: next };
     });
   };
