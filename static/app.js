@@ -5617,12 +5617,14 @@ function DayPlanView({
       e.stopPropagation();
       onToggleDone(day.day);
     };
-    const mark = done ? /*#__PURE__*/React.createElement("button", {
+    // The marker is only CLICKABLE on the day you're on (the reading day) — un-marking
+    // a prior day means clicking that day first. Other done days show a static ✓.
+    const mark = isReading ? done ? /*#__PURE__*/React.createElement("button", {
       className: "plan-day-mark plan-day-mark--done",
       onClick: markClick,
       "aria-label": "Mark Day " + day.day + " unread",
       title: "Read \u2014 click to undo"
-    }, /*#__PURE__*/React.createElement(Icon.Check, null)) : isReading ? /*#__PURE__*/React.createElement("button", {
+    }, /*#__PURE__*/React.createElement(Icon.Check, null)) : /*#__PURE__*/React.createElement("button", {
       className: "plan-day-mark plan-day-mark--reading",
       onClick: markClick,
       "aria-label": "Mark Day " + day.day + " read",
@@ -5630,7 +5632,10 @@ function DayPlanView({
     }, /*#__PURE__*/React.createElement("span", {
       className: "plan-day-dot",
       "aria-hidden": "true"
-    })) : /*#__PURE__*/React.createElement("span", {
+    })) : done ? /*#__PURE__*/React.createElement("span", {
+      className: "plan-day-mark plan-day-mark--done",
+      "aria-hidden": "true"
+    }, /*#__PURE__*/React.createElement(Icon.Check, null)) : /*#__PURE__*/React.createElement("span", {
       className: "plan-day-mark",
       "aria-hidden": "true"
     });

@@ -117,12 +117,16 @@ function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, o
           // read (click to undo), a navy dot when it's the day you're reading (click to
           // mark read). Every other day is bare — no Today gold, no Reading bar.
           const markClick = (e) => { e.stopPropagation(); onToggleDone(day.day); };
-          const mark = done
-            ? <button className="plan-day-mark plan-day-mark--done" onClick={markClick}
-                aria-label={"Mark Day " + day.day + " unread"} title="Read — click to undo"><Icon.Check/></button>
-            : isReading
-              ? <button className="plan-day-mark plan-day-mark--reading" onClick={markClick}
-                  aria-label={"Mark Day " + day.day + " read"} title="Mark as read"><span className="plan-day-dot" aria-hidden="true"></span></button>
+          // The marker is only CLICKABLE on the day you're on (the reading day) — un-marking
+          // a prior day means clicking that day first. Other done days show a static ✓.
+          const mark = isReading
+            ? (done
+                ? <button className="plan-day-mark plan-day-mark--done" onClick={markClick}
+                    aria-label={"Mark Day " + day.day + " unread"} title="Read — click to undo"><Icon.Check/></button>
+                : <button className="plan-day-mark plan-day-mark--reading" onClick={markClick}
+                    aria-label={"Mark Day " + day.day + " read"} title="Mark as read"><span className="plan-day-dot" aria-hidden="true"></span></button>)
+            : done
+              ? <span className="plan-day-mark plan-day-mark--done" aria-hidden="true"><Icon.Check/></span>
               : <span className="plan-day-mark" aria-hidden="true"></span>;
           return (
             <div key={day.day}
