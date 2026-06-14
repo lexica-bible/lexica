@@ -6473,6 +6473,25 @@ function LibNavPanel({
     return n;
   });
 
+  // The "More" popout closes on a click outside it (or Esc) — proper menu behaviour
+  // now it floats over the book list instead of sitting inline.
+  const sourceWrapRef = useRef(null);
+  useEffect(() => {
+    if (!otherOpen) return;
+    const onDown = e => {
+      if (sourceWrapRef.current && !sourceWrapRef.current.contains(e.target)) setOtherOpen(false);
+    };
+    const onKey = e => {
+      if (e.key === "Escape") setOtherOpen(false);
+    };
+    document.addEventListener("pointerdown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => {
+      document.removeEventListener("pointerdown", onDown);
+      document.removeEventListener("keydown", onKey);
+    };
+  }, [otherOpen, setOtherOpen]);
+
   // Book accordion: which book's chapter grid is expanded. Starts collapsed (null)
   // — the current chapter shows next to the book name until you open it. Click the
   // open book to collapse it again; click another book to switch + open that one.
@@ -6557,6 +6576,9 @@ function LibNavPanel({
     onClick: onClose,
     "aria-label": "Close"
   }, "\u2715")), /*#__PURE__*/React.createElement("div", {
+    className: "nav-source-wrap",
+    ref: sourceWrapRef
+  }, /*#__PURE__*/React.createElement("div", {
     className: "nav-source"
   }, /*#__PURE__*/React.createElement("div", {
     className: "seg nav-source-seg"
@@ -6637,7 +6659,7 @@ function LibNavPanel({
         if (isOverlay) onClose();
       }
     }, t.name)));
-  })), chronoMode && plan ? /*#__PURE__*/React.createElement("div", {
+  }))), chronoMode && plan ? /*#__PURE__*/React.createElement("div", {
     className: "nav-plan"
   }, /*#__PURE__*/React.createElement("div", {
     className: "plan-toggle"

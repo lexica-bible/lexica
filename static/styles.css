@@ -2607,15 +2607,18 @@ input { font-family: inherit; }
   height: calc(100vh - var(--hdr-h));
   overflow: hidden;
 }
-/* "Other" books list, inline in the panel (pushes .nav-scroll down; its own scroll) */
+/* The source row is the anchor for the floating "More" popout below it. */
+.nav-source-wrap { position: relative; flex: 0 0 auto; z-index: 20; }
+/* "More" texts = a floating popout under the source row (no longer pushes the book
+   list down). FIXED height + its own scroll, so expanding/collapsing a category scrolls
+   inside instead of resizing the menu. Clipped to the nav by .nav's overflow. */
 .nav-other-inline {
-  flex: 0 0 auto;
-  max-height: 48vh;
-  overflow-y: auto;
-  overscroll-behavior: contain;
-  background: var(--paper);
-  border-bottom: 1px solid var(--rule-2);
-  padding: 6px 6px 8px;
+  position: absolute; top: 100%; left: 6px; right: 6px; z-index: 40;
+  height: 300px; max-height: calc(100vh - var(--hdr-h) - 90px);
+  overflow-y: auto; overscroll-behavior: contain;
+  background: var(--paper); border: 1px solid var(--rule-2);
+  border-radius: 0 0 10px 10px; box-shadow: var(--shadow-lg);
+  padding: 6px;
 }
 .nav-top {
   display: flex; align-items: center; justify-content: space-between;
@@ -2668,8 +2671,10 @@ input { font-family: inherit; }
 .nav-source-seg .seg-b.on { background: none; box-shadow: none; color: var(--ink); border-bottom-color: var(--accent); }
 .nav-source-seg .seg-b:active:not(.on) { background: none; }
 .nav-other-wrap { position: relative; display: inline-flex; }
-.nav-other-seg { display: inline-flex; align-items: center; gap: 4px; }
-.nav-other-lbl { white-space: nowrap; }
+.nav-other-seg { display: inline-flex; align-items: center; gap: 4px; min-width: 0; }
+/* Truncate a long active label (a non-canon book name) so the More tab keeps its share
+   of the row instead of squishing ABP/KJV/BSB. */
+.nav-other-lbl { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; min-width: 0; }
 .nav-other-caret { font-size: 9px; color: var(--ink-4); flex: 0 0 auto; transition: transform 0.12s ease; }
 .nav-other-seg.on .nav-other-caret { color: var(--ink-3); }
 .nav-other-caret.open { transform: rotate(180deg); }

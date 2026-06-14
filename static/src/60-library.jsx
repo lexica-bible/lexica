@@ -198,6 +198,18 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
     return n;
   });
 
+  // The "More" popout closes on a click outside it (or Esc) — proper menu behaviour
+  // now it floats over the book list instead of sitting inline.
+  const sourceWrapRef = useRef(null);
+  useEffect(() => {
+    if (!otherOpen) return;
+    const onDown = (e) => { if (sourceWrapRef.current && !sourceWrapRef.current.contains(e.target)) setOtherOpen(false); };
+    const onKey = (e) => { if (e.key === "Escape") setOtherOpen(false); };
+    document.addEventListener("pointerdown", onDown);
+    document.addEventListener("keydown", onKey);
+    return () => { document.removeEventListener("pointerdown", onDown); document.removeEventListener("keydown", onKey); };
+  }, [otherOpen, setOtherOpen]);
+
   // Book accordion: which book's chapter grid is expanded. Starts collapsed (null)
   // — the current chapter shows next to the book name until you open it. Click the
   // open book to collapse it again; click another book to switch + open that one.
@@ -266,7 +278,9 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
       <div className="nav-top">
         {isOverlay && <button className="nav-x" onClick={onClose} aria-label="Close">✕</button>}
       </div>
-      {/* Text-source picker — ABP/KJV/BSB one-click; ESV/NIV/HEB + non-canon in "More" */}
+      {/* Text-source picker — ABP/KJV/BSB one-click; ESV/NIV/HEB + non-canon in "More".
+          Wrapper is the anchor for the floating "More" popout below. */}
+      <div className="nav-source-wrap" ref={sourceWrapRef}>
       <div className="nav-source">
         <div className="seg nav-source-seg">
           <button className={"seg-b" + (!nonCanon && translation === "abp" ? " on" : "")} onClick={() => pickBible("abp")}>ABP</button>
@@ -328,6 +342,7 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
           })}
         </div>
       )}
+      </div>
       {chronoMode && plan ? (
         <div className="nav-plan">
           <div className="plan-toggle">
