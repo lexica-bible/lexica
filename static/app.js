@@ -2778,9 +2778,7 @@ function DetailPanel({
     ref: isMobile ? scrollRef : null
   }, /*#__PURE__*/React.createElement("div", {
     className: "detail-hero" + (hero.noGloss ? " no-gloss" : "")
-  }, entry.strongs && entry.strongs !== "*" && /*#__PURE__*/React.createElement("span", {
-    className: "detail-strongs-tag"
-  }, entry.strongs), /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("div", {
     className: "detail-translit-row" + (hero.he ? " detail-translit-row-he" : "")
   }, /*#__PURE__*/React.createElement("span", {
     className: "detail-translit"
@@ -2792,7 +2790,9 @@ function DetailPanel({
     className: "detail-gloss"
   }, hero.standaloneGloss), hero.morph && /*#__PURE__*/React.createElement("div", {
     className: "detail-morph"
-  }, hero.morph)), sections.map(renderSection)));
+  }, hero.morph), entry.strongs && entry.strongs !== "*" && /*#__PURE__*/React.createElement("span", {
+    className: "detail-strongs-tag"
+  }, entry.strongs)), sections.map(renderSection)));
 }
 
 // ============================================================

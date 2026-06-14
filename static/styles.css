@@ -825,7 +825,7 @@ input { font-family: inherit; }
   padding: 2px 7px;
   border-radius: 4px;
   letter-spacing: 0.02em;
-  margin-bottom: 10px;
+  margin-top: 2px;
 }
 .detail-close {
   width: 32px; height: 32px;
@@ -860,7 +860,10 @@ input { font-family: inherit; }
 }
 
 .detail-hero {
-  margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 9px;
   padding-bottom: 18px;
   border-bottom: 1px solid var(--rule);
 }
@@ -877,7 +880,6 @@ input { font-family: inherit; }
 }
 .detail-translit-row {
   display: flex; align-items: center; gap: 6px;
-  margin-bottom: 10px;
 }
 .detail-translit {
   font-family: var(--f-serif);
@@ -897,7 +899,6 @@ input { font-family: inherit; }
   font-size: 12.5px;
   color: var(--ink-3);
   letter-spacing: 0.01em;
-  margin-top: 6px;
 }
 
 .detail-section { padding: 12px 0; border-bottom: 1px solid var(--rule); }

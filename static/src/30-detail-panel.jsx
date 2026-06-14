@@ -756,7 +756,6 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
 
       <div className="detail-body" ref={isMobile ? scrollRef : null}>
         <div className={"detail-hero" + (hero.noGloss ? " no-gloss" : "")}>
-          {entry.strongs && entry.strongs !== "*" && <span className="detail-strongs-tag">{entry.strongs}</span>}
           <div className={"detail-translit-row" + (hero.he ? " detail-translit-row-he" : "")}>
             <span className="detail-translit">{hero.translit}</span>
             {heroInlineGloss && (
@@ -767,6 +766,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             <div className="detail-gloss">{hero.standaloneGloss}</div>
           )}
           {hero.morph && <div className="detail-morph">{hero.morph}</div>}
+          {entry.strongs && entry.strongs !== "*" && <span className="detail-strongs-tag">{entry.strongs}</span>}
         </div>
 
         {sections.map(renderSection)}
