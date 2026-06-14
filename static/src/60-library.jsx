@@ -503,7 +503,7 @@ function MobileBookPicker({ books, selBook, selChapter, nonCanon, nonCanonList, 
           <button className={"plan-toggle-b" + (plan.view === "days" ? " on" : "")} onClick={() => plan.setView("days")}>Days</button>
         </div>
       )}
-      <div className="mpick-scroll" ref={scrollRef}>
+      <div className={"mpick-scroll" + (chronoOn && plan && plan.view === "days" ? " mpick-scroll--plan" : "")} ref={scrollRef}>
         {chronoOn ? (
           plan && plan.view === "days" ? (
             <DayPlanView isMobile chrono={chrono} curText={plan.curText} texts={plan.texts} progAll={plan.progAll}

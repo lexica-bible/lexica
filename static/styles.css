@@ -2925,7 +2925,12 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
    The progress header IS sticky — pulled out to the sheet edges (cancels .mpick-scroll's
    16px top / 14px side padding) so it's a solid full-width bar and no day rows bleed
    through beside or above it as they scroll under. The desktop nav keeps the spine. */
-.mpick .plan-head { position: sticky; top: 0; z-index: 5; margin: -16px -14px 8px; padding: 6px 14px 10px; }
+/* Days view: kill the scroller's top padding so the sticky header pins FLUSH to the top.
+   With top padding, a top:0 sticky header pins below it, leaving a strip where day rows
+   scroll through (the "behind the gap" bleed). No padding = no strip. Other mpick screens
+   keep their top padding. */
+.mpick-scroll--plan { padding-top: 0; }
+.mpick .plan-head { position: sticky; top: 0; z-index: 5; margin: 0 -14px 8px; padding: 6px 14px 10px; }
 .mpick .plan-days { margin-left: 0; padding: 4px 2px 10px; }
 .mpick .plan-days-inner { padding-left: 0; }
 .mpick .plan-days-inner::before { display: none; }

@@ -6963,7 +6963,7 @@ function MobileBookPicker({
     className: "plan-toggle-b" + (plan.view === "days" ? " on" : ""),
     onClick: () => plan.setView("days")
   }, "Days")), /*#__PURE__*/React.createElement("div", {
-    className: "mpick-scroll",
+    className: "mpick-scroll" + (chronoOn && plan && plan.view === "days" ? " mpick-scroll--plan" : ""),
     ref: scrollRef
   }, chronoOn ? plan && plan.view === "days" ? /*#__PURE__*/React.createElement(DayPlanView, {
     isMobile: true,
