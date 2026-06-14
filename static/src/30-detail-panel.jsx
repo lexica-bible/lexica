@@ -60,21 +60,20 @@ function SummaryPanel({ book, chapter, bookLabel, isMobile, onClose, onBack }) {
   );
 
   // Mobile: bottom sheet opened from the reading cockpit. Swipe down (drag
-  // anywhere) or tap the scrim / X to close — matches the other sheets.
+  // anywhere) or tap the scrim to close — matches the other sheets.
   if (isMobile) {
     return (
       <>
         <div className="sheet-scrim" onClick={onClose}/>
         <aside ref={sheetRef} className="detail detail-sheet summary-sheet" role="dialog" aria-label="Reading overview">
           <div className="sheet-drag-zone" aria-hidden="true"><div className="sheet-handle"></div></div>
+          {/* Same header as desktop: title on the left (wraps), the "‹ Intro" toggle on
+              the right pinned to the top. No ✕ — the drag handle + tap-outside close it. */}
           <div className="detail-head">
             <div className="detail-head-l">
-              {onBack && <button className="detail-back" onClick={onBack} aria-label="Back to reading intro">‹ Intro</button>}
               <span className="detail-pos summary-pos">{title}</span>
             </div>
-            <button className="detail-close" onClick={onClose} aria-label="Close">
-              <Icon.Close/>
-            </button>
+            {onBack && <button className="detail-back" onClick={onBack} aria-label="Back to reading intro">‹ Intro</button>}
           </div>
           <div className="detail-body" ref={scrollRef}>{content}</div>
         </aside>

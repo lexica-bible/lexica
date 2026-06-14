@@ -1881,7 +1881,7 @@ function SummaryPanel({
   }, "No overview available for this passage."));
 
   // Mobile: bottom sheet opened from the reading cockpit. Swipe down (drag
-  // anywhere) or tap the scrim / X to close — matches the other sheets.
+  // anywhere) or tap the scrim to close — matches the other sheets.
   if (isMobile) {
     return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
       className: "sheet-scrim",
@@ -1900,17 +1900,13 @@ function SummaryPanel({
       className: "detail-head"
     }, /*#__PURE__*/React.createElement("div", {
       className: "detail-head-l"
-    }, onBack && /*#__PURE__*/React.createElement("button", {
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "detail-pos summary-pos"
+    }, title)), onBack && /*#__PURE__*/React.createElement("button", {
       className: "detail-back",
       onClick: onBack,
       "aria-label": "Back to reading intro"
-    }, "\u2039 Intro"), /*#__PURE__*/React.createElement("span", {
-      className: "detail-pos summary-pos"
-    }, title)), /*#__PURE__*/React.createElement("button", {
-      className: "detail-close",
-      onClick: onClose,
-      "aria-label": "Close"
-    }, /*#__PURE__*/React.createElement(Icon.Close, null))), /*#__PURE__*/React.createElement("div", {
+    }, "\u2039 Intro")), /*#__PURE__*/React.createElement("div", {
       className: "detail-body",
       ref: scrollRef
     }, content)));
@@ -6140,14 +6136,14 @@ function DayIntroPanel({
     }, /*#__PURE__*/React.createElement("div", {
       className: "sheet-handle"
     })), /*#__PURE__*/React.createElement("div", {
-      className: "detail-head dintro-head-m"
-    }, onOverview && /*#__PURE__*/React.createElement("button", {
-      className: "detail-back dintro-back-m",
+      className: "detail-head"
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "detail-head-l"
+    }, headTitle), onOverview && /*#__PURE__*/React.createElement("button", {
+      className: "detail-back",
       onClick: onOverview,
       "aria-label": "Chapter overview"
-    }, "\u2039 Overview"), /*#__PURE__*/React.createElement("span", {
-      className: "detail-pos summary-pos dintro-title-m"
-    }, title)), /*#__PURE__*/React.createElement("div", {
+    }, "\u2039 Overview")), /*#__PURE__*/React.createElement("div", {
       className: "detail-body",
       ref: scrollRef
     }, content)));

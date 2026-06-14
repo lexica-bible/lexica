@@ -2948,11 +2948,16 @@ button.plan-day-mark:hover { background: var(--accent-soft); }
    (the old --gold marker/pill/hover) is out. */
 .dintro-era-head { min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .dintro-side .detail-head-l, .dintro-sheet .detail-head-l { min-width: 0; }
-/* Mobile reading-intro header: stacked, not one cramped row. The "‹ Overview" back
-   bar sits on its own line; the title gets the full width below and wraps. No ✕. */
-.dintro-head-m { flex-direction: column; align-items: stretch; gap: 2px; padding: 2px 20px 12px; }
-.dintro-back-m { align-self: flex-start; padding: 4px 0; }
-.dintro-title-m { white-space: normal; overflow: visible; text-overflow: clip; line-height: 1.25; }
+/* Reading overview + intro sheets (mobile) — uniform with desktop: the title sits on
+   the left and WRAPS (no run-off), the toggle link ("Overview" / "Intro") is pinned
+   top-right a bit higher (align to the first line, not vertically centred). No ✕ —
+   the drag handle + tap-outside scrim close the sheet. */
+.summary-sheet .detail-head { align-items: flex-start; }
+.summary-sheet .detail-head-l { flex: 1; min-width: 0; }
+.summary-sheet .summary-pos, .summary-sheet .dintro-era-head {
+  white-space: normal; overflow: visible; text-overflow: clip; line-height: 1.25;
+}
+.summary-sheet .detail-back { flex: 0 0 auto; margin-top: 2px; }
 .dintro-meta { font-size: 12.5px; font-weight: 600; letter-spacing: 0.02em; color: var(--accent); }
 .dintro-date { font-family: var(--f-mono); font-size: 12px; color: var(--ink-2); letter-spacing: 0.01em; margin-top: 6px; }
 .dintro-tl { margin: 0; }
