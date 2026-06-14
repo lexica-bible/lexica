@@ -2660,6 +2660,13 @@ input { font-family: inherit; }
 .nav-source-seg--wide { flex: 1 1 auto; width: 100%; }
 .nav-source-seg--wide .seg-b { flex: 1 1 0; min-width: 0; padding: 5px 3px; }
 .nav-source-seg--wide .nav-other-seg { flex: 0 0 auto; padding-left: 6px; padding-right: 6px; }
+/* Source picker = clean underline tabs, NOT a boxed segmented control. Scoped to
+   .nav-source-seg so the other .seg controls keep their pill look. Active tab carries a
+   navy underline that sits on the row hairline. */
+.nav-source-seg.seg { background: none; border: none; border-radius: 0; padding: 0; border-bottom: 1px solid var(--rule); }
+.nav-source-seg .seg-b { border-radius: 0; border-bottom: 2px solid transparent; margin-bottom: -1px; padding: 6px 4px; }
+.nav-source-seg .seg-b.on { background: none; box-shadow: none; color: var(--ink); border-bottom-color: var(--accent); }
+.nav-source-seg .seg-b:active:not(.on) { background: none; }
 .nav-other-wrap { position: relative; display: inline-flex; }
 .nav-other-seg { display: inline-flex; align-items: center; gap: 4px; }
 .nav-other-lbl { white-space: nowrap; }
@@ -2801,19 +2808,20 @@ input { font-family: inherit; }
    both on var(--bg-sunk). The per-text progress header pins to the top; the day
    list flows below. Pills use the theme control vars; gold-soft is theme-aware
    (light in light/sepia, dark in dark) so var(--ink) text on it is safe everywhere. */
-/* Eras|Days toggle = the same segmented-control look as the nav source picker
-   (.seg/.seg-b), full-width, so the two stacked control rows match. */
+/* Eras|Days toggle = underline tabs (matches the nav source picker below), full-width.
+   No box — a row hairline with a navy underline under the active tab. */
 .plan-toggle {
-  display: flex; flex-shrink: 0; margin: 7px 6px 9px; padding: 2px;
-  background: var(--bg-sunk); border: 1px solid var(--rule); border-radius: 8px;
+  display: flex; flex-shrink: 0; margin: 7px 6px 9px;
+  border-bottom: 1px solid var(--rule);
 }
 .plan-toggle-b {
-  flex: 1 1 0; padding: 5px 4px; font-size: 12px; cursor: pointer;
-  color: var(--ink-3); background: none; border: none; border-radius: 6px;
-  transition: background 0.1s, color 0.1s;
+  flex: 1 1 0; padding: 6px 4px; font-size: 12.5px; cursor: pointer;
+  color: var(--ink-3); background: none; border: none;
+  border-bottom: 2px solid transparent; margin-bottom: -1px;
+  transition: color 0.1s, border-color 0.1s;
 }
 .plan-toggle-b:hover { color: var(--ink); }
-.plan-toggle-b.on { background: var(--ctl-on); color: var(--ink); box-shadow: var(--shadow-sm); font-weight: 500; }
+.plan-toggle-b.on { color: var(--ink); font-weight: 500; border-bottom-color: var(--accent); }
 
 .plan-head {
   position: sticky; top: 0; z-index: 2;
