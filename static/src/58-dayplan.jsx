@@ -93,6 +93,7 @@ function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, o
   const [openMonth, setOpenMonth] = useState(() => monthOf(focusDay));   // which month block is expanded
   const todayRef = useRef(null);    // plan "Today" — target of the Jump button
   const focusRef = useRef(null);    // the day you're reading — auto-scrolled to
+  const monthRefs = useRef({});     // each month block — to scroll the opened one to the top
 
   // Follow the reading position: keep the day you're in open + scrolled into view as it
   // changes (switching into chrono, turning pages, or marking a day complete — all of
@@ -131,9 +132,24 @@ function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, o
     if (!g || g.n !== m) { g = { n: m, days: [], first: d.day, last: d.day }; months.push(g); }
     g.days.push(d); g.last = d.day;
   });
-  // Open/collapse a month — no scrolling, the list stays put. (Selecting a DAY still
-  // loads its passage; that's separate.)
-  const toggleMonth = (n) => setOpenMonth(cur => (cur === n ? null : n));
+  // Open/collapse a month. When opening, scroll the DAY LIST so the month lands at the
+  // top — but ONLY that inner list, never the page/reading (set scrollTop directly
+  // instead of scrollIntoView, which would yank every scroll parent around). Mobile
+  // offsets for the sticky progress bar; desktop's header is static, so no offset.
+  const toggleMonth = (n) => setOpenMonth(cur => {
+    const next = cur === n ? null : n;
+    if (next != null) {
+      requestAnimationFrame(() => {
+        const el = monthRefs.current[next];
+        const scroller = el && el.closest(".plan-days, .mpick-scroll");
+        if (!el || !scroller) return;
+        const offset = scroller.classList.contains("mpick-scroll") ? 84 : 0;
+        const delta = el.getBoundingClientRect().top - scroller.getBoundingClientRect().top;
+        scroller.scrollTo({ top: scroller.scrollTop + delta - offset, behavior: "smooth" });
+      });
+    }
+    return next;
+  });
 
   // One day row — rendered only when its month block is open.
   const renderDay = (day) => {
@@ -204,7 +220,8 @@ function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, o
           const doneInMonth = m.days.filter(d => doneSet.has(d.day)).length;
           const hasReading = readingDay != null && readingDay >= m.first && readingDay <= m.last;
           return (
-            <div key={m.n} className={"plan-month" + (mOpen ? " open" : "") + (hasReading ? " plan-month--reading" : "")}>
+            <div key={m.n} ref={el => { if (el) monthRefs.current[m.n] = el; }}
+              className={"plan-month" + (mOpen ? " open" : "") + (hasReading ? " plan-month--reading" : "")}>
               <button className="plan-month-head" onClick={() => toggleMonth(m.n)} aria-expanded={mOpen}>
                 <span className="plan-month-name" title={ZODIAC[m.n - 1].sign}>{ZODIAC[m.n - 1].glyph} {ZODIAC[m.n - 1].heb}</span>
                 <span className="plan-month-range">Days {m.first}–{m.last}</span>
