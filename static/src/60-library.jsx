@@ -284,23 +284,30 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
           menu never floats over the reading text. */}
       {otherOpen && (
         <div className="nav-other-inline">
-          {(esvOwner || nivOwner || hebShown) && (
-            <div className="nav-more-bibles">
-              {esvOwner && (
-                <button className={"lib-other-item" + (!nonCanon && translation === "esv" ? " on" : "")}
-                  onClick={() => { pickBible("esv"); setOtherOpen(false); if (isOverlay) onClose(); }}>ESV</button>
-              )}
-              {nivOwner && (
-                <button className={"lib-other-item" + (!nonCanon && translation === "niv" ? " on" : "")}
-                  onClick={() => { pickBible("niv"); setOtherOpen(false); if (isOverlay) onClose(); }}>NIV</button>
-              )}
-              {hebShown && (
-                <button className={"lib-other-item" + (!nonCanon && translation === "heb" ? " on" : "")}
-                  disabled={!hebPickable} title={!hebPickable ? "Old Testament books only" : undefined}
-                  onClick={() => { pickBible("heb"); setOtherOpen(false); if (isOverlay) onClose(); }}>Hebrew OT (interlinear)</button>
-              )}
-            </div>
-          )}
+          {(esvOwner || nivOwner || hebShown) && (() => {
+            const bibles = [
+              esvOwner && { id: "esv", name: "ESV" },
+              nivOwner && { id: "niv", name: "NIV" },
+              hebShown && { id: "heb", name: "Hebrew OT (interlinear)", disabled: !hebPickable, title: !hebPickable ? "Old Testament books only" : undefined },
+            ].filter(Boolean);
+            const open = openGroups.has("Other Bibles");
+            return (
+              <React.Fragment>
+                <button className={"lib-other-head lib-other-head-btn" + (open ? " open" : "")}
+                  onClick={() => toggleGroup("Other Bibles")} aria-expanded={open}>
+                  <span className="lib-other-head-caret">▸</span>
+                  <span className="lib-other-head-lbl">Other Bibles</span>
+                  <span className="lib-other-head-count">{bibles.length}</span>
+                </button>
+                {open && bibles.map(b => (
+                  <button key={b.id}
+                    className={"lib-other-item" + (!nonCanon && translation === b.id ? " on" : "")}
+                    disabled={b.disabled} title={b.title}
+                    onClick={() => { pickBible(b.id); setOtherOpen(false); if (isOverlay) onClose(); }}>{b.name}</button>
+                ))}
+              </React.Fragment>
+            );
+          })()}
           {nonCanonList && nonCanonList.length > 0 && nonCanonGroups(nonCanonList).map(grp => {
             const open = openGroups.has(grp.group);
             return (
