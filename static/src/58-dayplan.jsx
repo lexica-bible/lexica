@@ -77,12 +77,18 @@ function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, o
     requestAnimationFrame(() => focusRef.current && focusRef.current.scrollIntoView({ block: "nearest" }));
   }, [curText, focusDay]);
 
-  const toggle = (d) => setOpen(s => { const n = new Set(s); n.has(d) ? n.delete(d) : n.add(d); return n; });
   const jumpToday = () => {
     setOpen(s => new Set(s).add(curDay));
     requestAnimationFrame(() => todayRef.current && todayRef.current.scrollIntoView({ behavior: "smooth", block: "center" }));
   };
   const passagesOf = (day) => day.pos.map(q => chrono.passages[q - 1]).filter(Boolean);
+  // One click on a day does the lot: open ONLY that day (accordion — the one you were
+  // on closes), move the reading dot to it, and load its first reading in the pane.
+  const selectDay = (day) => {
+    setOpen(new Set([day.day]));
+    const ps = passagesOf(day);
+    if (ps[0]) onPickPassage(ps[0]);
+  };
 
   return (
     <div className="plan">
@@ -126,8 +132,8 @@ function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, o
               }}
               className={"plan-day" + (done ? " plan-day--done" : "") + (isReading ? " plan-day--reading" : "") + (isOpen ? " open" : "")}>
               <div className="plan-day-head" role="button" tabIndex={0} aria-expanded={isOpen}
-                onClick={() => toggle(day.day)}
-                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); toggle(day.day); } }}>
+                onClick={() => selectDay(day)}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selectDay(day); } }}>
                 <span className="plan-day-n">Day {day.day}</span>
                 <span className="plan-day-v">{day.verses}v</span>
                 {mark}

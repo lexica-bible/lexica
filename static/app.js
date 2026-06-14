@@ -5565,11 +5565,6 @@ function DayPlanView({
       block: "nearest"
     }));
   }, [curText, focusDay]);
-  const toggle = d => setOpen(s => {
-    const n = new Set(s);
-    n.has(d) ? n.delete(d) : n.add(d);
-    return n;
-  });
   const jumpToday = () => {
     setOpen(s => new Set(s).add(curDay));
     requestAnimationFrame(() => todayRef.current && todayRef.current.scrollIntoView({
@@ -5578,6 +5573,13 @@ function DayPlanView({
     }));
   };
   const passagesOf = day => day.pos.map(q => chrono.passages[q - 1]).filter(Boolean);
+  // One click on a day does the lot: open ONLY that day (accordion — the one you were
+  // on closes), move the reading dot to it, and load its first reading in the pane.
+  const selectDay = day => {
+    setOpen(new Set([day.day]));
+    const ps = passagesOf(day);
+    if (ps[0]) onPickPassage(ps[0]);
+  };
   return /*#__PURE__*/React.createElement("div", {
     className: "plan"
   }, /*#__PURE__*/React.createElement("div", {
@@ -5644,11 +5646,11 @@ function DayPlanView({
       role: "button",
       tabIndex: 0,
       "aria-expanded": isOpen,
-      onClick: () => toggle(day.day),
+      onClick: () => selectDay(day),
       onKeyDown: e => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          toggle(day.day);
+          selectDay(day);
         }
       }
     }, /*#__PURE__*/React.createElement("span", {
