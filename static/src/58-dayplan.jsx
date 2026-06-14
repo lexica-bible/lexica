@@ -49,20 +49,33 @@ function planAdvance(cur, totalDays) {
 }
 
 // The plan body — shared by the desktop left nav and the mobile picker.
-function DayPlanView({ chrono, curText, texts, progAll, onPickText, onPickPassage, onMarkComplete, onSetDay }) {
+function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, onPickPassage, onMarkComplete, onSetDay }) {
   const days = (chrono && chrono.days) || [];
   const total = days.length || 365;
   const prog = planFor(progAll, curText);
   const curDay = prog.day;
+  // The day that holds the passage you're currently reading. The list FOLLOWS this —
+  // opening, highlighting, and scrolling to it as you switch into chronological or turn
+  // pages — separately from your plan "Today" (curDay), which still owns the streak +
+  // Mark-complete button.
+  const readingDay = (() => {
+    if (chronoPos == null) return null;
+    const d = days.find(dd => dd.pos && dd.pos.includes(chronoPos));
+    return d ? d.day : null;
+  })();
+  const focusDay = readingDay || curDay;
   const pct = Math.round((curDay - 1) / total * 100);     // days COMPLETED / total
-  const [open, setOpen] = useState(() => new Set([curDay]));
-  const todayRef = useRef(null);
+  const [open, setOpen] = useState(() => new Set([focusDay]));
+  const todayRef = useRef(null);    // plan "Today" — target of the Jump button
+  const focusRef = useRef(null);    // the day you're reading — auto-scrolled to
 
-  // Switching text (chips) or advancing a day re-centres on the new "today".
+  // Follow the reading position: keep the day you're in open + scrolled into view as it
+  // changes (switching into chrono, turning pages, or marking a day complete — all of
+  // which move readingDay). Also re-centres when you switch reading text.
   useEffect(() => {
-    setOpen(new Set([curDay]));
-    requestAnimationFrame(() => todayRef.current && todayRef.current.scrollIntoView({ block: "nearest" }));
-  }, [curText, curDay]);
+    setOpen(new Set([focusDay]));
+    requestAnimationFrame(() => focusRef.current && focusRef.current.scrollIntoView({ block: "nearest" }));
+  }, [curText, focusDay]);
 
   const toggle = (d) => setOpen(s => { const n = new Set(s); n.has(d) ? n.delete(d) : n.add(d); return n; });
   const jumpToday = () => {
@@ -93,10 +106,17 @@ function DayPlanView({ chrono, curText, texts, progAll, onPickText, onPickPassag
       <div className="plan-days">
         {days.map(day => {
           const state = day.day < curDay ? "done" : day.day === curDay ? "today" : "soon";
+          // "Reading" highlight only when you're on a day OTHER than your plan Today, so
+          // it never clashes with the gold Today bar (reading your Today keeps the gold).
+          const isReading = readingDay != null && day.day === readingDay && readingDay !== curDay;
           const isOpen = open.has(day.day);
           return (
-            <div key={day.day} ref={day.day === curDay ? todayRef : null}
-              className={"plan-day plan-day--" + state + (isOpen ? " open" : "")}>
+            <div key={day.day}
+              ref={el => {
+                if (day.day === focusDay) focusRef.current = el;
+                if (day.day === curDay) todayRef.current = el;
+              }}
+              className={"plan-day plan-day--" + state + (isReading ? " plan-day--reading" : "") + (isOpen ? " open" : "")}>
               <button className="plan-day-head" onClick={() => toggle(day.day)} aria-expanded={isOpen}>
                 <span className="plan-day-mark">
                   {state === "done" ? <Icon.Check/>
@@ -104,6 +124,7 @@ function DayPlanView({ chrono, curText, texts, progAll, onPickText, onPickPassag
                     : <span className="plan-caret" aria-hidden="true">▸</span>}
                 </span>
                 <span className="plan-day-n">Day {day.day}</span>
+                {isReading && <span className="plan-reading-tag">Reading</span>}
                 {state === "today" && <span className="plan-today-tag">Today</span>}
                 <span className="plan-day-v">{day.verses}v</span>
               </button>

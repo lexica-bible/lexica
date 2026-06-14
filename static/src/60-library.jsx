@@ -329,6 +329,7 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
           </div>
           {plan.view === "days" ? (
             <DayPlanView chrono={chrono} curText={plan.curText} texts={plan.texts} progAll={plan.progAll}
+              chronoPos={chronoPos}
               onPickText={plan.onPickText} onMarkComplete={plan.onMarkComplete} onSetDay={plan.onSetDay}
               onPickPassage={(p) => { onPickPassage(p); if (isOverlay) onClose(); }} />
           ) : (
@@ -475,6 +476,7 @@ function MobileBookPicker({ books, selBook, selChapter, nonCanon, nonCanonList, 
         {chronoOn ? (
           plan && plan.view === "days" ? (
             <DayPlanView chrono={chrono} curText={plan.curText} texts={plan.texts} progAll={plan.progAll}
+              chronoPos={chronoPos}
               onPickText={plan.onPickText} onMarkComplete={plan.onMarkComplete} onSetDay={plan.onSetDay} onPickPassage={onPickPassage} />
           ) : chrono.eras.map(era => {
             const open = openEras.has(era.id);

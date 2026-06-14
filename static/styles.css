@@ -2899,6 +2899,13 @@ input { font-family: inherit; }
 }
 .plan-day-v { font-size: 10.5px; color: var(--ink-4); font-family: var(--f-mono); }
 .plan-day--today { background: var(--gold-soft); box-shadow: inset 3px 0 0 var(--gold); border-radius: 0 6px 6px 0; }
+/* "Reading" = the day you're currently in (accent), distinct from the gold plan Today. */
+.plan-day--reading { background: color-mix(in srgb, var(--accent) 12%, transparent); box-shadow: inset 3px 0 0 var(--accent); border-radius: 0 6px 6px 0; }
+.plan-day--reading .plan-day-n { color: var(--ink); font-weight: 600; }
+.plan-reading-tag {
+  font-size: 10px; font-weight: 600; color: var(--accent);
+  background: color-mix(in srgb, var(--accent) 14%, transparent); border-radius: 999px; padding: 1px 8px;
+}
 .plan-day-body { padding: 2px 8px 9px 22px; }
 .plan-passage {
   width: 100%; display: block; text-align: left; padding: 4px 8px; border-radius: 5px;

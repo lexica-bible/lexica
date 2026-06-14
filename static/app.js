@@ -5507,6 +5507,7 @@ function DayPlanView({
   curText,
   texts,
   progAll,
+  chronoPos,
   onPickText,
   onPickPassage,
   onMarkComplete,
@@ -5516,17 +5517,30 @@ function DayPlanView({
   const total = days.length || 365;
   const prog = planFor(progAll, curText);
   const curDay = prog.day;
+  // The day that holds the passage you're currently reading. The list FOLLOWS this —
+  // opening, highlighting, and scrolling to it as you switch into chronological or turn
+  // pages — separately from your plan "Today" (curDay), which still owns the streak +
+  // Mark-complete button.
+  const readingDay = (() => {
+    if (chronoPos == null) return null;
+    const d = days.find(dd => dd.pos && dd.pos.includes(chronoPos));
+    return d ? d.day : null;
+  })();
+  const focusDay = readingDay || curDay;
   const pct = Math.round((curDay - 1) / total * 100); // days COMPLETED / total
-  const [open, setOpen] = useState(() => new Set([curDay]));
-  const todayRef = useRef(null);
+  const [open, setOpen] = useState(() => new Set([focusDay]));
+  const todayRef = useRef(null); // plan "Today" — target of the Jump button
+  const focusRef = useRef(null); // the day you're reading — auto-scrolled to
 
-  // Switching text (chips) or advancing a day re-centres on the new "today".
+  // Follow the reading position: keep the day you're in open + scrolled into view as it
+  // changes (switching into chrono, turning pages, or marking a day complete — all of
+  // which move readingDay). Also re-centres when you switch reading text.
   useEffect(() => {
-    setOpen(new Set([curDay]));
-    requestAnimationFrame(() => todayRef.current && todayRef.current.scrollIntoView({
+    setOpen(new Set([focusDay]));
+    requestAnimationFrame(() => focusRef.current && focusRef.current.scrollIntoView({
       block: "nearest"
     }));
-  }, [curText, curDay]);
+  }, [curText, focusDay]);
   const toggle = d => setOpen(s => {
     const n = new Set(s);
     n.has(d) ? n.delete(d) : n.add(d);
@@ -5570,11 +5584,17 @@ function DayPlanView({
     className: "plan-days"
   }, days.map(day => {
     const state = day.day < curDay ? "done" : day.day === curDay ? "today" : "soon";
+    // "Reading" highlight only when you're on a day OTHER than your plan Today, so
+    // it never clashes with the gold Today bar (reading your Today keeps the gold).
+    const isReading = readingDay != null && day.day === readingDay && readingDay !== curDay;
     const isOpen = open.has(day.day);
     return /*#__PURE__*/React.createElement("div", {
       key: day.day,
-      ref: day.day === curDay ? todayRef : null,
-      className: "plan-day plan-day--" + state + (isOpen ? " open" : "")
+      ref: el => {
+        if (day.day === focusDay) focusRef.current = el;
+        if (day.day === curDay) todayRef.current = el;
+      },
+      className: "plan-day plan-day--" + state + (isReading ? " plan-day--reading" : "") + (isOpen ? " open" : "")
     }, /*#__PURE__*/React.createElement("button", {
       className: "plan-day-head",
       onClick: () => toggle(day.day),
@@ -5589,7 +5609,9 @@ function DayPlanView({
       "aria-hidden": "true"
     }, "\u25B8")), /*#__PURE__*/React.createElement("span", {
       className: "plan-day-n"
-    }, "Day ", day.day), state === "today" && /*#__PURE__*/React.createElement("span", {
+    }, "Day ", day.day), isReading && /*#__PURE__*/React.createElement("span", {
+      className: "plan-reading-tag"
+    }, "Reading"), state === "today" && /*#__PURE__*/React.createElement("span", {
       className: "plan-today-tag"
     }, "Today"), /*#__PURE__*/React.createElement("span", {
       className: "plan-day-v"
@@ -6129,6 +6151,7 @@ function LibNavPanel({
     curText: plan.curText,
     texts: plan.texts,
     progAll: plan.progAll,
+    chronoPos: chronoPos,
     onPickText: plan.onPickText,
     onMarkComplete: plan.onMarkComplete,
     onSetDay: plan.onSetDay,
@@ -6309,6 +6332,7 @@ function MobileBookPicker({
     curText: plan.curText,
     texts: plan.texts,
     progAll: plan.progAll,
+    chronoPos: chronoPos,
     onPickText: plan.onPickText,
     onMarkComplete: plan.onMarkComplete,
     onSetDay: plan.onSetDay,
