@@ -12494,11 +12494,11 @@ function App() {
     });
     setLibEverVisited(true);
     setMainView("library");
-    // Desktop: pop the verse's cross-references over the chapter-summary card so the jump
-    // lands with its xrefs already showing. Only when the rail is resting on the summary
-    // (no word-study / note panel open) so we don't steal a panel the user has up; mobile
-    // keeps the reader unobstructed (xref is a full bottom sheet there).
-    if (!isMobile && !activeEntry && !activeNote) setLibCrossRef({
+    // Desktop: queue the verse's cross-references for the rail. If it's resting on the summary
+    // the xref shows right away; if a word-study / note panel is up, the xref sits UNDER it (its
+    // render is gated on those) and surfaces when that panel is closed — instead of the summary.
+    // Mobile keeps the reader unobstructed (xref is a full bottom sheet there).
+    if (!isMobile) setLibCrossRef({
       book,
       chapter,
       verse,
@@ -12655,8 +12655,9 @@ function App() {
       });
       setLibEverVisited(true);
       setMainView("library");
-      // Same as Read-in-context: desktop pops the verse's xrefs over the summary card.
-      if (!isMobile && !activeEntry && !activeNote) setLibCrossRef({
+      // Same as Read-in-context: desktop queues the xref (shows now if resting on the
+      // summary, else tucks under the open panel and surfaces when it closes).
+      if (!isMobile) setLibCrossRef({
         book,
         chapter,
         verse,
@@ -12798,7 +12799,7 @@ function App() {
     noteId: activeNote,
     isMobile: isMobile,
     onClose: () => setActiveNote(null)
-  }), libCrossRef && !isMobile && /*#__PURE__*/React.createElement(CrossRefPanel, {
+  }), libCrossRef && !isMobile && !activeEntry && !activeNote && /*#__PURE__*/React.createElement(CrossRefPanel, {
     source: libCrossRef,
     translation: libTranslation === "kjv" ? "kjv" : "abp",
     onClose: () => {
