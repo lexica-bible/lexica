@@ -2838,19 +2838,20 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
         <>
           <div className="lib-search-scrim" onClick={() => setSearchOpen(false)} />
           <div className="lib-search-panel">
-            <div className="lib-search-row">
+            <form className="lib-search-row" onSubmit={(e) => { e.preventDefault(); runTextSearch(); }}>
               <input
                 className="lib-search-input"
                 type="text"
                 autoFocus
+                enterKeyHint="search"
                 placeholder={`Search ${searchName}…`}
                 value={searchQ}
                 onChange={(e) => setSearchQ(e.target.value)}
-                onKeyDown={(e) => { if (e.key === "Enter") runTextSearch(); if (e.key === "Escape") setSearchOpen(false); }}
+                onKeyDown={(e) => { if (e.key === "Escape") setSearchOpen(false); }}
               />
-              <button className="lib-search-go" onClick={runTextSearch} aria-label="Search">Go</button>
-              <button className="lib-search-x" onClick={() => setSearchOpen(false)} aria-label="Close search">✕</button>
-            </div>
+              <button type="submit" className="lib-search-go" aria-label="Search">Go</button>
+              <button type="button" className="lib-search-x" onClick={() => setSearchOpen(false)} aria-label="Close search">✕</button>
+            </form>
             <div className="lib-search-modes">
               <div className="seg lib-search-mode-seg">
                 <button className={"seg-b" + (searchMode === "any" ? " on" : "")} onClick={() => setSearchMode("any")}>Any word</button>
@@ -2880,15 +2881,17 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
                 )}
                 <label className="lib-search-check"><input type="checkbox" checked={!searchPartial} onChange={(e) => setSearchPartial(!e.target.checked)} /> Whole words only</label>
                 <label className="lib-search-check"><input type="checkbox" checked={searchCase} onChange={(e) => setSearchCase(e.target.checked)} /> Case-sensitive</label>
-                <input
-                  className="lib-search-input lib-search-excl-input"
-                  type="text"
-                  placeholder="Exclude verses with…"
-                  value={searchExclude}
-                  onChange={(e) => setSearchExclude(e.target.value)}
-                  onKeyDown={(e) => { if (e.key === "Enter") runTextSearch(); }}
-                  onBlur={() => { if (didSearchRef.current && searchQ.trim()) runTextSearch(); }}
-                />
+                <form style={{ display: "contents" }} onSubmit={(e) => { e.preventDefault(); runTextSearch(); }}>
+                  <input
+                    className="lib-search-input lib-search-excl-input"
+                    type="text"
+                    enterKeyHint="search"
+                    placeholder="Exclude verses with…"
+                    value={searchExclude}
+                    onChange={(e) => setSearchExclude(e.target.value)}
+                    onBlur={() => { if (didSearchRef.current && searchQ.trim()) runTextSearch(); }}
+                  />
+                </form>
               </div>
             )}
             <div className="lib-search-results">

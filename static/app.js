@@ -9844,24 +9844,29 @@ function LibraryView({
     onClick: () => setSearchOpen(false)
   }), /*#__PURE__*/React.createElement("div", {
     className: "lib-search-panel"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "lib-search-row"
+  }, /*#__PURE__*/React.createElement("form", {
+    className: "lib-search-row",
+    onSubmit: e => {
+      e.preventDefault();
+      runTextSearch();
+    }
   }, /*#__PURE__*/React.createElement("input", {
     className: "lib-search-input",
     type: "text",
     autoFocus: true,
+    enterKeyHint: "search",
     placeholder: `Search ${searchName}…`,
     value: searchQ,
     onChange: e => setSearchQ(e.target.value),
     onKeyDown: e => {
-      if (e.key === "Enter") runTextSearch();
       if (e.key === "Escape") setSearchOpen(false);
     }
   }), /*#__PURE__*/React.createElement("button", {
+    type: "submit",
     className: "lib-search-go",
-    onClick: runTextSearch,
     "aria-label": "Search"
   }, "Go"), /*#__PURE__*/React.createElement("button", {
+    type: "button",
     className: "lib-search-x",
     onClick: () => setSearchOpen(false),
     "aria-label": "Close search"
@@ -9924,19 +9929,25 @@ function LibraryView({
     type: "checkbox",
     checked: searchCase,
     onChange: e => setSearchCase(e.target.checked)
-  }), " Case-sensitive"), /*#__PURE__*/React.createElement("input", {
+  }), " Case-sensitive"), /*#__PURE__*/React.createElement("form", {
+    style: {
+      display: "contents"
+    },
+    onSubmit: e => {
+      e.preventDefault();
+      runTextSearch();
+    }
+  }, /*#__PURE__*/React.createElement("input", {
     className: "lib-search-input lib-search-excl-input",
     type: "text",
+    enterKeyHint: "search",
     placeholder: "Exclude verses with\u2026",
     value: searchExclude,
     onChange: e => setSearchExclude(e.target.value),
-    onKeyDown: e => {
-      if (e.key === "Enter") runTextSearch();
-    },
     onBlur: () => {
       if (didSearchRef.current && searchQ.trim()) runTextSearch();
     }
-  })), /*#__PURE__*/React.createElement("div", {
+  }))), /*#__PURE__*/React.createElement("div", {
     className: "lib-search-results"
   }, searchLoading ? /*#__PURE__*/React.createElement("div", {
     className: "lib-search-status"

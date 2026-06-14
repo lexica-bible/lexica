@@ -3062,10 +3062,30 @@ input { font-family: inherit; }
   background: var(--paper); border: 1px solid var(--rule);
   border-radius: 12px; box-shadow: 0 12px 40px rgba(34, 30, 24, 0.22);
   overflow: hidden;
+  animation: lib-search-drop 0.18s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
-/* On mobile the tab bar is fixed at the top (54px) — drop the panel below it. */
+@keyframes lib-search-drop {
+  from { opacity: 0; transform: translateX(-50%) translateY(-10px); }
+  to   { opacity: 1; transform: translateX(-50%) translateY(0); }
+}
+/* On mobile: a full-width "find bar" that drops flush from under the navy
+   section-tab bar (.mobile-tabs, 56px + notch) — not a floating card. */
 @media (max-width: 1099px) {
-  .lib-search-panel { top: 62px; }
+  .lib-search-panel {
+    top: calc(56px + env(safe-area-inset-top, 0px));
+    left: 0; right: 0; transform: none;
+    width: 100%; max-width: 100%;
+    max-height: calc(100vh - 56px - env(safe-area-inset-top, 0px));
+    max-height: calc(100dvh - 56px - env(safe-area-inset-top, 0px));
+    border-width: 0 0 1px 0;
+    border-radius: 0 0 14px 14px;
+    box-shadow: 0 14px 28px rgba(34, 30, 24, 0.18);
+    animation: lib-search-drop-m 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+}
+@keyframes lib-search-drop-m {
+  from { opacity: 0; transform: translateY(-14px); }
+  to   { opacity: 1; transform: translateY(0); }
 }
 .lib-search-row { display: flex; gap: 6px; padding: 10px; border-bottom: 1px solid var(--rule); }
 .lib-search-input {

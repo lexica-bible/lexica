@@ -99,10 +99,10 @@ Pick effort by task TYPE. When in doubt, lean higher — the plan affords it.
   NIV toggle next to ESV; TEXT-ONLY (no NIV audio — FCBH doesn't carry it). Loaded by
   `scripts/load_niv.py ~/Bible-niv ~/bible-db/niv.db` from the aruljohn/Bible-niv repo (66 JSON files,
   ~31,104 verses). No WSGI change — `OWNER_EMAIL` already gates it.**
-  ESV AUDIO (owner-only) prefers Crossway's OWN ESV API — set `ESV_API_TOKEN` (free, instant
-  self-serve at api.esv.org) in the WSGI: whole-Bible Max McLean reading, `views_esv._crossway_audio_url`
-  grabs the 302→signed-mp3 URL. FCBH (`FCBH_API_KEY`, NT-only, still pending) is the fallback if only
-  it's set. **KJV AUDIO is LIVE for everyone (public-domain, no key, audiotreasure.com — see
+  ESV AUDIO (owner-only) is **LIVE 2026-06-13** — `ESV_API_TOKEN` set in the WSGI, using Crossway's OWN
+  ESV API (api.esv.org): whole-Bible Max McLean reading, `views_esv._crossway_audio_url` grabs the
+  302→signed-mp3 URL. FCBH (`FCBH_API_KEY`, NT-only) stays the fallback if only that key is set.
+  **KJV AUDIO is LIVE for everyone (public-domain, no key, audiotreasure.com — see
   views_kjv.kjv_audio). Prefers the clearer VOICE-only reading (`KJV_AT`); 6 books the voice set is
   missing (Job, Song of Solomon, Philemon, 2/3 John, Jude) fall back to the MUSIC reading (`KJV_FF`).
   BSB audio is public-domain and needs no setup. NIV has NO audio source (FCBH doesn't carry it;
@@ -355,7 +355,13 @@ scripts/          # build-frontend.js + one-time import/migration scripts
   plain ORDER BY sorts ALPHABETICALLY — `_ABP_RANK_SQL` maps each abbrev to its Bible-order number so
   ABP sorts/range-filters canonically like KJV/BSB (which key by numeric book_id).** Skipped on
   purpose: inline Strong's in each result row (deferred). State + UI live in 60-library.jsx; API in
-  00-core.jsx `api.textSearch`.
+  00-core.jsx `api.textSearch`. **PANEL CHROME (find-bar polish, 2026-06-13): on mobile it's a
+  FULL-WIDTH bar flush under the navy `.mobile-tabs` (56px + notch), square top / rounded bottom, not a
+  floating card; desktop stays a centered 640px card. Both slide in (`@keyframes lib-search-drop` /
+  `-drop-m`). The search box + the Exclude box are each wrapped in a `<form onSubmit>` (Go = submit, X =
+  type=button; exclude form is `display:contents` so it doesn't disturb the options layout) so the
+  MOBILE keyboard's Search/Go key actually runs the search — a plain keydown-Enter handler was
+  unreliable on phones. `enterKeyHint="search"` labels that key.**
 - **Left-nav book list is an ACCORDION (2026-06-13).** Click a book to open its chapter grid (and
   switch to it); click the open book to collapse it. Starts collapsed — the current chapter shows
   beside the active book name (`.nav-book-ch`). `navOpenBook` in `LibNavPanel`; on the mobile overlay

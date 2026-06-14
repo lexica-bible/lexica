@@ -121,14 +121,17 @@ Deliberate NON-targets (listed so we don't mistake them for gaps): no paid comme
 
 ---
 
-## Library in-text search — eSword-style, DONE 2026-06-13 (one small follow-up)
+## Library in-text search — eSword-style + find-bar polish, DONE 2026-06-13
 
 The reader's magnifying-glass search got the eSword upgrade: canonical order, "X verses, Y matches",
 book range (preset groups + from/to), any/all/phrase (default Any), whole-word/case/exclude, auto
-re-run on setting change, and an in-memory result cache. Full record: memory `project-esword-reference`.
+re-run on setting change, and an in-memory result cache. **Find-bar polish + mobile Enter fix DONE
+2026-06-13** — on mobile it's now a full-width bar that drops flush under the top tab bar (not a
+floating popup; kept top-anchored on purpose, since a bottom sheet would sit under the phone keyboard),
+both desktop/mobile slide in, and the mobile keyboard's Search/Go key now actually runs the search
+(the box + the Exclude box are each in a tiny `<form>`, so the soft-keyboard action key submits —
+a plain Enter handler was unreliable on phones). Full record: memory `project-esword-reference`.
 Open:
-- **Quick phone check of the new options panel** — built/tested on desktop; styles are responsive but
-  the range dropdowns + checkboxes are worth a look on a narrow screen.
 - Optional, only if first-search latency ever bugs you: a real full-text index (FTS5) for speed —
   but it changes the "match inside a word" behavior (default substring he likes) and needs a one-time
   build on PA. Parked. `code: /api/text-search in views_search.py; panel in static/src/60-library.jsx`
@@ -345,7 +348,7 @@ is over fixed chrome (header/toolbar/nav/detail). Full records: memory `project_
 stitched single-scroll "today's reading"; deeper per-tab persistence (Lexicon/Search/Notes/Study
 last-state + within-chapter scroll position).
 
-### Read-along audio — DONE + LIVE 2026-06-10 (BSB live for all; ESV waits on a key)
+### Read-along audio — DONE + LIVE (BSB + KJV public; ESV live 2026-06-13)
 Per-chapter audio on KJV/BSB/ESV (ABP has no recording). Full record: memory `project_esv_audio` +
 TODO_ARCHIVE. **BSB is live for everyone** — public-domain openbible.com Souer mp3s, no key, no
 self-hosting (`/api/bsb/audio`). Control = a play/pause ICON in the toolbar + a draggable progress
@@ -356,11 +359,10 @@ chrono keeps the inline bar at the playing chapter.** Chrono is scroll-aware (pl
 - ~~**Mobile dock slide-OUT animation**~~ — **DONE 2026-06-11.** The bottom scrubber now eases back
   DOWN when the chapter/passage ends (`audio-dock-down`), matching its slide-up entry. It stays mounted
   one beat after the audio clears (`dockClosing` in 60-library.jsx) so the exit can play; a re-open cancels it.
-- **ESV audio** — owner-only; code DONE 2026-06-11. Now prefers **Crossway's own ESV API**
-  (api.esv.org, `ESV_API_TOKEN`) — whole-Bible Max McLean reading, instant self-serve token (NO FCBH
-  approval wait). `views_esv._crossway_audio_url` captures the 302→signed-mp3 URL. FCBH (`FCBH_API_KEY`,
-  NT-only) stays as the fallback if only that key is set. JUST NEEDS: free token at api.esv.org →
-  `ESV_API_TOKEN` in the WSGI → reload. (FCBH key still pending and now optional.)
+- ~~**ESV audio**~~ — **DONE + LIVE 2026-06-13 (owner-only).** `ESV_API_TOKEN` set in the WSGI; uses
+  **Crossway's own ESV API** (api.esv.org) — whole-Bible Max McLean reading, `views_esv._crossway_audio_url`
+  captures the 302→signed-mp3 URL. FCBH (`FCBH_API_KEY`, NT-only) stays as the fallback if only that key
+  is set.
 - ~~**KJV audio**~~ — **DONE + LIVE 2026-06-11 (public, no key).** Single narrator + soft music
   background (the "Firefighters for Christ" KJV reading, hosted by audiotreasure.com at
   `/content/KJV_FF/<NN>_<Name>_<chap>.mp3`). Hotlinked like BSB — `views_kjv.kjv_audio` +
@@ -393,8 +395,8 @@ place for the existing place sidebar, so this is smaller than it looks.
   the Compare picker as new toggles + their own loader/db (like BSB). Not started.
 - **ESV — PERSONAL, LOGIN-GATED — DONE + LIVE 2026-06-10** (memory `project_esv_audio`). Owner-only ESV
   reader, server-gated via the shared `views_notes.is_owner()` (`OWNER_EMAIL` live; toggle shows for the
-  owner). Text LOADED on PA (`load_esv.py` → `esv.db` = 31,104 verses, all 66 books). Only ESV AUDIO is
-  still open — waits on `FCBH_API_KEY` (see audio item).
+  owner). Text LOADED on PA (`load_esv.py` → `esv.db` = 31,104 verses, all 66 books). ESV AUDIO now
+  LIVE too (2026-06-13, `ESV_API_TOKEN` set — see audio item). Nothing open here.
 - **NIV — PERSONAL, OWNER-ONLY — DONE + LIVE 2026-06-10** (memory `project_esv_audio`). Mirrors ESV exactly:
   `views_niv.py`, own `niv.db`, NIV toggle. TEXT-ONLY (FCBH has no NIV audio). Loaded by `scripts/load_niv.py
   ~/Bible-niv ~/bible-db/niv.db` from aruljohn/Bible-niv. No WSGI change needed.
