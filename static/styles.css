@@ -2713,14 +2713,20 @@ input { font-family: inherit; }
 /* Chrome/Safari: slim by default, a touch wider on hover. The thumb's fat track-colored
    border (with background-clip:padding-box) makes the visible fill look slim; on hover the
    border shrinks so the fill grows. */
-.nav-scroll::-webkit-scrollbar { width: 12px; background: var(--bg-sunk); }
-.nav-scroll::-webkit-scrollbar-thumb { background: var(--rule-2); border-radius: 6px; border: 4px solid var(--bg-sunk); background-clip: padding-box; }
-.nav-scroll::-webkit-scrollbar-thumb:hover { border-width: 2px; }
+/* The chronological "Days" list (.plan-days) shares this slim treatment so it
+   matches the book list / Eras list instead of showing the fat default bar. */
+.nav-scroll::-webkit-scrollbar,
+.nav-plan .plan-days::-webkit-scrollbar { width: 12px; background: var(--bg-sunk); }
+.nav-scroll::-webkit-scrollbar-thumb,
+.nav-plan .plan-days::-webkit-scrollbar-thumb { background: var(--rule-2); border-radius: 6px; border: 4px solid var(--bg-sunk); background-clip: padding-box; }
+.nav-scroll::-webkit-scrollbar-thumb:hover,
+.nav-plan .plan-days::-webkit-scrollbar-thumb:hover { border-width: 2px; }
 /* Firefox ignores ::-webkit-scrollbar, so theme it here — but ONLY for Firefox: if
    scrollbar-color is set where Chrome sees it, Chrome 121+ drops the hover bar above for its
    fat standard one. @supports(-moz-appearance) matches Firefox only. */
 @supports (-moz-appearance: none) {
-  .nav-scroll { scrollbar-width: thin; scrollbar-color: var(--rule-2) var(--bg-sunk); }
+  .nav-scroll,
+  .nav-plan .plan-days { scrollbar-width: thin; scrollbar-color: var(--rule-2) var(--bg-sunk); }
 }
 
 /* No gap between same-testament groups so the spine (below) runs continuous. */
