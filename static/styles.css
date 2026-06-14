@@ -1488,13 +1488,13 @@ input { font-family: inherit; }
 }
 .bdb-xlit { font-size: 15px; color: var(--ink-2); font-style: italic; }
 .bdb-pronounce { color: var(--ink-2); font-style: normal; }
-/* A content/fact tag — match the metaV pills (Male, Genealogy): same 11px pill. */
+/* A content/fact tag — match the metaV tags (Male, Genealogy): same 11px square. */
 .bdb-pos-badge {
   display: inline-block;
   font-size: 11px;
   font-weight: 500;
   padding: 3px 8px;
-  border-radius: 999px;
+  border-radius: 5px;
   background: var(--accent-soft);
   color: var(--accent);
   margin-top: 2px;
@@ -2478,7 +2478,7 @@ input { font-family: inherit; }
 .metav-tag {
   font-size: 11px;
   padding: 3px 8px;
-  border-radius: 999px;
+  border-radius: 5px;
   background: var(--accent-soft);
   color: var(--accent);
   font-weight: 500;
