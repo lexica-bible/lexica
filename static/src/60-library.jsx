@@ -1075,6 +1075,22 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
     if (next < 1 || next > chrono.passages.length) return;
     pickPassage(chrono.passages[next - 1]);
   };
+  // Which chronological passage contains a given book + chapter (and verse, if known)?
+  // Used when flipping INTO chronological so you land on the passage holding the spot
+  // you were just reading. A chapter can sit in several passages (e.g. 1 Chronicles 1
+  // is split across days), so prefer the one whose verse window actually covers the
+  // verse; otherwise fall back to the first passage that covers the chapter.
+  const passageForRef = (book, ch, v) => {
+    if (!chrono || !book) return null;
+    const coversCh = (p) => p.book === book && ch >= p.start_ch && ch <= p.end_ch;
+    if (v != null) {
+      const exact = chrono.passages.find(p => coversCh(p)
+        && !(ch === p.start_ch && v < p.start_v)
+        && !(ch === p.end_ch && v > p.end_v));
+      if (exact) return exact;
+    }
+    return chrono.passages.find(coversCh) || null;
+  };
   // Reading-plan ("Days") wiring. Progress is per reading text; the chips switch text.
   const planTexts = [
     { id: "abp", label: "ABP" }, { id: "kjv", label: "KJV" }, { id: "bsb", label: "BSB" },
@@ -1116,7 +1132,11 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
       setOrderMode("chronological");
       if (chrono) {
         if (corpus !== "bible") setCorpus("bible");
-        pickPassage(chrono.passages[chronoPos - 1] || chrono.passages[0]);
+        // Land on the passage that holds the spot you were just reading; only fall back
+        // to the last-remembered chronological position if that lookup comes up empty.
+        const match = (selBook && passageForRef(selBook.abbrev, selChapter))
+          || chrono.passages[chronoPos - 1] || chrono.passages[0];
+        pickPassage(match);
       }
     } else {
       setOrderMode("canonical");
@@ -2713,13 +2733,13 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
               <button
                 className="ch-nav"
                 disabled={chronoOn ? chronoPos <= 1 : selChapter <= 1}
-                onClick={() => { if (chronoOn) { stepPassage(-1); return; } const c = Math.max(1, selChapter - 1); setSelChapter(c); if (!nonCanon) onNavChange?.({ ...nav, book: selBook?.abbrev, chapter: c, highlight: null }); }}
+                onClick={() => turnPage(-1)}
                 aria-label={chronoOn ? "Previous passage" : "Previous chapter"}
               >‹</button>
               <button
                 className="ch-nav"
                 disabled={chronoOn ? (chrono && chronoPos >= chrono.passages.length) : selChapter >= maxChap}
-                onClick={() => { if (chronoOn) { stepPassage(1); return; } const c = Math.min(maxChap, selChapter + 1); setSelChapter(c); if (!nonCanon) onNavChange?.({ ...nav, book: selBook?.abbrev, chapter: c, highlight: null }); }}
+                onClick={() => turnPage(1)}
                 aria-label={chronoOn ? "Next passage" : "Next chapter"}
               >›</button>
             </div>
