@@ -2834,12 +2834,16 @@ input { font-family: inherit; }
 }
 .plan-jump:hover { color: var(--ink); border-color: var(--gold); }
 
-.plan-days { padding: 4px 4px 10px; }
+/* Continuous left spine down the whole day list — same treatment as the Bible book
+   nav's testament spine (border-left + padding). The plan crosses both testaments, so
+   one cool accent; the soft tint is the dark-theme override, like the nav. */
+.plan-days { padding: 4px 4px 10px 6px; margin-left: 6px; border-left: 2px solid var(--accent); }
+:root[data-theme="dark"] .plan-days { border-left-color: var(--accent-soft); }
 .plan-day { border-radius: 6px; scroll-margin-top: 150px; }
 /* The whole row is the open/collapse toggle; day name flush-left, the count + marker +
    caret ride inline on the right. The marker is the only separately-clickable bit. */
 .plan-day-head {
-  display: flex; align-items: center; gap: 8px; padding: 7px 8px 7px 10px;
+  display: flex; align-items: center; gap: 8px; padding: 7px 8px 7px 8px;
   cursor: pointer; border-radius: 6px;
 }
 .plan-day-head:hover .plan-day-n { color: var(--ink); }
