@@ -208,6 +208,60 @@ def test_g1473_gloss():
     check("2P no-morph -> untouched", by_pos(rows, 0)[4], "1473")
 
 
+# ── 7. bracket-helper split (parse-time peel) ──────────────────────────────────
+def test_bracket_helper_split():
+    # OPEN variant: a helper word ("May") shares the bracketed verb's single
+    # Strong's (G2147) and sits before "[2be found". It must be peeled OUTSIDE the
+    # bracket; the verb opens the bracket and keeps the SOURCE position number (2).
+    _, _, _, w = B.parse_abp_line(
+        "(Psa 21:8)  May [2be foundG2147 G3588 1your hand]G5495 G1473 done.G1")
+    may, verb = w[0], w[1]
+    check("open: 'May' peeled to its own word", may[0], "May")
+    check("open: 'May' shares the verb strongs", may[1], "G2147")
+    check("open: 'May' sits OUTSIDE the bracket", (may[3], may[4]), (False, False))
+    check("open: bracket opens on the verb", (verb[0], verb[3]), ("be found", True))
+    check("open: verb keeps SOURCE position number", verb[2], 2)
+
+    # CLOSE variant: "1may] be found" — the trailing "be found" is peeled OUT,
+    # after the ']', sharing the same Strong's.
+    _, _, _, w = B.parse_abp_line(
+        "(Psa 21:8)  [2your right hand G1188 G1473 1may] be foundG2147 end.G1")
+    ci = next(i for i, x in enumerate(w) if x[4])        # the closing word
+    closer, trail = w[ci], w[ci + 1]
+    check("close: bracket closes on 'may'", closer[0], "may")
+    check("close: 'be found' peeled OUTSIDE the ']'",
+          (trail[0], trail[3], trail[4]), ("be found", False, False))
+    check("close: trailing word shares the strongs", trail[1], "G2147")
+
+    # No straddling text -> unchanged: a single-word bracket is NOT split.
+    _, _, _, w = B.parse_abp_line("(Gen 1:1)  [1one]G1520 thing.G2")
+    check("single-word bracket stays one word", w[0][0], "one")
+    check("single-word bracket opens AND closes", (w[0][3], w[0][4]), (True, True))
+
+    # A plain verse gains no extra words (byte-identical word list).
+    _, _, _, w = B.parse_abp_line(
+        "(Gen 1:1)  InG1722 the beginningG746 God madeG4160 G2316 all.G3956")
+    check("plain verse: no spurious split", [x[0] for x in w],
+          ["In", "the beginning", "God made", "", "all."])
+
+
+# ── 8. iter_source_tokens (the parser the bracket audits share) ────────────────
+def test_iter_source_tokens():
+    # The bracket audits delegate to this, so it must apply the SAME peel as the
+    # words build — otherwise an audit drifts from the build's bracket boundaries.
+    toks = list(B.iter_source_tokens(
+        "May [2be foundG2147 G3588 1your hand]G5495 G1473 by allG3956 "
+        "G3588 [2your right hand G1188 G1473 1may] be foundG2147 end.G1"))
+    may = next(t for t in toks if t["eng"] == "May")
+    check("iter: 'May' is OUTSIDE the bracket (br None)", may["br"], None)
+    check("iter: 'May' shares the verb strongs", may["sbase"], "G2147")
+    verb = next(t for t in toks if t["eng"] == "be found" and t["br"] is not None)
+    check("iter: 'be found' opens a bracket", verb["br"], 1)
+    check("iter: 'be found' keeps source position 2", verb["abp_pos"], 2)
+    trailing = [t for t in toks if t["eng"] == "be found" and t["br"] is None]
+    check("iter: trailing 'be found' peeled outside the ']'", len(trailing), 1)
+
+
 def main():
     try:
         sys.stdout.reconfigure(encoding="utf-8")

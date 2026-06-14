@@ -57,6 +57,10 @@ import sys
 from collections import defaultdict
 from pathlib import Path
 
+# Share the build's source parser so bracket boundaries can't drift (Psa 21:8 peel).
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+import build_words_from_abp as B  # noqa: E402
+
 # ── args ──────────────────────────────────────────────────────────────────────
 ARGS = sys.argv[1:]
 DB = next((a for a in ARGS if not a.startswith("--")), "bible.db")
@@ -66,10 +70,8 @@ if "--min-words" in ARGS:
 BOOK_FILTER = ARGS[ARGS.index("--book") + 1] if "--book" in ARGS else None
 SHOW_SHARED = "--show-shared" in ARGS
 
-# ── source parser (identical conventions to audit_bracket_order.py) ────────────
-_STRONGS_RE = re.compile(r"(G\*|G\d+(?:\.\d+)*)")
+# ── source parser: shared with the build (iter_source_tokens), can't drift ────────────
 _VERSE_RE   = re.compile(r"^\((\w+)\s+(\d+):(\d+)\)\s+(.*)")
-_LEAD_NUM   = re.compile(r"^\d+")
 _WORD_NUM   = re.compile(r"(?<!\w)\d+")
 _NONWORD    = re.compile(r"[^\w\s]")
 
@@ -81,58 +83,10 @@ def norm_words(text):
     return [w for w in t.lower().split() if w]
 
 
-def clean_eng(raw):
-    t = raw.strip().replace("[", "").replace("]", "")
-    return _WORD_NUM.sub("", t).strip()
-
-
-def src_base(raw_strongs):
-    if raw_strongs == "G*":
-        return "*"
-    return raw_strongs.split(".")[0]
-
-
-def bracket_info(raw):
-    opens = "[" in raw
-    closes = "]" in raw
-    s = re.sub(r"[^\w\s]", "", raw.strip().lstrip("[")).strip()
-    m = _LEAD_NUM.match(s)
-    abp_pos = int(m.group()) if m else None
-    return abp_pos, opens, closes
-
-
 def parse_source_line(text):
-    parts = _STRONGS_RE.split(text)
-    pairs = []
-    i = 0
-    while i < len(parts) - 1:
-        pairs.append((parts[i], parts[i + 1]))
-        i += 2
-    if parts and parts[-1].strip():
-        pairs.append((parts[-1], None))
-
-    toks = []
-    in_bracket = False
-    br_idx = 0
-    src_order = 0
-    for raw, strongs in pairs:
-        abp_pos, opens, closes = bracket_info(raw)
-        if opens and not in_bracket:
-            br_idx += 1
-            in_bracket = True
-        cur_br = br_idx if in_bracket else None
-        if closes:
-            in_bracket = False
-        toks.append({
-            "eng": clean_eng(raw),
-            "words": norm_words(raw),
-            "sbase": src_base(strongs) if strongs else "",
-            "abp_pos": abp_pos,
-            "br": cur_br,
-            "src_i": src_order,
-        })
-        src_order += 1
-    return toks
+    """Peeled source tokens — delegates to build_words_from_abp.iter_source_tokens so
+    bracket boundaries match the words table exactly (the Psa 21:8 helper peel)."""
+    return [{**t, "words": norm_words(t["eng"])} for t in B.iter_source_tokens(text)]
 
 
 # ── load source brackets ───────────────────────────────────────────────────────

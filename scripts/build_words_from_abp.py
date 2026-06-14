@@ -123,10 +123,52 @@ def bracket_info(raw: str):
     return abp_pos, opens, closes
 
 
+def _emit_words(raw: str, strongs):
+    """
+    Expand ONE (gloss, strongs) chunk into 1-3 words, peeling gloss text the SOURCE
+    places OUTSIDE the bracket markers so '[' / ']' land on the right word.
+
+    A helper word that shares the bracketed verb's single Strong's number (nothing
+    separates them) lands in the SAME chunk as the verb — e.g. "May [2be found" or
+    "1may] be found". Left whole, the '[' swallows "May" and the source's position
+    number is lost. Peel it back out, keeping the SAME Strong's (it is the same
+    Greek word) and sitting OUTSIDE the bracket:
+        "May [2be found"  -> "May" (outside)        + "[2be found" (opens, pos 2)
+        "1may] be found"  -> "1may]" (closes, pos 1) + "be found"  (outside)
+    A chunk with no straddling text is returned unchanged, so every unaffected verse
+    parses byte-for-byte as before. (Psa 21:8 lesson — the helper-word/bracket
+    problem; ~943 verses across the canon. The peeled word's abp_pos is None and it
+    opens/closes nothing, so the bracket state machine leaves it outside; the bracket
+    word keeps the source position number via bracket_info.)
+    """
+    lead = trail = None
+    mid = raw
+    if "[" in mid:
+        k = mid.index("[")
+        if re.search(r"[A-Za-z]", mid[:k]):          # real words BEFORE the '['
+            lead, mid = mid[:k], mid[k:]
+    if "]" in mid:
+        k = mid.index("]")
+        if re.search(r"[A-Za-z]", mid[k + 1:]):      # real words AFTER the ']'
+            trail, mid = mid[k + 1:], mid[:k + 1]
+
+    out = []
+    if lead is not None:                             # outside, before the bracket
+        out.append((clean_english(lead), strongs, None, False, False))
+    ap, ob, cb = bracket_info(mid)                   # bracket word keeps the markers
+    out.append((clean_english(mid), strongs, ap, ob, cb))
+    if trail is not None:                            # outside, after the bracket
+        out.append((clean_english(trail), strongs, None, False, False))
+    return out
+
+
 def parse_abp_line(line: str):
     """
     Returns (abbrev, chapter, verse, words) or None.
     words = [(english, strongs_raw, abp_pos, opens_bracket, closes_bracket), ...]
+
+    Each (gloss, strongs) chunk goes through _emit_words, which peels a helper word
+    glued onto a bracketed verb back outside the bracket (Psa 21:8 lesson).
     """
     m = _VERSE_RE.match(line.strip())
     if not m:
@@ -140,15 +182,52 @@ def parse_abp_line(line: str):
     words = []
     i = 0
     while i < len(parts) - 1:
-        raw = parts[i]
-        ap, ob, cb = bracket_info(raw)
-        words.append((clean_english(raw), parts[i + 1], ap, ob, cb))
+        words.extend(_emit_words(parts[i], parts[i + 1]))
         i += 2
     if parts and parts[-1].strip():
-        raw = parts[-1]
-        ap, ob, cb = bracket_info(raw)
-        words.append((clean_english(raw), None, ap, ob, cb))
+        words.extend(_emit_words(parts[-1], None))
     return book, chapter, verse, words
+
+
+def iter_source_tokens(text):
+    """Canonical PEELED source tokenization, shared with the bracket audits so they
+    can never drift from the build's bracket boundaries. Mirrors parse_abp_line
+    exactly (same _emit_words helper-peel + bracket state machine). Yields one dict
+    per source word:
+        eng     clean_english'd gloss (may be '')
+        sbase   source Strong's in strongs_base form ('G2962'/'G1249'/'*'/'')
+        abp_pos source position number (None outside a numbered slot)
+        br      1-based source bracket index the word sits in (None = outside)
+        src_i   0-based source reading-order index
+    """
+    parts = _STRONGS_RE.split(text)
+    pairs = []
+    i = 0
+    while i < len(parts) - 1:
+        pairs.append((parts[i], parts[i + 1]))
+        i += 2
+    if parts and parts[-1].strip():
+        pairs.append((parts[-1], None))
+
+    in_bracket = False
+    br = src_i = 0
+    for raw, strongs in pairs:
+        for eng, st, abp_pos, opens, closes in _emit_words(raw, strongs):
+            if opens and not in_bracket:
+                br += 1
+                in_bracket = True
+            cur_br = br if in_bracket else None
+            if closes:
+                in_bracket = False
+            if not st:
+                sbase = ""
+            elif st == "G*":
+                sbase = "*"
+            else:
+                sbase = st.split(".")[0]
+            yield {"eng": eng, "sbase": sbase, "abp_pos": abp_pos,
+                   "br": cur_br, "src_i": src_i}
+            src_i += 1
 
 
 def _abp_sources():
