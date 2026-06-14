@@ -5655,10 +5655,7 @@ function DayPlanView({
       className: "plan-day-n"
     }, "Day ", day.day), /*#__PURE__*/React.createElement("span", {
       className: "plan-day-v"
-    }, day.verses, "v"), mark, /*#__PURE__*/React.createElement("span", {
-      className: "plan-day-caret",
-      "aria-hidden": "true"
-    }, "\u25B8")), isOpen && /*#__PURE__*/React.createElement("div", {
+    }, day.verses, "v"), mark), isOpen && /*#__PURE__*/React.createElement("div", {
       className: "plan-day-body"
     }, passagesOf(day).map(p => /*#__PURE__*/React.createElement("button", {
       key: p.pos,

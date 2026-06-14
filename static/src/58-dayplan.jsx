@@ -131,7 +131,6 @@ function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, o
                 <span className="plan-day-n">Day {day.day}</span>
                 <span className="plan-day-v">{day.verses}v</span>
                 {mark}
-                <span className="plan-day-caret" aria-hidden="true">▸</span>
               </div>
               {isOpen && (
                 <div className="plan-day-body">

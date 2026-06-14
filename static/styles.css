@@ -2862,8 +2862,6 @@ button.plan-day-mark:hover { background: var(--accent-soft); }
 .plan-day-mark--done { color: var(--accent); }
 .plan-day-mark--done svg { width: 13px; height: 13px; }
 .plan-day-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--accent); }
-.plan-day-caret { flex: 0 0 auto; font-size: 9px; color: var(--ink-4); transition: transform 0.12s ease; }
-.plan-day.open .plan-day-caret { transform: rotate(90deg); }
 .plan-day-body { padding: 2px 8px 9px 12px; }
 .plan-passage {
   width: 100%; display: block; text-align: left; padding: 4px 8px; border-radius: 5px;
