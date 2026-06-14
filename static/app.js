@@ -5537,7 +5537,8 @@ function DayPlanView({
   chronoPos,
   onPickText,
   onPickPassage,
-  onToggleDone
+  onToggleDone,
+  isMobile
 }) {
   const days = chrono && chrono.days || [];
   const total = days.length || 365;
@@ -5583,6 +5584,17 @@ function DayPlanView({
     setOpen(new Set([day.day]));
     const ps = passagesOf(day);
     if (ps[0]) onPickPassage(ps[0]);
+  };
+  // On mobile the picker is a full-screen sheet, so loading a reading would close it.
+  // There, a day tap just EXPANDS the day (browse its passages); tapping a passage
+  // loads + closes. On desktop the nav stays put, so one tap does everything.
+  const toggleDay = d => setOpen(s => {
+    const n = new Set(s);
+    n.has(d) ? n.delete(d) : n.add(d);
+    return n;
+  });
+  const onDayTap = day => {
+    isMobile ? toggleDay(day.day) : selectDay(day);
   };
   return /*#__PURE__*/React.createElement("div", {
     className: "plan"
@@ -5657,11 +5669,11 @@ function DayPlanView({
       role: "button",
       tabIndex: 0,
       "aria-expanded": isOpen,
-      onClick: () => selectDay(day),
+      onClick: () => onDayTap(day),
       onKeyDown: e => {
         if (e.key === "Enter" || e.key === " ") {
           e.preventDefault();
-          selectDay(day);
+          onDayTap(day);
         }
       }
     }, /*#__PURE__*/React.createElement("span", {
@@ -6850,6 +6862,7 @@ function MobileBookPicker({
     className: "mpick-scroll",
     ref: scrollRef
   }, chronoOn ? plan && plan.view === "days" ? /*#__PURE__*/React.createElement(DayPlanView, {
+    isMobile: true,
     chrono: chrono,
     curText: plan.curText,
     texts: plan.texts,

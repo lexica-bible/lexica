@@ -498,7 +498,7 @@ function MobileBookPicker({ books, selBook, selChapter, nonCanon, nonCanonList, 
       <div className="mpick-scroll" ref={scrollRef}>
         {chronoOn ? (
           plan && plan.view === "days" ? (
-            <DayPlanView chrono={chrono} curText={plan.curText} texts={plan.texts} progAll={plan.progAll}
+            <DayPlanView isMobile chrono={chrono} curText={plan.curText} texts={plan.texts} progAll={plan.progAll}
               chronoPos={chronoPos}
               onPickText={plan.onPickText} onToggleDone={plan.onToggleDone} onPickPassage={onPickPassage} />
           ) : chrono.eras.map(era => {

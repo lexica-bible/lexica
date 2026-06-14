@@ -49,7 +49,7 @@ function planAdvance(cur, totalDays) {
 }
 
 // The plan body — shared by the desktop left nav and the mobile picker.
-function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, onPickPassage, onToggleDone }) {
+function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, onPickPassage, onToggleDone, isMobile }) {
   const days = (chrono && chrono.days) || [];
   const total = days.length || 365;
   const prog = planFor(progAll, curText);
@@ -91,6 +91,11 @@ function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, o
     const ps = passagesOf(day);
     if (ps[0]) onPickPassage(ps[0]);
   };
+  // On mobile the picker is a full-screen sheet, so loading a reading would close it.
+  // There, a day tap just EXPANDS the day (browse its passages); tapping a passage
+  // loads + closes. On desktop the nav stays put, so one tap does everything.
+  const toggleDay = (d) => setOpen(s => { const n = new Set(s); n.has(d) ? n.delete(d) : n.add(d); return n; });
+  const onDayTap = (day) => { isMobile ? toggleDay(day.day) : selectDay(day); };
 
   return (
     <div className="plan">
@@ -139,8 +144,8 @@ function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, o
               }}
               className={"plan-day" + (done ? " plan-day--done" : "") + (isReading ? " plan-day--reading" : "") + (isOpen ? " open" : "")}>
               <div className="plan-day-head" role="button" tabIndex={0} aria-expanded={isOpen}
-                onClick={() => selectDay(day)}
-                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); selectDay(day); } }}>
+                onClick={() => onDayTap(day)}
+                onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); onDayTap(day); } }}>
                 <span className="plan-day-n">Day {day.day}</span>
                 <span className="plan-day-v">{day.verses}v</span>
                 {mark}

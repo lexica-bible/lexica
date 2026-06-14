@@ -2903,6 +2903,22 @@ button.plan-day-mark:hover { background: var(--accent-soft); }
 /* The passage you're currently reading, marked with a bullet + accent. */
 .plan-passage.on { color: var(--ink); font-weight: 600; }
 
+/* ---- Mobile Days view (inside the .mpick sheet) ----
+   Mobile wants a simpler, thumb-sized list: no spine (navy or gold), bigger text/rows,
+   and the progress header scrolls with the list instead of pinning (the pinned header
+   left a gap above it where rows bled through). The desktop nav keeps the spine. */
+.mpick .plan-head { position: static; }
+.mpick .plan-days { margin-left: 0; padding: 4px 2px 10px; }
+.mpick .plan-days-inner { padding-left: 0; }
+.mpick .plan-days-inner::before { display: none; }
+.mpick .plan-day-body { margin-left: 0; border-left: none; padding: 2px 8px 8px 18px; }
+.mpick .plan-day-head { padding: 11px 10px; gap: 10px; }
+.mpick .plan-day-n { font-size: 15.5px; }
+.mpick .plan-day-v { font-size: 12px; }
+.mpick .plan-day-mark { flex-basis: 20px; width: 20px; height: 20px; }
+.mpick .plan-day-dot { width: 9px; height: 9px; }
+.mpick .plan-passage { font-size: 15px; padding: 9px 8px; }
+
 /* ---- Day intro panel (chronological "Reading" card) ----
    Shares the detail-rail language: a .detail-hero block + .sec/.sec-head sections,
    same as the word-study / xref panels. The header carries a "Reading N" badge + the
