@@ -5566,7 +5566,9 @@ function DayPlanView({
     }));
   }, [curText, focusDay]);
   const jumpToday = () => {
-    setOpen(new Set([curDay])); // open today AND collapse whatever day was open
+    const td = days.find(d => d.day === curDay);
+    if (td) selectDay(td); // open today, move the dot there, load its first reading
+    else setOpen(new Set([curDay]));
     requestAnimationFrame(() => todayRef.current && todayRef.current.scrollIntoView({
       behavior: "smooth",
       block: "center"
