@@ -1116,6 +1116,9 @@ input { font-family: inherit; }
 
 /* ---- Extracted from inline styles ---- */
 .detail-greek--he { font-family: var(--f-serif); text-align: left; }
+/* Latin/English proper-noun names render larger than Greek at the same px — size
+   them down so a name hero ("Adam") sits at the visual weight of a Greek hero. */
+.detail-greek--latin { font-size: 46px; }
 .lsj-badge--gold { background: var(--accent-soft); color: var(--accent); }
 .lsj-badge--accent { background: var(--accent); color: var(--paper); }
 .lsj-def--loading { color: var(--ink-4); font-style: italic; padding: 8px 0; }

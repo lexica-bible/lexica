@@ -755,7 +755,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
 
       <div className="detail-body" ref={isMobile ? scrollRef : null}>
         <div className={"detail-hero" + (hero.noGloss ? " no-gloss" : "")}>
-          <div className={"detail-greek" + (hero.he ? " detail-greek--he" : "")}
+          <div className={"detail-greek" + (hero.he ? " detail-greek--he" : (!entry.greek ? " detail-greek--latin" : ""))}
                dir={hero.he ? "rtl" : undefined}>
             {hero.script}
           </div>

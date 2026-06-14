@@ -2778,7 +2778,7 @@ function DetailPanel({
   }, /*#__PURE__*/React.createElement("div", {
     className: "detail-hero" + (hero.noGloss ? " no-gloss" : "")
   }, /*#__PURE__*/React.createElement("div", {
-    className: "detail-greek" + (hero.he ? " detail-greek--he" : ""),
+    className: "detail-greek" + (hero.he ? " detail-greek--he" : !entry.greek ? " detail-greek--latin" : ""),
     dir: hero.he ? "rtl" : undefined
   }, hero.script), /*#__PURE__*/React.createElement("div", {
     className: "detail-translit-row" + (hero.he ? " detail-translit-row-he" : "")
