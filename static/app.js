@@ -2252,12 +2252,10 @@ function DetailPanel({
   }, [entry && entry.id]);
   const [lsjEntry, setLsjEntry] = useState(null);
   const [lsjLoading, setLsjLoading] = useState(false);
-  const [lsjTab, setLsjTab] = useState("def");
   const [lsjSummary, setLsjSummary] = useState(null);
   const [lsjSummaryLoading, setLsjSummaryLoading] = useState(false);
   useEffect(() => {
     setLsjEntry(null);
-    setLsjTab("def");
     setLsjSummary(null);
     // For PN place entries with a mapped strongs_g, use that for LSJ lookup
     const placeStrongs = isPN && metavType === "place" && metavData?.strongs_g?.length > 0 ? metavData.strongs_g.replace(/^G/i, "") : null;
@@ -2535,27 +2533,19 @@ function DetailPanel({
         return /*#__PURE__*/React.createElement("section", {
           key: "lsj",
           className: "sec"
-        }, /*#__PURE__*/React.createElement("div", {
-          className: "lsj-head"
         }, /*#__PURE__*/React.createElement("h4", {
           className: "sec-head"
-        }, /*#__PURE__*/React.createElement("span", {
+        }, lsjEntry && lsjEntry.source === "abp_ext" ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", {
           className: "sec-t"
-        }, lsjEntry && lsjEntry.source === "abp_ext" ? /*#__PURE__*/React.createElement(React.Fragment, null, "ABP Extended", /*#__PURE__*/React.createElement("span", {
+        }, "ABP Extended"), /*#__PURE__*/React.createElement("span", {
           className: "abp-badge"
-        }, "ABP EXT")) : /*#__PURE__*/React.createElement(React.Fragment, null, "Liddell-Scott-Jones", /*#__PURE__*/React.createElement("span", {
+        }, "ABP EXT")) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", {
+          className: "sec-t"
+        }, "Liddell-Scott-Jones"), /*#__PURE__*/React.createElement("span", {
           className: "lsj-badge"
-        }, "LSJ")))), lsjEntry && /*#__PURE__*/React.createElement("div", {
-          className: "lsj-tabs"
-        }, /*#__PURE__*/React.createElement("button", {
-          className: "lsj-tab " + (lsjTab === "def" ? "on" : ""),
-          onClick: () => setLsjTab("def")
-        }, "Definition"), /*#__PURE__*/React.createElement("button", {
-          className: "lsj-tab " + (lsjTab === "full" ? "on" : ""),
-          onClick: () => setLsjTab("full")
-        }, lsjEntry.source === "abp_ext" ? "Full ABP" : "Full LSJ"))), lsjLoading ? /*#__PURE__*/React.createElement("div", {
+        }, "LSJ"))), lsjLoading ? /*#__PURE__*/React.createElement("div", {
           className: "lsj-def lsj-def--loading"
-        }, "Loading\u2026") : lsjEntry ? lsjTab === "def" ? lsjEntry.source === "strongs" ? /*#__PURE__*/React.createElement("div", {
+        }, "Loading\u2026") : lsjEntry ? lsjEntry.source === "strongs" ? /*#__PURE__*/React.createElement("div", {
           className: "lsj-def",
           dangerouslySetInnerHTML: {
             __html: lsjEntry.def_html
@@ -2563,11 +2553,6 @@ function DetailPanel({
         }) : /*#__PURE__*/React.createElement(LsjSummary, {
           data: lsjSummary,
           loading: lsjSummaryLoading
-        }) : /*#__PURE__*/React.createElement("div", {
-          className: "lsj-def",
-          dangerouslySetInnerHTML: {
-            __html: lsjEntry.def_html
-          }
         }) : /*#__PURE__*/React.createElement("div", {
           className: "lsj-def lsj-def--loading"
         }, "Not found."));

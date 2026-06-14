@@ -365,13 +365,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
 
   const [lsjEntry, setLsjEntry] = useState(null);
   const [lsjLoading, setLsjLoading] = useState(false);
-  const [lsjTab, setLsjTab] = useState("def");
   const [lsjSummary, setLsjSummary] = useState(null);
   const [lsjSummaryLoading, setLsjSummaryLoading] = useState(false);
 
   useEffect(() => {
     setLsjEntry(null);
-    setLsjTab("def");
     setLsjSummary(null);
     // For PN place entries with a mapped strongs_g, use that for LSJ lookup
     const placeStrongs = (isPN && metavType === "place" && metavData?.strongs_g?.length > 0)
@@ -591,31 +589,17 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     );
     case "lsj": return (
       <section key="lsj" className="sec">
-        <div className="lsj-head">
-          <h4 className="sec-head">
-            <span className="sec-t">
-              {lsjEntry && lsjEntry.source === "abp_ext"
-                ? <>ABP Extended<span className="abp-badge">ABP EXT</span></>
-                : <>Liddell-Scott-Jones<span className="lsj-badge">LSJ</span></>}
-            </span>
-          </h4>
-          {lsjEntry && (
-            <div className="lsj-tabs">
-              <button className={"lsj-tab " + (lsjTab === "def"  ? "on" : "")} onClick={() => setLsjTab("def")}>Definition</button>
-              <button className={"lsj-tab " + (lsjTab === "full" ? "on" : "")} onClick={() => setLsjTab("full")}>
-                {lsjEntry.source === "abp_ext" ? "Full ABP" : "Full LSJ"}
-              </button>
-            </div>
-          )}
-        </div>
+        <h4 className="sec-head">
+          {lsjEntry && lsjEntry.source === "abp_ext"
+            ? <><span className="sec-t">ABP Extended</span><span className="abp-badge">ABP EXT</span></>
+            : <><span className="sec-t">Liddell-Scott-Jones</span><span className="lsj-badge">LSJ</span></>}
+        </h4>
         {lsjLoading ? (
           <div className="lsj-def lsj-def--loading">Loading…</div>
         ) : lsjEntry ? (
-          lsjTab === "def"
-            ? lsjEntry.source === "strongs"
-              ? <div className="lsj-def" dangerouslySetInnerHTML={{ __html: lsjEntry.def_html }} />
-              : <LsjSummary data={lsjSummary} loading={lsjSummaryLoading} />
-            : <div className="lsj-def" dangerouslySetInnerHTML={{ __html: lsjEntry.def_html }} />
+          lsjEntry.source === "strongs"
+            ? <div className="lsj-def" dangerouslySetInnerHTML={{ __html: lsjEntry.def_html }} />
+            : <LsjSummary data={lsjSummary} loading={lsjSummaryLoading} />
         ) : (
           <div className="lsj-def lsj-def--loading">Not found.</div>
         )}

@@ -979,14 +979,6 @@ input { font-family: inherit; }
 /* ============================================================
    LSJ — TABS + DEFINITION
 ============================================================ */
-.lsj-head {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 12px;
-}
 /* SOURCE badge — provenance only ("where this block came from": LSJ, BDB, metaV,
    Nave's, ABP EXT). Deliberately quiet: a gray outline, NOT a filled pill, so it
    reads as a caption and never competes with the filled CONTENT tags (Male, Proper
@@ -1020,24 +1012,6 @@ input { font-family: inherit; }
   vertical-align: middle;
   margin-left: 6px;
 }
-.lsj-tabs {
-  display: flex;
-  gap: 2px;
-  padding: 2px;
-  background: var(--bg-sunk);
-  border-radius: 7px;
-  flex-shrink: 0;
-}
-.lsj-tab {
-  font-size: 11.5px;
-  padding: 4px 10px;
-  border-radius: 5px;
-  color: var(--ink-3);
-  transition: color 0.15s, background 0.15s;
-  white-space: nowrap;
-}
-.lsj-tab:hover { color: var(--ink); }
-.lsj-tab.on { color: var(--ink); background: var(--ctl-on); box-shadow: var(--shadow-sm); }
 
 /* Parsed / cleaned definition */
 .lsj-parsed { display: flex; flex-direction: column; gap: 6px; }
@@ -1127,7 +1101,6 @@ input { font-family: inherit; }
 .lsj-def--loading { color: var(--ink-4); font-style: italic; padding: 8px 0; }
 .detail-p--meta { margin-top: 8px; }
 .link-btn--strong { font-weight: 600; }
-.lsj-head .sec-head { margin: 0; }
 
 /* ============================================================
    RESULTS CONTROLS
