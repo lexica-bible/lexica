@@ -810,23 +810,6 @@ input { font-family: inherit; }
   color: var(--ink);
   letter-spacing: 0;
 }
-/* Hebrew header titles render right-to-left; the serif carries the glyphs. */
-.summary-pos--he { unicode-bidi: plaintext; }
-/* Greek/Hebrew glyphs read smaller than Latin at the same size — size the word-study
-   title up so it matches the weight of "Genesis 7" / "John 3:16" in the other headers. */
-.summary-pos--lg { font-size: 27px; line-height: 1.05; }
-/* Strong's id, demoted out of the word-study header into the top of the hero. */
-.detail-strongs-tag {
-  display: inline-block;
-  font-family: var(--f-mono);
-  font-size: 11px;
-  color: var(--accent);
-  background: var(--accent-soft);
-  padding: 2px 7px;
-  border-radius: 4px;
-  letter-spacing: 0.02em;
-  margin-top: 2px;
-}
 .detail-close {
   width: 32px; height: 32px;
   border-radius: 6px;
@@ -876,7 +859,6 @@ input { font-family: inherit; }
   line-height: 1.05;
   letter-spacing: -0.01em;
   color: var(--ink);
-  margin-bottom: 8px;
 }
 .detail-translit-row {
   display: flex; align-items: center; gap: 6px;

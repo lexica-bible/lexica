@@ -2763,9 +2763,10 @@ function DetailPanel({
   }, /*#__PURE__*/React.createElement("div", {
     className: "detail-head-l"
   }, /*#__PURE__*/React.createElement("span", {
-    className: "detail-pos summary-pos" + (entry.greek || hero.he ? " summary-pos--lg" : "") + (hero.he ? " summary-pos--he" : ""),
-    dir: hero.he ? "rtl" : undefined
-  }, hero.script)), overviewBack && !isMobile ? /*#__PURE__*/React.createElement("button", {
+    className: "card-badge solid"
+  }, entry.strongs), /*#__PURE__*/React.createElement("span", {
+    className: "detail-pos"
+  }, "Word study")), overviewBack && !isMobile ? /*#__PURE__*/React.createElement("button", {
     className: "detail-back",
     onClick: onClose,
     "aria-label": "Back to overview"
@@ -2779,6 +2780,9 @@ function DetailPanel({
   }, /*#__PURE__*/React.createElement("div", {
     className: "detail-hero" + (hero.noGloss ? " no-gloss" : "")
   }, /*#__PURE__*/React.createElement("div", {
+    className: "detail-greek" + (hero.he ? " detail-greek--he" : ""),
+    dir: hero.he ? "rtl" : undefined
+  }, hero.script), /*#__PURE__*/React.createElement("div", {
     className: "detail-translit-row" + (hero.he ? " detail-translit-row-he" : "")
   }, /*#__PURE__*/React.createElement("span", {
     className: "detail-translit"
@@ -2790,9 +2794,7 @@ function DetailPanel({
     className: "detail-gloss"
   }, hero.standaloneGloss), hero.morph && /*#__PURE__*/React.createElement("div", {
     className: "detail-morph"
-  }, hero.morph), entry.strongs && entry.strongs !== "*" && /*#__PURE__*/React.createElement("span", {
-    className: "detail-strongs-tag"
-  }, entry.strongs)), sections.map(renderSection)));
+  }, hero.morph)), sections.map(renderSection)));
 }
 
 // ============================================================

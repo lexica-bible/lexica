@@ -742,8 +742,8 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       {isMobile && <div className="sheet-drag-zone" aria-hidden="true"><div className="sheet-handle"></div></div>}
       <div className="detail-head">
         <div className="detail-head-l">
-          <span className={"detail-pos summary-pos" + ((entry.greek || hero.he) ? " summary-pos--lg" : "") + (hero.he ? " summary-pos--he" : "")}
-                dir={hero.he ? "rtl" : undefined}>{hero.script}</span>
+          <span className="card-badge solid">{entry.strongs}</span>
+          <span className="detail-pos">Word study</span>
         </div>
         {overviewBack && !isMobile ? (
           <button className="detail-back" onClick={onClose} aria-label="Back to overview">‹ Overview</button>
@@ -756,6 +756,10 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
 
       <div className="detail-body" ref={isMobile ? scrollRef : null}>
         <div className={"detail-hero" + (hero.noGloss ? " no-gloss" : "")}>
+          <div className={"detail-greek" + (hero.he ? " detail-greek--he" : "")}
+               dir={hero.he ? "rtl" : undefined}>
+            {hero.script}
+          </div>
           <div className={"detail-translit-row" + (hero.he ? " detail-translit-row-he" : "")}>
             <span className="detail-translit">{hero.translit}</span>
             {heroInlineGloss && (
@@ -766,7 +770,6 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             <div className="detail-gloss">{hero.standaloneGloss}</div>
           )}
           {hero.morph && <div className="detail-morph">{hero.morph}</div>}
-          {entry.strongs && entry.strongs !== "*" && <span className="detail-strongs-tag">{entry.strongs}</span>}
         </div>
 
         {sections.map(renderSection)}
