@@ -5874,6 +5874,9 @@ function fmtReadingDate(y0, y1) {
 // cleanly out of the bar — the bar can never swallow one. The first dot (era start) sits
 // flush-left so the year list below can line its bullets up under it. Milestone labels
 // live in that list (each tied to its own dot), not floating over the track.
+// The first dot is at viewBox x=0; the .dintro-tl-svg CSS insets the strip by half a
+// list-bullet (3.5px) and lets the end dots overflow, so that first dot's CENTRE lands
+// exactly on the year-list bullet centre (both 3.5px in) at any panel width.
 function TimelineStrip({
   win
 }) {
@@ -5883,13 +5886,11 @@ function TimelineStrip({
     y0,
     y1
   } = win;
-  const W = 320,
-    pad = 3.5,
-    innerW = W - pad * 2;
+  const W = 320;
   const span = et.end - et.start || 1;
-  const xOf = yr => pad + (yr - et.start) / span * innerW;
-  const mx0 = Math.max(pad, xOf(y0)),
-    mx1 = Math.min(W - pad, xOf(y1));
+  const xOf = yr => (yr - et.start) / span * W;
+  const mx0 = Math.max(0, xOf(y0)),
+    mx1 = Math.min(W, xOf(y1));
   const nowX = Math.min(mx0, mx1),
     nowW = Math.max(10, Math.abs(mx1 - mx0));
   return /*#__PURE__*/React.createElement("div", {
