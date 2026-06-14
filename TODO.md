@@ -42,11 +42,20 @@ Still open:
    b98517f then 5f38d25); the AI-search xref enrichment is on Sonnet too (21aa95a). STILL OPEN: (a) the
    shared VOICE snippet in core.py was never built — xref/chapter carry their own wording; (b) person/place
    (`_PN_SYSTEM`, Haiku, "1-2 sentences") is CORRECT as a hard cap — leave it, do NOT convert to adaptive;
-   (c) glance at the LSJ word-study blurb (Haiku) to confirm it's hard-capped, not soft.
+   (c) LSJ word-study blurb CONFIRMED hard-capped (2-3 sentences / 60 words) — fine as-is (checked
+   during the 2026-06-14 framing pass).
    (d) Book-blurb AUTHOR work DONE 2026-06-13: added the two textually-named scribes (Jeremiah/Baruch,
    Paul/Tertius). Tried folding metaV's traditional names for the anonymous books (Job=Moses etc.) —
    REVERTED: forcing Haiku to name a disputed author made it over-assert. See archive. OPEN, optional:
    1 Peter "by Silvanus" (1Pe 5:12) as a scribe? Debated (scribe vs letter-carrier); left out.
+   (e) FRAMING-OVER-PROHIBITION quality pass DONE 2026-06-14 (separate from length/house-style): killed
+   three output leaks — LSJ citing Homer/Iliad, "Moses wrote" opening every Pentateuch chapter, and the
+   xref write-up self-referencing "these passages"/"thematic thread" — by fixing the FRAME + the worked
+   EXAMPLE rather than adding blacklists. LSJ also moved to fingerprint-cache (`_synth_ver`) so it
+   self-refreshes like the others; chapter summary's author is now book-blurb-only. Full record: memory
+   `project_ai_synthesis_quality` (+ TODO_ARCHIVE). OPEN backstop (only if LSJ still cites Homer once live):
+   strip the obvious classical author names out of the LSJ entry text BEFORE the model sees it — no rule,
+   just don't feed it. User reviewing live; may follow up in another thread.
    NOTE: changing these prompts is exactly what the
    new fingerprint scheme watches, so each edit will lazily refresh that category's cache (expected).
    `code: shared snippet in core.py; views_crossref.py system prompts; views_metav.py _PN_SYSTEM;

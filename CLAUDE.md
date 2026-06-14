@@ -602,19 +602,26 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   category's delete.
 - summary rows carry a per-book author suffix: `summary:<tpl-hash>:<author-hash>`. Editing the prompt
   wording refreshes all summaries; editing one book's author in `_BOOK_AUTHORS` refreshes only that book.
-  - `_BOOK_AUTHORS` (views_summary.py) lists ONLY well-established authors. Named scribes go inline in
-    the value (Jer="Jeremiah, who dictated to his scribe Baruch", Rom="Paul, written down by his scribe
-    Tertius"). Only-traditionally-attributed / anonymous books (Job, Esther, Judges, Ruth, the
-    Samuel/Kings/Chronicles histories, Hebrews) are left BLANK on purpose. LESSON (2026-06-13): a bare
-    name in the list is INERT — with the normal wording Haiku just ignored Job=Moses and stayed blank.
-    It was the PROMPT PUSH (a "traditionally attributed to X / don't omit the author" hedge) that forced
-    over-assertion — Haiku then claimed "Moses wrote Job" and even leaked "Moses records…" into the
-    chapter summary. Don't hard-push Haiku on shaky facts; let it stay silent. DECIDED: don't re-add the
-    metaV names — every gap-fill is a disputed attribution, none is "well established", so the curated
-    list stays well-established-only + scribes. (Both a live `metav_writers` read and the prompt hedge
-    were tried and reverted — see TODO_ARCHIVE.)
-- LSJ summaries are NOT in this table (they live in `lsj.summary_json`/`abp_ext.summary_json`), so the
-  scheme deliberately skips them.
+  - `_BOOK_AUTHORS` (views_summary.py) lists ONLY well-established authors. The author is now fed ONLY to
+    the BOOK BLURB (orientation) — NOT the chapter summary (changed 2026-06-14). The chapter summary just
+    describes what happens, so the writer gets named only where the TEXT itself puts him (Moses acting in
+    an Exodus narrative), and a Genesis creation chapter / legal list no longer opens with a forced "Moses
+    records…". Named scribes go inline in the value (Jer="Jeremiah, who dictated to his scribe Baruch",
+    Rom="Paul, written down by his scribe Tertius"). Only-traditionally-attributed / anonymous books (Job,
+    Esther, Judges, Ruth, the Samuel/Kings/Chronicles histories, Hebrews) are left BLANK on purpose.
+    LESSON (2026-06-13): a bare name in the list is INERT — with the normal wording Haiku just ignored
+    Job=Moses and stayed blank. It was the PROMPT PUSH (a "traditionally attributed to X / don't omit the
+    author" hedge) that forced over-assertion — Haiku then claimed "Moses wrote Job" and even leaked
+    "Moses records…" into the chapter summary. Don't hard-push Haiku on shaky facts; let it stay silent.
+    DECIDED: don't re-add the metaV names — every gap-fill is a disputed attribution, none is "well
+    established", so the curated list stays well-established-only + scribes. (Both a live `metav_writers`
+    read and the prompt hedge were tried and reverted — see TODO_ARCHIVE.)
+- LSJ word-study summaries are NOT in this table (they live in `lsj.summary_json`/`abp_ext.summary_json`),
+  but as of 2026-06-14 they SELF-HEAL the same way: each stored synthesis carries a `_synth_ver` stamp
+  (= `ai_fingerprint("lsj", system + the two ask templates)` in views_lsj.py). On read, a stamp that
+  doesn't match the current prompt is dropped + regenerated; on write it's re-stamped. So editing the LSJ
+  prompt auto-refreshes those summaries too — no clear script needed. (Parsed `sections` are not
+  AI-written and are kept across a prompt change.)
 - One-time deploy note: the first run after this change sweeps the old-format (colon-less) rows via
   `ai_cache_drop_legacy()`, so all previously cached summaries/xrefs/pn/search lazily regenerate once.
 

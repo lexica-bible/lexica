@@ -14,23 +14,51 @@ from html.parser import HTMLParser
 
 from flask import Blueprint, jsonify, request
 
-from core import db, db_ro, _anthropic, limiter, log, _strip_accents
+from core import db, db_ro, _anthropic, limiter, log, _strip_accents, ai_fingerprint
 
 bp = Blueprint("lsj", __name__)
 
 
+# The prompt leans on FRAME, not prohibition (deliberate — see project_synthesis_no_parse
+# + the 2026-06-14 AI-synthesis pass). Three framing levers replace the old blacklists:
+#   - audience: someone reading the Greek BIBLE (LXX/NT), so classical provenance is plainly
+#     off-purpose — we no longer name "Homer/Plato/Attic" (naming them only primed the leak,
+#     and we were feeding it a classical lexicon entry to summarize anyway).
+#   - source framing: the entry is "scholarly source material" to distill, so its ancient
+#     citations read as apparatus, not the answer.
+#   - reader state: the reader already SEES the word + its translation, so the synthesis
+#     picks up from there instead of re-announcing the headword (curbs self-reference).
 _LSJ_SYNTHESIS_SYSTEM = """\
-You are a Greek lexicographer working from a Berean approach: the text speaks first. \
-Anchor all analysis in the Greek source words and their lexical range as used in the \
-Septuagint (LXX) and New Testament. Focus on biblical usage — how the word functions \
-in the ABP interlinear, what it means in OT and NT contexts, and what its semantic \
-range reveals about the text. Do not reference classical authors (Homer, Attic, Plato, \
-Aristotle etc.) or classical Greek literary usage — the audience is reading the Bible, \
-not classical literature. No imported systematic theology, no denominational assumptions \
-— follow where the words actually lead. Write in plain prose, no markdown, no headers. \
-Do not state the word's grammatical parsing (part of speech, case, number, tense, \
-voice, mood) — that is shown separately. Focus only on meaning and semantic range.\
+You are explaining a Greek word to someone reading the Greek Bible — the Septuagint \
+(LXX) and New Testament. The reader is already looking at the word and its basic \
+translation; pick up from there and tell them what it means and how it is used in \
+Scripture. Work from a Berean approach: the text speaks first. The dictionary entry \
+below is scholarly source material — distill from it only what the word means and the \
+range of senses it carries in the biblical text. No imported systematic theology, no \
+denominational assumptions — follow where the words actually lead. Write in plain \
+prose, no markdown, no headers. Do not state the word's grammatical parsing (part of \
+speech, case, number, tense, voice, mood) — that is shown separately. Focus only on \
+meaning and semantic range.\
 """
+
+# The two user-message asks, kept as named constants so the synthesis fingerprint below
+# covers their wording (editing either auto-refreshes the cached summaries).
+_LSJ_ASK_CTX = (
+    "Identify the sense of this word active in the verse above and explain it in plain "
+    "prose. 2-3 sentences, 60 words max. Let the entry dictate the length — do not pad. "
+    "No markdown, no headers, no bullet points."
+)
+_LSJ_ASK_GEN = (
+    "Explain what this word means and its main range of uses. 2-3 sentences, 60 words "
+    "max. Let the entry dictate the length — do not pad. No markdown, no headers, no "
+    "bullet points."
+)
+
+# Synthesis fingerprint — same self-healing scheme as the ai_search_cache entries. It's
+# stamped into each stored summary (summary_json["_synth_ver"]); when the prompt above
+# changes, the stamp no longer matches and the old summary is dropped + regenerated on
+# next view. No manual cache-clear script needed.
+_LSJ_SYNTH_VER = ai_fingerprint("lsj", _LSJ_SYNTHESIS_SYSTEM, _LSJ_ASK_CTX, _LSJ_ASK_GEN)
 
 # keyed on LSJ key; persists for server lifetime. Capped so a long-running worker
 # can't grow it without bound — context-keyed entries are many distinct keys.
@@ -332,6 +360,14 @@ def lsj_summary(lemma):
         except Exception:
             sj = {}
 
+    # Auto-refresh on prompt change: the AI-written parts (general + per-verse context)
+    # carry the synthesis fingerprint. If the prompt has changed since they were written,
+    # drop them so they regenerate below — same self-healing as the ai_search_cache rows.
+    # The parsed `sections` are not AI-written, so they're kept.
+    if sj.get("_synth_ver") != _LSJ_SYNTH_VER:
+        sj.pop("general", None)
+        sj.pop("context", None)
+
     # Check DB cache for the requested synthesis type
     ctx_db_key = f"{book}.{chapter}.{verse_n}"
     if has_ctx and sj.get("context", {}).get(ctx_db_key):
@@ -366,16 +402,12 @@ def lsj_summary(lemma):
         user_content = (
             f"Verse: {book} {chapter}:{verse_n} — {verse_text}\n\n"
             f"LSJ entry for {lemma}:\n{plain_def[:2000]}\n\n"
-            "Identify the sense of this word active in the verse above and explain it in plain prose. "
-            "2-3 sentences, 60 words max. Let the entry dictate the length — do not pad. "
-            "No markdown, no headers, no bullet points."
+            + _LSJ_ASK_CTX
         )
     else:
         user_content = (
             f"LSJ entry for {lemma}:\n{plain_def[:2000]}\n\n"
-            "Summarize the primary meaning of this word and its main range of uses. "
-            "2-3 sentences, 60 words max. Let the entry dictate the length — do not pad. "
-            "No markdown, no headers, no bullet points."
+            + _LSJ_ASK_GEN
         )
 
     try:
@@ -391,11 +423,13 @@ def lsj_summary(lemma):
         log.warning("LSJ synthesis failed: %s", exc)
         return jsonify({"error": "synthesis failed"}), 500
 
-    # Store synthesis back into summary_json alongside sections
+    # Store synthesis back into summary_json alongside sections, stamped with the current
+    # prompt fingerprint so a later prompt change drops + regenerates it (see load above).
     if actual_ctx:
         sj.setdefault("context", {})[ctx_db_key] = synthesis
     else:
         sj["general"] = synthesis
+    sj["_synth_ver"] = _LSJ_SYNTH_VER
 
     conn = db()
     try:

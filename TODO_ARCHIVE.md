@@ -6,6 +6,33 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Library AI synthesis — framing-over-prohibition pass — DONE 2026-06-14
+
+Killed three output leaks in the Library's AI writers WITHOUT adding "don't say X" rules — the
+user's explicit ask. All three traced to the same mistake: a blacklist/command bolted on, fighting
+the frame. Fixed the FRAME + the worked EXAMPLE instead. Full record: memory `project_ai_synthesis_quality`
+("Framing over prohibition"). Backend `.py` only, no app.js rebuild; user deploys (his step), reviewing live.
+- **LSJ word definition (views_lsj.py)** — was still citing Homer/Iliad despite a "don't reference
+  Homer/Plato/Attic" blacklist (we feed it a classical lexicon entry, then forbid echoing it — the
+  blacklist loses, and naming Homer primes it). Reframed: audience = someone *reading the Greek Bible*,
+  the entry = "source material to distill"; dropped the blacklist. Also fixed the user's self-reference
+  catch (it re-announced the headword / defined in a circle) via "the reader is already looking at the
+  word + its translation; pick up from there." Pulled the two asks into constants + added `_LSJ_SYNTH_VER`
+  → LSJ now **fingerprint-self-heals** (a `_synth_ver` stamp in summary_json), so a prompt edit
+  auto-refreshes; the old `clear_parse_jargon_cache.py` is no longer needed for prompt changes.
+- **Chapter summary (views_summary.py)** — "Moses wrote/records…" opened every Pentateuch chapter
+  because the author line was injected into the chapter prompt (+ "use the author's name"). Fix = SCOPE:
+  the author now feeds ONLY the book blurb; the chapter prompt just says what happens, so Moses is named
+  only where the text puts him. Auto-refreshes via the existing summary fingerprint.
+- **TSK xref synthesis (views_crossref.py)** — self-referenced "related passages" + "thematic/the thread",
+  because the worked EXAMPLE itself modeled it ("Later passages keep returning…", "The thread is…"). The
+  example beat the rule. Rewrote the example to name specifics ("Running through all of it is…"), reframed
+  to "write from inside the text… name a specific passage when it carries the point," dropped the quoted
+  blacklist. Auto-refreshes via `_XREF_VER`.
+
+OPEN backstop (only if LSJ still cites Homer once live): strip the obvious classical author names out of
+the entry text before the model sees it — no rule, just don't feed it. Left for a follow-up thread.
+
 ## Days month-grouping + mobile sticky header + intro/overview mobile header — DONE 2026-06-14
 
 Small polish round, all live/pushed. Full record: memory `project_chronological_tab` "SESSION 2026-06-14".

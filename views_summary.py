@@ -38,16 +38,16 @@ _EXTRA_BOOK_RE = re.compile(r"^[a-z0-9_]+$")   # stricter: table-name safe, used
 _HAIKU_MODEL = "claude-haiku-4-5-20251001"
 _CHAP_MODEL = "claude-sonnet-4-6"
 
-# Author per book, fed to the model so it names the writer instead of hedging ("an
-# apostolic witness…"). Only WELL-ESTABLISHED authors are listed. The only-traditionally
-# attributed books (Job, Esther, Judges, Ruth, the Samuel/Kings/Chronicles histories) and
-# the genuinely anonymous ones (Hebrews) are left out ON PURPOSE: forcing Haiku to name a
-# disputed writer makes it over-assert — it claimed "Moses wrote Job" and even narrated
-# "Moses records…" in the chapter summary. So we let the model stay silent on them.
-# (metaV's Writers list HAS those traditional names — Job=Moses, Kings=Jeremiah, etc. —
-# but we deliberately don't use them; see TODO_ARCHIVE for why.) Where a scribe is NAMED
-# IN THE TEXT it's added inline (Jeremiah/Baruch per Jer 36, Paul/Tertius per Rom 16:22) —
-# those are well-attested and render cleanly.
+# Author per book, fed to the BOOK BLURB so it names the writer instead of hedging ("an
+# apostolic witness…"). NOT fed to the chapter summary anymore (that's left to the text —
+# see the _CHAP_PROMPT_TMPL note above). Only WELL-ESTABLISHED authors are listed. The
+# only-traditionally attributed books (Job, Esther, Judges, Ruth, the Samuel/Kings/
+# Chronicles histories) and the genuinely anonymous ones (Hebrews) are left out ON PURPOSE:
+# forcing Haiku to name a disputed writer makes it over-assert — it claimed "Moses wrote
+# Job". So we let the model stay silent on them. (metaV's Writers list HAS those
+# traditional names — Job=Moses, Kings=Jeremiah, etc. — but we deliberately don't use them;
+# see TODO_ARCHIVE for why.) Where a scribe is NAMED IN THE TEXT it's added inline
+# (Jeremiah/Baruch per Jer 36, Paul/Tertius per Rom 16:22) — those render cleanly.
 _BOOK_AUTHORS = {
     "Gen": "Moses", "Exo": "Moses", "Lev": "Moses", "Num": "Moses", "Deu": "Moses",
     "Jos": "Joshua", "Ezr": "Ezra", "Neh": "Nehemiah",
@@ -99,8 +99,14 @@ _BOOK_PROMPT_TMPL = (
     'intended audience, and its overall concern. Do not retell the opening '
     'verses.\n\nOpening text:\n{opening}'
 )
+# NOTE: the chapter summary deliberately does NOT inject the author. Its job is "what
+# happens in this chapter," so naming the writer is left to the text itself — Moses gets
+# named in an Exodus narrative where he acts, but a Genesis creation chapter or a legal
+# list no longer opens with a forced "Moses records…". The author line stays on the BOOK
+# blurb (orientation), where naming the writer is the actual task. (2026-06-14 pass — the
+# old forced-author line leaked "Moses wrote" into every Pentateuch chapter.)
 _CHAP_PROMPT_TMPL = (
-    'Below is one chapter of "{name}". {author_line}The lines marked '
+    'Below is one chapter of "{name}". The lines marked '
     '"[Section: ...]" are the natural section breaks — use them to track the '
     'chapter\'s arc, but do NOT write a line for every section. Summarize what '
     'happens, anchored in the text, in a single tight paragraph: a short or '
@@ -113,8 +119,7 @@ _CHAP_PROMPT_TMPL = (
     'are strange or supernatural, reported plainly rather than softened or '
     'omitted. Use plain, short sentences, one idea each; never force several '
     'events into one long run-on. Still open with the chapter\'s beginning — do '
-    'not skip it or collapse it into a generic line. When you refer to the '
-    "writer, use the author's name.\n\n{chap_block}"
+    'not skip it or collapse it into a generic line.\n\n{chap_block}'
 )
 
 # Shared template fingerprint: editing any prompt above changes this, so every
@@ -299,7 +304,7 @@ def reading_summary(book, chapter):
         if chap_block:
             text = _summarize(
                 _SUMMARY_SYSTEM,
-                _CHAP_PROMPT_TMPL.format(name=name, author_line=author_line, chap_block=chap_block),
+                _CHAP_PROMPT_TMPL.format(name=name, chap_block=chap_block),
                 max_tokens=480,   # headroom; Sonnet keeps it to ~150-200 words
                 model=_CHAP_MODEL,
             )
