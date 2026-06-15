@@ -41,9 +41,19 @@ import os
 import re
 import sqlite3
 import sys
+import unicodedata
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))   # find lxx_align
 from lxx_align import RahlfsLXX, TAGNTSource, align, base, RESOLVE
+
+
+def strip_marks(s):
+    """Greek word with every accent/breathing/iota-subscript removed — for the
+    'is this really a different form?' test. ABP's printed Greek has no breathing
+    marks, so its in-context dative (αρχή) would otherwise look different from the
+    breathing-marked dictionary lemma (ἀρχή) and show a pointless echo line."""
+    return "".join(c for c in unicodedata.normalize("NFD", s or "")
+                   if not unicodedata.combining(c))
 
 
 # ABP abbrev -> BibleHub scrape book slug (bh_words.book). Inlined from
@@ -153,8 +163,18 @@ def build(db_path, rahlfs_dir, tagnt_paths, bh_db, dry_run):
 
     con = sqlite3.connect(db_path)
     rows = []                                   # (verse_id, position, form, translit)
-    st = {"ot_w": 0, "ot_s": 0, "nt_w": 0, "nt_s": 0}
+    # ot_w/nt_w = content words; ot_f/nt_f = a printed form was found; ot_s/nt_s = the
+    # form is genuinely different from the dictionary word, so it shows a line (stored).
+    st = {"ot_w": 0, "ot_f": 0, "ot_s": 0, "nt_w": 0, "nt_f": 0, "nt_s": 0}
     skipped_books = set()
+
+    # Dictionary lemma per Strong's (bare key), for the "really different?" filter on
+    # the bh source. lexicon.strongs_g is 'G####'; base() -> bare to match the words.
+    lemmas = {}
+    if use_bh:
+        for sg, lem in con.execute("SELECT strongs_g, lemma FROM lexicon"):
+            if sg:
+                lemmas[base(sg)] = lem or ""
 
     for vid, book, ch, vs, words in iter_db_verses(con):
         is_nt = book in _NT
@@ -192,6 +212,13 @@ def build(db_path, rahlfs_dir, tagnt_paths, bh_db, dry_run):
                 form = surfs[bj][0] or ""
                 if not form:
                     continue
+                if is_nt:
+                    st["nt_f"] += 1
+                else:
+                    st["ot_f"] += 1
+                lem = lemmas.get(sb, "")
+                if lem and strip_marks(form) == strip_marks(lem):
+                    continue   # ABP prints it the same as the dictionary word → no line
                 rows.append((vid, pos, form, ""))
                 if is_nt:
                     st["nt_s"] += 1
@@ -241,11 +268,17 @@ def build(db_path, rahlfs_dir, tagnt_paths, bh_db, dry_run):
                 st["nt_s"] += 1
 
     tot_w = st["ot_w"] + st["nt_w"]
+    tot_f = st["ot_f"] + st["nt_f"]
     tot_s = st["ot_s"] + st["nt_s"]
     print("\n== build_abp_surface (%s) ==" % ("bh_scrape = ABP's own" if use_bh else "Rahlfs/TAGNT"))
-    print(f"  OT : {st['ot_s']}/{st['ot_w']}  ({pct(st['ot_s'], st['ot_w'])}%)")
-    print(f"  NT : {st['nt_s']}/{st['nt_w']}  ({pct(st['nt_s'], st['nt_w'])}%)")
-    print(f"  ALL: {tot_s}/{tot_w}  ({pct(tot_s, tot_w)}%)   rows={len(rows)}")
+    if use_bh:
+        print(f"  form found  : OT {pct(st['ot_f'], st['ot_w'])}%  NT {pct(st['nt_f'], st['nt_w'])}%  ALL {pct(tot_f, tot_w)}%")
+        print(f"  shows a line: OT {pct(st['ot_s'], st['ot_w'])}%  NT {pct(st['nt_s'], st['nt_w'])}%  ALL {pct(tot_s, tot_w)}%   rows={len(rows)}")
+        print("  (found but no line = ABP prints it the same as the dictionary word — nothing to show.)")
+    else:
+        print(f"  OT : {st['ot_s']}/{st['ot_w']}  ({pct(st['ot_s'], st['ot_w'])}%)")
+        print(f"  NT : {st['nt_s']}/{st['nt_w']}  ({pct(st['nt_s'], st['nt_w'])}%)")
+        print(f"  ALL: {tot_s}/{tot_w}  ({pct(tot_s, tot_w)}%)   rows={len(rows)}")
     if skipped_books:
         print(f"  books with no source (skipped): {sorted(skipped_books)}")
     print("  samples:")
