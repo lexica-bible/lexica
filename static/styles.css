@@ -2129,11 +2129,13 @@ input { font-family: inherit; }
   .lib-parallel-col .lib-vnum { display: none; }
   /* ABP/KJV render a block verse row, so the per-line text label dropped onto its
      own line above; BSB/ESV/NIV render an inline span and ran in. Make the ABP/KJV
-     row flow inline too so every column's label runs in beside the text alike.
-     Drop the row's 5px left padding (BSB's plain span has none) so the label-to-text
-     gap matches BSB in both chip and prose mode. */
+     row + chips flow inline too so every column's label runs in beside the text.
+     The chip box must be plain `inline` (NOT inline-flex): an inline-flex box is one
+     atomic unit, so on a verse long enough to wrap it drops whole below the label —
+     plain inline lets the chips wrap word-by-word with the label, like BSB's text.
+     Drop the row's 5px left padding (BSB's plain span has none) so the gap matches. */
   .lib-parallel-col > .lib-verse-row { display: inline; padding-left: 0; }
-  .lib-parallel-col .lib-verse-chips { display: inline-flex; vertical-align: top; }
+  .lib-parallel-col .lib-verse-chips { display: inline; }
   /* The small text label (ABP/KJV/BSB/ESV/NIV) before each stacked line. */
   .lib-parallel-col-lbl {
     display: inline-block;
