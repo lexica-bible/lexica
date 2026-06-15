@@ -86,8 +86,9 @@ def neighbour(verse_id, position, delta):
 
 
 cands = conn.execute(
-    "SELECT w.verse_id, w.position, w.english, w.english_head, w.greek_pos, "
-    "       w.italic, w.italic_words, w.bracket_id, v.book, v.chapter, v.verse "
+    "SELECT w.verse_id, w.position, w.strongs_base, w.english, w.english_head, "
+    "       w.greek_pos, w.italic, w.italic_words, w.bracket_id, "
+    "       v.book, v.chapter, v.verse "
     "FROM words w JOIN verses v ON v.id = w.verse_id "
     "WHERE w.strongs_base = ? AND w.english IS NOT NULL AND w.english != '' "
     "ORDER BY w.verse_id, w.position", (ARTICLE_BASE,)).fetchall()
