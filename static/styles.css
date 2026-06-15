@@ -1428,10 +1428,10 @@ input { font-family: inherit; }
   font-weight: 600;
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: var(--gold);
-  background: var(--gold-soft);
+  color: var(--accent);
+  background: var(--accent-soft);
   padding: 3px 10px;
-  border-radius: 20px;
+  border-radius: 4px;
 }
 .lib-parallel-verse {
   display: grid;
@@ -2127,11 +2127,16 @@ input { font-family: inherit; }
   .lib-parallel-verse:first-child .lib-parallel-vnum { border-top: none; margin-top: 0; }
   .lib-parallel-col { padding-top: 3px; }
   .lib-parallel-col .lib-vnum { display: none; }
+  /* ABP/KJV render a block verse row, so the per-line text label dropped onto its
+     own line above; BSB/ESV/NIV render an inline span and ran in. Make the ABP/KJV
+     row flow inline too so every column's label runs in beside the text alike. */
+  .lib-parallel-col > .lib-verse-row { display: inline; }
+  .lib-parallel-col .lib-verse-chips { display: inline-flex; vertical-align: top; }
   /* The small text label (ABP/KJV/BSB/ESV/NIV) before each stacked line. */
   .lib-parallel-col-lbl {
     display: inline-block;
     font-size: 9px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--gold); margin-right: 6px; vertical-align: 1px;
+    color: var(--accent); margin-right: 6px; vertical-align: 1px;
   }
 }
 .mbar-center { flex: 1; display: flex; align-items: center; justify-content: center; gap: 18px; }
