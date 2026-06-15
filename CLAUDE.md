@@ -489,8 +489,9 @@ scripts/          # build-frontend.js + one-time import/migration scripts
 - KJV word clicks correctly route: common words → LSJ, proper nouns → metaV, Hebrew → BDB
 - **Word-detail side panel — interlinear FOLLOWS the reading text (2026-06-13).** The "Interlinear"
   toggle under the verse quote shows the breakdown of whatever text you're reading: KJV →
-  `/api/kjv/verse_words`, Hebrew reader → `/api/hebrew/verse-words` (one-verse route added to
-  views_heb.py), else ABP `/api/verse-words` (was always ABP Greek). Greek/Hebrew LEADS (dark, `--ink`),
+  `/api/kjv/verse_words`, BSB → `/api/bsb/verse_words` (2026-06-15), Hebrew reader →
+  `/api/hebrew/verse-words` (one-verse route added to views_heb.py), else ABP `/api/verse-words` (was
+  always ABP Greek). Greek/Hebrew LEADS (dark, `--ink`),
   English is the muted helper (`--ink-2`), centred columns — mirrors the reading-pane interlinear. ABP
   brackets render INLINE on the english word (`.iw-brk`, NOT a separate column — a column drifts off a
   short word), with the Greek-order number inside (`.iw-pos` = `greek_pos`, which is the ENGLISH reading
@@ -570,16 +571,17 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   (Bookmark · Note · 5 colors). Mobile "Add note" bar pins to screen bottom (clear of the OS
   copy/share toolbar); `selectionchange` backstop. Inline bookmark marker at the start of any verse
   with a record (indents first line only).
-- Anchoring is PER READING TEXT and covers non-canon texts too. ABP captures exact word-spots
-  (`data-note-pos` on spans, `data-note-verse` on rows); KJV/BSB anchor at the whole verse. Square
-  corners + flush chips make a multi-word highlight one continuous bar. Same-anchor reuse (no dupes)
-  via `NotesStore.findAnchor`.
+- Anchoring is PER READING TEXT and covers non-canon texts too. ABP AND BSB (2026-06-15) capture exact
+  word-spots (`data-note-pos` on the chip spans, `data-note-verse` on rows); KJV still anchors at the
+  whole verse. Square corners + flush chips make a multi-word highlight one continuous bar. Same-anchor
+  reuse (no dupes) via `NotesStore.findAnchor`.
 - **Highlights paint across ALL translations (verse-level), 2026-06-09.** A highlight shows in ABP,
   KJV, and BSB alike — `chapterNotes` (`forChapter`) gathers every translation's records for the
   book+chapter; `hiForWord` paints EXACT words only in the text it was made in (`n.translation ===
   translation`) and ROUNDS UP to the whole verse in any other translation (words don't line up
-  cross-text). The old same-`translation`-only wall is gone. Word-level paint INSIDE KJV/BSB is still
-  not a thing (those two only ever paint whole verses) — that's the one open piece.
+  cross-text). The old same-`translation`-only wall is gone. ABP and BSB paint per-WORD inside their own
+  text (BSB since 2026-06-15, via bsb_words positions); KJV still paints whole-verse only — KJV word-level
+  is the one remaining open piece (kjv_words has positions, so the BSB `renderBsbVerse` pattern could close it).
 - **Journal — free-form second note mode (LIVE 2026-06-09).** "Verse notes | Journal" toggle in the
   Notes tab. A journal page is the SAME record shape with `kind:"journal"` + `title` + `body` and NO
   anchor (no `.start`) — plain text, autosaving full-page editor, rides the same store/sync/Export-

@@ -96,8 +96,9 @@ Deliberate NON-targets (listed so we don't mistake them for gaps): no paid comme
   Notes tab with search + filters + sort + collapsible group-by-book + Export/Import backup.
   Browser-local first, with **opt-in accounts (email/password OR Google) for cross-device sync** —
   the first server-write path, in its own `notes.db` (NOT bible.db). See TODO_ARCHIVE + memory
-  `project_notes_highlights`. Open follow-ups: cross-translation highlight paint, word-level
-  highlights in KJV/BSB, **password reset / set-password (needs SMTP — see below)**, Apple sign-in (if wanted).
+  `project_notes_highlights`. Open follow-ups: word-level highlights in **KJV** (BSB got per-word
+  2026-06-15 — see the BSB chip-mode item below), **password reset / set-password (needs SMTP — see
+  below)**, Apple sign-in (if wanted). (Cross-translation highlight paint is DONE, 2026-06-09.)
 
 - **Notes — next-session follow-ups (one place to start from).** Memory `project_notes_highlights`
   has the full design + gotchas.
@@ -109,8 +110,10 @@ Deliberate NON-targets (listed so we don't mistake them for gaps): no paid comme
      it's just env vars in the WSGI + a small send helper + the reset/set-password endpoints. Nothing
      else is blocked by it.
   2. **Highlight paint reach** — cross-translation DONE 2026-06-09 (a highlight now shows in ABP/KJV/BSB;
-     exact words in its home text, rounds up to whole verse elsewhere). STILL OPEN (optional, lower
-     value): word-level highlights *within* KJV/BSB (today those two only paint a whole verse). Also, in
+     exact words in its home text, rounds up to whole verse elsewhere). BSB got per-WORD highlights
+     2026-06-15 (bsb_words; see the BSB chip-mode item). STILL OPEN (optional, lower value): word-level
+     highlights *within* KJV (it still paints whole-verse; kjv_words has positions so the BSB
+     `renderBsbVerse` pattern could close it). Also, in
      the new multi-text COMPARE view a highlight paints WHOLE-VERSE in every column (even its home text) —
      intentional for now; exact-word paint in compare would need the column's own translation id threaded
      into `hiForWord` (today it reads the global `translation`, which is "parallel" in compare).
@@ -303,13 +306,14 @@ kept below.
 - **Toggle:** header button switches basic/advanced, remembered in the browser, only shown on wide screens.
 </details>
 
-### Highlighting + notes (Logos-style) — DONE 2026-06-09, two paint follow-ups open
+### Highlighting + notes (Logos-style) — DONE 2026-06-09, one paint follow-up open
 Notes + highlights + bookmarks LIVE, plus opt-in accounts/sync (see archive + memory
 `project_notes_highlights`). Non-canon notes, Notes-tab filters/sort/group, Export/Import all DONE.
-Still open:
-- **Cross-translation paint** — a highlight made in ABP doesn't show in KJV/BSB (word positions
-  differ per text). Today paint is matched to the text it was made in.
-- **Word-level highlights in KJV/BSB** — they anchor at the whole verse for now (no `data-note-pos`).
+- **Cross-translation paint — DONE 2026-06-09.** A highlight made in any text shows in ABP/KJV/BSB:
+  exact words in its home text, rounds up to the whole verse elsewhere.
+- **Word-level highlights — DONE for ABP + BSB; open for KJV.** BSB got per-word anchoring 2026-06-15
+  (`data-note-pos` on its chips, via bsb_words — see the BSB chip-mode item). KJV still anchors the whole
+  verse; kjv_words has positions, so the same `renderBsbVerse` pattern could close it.
 
 ### Free user accounts — MOSTLY DONE 2026-06-09 (reset pending)
 LIVE: email/password + Google sign-in, opt-in, syncing notes across devices via `notes.db`
