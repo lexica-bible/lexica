@@ -317,6 +317,19 @@ scripts/          # build-frontend.js + one-time import/migration scripts
   is the mode; `compareSel` (array) = which texts. Desktop = N columns (`.lib-cmp-2/3/4`); mobile = stacked,
   one labeled line per text. Rows are the ordered UNION of every selected text's verses (keyed chapter+verse),
   so a missing verse leaves a blank cell. Notes/highlights are SHARED across columns (whole-verse paint in compare).
+  - **Labels (2026-06-14): navy, NOT gold.** Desktop column headers (`.lib-parallel-label`) +
+    mobile per-line text tags (`.lib-parallel-col-lbl`) use `--accent`/`--accent-soft` in a SQUARED
+    box (radius 3–4px), not the old gold rounded pill. The mobile per-line label sits in its own
+    little navy tag box so it reads as a tag, not as part of the verse.
+  - **Mobile per-line label runs INLINE with the verse (2026-06-14).** ABP/KJV render a block
+    verse row; BSB/ESV/NIV render plain inline text. To make every column's label run in beside
+    the text alike: `.lib-parallel-col > .lib-verse-row { display:inline; padding-left:0 }` AND
+    `.lib-parallel-col .lib-verse-chips { display:inline }`. The chip box MUST be plain `inline`,
+    NOT `inline-flex` — an inline-flex box is one atomic unit, so a verse long enough to wrap
+    drops the WHOLE box below the label (label stranded above). Plain inline lets the chips wrap
+    word-by-word WITH the label, like BSB. Gap is a uniform 6px (label `margin-right`) on every
+    text/verse. Chip mode IS allowed in compare (it's the only place ABP's Greek shows alongside
+    the translations; prose makes ABP English-only).
   - **Desktop picker** = checkbox dropdown on the Compare button.
   - **MOBILE picker (rebuilt 2026-06-10): the separate Compare row is GONE — the Reading sheet's single Text
     picker IS the compare control.** TAP a text = read just it (single swap); LONG-PRESS (or right-click) = tick
@@ -427,6 +440,11 @@ scripts/          # build-frontend.js + one-time import/migration scripts
   switch to it); click the open book to collapse it. Starts collapsed — the current chapter shows
   beside the active book name (`.nav-book-ch`). `navOpenBook` in `LibNavPanel`; on the mobile overlay
   the panel closes on a CHAPTER tap (not a book tap, since a book tap just expands).
+- **Mobile chapter/verse picker (`MobilePicker`, the toolbar `Book Ch ▾`) opens to the BOOK list
+  (2026-06-14).** `screen` starts `"book"` (was `"chapter"` for the current book) — pick a book to
+  step into its chapters; "‹ Books" steps back. Its section headers (OT/NT + non-canon groups,
+  `.mpick-sec-label`/`.mpick-sec-btn`/`.mpick-sec-count`) are navy (`--accent`/`--accent-soft`),
+  not gold.
 - **Left-nav polish (2026-06-13) — full record: memory `project_book_nav_polish`.** Hover/active
   pills darken the page via `color-mix(... var(--bg) N%, var(--ink))` — do NOT use `--bg-sunk` (it
   matches the sepia parchment → invisible). A spelled-out **Old/New Testament** header sits above the
