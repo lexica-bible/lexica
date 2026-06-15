@@ -2140,7 +2140,9 @@ input { font-family: inherit; }
   .lib-parallel-col-lbl {
     display: inline-block;
     font-size: 9px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
-    color: var(--accent); margin-right: 6px; vertical-align: 1px;
+    color: var(--accent); background: var(--accent-soft);
+    padding: 1px 5px; border-radius: 3px;
+    margin-right: 6px; vertical-align: 2px;
   }
 }
 .mbar-center { flex: 1; display: flex; align-items: center; justify-content: center; gap: 18px; }
