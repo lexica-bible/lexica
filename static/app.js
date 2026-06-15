@@ -7205,7 +7205,8 @@ function MobileBookPicker({
   // non-canonical text OR the current Bible book — so you can change chapter right away
   // instead of landing on the generic book list. "‹ Books" steps back to switch books.
   const startBook = nonCanon || selBook || null;
-  const [screen, setScreen] = useState(startBook ? "chapter" : "book");
+  // Open to the book list, not the chapter grid — picking a book steps into chapters.
+  const [screen, setScreen] = useState("book");
   const [pickedBook, setPickedBook] = useState(startBook);
   // Every section (OT, NT, and each non-canonical group) starts collapsed EXCEPT the
   // one you're currently reading: the testament of the open Bible book, or the active
