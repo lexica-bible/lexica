@@ -46,8 +46,15 @@ def bsb_chapter(book, chapter):
             (book, chapter),
         ).fetchall()
         try:
-            word_rows = conn.execute("""
-                SELECT bw.verse_num, bw.word_id, bw.verse_pos, bw.word, bw.italic, bw.punc,
+            # `form` (the original word AS PRINTED) + `form_translit` were added later;
+            # select them only if this bsb_words has them, so a code deploy BEFORE the
+            # loader re-run still serves chips (just without the inflected headword).
+            bw_cols = {c["name"] for c in conn.execute("PRAGMA table_info(bsb_words)")}
+            has_form = "form" in bw_cols
+            fsel = "bw.form, bw.form_translit," if has_form else ""
+            fgrp = ", bw.form, bw.form_translit" if has_form else ""
+            word_rows = conn.execute(f"""
+                SELECT bw.verse_num, bw.word_id, bw.verse_pos, bw.word, bw.italic, bw.punc, {fsel}
                        GROUP_CONCAT(bs.strongs_id) AS strongs_ids,
                        bv.verse_text,
                        MAX(COALESCE(bdb.lemma, lex.lemma))   AS lemma,
@@ -59,11 +66,12 @@ def bsb_chapter(book, chapter):
                 LEFT JOIN bdb ON bdb.strongs_id = bs.strongs_id AND bs.strongs_id LIKE 'H%'
                 LEFT JOIN lexicon lex ON lex.strongs_g = bs.strongs_id
                 WHERE bw.book_id = ? AND bw.chapter = ?
-                GROUP BY bw.word_id, bw.verse_num, bw.verse_pos, bw.word, bw.italic, bw.punc, bv.verse_text
+                GROUP BY bw.word_id, bw.verse_num, bw.verse_pos, bw.word, bw.italic, bw.punc, bv.verse_text{fgrp}
                 ORDER BY bw.verse_num, bw.verse_pos
             """, (book_id, chapter)).fetchall()
         except sqlite3.OperationalError:
             word_rows = []           # bsb_words/bsb_strongs not loaded yet
+            has_form = False
         verse_rows = []
         if not word_rows:
             verse_rows = conn.execute(
@@ -103,6 +111,8 @@ def bsb_chapter(book, chapter):
             "strongs_ids": sids,
             "lemma":     r["lemma"] or "",
             "xlit":      r["xlit"] or "",
+            "form":          (r["form"] if has_form else "") or "",            # inflected original word (side-card headword)
+            "form_translit": (r["form_translit"] if has_form else "") or "",
         })
     return jsonify([verses[v] for v in order])
 

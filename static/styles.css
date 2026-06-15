@@ -910,6 +910,17 @@ input { font-family: inherit; }
   color: var(--ink-3);
   letter-spacing: 0.01em;
 }
+/* Dictionary form (lemma) shown SMALL beneath the inflected headword — the "both"
+   layout for Hebrew + BSB word study (the big word is the form as it appears in the
+   verse; this is its dictionary form). Sits just under .detail-greek. */
+.detail-lemma {
+  font-family: var(--f-greek);
+  font-size: 24px;
+  line-height: 1.1;
+  color: var(--ink-3);
+  margin-top: -3px;
+}
+.detail-lemma--he { font-family: var(--f-serif); text-align: left; }
 
 .detail-section { padding: 12px 0; border-bottom: 1px solid var(--rule); }
 .detail-section.last { border-bottom: 0; }
@@ -2078,6 +2089,7 @@ input { font-family: inherit; }
   .results-controls::-webkit-scrollbar { display: none; }
   .results-sort { flex-wrap: nowrap; }
   .detail-greek { font-size: 44px; }
+  .detail-lemma { font-size: 20px; }
   .detail-body { padding: 16px 18px 32px; }
 }
 @media (max-width: 520px) {

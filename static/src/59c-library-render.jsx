@@ -74,6 +74,8 @@ const LibRender = (function () {
       strongs_raw: (w.strongs || "").replace(/^H/, ""),
       greek: "",
       translit: w.translit || "",
+      inflected: w.hebrew || "",            // pointed word as it appears → big side-card headword
+      inflectedTranslit: w.translit || "",
       gloss: w.gloss || "",
       hebrew: w.hebrew,
       morph: w.morph || "",
@@ -449,6 +451,8 @@ const LibRender = (function () {
       strongs_raw: sid ? sid.slice(1) : "",
       greek: w.lemma || "",
       translit: w.xlit || "",
+      inflected: w.form || "",              // original word as printed (Berean tables) → big side-card headword
+      inflectedTranslit: w.form_translit || "",
       gloss: w.word,
       ref: `${selBook.abbrev} ${ch}:${v.verse}`,
       book: selBook.abbrev,

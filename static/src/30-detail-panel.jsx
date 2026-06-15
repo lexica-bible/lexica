@@ -442,15 +442,28 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   const properName = extractProperName(entry.gloss);
   const nameOrGloss = (isPN || metavData) ? properName : entry.gloss;
   const trimTail = (s) => stripArticles((s)?.replace(/[.,;:!?—-]+$/, "").trim());
+  // The clicked word's INFLECTED form — the surface form as it appears in THIS verse —
+  // when the reading text carries one. The Hebrew OT reader (entry.inflected = the
+  // pointed word) and BSB (entry.inflected = the Berean-tables original word) set it at
+  // the click; ABP/KJV have no stored original surface form, so they keep showing the
+  // dictionary form (lemma) exactly as before. We show BOTH: inflected big, lemma small.
+  const heroInflected = (entry.inflected || "").trim();
+  const heroInflectedTranslit = (entry.inflectedTranslit || "").trim();
+  const heroLemma = isHebrew ? (bdbEntry?.lemma || "") : (entry.greek || "");
   const hero = {
     he: isHebrew,
     noGloss: isPN && !entry.greek && !isHebrew,
-    script: isHebrew ? (bdbEntry?.lemma || entry.gloss) : (entry.greek || nameOrGloss),
-    translit: isHebrew ? bdbEntry?.xlit : entry.translit,
+    // Headword: the inflected form when we have one, else today's dictionary form.
+    script: heroInflected || (isHebrew ? (bdbEntry?.lemma || entry.gloss) : (entry.greek || nameOrGloss)),
+    // Pronunciation row: the inflected word's own translit when it's the headword, else the lemma's.
+    translit: heroInflected ? heroInflectedTranslit : (isHebrew ? bdbEntry?.xlit : entry.translit),
     standaloneGloss: trimTail((isPN || metavData) ? properName
       : (entry.greek && (entry.gloss || "").trim().split(/\s+/).length > 2 ? (entry.english_head || entry.gloss) : entry.gloss)),
     morph: morphLine,
   };
+  // The small dictionary-form line under the headword — only when an inflected headword
+  // is showing AND the lemma actually differs (indeclinable words can coincide).
+  const heroDictForm = (heroInflected && heroLemma && heroLemma !== heroInflected) ? heroLemma : "";
   // Show "translit · gloss" on one line whenever there's both — same for Greek and
   // Hebrew so the two cards match (it was Hebrew-only before). Falls back to a
   // standalone gloss line only when there's no transliteration.
@@ -790,6 +803,12 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
                dir={hero.he ? "rtl" : undefined}>
             {hero.script}
           </div>
+          {heroDictForm && (
+            <div className={"detail-lemma" + (hero.he ? " detail-lemma--he" : "")}
+                 dir={hero.he ? "rtl" : undefined}>
+              {heroDictForm}
+            </div>
+          )}
           {(hero.translit || heroInlineGloss) && (
             <div className={"detail-translit-row" + (hero.he ? " detail-translit-row-he" : "")}>
               <span className="detail-translit">{hero.translit}</span>

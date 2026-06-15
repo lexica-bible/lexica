@@ -10,8 +10,15 @@ BSB Sort order, into English word tokens carrying that row's Strong's number
 (Str Heb -> H####, Str Grk -> G####; Hebrew AND Aramaic use H-numbers).
 
 Mirrors kjv_words / kjv_strongs so views_bsb can serve BSB exactly like views_kjv:
-    bsb_words(word_id, book_id, chapter, verse_num, verse_pos, word, italic, punc)
+    bsb_words(word_id, book_id, chapter, verse_num, verse_pos, word, italic, punc,
+              form, form_translit)
     bsb_strongs(id, word_id, strongs_id)        strongs_id fully H/G prefixed
+
+`form` = the original-language word AS PRINTED (the inflected Hebrew/Greek surface
+form, e.g. בְּרֵאשִׁ֖ית / αὐτῷ) and `form_translit` its transliteration — both straight
+from the Berean tables ("WLC / Nestle Base TR RP WH NE NA SBL" + "Translit" columns).
+They feed the word-detail side card's big headword (the word as it appears in the
+verse); the chip top line + interlinear stay the dictionary lemma.
 
 The token text reproduces the BSB reading text (verified against bsb.txt: all
 31,102 verses rebuild, 0 content differences). Non-text source markers are
@@ -90,12 +97,18 @@ def tokenize(rows, ix):
     [{word, italic, punc, strongs}]. ix maps a stripped column name -> position."""
     rows = sorted(rows, key=lambda r: int(r[ix["BSB Sort"]] or 0))
     toks, pre = [], ""
+    # The original word AS PRINTED + its transliteration (added later for the side-card
+    # headword). .get so an older/odd header without them just leaves the fields blank.
+    fi = ix.get("WLC / Nestle Base TR RP WH NE NA SBL")
+    ti = ix.get("Translit")
     for r in rows:
         word, added = _word(r[ix["BSB version"]].strip())
         beg = _punc(r[ix["begQ"]]).strip()
         trail = _punc(r[ix["pnc"]]) + _punc(r[ix["endQ"]]) + _punc(r[ix["End text"]])
         strh, strg = r[ix["Str Heb"]].strip(), r[ix["Str Grk"]].strip()
         sid = ("H" + strh) if strh else (("G" + strg) if strg else None)
+        form = r[fi].strip() if (fi is not None and fi < len(r)) else ""
+        ftr  = r[ti].strip() if (ti is not None and ti < len(r)) else ""
         # marker/empty OR punctuation-only residue (e.g. "(") -> float onto neighbours
         if not word or not any(c.isalnum() for c in word):
             pre += beg + word
@@ -104,7 +117,8 @@ def tokenize(rows, ix):
             else:
                 pre += trail
             continue
-        toks.append({"word": pre + beg + word, "italic": added, "punc": trail, "strongs": sid})
+        toks.append({"word": pre + beg + word, "italic": added, "punc": trail,
+                     "strongs": sid, "form": form, "form_translit": ftr})
         pre = ""
     return toks
 
@@ -208,7 +222,9 @@ def build(db_path, src, dry):
             verse_pos INTEGER NOT NULL,
             word      TEXT,
             italic    INTEGER DEFAULT 0,
-            punc      TEXT
+            punc      TEXT,
+            form          TEXT,
+            form_translit TEXT
         );
         CREATE TABLE bsb_strongs (
             id        INTEGER PRIMARY KEY,
@@ -222,9 +238,10 @@ def build(db_path, src, dry):
         for pos, t in enumerate(toks, start=1):
             wid += 1
             conn.execute(
-                "INSERT INTO bsb_words (word_id, book_id, chapter, verse_num, verse_pos, word, italic, punc)"
-                " VALUES (?,?,?,?,?,?,?,?)",
-                (wid, bid, ch, vs, pos, t["word"], 1 if t["italic"] else 0, t["punc"]),
+                "INSERT INTO bsb_words (word_id, book_id, chapter, verse_num, verse_pos, word, italic, punc, form, form_translit)"
+                " VALUES (?,?,?,?,?,?,?,?,?,?)",
+                (wid, bid, ch, vs, pos, t["word"], 1 if t["italic"] else 0, t["punc"],
+                 t.get("form", ""), t.get("form_translit", "")),
             )
             if t["strongs"]:
                 sid_id += 1
