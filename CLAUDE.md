@@ -189,8 +189,12 @@ scripts/          # build-frontend.js + one-time import/migration scripts
 - `bsb_verses` — Berean Standard Bible verse text (public domain), mirrors kjv_verses on 1-66 book ids
 - `bsb_words` / `bsb_strongs` — BSB per-word interlinear (LIVE 2026-06-15; loaded on PA = 386,063 words /
   381,948 Strong's / 66 books), mirroring `kjv_words`/`kjv_strongs`:
-  `bsb_words(word_id, book_id, chapter, verse_num, verse_pos, word, italic, punc)` + `bsb_strongs(id, word_id,
-  strongs_id)`. strongs_id fully H/G-prefixed (same invariant as kjv_strongs; locked in test_build_invariants.py).
+  `bsb_words(word_id, book_id, chapter, verse_num, verse_pos, word, italic, punc, form, form_translit)` +
+  `bsb_strongs(id, word_id, strongs_id)`. strongs_id fully H/G-prefixed (same invariant as kjv_strongs; locked
+  in test_build_invariants.py). `form` = the original word AS PRINTED (inflected Hebrew/Greek) + `form_translit`
+  its transliteration (from the Berean tables' "WLC / Nestle Base TR RP WH NE NA SBL" + "Translit" columns,
+  added 2026-06-15) — they feed the word-detail side-card "in this verse" line; the chip top line + interlinear
+  stay the dictionary lemma. `/api/bsb/chapter` selects them only if present (PRAGMA guard, deploy-safe).
   Built by `scripts/load_bsb_words.py` from the Berean Bible project's Strong's-tagged tables
   (`bereanbible.com/bsb_tables.tsv`, public domain, CC0). Gives BSB chip mode + clickable word study (served by
   the `views_bsb` word routes; lemma/xlit joined from lexicon/bdb exactly like KJV) + per-word highlights.
@@ -497,6 +501,14 @@ scripts/          # build-frontend.js + one-time import/migration scripts
   short word), with the Greek-order number inside (`.iw-pos` = `greek_pos`, which is the ENGLISH reading
   order — display order is Greek). Trailing clause punctuation lifts OUTSIDE the `]`. Full record +
   the badges/Nave's polish: memory `project_detail_panel_interlinear`.
+- **Word-detail side-card HEADWORD shows the inflected form (2026-06-15).** The big headword is the
+  DICTIONARY form (lemma) for EVERY text, and the word AS IT APPEARS in the clicked verse shows on a small
+  labeled "in this verse: <form> · <translit>" line beneath it — for Hebrew (heb_words pointed word) + BSB
+  (bsb_words `form`/`form_translit`), hidden when it equals the lemma. ABP/KJV have no stored surface form so
+  they show just the lemma (graceful). Built via `entry.inflected`/`entry.inflectedTranslit` on the click
+  entry (hebEntry/makeBsbEntry in 59c) → `heroForm`/`.detail-form` in 30-detail-panel.jsx. The reading-pane
+  chips + the Interlinear toggle stay the dictionary lemma. ABP inflected = deferred (no surface form in our
+  data; see memory `project_bsb_words`). Lemma-on-top was a deliberate flip from inflected-on-top.
 - **Chip-vs-prose render rule (verses shown OUTSIDE the reader).** CHIP = word-study (ABP brackets +
   punctuation outside the `]`): the reading pane, Search + Lexicon results (both via `CorpusGroup` in
   50-corpus-results.jsx), the side-card interlinear. PROSE = reading (plain text, no brackets): the TSK
