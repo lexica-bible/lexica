@@ -474,9 +474,34 @@ scripts/          # build-frontend.js + one-time import/migration scripts
   `lib-verse-content`. The verse number's CLICK target is an inner `.lib-vnum-num` hugging the digits, so
   the empty gutter beside the number is inert (no stray click/cross-ref/verse-highlight). (2026-06-11)
 - Clicking a verse number opens the TSK Cross-Reference Panel
-- Jumping to a verse (search/cross-ref) lands it in the UPPER THIRD of the reader (not centered); the left
-  nav scrolls the active book to the TOP of its own list (`.nav-scroll`), never the window. (2026-06-11)
+- Jumping to a verse (search / lexicon / read-in-context / cross-ref / note) lands it in the UPPER
+  THIRD of the reader (not centered); the left nav scrolls the active book to the TOP of its own list
+  (`.nav-scroll`), never the window. (2026-06-11) **In CHRONOLOGICAL order a verse jump flips the reader
+  back to canonical FIRST (2026-06-14)** so the verse shows in its normal chapter, not dumped mid-passage;
+  `chronoPos` is untouched, so toggling Chronological back returns you to your spot. (The nav effect does
+  the flip; the scroll effect waits out the chrono→canonical render. An earlier attempt — move the chrono
+  passage to the verse + a chrono-aware scroll — was reverted for this simpler flip.)
+- **Desktop link-over auto-opens the verse's xref card (2026-06-14).** A jump from Search / Lexicon /
+  Read-in-context queues `setLibCrossRef`, so the cross-ref card shows over the chapter-summary card. It's
+  the LOWEST rail layer (rendered only when `!activeEntry && !activeNote`): if a word-study / note card is
+  open the xref sits UNDER it and surfaces when that closes (not the summary). Desktop only (mobile xref is
+  a full sheet — left unobstructed); the Notes-list jump still opens the note editor, not xref.
+- **Rail stack model + back labels (2026-06-14).** The desktop rail stacks at most 3 deep: summary/Intro
+  (base) → xref → (word OR note). word/note never coexist (opening one clears the other) and are always
+  the top; xref only ever tucks UNDER them. Closing the top card reveals what's beneath, and its "‹ back"
+  NAMES it — the word card reads "‹ Cross-references" when an xref is under it, else "‹ Overview/Intro";
+  xref is always "‹ Overview/Intro" (summary is always beneath it); the NOTE card keeps just an X by
+  design (opening a note clears the stack — it's an editing surface, not a drill-down layer).
+  (90-app.jsx `backLabel` + the panel render gates; 30/40-panel.jsx headers.)
 - Both word detail panel and xref panel trigger `has-detail` on `.app` → compacts `lib-reading` on desktop (desktop only, scoped to `min-width: 1100px`)
+- **Desktop scrollbars are slim app-wide + the page scroller reserves a stable gutter (2026-06-14):** a
+  global `::-webkit-scrollbar` (+ a Firefox `scrollbar-width` fallback) scoped to `min-width:1100px` at the
+  TOP of styles.css replaces the fat OS bar everywhere (page, detail rail, search results, nav); `html {
+  scrollbar-gutter: stable }` keeps the page bar's space always reserved so swapping texts/chapters
+  (ABP↔KJV) never shifts the layout or jumps the right rail. Mobile keeps its overlay bars (styling
+  `::-webkit-scrollbar` on touch can force an always-visible bar). Per-element bars (`.nav-scroll`, the
+  focus-page reading bar) still win by specificity — `scrollbar-color`/`-width` stay Firefox-only so
+  Chrome 121+ doesn't drop the webkit bar for the fat default.
 
 ## Notes, Highlights, Bookmarks + Accounts (study notes — LIVE 2026-06-09)
 Full detail: memory `project_notes_highlights`. The headline facts:
