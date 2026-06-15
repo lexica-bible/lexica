@@ -114,11 +114,16 @@ Pick effort by task TYPE. When in doubt, lean higher — the plan affords it.
   (`tests/test_strongs_join.py` + `test_build_invariants.py`; they build their own in-memory data, no
   bible.db needed), (2) rebuilds `app.js` and FAILS if the committed copy is stale. Repo is public; check
   the Actions tab or query `api.github.com/repos/lexica-bible/lexica/actions/runs`. `gh` CLI NOT installed locally.
-  - **LINE-ENDING REQUIREMENT for the app.js check (cost a CI fail 2026-06-14):** `static/src/*.jsx`
-    are stored CRLF, and Babel keeps a block comment's CRLF newlines in the compiled `app.js`. Set
-    `git config core.autocrlf false` on your clone (matches the repo). With `autocrlf=true` (Git-for-
-    Windows default) your local `git diff` HIDES the CR mismatch, so a wrong `app.js` slips past the
-    pre-commit hook and CI rejects it as stale. Verify like CI before pushing:
+  - **LINE-ENDINGS for the app.js check (cost a CI fail 2026-06-14; the "all CRLF" claim CORRECTED
+    same day):** Keep `git config core.autocrlf false` — with `autocrlf=true` (Git-for-Windows default)
+    your local `git diff` HIDES CR mismatches, so a wrong `app.js` slips past the hook and CI rejects it
+    as stale. The `static/src/*.jsx` files are MIXED, NOT all CRLF: some LF (60-library.jsx, 90-app.jsx),
+    some CRLF (59a/59b, 10-icons, 30-detail-panel, 59-dayintro). Babel keeps a `/* */` block comment's
+    CRLF in `app.js`, so app.js carries 4 CRLF from the CRLF sources — the build reproduces them, so CI
+    matches as long as you commit src + app.js together. RULE: match a file's EXISTING endings; do NOT
+    flip a whole file (noisy diff + changes app.js's CRLF set). Check real endings with `xxd`/a byte
+    count, NOT Git-for-Windows `grep -c $'\r'` or piped `git show` (both falsely reported the LF
+    60-library.jsx as CRLF this session). Verify like CI before pushing:
     `git checkout HEAD -- static/src/ && npm run build && git diff --quiet -- static/app.js`.
 - **Pre-commit hook** (`scripts/githooks/pre-commit`, wired via `git config core.hooksPath scripts/githooks`)
   — local twin of CI: rebuilds+stages app.js if a `static/src/*.jsx` is staged, then runs the tests and

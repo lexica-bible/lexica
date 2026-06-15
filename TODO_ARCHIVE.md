@@ -6,6 +6,38 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Front-end split — LibraryView render block out to 59c — DONE 2026-06-14
+
+Closed TODO #3 ("split the oversized front-end file"). `static/src/60-library.jsx` had grown to 3,369
+lines; split in two passes.
+- PREAMBLE (earlier 2026-06-14): self-contained code before the `LibraryView` component →
+  `59a-library-helpers.jsx` + `59b-library-nav.jsx`. Behavior-neutral — app.js unchanged except 3
+  header comments (the moved code was top-level and used nothing from LibraryView).
+- RENDER BLOCK (this session): the ~600-line verse-renderer family (renderVerse + its chip/bracket
+  inner helpers, renderProseWords, KJV, BSB/plain, Hebrew, flow, Didache/non-canon) → a new
+  `59c-library-render.jsx`, the `LibRender` IIFE module. Each renderer takes a `ctx` bundle of the 19
+  live values it needs from LibraryView (book/chapter; note/highlight helpers hiClass / vnumEl /
+  noteMarker / noteVnum / noteDotInline / vnumNoteHandlers; toggles wordMode / showInterlinear /
+  showStrongs; onWordClick / handleVerseNum; refs highlightRef / vnumPressRef; selBook / nav / corpus /
+  nonCanon / didVerses). LibraryView builds ctx once per render and binds 13 thin one-line wrappers, so
+  every call site in the 540-line return reads UNCHANGED — the only new code is the ctx object + 13
+  wrappers. 60-library.jsx: 3,369 → 1,918 lines. Commit 547c483, pushed; user spot-checked live
+  (ABP chip+prose, KJV, BSB, Hebrew, Didache, Compare — all good).
+
+Why wrappers / not byte-identical: unlike the preamble (top-level move, app.js unchanged), this changed
+call sites (`renderVerse(v)` → wrapper), so the "app.js unchanged" proof didn't apply. Verified instead
+by clean build + `node --check`, an audit that every ctx field is destructured in each function that uses
+it with no LibraryView-local leaked through, 13 wrappers present + old defs gone, and a deterministic
+rebuild.
+
+LESSON — line endings (cost ~30 min): the repo's `static/src/*.jsx` are NOT all CRLF (the old CLAUDE.md /
+memory claim). They're MIXED — 60-library.jsx is LF, others (59a/59b, 10-icons, 30-detail-panel,
+59-dayintro) CRLF. I wrote the new/changed files CRLF on that assumption, flipping 60-library LF→CRLF
+(whole-file diff); fixed by converting both to LF to match HEAD. app.js legitimately carries 4 CRLF from
+CRLF sources' block comments. RULE: match a file's existing endings, don't flip a whole file; check with
+`xxd`/byte-count, NOT Git-for-Windows `grep`/piped `git show` (both falsely called the LF 60-library
+"CRLF"). Docs corrected: CLAUDE.md + memory project_frontend_build_step / project_code_quality.
+
 ## Library AI synthesis — framing-over-prohibition pass — DONE 2026-06-14
 
 Killed three output leaks in the Library's AI writers WITHOUT adding "don't say X" rules — the
