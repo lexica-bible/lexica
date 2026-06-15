@@ -6,6 +6,30 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## ABP inflected-form side-card line — DONE + LIVE 2026-06-15 (Hebrew + BSB + ABP; KJV impossible)
+
+The click-a-word side card shows the printed in-context Greek/Hebrew form on a small line under the dictionary
+lemma. Hebrew (heb_words pointed word) + BSB (bsb_words form/form_translit) were easy. ABP was the hard one
+(3 of 4; KJV can't — English↔Strong's, no original word). The ABP trail, lessons worth keeping:
+- ABP's own source is English+Strong's only — no Greek surface words. So the printed form is ALIGNED in by
+  Strong's and stored in a SEPARATE read-only table `abp_surface(verse_id, position, form, translit)`
+  (`scripts/build_abp_surface.py`, never touches words/verses; served by /api/chapter's deploy-safe LEFT JOIN).
+- FIRST built off Rahlfs-1935 (OT) / TAGNT (NT) → capped at OT 75% / NT 84%. The user spotted WHY, and it's the
+  lesson: **ABP's OT is the Vaticanus-Sixtine text family; Rahlfs is an eclectic edition. Where the two Greek OTs
+  disagree the Strong's match fails — a STRUCTURAL cap, no Rahlfs-based source can close it against ABP.**
+- FIX: ABP's OWN printed Greek, already on PA — `bh_scrape.db` `bh_words.greek` (the BibleHub ABP scrape). Same
+  text as our words → 91% found. Builder `--bh` expands bh compound cells (`4160-3588-2316`/`εποίησεν ο θεός`)
+  and bridges ABP's raw G1473 pronoun mis-tag to the live corrected numbers before aligning.
+- bh's Greek is ACCENT-ONLY (no breathing marks): an accent-only inflection (dative `αρχή`) looks like the
+  breathing-marked lemma (`ἀρχή`) → would echo a useless line on ~every word. `strip_marks` only keeps a form
+  that differs from the lemma by ENDING → 56% of words show a line; the rest ABP prints = the dictionary word.
+  Shown forms are breathing-less = ABP-authentic (user chose authentic over Rahlfs-polished, knowingly).
+- The Rahlfs/TAGNT path stays in the builder as an alt source. Surface translit + a full parsed-LXX 2nd parallel
+  text are PARKED follow-ups (in TODO.md). Re-run `build_abp_surface.py --bh` after any words rebuild that shifts
+  positions. Full record: memory `project_bsb_words`. Commits f536c52 (Rahlfs first cut) → 0b5e5ae + 0b908b7 (bh).
+
+---
+
 ## Front-end split — LibraryView render block out to 59c — DONE 2026-06-14
 
 Closed TODO #3 ("split the oversized front-end file"). `static/src/60-library.jsx` had grown to 3,369

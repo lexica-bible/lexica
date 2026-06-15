@@ -176,6 +176,15 @@ scripts/          # build-frontend.js + one-time import/migration scripts
 ## Database Tables
 - `verses` — ABP verse text
 - `words` — ABP word-level interlinear, Strong's tagged. Columns: english, english_head, strongs, strongs_base, greek_pos, bracket_id, italic, italic_words, smcap_words, is_pn, morph, lemma. The displayed Greek lemma is joined live from `lexicon` via `LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base` (the indexed G-prefixed key added in Phase 1; replaced the old `SUBSTR(strongs_base,2)` join — this is why strongs_base MUST stay G/H-prefixed). `is_pn=1` marks proper nouns (set by import_tipnr.py). `morph`/`lemma` columns added rebuild #6 (~78% populated).
+- `abp_surface` — `(verse_id, position, form, translit)` side table of the PRINTED (inflected) Greek per ABP word,
+  feeding the word-study side-card "in this verse" line (ABP's source has no Greek surface words). Built read-only
+  by `scripts/build_abp_surface.py --bh ~/bible-db/bh_scrape.db` (PA-only data step; DROP+rebuilds only its own
+  table, never words/verses). SOURCE = ABP's OWN printed Greek from `bh_scrape.db` `bh_words.greek` (the BibleHub
+  ABP scrape) — same text as `words`, so it matches ~91% (Rahlfs/TAGNT was tried first but capped at 75%: ABP-OT
+  is Vaticanus-Sixtine vs Rahlfs's eclectic text). `/api/chapter` LEFT-JOINs it only if present (deploy-safe).
+  bh's Greek is accent-only (no breathing marks), so `strip_marks` stores a form ONLY when it differs from the
+  lemma by ENDING (no echo lines) → 56% of words show a line. Surface translit deferred. Full record: memory
+  `project_bsb_words`.
 - `lexicon` — Greek Strong's definitions
 - `lsj` — Liddell-Scott-Jones Greek lexicon
 - `abp_ext` — extended ABP data
@@ -503,12 +512,15 @@ scripts/          # build-frontend.js + one-time import/migration scripts
   the badges/Nave's polish: memory `project_detail_panel_interlinear`.
 - **Word-detail side-card HEADWORD shows the inflected form (2026-06-15).** The big headword is the
   DICTIONARY form (lemma) for EVERY text, and the word AS IT APPEARS in the clicked verse shows on a small
-  line beneath it (the form + its translit, no text label) — for Hebrew (heb_words pointed word) + BSB
-  (bsb_words `form`/`form_translit`), hidden when it equals the lemma. ABP/KJV have no stored surface form so
-  they show just the lemma (graceful). Built via `entry.inflected`/`entry.inflectedTranslit` on the click
-  entry (hebEntry/makeBsbEntry in 59c) → `heroForm`/`.detail-form` in 30-detail-panel.jsx. The reading-pane
-  chips + the Interlinear toggle stay the dictionary lemma. ABP inflected = deferred (no surface form in our
-  data; see memory `project_bsb_words`). Lemma-on-top was a deliberate flip from inflected-on-top.
+  line beneath it (the form + its translit, no text label) — for Hebrew (heb_words pointed word), BSB
+  (bsb_words `form`/`form_translit`), AND ABP (the `abp_surface` side table — ABP's own printed Greek; see
+  Database Tables + the Words rebuild checklist), hidden when it equals the lemma. KJV has no stored surface
+  form → lemma only (graceful). Built via `entry.inflected`/`entry.inflectedTranslit` on the click entry
+  (hebEntry / makeBsbEntry / ABP `makeEntry` in 59c) → `heroForm`/`.detail-form` in 30-detail-panel.jsx. The
+  reading-pane chips + the Interlinear toggle stay the dictionary lemma. ABP's surface TRANSLIT is deferred
+  (shows the bare form alone — backfill later from the real Greek→Latin transliterator transliteration-search
+  needs; don't ship a throwaway map). Lemma-on-top was a deliberate flip from inflected-on-top. Full record:
+  memory `project_bsb_words`.
 - **Chip-vs-prose render rule (verses shown OUTSIDE the reader).** CHIP = word-study (ABP brackets +
   punctuation outside the `]`): the reading pane, Search + Lexicon results (both via `CorpusGroup` in
   50-corpus-results.jsx), the side-card interlinear. PROSE = reading (plain text, no brackets): the TSK
@@ -853,6 +865,9 @@ one rebuilt (DELETE only ever hits the copy). The build also makes its own `bibl
 7. Spot-check: Greek (Eze 31:9 "were jealous of" → ζηλόω), proper noun (1Chr 1:1 "Adam" → H121,
    opens metaV), LORD dual-order (1Ch 13:10 chip → "<verb> · the LORD").
 8. Swap + deploy: `mv bible.db bible_pre_<reason>_<date>.db; mv bible_test.db bible.db`; touch wsgi.
+9. RE-RUN `scripts/build_abp_surface.py --bh ~/bible-db/bh_scrape.db` (like import_tipnr.py): the `abp_surface`
+   side table is keyed by verse_id+position, so any rebuild that SHIFTS positions (splits/merges/bracket peel)
+   leaves stale forms until it's rebuilt. Read-only on words/verses.
 LOCAL HARNESS (no PA / no live DB): `tests/test_folded_fixes.py` exercises the six folds on synthetic
 rows; `test_build_invariants.py` + `test_strongs_join.py` lock the Strong's invariants (all in CI +
 the pre-commit hook). The full rebuild + both-way compare ran locally on a copy 2026-06-09.

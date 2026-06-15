@@ -477,21 +477,19 @@ place for the existing place sidebar, so this is smaller than it looks.
   per word like ABP; cross-text notes round up to whole-verse). Memory `project_bsb_words`. NOTE: closes the
   KJV/BSB word-level-highlight gap FOR BSB only — KJV still anchors whole-verse (kjv_words has positions, so
   the same `renderBsbVerse` pattern could enable KJV word-level later if wanted).
-- **Inflected-form side-card headword — DONE for Hebrew + BSB 2026-06-15 (ABP deferred, KJV impossible).**
-  The click-a-word SIDE CARD shows BOTH forms: the dictionary lemma is the BIG headword (same for every text),
-  with the inflected form (the word as it appears in the verse) on a small line beneath (the form + its
-  translit, no text label) (flipped from inflected-big after the user weighed it — lemma-big keeps the headline
-  consistent across ABP/KJV/BSB/Hebrew and matches the rest of the card). Only the card headword area — reader
-  chips + the card's Interlinear toggle stay the dictionary lemma. **Hebrew**: the
-  pointed word already rode the chapter feed → surfaced as `entry.inflected`. **BSB**: `bsb_words` gained
-  `form` + `form_translit` (Berean tables' "WLC / Nestle Base TR RP WH NE NA SBL" + "Translit" columns), the
-  loader populates them, `/api/bsb/chapter` carries them (PRAGMA-guarded so a code deploy before the loader
-  re-run still serves chips). **ABP DEFERRED — the research answer (don't re-investigate):** the ABP source
-  is English+Strong's only (no Greek surface form anywhere), and the Rahlfs/TAGNT alignment keeps only
-  `(strong, morph, is_pron, lemma)` — it discards the surface form. Adding it = re-run alignment into a NEW
-  side-table (~78% coverage, imperfect), NOT the full words rebuild; a separate data project if ever wanted.
-  KJV impossible (English↔Strong's, no original word). Full spec + the BSB deploy step: memory
-  `project_bsb_words`.
+- **Inflected-form side-card line — DONE + LIVE for Hebrew + BSB + ABP 2026-06-15 (KJV impossible).** Moved to
+  [TODO_ARCHIVE.md](TODO_ARCHIVE.md) with the full trail. Two follow-ups it left behind, both PARKED:
+- **ABP surface TRANSLIT — PARKED (unlock: transliteration-search).** The ABP "in this verse" line shows the
+  bare Greek form with NO transliteration (Hebrew/BSB show one). Deliberately deferred: don't ship a throwaway
+  ~40-line Greek→Latin map (subtly wrong under an accuracy brand). Backfill it from the ONE real, vetted
+  transliterator the planned **transliteration-search** feature has to build anyway — build once, use twice.
+  (NT translit is already captured if we ever take the Rahlfs/TAGNT route.) code: scripts/build_abp_surface.py
+- **Parsed Greek OT as a 2nd parallel text — PARKED idea (NOT ABP's surface line).** A CATSS-lineage Rahlfs LXX
+  (Eliran Wong's LXX-Rahlfs-1935 is most turnkey — surface + lemma + morph + SBL translit already paired, 100%
+  native, no alignment guessing) would be its OWN parallel Greek OT alongside ABP (like ESV / the Hebrew),
+  NOT a patch to ABP's number; its translit covers THAT text, not ABP's. LICENSING FLAG: CATSS/CCAT is NOT MIT
+  (user-declaration requirement) — read the downstream repo's terms before shipping in a donation-taking app.
+  code: new views_* + own db, modeled on views_heb
 - **ESV — PERSONAL, LOGIN-GATED — DONE + LIVE 2026-06-10** (memory `project_esv_audio`). Owner-only ESV
   reader, server-gated via the shared `views_notes.is_owner()` (`OWNER_EMAIL` live; toggle shows for the
   owner). Text LOADED on PA (`load_esv.py` → `esv.db` = 31,104 verses, all 66 books). ESV AUDIO now
