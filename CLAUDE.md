@@ -476,11 +476,14 @@ scripts/          # build-frontend.js + one-time import/migration scripts
 - Clicking a verse number opens the TSK Cross-Reference Panel
 - Jumping to a verse (search / lexicon / read-in-context / cross-ref / note) lands it in the UPPER
   THIRD of the reader (not centered); the left nav scrolls the active book to the TOP of its own list
-  (`.nav-scroll`), never the window. (2026-06-11) **In CHRONOLOGICAL order a verse jump flips the reader
-  back to canonical FIRST (2026-06-14)** so the verse shows in its normal chapter, not dumped mid-passage;
-  `chronoPos` is untouched, so toggling Chronological back returns you to your spot. (The nav effect does
-  the flip; the scroll effect waits out the chrono→canonical render. An earlier attempt — move the chrono
-  passage to the verse + a chrono-aware scroll — was reverted for this simpler flip.)
+  (`.nav-scroll`), never the window. (2026-06-11) **In CHRONOLOGICAL order, where a jump comes FROM decides
+  whether it stays chrono (2026-06-14):** an EXTERNAL jump (from Search / Lexicon / the Notes tab — flagged
+  `nav.extern` at the call site, set on whether `mainView !== "library"`) drops the reader back to canonical
+  so the reference shows in its normal chapter; an IN-READER control (clicking a verse number for xrefs, a
+  word panel, chasing a cross-ref — all triggered while reading chrono) STAYS chronological: the nav effect
+  moves `chronoPos` to the passage holding the verse (`passageForRef`) and the scroll effect waits out that
+  span load. (`nav.extern` gates both: the nav effect flips vs moves; the scroll effect waits for canonical
+  vs the chrono span.) Either way `chronoPos` survives, so toggling Chronological back returns to your spot.
 - **Desktop link-over auto-opens the verse's xref card (2026-06-14).** A jump from Search / Lexicon /
   Read-in-context queues `setLibCrossRef`, so the cross-ref card shows over the chapter-summary card. It's
   the LOWEST rail layer (rendered only when `!activeEntry && !activeNote`): if a word-study / note card is
