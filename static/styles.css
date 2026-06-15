@@ -910,17 +910,38 @@ input { font-family: inherit; }
   color: var(--ink-3);
   letter-spacing: 0.01em;
 }
-/* Dictionary form (lemma) shown SMALL beneath the inflected headword — the "both"
-   layout for Hebrew + BSB word study (the big word is the form as it appears in the
-   verse; this is its dictionary form). Sits just under .detail-greek. */
-.detail-lemma {
-  font-family: var(--f-greek);
-  font-size: 24px;
-  line-height: 1.1;
-  color: var(--ink-3);
+/* "In this verse" line — the word's INFLECTED form (as it appears in the clicked
+   verse), shown small just beneath the dictionary headword for Hebrew + BSB word
+   study: a muted label + the form (script font) + its transliteration. The big
+   headword stays the dictionary lemma for every text. Sits just under .detail-greek. */
+.detail-form {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 6px;
   margin-top: -3px;
 }
-.detail-lemma--he { font-family: var(--f-serif); text-align: left; }
+.detail-form-lbl {
+  font-family: var(--f-sans);
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--ink-4);
+}
+.detail-form-w {
+  font-family: var(--f-greek);
+  font-size: 22px;
+  line-height: 1.1;
+  color: var(--ink-2);
+}
+.detail-form-w--he { font-family: var(--f-serif); }
+.detail-form-tr {
+  font-family: var(--f-serif);
+  font-style: italic;
+  font-size: 14px;
+  color: var(--ink-3);
+}
 
 .detail-section { padding: 12px 0; border-bottom: 1px solid var(--rule); }
 .detail-section.last { border-bottom: 0; }
@@ -2089,7 +2110,7 @@ input { font-family: inherit; }
   .results-controls::-webkit-scrollbar { display: none; }
   .results-sort { flex-wrap: nowrap; }
   .detail-greek { font-size: 44px; }
-  .detail-lemma { font-size: 20px; }
+  .detail-form-w { font-size: 19px; }
   .detail-body { padding: 16px 18px 32px; }
 }
 @media (max-width: 520px) {

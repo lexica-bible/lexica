@@ -2493,29 +2493,27 @@ function DetailPanel({
   const nameOrGloss = isPN || metavData ? properName : entry.gloss;
   const trimTail = s => stripArticles(s?.replace(/[.,;:!?—-]+$/, "").trim());
   // The clicked word's INFLECTED form — the surface form as it appears in THIS verse —
-  // when the reading text carries one. The Hebrew OT reader (entry.inflected = the
+  // when the reading text carries one: the Hebrew OT reader (entry.inflected = the
   // pointed word) and BSB (entry.inflected = the Berean-tables original word) set it at
-  // the click; ABP/KJV have no stored original surface form, so they keep showing the
-  // dictionary form (lemma) exactly as before. We show BOTH: inflected big, lemma small.
+  // the click. The dictionary form (lemma) stays the BIG headword for EVERY text, so the
+  // card's headline word means the same thing everywhere (ABP/KJV have no surface form);
+  // the inflected form shows on a small "in this verse" line just beneath it.
   const heroInflected = (entry.inflected || "").trim();
   const heroInflectedTranslit = (entry.inflectedTranslit || "").trim();
-  const heroLemma = isHebrew ? bdbEntry?.lemma || "" : entry.greek || "";
   const hero = {
     he: isHebrew,
     noGloss: isPN && !entry.greek && !isHebrew,
-    // Headword: the inflected form when we have one, else today's dictionary form.
-    script: heroInflected || (isHebrew ? bdbEntry?.lemma || entry.gloss : entry.greek || nameOrGloss),
-    // Pronunciation row: the inflected word's own translit when it's the headword, else the lemma's.
-    translit: heroInflected ? heroInflectedTranslit : isHebrew ? bdbEntry?.xlit : entry.translit,
+    script: isHebrew ? bdbEntry?.lemma || entry.gloss : entry.greek || nameOrGloss,
+    translit: isHebrew ? bdbEntry?.xlit : entry.translit,
     standaloneGloss: trimTail(isPN || metavData ? properName : entry.greek && (entry.gloss || "").trim().split(/\s+/).length > 2 ? entry.english_head || entry.gloss : entry.gloss),
     morph: morphLine
   };
-  // The small dictionary-form line under the headword — only when an inflected headword
-  // is showing AND the lemma actually differs (indeclinable words can coincide).
-  const heroDictForm = heroInflected && heroLemma && heroLemma !== heroInflected ? heroLemma : "";
+  // The small "in this verse" line shows the inflected form — only when we have one AND
+  // it differs from the headword lemma (indeclinable words can coincide → skip it).
+  const heroForm = heroInflected && heroInflected !== hero.script ? heroInflected : "";
   // Show "translit · gloss" on one line whenever there's both — same for Greek and
-  // Hebrew so the two cards match (it was Hebrew-only before). Falls back to a
-  // standalone gloss line only when there's no transliteration.
+  // Hebrew so the two cards match. Falls back to a standalone gloss line only when
+  // there's no transliteration.
   const heroInlineGloss = !!(hero.translit && hero.standaloneGloss && !hero.noGloss);
 
   // Verse + place sections show an English reading text (not ABP) for Hebrew /
@@ -2976,10 +2974,16 @@ function DetailPanel({
   }, /*#__PURE__*/React.createElement("div", {
     className: "detail-greek" + (hero.he ? " detail-greek--he" : !entry.greek ? " detail-greek--latin" : ""),
     dir: hero.he ? "rtl" : undefined
-  }, hero.script), heroDictForm && /*#__PURE__*/React.createElement("div", {
-    className: "detail-lemma" + (hero.he ? " detail-lemma--he" : ""),
+  }, hero.script), heroForm && /*#__PURE__*/React.createElement("div", {
+    className: "detail-form"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "detail-form-lbl"
+  }, "in this verse"), /*#__PURE__*/React.createElement("span", {
+    className: "detail-form-w" + (hero.he ? " detail-form-w--he" : ""),
     dir: hero.he ? "rtl" : undefined
-  }, heroDictForm), (hero.translit || heroInlineGloss) && /*#__PURE__*/React.createElement("div", {
+  }, heroForm), heroInflectedTranslit && heroInflectedTranslit !== hero.translit && /*#__PURE__*/React.createElement("span", {
+    className: "detail-form-tr"
+  }, heroInflectedTranslit)), (hero.translit || heroInlineGloss) && /*#__PURE__*/React.createElement("div", {
     className: "detail-translit-row" + (hero.he ? " detail-translit-row-he" : "")
   }, /*#__PURE__*/React.createElement("span", {
     className: "detail-translit"
