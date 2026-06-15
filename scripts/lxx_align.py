@@ -174,6 +174,14 @@ class RahlfsLXX:
             self._lemma = self._load_col("02_lexemes/OSSP_lexemes.csv", 1)
         except OSError:
             self._lemma = {}                        # absent → lemma column stays NULL, morph still loads
+        try:                                        # surface = the PRINTED (accented, inflected) Greek word.
+            # 01_wordlist_unicode/text_accented.csv is "idx<tab>idx<tab>word" (word
+            # in col 2), line-aligned 1:1 with the morph/strong files (623,693 rows).
+            # OPTIONAL: absent → surface_verse() returns "" and the pronoun-fix build
+            # is unaffected (it never calls surface_verse). Used by build_abp_surface.py.
+            self._surface = self._load_col("01_wordlist_unicode/text_accented.csv", 2)
+        except OSError:
+            self._surface = {}
         self._ranges = self._load_verse_ranges()   # (booknum,ch,vs) -> (start,end) inclusive
 
     def _open(self, rel):
@@ -224,6 +232,18 @@ class RahlfsLXX:
             is_pron = bool(re.match(r"^R(?!A)", mo))     # RP/RD/RR/RI  (exclude RA article)
             out.append((base(self._strong.get(i, "")), mo, is_pron, self._lemma.get(i, "")))
         return out
+
+    def surface_verse(self, booknum, chapter, vs):
+        """Parallel to verse(): the PRINTED (accented, inflected) Greek word per
+        token, in the same order. '' where the accented wordlist isn't present.
+        Read-only; used by build_abp_surface.py, not by the pronoun-fix build."""
+        remap = _VERSIFICATION.get(booknum)
+        if remap:
+            chapter, vs = remap(chapter, vs)
+        rng = self._ranges.get((booknum, chapter, vs))
+        if not rng:
+            return []
+        return [self._surface.get(i, "") for i in range(rng[0], rng[1] + 1)]
 
 
 # ── TAGNT (STEPBible) New-Testament source ──────────────────────────────────
@@ -309,6 +329,7 @@ class TAGNTSource:
 
     def __init__(self, tagnt_paths):
         self._verses = {}        # (tagnt_book, ch, vs) -> [(strong, morph, is_pron, lemma)]
+        self._surface = {}       # parallel: (tagnt_book, ch, vs) -> [(printed_greek, translit)]
         for p in tagnt_paths:
             self._load(p)
 
@@ -331,9 +352,18 @@ class TAGNTSource:
                 # field5 is 'lemma(s)=meaning'; lemma part may list variants comma-joined
                 # ('οὕτω, οὕτως=thus(-ly)') — take the first form ('σύ=you' → σύ).
                 lemma = parts[4].split("=")[0].split(",")[0].strip() if len(parts) > 4 else ""
-                self._verses.setdefault(
-                    (mref.group(1), int(mref.group(2)), int(mref.group(3))), []
-                ).append((_tagnt_casesplit(dbase, morph), morph, _tagnt_is_pron(morph), lemma))
+                # field2 (parts[1]) = '<printed Greek> (<translit>) <gloss>', e.g.
+                # 'Βίβλος (Biblos) [The] book' — keep the printed word + TAGNT's own
+                # (vetted) transliteration for the word-study side-card. Parsed only;
+                # never feeds the alignment, so it can't shift the pronoun fix.
+                seg = parts[1].strip() if len(parts) > 1 else ""
+                surface = seg.split(" ", 1)[0].split("(", 1)[0].strip()
+                mtr = re.search(r"\(([^)]*)\)", seg)
+                translit = mtr.group(1).strip() if mtr else ""
+                key = (mref.group(1), int(mref.group(2)), int(mref.group(3)))
+                self._verses.setdefault(key, []).append(
+                    (_tagnt_casesplit(dbase, morph), morph, _tagnt_is_pron(morph), lemma))
+                self._surface.setdefault(key, []).append((surface, translit))
 
     def booknum(self, abp_abbrev):
         if abp_abbrev not in self.SCOPE:
@@ -342,6 +372,10 @@ class TAGNTSource:
 
     def verse(self, tagnt_book, chapter, vs):
         return self._verses.get((tagnt_book, chapter, vs), [])
+
+    def surface_verse(self, tagnt_book, chapter, vs):
+        """Parallel to verse(): [(printed_greek, translit)] in the same order."""
+        return self._surface.get((tagnt_book, chapter, vs), [])
 
 
 # ── pronoun-aware Needleman–Wunsch global alignment ─────────────────────────

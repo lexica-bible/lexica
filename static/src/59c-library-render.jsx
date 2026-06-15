@@ -124,6 +124,7 @@ const LibRender = (function () {
       ...wordEntryCore(w, { ref: `${selBook.abbrev} ${ch}:${v.verse}`, book: selBook.abbrev, chapter: ch, verse: v.verse, gloss: w.english }),
       english_head: w.english_head || "",   // hero shows the head word for a long gloss
       morph: w.morph || "",
+      inflected: w.inflected || "",         // printed Greek form → side-card "in this verse" line (no translit yet)
       pn_type: w.pn_type || null,
       pn_types: w.pn_types || null,
     });

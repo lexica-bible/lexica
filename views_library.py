@@ -192,18 +192,28 @@ def extra_strongs_count(book, strongs):
 def chapter_text(book, chapter):
     conn = db()
     try:
+        # The printed-form ("in this verse") side table is built separately by
+        # scripts/build_abp_surface.py on PA. Join it only if it exists, so a code
+        # deploy BEFORE that build still serves (words just carry no inflected form).
+        has_surface = conn.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='abp_surface'"
+        ).fetchone() is not None
+        surf_sel  = ", s.form AS surface_form" if has_surface else ""
+        surf_join = ("LEFT JOIN abp_surface s ON s.verse_id = w.verse_id AND s.position = w.position"
+                     if has_surface else "")
         rows = conn.execute(
-            """SELECT v.verse, v.text AS prose, w.position, w.english, w.english_head, w.strongs_base, w.strongs,
+            f"""SELECT v.verse, v.text AS prose, w.position, w.english, w.english_head, w.strongs_base, w.strongs,
                       l.lemma, l.translit, l.kjv_def, w.greek_pos, w.bracket_id, w.italic, w.is_pn, w.morph,
                       COALESCE(w.italic_words, '') AS italic_words,
                       COALESCE(w.smcap_words,  '') AS smcap_words,
                       t.entity_type AS pn_type, t.entity_types AS pn_types,
-                      p.heading
+                      p.heading{surf_sel}
                FROM verses v
                JOIN words w ON w.verse_id = v.id
                LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base
                LEFT JOIN tipnr t ON t.strongs = w.strongs_base
                LEFT JOIN pericopes p ON p.book = v.book AND p.chapter = v.chapter AND p.verse = v.verse
+               {surf_join}
                WHERE v.book = ? AND v.chapter = ?
                ORDER BY v.verse, w.position""",
             (book, chapter),
@@ -225,6 +235,9 @@ def chapter_text(book, chapter):
             "smcap_words":  r["smcap_words"],
             "pn_type":      r["pn_type"],
             "pn_types":     r["pn_types"],
+            # Printed ("in this verse") Greek form, when the side table is built +
+            # this word anchored. Blank otherwise → no extra line on the side card.
+            "inflected":    (r["surface_form"] if has_surface else "") or "",
         })
     return jsonify([
         {
