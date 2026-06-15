@@ -187,7 +187,8 @@ scripts/          # build-frontend.js + one-time import/migration scripts
 - `bdb` — Brown-Driver-Briggs Hebrew lexicon (H-numbers)
 - `pericopes` — section headings (book, chapter, verse, heading); populated from bh_scrape.db.bh_headings; display wiring pending
 - `bsb_verses` — Berean Standard Bible verse text (public domain), mirrors kjv_verses on 1-66 book ids
-- `bsb_words` / `bsb_strongs` — BSB per-word interlinear (built 2026-06-15), mirroring `kjv_words`/`kjv_strongs`:
+- `bsb_words` / `bsb_strongs` — BSB per-word interlinear (LIVE 2026-06-15; loaded on PA = 386,063 words /
+  381,948 Strong's / 66 books), mirroring `kjv_words`/`kjv_strongs`:
   `bsb_words(word_id, book_id, chapter, verse_num, verse_pos, word, italic, punc)` + `bsb_strongs(id, word_id,
   strongs_id)`. strongs_id fully H/G-prefixed (same invariant as kjv_strongs; locked in test_build_invariants.py).
   Built by `scripts/load_bsb_words.py` from the Berean Bible project's Strong's-tagged tables
