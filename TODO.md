@@ -476,13 +476,20 @@ place for the existing place sidebar, so this is smaller than it looks.
   (`isBsb` path). Chip mode + clickable word study + per-word highlights all landed together (BSB anchors
   per word like ABP; cross-text notes round up to whole-verse). Memory `project_bsb_words`. NOTE: closes the
   KJV/BSB word-level-highlight gap FOR BSB only — KJV still anchors whole-verse (kjv_words has positions, so
-  the same `renderBsbVerse` pattern could enable KJV word-level later if wanted). Possible follow-up the user
-  flagged (deferred): show the clicked word's INFLECTED form as the BIG HEADWORD at the top of the
-  click-a-word SIDE CARD (`hero.script`), for any text — NOT the card's verse-breakdown toggle, NOT the
-  reader chips. Doable for ABP*/BSB/Hebrew, not KJV (*ABP = research if the surface Greek form is stored).
-  Swap the TRANSLITERATION to match too (today's translit is the lemma, joined from bdb/lexicon; BSB's
-  inflected translit is free in bsb_tables, Hebrew already has it, ABP unknown, KJV impossible). Full spec
-  in memory `project_bsb_words`.
+  the same `renderBsbVerse` pattern could enable KJV word-level later if wanted).
+- **Inflected-form side-card headword — DONE for Hebrew + BSB 2026-06-15 (ABP deferred, KJV impossible).**
+  The click-a-word SIDE CARD's big headword now shows the word AS IT APPEARS in the verse (inflected/surface
+  form), dictionary lemma small beneath ("both"); pronunciation row swaps to the inflected translit. Only the
+  card headword — reader chips + the card's Interlinear toggle stay the dictionary lemma. **Hebrew**: the
+  pointed word already rode the chapter feed → surfaced as `entry.inflected`. **BSB**: `bsb_words` gained
+  `form` + `form_translit` (Berean tables' "WLC / Nestle Base TR RP WH NE NA SBL" + "Translit" columns), the
+  loader populates them, `/api/bsb/chapter` carries them (PRAGMA-guarded so a code deploy before the loader
+  re-run still serves chips). **ABP DEFERRED — the research answer (don't re-investigate):** the ABP source
+  is English+Strong's only (no Greek surface form anywhere), and the Rahlfs/TAGNT alignment keeps only
+  `(strong, morph, is_pron, lemma)` — it discards the surface form. Adding it = re-run alignment into a NEW
+  side-table (~78% coverage, imperfect), NOT the full words rebuild; a separate data project if ever wanted.
+  KJV impossible (English↔Strong's, no original word). Full spec + the BSB deploy step: memory
+  `project_bsb_words`.
 - **ESV — PERSONAL, LOGIN-GATED — DONE + LIVE 2026-06-10** (memory `project_esv_audio`). Owner-only ESV
   reader, server-gated via the shared `views_notes.is_owner()` (`OWNER_EMAIL` live; toggle shows for the
   owner). Text LOADED on PA (`load_esv.py` → `esv.db` = 31,104 verses, all 66 books). ESV AUDIO now
