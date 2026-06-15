@@ -477,7 +477,10 @@ place for the existing place sidebar, so this is smaller than it looks.
   per word like ABP; cross-text notes round up to whole-verse). Memory `project_bsb_words`. NOTE: closes the
   KJV/BSB word-level-highlight gap FOR BSB only — KJV still anchors whole-verse (kjv_words has positions, so
   the same `renderBsbVerse` pattern could enable KJV word-level later if wanted). Possible follow-up the user
-  flagged: show the INFLECTED original word in the side card (doable for ABP/BSB/Hebrew, not KJV) — deferred.
+  flagged (deferred): show the clicked word's INFLECTED form as the BIG HEADWORD at the top of the
+  click-a-word SIDE CARD (`hero.script`), for any text — NOT the card's verse-breakdown toggle, NOT the
+  reader chips. Doable for ABP*/BSB/Hebrew, not KJV (*ABP = research if the surface Greek form is stored).
+  Full spec in memory `project_bsb_words`.
 - **ESV — PERSONAL, LOGIN-GATED — DONE + LIVE 2026-06-10** (memory `project_esv_audio`). Owner-only ESV
   reader, server-gated via the shared `views_notes.is_owner()` (`OWNER_EMAIL` live; toggle shows for the
   owner). Text LOADED on PA (`load_esv.py` → `esv.db` = 31,104 verses, all 66 books). ESV AUDIO now
