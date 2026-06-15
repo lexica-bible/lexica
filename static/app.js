@@ -260,6 +260,9 @@ const api = {
   }).then(r => r.json()),
   kjvStrongsCount: strongs_id => fetch(`/api/kjv/strongs-count/${encodeURIComponent(strongs_id)}`).then(r => r.json()),
   kjvStrongsSearch: strongs_id => fetch(`/api/kjv/strongs-search/${encodeURIComponent(strongs_id)}`).then(r => r.json()),
+  bsbVerse: (book, ch, v) => fetch(`/api/bsb/verse/${encodeURIComponent(book)}/${ch}/${v}`).then(r => r.json()),
+  bsbVerseWords: (book, ch, v) => fetch(`/api/bsb/verse_words/${encodeURIComponent(book)}/${ch}/${v}`).then(r => r.json()),
+  bsbStrongsCount: strongs_id => fetch(`/api/bsb/strongs-count/${encodeURIComponent(strongs_id)}`).then(r => r.json()),
   pnCount: name => fetch(`/api/pn-count/${encodeURIComponent(name)}`).then(r => r.json()),
   metavPerson: name => fetch(`/api/metav/person/${encodeURIComponent(name)}`).then(r => r.json()),
   metavAiDescription: name => fetch(`/api/metav/ai-description/${encodeURIComponent(name)}`).then(r => r.json()),
@@ -2128,6 +2131,17 @@ function DetailPanel({
           he: /^H/i.test(sid)
         };
       }))).catch(() => done([]));
+    } else if (entry.isBsb) {
+      api.bsbVerseWords(entry.book, entry.chapter, entry.verse).then(rows => done((rows || []).map(w => {
+        const sid = w.strongs_ids && w.strongs_ids[0] || "";
+        return {
+          top: w.lemma || "",
+          translit: w.xlit || "",
+          english: w.word || "",
+          strongs: tag(sid),
+          he: /^H/i.test(sid)
+        };
+      }))).catch(() => done([]));
     } else if (entry.isHeb) {
       api.hebVerseWords(entry.book, entry.chapter, entry.verse).then(d => done((d.words || []).map(w => ({
         top: w.hebrew || "",
@@ -2233,12 +2247,29 @@ function DetailPanel({
   const [kjvCount, setKjvCount] = useState(null);
   useEffect(() => {
     setKjvCount(null);
-    if (!isHebrew && !entry.isKjv || !entry.strongs || entry.isHeb) return; // Hebrew OT reader: no KJV cross-link
+    if (!isHebrew && !entry.isKjv || !entry.strongs || entry.isHeb || entry.isBsb) return; // Hebrew OT reader / BSB: no KJV cross-link
     let cancelled = false;
     api.kjvStrongsCount(entry.strongs).then(d => {
       if (!cancelled) setKjvCount(d.count ?? null);
     }).catch(() => {
       if (!cancelled) setKjvCount(null);
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [entry && entry.strongs]);
+
+  // BSB occurrence count (BSB word study) — its own count; the Lexicon tab has no
+  // BSB corpus, so this shows as a plain "N× in BSB" tally, not a click-through.
+  const [bsbCount, setBsbCount] = useState(null);
+  useEffect(() => {
+    setBsbCount(null);
+    if (!entry || !entry.isBsb || !entry.strongs) return;
+    let cancelled = false;
+    api.bsbStrongsCount(entry.strongs).then(d => {
+      if (!cancelled) setBsbCount(d.count ?? null);
+    }).catch(() => {
+      if (!cancelled) setBsbCount(null);
     });
     return () => {
       cancelled = true;
@@ -2285,8 +2316,8 @@ function DetailPanel({
     setMetavPlaceData(null);
     setMetavTab("person");
     // Skip metaV for words with a real Greek lemma — those belong to LSJ
-    // Exception: KJV words that look like proper nouns (capitalized) still go through metaV
-    const kjvIsPN = entry.isKjv && extractProperName(entry.pnName || entry.gloss || "") !== "";
+    // Exception: KJV/BSB words that look like proper nouns (capitalized) still go through metaV
+    const kjvIsPN = (entry.isKjv || entry.isBsb) && extractProperName(entry.pnName || entry.gloss || "") !== "";
     if (!isPN && !kjvIsPN && entry.greek && entry.translit && entry.strongs_raw !== "2316") return;
     const name = extractProperName(entry.pnName || entry.gloss || "");
     if (!name || name.length < 2) return;
@@ -2377,13 +2408,15 @@ function DetailPanel({
     };
   }, [entry && entry.id]);
 
-  // KJV verse text (when entry came from KJV mode, or is a Hebrew word)
+  // English verse text for the quote — BSB for BSB words, else KJV (KJV mode, a
+  // Hebrew word, or a place card). Held in kjvVerseText; the source is picked here.
   const [kjvVerseText, setKjvVerseText] = useState("");
   useEffect(() => {
     setKjvVerseText("");
-    if (!entry || !entry.isKjv && !isHebrew && !(metavType === "place" && !isPN)) return;
+    if (!entry || !entry.isKjv && !entry.isBsb && !isHebrew && !(metavType === "place" && !isPN)) return;
     let cancelled = false;
-    api.kjvVerse(entry.book, entry.chapter, entry.verse).then(d => {
+    const fetchVerse = entry.isBsb ? api.bsbVerse : api.kjvVerse;
+    fetchVerse(entry.book, entry.chapter, entry.verse).then(d => {
       if (!cancelled) setKjvVerseText(d.text || "");
     }).catch(() => {});
     return () => {
@@ -2472,8 +2505,9 @@ function DetailPanel({
   // standalone gloss line only when there's no transliteration.
   const heroInlineGloss = !!(hero.translit && hero.standaloneGloss && !hero.noGloss);
 
-  // Verse + place sections show KJV text (not ABP) for Hebrew / KJV-mode / place words.
-  const useKjvText = entry.isKjv || isHebrew || metavType === "place" && !isPN;
+  // Verse + place sections show an English reading text (not ABP) for Hebrew /
+  // KJV-mode / BSB-mode / place words. BSB pulls BSB text; the rest pull KJV.
+  const useKjvText = entry.isKjv || entry.isBsb || isHebrew || metavType === "place" && !isPN;
 
   // Ordered list of stacked sections. BDB and LSJ are mutually exclusive (Hebrew
   // gets BDB; everything else may get LSJ) — same either/or as the old ternary.
@@ -2481,14 +2515,15 @@ function DetailPanel({
   if (metavLoading || metavPersonData || metavPlaceData) sections.push("metav");
   if (aiDescription || aiDescLoading) sections.push("aidesc");
   if (isHebrewWord) sections.push("bdb");else if ((!isPN || metavType === "place" && metavData?.strongs_g?.length > 0) && metavType !== "person" && !aiDescription && !aiDescLoading && (entry.greek || entry.strongs_raw || metavData?.strongs_g?.length > 0)) sections.push("lsj");
-  if (!isHebrew && !isPN && !entry.isKjv && !entry.isExtra && abpCount !== null && abpCount > 0) sections.push("abpOcc");
+  if (!isHebrew && !isPN && !entry.isKjv && !entry.isBsb && !entry.isExtra && abpCount !== null && abpCount > 0) sections.push("abpOcc");
   // Non-canon "other" books (Apostolic Fathers chip mode): suppress the occurrence
   // links/counts (the LXX cross-link above + this in-book count) until Lexicon search is
   // wired. Re-enable: drop `!entry.isExtra` above + uncomment extraOcc.
   // if (entry.isExtra && extraCount !== null && extraCount > 0) sections.push("extraOcc");
   if (entry.isKjv && !isHebrew && !isPN && kjvCount !== null && kjvCount > 0) sections.push("kjvOcc");
-  if (!entry.isKjv && isPN && pnCount !== null && pnCount > 0 && onNameSearch) sections.push("pnOcc");
-  if (isHebrew && !entry.isHeb && kjvCount !== null && kjvCount > 0) sections.push("hebrewKjvOcc");
+  if (entry.isBsb && !isPN && bsbCount !== null && bsbCount > 0) sections.push("bsbOcc");
+  if (!entry.isKjv && !entry.isBsb && isPN && pnCount !== null && pnCount > 0 && onNameSearch) sections.push("pnOcc");
+  if (isHebrew && !entry.isHeb && !entry.isBsb && kjvCount !== null && kjvCount > 0) sections.push("hebrewKjvOcc");
   // Nave's topical sits BELOW the lexicon/place cards (metaV, AI, BDB/LSJ) — it's a
   // study cross-link, not a definition, so it reads last among the reference blocks.
   if (naveData && naveData.sections.length) sections.push("naveTopical");
@@ -2731,6 +2766,17 @@ function DetailPanel({
           className: "occ-link",
           onClick: () => onNavigateToLexicon && onNavigateToLexicon(entry.strongs, "kjv")
         }, /*#__PURE__*/React.createElement("b", null, kjvCount), "\xD7 in KJV ", /*#__PURE__*/React.createElement(Icon.ArrowRight, null)));
+      case "bsbOcc":
+        return /*#__PURE__*/React.createElement("section", {
+          key: "bsbOcc",
+          className: "sec"
+        }, /*#__PURE__*/React.createElement("h4", {
+          className: "sec-head"
+        }, /*#__PURE__*/React.createElement("span", {
+          className: "sec-t"
+        }, "BSB Occurrences")), /*#__PURE__*/React.createElement("div", {
+          className: "occ-link occ-link--static"
+        }, /*#__PURE__*/React.createElement("b", null, bsbCount), "\xD7 in BSB"));
       case "pnOcc":
         return /*#__PURE__*/React.createElement("section", {
           key: "pnOcc",
@@ -2780,7 +2826,7 @@ function DetailPanel({
           className: "sec-t"
         }, "Verse \u2014 ", entry.ref), /*#__PURE__*/React.createElement("span", {
           className: "lsj-badge"
-        }, useKjvText ? "KJV" : "ABP")), /*#__PURE__*/React.createElement("blockquote", {
+        }, entry.isBsb ? "BSB" : useKjvText ? "KJV" : "ABP")), /*#__PURE__*/React.createElement("blockquote", {
           className: "dverse"
         }, /*#__PURE__*/React.createElement("span", {
           className: "dverse-n"
@@ -7404,7 +7450,7 @@ function ModesSheet({
     scrollRef
   } = useSwipeToDismiss(onClose);
   const activeNonCanon = nonCanonList.find(t => t.id === corpus) || null;
-  const proseLocked = !!(activeNonCanon && activeNonCanon.englishOnly) || translation === "bsb" || translation === "esv" || translation === "niv"; // English-only / BSB / ESV / NIV: no Greek toggles
+  const proseLocked = !!(activeNonCanon && activeNonCanon.englishOnly) || translation === "esv" || translation === "niv"; // English-only / ESV / NIV: no Greek toggles (BSB has its own per-word Strong's data)
   const hebMode = translation === "heb"; // Hebrew interlinear: always chips, no prose option
   const gray = proseLocked ? {
     opacity: 0.35,
@@ -8708,6 +8754,91 @@ const LibRender = function () {
       }, "G0")));
     }))));
   };
+
+  // BSB word chips — same shape as renderKjvVerse (standard Strong's, both H and
+  // G), but the word entry is flagged isBsb so the detail panel pulls BSB's own
+  // verse breakdown / quote / occurrence count.
+  const renderBsbVerse = (ctx, v, showVerseNum = true, skipHeading = false) => {
+    const {
+      selChapter,
+      nav,
+      selBook,
+      highlightRef,
+      vnumEl,
+      noteMarker,
+      onWordClick,
+      showInterlinear,
+      showStrongs,
+      hiClass
+    } = ctx;
+    const ch = v._ch ?? selChapter;
+    const isHighlight = nav && nav.highlight === v.verse && (nav.chapter == null || nav.chapter === ch);
+    const makeBsbEntry = (w, sid) => ({
+      id: `bsb-${selBook.abbrev}-${ch}-${v.verse}-${w.word_id}`,
+      strongs: sid || "",
+      strongs_base: sid ? sid.slice(1) : "",
+      strongs_raw: sid ? sid.slice(1) : "",
+      greek: w.lemma || "",
+      translit: w.xlit || "",
+      gloss: w.word,
+      ref: `${selBook.abbrev} ${ch}:${v.verse}`,
+      book: selBook.abbrev,
+      chapter: ch,
+      verse: v.verse,
+      definition: "",
+      derivation: "",
+      is_function: false,
+      isBsb: true,
+      isHebrew: sid ? sid.startsWith("H") : false
+    });
+    return /*#__PURE__*/React.createElement(React.Fragment, {
+      key: `${ch}-${v.verse}`
+    }, !skipHeading && v.heading && /*#__PURE__*/React.createElement("div", {
+      className: "lib-verse-row pericope-row"
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "lib-vnum",
+      "aria-hidden": "true"
+    }), /*#__PURE__*/React.createElement("div", {
+      className: "pericope-heading"
+    }, v.heading)), /*#__PURE__*/React.createElement("div", {
+      ref: isHighlight ? highlightRef : null,
+      "data-note-verse": v.verse,
+      "data-note-chapter": ch,
+      className: "lib-verse-row" + (isHighlight ? " lib-highlight" : "")
+    }, showVerseNum && vnumEl(v.verse, ch), /*#__PURE__*/React.createElement("span", {
+      className: "lib-verse-content lib-verse-chips"
+    }, showVerseNum && noteMarker(v.verse, ch), v.words.map((w, i) => {
+      const sid = w.strongs_ids && w.strongs_ids.length ? w.strongs_ids[0] : null;
+      const clickable = !!(onWordClick && sid);
+      const isHebrew = sid ? sid.startsWith("H") : false;
+      return /*#__PURE__*/React.createElement("span", {
+        key: i,
+        "data-note-pos": w.verse_pos,
+        className: "lib-word lib-bsb-word" + (w.italic ? " lib-bsb-italic" : "") + (clickable ? " lib-word-clickable" : "") + hiClass(v.verse, w.verse_pos, ch),
+        onClick: clickable ? () => onWordClick(makeBsbEntry(w, sid)) : undefined
+      }, showInterlinear && (w.lemma ? /*#__PURE__*/React.createElement("span", {
+        className: "lib-iw-greek",
+        dir: isHebrew ? "rtl" : undefined,
+        style: isHebrew ? {
+          fontFamily: "var(--f-serif)"
+        } : undefined
+      }, w.lemma) : /*#__PURE__*/React.createElement("span", {
+        className: "lib-iw-greek",
+        style: {
+          visibility: "hidden"
+        }
+      }, "x")), /*#__PURE__*/React.createElement("span", {
+        className: "lib-iw-english"
+      }, w.word, w.punc || ""), showStrongs && (sid ? /*#__PURE__*/React.createElement("span", {
+        className: "lib-iw-strongs"
+      }, sid) : /*#__PURE__*/React.createElement("span", {
+        className: "lib-iw-strongs",
+        style: {
+          visibility: "hidden"
+        }
+      }, "G0")));
+    }))));
+  };
   const renderKjvProse = (ctx, v, showVerseNum = true, skipHeading = false) => {
     const {
       selChapter,
@@ -9026,6 +9157,7 @@ const LibRender = function () {
     renderVerse,
     renderKjvVerse,
     renderKjvProse,
+    renderBsbVerse,
     renderPlainVerse,
     renderFlowVerse,
     plainFlowInner,
@@ -10010,15 +10142,16 @@ function LibraryView({
     [key]: val
   }));
 
-  // English-only non-canonical texts (e.g. 1 Enoch) have no Greek, so the reader is
-  // locked to Prose and the Greek-only toggles (Strong's / Interlinear / Parallel /
-  // Chip) are disabled and grayed out.
+  // English-only non-canonical texts (e.g. 1 Enoch) and ESV/NIV (no per-word data)
+  // are locked to Prose and the Greek/Strong's toggles (Strong's / Interlinear /
+  // Chip) are disabled and grayed out. BSB now has its own per-word Strong's data
+  // (bsb_words), so it is NOT prose-locked — it gets chip mode like KJV.
   const bsbMode = translation === "bsb";
   const esvMode = translation === "esv";
   const nivMode = translation === "niv";
   const kjvMode = translation === "kjv"; // KJV has public-domain audio (no key)
   const hebMode = translation === "heb"; // Hebrew interlinear: always chips, no prose option
-  const proseLocked = !!(nonCanon && nonCanon.englishOnly) || bsbMode || esvMode || nivMode;
+  const proseLocked = !!(nonCanon && nonCanon.englishOnly) || esvMode || nivMode;
   const chipMode = !proseLocked && (viewMode === "chip" || showStrongs || showInterlinear);
   const wordMode = chipMode;
   const kjvWordMode = chipMode;
@@ -10073,6 +10206,11 @@ function LibraryView({
   const bsbView = chronoOn ? flattenSpan("bsb") : bsbVerses;
   const esvView = chronoOn ? flattenSpan("esv") : esvVerses;
   const nivView = chronoOn ? flattenSpan("niv") : nivVerses;
+  // BSB chips need the per-word data (bsb_words). If it isn't loaded yet, the
+  // chapter feed has empty `words`, so fall back to prose even in chip mode —
+  // safe to ship the frontend before the data load.
+  const bsbHasWords = bsbView.some(v => v.words && v.words.length);
+  const bsbWordMode = chipMode && bsbHasWords;
   // A heading each time the chapter changes within a passage. EVERY chrono passage gets
   // one now — single-chapter ones too (they were skipped before, which is why Genesis 6
   // and the like showed no book/chapter label at all). When a passage only covers part of
@@ -10846,6 +10984,7 @@ function LibraryView({
   const renderVerse = (v, sh) => LibRender.renderVerse(_renderCtx, v, sh);
   const renderKjvVerse = (v, svn, sh) => LibRender.renderKjvVerse(_renderCtx, v, svn, sh);
   const renderKjvProse = (v, svn, sh) => LibRender.renderKjvProse(_renderCtx, v, svn, sh);
+  const renderBsbVerse = (v, svn, sh) => LibRender.renderBsbVerse(_renderCtx, v, svn, sh);
   const renderPlainVerse = (v, svn, sh) => LibRender.renderPlainVerse(_renderCtx, v, svn, sh);
   const renderFlowVerse = (v, inner) => LibRender.renderFlowVerse(_renderCtx, v, inner);
   const plainFlowInner = v => LibRender.plainFlowInner(_renderCtx, v);
@@ -11327,7 +11466,7 @@ function LibraryView({
         label: "BSB",
         view: bsbView,
         loading: bsbShowLoading,
-        render: plainCol
+        render: v => bsbWordMode ? renderBsbVerse(v, true, true) : plainCol(v)
       },
       esv: {
         label: "ESV",
@@ -11445,7 +11584,9 @@ function LibraryView({
     className: "lib-text-words lib-prose-flow"
   }, withMarks(kjvView, v => renderFlowVerse(v, kjvFlowInner(v)))) : translation === "bsb" ? bsbShowLoading ? /*#__PURE__*/React.createElement("div", {
     className: "lib-loading"
-  }, "Loading\u2026") : isPoetry ? /*#__PURE__*/React.createElement("div", {
+  }, "Loading\u2026") : bsbWordMode ? /*#__PURE__*/React.createElement("div", {
+    className: "lib-text-words"
+  }, withMarks(bsbView, v => renderBsbVerse(v))) : isPoetry ? /*#__PURE__*/React.createElement("div", {
     className: "lib-text-words"
   }, withMarks(bsbView, v => renderPlainVerse(v))) : /*#__PURE__*/React.createElement("div", {
     className: "lib-text-words lib-prose-flow"

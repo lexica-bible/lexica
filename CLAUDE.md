@@ -187,6 +187,14 @@ scripts/          # build-frontend.js + one-time import/migration scripts
 - `bdb` — Brown-Driver-Briggs Hebrew lexicon (H-numbers)
 - `pericopes` — section headings (book, chapter, verse, heading); populated from bh_scrape.db.bh_headings; display wiring pending
 - `bsb_verses` — Berean Standard Bible verse text (public domain), mirrors kjv_verses on 1-66 book ids
+- `bsb_words` / `bsb_strongs` — BSB per-word interlinear (built 2026-06-15), mirroring `kjv_words`/`kjv_strongs`:
+  `bsb_words(word_id, book_id, chapter, verse_num, verse_pos, word, italic, punc)` + `bsb_strongs(id, word_id,
+  strongs_id)`. strongs_id fully H/G-prefixed (same invariant as kjv_strongs; locked in test_build_invariants.py).
+  Built by `scripts/load_bsb_words.py` from the Berean Bible project's Strong's-tagged tables
+  (`bereanbible.com/bsb_tables.tsv`, public domain, CC0). Gives BSB chip mode + clickable word study (served by
+  the `views_bsb` word routes; lemma/xlit joined from lexicon/bdb exactly like KJV) + per-word highlights.
+  PA-only one-time data load (like bsb_verses) — `load_bsb_words.py` has a `--dry-run` that checks the tokens
+  rebuild the live bsb_verses text before writing. Source-format gotchas + the deploy step: memory `project_bsb_words`.
 - **Separate DB files (NOT bible.db, all gitignored + PA-only):** `notes.db` — user accounts/notes/
   highlights/journals + a `visits` table (owner-only visitor stats: day + daily IP+UA hash + referrer).
   `esv.db` — owner-only ESV text (`esv_verses`), loaded by `scripts/load_esv.py`. `niv.db` — owner-only

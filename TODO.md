@@ -462,15 +462,21 @@ place for the existing place sidebar, so this is smaller than it looks.
   labeled lines); notes/highlights shared across columns. This is the vehicle for comparison texts.
 - **More English translations** (ASV, YLT, Darby, Geneva) — all public domain; would slot straight into
   the Compare picker as new toggles + their own loader/db (like BSB). Not started.
-- **BSB chip mode + Strong's (NOT started — wanted).** Today BSB is verse-text only (`bsb_verses`), so
-  it's prose/whole-verse everywhere. Give it per-word data with Strong's tags like KJV has — build
-  `bsb_words` + `bsb_strongs` (mirroring `kjv_words`/`kjv_strongs`) from a Strong's-tagged BSB source
-  (the Berean Bible project publishes one — BSB is one of the few modern translations with free Strong's
-  tagging; confirm the exact file when building). Payoff: BSB gets chip mode, clickable word study, AND
-  word-level highlights all at once — once BSB tracks word spots, the KJV/BSB highlight gap below closes
-  for BSB for free. Pairs with the "word-level highlights in KJV/BSB" follow-up in the Notes section.
-  `code: new scripts/load_bsb_words.py (pattern: load_extra/kjv loaders); bsb_words/bsb_strongs tables;
-  views_bsb.py word endpoints like views_kjv; chip wiring for BSB in static/src/60-library.jsx`
+- **BSB chip mode + Strong's — BUILT 2026-06-15 (code committed); GO LIVE = run the loader on PA.**
+  `bsb_words` + `bsb_strongs` (mirror `kjv_words`/`kjv_strongs`) built from the Berean Bible project's
+  Strong's-tagged tables (`bereanbible.com/bsb_tables.tsv`, public domain) by `scripts/load_bsb_words.py`.
+  Word endpoints added to `views_bsb.py` (chapter-with-words, verse, verse_words, strongs-count); chip
+  wiring + word-level highlights in `static/src/59c-library-render.jsx` (`renderBsbVerse`) +
+  `60-library.jsx` (BSB un-prose-locked, `bsbWordMode` gated on the data being present) +
+  `30-detail-panel.jsx` (`isBsb` path → BSB's own verse breakdown / quote / occurrence count). Payoff
+  landed together: chip mode, clickable word study, AND word-level highlights (BSB anchors per word like
+  ABP; cross-text notes round up to whole-verse). Tokens verified to rebuild bsb_verses exactly (all
+  31,102 verses, 0 content diffs). **Remaining: on PA run `python3 scripts/load_bsb_words.py
+  ~/bible-db/bible.db --dry-run` (read-only check vs live bsb_verses), then without `--dry-run` to write
+  the two tables, then deploy. Frontend degrades to prose until the data is loaded.** Memory
+  `project_bsb_words`. NOTE: this also closes the KJV/BSB word-level-highlight gap FOR BSB only — KJV
+  still anchors whole-verse (kjv_words has positions, so the same `renderBsbVerse` pattern could enable
+  KJV word-level later if wanted).
 - **ESV — PERSONAL, LOGIN-GATED — DONE + LIVE 2026-06-10** (memory `project_esv_audio`). Owner-only ESV
   reader, server-gated via the shared `views_notes.is_owner()` (`OWNER_EMAIL` live; toggle shows for the
   owner). Text LOADED on PA (`load_esv.py` → `esv.db` = 31,104 verses, all 66 books). ESV AUDIO now

@@ -135,6 +135,14 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
                    strongs: tag(sid), he: /^H/i.test(sid) };
         })))
         .catch(() => done([]));
+    } else if (entry.isBsb) {
+      api.bsbVerseWords(entry.book, entry.chapter, entry.verse)
+        .then(rows => done((rows || []).map(w => {
+          const sid = (w.strongs_ids && w.strongs_ids[0]) || "";
+          return { top: w.lemma || "", translit: w.xlit || "", english: w.word || "",
+                   strongs: tag(sid), he: /^H/i.test(sid) };
+        })))
+        .catch(() => done([]));
     } else if (entry.isHeb) {
       api.hebVerseWords(entry.book, entry.chapter, entry.verse)
         .then(d => done((d.words || []).map(w => ({
@@ -226,11 +234,24 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   const [kjvCount, setKjvCount] = useState(null);
   useEffect(() => {
     setKjvCount(null);
-    if ((!isHebrew && !entry.isKjv) || !entry.strongs || entry.isHeb) return;   // Hebrew OT reader: no KJV cross-link
+    if ((!isHebrew && !entry.isKjv) || !entry.strongs || entry.isHeb || entry.isBsb) return;   // Hebrew OT reader / BSB: no KJV cross-link
     let cancelled = false;
     api.kjvStrongsCount(entry.strongs)
       .then(d => { if (!cancelled) setKjvCount(d.count ?? null); })
       .catch(() => { if (!cancelled) setKjvCount(null); });
+    return () => { cancelled = true; };
+  }, [entry && entry.strongs]);
+
+  // BSB occurrence count (BSB word study) — its own count; the Lexicon tab has no
+  // BSB corpus, so this shows as a plain "N× in BSB" tally, not a click-through.
+  const [bsbCount, setBsbCount] = useState(null);
+  useEffect(() => {
+    setBsbCount(null);
+    if (!entry || !entry.isBsb || !entry.strongs) return;
+    let cancelled = false;
+    api.bsbStrongsCount(entry.strongs)
+      .then(d => { if (!cancelled) setBsbCount(d.count ?? null); })
+      .catch(() => { if (!cancelled) setBsbCount(null); });
     return () => { cancelled = true; };
   }, [entry && entry.strongs]);
 
@@ -276,8 +297,8 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     setMetavPlaceData(null);
     setMetavTab("person");
     // Skip metaV for words with a real Greek lemma — those belong to LSJ
-    // Exception: KJV words that look like proper nouns (capitalized) still go through metaV
-    const kjvIsPN = entry.isKjv && extractProperName(entry.pnName || entry.gloss || "") !== "";
+    // Exception: KJV/BSB words that look like proper nouns (capitalized) still go through metaV
+    const kjvIsPN = (entry.isKjv || entry.isBsb) && extractProperName(entry.pnName || entry.gloss || "") !== "";
     if (!isPN && !kjvIsPN && entry.greek && entry.translit && entry.strongs_raw !== "2316") return;
     const name = extractProperName(entry.pnName || entry.gloss || "");
     if (!name || name.length < 2) return;
@@ -353,13 +374,15 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     return () => { cancelled = true; };
   }, [entry && entry.id]);
 
-  // KJV verse text (when entry came from KJV mode, or is a Hebrew word)
+  // English verse text for the quote — BSB for BSB words, else KJV (KJV mode, a
+  // Hebrew word, or a place card). Held in kjvVerseText; the source is picked here.
   const [kjvVerseText, setKjvVerseText] = useState("");
   useEffect(() => {
     setKjvVerseText("");
-    if (!entry || (!entry.isKjv && !isHebrew && !(metavType === "place" && !isPN))) return;
+    if (!entry || (!entry.isKjv && !entry.isBsb && !isHebrew && !(metavType === "place" && !isPN))) return;
     let cancelled = false;
-    api.kjvVerse(entry.book, entry.chapter, entry.verse)
+    const fetchVerse = entry.isBsb ? api.bsbVerse : api.kjvVerse;
+    fetchVerse(entry.book, entry.chapter, entry.verse)
       .then(d => { if (!cancelled) setKjvVerseText(d.text || ""); })
       .catch(() => {});
     return () => { cancelled = true; };
@@ -433,8 +456,9 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   // standalone gloss line only when there's no transliteration.
   const heroInlineGloss = !!(hero.translit && hero.standaloneGloss && !hero.noGloss);
 
-  // Verse + place sections show KJV text (not ABP) for Hebrew / KJV-mode / place words.
-  const useKjvText = entry.isKjv || isHebrew || (metavType === "place" && !isPN);
+  // Verse + place sections show an English reading text (not ABP) for Hebrew /
+  // KJV-mode / BSB-mode / place words. BSB pulls BSB text; the rest pull KJV.
+  const useKjvText = entry.isKjv || entry.isBsb || isHebrew || (metavType === "place" && !isPN);
 
   // Ordered list of stacked sections. BDB and LSJ are mutually exclusive (Hebrew
   // gets BDB; everything else may get LSJ) — same either/or as the old ternary.
@@ -445,14 +469,15 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   else if ((!isPN || (metavType === "place" && metavData?.strongs_g?.length > 0)) && metavType !== "person"
            && !aiDescription && !aiDescLoading
            && (entry.greek || entry.strongs_raw || metavData?.strongs_g?.length > 0)) sections.push("lsj");
-  if (!isHebrew && !isPN && !entry.isKjv && !entry.isExtra && abpCount !== null && abpCount > 0) sections.push("abpOcc");
+  if (!isHebrew && !isPN && !entry.isKjv && !entry.isBsb && !entry.isExtra && abpCount !== null && abpCount > 0) sections.push("abpOcc");
   // Non-canon "other" books (Apostolic Fathers chip mode): suppress the occurrence
   // links/counts (the LXX cross-link above + this in-book count) until Lexicon search is
   // wired. Re-enable: drop `!entry.isExtra` above + uncomment extraOcc.
   // if (entry.isExtra && extraCount !== null && extraCount > 0) sections.push("extraOcc");
   if (entry.isKjv && !isHebrew && !isPN && kjvCount !== null && kjvCount > 0) sections.push("kjvOcc");
-  if (!entry.isKjv && isPN && pnCount !== null && pnCount > 0 && onNameSearch) sections.push("pnOcc");
-  if (isHebrew && !entry.isHeb && kjvCount !== null && kjvCount > 0) sections.push("hebrewKjvOcc");
+  if (entry.isBsb && !isPN && bsbCount !== null && bsbCount > 0) sections.push("bsbOcc");
+  if (!entry.isKjv && !entry.isBsb && isPN && pnCount !== null && pnCount > 0 && onNameSearch) sections.push("pnOcc");
+  if (isHebrew && !entry.isHeb && !entry.isBsb && kjvCount !== null && kjvCount > 0) sections.push("hebrewKjvOcc");
   // Nave's topical sits BELOW the lexicon/place cards (metaV, AI, BDB/LSJ) — it's a
   // study cross-link, not a definition, so it reads last among the reference blocks.
   if (naveData && naveData.sections.length) sections.push("naveTopical");
@@ -629,6 +654,12 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
         </button>
       </section>
     );
+    case "bsbOcc": return (
+      <section key="bsbOcc" className="sec">
+        <h4 className="sec-head"><span className="sec-t">BSB Occurrences</span></h4>
+        <div className="occ-link occ-link--static"><b>{bsbCount}</b>× in BSB</div>
+      </section>
+    );
     case "pnOcc": return (
       <section key="pnOcc" className="sec">
         <h4 className="sec-head"><span className="sec-t">ABP Occurrences</span></h4>
@@ -661,7 +692,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       <section key="verse" className="sec">
         <h4 className="sec-head">
           <span className="sec-t">Verse — {entry.ref}</span>
-          <span className="lsj-badge">{useKjvText ? "KJV" : "ABP"}</span>
+          <span className="lsj-badge">{entry.isBsb ? "BSB" : useKjvText ? "KJV" : "ABP"}</span>
         </h4>
         <blockquote className="dverse">
           <span className="dverse-n">{entry.verse}</span>

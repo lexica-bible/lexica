@@ -731,15 +731,16 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
   const viewMode        = libOptions.viewMode        || "chip";
   const setOpt = (key, val) => setLibOptions(prev => ({ ...prev, [key]: val }));
 
-  // English-only non-canonical texts (e.g. 1 Enoch) have no Greek, so the reader is
-  // locked to Prose and the Greek-only toggles (Strong's / Interlinear / Parallel /
-  // Chip) are disabled and grayed out.
+  // English-only non-canonical texts (e.g. 1 Enoch) and ESV/NIV (no per-word data)
+  // are locked to Prose and the Greek/Strong's toggles (Strong's / Interlinear /
+  // Chip) are disabled and grayed out. BSB now has its own per-word Strong's data
+  // (bsb_words), so it is NOT prose-locked — it gets chip mode like KJV.
   const bsbMode     = translation === "bsb";
   const esvMode     = translation === "esv";
   const nivMode     = translation === "niv";
   const kjvMode     = translation === "kjv";   // KJV has public-domain audio (no key)
   const hebMode     = translation === "heb";   // Hebrew interlinear: always chips, no prose option
-  const proseLocked = !!(nonCanon && nonCanon.englishOnly) || bsbMode || esvMode || nivMode;
+  const proseLocked = !!(nonCanon && nonCanon.englishOnly) || esvMode || nivMode;
   const chipMode    = !proseLocked && (viewMode === "chip" || showStrongs || showInterlinear);
   const wordMode    = chipMode;
   const kjvWordMode = chipMode;
@@ -785,6 +786,11 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
   const bsbView = chronoOn ? flattenSpan("bsb") : bsbVerses;
   const esvView = chronoOn ? flattenSpan("esv") : esvVerses;
   const nivView = chronoOn ? flattenSpan("niv") : nivVerses;
+  // BSB chips need the per-word data (bsb_words). If it isn't loaded yet, the
+  // chapter feed has empty `words`, so fall back to prose even in chip mode —
+  // safe to ship the frontend before the data load.
+  const bsbHasWords = bsbView.some(v => v.words && v.words.length);
+  const bsbWordMode = chipMode && bsbHasWords;
   // A heading each time the chapter changes within a passage. EVERY chrono passage gets
   // one now — single-chapter ones too (they were skipped before, which is why Genesis 6
   // and the like showed no book/chapter label at all). When a passage only covers part of
@@ -1362,6 +1368,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
   const renderVerse = (v, sh) => LibRender.renderVerse(_renderCtx, v, sh);
   const renderKjvVerse = (v, svn, sh) => LibRender.renderKjvVerse(_renderCtx, v, svn, sh);
   const renderKjvProse = (v, svn, sh) => LibRender.renderKjvProse(_renderCtx, v, svn, sh);
+  const renderBsbVerse = (v, svn, sh) => LibRender.renderBsbVerse(_renderCtx, v, svn, sh);
   const renderPlainVerse = (v, svn, sh) => LibRender.renderPlainVerse(_renderCtx, v, svn, sh);
   const renderFlowVerse = (v, inner) => LibRender.renderFlowVerse(_renderCtx, v, inner);
   const plainFlowInner = (v) => LibRender.plainFlowInner(_renderCtx, v);
@@ -1717,7 +1724,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
             const colDefs = {
               abp: { label: "ABP", view: abpView, loading: abpShowLoading, render: (v) => renderVerse(v, true) },
               kjv: { label: "KJV", view: kjvView, loading: kjvShowLoading, render: (v) => (kjvWordMode ? renderKjvVerse(v, true, true) : renderKjvProse(v, true, true)) },
-              bsb: { label: "BSB", view: bsbView, loading: bsbShowLoading, render: plainCol },
+              bsb: { label: "BSB", view: bsbView, loading: bsbShowLoading, render: (v) => (bsbWordMode ? renderBsbVerse(v, true, true) : plainCol(v)) },
               esv: { label: "ESV", view: esvView, loading: esvShowLoading, render: plainCol },
               niv: { label: "NIV", view: nivView, loading: nivShowLoading, render: plainCol },
             };
@@ -1793,6 +1800,10 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
         ) : translation === "bsb" ? (
           bsbShowLoading ? (
             <div className="lib-loading">Loading…</div>
+          ) : bsbWordMode ? (
+            <div className="lib-text-words">
+              {withMarks(bsbView, v => renderBsbVerse(v))}
+            </div>
           ) : isPoetry ? (
             <div className="lib-text-words">
               {withMarks(bsbView, v => renderPlainVerse(v))}

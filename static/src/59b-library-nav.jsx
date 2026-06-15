@@ -476,7 +476,7 @@ function ModesSheet({
 }) {
   const { sheetRef, scrollRef } = useSwipeToDismiss(onClose);
   const activeNonCanon = nonCanonList.find(t => t.id === corpus) || null;
-  const proseLocked = !!(activeNonCanon && activeNonCanon.englishOnly) || translation === "bsb" || translation === "esv" || translation === "niv";   // English-only / BSB / ESV / NIV: no Greek toggles
+  const proseLocked = !!(activeNonCanon && activeNonCanon.englishOnly) || translation === "esv" || translation === "niv";   // English-only / ESV / NIV: no Greek toggles (BSB has its own per-word Strong's data)
   const hebMode = translation === "heb";   // Hebrew interlinear: always chips, no prose option
   const gray = proseLocked ? { opacity: 0.35, cursor: "default" } : undefined;
   // English-only "other books": Greek toggles stay locked, but line-vs-flow is allowed.

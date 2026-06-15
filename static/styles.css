@@ -1403,9 +1403,9 @@ input { font-family: inherit; }
 .lib-trans-btn:hover { color: var(--ink); }
 .lib-trans-btn.on { color: var(--ink); background: var(--ctl-on); box-shadow: var(--shadow-sm); }
 
-/* KJV word chips */
-.lib-kjv-word { display: inline-flex; flex-direction: column; align-items: center; }
-.lib-kjv-italic .lib-iw-english { color: var(--ink-2); font-style: italic; }
+/* KJV + BSB word chips (same chip styling) */
+.lib-kjv-word, .lib-bsb-word { display: inline-flex; flex-direction: column; align-items: center; }
+.lib-kjv-italic .lib-iw-english, .lib-bsb-italic .lib-iw-english { color: var(--ink-2); font-style: italic; }
 .lib-abp-italic .lib-iw-english { color: var(--ink-2); font-style: italic; }
 .lib-smcap .lib-iw-english { font-variant: small-caps; }
 

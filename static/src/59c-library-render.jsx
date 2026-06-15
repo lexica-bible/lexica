@@ -435,6 +435,66 @@ const LibRender = (function () {
     );
   };
 
+  // BSB word chips — same shape as renderKjvVerse (standard Strong's, both H and
+  // G), but the word entry is flagged isBsb so the detail panel pulls BSB's own
+  // verse breakdown / quote / occurrence count.
+  const renderBsbVerse = (ctx, v, showVerseNum = true, skipHeading = false) => {
+    const { selChapter, nav, selBook, highlightRef, vnumEl, noteMarker, onWordClick, showInterlinear, showStrongs, hiClass } = ctx;
+    const ch = v._ch ?? selChapter;
+    const isHighlight = nav && nav.highlight === v.verse && (nav.chapter == null || nav.chapter === ch);
+    const makeBsbEntry = (w, sid) => ({
+      id: `bsb-${selBook.abbrev}-${ch}-${v.verse}-${w.word_id}`,
+      strongs: sid || "",
+      strongs_base: sid ? sid.slice(1) : "",
+      strongs_raw: sid ? sid.slice(1) : "",
+      greek: w.lemma || "",
+      translit: w.xlit || "",
+      gloss: w.word,
+      ref: `${selBook.abbrev} ${ch}:${v.verse}`,
+      book: selBook.abbrev,
+      chapter: ch,
+      verse: v.verse,
+      definition: "", derivation: "", is_function: false,
+      isBsb: true,
+      isHebrew: sid ? sid.startsWith("H") : false,
+    });
+    return (
+      <React.Fragment key={`${ch}-${v.verse}`}>
+        {!skipHeading && v.heading && <div className="lib-verse-row pericope-row"><span className="lib-vnum" aria-hidden="true"/><div className="pericope-heading">{v.heading}</div></div>}
+        <div ref={isHighlight ? highlightRef : null} data-note-verse={v.verse} data-note-chapter={ch}
+          className={"lib-verse-row" + (isHighlight ? " lib-highlight" : "")}>
+        {showVerseNum && vnumEl(v.verse, ch)}
+        <span className="lib-verse-content lib-verse-chips">
+          {showVerseNum && noteMarker(v.verse, ch)}
+          {v.words.map((w, i) => {
+            const sid = w.strongs_ids && w.strongs_ids.length ? w.strongs_ids[0] : null;
+            const clickable = !!(onWordClick && sid);
+            const isHebrew = sid ? sid.startsWith("H") : false;
+            return (
+              <span key={i} data-note-pos={w.verse_pos}
+                className={"lib-word lib-bsb-word" + (w.italic ? " lib-bsb-italic" : "") + (clickable ? " lib-word-clickable" : "") + hiClass(v.verse, w.verse_pos, ch)}
+                onClick={clickable ? () => onWordClick(makeBsbEntry(w, sid)) : undefined}>
+                {showInterlinear && (w.lemma
+                  ? <span className="lib-iw-greek" dir={isHebrew ? "rtl" : undefined}
+                      style={isHebrew ? {fontFamily: "var(--f-serif)"} : undefined}>
+                      {w.lemma}
+                    </span>
+                  : <span className="lib-iw-greek" style={{visibility:"hidden"}}>x</span>
+                )}
+                <span className="lib-iw-english">{w.word}{w.punc || ""}</span>
+                {showStrongs && (sid
+                  ? <span className="lib-iw-strongs">{sid}</span>
+                  : <span className="lib-iw-strongs" style={{visibility:"hidden"}}>G0</span>
+                )}
+              </span>
+            );
+          })}
+        </span>
+      </div>
+      </React.Fragment>
+    );
+  };
+
   const renderKjvProse = (ctx, v, showVerseNum = true, skipHeading = false) => {
     const { selChapter, nav, highlightRef, vnumEl, noteMarker, hiClass } = ctx;
     const ch = v._ch ?? selChapter;
@@ -644,7 +704,7 @@ const LibRender = (function () {
 
   return {
     joinProse, renderProseWords, renderHebVerse, renderVerse,
-    renderKjvVerse, renderKjvProse, renderPlainVerse, renderFlowVerse,
+    renderKjvVerse, renderKjvProse, renderBsbVerse, renderPlainVerse, renderFlowVerse,
     plainFlowInner, kjvFlowInner, didChips, renderDidacheVerse,
     renderDidacheProse, renderExtraLines, renderDidacheParallelVerse,
   };

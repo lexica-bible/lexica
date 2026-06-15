@@ -45,9 +45,11 @@ def test_prefix_invariants():
     c.executescript("""
         CREATE TABLE words (id INTEGER PRIMARY KEY, strongs_base TEXT);
         CREATE TABLE kjv_strongs (id INTEGER PRIMARY KEY, strongs_id TEXT);
+        CREATE TABLE bsb_strongs (id INTEGER PRIMARY KEY, strongs_id TEXT);
         INSERT INTO words (id, strongs_base) VALUES
             (1, 'G4151'), (2, 'H7307'), (3, '*'), (4, 'G2321.1');
         INSERT INTO kjv_strongs (id, strongs_id) VALUES (1, 'G4151'), (2, 'H7307');
+        INSERT INTO bsb_strongs (id, strongs_id) VALUES (1, 'G4151'), (2, 'H7307');
     """)
     # The post-rebuild gate: no bare-number base (the 592k break).
     bare = c.execute("SELECT count(*) FROM words WHERE strongs_base GLOB '[0-9]*'").fetchone()[0]
@@ -60,6 +62,9 @@ def test_prefix_invariants():
 
     kbare = c.execute("SELECT count(*) FROM kjv_strongs WHERE strongs_id GLOB '[0-9]*'").fetchone()[0]
     check("kjv_strongs.strongs_id fully prefixed", kbare, 0)
+
+    bbare = c.execute("SELECT count(*) FROM bsb_strongs WHERE strongs_id GLOB '[0-9]*'").fetchone()[0]
+    check("bsb_strongs.strongs_id fully prefixed", bbare, 0)
     c.close()
 
 
