@@ -42,7 +42,7 @@ function App() {
       searchScrollRef.current = window.scrollY;
       setLibEverVisited(true);
       setMainView("library");
-      setLibNav({ book: n.book, chapter: n.chapter, highlight: n.start.verse, scroll: true, translation: n.translation === "kjv" ? "kjv" : "abp" });
+      setLibNav({ book: n.book, chapter: n.chapter, highlight: n.start.verse, scroll: true, extern: true, translation: n.translation === "kjv" ? "kjv" : "abp" });
     }
     openNote(n.id);
   };
@@ -169,7 +169,10 @@ function App() {
 
   const handleReadInContext = (book, chapter, verse) => {
     searchScrollRef.current = window.scrollY;
-    setLibNav({ book, chapter, highlight: verse, scroll: true });
+    // `extern` (jump came from OUTSIDE the reader — Search results, or a word panel opened over them)
+    // flips chrono→canonical so the verse shows in its chapter. A word panel opened IN the library
+    // (mainView already "library") is an in-reader control, so it stays chronological.
+    setLibNav({ book, chapter, highlight: verse, scroll: true, extern: mainView !== "library" });
     setLibEverVisited(true);
     setMainView("library");
     // Desktop: queue the verse's cross-references for the rail. If it's resting on the summary
@@ -276,7 +279,7 @@ function App() {
             onNavigateToSearch={(q) => { handleNavChange("search"); setQ2(q); }}
             onNavigateToLibrary={(book, chapter, verse, corpus) => {
               searchScrollRef.current = window.scrollY;
-              setLibNav({ book, chapter, highlight: verse, scroll: true, translation: corpus === "kjv" ? "kjv" : "abp" });
+              setLibNav({ book, chapter, highlight: verse, scroll: true, extern: true, translation: corpus === "kjv" ? "kjv" : "abp" });
               setLibEverVisited(true);
               setMainView("library");
               // Same as Read-in-context: desktop queues the xref (shows now if resting on the

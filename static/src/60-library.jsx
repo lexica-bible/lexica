@@ -1255,11 +1255,28 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
     // A verse jump can carry a translation (e.g. a KJV cross-ref) — honor it in either order.
     if (nav.translation) { setTranslation(nav.translation); onTranslationChange?.(nav.translation); }
 
-    // A verse jump (search / lexicon / cross-ref / note) is a specific reference — show it in its
-    // NORMAL chapter. If we're reading chronologically, drop back to canonical so the verse lands
-    // in context instead of dumped mid-passage. The chrono spot is remembered (chronoPos stays put),
-    // so toggling Chronological back returns you to it.
-    if (chronoOn) setOrderMode("canonical");
+    if (chronoOn) {
+      // EXTERNAL jump (from Search / Lexicon / a note list — flagged `nav.extern`) → drop to
+      // canonical so the reference shows in its NORMAL chapter, not dumped mid-passage. But the
+      // IN-READER controls (a verse-number cross-ref, a word panel, chasing a cross-ref — all
+      // triggered while reading chronologically) STAY in chrono: move to the passage that holds the
+      // target verse (passageForRef, narrowed by the verse for a split chapter). If it's already the
+      // current passage (e.g. just opening the xref on a verse you're reading) this is a no-op — and
+      // the `p.pos !== chronoPos` guard also stops the scroll:false self-update from re-firing it.
+      if (nav.extern) {
+        setOrderMode("canonical");   // fall through to the canonical reset below
+      } else {
+        const p = passageForRef(b.abbrev, nav.chapter || 1, nav.highlight);
+        if (p && p.pos !== chronoPos) {
+          if (corpus !== "bible") setCorpus("bible");
+          setOtherOpen(false);
+          setChronoPos(p.pos);
+          setSelBook(b);
+          setSelChapter(p.start_ch);
+        }
+        return;
+      }
+    }
 
     // Only react to a REAL destination change. The scroll-to-highlight step writes a `scroll: false`
     // self-update back to nav (same book + chapter); without this guard that re-fires the reset
@@ -1441,13 +1458,19 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
 
   useEffect(() => {
     if (!nav?.scroll || loading) return;
-    // A verse jump flips chronological order back to canonical first (see the nav effect) — wait
-    // for that render so we scroll within the verse's normal chapter, not the chrono passage.
-    if (chronoOn) return;
-    if (!verses.length) return;
-    // Don't scroll while the requested chapter's verses are still the OLD chapter's —
-    // otherwise we scroll to (and burn the scroll flag on) a wrong same-numbered verse.
-    if (nav.chapter != null && nav.chapter !== selChapter) return;
+    if (chronoOn) {
+      // An EXTERNAL jump is mid-flip to canonical — wait for that render so we don't briefly scroll
+      // (and burn the scroll flag on) the chrono passage. An INTERNAL jump (xref chase / read-in-
+      // context) stays chronological: the nav effect moved chronoPos to the verse's passage, so wait
+      // for that span to load, then the retry loop finds the highlighted row.
+      if (nav.extern) return;
+      if (!chronoData || chronoData.pos !== chronoPos) return;
+    } else {
+      if (!verses.length) return;
+      // Don't scroll while the requested chapter's verses are still the OLD chapter's —
+      // otherwise we scroll to (and burn the scroll flag on) a wrong same-numbered verse.
+      if (nav.chapter != null && nav.chapter !== selChapter) return;
+    }
     let raf, tries = 0;
     const tryScroll = () => {
       if (highlightRef.current) {
@@ -1464,9 +1487,9 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
     raf = requestAnimationFrame(tryScroll);
     return () => cancelAnimationFrame(raf);
     // kjvVerses is in the deps so a KJV-mode jump re-runs once the KJV rows render (the highlight
-    // ref lives on those rows, which load separately from the ABP set). chronoOn re-runs it after a
-    // jump flips order back to canonical.
-  }, [nav?.scroll, nav?.highlight, nav?.chapter, verses, kjvVerses, bsbVerses, loading, selChapter, chronoOn]);
+    // ref lives on those rows, which load separately from the ABP set). chronoData/chronoOn re-run it
+    // once an internal chrono jump's passage loads, or after an external jump flips to canonical.
+  }, [nav?.scroll, nav?.highlight, nav?.chapter, verses, kjvVerses, bsbVerses, loading, selChapter, chronoOn, chronoData, chronoPos]);
 
   const maxChap = nonCanon ? nonCanon.chapters : (selBook ? selBook.chapters : 1);
 
