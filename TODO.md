@@ -478,9 +478,11 @@ place for the existing place sidebar, so this is smaller than it looks.
   KJV/BSB word-level-highlight gap FOR BSB only — KJV still anchors whole-verse (kjv_words has positions, so
   the same `renderBsbVerse` pattern could enable KJV word-level later if wanted).
 - **Inflected-form side-card headword — DONE for Hebrew + BSB 2026-06-15 (ABP deferred, KJV impossible).**
-  The click-a-word SIDE CARD's big headword now shows the word AS IT APPEARS in the verse (inflected/surface
-  form), dictionary lemma small beneath ("both"); pronunciation row swaps to the inflected translit. Only the
-  card headword — reader chips + the card's Interlinear toggle stay the dictionary lemma. **Hebrew**: the
+  The click-a-word SIDE CARD shows BOTH forms: the dictionary lemma is the BIG headword (same for every text),
+  with the inflected form (the word as it appears in the verse) on a small labeled "in this verse: <form> ·
+  <translit>" line beneath (flipped from inflected-big after the user weighed it — lemma-big keeps the headline
+  consistent across ABP/KJV/BSB/Hebrew and matches the rest of the card). Only the card headword area — reader
+  chips + the card's Interlinear toggle stay the dictionary lemma. **Hebrew**: the
   pointed word already rode the chapter feed → surfaced as `entry.inflected`. **BSB**: `bsb_words` gained
   `form` + `form_translit` (Berean tables' "WLC / Nestle Base TR RP WH NE NA SBL" + "Translit" columns), the
   loader populates them, `/api/bsb/chapter` carries them (PRAGMA-guarded so a code deploy before the loader
