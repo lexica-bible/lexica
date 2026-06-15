@@ -60,12 +60,16 @@ Still open:
    new fingerprint scheme watches, so each edit will lazily refresh that category's cache (expected).
    `code: shared snippet in core.py; views_crossref.py system prompts; views_metav.py _PN_SYSTEM;
    views_summary.py _SUMMARY_SYSTEM/_*_TMPL; ai.py LSJ prompt in views_lsj.py`
-3. **Split the one oversized front-end file.** `static/src/60-library.jsx` is ~2,470 lines — by far
-   the biggest, clean inside, but it carries the reader + chip/prose + notes wiring + audio + chrono
-   all at once. Worth carving into smaller view files like the rest of `static/src/` (the build just
-   concatenates them in filename order, so a split costs nothing at runtime). Low urgency — flagged
-   by the 2026-06-10 code read (memory `project_code_quality`).
-   `code: static/src/60-library.jsx; build = scripts/build-frontend.js`
+3. **Split the one oversized front-end file — PREAMBLE DONE 2026-06-14.** `static/src/60-library.jsx`
+   had grown to 3,369 lines. The self-contained preamble (everything before the `LibraryView`
+   component) was carved into two new files that load just ahead of it: `59a-library-helpers.jsx`
+   (highlightTerms, SEARCH_RANGES/BOOK_LIST, word/greek helpers) + `59b-library-nav.jsx` (LibNavPanel,
+   MobileBookPicker, ModesSheet, NONCANON, restore helpers). The `59a`/`59b` prefixes keep the moved
+   code in its exact concat position, so `app.js` came out unchanged except 3 header comments —
+   behavior-neutral. 60-library.jsx is now just `LibraryView` (2,503 lines). STILL OPEN (bigger,
+   riskier, low urgency): splitting `LibraryView` ITSELF — it's one shared-state component, so pulling
+   render logic out means threading many props (not a free concat-split like the preamble).
+   `code: static/src/60-library.jsx + 59a/59b-library-*.jsx; build = scripts/build-frontend.js`
 
 ---
 
