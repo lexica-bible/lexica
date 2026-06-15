@@ -2977,8 +2977,6 @@ function DetailPanel({
   }, hero.script), heroForm && /*#__PURE__*/React.createElement("div", {
     className: "detail-form"
   }, /*#__PURE__*/React.createElement("span", {
-    className: "detail-form-lbl"
-  }, "in this verse"), /*#__PURE__*/React.createElement("span", {
     className: "detail-form-w" + (hero.he ? " detail-form-w--he" : ""),
     dir: hero.he ? "rtl" : undefined
   }, heroForm), heroInflectedTranslit && heroInflectedTranslit !== hero.translit && /*#__PURE__*/React.createElement("span", {

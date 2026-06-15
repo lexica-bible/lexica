@@ -503,7 +503,7 @@ scripts/          # build-frontend.js + one-time import/migration scripts
   the badges/Nave's polish: memory `project_detail_panel_interlinear`.
 - **Word-detail side-card HEADWORD shows the inflected form (2026-06-15).** The big headword is the
   DICTIONARY form (lemma) for EVERY text, and the word AS IT APPEARS in the clicked verse shows on a small
-  labeled "in this verse: <form> · <translit>" line beneath it — for Hebrew (heb_words pointed word) + BSB
+  line beneath it (the form + its translit, no text label) — for Hebrew (heb_words pointed word) + BSB
   (bsb_words `form`/`form_translit`), hidden when it equals the lemma. ABP/KJV have no stored surface form so
   they show just the lemma (graceful). Built via `entry.inflected`/`entry.inflectedTranslit` on the click
   entry (hebEntry/makeBsbEntry in 59c) → `heroForm`/`.detail-form` in 30-detail-panel.jsx. The reading-pane

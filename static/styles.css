@@ -910,24 +910,16 @@ input { font-family: inherit; }
   color: var(--ink-3);
   letter-spacing: 0.01em;
 }
-/* "In this verse" line — the word's INFLECTED form (as it appears in the clicked
-   verse), shown small just beneath the dictionary headword for Hebrew + BSB word
-   study: a muted label + the form (script font) + its transliteration. The big
-   headword stays the dictionary lemma for every text. Sits just under .detail-greek. */
+/* The word's INFLECTED form (as it appears in the clicked verse), shown small just
+   beneath the dictionary headword for Hebrew + BSB word study: the form (script font)
+   + its transliteration. The big headword stays the dictionary lemma for every text.
+   Sits just under .detail-greek. */
 .detail-form {
   display: flex;
   align-items: baseline;
   flex-wrap: wrap;
   gap: 6px;
   margin-top: -3px;
-}
-.detail-form-lbl {
-  font-family: var(--f-sans);
-  font-size: 10px;
-  font-weight: 600;
-  letter-spacing: 0.06em;
-  text-transform: uppercase;
-  color: var(--ink-4);
 }
 .detail-form-w {
   font-family: var(--f-greek);

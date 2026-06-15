@@ -479,8 +479,8 @@ place for the existing place sidebar, so this is smaller than it looks.
   the same `renderBsbVerse` pattern could enable KJV word-level later if wanted).
 - **Inflected-form side-card headword — DONE for Hebrew + BSB 2026-06-15 (ABP deferred, KJV impossible).**
   The click-a-word SIDE CARD shows BOTH forms: the dictionary lemma is the BIG headword (same for every text),
-  with the inflected form (the word as it appears in the verse) on a small labeled "in this verse: <form> ·
-  <translit>" line beneath (flipped from inflected-big after the user weighed it — lemma-big keeps the headline
+  with the inflected form (the word as it appears in the verse) on a small line beneath (the form + its
+  translit, no text label) (flipped from inflected-big after the user weighed it — lemma-big keeps the headline
   consistent across ABP/KJV/BSB/Hebrew and matches the rest of the card). Only the card headword area — reader
   chips + the card's Interlinear toggle stay the dictionary lemma. **Hebrew**: the
   pointed word already rode the chapter feed → surfaced as `entry.inflected`. **BSB**: `bsb_words` gained
