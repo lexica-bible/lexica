@@ -480,7 +480,9 @@ place for the existing place sidebar, so this is smaller than it looks.
   flagged (deferred): show the clicked word's INFLECTED form as the BIG HEADWORD at the top of the
   click-a-word SIDE CARD (`hero.script`), for any text — NOT the card's verse-breakdown toggle, NOT the
   reader chips. Doable for ABP*/BSB/Hebrew, not KJV (*ABP = research if the surface Greek form is stored).
-  Full spec in memory `project_bsb_words`.
+  Swap the TRANSLITERATION to match too (today's translit is the lemma, joined from bdb/lexicon; BSB's
+  inflected translit is free in bsb_tables, Hebrew already has it, ABP unknown, KJV impossible). Full spec
+  in memory `project_bsb_words`.
 - **ESV — PERSONAL, LOGIN-GATED — DONE + LIVE 2026-06-10** (memory `project_esv_audio`). Owner-only ESV
   reader, server-gated via the shared `views_notes.is_owner()` (`OWNER_EMAIL` live; toggle shows for the
   owner). Text LOADED on PA (`load_esv.py` → `esv.db` = 31,104 verses, all 66 books). ESV AUDIO now
