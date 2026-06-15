@@ -806,6 +806,10 @@ one rebuilt (DELETE only ever hits the copy). The build also makes its own `bibl
      over-blocks 53% of the good fixes — see memory project_architecture_rework #2. Don't re-investigate.)
    - fix_kyrios_mistags (3): Dan 4:19 "and"→καί; "of Cyrus" Dan 11:1/Ezr 5:13 → H3566. Pinned.
    - fix_merge_misses (1): Dan 9:10 hand-verified merge the auto generator misses. Pinned.
+   - fix_idios_own (13): 'his/their/its own' (ὁ G3588 + ἴδιος G2398) parked on the article slot →
+     relocate the English onto the empty ἴδιος slot (greek_pos carried in brackets). The orphan is
+     the ADJECTIVE ἴδιος, so the folded NOUN funcword_subject skips it — hence a standalone pinned
+     patch. Idempotent; corpus-wide on the exact ὁ+ἴδιος "own" shape (1Co/1Ti/2Ti/2Pe/Heb). 2026-06-14.
    - dedup_words (0 now — Hab 3:14 fixed at source) → fix_bracket_punct ONCE MORE (~202 cells):
      floats a trailing comma left on the verb onto the last chip of the LORD-subject brackets made
      in the pass (e.g. "said · the LORD,"). Runs LAST so it tidies brackets created above; re-run

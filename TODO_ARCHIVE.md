@@ -448,8 +448,16 @@ Again — never a reading bug, just click precision. The mechanism is proven and
   `bible_pre_funcword_idioms_20260606.db`. `script: fix_funcword_subject.py`
 - **Scrapped:** a third case (a verb's English wrapping around its subject) — too few, too varied,
   and would need risky row inserts for tiny payoff. Parked for good.
+- **ἴδιος "own"** — 'his/their/its own' (ὁ G3588 + ἴδιος G2398) parked on the article slot with ἴδιος
+  empty beside it. Same relocate move as the noun fix, but the orphan is the ADJECTIVE ἴδιος, so the
+  folded noun pass skipped it. 13 spots (1Co/1Ti/2Ti/2Pe/Heb), live 2026-06-14. Rollback:
+  `bible_pre_idios_20260614.db`. `script: fix_idios_own.py` (+ `dump_verse_words.py`, read-only inspector).
 
-What's left is in the live TODO (the "the"/article cleanup). The proven method if anyone resumes:
+The "the"/article cleanup is now essentially CLOSED (see live TODO): a 2026-06-14 read-only
+`audit_funcword_wrongslot.py` re-measure showed the NOUN-behind-"the" case at **0** (the folded
+`funcword_subject` already handles it — the old "highest-volume remaining" framing was stale), the
+ἴδιος "own" subset is fixed (above), and the ~25 remaining gray-zone cases (midst/least/whole/indeed,
+some defensible Greek) are left on purpose. The proven method if anyone resumes a similar cleanup:
 always start read-only and measure first; copy the database before any real change; never run a
 blanket delete; keep repair scripts narrow, re-runnable, with a dry-run; and add them to the
 checklist in CLAUDE.md.

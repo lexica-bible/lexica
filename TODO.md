@@ -141,21 +141,26 @@ Open:
 
 ---
 
-## Word click-targets — the article wrong-slot cleanup
+## Word click-targets — the article wrong-slot cleanup — essentially DONE (2026-06-14)
 
 Background: this is a precision upgrade, **not a bug** — every verse reads correctly. The issue is
-purely about which word you land on when you click. Most of this project is already done and live
-(see the archive). One sizeable piece is left:
+purely about which word you land on when you click. Almost all of it is done and live (see archive).
 
-- **Some nouns are "hidden behind" the word "the".** The Greek word for "the" (the commonest word
-  in the text) sometimes carries a real noun's English onto its own slot when that noun's slot was
-  left empty — so clicking "son" can open the entry for "the" instead of the entry for "son". The
-  catch: "the" legitimately renders as lots of English words too, so a blunt fix would wreck good
-  data. Any fix has to carefully separate the genuine cases from the leaked ones first, read-only,
-  before changing anything. Highest-volume remaining case. `code: audit "the"/G3588 + preposition
-  slots whose word is a concrete/proper noun with an empty slot next to it; method in the archive`
-- **A small gray-zone leftover** (~90 adjective/particle cases) and a cosmetic possessive split
-  ("your rod" — "your" sits on the noun's slot). Low value, not urgent.
+- **Nouns "hidden behind" the word "the" — AUDIT-CLEAN (0).** Re-measured 2026-06-14 with
+  `audit_funcword_wrongslot.py` (read-only): REPAIRABLE-NOUN = **0** for both the article and the
+  article+prepositions runs. The build's folded `funcword_subject` pass already handles the noun
+  leaks, so the old "highest-volume remaining case" framing was stale — that volume is gone.
+- **The ἴδιος "own" possessive split — DONE (13 fixed, 2026-06-14).** 'his/their/its own' (ὁ G3588 +
+  ἴδιος G2398) was parked on the article slot with ἴδιος empty beside it, so clicking "own" opened
+  "the". `scripts/fix_idios_own.py` relocates the English onto the empty ἴδιος slot (same safe move
+  as `fix_funcword_subject`, greek_pos carried in brackets); 13 verses (1Co/1Ti/2Ti/2Pe/Heb),
+  confirmed against the ABP source, applied + verified (audit, health_check, bracket-order all
+  baseline). Added to the rebuild tail chain (`finish_rebuild.sh` + CLAUDE.md checklist).
+- **Remaining gray zone — left on purpose (not worth it).** 25 article-slot cases (midst, least,
+  whole, indeed, "My God"…) — all adjective/adverb/quantifier, and several are defensible Greek
+  (κατὰ μόνας = "alone"). Plus the one straggler in 1Co 3:8's *second* "his own" (split his/own
+  across the two slots, a different shape). Low value; leave unless a specific one bugs you.
+  `code: scripts/fix_idios_own.py, scripts/audit_funcword_wrongslot.py`
 
 ---
 
@@ -216,9 +221,10 @@ subject title; badges TIERED. The chrono pass (this session) also: rebuilt the D
 (4-equal-col grid) + floating "More" popout, Compare/More close on click-outside, and the word/xref
 back-link follows the rail base ("‹ Intro" vs "‹ Overview"). Details in TODO_ARCHIVE.md.
 
-Still open (NOT this session): the xref-panel hero/header consistency note duplicated in the
-chronological block below — confirm against `project_side_panel_rail` (the rail pass may have already
-covered it) before re-doing.
+Nothing open here — the xref-panel hero/header consistency that used to be flagged "NEXT" was
+already covered by this same rail pass (verified 2026-06-14 in `40-crossref-panel.jsx`: header =
+verse ref, `TSK` is a quiet badge on "Related passages", AI synthesis carries the navy AI badge,
+gold swept to navy). See memory `project_side_panel_rail`.
 
 ## Random redesign ideas (2026-06-09 brainstorm — pick any, nothing committed)
 
@@ -393,13 +399,11 @@ current verse (`passageForRef`); the toolbar ‹ › carry the audio on a page t
   (memory `feedback_no_brown`); year weight 500 (JetBrains Mono only loads 400/500, 600 faux-bolds).
   An HTML fixed-dot timeline rebuild was tried + REVERTED (921fc05) — the SVG strip is live. Full
   record: memory `project_chronological_tab`.
-- **OPEN follow-up — xref panel consistency (user flagged, NEXT):** the cross-ref panel
-  (40-crossref-panel.jsx) doesn't line up with the word-study (LSJ) panel. The word panel is the gold
-  standard (badge → polished hero); xref leads with the verse ref + a gold `TSK` tag and jumps to a
-  "Related Passages" list with no hero block. Bring xref into the same header/hero rhythm, AND sweep
-  the leftover dark-gold bits to navy/neutral (TSK/LSJ tag text, the gold left-border on quoted verses
-  `.dverse`/`.verse`, the gold verse numbers `.dverse-n`) — confirm each with the user (gray-vs-hide
-  style; mock first). The word hero is the model. memory `project_chronological_tab` "OPEN" + `feedback_no_brown`.
+- **xref panel consistency — DONE (was flagged NEXT; covered by the 2026-06-14 rail pass).** The
+  cross-ref panel now matches the word-study rhythm: header = verse ref (`.detail-pos`), `TSK` is a
+  quiet badge on the "Related passages" `.sec-head`, the AI synthesis is a `.sec` with the navy AI
+  badge, and the gold (TSK tag, `.dverse`/`.verse` borders + numbers, `.xref-ref`) was swept to navy.
+  Verified in `40-crossref-panel.jsx`. Memory `project_side_panel_rail`.
 - PHASE 2 (deferred): exact hand-curated per-reading dates; sub-eras (Saul/David/Solomon) with finer
   timelines; milestone labels ON the timeline track (v1 lists them below).
 

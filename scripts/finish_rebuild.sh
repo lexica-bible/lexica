@@ -32,6 +32,9 @@ run python3 scripts/fix_theos_filler_tags.py "${DB}" --apply
 run python3 scripts/fix_split_merges.py      "${DB}" --apply
 run python3 scripts/fix_kyrios_mistags.py    "${DB}" --apply
 run python3 scripts/fix_merge_misses.py      "${DB}" --apply
+# idios "own" click-targets: 'his/their/its own' parked on the article slot ->
+# relocate onto the empty G2398 slot. Adjective orphan, so the noun fold skips it.
+run python3 scripts/fix_idios_own.py         "${DB}"
 
 # 3) Safety net: drop any byte-identical duplicate rows (normally 0 now that the
 #    Hab 3:14 source dup is fixed).
