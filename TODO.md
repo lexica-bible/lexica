@@ -60,16 +60,27 @@ Still open:
    new fingerprint scheme watches, so each edit will lazily refresh that category's cache (expected).
    `code: shared snippet in core.py; views_crossref.py system prompts; views_metav.py _PN_SYSTEM;
    views_summary.py _SUMMARY_SYSTEM/_*_TMPL; ai.py LSJ prompt in views_lsj.py`
-3. **Split the one oversized front-end file — PREAMBLE DONE 2026-06-14.** `static/src/60-library.jsx`
-   had grown to 3,369 lines. The self-contained preamble (everything before the `LibraryView`
-   component) was carved into two new files that load just ahead of it: `59a-library-helpers.jsx`
-   (highlightTerms, SEARCH_RANGES/BOOK_LIST, word/greek helpers) + `59b-library-nav.jsx` (LibNavPanel,
-   MobileBookPicker, ModesSheet, NONCANON, restore helpers). The `59a`/`59b` prefixes keep the moved
-   code in its exact concat position, so `app.js` came out unchanged except 3 header comments —
-   behavior-neutral. 60-library.jsx is now just `LibraryView` (2,503 lines). STILL OPEN (bigger,
-   riskier, low urgency): splitting `LibraryView` ITSELF — it's one shared-state component, so pulling
-   render logic out means threading many props (not a free concat-split like the preamble).
-   `code: static/src/60-library.jsx + 59a/59b-library-*.jsx; build = scripts/build-frontend.js`
+3. **Split the one oversized front-end file — DONE 2026-06-14.** `static/src/60-library.jsx` had
+   grown to 3,369 lines. Done in two passes:
+   (a) PREAMBLE — the self-contained code before the `LibraryView` component was carved into
+   `59a-library-helpers.jsx` (highlightTerms, SEARCH_RANGES/BOOK_LIST, word/greek helpers) +
+   `59b-library-nav.jsx` (LibNavPanel, MobileBookPicker, ModesSheet, NONCANON, restore helpers). The
+   `59a`/`59b` prefixes keep the moved code in its exact concat position, so `app.js` came out
+   unchanged except 3 header comments — behavior-neutral.
+   (b) RENDER BLOCK — the ~600-line family of verse renderers (renderVerse + its chip/bracket inner
+   helpers, KJV, BSB/plain, Hebrew, flow, and the Didache/non-canon renderers) moved into a new
+   `59c-library-render.jsx` (the `LibRender` module). Each renderer now takes a `ctx` bundle of the
+   live values it needs from LibraryView (current book/chapter, the note/highlight helpers, the
+   chip/Strong's/interlinear toggles, onWordClick, the highlight/press refs — 19 in all). LibraryView
+   builds `ctx` once per render and binds 13 thin one-line wrappers, so every call site in the main
+   return reads exactly as before. NOT byte-identical (call sites changed, unlike the preamble), so
+   verified instead by: clean build + `node --check`, an audit that every ctx field is destructured
+   where used and no component-local leaked through, the 13 wrappers present + old defs gone, and a
+   deterministic rebuild. Still needs a live reader spot-check (ABP chip+prose, KJV, BSB, Hebrew, a
+   Didache chapter, a Compare view) — can't run the reader without the live DB.
+   60-library.jsx: 3,369 -> 1,918 lines. What remains in LibraryView (correctly, not a smell): its
+   state/effects/handlers + the main return JSX — it's one shared-state component.
+   `code: static/src/60-library.jsx + 59a/59b/59c-library-*.jsx; build = scripts/build-frontend.js`
 
 ---
 
