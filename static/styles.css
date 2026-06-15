@@ -2129,8 +2129,10 @@ input { font-family: inherit; }
   .lib-parallel-col .lib-vnum { display: none; }
   /* ABP/KJV render a block verse row, so the per-line text label dropped onto its
      own line above; BSB/ESV/NIV render an inline span and ran in. Make the ABP/KJV
-     row flow inline too so every column's label runs in beside the text alike. */
-  .lib-parallel-col > .lib-verse-row { display: inline; }
+     row flow inline too so every column's label runs in beside the text alike.
+     Drop the row's 5px left padding (BSB's plain span has none) so the label-to-text
+     gap matches BSB in both chip and prose mode. */
+  .lib-parallel-col > .lib-verse-row { display: inline; padding-left: 0; }
   .lib-parallel-col .lib-verse-chips { display: inline-flex; vertical-align: top; }
   /* The small text label (ABP/KJV/BSB/ESV/NIV) before each stacked line. */
   .lib-parallel-col-lbl {
