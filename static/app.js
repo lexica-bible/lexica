@@ -6491,6 +6491,8 @@ function DayIntroPanel({
 }
 DayIntroPanel._cache = {};
 
+// 59a — Library helpers, split out of 60-library.jsx so that file holds only the
+//       LibraryView component. Loads just before 59b-library-nav + 60-library.
 // ============================================================
 // LIBRARY HELPERS
 // ============================================================
@@ -6713,6 +6715,11 @@ function strongsAnchorIndex(parts, italicSet, w) {
   return firstNonItalic;
 }
 
+// 59b — Library nav/picker sub-components + the non-canon text list + the
+//       restore-from-localStorage helpers, split out of 60-library.jsx.
+//       Loads between 59a-library-helpers and 60-library.
+//       Holds: LibNavPanel · MobileBookPicker · ModesSheet · _BOOK_DIV ·
+//              NONCANON + nonCanonGroups · readLibSaved/readCachedBooks/readCachedChrono.
 // ============================================================
 // LIB NAV PANEL — desktop left sidebar (≥1100px)
 // ============================================================
@@ -8095,6 +8102,11 @@ function readCachedChrono() {
     return null;
   }
 }
+
+// ============================================================
+// LIBRARY VIEW — the reader (the big component). Its helpers and nav/picker
+// sub-components live in 59a-library-helpers.jsx + 59b-library-nav.jsx.
+// ============================================================
 function LibraryView({
   nav,
   onNavChange,
