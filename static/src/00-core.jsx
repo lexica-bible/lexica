@@ -304,7 +304,7 @@ function _decodeCNG(s) {            // case + number + (optional) gender, by pos
   return out;
 }
 
-function decodeMorph(morph, lemma) {
+function decodeMorph(morph, lemma, snum) {
   if (!morph) return "";
   const m = morph.trim();
   let parts = [];
@@ -372,6 +372,20 @@ function decodeMorph(morph, lemma) {
       parts = [label];
     }
   } catch (e) { return ""; }
+  // Two-ending adjectives (masculine & feminine are one form): the OT (CATSS) /
+  // NT (Robinson) morph source often just defaults such a word to Masculine. For
+  // the words it never resolves (never tags Feminine — see scripts/build_two_ending.py)
+  // show "Masculine/Feminine" rather than assert a gender the form can't carry;
+  // Feminine/Neuter tags are trusted as-is. snum = strongs_base ("G517").
+  if (snum && parts[0] === "Adjective") {
+    const soft = (m.indexOf(".") >= 0)
+      ? (typeof TWO_END_SOFT_OT !== "undefined" && TWO_END_SOFT_OT)
+      : (typeof TWO_END_SOFT_NT !== "undefined" && TWO_END_SOFT_NT);
+    if (soft && soft.has(snum)) {
+      const gi = parts.indexOf("Masculine");
+      if (gi >= 0) parts[gi] = "Masculine/Feminine";
+    }
+  }
   return parts.filter(Boolean).join(" · ");
 }
 

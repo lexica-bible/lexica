@@ -430,7 +430,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   if (!entry) return null;
 
   const barWidth = Math.min(100, (occurrences / Math.max(1, totalResults)) * 100);
-  const morphLine = (entry.greek && !isHebrew) ? decodeMorph(entry.morph, entry.greek)
+  const morphLine = (entry.greek && !isHebrew) ? decodeMorph(entry.morph, entry.greek, entry.strongs_base)
     : (isHebrew ? (entry.grammar || "") : "");   // Hebrew: the decoded TAHOT grammar, same card slot as Greek
   const { sheetRef, scrollRef } = useSwipeToDismiss(onClose);
 
