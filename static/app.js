@@ -1650,7 +1650,7 @@ function Header({
   }, "Search"), /*#__PURE__*/React.createElement("button", {
     className: "hdr-link " + (activeView === "notes" ? "active" : ""),
     onClick: () => onNavChange("notes")
-  }, "Notes"), owner && /*#__PURE__*/React.createElement("button", {
+  }, "Notes"), /*#__PURE__*/React.createElement("button", {
     className: "hdr-link " + (activeView === "study" ? "active" : ""),
     onClick: () => onNavChange("study")
   }, "Study"), /*#__PURE__*/React.createElement("button", {
@@ -2245,7 +2245,8 @@ function DetailPanel({
   const [metavLoading, setMetavLoading] = useState(false);
 
   // Nave's topical study for this person/place (subtopic headers + counts), shown
-  // under the metaV card. Admin-only (the endpoint 404s otherwise → stays null).
+  // under the metaV card. PUBLIC for published name-topics; drafts stay admin-only
+  // (the endpoint returns no sections otherwise → stays null).
   const [naveData, setNaveData] = useState(null);
   useEffect(() => {
     setNaveData(null);
@@ -4721,7 +4722,7 @@ function TopicPage({
     })
   }, "Published")), /*#__PURE__*/React.createElement("span", {
     className: "study-label-hint"
-  }, "Draft = only you. Published shows it in Preview as reader (still admin-only for now).")));
+  }, "Draft = only you. Published = visible to everyone.")));
 }
 
 // ---- Claims (denomination / argument) -------------------------------------
@@ -5300,9 +5301,11 @@ function DenominationRead({
 
 // ---- The Study tab --------------------------------------------------------
 function StudyView({
+  admin,
   pending,
   onConsumed
 }) {
+  const adminUser = !!admin;
   const [module, setModule] = useState("topic");
   const [entries, setEntries] = useState(null);
   const [err, setErr] = useState(false);
@@ -5312,6 +5315,9 @@ function StudyView({
   const [saving, setSaving] = useState(false);
   const [savedAt, setSavedAt] = useState(null);
   const [q, setQ] = useState("");
+  // A non-admin visitor IS the reader: published-only, no editing, no module switch
+  // (only Topics are public). An admin can also opt into this view via "Preview as reader".
+  const readerView = !adminUser || previewReader;
   const load = mod => {
     setEntries(null);
     api.studyEntries(mod).then(d => {
@@ -5462,9 +5468,9 @@ function StudyView({
     className: "stats-view"
   }, /*#__PURE__*/React.createElement("div", {
     className: "stats-empty"
-  }, "Couldn't load study content. (Admin sign-in required.)"));
+  }, "Couldn't load study content.", adminUser ? " (Admin sign-in required.)" : ""));
   if (editing) {
-    const ro = previewReader || !editMode; // read-only: preview mode, or not actively editing
+    const ro = readerView || !editMode; // read-only: a reader/preview, or not actively editing
     const close = () => {
       setEditing(null);
       setSavedAt(null);
@@ -5479,7 +5485,7 @@ function StudyView({
       onDelete: del,
       onClose: close,
       onToggleEdit: () => setEditMode(m => !m),
-      previewReader: previewReader,
+      previewReader: readerView,
       saving: saving,
       savedAt: savedAt
     }));
@@ -5493,7 +5499,7 @@ function StudyView({
       onDelete: del,
       onClose: close,
       onToggleEdit: () => setEditMode(m => !m),
-      previewReader: previewReader,
+      previewReader: readerView,
       saving: saving,
       savedAt: savedAt
     }));
@@ -5503,7 +5509,7 @@ function StudyView({
       entry: editing,
       onClose: close,
       onToggleEdit: () => setEditMode(true),
-      previewReader: previewReader
+      previewReader: readerView
     }));
     return /*#__PURE__*/React.createElement("div", {
       className: "study-view"
@@ -5522,12 +5528,12 @@ function StudyView({
   const moduleName = isTopic ? "Topics" : module === "denomination" ? "Denominations" : "Arguments";
   const newLabel = isTopic ? "topic" : module === "denomination" ? "denomination" : "argument";
   const qs = q.trim().toLowerCase();
-  const pool = (entries || []).filter(e => !previewReader || e.status === "published"); // a reader only sees published
+  const pool = (entries || []).filter(e => !readerView || e.status === "published"); // a reader only sees published
   const sortKey = e => displayTitle(e.title || "").toLowerCase().replace(/^(?:the|a|an)\s+/, "");
   const shown = pool.filter(e => !qs || (e.title || "").toLowerCase().includes(qs) || displayTitle(e.title).toLowerCase().includes(qs) || (e.heldBy || "").toLowerCase().includes(qs)).sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
   return /*#__PURE__*/React.createElement("div", {
     className: "study-view"
-  }, /*#__PURE__*/React.createElement("div", {
+  }, adminUser && /*#__PURE__*/React.createElement("div", {
     className: "study-sub"
   }, STUDY_MODULES.map(m => /*#__PURE__*/React.createElement("button", {
     key: m.id,
@@ -5546,7 +5552,7 @@ function StudyView({
     className: "study-list-head"
   }, /*#__PURE__*/React.createElement("h1", {
     className: "stats-title"
-  }, moduleName), !previewReader && /*#__PURE__*/React.createElement("button", {
+  }, moduleName), !readerView && /*#__PURE__*/React.createElement("button", {
     className: "study-new",
     onClick: newEntry
   }, "+ New ", newLabel)), /*#__PURE__*/React.createElement("div", {
@@ -5561,7 +5567,7 @@ function StudyView({
     className: "stats-empty"
   }, "Loading\u2026") : shown.length === 0 ? /*#__PURE__*/React.createElement("div", {
     className: "stats-empty"
-  }, qs ? "No matches for “" + q + "”." : previewReader ? "Nothing published yet — mark an entry Published to show it here." : "Nothing here yet — start with “+ New " + newLabel + "”." + (isTopic ? " (Or import from MetaV.)" : "")) : /*#__PURE__*/React.createElement("div", {
+  }, qs ? "No matches for “" + q + "”." : !adminUser ? "No study topics yet — check back soon." : previewReader ? "Nothing published yet — mark an entry Published to show it here." : "Nothing here yet — start with “+ New " + newLabel + "”." + (isTopic ? " (Or import from MetaV.)" : "")) : /*#__PURE__*/React.createElement("div", {
     className: "study-rows"
   }, shown.map(e => /*#__PURE__*/React.createElement("button", {
     className: "study-row",
@@ -5575,7 +5581,7 @@ function StudyView({
     className: "study-row-held"
   }, " \xB7 ", e.heldBy) : null), /*#__PURE__*/React.createElement("span", {
     className: "study-row-n"
-  }, e.n || 0, " ", isTopic ? "verses" : "refs"), !previewReader && e.status === "draft" && /*#__PURE__*/React.createElement("span", {
+  }, e.n || 0, " ", isTopic ? "verses" : "refs"), !readerView && e.status === "draft" && /*#__PURE__*/React.createElement("span", {
     className: "study-row-draft"
   }, "draft")))));
 }
@@ -12811,7 +12817,8 @@ function App() {
     owner: owner
   }), mainView === "notes" && /*#__PURE__*/React.createElement(NotesView, {
     onOpen: openNoteFromList
-  }), mainView === "study" && owner && /*#__PURE__*/React.createElement(StudyView, {
+  }), mainView === "study" && /*#__PURE__*/React.createElement(StudyView, {
+    admin: owner,
     pending: studyPending,
     onConsumed: () => setStudyPending(null)
   }), /*#__PURE__*/React.createElement("div", {
@@ -13106,7 +13113,7 @@ function App() {
     strokeLinejoin: "round"
   }, /*#__PURE__*/React.createElement("path", {
     d: "M6 3h12v18l-6-4-6 4z"
-  })), "Notes"), owner && /*#__PURE__*/React.createElement("button", {
+  })), "Notes"), /*#__PURE__*/React.createElement("button", {
     className: "mobile-tab" + (mainView === "study" ? " active" : ""),
     onClick: () => handleNavChange("study")
   }, /*#__PURE__*/React.createElement("svg", {

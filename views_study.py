@@ -11,10 +11,12 @@ Storage: study.db (core.study_db), kept OUT of bible.db (the corpus is rebuilt;
 authored content must survive that) and OUT of git (*.db is gitignored), exactly
 like notes.db. One row per entry.
 
-Gating: every route is ADMIN-ONLY for now (the owner authors content). Reading may
-open to the public later — that's a deliberate, separate decision (these modules
-take positions, unlike the rest of the Berean app). Non-admins get a 404, same as
-the admin user-management routes in views_notes.
+Gating: WRITING is always admin-only (the owner authors content). READING is split
+(go-live 2026-06-16): published TOPICS — including the metaV name-topics — are PUBLIC,
+readable by anyone with no login. Denominations + arguments stay admin-only (they take
+positions, unlike the rest of the Berean app), as do all DRAFTS and the editor's
+verse-autofill. Non-admins get a 404 for anything they may not see, and private notes
+are never sent to a reader.
 
 Verses are stored as plain REFERENCES only ("Romans 10:17"); the ABP PROSE text is
 resolved live from bible.db on read and for the editor's auto-fill (KJV fallback
@@ -498,14 +500,23 @@ def _guard():
 # ── Routes ───────────────────────────────────────────────────────────────────
 @bp.route("/api/study/entries", methods=["GET"])
 def list_entries():
-    g = _guard()
-    if g:
-        return g
     _ensure_tables()
+    admin = is_admin()
     wanted = (request.args.get("type") or "").strip().lower()
     conn = study_db()
     try:
-        if wanted in _TYPES:
+        if not admin:
+            # PUBLIC: published TOPICS only. Denominations/arguments stay private;
+            # name-topics aren't browseable here (they open from the metaV sidebar).
+            if wanted and wanted != "topic":
+                rows = []
+            else:
+                rows = conn.execute(
+                    "SELECT id, type, title, json, status, updated FROM entries"
+                    " WHERE deleted=0 AND type='topic' AND status='published'"
+                    " ORDER BY updated DESC"
+                ).fetchall()
+        elif wanted in _TYPES:
             rows = conn.execute(
                 "SELECT id, type, title, json, status, updated FROM entries"
                 " WHERE deleted=0 AND type=? ORDER BY updated DESC",
@@ -546,10 +557,8 @@ def list_entries():
 
 @bp.route("/api/study/entry/<entry_id>", methods=["GET"])
 def get_entry(entry_id):
-    g = _guard()
-    if g:
-        return g
     _ensure_tables()
+    admin = is_admin()
     conn = study_db()
     try:
         r = conn.execute(
@@ -561,11 +570,17 @@ def get_entry(entry_id):
         conn.close()
     if not r:
         return jsonify({"error": "not found"}), 404
+    # PUBLIC: only published topic-like entries (topics + metaV name-topics).
+    # Denominations/arguments and any draft stay admin-only.
+    if not admin and not (r["type"] in ("topic", "name") and r["status"] == "published"):
+        return jsonify({"error": "not found"}), 404
     try:
         stored = json.loads(r["json"]) or {}
     except (ValueError, TypeError):
         stored = {}
     out = _resolve_body(r["type"], stored)
+    if not admin:
+        out.pop("notes", None)   # never send private notes to a reader
     out.update({
         "id": r["id"], "type": r["type"], "title": r["title"],
         "status": r["status"], "created": r["created"], "updated": r["updated"],
@@ -671,19 +686,18 @@ def for_name(name):
     """The Nave's topical study for a person/place name (its subtopic sections +
     verses), shown on the metaV sidebar. Loaded as a 'name'-type entry by the
     topics loader; id = 'metavn_' + slug(name). Empty {sections:[]} if there's none."""
-    g = _guard()
-    if g:
-        return g
     _ensure_tables()
+    admin = is_admin()
     entry_id = "metavn_" + _slug(name)
     conn = study_db()
     try:
         r = conn.execute(
-            "SELECT title, json FROM entries WHERE id=? AND deleted=0", (entry_id,)
+            "SELECT title, json, status FROM entries WHERE id=? AND deleted=0", (entry_id,)
         ).fetchone()
     finally:
         conn.close()
-    if not r:
+    # PUBLIC: published name-topics only; drafts stay admin-only.
+    if not r or (not admin and r["status"] != "published"):
         return jsonify({"name": name, "id": None, "sections": []})
     try:
         stored = json.loads(r["json"]) or {}

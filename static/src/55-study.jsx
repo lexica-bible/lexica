@@ -314,7 +314,7 @@ function TopicPage({ entry, editing, onChange, onSave, onDelete, onClose, onTogg
           <button className={"seg-b" + (entry.status === "draft" ? " on" : "")} onClick={() => up({ status: "draft" })}>Draft</button>
           <button className={"seg-b" + (entry.status === "published" ? " on" : "")} onClick={() => up({ status: "published" })}>Published</button>
         </div>
-        <span className="study-label-hint">Draft = only you. Published shows it in Preview as reader (still admin-only for now).</span>
+        <span className="study-label-hint">Draft = only you. Published = visible to everyone.</span>
       </div>
     </div>
   );
@@ -611,7 +611,8 @@ function DenominationRead({ entry, onClose, onToggleEdit, previewReader }) {
 }
 
 // ---- The Study tab --------------------------------------------------------
-function StudyView({ pending, onConsumed }) {
+function StudyView({ admin, pending, onConsumed }) {
+  const adminUser = !!admin;
   const [module, setModule] = useState("topic");
   const [entries, setEntries] = useState(null);
   const [err, setErr] = useState(false);
@@ -621,6 +622,9 @@ function StudyView({ pending, onConsumed }) {
   const [saving, setSaving] = useState(false);
   const [savedAt, setSavedAt] = useState(null);
   const [q, setQ] = useState("");
+  // A non-admin visitor IS the reader: published-only, no editing, no module switch
+  // (only Topics are public). An admin can also opt into this view via "Preview as reader".
+  const readerView = !adminUser || previewReader;
 
   const load = mod => {
     setEntries(null);
@@ -684,17 +688,17 @@ function StudyView({ pending, onConsumed }) {
     api.studyDelete(editing.id).then(() => { setEditing(null); load(module); });
   };
 
-  if (err) return <div className="stats-view"><div className="stats-empty">Couldn't load study content. (Admin sign-in required.)</div></div>;
+  if (err) return <div className="stats-view"><div className="stats-empty">Couldn't load study content.{adminUser ? " (Admin sign-in required.)" : ""}</div></div>;
 
   if (editing) {
-    const ro = previewReader || !editMode;   // read-only: preview mode, or not actively editing
+    const ro = readerView || !editMode;   // read-only: a reader/preview, or not actively editing
     const close = () => { setEditing(null); setSavedAt(null); };
     if (isTopicLike(editing.type))
-      return <div className="study-view"><TopicPage entry={editing} editing={!ro} onChange={setEditing} onSave={save} onDelete={del} onClose={close} onToggleEdit={() => setEditMode(m => !m)} previewReader={previewReader} saving={saving} savedAt={savedAt} /></div>;
+      return <div className="study-view"><TopicPage entry={editing} editing={!ro} onChange={setEditing} onSave={save} onDelete={del} onClose={close} onToggleEdit={() => setEditMode(m => !m)} previewReader={readerView} saving={saving} savedAt={savedAt} /></div>;
     if (editing.type === "argument")
-      return <div className="study-view"><ArgumentPage entry={editing} editing={!ro} onChange={setEditing} onSave={save} onDelete={del} onClose={close} onToggleEdit={() => setEditMode(m => !m)} previewReader={previewReader} saving={saving} savedAt={savedAt} /></div>;
+      return <div className="study-view"><ArgumentPage entry={editing} editing={!ro} onChange={setEditing} onSave={save} onDelete={del} onClose={close} onToggleEdit={() => setEditMode(m => !m)} previewReader={readerView} saving={saving} savedAt={savedAt} /></div>;
     if (ro)
-      return <div className="study-view"><DenominationRead entry={editing} onClose={close} onToggleEdit={() => setEditMode(true)} previewReader={previewReader} /></div>;
+      return <div className="study-view"><DenominationRead entry={editing} onClose={close} onToggleEdit={() => setEditMode(true)} previewReader={readerView} /></div>;
     return <div className="study-view"><StudyEditor entry={editing} onChange={setEditing} onSave={save} onDelete={del} onClose={close} onToggleEdit={() => setEditMode(false)} saving={saving} savedAt={savedAt} /></div>;
   }
 
@@ -702,22 +706,24 @@ function StudyView({ pending, onConsumed }) {
   const moduleName = isTopic ? "Topics" : (module === "denomination" ? "Denominations" : "Arguments");
   const newLabel = isTopic ? "topic" : (module === "denomination" ? "denomination" : "argument");
   const qs = q.trim().toLowerCase();
-  const pool = (entries || []).filter(e => !previewReader || e.status === "published");   // a reader only sees published
+  const pool = (entries || []).filter(e => !readerView || e.status === "published");   // a reader only sees published
   const sortKey = e => displayTitle(e.title || "").toLowerCase().replace(/^(?:the|a|an)\s+/, "");
   const shown = pool
     .filter(e => !qs || (e.title || "").toLowerCase().includes(qs) || displayTitle(e.title).toLowerCase().includes(qs) || (e.heldBy || "").toLowerCase().includes(qs))
     .sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
   return (
     <div className="study-view">
-      <div className="study-sub">
-        {STUDY_MODULES.map(m => (
-          <button key={m.id} className={"study-sub-b" + (module === m.id ? " on" : "")} onClick={() => pickModule(m.id)}>{m.label}</button>
-        ))}
-        <button className={"study-preview-toggle" + (previewReader ? " on" : "")} onClick={() => setPreviewReader(p => !p)}
-          title="See exactly what a reader sees — editing off, drafts hidden">
-          {previewReader ? "✓ Previewing as reader" : "Preview as reader"}
-        </button>
-      </div>
+      {adminUser && (
+        <div className="study-sub">
+          {STUDY_MODULES.map(m => (
+            <button key={m.id} className={"study-sub-b" + (module === m.id ? " on" : "")} onClick={() => pickModule(m.id)}>{m.label}</button>
+          ))}
+          <button className={"study-preview-toggle" + (previewReader ? " on" : "")} onClick={() => setPreviewReader(p => !p)}
+            title="See exactly what a reader sees — editing off, drafts hidden">
+            {previewReader ? "✓ Previewing as reader" : "Preview as reader"}
+          </button>
+        </div>
+      )}
       {previewReader && (
         <div className="study-preview-note">
           You're seeing what a reader sees — editing is off and drafts are hidden.
@@ -726,7 +732,7 @@ function StudyView({ pending, onConsumed }) {
       )}
       <div className="study-list-head">
         <h1 className="stats-title">{moduleName}</h1>
-        {!previewReader && <button className="study-new" onClick={newEntry}>+ New {newLabel}</button>}
+        {!readerView && <button className="study-new" onClick={newEntry}>+ New {newLabel}</button>}
       </div>
       <div className="stats-sub">{isTopic
         ? "Browse a subject and its verses, grouped by subtopic. Mostly filled from MetaV — light edits only."
@@ -744,6 +750,8 @@ function StudyView({ pending, onConsumed }) {
       ) : shown.length === 0 ? (
         <div className="stats-empty">{qs
           ? "No matches for “" + q + "”."
+          : !adminUser
+          ? "No study topics yet — check back soon."
           : previewReader
           ? "Nothing published yet — mark an entry Published to show it here."
           : "Nothing here yet — start with “+ New " + newLabel + "”." + (isTopic ? " (Or import from MetaV.)" : "")}</div>
@@ -754,7 +762,7 @@ function StudyView({ pending, onConsumed }) {
               {!isTopic && <span className={"study-badge study-badge--" + e.type}>{STUDY_TYPE_LABEL[e.type] || e.type}</span>}
               <span className="study-row-title">{isTopic ? displayTitle(e.title) : e.title}{e.heldBy ? <span className="study-row-held"> · {e.heldBy}</span> : null}</span>
               <span className="study-row-n">{e.n || 0} {isTopic ? "verses" : "refs"}</span>
-              {!previewReader && e.status === "draft" && <span className="study-row-draft">draft</span>}
+              {!readerView && e.status === "draft" && <span className="study-row-draft">draft</span>}
             </button>
           ))}
         </div>

@@ -262,7 +262,8 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   const [metavLoading, setMetavLoading] = useState(false);
 
   // Nave's topical study for this person/place (subtopic headers + counts), shown
-  // under the metaV card. Admin-only (the endpoint 404s otherwise → stays null).
+  // under the metaV card. PUBLIC for published name-topics; drafts stay admin-only
+  // (the endpoint returns no sections otherwise → stays null).
   const [naveData, setNaveData] = useState(null);
   useEffect(() => {
     setNaveData(null);
