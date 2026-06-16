@@ -183,8 +183,10 @@ scripts/          # build-frontend.js + one-time import/migration scripts
   ABP scrape) — same text as `words`, so it matches ~91% (Rahlfs/TAGNT was tried first but capped at 75%: ABP-OT
   is Vaticanus-Sixtine vs Rahlfs's eclectic text). `/api/chapter` LEFT-JOINs it only if present (deploy-safe).
   bh's Greek is accent-only (no breathing marks), so `strip_marks` stores a form ONLY when it differs from the
-  lemma by ENDING (no echo lines) → 56% of words show a line. Surface translit deferred. Full record: memory
-  `project_bsb_words`.
+  lemma by ENDING (no echo lines) → 56% of words show a line. Surface translit now FILLED by
+  `scripts/build_abp_translit.py` (SBL romanization matching the lexicon headword style; the rough-breathing
+  'h' is read from the lemma since bh forms have no breathing; re-run after any position-shifting rebuild).
+  Full record: memory `project_bsb_words`.
 - `lexicon` — Greek Strong's definitions
 - `lsj` — Liddell-Scott-Jones Greek lexicon
 - `abp_ext` — extended ABP data
@@ -517,9 +519,10 @@ scripts/          # build-frontend.js + one-time import/migration scripts
   Database Tables + the Words rebuild checklist), hidden when it equals the lemma. KJV has no stored surface
   form → lemma only (graceful). Built via `entry.inflected`/`entry.inflectedTranslit` on the click entry
   (hebEntry / makeBsbEntry / ABP `makeEntry` in 59c) → `heroForm`/`.detail-form` in 30-detail-panel.jsx. The
-  reading-pane chips + the Interlinear toggle stay the dictionary lemma. ABP's surface TRANSLIT is deferred
-  (shows the bare form alone — backfill later from the real Greek→Latin transliterator transliteration-search
-  needs; don't ship a throwaway map). Lemma-on-top was a deliberate flip from inflected-on-top. Full record:
+  reading-pane chips + the Interlinear toggle stay the dictionary lemma. ABP's surface TRANSLIT is now FILLED
+  (2026-06-15) by `scripts/build_abp_translit.py` — a Greek→Latin romanizer matched to the lexicon headword
+  style (SBL: keeps accents, eta→ē / omega→ō, ch/th/ph, rough breathing→h read from the lemma, initial rho→rh,
+  upsilon y-vs-u). Lemma-on-top was a deliberate flip from inflected-on-top. Full record:
   memory `project_bsb_words`.
 - **Chip-vs-prose render rule (verses shown OUTSIDE the reader).** CHIP = word-study (ABP brackets +
   punctuation outside the `]`): the reading pane, Search + Lexicon results (both via `CorpusGroup` in
@@ -867,7 +870,9 @@ one rebuilt (DELETE only ever hits the copy). The build also makes its own `bibl
 8. Swap + deploy: `mv bible.db bible_pre_<reason>_<date>.db; mv bible_test.db bible.db`; touch wsgi.
 9. RE-RUN `scripts/build_abp_surface.py --bh ~/bible-db/bh_scrape.db` (like import_tipnr.py): the `abp_surface`
    side table is keyed by verse_id+position, so any rebuild that SHIFTS positions (splits/merges/bracket peel)
-   leaves stale forms until it's rebuilt. Read-only on words/verses.
+   leaves stale forms until it's rebuilt. Read-only on words/verses. THEN re-run
+   `scripts/build_abp_translit.py bible.db` to refill the romanization (`abp_surface.translit`, same rows/keys —
+   SBL style from the lexicon, 'h' from the lemma).
 LOCAL HARNESS (no PA / no live DB): `tests/test_folded_fixes.py` exercises the six folds on synthetic
 rows; `test_build_invariants.py` + `test_strongs_join.py` lock the Strong's invariants (all in CI +
 the pre-commit hook). The full rebuild + both-way compare ran locally on a copy 2026-06-09.

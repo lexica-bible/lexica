@@ -6,6 +6,34 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## ABP surface romanization (translit) — DONE + SHIPPED 2026-06-15
+
+The ABP "in this verse" side-card form now carries a romanization (Hebrew/BSB already did) — the parked
+follow-up from the inflected-form section below. `scripts/build_abp_translit.py` fills `abp_surface.translit`
+(348,935 forms, read-only) with a Greek→Latin romanization matched to the lexicon's OWN SBL headword style
+(confirmed by sampling `lexicon.translit` — theós / pneûma / archḗ / huiós): keeps accents, eta→ē / omega→ō,
+ch/th/ph, **rough breathing → "h" read from the dictionary form** (the bh surface forms carry no breathing),
+**initial rho → rh**, and upsilon y-vs-u (y standalone, u in a diphthong incl. υι). Tested on real words before
+filling. NOT the throwaway ~40-line map the earlier note warned against — it handles the long tail (breathings,
+iota subscript, diphthongs, gamma-nasal, final sigma) and matches the app's existing romanization, so it's safe
+under the accuracy brand. Re-run after any position-shifting words/abp_surface rebuild (next to build_abp_surface).
+LESSON kept: the empty-string-in-string trap — `'' in 'αεηο'` is True, so word-initial upsilon silently became
+'u'; use SETS for membership. Commits d9adc7a (script) + 4e73577 (upsilon fix). Memory `project_bsb_words`.
+
+## ABP morphology gap — INVESTIGATED + SCRAPPED 2026-06-15
+
+Looked hard at filling the ~22% of ABP words with no morph (135,774). Verdict: not worth it; don't re-investigate.
+Measured on PA, the gap breaks down: 32,473 proper names (ABP doesn't parse them — correct), ~32,922
+indeclinable / no-surface-form words (καί / ἐν / the article etc. — nothing to parse, correctly blank), and only
+~70,379 inflected content words that genuinely could be filled (~86% OT). The single ABP-keyed source for those
+is Van der Pool's **Analytical Lexicon** — a paid $5 426-page PDF (an extraction project), whose parses also carry
+real nominative/accusative + gender ambiguity with no clean tiebreak. For a side-panel detail aimed at non-Greek
+readers, the juice isn't worth the squeeze. Also checked **STEPBible's ABGk/abpgrk** (Tyndale's adaptation): it's
+the SAME ABP text, not an upgrade — single-dot accent + no breathing (like what we already have), no inline
+morphology, under Van der Pool's "all rights reserved" copyright (NOT the CC-BY that covers STEPBible's own
+TAGNT/TAGOT). The free CC-BY TAGOT is Rahlfs-based, so it can't reach ABP's Vaticanus-Sixtine-only OT words anyway.
+Full record: memory `project_abp_morph_gap`.
+
 ## ABP inflected-form side-card line — DONE + LIVE 2026-06-15 (Hebrew + BSB + ABP; KJV impossible)
 
 The click-a-word side card shows the printed in-context Greek/Hebrew form on a small line under the dictionary
@@ -24,9 +52,10 @@ lemma. Hebrew (heb_words pointed word) + BSB (bsb_words form/form_translit) were
   breathing-marked lemma (`ἀρχή`) → would echo a useless line on ~every word. `strip_marks` only keeps a form
   that differs from the lemma by ENDING → 56% of words show a line; the rest ABP prints = the dictionary word.
   Shown forms are breathing-less = ABP-authentic (user chose authentic over Rahlfs-polished, knowingly).
-- The Rahlfs/TAGNT path stays in the builder as an alt source. Surface translit + a full parsed-LXX 2nd parallel
-  text are PARKED follow-ups (in TODO.md). Re-run `build_abp_surface.py --bh` after any words rebuild that shifts
-  positions. Full record: memory `project_bsb_words`. Commits f536c52 (Rahlfs first cut) → 0b5e5ae + 0b908b7 (bh).
+- The Rahlfs/TAGNT path stays in the builder as an alt source. Surface translit is now DONE (the section above,
+  `build_abp_translit.py`); a full parsed-LXX 2nd parallel text stays a PARKED follow-up (in TODO.md). Re-run
+  `build_abp_surface.py --bh` THEN `build_abp_translit.py` after any words rebuild that shifts positions. Full
+  record: memory `project_bsb_words`. Commits f536c52 (Rahlfs first cut) → 0b5e5ae + 0b908b7 (bh).
 
 ---
 

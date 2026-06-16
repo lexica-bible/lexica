@@ -458,7 +458,12 @@ place for the existing place sidebar, so this is smaller than it looks.
 - **Word grammar everywhere:** plain-English part-of-speech/tense/case per word. **DONE for the Hebrew OT**
   (2026-06-11, via STEP TAHOT — shown on the detail card; `decode_morph` in load_hebrew.py) and partly for
   ABP Greek (~78% morph). Could extend to fuller Greek coverage (CATSS for the LXX OT, macula-greek for the
-  NT). `code: morph column on words; decode_morph in scripts/load_hebrew.py`
+  NT). **The ABP-native morph fill was INVESTIGATED + SCRAPPED 2026-06-15** (memory `project_abp_morph_gap`):
+  the real gap is ~70k inflected OT words — the other ~65k missing-morph are proper names + indeclinables, both
+  correctly blank — and the only ABP-keyed source is Van der Pool's *Analytical Lexicon*, a $5 426-page PDF
+  (extraction + nom/acc ambiguity), not worth it for a side-panel detail. STEPBible's **ABGk/abpgrk** isn't an
+  upgrade either (same ABP text; single-dot accent, no breathing, no inline morph; Van der Pool copyright, not
+  CC-BY). `code: morph column on words; decode_morph in scripts/load_hebrew.py`
 - **Textus Receptus Greek NT:** add as a second NT text next to ABP. Same Strong's numbering, so it
   plugs in easily, and showing where the two Greek texts differ is genuinely rare and useful.
 - **Multi-text COMPARE — DONE + LIVE 2026-06-10** (memory `project_pericopes_parallel`). The old 2-column
@@ -479,11 +484,13 @@ place for the existing place sidebar, so this is smaller than it looks.
   the same `renderBsbVerse` pattern could enable KJV word-level later if wanted).
 - **Inflected-form side-card line — DONE + LIVE for Hebrew + BSB + ABP 2026-06-15 (KJV impossible).** Moved to
   [TODO_ARCHIVE.md](TODO_ARCHIVE.md) with the full trail. Two follow-ups it left behind, both PARKED:
-- **ABP surface TRANSLIT — PARKED (unlock: transliteration-search).** The ABP "in this verse" line shows the
-  bare Greek form with NO transliteration (Hebrew/BSB show one). Deliberately deferred: don't ship a throwaway
-  ~40-line Greek→Latin map (subtly wrong under an accuracy brand). Backfill it from the ONE real, vetted
-  transliterator the planned **transliteration-search** feature has to build anyway — build once, use twice.
-  (NT translit is already captured if we ever take the Rahlfs/TAGNT route.) code: scripts/build_abp_surface.py
+- ~~**ABP surface TRANSLIT — PARKED.**~~ **DONE + SHIPPED 2026-06-15.** The ABP "in this verse" line now carries
+  a romanization like Hebrew/BSB. Built `scripts/build_abp_translit.py` — NOT the feared throwaway map: a proper
+  Greek→Latin romanizer matched to the lexicon's own SBL headword style (keeps accents, eta→ē / omega→ō, ch/th/ph,
+  rough breathing→h read from the dictionary form, initial rho→rh, upsilon y-vs-u), tested on real words. Fills
+  `abp_surface.translit` (348,935 forms) read-only; re-run after a position-shifting rebuild. Full trail:
+  TODO_ARCHIVE + memory `project_bsb_words`. (transliteration-search can reuse this converter later.)
+  code: scripts/build_abp_translit.py
 - **Parsed Greek OT as a 2nd parallel text — PARKED idea (NOT ABP's surface line).** A CATSS-lineage Rahlfs LXX
   (Eliran Wong's LXX-Rahlfs-1935 is most turnkey — surface + lemma + morph + SBL translit already paired, 100%
   native, no alignment guessing) would be its OWN parallel Greek OT alongside ABP (like ESV / the Hebrew),
