@@ -2577,10 +2577,13 @@ input { font-family: inherit; }
   font-size: 14px; font-weight: 600; letter-spacing: 0.02em;
   color: var(--ink-2);
   text-align: center;
+  border-radius: 6px;
 }
 .mpick-btn:hover { color: var(--ink); }
 .mpick-btn:active { color: var(--accent); }
-.mpick-btn.on { color: var(--accent); font-weight: 800; font-size: 15px; }
+/* Current book/chapter: filled gray pill, same "you are here" look as the desktop
+   nav's .nav-book.on — theme-safe (darkens the page toward the ink in every theme). */
+.mpick-btn.on { background: color-mix(in oklab, var(--bg) 82%, var(--ink)); color: var(--ink); font-weight: 800; }
 /* chronological: full-width passage rows under each era */
 .mpick-passages { display: flex; flex-direction: column; gap: 1px; margin-bottom: 8px; }
 .mpick-passage {
