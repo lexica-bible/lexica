@@ -57,57 +57,38 @@ Pick effort by task TYPE. When in doubt, lean higher — the plan affords it.
 - All db changes must be made on PythonAnywhere
 
 ## Deployment
-- Preferred deploy (added 2026-06-07): `bash ~/bible-db/scripts/deploy.sh` — one command that
-  pulls, runs the invariant tests, loads any non-canonical books WHOSE FILES THE PULL CHANGED
-  (it diffs old..new HEAD and runs only the loaders for touched folders — a plain code deploy
-  loads nothing), and reloads the site ONLY if the tests pass. A loader hiccup warns but never
-  blocks the reload. So adding a new book just needs a normal deploy — no loader to run by hand.
-- Manual fallback (still valid): `cd ~/bible-db && git pull && touch /var/www/www_lexica_bible_wsgi.py`
-- PythonAnywhere git is configured: `pull.rebase false`, `merge.autoedit no` (no prompts)
-- Database is NOT in git (too large) — managed directly on PythonAnywhere
+- Preferred deploy: `bash ~/bible-db/scripts/deploy.sh` — pulls, runs the invariant tests, loads any
+  non-canonical books WHOSE FILES THE PULL CHANGED (diffs old..new HEAD, runs only the touched
+  loaders — a plain code deploy loads nothing), and reloads the site ONLY if the tests pass. A loader
+  hiccup warns but never blocks the reload, so adding a book just needs a normal deploy.
+- Manual fallback: `cd ~/bible-db && git pull && touch /var/www/www_lexica_bible_wsgi.py`
+- PA git is set `pull.rebase false`, `merge.autoedit no` (no prompts). The database is NOT in git
+  (too large) — managed directly on PA.
 - After a `requirements.txt` change: on PA, `workon bible-env` THEN `pip install -r requirements.txt`
-  (NO `--user` inside the venv — the venv is `/home/appssanding720/.virtualenvs/bible-env`, Python 3.11).
-  Then reload. A `--user` install lands in the wrong place (system 3.13 user dir) and the site ignores it.
-- **Env vars / secrets live in the WSGI file, NOT a `.env`.** `/var/www/www_lexica_bible_wsgi.py`
-  sets them with `os.environ['KEY'] = '...'` (ANTHROPIC_API_KEY, GOOGLE_CLIENT_ID). `core.load_dotenv()`
-  does NOT reliably find a `.env` under the PA web app, so a `.env` there is empty/ignored — don't rely on it.
-  The `os.environ[...]` lines MUST sit ABOVE the app import in the WSGI (module-level reads like
-  `GOOGLE_CLIENT_ID = os.environ.get(...)` happen at import). Edit the WSGI, then reload (touch it).
-- **Notes accounts (`google-auth`) — DONE + LIVE 2026-06-09:** `pip install -r requirements.txt` (adds
-  `google-auth`) + `GOOGLE_CLIENT_ID` in the WSGI + the Google consent screen Published. Google sign-in
-  degrades safely (button hidden) if any piece is missing, so a code-only deploy never breaks.
-  `notes.db` is gitignored (`*.db`) like bible.db — it holds user accounts/notes, managed on PA.
-- **Account roles: nologin / user / berean / admin (LIVE 2026-06-11).** A `role` column on
-  notes.db `users` (default `user`; migrates in on first run). Gates in `views_notes`:
-  `role_for_token()`, `is_admin()`, `is_berean()` (berean OR admin), `is_logged_in()`. The
-  `OWNER_EMAIL` account is ALWAYS admin (bootstrap — resolves to admin even before the column
-  migrates, so a deploy never drops you). `is_owner()` is now just an alias for `is_admin()`
-  (visitor stats unchanged). **What each tier unlocks:** nologin = everything public; **user**
-  (any sign-in) = AI search (`/api/ai-search` is login-gated — it costs API money; 401 + "sign in"
-  to signed-out); **berean** (trusted friends) = the ESV + NIV reading texts (ESV/NIV routes +
-  status now use `is_berean`, not owner); **admin** (you) = visitor Stats + the in-app **Admin**
-  page (About → About|Stats|Admin), which lists accounts and sets each one's role
-  (`/api/admin/users` + `/api/admin/role`, 404 to non-admins; owner row locked to admin).
-  Set `OWNER_EMAIL = '<your-owner-email>'` in the WSGI (above the import) + reload. Promote a
-  friend to berean via the Admin page. Frontend gating rides the status endpoints (stats/owner =
-  admin, esv/niv status = berean) — no role stored client-side. See memory `project_user_roles`.
-- **Owner/berean reading features.** Owner/berean sign-in shows: a private **Stats** view (admin
-  only; About → About|Stats toggle; counter in `notes.db`, no 3rd party) and the **ESV + NIV**
-  reading texts (berean+). ESV text is **LOADED + LIVE 2026-06-10** (`scripts/load_esv.py`
-  from github.com/lguenth/mdbible → `esv.db` = 31,104 verses, all 66 books; `esv.db` gitignored, PA-only).
-  **NIV = a 2nd owner-only text mirroring ESV exactly (LIVE 2026-06-10): `views_niv.py`, own `niv.db`,
-  NIV toggle next to ESV; TEXT-ONLY (no NIV audio — FCBH doesn't carry it). Loaded by
-  `scripts/load_niv.py ~/Bible-niv ~/bible-db/niv.db` from the aruljohn/Bible-niv repo (66 JSON files,
-  ~31,104 verses). No WSGI change — `OWNER_EMAIL` already gates it.**
-  ESV AUDIO (owner-only) is **LIVE 2026-06-13** — `ESV_API_TOKEN` set in the WSGI, using Crossway's OWN
-  ESV API (api.esv.org): whole-Bible Max McLean reading, `views_esv._crossway_audio_url` grabs the
-  302→signed-mp3 URL. FCBH (`FCBH_API_KEY`, NT-only) stays the fallback if only that key is set.
-  **KJV AUDIO is LIVE for everyone (public-domain, no key, audiotreasure.com — see
-  views_kjv.kjv_audio). Prefers the clearer VOICE-only reading (`KJV_AT`); 6 books the voice set is
-  missing (Job, Song of Solomon, Philemon, 2/3 John, Jude) fall back to the MUSIC reading (`KJV_FF`).
-  BSB audio is public-domain and needs no setup. NIV has NO audio source (FCBH doesn't carry it;
-  Biblica won't license it) — dead end.** Memory `project_esv_audio` +
-  `project_visitor_stats`.
+  — NO `--user` inside the venv (it's `/home/appssanding720/.virtualenvs/bible-env`, Python 3.11; a
+  `--user` install lands in the system 3.13 dir and is ignored). Then reload.
+- **Env vars / secrets live in the WSGI, NOT a `.env`.** `/var/www/www_lexica_bible_wsgi.py` sets them
+  with `os.environ['KEY'] = '...'`, and those lines MUST sit ABOVE the app import (module-level reads
+  like `GOOGLE_CLIENT_ID = os.environ.get(...)` run at import). `core.load_dotenv()` doesn't reliably
+  find a `.env` under the PA web app — don't rely on one. Edit the WSGI, then reload (touch it). Keys
+  set there: `ANTHROPIC_API_KEY`, `GOOGLE_CLIENT_ID`, `ESV_API_TOKEN`, `OWNER_EMAIL` (+ optional
+  `FCBH_API_KEY`).
+- **Accounts / roles / gated texts** (full records: memories `project_user_roles`, `project_esv_audio`,
+  `project_visitor_stats`; setup history in TODO_ARCHIVE):
+  - Roles nologin / user / berean / admin — a `role` column in `notes.db users`; gates in `views_notes`
+    (`is_admin()`, `is_berean()` = berean-or-admin, `is_logged_in()`). `OWNER_EMAIL` is ALWAYS admin
+    (bootstrap, even before the column migrates). user (any sign-in) = AI search (login-gated, costs
+    money); berean = ESV + NIV; admin = visitor Stats + the in-app Admin page (sets others' roles).
+  - Sign-in is email or Google; Google needs `GOOGLE_CLIENT_ID` + the `google-auth` package and the
+    button just hides if either is missing (a code-only deploy never breaks). `notes.db` is gitignored,
+    PA-only.
+  - ESV + NIV (berean-gated) each have their own `esv.db` / `niv.db` (gitignored, PA-only;
+    `scripts/load_esv.py` / `load_niv.py`; `views_esv.py` / `views_niv.py`).
+- **Audio sources:** ESV = Crossway's own API (api.esv.org, `ESV_API_TOKEN` in the WSGI — whole-Bible
+  Max McLean; `views_esv._crossway_audio_url` follows the 302 to the signed mp3), with FCBH
+  (`FCBH_API_KEY`, NT-only) as fallback. KJV = public-domain audiotreasure.com, no key (voice set
+  `KJV_AT`; Job/Song/Philemon/2–3 John/Jude fall back to the music set `KJV_FF`). BSB = public-domain,
+  no setup. NIV = no audio source (dead end).
 
 ## CI / automation (added 2026-06-07)
 - **GitHub Actions** (`.github/workflows/ci.yml`) — runs on every push/PR: (1) the invariant tests
@@ -509,46 +490,28 @@ Full detail: memory `project_notes_highlights`. The headline facts:
 - Cached in ai_search_cache, ver_key=`search:<hash>` (fingerprint of system prompt + book list +
   `_CACHE_CODE_VER` salt). See "AI result cache" below.
 
-## AI result cache (ai_search_cache) — unified prompt-fingerprint scheme (2026-06-09)
-- ALL these AI syntheses cache here (the xref write-up + chapter summary run on Sonnet; book blurb, search, pn, chrono intro stay Haiku) with `ver_key = "<category>:<sha1-of-its-own-prompt>"`:
+## AI result cache (ai_search_cache) — prompt-fingerprint scheme
+Full record: memory `project_ai_cache_unify`; the synthesis model map + the author lesson:
+memory `project_ai_synthesis_quality`.
+- Every AI synthesis caches here with `ver_key = "<category>:<sha1-of-its-own-prompt>"` — categories
   `search:` (ai.py), `summary:` (views_summary.py), `xref:` (views_crossref.py), `pn:` (views_metav.py),
-  `chrono:` (views_chrono.py — the chronological daily Reading-intro title+summary, key `chrono_intro:<day>`).
-  Editing a prompt changes only its category's hash, so just that cache lazily refreshes — no manual
-  version bump. (Replaced the old hand-bumped `_SUMMARY_VER` + fixed `"xref"`/`"pn"` literal tags.)
-- Shared helpers in core.py: `ai_fingerprint(category, *prompt_parts)`, `ai_cache_get(query, ver_key)`
-  (matches on ver_key, so an old-prompt row misses → regenerates), `ai_cache_put`, and
-  `ai_cache_prune(category, keep_prefix)` (deletes ONLY that category's stale rows). Each category
-  prunes its own at startup (app.py, next to `_load_ai_cache_from_db`).
-- The row KEY (`query`) is stable and unique (it's the table's primary key), so regenerating OVERWRITES
-  the stale row in place — no parallel old/new rows pile up.
-- LANDMINE (fixed): search's startup cleanup used to delete every non-search row except xref/summary BY
-  NAME. It's now scoped to `search:%` only — it never touches the other caches. If you add a new AI
-  cache category, give it its own `<category>:<hash>` tag + its own startup prune; don't widen another
-  category's delete.
-- summary rows carry a per-book author suffix: `summary:<tpl-hash>:<author-hash>`. Editing the prompt
-  wording refreshes all summaries; editing one book's author in `_BOOK_AUTHORS` refreshes only that book.
-  - `_BOOK_AUTHORS` (views_summary.py) lists ONLY well-established authors. The author is now fed ONLY to
-    the BOOK BLURB (orientation) — NOT the chapter summary (changed 2026-06-14). The chapter summary just
-    describes what happens, so the writer gets named only where the TEXT itself puts him (Moses acting in
-    an Exodus narrative), and a Genesis creation chapter / legal list no longer opens with a forced "Moses
-    records…". Named scribes go inline in the value (Jer="Jeremiah, who dictated to his scribe Baruch",
-    Rom="Paul, written down by his scribe Tertius"). Only-traditionally-attributed / anonymous books (Job,
-    Esther, Judges, Ruth, the Samuel/Kings/Chronicles histories, Hebrews) are left BLANK on purpose.
-    LESSON (2026-06-13): a bare name in the list is INERT — with the normal wording Haiku just ignored
-    Job=Moses and stayed blank. It was the PROMPT PUSH (a "traditionally attributed to X / don't omit the
-    author" hedge) that forced over-assertion — Haiku then claimed "Moses wrote Job" and even leaked
-    "Moses records…" into the chapter summary. Don't hard-push Haiku on shaky facts; let it stay silent.
-    DECIDED: don't re-add the metaV names — every gap-fill is a disputed attribution, none is "well
-    established", so the curated list stays well-established-only + scribes. (Both a live `metav_writers`
-    read and the prompt hedge were tried and reverted — see TODO_ARCHIVE.)
-- LSJ word-study summaries are NOT in this table (they live in `lsj.summary_json`/`abp_ext.summary_json`),
-  but as of 2026-06-14 they SELF-HEAL the same way: each stored synthesis carries a `_synth_ver` stamp
-  (= `ai_fingerprint("lsj", system + the two ask templates)` in views_lsj.py). On read, a stamp that
-  doesn't match the current prompt is dropped + regenerated; on write it's re-stamped. So editing the LSJ
-  prompt auto-refreshes those summaries too — no clear script needed. (Parsed `sections` are not
-  AI-written and are kept across a prompt change.)
-- One-time deploy note: the first run after this change sweeps the old-format (colon-less) rows via
-  `ai_cache_drop_legacy()`, so all previously cached summaries/xrefs/pn/search lazily regenerate once.
+  `chrono:` (views_chrono.py, key `chrono_intro:<day>`). Editing a prompt changes only its category's
+  hash, so just that cache refreshes — no manual version bump. The row key is stable + unique, so a
+  regen overwrites the stale row in place. (xref + chapter summary run on Sonnet; the rest on Haiku.)
+- Helpers in core.py: `ai_fingerprint(category, *parts)`, `ai_cache_get(query, ver_key)` (an old-prompt
+  row misses → regenerates), `ai_cache_put`, `ai_cache_prune(category, keep_prefix)`. Each category
+  prunes ONLY its own stale rows at startup (app.py).
+- **LANDMINE:** a delete must be scoped to its OWN category (search's startup cleanup is `search:%`
+  only). If you add a new cache category, give it its own `<category>:<hash>` tag + its own startup
+  prune — never widen another category's delete.
+- summary rows add a per-book author suffix `summary:<tpl-hash>:<author-hash>`. `_BOOK_AUTHORS`
+  (views_summary.py) feeds the BOOK BLURB only, NOT the chapter summary — well-established authors +
+  named scribes only, the rest left blank on purpose (don't hard-push Haiku on disputed authors;
+  memory `project_ai_synthesis_quality`).
+- LSJ word-study summaries live in `lsj.summary_json` / `abp_ext.summary_json`, NOT this table, but
+  self-heal the same way: a `_synth_ver` stamp (= `ai_fingerprint("lsj", ...)` in views_lsj.py) is
+  checked on read and dropped/regenerated when the prompt changes — so editing the LSJ prompt
+  auto-refreshes too, no clear script needed.
 
 ## BibleHub ABP Scrape
 - Scraper: `scripts/scrape_biblehub_abp.py` — captures strongs, greek_pos, italic (last-word
