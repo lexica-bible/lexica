@@ -196,7 +196,7 @@ scripts/          # build-frontend.js + one-time import/migration scripts
 - `kjv_words` — KJV word-level tokens with position and italic flag
 - `kjv_strongs` — KJV word → Strong's number mapping
 - `bdb` — Brown-Driver-Briggs Hebrew lexicon (H-numbers)
-- `pericopes` — section headings (book, chapter, verse, heading); populated from bh_scrape.db.bh_headings; display wiring pending
+- `pericopes` — section headings (book, chapter, verse, heading); populated from bh_scrape.db.bh_headings; DISPLAYED in the reader (all render modes) via `/api/chapter`'s LEFT JOIN + `.pericope-heading` in 59c-library-render.jsx
 - `bsb_verses` — Berean Standard Bible verse text (public domain), mirrors kjv_verses on 1-66 book ids
 - `bsb_words` / `bsb_strongs` — BSB per-word interlinear (LIVE 2026-06-15; loaded on PA = 386,063 words /
   381,948 Strong's / 66 books), mirroring `kjv_words`/`kjv_strongs`:
