@@ -65,6 +65,9 @@ function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation, onA
           {variants.map((vn, i) => (
             <p key={i} className="detail-p variant-note">
               <span className="variant-src">{vn.src}</span> {vn.op} <span className="variant-gloss">“{vn.gloss}”</span>
+              {vn.ref && (
+                <span className="variant-ref"> — {vn.op.startsWith("add") ? "added at our" : "in place of our"} “{vn.ref}”</span>
+              )}
             </p>
           ))}
         </section>

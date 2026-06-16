@@ -1770,6 +1770,7 @@ input { font-family: inherit; }
 .variant-note { margin: 2px 0; }
 .variant-note .variant-src { font-weight: 600; color: var(--accent); }
 .variant-note .variant-gloss { font-style: italic; }
+.variant-note .variant-ref { color: var(--ink-2); }
 
 /* Verse content — prose: inline text; chips: flex wrap */
 .lib-verse-content {

@@ -1,10 +1,10 @@
 {
-  "_about": "ABP textual-variant footnotes (the dagger apparatus from the ABP 2nd ed.). Shape: book -> chapter -> verse -> [ {src, op, gloss, conf} ]. src = printed Greek edition the variant comes from; op = adds/reads/omits; gloss = the English meaning of the variant word (the Greek form is omitted — it is unrecoverable as clean text from the source). conf = how the verse anchor was found (auto = exact text match; ai = meaning-matched). FILTERED: a note is only kept when its English actually differs from our ABP text — variants that read the same in English (a Greek-only or trivial difference, e.g. 'part' vs 'parts') are dropped, since they look redundant to a reader. Isaiah only for now (proof).",
+  "_about": "ABP textual-variant footnotes (the dagger apparatus from the ABP 2nd ed.). Shape: book -> chapter -> verse -> [ {src, op, gloss, ref, conf} ]. src = printed Greek edition the variant comes from; op = adds/reads/omits; gloss = the English meaning of the variant word (the Greek form is omitted — it is unrecoverable as clean text from the source); ref = the word in OUR ABP text the note attaches to (so the reader knows which word it's about). conf = how the verse anchor was found (auto = exact text match; ai = meaning-matched). FILTERED: a note is only kept when its English actually differs from our ABP text — variants that read the same in English (a Greek-only or trivial difference) are dropped. Isaiah only for now (proof).",
   "Isa": {
-    "1":  { "31": [ {"src": "Complutensian", "op": "adds",  "gloss": "of fire", "conf": "ai"} ] },
-    "2":  { "4":  [ {"src": "Complutensian", "op": "reads", "gloss": "reprove", "conf": "ai"} ] },
-    "9":  { "2":  [ {"src": "Complutensian", "op": "reads", "gloss": "sitting", "conf": "ai"} ] },
-    "12": { "1":  [ {"src": "Complutensian", "op": "reads", "gloss": "confess to the Lord", "conf": "ai"} ] },
-    "13": { "9":  [ {"src": "Complutensian & Aldine", "op": "add", "gloss": "and divine anger", "conf": "ai"} ] }
+    "1":  { "31": [ {"src": "Complutensian", "op": "adds",  "gloss": "of fire", "ref": "sparks", "conf": "ai"} ] },
+    "2":  { "4":  [ {"src": "Complutensian", "op": "reads", "gloss": "reprove", "ref": "refute", "conf": "ai"} ] },
+    "9":  { "2":  [ {"src": "Complutensian", "op": "reads", "gloss": "sitting", "ref": "going", "conf": "ai"} ] },
+    "12": { "1":  [ {"src": "Complutensian", "op": "reads", "gloss": "confess to the Lord", "ref": "I shall bless you", "conf": "ai"} ] },
+    "13": { "9":  [ {"src": "Complutensian & Aldine", "op": "add", "gloss": "and divine anger", "ref": "rage and anger", "conf": "ai"} ] }
   }
 }
