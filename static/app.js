@@ -12589,6 +12589,40 @@ function App() {
   const [libEverVisited, setLibEverVisited] = useState(true);
   const searchScrollRef = useRef(0);
 
+  // Deep link from the crawlable /read/ pages ("Open in interactive reader" →
+  // /?b=<abbrev>&c=<chapter>&t=<text>). Jump to that WHOLE chapter the same way a
+  // Search/Notes jump does — book selected, left nav follows, reader at top — but
+  // with NO verse highlight (it's a chapter, not a verse). Then strip the query so a
+  // refresh doesn't re-jump; the spot is saved to localStorage like any reading position.
+  useEffect(() => {
+    let p;
+    try {
+      p = new URLSearchParams(window.location.search);
+    } catch (e) {
+      return;
+    }
+    const b = p.get("b");
+    if (!b) return;
+    const t = p.get("t");
+    const translation = ["abp", "kjv", "bsb", "heb"].includes(t) ? t : "abp";
+    const chapter = Math.max(1, parseInt(p.get("c"), 10) || 1);
+    setLibEverVisited(true);
+    setMainView("library");
+    setLibTranslation(translation);
+    setLibNav({
+      book: b,
+      chapter,
+      highlight: null,
+      scroll: false,
+      extern: true,
+      translation
+    });
+    try {
+      window.history.replaceState(null, "", window.location.pathname);
+    } catch (e) {}
+    requestAnimationFrame(() => window.scrollTo(0, 0));
+  }, []);
+
   // Visitor stats: count this page load once (the server skips the owner's own
   // visits), and figure out whether the logged-in user is the owner so we can show
   // the private Stats tab. Re-check only when the signed-in email actually changes.
