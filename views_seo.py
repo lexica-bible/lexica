@@ -20,6 +20,7 @@ URLs:
 All queries are read-only and reuse the same SQL the JSON API endpoints use, so
 these pages can't drift from the app's own data.
 """
+import re
 import sqlite3
 from xml.sax.saxutils import escape
 
@@ -76,6 +77,21 @@ def _is_ot(abbrev: str) -> bool:
     return _KJV_BOOK_ID.get(abbrev, 99) <= 39
 
 
+def _parts(label: str, italic_words: str = "", smcap_words: str = "", whole_italic: bool = False):
+    """Split a gloss into display tokens, flagging which are italic (translator
+    additions) or small-caps. Mirrors the app's englishParts: `italic_words` /
+    `smcap_words` mark which sub-words inside the gloss get styled."""
+    if not label:
+        return []
+    iset = {x for x in (italic_words or "").split(",") if x}
+    sset = {x for x in (smcap_words or "").split(",") if x}
+    out = []
+    for tok in label.split(" "):
+        bare = re.sub(r"[^\w]", "", tok).lower()
+        out.append({"t": tok, "it": whole_italic or (bare in iset), "sc": bare in sset})
+    return out
+
+
 # ── per-text fetchers ────────────────────────────────────────────────────────
 # Each returns a uniform list: [{verse, heading, prose, words:[{en,lemma,
 # translit,strongs,italic}]}], in reading order. `prose` is a clean readable
@@ -85,8 +101,11 @@ def _fetch_abp(abbrev: str, chapter: int) -> list[dict]:
     conn = db_ro()
     try:
         rows = conn.execute(
-            """SELECT v.verse, v.text AS prose, w.english, w.strongs_base,
-                      l.lemma, l.translit, w.italic, p.heading
+            """SELECT v.verse, v.text AS prose, w.english, w.english_head, w.strongs_base,
+                      l.lemma, l.translit, w.italic,
+                      COALESCE(w.italic_words, '') AS italic_words,
+                      COALESCE(w.smcap_words,  '') AS smcap_words,
+                      p.heading
                FROM verses v
                JOIN words w ON w.verse_id = v.id
                LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base
@@ -105,9 +124,10 @@ def _fetch_abp(abbrev: str, chapter: int) -> list[dict]:
             out[vn] = {"verse": vn, "heading": r["heading"], "prose": r["prose"] or "", "words": []}
             order.append(vn)
         out[vn]["words"].append({
-            "en": r["english"] or "", "lemma": r["lemma"] or "",
-            "translit": r["translit"] or "", "strongs": r["strongs_base"] or "",
-            "italic": bool(r["italic"]),
+            "parts": _parts(r["english"] or r["english_head"] or "",
+                            r["italic_words"], r["smcap_words"], bool(r["italic"])),
+            "lemma": r["lemma"] or "", "translit": r["translit"] or "",
+            "strongs": r["strongs_base"] or "",
         })
     return [out[v] for v in order]
 
@@ -166,8 +186,9 @@ def _fetch_kjvlike(table_words: str, table_strongs: str, table_verses: str,
             order.append(vn)
         sids = [s.strip() for s in (r["strongs_ids"] or "").split(",") if s.strip()]
         out[vn]["words"].append({
-            "en": r["word"] or "", "lemma": r["lemma"] or "", "translit": r["xlit"] or "",
-            "strongs": sids[0] if sids else "", "italic": bool(r["italic"]),
+            "parts": _parts(r["word"] or "", whole_italic=bool(r["italic"])),
+            "lemma": r["lemma"] or "", "translit": r["xlit"] or "",
+            "strongs": sids[0] if sids else "",
         })
     return [out[v] for v in order]
 
@@ -223,12 +244,13 @@ def _fetch_heb(abbrev, chapter):
             out[vn] = {"verse": vn, "heading": headings.get(vn), "prose": "", "words": []}
             order.append(vn)
         out[vn]["words"].append({
-            "en": r["gloss"] or "", "lemma": r["hebrew"] or "",
+            "parts": _parts(r["gloss"] or ""),
+            "lemma": r["hebrew"] or "",
             "translit": (r["translit"] if "translit" in r.keys() else "") or "",
-            "strongs": r["strongs"] or "", "italic": False,
+            "strongs": r["strongs"] or "",
         })
     for v in order:
-        out[v]["prose"] = " ".join(w["en"] for w in out[v]["words"] if w["en"])
+        out[v]["prose"] = " ".join(p["t"] for w in out[v]["words"] for p in w["parts"])
     return [out[v] for v in order]
 
 
