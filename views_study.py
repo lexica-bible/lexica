@@ -35,6 +35,7 @@ import logging
 import re
 import secrets
 import time
+from collections import defaultdict
 
 from flask import Blueprint, jsonify, request
 
@@ -381,26 +382,145 @@ def _body_from_request(etype: str, body: dict) -> dict:
     }
 
 
-def _expand_refs(refs, conn=None):
-    """[ref,...] -> [{ref, text}] with ABP prose resolved (empty text if unresolved).
-    Pass a shared connection so a whole entry resolves on ONE db handle."""
-    out = []
-    for ref in refs or []:
-        hits = _resolve_ref(ref, conn)
-        out.append({"ref": ref, "text": " ".join(h["text"] for h in hits) if hits else ""})
+def _chunked(seq, n):
+    for i in range(0, len(seq), n):
+        yield seq[i:i + n]
+
+
+def _verse_ids_for(conn, endpoints):
+    """{(book_id, ch, v)} -> {(book_id, ch, v): kjv verse_id}, one query per distinct
+    book (indexed on book_id) instead of one lookup per verse."""
+    out = {}
+    by_book = defaultdict(set)
+    for (b, c, v) in endpoints:
+        by_book[b].add((c, v))
+    for b, cvs in by_book.items():
+        rows = conn.execute(
+            "SELECT chapter, verse_num, verse_id FROM kjv_verses WHERE book_id=?", (b,)
+        ).fetchall()
+        m = {(r["chapter"], r["verse_num"]): r["verse_id"] for r in rows}
+        for (c, v) in cvs:
+            if (c, v) in m:
+                out[(b, c, v)] = m[(c, v)]
+    return out
+
+
+def _abp_prose_bulk(conn, wants):
+    """{(abbr, ch, v)} -> {(abbr, ch, v): ABP prose}. Batched: one verse-id pass per
+    book, then the words in chunked reads — not two reads per verse."""
+    if not wants:
+        return {}
+    by_book = defaultdict(set)
+    for (abbr, c, v) in wants:
+        by_book[abbr].add((c, v))
+    vmap = {}                       # (abbr, ch, v) -> verses.id
+    for abbr, cvs in by_book.items():
+        rows = conn.execute(
+            "SELECT id, chapter, verse FROM verses WHERE book=?", (abbr,)
+        ).fetchall()
+        m = {(r["chapter"], r["verse"]): r["id"] for r in rows}
+        for (c, v) in cvs:
+            if (c, v) in m:
+                vmap[(abbr, c, v)] = m[(c, v)]
+    if not vmap:
+        return {}
+    id_to_key = {vid: k for k, vid in vmap.items()}
+    toks_by_id = defaultdict(list)  # verses.id -> [english, ...] in position order
+    for chunk in _chunked(list(id_to_key), 800):
+        q = ("SELECT verse_id, english FROM words"
+             " WHERE english IS NOT NULL AND verse_id IN (%s)"
+             " ORDER BY verse_id, position" % ",".join("?" * len(chunk)))
+        for row in conn.execute(q, chunk):
+            if row["english"]:
+                toks_by_id[row["verse_id"]].append(row["english"])
+    out = {}
+    for vid, toks in toks_by_id.items():
+        key = id_to_key.get(vid)
+        if key and toks:
+            out[key] = _join_prose(toks)
+    return out
+
+
+def _resolve_map(refs, conn):
+    """{ref string: resolved text} for MANY references in a handful of queries — the
+    same text _resolve_ref gives per ref (ABP prose, KJV fallback), but batched so a
+    big topic (~1000 verses) opens fast instead of doing ~5 reads per verse."""
+    uniq = list(dict.fromkeys(r for r in (refs or []) if r))
+    parsed = [(r, _parse_ref(r)) for r in uniq]
+    endpoints = set()
+    for _, p in parsed:
+        if p:
+            book_id, sc, sv, ec, ev = p
+            endpoints.add((book_id, sc, sv))
+            endpoints.add((book_id, ec, ev))
+    if not endpoints:
+        return {r: "" for r in uniq}
+    vid = _verse_ids_for(conn, endpoints)
+    ranges, need_ids = {}, set()
+    for ref, p in parsed:
+        if not p:
+            ranges[ref] = None
+            continue
+        book_id, sc, sv, ec, ev = p
+        s = vid.get((book_id, sc, sv))
+        if s is None:
+            ranges[ref] = None
+            continue
+        e = vid.get((book_id, ec, ev), s)
+        if e < s:
+            e = s
+        if e - s + 1 > _MAX_RANGE:
+            e = s + _MAX_RANGE - 1
+        ranges[ref] = (s, e)
+        need_ids.update(range(s, e + 1))
+    kjv = {}                        # verse_id -> (book_id, chapter, verse_num, verse_text)
+    for chunk in _chunked(sorted(need_ids), 800):
+        q = ("SELECT verse_id, book_id, chapter, verse_num, verse_text FROM kjv_verses"
+             " WHERE verse_id IN (%s)" % ",".join("?" * len(chunk)))
+        for r in conn.execute(q, chunk):
+            kjv[r["verse_id"]] = (r["book_id"], r["chapter"], r["verse_num"], r["verse_text"])
+    want_abp = set()
+    for vid_ in need_ids:
+        meta = kjv.get(vid_)
+        if meta:
+            abbr = _KJV_BOOK_ID_REV.get(meta[0], "")
+            if abbr:
+                want_abp.add((abbr, meta[1], meta[2]))
+    abp = _abp_prose_bulk(conn, want_abp)
+    out = {}
+    for ref in uniq:
+        rng = ranges.get(ref)
+        if not rng:
+            out[ref] = ""
+            continue
+        s, e = rng
+        parts = []
+        for i in range(s, e + 1):
+            meta = kjv.get(i)
+            if not meta:
+                continue
+            abbr = _KJV_BOOK_ID_REV.get(meta[0], "")
+            t = abp.get((abbr, meta[1], meta[2])) or meta[3]
+            if t:
+                parts.append(t)
+        out[ref] = " ".join(parts)
     return out
 
 
 def _resolve_body(etype: str, stored: dict) -> dict:
     """Expand stored refs into {ref, text} pairs for the client — inside each section
-    for a topic, in the support/tension buckets for a claim."""
+    for a topic, in the support/tension buckets for a claim. ALL of the entry's refs
+    resolve in one batched pass (see _resolve_map), so even a 1000-verse topic is fast."""
     b = dict(stored)
     conn = db_ro()
     try:
         if etype in ("topic", "name"):
+            secs = stored.get("sections") or []
+            tmap = _resolve_map([r for s in secs for r in ((s or {}).get("verses") or [])], conn)
             b["sections"] = [
-                {"heading": (s or {}).get("heading", ""), "verses": _expand_refs((s or {}).get("verses"), conn)}
-                for s in (stored.get("sections") or [])
+                {"heading": (s or {}).get("heading", ""),
+                 "verses": [{"ref": r, "text": tmap.get(r, "")} for r in ((s or {}).get("verses") or [])]}
+                for s in secs
             ]
         elif etype == "argument":
             sides = stored.get("sides")
@@ -410,18 +530,48 @@ def _resolve_body(etype: str, stored: dict) -> dict:
                     {"claim": "", "verses": stored.get("support") or []},
                     {"claim": "", "verses": stored.get("tension") or []},
                 ]
+            sides = sides or []
+            tmap = _resolve_map([r for s in sides for r in ((s or {}).get("verses") or [])], conn)
             b["sides"] = [
-                {"claim": (s or {}).get("claim", ""), "verses": _expand_refs((s or {}).get("verses"), conn)}
-                for s in (sides or [])
+                {"claim": (s or {}).get("claim", ""),
+                 "verses": [{"ref": r, "text": tmap.get(r, "")} for r in ((s or {}).get("verses") or [])]}
+                for s in sides
             ]
             b.pop("support", None)
             b.pop("tension", None)
         else:
-            b["support"] = _expand_refs(stored.get("support"), conn)
-            b["tension"] = _expand_refs(stored.get("tension"), conn)
+            tmap = _resolve_map((stored.get("support") or []) + (stored.get("tension") or []), conn)
+            b["support"] = [{"ref": r, "text": tmap.get(r, "")} for r in (stored.get("support") or [])]
+            b["tension"] = [{"ref": r, "text": tmap.get(r, "")} for r in (stored.get("tension") or [])]
     finally:
         conn.close()
     return b
+
+
+# Resolving a topic's verses is the costly part (a big topic cites ~1000 verses), and
+# the text never changes under a given entry — so cache each entry's RESOLVED body per
+# process, keyed by its `updated` stamp (an edit bumps the stamp → auto-refresh). Bounded
+# so it can't grow without limit; cleared whenever the worker reloads.
+_RESOLVED_CACHE = {}            # id -> (updated, resolved_body_dict)
+_RESOLVED_CACHE_MAX = 80
+
+
+def _resolved_entry(r):
+    """The resolved body (sections / sides / support+tension) for an entries row — from
+    the cache when the entry is unchanged, else resolved once and cached. Returns a fresh
+    copy so the caller can add id/status/strip notes without touching the cache."""
+    hit = _RESOLVED_CACHE.get(r["id"])
+    if hit and hit[0] == r["updated"]:
+        return dict(hit[1])
+    try:
+        stored = json.loads(r["json"]) or {}
+    except (ValueError, TypeError):
+        stored = {}
+    body = _resolve_body(r["type"], stored)
+    if r["id"] not in _RESOLVED_CACHE and len(_RESOLVED_CACHE) >= _RESOLVED_CACHE_MAX:
+        _RESOLVED_CACHE.pop(next(iter(_RESOLVED_CACHE)))   # evict the oldest
+    _RESOLVED_CACHE[r["id"]] = (r["updated"], dict(body))
+    return dict(body)
 
 
 # ── AI: draft a topic intro (text-first, Berean) ─────────────────────────────
@@ -574,11 +724,7 @@ def get_entry(entry_id):
     # Denominations/arguments and any draft stay admin-only.
     if not admin and not (r["type"] in ("topic", "name") and r["status"] == "published"):
         return jsonify({"error": "not found"}), 404
-    try:
-        stored = json.loads(r["json"]) or {}
-    except (ValueError, TypeError):
-        stored = {}
-    out = _resolve_body(r["type"], stored)
+    out = _resolved_entry(r)
     if not admin:
         out.pop("notes", None)   # never send private notes to a reader
     out.update({
