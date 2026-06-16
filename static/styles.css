@@ -1971,20 +1971,6 @@ input { font-family: inherit; }
   padding: 5px 0 2px;
   user-select: none;
 }
-/* The bracket glyphs ("[" "]") and a trailing punctuation mark carry hidden greek +
-   strongs placeholder rows (the same "x"/"G0" every chip uses) ONLY to reserve those
-   row HEIGHTS, so the glyph/mark lands on the english row, lined up with the words.
-   But the placeholders are WIDER than the glyph: left at full width they make the
-   column wider than the "[", and align-items:center then floats the glyph in the
-   middle, off its word (and in the trailing mark's row, shoves the mark right). Zero
-   their WIDTH so the column is exactly glyph-wide — the same as plain chip mode, which
-   has no placeholders. visibility:hidden text just overflows invisibly; row heights
-   (hence the vertical alignment) are unchanged. This is what makes the -3px tuck below
-   land identically in every mode. */
-.lib-bracket .lib-iw-greek,
-.lib-bracket .lib-iw-strongs,
-.lib-bracket-trail .lib-iw-greek,
-.lib-bracket-trail .lib-iw-strongs { width: 0; }
 /* A bracketed phrase sits in the sentence with a normal word-gap on each side: the
    "[" and "]" keep their tight inward tuck toward their own word, and carry 2px of
    PADDING on the OUTWARD side so — with the neighbouring word's own 2px padding — the
@@ -1999,18 +1985,8 @@ input { font-family: inherit; }
    bracket on its left, and a normal word-space before the next word on its right.
    The right space is PADDING (not margin) so a highlight bar over the verse paints
    straight across it — a margin would leave an unpainted notch. 2px here + the next
-   word's own 2px left padding = the same 4px any two words sit apart.
-   It is a COLUMN (like a chip) so the mark stacks OVER its hidden greek/strongs
-   placeholders and lands on the english row; as a plain inline span those hidden rows
-   sat in a ROW beside the mark and pushed it ~10px to the right of the "]". */
-.lib-bracket-trail {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  flex-shrink: 0;
-  margin-left: 0.5px;
-  padding-right: 2px;
-}
+   word's own 2px left padding = the same 4px any two words sit apart. */
+.lib-bracket-trail { flex-shrink: 0; margin-left: 0.5px; padding-right: 2px; }
 .lib-bracket-glyph {
   font-family: var(--f-serif);
   font-size: 16px;
@@ -2022,20 +1998,14 @@ input { font-family: inherit; }
   position: relative;
   z-index: 1;
 }
-/* With Strong's/interlinear ON a chip is as wide as its WIDEST row — usually the
-   greek lemma — and every row is centred. So a bracketed word whose greek is wider
-   than its english leaves the english floating in the middle of the box, and the
-   bracket (which hugs the box edge) ends up sitting in the gap the greek opened up —
-   it reads as the bracket "covering" that extra greek width. Align each bracket's
-   OUTER words toward their own bracket so the english meets the glyph: the first
-   word's stack to the LEFT (english hugs "["), the last word's to the RIGHT (english
-   hugs "]"). The widest row (the greek) still fills the box and barely moves; only the
-   narrower english/number slide over. Brackets now hug the english in interlinear mode
-   the same way they do in plain chip mode. A lone word in its own bracket can't hug
-   both sides at once, so it stays centred. */
-.lib-bracket + .lib-word-bracketed { align-items: flex-start; }
-.lib-word-bracketed:has(+ .lib-bracket) { align-items: flex-end; }
-.lib-bracket + .lib-word-bracketed:has(+ .lib-bracket) { align-items: center; }
+/* Reading-pane ABP bracket marks. The "[" / "]" ride INSIDE the english cell of the
+   first / last bracketed word (in the .lib-iw-pos-english row, alongside the number and
+   english) rather than as their own column — so they hug the english text while the
+   greek lemma still centres over each whole word. The separate bracket COLUMN above is
+   kept for the search/lexicon result rows, which have no greek line; with a wider greek
+   lemma sitting above, that column drifts off a short english word. Muted, a shade off
+   the text colour, like the detail-panel interlinear's .iw-brk. */
+.lib-iw-brk { color: var(--ink-2); }
 
 /* Interlinear in detail panel */
 .interlinear {

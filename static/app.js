@@ -8463,16 +8463,31 @@ const LibRender = function () {
       }, "G0")));
     };
 
-    // Bracket chip (bracketed word in Greek mode — shows inline position number)
-    const bracketChip = (w, key) => {
+    // Bracket chip (bracketed word in Greek mode). The "[" / "]" marks ride INSIDE the
+    // english cell of the group's first / last word (brk.open / brk.close), so they hug
+    // the english text and the greek still centres over each word — the same inline
+    // treatment the detail-panel interlinear uses. (A separate bracket COLUMN, still used
+    // by the search/lexicon result rows that carry no greek line, drifts off a short
+    // english word once a wider greek lemma sits above it.) brk.trail is the clause
+    // punctuation lifted outside the "]".
+    const bracketChip = (w, key, brk = {}) => {
       const isPN = !!(w.is_pn || w.strongs_base === "*");
       const clickable = !!(onWordClick && w.strongs_base && (w.strongs_base !== "*" || w.english));
+      const brkOpen = pi => brk.open && pi === 0 ? /*#__PURE__*/React.createElement("span", {
+        className: "lib-iw-brk"
+      }, "[") : null;
+      const brkClose = (pi, lastPi) => brk.close && pi === lastPi ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", {
+        className: "lib-iw-brk"
+      }, "]"), brk.trail ? /*#__PURE__*/React.createElement("span", {
+        className: "lib-iw-english"
+      }, brk.trail) : null) : null;
 
       // Split multi-word gloss within a bracket word
       if (w.italic_words && w.english && w.english.includes(' ')) {
         const italicSet = new Set(w.italic_words.split(','));
         const smcapSet = w.smcap_words ? new Set(w.smcap_words.split(',')) : new Set();
         const parts = w.english.split(' ');
+        const lastPi = parts.length - 1;
         const anchorIdx = strongsAnchorIndex(parts, italicSet, w);
         const hc = hiClass(v.verse, w.position, ch);
         return /*#__PURE__*/React.createElement(React.Fragment, {
@@ -8490,11 +8505,11 @@ const LibRender = function () {
               }
             }, "x"), /*#__PURE__*/React.createElement("span", {
               className: "lib-iw-pos-english"
-            }, pi === 0 && w.greek_pos !== null && w.greek_pos !== undefined && /*#__PURE__*/React.createElement("span", {
+            }, brkOpen(pi), pi === 0 && w.greek_pos !== null && w.greek_pos !== undefined && /*#__PURE__*/React.createElement("span", {
               className: "lib-iw-pos"
             }, w.greek_pos), /*#__PURE__*/React.createElement("span", {
               className: "lib-iw-english"
-            }, word)), showStrongs && /*#__PURE__*/React.createElement("span", {
+            }, word), brkClose(pi, lastPi)), showStrongs && /*#__PURE__*/React.createElement("span", {
               className: "lib-iw-strongs",
               style: {
                 visibility: "hidden"
@@ -8519,11 +8534,11 @@ const LibRender = function () {
             }
           }, "x")), /*#__PURE__*/React.createElement("span", {
             className: "lib-iw-pos-english"
-          }, pi === 0 && w.greek_pos !== null && w.greek_pos !== undefined && /*#__PURE__*/React.createElement("span", {
+          }, brkOpen(pi), pi === 0 && w.greek_pos !== null && w.greek_pos !== undefined && /*#__PURE__*/React.createElement("span", {
             className: "lib-iw-pos"
           }, w.greek_pos), /*#__PURE__*/React.createElement("span", {
             className: "lib-iw-english"
-          }, word)), showStrongs && (pi === anchorIdx && w.strongs_base && w.strongs_base !== "*" ? /*#__PURE__*/React.createElement("span", {
+          }, word), brkClose(pi, lastPi)), showStrongs && (pi === anchorIdx && w.strongs_base && w.strongs_base !== "*" ? /*#__PURE__*/React.createElement("span", {
             className: "lib-iw-strongs"
           }, w.strongs && w.strongs !== '*' ? 'G' + w.strongs : w.strongs_base) : /*#__PURE__*/React.createElement("span", {
             className: "lib-iw-strongs",
@@ -8556,11 +8571,11 @@ const LibRender = function () {
         }
       }, "x")), /*#__PURE__*/React.createElement("span", {
         className: "lib-iw-pos-english"
-      }, w.greek_pos !== null && w.greek_pos !== undefined && /*#__PURE__*/React.createElement("span", {
+      }, brkOpen(0), w.greek_pos !== null && w.greek_pos !== undefined && /*#__PURE__*/React.createElement("span", {
         className: "lib-iw-pos"
       }, w.greek_pos), /*#__PURE__*/React.createElement("span", {
         className: "lib-iw-english"
-      }, label)), showStrongs && (w.strongs_base && w.strongs_base !== "*" ? /*#__PURE__*/React.createElement("span", {
+      }, label), brkClose(0, 0)), showStrongs && (w.strongs_base && w.strongs_base !== "*" ? /*#__PURE__*/React.createElement("span", {
         className: "lib-iw-strongs"
       }, w.strongs && w.strongs !== '*' ? 'G' + w.strongs : w.strongs_base) : /*#__PURE__*/React.createElement("span", {
         className: "lib-iw-strongs",
@@ -8631,54 +8646,17 @@ const LibRender = function () {
             } : w);
           }
         }
-        // `hc` carries the highlight paint so the "[", "]" and trailing punctuation
-        // pick up the same color as the word they hug — otherwise the highlight bar
-        // breaks at every bracket (those glyphs sit between the painted word chips).
-        const trailChar = (txt, k, hc = "") => /*#__PURE__*/React.createElement("span", {
-          key: k,
-          className: "lib-bracket-trail" + hc
-        }, showInterlinear && /*#__PURE__*/React.createElement("span", {
-          className: "lib-iw-greek",
-          style: {
-            visibility: "hidden"
-          }
-        }, "x"), /*#__PURE__*/React.createElement("span", {
-          className: "lib-iw-english"
-        }, txt), showStrongs && /*#__PURE__*/React.createElement("span", {
-          className: "lib-iw-strongs",
-          style: {
-            visibility: "hidden"
-          }
-        }, "G0"));
-        const bracketChar = (glyph, k, hc = "") => /*#__PURE__*/React.createElement("span", {
-          key: k,
-          className: "lib-bracket" + hc
-        }, showInterlinear && /*#__PURE__*/React.createElement("span", {
-          className: "lib-iw-greek",
-          style: {
-            visibility: "hidden"
-          }
-        }, "x"), /*#__PURE__*/React.createElement("span", {
-          className: "lib-bracket-glyph"
-        }, glyph), showStrongs && /*#__PURE__*/React.createElement("span", {
-          className: "lib-iw-strongs",
-          style: {
-            visibility: "hidden"
-          }
-        }, "G0"));
-        // Highlight state of the bracket's edge words drives the bracket-glyph paint.
-        const hcOpen = hiClass(v.verse, gwR[0].position, ch);
-        const hcClose = hiClass(v.verse, gwR[gwR.length - 1].position, ch);
+        // The "[" / "]" ride the first / last word's english cell (see bracketChip), so
+        // the chips just flow in greek order and a verse highlight paints straight
+        // through — no separate bracket columns sitting between the chips to break it.
         return /*#__PURE__*/React.createElement("span", {
           key: `bg${gi}`,
           className: "lib-bracket-group"
-        }, gwR.length === 1 ? /*#__PURE__*/React.createElement("span", {
-          className: "lib-bracket-unit" + hcOpen
-        }, bracketChar("[", "bl", hcOpen), bracketChip(gwR[0], `bg${gi}w0`), bracketChar("]", "br", hcClose), bracketTrail && trailChar(bracketTrail, "bt", hcClose)) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", {
-          className: "lib-bracket-unit" + hcOpen
-        }, bracketChar("[", "bl", hcOpen), bracketChip(gwR[0], `bg${gi}w0`)), gwR.slice(1, -1).map((w, wi) => bracketChip(w, `bg${gi}w${wi + 1}`)), /*#__PURE__*/React.createElement("span", {
-          className: "lib-bracket-unit" + hcClose
-        }, bracketChip(gwR[gwR.length - 1], `bg${gi}w${gwR.length - 1}`), bracketChar("]", "br", hcClose), bracketTrail && trailChar(bracketTrail, "bt", hcClose))));
+        }, gwR.map((w, wi) => bracketChip(w, `bg${gi}w${wi}`, {
+          open: wi === 0,
+          close: wi === gwR.length - 1,
+          trail: wi === gwR.length - 1 ? bracketTrail : ""
+        })));
       });
     }
     return /*#__PURE__*/React.createElement(React.Fragment, {

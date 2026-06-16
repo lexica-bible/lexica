@@ -197,16 +197,27 @@ const LibRender = (function () {
       );
     };
 
-    // Bracket chip (bracketed word in Greek mode — shows inline position number)
-    const bracketChip = (w, key) => {
+    // Bracket chip (bracketed word in Greek mode). The "[" / "]" marks ride INSIDE the
+    // english cell of the group's first / last word (brk.open / brk.close), so they hug
+    // the english text and the greek still centres over each word — the same inline
+    // treatment the detail-panel interlinear uses. (A separate bracket COLUMN, still used
+    // by the search/lexicon result rows that carry no greek line, drifts off a short
+    // english word once a wider greek lemma sits above it.) brk.trail is the clause
+    // punctuation lifted outside the "]".
+    const bracketChip = (w, key, brk = {}) => {
       const isPN = !!(w.is_pn || w.strongs_base === "*");
       const clickable = !!(onWordClick && w.strongs_base && (w.strongs_base !== "*" || w.english));
+      const brkOpen = (pi) => (brk.open && pi === 0) ? <span className="lib-iw-brk">[</span> : null;
+      const brkClose = (pi, lastPi) => (brk.close && pi === lastPi)
+        ? <React.Fragment><span className="lib-iw-brk">]</span>{brk.trail ? <span className="lib-iw-english">{brk.trail}</span> : null}</React.Fragment>
+        : null;
 
       // Split multi-word gloss within a bracket word
       if (w.italic_words && w.english && w.english.includes(' ')) {
         const italicSet = new Set(w.italic_words.split(','));
         const smcapSet  = w.smcap_words ? new Set(w.smcap_words.split(',')) : new Set();
         const parts = w.english.split(' ');
+        const lastPi = parts.length - 1;
         const anchorIdx = strongsAnchorIndex(parts, italicSet, w);
         const hc = hiClass(v.verse, w.position, ch);
         return (
@@ -217,9 +228,11 @@ const LibRender = (function () {
                 return <span key={`${key}-p${pi}`} className={"lib-word lib-word-bracketed lib-abp-italic" + (smcapSet.has(bare) ? " lib-smcap" : "") + hc}>
                   {showInterlinear && <span className="lib-iw-greek" style={{visibility:"hidden"}}>x</span>}
                   <span className="lib-iw-pos-english">
+                    {brkOpen(pi)}
                     {pi === 0 && w.greek_pos !== null && w.greek_pos !== undefined &&
                       <span className="lib-iw-pos">{w.greek_pos}</span>}
                     <span className="lib-iw-english">{word}</span>
+                    {brkClose(pi, lastPi)}
                   </span>
                   {showStrongs && <span className="lib-iw-strongs" style={{visibility:"hidden"}}>G0</span>}
                 </span>;
@@ -233,9 +246,11 @@ const LibRender = (function () {
                     ? <span className="lib-iw-greek">{w.lemma}</span>
                     : <span className="lib-iw-greek" style={{visibility:"hidden"}}>x</span>)}
                   <span className="lib-iw-pos-english">
+                    {brkOpen(pi)}
                     {pi === 0 && w.greek_pos !== null && w.greek_pos !== undefined &&
                       <span className="lib-iw-pos">{w.greek_pos}</span>}
                     <span className="lib-iw-english">{word}</span>
+                    {brkClose(pi, lastPi)}
                   </span>
                   {showStrongs && (pi === anchorIdx && w.strongs_base && w.strongs_base !== "*"
                     ? <span className="lib-iw-strongs">{(w.strongs && w.strongs !== '*') ? 'G' + w.strongs : w.strongs_base}</span>
@@ -259,9 +274,11 @@ const LibRender = (function () {
             ? <span className="lib-iw-greek">{w.lemma}</span>
             : <span className="lib-iw-greek" style={{visibility:"hidden"}}>x</span>)}
           <span className="lib-iw-pos-english">
+            {brkOpen(0)}
             {w.greek_pos !== null && w.greek_pos !== undefined &&
               <span className="lib-iw-pos">{w.greek_pos}</span>}
             <span className="lib-iw-english">{label}</span>
+            {brkClose(0, 0)}
           </span>
           {showStrongs && (
             w.strongs_base && w.strongs_base !== "*"
@@ -324,47 +341,16 @@ const LibRender = (function () {
             gwR = gw.map((w, i) => i === li ? { ...w, english: lastEng.slice(0, m.index) } : w);
           }
         }
-        // `hc` carries the highlight paint so the "[", "]" and trailing punctuation
-        // pick up the same color as the word they hug — otherwise the highlight bar
-        // breaks at every bracket (those glyphs sit between the painted word chips).
-        const trailChar = (txt, k, hc = "") => (
-          <span key={k} className={"lib-bracket-trail" + hc}>
-            {showInterlinear && <span className="lib-iw-greek" style={{visibility:"hidden"}}>x</span>}
-            <span className="lib-iw-english">{txt}</span>
-            {showStrongs && <span className="lib-iw-strongs" style={{visibility:"hidden"}}>G0</span>}
-          </span>
-        );
-        const bracketChar = (glyph, k, hc = "") => (
-          <span key={k} className={"lib-bracket" + hc}>
-            {showInterlinear && <span className="lib-iw-greek" style={{visibility:"hidden"}}>x</span>}
-            <span className="lib-bracket-glyph">{glyph}</span>
-            {showStrongs && <span className="lib-iw-strongs" style={{visibility:"hidden"}}>G0</span>}
-          </span>
-        );
-        // Highlight state of the bracket's edge words drives the bracket-glyph paint.
-        const hcOpen = hiClass(v.verse, gwR[0].position, ch);
-        const hcClose = hiClass(v.verse, gwR[gwR.length - 1].position, ch);
+        // The "[" / "]" ride the first / last word's english cell (see bracketChip), so
+        // the chips just flow in greek order and a verse highlight paints straight
+        // through — no separate bracket columns sitting between the chips to break it.
         return (
           <span key={`bg${gi}`} className="lib-bracket-group">
-            {gwR.length === 1 ? (
-              <span className={"lib-bracket-unit" + hcOpen}>
-                {bracketChar("[", "bl", hcOpen)}
-                {bracketChip(gwR[0], `bg${gi}w0`)}
-                {bracketChar("]", "br", hcClose)}
-                {bracketTrail && trailChar(bracketTrail, "bt", hcClose)}
-              </span>
-            ) : (<>
-              <span className={"lib-bracket-unit" + hcOpen}>
-                {bracketChar("[", "bl", hcOpen)}
-                {bracketChip(gwR[0], `bg${gi}w0`)}
-              </span>
-              {gwR.slice(1, -1).map((w, wi) => bracketChip(w, `bg${gi}w${wi + 1}`))}
-              <span className={"lib-bracket-unit" + hcClose}>
-                {bracketChip(gwR[gwR.length - 1], `bg${gi}w${gwR.length - 1}`)}
-                {bracketChar("]", "br", hcClose)}
-                {bracketTrail && trailChar(bracketTrail, "bt", hcClose)}
-              </span>
-            </>)}
+            {gwR.map((w, wi) => bracketChip(w, `bg${gi}w${wi}`, {
+              open: wi === 0,
+              close: wi === gwR.length - 1,
+              trail: wi === gwR.length - 1 ? bracketTrail : "",
+            }))}
           </span>
         );
       });
