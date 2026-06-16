@@ -311,9 +311,10 @@ rules + gotchas; open the named memory for the backstory.
   list + mobile picker drop NT in HEB mode), NO chronological order (Chronological is grayed in
   Hebrew). On a non-Hebrew text sitting on a NT book the HEB selector is grayed, not hidden.
 - **Gray-vs-hide is the user's per-control call** (memory `feedback_gray_dont_hide`): GRAY a real
-  feature that doesn't apply here (HEB on NT, Search on ESV/NIV); HIDE Compare + the order toggle on
-  non-canon, audio with no track, and ESV/NIV (copyright). Propose gray for inactive-but-applicable,
-  but confirm per control.
+  feature that doesn't apply here (HEB on NT, Search on ESV/NIV, the MOBILE reading toolbar's play
+  button when a text has no audio — kept grayed so the row stays balanced + book/chapter centered,
+  2026-06-16); HIDE Compare + the order toggle on non-canon, and ESV/NIV (copyright). Propose gray for
+  inactive-but-applicable, but confirm per control.
 
 **Reader appearance** (memory `project_reader_appearance`)
 - Reader font = `--f-serif` (Source Serif 4). The `Aa ▾` menu / mobile ModesSheet hold A−/A+ size +

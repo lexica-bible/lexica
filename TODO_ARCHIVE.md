@@ -32,6 +32,21 @@ Lessons worth keeping:
 - **Can't test the SEO pages locally** (no bible.db on the dev box, must not create one) — verified by
   py_compile + standalone Jinja parse, then deploy-tested. Worked fine.
 
+## SEO word-page polish + mobile toolbar centering — DONE 2026-06-16
+
+Follow-ups after the SEO launch (same day):
+- **Word pages (`/word/<strongs>`, commit dfcdd2b):** example passages now jump to the verse + highlight
+  it (chapter page got `id="v<n>"` anchors + a tiny scroll/highlight script, soft gold `.verse-hi`,
+  `scroll-margin-top:24vh` so it lands upper-third — kept crawlable rather than bouncing into the app,
+  user's call). A HEBREW word's examples open the Hebrew OT interlinear (`/read/.../heb`, refs from
+  heb.db so the verse truly has the word — was wrongly pointing at the Greek ABP). "Rendered as" chips:
+  stripped stray punctuation + merged dups; left NON-clickable (filtering is the in-app Lexicon's job).
+- **Mobile reading toolbar (commit 9e9a631):** the play button was hidden on no-audio texts, which
+  unbalanced the row and shoved the centered book/chapter sideways. Now always rendered, grayed +
+  disabled when there's no audio → row balanced, book/chapter centered. This OVERRODE the old
+  "always hide dead audio" rule for the mobile toolbar only (memory `feedback_gray_dont_hide` updated;
+  desktop bar / audio dock still hide).
+
 ## Docs slimmed — CLAUDE.md → standing rules + pointers — DONE 2026-06-16
 
 Restructured the always-loaded docs so the rules that matter stand out instead of drowning in a
