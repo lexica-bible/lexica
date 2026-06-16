@@ -1971,6 +1971,20 @@ input { font-family: inherit; }
   padding: 5px 0 2px;
   user-select: none;
 }
+/* The bracket glyphs ("[" "]") and a trailing punctuation mark carry hidden greek +
+   strongs placeholder rows (the same "x"/"G0" every chip uses) ONLY to reserve those
+   row HEIGHTS, so the glyph/mark lands on the english row, lined up with the words.
+   But the placeholders are WIDER than the glyph: left at full width they make the
+   column wider than the "[", and align-items:center then floats the glyph in the
+   middle, off its word (and in the trailing mark's row, shoves the mark right). Zero
+   their WIDTH so the column is exactly glyph-wide — the same as plain chip mode, which
+   has no placeholders. visibility:hidden text just overflows invisibly; row heights
+   (hence the vertical alignment) are unchanged. This is what makes the -3px tuck below
+   land identically in every mode. */
+.lib-bracket .lib-iw-greek,
+.lib-bracket .lib-iw-strongs,
+.lib-bracket-trail .lib-iw-greek,
+.lib-bracket-trail .lib-iw-strongs { width: 0; }
 /* A bracketed phrase sits in the sentence with a normal word-gap on each side: the
    "[" and "]" keep their tight inward tuck toward their own word, and carry 2px of
    PADDING on the OUTWARD side so — with the neighbouring word's own 2px padding — the
@@ -1985,8 +1999,18 @@ input { font-family: inherit; }
    bracket on its left, and a normal word-space before the next word on its right.
    The right space is PADDING (not margin) so a highlight bar over the verse paints
    straight across it — a margin would leave an unpainted notch. 2px here + the next
-   word's own 2px left padding = the same 4px any two words sit apart. */
-.lib-bracket-trail { flex-shrink: 0; margin-left: 0.5px; padding-right: 2px; }
+   word's own 2px left padding = the same 4px any two words sit apart.
+   It is a COLUMN (like a chip) so the mark stacks OVER its hidden greek/strongs
+   placeholders and lands on the english row; as a plain inline span those hidden rows
+   sat in a ROW beside the mark and pushed it ~10px to the right of the "]". */
+.lib-bracket-trail {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  margin-left: 0.5px;
+  padding-right: 2px;
+}
 .lib-bracket-glyph {
   font-family: var(--f-serif);
   font-size: 16px;
