@@ -16,7 +16,7 @@ import os
 import re
 import sqlite3
 
-from flask import Flask, jsonify, render_template, request, url_for, redirect
+from flask import Flask, jsonify, render_template, request, url_for, redirect, send_from_directory
 
 from core import log, DB, db, limiter, _FUNCTION_STRONGS, ai_cache_drop_legacy
 
@@ -327,6 +327,30 @@ _prune_metav_cache()
 @app.route("/")
 def index():
     return render_template("index.html")
+
+
+# Conventional root-level files browsers and crawlers auto-request. The actual
+# files live in static/; these routes just expose them at the paths clients
+# expect (e.g. a browser always asks for /favicon.ico, iOS for the touch icon).
+@app.route("/favicon.ico")
+def favicon():
+    return send_from_directory(app.static_folder, "favicon.ico", mimetype="image/x-icon")
+
+
+@app.route("/apple-touch-icon.png")
+@app.route("/apple-touch-icon-precomposed.png")
+def apple_touch_icon():
+    return send_from_directory(app.static_folder, "apple-touch-icon.png", mimetype="image/png")
+
+
+@app.route("/robots.txt")
+def robots_txt():
+    return send_from_directory(app.static_folder, "robots.txt", mimetype="text/plain")
+
+
+@app.route("/sitemap.xml")
+def sitemap_xml():
+    return send_from_directory(app.static_folder, "sitemap.xml", mimetype="application/xml")
 
 
 if __name__ == "__main__":
