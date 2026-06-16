@@ -93,6 +93,7 @@ const api = {
   chronological: () => fetch("/static/chronological.json").then(r => r.json()),
   chronoIntro: day => fetch(`/api/chrono/intro/${day}`).then(r => r.json()),
   chapter: (book, ch) => fetch(`/api/chapter/${encodeURIComponent(book)}/${ch}`).then(r => r.json()),
+  variants: (book, ch) => fetch(`/api/variants/${encodeURIComponent(book)}/${ch}`).then(r => r.json()),
   extraChapter: (book, ch) => fetch(`/api/extra/${encodeURIComponent(book)}/chapter/${ch}`).then(r => r.json()),
   extraStrongsCount: (book, strongs) => fetch(`/api/extra/${encodeURIComponent(book)}/strongs-count/${encodeURIComponent(strongs)}`).then(r => r.json()),
   kjvChapter: (book, ch) => fetch(`/api/kjv/chapter/${encodeURIComponent(book)}/${ch}`).then(r => r.json()),
@@ -3791,6 +3792,7 @@ function CrossRefPanel({
   const [synthesis, setSynthesis] = useState(null);
   const [loading, setLoading] = useState(false);
   const [abpTexts, setAbpTexts] = useState({});
+  const [variants, setVariants] = useState([]); // ABP textual-variant notes for this verse
   const showAbp = translation === "abp" || translation === "parallel";
   useEffect(() => {
     if (!source) return;
@@ -3798,6 +3800,10 @@ function CrossRefPanel({
     setRefs([]);
     setSynthesis(null);
     setAbpTexts({});
+    setVariants([]);
+    api.variants(source.book, source.chapter).then(d => {
+      if (!cancelled) setVariants(d && d[source.verse] || []);
+    }).catch(() => {});
     setLoading(true);
     api.crossRefsCurated(source.book, source.chapter, source.verse).then(d => {
       if (cancelled) return;
@@ -3836,7 +3842,22 @@ function CrossRefPanel({
   // source reference + a passage count) then .sec/.sec-head sections — the AI
   // synthesis as "The connection" (Sonnet-written, so it carries the AI badge),
   // and the curated list as "Related passages".
-  const content = /*#__PURE__*/React.createElement(React.Fragment, null, (loading || synthesis) && /*#__PURE__*/React.createElement("section", {
+  const content = /*#__PURE__*/React.createElement(React.Fragment, null, variants.length > 0 && /*#__PURE__*/React.createElement("section", {
+    className: "sec"
+  }, /*#__PURE__*/React.createElement("h4", {
+    className: "sec-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "sec-t"
+  }, "Textual variants"), /*#__PURE__*/React.createElement("span", {
+    className: "lsj-badge"
+  }, "ABP")), variants.map((vn, i) => /*#__PURE__*/React.createElement("p", {
+    key: i,
+    className: "detail-p variant-note"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "variant-src"
+  }, vn.src), " ", vn.op, " ", /*#__PURE__*/React.createElement("span", {
+    className: "variant-gloss"
+  }, "\u201C", vn.gloss, "\u201D")))), (loading || synthesis) && /*#__PURE__*/React.createElement("section", {
     className: "sec"
   }, /*#__PURE__*/React.createElement("h4", {
     className: "sec-head"
@@ -9754,6 +9775,25 @@ function LibraryView({
     };
   }, [selBook && selBook.abbrev, selChapter, corpus, chronoOn]);
 
+  // ABP textual-variant footnotes for the loaded chapter (the dagger apparatus).
+  // {verse: [notes]}; stays empty unless this book/chapter has notes (Isaiah for now).
+  const [chapterVariants, setChapterVariants] = useState({});
+  useEffect(() => {
+    if (!selBook || nonCanon) {
+      setChapterVariants({});
+      return;
+    }
+    let cancelled = false;
+    api.variants(selBook.abbrev, selChapter).then(d => {
+      if (!cancelled) setChapterVariants(d || {});
+    }).catch(() => {
+      if (!cancelled) setChapterVariants({});
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [selBook && selBook.abbrev, selChapter, nonCanon]);
+
   // Chronological span loader: fetch every chapter the current passage covers, for
   // the active text(s). One state object keyed by chapter; the render trims each
   // chapter to the passage's verse window and stitches them with chapter markers.
@@ -10934,19 +10974,29 @@ function LibraryView({
   // Outer span = the alignment gutter (fixed width, not interactive). Inner span =
   // the actual hit target, sized to the digits, so clicking the empty space beside
   // the number does nothing (and can't start a verse-wide text selection).
-  const vnumEl = (verse, ch = selChapter) => /*#__PURE__*/React.createElement("span", {
-    className: "lib-vnum"
-  }, /*#__PURE__*/React.createElement("span", _extends({
-    className: "lib-vnum-num" + (handleVerseNum ? " lib-vnum-click" : ""),
-    title: handleVerseNum ? "Click: cross-references · Right-click / long-press: add a note" : undefined,
-    onClick: handleVerseNum ? () => {
-      if (vnumPressRef.current.fired) {
-        vnumPressRef.current.fired = false;
-        return;
-      }
-      handleVerseNum(verse, ch);
-    } : undefined
-  }, vnumNoteHandlers(verse, ch)), verse));
+  const vnumEl = (verse, ch = selChapter) => {
+    const hasVariant = ch === selChapter && Array.isArray(chapterVariants[verse]) && chapterVariants[verse].length > 0;
+    return /*#__PURE__*/React.createElement("span", {
+      className: "lib-vnum"
+    }, /*#__PURE__*/React.createElement("span", _extends({
+      className: "lib-vnum-num" + (handleVerseNum ? " lib-vnum-click" : ""),
+      title: handleVerseNum ? "Click: cross-references · Right-click / long-press: add a note" : undefined,
+      onClick: handleVerseNum ? () => {
+        if (vnumPressRef.current.fired) {
+          vnumPressRef.current.fired = false;
+          return;
+        }
+        handleVerseNum(verse, ch);
+      } : undefined
+    }, vnumNoteHandlers(verse, ch)), verse), hasVariant && /*#__PURE__*/React.createElement("span", {
+      className: "lib-var-dagger",
+      title: "Textual variant \u2014 click for the note",
+      onClick: handleVerseNum ? e => {
+        e.stopPropagation();
+        handleVerseNum(verse, ch);
+      } : undefined
+    }, "\u2020"));
+  };
 
   // Verse number for non-canonical texts: opens the note menu on right-click /
   // long-press, but no cross-references (those texts have none). Left-click is a no-op

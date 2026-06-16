@@ -1,0 +1,23 @@
+{
+  "_about": "ABP textual-variant footnotes (the dagger apparatus from the ABP 2nd ed.). Shape: book -> chapter -> verse -> [ {src, op, gloss, conf} ]. src = printed Greek edition the variant comes from; op = adds/reads/omits; gloss = the English meaning of the variant word (the Greek form is omitted — it is unrecoverable as clean text from the source). conf = how the verse anchor was determined (auto = exact text match; ai = meaning-matched). Isaiah only for now (proof).",
+  "Isa": {
+    "1":  { "31": [ {"src": "Complutensian", "op": "adds",  "gloss": "of fire", "conf": "ai"} ] },
+    "2":  { "2":  [ {"src": "Complutensian", "op": "reads", "gloss": "uppermost parts", "conf": "auto"},
+                    {"src": "Complutensian", "op": "reads", "gloss": "above", "conf": "auto"} ],
+            "4":  [ {"src": "Complutensian", "op": "reads", "gloss": "reprove", "conf": "ai"} ] },
+    "9":  { "2":  [ {"src": "Complutensian", "op": "reads", "gloss": "sitting", "conf": "ai"} ] },
+    "12": { "1":  [ {"src": "Complutensian", "op": "reads", "gloss": "confess to the Lord", "conf": "ai"} ] },
+    "13": { "9":  [ {"src": "Complutensian & Aldine", "op": "add", "gloss": "and divine anger", "conf": "ai"} ] },
+    "14": { "13": [ {"src": "Complutensian", "op": "reads", "gloss": "stars", "conf": "auto"} ] },
+    "22": { "1":  [ {"src": "Complutensian", "op": "reads", "gloss": "matter", "conf": "auto"} ] },
+    "25": { "3":  [ {"src": "Complutensian", "op": "adds",  "gloss": "shall bless you", "conf": "auto"} ],
+            "6":  [ {"src": "Complutensian", "op": "reads", "gloss": "he will make", "conf": "ai"} ] },
+    "26": { "1":  [ {"src": "Sixtine", "op": "reads", "gloss": "wall", "conf": "ai"} ] },
+    "35": { "5":  [ {"src": "Complutensian", "op": "adds",  "gloss": "being opened", "conf": "auto"} ] },
+    "37": { "33": [ {"src": "Complutensian", "op": "reads", "gloss": "throw", "conf": "auto"} ] },
+    "45": { "13": [ {"src": "Complutensian", "op": "reads", "gloss": "shall raise", "conf": "auto"} ] },
+    "50": { "2":  [ {"src": "Complutensian", "op": "reads", "gloss": "thirst", "conf": "auto"} ] },
+    "62": { "2":  [ {"src": "Sixtine", "op": "reads", "gloss": "glory", "conf": "auto"} ],
+            "4":  [ {"src": "Complutensian", "op": "reads", "gloss": "shall be lived in", "conf": "ai"} ] }
+  }
+}
