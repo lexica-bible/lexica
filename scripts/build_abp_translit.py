@@ -37,8 +37,8 @@ LETTER = {
 }
 ACC = {TONOS: ACUTE, VARIA: ACUTE, PERISP: CIRC}     # grave folded to acute for an isolated form
 VOWELS = set('αεηιουω')
-DIPH_FIRST = 'αεηο'          # an upsilon after one of these is 'u' (au/eu/euu/ou)
-NASAL_NEXT = 'γκχξ'          # a gamma before one of these is 'n'
+DIPH_FIRST = set('αεηο')     # an upsilon AFTER one of these is 'u' (au/eu/ou); else 'y'
+NASAL_NEXT = set('γκχξ')     # a gamma BEFORE one of these is 'n' (sets, so '' never matches)
 
 
 def rough_breathing(lemma):
@@ -58,7 +58,7 @@ def romanize(form, lemma):
         low = ch.lower()
         prev = units[i - 1][0].lower() if i else ''
         nxt = units[i + 1][0].lower() if i + 1 < len(units) else ''
-        if low == 'υ' and prev in DIPH_FIRST:   # diphthong: au / eu / euu / ou
+        if low == 'υ' and (prev in DIPH_FIRST or nxt == 'ι'):  # 'u' in a diphthong: au/eu/ou and ui
             lat = 'u'
         elif low == 'ρ' and i == 0:             # word-initial rho is always rough -> rh
             lat = 'rh'
