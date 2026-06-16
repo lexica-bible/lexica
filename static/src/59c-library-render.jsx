@@ -19,10 +19,17 @@ const LibRender = (function () {
     }, "");
   };
 
-  const renderProseWords = (ctx, v) => {
+  const renderProseWords = (ctx, v, opts = {}) => {
     const { selChapter, hiClass } = ctx;
+    // tightSpace: emit the inter-word space OUTSIDE the word's span. The reader leaves it
+    // INSIDE (default) so a multi-word highlight paints as one continuous bar; the
+    // Search/Lexicon result lists set it so a single-word match highlight hugs just the
+    // word — a trailing space caught inside the gold makes the highlight look off-centre.
+    const tight = !!opts.tightSpace;
     const ch = v._ch ?? selChapter;
     const englishWords = getEnglishOrderWords(v.words);
+    const sp = tight ? "" : " ";
+    const emit = (key, span) => tight ? <React.Fragment key={key}>{span}{" "}</React.Fragment> : span;
     return englishWords.map((w, i) => {
       const text = w.english || "";
       if (!text) return null;
@@ -32,30 +39,32 @@ const LibRender = (function () {
       if (text.includes(' ')) {
         if (w.italic_words) {
           const iset = new Set(w.italic_words.split(','));
-          return (
+          const parts = text.split(' ').filter(Boolean);
+          return emit(i,
             <span key={i} data-note-pos={w.position} className={hc || undefined}>
-              {text.split(' ').filter(Boolean).map((word, pi) => {
+              {parts.map((word, pi) => {
                 const bare = word.replace(/[^\w]/g,'').toLowerCase();
-                return <span key={pi} className={iset.has(bare) ? "lib-prose-italic" : undefined}>{word}{" "}</span>;
+                return <span key={pi} className={iset.has(bare) ? "lib-prose-italic" : undefined}>{word}{(pi < parts.length - 1 || !tight) ? " " : ""}</span>;
               })}
             </span>
           );
         }
         if (w.italic) {
           const headBare = w.english_head ? w.english_head.replace(/[^\w]/g,'').toLowerCase() : null;
-          return (
+          const parts = text.split(' ').filter(Boolean);
+          return emit(i,
             <span key={i} data-note-pos={w.position} className={hc || undefined}>
-              {text.split(' ').filter(Boolean).map((word, pi) => {
+              {parts.map((word, pi) => {
                 const bare = word.replace(/[^\w]/g,'').toLowerCase();
                 const isItalic = !headBare || bare === headBare;
-                return <span key={pi} className={isItalic ? "lib-prose-italic" : undefined}>{word}{" "}</span>;
+                return <span key={pi} className={isItalic ? "lib-prose-italic" : undefined}>{word}{(pi < parts.length - 1 || !tight) ? " " : ""}</span>;
               })}
             </span>
           );
         }
-        return <span key={i} data-note-pos={w.position} className={hc || undefined}>{text + " "}</span>;
+        return emit(i, <span key={i} data-note-pos={w.position} className={hc || undefined}>{text + sp}</span>);
       }
-      return <span key={i} data-note-pos={w.position} className={(!!w.italic ? "lib-prose-italic" : "") + hc}>{text + " "}</span>;
+      return emit(i, <span key={i} data-note-pos={w.position} className={(!!w.italic ? "lib-prose-italic" : "") + hc}>{text + sp}</span>);
     });
   };
 

@@ -3997,10 +3997,12 @@ function VerseRow({
     const sidBare = sid ? sid.replace(/^[GH]/i, "") : null;
     const isCited = sid && citedStrongs != null && citedStrongs.size > 0 && (citedStrongs.has(sid) || citedStrongs.has(sidBare));
     const cls = (w.italic ? "lib-prose-italic " : "") + (isCited ? "corpus-hit" : "");
-    return /*#__PURE__*/React.createElement("span", {
-      key: i,
+    // space OUTSIDE the span so a highlighted match hugs just the word
+    return /*#__PURE__*/React.createElement(React.Fragment, {
+      key: i
+    }, /*#__PURE__*/React.createElement("span", {
       className: cls.trim() || undefined
-    }, w.word, w.punc || "", " ");
+    }, w.word, w.punc || ""), " ");
   }) : words === null ? /*#__PURE__*/React.createElement("span", {
     style: {
       color: "var(--ink-4)",
@@ -4021,6 +4023,8 @@ function VerseRow({
       verse,
       words,
       _ch: chapter
+    }, {
+      tightSpace: true
     });
   })()));
 }
@@ -8052,13 +8056,22 @@ const LibRender = function () {
       return /^[.,;:?!—)]/.test(tok) ? acc + tok : acc + " " + tok;
     }, "");
   };
-  const renderProseWords = (ctx, v) => {
+  const renderProseWords = (ctx, v, opts = {}) => {
     const {
       selChapter,
       hiClass
     } = ctx;
+    // tightSpace: emit the inter-word space OUTSIDE the word's span. The reader leaves it
+    // INSIDE (default) so a multi-word highlight paints as one continuous bar; the
+    // Search/Lexicon result lists set it so a single-word match highlight hugs just the
+    // word — a trailing space caught inside the gold makes the highlight look off-centre.
+    const tight = !!opts.tightSpace;
     const ch = v._ch ?? selChapter;
     const englishWords = getEnglishOrderWords(v.words);
+    const sp = tight ? "" : " ";
+    const emit = (key, span) => tight ? /*#__PURE__*/React.createElement(React.Fragment, {
+      key: key
+    }, span, " ") : span;
     return englishWords.map((w, i) => {
       const text = w.english || "";
       if (!text) return null;
@@ -8072,44 +8085,46 @@ const LibRender = function () {
       if (text.includes(' ')) {
         if (w.italic_words) {
           const iset = new Set(w.italic_words.split(','));
-          return /*#__PURE__*/React.createElement("span", {
+          const parts = text.split(' ').filter(Boolean);
+          return emit(i, /*#__PURE__*/React.createElement("span", {
             key: i,
             "data-note-pos": w.position,
             className: hc || undefined
-          }, text.split(' ').filter(Boolean).map((word, pi) => {
+          }, parts.map((word, pi) => {
             const bare = word.replace(/[^\w]/g, '').toLowerCase();
             return /*#__PURE__*/React.createElement("span", {
               key: pi,
               className: iset.has(bare) ? "lib-prose-italic" : undefined
-            }, word, " ");
-          }));
+            }, word, pi < parts.length - 1 || !tight ? " " : "");
+          })));
         }
         if (w.italic) {
           const headBare = w.english_head ? w.english_head.replace(/[^\w]/g, '').toLowerCase() : null;
-          return /*#__PURE__*/React.createElement("span", {
+          const parts = text.split(' ').filter(Boolean);
+          return emit(i, /*#__PURE__*/React.createElement("span", {
             key: i,
             "data-note-pos": w.position,
             className: hc || undefined
-          }, text.split(' ').filter(Boolean).map((word, pi) => {
+          }, parts.map((word, pi) => {
             const bare = word.replace(/[^\w]/g, '').toLowerCase();
             const isItalic = !headBare || bare === headBare;
             return /*#__PURE__*/React.createElement("span", {
               key: pi,
               className: isItalic ? "lib-prose-italic" : undefined
-            }, word, " ");
-          }));
+            }, word, pi < parts.length - 1 || !tight ? " " : "");
+          })));
         }
-        return /*#__PURE__*/React.createElement("span", {
+        return emit(i, /*#__PURE__*/React.createElement("span", {
           key: i,
           "data-note-pos": w.position,
           className: hc || undefined
-        }, text + " ");
+        }, text + sp));
       }
-      return /*#__PURE__*/React.createElement("span", {
+      return emit(i, /*#__PURE__*/React.createElement("span", {
         key: i,
         "data-note-pos": w.position,
         className: (!!w.italic ? "lib-prose-italic" : "") + hc
-      }, text + " ");
+      }, text + sp));
     });
   };
 

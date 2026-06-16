@@ -62,7 +62,8 @@ function VerseRow({ book, chapter, verse, label, allResults, onWordClick, onRead
                 const isCited = sid && citedStrongs != null && citedStrongs.size > 0 &&
                   (citedStrongs.has(sid) || citedStrongs.has(sidBare));
                 const cls = (w.italic ? "lib-prose-italic " : "") + (isCited ? "corpus-hit" : "");
-                return <span key={i} className={cls.trim() || undefined}>{w.word}{w.punc || ""}{" "}</span>;
+                // space OUTSIDE the span so a highlighted match hugs just the word
+                return <React.Fragment key={i}><span className={cls.trim() || undefined}>{w.word}{w.punc || ""}</span>{" "}</React.Fragment>;
               })
         ) : words === null ? (
           <span style={{ color: "var(--ink-4)", fontSize: "13px" }}>Loading…</span>
@@ -81,7 +82,7 @@ function VerseRow({ book, chapter, verse, label, allResults, onWordClick, onRead
             selChapter: chapter,
             hiClass: (vs, pos) => citedPositions.has(pos) ? " corpus-hit" : "",
           };
-          return LibRender.renderProseWords(proseCtx, { verse, words, _ch: chapter });
+          return LibRender.renderProseWords(proseCtx, { verse, words, _ch: chapter }, { tightSpace: true });
         })()}
       </span>
     </div>

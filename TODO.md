@@ -89,6 +89,26 @@ Deliberate NON-targets (listed so we don't mistake them for gaps): no paid comme
 
 ---
 
+## Logos base-tier gaps — two real ones (2026-06-16)
+
+We can't touch Logos's full paid library, but on the core word-study loop we already match it — and
+beat it on the lexicons (LSJ + BDB are free here, paid add-ons there). Two things their BASE study
+tools have that we don't yet. Saved here, NOT being worked — revisit on your own schedule.
+
+1. **Grammar search.** Search the grammar tags themselves — e.g. "show every aorist participle of
+   this verb" across the whole text. We already STORE the tags on the words (~78% of ABP Greek, the
+   Hebrew OT in full); what's missing is the engine to search them. This is Logos's real muscle at
+   every tier, and the single biggest thing between us and their base word-study feel.
+   `code: morph column on words + heb_words; needs a new search route + UI`
+2. **Dedicated people/places module + timelines.** We HAVE people/places and maps already (metaV —
+   the person/place cards, coordinates, the map). What we DON'T have: (a) a dedicated browsable
+   module/hub for them (Logos's "Factbook"), instead of cards that only open on a word click, and
+   (b) timelines. The "Map tab" idea further down is the maps half; this is the broader
+   browse-the-people/places half + a time axis.
+   `code: metav_* tables + sidebar (today click-only); see "Map tab" below; memory project_metav_expansion`
+
+---
+
 ## New features
 
 - ~~**Notes feature.**~~ **DONE 2026-06-09** (notes + highlights + bookmarks + accounts). Study
