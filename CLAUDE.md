@@ -529,17 +529,27 @@ scripts/          # build-frontend.js + one-time import/migration scripts
   upsilon y-vs-u). Lemma-on-top was a deliberate flip from inflected-on-top. Full record:
   memory `project_bsb_words`.
 - **Chip-vs-prose render rule (verses shown OUTSIDE the reader).** CHIP = word-study (ABP brackets +
-  punctuation outside the `]`): the reading pane, Search + Lexicon results (both via `CorpusGroup` in
-  50-corpus-results.jsx), the side-card interlinear. PROSE = reading (plain text, no brackets): the TSK
-  cross-ref panel, Study-module verses, the side-card verse quote, the Library in-text "find" list.
-  Keep the split — don't bracket the prose surfaces.
+  punctuation outside the `]`): the reading pane + the side-card interlinear. PROSE = reading (plain
+  text, no brackets): the TSK cross-ref panel, Study-module verses, the side-card verse quote, the
+  Library in-text "find" list, AND (2026-06-16) the **Search + Lexicon RESULT lists** — they went
+  chip→prose (`CorpusGroup`/`VerseRow` in 50-corpus-results.jsx). In the result lists the MATCHED
+  word is gold-highlighted (`.corpus-hit`) and the reference button jumps into the reader for per-word
+  study (lists FIND, the reader STUDIES). ABP results reuse the reader's `LibRender.renderProseWords`
+  (with `tightSpace:true` so a one-word highlight hugs the word — see the bracket note below); KJV
+  joins its words inline. Keep the split — don't bracket the prose surfaces. Memory `project_lexicon_tab`.
 - Italic words render muted/italic: KJV (italic=1) and ABP (words.italic=1); ABP bracket words `[word]` are also translator additions
-- **Highlight paint over ABP brackets (2026-06-13):** word chips sit flush so their highlight
-  backgrounds merge into one bar, but the `[` `]` glyphs + trailing punctuation sit between chips and
-  weren't painted, so a highlight broke at every bracket. Fix: carry the edge word's highlight class
-  (`hcOpen`/`hcClose`) onto the bracket glyphs AND the `.lib-bracket-unit` wrappers. Because a
-  highlighted chip is tucked 3px over the bracket, `.lib-bracket-glyph` also gets `position/z-index`
-  so the bracket's serifs aren't covered (else `[` looked like a thin vertical line). (60-library.jsx + styles.css)
+- **ABP brackets render INLINE in the reader's chips (2026-06-16 — supersedes the old "bracket column"
+  approach).** The `[` `]` (and a bracket's lifted trailing punctuation) ride INSIDE the english cell of
+  the group's first/last word (`.lib-iw-brk` inside `.lib-iw-pos-english`), NOT as their own column — so
+  they hug the english text while the greek lemma still centres over the whole word. A separate bracket
+  COLUMN drifted off a short english word whenever a wider greek lemma sat above it (same reason the
+  detail-panel interlinear already went inline). Done via `bracketChip(w, key, {open, close, trail})` in
+  59c-library-render.jsx; the highlight now just rides the chip (the bracket is part of it) — no more
+  carrying a class onto separate glyphs. The old `.lib-bracket` / `.lib-bracket-unit` / `.lib-bracket-glyph`
+  / `.lib-bracket-trail` COLUMN CSS is now DEAD (reader is inline + Search/Lexicon went prose); only
+  `.lib-bracket-group` (the `display:contents` wrapper) is still used. Two interim CSS-only attempts
+  (zero-width row placeholders; then aligning boundary words toward their bracket) were tried + reverted
+  in favour of inline. Memory `project_library_bracket`.
 - Verse layout: `lib-verse-row` (flex-start) → `lib-vnum` (fixed, min-width gutter, non-selectable) +
   `lib-verse-content`. The verse number's CLICK target is an inner `.lib-vnum-num` hugging the digits, so
   the empty gutter beside the number is inert (no stray click/cross-ref/verse-highlight). (2026-06-11)

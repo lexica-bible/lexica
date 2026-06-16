@@ -60,6 +60,13 @@ Still open:
    new fingerprint scheme watches, so each edit will lazily refresh that category's cache (expected).
    `code: shared snippet in core.py; views_crossref.py system prompts; views_metav.py _PN_SYSTEM;
    views_summary.py _SUMMARY_SYSTEM/_*_TMPL; ai.py LSJ prompt in views_lsj.py`
+3. **Remove the now-dead ABP "bracket column" CSS.** After the reader's brackets went INLINE (2026-06-16,
+   `.lib-iw-brk` inside the chip's english cell) and the Search/Lexicon result lists went prose, nothing
+   renders the old bracket-COLUMN classes anymore: `.lib-bracket`, `.lib-bracket-unit`, `.lib-bracket-glyph`,
+   `.lib-bracket-trail` (+ the `:first-child` / `:last-child` / `:has(+ .lib-bracket-trail)` rules). Only
+   `.lib-bracket-group` (`display:contents`) is still emitted. Safe to delete the rest — grep `static/src/`
+   first to confirm no `.jsx` still emits them. Pure tidy-up, low priority. `code: static/styles.css bracket
+   section (~line 1956)`
 
 ---
 
