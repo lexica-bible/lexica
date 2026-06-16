@@ -92,60 +92,8 @@ function SearchBar({ q2, setQ2, onAiSearch, aiLoading }) {
 }
 
 // ============================================================
-// RESULT CARD
-// ============================================================
-function ResultCard({ entry, active, onClick, count }) {
-  return (
-    <article
-      className={"card " + (active ? "card-active" : "")}
-      onClick={onClick}
-      tabIndex="0"
-      onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && onClick()}
-    >
-      <div className="card-top">
-        <span className="card-ref">{entry.ref}</span>
-        <span className="card-badge">{entry.strongs}</span>
-      </div>
-      <div className="card-main">
-        {entry.greek ? (
-          <div className="card-greek">{entry.greek}</div>
-        ) : (
-          <div className="card-greek" style={{ fontSize: "22px" }}>{stripArticles(entry.gloss)}</div>
-        )}
-        {entry.greek && <div className="card-gloss">{stripArticles(entry.gloss)}</div>}
-      </div>
-      <div className="card-translit">{entry.translit}</div>
-      <div className="card-foot">
-        <span className="card-pos">{BOOK_LABELS[entry.book] || entry.book}</span>
-        <span className="card-occ">{count}×</span>
-      </div>
-    </article>
-  );
-}
-
-// ============================================================
 // LSJ SUMMARY DISPLAY
 // ============================================================
-function _senseLevel(marker) {
-  if (!marker) return 0;
-  if (/^[IVX]+\.$/.test(marker)) return 0;
-  if (/^[A-E]\.$/.test(marker))  return 1;
-  if (/^[1-9]/.test(marker))     return 2;
-  return 3;
-}
-
-function _stripMd(text) {
-  return text
-    .replace(/^#+\s*/gm, "")      // strip # ## ### headers
-    .replace(/^\s*[-*]\s+/gm, "") // strip bullet points
-    .replace(/\*\*(.+?)\*\*/g, "$1") // strip bold **
-    .replace(/\*(.+?)\*/g, "$1")     // strip italic *
-    .replace(/\s{2,}/g, " ")
-    .trim();
-}
-
-const _REFUSAL_RE = /^(I |A\.\s*I |I'm |I don't|I cannot|I appreciate|I need|Unfortunately)/i;
-
 function LsjSummary({ data, loading }) {
   if (loading)
     return <div className="lsj-def" style={{ color: "var(--muted)", fontStyle: "italic" }}>Summarizing…</div>;

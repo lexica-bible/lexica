@@ -30,7 +30,7 @@ import sqlite3
 import urllib.parse
 import urllib.request
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify
 
 from core import db_ro, esv_db, _KJV_BOOK_ID, _USFM_BOOK
 from views_notes import is_berean as _can_esv   # ESV reading text = berean+ (trusted friends)

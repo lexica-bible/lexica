@@ -1060,31 +1060,6 @@ input { font-family: inherit; }
   margin-left: 6px;
 }
 
-/* Parsed / cleaned definition */
-.lsj-parsed { display: flex; flex-direction: column; gap: 6px; }
-.lsj-sense {
-  display: flex;
-  gap: 7px;
-  font-family: var(--f-serif);
-  font-size: 13.5px;
-  line-height: 1.65;
-  color: var(--ink-2);
-}
-.lsj-l0 { padding-left: 0; }
-.lsj-l1 { padding-left: 14px; }
-.lsj-l2 { padding-left: 28px; }
-.lsj-l3 { padding-left: 42px; }
-.lsj-marker {
-  font-family: var(--f-mono);
-  font-size: 11px;
-  font-weight: 600;
-  color: var(--accent);
-  min-width: 24px;
-  flex-shrink: 0;
-  padding-top: 2px;
-}
-.lsj-text { color: var(--ink-2); }
-
 /* Context-aware synthesis (Definition tab) */
 .lsj-synthesis {
   font-family: var(--f-serif);
@@ -1949,57 +1924,15 @@ input { font-family: inherit; }
   margin: 0;
 }
 
-/* Bracket group wrapper — inline-flex so [ words ] stay on one visual unit */
+/* Bracket group wrapper — display:contents so the [ words ] flow directly in the verse row */
 .lib-bracket-group {
   display: contents;
 }
-.lib-bracket-unit {
-  display: inline-flex;
-  align-items: baseline;
-  white-space: nowrap;
-  flex-shrink: 0;
-}
-.lib-bracket {
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  flex-shrink: 0;
-  padding: 5px 0 2px;
-  user-select: none;
-}
-/* A bracketed phrase sits in the sentence with a normal word-gap on each side: the
-   "[" and "]" keep their tight inward tuck toward their own word, and carry 2px of
-   PADDING on the OUTWARD side so — with the neighbouring word's own 2px padding — the
-   gap before "[" and after "]" matches the 4px any two words sit apart. Padding (not
-   margin) so a verse highlight bar paints straight across the gap. */
-.lib-bracket:first-child { margin-right: -3px; padding-left: 2px; }
-.lib-bracket:last-child  { margin-left:  -3px; padding-right: 2px; }
-/* close-bracket keeps its leftward tuck even when trailing punctuation follows
-   (there the trailing-punct span carries the outward 2px instead) */
-.lib-bracket:has(+ .lib-bracket-trail) { margin-left: -3px; }
-/* Trailing clause punctuation lifted outside the "]": 0.5px of daylight off the
-   bracket on its left, and a normal word-space before the next word on its right.
-   The right space is PADDING (not margin) so a highlight bar over the verse paints
-   straight across it — a margin would leave an unpainted notch. 2px here + the next
-   word's own 2px left padding = the same 4px any two words sit apart. */
-.lib-bracket-trail { flex-shrink: 0; margin-left: 0.5px; padding-right: 2px; }
-.lib-bracket-glyph {
-  font-family: var(--f-serif);
-  font-size: 16px;
-  line-height: 1.3;
-  color: var(--ink-2);
-  /* The neighbour chip is tucked 3px over the bracket; lift the glyph so a
-     highlighted chip's opaque paint can't cover the bracket's serifs (which left
-     it looking like a thin vertical line). */
-  position: relative;
-  z-index: 1;
-}
+
 /* Reading-pane ABP bracket marks. The "[" / "]" ride INSIDE the english cell of the
    first / last bracketed word (in the .lib-iw-pos-english row, alongside the number and
    english) rather than as their own column — so they hug the english text while the
-   greek lemma still centres over each whole word. The separate bracket COLUMN above is
-   kept for the search/lexicon result rows, which have no greek line; with a wider greek
-   lemma sitting above, that column drifts off a short english word. Muted, a shade off
+   greek lemma still centres over each whole word. Muted, a shade off
    the text colour, like the detail-panel interlinear's .iw-brk. */
 .lib-iw-brk { color: var(--ink-2); }
 

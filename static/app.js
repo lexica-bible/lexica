@@ -1702,65 +1702,8 @@ function SearchBar({
 }
 
 // ============================================================
-// RESULT CARD
-// ============================================================
-function ResultCard({
-  entry,
-  active,
-  onClick,
-  count
-}) {
-  return /*#__PURE__*/React.createElement("article", {
-    className: "card " + (active ? "card-active" : ""),
-    onClick: onClick,
-    tabIndex: "0",
-    onKeyDown: e => (e.key === "Enter" || e.key === " ") && onClick()
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "card-top"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "card-ref"
-  }, entry.ref), /*#__PURE__*/React.createElement("span", {
-    className: "card-badge"
-  }, entry.strongs)), /*#__PURE__*/React.createElement("div", {
-    className: "card-main"
-  }, entry.greek ? /*#__PURE__*/React.createElement("div", {
-    className: "card-greek"
-  }, entry.greek) : /*#__PURE__*/React.createElement("div", {
-    className: "card-greek",
-    style: {
-      fontSize: "22px"
-    }
-  }, stripArticles(entry.gloss)), entry.greek && /*#__PURE__*/React.createElement("div", {
-    className: "card-gloss"
-  }, stripArticles(entry.gloss))), /*#__PURE__*/React.createElement("div", {
-    className: "card-translit"
-  }, entry.translit), /*#__PURE__*/React.createElement("div", {
-    className: "card-foot"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "card-pos"
-  }, BOOK_LABELS[entry.book] || entry.book), /*#__PURE__*/React.createElement("span", {
-    className: "card-occ"
-  }, count, "\xD7")));
-}
-
-// ============================================================
 // LSJ SUMMARY DISPLAY
 // ============================================================
-function _senseLevel(marker) {
-  if (!marker) return 0;
-  if (/^[IVX]+\.$/.test(marker)) return 0;
-  if (/^[A-E]\.$/.test(marker)) return 1;
-  if (/^[1-9]/.test(marker)) return 2;
-  return 3;
-}
-function _stripMd(text) {
-  return text.replace(/^#+\s*/gm, "") // strip # ## ### headers
-  .replace(/^\s*[-*]\s+/gm, "") // strip bullet points
-  .replace(/\*\*(.+?)\*\*/g, "$1") // strip bold **
-  .replace(/\*(.+?)\*/g, "$1") // strip italic *
-  .replace(/\s{2,}/g, " ").trim();
-}
-const _REFUSAL_RE = /^(I |A\.\s*I |I'm |I don't|I cannot|I appreciate|I need|Unfortunately)/i;
 function LsjSummary({
   data,
   loading

@@ -11,8 +11,8 @@ NOTE: the three `SUBSTR(w.strongs_base, 2)` examples inside _AI_SYSTEM_TMPL are
 LEFT AS-IS — they're illustrative SQL for Haiku, and changing them alters AI
 output + busts the prompt cache (the Phase-1 SUBSTR removal's separate follow-up).
 
-Imports _lsj_concept_lookup/_format_lsj_context from views_lsj and
-_XREF_SYNTHESIS_SYSTEM from views_crossref (their primary-consumer homes).
+Imports _lsj_concept_lookup/_format_lsj_context from views_lsj
+(their primary-consumer home).
 """
 import json
 import re
@@ -22,11 +22,10 @@ from flask import Blueprint, jsonify, request
 
 from core import (
     log, db, db_ro, _anthropic, limiter, _FUNCTION_STRONGS,
-    _serialize_word_core, _clean_gloss, _ai_cache, _KJV_BOOK_ID,
+    _serialize_word_core, _clean_gloss, _ai_cache,
     ai_fingerprint, ai_cache_put, ai_cache_prune,
 )
 from views_lsj import _lsj_concept_lookup, _format_lsj_context
-from views_crossref import _XREF_SYNTHESIS_SYSTEM
 from views_notes import is_logged_in   # AI search is login-gated (it costs API money)
 
 bp = Blueprint("ai", __name__)
@@ -636,73 +635,6 @@ def _curate_primary_verses(
     except Exception as exc:
         log.warning("Pass-2 curation failed: %s", exc)
         return [], []
-
-
-def _enrich_explanation_with_cross_refs(
-    query: str, results: list[dict], explanation: str
-) -> str:
-    """Generate a cross-ref-enriched explanation. Only called when result count ≤ 10."""
-    if not _anthropic:
-        return explanation
-    conn = db_ro()
-    try:
-        verse_ids: list[int] = []
-        verse_texts: list[str] = []
-        for v in results[:10]:
-            book_id = _KJV_BOOK_ID.get(v["book"])
-            if book_id is None:
-                continue
-            row = conn.execute(
-                "SELECT verse_id, verse_text FROM kjv_verses"
-                " WHERE book_id=? AND chapter=? AND verse_num=?",
-                (book_id, v["chapter"], v["verse"]),
-            ).fetchone()
-            if row:
-                verse_ids.append(row["verse_id"])
-                verse_texts.append(
-                    f"{v['book']} {v['chapter']}:{v['verse']}: {row['verse_text'][:200]}"
-                )
-        if not verse_ids:
-            return explanation
-        ph = ",".join("?" * len(verse_ids))
-        xrefs = conn.execute(
-            f"""SELECT kv.verse_text, COUNT(*) AS freq
-                FROM cross_references cr
-                JOIN kjv_verses kv ON kv.verse_id = cr.verse_ref_id
-                WHERE cr.verse_id IN ({ph})
-                  AND cr.verse_ref_id NOT IN ({ph})
-                GROUP BY cr.verse_ref_id
-                ORDER BY freq DESC
-                LIMIT 5""",
-            verse_ids + verse_ids,
-        ).fetchall()
-    finally:
-        conn.close()
-
-    if not xrefs:
-        return explanation
-
-    verse_block = "\n".join(verse_texts)
-    xref_block  = "\n".join(f"- {r['verse_text'][:200]}" for r in xrefs)
-    try:
-        msg = _anthropic.messages.create(
-            model="claude-sonnet-4-6",
-            max_tokens=250,
-            temperature=0,
-            system=_XREF_SYNTHESIS_SYSTEM,
-            messages=[{"role": "user", "content": (
-                f"Query: {query}\n\n"
-                f"Result verses:\n{verse_block}\n\n"
-                f"Related passages from cross-references:\n{xref_block}\n\n"
-                "Write a 2-3 sentence synthesis."
-            )}],
-        )
-        return msg.content[0].text.strip()
-    except Exception as exc:
-        log.warning("Cross-ref enrichment failed: %s", exc)
-        return explanation
-
-
 
 
 def _normalize_union_sql(sql: str) -> str:

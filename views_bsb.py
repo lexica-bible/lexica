@@ -14,7 +14,7 @@ return empty rather than erroring, so deploying the code before the data is safe
 """
 import sqlite3
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, jsonify
 
 from core import db_ro, _KJV_BOOK_ID, _USFM_BOOK, usfm_titlecase
 

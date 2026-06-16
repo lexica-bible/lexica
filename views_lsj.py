@@ -10,7 +10,6 @@ imports them.
 """
 import json
 import re
-from html.parser import HTMLParser
 
 from flask import Blueprint, jsonify, request
 
@@ -172,49 +171,6 @@ def _format_lsj_context(entries: list[dict]) -> str:
             line += f" [corpus dotted variants: {vlist} — use w.strongs='...' to target specifically]"
         lines.append(line)
     return "\n".join(lines)
-
-_SENSE_MARKER_RE = re.compile(r'^([IVX]+\.|[A-E]\.|[1-9][0-9]*\.|[a-e]\.)$')
-
-
-class _SectionParser(HTMLParser):
-    """Split LSJ def_html into major sense sections by bold markers."""
-    def __init__(self):
-        super().__init__()
-        self._bold = False
-        self._bold_buf: list[str] = []
-        self._cur_marker: str | None = None
-        self._cur_text: list[str] = []
-        self._sections: list[tuple[str | None, str]] = []
-
-    def handle_starttag(self, tag, attrs):
-        if tag in ("b", "strong"):
-            self._bold = True
-            self._bold_buf = []
-
-    def handle_endtag(self, tag):
-        if tag in ("b", "strong") and self._bold:
-            self._bold = False
-            marker = "".join(self._bold_buf).strip()
-            if _SENSE_MARKER_RE.match(marker):
-                text = "".join(self._cur_text).strip()
-                if text:
-                    self._sections.append((self._cur_marker, text))
-                self._cur_marker = marker
-                self._cur_text = []
-            else:
-                self._cur_text.append(marker)
-
-    def handle_data(self, data):
-        if self._bold:
-            self._bold_buf.append(data)
-        else:
-            self._cur_text.append(data)
-
-    def get_sections(self) -> list[tuple[str | None, str]]:
-        text = "".join(self._cur_text).strip()
-        if text:
-            self._sections.append((self._cur_marker, text))
-        return self._sections
 
 
 @bp.route("/api/lsj/<path:lemma>")

@@ -119,15 +119,6 @@ def _user_for_token(conn):
 OWNER_EMAIL = (os.environ.get("OWNER_EMAIL") or os.environ.get("ESV_OWNER_EMAIL") or "").strip().lower()
 
 
-def email_for_token(conn):
-    """Account email for the request's bearer token, or None."""
-    uid = _user_for_token(conn)
-    if uid is None:
-        return None
-    row = conn.execute("SELECT email FROM users WHERE id = ?", (uid,)).fetchone()
-    return row["email"] if row else None
-
-
 # Account tiers (lowest → highest). A signed-out visitor is "nologin" (not stored).
 #   user   — any signed-in account (the default for a new signup)
 #   berean — trusted friends; unlocks the gated reading texts (ESV / NIV)
