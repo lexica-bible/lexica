@@ -6,6 +6,23 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## ABP variant-reading (Bos/CP/Ald/Six) footnotes — INVESTIGATED + proof built + SCRAPPED 2026-06-16
+
+ABP's own dagger apparatus ("CP reads X", "see Bos for variants"). The data IS in the free ABP 2nd-ed
+PDF (archive.org `apostolic-bible`), but the PDF has **no verse anchors**: footnotes pool at each page
+BOTTOM with their text only; the verse numbers + the daggers that tie a note to its word are in a custom
+font that extracts as NOTHING. So a note pins only to its PAGE (~15-24 verses); the verse is INFERRED from
+the English gloss (distinctive word = nailed, e.g. "dimness"→Gen 15:12; a common word over a wide span =
+a guess). No digital module carries it either — BibleHub/studybible.info bare; the e-Sword/MySword ABP
+modules (incl. the user's local SQLitePlus-encrypted `abp+.bblx`) are text-only, no `<RF>` footnotes
+(verified by opening them). PDF English decodes via a fixed +29 letter-shift; each variant's Greek is a
+SEPARATE garbled font, so only the English meaning is recoverable. A 5-note Isaiah proof shipped († on the
+verse → folded into the TSK cross-ref card) then was fully REMOVED. **VERDICT (user): niche + lossy —
+"bereans don't need this; it's nothing you can't find by digging into the Hebrew/Greek."** Path B (diff
+the printed Greek editions vs ABP ourselves) also rejected (same hard alignment as Rahlfs; would be our
+apparatus, not ABP's). KEPT from the session: verse#/Strong's# now scale with the reading font (CLAUDE.md).
+DON'T re-pitch. Memory `project_pending_improvements`.
+
 ## ABP surface romanization (translit) — DONE + SHIPPED 2026-06-15
 
 The ABP "in this verse" side-card form now carries a romanization (Hebrew/BSB already did) — the parked

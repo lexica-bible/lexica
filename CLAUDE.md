@@ -329,6 +329,10 @@ scripts/          # build-frontend.js + one-time import/migration scripts
   (mobile) hold the A−/A+ size control AND the **Light · Sepia · Dark theme toggle** (LIVE 2026-06-11).
   (A Cardo/Gentium typeface PICKER was tried 2026-06-11 and reverted — the alt serifs looked worse than
   Source Serif; see memory `project_reader_appearance`. Don't re-add one.)
+  The verse number + the per-word Strong's number SCALE with the A−/A+ size (2026-06-16): `.lib-vnum`
+  ≈0.5× and `.lib-iw-strongs` ≈0.53× of `--lib-font-size` (both were fixed px before); `.lib-vnum`'s
+  vertical-centering offset is proportional too so the number stays centered at any size. Keep them
+  relative — don't pin back to fixed px.
 - **Fonts load `display=optional`, NOT `swap` (templates/index.html, 2026-06-13).** Google Fonts (DM Sans
   + Source Serif 4 + JetBrains Mono). `optional` = use the fallback only if the real font isn't ready in
   ~100ms, and NEVER swap mid-view — this killed the mobile toolbar reload "flash" (the chapter number in
