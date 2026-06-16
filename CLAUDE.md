@@ -297,299 +297,110 @@ scripts/          # build-frontend.js + one-time import/migration scripts
 - CSS: `@media (max-width: 1099px)` / `@media (min-width: 1100px)` — no other breakpoints except 520px for very small phones
 
 ## Library Tab
-- Desktop toolbar (lib-bar): [‹ Ch input ›] | [Compare ▾] | [Strong's] [Interlinear] | [Chip] [Prose]
-  (text source lives in the LEFT NAV's nav-source seg, not the toolbar. CONDENSED 2026-06-11: ABP/KJV/BSB
-  stay one-click; ESV*/NIV*/HEB + the non-canon books fold into a **"More ▾"** picker so the row stays
-  at 4. STYLING 2026-06-14: the source row + the Eras/Days toggle are **underline tabs**, NOT boxed
-  segmented controls — the source row is a 4-equal-column GRID (`.nav-source-seg.seg` is
-  `grid repeat(4,1fr)`) so the active "More" label (HEB/ESV/a book name, ellipsised) can't change a
-  tab's width and shove the others. The **"More" menu is a floating POPOUT** anchored under the source
-  row (`.nav-source-wrap` + `.nav-other-inline` absolute, sizes to content w/ max-height scroll), no
-  longer an inline block that pushed the book list down; ESV/NIV/Hebrew sit under a "Bibles" group
-  (default open) alongside the non-canon categories; closes on click-outside / Esc. The Compare ▾ menu
-  also closes on any outside click / Esc (document listener, not a scrim). BOTH (2026-06-14) now SWALLOW
-  the dismiss click (capture-phase one-shot, like the Aa menu) so the outside click that closes the menu
-  doesn't also land on a word chip behind it. HEB = the public Hebrew OT interlinear (OT books only; the left book list AND the mobile book
-  picker drop the NT books in HEB mode). HEB also has NO chronological order (2026-06-13): the
-  Chronological button is GRAYED/disabled while reading Hebrew (desktop toolbar + mobile order
-  toggle), an effect flips order back to canonical whenever Hebrew is the text, and `chronoOn` is
-  gated on `translation !== "heb"`. On a non-Hebrew text sitting on a NT book, the HEB selector now
-  shows GRAYED/disabled rather than hidden (`hebShown` = heb.db loaded + reading the Bible → visible;
-  `hebPickable` = and on an OT book → clickable) — mobile shows just the grayed pill (no tooltip, no
-  hover on touch), desktop More menu keeps a hover tooltip. ESV*/NIV* owner only; HEB is PUBLIC (no
-  login, 2026-06-11). Hebrew/ESV/NIV survive a refresh now via a `gatedReady` guard on the restore.)
-- **Mobile audio (BSB/ESV): the scrubber docks at the BOTTOM, on a strip just above the reading
-  cockpit (where play/pause lives), sliding up when a chapter loads — ALL modes incl. chronological
-  (`.lib-audio-dock`; desktop chrono keeps the inline scrubber). It clears when the chapter/passage
-  ends. The reading list gets extra bottom room (`lib-reading--audio`) so the last verse clears it.**
-- Mobile toolbar (lib-toolbar): [☰] [‹] [Book Ch ▾] [›] [ABP/KJV/Par] — sticky, fixed height 56px
-- **Toolbar control gray-vs-hide (the user's per-control call, 2026-06-11):** GRAYED (visible, disabled)
-  = a real feature that just doesn't apply here — HEB on a NT book, Search on ESV/NIV (`canSearch` false;
-  desktop tooltip "Search isn't available for this text", mobile grayed only). HIDDEN = Compare and the
-  Canonical/Chronological order toggle on non-canon texts (he prefers them gone, NOT grayed — tried gray,
-  reverted), audio when there's no recording, and owner-only ESV/NIV (copyright gate). It is NOT a blanket
-  rule: PROPOSE gray for inactive-but-applicable, but it's his call per control. See memory
-  `feedback_gray_dont_hide`.
-- Reader font = `--f-serif` (Source Serif 4) on `.lib-reading`; the `Aa ▾` menu (desktop) / ModesSheet
-  (mobile) hold the A−/A+ size control AND the **Light · Sepia · Dark theme toggle** (LIVE 2026-06-11).
-  (A Cardo/Gentium typeface PICKER was tried 2026-06-11 and reverted — the alt serifs looked worse than
-  Source Serif; see memory `project_reader_appearance`. Don't re-add one.)
-  The verse number + the per-word Strong's number SCALE with the A−/A+ size (2026-06-16): `.lib-vnum`
-  ≈0.5× and `.lib-iw-strongs` ≈0.53× of `--lib-font-size` (both were fixed px before); `.lib-vnum`'s
-  vertical-centering offset is proportional too so the number stays centered at any size. Keep them
-  relative — don't pin back to fixed px.
-- **Fonts load `display=optional`, NOT `swap` (templates/index.html, 2026-06-13).** Google Fonts (DM Sans
-  + Source Serif 4 + JetBrains Mono). `optional` = use the fallback only if the real font isn't ready in
-  ~100ms, and NEVER swap mid-view — this killed the mobile toolbar reload "flash" (the chapter number in
-  `--f-mono`/JetBrains Mono painted in fallback then snapped ~0.7s later). Trade-off: a brand-new
-  visitor's FIRST load may show fallback fonts until the next navigation; every reload after is clean.
-  Don't switch it back to `swap` (the flash returns). gstatic preconnect is already in the head.
-- **Reading themes (2026-06-11):** `data-theme` on `<html>` (set in 60-library.jsx, remembered in
-  `localStorage` `lexica.theme.v1`) re-skins the whole app via the color vars at the TOP of styles.css
-  (`:root` = light; `[data-theme="sepia"]`/`[data-theme="dark"]` override). Button/pill surfaces read
-  `--ctl-bg` (idle) / `--ctl-on` (selected) — set per theme in ONE place; **add new buttons with those
-  vars, never hardcoded `#fff`.** Light-on-light is the dark-mode trap: an `--ink`/`--accent` bg flips
-  LIGHT in dark, so pair its text with `var(--paper)`. Navy header stays brand navy in every theme.
-  More dark/sepia traps fixed 2026-06-13 (top-of-styles.css rules): (a) the highlight pastels +
-  search-mark + gold-filled badges/tags stay LIGHT in every theme, so their TEXT is pinned dark
-  (`:root[data-theme="dark"] .lib-hi-* / .lib-hi-* * / .tag / .lsj-badge--gold { color:#221e18 }` —
-  the `* ` reaches the inner chip Greek/English/Strong's spans); (b) borders use `var(--rule)`, NOT
-  `var(--line, #e4ded2)` (no `--line` exists → light fallback showed as white outlines in dark); (c)
-  the focus ring + frosted sticky bars are theme-aware — ring = `color-mix(... var(--accent) 30% ...)`,
-  bars mix toward `var(--ctl-bg)` (NOT `#fff`, which went muddy in dark).
-- **Compare (was "Parallel"): pick 2–4 of ABP/KJV/BSB/ESV/NIV to read side by side.** `translation === "parallel"`
-  is the mode; `compareSel` (array) = which texts. Desktop = N columns (`.lib-cmp-2/3/4`); mobile = stacked,
-  one labeled line per text. Rows are the ordered UNION of every selected text's verses (keyed chapter+verse),
-  so a missing verse leaves a blank cell. Notes/highlights are SHARED across columns (whole-verse paint in compare).
-  - **Labels (2026-06-14): navy, NOT gold.** Desktop column headers (`.lib-parallel-label`) +
-    mobile per-line text tags (`.lib-parallel-col-lbl`) use `--accent`/`--accent-soft` in a SQUARED
-    box (radius 3–4px), not the old gold rounded pill. The mobile per-line label sits in its own
-    little navy tag box so it reads as a tag, not as part of the verse.
-  - **Mobile per-line label runs INLINE with the verse (2026-06-14).** ABP/KJV render a block
-    verse row; BSB/ESV/NIV render plain inline text. To make every column's label run in beside
-    the text alike: `.lib-parallel-col > .lib-verse-row { display:inline; padding-left:0 }` AND
-    `.lib-parallel-col .lib-verse-chips { display:inline }`. The chip box MUST be plain `inline`,
-    NOT `inline-flex` — an inline-flex box is one atomic unit, so a verse long enough to wrap
-    drops the WHOLE box below the label (label stranded above). Plain inline lets the chips wrap
-    word-by-word WITH the label, like BSB. Gap is a uniform 6px (label `margin-right`) on every
-    text/verse. Chip mode IS allowed in compare (it's the only place ABP's Greek shows alongside
-    the translations; prose makes ABP English-only).
-  - **Desktop picker** = checkbox dropdown on the Compare button.
-  - **MOBILE picker (rebuilt 2026-06-10): the separate Compare row is GONE — the Reading sheet's single Text
-    picker IS the compare control.** TAP a text = read just it (single swap); LONG-PRESS (or right-click) = tick
-    it into/out of the 2–4 side-by-side set. A ✓ marks each shown text; a line below reads "Reading X" /
-    "Comparing N — … side by side". All driven by `compareActive`/`toggleCompare` (which already flip
-    single↔parallel and floor at 1). Gesture handler = `pickHandlers` in `ModesSheet` (500ms timer + a `fired`
-    flag so a long-press doesn't also fire the tap). Hint: "Tap to read · long-press to compare". A non-canon
-    reader falls back to the plain single picker (taps jump back to the Bible).
-- Chip mode: all words individually clickable with interlinear stack (Greek → English → Strong's)
-- Prose mode: plain inline text — words are NOT clickable, only verse numbers are tappable (cross-refs); no chip borders, reading-first view
-- KJV mode locks Prose to English only (no Greek available)
-- English-only "other books" (Apocrypha/Enoch/etc.): the Chip toggle gives a VERSE-PER-LINE reading layout
-  (`renderExtraLines`, `extraLineMode`) — plain text, one verse per row, no clickable chips (no Greek). Prose =
-  the old flowing run-together text. Strong's/Interlinear stay locked. (2026-06-10)
-- **Library remembers your reading spot across reloads + restores it WITHOUT a flicker:**
-  `localStorage` `lexica.lib.v1` saves book/chapter/translation + an open non-canon text AND
-  (2026-06-13) the reading ORDER (canonical/chronological), the chrono passage position, and the
-  Compare selection. orderMode/translation/compareSel/chronoPos restore SYNCHRONOUSLY in their
-  `useState` initializers (via `readLibSaved()`) so the pickers are right on the FIRST paint — no
-  more canonical→chronological flash; chapter NUMBER + corpus are synchronous too, and the book list
-  is CACHED (`lexica.books.v1`, read back in the `books`/`selBook` initializers via `readCachedBooks()`,
-  refreshed by `api.books()` in the background) so even the book NAME is instant — only a first-EVER
-  visit (empty cache) pops the name in. The reading-display toggles (chip/prose, Strong's, interlinear) persist too under
-  `lexica.opts.v1`. An explicit verse jump (`nav.book`, e.g. Search/cross-ref) still overrides.
-  Other first-paint-restored settings: active tab `lexica.view.v1`, theme `lexica.theme.v1`, font
-  `libFontSize`, Eras/Days `lexica.chronoview.v1`. Full map: memory `project_refresh_persistence`.
-  (2026-06-10, expanded 2026-06-13 — the old "Compare/chronological NOT restored" rule is RETIRED.)
-- **365-day reading plan — the "Days" view of the chronological picker (LIVE 2026-06-13).** An
-  `Eras | Days` toggle (pinned; desktop nav + mobile picker) sits atop the chrono picker. Days = a
-  plan-with-progress over the same chronological passages binned into 365 days — baked into
-  `chronological.json` as a top-level `days` array + `day`/`verses` on each passage by
-  `build_chronological.py` (balanced by verse length via a small DP, never splitting a passage,
-  aligned to era boundaries; ~85 verses/day). Progress is PER READING TEXT (each text keeps its own
-  day + streak + last-read) in `localStorage` `lexica.plan.v1`. **MONTH BLOCKS (2026-06-14):** 365 days
-  is too long to scroll as one list, so `DayPlanView` bins the days into ~12 collapsible **Month**
-  blocks (`monthSize = ceil(total/12)`, accordion — ONE month open at a time, auto-opens to the month
-  you're reading). Each header = `Month N · Days X–Y · done/total` (`.plan-month*` in styles.css).
-  `selectDay`/the focus effect set BOTH `open` (day) and `openMonth`. Applies to desktop nav + mobile
-  alike (shared component). **MARKER MODEL (RESTYLED 2026-06-14):**
-  the old per-row left check circle + the gold "Today" highlight + the navy "Reading" row tint are all
-  GONE. Each day row is just `Day N … <verses> <marker>` (flush left), with ONE marker on the right:
-  a navy ✓ when read (click to undo) / a navy DOT when it's the day you're reading. The marker is
-  clickable ONLY on the day you're on — un-marking a prior day means selecting it first. ONE-CLICK on a
-  day does everything: collapse the day you had open (accordion), open this one, move the dot, and load
-  its first reading. A navy SPINE runs down the whole list (`.plan-days-inner::before`, bounds the rows
-  like the book-nav testament spine) with a GOLD sub-rib on the open day's passages (`.plan-day-body`,
-  deliberate spotlight). "Jump to today" selects today (collapses the open day + moves the dot).
-  **MOBILE Days (`.mpick`):** same select-on-tap behavior but the sheet STAYS open (parent passes a
-  non-closing `onPickPassage`); NO spine, bigger rows/text. The progress header IS sticky now (2026-06-14)
-  — pulled out to the sheet edges (cancels `.mpick-scroll`'s padding) so it's a solid full-width bar and
-  no rows bleed through beside/above it (an earlier non-bleed-proof attempt had it `position:static`;
-  that's superseded). Component: `static/src/58-dayplan.jsx`
-  (DayPlanView + plan helpers); `toggleDayDone` still does the mark-through/un-mark math. Full record:
-  memory `project_chronological_tab`.
-- **Chronological daily "Reading intro" panel (LIVE 2026-06-13).** In chrono mode the right detail
-  panel (mobile = the ⓘ sheet) shows an ESV-style card for the day: reading number, AI Berean title +
-  summary, the era's dated timeline with the reading marked, and the day's passages. Backend
-  `views_chrono.py` (`GET /api/chrono/intro/<day>`, Haiku, one call for title+summary, cached in
-  ai_search_cache); frontend `static/src/59-dayintro.jsx` (`DayIntroPanel` + `TimelineStrip` +
-  `ERA_TIMELINE` constant). Era dates use LXX chronology for the early eras; per-reading dates are
-  interpolated within the era and shown "c." (approximate). RESTYLED 2026-06-13 to match the detail
-  rail (word-study/xref): header = navy "Reading N" badge + era + a `.detail-back` "‹ Overview"
-  toggle (SummaryPanel's "‹ Intro" moved to the same slot); body = `.detail-hero` + `.sec`/`.sec-head`
-  sections. The era TIMELINE is a thin track with a navy "you-are-here" bar whose dots are carved out
-  by a paper ring (so the bar can't swallow a checkpoint) + a lined-up dot·year·label list. NO brown
-  anywhere — marker/hovers use `--accent`, not `--gold` (see memory `feedback_no_brown`). **MOBILE
-  HEADER (2026-06-14):** on the intro card AND the overview popup (both `.summary-sheet`) the toggle is
-  a compact `‹` chevron inline with the title (NOT the full "‹ Overview"/"‹ Intro" text — that crammed
-  the row); the ✕ is dropped from both (drag handle + tap-outside close them); the title fills the row
-  on ONE line and auto-shrinks via the new `useFitText` hook (20-shared-components.jsx; `useLayoutEffect`
-  added to the 00-core React destructure) so it never wraps or runs off. Desktop keeps the full text
-  toggle. Full record: memory `project_chronological_tab`.
-- **Chronological views cleanup (2026-06-14) — same rail design language.** The in-reader chapter
-  marker (`.lib-chrono-chapmark`, shown in chrono mode, reader + Compare) went gold → navy
-  (`--accent`/`--accent-soft`). The **Eras picker** matches the Days plan: navy backbone spine + gold
-  sub-rib on the open era, de-boxed headers, no caret (desktop `.nav-eras-inner` / mobile `.mpick-eras`).
-  The Reading-intro "Today's passages" + the metaV "Nave's" rows dropped their per-item boxes for plain
-  hover rows. And the word/xref panel **back link follows the panel beneath it** — "‹ Intro" when the
-  chrono day-intro is the rail base, "‹ Overview" otherwise (LibraryView reports `detailBase` →
-  App passes `backLabel` to DetailPanel + CrossRefPanel).
-- **Wheel over fixed chrome doesn't scroll the reading pane (2026-06-13).** The reading pane rides
-  the window scroll; a scoped non-passive wheel handler in 90-app.jsx blocks the page scroll when
-  the pointer is over `.hdr / .lib-bar / .lib-toolbar / .nav / .detail-side`, after first letting an
-  inner list (book / day / era) consume the wheel if it can still scroll. Every scroll area is independent.
-- **In-text search (the magnifying-glass panel) — eSword-style (2026-06-13).** Searches the reader's
-  current text (ABP/KJV/BSB or a non-canon book). Modes Any / All / Phrase (DEFAULT = Any) — these are
-  **underline tabs** (2026-06-14), mirroring the More menu / source picker, NOT a filled box
-  (`.lib-search-mode-seg.seg` overrides the base `.seg` pill). Options
-  (in a collapsible "Options ▾") = a book RANGE (preset groups Whole-Bible/OT/NT/Pentateuch…Apocalypse
-  via `SEARCH_RANGES`, plus from/to pickers), Whole-words-only, Case-sensitive, Exclude words. Shows
-  "X verses found, Y matches". Enter or Go runs it; once a search has run, changing any control
-  re-runs automatically (exclude applies on Enter AND on blur); results cap at 1000 but the counts
-  cover the whole match set. Backed by `/api/text-search` in views_search.py — a broad case-insensitive
-  LIKE net narrowed/tallied in Python (whole-word/case/exclude), with an in-memory cache (last 256
-  searches, keyed by all params). **CRITICAL: ABP's `verses.book` column is a TEXT abbreviation, so a
-  plain ORDER BY sorts ALPHABETICALLY — `_ABP_RANK_SQL` maps each abbrev to its Bible-order number so
-  ABP sorts/range-filters canonically like KJV/BSB (which key by numeric book_id).** Skipped on
-  purpose: inline Strong's in each result row (deferred). State + UI live in 60-library.jsx; API in
-  00-core.jsx `api.textSearch`. **PANEL CHROME (find-bar polish, 2026-06-13): on mobile it's a
-  FULL-WIDTH bar flush under the navy `.mobile-tabs` (56px + notch), square top / rounded bottom, not a
-  floating card; desktop stays a centered 640px card. Both slide in (`@keyframes lib-search-drop` /
-  `-drop-m`). The search box + the Exclude box are each wrapped in a `<form onSubmit>` (Go = submit, X =
-  type=button; exclude form is `display:contents` so it doesn't disturb the options layout) so the
-  MOBILE keyboard's Search/Go key submits, AND the submit handler calls `document.activeElement.blur()`
-  so the on-screen keyboard DROPS after the search runs (else it stays up over the results).
-  `enterKeyHint="search"` labels that key.**
-- **Left-nav book list is an ACCORDION (2026-06-13).** Click a book to open its chapter grid (and
-  switch to it); click the open book to collapse it. Starts collapsed — the current chapter shows
-  beside the active book name (`.nav-book-ch`). `navOpenBook` in `LibNavPanel`; on the mobile overlay
-  the panel closes on a CHAPTER tap (not a book tap, since a book tap just expands).
-- **Mobile chapter/verse picker (`MobilePicker`, the toolbar `Book Ch ▾`) opens to the BOOK list
-  (2026-06-14).** `screen` starts `"book"` (was `"chapter"` for the current book) — pick a book to
-  step into its chapters; "‹ Books" steps back. Its section headers (OT/NT + non-canon groups,
-  `.mpick-sec-label`/`.mpick-sec-btn`/`.mpick-sec-count`) are navy (`--accent`/`--accent-soft`),
-  not gold.
-- **Left-nav polish (2026-06-13) — full record: memory `project_book_nav_polish`.** Hover/active
-  pills darken the page via `color-mix(... var(--bg) N%, var(--ink))` — do NOT use `--bg-sunk` (it
-  matches the sepia parchment → invisible). A spelled-out **Old/New Testament** header sits above the
-  first category of each testament (`.nav-testament`, colour-matched to its spine) — shown only when
-  the testament changes. A left **spine** runs down each testament (warm `--gold` for OT, cool
-  `--accent` for NT; the `*-soft` tints are a `[data-theme="dark"]`-only override — they vanish on
-  parchment). Every COLLAPSED book shows a muted right-aligned **chapter count** (`b.chapters`); the
-  OPEN book hides it; the active book also keeps its current chapter hugging the name.
-- The **Aa size/theme menu** closes on any click outside it (document `pointerdown` listener +
-  `fontWrapRef` in 60-library.jsx); that dismiss click is SWALLOWED (capture-phase one-shot) so it
-  doesn't also select a word behind the menu.
-- **Focus mode — distraction-free reading (LIVE 2026-06-11).** A `focusMode` flag in `90-app.jsx`
-  adds `focus-mode` to `.app` (library view only; NOT remembered across reloads). Trigger = tap blank
-  space in the reader (`readingHandlers.onClick` in 60-library.jsx → `toggleFocus`), Esc exits.
-  **Mobile** = hide the chrome outright (header/nav/toolbar/tabs/audio; audio keeps PLAYING). **Desktop**
-  = a click-through dark wash (`.app.focus-mode::before`) over everything with the reading lifted into a
-  `position:fixed`, centered, self-scrolling "book page" (`.lib-reading`, both edges showing) + big ‹ ›
-  page-turn chevrons in the side gutters (`.lib-focus-arrow`, desktop only, gray out at first/last). Page
-  turn shared by swipe (mobile) + arrow keys/chevrons via `turnPage(dir)`. All CSS at the end of styles.css.
-  Full record: memory `project_focus_mode`.
-- Word clicks → LSJ sidebar (G-numbers), BDB sidebar (H-numbers), or metaV (proper nouns)
-- KJV word clicks correctly route: common words → LSJ, proper nouns → metaV, Hebrew → BDB
-- **Word-detail side panel — interlinear FOLLOWS the reading text (2026-06-13).** The "Interlinear"
-  toggle under the verse quote shows the breakdown of whatever text you're reading: KJV →
-  `/api/kjv/verse_words`, BSB → `/api/bsb/verse_words` (2026-06-15), Hebrew reader →
-  `/api/hebrew/verse-words` (one-verse route added to views_heb.py), else ABP `/api/verse-words` (was
-  always ABP Greek). Greek/Hebrew LEADS (dark, `--ink`),
-  English is the muted helper (`--ink-2`), centred columns — mirrors the reading-pane interlinear. ABP
-  brackets render INLINE on the english word (`.iw-brk`, NOT a separate column — a column drifts off a
-  short word), with the Greek-order number inside (`.iw-pos` = `greek_pos`, which is the ENGLISH reading
-  order — display order is Greek). Trailing clause punctuation lifts OUTSIDE the `]`. Full record +
-  the badges/Nave's polish: memory `project_detail_panel_interlinear`.
-- **Word-detail side-card HEADWORD shows the inflected form (2026-06-15).** The big headword is the
-  DICTIONARY form (lemma) for EVERY text, and the word AS IT APPEARS in the clicked verse shows on a small
-  line beneath it (the form + its translit, no text label) — for Hebrew (heb_words pointed word), BSB
-  (bsb_words `form`/`form_translit`), AND ABP (the `abp_surface` side table — ABP's own printed Greek; see
-  Database Tables + the Words rebuild checklist), hidden when it equals the lemma. KJV has no stored surface
-  form → lemma only (graceful). Built via `entry.inflected`/`entry.inflectedTranslit` on the click entry
-  (hebEntry / makeBsbEntry / ABP `makeEntry` in 59c) → `heroForm`/`.detail-form` in 30-detail-panel.jsx. The
-  reading-pane chips + the Interlinear toggle stay the dictionary lemma. ABP's surface TRANSLIT is now FILLED
-  (2026-06-15) by `scripts/build_abp_translit.py` — a Greek→Latin romanizer matched to the lexicon headword
-  style (SBL: keeps accents, eta→ē / omega→ō, ch/th/ph, rough breathing→h read from the lemma, initial rho→rh,
-  upsilon y-vs-u). Lemma-on-top was a deliberate flip from inflected-on-top. Full record:
-  memory `project_bsb_words`.
-- **Chip-vs-prose render rule (verses shown OUTSIDE the reader).** CHIP = word-study (ABP brackets +
-  punctuation outside the `]`): the reading pane + the side-card interlinear. PROSE = reading (plain
-  text, no brackets): the TSK cross-ref panel, Study-module verses, the side-card verse quote, the
-  Library in-text "find" list, AND (2026-06-16) the **Search + Lexicon RESULT lists** — they went
-  chip→prose (`CorpusGroup`/`VerseRow` in 50-corpus-results.jsx). In the result lists the MATCHED
-  word is gold-highlighted (`.corpus-hit`) and the reference button jumps into the reader for per-word
-  study (lists FIND, the reader STUDIES). ABP results reuse the reader's `LibRender.renderProseWords`
-  (with `tightSpace:true` so a one-word highlight hugs the word — see the bracket note below); KJV
-  joins its words inline. Keep the split — don't bracket the prose surfaces. Memory `project_lexicon_tab`.
-- Italic words render muted/italic: KJV (italic=1) and ABP (words.italic=1); ABP bracket words `[word]` are also translator additions
-- **ABP brackets render INLINE in the reader's chips (2026-06-16 — supersedes the old "bracket column"
-  approach).** The `[` `]` (and a bracket's lifted trailing punctuation) ride INSIDE the english cell of
-  the group's first/last word (`.lib-iw-brk` inside `.lib-iw-pos-english`), NOT as their own column — so
-  they hug the english text while the greek lemma still centres over the whole word. A separate bracket
-  COLUMN drifted off a short english word whenever a wider greek lemma sat above it (same reason the
-  detail-panel interlinear already went inline). Done via `bracketChip(w, key, {open, close, trail})` in
-  59c-library-render.jsx; the highlight now just rides the chip (the bracket is part of it) — no more
-  carrying a class onto separate glyphs. The old `.lib-bracket` / `.lib-bracket-unit` / `.lib-bracket-glyph`
-  / `.lib-bracket-trail` COLUMN CSS is now DEAD (reader is inline + Search/Lexicon went prose); only
-  `.lib-bracket-group` (the `display:contents` wrapper) is still used. Two interim CSS-only attempts
-  (zero-width row placeholders; then aligning boundary words toward their bracket) were tried + reverted
-  in favour of inline. Memory `project_library_bracket`.
-- Verse layout: `lib-verse-row` (flex-start) → `lib-vnum` (fixed, min-width gutter, non-selectable) +
-  `lib-verse-content`. The verse number's CLICK target is an inner `.lib-vnum-num` hugging the digits, so
-  the empty gutter beside the number is inert (no stray click/cross-ref/verse-highlight). (2026-06-11)
-- Clicking a verse number opens the TSK Cross-Reference Panel
-- Jumping to a verse (search / lexicon / read-in-context / cross-ref / note) lands it in the UPPER
-  THIRD of the reader (not centered); the left nav scrolls the active book to the TOP of its own list
-  (`.nav-scroll`), never the window. (2026-06-11) **In CHRONOLOGICAL order, where a jump comes FROM decides
-  whether it stays chrono (2026-06-14):** an EXTERNAL jump (from Search / Lexicon / the Notes tab — flagged
-  `nav.extern` at the call site, set on whether `mainView !== "library"`) drops the reader back to canonical
-  so the reference shows in its normal chapter; an IN-READER control (clicking a verse number for xrefs, a
-  word panel, chasing a cross-ref — all triggered while reading chrono) STAYS chronological: the nav effect
-  moves `chronoPos` to the passage holding the verse (`passageForRef`) and the scroll effect waits out that
-  span load. (`nav.extern` gates both: the nav effect flips vs moves; the scroll effect waits for canonical
-  vs the chrono span.) Either way `chronoPos` survives, so toggling Chronological back returns to your spot.
-- **Desktop link-over auto-opens the verse's xref card (2026-06-14).** A jump from Search / Lexicon /
-  Read-in-context queues `setLibCrossRef`, so the cross-ref card shows over the chapter-summary card. It's
-  the LOWEST rail layer (rendered only when `!activeEntry && !activeNote`): if a word-study / note card is
-  open the xref sits UNDER it and surfaces when that closes (not the summary). Desktop only (mobile xref is
-  a full sheet — left unobstructed); the Notes-list jump still opens the note editor, not xref.
-- **Rail stack model + back labels (2026-06-14).** The desktop rail stacks at most 3 deep: summary/Intro
-  (base) → xref → (word OR note). word/note never coexist (opening one clears the other) and are always
-  the top; xref only ever tucks UNDER them. Closing the top card reveals what's beneath, and its "‹ back"
-  NAMES it — the word card reads "‹ Cross-references" when an xref is under it, else "‹ Overview/Intro";
-  xref is always "‹ Overview/Intro" (summary is always beneath it); the NOTE card keeps just an X by
-  design (opening a note clears the stack — it's an editing surface, not a drill-down layer).
-  (90-app.jsx `backLabel` + the panel render gates; 30/40-panel.jsx headers.)
-- Both word detail panel and xref panel trigger `has-detail` on `.app` → compacts `lib-reading` on desktop (desktop only, scoped to `min-width: 1100px`)
-- **Desktop scrollbars are slim app-wide + the page scroller reserves a stable gutter (2026-06-14):** a
-  global `::-webkit-scrollbar` (+ a Firefox `scrollbar-width` fallback) scoped to `min-width:1100px` at the
-  TOP of styles.css replaces the fat OS bar everywhere (page, detail rail, search results, nav); `html {
-  scrollbar-gutter: stable }` keeps the page bar's space always reserved so swapping texts/chapters
-  (ABP↔KJV) never shifts the layout or jumps the right rail. Mobile keeps its overlay bars (styling
-  `::-webkit-scrollbar` on touch can force an always-visible bar). Per-element bars (`.nav-scroll`, the
-  focus-page reading bar) still win by specificity — `scrollbar-color`/`-width` stay Firefox-only so
-  Chrome 121+ doesn't drop the webkit bar for the fat default.
+Full per-feature history lives in memory (each block names its file). This keeps the standing
+rules + gotchas; open the named memory for the backstory.
+
+**Layout**
+- Desktop toolbar (lib-bar): `[‹ Ch ›] | [Compare ▾] | [Strong's] [Interlinear] | [Chip] [Prose]`.
+  Text source lives in the LEFT NAV, not the toolbar. ABP/KJV/BSB are one-click; ESV/NIV/HEB +
+  non-canon books fold into a **"More ▾"** floating popout. The source row + Eras/Days are
+  **underline tabs**, NOT boxed segments — the source row is a 4-equal-column grid
+  (`.nav-source-seg.seg`) so a long "More" label can't shove the others.
+- Mobile toolbar (lib-toolbar): `[☰] [‹] [Book Ch ▾] [›] [ABP/KJV/Par]`, sticky, 56px. Audio
+  scrubber docks at the bottom on mobile (`.lib-audio-dock`); desktop chrono keeps the inline one.
+- Compare ▾, the "More" popout, and the Aa size/theme menu all close on outside-click/Esc AND
+  **swallow that dismiss click** (capture-phase one-shot) so it doesn't hit a word chip behind them.
+
+**Text sources / HEB**
+- HEB = public Hebrew OT interlinear (memory `project_hebrew_ot_interlinear`): OT books only (book
+  list + mobile picker drop NT in HEB mode), NO chronological order (Chronological is grayed in
+  Hebrew). On a non-Hebrew text sitting on a NT book the HEB selector is grayed, not hidden.
+- **Gray-vs-hide is the user's per-control call** (memory `feedback_gray_dont_hide`): GRAY a real
+  feature that doesn't apply here (HEB on NT, Search on ESV/NIV); HIDE Compare + the order toggle on
+  non-canon, audio with no track, and ESV/NIV (copyright). Propose gray for inactive-but-applicable,
+  but confirm per control.
+
+**Reader appearance** (memory `project_reader_appearance`)
+- Reader font = `--f-serif` (Source Serif 4). The `Aa ▾` menu / mobile ModesSheet hold A−/A+ size +
+  the **Light · Sepia · Dark** theme toggle. A font PICKER was tried and reverted — don't re-add one.
+- Verse number + per-word Strong's SCALE with the A−/A+ size (`.lib-vnum` ≈0.5×, `.lib-iw-strongs`
+  ≈0.53× of `--lib-font-size`) — keep relative, don't pin to fixed px.
+- Themes ride `data-theme` on `<html>` (`lexica.theme.v1`); colors are vars at the TOP of styles.css.
+  **Add new buttons with `--ctl-bg`/`--ctl-on`, never hardcoded `#fff`.** Dark traps: an
+  `--ink`/`--accent` background flips LIGHT in dark, so pair its text with `var(--paper)`; borders use
+  `var(--rule)` not `var(--line)`; navy header stays navy in every theme.
+- Desktop scrollbars slim app-wide + `html { scrollbar-gutter: stable }` reserves the gutter so
+  swapping ABP↔KJV never shifts layout. Fonts load **`display=optional`, NOT `swap`**
+  (templates/index.html) — kills the mobile toolbar reload flash. Don't switch back.
+
+**Render modes**
+- Chip = every word clickable, interlinear stack (Greek → English → Strong's). Prose = plain inline,
+  only verse numbers tappable. KJV locks Prose to English. English-only non-canon books: the Chip
+  toggle gives a verse-per-line layout (`renderExtraLines`); Strong's/Interlinear stay locked.
+- **Chip-vs-prose for verses shown OUTSIDE the reader** (memory `project_lexicon_tab`): CHIP (ABP
+  brackets + punctuation outside `]`) = reading pane + side-card interlinear. PROSE (plain, no
+  brackets) = TSK xref, Study verses, side-card quote, in-text find list, AND Search + Lexicon result
+  lists. Don't bracket the prose surfaces.
+- **ABP brackets render INLINE in the reader's chips** (memory `project_library_bracket`): `[`/`]`
+  ride inside the word's english cell (`.lib-iw-brk`), NOT a separate column. Old `.lib-bracket*`
+  column CSS is dead.
+- Italic = translator additions, muted/italic: KJV (italic=1), ABP (words.italic=1), ABP `[word]`.
+
+**Compare** (memory `project_pericopes_parallel`)
+- Pick 2–4 of ABP/KJV/BSB/ESV/NIV side by side (`translation === "parallel"`, `compareSel` = which).
+  Desktop = N columns; mobile = stacked, one labeled line per text. Notes/highlights shared across
+  columns (whole-verse paint).
+- Labels are **navy, not gold**. Mobile per-line label runs INLINE with the verse — the chip box MUST
+  be plain `inline`, NOT `inline-flex` (inline-flex drops a wrapping verse below the label). Chip mode
+  IS allowed in compare (only place ABP Greek shows beside translations).
+- Desktop picker = checkbox dropdown on Compare. Mobile = the Reading sheet's Text picker: TAP = read
+  one, LONG-PRESS = tick into the 2–4 compare set.
+
+**Chronological / reading plan** (memory `project_chronological_tab`)
+- Reading-order toggle Canonical|Chronological, any version. Static `chronological.json` (no DB). An
+  `Eras | Days` toggle sits atop the chrono picker.
+- Days = a 365-day plan with per-text progress (`lexica.plan.v1`), binned into ~12 collapsible Month
+  blocks. Component `static/src/58-dayplan.jsx`.
+- Chrono mode shows an ESV-style daily Reading-intro panel (AI title+summary + era timeline):
+  `views_chrono.py` + `static/src/59-dayintro.jsx`. **NO brown** anywhere — markers/hovers use
+  `--accent`, not `--gold` (memory `feedback_no_brown`).
+
+**Navigation / jumps**
+- Left-nav book list is an ACCORDION (memory `project_book_nav_polish`): click a book to open its
+  chapters, click again to collapse; testament spine + per-book chapter counts. Hover/active pills use
+  `color-mix(... var(--bg) ...)`, NOT `--bg-sunk` (invisible on sepia). Mobile `Book Ch ▾` opens to
+  the BOOK list first.
+- Jumping to a verse (search/lexicon/read-in-context/xref/note) lands it in the UPPER THIRD; the left
+  nav scrolls the active book to the TOP of its own list, never the window. The verse-number click
+  target is an inner `.lib-vnum-num` hugging the digits (the empty gutter is inert).
+- **Chrono jump rule:** an EXTERNAL jump (Search/Lexicon/Notes — flagged `nav.extern`) drops the
+  reader back to canonical; an IN-READER jump (verse-number xref, word panel, chasing an xref) STAYS
+  chronological (moves `chronoPos` to the passage). Either way `chronoPos` survives.
+- Clicking a verse number opens the TSK Cross-Reference panel. Desktop link-over from Search/Lexicon
+  auto-opens that verse's xref card over the chapter summary (tucked under any open word/note card).
+
+**Detail rail** (memories `project_side_panel_rail`, `project_detail_panel_interlinear`,
+`project_bsb_words`)
+- Word clicks → LSJ (G-numbers), BDB (H-numbers), or metaV (proper nouns); KJV/Hebrew route the same.
+- The side panel's Interlinear toggle FOLLOWS the reading text (KJV/BSB/Hebrew/ABP endpoints);
+  Greek/Hebrew leads, English muted. ABP brackets inline.
+- Headword = the dictionary lemma (big) + a small "in this verse" inflected-form line for
+  Hebrew/BSB/ABP (ABP via the `abp_surface` side table; KJV has none).
+- Rail stacks ≤3 deep: summary/Intro → xref → (word OR note). The "‹ back" link NAMES the card
+  beneath it; the note card keeps just an X. Word/xref panels trigger `has-detail` → compacts
+  `.lib-reading` on desktop.
+
+**Other**
+- Focus mode (memory `project_focus_mode`): tap blank space in the reader to enter, Esc exits. Mobile
+  hides chrome; desktop = dark wash + centered "book page" + ‹ › page-turn arrows. Not remembered.
+- In-text search (magnifying-glass panel, memory `project_esword_reference`): searches the current
+  text; modes Any/All/Phrase; range presets + whole-word/case/exclude; `/api/text-search`. **Gotcha:**
+  ABP's `verses.book` is a TEXT abbreviation, so a plain sort is alphabetical — `_ABP_RANK_SQL` maps
+  each abbrev to Bible order so ABP sorts/filters canonically.
+- Library remembers your spot across reloads (memory `project_refresh_persistence`): the `lexica.*`
+  keys restore book/chapter/translation/order/compare/theme/font. **Lesson: restore instant toggles
+  synchronously in the `useState` initializer, not an async effect — else the default flashes before
+  the saved value.** Wheel over fixed chrome (header/nav/toolbar/rail) doesn't scroll the reading pane.
 
 ## Notes, Highlights, Bookmarks + Accounts (study notes — LIVE 2026-06-09)
 Full detail: memory `project_notes_highlights`. The headline facts:
