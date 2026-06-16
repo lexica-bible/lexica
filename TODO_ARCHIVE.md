@@ -6,6 +6,32 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## SEO / search discoverability — DONE 2026-06-16
+
+The site was invisible to Google: the React app served an empty shell with no per-passage URLs, and
+there were no icons/share data. Built the whole discoverability layer (memories `project_seo_pages` +
+`project_seo_branding`):
+- **Branding:** favicons (svg/ico/apple-touch/192/512) + a 1200×630 `og.png` share card, generated from
+  one logo by `scripts/gen-icons.js`; meta/description/OG/Twitter tags; `robots.txt`. Icons/share live
+  in `static/`; `app.py` serves the root paths crawlers fetch.
+- **Crawlable pages (`views_seo.py` + `templates/seo/`):** `/read/...` chapter/book pages (ABP/KJV/BSB/
+  Hebrew interlinear, brackets + red Greek-order numbers) + `/word/<strongs>` word-study pages +
+  generated `/sitemap.xml` (~18-19k URLs). Public-domain texts ONLY. App deep-links in via `/?b=&c=&t=`
+  and `/?lex=` (read on mount in 90-app.jsx). Phases 1a/1b/2/3 all shipped (commits 09eead5 → 00f7207).
+- **Google Search Console:** Domain property `lexica.bible`, Cloudflare-verified, sitemap submitted
+  (Domain props need the FULL sitemap URL). Discovered ~4,561 pages immediately.
+
+Lessons worth keeping:
+- **og:image must be a real PNG, not an SVG** — most link-preview scrapers won't render SVG.
+- **Center a lockup by measure-then-crop, not hand-placed coordinates** — guessing text widths put the
+  share card off-center twice; rendering the art, auto-cropping the ink, and compositing centered fixed it.
+- **ABP brackets ≠ italics** — they're distinct ABP notation (a `bracket_id` group drawn `[ ]` in Greek
+  order with position numbers), NOT the italic helper-word styling. Don't conflate them.
+- **Interlinear chips must reserve all three rows** (lemma/english/strongs, invisible placeholder when a
+  row is empty) or function words push their English up into the original-language line.
+- **Can't test the SEO pages locally** (no bible.db on the dev box, must not create one) — verified by
+  py_compile + standalone Jinja parse, then deploy-tested. Worked fine.
+
 ## Docs slimmed — CLAUDE.md → standing rules + pointers — DONE 2026-06-16
 
 Restructured the always-loaded docs so the rules that matter stand out instead of drowning in a
