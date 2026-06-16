@@ -126,29 +126,4 @@ function groupForGreekMode(words) {
   }
   return groups;
 }
-
-// Which sub-word of a split multi-word gloss carries the Strong's number + Greek
-// lemma superscript in chip mode. For a CONTENT-word slot (verb/noun/adjective per
-// the morph POS) the number belongs to the head content word — english_head, e.g.
-// "put" in "you shall put it" — not the leading "you". For a FUNCTION-word slot
-// (article/preposition/pronoun/conjunction/particle), and whenever morph is absent,
-// it stays on the first non-italic token (prior behavior), which IS the function
-// word itself ("of", "the"). Only ever returns a non-italic (visible) token so the
-// superscript actually renders. morph schemes: OT CATSS (V./N./A.) + NT Robinson
-// (V-/N-/A-) — content words start V/N/A in both.
-function strongsAnchorIndex(parts, italicSet, w) {
-  const bare = s => s.replace(/[^\w]/g, "").toLowerCase();
-  const firstNonItalic = parts.findIndex(word => !italicSet.has(bare(word)));
-  // Anchor the Strong's on the gloss's head word whenever it's present — even when
-  // the row has no morph. The old morph gate dropped the Strong's onto the FIRST word
-  // for null-morph rows ("of the LORD" → shown on "of", not "LORD"); the head is the
-  // Strong's-bearing word, so anchoring on it is always at least as good (recovers ~552
-  // κύριος/G2962 displays — see scripts/audit_lord_strongs.py ANCHOR-MORPH bucket).
-  if (w.english_head) {
-    const hb = bare(w.english_head);
-    const hi = parts.findIndex(word => bare(word) === hb && !italicSet.has(bare(word)));
-    if (hi >= 0) return hi;
-  }
-  return firstNonItalic;
-}
 

@@ -1403,6 +1403,7 @@ input { font-family: inherit; }
 .lib-kjv-italic .lib-iw-english, .lib-bsb-italic .lib-iw-english { color: var(--ink-2); font-style: italic; }
 .lib-abp-italic .lib-iw-english { color: var(--ink-2); font-style: italic; }
 .lib-smcap .lib-iw-english { font-variant: small-caps; }
+.lib-iw-smcap { font-variant: small-caps; }   /* a smcap word inside a merged multi-word chip's english cell */
 
 /* Parallel view */
 .lib-parallel { display: flex; flex-direction: column; gap: 0; }

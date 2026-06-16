@@ -6,7 +6,7 @@
 // onWordClick, the highlight/press refs...). LibraryView builds `ctx` once per
 // render and binds thin wrappers around these, so its call sites read unchanged.
 // Pure relocation — no behavior change. Globals used here (React, Icon,
-// getEnglishOrderWords, groupForGreekMode, strongsAnchorIndex, wordEntryCore,
+// getEnglishOrderWords, groupForGreekMode, wordEntryCore,
 // strongsTag) all live in earlier files (00/10/59a).
 // ============================================================
 const LibRender = (function () {
@@ -143,47 +143,41 @@ const LibRender = (function () {
       return (w.english_head && w.english?.includes(' ')) ? w.english_head : (w.english || w.english_head || "");
     };
 
+    // Render a multi-word English gloss as inline sub-spans inside ONE chip's english
+    // cell: italic translator-helper words are muted, smcap words small-capped. Lets a
+    // gloss like "of the second" (all one Greek word, δευτέρῳ) stay a SINGLE chip — the
+    // Greek lemma + Strong's then centre over the whole phrase — instead of splitting
+    // into one chip per word, where a non-italic helper ("of") became its own blank,
+    // clickable box that just reopened the same word.
+    const englishParts = (w) => {
+      const italicSet = w.italic_words ? new Set(w.italic_words.split(',')) : new Set();
+      const smcapSet  = w.smcap_words ? new Set(w.smcap_words.split(',')) : new Set();
+      const parts = w.english.split(' ');
+      return parts.map((word, pi) => {
+        const bare = word.replace(/[^\w]/g, '').toLowerCase();
+        const cls = (italicSet.has(bare) ? "lib-prose-italic" : "") + (smcapSet.has(bare) ? " lib-iw-smcap" : "");
+        return <span key={pi} className={cls.trim() || undefined}>{word}{pi < parts.length - 1 ? " " : ""}</span>;
+      });
+    };
+
     // Plain chip (English mode or non-bracketed word in Greek mode)
     const chip = (w, key) => {
       const isPN = !!(w.is_pn || w.strongs_base === "*");
       const clickable = !!(onWordClick && w.strongs_base && (w.strongs_base !== "*" || w.english || w.english_head) && (w.english || w.english_head));
 
-      // Split multi-word gloss: mute italic sub-words, style smcap sub-words, chip the rest
+      // Multi-word gloss for one Greek word → ONE chip (Greek lemma + Strong's centred
+      // over the whole phrase), not one chip per word. See englishParts above.
       if (w.italic_words && w.english && w.english.includes(' ')) {
-        const italicSet = new Set(w.italic_words.split(','));
-        const smcapSet  = w.smcap_words ? new Set(w.smcap_words.split(',')) : new Set();
-        const parts = w.english.split(' ');
-        const hc = hiClass(v.verse, w.position, ch);
         return (
-          <React.Fragment key={key}>
-            {(() => {
-              const anchorIdx = strongsAnchorIndex(parts, italicSet, w);
-              return parts.map((word, pi) => {
-                const bare = word.replace(/[^\w]/g, '').toLowerCase();
-                if (italicSet.has(bare)) {
-                  return <span key={`${key}-p${pi}`} className={"lib-word lib-abp-italic" + (smcapSet.has(bare) ? " lib-smcap" : "") + hc}>
-                    {showInterlinear && <span className="lib-iw-greek" style={{visibility:"hidden"}}>x</span>}
-                    <span className="lib-iw-english">{word}</span>
-                    {showStrongs && <span className="lib-iw-strongs" style={{visibility:"hidden"}}>G0</span>}
-                  </span>;
-                }
-                const isSmcap = smcapSet.has(bare);
-                return (
-                  <span key={`${key}-p${pi}`}
-                    className={"lib-word" + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "") + hc}
-                    onClick={clickable ? () => onWordClick(isPN ? { ...makeEntry(w), isPN: true, pnName: w.english || w.english_head } : makeEntry(w)) : undefined}>
-                    {showInterlinear && (pi === anchorIdx && w.lemma
-                      ? <span className="lib-iw-greek">{w.lemma}</span>
-                      : <span className="lib-iw-greek" style={{visibility:"hidden"}}>x</span>)}
-                    <span className="lib-iw-english">{word}</span>
-                    {showStrongs && (pi === anchorIdx && w.strongs_base && w.strongs_base !== "*"
-                      ? <span className="lib-iw-strongs">{(w.strongs && w.strongs !== '*') ? 'G' + w.strongs : w.strongs_base}</span>
-                      : <span className="lib-iw-strongs" style={{visibility:"hidden"}}>G0</span>)}
-                  </span>
-                );
-              });
-            })()}
-          </React.Fragment>
+          <span key={key} data-note-pos={w.position}
+            className={"lib-word" + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "") + hiClass(v.verse, w.position, ch)}
+            onClick={clickable ? () => onWordClick(isPN ? { ...makeEntry(w), isPN: true, pnName: w.english_head || w.english } : makeEntry(w)) : undefined}>
+            {showInterlinear && (w.lemma ? <span className="lib-iw-greek">{w.lemma}</span> : <span className="lib-iw-greek" style={{visibility:"hidden"}}>x</span>)}
+            <span className="lib-iw-english">{englishParts(w)}</span>
+            {showStrongs && (w.strongs_base && w.strongs_base !== "*"
+              ? <span className="lib-iw-strongs">{(w.strongs && w.strongs !== '*') ? 'G' + w.strongs : w.strongs_base}</span>
+              : <span className="lib-iw-strongs" style={{visibility:"hidden"}}>G0</span>)}
+          </span>
         );
       }
 
@@ -221,53 +215,25 @@ const LibRender = (function () {
         ? <React.Fragment><span className="lib-iw-brk">]</span>{brk.trail ? <span className="lib-iw-english">{brk.trail}</span> : null}</React.Fragment>
         : null;
 
-      // Split multi-word gloss within a bracket word
+      // Multi-word gloss within a bracket word → ONE chip (same merge as the plain
+      // chip): bracket marks + position number + the whole phrase in the english cell,
+      // Greek lemma + Strong's centred over it. See englishParts above.
       if (w.italic_words && w.english && w.english.includes(' ')) {
-        const italicSet = new Set(w.italic_words.split(','));
-        const smcapSet  = w.smcap_words ? new Set(w.smcap_words.split(',')) : new Set();
-        const parts = w.english.split(' ');
-        const lastPi = parts.length - 1;
-        const anchorIdx = strongsAnchorIndex(parts, italicSet, w);
-        const hc = hiClass(v.verse, w.position, ch);
         return (
-          <React.Fragment key={key}>
-            {parts.map((word, pi) => {
-              const bare = word.replace(/[^\w]/g, '').toLowerCase();
-              if (italicSet.has(bare)) {
-                return <span key={`${key}-p${pi}`} className={"lib-word lib-word-bracketed lib-abp-italic" + (smcapSet.has(bare) ? " lib-smcap" : "") + hc}>
-                  {showInterlinear && <span className="lib-iw-greek" style={{visibility:"hidden"}}>x</span>}
-                  <span className="lib-iw-pos-english">
-                    {brkOpen(pi)}
-                    {pi === 0 && w.greek_pos !== null && w.greek_pos !== undefined &&
-                      <span className="lib-iw-pos">{w.greek_pos}</span>}
-                    <span className="lib-iw-english">{word}</span>
-                    {brkClose(pi, lastPi)}
-                  </span>
-                  {showStrongs && <span className="lib-iw-strongs" style={{visibility:"hidden"}}>G0</span>}
-                </span>;
-              }
-              const isSmcap = smcapSet.has(bare);
-              return (
-                <span key={`${key}-p${pi}`}
-                  className={"lib-word lib-word-bracketed" + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "") + hc}
-                  onClick={clickable ? () => onWordClick(isPN ? { ...makeEntry(w), isPN: true, pnName: w.english || w.english_head } : makeEntry(w)) : undefined}>
-                  {showInterlinear && (pi === anchorIdx && w.lemma
-                    ? <span className="lib-iw-greek">{w.lemma}</span>
-                    : <span className="lib-iw-greek" style={{visibility:"hidden"}}>x</span>)}
-                  <span className="lib-iw-pos-english">
-                    {brkOpen(pi)}
-                    {pi === 0 && w.greek_pos !== null && w.greek_pos !== undefined &&
-                      <span className="lib-iw-pos">{w.greek_pos}</span>}
-                    <span className="lib-iw-english">{word}</span>
-                    {brkClose(pi, lastPi)}
-                  </span>
-                  {showStrongs && (pi === anchorIdx && w.strongs_base && w.strongs_base !== "*"
-                    ? <span className="lib-iw-strongs">{(w.strongs && w.strongs !== '*') ? 'G' + w.strongs : w.strongs_base}</span>
-                    : <span className="lib-iw-strongs" style={{visibility:"hidden"}}>G0</span>)}
-                </span>
-              );
-            })}
-          </React.Fragment>
+          <span key={key} data-note-pos={w.position}
+            className={"lib-word lib-word-bracketed" + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "") + hiClass(v.verse, w.position, ch)}
+            onClick={clickable ? () => onWordClick(isPN ? { ...makeEntry(w), isPN: true, pnName: w.english_head || w.english } : makeEntry(w)) : undefined}>
+            {showInterlinear && (w.lemma ? <span className="lib-iw-greek">{w.lemma}</span> : <span className="lib-iw-greek" style={{visibility:"hidden"}}>x</span>)}
+            <span className="lib-iw-pos-english">
+              {brkOpen(0)}
+              {w.greek_pos !== null && w.greek_pos !== undefined && <span className="lib-iw-pos">{w.greek_pos}</span>}
+              <span className="lib-iw-english">{englishParts(w)}</span>
+              {brkClose(0, 0)}
+            </span>
+            {showStrongs && (w.strongs_base && w.strongs_base !== "*"
+              ? <span className="lib-iw-strongs">{(w.strongs && w.strongs !== '*') ? 'G' + w.strongs : w.strongs_base}</span>
+              : <span className="lib-iw-strongs" style={{visibility:"hidden"}}>G0</span>)}
+          </span>
         );
       }
 

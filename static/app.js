@@ -6586,31 +6586,6 @@ function groupForGreekMode(words) {
   return groups;
 }
 
-// Which sub-word of a split multi-word gloss carries the Strong's number + Greek
-// lemma superscript in chip mode. For a CONTENT-word slot (verb/noun/adjective per
-// the morph POS) the number belongs to the head content word — english_head, e.g.
-// "put" in "you shall put it" — not the leading "you". For a FUNCTION-word slot
-// (article/preposition/pronoun/conjunction/particle), and whenever morph is absent,
-// it stays on the first non-italic token (prior behavior), which IS the function
-// word itself ("of", "the"). Only ever returns a non-italic (visible) token so the
-// superscript actually renders. morph schemes: OT CATSS (V./N./A.) + NT Robinson
-// (V-/N-/A-) — content words start V/N/A in both.
-function strongsAnchorIndex(parts, italicSet, w) {
-  const bare = s => s.replace(/[^\w]/g, "").toLowerCase();
-  const firstNonItalic = parts.findIndex(word => !italicSet.has(bare(word)));
-  // Anchor the Strong's on the gloss's head word whenever it's present — even when
-  // the row has no morph. The old morph gate dropped the Strong's onto the FIRST word
-  // for null-morph rows ("of the LORD" → shown on "of", not "LORD"); the head is the
-  // Strong's-bearing word, so anchoring on it is always at least as good (recovers ~552
-  // κύριος/G2962 displays — see scripts/audit_lord_strongs.py ANCHOR-MORPH bucket).
-  if (w.english_head) {
-    const hb = bare(w.english_head);
-    const hi = parts.findIndex(word => bare(word) === hb && !italicSet.has(bare(word)));
-    if (hi >= 0) return hi;
-  }
-  return firstNonItalic;
-}
-
 // 59b — Library nav/picker sub-components + the non-canon text list + the
 //       restore-from-localStorage helpers, split out of 60-library.jsx.
 //       Loads between 59a-library-helpers and 60-library.
@@ -8007,7 +7982,7 @@ function readCachedChrono() {
 // onWordClick, the highlight/press refs...). LibraryView builds `ctx` once per
 // render and binds thin wrappers around these, so its call sites read unchanged.
 // Pure relocation — no behavior change. Globals used here (React, Icon,
-// getEnglishOrderWords, groupForGreekMode, strongsAnchorIndex, wordEntryCore,
+// getEnglishOrderWords, groupForGreekMode, wordEntryCore,
 // strongsTag) all live in earlier files (00/10/59a).
 // ============================================================
 const LibRender = function () {
@@ -8209,69 +8184,60 @@ const LibRender = function () {
       return w.english_head && w.english?.includes(' ') ? w.english_head : w.english || w.english_head || "";
     };
 
+    // Render a multi-word English gloss as inline sub-spans inside ONE chip's english
+    // cell: italic translator-helper words are muted, smcap words small-capped. Lets a
+    // gloss like "of the second" (all one Greek word, δευτέρῳ) stay a SINGLE chip — the
+    // Greek lemma + Strong's then centre over the whole phrase — instead of splitting
+    // into one chip per word, where a non-italic helper ("of") became its own blank,
+    // clickable box that just reopened the same word.
+    const englishParts = w => {
+      const italicSet = w.italic_words ? new Set(w.italic_words.split(',')) : new Set();
+      const smcapSet = w.smcap_words ? new Set(w.smcap_words.split(',')) : new Set();
+      const parts = w.english.split(' ');
+      return parts.map((word, pi) => {
+        const bare = word.replace(/[^\w]/g, '').toLowerCase();
+        const cls = (italicSet.has(bare) ? "lib-prose-italic" : "") + (smcapSet.has(bare) ? " lib-iw-smcap" : "");
+        return /*#__PURE__*/React.createElement("span", {
+          key: pi,
+          className: cls.trim() || undefined
+        }, word, pi < parts.length - 1 ? " " : "");
+      });
+    };
+
     // Plain chip (English mode or non-bracketed word in Greek mode)
     const chip = (w, key) => {
       const isPN = !!(w.is_pn || w.strongs_base === "*");
       const clickable = !!(onWordClick && w.strongs_base && (w.strongs_base !== "*" || w.english || w.english_head) && (w.english || w.english_head));
 
-      // Split multi-word gloss: mute italic sub-words, style smcap sub-words, chip the rest
+      // Multi-word gloss for one Greek word → ONE chip (Greek lemma + Strong's centred
+      // over the whole phrase), not one chip per word. See englishParts above.
       if (w.italic_words && w.english && w.english.includes(' ')) {
-        const italicSet = new Set(w.italic_words.split(','));
-        const smcapSet = w.smcap_words ? new Set(w.smcap_words.split(',')) : new Set();
-        const parts = w.english.split(' ');
-        const hc = hiClass(v.verse, w.position, ch);
-        return /*#__PURE__*/React.createElement(React.Fragment, {
-          key: key
-        }, (() => {
-          const anchorIdx = strongsAnchorIndex(parts, italicSet, w);
-          return parts.map((word, pi) => {
-            const bare = word.replace(/[^\w]/g, '').toLowerCase();
-            if (italicSet.has(bare)) {
-              return /*#__PURE__*/React.createElement("span", {
-                key: `${key}-p${pi}`,
-                className: "lib-word lib-abp-italic" + (smcapSet.has(bare) ? " lib-smcap" : "") + hc
-              }, showInterlinear && /*#__PURE__*/React.createElement("span", {
-                className: "lib-iw-greek",
-                style: {
-                  visibility: "hidden"
-                }
-              }, "x"), /*#__PURE__*/React.createElement("span", {
-                className: "lib-iw-english"
-              }, word), showStrongs && /*#__PURE__*/React.createElement("span", {
-                className: "lib-iw-strongs",
-                style: {
-                  visibility: "hidden"
-                }
-              }, "G0"));
-            }
-            const isSmcap = smcapSet.has(bare);
-            return /*#__PURE__*/React.createElement("span", {
-              key: `${key}-p${pi}`,
-              className: "lib-word" + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "") + hc,
-              onClick: clickable ? () => onWordClick(isPN ? {
-                ...makeEntry(w),
-                isPN: true,
-                pnName: w.english || w.english_head
-              } : makeEntry(w)) : undefined
-            }, showInterlinear && (pi === anchorIdx && w.lemma ? /*#__PURE__*/React.createElement("span", {
-              className: "lib-iw-greek"
-            }, w.lemma) : /*#__PURE__*/React.createElement("span", {
-              className: "lib-iw-greek",
-              style: {
-                visibility: "hidden"
-              }
-            }, "x")), /*#__PURE__*/React.createElement("span", {
-              className: "lib-iw-english"
-            }, word), showStrongs && (pi === anchorIdx && w.strongs_base && w.strongs_base !== "*" ? /*#__PURE__*/React.createElement("span", {
-              className: "lib-iw-strongs"
-            }, w.strongs && w.strongs !== '*' ? 'G' + w.strongs : w.strongs_base) : /*#__PURE__*/React.createElement("span", {
-              className: "lib-iw-strongs",
-              style: {
-                visibility: "hidden"
-              }
-            }, "G0")));
-          });
-        })());
+        return /*#__PURE__*/React.createElement("span", {
+          key: key,
+          "data-note-pos": w.position,
+          className: "lib-word" + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "") + hiClass(v.verse, w.position, ch),
+          onClick: clickable ? () => onWordClick(isPN ? {
+            ...makeEntry(w),
+            isPN: true,
+            pnName: w.english_head || w.english
+          } : makeEntry(w)) : undefined
+        }, showInterlinear && (w.lemma ? /*#__PURE__*/React.createElement("span", {
+          className: "lib-iw-greek"
+        }, w.lemma) : /*#__PURE__*/React.createElement("span", {
+          className: "lib-iw-greek",
+          style: {
+            visibility: "hidden"
+          }
+        }, "x")), /*#__PURE__*/React.createElement("span", {
+          className: "lib-iw-english"
+        }, englishParts(w)), showStrongs && (w.strongs_base && w.strongs_base !== "*" ? /*#__PURE__*/React.createElement("span", {
+          className: "lib-iw-strongs"
+        }, w.strongs && w.strongs !== '*' ? 'G' + w.strongs : w.strongs_base) : /*#__PURE__*/React.createElement("span", {
+          className: "lib-iw-strongs",
+          style: {
+            visibility: "hidden"
+          }
+        }, "G0")));
       }
       const rawLabel = w.english || chipLabel(w);
       if (!rawLabel) return null;
@@ -8325,71 +8291,40 @@ const LibRender = function () {
         className: "lib-iw-english"
       }, brk.trail) : null) : null;
 
-      // Split multi-word gloss within a bracket word
+      // Multi-word gloss within a bracket word → ONE chip (same merge as the plain
+      // chip): bracket marks + position number + the whole phrase in the english cell,
+      // Greek lemma + Strong's centred over it. See englishParts above.
       if (w.italic_words && w.english && w.english.includes(' ')) {
-        const italicSet = new Set(w.italic_words.split(','));
-        const smcapSet = w.smcap_words ? new Set(w.smcap_words.split(',')) : new Set();
-        const parts = w.english.split(' ');
-        const lastPi = parts.length - 1;
-        const anchorIdx = strongsAnchorIndex(parts, italicSet, w);
-        const hc = hiClass(v.verse, w.position, ch);
-        return /*#__PURE__*/React.createElement(React.Fragment, {
-          key: key
-        }, parts.map((word, pi) => {
-          const bare = word.replace(/[^\w]/g, '').toLowerCase();
-          if (italicSet.has(bare)) {
-            return /*#__PURE__*/React.createElement("span", {
-              key: `${key}-p${pi}`,
-              className: "lib-word lib-word-bracketed lib-abp-italic" + (smcapSet.has(bare) ? " lib-smcap" : "") + hc
-            }, showInterlinear && /*#__PURE__*/React.createElement("span", {
-              className: "lib-iw-greek",
-              style: {
-                visibility: "hidden"
-              }
-            }, "x"), /*#__PURE__*/React.createElement("span", {
-              className: "lib-iw-pos-english"
-            }, brkOpen(pi), pi === 0 && w.greek_pos !== null && w.greek_pos !== undefined && /*#__PURE__*/React.createElement("span", {
-              className: "lib-iw-pos"
-            }, w.greek_pos), /*#__PURE__*/React.createElement("span", {
-              className: "lib-iw-english"
-            }, word), brkClose(pi, lastPi)), showStrongs && /*#__PURE__*/React.createElement("span", {
-              className: "lib-iw-strongs",
-              style: {
-                visibility: "hidden"
-              }
-            }, "G0"));
+        return /*#__PURE__*/React.createElement("span", {
+          key: key,
+          "data-note-pos": w.position,
+          className: "lib-word lib-word-bracketed" + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "") + hiClass(v.verse, w.position, ch),
+          onClick: clickable ? () => onWordClick(isPN ? {
+            ...makeEntry(w),
+            isPN: true,
+            pnName: w.english_head || w.english
+          } : makeEntry(w)) : undefined
+        }, showInterlinear && (w.lemma ? /*#__PURE__*/React.createElement("span", {
+          className: "lib-iw-greek"
+        }, w.lemma) : /*#__PURE__*/React.createElement("span", {
+          className: "lib-iw-greek",
+          style: {
+            visibility: "hidden"
           }
-          const isSmcap = smcapSet.has(bare);
-          return /*#__PURE__*/React.createElement("span", {
-            key: `${key}-p${pi}`,
-            className: "lib-word lib-word-bracketed" + (isSmcap ? " lib-smcap" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "") + hc,
-            onClick: clickable ? () => onWordClick(isPN ? {
-              ...makeEntry(w),
-              isPN: true,
-              pnName: w.english || w.english_head
-            } : makeEntry(w)) : undefined
-          }, showInterlinear && (pi === anchorIdx && w.lemma ? /*#__PURE__*/React.createElement("span", {
-            className: "lib-iw-greek"
-          }, w.lemma) : /*#__PURE__*/React.createElement("span", {
-            className: "lib-iw-greek",
-            style: {
-              visibility: "hidden"
-            }
-          }, "x")), /*#__PURE__*/React.createElement("span", {
-            className: "lib-iw-pos-english"
-          }, brkOpen(pi), pi === 0 && w.greek_pos !== null && w.greek_pos !== undefined && /*#__PURE__*/React.createElement("span", {
-            className: "lib-iw-pos"
-          }, w.greek_pos), /*#__PURE__*/React.createElement("span", {
-            className: "lib-iw-english"
-          }, word), brkClose(pi, lastPi)), showStrongs && (pi === anchorIdx && w.strongs_base && w.strongs_base !== "*" ? /*#__PURE__*/React.createElement("span", {
-            className: "lib-iw-strongs"
-          }, w.strongs && w.strongs !== '*' ? 'G' + w.strongs : w.strongs_base) : /*#__PURE__*/React.createElement("span", {
-            className: "lib-iw-strongs",
-            style: {
-              visibility: "hidden"
-            }
-          }, "G0")));
-        }));
+        }, "x")), /*#__PURE__*/React.createElement("span", {
+          className: "lib-iw-pos-english"
+        }, brkOpen(0), w.greek_pos !== null && w.greek_pos !== undefined && /*#__PURE__*/React.createElement("span", {
+          className: "lib-iw-pos"
+        }, w.greek_pos), /*#__PURE__*/React.createElement("span", {
+          className: "lib-iw-english"
+        }, englishParts(w)), brkClose(0, 0)), showStrongs && (w.strongs_base && w.strongs_base !== "*" ? /*#__PURE__*/React.createElement("span", {
+          className: "lib-iw-strongs"
+        }, w.strongs && w.strongs !== '*' ? 'G' + w.strongs : w.strongs_base) : /*#__PURE__*/React.createElement("span", {
+          className: "lib-iw-strongs",
+          style: {
+            visibility: "hidden"
+          }
+        }, "G0")));
       }
       const rawLabel = w.english || chipLabel(w);
       if (!rawLabel) return null;
