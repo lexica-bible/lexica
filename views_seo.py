@@ -92,6 +92,58 @@ def _parts(label: str, italic_words: str = "", smcap_words: str = "", whole_ital
     return out
 
 
+def _word(parts, lemma="", translit="", strongs=""):
+    """One interlinear chip. num/brk_* default off (set only on ABP bracket groups)."""
+    return {"parts": parts, "lemma": lemma, "translit": translit, "strongs": strongs,
+            "num": None, "brk_open": False, "brk_close": False, "brk_trail": ""}
+
+
+_TRAIL = re.compile(r"[.,;:!?·]+$")
+
+
+def _mark_brackets(words):
+    """Port of the reader's groupForGreekMode + bracketChip: consecutive words
+    sharing a bracket id are a group — draw '[' before the first, ']' after the
+    last, show each word's greek position number (suppressing a repeat), and lift
+    the group's trailing clause punctuation outside the ']'. Words carry a
+    temporary `_bid` (bracket id) and `_gp` (greek position)."""
+    i, n = 0, len(words)
+    while i < n:
+        bid = words[i]["_bid"]
+        if bid is None:
+            i += 1
+            continue
+        j = i
+        while j < n and words[j]["_bid"] == bid:
+            j += 1
+        group = words[i:j]
+        last_gp = None
+        for w in group:
+            gp = w["_gp"]
+            if gp is not None and gp == last_gp:
+                w["num"] = None
+            else:
+                w["num"] = gp
+                if gp is not None:
+                    last_gp = gp
+        for k, w in enumerate(group):
+            w["brk_open"] = (k == 0)
+            w["brk_close"] = (k == len(group) - 1)
+        last = group[-1]
+        if last["parts"]:
+            tail = last["parts"][-1]["t"]
+            m = _TRAIL.search(tail)
+            if m:
+                last["brk_trail"] = m.group(0)
+                trimmed = tail[:m.start()]
+                if trimmed:
+                    last["parts"][-1]["t"] = trimmed
+                else:
+                    last["parts"] = last["parts"][:-1]
+        i = j
+    return words
+
+
 # ── per-text fetchers ────────────────────────────────────────────────────────
 # Each returns a uniform list: [{verse, heading, prose, words:[{en,lemma,
 # translit,strongs,italic}]}], in reading order. `prose` is a clean readable
@@ -102,7 +154,7 @@ def _fetch_abp(abbrev: str, chapter: int) -> list[dict]:
     try:
         rows = conn.execute(
             """SELECT v.verse, v.text AS prose, w.english, w.english_head, w.strongs_base,
-                      l.lemma, l.translit, w.italic,
+                      l.lemma, l.translit, w.italic, w.bracket_id, w.greek_pos,
                       COALESCE(w.italic_words, '') AS italic_words,
                       COALESCE(w.smcap_words,  '') AS smcap_words,
                       p.heading
@@ -123,12 +175,17 @@ def _fetch_abp(abbrev: str, chapter: int) -> list[dict]:
         if vn not in out:
             out[vn] = {"verse": vn, "heading": r["heading"], "prose": r["prose"] or "", "words": []}
             order.append(vn)
-        out[vn]["words"].append({
-            "parts": _parts(r["english"] or r["english_head"] or "",
-                            r["italic_words"], r["smcap_words"], bool(r["italic"])),
-            "lemma": r["lemma"] or "", "translit": r["translit"] or "",
-            "strongs": r["strongs_base"] or "",
-        })
+        wd = _word(
+            _parts(r["english"] or r["english_head"] or "",
+                   r["italic_words"], r["smcap_words"], bool(r["italic"])),
+            r["lemma"] or "", r["translit"] or "", r["strongs_base"] or "")
+        wd["_bid"] = r["bracket_id"]
+        wd["_gp"] = r["greek_pos"]
+        out[vn]["words"].append(wd)
+    # Drop empty-gloss words (e.g. the merged article) BEFORE grouping — matches the
+    # reader, which filters then groups — then apply the bracket/number marks.
+    for v in order:
+        out[v]["words"] = _mark_brackets([w for w in out[v]["words"] if w["parts"]])
     return [out[v] for v in order]
 
 
@@ -185,11 +242,9 @@ def _fetch_kjvlike(table_words: str, table_strongs: str, table_verses: str,
             out[vn] = {"verse": vn, "heading": pericopes.get(vn), "prose": r["verse_text"] or "", "words": []}
             order.append(vn)
         sids = [s.strip() for s in (r["strongs_ids"] or "").split(",") if s.strip()]
-        out[vn]["words"].append({
-            "parts": _parts(r["word"] or "", whole_italic=bool(r["italic"])),
-            "lemma": r["lemma"] or "", "translit": r["xlit"] or "",
-            "strongs": sids[0] if sids else "",
-        })
+        out[vn]["words"].append(_word(
+            _parts(r["word"] or "", whole_italic=bool(r["italic"])),
+            r["lemma"] or "", r["xlit"] or "", sids[0] if sids else ""))
     return [out[v] for v in order]
 
 
@@ -243,12 +298,11 @@ def _fetch_heb(abbrev, chapter):
         if vn not in out:
             out[vn] = {"verse": vn, "heading": headings.get(vn), "prose": "", "words": []}
             order.append(vn)
-        out[vn]["words"].append({
-            "parts": _parts(r["gloss"] or ""),
-            "lemma": r["hebrew"] or "",
-            "translit": (r["translit"] if "translit" in r.keys() else "") or "",
-            "strongs": r["strongs"] or "",
-        })
+        out[vn]["words"].append(_word(
+            _parts(r["gloss"] or ""),
+            r["hebrew"] or "",
+            (r["translit"] if "translit" in r.keys() else "") or "",
+            r["strongs"] or ""))
     for v in order:
         out[v]["prose"] = " ".join(p["t"] for w in out[v]["words"] for p in w["parts"])
     return [out[v] for v in order]

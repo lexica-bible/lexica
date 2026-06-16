@@ -27,7 +27,7 @@
   {% for v in verses %}
     {% if v.heading %}<div class="heading">{{ v.heading }}</div>{% endif %}
     {% if v.words %}
-      <p class="iv"><span class="vn">{{ v.verse }}</span>{% for w in v.words %}{% if w.parts %}<span class="iw"><span class="g">{% if w.lemma %}{{ w.lemma }}{% else %}<span class="ph">x</span>{% endif %}</span><span class="e">{% for p in w.parts %}{% if p.it or p.sc %}<span class="{{ 'it' if p.it }}{{ ' sc' if p.sc }}">{{ p.t }}</span>{% else %}{{ p.t }}{% endif %}{{ ' ' if not loop.last }}{% endfor %}</span>{% if w.strongs %}<span class="s">{{ w.strongs }}</span>{% endif %}</span>{% endif %}{% endfor %}</p>
+      <p class="iv"><span class="vn">{{ v.verse }}</span>{% for w in v.words %}{% if w.parts %}<span class="iw"><span class="g">{% if w.lemma %}{{ w.lemma }}{% else %}<span class="ph">x</span>{% endif %}</span><span class="e">{% if w.brk_open %}<span class="brk">[</span>{% endif %}{% if w.num is not none %}<span class="num">{{ w.num }}</span>{% endif %}{% for p in w.parts %}{% if p.it or p.sc %}<span class="{{ 'it' if p.it }}{{ ' sc' if p.sc }}">{{ p.t }}</span>{% else %}{{ p.t }}{% endif %}{{ ' ' if not loop.last }}{% endfor %}{% if w.brk_close %}<span class="brk">]</span>{{ w.brk_trail }}{% endif %}</span><span class="s">{% if w.strongs %}{{ w.strongs }}{% else %}<span class="ph">G0</span>{% endif %}</span></span>{% endif %}{% endfor %}</p>
     {% else %}
       <p class="iv"><span class="vn">{{ v.verse }}</span>{{ v.prose }}</p>
     {% endif %}
