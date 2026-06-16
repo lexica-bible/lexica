@@ -6,6 +6,24 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Docs slimmed — CLAUDE.md → standing rules + pointers — DONE 2026-06-16
+
+Restructured the always-loaded docs so the rules that matter stand out instead of drowning in a
+changelog. CLAUDE.md 908 → 599 lines:
+- The ~90-line Words rebuild checklist moved to a slash command, `.claude/commands/rebuild-words.md`
+  (`/rebuild-words`) — it only matters when actually rebuilding; CLAUDE.md keeps a 6-line pointer.
+- Library Tab section (~294 lines of dated UI changelog, already mirrored in the project_* memories)
+  condensed to ~100 lines of standing rules + memory pointers.
+- Deployment + AI-cache sections trimmed to the operational facts (where secrets/tokens live, which
+  db holds what, the gates, the cache scheme + LANDMINE); dated "done/live" setup history dropped (it
+  was already in this archive + memory). Stale "BibleHub scrape — status" block retired.
+- Commits 422ff46 / 07bf65b / 868709d, pushed.
+
+Memory tidied the same way: the index (MEMORY.md) went 20.5 → 13.9 KB (long lines → one-line hooks;
+fixed the stale "next up: sepia+dark / refactor #1" line); the 63 topic files left intact — they're
+the detail CLAUDE.md now points at. New preference saved: memory `feedback_lean_claude_md` (keep
+CLAUDE.md lean — heavy procedures → slash commands, done/live history → memory + TODO_ARCHIVE).
+
 ## Two-ending adjective gender (Masculine/Feminine) — FIXED, route a, LIVE 2026-06-16
 
 Greek two-ending adjectives (ἀόρατος, ον) share ONE form for masculine and feminine; the OT (CATSS) and
