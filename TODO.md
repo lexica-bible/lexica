@@ -118,6 +118,15 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
 
 ## New features
 
+- **Hebrew OT prose mode (idea — parked 2026-06-16, undecided).** Today Hebrew is locked to the
+  stacked RTL interlinear chips; the Prose button is grayed in Hebrew (`hebMode`). Adding a prose flow
+  is easy (we have hebrew / translit / gloss per word). The catch the user raised: real Hebrew reads
+  right-to-left, so a true LEFT-to-right read can't be the Hebrew letters — it has to be the
+  transliteration (sounded-out Hebrew, L→R, e.g. "bereshit bara elohim…") or the word-for-word English
+  gloss (rough, KJV/BSB already do smooth English). Could also offer real Hebrew prose flowing R→L.
+  User asked which flavor → "not sure, save for later." Pick the flavor before building.
+  `code: static/src/60-library.jsx:742 (hebMode), :1527/:1841 (prose lock + heb render), static/src/59c-library-render.jsx:75 (renderHebVerse)`
+
 - ~~**Notes feature.**~~ **DONE 2026-06-09** (notes + highlights + bookmarks + accounts). Study
   notes, color highlights, and bookmarks in the Library (drag-select, or a verse-number menu);
   Notes tab with search + filters + sort + collapsible group-by-book + Export/Import backup.
