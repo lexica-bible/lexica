@@ -8356,7 +8356,9 @@ const LibRender = function () {
       // hero shows the head word for a long gloss
       morph: w.morph || "",
       inflected: w.inflected || "",
-      // printed Greek form → side-card "in this verse" line (no translit yet)
+      // printed Greek form → side-card "in this verse" line
+      inflectedTranslit: w.inflected_translit || "",
+      // its romanization (build_abp_translit.py)
       pn_type: w.pn_type || null,
       pn_types: w.pn_types || null
     });

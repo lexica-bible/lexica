@@ -198,7 +198,7 @@ def chapter_text(book, chapter):
         has_surface = conn.execute(
             "SELECT 1 FROM sqlite_master WHERE type='table' AND name='abp_surface'"
         ).fetchone() is not None
-        surf_sel  = ", s.form AS surface_form" if has_surface else ""
+        surf_sel  = ", s.form AS surface_form, s.translit AS surface_translit" if has_surface else ""
         surf_join = ("LEFT JOIN abp_surface s ON s.verse_id = w.verse_id AND s.position = w.position"
                      if has_surface else "")
         rows = conn.execute(
@@ -235,9 +235,10 @@ def chapter_text(book, chapter):
             "smcap_words":  r["smcap_words"],
             "pn_type":      r["pn_type"],
             "pn_types":     r["pn_types"],
-            # Printed ("in this verse") Greek form, when the side table is built +
-            # this word anchored. Blank otherwise → no extra line on the side card.
-            "inflected":    (r["surface_form"] if has_surface else "") or "",
+            # Printed ("in this verse") Greek form + its romanization, when the side
+            # table is built + this word anchored. Blank otherwise → no extra line.
+            "inflected":          (r["surface_form"]     if has_surface else "") or "",
+            "inflected_translit": (r["surface_translit"] if has_surface else "") or "",
         })
     return jsonify([
         {
