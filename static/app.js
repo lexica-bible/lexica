@@ -10992,11 +10992,7 @@ function LibraryView({
       } : undefined
     }, vnumNoteHandlers(verse, ch)), verse), hasVariant && /*#__PURE__*/React.createElement("span", {
       className: "lib-var-dagger",
-      title: "Textual variant \u2014 click for the note",
-      onClick: handleVerseNum ? e => {
-        e.stopPropagation();
-        handleVerseNum(verse, ch);
-      } : undefined
+      title: "Textual variant \u2014 click the verse number"
     }, "\u2020"));
   };
 

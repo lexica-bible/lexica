@@ -1353,8 +1353,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
         {...vnumNoteHandlers(verse, ch)}
       >{verse}</span>
       {hasVariant && (
-        <span className="lib-var-dagger" title="Textual variant — click for the note"
-          onClick={handleVerseNum ? (e) => { e.stopPropagation(); handleVerseNum(verse, ch); } : undefined}>†</span>
+        <span className="lib-var-dagger" title="Textual variant — click the verse number">†</span>
       )}
     </span>
     );

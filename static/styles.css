@@ -1758,7 +1758,6 @@ input { font-family: inherit; }
 /* ABP textual-variant dagger (on the verse number) + the note in the cross-ref card */
 .lib-var-dagger {
   color: var(--accent);
-  cursor: pointer;
   font-weight: 700;
   font-size: 0.78em;
   vertical-align: super;
@@ -1766,7 +1765,6 @@ input { font-family: inherit; }
   margin-left: 1px;
   user-select: none;
 }
-.lib-var-dagger:hover { color: var(--accent-soft); }
 .variant-note { margin: 2px 0; }
 .variant-note .variant-src { font-weight: 600; color: var(--accent); }
 .variant-note .variant-gloss { font-style: italic; }
