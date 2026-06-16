@@ -1,15 +1,3 @@
-function corpusWordLabel(w) {
-  const e = w.english || "";
-  if (e) return e;
-  const kd = w.kjv_def || "";
-  if (kd) {
-    const first = kd.split(",").map(t => t.trim()).find(t => !t.startsWith("X ")) || kd.split(",")[0].trim();
-    const result = first.replace(/\s*[(\[+].*/,'').trim();
-    if (result) return result;
-  }
-  return w.translit || w.lemma || null;
-}
-
 // ============================================================
 // SHARED VERSE ROW — used by both Search (CorpusGroup) and the Lexicon tab.
 // Lazy-loads its own words; highlights any word whose Strong's is in citedStrongs.
@@ -56,20 +44,8 @@ function VerseRow({ book, chapter, verse, label, allResults, onWordClick, onRead
     return () => { cancelled = true; };
   }, [visible, book, chapter, verse, textMode, kjvCache]);
 
-  const entryMap = useMemo(() => {
-    const m = new Map();
-    for (const e of allResults) {
-      if (e.book === book && e.chapter === chapter && e.verse === verse) {
-        if (!m.has(e.strongs_raw)) m.set(e.strongs_raw, e);
-        // Also index by bare number to handle G/H prefix inconsistency
-        const bare = (e.strongs_raw || "").replace(/^[GH]/i, "");
-        if (bare && !m.has(bare)) m.set(bare, e);
-      }
-    }
-    return m;
-  }, [allResults, book, chapter, verse]);
-
-  // citedStrongs is now passed directly as a prop from App level — no local computation needed
+  // citedStrongs is passed in from App level; the matched word(s) are highlighted in
+  // the prose below. No per-word entry map — clicking a word is the reader's job now.
 
   return (
     <div className="corpus-verse" ref={rowRef}>
@@ -79,137 +55,33 @@ function VerseRow({ book, chapter, verse, label, allResults, onWordClick, onRead
           kjvText === null
             ? <span style={{ color: "var(--ink-4)", fontSize: "13px" }}>Loading…</span>
             : kjvText.map((w, i) => {
+                // Prose: plain readable text, the matched word gold-highlighted. No
+                // per-word click — the reference jumps into the reader for word study.
                 const sid = w.strongs_ids && w.strongs_ids.length ? w.strongs_ids[0] : null;
                 const sidBare = sid ? sid.replace(/^[GH]/i, "") : null;
                 const isCited = sid && citedStrongs != null && citedStrongs.size > 0 &&
                   (citedStrongs.has(sid) || citedStrongs.has(sidBare));
-                const kjvEntry = sid ? {
-                  id: `kjvcorpus-${book}-${chapter}-${verse}-${i}`,
-                  strongs: sid,
-                  strongs_base: sid.slice(1),
-                  strongs_raw: sid.slice(1),
-                  greek: w.lemma || "",
-                  translit: w.xlit || "",
-                  gloss: w.word,
-                  ref: `${book} ${chapter}:${verse}`,
-                  book, chapter, verse,
-                  definition: "", derivation: "", is_function: false,
-                  isKjv: true,
-                  isHebrew: sid.startsWith("H"),
-                } : null;
-                return (
-                  <span key={i} className={"lib-word" + (sid ? " lib-word-clickable" : "") + (w.italic ? " lib-kjv-italic" : "") + (isCited ? " cited" : "")}
-                    onClick={kjvEntry && onWordClick ? () => onWordClick(kjvEntry) : undefined}>
-                    <span className="lib-iw-english">{w.word}{w.punc || ""}</span>
-                  </span>
-                );
+                const cls = (w.italic ? "lib-prose-italic " : "") + (isCited ? "corpus-hit" : "");
+                return <span key={i} className={cls.trim() || undefined}>{w.word}{w.punc || ""}{" "}</span>;
               })
         ) : words === null ? (
           <span style={{ color: "var(--ink-4)", fontSize: "13px" }}>Loading…</span>
         ) : (() => {
-          function renderCorpusWord(w, key) {
-            const label = corpusWordLabel(w);
-            if (!label) return null;
-            const isPN = !!(w.is_pn || w.strongs_base === "*");
-            const clickable = !!(w.strongs_base && (w.strongs_base !== "*" || w.english));
-            const wnum = (w.strongs && w.strongs !== "*") ? w.strongs : w.strongs_base;
-            const foundEntry = !isPN && clickable && entryMap.get(wnum);
-            const entry = clickable && (foundEntry
-              ? { ...foundEntry, gloss: w.english || foundEntry.gloss }
-              : {
-                id: `corpus-${book}-${chapter}-${verse}-${key}`,
-                strongs: strongsTag(wnum),
-                strongs_base: w.strongs_base,
-                strongs_raw: wnum,
-                greek: w.lemma || "",
-                translit: w.translit || "",
-                gloss: label,
-                ref: `${book} ${chapter}:${verse}`,
-                book, chapter, verse,
-                definition: "", derivation: "", is_function: false,
-                ...(isPN ? { isPN: true, pnName: label } : {}),
-              });
-            const hasPos = w.greek_pos !== null && w.greek_pos !== undefined;
-            const bareNum = strongsBare(w.strongs_base);
-            const isCited = clickable && citedStrongs != null && citedStrongs.size > 0 &&
-              (citedStrongs.has(w.strongs_base) || citedStrongs.has(bareNum));
-            // Multi-word gloss with italic_words: split into separate chips (mirrors library)
-            if (label.includes(' ') && w.italic_words) {
-              const iset = new Set(w.italic_words.split(','));
-              return (
-                <React.Fragment key={key}>
-                  {label.split(' ').filter(Boolean).map((word, pi) => {
-                    const bare = word.replace(/[^\w]/g, '').toLowerCase();
-                    const isItal = iset.has(bare);
-                    return (
-                      <span key={pi} className={"lib-word" + (!isItal && clickable ? " lib-word-clickable" : "") + (isItal ? " lib-abp-italic" : "") + (!isItal && isCited ? " cited" : "")}
-                            onClick={!isItal && clickable ? () => onWordClick(entry) : undefined}>
-                        <span className="lib-iw-english">{word}</span>
-                      </span>
-                    );
-                  })}
-                </React.Fragment>
-              );
-            }
-            return (
-              <span key={key} className={"lib-word" + (clickable ? " lib-word-clickable" : "") + (w.italic ? " lib-abp-italic" : "") + (isCited ? " cited" : "")}
-                    onClick={clickable ? () => onWordClick(entry) : undefined}>
-                <span className="lib-iw-pos-english">
-                  {hasPos && <span className="lib-iw-pos">{w.greek_pos}</span>}
-                  <span className="lib-iw-english">{label}</span>
-                </span>
-              </span>
-            );
-          }
-          const groups = groupForGreekMode(words.filter(w => w.english).sort((a, b) => a.position - b.position));
-          return groups.map((g, gi) => {
-            if (!g.isBracket) return renderCorpusWord(g.word, `g${gi}`);
-            const corpusBracketChar = (ch, k) => (
-              <span key={k} className="lib-bracket">
-                <span className="lib-bracket-glyph">{ch}</span>
-              </span>
-            );
-            const corpusTrailChar = (txt, k) => (
-              <span key={k} className="lib-bracket-trail"><span className="lib-iw-english">{txt}</span></span>
-            );
-            // Lift the bracket's trailing clause punctuation OUTSIDE the "]" (mirror
-            // the reading pane): "...us;]" reads "...us];". clean_english glues the
-            // mark onto the group's last word, so snip it off and re-emit after "]".
-            const TRAIL = /[.,;:!?·]+$/;
-            let gw = g.words, trail = "";
-            {
-              const li = gw.length - 1;
-              const lastEng = (gw[li] && gw[li].english) || "";
-              const m = lastEng.match(TRAIL);
-              if (m) { trail = m[0]; gw = gw.map((w, i) => i === li ? { ...w, english: lastEng.slice(0, m.index) } : w); }
-            }
-            // Glue "[" to the first word and "]" (+ any lifted punctuation) to the
-            // last word (nowrap units) so a line break can only fall BETWEEN words
-            // inside the bracket — never stranding a lone "[" or "]" at a line edge.
-            return (
-              <span key={`bg${gi}`} className="lib-bracket-group">
-                {gw.length === 1 ? (
-                  <span className="lib-bracket-unit">
-                    {corpusBracketChar("[", "bl")}
-                    {renderCorpusWord(gw[0], `bg${gi}w0`)}
-                    {corpusBracketChar("]", "br")}
-                    {trail && corpusTrailChar(trail, "bt")}
-                  </span>
-                ) : (<>
-                  <span className="lib-bracket-unit">
-                    {corpusBracketChar("[", "bl")}
-                    {renderCorpusWord(gw[0], `bg${gi}w0`)}
-                  </span>
-                  {gw.slice(1, -1).map((w, wi) => renderCorpusWord(w, `bg${gi}w${wi + 1}`))}
-                  <span className="lib-bracket-unit">
-                    {renderCorpusWord(gw[gw.length - 1], `bg${gi}w${gw.length - 1}`)}
-                    {corpusBracketChar("]", "br")}
-                    {trail && corpusTrailChar(trail, "bt")}
-                  </span>
-                </>)}
-              </span>
-            );
-          });
+          // Prose: readable english in reading order — identical to the reader's prose
+          // mode (reuse LibRender.renderProseWords). The matched word(s) — those whose
+          // Strong's is in citedStrongs — get the gold "corpus-hit" highlight via a
+          // hiClass that lights up their position. No per-word click / brackets /
+          // numbers; the reference button jumps into the reader to study any word.
+          const citedPositions = new Set(
+            (citedStrongs && citedStrongs.size)
+              ? words.filter(w => citedStrongs.has(w.strongs_base) || citedStrongs.has(strongsBare(w.strongs_base))).map(w => w.position)
+              : []
+          );
+          const proseCtx = {
+            selChapter: chapter,
+            hiClass: (vs, pos) => citedPositions.has(pos) ? " corpus-hit" : "",
+          };
+          return LibRender.renderProseWords(proseCtx, { verse, words, _ch: chapter });
         })()}
       </span>
     </div>
