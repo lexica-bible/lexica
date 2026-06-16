@@ -449,6 +449,7 @@ def read_chapter_text(slug, chapter, text):
 
 _TAG_RE = re.compile(r"<[^>]+>")
 _STRONGS_RE = re.compile(r"^([GgHh]?)(\d+)[a-z]?(?:\.\d+)?$")
+_GLOSS_STRIP = " ,;:.!?—-)(][·"   # trailing punctuation ABP/KJV leave on phrase-boundary words
 
 
 def _word_profile(strongs: str):
@@ -490,23 +491,46 @@ def _word_profile(strongs: str):
         total = sum(counts.values())
         books = [{"slug": _BOOKS[b][1], "name": _BOOKS[b][0], "count": c}
                  for b, c in sorted(counts.items(), key=lambda x: -x[1]) if b in _BOOKS]
-        # top renderings
+        # top renderings — strip the stray phrase-boundary punctuation then merge dups
+        # (so "word" and "word," count as one), highest count first.
         if is_heb:
             grows = conn.execute("SELECT kw.word AS g, COUNT(*) AS c FROM kjv_strongs ks "
                                  "JOIN kjv_words kw ON kw.word_id = ks.word_id WHERE ks.strongs_id = ? "
-                                 "GROUP BY kw.word ORDER BY c DESC LIMIT 8", (sid,)).fetchall()
+                                 "GROUP BY kw.word", (sid,)).fetchall()
         else:
             grows = conn.execute("SELECT english AS g, COUNT(*) AS c FROM words WHERE strongs_base = ? "
-                                 "AND english IS NOT NULL AND english NOT IN ('', '*') "
-                                 "GROUP BY english ORDER BY c DESC LIMIT 8", (sid,)).fetchall()
-        glosses = [{"g": r["g"], "c": r["c"]} for r in grows if r["g"]]
-        # a handful of sample references (linked to chapter pages)
+                                 "AND english IS NOT NULL AND english NOT IN ('', '*') GROUP BY english", (sid,)).fetchall()
+        agg: dict[str, int] = {}
+        for r in grows:
+            g = (r["g"] or "").strip(_GLOSS_STRIP)
+            if g:
+                agg[g] = agg.get(g, 0) + r["c"]
+        glosses = [{"g": g, "c": c} for g, c in sorted(agg.items(), key=lambda x: -x[1])[:8]]
+        # a handful of sample references → chapter pages, scrolled to the verse. A Hebrew
+        # word's examples open the HEBREW interlinear (where the actual Hebrew word shows);
+        # a Greek word's open ABP. Hebrew refs come from heb.db so the verse really has it.
+        ref_suffix = ""
         refs, seen = [], set()
         if is_heb:
-            rrows = conn.execute("SELECT kw.book_id AS bid, kw.chapter AS ch, kw.verse_num AS v FROM kjv_strongs ks "
-                                 "JOIN kjv_words kw ON kw.word_id = ks.word_id WHERE ks.strongs_id = ? "
-                                 "ORDER BY kw.book_id, kw.chapter, kw.verse_num LIMIT 40", (sid,)).fetchall()
-            cand = [(_ABBR_BY_ID.get(r["bid"]), r["ch"], r["v"]) for r in rrows]
+            ref_suffix = "/heb"
+            cand = []
+            try:
+                hc = heb_db()
+                try:
+                    hrows = hc.execute("SELECT book AS b, chapter AS ch, verse AS v FROM heb_words "
+                                       "WHERE strongs = ? OR strongs GLOB ? ORDER BY rowid LIMIT 60",
+                                       (sid, sid + "[a-z]")).fetchall()
+                    cand = [(r["b"], r["ch"], r["v"]) for r in hrows]
+                finally:
+                    hc.close()
+            except sqlite3.OperationalError:
+                cand = []
+            if not cand:   # heb.db not loaded → fall back to KJV refs/links
+                ref_suffix = "/kjv"
+                rrows = conn.execute("SELECT kw.book_id AS bid, kw.chapter AS ch, kw.verse_num AS v FROM kjv_strongs ks "
+                                     "JOIN kjv_words kw ON kw.word_id = ks.word_id WHERE ks.strongs_id = ? "
+                                     "ORDER BY kw.book_id, kw.chapter, kw.verse_num LIMIT 40", (sid,)).fetchall()
+                cand = [(_ABBR_BY_ID.get(r["bid"]), r["ch"], r["v"]) for r in rrows]
         else:
             rrows = conn.execute("SELECT v.book AS b, v.chapter AS ch, v.verse AS v FROM words w "
                                  "JOIN verses v ON w.verse_id = v.id WHERE w.strongs_base = ? "
@@ -523,7 +547,8 @@ def _word_profile(strongs: str):
             if len(refs) >= 8:
                 break
         return {"sid": sid, "lemma": lemma, "translit": translit, "definition": definition,
-                "lang": lang, "total": total, "books": books, "glosses": glosses, "refs": refs}
+                "lang": lang, "total": total, "books": books, "glosses": glosses,
+                "refs": refs, "ref_suffix": ref_suffix}
     finally:
         conn.close()
 

@@ -27,9 +27,9 @@
   {% for v in verses %}
     {% if v.heading %}<div class="heading">{{ v.heading }}</div>{% endif %}
     {% if v.words %}
-      <p class="iv"><span class="vn">{{ v.verse }}</span>{% for w in v.words %}{% if w.parts %}<span class="iw"><span class="g">{% if w.lemma %}{{ w.lemma }}{% else %}<span class="ph">x</span>{% endif %}</span><span class="e">{% if w.brk_open %}<span class="brk">[</span>{% endif %}{% if w.num is not none %}<span class="num">{{ w.num }}</span>{% endif %}{% for p in w.parts %}{% if p.it or p.sc %}<span class="{{ 'it' if p.it }}{{ ' sc' if p.sc }}">{{ p.t }}</span>{% else %}{{ p.t }}{% endif %}{{ ' ' if not loop.last }}{% endfor %}{% if w.brk_close %}<span class="brk">]</span>{{ w.brk_trail }}{% endif %}</span><span class="s">{% if w.strongs %}<a class="slink" href="/word/{{ w.strongs }}">{{ w.strongs }}</a>{% else %}<span class="ph">G0</span>{% endif %}</span></span>{% endif %}{% endfor %}</p>
+      <p class="iv" id="v{{ v.verse }}"><span class="vn">{{ v.verse }}</span>{% for w in v.words %}{% if w.parts %}<span class="iw"><span class="g">{% if w.lemma %}{{ w.lemma }}{% else %}<span class="ph">x</span>{% endif %}</span><span class="e">{% if w.brk_open %}<span class="brk">[</span>{% endif %}{% if w.num is not none %}<span class="num">{{ w.num }}</span>{% endif %}{% for p in w.parts %}{% if p.it or p.sc %}<span class="{{ 'it' if p.it }}{{ ' sc' if p.sc }}">{{ p.t }}</span>{% else %}{{ p.t }}{% endif %}{{ ' ' if not loop.last }}{% endfor %}{% if w.brk_close %}<span class="brk">]</span>{{ w.brk_trail }}{% endif %}</span><span class="s">{% if w.strongs %}<a class="slink" href="/word/{{ w.strongs }}">{{ w.strongs }}</a>{% else %}<span class="ph">G0</span>{% endif %}</span></span>{% endif %}{% endfor %}</p>
     {% else %}
-      <p class="iv"><span class="vn">{{ v.verse }}</span>{{ v.prose }}</p>
+      <p class="iv" id="v{{ v.verse }}"><span class="vn">{{ v.verse }}</span>{{ v.prose }}</p>
     {% endif %}
   {% endfor %}
 
@@ -38,4 +38,13 @@
     <span><a href="{{ book_url }}">All {{ name }} chapters</a></span>
     <span>{% if next_url %}<a href="{{ next_url }}">Chapter {{ chapter + 1 }} ›</a>{% endif %}</span>
   </div>
+
+  <script>
+  (function () {
+    var h = location.hash;
+    if (!/^#v\d+$/.test(h)) return;
+    var el = document.getElementById(h.slice(1));
+    if (el) { el.classList.add("verse-hi"); el.scrollIntoView({ block: "start" }); }
+  })();
+  </script>
 {% endblock %}

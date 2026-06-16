@@ -31,6 +31,6 @@
 
   {% if w.refs %}
     <div class="heading">Example passages</div>
-    <ul class="reflist">{% for r in w.refs %}<li><a href="/read/{{ r.slug }}/{{ r.ch }}">{{ r.name }} {{ r.ch }}:{{ r.v }}</a></li>{% endfor %}</ul>
+    <ul class="reflist">{% for r in w.refs %}<li><a href="/read/{{ r.slug }}/{{ r.ch }}{{ w.ref_suffix }}#v{{ r.v }}">{{ r.name }} {{ r.ch }}:{{ r.v }}</a></li>{% endfor %}</ul>
   {% endif %}
 {% endblock %}
