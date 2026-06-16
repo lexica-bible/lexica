@@ -1670,7 +1670,7 @@ input { font-family: inherit; }
 
 .lib-vnum {
   font-family: var(--f-mono);
-  font-size: 9px;
+  font-size: calc(var(--lib-font-size, 18px) * 0.5);   /* scales with the reading font (the † rides this too) */
   color: var(--ink-4);
   letter-spacing: 0.04em;
   flex: 0 0 auto;
@@ -1682,7 +1682,7 @@ input { font-family: inherit; }
   /* Center the number on the first text line by tying the offset to the reading font
      size (--lib-font-size) rather than a fixed pixel — so it stays centered at every
      size (desktop 18px, mobile 15px, any Aa setting) instead of drifting low on mobile. */
-  margin-top: calc(var(--lib-line-h, 1.7) * var(--lib-font-size, 18px) / 2 - 4.3px);
+  margin-top: calc(var(--lib-line-h, 1.7) * var(--lib-font-size, 18px) / 2 - var(--lib-font-size, 18px) * 0.239);
 }
 
 /* The hit target — hugs the digits, so the empty alignment space beside the
@@ -1838,7 +1838,7 @@ input { font-family: inherit; }
 .lib-interlinear-on .lib-iw-english { color: var(--ink-2); }
 .lib-iw-strongs {
   font-family: var(--f-mono);
-  font-size: 9.5px;
+  font-size: calc(var(--lib-font-size, 18px) * 0.53);   /* scales with the reading font */
   color: var(--ink-3);
   letter-spacing: 0.02em;
 }
