@@ -6,6 +6,31 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Two-ending adjective gender (Masculine/Feminine) — FIXED, route a, LIVE 2026-06-16
+
+Greek two-ending adjectives (ἀόρατος, ον) share ONE form for masculine and feminine; the OT (CATSS) and
+NT (Robinson) morph sources often just DEFAULT such a word to Masculine, so the word-study card read the
+wrong gender next to a feminine noun (Gen 1:2 "earth, unseen": γῆ feminine, ἀόρατος showed Masculine). NOT
+a display bug — `decodeMorph` faithfully shows the single gender letter the source gave. FIXED via route
+(a): for a two-ending adjective the source NEVER tags Feminine (so it has never shown it can tell them
+apart), the card now shows **"Masculine/Feminine"**; words the source DOES resolve, plus all Feminine/Neuter
+tags, are left alone (decided per testament). ~836 displays (OT 441 / NT 395). The two-ending signal = the
+LSJ headword endings (three-ending lists a feminine ending then a neuter — ἀγαθός → ή, όν; two-ending lists
+only the neuter — ἀγαθοποιός → όν). Generator `scripts/build_two_ending.py` → `static/src/00b-two-ending.jsx`
+(`TWO_END_SOFT_OT/_NT` sets) + a tweak to `decodeMorph` in 00-core.jsx; commits fbd22cc + 2e874e2.
+**Re-run the generator after any words rebuild** (genders/tallies shift) and rebuild app.js.
+
+LESSONS: (1) measure-first paid off — the source turned out INCONSISTENT (resolves some two-ending words,
+defaults others), which is exactly why the never-Feminine rule is right and a blanket "blur every masculine"
+would be wrong (it'd also expose detector slips like εἷς, which the never-F rule auto-excludes). (2) Matching
+our words to LSJ by lemma needs BOTH the hyphen (ἀδικ-ητικός) AND the final sigma ς folded, or ~96% miss —
+cost two bad runs before the numbers were real.
+
+DEFERRED — route (b): resolve to a REAL gender from the neighboring noun (match the same-verse noun by
+case+number, which is reliably tagged; only gender is the unknown). Safe only when there's exactly one clear
+match, else fall back to "Masculine/Feminine"; needs the neighboring words at display time (the card sees
+only the clicked word now) or a precompute pass. Parked, not rejected. Memory `project_two_ending_gender`.
+
 ## ABP variant-reading (Bos/CP/Ald/Six) footnotes — INVESTIGATED + proof built + SCRAPPED 2026-06-16
 
 ABP's own dagger apparatus ("CP reads X", "see Bos for variants"). The data IS in the free ABP 2nd-ed
