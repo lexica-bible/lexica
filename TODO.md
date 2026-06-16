@@ -464,6 +464,19 @@ place for the existing place sidebar, so this is smaller than it looks.
   (extraction + nom/acc ambiguity), not worth it for a side-panel detail. STEPBible's **ABGk/abpgrk** isn't an
   upgrade either (same ABP text; single-dot accent, no breathing, no inline morph; Van der Pool copyright, not
   CC-BY). `code: morph column on words; decode_morph in scripts/load_hebrew.py`
+- **Two-ending adjective gender reads wrong in context — PARKED, needs a session.** CONFIRMED Gen 1:2: "earth"
+  (γῆ, G1093) = `N.NSF` ✓ feminine, but "unseen" (ἀόρατος, G517) = `A.NSM` — shows **Masculine** even though it
+  agrees with the feminine γῆ. ἀόρατος is a **two-ending adjective** (masculine + feminine share one form; only
+  the neuter differs), and the OT morph source (CATSS) stored the DEFAULT gender, not the contextual one. NOT a
+  display bug — `decodeMorph` faithfully shows the single gender letter CATSS gave. **Class-wide:** every
+  two-ending adjective next to a feminine/neuter noun reads with its default (usually masculine) gender. TWO FIX
+  ROUTES (decide in the session): (a) PREFERRED — show **"Masculine/Feminine"** for two-ending adjectives (honest,
+  never asserts a wrong gender, lower risk); needs a reliable two-ending signal, which our `lexicon` doesn't carry
+  — source it from LSJ ("-ος, -ον" entry form) or the ABP Analytical Lexicon (it tags these "masc-fem" — the very
+  source we skipped, see memory `project_abp_morph_gap`). (b) Resolve by agreement (copy the gender from the noun
+  it modifies → "Feminine" here) — nicer to read but riskier; a wrong pairing makes a NEW error. STEP 1: find the
+  two-ending signal + measure how many words are affected before picking a route.
+  `code: decodeMorph + _decodeCNG in static/src/00-core.jsx; morph column on words (CATSS source)`
 - **Textus Receptus Greek NT:** add as a second NT text next to ABP. Same Strong's numbering, so it
   plugs in easily, and showing where the two Greek texts differ is genuinely rare and useful.
 - **Multi-text COMPARE — DONE + LIVE 2026-06-10** (memory `project_pericopes_parallel`). The old 2-column
