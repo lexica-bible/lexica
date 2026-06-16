@@ -1670,7 +1670,7 @@ input { font-family: inherit; }
 
 .lib-vnum {
   font-family: var(--f-mono);
-  font-size: calc(var(--lib-font-size, 18px) * 0.5);   /* scales with the reading font (the † rides this too) */
+  font-size: calc(var(--lib-font-size, 18px) * 0.5);   /* scales with the reading font */
   color: var(--ink-4);
   letter-spacing: 0.04em;
   flex: 0 0 auto;
@@ -1754,21 +1754,6 @@ input { font-family: inherit; }
   color: var(--ink-2);
   margin: 0;
 }
-
-/* ABP textual-variant dagger (on the verse number) + the note in the cross-ref card */
-.lib-var-dagger {
-  color: var(--accent);
-  font-weight: 700;
-  font-size: 0.78em;
-  vertical-align: super;
-  line-height: 0;
-  margin-left: 1px;
-  user-select: none;
-}
-.variant-note { margin: 2px 0; }
-.variant-note .variant-src { font-weight: 600; color: var(--accent); }
-.variant-note .variant-gloss { font-style: italic; }
-.variant-note .variant-ref { color: var(--ink-2); }
 
 /* Verse content — prose: inline text; chips: flex wrap */
 .lib-verse-content {

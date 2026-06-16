@@ -6,7 +6,6 @@ function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation, onA
   const [synthesis, setSynthesis] = useState(null);
   const [loading, setLoading] = useState(false);
   const [abpTexts, setAbpTexts] = useState({});
-  const [variants, setVariants] = useState([]);   // ABP textual-variant notes for this verse
   const showAbp = translation === "abp" || translation === "parallel";
 
   useEffect(() => {
@@ -15,10 +14,6 @@ function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation, onA
     setRefs([]);
     setSynthesis(null);
     setAbpTexts({});
-    setVariants([]);
-    api.variants(source.book, source.chapter)
-      .then(d => { if (!cancelled) setVariants((d && d[source.verse]) || []); })
-      .catch(() => {});
     setLoading(true);
     api.crossRefsCurated(source.book, source.chapter, source.verse)
       .then(d => {
@@ -56,22 +51,6 @@ function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation, onA
   // and the curated list as "Related passages".
   const content = (
     <>
-      {variants.length > 0 && (
-        <section className="sec">
-          <h4 className="sec-head">
-            <span className="sec-t">Textual variants</span>
-            <span className="lsj-badge">ABP</span>
-          </h4>
-          {variants.map((vn, i) => (
-            <p key={i} className="detail-p variant-note">
-              <span className="variant-src">{vn.src}</span> {vn.op} <span className="variant-gloss">“{vn.gloss}”</span>
-              {vn.ref && (
-                <span className="variant-ref"> — {vn.op.startsWith("add") ? "added at" : "in place of"} “{vn.ref}”</span>
-              )}
-            </p>
-          ))}
-        </section>
-      )}
       {(loading || synthesis) && (
         <section className="sec">
           <h4 className="sec-head">

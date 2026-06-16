@@ -157,7 +157,6 @@ from views_library import bp as library_bp
 from views_search import bp as search_bp
 from views_summary import bp as summary_bp, prune_cache as _prune_summary_cache
 from views_chrono import bp as chrono_bp, prune_cache as _prune_chrono_cache
-from views_variants import bp as variants_bp
 from views_notes import bp as notes_bp
 from views_study import bp as study_bp
 from ai import bp as ai_bp, _load_ai_cache_from_db
@@ -197,7 +196,6 @@ app.register_blueprint(library_bp)
 app.register_blueprint(search_bp)
 app.register_blueprint(summary_bp)
 app.register_blueprint(chrono_bp)
-app.register_blueprint(variants_bp)
 app.register_blueprint(notes_bp)
 app.register_blueprint(study_bp)
 app.register_blueprint(ai_bp)

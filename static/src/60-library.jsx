@@ -439,18 +439,6 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
     return () => { cancelled = true; };
   }, [selBook && selBook.abbrev, selChapter, corpus, chronoOn]);
 
-  // ABP textual-variant footnotes for the loaded chapter (the dagger apparatus).
-  // {verse: [notes]}; stays empty unless this book/chapter has notes (Isaiah for now).
-  const [chapterVariants, setChapterVariants] = useState({});
-  useEffect(() => {
-    if (!selBook || nonCanon) { setChapterVariants({}); return; }
-    let cancelled = false;
-    api.variants(selBook.abbrev, selChapter)
-      .then(d => { if (!cancelled) setChapterVariants(d || {}); })
-      .catch(() => { if (!cancelled) setChapterVariants({}); });
-    return () => { cancelled = true; };
-  }, [selBook && selBook.abbrev, selChapter, nonCanon]);
-
   // Chronological span loader: fetch every chapter the current passage covers, for
   // the active text(s). One state object keyed by chapter; the render trims each
   // chapter to the passage's verse window and stitches them with chapter markers.
@@ -1339,9 +1327,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
   // Outer span = the alignment gutter (fixed width, not interactive). Inner span =
   // the actual hit target, sized to the digits, so clicking the empty space beside
   // the number does nothing (and can't start a verse-wide text selection).
-  const vnumEl = (verse, ch = selChapter) => {
-    const hasVariant = ch === selChapter && Array.isArray(chapterVariants[verse]) && chapterVariants[verse].length > 0;
-    return (
+  const vnumEl = (verse, ch = selChapter) => (
     <span className="lib-vnum">
       <span
         className={"lib-vnum-num" + (handleVerseNum ? " lib-vnum-click" : "")}
@@ -1352,12 +1338,8 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
         } : undefined}
         {...vnumNoteHandlers(verse, ch)}
       >{verse}</span>
-      {hasVariant && (
-        <span className="lib-var-dagger" title="Textual variant — click the verse number">†</span>
-      )}
     </span>
-    );
-  };
+  );
 
   // Verse number for non-canonical texts: opens the note menu on right-click /
   // long-press, but no cross-references (those texts have none). Left-click is a no-op

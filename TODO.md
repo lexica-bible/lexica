@@ -504,17 +504,20 @@ place for the existing place sidebar, so this is smaller than it looks.
   `abp_surface.translit` (348,935 forms) read-only; re-run after a position-shifting rebuild. Full trail:
   TODO_ARCHIVE + memory `project_bsb_words`. (transliteration-search can reuse this converter later.)
   code: scripts/build_abp_translit.py
-- **ABP variant-reading footnotes — NEXT (Path A, fresh session).** The last real "more complete ABP" frontier:
-  ABP's OWN apparatus (the dagger notes — "see Bos for variants", "Six./CP/Ald. reads X"). **Confirmed NOT in our
-  source** — `abp_texts/**` has 0 daggers and no Sixtine/Complutensian/Aldine refs (verse text + Strong's only;
-  the earlier "343 hits" was case-insensitive "six." the number). So the work is GETTING the data, not displaying
-  it. PLAN: extract the footnotes from the full ABP interlinear PDF (free at apostolicbible.com / printed book),
-  tie each to its verse, store a small table (pericopes-style), show a † marker → panel (same pattern as the TSK
-  cross-ref panel). **STEP 1 (gating, cheap — do FIRST):** pull a book or two of the ABP PDF and check the
-  footnotes come out as clean machine-readable text vs. scattered/image — that decides easy-vs-hard, like the
-  format check gated the analytical-lexicon idea this session. Path B (diff Sixtine/CP/Aldine vs ABP ourselves)
-  REJECTED — same hard alignment as Rahlfs, and it'd be our apparatus, not ABP's curated one. Niche / low urgency.
-  `code: new variant table + /api/chapter join + a † marker in 59c-library-render.jsx; PDF source at apostolicbible.com`
+- **ABP variant-reading footnotes — SCRAPPED 2026-06-16 (investigated + proof built + REMOVED; don't re-open).**
+  The apparatus IS in the free ABP 2nd-ed PDF (archive.org `apostolic-bible`), but the PDF carries **no verse
+  anchors**: footnotes pool at each page BOTTOM with their text only; the verse numbers + the daggers that link a
+  note to its word are in a custom font that extracts as NOTHING. So a note can only be placed to its PAGE
+  (~15-24 verses) and the verse is INFERRED from the footnote's English gloss (distinctive word = nailed, e.g.
+  "dimness"→Gen 15:12; a common word over a wide span = a guess). No digital module carries it either: BibleHub /
+  studybible.info are bare, and the e-Sword/MySword ABP modules — incl. the user's local `abp+.bblx`, which is
+  SQLitePlus-ENCRYPTED — are text-only, no `<RF>` footnotes (verified by opening them). The PDF English decodes
+  via a fixed +29 letter-shift; the Greek of each variant is a SEPARATE custom font that stays garbled, so we
+  could only ever show the English meaning. An Isaiah proof shipped († on the verse → notes folded into the TSK
+  card) then got pulled. **VERDICT (user): niche + lossy — "bereans don't need this; it's nothing you can't find
+  by digging into the Hebrew/Greek."** Path B (diff Sixtine/CP/Aldine vs ABP ourselves) also REJECTED (same hard
+  alignment as Rahlfs; would be our apparatus, not ABP's). KEPT from the session: verse#/Strong's# now scale with
+  the reading font. Scratch pipeline lived in `C:\Users\JP\abp_scratch` (outside the repo). DON'T re-pitch.
 - **Parsed Greek OT as a 2nd parallel text — PARKED idea (NOT ABP's surface line).** A CATSS-lineage Rahlfs LXX
   (Eliran Wong's LXX-Rahlfs-1935 is most turnkey — surface + lemma + morph + SBL translit already paired, 100%
   native, no alignment guessing) would be its OWN parallel Greek OT alongside ABP (like ESV / the Hebrew),
