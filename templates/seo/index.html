@@ -1,0 +1,17 @@
+{% extends "seo/_base.html" %}
+{% block title %}Browse the Bible — Greek &amp; Hebrew Interlinear | Lexica{% endblock %}
+{% block description %}Browse all 66 books of the Bible in Greek and Hebrew interlinear with Strong's numbers, plus KJV and BSB. Free word study from Lexica.{% endblock %}
+{% block main %}
+  <h1>Browse the Bible</h1>
+  <p class="sub">Every book in Greek &amp; Hebrew interlinear with Strong's numbers — plus KJV and BSB.</p>
+
+  <div class="heading">Old Testament</div>
+  <ul class="booklist">
+    {% for slug, name in ot %}<li><a href="/read/{{ slug }}">{{ name }}</a></li>{% endfor %}
+  </ul>
+
+  <div class="heading">New Testament</div>
+  <ul class="booklist">
+    {% for slug, name in nt %}<li><a href="/read/{{ slug }}">{{ name }}</a></li>{% endfor %}
+  </ul>
+{% endblock %}

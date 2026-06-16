@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>{% block title %}Lexica — Greek &amp; Hebrew Bible Word Study{% endblock %}</title>
+  <meta name="description" content="{% block description %}Read the Bible in Greek and Hebrew interlinear with Strong's numbers, KJV and BSB side by side.{% endblock %}"/>
+  {% if canonical %}<link rel="canonical" href="{{ canonical }}"/>{% endif %}
+  <meta name="theme-color" content="#1a1a2e"/>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml"/>
+  <link rel="icon" href="/favicon.ico" sizes="32x32"/>
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png"/>
+  <meta property="og:type" content="website"/>
+  <meta property="og:site_name" content="Lexica"/>
+  <meta property="og:title" content="{{ self.title() }}"/>
+  <meta property="og:description" content="{{ self.description() }}"/>
+  {% if canonical %}<meta property="og:url" content="{{ canonical }}"/>{% endif %}
+  <meta property="og:image" content="https://www.lexica.bible/static/og.png"/>
+  <style>
+    :root{ --navy:#1a1a2e; --gold:#c9a84c; --ink:#221e18; --paper:#fbf8f1;
+           --muted:#6b6660; --rule:#e6ddca; --serif:"Source Serif 4",Georgia,serif;
+           --sans:"DM Sans",system-ui,sans-serif; }
+    *{ box-sizing:border-box; }
+    body{ margin:0; background:var(--paper); color:var(--ink); font-family:var(--serif);
+          line-height:1.6; -webkit-text-size-adjust:100%; }
+    a{ color:#3a4a8c; text-decoration:none; } a:hover{ text-decoration:underline; }
+    header.site{ background:var(--navy); color:#fff; }
+    header.site .wrap{ max-width:820px; margin:0 auto; padding:14px 20px;
+          display:flex; align-items:center; gap:12px; }
+    header.site a{ color:#fff; }
+    header.site .brand{ font-weight:700; font-size:1.2rem; display:flex; align-items:center; gap:10px; }
+    header.site nav{ margin-left:auto; font-family:var(--sans); font-size:.95rem; }
+    header.site nav a{ margin-left:18px; opacity:.85; }
+    main{ max-width:820px; margin:0 auto; padding:24px 20px 48px; }
+    h1{ font-size:1.9rem; margin:.2em 0 .1em; color:var(--navy); }
+    .sub{ color:var(--muted); font-family:var(--sans); margin:0 0 1.4em; }
+    .crumb{ font-family:var(--sans); font-size:.9rem; color:var(--muted); margin:0 0 .4em; }
+    .tabs{ display:flex; flex-wrap:wrap; gap:8px; margin:0 0 1.4em; font-family:var(--sans); }
+    .tabs a,.tabs span{ padding:5px 12px; border:1px solid var(--rule); border-radius:6px;
+          font-size:.9rem; }
+    .tabs .on{ background:var(--navy); color:#fff; border-color:var(--navy); }
+    .heading{ font-family:var(--sans); font-weight:600; color:var(--navy);
+          margin:1.4em 0 .5em; font-size:1.05rem; }
+    .iv{ margin:0 0 1.1em; }
+    .vn{ font-family:var(--sans); font-weight:700; color:var(--gold); font-size:.85rem;
+          vertical-align:top; margin-right:6px; }
+    .iw{ display:inline-block; text-align:center; vertical-align:top; margin:0 .5em .5em 0; }
+    .iw .g{ display:block; color:var(--navy); font-size:1.05rem; }
+    .iw .e{ display:block; font-size:.92rem; }
+    .iw .e.it{ color:var(--muted); font-style:italic; }
+    .iw .s{ display:block; font-family:var(--sans); font-size:.66rem; color:var(--muted); letter-spacing:.02em; }
+    .open{ display:inline-block; margin:.6em 0 1.6em; background:var(--navy); color:#fff;
+          padding:9px 18px; border-radius:7px; font-family:var(--sans); font-size:.95rem; }
+    .open:hover{ text-decoration:none; opacity:.92; }
+    .pager{ display:flex; justify-content:space-between; gap:12px; margin:1.6em 0 0;
+          font-family:var(--sans); border-top:1px solid var(--rule); padding-top:1em; }
+    .booklist{ columns:2; column-gap:32px; padding:0; list-style:none; }
+    .booklist li{ break-inside:avoid; margin:.2em 0; }
+    .chapgrid{ display:flex; flex-wrap:wrap; gap:8px; padding:0; list-style:none; margin:.6em 0 0; }
+    .chapgrid a{ display:inline-block; min-width:42px; text-align:center; padding:8px 10px;
+          border:1px solid var(--rule); border-radius:6px; }
+    footer.site{ border-top:1px solid var(--rule); color:var(--muted);
+          font-family:var(--sans); font-size:.85rem; }
+    footer.site .wrap{ max-width:820px; margin:0 auto; padding:20px; }
+    footer.site a{ color:var(--muted); margin-right:16px; }
+    @media (max-width:560px){ .booklist{ columns:1; } h1{ font-size:1.55rem; } }
+  </style>
+  {% block head_extra %}{% endblock %}
+</head>
+<body>
+  <header class="site"><div class="wrap">
+    <a class="brand" href="/read/">
+      <svg width="26" height="26" viewBox="-2 -1 28 28" aria-hidden="true">
+        <rect x="-2" y="-1" width="28" height="28" rx="5" fill="#1a1a2e"/>
+        <path d="M5 4.5A2.5 2.5 0 0 1 7.5 2H19v17H7.5a2.5 2.5 0 0 0 0 5H19v-3" stroke="#c9a84c" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+        <path d="M11 8v4M13 10h-4" stroke="#c9a84c" stroke-width="1.4" stroke-linecap="round"/>
+      </svg>
+      Lexica
+    </a>
+    <nav><a href="/">Open reader</a><a href="/read/">Browse</a></nav>
+  </div></header>
+  <main>{% block main %}{% endblock %}</main>
+  <footer class="site"><div class="wrap">
+    <a href="/">Interactive reader</a><a href="/read/">All books</a>
+    <span>Greek &amp; Hebrew Bible word study · public-domain texts (ABP · KJV · BSB · Hebrew OT)</span>
+  </div></footer>
+</body>
+</html>

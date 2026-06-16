@@ -1,0 +1,11 @@
+{% extends "seo/_base.html" %}
+{% block title %}{{ name }} — Greek &amp; Hebrew Interlinear | Lexica{% endblock %}
+{% block description %}Read {{ name }} in Greek and Hebrew interlinear with Strong's numbers, KJV and BSB. Pick a chapter to study word by word on Lexica.{% endblock %}
+{% block main %}
+  <p class="crumb"><a href="/read/">Browse</a> › {{ name }}</p>
+  <h1>{{ name }}</h1>
+  <p class="sub">{{ testament }} · {{ chapters|length }} chapters</p>
+  <ul class="chapgrid">
+    {% for c in chapters %}<li><a href="/read/{{ slug }}/{{ c }}">{{ c }}</a></li>{% endfor %}
+  </ul>
+{% endblock %}

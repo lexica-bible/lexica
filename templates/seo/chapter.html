@@ -1,0 +1,41 @@
+{% extends "seo/_base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block description %}{{ description }}{% endblock %}
+{% block head_extra %}
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
+    {"@type":"ListItem","position":1,"name":"Browse","item":"https://www.lexica.bible/read/"},
+    {"@type":"ListItem","position":2,"name":"{{ name }}","item":"https://www.lexica.bible{{ book_url }}"},
+    {"@type":"ListItem","position":3,"name":"{{ name }} {{ chapter }}"}
+  ]}
+  </script>
+{% endblock %}
+{% block main %}
+  <p class="crumb"><a href="/read/">Browse</a> › <a href="{{ book_url }}">{{ name }}</a> › Chapter {{ chapter }}</p>
+  <h1>{{ name }} {{ chapter }}</h1>
+  <p class="sub">{{ label }}</p>
+
+  <div class="tabs">
+    {% for o in others %}
+      {% if o.active %}<span class="on">{{ o.short }}</span>
+      {% else %}<a href="{{ o.url }}">{{ o.short }}</a>{% endif %}
+    {% endfor %}
+  </div>
+
+  <a class="open" href="{{ reader_url }}">Open in the interactive reader →</a>
+
+  {% for v in verses %}
+    {% if v.heading %}<div class="heading">{{ v.heading }}</div>{% endif %}
+    {% if v.words %}
+      <p class="iv"><span class="vn">{{ v.verse }}</span>{% for w in v.words %}<span class="iw">{% if w.lemma %}<span class="g">{{ w.lemma }}</span>{% endif %}<span class="e{% if w.italic %} it{% endif %}">{{ w.en }}</span>{% if w.strongs %}<span class="s">{{ w.strongs }}</span>{% endif %}</span>{% endfor %}</p>
+    {% else %}
+      <p class="iv"><span class="vn">{{ v.verse }}</span>{{ v.prose }}</p>
+    {% endif %}
+  {% endfor %}
+
+  <div class="pager">
+    <span>{% if prev_url %}<a href="{{ prev_url }}">‹ Chapter {{ chapter - 1 }}</a>{% endif %}</span>
+    <span><a href="{{ book_url }}">All {{ name }} chapters</a></span>
+    <span>{% if next_url %}<a href="{{ next_url }}">Chapter {{ chapter + 1 }} ›</a>{% endif %}</span>
+  </div>
+{% endblock %}
