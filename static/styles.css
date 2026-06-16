@@ -1614,11 +1614,13 @@ input { font-family: inherit; }
 }
 .lib-flow-vnum:hover { color: var(--accent); }
 @media (max-width: 1099px) {
-  /* Bigger tap / long-press target for the prose verse number. Stays `inline`
-     (NOT inline-block) so a line never breaks right after the number, leaving it
-     dangling at the end of a line — inline padding still enlarges the hit area. */
+  /* Digits stay small (base size) for reading ease; pad ONLY the hit area so the
+     superscript verse number is still easy to tap / long-press. Stays `inline`
+     (NOT inline-block) so a line never breaks right after the number; the negative
+     left margin keeps the padding from nudging the verse text. The focus-mode tap
+     handler already skips .lib-flow-vnum, so this wider target never steals a
+     tap-to-enter-reading-mode. */
   .lib-flow-vnum {
-    font-size: 0.66em;
     padding: 6px 8px;
     margin-left: -4px;
     touch-action: manipulation;
@@ -1642,7 +1644,7 @@ input { font-family: inherit; }
 
 .lib-vnum {
   font-family: var(--f-mono);
-  font-size: calc(var(--lib-font-size, 18px) * 0.5);   /* scales with the reading font */
+  font-size: calc(var(--lib-font-size, 18px) * 0.58);   /* matches the prose verse number (.lib-flow-vnum 0.58em) */
   color: var(--ink-4);
   letter-spacing: 0.04em;
   flex: 0 0 auto;
