@@ -37,7 +37,9 @@ below is scholarly source material — distill from it only what the word means 
 range of senses it carries in the biblical text. No imported systematic theology, no \
 denominational assumptions — follow where the words actually lead. Write in plain \
 prose, no markdown, no headers. Do not state the word's grammatical parsing (part of \
-speech, case, number, tense, voice, mood) — that is shown separately. Focus only on \
+speech, case, number, tense, voice, mood) — that is shown separately. The reader already \
+sees the word, so do NOT open by restating or romanizing the headword itself; begin \
+directly with the meaning. Focus only on \
 meaning and semantic range.\
 """
 
