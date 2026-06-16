@@ -2022,6 +2022,20 @@ input { font-family: inherit; }
   position: relative;
   z-index: 1;
 }
+/* With Strong's/interlinear ON a chip is as wide as its WIDEST row — usually the
+   greek lemma — and every row is centred. So a bracketed word whose greek is wider
+   than its english leaves the english floating in the middle of the box, and the
+   bracket (which hugs the box edge) ends up sitting in the gap the greek opened up —
+   it reads as the bracket "covering" that extra greek width. Align each bracket's
+   OUTER words toward their own bracket so the english meets the glyph: the first
+   word's stack to the LEFT (english hugs "["), the last word's to the RIGHT (english
+   hugs "]"). The widest row (the greek) still fills the box and barely moves; only the
+   narrower english/number slide over. Brackets now hug the english in interlinear mode
+   the same way they do in plain chip mode. A lone word in its own bracket can't hug
+   both sides at once, so it stays centred. */
+.lib-bracket + .lib-word-bracketed { align-items: flex-start; }
+.lib-word-bracketed:has(+ .lib-bracket) { align-items: flex-end; }
+.lib-bracket + .lib-word-bracketed:has(+ .lib-bracket) { align-items: center; }
 
 /* Interlinear in detail panel */
 .interlinear {
