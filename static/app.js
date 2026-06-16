@@ -12601,6 +12601,16 @@ function App() {
     } catch (e) {
       return;
     }
+    const lex = p.get("lex");
+    if (lex) {
+      // word page → open the Lexicon tab on that Strong's number
+      setMainView("lexicon");
+      setLexiconPendingStrongs(lex);
+      try {
+        window.history.replaceState(null, "", window.location.pathname);
+      } catch (e) {}
+      return;
+    }
     const b = p.get("b");
     if (!b) return;
     const t = p.get("t");

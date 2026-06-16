@@ -71,6 +71,7 @@ _BOOKS: dict[str, tuple[str, str]] = {
     "Jud": ("Jude", "jude"),                  "Rev": ("Revelation", "revelation"),
 }
 _SLUG = {slug: abbrev for abbrev, (_n, slug) in _BOOKS.items()}
+_ABBR_BY_ID = {v: k for k, v in _KJV_BOOK_ID.items()}
 
 
 def _is_ot(abbrev: str) -> bool:
@@ -446,6 +447,143 @@ def read_chapter_text(slug, chapter, text):
     return _render_chapter(slug, chapter, text)
 
 
+_TAG_RE = re.compile(r"<[^>]+>")
+_STRONGS_RE = re.compile(r"^([GgHh]?)(\d+)[a-z]?(?:\.\d+)?$")
+
+
+def _word_profile(strongs: str):
+    """Lemma, definition, occurrence distribution, top renderings, and a few sample
+    references for one Strong's number — reusing the Lexicon tab's own SQL so it
+    can't drift. Returns None if there's no lexicon/bdb entry."""
+    m = _STRONGS_RE.match((strongs or "").strip())
+    if not m:
+        return None
+    prefix, num = m.group(1).upper(), m.group(2)
+    is_heb = prefix == "H" or (not prefix and int(num) > 5624)
+    sid = f"H{num}" if is_heb else f"G{num}"
+    conn = db_ro()
+    try:
+        if is_heb:
+            row = conn.execute("SELECT lemma, xlit, description FROM bdb WHERE strongs_id = ?", (sid,)).fetchone()
+            if not row:
+                return None
+            lemma, translit = row["lemma"] or "", row["xlit"] or ""
+            definition = _TAG_RE.sub("", row["description"] or "").strip()
+            lang = "Hebrew"
+        else:
+            row = conn.execute("SELECT lemma, translit, strongs_def, kjv_def FROM lexicon WHERE strongs = ?", (num,)).fetchone()
+            if not row:
+                return None
+            lemma, translit = row["lemma"] or "", row["translit"] or ""
+            definition = _TAG_RE.sub("", row["strongs_def"] or row["kjv_def"] or "").strip()
+            lang = "Greek"
+        # occurrence counts per book: ABP interlinear + KJV text (same as the lexicon "all")
+        counts: dict[str, int] = {}
+        for r in conn.execute("SELECT v.book AS b, COUNT(*) AS c FROM words w JOIN verses v ON w.verse_id = v.id "
+                              "WHERE w.strongs_base = ? GROUP BY v.book", (sid,)):
+            counts[r["b"]] = counts.get(r["b"], 0) + r["c"]
+        for r in conn.execute("SELECT kw.book_id AS bid, COUNT(*) AS c FROM kjv_strongs ks "
+                              "JOIN kjv_words kw ON kw.word_id = ks.word_id WHERE ks.strongs_id = ? GROUP BY kw.book_id", (sid,)):
+            ab = _ABBR_BY_ID.get(r["bid"])
+            if ab:
+                counts[ab] = counts.get(ab, 0) + r["c"]
+        total = sum(counts.values())
+        books = [{"slug": _BOOKS[b][1], "name": _BOOKS[b][0], "count": c}
+                 for b, c in sorted(counts.items(), key=lambda x: -x[1]) if b in _BOOKS]
+        # top renderings
+        if is_heb:
+            grows = conn.execute("SELECT kw.word AS g, COUNT(*) AS c FROM kjv_strongs ks "
+                                 "JOIN kjv_words kw ON kw.word_id = ks.word_id WHERE ks.strongs_id = ? "
+                                 "GROUP BY kw.word ORDER BY c DESC LIMIT 8", (sid,)).fetchall()
+        else:
+            grows = conn.execute("SELECT english AS g, COUNT(*) AS c FROM words WHERE strongs_base = ? "
+                                 "AND english IS NOT NULL AND english NOT IN ('', '*') "
+                                 "GROUP BY english ORDER BY c DESC LIMIT 8", (sid,)).fetchall()
+        glosses = [{"g": r["g"], "c": r["c"]} for r in grows if r["g"]]
+        # a handful of sample references (linked to chapter pages)
+        refs, seen = [], set()
+        if is_heb:
+            rrows = conn.execute("SELECT kw.book_id AS bid, kw.chapter AS ch, kw.verse_num AS v FROM kjv_strongs ks "
+                                 "JOIN kjv_words kw ON kw.word_id = ks.word_id WHERE ks.strongs_id = ? "
+                                 "ORDER BY kw.book_id, kw.chapter, kw.verse_num LIMIT 40", (sid,)).fetchall()
+            cand = [(_ABBR_BY_ID.get(r["bid"]), r["ch"], r["v"]) for r in rrows]
+        else:
+            rrows = conn.execute("SELECT v.book AS b, v.chapter AS ch, v.verse AS v FROM words w "
+                                 "JOIN verses v ON w.verse_id = v.id WHERE w.strongs_base = ? "
+                                 "ORDER BY v.id LIMIT 40", (sid,)).fetchall()
+            cand = [(r["b"], r["ch"], r["v"]) for r in rrows]
+        for ab, ch, vv in cand:
+            if not ab or ab not in _BOOKS:
+                continue
+            key = (ab, ch, vv)
+            if key in seen:
+                continue
+            seen.add(key)
+            refs.append({"slug": _BOOKS[ab][1], "name": _BOOKS[ab][0], "ch": ch, "v": vv})
+            if len(refs) >= 8:
+                break
+        return {"sid": sid, "lemma": lemma, "translit": translit, "definition": definition,
+                "lang": lang, "total": total, "books": books, "glosses": glosses, "refs": refs}
+    finally:
+        conn.close()
+
+
+@bp.route("/word/<strongs>")
+def word_page(strongs):
+    prof = _word_profile(strongs)
+    if not prof:
+        abort(404)
+    if strongs != prof["sid"]:          # normalize /word/g3056, /word/3056 → /word/G3056
+        return redirect(f"/word/{prof['sid']}", code=301)
+    head = " ".join(x for x in (prof["lemma"], f"({prof['translit']})" if prof["translit"] else "") if x)
+    desc = f"{prof['sid']} {head} — {prof['lang']} word study on Lexica. " + (prof["definition"][:160])
+    return render_template(
+        "seo/word.html", w=prof,
+        title=f"{prof['sid']} {prof['lemma']} — {prof['lang']} Word Study, Strong's | Lexica",
+        description=desc.strip(),
+        canonical=f"{CANON}/word/{prof['sid']}",
+        reader_url=f"/?lex={prof['sid']}",
+    )
+
+
+_WORD_SIDS: list[str] | None = None
+_CLEAN_SID = re.compile(r"^[GH]\d+$")
+
+
+def _word_sids() -> list[str]:
+    """Every Strong's number that actually occurs in the corpus (so the sitemap only
+    lists word pages that have content). Computed once, then cached."""
+    global _WORD_SIDS
+    if _WORD_SIDS is not None:
+        return _WORD_SIDS
+    sids: set[str] = set()
+    conn = db_ro()
+    try:
+        for r in conn.execute("SELECT DISTINCT strongs_base AS s FROM words WHERE strongs_base LIKE 'G%'"):
+            sids.add(r["s"])
+        for r in conn.execute("SELECT DISTINCT strongs_id AS s FROM kjv_strongs"):
+            sids.add(r["s"])
+        try:
+            for r in conn.execute("SELECT DISTINCT strongs_id AS s FROM bsb_strongs"):
+                sids.add(r["s"])
+        except sqlite3.OperationalError:
+            pass
+    finally:
+        conn.close()
+    try:
+        hc = heb_db()
+        try:
+            for r in hc.execute("SELECT DISTINCT strongs AS s FROM heb_words"):
+                if r["s"]:
+                    sids.add(r["s"])
+        finally:
+            hc.close()
+    except sqlite3.OperationalError:
+        pass
+    _WORD_SIDS = sorted(s for s in sids if s and _CLEAN_SID.match(s))
+    return _WORD_SIDS
+
+
 @bp.route("/sitemap.xml")
 def sitemap():
     urls = [f"{CANON}/", f"{CANON}/read/"]
@@ -461,6 +599,8 @@ def sitemap():
                 if t == "heb" and not _is_ot(abbrev):
                     continue
                 urls.append(f"{CANON}/read/{slug}/{c}/{t}")
+    for sid in _word_sids():
+        urls.append(f"{CANON}/word/{sid}")
     body = "\n".join(f"  <url><loc>{escape(u)}</loc></url>" for u in urls)
     xml = ('<?xml version="1.0" encoding="UTF-8"?>\n'
            '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'

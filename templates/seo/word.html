@@ -1,0 +1,36 @@
+{% extends "seo/_base.html" %}
+{% block title %}{{ title }}{% endblock %}
+{% block description %}{{ description }}{% endblock %}
+{% block head_extra %}
+  <script type="application/ld+json">
+  {"@context":"https://schema.org","@type":"DefinedTerm","name":"{{ w.lemma }}","termCode":"{{ w.sid }}",
+   "description":"{{ w.definition|truncate(200, true, '') }}",
+   "inDefinedTermSet":"{{ w.lang }} Strong's lexicon"}
+  </script>
+{% endblock %}
+{% block main %}
+  <p class="crumb"><a href="/read/">Browse</a> › {{ w.lang }} word</p>
+  <h1 class="word-h1"><span class="word-lemma">{{ w.lemma }}</span>
+    {% if w.translit %}<span class="word-xlit">{{ w.translit }}</span>{% endif %}
+    <span class="word-sid">{{ w.sid }}</span></h1>
+  <p class="sub">{{ w.lang }} · Strong's {{ w.sid }}{% if w.total %} · appears {{ w.total }}×{% endif %}</p>
+
+  {% if w.definition %}<p class="word-def">{{ w.definition }}</p>{% endif %}
+
+  <a class="open" href="{{ reader_url }}">Open in the word-study tool →</a>
+
+  {% if w.glosses %}
+    <div class="heading">Rendered as</div>
+    <p class="word-glosses">{% for g in w.glosses %}<span class="gloss">{{ g.g }}<span class="gloss-c">{{ g.c }}</span></span>{% endfor %}</p>
+  {% endif %}
+
+  {% if w.books %}
+    <div class="heading">Where it appears</div>
+    <p class="word-glosses">{% for b in w.books %}<a class="gloss" href="/read/{{ b.slug }}">{{ b.name }}<span class="gloss-c">{{ b.count }}</span></a>{% endfor %}</p>
+  {% endif %}
+
+  {% if w.refs %}
+    <div class="heading">Example passages</div>
+    <ul class="reflist">{% for r in w.refs %}<li><a href="/read/{{ r.slug }}/{{ r.ch }}">{{ r.name }} {{ r.ch }}:{{ r.v }}</a></li>{% endfor %}</ul>
+  {% endif %}
+{% endblock %}
