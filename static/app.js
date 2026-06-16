@@ -3859,7 +3859,7 @@ function CrossRefPanel({
     className: "variant-gloss"
   }, "\u201C", vn.gloss, "\u201D"), vn.ref && /*#__PURE__*/React.createElement("span", {
     className: "variant-ref"
-  }, " \u2014 ", vn.op.startsWith("add") ? "added at our" : "in place of our", " \u201C", vn.ref, "\u201D")))), (loading || synthesis) && /*#__PURE__*/React.createElement("section", {
+  }, " \u2014 ", vn.op.startsWith("add") ? "added at" : "in place of", " \u201C", vn.ref, "\u201D")))), (loading || synthesis) && /*#__PURE__*/React.createElement("section", {
     className: "sec"
   }, /*#__PURE__*/React.createElement("h4", {
     className: "sec-head"
