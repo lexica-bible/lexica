@@ -11057,11 +11057,16 @@ function LibraryView({
     className: "mbar-loc-name"
   }, nonCanon ? nonCanon.name : selBook ? selBook.name : ""), /*#__PURE__*/React.createElement("span", {
     className: "mbar-loc-ch"
-  }, selChapter)))), audioCapable && /*#__PURE__*/React.createElement("button", {
+  }, selChapter)))), /*#__PURE__*/React.createElement("button", {
     className: "mbar-overview mbar-audio" + (showPause ? " on" : ""),
-    disabled: audioBusy,
-    onClick: onToolbarAudio,
-    "aria-label": showPause ? "Pause audio" : "Play chapter audio"
+    disabled: !audioCapable || audioBusy,
+    style: !audioCapable ? {
+      opacity: 0.35
+    } : undefined,
+    onClick: () => {
+      if (audioCapable) onToolbarAudio();
+    },
+    "aria-label": !audioCapable ? "Audio not available for this text" : showPause ? "Pause audio" : "Play chapter audio"
   }, showPause ? /*#__PURE__*/React.createElement(Icon.Pause, null) : /*#__PURE__*/React.createElement(Icon.Play, null)), /*#__PURE__*/React.createElement("button", {
     className: "mbar-trans",
     onClick: () => setModesOpen(true),

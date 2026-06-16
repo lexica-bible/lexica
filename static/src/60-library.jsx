@@ -1577,12 +1577,13 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
               )}
             </button>
           </div>
-          {audioCapable && (
-            <button className={"mbar-overview mbar-audio" + (showPause ? " on" : "")} disabled={audioBusy}
-              onClick={onToolbarAudio} aria-label={showPause ? "Pause audio" : "Play chapter audio"}>
-              {showPause ? <Icon.Pause/> : <Icon.Play/>}
-            </button>
-          )}
+          <button className={"mbar-overview mbar-audio" + (showPause ? " on" : "")}
+            disabled={!audioCapable || audioBusy}
+            style={!audioCapable ? { opacity: 0.35 } : undefined}
+            onClick={() => { if (audioCapable) onToolbarAudio(); }}
+            aria-label={!audioCapable ? "Audio not available for this text" : (showPause ? "Pause audio" : "Play chapter audio")}>
+            {showPause ? <Icon.Pause/> : <Icon.Play/>}
+          </button>
           <button className="mbar-trans" onClick={() => setModesOpen(true)} aria-label="Reading options">
             {nonCanon ? (nonCanon.abbr || nonCanon.name) : translation === "parallel" ? "Par" : translation.toUpperCase()}
           </button>
