@@ -1621,8 +1621,10 @@ input { font-family: inherit; }
      handler already skips .lib-flow-vnum, so this wider target never steals a
      tap-to-enter-reading-mode. */
   .lib-flow-vnum {
-    padding: 6px 8px;
-    margin-left: -4px;
+    padding: 8px 6px;
+    /* negative side margins cancel the horizontal padding so the number sits
+       tight to the verse text (no big gap) while the box stays a tall tap target */
+    margin: 0 -4px 0 -4px;
     touch-action: manipulation;
   }
 }
