@@ -136,17 +136,17 @@ def iter_db_verses(con):
     """Yield (verse_id, book_abbrev, chapter, verse, [(position, base_strongs), ...])
     per ABP verse, words in position order."""
     cur = con.execute(
-        "SELECT v.id, v.book, v.chapter, v.verse, w.position, w.strongs_base "
+        "SELECT v.id, v.book, v.chapter, v.verse, w.position, w.strongs_base, w.strongs "
         "FROM verses v JOIN words w ON w.verse_id = v.id "
         "ORDER BY v.id, w.position"
     )
     cur_id, rec = None, None
-    for vid, book, ch, vs, pos, sb in cur:
+    for vid, book, ch, vs, pos, sb, full in cur:
         if vid != cur_id:
             if rec:
                 yield rec
             cur_id, rec = vid, (vid, book, ch, vs, [])
-        rec[4].append((pos, base(sb or "")))
+        rec[4].append((pos, base(sb or ""), (full or "").strip()))
     if rec:
         yield rec
 
@@ -171,14 +171,18 @@ def build(db_path, rahlfs_dir, tagnt_paths, bh_db, dry_run):
     # Dictionary lemma per Strong's (bare key), for the "really different?" filter on
     # the bh source. lexicon.strongs_g is 'G####'; base() -> bare to match the words.
     lemmas = {}
+    dotted_lemmas = {}                       # full dotted G-number -> corrected lemma
     if use_bh:
         for sg, lem in con.execute("SELECT strongs_g, lemma FROM lexicon"):
             if sg:
                 lemmas[base(sg)] = lem or ""
+        if con.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='dotted_lexicon'").fetchone():
+            for s, lem in con.execute("SELECT strongs, lemma FROM dotted_lexicon"):
+                dotted_lemmas[s] = lem or ""
 
     for vid, book, ch, vs, words in iter_db_verses(con):
         is_nt = book in _NT
-        a_raw = [sb for _pos, sb in words]
+        a_raw = [sb for _pos, sb, _full in words]
 
         if use_bh:
             slug = bh.slug(book)
@@ -197,7 +201,7 @@ def build(db_path, rahlfs_dir, tagnt_paths, bh_db, dry_run):
             b_al = [_norm(b) for b in b_bases]
             pairs = align(a_al, b_al, [False] * len(b_al))
             amap = {ai: bj for ai, bj in pairs if ai >= 0}
-            for i, (pos, sb) in enumerate(words):
+            for i, (pos, sb, full) in enumerate(words):
                 if is_nt:
                     st["nt_w"] += 1
                 else:
@@ -216,7 +220,7 @@ def build(db_path, rahlfs_dir, tagnt_paths, bh_db, dry_run):
                     st["nt_f"] += 1
                 else:
                     st["ot_f"] += 1
-                lem = lemmas.get(sb, "")
+                lem = dotted_lemmas.get("G" + full) or lemmas.get(sb, "")
                 if lem and strip_marks(form) == strip_marks(lem):
                     continue   # ABP prints it the same as the dictionary word → no line
                 rows.append((vid, pos, form, ""))
@@ -242,7 +246,7 @@ def build(db_path, rahlfs_dir, tagnt_paths, bh_db, dry_run):
         b_pron  = [t[2] for t in sverse]
         pairs = align(a_raw, b_bases, b_pron)
         amap = {ai: bj for ai, bj in pairs if ai >= 0}
-        for i, (pos, sb) in enumerate(words):
+        for i, (pos, sb, _full) in enumerate(words):
             if kind == "ot":
                 st["ot_w"] += 1
             else:
