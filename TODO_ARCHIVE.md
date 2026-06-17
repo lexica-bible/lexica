@@ -6,6 +6,37 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Study tab — public go-live + study↔reader links + speedup — DONE 2026-06-16
+
+The Study tab (admin-only since 2026-06-12) opened to the public, plus a batch of linking/perf/UX work.
+Full record: memory `project_study_modules`.
+- **Go-live:** published TOPICS + the metaV NAME-topics are now readable by anyone, no login;
+  denominations/arguments, drafts, and all editing/writes stay admin-only; private `notes` stripped for
+  readers. Backend split the old all-admin `_guard` into write-only; reads branch on `is_admin`. Name-topics
+  imported as drafts, so `publish_topics.py` got a `--names` flag (the plain script only flipped concept topics).
+- **Two-way links:** study verse references are clickable (jump into the reader); tapping a verse number shows
+  an "In studies:" line in the xref panel (`/api/study/for-verse`, a cached verse→topics index that includes
+  **hand-authored studies only** — excludes `source='metav'` so the giant Nave's imports, e.g. Psalms=1008
+  verses, don't blanket the reader).
+- **Speedup:** opening a topic was ~5 reads PER verse (9–13s on big topics, nothing cached). Now one batched
+  pass (`_resolve_map`) + an in-process cache → ~1–2s.
+- **Verse-add box fix + `add_study_topic.py` loader** (load a hand-authored topic via dry-run/--apply; first
+  use: Divine Council).
+
+Lessons worth keeping:
+- **Plain `git pull` does NOT reload the web app** — it bit us repeatedly this session (new routes 404'd,
+  backend changes didn't take, the browser kept a cached `app.js`). Use `deploy.sh` (pull + reload) and
+  hard-refresh; if a just-shipped change "isn't working," suspect a missed reload FIRST. (Now called out in
+  memory `feedback-deploy-command`.)
+- **A query param can be silently dropped before the app.** The editor's `GET /api/study/verse?ref=…`
+  arrived with an EMPTY ref (400) for the admin — every POST-with-JSON call worked, only the GET-with-an-
+  encoded-query (space+colon) lost its param (root cause never pinned — proxy/edge sanitization suspected;
+  service worker ruled out). Fix: made it a POST body. If a GET query param ever vanishes again, switch to a
+  body before chasing ghosts.
+- **Keep the in-app editor even though the loader exists** — it's admin-only (invisible to readers) and is the
+  only home for the `✦ Draft with AI` intro (uses the WSGI key, no shell key), quick edits, and denom/argument
+  types. Loader = bulk drop-in; editor = touch-ups + intros.
+
 ## SEO / search discoverability — DONE 2026-06-16
 
 The site was invisible to Google: the React app served an empty shell with no per-passage URLs, and

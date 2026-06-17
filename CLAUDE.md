@@ -218,21 +218,28 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   `/api/hebrew/chapter/<book>/<ch>`, and `/api/hebrew/verse-words/<book>/<ch>/<v>` (one verse, added
   2026-06-13 to feed the word-detail side panel's interlinear). Full record: memory
   `project_hebrew_ot_interlinear`.
-  `study.db` — **admin-only** authored "study modules" (built 2026-06-12/13): one `entries` table (row
-  per topic / denomination / argument / name; `json` body + `type` + `status`). Served by admin-gated
-  `views_study.py` (`core.study_db()`); the **Study** tab (`static/src/55-study.jsx`). TOPICS = a
+  `study.db` — authored "study modules" (built 2026-06-12/13; **topics opened to the PUBLIC 2026-06-16**):
+  one `entries` table (row per topic / denomination / argument / name; `json` body + `type` + `status`).
+  Served by `views_study.py` (`core.study_db()`); the **Study** tab (`static/src/55-study.jsx`). TOPICS = a
   sectioned browse (collapsible subtopics + a BOOK sub-collapse, alphabetical, comma-flipped display
   titles); DENOMINATIONS = a position→support→tension→resolution claim editor; ARGUMENTS = a TWO-SIDED
-  layout (Side A | Side B, each its own claim+verses, + resolution — its own `sides` shape, NOT the
-  denom shape). All types open READ-first (Edit button, admin). A "Preview as reader" admin toggle skins
-  the tab as a visitor would see it (published-only, no editing). Verse text = ABP prose (KJV fallback).
-  Topic INTROS are AI-written, text-first Berean (Haiku default / Sonnet for the public batch,
-  `_draft_intro` + the `_INTRO_SYSTEM` prompt) and STORED on the topic — a "✦ Draft with AI" button +
-  `scripts/generate_topic_intros.py` (`--common`/`--order size`/`--sonnet`; needs `ANTHROPIC_API_KEY`
-  exported, it's in the WSGI not the shell). MetaV/Nave's topics imported by `scripts/load_study_topics.py`
-  (concepts → browser; person/place names → a "Nave's topical" sidebar block). Other scripts:
-  `publish_topics.py` (draft↔published flag), `find_topics.py`, `find_topic_dupes.py`, `merge_the_dupes.py`
-  (folds "X, the"→"X"). Modules are admin-only; opening published topics to the public is a PENDING flip.
+  layout (Side A | Side B + resolution — its own `sides` shape, NOT the denom shape). All types open
+  READ-first (Edit button, admin); a "Preview as reader" admin toggle skins the tab as a visitor sees it.
+  Verse text = ABP prose (KJV fallback).
+  **GATING (go-live 2026-06-16): READING is split — published TOPICS + the metaV NAME-topics are PUBLIC
+  (no login); denominations/arguments, all DRAFTS, and every WRITE/editor route stay admin-only; private
+  `notes` are stripped from anything served to a reader.** Two-way study↔reader links: a study's verse
+  references are clickable (jump into the reader — the resolver returns book/chapter/verse), and tapping a
+  verse number shows an "In studies:" line in the xref panel (`/api/study/for-verse/<book>/<ch>/<v>`, a
+  cached verse→topics index that includes HAND-AUTHORED studies only — `source != 'metav'`, so the giant
+  Nave's imports don't blanket the text). PERF: a whole entry resolves in one batched pass (`_resolve_map`)
+  + an in-memory `_RESOLVED_CACHE` (a 1000-verse topic opened ~13s→~1s). The editor's verse lookup is
+  **`POST /api/study/verse`** (a query param was silently dropped before the app) and normalizes a typed
+  ref to its full book name (`_canonical_ref`: gen 1:1 → Genesis 1:1). Topic INTROS are AI-written,
+  text-first Berean (`✦ Draft with AI` button uses the WSGI key; `_draft_intro`/`_INTRO_SYSTEM`).
+  Scripts: `add_study_topic.py` (load a hand-authored topic; dry-run default / `--apply`),
+  `load_study_topics.py` (MetaV import), `generate_topic_intros.py`, `publish_topics.py` (draft↔published;
+  **`--names`** for the metaV name-topics), `find_topics.py`, `find_topic_dupes.py`, `merge_the_dupes.py`.
   Full record: memory `project_study_modules`.
 - `<book>_words` / `<book>_verses` — non-canonical texts, each in its OWN two tables, walled off
   from the Bible's tables and from search/word counts. Built by `scripts/load_extra.py`; served by

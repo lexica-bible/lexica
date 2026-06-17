@@ -377,19 +377,21 @@ category *names* (renamed to drop loaded framing); generate the actual verses an
 Berean-style. Build a quick proof-of-concept with the off-the-shelf topic→verse mappings first to see
 if people use it, then swap in our own verse selection. Could be a new tab or a mode inside Search.
 
-### Study modules — admin Study tab (LIVE 2026-06-12/13; full record: memory project_study_modules)
-Admin-only **Study** tab: Topics (sectioned browse — collapsible subtopics + a book sub-collapse,
-alphabetical, comma-flipped display titles) · Denominations (support/tension editor) · Arguments
-(two-sided Side A | Side B + resolution). All types read-first; "Preview as reader" admin toggle;
-AI-drafted Berean topic intros (Haiku default / Sonnet for the public batch, sharpened prompt — ✦ button +
-`scripts/generate_topic_intros.py`). MetaV/Nave's import (~1,819 concepts + 696 name-topics; Nave's-topical
-sidebar block). Publish + dupe scripts: publish_topics, find_topics, find_topic_dupes, merge_the_dupes. OPEN:
-- **PUBLIC "go-live" flip** — open published Study topics to actual visitors (everything's admin-only
-  Preview until then). The big remaining step/decision.
+### Study modules — Study tab (LIVE 2026-06-12/13; **PUBLIC 2026-06-16**; full record: memory project_study_modules)
+**Study** tab: Topics (sectioned browse) · Denominations (support/tension) · Arguments (two-sided + resolution).
+**WENT PUBLIC 2026-06-16** (was the big "go-live" decision): published Topics + the metaV name-topics are now
+readable by anyone, no login; denominations/arguments + drafts + all editing stay admin-only. Also shipped
+this round (all DONE + LIVE, see TODO_ARCHIVE + memory): two-way study↔reader links (clickable verse refs;
+"In studies" line in the xref panel via `/api/study/for-verse`, hand-authored studies only); the ~13s→~1s
+topic-open speedup (bulk resolve + cache); the verse-add box fix (POST lookup; was dropping its query param)
++ typed-ref normalization; `add_study_topic.py` loader; `publish_topics.py --names`.
+OPEN:
 - Drop the place "Sin" entry (Sin (1)/(2) — one is the Wilderness of Sin) from the `_COMMON` list.
 - Optional: scope the alphabetical list sort to Topics if denom/arg should stay newest-first; the few
-  ambiguous "X, the Y" titles ("God, the Father") stay un-flipped. (MetaV `Writers` fold-in DONE — see archive.)
-`code: views_study.py + static/src/55-study.jsx; scripts/{load_study_topics,generate_topic_intros,publish_topics,find_topics,find_topic_dupes,merge_the_dupes}.py; memory project_study_modules`
+  ambiguous "X, the Y" titles ("God, the Father") stay un-flipped.
+- Optional later: open DENOMINATIONS/ARGUMENTS to the public too (kept admin-only on purpose — they take
+  positions). Would reuse the same read-gate, with the same source-aware care.
+`code: views_study.py + static/src/55-study.jsx; scripts/{add_study_topic,load_study_topics,generate_topic_intros,publish_topics,find_topics,find_topic_dupes,merge_the_dupes}.py; memory project_study_modules`
 
 ### ~~Chronological reading mode~~ — DONE + LIVE 2026-06-09 (desktop + mobile)
 Read the Bible in event order, works with ANY version (ABP/KJV/BSB). Shipped as a reading-ORDER
