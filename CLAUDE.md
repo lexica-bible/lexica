@@ -102,8 +102,8 @@ Pick effort by task TYPE. When in doubt, lean higher — the plan affords it.
   - **LINE-ENDINGS for the app.js check (cost a CI fail 2026-06-14; the "all CRLF" claim CORRECTED
     same day):** Keep `git config core.autocrlf false` — with `autocrlf=true` (Git-for-Windows default)
     your local `git diff` HIDES CR mismatches, so a wrong `app.js` slips past the hook and CI rejects it
-    as stale. The `static/src/*.jsx` files are MIXED, NOT all CRLF: some LF (60-library.jsx, 90-app.jsx),
-    some CRLF (59a/59b, 10-icons, 30-detail-panel, 59-dayintro). Babel keeps a `/* */` block comment's
+    as stale. The `static/src/*.jsx` files are MIXED, NOT all CRLF: some LF (60-library.jsx, 90-app.jsx,
+    30-detail-panel), some CRLF (59a/59b, 10-icons, 59-dayintro). Babel keeps a `/* */` block comment's
     CRLF in `app.js`, so app.js carries 4 CRLF from the CRLF sources — the build reproduces them, so CI
     matches as long as you commit src + app.js together. RULE: match a file's EXISTING endings; do NOT
     flip a whole file (noisy diff + changes app.js's CRLF set). Check real endings with `xxd`/a byte
@@ -498,7 +498,11 @@ Full detail: memory `project_notes_highlights`. The headline facts:
 - Step 2: Sonnet (claude-sonnet-4-6) writes the synthesis — adaptive length (~100-word soft
   ceiling, runs longer for a rich link), anchored in ABP source vocabulary. Prompt carries a
   worked example. (Moved off Haiku 2026-06-09 — ONLY the synthesis is Sonnet; the Step-1 picker
-  and every other AI feature stay on Haiku.)
+  and every other AI feature stay on Haiku.) BOTH the source verse AND the curated cross-refs are
+  fed to it in ABP (2026-06-17, `_abp_text` in views_crossref.py; KJV only as a fallback when ABP's
+  versification lacks a verse) — so the write-up no longer quotes KJV "thou/thee". A `msg:` salt in
+  `_XREF_VER` was bumped so cached rows refresh (the fingerprint covers the prompts, not the
+  message text, so a message change needs the manual salt).
 - Cached in ai_search_cache, key prefix `xref_cur:`/`xref_synth:`, ver_key=`xref:<hash>`
   (fingerprint of the two xref prompts — see "AI result cache" below)
 

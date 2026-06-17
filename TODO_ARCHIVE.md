@@ -6,6 +6,38 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Word-study def + cross-ref synthesis: text-first cleanup — DONE 2026-06-17
+
+Three small fixes, all live (pushed; deployed and confirmed by the user):
+- **Cross-ref synthesis reads the cross-refs in ABP, not KJV** (commit f105b05). The "Related passages"
+  write-up was quoting verses in KJV ("thou gavest", "thou hast hearkened" on Gen 3:6) because Torrey's TSK
+  is stored against KJV verses and only the SOURCE verse was fed in ABP. Now each curated ref is rebuilt
+  from ABP (`_abp_text` in views_crossref.py — interlinear english joined in order, the same text the panel
+  shows), KJV only as a versification-miss fallback. **LESSON:** the AI-cache fingerprint (`_XREF_VER`)
+  covers the PROMPTS only — changing what TEXT you feed (the user message) does NOT change the hash, so
+  cached rows keep serving the old output. Bump a manual salt (`"msg:abp-refs-1"`) when the message
+  construction changes. Memory `project_ai_synthesis_quality`.
+- **LSJ Strong's-fallback def leads with the KJV rendering** (commit 769d269). A word with no LSJ entry
+  (2 Peter 2:4 ταρταρόω G5020) showed ONLY `lexicon.strongs_def` — Strong's paraphrase "to incarcerate in
+  eternal torment", imported doctrine the text-first rule rejects. Now: `kjv_def` ("cast down to hell") →
+  `derivation` → `strongs_def` (last resort). Affects every LSJ-gap word. Memory `project_lsj_lookup`.
+  Follow-up left open (TODO #5): the Search/Lexicon RESULT cards still read raw `strongs_def`.
+- **Hero headword auto-shrinks to fit** (commit 503df96). Long names (Nebuchadnezzar) overflowed the word
+  card at the fixed 56/46px; a measure-and-scale `useLayoutEffect` (`heroRef`, 30-detail-panel.jsx) now
+  shrinks an over-long headword to one line (22px floor, re-fits on word/layout/resize/font-load). Memory
+  `project_detail_panel_interlinear`. Don't re-pin `.detail-greek`'s font-size.
+
+Also captured this session (not built): the "let published study TOPICS shape AI search answers" idea,
+with the hardcoded divine-council corpus in ai.py as the one-off it would replace — kept as an open item
+in TODO.md ("Let study results shape AI search answers").
+
+LINE-ENDING note (same recurring gotcha): the editor flipped views_crossref.py LF→CRLF on a multi-line
+edit (a ~600-line phantom diff), caught from the commit's +/- count and fixed before pushing; views_lsj.py
+and 30-detail-panel.jsx edited the same session stayed LF. Confirmed 30-detail-panel.jsx is all-LF (the
+docs had wrongly listed it CRLF — corrected). Full lore: memory `project_frontend_build_step`.
+
+---
+
 ## ABP dotted Strong's headword + word-card formatting — DONE 2026-06-17
 
 The word-study card showed the WRONG Greek headword for ABP's dotted Strong's numbers — e.g. Gen 1:2

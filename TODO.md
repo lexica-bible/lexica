@@ -73,6 +73,14 @@ Still open:
    AND clicks through by the BASE number end-to-end, so a display-only swap would show one word but open another.
    Doing it right means treating a dotted-different-word as its own lexicon entry (regroup by the full `G###.N` +
    carry the full number through the click) — a real change, low priority. `code: views_lexicon.py`
+5. **Strong's-fallback def: align Search/Lexicon result cards with the word card (surfaced 2026-06-17).**
+   The word-study card's no-LSJ-entry fallback now leads with the KJV rendering (`kjv_def`) instead of
+   Strong's interpretive paraphrase (`strongs_def`) — text-first, see TODO_ARCHIVE + memory
+   `project_lsj_lookup`. The Search and Lexicon RESULT cards still read `strongs_def` directly, so the same
+   editorial phrasing (e.g. G5020 "to incarcerate in eternal torment") can still show there. Low priority;
+   mirror the `kjv_def → derivation → strongs_def` order if you want it consistent. Also dead code to delete:
+   the `/api/cross-references/synthesis/` route (`cross_ref_synthesis`) is unused by the frontend (only
+   `/curated/` is called) and still feeds KJV. `code: views_search.py, views_lexicon.py, views_crossref.py`
 
 ---
 
