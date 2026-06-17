@@ -891,6 +891,9 @@ input { font-family: inherit; }
   gap: 5px;
 }
 .detail-hero-occ { margin-top: 6px; }
+/* No inflected form (indeclinables like prepositions): the lone parsing line sits
+   neatly under the gloss instead of floating with the full group-break gap. */
+.detail-hero-occ--tight { margin-top: 0; }
 .detail-greek {
   font-family: var(--f-greek);
   font-size: 56px;

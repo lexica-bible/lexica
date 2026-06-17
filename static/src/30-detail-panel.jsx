@@ -816,7 +816,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             )}
           </div>
           {(heroForm || hero.morph) && (
-            <div className="detail-hero-occ">
+            <div className={"detail-hero-occ" + (heroForm ? "" : " detail-hero-occ--tight")}>
               {heroForm && <span className="detail-form-label">in this verse</span>}
               {heroForm && (
                 <span className={"detail-form-w" + (hero.he ? " detail-form-w--he" : "")}

@@ -3034,7 +3034,7 @@ function DetailPanel({
   }, hero.standaloneGloss))), !hero.noGloss && !heroInlineGloss && /*#__PURE__*/React.createElement("div", {
     className: "detail-gloss"
   }, hero.standaloneGloss)), (heroForm || hero.morph) && /*#__PURE__*/React.createElement("div", {
-    className: "detail-hero-occ"
+    className: "detail-hero-occ" + (heroForm ? "" : " detail-hero-occ--tight")
   }, heroForm && /*#__PURE__*/React.createElement("span", {
     className: "detail-form-label"
   }, "in this verse"), heroForm && /*#__PURE__*/React.createElement("span", {
