@@ -802,15 +802,6 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
                dir={hero.he ? "rtl" : undefined}>
             {hero.script}
           </div>
-          {heroForm && (
-            <div className="detail-form">
-              <span className={"detail-form-w" + (hero.he ? " detail-form-w--he" : "")}
-                    dir={hero.he ? "rtl" : undefined}>{heroForm}</span>
-              {heroInflectedTranslit && heroInflectedTranslit !== hero.translit && (
-                <span className="detail-form-tr">{heroInflectedTranslit}</span>
-              )}
-            </div>
-          )}
           {(hero.translit || heroInlineGloss) && (
             <div className={"detail-translit-row" + (hero.he ? " detail-translit-row-he" : "")}>
               <span className="detail-translit">{hero.translit}</span>
@@ -821,6 +812,16 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
           )}
           {!hero.noGloss && !heroInlineGloss && (
             <div className="detail-gloss">{hero.standaloneGloss}</div>
+          )}
+          {heroForm && (
+            <div className="detail-form">
+              <span className="detail-form-label">in this verse</span>
+              <span className={"detail-form-w" + (hero.he ? " detail-form-w--he" : "")}
+                    dir={hero.he ? "rtl" : undefined}>{heroForm}</span>
+              {heroInflectedTranslit && heroInflectedTranslit !== hero.translit && (
+                <><span className="detail-sep">·</span><span className="detail-form-tr">{heroInflectedTranslit}</span></>
+              )}
+            </div>
           )}
           {hero.morph && <div className="detail-morph">{hero.morph}</div>}
         </div>

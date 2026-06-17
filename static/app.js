@@ -3021,14 +3021,7 @@ function DetailPanel({
   }, /*#__PURE__*/React.createElement("div", {
     className: "detail-greek" + (hero.he ? " detail-greek--he" : !entry.greek ? " detail-greek--latin" : ""),
     dir: hero.he ? "rtl" : undefined
-  }, hero.script), heroForm && /*#__PURE__*/React.createElement("div", {
-    className: "detail-form"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "detail-form-w" + (hero.he ? " detail-form-w--he" : ""),
-    dir: hero.he ? "rtl" : undefined
-  }, heroForm), heroInflectedTranslit && heroInflectedTranslit !== hero.translit && /*#__PURE__*/React.createElement("span", {
-    className: "detail-form-tr"
-  }, heroInflectedTranslit)), (hero.translit || heroInlineGloss) && /*#__PURE__*/React.createElement("div", {
+  }, hero.script), (hero.translit || heroInlineGloss) && /*#__PURE__*/React.createElement("div", {
     className: "detail-translit-row" + (hero.he ? " detail-translit-row-he" : "")
   }, /*#__PURE__*/React.createElement("span", {
     className: "detail-translit"
@@ -3038,7 +3031,18 @@ function DetailPanel({
     className: "detail-gloss"
   }, hero.standaloneGloss))), !hero.noGloss && !heroInlineGloss && /*#__PURE__*/React.createElement("div", {
     className: "detail-gloss"
-  }, hero.standaloneGloss), hero.morph && /*#__PURE__*/React.createElement("div", {
+  }, hero.standaloneGloss), heroForm && /*#__PURE__*/React.createElement("div", {
+    className: "detail-form"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "detail-form-label"
+  }, "in this verse"), /*#__PURE__*/React.createElement("span", {
+    className: "detail-form-w" + (hero.he ? " detail-form-w--he" : ""),
+    dir: hero.he ? "rtl" : undefined
+  }, heroForm), heroInflectedTranslit && heroInflectedTranslit !== hero.translit && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", {
+    className: "detail-sep"
+  }, "\xB7"), /*#__PURE__*/React.createElement("span", {
+    className: "detail-form-tr"
+  }, heroInflectedTranslit))), hero.morph && /*#__PURE__*/React.createElement("div", {
     className: "detail-morph"
   }, hero.morph)), sections.map(renderSection)));
 }
