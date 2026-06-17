@@ -47,14 +47,24 @@ def verse_words(book, chapter, verse):
         ).fetchone()
         if not row:
             return jsonify({"error": "verse not found"}), 404
+        # Corrected headword for ABP dotted Strong's (scripts/build_dotted_lexicon.py);
+        # join only if that side table exists, else fall back to the base lexicon lemma.
+        has_dotted = conn.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='dotted_lexicon'"
+        ).fetchone() is not None
+        lem_sel = "COALESCE(dl.lemma, l.lemma) AS lemma"          if has_dotted else "l.lemma"
+        tr_sel  = "COALESCE(dl.translit, l.translit) AS translit" if has_dotted else "l.translit"
+        dl_join = ("LEFT JOIN dotted_lexicon dl ON dl.strongs = 'G' || w.strongs"
+                   if has_dotted else "")
         wrows = conn.execute(
-            """SELECT w.position, w.english, w.english_head, w.greek_pos, w.bracket_id, w.italic,
+            f"""SELECT w.position, w.english, w.english_head, w.greek_pos, w.bracket_id, w.italic,
                       COALESCE(w.italic_words, '') AS italic_words,
                       w.strongs_base, w.strongs, w.is_pn, w.morph,
-                      l.lemma, l.translit, l.kjv_def, l.strongs_def, l.derivation,
+                      {lem_sel}, {tr_sel}, l.kjv_def, l.strongs_def, l.derivation,
                       t.entity_type AS pn_type, t.entity_types AS pn_types
                FROM words w
                LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base
+               {dl_join}
                LEFT JOIN tipnr t ON t.strongs = w.strongs_base
                WHERE w.verse_id = ?
                ORDER BY w.position""",
@@ -201,9 +211,19 @@ def chapter_text(book, chapter):
         surf_sel  = ", s.form AS surface_form, s.translit AS surface_translit" if has_surface else ""
         surf_join = ("LEFT JOIN abp_surface s ON s.verse_id = w.verse_id AND s.position = w.position"
                      if has_surface else "")
+        # Corrected headword for the ABP dotted Strong's that are a different word from
+        # their base (scripts/build_dotted_lexicon.py). Join only if that side table is
+        # built; otherwise fall back to the base lexicon lemma (so a pre-build deploy is fine).
+        has_dotted = conn.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='dotted_lexicon'"
+        ).fetchone() is not None
+        lem_sel = "COALESCE(dl.lemma, l.lemma) AS lemma"          if has_dotted else "l.lemma"
+        tr_sel  = "COALESCE(dl.translit, l.translit) AS translit" if has_dotted else "l.translit"
+        dl_join = ("LEFT JOIN dotted_lexicon dl ON dl.strongs = 'G' || w.strongs"
+                   if has_dotted else "")
         rows = conn.execute(
             f"""SELECT v.verse, v.text AS prose, w.position, w.english, w.english_head, w.strongs_base, w.strongs,
-                      l.lemma, l.translit, l.kjv_def, w.greek_pos, w.bracket_id, w.italic, w.is_pn, w.morph,
+                      {lem_sel}, {tr_sel}, l.kjv_def, w.greek_pos, w.bracket_id, w.italic, w.is_pn, w.morph,
                       COALESCE(w.italic_words, '') AS italic_words,
                       COALESCE(w.smcap_words,  '') AS smcap_words,
                       t.entity_type AS pn_type, t.entity_types AS pn_types,
@@ -211,6 +231,7 @@ def chapter_text(book, chapter):
                FROM verses v
                JOIN words w ON w.verse_id = v.id
                LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base
+               {dl_join}
                LEFT JOIN tipnr t ON t.strongs = w.strongs_base
                LEFT JOIN pericopes p ON p.book = v.book AND p.chapter = v.chapter AND p.verse = v.verse
                {surf_join}
