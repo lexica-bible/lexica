@@ -413,6 +413,18 @@ function AccountModal({ onClose }) {
   const label = (t) => PLAN_TEXT_LABELS[t] || t.toUpperCase();
   const clearOne = (t) => { if (window.confirm(`Clear your ${label(t)} reading-plan progress?`)) NotesStore.clearPlan(t); };
   const clearAll = () => { if (window.confirm("Clear ALL reading-plan progress (every text)?")) NotesStore.clearPlan("*"); };
+  const [pw, setPw] = useState("");
+  const [pwMsg, setPwMsg] = useState("");
+  const [pwBusy, setPwBusy] = useState(false);
+  const savePw = async () => {
+    if (pwBusy) return;
+    if (!pw || pw.length < 8) { setPwMsg("At least 8 characters."); return; }
+    setPwBusy(true); setPwMsg("");
+    const r = await NotesStore.setPassword(pw);
+    setPwBusy(false);
+    setPwMsg(r.ok ? "Password updated." : (r.error || "Couldn't update."));
+    if (r.ok) setPw("");
+  };
   return (
     <>
       <div className="auth-scrim" onClick={onClose} />
@@ -443,6 +455,17 @@ function AccountModal({ onClose }) {
           )}
         </div>
 
+        <div className="acct-sec">
+          <div className="acct-sec-h">Password</div>
+          <div className="acct-pw-row">
+            <input className="auth-input" type="password" placeholder="New password" autoComplete="new-password"
+              value={pw} onChange={(e) => setPw(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") savePw(); }} />
+            <button className="acct-plan-clear" onClick={savePw} disabled={pwBusy}>{pwBusy ? "…" : "Set"}</button>
+          </div>
+          {pwMsg && <div className="auth-fine">{pwMsg}</div>}
+          <div className="acct-empty">Set a password to also sign in without Google.</div>
+        </div>
+
         <button className="auth-submit acct-logout" onClick={() => { NotesStore.logout(); onClose(); }}>Log out</button>
       </div>
     </>
@@ -450,25 +473,36 @@ function AccountModal({ onClose }) {
 }
 
 // Centered login / sign-up dialog.
-function AuthModal({ mode, onClose }) {
+// modes: "login" | "signup" | "forgot" (email me a reset link) | "reset" (set a new
+// password from a link's token, passed in resetToken).
+function AuthModal({ mode, onClose, resetToken }) {
   const [m, setM] = useState(mode);
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [err, setErr] = useState("");
+  const [sent, setSent] = useState(false);   // forgot-password confirmation shown
   const [busy, setBusy] = useState(false);
   const [gid, setGid] = useState(null);     // Google Client ID, if configured
   const emailRef = useRef(null);
+  const passRef = useRef(null);
   const gbtnRef = useRef(null);
-  useEffect(() => { requestAnimationFrame(() => emailRef.current && emailRef.current.focus()); }, []);
-
-  // Is "Sign in with Google" turned on for this site?
+  const isPw = m === "login" || m === "signup";   // email + password / Google modes
   useEffect(() => {
-    fetch("/api/auth/config").then(r => r.json()).then(d => setGid(d.google_client_id || null)).catch(() => {});
+    requestAnimationFrame(() => {
+      const el = m === "reset" ? passRef.current : emailRef.current;
+      el && el.focus();
+    });
   }, []);
 
-  // Load Google's button + wire the callback (only when configured).
+  // Is "Sign in with Google" turned on for this site? (login/signup only)
   useEffect(() => {
-    if (!gid) return;
+    if (!isPw) return;
+    fetch("/api/auth/config").then(r => r.json()).then(d => setGid(d.google_client_id || null)).catch(() => {});
+  }, [isPw]);
+
+  // Load Google's button + wire the callback (only when configured + a pw mode).
+  useEffect(() => {
+    if (!gid || !isPw) return;
     let cancelled = false;
     const init = () => {
       if (cancelled || !window.google || !window.google.accounts || !gbtnRef.current) return;
@@ -491,46 +525,93 @@ function AuthModal({ mode, onClose }) {
     }
     s.addEventListener("load", init);
     return () => { cancelled = true; s && s.removeEventListener("load", init); };
-  }, [gid, m]);
+  }, [gid, m, isPw]);
 
   const submit = async () => {
     if (busy) return;
     setBusy(true); setErr("");
+    if (m === "forgot") {
+      await NotesStore.requestReset(email);
+      setBusy(false); setSent(true);   // never reveal whether the email exists
+      return;
+    }
+    if (m === "reset") {
+      const r = await NotesStore.resetPassword(resetToken, pass);
+      setBusy(false);
+      if (r.ok) onClose(); else setErr(r.error || "That reset link is invalid or has expired.");
+      return;
+    }
     const r = m === "signup" ? await NotesStore.signup(email, pass) : await NotesStore.login(email, pass);
     setBusy(false);
-    if (r.ok) onClose();
-    else setErr(r.error || "Something went wrong.");
+    if (r.ok) onClose(); else setErr(r.error || "Something went wrong.");
   };
+
+  const title = m === "signup" ? "Create account"
+    : m === "forgot" ? "Reset password"
+    : m === "reset" ? "Choose a new password" : "Log in";
+  const cta = m === "signup" ? "Create account"
+    : m === "forgot" ? "Send reset link"
+    : m === "reset" ? "Set new password" : "Log in";
 
   return (
     <>
       <div className="auth-scrim" onClick={onClose} />
-      <div className="auth-modal" role="dialog" aria-modal="true" aria-label={m === "signup" ? "Sign up" : "Log in"}>
+      <div className="auth-modal" role="dialog" aria-modal="true" aria-label={title}>
         <div className="auth-modal-head">
-          <h3 className="auth-modal-title">{m === "signup" ? "Create account" : "Log in"}</h3>
+          <h3 className="auth-modal-title">{title}</h3>
           <button className="detail-close" onClick={onClose} aria-label="Close"><Icon.Close/></button>
         </div>
-        <p className="auth-modal-sub">Sync your notes across devices.</p>
-        {gid && (
+
+        {m === "reset" ? (
           <>
-            <div className="auth-google" ref={gbtnRef} />
-            <div className="auth-or"><span>or</span></div>
+            <p className="auth-modal-sub">Pick a new password for your account.</p>
+            <input ref={passRef} className="auth-input" type="password" placeholder="New password" autoComplete="new-password"
+              value={pass} onChange={(e) => setPass(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") submit(); }} />
+            <div className="auth-fine">At least 8 characters.</div>
+          </>
+        ) : m === "forgot" ? (
+          sent ? (
+            <p className="auth-modal-sub">If that email has an account, a reset link is on its way. The link expires in 1 hour — check your inbox (and spam folder).</p>
+          ) : (
+            <>
+              <p className="auth-modal-sub">Enter your email and we'll send a link to set a new password.</p>
+              <input ref={emailRef} className="auth-input" type="email" placeholder="Email" autoComplete="username"
+                value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") submit(); }} />
+            </>
+          )
+        ) : (
+          <>
+            <p className="auth-modal-sub">Sync your notes across devices.</p>
+            {gid && (
+              <>
+                <div className="auth-google" ref={gbtnRef} />
+                <div className="auth-or"><span>or</span></div>
+              </>
+            )}
+            <input ref={emailRef} className="auth-input" type="email" placeholder="Email" autoComplete="username"
+              value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") submit(); }} />
+            <input className="auth-input" type="password" placeholder="Password"
+              autoComplete={m === "signup" ? "new-password" : "current-password"}
+              value={pass} onChange={(e) => setPass(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") submit(); }} />
+            {m === "signup" && <div className="auth-fine">At least 8 characters.</div>}
+            {m === "login" && (
+              <div className="auth-forgot">
+                <button onClick={() => { setM("forgot"); setErr(""); setSent(false); }}>Forgot password?</button>
+              </div>
+            )}
           </>
         )}
-        <input ref={emailRef} className="auth-input" type="email" placeholder="Email" autoComplete="username"
-          value={email} onChange={(e) => setEmail(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") submit(); }} />
-        <input className="auth-input" type="password" placeholder="Password"
-          autoComplete={m === "signup" ? "new-password" : "current-password"}
-          value={pass} onChange={(e) => setPass(e.target.value)} onKeyDown={(e) => { if (e.key === "Enter") submit(); }} />
-        {m === "signup" && <div className="auth-fine">At least 8 characters.</div>}
+
         {err && <div className="auth-err">{err}</div>}
-        <button className="auth-submit" onClick={submit} disabled={busy}>
-          {busy ? "…" : (m === "signup" ? "Create account" : "Log in")}
-        </button>
+        {!(m === "forgot" && sent) && (
+          <button className="auth-submit" onClick={submit} disabled={busy}>{busy ? "…" : cta}</button>
+        )}
+
         <div className="auth-switch">
-          {m === "signup"
-            ? <>Already have an account? <button onClick={() => { setM("login"); setErr(""); }}>Log in</button></>
-            : <>New here? <button onClick={() => { setM("signup"); setErr(""); }}>Sign up</button></>}
+          {m === "signup" && <>Already have an account? <button onClick={() => { setM("login"); setErr(""); }}>Log in</button></>}
+          {m === "login" && <>New here? <button onClick={() => { setM("signup"); setErr(""); }}>Sign up</button></>}
+          {m === "forgot" && <>Remembered it? <button onClick={() => { setM("login"); setErr(""); setSent(false); }}>Back to log in</button></>}
+          {m === "reset" && <>Changed your mind? <button onClick={onClose}>Cancel</button></>}
         </div>
       </div>
     </>

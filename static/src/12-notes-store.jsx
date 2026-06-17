@@ -170,13 +170,15 @@ const NotesStore = (function () {
     }
   }
 
-  // POST to an auth endpoint; on success store {token,email} and push/pull notes.
-  async function authPost(path, email, password) {
+  // POST a JSON body to an auth endpoint; on success store {token,email} and
+  // push/pull notes. Shared by signup/login AND password-reset (the reset endpoint
+  // also returns {token,email}, signing the user in once the new password is set).
+  async function authPostBody(path, payload) {
     try {
       const res = await fetch(path, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify(payload),
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) return { ok: false, error: data.error || "Something went wrong." };
@@ -187,6 +189,7 @@ const NotesStore = (function () {
       return { ok: false, error: "Network error." };
     }
   }
+  function authPost(path, email, password) { return authPostBody(path, { email, password }); }
 
   return {
     // newest-edited first (tombstones hidden). Journal pages are a separate
@@ -283,6 +286,42 @@ const NotesStore = (function () {
     authInfo() { const a = getAuth(); return { email: a && a.email, token: a && a.token, syncing, last: lastSync }; },
     signup(email, password) { return authPost("/api/auth/signup", email, password); },
     login(email, password) { return authPost("/api/auth/login", email, password); },
+    // Ask the server to email a reset link. Always resolves ok (the server never
+    // reveals whether the address has an account); the UI just says "check email".
+    async requestReset(email) {
+      try {
+        const res = await fetch("/api/auth/request-reset", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
+        });
+        await res.json().catch(() => ({}));
+        return { ok: res.ok };
+      } catch (e) {
+        return { ok: false, error: "Network error." };
+      }
+    },
+    // Consume a reset link's token + new password; on success the server signs the
+    // user in (returns {token,email}), so reuse the shared sign-in path.
+    resetPassword(token, password) { return authPostBody("/api/auth/reset", { token, password }); },
+    // Set/change the password for the signed-in account (lets a Google-only account
+    // add one). Needs a bearer token.
+    async setPassword(password) {
+      const a = getAuth();
+      if (!a || !a.token) return { ok: false, error: "Not signed in." };
+      try {
+        const res = await fetch("/api/auth/set-password", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": "Bearer " + a.token },
+          body: JSON.stringify({ password }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) return { ok: false, error: data.error || "Could not set password." };
+        return { ok: true };
+      } catch (e) {
+        return { ok: false, error: "Network error." };
+      }
+    },
     // Sign in with the signed token Google handed the browser.
     async googleLogin(credential) {
       try {

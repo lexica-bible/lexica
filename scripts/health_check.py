@@ -8,11 +8,22 @@ Each check is OK (0 / informational) or WARN (non-zero where zero is expected).
 
 Usage:
   python3 scripts/health_check.py bible.db
+  python3 scripts/health_check.py bible.db --email                 # mail the report
+  python3 scripts/health_check.py bible.db --email --only-warn     # mail only if not clean
+  python3 scripts/health_check.py bible.db --email --email-to=you@example.com
+
+The email path is for a nightly PythonAnywhere scheduled task. SMTP creds + the
+recipient (OWNER_EMAIL) come from a repo-root .env (a cron run has no WSGI env), or
+pass --email-to=. See mailer.py.
 """
+import os
 import sqlite3
 import sys
 
 DB = next((a for a in sys.argv[1:] if not a.startswith("--")), "bible.db")
+EMAIL = "--email" in sys.argv
+ONLY_WARN = "--only-warn" in sys.argv
+EMAIL_TO = next((a.split("=", 1)[1] for a in sys.argv if a.startswith("--email-to=")), None)
 conn = sqlite3.connect(DB)
 conn.row_factory = sqlite3.Row
 
@@ -108,15 +119,17 @@ check("verses with zero words  [parse failure]",
       expect_zero=False)
 
 # ── print report ─────────────────────────────────────────────────────────────
-print(f"\n=== bible.db health check: {DB} ===\n")
+report_lines = [f"=== bible.db health check: {DB} ===", ""]
 for status, label, count, note in results:
     line = f"  [{status}] {label}: {count}"
     if note:
         line += f"   ({note})"
-    print(line)
+    report_lines.append(line)
 warns = sum(1 for s, *_ in results if s == "WARN")
 errs = sum(1 for s, *_ in results if s == "ERR ")
-print(f"\n  {warns} warning(s), {errs} error(s).\n")
+report_lines += ["", f"  {warns} warning(s), {errs} error(s)."]
+report_text = "\n".join(report_lines)
+print("\n" + report_text + "\n")
 
 # ── person/place overlap (metaV) — informational ─────────────────────────────
 print("=== person/place name overlap (metaV) ===")
@@ -139,3 +152,26 @@ try:
 except Exception as e:
     print("  (metaV overlap query failed:", str(e)[:80], ")")
 conn.close()
+
+# ── optional email (for a nightly PythonAnywhere scheduled task) ──────────────
+if EMAIL:
+    root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+    if root not in sys.path:
+        sys.path.insert(0, root)
+    try:
+        from dotenv import load_dotenv
+        load_dotenv(os.path.join(root, ".env"))   # a cron run has no WSGI env
+    except Exception:
+        pass
+    from mailer import send_email, mail_configured
+    to = EMAIL_TO or os.environ.get("OWNER_EMAIL") or os.environ.get("ESV_OWNER_EMAIL")
+    if not to:
+        print("  [email] no recipient — pass --email-to=you@example.com or set OWNER_EMAIL")
+    elif ONLY_WARN and warns == 0 and errs == 0:
+        print("  [email] all clear — not sending (--only-warn)")
+    elif not mail_configured():
+        print("  [email] SMTP not configured (set SMTP_* in .env / WSGI) — not sending")
+    else:
+        status = "all clear" if (warns == 0 and errs == 0) else f"{warns} warning(s), {errs} error(s)"
+        sent = send_email(to, f"Lexica health check — {status}", report_text)
+        print(f"  [email] {'sent to ' + to if sent else 'send FAILED (see log)'}")

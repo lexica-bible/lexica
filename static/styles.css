@@ -3533,6 +3533,11 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
 .auth-switch { text-align: center; font-size: 13px; color: var(--ink-3); margin-top: 14px; }
 .auth-switch button { background: none; border: none; color: var(--accent); font-weight: 600; cursor: pointer; font-size: 13px; padding: 0; }
 .auth-switch button:hover { text-decoration: underline; }
+.auth-forgot { text-align: right; margin: -2px 0 12px; }
+.auth-forgot button { background: none; border: none; color: var(--accent); font-size: 12.5px; cursor: pointer; padding: 0; }
+.auth-forgot button:hover { text-decoration: underline; }
+.acct-pw-row { display: flex; gap: 8px; align-items: center; }
+.acct-pw-row .auth-input { margin-bottom: 0; flex: 1; min-width: 0; }
 .notes-search {
   width: 100%; box-sizing: border-box; border: 1px solid var(--rule);
   border-radius: 10px; padding: 10px 14px; font: inherit; font-size: 15px;

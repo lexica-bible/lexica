@@ -1335,18 +1335,17 @@ const NotesStore = function () {
     }
   }
 
-  // POST to an auth endpoint; on success store {token,email} and push/pull notes.
-  async function authPost(path, email, password) {
+  // POST a JSON body to an auth endpoint; on success store {token,email} and
+  // push/pull notes. Shared by signup/login AND password-reset (the reset endpoint
+  // also returns {token,email}, signing the user in once the new password is set).
+  async function authPostBody(path, payload) {
     try {
       const res = await fetch(path, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
         },
-        body: JSON.stringify({
-          email,
-          password
-        })
+        body: JSON.stringify(payload)
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) return {
@@ -1368,6 +1367,12 @@ const NotesStore = function () {
         error: "Network error."
       };
     }
+  }
+  function authPost(path, email, password) {
+    return authPostBody(path, {
+      email,
+      password
+    });
   }
   return {
     // newest-edited first (tombstones hidden). Journal pages are a separate
@@ -1510,6 +1515,72 @@ const NotesStore = function () {
     },
     login(email, password) {
       return authPost("/api/auth/login", email, password);
+    },
+    // Ask the server to email a reset link. Always resolves ok (the server never
+    // reveals whether the address has an account); the UI just says "check email".
+    async requestReset(email) {
+      try {
+        const res = await fetch("/api/auth/request-reset", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            email
+          })
+        });
+        await res.json().catch(() => ({}));
+        return {
+          ok: res.ok
+        };
+      } catch (e) {
+        return {
+          ok: false,
+          error: "Network error."
+        };
+      }
+    },
+    // Consume a reset link's token + new password; on success the server signs the
+    // user in (returns {token,email}), so reuse the shared sign-in path.
+    resetPassword(token, password) {
+      return authPostBody("/api/auth/reset", {
+        token,
+        password
+      });
+    },
+    // Set/change the password for the signed-in account (lets a Google-only account
+    // add one). Needs a bearer token.
+    async setPassword(password) {
+      const a = getAuth();
+      if (!a || !a.token) return {
+        ok: false,
+        error: "Not signed in."
+      };
+      try {
+        const res = await fetch("/api/auth/set-password", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": "Bearer " + a.token
+          },
+          body: JSON.stringify({
+            password
+          })
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) return {
+          ok: false,
+          error: data.error || "Could not set password."
+        };
+        return {
+          ok: true
+        };
+      } catch (e) {
+        return {
+          ok: false,
+          error: "Network error."
+        };
+      }
     },
     // Sign in with the signed token Google handed the browser.
     async googleLogin(credential) {
@@ -3562,6 +3633,22 @@ function AccountModal({
   const clearAll = () => {
     if (window.confirm("Clear ALL reading-plan progress (every text)?")) NotesStore.clearPlan("*");
   };
+  const [pw, setPw] = useState("");
+  const [pwMsg, setPwMsg] = useState("");
+  const [pwBusy, setPwBusy] = useState(false);
+  const savePw = async () => {
+    if (pwBusy) return;
+    if (!pw || pw.length < 8) {
+      setPwMsg("At least 8 characters.");
+      return;
+    }
+    setPwBusy(true);
+    setPwMsg("");
+    const r = await NotesStore.setPassword(pw);
+    setPwBusy(false);
+    setPwMsg(r.ok ? "Password updated." : r.error || "Couldn't update.");
+    if (r.ok) setPw("");
+  };
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "auth-scrim",
     onClick: onClose
@@ -3601,7 +3688,31 @@ function AccountModal({
   }, "Clear")))), rows.length > 1 && /*#__PURE__*/React.createElement("button", {
     className: "acct-plan-clearall",
     onClick: clearAll
-  }, "Clear all progress")), /*#__PURE__*/React.createElement("button", {
+  }, "Clear all progress")), /*#__PURE__*/React.createElement("div", {
+    className: "acct-sec"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "acct-sec-h"
+  }, "Password"), /*#__PURE__*/React.createElement("div", {
+    className: "acct-pw-row"
+  }, /*#__PURE__*/React.createElement("input", {
+    className: "auth-input",
+    type: "password",
+    placeholder: "New password",
+    autoComplete: "new-password",
+    value: pw,
+    onChange: e => setPw(e.target.value),
+    onKeyDown: e => {
+      if (e.key === "Enter") savePw();
+    }
+  }), /*#__PURE__*/React.createElement("button", {
+    className: "acct-plan-clear",
+    onClick: savePw,
+    disabled: pwBusy
+  }, pwBusy ? "…" : "Set")), pwMsg && /*#__PURE__*/React.createElement("div", {
+    className: "auth-fine"
+  }, pwMsg), /*#__PURE__*/React.createElement("div", {
+    className: "acct-empty"
+  }, "Set a password to also sign in without Google.")), /*#__PURE__*/React.createElement("button", {
     className: "auth-submit acct-logout",
     onClick: () => {
       NotesStore.logout();
@@ -3611,30 +3722,40 @@ function AccountModal({
 }
 
 // Centered login / sign-up dialog.
+// modes: "login" | "signup" | "forgot" (email me a reset link) | "reset" (set a new
+// password from a link's token, passed in resetToken).
 function AuthModal({
   mode,
-  onClose
+  onClose,
+  resetToken
 }) {
   const [m, setM] = useState(mode);
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");
   const [err, setErr] = useState("");
+  const [sent, setSent] = useState(false); // forgot-password confirmation shown
   const [busy, setBusy] = useState(false);
   const [gid, setGid] = useState(null); // Google Client ID, if configured
   const emailRef = useRef(null);
+  const passRef = useRef(null);
   const gbtnRef = useRef(null);
+  const isPw = m === "login" || m === "signup"; // email + password / Google modes
   useEffect(() => {
-    requestAnimationFrame(() => emailRef.current && emailRef.current.focus());
+    requestAnimationFrame(() => {
+      const el = m === "reset" ? passRef.current : emailRef.current;
+      el && el.focus();
+    });
   }, []);
 
-  // Is "Sign in with Google" turned on for this site?
+  // Is "Sign in with Google" turned on for this site? (login/signup only)
   useEffect(() => {
+    if (!isPw) return;
     fetch("/api/auth/config").then(r => r.json()).then(d => setGid(d.google_client_id || null)).catch(() => {});
-  }, []);
+  }, [isPw]);
 
-  // Load Google's button + wire the callback (only when configured).
+  // Load Google's button + wire the callback (only when configured + a pw mode).
   useEffect(() => {
-    if (!gid) return;
+    if (!gid || !isPw) return;
     let cancelled = false;
     const init = () => {
       if (cancelled || !window.google || !window.google.accounts || !gbtnRef.current) return;
@@ -3674,15 +3795,29 @@ function AuthModal({
       cancelled = true;
       s && s.removeEventListener("load", init);
     };
-  }, [gid, m]);
+  }, [gid, m, isPw]);
   const submit = async () => {
     if (busy) return;
     setBusy(true);
     setErr("");
+    if (m === "forgot") {
+      await NotesStore.requestReset(email);
+      setBusy(false);
+      setSent(true); // never reveal whether the email exists
+      return;
+    }
+    if (m === "reset") {
+      const r = await NotesStore.resetPassword(resetToken, pass);
+      setBusy(false);
+      if (r.ok) onClose();else setErr(r.error || "That reset link is invalid or has expired.");
+      return;
+    }
     const r = m === "signup" ? await NotesStore.signup(email, pass) : await NotesStore.login(email, pass);
     setBusy(false);
     if (r.ok) onClose();else setErr(r.error || "Something went wrong.");
   };
+  const title = m === "signup" ? "Create account" : m === "forgot" ? "Reset password" : m === "reset" ? "Choose a new password" : "Log in";
+  const cta = m === "signup" ? "Create account" : m === "forgot" ? "Send reset link" : m === "reset" ? "Set new password" : "Log in";
   return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "auth-scrim",
     onClick: onClose
@@ -3690,16 +3825,46 @@ function AuthModal({
     className: "auth-modal",
     role: "dialog",
     "aria-modal": "true",
-    "aria-label": m === "signup" ? "Sign up" : "Log in"
+    "aria-label": title
   }, /*#__PURE__*/React.createElement("div", {
     className: "auth-modal-head"
   }, /*#__PURE__*/React.createElement("h3", {
     className: "auth-modal-title"
-  }, m === "signup" ? "Create account" : "Log in"), /*#__PURE__*/React.createElement("button", {
+  }, title), /*#__PURE__*/React.createElement("button", {
     className: "detail-close",
     onClick: onClose,
     "aria-label": "Close"
-  }, /*#__PURE__*/React.createElement(Icon.Close, null))), /*#__PURE__*/React.createElement("p", {
+  }, /*#__PURE__*/React.createElement(Icon.Close, null))), m === "reset" ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("p", {
+    className: "auth-modal-sub"
+  }, "Pick a new password for your account."), /*#__PURE__*/React.createElement("input", {
+    ref: passRef,
+    className: "auth-input",
+    type: "password",
+    placeholder: "New password",
+    autoComplete: "new-password",
+    value: pass,
+    onChange: e => setPass(e.target.value),
+    onKeyDown: e => {
+      if (e.key === "Enter") submit();
+    }
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "auth-fine"
+  }, "At least 8 characters.")) : m === "forgot" ? sent ? /*#__PURE__*/React.createElement("p", {
+    className: "auth-modal-sub"
+  }, "If that email has an account, a reset link is on its way. The link expires in 1 hour \u2014 check your inbox (and spam folder).") : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("p", {
+    className: "auth-modal-sub"
+  }, "Enter your email and we'll send a link to set a new password."), /*#__PURE__*/React.createElement("input", {
+    ref: emailRef,
+    className: "auth-input",
+    type: "email",
+    placeholder: "Email",
+    autoComplete: "username",
+    value: email,
+    onChange: e => setEmail(e.target.value),
+    onKeyDown: e => {
+      if (e.key === "Enter") submit();
+    }
+  })) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("p", {
     className: "auth-modal-sub"
   }, "Sync your notes across devices."), gid && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "auth-google",
@@ -3729,25 +3894,41 @@ function AuthModal({
     }
   }), m === "signup" && /*#__PURE__*/React.createElement("div", {
     className: "auth-fine"
-  }, "At least 8 characters."), err && /*#__PURE__*/React.createElement("div", {
+  }, "At least 8 characters."), m === "login" && /*#__PURE__*/React.createElement("div", {
+    className: "auth-forgot"
+  }, /*#__PURE__*/React.createElement("button", {
+    onClick: () => {
+      setM("forgot");
+      setErr("");
+      setSent(false);
+    }
+  }, "Forgot password?"))), err && /*#__PURE__*/React.createElement("div", {
     className: "auth-err"
-  }, err), /*#__PURE__*/React.createElement("button", {
+  }, err), !(m === "forgot" && sent) && /*#__PURE__*/React.createElement("button", {
     className: "auth-submit",
     onClick: submit,
     disabled: busy
-  }, busy ? "…" : m === "signup" ? "Create account" : "Log in"), /*#__PURE__*/React.createElement("div", {
+  }, busy ? "…" : cta), /*#__PURE__*/React.createElement("div", {
     className: "auth-switch"
-  }, m === "signup" ? /*#__PURE__*/React.createElement(React.Fragment, null, "Already have an account? ", /*#__PURE__*/React.createElement("button", {
+  }, m === "signup" && /*#__PURE__*/React.createElement(React.Fragment, null, "Already have an account? ", /*#__PURE__*/React.createElement("button", {
     onClick: () => {
       setM("login");
       setErr("");
     }
-  }, "Log in")) : /*#__PURE__*/React.createElement(React.Fragment, null, "New here? ", /*#__PURE__*/React.createElement("button", {
+  }, "Log in")), m === "login" && /*#__PURE__*/React.createElement(React.Fragment, null, "New here? ", /*#__PURE__*/React.createElement("button", {
     onClick: () => {
       setM("signup");
       setErr("");
     }
-  }, "Sign up")))));
+  }, "Sign up")), m === "forgot" && /*#__PURE__*/React.createElement(React.Fragment, null, "Remembered it? ", /*#__PURE__*/React.createElement("button", {
+    onClick: () => {
+      setM("login");
+      setErr("");
+      setSent(false);
+    }
+  }, "Back to log in")), m === "reset" && /*#__PURE__*/React.createElement(React.Fragment, null, "Changed your mind? ", /*#__PURE__*/React.createElement("button", {
+    onClick: onClose
+  }, "Cancel")))));
 }
 
 // ============================================================
@@ -12541,6 +12722,7 @@ function App() {
   // chrono day intro) — so a word/xref panel labels its back link to match.
   const [libDetailBase, setLibDetailBase] = useState("overview");
   const [activeNote, setActiveNote] = useState(null); // note id being edited
+  const [resetToken, setResetToken] = useState(null); // ?reset=<token> from a password-reset email
   const [focusMode, setFocusMode] = useState(false); // distraction-free reading: chrome hidden (library only, not remembered)
 
   // Open a note's editor — closes the word / cross-ref panels so one panel owns the slot.
@@ -12692,6 +12874,15 @@ function App() {
     try {
       p = new URLSearchParams(window.location.search);
     } catch (e) {
+      return;
+    }
+    const reset = p.get("reset");
+    if (reset) {
+      // arrived from a password-reset email → open the reset dialog
+      setResetToken(reset);
+      try {
+        window.history.replaceState(null, "", window.location.pathname);
+      } catch (e) {}
       return;
     }
     const lex = p.get("lex");
@@ -13241,6 +13432,10 @@ function App() {
     y1: "12",
     x2: "12",
     y2: "16"
-  })), "About")));
+  })), "About")), resetToken && /*#__PURE__*/React.createElement(AuthModal, {
+    mode: "reset",
+    resetToken: resetToken,
+    onClose: () => setResetToken(null)
+  }));
 }
 ReactDOM.createRoot(document.getElementById("root")).render(/*#__PURE__*/React.createElement(App, null));

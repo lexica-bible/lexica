@@ -35,7 +35,8 @@ import time
 from flask import Blueprint, jsonify, request
 from werkzeug.security import generate_password_hash, check_password_hash
 
-from core import notes_db, limiter
+from core import notes_db, limiter, log
+from mailer import send_email, mail_configured
 
 bp = Blueprint("notes", __name__)
 
@@ -61,6 +62,7 @@ _MAX_NOTE_BYTES = 8000       # one anchored note's JSON
 _MAX_JOURNAL_BYTES = 64000   # one free-form journal page's JSON (long essays)
 _MAX_BODY_BYTES = 4_000_000  # whole request
 _MIN_PASSWORD = 8
+_RESET_TTL = 3600            # a reset link is good for 1 hour
 
 
 def _ensure_tables():
@@ -86,6 +88,13 @@ def _ensure_tables():
         conn.execute(
             "CREATE TABLE IF NOT EXISTS plan ("
             " code TEXT PRIMARY KEY, json TEXT NOT NULL, updated TEXT NOT NULL)"
+        )
+        # Password-reset links (added 2026-06-16). One short-lived single-use token
+        # per request; pruned on expiry. Sending the email needs SMTP (mailer.py).
+        conn.execute(
+            "CREATE TABLE IF NOT EXISTS password_resets ("
+            " token TEXT PRIMARY KEY, user_id INTEGER NOT NULL,"
+            " created TEXT NOT NULL, expires REAL NOT NULL, used INTEGER NOT NULL DEFAULT 0)"
         )
         # Role tier per account (added 2026-06-11). Older dbs predate the column.
         cols = [r[1] for r in conn.execute("PRAGMA table_info(users)").fetchall()]
@@ -314,6 +323,148 @@ def me():
     if not row:
         return jsonify({"error": "not signed in"}), 401
     return jsonify({"email": row["email"], "role": role_for_token()})
+
+
+def _site_base():
+    """Base URL for links we email out. SITE_URL (WSGI) wins so the link is always
+    the real https domain; otherwise fall back to the request's own host."""
+    base = (os.environ.get("SITE_URL") or request.host_url or "").strip()
+    return base.rstrip("/")
+
+
+def _send_reset_email(email, link):
+    subject = "Reset your Lexica password"
+    text = (
+        "Someone asked to reset the password for your Lexica account.\n\n"
+        "Open this link to choose a new password (it expires in 1 hour):\n\n"
+        f"{link}\n\n"
+        "If you didn't ask for this, just ignore this email — your password "
+        "won't change.\n\n— Lexica · https://www.lexica.bible\n"
+    )
+    html = (
+        '<div style="font-family:Georgia,serif;font-size:16px;color:#221e18;line-height:1.55">'
+        "<p>Someone asked to reset the password for your <b>Lexica</b> account.</p>"
+        "<p>Choose a new password (this link expires in 1 hour):</p>"
+        f'<p><a href="{link}" style="background:#1a1a2e;color:#fff;padding:11px 20px;'
+        'border-radius:6px;text-decoration:none;display:inline-block">Reset password</a></p>'
+        f'<p style="font-size:13px;color:#666">Or paste this link into your browser:<br>{link}</p>'
+        "<p>If you didn't ask for this, just ignore this email — your password won't change.</p>"
+        '<p style="font-size:13px;color:#666">— Lexica · '
+        '<a href="https://www.lexica.bible">lexica.bible</a></p></div>'
+    )
+    send_email(email, subject, text, html)
+
+
+@bp.route("/api/auth/request-reset", methods=["POST"])
+@limiter.limit("10 per hour")
+def request_reset():
+    """Email a password-reset link. ALWAYS returns ok — it never reveals whether the
+    address has an account (that would leak who's registered)."""
+    try:
+        body = json.loads(request.get_data(cache=False) or b"{}")
+    except (ValueError, TypeError):
+        body = {}
+    email = ((body or {}).get("email") or "").strip().lower()
+    ok = {"ok": True}
+    if not email or not _EMAIL_RE.match(email):
+        return jsonify(ok)
+    if not mail_configured():
+        # Mail not wired yet — still answer ok (no leak), but log so you notice.
+        log.warning("password reset requested but SMTP is not configured")
+        return jsonify(ok)
+    _ensure_tables()
+    token = None
+    conn = notes_db()
+    try:
+        conn.execute("DELETE FROM password_resets WHERE expires < ?", (time.time(),))
+        row = conn.execute("SELECT id FROM users WHERE email = ?", (email,)).fetchone()
+        if row:
+            token = secrets.token_urlsafe(32)
+            conn.execute(
+                "INSERT INTO password_resets (token, user_id, created, expires, used)"
+                " VALUES (?,?,?,?,0)",
+                (token, row["id"], _now(), time.time() + _RESET_TTL),
+            )
+        conn.commit()
+    except sqlite3.Error:
+        token = None
+    finally:
+        conn.close()
+    if token:
+        _send_reset_email(email, f"{_site_base()}/?reset={token}")
+    return jsonify(ok)
+
+
+@bp.route("/api/auth/reset", methods=["POST"])
+@limiter.limit("30 per hour")
+def do_reset():
+    """Consume a reset link: set the new password, sign out every existing session
+    (so a compromised account is locked out), and sign in on this device."""
+    try:
+        body = json.loads(request.get_data(cache=False) or b"{}")
+    except (ValueError, TypeError):
+        body = {}
+    token = ((body or {}).get("token") or "").strip()
+    password = (body or {}).get("password") or ""
+    if not token:
+        return jsonify({"error": "Missing reset token."}), 400
+    if not isinstance(password, str) or len(password) < _MIN_PASSWORD:
+        return jsonify({"error": "Password must be at least 8 characters."}), 400
+    _ensure_tables()
+    conn = notes_db()
+    try:
+        row = conn.execute(
+            "SELECT pr.user_id, pr.expires, pr.used, u.email FROM password_resets pr"
+            " JOIN users u ON u.id = pr.user_id WHERE pr.token = ?",
+            (token,),
+        ).fetchone()
+        if not row or row["used"] or float(row["expires"]) < time.time():
+            return jsonify({"error": "This reset link is invalid or has expired. Request a new one."}), 400
+        uid = row["user_id"]
+        conn.execute("UPDATE users SET pass_hash = ? WHERE id = ?",
+                     (generate_password_hash(password), uid))
+        conn.execute("UPDATE password_resets SET used = 1 WHERE token = ?", (token,))
+        conn.execute("DELETE FROM password_resets WHERE user_id = ? AND token != ?", (uid, token))
+        # A reset invalidates every existing login on the account.
+        conn.execute("DELETE FROM tokens WHERE user_id = ?", (uid,))
+        new_token = secrets.token_urlsafe(24)
+        conn.execute("INSERT INTO tokens (token, user_id, created) VALUES (?,?,?)",
+                     (new_token, uid, _now()))
+        conn.commit()
+        email = row["email"]
+    except sqlite3.Error:
+        return jsonify({"error": "Reset failed. Try again."}), 500
+    finally:
+        conn.close()
+    return jsonify({"token": new_token, "email": email})
+
+
+@bp.route("/api/auth/set-password", methods=["POST"])
+@limiter.limit("30 per hour")
+def set_password():
+    """Set/change the password for the signed-in account. Lets a Google-only account
+    add a password so it can also log in the email + password way."""
+    try:
+        body = json.loads(request.get_data(cache=False) or b"{}")
+    except (ValueError, TypeError):
+        body = {}
+    password = (body or {}).get("password") or ""
+    if not isinstance(password, str) or len(password) < _MIN_PASSWORD:
+        return jsonify({"error": "Password must be at least 8 characters."}), 400
+    _ensure_tables()
+    conn = notes_db()
+    try:
+        uid = _user_for_token(conn)
+        if uid is None:
+            return jsonify({"error": "not signed in"}), 401
+        conn.execute("UPDATE users SET pass_hash = ? WHERE id = ?",
+                     (generate_password_hash(password), uid))
+        conn.commit()
+    except sqlite3.Error:
+        return jsonify({"error": "Could not set password."}), 500
+    finally:
+        conn.close()
+    return jsonify({"ok": True})
 
 
 @bp.route("/api/admin/users", methods=["GET"])

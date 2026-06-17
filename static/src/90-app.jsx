@@ -32,6 +32,7 @@ function App() {
   // chrono day intro) — so a word/xref panel labels its back link to match.
   const [libDetailBase, setLibDetailBase] = useState("overview");
   const [activeNote, setActiveNote] = useState(null);   // note id being edited
+  const [resetToken, setResetToken] = useState(null);   // ?reset=<token> from a password-reset email
   const [focusMode, setFocusMode] = useState(false);    // distraction-free reading: chrome hidden (library only, not remembered)
 
   // Open a note's editor — closes the word / cross-ref panels so one panel owns the slot.
@@ -157,6 +158,12 @@ function App() {
   useEffect(() => {
     let p;
     try { p = new URLSearchParams(window.location.search); } catch (e) { return; }
+    const reset = p.get("reset");
+    if (reset) {   // arrived from a password-reset email → open the reset dialog
+      setResetToken(reset);
+      try { window.history.replaceState(null, "", window.location.pathname); } catch (e) {}
+      return;
+    }
     const lex = p.get("lex");
     if (lex) {   // word page → open the Lexicon tab on that Strong's number
       setMainView("lexicon");
@@ -510,6 +517,7 @@ function App() {
           </button>
         </nav>
       )}
+      {resetToken && <AuthModal mode="reset" resetToken={resetToken} onClose={() => setResetToken(null)} />}
     </div>
   );
 }
