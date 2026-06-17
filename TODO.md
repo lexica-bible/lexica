@@ -67,18 +67,18 @@ Still open:
    `.lib-bracket-group` (`display:contents`) is still emitted. Safe to delete the rest — grep `static/src/`
    first to confirm no `.jsx` still emits them. Pure tidy-up, low priority. `code: static/styles.css bracket
    section (~line 1956)`
-4. **ABP dotted Strong's show the wrong headword word.** When ABP uses a dotted number (e.g. G180.2) for a
-   word genuinely DIFFERENT from the plain base number, the big Greek word + its romanization on the word-study
-   card come out as the BASE word. Cause: the build trims the ".N" when making `strongs_base`
-   (`sbase = st.split(".")[0]`), and the headword is looked up in the Greek dictionary by `strongs_base`, so it
-   lands on the base entry. The rest of the card (the "G180.2" label, the definition, the "N× in LXX", and the
-   "in this verse" form) is keyed off the full dotted number and is correct. The dictionary has no dotted
-   entries, so the likely fix is to serve the already-stored LXX-aligned `words.lemma` for dotted words (has
-   gaps — measure first with a read-only check comparing `words.lemma` vs the shown base lemma where the number
-   has a dot). Confirm a sample against eSword/ABP before changing. While in there, a small side-card FORMATTING
-   pass too (group lemma + romanization + gloss; muted "in this verse" line last; one separator style) — STEP
-   "Word analysis" panel saved as a UI reference. Full record: memory `project_dotted_strongs_lemma`.
-   `code: scripts/build_words_from_abp.py:227; core.py _serialize_word_core; views_library.py chapter_text/verse_words lexicon join`
+4. **ABP dotted Strong's headword — FIXED + LIVE 2026-06-17.** ~3049 dotted numbers (15,786 word-spots) that are
+   a genuinely different word from their base (G180.2 ἀκατασκεύαστος was shown as G180 ἀκατάπαυστος) now show
+   their OWN word: `scripts/build_dotted_lexicon.py` builds a `dotted_lexicon` side table from each one's abp_ext
+   entry, and `chapter_text`/`verse_words` COALESCE it over the base lexicon join (joined only if the table
+   exists → deploy-safe). `build_abp_surface.py` updated to drop the resulting "in this verse" echo. Audit:
+   `scripts/audit_dotted_lemmas.py`. Full record + re-run recipe: memory `project_dotted_strongs_lemma`.
+   STILL OPEN under this umbrella: (a) the side-card top-block FORMATTING pass the bug surfaced from (group
+   lemma + romanization + gloss; muted "in this verse" line LAST with a label; one separator style) — STEP
+   "Word analysis" saved as a UI reference; (b) optionally apply the same correction to the other lexicon-join
+   surfaces (views_seo, ai.py `_fetch_verse_words`, views_search/lexicon), which still show the base word for
+   dotted numbers.
+   `code: scripts/build_dotted_lexicon.py, audit_dotted_lemmas.py; views_library.py chapter_text/verse_words; scripts/build_abp_surface.py`
 
 ---
 
