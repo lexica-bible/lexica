@@ -301,7 +301,7 @@ function App() {
         )}
         {mainView === "about" && <AboutView owner={owner} />}
         {mainView === "notes" && <NotesView onOpen={openNoteFromList} />}
-        {mainView === "study" && <StudyView admin={owner} pending={studyPending} onConsumed={() => setStudyPending(null)} />}
+        {mainView === "study" && <StudyView admin={owner} pending={studyPending} onConsumed={() => setStudyPending(null)} onNavigateToLibrary={handleReadInContext} />}
         <div style={{ display: mainView === "lexicon" ? undefined : "none" }}>
           <LexiconView
             onNavigateToSearch={(q) => { handleNavChange("search"); setQ2(q); }}
@@ -456,6 +456,7 @@ function App() {
             setLibNav({ book, chapter, scroll: true, highlight: verse });
           }}
           onAiSearch={(q) => { setLibCrossRef(null); handleAiSearch(q); }}
+          onOpenStudy={handleOpenStudyName}
           isMobile={false}
           overviewBack={true}
           backLabel={libDetailBase === "intro" ? "Intro" : "Overview"}
@@ -474,6 +475,7 @@ function App() {
               setLibNav({ book, chapter, scroll: true, highlight: verse });
             }}
             onAiSearch={(q) => { setLibCrossRef(null); handleAiSearch(q); }}
+            onOpenStudy={handleOpenStudyName}
             isMobile={true}
           />
         </>

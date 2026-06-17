@@ -222,6 +222,12 @@ const api = {
   }).catch(() => ({
     sections: []
   })),
+  // Which published concept studies cite this verse → the reader's "In studies:" line.
+  studyForVerse: (book, chapter, verse) => fetch(`/api/study/for-verse/${encodeURIComponent(book)}/${chapter}/${verse}`).then(r => r.ok ? r.json() : {
+    topics: []
+  }).catch(() => ({
+    topics: []
+  })),
   // Admin: draft a text-first intro for a topic (title + sections) → { intro }.
   studyDraftIntro: payload => fetch(`/api/study/draft-intro`, {
     method: "POST",
@@ -3748,12 +3754,14 @@ function CrossRefPanel({
   translation,
   onAiSearch,
   overviewBack,
-  backLabel = "Overview"
+  backLabel = "Overview",
+  onOpenStudy
 }) {
   const [refs, setRefs] = useState([]);
   const [synthesis, setSynthesis] = useState(null);
   const [loading, setLoading] = useState(false);
   const [abpTexts, setAbpTexts] = useState({});
+  const [studies, setStudies] = useState([]); // published concept studies that cite this verse
   const showAbp = translation === "abp" || translation === "parallel";
   useEffect(() => {
     if (!source) return;
@@ -3774,6 +3782,22 @@ function CrossRefPanel({
       cancelled = true;
     };
   }, [source && source.book, source && source.chapter, source && source.verse]);
+
+  // Which published concept studies cite this verse (the "In studies:" line). Cheap, public.
+  useEffect(() => {
+    if (!source || !onOpenStudy) {
+      setStudies([]);
+      return;
+    }
+    let cancelled = false;
+    setStudies([]);
+    api.studyForVerse(source.book, source.chapter, source.verse).then(d => {
+      if (!cancelled) setStudies(d && d.topics || []);
+    }).catch(() => {});
+    return () => {
+      cancelled = true;
+    };
+  }, [source && source.book, source && source.chapter, source && source.verse, !!onOpenStudy]);
   useEffect(() => {
     if (!showAbp || !refs.length) {
       setAbpTexts({});
@@ -3799,7 +3823,22 @@ function CrossRefPanel({
   // source reference + a passage count) then .sec/.sec-head sections — the AI
   // synthesis as "The connection" (Sonnet-written, so it carries the AI badge),
   // and the curated list as "Related passages".
-  const content = /*#__PURE__*/React.createElement(React.Fragment, null, (loading || synthesis) && /*#__PURE__*/React.createElement("section", {
+  const content = /*#__PURE__*/React.createElement(React.Fragment, null, onOpenStudy && studies.length > 0 && /*#__PURE__*/React.createElement("section", {
+    className: "sec"
+  }, /*#__PURE__*/React.createElement("h4", {
+    className: "sec-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "sec-t"
+  }, "In studies")), /*#__PURE__*/React.createElement("div", {
+    className: "xref-studies"
+  }, studies.map(t => /*#__PURE__*/React.createElement("button", {
+    key: t.id,
+    className: "xref-study-link",
+    onClick: () => {
+      onClose();
+      onOpenStudy(t.id);
+    }
+  }, t.title, " \u2192")))), (loading || synthesis) && /*#__PURE__*/React.createElement("section", {
     className: "sec"
   }, /*#__PURE__*/React.createElement("h4", {
     className: "sec-head"
@@ -4226,6 +4265,24 @@ function groupByBook(verses) {
   });
   return groups;
 }
+// A verse reference inside a READ view. When the verse carries book/chapter/verse (the
+// server resolves them) and a nav handler is present, it's a button that jumps into the
+// Library reader — same idea as a Search/Lexicon result reference. Otherwise a plain pill.
+function StudyRef({
+  v,
+  label,
+  onNavigate
+}) {
+  const go = onNavigate && v && v.book && v.chapter && v.verse;
+  if (!go) return /*#__PURE__*/React.createElement("span", {
+    className: "study-verse-ref"
+  }, label);
+  return /*#__PURE__*/React.createElement("button", {
+    className: "study-verse-ref study-verse-ref--link",
+    title: "Open in the reader",
+    onClick: () => onNavigate(v.book, v.chapter, v.verse)
+  }, label);
+}
 // Nave's titles are index-style — keyword first: "Accusation, False", "Trinity, The".
 // Flip the SAFE ones to read naturally ("False Accusation", "The Trinity"); leave
 // ambiguous multi-word tails alone (e.g. "God, the Father" shouldn't become "the
@@ -4499,7 +4556,8 @@ function TopicPage({
   onToggleEdit,
   previewReader,
   saving,
-  savedAt
+  savedAt,
+  onNavigate
 }) {
   const up = patch => onChange({
     ...entry,
@@ -4611,9 +4669,11 @@ function TopicPage({
         }, g.verses.map((v, j) => /*#__PURE__*/React.createElement("div", {
           className: "study-read-verse",
           key: j
-        }, /*#__PURE__*/React.createElement("span", {
-          className: "study-verse-ref"
-        }, shortRef(v.ref)), /*#__PURE__*/React.createElement("span", {
+        }, /*#__PURE__*/React.createElement(StudyRef, {
+          v: v,
+          label: shortRef(v.ref),
+          onNavigate: onNavigate
+        }), /*#__PURE__*/React.createElement("span", {
           className: "study-read-text"
         }, v.text || /*#__PURE__*/React.createElement("em", {
           className: "study-verse-missing"
@@ -4623,9 +4683,11 @@ function TopicPage({
       }, s.verses.map((v, j) => /*#__PURE__*/React.createElement("div", {
         className: "study-read-verse",
         key: j
-      }, /*#__PURE__*/React.createElement("span", {
-        className: "study-verse-ref"
-      }, v.ref), /*#__PURE__*/React.createElement("span", {
+      }, /*#__PURE__*/React.createElement(StudyRef, {
+        v: v,
+        label: v.ref,
+        onNavigate: onNavigate
+      }), /*#__PURE__*/React.createElement("span", {
         className: "study-read-text"
       }, v.text || /*#__PURE__*/React.createElement("em", {
         className: "study-verse-missing"
@@ -5017,7 +5079,8 @@ function ArgumentPage({
   onToggleEdit,
   previewReader,
   saving,
-  savedAt
+  savedAt,
+  onNavigate
 }) {
   const up = patch => onChange({
     ...entry,
@@ -5067,9 +5130,11 @@ function ArgumentPage({
     }, s.verses.map((v, j) => /*#__PURE__*/React.createElement("div", {
       className: "study-read-verse",
       key: j
-    }, /*#__PURE__*/React.createElement("span", {
-      className: "study-verse-ref"
-    }, v.ref), /*#__PURE__*/React.createElement("span", {
+    }, /*#__PURE__*/React.createElement(StudyRef, {
+      v: v,
+      label: v.ref,
+      onNavigate: onNavigate
+    }), /*#__PURE__*/React.createElement("span", {
       className: "study-read-text"
     }, v.text || /*#__PURE__*/React.createElement("em", {
       className: "study-verse-missing"
@@ -5232,7 +5297,8 @@ function ArgumentPage({
 // A labeled read-only verse list (Support / Tension), for the denomination read view.
 function DenomVerseList({
   label,
-  items
+  items,
+  onNavigate
 }) {
   if (!items || !items.length) return null;
   return /*#__PURE__*/React.createElement("div", {
@@ -5244,9 +5310,11 @@ function DenomVerseList({
   }, items.map((v, j) => /*#__PURE__*/React.createElement("div", {
     className: "study-read-verse",
     key: j
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "study-verse-ref"
-  }, v.ref), /*#__PURE__*/React.createElement("span", {
+  }, /*#__PURE__*/React.createElement(StudyRef, {
+    v: v,
+    label: v.ref,
+    onNavigate: onNavigate
+  }), /*#__PURE__*/React.createElement("span", {
     className: "study-read-text"
   }, v.text || /*#__PURE__*/React.createElement("em", {
     className: "study-verse-missing"
@@ -5258,7 +5326,8 @@ function DenominationRead({
   entry,
   onClose,
   onToggleEdit,
-  previewReader
+  previewReader,
+  onNavigate
 }) {
   const res = entry.resolution || {
     mode: "middle",
@@ -5284,10 +5353,12 @@ function DenominationRead({
     className: "study-topic-intro"
   }, entry.intro), /*#__PURE__*/React.createElement(DenomVerseList, {
     label: "Support",
-    items: entry.support
+    items: entry.support,
+    onNavigate: onNavigate
   }), /*#__PURE__*/React.createElement(DenomVerseList, {
     label: "Tension",
-    items: entry.tension
+    items: entry.tension,
+    onNavigate: onNavigate
   }), /*#__PURE__*/React.createElement("div", {
     className: "study-arg-res"
   }, /*#__PURE__*/React.createElement("div", {
@@ -5303,7 +5374,8 @@ function DenominationRead({
 function StudyView({
   admin,
   pending,
-  onConsumed
+  onConsumed,
+  onNavigateToLibrary
 }) {
   const adminUser = !!admin;
   const [module, setModule] = useState("topic");
@@ -5487,7 +5559,8 @@ function StudyView({
       onToggleEdit: () => setEditMode(m => !m),
       previewReader: readerView,
       saving: saving,
-      savedAt: savedAt
+      savedAt: savedAt,
+      onNavigate: onNavigateToLibrary
     }));
     if (editing.type === "argument") return /*#__PURE__*/React.createElement("div", {
       className: "study-view"
@@ -5501,7 +5574,8 @@ function StudyView({
       onToggleEdit: () => setEditMode(m => !m),
       previewReader: readerView,
       saving: saving,
-      savedAt: savedAt
+      savedAt: savedAt,
+      onNavigate: onNavigateToLibrary
     }));
     if (ro) return /*#__PURE__*/React.createElement("div", {
       className: "study-view"
@@ -5509,7 +5583,8 @@ function StudyView({
       entry: editing,
       onClose: close,
       onToggleEdit: () => setEditMode(true),
-      previewReader: readerView
+      previewReader: readerView,
+      onNavigate: onNavigateToLibrary
     }));
     return /*#__PURE__*/React.createElement("div", {
       className: "study-view"
@@ -12820,7 +12895,8 @@ function App() {
   }), mainView === "study" && /*#__PURE__*/React.createElement(StudyView, {
     admin: owner,
     pending: studyPending,
-    onConsumed: () => setStudyPending(null)
+    onConsumed: () => setStudyPending(null),
+    onNavigateToLibrary: handleReadInContext
   }), /*#__PURE__*/React.createElement("div", {
     style: {
       display: mainView === "lexicon" ? undefined : "none"
@@ -13010,6 +13086,7 @@ function App() {
       setLibCrossRef(null);
       handleAiSearch(q);
     },
+    onOpenStudy: handleOpenStudyName,
     isMobile: false,
     overviewBack: true,
     backLabel: libDetailBase === "intro" ? "Intro" : "Overview"
@@ -13046,6 +13123,7 @@ function App() {
       setLibCrossRef(null);
       handleAiSearch(q);
     },
+    onOpenStudy: handleOpenStudyName,
     isMobile: true
   })), showTour && /*#__PURE__*/React.createElement(GuidedTour, {
     onDone: handleTourDone

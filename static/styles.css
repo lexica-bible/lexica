@@ -1730,6 +1730,14 @@ input { font-family: inherit; }
   color: var(--ink-2);
   margin: 0;
 }
+/* "In studies:" — published concept studies that cite this verse (navy chips, no brown). */
+.xref-studies { display: flex; flex-wrap: wrap; gap: 6px; }
+.xref-study-link {
+  font: inherit; font-size: 12.5px; font-weight: 500; color: var(--accent);
+  background: var(--accent-soft); border: none; border-radius: 6px;
+  padding: 4px 10px; cursor: pointer; transition: opacity 0.12s;
+}
+.xref-study-link:hover { opacity: 0.8; }
 
 /* Verse content — prose: inline text; chips: flex wrap */
 .lib-verse-content {
@@ -3761,6 +3769,10 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
   white-space: nowrap; letter-spacing: 0.04em; margin-right: 6px; vertical-align: baseline;
 }
 .study-read-text { font-family: var(--f-serif); font-size: 15px; line-height: 1.5; color: var(--ink); }
+/* Clickable reference (jumps into the reader) — the pill look comes from the rule above. */
+button.study-verse-ref { border: none; }
+.study-verse-ref--link { cursor: pointer; transition: opacity 0.12s; }
+.study-verse-ref--link:hover { opacity: 0.78; }
 
 /* topic — edit (sections) */
 .study-section--edit { border: 1px solid var(--rule); border-radius: 12px; padding: 12px 14px; margin-bottom: 12px; background: var(--paper); }

@@ -40,6 +40,17 @@ function groupByBook(verses) {
   });
   return groups;
 }
+// A verse reference inside a READ view. When the verse carries book/chapter/verse (the
+// server resolves them) and a nav handler is present, it's a button that jumps into the
+// Library reader — same idea as a Search/Lexicon result reference. Otherwise a plain pill.
+function StudyRef({ v, label, onNavigate }) {
+  const go = onNavigate && v && v.book && v.chapter && v.verse;
+  if (!go) return <span className="study-verse-ref">{label}</span>;
+  return (
+    <button className="study-verse-ref study-verse-ref--link" title="Open in the reader"
+      onClick={() => onNavigate(v.book, v.chapter, v.verse)}>{label}</button>
+  );
+}
 // Nave's titles are index-style — keyword first: "Accusation, False", "Trinity, The".
 // Flip the SAFE ones to read naturally ("False Accusation", "The Trinity"); leave
 // ambiguous multi-word tails alone (e.g. "God, the Father" shouldn't become "the
@@ -185,7 +196,7 @@ function defaultOpenSecs(entry) {
   return new Set(secs.length <= 1 ? secs.map((_, i) => i) : []);
 }
 
-function TopicPage({ entry, editing, onChange, onSave, onDelete, onClose, onToggleEdit, previewReader, saving, savedAt }) {
+function TopicPage({ entry, editing, onChange, onSave, onDelete, onClose, onToggleEdit, previewReader, saving, savedAt, onNavigate }) {
   const up = patch => onChange({ ...entry, ...patch });
   const verseCount = entry.sections.reduce((n, s) => n + s.verses.length, 0);
   const [drafting, setDrafting] = useState(false);
@@ -251,7 +262,7 @@ function TopicPage({ entry, editing, onChange, onSave, onDelete, onClose, onTogg
                               <div className="study-book-verses">
                                 {g.verses.map((v, j) => (
                                   <div className="study-read-verse" key={j}>
-                                    <span className="study-verse-ref">{shortRef(v.ref)}</span>
+                                    <StudyRef v={v} label={shortRef(v.ref)} onNavigate={onNavigate} />
                                     <span className="study-read-text">{v.text || <em className="study-verse-missing">(text not found)</em>}</span>
                                   </div>
                                 ))}
@@ -265,7 +276,7 @@ function TopicPage({ entry, editing, onChange, onSave, onDelete, onClose, onTogg
                     <div className="study-read-verses">
                       {s.verses.map((v, j) => (
                         <div className="study-read-verse" key={j}>
-                          <span className="study-verse-ref">{v.ref}</span>
+                          <StudyRef v={v} label={v.ref} onNavigate={onNavigate} />
                           <span className="study-read-text">{v.text || <em className="study-verse-missing">(text not found)</em>}</span>
                         </div>
                       ))}
@@ -453,7 +464,7 @@ function ArgumentSideEdit({ side, label, onChange }) {
 
 // An argument reads/edits like a topic page (read view + Edit toggle), but its body
 // is the two-sided layout (Side A | Side B) plus the resolution that weighs them.
-function ArgumentPage({ entry, editing, onChange, onSave, onDelete, onClose, onToggleEdit, previewReader, saving, savedAt }) {
+function ArgumentPage({ entry, editing, onChange, onSave, onDelete, onClose, onToggleEdit, previewReader, saving, savedAt, onNavigate }) {
   const up = patch => onChange({ ...entry, ...patch });
   const sides = padSides(entry.sides);
   const res = entry.resolution || { mode: "middle", text: "" };
@@ -480,7 +491,7 @@ function ArgumentPage({ entry, editing, onChange, onSave, onDelete, onClose, onT
                 <div className="study-read-verses">
                   {s.verses.map((v, j) => (
                     <div className="study-read-verse" key={j}>
-                      <span className="study-verse-ref">{v.ref}</span>
+                      <StudyRef v={v} label={v.ref} onNavigate={onNavigate} />
                       <span className="study-read-text">{v.text || <em className="study-verse-missing">(text not found)</em>}</span>
                     </div>
                   ))}
@@ -570,7 +581,7 @@ function ArgumentPage({ entry, editing, onChange, onSave, onDelete, onClose, onT
 
 // ---- Reader views ---------------------------------------------------------
 // A labeled read-only verse list (Support / Tension), for the denomination read view.
-function DenomVerseList({ label, items }) {
+function DenomVerseList({ label, items, onNavigate }) {
   if (!items || !items.length) return null;
   return (
     <div className="study-section">
@@ -578,7 +589,7 @@ function DenomVerseList({ label, items }) {
       <div className="study-read-verses">
         {items.map((v, j) => (
           <div className="study-read-verse" key={j}>
-            <span className="study-verse-ref">{v.ref}</span>
+            <StudyRef v={v} label={v.ref} onNavigate={onNavigate} />
             <span className="study-read-text">{v.text || <em className="study-verse-missing">(text not found)</em>}</span>
           </div>
         ))}
@@ -588,7 +599,7 @@ function DenomVerseList({ label, items }) {
 }
 
 // Clean read view of a denomination (position + support/tension + resolution).
-function DenominationRead({ entry, onClose, onToggleEdit, previewReader }) {
+function DenominationRead({ entry, onClose, onToggleEdit, previewReader, onNavigate }) {
   const res = entry.resolution || { mode: "middle", text: "" };
   return (
     <div className="study-topic">
@@ -600,8 +611,8 @@ function DenominationRead({ entry, onClose, onToggleEdit, previewReader }) {
       <h1 className="study-topic-title">{entry.title}</h1>
       {entry.heldBy && <div className="study-topic-meta">Held by {entry.heldBy}</div>}
       {entry.intro && <p className="study-topic-intro">{entry.intro}</p>}
-      <DenomVerseList label="Support" items={entry.support} />
-      <DenomVerseList label="Tension" items={entry.tension} />
+      <DenomVerseList label="Support" items={entry.support} onNavigate={onNavigate} />
+      <DenomVerseList label="Tension" items={entry.tension} onNavigate={onNavigate} />
       <div className="study-arg-res">
         <div className="study-arg-res-label">{res.mode === "mystery" ? "An open mystery" : "Where the text lands"}</div>
         <p className="study-arg-res-text">{res.text || <em className="study-verse-missing">(not written yet)</em>}</p>
@@ -611,7 +622,7 @@ function DenominationRead({ entry, onClose, onToggleEdit, previewReader }) {
 }
 
 // ---- The Study tab --------------------------------------------------------
-function StudyView({ admin, pending, onConsumed }) {
+function StudyView({ admin, pending, onConsumed, onNavigateToLibrary }) {
   const adminUser = !!admin;
   const [module, setModule] = useState("topic");
   const [entries, setEntries] = useState(null);
@@ -694,11 +705,11 @@ function StudyView({ admin, pending, onConsumed }) {
     const ro = readerView || !editMode;   // read-only: a reader/preview, or not actively editing
     const close = () => { setEditing(null); setSavedAt(null); };
     if (isTopicLike(editing.type))
-      return <div className="study-view"><TopicPage entry={editing} editing={!ro} onChange={setEditing} onSave={save} onDelete={del} onClose={close} onToggleEdit={() => setEditMode(m => !m)} previewReader={readerView} saving={saving} savedAt={savedAt} /></div>;
+      return <div className="study-view"><TopicPage entry={editing} editing={!ro} onChange={setEditing} onSave={save} onDelete={del} onClose={close} onToggleEdit={() => setEditMode(m => !m)} previewReader={readerView} saving={saving} savedAt={savedAt} onNavigate={onNavigateToLibrary} /></div>;
     if (editing.type === "argument")
-      return <div className="study-view"><ArgumentPage entry={editing} editing={!ro} onChange={setEditing} onSave={save} onDelete={del} onClose={close} onToggleEdit={() => setEditMode(m => !m)} previewReader={readerView} saving={saving} savedAt={savedAt} /></div>;
+      return <div className="study-view"><ArgumentPage entry={editing} editing={!ro} onChange={setEditing} onSave={save} onDelete={del} onClose={close} onToggleEdit={() => setEditMode(m => !m)} previewReader={readerView} saving={saving} savedAt={savedAt} onNavigate={onNavigateToLibrary} /></div>;
     if (ro)
-      return <div className="study-view"><DenominationRead entry={editing} onClose={close} onToggleEdit={() => setEditMode(true)} previewReader={readerView} /></div>;
+      return <div className="study-view"><DenominationRead entry={editing} onClose={close} onToggleEdit={() => setEditMode(true)} previewReader={readerView} onNavigate={onNavigateToLibrary} /></div>;
     return <div className="study-view"><StudyEditor entry={editing} onChange={setEditing} onSave={save} onDelete={del} onClose={close} onToggleEdit={() => setEditMode(false)} saving={saving} savedAt={savedAt} /></div>;
   }
 

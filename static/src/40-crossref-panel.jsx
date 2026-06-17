@@ -1,11 +1,12 @@
 // ============================================================
 // CROSS-REFERENCE PANEL
 // ============================================================
-function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation, onAiSearch, overviewBack, backLabel = "Overview" }) {
+function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation, onAiSearch, overviewBack, backLabel = "Overview", onOpenStudy }) {
   const [refs, setRefs] = useState([]);
   const [synthesis, setSynthesis] = useState(null);
   const [loading, setLoading] = useState(false);
   const [abpTexts, setAbpTexts] = useState({});
+  const [studies, setStudies] = useState([]);   // published concept studies that cite this verse
   const showAbp = translation === "abp" || translation === "parallel";
 
   useEffect(() => {
@@ -25,6 +26,17 @@ function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation, onA
       .catch(() => { if (!cancelled) setLoading(false); });
     return () => { cancelled = true; };
   }, [source && source.book, source && source.chapter, source && source.verse]);
+
+  // Which published concept studies cite this verse (the "In studies:" line). Cheap, public.
+  useEffect(() => {
+    if (!source || !onOpenStudy) { setStudies([]); return; }
+    let cancelled = false;
+    setStudies([]);
+    api.studyForVerse(source.book, source.chapter, source.verse)
+      .then(d => { if (!cancelled) setStudies((d && d.topics) || []); })
+      .catch(() => {});
+    return () => { cancelled = true; };
+  }, [source && source.book, source && source.chapter, source && source.verse, !!onOpenStudy]);
 
   useEffect(() => {
     if (!showAbp || !refs.length) { setAbpTexts({}); return; }
@@ -51,6 +63,18 @@ function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation, onA
   // and the curated list as "Related passages".
   const content = (
     <>
+      {onOpenStudy && studies.length > 0 && (
+        <section className="sec">
+          <h4 className="sec-head"><span className="sec-t">In studies</span></h4>
+          <div className="xref-studies">
+            {studies.map(t => (
+              <button key={t.id} className="xref-study-link" onClick={() => { onClose(); onOpenStudy(t.id); }}>
+                {t.title} →
+              </button>
+            ))}
+          </div>
+        </section>
+      )}
       {(loading || synthesis) && (
         <section className="sec">
           <h4 className="sec-head">

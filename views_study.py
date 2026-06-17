@@ -442,9 +442,10 @@ def _abp_prose_bulk(conn, wants):
 
 
 def _resolve_map(refs, conn):
-    """{ref string: resolved text} for MANY references in a handful of queries — the
-    same text _resolve_ref gives per ref (ABP prose, KJV fallback), but batched so a
-    big topic (~1000 verses) opens fast instead of doing ~5 reads per verse."""
+    """{ref string: {text, book, chapter, verse}} for MANY references in a handful of
+    queries — the same text _resolve_ref gives per ref (ABP prose, KJV fallback), batched
+    so a big topic (~1000 verses) opens fast instead of ~5 reads per verse. book/chapter/
+    verse are the ref's FIRST verse (the jump target when a reader clicks the reference)."""
     uniq = list(dict.fromkeys(r for r in (refs or []) if r))
     parsed = [(r, _parse_ref(r)) for r in uniq]
     endpoints = set()
@@ -454,14 +455,16 @@ def _resolve_map(refs, conn):
             endpoints.add((book_id, sc, sv))
             endpoints.add((book_id, ec, ev))
     if not endpoints:
-        return {r: "" for r in uniq}
+        return {r: {"text": "", "book": "", "chapter": None, "verse": None} for r in uniq}
     vid = _verse_ids_for(conn, endpoints)
-    ranges, need_ids = {}, set()
+    ranges, need_ids, start = {}, set(), {}
     for ref, p in parsed:
         if not p:
             ranges[ref] = None
+            start[ref] = ("", None, None)
             continue
         book_id, sc, sv, ec, ev = p
+        start[ref] = (_KJV_BOOK_ID_REV.get(book_id, ""), sc, sv)   # jump target = the ref's first verse
         s = vid.get((book_id, sc, sv))
         if s is None:
             ranges[ref] = None
@@ -489,9 +492,10 @@ def _resolve_map(refs, conn):
     abp = _abp_prose_bulk(conn, want_abp)
     out = {}
     for ref in uniq:
+        b, c, v = start.get(ref, ("", None, None))
         rng = ranges.get(ref)
         if not rng:
-            out[ref] = ""
+            out[ref] = {"text": "", "book": b, "chapter": c, "verse": v}
             continue
         s, e = rng
         parts = []
@@ -503,14 +507,26 @@ def _resolve_map(refs, conn):
             t = abp.get((abbr, meta[1], meta[2])) or meta[3]
             if t:
                 parts.append(t)
-        out[ref] = " ".join(parts)
+        out[ref] = {"text": " ".join(parts), "book": b, "chapter": c, "verse": v}
+    return out
+
+
+def _verses_payload(refs, tmap):
+    """[ref,...] -> [{ref, text, book, chapter, verse}] using the resolved map (book/
+    chapter/verse let a reader click the reference and jump into the Library)."""
+    out = []
+    for r in (refs or []):
+        m = tmap.get(r) or {}
+        out.append({"ref": r, "text": m.get("text", ""), "book": m.get("book", ""),
+                    "chapter": m.get("chapter"), "verse": m.get("verse")})
     return out
 
 
 def _resolve_body(etype: str, stored: dict) -> dict:
-    """Expand stored refs into {ref, text} pairs for the client — inside each section
-    for a topic, in the support/tension buckets for a claim. ALL of the entry's refs
-    resolve in one batched pass (see _resolve_map), so even a 1000-verse topic is fast."""
+    """Expand stored refs into {ref, text, book, chapter, verse} for the client — inside
+    each section for a topic, in the support/tension buckets for a claim. ALL of the
+    entry's refs resolve in one batched pass (see _resolve_map), so even a 1000-verse
+    topic is fast."""
     b = dict(stored)
     conn = db_ro()
     try:
@@ -518,8 +534,7 @@ def _resolve_body(etype: str, stored: dict) -> dict:
             secs = stored.get("sections") or []
             tmap = _resolve_map([r for s in secs for r in ((s or {}).get("verses") or [])], conn)
             b["sections"] = [
-                {"heading": (s or {}).get("heading", ""),
-                 "verses": [{"ref": r, "text": tmap.get(r, "")} for r in ((s or {}).get("verses") or [])]}
+                {"heading": (s or {}).get("heading", ""), "verses": _verses_payload((s or {}).get("verses"), tmap)}
                 for s in secs
             ]
         elif etype == "argument":
@@ -533,16 +548,15 @@ def _resolve_body(etype: str, stored: dict) -> dict:
             sides = sides or []
             tmap = _resolve_map([r for s in sides for r in ((s or {}).get("verses") or [])], conn)
             b["sides"] = [
-                {"claim": (s or {}).get("claim", ""),
-                 "verses": [{"ref": r, "text": tmap.get(r, "")} for r in ((s or {}).get("verses") or [])]}
+                {"claim": (s or {}).get("claim", ""), "verses": _verses_payload((s or {}).get("verses"), tmap)}
                 for s in sides
             ]
             b.pop("support", None)
             b.pop("tension", None)
         else:
             tmap = _resolve_map((stored.get("support") or []) + (stored.get("tension") or []), conn)
-            b["support"] = [{"ref": r, "text": tmap.get(r, "")} for r in (stored.get("support") or [])]
-            b["tension"] = [{"ref": r, "text": tmap.get(r, "")} for r in (stored.get("tension") or [])]
+            b["support"] = _verses_payload(stored.get("support"), tmap)
+            b["tension"] = _verses_payload(stored.get("tension"), tmap)
     finally:
         conn.close()
     return b
@@ -572,6 +586,51 @@ def _resolved_entry(r):
         _RESOLVED_CACHE.pop(next(iter(_RESOLVED_CACHE)))   # evict the oldest
     _RESOLVED_CACHE[r["id"]] = (r["updated"], dict(body))
     return dict(body)
+
+
+# ── Verse -> studies (the reader's "In studies:" line) ───────────────────────
+# A reverse lookup so the reader can ask "is this verse in a study?" cheaply. Built from
+# the PUBLISHED CONCEPT topics only (type 'topic') — NOT the ~696 person/place name-topics,
+# which already surface via the metaV sidebar and would otherwise light up nearly every
+# verse. Keyed by the ref's FIRST verse (single-verse citations are the norm). Cached in
+# memory and rebuilt only when the published-topic set actually changes (id+updated signature).
+_VERSE_INDEX = None             # {(book_abbr, chapter, verse): [(id, title), ...]}
+_VERSE_INDEX_SIG = None
+
+
+def _verse_index():
+    global _VERSE_INDEX, _VERSE_INDEX_SIG
+    conn = study_db()
+    try:
+        rows = conn.execute(
+            "SELECT id, title, json, updated FROM entries"
+            " WHERE type='topic' AND status='published' AND deleted=0"
+        ).fetchall()
+    finally:
+        conn.close()
+    sig = tuple((r["id"], r["updated"]) for r in rows)
+    if _VERSE_INDEX is not None and sig == _VERSE_INDEX_SIG:
+        return _VERSE_INDEX
+    idx = {}
+    for r in rows:
+        try:
+            data = json.loads(r["json"]) or {}
+        except (ValueError, TypeError):
+            data = {}
+        seen = set()                       # one entry per verse, even if cited twice in a topic
+        for s in (data.get("sections") or []):
+            for ref in ((s or {}).get("verses") or []):
+                p = _parse_ref(ref)
+                if not p:
+                    continue
+                book_id, sc, sv, ec, ev = p
+                key = (_KJV_BOOK_ID_REV.get(book_id, ""), sc, sv)
+                if not key[0] or key in seen:
+                    continue
+                seen.add(key)
+                idx.setdefault(key, []).append((r["id"], r["title"]))
+    _VERSE_INDEX, _VERSE_INDEX_SIG = idx, sig
+    return idx
 
 
 # ── AI: draft a topic intro (text-first, Berean) ─────────────────────────────
@@ -852,6 +911,16 @@ def for_name(name):
     secs = [{"heading": (s or {}).get("heading", ""), "n": len((s or {}).get("verses") or [])}
             for s in (stored.get("sections") or [])]
     return jsonify({"name": r["title"], "id": entry_id, "sections": secs})
+
+
+@bp.route("/api/study/for-verse/<book>/<int:chapter>/<int:verse>", methods=["GET"])
+@limiter.limit("600 per hour")
+def for_verse(book, chapter, verse):
+    """PUBLIC: which published CONCEPT topics cite this verse — the reader's 'In studies:'
+    line. {topics:[{id,title}]}, empty if none. Name-topics are deliberately excluded."""
+    idx = _verse_index()
+    hits = idx.get((book, chapter, verse), [])
+    return jsonify({"topics": [{"id": i, "title": t} for i, t in hits]})
 
 
 @bp.route("/api/study/draft-intro", methods=["POST"])

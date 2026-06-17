@@ -169,6 +169,10 @@ const api = {
   studyForName: (name) =>
     fetch(`/api/study/for-name/${encodeURIComponent(name)}`, { headers: _authHeaders() })
       .then(r => r.ok ? r.json() : { sections: [] }).catch(() => ({ sections: [] })),
+  // Which published concept studies cite this verse → the reader's "In studies:" line.
+  studyForVerse: (book, chapter, verse) =>
+    fetch(`/api/study/for-verse/${encodeURIComponent(book)}/${chapter}/${verse}`)
+      .then(r => r.ok ? r.json() : { topics: [] }).catch(() => ({ topics: [] })),
   // Admin: draft a text-first intro for a topic (title + sections) → { intro }.
   studyDraftIntro: (payload) =>
     fetch(`/api/study/draft-intro`, {
