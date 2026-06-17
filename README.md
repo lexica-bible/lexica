@@ -22,20 +22,6 @@ Lexica is built on a simple principle: **the text speaks first**. No imported sy
 
 ---
 
-![Search results showing πνεῦμα with LSJ sidebar and gloss groupings](assets/screenshot-search.png)
-*Lexicon search with LSJ definition and occurrence groupings*
-
-![AI synthesis with Hebrew and Greek citation chips](assets/screenshot-ai-search.png)
-*AI natural language search reasoning across Greek and Hebrew*
-
-![Library reading view with TSK cross-reference panel](assets/screenshot-cross-reference.png)
-*Cross-reference panel with AI thematic synthesis*
-
-![Parallel interlinear view with Strong's badges](assets/screenshot-parallel.png)
-*ABP and KJV parallel interlinear with Strong's numbers*
-
----
-
 ## What's Under the Hood
 
 - **ABP interlinear** — full 66-book Greek/English word-level text with Strong's tagging
