@@ -916,15 +916,21 @@ input { font-family: inherit; }
    (via abp_surface); placed BELOW the romanization/gloss line. */
 .detail-form {
   display: flex;
-  align-items: baseline;
-  flex-wrap: wrap;
-  gap: 7px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 2px;
 }
 .detail-form-label {
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--ink-4);
+}
+.detail-form-line {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 7px;
 }
 .detail-form-w {
   font-family: var(--f-greek);
