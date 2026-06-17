@@ -798,34 +798,40 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
 
       <div className="detail-body" ref={isMobile ? scrollRef : null}>
         <div className={"detail-hero" + (hero.noGloss ? " no-gloss" : "")}>
-          <div className={"detail-greek" + (hero.he ? " detail-greek--he" : (!entry.greek ? " detail-greek--latin" : ""))}
-               dir={hero.he ? "rtl" : undefined}>
-            {hero.script}
-          </div>
-          {(hero.translit || heroInlineGloss) && (
-            <div className={"detail-translit-row" + (hero.he ? " detail-translit-row-he" : "")}>
-              <span className="detail-translit">{hero.translit}</span>
-              {heroInlineGloss && (
-                <><span className="detail-sep">·</span><span className="detail-gloss">{hero.standaloneGloss}</span></>
-              )}
+          <div className="detail-hero-id">
+            <div className={"detail-greek" + (hero.he ? " detail-greek--he" : (!entry.greek ? " detail-greek--latin" : ""))}
+                 dir={hero.he ? "rtl" : undefined}>
+              {hero.script}
             </div>
-          )}
-          {!hero.noGloss && !heroInlineGloss && (
-            <div className="detail-gloss">{hero.standaloneGloss}</div>
-          )}
-          {heroForm && (
-            <div className="detail-form">
-              <span className="detail-form-label">in this verse</span>
-              <span className="detail-form-line">
-                <span className={"detail-form-w" + (hero.he ? " detail-form-w--he" : "")}
-                      dir={hero.he ? "rtl" : undefined}>{heroForm}</span>
-                {heroInflectedTranslit && heroInflectedTranslit !== hero.translit && (
-                  <><span className="detail-sep">·</span><span className="detail-form-tr">{heroInflectedTranslit}</span></>
+            {(hero.translit || heroInlineGloss) && (
+              <div className={"detail-translit-row" + (hero.he ? " detail-translit-row-he" : "")}>
+                <span className="detail-translit">{hero.translit}</span>
+                {heroInlineGloss && (
+                  <><span className="detail-sep">·</span><span className="detail-gloss">{hero.standaloneGloss}</span></>
                 )}
-              </span>
+              </div>
+            )}
+            {!hero.noGloss && !heroInlineGloss && (
+              <div className="detail-gloss">{hero.standaloneGloss}</div>
+            )}
+          </div>
+          {(heroForm || hero.morph) && (
+            <div className="detail-hero-occ">
+              {heroForm && (
+                <div className="detail-form">
+                  <span className="detail-form-label">in this verse</span>
+                  <span className="detail-form-line">
+                    <span className={"detail-form-w" + (hero.he ? " detail-form-w--he" : "")}
+                          dir={hero.he ? "rtl" : undefined}>{heroForm}</span>
+                    {heroInflectedTranslit && heroInflectedTranslit !== hero.translit && (
+                      <><span className="detail-sep">·</span><span className="detail-form-tr">{heroInflectedTranslit}</span></>
+                    )}
+                  </span>
+                </div>
+              )}
+              {hero.morph && <div className="detail-morph">{hero.morph}</div>}
             </div>
           )}
-          {hero.morph && <div className="detail-morph">{hero.morph}</div>}
         </div>
 
         {sections.map(renderSection)}

@@ -3019,6 +3019,8 @@ function DetailPanel({
   }, /*#__PURE__*/React.createElement("div", {
     className: "detail-hero" + (hero.noGloss ? " no-gloss" : "")
   }, /*#__PURE__*/React.createElement("div", {
+    className: "detail-hero-id"
+  }, /*#__PURE__*/React.createElement("div", {
     className: "detail-greek" + (hero.he ? " detail-greek--he" : !entry.greek ? " detail-greek--latin" : ""),
     dir: hero.he ? "rtl" : undefined
   }, hero.script), (hero.translit || heroInlineGloss) && /*#__PURE__*/React.createElement("div", {
@@ -3031,7 +3033,9 @@ function DetailPanel({
     className: "detail-gloss"
   }, hero.standaloneGloss))), !hero.noGloss && !heroInlineGloss && /*#__PURE__*/React.createElement("div", {
     className: "detail-gloss"
-  }, hero.standaloneGloss), heroForm && /*#__PURE__*/React.createElement("div", {
+  }, hero.standaloneGloss)), (heroForm || hero.morph) && /*#__PURE__*/React.createElement("div", {
+    className: "detail-hero-occ"
+  }, heroForm && /*#__PURE__*/React.createElement("div", {
     className: "detail-form"
   }, /*#__PURE__*/React.createElement("span", {
     className: "detail-form-label"
@@ -3046,7 +3050,7 @@ function DetailPanel({
     className: "detail-form-tr"
   }, heroInflectedTranslit)))), hero.morph && /*#__PURE__*/React.createElement("div", {
     className: "detail-morph"
-  }, hero.morph)), sections.map(renderSection)));
+  }, hero.morph))), sections.map(renderSection)));
 }
 
 // ============================================================

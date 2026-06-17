@@ -881,6 +881,16 @@ input { font-family: inherit; }
 .detail-hero.no-gloss {
   padding-bottom: 12px;
 }
+/* Two visual groups in the word card: dictionary identity (lemma + romanization ·
+   gloss) and this-occurrence (in-verse form + parsing) — tight within, clear gap
+   between. Scoped to the word card; .detail-hero itself is shared with other rails. */
+.detail-hero-id, .detail-hero-occ {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 5px;
+}
+.detail-hero-occ { margin-top: 6px; }
 .detail-greek {
   font-family: var(--f-greek);
   font-size: 56px;
