@@ -24,8 +24,8 @@ Still open:
    the dangerous data invariants (strongs prefix, tipnr type-set, the build's guards). 2026-06-07 added
    the automation layer: GitHub auto-runs the tests + frontend build-check on every push (CI), a
    pre-commit hook runs the same checks locally, `scripts/deploy.sh` is a one-command tested deploy, and
-   Dependabot watches outside packages. STILL OPEN here: a nightly `health_check.py` email on PA (needs a
-   PA scheduled task + email login) — the only piece that has to run against the real database.
+   Dependabot watches outside packages. The nightly `health_check.py --email --only-warn` email on PA is
+   now DONE too (2026-06-16; daily scheduled task at 23:53 UTC, mails only on a real failure).
    Also note (flagged by the 2026-06-10 code read): CI itself auto-runs only the data-invariant
    tests; the endpoint snapshot harness + browser click-through are MANUAL (run against a DB copy
    during dev), so web routes / click behavior aren't checked on every push. That's the main
@@ -133,18 +133,15 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
   Browser-local first, with **opt-in accounts (email/password OR Google) for cross-device sync** —
   the first server-write path, in its own `notes.db` (NOT bible.db). See TODO_ARCHIVE + memory
   `project_notes_highlights`. Open follow-ups: word-level highlights in **KJV** (BSB got per-word
-  2026-06-15 — see the BSB chip-mode item below), **password reset / set-password (needs SMTP — see
-  below)**, Apple sign-in (if wanted). (Cross-translation highlight paint is DONE, 2026-06-09.)
+  2026-06-15 — see the BSB chip-mode item below), Apple sign-in (if wanted). (Password reset +
+  set-password DONE 2026-06-16 via SMTP/Resend; cross-translation highlight paint DONE 2026-06-09.)
 
 - **Notes — next-session follow-ups (one place to start from).** Memory `project_notes_highlights`
   has the full design + gotchas.
-  1. **Email / SMTP on PA — PARKED until the app gets a custom domain (2026-06-09 decision).** Unlocks
-     password **reset**, **set-a-password** for Google-only accounts, the nightly `health_check.py`
-     email, and later campaigns. Deliberately deferred: a domain means doing the sender setup once,
-     properly (mail from `you@domain` + SPF/DKIM via a real service), instead of standing up a throwaway
-     Gmail now and redoing it. The send code is provider-agnostic plain SMTP, so when the domain lands
-     it's just env vars in the WSGI + a small send helper + the reset/set-password endpoints. Nothing
-     else is blocked by it.
+  1. ~~**Email / SMTP on PA — PARKED until a custom domain.**~~ **DONE 2026-06-16** — lexica.bible
+     landed, so it got built: Resend SMTP via `mailer.py`, password reset + set-password endpoints, and
+     the nightly health-check email — all live. Moved to TODO_ARCHIVE; full record memory
+     `project_email_smtp`. (Email campaigns / reading-plan mailings remain a future "reach" item.)
   2. **Highlight paint reach** — cross-translation DONE 2026-06-09 (a highlight now shows in ABP/KJV/BSB;
      exact words in its home text, rounds up to whole verse elsewhere). BSB got per-WORD highlights
      2026-06-15 (bsb_words; see the BSB chip-mode item). STILL OPEN (optional, lower value): word-level
@@ -351,17 +348,16 @@ Notes + highlights + bookmarks LIVE, plus opt-in accounts/sync (see archive + me
   (`data-note-pos` on its chips, via bsb_words — see the BSB chip-mode item). KJV still anchors the whole
   verse; kjv_words has positions, so the same `renderBsbVerse` pattern could close it.
 
-### Free user accounts — MOSTLY DONE 2026-06-09 (reset pending)
+### Free user accounts — DONE 2026-06-09 (reset added 2026-06-16)
 LIVE: email/password + Google sign-in, opt-in, syncing notes across devices via `notes.db`
 (see archive + memory). App stays fully usable with no account.
 **Account ROLES added 2026-06-11 (LIVE): nologin / user / berean / admin** — `role` column on
 notes.db users; ESV/NIV = berean+, Stats + an in-app Admin page (About → Admin) = admin, AI search
-= any login. Owner email is always admin. Full record: memory `project_user_roles`. STILL OPEN:
-- **Password reset + set-password** — needs the site to SEND email (SMTP on PA, not configured). A
-  Google-only account currently can't use the password form (no password set). Same SMTP blocker as
-  the nightly health_check email below — wire SMTP once, both unlock.
+= any login. Owner email is always admin. Full record: memory `project_user_roles`.
+**Password reset + set-password DONE 2026-06-16** via SMTP/Resend (a Google-only account can now add
+a password). Full record: memory `project_email_smtp`. STILL OPEN:
 - **Apple sign-in** — only if wanted (needs a paid Apple Developer account; heavier than Google).
-- Email campaign / reading plans (the original "reach" payoff) — once SMTP + accounts are proven.
+- Email campaign / reading plans (the original "reach" payoff) — now that mail is proven.
 
 ### Broader AI search — meaning-based passage search
 Logos feels "broader" for two reasons: it reads their whole paid library (commentaries, dictionaries),

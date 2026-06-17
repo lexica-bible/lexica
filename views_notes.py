@@ -8,21 +8,24 @@ account (browse + local notes), exactly as before.
 
 Auth: email + password (password stored ONE-WAY hashed via werkzeug — never
 readable). Stay-logged-in is a random bearer token kept in the browser; the
-server keeps a table of valid tokens (logout deletes the token). NO email
-verification and NO "forgot password" yet — password reset needs the site to
-send email (SMTP), which isn't configured on PA. Add it later (a reset token
-mailed to the address). Until then a lost password = no self-serve recovery.
+server keeps a table of valid tokens (logout deletes the token). Password RESET
+is live (a single-use token mailed via mailer.py / Resend SMTP — see request_reset);
+set-password lets a Google-only account add a password. NO email verification on
+signup yet.
 
 Storage: notes.db (core.notes_db), kept OUT of bible.db (corpus gets rebuilt;
 user data must survive that). Tables: users, tokens, notes (one row per note,
-keyed by owner = "u<user_id>").
+keyed by owner = "u<user_id>"), plan, password_resets.
 
 Endpoints:
-  POST /api/auth/signup  {email, password} -> {token, email}
-  POST /api/auth/login   {email, password} -> {token, email}
-  POST /api/auth/logout                     -> {ok}
-  GET  /api/auth/me                          -> {email} | 401
-  POST /api/notes/sync   {notes:[...]}       -> {notes:[...]}   (Authorization: Bearer <token>)
+  POST /api/auth/signup        {email, password}  -> {token, email}
+  POST /api/auth/login         {email, password}  -> {token, email}
+  POST /api/auth/logout                            -> {ok}
+  GET  /api/auth/me                                -> {email, role} | 401
+  POST /api/auth/request-reset {email}             -> {ok}   (emails a link; never leaks existence)
+  POST /api/auth/reset         {token, password}   -> {token, email}   (single-use, 1h)
+  POST /api/auth/set-password  {password}          -> {ok}   (Authorization: Bearer <token>)
+  POST /api/notes/sync         {notes:[...]}        -> {notes:[...]}   (Authorization: Bearer <token>)
 Two-way last-write-wins merge by note id; deletes carry a tombstone.
 """
 import json

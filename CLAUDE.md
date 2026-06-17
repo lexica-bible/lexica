@@ -71,8 +71,12 @@ Pick effort by task TYPE. When in doubt, lean higher — the plan affords it.
   with `os.environ['KEY'] = '...'`, and those lines MUST sit ABOVE the app import (module-level reads
   like `GOOGLE_CLIENT_ID = os.environ.get(...)` run at import). `core.load_dotenv()` doesn't reliably
   find a `.env` under the PA web app — don't rely on one. Edit the WSGI, then reload (touch it). Keys
-  set there: `ANTHROPIC_API_KEY`, `GOOGLE_CLIENT_ID`, `ESV_API_TOKEN`, `OWNER_EMAIL` (+ optional
-  `FCBH_API_KEY`).
+  set there: `ANTHROPIC_API_KEY`, `GOOGLE_CLIENT_ID`, `ESV_API_TOKEN`, `OWNER_EMAIL`, the mail keys
+  `SMTP_HOST`/`SMTP_PORT`/`SMTP_USER`/`SMTP_PASS` + `MAIL_FROM` + `SITE_URL` (+ optional `FCBH_API_KEY`,
+  `MAIL_REPLY_TO`). Outbound mail goes through **Resend** (relay `smtp.resend.com:587`, user `resend`,
+  pass = a Resend API key, From `noreply@lexica.bible`). The nightly `health_check.py` task can't see the
+  WSGI env, so ITS copy of the mail keys + `OWNER_EMAIL` lives in a gitignored `~/bible-db/.env` (the
+  script `load_dotenv`s it). Full record + gotchas: memory `project_email_smtp`.
 - **Accounts / roles / gated texts** (full records: memories `project_user_roles`, `project_esv_audio`,
   `project_visitor_stats`; setup history in TODO_ARCHIVE):
   - Roles nologin / user / berean / admin — a `role` column in `notes.db users`; gates in `views_notes`
@@ -112,7 +116,9 @@ Pick effort by task TYPE. When in doubt, lean higher — the plan affords it.
   core.hooksPath`) because PA has no Node. Bypass once with `git commit --no-verify`.
 - **Dependabot** (`.github/dependabot.yml`) — weekly; opens PRs for pip/npm/actions updates. They're
   suggestions, not auto-applied; merge on GitHub, then `pip install` on PA for pip ones.
-- PENDING (not done): nightly `health_check.py` email on PA — needs PA scheduled task + email creds.
+- Nightly `health_check.py --email --only-warn` email — LIVE on PA 2026-06-16 (daily PA scheduled task,
+  23:53 UTC). `--only-warn` = mails ONLY when a check fails (silent on clean nights). The task's mail keys
+  + `OWNER_EMAIL` are in `~/bible-db/.env` (a cron can't read the WSGI env). Memory `project_email_smtp`.
 
 ## Frontend build step (added 2026-06-06)
 - The SOURCE is `static/src/*.jsx` — per-view files, concatenated (filename order;
@@ -207,7 +213,8 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   PA-only one-time data load (like bsb_verses) — `load_bsb_words.py` has a `--dry-run` that checks the tokens
   rebuild the live bsb_verses text before writing. Source-format gotchas + the deploy step: memory `project_bsb_words`.
 - **Separate DB files (NOT bible.db, all gitignored + PA-only):** `notes.db` — user accounts/notes/
-  highlights/journals + a `visits` table (owner-only visitor stats: day + daily IP+UA hash + referrer).
+  highlights/journals + a `visits` table (owner-only visitor stats: day + daily IP+UA hash + referrer)
+  + `password_resets` (short-lived single-use reset tokens, added 2026-06-16).
   `esv.db` — owner-only ESV text (`esv_verses`), loaded by `scripts/load_esv.py`. `niv.db` — owner-only
   NIV text (`niv_verses`), loaded by `scripts/load_niv.py`. See "Owner-only features".
   `heb.db` — **PUBLIC** Hebrew OT interlinear: `heb_words` (per word: hebrew, strongs H-number, morph,
@@ -421,7 +428,11 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   one-way hashed (werkzeug, ships with Flask). Stay-logged-in = random bearer token in `tokens` +
   browser `localStorage` `lexica.auth.v1`; logout deletes it. Sync = two-way last-write-wins by id.
   Guards: rate limits, size/count caps, parameterized SQL. Tables auto-create (deploy is a normal pull).
-  NO email verification, NO password reset yet (reset needs SMTP on PA — not set up).
+  Password **reset** + **set-password** (so a Google-only account can add one) are LIVE 2026-06-16 via
+  SMTP/Resend — `request-reset`/`reset`/`set-password` in views_notes + a `password_resets` table; the
+  emailed link opens the SPA at `/?reset=<token>`. `request-reset` always returns ok (never reveals
+  whether an email has an account); `reset` is single-use + 1h + clears every existing session. NO email
+  *verification* on signup yet. Mail setup + the 535/550 gotchas: memory `project_email_smtp`.
 - **Google sign-in (optional).** `/api/auth/google` verifies Google's signed token (`google-auth`)
   and finds-or-creates the account by email. Shows only when `GOOGLE_CLIENT_ID` is set AND
   `google-auth` is importable — both checked LAZILY in `_google_ready()` so a deploy before setup
@@ -577,7 +588,8 @@ memory `project_ai_synthesis_quality`.
 ## Maintenance / data-quality scripts
 - `scripts/health_check.py <db>` — READ-ONLY scanner; run after ANY import/rebuild. ~14 checks (strongs_base
   invariant, dups, misalignment, fragmented brackets, missing/orphan greek_pos, strongs range, lexicon/bdb
-  coverage) + person/place overlap report. Should be 0 warnings
+  coverage) + person/place overlap report. Should be 0 warnings. `--email [--only-warn] [--email-to=addr]`
+  mails the report via `mailer.py` (the nightly PA task; SMTP creds from `~/bible-db/.env`).
 - `fix_greek_pos_gaps.py` / `fix_bracket_gaps_absorb.py` / `fix_orphan_greek_pos.py` / `dedup_words.py` —
   targeted data repairs, all with `--dry-run`. Touch only the named column; never blanket DELETE
 

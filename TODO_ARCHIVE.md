@@ -6,6 +6,26 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Outbound email — Resend SMTP, password reset + nightly health-check — DONE 2026-06-16
+
+Parked since 2026-06-09 "until a custom domain" so the sender setup got done ONCE properly
+(authenticated `@lexica.bible`, not a throwaway Gmail). lexica.bible landed, so it got built.
+Full record + the test-error decoder: memory `project_email_smtp`.
+- **Sender:** Resend (SMTP relay `smtp.resend.com:587`, user `resend`, pass = a Resend API key,
+  From `noreply@lexica.bible`). DNS (MX + SPF + DKIM + DMARC) added in Cloudflare, DNS-only. New
+  module `mailer.py` (no Flask dep, no-op until configured — deploy-safe like the Google button).
+- **Password reset + set-password:** `request-reset` (always ok, no account-existence leak) /
+  `reset` (single-use, 1h, clears every session then signs in) / `set-password` (Google-only
+  accounts add a password). `password_resets` table in notes.db; the emailed link opens the SPA at
+  `/?reset=<token>`. Frontend: forgot/reset modes in the auth box + a Password box in the Account panel.
+- **Nightly health-check email:** `health_check.py` got `--email/--only-warn/--email-to`; a daily PA
+  scheduled task (23:53 UTC) mails only on a real failure.
+- **Lessons:** (1) the web app reads keys from the WSGI but a cron has NO WSGI env, so the task's
+  copy of the mail keys lives in a gitignored `~/bible-db/.env` — keys exist in BOTH places on purpose.
+  (2) Test errors: **535** = bad SMTP username/key (user must be the literal `resend`); **550 "domain
+  not verified"** = key is fine, just wait for Resend's DNS check (or fix a Cloudflare doubled-domain
+  name typo). Cloudflare publishes instantly; Resend re-checks on its own slow timer.
+
 ## Study tab — public go-live + study↔reader links + speedup — DONE 2026-06-16
 
 The Study tab (admin-only since 2026-06-12) opened to the public, plus a batch of linking/perf/UX work.
