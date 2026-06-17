@@ -10,8 +10,13 @@ For every dotted ABP number (e.g. 180.2) it compares:
 Where they disagree (ignoring accent marks) the headword is wrong -- e.g.
 G180.2 shows G180 ἀκατάπαυστος but should be ἀκατασκεύαστος.
 
+The ABP dict stores Greek as HTML codes (&kappa;, &#x1F00;) inside <grk> tags,
+with the morpheme hyphen sitting BETWEEN two <grk> spans, so the reader has to
+drop tags, turn the codes back into letters, and join the hyphen first.
+
 Touches nothing. On PA:  python scripts/audit_dotted_lemmas.py
 """
+import html
 import os
 import re
 import sqlite3
@@ -19,22 +24,34 @@ import unicodedata
 
 DB = os.path.expanduser("~/bible-db/bible.db")
 
-_GREEK = re.compile(r"[Ͱ-Ͽἀ-῿]+")
+# Greek and Coptic (0x370-0x3ff) + Greek Extended (0x1f00-0x1fff), by code number
+# so we never have to spell out tricky boundary letters or \u escapes.
+def _is_greek(c: str) -> bool:
+    o = ord(c)
+    return 0x370 <= o <= 0x3ff or 0x1f00 <= o <= 0x1fff
 
 
-def first_greek(html: str) -> str:
-    """First Greek word of an abp_ext definition (drop tags + morpheme hyphens)."""
-    txt = re.sub(r"<[^>]+>", " ", html or "")
-    txt = txt.replace("­", "").replace("-", "")      # join "ἀκατα-σκεύαστος"
-    m = _GREEK.search(txt)
-    return m.group(0) if m else ""
+def first_greek(def_html: str) -> str:
+    """First Greek word of an abp_ext definition."""
+    txt = re.sub(r"<[^>]+>", "", def_html or "")      # drop <grk>/<span>/<p> tags
+    txt = html.unescape(txt)                           # &kappa; -> letter, &#x1F00; -> letter
+    txt = txt.replace(chr(0xad), "").replace("-", "")  # join "akata-skeuastos"
+    run, started = [], False
+    for c in txt:
+        if _is_greek(c):
+            run.append(c)
+            started = True
+        elif started:
+            break
+    return "".join(run)
 
 
 def bare(s: str) -> str:
-    """Accent- and case-insensitive form, so the same word stored with different
-    accent encoding doesn't read as a difference."""
+    """Accent-, case-, and final-sigma-insensitive form, so the same word stored
+    with different accent encoding doesn't read as a difference."""
     s = unicodedata.normalize("NFD", s or "")
-    return "".join(c for c in s if not unicodedata.combining(c)).lower()
+    s = "".join(c for c in s if not unicodedata.combining(c)).lower()
+    return s.replace("ς", "σ")
 
 
 def main() -> None:
@@ -46,7 +63,7 @@ def main() -> None:
         "WHERE strongs LIKE '%.%' GROUP BY strongs"
     ).fetchall()
 
-    wrong, no_entry = [], 0
+    wrong, no_entry, unreadable = [], 0, 0
     for r in dotted:
         num = r["num"]
         base = "G" + num.split(".")[0]
@@ -62,7 +79,10 @@ def main() -> None:
             no_entry += 1
             continue
         should = first_greek(ext["def_html"])
-        if should and bare(should) != bare(shown_lemma):
+        if not should:
+            unreadable += 1
+            continue
+        if bare(should) != bare(shown_lemma):
             wrong.append((num, shown_lemma, should, r["uses"]))
 
     conn.close()
@@ -70,7 +90,8 @@ def main() -> None:
     wrong.sort(key=lambda t: -t[3])
     print(f"dotted numbers: {len(dotted)}   "
           f"WRONG headword: {len(wrong)}   "
-          f"no ABP dict entry: {no_entry}")
+          f"no ABP dict entry: {no_entry}   "
+          f"couldn't read def: {unreadable}")
     print("dotted | shown now (base) | should be (ABP dict) | uses")
     for num, shown_lemma, should, uses in wrong:
         print(f"{num} | {shown_lemma} | {should} | {uses}")
