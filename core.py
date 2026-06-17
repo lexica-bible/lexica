@@ -346,6 +346,24 @@ def _serialize_word_core(row) -> dict:
     }
 
 
+def dotted_lexicon_cols(conn, base_lemma="l.lemma", base_translit="l.translit", strongs_col="w.strongs"):
+    """ABP dotted Strong's (G###.N) whose word differs from their base keep their correct
+    lemma/translit in the `dotted_lexicon` side table (full number -> own word). Returns
+    (lemma_expr, translit_expr, join_clause) that COALESCE it over the base lexicon columns,
+    or the base columns + '' when the table isn't built (deploy-safe). The caller selects the
+    exprs `AS lemma`/`AS translit` and drops the join into its FROM. Per-word/per-occurrence
+    queries only — NOT for queries that GROUP BY the base number (the dotted word would be
+    ambiguous across the group)."""
+    have = conn.execute(
+        "SELECT 1 FROM sqlite_master WHERE type='table' AND name='dotted_lexicon'"
+    ).fetchone()
+    if not have:
+        return base_lemma, base_translit, ""
+    return (f"COALESCE(dl.lemma, {base_lemma})",
+            f"COALESCE(dl.translit, {base_translit})",
+            f"LEFT JOIN dotted_lexicon dl ON dl.strongs = 'G' || {strongs_col}")
+
+
 def _clean_gloss(s: str | None) -> str | None:
     """Strip trailing punctuation that ABP interlinear leaves on phrase-boundary words."""
     if not s:

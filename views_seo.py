@@ -26,7 +26,7 @@ from xml.sax.saxutils import escape
 
 from flask import Blueprint, render_template, abort, redirect, Response
 
-from core import db_ro, heb_db, _KJV_BOOK_ID
+from core import db_ro, heb_db, _KJV_BOOK_ID, dotted_lexicon_cols
 
 bp = Blueprint("seo", __name__)
 
@@ -153,15 +153,17 @@ def _mark_brackets(words):
 def _fetch_abp(abbrev: str, chapter: int) -> list[dict]:
     conn = db_ro()
     try:
+        lem, tr, dl = dotted_lexicon_cols(conn)
         rows = conn.execute(
-            """SELECT v.verse, v.text AS prose, w.english, w.english_head, w.strongs_base,
-                      l.lemma, l.translit, w.italic, w.bracket_id, w.greek_pos,
+            f"""SELECT v.verse, v.text AS prose, w.english, w.english_head, w.strongs_base,
+                      {lem} AS lemma, {tr} AS translit, w.italic, w.bracket_id, w.greek_pos,
                       COALESCE(w.italic_words, '') AS italic_words,
                       COALESCE(w.smcap_words,  '') AS smcap_words,
                       p.heading
                FROM verses v
                JOIN words w ON w.verse_id = v.id
                LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base
+               {dl}
                LEFT JOIN pericopes p ON p.book = v.book AND p.chapter = v.chapter AND p.verse = v.verse
                WHERE v.book = ? AND v.chapter = ?
                ORDER BY v.verse, w.position""",

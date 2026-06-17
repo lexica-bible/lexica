@@ -22,7 +22,7 @@ from flask import Blueprint, jsonify, request
 
 from core import (
     log, db, db_ro, _anthropic, limiter, _FUNCTION_STRONGS,
-    _serialize_word_core, _clean_gloss, _ai_cache,
+    _serialize_word_core, _clean_gloss, _ai_cache, dotted_lexicon_cols,
     ai_fingerprint, ai_cache_put, ai_cache_prune,
 )
 from views_lsj import _lsj_concept_lookup, _format_lsj_context
@@ -443,13 +443,15 @@ def _get_verse_ref_re() -> re.Pattern:
 
 def _fetch_verse_words(conn, verse_id: int) -> list[dict]:
     """Return the full word list for a verse, used when fetching cited/primary verses."""
+    lem, tr, dl = dotted_lexicon_cols(conn)
     wrows = conn.execute(
-        """SELECT w.strongs_base, w.strongs, w.english, w.english_head, w.greek_pos,
+        f"""SELECT w.strongs_base, w.strongs, w.english, w.english_head, w.greek_pos,
                   w.bracket_id, w.italic, w.is_pn,
                   COALESCE(w.italic_words, '') AS italic_words,
-                  l.lemma, l.translit, l.strongs_def, l.kjv_def, l.derivation
+                  {lem} AS lemma, {tr} AS translit, l.strongs_def, l.kjv_def, l.derivation
            FROM words w
            LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base
+           {dl}
            WHERE w.verse_id = ?
              AND w.english IS NOT NULL AND w.english != ''
              AND w.strongs_base != '*'

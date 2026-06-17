@@ -15,7 +15,7 @@ import sqlite3
 from flask import Blueprint, Response, jsonify, request
 
 from core import (
-    db, db_ro, _strongs_num, _strip_accents, _clean_gloss,
+    db, db_ro, _strongs_num, _strip_accents, _clean_gloss, dotted_lexicon_cols,
     _FUNCTION_STRONGS, _KJV_BOOK_ID, _KJV_BOOK_ID_REV,
 )
 
@@ -310,6 +310,7 @@ def search():
         return Response(_search_cache[cache_key], mimetype="application/json")
 
     conn = db()
+    lem, tr, dl = dotted_lexicon_cols(conn)   # corrected headword for ABP dotted Strong's
     groupings: dict = {}
     variants: dict = {}
     kjv_rows: list = []
@@ -323,10 +324,11 @@ def search():
                 f"""
                 SELECT w.strongs_base, w.strongs, w.english, w.english_head,
                        v.id AS verse_id, v.book, v.chapter, v.verse,
-                       l.lemma, l.translit, l.strongs_def, l.kjv_def, l.derivation
+                       {lem} AS lemma, {tr} AS translit, l.strongs_def, l.kjv_def, l.derivation
                 FROM words w
                 JOIN verses v ON w.verse_id = v.id
                 LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base
+                {dl}
                 WHERE ({col} = ? OR {col} = ? OR {col} = ?)
                   AND w.english IS NOT NULL AND w.english != ''
                   AND w.strongs_base != '*'
@@ -344,13 +346,14 @@ def search():
             if phrase_mode:
                 # Phrase mode: word-boundary match within the full multi-word gloss.
                 rows = conn.execute(
-                    """
+                    f"""
                     SELECT w.strongs_base, w.strongs, w.english, w.english_head,
                            v.id AS verse_id, v.book, v.chapter, v.verse,
-                           l.lemma, l.translit, l.strongs_def, l.kjv_def, l.derivation
+                           {lem} AS lemma, {tr} AS translit, l.strongs_def, l.kjv_def, l.derivation
                     FROM words w
                     JOIN verses v ON w.verse_id = v.id
                     LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base
+                    {dl}
                     WHERE (word_boundary(w.english, ?)
                            OR word_boundary(strip_accents(l.translit), ?))
                       AND w.english IS NOT NULL AND w.english != ''
@@ -365,13 +368,14 @@ def search():
                 # with english fallback for rows where english_head is null,
                 # or transliteration prefix/substring for Greek lookup flexibility.
                 rows = conn.execute(
-                    """
+                    f"""
                     SELECT w.strongs_base, w.strongs, w.english, w.english_head,
                            v.id AS verse_id, v.book, v.chapter, v.verse,
-                           l.lemma, l.translit, l.strongs_def, l.kjv_def, l.derivation
+                           {lem} AS lemma, {tr} AS translit, l.strongs_def, l.kjv_def, l.derivation
                     FROM words w
                     JOIN verses v ON w.verse_id = v.id
                     LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base
+                    {dl}
                     WHERE (w.english_head = ? COLLATE NOCASE
                            OR w.english = ? COLLATE NOCASE
                            OR word_boundary(strip_accents(l.translit), ?)
