@@ -2149,10 +2149,45 @@ function DetailPanel({
   const [extraCount, setExtraCount] = useState(null);
   const [showInterlinear, setShowInterlinear] = useState(false);
   const [interlinearWords, setInterlinearWords] = useState(null);
+  const heroRef = useRef(null);
   useEffect(() => {
     setShowInterlinear(false);
     setInterlinearWords(null);
   }, [entry && entry.id]);
+
+  // Auto-shrink the big headword so a long word (e.g. a proper name like
+  // "Nebuchadnezzar") scales down to fit the panel on one line instead of
+  // overflowing. Measure the natural width at the CSS base size against the
+  // panel's content width, then drop the size proportionally if it's too wide.
+  // Re-runs per word and when the layout swaps (mobile sheet <-> desktop side)
+  // or the window resizes.
+  useLayoutEffect(() => {
+    const el = heroRef.current;
+    if (!el) return;
+    let cancelled = false;
+    const fit = () => {
+      if (cancelled || !el.isConnected) return;
+      el.style.fontSize = ""; // reset to the CSS base, then measure
+      const box = el.closest(".detail-body");
+      if (!box) return;
+      const cs = getComputedStyle(box);
+      const avail = box.clientWidth - parseFloat(cs.paddingLeft) - parseFloat(cs.paddingRight);
+      const natural = el.scrollWidth;
+      if (avail > 0 && natural > avail) {
+        const base = parseFloat(getComputedStyle(el).fontSize);
+        el.style.fontSize = Math.max(22, Math.floor(base * avail / natural)) + "px";
+      }
+    };
+    fit();
+    // The reader fonts load with display=optional, so a first-open measure can
+    // land on the fallback font — re-measure once the real font settles.
+    if (document.fonts && document.fonts.ready) document.fonts.ready.then(fit);
+    window.addEventListener("resize", fit);
+    return () => {
+      cancelled = true;
+      window.removeEventListener("resize", fit);
+    };
+  }, [entry && entry.id, isMobile]);
 
   // The side-card interlinear follows the TEXT you're reading, same as the reading
   // pane: KJV -> KJV words, Hebrew (HEB reader) -> Hebrew words, otherwise ABP Greek.
@@ -3021,6 +3056,7 @@ function DetailPanel({
   }, /*#__PURE__*/React.createElement("div", {
     className: "detail-hero-id"
   }, /*#__PURE__*/React.createElement("div", {
+    ref: heroRef,
     className: "detail-greek" + (hero.he ? " detail-greek--he" : !entry.greek ? " detail-greek--latin" : ""),
     dir: hero.he ? "rtl" : undefined
   }, hero.script), (hero.translit || heroInlineGloss) && /*#__PURE__*/React.createElement("div", {
