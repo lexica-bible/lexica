@@ -85,7 +85,7 @@ def main() -> None:
         "WHERE strongs LIKE '%.%' GROUP BY strongs"
     ).fetchall()
 
-    wrong, no_entry, unreadable = [], 0, 0
+    wrong, no_entry, unreadable, form_note = [], 0, 0, 0
     for r in dotted:
         num = r["num"]
         base = "G" + num.split(".")[0]
@@ -100,6 +100,9 @@ def main() -> None:
         if not ext:
             no_entry += 1
             continue
+        if clean_text(ext["def_html"]).lstrip().startswith("[ABP]"):
+            form_note += 1     # ABP form note (e.g. εστίν -> Strong G2076); base lemma is right
+            continue
         should = first_greek(ext["def_html"])
         if not should:
             unreadable += 1
@@ -112,6 +115,7 @@ def main() -> None:
     wrong.sort(key=lambda t: -t[3])
     print(f"dotted numbers: {len(dotted)}   "
           f"WRONG headword: {len(wrong)}   "
+          f"ABP form notes (fine): {form_note}   "
           f"no ABP dict entry: {no_entry}   "
           f"couldn't read def: {unreadable}")
     print("dotted | shown now (base) | should be (ABP dict) | uses")
