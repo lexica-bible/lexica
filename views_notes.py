@@ -344,8 +344,10 @@ def _send_reset_email(email, link):
         "If you didn't ask for this, just ignore this email — your password "
         "won't change.\n\n— Lexica · https://www.lexica.bible\n"
     )
+    logo = f"{_site_base()}/static/icon-512.png"
     html = (
-        '<div style="font-family:Georgia,serif;font-size:16px;color:#221e18;line-height:1.55">'
+        '<div style="font-family:Georgia,serif;font-size:16px;color:#221e18;line-height:1.55;max-width:480px;margin:0 auto">'
+        f'<div style="text-align:center;padding:6px 0 2px"><img src="{logo}" width="64" height="64" alt="Lexica" style="display:inline-block"></div>'
         "<p>Someone asked to reset the password for your <b>Lexica</b> account.</p>"
         "<p>Choose a new password (this link expires in 1 hour):</p>"
         f'<p><a href="{link}" style="background:#1a1a2e;color:#fff;padding:11px 20px;'
