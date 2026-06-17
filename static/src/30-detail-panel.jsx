@@ -824,7 +824,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
                     <span className={"detail-form-w" + (hero.he ? " detail-form-w--he" : "")}
                           dir={hero.he ? "rtl" : undefined}>{heroForm}</span>
                     {heroInflectedTranslit && heroInflectedTranslit !== hero.translit && (
-                      <><span className="detail-sep">·</span><span className="detail-form-tr">{heroInflectedTranslit}</span></>
+                      <span className="detail-form-tr">{heroInflectedTranslit}</span>
                     )}
                   </span>
                 </div>

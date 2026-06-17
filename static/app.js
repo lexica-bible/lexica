@@ -3044,11 +3044,9 @@ function DetailPanel({
   }, /*#__PURE__*/React.createElement("span", {
     className: "detail-form-w" + (hero.he ? " detail-form-w--he" : ""),
     dir: hero.he ? "rtl" : undefined
-  }, heroForm), heroInflectedTranslit && heroInflectedTranslit !== hero.translit && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("span", {
-    className: "detail-sep"
-  }, "\xB7"), /*#__PURE__*/React.createElement("span", {
+  }, heroForm), heroInflectedTranslit && heroInflectedTranslit !== hero.translit && /*#__PURE__*/React.createElement("span", {
     className: "detail-form-tr"
-  }, heroInflectedTranslit)))), hero.morph && /*#__PURE__*/React.createElement("div", {
+  }, heroInflectedTranslit))), hero.morph && /*#__PURE__*/React.createElement("div", {
     className: "detail-morph"
   }, hero.morph))), sections.map(renderSection)));
 }
