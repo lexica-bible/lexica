@@ -133,7 +133,7 @@ function AddRef({ onAdd, placeholder }) {
     api.studyVerse(r).then(d => {
       setBusy(false);
       if (d && d.verses && d.verses.length) {
-        onAdd({ ref: r, text: d.verses.map(v => v.text).join(" ") });
+        onAdd({ ref: d.canonical || r, text: d.verses.map(v => v.text).join(" ") });
         setRef("");
       } else {
         setErr((d && d.error) || "Couldn't find that reference.");

@@ -199,6 +199,23 @@ def _parse_ref(ref: str):
     return book_id, start_ch, start_v, end_ch, end_v
 
 
+def _canonical_ref(ref):
+    """'gen 1:1' -> 'Genesis 1:1' — full book name, range preserved. Falls back to the
+    text as given if it can't be parsed, so the editor stores a tidy reference."""
+    parsed = _parse_ref(ref)
+    if not parsed:
+        return ref
+    book_id, sc, sv, ec, ev = parsed
+    disp = _BOOK_DISPLAY.get(_KJV_BOOK_ID_REV.get(book_id, ""), "")
+    if not disp:
+        return ref
+    if sc == ec and sv == ev:
+        return "%s %d:%d" % (disp, sc, sv)
+    if sc == ec:
+        return "%s %d:%d-%d" % (disp, sc, sv, ev)
+    return "%s %d:%d-%d:%d" % (disp, sc, sv, ec, ev)
+
+
 def _join_prose(tokens):
     """Join word glosses into prose, attaching trailing punctuation with no space —
     the same rule the reader's ABP Prose mode uses (joinProse in 60-library.jsx)."""
@@ -895,7 +912,7 @@ def resolve_verse():
     verses = _resolve_ref(ref)
     if not verses:
         return jsonify({"ref": ref, "verses": [], "error": "Couldn't find that reference."}), 200
-    return jsonify({"ref": ref, "verses": verses})
+    return jsonify({"ref": ref, "canonical": _canonical_ref(ref), "verses": verses})
 
 
 @bp.route("/api/study/for-name/<name>", methods=["GET"])

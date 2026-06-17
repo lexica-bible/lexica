@@ -4431,7 +4431,7 @@ function AddRef({
       setBusy(false);
       if (d && d.verses && d.verses.length) {
         onAdd({
-          ref: r,
+          ref: d.canonical || r,
           text: d.verses.map(v => v.text).join(" ")
         });
         setRef("");
