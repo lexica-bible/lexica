@@ -33,8 +33,10 @@ number (ABP parks its own added words at "nearest Strong's + a dot"). ~3049 numb
   boxes (`.detail-hero-id` / `.detail-hero-occ`); parsing-only cards (indeclinables) sit tight via
   `.detail-hero-occ--tight`. 30-detail-panel.jsx + styles.css. (An "in this verse" label had been removed
   back on 2026-06-15; it's back now and kept.)
-- **Still open (in TODO.md):** the SEO/AI/Search/Lexicon lexicon-join surfaces still show the base word for
-  dotted numbers — optional follow-up.
+- **Other surfaces (2026-06-17):** the SEO `/read` pages, the AI verse-word context (`ai._fetch_verse_words`),
+  and ABP Search now get the same correction via a shared `core.dotted_lexicon_cols()` helper (per-word, so no
+  grouping is affected; deploy-safe). Only the **Lexicon tab** is left open (TODO.md) — it groups + clicks
+  through by the base number, so it needs a bigger change, not a display swap.
 
 ## Outbound email — Resend SMTP, password reset + nightly health-check — DONE 2026-06-16
 

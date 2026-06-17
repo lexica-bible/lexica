@@ -67,13 +67,12 @@ Still open:
    `.lib-bracket-group` (`display:contents`) is still emitted. Safe to delete the rest — grep `static/src/`
    first to confirm no `.jsx` still emits them. Pure tidy-up, low priority. `code: static/styles.css bracket
    section (~line 1956)`
-4. **Optional: extend the dotted-Strong's headword fix to the OTHER lexicon-join surfaces.** The word card is
-   fixed and the formatting pass is done (TODO_ARCHIVE "ABP dotted Strong's headword + word-card formatting",
-   2026-06-17), but the server-rendered SEO pages (`views_seo`), the AI verse-word context (`ai.py`
-   `_fetch_verse_words`), and Search/Lexicon (`views_search`/`views_lexicon`) still resolve a dotted number to
-   its BASE word. Low priority — those group by base on purpose and the wrong word is far less prominent there.
-   Same fix shape: COALESCE `dotted_lexicon` over the base join.
-   `code: views_seo.py, ai.py, views_search.py, views_lexicon.py`
+4. **Optional: the Lexicon tab still shows a dotted Strong's BASE word.** The dotted-headword fix now covers the
+   reader card, the SEO `/read` pages, the AI verse-word context, and Search — all per-word, via the shared
+   `core.dotted_lexicon_cols` helper (2026-06-17; see TODO_ARCHIVE). Only the **Lexicon** tab is left: it groups
+   AND clicks through by the BASE number end-to-end, so a display-only swap would show one word but open another.
+   Doing it right means treating a dotted-different-word as its own lexicon entry (regroup by the full `G###.N` +
+   carry the full number through the click) — a real change, low priority. `code: views_lexicon.py`
 
 ---
 
