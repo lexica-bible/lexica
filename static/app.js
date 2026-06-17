@@ -207,8 +207,15 @@ const api = {
   }).catch(() => ({
     ok: false
   })),
-  studyVerse: ref => fetch(`/api/study/verse?ref=${encodeURIComponent(ref)}`, {
-    headers: _authHeaders()
+  studyVerse: ref => fetch(`/api/study/verse`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      ..._authHeaders()
+    },
+    body: JSON.stringify({
+      ref
+    })
   }).then(r => r.ok ? r.json() : {
     verses: []
   }).catch(() => ({

@@ -874,16 +874,24 @@ def delete_entry(entry_id):
     return jsonify({"ok": True})
 
 
-@bp.route("/api/study/verse", methods=["GET"])
+@bp.route("/api/study/verse", methods=["GET", "POST"])
 @limiter.limit("600 per hour")
 def resolve_verse():
-    """Auto-fill helper: look up one reference's ABP prose text as the editor adds it."""
+    """Auto-fill helper: look up one reference's ABP prose text as the editor adds it.
+    Takes the reference from a POST JSON body (the editor's path — query params on this
+    one were being dropped before the app, unlike the POST endpoints that always worked),
+    falling back to a ?ref= query for compatibility."""
     g = _guard()
     if g:
         return g
     ref = (request.args.get("ref") or "").strip()
+    if not ref and request.method == "POST":
+        body = request.get_json(silent=True) or {}
+        if isinstance(body, dict):
+            ref = (body.get("ref") or "").strip()
     if not ref:
-        return jsonify({"error": "no reference"}), 400
+        # admin-only endpoint, so it's safe to echo what arrived — diagnostic if it ever recurs
+        return jsonify({"error": "no reference", "saw": request.full_path}), 400
     verses = _resolve_ref(ref)
     if not verses:
         return jsonify({"ref": ref, "verses": [], "error": "Couldn't find that reference."}), 200
