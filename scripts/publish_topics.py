@@ -4,11 +4,12 @@ flag — no AI, no key needed). Runs on PythonAnywhere. Reversible.
 
   python3 scripts/publish_topics.py             # publish topics that HAVE an intro (the "ready" ones)
   python3 scripts/publish_topics.py --all       # publish EVERY topic
+  python3 scripts/publish_topics.py --names      # publish the metaV person/place NAME-topics (the Nave's blocks)
   python3 scripts/publish_topics.py --limit 50  # cap how many it flips
   python3 scripts/publish_topics.py --unpublish # set ALL topics back to Draft
 
-Publishing only affects what shows in "Preview as reader" for now (Study is still
-admin-only), so this is safe — re-run with --unpublish to undo.
+Published topics + name-topics are PUBLIC (visible to everyone). This just flips the
+flag, so it's safe and reversible — re-run with --unpublish to undo.
 """
 import argparse
 import json
@@ -25,6 +26,7 @@ from generate_topic_intros import _COMMON   # noqa: E402  (the curated hot-topic
 def main():
     ap = argparse.ArgumentParser(description="Batch publish/unpublish Study topics.")
     ap.add_argument("--all", action="store_true", help="publish every topic (default: only ones with an intro)")
+    ap.add_argument("--names", action="store_true", help="target the metaV person/place NAME-topics (the Nave's sidebar blocks) instead of concept topics; publishes all of them (they have no intro)")
     ap.add_argument("--common", action="store_true", help="only the curated hot topics (same list the intro script uses)")
     ap.add_argument("--skip-first", type=int, default=0, metavar="N", help="when publishing, skip the first N topics alphabetically (the early test batch)")
     ap.add_argument("--unpublish", action="store_true", help="set topics back to Draft instead")
@@ -32,9 +34,11 @@ def main():
     args = ap.parse_args()
 
     target = "draft" if args.unpublish else "published"
+    etype = "name" if args.names else "topic"
     conn = study_db()
     rows = conn.execute(
-        "SELECT id, title, json, status FROM entries WHERE type='topic' AND deleted=0 ORDER BY title"
+        "SELECT id, title, json, status FROM entries WHERE type=? AND deleted=0 ORDER BY title",
+        (etype,),
     ).fetchall()
     if args.common:
         wanted = {t.lower() for t in _COMMON}
@@ -45,8 +49,9 @@ def main():
 
     changed = 0
     for r in rows:
-        # default (publishing, not --all): only topics that already have an intro
-        if not args.unpublish and not args.all:
+        # default (publishing, not --all): only topics that already have an intro.
+        # Name-topics have no intro, so --names publishes all of them.
+        if not args.unpublish and not args.all and not args.names:
             try:
                 stored = json.loads(r["json"]) or {}
             except (ValueError, TypeError):
