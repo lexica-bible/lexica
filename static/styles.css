@@ -920,27 +920,15 @@ input { font-family: inherit; }
   color: var(--ink-3);
   letter-spacing: 0.01em;
 }
-/* The word's INFLECTED form (as it appears in the clicked verse): the form (script
-   font) + its transliteration, on a small "in this verse" labeled line. The big
-   headword stays the dictionary lemma for every text. Shown for Hebrew, BSB, and ABP
-   (via abp_surface); placed BELOW the romanization/gloss line. */
-.detail-form {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 2px;
-}
+/* The word's INFLECTED form (as it appears in the clicked verse): a small "in this
+   verse" label, the form (script font), and its transliteration. The big headword
+   stays the dictionary lemma for every text. Shown for Hebrew, BSB, and ABP (via
+   abp_surface). Direct children of .detail-hero-occ, evenly spaced by it. */
 .detail-form-label {
   font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 0.07em;
   color: var(--ink-4);
-}
-.detail-form-line {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  gap: 2px;
 }
 .detail-form-w {
   font-family: var(--f-greek);

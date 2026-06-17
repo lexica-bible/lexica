@@ -817,17 +817,13 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
           </div>
           {(heroForm || hero.morph) && (
             <div className="detail-hero-occ">
+              {heroForm && <span className="detail-form-label">in this verse</span>}
               {heroForm && (
-                <div className="detail-form">
-                  <span className="detail-form-label">in this verse</span>
-                  <span className="detail-form-line">
-                    <span className={"detail-form-w" + (hero.he ? " detail-form-w--he" : "")}
-                          dir={hero.he ? "rtl" : undefined}>{heroForm}</span>
-                    {heroInflectedTranslit && heroInflectedTranslit !== hero.translit && (
-                      <span className="detail-form-tr">{heroInflectedTranslit}</span>
-                    )}
-                  </span>
-                </div>
+                <span className={"detail-form-w" + (hero.he ? " detail-form-w--he" : "")}
+                      dir={hero.he ? "rtl" : undefined}>{heroForm}</span>
+              )}
+              {heroForm && heroInflectedTranslit && heroInflectedTranslit !== hero.translit && (
+                <span className="detail-form-tr">{heroInflectedTranslit}</span>
               )}
               {hero.morph && <div className="detail-morph">{hero.morph}</div>}
             </div>

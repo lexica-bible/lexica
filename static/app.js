@@ -3035,18 +3035,14 @@ function DetailPanel({
     className: "detail-gloss"
   }, hero.standaloneGloss)), (heroForm || hero.morph) && /*#__PURE__*/React.createElement("div", {
     className: "detail-hero-occ"
-  }, heroForm && /*#__PURE__*/React.createElement("div", {
-    className: "detail-form"
-  }, /*#__PURE__*/React.createElement("span", {
+  }, heroForm && /*#__PURE__*/React.createElement("span", {
     className: "detail-form-label"
-  }, "in this verse"), /*#__PURE__*/React.createElement("span", {
-    className: "detail-form-line"
-  }, /*#__PURE__*/React.createElement("span", {
+  }, "in this verse"), heroForm && /*#__PURE__*/React.createElement("span", {
     className: "detail-form-w" + (hero.he ? " detail-form-w--he" : ""),
     dir: hero.he ? "rtl" : undefined
-  }, heroForm), heroInflectedTranslit && heroInflectedTranslit !== hero.translit && /*#__PURE__*/React.createElement("span", {
+  }, heroForm), heroForm && heroInflectedTranslit && heroInflectedTranslit !== hero.translit && /*#__PURE__*/React.createElement("span", {
     className: "detail-form-tr"
-  }, heroInflectedTranslit))), hero.morph && /*#__PURE__*/React.createElement("div", {
+  }, heroInflectedTranslit), hero.morph && /*#__PURE__*/React.createElement("div", {
     className: "detail-morph"
   }, hero.morph))), sections.map(renderSection)));
 }
