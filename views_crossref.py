@@ -72,8 +72,30 @@ e.g. [1,3,7,12]. No prose, no explanation — only the array.\
 """
 
 # One fingerprint for both xref endpoints (they share a category). Editing either
-# system prompt above changes it, so cached synthesis/curation lazily refreshes.
-_XREF_VER = ai_fingerprint("xref", _XREF_CURATION_SYSTEM, _XREF_SYNTHESIS_SYSTEM)
+# system prompt above changes it, so cached synthesis/curation lazily refreshes. The
+# trailing salt is a manual bump for non-prompt changes to the synthesis MESSAGE —
+# e.g. feeding the cross-refs in ABP instead of KJV — so those cached rows refresh too.
+_XREF_VER = ai_fingerprint(
+    "xref", _XREF_CURATION_SYSTEM, _XREF_SYNTHESIS_SYSTEM, "msg:abp-refs-1"
+)
+
+
+def _abp_text(conn, abbr, chapter, verse):
+    """ABP English for one verse — its interlinear words joined in order, the same
+    rendering the reader shows. None when ABP has no matching verse (versification can
+    differ from the KJV reference) so the caller can fall back to KJV."""
+    row = conn.execute(
+        "SELECT id FROM verses WHERE book=? AND chapter=? AND verse=?",
+        (abbr, chapter, verse),
+    ).fetchone()
+    if not row:
+        return None
+    ws = conn.execute(
+        "SELECT english FROM words WHERE verse_id=? AND english IS NOT NULL ORDER BY position",
+        (row["id"],),
+    ).fetchall()
+    toks = [w["english"] for w in ws if w["english"]]
+    return " ".join(toks) if toks else None
 
 
 def prune_cache() -> int:
@@ -208,18 +230,8 @@ def cross_refs_curated(book, chapter, verse):
             (src["verse_id"],),
         ).fetchall()
 
-        # Fetch ABP text for the source verse so synthesis reflects ABP vocabulary
-        abp_text = ""
-        abp_id_row = conn.execute(
-            "SELECT id FROM verses WHERE book=? AND chapter=? AND verse=?",
-            (book, chapter, verse),
-        ).fetchone()
-        if abp_id_row:
-            abp_words = conn.execute(
-                "SELECT english FROM words WHERE verse_id=? AND english IS NOT NULL ORDER BY position",
-                (abp_id_row["id"],),
-            ).fetchall()
-            abp_text = " ".join(w["english"] for w in abp_words)
+        # ABP text for the source verse so the synthesis reflects ABP vocabulary.
+        abp_text = _abp_text(conn, book, chapter, verse) or ""
     finally:
         conn.close()
 
@@ -266,14 +278,23 @@ def cross_refs_curated(book, chapter, verse):
                 "kjv_text": r["verse_text"],
             })
 
-    # Step 2: Synthesis from the curated set
+    # Step 2: Synthesis from the curated set. Feed the cross-refs in ABP (the app's
+    # primary text) so the write-up quotes the same wording the panel shows — the TSK
+    # list is stored against KJV, which is why it used to come out in "thou/thee".
+    # KJV is only a fallback for a verse ABP's versification doesn't carry.
     synthesis = None
     if refs:
-        ref_block = "\n".join(f"- {r['kjv_text']}" for r in refs)
+        conn = db_ro()
+        try:
+            ref_block = "\n".join(
+                f"- {_abp_text(conn, r['book'], r['chapter'], r['verse']) or r['kjv_text']}"
+                for r in refs
+            )
+        finally:
+            conn.close()
         src_line = (
-            f'Source (ABP): "{abp_text}"\n'
-            "The cross-references below are KJV; let the ABP source vocabulary guide your word choices."
-            if abp_text else f'Source: "{src["verse_text"]}"'
+            f'Source (ABP): "{abp_text}"' if abp_text
+            else f'Source: "{src["verse_text"]}"'
         )
         try:
             syn_msg = _anthropic.messages.create(
