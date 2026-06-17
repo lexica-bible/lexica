@@ -396,6 +396,40 @@ OPEN:
   positions). Would reuse the same read-gate, with the same source-aware care.
 `code: views_study.py + static/src/55-study.jsx; scripts/{add_study_topic,load_study_topics,generate_topic_intros,publish_topics,find_topics,find_topic_dupes,merge_the_dupes}.py; memory project_study_modules`
 
+### Let study results shape AI search answers — divine council is the test case (idea, 2026-06-17)
+AI search is deliberately neutral — text first, no imported theology. But for ONE topic, the divine
+council, we've already hand-wired the answer in code: `ai.py` carries a fixed list of ~20 verses
+(`_DIVINE_COUNCIL_VERSES`), a trigger-phrase matcher (`_DIVINE_COUNCIL_RE`), and a fixed set of 6
+Greek/Hebrew word chips (`dc_strongs`). When a question matches, those verses are forced into the
+results as "primary" no matter what the AI's own search found. Every line of it is specific to divine
+council — a true one-off.
+
+We ALSO already have a hand-authored "Divine Council" study TOPIC in `study.db` (via
+`add_study_topic.py`) carrying the SAME verse list (plus Psalm 58:1). So the same curated answer
+lives in two places — which is exactly what makes this a clean test.
+
+The idea: have AI search notice when a question matches a published study topic, pull that topic's
+verses straight from the study, and force them in as primary — exactly what the hardcode does now, but
+driven by the study instead of by code. Prove it on divine council, confirm it matches today's
+behavior, then DELETE the one-off. The payoff: it generalizes — any topic you author later shapes
+search the same way, with zero new code per topic.
+
+What the divine-council study would need to gain to fully retire the hardcode:
+- **Trigger phrases.** Today the code's narrow regex decides when to fire ("divine council",
+  "heavenly assembly", "bene elohim"…). A study only has its title. Add a small list of match phrases
+  to a topic (or match the question against the title + an aliases field).
+- **The 6 word chips.** The study has verses + section headings but not the Strong's word list the
+  card shows. Either add a key-terms field to a topic, or pull the chips from the verses' own words.
+
+GUARDRAIL (the Berean rule): only PUBLISHED, text-first TOPICS may feed an answer — NOT denominations
+or arguments, which take sides on purpose. Divine council is a topic, so it qualifies.
+
+One practical note: answers get saved and reused. If a study feeds an answer, the saved-answer key has
+to include that study's verse list, or editing the study later wouldn't refresh the saved answer.
+`code: ai.py (_DIVINE_COUNCIL_VERSES / _DIVINE_COUNCIL_RE / dc_strongs — the one-off to delete);
+scripts/add_study_topic.py + study.db topic; views_study.py (read a topic's verses); memory
+project_study_modules + project_ai_search_architecture`
+
 ### ~~Chronological reading mode~~ — DONE + LIVE 2026-06-09 (desktop + mobile)
 Read the Bible in event order, works with ANY version (ABP/KJV/BSB). Shipped as a reading-ORDER
 toggle in the Library (Canonical | Clock icon = Chronological), NOT a separate tab. Data is a static
