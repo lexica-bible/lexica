@@ -20,6 +20,7 @@ import html
 import os
 import re
 import sqlite3
+import sys
 import unicodedata
 
 DB = os.path.expanduser("~/bible-db/bible.db")
@@ -46,6 +47,11 @@ def first_greek(def_html: str) -> str:
     return "".join(run)
 
 
+def clean_text(def_html: str) -> str:
+    """Tags dropped + entities decoded, for eyeballing an entry's structure."""
+    return html.unescape(re.sub(r"<[^>]+>", "", def_html or ""))
+
+
 def bare(s: str) -> str:
     """Accent-, case-, and final-sigma-insensitive form, so the same word stored
     with different accent encoding doesn't read as a difference."""
@@ -57,6 +63,22 @@ def bare(s: str) -> str:
 def main() -> None:
     conn = sqlite3.connect(DB)
     conn.row_factory = sqlite3.Row
+
+    if len(sys.argv) > 1:                 # --show G#### ... : dump those entries
+        for num in sys.argv[1:]:
+            if num == "--show":
+                continue
+            row = conn.execute(
+                "SELECT def_html FROM abp_ext WHERE trim(strongs)=? OR trim(strongs)=?",
+                (num, "G" + num.lstrip("G")),
+            ).fetchone()
+            if not row:
+                print(f"{num}: (no ABP dict entry)")
+                continue
+            print(f"{num}: lemma-guess={first_greek(row['def_html'])!r}")
+            print("   " + clean_text(row["def_html"])[:160].replace(chr(10), " "))
+        conn.close()
+        return
 
     dotted = conn.execute(
         "SELECT strongs AS num, COUNT(*) AS uses FROM words "
