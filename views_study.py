@@ -617,6 +617,11 @@ def _verse_index():
             data = json.loads(r["json"]) or {}
         except (ValueError, TypeError):
             data = {}
+        # Reader line = HAND-AUTHORED studies only. The Nave's auto-imports stamp
+        # themselves source='metav' and cite ~1000 scattered verses each — they'd blanket
+        # the text. They stay browsable in the Study tab; they just don't tag the reader.
+        if (data.get("source") or "").strip().lower() == "metav":
+            continue
         seen = set()                       # one entry per verse, even if cited twice in a topic
         for s in (data.get("sections") or []):
             for ref in ((s or {}).get("verses") or []):
