@@ -67,18 +67,13 @@ Still open:
    `.lib-bracket-group` (`display:contents`) is still emitted. Safe to delete the rest — grep `static/src/`
    first to confirm no `.jsx` still emits them. Pure tidy-up, low priority. `code: static/styles.css bracket
    section (~line 1956)`
-4. **ABP dotted Strong's headword — FIXED + LIVE 2026-06-17.** ~3049 dotted numbers (15,786 word-spots) that are
-   a genuinely different word from their base (G180.2 ἀκατασκεύαστος was shown as G180 ἀκατάπαυστος) now show
-   their OWN word: `scripts/build_dotted_lexicon.py` builds a `dotted_lexicon` side table from each one's abp_ext
-   entry, and `chapter_text`/`verse_words` COALESCE it over the base lexicon join (joined only if the table
-   exists → deploy-safe). `build_abp_surface.py` updated to drop the resulting "in this verse" echo. Audit:
-   `scripts/audit_dotted_lemmas.py`. Full record + re-run recipe: memory `project_dotted_strongs_lemma`.
-   STILL OPEN under this umbrella: (a) the side-card top-block FORMATTING pass the bug surfaced from (group
-   lemma + romanization + gloss; muted "in this verse" line LAST with a label; one separator style) — STEP
-   "Word analysis" saved as a UI reference; (b) optionally apply the same correction to the other lexicon-join
-   surfaces (views_seo, ai.py `_fetch_verse_words`, views_search/lexicon), which still show the base word for
-   dotted numbers.
-   `code: scripts/build_dotted_lexicon.py, audit_dotted_lemmas.py; views_library.py chapter_text/verse_words; scripts/build_abp_surface.py`
+4. **Optional: extend the dotted-Strong's headword fix to the OTHER lexicon-join surfaces.** The word card is
+   fixed and the formatting pass is done (TODO_ARCHIVE "ABP dotted Strong's headword + word-card formatting",
+   2026-06-17), but the server-rendered SEO pages (`views_seo`), the AI verse-word context (`ai.py`
+   `_fetch_verse_words`), and Search/Lexicon (`views_search`/`views_lexicon`) still resolve a dotted number to
+   its BASE word. Low priority — those group by base on purpose and the wrong word is far less prominent there.
+   Same fix shape: COALESCE `dotted_lexicon` over the base join.
+   `code: views_seo.py, ai.py, views_search.py, views_lexicon.py`
 
 ---
 

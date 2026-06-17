@@ -191,6 +191,13 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
 - `lexicon` — Greek Strong's definitions
 - `lsj` — Liddell-Scott-Jones Greek lexicon
 - `abp_ext` — extended ABP data
+- `dotted_lexicon` — corrected headword for ABP dotted Strong's. A side table in bible.db (built on PA,
+  not in git) mapping the full dotted number (`G###.N`) → its OWN lemma + romanization, for the dotted
+  numbers that are a genuinely DIFFERENT word from their base (ABP parks its added words at "nearest
+  Strong's + a dot", so the base lemma is the alphabetical neighbour — G180.2 ἀκατασκεύαστος vs base
+  G180 ἀκατάπαυστος). `chapter_text`/`verse_words` COALESCE it over the base `lexicon` join so the word
+  card shows the right word; joined only if present (deploy-safe). Built by `scripts/build_dotted_lexicon.py`,
+  audited by `scripts/audit_dotted_lemmas.py`. Full record: memory `project_dotted_strongs_lemma`.
 - `books` — book metadata (name, testament, regex)
 - `ai_search_cache` — cached AI query results and TSK synthesis
 - `kjv_verses` — KJV full verse text (31,102 verses)
@@ -289,6 +296,10 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   '[0-9]*'`.) tests/test_strongs_join.py + test_build_invariants.py lock this invariant.
 - `words.strongs` (the other column) is intentionally LEFT BARE ('2206', dotted '2321.1');
   the frontend renders it as `G{strongs}`. Only strongs_base carries the prefix.
+- DOTTED-NUMBER CAVEAT: strongs_base drops the `.N` (built as `st.split(".")[0]`), so a dotted ABP number
+  that's a DIFFERENT word than its base resolves the base's lemma through the join. The `dotted_lexicon`
+  side table + a COALESCE in the word card correct this (see that table + memory `project_dotted_strongs_lemma`);
+  form-variants like 1510.x (forms of εἰμί) correctly keep the base lemma.
 - `kjv_strongs.strongs_id` is also fully prefixed (was always so)
 - Always use single-match in SQL: WHERE w.strongs_base = 'G4151'
 - After ANY words-table rebuild, verify: `SELECT count(*) FROM words WHERE strongs_base GLOB '[0-9]*'` must be 0
@@ -626,7 +637,7 @@ memory `project_ai_synthesis_quality`.
 ## Words rebuild checklist (if you ever rebuild the words table)
 The full step-by-step lives in the **`/rebuild-words`** slash command
 (`.claude/commands/rebuild-words.md`): copy-first → single self-correcting build → tail patches →
-the audit gates → swap/deploy → re-run the surface/translit/two-ending builders. It's a rare,
+the audit gates → swap/deploy → re-run the dotted-lexicon/surface/translit/two-ending builders. It's a rare,
 high-stakes job, so the 90-line procedure is kept out of this always-loaded file. The hard SAFETY
 rules for the words table stay in **Do Not** above; background in memory
 `project_architecture_rework`.

@@ -6,6 +6,36 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## ABP dotted Strong's headword + word-card formatting — DONE 2026-06-17
+
+The word-study card showed the WRONG Greek headword for ABP's dotted Strong's numbers — e.g. Gen 1:2
+"unready" = G180.2 ἀκατασκεύαστος ("unformed") was displayed as G180 ἀκατάπαυστος ("unceasing"). Cause:
+the build makes `strongs_base` by chopping the ".N" (`sbase = st.split(".")[0]`), and the card resolves
+the headword via the lexicon join on `strongs_base`, so it lands on the alphabetical-neighbour base
+number (ABP parks its own added words at "nearest Strong's + a dot"). ~3049 numbers / 15,786 word-spots.
+- **Fix:** `scripts/build_dotted_lexicon.py` builds a `dotted_lexicon` side table (full `G###.N` → correct
+  lemma + romanization, pulled from each one's OWN abp_ext entry); `chapter_text`/`verse_words` COALESCE it
+  over the base join (deploy-safe — joined only if the table exists); `build_abp_surface.py` made
+  dotted-aware so a corrected word stops echoing on the "in this verse" line. Read-only audit:
+  `scripts/audit_dotted_lemmas.py` (`--show G####` dumps a raw abp_ext entry).
+- **Lessons:** (1) the first "3643 wrong" count was mostly FALSE — εἰμί-style forms (1510.x) are inflected
+  forms of the SAME base lemma and correct as-is. Real different-word cases are told apart by the abp_ext
+  entry shape: `[ABP] <form> … Strong G####` = a form note → leave the base; a full LSJ entry (no `[ABP]`) =
+  a genuinely different word → fix. (2) `words.lemma` (LXX-aligned) is a DEAD END as the fix source — blank
+  for ~all of these; the correct lemma is the first Greek word of the dotted number's own abp_ext entry
+  (Greek stored as HTML entities inside `<grk>` tags → unescape + strip tags). (3) Verify the Greek
+  extraction on real data before trusting a count — a too-narrow Greek code range read empty and reported
+  "0 wrong."
+- **Re-run after any words rebuild:** `build_dotted_lexicon.py --apply` → `build_abp_surface.py --bh` →
+  `build_abp_translit.py`. Full record: memory `project_dotted_strongs_lemma`.
+- **Card formatting (same session):** the hero now reads lemma → romanization · gloss → a labeled,
+  evenly-spaced "in this verse" block (form, romanization stacked under it, parsing), split into two grouped
+  boxes (`.detail-hero-id` / `.detail-hero-occ`); parsing-only cards (indeclinables) sit tight via
+  `.detail-hero-occ--tight`. 30-detail-panel.jsx + styles.css. (An "in this verse" label had been removed
+  back on 2026-06-15; it's back now and kept.)
+- **Still open (in TODO.md):** the SEO/AI/Search/Lexicon lexicon-join surfaces still show the base word for
+  dotted numbers — optional follow-up.
+
 ## Outbound email — Resend SMTP, password reset + nightly health-check — DONE 2026-06-16
 
 Parked since 2026-06-09 "until a custom domain" so the sender setup got done ONCE properly
