@@ -210,11 +210,11 @@ def lsj_lookup(lemma):
         lex_row = None
         if not row and not abp_row:
             lex_row = conn.execute(
-                "SELECT strongs_def, translit FROM lexicon WHERE lemma = ?", (lemma,)
+                "SELECT strongs_def, kjv_def, derivation, translit FROM lexicon WHERE lemma = ?", (lemma,)
             ).fetchone()
             if not lex_row and snum:
                 lex_row = conn.execute(
-                    "SELECT strongs_def, translit FROM lexicon WHERE strongs = ?",
+                    "SELECT strongs_def, kjv_def, derivation, translit FROM lexicon WHERE strongs = ?",
                     (snum.lstrip("Gg"),),
                 ).fetchone()
     finally:
@@ -230,13 +230,25 @@ def lsj_lookup(lemma):
             "def_html": _trim_br(abp_row["def_html"]),
             "source":   "abp_ext",
         })
-    if lex_row and lex_row["strongs_def"]:
-        return jsonify({
-            "key":      lemma,
-            "translit": lex_row["translit"] or "",
-            "def_html": f"<p>{lex_row['strongs_def']}</p>",
-            "source":   "strongs",
-        })
+    if lex_row:
+        # Strong's fallback (no LSJ / abp_ext entry). Lead with the KJV rendering, then
+        # the derivation — concrete, text-first data — rather than Strong's own
+        # interpretive paraphrase (strongs_def), which can carry imported doctrine:
+        # e.g. G5020 ταρταρόω reads "to incarcerate in eternal torment", where the text
+        # itself only says "cast down to hell" (from Tartarus). strongs_def is the last
+        # resort, used only when there's nothing more concrete.
+        strongs_body = (
+            (lex_row["kjv_def"] or "").strip()
+            or (lex_row["derivation"] or "").strip()
+            or (lex_row["strongs_def"] or "").strip()
+        )
+        if strongs_body:
+            return jsonify({
+                "key":      lemma,
+                "translit": lex_row["translit"] or "",
+                "def_html": f"<p>{strongs_body}</p>",
+                "source":   "strongs",
+            })
     if not row:
         return jsonify({"error": "not found"}), 404
     return jsonify({
