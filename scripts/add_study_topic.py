@@ -16,8 +16,12 @@ To author the NEXT study, copy this file and edit TITLE / TOPIC_ID / SECTIONS.
 """
 import argparse
 import json
+import os
 import sys
 import time
+
+# scripts/ live one level below the app root, where core.py / views_study.py sit.
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from core import study_db
 from views_study import _resolve_ref, _parse_ref
