@@ -19,11 +19,21 @@ from build_abp_translit.py. Reads abp_ext/lexicon/words; writes ONLY dotted_lexi
 import os
 import sqlite3
 import sys
+import unicodedata
 
 from audit_dotted_lemmas import bare, clean_text, first_greek
 from build_abp_translit import romanize
 
 DB = os.path.expanduser("~/bible-db/bible.db")
+
+# LSJ headwords carry vowel-length marks (breve/macron, e.g. τραυμᾰτίας); strip them
+# so the stored lemma reads clean like the rest of the dictionary (τραυματίας). These
+# are the only Greek uses of combining breve (0x306) / macron (0x304); real accents
+# (tonos/perispomeni/breathing) are untouched.
+def strip_length_marks(s: str) -> str:
+    d = unicodedata.normalize("NFD", s or "")
+    d = "".join(c for c in d if c not in (chr(0x306), chr(0x304)))
+    return unicodedata.normalize("NFC", d)
 
 
 def collect(conn):
@@ -57,6 +67,7 @@ def collect(conn):
         if bare(correct) == bare(shown_lemma):
             skipped["already_ok"] += 1           # LSJ entry that already matches the base
             continue
+        correct = strip_length_marks(correct)
         fixes.append((num, shown_lemma, correct, romanize(correct, correct), r["uses"]))
     fixes.sort(key=lambda t: -t[4])
     return fixes, skipped
