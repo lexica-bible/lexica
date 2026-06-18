@@ -294,17 +294,21 @@ def lexicon_english():
                 ORDER BY cnt DESC
                 LIMIT 10
             """, (q,)).fetchall()
+            # Drop Greek function words (δέ, the article, conjunctions…) the same
+            # way the ABP branch does — whether KJV is viewed alone or via 'all'. A
+            # lone stray-tagged KJV token (e.g. one "spirit" mistagged G1161 δέ)
+            # shouldn't surface as a rendering.
+            heb_rows = [r for r in heb_rows
+                        if not (r["sbase"].startswith("G")
+                                and r["sbase"][1:] in _FUNCTION_STRONGS)]
             if corpus == "all":
                 # ABP already carries Greek via its own english_head (LXX OT + NT,
                 # counted natively). Drop KJV Greek numbers ABP already listed so a
                 # word never appears twice, but KEEP KJV Greek whose ABP gloss
                 # differs (e.g. G4352 προσκυνέω — ABP head isn't "worship") so 'All'
-                # is a true superset. Also drop Greek function words, as ABP does.
+                # is a true superset.
                 abp_set = {r["sbase"] for r in abp_rows}
-                heb_rows = [r for r in heb_rows
-                            if r["sbase"] not in abp_set
-                            and not (r["sbase"].startswith("G")
-                                     and r["sbase"][1:] in _FUNCTION_STRONGS)]
+                heb_rows = [r for r in heb_rows if r["sbase"] not in abp_set]
 
         all_snums = [r["sbase"] for r in abp_rows] + [r["sbase"] for r in heb_rows]
         # Each row carries BOTH Bibles' renderings as SEPARATE lists (the UI shows
