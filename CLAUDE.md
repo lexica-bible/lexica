@@ -239,8 +239,9 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   titles); GRAPHS = an argument map (admin-only): a shared pool of CLAIMS joined by per-tradition LINKS, each
   claim tagged with provenance (text/lexicon = grounded; tradition/conjecture/inference = not) + each link with
   a strength (solid/contested/weak), stress-tested by `argmap.py` (is the conclusion reachable from grounded
-  claims on solid links? else name the load-bearing joint, or flag a gap). Drawn as a left→right SVG chart per
-  tradition (shared verses pinned across the overlay flip). READ-ONLY in-app — authored via
+  claims on solid links? else name the load-bearing joint, or flag a gap; a grounded+SOLID objection knocks
+  its target out → "overturned"). Drawn as a left→right SVG chart per tradition (auto-laid-out: barycenter
+  row-ordering + lines routed through the column GAPS so nothing crosses a box). READ-ONLY in-app — authored via
   `scripts/add_study_graph.py`. (Replaced the old Denominations/Arguments claim editors 2026-06-18; full record
   + the graph json shape in memory `project_study_modules`.) Topics open READ-first (Edit button, admin); a
   "Preview as reader" admin toggle skins the tab as a visitor sees it.
