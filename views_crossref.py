@@ -2,13 +2,11 @@
 """Cross-reference (TSK) routes.
 
 Torrey's Treasury of Scripture Knowledge cross-references for a verse, plus the
-two Haiku-backed endpoints that synthesise / curate them. Cross-ref payloads are
-cached in core._ai_cache (in-memory) and in the ai_search_cache table with
-ver_key=_XREF_VER — the unified prompt fingerprint (core.ai_fingerprint over the two
-xref system prompts). Editing either prompt auto-refreshes this cache and nothing else.
-
-_XREF_SYNTHESIS_SYSTEM is also imported by the AI blueprint (the cross-ref
-enrichment helper), so it lives here with its primary consumer.
+AI endpoint that curates them (Haiku picks the 8–10 strongest) and writes a short
+synthesis (Sonnet, anchored in ABP vocabulary). Cross-ref payloads are cached in
+core._ai_cache (in-memory) and in the ai_search_cache table with ver_key=_XREF_VER —
+the unified prompt fingerprint (core.ai_fingerprint over the two xref system prompts).
+Editing either prompt auto-refreshes this cache and nothing else.
 """
 import json
 import re
@@ -138,60 +136,6 @@ def cross_references_route(book, chapter, verse):
                 "kjv_text": r["verse_text"],
             })
     return jsonify(result)
-
-
-@bp.route("/api/cross-references/synthesis/<book>/<int:chapter>/<int:verse>")
-@limiter.limit("200 per hour")
-def cross_ref_synthesis(book, chapter, verse):
-    if not _anthropic:
-        return jsonify({"synthesis": None})
-    book_id = _KJV_BOOK_ID.get(book)
-    if book_id is None:
-        return jsonify({"synthesis": None})
-    cache_key = f"xref_synth:{book}:{chapter}:{verse}"
-    if cache_key in _ai_cache:
-        return jsonify(_ai_cache[cache_key])
-    cached = ai_cache_get(cache_key, _XREF_VER)
-    if cached is not None:
-        _ai_cache[cache_key] = cached
-        return jsonify(cached)
-    conn = db_ro()
-    try:
-        src = conn.execute(
-            "SELECT verse_id, verse_text FROM kjv_verses"
-            " WHERE book_id=? AND chapter=? AND verse_num=?",
-            (book_id, chapter, verse),
-        ).fetchone()
-        if not src:
-            return jsonify({"synthesis": None})
-        refs = conn.execute(
-            """SELECT kv.verse_text FROM cross_references cr
-               JOIN kjv_verses kv ON kv.verse_id = cr.verse_ref_id
-               WHERE cr.verse_id = ? LIMIT 20""",
-            (src["verse_id"],),
-        ).fetchall()
-    finally:
-        conn.close()
-    if not refs:
-        return jsonify({"synthesis": None})
-    ref_block = "\n".join(f"- {r['verse_text']}" for r in refs)
-    try:
-        msg = _anthropic.messages.create(
-            model="claude-sonnet-4-6",
-            max_tokens=400,
-            temperature=0,
-            system=_XREF_SYNTHESIS_SYSTEM,
-            messages=[{"role": "user", "content":
-                f'Source: "{src["verse_text"]}"\n\nCross-references:\n{ref_block}'}],
-        )
-        synthesis = re.sub(r"^#+\s*[^:\n]*:\s*", "", msg.content[0].text.strip())
-    except Exception as exc:
-        log.warning("Cross-ref synthesis failed: %s", exc)
-        return jsonify({"synthesis": None})
-    payload = {"synthesis": synthesis}
-    ai_cache_put(cache_key, payload, _XREF_VER)
-    _ai_cache[cache_key] = payload
-    return jsonify(payload)
 
 
 @bp.route("/api/cross-references/curated/<book>/<int:chapter>/<int:verse>")

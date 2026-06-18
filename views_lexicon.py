@@ -137,11 +137,15 @@ def lexicon_lookup():
                     return jsonify([{"strongs": row["strongs_id"], "lemma": row["lemma"] or "", "translit": row["xlit"] or "", "gloss": row["description"] or ""}])
             else:
                 row = conn.execute(
-                    "SELECT strongs, lemma, translit, strongs_def FROM lexicon WHERE strongs = ?",
+                    "SELECT strongs, lemma, translit, kjv_def, derivation, strongs_def FROM lexicon WHERE strongs = ?",
                     (snum,)
                 ).fetchone()
                 if row:
-                    return jsonify([{"strongs": f"G{row['strongs']}", "lemma": row["lemma"] or "", "translit": row["translit"] or "", "gloss": row["strongs_def"] or ""}])
+                    # Text-first gloss (mirrors the word card / views_lsj.py): KJV rendering
+                    # → derivation → Strong's paraphrase, so Strong's interpretive wording
+                    # (e.g. G5020 "eternal torment") never leads.
+                    gloss = row["kjv_def"] or row["derivation"] or row["strongs_def"] or ""
+                    return jsonify([{"strongs": f"G{row['strongs']}", "lemma": row["lemma"] or "", "translit": row["translit"] or "", "gloss": gloss}])
             return jsonify([])
         # English/transliteration search — Greek lexicon + Hebrew BDB. The
         # lemma/translit/xlit matches are accent-insensitive (strip_accents on
@@ -150,7 +154,7 @@ def lexicon_lookup():
         # still matches. Definition matches keep the raw query.
         qn = (_strip_accents(q) or q).lower()
         grk = conn.execute(
-            """SELECT strongs, lemma, translit, strongs_def FROM lexicon
+            """SELECT strongs, lemma, translit, kjv_def, derivation, strongs_def FROM lexicon
                WHERE strongs_def LIKE ? OR kjv_def LIKE ?
                   OR strip_accents(lower(translit)) LIKE ?
                   OR strip_accents(lower(lemma)) LIKE ?
@@ -165,7 +169,7 @@ def lexicon_lookup():
                LIMIT 10""",
             (f"%{q}%", f"%{qn}%", f"%{qn}%")
         ).fetchall()
-        results = [{"strongs": f"G{r['strongs']}", "lemma": r["lemma"] or "", "translit": r["translit"] or "", "gloss": r["strongs_def"] or ""} for r in grk]
+        results = [{"strongs": f"G{r['strongs']}", "lemma": r["lemma"] or "", "translit": r["translit"] or "", "gloss": r["kjv_def"] or r["derivation"] or r["strongs_def"] or ""} for r in grk]
         results += [{"strongs": r["strongs_id"], "lemma": r["lemma"] or "", "translit": r["xlit"] or "", "gloss": r["description"] or ""} for r in heb]
         return jsonify(results[:20])
     finally:
@@ -350,13 +354,15 @@ def lexicon_profile(strongs):
         else:
             strongs_id = f"G{snum}"
             row = conn.execute(
-                "SELECT lemma, translit, strongs_def, kjv_def FROM lexicon WHERE strongs = ?", (snum,)
+                "SELECT lemma, translit, kjv_def, derivation, strongs_def FROM lexicon WHERE strongs = ?", (snum,)
             ).fetchone()
             if not row:
                 return jsonify({"error": "not found"}), 404
             lemma = row["lemma"] or ""
             translit = row["translit"] or ""
-            definition = row["strongs_def"] or row["kjv_def"] or ""
+            # Text-first (mirrors the word card / views_lsj.py): KJV rendering → derivation
+            # → Strong's paraphrase, so Strong's interpretive wording never leads.
+            definition = row["kjv_def"] or row["derivation"] or row["strongs_def"] or ""
         # Corpus: default H→kjv, G→abp; override via ?corpus=
         corpus = request.args.get("corpus", "kjv" if is_heb else "abp")
         if corpus == "all":  # profile is single-corpus; 'all' would double-count NT
