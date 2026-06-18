@@ -26,6 +26,16 @@ from build_abp_translit import romanize
 
 DB = os.path.expanduser("~/bible-db/bible.db")
 
+# ABP spells some numbers as Greek numeral LETTERS, parked at a dotted Strong's whose
+# base is an unrelated word (so the auto-derivation below skips/misreads them). Pin the
+# correct numeral letter here so the chip's Greek line shows χ/ξ/ϛ, not φωτισμός/νῶτος/ἕως.
+# (e.g. 666 in Rev 13:18 = χ ξ ϛ.) lemma = the letter, translit = its name.
+NUMERAL_OVERRIDES = {
+    "5462.1": ("χ", "chi"),      # 600
+    "3577.2": ("ξ", "xi"),       # 60
+    "2193.2": ("ϛ", "stigma"),   # 6
+}
+
 # LSJ headwords carry vowel-length marks (breve/macron, e.g. τραυμᾰτίας); strip them
 # so the stored lemma reads clean like the rest of the dictionary (τραυματίας). These
 # are the only Greek uses of combining breve (0x306) / macron (0x304); real accents
@@ -69,6 +79,16 @@ def collect(conn):
             continue
         correct = strip_length_marks(correct)
         fixes.append((num, shown_lemma, correct, romanize(correct, correct), r["uses"]))
+    # Pin the Greek-numeral letters (override any auto-derived row for the same number).
+    fixes = [f for f in fixes if f[0] not in NUMERAL_OVERRIDES]
+    for num, (letter, tr) in NUMERAL_OVERRIDES.items():
+        base = conn.execute(
+            "SELECT lemma FROM lexicon WHERE strongs_g = ?", ("G" + num.split(".")[0],)
+        ).fetchone()
+        uses = conn.execute(
+            "SELECT COUNT(*) FROM words WHERE strongs = ?", (num,)
+        ).fetchone()[0]
+        fixes.append((num, base["lemma"] if base else "", letter, tr, uses))
     fixes.sort(key=lambda t: -t[4])
     return fixes, skipped
 
