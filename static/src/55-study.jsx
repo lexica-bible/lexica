@@ -414,12 +414,15 @@ function GraphSvg({ claims, overlay, verdict, shared, onNavigate }) {
     const p = (claims[id] || {}).provenance;
     return p === "conclusion" ? "concl" : (PROV_GROUNDED.has(p) ? "verse" : "added");
   };
-  // Smooth path through a list of points, horizontal tangents at each (tidy, and clears the boxes).
+  // Smooth path through a list of points. The vertical move is held LATE — near the target x, in
+  // the gap before the box — so a line that has to change rows doesn't cut across a box one column
+  // over (the "thief through Sealed before baptism" case). Entry stays horizontal into each box.
   const pathThrough = pts => {
     let d = "M" + pts[0][0] + "," + pts[0][1];
     for (let i = 1; i < pts.length; i++) {
-      const mx = (pts[i - 1][0] + pts[i][0]) / 2;
-      d += " C" + mx + "," + pts[i - 1][1] + " " + mx + "," + pts[i][1] + " " + pts[i][0] + "," + pts[i][1];
+      const x1 = pts[i - 1][0], y1 = pts[i - 1][1], x2 = pts[i][0], y2 = pts[i][1];
+      const cx = x2 - Math.min(28, (x2 - x1) * 0.5);
+      d += " C" + cx + "," + y1 + " " + cx + "," + y2 + " " + x2 + "," + y2;
     }
     return d;
   };
