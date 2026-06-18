@@ -476,10 +476,108 @@ function GraphSvg({ claims, overlay, verdict, shared, onNavigate }) {
   );
 }
 
+// Pinch-zoom + drag-pan window for the chart (mobile-friendly). A CLEAN tap still falls
+// through to a box's verse jump; a drag pans the canvas and sets movedRef so that jump is
+// swallowed — the same press-vs-tap guard the reader's verse numbers use. Two fingers =
+// zoom, wheel = zoom (desktop). resetKey re-fits the view when the tradition switches.
+function PanZoom({ movedRef, resetKey, children }) {
+  const view = useRef(null);     // clipping window
+  const inner = useRef(null);    // the layer we move/scale
+  const tf = useRef({ s: 1, x: 0, y: 0 });
+  const drag = useRef(null);
+  const pinch = useRef(null);
+
+  const apply = () => {
+    const el = inner.current;
+    if (el) el.style.transform = "translate(" + tf.current.x + "px," + tf.current.y + "px) scale(" + tf.current.s + ")";
+  };
+  const clamp = s => Math.max(0.3, Math.min(4, s));
+  const vpt = (cx, cy) => { const r = view.current.getBoundingClientRect(); return [cx - r.left, cy - r.top]; };
+  const zoomTo = (ns, px, py) => {
+    const c = tf.current; ns = clamp(ns);
+    c.x = px - (px - c.x) * (ns / c.s);
+    c.y = py - (py - c.y) * (ns / c.s);
+    c.s = ns; apply();
+  };
+  const fit = () => {
+    const v = view.current, el = inner.current;
+    if (!v || !el) return;
+    const svg = el.querySelector("svg");
+    const natW = (svg && svg.viewBox && svg.viewBox.baseVal && svg.viewBox.baseVal.width) || el.scrollWidth || 1;
+    const s = Math.min(1, (v.clientWidth - 10) / natW);
+    tf.current = { s, x: Math.max(0, (v.clientWidth - natW * s) / 2), y: 6 };
+    apply();
+  };
+  useEffect(() => { fit(); }, [resetKey]);
+
+  const onTouchStart = e => {
+    if (e.touches.length === 2) {
+      const [a, b] = e.touches;
+      const [mx, my] = vpt((a.clientX + b.clientX) / 2, (a.clientY + b.clientY) / 2);
+      pinch.current = { d: Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY), mx, my, s: tf.current.s };
+      drag.current = null;
+    } else if (e.touches.length === 1) {
+      drag.current = { x: e.touches[0].clientX, y: e.touches[0].clientY, moved: 0 };
+      movedRef.current = false;
+    }
+  };
+  const onTouchMove = e => {
+    if (pinch.current && e.touches.length === 2) {
+      const [a, b] = e.touches;
+      const d = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
+      zoomTo(pinch.current.s * (d / pinch.current.d), pinch.current.mx, pinch.current.my);
+    } else if (drag.current && e.touches.length === 1) {
+      const t = e.touches[0], dx = t.clientX - drag.current.x, dy = t.clientY - drag.current.y;
+      tf.current.x += dx; tf.current.y += dy;
+      drag.current.x = t.clientX; drag.current.y = t.clientY;
+      drag.current.moved += Math.abs(dx) + Math.abs(dy);
+      if (drag.current.moved > 8) movedRef.current = true;
+      apply();
+    }
+  };
+  const onTouchEnd = e => {
+    if (!e.touches.length) { drag.current = null; pinch.current = null; }
+    else if (e.touches.length === 1) { pinch.current = null; drag.current = { x: e.touches[0].clientX, y: e.touches[0].clientY, moved: 999 }; }
+  };
+  const onMouseDown = e => { drag.current = { x: e.clientX, y: e.clientY, moved: 0 }; movedRef.current = false; };
+  const onMouseMove = e => {
+    if (!drag.current) return;
+    const dx = e.clientX - drag.current.x, dy = e.clientY - drag.current.y;
+    tf.current.x += dx; tf.current.y += dy;
+    drag.current.x = e.clientX; drag.current.y = e.clientY;
+    drag.current.moved += Math.abs(dx) + Math.abs(dy);
+    if (drag.current.moved > 6) movedRef.current = true;
+    apply();
+  };
+  const endMouse = () => { drag.current = null; };
+  const onWheel = e => { const [mx, my] = vpt(e.clientX, e.clientY); zoomTo(tf.current.s * (e.deltaY < 0 ? 1.1 : 0.9), mx, my); e.preventDefault(); };
+  const zoomBtn = f => () => { const v = view.current; zoomTo(tf.current.s * f, v.clientWidth / 2, v.clientHeight / 2); };
+
+  return (
+    <div className="study-pz">
+      <div className="study-pz-view" ref={view}
+        onTouchStart={onTouchStart} onTouchMove={onTouchMove} onTouchEnd={onTouchEnd}
+        onMouseDown={onMouseDown} onMouseMove={onMouseMove} onMouseUp={endMouse} onMouseLeave={endMouse}
+        onWheel={onWheel}>
+        <div className="study-pz-inner" ref={inner}>{children}</div>
+      </div>
+      <div className="study-pz-tools">
+        <button className="study-pz-btn" onClick={zoomBtn(1.25)} aria-label="Zoom in" title="Zoom in">＋</button>
+        <button className="study-pz-btn" onClick={zoomBtn(0.8)} aria-label="Zoom out" title="Zoom out">－</button>
+        <button className="study-pz-btn study-pz-btn--fit" onClick={fit} aria-label="Fit to screen" title="Fit to screen">Fit</button>
+      </div>
+    </div>
+  );
+}
+
 // Tabs to flip traditions, the SVG, a legend, and — for the selected side — the verdict,
 // why each non-solid link is rated as it is, and the open objections.
 function GraphChart({ claims, overlays, analysis, onNavigate }) {
   const [sel, setSel] = useState(0);
+  // Set true while a drag/pan is in progress so a pan that ends on a box doesn't also
+  // fire that box's verse jump (a clean tap leaves it false → the jump goes through).
+  const movedRef = useRef(false);
+  const guardedNav = onNavigate ? (b, c, v) => { if (!movedRef.current) onNavigate(b, c, v); } : undefined;
   if (!overlays.length) return null;
   const i = Math.min(sel, overlays.length - 1);
   const overlay = overlays[i];
@@ -503,9 +601,9 @@ function GraphChart({ claims, overlays, analysis, onNavigate }) {
         ))}
       </div>
       <div className={"study-verdict study-verdict--" + cls}>{label}</div>
-      <div className="study-chart-scroll">
-        <GraphSvg claims={claims} overlay={overlay} verdict={verdict} shared={shared} onNavigate={onNavigate} />
-      </div>
+      <PanZoom movedRef={movedRef} resetKey={i}>
+        <GraphSvg claims={claims} overlay={overlay} verdict={verdict} shared={shared} onNavigate={guardedNav} />
+      </PanZoom>
       <div className="study-chart-legend">
         <span><i className="study-key study-key--verse" /> verse (grounded)</span>
         <span><i className="study-key study-key--added" /> inference / tradition</span>

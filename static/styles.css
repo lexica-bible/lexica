@@ -3920,6 +3920,19 @@ button.study-verse-ref { border: none; }
 .study-chart-tab.on { color: var(--paper); background: var(--accent); border-color: var(--accent); }
 .study-chart-scroll { overflow-x: auto; padding: 4px 0 10px; }
 .study-svg { display: block; max-width: 100%; height: auto; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+/* Pan/zoom window for the chart (mobile-friendly): a bounded canvas you drag + pinch. */
+.study-pz { position: relative; margin: 4px 0 10px; }
+.study-pz-view { overflow: hidden; touch-action: none; height: 58vh; max-height: 460px; min-height: 240px;
+  background: var(--bg-sunk); border: 1px solid var(--rule-2); border-radius: 8px; cursor: grab; }
+.study-pz-view:active { cursor: grabbing; }
+.study-pz-inner { transform-origin: 0 0; display: inline-block; will-change: transform; }
+.study-pz-inner .study-svg { max-width: none; width: auto; height: auto; }
+.study-pz-tools { position: absolute; right: 8px; bottom: 8px; display: flex; gap: 6px; }
+.study-pz-btn { min-width: 34px; height: 34px; padding: 0 9px; border-radius: 8px; border: 1px solid var(--rule-2);
+  background: var(--ctl-bg); color: var(--ink); font-size: 16px; line-height: 1; cursor: pointer;
+  display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
+.study-pz-btn:hover { border-color: var(--ink-3); }
+.study-pz-btn--fit { font-size: 13px; }
 .study-node--link { cursor: pointer; }
 /* node = a foreignObject box so the label WRAPS to the box width (SVG text can't wrap) */
 .study-node-box {
