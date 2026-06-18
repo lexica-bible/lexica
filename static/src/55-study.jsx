@@ -397,7 +397,7 @@ function GraphSvg({ claims, overlay, verdict, shared, onNavigate }) {
     for (let i = cols.length - 1; i >= 0; i--) relax(cols[i], segSucc);
     for (let i = 0; i < cols.length; i++) if (cols[i] > 0) relax(cols[i], segPre);
   }
-  const minY = Math.min(0, ...nodes.map(id => yy[id] || 0));       // tighten back to the top edge
+  const minY = Math.min(...nodes.map(id => yy[id] || 0));          // shift the topmost node to y=0 (no dead space above)
   if (minY) nodes.forEach(id => { yy[id] = (yy[id] || 0) - minY; });
   const pos = {};
   nodes.forEach(id => { pos[id] = { c: colOf(id), y: yy[id] || 0 }; });
