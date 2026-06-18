@@ -114,8 +114,8 @@ CLAIMS = {
                           "text": "Baptism effects what it signifies — forgiveness, new birth, salvation (the effects the texts name)"},
     "t_regen_saves":     {"provenance": "conclusion", "label": "Baptism saves",
                           "text": "Baptism saves — it does not merely signify (it effects salvation)"},
-    "t_regen_necessary": {"provenance": "conclusion", "label": "Baptism is necessary",
-                          "text": "Water baptism is necessary for salvation — no one is saved without it (the strict Churches-of-Christ form)"},
+    "t_regen_necessary": {"provenance": "conclusion", "label": "Ordinarily necessary",
+                          "text": "Water baptism is ordinarily necessary for salvation — the ordinary means, apart from providential hindrance (baptism of desire, the unevangelized); the qualified form most regenerationists actually hold"},
 }
 
 OVERLAYS = [
@@ -198,12 +198,13 @@ OVERLAYS = [
             # whereas credo's base rests on a verse both sides grant; that gap should show. Don't promote them.
             {"from": "t_regen_grace", "to": "t_regen_saves", "relation": "supports", "strength": "solid",
              "why": "Granting the effects reading, 'baptism saves, not merely signifies' follows directly."},
-            # NECESSITY is a further claim with TWO soft spots: (a) the strict "no exceptions" form is the
-            # Churches-of-Christ position (the weak step below), and (b) it REQUIRES grace be an infused
-            # substance — a contested definition not in the cited texts (def_grace_infused + the charis
-            # objection). The thief is the classic break on necessity itself.
-            {"from": "t_regen_saves", "to": "t_regen_necessary", "relation": "supports", "strength": "weak",
-             "why": "From 'baptism saves' to 'necessary, no exceptions' is the Churches-of-Christ position; other regenerationists qualify it (baptism of desire, the unevangelized)."},
+            # NECESSITY here is the QUALIFIED form (ordinarily necessary, with providential exceptions) —
+            # the strongest regenerationist version, NOT the strict Churches-of-Christ "no exceptions" claim.
+            # It rides on the contested "baptism saves" premise and REQUIRES grace be an infused substance
+            # (def_grace_infused + the charis objection). The thief rules out the strict sub-form, but the
+            # qualified form on the board absorbs it.
+            {"from": "t_regen_saves", "to": "t_regen_necessary", "relation": "supports", "strength": "contested",
+             "why": "If baptism truly effects salvation it is the ordinary means, so the qualified-necessity reading follows fairly directly; the remaining weight sits on the contested 'baptism saves' premise upstream, not on an overreach to 'no exceptions'."},
             {"from": "def_grace_infused", "to": "t_regen_necessary", "relation": "requires", "strength": "contested",
              "why": "Necessity presupposes grace is an imparted substance. The cited verses speak of forgiveness, salvation and new birth — never of charis being conveyed."},
             {"from": "obj_grace_charis", "to": "def_grace_infused", "relation": "undercuts", "strength": "contested",
@@ -215,7 +216,7 @@ OVERLAYS = [
             {"from": "obj_mark_unbelief", "to": "t_regen_grace", "relation": "undercuts", "strength": "contested",
              "why": "Mark 16:16's negative clause drops baptism (condemnation = unbelief), and the longer ending is textually disputed — so the verse undercuts its own efficacy use."},
             {"from": "v_luke23_43", "to": "t_regen_necessary", "relation": "undercuts", "strength": "contested",
-             "why": "The thief was saved with no baptism — the classic break on the strict 'no exceptions' form. But regeneration answers that he predates the post-resurrection baptismal norm and counts as a providential exception (the qualified-necessity form the position already holds), so it's raised-and-answered, not a clean knockout — it tells against the no-exceptions form only. Credo/Reformed raise it."},
+             "why": "The thief was saved with no baptism — a clean counterexample to the strict 'no exceptions' form, which rules that sub-form out. The qualified form on the board (a providential exception) absorbs it: the objection constrains the position, it doesn't defeat it. Credo/Reformed raise it."},
         ],
     },
 ]
