@@ -4970,6 +4970,7 @@ function ClaimChip({
 const linkKey = l => l.from + "→" + l.to + "·" + l.relation;
 
 // One tradition's card: its conclusion, the verdict, the load-bearing joint, then the chain.
+// Every non-solid link shows WHY it's rated that way and WHOSE call it is.
 function OverlayCard({
   overlay,
   verdict,
@@ -4985,9 +4986,14 @@ function OverlayCard({
   };
   const joints = new Set((v.load_bearing || []).map(linkKey));
   const cls = v.grounded ? "stands" : v.gap ? "gap" : "depends";
-  const label = v.grounded ? "Stands on the text" : v.gap ? "Incomplete — a step is missing" : "Depends on non-solid joints";
+  const label = v.grounded ? "Stands on the text" : v.gap ? "Incomplete — a step is missing" : "Depends on a non-solid joint";
   const chain = (overlay.links || []).filter(l => l.relation !== "undercuts");
   const objections = (overlay.links || []).filter(l => l.relation === "undercuts");
+  const whyLine = l => l.why ? /*#__PURE__*/React.createElement("div", {
+    className: "study-link-why"
+  }, l.why, " ", /*#__PURE__*/React.createElement("span", {
+    className: "study-link-by"
+  }, "\u2014 ", overlay.tradition, "'s call")) : null;
   return /*#__PURE__*/React.createElement("div", {
     className: "study-overlay"
   }, /*#__PURE__*/React.createElement("div", {
@@ -5008,7 +5014,7 @@ function OverlayCard({
     onNavigate: onNavigate
   }), /*#__PURE__*/React.createElement("div", {
     className: "study-link-rel study-link-rel--weak"
-  }, l.relation, " \xB7 ", l.strength), /*#__PURE__*/React.createElement(ClaimChip, {
+  }, l.relation, " \xB7 ", l.strength), whyLine(l), /*#__PURE__*/React.createElement(ClaimChip, {
     claim: claims[l.to],
     onNavigate: onNavigate
   })))), /*#__PURE__*/React.createElement("div", {
@@ -5021,7 +5027,7 @@ function OverlayCard({
     onNavigate: onNavigate
   }), /*#__PURE__*/React.createElement("div", {
     className: "study-link-rel study-link-rel--" + l.strength
-  }, l.relation, " \xB7 ", l.strength), /*#__PURE__*/React.createElement(ClaimChip, {
+  }, l.relation, " \xB7 ", l.strength), l.strength !== "solid" && whyLine(l), /*#__PURE__*/React.createElement(ClaimChip, {
     claim: claims[l.to],
     onNavigate: onNavigate
   })))), objections.length > 0 && /*#__PURE__*/React.createElement("div", {
@@ -5031,7 +5037,7 @@ function OverlayCard({
   }, "Open objections (noted, not scored)"), objections.map((l, i) => /*#__PURE__*/React.createElement("div", {
     className: "study-objection",
     key: i
-  }, l.note || (claims[l.from] || {}).text + " — attacks the conclusion"))));
+  }, l.why || (claims[l.from] || {}).text + " — attacks the conclusion"))));
 }
 
 // Read-only argument-map page (the in-app editor + React Flow canvas come in a later cut).
@@ -5050,7 +5056,8 @@ function GraphPage({
   const diff = analysis.diff || {};
   const sharedVerses = diff.shared_verses || [];
   const privates = diff.private || {};
-  const hasPart = sharedVerses.length > 0 || Object.keys(privates).some(k => (privates[k] || []).length);
+  const seams = diff.seams || [];
+  const hasPart = sharedVerses.length > 0 || seams.length > 0 || Object.keys(privates).some(k => (privates[k] || []).length);
   return /*#__PURE__*/React.createElement("div", {
     className: "study-topic study-graph"
   }, /*#__PURE__*/React.createElement("div", {
@@ -5064,7 +5071,9 @@ function GraphPage({
     className: "study-topic-title"
   }, entry.title), /*#__PURE__*/React.createElement("div", {
     className: "study-topic-meta"
-  }, Object.keys(claims).length, " claims \xB7 ", overlays.length, " ", overlays.length === 1 ? "tradition" : "traditions"), entry.intro && /*#__PURE__*/React.createElement("p", {
+  }, Object.keys(claims).length, " claims \xB7 ", overlays.length, " ", overlays.length === 1 ? "tradition" : "traditions"), /*#__PURE__*/React.createElement("div", {
+    className: "study-graph-caution"
+  }, "Maps reasoning, does not settle truth."), entry.intro && /*#__PURE__*/React.createElement("p", {
     className: "study-topic-intro"
   }, entry.intro), /*#__PURE__*/React.createElement("div", {
     className: "study-prov-key"
@@ -5086,12 +5095,25 @@ function GraphPage({
     className: "study-part-row"
   }, /*#__PURE__*/React.createElement("span", {
     className: "study-part-key"
-  }, "Verses both lean on:"), " ", sharedVerses.length ? sharedVerses.map((cid, i) => /*#__PURE__*/React.createElement("span", {
+  }, "Verses leaned on by more than one side:"), " ", sharedVerses.length ? sharedVerses.map((cid, i) => /*#__PURE__*/React.createElement("span", {
     key: i,
     className: "study-part-chip"
   }, (claims[cid] || {}).ref || cid)) : /*#__PURE__*/React.createElement("em", {
     className: "study-verse-missing"
-  }, "they cite different verses")), overlays.map((ov, i) => {
+  }, "they cite different verses")), seams.length > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "study-part-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "study-part-key"
+  }, "Contested claims (one side leans on, another rejects):"), /*#__PURE__*/React.createElement("div", {
+    className: "study-part-privs"
+  }, seams.map((s, i) => /*#__PURE__*/React.createElement("div", {
+    className: "study-part-priv",
+    key: i
+  }, /*#__PURE__*/React.createElement(ProvBadge, {
+    prov: s.provenance
+  }), " ", s.body, /*#__PURE__*/React.createElement("span", {
+    className: "study-seam-who"
+  }, " \u2014 held by ", s.used_by.join(", "), "; rejected by ", s.rejected_by.join(", ")))))), overlays.map((ov, i) => {
     const priv = privates[i] || [];
     if (!priv.length) return null;
     return /*#__PURE__*/React.createElement("div", {

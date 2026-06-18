@@ -84,18 +84,22 @@ def stress_test(claims, overlay):
 
 
 def diff_overlays(claims, overlays):
-    """Where the overlays part: the grounded verses leaned on by MORE THAN ONE side (the real
-    friction — the same verse pulled toward different conclusions), and each side's OWN
-    interpretive claims (non-grounded, non-conclusion) no other side touches.
-    Returns {"shared_verses": [id...], "private": {overlay_index: [id...]}}."""
-    touched = []
+    """Where the overlays part. Returns:
+      shared_verses — grounded verses leaned on by >=2 sides (same verse, opposite pulls)
+      private       — each side's own interpretive claims no other side touches
+      seams         — a claim one side LEANS ON and another EXPLICITLY REJECTS (the
+                      smuggled-claim exposure): [{claim, body, provenance, used_by, rejected_by}]
+    """
+    touched, rejects = [], []
     for ov in overlays:
         ids = set()
         for l in (ov.get("links") or []):
-            ids.add(l.get("from"))
-            ids.add(l.get("to"))
+            if l.get("relation") in CARRY:          # "leans on" = supports/requires, not objections
+                ids.add(l.get("from"))
+                ids.add(l.get("to"))
         ids.discard(None)
         touched.append(ids)
+        rejects.append(set(ov.get("rejects") or []))
     counts = Counter(c for ids in touched for c in ids)
 
     def prov(c):
@@ -108,7 +112,17 @@ def diff_overlays(claims, overlays):
             c for c in ids
             if counts[c] == 1 and prov(c) not in GROUNDED and prov(c) != "conclusion"
         )
-    return {"shared_verses": shared_verses, "private": private}
+    seams = []
+    candidates = set(counts) | (set().union(*rejects) if rejects else set())
+    for cid in sorted(candidates):
+        used_by = [overlays[i].get("tradition", "") for i, ids in enumerate(touched) if cid in ids]
+        rejected_by = [overlays[i].get("tradition", "") for i, rej in enumerate(rejects) if cid in rej]
+        if used_by and rejected_by:
+            seams.append({
+                "claim": cid, "body": (claims.get(cid) or {}).get("text", ""),
+                "provenance": prov(cid), "used_by": used_by, "rejected_by": rejected_by,
+            })
+    return {"shared_verses": shared_verses, "private": private, "seams": seams}
 
 
 def analyze(claims, overlays):

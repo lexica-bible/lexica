@@ -367,9 +367,9 @@ def _clean_claims(obj):
 
 
 def _clean_overlays(obj, claim_ids):
-    """Per-tradition overlays: [{tradition, thesis, links:[{from,to,relation,strength,note?}]}].
-    Links pointing at a claim that isn't in the pool are dropped; an unknown relation/strength
-    snaps to a safe default."""
+    """Per-tradition overlays: [{tradition, thesis, rejects:[id], links:[{from,to,relation,
+    strength,why?}]}]. Links pointing at a claim that isn't in the pool are dropped; an unknown
+    relation/strength snaps to a safe default; rejects are kept only for real pool claims."""
     out = []
     if not isinstance(obj, list):
         return out
@@ -390,16 +390,18 @@ def _clean_overlays(obj, claim_ids):
                 "relation": rel if rel in argmap.RELATIONS else "supports",
                 "strength": strg if strg in argmap.STRENGTHS else "contested",
             }
-            note = str(l.get("note") or "").strip()
-            if note:
-                link["note"] = note[:300]
+            why = str(l.get("why") or l.get("note") or "").strip()   # why it's rated this way / whose call
+            if why:
+                link["why"] = why[:300]
             links.append(link)
             if len(links) >= _MAX_LINKS:
                 break
         thesis = str(ov.get("thesis") or "").strip()
+        rejects = [c for c in (str(x).strip() for x in (ov.get("rejects") or [])) if c in claim_ids][:_MAX_CLAIMS]
         out.append({
             "tradition": str(ov.get("tradition") or "").strip()[:200],
             "thesis": thesis if thesis in claim_ids else "",
+            "rejects": rejects,
             "links": links,
         })
         if len(out) >= _MAX_OVERLAYS:

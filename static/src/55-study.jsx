@@ -316,13 +316,17 @@ function ClaimChip({ claim, onNavigate }) {
 const linkKey = l => l.from + "→" + l.to + "·" + l.relation;
 
 // One tradition's card: its conclusion, the verdict, the load-bearing joint, then the chain.
+// Every non-solid link shows WHY it's rated that way and WHOSE call it is.
 function OverlayCard({ overlay, verdict, claims, onNavigate }) {
   const v = verdict || { grounded: false, gap: false, load_bearing: [], soft_steps: [], objections: [] };
   const joints = new Set((v.load_bearing || []).map(linkKey));
   const cls = v.grounded ? "stands" : v.gap ? "gap" : "depends";
-  const label = v.grounded ? "Stands on the text" : v.gap ? "Incomplete — a step is missing" : "Depends on non-solid joints";
+  const label = v.grounded ? "Stands on the text" : v.gap ? "Incomplete — a step is missing" : "Depends on a non-solid joint";
   const chain = (overlay.links || []).filter(l => l.relation !== "undercuts");
   const objections = (overlay.links || []).filter(l => l.relation === "undercuts");
+  const whyLine = l => l.why
+    ? <div className="study-link-why">{l.why} <span className="study-link-by">— {overlay.tradition}'s call</span></div>
+    : null;
   return (
     <div className="study-overlay">
       <div className="study-overlay-head">{overlay.tradition}</div>
@@ -335,6 +339,7 @@ function OverlayCard({ overlay, verdict, claims, onNavigate }) {
             <div className="study-joint" key={i}>
               <ClaimChip claim={claims[l.from]} onNavigate={onNavigate} />
               <div className="study-link-rel study-link-rel--weak">{l.relation} · {l.strength}</div>
+              {whyLine(l)}
               <ClaimChip claim={claims[l.to]} onNavigate={onNavigate} />
             </div>
           ))}
@@ -345,6 +350,7 @@ function OverlayCard({ overlay, verdict, claims, onNavigate }) {
           <div className={"study-link study-link--" + l.strength + (joints.has(linkKey(l)) ? " study-link--joint" : "")} key={i}>
             <ClaimChip claim={claims[l.from]} onNavigate={onNavigate} />
             <div className={"study-link-rel study-link-rel--" + l.strength}>{l.relation} · {l.strength}</div>
+            {l.strength !== "solid" && whyLine(l)}
             <ClaimChip claim={claims[l.to]} onNavigate={onNavigate} />
           </div>
         ))}
@@ -353,7 +359,7 @@ function OverlayCard({ overlay, verdict, claims, onNavigate }) {
         <div className="study-objections">
           <div className="study-objections-label">Open objections (noted, not scored)</div>
           {objections.map((l, i) => (
-            <div className="study-objection" key={i}>{l.note || ((claims[l.from] || {}).text + " — attacks the conclusion")}</div>
+            <div className="study-objection" key={i}>{l.why || ((claims[l.from] || {}).text + " — attacks the conclusion")}</div>
           ))}
         </div>
       )}
@@ -369,7 +375,8 @@ function GraphPage({ entry, onClose, previewReader, onNavigate }) {
   const diff = analysis.diff || {};
   const sharedVerses = diff.shared_verses || [];
   const privates = diff.private || {};
-  const hasPart = sharedVerses.length > 0 || Object.keys(privates).some(k => (privates[k] || []).length);
+  const seams = diff.seams || [];
+  const hasPart = sharedVerses.length > 0 || seams.length > 0 || Object.keys(privates).some(k => (privates[k] || []).length);
   return (
     <div className="study-topic study-graph">
       <div className="study-editor-bar">
@@ -378,6 +385,7 @@ function GraphPage({ entry, onClose, previewReader, onNavigate }) {
       <div className="study-eyebrow">Argument graph</div>
       <h1 className="study-topic-title">{entry.title}</h1>
       <div className="study-topic-meta">{Object.keys(claims).length} claims · {overlays.length} {overlays.length === 1 ? "tradition" : "traditions"}</div>
+      <div className="study-graph-caution">Maps reasoning, does not settle truth.</div>
       {entry.intro && <p className="study-topic-intro">{entry.intro}</p>}
       <div className="study-prov-key">
         <span className="study-prov study-prov--grounded">Grounded</span> stands on the text ·
@@ -390,11 +398,24 @@ function GraphPage({ entry, onClose, previewReader, onNavigate }) {
         <div className="study-part">
           <div className="study-part-label">Where they part</div>
           <div className="study-part-row">
-            <span className="study-part-key">Verses both lean on:</span>{" "}
+            <span className="study-part-key">Verses leaned on by more than one side:</span>{" "}
             {sharedVerses.length
               ? sharedVerses.map((cid, i) => <span key={i} className="study-part-chip">{(claims[cid] || {}).ref || cid}</span>)
               : <em className="study-verse-missing">they cite different verses</em>}
           </div>
+          {seams.length > 0 && (
+            <div className="study-part-row">
+              <span className="study-part-key">Contested claims (one side leans on, another rejects):</span>
+              <div className="study-part-privs">
+                {seams.map((s, i) => (
+                  <div className="study-part-priv" key={i}>
+                    <ProvBadge prov={s.provenance} /> {s.body}
+                    <span className="study-seam-who"> — held by {s.used_by.join(", ")}; rejected by {s.rejected_by.join(", ")}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
           {overlays.map((ov, i) => {
             const priv = privates[i] || [];
             if (!priv.length) return null;

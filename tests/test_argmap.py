@@ -64,6 +64,14 @@ def test_diff_separates_shared_and_private():
     assert d["private"][0] == []           # overlay A introduces no interpretive claim
 
 
+def test_seams_from_rejects():
+    # B leans on the tradition claim c1; A explicitly rejects it -> a seam.
+    a = dict(OV_PASS, rejects=["c1"])
+    d = argmap.diff_overlays(CLAIMS, [a, OV_DEPENDS])
+    assert any(s["claim"] == "c1" and s["rejected_by"] == ["A"] and "B" in s["used_by"]
+               for s in d["seams"])
+
+
 def test_analyze_bundles_everything():
     out = argmap.analyze(CLAIMS, [OV_PASS, OV_DEPENDS, OV_GAP])
     assert len(out["verdicts"]) == 3

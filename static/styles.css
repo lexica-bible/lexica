@@ -3899,6 +3899,10 @@ button.study-verse-ref { border: none; }
 .study-part-chip { display: inline-block; font-family: var(--f-mono); font-size: 11px; color: var(--accent); background: var(--accent-soft); padding: 1px 7px; border-radius: 4px; margin: 0 4px 4px 0; }
 .study-part-privs { margin-top: 6px; display: flex; flex-direction: column; gap: 6px; }
 .study-part-priv { font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+.study-seam-who { color: var(--ink-4); font-size: 12px; }
+.study-graph-caution { font-size: 12px; font-style: italic; color: var(--ink-4); margin: 0 0 14px; }
+.study-link-why { font-size: 12px; line-height: 1.45; color: var(--ink-3); padding: 1px 0 1px 2px; }
+.study-link-by { color: var(--ink-4); font-style: italic; }
 
 @media (max-width: 1099px) {
   .study-view { padding: 14px 14px 90px; }

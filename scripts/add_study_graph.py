@@ -3,18 +3,25 @@
 
 A graph is a pool of CLAIMS joined by per-tradition LINKS (see argmap.py). Each claim is
 tagged with a provenance — text/lexicon are GROUNDED in the source; tradition/conjecture/
-inference are NOT. Each link carries a strength (solid/contested/weak). The stress test
-asks, for each tradition: is the conclusion reachable from grounded claims on solid links
-alone? If not, it names the load-bearing joint (or flags an outright gap).
+inference are NOT. Each link carries a strength (solid/contested/weak) and a `why` (why it's
+rated that way — i.e. whose call it is and on what basis). An overlay may also `reject`
+claims another tradition leans on. The stress test asks, per tradition: is the conclusion
+reachable from grounded claims on solid links alone? If not, it names the load-bearing joint
+(or flags an outright gap).
 
     workon bible-env
     python scripts/add_study_graph.py             # DRY RUN: stress test + resolve verses, write nothing
     python scripts/add_study_graph.py --apply     # write it to study.db (published)
 
 The stress-test verdict needs NO database (pure logic); the verse text resolves from
-bible.db the same way the Study tab does. Re-running REPLACES the same graph (stable id),
-so it's safe to tweak and run again. To author another graph, copy this file and edit the
-block below.
+bible.db the same way the Study tab does. Re-running REPLACES the same graph (stable id).
+
+STRENGTH RUBRIC (audited for even-handedness across all overlays):
+  solid     = the text states it directly, or both sides grant it
+  contested = a disputed inference — BOTH arguments from silence sit here (credo's "infants
+              excluded" and paedo's "households included infants" get the SAME bar), as do the
+              systematic bridges (covenant continuity, baptism-replaces-circumcision, baptism-saves)
+  weak      = a real stretch even granting charity
 """
 import argparse
 import json
@@ -28,12 +35,12 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import argmap   # pure logic, no database — safe to import anywhere
 
 # ── The graph to add — edit this block ───────────────────────────────────────
-GRAPH_ID = "baptism_who"             # stable id; re-running replaces this graph
+GRAPH_ID = "baptism_who"
 TITLE = "Baptism — who, and what does it do?"
 INTRO = ("Three traditions read the same New Testament and reach different conclusions. "
          "This lays out each side's chain and asks where it actually load-bears — and where "
          "two sides pull the very same verse in opposite directions.")
-PUBLISHED = True                     # admin-only either way for now; True = ready to show when graphs go public
+PUBLISHED = True
 
 # Claims: the shared pool. Verse claims carry a `ref` (resolves to text, clickable in the
 # reader); interpretive claims have no ref. provenance: text/lexicon grounded; the rest not.
@@ -41,20 +48,20 @@ CLAIMS = {
     # ── grounded source verses ──
     "v_acts2_38":  {"provenance": "text", "ref": "Acts 2:38",
                     "text": "'Repent and be baptized... for the forgiveness of sins'"},
-    "v_acts2_39":  {"provenance": "text", "ref": "Acts 2:39",
-                    "text": "'The promise is to you and to your children'"},
     "v_acts8_12":  {"provenance": "text", "ref": "Acts 8:12",
                     "text": "Samaritans were baptized after they believed Philip's preaching"},
     "v_mark16_16": {"provenance": "text", "ref": "Mark 16:16",
                     "text": "'Whoever believes and is baptized will be saved'"},
+    "v_eph2_8":    {"provenance": "text", "ref": "Ephesians 2:8-9",
+                    "text": "'By grace you are saved through faith... not of works'"},
     "v_1pet3_21":  {"provenance": "text", "ref": "1 Peter 3:21",
                     "text": "'Baptism now saves you'"},
     "v_john3_5":   {"provenance": "text", "ref": "John 3:5",
                     "text": "'Unless one is born of water and the Spirit...'"},
-    "v_eph2_8":    {"provenance": "text", "ref": "Ephesians 2:8-9",
-                    "text": "'By grace you are saved through faith... not of works'"},
     "v_luke23_43": {"provenance": "text", "ref": "Luke 23:43",
                     "text": "The thief on the cross — 'today you will be with me in Paradise', unbaptized"},
+    "v_acts2_39":  {"provenance": "text", "ref": "Acts 2:39",
+                    "text": "'The promise is to you and to your children'"},
     "v_households":{"provenance": "text", "ref": "Acts 16:33",
                     "text": "Whole households were baptized (Lydia, the jailer, Stephanas)"},
     "v_col2":      {"provenance": "text", "ref": "Colossians 2:11-12",
@@ -63,22 +70,24 @@ CLAIMS = {
                     "text": "Circumcision given to Abraham's household, infants included, as the covenant sign"},
 
     # ── interpretive claims (not grounded) ──
-    "c_belief_first":     {"provenance": "inference",
-                           "text": "In every baptism the New Testament narrates, the person first professed faith"},
-    "c_faith_alone":      {"provenance": "inference",
-                           "text": "Salvation is received by faith, not by a rite performed on a person"},
-    "c_covenant_kids":    {"provenance": "tradition",
-                           "text": "Believers' children stay inside the covenant community, so the covenant sign still belongs to them"},
-    "c_baptism_for_circ": {"provenance": "tradition",
-                           "text": "Baptism is the new-covenant replacement for circumcision, so it goes to the same recipients — infants included"},
-    "c_household_infants":{"provenance": "conjecture",
-                           "text": "Those baptized households included infants"},
-    "c_baptism_saves":    {"provenance": "tradition",
-                           "text": "Baptism itself conveys saving grace (not merely a picture of it)"},
+    "c_belief_first":      {"provenance": "inference",
+                            "text": "In every baptism the New Testament narrates, the person first professed faith"},
+    "c_faith_alone":       {"provenance": "inference",
+                            "text": "Salvation is received by faith, not by a rite performed on a person"},
+    "c_baptize_believers": {"provenance": "inference",
+                            "text": "Baptism is for those who profess faith (both sides grant this much)"},
+    "c_covenant_kids":     {"provenance": "tradition",
+                            "text": "Believers' children stay inside the covenant community, so the covenant sign still belongs to them"},
+    "c_household_infants": {"provenance": "conjecture",
+                            "text": "Those baptized households included infants"},
+    "c_baptism_for_circ":  {"provenance": "tradition",
+                            "text": "Baptism is the new-covenant replacement for circumcision, so it goes to the same recipients"},
+    "c_baptism_saves":     {"provenance": "tradition",
+                            "text": "Baptism itself conveys saving grace (not merely a picture of it)"},
 
     # ── the three conclusions ──
     "t_credo": {"provenance": "conclusion",
-                "text": "Baptize those who profess faith — baptism pictures a salvation already received"},
+                "text": "Baptism is ONLY for those who profess faith — infants are excluded"},
     "t_paedo": {"provenance": "conclusion",
                 "text": "Baptize the infant children of believers"},
     "t_regen": {"provenance": "conclusion",
@@ -89,47 +98,62 @@ OVERLAYS = [
     {
         "tradition": "Credobaptist (believer's baptism)",
         "thesis": "t_credo",
+        "rejects": ["c_covenant_kids"],
         "links": [
             {"from": "v_acts2_38",  "to": "c_belief_first", "relation": "supports", "strength": "solid"},
             {"from": "v_acts8_12",  "to": "c_belief_first", "relation": "supports", "strength": "solid"},
-            {"from": "v_mark16_16", "to": "c_belief_first", "relation": "supports", "strength": "solid"},
-            {"from": "c_belief_first", "to": "t_credo",     "relation": "supports", "strength": "solid"},
+            {"from": "v_mark16_16", "to": "c_belief_first", "relation": "supports", "strength": "contested",
+             "why": "Pairs belief and baptism for salvation, but does not fix their order."},
             {"from": "v_eph2_8",    "to": "c_faith_alone",  "relation": "supports", "strength": "solid"},
-            {"from": "c_faith_alone", "to": "t_credo",      "relation": "supports", "strength": "solid"},
-            # the regeneration reading pushes back on "symbol only":
-            {"from": "c_baptism_saves", "to": "t_credo", "relation": "undercuts", "strength": "contested",
-             "note": "If baptism actually conveys grace, 'just a picture' is too weak a reading."},
+            {"from": "c_belief_first",  "to": "c_baptize_believers", "relation": "supports", "strength": "solid"},
+            {"from": "c_faith_alone",   "to": "c_baptize_believers", "relation": "supports", "strength": "solid"},
+            {"from": "c_baptize_believers", "to": "t_credo", "relation": "supports", "strength": "contested",
+             "why": "The EXCLUSION of infants is an argument from silence — every narrated case is a first-generation adult convert, so the absence of an infant baptism doesn't settle whether infants may be baptized."},
+            {"from": "v_households", "to": "t_credo", "relation": "undercuts", "strength": "contested",
+             "why": "If those households included children, the 'believers only' rule already has exceptions."},
         ],
     },
     {
         "tradition": "Paedobaptist (infant baptism)",
         "thesis": "t_paedo",
+        "rejects": [],
         "links": [
-            {"from": "v_gen17",      "to": "c_covenant_kids", "relation": "supports", "strength": "contested"},
-            {"from": "v_acts2_39",   "to": "c_covenant_kids", "relation": "supports", "strength": "contested"},
-            {"from": "v_households", "to": "c_household_infants", "relation": "supports", "strength": "weak"},
-            {"from": "c_household_infants", "to": "c_covenant_kids", "relation": "supports", "strength": "weak"},
-            {"from": "c_covenant_kids",  "to": "c_baptism_for_circ", "relation": "requires", "strength": "contested"},
-            {"from": "v_col2",           "to": "c_baptism_for_circ", "relation": "supports", "strength": "contested"},
-            {"from": "c_baptism_for_circ", "to": "t_paedo",   "relation": "supports", "strength": "weak"},
-            # the believer's-baptism pattern pushes back:
+            {"from": "v_gen17",    "to": "c_covenant_kids", "relation": "supports", "strength": "contested",
+             "why": "Covenant continuity — a systematic inference the other side disputes."},
+            {"from": "v_acts2_39", "to": "c_covenant_kids", "relation": "supports", "strength": "contested",
+             "why": "'Your children' may mean posterity generally, not a mandate to baptize infants."},
+            {"from": "v_households", "to": "c_household_infants", "relation": "supports", "strength": "contested",
+             "why": "Argument from silence — the household's composition is unstated (the mirror of credo's exclusion step, rated the same)."},
+            {"from": "c_household_infants", "to": "c_baptism_for_circ", "relation": "supports", "strength": "contested",
+             "why": "Read as covenant inclusion of children."},
+            {"from": "c_covenant_kids", "to": "c_baptism_for_circ", "relation": "requires", "strength": "contested",
+             "why": "The circumcision-replacement step needs covenant continuity to stand."},
+            {"from": "v_col2", "to": "c_baptism_for_circ", "relation": "supports", "strength": "contested",
+             "why": "Baptism is set beside circumcision, but the recipients aren't specified."},
+            {"from": "c_baptism_for_circ", "to": "t_paedo", "relation": "supports", "strength": "contested",
+             "why": "Baptism replaces circumcision, so it goes to the same recipients — the recipient-equivalence leap."},
             {"from": "c_belief_first", "to": "t_paedo", "relation": "undercuts", "strength": "contested",
-             "note": "Every baptism the NT actually describes follows a profession of faith."},
+             "why": "Every baptism the NT actually describes follows a profession of faith."},
         ],
     },
     {
         "tradition": "Baptismal regeneration (baptism saves)",
         "thesis": "t_regen",
+        "rejects": ["c_faith_alone"],
         "links": [
-            {"from": "v_acts2_38",  "to": "c_baptism_saves", "relation": "supports", "strength": "contested"},
-            {"from": "v_1pet3_21",  "to": "c_baptism_saves", "relation": "supports", "strength": "contested"},
-            {"from": "v_john3_5",   "to": "c_baptism_saves", "relation": "supports", "strength": "contested"},
-            {"from": "v_mark16_16", "to": "c_baptism_saves", "relation": "supports", "strength": "weak"},
+            {"from": "v_acts2_38", "to": "c_baptism_saves", "relation": "supports", "strength": "contested",
+             "why": "'For the forgiveness of sins' read as baptism effecting forgiveness."},
+            {"from": "v_1pet3_21", "to": "c_baptism_saves", "relation": "supports", "strength": "contested",
+             "why": "'Baptism now saves you' — though Peter adds 'not the removal of dirt from the body.'"},
+            {"from": "v_john3_5",  "to": "c_baptism_saves", "relation": "supports", "strength": "contested",
+             "why": "'Born of water' read as baptism — disputed."},
+            {"from": "v_mark16_16", "to": "c_baptism_saves", "relation": "supports", "strength": "contested",
+             "why": "Couples baptism with being saved."},
             # NOTE: nothing carries from "baptism saves" to "necessary, no exceptions" — that is the gap.
             {"from": "c_faith_alone", "to": "c_baptism_saves", "relation": "undercuts", "strength": "contested",
-             "note": "Grace through faith, not of works — cuts against baptism as the cause."},
+             "why": "Grace through faith, not of works — cuts against baptism as the cause."},
             {"from": "v_luke23_43", "to": "t_regen", "relation": "undercuts", "strength": "solid",
-             "note": "The thief was saved with no baptism — the leap from 'baptism saves' to 'necessary, no exceptions' isn't in the text."},
+             "why": "The thief was saved with no baptism — the leap from 'baptism saves' to 'necessary, no exceptions' isn't in the text."},
         ],
     },
 ]
@@ -160,17 +184,18 @@ def stress():
         elif v["gap"]:
             print("  VERDICT: INCOMPLETE — a step is missing; unreachable even granting every link.")
         else:
-            print("  VERDICT: DEPENDS ON NON-SOLID JOINTS.")
+            print("  VERDICT: DEPENDS ON A NON-SOLID JOINT.")
             for l in v["load_bearing"]:
-                print("    >>> load-bearing joint [%s]:" % l["strength"])
-                print("        %s" % _c(l["from"]))
-                print("          -> %s" % _c(l["to"]))
-        for l in v["objections"]:
-            print("    (open objection) %s" % (l.get("note") or (_c(l["from"]) + " attacks " + _c(l["to"]))))
+                print("    >>> load-bearing joint [%s]: %s -> %s" % (l["strength"], _c(l["from"]), _c(l["to"])))
+        if ov.get("rejects"):
+            print("  Rejects: %s" % ", ".join(_c(c) for c in ov["rejects"]))
     diff = out["diff"]
     print("\n== Where they part ==")
     shared = ", ".join((CLAIMS.get(c) or {}).get("ref", c) for c in diff["shared_verses"])
     print("  Verses leaned on by more than one side: %s" % (shared or "(none)"))
+    for s in diff.get("seams", []):
+        print("  Seam: %s [%s] — held by %s; rejected by %s"
+              % (_c(s["claim"]), s["provenance"], ", ".join(s["used_by"]), ", ".join(s["rejected_by"])))
 
 
 def dry_run():
