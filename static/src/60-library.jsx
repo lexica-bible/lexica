@@ -246,6 +246,12 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
       // flash on mobile). Only selBook waits here: it must be resolved against the just-loaded
       // books list. The gated-text bounce (owner status) still drops ESV/NIV/HEB afterward.
       setSelBook(savedBook || data[0]);
+      // Restore the placeholder verse (the verse you last clicked) so a refresh lands
+      // back on it — set the highlight + scroll. No book in the nav, so the chapter-load
+      // effect leaves it alone (selBook/selChapter are already restored above).
+      if (savedBook && saved.highlight != null) {
+        onNavChange?.({ chapter: saved.chapter, highlight: saved.highlight, scroll: true });
+      }
     });
   }, []);
   // Remember the reading spot so a refresh returns you here instead of Genesis 1.
@@ -254,10 +260,18 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
     try {
       localStorage.setItem("lexica.lib.v1", JSON.stringify({
         corpus, book: selBook ? selBook.abbrev : null, chapter: selChapter, translation,
-        orderMode, chronoPos, compareSel,
+        orderMode, chronoPos, compareSel, highlight: nav?.highlight ?? null,
       }));
     } catch (e) {}
-  }, [corpus, selBook, selChapter, translation, orderMode, chronoPos, compareSel]);
+  }, [corpus, selBook, selChapter, translation, orderMode, chronoPos, compareSel, nav?.highlight]);
+  // Re-scroll to the placeholder verse when you switch Bible version, so you land back
+  // on the verse you marked instead of the top of the chapter. Skip the first render
+  // (the version is just being restored); only real switches re-arm the scroll.
+  const firstTransRef = useRef(true);
+  useEffect(() => {
+    if (firstTransRef.current) { firstTransRef.current = false; return; }
+    onNavChange?.(n => (n && n.highlight != null) ? { ...n, scroll: true } : n);
+  }, [translation]);
   // Persist reading-plan progress + the Eras/Days choice.
   useEffect(() => { planSaveAll(planProg); NotesStore.schedulePlanSync(); }, [planProg]);
   // Pull account-synced plan progress back in: when a sync folds the server's copy into

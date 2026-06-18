@@ -9600,6 +9600,16 @@ function LibraryView({
       // flash on mobile). Only selBook waits here: it must be resolved against the just-loaded
       // books list. The gated-text bounce (owner status) still drops ESV/NIV/HEB afterward.
       setSelBook(savedBook || data[0]);
+      // Restore the placeholder verse (the verse you last clicked) so a refresh lands
+      // back on it — set the highlight + scroll. No book in the nav, so the chapter-load
+      // effect leaves it alone (selBook/selChapter are already restored above).
+      if (savedBook && saved.highlight != null) {
+        onNavChange?.({
+          chapter: saved.chapter,
+          highlight: saved.highlight,
+          scroll: true
+        });
+      }
     });
   }, []);
   // Remember the reading spot so a refresh returns you here instead of Genesis 1.
@@ -9613,10 +9623,25 @@ function LibraryView({
         translation,
         orderMode,
         chronoPos,
-        compareSel
+        compareSel,
+        highlight: nav?.highlight ?? null
       }));
     } catch (e) {}
-  }, [corpus, selBook, selChapter, translation, orderMode, chronoPos, compareSel]);
+  }, [corpus, selBook, selChapter, translation, orderMode, chronoPos, compareSel, nav?.highlight]);
+  // Re-scroll to the placeholder verse when you switch Bible version, so you land back
+  // on the verse you marked instead of the top of the chapter. Skip the first render
+  // (the version is just being restored); only real switches re-arm the scroll.
+  const firstTransRef = useRef(true);
+  useEffect(() => {
+    if (firstTransRef.current) {
+      firstTransRef.current = false;
+      return;
+    }
+    onNavChange?.(n => n && n.highlight != null ? {
+      ...n,
+      scroll: true
+    } : n);
+  }, [translation]);
   // Persist reading-plan progress + the Eras/Days choice.
   useEffect(() => {
     planSaveAll(planProg);
@@ -12888,6 +12913,15 @@ function App() {
       highlight: verse
     }));
   };
+
+  // Returning to the Library tab re-scrolls to the placeholder verse (the last verse
+  // you clicked / jumped to), so it survives a tab switch like a version switch does.
+  useEffect(() => {
+    if (mainView === "library") setLibNav(n => n && n.highlight != null ? {
+      ...n,
+      scroll: true
+    } : n);
+  }, [mainView]);
 
   // Corpus-filtered AI results (OT/NT filter)
   const corpusFilteredResults = useMemo(() => {
