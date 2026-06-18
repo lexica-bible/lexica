@@ -10,12 +10,11 @@ Storage: study.db (core.study_db), kept OUT of bible.db (the corpus is rebuilt;
 authored content must survive that) and OUT of git (*.db is gitignored), exactly
 like notes.db. One row per entry.
 
-Gating: WRITING is always admin-only (the owner authors content). READING is split
-(go-live 2026-06-16): published TOPICS — including the metaV name-topics — are PUBLIC,
-readable by anyone with no login. Argument graphs stay admin-only (they take
-positions, unlike the rest of the Berean app), as do all DRAFTS and the editor's
-verse-autofill. Non-admins get a 404 for anything they may not see, and private notes
-are never sent to a reader.
+Gating: WRITING is always admin-only (the owner authors content). READING is public for
+published TOPICS — including the metaV name-topics — AND argument GRAPHS (graphs opened
+to everyone 2026-06-18; the owner's call — his app, his direction). All DRAFTS and the
+editor's verse-autofill stay admin-only. Non-admins get a 404 for anything they may not
+see, and private graph `notes` are never sent to a reader.
 
 Verses are stored as plain REFERENCES only ("Romans 10:17"); the ABP PROSE text is
 resolved live from bible.db on read and for the editor's auto-fill (KJV fallback
@@ -781,14 +780,21 @@ def list_entries():
     conn = study_db()
     try:
         if not admin:
-            # PUBLIC: published TOPICS only. Graphs stay private; name-topics aren't
-            # browseable here (they open from the metaV sidebar).
-            if wanted and wanted != "topic":
+            # PUBLIC: published TOPICS + GRAPHS. Name-topics aren't browseable here
+            # (they open from the metaV sidebar).
+            if wanted in ("topic", "graph"):
+                rows = conn.execute(
+                    "SELECT id, type, title, json, status, updated FROM entries"
+                    " WHERE deleted=0 AND type=? AND status='published'"
+                    " ORDER BY updated DESC",
+                    (wanted,),
+                ).fetchall()
+            elif wanted == "name":
                 rows = []
             else:
                 rows = conn.execute(
                     "SELECT id, type, title, json, status, updated FROM entries"
-                    " WHERE deleted=0 AND type='topic' AND status='published'"
+                    " WHERE deleted=0 AND type IN ('topic','graph') AND status='published'"
                     " ORDER BY updated DESC"
                 ).fetchall()
         elif wanted in _TYPES:
@@ -838,9 +844,9 @@ def get_entry(entry_id):
         conn.close()
     if not r:
         return jsonify({"error": "not found"}), 404
-    # PUBLIC: only published topic-like entries (topics + metaV name-topics).
-    # Graphs and any draft stay admin-only.
-    if not admin and not (r["type"] in ("topic", "name") and r["status"] == "published"):
+    # PUBLIC: published topics, metaV name-topics, AND argument graphs. Any draft
+    # stays admin-only; private `notes` are stripped below before a reader sees it.
+    if not admin and not (r["type"] in ("topic", "name", "graph") and r["status"] == "published"):
         return jsonify({"error": "not found"}), 404
     out = _resolved_entry(r)
     if not admin:
@@ -984,13 +990,12 @@ def for_name(name):
 @limiter.limit("600 per hour")
 def for_verse(book, chapter, verse):
     """PUBLIC: which published studies cite this verse — the reader's 'In studies:' line.
-    {topics:[{id,title,kind}]}, empty if none. Concept TOPICS show for everyone; argument
-    GRAPHS are admin-only, so a non-admin never sees a graph chip (it would 404 for them).
-    Name-topics are deliberately excluded from the index."""
+    {topics:[{id,title,kind}]}, empty if none. Concept TOPICS and argument GRAPHS both
+    show for everyone (graphs went public 2026-06-18). Name-topics are deliberately
+    excluded from the index."""
     idx = _verse_index()
     hits = idx.get((book, chapter, verse), [])
-    admin = is_admin()
-    out = [{"id": i, "title": t, "kind": k} for (i, t, k) in hits if admin or k != "graph"]
+    out = [{"id": i, "title": t, "kind": k} for (i, t, k) in hits]
     return jsonify({"topics": out})
 
 

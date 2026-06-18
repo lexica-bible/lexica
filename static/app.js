@@ -4439,11 +4439,12 @@ function CorpusResults({
 //   Topics — a BROWSE: a subject broken into subtopic SECTIONS, each with its verses
 //            (mostly filled from MetaV; light editing). PUBLIC when published. Shape:
 //            {title, intro, sections:[{heading, verses:[{ref,text}]}]}.
-//   Graphs — an ARGUMENT MAP (admin-only): a pool of CLAIMS joined by per-tradition
-//            LINKS, each claim tagged with provenance + each link with strength, so the
-//            conclusion can be stress-tested (see argmap.py). Read-only here; authored
-//            with scripts/add_study_graph.py.
-// Backend: views_study.py (study.db). Graph routes are admin-gated (404 otherwise).
+//   Graphs — an ARGUMENT MAP (PUBLIC when published, since 2026-06-18): a pool of CLAIMS
+//            joined by per-tradition LINKS, each claim tagged with provenance + each link
+//            with strength, so the conclusion can be stress-tested (see argmap.py).
+//            Read-only here; authored with scripts/add_study_graph.py.
+// Backend: views_study.py (study.db). Reading published topics/graphs is public; all
+// writing + drafts stay admin-gated (404 otherwise).
 // ============================================================
 const STUDY_MODULES = [{
   id: "topic",
@@ -5543,8 +5544,7 @@ function StudyView({
 }) {
   const adminUser = !!admin;
   const [module, setModule] = useState(() => {
-    // Restore unconditionally: only an admin can ever set "graph" (the switch is admin-only), and
-    // `admin` often isn't resolved yet on this first render — gating on it here fell back to Topics.
+    // Restore the saved sub-tab. Both Topics and Graphs are public now, so no admin gate here.
     try {
       return localStorage.getItem("lexica.study.module.v1") === "graph" ? "graph" : "topic";
     } catch (e) {
@@ -5737,13 +5737,13 @@ function StudyView({
   const shown = pool.filter(e => !qs || (e.title || "").toLowerCase().includes(qs) || displayTitle(e.title).toLowerCase().includes(qs) || (e.heldBy || "").toLowerCase().includes(qs)).sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
   return /*#__PURE__*/React.createElement("div", {
     className: "study-view"
-  }, adminUser && /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement("div", {
     className: "study-sub"
   }, STUDY_MODULES.map(m => /*#__PURE__*/React.createElement("button", {
     key: m.id,
     className: "study-sub-b" + (module === m.id ? " on" : ""),
     onClick: () => pickModule(m.id)
-  }, m.label)), /*#__PURE__*/React.createElement("button", {
+  }, m.label)), adminUser && /*#__PURE__*/React.createElement("button", {
     className: "study-preview-toggle" + (previewReader ? " on" : ""),
     onClick: () => setPreviewReader(p => !p),
     title: "See exactly what a reader sees \u2014 editing off, drafts hidden"
@@ -5771,7 +5771,7 @@ function StudyView({
     className: "stats-empty"
   }, "Loading\u2026") : shown.length === 0 ? /*#__PURE__*/React.createElement("div", {
     className: "stats-empty"
-  }, qs ? "No matches for “" + q + "”." : !adminUser ? "No study topics yet — check back soon." : previewReader ? "Nothing published yet — mark an entry Published to show it here." : isTopic ? "Nothing here yet — start with “+ New topic”. (Or import from MetaV.)" : "No graphs yet — add one with scripts/add_study_graph.py.") : /*#__PURE__*/React.createElement("div", {
+  }, qs ? "No matches for “" + q + "”." : !adminUser ? isTopic ? "No study topics yet — check back soon." : "No graphs yet — check back soon." : previewReader ? "Nothing published yet — mark an entry Published to show it here." : isTopic ? "Nothing here yet — start with “+ New topic”. (Or import from MetaV.)" : "No graphs yet — add one with scripts/add_study_graph.py.") : /*#__PURE__*/React.createElement("div", {
     className: "study-rows"
   }, shown.map(e => /*#__PURE__*/React.createElement("button", {
     className: "study-row",

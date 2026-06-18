@@ -4,11 +4,12 @@
 //   Topics — a BROWSE: a subject broken into subtopic SECTIONS, each with its verses
 //            (mostly filled from MetaV; light editing). PUBLIC when published. Shape:
 //            {title, intro, sections:[{heading, verses:[{ref,text}]}]}.
-//   Graphs — an ARGUMENT MAP (admin-only): a pool of CLAIMS joined by per-tradition
-//            LINKS, each claim tagged with provenance + each link with strength, so the
-//            conclusion can be stress-tested (see argmap.py). Read-only here; authored
-//            with scripts/add_study_graph.py.
-// Backend: views_study.py (study.db). Graph routes are admin-gated (404 otherwise).
+//   Graphs — an ARGUMENT MAP (PUBLIC when published, since 2026-06-18): a pool of CLAIMS
+//            joined by per-tradition LINKS, each claim tagged with provenance + each link
+//            with strength, so the conclusion can be stress-tested (see argmap.py).
+//            Read-only here; authored with scripts/add_study_graph.py.
+// Backend: views_study.py (study.db). Reading published topics/graphs is public; all
+// writing + drafts stay admin-gated (404 otherwise).
 // ============================================================
 const STUDY_MODULES = [
   { id: "topic", label: "Topics" },
@@ -709,8 +710,7 @@ function GraphPage({ entry, onClose, previewReader, onNavigate }) {
 function StudyView({ admin, pending, onConsumed, onNavigateToLibrary }) {
   const adminUser = !!admin;
   const [module, setModule] = useState(() => {
-    // Restore unconditionally: only an admin can ever set "graph" (the switch is admin-only), and
-    // `admin` often isn't resolved yet on this first render — gating on it here fell back to Topics.
+    // Restore the saved sub-tab. Both Topics and Graphs are public now, so no admin gate here.
     try { return localStorage.getItem("lexica.study.module.v1") === "graph" ? "graph" : "topic"; } catch (e) { return "topic"; }
   });
   const [entries, setEntries] = useState(null);
@@ -813,17 +813,17 @@ function StudyView({ admin, pending, onConsumed, onNavigateToLibrary }) {
     .sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
   return (
     <div className="study-view">
-      {adminUser && (
-        <div className="study-sub">
-          {STUDY_MODULES.map(m => (
-            <button key={m.id} className={"study-sub-b" + (module === m.id ? " on" : "")} onClick={() => pickModule(m.id)}>{m.label}</button>
-          ))}
+      <div className="study-sub">
+        {STUDY_MODULES.map(m => (
+          <button key={m.id} className={"study-sub-b" + (module === m.id ? " on" : "")} onClick={() => pickModule(m.id)}>{m.label}</button>
+        ))}
+        {adminUser && (
           <button className={"study-preview-toggle" + (previewReader ? " on" : "")} onClick={() => setPreviewReader(p => !p)}
             title="See exactly what a reader sees — editing off, drafts hidden">
             {previewReader ? "✓ Previewing as reader" : "Preview as reader"}
           </button>
-        </div>
-      )}
+        )}
+      </div>
       {previewReader && (
         <div className="study-preview-note">
           You're seeing what a reader sees — editing is off and drafts are hidden.
@@ -849,7 +849,7 @@ function StudyView({ admin, pending, onConsumed, onNavigateToLibrary }) {
         <div className="stats-empty">{qs
           ? "No matches for “" + q + "”."
           : !adminUser
-          ? "No study topics yet — check back soon."
+          ? (isTopic ? "No study topics yet — check back soon." : "No graphs yet — check back soon.")
           : previewReader
           ? "Nothing published yet — mark an entry Published to show it here."
           : isTopic
