@@ -12021,6 +12021,25 @@ function AboutView({
 // LEXICON VIEW
 // ============================================================
 const _STRONGS_RE = /^[GgHh]?\d+(\.\d+)?$/;
+
+// Which original languages live in a (corpus, testament) slice of the English
+// search results. ABP is Greek throughout (the Septuagint in the OT, Greek NT);
+// KJV's OT is Hebrew and its NT is Greek. Lets the Greek/Hebrew filter gray out
+// combos that can't return anything (ABP has no Hebrew; KJV's OT has no Greek)
+// while still allowing Greek in the OT via the Septuagint.
+function _sliceHasGreek(corpus, testament) {
+  if (corpus === "kjv") return testament !== "ot"; // KJV: Greek only in the NT
+  return true; // ABP / All: always some Greek
+}
+function _sliceHasHebrew(corpus, testament) {
+  if (corpus === "abp") return false; // ABP is all Greek
+  return testament !== "nt"; // KJV / All: Hebrew only outside the NT
+}
+function _comboOK(corpus, testament, language) {
+  if (language === "greek") return _sliceHasGreek(corpus, testament);
+  if (language === "hebrew") return _sliceHasHebrew(corpus, testament);
+  return true;
+}
 function LexiconView({
   onNavigateToSearch,
   onNavigateToLibrary,
@@ -12034,6 +12053,7 @@ function LexiconView({
   const [profile, setProfile] = useState(null);
   const [corpus, setCorpus] = useState("all"); // search-results scope: all | abp | kjv
   const [profileCorpus, setProfileCorpus] = useState("abp"); // drilled-in word view: abp | kjv (never "all")
+  const [language, setLanguage] = useState("all"); // results filter: all | greek | hebrew
   const [testament, setTestament] = useState("all");
   const [selectedBook, setSelectedBook] = useState(null);
   const [verseList, setVerseList] = useState(null);
@@ -12132,6 +12152,7 @@ function LexiconView({
   // in focus; re-runs the English search in that corpus.
   const switchCorpus = async c => {
     if (loading || c === corpus) return;
+    if (c !== "all" && !_comboOK(c, testament, language)) return; // grayed combo
     setCorpus(c);
     const q = query.trim();
     const isEnglishQuery = !!q && !_STRONGS_RE.test(q) && !_isGreekHebrew(q);
@@ -12170,6 +12191,7 @@ function LexiconView({
   };
   const switchTestament = async t => {
     if (loading) return;
+    if (!profile && t !== "all" && !_comboOK(corpus, t, language)) return; // grayed combo (results view only)
     setTestament(t);
     setSelectedBook(null);
     setVerseList(null);
@@ -12189,6 +12211,13 @@ function LexiconView({
         setLoading(false);
       }
     }
+  };
+
+  // Greek/Hebrew filter for the results grid — a pure client-side row filter, no
+  // refetch. Graying (via _comboOK) keeps it from clashing with corpus/testament.
+  const switchLanguage = l => {
+    if (l === language || !_comboOK(corpus, testament, l)) return;
+    setLanguage(l);
   };
   const fetchVerses = async (book, gloss) => {
     setVerseList(null);
@@ -12318,6 +12347,9 @@ function LexiconView({
       setLoading(false);
     }
   };
+
+  // Apply the Greek/Hebrew filter to the results grid (client-side row hide).
+  const visibleGroupings = !groupings ? null : language === "all" ? groupings : groupings.filter(g => language === "greek" ? g.strongs[0] === "G" : g.strongs[0] === "H");
   return /*#__PURE__*/React.createElement("div", {
     className: "lexicon-view"
   }, /*#__PURE__*/React.createElement("section", {
@@ -12372,17 +12404,33 @@ function LexiconView({
     onClick: () => switchCorpus("all")
   }, "All"), /*#__PURE__*/React.createElement("button", {
     className: "lct-btn" + (corpus === "abp" ? " on" : ""),
+    disabled: !_comboOK("abp", testament, language),
     onClick: () => switchCorpus("abp")
   }, "ABP"), /*#__PURE__*/React.createElement("button", {
     className: "lct-btn" + (corpus === "kjv" ? " on" : ""),
+    disabled: !_comboOK("kjv", testament, language),
     onClick: () => switchCorpus("kjv")
   }, "KJV"))), /*#__PURE__*/React.createElement("div", {
     className: "lexicon-corpus-toggle"
   }, ["all", "ot", "nt"].map(t => /*#__PURE__*/React.createElement("button", {
     key: t,
     className: "lct-btn" + (testament === t ? " on" : ""),
+    disabled: !profile && t !== "all" && !_comboOK(corpus, t, language),
     onClick: () => switchTestament(t)
-  }, t === "all" ? "All" : t.toUpperCase())))), error && /*#__PURE__*/React.createElement("p", {
+  }, t === "all" ? "All" : t.toUpperCase()))), !profile && /*#__PURE__*/React.createElement("div", {
+    className: "lexicon-corpus-toggle"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "lct-btn" + (language === "all" ? " on" : ""),
+    onClick: () => switchLanguage("all")
+  }, "All"), /*#__PURE__*/React.createElement("button", {
+    className: "lct-btn" + (language === "greek" ? " on" : ""),
+    disabled: !_comboOK(corpus, testament, "greek"),
+    onClick: () => switchLanguage("greek")
+  }, "Greek"), /*#__PURE__*/React.createElement("button", {
+    className: "lct-btn" + (language === "hebrew" ? " on" : ""),
+    disabled: !_comboOK(corpus, testament, "hebrew"),
+    onClick: () => switchLanguage("hebrew")
+  }, "Hebrew"))), error && /*#__PURE__*/React.createElement("p", {
     className: "lexicon-error"
   }, error), matches && !profile && /*#__PURE__*/React.createElement("div", {
     className: "lexicon-matches"
@@ -12402,7 +12450,9 @@ function LexiconView({
     className: "lexicon-results"
   }, /*#__PURE__*/React.createElement("div", {
     className: "lexicon-dist-label"
-  }, "rendered as \"", query.trim(), "\" \xB7 ", groupings.length, " ", groupings.length === 1 ? "word" : "words"), groupings.map(g => /*#__PURE__*/React.createElement("button", {
+  }, "rendered as \"", query.trim(), "\" \xB7 ", visibleGroupings.length, " ", visibleGroupings.length === 1 ? "word" : "words"), visibleGroupings.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "lexicon-dist-label"
+  }, "No ", language === "greek" ? "Greek" : "Hebrew", " words rendered \"", query.trim(), "\".") : visibleGroupings.map(g => /*#__PURE__*/React.createElement("button", {
     key: g.strongs,
     className: "lexicon-result-row",
     onClick: () => loadProfile(g.strongs, corpus === "all" ? undefined : corpus)
