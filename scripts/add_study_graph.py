@@ -94,6 +94,10 @@ CLAIMS = {
                             "text": "Those baptized households included infants"},
     "c_baptism_for_circ":  {"provenance": "tradition", "label": "Baptism replaces circumcision",
                             "text": "Baptism is the new-covenant replacement for circumcision, so it goes to the same recipients"},
+    "def_grace_infused":   {"provenance": "tradition", "label": "Grace = an infused quality",
+                            "text": "Grace here is a conferred quality the rite imparts — not only God's favor exercised by faith"},
+    "obj_grace_charis":    {"provenance": "text", "ref": "Ephesians 2:8", "label": "charis = favor, by faith",
+                            "text": "In the NT charis is God's favor shown through faith (Eph 2:8); none of the cited baptism verses use the word charis"},
 
     # ── conclusions ──
     "t_credo_who":  {"provenance": "conclusion", "label": "For believers only",
@@ -102,8 +106,8 @@ CLAIMS = {
                      "text": "Baptism does not save — it signs a salvation already received by faith"},
     "t_paedo": {"provenance": "conclusion", "label": "Baptize believers' infants",
                 "text": "Baptize the infant children of believers"},
-    "t_regen_grace":     {"provenance": "conclusion", "label": "Baptism conveys grace",
-                          "text": "Baptism conveys saving grace — not merely a picture of it"},
+    "t_regen_grace":     {"provenance": "conclusion", "label": "Effects what it signifies",
+                          "text": "Baptism effects what it signifies — forgiveness, new birth, salvation (the effects the texts name)"},
     "t_regen_necessary": {"provenance": "conclusion", "label": "Baptism is necessary",
                           "text": "Water baptism is necessary for salvation — no one is saved without it (the strict Churches-of-Christ form)"},
 }
@@ -182,12 +186,18 @@ OVERLAYS = [
              "why": "'Born of water' read as baptism — disputed."},
             {"from": "v_mark16_16", "to": "t_regen_grace", "relation": "supports", "strength": "contested",
              "why": "Couples baptism with being saved."},
-            # "Conveys grace" is the real distinctive the verses support. NECESSITY is a further, stronger
-            # claim — the strict no-exceptions form is really the Churches-of-Christ position; Catholics,
-            # Lutherans and Orthodox qualify it (baptism of desire, the unevangelized). So it hangs off the
-            # thesis on a weak step, with the thief on the cross as the classic break.
+            # The thesis is the EFFECTS claim the verses actually name (forgiveness/new birth/salvation), NOT
+            # "conveys grace" (which smuggles the infused-substance sense of charis). NECESSITY is a further
+            # claim with TWO distinct soft spots: (a) the strict "no exceptions" form is really the
+            # Churches-of-Christ position (the weak step), and (b) it REQUIRES grace be an infused substance —
+            # a contested definition not in the cited texts (def_grace_infused + the charis objection). The
+            # thief on the cross is the classic break on necessity itself.
             {"from": "t_regen_grace", "to": "t_regen_necessary", "relation": "supports", "strength": "weak",
-             "why": "The step from 'conveys grace' to 'necessary, no exceptions' is the Churches-of-Christ position; other regenerationists qualify it (baptism of desire, the unevangelized)."},
+             "why": "From 'baptism effects salvation' to 'necessary, no exceptions' is the Churches-of-Christ position; other regenerationists qualify it (baptism of desire, the unevangelized)."},
+            {"from": "def_grace_infused", "to": "t_regen_necessary", "relation": "requires", "strength": "contested",
+             "why": "Necessity presupposes grace is an imparted substance. The cited verses speak of forgiveness, salvation and new birth — never of charis being conveyed."},
+            {"from": "obj_grace_charis", "to": "def_grace_infused", "relation": "undercuts", "strength": "contested",
+             "why": "If charis is favor exercised by faith (Eph 2:8), not a substance, nothing is conveyed through the rite and the necessity step loses its premise — the credo/Reformed reading."},
             {"from": "c_faith_alone", "to": "t_regen_grace", "relation": "undercuts", "strength": "contested",
              "why": "Grace through faith, not of works — cuts against baptism as the cause."},
             {"from": "v_luke23_43", "to": "t_regen_necessary", "relation": "undercuts", "strength": "solid",
