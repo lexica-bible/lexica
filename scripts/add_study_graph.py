@@ -86,8 +86,10 @@ CLAIMS = {
                             "text": "Baptism itself conveys saving grace (not merely a picture of it)"},
 
     # ── the three conclusions ──
-    "t_credo": {"provenance": "conclusion", "label": "For believers only",
-                "text": "Baptism is ONLY for those who profess faith — infants are excluded"},
+    "t_credo_who":  {"provenance": "conclusion", "label": "For believers only",
+                     "text": "Baptism is for professing believers only — infants are excluded"},
+    "t_credo_save": {"provenance": "conclusion", "label": "Baptism doesn't save",
+                     "text": "Baptism does not save — it signs a salvation already received by faith"},
     "t_paedo": {"provenance": "conclusion", "label": "Baptize believers' infants",
                 "text": "Baptize the infant children of believers"},
     "t_regen": {"provenance": "conclusion", "label": "Baptism is necessary",
@@ -97,19 +99,22 @@ CLAIMS = {
 OVERLAYS = [
     {
         "tradition": "Credobaptist (believer's baptism)",
-        "thesis": "t_credo",
+        "thesis": "t_credo_who",
         "rejects": ["c_covenant_kids"],
         "links": [
             {"from": "v_acts2_38",  "to": "c_belief_first", "relation": "supports", "strength": "solid"},
             {"from": "v_acts8_12",  "to": "c_belief_first", "relation": "supports", "strength": "solid"},
             {"from": "v_mark16_16", "to": "c_belief_first", "relation": "supports", "strength": "contested",
              "why": "Pairs belief and baptism for salvation, but does not fix their order."},
-            {"from": "v_eph2_8",    "to": "c_faith_alone",  "relation": "supports", "strength": "solid"},
-            {"from": "c_belief_first",  "to": "c_baptize_believers", "relation": "supports", "strength": "solid"},
-            {"from": "c_faith_alone",   "to": "c_baptize_believers", "relation": "supports", "strength": "solid"},
-            {"from": "c_baptize_believers", "to": "t_credo", "relation": "supports", "strength": "contested",
+            {"from": "c_belief_first", "to": "c_baptize_believers", "relation": "supports", "strength": "solid"},
+            {"from": "c_baptize_believers", "to": "t_credo_who", "relation": "supports", "strength": "contested",
              "why": "The EXCLUSION of infants is an argument from silence — every narrated case is a first-generation adult convert, so the absence of an infant baptism doesn't settle whether infants may be baptized."},
-            {"from": "v_households", "to": "t_credo", "relation": "undercuts", "strength": "contested",
+            # The Ephesians branch argues EFFICACY (what baptism does), not recipients — it discriminates
+            # against baptismal regeneration, NOT against infant baptism (a Reformed paedobaptist holds
+            # faith-alone and baptizes infants). So it feeds "baptism doesn't save," not "believers only."
+            {"from": "v_eph2_8",    "to": "c_faith_alone",  "relation": "supports", "strength": "solid"},
+            {"from": "c_faith_alone", "to": "t_credo_save", "relation": "supports", "strength": "solid"},
+            {"from": "v_households", "to": "t_credo_who", "relation": "undercuts", "strength": "contested",
              "why": "If those households included children, the 'believers only' rule already has exceptions."},
         ],
     },

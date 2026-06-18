@@ -358,13 +358,33 @@ function GraphSvg({ claims, overlay, verdict, shared, onNavigate }) {
     const rank = id => { const i = shared.indexOf(id); return i < 0 ? 1e6 : i; };
     byCol[0].sort((a, b) => rank(a) - rank(b));
   }
+  // y: column 0 on a fixed row grid (shared pinned); each later column centers a node on the
+  // verses/claims that feed it (barycenter), then nudges siblings apart so boxes don't overlap.
+  // This keeps feeders grouped under their target, so the support lines stop crossing.
+  const preds = {};
+  carry.forEach(l => { (preds[l.to] = preds[l.to] || []).push(l.from); });
+  const yy = {};
+  (byCol[0] || []).forEach((id, r) => { yy[id] = r * CH.ROWGAP; });
+  const mid = Math.max(0, (byCol[0] || []).length - 1) / 2 * CH.ROWGAP;
+  Object.keys(byCol).map(Number).sort((a, b) => a - b).forEach(c => {
+    if (c === 0) return;
+    byCol[c].forEach(id => {
+      const ps = (preds[id] || []).filter(p => p in yy);
+      yy[id] = ps.length ? ps.reduce((s, p) => s + yy[p], 0) / ps.length : mid;
+    });
+    byCol[c].sort((a, b) => yy[a] - yy[b]);
+    for (let k = 1; k < byCol[c].length; k++) {
+      const a = byCol[c][k - 1], b = byCol[c][k];
+      if (yy[b] - yy[a] < CH.ROWGAP) yy[b] = yy[a] + CH.ROWGAP;
+    }
+  });
   const pos = {};
-  Object.keys(byCol).forEach(c => byCol[c].forEach((id, r) => { pos[id] = { c: +c, r }; }));
-  const maxRow = Math.max(0, ...Object.values(byCol).map(a => a.length - 1));
+  ids.forEach(id => { pos[id] = { c: col[id], y: yy[id] || 0 }; });
+  const maxY = Math.max(0, ...ids.map(id => pos[id].y));
   const W = CH.PAD * 2 + maxCol * CH.COLGAP + CH.W;
-  const H = CH.PAD * 2 + maxRow * CH.ROWGAP + CH.H;
+  const H = CH.PAD * 2 + maxY + CH.H;
   const X = id => CH.PAD + pos[id].c * CH.COLGAP;
-  const Y = id => CH.PAD + pos[id].r * CH.ROWGAP;
+  const Y = id => CH.PAD + pos[id].y;
   const joints = new Set(((verdict && verdict.load_bearing) || []).map(linkKey));
   const edgeKind = l => joints.has(linkKey(l)) ? "joint" : (l.strength === "solid" ? "solid" : "soft");
   const nodeKind = id => {
