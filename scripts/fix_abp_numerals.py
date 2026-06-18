@@ -30,21 +30,24 @@ def main():
     args = ap.parse_args()
 
     con = sqlite3.connect(args.db)
-    con.row_factory = sqlite3.Row
     cur = con.cursor()
+
+    # Only touch rows whose gloss is blank or just punctuation (never overwrite real text):
+    # after stripping spaces + the usual punctuation, nothing is left.
+    BLANK = ("(english IS NULL OR "
+             "trim(english, ' .,:;·') = '')")
 
     total = 0
     for code, digit in NUMERALS.items():
-        rows = cur.execute(
-            "SELECT rowid, english FROM words WHERE strongs = ?", (code,)
-        ).fetchall()
-        # Only touch rows whose gloss is blank or just punctuation (never overwrite real text).
-        targets = [r for r in rows if not (r["english"] or "").strip(" .,:;·")]
-        print(f"{code} -> '{digit}': {len(rows)} word(s) tagged, {len(targets)} blank to fill")
-        total += len(targets)
+        n = cur.execute(
+            f"SELECT COUNT(*) FROM words WHERE strongs = ? AND {BLANK}", (code,)
+        ).fetchone()[0]
+        print(f"{code} -> '{digit}': {n} blank word(s) to fill")
+        total += n
         if args.apply:
-            for r in targets:
-                cur.execute("UPDATE words SET english = ? WHERE rowid = ?", (digit, r["rowid"]))
+            cur.execute(
+                f"UPDATE words SET english = ? WHERE strongs = ? AND {BLANK}", (digit, code)
+            )
 
     if args.apply:
         con.commit()
