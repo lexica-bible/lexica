@@ -106,8 +106,10 @@ CLAIMS = {
                      "text": "Baptism does not save — it signs a salvation already received by faith"},
     "t_paedo": {"provenance": "conclusion", "label": "Baptize believers' infants",
                 "text": "Baptize the infant children of believers"},
-    "t_regen_grace":     {"provenance": "conclusion", "label": "Effects what it signifies",
+    "t_regen_grace":     {"provenance": "inference", "label": "Effects what it signifies",
                           "text": "Baptism effects what it signifies — forgiveness, new birth, salvation (the effects the texts name)"},
+    "t_regen_saves":     {"provenance": "conclusion", "label": "Baptism saves",
+                          "text": "Baptism saves — it does not merely signify (it effects salvation)"},
     "t_regen_necessary": {"provenance": "conclusion", "label": "Baptism is necessary",
                           "text": "Water baptism is necessary for salvation — no one is saved without it (the strict Churches-of-Christ form)"},
 }
@@ -175,7 +177,7 @@ OVERLAYS = [
     },
     {
         "tradition": "Baptismal regeneration (baptism saves)",
-        "thesis": "t_regen_grace",
+        "thesis": "t_regen_saves",
         "rejects": ["c_faith_alone"],
         "links": [
             {"from": "v_acts2_38", "to": "t_regen_grace", "relation": "supports", "strength": "contested",
@@ -186,14 +188,18 @@ OVERLAYS = [
              "why": "'Born of water' read as baptism — disputed."},
             {"from": "v_mark16_16", "to": "t_regen_grace", "relation": "supports", "strength": "contested",
              "why": "Couples baptism with being saved."},
-            # The thesis is the EFFECTS claim the verses actually name (forgiveness/new birth/salvation), NOT
-            # "conveys grace" (which smuggles the infused-substance sense of charis). NECESSITY is a further
-            # claim with TWO distinct soft spots: (a) the strict "no exceptions" form is really the
-            # Churches-of-Christ position (the weak step), and (b) it REQUIRES grace be an infused substance —
-            # a contested definition not in the cited texts (def_grace_infused + the charis objection). The
-            # thief on the cross is the classic break on necessity itself.
-            {"from": "t_regen_grace", "to": "t_regen_necessary", "relation": "supports", "strength": "weak",
-             "why": "From 'baptism effects salvation' to 'necessary, no exceptions' is the Churches-of-Christ position; other regenerationists qualify it (baptism of desire, the unevangelized)."},
+            # The verses (contested readings) support the EFFECTS inference; the thesis "Baptism saves, not
+            # merely signifies" follows from it (mirrors credo's "Baptism doesn't save"). Verse→inference
+            # links stay CONTESTED on purpose — regeneration's efficacy reading rests on DISPUTED verses,
+            # whereas credo's base rests on a verse both sides grant; that gap should show. Don't promote them.
+            {"from": "t_regen_grace", "to": "t_regen_saves", "relation": "supports", "strength": "solid",
+             "why": "Granting the effects reading, 'baptism saves, not merely signifies' follows directly."},
+            # NECESSITY is a further claim with TWO soft spots: (a) the strict "no exceptions" form is the
+            # Churches-of-Christ position (the weak step below), and (b) it REQUIRES grace be an infused
+            # substance — a contested definition not in the cited texts (def_grace_infused + the charis
+            # objection). The thief is the classic break on necessity itself.
+            {"from": "t_regen_saves", "to": "t_regen_necessary", "relation": "supports", "strength": "weak",
+             "why": "From 'baptism saves' to 'necessary, no exceptions' is the Churches-of-Christ position; other regenerationists qualify it (baptism of desire, the unevangelized)."},
             {"from": "def_grace_infused", "to": "t_regen_necessary", "relation": "requires", "strength": "contested",
              "why": "Necessity presupposes grace is an imparted substance. The cited verses speak of forgiveness, salvation and new birth — never of charis being conveyed."},
             {"from": "obj_grace_charis", "to": "def_grace_infused", "relation": "undercuts", "strength": "contested",
