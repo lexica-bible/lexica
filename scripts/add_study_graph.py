@@ -98,6 +98,10 @@ CLAIMS = {
                             "text": "Grace here is a conferred quality the rite imparts — not only God's favor exercised by faith"},
     "obj_grace_charis":    {"provenance": "text", "ref": "Ephesians 2:8", "label": "charis = favor, by faith",
                             "text": "In the NT charis is God's favor shown through faith (Eph 2:8); none of the cited baptism verses use the word charis"},
+    "obj_pet_pledge":      {"provenance": "text", "ref": "1 Peter 3:21", "label": "pledge, not washing",
+                            "text": "1 Peter 3:21 says baptism saves 'not as the removal of dirt from the body, but as the pledge of a good conscience toward God'"},
+    "obj_mark_unbelief":   {"provenance": "text", "ref": "Mark 16:16", "label": "condemned for unbelief",
+                            "text": "Mark 16:16 ties condemnation to unbelief alone, dropping baptism from the negative clause; the longer ending is textually disputed"},
 
     # ── conclusions ──
     "t_credo_who":  {"provenance": "conclusion", "label": "For believers only",
@@ -182,12 +186,12 @@ OVERLAYS = [
         "links": [
             {"from": "v_acts2_38", "to": "t_regen_grace", "relation": "supports", "strength": "contested",
              "why": "'For the forgiveness of sins' read as baptism effecting it; credo/paedo read it as a sign."},
-            {"from": "v_1pet3_21", "to": "t_regen_grace", "relation": "supports", "strength": "contested",
-             "why": "'Baptism now saves you' — though Peter adds 'not the removal of dirt from the body.'"},
+            {"from": "v_1pet3_21", "to": "t_regen_grace", "relation": "supports", "strength": "weak",
+             "why": "The verse qualifies itself: 'not the removal of dirt from the body, but the pledge of a good conscience' — Peter locates the saving in the pledge, not the washing."},
             {"from": "v_john3_5",  "to": "t_regen_grace", "relation": "supports", "strength": "contested",
              "why": "'Born of water' read as baptism — disputed."},
-            {"from": "v_mark16_16", "to": "t_regen_grace", "relation": "supports", "strength": "contested",
-             "why": "Couples baptism with being saved."},
+            {"from": "v_mark16_16", "to": "t_regen_grace", "relation": "supports", "strength": "weak",
+             "why": "The verse pins condemnation to unbelief, not non-baptism ('whoever does not believe will be condemned'), and Mark's longer ending is absent from the earliest manuscripts."},
             # The verses (contested readings) support the EFFECTS inference; the thesis "Baptism saves, not
             # merely signifies" follows from it (mirrors credo's "Baptism doesn't save"). Verse→inference
             # links stay CONTESTED on purpose — regeneration's efficacy reading rests on DISPUTED verses,
@@ -206,6 +210,10 @@ OVERLAYS = [
              "why": "If charis is favor exercised by faith (Eph 2:8), not a substance, nothing is conveyed through the rite and the necessity step loses its premise — the credo/Reformed reading."},
             {"from": "c_faith_alone", "to": "t_regen_grace", "relation": "undercuts", "strength": "contested",
              "why": "Grace through faith, not of works — cuts against baptism as the cause."},
+            {"from": "obj_pet_pledge", "to": "t_regen_grace", "relation": "undercuts", "strength": "contested",
+             "why": "1 Peter's own clause ('not the removal of dirt... but the pledge of a good conscience') points the saving away from the washing — so the verse undercuts its own efficacy use."},
+            {"from": "obj_mark_unbelief", "to": "t_regen_grace", "relation": "undercuts", "strength": "contested",
+             "why": "Mark 16:16's negative clause drops baptism (condemnation = unbelief), and the longer ending is textually disputed — so the verse undercuts its own efficacy use."},
             {"from": "v_luke23_43", "to": "t_regen_necessary", "relation": "undercuts", "strength": "solid",
              "why": "The thief was saved with no baptism — the classic break on the necessity claim."},
         ],
