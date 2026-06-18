@@ -250,7 +250,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
       // back on it — set the highlight + scroll. No book in the nav, so the chapter-load
       // effect leaves it alone (selBook/selChapter are already restored above).
       if (savedBook && saved.highlight != null) {
-        onNavChange?.({ chapter: saved.chapter, highlight: saved.highlight, scroll: true });
+        onNavChange?.({ chapter: saved.chapter, highlight: saved.highlight, scroll: true, instant: true });
       }
     });
   }, []);
@@ -270,7 +270,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
   const firstTransRef = useRef(true);
   useEffect(() => {
     if (firstTransRef.current) { firstTransRef.current = false; return; }
-    onNavChange?.(n => (n && n.highlight != null) ? { ...n, scroll: true } : n);
+    onNavChange?.(n => (n && n.highlight != null) ? { ...n, scroll: true, instant: true } : n);
   }, [translation]);
   // Persist reading-plan progress + the Eras/Days choice.
   useEffect(() => { planSaveAll(planProg); NotesStore.schedulePlanSync(); }, [planProg]);
@@ -626,7 +626,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
         // not dead center. The row carries scroll-margin-top: 30vh (styles.css), so
         // block:"start" stops 30% down. scrollIntoView finds the right scroller on its
         // own (the window, or the fixed focus-mode page), so this works in every mode.
-        highlightRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
+        highlightRef.current.scrollIntoView({ behavior: nav.instant ? "auto" : "smooth", block: "start" });
         onNavChange?.({ ...nav, scroll: false });
       } else if (tries++ < 30) {
         raf = requestAnimationFrame(tryScroll); // highlight row not rendered yet — keep waiting

@@ -93,7 +93,7 @@ function App() {
   // Returning to the Library tab re-scrolls to the placeholder verse (the last verse
   // you clicked / jumped to), so it survives a tab switch like a version switch does.
   useEffect(() => {
-    if (mainView === "library") setLibNav(n => (n && n.highlight != null) ? { ...n, scroll: true } : n);
+    if (mainView === "library") setLibNav(n => (n && n.highlight != null) ? { ...n, scroll: true, instant: true } : n);
   }, [mainView]);
 
   // Corpus-filtered AI results (OT/NT filter)

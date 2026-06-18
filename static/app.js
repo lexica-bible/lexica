@@ -9607,7 +9607,8 @@ function LibraryView({
         onNavChange?.({
           chapter: saved.chapter,
           highlight: saved.highlight,
-          scroll: true
+          scroll: true,
+          instant: true
         });
       }
     });
@@ -9639,7 +9640,8 @@ function LibraryView({
     }
     onNavChange?.(n => n && n.highlight != null ? {
       ...n,
-      scroll: true
+      scroll: true,
+      instant: true
     } : n);
   }, [translation]);
   // Persist reading-plan progress + the Eras/Days choice.
@@ -10097,7 +10099,7 @@ function LibraryView({
         // block:"start" stops 30% down. scrollIntoView finds the right scroller on its
         // own (the window, or the fixed focus-mode page), so this works in every mode.
         highlightRef.current.scrollIntoView({
-          behavior: "smooth",
+          behavior: nav.instant ? "auto" : "smooth",
           block: "start"
         });
         onNavChange?.({
@@ -12919,7 +12921,8 @@ function App() {
   useEffect(() => {
     if (mainView === "library") setLibNav(n => n && n.highlight != null ? {
       ...n,
-      scroll: true
+      scroll: true,
+      instant: true
     } : n);
   }, [mainView]);
 
