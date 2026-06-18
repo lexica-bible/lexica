@@ -352,31 +352,19 @@ function GraphSvg({ claims, overlay, verdict, shared, onNavigate }) {
     col[overlay.thesis] = maxCol + 1;                        // gap: nothing points at the conclusion — float it out alone, with a visible space before it
     maxCol += 1;
   }
-  // A link spanning more than one column gets invisible WAYPOINTS at each column it crosses, so
-  // the layout reserves a clear row for the line there and the line bends around the boxes instead
-  // of slicing over them. Waypoints join the ordering like thin nodes; the link is drawn through them.
-  const wpOf = {}, dcol = {};
-  const segPre = {}, segSucc = {};                  // chain-segment links that drive the ordering
-  const seg = (a, b) => { (segPre[b] = segPre[b] || []).push(a); (segSucc[a] = segSucc[a] || []).push(b); };
-  carry.forEach(l => {
-    const wps = [];
-    for (let c = (col[l.from] || 0) + 1; c < (col[l.to] || 0); c++) {
-      const d = "~wp:" + linkKey(l) + ":" + c;
-      dcol[d] = c; wps.push(d);
-    }
-    wpOf[linkKey(l)] = wps;
-    const chain = [l.from, ...wps, l.to];
-    for (let j = 0; j < chain.length - 1; j++) seg(chain[j], chain[j + 1]);
-  });
-  const nodes = ids.concat(Object.keys(dcol));
-  const colOf = id => (id in dcol) ? dcol[id] : col[id];
   const byCol = {};
-  nodes.forEach(id => { (byCol[colOf(id)] = byCol[colOf(id)] || []).push(id); });
+  ids.forEach(id => { (byCol[col[id]] = byCol[col[id]] || []).push(id); });
+  // Links each way: preds = what feeds a node; succs = what a node feeds.
+  const preds = {}, succs = {};
+  carry.forEach(l => {
+    (preds[l.to] = preds[l.to] || []).push(l.from);
+    (succs[l.from] = succs[l.from] || []).push(l.to);
+  });
   const rank = id => { const i = shared.indexOf(id); return i < 0 ? 1e6 : i; };   // tiebreak only
   const cols = Object.keys(byCol).map(Number).sort((a, b) => a - b);
   const yy = {};
-  // Pull every node toward the average row of its chain-neighbours, re-sort, then push siblings
-  // apart so nothing overlaps. Waypoints take part, so each line reserves its own clear row.
+  // Pull every node in a column toward the average row of its neighbours (the nodes feeding it,
+  // or the nodes it feeds), re-sort by that, then push siblings apart so boxes never overlap.
   const relax = (c, neigh) => {
     byCol[c].forEach(id => {
       const ns = (neigh[id] || []).filter(n => n in yy);
@@ -390,38 +378,28 @@ function GraphSvg({ claims, overlay, verdict, shared, onNavigate }) {
   };
   if (byCol[0]) byCol[0].sort((a, b) => rank(a) - rank(b));        // a stable starting order
   (byCol[0] || []).forEach((id, r) => { yy[id] = r * CH.ROWGAP; });
-  cols.forEach(c => { if (c > 0) relax(c, segPre); });            // seed everyone with one forward pass
-  // Sweep both directions a few times — the standard untangle. Right→left reorders verses to sit
-  // beside what they feed; left→right re-centres the claims (and waypoints) on their feeders.
+  cols.forEach(c => { if (c > 0) relax(c, preds); });             // seed everyone with one forward pass
+  // Sweep both directions a few times — the standard untangle. Going right→left reorders the
+  // verses to sit beside what they feed; left→right re-centres the claims on their feeders.
   for (let pass = 0; pass < 4; pass++) {
-    for (let i = cols.length - 1; i >= 0; i--) relax(cols[i], segSucc);
-    for (let i = 0; i < cols.length; i++) if (cols[i] > 0) relax(cols[i], segPre);
+    for (let i = cols.length - 1; i >= 0; i--) relax(cols[i], succs);
+    for (let i = 0; i < cols.length; i++) if (cols[i] > 0) relax(cols[i], preds);
   }
-  const minY = Math.min(0, ...nodes.map(id => yy[id] || 0));       // tighten back to the top edge
-  if (minY) nodes.forEach(id => { yy[id] = (yy[id] || 0) - minY; });
+  const minY = Math.min(0, ...ids.map(id => yy[id] || 0));         // tighten back to the top edge
+  if (minY) ids.forEach(id => { yy[id] = (yy[id] || 0) - minY; });
   const pos = {};
-  nodes.forEach(id => { pos[id] = { c: colOf(id), y: yy[id] || 0 }; });
-  const maxY = Math.max(0, ...nodes.map(id => pos[id].y));
+  ids.forEach(id => { pos[id] = { c: col[id], y: yy[id] || 0 }; });
+  const maxY = Math.max(0, ...ids.map(id => pos[id].y));
   const W = CH.PAD * 2 + maxCol * CH.COLGAP + CH.W;
   const H = CH.PAD * 2 + maxY + CH.H;
   const X = id => CH.PAD + pos[id].c * CH.COLGAP;
   const Y = id => CH.PAD + pos[id].y;
-  const cxc = id => X(id) + CH.W / 2;                              // column-centre x (a waypoint's x)
   const joints = new Set(((verdict && verdict.load_bearing) || []).map(linkKey));
   const defeated = new Set(((verdict && verdict.defeated) || []));        // knocked out by a grounded, solid objection
   const edgeKind = l => joints.has(linkKey(l)) ? "joint" : l.strength;   // solid | contested | weak
   const nodeKind = id => {
     const p = (claims[id] || {}).provenance;
     return p === "conclusion" ? "concl" : (PROV_GROUNDED.has(p) ? "verse" : "added");
-  };
-  // Smooth path through a list of points, horizontal tangents at each (tidy, and clears the boxes).
-  const pathThrough = pts => {
-    let d = "M" + pts[0][0] + "," + pts[0][1];
-    for (let i = 1; i < pts.length; i++) {
-      const mx = (pts[i - 1][0] + pts[i][0]) / 2;
-      d += " C" + mx + "," + pts[i - 1][1] + " " + mx + "," + pts[i][1] + " " + pts[i][0] + "," + pts[i][1];
-    }
-    return d;
   };
   return (
     <svg className="study-svg" viewBox={"0 0 " + W + " " + H} width={W} height={H} role="img">
@@ -436,11 +414,11 @@ function GraphSvg({ claims, overlay, verdict, shared, onNavigate }) {
       {carry.map((l, i) => {
         if (!pos[l.from] || !pos[l.to]) return null;
         const k = edgeKind(l);
-        const pts = [[X(l.from) + CH.W, Y(l.from) + CH.H / 2]];                 // right edge of the from box
-        (wpOf[linkKey(l)] || []).forEach(d => { pts.push([cxc(d), Y(d) + CH.H / 2]); });   // through each reserved row
-        pts.push([X(l.to) - 8, Y(l.to) + CH.H / 2]);                           // left edge of the to box (room for the arrow)
+        const x1 = X(l.from) + CH.W, y1 = Y(l.from) + CH.H / 2;
+        const x2 = X(l.to), y2 = Y(l.to) + CH.H / 2, mx = (x1 + x2) / 2;
         return <path key={i} className={"study-edge study-edge--" + k}
-          d={pathThrough(pts)} markerEnd={"url(#ah-" + k + ")"} />;
+          d={"M" + x1 + "," + y1 + " C" + mx + "," + y1 + " " + mx + "," + y2 + " " + (x2 - 8) + "," + y2}
+          markerEnd={"url(#ah-" + k + ")"} />;
       })}
       {ids.map(id => {
         const c = claims[id] || {};
