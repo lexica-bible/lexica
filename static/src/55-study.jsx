@@ -574,7 +574,10 @@ function GraphPage({ entry, onClose, previewReader, onNavigate }) {
 // ---- The Study tab --------------------------------------------------------
 function StudyView({ admin, pending, onConsumed, onNavigateToLibrary }) {
   const adminUser = !!admin;
-  const [module, setModule] = useState("topic");
+  const [module, setModule] = useState(() => {
+    if (!admin) return "topic";                                  // readers only ever have Topics
+    try { return localStorage.getItem("lexica.study.module.v1") === "graph" ? "graph" : "topic"; } catch (e) { return "topic"; }
+  });
   const [entries, setEntries] = useState(null);
   const [err, setErr] = useState(false);
   const [editing, setEditing] = useState(null);
@@ -620,6 +623,21 @@ function StudyView({ admin, pending, onConsumed, onNavigateToLibrary }) {
   useEffect(() => {
     if (pending) { openEntry(pending); if (onConsumed) onConsumed(); }
   }, [pending]);
+
+  // Refresh-persistence: remember the sub-tab (Topics/Graphs) and the open entry, so a reload
+  // lands you right back instead of resetting to Topics. Restored on mount; the sidebar
+  // `pending` open wins if both are set. (StudyView mounts once — kept alive via display:none.)
+  useEffect(() => { try { localStorage.setItem("lexica.study.module.v1", module); } catch (e) {} }, [module]);
+  useEffect(() => {
+    try {
+      if (editing && editing.id) localStorage.setItem("lexica.study.open.v1", editing.id);
+      else localStorage.removeItem("lexica.study.open.v1");
+    } catch (e) {}
+  }, [editing && editing.id]);
+  useEffect(() => {
+    if (pending) return;
+    try { const id = localStorage.getItem("lexica.study.open.v1"); if (id) openEntry(id); } catch (e) {}
+  }, []);
 
   const save = () => {
     if (!editing || !editing.title.trim() || saving) return;   // only topic-like entries have an in-app editor
