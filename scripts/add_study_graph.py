@@ -88,18 +88,18 @@ CLAIMS = {
                             "text": "Those baptized households included infants"},
     "c_baptism_for_circ":  {"provenance": "tradition", "label": "Baptism replaces circumcision",
                             "text": "Baptism is the new-covenant replacement for circumcision, so it goes to the same recipients"},
-    "c_baptism_saves":     {"provenance": "tradition", "label": "Baptism conveys grace",
-                            "text": "Baptism itself conveys saving grace (not merely a picture of it)"},
 
-    # ── the three conclusions ──
+    # ── conclusions ──
     "t_credo_who":  {"provenance": "conclusion", "label": "For believers only",
                      "text": "Baptism is for professing believers only — infants are excluded"},
     "t_credo_save": {"provenance": "conclusion", "label": "Baptism doesn't save",
                      "text": "Baptism does not save — it signs a salvation already received by faith"},
     "t_paedo": {"provenance": "conclusion", "label": "Baptize believers' infants",
                 "text": "Baptize the infant children of believers"},
-    "t_regen": {"provenance": "conclusion", "label": "Baptism is necessary",
-                "text": "Water baptism is necessary for salvation — no one is saved without it"},
+    "t_regen_grace":     {"provenance": "conclusion", "label": "Baptism conveys grace",
+                          "text": "Baptism conveys saving grace — not merely a picture of it"},
+    "t_regen_necessary": {"provenance": "conclusion", "label": "Baptism is necessary",
+                          "text": "Water baptism is necessary for salvation — no one is saved without it (the strict Churches-of-Christ form)"},
 }
 
 OVERLAYS = [
@@ -145,8 +145,8 @@ OVERLAYS = [
              "why": "'Your children' may mean posterity generally, not a mandate to baptize infants."},
             {"from": "v_households", "to": "c_household_infants", "relation": "supports", "strength": "contested",
              "why": "Argument from silence — the household's composition is unstated (the mirror of credo's exclusion step, rated the same)."},
-            {"from": "c_household_infants", "to": "c_baptism_for_circ", "relation": "supports", "strength": "contested",
-             "why": "Read as covenant inclusion of children."},
+            {"from": "c_household_infants", "to": "c_covenant_kids", "relation": "supports", "strength": "contested",
+             "why": "The baptized households are read as evidence that children belong in the covenant community."},
             {"from": "c_covenant_kids", "to": "c_baptism_for_circ", "relation": "requires", "strength": "contested",
              "why": "The circumcision-replacement step needs covenant continuity to stand."},
             {"from": "v_col2", "to": "c_baptism_for_circ", "relation": "supports", "strength": "contested",
@@ -159,22 +159,27 @@ OVERLAYS = [
     },
     {
         "tradition": "Baptismal regeneration (baptism saves)",
-        "thesis": "t_regen",
+        "thesis": "t_regen_grace",
         "rejects": ["c_faith_alone"],
         "links": [
-            {"from": "v_acts2_38", "to": "c_baptism_saves", "relation": "supports", "strength": "contested",
-             "why": "'For the forgiveness of sins' read as baptism effecting forgiveness."},
-            {"from": "v_1pet3_21", "to": "c_baptism_saves", "relation": "supports", "strength": "contested",
+            {"from": "v_acts2_38", "to": "t_regen_grace", "relation": "supports", "strength": "contested",
+             "why": "'For the forgiveness of sins' read as baptism effecting it; credo/paedo read it as a sign."},
+            {"from": "v_1pet3_21", "to": "t_regen_grace", "relation": "supports", "strength": "contested",
              "why": "'Baptism now saves you' — though Peter adds 'not the removal of dirt from the body.'"},
-            {"from": "v_john3_5",  "to": "c_baptism_saves", "relation": "supports", "strength": "contested",
+            {"from": "v_john3_5",  "to": "t_regen_grace", "relation": "supports", "strength": "contested",
              "why": "'Born of water' read as baptism — disputed."},
-            {"from": "v_mark16_16", "to": "c_baptism_saves", "relation": "supports", "strength": "contested",
+            {"from": "v_mark16_16", "to": "t_regen_grace", "relation": "supports", "strength": "contested",
              "why": "Couples baptism with being saved."},
-            # NOTE: nothing carries from "baptism saves" to "necessary, no exceptions" — that is the gap.
-            {"from": "c_faith_alone", "to": "c_baptism_saves", "relation": "undercuts", "strength": "contested",
+            # "Conveys grace" is the real distinctive the verses support. NECESSITY is a further, stronger
+            # claim — the strict no-exceptions form is really the Churches-of-Christ position; Catholics,
+            # Lutherans and Orthodox qualify it (baptism of desire, the unevangelized). So it hangs off the
+            # thesis on a weak step, with the thief on the cross as the classic break.
+            {"from": "t_regen_grace", "to": "t_regen_necessary", "relation": "supports", "strength": "weak",
+             "why": "The step from 'conveys grace' to 'necessary, no exceptions' is the Churches-of-Christ position; other regenerationists qualify it (baptism of desire, the unevangelized)."},
+            {"from": "c_faith_alone", "to": "t_regen_grace", "relation": "undercuts", "strength": "contested",
              "why": "Grace through faith, not of works — cuts against baptism as the cause."},
-            {"from": "v_luke23_43", "to": "t_regen", "relation": "undercuts", "strength": "solid",
-             "why": "The thief was saved with no baptism — the leap from 'baptism saves' to 'necessary, no exceptions' isn't in the text."},
+            {"from": "v_luke23_43", "to": "t_regen_necessary", "relation": "undercuts", "strength": "solid",
+             "why": "The thief was saved with no baptism — the classic break on the necessity claim."},
         ],
     },
 ]
