@@ -68,6 +68,10 @@ CLAIMS = {
                     "text": "Baptism set beside circumcision — 'buried with him in baptism'"},
     "v_gen17":     {"provenance": "text", "ref": "Genesis 17:12", "label": "infant circumcision sign",
                     "text": "Circumcision given to Abraham's household, infants included, as the covenant sign"},
+    "v_jer31":     {"provenance": "text", "ref": "Jeremiah 31:31-34", "label": "the new covenant",
+                    "text": "'They shall all know me, from the least to the greatest' — the new covenant"},
+    "v_heb8":      {"provenance": "text", "ref": "Hebrews 8:10-11", "label": "all will know the Lord",
+                    "text": "Hebrews 8 applies Jeremiah's new covenant — 'all shall know me'"},
 
     # ── interpretive claims (not grounded) ──
     "c_belief_first":      {"provenance": "inference", "label": "Faith comes first",
@@ -76,6 +80,8 @@ CLAIMS = {
                             "text": "Salvation is received by faith, not by a rite performed on a person"},
     "c_baptize_believers": {"provenance": "inference", "label": "Baptize believers",
                             "text": "Baptism is for those who profess faith (both sides grant this much)"},
+    "c_regenerate_membership": {"provenance": "inference", "label": "Membership by faith, not lineage",
+                            "text": "New-covenant membership is constituted by faith and regeneration, not physical descent"},
     "c_covenant_kids":     {"provenance": "tradition", "label": "Children in the covenant",
                             "text": "Believers' children stay inside the covenant community, so the covenant sign still belongs to them"},
     "c_household_infants": {"provenance": "conjecture", "label": "Households included infants",
@@ -114,6 +120,16 @@ OVERLAYS = [
             # faith-alone and baptizes infants). So it feeds "baptism doesn't save," not "believers only."
             {"from": "v_eph2_8",    "to": "c_faith_alone",  "relation": "supports", "strength": "solid"},
             {"from": "c_faith_alone", "to": "t_credo_save", "relation": "supports", "strength": "solid"},
+            # Credo's POSITIVE, non-silence plank: the new covenant is constituted by faith/regeneration,
+            # not lineage (Jer 31, Heb 8), so the sign goes to believers. Paedo contests the reading (the
+            # household principle carries over), so it's contested — but as live exegesis, NOT silence.
+            # This gives credo a second path to its conclusion that doesn't run through the silence joint.
+            {"from": "v_jer31", "to": "c_regenerate_membership", "relation": "supports", "strength": "contested",
+             "why": "Credo reads 'they shall all know me' as a regenerate membership; paedo reads it as the covenant's fullness, not a present exclusion of children — a live dispute over Jeremiah 31, not silence."},
+            {"from": "v_heb8",  "to": "c_regenerate_membership", "relation": "supports", "strength": "contested",
+             "why": "Hebrews 8 applies Jeremiah's new covenant; whether it redraws covenant membership now is the disputed point."},
+            {"from": "c_regenerate_membership", "to": "t_credo_who", "relation": "supports", "strength": "contested",
+             "why": "If new-covenant membership is by faith, the sign goes to professed believers; paedo answers that the household principle carries into the new covenant."},
             {"from": "v_households", "to": "t_credo_who", "relation": "undercuts", "strength": "contested",
              "why": "If those households included children, the 'believers only' rule already has exceptions."},
         ],
@@ -121,7 +137,7 @@ OVERLAYS = [
     {
         "tradition": "Paedobaptist (infant baptism)",
         "thesis": "t_paedo",
-        "rejects": [],
+        "rejects": ["c_regenerate_membership"],
         "links": [
             {"from": "v_gen17",    "to": "c_covenant_kids", "relation": "supports", "strength": "contested",
              "why": "Covenant continuity — a systematic inference the other side disputes."},
@@ -188,10 +204,12 @@ def stress():
             print("  VERDICT: STANDS — reachable from the text on solid links alone.")
         elif v["gap"]:
             print("  VERDICT: INCOMPLETE — a step is missing; unreachable even granting every link.")
-        else:
+        elif v["load_bearing"]:
             print("  VERDICT: DEPENDS ON A NON-SOLID JOINT.")
             for l in v["load_bearing"]:
                 print("    >>> load-bearing joint [%s]: %s -> %s" % (l["strength"], _c(l["from"]), _c(l["to"])))
+        else:
+            print("  VERDICT: DEPENDS ON CONTESTED STEPS (reachable only through non-solid links; no single joint).")
         if ov.get("rejects"):
             print("  Rejects: %s" % ", ".join(_c(c) for c in ov["rejects"]))
     diff = out["diff"]

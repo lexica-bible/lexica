@@ -439,7 +439,10 @@ function GraphChart({ claims, overlays, analysis, onNavigate }) {
   const verdict = (analysis.verdicts || [])[i] || { grounded: false, gap: false, load_bearing: [] };
   const shared = (analysis.diff || {}).shared_verses || [];
   const cls = verdict.grounded ? "stands" : verdict.gap ? "gap" : "depends";
-  const label = verdict.grounded ? "Stands on the text" : verdict.gap ? "Incomplete — a step is missing" : "Depends on a non-solid joint";
+  const label = verdict.grounded ? "Stands on the text"
+    : verdict.gap ? "Incomplete — a step is missing"
+    : (verdict.load_bearing && verdict.load_bearing.length) ? "Depends on a non-solid joint"
+    : "Depends on contested steps";
   const why = (overlay.links || []).filter(l => l.relation !== "undercuts" && l.strength !== "solid" && l.why);
   const objections = (overlay.links || []).filter(l => l.relation === "undercuts");
   return (
