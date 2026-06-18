@@ -4971,11 +4971,11 @@ const linkKey = l => l.from + "→" + l.to + "·" + l.relation;
 
 // ---- The chart (per-overlay SVG: verses converge into claims into the thesis) ----
 const CH = {
-  W: 176,
-  H: 58,
-  COLGAP: 232,
-  ROWGAP: 94,
-  PAD: 18
+  W: 168,
+  H: 60,
+  COLGAP: 206,
+  ROWGAP: 90,
+  PAD: 16
 };
 const shortLabel = c => c && (c.label || c.ref) || (c && c.text ? c.text.length > 32 ? c.text.slice(0, 30) + "…" : c.text : "");
 
@@ -5126,21 +5126,18 @@ function GraphSvg({
       transform: "translate(" + X(id) + "," + Y(id) + ")",
       className: "study-node study-node--" + k + (go ? " study-node--link" : ""),
       onClick: go ? () => onNavigate(c.book, c.chapter, c.verse) : undefined
-    }, /*#__PURE__*/React.createElement("title", null, c.text || id), /*#__PURE__*/React.createElement("rect", {
+    }, /*#__PURE__*/React.createElement("title", null, c.text || id), /*#__PURE__*/React.createElement("foreignObject", {
       width: CH.W,
-      height: CH.H,
-      rx: "9"
-    }), /*#__PURE__*/React.createElement("text", {
-      className: "study-node-t1",
-      x: CH.W / 2,
-      y: k === "verse" ? 24 : 34,
-      textAnchor: "middle"
-    }, c.ref || shortLabel(c)), k === "verse" && /*#__PURE__*/React.createElement("text", {
-      className: "study-node-t2",
-      x: CH.W / 2,
-      y: 40,
-      textAnchor: "middle"
-    }, c.label || ""));
+      height: CH.H
+    }, /*#__PURE__*/React.createElement("div", {
+      className: "study-node-box"
+    }, k === "verse" ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+      className: "study-node-ref"
+    }, c.ref), c.label ? /*#__PURE__*/React.createElement("div", {
+      className: "study-node-sub"
+    }, c.label) : null) : /*#__PURE__*/React.createElement("div", {
+      className: "study-node-main"
+    }, shortLabel(c)))));
   }));
 }
 

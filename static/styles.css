@@ -3919,16 +3919,24 @@ button.study-verse-ref { border: none; }
 .study-chart-scroll { overflow-x: auto; padding: 4px 0 10px; }
 .study-svg { display: block; max-width: 100%; height: auto; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
 .study-node--link { cursor: pointer; }
-.study-node rect { transition: opacity 0.12s; }
-.study-node--link:hover rect { opacity: 0.85; }
-.study-node--verse rect { fill: var(--chart-verse); }
-.study-node--added rect { fill: var(--bg-sunk); stroke: var(--rule-2); stroke-width: 1; }
-.study-node--concl rect { fill: var(--chart-concl); }
-.study-node-t1 { font-size: 13px; font-weight: 600; }
-.study-node-t2 { font-size: 11.5px; }
-.study-node--verse .study-node-t1, .study-node--concl .study-node-t1 { fill: var(--chart-node-fg); }
-.study-node--verse .study-node-t2 { fill: var(--chart-node-fg); opacity: 0.78; }
-.study-node--added .study-node-t1 { fill: var(--ink); }
+/* node = a foreignObject box so the label WRAPS to the box width (SVG text can't wrap) */
+.study-node-box {
+  width: 100%; height: 100%; box-sizing: border-box; border-radius: 9px; padding: 5px 9px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  text-align: center; overflow: hidden; line-height: 1.18; transition: opacity 0.12s;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+.study-node--link .study-node-box:hover { opacity: 0.88; }
+.study-node--verse .study-node-box { background: var(--chart-verse); }
+.study-node--added .study-node-box { background: var(--bg-sunk); border: 1px solid var(--rule-2); }
+.study-node--concl .study-node-box { background: var(--chart-concl); }
+.study-node-ref  { font-size: 12.5px; font-weight: 600; }
+.study-node-sub  { font-size: 11px; margin-top: 1px; }
+.study-node-main { font-size: 12.5px; font-weight: 600; }
+.study-node--verse .study-node-ref, .study-node--verse .study-node-sub,
+.study-node--concl .study-node-main { color: var(--chart-node-fg); }
+.study-node--verse .study-node-sub { opacity: 0.82; }
+.study-node--added .study-node-main { color: var(--ink); }
 .study-edge { fill: none; stroke-width: 1.6; }
 .study-edge--solid { stroke: var(--ink-4); }
 .study-edge--soft { stroke: var(--chart-contested); stroke-dasharray: 6 5; }     /* contested — navy dashed, no brown */

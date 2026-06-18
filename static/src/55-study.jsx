@@ -316,7 +316,7 @@ function ClaimChip({ claim, onNavigate }) {
 const linkKey = l => l.from + "→" + l.to + "·" + l.relation;
 
 // ---- The chart (per-overlay SVG: verses converge into claims into the thesis) ----
-const CH = { W: 176, H: 58, COLGAP: 232, ROWGAP: 94, PAD: 18 };
+const CH = { W: 168, H: 60, COLGAP: 206, ROWGAP: 90, PAD: 16 };
 const shortLabel = c => (c && (c.label || c.ref)) || (c && c.text ? (c.text.length > 32 ? c.text.slice(0, 30) + "…" : c.text) : "");
 
 // Longest-path column for each node from the grounded verses (verses = column 0).
@@ -419,9 +419,19 @@ function GraphSvg({ claims, overlay, verdict, shared, onNavigate }) {
             className={"study-node study-node--" + k + (go ? " study-node--link" : "")}
             onClick={go ? () => onNavigate(c.book, c.chapter, c.verse) : undefined}>
             <title>{c.text || id}</title>
-            <rect width={CH.W} height={CH.H} rx="9" />
-            <text className="study-node-t1" x={CH.W / 2} y={k === "verse" ? 24 : 34} textAnchor="middle">{c.ref || shortLabel(c)}</text>
-            {k === "verse" && <text className="study-node-t2" x={CH.W / 2} y={40} textAnchor="middle">{c.label || ""}</text>}
+            {/* a foreignObject box so the label WRAPS to the box (SVG <text> can't wrap → it spilled) */}
+            <foreignObject width={CH.W} height={CH.H}>
+              <div className="study-node-box">
+                {k === "verse" ? (
+                  <>
+                    <div className="study-node-ref">{c.ref}</div>
+                    {c.label ? <div className="study-node-sub">{c.label}</div> : null}
+                  </>
+                ) : (
+                  <div className="study-node-main">{shortLabel(c)}</div>
+                )}
+              </div>
+            </foreignObject>
           </g>
         );
       })}
