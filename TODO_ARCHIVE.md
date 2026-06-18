@@ -6,6 +6,26 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Argument graphs replace Denominations/Arguments — DONE 2026-06-18
+
+The flat two-sided **Argument** editor and the **Denomination** (support/tension) editor were REPLACED by
+one new `graph` study kind: a shared pool of provenance-tagged CLAIMS joined by per-tradition LINKS
+(strength-tagged), stress-tested by `argmap.py` and drawn as a left→right SVG chart per tradition (shared
+verses pinned across the overlay flip). Nothing was authored in the old two types (user confirmed), so they
+were removed outright, not migrated. Read-only in-app; authored via `scripts/add_study_graph.py` (ships the
+Baptism graph — 3 traditions). Engine guarded by `tests/test_argmap.py` (CI + the pre-commit hook). Study tab
+now stays mounted (`display:none`) so it keeps its place across tab switches. Chart colors are FIXED
+theme-safe vars (`--chart-*`: navy verse / slate conclusion / navy contested), not `--accent`/`--ink` (twin
+browns in sepia + flip in dark). Verdict strings are COMPUTED from graph structure, never hand-set.
+- DEFERRED ("cut 2"): in-app graph editor, React Flow drag canvas, undercut scoring in the stress test, an
+  "In studies" verse back-reference for graphs.
+- LESSON (the build's real value): the chart kept catching fairness bugs the flat list hid — a cross-axis
+  feed (an efficacy argument routed into a recipient conclusion), an argument-from-silence rated unevenly vs
+  its mirror, a missing strongest plank, a thesis set stricter than the tradition actually holds. Two checks
+  did most of the work: is every node grounded in what it claims, and is each side's STRONGEST version on the
+  board. Built/reviewed alongside Claude chat via screenshots — method in memory `feedback_claude_chat_collab`.
+Full record: memory `project_study_modules`.
+
 ## Word-study def + cross-ref synthesis: text-first cleanup — DONE 2026-06-17
 
 Three small fixes, all live (pushed; deployed and confirmed by the user):

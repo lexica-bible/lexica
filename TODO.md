@@ -380,20 +380,19 @@ Berean-style. Build a quick proof-of-concept with the off-the-shelf topic→vers
 if people use it, then swap in our own verse selection. Could be a new tab or a mode inside Search.
 
 ### Study modules — Study tab (LIVE 2026-06-12/13; **PUBLIC 2026-06-16**; full record: memory project_study_modules)
-**Study** tab: Topics (sectioned browse) · Denominations (support/tension) · Arguments (two-sided + resolution).
-**WENT PUBLIC 2026-06-16** (was the big "go-live" decision): published Topics + the metaV name-topics are now
-readable by anyone, no login; denominations/arguments + drafts + all editing stay admin-only. Also shipped
-this round (all DONE + LIVE, see TODO_ARCHIVE + memory): two-way study↔reader links (clickable verse refs;
-"In studies" line in the xref panel via `/api/study/for-verse`, hand-authored studies only); the ~13s→~1s
-topic-open speedup (bulk resolve + cache); the verse-add box fix (POST lookup; was dropping its query param)
-+ typed-ref normalization; `add_study_topic.py` loader; `publish_topics.py --names`.
+**Study** tab: Topics (sectioned browse) · **Graphs** (argument maps — added 2026-06-18, REPLACED the old
+Denominations/Arguments claim editors). Published Topics + the metaV name-topics are PUBLIC (no login); graphs
++ drafts + all editing stay admin-only. Graphs = a shared claim pool + per-tradition overlays (provenance +
+strength tagged), stress-tested by `argmap.py`, drawn as a per-tradition SVG chart; authored via
+`add_study_graph.py` (read-only in-app). Earlier this round (all DONE + LIVE, see TODO_ARCHIVE + memory):
+two-way study↔reader links; the ~13s→~1s topic-open speedup; the verse-add POST fix; `add_study_topic.py`;
+`publish_topics.py --names`.
 OPEN:
 - Drop the place "Sin" entry (Sin (1)/(2) — one is the Wilderness of Sin) from the `_COMMON` list.
-- Optional: scope the alphabetical list sort to Topics if denom/arg should stay newest-first; the few
-  ambiguous "X, the Y" titles ("God, the Father") stay un-flipped.
-- Optional later: open DENOMINATIONS/ARGUMENTS to the public too (kept admin-only on purpose — they take
-  positions). Would reuse the same read-gate, with the same source-aware care.
-`code: views_study.py + static/src/55-study.jsx; scripts/{add_study_topic,load_study_topics,generate_topic_intros,publish_topics,find_topics,find_topic_dupes,merge_the_dupes}.py; memory project_study_modules`
+- Graph CUT 2 (deferred on purpose): an in-app graph editor (author without the script), a React Flow drag
+  canvas, undercut scoring in the stress test, and an "In studies" verse back-reference for graphs (today's
+  reverse index is topics-only).
+`code: argmap.py + views_study.py + static/src/55-study.jsx; scripts/{add_study_topic,add_study_graph,load_study_topics,generate_topic_intros,publish_topics,find_topics,find_topic_dupes,merge_the_dupes}.py; memory project_study_modules`
 
 ### Let study results shape AI search answers — divine council is the test case (idea, 2026-06-17)
 AI search is deliberately neutral — text first, no imported theology. But for ONE topic, the divine

@@ -96,7 +96,7 @@ Pick effort by task TYPE. When in doubt, lean higher — the plan affords it.
 
 ## CI / automation (added 2026-06-07)
 - **GitHub Actions** (`.github/workflows/ci.yml`) — runs on every push/PR: (1) the invariant tests
-  (`tests/test_strongs_join.py` + `test_build_invariants.py`; they build their own in-memory data, no
+  (the `tests/test_*.py` set — strongs-join, build-invariants, folded-fixes, argmap; they build their own in-memory data, no
   bible.db needed), (2) rebuilds `app.js` and FAILS if the committed copy is stale. Repo is public; check
   the Actions tab or query `api.github.com/repos/lexica-bible/lexica/actions/runs`. `gh` CLI NOT installed locally.
   - **LINE-ENDINGS for the app.js check (cost a CI fail 2026-06-14; the "all CRLF" claim CORRECTED
@@ -233,15 +233,20 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   2026-06-13 to feed the word-detail side panel's interlinear). Full record: memory
   `project_hebrew_ot_interlinear`.
   `study.db` — authored "study modules" (built 2026-06-12/13; **topics opened to the PUBLIC 2026-06-16**):
-  one `entries` table (row per topic / denomination / argument / name; `json` body + `type` + `status`).
+  one `entries` table (row per topic / graph / name; `json` body + `type` + `status`).
   Served by `views_study.py` (`core.study_db()`); the **Study** tab (`static/src/55-study.jsx`). TOPICS = a
   sectioned browse (collapsible subtopics + a BOOK sub-collapse, alphabetical, comma-flipped display
-  titles); DENOMINATIONS = a position→support→tension→resolution claim editor; ARGUMENTS = a TWO-SIDED
-  layout (Side A | Side B + resolution — its own `sides` shape, NOT the denom shape). All types open
-  READ-first (Edit button, admin); a "Preview as reader" admin toggle skins the tab as a visitor sees it.
+  titles); GRAPHS = an argument map (admin-only): a shared pool of CLAIMS joined by per-tradition LINKS, each
+  claim tagged with provenance (text/lexicon = grounded; tradition/conjecture/inference = not) + each link with
+  a strength (solid/contested/weak), stress-tested by `argmap.py` (is the conclusion reachable from grounded
+  claims on solid links? else name the load-bearing joint, or flag a gap). Drawn as a left→right SVG chart per
+  tradition (shared verses pinned across the overlay flip). READ-ONLY in-app — authored via
+  `scripts/add_study_graph.py`. (Replaced the old Denominations/Arguments claim editors 2026-06-18; full record
+  + the graph json shape in memory `project_study_modules`.) Topics open READ-first (Edit button, admin); a
+  "Preview as reader" admin toggle skins the tab as a visitor sees it.
   Verse text = ABP prose (KJV fallback).
   **GATING (go-live 2026-06-16): READING is split — published TOPICS + the metaV NAME-topics are PUBLIC
-  (no login); denominations/arguments, all DRAFTS, and every WRITE/editor route stay admin-only; private
+  (no login); argument graphs, all DRAFTS, and every WRITE/editor route stay admin-only; private
   `notes` are stripped from anything served to a reader.** Two-way study↔reader links: a study's verse
   references are clickable (jump into the reader — the resolver returns book/chapter/verse), and tapping a
   verse number shows an "In studies:" line in the xref panel (`/api/study/for-verse/<book>/<ch>/<v>`, a
@@ -251,7 +256,7 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   **`POST /api/study/verse`** (a query param was silently dropped before the app) and normalizes a typed
   ref to its full book name (`_canonical_ref`: gen 1:1 → Genesis 1:1). Topic INTROS are AI-written,
   text-first Berean (`✦ Draft with AI` button uses the WSGI key; `_draft_intro`/`_INTRO_SYSTEM`).
-  Scripts: `add_study_topic.py` (load a hand-authored topic; dry-run default / `--apply`),
+  Scripts: `add_study_topic.py` (hand-authored topic) + `add_study_graph.py` (hand-authored argument graph; both dry-run default / `--apply`),
   `load_study_topics.py` (MetaV import), `generate_topic_intros.py`, `publish_topics.py` (draft↔published;
   **`--names`** for the metaV name-topics), `find_topics.py`, `find_topic_dupes.py`, `merge_the_dupes.py`.
   Full record: memory `project_study_modules`.
