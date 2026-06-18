@@ -4066,7 +4066,9 @@ function CrossRefPanel({
       onClose();
       onOpenStudy(t.id);
     }
-  }, t.title, " \u2192")))), (loading || synthesis) && /*#__PURE__*/React.createElement("section", {
+  }, t.kind === "graph" && /*#__PURE__*/React.createElement("span", {
+    className: "xref-study-tag"
+  }, "graph"), t.title, " \u2192")))), (loading || synthesis) && /*#__PURE__*/React.createElement("section", {
     className: "sec"
   }, /*#__PURE__*/React.createElement("h4", {
     className: "sec-head"
@@ -5080,6 +5082,7 @@ function GraphSvg({
   const X = id => CH.PAD + pos[id].c * CH.COLGAP;
   const Y = id => CH.PAD + pos[id].y;
   const joints = new Set((verdict && verdict.load_bearing || []).map(linkKey));
+  const defeated = new Set(verdict && verdict.defeated || []); // knocked out by a grounded, solid objection
   const edgeKind = l => joints.has(linkKey(l)) ? "joint" : l.strength; // solid | contested | weak
   const nodeKind = id => {
     const p = (claims[id] || {}).provenance;
@@ -5124,7 +5127,7 @@ function GraphSvg({
     return /*#__PURE__*/React.createElement("g", {
       key: id,
       transform: "translate(" + X(id) + "," + Y(id) + ")",
-      className: "study-node study-node--" + k + (go ? " study-node--link" : ""),
+      className: "study-node study-node--" + k + (go ? " study-node--link" : "") + (defeated.has(id) ? " study-node--defeated" : ""),
       onClick: go ? () => onNavigate(c.book, c.chapter, c.verse) : undefined
     }, /*#__PURE__*/React.createElement("title", null, c.text || id), /*#__PURE__*/React.createElement("foreignObject", {
       width: CH.W,
@@ -5156,13 +5159,16 @@ function GraphChart({
   const verdict = (analysis.verdicts || [])[i] || {
     grounded: false,
     gap: false,
-    load_bearing: []
+    load_bearing: [],
+    defeated: []
   };
   const shared = (analysis.diff || {}).shared_verses || [];
-  const cls = verdict.grounded ? "stands" : verdict.gap ? "gap" : "depends";
-  const label = verdict.grounded ? "Stands on the text" : verdict.gap ? "Incomplete — a step is missing" : verdict.load_bearing && verdict.load_bearing.length ? "Depends on a non-solid joint" : "Depends on contested steps";
+  const cls = verdict.overturned ? "overturned" : verdict.grounded ? "stands" : verdict.gap ? "gap" : "depends";
+  const label = verdict.overturned ? "Overturned — a grounded objection knocks out the conclusion" : verdict.grounded ? "Stands on the text" : verdict.gap ? "Incomplete — a step is missing" : verdict.load_bearing && verdict.load_bearing.length ? "Depends on a non-solid joint" : "Depends on contested steps";
   const why = (overlay.links || []).filter(l => l.relation !== "undercuts" && l.strength !== "solid" && l.why);
   const objections = (overlay.links || []).filter(l => l.relation === "undercuts");
+  const defeatedSet = new Set(verdict.defeated || []);
+  const objDecisive = l => l.strength === "solid" && defeatedSet.has(l.to); // cleared the knock-down bar
   return /*#__PURE__*/React.createElement("div", {
     className: "study-chart"
   }, /*#__PURE__*/React.createElement("div", {
@@ -5197,7 +5203,9 @@ function GraphChart({
     className: "study-key-line study-key-line--weak"
   }), " weak"), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("i", {
     className: "study-key-line study-key-line--joint"
-  }), " load-bearing joint")), why.length > 0 && /*#__PURE__*/React.createElement("div", {
+  }), " load-bearing joint"), verdict.defeated && verdict.defeated.length > 0 && /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("i", {
+    className: "study-key study-key--defeated"
+  }), " overturned by an objection")), why.length > 0 && /*#__PURE__*/React.createElement("div", {
     className: "study-chart-why"
   }, /*#__PURE__*/React.createElement("div", {
     className: "study-objections-label"
@@ -5210,10 +5218,12 @@ function GraphChart({
     className: "study-objections"
   }, /*#__PURE__*/React.createElement("div", {
     className: "study-objections-label"
-  }, "Open objections (noted, not scored)"), objections.map((l, j) => /*#__PURE__*/React.createElement("div", {
-    className: "study-objection",
+  }, "Objections ", objections.some(objDecisive) ? "(a grounded, solid one knocks out its target)" : "(raised, none decisive)"), objections.map((l, j) => /*#__PURE__*/React.createElement("div", {
+    className: "study-objection" + (objDecisive(l) ? " study-objection--decisive" : ""),
     key: j
-  }, l.why || (claims[l.from] || {}).text + " — attacks the conclusion"))));
+  }, objDecisive(l) && /*#__PURE__*/React.createElement("span", {
+    className: "study-objection-tag"
+  }, "knocks out ", shortLabel(claims[l.to])), l.why || (claims[l.from] || {}).text + " — attacks the conclusion"))));
 }
 
 // Read-only argument-map page (the in-app editor + React Flow canvas come in a later cut).

@@ -654,8 +654,8 @@ def _verse_index():
     conn = study_db()
     try:
         rows = conn.execute(
-            "SELECT id, title, json, updated FROM entries"
-            " WHERE type='topic' AND status='published' AND deleted=0"
+            "SELECT id, title, type, json, updated FROM entries"
+            " WHERE type IN ('topic','graph') AND status='published' AND deleted=0"
         ).fetchall()
     finally:
         conn.close()
@@ -668,23 +668,33 @@ def _verse_index():
             data = json.loads(r["json"]) or {}
         except (ValueError, TypeError):
             data = {}
+        kind = r["type"]
         # Reader line = HAND-AUTHORED studies only. The Nave's auto-imports stamp
         # themselves source='metav' and cite ~1000 scattered verses each — they'd blanket
         # the text. They stay browsable in the Study tab; they just don't tag the reader.
-        if (data.get("source") or "").strip().lower() == "metav":
+        if kind == "topic" and (data.get("source") or "").strip().lower() == "metav":
             continue
-        seen = set()                       # one entry per verse, even if cited twice in a topic
-        for s in (data.get("sections") or []):
-            for ref in ((s or {}).get("verses") or []):
-                p = _parse_ref(ref)
-                if not p:
-                    continue
-                book_id, sc, sv, ec, ev = p
-                key = (_KJV_BOOK_ID_REV.get(book_id, ""), sc, sv)
-                if not key[0] or key in seen:
-                    continue
-                seen.add(key)
-                idx.setdefault(key, []).append((r["id"], r["title"]))
+        # A topic carries its verses in sections[].verses[]; a graph carries them on its
+        # claims' refs (interpretive claims have no ref). Either way: key by the ref's FIRST
+        # verse, one hit per verse per entry, tag each hit with its kind so for_verse can
+        # gate graphs behind admin.
+        if kind == "graph":
+            refs = [(c or {}).get("ref") for c in (data.get("claims") or {}).values()]
+        else:
+            refs = [ref for s in (data.get("sections") or []) for ref in ((s or {}).get("verses") or [])]
+        seen = set()
+        for ref in refs:
+            if not ref:
+                continue
+            p = _parse_ref(ref)
+            if not p:
+                continue
+            book_id, sc, sv, ec, ev = p
+            key = (_KJV_BOOK_ID_REV.get(book_id, ""), sc, sv)
+            if not key[0] or key in seen:
+                continue
+            seen.add(key)
+            idx.setdefault(key, []).append((r["id"], r["title"], kind))
     _VERSE_INDEX, _VERSE_INDEX_SIG = idx, sig
     return idx
 
@@ -973,11 +983,15 @@ def for_name(name):
 @bp.route("/api/study/for-verse/<book>/<int:chapter>/<int:verse>", methods=["GET"])
 @limiter.limit("600 per hour")
 def for_verse(book, chapter, verse):
-    """PUBLIC: which published CONCEPT topics cite this verse — the reader's 'In studies:'
-    line. {topics:[{id,title}]}, empty if none. Name-topics are deliberately excluded."""
+    """PUBLIC: which published studies cite this verse — the reader's 'In studies:' line.
+    {topics:[{id,title,kind}]}, empty if none. Concept TOPICS show for everyone; argument
+    GRAPHS are admin-only, so a non-admin never sees a graph chip (it would 404 for them).
+    Name-topics are deliberately excluded from the index."""
     idx = _verse_index()
     hits = idx.get((book, chapter, verse), [])
-    return jsonify({"topics": [{"id": i, "title": t} for i, t in hits]})
+    admin = is_admin()
+    out = [{"id": i, "title": t, "kind": k} for (i, t, k) in hits if admin or k != "graph"]
+    return jsonify({"topics": out})
 
 
 @bp.route("/api/study/draft-intro", methods=["POST"])

@@ -11,6 +11,11 @@ THE STRESS TEST: starting only from grounded claims and walking only SOLID links
 reach the conclusion? If yes, it stands on grounded ground. If not, name the LOAD-BEARING
 link — the joint that, if cut, severs the conclusion.
 
+OBJECTIONS ('undercuts' links) cut the other way. A grounded, SOLID objection knocks its
+target claim out of the picture — if that target is the conclusion, the chain is OVERTURNED.
+Contested/weak objections are raised but never decisive (the mirror of support: only solid
+grounded steps move the verdict, in either direction).
+
 ONE claim pool, MANY overlays (one per tradition). Each overlay brings its OWN links over
 the shared claims and aims at its OWN conclusion. Comparing two overlays shows exactly
 where they part.
@@ -36,41 +41,65 @@ PROVENANCE = frozenset({"text", "lexicon", "tradition", "conjecture",
 _ALL = STRENGTHS
 
 
-def established(claims, links, allowed):
+def established(claims, links, allowed, blocked=frozenset()):
     """The claim ids you can stand on: start from the grounded claims, then walk only the
-    links whose strength is in `allowed`, growing the set until it stops changing."""
-    est = {cid for cid, c in claims.items() if (c or {}).get("provenance") in GROUNDED}
+    links whose strength is in `allowed`, growing the set until it stops changing. A claim in
+    `blocked` (knocked out by a decisive objection) is never added — proof can neither land on
+    it nor pass through it."""
+    est = {cid for cid, c in claims.items()
+           if (c or {}).get("provenance") in GROUNDED and cid not in blocked}
     carry = [l for l in links if l.get("relation") in CARRY and l.get("strength") in allowed]
     changed = True
     while changed:
         changed = False
         for l in carry:
-            if l.get("from") in est and l.get("to") not in est:
+            if l.get("from") in est and l.get("to") not in est and l.get("to") not in blocked:
                 est.add(l.get("to"))
                 changed = True
     return est
 
 
+def _knockouts(claims, links, standing):
+    """Objections that BITE. An 'undercuts' link knocks its target claim out only if it clears
+    the SAME bar a support must clear to prove something: the link is SOLID and its source
+    itself stands on solid grounded ground (`standing`). A knock-down is as well-founded as a
+    proof — the symmetry is the point. Contested/weak objections are raised but never decisive,
+    exactly as a contested/weak support never establishes anything. Returns (defeated claim
+    ids, the firing links)."""
+    fired = [l for l in links
+             if l.get("relation") == "undercuts" and l.get("strength") == "solid"
+             and l.get("from") in standing]
+    return {l.get("to") for l in fired}, fired
+
+
 def stress_test(claims, overlay):
     """Findings for one overlay. Returns a plain dict:
+      overturned   — the conclusion itself is knocked out by a decisive (grounded+solid) objection
       grounded     — the conclusion is reachable on grounded + solid links alone
       gap          — unreachable even granting EVERY link (a step is missing)
       load_bearing — non-solid links that are single points of failure (cut one, it falls)
       soft_steps   — the first non-solid links leaving the grounded+solid frontier
-      objections   — links tagged 'undercuts' (noted, not yet scored)
+      defeated     — claim ids knocked out by a decisive objection (struck through in the chart)
+      objections   — links tagged 'undercuts' (the full list; decisive ones populate `defeated`)
     """
     links = overlay.get("links") or []
     thesis = overlay.get("thesis")
-    solid = established(claims, links, {"solid"})
-    full = established(claims, links, _ALL)
+    # Judge which objections bite against the solid frontier BEFORE any knockout, so a defeat
+    # rests on solidly grounded ground — then re-establish with the knocked-out claims removed.
+    standing = established(claims, links, {"solid"})
+    defeated, _fired = _knockouts(claims, links, standing)
+    solid = established(claims, links, {"solid"}, blocked=defeated)
+    full = established(claims, links, _ALL, blocked=defeated)
     res = {
-        "grounded": thesis in solid,
-        "gap": thesis not in full,
+        "overturned": thesis in defeated,
+        "grounded": (thesis in solid) and (thesis not in defeated),
+        "gap": (thesis not in full) and (thesis not in defeated),
         "load_bearing": [],
         "soft_steps": [],
+        "defeated": sorted(defeated),
         "objections": [l for l in links if l.get("relation") == "undercuts"],
     }
-    if res["grounded"] or res["gap"]:
+    if res["overturned"] or res["grounded"] or res["gap"]:
         return res
     carry = [l for l in links if l.get("relation") in CARRY]
     res["soft_steps"] = [l for l in carry if l.get("strength") != "solid" and l.get("from") in solid]
@@ -78,7 +107,7 @@ def stress_test(claims, overlay):
         if l.get("strength") == "solid":
             continue
         without = [x for x in carry if x is not l]
-        if thesis not in established(claims, without, _ALL):
+        if thesis not in established(claims, without, _ALL, blocked=defeated):
             res["load_bearing"].append(l)
     return res
 

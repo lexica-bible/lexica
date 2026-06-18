@@ -69,6 +69,7 @@ function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation, onA
           <div className="xref-studies">
             {studies.map(t => (
               <button key={t.id} className="xref-study-link" onClick={() => { onClose(); onOpenStudy(t.id); }}>
+                {t.kind === "graph" && <span className="xref-study-tag">graph</span>}
                 {t.title} →
               </button>
             ))}

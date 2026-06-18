@@ -241,7 +241,9 @@ def stress():
     for ov, v in zip(OVERLAYS, out["verdicts"]):
         print("\n== %s ==" % ov["tradition"])
         print("  Conclusion: %s" % _c(ov["thesis"]))
-        if v["grounded"]:
+        if v.get("overturned"):
+            print("  VERDICT: OVERTURNED — a grounded, solid objection knocks out the conclusion.")
+        elif v["grounded"]:
             print("  VERDICT: STANDS — reachable from the text on solid links alone.")
         elif v["gap"]:
             print("  VERDICT: INCOMPLETE — a step is missing; unreachable even granting every link.")
@@ -251,6 +253,8 @@ def stress():
                 print("    >>> load-bearing joint [%s]: %s -> %s" % (l["strength"], _c(l["from"]), _c(l["to"])))
         else:
             print("  VERDICT: DEPENDS ON CONTESTED STEPS (reachable only through non-solid links; no single joint).")
+        if v.get("defeated"):
+            print("  Knocked out by a grounded objection: %s" % ", ".join(_c(c) for c in v["defeated"]))
         if ov.get("rejects"):
             print("  Rejects: %s" % ", ".join(_c(c) for c in ov["rejects"]))
     diff = out["diff"]

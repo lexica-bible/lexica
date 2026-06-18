@@ -3871,6 +3871,7 @@ button.study-verse-ref { border: none; }
 .study-verdict--stands { background: var(--accent-soft); color: var(--accent); }
 .study-verdict--depends { background: var(--gold-soft); color: var(--ink); }
 .study-verdict--gap { background: var(--bg-sunk); color: var(--ink-3); }
+.study-verdict--overturned { background: var(--bg-sunk); color: #b3382f; }   /* conclusion knocked out by a grounded objection */
 
 .study-joint-callout { background: var(--gold-soft); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; }
 .study-joint-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: #b3382f; margin-bottom: 8px; }
@@ -3956,6 +3957,13 @@ button.study-verse-ref { border: none; }
 .study-key-line--contested { border-top-style: dashed; border-top-color: var(--chart-contested); }
 .study-key-line--weak { border-top-style: dotted; border-top-color: var(--chart-weak); }
 .study-key-line--joint { border-top-style: dashed; border-top-color: #b3382f; }
+/* a claim knocked out by a grounded, solid objection — struck through + faded */
+.study-node--defeated .study-node-box { opacity: 0.5; }
+.study-node--defeated .study-node-main, .study-node--defeated .study-node-ref { text-decoration: line-through; }
+.study-key--defeated { background: var(--chart-concl); opacity: 0.5; }
+.study-objection--decisive { color: var(--ink); }
+.study-objection-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; color: #b3382f; margin-right: 6px; }
+.xref-study-tag { font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--accent); background: var(--accent-soft); padding: 0 5px; border-radius: 3px; margin-right: 6px; vertical-align: 1px; }
 .study-chart-why { margin: 4px 0 14px; }
 .study-chart-why .study-link-why { margin-bottom: 5px; }
 

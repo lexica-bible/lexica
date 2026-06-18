@@ -34,6 +34,18 @@ OV_GAP = {"tradition": "C", "thesis": "t", "links": [
     {"from": "v1", "to": "c1", "relation": "supports", "strength": "solid"},
 ]}
 
+# D: solid support to the conclusion, but a grounded verse SOLIDLY objects to it -> overturned.
+OV_OVERTURNED = {"tradition": "D", "thesis": "t", "links": [
+    {"from": "v1", "to": "t", "relation": "supports", "strength": "solid"},
+    {"from": "v2", "to": "t", "relation": "undercuts", "strength": "solid"},
+]}
+
+# E: the SAME objection, but only contested -> raised, not decisive (verdict unchanged).
+OV_SOFT_OBJECTION = {"tradition": "E", "thesis": "t", "links": [
+    {"from": "v1", "to": "t", "relation": "supports", "strength": "solid"},
+    {"from": "v2", "to": "t", "relation": "undercuts", "strength": "contested"},
+]}
+
 
 def test_grounded_passes():
     r = argmap.stress_test(CLAIMS, OV_PASS)
@@ -55,6 +67,22 @@ def test_gap_detected():
     r = argmap.stress_test(CLAIMS, OV_GAP)
     assert r["gap"] is True
     assert r["grounded"] is False
+
+
+def test_grounded_solid_objection_overturns():
+    # A grounded verse objecting on a SOLID link knocks the conclusion out.
+    r = argmap.stress_test(CLAIMS, OV_OVERTURNED)
+    assert r["overturned"] is True
+    assert r["grounded"] is False          # the conclusion was knocked out, not reached
+    assert "t" in r["defeated"]
+
+
+def test_soft_objection_is_not_decisive():
+    # A contested objection is raised but never bites — same bar as a contested support.
+    r = argmap.stress_test(CLAIMS, OV_SOFT_OBJECTION)
+    assert r["overturned"] is False
+    assert r["grounded"] is True           # still stands on the solid support
+    assert r["defeated"] == []
 
 
 def test_diff_separates_shared_and_private():

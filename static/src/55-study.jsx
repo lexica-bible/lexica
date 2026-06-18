@@ -386,6 +386,7 @@ function GraphSvg({ claims, overlay, verdict, shared, onNavigate }) {
   const X = id => CH.PAD + pos[id].c * CH.COLGAP;
   const Y = id => CH.PAD + pos[id].y;
   const joints = new Set(((verdict && verdict.load_bearing) || []).map(linkKey));
+  const defeated = new Set(((verdict && verdict.defeated) || []));        // knocked out by a grounded, solid objection
   const edgeKind = l => joints.has(linkKey(l)) ? "joint" : l.strength;   // solid | contested | weak
   const nodeKind = id => {
     const p = (claims[id] || {}).provenance;
@@ -416,7 +417,7 @@ function GraphSvg({ claims, overlay, verdict, shared, onNavigate }) {
         const go = onNavigate && c.book && c.chapter && c.verse;
         return (
           <g key={id} transform={"translate(" + X(id) + "," + Y(id) + ")"}
-            className={"study-node study-node--" + k + (go ? " study-node--link" : "")}
+            className={"study-node study-node--" + k + (go ? " study-node--link" : "") + (defeated.has(id) ? " study-node--defeated" : "")}
             onClick={go ? () => onNavigate(c.book, c.chapter, c.verse) : undefined}>
             <title>{c.text || id}</title>
             {/* a foreignObject box so the label WRAPS to the box (SVG <text> can't wrap → it spilled) */}
@@ -446,15 +447,18 @@ function GraphChart({ claims, overlays, analysis, onNavigate }) {
   if (!overlays.length) return null;
   const i = Math.min(sel, overlays.length - 1);
   const overlay = overlays[i];
-  const verdict = (analysis.verdicts || [])[i] || { grounded: false, gap: false, load_bearing: [] };
+  const verdict = (analysis.verdicts || [])[i] || { grounded: false, gap: false, load_bearing: [], defeated: [] };
   const shared = (analysis.diff || {}).shared_verses || [];
-  const cls = verdict.grounded ? "stands" : verdict.gap ? "gap" : "depends";
-  const label = verdict.grounded ? "Stands on the text"
+  const cls = verdict.overturned ? "overturned" : verdict.grounded ? "stands" : verdict.gap ? "gap" : "depends";
+  const label = verdict.overturned ? "Overturned — a grounded objection knocks out the conclusion"
+    : verdict.grounded ? "Stands on the text"
     : verdict.gap ? "Incomplete — a step is missing"
     : (verdict.load_bearing && verdict.load_bearing.length) ? "Depends on a non-solid joint"
     : "Depends on contested steps";
   const why = (overlay.links || []).filter(l => l.relation !== "undercuts" && l.strength !== "solid" && l.why);
   const objections = (overlay.links || []).filter(l => l.relation === "undercuts");
+  const defeatedSet = new Set(verdict.defeated || []);
+  const objDecisive = l => l.strength === "solid" && defeatedSet.has(l.to);   // cleared the knock-down bar
   return (
     <div className="study-chart">
       <div className="study-chart-tabs">
@@ -474,6 +478,9 @@ function GraphChart({ claims, overlays, analysis, onNavigate }) {
         <span><i className="study-key-line study-key-line--contested" /> contested</span>
         <span><i className="study-key-line study-key-line--weak" /> weak</span>
         <span><i className="study-key-line study-key-line--joint" /> load-bearing joint</span>
+        {verdict.defeated && verdict.defeated.length > 0 && (
+          <span><i className="study-key study-key--defeated" /> overturned by an objection</span>
+        )}
       </div>
       {why.length > 0 && (
         <div className="study-chart-why">
@@ -488,9 +495,12 @@ function GraphChart({ claims, overlays, analysis, onNavigate }) {
       )}
       {objections.length > 0 && (
         <div className="study-objections">
-          <div className="study-objections-label">Open objections (noted, not scored)</div>
+          <div className="study-objections-label">Objections {objections.some(objDecisive) ? "(a grounded, solid one knocks out its target)" : "(raised, none decisive)"}</div>
           {objections.map((l, j) => (
-            <div className="study-objection" key={j}>{l.why || ((claims[l.from] || {}).text + " — attacks the conclusion")}</div>
+            <div className={"study-objection" + (objDecisive(l) ? " study-objection--decisive" : "")} key={j}>
+              {objDecisive(l) && <span className="study-objection-tag">knocks out {shortLabel(claims[l.to])}</span>}
+              {l.why || ((claims[l.from] || {}).text + " — attacks the conclusion")}
+            </div>
           ))}
         </div>
       )}
