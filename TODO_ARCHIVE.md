@@ -24,6 +24,13 @@ browns in sepia + flip in dark). Verdict strings are COMPUTED from graph structu
   its mirror, a missing strongest plank, a thesis set stricter than the tradition actually holds. Two checks
   did most of the work: is every node grounded in what it claims, and is each side's STRONGEST version on the
   board. Built/reviewed alongside Claude chat via screenshots — method in memory `feedback_claude_chat_collab`.
+- REFINED the same day (fairness pass, all live): split credo's conclusion by axis (who vs efficacy);
+  Acts 16:33 → weak with Lydia/Stephanas as the clean-silence household anchors; gave credo its covenant
+  plank (Jer 31/Heb 8); made regeneration's thesis the EFFECTS claim ("Baptism saves") with "grace is an
+  infused substance" surfaced as a required premise (not buried in a label), and 1 Pet 3:21 / Mark 16:16
+  rated weak for self-qualifying. Chart polish: foreignObject node labels (wrap, no spill), tighter spacing,
+  a distinct dotted "weak" line style. The five checks behind all this are now the `argument-graph-review`
+  skill (auto-triggers on graph work).
 Full record: memory `project_study_modules`.
 
 ## Word-study def + cross-ref synthesis: text-first cleanup — DONE 2026-06-17
