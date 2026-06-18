@@ -317,7 +317,7 @@ function App() {
       <main className="main">
         {libEverVisited && (
           <div style={{ display: mainView === "library" ? undefined : "none" }}>
-            <LibraryView nav={libNav} onNavChange={setLibNav} onWordClick={(e) => { setLibCrossRef(null); setActiveNote(null); setActiveEntry(e); setEntryView("library"); }} onVerseNumberClick={handleVerseNumberClick} onOpenNote={openNote} onTranslationChange={setLibTranslation} isMobile={isMobile} showSummary={showLibSummary} focusMode={focusMode} onToggleFocus={() => setFocusMode(f => !f)} onDetailBaseChange={setLibDetailBase} />
+            <LibraryView nav={libNav} onNavChange={setLibNav} onWordClick={(e) => { if (isMobile) setLibCrossRef(null); setActiveNote(null); setActiveEntry(e); setEntryView("library"); }} onVerseNumberClick={handleVerseNumberClick} onOpenNote={openNote} onTranslationChange={setLibTranslation} isMobile={isMobile} showSummary={showLibSummary} focusMode={focusMode} onToggleFocus={() => setFocusMode(f => !f)} onDetailBaseChange={setLibDetailBase} />
           </div>
         )}
         {mainView === "about" && <AboutView owner={owner} />}

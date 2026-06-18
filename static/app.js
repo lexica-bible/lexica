@@ -13133,7 +13133,7 @@ function App() {
     nav: libNav,
     onNavChange: setLibNav,
     onWordClick: e => {
-      setLibCrossRef(null);
+      if (isMobile) setLibCrossRef(null);
       setActiveNote(null);
       setActiveEntry(e);
       setEntryView("library");
