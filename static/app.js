@@ -12857,12 +12857,16 @@ function App() {
     owner: owner
   }), mainView === "notes" && /*#__PURE__*/React.createElement(NotesView, {
     onOpen: openNoteFromList
-  }), mainView === "study" && /*#__PURE__*/React.createElement(StudyView, {
+  }), /*#__PURE__*/React.createElement("div", {
+    style: {
+      display: mainView === "study" ? undefined : "none"
+    }
+  }, /*#__PURE__*/React.createElement(StudyView, {
     admin: owner,
     pending: studyPending,
     onConsumed: () => setStudyPending(null),
     onNavigateToLibrary: handleReadInContext
-  }), /*#__PURE__*/React.createElement("div", {
+  })), /*#__PURE__*/React.createElement("div", {
     style: {
       display: mainView === "lexicon" ? undefined : "none"
     }

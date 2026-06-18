@@ -34,6 +34,13 @@
   --gold: oklch(0.58 0.09 75);
   --gold-soft: oklch(0.93 0.04 75);
 
+  /* Argument-chart node/edge colors — FIXED across themes (chosen to read on light,
+     sepia AND dark backgrounds) and deliberately NOT brown. Not overridden per theme. */
+  --chart-verse: #243a63;       /* grounded verse — navy */
+  --chart-concl: #424a59;       /* conclusion — slate (clearly not the verse navy) */
+  --chart-node-fg: #f4f1ea;     /* text on the dark verse/conclusion boxes */
+  --chart-contested: #3a5a92;   /* contested link — clear navy (NOT --accent, which is brown in sepia) */
+
   --shadow-sm: 0 1px 0 rgba(20, 20, 30, 0.04), 0 1px 2px rgba(20, 20, 30, 0.04);
   --shadow-md: 0 2px 4px rgba(20, 20, 30, 0.05), 0 8px 24px -8px rgba(20, 20, 30, 0.10);
   --shadow-lg: 0 8px 16px -4px rgba(20, 20, 30, 0.08), 0 24px 48px -12px rgba(20, 20, 30, 0.18);
@@ -3914,28 +3921,28 @@ button.study-verse-ref { border: none; }
 .study-node--link { cursor: pointer; }
 .study-node rect { transition: opacity 0.12s; }
 .study-node--link:hover rect { opacity: 0.85; }
-.study-node--verse rect { fill: var(--accent); }
+.study-node--verse rect { fill: var(--chart-verse); }
 .study-node--added rect { fill: var(--bg-sunk); stroke: var(--rule-2); stroke-width: 1; }
-.study-node--concl rect { fill: var(--ink); }
+.study-node--concl rect { fill: var(--chart-concl); }
 .study-node-t1 { font-size: 13px; font-weight: 600; }
 .study-node-t2 { font-size: 11.5px; }
-.study-node--verse .study-node-t1, .study-node--concl .study-node-t1 { fill: var(--paper); }
-.study-node--verse .study-node-t2 { fill: var(--paper); opacity: 0.8; }
+.study-node--verse .study-node-t1, .study-node--concl .study-node-t1 { fill: var(--chart-node-fg); }
+.study-node--verse .study-node-t2 { fill: var(--chart-node-fg); opacity: 0.78; }
 .study-node--added .study-node-t1 { fill: var(--ink); }
 .study-edge { fill: none; stroke-width: 1.6; }
 .study-edge--solid { stroke: var(--ink-4); }
-.study-edge--soft { stroke: var(--accent); stroke-dasharray: 6 5; }     /* contested — navy dashed, no brown */
+.study-edge--soft { stroke: var(--chart-contested); stroke-dasharray: 6 5; }     /* contested — navy dashed, no brown */
 .study-edge--joint { stroke: #b3382f; stroke-width: 2.2; stroke-dasharray: 6 5; }
 .study-arrow--solid { fill: var(--ink-4); }
-.study-arrow--soft { fill: var(--accent); }
+.study-arrow--soft { fill: var(--chart-contested); }
 .study-arrow--joint { fill: #b3382f; }
 .study-chart-legend { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; font-size: 12px; color: var(--ink-3); margin: 2px 0 16px; }
 .study-key { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 5px; }
-.study-key--verse { background: var(--accent); }
+.study-key--verse { background: var(--chart-verse); }
 .study-key--added { background: var(--bg-sunk); border: 1px solid var(--rule-2); }
-.study-key--concl { background: var(--ink); }
+.study-key--concl { background: var(--chart-concl); }
 .study-key-line { display: inline-block; width: 22px; border-top: 2px solid var(--ink-4); vertical-align: 4px; margin-right: 5px; }
-.study-key-line--soft { border-top-style: dashed; border-top-color: var(--accent); }
+.study-key-line--soft { border-top-style: dashed; border-top-color: var(--chart-contested); }
 .study-key-line--joint { border-top-style: dashed; border-top-color: #b3382f; }
 .study-chart-why { margin: 4px 0 14px; }
 .study-chart-why .study-link-why { margin-bottom: 5px; }

@@ -322,7 +322,9 @@ function App() {
         )}
         {mainView === "about" && <AboutView owner={owner} />}
         {mainView === "notes" && <NotesView onOpen={openNoteFromList} />}
-        {mainView === "study" && <StudyView admin={owner} pending={studyPending} onConsumed={() => setStudyPending(null)} onNavigateToLibrary={handleReadInContext} />}
+        <div style={{ display: mainView === "study" ? undefined : "none" }}>
+          <StudyView admin={owner} pending={studyPending} onConsumed={() => setStudyPending(null)} onNavigateToLibrary={handleReadInContext} />
+        </div>
         <div style={{ display: mainView === "lexicon" ? undefined : "none" }}>
           <LexiconView
             onNavigateToSearch={(q) => { handleNavChange("search"); setQ2(q); }}
