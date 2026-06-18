@@ -3936,7 +3936,7 @@ button.study-verse-ref { border: none; }
 .study-node-sub  { font-size: 11px; margin-top: 1px; }
 .study-node-main { font-size: 12.5px; font-weight: 600; }
 .study-node--verse .study-node-ref, .study-node--verse .study-node-sub,
-.study-node--concl .study-node-main { color: var(--chart-node-fg); }
+.study-node--verse .study-node-main, .study-node--concl .study-node-main { color: var(--chart-node-fg); }
 .study-node--verse .study-node-sub { opacity: 0.82; }
 .study-node--added .study-node-main { color: var(--ink); }
 .study-edge { fill: none; stroke-width: 1.6; }

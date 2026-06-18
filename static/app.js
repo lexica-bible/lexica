@@ -4983,7 +4983,6 @@ const shortLabel = c => c && (c.label || c.ref) || (c && c.text ? c.text.length 
 
 // Longest-path column for each node from the grounded verses (verses = column 0).
 function chartColumns(claims, carry, ids) {
-  const isVerse = id => PROV_GROUNDED.has((claims[id] || {}).provenance);
   const preds = {};
   carry.forEach(l => {
     (preds[l.to] = preds[l.to] || []).push(l.from);
@@ -4994,7 +4993,9 @@ function chartColumns(claims, carry, ids) {
     if (id in col) return col[id];
     if (busy[id]) return 0; // cycle guard
     busy[id] = true;
-    const c = !isVerse(id) && preds[id] ? 1 + Math.max(...preds[id].map(walk)) : 0;
+    // A SOURCE (a verse, or anything with no feeder) sits in column 0; everything else — incl. a
+    // grounded LEXICON claim that's derived from a verse — sits one past whatever feeds it.
+    const c = preds[id] && preds[id].length ? 1 + Math.max(...preds[id].map(walk)) : 0;
     busy[id] = false;
     return col[id] = c;
   };
@@ -5117,17 +5118,17 @@ function GraphSvg({
     const p = (claims[id] || {}).provenance;
     return p === "conclusion" ? "concl" : PROV_GROUNDED.has(p) ? "verse" : "added";
   };
-  // Smooth path through a list of points. The vertical move is held LATE — near the target x, in
-  // the gap before the box — so a line that has to change rows doesn't cut across a box one column
-  // over (the "thief through Sealed before baptism" case). Entry stays horizontal into each box.
+  // Smooth path through a list of points (each [x, y, column]). The vertical move always happens in
+  // the GAP between two columns — never inside a box's column — so a line that changes rows can't cut
+  // across a box. Horizontal runs sit on de-overlapped rows, so they're clear too. Boxes can't be hit.
   const pathThrough = pts => {
     let d = "M" + pts[0][0] + "," + pts[0][1];
     for (let i = 1; i < pts.length; i++) {
-      const x1 = pts[i - 1][0],
-        y1 = pts[i - 1][1],
+      const y1 = pts[i - 1][1],
         x2 = pts[i][0],
         y2 = pts[i][1];
-      const cx = x2 - Math.min(28, (x2 - x1) * 0.5);
+      const c = Math.min(pts[i - 1][2], pts[i][2]);
+      const cx = CH.PAD + c * CH.COLGAP + CH.W + (CH.COLGAP - CH.W) / 2; // mid of the gap after column c
       d += " C" + cx + "," + y1 + " " + cx + "," + y2 + " " + x2 + "," + y2;
     }
     return d;
@@ -5153,11 +5154,11 @@ function GraphSvg({
   })))), carry.map((l, i) => {
     if (!pos[l.from] || !pos[l.to]) return null;
     const k = edgeKind(l);
-    const pts = [[X(l.from) + CH.W, Y(l.from) + CH.H / 2]]; // right edge of the from box
+    const pts = [[X(l.from) + CH.W, Y(l.from) + CH.H / 2, pos[l.from].c]]; // right edge of the from box
     (wpOf[linkKey(l)] || []).forEach(d => {
-      pts.push([cxc(d), Y(d) + CH.H / 2]);
+      pts.push([cxc(d), Y(d) + CH.H / 2, pos[d].c]);
     }); // through each reserved row
-    pts.push([X(l.to) - 8, Y(l.to) + CH.H / 2]); // left edge of the to box (room for the arrow)
+    pts.push([X(l.to) - 8, Y(l.to) + CH.H / 2, pos[l.to].c]); // left edge of the to box (room for the arrow)
     return /*#__PURE__*/React.createElement("path", {
       key: i,
       className: "study-edge study-edge--" + k,
@@ -5178,7 +5179,7 @@ function GraphSvg({
       height: CH.H
     }, /*#__PURE__*/React.createElement("div", {
       className: "study-node-box"
-    }, k === "verse" ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    }, k === "verse" && c.ref ? /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
       className: "study-node-ref"
     }, c.ref), c.label ? /*#__PURE__*/React.createElement("div", {
       className: "study-node-sub"
