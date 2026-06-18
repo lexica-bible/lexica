@@ -1095,6 +1095,30 @@ def _lord_oath_fix(rows: list) -> None:
         rows[nj] = (nb[0], remainder, _oath_head(remainder)) + nb[3:]
 
 
+# ── Greek-numeral gloss fill (fold of fix_abp_numerals.py) ─────────────────────
+# ABP spells some numbers as Greek numeral LETTERS (χ ξ ϛ = 600 60 6, e.g. 666 in
+# Rev 13:18), each parked at a dotted Strong's whose base is an unrelated word. The
+# numeric gloss came across blank, so the reader dropped those words and the number
+# vanished. These dotted codes mean the same numeral wherever they occur, so fill the
+# digit by code (english only; leaves a real gloss alone). Greek letter side: pinned
+# in build_dotted_lexicon.py so the chip's Greek line shows χ/ξ/ϛ.
+_NUMERAL_GLOSS = {
+    "5462.1": "600",   # χ
+    "3577.2": "60",    # ξ
+    "2193.2": "6",     # ϛ
+}
+
+
+def _numeral_gloss_fill(rows: list) -> None:
+    """Fold of fix_abp_numerals.py — fill the digit for ABP's Greek-numeral words
+    when their gloss is blank or bare punctuation. strongs (idx 3) is the shape key;
+    english (idx 1) / head (idx 2) only. Re-runnable: a filled gloss won't re-fill."""
+    for i, r in enumerate(rows):
+        digit = _NUMERAL_GLOSS.get(r[3])
+        if digit and not (r[1] or "").strip(" .,:;·"):
+            rows[i] = (r[0], digit, digit) + r[3:]
+
+
 # ── greek_pos backfill (fold of fix_greek_pos_gaps.py) ─────────────────────────
 def _greek_pos_backfill(rows: list) -> None:
     """Fold of fix_greek_pos_gaps.py — a bracketed gloss word with NULL greek_pos
@@ -1219,6 +1243,7 @@ def build_verse_words(abp_words: list, bh_rows: list, lex: dict = None) -> list:
     if lex:
         _funcword_noun_relocate(rows, lex)
     _lord_oath_fix(rows)
+    _numeral_gloss_fill(rows)
     _greek_pos_backfill(rows)
 
     # Strip temporary abp_pos (idx 10); keep morph (11) + lemma (12) as the last two columns.

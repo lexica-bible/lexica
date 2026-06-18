@@ -8,6 +8,11 @@ number disappears from the end of the verse.
 
 These dotted codes mean the same numeral everywhere they occur, so we fill the gloss
 by code. Read-only by default; pass --apply to write. PA-only (bible.db is on PA).
+
+ONE-TIME use: this only patches the CURRENT live database. The real fix is folded into
+build_words_from_abp.py (`_numeral_gloss_fill`), so a future words rebuild produces the
+numbers on its own — you do NOT need to re-run this after a rebuild. (Twin of the
+patch-fold pattern: the fold is the source of truth; this patched the live data once.)
 """
 import argparse, sqlite3, sys
 

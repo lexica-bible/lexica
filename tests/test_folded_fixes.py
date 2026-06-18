@@ -101,6 +101,26 @@ def test_lord_oath():
     check("oath: non-2198 neighbour untouched", rows, snap)
 
 
+# ── 3b. Greek-numeral gloss fill ──────────────────────────────────────────────
+def test_numeral_gloss_fill():
+    # Rev 13:18 tail: the three numeral letters arrive blank / bare "." -> 600 60 6
+    rows = [row(0, None, "5462.1"),
+            row(1, None, "3577.2"),
+            row(2, ".",  "2193.2")]
+    B._numeral_gloss_fill(rows)
+    check("χ 5462.1 -> 600", by_pos(rows, 0)[1], "600")
+    check("ξ 3577.2 -> 60",  by_pos(rows, 1)[1], "60")
+    check("ϛ 2193.2 (bare '.') -> 6", by_pos(rows, 2)[1], "6")
+    check("numeral head matches gloss", by_pos(rows, 0)[2], "600")
+
+    # a real gloss already there -> left alone; a non-numeral code -> untouched
+    rows = [row(0, "six hundred", "5462.1", head="hundred"),
+            row(1, "word", "3056", head="word")]
+    B._numeral_gloss_fill(rows)
+    check("existing numeral gloss untouched", by_pos(rows, 0)[1], "six hundred")
+    check("non-numeral code untouched", by_pos(rows, 1)[1], "word")
+
+
 # ── 4. LORD-subject dual-ordering ─────────────────────────────────────────────
 def test_lord_subject():
     # 1Ch 13:10 shape: verb carries "the LORD was enraged"; empty kyrios slot next
