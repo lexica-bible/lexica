@@ -1,11 +1,10 @@
 #!/usr/bin/env python3
 """Study modules — admin-authored study content (the "engine").
 
-One shared shape powers three views (a study TOPIC, a DENOMINATION's belief, one
-side of an ARGUMENT). Every entry is the same thing: a position, the verses that
-support it, the verses that sit in tension with it, a resolution (the middle road
-the text points to, OR plainly marked an open mystery), private notes, and links
-to related entries. Build the entry once here; the reader views render it.
+Two kinds of entry, one row each: a study TOPIC (a subject broken into subtopic SECTIONS
+of verses) and an argument GRAPH (a pool of CLAIMS joined by per-tradition LINKS, each
+tagged with provenance + strength so the conclusion can be stress-tested — see argmap.py).
+Build the entry once here; the reader views render it.
 
 Storage: study.db (core.study_db), kept OUT of bible.db (the corpus is rebuilt;
 authored content must survive that) and OUT of git (*.db is gitignored), exactly
@@ -13,7 +12,7 @@ like notes.db. One row per entry.
 
 Gating: WRITING is always admin-only (the owner authors content). READING is split
 (go-live 2026-06-16): published TOPICS — including the metaV name-topics — are PUBLIC,
-readable by anyone with no login. Denominations + arguments stay admin-only (they take
+readable by anyone with no login. Argument graphs stay admin-only (they take
 positions, unlike the rest of the Berean app), as do all DRAFTS and the editor's
 verse-autofill. Non-admins get a 404 for anything they may not see, and private notes
 are never sent to a reader.
@@ -24,7 +23,7 @@ when ABP lacks the verse), so a long verse list costs a few keystrokes and the t
 never drifts from the corpus.
 
 Endpoints (all admin-only):
-  GET  /api/study/entries?type=        -> {entries:[{id,type,title,heldBy,status,updated}]}
+  GET  /api/study/entries?type=        -> {entries:[{id,type,title,n,status,updated}]}
   GET  /api/study/entry/<id>           -> full entry (verses resolved to text)
   POST /api/study/entry                -> create/update (mints id if absent) -> {id}
   POST /api/study/entry/<id>/delete    -> soft delete -> {ok}
@@ -39,16 +38,16 @@ from collections import defaultdict
 
 from flask import Blueprint, jsonify, request
 
+import argmap
 from core import study_db, db_ro, limiter, _anthropic, _KJV_BOOK_ID, _KJV_BOOK_ID_REV
 from views_notes import is_admin
 
 bp = Blueprint("study", __name__)
 log = logging.getLogger("study")
 
-_TYPES = ("topic", "denomination", "argument", "name")   # "name" = a metaV person/place name-topic (sectioned like a topic; not shown in the browser list)
-_RES_MODES = ("middle", "mystery")
+_TYPES = ("topic", "graph", "name")   # "name" = a metaV person/place name-topic (sectioned like a topic; not shown in the browser list)
 _MAX_ENTRY_BYTES = 200_000     # one whole entry's JSON (long notes + many refs)
-_MAX_VERSES = 300              # support/tension refs per bucket
+_MAX_VERSES = 300              # verse refs per topic section
 _MAX_RANGE = 60                # verses a single reference range may expand to
 
 
@@ -339,30 +338,79 @@ def _clean_sections(items):
     return out
 
 
-_MAX_SIDES = 2   # an argument is two-sided
+_MAX_CLAIMS = 200
+_MAX_OVERLAYS = 8
+_MAX_LINKS = 400
 
 
-def _clean_sides(items):
-    """Argument sides: [{claim, verses:[ref,...]}], trimmed; the first two kept."""
-    out = []
-    if not isinstance(items, list):
+def _clean_claims(obj):
+    """Graph claim pool: {id: {text, provenance, ref?}}, trimmed + capped. An unknown
+    provenance is parked at 'conjecture' (clearly not grounded) so the stress test stays honest."""
+    out = {}
+    if not isinstance(obj, dict):
         return out
-    for s in items:
-        if not isinstance(s, dict):
+    for cid, c in obj.items():
+        cid = str(cid).strip()
+        if not cid or not isinstance(c, dict):
             continue
+        prov = str(c.get("provenance") or "").strip().lower()
+        if prov not in argmap.PROVENANCE:
+            prov = "conjecture"
+        item = {"text": str(c.get("text") or "").strip()[:600], "provenance": prov}
+        ref = str(c.get("ref") or "").strip()
+        if ref:
+            item["ref"] = ref[:80]
+        out[cid] = item
+        if len(out) >= _MAX_CLAIMS:
+            break
+    return out
+
+
+def _clean_overlays(obj, claim_ids):
+    """Per-tradition overlays: [{tradition, thesis, links:[{from,to,relation,strength,note?}]}].
+    Links pointing at a claim that isn't in the pool are dropped; an unknown relation/strength
+    snaps to a safe default."""
+    out = []
+    if not isinstance(obj, list):
+        return out
+    for ov in obj:
+        if not isinstance(ov, dict):
+            continue
+        links = []
+        for l in (ov.get("links") or []):
+            if not isinstance(l, dict):
+                continue
+            f, t = str(l.get("from") or "").strip(), str(l.get("to") or "").strip()
+            if f not in claim_ids or t not in claim_ids:
+                continue
+            rel = str(l.get("relation") or "").strip().lower()
+            strg = str(l.get("strength") or "").strip().lower()
+            link = {
+                "from": f, "to": t,
+                "relation": rel if rel in argmap.RELATIONS else "supports",
+                "strength": strg if strg in argmap.STRENGTHS else "contested",
+            }
+            note = str(l.get("note") or "").strip()
+            if note:
+                link["note"] = note[:300]
+            links.append(link)
+            if len(links) >= _MAX_LINKS:
+                break
+        thesis = str(ov.get("thesis") or "").strip()
         out.append({
-            "claim": str(s.get("claim") or "").strip()[:300],
-            "verses": _clean_refs(s.get("verses")),
+            "tradition": str(ov.get("tradition") or "").strip()[:200],
+            "thesis": thesis if thesis in claim_ids else "",
+            "links": links,
         })
-        if len(out) >= _MAX_SIDES:
+        if len(out) >= _MAX_OVERLAYS:
             break
     return out
 
 
 def _body_from_request(etype: str, body: dict) -> dict:
-    """Normalize the incoming entry into its stored JSON shape (only fields we keep,
-    so a client can't smuggle extra keys in). A TOPIC carries subtopic SECTIONS; a
-    denomination/argument carries the claim shape (support/tension/resolution)."""
+    """Normalize the incoming entry into its stored JSON shape (only fields we keep, so a
+    client can't smuggle extra keys in). A TOPIC carries subtopic SECTIONS; a GRAPH carries
+    the claim pool + per-tradition overlays (see argmap.py)."""
     related = body.get("related") if isinstance(body.get("related"), list) else []
     related = [str(x).strip() for x in related if str(x).strip()][:100]
     if etype in ("topic", "name"):
@@ -372,28 +420,12 @@ def _body_from_request(etype: str, body: dict) -> dict:
             "related": related,
             "source": str(body.get("source") or "").strip()[:40],
         }
-    if etype == "argument":
-        res = body.get("resolution") or {}
-        mode = (res.get("mode") or "middle").strip().lower()
-        if mode not in _RES_MODES:
-            mode = "middle"
-        return {
-            "intro": str(body.get("intro") or "").strip()[:2000],
-            "sides": _clean_sides(body.get("sides")),
-            "resolution": {"mode": mode, "text": str(res.get("text") or "").strip()[:8000]},
-            "notes": str(body.get("notes") or "").strip()[:20000],
-            "related": related,
-        }
-    res = body.get("resolution") or {}
-    mode = (res.get("mode") or "middle").strip().lower()
-    if mode not in _RES_MODES:
-        mode = "middle"
+    # graph
+    claims = _clean_claims(body.get("claims"))
     return {
-        "heldBy": str(body.get("heldBy") or "").strip()[:200],
         "intro": str(body.get("intro") or "").strip()[:2000],
-        "support": _clean_refs(body.get("support")),
-        "tension": _clean_refs(body.get("tension")),
-        "resolution": {"mode": mode, "text": str(res.get("text") or "").strip()[:8000]},
+        "claims": claims,
+        "overlays": _clean_overlays(body.get("overlays"), set(claims.keys())),
         "notes": str(body.get("notes") or "").strip()[:20000],
         "related": related,
     }
@@ -554,26 +586,23 @@ def _resolve_body(etype: str, stored: dict) -> dict:
                 {"heading": (s or {}).get("heading", ""), "verses": _verses_payload((s or {}).get("verses"), tmap)}
                 for s in secs
             ]
-        elif etype == "argument":
-            sides = stored.get("sides")
-            if not sides and (stored.get("support") or stored.get("tension")):
-                # legacy argument (saved before the two-sided layout): support -> A, tension -> B
-                sides = [
-                    {"claim": "", "verses": stored.get("support") or []},
-                    {"claim": "", "verses": stored.get("tension") or []},
-                ]
-            sides = sides or []
-            tmap = _resolve_map([r for s in sides for r in ((s or {}).get("verses") or [])], conn)
-            b["sides"] = [
-                {"claim": (s or {}).get("claim", ""), "verses": _verses_payload((s or {}).get("verses"), tmap)}
-                for s in sides
-            ]
-            b.pop("support", None)
-            b.pop("tension", None)
-        else:
-            tmap = _resolve_map((stored.get("support") or []) + (stored.get("tension") or []), conn)
-            b["support"] = _verses_payload(stored.get("support"), tmap)
-            b["tension"] = _verses_payload(stored.get("tension"), tmap)
+        else:   # graph
+            claims = stored.get("claims") or {}
+            refs = [(c or {}).get("ref") for c in claims.values() if (c or {}).get("ref")]
+            tmap = _resolve_map(refs, conn)
+            rclaims = {}
+            for cid, c in claims.items():
+                c = dict(c or {})
+                ref = c.get("ref")
+                if ref:
+                    m = tmap.get(ref) or {}
+                    c["verse_text"] = m.get("text", "")
+                    c["book"], c["chapter"], c["verse"] = m.get("book", ""), m.get("chapter"), m.get("verse")
+                rclaims[cid] = c
+            overlays = stored.get("overlays") or []
+            b["claims"] = rclaims
+            b["overlays"] = overlays
+            b["analysis"] = argmap.analyze(rclaims, overlays)
     finally:
         conn.close()
     return b
@@ -588,7 +617,7 @@ _RESOLVED_CACHE_MAX = 80
 
 
 def _resolved_entry(r):
-    """The resolved body (sections / sides / support+tension) for an entries row — from
+    """The resolved body (topic sections / graph claims+overlays) for an entries row — from
     the cache when the entry is unchanged, else resolved once and cached. Returns a fresh
     copy so the caller can add id/status/strip notes without touching the cache."""
     hit = _RESOLVED_CACHE.get(r["id"])
@@ -737,8 +766,8 @@ def list_entries():
     conn = study_db()
     try:
         if not admin:
-            # PUBLIC: published TOPICS only. Denominations/arguments stay private;
-            # name-topics aren't browseable here (they open from the metaV sidebar).
+            # PUBLIC: published TOPICS only. Graphs stay private; name-topics aren't
+            # browseable here (they open from the metaV sidebar).
             if wanted and wanted != "topic":
                 rows = []
             else:
@@ -768,20 +797,13 @@ def list_entries():
             data = {}
         if r["type"] in ("topic", "name"):
             n = sum(len((s or {}).get("verses") or []) for s in (data.get("sections") or []))
-            heldBy = ""
-        elif r["type"] == "argument":
-            sides = data.get("sides")
-            if sides:
-                n = sum(len((s or {}).get("verses") or []) for s in sides)
-            else:
-                n = len(data.get("support") or []) + len(data.get("tension") or [])
-            heldBy = ""
+        elif r["type"] == "graph":
+            n = len(data.get("claims") or {})
         else:
-            n = len(data.get("support") or []) + len(data.get("tension") or [])
-            heldBy = data.get("heldBy", "")
+            n = 0
         out.append({
             "id": r["id"], "type": r["type"], "title": r["title"],
-            "heldBy": heldBy, "n": n, "status": r["status"], "updated": r["updated"],
+            "n": n, "status": r["status"], "updated": r["updated"],
         })
     return jsonify({"entries": out})
 
@@ -802,7 +824,7 @@ def get_entry(entry_id):
     if not r:
         return jsonify({"error": "not found"}), 404
     # PUBLIC: only published topic-like entries (topics + metaV name-topics).
-    # Denominations/arguments and any draft stay admin-only.
+    # Graphs and any draft stay admin-only.
     if not admin and not (r["type"] in ("topic", "name") and r["status"] == "published"):
         return jsonify({"error": "not found"}), 404
     out = _resolved_entry(r)

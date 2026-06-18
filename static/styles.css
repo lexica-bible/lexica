@@ -3692,7 +3692,7 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
   text-transform: uppercase; letter-spacing: 0.02em; background: var(--bg-sunk); color: var(--ink-3);
 }
 .study-badge--topic { background: var(--accent-soft); color: var(--accent); }
-.study-badge--denomination { background: var(--gold-soft); color: var(--gold); }
+.study-badge--graph { background: var(--accent-soft); color: var(--accent); }
 .study-row-title { flex: 1; min-width: 0; font-size: 14.5px; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .study-row-held { color: var(--ink-4); }
 .study-row-draft { flex: none; font-size: 11px; color: var(--ink-4); border: 1px solid var(--rule); border-radius: 6px; padding: 1px 6px; }
@@ -3845,6 +3845,61 @@ button.study-verse-ref { border: none; }
 .study-preview-note { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; font-size: 12.5px; color: var(--ink-3); background: var(--bg-sunk); border: 1px solid var(--rule); border-radius: 8px; padding: 8px 12px; margin-bottom: 14px; }
 .study-preview-exit { font-size: 12.5px; color: var(--accent); background: none; border: none; cursor: pointer; padding: 0; text-decoration: underline; }
 
+/* ---- Graph (argument map) — read-only ---------------------------------- */
+.study-graph .study-topic-meta { margin-bottom: 10px; }
+.study-prov-key { font-size: 12px; color: var(--ink-4); margin-bottom: 18px; display: flex; flex-wrap: wrap; gap: 6px; align-items: center; line-height: 1.6; }
+
+/* provenance badge: navy = grounded in the source, muted = leans on something added */
+.study-prov { display: inline-block; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; padding: 1px 6px; border-radius: 4px; vertical-align: baseline; }
+.study-prov--grounded { background: var(--accent-soft); color: var(--accent); }
+.study-prov--added { background: var(--bg-sunk); color: var(--ink-3); border: 1px solid var(--rule-2); }
+
+/* one tradition's card: conclusion, verdict, the load-bearing joint, then the chain */
+.study-overlay { border: 1px solid var(--rule); border-radius: 14px; padding: 16px 16px 18px; margin-bottom: 18px; background: var(--paper); }
+.study-overlay-head { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
+.study-overlay-thesis { font-family: var(--f-serif); font-size: 15px; line-height: 1.5; color: var(--ink); margin-bottom: 12px; }
+
+.study-verdict { display: inline-block; font-size: 12px; font-weight: 600; padding: 5px 12px; border-radius: 999px; margin-bottom: 14px; }
+.study-verdict--stands { background: var(--accent-soft); color: var(--accent); }
+.study-verdict--depends { background: var(--gold-soft); color: var(--ink); }
+.study-verdict--gap { background: var(--bg-sunk); color: var(--ink-3); }
+
+.study-joint-callout { background: var(--gold-soft); border: 1px solid var(--rule); border-radius: 12px; padding: 12px 14px; margin-bottom: 14px; }
+.study-joint-label { font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: #b3382f; margin-bottom: 8px; }
+.study-joint { display: flex; flex-direction: column; gap: 6px; }
+
+.study-chain { display: flex; flex-direction: column; gap: 5px; }
+.study-link { display: flex; flex-direction: column; gap: 6px; padding: 10px 12px; border-radius: 10px; border-left: 3px solid var(--rule-2); background: var(--bg); }
+.study-link--solid { border-left-color: var(--accent); }
+.study-link--contested { border-left-style: dashed; border-left-color: var(--ink-4); }
+.study-link--weak { border-left-style: dashed; border-left-color: #b3382f; }
+.study-link--joint { background: var(--gold-soft); }
+
+.study-link-rel { align-self: flex-start; font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; color: var(--ink-4); padding: 1px 8px; border-radius: 999px; background: var(--bg-sunk); }
+.study-link-rel--solid { color: var(--accent); }
+.study-link-rel--contested { color: var(--ink-3); }
+.study-link-rel--weak { color: #b3382f; }
+
+.study-claim { background: var(--paper); border: 1px solid var(--rule); border-radius: 8px; padding: 8px 10px; }
+.study-claim--grounded { border-left: 3px solid var(--accent); }
+.study-claim--missing { color: var(--ink-4); font-style: italic; }
+.study-claim-head { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; }
+.study-claim-text { font-size: 13.5px; line-height: 1.45; color: var(--ink); }
+.study-claim-verse { font-family: var(--f-serif); font-size: 13px; line-height: 1.5; color: var(--ink-3); margin-top: 4px; }
+.study-claim .study-verse-ref { font-family: var(--f-mono); font-size: 10.5px; font-weight: 500; color: var(--accent); background: var(--accent-soft); padding: 1px 6px; border-radius: 4px; letter-spacing: 0.04em; }
+
+.study-objections { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--rule); }
+.study-objections-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-4); margin-bottom: 6px; }
+.study-objection { font-size: 13px; line-height: 1.5; color: var(--ink-2); margin-bottom: 4px; }
+
+.study-part { margin-top: 6px; background: var(--bg-sunk); border: 1px solid var(--rule); border-radius: 12px; padding: 14px 16px; }
+.study-part-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-3); margin-bottom: 10px; }
+.study-part-row { font-size: 13px; color: var(--ink-2); margin-bottom: 10px; }
+.study-part-key { font-weight: 600; color: var(--ink); }
+.study-part-chip { display: inline-block; font-family: var(--f-mono); font-size: 11px; color: var(--accent); background: var(--accent-soft); padding: 1px 7px; border-radius: 4px; margin: 0 4px 4px 0; }
+.study-part-privs { margin-top: 6px; display: flex; flex-direction: column; gap: 6px; }
+.study-part-priv { font-size: 13px; line-height: 1.45; color: var(--ink-2); }
+
 @media (max-width: 1099px) {
   .study-view { padding: 14px 14px 90px; }
   .study-editor-bar { position: static; }
@@ -3853,4 +3908,6 @@ button.study-verse-ref { border: none; }
   .study-topic-title { font-size: 22px; }
   .study-sides { grid-template-columns: 1fr; }
   .study-sub { flex-wrap: wrap; row-gap: 8px; }
+  .study-overlay { padding: 13px; }
+  .study-prov-key { font-size: 11.5px; }
 }

@@ -4432,38 +4432,24 @@ function CorpusResults({
 }
 
 // ============================================================
-// STUDY MODULES — admin-only (the "engine")
-// One Study tab with a sub-switch: Topics · Denominations · Arguments.
-//   Topics       — a BROWSE: a subject broken into subtopic SECTIONS, each with its
-//                  verses (mostly filled from MetaV; light editing). Shape:
-//                  {title, intro, sections:[{heading, verses:[{ref,text}]}]}.
-//   Denominations / Arguments — the CLAIM editor: a position with support + tension
-//                  verses and a resolution (middle road / open mystery).
-// Verses are entered as a REFERENCE; the ABP prose text auto-fills from the corpus.
-// Backend: views_study.py (study.db). Every route is admin-gated (404 otherwise).
+// STUDY MODULES
+// One Study tab with a sub-switch: Topics · Graphs.
+//   Topics — a BROWSE: a subject broken into subtopic SECTIONS, each with its verses
+//            (mostly filled from MetaV; light editing). PUBLIC when published. Shape:
+//            {title, intro, sections:[{heading, verses:[{ref,text}]}]}.
+//   Graphs — an ARGUMENT MAP (admin-only): a pool of CLAIMS joined by per-tradition
+//            LINKS, each claim tagged with provenance + each link with strength, so the
+//            conclusion can be stress-tested (see argmap.py). Read-only here; authored
+//            with scripts/add_study_graph.py.
+// Backend: views_study.py (study.db). Graph routes are admin-gated (404 otherwise).
 // ============================================================
 const STUDY_MODULES = [{
   id: "topic",
   label: "Topics"
 }, {
-  id: "denomination",
-  label: "Denominations"
-}, {
-  id: "argument",
-  label: "Arguments"
+  id: "graph",
+  label: "Graphs"
 }];
-const CLAIM_TYPES = [{
-  id: "denomination",
-  label: "Denomination"
-}, {
-  id: "argument",
-  label: "Argument"
-}];
-const STUDY_TYPE_LABEL = {
-  topic: "Topic",
-  denomination: "Denomination",
-  argument: "Argument"
-};
 // "name" = a person/place name-topic (MetaV), shown on the metaV sidebar, opened
 // here read-only. Same shape as a topic, so it renders through TopicPage.
 const isTopicLike = t => t === "topic" || t === "name";
@@ -4541,88 +4527,6 @@ function blankTopic() {
     related: [],
     status: "draft",
     source: ""
-  };
-}
-function blankClaim(type) {
-  return {
-    id: "",
-    type: type || "denomination",
-    title: "",
-    heldBy: "",
-    intro: "",
-    support: [],
-    tension: [],
-    resolution: {
-      mode: "middle",
-      text: ""
-    },
-    notes: "",
-    related: [],
-    status: "draft"
-  };
-}
-// An ARGUMENT is two-sided: a question, then Side A and Side B (each with its own
-// claim + verses), then the shared resolution. A denomination stays one-sided
-// (support/tension) in blankClaim above.
-function blankArgument() {
-  return {
-    id: "",
-    type: "argument",
-    title: "",
-    intro: "",
-    sides: [{
-      claim: "",
-      verses: []
-    }, {
-      claim: "",
-      verses: []
-    }],
-    resolution: {
-      mode: "middle",
-      text: ""
-    },
-    notes: "",
-    related: [],
-    status: "draft"
-  };
-}
-// Arguments always show exactly two side slots — pad/trim so the layout stays stable.
-function padSides(sides) {
-  const a = (sides || []).slice(0, 2).map(s => ({
-    claim: s && s.claim || "",
-    verses: s && s.verses || []
-  }));
-  while (a.length < 2) a.push({
-    claim: "",
-    verses: []
-  });
-  return a;
-}
-// Flip a claim between denomination (support/tension) and argument (two sides)
-// WITHOUT losing the verses already entered: support↔Side A, tension↔Side B.
-function convertClaimType(entry, t) {
-  if (t === entry.type) return entry;
-  if (t === "argument") {
-    const sides = entry.sides && entry.sides.length ? entry.sides : [{
-      claim: "",
-      verses: entry.support || []
-    }, {
-      claim: "",
-      verses: entry.tension || []
-    }];
-    return {
-      ...entry,
-      type: t,
-      sides: padSides(sides)
-    };
-  }
-  const s = entry.sides || [];
-  return {
-    ...entry,
-    type: t,
-    heldBy: entry.heldBy || "",
-    support: entry.support && entry.support.length ? entry.support : s[0] && s[0].verses || [],
-    tension: entry.tension && entry.tension.length ? entry.tension : s[1] && s[1].verses || []
   };
 }
 function moveItem(arr, i, dir) {
@@ -5015,587 +4919,195 @@ function TopicPage({
   }, "Draft = only you. Published = visible to everyone.")));
 }
 
-// ---- Claims (denomination / argument) -------------------------------------
-function StudyVerseBucket({
-  kind,
-  items,
-  onAdd,
-  onRemove
+// ---- Graph (argument map) -------------------------------------------------
+// Provenance says whether a claim stands on the source: text/lexicon = grounded (navy),
+// everything else leans on something added (amber). A conclusion gets no badge.
+const PROV_GROUNDED = new Set(["text", "lexicon"]);
+const PROV_LABEL = {
+  text: "Text",
+  lexicon: "Lexicon",
+  tradition: "Tradition",
+  conjecture: "Conjecture",
+  inference: "Inference",
+  observation: "Observation",
+  conclusion: ""
+};
+function ProvBadge({
+  prov
 }) {
-  const isSupport = kind === "support";
-  return /*#__PURE__*/React.createElement("div", {
-    className: "study-bucket study-bucket--" + kind
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "study-bucket-head"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "study-bucket-dot",
-    "aria-hidden": "true"
-  }), /*#__PURE__*/React.createElement("span", {
-    className: "study-bucket-name"
-  }, isSupport ? "Support" : "Tension"), /*#__PURE__*/React.createElement("span", {
-    className: "study-bucket-hint"
-  }, isSupport ? "verses used to hold it" : "verses that sit in conflict with it")), /*#__PURE__*/React.createElement(VerseRows, {
-    items: items,
-    onRemove: onRemove
-  }), /*#__PURE__*/React.createElement(AddRef, {
-    onAdd: onAdd
-  }));
-}
-function StudyRelated({
-  items,
-  onAdd,
-  onRemove
-}) {
-  const [val, setVal] = useState("");
-  const add = () => {
-    const v = val.trim();
-    if (!v) return;
-    if (!items.includes(v)) onAdd(v);
-    setVal("");
-  };
-  return /*#__PURE__*/React.createElement("div", {
-    className: "study-related"
-  }, items.map((r, i) => /*#__PURE__*/React.createElement("span", {
-    className: "study-chip",
-    key: i
-  }, r, /*#__PURE__*/React.createElement("button", {
-    className: "study-chip-x",
-    onClick: () => onRemove(i),
-    "aria-label": "Remove",
-    title: "Remove"
-  }, "\xD7"))), /*#__PURE__*/React.createElement("input", {
-    className: "study-chip-input",
-    type: "text",
-    value: val,
-    placeholder: "link a topic\u2026",
-    onChange: e => setVal(e.target.value),
-    onKeyDown: e => {
-      if (e.key === "Enter") {
-        e.preventDefault();
-        add();
-      }
-    },
-    onBlur: add
-  }));
-}
-function StudyEditor({
-  entry,
-  onChange,
-  onSave,
-  onDelete,
-  onClose,
-  onToggleEdit,
-  saving,
-  savedAt
-}) {
-  const up = patch => onChange({
-    ...entry,
-    ...patch
-  });
-  const isDenom = entry.type === "denomination";
-  return /*#__PURE__*/React.createElement("div", {
-    className: "study-editor"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "study-editor-bar"
-  }, /*#__PURE__*/React.createElement("button", {
-    className: "study-back",
-    onClick: () => entry.id ? onToggleEdit() : onClose()
-  }, "\u2039 ", entry.id ? "Done editing" : "Cancel"), /*#__PURE__*/React.createElement("div", {
-    className: "study-editor-actions"
-  }, savedAt && !saving && /*#__PURE__*/React.createElement("span", {
-    className: "study-saved"
-  }, "Saved \u2713"), entry.id && /*#__PURE__*/React.createElement("button", {
-    className: "study-del",
-    onClick: onDelete
-  }, "Delete"), /*#__PURE__*/React.createElement("button", {
-    className: "study-save",
-    onClick: onSave,
-    disabled: saving || !entry.title.trim()
-  }, saving ? "Saving…" : "Save"))), /*#__PURE__*/React.createElement("div", {
-    className: "study-field study-type-row"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "study-label"
-  }, "Type"), /*#__PURE__*/React.createElement("div", {
-    className: "seg"
-  }, CLAIM_TYPES.map(t => /*#__PURE__*/React.createElement("button", {
-    key: t.id,
-    className: "seg-b" + (entry.type === t.id ? " on" : ""),
-    onClick: () => onChange(convertClaimType(entry, t.id))
-  }, t.label)))), /*#__PURE__*/React.createElement("div", {
-    className: "study-head-row"
-  }, isDenom && /*#__PURE__*/React.createElement("div", {
-    className: "study-field study-field--held"
-  }, /*#__PURE__*/React.createElement("label", {
-    className: "study-label"
-  }, "Held by"), /*#__PURE__*/React.createElement("input", {
-    className: "study-input",
-    type: "text",
-    value: entry.heldBy,
-    placeholder: "e.g. Church of Christ",
-    onChange: e => up({
-      heldBy: e.target.value
-    })
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "study-field study-field--title"
-  }, /*#__PURE__*/React.createElement("label", {
-    className: "study-label"
-  }, entry.type === "argument" ? "Position (one side)" : "Position"), /*#__PURE__*/React.createElement("input", {
-    className: "study-input",
-    type: "text",
-    value: entry.title,
-    placeholder: isDenom ? "What they hold — e.g. Baptism is required for salvation" : "The claim",
-    onChange: e => up({
-      title: e.target.value
-    })
-  }))), /*#__PURE__*/React.createElement("div", {
-    className: "study-field"
-  }, /*#__PURE__*/React.createElement("label", {
-    className: "study-label"
-  }, "Intro ", /*#__PURE__*/React.createElement("span", {
-    className: "study-label-hint"
-  }, "(optional)")), /*#__PURE__*/React.createElement("textarea", {
-    className: "study-textarea study-textarea--sm",
-    value: entry.intro,
-    placeholder: "A short, plain-English lead-in.",
-    onChange: e => up({
-      intro: e.target.value
-    })
-  })), /*#__PURE__*/React.createElement(StudyVerseBucket, {
-    kind: "support",
-    items: entry.support,
-    onAdd: v => up({
-      support: [...entry.support, v]
-    }),
-    onRemove: i => up({
-      support: entry.support.filter((_, j) => j !== i)
-    })
-  }), /*#__PURE__*/React.createElement(StudyVerseBucket, {
-    kind: "tension",
-    items: entry.tension,
-    onAdd: v => up({
-      tension: [...entry.tension, v]
-    }),
-    onRemove: i => up({
-      tension: entry.tension.filter((_, j) => j !== i)
-    })
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "study-field"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "study-res-head"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "study-label"
-  }, "Resolution"), /*#__PURE__*/React.createElement("div", {
-    className: "seg seg--res"
-  }, /*#__PURE__*/React.createElement("button", {
-    className: "seg-b" + (entry.resolution.mode === "middle" ? " on" : ""),
-    onClick: () => up({
-      resolution: {
-        ...entry.resolution,
-        mode: "middle"
-      }
-    })
-  }, "Middle road"), /*#__PURE__*/React.createElement("button", {
-    className: "seg-b" + (entry.resolution.mode === "mystery" ? " on" : ""),
-    onClick: () => up({
-      resolution: {
-        ...entry.resolution,
-        mode: "mystery"
-      }
-    })
-  }, "Open mystery"))), /*#__PURE__*/React.createElement("textarea", {
-    className: "study-textarea",
-    value: entry.resolution.text,
-    placeholder: entry.resolution.mode === "mystery" ? "Why the text leaves this open — what we can and can't say." : "The middle road the text points to — how the support and tension are held together.",
-    onChange: e => up({
-      resolution: {
-        ...entry.resolution,
-        text: e.target.value
-      }
-    })
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "study-field"
-  }, /*#__PURE__*/React.createElement("label", {
-    className: "study-label"
-  }, "Your notes ", /*#__PURE__*/React.createElement("span", {
-    className: "study-label-hint"
-  }, "(private)")), /*#__PURE__*/React.createElement("textarea", {
-    className: "study-textarea study-textarea--sm",
-    value: entry.notes,
-    placeholder: "Commentary, cross-links, things to revisit.",
-    onChange: e => up({
-      notes: e.target.value
-    })
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "study-field"
-  }, /*#__PURE__*/React.createElement("label", {
-    className: "study-label"
-  }, "Related"), /*#__PURE__*/React.createElement(StudyRelated, {
-    items: entry.related,
-    onAdd: r => up({
-      related: [...entry.related, r]
-    }),
-    onRemove: i => up({
-      related: entry.related.filter((_, j) => j !== i)
-    })
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "study-field study-status-row"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "study-label"
-  }, "Visibility"), /*#__PURE__*/React.createElement("div", {
-    className: "seg"
-  }, /*#__PURE__*/React.createElement("button", {
-    className: "seg-b" + (entry.status === "draft" ? " on" : ""),
-    onClick: () => up({
-      status: "draft"
-    })
-  }, "Draft"), /*#__PURE__*/React.createElement("button", {
-    className: "seg-b" + (entry.status === "published" ? " on" : ""),
-    onClick: () => up({
-      status: "published"
-    })
-  }, "Published")), /*#__PURE__*/React.createElement("span", {
-    className: "study-label-hint"
-  }, "Draft = only you. Published is reserved for a future public reader.")));
+  const label = PROV_LABEL[prov] != null ? PROV_LABEL[prov] : prov;
+  if (!label) return null;
+  return /*#__PURE__*/React.createElement("span", {
+    className: "study-prov " + (PROV_GROUNDED.has(prov) ? "study-prov--grounded" : "study-prov--added")
+  }, label);
 }
 
-// ---- Argument (two-sided) -------------------------------------------------
-// One side card in the editor: its claim + its own verse list.
-function ArgumentSideEdit({
-  side,
-  label,
-  onChange
-}) {
-  return /*#__PURE__*/React.createElement("div", {
-    className: "study-side study-side--edit"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "study-side-label"
-  }, label), /*#__PURE__*/React.createElement("input", {
-    className: "study-side-claim-input",
-    type: "text",
-    value: side.claim,
-    placeholder: "This side holds\u2026",
-    onChange: e => onChange({
-      ...side,
-      claim: e.target.value
-    })
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "study-side-vlabel"
-  }, "Verses for this side"), /*#__PURE__*/React.createElement(VerseRows, {
-    items: side.verses,
-    onRemove: i => onChange({
-      ...side,
-      verses: side.verses.filter((_, j) => j !== i)
-    })
-  }), /*#__PURE__*/React.createElement(AddRef, {
-    onAdd: v => onChange({
-      ...side,
-      verses: [...side.verses, v]
-    }),
-    placeholder: "Add a verse for this side"
-  }));
-}
-
-// An argument reads/edits like a topic page (read view + Edit toggle), but its body
-// is the two-sided layout (Side A | Side B) plus the resolution that weighs them.
-function ArgumentPage({
-  entry,
-  editing,
-  onChange,
-  onSave,
-  onDelete,
-  onClose,
-  onToggleEdit,
-  previewReader,
-  saving,
-  savedAt,
+// One claim, compact: its statement + provenance badge, and (for a verse claim) a
+// reference button that jumps into the reader plus the verse text.
+function ClaimChip({
+  claim,
   onNavigate
 }) {
-  const up = patch => onChange({
-    ...entry,
-    ...patch
-  });
-  const sides = padSides(entry.sides);
-  const res = entry.resolution || {
-    mode: "middle",
-    text: ""
-  };
-  const setSide = (i, ns) => up({
-    sides: sides.map((x, j) => j === i ? ns : x)
-  });
-  if (!editing) {
-    const verseCount = sides.reduce((n, s) => n + (s.verses ? s.verses.length : 0), 0);
-    return /*#__PURE__*/React.createElement("div", {
-      className: "study-topic study-arg"
-    }, /*#__PURE__*/React.createElement("div", {
-      className: "study-editor-bar"
-    }, /*#__PURE__*/React.createElement("button", {
-      className: "study-back",
-      onClick: onClose
-    }, "\u2039 ", previewReader ? "Back" : "All arguments"), !previewReader && /*#__PURE__*/React.createElement("button", {
-      className: "study-edit-btn",
-      onClick: onToggleEdit
-    }, "Edit")), /*#__PURE__*/React.createElement("div", {
-      className: "study-eyebrow"
-    }, "Argument"), /*#__PURE__*/React.createElement("h1", {
-      className: "study-topic-title"
-    }, entry.title), /*#__PURE__*/React.createElement("div", {
-      className: "study-topic-meta"
-    }, "two sides \xB7 ", verseCount, " verses"), entry.intro && /*#__PURE__*/React.createElement("p", {
-      className: "study-topic-intro"
-    }, entry.intro), /*#__PURE__*/React.createElement("div", {
-      className: "study-sides study-sides--read"
-    }, sides.map((s, i) => /*#__PURE__*/React.createElement("div", {
-      className: "study-side study-side--read",
-      key: i
-    }, /*#__PURE__*/React.createElement("div", {
-      className: "study-side-tag"
-    }, "Side ", i === 0 ? "A" : "B"), /*#__PURE__*/React.createElement("div", {
-      className: "study-side-claim"
-    }, s.claim || /*#__PURE__*/React.createElement("em", {
-      className: "study-verse-missing"
-    }, "(no claim yet)")), s.verses && s.verses.length ? /*#__PURE__*/React.createElement("div", {
-      className: "study-read-verses"
-    }, s.verses.map((v, j) => /*#__PURE__*/React.createElement("div", {
-      className: "study-read-verse",
-      key: j
-    }, /*#__PURE__*/React.createElement(StudyRef, {
-      v: v,
-      label: v.ref,
-      onNavigate: onNavigate
-    }), /*#__PURE__*/React.createElement("span", {
-      className: "study-read-text"
-    }, v.text || /*#__PURE__*/React.createElement("em", {
-      className: "study-verse-missing"
-    }, "(text not found)"))))) : /*#__PURE__*/React.createElement("div", {
-      className: "study-side-empty"
-    }, "No verses yet.")))), /*#__PURE__*/React.createElement("div", {
-      className: "study-arg-res"
-    }, /*#__PURE__*/React.createElement("div", {
-      className: "study-arg-res-label"
-    }, res.mode === "mystery" ? "An open mystery" : "Where the text lands"), /*#__PURE__*/React.createElement("p", {
-      className: "study-arg-res-text"
-    }, res.text || /*#__PURE__*/React.createElement("em", {
-      className: "study-verse-missing"
-    }, "(not written yet)"))));
-  }
+  if (!claim) return /*#__PURE__*/React.createElement("div", {
+    className: "study-claim study-claim--missing"
+  }, "(missing claim)");
   return /*#__PURE__*/React.createElement("div", {
-    className: "study-editor"
+    className: "study-claim" + (PROV_GROUNDED.has(claim.provenance) ? " study-claim--grounded" : "")
   }, /*#__PURE__*/React.createElement("div", {
-    className: "study-editor-bar"
-  }, /*#__PURE__*/React.createElement("button", {
-    className: "study-back",
-    onClick: () => entry.id ? onToggleEdit() : onClose()
-  }, "\u2039 ", entry.id ? "Done editing" : "Cancel"), /*#__PURE__*/React.createElement("div", {
-    className: "study-editor-actions"
-  }, savedAt && !saving && /*#__PURE__*/React.createElement("span", {
-    className: "study-saved"
-  }, "Saved \u2713"), entry.id && /*#__PURE__*/React.createElement("button", {
-    className: "study-del",
-    onClick: onDelete
-  }, "Delete"), /*#__PURE__*/React.createElement("button", {
-    className: "study-save",
-    onClick: onSave,
-    disabled: saving || !entry.title.trim()
-  }, saving ? "Saving…" : "Save"))), /*#__PURE__*/React.createElement("div", {
-    className: "study-field study-type-row"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "study-label"
-  }, "Type"), /*#__PURE__*/React.createElement("div", {
-    className: "seg"
-  }, CLAIM_TYPES.map(t => /*#__PURE__*/React.createElement("button", {
-    key: t.id,
-    className: "seg-b" + (entry.type === t.id ? " on" : ""),
-    onClick: () => onChange(convertClaimType(entry, t.id))
-  }, t.label)))), /*#__PURE__*/React.createElement("div", {
-    className: "study-field"
-  }, /*#__PURE__*/React.createElement("label", {
-    className: "study-label"
-  }, "The question"), /*#__PURE__*/React.createElement("input", {
-    className: "study-input",
-    type: "text",
-    value: entry.title,
-    placeholder: "What's disputed \u2014 e.g. Can a believer lose their salvation?",
-    onChange: e => up({
-      title: e.target.value
-    })
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "study-field"
-  }, /*#__PURE__*/React.createElement("label", {
-    className: "study-label"
-  }, "Intro ", /*#__PURE__*/React.createElement("span", {
-    className: "study-label-hint"
-  }, "(optional)")), /*#__PURE__*/React.createElement("textarea", {
-    className: "study-textarea study-textarea--sm",
-    value: entry.intro,
-    placeholder: "A short, plain-English lead-in to the question.",
-    onChange: e => up({
-      intro: e.target.value
-    })
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "study-sides study-sides--edit"
-  }, /*#__PURE__*/React.createElement(ArgumentSideEdit, {
-    side: sides[0],
-    label: "Side A",
-    onChange: ns => setSide(0, ns)
-  }), /*#__PURE__*/React.createElement(ArgumentSideEdit, {
-    side: sides[1],
-    label: "Side B",
-    onChange: ns => setSide(1, ns)
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "study-field"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "study-res-head"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "study-label"
-  }, "Resolution"), /*#__PURE__*/React.createElement("div", {
-    className: "seg seg--res"
-  }, /*#__PURE__*/React.createElement("button", {
-    className: "seg-b" + (res.mode === "middle" ? " on" : ""),
-    onClick: () => up({
-      resolution: {
-        ...res,
-        mode: "middle"
-      }
-    })
-  }, "Middle road"), /*#__PURE__*/React.createElement("button", {
-    className: "seg-b" + (res.mode === "mystery" ? " on" : ""),
-    onClick: () => up({
-      resolution: {
-        ...res,
-        mode: "mystery"
-      }
-    })
-  }, "Open mystery"))), /*#__PURE__*/React.createElement("textarea", {
-    className: "study-textarea",
-    value: res.text,
-    placeholder: res.mode === "mystery" ? "Why the text leaves this open — what we can and can't say." : "The middle road the text points to — how both sides are held together.",
-    onChange: e => up({
-      resolution: {
-        ...res,
-        text: e.target.value
-      }
-    })
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "study-field"
-  }, /*#__PURE__*/React.createElement("label", {
-    className: "study-label"
-  }, "Your notes ", /*#__PURE__*/React.createElement("span", {
-    className: "study-label-hint"
-  }, "(private)")), /*#__PURE__*/React.createElement("textarea", {
-    className: "study-textarea study-textarea--sm",
-    value: entry.notes,
-    placeholder: "Commentary, cross-links, things to revisit.",
-    onChange: e => up({
-      notes: e.target.value
-    })
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "study-field"
-  }, /*#__PURE__*/React.createElement("label", {
-    className: "study-label"
-  }, "Related"), /*#__PURE__*/React.createElement(StudyRelated, {
-    items: entry.related,
-    onAdd: r => up({
-      related: [...entry.related, r]
-    }),
-    onRemove: i => up({
-      related: entry.related.filter((_, j) => j !== i)
-    })
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "study-field study-status-row"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "study-label"
-  }, "Visibility"), /*#__PURE__*/React.createElement("div", {
-    className: "seg"
-  }, /*#__PURE__*/React.createElement("button", {
-    className: "seg-b" + (entry.status === "draft" ? " on" : ""),
-    onClick: () => up({
-      status: "draft"
-    })
-  }, "Draft"), /*#__PURE__*/React.createElement("button", {
-    className: "seg-b" + (entry.status === "published" ? " on" : ""),
-    onClick: () => up({
-      status: "published"
-    })
-  }, "Published")), /*#__PURE__*/React.createElement("span", {
-    className: "study-label-hint"
-  }, "Draft = only you. Published is reserved for a future public reader.")));
-}
-
-// ---- Reader views ---------------------------------------------------------
-// A labeled read-only verse list (Support / Tension), for the denomination read view.
-function DenomVerseList({
-  label,
-  items,
-  onNavigate
-}) {
-  if (!items || !items.length) return null;
-  return /*#__PURE__*/React.createElement("div", {
-    className: "study-section"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "study-section-head"
-  }, label), /*#__PURE__*/React.createElement("div", {
-    className: "study-read-verses"
-  }, items.map((v, j) => /*#__PURE__*/React.createElement("div", {
-    className: "study-read-verse",
-    key: j
-  }, /*#__PURE__*/React.createElement(StudyRef, {
-    v: v,
-    label: v.ref,
+    className: "study-claim-head"
+  }, /*#__PURE__*/React.createElement(ProvBadge, {
+    prov: claim.provenance
+  }), claim.ref && /*#__PURE__*/React.createElement(StudyRef, {
+    v: claim,
+    label: claim.ref,
     onNavigate: onNavigate
-  }), /*#__PURE__*/React.createElement("span", {
-    className: "study-read-text"
-  }, v.text || /*#__PURE__*/React.createElement("em", {
-    className: "study-verse-missing"
-  }, "(text not found)"))))));
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "study-claim-text"
+  }, claim.text), claim.ref && claim.verse_text && /*#__PURE__*/React.createElement("div", {
+    className: "study-claim-verse"
+  }, claim.verse_text));
+}
+const linkKey = l => l.from + "→" + l.to + "·" + l.relation;
+
+// One tradition's card: its conclusion, the verdict, the load-bearing joint, then the chain.
+function OverlayCard({
+  overlay,
+  verdict,
+  claims,
+  onNavigate
+}) {
+  const v = verdict || {
+    grounded: false,
+    gap: false,
+    load_bearing: [],
+    soft_steps: [],
+    objections: []
+  };
+  const joints = new Set((v.load_bearing || []).map(linkKey));
+  const cls = v.grounded ? "stands" : v.gap ? "gap" : "depends";
+  const label = v.grounded ? "Stands on the text" : v.gap ? "Incomplete — a step is missing" : "Depends on non-solid joints";
+  const chain = (overlay.links || []).filter(l => l.relation !== "undercuts");
+  const objections = (overlay.links || []).filter(l => l.relation === "undercuts");
+  return /*#__PURE__*/React.createElement("div", {
+    className: "study-overlay"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "study-overlay-head"
+  }, overlay.tradition), /*#__PURE__*/React.createElement("div", {
+    className: "study-overlay-thesis"
+  }, (claims[overlay.thesis] || {}).text || "(no conclusion set)"), /*#__PURE__*/React.createElement("div", {
+    className: "study-verdict study-verdict--" + cls
+  }, label), (v.load_bearing || []).length > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "study-joint-callout"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "study-joint-label"
+  }, "Load-bearing joint \u2014 cut this and the conclusion falls"), (v.load_bearing || []).map((l, i) => /*#__PURE__*/React.createElement("div", {
+    className: "study-joint",
+    key: i
+  }, /*#__PURE__*/React.createElement(ClaimChip, {
+    claim: claims[l.from],
+    onNavigate: onNavigate
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "study-link-rel study-link-rel--weak"
+  }, l.relation, " \xB7 ", l.strength), /*#__PURE__*/React.createElement(ClaimChip, {
+    claim: claims[l.to],
+    onNavigate: onNavigate
+  })))), /*#__PURE__*/React.createElement("div", {
+    className: "study-chain"
+  }, chain.map((l, i) => /*#__PURE__*/React.createElement("div", {
+    className: "study-link study-link--" + l.strength + (joints.has(linkKey(l)) ? " study-link--joint" : ""),
+    key: i
+  }, /*#__PURE__*/React.createElement(ClaimChip, {
+    claim: claims[l.from],
+    onNavigate: onNavigate
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "study-link-rel study-link-rel--" + l.strength
+  }, l.relation, " \xB7 ", l.strength), /*#__PURE__*/React.createElement(ClaimChip, {
+    claim: claims[l.to],
+    onNavigate: onNavigate
+  })))), objections.length > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "study-objections"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "study-objections-label"
+  }, "Open objections (noted, not scored)"), objections.map((l, i) => /*#__PURE__*/React.createElement("div", {
+    className: "study-objection",
+    key: i
+  }, l.note || (claims[l.from] || {}).text + " — attacks the conclusion"))));
 }
 
-// Clean read view of a denomination (position + support/tension + resolution).
-function DenominationRead({
+// Read-only argument-map page (the in-app editor + React Flow canvas come in a later cut).
+function GraphPage({
   entry,
   onClose,
-  onToggleEdit,
   previewReader,
   onNavigate
 }) {
-  const res = entry.resolution || {
-    mode: "middle",
-    text: ""
+  const claims = entry.claims || {};
+  const overlays = entry.overlays || [];
+  const analysis = entry.analysis || {
+    verdicts: [],
+    diff: {}
   };
+  const diff = analysis.diff || {};
+  const sharedVerses = diff.shared_verses || [];
+  const privates = diff.private || {};
+  const hasPart = sharedVerses.length > 0 || Object.keys(privates).some(k => (privates[k] || []).length);
   return /*#__PURE__*/React.createElement("div", {
-    className: "study-topic"
+    className: "study-topic study-graph"
   }, /*#__PURE__*/React.createElement("div", {
     className: "study-editor-bar"
   }, /*#__PURE__*/React.createElement("button", {
     className: "study-back",
     onClick: onClose
-  }, "\u2039 ", previewReader ? "Back" : "All denominations"), !previewReader && /*#__PURE__*/React.createElement("button", {
-    className: "study-edit-btn",
-    onClick: onToggleEdit
-  }, "Edit")), /*#__PURE__*/React.createElement("div", {
+  }, "\u2039 ", previewReader ? "Back" : "All graphs")), /*#__PURE__*/React.createElement("div", {
     className: "study-eyebrow"
-  }, "Denomination"), /*#__PURE__*/React.createElement("h1", {
+  }, "Argument graph"), /*#__PURE__*/React.createElement("h1", {
     className: "study-topic-title"
-  }, entry.title), entry.heldBy && /*#__PURE__*/React.createElement("div", {
+  }, entry.title), /*#__PURE__*/React.createElement("div", {
     className: "study-topic-meta"
-  }, "Held by ", entry.heldBy), entry.intro && /*#__PURE__*/React.createElement("p", {
+  }, Object.keys(claims).length, " claims \xB7 ", overlays.length, " ", overlays.length === 1 ? "tradition" : "traditions"), entry.intro && /*#__PURE__*/React.createElement("p", {
     className: "study-topic-intro"
-  }, entry.intro), /*#__PURE__*/React.createElement(DenomVerseList, {
-    label: "Support",
-    items: entry.support,
+  }, entry.intro), /*#__PURE__*/React.createElement("div", {
+    className: "study-prov-key"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "study-prov study-prov--grounded"
+  }, "Grounded"), " stands on the text \xB7", /*#__PURE__*/React.createElement("span", {
+    className: "study-prov study-prov--added"
+  }, "Added"), " leans on tradition, inference or conjecture"), overlays.map((ov, i) => /*#__PURE__*/React.createElement(OverlayCard, {
+    key: i,
+    overlay: ov,
+    verdict: (analysis.verdicts || [])[i],
+    claims: claims,
     onNavigate: onNavigate
-  }), /*#__PURE__*/React.createElement(DenomVerseList, {
-    label: "Tension",
-    items: entry.tension,
-    onNavigate: onNavigate
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "study-arg-res"
+  })), hasPart && /*#__PURE__*/React.createElement("div", {
+    className: "study-part"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "study-arg-res-label"
-  }, res.mode === "mystery" ? "An open mystery" : "Where the text lands"), /*#__PURE__*/React.createElement("p", {
-    className: "study-arg-res-text"
-  }, res.text || /*#__PURE__*/React.createElement("em", {
+    className: "study-part-label"
+  }, "Where they part"), /*#__PURE__*/React.createElement("div", {
+    className: "study-part-row"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "study-part-key"
+  }, "Verses both lean on:"), " ", sharedVerses.length ? sharedVerses.map((cid, i) => /*#__PURE__*/React.createElement("span", {
+    key: i,
+    className: "study-part-chip"
+  }, (claims[cid] || {}).ref || cid)) : /*#__PURE__*/React.createElement("em", {
     className: "study-verse-missing"
-  }, "(not written yet)"))));
+  }, "they cite different verses")), overlays.map((ov, i) => {
+    const priv = privates[i] || [];
+    if (!priv.length) return null;
+    return /*#__PURE__*/React.createElement("div", {
+      className: "study-part-row",
+      key: i
+    }, /*#__PURE__*/React.createElement("span", {
+      className: "study-part-key"
+    }, ov.tradition, " adds:"), /*#__PURE__*/React.createElement("div", {
+      className: "study-part-privs"
+    }, priv.map((cid, j) => /*#__PURE__*/React.createElement("div", {
+      className: "study-part-priv",
+      key: j
+    }, /*#__PURE__*/React.createElement(ProvBadge, {
+      prov: (claims[cid] || {}).provenance
+    }), " ", (claims[cid] || {}).text))));
+  })));
 }
 
 // ---- The Study tab --------------------------------------------------------
@@ -5655,49 +5167,30 @@ function StudyView({
           status: d.status || "draft",
           source: d.source || ""
         });
-        setEditMode(false);
-      } else if (d.type === "argument") {
-        setEditing({
-          id: d.id,
-          type: "argument",
-          title: d.title || "",
-          intro: d.intro || "",
-          sides: padSides(d.sides),
-          resolution: d.resolution || {
-            mode: "middle",
-            text: ""
-          },
-          notes: d.notes || "",
-          related: d.related || [],
-          status: d.status || "draft"
-        });
-        setEditMode(false);
       } else {
+        // graph — read-only in this cut
         setEditing({
           id: d.id,
-          type: d.type,
+          type: "graph",
           title: d.title || "",
-          heldBy: d.heldBy || "",
           intro: d.intro || "",
-          support: d.support || [],
-          tension: d.tension || [],
-          resolution: d.resolution || {
-            mode: "middle",
-            text: ""
+          claims: d.claims || {},
+          overlays: d.overlays || [],
+          analysis: d.analysis || {
+            verdicts: [],
+            diff: {}
           },
-          notes: d.notes || "",
-          related: d.related || [],
           status: d.status || "draft"
         });
-        setEditMode(false); // read-first; Edit opens the editor (admin only)
       }
+      setEditMode(false);
     });
   };
   const newEntry = () => {
     setSavedAt(null);
     setEditMode(true);
-    setEditing(module === "topic" ? blankTopic() : module === "argument" ? blankArgument() : blankClaim(module));
-  };
+    setEditing(blankTopic());
+  }; // only topics are authored in-app; graphs come from the script
 
   // Opened from the metaV sidebar: jump straight into a name-topic's page.
   useEffect(() => {
@@ -5707,40 +5200,17 @@ function StudyView({
     }
   }, [pending]);
   const save = () => {
-    if (!editing || !editing.title.trim() || saving) return;
+    if (!editing || !editing.title.trim() || saving) return; // only topic-like entries have an in-app editor
     setSaving(true);
-    let payload;
-    if (isTopicLike(editing.type)) {
-      payload = {
-        ...editing,
-        sections: editing.sections.map(s => ({
-          heading: s.heading,
-          verses: s.verses.map(v => ({
-            ref: v.ref
-          }))
-        }))
-      };
-    } else if (editing.type === "argument") {
-      payload = {
-        ...editing,
-        sides: padSides(editing.sides).map(s => ({
-          claim: s.claim,
-          verses: (s.verses || []).map(v => ({
-            ref: v.ref
-          }))
-        }))
-      };
-    } else {
-      payload = {
-        ...editing,
-        support: editing.support.map(v => ({
-          ref: v.ref
-        })),
-        tension: editing.tension.map(v => ({
+    const payload = {
+      ...editing,
+      sections: editing.sections.map(s => ({
+        heading: s.heading,
+        verses: s.verses.map(v => ({
           ref: v.ref
         }))
-      };
-    }
+      }))
+    };
     api.studySave(payload).then(d => {
       setSaving(false);
       if (d && d.id) {
@@ -5790,46 +5260,17 @@ function StudyView({
       savedAt: savedAt,
       onNavigate: onNavigateToLibrary
     }));
-    if (editing.type === "argument") return /*#__PURE__*/React.createElement("div", {
-      className: "study-view"
-    }, /*#__PURE__*/React.createElement(ArgumentPage, {
-      entry: editing,
-      editing: !ro,
-      onChange: setEditing,
-      onSave: save,
-      onDelete: del,
-      onClose: close,
-      onToggleEdit: () => setEditMode(m => !m),
-      previewReader: readerView,
-      saving: saving,
-      savedAt: savedAt,
-      onNavigate: onNavigateToLibrary
-    }));
-    if (ro) return /*#__PURE__*/React.createElement("div", {
-      className: "study-view"
-    }, /*#__PURE__*/React.createElement(DenominationRead, {
-      entry: editing,
-      onClose: close,
-      onToggleEdit: () => setEditMode(true),
-      previewReader: readerView,
-      onNavigate: onNavigateToLibrary
-    }));
     return /*#__PURE__*/React.createElement("div", {
       className: "study-view"
-    }, /*#__PURE__*/React.createElement(StudyEditor, {
+    }, /*#__PURE__*/React.createElement(GraphPage, {
       entry: editing,
-      onChange: setEditing,
-      onSave: save,
-      onDelete: del,
       onClose: close,
-      onToggleEdit: () => setEditMode(false),
-      saving: saving,
-      savedAt: savedAt
+      previewReader: readerView,
+      onNavigate: onNavigateToLibrary
     }));
   }
   const isTopic = module === "topic";
-  const moduleName = isTopic ? "Topics" : module === "denomination" ? "Denominations" : "Arguments";
-  const newLabel = isTopic ? "topic" : module === "denomination" ? "denomination" : "argument";
+  const moduleName = isTopic ? "Topics" : "Graphs";
   const qs = q.trim().toLowerCase();
   const pool = (entries || []).filter(e => !readerView || e.status === "published"); // a reader only sees published
   const sortKey = e => displayTitle(e.title || "").toLowerCase().replace(/^(?:the|a|an)\s+/, "");
@@ -5855,12 +5296,12 @@ function StudyView({
     className: "study-list-head"
   }, /*#__PURE__*/React.createElement("h1", {
     className: "stats-title"
-  }, moduleName), !readerView && /*#__PURE__*/React.createElement("button", {
+  }, moduleName), !readerView && isTopic && /*#__PURE__*/React.createElement("button", {
     className: "study-new",
     onClick: newEntry
-  }, "+ New ", newLabel)), /*#__PURE__*/React.createElement("div", {
+  }, "+ New topic")), /*#__PURE__*/React.createElement("div", {
     className: "stats-sub"
-  }, isTopic ? "Browse a subject and its verses, grouped by subtopic. Mostly filled from MetaV — light edits only." : module === "argument" ? "Two sides laid out with their own verses, and where the text lands between them — or stays a mystery." : "A position with its support and tension verses, and where the text resolves it — or stays a mystery."), pool.length > 0 && /*#__PURE__*/React.createElement("input", {
+  }, isTopic ? "Browse a subject and its verses, grouped by subtopic. Mostly filled from MetaV — light edits only." : "Arguments as claims and links — each side's chain stress-tested to show where it actually load-bears."), pool.length > 0 && /*#__PURE__*/React.createElement("input", {
     className: "study-search-input",
     type: "text",
     value: q,
@@ -5870,21 +5311,19 @@ function StudyView({
     className: "stats-empty"
   }, "Loading\u2026") : shown.length === 0 ? /*#__PURE__*/React.createElement("div", {
     className: "stats-empty"
-  }, qs ? "No matches for “" + q + "”." : !adminUser ? "No study topics yet — check back soon." : previewReader ? "Nothing published yet — mark an entry Published to show it here." : "Nothing here yet — start with “+ New " + newLabel + "”." + (isTopic ? " (Or import from MetaV.)" : "")) : /*#__PURE__*/React.createElement("div", {
+  }, qs ? "No matches for “" + q + "”." : !adminUser ? "No study topics yet — check back soon." : previewReader ? "Nothing published yet — mark an entry Published to show it here." : isTopic ? "Nothing here yet — start with “+ New topic”. (Or import from MetaV.)" : "No graphs yet — add one with scripts/add_study_graph.py.") : /*#__PURE__*/React.createElement("div", {
     className: "study-rows"
   }, shown.map(e => /*#__PURE__*/React.createElement("button", {
     className: "study-row",
     key: e.id,
     onClick: () => openEntry(e.id)
   }, !isTopic && /*#__PURE__*/React.createElement("span", {
-    className: "study-badge study-badge--" + e.type
-  }, STUDY_TYPE_LABEL[e.type] || e.type), /*#__PURE__*/React.createElement("span", {
+    className: "study-badge study-badge--graph"
+  }, "Graph"), /*#__PURE__*/React.createElement("span", {
     className: "study-row-title"
-  }, isTopic ? displayTitle(e.title) : e.title, e.heldBy ? /*#__PURE__*/React.createElement("span", {
-    className: "study-row-held"
-  }, " \xB7 ", e.heldBy) : null), /*#__PURE__*/React.createElement("span", {
+  }, isTopic ? displayTitle(e.title) : e.title), /*#__PURE__*/React.createElement("span", {
     className: "study-row-n"
-  }, e.n || 0, " ", isTopic ? "verses" : "refs"), !readerView && e.status === "draft" && /*#__PURE__*/React.createElement("span", {
+  }, e.n || 0, " ", isTopic ? "verses" : "claims"), !readerView && e.status === "draft" && /*#__PURE__*/React.createElement("span", {
     className: "study-row-draft"
   }, "draft")))));
 }

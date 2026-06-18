@@ -21,6 +21,7 @@ jobs:
           python tests/test_strongs_join.py
           python tests/test_build_invariants.py
           python tests/test_folded_fixes.py
+          python tests/test_argmap.py
 
   frontend:
     runs-on: ubuntu-latest
