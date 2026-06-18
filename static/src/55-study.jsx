@@ -386,7 +386,7 @@ function GraphSvg({ claims, overlay, verdict, shared, onNavigate }) {
   const X = id => CH.PAD + pos[id].c * CH.COLGAP;
   const Y = id => CH.PAD + pos[id].y;
   const joints = new Set(((verdict && verdict.load_bearing) || []).map(linkKey));
-  const edgeKind = l => joints.has(linkKey(l)) ? "joint" : (l.strength === "solid" ? "solid" : "soft");
+  const edgeKind = l => joints.has(linkKey(l)) ? "joint" : l.strength;   // solid | contested | weak
   const nodeKind = id => {
     const p = (claims[id] || {}).provenance;
     return p === "conclusion" ? "concl" : (PROV_GROUNDED.has(p) ? "verse" : "added");
@@ -394,7 +394,7 @@ function GraphSvg({ claims, overlay, verdict, shared, onNavigate }) {
   return (
     <svg className="study-svg" viewBox={"0 0 " + W + " " + H} width={W} height={H} role="img">
       <defs>
-        {["solid", "soft", "joint"].map(k => (
+        {["solid", "contested", "weak", "joint"].map(k => (
           <marker key={k} id={"ah-" + k} className={"study-arrow study-arrow--" + k}
             markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto" markerUnits="userSpaceOnUse">
             <path d="M0,0 L7,3 L0,6 Z" />
@@ -471,7 +471,8 @@ function GraphChart({ claims, overlays, analysis, onNavigate }) {
         <span><i className="study-key study-key--added" /> inference / tradition</span>
         <span><i className="study-key study-key--concl" /> conclusion</span>
         <span><i className="study-key-line study-key-line--solid" /> established</span>
-        <span><i className="study-key-line study-key-line--soft" /> contested</span>
+        <span><i className="study-key-line study-key-line--contested" /> contested</span>
+        <span><i className="study-key-line study-key-line--weak" /> weak</span>
         <span><i className="study-key-line study-key-line--joint" /> load-bearing joint</span>
       </div>
       {why.length > 0 && (

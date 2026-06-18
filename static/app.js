@@ -5080,7 +5080,7 @@ function GraphSvg({
   const X = id => CH.PAD + pos[id].c * CH.COLGAP;
   const Y = id => CH.PAD + pos[id].y;
   const joints = new Set((verdict && verdict.load_bearing || []).map(linkKey));
-  const edgeKind = l => joints.has(linkKey(l)) ? "joint" : l.strength === "solid" ? "solid" : "soft";
+  const edgeKind = l => joints.has(linkKey(l)) ? "joint" : l.strength; // solid | contested | weak
   const nodeKind = id => {
     const p = (claims[id] || {}).provenance;
     return p === "conclusion" ? "concl" : PROV_GROUNDED.has(p) ? "verse" : "added";
@@ -5091,7 +5091,7 @@ function GraphSvg({
     width: W,
     height: H,
     role: "img"
-  }, /*#__PURE__*/React.createElement("defs", null, ["solid", "soft", "joint"].map(k => /*#__PURE__*/React.createElement("marker", {
+  }, /*#__PURE__*/React.createElement("defs", null, ["solid", "contested", "weak", "joint"].map(k => /*#__PURE__*/React.createElement("marker", {
     key: k,
     id: "ah-" + k,
     className: "study-arrow study-arrow--" + k,
@@ -5192,8 +5192,10 @@ function GraphChart({
   }), " conclusion"), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("i", {
     className: "study-key-line study-key-line--solid"
   }), " established"), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("i", {
-    className: "study-key-line study-key-line--soft"
+    className: "study-key-line study-key-line--contested"
   }), " contested"), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("i", {
+    className: "study-key-line study-key-line--weak"
+  }), " weak"), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("i", {
     className: "study-key-line study-key-line--joint"
   }), " load-bearing joint")), why.length > 0 && /*#__PURE__*/React.createElement("div", {
     className: "study-chart-why"
