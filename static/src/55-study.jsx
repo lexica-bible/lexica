@@ -487,6 +487,14 @@ function PanZoom({ movedRef, resetKey, children }) {
   const tf = useRef({ s: 1, x: 0, y: 0 });
   const drag = useRef(null);
   const pinch = useRef(null);
+  // The boxed pan/zoom window is for touch screens. On desktop the chart fits fine, so
+  // we just render it whole (no clip box, no +/-/Fit, no gestures).
+  const [mobile, setMobile] = useState(() => typeof window !== "undefined" && window.innerWidth < 1100);
+  useEffect(() => {
+    const f = () => setMobile(window.innerWidth < 1100);
+    window.addEventListener("resize", f);
+    return () => window.removeEventListener("resize", f);
+  }, []);
 
   const apply = () => {
     const el = inner.current;
@@ -515,7 +523,10 @@ function PanZoom({ movedRef, resetKey, children }) {
     if (e.touches.length === 2) {
       const [a, b] = e.touches;
       const [mx, my] = vpt((a.clientX + b.clientX) / 2, (a.clientY + b.clientY) / 2);
-      pinch.current = { d: Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY), mx, my, s: tf.current.s };
+      const c = tf.current;
+      // Remember the WHOLE transform at gesture start, so each move recomputes from it —
+      // zoom about the start pinch point AND pan as the fingers' midpoint slides.
+      pinch.current = { d: Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY), mx, my, s: c.s, x: c.x, y: c.y };
       drag.current = null;
     } else if (e.touches.length === 1) {
       drag.current = { x: e.touches[0].clientX, y: e.touches[0].clientY, moved: 0 };
@@ -526,7 +537,13 @@ function PanZoom({ movedRef, resetKey, children }) {
     if (pinch.current && e.touches.length === 2) {
       const [a, b] = e.touches;
       const d = Math.hypot(a.clientX - b.clientX, a.clientY - b.clientY);
-      zoomTo(pinch.current.s * (d / pinch.current.d), pinch.current.mx, pinch.current.my);
+      const [mx, my] = vpt((a.clientX + b.clientX) / 2, (a.clientY + b.clientY) / 2);
+      const p = pinch.current, c = tf.current;
+      const k = clamp(p.s * (d / p.d)) / p.s;        // how much we've scaled since the gesture began
+      c.s = p.s * k;
+      c.x = p.mx - (p.mx - p.x) * k + (mx - p.mx);    // zoom about the start point, then follow the fingers
+      c.y = p.my - (p.my - p.y) * k + (my - p.my);
+      apply();
     } else if (drag.current && e.touches.length === 1) {
       const t = e.touches[0], dx = t.clientX - drag.current.x, dy = t.clientY - drag.current.y;
       tf.current.x += dx; tf.current.y += dy;
@@ -553,6 +570,9 @@ function PanZoom({ movedRef, resetKey, children }) {
   const endMouse = () => { drag.current = null; };
   const onWheel = e => { const [mx, my] = vpt(e.clientX, e.clientY); zoomTo(tf.current.s * (e.deltaY < 0 ? 1.1 : 0.9), mx, my); e.preventDefault(); };
   const zoomBtn = f => () => { const v = view.current; zoomTo(tf.current.s * f, v.clientWidth / 2, v.clientHeight / 2); };
+
+  // Desktop: no clip box — show the whole chart, scrolling sideways only if it's ever wider than the page.
+  if (!mobile) return <div className="study-pz study-pz--static">{children}</div>;
 
   return (
     <div className="study-pz">

@@ -3933,6 +3933,9 @@ button.study-verse-ref { border: none; }
   display: flex; align-items: center; justify-content: center; box-shadow: 0 1px 3px rgba(0,0,0,.12); }
 .study-pz-btn:hover { border-color: var(--ink-3); }
 .study-pz-btn--fit { font-size: 13px; }
+/* Desktop: the chart is shown whole (no clip box / gestures); scroll sideways only if oversized. */
+.study-pz--static { overflow-x: auto; }
+.study-pz--static .study-svg { max-width: 100%; height: auto; }
 .study-node--link { cursor: pointer; }
 /* node = a foreignObject box so the label WRAPS to the box width (SVG text can't wrap) */
 .study-node-box {
