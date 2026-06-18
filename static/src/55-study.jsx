@@ -354,46 +354,39 @@ function GraphSvg({ claims, overlay, verdict, shared, onNavigate }) {
   }
   const byCol = {};
   ids.forEach(id => { (byCol[col[id]] = byCol[col[id]] || []).push(id); });
-  // Links each way: preds = what feeds a node; succs = what a verse feeds (orders column 0).
+  // Links each way: preds = what feeds a node; succs = what a node feeds.
   const preds = {}, succs = {};
   carry.forEach(l => {
     (preds[l.to] = preds[l.to] || []).push(l.from);
     (succs[l.from] = succs[l.from] || []).push(l.to);
   });
-  const rank = id => { const i = shared.indexOf(id); return i < 0 ? 1e6 : i; };
+  const rank = id => { const i = shared.indexOf(id); return i < 0 ? 1e6 : i; };   // tiebreak only
   const cols = Object.keys(byCol).map(Number).sort((a, b) => a - b);
-  const mid = Math.max(0, (byCol[0] || []).length - 1) / 2 * CH.ROWGAP;
   const yy = {};
-  // Place each later column at the average row of the things feeding it (barycenter), then nudge
-  // siblings apart so boxes don't overlap. Column 0 is laid on a fixed row grid in its current order.
-  const placeForward = () => {
-    (byCol[0] || []).forEach((id, r) => { yy[id] = r * CH.ROWGAP; });
-    cols.forEach(c => {
-      if (c === 0) return;
-      byCol[c].forEach(id => {
-        const ps = (preds[id] || []).filter(p => p in yy);
-        yy[id] = ps.length ? ps.reduce((s, p) => s + yy[p], 0) / ps.length : mid;
-      });
-      byCol[c].sort((a, b) => yy[a] - yy[b]);
-      for (let k = 1; k < byCol[c].length; k++) {
-        const a = byCol[c][k - 1], b = byCol[c][k];
-        if (yy[b] - yy[a] < CH.ROWGAP) yy[b] = yy[a] + CH.ROWGAP;
-      }
+  // Pull every node in a column toward the average row of its neighbours (the nodes feeding it,
+  // or the nodes it feeds), re-sort by that, then push siblings apart so boxes never overlap.
+  const relax = (c, neigh) => {
+    byCol[c].forEach(id => {
+      const ns = (neigh[id] || []).filter(n => n in yy);
+      if (ns.length) yy[id] = ns.reduce((s, n) => s + yy[n], 0) / ns.length;
     });
+    byCol[c].sort((a, b) => (yy[a] - yy[b]) || (rank(a) - rank(b)));
+    for (let k = 1; k < byCol[c].length; k++) {
+      const a = byCol[c][k - 1], b = byCol[c][k];
+      if (yy[b] - yy[a] < CH.ROWGAP) yy[b] = yy[a] + CH.ROWGAP;
+    }
   };
-  if (byCol[0]) byCol[0].sort((a, b) => rank(a) - rank(b));   // seed order: shared verses first
-  placeForward();
-  // Reorder column 0 to sit beside the node each verse FEEDS — groups a target's feeders together
-  // so the support lines stop fanning out and crossing. Shared-verse order is only the tiebreaker,
-  // so the cross-overlay pinning still mostly holds within a band. Then re-place the later columns.
-  if (byCol[0]) {
-    const targetY = id => {
-      const ss = (succs[id] || []).filter(s => s in yy);
-      return ss.length ? ss.reduce((s, p) => s + yy[p], 0) / ss.length : 0;
-    };
-    byCol[0].sort((a, b) => (targetY(a) - targetY(b)) || (rank(a) - rank(b)));
-    placeForward();
+  if (byCol[0]) byCol[0].sort((a, b) => rank(a) - rank(b));        // a stable starting order
+  (byCol[0] || []).forEach((id, r) => { yy[id] = r * CH.ROWGAP; });
+  cols.forEach(c => { if (c > 0) relax(c, preds); });             // seed everyone with one forward pass
+  // Sweep both directions a few times — the standard untangle. Going right→left reorders the
+  // verses to sit beside what they feed; left→right re-centres the claims on their feeders.
+  for (let pass = 0; pass < 4; pass++) {
+    for (let i = cols.length - 1; i >= 0; i--) relax(cols[i], succs);
+    for (let i = 0; i < cols.length; i++) if (cols[i] > 0) relax(cols[i], preds);
   }
+  const minY = Math.min(0, ...ids.map(id => yy[id] || 0));         // tighten back to the top edge
+  if (minY) ids.forEach(id => { yy[id] = (yy[id] || 0) - minY; });
   const pos = {};
   ids.forEach(id => { pos[id] = { c: col[id], y: yy[id] || 0 }; });
   const maxY = Math.max(0, ...ids.map(id => pos[id].y));
