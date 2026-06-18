@@ -3923,7 +3923,8 @@ button.study-verse-ref { border: none; }
 /* Pan/zoom window for the chart (mobile-friendly): a bounded canvas you drag + pinch. */
 .study-pz { position: relative; margin: 4px 0 10px; }
 .study-pz-view { overflow: hidden; touch-action: none; height: 58vh; max-height: 460px; min-height: 240px;
-  background: var(--bg-sunk); border: 1px solid var(--rule-2); border-radius: 8px; cursor: grab; }
+  /* page color, NOT --bg-sunk: the inference/tradition boxes are --bg-sunk and were blending into the canvas. */
+  background: var(--paper); border: 1px solid var(--rule-2); border-radius: 8px; cursor: grab; }
 .study-pz-view:active { cursor: grabbing; }
 .study-pz-inner { transform-origin: 0 0; display: inline-block; will-change: transform; }
 .study-pz-inner .study-svg { max-width: none; width: auto; height: auto; }
