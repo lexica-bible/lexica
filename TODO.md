@@ -392,7 +392,8 @@ OPEN:
 - Graph CUT 2: undercut scoring + the graph "In studies" verse back-reference are DONE 2026-06-18
   (objections score on a grounded+solid bar → knockout/overturned; graphs feed `for_verse`, admin-gated).
   STILL deferred: an in-app graph editor (user DECLINED — he authors via the script through CC) + a React
-  Flow drag canvas.
+  Flow drag canvas + a **Strong's deep-link from a graph node** (a lexicon claim like baptizō/G907 should
+  open the Lexicon tab on click; today graph boxes only deep-link verse refs to the reader, 2026-06-18).
 `code: argmap.py + views_study.py + static/src/55-study.jsx; scripts/{add_study_topic,add_study_graph,load_study_topics,generate_topic_intros,publish_topics,find_topics,find_topic_dupes,merge_the_dupes}.py; memory project_study_modules`
 
 ### Let study results shape AI search answers — divine council is the test case (idea, 2026-06-17)
