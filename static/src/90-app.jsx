@@ -12,6 +12,7 @@ function App() {
   const [error, setError] = useState("");
   const [aiNotice, setAiNotice] = useState("");
   const [activeEntry, setActiveEntry] = useState(null);
+  const [entryView, setEntryView] = useState(null);   // which tab opened the word card (library|search|lexicon) — scopes the rail to that tab
   const [corpusFilter, setCorpusFilter] = useState("all"); // "all" | "ot" | "nt"
   const [corpusSort, setCorpusSort] = useState("curated"); // "curated" | "canonical"
   const [corpusTextMode, setCorpusTextMode] = useState("abp"); // "abp" | "kjv"
@@ -287,14 +288,21 @@ function App() {
 
   const searchLabel = q2.trim();
 
+  // The right rail belongs to the tab that opened a card: a word card scopes to
+  // where it was opened (Library, Search, or Lexicon), xref + note are Library-only.
+  // Leaving that tab hides the card (the state is kept), and returning shows it again
+  // — so a card never bleeds onto a tab it wasn't opened in.
+  const showWord = !!activeEntry && mainView === entryView;
+  const showXref = !!libCrossRef && mainView === "library";
+  const showNote = !!activeNote && mainView === "library";
   // Desktop Library: when nothing is selected, the right panel rests on the
-  // book/chapter overview (SummaryPanel). It fills the same slot the word-study
-  // and xref panels use, so `has-detail` stays on and the reading column keeps
-  // its condensed (three-column) measure. Mobile never shows the summary.
-  const showLibSummary = !isMobile && mainView === "library" && !activeEntry && !libCrossRef && !activeNote;
+  // book/chapter overview (SummaryPanel) — same slot the word/xref panels use, so
+  // `has-detail` stays on and the reading column keeps its condensed measure. Mobile
+  // never shows the summary.
+  const showLibSummary = !isMobile && mainView === "library" && !showWord && !showXref && !showNote;
 
   return (
-    <div className={"app view-" + mainView + " " + ((activeEntry || libCrossRef || activeNote || showLibSummary) ? "has-detail " : "") + (focusMode && mainView === "library" ? "focus-mode" : "")}>
+    <div className={"app view-" + mainView + " " + ((showWord || showXref || showNote || showLibSummary) ? "has-detail " : "") + (focusMode && mainView === "library" ? "focus-mode" : "")}>
       <Header activeView={mainView} onNavChange={handleNavChange} owner={owner}/>
       {isMobile && mainView !== "library" && (
         <div className="mobile-brand-bar">
@@ -309,7 +317,7 @@ function App() {
       <main className="main">
         {libEverVisited && (
           <div style={{ display: mainView === "library" ? undefined : "none" }}>
-            <LibraryView nav={libNav} onNavChange={setLibNav} onWordClick={(e) => { setLibCrossRef(null); setActiveNote(null); setActiveEntry(e); }} onVerseNumberClick={handleVerseNumberClick} onOpenNote={openNote} onTranslationChange={setLibTranslation} isMobile={isMobile} showSummary={showLibSummary} focusMode={focusMode} onToggleFocus={() => setFocusMode(f => !f)} onDetailBaseChange={setLibDetailBase} />
+            <LibraryView nav={libNav} onNavChange={setLibNav} onWordClick={(e) => { setLibCrossRef(null); setActiveNote(null); setActiveEntry(e); setEntryView("library"); }} onVerseNumberClick={handleVerseNumberClick} onOpenNote={openNote} onTranslationChange={setLibTranslation} isMobile={isMobile} showSummary={showLibSummary} focusMode={focusMode} onToggleFocus={() => setFocusMode(f => !f)} onDetailBaseChange={setLibDetailBase} />
           </div>
         )}
         {mainView === "about" && <AboutView owner={owner} />}
@@ -327,7 +335,7 @@ function App() {
               // summary, else tucks under the open panel and surfaces when it closes).
               if (!isMobile) setLibCrossRef({ book, chapter, verse, translation: corpus === "kjv" ? "kjv" : "abp" });
             }}
-            onWordClick={(e) => setActiveEntry(e)}
+            onWordClick={(e) => { setActiveEntry(e); setEntryView("lexicon"); }}
             pendingStrongs={lexiconPendingStrongs}
             onPendingStrongsConsumed={() => setLexiconPendingStrongs(null)}
             isMobile={isMobile}
@@ -373,7 +381,7 @@ function App() {
               query={aiMeta.query}
               explanation={aiMeta.explanation}
               keyStrongs={aiMeta.keyStrongs || []}
-              onPick={(e) => setActiveEntry(e)}
+              onPick={(e) => { setActiveEntry(e); setEntryView("search"); }}
             />
           )}
 
@@ -409,7 +417,7 @@ function App() {
                   Searching…
                 </div>
               ) : (
-                <CorpusResults allResults={corpusFilteredResults} primaryStrongs={primaryStrongs} citedStrongs={citedStrongsApp} showAll={showAllAi} onWordClick={(e) => setActiveEntry(e)} onReadInContext={handleReadInContext} corpusSort={corpusSort} textMode={corpusTextMode} />
+                <CorpusResults allResults={corpusFilteredResults} primaryStrongs={primaryStrongs} citedStrongs={citedStrongsApp} showAll={showAllAi} onWordClick={(e) => { setActiveEntry(e); setEntryView("search"); }} onReadInContext={handleReadInContext} corpusSort={corpusSort} textMode={corpusTextMode} />
               )}
             </>
           )}
@@ -421,7 +429,7 @@ function App() {
         </div>
       </main>
 
-      {activeEntry && !isMobile && (
+      {showWord && !isMobile && (
         <DetailPanel
           entry={activeEntry}
           isMobile={false}
@@ -436,7 +444,7 @@ function App() {
         />
       )}
 
-      {activeEntry && isMobile && (
+      {showWord && isMobile && (
         <>
           <div className="sheet-scrim" onClick={() => setActiveEntry(null)}/>
           <DetailPanel
@@ -451,14 +459,14 @@ function App() {
           />
         </>
       )}
-      {activeNote && (
+      {showNote && (
         <NotesPanel
           noteId={activeNote}
           isMobile={isMobile}
           onClose={() => setActiveNote(null)}
         />
       )}
-      {libCrossRef && !isMobile && !activeEntry && !activeNote && (
+      {showXref && !isMobile && !showWord && !showNote && (
         <CrossRefPanel
           source={libCrossRef}
           translation={libTranslation === "kjv" ? "kjv" : "abp"}
@@ -475,7 +483,7 @@ function App() {
           backLabel={libDetailBase === "intro" ? "Intro" : "Overview"}
         />
       )}
-      {libCrossRef && isMobile && (
+      {showXref && isMobile && (
         <>
           <div className="sheet-scrim" onClick={() => { setLibCrossRef(null); setLibNav(prev => prev ? { ...prev, highlight: null } : prev); }} />
           <CrossRefPanel

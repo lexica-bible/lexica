@@ -12811,6 +12811,7 @@ function App() {
   const [error, setError] = useState("");
   const [aiNotice, setAiNotice] = useState("");
   const [activeEntry, setActiveEntry] = useState(null);
+  const [entryView, setEntryView] = useState(null); // which tab opened the word card (library|search|lexicon) — scopes the rail to that tab
   const [corpusFilter, setCorpusFilter] = useState("all"); // "all" | "ot" | "nt"
   const [corpusSort, setCorpusSort] = useState("curated"); // "curated" | "canonical"
   const [corpusTextMode, setCorpusTextMode] = useState("abp"); // "abp" | "kjv"
@@ -13158,13 +13159,20 @@ function App() {
   };
   const searchLabel = q2.trim();
 
+  // The right rail belongs to the tab that opened a card: a word card scopes to
+  // where it was opened (Library, Search, or Lexicon), xref + note are Library-only.
+  // Leaving that tab hides the card (the state is kept), and returning shows it again
+  // — so a card never bleeds onto a tab it wasn't opened in.
+  const showWord = !!activeEntry && mainView === entryView;
+  const showXref = !!libCrossRef && mainView === "library";
+  const showNote = !!activeNote && mainView === "library";
   // Desktop Library: when nothing is selected, the right panel rests on the
-  // book/chapter overview (SummaryPanel). It fills the same slot the word-study
-  // and xref panels use, so `has-detail` stays on and the reading column keeps
-  // its condensed (three-column) measure. Mobile never shows the summary.
-  const showLibSummary = !isMobile && mainView === "library" && !activeEntry && !libCrossRef && !activeNote;
+  // book/chapter overview (SummaryPanel) — same slot the word/xref panels use, so
+  // `has-detail` stays on and the reading column keeps its condensed measure. Mobile
+  // never shows the summary.
+  const showLibSummary = !isMobile && mainView === "library" && !showWord && !showXref && !showNote;
   return /*#__PURE__*/React.createElement("div", {
-    className: "app view-" + mainView + " " + (activeEntry || libCrossRef || activeNote || showLibSummary ? "has-detail " : "") + (focusMode && mainView === "library" ? "focus-mode" : "")
+    className: "app view-" + mainView + " " + (showWord || showXref || showNote || showLibSummary ? "has-detail " : "") + (focusMode && mainView === "library" ? "focus-mode" : "")
   }, /*#__PURE__*/React.createElement(Header, {
     activeView: mainView,
     onNavChange: handleNavChange,
@@ -13204,6 +13212,7 @@ function App() {
       setLibCrossRef(null);
       setActiveNote(null);
       setActiveEntry(e);
+      setEntryView("library");
     },
     onVerseNumberClick: handleVerseNumberClick,
     onOpenNote: openNote,
@@ -13252,7 +13261,10 @@ function App() {
         translation: corpus === "kjv" ? "kjv" : "abp"
       });
     },
-    onWordClick: e => setActiveEntry(e),
+    onWordClick: e => {
+      setActiveEntry(e);
+      setEntryView("lexicon");
+    },
     pendingStrongs: lexiconPendingStrongs,
     onPendingStrongsConsumed: () => setLexiconPendingStrongs(null),
     isMobile: isMobile
@@ -13290,7 +13302,10 @@ function App() {
     query: aiMeta.query,
     explanation: aiMeta.explanation,
     keyStrongs: aiMeta.keyStrongs || [],
-    onPick: e => setActiveEntry(e)
+    onPick: e => {
+      setActiveEntry(e);
+      setEntryView("search");
+    }
   }), mode === "ai" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "results-head"
   }, /*#__PURE__*/React.createElement("div", {
@@ -13354,13 +13369,16 @@ function App() {
     primaryStrongs: primaryStrongs,
     citedStrongs: citedStrongsApp,
     showAll: showAllAi,
-    onWordClick: e => setActiveEntry(e),
+    onWordClick: e => {
+      setActiveEntry(e);
+      setEntryView("search");
+    },
     onReadInContext: handleReadInContext,
     corpusSort: corpusSort,
     textMode: corpusTextMode
   })), /*#__PURE__*/React.createElement("footer", {
     className: "foot"
-  }, /*#__PURE__*/React.createElement("span", null, "Lexica \xB7 Greek Septuagint (LXX) \xB7 Apostolic Bible Polyglot Interlinear \xB7 Strong's Greek"))))), activeEntry && !isMobile && /*#__PURE__*/React.createElement(DetailPanel, {
+  }, /*#__PURE__*/React.createElement("span", null, "Lexica \xB7 Greek Septuagint (LXX) \xB7 Apostolic Bible Polyglot Interlinear \xB7 Strong's Greek"))))), showWord && !isMobile && /*#__PURE__*/React.createElement(DetailPanel, {
     entry: activeEntry,
     isMobile: false,
     onClose: () => setActiveEntry(null),
@@ -13371,7 +13389,7 @@ function App() {
     onOpenStudyName: handleOpenStudyName,
     overviewBack: mainView === "library",
     backLabel: libCrossRef ? "Cross-references" : libDetailBase === "intro" ? "Intro" : "Overview"
-  }), activeEntry && isMobile && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+  }), showWord && isMobile && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "sheet-scrim",
     onClick: () => setActiveEntry(null)
   }), /*#__PURE__*/React.createElement(DetailPanel, {
@@ -13383,11 +13401,11 @@ function App() {
     onNavigateToLexicon: handleNavigateToLexicon,
     onReadInContext: handleReadInContext,
     onOpenStudyName: handleOpenStudyName
-  })), activeNote && /*#__PURE__*/React.createElement(NotesPanel, {
+  })), showNote && /*#__PURE__*/React.createElement(NotesPanel, {
     noteId: activeNote,
     isMobile: isMobile,
     onClose: () => setActiveNote(null)
-  }), libCrossRef && !isMobile && !activeEntry && !activeNote && /*#__PURE__*/React.createElement(CrossRefPanel, {
+  }), showXref && !isMobile && !showWord && !showNote && /*#__PURE__*/React.createElement(CrossRefPanel, {
     source: libCrossRef,
     translation: libTranslation === "kjv" ? "kjv" : "abp",
     onClose: () => {
@@ -13415,7 +13433,7 @@ function App() {
     isMobile: false,
     overviewBack: true,
     backLabel: libDetailBase === "intro" ? "Intro" : "Overview"
-  }), libCrossRef && isMobile && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+  }), showXref && isMobile && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "sheet-scrim",
     onClick: () => {
       setLibCrossRef(null);
