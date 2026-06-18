@@ -575,7 +575,8 @@ function GraphPage({ entry, onClose, previewReader, onNavigate }) {
 function StudyView({ admin, pending, onConsumed, onNavigateToLibrary }) {
   const adminUser = !!admin;
   const [module, setModule] = useState(() => {
-    if (!admin) return "topic";                                  // readers only ever have Topics
+    // Restore unconditionally: only an admin can ever set "graph" (the switch is admin-only), and
+    // `admin` often isn't resolved yet on this first render — gating on it here fell back to Topics.
     try { return localStorage.getItem("lexica.study.module.v1") === "graph" ? "graph" : "topic"; } catch (e) { return "topic"; }
   });
   const [entries, setEntries] = useState(null);
@@ -586,6 +587,10 @@ function StudyView({ admin, pending, onConsumed, onNavigateToLibrary }) {
   const [saving, setSaving] = useState(false);
   const [savedAt, setSavedAt] = useState(null);
   const [q, setQ] = useState("");
+  // Capture the saved open-entry id ONCE at first render, BEFORE any effect runs — the persist
+  // effect below clears the stored key on mount (nothing open yet), so reading it later in the
+  // restore effect found it already gone. Holding it in a var dodges that ordering trap.
+  const [initialOpen] = useState(() => { try { return localStorage.getItem("lexica.study.open.v1") || ""; } catch (e) { return ""; } });
   // A non-admin visitor IS the reader: published-only, no editing, no module switch
   // (only Topics are public). An admin can also opt into this view via "Preview as reader".
   const readerView = !adminUser || previewReader;
@@ -635,8 +640,8 @@ function StudyView({ admin, pending, onConsumed, onNavigateToLibrary }) {
     } catch (e) {}
   }, [editing && editing.id]);
   useEffect(() => {
-    if (pending) return;
-    try { const id = localStorage.getItem("lexica.study.open.v1"); if (id) openEntry(id); } catch (e) {}
+    if (pending) return;                        // a sidebar open wins over the restore
+    if (initialOpen) openEntry(initialOpen);    // captured at first render, before the persist effect could clear it
   }, []);
 
   const save = () => {
