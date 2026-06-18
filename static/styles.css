@@ -40,7 +40,7 @@
   --chart-concl: #424a59;       /* conclusion — slate (clearly not the verse navy) */
   --chart-node-fg: #f4f1ea;     /* text on the dark verse/conclusion boxes */
   --chart-contested: #3a5a92;   /* contested link — clear navy (NOT --accent, which is brown in sepia) */
-  --chart-weak: #6f88b0;        /* weak link — fainter navy (reads weaker than contested), drawn dotted */
+  --chart-weak: #8094bd;        /* weak link — lighter than contested navy (keeps the rank); drawn as big round dots */
 
   --shadow-sm: 0 1px 0 rgba(20, 20, 30, 0.04), 0 1px 2px rgba(20, 20, 30, 0.04);
   --shadow-md: 0 2px 4px rgba(20, 20, 30, 0.05), 0 8px 24px -8px rgba(20, 20, 30, 0.10);
@@ -3942,7 +3942,7 @@ button.study-verse-ref { border: none; }
 .study-edge { fill: none; stroke-width: 1.6; }
 .study-edge--solid { stroke: var(--ink-4); }
 .study-edge--contested { stroke: var(--chart-contested); stroke-dasharray: 6 5; }   /* navy dashed */
-.study-edge--weak { stroke: var(--chart-weak); stroke-width: 1.8; stroke-dasharray: 2.5 4; stroke-linecap: round; }   /* dotted = weaker; rounder/denser dots so it doesn't read too faint */
+.study-edge--weak { stroke: var(--chart-weak); stroke-width: 2.6; stroke-dasharray: 0.5 8; stroke-linecap: round; }   /* big round dots = clearly weaker, and clearly not contested's dashes */
 .study-edge--joint { stroke: #b3382f; stroke-width: 2.2; stroke-dasharray: 6 5; }
 .study-arrow--solid { fill: var(--ink-4); }
 .study-arrow--contested { fill: var(--chart-contested); }
@@ -3955,7 +3955,7 @@ button.study-verse-ref { border: none; }
 .study-key--concl { background: var(--chart-concl); }
 .study-key-line { display: inline-block; width: 22px; border-top: 2px solid var(--ink-4); vertical-align: 4px; margin-right: 5px; }
 .study-key-line--contested { border-top-style: dashed; border-top-color: var(--chart-contested); }
-.study-key-line--weak { border-top-style: dotted; border-top-color: var(--chart-weak); }
+.study-key-line--weak { border-top-style: dotted; border-top-width: 3px; border-top-color: var(--chart-weak); }   /* bigger dots, matches the chart's weak edge */
 .study-key-line--joint { border-top-style: dashed; border-top-color: #b3382f; }
 /* a claim knocked out by a grounded, solid objection — struck through + faded */
 .study-node--defeated .study-node-box { opacity: 0.5; }
