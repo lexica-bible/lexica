@@ -21,7 +21,11 @@ Three small fixes, all live (pushed; deployed and confirmed by the user):
   (2 Peter 2:4 ταρταρόω G5020) showed ONLY `lexicon.strongs_def` — Strong's paraphrase "to incarcerate in
   eternal torment", imported doctrine the text-first rule rejects. Now: `kjv_def` ("cast down to hell") →
   `derivation` → `strongs_def` (last resort). Affects every LSJ-gap word. Memory `project_lsj_lookup`.
-  Follow-up left open (TODO #5): the Search/Lexicon RESULT cards still read raw `strongs_def`.
+  Follow-up (TODO #5) — DONE 2026-06-17 (commit f2c270f): the Lexicon match dropdown + word profile now
+  use the same `kjv_def → derivation → strongs_def` order. The Search RESULT rows render no def text (word
+  clicks re-fetch LSJ, already text-first), so nothing to change there. Same commit deleted the dead
+  `/api/cross-references/synthesis/` route — the frontend only calls `/curated/`, which already curates
+  (Haiku) + writes the synthesis (Sonnet, in ABP); shared prompt + fingerprint kept, so no cache churn.
 - **Hero headword auto-shrinks to fit** (commit 503df96). Long names (Nebuchadnezzar) overflowed the word
   card at the fixed 56/46px; a measure-and-scale `useLayoutEffect` (`heroRef`, 30-detail-panel.jsx) now
   shrinks an over-long headword to one line (22px floor, re-fits on word/layout/resize/font-load). Memory
