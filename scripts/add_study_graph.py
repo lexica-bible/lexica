@@ -214,8 +214,8 @@ OVERLAYS = [
              "why": "1 Peter's own clause ('not the removal of dirt... but the pledge of a good conscience') points the saving away from the washing — so the verse undercuts its own efficacy use."},
             {"from": "obj_mark_unbelief", "to": "t_regen_grace", "relation": "undercuts", "strength": "contested",
              "why": "Mark 16:16's negative clause drops baptism (condemnation = unbelief), and the longer ending is textually disputed — so the verse undercuts its own efficacy use."},
-            {"from": "v_luke23_43", "to": "t_regen_necessary", "relation": "undercuts", "strength": "solid",
-             "why": "The thief was saved with no baptism — the classic break on the necessity claim."},
+            {"from": "v_luke23_43", "to": "t_regen_necessary", "relation": "undercuts", "strength": "contested",
+             "why": "The thief was saved with no baptism — the classic break on the strict 'no exceptions' form. But regeneration answers that he predates the post-resurrection baptismal norm and counts as a providential exception (the qualified-necessity form the position already holds), so it's raised-and-answered, not a clean knockout — it tells against the no-exceptions form only. Credo/Reformed raise it."},
         ],
     },
 ]
