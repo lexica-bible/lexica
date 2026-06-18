@@ -25,6 +25,7 @@ Shapes (plain dicts, JSON-friendly — the same thing stored in a study entry):
 
 Used by views_study.py (the Study tab's graph kind); covered by tests/test_argmap.py.
 """
+from collections import Counter
 
 GROUNDED = frozenset({"text", "lexicon"})           # provenance tags that stand on the source
 CARRY = frozenset({"supports", "requires"})          # links that pass proof forward
@@ -83,8 +84,9 @@ def stress_test(claims, overlay):
 
 
 def diff_overlays(claims, overlays):
-    """Where the overlays part: the grounded verses they ALL lean on, and each overlay's
-    OWN interpretive claims (non-grounded, non-conclusion) the others never touch.
+    """Where the overlays part: the grounded verses leaned on by MORE THAN ONE side (the real
+    friction — the same verse pulled toward different conclusions), and each side's OWN
+    interpretive claims (non-grounded, non-conclusion) no other side touches.
     Returns {"shared_verses": [id...], "private": {overlay_index: [id...]}}."""
     touched = []
     for ov in overlays:
@@ -94,16 +96,17 @@ def diff_overlays(claims, overlays):
             ids.add(l.get("to"))
         ids.discard(None)
         touched.append(ids)
-    shared = set.intersection(*touched) if touched else set()
-    shared_verses = sorted(c for c in shared if (claims.get(c) or {}).get("provenance") in GROUNDED)
+    counts = Counter(c for ids in touched for c in ids)
+
+    def prov(c):
+        return (claims.get(c) or {}).get("provenance")
+
+    shared_verses = sorted(c for c, n in counts.items() if n >= 2 and prov(c) in GROUNDED)
     private = {}
     for i, ids in enumerate(touched):
-        others = set().union(*[t for j, t in enumerate(touched) if j != i]) if len(touched) > 1 else set()
         private[i] = sorted(
             c for c in ids
-            if c not in others
-            and (claims.get(c) or {}).get("provenance") not in GROUNDED
-            and (claims.get(c) or {}).get("provenance") != "conclusion"
+            if counts[c] == 1 and prov(c) not in GROUNDED and prov(c) != "conclusion"
         )
     return {"shared_verses": shared_verses, "private": private}
 
