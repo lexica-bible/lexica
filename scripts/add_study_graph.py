@@ -116,6 +116,28 @@ CLAIMS = {
                           "text": "Baptism saves — it does not merely signify (it effects salvation)"},
     "t_regen_necessary": {"provenance": "conclusion", "label": "Ordinarily necessary",
                           "text": "Water baptism is ordinarily necessary for salvation — the ordinary means, apart from providential hindrance (baptism of desire, the unevangelized); the qualified form most regenerationists actually hold"},
+
+    # ── "Narrow road (Berean)" overlay — new claims (efficacy axis: what baptism does) ──
+    "v_cornelius": {"provenance": "text", "ref": "Acts 10:44-47", "label": "Spirit before baptism",
+                    "text": "Cornelius's household received the Holy Spirit while Peter was still speaking — before any water baptism"},
+    "v_eph1":      {"provenance": "text", "ref": "Ephesians 1:13-14", "label": "Spirit = the seal",
+                    "text": "'You were sealed with the promised Holy Spirit, the guarantee of our inheritance'"},
+    "v_rom8_9":    {"provenance": "text", "ref": "Romans 8:9", "label": "no Spirit, not his",
+                    "text": "'Anyone who does not have the Spirit of Christ does not belong to him'"},
+    "v_acts11_17": {"provenance": "text", "ref": "Acts 11:17", "label": "the same gift",
+                    "text": "'God gave them the same gift he gave us' — Peter defending the Gentiles' Spirit-reception"},
+    "v_rom6":      {"provenance": "text", "ref": "Romans 6:3-4", "label": "buried and raised",
+                    "text": "'Buried with him in baptism... raised to walk in newness of life'"},
+    "c_spirit_seal":    {"provenance": "inference", "label": "Spirit = seal of salvation",
+                         "text": "The Holy Spirit is the seal and guarantee of salvation"},
+    "c_sealed_pre_bap": {"provenance": "inference", "label": "Sealed before baptism",
+                         "text": "Salvation is sealed by the Spirit, received before and apart from baptism"},
+    "c_not_instrument": {"provenance": "inference", "label": "Not the instrument",
+                         "text": "Baptism is not the instrument of salvation"},
+    "c_outward_pledge": {"provenance": "inference", "label": "Outward pledge of faith",
+                         "text": "Baptism is the outward pledge of a faith already held"},
+    "t_berean": {"provenance": "conclusion", "label": "Pledge, not instrument",
+                 "text": "Baptism is the outward pledge of a faith already held — commanded, but not the instrument of salvation"},
 }
 
 OVERLAYS = [
@@ -217,6 +239,40 @@ OVERLAYS = [
              "why": "Mark 16:16's negative clause drops baptism (condemnation = unbelief), and the longer ending is textually disputed — so the verse undercuts its own efficacy use."},
             {"from": "v_luke23_43", "to": "t_regen_necessary", "relation": "undercuts", "strength": "contested",
              "why": "The thief was saved with no baptism — a clean counterexample to the strict 'no exceptions' form, which rules that sub-form out. The qualified form on the board (a providential exception) absorbs it: the objection constrains the position, it doesn't defeat it. Credo/Reformed raise it."},
+        ],
+    },
+    {
+        "tradition": "Narrow road (Berean)",
+        "thesis": "t_berean",
+        "rejects": [],
+        "links": [
+            # Not-the-instrument branch
+            {"from": "v_eph1",   "to": "c_spirit_seal", "relation": "supports", "strength": "solid"},
+            {"from": "v_rom8_9", "to": "c_spirit_seal", "relation": "supports", "strength": "solid"},
+            {"from": "v_cornelius", "to": "c_sealed_pre_bap", "relation": "supports", "strength": "solid"},
+            # THE one rating JP must set (default solid): Spirit-reception = salvation sealed.
+            {"from": "c_spirit_seal", "to": "c_sealed_pre_bap", "relation": "supports", "strength": "solid",
+             "why": "JP's call (default solid): the Spirit being the seal means salvation is sealed when the Spirit is received. Acts 11:17 defends it; the regen 'gentile-authentication' reading of Cornelius is the contested undercut."},
+            {"from": "v_acts11_17", "to": "c_sealed_pre_bap", "relation": "supports", "strength": "contested",
+             "why": "'The same gift as us' defends reading Cornelius as the normative pattern, not an exceptional sign — itself the disputed point."},
+            {"from": "c_sealed_pre_bap", "to": "c_not_instrument", "relation": "supports", "strength": "solid"},
+            # Outward-pledge branch
+            {"from": "v_1pet3_21", "to": "c_outward_pledge", "relation": "supports", "strength": "solid",
+             "why": "The verse's own clause locates the role in the pledge of a good conscience, not the washing."},
+            {"from": "v_rom6", "to": "c_outward_pledge", "relation": "supports", "strength": "contested",
+             "why": "Corroborating only — Romans 6 can also be read as baptism effecting union, so it doesn't carry solid weight alone."},
+            # Converge
+            {"from": "c_not_instrument", "to": "t_berean", "relation": "supports", "strength": "solid"},
+            {"from": "c_outward_pledge", "to": "t_berean", "relation": "supports", "strength": "solid"},
+            # Objections (raised, handled — off the solid spine; reused verses carry their regen strength)
+            {"from": "v_luke23_43", "to": "c_not_instrument", "relation": "supports", "strength": "contested",
+             "why": "The thief (saved unbaptized) confirms 'not strictly the instrument in every case' — carried at the same contested rating it has in the regeneration overlay. Confirming only, not part of the spine."},
+            {"from": "v_acts2_38", "to": "c_not_instrument", "relation": "undercuts", "strength": "contested",
+             "why": "'For the forgiveness of sins' is the causal/telic (eis) debate; answered by Cornelius (Spirit + forgiveness before baptism) without having to win the eis argument."},
+            {"from": "v_john3_5", "to": "c_not_instrument", "relation": "undercuts", "strength": "contested",
+             "why": "'Born of water' — baptism / physical birth / the word all live; parked unresolved either direction."},
+            {"from": "v_mark16_16", "to": "c_not_instrument", "relation": "supports", "strength": "contested",
+             "why": "The condemnation clause ties damnation to unbelief, not non-baptism — rested on the unbelief clause (not the longer ending's textual dispute), and weak-for-efficacy in the regen overlay, so contested here too."},
         ],
     },
 ]
