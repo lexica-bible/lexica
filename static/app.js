@@ -4969,74 +4969,226 @@ function ClaimChip({
 }
 const linkKey = l => l.from + "→" + l.to + "·" + l.relation;
 
-// One tradition's card: its conclusion, the verdict, the load-bearing joint, then the chain.
-// Every non-solid link shows WHY it's rated that way and WHOSE call it is.
-function OverlayCard({
+// ---- The chart (per-overlay SVG: verses converge into claims into the thesis) ----
+const CH = {
+  W: 176,
+  H: 58,
+  COLGAP: 232,
+  ROWGAP: 94,
+  PAD: 18
+};
+const shortLabel = c => c && (c.label || c.ref) || (c && c.text ? c.text.length > 32 ? c.text.slice(0, 30) + "…" : c.text : "");
+
+// Longest-path column for each node from the grounded verses (verses = column 0).
+function chartColumns(claims, carry, ids) {
+  const isVerse = id => PROV_GROUNDED.has((claims[id] || {}).provenance);
+  const preds = {};
+  carry.forEach(l => {
+    (preds[l.to] = preds[l.to] || []).push(l.from);
+  });
+  const col = {},
+    busy = {};
+  const walk = id => {
+    if (id in col) return col[id];
+    if (busy[id]) return 0; // cycle guard
+    busy[id] = true;
+    const c = !isVerse(id) && preds[id] ? 1 + Math.max(...preds[id].map(walk)) : 0;
+    busy[id] = false;
+    return col[id] = c;
+  };
+  ids.forEach(walk);
+  return col;
+}
+
+// One overlay drawn left-to-right. Shared verses are pinned to the top rows in the same
+// order on every overlay, so flipping traditions holds them in place while the arrows and
+// the conclusion change — the verse back-reference, made visual.
+function GraphSvg({
+  claims,
   overlay,
   verdict,
-  claims,
+  shared,
   onNavigate
 }) {
-  const v = verdict || {
+  const carry = (overlay.links || []).filter(l => l.relation !== "undercuts");
+  const ids = [],
+    seen = new Set();
+  const add = id => {
+    if (id && !seen.has(id)) {
+      seen.add(id);
+      ids.push(id);
+    }
+  };
+  carry.forEach(l => {
+    add(l.from);
+    add(l.to);
+  });
+  add(overlay.thesis);
+  const col = chartColumns(claims, carry, ids);
+  let maxCol = Math.max(0, ...ids.map(id => col[id] || 0));
+  if (overlay.thesis && !carry.some(l => l.to === overlay.thesis)) {
+    col[overlay.thesis] = maxCol + 1; // gap: nothing points at the conclusion — float it out alone, with a visible space before it
+    maxCol += 1;
+  }
+  const byCol = {};
+  ids.forEach(id => {
+    (byCol[col[id]] = byCol[col[id]] || []).push(id);
+  });
+  if (byCol[0]) {
+    // pin shared verses to the top rows
+    const rank = id => {
+      const i = shared.indexOf(id);
+      return i < 0 ? 1e6 : i;
+    };
+    byCol[0].sort((a, b) => rank(a) - rank(b));
+  }
+  const pos = {};
+  Object.keys(byCol).forEach(c => byCol[c].forEach((id, r) => {
+    pos[id] = {
+      c: +c,
+      r
+    };
+  }));
+  const maxRow = Math.max(0, ...Object.values(byCol).map(a => a.length - 1));
+  const W = CH.PAD * 2 + maxCol * CH.COLGAP + CH.W;
+  const H = CH.PAD * 2 + maxRow * CH.ROWGAP + CH.H;
+  const X = id => CH.PAD + pos[id].c * CH.COLGAP;
+  const Y = id => CH.PAD + pos[id].r * CH.ROWGAP;
+  const joints = new Set((verdict && verdict.load_bearing || []).map(linkKey));
+  const edgeKind = l => joints.has(linkKey(l)) ? "joint" : l.strength === "solid" ? "solid" : "soft";
+  const nodeKind = id => {
+    const p = (claims[id] || {}).provenance;
+    return p === "conclusion" ? "concl" : PROV_GROUNDED.has(p) ? "verse" : "added";
+  };
+  return /*#__PURE__*/React.createElement("svg", {
+    className: "study-svg",
+    viewBox: "0 0 " + W + " " + H,
+    width: W,
+    height: H,
+    role: "img"
+  }, /*#__PURE__*/React.createElement("defs", null, ["solid", "soft", "joint"].map(k => /*#__PURE__*/React.createElement("marker", {
+    key: k,
+    id: "ah-" + k,
+    className: "study-arrow study-arrow--" + k,
+    markerWidth: "9",
+    markerHeight: "9",
+    refX: "7",
+    refY: "3",
+    orient: "auto",
+    markerUnits: "userSpaceOnUse"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M0,0 L7,3 L0,6 Z"
+  })))), carry.map((l, i) => {
+    if (!pos[l.from] || !pos[l.to]) return null;
+    const k = edgeKind(l);
+    const x1 = X(l.from) + CH.W,
+      y1 = Y(l.from) + CH.H / 2;
+    const x2 = X(l.to),
+      y2 = Y(l.to) + CH.H / 2,
+      mx = (x1 + x2) / 2;
+    return /*#__PURE__*/React.createElement("path", {
+      key: i,
+      className: "study-edge study-edge--" + k,
+      d: "M" + x1 + "," + y1 + " C" + mx + "," + y1 + " " + mx + "," + y2 + " " + (x2 - 8) + "," + y2,
+      markerEnd: "url(#ah-" + k + ")"
+    });
+  }), ids.map(id => {
+    const c = claims[id] || {};
+    const k = nodeKind(id);
+    const go = onNavigate && c.book && c.chapter && c.verse;
+    return /*#__PURE__*/React.createElement("g", {
+      key: id,
+      transform: "translate(" + X(id) + "," + Y(id) + ")",
+      className: "study-node study-node--" + k + (go ? " study-node--link" : ""),
+      onClick: go ? () => onNavigate(c.book, c.chapter, c.verse) : undefined
+    }, /*#__PURE__*/React.createElement("title", null, c.text || id), /*#__PURE__*/React.createElement("rect", {
+      width: CH.W,
+      height: CH.H,
+      rx: "9"
+    }), /*#__PURE__*/React.createElement("text", {
+      className: "study-node-t1",
+      x: CH.W / 2,
+      y: k === "verse" ? 24 : 34,
+      textAnchor: "middle"
+    }, c.ref || shortLabel(c)), k === "verse" && /*#__PURE__*/React.createElement("text", {
+      className: "study-node-t2",
+      x: CH.W / 2,
+      y: 40,
+      textAnchor: "middle"
+    }, c.label || ""));
+  }));
+}
+
+// Tabs to flip traditions, the SVG, a legend, and — for the selected side — the verdict,
+// why each non-solid link is rated as it is, and the open objections.
+function GraphChart({
+  claims,
+  overlays,
+  analysis,
+  onNavigate
+}) {
+  const [sel, setSel] = useState(0);
+  if (!overlays.length) return null;
+  const i = Math.min(sel, overlays.length - 1);
+  const overlay = overlays[i];
+  const verdict = (analysis.verdicts || [])[i] || {
     grounded: false,
     gap: false,
-    load_bearing: [],
-    soft_steps: [],
-    objections: []
+    load_bearing: []
   };
-  const joints = new Set((v.load_bearing || []).map(linkKey));
-  const cls = v.grounded ? "stands" : v.gap ? "gap" : "depends";
-  const label = v.grounded ? "Stands on the text" : v.gap ? "Incomplete — a step is missing" : "Depends on a non-solid joint";
-  const chain = (overlay.links || []).filter(l => l.relation !== "undercuts");
+  const shared = (analysis.diff || {}).shared_verses || [];
+  const cls = verdict.grounded ? "stands" : verdict.gap ? "gap" : "depends";
+  const label = verdict.grounded ? "Stands on the text" : verdict.gap ? "Incomplete — a step is missing" : "Depends on a non-solid joint";
+  const why = (overlay.links || []).filter(l => l.relation !== "undercuts" && l.strength !== "solid" && l.why);
   const objections = (overlay.links || []).filter(l => l.relation === "undercuts");
-  const whyLine = l => l.why ? /*#__PURE__*/React.createElement("div", {
-    className: "study-link-why"
-  }, l.why, " ", /*#__PURE__*/React.createElement("span", {
-    className: "study-link-by"
-  }, "\u2014 ", overlay.tradition, "'s call")) : null;
   return /*#__PURE__*/React.createElement("div", {
-    className: "study-overlay"
+    className: "study-chart"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "study-overlay-head"
-  }, overlay.tradition), /*#__PURE__*/React.createElement("div", {
-    className: "study-overlay-thesis"
-  }, (claims[overlay.thesis] || {}).text || "(no conclusion set)"), /*#__PURE__*/React.createElement("div", {
+    className: "study-chart-tabs"
+  }, overlays.map((ov, j) => /*#__PURE__*/React.createElement("button", {
+    key: j,
+    className: "study-chart-tab" + (j === i ? " on" : ""),
+    onClick: () => setSel(j)
+  }, ov.tradition))), /*#__PURE__*/React.createElement("div", {
     className: "study-verdict study-verdict--" + cls
-  }, label), (v.load_bearing || []).length > 0 && /*#__PURE__*/React.createElement("div", {
-    className: "study-joint-callout"
+  }, label), /*#__PURE__*/React.createElement("div", {
+    className: "study-chart-scroll"
+  }, /*#__PURE__*/React.createElement(GraphSvg, {
+    claims: claims,
+    overlay: overlay,
+    verdict: verdict,
+    shared: shared,
+    onNavigate: onNavigate
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "study-chart-legend"
+  }, /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("i", {
+    className: "study-key study-key--verse"
+  }), " verse (grounded)"), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("i", {
+    className: "study-key study-key--added"
+  }), " inference / tradition"), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("i", {
+    className: "study-key study-key--concl"
+  }), " conclusion"), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("i", {
+    className: "study-key-line study-key-line--solid"
+  }), " established"), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("i", {
+    className: "study-key-line study-key-line--soft"
+  }), " contested"), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("i", {
+    className: "study-key-line study-key-line--joint"
+  }), " load-bearing joint")), why.length > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "study-chart-why"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "study-joint-label"
-  }, "Load-bearing joint \u2014 cut this and the conclusion falls"), (v.load_bearing || []).map((l, i) => /*#__PURE__*/React.createElement("div", {
-    className: "study-joint",
-    key: i
-  }, /*#__PURE__*/React.createElement(ClaimChip, {
-    claim: claims[l.from],
-    onNavigate: onNavigate
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "study-link-rel study-link-rel--weak"
-  }, l.relation, " \xB7 ", l.strength), whyLine(l), /*#__PURE__*/React.createElement(ClaimChip, {
-    claim: claims[l.to],
-    onNavigate: onNavigate
-  })))), /*#__PURE__*/React.createElement("div", {
-    className: "study-chain"
-  }, chain.map((l, i) => /*#__PURE__*/React.createElement("div", {
-    className: "study-link study-link--" + l.strength + (joints.has(linkKey(l)) ? " study-link--joint" : ""),
-    key: i
-  }, /*#__PURE__*/React.createElement(ClaimChip, {
-    claim: claims[l.from],
-    onNavigate: onNavigate
-  }), /*#__PURE__*/React.createElement("div", {
-    className: "study-link-rel study-link-rel--" + l.strength
-  }, l.relation, " \xB7 ", l.strength), l.strength !== "solid" && whyLine(l), /*#__PURE__*/React.createElement(ClaimChip, {
-    claim: claims[l.to],
-    onNavigate: onNavigate
-  })))), objections.length > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "study-objections-label"
+  }, "Why the dashed links are rated that way"), why.map((l, j) => /*#__PURE__*/React.createElement("div", {
+    className: "study-link-why",
+    key: j
+  }, /*#__PURE__*/React.createElement("b", null, shortLabel(claims[l.from]), " \u2192 ", shortLabel(claims[l.to])), " (", l.strength, "): ", l.why, /*#__PURE__*/React.createElement("span", {
+    className: "study-link-by"
+  }, " \u2014 ", overlay.tradition, "'s call")))), objections.length > 0 && /*#__PURE__*/React.createElement("div", {
     className: "study-objections"
   }, /*#__PURE__*/React.createElement("div", {
     className: "study-objections-label"
-  }, "Open objections (noted, not scored)"), objections.map((l, i) => /*#__PURE__*/React.createElement("div", {
+  }, "Open objections (noted, not scored)"), objections.map((l, j) => /*#__PURE__*/React.createElement("div", {
     className: "study-objection",
-    key: i
+    key: j
   }, l.why || (claims[l.from] || {}).text + " — attacks the conclusion"))));
 }
 
@@ -5075,19 +5227,12 @@ function GraphPage({
     className: "study-graph-caution"
   }, "Maps reasoning, does not settle truth."), entry.intro && /*#__PURE__*/React.createElement("p", {
     className: "study-topic-intro"
-  }, entry.intro), /*#__PURE__*/React.createElement("div", {
-    className: "study-prov-key"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "study-prov study-prov--grounded"
-  }, "Grounded"), " stands on the text \xB7", /*#__PURE__*/React.createElement("span", {
-    className: "study-prov study-prov--added"
-  }, "Added"), " leans on tradition, inference or conjecture"), overlays.map((ov, i) => /*#__PURE__*/React.createElement(OverlayCard, {
-    key: i,
-    overlay: ov,
-    verdict: (analysis.verdicts || [])[i],
+  }, entry.intro), /*#__PURE__*/React.createElement(GraphChart, {
     claims: claims,
+    overlays: overlays,
+    analysis: analysis,
     onNavigate: onNavigate
-  })), hasPart && /*#__PURE__*/React.createElement("div", {
+  }), hasPart && /*#__PURE__*/React.createElement("div", {
     className: "study-part"
   }, /*#__PURE__*/React.createElement("div", {
     className: "study-part-label"

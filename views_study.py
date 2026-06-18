@@ -360,6 +360,9 @@ def _clean_claims(obj):
         ref = str(c.get("ref") or "").strip()
         if ref:
             item["ref"] = ref[:80]
+        label = str(c.get("label") or "").strip()   # short caption for the chart boxes
+        if label:
+            item["label"] = label[:120]
         out[cid] = item
         if len(out) >= _MAX_CLAIMS:
             break

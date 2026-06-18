@@ -3904,6 +3904,42 @@ button.study-verse-ref { border: none; }
 .study-link-why { font-size: 12px; line-height: 1.45; color: var(--ink-3); padding: 1px 0 1px 2px; }
 .study-link-by { color: var(--ink-4); font-style: italic; }
 
+/* ---- Graph chart (SVG, per-overlay) ---- */
+.study-chart-tabs { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.study-chart-tab { font-size: 12.5px; color: var(--ink-3); background: var(--ctl-bg); border: 1px solid var(--rule-2); border-radius: 999px; padding: 5px 13px; cursor: pointer; }
+.study-chart-tab:hover { color: var(--ink); border-color: var(--ink-3); }
+.study-chart-tab.on { color: var(--paper); background: var(--accent); border-color: var(--accent); }
+.study-chart-scroll { overflow-x: auto; padding: 4px 0 10px; }
+.study-svg { display: block; max-width: 100%; height: auto; font-family: system-ui, -apple-system, "Segoe UI", sans-serif; }
+.study-node--link { cursor: pointer; }
+.study-node rect { transition: opacity 0.12s; }
+.study-node--link:hover rect { opacity: 0.85; }
+.study-node--verse rect { fill: var(--accent); }
+.study-node--added rect { fill: var(--bg-sunk); stroke: var(--rule-2); stroke-width: 1; }
+.study-node--concl rect { fill: var(--ink); }
+.study-node-t1 { font-size: 13px; font-weight: 600; }
+.study-node-t2 { font-size: 11.5px; }
+.study-node--verse .study-node-t1, .study-node--concl .study-node-t1 { fill: var(--paper); }
+.study-node--verse .study-node-t2 { fill: var(--paper); opacity: 0.8; }
+.study-node--added .study-node-t1 { fill: var(--ink); }
+.study-edge { fill: none; stroke-width: 1.6; }
+.study-edge--solid { stroke: var(--ink-4); }
+.study-edge--soft { stroke: var(--accent); stroke-dasharray: 6 5; }     /* contested — navy dashed, no brown */
+.study-edge--joint { stroke: #b3382f; stroke-width: 2.2; stroke-dasharray: 6 5; }
+.study-arrow--solid { fill: var(--ink-4); }
+.study-arrow--soft { fill: var(--accent); }
+.study-arrow--joint { fill: #b3382f; }
+.study-chart-legend { display: flex; flex-wrap: wrap; gap: 14px; align-items: center; font-size: 12px; color: var(--ink-3); margin: 2px 0 16px; }
+.study-key { display: inline-block; width: 12px; height: 12px; border-radius: 3px; vertical-align: -1px; margin-right: 5px; }
+.study-key--verse { background: var(--accent); }
+.study-key--added { background: var(--bg-sunk); border: 1px solid var(--rule-2); }
+.study-key--concl { background: var(--ink); }
+.study-key-line { display: inline-block; width: 22px; border-top: 2px solid var(--ink-4); vertical-align: 4px; margin-right: 5px; }
+.study-key-line--soft { border-top-style: dashed; border-top-color: var(--accent); }
+.study-key-line--joint { border-top-style: dashed; border-top-color: #b3382f; }
+.study-chart-why { margin: 4px 0 14px; }
+.study-chart-why .study-link-why { margin-bottom: 5px; }
+
 @media (max-width: 1099px) {
   .study-view { padding: 14px 14px 90px; }
   .study-editor-bar { position: static; }
