@@ -41,6 +41,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
   const [selectedGloss, setSelectedGloss] = useState(null);
   const [bookGlosses, setBookGlosses] = useState(null);
   const [filteredBooks, setFilteredBooks] = useState(null);
+  const [showAllBooks, setShowAllBooks] = useState(false);  // distribution: top 12 vs all
   const [groupings, setGroupings] = useState(null);
   const [pendingGloss, setPendingGloss] = useState(null);
   const [showDef, setShowDef] = useState(false);
@@ -100,6 +101,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
     setSelectedGloss(null);
     setBookGlosses(null);
     setFilteredBooks(null);
+    setShowAllBooks(false);
     setShowDef(false);
     const isHeb = /^H/i.test(strongs) || (!(/^[GgHh]/.test(strongs)) && parseInt(strongs) > 5624);
     const c = corpusOverride ?? (isHeb ? "kjv" : "abp");  // drilling in always lands in a single corpus
@@ -273,6 +275,20 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
     return new Set([tag, base, base.replace(/^[GH]/i, "")]);
   }, [profile?.strongs]);
 
+  // Distribution data for the book bars: testament-filtered books, the top count
+  // (for bar scaling), and the OT/NT split totals (the split bar only shows when a
+  // word spans both testaments).
+  const dist = useMemo(() => {
+    if (!profile) return null;
+    const isNT = b => (b.testament || "").toUpperCase() === "NT";
+    const books = (filteredBooks || profile.books || []).filter(
+      b => testament === "all" || (b.testament || "").toLowerCase() === testament);
+    const max = books.reduce((m, b) => Math.max(m, b.count), 0) || 1;
+    const ot = books.filter(b => !isNT(b)).reduce((s, b) => s + b.count, 0);
+    const nt = books.filter(b => isNT(b)).reduce((s, b) => s + b.count, 0);
+    return { books, max, ot, nt };
+  }, [profile, filteredBooks, testament]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const q = query.trim();
@@ -441,17 +457,27 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
               <button className="lexicon-back-btn" title={`Back to "${query.trim()}" results`}
                 onClick={() => { setProfile(null); setSelectedBook(null); setVerseList(null); }}>←</button>
             )}
-            <span className="lexicon-lemma" dir={profile.strongs[0] === "H" ? "rtl" : undefined}>{profile.lemma}</span>
-            <span className="lexicon-translit">{profile.translit}</span>
-            <span className="lexicon-strongs-tag">{profile.strongs}</span>
-            <span className="lexicon-total">{
-              testament === "all"
-                ? profile.total
-                : (filteredBooks || profile.books)
-                    .filter(b => (b.testament || "").toLowerCase() === testament)
-                    .reduce((s, b) => s + b.count, 0)
-            } occurrences</span>
+            <div className="lexicon-hero-id">
+              <span className="lexicon-lemma" dir={profile.strongs[0] === "H" ? "rtl" : undefined}>{profile.lemma}</span>
+              <span className="lexicon-id-sub">
+                <span className="lexicon-translit">{profile.translit}</span>
+                <span className="lexicon-strongs-tag">{profile.strongs}</span>
+              </span>
+            </div>
+            <div className="lexicon-hero-stat">
+              <span className="lexicon-total-num">{
+                testament === "all"
+                  ? profile.total
+                  : (filteredBooks || profile.books)
+                      .filter(b => (b.testament || "").toLowerCase() === testament)
+                      .reduce((s, b) => s + b.count, 0)
+              }</span>
+              <span className="lexicon-total-label">occurrences{dist && dist.books.length ? ` · ${dist.books.length} ${dist.books.length === 1 ? "book" : "books"}` : ""}</span>
+            </div>
           </div>
+          {profile.glosses && profile.glosses.length > 0 && (
+            <p className="lexicon-lead">{profile.glosses.slice(0, 4).map(g => g.gloss).join("  ·  ")}</p>
+          )}
           {onAiSearch && (
             <div className="lexicon-pivots">
               <button className="lexicon-ask-corpus" onClick={() => { const aq = `How is ${profile.translit || profile.lemma} (${profile.strongs}) used in scripture?`; setQuery(aq); onAiSearch(aq); }}>
@@ -501,50 +527,68 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
 
           {selectedBook
             ? ((bookGlosses || profile.glosses) && (bookGlosses || profile.glosses).length > 0 && (
-                <div className="lexicon-glosses">
-                  <div className="lexicon-gloss-label">In this book</div>
+                <div className="lexicon-senses">
+                  <div className="lexicon-section-label">In this book</div>
                   <div className="lexicon-dist-list">
-                    {(bookGlosses || profile.glosses).map((g, i) => (
-                      <React.Fragment key={g.gloss}>
-                        {i > 0 && <span className="lexicon-dist-sep"> · </span>}
-                        <button
-                          className={"lexicon-dist-item" + (selectedGloss === g.gloss ? " selected" : "")}
-                          onClick={() => selectGloss(g.gloss)}
-                        >
-                          {g.gloss}<span className="lexicon-dist-count">{g.count}</span>
-                        </button>
-                      </React.Fragment>
+                    {(bookGlosses || profile.glosses).map((g) => (
+                      <button key={g.gloss}
+                        className={"lexicon-dist-item" + (selectedGloss === g.gloss ? " selected" : "")}
+                        onClick={() => selectGloss(g.gloss)}>
+                        {g.gloss}<span className="lexicon-dist-count">{g.count}</span>
+                      </button>
                     ))}
                   </div>
                 </div>
               ))
-            : (
-                <>
-                  {renderGlossLine("abp", "ABP renders this as", profile.abp_glosses)}
-                  {renderGlossLine("kjv", "KJV renders this as", profile.kjv_glosses)}
-                </>
-              )}
+            : ((profile.abp_glosses && profile.abp_glosses.length) || (profile.kjv_glosses && profile.kjv_glosses.length)) ? (
+                <div className="lexicon-senses">
+                  <div className="lexicon-section-label">Senses — how it's rendered</div>
+                  {renderGlossLine("abp", "ABP", profile.abp_glosses)}
+                  {renderGlossLine("kjv", "KJV", profile.kjv_glosses)}
+                </div>
+              ) : null}
 
-          <div className="lexicon-distribution">
-            <div className="lexicon-dist-header">
-              <div className="lexicon-dist-label">Distribution by book</div>
-            </div>
-            <div className="lexicon-dist-list">
-              {(filteredBooks || profile.books)
-                .filter(b => testament === "all" || (b.testament || "").toLowerCase() === testament)
-                .map((b, i) => (
-                  <React.Fragment key={b.book}>
-                    {i > 0 && <span className="lexicon-dist-sep"> · </span>}
-                    <button
-                      className={"lexicon-dist-item" + (selectedBook === b.book ? " selected" : "")}
-                      onClick={() => selectBook(b.book)}
-                    >
-                      {b.name}<span className="lexicon-dist-count">{b.count}</span>
+          {dist && dist.books.length > 0 && (
+            <div className="lexicon-distribution">
+              <div className="lexicon-dist-top">
+                <span className="lexicon-section-label">Distribution by book</span>
+                {dist.ot > 0 && dist.nt > 0 && (
+                  <span className="lexicon-dist-legend">
+                    <span className="leg ot">OT {dist.ot}</span>
+                    <span className="leg nt">NT {dist.nt}</span>
+                  </span>
+                )}
+              </div>
+              {dist.ot > 0 && dist.nt > 0 && (
+                <div className="lexicon-split">
+                  <span className="seg ot" style={{ width: (dist.ot / (dist.ot + dist.nt) * 100) + "%" }} />
+                  <span className="seg nt" style={{ width: (dist.nt / (dist.ot + dist.nt) * 100) + "%" }} />
+                </div>
+              )}
+              <div className="lexicon-bars">
+                {(showAllBooks ? dist.books : dist.books.slice(0, 12)).map(b => {
+                  const isNT = (b.testament || "").toUpperCase() === "NT";
+                  return (
+                    <button key={b.book}
+                      className={"lexicon-bar-row" + (selectedBook === b.book ? " selected" : "")}
+                      onClick={() => selectBook(b.book)} title={`${b.name} — ${b.count}`}>
+                      <span className="lexicon-bar-name">{b.name}</span>
+                      <span className="lexicon-bar-track">
+                        <span className={"lexicon-bar-fill " + (isNT ? "nt" : "ot")}
+                          style={{ width: Math.max(3, Math.round(b.count / dist.max * 100)) + "%" }} />
+                      </span>
+                      <span className="lexicon-bar-ct">{b.count}</span>
                     </button>
-                  </React.Fragment>
-                ))}
+                  );
+                })}
+              </div>
+              {dist.books.length > 12 && (
+                <button className="lexicon-showall" onClick={() => setShowAllBooks(v => !v)}>
+                  {showAllBooks ? "Show fewer ▲" : `Show all ${dist.books.length} books →`}
+                </button>
+              )}
             </div>
-          </div>
+          )}
 
           {selectedBook && (
             <div className="corpus-groups">
