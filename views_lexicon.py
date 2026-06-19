@@ -15,6 +15,40 @@ from core import db_ro, _KJV_BOOK_ID, _FUNCTION_STRONGS, _strip_accents
 bp = Blueprint("lexicon", __name__)
 
 
+def _greek_cognates(conn, snum, derivation):
+    """Same-root family for a Greek word, derived on the fly from the lexicon's
+    `derivation` text (no extra table): parent(s) = the G-numbers THIS word comes
+    from; children = words whose derivation points back at this one. Returns up
+    to 8 {strongs, lemma, translit, gloss}. Semantic (meaning-only) relatives are
+    NOT covered — they aren't in the data."""
+    out, seen = [], {snum}
+
+    def add(sn):
+        if sn in seen or len(out) >= 8:
+            return
+        seen.add(sn)
+        r = conn.execute(
+            "SELECT lemma, translit, kjv_def, strongs_def FROM lexicon WHERE strongs = ?", (sn,)
+        ).fetchone()
+        if not r or not r["lemma"]:
+            return
+        g = (r["kjv_def"] or r["strongs_def"] or "").strip()
+        g = re.split(r"[;,]", g)[0][:36] if g else ""
+        out.append({"strongs": f"G{sn}", "lemma": r["lemma"], "translit": r["translit"] or "", "gloss": g})
+
+    for pn in re.findall(r"G(\d+)", derivation or ""):   # parent(s)
+        add(pn)
+    if len(out) < 8:                                       # children
+        for r in conn.execute(
+            "SELECT strongs, derivation FROM lexicon WHERE derivation LIKE ?", (f"%G{snum}%",)
+        ).fetchall():
+            if re.search(rf"G{snum}(?!\d)", r["derivation"] or ""):
+                add(r["strongs"])
+                if len(out) >= 8:
+                    break
+    return out
+
+
 _GLOSS_FUNC = {
     'a','an','the','my','his','her','your','their','our','its',
     'of','in','by','as','to','with','for','from','at','on','into',
@@ -345,6 +379,7 @@ def lexicon_profile(strongs):
     num = m.group(2)
     snum = num.split('.')[0]
     is_heb = prefix == 'H' or (not prefix and int(snum) > 5624)
+    _deriv_raw = ""
     conn = db_ro()
     try:
         if is_heb:
@@ -368,9 +403,10 @@ def lexicon_profile(strongs):
             # Text-first (mirrors the word card / views_lsj.py): KJV rendering → derivation
             # → Strong's paraphrase, so Strong's interpretive wording never leads.
             definition = row["kjv_def"] or row["derivation"] or row["strongs_def"] or ""
+            _deriv_raw = row["derivation"] or ""
             # Etymology for the card's Derivation section (only when it adds
             # something the definition line isn't already showing).
-            derivation = (row["derivation"] or "") if (row["kjv_def"] or "").strip() else ""
+            derivation = _deriv_raw if (row["kjv_def"] or "").strip() else ""
         # Corpus: default H→kjv, G→abp; override via ?corpus=
         corpus = request.args.get("corpus", "kjv" if is_heb else "abp")
         if corpus == "all":  # profile is single-corpus; 'all' would double-count NT
@@ -448,7 +484,8 @@ def lexicon_profile(strongs):
         # have ABP/words rows) keep ABP enabled.
         has_abp = conn.execute("SELECT 1 FROM words WHERE strongs_base = ? LIMIT 1", (sid,)).fetchone() is not None
         has_kjv = conn.execute("SELECT 1 FROM kjv_strongs WHERE strongs_id = ? LIMIT 1", (sid,)).fetchone() is not None
-        return jsonify({"strongs": strongs_id, "lemma": lemma, "translit": translit, "definition": definition, "derivation": derivation, "total": total, "books": books, "corpus": corpus, "glosses": glosses, "abp_glosses": abp_glosses, "kjv_glosses": kjv_glosses, "has_abp": has_abp, "has_kjv": has_kjv})
+        related = _greek_cognates(conn, snum, _deriv_raw) if not is_heb else []
+        return jsonify({"strongs": strongs_id, "lemma": lemma, "translit": translit, "definition": definition, "derivation": derivation, "related": related, "total": total, "books": books, "corpus": corpus, "glosses": glosses, "abp_glosses": abp_glosses, "kjv_glosses": kjv_glosses, "has_abp": has_abp, "has_kjv": has_kjv})
     except Exception:
         return jsonify({"error": "Server error"}), 500
     finally:

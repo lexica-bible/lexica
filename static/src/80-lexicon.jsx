@@ -634,6 +634,20 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
                 <p className="root-note">{profile.derivation}</p>
               </div>
             )}
+            {profile.related && profile.related.length > 0 && (
+              <div className="wd-sec">
+                <div className="wd-sec-h"><span className="wd-sec-t">Cognates &amp; related lemmas</span></div>
+                <div className="related">
+                  {profile.related.map(r => (
+                    <button key={r.strongs} className="rel" onClick={() => loadProfile(r.strongs, "abp")}>
+                      <span className="rel-gk">{r.lemma}</span>
+                      <span className="rel-tr">{r.translit}</span>
+                      <span className="rel-gloss">{r.gloss}<span className="rel-s">{r.strongs}</span></span>
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
           </div>
           </>
         ) : (
