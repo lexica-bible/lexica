@@ -4168,3 +4168,131 @@ button.study-verse-ref { border: none; }
   .ac-ask-q { font-size: 21px; }
   .ac-composer.pinned { padding: 12px 18px 18px; }
 }
+
+/* ============================================================
+   WORD STUDY — three panes (mirrors the Library: nav · text · detail).
+   Left = distribution rail · center = search + occurrences · right = word card.
+   (Phase 2 of the study/AI redesign — see design/README.md.)
+============================================================ */
+.ws {
+  display: grid;
+  grid-template-columns: 248px minmax(0, 1fr) 420px;
+  height: calc(100vh - var(--hdr-h));
+  min-height: 0;
+}
+.ws.center-only { grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 1100px) and (max-width: 1320px) {
+  .ws { grid-template-columns: 232px minmax(0, 1fr) 384px; }
+}
+
+/* LEFT — distribution rail */
+.brail { border-right: 1px solid var(--rule); background: var(--bg-sunk); min-height: 0; display: flex; flex-direction: column; }
+.brail-top { flex: 0 0 auto; padding: 16px 18px 12px; border-bottom: 1px solid var(--rule); }
+.brail-eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; color: var(--ink-3); }
+.brail-sub { font-size: 12px; color: var(--ink-4); margin-top: 5px; }
+.brail-gk { font-family: var(--f-greek); color: var(--ink-2); font-size: 14px; }
+.brail-scroll { flex: 1; overflow-y: auto; padding: 8px 8px 24px; }
+.brow { width: 100%; display: grid; grid-template-columns: 1fr 46px auto; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 6px; text-align: left; color: var(--ink-2); }
+.brow:hover { background: color-mix(in oklab, var(--ink) 6%, transparent); }
+.brow.on { background: var(--navy); }
+.brow.on .brow-name, .brow.on .brow-n { color: #f4f6fa; }
+.brow.on .brow-bar { background: rgba(255,255,255,0.18); }
+.brow.on .brow-fill { background: rgba(255,255,255,0.6); }
+.brow-name { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.005em; }
+.brow-bar { height: 6px; background: color-mix(in oklab, var(--ink) 8%, transparent); border-radius: 3px; overflow: hidden; }
+.brow-fill { height: 100%; border-radius: 3px; background: color-mix(in oklab, var(--ink) 26%, transparent); }
+.brow-n { font-family: var(--f-mono); font-size: 10.5px; color: var(--ink-4); text-align: right; min-width: 22px; }
+.brow-all { grid-template-columns: 1fr auto; margin-bottom: 6px; padding: 9px 10px; border: 1px solid var(--rule); background: var(--paper); }
+.brow-all .brow-name { font-weight: 600; color: var(--ink); }
+.brow-all.on { background: var(--navy); border-color: var(--navy); }
+
+/* CENTER — search + occurrences */
+.ws .center { min-height: 0; display: flex; flex-direction: column; background: var(--bg); }
+.ws .searchbar { flex: 0 0 auto; padding: 14px 28px; border-bottom: 1px solid var(--rule); background: color-mix(in oklab, var(--bg) 82%, var(--paper)); }
+.ws .searchbar-in { max-width: 740px; margin: 0 auto; }
+.ws .search-field { display: flex; align-items: center; gap: 10px; background: var(--paper); border: 1px solid var(--rule-2); border-radius: 11px; padding: 0 8px 0 14px; height: 46px; box-shadow: var(--shadow-sm); transition: border-color 0.15s, box-shadow 0.15s; }
+.ws .search-field:focus-within { border-color: var(--accent); box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 12%, transparent); }
+.search-i { color: var(--ink-3); flex: 0 0 17px; transition: color 0.15s; }
+.ws .search-field:focus-within .search-i { color: var(--accent); }
+.ws .search-input { flex: 1; border: 0; outline: 0; background: transparent; font-size: 16px; color: var(--ink); letter-spacing: -0.005em; }
+.ws .search-input::placeholder { color: var(--ink-4); }
+.ws .search-go { width: 38px; height: 38px; border-radius: 8px; background: var(--navy); color: #fff; display: grid; place-items: center; flex: 0 0 auto; }
+.ws .search-go:hover { background: var(--navy-2); }
+.ws .search-hint { margin-top: 9px; font-size: 12px; color: var(--ink-4); }
+.results-scroll { flex: 1; overflow-y: auto; }
+.results-col { max-width: 780px; margin: 0 auto; padding: 18px 28px 70px; }
+
+/* reading-style underline tabs (testament + ABP/KJV) */
+.ws .filters { display: flex; align-items: center; gap: 16px; margin: 0 2px 14px; padding-bottom: 11px; border-bottom: 1px solid var(--rule); }
+.ws .tgroup { display: inline-flex; gap: 14px; }
+.ws .tg { position: relative; font-size: 13px; color: var(--ink-4); padding: 2px 1px 3px; letter-spacing: 0.02em; }
+.ws .tg:hover { color: var(--ink-2); }
+.ws .tg.on { color: var(--ink); font-weight: 600; }
+.ws .tg.on::after { content: ""; position: absolute; left: 0; right: 0; bottom: -12px; height: 2px; background: var(--gold); border-radius: 2px; }
+.ws .tg:disabled { color: var(--ink-4); opacity: 0.4; cursor: default; }
+.ws .filters-sep { width: 1px; height: 14px; background: var(--rule-2); }
+
+.occ-filter { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin: 2px 2px 12px; font-size: 12.5px; color: var(--ink-3); }
+.occ-filter b { color: var(--ink); font-weight: 600; }
+.occ-reset { font-size: 12px; color: var(--accent); }
+.occ-reset:hover { text-decoration: underline; }
+.occ-empty { padding: 28px 10px; font-size: 13.5px; color: var(--ink-3); line-height: 1.55; font-family: var(--f-serif); }
+.occ-welcome { max-width: 460px; margin: 60px auto 0; text-align: center; }
+.occ-welcome-t { font-family: var(--f-serif); font-size: 24px; font-weight: 600; color: var(--ink); margin-bottom: 8px; letter-spacing: -0.01em; }
+.occ-welcome-s { font-size: 14px; color: var(--ink-3); line-height: 1.55; margin-bottom: 20px; }
+.occ-welcome-chips { display: flex; justify-content: center; flex-wrap: wrap; gap: 8px; }
+.welcome-chip { font-family: var(--f-greek); font-size: 15px; color: var(--ink-2); padding: 7px 14px; border-radius: 999px; background: var(--paper); border: 1px solid var(--rule); }
+.welcome-chip:hover { border-color: var(--accent); color: var(--accent); }
+
+/* RIGHT — word detail card */
+.wd { border-left: 1px solid var(--rule); background: var(--paper); min-height: 0; display: flex; flex-direction: column; }
+.wd-head { flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid var(--rule); }
+.wd-head-r { display: inline-flex; align-items: center; gap: 8px; }
+.wd-strongs { font-family: var(--f-mono); font-size: 14px; color: var(--ink-2); letter-spacing: 0.02em; }
+.wd-overview { display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; color: var(--ink-3); padding: 5px 11px; border-radius: 7px; border: 1px solid var(--rule); background: var(--bg); }
+.wd-overview:hover { border-color: var(--ink-3); color: var(--ink); }
+.wd-body { flex: 1; overflow-y: auto; padding: 26px 24px 48px; }
+.wd-hero { padding-bottom: 4px; }
+.wd-greek { font-family: var(--f-greek); font-size: 56px; line-height: 1.04; letter-spacing: -0.01em; color: var(--ink); margin-bottom: 12px; }
+.wd-greek.heb { font-size: 48px; }
+.wd-sub { font-family: var(--f-serif); font-size: 19px; color: var(--ink); margin-bottom: 10px; }
+.wd-tr { font-style: italic; color: var(--ink-2); }
+.wd-gloss { color: var(--ink); }
+.wd-morph { font-size: 13px; color: var(--ink-3); letter-spacing: 0.01em; }
+.wd-askai { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; font-size: 12.5px; font-weight: 500; color: var(--ai); padding: 5px 11px 5px 9px; border-radius: 7px; border: 1px solid color-mix(in oklab, var(--ai) 24%, transparent); background: var(--ai-soft); transition: background 0.15s, border-color 0.15s; }
+.wd-askai svg:first-child { color: var(--ai); flex: 0 0 auto; width: 15px; height: 15px; }
+.wd-askai svg:last-child { opacity: 0.55; flex: 0 0 auto; width: 13px; height: 13px; transition: transform 0.15s, opacity 0.15s; }
+.wd-askai .wd-askai-w { font-family: var(--f-greek); font-size: 14px; }
+.wd-askai:hover { background: color-mix(in oklab, var(--ai) 13%, var(--paper)); border-color: color-mix(in oklab, var(--ai) 40%, transparent); }
+.wd-askai:hover svg:last-child { opacity: 1; transform: translateX(2px); }
+.wd-sec { padding: 20px 0; border-top: 1px solid var(--rule); margin-top: 8px; }
+.wd-sec:first-of-type { margin-top: 20px; }
+.wd-sec-h { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+.wd-sec-t { font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; color: var(--ink-3); }
+.wd-sec-meta { font-size: 11px; color: var(--ink-4); }
+.wd-badge { font-family: var(--f-mono); font-size: 9.5px; color: var(--accent); background: var(--accent-soft); padding: 2px 7px; border-radius: 4px; letter-spacing: 0.05em; font-weight: 600; }
+.wd .lsj { font-family: var(--f-serif); font-size: 15px; line-height: 1.6; color: var(--ink); margin: 0; }
+.wd .lsj-toggle { margin-top: 10px; font-size: 12.5px; color: var(--accent); display: inline-flex; align-items: center; gap: 4px; }
+.wd .lsj-toggle:hover { text-decoration: underline; }
+.wd .root-note { font-family: var(--f-serif); font-style: italic; font-size: 14.5px; color: var(--ink-2); line-height: 1.55; margin: 0; }
+/* the card reuses the existing .lexicon-glosses / .lexicon-dist-item chips for renders */
+.wd .lexicon-glosses { margin: 0; }
+
+/* mobile panel-toggle bar (center) */
+.ws-mobi { display: none; }
+.rail-scrim, .wd-scrim { display: none; }
+
+/* MOBILE — app breakpoint 1100 */
+@media (max-width: 1099px) {
+  .ws, .ws.center-only { grid-template-columns: minmax(0, 1fr); height: calc(100vh - var(--hdr-h) - 56px); }
+  .brail { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; z-index: 60; box-shadow: var(--shadow-lg); }
+  .brail.hidden { display: none; }
+  .wd { position: fixed; top: 0; right: 0; bottom: 0; width: min(92vw, 420px); z-index: 60; box-shadow: var(--shadow-lg); }
+  .wd.hidden { display: none; }
+  .rail-scrim, .wd-scrim { display: block; position: fixed; inset: 0; background: rgba(15,23,42,0.35); z-index: 59; }
+  .ws-mobi { display: flex; gap: 8px; margin-bottom: 14px; }
+  .ws-mobi-b { flex: 1; font-size: 12.5px; color: var(--ink-2); padding: 8px 10px; border-radius: 8px; border: 1px solid var(--rule); background: var(--paper); }
+  .ws-mobi-b:hover { border-color: var(--ink-3); }
+  .results-col { padding: 16px 16px 60px; }
+  .wd-greek { font-size: 48px; }
+}
