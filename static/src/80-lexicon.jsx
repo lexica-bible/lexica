@@ -25,7 +25,7 @@ function _comboOK(corpus, testament, language) {
   return true;
 }
 
-function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendingStrongsConsumed, isMobile, onAiSearch, onExitAi, aiActive, ai }) {
+function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendingStrongsConsumed, isMobile, onAiSearch, onAskWord }) {
   const [query, setQuery] = useState("");
   const [matches, setMatches] = useState(null);
   const [profile, setProfile] = useState(null);
@@ -90,7 +90,6 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
   }, [pendingStrongs]);
 
   const loadProfile = async (strongs, corpusOverride) => {
-    onExitAi?.();   // drilling into a word leaves any AI answer behind
     setLoading(true);
     setError(null);
     // NOTE: keep `matches`/`groupings` alive so the profile's back button can
@@ -286,7 +285,6 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
       onAiSearch(q);
       return;
     }
-    onExitAi?.();   // any other route is a word lookup — leave AI mode
     if (_STRONGS_RE.test(q)) {
       const normalized = /^[GgHh]/i.test(q) ? q.toUpperCase() : q;
       loadProfile(normalized);
@@ -346,11 +344,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
         </div>
       </section>
 
-      {aiActive ? (
-        <AiResults {...ai} />
-      ) : (
-        <>
-        <div className="lexicon-toolbar">
+      <div className="lexicon-toolbar">
         <div className="lexicon-corpus-toggle">
           {profile ? (
             /* Drilled into a word: All is N/A (search-only); gray a corpus the
@@ -452,10 +446,10 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
                     .reduce((s, b) => s + b.count, 0)
             } occurrences</span>
           </div>
-          {onAiSearch && (
+          {onAskWord && (
             <div className="lexicon-pivots">
-              <button className="lexicon-ask-corpus" onClick={() => { const aq = `How is ${profile.translit || profile.lemma} (${profile.strongs}) used in scripture?`; setQuery(aq); onAiSearch(aq); }}>
-                <Icon.Sparkle/> Ask the corpus about {profile.lemma}
+              <button className="lexicon-ask-corpus" onClick={() => onAskWord(profile.strongs, profile.lemma, profile.translit)}>
+                <Icon.Sparkle/> Ask AI about {profile.lemma}
               </button>
             </div>
           )}
@@ -564,8 +558,6 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
             </div>
           )}
         </div>
-      )}
-        </>
       )}
     </div>
   );

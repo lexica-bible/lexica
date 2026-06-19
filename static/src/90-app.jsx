@@ -18,7 +18,7 @@ function App() {
   const [corpusTextMode, setCorpusTextMode] = useState("abp"); // "abp" | "kjv"
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 1100);
   // Remember the active tab across refreshes (guard against a stale/removed value).
-  const _VIEWS = ["library", "lexicon", "notes", "study", "about"];
+  const _VIEWS = ["library", "lexicon", "corpus", "notes", "study", "about"];
   const [mainView, setMainView] = useState(() => {
     try { const v = localStorage.getItem("lexica.view.v1"); return _VIEWS.includes(v) ? v : "library"; }
     catch (e) { return "library"; }
@@ -27,6 +27,7 @@ function App() {
   const [libNav, setLibNav] = useState(null);
   const [libCrossRef, setLibCrossRef] = useState(null);
   const [lexiconPendingStrongs, setLexiconPendingStrongs] = useState(null);
+  const [corpusPending, setCorpusPending] = useState(null);   // {ask} or {scope:{strongs,lemma,translit}} handed to the Ask-the-corpus tab
   const [studyPending, setStudyPending] = useState(null);   // open this name-topic in Study (from the metaV sidebar)
   const [libTranslation, setLibTranslation] = useState("abp");
   // Which panel is the base of the detail rail ("overview" = chapter summary, "intro" =
@@ -252,41 +253,24 @@ function App() {
     handleNavChange("study");
   };
 
-  const handleAiSearch = async (overrideQ) => {
+  // AI lives in its own "Ask the corpus" tab now — a question hands off there.
+  const handleAiSearch = (overrideQ) => {
     const q = (overrideQ !== undefined ? overrideQ : q2).trim();
     if (!q) return;
-    if (overrideQ !== undefined) setQ2(overrideQ);
-    setMainView("lexicon");
-    setAiLoading(true);
-    setError("");
-    setAiNotice("");
-    setMode("ai");
-    setShowAllAi(false);
     setActiveEntry(null);
-    try {
-      const data = await api.aiSearch(q);
-      if (data.out_of_scope) {
-        setAiNotice(data.explanation || "This tool searches the Greek Bible corpus — try a question about a word, theme, or passage.");
-        setAllResults([]);
-        setAiMeta(null);
-      } else if (data.error) {
-        setError(data.error);
-        setAllResults([]);
-        setAiMeta(null);
-      } else {
-        setAllResults(flattenAiResults(data.results || []));
-        setAiMeta({ query: q, explanation: data.explanation || "", total: data.total || 0, keyStrongs: data.key_strongs || [] });
-      }
-    } catch (e) {
-      setError("Network error: " + e.message);
-      setAllResults([]);
-      setAiMeta(null);
-    } finally {
-      setAiLoading(false);
-    }
+    setLibCrossRef(null);
+    setCorpusPending({ ask: q });
+    handleNavChange("corpus");
   };
-
-  const searchLabel = q2.trim();
+  // From Word study's "✦ Ask AI about <word>": seed the corpus tab's scope +
+  // contextual suggestions (no question fired yet).
+  const handleAskWord = (strongs, lemma, translit) => {
+    if (!strongs) return;
+    setActiveEntry(null);
+    setLibCrossRef(null);
+    setCorpusPending({ scope: { strongs, lemma, translit } });
+    handleNavChange("corpus");
+  };
 
   // The right rail belongs to the tab that opened a card: a word card scopes to
   // where it was opened (Library, Search, or Lexicon), xref + note are Library-only.
@@ -300,21 +284,6 @@ function App() {
   // `has-detail` stays on and the reading column keeps its condensed measure. Mobile
   // never shows the summary.
   const showLibSummary = !isMobile && mainView === "library" && !showWord && !showXref && !showNote;
-
-  // Everything the merged Word study tab needs to render an "Ask the corpus"
-  // answer + verse results. The state still lives here; LexiconView shows it
-  // (in place of the word lookup) whenever a plain-language question is asked.
-  const wordStudyAi = {
-    notice: aiNotice, error, meta: aiMeta, mode, loading, aiLoading, primaryVerseCount,
-    showAll: showAllAi, setShowAll: setShowAllAi,
-    filter: corpusFilter, setFilter: setCorpusFilter,
-    sort: corpusSort, setSort: setCorpusSort,
-    textMode: corpusTextMode, setTextMode: setCorpusTextMode,
-    results: corpusFilteredResults, primaryStrongs, citedStrongs: citedStrongsApp, searchLabel,
-    onWordClick: (e) => { setActiveEntry(e); setEntryView("lexicon"); },
-    onReadInContext: handleReadInContext,
-    onPick: (e) => { setActiveEntry(e); setEntryView("lexicon"); },
-  };
 
   return (
     <div className={"app view-" + mainView + " " + ((showWord || showXref || showNote || showLibSummary) ? "has-detail " : "") + (focusMode && mainView === "library" ? "focus-mode" : "")}>
@@ -340,12 +309,19 @@ function App() {
         <div style={{ display: mainView === "study" ? undefined : "none" }}>
           <StudyView admin={owner} pending={studyPending} onConsumed={() => setStudyPending(null)} onNavigateToLibrary={handleReadInContext} />
         </div>
+        <div style={{ display: mainView === "corpus" ? undefined : "none" }}>
+          <AskCorpusView
+            pending={corpusPending}
+            onConsumed={() => setCorpusPending(null)}
+            onReadInContext={handleReadInContext}
+            onNavigateToLexicon={handleNavigateToLexicon}
+            isMobile={isMobile}
+          />
+        </div>
         <div style={{ display: mainView === "lexicon" ? undefined : "none" }}>
           <LexiconView
             onAiSearch={handleAiSearch}
-            onExitAi={() => { setMode("idle"); setAiMeta(null); setAllResults([]); setAiNotice(""); setError(""); }}
-            aiActive={mode === "ai"}
-            ai={wordStudyAi}
+            onAskWord={handleAskWord}
             onNavigateToLibrary={(book, chapter, verse, corpus) => {
               searchScrollRef.current = window.scrollY;
               setLibNav({ book, chapter, highlight: verse, scroll: true, extern: true, translation: corpus === "kjv" ? "kjv" : "abp" });
@@ -446,6 +422,10 @@ function App() {
           <button className={"mobile-tab" + (mainView === "lexicon" ? " active" : "")} onClick={() => handleNavChange("lexicon")}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M4 19V6a2 2 0 0 1 2-2h13"/><path d="M4 19a2 2 0 0 0 2 2h13V8H6a2 2 0 0 0-2 2"/></svg>
             Words
+          </button>
+          <button className={"mobile-tab" + (mainView === "corpus" ? " active" : "")} onClick={() => handleNavChange("corpus")}>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.4c.3 3.4 1.6 5.3 3.4 6.4 1.1.7 2.6 1 4.9 1.2-2.3.2-3.8.5-4.9 1.2-1.8 1.1-3.1 3-3.4 6.4-.3-3.4-1.6-5.3-3.4-6.4-1.1-.7-2.6-1-4.9-1.2 2.3-.2 3.8-.5 4.9-1.2C10.4 7.7 11.7 5.8 12 2.4Z"/></svg>
+            Ask
           </button>
           <button className={"mobile-tab" + (mainView === "notes" ? " active" : "")} onClick={() => handleNavChange("notes")}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M6 3h12v18l-6-4-6 4z"/></svg>

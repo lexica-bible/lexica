@@ -50,6 +50,7 @@ function Header({ activeView, onNavChange, owner }) {
         <nav className="hdr-nav">
           <button className={"hdr-link " + (activeView === "library" ? "active" : "")} onClick={() => onNavChange("library")}>Library</button>
           <button className={"hdr-link " + (activeView === "lexicon" ? "active" : "")} onClick={() => onNavChange("lexicon")}>Word study</button>
+          <button className={"hdr-link " + (activeView === "corpus" ? "active" : "")} onClick={() => onNavChange("corpus")}>Ask the corpus</button>
           <button className={"hdr-link " + (activeView === "notes" ? "active" : "")} onClick={() => onNavChange("notes")}>Notes</button>
           <button className={"hdr-link " + (activeView === "study" ? "active" : "")} onClick={() => onNavChange("study")}>Study</button>
           <button className={"hdr-link " + (activeView === "about" ? "active" : "")} onClick={() => onNavChange("about")}>About</button>

@@ -1729,6 +1729,9 @@ function Header({
     className: "hdr-link " + (activeView === "lexicon" ? "active" : ""),
     onClick: () => onNavChange("lexicon")
   }, "Word study"), /*#__PURE__*/React.createElement("button", {
+    className: "hdr-link " + (activeView === "corpus" ? "active" : ""),
+    onClick: () => onNavChange("corpus")
+  }, "Ask the corpus"), /*#__PURE__*/React.createElement("button", {
     className: "hdr-link " + (activeView === "notes" ? "active" : ""),
     onClick: () => onNavChange("notes")
   }, "Notes"), /*#__PURE__*/React.createElement("button", {
@@ -4386,6 +4389,312 @@ function CorpusResults({
     label: g.label,
     verses: g.verses
   }, passageGroupProps))));
+}
+
+// ============================================================
+// ASK THE CORPUS — the single home for AI search.
+// A question in plain language → a synthesis answer with cited Greek/Hebrew
+// lemmas and the passages that carry it. Reuses /api/ai-search (login-gated)
+// and CorpusResults for the verse evidence. Opened on its own ("corpus" tab)
+// or handed a word from Word study ("✦ Ask AI about <word>"), which seeds the
+// scope + contextual suggestions. (Phase 1 of the study/AI redesign — see
+// design/README.md + memory project_ai_search_redesign.)
+// ============================================================
+
+const _AC_HIST_KEY = "lexica.corpus.history.v1";
+
+// Broad starter questions (no word in scope).
+const _AC_BROAD = ["Where does Scripture link blood and covenant?", "Compare the OT and NT view of the Sabbath", "What does fire symbolize across the prophets?", "How is the temple reimagined in the New Testament?"];
+
+// Contextual questions seeded from the word handed in from Word study.
+function acScopeSuggestions(scope) {
+  if (!scope) return _AC_BROAD;
+  const w = scope.translit || scope.lemma || "this word";
+  return [`How does ${w} differ from its synonyms?`, `Trace ${w} from the OT to the NT`, `Where is ${w} most concentrated?`, `When does ${w} mean one thing versus another?`];
+}
+
+// The set of Strong's strings that mark a turn's key words in its verse list
+// (so the matched word lights up gold). Mirrors App.citedStrongsApp.
+function _acCited(keyStrongs) {
+  if (!keyStrongs || !keyStrongs.length) return null;
+  const s = new Set();
+  for (const p of keyStrongs) {
+    if (!p.strongs_base) continue;
+    const bare = strongsBare(p.strongs_base);
+    s.add(p.strongs_base);
+    s.add(bare);
+    s.add(`G${bare}`);
+    s.add(`H${bare}`);
+  }
+  return s.size ? s : null;
+}
+
+// One answered (or in-flight) question.
+function AcTurn({
+  turn,
+  textMode,
+  onReadInContext,
+  onLemma
+}) {
+  const [showAll, setShowAll] = useState(false);
+  const cited = useMemo(() => _acCited(turn.keyStrongs), [turn.keyStrongs]);
+  const primaryCount = useMemo(() => {
+    if (!turn.results) return 0;
+    const seen = new Set();
+    for (const e of turn.results) if (e.is_primary) seen.add(e.ref);
+    return seen.size || new Set(turn.results.map(e => e.ref)).size;
+  }, [turn.results]);
+  return /*#__PURE__*/React.createElement("div", {
+    className: "ac-turn"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ac-ask"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "ac-ask-q"
+  }, turn.question)), turn.loading ? /*#__PURE__*/React.createElement("div", {
+    className: "ac-answer thinking"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ac-syn-tag"
+  }, /*#__PURE__*/React.createElement(Icon.Sparkle, null), " Synthesis"), /*#__PURE__*/React.createElement("div", {
+    className: "ac-dots"
+  }, /*#__PURE__*/React.createElement("span", null), /*#__PURE__*/React.createElement("span", null), /*#__PURE__*/React.createElement("span", null)), /*#__PURE__*/React.createElement("div", {
+    className: "ac-thinking-l"
+  }, "Reading across the canon\u2026")) : turn.notice ? /*#__PURE__*/React.createElement("div", {
+    className: "ac-answer"
+  }, /*#__PURE__*/React.createElement("p", {
+    className: "ac-notice"
+  }, turn.notice)) : turn.error ? /*#__PURE__*/React.createElement("div", {
+    className: "ac-answer"
+  }, /*#__PURE__*/React.createElement("p", {
+    className: "ac-error"
+  }, turn.error)) : /*#__PURE__*/React.createElement("div", {
+    className: "ac-answer"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ac-syn-tag"
+  }, /*#__PURE__*/React.createElement(Icon.Sparkle, null), " Synthesis"), /*#__PURE__*/React.createElement("p", {
+    className: "ac-prose"
+  }, turn.explanation), turn.keyStrongs && turn.keyStrongs.length > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "ac-lemmas"
+  }, turn.keyStrongs.map(l => /*#__PURE__*/React.createElement("button", {
+    key: l.strongs_base,
+    className: "ac-lem",
+    onClick: () => onLemma(l),
+    title: "Study " + (l.translit || l.lemma) + " in Word study"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "ac-lem-gk" + (/^H/i.test(l.strongs_base) ? " heb" : ""),
+    dir: /^H/i.test(l.strongs_base) ? "rtl" : undefined
+  }, l.lemma), l.translit && /*#__PURE__*/React.createElement("span", {
+    className: "ac-lem-tr"
+  }, l.translit), /*#__PURE__*/React.createElement("span", {
+    className: "ac-lem-s"
+  }, l.strongs_base)))), turn.results && turn.results.length > 0 && /*#__PURE__*/React.createElement("div", {
+    className: "ac-evidence"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ac-evidence-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "ac-evidence-n"
+  }, primaryCount), /*#__PURE__*/React.createElement("span", {
+    className: "ac-evidence-l"
+  }, "key ", primaryCount === 1 ? "passage" : "passages"), turn.total > primaryCount && /*#__PURE__*/React.createElement("button", {
+    className: "ac-seeall",
+    onClick: () => setShowAll(v => !v)
+  }, showAll ? "Show less" : `See all ${turn.total}`)), /*#__PURE__*/React.createElement(CorpusResults, {
+    allResults: turn.results,
+    primaryStrongs: turn.keyStrongs,
+    citedStrongs: cited,
+    showAll: showAll,
+    onWordClick: () => {},
+    onReadInContext: onReadInContext,
+    corpusSort: "curated",
+    textMode: textMode
+  }))));
+}
+function AcComposer({
+  pinned,
+  value,
+  setValue,
+  onSubmit,
+  placeholder,
+  busy
+}) {
+  return /*#__PURE__*/React.createElement("div", {
+    className: "ac-composer " + (pinned ? "pinned" : "hero")
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ac-field"
+  }, /*#__PURE__*/React.createElement(Icon.Sparkle, {
+    className: "ac-field-i"
+  }), /*#__PURE__*/React.createElement("input", {
+    className: "ac-input",
+    value: value,
+    onChange: e => setValue(e.target.value),
+    onKeyDown: e => e.key === "Enter" && onSubmit(),
+    placeholder: placeholder
+  }), /*#__PURE__*/React.createElement("button", {
+    className: "ac-send",
+    onClick: onSubmit,
+    "aria-label": "Ask",
+    disabled: busy
+  }, busy ? /*#__PURE__*/React.createElement("span", {
+    className: "spinner"
+  }) : /*#__PURE__*/React.createElement(Icon.ArrowRight, null))));
+}
+function AskCorpusView({
+  pending,
+  onConsumed,
+  onReadInContext,
+  onNavigateToLexicon,
+  isMobile
+}) {
+  const [thread, setThread] = useState([]);
+  const [draft, setDraft] = useState("");
+  const [textMode, setTextMode] = useState("abp");
+  const [railOpen, setRailOpen] = useState(false);
+  const [scope, setScope] = useState(null); // { strongs, lemma, translit } from a Word study handoff
+  const [history, setHistory] = useState(() => {
+    try {
+      return JSON.parse(sessionStorage.getItem(_AC_HIST_KEY) || "[]");
+    } catch (e) {
+      return [];
+    }
+  });
+  const threadRef = useRef(null);
+  useEffect(() => {
+    try {
+      sessionStorage.setItem(_AC_HIST_KEY, JSON.stringify(history.slice(0, 24)));
+    } catch (e) {}
+  }, [history]);
+  const ask = async question => {
+    const q = (question || "").trim();
+    if (!q) return;
+    setDraft("");
+    if (isMobile) setRailOpen(false);
+    setHistory(h => [q, ...h.filter(x => x !== q)].slice(0, 24));
+    const idx = thread.length;
+    setThread(t => [...t, {
+      question: q,
+      loading: true
+    }]);
+    try {
+      const data = await api.aiSearch(q);
+      let turn;
+      if (data.login) turn = {
+        question: q,
+        error: "Sign in to ask the corpus."
+      };else if (data.out_of_scope) turn = {
+        question: q,
+        notice: data.explanation || "This tool searches the Greek & Hebrew Bible corpus — try a question about a word, theme, or passage."
+      };else if (data.error) turn = {
+        question: q,
+        error: data.error
+      };else turn = {
+        question: q,
+        explanation: data.explanation || "",
+        keyStrongs: data.key_strongs || [],
+        results: flattenAiResults(data.results || []),
+        total: data.total || 0
+      };
+      setThread(t => t.map((x, i) => i === idx ? turn : x));
+    } catch (e) {
+      setThread(t => t.map((x, i) => i === idx ? {
+        question: q,
+        error: "Network error: " + e.message
+      } : x));
+    }
+  };
+
+  // Handoff from Word study (scope) or a pushed question (ask) — consumed once.
+  useEffect(() => {
+    if (!pending) return;
+    if (pending.scope) setScope(pending.scope);
+    if (pending.ask) ask(pending.ask);
+    onConsumed?.();
+  }, [pending]);
+
+  // Keep the latest turn in view.
+  useEffect(() => {
+    const c = threadRef.current;
+    if (!c) return;
+    const turns = c.querySelectorAll(".ac-turn");
+    const last = turns[turns.length - 1];
+    if (last) {
+      const r = last.getBoundingClientRect(),
+        cr = c.getBoundingClientRect();
+      c.scrollTop += r.top - cr.top - 22;
+    }
+  }, [thread.length]);
+  const onLemma = l => onNavigateToLexicon?.(l.strongs_base, /^H/i.test(l.strongs_base) ? "kjv" : "abp");
+  const started = thread.length > 0;
+  const suggestions = acScopeSuggestions(scope);
+  return /*#__PURE__*/React.createElement("div", {
+    className: "ac" + (railOpen ? " rail-open" : "")
+  }, isMobile && railOpen && /*#__PURE__*/React.createElement("div", {
+    className: "ac-rail-scrim",
+    onClick: () => setRailOpen(false)
+  }), /*#__PURE__*/React.createElement("aside", {
+    className: "ac-rail" + (isMobile && !railOpen ? " hidden" : "")
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ac-rail-top"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "ac-rail-eyebrow"
+  }, /*#__PURE__*/React.createElement(Icon.Clock, null), " Recent questions")), history.length === 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "ac-rail-empty"
+  }, "Your session's questions collect here.") : /*#__PURE__*/React.createElement("div", {
+    className: "ac-rail-list"
+  }, history.map((h, i) => /*#__PURE__*/React.createElement("button", {
+    key: i,
+    className: "ac-rail-item",
+    onClick: () => ask(h)
+  }, h))), history.length > 0 && /*#__PURE__*/React.createElement("button", {
+    className: "ac-rail-clear",
+    onClick: () => setHistory([])
+  }, "Clear history")), /*#__PURE__*/React.createElement("main", {
+    className: "ac-main"
+  }, !started ? /*#__PURE__*/React.createElement("div", {
+    className: "ac-landing"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ac-landing-in"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ac-mark"
+  }, /*#__PURE__*/React.createElement(Icon.Sparkle, null)), /*#__PURE__*/React.createElement("h1", {
+    className: "ac-title"
+  }, "Ask the corpus"), scope && /*#__PURE__*/React.createElement("p", {
+    className: "ac-scope"
+  }, "Asking about", " ", /*#__PURE__*/React.createElement("span", {
+    className: "ac-scope-gk" + (/^H/i.test(scope.strongs) ? " heb" : ""),
+    dir: /^H/i.test(scope.strongs) ? "rtl" : undefined
+  }, scope.lemma), /*#__PURE__*/React.createElement("span", {
+    className: "ac-scope-s"
+  }, scope.strongs)), /*#__PURE__*/React.createElement("p", {
+    className: "ac-lede"
+  }, scope ? /*#__PURE__*/React.createElement(React.Fragment, null, "Ask anything about ", /*#__PURE__*/React.createElement("b", null, scope.translit || scope.lemma), " across the whole of Scripture \u2014 its synonyms, its spread, the passages that carry it. Or ask a broader question.") : "A question in plain language, answered across the whole of Scripture — with the Greek and Hebrew it turns on, and the passages that carry it."), /*#__PURE__*/React.createElement(AcComposer, {
+    pinned: false,
+    value: draft,
+    setValue: setDraft,
+    onSubmit: () => ask(draft),
+    placeholder: scope ? `Ask about ${scope.translit || scope.lemma}…` : "Ask anything across the Bible…"
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "ac-examples"
+  }, suggestions.map((ex, i) => /*#__PURE__*/React.createElement("button", {
+    key: i,
+    className: "ac-example",
+    onClick: () => ask(ex)
+  }, /*#__PURE__*/React.createElement("span", null, ex), /*#__PURE__*/React.createElement(Icon.ArrowRight, null)))))) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "ac-thread",
+    ref: threadRef
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ac-thread-col"
+  }, thread.map((turn, i) => /*#__PURE__*/React.createElement(AcTurn, {
+    key: i,
+    turn: turn,
+    textMode: textMode,
+    onReadInContext: onReadInContext,
+    onLemma: onLemma
+  })))), /*#__PURE__*/React.createElement(AcComposer, {
+    pinned: true,
+    value: draft,
+    setValue: setDraft,
+    onSubmit: () => ask(draft),
+    placeholder: "Ask a follow-up\u2026"
+  }))));
 }
 
 // ============================================================
@@ -12132,9 +12441,7 @@ function LexiconView({
   onPendingStrongsConsumed,
   isMobile,
   onAiSearch,
-  onExitAi,
-  aiActive,
-  ai
+  onAskWord
 }) {
   const [query, setQuery] = useState("");
   const [matches, setMatches] = useState(null);
@@ -12207,7 +12514,6 @@ function LexiconView({
     loadProfile(s, c);
   }, [pendingStrongs]);
   const loadProfile = async (strongs, corpusOverride) => {
-    onExitAi?.(); // drilling into a word leaves any AI answer behind
     setLoading(true);
     setError(null);
     // NOTE: keep `matches`/`groupings` alive so the profile's back button can
@@ -12413,7 +12719,6 @@ function LexiconView({
       onAiSearch(q);
       return;
     }
-    onExitAi?.(); // any other route is a word lookup — leave AI mode
     if (_STRONGS_RE.test(q)) {
       const normalized = /^[GgHh]/i.test(q) ? q.toUpperCase() : q;
       loadProfile(normalized);
@@ -12476,7 +12781,7 @@ function LexiconView({
     className: "spinner"
   }) : /*#__PURE__*/React.createElement(Icon.ArrowRight, null))), /*#__PURE__*/React.createElement("div", {
     className: "lexicon-search-hint"
-  }, "One word looks it up \xB7 a question asks the corpus"))), aiActive ? /*#__PURE__*/React.createElement(AiResults, ai) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+  }, "One word looks it up \xB7 a question asks the corpus"))), /*#__PURE__*/React.createElement("div", {
     className: "lexicon-toolbar"
   }, /*#__PURE__*/React.createElement("div", {
     className: "lexicon-corpus-toggle"
@@ -12599,16 +12904,12 @@ function LexiconView({
     className: "lexicon-strongs-tag"
   }, profile.strongs), /*#__PURE__*/React.createElement("span", {
     className: "lexicon-total"
-  }, testament === "all" ? profile.total : (filteredBooks || profile.books).filter(b => (b.testament || "").toLowerCase() === testament).reduce((s, b) => s + b.count, 0), " occurrences")), onAiSearch && /*#__PURE__*/React.createElement("div", {
+  }, testament === "all" ? profile.total : (filteredBooks || profile.books).filter(b => (b.testament || "").toLowerCase() === testament).reduce((s, b) => s + b.count, 0), " occurrences")), onAskWord && /*#__PURE__*/React.createElement("div", {
     className: "lexicon-pivots"
   }, /*#__PURE__*/React.createElement("button", {
     className: "lexicon-ask-corpus",
-    onClick: () => {
-      const aq = `How is ${profile.translit || profile.lemma} (${profile.strongs}) used in scripture?`;
-      setQuery(aq);
-      onAiSearch(aq);
-    }
-  }, /*#__PURE__*/React.createElement(Icon.Sparkle, null), " Ask the corpus about ", profile.lemma)), (profile.definition || /^G/i.test(profile.strongs)) && /*#__PURE__*/React.createElement("div", {
+    onClick: () => onAskWord(profile.strongs, profile.lemma, profile.translit)
+  }, /*#__PURE__*/React.createElement(Icon.Sparkle, null), " Ask AI about ", profile.lemma)), (profile.definition || /^G/i.test(profile.strongs)) && /*#__PURE__*/React.createElement("div", {
     className: "lexicon-def-section"
   }, /*#__PURE__*/React.createElement("button", {
     className: "lexicon-def-toggle",
@@ -12697,7 +12998,7 @@ function LexiconView({
     kjvCache: {}
   }) : /*#__PURE__*/React.createElement("div", {
     className: "lexicon-verse-loading"
-  }, "No verses.")))));
+  }, "No verses."))));
 }
 
 // ============================================================
@@ -12902,7 +13203,7 @@ function App() {
   const [corpusTextMode, setCorpusTextMode] = useState("abp"); // "abp" | "kjv"
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 1100);
   // Remember the active tab across refreshes (guard against a stale/removed value).
-  const _VIEWS = ["library", "lexicon", "notes", "study", "about"];
+  const _VIEWS = ["library", "lexicon", "corpus", "notes", "study", "about"];
   const [mainView, setMainView] = useState(() => {
     try {
       const v = localStorage.getItem("lexica.view.v1");
@@ -12919,6 +13220,7 @@ function App() {
   const [libNav, setLibNav] = useState(null);
   const [libCrossRef, setLibCrossRef] = useState(null);
   const [lexiconPendingStrongs, setLexiconPendingStrongs] = useState(null);
+  const [corpusPending, setCorpusPending] = useState(null); // {ask} or {scope:{strongs,lemma,translit}} handed to the Ask-the-corpus tab
   const [studyPending, setStudyPending] = useState(null); // open this name-topic in Study (from the metaV sidebar)
   const [libTranslation, setLibTranslation] = useState("abp");
   // Which panel is the base of the detail rail ("overview" = chapter summary, "intro" =
@@ -13204,45 +13506,33 @@ function App() {
     setStudyPending(id);
     handleNavChange("study");
   };
-  const handleAiSearch = async overrideQ => {
+
+  // AI lives in its own "Ask the corpus" tab now — a question hands off there.
+  const handleAiSearch = overrideQ => {
     const q = (overrideQ !== undefined ? overrideQ : q2).trim();
     if (!q) return;
-    if (overrideQ !== undefined) setQ2(overrideQ);
-    setMainView("lexicon");
-    setAiLoading(true);
-    setError("");
-    setAiNotice("");
-    setMode("ai");
-    setShowAllAi(false);
     setActiveEntry(null);
-    try {
-      const data = await api.aiSearch(q);
-      if (data.out_of_scope) {
-        setAiNotice(data.explanation || "This tool searches the Greek Bible corpus — try a question about a word, theme, or passage.");
-        setAllResults([]);
-        setAiMeta(null);
-      } else if (data.error) {
-        setError(data.error);
-        setAllResults([]);
-        setAiMeta(null);
-      } else {
-        setAllResults(flattenAiResults(data.results || []));
-        setAiMeta({
-          query: q,
-          explanation: data.explanation || "",
-          total: data.total || 0,
-          keyStrongs: data.key_strongs || []
-        });
-      }
-    } catch (e) {
-      setError("Network error: " + e.message);
-      setAllResults([]);
-      setAiMeta(null);
-    } finally {
-      setAiLoading(false);
-    }
+    setLibCrossRef(null);
+    setCorpusPending({
+      ask: q
+    });
+    handleNavChange("corpus");
   };
-  const searchLabel = q2.trim();
+  // From Word study's "✦ Ask AI about <word>": seed the corpus tab's scope +
+  // contextual suggestions (no question fired yet).
+  const handleAskWord = (strongs, lemma, translit) => {
+    if (!strongs) return;
+    setActiveEntry(null);
+    setLibCrossRef(null);
+    setCorpusPending({
+      scope: {
+        strongs,
+        lemma,
+        translit
+      }
+    });
+    handleNavChange("corpus");
+  };
 
   // The right rail belongs to the tab that opened a card: a word card scopes to
   // where it was opened (Library, Search, or Lexicon), xref + note are Library-only.
@@ -13256,40 +13546,6 @@ function App() {
   // `has-detail` stays on and the reading column keeps its condensed measure. Mobile
   // never shows the summary.
   const showLibSummary = !isMobile && mainView === "library" && !showWord && !showXref && !showNote;
-
-  // Everything the merged Word study tab needs to render an "Ask the corpus"
-  // answer + verse results. The state still lives here; LexiconView shows it
-  // (in place of the word lookup) whenever a plain-language question is asked.
-  const wordStudyAi = {
-    notice: aiNotice,
-    error,
-    meta: aiMeta,
-    mode,
-    loading,
-    aiLoading,
-    primaryVerseCount,
-    showAll: showAllAi,
-    setShowAll: setShowAllAi,
-    filter: corpusFilter,
-    setFilter: setCorpusFilter,
-    sort: corpusSort,
-    setSort: setCorpusSort,
-    textMode: corpusTextMode,
-    setTextMode: setCorpusTextMode,
-    results: corpusFilteredResults,
-    primaryStrongs,
-    citedStrongs: citedStrongsApp,
-    searchLabel,
-    onWordClick: e => {
-      setActiveEntry(e);
-      setEntryView("lexicon");
-    },
-    onReadInContext: handleReadInContext,
-    onPick: e => {
-      setActiveEntry(e);
-      setEntryView("lexicon");
-    }
-  };
   return /*#__PURE__*/React.createElement("div", {
     className: "app view-" + mainView + " " + (showWord || showXref || showNote || showLibSummary ? "has-detail " : "") + (focusMode && mainView === "library" ? "focus-mode" : "")
   }, /*#__PURE__*/React.createElement(Header, {
@@ -13356,19 +13612,21 @@ function App() {
     onNavigateToLibrary: handleReadInContext
   })), /*#__PURE__*/React.createElement("div", {
     style: {
+      display: mainView === "corpus" ? undefined : "none"
+    }
+  }, /*#__PURE__*/React.createElement(AskCorpusView, {
+    pending: corpusPending,
+    onConsumed: () => setCorpusPending(null),
+    onReadInContext: handleReadInContext,
+    onNavigateToLexicon: handleNavigateToLexicon,
+    isMobile: isMobile
+  })), /*#__PURE__*/React.createElement("div", {
+    style: {
       display: mainView === "lexicon" ? undefined : "none"
     }
   }, /*#__PURE__*/React.createElement(LexiconView, {
     onAiSearch: handleAiSearch,
-    onExitAi: () => {
-      setMode("idle");
-      setAiMeta(null);
-      setAllResults([]);
-      setAiNotice("");
-      setError("");
-    },
-    aiActive: mode === "ai",
-    ai: wordStudyAi,
+    onAskWord: handleAskWord,
     onNavigateToLibrary: (book, chapter, verse, corpus) => {
       searchScrollRef.current = window.scrollY;
       setLibNav({
@@ -13520,6 +13778,16 @@ function App() {
   }), /*#__PURE__*/React.createElement("path", {
     d: "M4 19a2 2 0 0 0 2 2h13V8H6a2 2 0 0 0-2 2"
   })), "Words"), /*#__PURE__*/React.createElement("button", {
+    className: "mobile-tab" + (mainView === "corpus" ? " active" : ""),
+    onClick: () => handleNavChange("corpus")
+  }, /*#__PURE__*/React.createElement("svg", {
+    width: "18",
+    height: "18",
+    viewBox: "0 0 24 24",
+    fill: "currentColor"
+  }, /*#__PURE__*/React.createElement("path", {
+    d: "M12 2.4c.3 3.4 1.6 5.3 3.4 6.4 1.1.7 2.6 1 4.9 1.2-2.3.2-3.8.5-4.9 1.2-1.8 1.1-3.1 3-3.4 6.4-.3-3.4-1.6-5.3-3.4-6.4-1.1-.7-2.6-1-4.9-1.2 2.3-.2 3.8-.5 4.9-1.2C10.4 7.7 11.7 5.8 12 2.4Z"
+  })), "Ask"), /*#__PURE__*/React.createElement("button", {
     className: "mobile-tab" + (mainView === "notes" ? " active" : ""),
     onClick: () => handleNavChange("notes")
   }, /*#__PURE__*/React.createElement("svg", {
