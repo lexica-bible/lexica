@@ -360,33 +360,40 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
   const backToResults = () => { setProfile(null); setSelectedBook(null); setVerseList(null); };
 
   return (
-    <div className={"ws" + (profile ? "" : " center-only") + (isMobile ? " is-mobile" : "")}>
+    <div className={"ws" + (isMobile ? " is-mobile" : "")}>
 
-      {/* LEFT — distribution rail (only with a word in focus) */}
-      {isMobile && railOpen && profile && <div className="rail-scrim" onClick={() => setRailOpen(false)}/>}
-      {profile && (
-        <aside className={"brail" + (isMobile && !railOpen ? " hidden" : "")}>
-          <div className="brail-top">
-            <div className="brail-eyebrow">Distribution by book</div>
-            <div className="brail-sub"><span className="brail-gk" dir={isHeb ? "rtl" : undefined}>{profile.lemma}</span> · {profile.books.length} {profile.books.length === 1 ? "book" : "books"}</div>
-          </div>
-          <div className="brail-scroll">
-            <button className={"brow brow-all" + (!selectedBook ? " on" : "")}
-              onClick={() => { setSelectedBook(null); setVerseList(null); setBookGlosses(null); setSelectedGloss(null); setFilteredBooks(null); if (isMobile) setRailOpen(false); }}>
-              <span className="brow-name">All books</span>
-              <span className="brow-n">{occCount}</span>
-            </button>
-            {distBooks.map(b => (
-              <button key={b.book} className={"brow" + (selectedBook === b.book ? " on" : "")}
-                onClick={() => { selectBook(b.book); if (isMobile) setRailOpen(false); }}>
-                <span className="brow-name">{b.name}</span>
-                <span className="brow-bar"><span className="brow-fill" style={{ width: Math.max(7, (b.count / maxCount) * 100) + "%" }}/></span>
-                <span className="brow-n">{b.count}</span>
+      {/* LEFT — distribution rail (empty state before a word is studied) */}
+      {isMobile && railOpen && <div className="rail-scrim" onClick={() => setRailOpen(false)}/>}
+      <aside className={"brail" + (isMobile && !railOpen ? " hidden" : "")}>
+        {profile ? (
+          <>
+            <div className="brail-top">
+              <div className="brail-eyebrow">Distribution by book</div>
+              <div className="brail-sub"><span className="brail-gk" dir={isHeb ? "rtl" : undefined}>{profile.lemma}</span> · {profile.books.length} {profile.books.length === 1 ? "book" : "books"}</div>
+            </div>
+            <div className="brail-scroll">
+              <button className={"brow brow-all" + (!selectedBook ? " on" : "")}
+                onClick={() => { setSelectedBook(null); setVerseList(null); setBookGlosses(null); setSelectedGloss(null); setFilteredBooks(null); if (isMobile) setRailOpen(false); }}>
+                <span className="brow-name">All books</span>
+                <span className="brow-n">{occCount}</span>
               </button>
-            ))}
-          </div>
-        </aside>
-      )}
+              {distBooks.map(b => (
+                <button key={b.book} className={"brow" + (selectedBook === b.book ? " on" : "")}
+                  onClick={() => { selectBook(b.book); if (isMobile) setRailOpen(false); }}>
+                  <span className="brow-name">{b.name}</span>
+                  <span className="brow-bar"><span className="brow-fill" style={{ width: Math.max(7, (b.count / maxCount) * 100) + "%" }}/></span>
+                  <span className="brow-n">{b.count}</span>
+                </button>
+              ))}
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="brail-top"><div className="brail-eyebrow">Distribution by book</div></div>
+            <div className="brail-empty">The books a word appears in show here once you study it.</div>
+          </>
+        )}
+      </aside>
 
       {/* CENTER — search + occurrences / results */}
       <main className="center">
@@ -514,18 +521,21 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
                 ) : (verseList && verseList[0] && verseList[0].error) ? (
                   <div className="occ-empty" style={{ color: "var(--danger, #b91c1c)" }}>{verseList[0].error}</div>
                 ) : (verseList && verseList.length) ? (
-                  <div className="corpus-groups">
-                    <CorpusGroup
-                      label={selBookName}
-                      verses={verseList.map(v => ({ book: selectedBook, chapter: v.chapter, verse: v.verse, ref: `${selectedBook} ${v.chapter}:${v.verse}` }))}
-                      allResults={[]}
-                      onWordClick={onWordClick}
-                      onReadInContext={onNavigateToLibrary ? (b, c, vv) => onNavigateToLibrary(b, c, vv, profileCorpus) : undefined}
-                      textMode={profileCorpus === "kjv" ? "kjv" : "greek"}
-                      primaryStrongs={null}
-                      citedStrongs={citedStrongs}
-                      kjvCache={{}}
-                    />
+                  <div className="vlist">
+                    {verseList.map(v => (
+                      <VerseRow
+                        key={`${selectedBook}-${v.chapter}-${v.verse}`}
+                        book={selectedBook} chapter={v.chapter} verse={v.verse}
+                        label={`${selectedBook} ${v.chapter}:${v.verse}`}
+                        allResults={[]}
+                        onWordClick={onWordClick}
+                        onReadInContext={onNavigateToLibrary ? (b, c, vv) => onNavigateToLibrary(b, c, vv, profileCorpus) : undefined}
+                        textMode={profileCorpus === "kjv" ? "kjv" : "greek"}
+                        primaryStrongs={null}
+                        citedStrongs={citedStrongs}
+                        kjvCache={{}}
+                      />
+                    ))}
                   </div>
                 ) : (
                   <div className="occ-empty">No verses.</div>
@@ -549,10 +559,11 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
         </div>
       </main>
 
-      {/* RIGHT — word detail card (only with a word in focus) */}
-      {isMobile && detailOpen && profile && <div className="wd-scrim" onClick={() => setDetailOpen(false)}/>}
-      {profile && (
-        <aside className={"wd" + (isMobile && !detailOpen ? " hidden" : "")}>
+      {/* RIGHT — word detail card (empty state before a word is studied) */}
+      {isMobile && detailOpen && <div className="wd-scrim" onClick={() => setDetailOpen(false)}/>}
+      <aside className={"wd" + (isMobile && !detailOpen ? " hidden" : "")}>
+        {profile ? (
+          <>
           <div className="wd-head">
             <span className="wd-strongs">{profile.strongs}</span>
             <span className="wd-head-r">
@@ -624,8 +635,15 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
               </div>
             )}
           </div>
-        </aside>
-      )}
+          </>
+        ) : (
+          <div className="empty-pane">
+            <div className="empty-mark"><Icon.Book width="30" height="30"/></div>
+            <div className="empty-t">No word selected</div>
+            <div className="empty-s">Search a Greek or Hebrew word, a transliteration, or a Strong's number to study it here.</div>
+          </div>
+        )}
+      </aside>
     </div>
   );
 }

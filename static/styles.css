@@ -4278,6 +4278,16 @@ button.study-verse-ref { border: none; }
 /* the card reuses the existing .lexicon-glosses / .lexicon-dist-item chips for renders */
 .wd .lexicon-glosses { margin: 0; }
 
+/* flat occurrence list (plain verse rows, no collapsible group) */
+.vlist { display: flex; flex-direction: column; }
+
+/* empty states (3-pane frame shows before a word is studied) */
+.brail-empty { padding: 22px 18px; font-size: 13px; color: var(--ink-4); line-height: 1.55; }
+.empty-pane { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 48px 28px; height: 100%; }
+.empty-mark { color: var(--ink-4); margin-bottom: 16px; }
+.empty-t { font-family: var(--f-serif); font-size: 19px; color: var(--ink); margin-bottom: 6px; }
+.empty-s { font-size: 13px; color: var(--ink-3); max-width: 280px; line-height: 1.5; }
+
 /* mobile panel-toggle bar (center) */
 .ws-mobi { display: none; }
 .rail-scrim, .wd-scrim { display: none; }
