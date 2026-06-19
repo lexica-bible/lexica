@@ -265,6 +265,37 @@ def test_bracket_helper_split():
           ["In", "the beginning", "God made", "", "all."])
 
 
+# ── 7b. split a verb spread over 2+ ABP slots (Jas 2:21 class) ──────────────────
+def test_split_numbered():
+    # Jas 2:21: one verb (G1344) whose English wraps the subject -> "1Was 5justified]".
+    # The old single-number read kept slot 1 and dropped slot 5, gluing "Was justified"
+    # onto position 1 (wrong order, missing bracket number). Now BOTH slots survive.
+    _, _, _, w = B.parse_abp_line(
+        "(Jas 2:21)  [3AbrahamG* G3588 4our FatherG3962 G1473 2notG3756 "
+        "6byG1537 7worksG2041 1Was 5justified],G1344")
+    was      = next(x for x in w if x[0] == "Was")
+    justified= next(x for x in w if x[0].startswith("justified"))
+    check("'Was' keeps slot 1", was[2], 1)
+    check("'justified' keeps slot 5 (was dropped before)", justified[2], 5)
+    check("both halves share the verb strongs", (was[1], justified[1]), ("G1344", "G1344"))
+    check("']' closes on the last half only", (was[4], justified[4]), (False, True))
+    # the bracket's slot numbers are now complete 1..7 (no hole)
+    nums = sorted(x[2] for x in w if x[2] is not None)
+    check("bracket numbering 1..7 complete", nums, [1, 2, 3, 4, 5, 6, 7])
+
+    # Three-piece split (Job 3:4 "1may 5search 7out" for G327).
+    _, _, _, w = B.parse_abp_line("(Job 3:4)  1may 5search 7outG327")
+    check("three slots all emitted", [x[0] for x in w], ["may", "search", "out"])
+    check("three slots keep their numbers", [x[2] for x in w], [1, 5, 7])
+    check("three slots share one strongs", {x[1] for x in w}, {"G327"})
+
+    # Single-number chunk is untouched -> no spurious split, byte-identical word list.
+    _, _, _, w = B.parse_abp_line(
+        "(Gen 1:1)  InG1722 the beginningG746 God madeG4160 G2316 all.G3956")
+    check("single-number chunks: no spurious split", [x[0] for x in w],
+          ["In", "the beginning", "God made", "", "all."])
+
+
 # ── 8. iter_source_tokens (the parser the bracket audits share) ────────────────
 def test_iter_source_tokens():
     # The bracket audits delegate to this, so it must apply the SAME peel as the

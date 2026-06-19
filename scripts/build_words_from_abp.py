@@ -86,6 +86,7 @@ _VERSE_RE    = re.compile(r"^\((\w+)\s+(\d+):(\d+)\)\s+(.*)")
 _STRIP_PUNCT = re.compile(r"[^\w\s]")
 _WORD_NUM    = re.compile(r"(?<!\w)\d+")
 _LEAD_NUM    = re.compile(r"^\d+")
+_NUM_PIECE   = re.compile(r"(?<![\w.])\d+(?=[A-Za-z])")  # an ABP position number leading a word
 
 
 # ── Parsing ───────────────────────────────────────────────────────────────────
@@ -123,6 +124,32 @@ def bracket_info(raw: str):
     return abp_pos, opens, closes
 
 
+def _split_numbered(mid: str):
+    """Split a bracket-interior gloss that carries MORE THAN ONE ABP position number
+    into one piece per number — so a single Greek word whose English is spread across
+    two reorder slots ('1Was 5justified]' for ἐδικαιώθη; '1let 3have]' for ἐχέτω)
+    keeps BOTH slot numbers instead of collapsing onto the first.
+
+    Returns [mid] unchanged when there are 0 or 1 position numbers, so every
+    unaffected verse parses byte-for-byte as before. Any text before the first number
+    (a leading '[' or a peeled-off helper) rides along on the first piece; the '['/']'
+    markers stay on whichever piece holds them.
+        "1Was 5justified],"  -> ["1Was ", "5justified],"]
+        "[2let 6boast"       -> ["[2let ", "6boast"]
+        "1may 5search 7out"  -> ["1may ", "5search ", "7out"]
+    (Jas 2:21 / Job 3:4 class — 321 spots canon-wide where ABP wraps one verb's
+    English around the subject; the old single-number read dropped the later slot.)
+    """
+    cuts = [m.start() for m in _NUM_PIECE.finditer(mid)][1:]  # split BEFORE each number after the 1st
+    if not cuts:
+        return [mid]
+    pieces, prev = [], 0
+    for c in cuts:
+        pieces.append(mid[prev:c]); prev = c
+    pieces.append(mid[prev:])
+    return pieces
+
+
 def _emit_words(raw: str, strongs):
     """
     Expand ONE (gloss, strongs) chunk into 1-3 words, peeling gloss text the SOURCE
@@ -155,8 +182,9 @@ def _emit_words(raw: str, strongs):
     out = []
     if lead is not None:                             # outside, before the bracket
         out.append((clean_english(lead), strongs, None, False, False))
-    ap, ob, cb = bracket_info(mid)                   # bracket word keeps the markers
-    out.append((clean_english(mid), strongs, ap, ob, cb))
+    for piece in _split_numbered(mid):               # one word per ABP slot (verb split over 2+ slots)
+        ap, ob, cb = bracket_info(piece)             # each piece keeps its own marker + number
+        out.append((clean_english(piece), strongs, ap, ob, cb))
     if trail is not None:                            # outside, after the bracket
         out.append((clean_english(trail), strongs, None, False, False))
     return out
