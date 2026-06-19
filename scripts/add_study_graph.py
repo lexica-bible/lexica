@@ -138,8 +138,10 @@ CLAIMS = {
                          "text": "Baptism is not the instrument of salvation"},
     "c_outward_pledge": {"provenance": "inference", "label": "Outward pledge of faith",
                          "text": "Baptism is the outward pledge of a faith already held"},
-    "t_berean": {"provenance": "conclusion", "label": "Pledge, not instrument",
-                 "text": "Baptism is the outward pledge of a faith already held — commanded, but not the instrument of salvation"},
+    "t_berean": {"provenance": "conclusion", "label": "Not the instrument",
+                 "text": "Baptism does not save — commanded, but not the instrument of salvation"},
+    "t_berean_pledge": {"provenance": "conclusion", "label": "Outward pledge",
+                 "text": "Baptism is the outward pledge of a faith already held"},
 }
 
 OVERLAYS = [
@@ -274,9 +276,14 @@ OVERLAYS = [
             #  contested corroborators on this branch. The pledge stands on 1 Peter 3:21 alone; the
             #  "baptizō is medium-neutral" point now lives in the foundational-words strip, where a
             #  lexical fact about the key word belongs — not as a graph node.)
-            # Converge
+            # Converge — TWO sibling conclusions. An OR-only engine can't put a conjunction ("pledge AND
+            # not-instrument") in one node without the whole thing reading STANDS off its easier half, so the
+            # claim is split: the PLEDGE half stands on 1 Peter 3:21 (solid); the NOT-INSTRUMENT half rests on
+            # the contested Spirit-timing chain. The overlay THESIS is the distinctive, contested claim
+            # (not-instrument), so the verdict pill reads honestly DEPENDS — it no longer borrows the pledge
+            # half's STANDS. The pledge conclusion still renders, visibly reached on solid links.
+            {"from": "c_outward_pledge", "to": "t_berean_pledge", "relation": "supports", "strength": "solid"},
             {"from": "c_not_instrument", "to": "t_berean", "relation": "supports", "strength": "solid"},
-            {"from": "c_outward_pledge", "to": "t_berean", "relation": "supports", "strength": "solid"},
             # Objections (raised, handled — off the solid spine; reused verses carry their regen strength)
             {"from": "v_luke23_43", "to": "c_not_instrument", "relation": "supports", "strength": "contested",
              "why": "The thief (saved unbaptized) confirms 'not strictly the instrument in every case' — carried at the same contested rating it has in the regeneration overlay. Confirming only, not part of the spine."},
