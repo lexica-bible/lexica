@@ -134,10 +134,6 @@ CLAIMS = {
                          "text": "Cornelius receiving the Spirit before baptism is the normal pattern, not a one-off sign authenticating the Gentiles to the Jewish witnesses present"},
     "c_sealed_pre_bap": {"provenance": "inference", "label": "Sealed before baptism",
                          "text": "Salvation is sealed by the Spirit, received before and apart from baptism"},
-    "c_not_instrument": {"provenance": "inference", "label": "Not the instrument",
-                         "text": "Baptism is not the instrument of salvation"},
-    "c_outward_pledge": {"provenance": "inference", "label": "Outward pledge of faith",
-                         "text": "Baptism is the outward pledge of a faith already held"},
     "t_berean": {"provenance": "conclusion", "label": "Not the instrument",
                  "text": "Baptism does not save — commanded, but not the instrument of salvation"},
     "t_berean_pledge": {"provenance": "conclusion", "label": "Outward pledge",
@@ -266,32 +262,30 @@ OVERLAYS = [
              "why": "The seal premise is solid, but moving from 'the Spirit seals' to 'sealed BEFORE baptism' assumes the timing generalization — so this edge is contested, not solid."},
             {"from": "c_timing_normal", "to": "c_sealed_pre_bap", "relation": "supports", "strength": "contested",
              "why": "Granting the timing is the norm, the sealing precedes baptism; but the timing itself is contested, so the conclusion does not stand on solid links alone."},
-            {"from": "c_sealed_pre_bap", "to": "c_not_instrument", "relation": "supports", "strength": "solid"},
+            {"from": "c_sealed_pre_bap", "to": "t_berean", "relation": "supports", "strength": "solid"},
             # Outward-pledge branch
-            {"from": "v_1pet3_21", "to": "c_outward_pledge", "relation": "supports", "strength": "solid",
+            {"from": "v_1pet3_21", "to": "t_berean_pledge", "relation": "supports", "strength": "solid",
              "why": "The verse's own clause locates the role in the pledge of a good conscience, not the washing."},
-            {"from": "v_rom6", "to": "c_outward_pledge", "relation": "supports", "strength": "contested",
+            {"from": "v_rom6", "to": "t_berean_pledge", "relation": "supports", "strength": "contested",
              "why": "Corroborating only — Romans 6 can also be read as baptism effecting union, so it doesn't carry solid weight alone."},
             # (Trimmed: the baptizō / 1 Cor 12:13 / Gal 3:27 lexical sub-argument was an extra stack of
             #  contested corroborators on this branch. The pledge stands on 1 Peter 3:21 alone; the
             #  "baptizō is medium-neutral" point now lives in the foundational-words strip, where a
             #  lexical fact about the key word belongs — not as a graph node.)
-            # Converge — TWO sibling conclusions. An OR-only engine can't put a conjunction ("pledge AND
+            # TWO sibling conclusions, NOT one. An OR-only engine can't hold a conjunction ("pledge AND
             # not-instrument") in one node without the whole thing reading STANDS off its easier half, so the
-            # claim is split: the PLEDGE half stands on 1 Peter 3:21 (solid); the NOT-INSTRUMENT half rests on
-            # the contested Spirit-timing chain. The overlay THESIS is the distinctive, contested claim
-            # (not-instrument), so the verdict pill reads honestly DEPENDS — it no longer borrows the pledge
-            # half's STANDS. The pledge conclusion still renders, visibly reached on solid links.
-            {"from": "c_outward_pledge", "to": "t_berean_pledge", "relation": "supports", "strength": "solid"},
-            {"from": "c_not_instrument", "to": "t_berean", "relation": "supports", "strength": "solid"},
+            # claim is split into two conclusion boxes the branches feed DIRECTLY (the old "not the instrument"
+            # / "outward pledge" inference boxes were duplicates of these conclusions and were collapsed in):
+            # the PLEDGE conclusion stands on 1 Peter 3:21 (solid); the NOT-INSTRUMENT conclusion (the overlay
+            # THESIS) rests on the contested Spirit-timing chain, so its verdict pill reads honestly DEPENDS.
             # Objections (raised, handled — off the solid spine; reused verses carry their regen strength)
-            {"from": "v_luke23_43", "to": "c_not_instrument", "relation": "supports", "strength": "contested",
+            {"from": "v_luke23_43", "to": "t_berean", "relation": "supports", "strength": "contested",
              "why": "The thief (saved unbaptized) confirms 'not strictly the instrument in every case' — carried at the same contested rating it has in the regeneration overlay. Confirming only, not part of the spine."},
-            {"from": "v_acts2_38", "to": "c_not_instrument", "relation": "undercuts", "strength": "contested",
+            {"from": "v_acts2_38", "to": "t_berean", "relation": "undercuts", "strength": "contested",
              "why": "'For the forgiveness of sins' is the causal/telic (eis) debate; answered by Cornelius (Spirit + forgiveness before baptism) without having to win the eis argument."},
-            {"from": "v_john3_5", "to": "c_not_instrument", "relation": "undercuts", "strength": "contested",
+            {"from": "v_john3_5", "to": "t_berean", "relation": "undercuts", "strength": "contested",
              "why": "'Born of water' — baptism / physical birth / the word all live; parked unresolved either direction."},
-            {"from": "v_mark16_16", "to": "c_not_instrument", "relation": "supports", "strength": "contested",
+            {"from": "v_mark16_16", "to": "t_berean", "relation": "supports", "strength": "contested",
              "why": "The condemnation clause ties damnation to unbelief, not non-baptism — rested on the unbelief clause (not the longer ending's textual dispute), and weak-for-efficacy in the regen overlay, so contested here too."},
         ],
     },
