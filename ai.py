@@ -672,7 +672,7 @@ _ai_cache_ver: str | None = None  # computed once from prompt template + book li
 
 # Bump this integer whenever server-side search logic changes in a way that
 # affects results but doesn't change _AI_SYSTEM_TMPL (e.g. new fallback steps).
-_CACHE_CODE_VER = 25
+_CACHE_CODE_VER = 26   # 26: fix Hebrew key_strongs resolved as Greek (prefix from prose)
 
 
 def _get_ai_cache_ver() -> str:
@@ -829,6 +829,15 @@ def ai_search():
             if m:
                 orig = m.group(1).upper() if m.group(1) else None
                 _ks_pairs_all.append((m.group(2), orig))
+        # The AI reliably prefixes Strong's in its PROSE (e.g. "H1818 dam"); use
+        # that to fill in any bare key_strongs numbers. The >5624 range heuristic
+        # misfires on low Hebrew numbers (H1818 dam, H1285 berith) and would
+        # resolve them as the Greek word of the same number (G1818 ἐξαπατάω).
+        _expl_pref: dict[str, str] = {}
+        for _pm, _pn in re.findall(r'\b([GHgh])(\d+(?:\.\d+)?)\b', explanation):
+            _expl_pref.setdefault(_pn, _pm.upper())
+        _ks_pairs_all = [(num, orig or _expl_pref.get(num)) for (num, orig) in _ks_pairs_all]
+
         def _is_heb(pair):
             sn, orig = pair
             if orig == "H": return True

@@ -36,9 +36,10 @@ function _acCited(keyStrongs) {
   if (!keyStrongs || !keyStrongs.length) return null;
   const s = new Set();
   for (const p of keyStrongs) {
-    if (!p.strongs_base) continue;
-    const bare = strongsBare(p.strongs_base);
-    s.add(p.strongs_base); s.add(bare); s.add(`G${bare}`); s.add(`H${bare}`);
+    const tag = p.strongs || p.strongs_base;   // p.strongs is H/G-prefixed
+    if (!tag) continue;
+    const bare = strongsBare(tag);
+    s.add(tag); s.add(bare); s.add(`G${bare}`); s.add(`H${bare}`);
   }
   return s.size ? s : null;
 }
@@ -75,15 +76,18 @@ function AcTurn({ turn, textMode, onReadInContext, onLemma }) {
 
           {turn.keyStrongs && turn.keyStrongs.length > 0 && (
             <div className="ac-lemmas">
-              {turn.keyStrongs.map((l) => (
-                <button key={l.strongs_base} className="ac-lem" onClick={() => onLemma(l)}
-                  title={"Study " + (l.translit || l.lemma) + " in Word study"}>
-                  <span className={"ac-lem-gk" + (/^H/i.test(l.strongs_base) ? " heb" : "")}
-                    dir={/^H/i.test(l.strongs_base) ? "rtl" : undefined}>{l.lemma}</span>
-                  {l.translit && <span className="ac-lem-tr">{l.translit}</span>}
-                  <span className="ac-lem-s">{l.strongs_base}</span>
-                </button>
-              ))}
+              {turn.keyStrongs.map((l) => {
+                const tag = l.strongs || l.strongs_base;   // H/G-prefixed
+                const heb = /^H/i.test(tag);
+                return (
+                  <button key={tag} className="ac-lem" onClick={() => onLemma(l)}
+                    title={"Study " + (l.translit || l.lemma) + " in Word study"}>
+                    <span className={"ac-lem-gk" + (heb ? " heb" : "")} dir={heb ? "rtl" : undefined}>{l.lemma}</span>
+                    {l.translit && <span className="ac-lem-tr">{l.translit}</span>}
+                    <span className="ac-lem-s">{tag}</span>
+                  </button>
+                );
+              })}
             </div>
           )}
 
@@ -186,7 +190,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
     if (last) { const r = last.getBoundingClientRect(), cr = c.getBoundingClientRect(); c.scrollTop += (r.top - cr.top) - 22; }
   }, [thread.length]);
 
-  const onLemma = (l) => onNavigateToLexicon?.(l.strongs_base, /^H/i.test(l.strongs_base) ? "kjv" : "abp");
+  const onLemma = (l) => { const tag = l.strongs || l.strongs_base; onNavigateToLexicon?.(tag, /^H/i.test(tag) ? "kjv" : "abp"); };
   const started = thread.length > 0;
   const suggestions = acScopeSuggestions(scope);
 
