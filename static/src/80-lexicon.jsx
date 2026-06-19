@@ -2,6 +2,9 @@
 // LEXICON VIEW
 // ============================================================
 const _STRONGS_RE = /^[GgHh]?\d+(\.\d+)?$/;
+// A phrase or question (3+ words, or ending in "?") routes to the corpus AI
+// instead of a word lookup. A single English word still does a lexicon lookup.
+const _looksLikeQuestion = (s) => /\?\s*$/.test(s) || s.split(/\s+/).filter(Boolean).length >= 3;
 
 // Which original languages live in a (corpus, testament) slice of the English
 // search results. ABP is Greek throughout (the Septuagint in the OT, Greek NT);
@@ -22,7 +25,7 @@ function _comboOK(corpus, testament, language) {
   return true;
 }
 
-function LexiconView({ onNavigateToSearch, onNavigateToLibrary, onWordClick, pendingStrongs, onPendingStrongsConsumed, isMobile }) {
+function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendingStrongsConsumed, isMobile, onAiSearch, onExitAi, aiActive, ai }) {
   const [query, setQuery] = useState("");
   const [matches, setMatches] = useState(null);
   const [profile, setProfile] = useState(null);
@@ -87,6 +90,7 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, onWordClick, pen
   }, [pendingStrongs]);
 
   const loadProfile = async (strongs, corpusOverride) => {
+    onExitAi?.();   // drilling into a word leaves any AI answer behind
     setLoading(true);
     setError(null);
     // NOTE: keep `matches`/`groupings` alive so the profile's back button can
@@ -277,6 +281,12 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, onWordClick, pen
     setMatches(null);
     setGroupings(null);
     setError(null);
+    // Plain-language question / phrase → hand the box over to the corpus AI.
+    if (onAiSearch && !_STRONGS_RE.test(q) && !_isGreekHebrew(q) && _looksLikeQuestion(q)) {
+      onAiSearch(q);
+      return;
+    }
+    onExitAi?.();   // any other route is a word lookup — leave AI mode
     if (_STRONGS_RE.test(q)) {
       const normalized = /^[GgHh]/i.test(q) ? q.toUpperCase() : q;
       loadProfile(normalized);
@@ -316,7 +326,7 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, onWordClick, pen
       <section className="search">
         <div className="search-cell">
           <label className="search-label">
-            <span className="search-eyebrow">Word lookup</span>
+            <span className="search-eyebrow">Search</span>
           </label>
           <form className="search-field" onSubmit={handleSubmit}>
             <Icon.Search className="search-icon"/>
@@ -325,17 +335,22 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, onWordClick, pen
               type="text"
               value={query}
               onChange={e => setQuery(e.target.value)}
-              placeholder="Greek, Hebrew, English, or Strong's (G4151, H7307)…"
+              placeholder="A word, a Strong's number, or a question…"
               autoFocus
             />
             <button type="submit" className="search-go" aria-label="Search" disabled={loading}>
               {loading ? <span className="spinner"/> : <Icon.ArrowRight/>}
             </button>
           </form>
+          <div className="lexicon-search-hint">One word looks it up · a question asks the corpus</div>
         </div>
       </section>
 
-      <div className="lexicon-toolbar">
+      {aiActive ? (
+        <AiResults {...ai} />
+      ) : (
+        <>
+        <div className="lexicon-toolbar">
         <div className="lexicon-corpus-toggle">
           {profile ? (
             /* Drilled into a word: All is N/A (search-only); gray a corpus the
@@ -392,6 +407,11 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, onWordClick, pen
           <div className="lexicon-dist-label">
             rendered as "{query.trim()}" · {visibleGroupings.length} {visibleGroupings.length === 1 ? "word" : "words"}
           </div>
+          {onAiSearch && (
+            <button className="lexicon-ask-instead" onClick={() => { setQuery(query.trim()); onAiSearch(query.trim()); }}>
+              Or ask the corpus about "{query.trim()}" →
+            </button>
+          )}
           {visibleGroupings.length === 0 ? (
             <div className="lexicon-dist-label">No {language === "greek" ? "Greek" : "Hebrew"} words rendered "{query.trim()}".</div>
           ) : visibleGroupings.map(g => (
@@ -432,6 +452,13 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, onWordClick, pen
                     .reduce((s, b) => s + b.count, 0)
             } occurrences</span>
           </div>
+          {onAiSearch && (
+            <div className="lexicon-pivots">
+              <button className="lexicon-ask-corpus" onClick={() => { const aq = `How is ${profile.translit || profile.lemma} (${profile.strongs}) used in scripture?`; setQuery(aq); onAiSearch(aq); }}>
+                <Icon.Sparkle/> Ask the corpus about {profile.lemma}
+              </button>
+            </div>
+          )}
           {(profile.definition || /^G/i.test(profile.strongs)) && (
             <div className="lexicon-def-section">
               <button className="lexicon-def-toggle" onClick={() => setShowDef(v => !v)}>
@@ -537,6 +564,8 @@ function LexiconView({ onNavigateToSearch, onNavigateToLibrary, onWordClick, pen
             </div>
           )}
         </div>
+      )}
+        </>
       )}
     </div>
   );

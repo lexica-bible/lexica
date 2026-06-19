@@ -12,13 +12,13 @@ function App() {
   const [error, setError] = useState("");
   const [aiNotice, setAiNotice] = useState("");
   const [activeEntry, setActiveEntry] = useState(null);
-  const [entryView, setEntryView] = useState(null);   // which tab opened the word card (library|search|lexicon) — scopes the rail to that tab
+  const [entryView, setEntryView] = useState(null);   // which tab opened the word card (library|lexicon) — scopes the rail to that tab
   const [corpusFilter, setCorpusFilter] = useState("all"); // "all" | "ot" | "nt"
   const [corpusSort, setCorpusSort] = useState("curated"); // "curated" | "canonical"
   const [corpusTextMode, setCorpusTextMode] = useState("abp"); // "abp" | "kjv"
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 1100);
   // Remember the active tab across refreshes (guard against a stale/removed value).
-  const _VIEWS = ["library", "lexicon", "search", "notes", "study", "about"];
+  const _VIEWS = ["library", "lexicon", "notes", "study", "about"];
   const [mainView, setMainView] = useState(() => {
     try { const v = localStorage.getItem("lexica.view.v1"); return _VIEWS.includes(v) ? v : "library"; }
     catch (e) { return "library"; }
@@ -256,7 +256,7 @@ function App() {
     const q = (overrideQ !== undefined ? overrideQ : q2).trim();
     if (!q) return;
     if (overrideQ !== undefined) setQ2(overrideQ);
-    setMainView("search");
+    setMainView("lexicon");
     setAiLoading(true);
     setError("");
     setAiNotice("");
@@ -301,6 +301,21 @@ function App() {
   // never shows the summary.
   const showLibSummary = !isMobile && mainView === "library" && !showWord && !showXref && !showNote;
 
+  // Everything the merged Word study tab needs to render an "Ask the corpus"
+  // answer + verse results. The state still lives here; LexiconView shows it
+  // (in place of the word lookup) whenever a plain-language question is asked.
+  const wordStudyAi = {
+    notice: aiNotice, error, meta: aiMeta, mode, loading, aiLoading, primaryVerseCount,
+    showAll: showAllAi, setShowAll: setShowAllAi,
+    filter: corpusFilter, setFilter: setCorpusFilter,
+    sort: corpusSort, setSort: setCorpusSort,
+    textMode: corpusTextMode, setTextMode: setCorpusTextMode,
+    results: corpusFilteredResults, primaryStrongs, citedStrongs: citedStrongsApp, searchLabel,
+    onWordClick: (e) => { setActiveEntry(e); setEntryView("lexicon"); },
+    onReadInContext: handleReadInContext,
+    onPick: (e) => { setActiveEntry(e); setEntryView("lexicon"); },
+  };
+
   return (
     <div className={"app view-" + mainView + " " + ((showWord || showXref || showNote || showLibSummary) ? "has-detail " : "") + (focusMode && mainView === "library" ? "focus-mode" : "")}>
       <Header activeView={mainView} onNavChange={handleNavChange} owner={owner}/>
@@ -327,7 +342,10 @@ function App() {
         </div>
         <div style={{ display: mainView === "lexicon" ? undefined : "none" }}>
           <LexiconView
-            onNavigateToSearch={(q) => { handleNavChange("search"); setQ2(q); }}
+            onAiSearch={handleAiSearch}
+            onExitAi={() => { setMode("idle"); setAiMeta(null); setAllResults([]); setAiNotice(""); setError(""); }}
+            aiActive={mode === "ai"}
+            ai={wordStudyAi}
             onNavigateToLibrary={(book, chapter, verse, corpus) => {
               searchScrollRef.current = window.scrollY;
               setLibNav({ book, chapter, highlight: verse, scroll: true, extern: true, translation: corpus === "kjv" ? "kjv" : "abp" });
@@ -342,92 +360,6 @@ function App() {
             onPendingStrongsConsumed={() => setLexiconPendingStrongs(null)}
             isMobile={isMobile}
           />
-        </div>
-        <div className="main-inner" style={{ display: (mainView === "library" || mainView === "about" || mainView === "lexicon" || mainView === "notes" || mainView === "study") ? "none" : undefined }}>
-          <><SearchBar
-            q2={q2} setQ2={setQ2}
-            onAiSearch={handleAiSearch}
-            aiLoading={aiLoading}
-          />
-
-          {aiNotice && (
-            <div style={{
-              marginTop: "14px",
-              padding: "12px 16px",
-              background: "var(--accent-soft, #f0f4ff)",
-              border: "1px solid var(--accent, #b0bfff)",
-              borderRadius: "10px",
-              color: "var(--ink-2, #444)",
-              fontSize: "14px",
-            }}>
-              {aiNotice}
-            </div>
-          )}
-
-          {error && (
-            <div style={{
-              marginTop: "14px",
-              padding: "12px 16px",
-              background: "#fef2f2",
-              border: "1px solid #fecaca",
-              borderRadius: "10px",
-              color: "#b91c1c",
-              fontSize: "14px",
-            }}>
-              {error}
-            </div>
-          )}
-
-          {aiMeta && (
-            <AIAnswer
-              query={aiMeta.query}
-              explanation={aiMeta.explanation}
-              keyStrongs={aiMeta.keyStrongs || []}
-              onPick={(e) => { setActiveEntry(e); setEntryView("search"); }}
-            />
-          )}
-
-          {mode === "ai" && (
-            <>
-              <div className="results-head">
-                <div className="results-meta">
-                  <span className="results-count">{(loading || aiLoading) ? "…" : primaryVerseCount}</span>
-                  <span className="results-label">primary {primaryVerseCount === 1 ? "verse" : "verses"}</span>
-                  {!loading && aiMeta && aiMeta.total > primaryVerseCount && (
-                    <button className="see-all-link" onClick={() => setShowAllAi(v => !v)}>
-                      {showAllAi ? "Show less" : `See all ${aiMeta.total} occurrences`}
-                    </button>
-                  )}
-                  {searchLabel && !aiLoading && <span className="results-for">for "<b>{searchLabel}</b>"</span>}
-                </div>
-                <div className="results-controls" style={{marginLeft:"auto"}}>
-                  <div className="results-sort">
-                    <button className={"sort-btn " + (corpusFilter === "all" ? "on" : "")} onClick={() => setCorpusFilter("all")}>All</button>
-                    <button className={"sort-btn " + (corpusFilter === "ot"  ? "on" : "")} onClick={() => setCorpusFilter("ot")}>OT</button>
-                    <button className={"sort-btn " + (corpusFilter === "nt"  ? "on" : "")} onClick={() => setCorpusFilter("nt")}>NT</button>
-                    <span style={{margin:"0 4px",color:"var(--rule-2)"}}>|</span>
-                    <button className={"sort-btn " + (corpusSort === "curated"   ? "on" : "")} onClick={() => setCorpusSort("curated")}>Curated</button>
-                    <button className={"sort-btn " + (corpusSort === "canonical" ? "on" : "")} onClick={() => setCorpusSort("canonical")}>Canonical</button>
-                    <span style={{margin:"0 4px",color:"var(--rule-2)"}}>|</span>
-                    <button className={"sort-btn " + (corpusTextMode === "abp" ? "on" : "")} onClick={() => setCorpusTextMode("abp")}>ABP</button>
-                    <button className={"sort-btn " + (corpusTextMode === "kjv" ? "on" : "")} onClick={() => setCorpusTextMode("kjv")}>KJV</button>
-                  </div>
-                </div>
-              </div>
-              {(loading || aiLoading) ? (
-                <div style={{ textAlign: "center", padding: "60px 20px", color: "var(--ink-3)", fontSize: "14px" }}>
-                  Searching…
-                </div>
-              ) : (
-                <CorpusResults allResults={corpusFilteredResults} primaryStrongs={primaryStrongs} citedStrongs={citedStrongsApp} showAll={showAllAi} onWordClick={(e) => { setActiveEntry(e); setEntryView("search"); }} onReadInContext={handleReadInContext} corpusSort={corpusSort} textMode={corpusTextMode} />
-              )}
-            </>
-          )}
-
-          <footer className="foot">
-            <span>Lexica · Greek Septuagint (LXX) · Apostolic Bible Polyglot Interlinear · Strong's Greek</span>
-          </footer>
-          </>
         </div>
       </main>
 
@@ -513,11 +445,7 @@ function App() {
           </button>
           <button className={"mobile-tab" + (mainView === "lexicon" ? " active" : "")} onClick={() => handleNavChange("lexicon")}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><path d="M4 19V6a2 2 0 0 1 2-2h13"/><path d="M4 19a2 2 0 0 0 2 2h13V8H6a2 2 0 0 0-2 2"/></svg>
-            Lexicon
-          </button>
-          <button className={"mobile-tab" + (mainView === "search" ? " active" : "")} onClick={() => handleNavChange("search")}>
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="11" cy="11" r="7"/><line x1="16.5" y1="16.5" x2="21" y2="21"/></svg>
-            Search
+            Words
           </button>
           <button className={"mobile-tab" + (mainView === "notes" ? " active" : "")} onClick={() => handleNavChange("notes")}>
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M6 3h12v18l-6-4-6 4z"/></svg>

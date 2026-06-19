@@ -49,45 +49,13 @@ function Header({ activeView, onNavChange, owner }) {
         </div>
         <nav className="hdr-nav">
           <button className={"hdr-link " + (activeView === "library" ? "active" : "")} onClick={() => onNavChange("library")}>Library</button>
-          <button className={"hdr-link " + (activeView === "lexicon" ? "active" : "")} onClick={() => onNavChange("lexicon")}>Lexicon</button>
-          <button className={"hdr-link " + (activeView === "search" ? "active" : "")} onClick={() => onNavChange("search")}>Search</button>
+          <button className={"hdr-link " + (activeView === "lexicon" ? "active" : "")} onClick={() => onNavChange("lexicon")}>Word study</button>
           <button className={"hdr-link " + (activeView === "notes" ? "active" : "")} onClick={() => onNavChange("notes")}>Notes</button>
           <button className={"hdr-link " + (activeView === "study" ? "active" : "")} onClick={() => onNavChange("study")}>Study</button>
           <button className={"hdr-link " + (activeView === "about" ? "active" : "")} onClick={() => onNavChange("about")}>About</button>
         </nav>
       </div>
     </header>
-  );
-}
-
-// ============================================================
-// SEARCH BAR
-// ============================================================
-function SearchBar({ q2, setQ2, onAiSearch, aiLoading }) {
-  return (
-    <section className="search">
-      <div className="search-cell">
-        <label className="search-label">
-          <span className="search-eyebrow ai">
-            <span className="ai-dot"></span>
-            Ask the corpus
-          </span>
-        </label>
-        <form className="search-field ai-field" onSubmit={(e) => { e.preventDefault(); onAiSearch(); }}>
-          <Icon.Sparkle className="search-icon"/>
-          <input
-            type="text"
-            className="search-input"
-            placeholder="Ask the corpus… Where does the divine council appear?"
-            value={q2}
-            onChange={(e) => setQ2(e.target.value)}
-          />
-          <button type="submit" className="search-go" aria-label="Submit">
-            {aiLoading ? <span className="spinner"/> : <Icon.ArrowRight/>}
-          </button>
-        </form>
-      </div>
-    </section>
   );
 }
 

@@ -41,14 +41,81 @@ function AIAnswer({ query, explanation, keyStrongs, onPick }) {
 }
 
 // ============================================================
+// ASK-THE-CORPUS RESULTS
+// ============================================================
+// The AI answer + verse results, shown inside the Word study tab when a
+// plain-language question is asked. (This was the standalone Search tab; the
+// state still lives in App and is passed down as one bundle.)
+function AiResults({
+  notice, error, meta, mode, loading, aiLoading,
+  primaryVerseCount, showAll, setShowAll,
+  filter, setFilter, sort, setSort, textMode, setTextMode,
+  results, primaryStrongs, citedStrongs, searchLabel,
+  onWordClick, onReadInContext, onPick,
+}) {
+  return (
+    <>
+      {notice && (
+        <div style={{ marginTop: "14px", padding: "12px 16px", background: "var(--accent-soft, #f0f4ff)", border: "1px solid var(--accent, #b0bfff)", borderRadius: "10px", color: "var(--ink-2, #444)", fontSize: "14px" }}>
+          {notice}
+        </div>
+      )}
+      {error && (
+        <div style={{ marginTop: "14px", padding: "12px 16px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: "10px", color: "#b91c1c", fontSize: "14px" }}>
+          {error}
+        </div>
+      )}
+      {meta && (
+        <AIAnswer query={meta.query} explanation={meta.explanation} keyStrongs={meta.keyStrongs || []} onPick={onPick} />
+      )}
+      {mode === "ai" && (
+        <>
+          <div className="results-head">
+            <div className="results-meta">
+              <span className="results-count">{(loading || aiLoading) ? "…" : primaryVerseCount}</span>
+              <span className="results-label">primary {primaryVerseCount === 1 ? "verse" : "verses"}</span>
+              {!loading && meta && meta.total > primaryVerseCount && (
+                <button className="see-all-link" onClick={() => setShowAll(v => !v)}>
+                  {showAll ? "Show less" : `See all ${meta.total} occurrences`}
+                </button>
+              )}
+              {searchLabel && !aiLoading && <span className="results-for">for "<b>{searchLabel}</b>"</span>}
+            </div>
+            <div className="results-controls" style={{ marginLeft: "auto" }}>
+              <div className="results-sort">
+                <button className={"sort-btn " + (filter === "all" ? "on" : "")} onClick={() => setFilter("all")}>All</button>
+                <button className={"sort-btn " + (filter === "ot"  ? "on" : "")} onClick={() => setFilter("ot")}>OT</button>
+                <button className={"sort-btn " + (filter === "nt"  ? "on" : "")} onClick={() => setFilter("nt")}>NT</button>
+                <span style={{ margin: "0 4px", color: "var(--rule-2)" }}>|</span>
+                <button className={"sort-btn " + (sort === "curated"   ? "on" : "")} onClick={() => setSort("curated")}>Curated</button>
+                <button className={"sort-btn " + (sort === "canonical" ? "on" : "")} onClick={() => setSort("canonical")}>Canonical</button>
+                <span style={{ margin: "0 4px", color: "var(--rule-2)" }}>|</span>
+                <button className={"sort-btn " + (textMode === "abp" ? "on" : "")} onClick={() => setTextMode("abp")}>ABP</button>
+                <button className={"sort-btn " + (textMode === "kjv" ? "on" : "")} onClick={() => setTextMode("kjv")}>KJV</button>
+              </div>
+            </div>
+          </div>
+          {(loading || aiLoading) ? (
+            <div style={{ textAlign: "center", padding: "60px 20px", color: "var(--ink-3)", fontSize: "14px" }}>
+              Searching…
+            </div>
+          ) : (
+            <CorpusResults allResults={results} primaryStrongs={primaryStrongs} citedStrongs={citedStrongs} showAll={showAll} onWordClick={onWordClick} onReadInContext={onReadInContext} corpusSort={sort} textMode={textMode} />
+          )}
+        </>
+      )}
+    </>
+  );
+}
+
+// ============================================================
 // GUIDED TOUR
 // ============================================================
 const TOUR_STEPS = [
   { icon: "Book",    label: "Welcome to Lexica", body: "Lexica is a Greek and Hebrew word study tool built for the diligent Berean. No prior training required. Every word traces back to its Greek or Hebrew source so you can read what the text actually says — before any theological framework is applied. You won't be a scholar overnight, but you'll immediately be a Berean." },
-  { icon: "Search",  label: "The Lexicon",       body: "Search by English, Greek, Hebrew, transliteration, or Strong's number. Results span both Greek (LSJ) and Hebrew (BDB) — click any word for its full lexicon entry and a context-aware AI summary anchored in the source text." },
+  { icon: "Search",  label: "Word study",        body: "Search by English, Greek, Hebrew, transliteration, or Strong's number — or just ask a question in plain language like 'Where does pneuma appear in Genesis?' One word looks it up; a question searches the whole corpus and cites the passages. Results span both Greek (LSJ) and Hebrew (BDB) — click any word for its full lexicon entry and a context-aware AI summary anchored in the source text." },
   { icon: "Book",    label: "The Library",       body: "Read in ABP Greek, KJV, or the Berean Standard Bible — on their own, in parallel, or compare them side by side. Switch between plain reading and a full interlinear (Hebrew over OT words, Greek over NT), follow the text in chronological order, or listen with read-along audio. Click any word for its lexicon entry; click any verse number for cross-references. Beyond the canon you'll also find the Apocrypha, 1 Enoch, and the Apostolic Fathers." },
   { icon: "Panel",   label: "Cross-References",  body: "Every verse connects to Torrey's Treasury of Scripture Knowledge — AI-curated to the strongest matches and synthesized into a thematic overview anchored in ABP vocabulary." },
-  { icon: "Sparkle", label: "Ask the Corpus",    body: "Ask in plain language: 'Where does pneuma appear in Genesis?' or 'Differences in how KJV and ABP render spirit in the OT.' The AI searches Greek and Hebrew simultaneously and cites specific passages." },
   { icon: "Note",    label: "Notes & Highlights", body: "Highlight verses in five colors, write notes on any word or verse, drop bookmarks, and keep a free-form journal. It all saves in your browser automatically — no account required. Sign in with email or Google to sync everything across your devices." },
   { icon: "Book",    label: "Support Lexica",    body: "Lexica is free, independent, and has no ads. It's maintained by one person who thinks serious Bible study tools shouldn't cost hundreds of dollars. If it's been useful to your studies, a small contribution keeps it running.", donate: true },
 ];

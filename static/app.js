@@ -1728,10 +1728,7 @@ function Header({
   }, "Library"), /*#__PURE__*/React.createElement("button", {
     className: "hdr-link " + (activeView === "lexicon" ? "active" : ""),
     onClick: () => onNavChange("lexicon")
-  }, "Lexicon"), /*#__PURE__*/React.createElement("button", {
-    className: "hdr-link " + (activeView === "search" ? "active" : ""),
-    onClick: () => onNavChange("search")
-  }, "Search"), /*#__PURE__*/React.createElement("button", {
+  }, "Word study"), /*#__PURE__*/React.createElement("button", {
     className: "hdr-link " + (activeView === "notes" ? "active" : ""),
     onClick: () => onNavChange("notes")
   }, "Notes"), /*#__PURE__*/React.createElement("button", {
@@ -1741,48 +1738,6 @@ function Header({
     className: "hdr-link " + (activeView === "about" ? "active" : ""),
     onClick: () => onNavChange("about")
   }, "About"))));
-}
-
-// ============================================================
-// SEARCH BAR
-// ============================================================
-function SearchBar({
-  q2,
-  setQ2,
-  onAiSearch,
-  aiLoading
-}) {
-  return /*#__PURE__*/React.createElement("section", {
-    className: "search"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "search-cell"
-  }, /*#__PURE__*/React.createElement("label", {
-    className: "search-label"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "search-eyebrow ai"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "ai-dot"
-  }), "Ask the corpus")), /*#__PURE__*/React.createElement("form", {
-    className: "search-field ai-field",
-    onSubmit: e => {
-      e.preventDefault();
-      onAiSearch();
-    }
-  }, /*#__PURE__*/React.createElement(Icon.Sparkle, {
-    className: "search-icon"
-  }), /*#__PURE__*/React.createElement("input", {
-    type: "text",
-    className: "search-input",
-    placeholder: "Ask the corpus\u2026 Where does the divine council appear?",
-    value: q2,
-    onChange: e => setQ2(e.target.value)
-  }), /*#__PURE__*/React.createElement("button", {
-    type: "submit",
-    className: "search-go",
-    "aria-label": "Submit"
-  }, aiLoading ? /*#__PURE__*/React.createElement("span", {
-    className: "spinner"
-  }) : /*#__PURE__*/React.createElement(Icon.ArrowRight, null)))));
 }
 
 // ============================================================
@@ -11861,6 +11816,131 @@ function AIAnswer({
 }
 
 // ============================================================
+// ASK-THE-CORPUS RESULTS
+// ============================================================
+// The AI answer + verse results, shown inside the Word study tab when a
+// plain-language question is asked. (This was the standalone Search tab; the
+// state still lives in App and is passed down as one bundle.)
+function AiResults({
+  notice,
+  error,
+  meta,
+  mode,
+  loading,
+  aiLoading,
+  primaryVerseCount,
+  showAll,
+  setShowAll,
+  filter,
+  setFilter,
+  sort,
+  setSort,
+  textMode,
+  setTextMode,
+  results,
+  primaryStrongs,
+  citedStrongs,
+  searchLabel,
+  onWordClick,
+  onReadInContext,
+  onPick
+}) {
+  return /*#__PURE__*/React.createElement(React.Fragment, null, notice && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: "14px",
+      padding: "12px 16px",
+      background: "var(--accent-soft, #f0f4ff)",
+      border: "1px solid var(--accent, #b0bfff)",
+      borderRadius: "10px",
+      color: "var(--ink-2, #444)",
+      fontSize: "14px"
+    }
+  }, notice), error && /*#__PURE__*/React.createElement("div", {
+    style: {
+      marginTop: "14px",
+      padding: "12px 16px",
+      background: "#fef2f2",
+      border: "1px solid #fecaca",
+      borderRadius: "10px",
+      color: "#b91c1c",
+      fontSize: "14px"
+    }
+  }, error), meta && /*#__PURE__*/React.createElement(AIAnswer, {
+    query: meta.query,
+    explanation: meta.explanation,
+    keyStrongs: meta.keyStrongs || [],
+    onPick: onPick
+  }), mode === "ai" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "results-head"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "results-meta"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "results-count"
+  }, loading || aiLoading ? "…" : primaryVerseCount), /*#__PURE__*/React.createElement("span", {
+    className: "results-label"
+  }, "primary ", primaryVerseCount === 1 ? "verse" : "verses"), !loading && meta && meta.total > primaryVerseCount && /*#__PURE__*/React.createElement("button", {
+    className: "see-all-link",
+    onClick: () => setShowAll(v => !v)
+  }, showAll ? "Show less" : `See all ${meta.total} occurrences`), searchLabel && !aiLoading && /*#__PURE__*/React.createElement("span", {
+    className: "results-for"
+  }, "for \"", /*#__PURE__*/React.createElement("b", null, searchLabel), "\"")), /*#__PURE__*/React.createElement("div", {
+    className: "results-controls",
+    style: {
+      marginLeft: "auto"
+    }
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "results-sort"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "sort-btn " + (filter === "all" ? "on" : ""),
+    onClick: () => setFilter("all")
+  }, "All"), /*#__PURE__*/React.createElement("button", {
+    className: "sort-btn " + (filter === "ot" ? "on" : ""),
+    onClick: () => setFilter("ot")
+  }, "OT"), /*#__PURE__*/React.createElement("button", {
+    className: "sort-btn " + (filter === "nt" ? "on" : ""),
+    onClick: () => setFilter("nt")
+  }, "NT"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      margin: "0 4px",
+      color: "var(--rule-2)"
+    }
+  }, "|"), /*#__PURE__*/React.createElement("button", {
+    className: "sort-btn " + (sort === "curated" ? "on" : ""),
+    onClick: () => setSort("curated")
+  }, "Curated"), /*#__PURE__*/React.createElement("button", {
+    className: "sort-btn " + (sort === "canonical" ? "on" : ""),
+    onClick: () => setSort("canonical")
+  }, "Canonical"), /*#__PURE__*/React.createElement("span", {
+    style: {
+      margin: "0 4px",
+      color: "var(--rule-2)"
+    }
+  }, "|"), /*#__PURE__*/React.createElement("button", {
+    className: "sort-btn " + (textMode === "abp" ? "on" : ""),
+    onClick: () => setTextMode("abp")
+  }, "ABP"), /*#__PURE__*/React.createElement("button", {
+    className: "sort-btn " + (textMode === "kjv" ? "on" : ""),
+    onClick: () => setTextMode("kjv")
+  }, "KJV")))), loading || aiLoading ? /*#__PURE__*/React.createElement("div", {
+    style: {
+      textAlign: "center",
+      padding: "60px 20px",
+      color: "var(--ink-3)",
+      fontSize: "14px"
+    }
+  }, "Searching\u2026") : /*#__PURE__*/React.createElement(CorpusResults, {
+    allResults: results,
+    primaryStrongs: primaryStrongs,
+    citedStrongs: citedStrongs,
+    showAll: showAll,
+    onWordClick: onWordClick,
+    onReadInContext: onReadInContext,
+    corpusSort: sort,
+    textMode: textMode
+  })));
+}
+
+// ============================================================
 // GUIDED TOUR
 // ============================================================
 const TOUR_STEPS = [{
@@ -11869,8 +11949,8 @@ const TOUR_STEPS = [{
   body: "Lexica is a Greek and Hebrew word study tool built for the diligent Berean. No prior training required. Every word traces back to its Greek or Hebrew source so you can read what the text actually says — before any theological framework is applied. You won't be a scholar overnight, but you'll immediately be a Berean."
 }, {
   icon: "Search",
-  label: "The Lexicon",
-  body: "Search by English, Greek, Hebrew, transliteration, or Strong's number. Results span both Greek (LSJ) and Hebrew (BDB) — click any word for its full lexicon entry and a context-aware AI summary anchored in the source text."
+  label: "Word study",
+  body: "Search by English, Greek, Hebrew, transliteration, or Strong's number — or just ask a question in plain language like 'Where does pneuma appear in Genesis?' One word looks it up; a question searches the whole corpus and cites the passages. Results span both Greek (LSJ) and Hebrew (BDB) — click any word for its full lexicon entry and a context-aware AI summary anchored in the source text."
 }, {
   icon: "Book",
   label: "The Library",
@@ -11879,10 +11959,6 @@ const TOUR_STEPS = [{
   icon: "Panel",
   label: "Cross-References",
   body: "Every verse connects to Torrey's Treasury of Scripture Knowledge — AI-curated to the strongest matches and synthesized into a thematic overview anchored in ABP vocabulary."
-}, {
-  icon: "Sparkle",
-  label: "Ask the Corpus",
-  body: "Ask in plain language: 'Where does pneuma appear in Genesis?' or 'Differences in how KJV and ABP render spirit in the OT.' The AI searches Greek and Hebrew simultaneously and cites specific passages."
 }, {
   icon: "Note",
   label: "Notes & Highlights",
@@ -12027,6 +12103,9 @@ function AboutView({
 // LEXICON VIEW
 // ============================================================
 const _STRONGS_RE = /^[GgHh]?\d+(\.\d+)?$/;
+// A phrase or question (3+ words, or ending in "?") routes to the corpus AI
+// instead of a word lookup. A single English word still does a lexicon lookup.
+const _looksLikeQuestion = s => /\?\s*$/.test(s) || s.split(/\s+/).filter(Boolean).length >= 3;
 
 // Which original languages live in a (corpus, testament) slice of the English
 // search results. ABP is Greek throughout (the Septuagint in the OT, Greek NT);
@@ -12047,12 +12126,15 @@ function _comboOK(corpus, testament, language) {
   return true;
 }
 function LexiconView({
-  onNavigateToSearch,
   onNavigateToLibrary,
   onWordClick,
   pendingStrongs,
   onPendingStrongsConsumed,
-  isMobile
+  isMobile,
+  onAiSearch,
+  onExitAi,
+  aiActive,
+  ai
 }) {
   const [query, setQuery] = useState("");
   const [matches, setMatches] = useState(null);
@@ -12125,6 +12207,7 @@ function LexiconView({
     loadProfile(s, c);
   }, [pendingStrongs]);
   const loadProfile = async (strongs, corpusOverride) => {
+    onExitAi?.(); // drilling into a word leaves any AI answer behind
     setLoading(true);
     setError(null);
     // NOTE: keep `matches`/`groupings` alive so the profile's back button can
@@ -12325,6 +12408,12 @@ function LexiconView({
     setMatches(null);
     setGroupings(null);
     setError(null);
+    // Plain-language question / phrase → hand the box over to the corpus AI.
+    if (onAiSearch && !_STRONGS_RE.test(q) && !_isGreekHebrew(q) && _looksLikeQuestion(q)) {
+      onAiSearch(q);
+      return;
+    }
+    onExitAi?.(); // any other route is a word lookup — leave AI mode
     if (_STRONGS_RE.test(q)) {
       const normalized = /^[GgHh]/i.test(q) ? q.toUpperCase() : q;
       loadProfile(normalized);
@@ -12366,7 +12455,7 @@ function LexiconView({
     className: "search-label"
   }, /*#__PURE__*/React.createElement("span", {
     className: "search-eyebrow"
-  }, "Word lookup")), /*#__PURE__*/React.createElement("form", {
+  }, "Search")), /*#__PURE__*/React.createElement("form", {
     className: "search-field",
     onSubmit: handleSubmit
   }, /*#__PURE__*/React.createElement(Icon.Search, {
@@ -12376,7 +12465,7 @@ function LexiconView({
     type: "text",
     value: query,
     onChange: e => setQuery(e.target.value),
-    placeholder: "Greek, Hebrew, English, or Strong's (G4151, H7307)\u2026",
+    placeholder: "A word, a Strong's number, or a question\u2026",
     autoFocus: true
   }), /*#__PURE__*/React.createElement("button", {
     type: "submit",
@@ -12385,7 +12474,9 @@ function LexiconView({
     disabled: loading
   }, loading ? /*#__PURE__*/React.createElement("span", {
     className: "spinner"
-  }) : /*#__PURE__*/React.createElement(Icon.ArrowRight, null))))), /*#__PURE__*/React.createElement("div", {
+  }) : /*#__PURE__*/React.createElement(Icon.ArrowRight, null))), /*#__PURE__*/React.createElement("div", {
+    className: "lexicon-search-hint"
+  }, "One word looks it up \xB7 a question asks the corpus"))), aiActive ? /*#__PURE__*/React.createElement(AiResults, ai) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "lexicon-toolbar"
   }, /*#__PURE__*/React.createElement("div", {
     className: "lexicon-corpus-toggle"
@@ -12456,7 +12547,13 @@ function LexiconView({
     className: "lexicon-results"
   }, /*#__PURE__*/React.createElement("div", {
     className: "lexicon-dist-label"
-  }, "rendered as \"", query.trim(), "\" \xB7 ", visibleGroupings.length, " ", visibleGroupings.length === 1 ? "word" : "words"), visibleGroupings.length === 0 ? /*#__PURE__*/React.createElement("div", {
+  }, "rendered as \"", query.trim(), "\" \xB7 ", visibleGroupings.length, " ", visibleGroupings.length === 1 ? "word" : "words"), onAiSearch && /*#__PURE__*/React.createElement("button", {
+    className: "lexicon-ask-instead",
+    onClick: () => {
+      setQuery(query.trim());
+      onAiSearch(query.trim());
+    }
+  }, "Or ask the corpus about \"", query.trim(), "\" \u2192"), visibleGroupings.length === 0 ? /*#__PURE__*/React.createElement("div", {
     className: "lexicon-dist-label"
   }, "No ", language === "greek" ? "Greek" : "Hebrew", " words rendered \"", query.trim(), "\".") : visibleGroupings.map(g => /*#__PURE__*/React.createElement("button", {
     key: g.strongs,
@@ -12502,7 +12599,16 @@ function LexiconView({
     className: "lexicon-strongs-tag"
   }, profile.strongs), /*#__PURE__*/React.createElement("span", {
     className: "lexicon-total"
-  }, testament === "all" ? profile.total : (filteredBooks || profile.books).filter(b => (b.testament || "").toLowerCase() === testament).reduce((s, b) => s + b.count, 0), " occurrences")), (profile.definition || /^G/i.test(profile.strongs)) && /*#__PURE__*/React.createElement("div", {
+  }, testament === "all" ? profile.total : (filteredBooks || profile.books).filter(b => (b.testament || "").toLowerCase() === testament).reduce((s, b) => s + b.count, 0), " occurrences")), onAiSearch && /*#__PURE__*/React.createElement("div", {
+    className: "lexicon-pivots"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "lexicon-ask-corpus",
+    onClick: () => {
+      const aq = `How is ${profile.translit || profile.lemma} (${profile.strongs}) used in scripture?`;
+      setQuery(aq);
+      onAiSearch(aq);
+    }
+  }, /*#__PURE__*/React.createElement(Icon.Sparkle, null), " Ask the corpus about ", profile.lemma)), (profile.definition || /^G/i.test(profile.strongs)) && /*#__PURE__*/React.createElement("div", {
     className: "lexicon-def-section"
   }, /*#__PURE__*/React.createElement("button", {
     className: "lexicon-def-toggle",
@@ -12591,7 +12697,7 @@ function LexiconView({
     kjvCache: {}
   }) : /*#__PURE__*/React.createElement("div", {
     className: "lexicon-verse-loading"
-  }, "No verses."))));
+  }, "No verses.")))));
 }
 
 // ============================================================
@@ -12790,13 +12896,13 @@ function App() {
   const [error, setError] = useState("");
   const [aiNotice, setAiNotice] = useState("");
   const [activeEntry, setActiveEntry] = useState(null);
-  const [entryView, setEntryView] = useState(null); // which tab opened the word card (library|search|lexicon) — scopes the rail to that tab
+  const [entryView, setEntryView] = useState(null); // which tab opened the word card (library|lexicon) — scopes the rail to that tab
   const [corpusFilter, setCorpusFilter] = useState("all"); // "all" | "ot" | "nt"
   const [corpusSort, setCorpusSort] = useState("curated"); // "curated" | "canonical"
   const [corpusTextMode, setCorpusTextMode] = useState("abp"); // "abp" | "kjv"
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 1100);
   // Remember the active tab across refreshes (guard against a stale/removed value).
-  const _VIEWS = ["library", "lexicon", "search", "notes", "study", "about"];
+  const _VIEWS = ["library", "lexicon", "notes", "study", "about"];
   const [mainView, setMainView] = useState(() => {
     try {
       const v = localStorage.getItem("lexica.view.v1");
@@ -13102,7 +13208,7 @@ function App() {
     const q = (overrideQ !== undefined ? overrideQ : q2).trim();
     if (!q) return;
     if (overrideQ !== undefined) setQ2(overrideQ);
-    setMainView("search");
+    setMainView("lexicon");
     setAiLoading(true);
     setError("");
     setAiNotice("");
@@ -13150,6 +13256,40 @@ function App() {
   // `has-detail` stays on and the reading column keeps its condensed measure. Mobile
   // never shows the summary.
   const showLibSummary = !isMobile && mainView === "library" && !showWord && !showXref && !showNote;
+
+  // Everything the merged Word study tab needs to render an "Ask the corpus"
+  // answer + verse results. The state still lives here; LexiconView shows it
+  // (in place of the word lookup) whenever a plain-language question is asked.
+  const wordStudyAi = {
+    notice: aiNotice,
+    error,
+    meta: aiMeta,
+    mode,
+    loading,
+    aiLoading,
+    primaryVerseCount,
+    showAll: showAllAi,
+    setShowAll: setShowAllAi,
+    filter: corpusFilter,
+    setFilter: setCorpusFilter,
+    sort: corpusSort,
+    setSort: setCorpusSort,
+    textMode: corpusTextMode,
+    setTextMode: setCorpusTextMode,
+    results: corpusFilteredResults,
+    primaryStrongs,
+    citedStrongs: citedStrongsApp,
+    searchLabel,
+    onWordClick: e => {
+      setActiveEntry(e);
+      setEntryView("lexicon");
+    },
+    onReadInContext: handleReadInContext,
+    onPick: e => {
+      setActiveEntry(e);
+      setEntryView("lexicon");
+    }
+  };
   return /*#__PURE__*/React.createElement("div", {
     className: "app view-" + mainView + " " + (showWord || showXref || showNote || showLibSummary ? "has-detail " : "") + (focusMode && mainView === "library" ? "focus-mode" : "")
   }, /*#__PURE__*/React.createElement(Header, {
@@ -13219,10 +13359,16 @@ function App() {
       display: mainView === "lexicon" ? undefined : "none"
     }
   }, /*#__PURE__*/React.createElement(LexiconView, {
-    onNavigateToSearch: q => {
-      handleNavChange("search");
-      setQ2(q);
+    onAiSearch: handleAiSearch,
+    onExitAi: () => {
+      setMode("idle");
+      setAiMeta(null);
+      setAllResults([]);
+      setAiNotice("");
+      setError("");
     },
+    aiActive: mode === "ai",
+    ai: wordStudyAi,
     onNavigateToLibrary: (book, chapter, verse, corpus) => {
       searchScrollRef.current = window.scrollY;
       setLibNav({
@@ -13251,117 +13397,7 @@ function App() {
     pendingStrongs: lexiconPendingStrongs,
     onPendingStrongsConsumed: () => setLexiconPendingStrongs(null),
     isMobile: isMobile
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "main-inner",
-    style: {
-      display: mainView === "library" || mainView === "about" || mainView === "lexicon" || mainView === "notes" || mainView === "study" ? "none" : undefined
-    }
-  }, /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement(SearchBar, {
-    q2: q2,
-    setQ2: setQ2,
-    onAiSearch: handleAiSearch,
-    aiLoading: aiLoading
-  }), aiNotice && /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginTop: "14px",
-      padding: "12px 16px",
-      background: "var(--accent-soft, #f0f4ff)",
-      border: "1px solid var(--accent, #b0bfff)",
-      borderRadius: "10px",
-      color: "var(--ink-2, #444)",
-      fontSize: "14px"
-    }
-  }, aiNotice), error && /*#__PURE__*/React.createElement("div", {
-    style: {
-      marginTop: "14px",
-      padding: "12px 16px",
-      background: "#fef2f2",
-      border: "1px solid #fecaca",
-      borderRadius: "10px",
-      color: "#b91c1c",
-      fontSize: "14px"
-    }
-  }, error), aiMeta && /*#__PURE__*/React.createElement(AIAnswer, {
-    query: aiMeta.query,
-    explanation: aiMeta.explanation,
-    keyStrongs: aiMeta.keyStrongs || [],
-    onPick: e => {
-      setActiveEntry(e);
-      setEntryView("search");
-    }
-  }), mode === "ai" && /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
-    className: "results-head"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "results-meta"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "results-count"
-  }, loading || aiLoading ? "…" : primaryVerseCount), /*#__PURE__*/React.createElement("span", {
-    className: "results-label"
-  }, "primary ", primaryVerseCount === 1 ? "verse" : "verses"), !loading && aiMeta && aiMeta.total > primaryVerseCount && /*#__PURE__*/React.createElement("button", {
-    className: "see-all-link",
-    onClick: () => setShowAllAi(v => !v)
-  }, showAllAi ? "Show less" : `See all ${aiMeta.total} occurrences`), searchLabel && !aiLoading && /*#__PURE__*/React.createElement("span", {
-    className: "results-for"
-  }, "for \"", /*#__PURE__*/React.createElement("b", null, searchLabel), "\"")), /*#__PURE__*/React.createElement("div", {
-    className: "results-controls",
-    style: {
-      marginLeft: "auto"
-    }
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "results-sort"
-  }, /*#__PURE__*/React.createElement("button", {
-    className: "sort-btn " + (corpusFilter === "all" ? "on" : ""),
-    onClick: () => setCorpusFilter("all")
-  }, "All"), /*#__PURE__*/React.createElement("button", {
-    className: "sort-btn " + (corpusFilter === "ot" ? "on" : ""),
-    onClick: () => setCorpusFilter("ot")
-  }, "OT"), /*#__PURE__*/React.createElement("button", {
-    className: "sort-btn " + (corpusFilter === "nt" ? "on" : ""),
-    onClick: () => setCorpusFilter("nt")
-  }, "NT"), /*#__PURE__*/React.createElement("span", {
-    style: {
-      margin: "0 4px",
-      color: "var(--rule-2)"
-    }
-  }, "|"), /*#__PURE__*/React.createElement("button", {
-    className: "sort-btn " + (corpusSort === "curated" ? "on" : ""),
-    onClick: () => setCorpusSort("curated")
-  }, "Curated"), /*#__PURE__*/React.createElement("button", {
-    className: "sort-btn " + (corpusSort === "canonical" ? "on" : ""),
-    onClick: () => setCorpusSort("canonical")
-  }, "Canonical"), /*#__PURE__*/React.createElement("span", {
-    style: {
-      margin: "0 4px",
-      color: "var(--rule-2)"
-    }
-  }, "|"), /*#__PURE__*/React.createElement("button", {
-    className: "sort-btn " + (corpusTextMode === "abp" ? "on" : ""),
-    onClick: () => setCorpusTextMode("abp")
-  }, "ABP"), /*#__PURE__*/React.createElement("button", {
-    className: "sort-btn " + (corpusTextMode === "kjv" ? "on" : ""),
-    onClick: () => setCorpusTextMode("kjv")
-  }, "KJV")))), loading || aiLoading ? /*#__PURE__*/React.createElement("div", {
-    style: {
-      textAlign: "center",
-      padding: "60px 20px",
-      color: "var(--ink-3)",
-      fontSize: "14px"
-    }
-  }, "Searching\u2026") : /*#__PURE__*/React.createElement(CorpusResults, {
-    allResults: corpusFilteredResults,
-    primaryStrongs: primaryStrongs,
-    citedStrongs: citedStrongsApp,
-    showAll: showAllAi,
-    onWordClick: e => {
-      setActiveEntry(e);
-      setEntryView("search");
-    },
-    onReadInContext: handleReadInContext,
-    corpusSort: corpusSort,
-    textMode: corpusTextMode
-  })), /*#__PURE__*/React.createElement("footer", {
-    className: "foot"
-  }, /*#__PURE__*/React.createElement("span", null, "Lexica \xB7 Greek Septuagint (LXX) \xB7 Apostolic Bible Polyglot Interlinear \xB7 Strong's Greek"))))), showWord && !isMobile && /*#__PURE__*/React.createElement(DetailPanel, {
+  }))), showWord && !isMobile && /*#__PURE__*/React.createElement(DetailPanel, {
     entry: activeEntry,
     isMobile: false,
     onClose: () => setActiveEntry(null),
@@ -13483,27 +13519,7 @@ function App() {
     d: "M4 19V6a2 2 0 0 1 2-2h13"
   }), /*#__PURE__*/React.createElement("path", {
     d: "M4 19a2 2 0 0 0 2 2h13V8H6a2 2 0 0 0-2 2"
-  })), "Lexicon"), /*#__PURE__*/React.createElement("button", {
-    className: "mobile-tab" + (mainView === "search" ? " active" : ""),
-    onClick: () => handleNavChange("search")
-  }, /*#__PURE__*/React.createElement("svg", {
-    width: "18",
-    height: "18",
-    viewBox: "0 0 24 24",
-    fill: "none",
-    stroke: "currentColor",
-    strokeWidth: "1.8",
-    strokeLinecap: "round"
-  }, /*#__PURE__*/React.createElement("circle", {
-    cx: "11",
-    cy: "11",
-    r: "7"
-  }), /*#__PURE__*/React.createElement("line", {
-    x1: "16.5",
-    y1: "16.5",
-    x2: "21",
-    y2: "21"
-  })), "Search"), /*#__PURE__*/React.createElement("button", {
+  })), "Words"), /*#__PURE__*/React.createElement("button", {
     className: "mobile-tab" + (mainView === "notes" ? " active" : ""),
     onClick: () => handleNavChange("notes")
   }, /*#__PURE__*/React.createElement("svg", {
