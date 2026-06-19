@@ -139,7 +139,7 @@ def diff_overlays(claims, overlays):
     for i, ids in enumerate(touched):
         private[i] = sorted(
             c for c in ids
-            if counts[c] == 1 and prov(c) not in GROUNDED and prov(c) != "conclusion"
+            if counts[c] == 1 and prov(c) not in GROUNDED
         )
     seams = []
     candidates = set(counts) | (set().union(*rejects) if rejects else set())
