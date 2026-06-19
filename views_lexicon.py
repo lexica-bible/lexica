@@ -355,6 +355,7 @@ def lexicon_profile(strongs):
             if not row:
                 return jsonify({"error": "not found"}), 404
             lemma, translit, definition = row["lemma"] or "", row["xlit"] or "", row["description"] or ""
+            derivation = ""   # BDB has no separate etymology column
         else:
             strongs_id = f"G{snum}"
             row = conn.execute(
@@ -367,6 +368,9 @@ def lexicon_profile(strongs):
             # Text-first (mirrors the word card / views_lsj.py): KJV rendering → derivation
             # → Strong's paraphrase, so Strong's interpretive wording never leads.
             definition = row["kjv_def"] or row["derivation"] or row["strongs_def"] or ""
+            # Etymology for the card's Derivation section (only when it adds
+            # something the definition line isn't already showing).
+            derivation = (row["derivation"] or "") if (row["kjv_def"] or "").strip() else ""
         # Corpus: default H→kjv, G→abp; override via ?corpus=
         corpus = request.args.get("corpus", "kjv" if is_heb else "abp")
         if corpus == "all":  # profile is single-corpus; 'all' would double-count NT
@@ -444,7 +448,7 @@ def lexicon_profile(strongs):
         # have ABP/words rows) keep ABP enabled.
         has_abp = conn.execute("SELECT 1 FROM words WHERE strongs_base = ? LIMIT 1", (sid,)).fetchone() is not None
         has_kjv = conn.execute("SELECT 1 FROM kjv_strongs WHERE strongs_id = ? LIMIT 1", (sid,)).fetchone() is not None
-        return jsonify({"strongs": strongs_id, "lemma": lemma, "translit": translit, "definition": definition, "total": total, "books": books, "corpus": corpus, "glosses": glosses, "abp_glosses": abp_glosses, "kjv_glosses": kjv_glosses, "has_abp": has_abp, "has_kjv": has_kjv})
+        return jsonify({"strongs": strongs_id, "lemma": lemma, "translit": translit, "definition": definition, "derivation": derivation, "total": total, "books": books, "corpus": corpus, "glosses": glosses, "abp_glosses": abp_glosses, "kjv_glosses": kjv_glosses, "has_abp": has_abp, "has_kjv": has_kjv})
     except Exception:
         return jsonify({"error": "Server error"}), 500
     finally:
