@@ -5095,6 +5095,57 @@ function GraphSvg({
     for (let i = cols.length - 1; i >= 0; i--) relax(cols[i], segSucc);
     for (let i = 0; i < cols.length; i++) if (cols[i] > 0) relax(cols[i], segPre);
   }
+  // Disconnected branches (e.g. a split conclusion: "outward pledge" vs "not the instrument") would
+  // otherwise float with dead vertical space between them — the barycenter only spaces nodes WITHIN a
+  // column, it never pulls two separate clusters together. Pack the connected components: keep each
+  // cluster's own internal layout, but stack them top-to-bottom with a single ROWGAP between.
+  const adj = {};
+  nodes.forEach(id => {
+    adj[id] = [];
+  });
+  Object.keys(segSucc).forEach(a => (segSucc[a] || []).forEach(b => {
+    if (a in adj && b in adj) {
+      adj[a].push(b);
+      adj[b].push(a);
+    }
+  }));
+  const compOf = {};
+  let nComp = 0;
+  nodes.forEach(id => {
+    if (id in compOf) return;
+    const stack = [id];
+    compOf[id] = nComp;
+    while (stack.length) {
+      const x = stack.pop();
+      (adj[x] || []).forEach(n => {
+        if (!(n in compOf)) {
+          compOf[n] = nComp;
+          stack.push(n);
+        }
+      });
+    }
+    nComp++;
+  });
+  if (nComp > 1) {
+    const comps = [];
+    for (let g = 0; g < nComp; g++) {
+      const mem = nodes.filter(id => compOf[id] === g);
+      comps.push({
+        mem,
+        lo: Math.min(...mem.map(id => yy[id] || 0)),
+        hi: Math.max(...mem.map(id => yy[id] || 0))
+      });
+    }
+    comps.sort((a, b) => a.lo - b.lo); // keep the clusters' existing top-to-bottom order
+    let cursor = 0;
+    comps.forEach(cm => {
+      const shift = cursor - cm.lo;
+      cm.mem.forEach(id => {
+        yy[id] = (yy[id] || 0) + shift;
+      });
+      cursor += cm.hi - cm.lo + CH.ROWGAP;
+    });
+  }
   const minY = Math.min(...nodes.map(id => yy[id] || 0)); // shift the topmost node to y=0 (no dead space above)
   if (minY) nodes.forEach(id => {
     yy[id] = (yy[id] || 0) - minY;
