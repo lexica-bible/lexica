@@ -347,6 +347,7 @@ def lexicon_profile(strongs):
     is_heb = prefix == 'H' or (not prefix and int(snum) > 5624)
     conn = db_ro()
     try:
+        related = []
         if is_heb:
             strongs_id = f"H{snum}"
             row = conn.execute(
@@ -367,6 +368,21 @@ def lexicon_profile(strongs):
             # Text-first (mirrors the word card / views_lsj.py): KJV rendering → derivation
             # → Strong's paraphrase, so Strong's interpretive wording never leads.
             definition = row["kjv_def"] or row["derivation"] or row["strongs_def"] or ""
+            # Cognates ("related words"): Strong's derivation text cross-references the
+            # words this one is built from as G-numbers (e.g. G4151 ← G4154). Pull them
+            # out, drop self + function words, and attach each one's lemma/translit so
+            # the word page can offer clickable "related" chips.
+            seen = set()
+            for mm in re.finditer(r'G(\d+)', row["derivation"] or ""):
+                n = mm.group(1)
+                if n == snum or n in seen or n in _FUNCTION_STRONGS:
+                    continue
+                seen.add(n)
+                rr = conn.execute("SELECT lemma, translit FROM lexicon WHERE strongs = ?", (n,)).fetchone()
+                related.append({"strongs": f"G{n}", "lemma": (rr["lemma"] if rr else "") or "",
+                                "translit": (rr["translit"] if rr else "") or ""})
+                if len(related) >= 6:
+                    break
         # Corpus: default H→kjv, G→abp; override via ?corpus=
         corpus = request.args.get("corpus", "kjv" if is_heb else "abp")
         if corpus == "all":  # profile is single-corpus; 'all' would double-count NT
@@ -444,7 +460,7 @@ def lexicon_profile(strongs):
         # have ABP/words rows) keep ABP enabled.
         has_abp = conn.execute("SELECT 1 FROM words WHERE strongs_base = ? LIMIT 1", (sid,)).fetchone() is not None
         has_kjv = conn.execute("SELECT 1 FROM kjv_strongs WHERE strongs_id = ? LIMIT 1", (sid,)).fetchone() is not None
-        return jsonify({"strongs": strongs_id, "lemma": lemma, "translit": translit, "definition": definition, "total": total, "books": books, "corpus": corpus, "glosses": glosses, "abp_glosses": abp_glosses, "kjv_glosses": kjv_glosses, "has_abp": has_abp, "has_kjv": has_kjv})
+        return jsonify({"strongs": strongs_id, "lemma": lemma, "translit": translit, "definition": definition, "total": total, "books": books, "corpus": corpus, "glosses": glosses, "abp_glosses": abp_glosses, "kjv_glosses": kjv_glosses, "related": related, "has_abp": has_abp, "has_kjv": has_kjv})
     except Exception:
         return jsonify({"error": "Server error"}), 500
     finally:

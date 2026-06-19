@@ -457,6 +457,17 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
               <button className="lexicon-ask-corpus" onClick={() => { const aq = `How is ${profile.translit || profile.lemma} (${profile.strongs}) used in scripture?`; setQuery(aq); onAiSearch(aq); }}>
                 <Icon.Sparkle/> Ask the corpus about {profile.lemma}
               </button>
+              {profile.related && profile.related.length > 0 && (
+                <span className="lexicon-related">
+                  <span className="lexicon-related-label">Related</span>
+                  {profile.related.map(r => (
+                    <button key={r.strongs} className="lexicon-related-chip" title={r.lemma}
+                      onClick={() => loadProfile(r.strongs)}>
+                      {r.strongs}{r.translit ? " · " + r.translit : ""}
+                    </button>
+                  ))}
+                </span>
+              )}
             </div>
           )}
           {(profile.definition || /^G/i.test(profile.strongs)) && (

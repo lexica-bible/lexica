@@ -12608,7 +12608,16 @@ function LexiconView({
       setQuery(aq);
       onAiSearch(aq);
     }
-  }, /*#__PURE__*/React.createElement(Icon.Sparkle, null), " Ask the corpus about ", profile.lemma)), (profile.definition || /^G/i.test(profile.strongs)) && /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement(Icon.Sparkle, null), " Ask the corpus about ", profile.lemma), profile.related && profile.related.length > 0 && /*#__PURE__*/React.createElement("span", {
+    className: "lexicon-related"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "lexicon-related-label"
+  }, "Related"), profile.related.map(r => /*#__PURE__*/React.createElement("button", {
+    key: r.strongs,
+    className: "lexicon-related-chip",
+    title: r.lemma,
+    onClick: () => loadProfile(r.strongs)
+  }, r.strongs, r.translit ? " · " + r.translit : "")))), (profile.definition || /^G/i.test(profile.strongs)) && /*#__PURE__*/React.createElement("div", {
     className: "lexicon-def-section"
   }, /*#__PURE__*/React.createElement("button", {
     className: "lexicon-def-toggle",

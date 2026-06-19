@@ -362,16 +362,33 @@ input { font-family: inherit; }
 .lexicon-controls-row { display: flex; gap: 8px; align-items: center; margin-bottom: 14px; }
 .lexicon-toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 12px 0 4px; }
 .lexicon-search-hint { margin-top: 8px; font-size: 12.5px; color: var(--ink-3); }
-.lexicon-pivots { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 14px 0 4px; }
+/* Navy left edge marks the smart box (clear navy in every theme, never brown). */
+.lexicon-view .search { box-shadow: inset 3px 0 0 var(--chart-contested), var(--shadow-sm); }
+.lexicon-pivots {
+  display: flex; flex-wrap: wrap; gap: 9px 13px; align-items: center;
+  margin: 14px 0 4px; padding: 11px 13px; border-radius: 10px;
+  background: color-mix(in oklab, var(--chart-contested) 7%, var(--paper));
+  border: 1px solid color-mix(in oklab, var(--chart-contested) 20%, var(--paper));
+}
 .lexicon-ask-corpus {
   display: inline-flex; align-items: center; gap: 7px;
   font-family: var(--f-sans); font-size: 13px; padding: 7px 13px;
-  color: var(--accent); background: var(--accent-soft);
-  border: 1px solid var(--accent); border-radius: 8px; cursor: pointer;
+  color: #f3f1ea; background: var(--chart-contested);
+  border: 1px solid color-mix(in oklab, var(--chart-contested) 65%, #000);
+  border-radius: 8px; cursor: pointer;
 }
-.lexicon-ask-corpus:hover { background: color-mix(in oklab, var(--accent) 16%, var(--paper)); }
+.lexicon-ask-corpus:hover { background: color-mix(in oklab, var(--chart-contested) 88%, #000); }
 .lexicon-ask-corpus svg { width: 15px; height: 15px; }
-.lexicon-ask-instead { display: inline-block; margin: 2px 0 10px; padding: 0; font-family: var(--f-sans); font-size: 12.5px; color: var(--accent); background: none; border: none; cursor: pointer; }
+.lexicon-related { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 6px; }
+.lexicon-related-label { font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-4); }
+.lexicon-related-chip {
+  font-family: var(--f-sans); font-size: 12px; padding: 3px 9px;
+  border-radius: 6px; cursor: pointer; color: var(--chart-contested);
+  background: var(--paper);
+  border: 1px solid color-mix(in oklab, var(--chart-contested) 30%, var(--paper));
+}
+.lexicon-related-chip:hover { background: color-mix(in oklab, var(--chart-contested) 12%, var(--paper)); }
+.lexicon-ask-instead { display: inline-block; margin: 2px 0 10px; padding: 0; font-family: var(--f-sans); font-size: 12.5px; color: var(--chart-contested); background: none; border: none; cursor: pointer; }
 .lexicon-ask-instead:hover { text-decoration: underline; }
 .lexicon-corpus-toggle { display: inline-flex; gap: 2px; background: var(--bg-sunk); border: 1px solid var(--rule); border-radius: 8px; padding: 2px; }
 .lct-btn { padding: 5px 12px; font-size: 12px; font-weight: 500; border: none; border-radius: 6px; cursor: pointer; background: transparent; color: var(--ink-3); transition: background 0.1s, color 0.1s; }
