@@ -12400,22 +12400,6 @@ function LexiconView({
     const base = tag.split(".")[0];
     return new Set([tag, base, base.replace(/^[GH]/i, "")]);
   }, [profile?.strongs]);
-
-  // Distribution data for the book bars: testament-filtered books, the top count
-  // (for bar scaling), and the OT/NT split totals (the split bar only shows when a
-  // word spans both testaments).
-  const dist = useMemo(() => {
-    if (!profile) return null;
-    const isNT = b => (b.testament || "").toUpperCase() === "NT";
-    const books = (filteredBooks || profile.books || []).filter(b => testament === "all" || (b.testament || "").toLowerCase() === testament);
-    const ot = books.filter(b => !isNT(b)).reduce((s, b) => s + b.count, 0);
-    const nt = books.filter(b => isNT(b)).reduce((s, b) => s + b.count, 0);
-    return {
-      books,
-      ot,
-      nt
-    };
-  }, [profile, filteredBooks, testament]);
   const handleSubmit = async e => {
     e.preventDefault();
     const q = query.trim();
@@ -12606,26 +12590,16 @@ function LexiconView({
       setSelectedBook(null);
       setVerseList(null);
     }
-  }, "\u2190"), /*#__PURE__*/React.createElement("div", {
-    className: "lexicon-hero-id"
-  }, /*#__PURE__*/React.createElement("span", {
+  }, "\u2190"), /*#__PURE__*/React.createElement("span", {
     className: "lexicon-lemma",
     dir: profile.strongs[0] === "H" ? "rtl" : undefined
   }, profile.lemma), /*#__PURE__*/React.createElement("span", {
-    className: "lexicon-id-sub"
-  }, /*#__PURE__*/React.createElement("span", {
     className: "lexicon-translit"
   }, profile.translit), /*#__PURE__*/React.createElement("span", {
     className: "lexicon-strongs-tag"
-  }, profile.strongs))), /*#__PURE__*/React.createElement("div", {
-    className: "lexicon-hero-stat"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "lexicon-total-num"
-  }, testament === "all" ? profile.total : (filteredBooks || profile.books).filter(b => (b.testament || "").toLowerCase() === testament).reduce((s, b) => s + b.count, 0)), /*#__PURE__*/React.createElement("span", {
-    className: "lexicon-total-label"
-  }, "occurrences", dist && dist.books.length ? ` · ${dist.books.length} ${dist.books.length === 1 ? "book" : "books"}` : ""))), profile.glosses && profile.glosses.length > 0 && /*#__PURE__*/React.createElement("p", {
-    className: "lexicon-lead"
-  }, profile.glosses.slice(0, 4).map(g => g.gloss).join("  ·  ")), onAiSearch && /*#__PURE__*/React.createElement("div", {
+  }, profile.strongs), /*#__PURE__*/React.createElement("span", {
+    className: "lexicon-total"
+  }, testament === "all" ? profile.total : (filteredBooks || profile.books).filter(b => (b.testament || "").toLowerCase() === testament).reduce((s, b) => s + b.count, 0), " occurrences")), onAiSearch && /*#__PURE__*/React.createElement("div", {
     className: "lexicon-pivots"
   }, /*#__PURE__*/React.createElement("button", {
     className: "lexicon-ask-corpus",
@@ -12634,16 +12608,7 @@ function LexiconView({
       setQuery(aq);
       onAiSearch(aq);
     }
-  }, /*#__PURE__*/React.createElement(Icon.Sparkle, null), " Ask the corpus about ", profile.lemma), profile.related && profile.related.length > 0 && /*#__PURE__*/React.createElement("span", {
-    className: "lexicon-related"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "lexicon-related-label"
-  }, "Related"), profile.related.map(r => /*#__PURE__*/React.createElement("button", {
-    key: r.strongs,
-    className: "lexicon-related-chip",
-    title: r.lemma,
-    onClick: () => loadProfile(r.strongs)
-  }, r.strongs, r.translit ? " · " + r.translit : "")))), (profile.definition || /^G/i.test(profile.strongs)) && /*#__PURE__*/React.createElement("div", {
+  }, /*#__PURE__*/React.createElement(Icon.Sparkle, null), " Ask the corpus about ", profile.lemma)), (profile.definition || /^G/i.test(profile.strongs)) && /*#__PURE__*/React.createElement("div", {
     className: "lexicon-def-section"
   }, /*#__PURE__*/React.createElement("button", {
     className: "lexicon-def-toggle",
@@ -12675,55 +12640,37 @@ function LexiconView({
       __html: lsjEntry.def_html
     }
   }) /* AI down: raw LSJ */)), selectedBook ? (bookGlosses || profile.glosses) && (bookGlosses || profile.glosses).length > 0 && /*#__PURE__*/React.createElement("div", {
-    className: "lexicon-senses"
+    className: "lexicon-glosses"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "lexicon-section-label"
+    className: "lexicon-gloss-label"
   }, "In this book"), /*#__PURE__*/React.createElement("div", {
     className: "lexicon-dist-list"
-  }, (bookGlosses || profile.glosses).map(g => /*#__PURE__*/React.createElement("button", {
-    key: g.gloss,
+  }, (bookGlosses || profile.glosses).map((g, i) => /*#__PURE__*/React.createElement(React.Fragment, {
+    key: g.gloss
+  }, i > 0 && /*#__PURE__*/React.createElement("span", {
+    className: "lexicon-dist-sep"
+  }, " \xB7 "), /*#__PURE__*/React.createElement("button", {
     className: "lexicon-dist-item" + (selectedGloss === g.gloss ? " selected" : ""),
     onClick: () => selectGloss(g.gloss)
   }, g.gloss, /*#__PURE__*/React.createElement("span", {
     className: "lexicon-dist-count"
-  }, g.count))))) : profile.abp_glosses && profile.abp_glosses.length || profile.kjv_glosses && profile.kjv_glosses.length ? /*#__PURE__*/React.createElement("div", {
-    className: "lexicon-senses"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "lexicon-section-label"
-  }, "Senses \u2014 how it's rendered"), renderGlossLine("abp", "ABP", profile.abp_glosses), renderGlossLine("kjv", "KJV", profile.kjv_glosses)) : null, dist && dist.books.length > 0 && /*#__PURE__*/React.createElement("div", {
+  }, g.count)))))) : /*#__PURE__*/React.createElement(React.Fragment, null, renderGlossLine("abp", "ABP renders this as", profile.abp_glosses), renderGlossLine("kjv", "KJV renders this as", profile.kjv_glosses)), /*#__PURE__*/React.createElement("div", {
     className: "lexicon-distribution"
   }, /*#__PURE__*/React.createElement("div", {
-    className: "lexicon-dist-top"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "lexicon-section-label"
-  }, "Distribution by book"), dist.ot > 0 && dist.nt > 0 && /*#__PURE__*/React.createElement("span", {
-    className: "lexicon-distsplit",
-    title: `Old Testament ${dist.ot} · New Testament ${dist.nt}`
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "lexicon-distsplit-bar"
-  }, /*#__PURE__*/React.createElement("span", {
-    className: "seg ot",
-    style: {
-      width: dist.ot / (dist.ot + dist.nt) * 100 + "%"
-    }
-  }), /*#__PURE__*/React.createElement("span", {
-    className: "seg nt",
-    style: {
-      width: dist.nt / (dist.ot + dist.nt) * 100 + "%"
-    }
-  })), /*#__PURE__*/React.createElement("span", {
-    className: "lexicon-distsplit-lab"
-  }, "OT ", dist.ot, " \xB7 NT ", dist.nt))), /*#__PURE__*/React.createElement("div", {
-    className: "lexicon-distbooks"
-  }, dist.books.map((b, i) => /*#__PURE__*/React.createElement(React.Fragment, {
+    className: "lexicon-dist-header"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "lexicon-dist-label"
+  }, "Distribution by book")), /*#__PURE__*/React.createElement("div", {
+    className: "lexicon-dist-list"
+  }, (filteredBooks || profile.books).filter(b => testament === "all" || (b.testament || "").toLowerCase() === testament).map((b, i) => /*#__PURE__*/React.createElement(React.Fragment, {
     key: b.book
   }, i > 0 && /*#__PURE__*/React.createElement("span", {
-    className: "lexicon-distbook-sep"
+    className: "lexicon-dist-sep"
   }, " \xB7 "), /*#__PURE__*/React.createElement("button", {
-    className: "lexicon-distbook" + (selectedBook === b.book ? " selected" : ""),
+    className: "lexicon-dist-item" + (selectedBook === b.book ? " selected" : ""),
     onClick: () => selectBook(b.book)
   }, b.name, /*#__PURE__*/React.createElement("span", {
-    className: "lexicon-distbook-ct"
+    className: "lexicon-dist-count"
   }, b.count)))))), selectedBook && /*#__PURE__*/React.createElement("div", {
     className: "corpus-groups"
   }, verseLoading ? /*#__PURE__*/React.createElement("div", {

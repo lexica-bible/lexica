@@ -273,19 +273,6 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
     return new Set([tag, base, base.replace(/^[GH]/i, "")]);
   }, [profile?.strongs]);
 
-  // Distribution data for the book bars: testament-filtered books, the top count
-  // (for bar scaling), and the OT/NT split totals (the split bar only shows when a
-  // word spans both testaments).
-  const dist = useMemo(() => {
-    if (!profile) return null;
-    const isNT = b => (b.testament || "").toUpperCase() === "NT";
-    const books = (filteredBooks || profile.books || []).filter(
-      b => testament === "all" || (b.testament || "").toLowerCase() === testament);
-    const ot = books.filter(b => !isNT(b)).reduce((s, b) => s + b.count, 0);
-    const nt = books.filter(b => isNT(b)).reduce((s, b) => s + b.count, 0);
-    return { books, ot, nt };
-  }, [profile, filteredBooks, testament]);
-
   const handleSubmit = async (e) => {
     e.preventDefault();
     const q = query.trim();
@@ -454,43 +441,22 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
               <button className="lexicon-back-btn" title={`Back to "${query.trim()}" results`}
                 onClick={() => { setProfile(null); setSelectedBook(null); setVerseList(null); }}>←</button>
             )}
-            <div className="lexicon-hero-id">
-              <span className="lexicon-lemma" dir={profile.strongs[0] === "H" ? "rtl" : undefined}>{profile.lemma}</span>
-              <span className="lexicon-id-sub">
-                <span className="lexicon-translit">{profile.translit}</span>
-                <span className="lexicon-strongs-tag">{profile.strongs}</span>
-              </span>
-            </div>
-            <div className="lexicon-hero-stat">
-              <span className="lexicon-total-num">{
-                testament === "all"
-                  ? profile.total
-                  : (filteredBooks || profile.books)
-                      .filter(b => (b.testament || "").toLowerCase() === testament)
-                      .reduce((s, b) => s + b.count, 0)
-              }</span>
-              <span className="lexicon-total-label">occurrences{dist && dist.books.length ? ` · ${dist.books.length} ${dist.books.length === 1 ? "book" : "books"}` : ""}</span>
-            </div>
+            <span className="lexicon-lemma" dir={profile.strongs[0] === "H" ? "rtl" : undefined}>{profile.lemma}</span>
+            <span className="lexicon-translit">{profile.translit}</span>
+            <span className="lexicon-strongs-tag">{profile.strongs}</span>
+            <span className="lexicon-total">{
+              testament === "all"
+                ? profile.total
+                : (filteredBooks || profile.books)
+                    .filter(b => (b.testament || "").toLowerCase() === testament)
+                    .reduce((s, b) => s + b.count, 0)
+            } occurrences</span>
           </div>
-          {profile.glosses && profile.glosses.length > 0 && (
-            <p className="lexicon-lead">{profile.glosses.slice(0, 4).map(g => g.gloss).join("  ·  ")}</p>
-          )}
           {onAiSearch && (
             <div className="lexicon-pivots">
               <button className="lexicon-ask-corpus" onClick={() => { const aq = `How is ${profile.translit || profile.lemma} (${profile.strongs}) used in scripture?`; setQuery(aq); onAiSearch(aq); }}>
                 <Icon.Sparkle/> Ask the corpus about {profile.lemma}
               </button>
-              {profile.related && profile.related.length > 0 && (
-                <span className="lexicon-related">
-                  <span className="lexicon-related-label">Related</span>
-                  {profile.related.map(r => (
-                    <button key={r.strongs} className="lexicon-related-chip" title={r.lemma}
-                      onClick={() => loadProfile(r.strongs)}>
-                      {r.strongs}{r.translit ? " · " + r.translit : ""}
-                    </button>
-                  ))}
-                </span>
-              )}
             </div>
           )}
           {(profile.definition || /^G/i.test(profile.strongs)) && (
@@ -524,54 +490,50 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
 
           {selectedBook
             ? ((bookGlosses || profile.glosses) && (bookGlosses || profile.glosses).length > 0 && (
-                <div className="lexicon-senses">
-                  <div className="lexicon-section-label">In this book</div>
+                <div className="lexicon-glosses">
+                  <div className="lexicon-gloss-label">In this book</div>
                   <div className="lexicon-dist-list">
-                    {(bookGlosses || profile.glosses).map((g) => (
-                      <button key={g.gloss}
-                        className={"lexicon-dist-item" + (selectedGloss === g.gloss ? " selected" : "")}
-                        onClick={() => selectGloss(g.gloss)}>
-                        {g.gloss}<span className="lexicon-dist-count">{g.count}</span>
-                      </button>
+                    {(bookGlosses || profile.glosses).map((g, i) => (
+                      <React.Fragment key={g.gloss}>
+                        {i > 0 && <span className="lexicon-dist-sep"> · </span>}
+                        <button
+                          className={"lexicon-dist-item" + (selectedGloss === g.gloss ? " selected" : "")}
+                          onClick={() => selectGloss(g.gloss)}
+                        >
+                          {g.gloss}<span className="lexicon-dist-count">{g.count}</span>
+                        </button>
+                      </React.Fragment>
                     ))}
                   </div>
                 </div>
               ))
-            : ((profile.abp_glosses && profile.abp_glosses.length) || (profile.kjv_glosses && profile.kjv_glosses.length)) ? (
-                <div className="lexicon-senses">
-                  <div className="lexicon-section-label">Senses — how it's rendered</div>
-                  {renderGlossLine("abp", "ABP", profile.abp_glosses)}
-                  {renderGlossLine("kjv", "KJV", profile.kjv_glosses)}
-                </div>
-              ) : null}
+            : (
+                <>
+                  {renderGlossLine("abp", "ABP renders this as", profile.abp_glosses)}
+                  {renderGlossLine("kjv", "KJV renders this as", profile.kjv_glosses)}
+                </>
+              )}
 
-          {dist && dist.books.length > 0 && (
-            <div className="lexicon-distribution">
-              <div className="lexicon-dist-top">
-                <span className="lexicon-section-label">Distribution by book</span>
-                {dist.ot > 0 && dist.nt > 0 && (
-                  <span className="lexicon-distsplit" title={`Old Testament ${dist.ot} · New Testament ${dist.nt}`}>
-                    <span className="lexicon-distsplit-bar">
-                      <span className="seg ot" style={{ width: (dist.ot / (dist.ot + dist.nt) * 100) + "%" }} />
-                      <span className="seg nt" style={{ width: (dist.nt / (dist.ot + dist.nt) * 100) + "%" }} />
-                    </span>
-                    <span className="lexicon-distsplit-lab">OT {dist.ot} · NT {dist.nt}</span>
-                  </span>
-                )}
-              </div>
-              <div className="lexicon-distbooks">
-                {dist.books.map((b, i) => (
+          <div className="lexicon-distribution">
+            <div className="lexicon-dist-header">
+              <div className="lexicon-dist-label">Distribution by book</div>
+            </div>
+            <div className="lexicon-dist-list">
+              {(filteredBooks || profile.books)
+                .filter(b => testament === "all" || (b.testament || "").toLowerCase() === testament)
+                .map((b, i) => (
                   <React.Fragment key={b.book}>
-                    {i > 0 && <span className="lexicon-distbook-sep"> · </span>}
-                    <button className={"lexicon-distbook" + (selectedBook === b.book ? " selected" : "")}
-                      onClick={() => selectBook(b.book)}>
-                      {b.name}<span className="lexicon-distbook-ct">{b.count}</span>
+                    {i > 0 && <span className="lexicon-dist-sep"> · </span>}
+                    <button
+                      className={"lexicon-dist-item" + (selectedBook === b.book ? " selected" : "")}
+                      onClick={() => selectBook(b.book)}
+                    >
+                      {b.name}<span className="lexicon-dist-count">{b.count}</span>
                     </button>
                   </React.Fragment>
                 ))}
-              </div>
             </div>
-          )}
+          </div>
 
           {selectedBook && (
             <div className="corpus-groups">

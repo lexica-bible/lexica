@@ -40,8 +40,6 @@
   --chart-concl: #424a59;       /* conclusion — slate (clearly not the verse navy) */
   --chart-node-fg: #f4f1ea;     /* text on the dark verse/conclusion boxes */
   --chart-contested: #3a5a92;   /* contested link — clear navy (NOT --accent, which is brown in sepia) */
-  --dist-nt: #3a5a92;           /* word distribution bars — deep navy = NT */
-  --dist-ot: #8aa2c6;           /* lighter navy = OT, so a word's testament split reads at a glance */
   --chart-weak: #8094bd;        /* weak link — lighter than contested navy (keeps the rank); drawn as big round dots */
 
   --shadow-sm: 0 1px 0 rgba(20, 20, 30, 0.04), 0 1px 2px rgba(20, 20, 30, 0.04);
@@ -342,62 +340,38 @@ input { font-family: inherit; }
 .lexicon-profile { margin-top: 28px; }
 .lexicon-profile-header {
   display: flex;
-  align-items: flex-end;
-  gap: 16px;
+  align-items: baseline;
+  gap: 14px;
   flex-wrap: wrap;
-  padding-bottom: 14px;
+  padding-bottom: 12px;
   border-bottom: 1px solid var(--rule);
-  margin-bottom: 0;
+  margin-bottom: 12px;
 }
-.lexicon-hero-id { display: flex; flex-direction: column; gap: 8px; min-width: 0; flex: 1 1 auto; }
-.lexicon-id-sub { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-.lexicon-hero-stat { display: flex; flex-direction: column; align-items: flex-end; text-align: right; flex: none; margin-left: auto; }
-.lexicon-total-num { font-family: var(--f-greek); font-size: 30px; line-height: 1; color: var(--chart-contested); font-variant-numeric: tabular-nums; }
-.lexicon-total-label { font-size: 11.5px; color: var(--ink-4); margin-top: 4px; }
 .lexicon-back-btn { background: none; border: none; cursor: pointer; font-size: 18px; line-height: 1; color: var(--ink-3); padding: 0; margin-right: 2px; align-self: center; }
 .lexicon-back-btn:hover { color: var(--ink); }
-.lexicon-lemma { font-size: 34px; line-height: 1.05; font-family: var(--f-greek); color: var(--ink); }
-.lexicon-translit { font-size: 16px; font-style: italic; font-family: var(--f-serif); color: var(--ink-3); }
+.lexicon-lemma { font-size: 20px; font-family: var(--f-greek); color: var(--ink); }
+.lexicon-translit { font-size: 15px; font-style: italic; font-family: var(--f-serif); color: var(--ink-2); }
 .lexicon-strongs-tag {
   font-family: var(--f-mono);
-  font-size: 11px; font-weight: 500; color: #f3f1ea;
-  background: var(--chart-contested); padding: 2px 7px; border-radius: 4px;
+  font-size: 11px; font-weight: 500; color: var(--paper);
+  background: var(--accent); padding: 2px 7px; border-radius: 4px;
   letter-spacing: 0.02em;
 }
 .lexicon-total { font-size: 13px; color: var(--ink-3); }
-.lexicon-lead { font-family: var(--f-serif); font-size: 15px; line-height: 1.5; color: var(--ink-2); margin: 13px 0 0; }
-.lexicon-section-label { display: block; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-4); margin-bottom: 9px; }
 .lexicon-header-controls { display: flex; gap: 8px; margin-left: auto; align-items: center; }
 .lexicon-controls-row { display: flex; gap: 8px; align-items: center; margin-bottom: 14px; }
 .lexicon-toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 12px 0 4px; }
 .lexicon-search-hint { margin-top: 8px; font-size: 12.5px; color: var(--ink-3); }
-/* Navy left edge marks the smart box (clear navy in every theme, never brown). */
-.lexicon-view .search { box-shadow: inset 3px 0 0 var(--chart-contested), var(--shadow-sm); }
-.lexicon-pivots {
-  display: flex; flex-wrap: wrap; gap: 9px 13px; align-items: center;
-  margin: 14px 0 4px; padding: 11px 13px; border-radius: 10px;
-  background: color-mix(in oklab, var(--chart-contested) 7%, var(--paper));
-  border: 1px solid color-mix(in oklab, var(--chart-contested) 20%, var(--paper));
-}
+.lexicon-pivots { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 14px 0 4px; }
 .lexicon-ask-corpus {
   display: inline-flex; align-items: center; gap: 7px;
   font-family: var(--f-sans); font-size: 13px; padding: 7px 13px;
-  color: #f3f1ea; background: var(--chart-contested);
-  border: 1px solid color-mix(in oklab, var(--chart-contested) 65%, #000);
-  border-radius: 8px; cursor: pointer;
+  color: var(--accent); background: var(--accent-soft);
+  border: 1px solid var(--accent); border-radius: 8px; cursor: pointer;
 }
-.lexicon-ask-corpus:hover { background: color-mix(in oklab, var(--chart-contested) 88%, #000); }
+.lexicon-ask-corpus:hover { background: color-mix(in oklab, var(--accent) 16%, var(--paper)); }
 .lexicon-ask-corpus svg { width: 15px; height: 15px; }
-.lexicon-related { display: inline-flex; align-items: center; flex-wrap: wrap; gap: 6px; }
-.lexicon-related-label { font-size: 10.5px; text-transform: uppercase; letter-spacing: .05em; color: var(--ink-4); }
-.lexicon-related-chip {
-  font-family: var(--f-sans); font-size: 12px; padding: 3px 9px;
-  border-radius: 6px; cursor: pointer; color: var(--chart-contested);
-  background: var(--paper);
-  border: 1px solid color-mix(in oklab, var(--chart-contested) 30%, var(--paper));
-}
-.lexicon-related-chip:hover { background: color-mix(in oklab, var(--chart-contested) 12%, var(--paper)); }
-.lexicon-ask-instead { display: inline-block; margin: 2px 0 10px; padding: 0; font-family: var(--f-sans); font-size: 12.5px; color: var(--chart-contested); background: none; border: none; cursor: pointer; }
+.lexicon-ask-instead { display: inline-block; margin: 2px 0 10px; padding: 0; font-family: var(--f-sans); font-size: 12.5px; color: var(--accent); background: none; border: none; cursor: pointer; }
 .lexicon-ask-instead:hover { text-decoration: underline; }
 .lexicon-corpus-toggle { display: inline-flex; gap: 2px; background: var(--bg-sunk); border: 1px solid var(--rule); border-radius: 8px; padding: 2px; }
 .lct-btn { padding: 5px 12px; font-size: 12px; font-weight: 500; border: none; border-radius: 6px; cursor: pointer; background: transparent; color: var(--ink-3); transition: background 0.1s, color 0.1s; }
@@ -407,10 +381,8 @@ input { font-family: inherit; }
 .lexicon-back-link { display: inline-block; background: none; border: none; cursor: pointer; font-size: 13px; color: var(--ink-3); padding: 0 0 12px; }
 .lexicon-back-link:hover { color: var(--ink); }
 /* Rendering / gloss filter list (shares .lexicon-dist-* inline-list styles) */
-.lexicon-senses { margin-top: 20px; }
-.lexicon-glosses { display: flex; gap: 10px; align-items: flex-start; margin: 0 0 9px; }
-.lexicon-gloss-label { flex: none; width: 34px; padding-top: 6px; font-size: 11px; font-weight: 500; letter-spacing: 0.03em; text-transform: uppercase; color: var(--ink-4); margin: 0; }
-.lexicon-glosses .lexicon-dist-list { flex: 1 1 0; min-width: 0; }
+.lexicon-glosses { margin: 0 0 18px; }
+.lexicon-gloss-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 8px; }
 
 .lexicon-def-section { margin-bottom: 20px; }
 .lexicon-def-toggle { background: none; border: none; cursor: pointer; font-size: 12px; color: var(--ink-3); padding: 0; letter-spacing: .03em; }
@@ -418,47 +390,25 @@ input { font-family: inherit; }
 .lexicon-def-src { display: inline-block; margin-left: 6px; font-family: var(--f-mono); font-size: 9.5px; font-weight: 500; letter-spacing: 0.04em; color: var(--ink-3); background: var(--bg-sunk); padding: 1px 6px; border-radius: 4px; vertical-align: middle; }
 .lexicon-definition { font-size: 14px; color: var(--ink-2); line-height: 1.6; margin: 8px 0 0; }
 
-/* "rendered as X · N words" label on the search-results list */
+/* Distribution */
+.lexicon-dist-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
 .lexicon-dist-label { font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); }
-/* Sense chips (how a word is rendered) — flex-wrap chip rows, no run-on separators */
-.lexicon-dist-list { display: flex; flex-wrap: wrap; gap: 7px; align-items: center; }
-.lexicon-dist-sep { display: none; }
-.lexicon-dist-item {
-  display: inline-flex; align-items: baseline; gap: 4px;
-  background: var(--paper); border: 1px solid var(--rule); border-radius: 7px;
-  padding: 4px 10px; margin: 0; font-family: var(--f-serif); font-size: 14px;
-  line-height: 1.3; color: var(--ink); cursor: pointer;
-}
-@media (hover: hover) { .lexicon-dist-item:hover { border-color: color-mix(in oklab, var(--chart-contested) 35%, var(--rule)); } }
+.lexicon-testament-toggle { display: flex; gap: 2px; background: var(--rule); border-radius: 6px; padding: 2px; }
+.lexicon-dist-list { font-size: 14px; line-height: 2; color: var(--ink-2); }
+.lexicon-dist-item { display: inline; background: none; border: none; padding: 0; margin: 0; font: inherit; line-height: 1.3; color: var(--ink); cursor: pointer; }
+@media (hover: hover) { .lexicon-dist-item:hover { color: var(--accent); } }
 .lexicon-dist-item.selected {
-  color: var(--ink);
-  background: color-mix(in oklab, var(--chart-contested) 10%, var(--paper));
-  border-color: color-mix(in oklab, var(--chart-contested) 42%, var(--paper));
+  color: var(--accent);
+  background: var(--accent-soft);
+  border-radius: 4px;
+  padding: 0 2px;
 }
 /* Read-only rendering chip — the non-active Bible's line on the word page */
-.lexicon-dist-item--ref { cursor: default; color: var(--ink-3); background: var(--bg-sunk); border-color: transparent; }
-@media (hover: hover) { .lexicon-dist-item--ref:hover { border-color: transparent; } }
-.lexicon-dist-count { color: var(--ink-4); font-size: 11px; font-family: var(--f-mono); }
-.lexicon-dist-item.selected .lexicon-dist-count { color: var(--chart-contested); }
-
-/* Distribution by book — compact run-on list (all books on screen, one click to
-   filter). A small inline OT/NT split bar in the header gives the testament shape
-   at a glance, adding no rows. */
-.lexicon-distribution { margin-top: 24px; }
-.lexicon-dist-top { display: flex; align-items: center; justify-content: space-between; gap: 10px 16px; flex-wrap: wrap; margin-bottom: 10px; }
-.lexicon-dist-top .lexicon-section-label { margin-bottom: 0; }
-.lexicon-distsplit { display: inline-flex; align-items: center; gap: 9px; }
-.lexicon-distsplit-bar { display: inline-flex; width: 104px; height: 8px; border-radius: 3px; overflow: hidden; background: var(--bg-sunk); }
-.lexicon-distsplit-bar .seg.ot { background: var(--dist-ot); }
-.lexicon-distsplit-bar .seg.nt { background: var(--dist-nt); }
-.lexicon-distsplit-lab { font-size: 11.5px; color: var(--ink-3); white-space: nowrap; }
-.lexicon-distbooks { font-size: 14px; line-height: 2; color: var(--ink-2); }
-.lexicon-distbook { display: inline; background: none; border: none; padding: 0; margin: 0; font: inherit; line-height: 1.3; color: var(--ink); cursor: pointer; }
-@media (hover: hover) { .lexicon-distbook:hover { color: var(--chart-contested); } }
-.lexicon-distbook.selected { color: var(--chart-contested); background: color-mix(in oklab, var(--chart-contested) 12%, var(--paper)); border-radius: 4px; padding: 0 3px; }
-.lexicon-distbook-ct { color: var(--ink-3); font-size: 11px; font-family: var(--f-mono); margin-left: 3px; }
-.lexicon-distbook.selected .lexicon-distbook-ct { color: var(--chart-contested); }
-.lexicon-distbook-sep { color: var(--ink-3); opacity: 0.45; user-select: none; }
+.lexicon-dist-item--ref { cursor: default; color: var(--ink-3); }
+@media (hover: hover) { .lexicon-dist-item--ref:hover { color: var(--ink-3); } }
+.lexicon-dist-count { color: var(--ink-3); font-size: 11px; font-family: var(--f-mono); margin-left: 3px; }
+.lexicon-dist-item.selected .lexicon-dist-count { color: var(--accent); }
+.lexicon-dist-sep { color: var(--ink-3); opacity: 0.5; user-select: none; }
 
 /* Verse list */
 .lexicon-verse-list { margin-top: 20px; border: 1px solid var(--rule); border-radius: var(--r-md); overflow: hidden; }
