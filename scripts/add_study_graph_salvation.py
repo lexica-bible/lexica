@@ -101,8 +101,10 @@ CLAIMS = {
                    "text": "The sheep and goats divided at the last judgment by what they did"},
     "v_matt7_21": {"provenance": "text", "ref": "Matthew 7:21", "label": "not 'Lord, Lord' but does the will (final)",
                    "text": "'Not everyone who says to me Lord, Lord... but the one who does the will of my Father'"},
+    "v_matt11_19":{"provenance": "text", "ref": "Matthew 11:19", "label": "wisdom justified by her deeds",
+                   "text": "'Wisdom is justified (edikaiothe) by her deeds' — dikaioo + ek ergon, the SAME construction as James 2:24; wisdom can't be MADE righteous, so here dikaioo can only mean VINDICATED / shown right"},
 
-    # ── lexical senses (grounded in the lexicon — a real range of the words) ──
+    # ── lexical senses (grounded — a real range of the words; vindicate-sense now backed by text) ──
     "def_dikaioo_demonstrate": {"provenance": "lexicon", "label": "dikaioo = show / vindicate righteous",
                    "text": "dikaioo also bears the demonstrative sense 'show / vindicate to be righteous' (cf. Luke 7:35; Rom 3:4) — not only 'declare' or 'make'"},
     "def_pistis_living": {"provenance": "lexicon", "label": "pistis = living trust / allegiance",
@@ -183,6 +185,8 @@ OVERLAYS = [
              "why": "Demons 'believe' and shudder — the faith James calls dead is bare assent, not the living trust Paul means."},
             {"from": "def_pistis_living", "to": "c_dead_faith_not_saving", "relation": "supports", "strength": "contested",
              "why": "If pistis is by nature living/active fidelity, a 'dead faith' is not faith in Paul's sense at all."},
+            {"from": "v_matt11_19", "to": "def_dikaioo_demonstrate", "relation": "supports", "strength": "solid",
+             "why": "Grounds the vindicate-range in text: 'wisdom justified by her deeds' (same dikaioo + ek ergon as James 2:24) can ONLY mean shown-right, since wisdom can't be 'made righteous'. The lexical fact is solid; applying it to James 2:24 is the contested step on the edge below."},
             {"from": "def_dikaioo_demonstrate", "to": "c_works_evidence", "relation": "supports", "strength": "contested",
              "why": "If James's 'justified by works' = SHOWN/vindicated righteous (a real lexical sense), works prove faith without grounding it."},
             {"from": "v_james2_24", "to": "c_works_evidence", "relation": "supports", "strength": "weak",
@@ -206,6 +210,12 @@ OVERLAYS = [
             # THE DIKAIOO/PISTIS JOINT — the single contested step the James rebuttal must cross.
             {"from": "c_works_evidence", "to": "t_faith_alone", "relation": "supports", "strength": "contested",
              "why": "DIKAIOO-SENSE JOINT. If works are only fruit/evidence, faith alone is the ground — but reading James's 'justified by works' as vindication (demonstrative dikaioo) rather than ground is the disputed step this whole route rests on."},
+            # Faith+works's best shot, raised on this overlay (symmetry with the counters faith-alone
+            # raises on the faith+works overlay) — contested, so not decisive.
+            {"from": "v_james2_24", "to": "t_faith_alone", "relation": "undercuts", "strength": "contested",
+             "why": "Read plainly, 'justified by works and NOT by faith alone' (2:24) is the direct contradiction of faith-alone — works as part of the ground. Answered only by the demonstrative-dikaioo reading above."},
+            {"from": "v_gal5_6", "to": "t_faith_alone", "relation": "undercuts", "strength": "contested",
+             "why": "'Faith working through love' read as love FORMING/completing faith (faith+works's reading) — faith doesn't justify ALONE but as it works in love."},
         ],
     },
     {
@@ -271,6 +281,8 @@ OVERLAYS = [
              "why": "Demons 'believe' and shudder — dead assent is not living faith."},
             {"from": "c_dead_faith_not_saving", "to": "t_berean", "relation": "supports", "strength": "contested",
              "why": "Living faith inevitably works; the 'faith' that doesn't is not saving faith — so 'faith alone' and 'faith that works' aren't rivals."},
+            {"from": "v_matt11_19", "to": "def_dikaioo_demonstrate", "relation": "supports", "strength": "solid",
+             "why": "Same textual grounding of the vindicate-range — 'wisdom justified by her deeds', the same dikaioo + ek ergon as James 2:24."},
             {"from": "def_dikaioo_demonstrate", "to": "t_berean", "relation": "requires", "strength": "contested",
              "why": "The Berean read takes James's 'justified by works' as SHOWN/vindicated (demonstrative dikaioo), dissolving the Paul/James tension without works grounding salvation."},
             {"from": "v_james2_24", "to": "t_berean", "relation": "supports", "strength": "weak",

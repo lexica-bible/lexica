@@ -665,7 +665,9 @@ function GraphChart({ claims, overlays, analysis, onNavigate }) {
         <span><i className="study-key-line study-key-line--solid" /> established</span>
         <span><i className="study-key-line study-key-line--contested" /> contested</span>
         <span><i className="study-key-line study-key-line--weak" /> weak</span>
-        <span><i className="study-key-line study-key-line--joint" /> load-bearing joint</span>
+        {verdict.load_bearing && verdict.load_bearing.length > 0 && (
+          <span><i className="study-key-line study-key-line--joint" /> load-bearing joint</span>
+        )}
         {verdict.defeated && verdict.defeated.length > 0 && (
           <span><i className="study-key study-key--defeated" /> overturned by an objection</span>
         )}

@@ -5501,7 +5501,7 @@ function GraphChart({
     className: "study-key-line study-key-line--contested"
   }), " contested"), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("i", {
     className: "study-key-line study-key-line--weak"
-  }), " weak"), /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("i", {
+  }), " weak"), verdict.load_bearing && verdict.load_bearing.length > 0 && /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("i", {
     className: "study-key-line study-key-line--joint"
   }), " load-bearing joint"), verdict.defeated && verdict.defeated.length > 0 && /*#__PURE__*/React.createElement("span", null, /*#__PURE__*/React.createElement("i", {
     className: "study-key study-key--defeated"
