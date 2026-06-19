@@ -198,6 +198,13 @@ purely about which word you land on when you click. Almost all of it is done and
   as `fix_funcword_subject`, greek_pos carried in brackets); 13 verses (1Co/1Ti/2Ti/2Pe/Heb),
   confirmed against the ABP source, applied + verified (audit, health_check, bracket-order all
   baseline). Added to the rebuild tail chain (`finish_rebuild.sh` + CLAUDE.md checklist).
+- **Split verbs that wrap the subject — DONE + LIVE (2026-06-18).** ABP gives one verb two reorder
+  numbers ("1Was 5justified" G1344) under a single Strong's; the build merged them onto the first
+  slot, dropping a bracket number + ordering the verb wrong. `_split_numbered` in
+  build_words_from_abp.py now emits one word per slot, sharing the Strong's. 308 verses, count→625,921.
+  Rom 3:4 split_merge regrafted. Memory `project_verb_split_slots`. OPTIONAL follow-up (not done): the
+  helper half ("Was") shows the same Greek lemma as the main half — could hide the Greek line on the
+  helper, but only if it reads oddly to you. Leave unless it bugs you.
 - **Remaining gray zone — left on purpose (not worth it).** 25 article-slot cases (midst, least,
   whole, indeed, "My God"…) — all adjective/adverb/quantifier, and several are defensible Greek
   (κατὰ μόνας = "alone"). Plus the one straggler in 1Co 3:8's *second* "his own" (split his/own

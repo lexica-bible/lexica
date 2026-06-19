@@ -31,7 +31,7 @@ one rebuilt (DELETE only ever hits the copy). The build also makes its own `bibl
 1. Rollback copy: `cp bible.db bible_pre_<reason>_<date>.db`; `cp bible.db bible_test.db`.
 2. Rebuild (self-correcting): `python3 scripts/build_words_from_abp.py bible_test.db bh_scrape.db`
    (type 'rebuild'; re-applies the 'G' prefix at INSERT). Needs Rahlfs + TAGNT for pronoun
-   correction + morph. Confirm `Words inserted: ~625,598`, `Verses skipped: 0`, ~6,880 flagged.
+   correction + morph. Confirm `Words inserted: ~625,921`, `Verses skipped: 0`, ~6,880 flagged.
    FOLDED INTO THIS PASS (no longer separate): bracket_punct (~331v), g1473_gloss (~1,724),
    lord_subject (~795), funcword_subject (~108), lord_oath (29), greek_pos backfill. Already at
    build from before: pronoun correction (Rahlfs/TAGNT), _redistribute_pronoun_compounds,
@@ -42,6 +42,14 @@ one rebuilt (DELETE only ever hits the copy). The build also makes its own `bibl
    ("May [be found your hand]"). ~943 verses, +~1,023 word slots (why the count rose). The source
    bracket parser is now shared — `build.iter_source_tokens`, and the bracket audits delegate to it
    so they can't drift from the build. See memory project_bracket_helper_peel.
+   NEW 2026-06-18 — `_emit_words` VERB SPLIT (`_split_numbered`): ABP wraps some verbs' English
+   around the subject, giving ONE Greek word TWO position numbers under a single Strong's with
+   nothing between them ("1Was 5justified]" G1344; "1may 5search 7out" G327). The old code read
+   only the FIRST number, glued the gloss onto that slot and dropped the rest — a skipped bracket
+   number + the verb in the wrong reading order. Now each numbered piece becomes its own word,
+   sharing the verb's Strong's. 321 chunks / 308 verses canon-wide (Job 57, Isa 24, 1Co 23,
+   Jas 11…), +323 word slots (part of why the count rose). Single-number chunks are byte-identical.
+   See memory project_verb_split_slots.
 3. Tail — one command: `bash scripts/finish_rebuild.sh bible_test.db`. Restores proper nouns
    (import_tipnr, ~27,965 matched — the build CLEARS is_pn + PN Strong's) then the PINNED
    data-patches that can't fold, then a final punctuation float. Each only touches its own named
@@ -51,11 +59,12 @@ one rebuilt (DELETE only ever hits the copy). The build also makes its own `bibl
    - fix_theos_filler_tags (2): Lam 3:16 "and"→καί, 1Pe 1:23 "of God living" split. Pinned.
    - fix_split_merges (237): reorder-MERGE garbles. STAYS A PATCH — the general splitter
      (carry=True in _split_compounds) regresses ~85 other verses, so the provably-clean subset is
-     frozen in scripts/split_merge_fixes.json. Its positions are ABSOLUTE, so the `_emit_words` peel
-     (it inserts a word) shifted 4 target verses that are ALSO peeled — Isa 31:8, Jer 17:18,
-     Jer 37:20, Job 31:30 — and the patch skipped them (safe: strongs precondition caught it). Those
-     4 entries were refreshed 2026-06-14 so it again applies 237/0-skipped. REFRESH BY GRAFTING only
-     the shifted verses (regen on a peeled build, copy just those keys); do NOT commit a full
+     frozen in scripts/split_merge_fixes.json. Its positions are ABSOLUTE, so any build step that
+     INSERTS a word ahead of a target shifts it and the patch skips it (safe: strongs precondition
+     caught it). The `_emit_words` peel shifted 4 ALSO-peeled verses — Isa 31:8, Jer 17:18,
+     Jer 37:20, Job 31:30 (refreshed 2026-06-14); the 2026-06-18 verb split shifted Rom 3:4's later
+     pair by +1 (refreshed 2026-06-18, the only overlap of the 308 split verses). REFRESH BY GRAFTING
+     only the shifted verses (regen on the new build, copy just those keys); do NOT commit a full
      `_gen_split_candidates.py` regen — it re-baselines and drops ~36 unrelated verses to build drift.
      (Retiring this via the Rahlfs/TAGNT alignment was viability-checked 2026-06-09 and DECLINED: the
      alignment is Greek-only so it can't replace the English-pairing guess, and a morph filter
