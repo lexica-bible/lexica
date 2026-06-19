@@ -44,8 +44,47 @@ function _acCited(keyStrongs) {
   return s.size ? s : null;
 }
 
+// Resolve a book name/abbrev the AI wrote in prose ("Matthew", "Exo",
+// "1 Corinthians", "1Co") to the app's book key. Built from BOOK_LABELS, so it
+// accepts both the 3-letter key and the full name; spaces/case are ignored.
+const _BOOK_LOOKUP = (() => {
+  const m = {};
+  const add = (s, key) => { if (s) m[String(s).toLowerCase().replace(/\s+/g, "")] = key; };
+  for (const key in BOOK_LABELS) { add(key, key); add(BOOK_LABELS[key], key); }
+  // a few abbreviations the model favours that aren't the app's key
+  Object.entries({ matt: "Mat", mk: "Mar", lk: "Luk", jn: "Joh", ps: "Psa", psalm: "Psa", song: "Son", phil: "Php", rev: "Rev" })
+    .forEach(([k, v]) => add(k, v));
+  return m;
+})();
+
+// Make the citations the AI already wrote in its prose clickable: verse refs
+// ("Exo 24:8", "Hebrews 9:12-22") jump to the reader; Strong's ("G129", "H1818")
+// open Word study. No prompt/caching change — purely a render of existing text.
+const _CITE_RE = /\b((?:[1-3]\s?)?[A-Za-z][A-Za-z]+)\.?\s+(\d+):(\d+)(?:[-–]\d+)?\b|\b([GH])(\d+(?:\.\d+)?)\b/g;
+function AcProse({ text, onVerse, onStrongs }) {
+  if (!text) return null;
+  const out = []; let last = 0, m, k = 0;
+  _CITE_RE.lastIndex = 0;
+  while ((m = _CITE_RE.exec(text)) !== null) {
+    if (m[1]) {   // verse ref
+      const key = _BOOK_LOOKUP[m[1].toLowerCase().replace(/\s+/g, "")];
+      if (!key) continue;   // unknown book → leave as plain text
+      if (m.index > last) out.push(text.slice(last, m.index));
+      out.push(<button key={k++} className="ac-ref" onClick={() => onVerse(key, +m[2], +m[3])}>{m[0]}</button>);
+      last = _CITE_RE.lastIndex;
+    } else if (m[4]) {   // Strong's number
+      if (m.index > last) out.push(text.slice(last, m.index));
+      const tag = m[4].toUpperCase() + m[5];
+      out.push(<button key={k++} className="ac-instrongs" onClick={() => onStrongs(tag)}>{m[0]}</button>);
+      last = _CITE_RE.lastIndex;
+    }
+  }
+  if (last < text.length) out.push(text.slice(last));
+  return <p className="ac-prose">{out}</p>;
+}
+
 // One answered (or in-flight) question.
-function AcTurn({ turn, textMode, onReadInContext, onLemma }) {
+function AcTurn({ turn, textMode, onReadInContext, onLemma, onStrongs }) {
   const [showAll, setShowAll] = useState(false);
   const cited = useMemo(() => _acCited(turn.keyStrongs), [turn.keyStrongs]);
   const primaryCount = useMemo(() => {
@@ -72,7 +111,7 @@ function AcTurn({ turn, textMode, onReadInContext, onLemma }) {
       ) : (
         <div className="ac-answer">
           <div className="ac-syn-tag"><Icon.Sparkle/> Synthesis</div>
-          <p className="ac-prose">{turn.explanation}</p>
+          <AcProse text={turn.explanation} onVerse={onReadInContext} onStrongs={onStrongs}/>
 
           {turn.keyStrongs && turn.keyStrongs.length > 0 && (
             <div className="ac-lemmas">
@@ -191,6 +230,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   }, [thread.length]);
 
   const onLemma = (l) => { const tag = l.strongs || l.strongs_base; onNavigateToLexicon?.(tag, /^H/i.test(tag) ? "kjv" : "abp"); };
+  const onStrongs = (tag) => onNavigateToLexicon?.(tag, /^H/i.test(tag) ? "kjv" : "abp");
   const started = thread.length > 0;
   const suggestions = acScopeSuggestions(scope);
 
@@ -237,7 +277,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
             <div className="ac-thread" ref={threadRef}>
               <div className="ac-thread-col">
                 {thread.map((turn, i) => (
-                  <AcTurn key={i} turn={turn} textMode={textMode} onReadInContext={onReadInContext} onLemma={onLemma}/>
+                  <AcTurn key={i} turn={turn} textMode={textMode} onReadInContext={onReadInContext} onLemma={onLemma} onStrongs={onStrongs}/>
                 ))}
               </div>
             </div>
