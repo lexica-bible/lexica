@@ -12125,6 +12125,66 @@ function _comboOK(corpus, testament, language) {
   if (language === "hebrew") return _sliceHasHebrew(corpus, testament);
   return true;
 }
+
+// ============================================================
+// WORD STUDY — MOBILE BOTTOM COCKPIT + SHEETS
+// ============================================================
+// Mirrors the library's mobile chrome: the verses ARE the page, and a fixed
+// bottom cockpit (thumb zone) opens the side content as bottom sheets. Left
+// button = Analysis (the desktop RIGHT rail), middle = Word (the desktop LEFT
+// rail), right = Options (filters / settings).
+function WsCockpit({
+  open,
+  setOpen
+}) {
+  const btn = (id, icon, label) => /*#__PURE__*/React.createElement("button", {
+    className: "ws-cockpit-btn" + (open === id ? " on" : ""),
+    "aria-label": label,
+    "aria-pressed": open === id,
+    onClick: () => setOpen(open === id ? null : id)
+  }, icon, /*#__PURE__*/React.createElement("span", {
+    className: "ws-cockpit-lbl"
+  }, label));
+  return /*#__PURE__*/React.createElement("div", {
+    className: "ws-cockpit"
+  }, btn("analysis", /*#__PURE__*/React.createElement(Icon.Panel, null), "Analysis"), btn("word", /*#__PURE__*/React.createElement(Icon.Book, null), "Word"), btn("options", /*#__PURE__*/React.createElement(Icon.Filter, null), "Options"));
+}
+
+// One library-style bottom sheet (scrim + swipe-to-dismiss), reusing the
+// reading-options sheet styling (.msheet / .msheet-head / .msheet-body).
+function WsSheet({
+  title,
+  onClose,
+  children
+}) {
+  const {
+    sheetRef,
+    scrollRef
+  } = useSwipeToDismiss(onClose);
+  return /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "sheet-scrim",
+    onClick: onClose
+  }), /*#__PURE__*/React.createElement("div", {
+    className: "msheet ws-sheet",
+    ref: sheetRef
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sheet-drag-zone",
+    "aria-hidden": "true"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "sheet-handle"
+  })), /*#__PURE__*/React.createElement("div", {
+    className: "msheet-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "msheet-title"
+  }, title), /*#__PURE__*/React.createElement("button", {
+    className: "msheet-x",
+    onClick: onClose,
+    "aria-label": "Close"
+  }, "\u2715")), /*#__PURE__*/React.createElement("div", {
+    className: "msheet-body",
+    ref: scrollRef
+  }, children)));
+}
 function LexiconView({
   onNavigateToLibrary,
   onWordClick,
@@ -12158,6 +12218,7 @@ function LexiconView({
   const [lsjSummary, setLsjSummary] = useState(null);
   const [lsjLoading, setLsjLoading] = useState(false);
   const [lsjSummaryLoading, setLsjSummaryLoading] = useState(false);
+  const [sheet, setSheet] = useState(null); // mobile bottom sheet open: null | "word" | "analysis" | "options"
 
   // Reset the curated LSJ definition whenever the focused word changes.
   useEffect(() => {
@@ -12237,6 +12298,18 @@ function LexiconView({
     }
   }, [profile, pendingGloss]);
 
+  // Lead with the verses: when a word loads (or the testament filter changes) and
+  // no book is chosen yet, auto-open the book with the most occurrences so the
+  // center fills with verses immediately instead of sitting blank. Everything else
+  // stays user-driven (the distribution list re-picks the book).
+  useEffect(() => {
+    if (!profile || loading || selectedBook) return;
+    const books = (filteredBooks || profile.books || []).filter(b => testament === "all" || (b.testament || "").toLowerCase() === testament);
+    if (!books.length) return;
+    const top = books.reduce((a, b) => b.count > a.count ? b : a);
+    selectBook(top.book);
+  }, [profile, loading, selectedBook, testament, filteredBooks]);
+
   // Search-results scope toggle (All / ABP / KJV). Only shown when no word is
   // in focus; re-runs the English search in that corpus.
   const switchCorpus = async c => {
@@ -12284,7 +12357,8 @@ function LexiconView({
     setTestament(t);
     setSelectedBook(null);
     setVerseList(null);
-    // Profile view filters its distribution + count on `testament` client-side.
+    // Profile view filters its distribution + count on `testament` client-side
+    // (the auto-select effect then re-opens the top book within that testament).
     if (profile) return;
     // Results view: re-run the English search scoped to the testament.
     const q = query.trim();
@@ -12408,6 +12482,7 @@ function LexiconView({
     setMatches(null);
     setGroupings(null);
     setError(null);
+    setSheet(null);
     // Plain-language question / phrase → hand the box over to the corpus AI.
     if (onAiSearch && !_STRONGS_RE.test(q) && !_isGreekHebrew(q) && _looksLikeQuestion(q)) {
       onAiSearch(q);
@@ -12445,10 +12520,182 @@ function LexiconView({
 
   // Apply the Greek/Hebrew filter to the results grid (client-side row hide).
   const visibleGroupings = !groupings ? null : language === "all" ? groupings : groupings.filter(g => language === "greek" ? g.strongs[0] === "G" : g.strongs[0] === "H");
-  return /*#__PURE__*/React.createElement("div", {
-    className: "lexicon-view"
-  }, /*#__PURE__*/React.createElement("section", {
-    className: "search"
+
+  // ----------------------------------------------------------------
+  // Focused-word pieces — defined once, placed in the desktop rails OR
+  // the mobile sheets (only one branch renders, so no element reuse).
+  // ----------------------------------------------------------------
+  const displayCount = !profile ? 0 : testament === "all" ? profile.total : (filteredBooks || profile.books).filter(b => (b.testament || "").toLowerCase() === testament).reduce((s, b) => s + b.count, 0);
+  const hasResultsToReturn = !!(groupings || matches);
+  const curBookName = profile && selectedBook ? profile.books.find(b => b.book === selectedBook)?.name || selectedBook : null;
+  const backToResults = () => {
+    setProfile(null);
+    setSelectedBook(null);
+    setVerseList(null);
+    setSheet(null);
+  };
+  const idHead = () => /*#__PURE__*/React.createElement("div", {
+    className: "ws-id-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "lexicon-lemma",
+    dir: profile.strongs[0] === "H" ? "rtl" : undefined
+  }, profile.lemma), /*#__PURE__*/React.createElement("span", {
+    className: "lexicon-translit"
+  }, profile.translit), /*#__PURE__*/React.createElement("div", {
+    className: "ws-id-meta"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "lexicon-strongs-tag"
+  }, profile.strongs), /*#__PURE__*/React.createElement("span", {
+    className: "lexicon-total"
+  }, displayCount, " occurrences")));
+  const askBtn = () => onAiSearch ? /*#__PURE__*/React.createElement("button", {
+    className: "lexicon-ask-corpus",
+    onClick: () => {
+      const aq = `How is ${profile.translit || profile.lemma} (${profile.strongs}) used in scripture?`;
+      setQuery(aq);
+      setSheet(null);
+      onAiSearch(aq);
+    }
+  }, /*#__PURE__*/React.createElement(Icon.Sparkle, null), " Ask the corpus about ", profile.lemma) : null;
+  const defSection = () => profile.definition || /^G/i.test(profile.strongs) ? /*#__PURE__*/React.createElement("div", {
+    className: "lexicon-def-section"
+  }, /*#__PURE__*/React.createElement("button", {
+    className: "lexicon-def-toggle",
+    onClick: () => setShowDef(v => !v)
+  }, "Definition", showDef && (!/^G/i.test(profile.strongs) ? /*#__PURE__*/React.createElement("span", {
+    className: "lexicon-def-src"
+  }, "BDB") : !lsjLoading && lsjEntry ? /*#__PURE__*/React.createElement("span", {
+    className: "lexicon-def-src"
+  }, lsjEntry.source === "strongs" ? "Strong's" : lsjEntry.source === "abp_ext" ? "ABP" : "LSJ") : null), " ", showDef ? "▲" : "▼"), showDef && (!/^G/i.test(profile.strongs) ? /*#__PURE__*/React.createElement("p", {
+    className: "lexicon-definition"
+  }, profile.definition) /* Hebrew: BDB */ : lsjLoading ? /*#__PURE__*/React.createElement("div", {
+    className: "lsj-def lsj-def--loading"
+  }, "Loading\u2026") : !lsjEntry ? /*#__PURE__*/React.createElement("p", {
+    className: "lexicon-definition"
+  }, profile.definition) /* no LSJ: strongs_def */ : lsjEntry.source === "strongs" ? /*#__PURE__*/React.createElement("div", {
+    className: "lsj-def",
+    dangerouslySetInnerHTML: {
+      __html: lsjEntry.def_html
+    }
+  }) : lsjSummaryLoading ? /*#__PURE__*/React.createElement(LsjSummary, {
+    data: null,
+    loading: true
+  }) : lsjSummary && lsjSummary.summary ? /*#__PURE__*/React.createElement(LsjSummary, {
+    data: lsjSummary,
+    loading: false
+  }) : /*#__PURE__*/React.createElement("div", {
+    className: "lsj-def",
+    dangerouslySetInnerHTML: {
+      __html: lsjEntry.def_html
+    }
+  }) /* AI down: raw LSJ */)) : null;
+  const inThisBook = () => selectedBook && (bookGlosses || profile.glosses) && (bookGlosses || profile.glosses).length > 0 ? /*#__PURE__*/React.createElement("div", {
+    className: "lexicon-glosses"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "lexicon-gloss-label"
+  }, "In this book"), /*#__PURE__*/React.createElement("div", {
+    className: "lexicon-dist-list"
+  }, (bookGlosses || profile.glosses).map((g, i) => /*#__PURE__*/React.createElement(React.Fragment, {
+    key: g.gloss
+  }, i > 0 && /*#__PURE__*/React.createElement("span", {
+    className: "lexicon-dist-sep"
+  }, " \xB7 "), /*#__PURE__*/React.createElement("button", {
+    className: "lexicon-dist-item" + (selectedGloss === g.gloss ? " selected" : ""),
+    onClick: () => selectGloss(g.gloss)
+  }, g.gloss, /*#__PURE__*/React.createElement("span", {
+    className: "lexicon-dist-count"
+  }, g.count)))))) : null;
+
+  // RIGHT-rail analysis: the whole-corpus renderings + the book distribution.
+  const rendersAnalysis = () => /*#__PURE__*/React.createElement(React.Fragment, null, renderGlossLine("abp", "ABP renders this as", profile.abp_glosses), renderGlossLine("kjv", "KJV renders this as", profile.kjv_glosses));
+  const distribution = afterPick => /*#__PURE__*/React.createElement("div", {
+    className: "lexicon-distribution"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "lexicon-dist-header"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "lexicon-dist-label"
+  }, "Distribution by book")), /*#__PURE__*/React.createElement("div", {
+    className: "lexicon-dist-list"
+  }, (filteredBooks || profile.books).filter(b => testament === "all" || (b.testament || "").toLowerCase() === testament).map((b, i) => /*#__PURE__*/React.createElement(React.Fragment, {
+    key: b.book
+  }, i > 0 && /*#__PURE__*/React.createElement("span", {
+    className: "lexicon-dist-sep"
+  }, " \xB7 "), /*#__PURE__*/React.createElement("button", {
+    className: "lexicon-dist-item" + (selectedBook === b.book ? " selected" : ""),
+    onClick: () => {
+      selectBook(b.book);
+      afterPick && afterPick();
+    }
+  }, b.name, /*#__PURE__*/React.createElement("span", {
+    className: "lexicon-dist-count"
+  }, b.count))))));
+
+  // ABP|KJV corpus toggle for a focused word (segmented; matches the sheet look
+  // when `seg` is true, the desktop pill look otherwise).
+  const corpusToggle = (seg, afterPick) => {
+    const cls = seg ? "mseg-b" : "lct-btn";
+    return /*#__PURE__*/React.createElement("div", {
+      className: seg ? "mseg" : "lexicon-corpus-toggle"
+    }, /*#__PURE__*/React.createElement("button", {
+      className: cls + (profileCorpus === "abp" ? " on" : ""),
+      disabled: !profile.has_abp,
+      onClick: () => {
+        switchProfileCorpus("abp");
+        afterPick && afterPick();
+      }
+    }, "ABP"), /*#__PURE__*/React.createElement("button", {
+      className: cls + (profileCorpus === "kjv" ? " on" : ""),
+      disabled: !profile.has_kjv,
+      onClick: () => {
+        switchProfileCorpus("kjv");
+        afterPick && afterPick();
+      }
+    }, "KJV"));
+  };
+  const testamentToggle = (seg, afterPick) => {
+    const cls = seg ? "mseg-b" : "lct-btn";
+    return /*#__PURE__*/React.createElement("div", {
+      className: seg ? "mseg" : "lexicon-corpus-toggle"
+    }, ["all", "ot", "nt"].map(t => /*#__PURE__*/React.createElement("button", {
+      key: t,
+      className: cls + (testament === t ? " on" : ""),
+      onClick: () => {
+        switchTestament(t);
+        afterPick && afterPick();
+      }
+    }, t === "all" ? "All" : t.toUpperCase())));
+  };
+
+  // CENTER: the verse occurrences for the open book, in the reader's cards.
+  const versesBody = () => !selectedBook ? /*#__PURE__*/React.createElement("div", {
+    className: "lexicon-verse-loading"
+  }, "Pick a book to see its verses.") : verseLoading ? /*#__PURE__*/React.createElement("div", {
+    className: "lexicon-verse-loading"
+  }, "Loading\u2026") : verseList && verseList[0] && verseList[0].error ? /*#__PURE__*/React.createElement("div", {
+    className: "lexicon-verse-loading",
+    style: {
+      color: "red"
+    }
+  }, verseList[0].error) : verseList && verseList.length ? /*#__PURE__*/React.createElement(CorpusGroup, {
+    label: curBookName,
+    verses: verseList.map(v => ({
+      book: selectedBook,
+      chapter: v.chapter,
+      verse: v.verse,
+      ref: `${selectedBook} ${v.chapter}:${v.verse}`
+    })),
+    allResults: [],
+    onWordClick: onWordClick,
+    onReadInContext: onNavigateToLibrary ? (b, c, vv) => onNavigateToLibrary(b, c, vv, profileCorpus) : undefined,
+    textMode: profileCorpus === "kjv" ? "kjv" : "greek",
+    primaryStrongs: null,
+    citedStrongs: citedStrongs,
+    kjvCache: {}
+  }) : /*#__PURE__*/React.createElement("div", {
+    className: "lexicon-verse-loading"
+  }, "No verses.");
+  const searchHeader = /*#__PURE__*/React.createElement("section", {
+    className: "search ws-search"
   }, /*#__PURE__*/React.createElement("div", {
     className: "search-cell"
   }, /*#__PURE__*/React.createElement("label", {
@@ -12476,27 +12723,80 @@ function LexiconView({
     className: "spinner"
   }) : /*#__PURE__*/React.createElement(Icon.ArrowRight, null))), /*#__PURE__*/React.createElement("div", {
     className: "lexicon-search-hint"
-  }, "One word looks it up \xB7 a question asks the corpus"))), aiActive ? /*#__PURE__*/React.createElement(AiResults, ai) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+  }, "One word looks it up \xB7 a question asks the corpus")));
+  return /*#__PURE__*/React.createElement("div", {
+    className: "lexicon-view" + (profile && !aiActive ? " ws-profile" : "")
+  }, searchHeader, aiActive ? /*#__PURE__*/React.createElement(AiResults, ai) : profile ? isMobile ?
+  /*#__PURE__*/
+  /* ---------- MOBILE: verses are the page; cockpit opens the rest ---------- */
+  React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
+    className: "ws-mini-head"
+  }, hasResultsToReturn && /*#__PURE__*/React.createElement("button", {
+    className: "ws-mini-back",
+    onClick: backToResults,
+    "aria-label": `Back to "${query.trim()}" results`
+  }, "\u2190"), /*#__PURE__*/React.createElement("span", {
+    className: "ws-mini-lemma",
+    dir: profile.strongs[0] === "H" ? "rtl" : undefined
+  }, profile.lemma), profile.translit && /*#__PURE__*/React.createElement("span", {
+    className: "ws-mini-translit"
+  }, profile.translit), /*#__PURE__*/React.createElement("span", {
+    className: "lexicon-strongs-tag"
+  }, profile.strongs), curBookName && /*#__PURE__*/React.createElement("span", {
+    className: "ws-mini-book"
+  }, curBookName)), /*#__PURE__*/React.createElement("div", {
+    className: "ws-verses ws-verses-mobile"
+  }, versesBody()), /*#__PURE__*/React.createElement(WsCockpit, {
+    open: sheet,
+    setOpen: setSheet
+  }), sheet === "word" && /*#__PURE__*/React.createElement(WsSheet, {
+    title: "Word",
+    onClose: () => setSheet(null)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ws-sheet-pad"
+  }, idHead(), askBtn(), defSection(), inThisBook())), sheet === "analysis" && /*#__PURE__*/React.createElement(WsSheet, {
+    title: "Analysis",
+    onClose: () => setSheet(null)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ws-sheet-pad"
+  }, rendersAnalysis(), distribution(() => setSheet(null)))), sheet === "options" && /*#__PURE__*/React.createElement(WsSheet, {
+    title: "Options",
+    onClose: () => setSheet(null)
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mode-sec"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mode-lbl"
+  }, "Text"), corpusToggle(true, () => setSheet(null))), /*#__PURE__*/React.createElement("div", {
+    className: "mode-sec"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "mode-lbl"
+  }, "Testament"), testamentToggle(true, () => setSheet(null))))) :
+  /*#__PURE__*/
+  /* ---------- DESKTOP: three columns (identity / verses / analysis) ---------- */
+  React.createElement("div", {
+    className: "ws-grid"
+  }, /*#__PURE__*/React.createElement("aside", {
+    className: "ws-rail ws-identity"
+  }, hasResultsToReturn && /*#__PURE__*/React.createElement("button", {
+    className: "ws-back",
+    onClick: backToResults,
+    title: `Back to "${query.trim()}" results`
+  }, "\u2190 results"), idHead(), corpusToggle(false), askBtn(), defSection(), inThisBook()), /*#__PURE__*/React.createElement("div", {
+    className: "ws-verses"
+  }, /*#__PURE__*/React.createElement("div", {
+    className: "ws-verses-head"
+  }, /*#__PURE__*/React.createElement("span", {
+    className: "ws-verses-title"
+  }, curBookName || "Verses"), testamentToggle(false)), versesBody()), /*#__PURE__*/React.createElement("aside", {
+    className: "ws-rail ws-analysis"
+  }, rendersAnalysis(), distribution())) :
+  /*#__PURE__*/
+  /* ---------- EMPTY / RESULTS LIST / DISAMBIGUATION — single column ---------- */
+  React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("div", {
     className: "lexicon-toolbar"
   }, /*#__PURE__*/React.createElement("div", {
     className: "lexicon-corpus-toggle"
-  }, profile ?
-  /*#__PURE__*/
-  /* Drilled into a word: All is N/A (search-only); gray a corpus the
-     word isn't in — but ABP stays live for backfilled proper nouns. */
-  React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
-    className: "lct-btn",
-    disabled: true,
-    title: "Pick ABP or KJV to study this word"
-  }, "All"), /*#__PURE__*/React.createElement("button", {
-    className: "lct-btn" + (profileCorpus === "abp" ? " on" : ""),
-    disabled: !profile.has_abp,
-    onClick: () => switchProfileCorpus("abp")
-  }, "ABP"), /*#__PURE__*/React.createElement("button", {
-    className: "lct-btn" + (profileCorpus === "kjv" ? " on" : ""),
-    disabled: !profile.has_kjv,
-    onClick: () => switchProfileCorpus("kjv")
-  }, "KJV")) : /*#__PURE__*/React.createElement(React.Fragment, null, /*#__PURE__*/React.createElement("button", {
+  }, /*#__PURE__*/React.createElement("button", {
     className: "lct-btn" + (corpus === "all" ? " on" : ""),
     onClick: () => switchCorpus("all")
   }, "All"), /*#__PURE__*/React.createElement("button", {
@@ -12507,14 +12807,14 @@ function LexiconView({
     className: "lct-btn" + (corpus === "kjv" ? " on" : ""),
     disabled: !_comboOK("kjv", testament, language),
     onClick: () => switchCorpus("kjv")
-  }, "KJV"))), /*#__PURE__*/React.createElement("div", {
+  }, "KJV")), /*#__PURE__*/React.createElement("div", {
     className: "lexicon-corpus-toggle"
   }, ["all", "ot", "nt"].map(t => /*#__PURE__*/React.createElement("button", {
     key: t,
     className: "lct-btn" + (testament === t ? " on" : ""),
-    disabled: !profile && t !== "all" && !_comboOK(corpus, t, language),
+    disabled: t !== "all" && !_comboOK(corpus, t, language),
     onClick: () => switchTestament(t)
-  }, t === "all" ? "All" : t.toUpperCase()))), !profile && /*#__PURE__*/React.createElement("div", {
+  }, t === "all" ? "All" : t.toUpperCase()))), /*#__PURE__*/React.createElement("div", {
     className: "lexicon-corpus-toggle"
   }, /*#__PURE__*/React.createElement("button", {
     className: "lct-btn" + (language === "all" ? " on" : ""),
@@ -12529,7 +12829,7 @@ function LexiconView({
     onClick: () => switchLanguage("hebrew")
   }, "Hebrew"))), error && /*#__PURE__*/React.createElement("p", {
     className: "lexicon-error"
-  }, error), matches && !profile && /*#__PURE__*/React.createElement("div", {
+  }, error), matches && /*#__PURE__*/React.createElement("div", {
     className: "lexicon-matches"
   }, matches.map(m => /*#__PURE__*/React.createElement("button", {
     key: m.strongs,
@@ -12543,7 +12843,7 @@ function LexiconView({
     className: "lexicon-match-translit"
   }, m.translit), /*#__PURE__*/React.createElement("span", {
     className: "lexicon-match-gloss"
-  }, m.gloss)))), groupings && !profile && /*#__PURE__*/React.createElement("div", {
+  }, m.gloss)))), groupings && /*#__PURE__*/React.createElement("div", {
     className: "lexicon-results"
   }, /*#__PURE__*/React.createElement("div", {
     className: "lexicon-dist-label"
@@ -12578,126 +12878,7 @@ function LexiconView({
     className: "lexicon-result-chev"
   }, "\u203A"))), /*#__PURE__*/React.createElement("span", {
     className: "lexicon-result-preview"
-  }, renderRowPreview(g))))), profile && /*#__PURE__*/React.createElement("div", {
-    className: "lexicon-profile"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "lexicon-profile-header"
-  }, (groupings || matches) && /*#__PURE__*/React.createElement("button", {
-    className: "lexicon-back-btn",
-    title: `Back to "${query.trim()}" results`,
-    onClick: () => {
-      setProfile(null);
-      setSelectedBook(null);
-      setVerseList(null);
-    }
-  }, "\u2190"), /*#__PURE__*/React.createElement("span", {
-    className: "lexicon-lemma",
-    dir: profile.strongs[0] === "H" ? "rtl" : undefined
-  }, profile.lemma), /*#__PURE__*/React.createElement("span", {
-    className: "lexicon-translit"
-  }, profile.translit), /*#__PURE__*/React.createElement("span", {
-    className: "lexicon-strongs-tag"
-  }, profile.strongs), /*#__PURE__*/React.createElement("span", {
-    className: "lexicon-total"
-  }, testament === "all" ? profile.total : (filteredBooks || profile.books).filter(b => (b.testament || "").toLowerCase() === testament).reduce((s, b) => s + b.count, 0), " occurrences")), onAiSearch && /*#__PURE__*/React.createElement("div", {
-    className: "lexicon-pivots"
-  }, /*#__PURE__*/React.createElement("button", {
-    className: "lexicon-ask-corpus",
-    onClick: () => {
-      const aq = `How is ${profile.translit || profile.lemma} (${profile.strongs}) used in scripture?`;
-      setQuery(aq);
-      onAiSearch(aq);
-    }
-  }, /*#__PURE__*/React.createElement(Icon.Sparkle, null), " Ask the corpus about ", profile.lemma)), (profile.definition || /^G/i.test(profile.strongs)) && /*#__PURE__*/React.createElement("div", {
-    className: "lexicon-def-section"
-  }, /*#__PURE__*/React.createElement("button", {
-    className: "lexicon-def-toggle",
-    onClick: () => setShowDef(v => !v)
-  }, "Definition", showDef && (!/^G/i.test(profile.strongs) ? /*#__PURE__*/React.createElement("span", {
-    className: "lexicon-def-src"
-  }, "BDB") : !lsjLoading && lsjEntry ? /*#__PURE__*/React.createElement("span", {
-    className: "lexicon-def-src"
-  }, lsjEntry.source === "strongs" ? "Strong's" : lsjEntry.source === "abp_ext" ? "ABP" : "LSJ") : null), " ", showDef ? "▲" : "▼"), showDef && (!/^G/i.test(profile.strongs) ? /*#__PURE__*/React.createElement("p", {
-    className: "lexicon-definition"
-  }, profile.definition) /* Hebrew: BDB */ : lsjLoading ? /*#__PURE__*/React.createElement("div", {
-    className: "lsj-def lsj-def--loading"
-  }, "Loading\u2026") : !lsjEntry ? /*#__PURE__*/React.createElement("p", {
-    className: "lexicon-definition"
-  }, profile.definition) /* no LSJ: strongs_def */ : lsjEntry.source === "strongs" ? /*#__PURE__*/React.createElement("div", {
-    className: "lsj-def",
-    dangerouslySetInnerHTML: {
-      __html: lsjEntry.def_html
-    }
-  }) : lsjSummaryLoading ? /*#__PURE__*/React.createElement(LsjSummary, {
-    data: null,
-    loading: true
-  }) : lsjSummary && lsjSummary.summary ? /*#__PURE__*/React.createElement(LsjSummary, {
-    data: lsjSummary,
-    loading: false
-  }) : /*#__PURE__*/React.createElement("div", {
-    className: "lsj-def",
-    dangerouslySetInnerHTML: {
-      __html: lsjEntry.def_html
-    }
-  }) /* AI down: raw LSJ */)), selectedBook ? (bookGlosses || profile.glosses) && (bookGlosses || profile.glosses).length > 0 && /*#__PURE__*/React.createElement("div", {
-    className: "lexicon-glosses"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "lexicon-gloss-label"
-  }, "In this book"), /*#__PURE__*/React.createElement("div", {
-    className: "lexicon-dist-list"
-  }, (bookGlosses || profile.glosses).map((g, i) => /*#__PURE__*/React.createElement(React.Fragment, {
-    key: g.gloss
-  }, i > 0 && /*#__PURE__*/React.createElement("span", {
-    className: "lexicon-dist-sep"
-  }, " \xB7 "), /*#__PURE__*/React.createElement("button", {
-    className: "lexicon-dist-item" + (selectedGloss === g.gloss ? " selected" : ""),
-    onClick: () => selectGloss(g.gloss)
-  }, g.gloss, /*#__PURE__*/React.createElement("span", {
-    className: "lexicon-dist-count"
-  }, g.count)))))) : /*#__PURE__*/React.createElement(React.Fragment, null, renderGlossLine("abp", "ABP renders this as", profile.abp_glosses), renderGlossLine("kjv", "KJV renders this as", profile.kjv_glosses)), /*#__PURE__*/React.createElement("div", {
-    className: "lexicon-distribution"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "lexicon-dist-header"
-  }, /*#__PURE__*/React.createElement("div", {
-    className: "lexicon-dist-label"
-  }, "Distribution by book")), /*#__PURE__*/React.createElement("div", {
-    className: "lexicon-dist-list"
-  }, (filteredBooks || profile.books).filter(b => testament === "all" || (b.testament || "").toLowerCase() === testament).map((b, i) => /*#__PURE__*/React.createElement(React.Fragment, {
-    key: b.book
-  }, i > 0 && /*#__PURE__*/React.createElement("span", {
-    className: "lexicon-dist-sep"
-  }, " \xB7 "), /*#__PURE__*/React.createElement("button", {
-    className: "lexicon-dist-item" + (selectedBook === b.book ? " selected" : ""),
-    onClick: () => selectBook(b.book)
-  }, b.name, /*#__PURE__*/React.createElement("span", {
-    className: "lexicon-dist-count"
-  }, b.count)))))), selectedBook && /*#__PURE__*/React.createElement("div", {
-    className: "corpus-groups"
-  }, verseLoading ? /*#__PURE__*/React.createElement("div", {
-    className: "lexicon-verse-loading"
-  }, "Loading\u2026") : verseList && verseList[0] && verseList[0].error ? /*#__PURE__*/React.createElement("div", {
-    className: "lexicon-verse-loading",
-    style: {
-      color: "red"
-    }
-  }, verseList[0].error) : verseList && verseList.length ? /*#__PURE__*/React.createElement(CorpusGroup, {
-    label: profile.books.find(b => b.book === selectedBook)?.name || selectedBook,
-    verses: verseList.map(v => ({
-      book: selectedBook,
-      chapter: v.chapter,
-      verse: v.verse,
-      ref: `${selectedBook} ${v.chapter}:${v.verse}`
-    })),
-    allResults: [],
-    onWordClick: onWordClick,
-    onReadInContext: onNavigateToLibrary ? (b, c, vv) => onNavigateToLibrary(b, c, vv, profileCorpus) : undefined,
-    textMode: profileCorpus === "kjv" ? "kjv" : "greek",
-    primaryStrongs: null,
-    citedStrongs: citedStrongs,
-    kjvCache: {}
-  }) : /*#__PURE__*/React.createElement("div", {
-    className: "lexicon-verse-loading"
-  }, "No verses.")))));
+  }, renderRowPreview(g)))))));
 }
 
 // ============================================================

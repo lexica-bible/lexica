@@ -25,6 +25,49 @@ function _comboOK(corpus, testament, language) {
   return true;
 }
 
+// ============================================================
+// WORD STUDY — MOBILE BOTTOM COCKPIT + SHEETS
+// ============================================================
+// Mirrors the library's mobile chrome: the verses ARE the page, and a fixed
+// bottom cockpit (thumb zone) opens the side content as bottom sheets. Left
+// button = Analysis (the desktop RIGHT rail), middle = Word (the desktop LEFT
+// rail), right = Options (filters / settings).
+function WsCockpit({ open, setOpen }) {
+  const btn = (id, icon, label) => (
+    <button className={"ws-cockpit-btn" + (open === id ? " on" : "")}
+      aria-label={label} aria-pressed={open === id}
+      onClick={() => setOpen(open === id ? null : id)}>
+      {icon}<span className="ws-cockpit-lbl">{label}</span>
+    </button>
+  );
+  return (
+    <div className="ws-cockpit">
+      {btn("analysis", <Icon.Panel/>, "Analysis")}
+      {btn("word", <Icon.Book/>, "Word")}
+      {btn("options", <Icon.Filter/>, "Options")}
+    </div>
+  );
+}
+
+// One library-style bottom sheet (scrim + swipe-to-dismiss), reusing the
+// reading-options sheet styling (.msheet / .msheet-head / .msheet-body).
+function WsSheet({ title, onClose, children }) {
+  const { sheetRef, scrollRef } = useSwipeToDismiss(onClose);
+  return (
+    <>
+      <div className="sheet-scrim" onClick={onClose} />
+      <div className="msheet ws-sheet" ref={sheetRef}>
+        <div className="sheet-drag-zone" aria-hidden="true"><div className="sheet-handle"></div></div>
+        <div className="msheet-head">
+          <span className="msheet-title">{title}</span>
+          <button className="msheet-x" onClick={onClose} aria-label="Close">✕</button>
+        </div>
+        <div className="msheet-body" ref={scrollRef}>{children}</div>
+      </div>
+    </>
+  );
+}
+
 function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendingStrongsConsumed, isMobile, onAiSearch, onExitAi, aiActive, ai }) {
   const [query, setQuery] = useState("");
   const [matches, setMatches] = useState(null);
@@ -48,6 +91,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
   const [lsjSummary, setLsjSummary] = useState(null);
   const [lsjLoading, setLsjLoading] = useState(false);
   const [lsjSummaryLoading, setLsjSummaryLoading] = useState(false);
+  const [sheet, setSheet] = useState(null);   // mobile bottom sheet open: null | "word" | "analysis" | "options"
 
   // Reset the curated LSJ definition whenever the focused word changes.
   useEffect(() => { setLsjEntry(null); setLsjSummary(null); }, [profile?.strongs]);
@@ -119,6 +163,19 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
     }
   }, [profile, pendingGloss]);
 
+  // Lead with the verses: when a word loads (or the testament filter changes) and
+  // no book is chosen yet, auto-open the book with the most occurrences so the
+  // center fills with verses immediately instead of sitting blank. Everything else
+  // stays user-driven (the distribution list re-picks the book).
+  useEffect(() => {
+    if (!profile || loading || selectedBook) return;
+    const books = (filteredBooks || profile.books || [])
+      .filter(b => testament === "all" || (b.testament || "").toLowerCase() === testament);
+    if (!books.length) return;
+    const top = books.reduce((a, b) => (b.count > a.count ? b : a));
+    selectBook(top.book);
+  }, [profile, loading, selectedBook, testament, filteredBooks]);
+
   // Search-results scope toggle (All / ABP / KJV). Only shown when no word is
   // in focus; re-runs the English search in that corpus.
   const switchCorpus = async (c) => {
@@ -163,7 +220,8 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
     setTestament(t);
     setSelectedBook(null);
     setVerseList(null);
-    // Profile view filters its distribution + count on `testament` client-side.
+    // Profile view filters its distribution + count on `testament` client-side
+    // (the auto-select effect then re-opens the top book within that testament).
     if (profile) return;
     // Results view: re-run the English search scoped to the testament.
     const q = query.trim();
@@ -281,6 +339,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
     setMatches(null);
     setGroupings(null);
     setError(null);
+    setSheet(null);
     // Plain-language question / phrase → hand the box over to the corpus AI.
     if (onAiSearch && !_STRONGS_RE.test(q) && !_isGreekHebrew(q) && _looksLikeQuestion(q)) {
       onAiSearch(q);
@@ -321,250 +380,340 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
     : language === "all" ? groupings
     : groupings.filter(g => language === "greek" ? g.strongs[0] === "G" : g.strongs[0] === "H");
 
-  return (
-    <div className="lexicon-view">
-      <section className="search">
-        <div className="search-cell">
-          <label className="search-label">
-            <span className="search-eyebrow">Search</span>
-          </label>
-          <form className="search-field" onSubmit={handleSubmit}>
-            <Icon.Search className="search-icon"/>
-            <input
-              className="search-input"
-              type="text"
-              value={query}
-              onChange={e => setQuery(e.target.value)}
-              placeholder="A word, a Strong's number, or a question…"
-              autoFocus
-            />
-            <button type="submit" className="search-go" aria-label="Search" disabled={loading}>
-              {loading ? <span className="spinner"/> : <Icon.ArrowRight/>}
+  // ----------------------------------------------------------------
+  // Focused-word pieces — defined once, placed in the desktop rails OR
+  // the mobile sheets (only one branch renders, so no element reuse).
+  // ----------------------------------------------------------------
+  const displayCount = !profile ? 0 : (
+    testament === "all"
+      ? profile.total
+      : (filteredBooks || profile.books).filter(b => (b.testament || "").toLowerCase() === testament).reduce((s, b) => s + b.count, 0)
+  );
+  const hasResultsToReturn = !!(groupings || matches);
+  const curBookName = profile && selectedBook
+    ? (profile.books.find(b => b.book === selectedBook)?.name || selectedBook)
+    : null;
+  const backToResults = () => { setProfile(null); setSelectedBook(null); setVerseList(null); setSheet(null); };
+
+  const idHead = () => (
+    <div className="ws-id-head">
+      <span className="lexicon-lemma" dir={profile.strongs[0] === "H" ? "rtl" : undefined}>{profile.lemma}</span>
+      <span className="lexicon-translit">{profile.translit}</span>
+      <div className="ws-id-meta">
+        <span className="lexicon-strongs-tag">{profile.strongs}</span>
+        <span className="lexicon-total">{displayCount} occurrences</span>
+      </div>
+    </div>
+  );
+
+  const askBtn = () => onAiSearch ? (
+    <button className="lexicon-ask-corpus" onClick={() => { const aq = `How is ${profile.translit || profile.lemma} (${profile.strongs}) used in scripture?`; setQuery(aq); setSheet(null); onAiSearch(aq); }}>
+      <Icon.Sparkle/> Ask the corpus about {profile.lemma}
+    </button>
+  ) : null;
+
+  const defSection = () => (profile.definition || /^G/i.test(profile.strongs)) ? (
+    <div className="lexicon-def-section">
+      <button className="lexicon-def-toggle" onClick={() => setShowDef(v => !v)}>
+        Definition
+        {showDef && (!/^G/i.test(profile.strongs)
+          ? <span className="lexicon-def-src">BDB</span>
+          : (!lsjLoading && lsjEntry)
+            ? <span className="lexicon-def-src">{lsjEntry.source === "strongs" ? "Strong's" : lsjEntry.source === "abp_ext" ? "ABP" : "LSJ"}</span>
+            : null)}
+        {" "}{showDef ? "▲" : "▼"}
+      </button>
+      {showDef && (
+        !/^G/i.test(profile.strongs)
+          ? <p className="lexicon-definition">{profile.definition}</p>     /* Hebrew: BDB */
+          : lsjLoading
+            ? <div className="lsj-def lsj-def--loading">Loading…</div>
+            : !lsjEntry
+              ? <p className="lexicon-definition">{profile.definition}</p>  /* no LSJ: strongs_def */
+              : lsjEntry.source === "strongs"
+                ? <div className="lsj-def" dangerouslySetInnerHTML={{ __html: lsjEntry.def_html }} />
+                : lsjSummaryLoading
+                  ? <LsjSummary data={null} loading={true} />
+                  : (lsjSummary && lsjSummary.summary)
+                    ? <LsjSummary data={lsjSummary} loading={false} />
+                    : <div className="lsj-def" dangerouslySetInnerHTML={{ __html: lsjEntry.def_html }} />  /* AI down: raw LSJ */
+      )}
+    </div>
+  ) : null;
+
+  const inThisBook = () => (selectedBook && (bookGlosses || profile.glosses) && (bookGlosses || profile.glosses).length > 0) ? (
+    <div className="lexicon-glosses">
+      <div className="lexicon-gloss-label">In this book</div>
+      <div className="lexicon-dist-list">
+        {(bookGlosses || profile.glosses).map((g, i) => (
+          <React.Fragment key={g.gloss}>
+            {i > 0 && <span className="lexicon-dist-sep"> · </span>}
+            <button
+              className={"lexicon-dist-item" + (selectedGloss === g.gloss ? " selected" : "")}
+              onClick={() => selectGloss(g.gloss)}
+            >
+              {g.gloss}<span className="lexicon-dist-count">{g.count}</span>
             </button>
-          </form>
-          <div className="lexicon-search-hint">One word looks it up · a question asks the corpus</div>
-        </div>
-      </section>
+          </React.Fragment>
+        ))}
+      </div>
+    </div>
+  ) : null;
+
+  // RIGHT-rail analysis: the whole-corpus renderings + the book distribution.
+  const rendersAnalysis = () => (
+    <>
+      {renderGlossLine("abp", "ABP renders this as", profile.abp_glosses)}
+      {renderGlossLine("kjv", "KJV renders this as", profile.kjv_glosses)}
+    </>
+  );
+
+  const distribution = (afterPick) => (
+    <div className="lexicon-distribution">
+      <div className="lexicon-dist-header">
+        <div className="lexicon-dist-label">Distribution by book</div>
+      </div>
+      <div className="lexicon-dist-list">
+        {(filteredBooks || profile.books)
+          .filter(b => testament === "all" || (b.testament || "").toLowerCase() === testament)
+          .map((b, i) => (
+            <React.Fragment key={b.book}>
+              {i > 0 && <span className="lexicon-dist-sep"> · </span>}
+              <button
+                className={"lexicon-dist-item" + (selectedBook === b.book ? " selected" : "")}
+                onClick={() => { selectBook(b.book); afterPick && afterPick(); }}
+              >
+                {b.name}<span className="lexicon-dist-count">{b.count}</span>
+              </button>
+            </React.Fragment>
+          ))}
+      </div>
+    </div>
+  );
+
+  // ABP|KJV corpus toggle for a focused word (segmented; matches the sheet look
+  // when `seg` is true, the desktop pill look otherwise).
+  const corpusToggle = (seg, afterPick) => {
+    const cls = seg ? "mseg-b" : "lct-btn";
+    return (
+      <div className={seg ? "mseg" : "lexicon-corpus-toggle"}>
+        <button className={cls + (profileCorpus === "abp" ? " on" : "")} disabled={!profile.has_abp} onClick={() => { switchProfileCorpus("abp"); afterPick && afterPick(); }}>ABP</button>
+        <button className={cls + (profileCorpus === "kjv" ? " on" : "")} disabled={!profile.has_kjv} onClick={() => { switchProfileCorpus("kjv"); afterPick && afterPick(); }}>KJV</button>
+      </div>
+    );
+  };
+
+  const testamentToggle = (seg, afterPick) => {
+    const cls = seg ? "mseg-b" : "lct-btn";
+    return (
+      <div className={seg ? "mseg" : "lexicon-corpus-toggle"}>
+        {["all", "ot", "nt"].map(t => (
+          <button key={t} className={cls + (testament === t ? " on" : "")} onClick={() => { switchTestament(t); afterPick && afterPick(); }}>
+            {t === "all" ? "All" : t.toUpperCase()}
+          </button>
+        ))}
+      </div>
+    );
+  };
+
+  // CENTER: the verse occurrences for the open book, in the reader's cards.
+  const versesBody = () => (
+    !selectedBook ? (
+      <div className="lexicon-verse-loading">Pick a book to see its verses.</div>
+    ) : verseLoading ? (
+      <div className="lexicon-verse-loading">Loading…</div>
+    ) : (verseList && verseList[0] && verseList[0].error) ? (
+      <div className="lexicon-verse-loading" style={{ color: "red" }}>{verseList[0].error}</div>
+    ) : (verseList && verseList.length) ? (
+      <CorpusGroup
+        label={curBookName}
+        verses={verseList.map(v => ({ book: selectedBook, chapter: v.chapter, verse: v.verse, ref: `${selectedBook} ${v.chapter}:${v.verse}` }))}
+        allResults={[]}
+        onWordClick={onWordClick}
+        onReadInContext={onNavigateToLibrary ? (b, c, vv) => onNavigateToLibrary(b, c, vv, profileCorpus) : undefined}
+        textMode={profileCorpus === "kjv" ? "kjv" : "greek"}
+        primaryStrongs={null}
+        citedStrongs={citedStrongs}
+        kjvCache={{}}
+      />
+    ) : (
+      <div className="lexicon-verse-loading">No verses.</div>
+    )
+  );
+
+  const searchHeader = (
+    <section className="search ws-search">
+      <div className="search-cell">
+        <label className="search-label">
+          <span className="search-eyebrow">Search</span>
+        </label>
+        <form className="search-field" onSubmit={handleSubmit}>
+          <Icon.Search className="search-icon"/>
+          <input
+            className="search-input"
+            type="text"
+            value={query}
+            onChange={e => setQuery(e.target.value)}
+            placeholder="A word, a Strong's number, or a question…"
+            autoFocus
+          />
+          <button type="submit" className="search-go" aria-label="Search" disabled={loading}>
+            {loading ? <span className="spinner"/> : <Icon.ArrowRight/>}
+          </button>
+        </form>
+        <div className="lexicon-search-hint">One word looks it up · a question asks the corpus</div>
+      </div>
+    </section>
+  );
+
+  return (
+    <div className={"lexicon-view" + (profile && !aiActive ? " ws-profile" : "")}>
+      {searchHeader}
 
       {aiActive ? (
         <AiResults {...ai} />
+      ) : profile ? (
+        isMobile ? (
+          /* ---------- MOBILE: verses are the page; cockpit opens the rest ---------- */
+          <>
+            <div className="ws-mini-head">
+              {hasResultsToReturn && (
+                <button className="ws-mini-back" onClick={backToResults} aria-label={`Back to "${query.trim()}" results`}>←</button>
+              )}
+              <span className="ws-mini-lemma" dir={profile.strongs[0] === "H" ? "rtl" : undefined}>{profile.lemma}</span>
+              {profile.translit && <span className="ws-mini-translit">{profile.translit}</span>}
+              <span className="lexicon-strongs-tag">{profile.strongs}</span>
+              {curBookName && <span className="ws-mini-book">{curBookName}</span>}
+            </div>
+
+            <div className="ws-verses ws-verses-mobile">{versesBody()}</div>
+
+            <WsCockpit open={sheet} setOpen={setSheet} />
+
+            {sheet === "word" && (
+              <WsSheet title="Word" onClose={() => setSheet(null)}>
+                <div className="ws-sheet-pad">
+                  {idHead()}
+                  {askBtn()}
+                  {defSection()}
+                  {inThisBook()}
+                </div>
+              </WsSheet>
+            )}
+            {sheet === "analysis" && (
+              <WsSheet title="Analysis" onClose={() => setSheet(null)}>
+                <div className="ws-sheet-pad">
+                  {rendersAnalysis()}
+                  {distribution(() => setSheet(null))}
+                </div>
+              </WsSheet>
+            )}
+            {sheet === "options" && (
+              <WsSheet title="Options" onClose={() => setSheet(null)}>
+                <div className="mode-sec"><div className="mode-lbl">Text</div>{corpusToggle(true, () => setSheet(null))}</div>
+                <div className="mode-sec"><div className="mode-lbl">Testament</div>{testamentToggle(true, () => setSheet(null))}</div>
+              </WsSheet>
+            )}
+          </>
+        ) : (
+          /* ---------- DESKTOP: three columns (identity / verses / analysis) ---------- */
+          <div className="ws-grid">
+            <aside className="ws-rail ws-identity">
+              {hasResultsToReturn && (
+                <button className="ws-back" onClick={backToResults} title={`Back to "${query.trim()}" results`}>← results</button>
+              )}
+              {idHead()}
+              {corpusToggle(false)}
+              {askBtn()}
+              {defSection()}
+              {inThisBook()}
+            </aside>
+
+            <div className="ws-verses">
+              <div className="ws-verses-head">
+                <span className="ws-verses-title">{curBookName || "Verses"}</span>
+                {testamentToggle(false)}
+              </div>
+              {versesBody()}
+            </div>
+
+            <aside className="ws-rail ws-analysis">
+              {rendersAnalysis()}
+              {distribution()}
+            </aside>
+          </div>
+        )
       ) : (
+        /* ---------- EMPTY / RESULTS LIST / DISAMBIGUATION — single column ---------- */
         <>
-        <div className="lexicon-toolbar">
-        <div className="lexicon-corpus-toggle">
-          {profile ? (
-            /* Drilled into a word: All is N/A (search-only); gray a corpus the
-               word isn't in — but ABP stays live for backfilled proper nouns. */
-            <>
-              <button className="lct-btn" disabled title="Pick ABP or KJV to study this word">All</button>
-              <button className={"lct-btn" + (profileCorpus === "abp" ? " on" : "")} disabled={!profile.has_abp} onClick={() => switchProfileCorpus("abp")}>ABP</button>
-              <button className={"lct-btn" + (profileCorpus === "kjv" ? " on" : "")} disabled={!profile.has_kjv} onClick={() => switchProfileCorpus("kjv")}>KJV</button>
-            </>
-          ) : (
-            <>
+          <div className="lexicon-toolbar">
+            <div className="lexicon-corpus-toggle">
               <button className={"lct-btn" + (corpus === "all" ? " on" : "")} onClick={() => switchCorpus("all")}>All</button>
               <button className={"lct-btn" + (corpus === "abp" ? " on" : "")} disabled={!_comboOK("abp", testament, language)} onClick={() => switchCorpus("abp")}>ABP</button>
               <button className={"lct-btn" + (corpus === "kjv" ? " on" : "")} disabled={!_comboOK("kjv", testament, language)} onClick={() => switchCorpus("kjv")}>KJV</button>
-            </>
-          )}
-        </div>
-        <div className="lexicon-corpus-toggle">
-          {["all","ot","nt"].map(t => (
-            <button key={t} className={"lct-btn" + (testament === t ? " on" : "")}
-              disabled={!profile && t !== "all" && !_comboOK(corpus, t, language)}
-              onClick={() => switchTestament(t)}>
-              {t === "all" ? "All" : t.toUpperCase()}
-            </button>
-          ))}
-        </div>
-        {!profile && (
-          <div className="lexicon-corpus-toggle">
-            <button className={"lct-btn" + (language === "all" ? " on" : "")} onClick={() => switchLanguage("all")}>All</button>
-            <button className={"lct-btn" + (language === "greek" ? " on" : "")} disabled={!_comboOK(corpus, testament, "greek")} onClick={() => switchLanguage("greek")}>Greek</button>
-            <button className={"lct-btn" + (language === "hebrew" ? " on" : "")} disabled={!_comboOK(corpus, testament, "hebrew")} onClick={() => switchLanguage("hebrew")}>Hebrew</button>
+            </div>
+            <div className="lexicon-corpus-toggle">
+              {["all","ot","nt"].map(t => (
+                <button key={t} className={"lct-btn" + (testament === t ? " on" : "")}
+                  disabled={t !== "all" && !_comboOK(corpus, t, language)}
+                  onClick={() => switchTestament(t)}>
+                  {t === "all" ? "All" : t.toUpperCase()}
+                </button>
+              ))}
+            </div>
+            <div className="lexicon-corpus-toggle">
+              <button className={"lct-btn" + (language === "all" ? " on" : "")} onClick={() => switchLanguage("all")}>All</button>
+              <button className={"lct-btn" + (language === "greek" ? " on" : "")} disabled={!_comboOK(corpus, testament, "greek")} onClick={() => switchLanguage("greek")}>Greek</button>
+              <button className={"lct-btn" + (language === "hebrew" ? " on" : "")} disabled={!_comboOK(corpus, testament, "hebrew")} onClick={() => switchLanguage("hebrew")}>Hebrew</button>
+            </div>
           </div>
-        )}
-      </div>
 
-      {error && <p className="lexicon-error">{error}</p>}
+          {error && <p className="lexicon-error">{error}</p>}
 
-      {matches && !profile && (
-        <div className="lexicon-matches">
-          {matches.map(m => (
-            <button key={m.strongs} className="lexicon-match-row" onClick={() => loadProfile(m.strongs)}>
-              <span className="lexicon-match-strongs">{m.strongs}</span>
-              <span className="lexicon-match-lemma">{m.lemma}</span>
-              <span className="lexicon-match-translit">{m.translit}</span>
-              <span className="lexicon-match-gloss">{m.gloss}</span>
-            </button>
-          ))}
-        </div>
-      )}
-
-
-      {groupings && !profile && (
-        <div className="lexicon-results">
-          <div className="lexicon-dist-label">
-            rendered as "{query.trim()}" · {visibleGroupings.length} {visibleGroupings.length === 1 ? "word" : "words"}
-          </div>
-          {onAiSearch && (
-            <button className="lexicon-ask-instead" onClick={() => { setQuery(query.trim()); onAiSearch(query.trim()); }}>
-              Or ask the corpus about "{query.trim()}" →
-            </button>
-          )}
-          {visibleGroupings.length === 0 ? (
-            <div className="lexicon-dist-label">No {language === "greek" ? "Greek" : "Hebrew"} words rendered "{query.trim()}".</div>
-          ) : visibleGroupings.map(g => (
-            <button key={g.strongs} className="lexicon-result-row"
-              onClick={() => loadProfile(g.strongs, corpus === "all" ? undefined : corpus)}>
-              <span className="lexicon-result-topbar">
-                <span className="lexicon-result-head">
-                  <span className="lexicon-match-strongs">{g.strongs}</span>
-                  {g.lemma && <span className="lexicon-match-lemma" dir={g.strongs[0] === "H" ? "rtl" : undefined}>{g.lemma}</span>}
-                  {g.translit && <span className="lexicon-match-translit">{g.translit}</span>}
-                </span>
-                <span className="lexicon-result-end">
-                  <span className="lexicon-result-count">{g.count}</span>
-                  <span className="lexicon-result-chev">›</span>
-                </span>
-              </span>
-              <span className="lexicon-result-preview">{renderRowPreview(g)}</span>
-            </button>
-          ))}
-        </div>
-      )}
-
-      {profile && (
-        <div className="lexicon-profile">
-          <div className="lexicon-profile-header">
-            {(groupings || matches) && (
-              <button className="lexicon-back-btn" title={`Back to "${query.trim()}" results`}
-                onClick={() => { setProfile(null); setSelectedBook(null); setVerseList(null); }}>←</button>
-            )}
-            <span className="lexicon-lemma" dir={profile.strongs[0] === "H" ? "rtl" : undefined}>{profile.lemma}</span>
-            <span className="lexicon-translit">{profile.translit}</span>
-            <span className="lexicon-strongs-tag">{profile.strongs}</span>
-            <span className="lexicon-total">{
-              testament === "all"
-                ? profile.total
-                : (filteredBooks || profile.books)
-                    .filter(b => (b.testament || "").toLowerCase() === testament)
-                    .reduce((s, b) => s + b.count, 0)
-            } occurrences</span>
-          </div>
-          {onAiSearch && (
-            <div className="lexicon-pivots">
-              <button className="lexicon-ask-corpus" onClick={() => { const aq = `How is ${profile.translit || profile.lemma} (${profile.strongs}) used in scripture?`; setQuery(aq); onAiSearch(aq); }}>
-                <Icon.Sparkle/> Ask the corpus about {profile.lemma}
-              </button>
+          {matches && (
+            <div className="lexicon-matches">
+              {matches.map(m => (
+                <button key={m.strongs} className="lexicon-match-row" onClick={() => loadProfile(m.strongs)}>
+                  <span className="lexicon-match-strongs">{m.strongs}</span>
+                  <span className="lexicon-match-lemma">{m.lemma}</span>
+                  <span className="lexicon-match-translit">{m.translit}</span>
+                  <span className="lexicon-match-gloss">{m.gloss}</span>
+                </button>
+              ))}
             </div>
           )}
-          {(profile.definition || /^G/i.test(profile.strongs)) && (
-            <div className="lexicon-def-section">
-              <button className="lexicon-def-toggle" onClick={() => setShowDef(v => !v)}>
-                Definition
-                {showDef && (!/^G/i.test(profile.strongs)
-                  ? <span className="lexicon-def-src">BDB</span>
-                  : (!lsjLoading && lsjEntry)
-                    ? <span className="lexicon-def-src">{lsjEntry.source === "strongs" ? "Strong's" : lsjEntry.source === "abp_ext" ? "ABP" : "LSJ"}</span>
-                    : null)}
-                {" "}{showDef ? "▲" : "▼"}
-              </button>
-              {showDef && (
-                !/^G/i.test(profile.strongs)
-                  ? <p className="lexicon-definition">{profile.definition}</p>     /* Hebrew: BDB */
-                  : lsjLoading
-                    ? <div className="lsj-def lsj-def--loading">Loading…</div>
-                    : !lsjEntry
-                      ? <p className="lexicon-definition">{profile.definition}</p>  /* no LSJ: strongs_def */
-                      : lsjEntry.source === "strongs"
-                        ? <div className="lsj-def" dangerouslySetInnerHTML={{ __html: lsjEntry.def_html }} />
-                        : lsjSummaryLoading
-                          ? <LsjSummary data={null} loading={true} />
-                          : (lsjSummary && lsjSummary.summary)
-                            ? <LsjSummary data={lsjSummary} loading={false} />
-                            : <div className="lsj-def" dangerouslySetInnerHTML={{ __html: lsjEntry.def_html }} />  /* AI down: raw LSJ */
+
+          {groupings && (
+            <div className="lexicon-results">
+              <div className="lexicon-dist-label">
+                rendered as "{query.trim()}" · {visibleGroupings.length} {visibleGroupings.length === 1 ? "word" : "words"}
+              </div>
+              {onAiSearch && (
+                <button className="lexicon-ask-instead" onClick={() => { setQuery(query.trim()); onAiSearch(query.trim()); }}>
+                  Or ask the corpus about "{query.trim()}" →
+                </button>
               )}
+              {visibleGroupings.length === 0 ? (
+                <div className="lexicon-dist-label">No {language === "greek" ? "Greek" : "Hebrew"} words rendered "{query.trim()}".</div>
+              ) : visibleGroupings.map(g => (
+                <button key={g.strongs} className="lexicon-result-row"
+                  onClick={() => loadProfile(g.strongs, corpus === "all" ? undefined : corpus)}>
+                  <span className="lexicon-result-topbar">
+                    <span className="lexicon-result-head">
+                      <span className="lexicon-match-strongs">{g.strongs}</span>
+                      {g.lemma && <span className="lexicon-match-lemma" dir={g.strongs[0] === "H" ? "rtl" : undefined}>{g.lemma}</span>}
+                      {g.translit && <span className="lexicon-match-translit">{g.translit}</span>}
+                    </span>
+                    <span className="lexicon-result-end">
+                      <span className="lexicon-result-count">{g.count}</span>
+                      <span className="lexicon-result-chev">›</span>
+                    </span>
+                  </span>
+                  <span className="lexicon-result-preview">{renderRowPreview(g)}</span>
+                </button>
+              ))}
             </div>
           )}
-
-          {selectedBook
-            ? ((bookGlosses || profile.glosses) && (bookGlosses || profile.glosses).length > 0 && (
-                <div className="lexicon-glosses">
-                  <div className="lexicon-gloss-label">In this book</div>
-                  <div className="lexicon-dist-list">
-                    {(bookGlosses || profile.glosses).map((g, i) => (
-                      <React.Fragment key={g.gloss}>
-                        {i > 0 && <span className="lexicon-dist-sep"> · </span>}
-                        <button
-                          className={"lexicon-dist-item" + (selectedGloss === g.gloss ? " selected" : "")}
-                          onClick={() => selectGloss(g.gloss)}
-                        >
-                          {g.gloss}<span className="lexicon-dist-count">{g.count}</span>
-                        </button>
-                      </React.Fragment>
-                    ))}
-                  </div>
-                </div>
-              ))
-            : (
-                <>
-                  {renderGlossLine("abp", "ABP renders this as", profile.abp_glosses)}
-                  {renderGlossLine("kjv", "KJV renders this as", profile.kjv_glosses)}
-                </>
-              )}
-
-          <div className="lexicon-distribution">
-            <div className="lexicon-dist-header">
-              <div className="lexicon-dist-label">Distribution by book</div>
-            </div>
-            <div className="lexicon-dist-list">
-              {(filteredBooks || profile.books)
-                .filter(b => testament === "all" || (b.testament || "").toLowerCase() === testament)
-                .map((b, i) => (
-                  <React.Fragment key={b.book}>
-                    {i > 0 && <span className="lexicon-dist-sep"> · </span>}
-                    <button
-                      className={"lexicon-dist-item" + (selectedBook === b.book ? " selected" : "")}
-                      onClick={() => selectBook(b.book)}
-                    >
-                      {b.name}<span className="lexicon-dist-count">{b.count}</span>
-                    </button>
-                  </React.Fragment>
-                ))}
-            </div>
-          </div>
-
-          {selectedBook && (
-            <div className="corpus-groups">
-              {verseLoading ? (
-                <div className="lexicon-verse-loading">Loading…</div>
-              ) : (verseList && verseList[0] && verseList[0].error) ? (
-                <div className="lexicon-verse-loading" style={{ color: "red" }}>{verseList[0].error}</div>
-              ) : (verseList && verseList.length) ? (
-                <CorpusGroup
-                  label={profile.books.find(b => b.book === selectedBook)?.name || selectedBook}
-                  verses={verseList.map(v => ({
-                    book: selectedBook,
-                    chapter: v.chapter,
-                    verse: v.verse,
-                    ref: `${selectedBook} ${v.chapter}:${v.verse}`,
-                  }))}
-                  allResults={[]}
-                  onWordClick={onWordClick}
-                  onReadInContext={onNavigateToLibrary ? (b, c, vv) => onNavigateToLibrary(b, c, vv, profileCorpus) : undefined}
-                  textMode={profileCorpus === "kjv" ? "kjv" : "greek"}
-                  primaryStrongs={null}
-                  citedStrongs={citedStrongs}
-                  kjvCache={{}}
-                />
-              ) : (
-                <div className="lexicon-verse-loading">No verses.</div>
-              )}
-            </div>
-          )}
-        </div>
-      )}
         </>
       )}
     </div>
