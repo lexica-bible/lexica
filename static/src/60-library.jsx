@@ -619,7 +619,12 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
       // otherwise we scroll to (and burn the scroll flag on) a wrong same-numbered verse.
       if (nav.chapter != null && nav.chapter !== selChapter) return;
     }
-    let raf, tries = 0;
+    let raf;
+    // Wait on a WALL-CLOCK deadline, not a frame count: leaving a heavy view (e.g. the
+    // Study argument-graph SVG) drops frames, so a fixed ~30-frame budget could expire
+    // before the target chapter finishes loading/painting → verse highlighted but never
+    // scrolled to. ~3s of retries outlasts any normal load+paint.
+    const deadline = Date.now() + 3000;
     const tryScroll = () => {
       if (highlightRef.current) {
         // Land the verse in the UPPER THIRD (context above, room to read forward) —
@@ -628,7 +633,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
         // own (the window, or the fixed focus-mode page), so this works in every mode.
         highlightRef.current.scrollIntoView({ behavior: nav.instant ? "auto" : "smooth", block: "start" });
         onNavChange?.({ ...nav, scroll: false });
-      } else if (tries++ < 30) {
+      } else if (Date.now() < deadline) {
         raf = requestAnimationFrame(tryScroll); // highlight row not rendered yet — keep waiting
       }
     };
