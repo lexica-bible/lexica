@@ -55,6 +55,11 @@ function Header({ activeView, onNavChange, owner }) {
           <button className={"hdr-link " + (activeView === "study" ? "active" : "")} onClick={() => onNavChange("study")}>Study</button>
           <button className={"hdr-link " + (activeView === "about" ? "active" : "")} onClick={() => onNavChange("about")}>About</button>
         </nav>
+        {(activeView === "lexicon" || activeView === "corpus") && (
+          <span className="hdr-wip" title="This section is being rebuilt — things may change or look unfinished.">
+            <span className="hdr-wip-dot"/> Under development
+          </span>
+        )}
       </div>
     </header>
   );
