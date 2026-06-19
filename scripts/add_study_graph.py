@@ -128,14 +128,10 @@ CLAIMS = {
                     "text": "'God gave them the same gift he gave us' — Peter defending the Gentiles' Spirit-reception"},
     "v_rom6":      {"provenance": "text", "ref": "Romans 6:3-4", "label": "buried and raised",
                     "text": "'Buried with him in baptism... raised to walk in newness of life'"},
-    "v_1cor12_13": {"provenance": "text", "ref": "1 Corinthians 12:13", "label": "baptized into one body",
-                    "text": "'In one Spirit we were all baptized into one body' — baptizō used for Spirit-immersion, no water"},
-    "v_gal3_27":   {"provenance": "text", "ref": "Galatians 3:27", "label": "baptized into Christ",
-                    "text": "'As many as were baptized into Christ have put on Christ' — a union text, parallel to Romans 6"},
-    "lex_baptizo": {"provenance": "lexicon", "label": "baptizō is medium-neutral",
-                    "text": "baptizō (G907) is medium-neutral; in the union texts (Rom 6:3-4, Gal 3:27) the immersion may be the Spirit's incorporation into Christ, not the water rite"},
     "c_spirit_seal":    {"provenance": "inference", "label": "Spirit = seal of salvation",
                          "text": "The Holy Spirit is the seal and guarantee of salvation"},
+    "c_timing_normal":  {"provenance": "inference", "label": "The normal order, not a sign",
+                         "text": "Cornelius receiving the Spirit before baptism is the normal pattern, not a one-off sign authenticating the Gentiles to the Jewish witnesses present"},
     "c_sealed_pre_bap": {"provenance": "inference", "label": "Sealed before baptism",
                          "text": "Salvation is sealed by the Spirit, received before and apart from baptism"},
     "c_not_instrument": {"provenance": "inference", "label": "Not the instrument",
@@ -255,26 +251,29 @@ OVERLAYS = [
             # Not-the-instrument branch
             {"from": "v_eph1",   "to": "c_spirit_seal", "relation": "supports", "strength": "solid"},
             {"from": "v_rom8_9", "to": "c_spirit_seal", "relation": "supports", "strength": "solid"},
-            {"from": "v_cornelius", "to": "c_sealed_pre_bap", "relation": "supports", "strength": "solid"},
-            # THE one rating JP must set (default solid): Spirit-reception = salvation sealed.
-            {"from": "c_spirit_seal", "to": "c_sealed_pre_bap", "relation": "supports", "strength": "solid",
-             "why": "JP's call (default solid): the Spirit being the seal means salvation is sealed when the Spirit is received. Acts 11:17 defends it; the regen 'gentile-authentication' reading of Cornelius is the contested undercut."},
-            {"from": "v_acts11_17", "to": "c_sealed_pre_bap", "relation": "supports", "strength": "contested",
-             "why": "'The same gift as us' defends reading Cornelius as the normative pattern, not an exceptional sign — itself the disputed point."},
+            # Timing is the disputed joint. The SEAL premise (Spirit = seal, from Eph 1 / Rom 8:9) is
+            # solid and stays solid. What's contested is whether Cornelius's Spirit-before-water is the
+            # NORMAL order or a one-off authenticating sign — so "sealed before baptism" is routed THROUGH
+            # that contested generalization and is no longer reachable on solid links alone (the false
+            # back-door of a direct solid Cornelius edge into the node is removed).
+            {"from": "v_cornelius",   "to": "c_timing_normal", "relation": "supports", "strength": "contested",
+             "why": "Generalizing one episode to the normal pattern is the disputed step; the regen reading takes Cornelius as an exceptional sign authenticating the Gentiles."},
+            {"from": "v_acts11_17",   "to": "c_timing_normal", "relation": "supports", "strength": "contested",
+             "why": "'The same gift as us' (and Acts 15:9) defends reading Cornelius as the pattern, not an exception — itself the disputed point."},
+            {"from": "c_spirit_seal", "to": "c_sealed_pre_bap", "relation": "supports", "strength": "contested",
+             "why": "The seal premise is solid, but moving from 'the Spirit seals' to 'sealed BEFORE baptism' assumes the timing generalization — so this edge is contested, not solid."},
+            {"from": "c_timing_normal", "to": "c_sealed_pre_bap", "relation": "supports", "strength": "contested",
+             "why": "Granting the timing is the norm, the sealing precedes baptism; but the timing itself is contested, so the conclusion does not stand on solid links alone."},
             {"from": "c_sealed_pre_bap", "to": "c_not_instrument", "relation": "supports", "strength": "solid"},
             # Outward-pledge branch
             {"from": "v_1pet3_21", "to": "c_outward_pledge", "relation": "supports", "strength": "solid",
              "why": "The verse's own clause locates the role in the pledge of a good conscience, not the washing."},
             {"from": "v_rom6", "to": "c_outward_pledge", "relation": "supports", "strength": "contested",
              "why": "Corroborating only — Romans 6 can also be read as baptism effecting union, so it doesn't carry solid weight alone."},
-            # baptizō medium-neutral: the lexical category is grounded solid by 1 Cor 12:13 (Spirit-baptism,
-            # no water); its onward read of the union texts as the Spirit's immersion is contested.
-            {"from": "v_1cor12_13", "to": "lex_baptizo", "relation": "supports", "strength": "solid",
-             "why": "1 Cor 12:13 plainly is Spirit-baptism with no water — it grounds the category that baptizō need not mean the water rite."},
-            {"from": "lex_baptizo", "to": "c_outward_pledge", "relation": "supports", "strength": "contested",
-             "why": "The medium-neutral category is solid, but reading Rom 6 / Gal 3:27 specifically as Spirit-immersion rather than the water rite is disputed — the water reading is also defended."},
-            {"from": "v_gal3_27", "to": "c_outward_pledge", "relation": "supports", "strength": "contested",
-             "why": "Union text read as Spirit-incorporation with water as the sign — same contested rating as Romans 6:3-4."},
+            # (Trimmed: the baptizō / 1 Cor 12:13 / Gal 3:27 lexical sub-argument was an extra stack of
+            #  contested corroborators on this branch. The pledge stands on 1 Peter 3:21 alone; the
+            #  "baptizō is medium-neutral" point now lives in the foundational-words strip, where a
+            #  lexical fact about the key word belongs — not as a graph node.)
             # Converge
             {"from": "c_not_instrument", "to": "t_berean", "relation": "supports", "strength": "solid"},
             {"from": "c_outward_pledge", "to": "t_berean", "relation": "supports", "strength": "solid"},
