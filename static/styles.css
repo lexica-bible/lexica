@@ -441,30 +441,24 @@ input { font-family: inherit; }
 .lexicon-dist-count { color: var(--ink-4); font-size: 11px; font-family: var(--f-mono); }
 .lexicon-dist-item.selected .lexicon-dist-count { color: var(--chart-contested); }
 
-/* Distribution by book — clickable horizontal bars, OT/NT colored */
+/* Distribution by book — compact run-on list (all books on screen, one click to
+   filter). A small inline OT/NT split bar in the header gives the testament shape
+   at a glance, adding no rows. */
 .lexicon-distribution { margin-top: 24px; }
-.lexicon-dist-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-bottom: 11px; }
+.lexicon-dist-top { display: flex; align-items: center; justify-content: space-between; gap: 10px 16px; flex-wrap: wrap; margin-bottom: 10px; }
 .lexicon-dist-top .lexicon-section-label { margin-bottom: 0; }
-.lexicon-dist-legend { display: inline-flex; gap: 14px; font-size: 11.5px; color: var(--ink-3); white-space: nowrap; }
-.lexicon-dist-legend .leg::before { content: ""; display: inline-block; width: 9px; height: 9px; border-radius: 2px; margin-right: 5px; }
-.lexicon-dist-legend .leg.ot::before { background: var(--dist-ot); }
-.lexicon-dist-legend .leg.nt::before { background: var(--dist-nt); }
-.lexicon-split { display: flex; height: 11px; border-radius: 3px; overflow: hidden; margin-bottom: 16px; background: var(--bg-sunk); }
-.lexicon-split .seg.ot { background: var(--dist-ot); }
-.lexicon-split .seg.nt { background: var(--dist-nt); }
-.lexicon-bars { display: flex; flex-direction: column; gap: 6px; }
-.lexicon-bar-row { display: flex; align-items: center; gap: 10px; width: 100%; background: none; border: none; padding: 3px 4px; border-radius: 6px; cursor: pointer; text-align: left; }
-@media (hover: hover) { .lexicon-bar-row:hover { background: color-mix(in oklab, var(--chart-contested) 8%, transparent); } }
-.lexicon-bar-row.selected { background: color-mix(in oklab, var(--chart-contested) 14%, transparent); }
-.lexicon-bar-name { flex: none; width: 108px; text-align: right; font-family: var(--f-serif); font-size: 13.5px; color: var(--ink-2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.lexicon-bar-row.selected .lexicon-bar-name { color: var(--ink); }
-.lexicon-bar-track { flex: 1; height: 13px; background: var(--bg-sunk); border-radius: 3px; overflow: hidden; }
-.lexicon-bar-fill { display: block; height: 100%; border-radius: 3px; min-width: 3px; }
-.lexicon-bar-fill.ot { background: var(--dist-ot); }
-.lexicon-bar-fill.nt { background: var(--dist-nt); }
-.lexicon-bar-ct { flex: none; width: 30px; font-family: var(--f-mono); font-size: 12px; color: var(--ink-3); }
-.lexicon-showall { margin-top: 13px; background: none; border: none; padding: 0; font-family: var(--f-sans); font-size: 12.5px; color: var(--chart-contested); cursor: pointer; }
-.lexicon-showall:hover { text-decoration: underline; }
+.lexicon-distsplit { display: inline-flex; align-items: center; gap: 9px; }
+.lexicon-distsplit-bar { display: inline-flex; width: 104px; height: 8px; border-radius: 3px; overflow: hidden; background: var(--bg-sunk); }
+.lexicon-distsplit-bar .seg.ot { background: var(--dist-ot); }
+.lexicon-distsplit-bar .seg.nt { background: var(--dist-nt); }
+.lexicon-distsplit-lab { font-size: 11.5px; color: var(--ink-3); white-space: nowrap; }
+.lexicon-distbooks { font-size: 14px; line-height: 2; color: var(--ink-2); }
+.lexicon-distbook { display: inline; background: none; border: none; padding: 0; margin: 0; font: inherit; line-height: 1.3; color: var(--ink); cursor: pointer; }
+@media (hover: hover) { .lexicon-distbook:hover { color: var(--chart-contested); } }
+.lexicon-distbook.selected { color: var(--chart-contested); background: color-mix(in oklab, var(--chart-contested) 12%, var(--paper)); border-radius: 4px; padding: 0 3px; }
+.lexicon-distbook-ct { color: var(--ink-3); font-size: 11px; font-family: var(--f-mono); margin-left: 3px; }
+.lexicon-distbook.selected .lexicon-distbook-ct { color: var(--chart-contested); }
+.lexicon-distbook-sep { color: var(--ink-3); opacity: 0.45; user-select: none; }
 
 /* Verse list */
 .lexicon-verse-list { margin-top: 20px; border: 1px solid var(--rule); border-radius: var(--r-md); overflow: hidden; }

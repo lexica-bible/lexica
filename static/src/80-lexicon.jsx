@@ -41,7 +41,6 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
   const [selectedGloss, setSelectedGloss] = useState(null);
   const [bookGlosses, setBookGlosses] = useState(null);
   const [filteredBooks, setFilteredBooks] = useState(null);
-  const [showAllBooks, setShowAllBooks] = useState(false);  // distribution: top 12 vs all
   const [groupings, setGroupings] = useState(null);
   const [pendingGloss, setPendingGloss] = useState(null);
   const [showDef, setShowDef] = useState(false);
@@ -101,7 +100,6 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
     setSelectedGloss(null);
     setBookGlosses(null);
     setFilteredBooks(null);
-    setShowAllBooks(false);
     setShowDef(false);
     const isHeb = /^H/i.test(strongs) || (!(/^[GgHh]/.test(strongs)) && parseInt(strongs) > 5624);
     const c = corpusOverride ?? (isHeb ? "kjv" : "abp");  // drilling in always lands in a single corpus
@@ -283,10 +281,9 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
     const isNT = b => (b.testament || "").toUpperCase() === "NT";
     const books = (filteredBooks || profile.books || []).filter(
       b => testament === "all" || (b.testament || "").toLowerCase() === testament);
-    const max = books.reduce((m, b) => Math.max(m, b.count), 0) || 1;
     const ot = books.filter(b => !isNT(b)).reduce((s, b) => s + b.count, 0);
     const nt = books.filter(b => isNT(b)).reduce((s, b) => s + b.count, 0);
-    return { books, max, ot, nt };
+    return { books, ot, nt };
   }, [profile, filteredBooks, testament]);
 
   const handleSubmit = async (e) => {
@@ -553,40 +550,26 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
               <div className="lexicon-dist-top">
                 <span className="lexicon-section-label">Distribution by book</span>
                 {dist.ot > 0 && dist.nt > 0 && (
-                  <span className="lexicon-dist-legend">
-                    <span className="leg ot">OT {dist.ot}</span>
-                    <span className="leg nt">NT {dist.nt}</span>
+                  <span className="lexicon-distsplit" title={`Old Testament ${dist.ot} · New Testament ${dist.nt}`}>
+                    <span className="lexicon-distsplit-bar">
+                      <span className="seg ot" style={{ width: (dist.ot / (dist.ot + dist.nt) * 100) + "%" }} />
+                      <span className="seg nt" style={{ width: (dist.nt / (dist.ot + dist.nt) * 100) + "%" }} />
+                    </span>
+                    <span className="lexicon-distsplit-lab">OT {dist.ot} · NT {dist.nt}</span>
                   </span>
                 )}
               </div>
-              {dist.ot > 0 && dist.nt > 0 && (
-                <div className="lexicon-split">
-                  <span className="seg ot" style={{ width: (dist.ot / (dist.ot + dist.nt) * 100) + "%" }} />
-                  <span className="seg nt" style={{ width: (dist.nt / (dist.ot + dist.nt) * 100) + "%" }} />
-                </div>
-              )}
-              <div className="lexicon-bars">
-                {(showAllBooks ? dist.books : dist.books.slice(0, 12)).map(b => {
-                  const isNT = (b.testament || "").toUpperCase() === "NT";
-                  return (
-                    <button key={b.book}
-                      className={"lexicon-bar-row" + (selectedBook === b.book ? " selected" : "")}
-                      onClick={() => selectBook(b.book)} title={`${b.name} — ${b.count}`}>
-                      <span className="lexicon-bar-name">{b.name}</span>
-                      <span className="lexicon-bar-track">
-                        <span className={"lexicon-bar-fill " + (isNT ? "nt" : "ot")}
-                          style={{ width: Math.max(3, Math.round(b.count / dist.max * 100)) + "%" }} />
-                      </span>
-                      <span className="lexicon-bar-ct">{b.count}</span>
+              <div className="lexicon-distbooks">
+                {dist.books.map((b, i) => (
+                  <React.Fragment key={b.book}>
+                    {i > 0 && <span className="lexicon-distbook-sep"> · </span>}
+                    <button className={"lexicon-distbook" + (selectedBook === b.book ? " selected" : "")}
+                      onClick={() => selectBook(b.book)}>
+                      {b.name}<span className="lexicon-distbook-ct">{b.count}</span>
                     </button>
-                  );
-                })}
+                  </React.Fragment>
+                ))}
               </div>
-              {dist.books.length > 12 && (
-                <button className="lexicon-showall" onClick={() => setShowAllBooks(v => !v)}>
-                  {showAllBooks ? "Show fewer ▲" : `Show all ${dist.books.length} books →`}
-                </button>
-              )}
             </div>
           )}
 

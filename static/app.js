@@ -12151,7 +12151,6 @@ function LexiconView({
   const [selectedGloss, setSelectedGloss] = useState(null);
   const [bookGlosses, setBookGlosses] = useState(null);
   const [filteredBooks, setFilteredBooks] = useState(null);
-  const [showAllBooks, setShowAllBooks] = useState(false); // distribution: top 12 vs all
   const [groupings, setGroupings] = useState(null);
   const [pendingGloss, setPendingGloss] = useState(null);
   const [showDef, setShowDef] = useState(false);
@@ -12218,7 +12217,6 @@ function LexiconView({
     setSelectedGloss(null);
     setBookGlosses(null);
     setFilteredBooks(null);
-    setShowAllBooks(false);
     setShowDef(false);
     const isHeb = /^H/i.test(strongs) || !/^[GgHh]/.test(strongs) && parseInt(strongs) > 5624;
     const c = corpusOverride ?? (isHeb ? "kjv" : "abp"); // drilling in always lands in a single corpus
@@ -12410,12 +12408,10 @@ function LexiconView({
     if (!profile) return null;
     const isNT = b => (b.testament || "").toUpperCase() === "NT";
     const books = (filteredBooks || profile.books || []).filter(b => testament === "all" || (b.testament || "").toLowerCase() === testament);
-    const max = books.reduce((m, b) => Math.max(m, b.count), 0) || 1;
     const ot = books.filter(b => !isNT(b)).reduce((s, b) => s + b.count, 0);
     const nt = books.filter(b => isNT(b)).reduce((s, b) => s + b.count, 0);
     return {
       books,
-      max,
       ot,
       nt
     };
@@ -12701,13 +12697,10 @@ function LexiconView({
   }, /*#__PURE__*/React.createElement("span", {
     className: "lexicon-section-label"
   }, "Distribution by book"), dist.ot > 0 && dist.nt > 0 && /*#__PURE__*/React.createElement("span", {
-    className: "lexicon-dist-legend"
+    className: "lexicon-distsplit",
+    title: `Old Testament ${dist.ot} · New Testament ${dist.nt}`
   }, /*#__PURE__*/React.createElement("span", {
-    className: "leg ot"
-  }, "OT ", dist.ot), /*#__PURE__*/React.createElement("span", {
-    className: "leg nt"
-  }, "NT ", dist.nt))), dist.ot > 0 && dist.nt > 0 && /*#__PURE__*/React.createElement("div", {
-    className: "lexicon-split"
+    className: "lexicon-distsplit-bar"
   }, /*#__PURE__*/React.createElement("span", {
     className: "seg ot",
     style: {
@@ -12718,31 +12711,20 @@ function LexiconView({
     style: {
       width: dist.nt / (dist.ot + dist.nt) * 100 + "%"
     }
-  })), /*#__PURE__*/React.createElement("div", {
-    className: "lexicon-bars"
-  }, (showAllBooks ? dist.books : dist.books.slice(0, 12)).map(b => {
-    const isNT = (b.testament || "").toUpperCase() === "NT";
-    return /*#__PURE__*/React.createElement("button", {
-      key: b.book,
-      className: "lexicon-bar-row" + (selectedBook === b.book ? " selected" : ""),
-      onClick: () => selectBook(b.book),
-      title: `${b.name} — ${b.count}`
-    }, /*#__PURE__*/React.createElement("span", {
-      className: "lexicon-bar-name"
-    }, b.name), /*#__PURE__*/React.createElement("span", {
-      className: "lexicon-bar-track"
-    }, /*#__PURE__*/React.createElement("span", {
-      className: "lexicon-bar-fill " + (isNT ? "nt" : "ot"),
-      style: {
-        width: Math.max(3, Math.round(b.count / dist.max * 100)) + "%"
-      }
-    })), /*#__PURE__*/React.createElement("span", {
-      className: "lexicon-bar-ct"
-    }, b.count));
-  })), dist.books.length > 12 && /*#__PURE__*/React.createElement("button", {
-    className: "lexicon-showall",
-    onClick: () => setShowAllBooks(v => !v)
-  }, showAllBooks ? "Show fewer ▲" : `Show all ${dist.books.length} books →`)), selectedBook && /*#__PURE__*/React.createElement("div", {
+  })), /*#__PURE__*/React.createElement("span", {
+    className: "lexicon-distsplit-lab"
+  }, "OT ", dist.ot, " \xB7 NT ", dist.nt))), /*#__PURE__*/React.createElement("div", {
+    className: "lexicon-distbooks"
+  }, dist.books.map((b, i) => /*#__PURE__*/React.createElement(React.Fragment, {
+    key: b.book
+  }, i > 0 && /*#__PURE__*/React.createElement("span", {
+    className: "lexicon-distbook-sep"
+  }, " \xB7 "), /*#__PURE__*/React.createElement("button", {
+    className: "lexicon-distbook" + (selectedBook === b.book ? " selected" : ""),
+    onClick: () => selectBook(b.book)
+  }, b.name, /*#__PURE__*/React.createElement("span", {
+    className: "lexicon-distbook-ct"
+  }, b.count)))))), selectedBook && /*#__PURE__*/React.createElement("div", {
     className: "corpus-groups"
   }, verseLoading ? /*#__PURE__*/React.createElement("div", {
     className: "lexicon-verse-loading"
