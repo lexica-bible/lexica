@@ -807,9 +807,9 @@ input { font-family: inherit; }
 /* Library tab keeps a fixed reading cockpit at the bottom (≈58px) — lift the
    sheet above it there, and shorten its max height to match. */
 .app.view-library .detail-sheet {
-  bottom: calc(58px + env(safe-area-inset-bottom, 0px));
-  max-height: calc(100vh - 114px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
-  max-height: calc(100dvh - 114px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  bottom: calc(56px + env(safe-area-inset-bottom, 0px));
+  max-height: calc(100vh - 112px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  max-height: calc(100dvh - 112px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
 }
 .detail-sheet .detail-body { overscroll-behavior: contain; }
 @keyframes slide-up {
@@ -2179,7 +2179,7 @@ input { font-family: inherit; }
     position: fixed;
     top: auto; bottom: 0; left: 0; right: 0;
     z-index: 200;
-    height: auto; min-height: 56px;
+    height: auto; min-height: calc(56px + env(safe-area-inset-bottom, 0px));
     margin-bottom: 0;
     border-bottom: none;
     border-top: 1px solid var(--rule);
