@@ -213,15 +213,26 @@ purely about which word you land on when you click. Almost all of it is done and
 
 ---
 
-## Lexicon tab — done; ongoing polish only
+## Word study + Ask the corpus — REDESIGNED (2026-06-19, under development)
 
-Essentially finished. Leave as a small footnote: tweak spacing/hierarchy as you notice rough edges,
-nothing structural left. `code: LexiconView in static/src/80-lexicon.jsx; /api/lexicon/* in views_lexicon.py`
+The Word-study / AI experience was rebuilt to the Claude-design mockups (in `design/`). LIVE but the
+header still shows an "Under development" badge on these two tabs. Full record: memory
+`project_ai_search_redesign`. What landed (all 4 phases + extras, pushed to master):
+- **Ask the corpus** is now its OWN tab (`static/src/52-ask-corpus.jsx`) — AI no longer renders inside
+  Word study. Landing + Q&A thread + recent-questions rail; word-scoped handoff from Word study.
+- **Word study** is a 3-pane layout (distribution rail / occurrences / word card) in 80-lexicon.jsx.
+- New `--ai` steel-blue theme token for the AI accent; `lexicon_profile` now returns `derivation` +
+  `related` (cognates, derived on the fly from the lexicon `derivation` text — no extra table).
+- Inline citations in AI answers (verse→reader, Strong's→Word study); Hebrew key_strongs chip bug fixed.
 
-## AI search — almost done; ongoing dev
-
-Mostly there. Leave as a footnote: keep refining results quality and the result cards as you use it;
-nothing structural blocking. `code: Search tab in static/src/70-search.jsx; /api/search (views_search.py) + /api/ai-search (ai.py); memory project_ai_search_architecture`
+**Still open (parked — pick up later):**
+1. **Visual fidelity gaps** — user flagged "lots that you didn't follow" vs the mockups; only two fixed
+   (empty 3-pane frame + flat verse list). NEXT real chunk — best done fresh with `design/` open.
+2. **AI curation hard-tune + likely full redesign** — verse selection / "don't spam" / answer shape on
+   Ask the corpus. Current = primary/see-all + inline links; adequate, not the end state. Touches ai.py
+   prompts + caching. `code: ai.py; memory project_ai_search_architecture`
+3. **Mobile polish** for the two new tabs (drawer + height math; WIP badge is desktop-only).
+4. **"AndG." artifact** leaking into ABP prose (e.g. Zec 9:11) — pre-existing, small.
 
 > Note: you revisit these on your own schedule — Claude shouldn't keep pitching them as "next steps."
 

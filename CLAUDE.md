@@ -513,6 +513,14 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   (fingerprint of the two xref prompts — see "AI result cache" below)
 
 ## Lexicon Tab
+- **REDESIGNED 2026-06-19 (under development) — see memory `project_ai_search_redesign`.** "Word study"
+  is now a 3-pane layout (distribution rail · occurrences · word card) in `static/src/80-lexicon.jsx`;
+  AI search was split OUT into its own **"Ask the corpus"** tab (`static/src/52-ask-corpus.jsx`, view
+  key `corpus`) — it no longer renders inside Word study. New `--ai` steel-blue theme token = the AI
+  accent. `/api/lexicon/profile` now also returns `derivation` + `related` (cognates, on-the-fly from the
+  lexicon `derivation` text). The data flow + endpoints below are unchanged; the UI is still in flux
+  (visual-fidelity + AI-curation passes pending). The two sections below describe the data model, not the
+  current layout.
 - Dedicated word study tab — separate from AI Search
 - Flow: search box → word profile → gloss chips → book distribution → verse list
 - Smart search: detects Strong's (G4151, H7307), Greek, Hebrew, English
