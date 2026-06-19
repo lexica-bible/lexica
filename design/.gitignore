@@ -1,0 +1,3 @@
+# the exported zip is redundant with its extracted contents (and 2.3MB) — keep the
+# extracted mockup files + README in git, not the archive.
+*.zip
