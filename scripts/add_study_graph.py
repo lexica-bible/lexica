@@ -269,9 +269,10 @@ OVERLAYS = [
             {"from": "v_rom6", "to": "t_berean_pledge", "relation": "supports", "strength": "contested",
              "why": "Corroborating only — Romans 6 can also be read as baptism effecting union, so it doesn't carry solid weight alone."},
             # (Trimmed: the baptizō / 1 Cor 12:13 / Gal 3:27 lexical sub-argument was an extra stack of
-            #  contested corroborators on this branch. The pledge stands on 1 Peter 3:21 alone; the
-            #  "baptizō is medium-neutral" point now lives in the foundational-words strip, where a
-            #  lexical fact about the key word belongs — not as a graph node.)
+            #  contested corroborators on this branch. The pledge stands on 1 Peter 3:21 alone. The
+            #  "baptizō is medium-neutral" point BELONGS in a foundational-words strip / lexeme panel —
+            #  a lexical fact about the key word, not a graph node — but that strip is SPECCED, NOT YET
+            #  BUILT (see TODO). For now the insight is parked here in this comment, not displayed.)
             # TWO sibling conclusions, NOT one. An OR-only engine can't hold a conjunction ("pledge AND
             # not-instrument") in one node without the whole thing reading STANDS off its easier half, so the
             # claim is split into two conclusion boxes the branches feed DIRECTLY (the old "not the instrument"

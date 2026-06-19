@@ -387,8 +387,20 @@ strength tagged), stress-tested by `argmap.py`, drawn as a per-tradition SVG cha
 `add_study_graph.py` (read-only in-app). Earlier this round (all DONE + LIVE, see TODO_ARCHIVE + memory):
 two-way study↔reader links; the ~13s→~1s topic-open speedup; the verse-add POST fix; `add_study_topic.py`;
 `publish_topics.py --names`.
+Baptism graph honesty/fairness pass DONE 2026-06-18 (commits 56d79f7 / f4b8548 / 2e08c87 / 6c582ff /
+d536daa; full lessons in memory project_study_modules): trimmed the baptizō lexical sub-argument off the
+Berean pledge branch; routed "sealed before baptism" through a contested timing joint (was a false-solid
+back-door); split the Berean conclusion into "outward pledge" (stands) + "not the instrument" (the thesis,
+depends) so it no longer reads as the lone winner; collapsed the duplicate inference boxes. Two general
+fixes came out of it (both live on a code deploy, no `--apply`): the chart now packs disconnected branches
+(no dead gap), and the "where they part" diff lists each side's conclusion nodes.
 OPEN:
 - Drop the place "Sin" entry (Sin (1)/(2) — one is the Wilderness of Sin) from the `_COMMON` list.
+- **Foundational-words strip / lexeme panel (NEW, 2026-06-18).** The baptizō "medium-neutral" insight was
+  trimmed out of the baptism graph on the understanding it belongs in a per-study foundational-words strip
+  (a lexical fact about the key word the argument turns on). That strip is SPECCED but NOT BUILT — until it
+  exists the insight is dropped from the UI. Build the strip (and a Strong's deep-link from it / from a graph
+  lexeme node, which folds in the deferred item below).
 - Graph CUT 2: undercut scoring + the graph "In studies" verse back-reference are DONE 2026-06-18
   (objections score on a grounded+solid bar → knockout/overturned; graphs feed `for_verse`, admin-gated).
   STILL deferred: an in-app graph editor (user DECLINED — he authors via the script through CC) + a React
