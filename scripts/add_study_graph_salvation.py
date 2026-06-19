@@ -133,6 +133,12 @@ CLAIMS = {
                    "text": "Justification begins in unmerited grace (initial grace), not earned — both sides grant this (Trent affirms it too)"},
     "c_grace_cooperation": {"provenance": "tradition", "label": "Grace-wrought works cooperate",
                    "text": "The believer cooperates with grace; Spirit-wrought works of love are part of HOW one is justified, not merely its fruit"},
+    # Convergence nodes: each sub-argument funnels through ONE contested joint, so the chart and
+    # the route-printout show the real load path (NOT parallel edges that hide a shared premise).
+    "c_faith_excludes_works": {"provenance": "inference", "label": "Faith excludes works as ground",
+                   "text": "Scripture ties justification to faith and sets it against works — so works are excluded as the GROUND (the positive faith-alone case, before James is even raised)"},
+    "c_james_works_ground": {"provenance": "inference", "label": "James: works justify (as ground)",
+                   "text": "James says a person is justified by works — read as works being part of the GROUND of justification"},
 
     # ── conclusions (theses) ──
     "t_faith_alone":  {"provenance": "conclusion", "label": "Faith alone (works are fruit)",
@@ -149,32 +155,40 @@ OVERLAYS = [
         "thesis": "t_faith_alone",
         "rejects": ["c_grace_cooperation"],
         "links": [
-            # The granted base: justified through faith
+            # ── ROUTE 1: the POSITIVE case. All the faith-not-works verses converge on ONE node,
+            #    which crosses ONE contested joint — the erga-scope reading (def_works_paul_all).
+            #    Cut that joint and the whole positive case is severed: it IS a load-bearing joint
+            #    for this route (not parallel edges hiding a shared premise).
             {"from": "v_eph2_8",  "to": "c_through_faith", "relation": "supports", "strength": "solid"},
             {"from": "v_rom3_28", "to": "c_through_faith", "relation": "supports", "strength": "solid"},
             {"from": "v_gal2_16", "to": "c_through_faith", "relation": "supports", "strength": "solid"},
+            {"from": "v_titus3_5", "to": "c_through_faith", "relation": "supports", "strength": "solid"},
+            {"from": "v_rom11_6", "to": "c_through_faith", "relation": "supports", "strength": "solid"},
             {"from": "v_rom4_4",  "to": "c_faith_counted", "relation": "supports", "strength": "solid"},
             {"from": "v_gen15_6", "to": "c_faith_counted", "relation": "supports", "strength": "solid"},
-            # ...to the thesis: every inbound edge is contested — the 'alone' is the disputed step
-            {"from": "c_through_faith", "to": "t_faith_alone", "relation": "supports", "strength": "contested",
-             "why": "'Through faith' is common ground; 'faith ALONE — no work grounds justification' is the added, disputed step, resting on reading Paul's excluded 'works' as every work (incl. grace-wrought)."},
-            {"from": "c_faith_counted", "to": "t_faith_alone", "relation": "supports", "strength": "contested",
-             "why": "Faith counted righteous apart from prior works (Abraham); faith+works answers that Gen 15:6 was 'fulfilled' by Abraham's later obedience (James 2:23), so the counting isn't faith-alone."},
-            {"from": "def_dikaioo_forensic", "to": "t_faith_alone", "relation": "requires", "strength": "contested",
-             "why": "Sola fide needs 'justify' = God DECLARES righteous (imputed), received by faith; if it = MAKE righteous, inward transformation and its works are part of it."},
-            {"from": "def_works_paul_all", "to": "t_faith_alone", "relation": "requires", "strength": "contested",
-             "why": "Needs Paul's excluded 'works' to cover all works; if only pre-grace merit, grace-wrought works could still justify."},
-            # Resolving James WITHOUT conceding works-as-ground
+            {"from": "c_through_faith", "to": "c_faith_excludes_works", "relation": "supports", "strength": "solid"},
+            {"from": "c_faith_counted", "to": "c_faith_excludes_works", "relation": "supports", "strength": "solid"},
+            # THE ERGA JOINT — the single contested step the entire positive case must cross.
+            {"from": "c_faith_excludes_works", "to": "t_faith_alone", "relation": "supports", "strength": "contested",
+             "why": "ERGA-SCOPE JOINT. 'Justified through faith' is common ground; 'faith ALONE — no work grounds it' rests on reading Paul's excluded 'works' as EVERY work (incl. grace-wrought). If 'works' = boundary-markers / pre-grace merit, the positive case does not reach faith-alone."},
+            {"from": "def_works_paul_all", "to": "c_faith_excludes_works", "relation": "requires", "strength": "contested",
+             "why": "The erga-scope premise, named explicitly: Paul's excluded 'works' = all works. Faith+works disputes exactly this."},
+            {"from": "def_dikaioo_forensic", "to": "c_faith_excludes_works", "relation": "requires", "strength": "contested",
+             "why": "Also leans on 'justify' = DECLARE righteous (imputed); if it = MAKE righteous, inward change and its works are part of it."},
+
+            # ── ROUTE 2: the JAMES rebuttal. A SEPARATE route to the same thesis, crossing a
+            #    DIFFERENT contested joint — the dikaioo-sense / living-pistis reading. This is why
+            #    there is no SINGLE chokepoint: two routes, two distinct definitional joints.
             {"from": "v_james2_19", "to": "c_dead_faith_not_saving", "relation": "supports", "strength": "contested",
-             "why": "Demons 'believe' and shudder — so the faith James calls dead is bare assent, not the living trust Paul means; the two 'faiths' differ."},
+             "why": "Demons 'believe' and shudder — the faith James calls dead is bare assent, not the living trust Paul means."},
             {"from": "def_pistis_living", "to": "c_dead_faith_not_saving", "relation": "supports", "strength": "contested",
              "why": "If pistis is by nature living/active fidelity, a 'dead faith' is not faith in Paul's sense at all."},
-            {"from": "c_dead_faith_not_saving", "to": "t_faith_alone", "relation": "supports", "strength": "contested",
-             "why": "If James's dead faith isn't Paul's faith, James 2 doesn't touch justification by (living) faith alone."},
             {"from": "def_dikaioo_demonstrate", "to": "c_works_evidence", "relation": "supports", "strength": "contested",
              "why": "If James's 'justified by works' = SHOWN/vindicated righteous (a real lexical sense), works prove faith without grounding it."},
             {"from": "v_james2_24", "to": "c_works_evidence", "relation": "supports", "strength": "weak",
              "why": "Faith-alone must read 'justified by works... not by faith alone' as vindicated-before-others; the plain wording resists that, and 2:23 quotes the same Gen 15:6 Paul uses — its own context fights this use (weak)."},
+            {"from": "c_dead_faith_not_saving", "to": "c_works_evidence", "relation": "supports", "strength": "contested",
+             "why": "If the dead faith isn't Paul's faith, James's works show LIVING faith — i.e. works as evidence, not ground."},
             # The tense axis: final-judgment verses -> shared 'final works' node (solid, both grant)
             {"from": "v_rom2_6",   "to": "c_final_works", "relation": "supports", "strength": "solid"},
             {"from": "v_rom2_13",  "to": "c_final_works", "relation": "supports", "strength": "solid"},
@@ -189,8 +203,9 @@ OVERLAYS = [
              "why": "'Work out your salvation, God works in you' read as grace PRODUCING the believer's works (fruit), not cooperation that contributes."},
             {"from": "v_eph2_10", "to": "c_works_evidence", "relation": "supports", "strength": "contested",
              "why": "'Created for good works' — works as the designed RESULT of salvation; faith+works reads them as the goal we're saved INTO, part of the saving purpose."},
+            # THE DIKAIOO/PISTIS JOINT — the single contested step the James rebuttal must cross.
             {"from": "c_works_evidence", "to": "t_faith_alone", "relation": "supports", "strength": "contested",
-             "why": "If works are only fruit/evidence, faith alone is the ground — but that the verses above carry only the fruit reading is itself the disputed point."},
+             "why": "DIKAIOO-SENSE JOINT. If works are only fruit/evidence, faith alone is the ground — but reading James's 'justified by works' as vindication (demonstrative dikaioo) rather than ground is the disputed step this whole route rests on."},
         ],
     },
     {
@@ -198,7 +213,8 @@ OVERLAYS = [
         "thesis": "t_works_ground",
         "rejects": ["c_works_evidence"],
         "links": [
-            # Backbone: grace-INITIATED cooperation (NOT autonomous effort)
+            # ── ROUTE A: grace-INITIATED cooperation (NOT autonomous effort). Crosses ONE joint —
+            #    the erga-premerit + infused reading at the cooperation step.
             {"from": "v_eph2_8", "to": "c_grace_initiated", "relation": "supports", "strength": "solid"},
             {"from": "c_grace_initiated", "to": "c_grace_cooperation", "relation": "supports", "strength": "contested",
              "why": "From unmerited initial grace (granted by all) to grace-empowered cooperation that CONTRIBUTES — the synergistic step faith-alone denies."},
@@ -207,20 +223,23 @@ OVERLAYS = [
             {"from": "v_phil2_12", "to": "c_grace_cooperation", "relation": "supports", "strength": "contested",
              "why": "'Work out your salvation, for God works in you' read as real Spirit-enabled cooperation that contributes to final salvation."},
             {"from": "c_grace_cooperation", "to": "t_works_ground", "relation": "supports", "strength": "contested",
-             "why": "If Spirit-wrought works of love are part of how one is justified, works share the ground — the position's core claim."},
-            # The two contested definitions this side needs
-            {"from": "def_dikaioo_infused", "to": "t_works_ground", "relation": "requires", "strength": "contested",
+             "why": "ERGA-PREMERIT / INFUSED JOINT. If Spirit-wrought works of love are part of how one is justified, works share the ground. Rests on 'justify' = MAKE righteous and on Paul's excluded 'works' = pre-grace merit only."},
+            {"from": "def_dikaioo_infused", "to": "c_grace_cooperation", "relation": "requires", "strength": "contested",
              "why": "Needs 'justify' = God MAKES righteous (infused), a real change works participate in; if it = DECLARES (forensic/imputed), works can't be part of the ground."},
-            {"from": "def_works_paul_premerit", "to": "t_works_ground", "relation": "requires", "strength": "contested",
+            {"from": "def_works_paul_premerit", "to": "c_grace_cooperation", "relation": "requires", "strength": "contested",
              "why": "Needs Paul's excluded 'works' to mean pre-grace/meritorious works (done to earn the first grace); grace-wrought works of love then still genuinely justify."},
-            # James, read at face value
-            {"from": "v_james2_24", "to": "t_works_ground", "relation": "supports", "strength": "weak",
+            # ── ROUTE B: James read at face value. A SEPARATE route, funneled through ONE node so its
+            #    joint (dikaioo = made/declared, not demonstrated) is visible — not parallel edges.
+            {"from": "v_james2_24", "to": "c_james_works_ground", "relation": "supports", "strength": "weak",
              "why": "'Justified by works, not by faith alone' read plainly — but the same context quotes Gen 15:6 (Paul's faith-text) and calls Abraham's obedience its 'fulfillment' (2:23), and dikaioo may mean VINDICATED. Carries its own counter-evidence — weak."},
-            {"from": "v_james2_17", "to": "t_works_ground", "relation": "supports", "strength": "contested",
+            {"from": "v_james2_17", "to": "c_james_works_ground", "relation": "supports", "strength": "contested",
              "why": "'Faith without works is dead' — faith-alone grants this but reads dead works as proof of dead (non-saving) faith, not works as the ground."},
-            {"from": "v_james2_21", "to": "t_works_ground", "relation": "supports", "strength": "contested",
+            {"from": "v_james2_21", "to": "c_james_works_ground", "relation": "supports", "strength": "contested",
              "why": "'Abraham justified by works when he offered Isaac' — faith+works reads dikaioo here as 'made righteous'; faith-alone reads 'shown righteous' (demonstrative)."},
-            # The tense axis: the shared final-works node, pulled (weakly) back to the GROUND of initial justification
+            {"from": "c_james_works_ground", "to": "t_works_ground", "relation": "supports", "strength": "contested",
+             "why": "DIKAIOO-SENSE JOINT. James's 'justified by works' counts toward the GROUND only if dikaioo here = made/declared righteous, not 'shown/vindicated' (the demonstrative sense)."},
+            # ── ROUTE C: the tense axis. The shared final-works node, pulled (weakly) back to the
+            #    GROUND of INITIAL justification — the tense stretch, rated weak.
             {"from": "v_rom2_6",   "to": "c_final_works", "relation": "supports", "strength": "solid"},
             {"from": "v_rom2_13",  "to": "c_final_works", "relation": "supports", "strength": "solid"},
             {"from": "v_matt25",   "to": "c_final_works", "relation": "supports", "strength": "solid"},
