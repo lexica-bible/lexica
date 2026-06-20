@@ -232,6 +232,9 @@ input { font-family: inherit; }
   background: rgba(255,255,255,0.06);
 }
 .hdr-right { margin-left: auto; display: flex; align-items: center; gap: 14px; }
+/* Word study floats its right card (--sidebar-w) over the navy bar's right edge,
+   so shift the account control clear of it. Header is hidden < 1100, so no media query needed. */
+.app.view-lexicon .hdr-right { margin-right: calc(var(--sidebar-w) + 12px); }
 /* Account control in the navy header (desktop only — the header is hidden < 1100px). */
 .hdr-login {
   font-size: 13px; font-weight: 600; color: #0f1b2d;
