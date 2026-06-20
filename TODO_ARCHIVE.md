@@ -6,6 +6,17 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Word-study dead-CSS sweep — DONE (commit 103f81c, 2026-06-19)
+
+The word-card fold orphaned a pile of `.wd-*` rules (`.wd-hero/.wd-sub/.wd-tr/.wd-gloss/.wd-morph/.wd-greek/
+.wd-strongs/.wd-head/.wd-head-r/.wd-overview/.wd-sec*/.wd-badge/.wd-askai*`) plus `.lexicon-toolbar`/
+`.lexicon-corpus-toggle`/`.lct-btn` — all removed (CSS-only, 33 lines). KEPT (still live, grep-confirmed):
+`.wd`/`.wd.hidden`/`.wd-scrim` (panel shell), `.wm-card`, the `.wd .detail-*` overrides, and
+`.wm-searchsheet` (the orphan list had it wrong — still used by the mobile Search sheet). Re-confirmed clean
+2026-06-20 (`.lct-btn`/`.wd-hero`/`.lexicon-toolbar` = 0 matches). NOTE: 2026-06-20b briefly re-added then
+removed a `.wd-askai` footer button + removed `.lsj-toggle` (toggle deleted) — no new dead CSS left. Full
+record: memory `project_ai_search_redesign`.
+
 ## Argument graphs replace Denominations/Arguments — DONE 2026-06-18
 
 The flat two-sided **Argument** editor and the **Denomination** (support/tension) editor were REPLACED by

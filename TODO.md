@@ -233,11 +233,13 @@ header still shows an "Under development" badge on these two tabs. Full record: 
    `.occ-link` action links steel-blue `--ai`, results filters → underline `.tg` tabs. REMAINING: the
    **Ask the corpus** tab vs its mockup (desktop + mobile). Reference: `design/_mobile_preview/`. Memory
    `project_ai_search_redesign`.
-5. **Dead-CSS sweep from the word-card fold (low priority, user's call "once the card's settled").** The
-   fold orphaned a pile of `.wd-*` rules (`.wd-hero/.wd-sub/.wd-tr/.wd-gloss/.wd-morph/.wd-greek/
-   .wd-strongs/.wd-head/.wd-head-r/.wd-overview/.wd-sec*/.wd-badge/.wd-askai*`) + `.lexicon-toolbar`/
-   `.lexicon-corpus-toggle`/`.lct-btn` (filters now `.tg`) + `.wm-searchsheet`. Only `.wd`/`.wd-scrim`/
-   `.wd.hidden` + `.wm-card` are still used. Grep `static/src/` to confirm, then delete. `code: static/styles.css`
+   **Desktop polish 2026-06-20b (DONE, live):** definition always shows (Full-entry toggle removed), the
+   occurrences fill the center at Library width, the search bar is left-justified with "Ask AI about <word>"
+   moved BESIDE it (out of the card; mobile keeps its Views-sheet "Go deeper"), and result-list gold hugs the
+   matched word's `english_head` only — no longer rides onto ABP's glued-in helper words ("is love"→"love",
+   "his love"→"love"); the reader is unchanged. WATCH (accepted trade-off): a VERB whose one Greek word
+   glosses to several English words ("we should love") now golds only the head in result lists — refine only
+   if it bugs you. Full record + the leftover-`setShowDef` crash lesson: memory `project_ai_search_redesign`.
 2. **AI curation hard-tune + likely full redesign** — verse selection / "don't spam" / answer shape on
    Ask the corpus. Current = primary/see-all + inline links; adequate, not the end state. Touches ai.py
    prompts + caching. `code: ai.py; memory project_ai_search_architecture`
