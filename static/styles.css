@@ -4214,6 +4214,19 @@ button.study-verse-ref { border: none; }
 /* CENTER */
 .ac-main { min-height: 0; display: flex; flex-direction: column; background: var(--bg); }
 
+/* "Under construction" warning strip — pinned at the top of the tab (desktop + mobile).
+   Pale amber (gold-soft is theme-aware: pale in light/sepia, deep in dark). */
+.ac-construction {
+  flex: 0 0 auto;
+  display: flex; align-items: center; gap: 9px;
+  padding: 9px 18px;
+  background: var(--gold-soft);
+  border-bottom: 1px solid color-mix(in oklab, var(--gold) 35%, transparent);
+  font-size: 13px; line-height: 1.4; color: var(--ink); text-wrap: pretty;
+}
+.ac-construction-i { color: var(--gold); flex: 0 0 auto; }
+.ac-construction b { font-weight: 700; }
+
 /* landing (empty) */
 .ac-landing { flex: 1; overflow-y: auto; display: grid; place-items: center; padding: 40px 28px; }
 .ac-landing-in { width: 100%; max-width: 660px; text-align: center; margin-top: -4vh; }
@@ -4343,6 +4356,7 @@ button.study-verse-ref { border: none; }
      ends exactly at the visible bottom (no extra page height to scroll into). */
   .app.view-corpus .main { padding-bottom: 0; }
   .ac-thread, .ac-landing { overscroll-behavior: contain; }
+  .ac-construction { padding: 8px 16px; font-size: 12.5px; }
   .ac-rail { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; z-index: 60; box-shadow: var(--shadow-lg); }
   .ac-rail.hidden { display: none; }
   .ac-rail-scrim { display: block; position: fixed; inset: 0; background: rgba(15,23,42,0.35); z-index: 59; }
