@@ -62,6 +62,23 @@ const LibRender = (function () {
             </span>
           );
         }
+        // Plain multi-word gloss. In a result list (tight) the matched slot paints
+        // the gold ONLY on its head word — ABP sometimes glues a supplied helper
+        // into the slot (a relocated copula → "is love", a possessive → "his love")
+        // and the highlight shouldn't ride onto it. The reader (non-tight) is left
+        // as-is so a whole-phrase gloss still paints as one bar.
+        if (tight && hc && w.english_head) {
+          const headBare = w.english_head.replace(/[^\w]/g,'').toLowerCase();
+          const parts = text.split(' ').filter(Boolean);
+          return emit(i,
+            <span key={i} data-note-pos={w.position}>
+              {parts.map((word, pi) => {
+                const isHead = word.replace(/[^\w]/g,'').toLowerCase() === headBare;
+                return <React.Fragment key={pi}>{isHead ? <span className={hc.trim()}>{word}</span> : word}{pi < parts.length - 1 ? " " : ""}</React.Fragment>;
+              })}
+            </span>
+          );
+        }
         return emit(i, <span key={i} data-note-pos={w.position} className={hc || undefined}>{text + sp}</span>);
       }
       return emit(i, <span key={i} data-note-pos={w.position} className={(!!w.italic ? "lib-prose-italic" : "") + hc}>{text + sp}</span>);

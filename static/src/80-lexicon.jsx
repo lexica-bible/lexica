@@ -493,11 +493,6 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
           )}
           <div className="detail-morph">{occCount} {occCount === 1 ? "occurrence" : "occurrences"}</div>
         </div>
-        {onAskWord && (
-          <button className="occ-link" onClick={() => onAskWord(profile.strongs, profile.lemma, profile.translit)}>
-            <span>Ask AI about <span dir={isHeb ? "rtl" : undefined}>{profile.lemma}</span></span><Icon.ArrowRight/>
-          </button>
-        )}
       </div>
 
       {(profile.definition || /^G/i.test(profile.strongs)) && (
@@ -558,6 +553,11 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
             ))}
           </div>
         </section>
+      )}
+      {onAskWord && (
+        <button className="wd-askai" onClick={() => onAskWord(profile.strongs, profile.lemma, profile.translit)}>
+          <Icon.Sparkle/><span>Ask AI about <span dir={isHeb ? "rtl" : undefined}>{profile.lemma}</span></span><Icon.ArrowRight/>
+        </button>
       )}
     </>
   );

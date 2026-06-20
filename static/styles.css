@@ -4395,6 +4395,20 @@ button.study-verse-ref { border: none; }
 /* the card reuses the existing .lexicon-glosses / .lexicon-dist-item chips for renders */
 .sec .lexicon-glosses { margin: 0; }
 
+/* "Ask AI about X" — a quiet footer action at the bottom of the word card (desktop
+   .wd + mobile .wm-card). Its own class so it never touches the shared .occ-link. */
+.wd-askai {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  width: 100%; margin-top: 20px; padding: 11px 14px;
+  border: 1px solid color-mix(in oklab, var(--ai) 32%, var(--rule-2));
+  border-radius: 10px;
+  background: color-mix(in oklab, var(--ai) 7%, transparent);
+  color: var(--ai); font-family: var(--f-serif); font-size: 15px; font-weight: 500;
+  transition: background 0.12s, border-color 0.12s;
+}
+.wd-askai:hover { background: color-mix(in oklab, var(--ai) 13%, transparent); border-color: var(--ai); }
+.wd-askai svg { flex: 0 0 auto; width: 16px; height: 16px; }
+
 /* flat occurrence list (plain verse rows, no collapsible group) */
 .vlist { display: flex; flex-direction: column; }
 
