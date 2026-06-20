@@ -4287,13 +4287,17 @@ button.study-verse-ref { border: none; }
 ============================================================ */
 .ws {
   display: grid;
-  grid-template-columns: 248px minmax(0, 1fr) 420px;
+  /* Mirror the Library: 224px left rail (= the book nav) + center fills.
+     The right word card is pulled out of the grid (position:fixed, below) and
+     floats over the navy header, so reserve its strip with padding-right. */
+  grid-template-columns: 224px minmax(0, 1fr);
+  padding-right: var(--sidebar-w);
   height: calc(100vh - var(--hdr-h));
   min-height: 0;
 }
 .ws.center-only { grid-template-columns: minmax(0, 1fr); }
 @media (min-width: 1100px) and (max-width: 1320px) {
-  .ws { grid-template-columns: 232px minmax(0, 1fr) 384px; }
+  .ws { grid-template-columns: 224px minmax(0, 1fr); }
 }
 
 /* LEFT — distribution rail */
@@ -4356,10 +4360,21 @@ button.study-verse-ref { border: none; }
 .welcome-chip:hover { border-color: var(--accent); color: var(--accent); }
 
 /* RIGHT — word detail card */
-.wd { border-left: 1px solid var(--rule); background: var(--paper); min-height: 0; display: flex; flex-direction: column; }
-/* Word-study card header: shared .detail-head styles, just a bit more compact.
+/* Right word card mirrors the Library's .detail-side: pinned to the top-right,
+   floating over the navy header (z 40 > header's 30), one clean full-height
+   left border. Always shown on this tab (empty state included). */
+.wd {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: var(--sidebar-w);
+  z-index: 40;
+  border-left: 1px solid var(--rule);
+  background: var(--paper);
+  display: flex; flex-direction: column;
+}
+/* Card header matches the navy header height so its bottom rule continues the
+   blue→white line straight across — same trick as .detail-side .detail-head.
    The 14px Strong's number is scoped HERE so it never touches the Library card. */
-.wd .detail-head { padding: 12px 24px 11px; }
+.wd .detail-head { height: var(--hdr-h); box-sizing: border-box; padding: 0 24px; }
 .wd .detail-strong-head { font-size: 14px; }
 .sec .lsj { font-family: var(--f-serif); font-size: 15px; line-height: 1.6; color: var(--ink); margin: 0; }
 .lsj-toggle { margin-top: 10px; font-size: 12.5px; color: var(--accent); display: inline-flex; align-items: center; gap: 4px; }
@@ -4393,11 +4408,13 @@ button.study-verse-ref { border: none; }
 
 /* MOBILE — app breakpoint 1100 */
 @media (max-width: 1099px) {
-  .ws, .ws.center-only { grid-template-columns: minmax(0, 1fr); height: calc(100vh - var(--hdr-h) - 56px); }
+  .ws, .ws.center-only { grid-template-columns: minmax(0, 1fr); padding-right: 0; height: calc(100vh - var(--hdr-h) - 56px); }
   .brail { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; z-index: 60; box-shadow: var(--shadow-lg); }
   .brail.hidden { display: none; }
   .wd { position: fixed; top: 0; right: 0; bottom: 0; width: min(92vw, 420px); z-index: 60; box-shadow: var(--shadow-lg); }
   .wd.hidden { display: none; }
+  /* Desktop pins the card head to the navy-bar height; mobile (no navy bar) keeps it compact. */
+  .wd .detail-head { height: auto; padding: 12px 24px 11px; }
   .rail-scrim, .wd-scrim { display: block; position: fixed; inset: 0; background: rgba(15,23,42,0.35); z-index: 59; }
   .ws-mobi { display: flex; gap: 8px; margin-bottom: 14px; }
   .ws-mobi-b { flex: 1; font-size: 12.5px; color: var(--ink-2); padding: 8px 10px; border-radius: 8px; border: 1px solid var(--rule); background: var(--paper); }
