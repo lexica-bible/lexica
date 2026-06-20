@@ -103,6 +103,20 @@ def clean_english(text: str) -> str:
     return t.strip()
 
 
+# A leaked Strong's marker: the ABP/BibleHub source occasionally renders a word with its
+# Strong's link mashed onto the English ("AndG. you," for σύ in Zec 9:11; "biddingG." in
+# Act 24:8). The digit-strip above already removes the number, leaving a bare "G." that is
+# not English. Peel it. Conservative: only a capital G + dot sitting right after a lowercase
+# letter and before whitespace/end — real glosses ("God", "of God", "Gog") never match.
+_LEAK_MARK = re.compile(r"(?<=[a-z])G\.(?=\s|$)")
+
+
+def strip_leaked_marker(text: str) -> str:
+    if not text or "G." not in text:
+        return text
+    return re.sub(r"\s{2,}", " ", _LEAK_MARK.sub("", text)).strip()
+
+
 def bracket_info(raw: str):
     """
     Extract bracket metadata from a raw (pre-clean) token text.
@@ -1241,6 +1255,8 @@ def build_verse_words(abp_words: list, bh_rows: list, lex: dict = None) -> list:
         if closes_bracket:
             in_bracket = False
 
+        if english:
+            english = strip_leaked_marker(english)   # peel a leaked "G." source marker
         english_head = _head_word(english) if english else None
         display      = english_head or (english if english and " " not in english else None)
         italic_set   = set(iw.split(",")) if iw else set()
