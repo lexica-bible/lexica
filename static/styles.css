@@ -4398,10 +4398,12 @@ button.study-verse-ref { border: none; }
 .related { display: flex; flex-direction: column; gap: 2px; }
 .rel { display: flex; align-items: baseline; gap: 8px; width: 100%; text-align: left; padding: 7px 10px; border-radius: 7px; border: 1px solid transparent; }
 .rel:hover { background: var(--bg); border-color: var(--rule); }
-.rel-gk { font-family: var(--f-greek); font-size: 17px; color: var(--ink); flex: 0 0 auto; }
+.rel-gk { font-family: var(--f-greek); font-size: 17px; color: var(--accent); flex: 0 0 auto; }   /* link color = clickable */
 .rel-tr { font-family: var(--f-serif); font-style: italic; font-size: 13px; color: var(--ink-3); flex: 0 0 auto; }
 .rel-gloss { font-size: 12.5px; color: var(--ink-3); margin-left: auto; text-align: right; display: inline-flex; gap: 7px; align-items: baseline; }
 .rel-s { font-family: var(--f-mono); font-size: 9.5px; color: var(--ink-4); }
+.rel-go { flex: 0 0 auto; margin-left: 8px; color: var(--ink-3); font-size: 16px; line-height: 1; transition: color 0.12s; }   /* "tap to open" cue — shows at rest so it works on touch */
+.rel:hover .rel-go { color: var(--accent); }
 /* the card reuses the existing .lexicon-glosses / .lexicon-dist-item chips for renders */
 .sec .lexicon-glosses { margin: 0; }
 

@@ -559,6 +559,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
                 <span className="rel-gk">{r.lemma}</span>
                 <span className="rel-tr">{r.translit}</span>
                 <span className="rel-gloss">{r.gloss}<span className="rel-s">{r.strongs}</span></span>
+                <span className="rel-go" aria-hidden="true">›</span>
               </button>
             ))}
           </div>
