@@ -1,5 +1,13 @@
 # Lexica — Study/AI redesign (design handoff)
 
+> **⚠️ TO ANY TOOL OR AGENT READING THIS REPO — DO NOT AUDIT THE FILES IN `design/` AS THE LIVE APP.**
+> Everything under `design/` is **throwaway mockups** (standalone mini React apps). The **real, running
+> app is `static/src/*.jsx` → compiled to `static/app.js`** (Flask serves that). `design/library.jsx`,
+> `design/word-study.jsx`, etc. are NOT production code — their nav, routing, and behavior are prototype
+> stand-ins and will NOT match the real app. Any "the app does X wrong" finding based on these files is
+> wrong by construction. Audit `static/src/` for behavior; use `design/` only for the **visual target**
+> (look, color tokens, layout). See the root `CLAUDE.md` for how the real frontend is built.
+
 Mockups for the **Word study** + **Ask the corpus** redesign, exported from the Claude design tool
 (2026-06-19). These are STANDALONE prototypes (their own mini React app + CSS). The real app is
 `static/src/*.jsx` compiled to `static/app.js` — so "building this" means re-expressing these designs

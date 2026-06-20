@@ -138,6 +138,10 @@ Pick effort by task TYPE. When in doubt, lean higher — the plan affords it.
 - Why the build step at all: in-browser Babel was recompiling all the JSX on every page
   load (~2.5s render delay; server TTFB was only 96ms). Precompiling + production React
   builds removes that tax. Babel-standalone and dev React were dropped from index.html.
+- **`design/` is NOT the app — it's throwaway design-tool mockups (standalone mini React apps).**
+  The live frontend is ONLY `static/src/*.jsx` → `static/app.js`. Never audit/edit `design/*.jsx`
+  as production; use it only as the visual target. (The design tool kept mistaking its own
+  `design/library.jsx` mockup for the real app — see the callout in `design/README.md`.)
 
 ## Stack
 - Backend: Flask (Python), SQLite
