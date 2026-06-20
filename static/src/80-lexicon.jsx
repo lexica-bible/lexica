@@ -98,7 +98,6 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
   const [filteredBooks, setFilteredBooks] = useState(null);
   const [groupings, setGroupings] = useState(null);
   const [pendingGloss, setPendingGloss] = useState(null);
-  const [showDef, setShowDef] = useState(false);
   const [lsjEntry, setLsjEntry] = useState(null);
   const [lsjSummary, setLsjSummary] = useState(null);
   const [lsjLoading, setLsjLoading] = useState(false);
@@ -107,11 +106,11 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
   // Reset the curated LSJ definition whenever the focused word changes.
   useEffect(() => { setLsjEntry(null); setLsjSummary(null); }, [profile?.strongs]);
 
-  // Lazily fetch the LSJ entry + AI-curated summary when the Greek definition is
-  // opened (Haiku, cached). Hebrew keeps its BDB definition. The /api/lsj endpoint
-  // auto-falls back to strongs_def when there's no LSJ match.
+  // Fetch the LSJ entry + AI-curated summary for the focused Greek word (Haiku,
+  // cached). Hebrew keeps its BDB definition. The /api/lsj endpoint auto-falls
+  // back to strongs_def when there's no LSJ match.
   useEffect(() => {
-    if (!showDef || !profile || !/^G/i.test(profile.strongs) || lsjEntry || lsjLoading) return;
+    if (!profile || !/^G/i.test(profile.strongs) || lsjEntry || lsjLoading) return;
     let cancelled = false;
     setLsjLoading(true);
     api.lsj(profile.lemma || "", profile.strongs.replace(/^[GH]/i, ""))
@@ -130,7 +129,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
       })
       .catch(() => { if (!cancelled) { setLsjEntry(null); setLsjLoading(false); } });
     return () => { cancelled = true; };
-  }, [showDef, profile?.strongs]);
+  }, [profile?.strongs]);
 
   useEffect(() => {
     if (!pendingStrongs) return;
@@ -505,30 +504,25 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
         <section className="sec">
           <h4 className="sec-head">
             <span className="sec-t">Definition</span>
-            {showDef && (!/^G/i.test(profile.strongs)
+            {!/^G/i.test(profile.strongs)
               ? <span className="bdb-badge">BDB</span>
               : (!lsjLoading && lsjEntry)
                 ? <span className="lsj-badge">{lsjEntry.source === "strongs" ? "Strong's" : lsjEntry.source === "abp_ext" ? "ABP" : "LSJ"}</span>
-                : null)}
+                : null}
           </h4>
-          {showDef ? (
-            !/^G/i.test(profile.strongs)
-              ? <p className="lsj">{profile.definition}</p>
-              : lsjLoading
-                ? <div className="lsj-def lsj-def--loading">Loading…</div>
-                : !lsjEntry
-                  ? <p className="lsj">{profile.definition}</p>
-                  : lsjEntry.source === "strongs"
-                    ? <div className="lsj-def" dangerouslySetInnerHTML={{ __html: lsjEntry.def_html }} />
-                    : lsjSummaryLoading
-                      ? <LsjSummary data={null} loading={true} />
-                      : (lsjSummary && lsjSummary.summary)
-                        ? <LsjSummary data={lsjSummary} loading={false} />
-                        : <div className="lsj-def" dangerouslySetInnerHTML={{ __html: lsjEntry.def_html }} />
-          ) : (
-            <button className="lsj-toggle" onClick={() => setShowDef(true)}>Full entry ▾</button>
-          )}
-          {showDef && <button className="lsj-toggle" onClick={() => setShowDef(false)}>Show less ▴</button>}
+          {!/^G/i.test(profile.strongs)
+            ? <p className="lsj">{profile.definition}</p>
+            : lsjLoading
+              ? <div className="lsj-def lsj-def--loading">Loading…</div>
+              : !lsjEntry
+                ? <p className="lsj">{profile.definition}</p>
+                : lsjEntry.source === "strongs"
+                  ? <div className="lsj-def" dangerouslySetInnerHTML={{ __html: lsjEntry.def_html }} />
+                  : lsjSummaryLoading
+                    ? <LsjSummary data={null} loading={true} />
+                    : (lsjSummary && lsjSummary.summary)
+                      ? <LsjSummary data={lsjSummary} loading={false} />
+                      : <div className="lsj-def" dangerouslySetInnerHTML={{ __html: lsjEntry.def_html }} />}
         </section>
       )}
 
