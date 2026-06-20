@@ -153,7 +153,6 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
     setSelectedGloss(null);
     setBookGlosses(null);
     setFilteredBooks(null);
-    setShowDef(false);
     const isHeb = /^H/i.test(strongs) || (!(/^[GgHh]/.test(strongs)) && parseInt(strongs) > 5624);
     const c = corpusOverride ?? (isHeb ? "kjv" : "abp");  // drilling in always lands in a single corpus
     setProfileCorpus(c);
@@ -217,7 +216,6 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
     setSelectedGloss(null);
     setBookGlosses(null);
     setFilteredBooks(null);
-    setShowDef(false);
     try {
       const data = await api.lexiconProfile(profile.strongs, c);
       if (!data.error) { setProfile(data); await _openTopBook(data, c); }
