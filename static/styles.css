@@ -4330,7 +4330,7 @@ button.study-verse-ref { border: none; }
 /* CENTER — search + occurrences */
 .ws .center { min-height: 0; display: flex; flex-direction: column; background: var(--bg); }
 .ws .searchbar { flex: 0 0 auto; padding: 14px 28px; border-bottom: 1px solid var(--rule); background: color-mix(in oklab, var(--bg) 82%, var(--paper)); }
-.ws .searchbar-in { max-width: 740px; margin: 0 auto; }
+.ws .searchbar-in { max-width: 540px; margin: 0 auto; }
 .ws .search-field { display: flex; align-items: center; gap: 10px; background: var(--paper); border: 1px solid var(--rule-2); border-radius: 11px; padding: 0 8px 0 14px; height: 46px; box-shadow: var(--shadow-sm); transition: border-color 0.15s, box-shadow 0.15s; }
 .ws .search-field:focus-within { border-color: var(--accent); box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 12%, transparent); }
 .search-i { color: var(--ink-3); flex: 0 0 17px; transition: color 0.15s; }
