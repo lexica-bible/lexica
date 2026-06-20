@@ -45,11 +45,12 @@ const WsI = {
 // Bottom sheet for the mobile word-study tools — rises from the bottom, drag the
 // grab-zone down past ~110px to dismiss (ported from the design handoff's Sheet).
 function WsSheet({ title, tall, titleMono, hideClose, onClose, children }) {
-  const [dy, setDy] = useState(0);
-  const [dragging, setDragging] = useState(false);
+  // Same swipe-down-to-dismiss as every other sheet: the shared hook arms on the
+  // chrome (handle/header) OR on the body when it's scrolled to the top.
+  const { sheetRef, scrollRef } = useSwipeToDismiss(onClose);
   const [kb, setKb] = useState(0);   // how far the on-screen keyboard eats into the screen
-  // Lift the sheet above the keyboard: when it opens the visible area shrinks, so park
-  // the sheet's bottom at the top of the keyboard instead of behind it.
+  // Lift the sheet above the keyboard. Done via `bottom` (not transform) so it never
+  // fights the swipe hook, which drives the sheet's transform.
   useEffect(() => {
     const vv = window.visualViewport;
     if (!vv) return;
@@ -59,25 +60,18 @@ function WsSheet({ title, tall, titleMono, hideClose, onClose, children }) {
     onResize();
     return () => { vv.removeEventListener("resize", onResize); vv.removeEventListener("scroll", onResize); };
   }, []);
-  const drag = useRef({ active: false, startY: 0 });
-  const grab = {
-    onPointerDown: (e) => { drag.current = { active: true, startY: e.clientY }; setDragging(true); try { e.currentTarget.setPointerCapture(e.pointerId); } catch (_) {} },
-    onPointerMove: (e) => { if (!drag.current.active) return; setDy(Math.max(0, e.clientY - drag.current.startY)); },
-    onPointerUp: () => { if (!drag.current.active) return; drag.current.active = false; setDragging(false); setDy(d => { if (d > 110) { onClose(); return 0; } return 0; }); },
-  };
   return (
     <>
       <div className="wm-scrim" onClick={onClose}/>
-      <div className={"wm-sheet" + (tall ? " tall" : "")}
-        style={{ transform: `translateY(${dy - kb}px)`, transition: dragging ? "none" : "transform 0.26s cubic-bezier(0.2,0.8,0.2,1)" }}>
-        <div className="wm-grab" {...grab}>
+      <div ref={sheetRef} className={"wm-sheet" + (tall ? " tall" : "")} style={kb ? { bottom: kb } : undefined}>
+        <div className="wm-grab">
           <div className="wm-handle" aria-hidden="true"/>
           <div className="wm-sheet-head">
             <span className={"wm-sheet-title" + (titleMono ? " wm-sheet-title--mono" : "")}>{title}</span>
             {!hideClose && <button className="wm-sheet-x" onClick={onClose} aria-label="Close"><WsI.Close/></button>}
           </div>
         </div>
-        <div className="wm-sheet-body">{children}</div>
+        <div ref={scrollRef} className="wm-sheet-body">{children}</div>
       </div>
     </>
   );
