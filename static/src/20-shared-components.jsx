@@ -31,7 +31,7 @@ function useFitText(ref, text, opts) {
 // ============================================================
 // HEADER
 // ============================================================
-function Header({ activeView, onNavChange, owner }) {
+function Header({ activeView, onNavChange, owner, email, onLogin, onAccount }) {
   return (
     <header className="hdr">
       <div className="hdr-inner">
@@ -55,11 +55,16 @@ function Header({ activeView, onNavChange, owner }) {
           <button className={"hdr-link " + (activeView === "study" ? "active" : "")} onClick={() => onNavChange("study")}>Study</button>
           <button className={"hdr-link " + (activeView === "about" ? "active" : "")} onClick={() => onNavChange("about")}>About</button>
         </nav>
-        {(activeView === "lexicon" || activeView === "corpus") && (
-          <span className="hdr-wip" title="This section is being rebuilt — things may change or look unfinished.">
-            <span className="hdr-wip-dot"/> Under development
-          </span>
-        )}
+        <div className="hdr-right">
+          {(activeView === "lexicon" || activeView === "corpus") && (
+            <span className="hdr-wip" title="This section is being rebuilt — things may change or look unfinished.">
+              <span className="hdr-wip-dot"/> Under development
+            </span>
+          )}
+          {email
+            ? <button className="hdr-acct" onClick={onAccount} title="Your account">{email}</button>
+            : <button className="hdr-login" onClick={onLogin}>Log in</button>}
+        </div>
       </div>
     </header>
   );

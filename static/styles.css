@@ -212,7 +212,7 @@ input { font-family: inherit; }
 }
 .hdr-nav { display: flex; gap: 4px; }
 .hdr-wip {
-  margin-left: auto; display: inline-flex; align-items: center; gap: 7px;
+  display: inline-flex; align-items: center; gap: 7px;
   font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
   color: #f4d58a; background: rgba(244,213,138,0.12);
   border: 1px solid rgba(244,213,138,0.32); padding: 4px 11px; border-radius: 999px;
@@ -231,7 +231,21 @@ input { font-family: inherit; }
   color: #f6f7fa;
   background: rgba(255,255,255,0.06);
 }
-.hdr-right { display: flex; align-items: center; gap: 14px; }
+.hdr-right { margin-left: auto; display: flex; align-items: center; gap: 14px; }
+/* Account control in the navy header (desktop only — the header is hidden < 1100px). */
+.hdr-login {
+  font-size: 13px; font-weight: 600; color: #0f1b2d;
+  background: #e9ecf2; border: none; border-radius: 7px;
+  padding: 7px 16px; cursor: pointer; letter-spacing: 0.01em;
+}
+.hdr-login:hover { background: #fff; }
+.hdr-acct {
+  font-size: 13px; color: #a8b0c0;
+  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 999px; padding: 6px 13px; cursor: pointer;
+  max-width: 190px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.hdr-acct:hover { color: #e9ecf2; border-color: rgba(255,255,255,0.25); }
 .hdr-icon-btn {
   width: 34px; height: 34px;
   border-radius: 6px;
