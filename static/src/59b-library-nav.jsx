@@ -168,8 +168,9 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
       </div>
       {/* Reading-order toggle (Canonical | Chronological) lives in the top toolbar.
           The nav just reflects orderMode: era→passage list when chronological. */}
-      {/* "Other" books open INLINE in the panel (pushes the book list down) so the
-          menu never floats over the reading text. */}
+      {/* "Other" books (ESV/NIV/HEB + non-canon) open in a floating panel anchored under the
+          source picker; a faint dim sits behind it over the book list (design 2026-06-19). */}
+      {otherOpen && <div className="nav-other-dim" onClick={() => setOtherOpen(false)} />}
       {otherOpen && (
         <div className="nav-other-inline">
           {(esvOwner || nivOwner || hebShown) && (() => {

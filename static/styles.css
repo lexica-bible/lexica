@@ -2001,7 +2001,8 @@ input { font-family: inherit; }
   border-top: 1px solid var(--rule);
 }
 .lib-other-item {
-  display: block;
+  display: flex;
+  align-items: center;
   width: 100%;
   text-align: left;
   padding: 7px 10px;
@@ -2013,13 +2014,18 @@ input { font-family: inherit; }
   cursor: pointer;
 }
 .lib-other-item:not(:disabled):hover { background: var(--bg-sunk); }
-.lib-other-item.on { color: var(--gold); font-weight: 600; }
+/* active version = clear "you are here": accent text + soft fill + a check on the right.
+   NOT gold — gold is reserved for target words (design 2026-06-19). */
+.lib-other-item.on { color: var(--accent); font-weight: 600; background: var(--accent-soft); }
+.lib-other-item.on::after { content: "\2713"; margin-left: auto; padding-left: 8px; font-size: 12px; color: var(--accent); }
 .lib-other-item:disabled { opacity: 0.4; cursor: default; }
 
 /* Compact text-size button + its little popover (replaces the inline A−/A+ seg) */
 .lib-font-btn { font-size: 13px; letter-spacing: 0.01em; }
 .lib-font-menu { min-width: 0; padding: 6px; }
-.lib-theme-seg { margin-top: 6px; }
+/* hairline divides SIZE (stepper above) from THEME (segments below) so the Aa menu reads
+   composed, not stacked (design 2026-06-19) */
+.lib-theme-seg { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--rule); }
 .lib-theme-seg .seg-b { flex: 1 1 0; padding: 5px 6px; }
 
 /* ----- Non-canonical reader: readable English (parallel right column) ----- */
@@ -2305,7 +2311,7 @@ input { font-family: inherit; }
 .mseg-b.on { background: var(--ctl-on); color: var(--ink); font-weight: 600; box-shadow: var(--shadow-sm); }
 .mseg-b:active:not(.on) { background: rgba(0,0,0,0.08); color: var(--ink); }
 .mseg-view .mseg-b { display: inline-flex; align-items: center; justify-content: center; }
-.font-size-lbl { font-size: 12px; color: var(--ink-3); flex: 1; text-align: center; align-self: center; user-select: none; pointer-events: none; }
+.font-size-lbl { font-size: 12px; color: var(--ink-2); flex: 1; text-align: center; align-self: center; user-select: none; pointer-events: none; }
 .font-picker .mseg-b { flex: 0 0 44px; }
 /* Checkable Text picker (mobile): tick 1 to read, 2-4 to compare side by side. */
 /* Text picker wraps when there are enough texts. Sized so a NORMAL user's four
@@ -2715,6 +2721,12 @@ input { font-family: inherit; }
 /* "More" texts = a floating popout under the source row (no longer pushes the book
    list down). Sizes to its content, with a max-height + own scroll for long lists.
    Clipped to the nav by .nav's overflow. */
+/* faint dim over the book list behind the floating version menu — cleans the overlap, matches
+   the focus-dim language (design 2026-06-19). Sits under the menu (z 40), over the books. */
+.nav-other-dim {
+  position: absolute; top: 100%; left: 0; right: 0; height: 100vh; z-index: 30;
+  background: rgba(15, 23, 42, 0.16);
+}
 .nav-other-inline {
   position: absolute; top: 100%; left: 6px; right: 6px; z-index: 40;
   max-height: calc(100vh - var(--hdr-h) - 90px);
