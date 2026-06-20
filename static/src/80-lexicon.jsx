@@ -635,17 +635,17 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
         </div>
 
         <nav className="wm-tabs" aria-label="Word study tools">
-          <button className={"wm-tab" + (sheet === "search" ? " on" : "")} onClick={() => setSheet("search")}>
-            <WsI.Search/><span className="wm-tab-l">Search</span>
+          <button className={"wm-tab" + (sheet === "search" ? " on" : "")} onClick={() => setSheet("search")} title="Search" aria-label="Search">
+            <WsI.Search/>
           </button>
-          <button className={"wm-tab" + (sheet === "dist" ? " on" : "")} disabled={!profile} onClick={() => setSheet("dist")}>
-            <WsI.Book/><span className="wm-tab-l">Distribution</span>
+          <button className={"wm-tab" + (sheet === "dist" ? " on" : "")} disabled={!profile} onClick={() => setSheet("dist")} title="Distribution" aria-label="Distribution">
+            <WsI.Book/>
           </button>
-          <button className={"wm-tab" + (sheet === "card" ? " on" : "")} disabled={!profile} onClick={() => setSheet("card")}>
-            <WsI.Card/><span className="wm-tab-l">Word card</span>
+          <button className={"wm-tab" + (sheet === "card" ? " on" : "")} disabled={!profile} onClick={() => setSheet("card")} title="Word card" aria-label="Word card">
+            <WsI.Card/>
           </button>
-          <button className={"wm-tab" + (sheet === "views" ? " on" : "")} disabled={!profile} onClick={() => setSheet("views")}>
-            <WsI.Sliders/><span className="wm-tab-l">Views</span>
+          <button className={"wm-tab" + (sheet === "views" ? " on" : "")} disabled={!profile} onClick={() => setSheet("views")} title="Views" aria-label="Views">
+            <WsI.Sliders/>
           </button>
         </nav>
 

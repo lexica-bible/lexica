@@ -3,6 +3,10 @@
      sized to match exactly. Left unpinned, the brand text renders ~65px and the
      64px the nav assumed left the page 1px too tall (a mouse-wheel shift). */
   --hdr-h: 66px;
+  /* Shared height of the slim mobile chrome bars — the top section-nav, the
+     Library bottom reading cockpit, and the Word-study bottom tools bar. One
+     knob so every bar stays the same height and aligned. */
+  --bar-h: 48px;
 
   /* Type */
   --f-sans: "DM Sans", "Söhne", system-ui, -apple-system, sans-serif;
@@ -839,9 +843,9 @@ input { font-family: inherit; }
      cockpit pinned to the bottom; other tabs (Lexicon, Search) have nothing
      there, so anchoring above 0 left an empty gap below the sheet. */
   bottom: env(safe-area-inset-bottom, 0px);
-  /* Rise no further than the bottom of the top menu (.mobile-tabs, 56px). */
-  max-height: calc(100vh - 56px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
-  max-height: calc(100dvh - 56px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  /* Rise no further than the bottom of the top menu (.mobile-tabs, --bar-h). */
+  max-height: calc(100vh - var(--bar-h) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  max-height: calc(100dvh - var(--bar-h) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
   overscroll-behavior: contain;
   background: var(--paper);
   border-top-left-radius: 18px;
@@ -855,9 +859,9 @@ input { font-family: inherit; }
 /* Library tab keeps a fixed reading cockpit at the bottom (≈58px) — lift the
    sheet above it there, and shorten its max height to match. */
 .app.view-library .detail-sheet {
-  bottom: calc(56px + env(safe-area-inset-bottom, 0px));
-  max-height: calc(100vh - 112px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
-  max-height: calc(100dvh - 112px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  bottom: calc(var(--bar-h) + env(safe-area-inset-bottom, 0px));
+  max-height: calc(100vh - var(--bar-h) * 2 - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  max-height: calc(100dvh - var(--bar-h) * 2 - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
 }
 .detail-sheet .detail-body { overscroll-behavior: contain; }
 @keyframes slide-up {
@@ -2095,7 +2099,7 @@ input { font-family: inherit; }
   /* Section tabs are fixed at the TOP on every tab, so .main carries the top
      clearance for all tabs. The Library bottom cockpit adds its own bottom
      clearance (see the view-library block below). */
-  .main { padding-top: calc(56px + env(safe-area-inset-top, 0px)); padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
+  .main { padding-top: calc(var(--bar-h) + env(safe-area-inset-top, 0px)); padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
   /* a little breathing room below the fixed tab bar before the search box */
   .main-inner { padding: 28px 16px 24px; max-width: 100%; }
   /* match .main-inner so the lexicon "Word lookup" box lines up with the Search box */
@@ -2115,7 +2119,7 @@ input { font-family: inherit; }
     display: flex;
     align-items: center;
     justify-content: center;
-    height: 56px;
+    height: var(--bar-h);
     color: #8a9ab8;
     background: none;
     border: none;
@@ -2137,7 +2141,7 @@ input { font-family: inherit; }
 }
 @media (max-width: 1099px) {
   .hdr { display: none; }
-  .lib-toolbar { position: sticky; top: 0; z-index: 20; height: 56px; padding: 0 6px; margin-bottom: 8px; flex-wrap: nowrap; justify-content: space-between; background: color-mix(in oklab, var(--bg) 84%, var(--ctl-bg)); backdrop-filter: blur(6px); border-bottom: 1px solid var(--rule); gap: 4px; }
+  .lib-toolbar { position: sticky; top: 0; z-index: 20; height: var(--bar-h); padding: 0 6px; margin-bottom: 8px; flex-wrap: nowrap; justify-content: space-between; background: color-mix(in oklab, var(--bg) 84%, var(--ctl-bg)); backdrop-filter: blur(6px); border-bottom: 1px solid var(--rule); gap: 4px; }
   .lib-toolbar-navy { background: var(--navy); border-bottom-color: var(--navy-edge, #1e3050); backdrop-filter: none; }
   .lib-toolbar-navy .mbar-loc-name { color: #e9ecf2; }
   .lib-toolbar-navy .mbar-loc-ch { color: #7eb8e8; }  /* --accent is dark navy; invisible on the navy bar without this */
@@ -2150,13 +2154,13 @@ input { font-family: inherit; }
   .mobile-brand-name { font-family: var(--f-serif); font-weight: 600; font-size: 17px; letter-spacing: -0.01em; color: #f6f7fa; }
   .mobile-brand-sub { font-size: 11px; color: #8a9ab8; letter-spacing: 0.01em; margin-left: 2px; }
   .lib-heading { display: none; }
-  /* Fill the screen below the top chrome (section tabs 56px + lib toolbar 56px)
+  /* Fill the screen below the top chrome (top nav + bottom cockpit, --bar-h each)
      so a short chapter's empty space below the text is still part of the
      page-turn swipe zone. */
   .lib-reading {
     overflow-x: hidden; max-width: 100%; padding: 10px 12px;
-    min-height: calc(100vh - 112px);
-    min-height: calc(100dvh - 112px);
+    min-height: calc(100vh - var(--bar-h) * 2);
+    min-height: calc(100dvh - var(--bar-h) * 2);
   }
   .lib-text-words { --lib-line-h: 1.65; }
   .lib-verse-row { margin-bottom: 3px; }
@@ -2224,7 +2228,7 @@ input { font-family: inherit; }
     position: fixed;
     top: auto; bottom: 0; left: 0; right: 0;
     z-index: 200;
-    height: auto; min-height: calc(56px + env(safe-area-inset-bottom, 0px));
+    height: auto; min-height: calc(var(--bar-h) + env(safe-area-inset-bottom, 0px));
     margin-bottom: 0;
     border-bottom: none;
     border-top: 1px solid var(--rule);
@@ -2232,12 +2236,12 @@ input { font-family: inherit; }
   }
   .app.view-library .mbar-logo-btn { display: none; }  /* pointless in the bottom cockpit */
   /* Bottom clearance for the cockpit; top clearance is global (.main above). */
-  .app.view-library .main { padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
+  .app.view-library .main { padding-bottom: calc(var(--bar-h) + 8px + env(safe-area-inset-bottom, 0px)); }
   /* The bottom player (base styles in the dock block) docks just ON TOP of the bottom
      cockpit on mobile, not flush at the screen edge. z below the detail/modes sheets
      (51/220) so an open sheet covers it, above content. */
   .app.view-library .lib-audio-dock {
-    bottom: calc(56px + env(safe-area-inset-bottom, 0px));
+    bottom: calc(var(--bar-h) + env(safe-area-inset-bottom, 0px));
     z-index: 49;
     padding: 8px 16px;
   }
@@ -3257,14 +3261,14 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
   to   { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 /* On mobile: a full-width "find bar" that drops flush from under the navy
-   section-tab bar (.mobile-tabs, 56px + notch) — not a floating card. */
+   section-tab bar (.mobile-tabs, --bar-h + notch) — not a floating card. */
 @media (max-width: 1099px) {
   .lib-search-panel {
-    top: calc(56px + env(safe-area-inset-top, 0px));
+    top: calc(var(--bar-h) + env(safe-area-inset-top, 0px));
     left: 0; right: 0; transform: none;
     width: 100%; max-width: 100%;
-    max-height: calc(100vh - 56px - env(safe-area-inset-top, 0px));
-    max-height: calc(100dvh - 56px - env(safe-area-inset-top, 0px));
+    max-height: calc(100vh - var(--bar-h) - env(safe-area-inset-top, 0px));
+    max-height: calc(100dvh - var(--bar-h) - env(safe-area-inset-top, 0px));
     border-width: 0 0 1px 0;
     border-radius: 0 0 14px 14px;
     box-shadow: 0 14px 28px rgba(34, 30, 24, 0.18);
@@ -4362,8 +4366,8 @@ button.study-verse-ref { border: none; }
   .view-lexicon .main { padding-bottom: 0; }
   .wm {
     display: flex; flex-direction: column;
-    height: calc(100vh - 56px);
-    height: calc(100dvh - 56px - env(safe-area-inset-top, 0px));
+    height: calc(100vh - var(--bar-h));
+    height: calc(100dvh - var(--bar-h) - env(safe-area-inset-top, 0px));
     min-height: 0;
     background: var(--bg);
   }
@@ -4399,17 +4403,18 @@ button.study-verse-ref { border: none; }
   .wm .glsenses { margin: 0 0 16px; }
   .wm .corpus-text { font-size: 16px; line-height: 1.56; }
 
-  /* bottom tools bar */
+  /* bottom tools bar — icon-only, same height as the top nav + library cockpit */
   .wm-tabs {
     flex: 0 0 auto; display: flex;
+    min-height: calc(var(--bar-h) + env(safe-area-inset-bottom, 0px));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
     border-top: 1px solid var(--rule); background: var(--paper);
-    padding: 7px 0 max(9px, env(safe-area-inset-bottom));
   }
-  .wm-tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--ink-3); padding: 4px 0; background: none; border: none; }
+  .wm-tab { flex: 1; display: flex; align-items: center; justify-content: center; color: var(--ink-3); background: none; border: none; }
+  .wm-tab svg { width: 22px; height: 22px; }
   .wm-tab:active { color: var(--ink-2); }
   .wm-tab.on { color: var(--accent); }
   .wm-tab:disabled { opacity: 0.38; }
-  .wm-tab-l { font-size: 11px; letter-spacing: 0.01em; }
 
   /* bottom sheets — fixed overlays above the top nav */
   .wm-scrim { position: fixed; inset: 0; z-index: 120; background: rgba(15,23,42,0.42); animation: wm-fade 0.18s ease; }
