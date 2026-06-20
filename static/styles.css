@@ -2874,7 +2874,10 @@ input { font-family: inherit; }
    uppercase label colour-matched to its spine (was a floating gold pill). */
 .nav-testament {
   font-size: 10.5px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase;
-  padding: 2px 10px 5px;
+  /* No top padding + line-height:1 so the label's cap-height sits at the group's top
+     edge — the spine (border-left) then starts at the text caps instead of floating
+     a few px above them. Keeps the bar continuous (only the text box tightens). */
+  padding: 0 10px 5px; line-height: 1;
 }
 .nav-group--ot .nav-testament { color: var(--gold); }
 .nav-group--nt .nav-testament { color: var(--spine-nt); }
