@@ -44,7 +44,7 @@ const WsI = {
 
 // Bottom sheet for the mobile word-study tools — rises from the bottom, drag the
 // grab-zone down past ~110px to dismiss (ported from the design handoff's Sheet).
-function WsSheet({ title, tall, titleMono, onClose, children }) {
+function WsSheet({ title, tall, titleMono, hideClose, onClose, children }) {
   const [dy, setDy] = useState(0);
   const [dragging, setDragging] = useState(false);
   const drag = useRef({ active: false, startY: 0 });
@@ -62,7 +62,7 @@ function WsSheet({ title, tall, titleMono, onClose, children }) {
           <div className="wm-handle" aria-hidden="true"/>
           <div className="wm-sheet-head">
             <span className={"wm-sheet-title" + (titleMono ? " wm-sheet-title--mono" : "")}>{title}</span>
-            <button className="wm-sheet-x" onClick={onClose} aria-label="Close"><WsI.Close/></button>
+            {!hideClose && <button className="wm-sheet-x" onClick={onClose} aria-label="Close"><WsI.Close/></button>}
           </div>
         </div>
         <div className="wm-sheet-body">{children}</div>
@@ -477,27 +477,35 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
   // The word card body (hero + LSJ/BDB + ABP/KJV renderings + derivation + cognates).
   const renderWordCardInner = () => !profile ? null : (
     <>
-      <div className="wd-hero">
-        <div className={"wd-greek" + (isHeb ? " heb" : "")} dir={isHeb ? "rtl" : undefined}>{profile.lemma}</div>
-        <div className="wd-sub"><span className="wd-tr">{profile.translit}</span>{firstGloss ? <> · <span className="wd-gloss">{firstGloss}</span></> : null}</div>
-        <div className="wd-morph">{occCount} {occCount === 1 ? "occurrence" : "occurrences"}</div>
+      <div className="detail-hero">
+        <div className="detail-hero-id">
+          <div className={"detail-greek" + (isHeb ? " detail-greek--he" : "")} dir={isHeb ? "rtl" : undefined}>{profile.lemma}</div>
+          {(profile.translit || firstGloss) && (
+            <div className="detail-translit-row">
+              {profile.translit && <span className="detail-translit">{profile.translit}</span>}
+              {profile.translit && firstGloss && <span className="detail-sep">·</span>}
+              {firstGloss && <span className="detail-gloss">{firstGloss}</span>}
+            </div>
+          )}
+          <div className="detail-morph">{occCount} {occCount === 1 ? "occurrence" : "occurrences"}</div>
+        </div>
         {onAskWord && (
-          <button className="wd-askai" onClick={() => onAskWord(profile.strongs, profile.lemma, profile.translit)}>
-            <Icon.Sparkle/> Ask AI about <span className={"wd-askai-w" + (isHeb ? " heb" : "")} dir={isHeb ? "rtl" : undefined}>{profile.lemma}</span> <Icon.ArrowRight/>
+          <button className="occ-link" onClick={() => onAskWord(profile.strongs, profile.lemma, profile.translit)}>
+            <span>Ask AI about <span dir={isHeb ? "rtl" : undefined}>{profile.lemma}</span></span><Icon.ArrowRight/>
           </button>
         )}
       </div>
 
       {(profile.definition || /^G/i.test(profile.strongs)) && (
-        <div className="wd-sec">
-          <div className="wd-sec-h">
-            <span className="wd-sec-t">Definition</span>
+        <section className="sec">
+          <h4 className="sec-head">
+            <span className="sec-t">Definition</span>
             {showDef && (!/^G/i.test(profile.strongs)
-              ? <span className="wd-badge">BDB</span>
+              ? <span className="bdb-badge">BDB</span>
               : (!lsjLoading && lsjEntry)
-                ? <span className="wd-badge">{lsjEntry.source === "strongs" ? "Strong's" : lsjEntry.source === "abp_ext" ? "ABP" : "LSJ"}</span>
+                ? <span className="lsj-badge">{lsjEntry.source === "strongs" ? "Strong's" : lsjEntry.source === "abp_ext" ? "ABP" : "LSJ"}</span>
                 : null)}
-          </div>
+          </h4>
           {showDef ? (
             !/^G/i.test(profile.strongs)
               ? <p className="lsj">{profile.definition}</p>
@@ -516,30 +524,30 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
             <button className="lsj-toggle" onClick={() => setShowDef(true)}>Full entry ▾</button>
           )}
           {showDef && <button className="lsj-toggle" onClick={() => setShowDef(false)}>Show less ▴</button>}
-        </div>
+        </section>
       )}
 
       {profile.abp_glosses && profile.abp_glosses.length > 0 && (
-        <div className="wd-sec">
-          <div className="wd-sec-h"><span className="wd-sec-t">ABP renders as</span><span className="wd-sec-meta">{profile.abp_glosses.length} senses</span></div>
+        <section className="sec">
+          <h4 className="sec-head"><span className="sec-t">ABP renders as</span></h4>
           {renderGlossLine("abp", null, profile.abp_glosses)}
-        </div>
+        </section>
       )}
       {profile.kjv_glosses && profile.kjv_glosses.length > 0 && (
-        <div className="wd-sec">
-          <div className="wd-sec-h"><span className="wd-sec-t">KJV renders as</span><span className="wd-sec-meta">{profile.kjv_glosses.length} senses</span></div>
+        <section className="sec">
+          <h4 className="sec-head"><span className="sec-t">KJV renders as</span></h4>
           {renderGlossLine("kjv", null, profile.kjv_glosses)}
-        </div>
+        </section>
       )}
       {profile.derivation && (
-        <div className="wd-sec">
-          <div className="wd-sec-h"><span className="wd-sec-t">Derivation</span></div>
+        <section className="sec">
+          <h4 className="sec-head"><span className="sec-t">Derivation</span></h4>
           <p className="root-note">{profile.derivation}</p>
-        </div>
+        </section>
       )}
       {profile.related && profile.related.length > 0 && (
-        <div className="wd-sec">
-          <div className="wd-sec-h"><span className="wd-sec-t">Cognates &amp; related lemmas</span></div>
+        <section className="sec">
+          <h4 className="sec-head"><span className="sec-t">Cognates &amp; related lemmas</span></h4>
           <div className="related">
             {profile.related.map(r => (
               <button key={r.strongs} className="rel" onClick={() => loadProfile(r.strongs, "abp")}>
@@ -549,7 +557,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
               </button>
             ))}
           </div>
-        </div>
+        </section>
       )}
     </>
   );
@@ -609,16 +617,10 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
           {profile ? (
             <>
               <div className="wm-occhead">
-                <span className="wm-occ-count">{occCount}</span>
+                <span className="wm-occ-count">{selectedBook && selBookCount != null ? selBookCount : occCount}</span>
                 <span className="wm-occ-lbl">{selectedBook ? "in " + selBookName : (occCount === 1 ? "occurrence" : "occurrences")}</span>
                 <span className="wm-occ-meta">{tLabel} · {profileCorpus.toUpperCase()}</span>
               </div>
-              {selectedBook && (
-                <div className="wm-filterchip">
-                  <span>Filtered to <b>{selBookName}</b>{selectedGloss ? ` · “${selectedGloss}”` : ""}</span>
-                  <button onClick={() => { setSelectedBook(null); setVerseList(null); setBookGlosses(null); }}>Clear</button>
-                </div>
-              )}
               {occList}
             </>
           ) : (!groupings && !matches && !error) ? (
@@ -655,8 +657,8 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
           </WsSheet>
         )}
         {sheet === "card" && (
-          <WsSheet tall title={profile ? profile.strongs : "Word card"} titleMono onClose={() => setSheet(null)}>
-            <div className="wd-body wm-card">{renderWordCardInner()}</div>
+          <WsSheet tall title={profile ? profile.strongs : "Word card"} titleMono hideClose onClose={() => setSheet(null)}>
+            <div className="detail-body wm-card">{renderWordCardInner()}</div>
           </WsSheet>
         )}
         {sheet === "views" && (
@@ -877,16 +879,13 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
       <aside className={"wd" + (isMobile && !detailOpen ? " hidden" : "")}>
         {profile ? (
           <>
-          <div className="wd-head">
-            <span className="wd-strongs">{profile.strongs}</span>
-            <span className="wd-head-r">
-              {(groupings || matches) && (
-                <button className="wd-overview" onClick={backToResults}>‹ Results</button>
-              )}
-              {isMobile && <button className="wd-overview" onClick={() => setDetailOpen(false)} aria-label="Close">✕</button>}
-            </span>
+          <div className="detail-head">
+            <span className="detail-strong-head">{profile.strongs}</span>
+            {(groupings || matches) && (
+              <button className="detail-back" onClick={backToResults}>‹ Results</button>
+            )}
           </div>
-          <div className="wd-body">{renderWordCardInner()}</div>
+          <div className="detail-body">{renderWordCardInner()}</div>
           </>
         ) : (
           <div className="empty-pane">

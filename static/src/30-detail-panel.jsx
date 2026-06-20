@@ -680,7 +680,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       <section key="abpOcc" className="sec">
         <h4 className="sec-head"><span className="sec-t">{entry.isExtra ? "Occurrences in Scripture" : "ABP Occurrences"}</span></h4>
         <button className="occ-link" onClick={() => onNavigateToLexicon && onNavigateToLexicon(entry.strongs_raw, "abp")}>
-          <b>{abpCount}</b>× in LXX <Icon.ArrowRight/>
+          <b>{abpCount}</b>× in ABP <Icon.ArrowRight/>
         </button>
       </section>
     );
@@ -708,7 +708,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       <section key="pnOcc" className="sec">
         <h4 className="sec-head"><span className="sec-t">ABP Occurrences</span></h4>
         <button className="occ-link" onClick={() => onNameSearch(extractProperName(entry.gloss))}>
-          <b>{pnCount}</b>× in LXX <Icon.ArrowRight/>
+          <b>{pnCount}</b>× in ABP <Icon.ArrowRight/>
         </button>
       </section>
     );
