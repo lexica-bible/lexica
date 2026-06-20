@@ -2113,19 +2113,16 @@ input { font-family: inherit; }
   .mobile-tab {
     flex: 1;
     display: flex;
-    flex-direction: column;
     align-items: center;
-    gap: 3px;
-    padding: 8px 0 10px;
-    font-size: 11px;
-    font-family: var(--f-sans);
+    justify-content: center;
+    height: 56px;
     color: #8a9ab8;
     background: none;
     border: none;
     cursor: pointer;
   }
   .mobile-tab.active { color: #e9ecf2; }
-  .mobile-tab svg { stroke: currentColor; }
+  .mobile-tab svg { width: 22px; height: 22px; stroke: currentColor; }
   .search { padding: 12px 14px; max-width: 100%; }
   .results-head { margin: 24px 2px 10px; flex-direction: column; align-items: flex-start; gap: 8px; }
   .results-controls { width: 100%; margin-left: 0 !important; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
@@ -4365,7 +4362,9 @@ button.study-verse-ref { border: none; }
   .view-lexicon .main { padding-bottom: 0; }
   .wm {
     display: flex; flex-direction: column;
-    height: calc(100vh - 56px); min-height: 0;
+    height: calc(100vh - 56px);
+    height: calc(100dvh - 56px - env(safe-area-inset-top, 0px));
+    min-height: 0;
     background: var(--bg);
   }
   /* context strip — which word is open; tap opens the word card sheet */
