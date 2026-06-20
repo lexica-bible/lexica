@@ -4312,19 +4312,17 @@ button.study-verse-ref { border: none; }
 .brail-sub { font-size: 12px; color: var(--ink-4); margin-top: 5px; }
 .brail-gk { font-family: var(--f-greek); color: var(--ink-2); font-size: 14px; }
 .brail-scroll { flex: 1; overflow-y: auto; padding: 8px 8px 24px; }
-/* Each book row carries a faint, count-scaled bar BEHIND the text: .brow-bar spans
-   the whole row, .brow-fill is the proportional shade (its inline width is now a %
-   of the row). The name gets the full width and the distribution still reads at a
-   glance — cleaner than a cramped tick column. */
-.brow { position: relative; overflow: hidden; width: 100%; display: grid; grid-template-columns: 1fr auto; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 6px; text-align: left; color: var(--ink-2); }
+.brow { width: 100%; display: grid; grid-template-columns: 1fr 46px auto; align-items: center; gap: 8px; padding: 6px 10px; border-radius: 6px; text-align: left; color: var(--ink-2); }
 .brow:hover { background: color-mix(in oklab, var(--ink) 6%, transparent); }
 .brow.on { background: var(--navy); }
 .brow.on .brow-name, .brow.on .brow-n { color: #f4f6fa; }
-.brow.on .brow-fill { background: rgba(255,255,255,0.14); }
-.brow-name { position: relative; z-index: 1; font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.005em; }
-.brow-bar { position: absolute; left: 0; top: 0; right: 0; bottom: 0; z-index: 0; background: none; }
-.brow-fill { height: 100%; background: color-mix(in oklab, var(--ink) 10%, transparent); }
-.brow-n { position: relative; z-index: 1; font-family: var(--f-mono); font-size: 10.5px; color: var(--ink-4); text-align: right; min-width: 22px; }
+.brow.on .brow-bar { background: rgba(255,255,255,0.18); }
+.brow.on .brow-fill { background: rgba(255,255,255,0.72); }
+.brow-name { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.005em; }
+.brow-bar { height: 6px; background: color-mix(in oklab, var(--ink) 8%, transparent); border-radius: 3px; overflow: hidden; }
+.brow-fill { height: 100%; border-radius: 3px; background: color-mix(in oklab, var(--ink) 32%, transparent); }
+.brow-n { font-family: var(--f-mono); font-size: 10.5px; color: var(--ink-4); text-align: right; min-width: 22px; }
+/* "All books" — no box (just a bold row); still fills navy when it's the active one. */
 .brow-all { grid-template-columns: 1fr auto; margin-bottom: 6px; padding: 9px 10px; }
 .brow-all .brow-name { font-weight: 600; color: var(--ink); }
 .brow-all.on { background: var(--navy); }
