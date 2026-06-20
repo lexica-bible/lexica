@@ -47,6 +47,13 @@ except ImportError:
     RahlfsLXX = TAGNTSource = None
     _G1473_BUCKET = _g1473_last = None
 
+try:
+    # The 5 ABP words ABP left with a blank "G." number — filled as a finishing step so a
+    # rebuild reproduces the fix (see fill_blank_strongs.py for the table + rationale).
+    from fill_blank_strongs import apply_blank_strongs_fills
+except ImportError:
+    apply_blank_strongs_fills = None
+
 BASE_DIR    = Path(__file__).parent.parent
 ABP_OT_ZIP  = BASE_DIR / "abp_ot_texts.zip"
 ABP_NT_ZIP  = BASE_DIR / "abp_nt_texts.zip"
@@ -101,20 +108,6 @@ def clean_english(text: str) -> str:
     t = t.replace("[", "").replace("]", "")
     t = _WORD_NUM.sub("", t)
     return t.strip()
-
-
-# A leaked Strong's marker: the ABP/BibleHub source occasionally renders a word with its
-# Strong's link mashed onto the English ("AndG. you," for σύ in Zec 9:11; "biddingG." in
-# Act 24:8). The digit-strip above already removes the number, leaving a bare "G." that is
-# not English. Peel it. Conservative: only a capital G + dot sitting right after a lowercase
-# letter and before whitespace/end — real glosses ("God", "of God", "Gog") never match.
-_LEAK_MARK = re.compile(r"(?<=[a-z])G\.(?=\s|$)")
-
-
-def strip_leaked_marker(text: str) -> str:
-    if not text or "G." not in text:
-        return text
-    return re.sub(r"\s{2,}", " ", _LEAK_MARK.sub("", text)).strip()
 
 
 def bracket_info(raw: str):
@@ -1255,8 +1248,6 @@ def build_verse_words(abp_words: list, bh_rows: list, lex: dict = None) -> list:
         if closes_bracket:
             in_bracket = False
 
-        if english:
-            english = strip_leaked_marker(english)   # peel a leaked "G." source marker
         english_head = _head_word(english) if english else None
         display      = english_head or (english if english and " " not in english else None)
         italic_set   = set(iw.split(",")) if iw else set()
@@ -1428,6 +1419,14 @@ def run(bible_db: str, scrape_db: str) -> None:
             print(f"  {inserted:,} words inserted …", flush=True)
 
     main.commit()
+
+    # Fill the 5 ABP words that carry a blank "G." number (Zec 9:11 etc.) — splits the merged
+    # slot back out and assigns the right Strong's. Bounded + guarded; no-op if unavailable.
+    if apply_blank_strongs_fills:
+        n_fill = apply_blank_strongs_fills(main, apply=True, log=lambda _m: None)
+        main.commit()
+        print(f"  Filled {n_fill} blank-Strong's word(s) (Zec 9:11 class).")
+
     main.close()
     scrape.close()
 
