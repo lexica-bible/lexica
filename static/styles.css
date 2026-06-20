@@ -2969,6 +2969,13 @@ input { font-family: inherit; }
   color: var(--ink); font-weight: 600; border-radius: 0;
   background: var(--bg-sunk); box-shadow: inset 2.5px 0 0 var(--navy);
 }
+/* Dark theme: navy is nearly invisible on the near-black sunk background, so the rule
+   rides the cool-blue spine token (visible on dark) instead. Light/sepia keep navy. */
+:root[data-theme="dark"] .nav-passage.on,
+:root[data-theme="dark"] .plan-passage.on,
+:root[data-theme="dark"] .mpick-passage.on {
+  box-shadow: inset 2.5px 0 0 var(--spine-nt);
+}
 
 /* ── Reading plan ("Days" view of the chronological picker) ───────────────────
    Renders inside the left nav (.nav-scroll) and the mobile picker (.mpick-scroll),
