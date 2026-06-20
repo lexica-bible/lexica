@@ -3062,8 +3062,9 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .plan-passage:hover { color: var(--ink); }
-/* The passage you're currently reading, marked with a bullet + accent. */
-.plan-passage.on { color: var(--ink); font-weight: 600; }
+/* The passage you're currently reading — ink + a navy "you are here" left-rule,
+   matching the eras list's active passage (.mpick-passage.on). */
+.plan-passage.on { color: var(--ink); font-weight: 600; box-shadow: inset 2.5px 0 0 var(--navy); border-radius: 5px; }
 /* Month blocks — the 365 days chunked into ~12 collapsible months (accordion). */
 .plan-month-head {
   display: flex; align-items: center; gap: 8px; width: 100%; text-align: left;
