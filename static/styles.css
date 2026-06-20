@@ -4401,6 +4401,12 @@ button.study-verse-ref { border: none; }
 /* empty states (3-pane frame shows before a word is studied) */
 .brail-empty { padding: 22px 18px; font-size: 13px; color: var(--ink-4); line-height: 1.55; }
 .empty-pane { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 48px 28px; height: 100%; }
+/* Keep the cross-line in the empty state too (desktop only — mobile has no navy bar),
+   so the divider continues the bar's edge before a word is even picked. */
+@media (min-width: 1100px) {
+  .wd .empty-pane { position: relative; }
+  .wd .empty-pane::before { content: ""; position: absolute; top: var(--hdr-h); left: 0; right: 0; height: 1px; background: var(--rule); }
+}
 .empty-mark { color: var(--ink-4); margin-bottom: 16px; }
 .empty-t { font-family: var(--f-serif); font-size: 19px; color: var(--ink); margin-bottom: 6px; }
 .empty-s { font-size: 13px; color: var(--ink-3); max-width: 280px; line-height: 1.5; }
