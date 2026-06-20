@@ -1172,6 +1172,12 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
       // the popover doesn't also hit a chip / verse number / focus. (Popover buttons sit
       // outside the reading area, so they're unaffected.)
       if (swallowClickRef.current) { swallowClickRef.current = false; e.stopPropagation(); e.preventDefault(); return; }
+      // Desktop focus mode = a read-only page: any tap inside the reader exits focus instead of
+      // opening a word/xref panel (those sit behind the non-interactive wash now). Mobile focus
+      // KEEPS chips + verse numbers tappable. Skip while the user is selecting text.
+      if (focusMode && !isMobile && !(window.getSelection && String(window.getSelection()))) {
+        e.stopPropagation(); e.preventDefault(); toggleFocus(); return;
+      }
       if (swipeHandlers.onClickCapture) swipeHandlers.onClickCapture(e);
     },
     // Tap on blank space (not a word / verse number / control, and not mid-selection)

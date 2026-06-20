@@ -1154,7 +1154,10 @@ onMouseDown:()=>{if(noteSel){setNoteSel(null);swallowClickRef.current=true;}just
 if(justSelectedRef.current){justSelectedRef.current=false;e.stopPropagation();e.preventDefault();return;}// A press that closed the popover flagged this click to be eaten — so dismissing
 // the popover doesn't also hit a chip / verse number / focus. (Popover buttons sit
 // outside the reading area, so they're unaffected.)
-if(swallowClickRef.current){swallowClickRef.current=false;e.stopPropagation();e.preventDefault();return;}if(swipeHandlers.onClickCapture)swipeHandlers.onClickCapture(e);},// Tap on blank space (not a word / verse number / control, and not mid-selection)
+if(swallowClickRef.current){swallowClickRef.current=false;e.stopPropagation();e.preventDefault();return;}// Desktop focus mode = a read-only page: any tap inside the reader exits focus instead of
+// opening a word/xref panel (those sit behind the non-interactive wash now). Mobile focus
+// KEEPS chips + verse numbers tappable. Skip while the user is selecting text.
+if(focusMode&&!isMobile&&!(window.getSelection&&String(window.getSelection()))){e.stopPropagation();e.preventDefault();toggleFocus();return;}if(swipeHandlers.onClickCapture)swipeHandlers.onClickCapture(e);},// Tap on blank space (not a word / verse number / control, and not mid-selection)
 // toggles focus mode. A swipe or a finished selection sets defaultPrevented above.
 onClick:e=>{if(e.defaultPrevented)return;if(window.getSelection&&String(window.getSelection()))return;if(e.target.closest&&e.target.closest(".lib-word, .lib-vnum, .lib-flow-vnum, button, a, input, textarea, [contenteditable]"))return;toggleFocus();}};// Notes/highlights are looked up per chapter. Canonical reading is one chapter
 // (ch defaults to selChapter); chronological spans several, so every note helper
