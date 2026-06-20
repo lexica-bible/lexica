@@ -1907,6 +1907,9 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
         const canNext = chronoOn ? (chrono && chronoPos < chrono.passages.length) : selChapter < maxChap;
         return (
           <>
+            {/* Real wash element (not a ::before) so it CAPTURES clicks: the dimmed chrome is
+                non-interactive, and clicking the wash leaves focus mode. */}
+            <div className="lib-focus-wash" onClick={toggleFocus} aria-hidden="true" />
             <button className={"lib-focus-arrow lib-focus-arrow-prev" + (audioDockOn ? " lib-focus-arrow--audio" : "")} aria-label="Previous" disabled={!canPrev} onClick={() => turnPage(-1)}>‹</button>
             <button className={"lib-focus-arrow lib-focus-arrow-next" + (audioDockOn ? " lib-focus-arrow--audio" : "")} aria-label="Next" disabled={!canNext} onClick={() => turnPage(1)}>›</button>
           </>

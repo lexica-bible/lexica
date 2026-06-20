@@ -3695,10 +3695,17 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
 
 /* --- Desktop: darken the surroundings, spotlight the reading --- */
 @media (min-width: 1100px) {
-  .app.focus-mode::before {
-    content: ""; position: fixed; inset: 0;
-    background: rgba(15, 23, 42, 0.5);
-    z-index: 50; pointer-events: none;   /* click-through: panels stay usable while dimmed */
+  /* Focus wash — a real element (rendered in the JSX) so it CAPTURES clicks: the dimmed
+     chrome is non-interactive and clicking the wash leaves focus mode. Dark tint + a soft
+     blur make the surroundings RECEDE so the lit reading page is the only thing the eye
+     catches — that's what earns "distraction-free" (design 2026-06-19). With the background
+     receded, the card no longer needs a heavy shadow to separate. */
+  .app.focus-mode .lib-focus-wash {
+    position: fixed; inset: 0; z-index: 50;
+    background: rgba(12, 17, 29, 0.62);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+    cursor: default;
     animation: focus-dim-in 0.2s ease;
   }
   .app.focus-mode .lib-reading {
@@ -3709,9 +3716,9 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
     overflow-y: auto;                      /* the text scrolls inside the page... */
     overscroll-behavior: contain;          /* ...without scrolling the dark backdrop */
     background: var(--bg);
-    border-radius: 14px;
+    border-radius: 8px;
     padding: 34px 46px 40px;               /* both the top and bottom edges show — like a real page */
-    box-shadow: 0 18px 64px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 4px 28px rgba(0, 0, 0, 0.22);   /* light — the receded background does the separating now */
   }
   /* Focus page scrollbar — same slim-then-wider-on-hover trick as the nav (Chrome via webkit;
      Firefox via the @supports block below). */
