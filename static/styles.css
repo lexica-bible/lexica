@@ -905,7 +905,7 @@ input { font-family: inherit; }
    titles, plain (no chip background). Stays mono — it's a catalog code. */
 .detail-strong-head {
   font-family: var(--f-mono);
-  font-size: 14px;
+  font-size: 18px;
   font-weight: 500;
   color: var(--ink);
   letter-spacing: 0.01em;
@@ -1190,7 +1190,7 @@ input { font-family: inherit; }
 .dverse-n { font-family: var(--f-mono); font-size: 10px; color: var(--accent); background: var(--accent-soft); padding: 2px 6px; border-radius: 4px; vertical-align: super; margin-right: 8px; }
 .dverse-tools { display: flex; align-items: center; gap: 8px; font-size: 12.5px; }
 
-.occ-link { display: inline-flex; align-items: center; gap: 6px; font-family: var(--f-serif); font-size: 17px; color: var(--accent); font-weight: 500; }
+.occ-link { display: inline-flex; align-items: center; gap: 6px; font-family: var(--f-serif); font-size: 17px; color: var(--ai); font-weight: 500; }
 .occ-link:hover { text-decoration: underline; }
 .occ-link--static { color: var(--ink-2); cursor: default; }
 .occ-link--static:hover { text-decoration: none; }
@@ -4294,8 +4294,10 @@ button.study-verse-ref { border: none; }
 
 /* RIGHT — word detail card */
 .wd { border-left: 1px solid var(--rule); background: var(--paper); min-height: 0; display: flex; flex-direction: column; }
-/* Word-study card header: shared .detail-head styles, just a bit more compact. */
+/* Word-study card header: shared .detail-head styles, just a bit more compact.
+   The 14px Strong's number is scoped HERE so it never touches the Library card. */
 .wd .detail-head { padding: 12px 24px 11px; }
+.wd .detail-strong-head { font-size: 14px; }
 .wd-head-r { display: inline-flex; align-items: center; gap: 8px; }
 .wd-strongs { font-family: var(--f-mono); font-size: 14px; color: var(--ink-2); letter-spacing: 0.02em; }
 .wd-overview { display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; color: var(--ink-3); padding: 5px 11px; border-radius: 7px; border: 1px solid var(--rule); background: var(--bg); }
