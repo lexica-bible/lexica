@@ -3733,24 +3733,19 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
 @media (min-width: 1100px) {
   .lib-focus-arrow {
     position: fixed; top: 50%; z-index: 61;
-    display: flex; align-items: center; justify-content: center;
-    width: 50px; height: 50px; padding: 0;
-    font-size: 30px; line-height: 1;
-    color: rgba(255, 255, 255, 0.92);
-    background: rgba(255, 255, 255, 0.10);
-    border: 1px solid rgba(255, 255, 255, 0.25);
-    border-radius: 50%;
+    background: none; border: none; padding: 16px 22px;
+    font-size: 76px; line-height: 1;
+    color: rgba(255, 255, 255, 0.45);
     cursor: pointer;
-    transition: background 0.15s, border-color 0.15s, color 0.15s;
+    transition: color 0.15s;
   }
-  .lib-focus-arrow:hover { background: rgba(255, 255, 255, 0.20); border-color: rgba(255, 255, 255, 0.45); color: #fff; }
+  .lib-focus-arrow:hover { color: #fff; }
   .lib-focus-arrow:disabled { opacity: 0; pointer-events: none; }   /* hide at the first/last */
   /* audio playing → page bottom lifts to 56px, so its middle rises ~16px; match it */
   .lib-focus-arrow--audio { top: calc(50% - 16px); }
-  /* circular buttons hugging just outside each page edge (page 760px wide, centered) — faint
-     backing + border so they read as real page-turn controls, not stray glyphs (design 2026-06-19) */
-  .lib-focus-arrow-prev { left: calc(50% - 392px); transform: translate(-100%, -50%); }
-  .lib-focus-arrow-next { right: calc(50% - 392px); transform: translate(100%, -50%); }
+  /* sit just outside the page edges (page is 760px wide, centered) */
+  .lib-focus-arrow-prev { left: calc(50% - 380px); transform: translate(-100%, -50%); }
+  .lib-focus-arrow-next { right: calc(50% - 380px); transform: translate(100%, -50%); }
 }
 
 /* ============================================================
