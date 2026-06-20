@@ -44,7 +44,7 @@ const WsI = {
 
 // Bottom sheet for the mobile word-study tools — rises from the bottom, drag the
 // grab-zone down past ~110px to dismiss (ported from the design handoff's Sheet).
-function WsSheet({ title, tall, onClose, children }) {
+function WsSheet({ title, tall, titleMono, onClose, children }) {
   const [dy, setDy] = useState(0);
   const [dragging, setDragging] = useState(false);
   const drag = useRef({ active: false, startY: 0 });
@@ -61,7 +61,7 @@ function WsSheet({ title, tall, onClose, children }) {
         <div className="wm-grab" {...grab}>
           <div className="wm-handle" aria-hidden="true"/>
           <div className="wm-sheet-head">
-            <span className="wm-sheet-title">{title}</span>
+            <span className={"wm-sheet-title" + (titleMono ? " wm-sheet-title--mono" : "")}>{title}</span>
             <button className="wm-sheet-x" onClick={onClose} aria-label="Close"><WsI.Close/></button>
           </div>
         </div>
@@ -655,7 +655,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
           </WsSheet>
         )}
         {sheet === "card" && (
-          <WsSheet tall title="Word card" onClose={() => setSheet(null)}>
+          <WsSheet tall title={profile ? profile.strongs : "Word card"} titleMono onClose={() => setSheet(null)}>
             <div className="wd-body wm-card">{renderWordCardInner()}</div>
           </WsSheet>
         )}
