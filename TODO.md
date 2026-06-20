@@ -240,6 +240,13 @@ header still shows an "Under development" badge on these two tabs. Full record: 
    "his love"→"love"); the reader is unchanged. WATCH (accepted trade-off): a VERB whose one Greek word
    glosses to several English words ("we should love") now golds only the head in result lists — refine only
    if it bugs you. Full record + the leftover-`setShowDef` crash lesson: memory `project_ai_search_redesign`.
+   **Library-mirror shell 2026-06-20c (DONE, live):** desktop Word study now mirrors the Library three-zone
+   shell — the right word card floats fixed over the navy header (card head = header height so the divider
+   runs unbroken across, empty state too), columns match the Library (224 rail / 460 card), Strong's size
+   back to the shared 18px, account pill shifted clear (`.app.view-lexicon .hdr-right`). Dist rail: header
+   band height = the search box (lines align), "All books" box removed. **Per-book bar scaling = DEAD END**
+   (behind-text shade / sqrt / power all tried; the 46px track is too narrow to read a curve change — user
+   deployed each and saw no difference; reverted to the original linear). Memory `project_ai_search_redesign`.
 2. **AI curation hard-tune + likely full redesign** — verse selection / "don't spam" / answer shape on
    Ask the corpus. Current = primary/see-all + inline links; adequate, not the end state. Touches ai.py
    prompts + caching. `code: ai.py; memory project_ai_search_architecture`

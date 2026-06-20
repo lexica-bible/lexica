@@ -554,7 +554,14 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   be scoped to `.wd`; NEVER edit the shared rule (it leaks into the Library word card, which the user has
   LOCKED).** Mobile sheets (`WsSheet`) use the shared `useSwipeToDismiss` hook (`.wm-sheet` reserves
   `env(safe-area-inset-bottom)`); `.occ-link` action links are steel-blue `--ai`; results filters are
-  underline `.tg` tabs. Full record + the still-owed dead-CSS sweep: memory `project_ai_search_redesign`.
+  underline `.tg` tabs. Full record: memory `project_ai_search_redesign`.
+- **2026-06-20 — desktop Word study mirrors the Library shell.** The right word card is a fixed full-height
+  panel over the navy header (like the Library's `.detail-side`): card head = header height so the divider
+  runs unbroken across (empty state too, via `.wd .empty-pane::before`), columns match the Library (224px
+  rail / `--sidebar-w` card), Strong's-number size back to the shared 18px, and the account pill is shifted
+  clear with `.app.view-lexicon .hdr-right`. Distribution rail: `.brail-top` height = the search box so the
+  two divider lines align; "All books" lost its box. The per-book bar's scaling is a DEAD END (46px track too
+  narrow to read any curve change — left at the original linear). Memory `project_ai_search_redesign`.
 - Dedicated word study tab — separate from AI Search
 - Flow: search box → word profile → gloss chips → book distribution → verse list
 - Smart search: detects Strong's (G4151, H7307), Greek, Hebrew, English
