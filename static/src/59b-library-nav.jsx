@@ -344,9 +344,18 @@ function MobileBookPicker({ books, selBook, selChapter, nonCanon, nonCanonList, 
   // Open to the book list, not the chapter grid — picking a book steps into chapters.
   const [screen, setScreen] = useState("book");
   const [pickedBook, setPickedBook] = useState(startBook);
-  // Type-to-filter the book list (design handoff 2026-06-20). Filters Bible + non-canon
-  // by name/abbrev; the testament → division grouping stays as the list narrows.
-  const [query, setQuery] = useState("");
+  // Every section (OT, NT, and each non-canonical group) starts collapsed EXCEPT the
+  // one you're currently reading: the testament of the open Bible book, or the active
+  // non-canonical text's group.
+  const [openGroups, setOpenGroups] = useState(() => new Set([
+    nonCanon ? nonCanon.group
+             : (selBook && NT_BOOKS.has(selBook.abbrev) ? "NT" : "OT"),
+  ]));
+  const toggleGroup = (g) => setOpenGroups(s => {
+    const n = new Set(s);
+    n.has(g) ? n.delete(g) : n.add(g);
+    return n;
+  });
   // Same swipe-down-to-close + at-top scroll arming as the hero / xref sheets.
   // ONE stable root so the refs survive the book→chapter screen switch.
   const { sheetRef, scrollRef } = useSwipeToDismiss(onClose);
@@ -373,12 +382,6 @@ function MobileBookPicker({ books, selBook, selChapter, nonCanon, nonCanonList, 
         <div className="plan-toggle mpick-toggle">
           <button className={"plan-toggle-b" + (plan.view !== "days" ? " on" : "")} onClick={() => plan.setView("eras")}>Eras</button>
           <button className={"plan-toggle-b" + (plan.view === "days" ? " on" : "")} onClick={() => plan.setView("days")}>Days</button>
-        </div>
-      )}
-      {!chronoOn && !onChapter && (
-        <div className="mpick-search">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="7" /><path d="m20 20-3.5-3.5" /></svg>
-          <input value={query} onChange={e => setQuery(e.target.value)} placeholder="Find a book" aria-label="Find a book" />
         </div>
       )}
       <div className={"mpick-scroll" + (chronoOn && plan && plan.view === "days" ? " mpick-scroll--plan" : "")} ref={scrollRef}>
@@ -408,85 +411,54 @@ function MobileBookPicker({ books, selBook, selChapter, nonCanon, nonCanonList, 
             );
           })
         ) : onChapter ? (
-          <>
-            <div className="mpick-chcur">{pickedBook.name} · <b>{pickedBook.chapters} chapters</b></div>
-            <div className="mpick-chgrid">
-              {Array.from({ length: pickedBook.chapters }, (_, i) => i + 1).map(n => {
-                const active = isActive(pickedBook) && n === selChapter;
-                return <button key={n} className={"mpick-chtile" + (active ? " on" : "")} onClick={() => onDone(pickedBook, n)}>{n}</button>;
-              })}
-            </div>
-          </>
+          <div className="mpick-grid">
+            {Array.from({ length: pickedBook.chapters }, (_, i) => i + 1).map(n => {
+              const active = isActive(pickedBook) && n === selChapter;
+              return <button key={n} className={"mpick-btn" + (active ? " on" : "")} onClick={() => onDone(pickedBook, n)}>{n}</button>;
+            })}
+          </div>
         ) : (
-          (() => {
-            // Always-expanded book list grouped testament → division, with a type-to-find
-            // filter (design handoff). Non-canonical groups follow as their own sections.
-            const q = query.trim().toLowerCase();
-            const matchB = b => !q || (b.name || "").toLowerCase().includes(q) || (b.abbrev || "").toLowerCase().includes(q);
-            const divsOf = bks => {
-              const order = [], map = {};
-              for (const b of bks) {
-                const d = _BOOK_DIV[b.abbrev] || "Other";
-                if (!map[d]) { map[d] = []; order.push(d); }
-                map[d].push(b);
-              }
-              return order.map(d => ({ div: d, books: map[d] }));
-            };
-            const bibleSecs = [["Old Testament", otBooks], ["New Testament", ntBooks]]
-              .map(([title, bks]) => ({ title, divs: divsOf(bks.filter(matchB)) }))
-              .filter(s => s.divs.length);
-            const ncSecs = (nonCanonList || []).length
-              ? nonCanonGroups(nonCanonList).map(grp => ({
-                  title: grp.group,
-                  items: grp.items.filter(t => !q || (t.name || "").toLowerCase().includes(q)),
-                })).filter(s => s.items.length)
-              : [];
-            if (!bibleSecs.length && !ncSecs.length)
-              return <div className="mpick-empty">No books match “{query.trim()}”.</div>;
+          [["OT", otBooks], ["NT", ntBooks]].filter(([, bks]) => bks.length).map(([label, bks]) => {
+            const open = openGroups.has(label);
             return (
-              <>
-                {bibleSecs.map(sec => (
-                  <div key={sec.title} className="mpick-bsec">
-                    <div className="mpick-test">
-                      <span className="mpick-test-t">{sec.title}</span>
-                      <span className="mpick-test-line" />
-                      <span className="mpick-test-n">{sec.divs.reduce((a, d) => a + d.books.length, 0)} books</span>
-                    </div>
-                    {sec.divs.map(D => (
-                      <div key={D.div}>
-                        <span className="mpick-div">{D.div}</span>
-                        <div className="mpick-bgrid">
-                          {D.books.map(b => (
-                            <button key={b.abbrev} className={"mpick-btile" + (isActive(b) ? " on" : "")} onClick={() => { setPickedBook(b); setScreen("chapter"); }}>
-                              <span className="mpick-btile-ab">{b.abbrev.toUpperCase()}</span>
-                              <span className="mpick-btile-ch">{b.chapters} ch</span>
-                            </button>
-                          ))}
-                        </div>
-                      </div>
+              <div key={label} className="mpick-section">
+                <button className={"mpick-sec-label mpick-sec-btn" + (open ? " open" : "")} onClick={() => toggleGroup(label)} aria-expanded={open}>
+                  <span className="mpick-sec-caret">▸</span>
+                  <span className="mpick-sec-name">{label}</span>
+                  <span className="mpick-sec-count">{bks.length}</span>
+                </button>
+                {open && (
+                  <div className="mpick-grid">
+                    {bks.map(b => (
+                      <button key={b.abbrev} className={"mpick-btn" + (isActive(b) ? " on" : "")} onClick={() => { setPickedBook(b); setScreen("chapter"); }}>
+                        {b.abbrev.toUpperCase()}
+                      </button>
                     ))}
                   </div>
-                ))}
-                {ncSecs.map(sec => (
-                  <div key={sec.title} className="mpick-bsec">
-                    <div className="mpick-test">
-                      <span className="mpick-test-t">{sec.title}</span>
-                      <span className="mpick-test-line" />
-                      <span className="mpick-test-n">{sec.items.length}</span>
-                    </div>
-                    <div className="mpick-nclist">
-                      {sec.items.map(t => (
-                        <button key={t.id} className={"mpick-nctile" + (isActive(t) ? " on" : "")} onClick={() => { setPickedBook(t); setScreen("chapter"); }}>
-                          <span className="mpick-nctile-name">{t.name}</span>
-                          {t.chapters ? <span className="mpick-nctile-ch">{t.chapters} ch</span> : null}
-                        </button>
-                      ))}
-                    </div>
-                  </div>
-                ))}
-              </>
+                )}
+              </div>
             );
-          })()
+          }).concat((nonCanonList || []).length ? nonCanonGroups(nonCanonList).map(grp => {
+            const open = openGroups.has(grp.group);
+            return (
+              <div key={grp.group} className="mpick-section">
+                <button className={"mpick-sec-label mpick-sec-btn" + (open ? " open" : "")} onClick={() => toggleGroup(grp.group)} aria-expanded={open}>
+                  <span className="mpick-sec-caret">▸</span>
+                  <span className="mpick-sec-name">{grp.group}</span>
+                  <span className="mpick-sec-count">{grp.items.length}</span>
+                </button>
+                {open && (
+                  <div className="mpick-grid">
+                    {grp.items.map(t => (
+                      <button key={t.id} className={"mpick-btn mpick-btn-nc" + (isActive(t) ? " on" : "")} onClick={() => { setPickedBook(t); setScreen("chapter"); }}>
+                        {t.name}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          }) : [])
         )}
       </div>
     </div>
