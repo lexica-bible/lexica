@@ -4428,6 +4428,9 @@ button.study-verse-ref { border: none; }
     background: var(--paper); border-radius: 18px 18px 0 0;
     box-shadow: 0 -10px 40px rgba(15,23,42,0.22);
     max-height: 62%; animation: wm-up 0.26s cubic-bezier(0.2,0.8,0.2,1);
+    /* Clear the home indicator / bottom browser bar — the proper way, so the
+       card body keeps a clean 18px and isn't padding-hacked to dodge the chrome. */
+    padding-bottom: env(safe-area-inset-bottom, 0px);
   }
   .wm-sheet.tall { max-height: 90%; height: 90%; }
   @keyframes wm-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
