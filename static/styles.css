@@ -2288,10 +2288,10 @@ input { font-family: inherit; }
 .msheet {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 220;
   background: var(--paper);
-  border-top-left-radius: 20px; border-top-right-radius: 20px;
-  box-shadow: 0 -16px 50px rgba(15,23,42,0.22);
+  border-top-left-radius: 18px; border-top-right-radius: 18px;
+  box-shadow: 0 -20px 60px rgba(15, 23, 42, 0.25);
   padding-bottom: env(safe-area-inset-bottom, 12px);
-  animation: msheet-up 0.28s cubic-bezier(0.2,0.8,0.2,1);
+  animation: slide-up 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
   /* swipe-to-dismiss + scroll: cap height below the top tab bar, scroll the body */
   display: flex; flex-direction: column;
   max-height: calc(100dvh - 64px - env(safe-area-inset-top, 0px));
@@ -4475,14 +4475,14 @@ button.study-verse-ref { border: none; }
   .wm-tab:disabled { opacity: 0.38; }
 
   /* bottom sheets — fixed overlays above the top nav */
-  .wm-scrim { position: fixed; inset: 0; z-index: 120; background: rgba(15,23,42,0.42); animation: wm-fade 0.18s ease; }
-  @keyframes wm-fade { from { opacity: 0; } to { opacity: 1; } }
+  /* scrim + slide-up shared with .detail-sheet so every bottom sheet animates the same */
+  .wm-scrim { position: fixed; inset: 0; z-index: 120; background: rgba(15, 23, 42, 0.4); animation: fade-in 0.2s ease; }
   .wm-sheet {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 121;
     display: flex; flex-direction: column;
     background: var(--paper); border-radius: 18px 18px 0 0;
-    box-shadow: 0 -10px 40px rgba(15,23,42,0.22);
-    max-height: 62%; animation: wm-up 0.26s cubic-bezier(0.2,0.8,0.2,1);
+    box-shadow: 0 -20px 60px rgba(15, 23, 42, 0.25);
+    max-height: 62%; animation: slide-up 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
     /* Clear the home indicator / bottom browser bar — the proper way, so the
        card body keeps a clean 18px and isn't padding-hacked to dodge the chrome. */
     padding-bottom: env(safe-area-inset-bottom, 0px);
