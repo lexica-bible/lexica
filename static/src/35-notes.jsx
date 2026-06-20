@@ -402,7 +402,7 @@ function NotesView({ onOpen }) {
 // Holds account actions (log out) + reading-plan progress management. Built to grow:
 // new account-level options drop in as more .acct-sec blocks.
 const PLAN_TEXT_LABELS = { abp: "ABP", kjv: "KJV", bsb: "BSB", esv: "ESV", niv: "NIV" };
-function AccountModal({ onClose }) {
+function AccountModal({ onClose, anchored }) {
   useNotesVersion();   // re-render after a clear (NotesStore.clearPlan notifies)
   const acct = NotesStore.authInfo();
   const plan = planLoadAll();
@@ -450,8 +450,8 @@ function AccountModal({ onClose }) {
   };
   return (
     <>
-      <div className="auth-scrim" onClick={onClose} />
-      <div className="auth-modal" role="dialog" aria-modal="true" aria-label="Account and options">
+      <div className={anchored ? "acct-pop-scrim" : "auth-scrim"} onClick={onClose} />
+      <div className={"auth-modal" + (anchored ? " acct-pop" : "")} role="dialog" aria-modal={anchored ? undefined : "true"} aria-label="Account and options">
         <div className="auth-modal-head">
           <h3 className="auth-modal-title">Account</h3>
           <button className="detail-close" onClick={onClose} aria-label="Close"><Icon.Close/></button>

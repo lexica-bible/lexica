@@ -199,6 +199,7 @@ function App() {
   const [authEmail, setAuthEmail] = useState(() => { try { return (NotesStore.authInfo() || {}).email || null; } catch (e) { return null; } });
   const [authName, setAuthName] = useState(() => { try { return (NotesStore.authInfo() || {}).name || null; } catch (e) { return null; } });
   const [authOpen, setAuthOpen] = useState(null);   // header "Log in" → sign-in popup
+  const [accountOpen, setAccountOpen] = useState(false);   // header account → dropdown in place
   useEffect(() => { api.statsHit(); }, []);
   useEffect(() => {
     let last;
@@ -296,7 +297,7 @@ function App() {
   return (
     <div className={"app view-" + mainView + " " + ((showWord || showXref || showNote || showLibSummary) ? "has-detail " : "") + (focusMode && mainView === "library" ? "focus-mode" : "")}>
       <Header activeView={mainView} onNavChange={handleNavChange} owner={owner}
-        email={authEmail} name={authName} onLogin={() => setAuthOpen("login")} onAccount={() => handleNavChange("notes")}/>
+        email={authEmail} name={authName} onLogin={() => setAuthOpen("login")} onAccount={() => setAccountOpen(true)}/>
       {isMobile && mainView !== "library" && (
         <div className="mobile-brand-bar">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
@@ -446,6 +447,7 @@ function App() {
       )}
       {resetToken && <AuthModal mode="reset" resetToken={resetToken} onClose={() => setResetToken(null)} />}
       {authOpen && <AuthModal mode={authOpen} onClose={() => setAuthOpen(null)} />}
+      {accountOpen && <AccountModal anchored onClose={() => setAccountOpen(false)} />}
     </div>
   );
 }

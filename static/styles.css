@@ -3543,6 +3543,10 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
 /* Account chip lives in the title row now: just the email + Log out (or Log in / Sign
    up). min-width:0 lets a long email truncate instead of shoving the title. */
 .notes-acct { display: flex; align-items: center; gap: 8px; min-width: 0; }
+/* Desktop has the account dropdown in the navy header, so the in-tab account
+   row (account button / Log in / Sign up) is redundant here. Mobile has no
+   header, so it stays. */
+@media (min-width: 1100px) { .notes-acct { display: none; } }
 /* The email is now a button that opens the account / options panel. */
 .notes-acct-email {
   display: inline-flex; align-items: center; gap: 5px; min-width: 0;
@@ -3653,6 +3657,19 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
   background: var(--paper); border: 1px solid var(--rule); border-radius: 14px;
   box-shadow: var(--shadow-lg); padding: 20px;
 }
+/* Account panel opened from the navy-header button: a dropdown anchored under the
+   button (desktop only — the header is hidden < 1100px), not a centered modal.
+   Transparent scrim still closes it on an outside click. */
+.acct-pop-scrim { position: fixed; inset: 0; background: transparent; z-index: 1100; }
+.acct-pop {
+  left: auto; right: 24px; top: calc(var(--hdr-h) + 6px); transform: none;
+  width: 340px; max-width: calc(100vw - 32px);
+  max-height: calc(100vh - var(--hdr-h) - 24px); overflow-y: auto;
+}
+/* Word study + Library shift the account button left of their right card, so the
+   dropdown follows it (mirrors the .hdr-right shift). */
+.app.view-lexicon .acct-pop,
+.app.view-library .acct-pop { right: calc(var(--sidebar-w) + 36px); }
 .auth-modal-head { display: flex; align-items: center; justify-content: space-between; }
 .auth-modal-title { font-size: 19px; font-weight: 700; color: var(--ink); margin: 0; }
 .auth-modal-sub { font-size: 13px; color: var(--ink-3); margin: 2px 0 16px; }
