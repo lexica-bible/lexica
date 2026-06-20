@@ -417,7 +417,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
         <button key={b.book} className={"brow" + (selectedBook === b.book ? " on" : "")}
           onClick={() => { selectBook(b.book); afterPick && afterPick(); }}>
           <span className="brow-name">{b.name}</span>
-          <span className="brow-bar"><span className="brow-fill" style={{ width: Math.max(8, Math.sqrt(b.count / maxCount) * 100) + "%" }}/></span>
+          <span className="brow-bar"><span className="brow-fill" style={{ width: Math.max(5, Math.pow(b.count / maxCount, 1.8) * 100) + "%" }}/></span>
           <span className="brow-n">{b.count}</span>
         </button>
       ))}
