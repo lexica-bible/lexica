@@ -31,7 +31,7 @@ function useFitText(ref, text, opts) {
 // ============================================================
 // HEADER
 // ============================================================
-function Header({ activeView, onNavChange, owner, email, onLogin, onAccount }) {
+function Header({ activeView, onNavChange, owner, email, name, onLogin, onAccount }) {
   return (
     <header className="hdr">
       <div className="hdr-inner">
@@ -57,7 +57,7 @@ function Header({ activeView, onNavChange, owner, email, onLogin, onAccount }) {
         </nav>
         <div className="hdr-right">
           {email
-            ? <button className="hdr-acct" onClick={onAccount} title="Your account">{email}</button>
+            ? <button className="hdr-acct" onClick={onAccount} title="Your account">{name || email}</button>
             : <button className="hdr-login" onClick={onLogin}>Log in</button>}
         </div>
       </div>

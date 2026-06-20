@@ -197,13 +197,18 @@ function App() {
   // the private Stats tab. Re-check only when the signed-in email actually changes.
   const [owner, setOwner] = useState(false);
   const [authEmail, setAuthEmail] = useState(() => { try { return (NotesStore.authInfo() || {}).email || null; } catch (e) { return null; } });
+  const [authName, setAuthName] = useState(() => { try { return (NotesStore.authInfo() || {}).name || null; } catch (e) { return null; } });
   const [authOpen, setAuthOpen] = useState(null);   // header "Log in" → sign-in popup
   useEffect(() => { api.statsHit(); }, []);
   useEffect(() => {
     let last;
     const check = () => {
       let email = null;
-      try { email = (NotesStore.authInfo() || {}).email || null; } catch (e) {}
+      try {
+        const ai = NotesStore.authInfo() || {};
+        email = ai.email || null;
+        setAuthName(ai.name || null);
+      } catch (e) {}
       setAuthEmail(email);
       if (email === last) return;
       last = email;
@@ -291,7 +296,7 @@ function App() {
   return (
     <div className={"app view-" + mainView + " " + ((showWord || showXref || showNote || showLibSummary) ? "has-detail " : "") + (focusMode && mainView === "library" ? "focus-mode" : "")}>
       <Header activeView={mainView} onNavChange={handleNavChange} owner={owner}
-        email={authEmail} onLogin={() => setAuthOpen("login")} onAccount={() => handleNavChange("notes")}/>
+        email={authEmail} name={authName} onLogin={() => setAuthOpen("login")} onAccount={() => handleNavChange("notes")}/>
       {isMobile && mainView !== "library" && (
         <div className="mobile-brand-bar">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none">

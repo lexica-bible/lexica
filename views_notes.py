@@ -103,6 +103,10 @@ def _ensure_tables():
         cols = [r[1] for r in conn.execute("PRAGMA table_info(users)").fetchall()]
         if "role" not in cols:
             conn.execute("ALTER TABLE users ADD COLUMN role TEXT NOT NULL DEFAULT 'user'")
+        # Optional display name (added 2026-06-20) — shown instead of the email in the
+        # header/account chrome when set. Email stays the account's identity.
+        if "name" not in cols:
+            conn.execute("ALTER TABLE users ADD COLUMN name TEXT NOT NULL DEFAULT ''")
         conn.commit()
     finally:
         conn.close()
@@ -222,7 +226,7 @@ def signup():
         conn.commit()
     finally:
         conn.close()
-    return jsonify({"token": token, "email": email})
+    return jsonify({"token": token, "email": email, "name": ""})
 
 
 @bp.route("/api/auth/login", methods=["POST"])
@@ -234,15 +238,16 @@ def login():
     _ensure_tables()
     conn = notes_db()
     try:
-        row = conn.execute("SELECT id, pass_hash FROM users WHERE email = ?", (email,)).fetchone()
+        row = conn.execute("SELECT id, pass_hash, name FROM users WHERE email = ?", (email,)).fetchone()
         if not row or not check_password_hash(row["pass_hash"], password):
             return jsonify({"error": "Wrong email or password."}), 401
         token = secrets.token_urlsafe(24)
         conn.execute("INSERT INTO tokens (token, user_id, created) VALUES (?,?,?)", (token, row["id"], _now()))
         conn.commit()
+        name = row["name"] or ""
     finally:
         conn.close()
-    return jsonify({"token": token, "email": email})
+    return jsonify({"token": token, "email": email, "name": name})
 
 
 @bp.route("/api/auth/logout", methods=["POST"])
@@ -293,9 +298,10 @@ def google_auth():
     try:
         # Find-or-create by email — a Google login and an email/password login with
         # the same address are the same account (Google verified they own it).
-        row = conn.execute("SELECT id FROM users WHERE email = ?", (email,)).fetchone()
+        row = conn.execute("SELECT id, name FROM users WHERE email = ?", (email,)).fetchone()
         if row:
             uid = row["id"]
+            name = row["name"] or ""
         else:
             cur = conn.execute(
                 "INSERT INTO users (email, pass_hash, created) VALUES (?,?,?)",
@@ -304,12 +310,13 @@ def google_auth():
                 (email, generate_password_hash(secrets.token_urlsafe(16)), _now()),
             )
             uid = cur.lastrowid
+            name = ""
         token = secrets.token_urlsafe(24)
         conn.execute("INSERT INTO tokens (token, user_id, created) VALUES (?,?,?)", (token, uid, _now()))
         conn.commit()
     finally:
         conn.close()
-    return jsonify({"token": token, "email": email})
+    return jsonify({"token": token, "email": email, "name": name})
 
 
 @bp.route("/api/auth/me", methods=["GET"])
@@ -320,12 +327,12 @@ def me():
         uid = _user_for_token(conn)
         if uid is None:
             return jsonify({"error": "not signed in"}), 401
-        row = conn.execute("SELECT email FROM users WHERE id = ?", (uid,)).fetchone()
+        row = conn.execute("SELECT email, name FROM users WHERE id = ?", (uid,)).fetchone()
     finally:
         conn.close()
     if not row:
         return jsonify({"error": "not signed in"}), 401
-    return jsonify({"email": row["email"], "role": role_for_token()})
+    return jsonify({"email": row["email"], "name": row["name"] or "", "role": role_for_token()})
 
 
 def _site_base():
@@ -465,6 +472,58 @@ def set_password():
         conn.commit()
     except sqlite3.Error:
         return jsonify({"error": "Could not set password."}), 500
+    finally:
+        conn.close()
+    return jsonify({"ok": True})
+
+
+@bp.route("/api/auth/set-name", methods=["POST"])
+@limiter.limit("60 per hour")
+def set_name():
+    """Set/clear the optional display name for the signed-in account. Empty string
+    clears it (the UI then falls back to the email). Needs a bearer token."""
+    try:
+        body = json.loads(request.get_data(cache=False) or b"{}")
+    except (ValueError, TypeError):
+        body = {}
+    name = (body or {}).get("name")
+    name = (name if isinstance(name, str) else "").strip()[:40]
+    _ensure_tables()
+    conn = notes_db()
+    try:
+        uid = _user_for_token(conn)
+        if uid is None:
+            return jsonify({"error": "not signed in"}), 401
+        conn.execute("UPDATE users SET name = ? WHERE id = ?", (name, uid))
+        conn.commit()
+    except sqlite3.Error:
+        return jsonify({"error": "Could not save the name."}), 500
+    finally:
+        conn.close()
+    return jsonify({"ok": True, "name": name})
+
+
+@bp.route("/api/auth/delete-account", methods=["POST"])
+@limiter.limit("10 per hour")
+def delete_account():
+    """Permanently delete the signed-in account and ALL its data — the user row,
+    every note/highlight/bookmark, the reading-plan progress, every login token,
+    and any pending reset links. No undo. Requires the account's bearer token."""
+    _ensure_tables()
+    conn = notes_db()
+    try:
+        uid = _user_for_token(conn)
+        if uid is None:
+            return jsonify({"error": "not signed in"}), 401
+        owner = "u" + str(uid)
+        conn.execute("DELETE FROM notes WHERE code = ?", (owner,))
+        conn.execute("DELETE FROM plan WHERE code = ?", (owner,))
+        conn.execute("DELETE FROM password_resets WHERE user_id = ?", (uid,))
+        conn.execute("DELETE FROM tokens WHERE user_id = ?", (uid,))
+        conn.execute("DELETE FROM users WHERE id = ?", (uid,))
+        conn.commit()
+    except sqlite3.Error:
+        return jsonify({"error": "Could not delete the account. Try again."}), 500
     finally:
         conn.close()
     return jsonify({"ok": True})

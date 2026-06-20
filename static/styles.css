@@ -235,9 +235,11 @@ input { font-family: inherit; }
   background: rgba(255,255,255,0.06);
 }
 .hdr-right { margin-left: auto; display: flex; align-items: center; gap: 14px; }
-/* Word study floats its right card (--sidebar-w) over the navy bar's right edge,
-   so shift the account control clear of it. Header is hidden < 1100, so no media query needed. */
-.app.view-lexicon .hdr-right { margin-right: calc(var(--sidebar-w) + 12px); }
+/* Word study + Library both float a right card (--sidebar-w) over the navy bar's
+   right edge, so shift the account control clear of it. Header is hidden < 1100,
+   so no media query needed. */
+.app.view-lexicon .hdr-right,
+.app.view-library .hdr-right { margin-right: calc(var(--sidebar-w) + 12px); }
 /* Account control in the navy header (desktop only — the header is hidden < 1100px). */
 .hdr-login {
   font-size: 13px; font-weight: 600; color: #0f1b2d;
@@ -247,11 +249,10 @@ input { font-family: inherit; }
 .hdr-login:hover { background: #fff; }
 .hdr-acct {
   font-size: 13px; color: #a8b0c0;
-  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 999px; padding: 6px 13px; cursor: pointer;
+  background: none; border: none; padding: 6px 2px; cursor: pointer;
   max-width: 190px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
 }
-.hdr-acct:hover { color: #e9ecf2; border-color: rgba(255,255,255,0.25); }
+.hdr-acct:hover { color: #e9ecf2; }
 .hdr-icon-btn {
   width: 34px; height: 34px;
   border-radius: 6px;
@@ -1718,8 +1719,8 @@ input { font-family: inherit; }
 .pericope-row { margin-bottom: 4px; }
 .pericope-row .lib-vnum { visibility: hidden; margin-top: 0; }
 .pericope-row .pericope-heading { flex: 1; }
-.lib-text-words > .pericope-row:first-child .pericope-heading,
-.lib-prose-flow > .pericope-row:first-child .pericope-heading { margin-top: 0; }
+/* The chapter-opening heading keeps its top gap in chip too, matching prose's
+   book-like margin (the old first-child reset zeroed it in chip only). */
 
 /* Prose continuous flow (non-poetry) */
 .lib-prose-flow { line-height: 1.85; }
@@ -2203,6 +2204,8 @@ input { font-family: inherit; }
     min-height: calc(100dvh - var(--bar-h) * 2);
   }
   .lib-text-words { --lib-line-h: 1.65; }
+  /* Trim the section / chapter-top book margin on phones (both chip + prose). */
+  .pericope-heading { margin-top: 0.85rem; }
   .lib-verse-row { margin-bottom: 3px; }
   /* Chip: smaller word size to fit more per line */
   .lib-iw-strongs { font-size: 9px; }
@@ -3569,6 +3572,13 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
 .acct-plan-clearall:hover { color: var(--accent); }
 .acct-logout { background: var(--ctl-bg, var(--bg-sunk)); color: var(--ink); }
 .acct-logout:hover:not(:disabled) { background: var(--rule); color: var(--ink); }
+.acct-delete {
+  margin-top: 8px; font-size: 12.5px; color: #b4453b; cursor: pointer;
+  background: none; border: 1px solid color-mix(in oklab, #b4453b 45%, transparent);
+  border-radius: 6px; padding: 6px 12px;
+}
+.acct-delete:hover:not(:disabled) { background: color-mix(in oklab, #b4453b 12%, transparent); border-color: #b4453b; }
+.acct-delete:disabled { opacity: 0.6; cursor: default; }
 
 /* Mobile: compact the Notes-tab header so the list isn't pushed off-screen.
    Smaller title, tighter spacing, the explanation line dropped, and the

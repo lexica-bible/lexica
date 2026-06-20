@@ -182,7 +182,7 @@ const NotesStore = (function () {
       });
       const data = await res.json().catch(() => ({}));
       if (!res.ok) return { ok: false, error: data.error || "Something went wrong." };
-      setAuth({ token: data.token, email: data.email });
+      setAuth({ token: data.token, email: data.email, name: data.name || null });
       syncNow();   // push local notes up + pull the account's down
       return { ok: true, email: data.email };
     } catch (e) {
@@ -283,7 +283,7 @@ const NotesStore = (function () {
 
     // --- account API ---
     auth: getAuth,
-    authInfo() { const a = getAuth(); return { email: a && a.email, token: a && a.token, syncing, last: lastSync }; },
+    authInfo() { const a = getAuth(); return { email: a && a.email, name: a && a.name, token: a && a.token, syncing, last: lastSync }; },
     signup(email, password) { return authPost("/api/auth/signup", email, password); },
     login(email, password) { return authPost("/api/auth/login", email, password); },
     // Ask the server to email a reset link. Always resolves ok (the server never
@@ -322,6 +322,36 @@ const NotesStore = (function () {
         return { ok: false, error: "Network error." };
       }
     },
+    // Set/clear the optional display name for the signed-in account. Empty clears it.
+    async setName(name) {
+      const a = getAuth();
+      if (!a || !a.token) return { ok: false, error: "Not signed in." };
+      try {
+        const res = await fetch("/api/auth/set-name", {
+          method: "POST",
+          headers: { "Content-Type": "application/json", "Authorization": "Bearer " + a.token },
+          body: JSON.stringify({ name }),
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) return { ok: false, error: data.error || "Could not save." };
+        setAuth({ ...a, name: data.name || null });
+        return { ok: true, name: data.name || null };
+      } catch (e) {
+        return { ok: false, error: "Network error." };
+      }
+    },
+    // Pull the account's email/name fresh from the server (keeps the name in sync
+    // across devices and fills it in for sessions that signed in before the feature).
+    async refreshAccount() {
+      const a = getAuth();
+      if (!a || !a.token) return;
+      try {
+        const res = await fetch("/api/auth/me", { headers: { "Authorization": "Bearer " + a.token } });
+        if (!res.ok) return;
+        const data = await res.json().catch(() => ({}));
+        if (data && data.email) setAuth({ ...a, email: data.email, name: data.name || null });
+      } catch (e) {}
+    },
     // Sign in with the signed token Google handed the browser.
     async googleLogin(credential) {
       try {
@@ -332,7 +362,7 @@ const NotesStore = (function () {
         });
         const data = await res.json().catch(() => ({}));
         if (!res.ok) return { ok: false, error: data.error || "Google sign-in failed." };
-        setAuth({ token: data.token, email: data.email });
+        setAuth({ token: data.token, email: data.email, name: data.name || null });
         syncNow();
         return { ok: true, email: data.email };
       } catch (e) {
@@ -347,13 +377,33 @@ const NotesStore = (function () {
       clearTimeout(syncTimer);
       setAuth(null);
     },
+    // Permanently delete the account + all its server data, then log out locally.
+    // Browser-local notes on THIS device are left as-is (the account is gone, but the
+    // device's own copy stays usable and can seed a fresh account later).
+    async deleteAccount() {
+      const a = getAuth();
+      if (!a || !a.token) return { ok: false, error: "Not signed in." };
+      try {
+        const res = await fetch("/api/auth/delete-account", {
+          method: "POST",
+          headers: { "Authorization": "Bearer " + a.token },
+        });
+        const data = await res.json().catch(() => ({}));
+        if (!res.ok) return { ok: false, error: data.error || "Could not delete the account." };
+        clearTimeout(syncTimer);
+        setAuth(null);
+        return { ok: true };
+      } catch (e) {
+        return { ok: false, error: "Network error." };
+      }
+    },
     syncNow,
     syncPlanNow, schedulePlanSync, clearPlan,
   };
 })();
 
 // On load, if signed in, pull once so this device catches up.
-if (NotesStore.auth()) { setTimeout(() => NotesStore.syncNow(), 400); }
+if (NotesStore.auth()) { setTimeout(() => NotesStore.syncNow(), 400); NotesStore.refreshAccount(); }
 
 // Re-render a component whenever the note store changes.
 function useNotesVersion() {

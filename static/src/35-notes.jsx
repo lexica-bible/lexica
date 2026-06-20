@@ -332,7 +332,7 @@ function NotesView({ onOpen }) {
           <div className="notes-acct">
             {acct.email ? (
               <button className="notes-acct-email" title="Account & options" onClick={() => setAcctOpen(true)}>
-                <span className="notes-acct-addr">{acct.email}</span>
+                <span className="notes-acct-addr">{acct.name || acct.email}</span>
                 <span className="notes-acct-caret" aria-hidden="true">▾</span>
               </button>
             ) : (
@@ -425,6 +425,29 @@ function AccountModal({ onClose }) {
     setPwMsg(r.ok ? "Password updated." : (r.error || "Couldn't update."));
     if (r.ok) setPw("");
   };
+  const [nm, setNm] = useState(acct.name || "");
+  const [nmMsg, setNmMsg] = useState("");
+  const [nmBusy, setNmBusy] = useState(false);
+  const saveNm = async () => {
+    if (nmBusy) return;
+    setNmBusy(true); setNmMsg("");
+    const r = await NotesStore.setName(nm);
+    setNmBusy(false);
+    setNmMsg(r.ok ? (nm.trim() ? "Saved." : "Name cleared.") : (r.error || "Couldn't save."));
+  };
+  const [delArm, setDelArm] = useState(false);
+  const [delText, setDelText] = useState("");
+  const [delBusy, setDelBusy] = useState(false);
+  const [delMsg, setDelMsg] = useState("");
+  const deleteAcct = async () => {
+    if (delBusy) return;
+    if (delText.trim().toLowerCase() !== "delete") { setDelMsg('Type "delete" to confirm.'); return; }
+    setDelBusy(true); setDelMsg("");
+    const r = await NotesStore.deleteAccount();
+    setDelBusy(false);
+    if (r.ok) onClose();
+    else setDelMsg(r.error || "Couldn't delete the account.");
+  };
   return (
     <>
       <div className="auth-scrim" onClick={onClose} />
@@ -434,6 +457,18 @@ function AccountModal({ onClose }) {
           <button className="detail-close" onClick={onClose} aria-label="Close"><Icon.Close/></button>
         </div>
         <p className="auth-modal-sub">{acct.email}</p>
+
+        <div className="acct-sec">
+          <div className="acct-sec-h">Display name</div>
+          <div className="acct-pw-row">
+            <input className="auth-input" type="text" placeholder="Optional — shown instead of your email"
+              value={nm} maxLength={40} onChange={(e) => setNm(e.target.value)}
+              onKeyDown={(e) => { if (e.key === "Enter") saveNm(); }} />
+            <button className="acct-plan-clear" onClick={saveNm} disabled={nmBusy}>{nmBusy ? "…" : "Save"}</button>
+          </div>
+          {nmMsg && <div className="auth-fine">{nmMsg}</div>}
+          <div className="acct-empty">Leave blank to show your email instead.</div>
+        </div>
 
         <div className="acct-sec">
           <div className="acct-sec-h">Reading plan progress</div>
@@ -467,6 +502,29 @@ function AccountModal({ onClose }) {
         </div>
 
         <button className="auth-submit acct-logout" onClick={() => { NotesStore.logout(); onClose(); }}>Log out</button>
+
+        <div className="acct-sec">
+          <div className="acct-sec-h">Delete account</div>
+          <div className="acct-empty">Permanently removes your account and everything saved to it — notes, highlights, bookmarks and reading-plan progress. No undo.</div>
+          {!delArm ? (
+            <button className="acct-delete" onClick={() => { setDelArm(true); setDelMsg(""); setDelText(""); }}>Delete my account</button>
+          ) : (
+            <div className="acct-del-confirm">
+              <div className="acct-empty">Type <b>delete</b> to confirm:</div>
+              <div className="acct-pw-row">
+                <input className="auth-input" type="text" autoFocus placeholder="delete" autoComplete="off"
+                  value={delText} onChange={(e) => setDelText(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === "Enter") deleteAcct(); }} />
+                <button className="acct-delete" onClick={deleteAcct}
+                  disabled={delBusy || delText.trim().toLowerCase() !== "delete"}>
+                  {delBusy ? "Deleting…" : "Delete"}
+                </button>
+              </div>
+              <button className="acct-plan-clearall" onClick={() => { setDelArm(false); setDelText(""); setDelMsg(""); }}>Cancel</button>
+            </div>
+          )}
+          {delMsg && <div className="auth-fine">{delMsg}</div>}
+        </div>
       </div>
     </>
   );
