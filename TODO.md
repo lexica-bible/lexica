@@ -226,16 +226,16 @@ header still shows an "Under development" badge on these two tabs. Full record: 
 - Inline citations in AI answers (verse→reader, Strong's→Word study); Hebrew key_strongs chip bug fixed.
 
 **Still open (parked — pick up later):**
-1. **Visual fidelity gaps.** Word study DONE (2026-06-19b, 3881254): English results = collapsible
-   pinned `.glsenses` card; mobile = full design-handoff layout (context strip + bottom `.wm-tabs` tools
-   bar → `WsSheet` sheets). REMAINING: the **Ask the corpus** tab vs its mockup (desktop + mobile).
+1. **Visual fidelity gaps.** Desktop Word study DONE (2026-06-19b, 3881254): English results =
+   collapsible pinned `.glsenses` card. **Mobile Word study FIRST CUT was WRONG — being reworked in a
+   separate session** (top nav must be ICON-ONLY per the reference, I left the labels; the new bottom
+   tools bar broke the existing bottom nav). REMAINING: the mobile redo + the **Ask the corpus** tab vs
+   its mockup (desktop + mobile). Reference: `design/_mobile_preview/design_handoff_word_study/`.
 2. **AI curation hard-tune + likely full redesign** — verse selection / "don't spam" / answer shape on
    Ask the corpus. Current = primary/see-all + inline links; adequate, not the end state. Touches ai.py
    prompts + caching. `code: ai.py; memory project_ai_search_architecture`
-3. **Mobile polish** — Word study mobile DONE (above; wants a live eyeball — built off measured live
-   layout, not live-data-verified). Ask-the-corpus mobile still first-pass.
-4. **"AndG." artifact** leaking into ABP prose (e.g. Zec 9:11) — pre-existing, small.
-5. **Auto-open the top word on an English search** (mockup does it; left as "pick a word"). Small, user's call.
+3. **"AndG." artifact** leaking into ABP prose (e.g. Zec 9:11) — pre-existing, small.
+4. **Auto-open the top word on an English search** (mockup does it; left as "pick a word"). Small, user's call.
 
 > Note: you revisit these on your own schedule — Claude shouldn't keep pitching them as "next steps."
 

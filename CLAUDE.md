@@ -527,9 +527,12 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   helpers. **Mobile word study (<1100px) is its own layout** — LexiconView branches `if (isMobile)`
   before the desktop `.ws` return: context strip (`.wm-ctx`) → reading area (`.wm-main`) → bottom tools
   bar (`.wm-tabs`: Search · Distribution · Word card · Views), each a drag-to-dismiss `WsSheet` bottom
-  sheet. Sheets reuse `.brow`/`.mseg`/`.wd-*`; only `.wm-*` chrome is new CSS. Global nav stays the app's
-  existing top bar (`.mobile-tabs`, fixed 56px). Mobile design source +
-  `design/_mobile_preview/design_handoff_word_study/`. Full record: memory `project_ai_search_redesign`.
+  sheet. Sheets reuse `.brow`/`.mseg`/`.wd-*`; only `.wm-*` chrome is new CSS. The desktop results card
+  is fine. **The MOBILE pass was WRONG and is being reworked in a separate session (2026-06-19b) — treat
+  the `.wm-*` details above as PROVISIONAL.** Misses vs the reference design: the top nav must be ICON-ONLY
+  (the reference strips the text labels) — left untouched/labels still on; and the new bottom tools bar
+  broke/duplicated the existing bottom nav. Reference: `design/_mobile_preview/design_handoff_word_study/`
+  (`word-study-mobile.jsx`/`.css`). Full record: memory `project_ai_search_redesign`.
 - Dedicated word study tab — separate from AI Search
 - Flow: search box → word profile → gloss chips → book distribution → verse list
 - Smart search: detects Strong's (G4151, H7307), Greek, Hebrew, English
