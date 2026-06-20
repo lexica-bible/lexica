@@ -746,7 +746,6 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
                 {loading ? <span className="spinner"/> : <Icon.ArrowRight/>}
               </button>
             </form>
-            <div className="search-hint">One word looks it up · a question opens Ask the corpus</div>
           </div>
         </div>
 
