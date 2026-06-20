@@ -1308,8 +1308,9 @@ input { font-family: inherit; }
   display: inline-block;
   font-family: var(--f-mono);
   font-size: 10.5px;
-  color: var(--accent);          /* clickable ref → plain accent link text, NO fill (design 2026-06-19):
-                                    the gold matched word is the only filled highlight per row */
+  color: var(--ink-3);           /* muted-ink reference mark, NO fill (design 2026-06-19): crisp
+                                    citation, not a faint code-y link; the gold matched word is the
+                                    only filled highlight per row */
   background: none;
   padding: 0;
   white-space: nowrap;
