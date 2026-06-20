@@ -689,8 +689,9 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
           </WsSheet>
         )}
         {sheet === "search" && (
-          <WsSheet title="Search" onClose={() => setSheet(null)}>
-            <div className="wm-searchsheet">
+          <>
+            <div className="wm-scrim" onClick={() => setSheet(null)}/>
+            <div className="wm-searchtop">
               <form className="wm-search" onSubmit={(e) => { setSheet(null); handleSubmit(e); }}>
                 <WsI.Search className="wm-search-i"/>
                 <input className="wm-search-input" type="text" value={query} autoFocus
@@ -705,7 +706,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
                 ))}
               </div>
             </div>
-          </WsSheet>
+          </>
         )}
       </div>
     );
