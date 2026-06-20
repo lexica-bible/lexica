@@ -254,6 +254,18 @@ header still shows an "Under development" badge on these two tabs. Full record: 
      stacked in the chat thread pile up fast. Rework how occurrences are presented in the thread (collapse /
      summarize / cap-with-see-all) so a turn isn't a wall of verses. Part of the answer-shape redesign above.
 4. **Auto-open the top word on an English search** (mockup does it; left as "pick a word"). Small, user's call.
+   - **Book distribution now lands on "All books" (DONE 2026-06-20, commit 62f1b48).** A word search no
+     longer auto-opens the busiest book + dumps its verses (`_topBook`/`_openTopBook` removed). Trade-off the
+     user accepted: the center verse column is then empty ("pick a book"). OPEN/LATER: put real landing
+     content in that empty center. (Reverted once mid-session by mistake, then reapplied — KEEP it.)
+   - **"All" on the Word-study ABP/KJV toggle = PARKED.** Not an oversight: a merged All double-counts the NT
+     (ABP + KJV both tag the same NT verses); backend `lexicon_profile` deliberately collapses `corpus=all`.
+     Needs a rule for counting the NT before building. Memory `project_ai_search_redesign`.
+5. **Ask-the-corpus MOBILE viewport — DONE 2026-06-20 (commit aca7b91).** `.ac` was `100vh - hdr - 56px`
+   (overshot the screen → page drifted every direction + a big gap under the pinned input). Now `100dvh -
+   --bar-h - safe-top` + `overflow:hidden` (only the inner chat scrolls), `.app.view-corpus .main` bottom pad
+   zeroed, safe-area moved onto the composer. Rule: full-screen mobile tab = 100dvh minus the chrome bars,
+   never 100vh + a header offset.
 6. **Verse-result rows clickable end-to-end — DONE 2026-06-19 (commit 45c7a43).** The whole `.corpus-verse`
    row is now the tap target → clean tap/click jumps to the verse (`onReadInContext`); the ref stays a real
    `<button>` (`stopPropagation`) for keyboard/screen-reader users. Drag-to-select / active text selection

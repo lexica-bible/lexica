@@ -367,7 +367,9 @@ rules + gotchas; open the named memory for the backstory.
   hues):** `--accent` = STEEL-BLUE (oklch 240, primary links/active), `--ai` = VIOLET (280, AI features),
   `--hl-match` = `#f0d27a` (the ONE shared gold for a matched/target word — used by `.corpus-hit` +
   `.lib-search-mark`, fixed across themes). **Gold (`--gold`) is RESERVED for target words ONLY** — active
-  tabs, count pills, etc. use `--accent`. Navy = brand header only. Memory `project_ai_search_redesign`.
+  tabs, count pills, etc. use `--accent`. Navy = brand header + the chronological "you are here" active-passage
+  rule (one shared `.nav-passage.on/.plan-passage.on/.mpick-passage.on`, dark falls back to `--spine-nt`; see
+  memory `project_chronological_tab`). Memory `project_ai_search_redesign`.
 - Desktop scrollbars slim app-wide + `html { scrollbar-gutter: stable }` reserves the gutter so
   swapping ABP↔KJV never shifts layout. Fonts load **`display=optional`, NOT `swap`**
   (templates/index.html) — kills the mobile toolbar reload flash. Don't switch back.
