@@ -223,7 +223,7 @@ function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, o
             <div key={m.n} ref={el => { if (el) monthRefs.current[m.n] = el; }}
               className={"plan-month" + (mOpen ? " open" : "") + (hasReading ? " plan-month--reading" : "")}>
               <button className="plan-month-head" onClick={() => toggleMonth(m.n)} aria-expanded={mOpen}>
-                <span className="plan-month-name" title={ZODIAC[m.n - 1].sign}>{ZODIAC[m.n - 1].glyph} {ZODIAC[m.n - 1].heb}</span>
+                <span className="plan-month-name">{ZODIAC[m.n - 1].heb}</span>
                 <span className="plan-month-range">Days {m.first}–{m.last}</span>
                 <span className="plan-month-done">{doneInMonth}/{m.days.length}</span>
               </button>
