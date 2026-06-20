@@ -333,6 +333,41 @@ input { font-family: inherit; }
   background: var(--bg-sunk); border-radius: 3px; padding: 0 4px; margin-right: 6px;
 }
 
+/* Collapsible "words rendered" results card (English search) — design 2026-06-19.
+   Stays pinned above the occurrences once a word is picked; the chosen row gets
+   the navy left-spine (.glrow.on). */
+.glsenses { margin: 0 2px 18px; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); overflow: hidden; }
+.glsenses-head { display: flex; align-items: center; gap: 11px; width: 100%; text-align: left; padding: 11px 14px; background: var(--bg-sunk); border: none; cursor: pointer; transition: background .12s; }
+.glsenses.open .glsenses-head { border-bottom: 1px solid var(--rule); }
+.glsenses-head:hover { background: color-mix(in oklab, var(--bg-sunk) 55%, var(--bg)); }
+.glsenses-l { font-size: 11.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); flex: 0 0 auto; }
+.glsenses-l b { color: var(--ink); font-weight: 700; }
+.glsenses-cur { display: inline-flex; align-items: baseline; gap: 7px; min-width: 0; overflow: hidden; }
+.glsenses-cur-gk { font-family: var(--f-greek); font-size: 16px; color: var(--ink); flex: 0 0 auto; }
+.glsenses-cur-gk.heb { direction: rtl; }
+.glsenses-cur-tr { font-family: var(--f-serif); font-style: italic; font-size: 13px; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.glsenses-tog { margin-left: auto; display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--accent); flex: 0 0 auto; }
+.glsenses-tog svg { width: 13px; height: 13px; transition: transform .18s; }
+.glsenses.open .glsenses-tog svg { transform: rotate(180deg); }
+.glsenses-empty { padding: 14px; font-size: 13px; color: var(--ink-3); }
+.glsenses-rows { display: flex; flex-direction: column; }
+.glrow { display: flex; align-items: flex-start; gap: 13px; width: 100%; text-align: left; padding: 12px 14px; border: none; border-bottom: 1px solid var(--rule); background: transparent; cursor: pointer; transition: background .12s; }
+.glrow:last-child { border-bottom: none; }
+.glrow:hover { background: var(--bg); }
+.glrow.on { background: var(--accent-soft); box-shadow: inset 3px 0 0 var(--accent); }
+.glrow-s { font-family: var(--f-mono); font-size: 10.5px; color: var(--ink-3); background: var(--bg-sunk); border: 1px solid var(--rule); padding: 3px 7px; border-radius: 5px; flex: 0 0 auto; margin-top: 2px; }
+.glrow.on .glrow-s { background: var(--paper); border-color: color-mix(in oklab, var(--accent) 30%, var(--rule)); color: var(--accent); }
+.glrow-main { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
+.glrow-top { display: flex; align-items: baseline; gap: 9px; }
+.glrow-gk { font-family: var(--f-greek); font-size: 21px; color: var(--ink); line-height: 1.05; }
+.glrow-gk.heb { direction: rtl; }
+.glrow-tr { font-family: var(--f-serif); font-style: italic; font-size: 14px; color: var(--ink-2); }
+.glrow-rend { display: grid; grid-template-columns: 31px 1fr; gap: 9px; font-size: 12.5px; color: var(--ink-2); line-height: 1.45; }
+.glrow-k { font-family: var(--f-mono); font-size: 9px; color: var(--ink-4); background: var(--bg-sunk); padding: 2px 0; border-radius: 3px; height: fit-content; letter-spacing: .04em; text-align: center; margin-top: 1px; }
+.glrow-occ { display: inline-flex; align-items: center; gap: 4px; font-family: var(--f-mono); font-size: 13px; color: var(--ink-3); flex: 0 0 auto; margin-top: 3px; }
+.glrow-occ svg { color: var(--ink-4); width: 13px; height: 13px; }
+.glrow.on .glrow-occ, .glrow.on .glrow-occ svg { color: var(--accent); }
+
 
 /* Back link from profile to groupings */
 .lexicon-back {
@@ -4324,4 +4359,109 @@ button.study-verse-ref { border: none; }
   .ws-mobi-b:hover { border-color: var(--ink-3); }
   .results-col { padding: 16px 16px 60px; }
   .wd-greek { font-size: 48px; }
+
+  /* ---- MOBILE word study: context strip · reading · bottom tools · sheets
+     (design handoff "Word Study Mobile"). The global nav stays the top bar. ---- */
+  .view-lexicon .main { padding-bottom: 0; }
+  .wm {
+    display: flex; flex-direction: column;
+    height: calc(100vh - 56px); min-height: 0;
+    background: var(--bg);
+  }
+  /* context strip — which word is open; tap opens the word card sheet */
+  .wm-ctx {
+    flex: 0 0 auto; display: flex; align-items: center; gap: 10px;
+    width: 100%; text-align: left; padding: 9px 16px;
+    border-bottom: 1px solid var(--rule); background: var(--paper);
+  }
+  .wm-ctx:active { background: var(--bg-sunk); }
+  .wm-ctx-gk { font-family: var(--f-greek); font-size: 26px; line-height: 1; color: var(--ink); flex: 0 0 auto; }
+  .wm-ctx-gk.heb { direction: rtl; }
+  .wm-ctx-meta { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 6px; overflow: hidden; }
+  .wm-ctx-tr { font-family: var(--f-serif); font-style: italic; font-size: 14px; color: var(--ink-2); flex: 0 0 auto; }
+  .wm-ctx-dot { color: var(--ink-4); }
+  .wm-ctx-gloss { font-family: var(--f-serif); font-size: 14px; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .wm-ctx-go { color: var(--ink-4); flex: 0 0 auto; display: grid; place-items: center; width: 26px; height: 26px; }
+
+  /* reading area — the only scroller */
+  .wm-main { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 14px 16px 24px; }
+  .wm-occhead { display: flex; align-items: baseline; gap: 8px; margin: 2px 2px 12px; }
+  .wm-occ-count { font-family: var(--f-serif); font-size: 28px; font-weight: 600; color: var(--ink); letter-spacing: -0.02em; }
+  .wm-occ-lbl { font-size: 13px; color: var(--ink-3); }
+  .wm-occ-meta { margin-left: auto; font-family: var(--f-mono); font-size: 10.5px; letter-spacing: 0.04em; color: var(--ink-4); text-transform: uppercase; }
+  .wm-filterchip {
+    display: flex; align-items: center; justify-content: space-between; gap: 10px;
+    margin: 0 2px 12px; padding: 8px 12px;
+    background: var(--paper); border: 1px solid var(--rule); border-radius: 9px;
+    font-size: 12.5px; color: var(--ink-3);
+  }
+  .wm-filterchip b { color: var(--ink); font-weight: 600; }
+  .wm-filterchip button { color: var(--accent); font-size: 12.5px; }
+  .wm .glsenses { margin: 0 0 16px; }
+  .wm .corpus-text { font-size: 16px; line-height: 1.56; }
+
+  /* bottom tools bar */
+  .wm-tabs {
+    flex: 0 0 auto; display: flex;
+    border-top: 1px solid var(--rule); background: var(--paper);
+    padding: 7px 0 max(9px, env(safe-area-inset-bottom));
+  }
+  .wm-tab { flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px; color: var(--ink-3); padding: 4px 0; background: none; border: none; }
+  .wm-tab:active { color: var(--ink-2); }
+  .wm-tab.on { color: var(--accent); }
+  .wm-tab:disabled { opacity: 0.38; }
+  .wm-tab-l { font-size: 11px; letter-spacing: 0.01em; }
+
+  /* bottom sheets — fixed overlays above the top nav */
+  .wm-scrim { position: fixed; inset: 0; z-index: 120; background: rgba(15,23,42,0.42); animation: wm-fade 0.18s ease; }
+  @keyframes wm-fade { from { opacity: 0; } to { opacity: 1; } }
+  .wm-sheet {
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 121;
+    display: flex; flex-direction: column;
+    background: var(--paper); border-radius: 18px 18px 0 0;
+    box-shadow: 0 -10px 40px rgba(15,23,42,0.22);
+    max-height: 62%; animation: wm-up 0.26s cubic-bezier(0.2,0.8,0.2,1);
+  }
+  .wm-sheet.tall { max-height: 90%; height: 90%; }
+  @keyframes wm-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+  .wm-grab { flex: 0 0 auto; cursor: grab; touch-action: none; }
+  .wm-grab:active { cursor: grabbing; }
+  .wm-handle { width: 40px; height: 4px; border-radius: 2px; background: var(--rule-2); margin: 10px auto 2px; }
+  .wm-sheet-head { display: flex; align-items: center; justify-content: space-between; padding: 6px 16px 10px; border-bottom: 1px solid var(--rule); }
+  .wm-sheet-title { font-size: 16px; font-weight: 600; color: var(--ink); letter-spacing: -0.01em; }
+  .wm-sheet-x { width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; color: var(--ink-3); background: none; border: none; }
+  .wm-sheet-x:active { background: var(--bg-sunk); }
+  .wm-sheet-body { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+
+  /* sheet bodies reuse the desktop word-card / rail / mode controls */
+  .wm-card { padding: 22px 18px 40px; }
+  .wm-card .wd-greek { font-size: 50px; }
+  .wm-card .wd-greek.heb { font-size: 44px; }
+  .wm-rail { padding: 10px 12px 28px; display: flex; flex-direction: column; gap: 1px; }
+  .wm-rail .brow { padding: 9px 10px; }
+  .wm-rail .brow-name { font-size: 14px; }
+  .wm-jump {
+    display: flex; align-items: center; gap: 7px; width: 100%; text-align: left;
+    font-size: 13.5px; font-weight: 500; color: var(--ai); padding: 12px 14px; border-radius: 10px;
+    border: 1px solid color-mix(in oklab, var(--ai) 24%, transparent); background: var(--ai-soft);
+  }
+  .wm-jump svg:first-child { color: var(--ai); flex: 0 0 auto; }
+  .wm-jump-w { font-family: var(--f-greek); font-size: 15px; }
+  .wm-jump-w.heb { direction: rtl; }
+
+  /* search sheet */
+  .wm-searchsheet { padding: 16px 16px 28px; display: flex; flex-direction: column; gap: 14px; }
+  .wm-search {
+    display: flex; align-items: center; gap: 9px; height: 48px; padding: 0 8px 0 13px;
+    background: var(--paper); border: 1px solid var(--rule-2); border-radius: 12px; box-shadow: var(--shadow-sm);
+  }
+  .wm-search:focus-within { border-color: var(--accent); box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 12%, transparent); }
+  .wm-search-i { color: var(--ink-3); flex: 0 0 20px; }
+  .wm-search:focus-within .wm-search-i { color: var(--accent); }
+  .wm-search-input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font-size: 16px; color: var(--ink); }
+  .wm-search-input::placeholder { color: var(--ink-4); }
+  .wm-search-clear { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; color: var(--ink-4); flex: 0 0 auto; background: none; border: none; }
+  .wm-search-clear:active { background: var(--bg-sunk); }
+  .wm-search-hint { font-size: 12.5px; color: var(--ink-4); line-height: 1.5; padding: 0 2px; }
+  .wm-search-chips { display: flex; flex-wrap: wrap; gap: 8px; }
 }

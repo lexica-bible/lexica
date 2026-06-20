@@ -32,9 +32,50 @@ function _topBook(books) {
   return books.reduce((a, b) => (b.count > a.count ? b : a)).book;
 }
 
+// Mobile word-study glyphs (kept local; mirror the design handoff's WMI set).
+const WsI = {
+  Search: (p) => (<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" {...p}><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>),
+  Book: (p) => (<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M5 4.5A2.5 2.5 0 0 1 7.5 2H19v17H7.5a2.5 2.5 0 0 0 0 5H19"/><path d="M19 16H7.5"/></svg>),
+  Card: (p) => (<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" {...p}><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 10h18"/></svg>),
+  Sliders: (p) => (<svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M5 8h9M19 8h0M5 16h0M10 16h9"/><circle cx="16" cy="8" r="2.4"/><circle cx="7.5" cy="16" r="2.4"/></svg>),
+  ChevR: (p) => (<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="m9 6 6 6-6 6"/></svg>),
+  Close: (p) => (<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" {...p}><path d="M6 6l12 12M6 18 18 6"/></svg>),
+};
+
+// Bottom sheet for the mobile word-study tools — rises from the bottom, drag the
+// grab-zone down past ~110px to dismiss (ported from the design handoff's Sheet).
+function WsSheet({ title, tall, onClose, children }) {
+  const [dy, setDy] = useState(0);
+  const [dragging, setDragging] = useState(false);
+  const drag = useRef({ active: false, startY: 0 });
+  const grab = {
+    onPointerDown: (e) => { drag.current = { active: true, startY: e.clientY }; setDragging(true); try { e.currentTarget.setPointerCapture(e.pointerId); } catch (_) {} },
+    onPointerMove: (e) => { if (!drag.current.active) return; setDy(Math.max(0, e.clientY - drag.current.startY)); },
+    onPointerUp: () => { if (!drag.current.active) return; drag.current.active = false; setDragging(false); setDy(d => { if (d > 110) { onClose(); return 0; } return 0; }); },
+  };
+  return (
+    <>
+      <div className="wm-scrim" onClick={onClose}/>
+      <div className={"wm-sheet" + (tall ? " tall" : "")}
+        style={{ transform: `translateY(${dy}px)`, transition: dragging ? "none" : "transform 0.26s cubic-bezier(0.2,0.8,0.2,1)" }}>
+        <div className="wm-grab" {...grab}>
+          <div className="wm-handle" aria-hidden="true"/>
+          <div className="wm-sheet-head">
+            <span className="wm-sheet-title">{title}</span>
+            <button className="wm-sheet-x" onClick={onClose} aria-label="Close"><WsI.Close/></button>
+          </div>
+        </div>
+        <div className="wm-sheet-body">{children}</div>
+      </div>
+    </>
+  );
+}
+
 function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendingStrongsConsumed, isMobile, onAiSearch, onAskWord }) {
   const [railOpen, setRailOpen] = useState(false);     // mobile: distribution drawer
   const [detailOpen, setDetailOpen] = useState(false); // mobile: word-card drawer
+  const [glOpen, setGlOpen] = useState(true);          // English results card: expanded/collapsed
+  const [sheet, setSheet] = useState(null);            // mobile bottom sheet: "search"|"dist"|"card"|"views"|null
   const [query, setQuery] = useState("");
   const [matches, setMatches] = useState(null);
   const [profile, setProfile] = useState(null);
@@ -359,6 +400,315 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
   const selBookCount = profile && selectedBook ? (profile.books.find(b => b.book === selectedBook)?.count ?? null) : null;
   const backToResults = () => { setProfile(null); setSelectedBook(null); setVerseList(null); };
 
+  // ---- shared render helpers (used by the desktop panes AND the mobile sheets) ----
+  const renderDistRows = (afterPick) => (
+    <>
+      <button className={"brow brow-all" + (!selectedBook ? " on" : "")}
+        onClick={() => { setSelectedBook(null); setVerseList(null); setBookGlosses(null); setSelectedGloss(null); setFilteredBooks(null); afterPick && afterPick(); }}>
+        <span className="brow-name">All books</span>
+        <span className="brow-n">{occCount}</span>
+      </button>
+      {distBooks.map(b => (
+        <button key={b.book} className={"brow" + (selectedBook === b.book ? " on" : "")}
+          onClick={() => { selectBook(b.book); afterPick && afterPick(); }}>
+          <span className="brow-name">{b.name}</span>
+          <span className="brow-bar"><span className="brow-fill" style={{ width: Math.max(7, (b.count / maxCount) * 100) + "%" }}/></span>
+          <span className="brow-n">{b.count}</span>
+        </button>
+      ))}
+    </>
+  );
+
+  // The collapsible "words rendered" card (English-gloss search → several lemmas).
+  const renderSenses = () => (
+    <div className={"glsenses" + (glOpen ? " open" : "")}>
+      <button className="glsenses-head" aria-expanded={glOpen} onClick={() => setGlOpen(o => !o)}>
+        <span className="glsenses-l">
+          <b>{visibleGroupings.length}</b> {visibleGroupings.length === 1 ? "word" : "words"} rendered “{query.trim()}”
+        </span>
+        {!glOpen && profile && (
+          <span className="glsenses-cur">
+            <span className={"glsenses-cur-gk" + (isHeb ? " heb" : "")} dir={isHeb ? "rtl" : undefined}>{profile.lemma}</span>
+            <span className="glsenses-cur-tr">{profile.translit}{occCount ? ` · ${occCount}` : ""}</span>
+          </span>
+        )}
+        <span className="glsenses-tog">
+          {glOpen ? "Collapse" : "Expand"}
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </span>
+      </button>
+      {glOpen && (
+        visibleGroupings.length === 0 ? (
+          <div className="glsenses-empty">No {language === "greek" ? "Greek" : "Hebrew"} words rendered “{query.trim()}”.</div>
+        ) : (
+          <div className="glsenses-rows">
+            {visibleGroupings.map(g => {
+              const gh = g.strongs[0] === "H";
+              return (
+                <button key={g.strongs}
+                  className={"glrow" + (profile && profile.strongs === g.strongs ? " on" : "")}
+                  onClick={() => loadProfile(g.strongs, corpus === "all" ? undefined : corpus)}>
+                  <span className="glrow-s">{g.strongs}</span>
+                  <span className="glrow-main">
+                    <span className="glrow-top">
+                      {g.lemma && <span className={"glrow-gk" + (gh ? " heb" : "")} dir={gh ? "rtl" : undefined}>{g.lemma}</span>}
+                      {g.translit && <span className="glrow-tr">{g.translit}</span>}
+                    </span>
+                    {g.abp_glosses && g.abp_glosses.length > 0 && (
+                      <span className="glrow-rend"><span className="glrow-k">ABP</span><span>{g.abp_glosses.slice(0, 8).map(x => x.gloss).join(", ")}</span></span>
+                    )}
+                    {g.kjv_glosses && g.kjv_glosses.length > 0 && (
+                      <span className="glrow-rend"><span className="glrow-k">KJV</span><span>{g.kjv_glosses.slice(0, 8).map(x => x.gloss).join(", ")}</span></span>
+                    )}
+                  </span>
+                  <span className="glrow-occ">
+                    {g.count}
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.85" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                  </span>
+                </button>
+              );
+            })}
+          </div>
+        )
+      )}
+    </div>
+  );
+
+  // The word card body (hero + LSJ/BDB + ABP/KJV renderings + derivation + cognates).
+  const renderWordCardInner = () => !profile ? null : (
+    <>
+      <div className="wd-hero">
+        <div className={"wd-greek" + (isHeb ? " heb" : "")} dir={isHeb ? "rtl" : undefined}>{profile.lemma}</div>
+        <div className="wd-sub"><span className="wd-tr">{profile.translit}</span>{firstGloss ? <> · <span className="wd-gloss">{firstGloss}</span></> : null}</div>
+        <div className="wd-morph">{occCount} {occCount === 1 ? "occurrence" : "occurrences"}</div>
+        {onAskWord && (
+          <button className="wd-askai" onClick={() => onAskWord(profile.strongs, profile.lemma, profile.translit)}>
+            <Icon.Sparkle/> Ask AI about <span className={"wd-askai-w" + (isHeb ? " heb" : "")} dir={isHeb ? "rtl" : undefined}>{profile.lemma}</span> <Icon.ArrowRight/>
+          </button>
+        )}
+      </div>
+
+      {(profile.definition || /^G/i.test(profile.strongs)) && (
+        <div className="wd-sec">
+          <div className="wd-sec-h">
+            <span className="wd-sec-t">Definition</span>
+            {showDef && (!/^G/i.test(profile.strongs)
+              ? <span className="wd-badge">BDB</span>
+              : (!lsjLoading && lsjEntry)
+                ? <span className="wd-badge">{lsjEntry.source === "strongs" ? "Strong's" : lsjEntry.source === "abp_ext" ? "ABP" : "LSJ"}</span>
+                : null)}
+          </div>
+          {showDef ? (
+            !/^G/i.test(profile.strongs)
+              ? <p className="lsj">{profile.definition}</p>
+              : lsjLoading
+                ? <div className="lsj-def lsj-def--loading">Loading…</div>
+                : !lsjEntry
+                  ? <p className="lsj">{profile.definition}</p>
+                  : lsjEntry.source === "strongs"
+                    ? <div className="lsj-def" dangerouslySetInnerHTML={{ __html: lsjEntry.def_html }} />
+                    : lsjSummaryLoading
+                      ? <LsjSummary data={null} loading={true} />
+                      : (lsjSummary && lsjSummary.summary)
+                        ? <LsjSummary data={lsjSummary} loading={false} />
+                        : <div className="lsj-def" dangerouslySetInnerHTML={{ __html: lsjEntry.def_html }} />
+          ) : (
+            <button className="lsj-toggle" onClick={() => setShowDef(true)}>Full entry ▾</button>
+          )}
+          {showDef && <button className="lsj-toggle" onClick={() => setShowDef(false)}>Show less ▴</button>}
+        </div>
+      )}
+
+      {profile.abp_glosses && profile.abp_glosses.length > 0 && (
+        <div className="wd-sec">
+          <div className="wd-sec-h"><span className="wd-sec-t">ABP renders as</span><span className="wd-sec-meta">{profile.abp_glosses.length} senses</span></div>
+          {renderGlossLine("abp", null, profile.abp_glosses)}
+        </div>
+      )}
+      {profile.kjv_glosses && profile.kjv_glosses.length > 0 && (
+        <div className="wd-sec">
+          <div className="wd-sec-h"><span className="wd-sec-t">KJV renders as</span><span className="wd-sec-meta">{profile.kjv_glosses.length} senses</span></div>
+          {renderGlossLine("kjv", null, profile.kjv_glosses)}
+        </div>
+      )}
+      {profile.derivation && (
+        <div className="wd-sec">
+          <div className="wd-sec-h"><span className="wd-sec-t">Derivation</span></div>
+          <p className="root-note">{profile.derivation}</p>
+        </div>
+      )}
+      {profile.related && profile.related.length > 0 && (
+        <div className="wd-sec">
+          <div className="wd-sec-h"><span className="wd-sec-t">Cognates &amp; related lemmas</span></div>
+          <div className="related">
+            {profile.related.map(r => (
+              <button key={r.strongs} className="rel" onClick={() => loadProfile(r.strongs, "abp")}>
+                <span className="rel-gk">{r.lemma}</span>
+                <span className="rel-tr">{r.translit}</span>
+                <span className="rel-gloss">{r.gloss}<span className="rel-s">{r.strongs}</span></span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+    </>
+  );
+
+  // ============================================================
+  // MOBILE — context strip · reading area · bottom tools bar · sheets
+  // (global nav stays at the top of the app; this is just the tab body)
+  // ============================================================
+  if (isMobile) {
+    const tLabel = testament === "all" ? "All" : testament.toUpperCase();
+    const occList = (
+      !selectedBook ? <div className="occ-empty">Open <b>Distribution</b> below to pick a book.</div>
+      : verseLoading ? <div className="occ-empty">Loading…</div>
+      : (verseList && verseList[0] && verseList[0].error) ? <div className="occ-empty" style={{ color: "var(--danger, #b91c1c)" }}>{verseList[0].error}</div>
+      : (verseList && verseList.length) ? (
+        <div className="vlist">
+          {verseList.map(v => (
+            <VerseRow key={`${selectedBook}-${v.chapter}-${v.verse}`}
+              book={selectedBook} chapter={v.chapter} verse={v.verse}
+              label={`${selectedBook} ${v.chapter}:${v.verse}`}
+              allResults={[]} onWordClick={onWordClick}
+              onReadInContext={onNavigateToLibrary ? (b, c, vv) => onNavigateToLibrary(b, c, vv, profileCorpus) : undefined}
+              textMode={profileCorpus === "kjv" ? "kjv" : "greek"}
+              primaryStrongs={null} citedStrongs={citedStrongs} kjvCache={{}}/>
+          ))}
+        </div>
+      ) : <div className="occ-empty">No verses.</div>
+    );
+    return (
+      <div className="wm">
+        {profile && (
+          <button className="wm-ctx" onClick={() => setSheet("card")} aria-label="Open word card">
+            <span className={"wm-ctx-gk" + (isHeb ? " heb" : "")} dir={isHeb ? "rtl" : undefined}>{profile.lemma}</span>
+            <span className="wm-ctx-meta">
+              <span className="wm-ctx-tr">{profile.translit}</span>
+              {firstGloss && <><span className="wm-ctx-dot">·</span><span className="wm-ctx-gloss">{firstGloss}</span></>}
+            </span>
+            <span className="wm-ctx-go"><WsI.ChevR/></span>
+          </button>
+        )}
+
+        <div className="wm-main">
+          {error && <p className="lexicon-error">{error}</p>}
+          {groupings && renderSenses()}
+          {matches && !profile && (
+            <div className="lexicon-matches">
+              {matches.map(m => (
+                <button key={m.strongs} className="lexicon-match-row" onClick={() => loadProfile(m.strongs)}>
+                  <span className="lexicon-match-strongs">{m.strongs}</span>
+                  <span className="lexicon-match-lemma">{m.lemma}</span>
+                  <span className="lexicon-match-translit">{m.translit}</span>
+                  <span className="lexicon-match-gloss">{m.gloss}</span>
+                </button>
+              ))}
+            </div>
+          )}
+          {profile ? (
+            <>
+              <div className="wm-occhead">
+                <span className="wm-occ-count">{occCount}</span>
+                <span className="wm-occ-lbl">{selectedBook ? "in " + selBookName : (occCount === 1 ? "occurrence" : "occurrences")}</span>
+                <span className="wm-occ-meta">{tLabel} · {profileCorpus.toUpperCase()}</span>
+              </div>
+              {selectedBook && (
+                <div className="wm-filterchip">
+                  <span>Filtered to <b>{selBookName}</b>{selectedGloss ? ` · “${selectedGloss}”` : ""}</span>
+                  <button onClick={() => { setSelectedBook(null); setVerseList(null); setBookGlosses(null); }}>Clear</button>
+                </div>
+              )}
+              {occList}
+            </>
+          ) : (!groupings && !matches && !error) ? (
+            <div className="occ-welcome">
+              <div className="occ-welcome-t">Greek &amp; Hebrew word study</div>
+              <div className="occ-welcome-s">Tap <b>Search</b> below to study a word, transliteration, or Strong's number.</div>
+              <div className="occ-welcome-chips">
+                {["πνεῦμα", "pistis", "G26", "spirit"].map(q => (
+                  <button key={q} className="welcome-chip" onClick={() => handleSubmit(null, q)}>{q}</button>
+                ))}
+              </div>
+            </div>
+          ) : null}
+        </div>
+
+        <nav className="wm-tabs" aria-label="Word study tools">
+          <button className={"wm-tab" + (sheet === "search" ? " on" : "")} onClick={() => setSheet("search")}>
+            <WsI.Search/><span className="wm-tab-l">Search</span>
+          </button>
+          <button className={"wm-tab" + (sheet === "dist" ? " on" : "")} disabled={!profile} onClick={() => setSheet("dist")}>
+            <WsI.Book/><span className="wm-tab-l">Distribution</span>
+          </button>
+          <button className={"wm-tab" + (sheet === "card" ? " on" : "")} disabled={!profile} onClick={() => setSheet("card")}>
+            <WsI.Card/><span className="wm-tab-l">Word card</span>
+          </button>
+          <button className={"wm-tab" + (sheet === "views" ? " on" : "")} disabled={!profile} onClick={() => setSheet("views")}>
+            <WsI.Sliders/><span className="wm-tab-l">Views</span>
+          </button>
+        </nav>
+
+        {sheet === "dist" && (
+          <WsSheet tall title={profile ? "Distribution · " + profile.translit : "Distribution"} onClose={() => setSheet(null)}>
+            <div className="wm-rail">{renderDistRows(() => setSheet(null))}</div>
+          </WsSheet>
+        )}
+        {sheet === "card" && (
+          <WsSheet tall title="Word card" onClose={() => setSheet(null)}>
+            <div className="wd-body wm-card">{renderWordCardInner()}</div>
+          </WsSheet>
+        )}
+        {sheet === "views" && (
+          <WsSheet title="Views" onClose={() => setSheet(null)}>
+            <div className="mode-sec">
+              <div className="mode-lbl">Edition</div>
+              <div className="mseg">
+                <button className={"mseg-b" + (profileCorpus === "abp" ? " on" : "")} disabled={!profile?.has_abp} onClick={() => switchProfileCorpus("abp")}>ABP</button>
+                <button className={"mseg-b" + (profileCorpus === "kjv" ? " on" : "")} disabled={!profile?.has_kjv} onClick={() => switchProfileCorpus("kjv")}>KJV</button>
+              </div>
+            </div>
+            <div className="mode-sec">
+              <div className="mode-lbl">Testament</div>
+              <div className="mseg">
+                {[["all", "All"], ["ot", "Old"], ["nt", "New"]].map(([k, l]) => (
+                  <button key={k} className={"mseg-b" + (testament === k ? " on" : "")} onClick={() => switchTestament(k)}>{l}</button>
+                ))}
+              </div>
+            </div>
+            {profile && onAskWord && (
+              <div className="mode-sec">
+                <div className="mode-lbl">Go deeper</div>
+                <button className="wm-jump" onClick={() => { setSheet(null); onAskWord(profile.strongs, profile.lemma, profile.translit); }}>
+                  <Icon.Sparkle/> Ask the corpus about <span className={"wm-jump-w" + (isHeb ? " heb" : "")} dir={isHeb ? "rtl" : undefined}>{profile.lemma}</span> <Icon.ArrowRight/>
+                </button>
+              </div>
+            )}
+          </WsSheet>
+        )}
+        {sheet === "search" && (
+          <WsSheet title="Search" onClose={() => setSheet(null)}>
+            <div className="wm-searchsheet">
+              <form className="wm-search" onSubmit={(e) => { setSheet(null); handleSubmit(e); }}>
+                <WsI.Search className="wm-search-i"/>
+                <input className="wm-search-input" type="text" value={query} autoFocus
+                  onChange={e => setQuery(e.target.value)}
+                  placeholder="Word, transliteration, Strong's…"/>
+                {query && <button type="button" className="wm-search-clear" onClick={() => setQuery("")} aria-label="Clear"><WsI.Close/></button>}
+              </form>
+              <div className="wm-search-hint">Greek, Hebrew, a transliteration, an English gloss, or a Strong's number.</div>
+              <div className="wm-search-chips">
+                {["πνεῦμα", "pistis", "G26", "spirit", "ἀγάπη", "H7307"].map(q => (
+                  <button key={q} className="welcome-chip" onClick={() => { setSheet(null); handleSubmit(null, q); }}>{q}</button>
+                ))}
+              </div>
+            </div>
+          </WsSheet>
+        )}
+      </div>
+    );
+  }
+
   return (
     <div className={"ws" + (isMobile ? " is-mobile" : "")}>
 
@@ -371,21 +721,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
               <div className="brail-eyebrow">Distribution by book</div>
               <div className="brail-sub"><span className="brail-gk" dir={isHeb ? "rtl" : undefined}>{profile.lemma}</span> · {profile.books.length} {profile.books.length === 1 ? "book" : "books"}</div>
             </div>
-            <div className="brail-scroll">
-              <button className={"brow brow-all" + (!selectedBook ? " on" : "")}
-                onClick={() => { setSelectedBook(null); setVerseList(null); setBookGlosses(null); setSelectedGloss(null); setFilteredBooks(null); if (isMobile) setRailOpen(false); }}>
-                <span className="brow-name">All books</span>
-                <span className="brow-n">{occCount}</span>
-              </button>
-              {distBooks.map(b => (
-                <button key={b.book} className={"brow" + (selectedBook === b.book ? " on" : "")}
-                  onClick={() => { selectBook(b.book); if (isMobile) setRailOpen(false); }}>
-                  <span className="brow-name">{b.name}</span>
-                  <span className="brow-bar"><span className="brow-fill" style={{ width: Math.max(7, (b.count / maxCount) * 100) + "%" }}/></span>
-                  <span className="brow-n">{b.count}</span>
-                </button>
-              ))}
-            </div>
+            <div className="brail-scroll">{renderDistRows()}</div>
           </>
         ) : (
           <>
@@ -459,36 +795,13 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
               </div>
             )}
 
-            {groupings && !profile && (
-              <div className="lexicon-results">
-                <div className="lexicon-dist-label">
-                  rendered as "{query.trim()}" · {visibleGroupings.length} {visibleGroupings.length === 1 ? "word" : "words"}
-                </div>
-                {onAiSearch && (
-                  <button className="lexicon-ask-instead" onClick={() => onAiSearch(query.trim())}>
-                    Or ask the corpus about "{query.trim()}" →
-                  </button>
-                )}
-                {visibleGroupings.length === 0 ? (
-                  <div className="lexicon-dist-label">No {language === "greek" ? "Greek" : "Hebrew"} words rendered "{query.trim()}".</div>
-                ) : visibleGroupings.map(g => (
-                  <button key={g.strongs} className="lexicon-result-row"
-                    onClick={() => loadProfile(g.strongs, corpus === "all" ? undefined : corpus)}>
-                    <span className="lexicon-result-topbar">
-                      <span className="lexicon-result-head">
-                        <span className="lexicon-match-strongs">{g.strongs}</span>
-                        {g.lemma && <span className="lexicon-match-lemma" dir={g.strongs[0] === "H" ? "rtl" : undefined}>{g.lemma}</span>}
-                        {g.translit && <span className="lexicon-match-translit">{g.translit}</span>}
-                      </span>
-                      <span className="lexicon-result-end">
-                        <span className="lexicon-result-count">{g.count}</span>
-                        <span className="lexicon-result-chev">›</span>
-                      </span>
-                    </span>
-                    <span className="lexicon-result-preview">{renderRowPreview(g)}</span>
-                  </button>
-                ))}
-              </div>
+            {/* English "words rendered" results — a collapsible card that stays
+                pinned above the occurrences once a word is picked. */}
+            {groupings && renderSenses()}
+            {groupings && !profile && onAiSearch && (
+              <button className="lexicon-ask-instead" onClick={() => onAiSearch(query.trim())}>
+                Or ask the corpus about “{query.trim()}” →
+              </button>
             )}
 
             {/* occurrences (word in focus) */}
@@ -573,82 +886,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
               {isMobile && <button className="wd-overview" onClick={() => setDetailOpen(false)} aria-label="Close">✕</button>}
             </span>
           </div>
-          <div className="wd-body">
-            <div className="wd-hero">
-              <div className={"wd-greek" + (isHeb ? " heb" : "")} dir={isHeb ? "rtl" : undefined}>{profile.lemma}</div>
-              <div className="wd-sub"><span className="wd-tr">{profile.translit}</span>{firstGloss ? <> · <span className="wd-gloss">{firstGloss}</span></> : null}</div>
-              <div className="wd-morph">{occCount} {occCount === 1 ? "occurrence" : "occurrences"}</div>
-              {onAskWord && (
-                <button className="wd-askai" onClick={() => onAskWord(profile.strongs, profile.lemma, profile.translit)}>
-                  <Icon.Sparkle/> Ask AI about <span className={"wd-askai-w" + (isHeb ? " heb" : "")} dir={isHeb ? "rtl" : undefined}>{profile.lemma}</span> <Icon.ArrowRight/>
-                </button>
-              )}
-            </div>
-
-            {(profile.definition || /^G/i.test(profile.strongs)) && (
-              <div className="wd-sec">
-                <div className="wd-sec-h">
-                  <span className="wd-sec-t">Definition</span>
-                  {showDef && (!/^G/i.test(profile.strongs)
-                    ? <span className="wd-badge">BDB</span>
-                    : (!lsjLoading && lsjEntry)
-                      ? <span className="wd-badge">{lsjEntry.source === "strongs" ? "Strong's" : lsjEntry.source === "abp_ext" ? "ABP" : "LSJ"}</span>
-                      : null)}
-                </div>
-                {showDef ? (
-                  !/^G/i.test(profile.strongs)
-                    ? <p className="lsj">{profile.definition}</p>
-                    : lsjLoading
-                      ? <div className="lsj-def lsj-def--loading">Loading…</div>
-                      : !lsjEntry
-                        ? <p className="lsj">{profile.definition}</p>
-                        : lsjEntry.source === "strongs"
-                          ? <div className="lsj-def" dangerouslySetInnerHTML={{ __html: lsjEntry.def_html }} />
-                          : lsjSummaryLoading
-                            ? <LsjSummary data={null} loading={true} />
-                            : (lsjSummary && lsjSummary.summary)
-                              ? <LsjSummary data={lsjSummary} loading={false} />
-                              : <div className="lsj-def" dangerouslySetInnerHTML={{ __html: lsjEntry.def_html }} />
-                ) : (
-                  <button className="lsj-toggle" onClick={() => setShowDef(true)}>Full entry ▾</button>
-                )}
-                {showDef && <button className="lsj-toggle" onClick={() => setShowDef(false)}>Show less ▴</button>}
-              </div>
-            )}
-
-            {profile.abp_glosses && profile.abp_glosses.length > 0 && (
-              <div className="wd-sec">
-                <div className="wd-sec-h"><span className="wd-sec-t">ABP renders as</span><span className="wd-sec-meta">{profile.abp_glosses.length} senses</span></div>
-                {renderGlossLine("abp", null, profile.abp_glosses)}
-              </div>
-            )}
-            {profile.kjv_glosses && profile.kjv_glosses.length > 0 && (
-              <div className="wd-sec">
-                <div className="wd-sec-h"><span className="wd-sec-t">KJV renders as</span><span className="wd-sec-meta">{profile.kjv_glosses.length} senses</span></div>
-                {renderGlossLine("kjv", null, profile.kjv_glosses)}
-              </div>
-            )}
-            {profile.derivation && (
-              <div className="wd-sec">
-                <div className="wd-sec-h"><span className="wd-sec-t">Derivation</span></div>
-                <p className="root-note">{profile.derivation}</p>
-              </div>
-            )}
-            {profile.related && profile.related.length > 0 && (
-              <div className="wd-sec">
-                <div className="wd-sec-h"><span className="wd-sec-t">Cognates &amp; related lemmas</span></div>
-                <div className="related">
-                  {profile.related.map(r => (
-                    <button key={r.strongs} className="rel" onClick={() => loadProfile(r.strongs, "abp")}>
-                      <span className="rel-gk">{r.lemma}</span>
-                      <span className="rel-tr">{r.translit}</span>
-                      <span className="rel-gloss">{r.gloss}<span className="rel-s">{r.strongs}</span></span>
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
-          </div>
+          <div className="wd-body">{renderWordCardInner()}</div>
           </>
         ) : (
           <div className="empty-pane">
