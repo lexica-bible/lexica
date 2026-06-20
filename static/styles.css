@@ -943,6 +943,10 @@ input { font-family: inherit; }
   overscroll-behavior: contain;
   padding: 16px 24px 18px;
 }
+/* Summary panel only: the head is a tall serif title, so the default 16px body-top + 12px
+   first-section-top stacked too much air above "About". Tighten just the summary's top gap —
+   the shared .detail-* spacing stays as-is for the LOCKED Library word card. (2026-06-19) */
+.summary-side .detail-body { padding-top: 4px; }
 
 .detail-hero {
   display: flex;
