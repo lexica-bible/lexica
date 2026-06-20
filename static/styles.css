@@ -4330,7 +4330,20 @@ button.study-verse-ref { border: none; }
 /* CENTER — search + occurrences */
 .ws .center { min-height: 0; display: flex; flex-direction: column; background: var(--bg); }
 .ws .searchbar { flex: 0 0 auto; padding: 14px 28px; border-bottom: 1px solid var(--rule); background: color-mix(in oklab, var(--bg) 82%, var(--paper)); }
-.ws .searchbar-in { max-width: 540px; margin: 0 auto; }
+.ws .searchbar-in { display: flex; align-items: center; gap: 16px; }
+.ws .searchbar-in .search-field { flex: 0 1 540px; min-width: 0; }
+/* "Ask AI about X" — appears to the RIGHT of the search bar once a word is loaded
+   (replaces the old word-card footer button). Its own class, never the shared .occ-link. */
+.searchbar-ask {
+  display: inline-flex; align-items: center; gap: 7px; flex: 0 0 auto;
+  font-family: var(--f-serif); font-size: 14.5px; font-weight: 500; color: var(--ai);
+  padding: 8px 13px; border-radius: 9px;
+  border: 1px solid color-mix(in oklab, var(--ai) 30%, var(--rule-2));
+  background: color-mix(in oklab, var(--ai) 6%, transparent);
+  transition: background 0.12s, border-color 0.12s;
+}
+.searchbar-ask:hover { background: color-mix(in oklab, var(--ai) 12%, transparent); border-color: var(--ai); }
+.searchbar-ask svg { flex: 0 0 auto; width: 15px; height: 15px; }
 .ws .search-field { display: flex; align-items: center; gap: 10px; background: var(--paper); border: 1px solid var(--rule-2); border-radius: 11px; padding: 0 8px 0 14px; height: 46px; box-shadow: var(--shadow-sm); transition: border-color 0.15s, box-shadow 0.15s; }
 .ws .search-field:focus-within { border-color: var(--accent); box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 12%, transparent); }
 .search-i { color: var(--ink-3); flex: 0 0 17px; transition: color 0.15s; }
@@ -4394,20 +4407,6 @@ button.study-verse-ref { border: none; }
 .rel:hover .rel-go { color: var(--accent); }
 /* the card reuses the existing .lexicon-glosses / .lexicon-dist-item chips for renders */
 .sec .lexicon-glosses { margin: 0; }
-
-/* "Ask AI about X" — a quiet footer action at the bottom of the word card (desktop
-   .wd + mobile .wm-card). Its own class so it never touches the shared .occ-link. */
-.wd-askai {
-  display: flex; align-items: center; justify-content: center; gap: 8px;
-  width: 100%; margin-top: 20px; padding: 11px 14px;
-  border: 1px solid color-mix(in oklab, var(--ai) 32%, var(--rule-2));
-  border-radius: 10px;
-  background: color-mix(in oklab, var(--ai) 7%, transparent);
-  color: var(--ai); font-family: var(--f-serif); font-size: 15px; font-weight: 500;
-  transition: background 0.12s, border-color 0.12s;
-}
-.wd-askai:hover { background: color-mix(in oklab, var(--ai) 13%, transparent); border-color: var(--ai); }
-.wd-askai svg { flex: 0 0 auto; width: 16px; height: 16px; }
 
 /* flat occurrence list (plain verse rows, no collapsible group) */
 .vlist { display: flex; flex-direction: column; }

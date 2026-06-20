@@ -552,11 +552,6 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
           </div>
         </section>
       )}
-      {onAskWord && (
-        <button className="wd-askai" onClick={() => onAskWord(profile.strongs, profile.lemma, profile.translit)}>
-          <Icon.Sparkle/><span>Ask AI about <span dir={isHeb ? "rtl" : undefined}>{profile.lemma}</span></span><Icon.ArrowRight/>
-        </button>
-      )}
     </>
   );
 
@@ -744,6 +739,11 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
                 {loading ? <span className="spinner"/> : <Icon.ArrowRight/>}
               </button>
             </form>
+            {profile && onAskWord && (
+              <button type="button" className="searchbar-ask" onClick={() => onAskWord(profile.strongs, profile.lemma, profile.translit)}>
+                <Icon.Sparkle/><span>Ask AI about <span dir={isHeb ? "rtl" : undefined}>{profile.lemma}</span></span><Icon.ArrowRight/>
+              </button>
+            )}
           </div>
         </div>
 
