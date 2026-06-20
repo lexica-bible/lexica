@@ -25,13 +25,6 @@ function _comboOK(corpus, testament, language) {
   return true;
 }
 
-// The book with the most occurrences — auto-opened on profile load so the
-// center column shows verses immediately instead of an empty "pick a book".
-function _topBook(books) {
-  if (!books || !books.length) return null;
-  return books.reduce((a, b) => (b.count > a.count ? b : a)).book;
-}
-
 // Mobile word-study glyphs (kept local; mirror the design handoff's WMI set).
 const WsI = {
   Search: (p) => (<svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" {...p}><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>),
@@ -149,7 +142,10 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
     // NOTE: keep `matches`/`groupings` alive so the profile's back button can
     // return to whichever result list we drilled in from. handleSubmit clears
     // both before every new search, so a stale list can't linger.
+    // Land on "All books" (selectedBook=null), NOT the busiest book — auto-opening
+    // a book buried the reader in one book's verses the moment you searched.
     setSelectedBook(null);
+    setVerseList(null);
     setSelectedGloss(null);
     setBookGlosses(null);
     setFilteredBooks(null);
@@ -159,24 +155,9 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
     try {
       const data = await api.lexiconProfile(strongs, c);
       if (data.error) setError(data.error);
-      else { setProfile(data); await _openTopBook(data, c); }
+      else setProfile(data);
     } catch (e) { setError("Failed to load word profile: " + e); }
     finally { setLoading(false); }
-  };
-
-  // Load the busiest book's verses straight into the center (used on profile
-  // load + corpus switch, where `profile`/`profileCorpus` state is still stale).
-  const _openTopBook = async (data, c) => {
-    const tb = _topBook(data.books);
-    if (!tb) { setSelectedBook(null); setVerseList(null); return; }
-    setSelectedBook(tb);
-    setVerseLoading(true);
-    try {
-      const vd = await api.lexiconVerses(data.strongs, tb, c, null);
-      if (vd.error) setVerseList([{ error: vd.error }]);
-      else { setVerseList(vd.verses || []); setBookGlosses(vd.glosses && vd.glosses.length ? vd.glosses : null); }
-    } catch (e) { setVerseList([{ error: String(e) }]); }
-    finally { setVerseLoading(false); }
   };
 
   useEffect(() => {
@@ -218,7 +199,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
     setFilteredBooks(null);
     try {
       const data = await api.lexiconProfile(profile.strongs, c);
-      if (!data.error) { setProfile(data); await _openTopBook(data, c); }
+      if (!data.error) setProfile(data);   // stays on "All books" (selectedBook cleared above)
     } catch {}
     finally { setLoading(false); }
   };
