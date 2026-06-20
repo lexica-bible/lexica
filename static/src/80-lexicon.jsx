@@ -47,6 +47,18 @@ const WsI = {
 function WsSheet({ title, tall, titleMono, hideClose, onClose, children }) {
   const [dy, setDy] = useState(0);
   const [dragging, setDragging] = useState(false);
+  const [kb, setKb] = useState(0);   // how far the on-screen keyboard eats into the screen
+  // Lift the sheet above the keyboard: when it opens the visible area shrinks, so park
+  // the sheet's bottom at the top of the keyboard instead of behind it.
+  useEffect(() => {
+    const vv = window.visualViewport;
+    if (!vv) return;
+    const onResize = () => setKb(Math.max(0, window.innerHeight - vv.height - vv.offsetTop));
+    vv.addEventListener("resize", onResize);
+    vv.addEventListener("scroll", onResize);
+    onResize();
+    return () => { vv.removeEventListener("resize", onResize); vv.removeEventListener("scroll", onResize); };
+  }, []);
   const drag = useRef({ active: false, startY: 0 });
   const grab = {
     onPointerDown: (e) => { drag.current = { active: true, startY: e.clientY }; setDragging(true); try { e.currentTarget.setPointerCapture(e.pointerId); } catch (_) {} },
@@ -57,7 +69,7 @@ function WsSheet({ title, tall, titleMono, hideClose, onClose, children }) {
     <>
       <div className="wm-scrim" onClick={onClose}/>
       <div className={"wm-sheet" + (tall ? " tall" : "")}
-        style={{ transform: `translateY(${dy}px)`, transition: dragging ? "none" : "transform 0.26s cubic-bezier(0.2,0.8,0.2,1)" }}>
+        style={{ transform: `translateY(${dy - kb}px)`, transition: dragging ? "none" : "transform 0.26s cubic-bezier(0.2,0.8,0.2,1)" }}>
         <div className="wm-grab" {...grab}>
           <div className="wm-handle" aria-hidden="true"/>
           <div className="wm-sheet-head">
@@ -689,9 +701,8 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
           </WsSheet>
         )}
         {sheet === "search" && (
-          <>
-            <div className="wm-scrim" onClick={() => setSheet(null)}/>
-            <div className="wm-searchtop">
+          <WsSheet title="Search" onClose={() => setSheet(null)}>
+            <div className="wm-searchsheet">
               <form className="wm-search" onSubmit={(e) => { setSheet(null); handleSubmit(e); }}>
                 <WsI.Search className="wm-search-i"/>
                 <input className="wm-search-input" type="text" value={query} autoFocus
@@ -706,7 +717,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
                 ))}
               </div>
             </div>
-          </>
+          </WsSheet>
         )}
       </div>
     );
