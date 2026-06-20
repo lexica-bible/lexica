@@ -670,7 +670,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
         )}
         {sheet === "card" && (
           <WsSheet tall title={profile ? profile.strongs : "Word card"} titleMono hideClose onClose={() => setSheet(null)}>
-            <div className="detail-body wm-card">{renderWordCardInner()}</div>
+            <div className="wm-card">{renderWordCardInner()}</div>
           </WsSheet>
         )}
         {sheet === "views" && (

@@ -4320,10 +4320,10 @@ button.study-verse-ref { border: none; }
 .wd-sec-t { font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; color: var(--ink-3); }
 .wd-sec-meta { font-size: 11px; color: var(--ink-4); }
 .wd-badge { font-family: var(--f-mono); font-size: 9.5px; color: var(--accent); background: var(--accent-soft); padding: 2px 7px; border-radius: 4px; letter-spacing: 0.05em; font-weight: 600; }
-.wd .lsj { font-family: var(--f-serif); font-size: 15px; line-height: 1.6; color: var(--ink); margin: 0; }
+.sec .lsj { font-family: var(--f-serif); font-size: 15px; line-height: 1.6; color: var(--ink); margin: 0; }
 .lsj-toggle { margin-top: 10px; font-size: 12.5px; color: var(--accent); display: inline-flex; align-items: center; gap: 4px; }
 .lsj-toggle:hover { text-decoration: underline; }
-.wd .root-note { font-family: var(--f-serif); font-style: italic; font-size: 14.5px; color: var(--ink-2); line-height: 1.55; margin: 0; }
+.sec .root-note { font-family: var(--f-serif); font-style: italic; font-size: 14.5px; color: var(--ink-2); line-height: 1.55; margin: 0; }
 .related { display: flex; flex-direction: column; gap: 2px; }
 .rel { display: flex; align-items: baseline; gap: 8px; width: 100%; text-align: left; padding: 7px 10px; border-radius: 7px; border: 1px solid transparent; }
 .rel:hover { background: var(--bg); border-color: var(--rule); }
@@ -4332,7 +4332,7 @@ button.study-verse-ref { border: none; }
 .rel-gloss { font-size: 12.5px; color: var(--ink-3); margin-left: auto; text-align: right; display: inline-flex; gap: 7px; align-items: baseline; }
 .rel-s { font-family: var(--f-mono); font-size: 9.5px; color: var(--ink-4); }
 /* the card reuses the existing .lexicon-glosses / .lexicon-dist-item chips for renders */
-.wd .lexicon-glosses { margin: 0; }
+.sec .lexicon-glosses { margin: 0; }
 
 /* flat occurrence list (plain verse rows, no collapsible group) */
 .vlist { display: flex; flex-direction: column; }
