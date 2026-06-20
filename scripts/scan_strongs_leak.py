@@ -5,10 +5,12 @@ scan_strongs_leak.py — READ-ONLY. Never writes.
 Finds ABP words whose ENGLISH gloss has a leaked Strong's marker stuck inside it
 — the "AndG." artifact (Zec 9:11 σύ: english "AndG. you,", head "andg").
 
-How the leak happens: the build splits each verse on Strong's markers (G#### /
-G####.#) and clean_english() strips bare DIGITS from a gloss. If a Strong's number
-ever ends up glued inside a gloss instead of between two words ("AndG2532 you,"),
-the digits get stripped but the bare "G" (and its dot) survive — leaving "AndG.".
+How the leak happens: ABP's source writes a NUMBERLESS "G." (a 'G' with no digits) for
+a few words — their Strong's number was never assigned. The build splits each verse on
+real Strong's markers (G#### / G####.#); a numberless "G." isn't one, so that word's
+English glues onto the NEXT real number, dragging the bare "G." along ("AndG. you,").
+The 5 known spots are filled by fill_blank_strongs.py + the build fold (see the
+project_blank_strongs_fill memory); this scanner is the guard for a future 6th.
 
 Fingerprint = a capital G sitting right after a lowercase letter ("...dG"), or a
 "G" immediately followed by a digit (an un-stripped number). Real English glosses

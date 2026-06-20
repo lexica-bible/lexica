@@ -6,6 +6,24 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## ABP blank "G." Strong's numbers — FILLED (commit df5c624, 2026-06-20)
+
+ABP's own source left EXACTLY 5 words with a numberless "G." (a 'G' with no digits — the Strong's
+number was never assigned). The build splits verses on real Strong's markers, so a numberless "G."
+wasn't recognized and that word's English glued onto the next real number ("bidding" landed on the
+article G3588 in Act 24:8; "AndG. you," collapsed καί onto σύ in Zec 9:11). Filled each with the right
+number and split the merged slot: Zec 9:11 & 1Pe 3:13 "And"→G2532, Heb 7:4 "And view"→G2334,
+Mat 12:14 "And the"→G3588, Act 24:8 "bidding"→G2753.
+- Live patch: `scripts/fill_blank_strongs.py --apply`, then re-ran `build_abp_surface` + `build_abp_translit`
+  (the 4 splits shift word slots). Build fold: `apply_blank_strongs_fills` runs at the end of the words
+  build, so a rebuild reproduces it — don't re-run the one-time script. `scan_strongs_leak.py` stays as a guard.
+- LESSON: the root was ABP's OWN blank number, NOT our scraper — BibleHub-live renders these clean.
+  Confirmed against the eSword ABP source files (`abp_texts/`) before touching anything. An earlier
+  "peel the G. text" approach was the WRONG fix and was reverted (these needed their NUMBER filled, not
+  the text stripped). Full record: memory `project_blank_strongs_fill`.
+
+---
+
 ## Word-study dead-CSS sweep — DONE (commit 103f81c, 2026-06-19)
 
 The word-card fold orphaned a pile of `.wd-*` rules (`.wd-hero/.wd-sub/.wd-tr/.wd-gloss/.wd-morph/.wd-greek/

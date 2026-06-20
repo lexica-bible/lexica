@@ -250,7 +250,6 @@ header still shows an "Under development" badge on these two tabs. Full record: 
 2. **AI curation hard-tune + likely full redesign** — verse selection / "don't spam" / answer shape on
    Ask the corpus. Current = primary/see-all + inline links; adequate, not the end state. Touches ai.py
    prompts + caching. `code: ai.py; memory project_ai_search_architecture`
-3. **"AndG." artifact** leaking into ABP prose (e.g. Zec 9:11) — pre-existing, small.
 4. **Auto-open the top word on an English search** (mockup does it; left as "pick a word"). Small, user's call.
 6. **Verse-result rows clickable end-to-end — DONE 2026-06-19 (commit 45c7a43).** The whole `.corpus-verse`
    row is now the tap target → clean tap/click jumps to the verse (`onReadInContext`); the ref stays a real

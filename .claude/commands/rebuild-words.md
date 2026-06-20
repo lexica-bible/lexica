@@ -50,6 +50,13 @@ one rebuilt (DELETE only ever hits the copy). The build also makes its own `bibl
    sharing the verb's Strong's. 321 chunks / 308 verses canon-wide (Job 57, Isa 24, 1Co 23,
    Jas 11…), +323 word slots (part of why the count rose). Single-number chunks are byte-identical.
    See memory project_verb_split_slots.
+   NEW 2026-06-20 — blank-"G." FILL (`apply_blank_strongs_fills`, a FINISHING step at the very end
+   of the build, after the insert loop): ABP's source leaves EXACTLY 5 words with a numberless "G."
+   (Zec 9:11/1Pe 3:13 "And"→G2532, Heb 7:4 "And view"→G2334, Mat 12:14 "And the"→G3588,
+   Act 24:8 "bidding"→G2753). The build merges them onto the next number; this fills the right number
+   and splits the slot. Runs automatically on rebuild — do NOT re-run the one-time fill_blank_strongs.py.
+   The 4 splits shift positions, so step 9 (surface + translit re-run) covers them. See memory
+   project_blank_strongs_fill.
 3. Tail — one command: `bash scripts/finish_rebuild.sh bible_test.db`. Restores proper nouns
    (import_tipnr, ~27,965 matched — the build CLEARS is_pn + PN Strong's) then the PINNED
    data-patches that can't fold, then a final punctuation float. Each only touches its own named
