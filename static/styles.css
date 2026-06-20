@@ -2248,12 +2248,15 @@ input { font-family: inherit; }
 .mbar-loc-ch { font-family: var(--f-mono); font-size: 15px; color: var(--accent); font-weight: 500; }
 .mbar-loc-chrono { font-size: 14.5px; max-width: 60vw; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .mbar-loc-cv { color: var(--ink-4); }
-.mbar-trans { width: 42px; height: 42px; border-radius: 10px; display: grid; place-items: center; font-size: 13px; font-weight: 600; color: var(--accent); flex: 0 0 auto; }
-.mbar-trans:active { background: rgba(15,27,45,0.06); }
+.mbar-trans { width: 42px; height: 42px; border-radius: 10px; display: grid; place-items: center; color: var(--ink-3); flex: 0 0 auto; }
+.mbar-trans:active { background: rgba(15,27,45,0.06); color: var(--ink); }
+.mbar-trans.on { color: var(--accent); }   /* reading-options sheet open → highlight */
 /* Overview (ⓘ) button — left slot of the mobile reading cockpit, opens the summary sheet */
 .mbar-overview { width: 42px; height: 42px; border-radius: 10px; display: grid; place-items: center; color: var(--ink-3); flex: 0 0 42px; }
 .mbar-overview:active { background: rgba(15,27,45,0.06); color: var(--ink); }
 .mbar-audio.on { color: var(--accent); }   /* playing → highlight the play/pause icon */
+/* Uniform icon size across the five cockpit slots (mockup heft) */
+.mbar-overview svg, .mbar-trans svg { width: 21px; height: 21px; }
 
 /* ============================================================
    LIBRARY BOTTOM-COCKPIT (mobile prototype)
@@ -2274,6 +2277,9 @@ input { font-family: inherit; }
     border-top: 1px solid var(--rule);
     padding: 0 6px env(safe-area-inset-bottom, 0px);
   }
+  /* Match the design: five equal-width tabs (Info · Search · Book · Play · Options),
+     not a wide centered book with the icons bunched at the edges. */
+  .app.view-library .lib-toolbar > * { flex: 1 1 0; min-width: 0; }
   .app.view-library .mbar-logo-btn { display: none; }  /* pointless in the bottom cockpit */
   /* Bottom clearance for the cockpit; top clearance is global (.main above). */
   .app.view-library .main { padding-bottom: calc(var(--bar-h) + 8px + env(safe-area-inset-bottom, 0px)); }

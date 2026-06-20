@@ -1584,24 +1584,9 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
         </div>
       ) : (
         <div className="lib-toolbar">
-          <button className="mbar-overview" onClick={() => setSummaryOpen(true)} aria-label={chronoOn ? "Reading intro" : "Chapter overview"}>
-            <Icon.Info/>
-          </button>
           <button className="mbar-overview mbar-search" disabled={!canSearch} style={!canSearch ? { opacity: 0.35 } : undefined} onClick={() => { if (canSearch) setSearchOpen(o => !o); }} aria-label="Search this text">
             <Icon.Search/>
           </button>
-          <div className="mbar-center">
-            <button className="mbar-loc" onClick={() => setMobileNavOpen(true)}>
-              {chronoOn ? (
-                <span className="mbar-loc-name mbar-loc-chrono">{curPassage ? curPassage.label : "—"}</span>
-              ) : (
-                <>
-                  <span className="mbar-loc-name">{nonCanon ? nonCanon.name : (selBook ? selBook.name : "")}</span>
-                  <span className="mbar-loc-ch">{selChapter}</span>
-                </>
-              )}
-            </button>
-          </div>
           <button className={"mbar-overview mbar-audio" + (showPause ? " on" : "")}
             disabled={!audioCapable || audioBusy}
             style={!audioCapable ? { opacity: 0.35 } : undefined}
@@ -1609,8 +1594,23 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
             aria-label={!audioCapable ? "Audio not available for this text" : (showPause ? "Pause audio" : "Play chapter audio")}>
             {showPause ? <Icon.Pause/> : <Icon.Play/>}
           </button>
-          <button className="mbar-trans" onClick={() => setModesOpen(true)} aria-label="Reading options">
-            {nonCanon ? (nonCanon.abbr || nonCanon.name) : translation === "parallel" ? "Par" : translation.toUpperCase()}
+          <div className="mbar-center">
+            <button className="mbar-loc" onClick={() => setMobileNavOpen(true)}>
+              {chronoOn ? (
+                <span className="mbar-loc-name mbar-loc-chrono">{curPassage ? curPassage.label : "—"}</span>
+              ) : (
+                <>
+                  <span className="mbar-loc-name">{nonCanon ? (nonCanon.abbr || nonCanon.name) : (selBook ? selBook.abbrev : "")}</span>
+                  <span className="mbar-loc-ch">{selChapter}</span>
+                </>
+              )}
+            </button>
+          </div>
+          <button className="mbar-overview" onClick={() => setSummaryOpen(true)} aria-label={chronoOn ? "Reading intro" : "Chapter overview"}>
+            <Icon.Info/>
+          </button>
+          <button className={"mbar-trans" + (modesOpen ? " on" : "")} onClick={() => setModesOpen(true)} aria-label="Reading options">
+            <Icon.Modes/>
           </button>
         </div>
       )}
