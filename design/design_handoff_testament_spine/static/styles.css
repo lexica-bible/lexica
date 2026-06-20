@@ -3,10 +3,6 @@
      sized to match exactly. Left unpinned, the brand text renders ~65px and the
      64px the nav assumed left the page 1px too tall (a mouse-wheel shift). */
   --hdr-h: 66px;
-  /* Shared height of the slim mobile chrome bars — the top section-nav, the
-     Library bottom reading cockpit, and the Word-study bottom tools bar. One
-     knob so every bar stays the same height and aligned. */
-  --bar-h: 48px;
 
   /* Type */
   --f-sans: "DM Sans", "Söhne", system-ui, -apple-system, sans-serif;
@@ -33,22 +29,21 @@
   --navy-2: #182842;
   --navy-edge: #0a1424;
 
-  --accent: oklch(0.46 0.08 240);  /* steel blue — primary interactive (Claude Design) */
-  --accent-soft: color-mix(in oklab, oklch(0.46 0.08 240) 10%, var(--paper));
-  --spine-nt: var(--navy-2);       /* NT testament spine — a true cool blue in every theme (warm/cool encodes OT/NT) */
-  --ai: oklch(0.46 0.08 280);      /* violet — AI accent (Ask the corpus), split off from --accent */
-  --ai-soft: oklch(0.92 0.025 280);
+  --accent: var(--navy-2);        /* navy (lighter, legible at small sizes) */
+  --accent-soft: color-mix(in oklab, var(--navy-2) 10%, var(--paper));
+  --spine-nt: var(--navy-2);      /* NT testament spine — a true cool blue in every theme
+                                     (NOT --accent, which goes warm-brown in sepia). */
+  --ai: oklch(0.46 0.08 240);     /* steel blue — the AI accent (Ask the corpus) */
+  --ai-soft: oklch(0.92 0.025 240);
   --gold: oklch(0.58 0.09 75);
   --gold-soft: oklch(0.93 0.04 75);
-  --hl-match: #f0d27a;            /* matched/target-word highlight — ONE fixed gold for every theme
-                                    (light fill + dark text), so Word study + search can't drift */
 
   /* Argument-chart node/edge colors — FIXED across themes (chosen to read on light,
      sepia AND dark backgrounds) and deliberately NOT brown. Not overridden per theme. */
   --chart-verse: #243a63;       /* grounded verse — navy */
   --chart-concl: #424a59;       /* conclusion — slate (clearly not the verse navy) */
   --chart-node-fg: #f4f1ea;     /* text on the dark verse/conclusion boxes */
-  --chart-contested: #3a5a92;   /* contested link — fixed navy across themes (kept independent of --accent) */
+  --chart-contested: #3a5a92;   /* contested link — clear navy (NOT --accent, which is brown in sepia) */
   --chart-weak: #8094bd;        /* weak link — lighter than contested navy (keeps the rank); drawn as big round dots */
 
   --shadow-sm: 0 1px 0 rgba(20, 20, 30, 0.04), 0 1px 2px rgba(20, 20, 30, 0.04);
@@ -79,11 +74,11 @@
   --ink-4: #9b8c6f;
   --rule: #d7c9a8;
   --rule-2: #c7b791;
-  --accent: oklch(0.47 0.08 240);  /* steel blue holds up on parchment */
-  --accent-soft: color-mix(in oklab, oklch(0.47 0.08 240) 12%, var(--paper));
+  --accent: #4a4636;
+  --accent-soft: color-mix(in oklab, #4a4636 12%, var(--paper));
   --spine-nt: oklch(0.47 0.10 248);   /* steel blue that stays cool on parchment */
-  --ai: oklch(0.47 0.08 280);     /* violet AI accent */
-  --ai-soft: color-mix(in oklab, oklch(0.47 0.08 280) 12%, var(--paper));
+  --ai: oklch(0.47 0.08 240);     /* steel blue holds up on parchment */
+  --ai-soft: color-mix(in oklab, oklch(0.47 0.08 240) 12%, var(--paper));
   --ctl-bg: #fbf5e6;      /* warm off-white pills instead of stark pure white on parchment */
   --ctl-on: #fefaf0;
 }
@@ -97,11 +92,11 @@
   --ink-4: #6c717b;
   --rule: #2b2f37;
   --rule-2: #3a3f49;
-  --accent: oklch(0.74 0.09 240);  /* steel blue, brightened so links read on dark */
-  --accent-soft: color-mix(in oklab, oklch(0.74 0.09 240) 16%, var(--paper));
-  --spine-nt: #9db4d8;            /* NT testament spine — light steel blue, already cool on dark */
-  --ai: oklch(0.74 0.09 280);     /* brighter violet so the AI accent reads on dark */
-  --ai-soft: color-mix(in oklab, oklch(0.74 0.09 280) 18%, var(--paper));
+  --accent: #9db4d8;      /* lighter navy so links read on dark */
+  --accent-soft: color-mix(in oklab, #9db4d8 16%, var(--paper));
+  --spine-nt: #9db4d8;            /* light steel blue, already cool on dark */
+  --ai: oklch(0.74 0.09 240);     /* brighter steel blue so it reads on dark */
+  --ai-soft: color-mix(in oklab, oklch(0.74 0.09 240) 18%, var(--paper));
   --gold: oklch(0.78 0.11 75);
   --gold-soft: oklch(0.33 0.06 75);
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
@@ -214,13 +209,6 @@ input { font-family: inherit; }
   margin-top: 3px;
 }
 .hdr-nav { display: flex; gap: 4px; }
-.hdr-wip {
-  display: inline-flex; align-items: center; gap: 7px;
-  font-size: 11px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase;
-  color: #f4d58a; background: rgba(244,213,138,0.12);
-  border: 1px solid rgba(244,213,138,0.32); padding: 4px 11px; border-radius: 999px;
-}
-.hdr-wip-dot { width: 7px; height: 7px; border-radius: 50%; background: #f4d58a; animation: ac-dot 1.4s ease-in-out infinite; }
 .hdr-link {
   font-size: 13.5px;
   color: #a8b0c0;
@@ -234,24 +222,7 @@ input { font-family: inherit; }
   color: #f6f7fa;
   background: rgba(255,255,255,0.06);
 }
-.hdr-right { margin-left: auto; display: flex; align-items: center; gap: 14px; }
-/* Word study floats its right card (--sidebar-w) over the navy bar's right edge,
-   so shift the account control clear of it. Header is hidden < 1100, so no media query needed. */
-.app.view-lexicon .hdr-right { margin-right: calc(var(--sidebar-w) + 12px); }
-/* Account control in the navy header (desktop only — the header is hidden < 1100px). */
-.hdr-login {
-  font-size: 13px; font-weight: 600; color: #0f1b2d;
-  background: #e9ecf2; border: none; border-radius: 7px;
-  padding: 7px 16px; cursor: pointer; letter-spacing: 0.01em;
-}
-.hdr-login:hover { background: #fff; }
-.hdr-acct {
-  font-size: 13px; color: #a8b0c0;
-  background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 999px; padding: 6px 13px; cursor: pointer;
-  max-width: 190px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
-}
-.hdr-acct:hover { color: #e9ecf2; border-color: rgba(255,255,255,0.25); }
+.hdr-right { display: flex; align-items: center; gap: 14px; }
 .hdr-icon-btn {
   width: 34px; height: 34px;
   border-radius: 6px;
@@ -359,41 +330,6 @@ input { font-family: inherit; }
   background: var(--bg-sunk); border-radius: 3px; padding: 0 4px; margin-right: 6px;
 }
 
-/* Collapsible "words rendered" results card (English search) — design 2026-06-19.
-   Stays pinned above the occurrences once a word is picked; the chosen row gets
-   the navy left-spine (.glrow.on). */
-.glsenses { margin: 0 2px 18px; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); overflow: hidden; }
-.glsenses-head { display: flex; align-items: center; gap: 11px; width: 100%; text-align: left; padding: 11px 14px; background: var(--bg-sunk); border: none; cursor: pointer; transition: background .12s; }
-.glsenses.open .glsenses-head { border-bottom: 1px solid var(--rule); }
-.glsenses-head:hover { background: color-mix(in oklab, var(--bg-sunk) 55%, var(--bg)); }
-.glsenses-l { font-size: 11.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); flex: 0 0 auto; }
-.glsenses-l b { color: var(--ink); font-weight: 700; }
-.glsenses-cur { display: inline-flex; align-items: baseline; gap: 7px; min-width: 0; overflow: hidden; }
-.glsenses-cur-gk { font-family: var(--f-greek); font-size: 16px; color: var(--ink); flex: 0 0 auto; }
-.glsenses-cur-gk.heb { direction: rtl; }
-.glsenses-cur-tr { font-family: var(--f-serif); font-style: italic; font-size: 13px; color: var(--ink-3); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.glsenses-tog { margin-left: auto; display: inline-flex; align-items: center; gap: 5px; font-size: 12px; color: var(--accent); flex: 0 0 auto; }
-.glsenses-tog svg { width: 13px; height: 13px; transition: transform .18s; }
-.glsenses.open .glsenses-tog svg { transform: rotate(180deg); }
-.glsenses-empty { padding: 14px; font-size: 13px; color: var(--ink-3); }
-.glsenses-rows { display: flex; flex-direction: column; }
-.glrow { display: flex; align-items: flex-start; gap: 13px; width: 100%; text-align: left; padding: 12px 14px; border: none; border-bottom: 1px solid var(--rule); background: transparent; cursor: pointer; transition: background .12s; }
-.glrow:last-child { border-bottom: none; }
-.glrow:hover { background: var(--bg); }
-.glrow.on { background: var(--accent-soft); box-shadow: inset 3px 0 0 var(--accent); }
-.glrow-s { font-family: var(--f-mono); font-size: 10.5px; color: var(--ink-3); background: var(--bg-sunk); border: 1px solid var(--rule); padding: 3px 7px; border-radius: 5px; flex: 0 0 auto; margin-top: 2px; }
-.glrow.on .glrow-s { background: var(--paper); border-color: color-mix(in oklab, var(--accent) 30%, var(--rule)); color: var(--accent); }
-.glrow-main { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
-.glrow-top { display: flex; align-items: baseline; gap: 9px; }
-.glrow-gk { font-family: var(--f-greek); font-size: 21px; color: var(--ink); line-height: 1.05; }
-.glrow-gk.heb { direction: rtl; }
-.glrow-tr { font-family: var(--f-serif); font-style: italic; font-size: 14px; color: var(--ink-2); }
-.glrow-rend { display: grid; grid-template-columns: 31px 1fr; gap: 9px; font-size: 12.5px; color: var(--ink-2); line-height: 1.45; }
-.glrow-k { font-family: var(--f-mono); font-size: 9px; color: var(--ink-4); background: var(--bg-sunk); padding: 2px 0; border-radius: 3px; height: fit-content; letter-spacing: .04em; text-align: center; margin-top: 1px; }
-.glrow-occ { display: inline-flex; align-items: center; gap: 4px; font-family: var(--f-mono); font-size: 13px; color: var(--ink-3); flex: 0 0 auto; margin-top: 3px; }
-.glrow-occ svg { color: var(--ink-4); width: 13px; height: 13px; }
-.glrow.on .glrow-occ, .glrow.on .glrow-occ svg { color: var(--accent); }
-
 
 /* Back link from profile to groupings */
 .lexicon-back {
@@ -434,6 +370,7 @@ input { font-family: inherit; }
 .lexicon-total { font-size: 13px; color: var(--ink-3); }
 .lexicon-header-controls { display: flex; gap: 8px; margin-left: auto; align-items: center; }
 .lexicon-controls-row { display: flex; gap: 8px; align-items: center; margin-bottom: 14px; }
+.lexicon-toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 12px 0 4px; }
 .lexicon-search-hint { margin-top: 8px; font-size: 12.5px; color: var(--ink-3); }
 .lexicon-pivots { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 14px 0 4px; }
 .lexicon-ask-corpus {
@@ -446,6 +383,11 @@ input { font-family: inherit; }
 .lexicon-ask-corpus svg { width: 15px; height: 15px; }
 .lexicon-ask-instead { display: inline-block; margin: 2px 0 10px; padding: 0; font-family: var(--f-sans); font-size: 12.5px; color: var(--accent); background: none; border: none; cursor: pointer; }
 .lexicon-ask-instead:hover { text-decoration: underline; }
+.lexicon-corpus-toggle { display: inline-flex; gap: 2px; background: var(--bg-sunk); border: 1px solid var(--rule); border-radius: 8px; padding: 2px; }
+.lct-btn { padding: 5px 12px; font-size: 12px; font-weight: 500; border: none; border-radius: 6px; cursor: pointer; background: transparent; color: var(--ink-3); transition: background 0.1s, color 0.1s; }
+.lct-btn:hover:not(:disabled):not(.on) { color: var(--ink); }
+.lct-btn.on { background: var(--ctl-on); color: var(--ink); box-shadow: var(--shadow-sm); }
+.lct-btn:disabled { opacity: 0.35; cursor: default; }
 .lexicon-back-link { display: inline-block; background: none; border: none; cursor: pointer; font-size: 13px; color: var(--ink-3); padding: 0 0 12px; }
 .lexicon-back-link:hover { color: var(--ink); }
 /* Rendering / gloss filter list (shares .lexicon-dist-* inline-list styles) */
@@ -859,9 +801,9 @@ input { font-family: inherit; }
      cockpit pinned to the bottom; other tabs (Lexicon, Search) have nothing
      there, so anchoring above 0 left an empty gap below the sheet. */
   bottom: env(safe-area-inset-bottom, 0px);
-  /* Rise no further than the bottom of the top menu (.mobile-tabs, --bar-h). */
-  max-height: calc(100vh - var(--bar-h) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
-  max-height: calc(100dvh - var(--bar-h) - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  /* Rise no further than the bottom of the top menu (.mobile-tabs, 56px). */
+  max-height: calc(100vh - 56px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  max-height: calc(100dvh - 56px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
   overscroll-behavior: contain;
   background: var(--paper);
   border-top-left-radius: 18px;
@@ -875,9 +817,9 @@ input { font-family: inherit; }
 /* Library tab keeps a fixed reading cockpit at the bottom (≈58px) — lift the
    sheet above it there, and shorten its max height to match. */
 .app.view-library .detail-sheet {
-  bottom: calc(var(--bar-h) + env(safe-area-inset-bottom, 0px));
-  max-height: calc(100vh - var(--bar-h) * 2 - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
-  max-height: calc(100dvh - var(--bar-h) * 2 - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  bottom: calc(56px + env(safe-area-inset-bottom, 0px));
+  max-height: calc(100vh - 112px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
+  max-height: calc(100dvh - 112px - env(safe-area-inset-top, 0px) - env(safe-area-inset-bottom, 0px));
 }
 .detail-sheet .detail-body { overscroll-behavior: contain; }
 @keyframes slide-up {
@@ -955,20 +897,8 @@ input { font-family: inherit; }
   flex: 1;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 16px 24px 18px;
+  padding: 16px 24px 40px;
 }
-/* Align the rail panels' section rhythm (2026-06-19). The word card (.wd, LOCKED) is the
-   anchor: .sec sections (18px, border-top) + 16px body-top. Bring the others onto it —
-   shared rules stay untouched, everything here is scoped per panel.
-   • Summary used the OLD .detail-section (12px, border-bottom) → match the .sec look.
-   • No-hero panels (summary, xref) tighten the FIRST section's top so the first heading
-     isn't stranded far below the header (your "xref too much").
-   • Day-intro gets a little more top air (your "too little"). */
-.summary-side .detail-section { padding: 18px 0; border-top: 1px solid var(--rule); border-bottom: 0; }
-.summary-side .detail-section:first-of-type { border-top: 0; padding-top: 4px; }
-.summary-side .detail-h { margin: 0 0 12px; }
-.xref-panel .sec:first-of-type { padding-top: 4px; }
-.dintro-side .detail-body { padding-top: 22px; }
 
 .detail-hero {
   display: flex;
@@ -1218,7 +1148,7 @@ input { font-family: inherit; }
 .dverse-n { font-family: var(--f-mono); font-size: 10px; color: var(--accent); background: var(--accent-soft); padding: 2px 6px; border-radius: 4px; vertical-align: super; margin-right: 8px; }
 .dverse-tools { display: flex; align-items: center; gap: 8px; font-size: 12.5px; }
 
-.occ-link { display: inline-flex; align-items: center; gap: 6px; font-family: var(--f-serif); font-size: 17px; color: var(--ai); font-weight: 500; }
+.occ-link { display: inline-flex; align-items: center; gap: 6px; font-family: var(--f-serif); font-size: 17px; color: var(--accent); font-weight: 500; }
 .occ-link:hover { text-decoration: underline; }
 .occ-link--static { color: var(--ink-2); cursor: default; }
 .occ-link--static:hover { text-decoration: none; }
@@ -1336,41 +1266,33 @@ input { font-family: inherit; }
   display: inline-block;
   font-family: var(--f-mono);
   font-size: 10.5px;
-  color: var(--ink-3);           /* muted-ink reference mark, NO fill (design 2026-06-19): crisp
-                                    citation, not a faint code-y link; the gold matched word is the
-                                    only filled highlight per row */
-  background: none;
-  padding: 0;
+  color: var(--accent);
+  background: var(--accent-soft);
+  padding: 1px 6px;
+  border-radius: 4px;
   white-space: nowrap;
   letter-spacing: 0.04em;
-  margin-right: 8px;
+  margin-right: 4px;
   vertical-align: baseline;
   border: none;
   cursor: pointer;
   transition: opacity 0.12s;
 }
-/* Whole verse-result row is the click target (mainly for touch — no hover there, and the
-   ref is a tiny tap target). Resting = muted-ink ref; on desktop hover the row tints, the
-   ref lifts to the --accent link color, and the pointer shows. */
-@media (hover: hover) {
-  .corpus-verse--click { cursor: pointer; }
-  .corpus-verse--click:hover { background: color-mix(in oklab, var(--accent) 6%, transparent); }
-  .corpus-verse--click:hover .corpus-ref { color: var(--accent); }
-}
+.corpus-ref:hover { opacity: 0.75; }
 .corpus-text {
   display: inline;
 }
-/* The matched word in any result list (Word study, Search, Library find) — ONE shared gold
-   (--hl-match) hugging the word, dark text in every theme. box-decoration-break keeps the
-   rounding/fill intact if a multi-word match wraps a line. */
+/* The matched word in a Search/Lexicon prose result — gold, hugging the word.
+   box-decoration-break keeps the rounding/fill intact if a multi-word match wraps a
+   line. Text pinned dark because the gold stays light in every theme (dark-mode trap). */
 .corpus-hit {
-  background: var(--hl-match);
-  color: #221e18;
+  background: var(--gold-soft);
   border-radius: 4px;
   padding: 0 2px;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
 }
+:root[data-theme="dark"] .corpus-hit { color: #221e18; }
 .word-badge {
   position: absolute;
   bottom: calc(100% + 4px);
@@ -2016,17 +1938,18 @@ input { font-family: inherit; }
 .lib-other-head-btn.open .lib-other-head-caret { transform: rotate(90deg); }
 .lib-other-head-lbl { flex: 1; text-align: left; }
 .lib-other-head-count {
-  font-size: 11px;
-  color: var(--ink-4);           /* plain muted count, no filled pill — keep the menu calm (2026-06-19) */
-  padding-left: 6px;
+  font-size: 10px;
+  color: var(--gold);
+  background: var(--gold-soft);
+  border-radius: 9px;
+  padding: 1px 7px;
 }
 .lib-other-head-btn:not(:first-child) {
   margin-top: 2px;
   border-top: 1px solid var(--rule);
 }
 .lib-other-item {
-  display: flex;
-  align-items: center;
+  display: block;
   width: 100%;
   text-align: left;
   padding: 7px 10px;
@@ -2038,18 +1961,13 @@ input { font-family: inherit; }
   cursor: pointer;
 }
 .lib-other-item:not(:disabled):hover { background: var(--bg-sunk); }
-/* active version = clear "you are here": accent text + soft fill + a check on the right.
-   NOT gold — gold is reserved for target words (design 2026-06-19). */
-.lib-other-item.on { color: var(--accent); font-weight: 600; }
-.lib-other-item.on::after { content: "\2713"; margin-left: auto; padding-left: 8px; font-size: 12px; color: var(--accent); }
+.lib-other-item.on { color: var(--gold); font-weight: 600; }
 .lib-other-item:disabled { opacity: 0.4; cursor: default; }
 
 /* Compact text-size button + its little popover (replaces the inline A−/A+ seg) */
 .lib-font-btn { font-size: 13px; letter-spacing: 0.01em; }
 .lib-font-menu { min-width: 0; padding: 6px; }
-/* hairline divides SIZE (stepper above) from THEME (segments below) so the Aa menu reads
-   composed, not stacked (design 2026-06-19) */
-.lib-theme-seg { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--rule); }
+.lib-theme-seg { margin-top: 6px; }
 .lib-theme-seg .seg-b { flex: 1 1 0; padding: 5px 6px; }
 
 /* ----- Non-canonical reader: readable English (parallel right column) ----- */
@@ -2139,7 +2057,7 @@ input { font-family: inherit; }
   /* Section tabs are fixed at the TOP on every tab, so .main carries the top
      clearance for all tabs. The Library bottom cockpit adds its own bottom
      clearance (see the view-library block below). */
-  .main { padding-top: calc(var(--bar-h) + env(safe-area-inset-top, 0px)); padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
+  .main { padding-top: calc(56px + env(safe-area-inset-top, 0px)); padding-bottom: calc(24px + env(safe-area-inset-bottom, 0px)); }
   /* a little breathing room below the fixed tab bar before the search box */
   .main-inner { padding: 28px 16px 24px; max-width: 100%; }
   /* match .main-inner so the lexicon "Word lookup" box lines up with the Search box */
@@ -2157,16 +2075,19 @@ input { font-family: inherit; }
   .mobile-tab {
     flex: 1;
     display: flex;
+    flex-direction: column;
     align-items: center;
-    justify-content: center;
-    height: var(--bar-h);
+    gap: 3px;
+    padding: 8px 0 10px;
+    font-size: 11px;
+    font-family: var(--f-sans);
     color: #8a9ab8;
     background: none;
     border: none;
     cursor: pointer;
   }
   .mobile-tab.active { color: #e9ecf2; }
-  .mobile-tab svg { width: 22px; height: 22px; stroke: currentColor; }
+  .mobile-tab svg { stroke: currentColor; }
   .search { padding: 12px 14px; max-width: 100%; }
   .results-head { margin: 24px 2px 10px; flex-direction: column; align-items: flex-start; gap: 8px; }
   .results-controls { width: 100%; margin-left: 0 !important; overflow-x: auto; -webkit-overflow-scrolling: touch; scrollbar-width: none; }
@@ -2174,14 +2095,14 @@ input { font-family: inherit; }
   .results-sort { flex-wrap: nowrap; }
   .detail-greek { font-size: 44px; }
   .detail-form-w { font-size: 19px; }
-  .detail-body { padding: 16px 18px 18px; }
+  .detail-body { padding: 16px 18px 32px; }
 }
 @media (max-width: 520px) {
   .results { grid-template-columns: 1fr; }
 }
 @media (max-width: 1099px) {
   .hdr { display: none; }
-  .lib-toolbar { position: sticky; top: 0; z-index: 20; height: var(--bar-h); padding: 0 6px; margin-bottom: 8px; flex-wrap: nowrap; justify-content: space-between; background: color-mix(in oklab, var(--bg) 84%, var(--ctl-bg)); backdrop-filter: blur(6px); border-bottom: 1px solid var(--rule); gap: 4px; }
+  .lib-toolbar { position: sticky; top: 0; z-index: 20; height: 56px; padding: 0 6px; margin-bottom: 8px; flex-wrap: nowrap; justify-content: space-between; background: color-mix(in oklab, var(--bg) 84%, var(--ctl-bg)); backdrop-filter: blur(6px); border-bottom: 1px solid var(--rule); gap: 4px; }
   .lib-toolbar-navy { background: var(--navy); border-bottom-color: var(--navy-edge, #1e3050); backdrop-filter: none; }
   .lib-toolbar-navy .mbar-loc-name { color: #e9ecf2; }
   .lib-toolbar-navy .mbar-loc-ch { color: #7eb8e8; }  /* --accent is dark navy; invisible on the navy bar without this */
@@ -2194,13 +2115,13 @@ input { font-family: inherit; }
   .mobile-brand-name { font-family: var(--f-serif); font-weight: 600; font-size: 17px; letter-spacing: -0.01em; color: #f6f7fa; }
   .mobile-brand-sub { font-size: 11px; color: #8a9ab8; letter-spacing: 0.01em; margin-left: 2px; }
   .lib-heading { display: none; }
-  /* Fill the screen below the top chrome (top nav + bottom cockpit, --bar-h each)
+  /* Fill the screen below the top chrome (section tabs 56px + lib toolbar 56px)
      so a short chapter's empty space below the text is still part of the
      page-turn swipe zone. */
   .lib-reading {
     overflow-x: hidden; max-width: 100%; padding: 10px 12px;
-    min-height: calc(100vh - var(--bar-h) * 2);
-    min-height: calc(100dvh - var(--bar-h) * 2);
+    min-height: calc(100vh - 112px);
+    min-height: calc(100dvh - 112px);
   }
   .lib-text-words { --lib-line-h: 1.65; }
   .lib-verse-row { margin-bottom: 3px; }
@@ -2268,7 +2189,7 @@ input { font-family: inherit; }
     position: fixed;
     top: auto; bottom: 0; left: 0; right: 0;
     z-index: 200;
-    height: auto; min-height: calc(var(--bar-h) + env(safe-area-inset-bottom, 0px));
+    height: auto; min-height: calc(56px + env(safe-area-inset-bottom, 0px));
     margin-bottom: 0;
     border-bottom: none;
     border-top: 1px solid var(--rule);
@@ -2276,12 +2197,12 @@ input { font-family: inherit; }
   }
   .app.view-library .mbar-logo-btn { display: none; }  /* pointless in the bottom cockpit */
   /* Bottom clearance for the cockpit; top clearance is global (.main above). */
-  .app.view-library .main { padding-bottom: calc(var(--bar-h) + 8px + env(safe-area-inset-bottom, 0px)); }
+  .app.view-library .main { padding-bottom: calc(64px + env(safe-area-inset-bottom, 0px)); }
   /* The bottom player (base styles in the dock block) docks just ON TOP of the bottom
      cockpit on mobile, not flush at the screen edge. z below the detail/modes sheets
      (51/220) so an open sheet covers it, above content. */
   .app.view-library .lib-audio-dock {
-    bottom: calc(var(--bar-h) + env(safe-area-inset-bottom, 0px));
+    bottom: calc(56px + env(safe-area-inset-bottom, 0px));
     z-index: 49;
     padding: 8px 16px;
   }
@@ -2302,10 +2223,10 @@ input { font-family: inherit; }
 .msheet {
   position: fixed; left: 0; right: 0; bottom: 0; z-index: 220;
   background: var(--paper);
-  border-top-left-radius: 18px; border-top-right-radius: 18px;
-  box-shadow: 0 -20px 60px rgba(15, 23, 42, 0.25);
+  border-top-left-radius: 20px; border-top-right-radius: 20px;
+  box-shadow: 0 -16px 50px rgba(15,23,42,0.22);
   padding-bottom: env(safe-area-inset-bottom, 12px);
-  animation: slide-up 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+  animation: msheet-up 0.28s cubic-bezier(0.2,0.8,0.2,1);
   /* swipe-to-dismiss + scroll: cap height below the top tab bar, scroll the body */
   display: flex; flex-direction: column;
   max-height: calc(100dvh - 64px - env(safe-area-inset-top, 0px));
@@ -2335,7 +2256,7 @@ input { font-family: inherit; }
 .mseg-b.on { background: var(--ctl-on); color: var(--ink); font-weight: 600; box-shadow: var(--shadow-sm); }
 .mseg-b:active:not(.on) { background: rgba(0,0,0,0.08); color: var(--ink); }
 .mseg-view .mseg-b { display: inline-flex; align-items: center; justify-content: center; }
-.font-size-lbl { font-size: 12px; color: var(--ink-2); flex: 1; text-align: center; align-self: center; user-select: none; pointer-events: none; }
+.font-size-lbl { font-size: 12px; color: var(--ink-3); flex: 1; text-align: center; align-self: center; user-select: none; pointer-events: none; }
 .font-picker .mseg-b { flex: 0 0 44px; }
 /* Checkable Text picker (mobile): tick 1 to read, 2-4 to compare side by side. */
 /* Text picker wraps when there are enough texts. Sized so a NORMAL user's four
@@ -2745,12 +2666,6 @@ input { font-family: inherit; }
 /* "More" texts = a floating popout under the source row (no longer pushes the book
    list down). Sizes to its content, with a max-height + own scroll for long lists.
    Clipped to the nav by .nav's overflow. */
-/* faint dim over the book list behind the floating version menu — cleans the overlap, matches
-   the focus-dim language (design 2026-06-19). Sits under the menu (z 40), over the books. */
-.nav-other-dim {
-  position: absolute; top: 100%; left: 0; right: 0; height: 100vh; z-index: 30;
-  background: rgba(15, 23, 42, 0.16);
-}
 .nav-other-inline {
   position: absolute; top: 100%; left: 6px; right: 6px; z-index: 40;
   max-height: calc(100vh - var(--hdr-h) - 90px);
@@ -2846,10 +2761,11 @@ input { font-family: inherit; }
 /* A touch more air above a new testament block (where the OT/NT tag shows). */
 .nav-group--tnew { margin-top: 10px; }
 .nav-group--tnew:first-child { margin-top: 0; }
-/* #3 — testament spine down the left: warm OT (--gold) / cool NT (--spine-nt), so you
-   sense which testament you're in. Full-strength 3px in every theme — the old 2px soft
-   tints washed out on parchment + navy; --spine-nt carries the per-theme cool blue. */
-.nav-group--ot { border-left: 3px solid var(--gold);     padding-left: 7px; }
+/* #3 — testament spine down the left: warm for OT, cool for NT, so you sense which
+   testament you're in. One treatment across every theme — 3px, OT = full --gold,
+   NT = --spine-nt (a true cool blue per theme; --accent went warm-brown in sepia
+   and broke the warm/cool read). */
+.nav-group--ot { border-left: 3px solid var(--gold); padding-left: 7px; }
 .nav-group--nt { border-left: 3px solid var(--spine-nt); padding-left: 7px; }
 /* Standalone OT/NT testament header above the first category — a spelled-out
    uppercase label colour-matched to its spine (was a floating gold pill). */
@@ -3305,14 +3221,14 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
   to   { opacity: 1; transform: translateX(-50%) translateY(0); }
 }
 /* On mobile: a full-width "find bar" that drops flush from under the navy
-   section-tab bar (.mobile-tabs, --bar-h + notch) — not a floating card. */
+   section-tab bar (.mobile-tabs, 56px + notch) — not a floating card. */
 @media (max-width: 1099px) {
   .lib-search-panel {
-    top: calc(var(--bar-h) + env(safe-area-inset-top, 0px));
+    top: calc(56px + env(safe-area-inset-top, 0px));
     left: 0; right: 0; transform: none;
     width: 100%; max-width: 100%;
-    max-height: calc(100vh - var(--bar-h) - env(safe-area-inset-top, 0px));
-    max-height: calc(100dvh - var(--bar-h) - env(safe-area-inset-top, 0px));
+    max-height: calc(100vh - 56px - env(safe-area-inset-top, 0px));
+    max-height: calc(100dvh - 56px - env(safe-area-inset-top, 0px));
     border-width: 0 0 1px 0;
     border-radius: 0 0 14px 14px;
     box-shadow: 0 14px 28px rgba(34, 30, 24, 0.18);
@@ -3377,12 +3293,9 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
   padding: 8px 14px; cursor: pointer; border-bottom: 1px solid rgba(34,30,24,0.05);
 }
 .lib-search-hit:hover { background: var(--bg); }
-/* Verse ref = quiet mono muted-ink citation, matching Word study's .corpus-ref (design
-   2026-06-19): the stacked card layout already gives the ref prominence by position, so the
-   type stays quiet (was serif/dark/600 — the outlier vs the system's "refs = mono" rule). */
-.lib-search-hit-ref { display: block; font-family: var(--f-mono); font-weight: 400; color: var(--ink-3); font-size: 12px; letter-spacing: 0.04em; margin-bottom: 3px; }
+.lib-search-hit-ref { display: block; font-weight: 600; color: var(--ink); font-size: 13px; margin-bottom: 2px; }
 .lib-search-hit-text { display: block; color: var(--ink-2); font-size: 14px; line-height: 1.4; }
-.lib-search-mark { background: var(--hl-match); color: #221e18; border-radius: 4px; padding: 0 2px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }   /* identical to Word study's .corpus-hit — same --hl-match gold (design 2026-06-19) */
+.lib-search-mark { background: #ffe6a3; color: var(--ink); font-weight: 600; border-radius: 2px; padding: 0 1px; }
 .mbar-search { margin-left: 2px; }
 
 /* ============================================================
@@ -3719,17 +3632,10 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
 
 /* --- Desktop: darken the surroundings, spotlight the reading --- */
 @media (min-width: 1100px) {
-  /* Focus wash — a real element (rendered in the JSX) so it CAPTURES clicks: the dimmed
-     chrome is non-interactive and clicking the wash leaves focus mode. Dark tint + a soft
-     blur make the surroundings RECEDE so the lit reading page is the only thing the eye
-     catches — that's what earns "distraction-free" (design 2026-06-19). With the background
-     receded, the card no longer needs a heavy shadow to separate. */
-  .app.focus-mode .lib-focus-wash {
-    position: fixed; inset: 0; z-index: 50;
-    background: rgba(12, 17, 29, 0.62);
-    -webkit-backdrop-filter: blur(3px);
-    backdrop-filter: blur(3px);
-    cursor: default;
+  .app.focus-mode::before {
+    content: ""; position: fixed; inset: 0;
+    background: rgba(15, 23, 42, 0.5);
+    z-index: 50; pointer-events: none;   /* click-through: panels stay usable while dimmed */
     animation: focus-dim-in 0.2s ease;
   }
   .app.focus-mode .lib-reading {
@@ -3740,9 +3646,9 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
     overflow-y: auto;                      /* the text scrolls inside the page... */
     overscroll-behavior: contain;          /* ...without scrolling the dark backdrop */
     background: var(--bg);
-    border-radius: 8px;
+    border-radius: 14px;
     padding: 34px 46px 40px;               /* both the top and bottom edges show — like a real page */
-    box-shadow: 0 4px 28px rgba(0, 0, 0, 0.22);   /* light — the receded background does the separating now */
+    box-shadow: 0 18px 64px rgba(0, 0, 0, 0.5);
   }
   /* Focus page scrollbar — same slim-then-wider-on-hover trick as the nav (Chrome via webkit;
      Firefox via the @supports block below). */
@@ -3758,19 +3664,6 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
   .app.focus-mode .lib-reading--audio { bottom: 56px; }
 }
 @keyframes focus-dim-in { from { opacity: 0; } to { opacity: 1; } }
-
-/* Desktop focus is READ-ONLY (any tap exits) — strip the clickable CUES so it looks as inert
-   as it acts. Words keep their text selectable but lose the pointer + hover box; verse numbers
-   go pointer-events:none so the "Click: cross-references…" title tooltip, the cursor and the
-   hover all vanish (a tap falls through to the reader → exits focus). Mobile focus stays fully
-   tappable, so this is desktop-only. (2026-06-19) */
-@media (min-width: 1100px) {
-  .app.focus-mode .lib-reading .lib-word { cursor: default; }
-  .app.focus-mode .lib-reading .lib-word:hover,
-  .app.focus-mode .lib-reading .lib-word.lib-word-clickable:hover { background: none; }
-  .app.focus-mode .lib-reading .lib-flow-vnum,
-  .app.focus-mode .lib-reading .lib-vnum-num { pointer-events: none; }
-}
 
 /* Page-turn chevrons hugging the outer edges of the focus-mode page,
    vertically centered (desktop focus only — added by the JSX guard). */
@@ -4230,11 +4123,6 @@ button.study-verse-ref { border: none; }
 }
 .ac-syn-tag svg { width: 14px; height: 14px; }
 .ac-prose { font-family: var(--f-serif); font-size: 17px; line-height: 1.72; color: var(--ink); margin: 0; text-wrap: pretty; }
-/* inline citations the AI already wrote, made clickable */
-.ac-ref { font-family: var(--f-mono); font-size: 12.5px; color: var(--gold); background: var(--gold-soft); padding: 1px 6px; border-radius: 5px; white-space: nowrap; letter-spacing: 0.01em; }
-.ac-ref:hover { background: color-mix(in oklab, var(--gold) 28%, var(--gold-soft)); }
-.ac-instrongs { font-family: var(--f-mono); font-size: 0.9em; color: var(--ai); border-bottom: 1px solid color-mix(in oklab, var(--ai) 32%, transparent); white-space: nowrap; }
-.ac-instrongs:hover { border-bottom-color: var(--ai); }
 .ac-notice { font-size: 14.5px; line-height: 1.6; color: var(--ink-2); margin: 0; padding: 14px 16px; background: var(--ai-soft); border: 1px solid color-mix(in oklab, var(--ai) 20%, transparent); border-radius: 10px; }
 .ac-error { font-size: 14px; color: #b91c1c; margin: 0; padding: 12px 16px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px; }
 
@@ -4291,24 +4179,18 @@ button.study-verse-ref { border: none; }
 ============================================================ */
 .ws {
   display: grid;
-  /* Mirror the Library: 224px left rail (= the book nav) + center fills.
-     The right word card is pulled out of the grid (position:fixed, below) and
-     floats over the navy header, so reserve its strip with padding-right. */
-  grid-template-columns: 224px minmax(0, 1fr);
-  padding-right: var(--sidebar-w);
+  grid-template-columns: 248px minmax(0, 1fr) 420px;
   height: calc(100vh - var(--hdr-h));
   min-height: 0;
 }
 .ws.center-only { grid-template-columns: minmax(0, 1fr); }
 @media (min-width: 1100px) and (max-width: 1320px) {
-  .ws { grid-template-columns: 224px minmax(0, 1fr); }
+  .ws { grid-template-columns: 232px minmax(0, 1fr) 384px; }
 }
 
 /* LEFT — distribution rail */
 .brail { border-right: 1px solid var(--rule); background: var(--bg-sunk); min-height: 0; display: flex; flex-direction: column; }
-/* Height matches the center .searchbar (14 + 46px field + 14 + 1px border) so the
-   rail's divider line meets the search box's line cleanly across the column gap. */
-.brail-top { flex: 0 0 auto; box-sizing: border-box; height: 75px; display: flex; flex-direction: column; justify-content: center; padding: 0 18px; border-bottom: 1px solid var(--rule); }
+.brail-top { flex: 0 0 auto; padding: 16px 18px 12px; border-bottom: 1px solid var(--rule); }
 .brail-eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; color: var(--ink-3); }
 .brail-sub { font-size: 12px; color: var(--ink-4); margin-top: 5px; }
 .brail-gk { font-family: var(--f-greek); color: var(--ink-2); font-size: 14px; }
@@ -4323,28 +4205,14 @@ button.study-verse-ref { border: none; }
 .brow-bar { height: 6px; background: color-mix(in oklab, var(--ink) 8%, transparent); border-radius: 3px; overflow: hidden; }
 .brow-fill { height: 100%; border-radius: 3px; background: color-mix(in oklab, var(--ink) 26%, transparent); }
 .brow-n { font-family: var(--f-mono); font-size: 10.5px; color: var(--ink-4); text-align: right; min-width: 22px; }
-/* "All books" — no box (just a bold row); still fills navy when it's the active one. */
-.brow-all { grid-template-columns: 1fr auto; margin-bottom: 6px; padding: 9px 10px; }
+.brow-all { grid-template-columns: 1fr auto; margin-bottom: 6px; padding: 9px 10px; border: 1px solid var(--rule); background: var(--paper); }
 .brow-all .brow-name { font-weight: 600; color: var(--ink); }
-.brow-all.on { background: var(--navy); }
+.brow-all.on { background: var(--navy); border-color: var(--navy); }
 
 /* CENTER — search + occurrences */
 .ws .center { min-height: 0; display: flex; flex-direction: column; background: var(--bg); }
 .ws .searchbar { flex: 0 0 auto; padding: 14px 28px; border-bottom: 1px solid var(--rule); background: color-mix(in oklab, var(--bg) 82%, var(--paper)); }
-.ws .searchbar-in { display: flex; align-items: center; gap: 16px; }
-.ws .searchbar-in .search-field { flex: 0 1 540px; min-width: 0; }
-/* "Ask AI about X" — appears to the RIGHT of the search bar once a word is loaded
-   (replaces the old word-card footer button). Its own class, never the shared .occ-link. */
-.searchbar-ask {
-  display: inline-flex; align-items: center; gap: 7px; flex: 0 0 auto;
-  font-family: var(--f-serif); font-size: 14.5px; font-weight: 500; color: var(--ai);
-  padding: 8px 13px; border-radius: 9px;
-  border: 1px solid color-mix(in oklab, var(--ai) 30%, var(--rule-2));
-  background: color-mix(in oklab, var(--ai) 6%, transparent);
-  transition: background 0.12s, border-color 0.12s;
-}
-.searchbar-ask:hover { background: color-mix(in oklab, var(--ai) 12%, transparent); border-color: var(--ai); }
-.searchbar-ask svg { flex: 0 0 auto; width: 15px; height: 15px; }
+.ws .searchbar-in { max-width: 740px; margin: 0 auto; }
 .ws .search-field { display: flex; align-items: center; gap: 10px; background: var(--paper); border: 1px solid var(--rule-2); border-radius: 11px; padding: 0 8px 0 14px; height: 46px; box-shadow: var(--shadow-sm); transition: border-color 0.15s, box-shadow 0.15s; }
 .ws .search-field:focus-within { border-color: var(--accent); box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 12%, transparent); }
 .search-i { color: var(--ink-3); flex: 0 0 17px; transition: color 0.15s; }
@@ -4355,7 +4223,7 @@ button.study-verse-ref { border: none; }
 .ws .search-go:hover { background: var(--navy-2); }
 .ws .search-hint { margin-top: 9px; font-size: 12px; color: var(--ink-4); }
 .results-scroll { flex: 1; overflow-y: auto; }
-.results-col { padding: 8px 28px 70px; }
+.results-col { max-width: 780px; margin: 0 auto; padding: 18px 28px 70px; }
 
 /* reading-style underline tabs (testament + ABP/KJV) */
 .ws .filters { display: flex; align-items: center; gap: 16px; margin: 0 2px 14px; padding-bottom: 11px; border-bottom: 1px solid var(--rule); }
@@ -4363,7 +4231,7 @@ button.study-verse-ref { border: none; }
 .ws .tg { position: relative; font-size: 13px; color: var(--ink-4); padding: 2px 1px 3px; letter-spacing: 0.02em; }
 .ws .tg:hover { color: var(--ink-2); }
 .ws .tg.on { color: var(--ink); font-weight: 600; }
-.ws .tg.on::after { content: ""; position: absolute; left: 0; right: 0; bottom: -12px; height: 2px; background: var(--accent); border-radius: 2px; }   /* navy/accent underline, NOT gold (design 2026-06-19): match the Library search tabs + keep gold for target words only */
+.ws .tg.on::after { content: ""; position: absolute; left: 0; right: 0; bottom: -12px; height: 2px; background: var(--gold); border-radius: 2px; }
 .ws .tg:disabled { color: var(--ink-4); opacity: 0.4; cursor: default; }
 .ws .filters-sep { width: 1px; height: 14px; background: var(--rule-2); }
 
@@ -4380,50 +4248,38 @@ button.study-verse-ref { border: none; }
 .welcome-chip:hover { border-color: var(--accent); color: var(--accent); }
 
 /* RIGHT — word detail card */
-/* Right word card mirrors the Library's .detail-side: pinned to the top-right,
-   floating over the navy header (z 40 > header's 30), one clean full-height
-   left border. Always shown on this tab (empty state included). */
-.wd {
-  position: fixed; top: 0; right: 0; bottom: 0;
-  width: var(--sidebar-w);
-  z-index: 40;
-  border-left: 1px solid var(--rule);
-  background: var(--paper);
-  display: flex; flex-direction: column;
-}
-/* Card header matches the navy header height so its bottom rule continues the
-   blue→white line straight across — same trick as .detail-side .detail-head.
-   The Strong's number inherits the shared 18px so it matches the Library card. */
-.wd .detail-head { height: var(--hdr-h); box-sizing: border-box; padding: 0 24px; }
-.sec .lsj { font-family: var(--f-serif); font-size: 15px; line-height: 1.6; color: var(--ink); margin: 0; }
-.sec .root-note { font-family: var(--f-serif); font-style: italic; font-size: 14.5px; color: var(--ink-2); line-height: 1.55; margin: 0; }
-.related { display: flex; flex-direction: column; gap: 2px; }
-.rel { display: flex; align-items: baseline; gap: 8px; width: 100%; text-align: left; padding: 7px 10px; border-radius: 7px; border: 1px solid transparent; }
-.rel:hover { background: var(--bg); border-color: var(--rule); }
-.rel-gk { font-family: var(--f-greek); font-size: 17px; color: var(--accent); flex: 0 0 auto; }   /* link color = clickable */
-.rel-tr { font-family: var(--f-serif); font-style: italic; font-size: 13px; color: var(--ink-3); flex: 0 0 auto; }
-.rel-gloss { font-size: 12.5px; color: var(--ink-3); margin-left: auto; text-align: right; display: inline-flex; gap: 7px; align-items: baseline; }
-.rel-s { font-family: var(--f-mono); font-size: 9.5px; color: var(--ink-4); }
-.rel-go { flex: 0 0 auto; margin-left: 8px; color: var(--ink-3); font-size: 16px; line-height: 1; transition: color 0.12s; }   /* "tap to open" cue — shows at rest so it works on touch */
-.rel:hover .rel-go { color: var(--accent); }
+.wd { border-left: 1px solid var(--rule); background: var(--paper); min-height: 0; display: flex; flex-direction: column; }
+.wd-head { flex: 0 0 auto; display: flex; align-items: center; justify-content: space-between; padding: 16px 24px; border-bottom: 1px solid var(--rule); }
+.wd-head-r { display: inline-flex; align-items: center; gap: 8px; }
+.wd-strongs { font-family: var(--f-mono); font-size: 14px; color: var(--ink-2); letter-spacing: 0.02em; }
+.wd-overview { display: inline-flex; align-items: center; gap: 5px; font-size: 12.5px; color: var(--ink-3); padding: 5px 11px; border-radius: 7px; border: 1px solid var(--rule); background: var(--bg); }
+.wd-overview:hover { border-color: var(--ink-3); color: var(--ink); }
+.wd-body { flex: 1; overflow-y: auto; padding: 26px 24px 48px; }
+.wd-hero { padding-bottom: 4px; }
+.wd-greek { font-family: var(--f-greek); font-size: 56px; line-height: 1.04; letter-spacing: -0.01em; color: var(--ink); margin-bottom: 12px; }
+.wd-greek.heb { font-size: 48px; }
+.wd-sub { font-family: var(--f-serif); font-size: 19px; color: var(--ink); margin-bottom: 10px; }
+.wd-tr { font-style: italic; color: var(--ink-2); }
+.wd-gloss { color: var(--ink); }
+.wd-morph { font-size: 13px; color: var(--ink-3); letter-spacing: 0.01em; }
+.wd-askai { display: inline-flex; align-items: center; gap: 6px; margin-top: 14px; font-size: 12.5px; font-weight: 500; color: var(--ai); padding: 5px 11px 5px 9px; border-radius: 7px; border: 1px solid color-mix(in oklab, var(--ai) 24%, transparent); background: var(--ai-soft); transition: background 0.15s, border-color 0.15s; }
+.wd-askai svg:first-child { color: var(--ai); flex: 0 0 auto; width: 15px; height: 15px; }
+.wd-askai svg:last-child { opacity: 0.55; flex: 0 0 auto; width: 13px; height: 13px; transition: transform 0.15s, opacity 0.15s; }
+.wd-askai .wd-askai-w { font-family: var(--f-greek); font-size: 14px; }
+.wd-askai:hover { background: color-mix(in oklab, var(--ai) 13%, var(--paper)); border-color: color-mix(in oklab, var(--ai) 40%, transparent); }
+.wd-askai:hover svg:last-child { opacity: 1; transform: translateX(2px); }
+.wd-sec { padding: 20px 0; border-top: 1px solid var(--rule); margin-top: 8px; }
+.wd-sec:first-of-type { margin-top: 20px; }
+.wd-sec-h { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 12px; }
+.wd-sec-t { font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; color: var(--ink-3); }
+.wd-sec-meta { font-size: 11px; color: var(--ink-4); }
+.wd-badge { font-family: var(--f-mono); font-size: 9.5px; color: var(--accent); background: var(--accent-soft); padding: 2px 7px; border-radius: 4px; letter-spacing: 0.05em; font-weight: 600; }
+.wd .lsj { font-family: var(--f-serif); font-size: 15px; line-height: 1.6; color: var(--ink); margin: 0; }
+.wd .lsj-toggle { margin-top: 10px; font-size: 12.5px; color: var(--accent); display: inline-flex; align-items: center; gap: 4px; }
+.wd .lsj-toggle:hover { text-decoration: underline; }
+.wd .root-note { font-family: var(--f-serif); font-style: italic; font-size: 14.5px; color: var(--ink-2); line-height: 1.55; margin: 0; }
 /* the card reuses the existing .lexicon-glosses / .lexicon-dist-item chips for renders */
-.sec .lexicon-glosses { margin: 0; }
-
-/* flat occurrence list (plain verse rows, no collapsible group) */
-.vlist { display: flex; flex-direction: column; }
-
-/* empty states (3-pane frame shows before a word is studied) */
-.brail-empty { padding: 22px 18px; font-size: 13px; color: var(--ink-4); line-height: 1.55; }
-.empty-pane { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 48px 28px; height: 100%; }
-/* Keep the cross-line in the empty state too (desktop only — mobile has no navy bar),
-   so the divider continues the bar's edge before a word is even picked. */
-@media (min-width: 1100px) {
-  .wd .empty-pane { position: relative; }
-  .wd .empty-pane::before { content: ""; position: absolute; top: var(--hdr-h); left: 0; right: 0; height: 1px; background: var(--rule); }
-}
-.empty-mark { color: var(--ink-4); margin-bottom: 16px; }
-.empty-t { font-family: var(--f-serif); font-size: 19px; color: var(--ink); margin-bottom: 6px; }
-.empty-s { font-size: 13px; color: var(--ink-3); max-width: 280px; line-height: 1.5; }
+.wd .lexicon-glosses { margin: 0; }
 
 /* mobile panel-toggle bar (center) */
 .ws-mobi { display: none; }
@@ -4431,126 +4287,15 @@ button.study-verse-ref { border: none; }
 
 /* MOBILE — app breakpoint 1100 */
 @media (max-width: 1099px) {
-  .ws, .ws.center-only { grid-template-columns: minmax(0, 1fr); padding-right: 0; height: calc(100vh - var(--hdr-h) - 56px); }
+  .ws, .ws.center-only { grid-template-columns: minmax(0, 1fr); height: calc(100vh - var(--hdr-h) - 56px); }
   .brail { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; z-index: 60; box-shadow: var(--shadow-lg); }
   .brail.hidden { display: none; }
   .wd { position: fixed; top: 0; right: 0; bottom: 0; width: min(92vw, 420px); z-index: 60; box-shadow: var(--shadow-lg); }
   .wd.hidden { display: none; }
-  /* Desktop pins the card head to the navy-bar height; mobile (no navy bar) keeps it compact. */
-  .wd .detail-head { height: auto; padding: 12px 24px 11px; }
   .rail-scrim, .wd-scrim { display: block; position: fixed; inset: 0; background: rgba(15,23,42,0.35); z-index: 59; }
   .ws-mobi { display: flex; gap: 8px; margin-bottom: 14px; }
   .ws-mobi-b { flex: 1; font-size: 12.5px; color: var(--ink-2); padding: 8px 10px; border-radius: 8px; border: 1px solid var(--rule); background: var(--paper); }
   .ws-mobi-b:hover { border-color: var(--ink-3); }
   .results-col { padding: 16px 16px 60px; }
-
-  /* ---- MOBILE word study: context strip · reading · bottom tools · sheets
-     (design handoff "Word Study Mobile"). The global nav stays the top bar. ---- */
-  .view-lexicon .main { padding-bottom: 0; }
-  .wm {
-    display: flex; flex-direction: column;
-    height: calc(100vh - var(--bar-h));
-    height: calc(100dvh - var(--bar-h) - env(safe-area-inset-top, 0px));
-    min-height: 0;
-    background: var(--bg);
-  }
-  /* context strip — which word is open; tap opens the word card sheet */
-  .wm-ctx {
-    flex: 0 0 auto; display: flex; align-items: center; gap: 10px;
-    width: 100%; text-align: left; padding: 9px 16px;
-    border-bottom: 1px solid var(--rule); background: var(--paper);
-  }
-  .wm-ctx:active { background: var(--bg-sunk); }
-  .wm-ctx-gk { font-family: var(--f-greek); font-size: 26px; line-height: 1; color: var(--ink); flex: 0 0 auto; }
-  .wm-ctx-gk.heb { direction: rtl; }
-  .wm-ctx-meta { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 6px; overflow: hidden; }
-  .wm-ctx-tr { font-family: var(--f-serif); font-style: italic; font-size: 14px; color: var(--ink-2); flex: 0 0 auto; }
-  .wm-ctx-dot { color: var(--ink-4); }
-  .wm-ctx-gloss { font-family: var(--f-serif); font-size: 14px; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .wm-ctx-go { color: var(--ink-4); flex: 0 0 auto; display: grid; place-items: center; width: 26px; height: 26px; }
-
-  /* reading area — the only scroller */
-  .wm-main { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 14px 16px 24px; }
-  .wm-occhead { display: flex; align-items: baseline; gap: 8px; margin: 2px 2px 12px; }
-  .wm-occ-count { font-family: var(--f-serif); font-size: 28px; font-weight: 600; color: var(--ink); letter-spacing: -0.02em; }
-  .wm-occ-lbl { font-size: 13px; color: var(--ink-3); }
-  .wm-occ-meta { margin-left: auto; font-family: var(--f-mono); font-size: 10.5px; letter-spacing: 0.04em; color: var(--ink-4); text-transform: uppercase; }
-  .wm-filterchip {
-    display: flex; align-items: center; justify-content: space-between; gap: 10px;
-    margin: 0 2px 12px; padding: 8px 12px;
-    background: var(--paper); border: 1px solid var(--rule); border-radius: 9px;
-    font-size: 12.5px; color: var(--ink-3);
-  }
-  .wm-filterchip b { color: var(--ink); font-weight: 600; }
-  .wm-filterchip button { color: var(--accent); font-size: 12.5px; }
-  .wm .glsenses { margin: 0 0 16px; }
-  .wm .corpus-text { font-size: 16px; line-height: 1.56; }
-
-  /* bottom tools bar — icon-only, same height as the top nav + library cockpit */
-  .wm-tabs {
-    flex: 0 0 auto; display: flex;
-    min-height: calc(var(--bar-h) + env(safe-area-inset-bottom, 0px));
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-    border-top: 1px solid var(--rule); background: var(--paper);
-  }
-  .wm-tab { flex: 1; display: flex; align-items: center; justify-content: center; color: var(--ink-3); background: none; border: none; }
-  .wm-tab svg { width: 22px; height: 22px; }
-  .wm-tab:active { color: var(--ink-2); }
-  .wm-tab.on { color: var(--accent); }
-  .wm-tab:disabled { opacity: 0.38; }
-
-  /* bottom sheets — fixed overlays above the top nav */
-  /* scrim + slide-up shared with .detail-sheet so every bottom sheet animates the same */
-  .wm-scrim { position: fixed; inset: 0; z-index: 120; background: rgba(15, 23, 42, 0.4); animation: fade-in 0.2s ease; }
-  .wm-sheet {
-    position: fixed; left: 0; right: 0; bottom: 0; z-index: 121;
-    display: flex; flex-direction: column;
-    background: var(--paper); border-radius: 18px 18px 0 0;
-    box-shadow: 0 -20px 60px rgba(15, 23, 42, 0.25);
-    max-height: 62%; animation: slide-up 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
-    /* Clear the home indicator / bottom browser bar — the proper way, so the
-       card body keeps a clean 18px and isn't padding-hacked to dodge the chrome. */
-    padding-bottom: env(safe-area-inset-bottom, 0px);
-  }
-  .wm-sheet.tall { max-height: 90%; height: 90%; }
-  @keyframes wm-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
-  .wm-grab { flex: 0 0 auto; cursor: grab; touch-action: none; }
-  .wm-grab:active { cursor: grabbing; }
-  .wm-handle { width: 40px; height: 4px; border-radius: 2px; background: var(--rule-2); margin: 10px auto 2px; }
-  .wm-sheet-head { display: flex; align-items: center; justify-content: space-between; padding: 4px 16px 8px; border-bottom: 1px solid var(--rule); }
-  .wm-sheet-title { font-size: 16px; font-weight: 600; color: var(--ink); letter-spacing: -0.01em; }
-  .wm-sheet-title--mono { font-family: var(--f-mono); font-size: 15px; font-weight: 500; letter-spacing: 0.01em; }
-  .wm-sheet-x { width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; color: var(--ink-3); background: none; border: none; }
-  .wm-sheet-x:active { background: var(--bg-sunk); }
-  .wm-sheet-body { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
-
-  /* sheet bodies reuse the desktop word-card / rail / mode controls */
-  .wm-card { padding: 22px 18px 18px; }
-  .wm-rail { padding: 10px 12px 28px; display: flex; flex-direction: column; gap: 1px; }
-  .wm-rail .brow { padding: 9px 10px; }
-  .wm-rail .brow-name { font-size: 14px; }
-  .wm-jump {
-    display: flex; align-items: center; gap: 7px; width: 100%; text-align: left;
-    font-size: 13.5px; font-weight: 500; color: var(--ai); padding: 12px 14px; border-radius: 10px;
-    border: 1px solid color-mix(in oklab, var(--ai) 24%, transparent); background: var(--ai-soft);
-  }
-  .wm-jump svg:first-child { color: var(--ai); flex: 0 0 auto; }
-  .wm-jump-w { font-family: var(--f-greek); font-size: 15px; }
-  .wm-jump-w.heb { direction: rtl; }
-
-  /* search sheet */
-  .wm-searchsheet { padding: 16px 16px 28px; display: flex; flex-direction: column; gap: 14px; }
-  .wm-search {
-    display: flex; align-items: center; gap: 9px; height: 48px; padding: 0 8px 0 13px;
-    background: var(--paper); border: 1px solid var(--rule-2); border-radius: 12px; box-shadow: var(--shadow-sm);
-  }
-  .wm-search:focus-within { border-color: var(--accent); box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 12%, transparent); }
-  .wm-search-i { color: var(--ink-3); flex: 0 0 20px; }
-  .wm-search:focus-within .wm-search-i { color: var(--accent); }
-  .wm-search-input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font-size: 16px; color: var(--ink); }
-  .wm-search-input::placeholder { color: var(--ink-4); }
-  .wm-search-clear { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; color: var(--ink-4); flex: 0 0 auto; background: none; border: none; }
-  .wm-search-clear:active { background: var(--bg-sunk); }
-  .wm-search-hint { font-size: 12.5px; color: var(--ink-4); line-height: 1.5; padding: 0 2px; }
-  .wm-search-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .wd-greek { font-size: 48px; }
 }
