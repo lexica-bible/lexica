@@ -939,7 +939,7 @@ input { font-family: inherit; }
   flex: 1;
   overflow-y: auto;
   overscroll-behavior: contain;
-  padding: 16px 24px 40px;
+  padding: 16px 24px 18px;
 }
 
 .detail-hero {
@@ -2134,7 +2134,7 @@ input { font-family: inherit; }
   .results-sort { flex-wrap: nowrap; }
   .detail-greek { font-size: 44px; }
   .detail-form-w { font-size: 19px; }
-  .detail-body { padding: 16px 18px 32px; }
+  .detail-body { padding: 16px 18px 18px; }
 }
 @media (max-width: 520px) {
   .results { grid-template-columns: 1fr; }
@@ -4442,7 +4442,7 @@ button.study-verse-ref { border: none; }
   .wm-sheet-body { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
 
   /* sheet bodies reuse the desktop word-card / rail / mode controls */
-  .wm-card { padding: 22px 18px 40px; }
+  .wm-card { padding: 22px 18px 18px; }
   .wm-card .wd-greek { font-size: 50px; }
   .wm-card .wd-greek.heb { font-size: 44px; }
   .wm-rail { padding: 10px 12px 28px; display: flex; flex-direction: column; gap: 1px; }
