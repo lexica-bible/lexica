@@ -243,14 +243,16 @@ header still shows an "Under development" badge on these two tabs. Full record: 
    prompts + caching. `code: ai.py; memory project_ai_search_architecture`
 3. **"AndG." artifact** leaking into ABP prose (e.g. Zec 9:11) — pre-existing, small.
 4. **Auto-open the top word on an English search** (mockup does it; left as "pick a word"). Small, user's call.
-6. **Verse-result rows clickable end-to-end (design note 2026-06-19, not built).** The verse ref is now a
-   muted-ink (`--ink-3`) reference mark with no fill — good at rest, but on TOUCH there's no hover cue and
-   the tiny ref is a poor tap target. Plan: make the whole row the tap target (tap row → jump to verse;
-   tap the gold word → study it, `stopPropagation` so it doesn't also jump), add navy/`--accent` + pointer
-   on hover for desktop. The pieces exist — the shared `VerseRow` already wires ref→`onReadInContext` and
-   word→`onWordClick`. WATCH: don't break drag-to-select / copy — reuse the Study graph's "did they drag?"
-   guard (`movedRef` in 55-study.jsx) so a select-drag doesn't fire a jump; long-press still selects on
-   mobile. `code: static/src/50-corpus-results.jsx, static/styles.css (.corpus-ref / .corpus-verse)`
+6. **Verse-result rows clickable end-to-end — DONE 2026-06-19 (commit 45c7a43).** The whole `.corpus-verse`
+   row is now the tap target → clean tap/click jumps to the verse (`onReadInContext`); the ref stays a real
+   `<button>` (`stopPropagation`) for keyboard/screen-reader users. Drag-to-select / active text selection
+   does NOT jump (move-threshold + `window.getSelection()` guard, `downRef`). Desktop hover (scoped to
+   `@media (hover: hover)`) tints the row + lifts the ref to `--accent` + shows the pointer. Covers Search,
+   Word study occurrences, and Ask-corpus evidence (shared `VerseRow`).
+   NOT done (deliberate): per-word "tap the gold word → study it" — the words in these lists aren't
+   individually clickable (model strips per-word click; the row→reader is how you study). Tapping the gold
+   word jumps to the verse like the rest of the row. Revisit only if the designer wants the word to open
+   Word study directly. `code: static/src/50-corpus-results.jsx, static/styles.css`
 
 > Note: you revisit these on your own schedule — Claude shouldn't keep pitching them as "next steps."
 
