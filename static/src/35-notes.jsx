@@ -456,7 +456,7 @@ function AccountModal({ onClose, anchored }) {
           <h3 className="auth-modal-title">Account</h3>
           <button className="detail-close" onClick={onClose} aria-label="Close"><Icon.Close/></button>
         </div>
-        <p className="auth-modal-sub">{acct.email}</p>
+        <p className="auth-modal-sub">{acct.name ? <>{acct.name} · {acct.email}</> : acct.email}</p>
 
         <div className="acct-sec">
           <div className="acct-sec-h">Display name</div>
