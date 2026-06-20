@@ -2739,7 +2739,7 @@ input { font-family: inherit; }
   font-size: 14.5px; color: var(--ink-2); background: none; border: none;
 }
 .mpick-passage:active { background: var(--bg-sunk); }
-.mpick-passage.on { color: var(--ink); font-weight: 700; background: var(--bg-sunk); box-shadow: inset 2.5px 0 0 var(--navy); }
+/* .mpick-passage.on lives in the shared chronological "you are here" rule near .nav-passage.on. */
 /* non-canonical books: full-width rows with the readable name (not a cramped abbr) */
 .mpick-btn-nc {
   grid-column: 1 / -1;
@@ -2947,25 +2947,28 @@ input { font-family: inherit; }
   font-family: var(--f-mono); font-size: 9.5px; font-weight: 600;
   color: var(--ink-4); background: var(--bg-sunk); padding: 1px 6px; border-radius: 8px;
 }
-/* Same chronological-picker language as the Days plan: a navy backbone down the whole
-   era list (rides .nav-eras-inner — the full content — not the scroll frame) and a gold
-   sub-rib on the OPEN era's passages. Soft tints in dark, like the nav. */
-.nav-eras-inner { position: relative; padding-left: 6px; }
-.nav-eras-inner::before {
-  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
-  background: var(--accent); border-radius: 1px;
-}
-:root[data-theme="dark"] .nav-eras-inner::before { background: var(--accent-soft); }
-.nav-passages { margin-left: 6px; border-left: 2px solid var(--gold); padding: 2px 4px 6px 12px; }
-:root[data-theme="dark"] .nav-passages { border-left-color: var(--gold-soft); }
+/* Chronological nesting is read from indentation alone — no navy backbone, no gold rib
+   (gold is reserved for highlighted target words). The OPEN era's passages just indent;
+   the active passage carries a single navy "you are here" left-rule — the shared
+   .nav-passage.on/.plan-passage.on/.mpick-passage.on rule below, identical across the
+   desktop eras + Days lists and the mobile picker. */
+.nav-eras-inner { padding-left: 0; }
+.nav-passages { margin-left: 8px; border-left: none; padding: 2px 4px 6px 14px; }
 .nav-passage {
+  position: relative;
   width: 100%; display: block; text-align: left;
   padding: 4px 10px 4px 8px;
   font-size: 12.5px; color: var(--ink-2); background: none; border: none;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .nav-passage:hover { color: var(--ink); }
-.nav-passage.on { color: var(--ink); font-weight: 600; }
+
+/* ONE shared "you are here" treatment for every chronological active passage — a
+   straight navy left-rule (border-radius:0 so it never rounds into a bracket). */
+.nav-passage.on, .plan-passage.on, .mpick-passage.on {
+  color: var(--ink); font-weight: 600; border-radius: 0;
+  background: var(--bg-sunk); box-shadow: inset 2.5px 0 0 var(--navy);
+}
 
 /* ── Reading plan ("Days" view of the chronological picker) ───────────────────
    Renders inside the left nav (.nav-scroll) and the mobile picker (.mpick-scroll),
@@ -3014,18 +3017,10 @@ input { font-family: inherit; }
 }
 .plan-jump:hover { color: var(--ink); border-color: var(--gold); }
 
-/* Continuous left spine down the whole day list — same cool accent as the Bible book
-   nav's testament spine. A pseudo-element (not a border) so it can start just below the
-   header divider and stop just shy of the bottom. It rides .plan-days-inner (the full
-   content height) NOT .plan-days (the scroll frame), so it spans all 365 days instead
-   of stopping at the visible edge. Soft tint in dark, like the nav. */
-.plan-days { padding: 4px 4px 10px 0; margin-left: 6px; }
-.plan-days-inner { position: relative; padding-left: 6px; }
-.plan-days-inner::before {
-  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 2px;
-  background: var(--accent); border-radius: 1px;
-}
-:root[data-theme="dark"] .plan-days-inner::before { background: var(--accent-soft); }
+/* No spine down the day list — nesting reads from indentation; the active passage
+   carries the shared navy "you are here" rule (see .nav-passage.on group above). */
+.plan-days { padding: 4px 4px 10px 0; }
+.plan-days-inner { padding-left: 0; }
 .plan-day { border-radius: 6px; scroll-margin-top: 150px; }
 /* The whole row is the open/collapse toggle; day name flush-left, the count + marker +
    caret ride inline on the right. The marker is the only separately-clickable bit. */
@@ -3054,17 +3049,15 @@ button.plan-day-mark:hover { background: var(--accent-soft); }
 button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
 /* The open day's readings nest under a GOLD sub-spine — a deliberate spotlight on what
    you're reading, against the navy backbone. Soft tint in dark, like the nav OT spine. */
-.plan-day-body { margin-left: 6px; border-left: 2px solid var(--gold); padding: 2px 8px 7px 12px; }
-:root[data-theme="dark"] .plan-day-body { border-left-color: var(--gold-soft); }
+.plan-day-body { margin-left: 8px; border-left: none; padding: 2px 8px 7px 14px; }
 .plan-passage {
+  position: relative;
   width: 100%; display: block; text-align: left; padding: 4px 8px; border-radius: 5px;
   font-size: 13px; color: var(--ink-2); background: none; border: none; cursor: pointer;
   white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
 }
 .plan-passage:hover { color: var(--ink); }
-/* The passage you're currently reading — ink + a navy "you are here" left-rule,
-   matching the eras list's active passage (.mpick-passage.on). */
-.plan-passage.on { color: var(--ink); font-weight: 600; box-shadow: inset 2.5px 0 0 var(--navy); border-radius: 5px; }
+/* .plan-passage.on lives in the shared chronological "you are here" rule near .nav-passage.on. */
 /* Month blocks — the 365 days chunked into ~12 collapsible months (accordion). */
 .plan-month-head {
   display: flex; align-items: center; gap: 8px; width: 100%; text-align: left;
@@ -3090,7 +3083,6 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
 .mpick .plan-head { position: sticky; top: 0; z-index: 5; margin: 0 -14px 8px; padding: 6px 14px 10px; }
 .mpick .plan-days { margin-left: 0; padding: 4px 2px 10px; }
 .mpick .plan-days-inner { padding-left: 0; }
-.mpick .plan-days-inner::before { display: none; }
 .mpick .plan-day-body { margin-left: 0; border-left: none; padding: 2px 8px 8px 18px; }
 .mpick .plan-day-head { padding: 11px 10px; gap: 10px; }
 .mpick .plan-day-n { font-size: 15.5px; }
