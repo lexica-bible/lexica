@@ -414,9 +414,18 @@ LIVE: email/password + Google sign-in, opt-in, syncing notes across devices via 
 notes.db users; ESV/NIV = berean+, Stats + an in-app Admin page (About → Admin) = admin, AI search
 = any login. Owner email is always admin. Full record: memory `project_user_roles`.
 **Password reset + set-password DONE 2026-06-16** via SMTP/Resend (a Google-only account can now add
-a password). Full record: memory `project_email_smtp`. STILL OPEN:
+a password). Full record: memory `project_email_smtp`.
+**Account-panel polish DONE 2026-06-20:** optional display name (`users.name`, shown instead of email),
+type-"delete" account removal, header account opens a dropdown in place (no tab jump; plain-text label).
+Full record: memory `project_notes_highlights`. STILL OPEN:
 - **Apple sign-in** — only if wanted (needs a paid Apple Developer account; heavier than Google).
 - Email campaign / reading plans (the original "reach" payoff) — now that mail is proven.
+
+### Mobile reading cockpit redesign — DONE 2026-06-20 (design ZIP handoff)
+Five equal-width icon slots `[Search][Play][Abbr Ch][Info][Options]`; book slot shows the 3-letter
+abbreviation, right slot is the sliders Icon.Modes. Full record: memory `project_reader_appearance`.
+STILL OPEN (small, user's call): switch the cockpit Play/Pause from the filled media icons to thin
+outlines to match the mockup exactly — left filled for now.
 
 ### Broader AI search — meaning-based passage search
 Logos feels "broader" for two reasons: it reads their whole paid library (commentaries, dictionaries),

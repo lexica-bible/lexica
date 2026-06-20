@@ -336,8 +336,11 @@ rules + gotchas; open the named memory for the backstory.
   non-canon books fold into a **"More ▾"** floating popout. The source row + Eras/Days are
   **underline tabs**, NOT boxed segments — the source row is a 4-equal-column grid
   (`.nav-source-seg.seg`) so a long "More" label can't shove the others.
-- Mobile toolbar (lib-toolbar): `[☰] [‹] [Book Ch ▾] [›] [ABP/KJV/Par]`, sticky, 56px. Audio
-  scrubber docks at the bottom on mobile (`.lib-audio-dock`); desktop chrono keeps the inline one.
+- Mobile cockpit (lib-toolbar, fixed at the BOTTOM/thumb-zone on the Library tab) is an
+  ICON row of five EQUAL-width slots (2026-06-20): `[🔍 Search] [▷ Play] [Abbr Ch] [ⓘ Info] [⚙ Options]`.
+  Center slot keeps TEXT but shows the 3-letter book abbreviation (`selBook.abbrev`, "Amo 1"), not the
+  full name; right slot is the sliders `Icon.Modes` (opens the reading-options sheet), not ABP/KJV text.
+  Audio scrubber docks above the cockpit (`.lib-audio-dock`); desktop chrono keeps the inline one.
 - Compare ▾, the "More" popout, and the Aa size/theme menu all close on outside-click/Esc AND
   **swallow that dismiss click** (capture-phase one-shot) so it doesn't hit a word chip behind them.
 
@@ -448,10 +451,13 @@ rules + gotchas; open the named memory for the backstory.
 
 ## Notes, Highlights, Bookmarks + Accounts (study notes — LIVE 2026-06-09)
 Full detail: memory `project_notes_highlights`. The headline facts:
-- **Sign-in lives in the DESKTOP header (2026-06-19):** right side of the navy header — a "Log in" pill
-  (opens the `AuthModal`, `authOpen` state in 90-app.jsx) when signed out, or your account email (→ Notes
-  tab) when signed in (`Header` props `email`/`onLogin`/`onAccount`). **Mobile has NO header**, so account
-  there stays in the Notes tab. The Notes tab still has its own in-tab Log in / Sign up too.
+- **Sign-in lives in the DESKTOP header:** right side of the navy header — a "Log in" pill (opens the
+  `AuthModal`, `authOpen` in 90-app.jsx) when signed out, or your **display name (else email)** when signed
+  in. Clicking it opens the **account panel as a dropdown anchored under the button on the current page**
+  (`AccountModal anchored`, `accountOpen` in 90-app.jsx) — it no longer jumps to the Notes tab (2026-06-20).
+  The signed-in label is PLAIN TEXT now (the old pill/chip was dropped). `Header` props
+  `email`/`name`/`onLogin`/`onAccount`. **Mobile has NO header**, so account there stays in the Notes tab;
+  the in-tab account row is HIDDEN on desktop (redundant with the header).
 - **Browser-local first; accounts are OPT-IN.** Notes live in the browser (`localStorage`
   `lexica.notes.v1`) and the app is fully usable with NO account. Signing in (below) syncs them
   across devices. One record = a word-position anchor + optional text + optional color + optional
@@ -461,8 +467,11 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   SOFT delete (`deleted:true` tombstone) so deletes propagate through sync/import.
 - **Accounts / sync — `notes.db`, the FIRST + ONLY visitor-write path on the site.** Kept OUT of
   bible.db (corpus is rebuilt; user data must survive). `core.notes_db()`; tables `users`, `tokens`,
-  `notes` (one row per note, keyed by `code = "u<user_id>"`). `views_notes.py` blueprint:
-  `/api/auth/signup|login|logout|me|config|google` + `/api/notes/sync` (Bearer token). Passwords
+  `notes` (one row per note, keyed by `code = "u<user_id>"`). `users` carries an optional `name`
+  column (display name, auto-added on startup; shown instead of the email when set). `views_notes.py`
+  blueprint: `/api/auth/signup|login|logout|me|config|google|set-name|delete-account` + `/api/notes/sync`
+  (Bearer token). `set-name` saves/clears the display name; `delete-account` permanently removes the
+  user + all their notes/plan/tokens (the in-app confirm makes you type "delete"). Passwords
   one-way hashed (werkzeug, ships with Flask). Stay-logged-in = random bearer token in `tokens` +
   browser `localStorage` `lexica.auth.v1`; logout deletes it. Sync = two-way last-write-wins by id.
   Guards: rate limits, size/count caps, parameterized SQL. Tables auto-create (deploy is a normal pull).
