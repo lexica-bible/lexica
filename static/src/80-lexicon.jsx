@@ -762,23 +762,25 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
 
             {/* search-results toolbar (no word in focus) */}
             {!profile && (groupings || matches) && (
-              <div className="lexicon-toolbar">
-                <div className="lexicon-corpus-toggle">
-                  <button className={"lct-btn" + (corpus === "all" ? " on" : "")} onClick={() => switchCorpus("all")}>All</button>
-                  <button className={"lct-btn" + (corpus === "abp" ? " on" : "")} disabled={!_comboOK("abp", testament, language)} onClick={() => switchCorpus("abp")}>ABP</button>
-                  <button className={"lct-btn" + (corpus === "kjv" ? " on" : "")} disabled={!_comboOK("kjv", testament, language)} onClick={() => switchCorpus("kjv")}>KJV</button>
+              <div className="filters">
+                <div className="tgroup">
+                  <button className={"tg" + (corpus === "all" ? " on" : "")} onClick={() => switchCorpus("all")}>All</button>
+                  <button className={"tg" + (corpus === "abp" ? " on" : "")} disabled={!_comboOK("abp", testament, language)} onClick={() => switchCorpus("abp")}>ABP</button>
+                  <button className={"tg" + (corpus === "kjv" ? " on" : "")} disabled={!_comboOK("kjv", testament, language)} onClick={() => switchCorpus("kjv")}>KJV</button>
                 </div>
-                <div className="lexicon-corpus-toggle">
+                <span className="filters-sep"/>
+                <div className="tgroup">
                   {["all","ot","nt"].map(t => (
-                    <button key={t} className={"lct-btn" + (testament === t ? " on" : "")}
+                    <button key={t} className={"tg" + (testament === t ? " on" : "")}
                       disabled={t !== "all" && !_comboOK(corpus, t, language)}
                       onClick={() => switchTestament(t)}>{t === "all" ? "All" : t.toUpperCase()}</button>
                   ))}
                 </div>
-                <div className="lexicon-corpus-toggle">
-                  <button className={"lct-btn" + (language === "all" ? " on" : "")} onClick={() => switchLanguage("all")}>All</button>
-                  <button className={"lct-btn" + (language === "greek" ? " on" : "")} disabled={!_comboOK(corpus, testament, "greek")} onClick={() => switchLanguage("greek")}>Greek</button>
-                  <button className={"lct-btn" + (language === "hebrew" ? " on" : "")} disabled={!_comboOK(corpus, testament, "hebrew")} onClick={() => switchLanguage("hebrew")}>Hebrew</button>
+                <span className="filters-sep"/>
+                <div className="tgroup">
+                  <button className={"tg" + (language === "all" ? " on" : "")} onClick={() => switchLanguage("all")}>All</button>
+                  <button className={"tg" + (language === "greek" ? " on" : "")} disabled={!_comboOK(corpus, testament, "greek")} onClick={() => switchLanguage("greek")}>Greek</button>
+                  <button className={"tg" + (language === "hebrew" ? " on" : "")} disabled={!_comboOK(corpus, testament, "hebrew")} onClick={() => switchLanguage("hebrew")}>Hebrew</button>
                 </div>
               </div>
             )}

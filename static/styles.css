@@ -4268,7 +4268,7 @@ button.study-verse-ref { border: none; }
 .ws .search-go:hover { background: var(--navy-2); }
 .ws .search-hint { margin-top: 9px; font-size: 12px; color: var(--ink-4); }
 .results-scroll { flex: 1; overflow-y: auto; }
-.results-col { max-width: 780px; margin: 0 auto; padding: 18px 28px 70px; }
+.results-col { max-width: 780px; margin: 0 auto; padding: 8px 28px 70px; }
 
 /* reading-style underline tabs (testament + ABP/KJV) */
 .ws .filters { display: flex; align-items: center; gap: 16px; margin: 0 2px 14px; padding-bottom: 11px; border-bottom: 1px solid var(--rule); }
