@@ -226,11 +226,18 @@ header still shows an "Under development" badge on these two tabs. Full record: 
 - Inline citations in AI answers (verse→reader, Strong's→Word study); Hebrew key_strongs chip bug fixed.
 
 **Still open (parked — pick up later):**
-1. **Visual fidelity gaps.** Desktop Word study DONE (2026-06-19b, 3881254): English results =
-   collapsible pinned `.glsenses` card. **Mobile Word study FIRST CUT was WRONG — being reworked in a
-   separate session** (top nav must be ICON-ONLY per the reference, I left the labels; the new bottom
-   tools bar broke the existing bottom nav). REMAINING: the mobile redo + the **Ask the corpus** tab vs
-   its mockup (desktop + mobile). Reference: `design/_mobile_preview/design_handoff_word_study/`.
+1. **Visual fidelity gaps.** Desktop Word study DONE (2026-06-19b). **Mobile Word study REBUILT
+   2026-06-19c** to the handoff: icon-only top nav, ONE shared bar height `--bar-h` (48px) for every mobile
+   chrome bar, the word card FOLDED onto the Library card's shared `.detail-*`/`.sec` styles (word-study
+   tweaks scoped to `.wd` so they can't touch the LOCKED Library card), sheets via `useSwipeToDismiss`,
+   `.occ-link` action links steel-blue `--ai`, results filters → underline `.tg` tabs. REMAINING: the
+   **Ask the corpus** tab vs its mockup (desktop + mobile). Reference: `design/_mobile_preview/`. Memory
+   `project_ai_search_redesign`.
+5. **Dead-CSS sweep from the word-card fold (low priority, user's call "once the card's settled").** The
+   fold orphaned a pile of `.wd-*` rules (`.wd-hero/.wd-sub/.wd-tr/.wd-gloss/.wd-morph/.wd-greek/
+   .wd-strongs/.wd-head/.wd-head-r/.wd-overview/.wd-sec*/.wd-badge/.wd-askai*`) + `.lexicon-toolbar`/
+   `.lexicon-corpus-toggle`/`.lct-btn` (filters now `.tg`) + `.wm-searchsheet`. Only `.wd`/`.wd-scrim`/
+   `.wd.hidden` + `.wm-card` are still used. Grep `static/src/` to confirm, then delete. `code: static/styles.css`
 2. **AI curation hard-tune + likely full redesign** — verse selection / "don't spam" / answer shape on
    Ask the corpus. Current = primary/see-all + inline links; adequate, not the end state. Touches ai.py
    prompts + caching. `code: ai.py; memory project_ai_search_architecture`

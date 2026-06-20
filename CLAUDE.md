@@ -521,18 +521,19 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   lexicon `derivation` text). The data flow + endpoints below are unchanged; the UI is still in flux
   (visual-fidelity + AI-curation passes pending). The two sections below describe the data model, not the
   current layout.
-- **2026-06-19b:** the English "words rendered" results list is now a collapsible card
-  (`.glsenses`/`.glrow`) that stays PINNED above the occurrences once a word is picked (chosen lemma =
-  `.glrow.on` navy spine); desktop + mobile share `renderDistRows`/`renderSenses`/`renderWordCardInner`
-  helpers. **Mobile word study (<1100px) is its own layout** — LexiconView branches `if (isMobile)`
-  before the desktop `.ws` return: context strip (`.wm-ctx`) → reading area (`.wm-main`) → bottom tools
-  bar (`.wm-tabs`: Search · Distribution · Word card · Views), each a drag-to-dismiss `WsSheet` bottom
-  sheet. Sheets reuse `.brow`/`.mseg`/`.wd-*`; only `.wm-*` chrome is new CSS. The desktop results card
-  is fine. **The MOBILE pass was WRONG and is being reworked in a separate session (2026-06-19b) — treat
-  the `.wm-*` details above as PROVISIONAL.** Misses vs the reference design: the top nav must be ICON-ONLY
-  (the reference strips the text labels) — left untouched/labels still on; and the new bottom tools bar
-  broke/duplicated the existing bottom nav. Reference: `design/_mobile_preview/design_handoff_word_study/`
-  (`word-study-mobile.jsx`/`.css`). Full record: memory `project_ai_search_redesign`.
+- **2026-06-19c — mobile word study built + the word card unified:** desktop + mobile share
+  `renderDistRows`/`renderSenses`/`renderWordCardInner`; the English "words rendered" list is a
+  collapsible `.glsenses`/`.glrow` card pinned above the occurrences. **Mobile (<1100px)** branches
+  `if (isMobile)` before the desktop `.ws` return: context strip (`.wm-ctx`) → reading area (`.wm-main`)
+  → icon-only bottom tools bar (`.wm-tabs`). The top section-nav is ICON-ONLY now too. **One shared height
+  `--bar-h` (48px, in :root) sizes EVERY mobile chrome bar** (top nav, Library cockpit `.lib-toolbar`,
+  `.wm-tabs`) + the sheet clearances — bars/sheets use `100dvh` + safe-area, never `100vh`. The **word CARD
+  reuses the Library detail card's shared classes** (`.detail-hero`/`.sec`/`.detail-head`/
+  `.detail-strong-head`/`.detail-body`/`.occ-link`) so the two can't drift — **word-study-only tweaks MUST
+  be scoped to `.wd`; NEVER edit the shared rule (it leaks into the Library word card, which the user has
+  LOCKED).** Mobile sheets (`WsSheet`) use the shared `useSwipeToDismiss` hook (`.wm-sheet` reserves
+  `env(safe-area-inset-bottom)`); `.occ-link` action links are steel-blue `--ai`; results filters are
+  underline `.tg` tabs. Full record + the still-owed dead-CSS sweep: memory `project_ai_search_redesign`.
 - Dedicated word study tab — separate from AI Search
 - Flow: search box → word profile → gloss chips → book distribution → verse list
 - Smart search: detects Strong's (G4151, H7307), Greek, Hebrew, English
