@@ -33,10 +33,10 @@
   --navy-2: #182842;
   --navy-edge: #0a1424;
 
-  --accent: var(--navy-2);        /* navy (lighter, legible at small sizes) */
-  --accent-soft: color-mix(in oklab, var(--navy-2) 10%, var(--paper));
-  --ai: oklch(0.46 0.08 240);     /* steel blue — the AI accent (Ask the corpus) */
-  --ai-soft: oklch(0.92 0.025 240);
+  --accent: oklch(0.46 0.08 240);  /* steel blue — primary interactive (Claude Design) */
+  --accent-soft: color-mix(in oklab, oklch(0.46 0.08 240) 10%, var(--paper));
+  --ai: oklch(0.46 0.08 280);      /* violet — AI accent (Ask the corpus), split off from --accent */
+  --ai-soft: oklch(0.92 0.025 280);
   --gold: oklch(0.58 0.09 75);
   --gold-soft: oklch(0.93 0.04 75);
 
@@ -45,7 +45,7 @@
   --chart-verse: #243a63;       /* grounded verse — navy */
   --chart-concl: #424a59;       /* conclusion — slate (clearly not the verse navy) */
   --chart-node-fg: #f4f1ea;     /* text on the dark verse/conclusion boxes */
-  --chart-contested: #3a5a92;   /* contested link — clear navy (NOT --accent, which is brown in sepia) */
+  --chart-contested: #3a5a92;   /* contested link — fixed navy across themes (kept independent of --accent) */
   --chart-weak: #8094bd;        /* weak link — lighter than contested navy (keeps the rank); drawn as big round dots */
 
   --shadow-sm: 0 1px 0 rgba(20, 20, 30, 0.04), 0 1px 2px rgba(20, 20, 30, 0.04);
@@ -76,10 +76,10 @@
   --ink-4: #9b8c6f;
   --rule: #d7c9a8;
   --rule-2: #c7b791;
-  --accent: #4a4636;
-  --accent-soft: color-mix(in oklab, #4a4636 12%, var(--paper));
-  --ai: oklch(0.47 0.08 240);     /* steel blue holds up on parchment */
-  --ai-soft: color-mix(in oklab, oklch(0.47 0.08 240) 12%, var(--paper));
+  --accent: oklch(0.47 0.08 240);  /* steel blue holds up on parchment */
+  --accent-soft: color-mix(in oklab, oklch(0.47 0.08 240) 12%, var(--paper));
+  --ai: oklch(0.47 0.08 280);     /* violet AI accent */
+  --ai-soft: color-mix(in oklab, oklch(0.47 0.08 280) 12%, var(--paper));
   --ctl-bg: #fbf5e6;      /* warm off-white pills instead of stark pure white on parchment */
   --ctl-on: #fefaf0;
 }
@@ -93,10 +93,10 @@
   --ink-4: #6c717b;
   --rule: #2b2f37;
   --rule-2: #3a3f49;
-  --accent: #9db4d8;      /* lighter navy so links read on dark */
-  --accent-soft: color-mix(in oklab, #9db4d8 16%, var(--paper));
-  --ai: oklch(0.74 0.09 240);     /* brighter steel blue so it reads on dark */
-  --ai-soft: color-mix(in oklab, oklch(0.74 0.09 240) 18%, var(--paper));
+  --accent: oklch(0.74 0.09 240);  /* steel blue, brightened so links read on dark */
+  --accent-soft: color-mix(in oklab, oklch(0.74 0.09 240) 16%, var(--paper));
+  --ai: oklch(0.74 0.09 280);     /* brighter violet so the AI accent reads on dark */
+  --ai-soft: color-mix(in oklab, oklch(0.74 0.09 280) 18%, var(--paper));
   --gold: oklch(0.78 0.11 75);
   --gold-soft: oklch(0.33 0.06 75);
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.4);
