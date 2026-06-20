@@ -943,10 +943,18 @@ input { font-family: inherit; }
   overscroll-behavior: contain;
   padding: 16px 24px 18px;
 }
-/* Summary panel only: the head is a tall serif title, so the default 16px body-top + 12px
-   first-section-top stacked too much air above "About". Tighten just the summary's top gap —
-   the shared .detail-* spacing stays as-is for the LOCKED Library word card. (2026-06-19) */
-.summary-side .detail-body { padding-top: 4px; }
+/* Align the rail panels' section rhythm (2026-06-19). The word card (.wd, LOCKED) is the
+   anchor: .sec sections (18px, border-top) + 16px body-top. Bring the others onto it —
+   shared rules stay untouched, everything here is scoped per panel.
+   • Summary used the OLD .detail-section (12px, border-bottom) → match the .sec look.
+   • No-hero panels (summary, xref) tighten the FIRST section's top so the first heading
+     isn't stranded far below the header (your "xref too much").
+   • Day-intro gets a little more top air (your "too little"). */
+.summary-side .detail-section { padding: 18px 0; border-top: 1px solid var(--rule); border-bottom: 0; }
+.summary-side .detail-section:first-of-type { border-top: 0; padding-top: 4px; }
+.summary-side .detail-h { margin: 0 0 12px; }
+.xref-panel .sec:first-of-type { padding-top: 4px; }
+.dintro-side .detail-body { padding-top: 22px; }
 
 .detail-hero {
   display: flex;
