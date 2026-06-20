@@ -4317,10 +4317,10 @@ button.study-verse-ref { border: none; }
 .brow.on { background: var(--navy); }
 .brow.on .brow-name, .brow.on .brow-n { color: #f4f6fa; }
 .brow.on .brow-bar { background: rgba(255,255,255,0.18); }
-.brow.on .brow-fill { background: rgba(255,255,255,0.72); }
+.brow.on .brow-fill { background: rgba(255,255,255,0.6); }
 .brow-name { font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; letter-spacing: -0.005em; }
 .brow-bar { height: 6px; background: color-mix(in oklab, var(--ink) 8%, transparent); border-radius: 3px; overflow: hidden; }
-.brow-fill { height: 100%; border-radius: 3px; background: color-mix(in oklab, var(--ink) 32%, transparent); }
+.brow-fill { height: 100%; border-radius: 3px; background: color-mix(in oklab, var(--ink) 26%, transparent); }
 .brow-n { font-family: var(--f-mono); font-size: 10.5px; color: var(--ink-4); text-align: right; min-width: 22px; }
 /* "All books" — no box (just a bold row); still fills navy when it's the active one. */
 .brow-all { grid-template-columns: 1fr auto; margin-bottom: 6px; padding: 9px 10px; }
