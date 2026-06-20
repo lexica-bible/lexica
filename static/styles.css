@@ -4329,7 +4329,20 @@ button.study-verse-ref { border: none; }
 
 /* MOBILE — app breakpoint is 1100 (conform to the app, not the mockup) */
 @media (max-width: 1099px) {
-  .ac { grid-template-columns: minmax(0, 1fr); height: calc(100vh - var(--hdr-h) - 56px); }
+  /* Pin the tab to the VISIBLE viewport (100dvh, which tracks the address bar),
+     below the fixed top tab bar — and clip overflow so only the inner chat/landing
+     scrolls. The old 100vh - hdr - 56px overshot the screen, so the whole page
+     rubber-banded and the pinned input sat below the address bar (the "gap"). */
+  .ac {
+    grid-template-columns: minmax(0, 1fr);
+    height: calc(100vh - var(--bar-h) - env(safe-area-inset-top, 0px));
+    height: calc(100dvh - var(--bar-h) - env(safe-area-inset-top, 0px));
+    overflow: hidden; min-width: 0;
+  }
+  /* .main already pads the top for the fixed tab bar; drop its bottom pad so .ac
+     ends exactly at the visible bottom (no extra page height to scroll into). */
+  .app.view-corpus .main { padding-bottom: 0; }
+  .ac-thread, .ac-landing { overscroll-behavior: contain; }
   .ac-rail { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; z-index: 60; box-shadow: var(--shadow-lg); }
   .ac-rail.hidden { display: none; }
   .ac-rail-scrim { display: block; position: fixed; inset: 0; background: rgba(15,23,42,0.35); z-index: 59; }
@@ -4338,7 +4351,8 @@ button.study-verse-ref { border: none; }
   .ac-examples { grid-template-columns: 1fr; }
   .ac-thread-col { padding: 22px 18px 32px; }
   .ac-ask-q { font-size: 21px; }
-  .ac-composer.pinned { padding: 12px 18px 18px; }
+  /* bottom pad carries the home-indicator safe area now that .main's was dropped */
+  .ac-composer.pinned { padding: 12px 18px calc(14px + env(safe-area-inset-bottom, 0px)); }
 }
 
 /* ============================================================
