@@ -1308,13 +1308,13 @@ input { font-family: inherit; }
   display: inline-block;
   font-family: var(--f-mono);
   font-size: 10.5px;
-  color: var(--accent);
-  background: var(--accent-soft);
-  padding: 1px 6px;
-  border-radius: 4px;
+  color: var(--accent);          /* clickable ref → plain accent link text, NO fill (design 2026-06-19):
+                                    the gold matched word is the only filled highlight per row */
+  background: none;
+  padding: 0;
   white-space: nowrap;
   letter-spacing: 0.04em;
-  margin-right: 4px;
+  margin-right: 8px;
   vertical-align: baseline;
   border: none;
   cursor: pointer;
