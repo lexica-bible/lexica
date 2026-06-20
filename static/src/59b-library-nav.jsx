@@ -507,7 +507,6 @@ function ModesSheet({
         <div className="sheet-drag-zone" aria-hidden="true"><div className="sheet-handle"></div></div>
         <div className="msheet-head">
           <span className="msheet-title">Reading</span>
-          <button className="msheet-x" onClick={onClose} aria-label="Close">✕</button>
         </div>
         <div className="msheet-body" ref={scrollRef}>
           <div className="mode-sec">

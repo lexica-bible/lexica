@@ -132,7 +132,7 @@ function NotesPanel({ noteId, isMobile, onClose }) {
         title={bookmark ? "Bookmarked" : "Bookmark this"} aria-label="Toggle bookmark" aria-pressed={bookmark}>
         <Icon.Bookmark/>
       </button>
-      <button className="detail-close" onClick={close} aria-label="Close"><Icon.Close/></button>
+      {!isMobile && <button className="detail-close" onClick={close} aria-label="Close"><Icon.Close/></button>}
     </div>
   );
   const content = (

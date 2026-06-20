@@ -821,11 +821,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
         </div>
         {overviewBack && !isMobile ? (
           <button className="detail-back" onClick={onClose} aria-label={"Back to " + backLabel.toLowerCase()}>‹ {backLabel}</button>
-        ) : (
+        ) : !isMobile ? (
           <button className="detail-close" onClick={onClose} aria-label="Close">
             <Icon.Close/>
           </button>
-        )}
+        ) : null}
       </div>
 
       <div className="detail-body" ref={isMobile ? scrollRef : null}>

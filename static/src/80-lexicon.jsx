@@ -68,7 +68,6 @@ function WsSheet({ title, tall, titleMono, hideClose, onClose, children }) {
           <div className="wm-handle" aria-hidden="true"/>
           <div className="wm-sheet-head">
             <span className={"wm-sheet-title" + (titleMono ? " wm-sheet-title--mono" : "")}>{title}</span>
-            {!hideClose && <button className="wm-sheet-x" onClick={onClose} aria-label="Close"><WsI.Close/></button>}
           </div>
         </div>
         <div ref={scrollRef} className="wm-sheet-body">{children}</div>
