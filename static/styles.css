@@ -1321,7 +1321,14 @@ input { font-family: inherit; }
   cursor: pointer;
   transition: opacity 0.12s;
 }
-.corpus-ref:hover { opacity: 0.75; }
+/* Whole verse-result row is the click target (mainly for touch — no hover there, and the
+   ref is a tiny tap target). Resting = muted-ink ref; on desktop hover the row tints, the
+   ref lifts to the --accent link color, and the pointer shows. */
+@media (hover: hover) {
+  .corpus-verse--click { cursor: pointer; }
+  .corpus-verse--click:hover { background: color-mix(in oklab, var(--accent) 6%, transparent); }
+  .corpus-verse--click:hover .corpus-ref { color: var(--accent); }
+}
 .corpus-text {
   display: inline;
 }

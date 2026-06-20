@@ -7,6 +7,7 @@ function VerseRow({ book, chapter, verse, label, allResults, onWordClick, onRead
   const [kjvText, setKjvText] = useState(null);
   const [visible, setVisible] = useState(false);
   const rowRef = useRef(null);
+  const downRef = useRef(null);   // pointer-down spot, to tell a clean tap from a select-drag
 
   useEffect(() => {
     const el = rowRef.current;
@@ -47,9 +48,25 @@ function VerseRow({ book, chapter, verse, label, allResults, onWordClick, onRead
   // citedStrongs is passed in from App level; the matched word(s) are highlighted in
   // the prose below. No per-word entry map — clicking a word is the reader's job now.
 
+  // The WHOLE ROW is the tap target (touch has no hover, and the ref is a tiny target): a
+  // clean tap/click jumps to the verse. A drag-to-select or an active text selection does
+  // NOT jump (reuse the Study-graph "did they move?" guard). The ref stays a real <button>
+  // so keyboard / screen-reader users still have a focusable control.
+  const clickable = !!onReadInContext;
+  const jump = () => onReadInContext?.(book, chapter, verse);
+  const onRowDown = (e) => { downRef.current = { x: e.clientX, y: e.clientY }; };
+  const onRowClick = (e) => {
+    const sel = (typeof window !== "undefined" && window.getSelection) ? window.getSelection() : null;
+    if (sel && String(sel).length > 0) return;          // user was selecting text → don't jump
+    const d = downRef.current;
+    if (d && (Math.abs(e.clientX - d.x) > 5 || Math.abs(e.clientY - d.y) > 5)) return;  // a drag
+    jump();
+  };
+
   return (
-    <div className="corpus-verse" ref={rowRef}>
-      <button className="corpus-ref" onClick={() => onReadInContext?.(book, chapter, verse)}>{label}</button>
+    <div className={"corpus-verse" + (clickable ? " corpus-verse--click" : "")} ref={rowRef}
+      onMouseDown={clickable ? onRowDown : undefined} onClick={clickable ? onRowClick : undefined}>
+      <button className="corpus-ref" onClick={(e) => { e.stopPropagation(); jump(); }}>{label}</button>
       <span className="corpus-text">
         {textMode === "kjv" ? (
           kjvText === null
