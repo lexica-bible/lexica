@@ -39,6 +39,8 @@
   --ai-soft: oklch(0.92 0.025 280);
   --gold: oklch(0.58 0.09 75);
   --gold-soft: oklch(0.93 0.04 75);
+  --hl-match: #f0d27a;            /* matched/target-word highlight — ONE fixed gold for every theme
+                                    (light fill + dark text), so Word study + search can't drift */
 
   /* Argument-chart node/edge colors — FIXED across themes (chosen to read on light,
      sepia AND dark backgrounds) and deliberately NOT brown. Not overridden per theme. */
@@ -1332,17 +1334,17 @@ input { font-family: inherit; }
 .corpus-text {
   display: inline;
 }
-/* The matched word in a Search/Lexicon prose result — gold, hugging the word.
-   box-decoration-break keeps the rounding/fill intact if a multi-word match wraps a
-   line. Text pinned dark because the gold stays light in every theme (dark-mode trap). */
+/* The matched word in any result list (Word study, Search, Library find) — ONE shared gold
+   (--hl-match) hugging the word, dark text in every theme. box-decoration-break keeps the
+   rounding/fill intact if a multi-word match wraps a line. */
 .corpus-hit {
-  background: var(--gold-soft);
+  background: var(--hl-match);
+  color: #221e18;
   border-radius: 4px;
   padding: 0 2px;
   box-decoration-break: clone;
   -webkit-box-decoration-break: clone;
 }
-:root[data-theme="dark"] .corpus-hit { color: #221e18; }
 .word-badge {
   position: absolute;
   bottom: calc(100% + 4px);
@@ -3346,7 +3348,7 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
    type stays quiet (was serif/dark/600 — the outlier vs the system's "refs = mono" rule). */
 .lib-search-hit-ref { display: block; font-family: var(--f-mono); font-weight: 400; color: var(--ink-3); font-size: 12px; letter-spacing: 0.04em; margin-bottom: 3px; }
 .lib-search-hit-text { display: block; color: var(--ink-2); font-size: 14px; line-height: 1.4; }
-.lib-search-mark { background: #ffe6a3; color: var(--ink); font-weight: 600; border-radius: 2px; padding: 0 1px; }
+.lib-search-mark { background: var(--hl-match); color: #221e18; border-radius: 4px; padding: 0 2px; box-decoration-break: clone; -webkit-box-decoration-break: clone; }   /* identical to Word study's .corpus-hit — same --hl-match gold (design 2026-06-19) */
 .mbar-search { margin-left: 2px; }
 
 /* ============================================================
