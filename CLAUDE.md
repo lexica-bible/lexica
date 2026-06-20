@@ -521,6 +521,15 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   lexicon `derivation` text). The data flow + endpoints below are unchanged; the UI is still in flux
   (visual-fidelity + AI-curation passes pending). The two sections below describe the data model, not the
   current layout.
+- **2026-06-19b:** the English "words rendered" results list is now a collapsible card
+  (`.glsenses`/`.glrow`) that stays PINNED above the occurrences once a word is picked (chosen lemma =
+  `.glrow.on` navy spine); desktop + mobile share `renderDistRows`/`renderSenses`/`renderWordCardInner`
+  helpers. **Mobile word study (<1100px) is its own layout** — LexiconView branches `if (isMobile)`
+  before the desktop `.ws` return: context strip (`.wm-ctx`) → reading area (`.wm-main`) → bottom tools
+  bar (`.wm-tabs`: Search · Distribution · Word card · Views), each a drag-to-dismiss `WsSheet` bottom
+  sheet. Sheets reuse `.brow`/`.mseg`/`.wd-*`; only `.wm-*` chrome is new CSS. Global nav stays the app's
+  existing top bar (`.mobile-tabs`, fixed 56px). Mobile design source +
+  `design/_mobile_preview/design_handoff_word_study/`. Full record: memory `project_ai_search_redesign`.
 - Dedicated word study tab — separate from AI Search
 - Flow: search box → word profile → gloss chips → book distribution → verse list
 - Smart search: detects Strong's (G4151, H7307), Greek, Hebrew, English

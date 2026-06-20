@@ -226,13 +226,16 @@ header still shows an "Under development" badge on these two tabs. Full record: 
 - Inline citations in AI answers (verse→reader, Strong's→Word study); Hebrew key_strongs chip bug fixed.
 
 **Still open (parked — pick up later):**
-1. **Visual fidelity gaps** — user flagged "lots that you didn't follow" vs the mockups; only two fixed
-   (empty 3-pane frame + flat verse list). NEXT real chunk — best done fresh with `design/` open.
+1. **Visual fidelity gaps.** Word study DONE (2026-06-19b, 3881254): English results = collapsible
+   pinned `.glsenses` card; mobile = full design-handoff layout (context strip + bottom `.wm-tabs` tools
+   bar → `WsSheet` sheets). REMAINING: the **Ask the corpus** tab vs its mockup (desktop + mobile).
 2. **AI curation hard-tune + likely full redesign** — verse selection / "don't spam" / answer shape on
    Ask the corpus. Current = primary/see-all + inline links; adequate, not the end state. Touches ai.py
    prompts + caching. `code: ai.py; memory project_ai_search_architecture`
-3. **Mobile polish** for the two new tabs (drawer + height math; WIP badge is desktop-only).
+3. **Mobile polish** — Word study mobile DONE (above; wants a live eyeball — built off measured live
+   layout, not live-data-verified). Ask-the-corpus mobile still first-pass.
 4. **"AndG." artifact** leaking into ABP prose (e.g. Zec 9:11) — pre-existing, small.
+5. **Auto-open the top word on an English search** (mockup does it; left as "pick a word"). Small, user's call.
 
 > Note: you revisit these on your own schedule — Claude shouldn't keep pitching them as "next steps."
 
