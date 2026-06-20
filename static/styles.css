@@ -2704,24 +2704,82 @@ input { font-family: inherit; }
   font-weight: 600; color: var(--accent);
   background: var(--ctl-bg); border-radius: 9px; padding: 0 7px; letter-spacing: 0;
 }
-.mpick-grid {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-  gap: 7px;
+/* ---- Mobile book picker — design handoff 2026-06-20 ----
+   Always-expanded list with a type-to-find search box, testament → division grouping,
+   and tiles carrying the book abbrev + chapter count. */
+.mpick-search {
+  flex: 0 0 auto;
+  margin: 12px 14px 4px;
+  display: flex; align-items: center; gap: 9px;
+  background: var(--ctl-bg); border: 1px solid var(--rule); border-radius: 11px;
+  padding: 0 12px; height: 44px;
 }
-.mpick-btn {
-  padding: 8px 4px;
-  font-family: var(--f-mono);
-  font-size: 14px; font-weight: 600; letter-spacing: 0.02em;
-  color: var(--ink-2);
-  text-align: center;
-  border-radius: 6px;
+.mpick-search:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 12%, transparent); }
+.mpick-search svg { color: var(--ink-4); flex: 0 0 auto; }
+.mpick-search input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font-size: 15px; color: var(--ink); }
+.mpick-search input::placeholder { color: var(--ink-4); }
+
+.mpick-bsec { margin-bottom: 6px; }
+.mpick-test {
+  display: flex; align-items: center; gap: 10px;
+  padding: 18px 2px 8px;
 }
-.mpick-btn:hover { color: var(--ink); }
-.mpick-btn:active { color: var(--accent); }
-/* Current book/chapter: filled gray pill, same "you are here" look as the desktop
-   nav's .nav-book.on — theme-safe (darkens the page toward the ink in every theme). */
-.mpick-btn.on { background: color-mix(in oklab, var(--bg) 82%, var(--ink)); color: var(--ink); font-weight: 800; }
+.mpick-test-t {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--ink-2);
+}
+.mpick-test-line { flex: 1; height: 1px; background: var(--rule); }
+.mpick-test-n { font-family: var(--f-mono); font-size: 10.5px; color: var(--ink-4); }
+
+/* division sub-label — accent pill, not gold (target words own gold) */
+.mpick-div {
+  font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--accent); background: var(--accent-soft);
+  padding: 2px 7px; border-radius: 4px;
+  display: inline-block; margin: 14px 0 8px 2px;
+}
+
+.mpick-bgrid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; }
+.mpick-btile {
+  height: 56px; border-radius: 11px;
+  border: 1px solid var(--rule); background: var(--paper);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px;
+}
+.mpick-btile:active { border-color: var(--ink-3); transform: scale(0.97); }
+.mpick-btile-ab { font-family: var(--f-mono); font-size: 13.5px; font-weight: 500; letter-spacing: 0.05em; color: var(--ink); }
+.mpick-btile-ch { font-size: 9px; color: var(--ink-4); white-space: nowrap; }
+/* "you are here" book — navy (brand colour, stays navy in every theme; fixed light text) */
+.mpick-btile.on { background: var(--navy); border-color: var(--navy); }
+.mpick-btile.on .mpick-btile-ab { color: #f4f6fa; }
+.mpick-btile.on .mpick-btile-ch { color: #8a93a6; }
+
+/* non-canonical books: readable full-width name rows */
+.mpick-nclist { display: flex; flex-direction: column; gap: 8px; }
+.mpick-nctile {
+  display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  text-align: left; padding: 12px; border-radius: 11px;
+  border: 1px solid var(--rule); background: var(--paper);
+  font-family: var(--f-sans); font-size: 14px; color: var(--ink);
+}
+.mpick-nctile:active { border-color: var(--ink-3); transform: scale(0.99); }
+.mpick-nctile-ch { flex: 0 0 auto; font-size: 10px; color: var(--ink-4); white-space: nowrap; }
+.mpick-nctile.on { background: var(--navy); border-color: var(--navy); color: #f4f6fa; }
+.mpick-nctile.on .mpick-nctile-ch { color: #8a93a6; }
+
+.mpick-empty { padding: 40px 8px; text-align: center; color: var(--ink-3); font-size: 14px; }
+
+/* chapter grid */
+.mpick-chcur { font-family: var(--f-serif); font-size: 13px; color: var(--ink-3); padding: 16px 2px 12px; }
+.mpick-chcur b { color: var(--ink); font-weight: 600; }
+.mpick-chgrid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
+.mpick-chtile {
+  height: 50px; border-radius: 11px;
+  border: 1px solid var(--rule); background: var(--paper);
+  font-family: var(--f-mono); font-size: 16px; color: var(--ink-2);
+  display: grid; place-items: center;
+}
+.mpick-chtile:active { border-color: var(--ink-3); transform: scale(0.95); }
+.mpick-chtile.on { background: var(--accent); border-color: var(--accent); color: #fff; }
 /* chronological: full-width passage rows under each era */
 .mpick-passages { display: flex; flex-direction: column; gap: 1px; margin-bottom: 8px; }
 .mpick-passage {
@@ -2730,14 +2788,6 @@ input { font-family: inherit; }
 }
 .mpick-passage:active { background: var(--bg-sunk); }
 .mpick-passage.on { color: var(--accent); font-weight: 700; background: var(--bg-sunk); }
-/* non-canonical books: full-width rows with the readable name (not a cramped abbr) */
-.mpick-btn-nc {
-  grid-column: 1 / -1;
-  text-align: left;
-  font-family: var(--f-sans);
-  padding: 9px 6px;
-  border-bottom: 1px solid var(--line, #eee);
-}
 
 .nav {
   border-right: 1px solid var(--rule);
