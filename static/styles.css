@@ -3341,7 +3341,10 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
   padding: 8px 14px; cursor: pointer; border-bottom: 1px solid rgba(34,30,24,0.05);
 }
 .lib-search-hit:hover { background: var(--bg); }
-.lib-search-hit-ref { display: block; font-weight: 600; color: var(--ink); font-size: 13px; margin-bottom: 2px; }
+/* Verse ref = quiet mono muted-ink citation, matching Word study's .corpus-ref (design
+   2026-06-19): the stacked card layout already gives the ref prominence by position, so the
+   type stays quiet (was serif/dark/600 — the outlier vs the system's "refs = mono" rule). */
+.lib-search-hit-ref { display: block; font-family: var(--f-mono); font-weight: 400; color: var(--ink-3); font-size: 12px; letter-spacing: 0.04em; margin-bottom: 3px; }
 .lib-search-hit-text { display: block; color: var(--ink-2); font-size: 14px; line-height: 1.4; }
 .lib-search-mark { background: #ffe6a3; color: var(--ink); font-weight: 600; border-radius: 2px; padding: 0 1px; }
 .mbar-search { margin-left: 2px; }
@@ -4284,7 +4287,7 @@ button.study-verse-ref { border: none; }
 .ws .tg { position: relative; font-size: 13px; color: var(--ink-4); padding: 2px 1px 3px; letter-spacing: 0.02em; }
 .ws .tg:hover { color: var(--ink-2); }
 .ws .tg.on { color: var(--ink); font-weight: 600; }
-.ws .tg.on::after { content: ""; position: absolute; left: 0; right: 0; bottom: -12px; height: 2px; background: var(--gold); border-radius: 2px; }
+.ws .tg.on::after { content: ""; position: absolute; left: 0; right: 0; bottom: -12px; height: 2px; background: var(--accent); border-radius: 2px; }   /* navy/accent underline, NOT gold (design 2026-06-19): match the Library search tabs + keep gold for target words only */
 .ws .tg:disabled { color: var(--ink-4); opacity: 0.4; cursor: default; }
 .ws .filters-sep { width: 1px; height: 14px; background: var(--rule-2); }
 
