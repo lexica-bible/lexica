@@ -3739,6 +3739,19 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
 }
 @keyframes focus-dim-in { from { opacity: 0; } to { opacity: 1; } }
 
+/* Desktop focus is READ-ONLY (any tap exits) — strip the clickable CUES so it looks as inert
+   as it acts. Words keep their text selectable but lose the pointer + hover box; verse numbers
+   go pointer-events:none so the "Click: cross-references…" title tooltip, the cursor and the
+   hover all vanish (a tap falls through to the reader → exits focus). Mobile focus stays fully
+   tappable, so this is desktop-only. (2026-06-19) */
+@media (min-width: 1100px) {
+  .app.focus-mode .lib-reading .lib-word { cursor: default; }
+  .app.focus-mode .lib-reading .lib-word:hover,
+  .app.focus-mode .lib-reading .lib-word.lib-word-clickable:hover { background: none; }
+  .app.focus-mode .lib-reading .lib-flow-vnum,
+  .app.focus-mode .lib-reading .lib-vnum-num { pointer-events: none; }
+}
+
 /* Page-turn chevrons hugging the outer edges of the focus-mode page,
    vertically centered (desktop focus only — added by the JSX guard). */
 @media (min-width: 1100px) {
