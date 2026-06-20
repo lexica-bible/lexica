@@ -28,6 +28,18 @@ const _BOOK_DIV = {
   Jud:"General Epistles",Rev:"Apocalyptic",
 };
 
+// Group a testament's books by their _BOOK_DIV division, preserving canon order —
+// quiet division waypoints inside the mobile picker's single testament grid.
+function divisionsOf(bks) {
+  const order = [], map = {};
+  for (const b of bks) {
+    const d = _BOOK_DIV[b.abbrev] || "";
+    if (!map[d]) { map[d] = []; order.push(d); }
+    map[d].push(b);
+  }
+  return order.map(d => ({ div: d, books: map[d] }));
+}
+
 function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, isOverlay, onClose, navBookRef, nonCanon, nonCanonList, onPickNonCanon, translation, corpus, pickBible, esvOwner, nivOwner, hebShown, hebPickable, otherOpen, setOtherOpen, chrono, orderMode, setOrder, chronoPos, onPickPassage, plan }) {
   const [query, setQuery] = useState("");
   const chronoMode = orderMode === "chronological" && chrono && !nonCanon;
@@ -429,10 +441,15 @@ function MobileBookPicker({ books, selBook, selChapter, nonCanon, nonCanonList, 
                 </button>
                 {open && (
                   <div className="mpick-grid">
-                    {bks.map(b => (
-                      <button key={b.abbrev} className={"mpick-btn" + (isActive(b) ? " on" : "")} onClick={() => { setPickedBook(b); setScreen("chapter"); }}>
-                        {b.abbrev.toUpperCase()}
-                      </button>
+                    {divisionsOf(bks).map(d => (
+                      <React.Fragment key={d.div}>
+                        <div className="mpick-div">{d.div}</div>
+                        {d.books.map(b => (
+                          <button key={b.abbrev} className={"mpick-btn" + (isActive(b) ? " on" : "")} onClick={() => { setPickedBook(b); setScreen("chapter"); }}>
+                            {b.abbrev.toUpperCase()}
+                          </button>
+                        ))}
+                      </React.Fragment>
                     ))}
                   </div>
                 )}
