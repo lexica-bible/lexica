@@ -360,6 +360,11 @@ rules + gotchas; open the named memory for the backstory.
   **Add new buttons with `--ctl-bg`/`--ctl-on`, never hardcoded `#fff`.** Dark traps: an
   `--ink`/`--accent` background flips LIGHT in dark, so pair its text with `var(--paper)`; borders use
   `var(--rule)` not `var(--line)`; navy header stays navy in every theme.
+- **Palette tokens (reset 2026-06-19 to the Claude Design spec — implement his calls, don't freelance
+  hues):** `--accent` = STEEL-BLUE (oklch 240, primary links/active), `--ai` = VIOLET (280, AI features),
+  `--hl-match` = `#f0d27a` (the ONE shared gold for a matched/target word — used by `.corpus-hit` +
+  `.lib-search-mark`, fixed across themes). **Gold (`--gold`) is RESERVED for target words ONLY** — active
+  tabs, count pills, etc. use `--accent`. Navy = brand header only. Memory `project_ai_search_redesign`.
 - Desktop scrollbars slim app-wide + `html { scrollbar-gutter: stable }` reserves the gutter so
   swapping ABP↔KJV never shifts layout. Fonts load **`display=optional`, NOT `swap`**
   (templates/index.html) — kills the mobile toolbar reload flash. Don't switch back.
@@ -418,12 +423,20 @@ rules + gotchas; open the named memory for the backstory.
 - Headword = the dictionary lemma (big) + a small "in this verse" inflected-form line for
   Hebrew/BSB/ABP (ABP via the `abp_surface` side table; KJV has none).
 - Rail stacks ≤3 deep: summary/Intro → xref → (word OR note). The "‹ back" link NAMES the card
-  beneath it; the note card keeps just an X. Word/xref panels trigger `has-detail` → compacts
+  beneath it; the note card keeps just an X (DESKTOP). Word/xref panels trigger `has-detail` → compacts
   `.lib-reading` on desktop.
+- **Mobile = bottom sheets, unified 2026-06-19:** every rail panel + word-study/notes/reading sheet
+  shares ONE slide-up animation + scrim + radius/shadow and closes by **swipe-down + tap-scrim — NO close
+  X on mobile** (X stays on DESKTOP panels; real centered modals like Account/password keep theirs).
+  Section spacing aligns to the LOCKED word card. `useSwipeToDismiss`, memory `project_mobile_gestures`.
+  Heights still drift (not yet unified — see that memory).
 
 **Other**
-- Focus mode (memory `project_focus_mode`): tap blank space in the reader to enter, Esc exits. Mobile
-  hides chrome; desktop = dark wash + centered "book page" + ‹ › page-turn arrows. Not remembered.
+- Focus mode (memory `project_focus_mode`): tap blank to enter, Esc/tap exits. Mobile hides chrome.
+  **Desktop (rebuilt 2026-06-19): a dark + blurred wash makes the chrome RECEDE and go NON-interactive
+  (click the wash to exit); the centered "book page" is READ-ONLY — any tap exits, word/verse clicks are
+  off (those panels sit behind the wash). Light shadow, plain ‹ › chevrons (circles were tried + reverted).**
+  Not remembered.
 - In-text search (magnifying-glass panel, memory `project_esword_reference`): searches the current
   text; modes Any/All/Phrase; range presets + whole-word/case/exclude; `/api/text-search`. **Gotcha:**
   ABP's `verses.book` is a TEXT abbreviation, so a plain sort is alphabetical — `_ABP_RANK_SQL` maps
@@ -435,6 +448,10 @@ rules + gotchas; open the named memory for the backstory.
 
 ## Notes, Highlights, Bookmarks + Accounts (study notes — LIVE 2026-06-09)
 Full detail: memory `project_notes_highlights`. The headline facts:
+- **Sign-in lives in the DESKTOP header (2026-06-19):** right side of the navy header — a "Log in" pill
+  (opens the `AuthModal`, `authOpen` state in 90-app.jsx) when signed out, or your account email (→ Notes
+  tab) when signed in (`Header` props `email`/`onLogin`/`onAccount`). **Mobile has NO header**, so account
+  there stays in the Notes tab. The Notes tab still has its own in-tab Log in / Sign up too.
 - **Browser-local first; accounts are OPT-IN.** Notes live in the browser (`localStorage`
   `lexica.notes.v1`) and the app is fully usable with NO account. Signing in (below) syncs them
   across devices. One record = a word-position anchor + optional text + optional color + optional

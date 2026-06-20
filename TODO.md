@@ -254,6 +254,13 @@ header still shows an "Under development" badge on these two tabs. Full record: 
    word jumps to the verse like the rest of the row. Revisit only if the designer wants the word to open
    Word study directly. `code: static/src/50-corpus-results.jsx, static/styles.css`
 
+7. **Mobile sheet HEIGHT/gap unification (open — needs the user's eye).** 2026-06-19 unified every bottom
+   sheet's animation/scrim/chrome + dropped the X on mobile (done — memory `project_mobile_gestures`), but
+   the HEIGHTS still differ (detail sheets cap at `100dvh - bar-h` / `- bar-h*2` in library; `.wm-sheet`
+   62%/90%; `.msheet` `100dvh - 64px`). They all leave *a* gap but of different sizes. Held off blanket-
+   changing heights to avoid regressing the carefully-rebuilt word-study mobile — waiting on the user to
+   point at the SPECIFIC sheet whose gap looks wrong, then match it. `code: static/styles.css`
+
 > Note: you revisit these on your own schedule — Claude shouldn't keep pitching them as "next steps."
 
 ---
