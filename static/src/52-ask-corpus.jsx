@@ -61,7 +61,7 @@ const _BOOK_LOOKUP = (() => {
 // ("Exo 24:8", "Hebrews 9:12-22") jump to the reader; Strong's ("G129", "H1818")
 // open Word study. No prompt/caching change — purely a render of existing text.
 const _CITE_RE = /\b((?:[1-3]\s?)?[A-Za-z][A-Za-z]+)\.?\s+(\d+):(\d+)(?:[-–]\d+)?\b|\b([GH])(\d+(?:\.\d+)?)\b/g;
-function AcProse({ text, onVerse, onStrongs }) {
+function AcProse({ text, onVerse, onStrongs, verified }) {
   if (!text) return null;
   const out = []; let last = 0, m, k = 0;
   _CITE_RE.lastIndex = 0;
@@ -69,6 +69,10 @@ function AcProse({ text, onVerse, onStrongs }) {
     if (m[1]) {   // verse ref
       const key = _BOOK_LOOKUP[m[1].toLowerCase().replace(/\s+/g, "")];
       if (!key) continue;   // unknown book → leave as plain text
+      // SEATBELT: only vouch for (linkify) a verse the search actually surfaced.
+      // If the AI named a verse we never retrieved, render it as plain text — we
+      // can't verify it, so we don't link it or imply it's evidence.
+      if (verified && !verified.has(`${key}-${+m[2]}-${+m[3]}`)) continue;
       if (m.index > last) out.push(text.slice(last, m.index));
       out.push(<button key={k++} className="ac-ref" onClick={() => onVerse(key, +m[2], +m[3])}>{m[0]}</button>);
       last = _CITE_RE.lastIndex;
@@ -87,6 +91,13 @@ function AcProse({ text, onVerse, onStrongs }) {
 function AcTurn({ turn, textMode, onReadInContext, onLemma, onStrongs }) {
   const [showAll, setShowAll] = useState(false);
   const cited = useMemo(() => _acCited(turn.keyStrongs), [turn.keyStrongs]);
+  // Verses the search actually surfaced — the only ones the synthesis prose may
+  // link. Anything the AI names outside this set renders un-linked (seatbelt).
+  const verifiedRefs = useMemo(() => {
+    const s = new Set();
+    for (const e of (turn.results || [])) s.add(`${e.book}-${e.chapter}-${e.verse}`);
+    return s;
+  }, [turn.results]);
   const primaryCount = useMemo(() => {
     if (!turn.results) return 0;
     const seen = new Set();
@@ -118,7 +129,7 @@ function AcTurn({ turn, textMode, onReadInContext, onLemma, onStrongs }) {
               Treat it with caution and verify against the text.
             </div>
           )}
-          <AcProse text={turn.explanation} onVerse={onReadInContext} onStrongs={onStrongs}/>
+          <AcProse text={turn.explanation} onVerse={onReadInContext} onStrongs={onStrongs} verified={verifiedRefs}/>
 
           {turn.keyStrongs && turn.keyStrongs.length > 0 && (
             <div className="ac-lemmas">
