@@ -428,6 +428,13 @@ _VERSE_REF_RE: re.Pattern | None = None
 # Parses "Book Ch:V" refs from AI-generated text (explanation, primary_verses, etc.)
 _VERSE_REF_PARSE_RE = re.compile(r'(\w+)\s+(\d+):(\d+)')
 
+# Inner text of an `... LIKE '%phrase%'` clause in the AI's generated SQL. The
+# phrase supplement re-runs the AI's own multi-word phrases against the FULL verse
+# text (verses.text / kjv_verses.verse_text), where a contiguous phrase actually
+# lives — the word-gloss `english` splits + reorders phrases, so a gloss LIKE both
+# scans all ~600k words AND misses.
+_LIKE_PHRASE_RE = re.compile(r"LIKE\s+'%([^%']+)%'", re.IGNORECASE)
+
 
 def _norm_book(raw: str) -> str:
     key = raw.lower().rstrip(".")
@@ -767,7 +774,7 @@ _ai_cache_ver: str | None = None  # computed once from prompt template + book li
 
 # Bump this integer whenever server-side search logic changes in a way that
 # affects results but doesn't change _AI_SYSTEM_TMPL (e.g. new fallback steps).
-_CACHE_CODE_VER = 29   # 29: always ground the explanation when it cites a verse (correct refs)
+_CACHE_CODE_VER = 30   # 30: phrase supplement — search full verse text for multi-word phrases
 
 
 def _get_ai_cache_ver() -> str:
@@ -1128,6 +1135,60 @@ def ai_search():
                 results = results + [verse_index[k] for k in new_pn]
                 log.debug("Proper noun supplement: +%d verses for %s", len(new_pn), proper_nouns)
 
+        # ── Step 3.6: Phrase supplement — search the FULL verse text ──────────
+        # The AI writes a phrase as `english LIKE '%son of perdition%'`, but the
+        # word-gloss splits + reorders phrases, so that scans all ~600k words AND
+        # misses. Re-run the AI's OWN multi-word phrases against the readable verse
+        # text (verses.text + KJV, ~31k rows each) in code — no AI-written SQL — and
+        # merge any verses found. A verse whose text literally contains the phrase is
+        # a real occurrence, so it is not thematic.
+        phrase_hits = False
+        phrases = [p for p in {m.lower().strip() for m in _LIKE_PHRASE_RE.findall(sql)}
+                   if " " in p]
+        if phrases:
+            cand: set = set()
+            new_phrase: list = []
+            pf_conn = db_ro()
+            try:
+                for ph in phrases:
+                    like = f"%{ph}%"
+                    for r in pf_conn.execute(
+                        "SELECT book, chapter, verse FROM verses "
+                        "WHERE text LIKE ? COLLATE NOCASE LIMIT 200", (like,)
+                    ).fetchall():
+                        cand.add((r["book"], r["chapter"], r["verse"]))
+                    for r in pf_conn.execute(
+                        "SELECT b.abbrev AS book, kv.chapter AS chapter, kv.verse_num AS verse "
+                        "FROM kjv_verses kv JOIN books b ON b.id = kv.book_id "
+                        "WHERE kv.verse_text LIKE ? COLLATE NOCASE LIMIT 200", (like,)
+                    ).fetchall():
+                        cand.add((r["book"], r["chapter"], r["verse"]))
+                for key in cand:
+                    if key in verse_index:
+                        continue
+                    book, chapter, verse_num = key
+                    vrow = pf_conn.execute(
+                        "SELECT id FROM verses WHERE book=? AND chapter=? AND verse=?",
+                        (book, chapter, verse_num),
+                    ).fetchone()
+                    if not vrow:
+                        continue
+                    words = _fetch_verse_words(pf_conn, vrow["id"])
+                    if words:
+                        verse_index[key] = {
+                            "ref": f"{book} {chapter}:{verse_num}",
+                            "book": book, "chapter": chapter, "verse": verse_num,
+                            "words": words,
+                            "is_thematic": False,
+                        }
+                        new_phrase.append(key)
+            finally:
+                pf_conn.close()
+            if new_phrase:
+                phrase_hits = True
+                results = results + [verse_index[k] for k in new_phrase]
+                log.debug("Phrase supplement: +%d verses for %r", len(new_phrase), phrases)
+
         # ── Last-resort retry: only if SQL + the cheap fallbacks ALL came up empty ──
         # Firing this the instant the first SQL was empty cost a wasted ~5s model call
         # whenever the explanation's cited verses or a proper-noun match already filled
@@ -1343,7 +1404,7 @@ def ai_search():
         # No target words (a broad, non-word question) ⇒ can't word-check ⇒ don't flag.
         if not results:
             grounded = False
-        elif rows or not _target_bases:
+        elif rows or phrase_hits or not _target_bases:
             grounded = True
         else:
             grounded = any(not _is_thematic(v.get("words", [])) for v in results)
