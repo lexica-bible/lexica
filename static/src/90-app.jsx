@@ -157,6 +157,8 @@ function App() {
   }, [allResults, mode]);
 
   const [showTour, setShowTour] = useState(() => {
+    // A /?news=<key> share link (Tudor's read-only News) skips the full-site welcome tour.
+    try { if (new URLSearchParams(window.location.search).get("news")) return false; } catch (e) {}
     try { return !localStorage.getItem("lexica_tour_seen"); } catch { return false; }
   });
   const handleTourDone = () => {

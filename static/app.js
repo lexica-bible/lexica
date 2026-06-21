@@ -1375,7 +1375,8 @@ s.add(bare);// bare (e.g. "4151")
 s.add(`G${bare}`);// G-prefixed
 s.add(`H${bare}`);// H-prefixed
 }}return s.size>0?s:null;},[primaryStrongs]);// Count of distinct primary verses (AI mode only)
-const primaryVerseCount=useMemo(()=>{if(mode!=="ai")return null;const seen=new Set();for(const e of allResults){if(e.is_primary)seen.add(e.ref);}return seen.size;},[allResults,mode]);const[showTour,setShowTour]=useState(()=>{try{return!localStorage.getItem("lexica_tour_seen");}catch{return false;}});const handleTourDone=()=>{try{localStorage.setItem("lexica_tour_seen","1");}catch{}setShowTour(false);};const[libEverVisited,setLibEverVisited]=useState(true);const searchScrollRef=useRef(0);// Deep link from the crawlable /read/ pages ("Open in interactive reader" →
+const primaryVerseCount=useMemo(()=>{if(mode!=="ai")return null;const seen=new Set();for(const e of allResults){if(e.is_primary)seen.add(e.ref);}return seen.size;},[allResults,mode]);const[showTour,setShowTour]=useState(()=>{// A /?news=<key> share link (Tudor's read-only News) skips the full-site welcome tour.
+try{if(new URLSearchParams(window.location.search).get("news"))return false;}catch(e){}try{return!localStorage.getItem("lexica_tour_seen");}catch{return false;}});const handleTourDone=()=>{try{localStorage.setItem("lexica_tour_seen","1");}catch{}setShowTour(false);};const[libEverVisited,setLibEverVisited]=useState(true);const searchScrollRef=useRef(0);// Deep link from the crawlable /read/ pages ("Open in interactive reader" →
 // /?b=<abbrev>&c=<chapter>&t=<text>). Jump to that WHOLE chapter the same way a
 // Search/Notes jump does — book selected, left nav follows, reader at top — but
 // with NO verse highlight (it's a chapter, not a verse). Then strip the query so a
