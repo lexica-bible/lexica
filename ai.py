@@ -481,7 +481,8 @@ You are selecting primary evidence verses for a word study of the Greek Bible (O
 Return ONLY valid JSON — no prose, no markdown:
 {
   "primary_verses": ["Book Ch:V", ...],
-  "additional_verses": ["Book Ch:V", ...]
+  "additional_verses": ["Book Ch:V", ...],
+  "explanation": "2-3 sentence grounded note — see the explanation section below"
 }
 
 ─── STEP 1: IDENTIFY THE REFERENT ──────────────────────────────────────────
@@ -566,21 +567,35 @@ but were NOT in the verse list provided. Use ONLY when:
   • The connection is inferred from context or implicit language rather than
     explicit vocabulary.
 If the verse list already covers the topic well, return additional_verses as [].
-Prefer empty over speculative.\
+Prefer empty over speculative.
+
+─── explanation ──────────────────────────────────────────────────────────────
+Write a short lexicon-style note, 2-3 sentences of plain prose — no markdown, no
+headers. Open with the Greek or Hebrew term under study and what it means, name its
+concrete sense range, and point to what the verses you selected actually say. Berean
+approach: the text speaks first, no imported theology.
+CITATIONS — STRICT: cite ONLY verse references that appear in the verse list given in
+the user message. Never cite a verse that is not in that list. To make a thematic
+point about a passage that is not listed, describe it in words with no chapter:verse
+citation.\
 """
 
 
 def _curate_primary_verses(
-    query: str, results: list[dict]
-) -> tuple[list[str], list[str]]:
-    """Pass 2: send actual verse texts to Haiku.
+    query: str, results: list[dict], key_strongs_data: list[dict] | None = None
+) -> tuple[list[str], list[str], str]:
+    """Pass 2: send actual verse texts to Haiku — picks the evidence verses AND
+    writes the grounded explanation in the same call. The model has the real
+    retrieved verses in front of it here, so its note can only cite what was
+    actually found (no separate grounding pass needed).
 
-    Returns (primary_refs, additional_refs). primary_refs are curated from the
-    SQL results; additional_refs are scholarly additions from Haiku's training
-    knowledge that the SQL query missed (capped at 12, caller validates against DB).
+    Returns (primary_refs, additional_refs, explanation). primary_refs are curated
+    from the SQL results; additional_refs are scholarly additions from Haiku's
+    training knowledge that the SQL query missed (capped at 12, caller validates
+    against DB); explanation is the grounded note ("" on any failure).
     """
     if not results or not _anthropic:
-        return [], []
+        return [], [], ""
 
     # Scale input window and primary target with result pool size.
     n = len(results)
@@ -622,75 +637,38 @@ def _curate_primary_verses(
     else:
         verse_list = ""
 
+    terms = ", ".join(
+        f"{e.get('strongs', '')} {e.get('lemma', '')}".strip()
+        for e in (key_strongs_data or [])[:10]
+    )
+
     try:
         msg = _anthropic.messages.create(
             model="claude-haiku-4-5-20251001",
-            max_tokens=600,
+            max_tokens=850,
             temperature=0,
             system=_CURATION_SYSTEM,
             messages=[{
                 "role": "user",
-                "content": f"Query: {query}\nSelect up to {primary_cap} primary verses.\n\nVerses:\n{verse_list}",
+                "content": (
+                    f"Query: {query}\n"
+                    f"Key word(s) under study: {terms}\n"
+                    f"Select up to {primary_cap} primary verses, then write the "
+                    f"explanation grounded ONLY in the verses below.\n\n"
+                    f"Verses:\n{verse_list}"
+                ),
             }],
         )
         raw = msg.content[0].text.strip()
         s, e = raw.find("{"), raw.rfind("}")
         parsed = json.loads(raw[s:e + 1]) if s != -1 and e > s else {}
-        primary    = [str(r) for r in parsed.get("primary_verses", [])][:primary_cap]
-        additional = [str(r) for r in parsed.get("additional_verses", [])][:12]
-        return primary, additional
+        primary     = [str(r) for r in parsed.get("primary_verses", [])][:primary_cap]
+        additional  = [str(r) for r in parsed.get("additional_verses", [])][:12]
+        explanation = str(parsed.get("explanation", "")).strip()
+        return primary, additional, explanation
     except Exception as exc:
         log.warning("Pass-2 curation failed: %s", exc)
-        return [], []
-
-
-_GROUNDED_EXPL_SYSTEM = """\
-You are writing a short lexicon-style note for a study of the Greek Bible (Septuagint + NT).
-You are given the user's question, the key word(s) under study, and the verses the search
-actually found, with their English text. Write 2-3 sentences of plain prose — no markdown, no
-headers. Open with the Greek or Hebrew term and what it means, name its concrete sense range,
-and point to what the cited verses actually say. Berean approach: the text speaks first, no
-imported theology.
-CITATIONS — STRICT: you may cite ONLY verse references that appear in the provided list. Never
-cite a verse that is not in that list. To make a thematic point about a passage not listed,
-describe it in words with no chapter:verse citation.\
-"""
-
-
-def _grounded_explanation(query: str, results: list[dict], key_strongs_data: list[dict]):
-    """Pass 3: rewrite the explanation AFTER retrieval, grounded in the verses we
-    actually found, so every reference it makes is one on screen. The pass-1
-    explanation is written alongside the SQL, before any verse comes back, so it
-    can name a verse that isn't here. Returns None on any failure — the caller then
-    keeps the pass-1 explanation."""
-    if not results or not _anthropic:
-        return None
-    # Prefer the curated primary verses; fall back to the first results. Cap the window.
-    ordered = [v for v in results if v.get("is_primary")] or results
-    lines = []
-    for v in ordered[:25]:
-        text = " ".join((w.get("gloss") or "") for w in v.get("words", []))[:200].strip()
-        lines.append(f"{v['ref']}: {text}")
-    verse_block = "\n".join(lines)
-    terms = ", ".join(
-        f"{e.get('strongs', '')} {e.get('lemma', '')}".strip()
-        for e in key_strongs_data[:10]
-    )
-    try:
-        msg = _anthropic.messages.create(
-            model="claude-haiku-4-5-20251001",
-            max_tokens=220,
-            temperature=0,
-            system=_GROUNDED_EXPL_SYSTEM,
-            messages=[{
-                "role": "user",
-                "content": f"Question: {query}\nKey word(s): {terms}\n\nVerses found:\n{verse_block}",
-            }],
-        )
-        return msg.content[0].text.strip() or None
-    except Exception as exc:
-        log.warning("Pass-3 grounded explanation failed: %s", exc)
-        return None
+        return [], [], ""
 
 
 def _normalize_union_sql(sql: str) -> str:
@@ -726,7 +704,7 @@ _ai_cache_ver: str | None = None  # computed once from prompt template + book li
 
 # Bump this integer whenever server-side search logic changes in a way that
 # affects results but doesn't change _AI_SYSTEM_TMPL (e.g. new fallback steps).
-_CACHE_CODE_VER = 26   # 26: fix Hebrew key_strongs resolved as Greek (prefix from prose)
+_CACHE_CODE_VER = 27   # 27: grounded explanation folded into pass-2 (drop separate pass-3)
 
 
 def _get_ai_cache_ver() -> str:
@@ -747,7 +725,7 @@ def _get_ai_cache_ver() -> str:
     finally:
         conn.close()
     _ai_cache_ver = ai_fingerprint(
-        "search", _AI_SYSTEM_TMPL, _GROUNDED_EXPL_SYSTEM, f"books={abbrevs}", f"cv={_CACHE_CODE_VER}"
+        "search", _AI_SYSTEM_TMPL, _CURATION_SYSTEM, f"books={abbrevs}", f"cv={_CACHE_CODE_VER}"
     )
     return _ai_cache_ver
 
@@ -1135,10 +1113,16 @@ def ai_search():
                 results = results + [verse_index[k] for k in new_pn]
                 log.debug("Proper noun supplement: +%d verses for %s", len(new_pn), proper_nouns)
 
-        # ── Pass 2: relevance curation ────────────────────────────────────────
-        primary_verses_raw, additional_verses_raw = _curate_primary_verses(q, results)
+        # ── Pass 2: relevance curation + grounded explanation ─────────────────
+        # This call has the real retrieved verses in front of it, so its explanation
+        # can only cite what was actually found — no separate grounding pass needed.
+        primary_verses_raw, additional_verses_raw, curated_expl = _curate_primary_verses(
+            q, results, key_strongs_data
+        )
         log.debug("Pass-2 primary_verses: %s", primary_verses_raw)
         log.debug("Pass-2 additional_verses: %s", additional_verses_raw)
+        if curated_expl:
+            explanation = curated_expl  # grounded; keeps the pass-1 prose on failure
 
         # ── Build primary_set and fetch any missing primary verses ────────────
         dc_query = bool(_DIVINE_COUNCIL_RE.search(q))
@@ -1271,20 +1255,8 @@ def ai_search():
                 if ks["strongs_base"] not in existing_bases:
                     key_strongs_data.append(ks)
 
-        # ── Pass 3: ground the explanation — ONLY when pass-1 actually slipped ──
-        # The pass-1 prose is usually clean (every verse it names is in the results).
-        # Re-running it then is a wasted model call + latency, so we only rewrite when
-        # a cited verse is missing from the results or is thematic (off-word). cited_keys
-        # was parsed from the explanation earlier; an empty set means no refs to check.
-        needs_rewrite = any(
-            (key not in verse_index) or verse_index[key].get("is_thematic")
-            for key in cited_keys
-        )
-        if needs_rewrite:
-            grounded = _grounded_explanation(q, results, key_strongs_data)
-            if grounded:
-                explanation = grounded
-
+        # The explanation is grounded in pass 2 above (which has the retrieved
+        # verses in hand); no separate grounding pass runs here anymore.
         payload = {"results": results, "total": len(results),
                    "explanation": explanation, "key_strongs": key_strongs_data}
         _ai_cache[q] = payload
