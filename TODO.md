@@ -317,17 +317,30 @@ Ranked: #1 first (cheap, highest-leverage), #2 next (best feature add), #3 is a 
      (`w.english` referencing the OUTER alias) → 0 rows. LESSON: don't tune SQL CONSTRUCTION blind —
      the real win is a text index, not a prompt nudge.
 
+   SHIPPED 2026-06-21 (cont.) — corpus-tuning thread mostly CLOSED (commits 1b952a4 … 8e2a2b9; full
+   record: memory `project_ai_search_architecture`):
+   - **Seatbelt — DONE** (frontend): the synthesis prose only LINKS a `Book C:V` actually in the
+     retrieved results; an unverified ref the model named renders as plain text. (Chose "don't linkify"
+     over grammar-risky stripping.)
+   - **Phrase search — DONE in code, not FTS:** a phrase supplement re-runs the AI's own multi-word
+     phrases against the FULL verse text (`verses.text` + `kjv_verses`, ~31k rows); a phrase-only query
+     SKIPS the 600k gloss scan. Cut "son of perdition" 15→9s. A real FTS index is now OPTIONAL (31k LIKE
+     is fast) — keep it parked under "Library in-text search".
+   - **Synthesis → SONNET** + the verses fed to it are a SPREAD across books (was OT-only for common
+     words) + cross-reference WEIGHTING (each book's hub verse wins its seat). The "say ABP not LXX"
+     wording fixed ITSELF once the sample spanned both testaments (data-fix > prompt rule). Proper-noun
+     name-scan gated to thin results (a capitalized common word like "Sabbath" was burning ~7s).
+
    STILL OPEN — corpus-tuning thread:
-   - **"Seatbelt" hard ref-check (cheap, NO slowdown — pure in-memory string check, no AI/DB call):**
-     after the explanation is final, strip/flag any `Book C:V` in the prose that isn't in the
-     found-verses set. The grounding pass makes a wrong number rare but not impossible; this guarantees
-     it. Open design Q: grammar-safe stripping (deleting a ref mid-sentence can read broken) — maybe
-     the frontend just doesn't linkify an unverified ref, or pass the verified set down and dim the rest.
-   - **Phrase-search speed + accuracy (root cause):** `english LIKE '%son of perdition%'` BOTH scans
-     the whole 600k-word table (~7s) AND misses (that literal phrase isn't in the ABP gloss). Reliable
-     fix = a real text/FTS index so "contains phrase" is fast, and/or route rare-word phrases to
-     Strong's co-occurrence (G5207+G684 found 94 hits, fast) done CAREFULLY (the blind steer above
-     failed). No AI gambling — the index is structural. (Overlaps the FTS idea under "Library in-text search".)
+   - **Stream verses first** (perceived speed): show matched verses the moment the SQL runs, fill the
+     Sonnet write-up in after (~12s of model calls is the floor). Frontend only. DECLINED for now — user
+     wants synthesis quality over perceived-speed tricks; pick up only if the wait annoys real users.
+   - **Broad / thematic-topic answers:** sharp on word/phrase queries, thin on broad questions ("how is
+     the temple reimagined in the NT") because retrieval is word-based. The bigger answer-shape work.
+     User's idea, parked — revisit on his timeline.
+   - **Cross-ref weighting picks the GENERAL hub verse, not the query-specific one** (John 3:16 over John
+     21 for an agapao/phileo contrast). Sonnet still names the specific anchor from its own knowledge, so
+     low priority — sharpen only if it bugs him.
    - **Residual framing lean:** neutrality stopped the flat contradiction, but the two framings still
      close on slightly different emphases. Acceptable; tighten only if it bugs the user.
    - **Answer-shape / curation redesign** is the same thread — see "Word study + Ask the corpus" #2

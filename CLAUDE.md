@@ -600,20 +600,24 @@ Full detail: memory `project_notes_highlights`. The headline facts:
 - Search cache key prefix: `v3|`
 
 ## AI Search
-- Uses Claude Haiku
+- SQL gen + term-extraction on **Haiku**; the displayed **synthesis + verse curation (pass 2) on
+  Sonnet** (`claude-sonnet-4-6`, 2026-06-21 — Haiku parroted the question's framing on nuanced
+  "same vs different" questions and over-asserts; same lesson as xref/summary)
 - Berean system prompt — no imported theology
 - key_strongs: up to 10 chips (6 Greek + 4 Hebrew max)
 - Empty-result retry (LAST RESORT, 2026-06-21): Haiku broadens the SQL only when the first query
   AND the cheap fallbacks (explanation-cited verses, proper-noun english LIKE) ALL come up empty —
   not the instant the SQL is empty. Saved a wasted ~5s call on Hebrew/empty searches.
 - Hebrew word bridge: BDB → kjv_strongs → ABP verses
-- **Speed shape (2026-06-21): model-bound, NOT db-bound.** Each Haiku call ~5s; the SQL itself runs
-  ~0.1s — EXCEPT a Haiku-written `english LIKE '%phrase%'` scan of the 600k-word table, which can hit
-  ~7s (e.g. "son of perdition" — that literal phrase isn't in the ABP gloss, so LIKE both scans AND
-  misses). A search = 2 calls (terms + write-SQL) + the pass-2 grounding/curation call whenever the
-  answer ranks or names a verse (see citation guard). A temporary `log.info("ai_search timing …")`
-  line reports per-step seconds (kept on at the user's request). "Feel-instant" (stream verses first,
-  fill the note after) is a not-yet-done frontend idea.
+- **Speed shape (2026-06-21): model-bound.** terms ~1s + write-SQL ~5s (Haiku) + pass-2 synthesis
+  ~11-12s (Sonnet, scales with how many verses it reads); DB ~0.1s. **Phrase queries no longer scan
+  the 600k word-gloss:** a multi-word `english LIKE '%phrase%'` is re-run against the FULL verse text
+  (`verses.text` + `kjv_verses`, ~31k rows) in code (the phrase supplement), and a phrase-ONLY query
+  (phrase LIKE, no Strong's-number filter) SKIPS the gloss SQL entirely — it was ~6-7s and fruitless
+  (cut a live "son of perdition" 15→9s). The proper-noun name-scan only fires when results are thin
+  (`< _PROPER_NOUN_NEED`) — a common capitalized word like "Sabbath" was burning ~7s on a redundant
+  scan. Timing `log.info("ai_search timing …")` kept on. "Stream verses first" = a not-yet-done
+  frontend idea. Full record: memory `project_ai_search_architecture`.
 - **Citation guard + grounding (2026-06-21).** Occurrence lists are pulled by Strong's = unfakeable;
   the leak is in the PROSE. A verse the model names/adds is checked against the target Strong's set —
   one containing NONE of the target words is `is_thematic` → frontend "Additional references" (kept,
@@ -623,6 +627,13 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   verse, even a short one (pass-2 is told to cite ONLY from the real retrieved list). Ranking is
   skipped only for a small pool whose prose cites nothing. Separate pass-3 dropped (folded into
   pass-2). Full record: memory `project_ai_search_architecture`.
+- **Synthesis inputs + seatbelt (2026-06-21).** The verses handed to pass-2 are a SPREAD across books
+  (`_spread_sample`: round-robin a few per book, not `results[:N]` — which, ordered by verse id, was
+  early-OT-only, so a both-testament word came back OT-only and mislabeled "the LXX"); within each book
+  the most cross-referenced verse (TSK count via `_xref_scores`, falls back to position order on any
+  miss) wins the seat. Frontend SEATBELT (`AcProse` in 52-ask-corpus.jsx): the synthesis prose only
+  LINKS a verse ref that's actually in the retrieved results — a verse the model named but we never
+  retrieved renders as plain (unverified) text.
 - **Honest empty-state + neutrality (2026-06-21).** Payload carries `grounded: false` when the search
   found no real occurrence (SQL 0 rows AND every shown verse is thematic/model-named); the frontend
   shows a pale-amber "no direct occurrences" caveat instead of a confident write-up. Both explanation
@@ -642,7 +653,8 @@ memory `project_ai_synthesis_quality`.
   `search:` (ai.py), `summary:` (views_summary.py), `xref:` (views_crossref.py), `pn:` (views_metav.py),
   `chrono:` (views_chrono.py, key `chrono_intro:<day>`). Editing a prompt changes only its category's
   hash, so just that cache refreshes — no manual version bump. The row key is stable + unique, so a
-  regen overwrites the stale row in place. (xref + chapter summary run on Sonnet; the rest on Haiku.)
+  regen overwrites the stale row in place. (xref, chapter summary, AND the ask-corpus synthesis/curation
+  run on Sonnet; the rest on Haiku.)
 - Helpers in core.py: `ai_fingerprint(category, *parts)`, `ai_cache_get(query, ver_key)` (an old-prompt
   row misses → regenerates), `ai_cache_put`, `ai_cache_prune(category, keep_prefix)`. Each category
   prunes ONLY its own stale rows at startup (app.py).
