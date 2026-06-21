@@ -652,33 +652,43 @@ def _curate_primary_verses(
         for e in (key_strongs_data or [])[:10]
     )
 
-    try:
-        msg = _anthropic.messages.create(
-            model="claude-haiku-4-5-20251001",
-            max_tokens=850,
-            temperature=0,
-            system=_CURATION_SYSTEM,
-            messages=[{
-                "role": "user",
-                "content": (
-                    f"Query: {query}\n"
-                    f"Key word(s) under study: {terms}\n"
-                    f"Select up to {primary_cap} primary verses, then write the "
-                    f"explanation grounded ONLY in the verses below.\n\n"
-                    f"Verses:\n{verse_list}"
-                ),
-            }],
-        )
-        raw = msg.content[0].text.strip()
-        s, e = raw.find("{"), raw.rfind("}")
-        parsed = json.loads(raw[s:e + 1]) if s != -1 and e > s else {}
-        primary     = [str(r) for r in parsed.get("primary_verses", [])][:primary_cap]
-        additional  = [str(r) for r in parsed.get("additional_verses", [])][:12]
-        explanation = str(parsed.get("explanation", "")).strip()
-        return primary, additional, explanation
-    except Exception as exc:
-        log.warning("Pass-2 curation failed: %s", exc)
-        return [], [], ""
+    user_msg = (
+        f"Query: {query}\n"
+        f"Key word(s) under study: {terms}\n"
+        f"Select up to {primary_cap} primary verses, then write the "
+        f"explanation grounded ONLY in the verses below.\n\n"
+        f"Verses:\n{verse_list}"
+    )
+
+    # Pass 2 occasionally comes back unreadable or gets cut off on a long answer.
+    # When that happens the caller silently falls back to the pass-1 prose — the
+    # from-memory draft written before retrieval, the one that can name a wrong
+    # verse. Guard it three ways: a roomier word budget (was 850 — overflow was the
+    # main cause), an explicit cut-off warning so we SEE it, and one retry (catches a
+    # transient API hiccup) before we accept the downgrade.
+    for attempt in range(2):
+        try:
+            msg = _anthropic.messages.create(
+                model="claude-haiku-4-5-20251001",
+                max_tokens=1400,
+                temperature=0,
+                system=_CURATION_SYSTEM,
+                messages=[{"role": "user", "content": user_msg}],
+            )
+            if msg.stop_reason == "max_tokens":
+                log.warning("Pass-2 curation hit the word cap (attempt %d/2) — may be cut off", attempt + 1)
+            raw = msg.content[0].text.strip()
+            s, e = raw.find("{"), raw.rfind("}")
+            parsed = json.loads(raw[s:e + 1]) if s != -1 and e > s else {}
+            explanation = str(parsed.get("explanation", "")).strip()
+            if not explanation:
+                raise ValueError("pass-2 returned no explanation")
+            primary    = [str(r) for r in parsed.get("primary_verses", [])][:primary_cap]
+            additional = [str(r) for r in parsed.get("additional_verses", [])][:12]
+            return primary, additional, explanation
+        except Exception as exc:
+            log.warning("Pass-2 curation failed (attempt %d/2): %s", attempt + 1, exc)
+    return [], [], ""
 
 
 def _normalize_union_sql(sql: str) -> str:
