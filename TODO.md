@@ -293,20 +293,29 @@ header still shows an "Under development" badge on these two tabs. Full record: 
 A batch of ideas about making the AI prose trustworthy and deepening the free reference shelf.
 Ranked: #1 first (cheap, highest-leverage), #2 next (best feature add), #3 is a real wiring job.
 
-1. **Citation guard for AI prose — HIGHEST LEVERAGE, mostly a small post-step, not a model change.**
-   Retrieval here is NOT embeddings — it's the model writing SQL keyed off Strong's, so the OCCURRENCE
-   lists are pulled straight from the DB and can't be wrong. The leak is only in the PROSE (LSJ word
-   blurb + Ask-the-corpus answers): the model can name a verse that isn't in the pulled set (earlier
-   misses: Luke 2:26 + a Philippians attribution on G4815). Two cheap guards, belt-and-suspenders:
-   (a) CONSTRAIN — pass the occurrence list as the only citable set, instruct that every verse ref must
-   come from there; (b) CHECK AFTER — parse verse refs out of the answer, drop or visibly flag any not in
-   the set. Because occurrences are already pulled by tag, the word-focused answers can be made
-   citation-proof BY CONSTRUCTION (reserve any fuzzy/meaning-based retrieval for the open "broad
-   question" path only). GOTCHA: the after-check must normalize refs first (book abbrev + ABP-vs-KJV
-   versification differ) or it false-flags good citations. The interpretive lemma-comparison claims
-   (lambanō neutral vs syllambanō forceful) are NOT mechanically checkable and are lower-risk — a reader
-   can weigh a semantic argument; a wrong verse citation just looks authoritative and misleads.
-   `code: ai.py (Ask-corpus answer + curation), views_lsj.py (word blurb); occurrence set already in /api/lexicon/verses`
+1. **Citation guard for AI prose — BUILT 2026-06-21 (Ask-corpus path); two open bits below.**
+   Retrieval is NOT embeddings — it's the model writing SQL keyed off Strong's, so OCCURRENCE lists are
+   pulled straight from the DB and can't be wrong. The leak was only in the PROSE. SHIPPED (commits
+   0dae315 / 220b04f / 6e18797): a verse the model names in its explanation or adds from its own
+   knowledge is checked against the target Strong's set (`_is_thematic`); off-word ones are tagged
+   `is_thematic` → routed to the frontend "Additional references" bucket (kept, labeled "may not
+   contain the word", never primary evidence). Regime-aware (no target word ⇒ no flag, ready for a
+   broad-question mode). Pass-3 (`_grounded_explanation`) rewrites the prose from the final verse set
+   so it only cites verses on screen — CONDITIONAL (runs only when pass-1 actually mis-cited). Full
+   record: memory `project_ai_search_architecture`.
+   STILL OPEN:
+   - **PERF decision (user-flagged 2026-06-21):** pass-3 adds a Haiku call on the mis-cite path;
+     uncached search went 3-5s → ~15s when it ran unconditionally (the conditional gate fixes the
+     clean case). DECIDE: keep conditional pass-3, or DROP it and lean on the labeling backstop alone
+     for the snappiest uncached speed.
+   - **Pass-3 cutoff bug:** the divine-council synthesis truncated mid-sentence ("…(Deuteronomy") —
+     Greek/Hebrew Unicode burns tokens fast and pass-3 `max_tokens=220` is low. Raise it (or confirm
+     the cutoff was pass-1, max_tokens=1200) — was mid-investigation when the perf concern interrupted.
+   - **LSJ word blurb** (views_lsj.py) was NOT touched — it's given the dictionary entry + at most the
+     one verse on screen, so its citation risk is small, but it could get the same after-check if a
+     bad cite shows up. The interpretive lemma-comparison claims (lambanō vs syllambanō) are NOT
+     mechanically checkable and lower-risk — leave them.
+   `code: ai.py (_is_thematic, _grounded_explanation, pass-3 gate ~line 1225); static/src/50-corpus-results.jsx (Additional references label); views_lsj.py (untouched)`
 2. **Feed public-domain reference works into the synthesis engine — the "clean a messy free source into
    prose" move we already do for LSJ/BDB works on the whole pre-1929 shelf.** Best picks:
    - **Trench (NT synonyms) + Girdlestone (OT synonyms)** — the STANDOUT. Grounds the very synonym answers

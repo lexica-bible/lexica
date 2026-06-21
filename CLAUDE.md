@@ -179,7 +179,11 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   (Domain property, sitemap submitted).
 
 ## Database Tables
-- `verses` — ABP verse text
+- `verses` — ABP verse text. `verses.text` is the clean, correctly-ordered English PROSE (what
+  the reader's prose mode + SEO pages use). NEVER rebuild a single verse from `words` joined by
+  `position` — that's raw Greek order and SCRAMBLES ABP's bracket-reordered English. (2026-06-21
+  TSK-panel garble: `/api/verse` and `views_crossref._abp_text` were stitching words by position;
+  both now read `verses.text`.)
 - `words` — ABP word-level interlinear, Strong's tagged. Columns: english, english_head, strongs, strongs_base, greek_pos, bracket_id, italic, italic_words, smcap_words, is_pn, morph, lemma. The displayed Greek lemma is joined live from `lexicon` via `LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base` (the indexed G-prefixed key added in Phase 1; replaced the old `SUBSTR(strongs_base,2)` join — this is why strongs_base MUST stay G/H-prefixed). `is_pn=1` marks proper nouns (set by import_tipnr.py). `morph`/`lemma` columns added rebuild #6 (~78% populated).
 - `abp_surface` — `(verse_id, position, form, translit)` side table of the PRINTED (inflected) Greek per ABP word,
   feeding the word-study side-card "in this verse" line (ABP's source has no Greek surface words). Built read-only
@@ -601,8 +605,18 @@ Full detail: memory `project_notes_highlights`. The headline facts:
 - key_strongs: up to 10 chips (6 Greek + 4 Hebrew max)
 - Empty-result retry: Haiku broadens SQL automatically if first query returns 0 rows
 - Hebrew word bridge: BDB → kjv_strongs → ABP verses
-- Cached in ai_search_cache, ver_key=`search:<hash>` (fingerprint of system prompt + book list +
-  `_CACHE_CODE_VER` salt). See "AI result cache" below.
+- **Citation guard (2026-06-21).** Occurrence lists are pulled by Strong's = unfakeable; the leak is
+  in the PROSE. A verse the model names in its explanation or adds from its own knowledge is checked
+  against the target Strong's set — one containing NONE of the target words is tagged `is_thematic`
+  and routed to the frontend "Additional references" bucket (kept, labeled, never shown as direct
+  evidence). REGIME-AWARE: no target word (a broad, non-word question) ⇒ no flag, so a future
+  answer-anything mode won't mislabel. Pass-3 `_grounded_explanation` rewrites the prose from the
+  final verse set so it only cites verses on screen — runs ONLY when pass-1 actually mis-cited (a
+  cited verse is missing/thematic), to spare the extra Haiku call + latency. **OPEN tradeoff: pass-3
+  still adds a call on the mis-cite path; if uncached speed matters more than airtight prose, it can
+  be dropped, leaving the labeling backstop.** Full record: memory `project_ai_search_architecture`.
+- Cached in ai_search_cache, ver_key=`search:<hash>` (fingerprint of system prompt +
+  `_GROUNDED_EXPL_SYSTEM` + book list + `_CACHE_CODE_VER` salt). See "AI result cache" below.
 
 ## AI result cache (ai_search_cache) — prompt-fingerprint scheme
 Full record: memory `project_ai_cache_unify`; the synthesis model map + the author lesson:
