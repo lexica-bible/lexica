@@ -16,6 +16,7 @@ Imports _lsj_concept_lookup/_format_lsj_context from views_lsj
 """
 import json
 import re
+import time
 import traceback
 
 from flask import Blueprint, jsonify, request
@@ -782,6 +783,13 @@ def ai_search():
         if not _anthropic:
             return jsonify({"error": "ANTHROPIC_API_KEY not set"}), 500
 
+        # ── Timing instrument: one INFO line at the end shows where the
+        # seconds go (cumulative from start). Temporary diagnostic. ──────────
+        _t0 = time.perf_counter()
+        _marks: dict[str, float] = {}
+        def _mark(name: str) -> None:
+            _marks[name] = round(time.perf_counter() - _t0, 2)
+
         # ── Step 1: extract key terms for LSJ lookup ──────────────────────
         log.debug("Step 1: extracting key terms…")
         terms_msg = _anthropic.messages.create(
@@ -805,10 +813,12 @@ def ai_search():
         except Exception:
             terms = []
         log.debug("Extracted terms: %r", terms)
+        _mark("terms")
 
         # ── Step 2: LSJ concept lookup ────────────────────────────────────
         lsj_entries = _lsj_concept_lookup(terms)
         lsj_context = _format_lsj_context(lsj_entries)
+        _mark("lsj")
         log.debug("LSJ context (%d entries): %.200s", len(lsj_entries), lsj_context)
 
         # ── Step 3: SQL generation with LSJ context ───────────────────────
@@ -823,6 +833,7 @@ def ai_search():
         )
         raw = msg.content[0].text.strip() if msg.content else ""
         log.debug("Haiku raw response (stop=%s): %r", msg.stop_reason, raw[:300])
+        _mark("sqlgen")
 
         if not raw:
             log.error("AI returned empty response (stop_reason=%s)", msg.stop_reason)
@@ -960,6 +971,7 @@ def ai_search():
         finally:
             conn.close()
         log.debug("SQL returned %d rows", len(rows))
+        _mark("sqlrun")
 
         # ── Retry with broader query if first SQL returned nothing ────────────
         if not rows:
@@ -1123,6 +1135,7 @@ def ai_search():
         log.debug("Pass-2 additional_verses: %s", additional_verses_raw)
         if curated_expl:
             explanation = curated_expl  # grounded; keeps the pass-1 prose on failure
+        _mark("curate")
 
         # ── Build primary_set and fetch any missing primary verses ────────────
         dc_query = bool(_DIVINE_COUNCIL_RE.search(q))
@@ -1261,6 +1274,8 @@ def ai_search():
                    "explanation": explanation, "key_strongs": key_strongs_data}
         _ai_cache[q] = payload
         _persist_ai_cache(q, payload)
+        _mark("total")
+        log.info("ai_search timing q=%r rows=%d | %s", q, len(rows), _marks)
         return jsonify(payload)
 
     except Exception:
