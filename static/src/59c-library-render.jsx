@@ -37,6 +37,34 @@ const LibRender = (function () {
       const isPunct = /^[.,;:?!—)]/.test(text);
       if (isPunct) return <span key={i} data-note-pos={w.position} className={hc || undefined}>{text}</span>;
       if (text.includes(' ')) {
+        // RESULT LIST (tight) + this slot matched (hc set): the gold hugs ONLY the
+        // matched head word (w.english_head) and NEVER a glued helper — whether the
+        // helper is a supplied italic article ("the love"), a relocated copula
+        // ("is love") or a possessive ("his love"). Italic helpers still render italic.
+        // The reader (non-tight) keeps the whole-phrase bar via the branches below.
+        // (Subsumes the old plain-gloss head-hug AND the italic cases that used to paint
+        // the whole span gold — the leak the user spotted on an italic "the".)
+        if (tight && hc) {
+          const headBare = w.english_head ? w.english_head.replace(/[^\w]/g,'').toLowerCase() : null;
+          const iset = w.italic_words ? new Set(w.italic_words.split(',')) : null;
+          const parts = text.split(' ').filter(Boolean);
+          const bares = parts.map(word => word.replace(/[^\w]/g,'').toLowerCase());
+          const italicOf = (pi) => iset ? iset.has(bares[pi]) : (!!w.italic && (!headBare || bares[pi] !== headBare));
+          const headFound = !!headBare && bares.some((b, pi) => b === headBare && !italicOf(pi));
+          const anyGold = bares.some((b, pi) => !italicOf(pi));
+          return emit(i,
+            <span key={i} data-note-pos={w.position}>
+              {parts.map((word, pi) => {
+                const isItalic = italicOf(pi);
+                // gold the head; with no locatable head, gold every non-helper word
+                // (and if every word is a helper, gold all so a match never goes dark)
+                const isHead = headFound ? (bares[pi] === headBare) : anyGold ? !isItalic : true;
+                const inner = isItalic ? <span className="lib-prose-italic">{word}</span> : word;
+                return <React.Fragment key={pi}>{isHead ? <span className={hc.trim()}>{inner}</span> : inner}{pi < parts.length - 1 ? " " : ""}</React.Fragment>;
+              })}
+            </span>
+          );
+        }
         if (w.italic_words) {
           const iset = new Set(w.italic_words.split(','));
           const parts = text.split(' ').filter(Boolean);
@@ -58,23 +86,6 @@ const LibRender = (function () {
                 const bare = word.replace(/[^\w]/g,'').toLowerCase();
                 const isItalic = !headBare || bare === headBare;
                 return <span key={pi} className={isItalic ? "lib-prose-italic" : undefined}>{word}{(pi < parts.length - 1 || !tight) ? " " : ""}</span>;
-              })}
-            </span>
-          );
-        }
-        // Plain multi-word gloss. In a result list (tight) the matched slot paints
-        // the gold ONLY on its head word — ABP sometimes glues a supplied helper
-        // into the slot (a relocated copula → "is love", a possessive → "his love")
-        // and the highlight shouldn't ride onto it. The reader (non-tight) is left
-        // as-is so a whole-phrase gloss still paints as one bar.
-        if (tight && hc && w.english_head) {
-          const headBare = w.english_head.replace(/[^\w]/g,'').toLowerCase();
-          const parts = text.split(' ').filter(Boolean);
-          return emit(i,
-            <span key={i} data-note-pos={w.position}>
-              {parts.map((word, pi) => {
-                const isHead = word.replace(/[^\w]/g,'').toLowerCase() === headBare;
-                return <React.Fragment key={pi}>{isHead ? <span className={hc.trim()}>{word}</span> : word}{pi < parts.length - 1 ? " " : ""}</React.Fragment>;
               })}
             </span>
           );
