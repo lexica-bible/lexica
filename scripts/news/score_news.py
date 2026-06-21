@@ -37,12 +37,30 @@ REPO_ROOT = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__fi
 DEFAULT_DB = os.path.join(REPO_ROOT, "news.db")
 
 # Load the key from ~/bible-db/.env BEFORE we build the AI client (a cron run has
-# no web-app settings). Harmless if there's no .env — we then rely on the shell.
-try:
-    from dotenv import load_dotenv
-    load_dotenv(os.path.join(REPO_ROOT, ".env"))
-except Exception:
-    pass
+# no web-app settings). Read the file ourselves so this works under a plain
+# `python3` too — no python-dotenv needed (the web app's venv has it, but a cron
+# or a bare shell may not).
+def _load_env_file(path):
+    """Pull simple KEY=VALUE lines from a .env into the environment. Won't clobber
+    a value already set in the shell. Tolerates quotes, blank lines, and #comments."""
+    if not os.path.exists(path):
+        return
+    try:
+        with open(path, encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith("#") or "=" not in line:
+                    continue
+                key, val = line.split("=", 1)
+                key = key.strip()
+                val = val.strip().strip('"').strip("'")
+                if key and key not in os.environ:
+                    os.environ[key] = val
+    except Exception:
+        pass
+
+
+_load_env_file(os.path.join(REPO_ROOT, ".env"))
 
 DRY_RUN = "--dry-run" in sys.argv
 RESCORE = "--rescore" in sys.argv
