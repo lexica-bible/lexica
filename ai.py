@@ -202,23 +202,6 @@ This prevents false positives from Strong's co-occurrence (G5207 + G2316 matches
 any verse with both "son" and "God" regardless of relationship, flooding results
 with "sons of Israel", genealogies, etc.).
 
-PERFORMANCE — english LIKE scans the ENTIRE word list (no index), so it is SLOW; spend
-it carefully:
-  • Match ONLY the phrase(s) actually asked about, plus a true synonym that renders the
-    SAME Greek (e.g. "son of perdition" = "son of destruction", both huios + apoleia). Do
-    NOT invent speculative variants ("son of death", "son of wickedness", "son of Belial")
-    — each one is another full scan for little gain.
-  • Pick ONE approach per concept. Never stack an english LIKE branch AND a Strong's branch
-    that cover the same phrase — that runs the slow scan on top of the fast lookup for no
-    extra coverage.
-  • When the phrase's content words are SPECIFIC/rare — e.g. apoleia (G684), anomia (G458)
-    — a Strong's co-occurrence subquery is BOTH faster and precise, so use it INSTEAD of
-    LIKE:
-      WHERE w.strongs_base IN ('5207','G5207')
-        AND v.id IN (SELECT verse_id FROM words WHERE strongs_base IN ('684','G684'))
-    Reserve english LIKE for phrases whose words are COMMON (son+God, son+man, word+God),
-    where co-occurrence would flood with unrelated verses.
-
 ADJECTIVE + NOUN PHRASES ("holy spirit", "living water", "eternal life") — each
 word is a separate DB row, so english LIKE on the full phrase will match nothing.
 Use Strong's numbers instead:
