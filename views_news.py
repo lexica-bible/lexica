@@ -1,0 +1,219 @@
+#!/usr/bin/env python3
+"""News watch — admin-only review tab for the end-times news gatherer.
+
+The data is gathered + AI-scored OFFLINE by scripts/news/ (gather_news.py +
+score_news.py) into news.db. This blueprint just SERVES that file to the in-app
+tab, admin-gated (404 to everyone else, exactly like visitor stats):
+
+  GET  /api/news/meta             → {owner, available, labels, counts}
+  GET  /api/news/list?...         → stories (near-duplicates grouped into one card)
+  POST /api/news/status           → mark a story keep / dismiss / new
+
+Read-mostly: the only write is flipping an article's review status. It never
+gathers or scores (that's the offline scripts' job) and never touches bible.db.
+"""
+import json
+import os
+import re
+import sqlite3
+
+from flask import Blueprint, jsonify, request
+
+from core import news_db, NEWS_DB, limiter
+from views_notes import is_admin
+
+bp = Blueprint("news", __name__)
+
+# Display names for the gatherer's 12 threads. KEEP IN SYNC with the THREADS keys
+# in scripts/news/queries.py (small + static, so duplicated here rather than
+# importing across the scripts/ boundary). "new" = the AI flagged a fresh angle.
+THREAD_LABELS = {
+    "exposure_to_moral_authority": "Exposure → moral authority",
+    "papacy_moral_authority": "Papacy as moral authority",
+    "american_pope": "The American pope",
+    "encyclical_political": "Encyclicals going political",
+    "ai_moralized": "AI being moralized",
+    "legislating_morality": "Legislating morality",
+    "ecumenism": "Ecumenism",
+    "jesuits": "Jesuits",
+    "trump_vs_leo": "Trump vs. Pope Leo",
+    "alien_agenda": "Alien / UFO agenda",
+    "protestants_to_rome": "Protestants → Rome",
+    "financial_control": "Financial control",
+    "new": "New angle",
+}
+
+_VALID_STATUS = {"new", "keep", "dismiss"}
+
+# Words too common to help tell two headlines apart when grouping near-duplicates.
+_STOP = set((
+    "the a an of to in on for and or with at by from as is are was were be been "
+    "his her its their our your s it that this these those new over amid into "
+    "after before about out up down off than then but not no will would can could"
+).split())
+
+
+def _available():
+    return os.path.exists(NEWS_DB)
+
+
+def _sig_tokens(title):
+    """Significant words of a headline, used to spot duplicate stories. Drops the
+    trailing ' - Outlet', lowercases, keeps words of 3+ letters that aren't filler."""
+    t = (title or "").lower()
+    t = re.sub(r"\s+-\s+[^-]+$", "", t)          # strip the " - Source Name" suffix
+    words = re.findall(r"[a-z0-9]+", t)
+    return {w for w in words if len(w) >= 3 and w not in _STOP}
+
+
+def _cluster(rows):
+    """Group near-identical stories (the same encyclical reported by 20 outlets) into
+    one card. Greedy: rows come in strongest-first, so the first article in a group is
+    its representative; later ones join if their wording overlaps enough (Jaccard)."""
+    clusters = []
+    for r in rows:
+        toks = _sig_tokens(r["title"])
+        best, best_sim = None, 0.0
+        for c in clusters:
+            inter = len(toks & c["tokens"])
+            if not inter:
+                continue
+            sim = inter / (len(toks | c["tokens"]) or 1)
+            if sim > best_sim:
+                best_sim, best = sim, c
+        if best and best_sim >= 0.6:
+            best["arts"].append(r)
+            best["tokens"] |= toks            # let the signature grow a little
+        else:
+            clusters.append({"rep": r, "tokens": set(toks), "arts": [r]})
+    return clusters
+
+
+def _serialize(cluster):
+    rep = cluster["rep"]
+    arts = sorted(cluster["arts"], key=lambda a: a["published"] or "", reverse=True)
+    sources, seen = [], set()
+    for a in arts:
+        s = a["source"] or "?"
+        if s in seen:
+            continue
+        seen.add(s)
+        sources.append({"source": s, "url": a["url"], "published": (a["published"] or "")[:10]})
+    return {
+        "ids": [a["id"] for a in cluster["arts"]],
+        "title": rep["title"],
+        "score": rep["score"],
+        "thread": rep["ai_thread"],
+        "thread_label": THREAD_LABELS.get(rep["ai_thread"], rep["ai_thread"] or "?"),
+        "why": rep["ai_why"] or "",
+        "published": max((a["published"] or "" for a in arts), default="")[:10],
+        "count": len(arts),
+        "sources": sources[:12],
+        "status": rep["status"] or "new",
+    }
+
+
+@bp.route("/api/news/meta", methods=["GET"])
+def meta():
+    """Drives the tab: is the viewer admin, is news.db loaded, the thread names, and
+    how many stories sit in each review bucket. Yes/no to everyone; data only to admin."""
+    if not is_admin():
+        return jsonify({"owner": False, "available": False})
+    if not _available():
+        return jsonify({"owner": True, "available": False, "labels": THREAD_LABELS})
+    conn = news_db()
+    try:
+        def n(sql, args=()):
+            r = conn.execute(sql, args).fetchone()
+            return (r[0] or 0) if r else 0
+        counts = {
+            "scored": n("SELECT count(*) FROM items WHERE score IS NOT NULL"),
+            "total": n("SELECT count(*) FROM items"),
+            "kept": n("SELECT count(*) FROM items WHERE status='keep'"),
+            "dismissed": n("SELECT count(*) FROM items WHERE status='dismiss'"),
+        }
+    except sqlite3.Error:
+        counts = {}
+    finally:
+        conn.close()
+    return jsonify({"owner": True, "available": True, "labels": THREAD_LABELS, "counts": counts})
+
+
+@bp.route("/api/news/list", methods=["GET"])
+@limiter.limit("240 per hour")
+def list_news():
+    if not is_admin():
+        return jsonify({"error": "not found"}), 404
+    if not _available():
+        return jsonify({"stories": [], "available": False})
+
+    since = (request.args.get("since") or "").strip()        # 'YYYY-MM-DD' or empty
+    try:
+        min_score = max(0, min(10, int(request.args.get("min", 0))))
+    except (TypeError, ValueError):
+        min_score = 0
+    thread = (request.args.get("thread") or "").strip()      # a thread key, or '' = all
+    view = (request.args.get("view") or "inbox").strip()     # inbox | kept | dismissed | all
+    order = (request.args.get("order") or "score").strip()   # score | date
+
+    where = ["score IS NOT NULL", "score >= ?"]
+    args = [min_score]
+    if since:
+        # published is full ISO; comparing against a 'YYYY-MM-DD' floor works as text.
+        # Empty published (unknown date) is excluded once a since-floor is set.
+        where.append("published >= ? AND published != ''")
+        args.append(since)
+    if thread:
+        where.append("ai_thread = ?")
+        args.append(thread)
+    if view == "inbox":
+        where.append("(status IS NULL OR status = 'new')")
+    elif view == "kept":
+        where.append("status = 'keep'")
+    elif view == "dismissed":
+        where.append("status = 'dismiss'")
+
+    sql = (f"SELECT id, title, source, published, score, ai_thread, ai_why, status "
+           f"FROM items WHERE {' AND '.join(where)} "
+           f"ORDER BY score DESC, published DESC")
+    conn = news_db()
+    try:
+        rows = conn.execute(sql, args).fetchall()
+    finally:
+        conn.close()
+
+    clusters = _cluster(rows)
+    stories = [_serialize(c) for c in clusters]
+    if order == "date":
+        stories.sort(key=lambda s: (s["published"], s["score"]), reverse=True)
+    else:
+        stories.sort(key=lambda s: (s["score"], s["published"]), reverse=True)
+    return jsonify({"stories": stories[:300], "available": True})
+
+
+@bp.route("/api/news/status", methods=["POST"])
+@limiter.limit("600 per hour")
+def set_status():
+    if not is_admin():
+        return jsonify({"error": "not found"}), 404
+    try:
+        body = json.loads(request.get_data(cache=False) or b"{}")
+    except (ValueError, TypeError):
+        body = {}
+    ids = body.get("ids") or []
+    status = body.get("status")
+    if status not in _VALID_STATUS or not isinstance(ids, list) or not ids:
+        return jsonify({"ok": False}), 400
+    ids = [int(i) for i in ids if str(i).isdigit()][:500]
+    if not ids:
+        return jsonify({"ok": False}), 400
+    conn = news_db()
+    try:
+        marks = ",".join("?" * len(ids))
+        conn.execute(f"UPDATE items SET status = ? WHERE id IN ({marks})", [status, *ids])
+        conn.commit()
+    except sqlite3.Error:
+        return jsonify({"ok": False}), 500
+    finally:
+        conn.close()
+    return jsonify({"ok": True, "n": len(ids)})

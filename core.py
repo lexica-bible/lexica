@@ -178,6 +178,20 @@ def study_db():
     return conn
 
 
+# Admin-only "news watch" articles — the end-times news gatherer's output. They
+# live in their OWN file, news.db, gathered + AI-scored by scripts/news/, kept OUT
+# of bible.db and OUT of git (*.db is gitignored), PythonAnywhere only. The admin
+# gate in views_news.py decides who may read it; this helper just opens the file.
+# Read-write (the tab marks stories keep/dismiss), like notes.db.
+NEWS_DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), "news.db")
+
+
+def news_db():
+    conn = sqlite3.connect(NEWS_DB)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
 # The ESV is a PERSONAL, owner-only reading text (Crossway-copyrighted — it is
 # NEVER a public corpus like KJV/BSB). Its text lives in its OWN file, esv.db,
 # kept OUT of bible.db and OUT of git (*.db is gitignored), and loaded on

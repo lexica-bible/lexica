@@ -18,7 +18,7 @@ function App() {
   const [corpusTextMode, setCorpusTextMode] = useState("abp"); // "abp" | "kjv"
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 1100);
   // Remember the active tab across refreshes (guard against a stale/removed value).
-  const _VIEWS = ["library", "lexicon", "corpus", "notes", "study", "about"];
+  const _VIEWS = ["library", "lexicon", "corpus", "notes", "study", "news", "about"];
   const [mainView, setMainView] = useState(() => {
     try { const v = localStorage.getItem("lexica.view.v1"); return _VIEWS.includes(v) ? v : "library"; }
     catch (e) { return "library"; }
@@ -315,6 +315,7 @@ function App() {
           </div>
         )}
         {mainView === "about" && <AboutView owner={owner} />}
+        {mainView === "news" && owner && <NewsView />}
         {mainView === "notes" && <NotesView onOpen={openNoteFromList} />}
         <div style={{ display: mainView === "study" ? undefined : "none" }}>
           <StudyView admin={owner} pending={studyPending} onConsumed={() => setStudyPending(null)} onNavigateToLibrary={handleReadInContext} />

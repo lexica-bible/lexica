@@ -146,6 +146,21 @@ const api = {
       headers: { "Content-Type": "application/json", ..._authHeaders() },
       body: JSON.stringify({ user_id: userId, role }),
     }).then(r => r.ok ? r.json() : { ok: false }).catch(() => ({ ok: false })),
+  // News watch (admin-only) — the end-times news gatherer's scored output (news.db).
+  newsMeta: () =>
+    fetch(`/api/news/meta`, { headers: _authHeaders() })
+      .then(r => r.json()).catch(() => ({ owner: false, available: false })),
+  newsList: (params) => {
+    const qs = new URLSearchParams(params || {}).toString();
+    return fetch(`/api/news/list${qs ? "?" + qs : ""}`, { headers: _authHeaders() })
+      .then(r => r.ok ? r.json() : { stories: [] }).catch(() => ({ stories: [] }));
+  },
+  newsStatus: (ids, status) =>
+    fetch(`/api/news/status`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ..._authHeaders() },
+      body: JSON.stringify({ ids, status }),
+    }).then(r => r.ok ? r.json() : { ok: false }).catch(() => ({ ok: false })),
   // Study modules (admin-only) — authored study content in study.db.
   studyEntries: (type) =>
     fetch(`/api/study/entries${type && type !== "all" ? `?type=${encodeURIComponent(type)}` : ""}`, { headers: _authHeaders() })
