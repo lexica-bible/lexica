@@ -601,7 +601,7 @@ way must get the same answer. If the verses don't settle it, say so plainly.\
 def _curate_primary_verses(
     query: str, results: list[dict], key_strongs_data: list[dict] | None = None
 ) -> tuple[list[str], list[str], str]:
-    """Pass 2: send actual verse texts to Haiku — picks the evidence verses AND
+    """Pass 2: send actual verse texts to Sonnet — picks the evidence verses AND
     writes the grounded explanation in the same call. The model has the real
     retrieved verses in front of it here, so its note can only cite what was
     actually found (no separate grounding pass needed).
@@ -676,7 +676,10 @@ def _curate_primary_verses(
     for attempt in range(2):
         try:
             msg = _anthropic.messages.create(
-                model="claude-haiku-4-5-20251001",
+                # Sonnet writes the displayed synthesis (grounded note) + curates the
+                # verses — markedly better prose/reasoning than Haiku, same as the xref
+                # + chapter-summary syntheses. Term-extraction + SQL-gen stay on Haiku.
+                model="claude-sonnet-4-6",
                 max_tokens=1400,
                 temperature=0,
                 system=_CURATION_SYSTEM,
@@ -774,7 +777,7 @@ _ai_cache_ver: str | None = None  # computed once from prompt template + book li
 
 # Bump this integer whenever server-side search logic changes in a way that
 # affects results but doesn't change _AI_SYSTEM_TMPL (e.g. new fallback steps).
-_CACHE_CODE_VER = 30   # 30: phrase supplement — search full verse text for multi-word phrases
+_CACHE_CODE_VER = 31   # 31: pass-2 synthesis + verse curation moved to Sonnet (was Haiku)
 
 
 def _get_ai_cache_ver() -> str:
