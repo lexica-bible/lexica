@@ -644,6 +644,55 @@ def _curate_primary_verses(
         return [], []
 
 
+_GROUNDED_EXPL_SYSTEM = """\
+You are writing a short lexicon-style note for a study of the Greek Bible (Septuagint + NT).
+You are given the user's question, the key word(s) under study, and the verses the search
+actually found, with their English text. Write 2-3 sentences of plain prose — no markdown, no
+headers. Open with the Greek or Hebrew term and what it means, name its concrete sense range,
+and point to what the cited verses actually say. Berean approach: the text speaks first, no
+imported theology.
+CITATIONS — STRICT: you may cite ONLY verse references that appear in the provided list. Never
+cite a verse that is not in that list. To make a thematic point about a passage not listed,
+describe it in words with no chapter:verse citation.\
+"""
+
+
+def _grounded_explanation(query: str, results: list[dict], key_strongs_data: list[dict]):
+    """Pass 3: rewrite the explanation AFTER retrieval, grounded in the verses we
+    actually found, so every reference it makes is one on screen. The pass-1
+    explanation is written alongside the SQL, before any verse comes back, so it
+    can name a verse that isn't here. Returns None on any failure — the caller then
+    keeps the pass-1 explanation."""
+    if not results or not _anthropic:
+        return None
+    # Prefer the curated primary verses; fall back to the first results. Cap the window.
+    ordered = [v for v in results if v.get("is_primary")] or results
+    lines = []
+    for v in ordered[:25]:
+        text = " ".join((w.get("gloss") or "") for w in v.get("words", []))[:200].strip()
+        lines.append(f"{v['ref']}: {text}")
+    verse_block = "\n".join(lines)
+    terms = ", ".join(
+        f"{e.get('strongs', '')} {e.get('lemma', '')}".strip()
+        for e in key_strongs_data[:10]
+    )
+    try:
+        msg = _anthropic.messages.create(
+            model="claude-haiku-4-5-20251001",
+            max_tokens=220,
+            temperature=0,
+            system=_GROUNDED_EXPL_SYSTEM,
+            messages=[{
+                "role": "user",
+                "content": f"Question: {query}\nKey word(s): {terms}\n\nVerses found:\n{verse_block}",
+            }],
+        )
+        return msg.content[0].text.strip() or None
+    except Exception as exc:
+        log.warning("Pass-3 grounded explanation failed: %s", exc)
+        return None
+
+
 def _normalize_union_sql(sql: str) -> str:
     """Wrap UNION ALL queries in a subquery so ORDER BY works in SQLite.
 
@@ -698,7 +747,7 @@ def _get_ai_cache_ver() -> str:
     finally:
         conn.close()
     _ai_cache_ver = ai_fingerprint(
-        "search", _AI_SYSTEM_TMPL, f"books={abbrevs}", f"cv={_CACHE_CODE_VER}"
+        "search", _AI_SYSTEM_TMPL, _GROUNDED_EXPL_SYSTEM, f"books={abbrevs}", f"cv={_CACHE_CODE_VER}"
     )
     return _ai_cache_ver
 
@@ -1221,6 +1270,13 @@ def ai_search():
             for ks in dc_strongs:
                 if ks["strongs_base"] not in existing_bases:
                     key_strongs_data.append(ks)
+
+        # ── Pass 3: ground the explanation in the verses we actually found ───
+        # Rewrites the pass-1 prose from the final result set so every reference it
+        # makes is one on screen. One cheap Haiku call; keeps the original on failure.
+        grounded = _grounded_explanation(q, results, key_strongs_data)
+        if grounded:
+            explanation = grounded
 
         payload = {"results": results, "total": len(results),
                    "explanation": explanation, "key_strongs": key_strongs_data}
