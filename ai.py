@@ -757,7 +757,7 @@ _ai_cache_ver: str | None = None  # computed once from prompt template + book li
 
 # Bump this integer whenever server-side search logic changes in a way that
 # affects results but doesn't change _AI_SYSTEM_TMPL (e.g. new fallback steps).
-_CACHE_CODE_VER = 28   # 28: retry is last-resort; skip pass-2 ranking for small pools
+_CACHE_CODE_VER = 29   # 29: always ground the explanation when it cites a verse (correct refs)
 
 
 def _get_ai_cache_ver() -> str:
@@ -1167,19 +1167,28 @@ def ai_search():
 
         # ── Pass 2: relevance curation + grounded explanation ─────────────────
         # This call has the real retrieved verses in front of it, so its explanation
-        # can only cite what was actually found — no separate grounding pass needed.
-        # Skip it for a small pool: ranking is pointless when we'd show them all
-        # anyway, and it saves a ~5s model call.
-        if len(results) > _CURATE_SKIP_MAX:
+        # cites the CORRECT references from that list. The pass-1 prose is written from
+        # memory BEFORE retrieval and can get a verse number wrong (e.g. 2Th 3:3 for
+        # 2:3), so we must NOT display it whenever it names a verse.
+        # Rule: ground the explanation if the pool is big enough to rank OR the prose
+        # cites any verse (so its number is checked against the text). Skip the call
+        # only for a small pool whose prose cites nothing to verify. Ranking is still
+        # skipped for a small pool (show them all).
+        small_pool  = len(results) <= _CURATE_SKIP_MAX
+        cites_verse = bool(_get_verse_ref_re().findall(explanation))
+        if not small_pool or cites_verse:
             primary_verses_raw, additional_verses_raw, curated_expl = _curate_primary_verses(
                 q, results, key_strongs_data
             )
             if curated_expl:
                 explanation = curated_expl  # grounded; keeps the pass-1 prose on failure
+            if small_pool:                  # small pool: show them all, ranking is moot
+                primary_verses_raw = [v["ref"] for v in results]
+                additional_verses_raw = []
         else:
             primary_verses_raw = [v["ref"] for v in results]
             additional_verses_raw = []
-            log.debug("Pass-2 skipped (%d verses <= %d) — showing all", len(results), _CURATE_SKIP_MAX)
+            log.debug("Pass-2 skipped (%d verses, prose cites no verse) — showing all", len(results))
         log.debug("Pass-2 primary_verses: %s", primary_verses_raw)
         log.debug("Pass-2 additional_verses: %s", additional_verses_raw)
         _mark("curate")
