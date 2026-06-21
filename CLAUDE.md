@@ -603,20 +603,28 @@ Full detail: memory `project_notes_highlights`. The headline facts:
 - Uses Claude Haiku
 - Berean system prompt — no imported theology
 - key_strongs: up to 10 chips (6 Greek + 4 Hebrew max)
-- Empty-result retry: Haiku broadens SQL automatically if first query returns 0 rows
+- Empty-result retry (LAST RESORT, 2026-06-21): Haiku broadens the SQL only when the first query
+  AND the cheap fallbacks (explanation-cited verses, proper-noun english LIKE) ALL come up empty —
+  not the instant the SQL is empty. Saved a wasted ~5s call on Hebrew/empty searches.
 - Hebrew word bridge: BDB → kjv_strongs → ABP verses
+- **Speed shape (2026-06-21): model-bound, NOT db-bound.** Timing showed the generated SQL runs in
+  ~0.1s; each Haiku call is ~5s. A normal search = 2 calls (terms + write-SQL); the pass-2 ranking
+  call is added only when the verse pool is bigger than `_CURATE_SKIP_MAX` (8) — a small pool is
+  shown as-is (no ranking call). A temporary `log.info("ai_search timing …")` line reports per-step
+  seconds in the server log (kept on at the user's request). Floor for one search ≈ the ~5s write-SQL
+  call; the remaining trim would be folding the ~1s terms call in. The "feel-instant" option (stream
+  verses first, fill the AI note after) is a frontend change, not yet done.
 - **Citation guard (2026-06-21).** Occurrence lists are pulled by Strong's = unfakeable; the leak is
   in the PROSE. A verse the model names in its explanation or adds from its own knowledge is checked
   against the target Strong's set — one containing NONE of the target words is tagged `is_thematic`
   and routed to the frontend "Additional references" bucket (kept, labeled, never shown as direct
   evidence). REGIME-AWARE: no target word (a broad, non-word question) ⇒ no flag, so a future
-  answer-anything mode won't mislabel. Pass-3 `_grounded_explanation` rewrites the prose from the
-  final verse set so it only cites verses on screen — runs ONLY when pass-1 actually mis-cited (a
-  cited verse is missing/thematic), to spare the extra Haiku call + latency. **OPEN tradeoff: pass-3
-  still adds a call on the mis-cite path; if uncached speed matters more than airtight prose, it can
-  be dropped, leaving the labeling backstop.** Full record: memory `project_ai_search_architecture`.
+  answer-anything mode won't mislabel. The grounded explanation is now written by the pass-2
+  curation call itself (it already has the retrieved verses in hand), so it can only cite verses on
+  screen — the separate pass-3 was dropped 2026-06-21 (no extra call). Full record: memory
+  `project_ai_search_architecture`.
 - Cached in ai_search_cache, ver_key=`search:<hash>` (fingerprint of system prompt +
-  `_GROUNDED_EXPL_SYSTEM` + book list + `_CACHE_CODE_VER` salt). See "AI result cache" below.
+  `_CURATION_SYSTEM` + book list + `_CACHE_CODE_VER` salt). See "AI result cache" below.
 
 ## AI result cache (ai_search_cache) — prompt-fingerprint scheme
 Full record: memory `project_ai_cache_unify`; the synthesis model map + the author lesson:
