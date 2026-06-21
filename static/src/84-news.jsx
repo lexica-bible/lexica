@@ -6,7 +6,7 @@ function _newsDaysAgo(n) {
   return new Date(Date.now() - n * 86400000).toISOString().slice(0, 10);
 }
 
-function NewsStory({ story, view, onMark }) {
+function NewsStory({ story, view, onMark, readOnly }) {
   const [open, setOpen] = useState(false);
   const top = story.sources[0] || {};
   const tier = story.score >= 8 ? "hi" : story.score >= 6 ? "mid" : "lo";
@@ -42,7 +42,7 @@ function NewsStory({ story, view, onMark }) {
           </div>
         )}
       </div>
-      <div className="news-actions">
+      {!readOnly && <div className="news-actions">
         {view === "inbox" ? (
           <>
             <button className="news-btn news-keep" title="Keep for the episode"
@@ -54,7 +54,7 @@ function NewsStory({ story, view, onMark }) {
           <button className="news-btn" title="Back to the inbox"
                   onClick={() => onMark(story, "new")}>Un-keep</button>
         )}
-      </div>
+      </div>}
     </div>
   );
 }
@@ -110,8 +110,10 @@ function NewsView() {
     );
   };
 
+  const isAdmin = !!(meta && meta.owner);
+  const canRead = !!(meta && (meta.owner || meta.reader));
   if (!meta) return <div className="news-view"><div className="news-empty">Loading…</div></div>;
-  if (!meta.owner) return <div className="news-view"><div className="news-empty">Not available.</div></div>;
+  if (!canRead) return <div className="news-view"><div className="news-empty">Not available.</div></div>;
   if (!meta.available) return (
     <div className="news-view">
       <h1 className="news-h1">News watch</h1>
@@ -184,7 +186,7 @@ function NewsView() {
           <div className="news-count">{stories.length} stories</div>
           <div className="news-list">
             {stories.map((s, i) => (
-              <NewsStory key={s.ids[0] + "-" + i} story={s} view={view} onMark={mark} />
+              <NewsStory key={s.ids[0] + "-" + i} story={s} view={view} onMark={mark} readOnly={!isAdmin} />
             ))}
           </div>
         </>

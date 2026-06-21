@@ -35,6 +35,11 @@ function App() {
   const [libDetailBase, setLibDetailBase] = useState("overview");
   const [activeNote, setActiveNote] = useState(null);   // note id being edited
   const [resetToken, setResetToken] = useState(null);   // ?reset=<token> from a password-reset email
+  // No-login News reader: true once someone has opened a /?news=<key> share link (the key
+  // is saved in localStorage). Lets them see the read-only News tab without an account.
+  const [newsReader, setNewsReader] = useState(() => {
+    try { return !!localStorage.getItem("lexica.news.key.v1"); } catch (e) { return false; }
+  });
   const [focusMode, setFocusMode] = useState(false);    // distraction-free reading: chrome hidden (library only, not remembered)
 
   // Open a note's editor — closes the word / cross-ref panels so one panel owns the slot.
@@ -172,6 +177,14 @@ function App() {
       try { window.history.replaceState(null, "", window.location.pathname); } catch (e) {}
       return;
     }
+    const newsKey = p.get("news");
+    if (newsKey) {   // a News share link → save the key, open the read-only News tab
+      try { localStorage.setItem("lexica.news.key.v1", newsKey); } catch (e) {}
+      setNewsReader(true);
+      setMainView("news");
+      try { window.history.replaceState(null, "", window.location.pathname); } catch (e) {}
+      return;
+    }
     const lex = p.get("lex");
     if (lex) {   // word page → open the Lexicon tab on that Strong's number
       setMainView("lexicon");
@@ -296,7 +309,7 @@ function App() {
 
   return (
     <div className={"app view-" + mainView + " " + ((showWord || showXref || showNote || showLibSummary) ? "has-detail " : "") + (focusMode && mainView === "library" ? "focus-mode" : "")}>
-      <Header activeView={mainView} onNavChange={handleNavChange} owner={owner}
+      <Header activeView={mainView} onNavChange={handleNavChange} owner={owner} showNews={owner || newsReader}
         email={authEmail} name={authName} onLogin={() => setAuthOpen("login")} onAccount={() => setAccountOpen(true)}/>
       {isMobile && mainView !== "library" && (
         <div className="mobile-brand-bar">
@@ -315,7 +328,7 @@ function App() {
           </div>
         )}
         {mainView === "about" && <AboutView owner={owner} />}
-        {mainView === "news" && owner && <NewsView />}
+        {mainView === "news" && (owner || newsReader) && <NewsView />}
         {mainView === "notes" && <NotesView onOpen={openNoteFromList} />}
         <div style={{ display: mainView === "study" ? undefined : "none" }}>
           <StudyView admin={owner} pending={studyPending} onConsumed={() => setStudyPending(null)} onNavigateToLibrary={handleReadInContext} />

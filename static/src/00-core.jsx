@@ -42,6 +42,11 @@ function _authHeaders() {
   } catch (e) { return {}; }
 }
 
+// The no-login News share key (saved when someone opens /?news=<key>), if any.
+function _newsKey() {
+  try { return localStorage.getItem("lexica.news.key.v1") || ""; } catch (e) { return ""; }
+}
+
 const api = {
   search: (q, phrase = false) =>
     fetch(`/api/search?q=${encodeURIComponent(q)}&phrase=${phrase ? 1 : 0}`).then(r => r.json()),
@@ -146,12 +151,16 @@ const api = {
       headers: { "Content-Type": "application/json", ..._authHeaders() },
       body: JSON.stringify({ user_id: userId, role }),
     }).then(r => r.ok ? r.json() : { ok: false }).catch(() => ({ ok: false })),
-  // News watch (admin-only) — the end-times news gatherer's scored output (news.db).
-  newsMeta: () =>
-    fetch(`/api/news/meta`, { headers: _authHeaders() })
-      .then(r => r.json()).catch(() => ({ owner: false, available: false })),
+  // News watch (admin, or a no-login reader holding the share key) — scored news.db.
+  newsMeta: () => {
+    const k = _newsKey();
+    return fetch(`/api/news/meta${k ? `?key=${encodeURIComponent(k)}` : ""}`, { headers: _authHeaders() })
+      .then(r => r.json()).catch(() => ({ owner: false, reader: false, available: false }));
+  },
   newsList: (params) => {
-    const qs = new URLSearchParams(params || {}).toString();
+    const p = { ...(params || {}) };
+    const k = _newsKey(); if (k) p.key = k;
+    const qs = new URLSearchParams(p).toString();
     return fetch(`/api/news/list${qs ? "?" + qs : ""}`, { headers: _authHeaders() })
       .then(r => r.ok ? r.json() : { stories: [] }).catch(() => ({ stories: [] }));
   },

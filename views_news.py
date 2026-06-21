@@ -12,6 +12,7 @@ tab, admin-gated (404 to everyone else, exactly like visitor stats):
 Read-mostly: the only write is flipping an article's review status. It never
 gathers or scores (that's the offline scripts' job) and never touches bible.db.
 """
+import hmac
 import json
 import math
 import os
@@ -46,6 +47,23 @@ THREAD_LABELS = {
 }
 
 _VALID_STATUS = {"new", "keep", "dismiss"}
+
+# Optional "share link" for a no-login READER (e.g. Tudor). Set NEWS_SHARE_KEY in the
+# WSGI env; then /?news=<key> lets someone browse the tab read-only without an account.
+# Empty/unset = sharing off (admin only). Writes (keep/dismiss) ALWAYS stay admin-only.
+NEWS_SHARE_KEY = os.environ.get("NEWS_SHARE_KEY", "").strip()
+
+
+def _shared_key_ok():
+    if not NEWS_SHARE_KEY:
+        return False
+    given = (request.args.get("key") or request.headers.get("X-News-Key") or "").strip()
+    return bool(given) and hmac.compare_digest(given, NEWS_SHARE_KEY)
+
+
+def _can_read():
+    """Admins always; a valid share-key holder gets read-only access too."""
+    return is_admin() or _shared_key_ok()
 
 # Words too common to help tell two headlines apart when grouping near-duplicates.
 _STOP = set((
@@ -167,10 +185,12 @@ def _serialize(cluster):
 def meta():
     """Drives the tab: is the viewer admin, is news.db loaded, the thread names, and
     how many stories sit in each review bucket. Yes/no to everyone; data only to admin."""
-    if not is_admin():
-        return jsonify({"owner": False, "available": False})
+    admin = is_admin()
+    reader = (not admin) and _shared_key_ok()
+    if not (admin or reader):
+        return jsonify({"owner": False, "reader": False, "available": False})
     if not _available():
-        return jsonify({"owner": True, "available": False, "labels": THREAD_LABELS})
+        return jsonify({"owner": admin, "reader": reader, "available": False, "labels": THREAD_LABELS})
     conn = news_db()
     try:
         def n(sql, args=()):
@@ -192,7 +212,7 @@ def meta():
 @bp.route("/api/news/list", methods=["GET"])
 @limiter.limit("240 per hour")
 def list_news():
-    if not is_admin():
+    if not _can_read():
         return jsonify({"error": "not found"}), 404
     if not _available():
         return jsonify({"stories": [], "available": False})
