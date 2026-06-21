@@ -173,7 +173,7 @@ def list_news():
     elif view == "dismissed":
         where.append("status = 'dismiss'")
 
-    sql = (f"SELECT id, title, source, published, score, ai_thread, ai_why, status "
+    sql = (f"SELECT id, url, title, source, published, score, ai_thread, ai_why, status "
            f"FROM items WHERE {' AND '.join(where)} "
            f"ORDER BY score DESC, published DESC")
     conn = news_db()
