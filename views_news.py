@@ -206,7 +206,7 @@ def meta():
         counts = {}
     finally:
         conn.close()
-    return jsonify({"owner": True, "available": True, "labels": THREAD_LABELS, "counts": counts})
+    return jsonify({"owner": admin, "reader": reader, "available": True, "labels": THREAD_LABELS, "counts": counts})
 
 
 @bp.route("/api/news/list", methods=["GET"])
