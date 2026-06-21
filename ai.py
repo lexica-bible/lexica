@@ -598,6 +598,29 @@ way must get the same answer. If the verses don't settle it, say so plainly.\
 """
 
 
+def _spread_sample(results: list[dict], cap: int) -> list[dict]:
+    """Pick up to `cap` verses spread ACROSS the books they fall in — not the first
+    `cap`. Ordered by verse id, the first N hits of a common word are all early-OT,
+    so the synthesizer never saw the NT (an 'agape' answer cited only Genesis /
+    Deuteronomy, missing John + 1 Corinthians). Round-robin one verse per book per
+    pass, in first-appearance (≈canonical) order, until the cap is reached — so every
+    book that uses the word gets a seat and no single book can dominate."""
+    if len(results) <= cap:
+        return results
+    by_book: dict = {}
+    for v in results:
+        by_book.setdefault(v["book"], []).append(v)
+    books = list(by_book.keys())
+    picked: list = []
+    i = 0
+    while len(picked) < cap and any(by_book.values()):
+        bucket = by_book[books[i % len(books)]]
+        if bucket:
+            picked.append(bucket.pop(0))
+        i += 1
+    return picked
+
+
 def _curate_primary_verses(
     query: str, results: list[dict], key_strongs_data: list[dict] | None = None
 ) -> tuple[list[str], list[str], str]:
@@ -625,7 +648,7 @@ def _curate_primary_verses(
     else:
         input_cap, primary_cap = max(n, 1), 8
 
-    capped = results[:input_cap]
+    capped = _spread_sample(results, input_cap)
     if capped:
         or_parts = " OR ".join(
             "(v.book=? AND v.chapter=? AND v.verse=?)" for _ in capped
@@ -777,7 +800,7 @@ _ai_cache_ver: str | None = None  # computed once from prompt template + book li
 
 # Bump this integer whenever server-side search logic changes in a way that
 # affects results but doesn't change _AI_SYSTEM_TMPL (e.g. new fallback steps).
-_CACHE_CODE_VER = 31   # 31: pass-2 synthesis + verse curation moved to Sonnet (was Haiku)
+_CACHE_CODE_VER = 32   # 32: feed the synthesizer a spread of verses across books (was first-N = OT-biased)
 
 
 def _get_ai_cache_ver() -> str:
