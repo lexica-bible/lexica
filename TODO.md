@@ -288,6 +288,51 @@ header still shows an "Under development" badge on these two tabs. Full record: 
 
 ---
 
+## AI trust + reference depth (2026-06-20 brainstorm — user + outside-Claude review)
+
+A batch of ideas about making the AI prose trustworthy and deepening the free reference shelf.
+Ranked: #1 first (cheap, highest-leverage), #2 next (best feature add), #3 is a real wiring job.
+
+1. **Citation guard for AI prose — HIGHEST LEVERAGE, mostly a small post-step, not a model change.**
+   Retrieval here is NOT embeddings — it's the model writing SQL keyed off Strong's, so the OCCURRENCE
+   lists are pulled straight from the DB and can't be wrong. The leak is only in the PROSE (LSJ word
+   blurb + Ask-the-corpus answers): the model can name a verse that isn't in the pulled set (earlier
+   misses: Luke 2:26 + a Philippians attribution on G4815). Two cheap guards, belt-and-suspenders:
+   (a) CONSTRAIN — pass the occurrence list as the only citable set, instruct that every verse ref must
+   come from there; (b) CHECK AFTER — parse verse refs out of the answer, drop or visibly flag any not in
+   the set. Because occurrences are already pulled by tag, the word-focused answers can be made
+   citation-proof BY CONSTRUCTION (reserve any fuzzy/meaning-based retrieval for the open "broad
+   question" path only). GOTCHA: the after-check must normalize refs first (book abbrev + ABP-vs-KJV
+   versification differ) or it false-flags good citations. The interpretive lemma-comparison claims
+   (lambanō neutral vs syllambanō forceful) are NOT mechanically checkable and are lower-risk — a reader
+   can weigh a semantic argument; a wrong verse citation just looks authoritative and misleads.
+   `code: ai.py (Ask-corpus answer + curation), views_lsj.py (word blurb); occurrence set already in /api/lexicon/verses`
+2. **Feed public-domain reference works into the synthesis engine — the "clean a messy free source into
+   prose" move we already do for LSJ/BDB works on the whole pre-1929 shelf.** Best picks:
+   - **Trench (NT synonyms) + Girdlestone (OT synonyms)** — the STANDOUT. Grounds the very synonym answers
+     the AI was improvising; authoritative, zero license cost. Pairs with #1.
+   - Thayer's, Vine's, Strong's own defs, Gesenius — more lexicon depth, easy adds.
+   - PD COMMENTARIES (Matthew Henry, Barnes, Gill, Clarke, JFB, Pulpit) — a "what the tradition says"
+     layer, synthesized like LSJ. CAUTION: a commentary layer is IMPORTED interpretation — exactly what
+     the Berean text-first rule keeps OUT. Only worth doing walled-off + clearly labeled "tradition, not
+     the text" (same provenance discipline as the argument graphs); never let it bleed into the neutral
+     answers.
+   - LICENSE caution (real — we've been bitten): some old works have free TEXT wrapped in a not-free
+     database license (hit us on the morphology sources). Grab original scans / known-free digitizations
+     (CCEL, pre-1929 Internet Archive printings, openly-licensed morphology projects), not a random
+     repackaging. `code: synthesis pattern in views_lsj.py / ai.py; would need a loader + side table per source`
+3. **Swap the OT Hebrew reference from KJV's Strong's tags to the real Hebrew OT (heb.db).** Today the
+   Hebrew word-study / AI bridge runs BDB → kjv_strongs → ABP verses — i.e. KJV's reverse-engineered
+   Strong's tagging is the OT occurrence source. We now HAVE the real Hebrew OT (heb.db, STEP TAHOT, all
+   39 books, per-word H-numbers + morph). It's richer + cleaner than KJV tags, so make heb.db the OT
+   occurrence source for word study + search. NO objection on merit. Costs: (a) cross-db wiring — the
+   Lexicon/Search tabs only know the main + KJV tables today (overlaps the "teach the tabs about other
+   corpora" item under Non-canonical); (b) versification alignment (Hebrew Psalm titles / chapter breaks
+   differ from KJV/ABP). OT-only, which matches the use. `code: ai.py Hebrew bridge; views_lexicon.py;
+   views_search.py; heb.db via core.heb_db(); memory project_hebrew_ot_interlinear`
+
+---
+
 ## Non-canonical texts — library DONE + LIVE; a few open scraps
 
 The whole non-canonical library is built, loaded, and live: Septuagint Apocrypha, Pseudepigrapha,
@@ -472,6 +517,15 @@ depends) so it no longer reads as the lone winner; collapsed the duplicate infer
 fixes came out of it (both live on a code deploy, no `--apply`): the chart now packs disconnected branches
 (no dead gap), and the "where they part" diff lists each side's conclusion nodes.
 OPEN:
+- **Mobile graph = narrate a traversal, not a shrunk 2D chart (design note, 2026-06-20; LOW urgency —
+  graphs are admin-only).** The shared-claim-pool + per-tradition-overlay structure means the graph is
+  just one rendering of the data. On a phone, walk the same nodes vertically as argument STEPS (grounded
+  verses → the inference they feed → the contested joint → the conclusion + "where they part"), so
+  vertical position means "next step" instead of fighting the 2D layout. Alt: horizontal scroll with the
+  conclusion column PINNED preserves the "converges to a conclusion" feel. HARDEST thing to preserve:
+  the CONTESTED edges — if dashed lines vanish or read solid at phone density, the map quietly becomes
+  the verdict machine we avoid. On mobile carry "contested" as an explicit colored TAG/label, not fine
+  dashes. `code: static/src/55-study.jsx graph SVG render; memory project_study_modules`
 - Drop the place "Sin" entry (Sin (1)/(2) — one is the Wilderness of Sin) from the `_COMMON` list.
 - **Foundational-words strip / lexeme panel (NEW, 2026-06-18).** The baptizō "medium-neutral" insight was
   trimmed out of the baptism graph on the understanding it belongs in a per-study foundational-words strip

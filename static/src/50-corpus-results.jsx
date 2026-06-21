@@ -233,7 +233,10 @@ function CorpusResults({ allResults, primaryStrongs, citedStrongs, showAll, onWo
       ))}
       {additionalGroups.length > 0 && (
         <div className="additional-refs-section">
-          <div className="additional-refs-label">Additional references</div>
+          <div className="additional-refs-label">
+            Additional references
+            <span style={{ fontWeight: 400, color: "var(--ink-4)" }}> · related by theme — may not contain the word</span>
+          </div>
           {additionalGroups.map(g => (
             <CorpusGroup key={g.label} label={g.label} verses={g.verses} {...passageGroupProps} />
           ))}

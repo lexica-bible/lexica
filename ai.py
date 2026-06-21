@@ -143,6 +143,11 @@ with "This query", "This search", "The results", "The passages", or any sentence
 that describes what the system did. Pretend you are writing a lexicon note.
 Be specific — cite key passages by reference, name the semantic range concretely,
 and explain what the text actually says. Do not write vague generalities.
+CITATION HONESTY: only cite a verse reference when you are confident the word you
+are discussing actually occurs in that verse. Do not cite a verse merely because it
+fits the theme — the system verifies every citation against the text and visibly
+flags any that do not contain the word, so a loose citation will be marked, not
+trusted. When you mean a thematic parallel rather than an occurrence, say so in words.
 
 GOOD: "Pneuma (G4151) in Genesis spans breath, wind, and divine spirit — the LXX
 rendering of ruach (H7307). At Gen 1:2 the spirit moves over the waters; at Gen
@@ -890,6 +895,29 @@ def ai_search():
             finally:
                 ks_conn.close()
 
+        # ── Citation guard ───────────────────────────────────────────────────
+        # The bare base numbers of the target words (dots stripped), e.g.
+        # {"4815","1818"}. Verses injected from the model's PROSE or its
+        # "additional" list are checked against this: a verse that contains NONE
+        # of the target words is THEMATIC (kept, but routed to "Additional
+        # references", never shown as a direct word occurrence).
+        # REGIME-AWARE: when there is no clear target word — a broad, non-word
+        # question — the word-check can't apply, so nothing is flagged thematic on
+        # that basis (the citable set would generalize to the retrieved verses
+        # instead, for an expanded answer-anything mode).
+        _target_bases = {e["strongs_base"].split(".")[0] for e in key_strongs_data}
+
+        def _is_thematic(words):
+            """True only when there IS a target-word set AND this verse contains
+            none of it (so it's thematic, not lexical evidence)."""
+            if not _target_bases:
+                return False
+            for wd in words:
+                sb = (wd.get("strongs_base") or "").lstrip("GH").split(".")[0]
+                if sb in _target_bases:
+                    return False
+            return True
+
         if not re.match(r"^\s*SELECT\b", sql, re.IGNORECASE):
             log.error("AI returned non-SELECT query: %r", sql)
             # Don't echo the generated SQL back to the client (info disclosure).
@@ -1010,6 +1038,7 @@ def ai_search():
                             "ref": f"{book} {chapter}:{verse_num}",
                             "book": book, "chapter": chapter, "verse": verse_num,
                             "words": words,
+                            "is_thematic": _is_thematic(words),
                         }
                         new_cited.append(key)
                         log.debug("Cited verse fetched: %s %d:%d", book, chapter, verse_num)
@@ -1139,6 +1168,7 @@ def ai_search():
                             "ref": f"{book} {chapter}:{verse_num}",
                             "book": book, "chapter": chapter, "verse": verse_num,
                             "words": words,
+                            "is_thematic": _is_thematic(words),
                         }
                         new_additional.append(key)
                         log.debug(
@@ -1150,13 +1180,17 @@ def ai_search():
                 results = [verse_index[k] for k in new_additional] + results
 
         # ── Tag is_primary / is_additional on every result verse ─────────────
+        # A THEMATIC verse (cited/added but containing none of the target words)
+        # can never be primary evidence — it routes to the "Additional references"
+        # bucket so it reads as context, not proof.
         for v in results:
             key = (v["book"], v["chapter"], v["verse"])
+            thematic = v.get("is_thematic", False)
             if dc_query:
                 v["is_primary"] = key in _DIVINE_COUNCIL_VERSES
             else:
-                v["is_primary"] = key in primary_set
-            v["is_additional"] = (key in additional_set) and not v["is_primary"]
+                v["is_primary"] = (key in primary_set) and not thematic
+            v["is_additional"] = thematic or ((key in additional_set) and not v["is_primary"])
 
         # ── Sort in canonical book order (books.id) then chapter/verse ────────
         ord_conn = db_ro()
