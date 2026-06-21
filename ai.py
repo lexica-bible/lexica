@@ -1271,12 +1271,19 @@ def ai_search():
                 if ks["strongs_base"] not in existing_bases:
                     key_strongs_data.append(ks)
 
-        # ── Pass 3: ground the explanation in the verses we actually found ───
-        # Rewrites the pass-1 prose from the final result set so every reference it
-        # makes is one on screen. One cheap Haiku call; keeps the original on failure.
-        grounded = _grounded_explanation(q, results, key_strongs_data)
-        if grounded:
-            explanation = grounded
+        # ── Pass 3: ground the explanation — ONLY when pass-1 actually slipped ──
+        # The pass-1 prose is usually clean (every verse it names is in the results).
+        # Re-running it then is a wasted model call + latency, so we only rewrite when
+        # a cited verse is missing from the results or is thematic (off-word). cited_keys
+        # was parsed from the explanation earlier; an empty set means no refs to check.
+        needs_rewrite = any(
+            (key not in verse_index) or verse_index[key].get("is_thematic")
+            for key in cited_keys
+        )
+        if needs_rewrite:
+            grounded = _grounded_explanation(q, results, key_strongs_data)
+            if grounded:
+                explanation = grounded
 
         payload = {"results": results, "total": len(results),
                    "explanation": explanation, "key_strongs": key_strongs_data}
