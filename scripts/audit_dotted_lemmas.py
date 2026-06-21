@@ -100,8 +100,11 @@ def main() -> None:
         if not ext:
             no_entry += 1
             continue
-        if clean_text(ext["def_html"]).lstrip().startswith("[ABP]"):
-            form_note += 1     # ABP form note (e.g. εστίν -> Strong G2076); base lemma is right
+        # Only true ABP form-notes (the εἰμί family, "... Strong G2076") keep the base lemma.
+        # A "[ABP]" entry that is a DIFFERENT word (σαβέκ vs σάββατον) has no "Strong G####"
+        # pointer and IS a wrong headword today. (Matches build_dotted_lexicon.py / probe_dotted_abp.py.)
+        if re.search(r"Strong\s+G\d", clean_text(ext["def_html"])):
+            form_note += 1
             continue
         should = first_greek(ext["def_html"])
         if not should:

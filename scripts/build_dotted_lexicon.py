@@ -17,6 +17,7 @@ Reuses the verified Greek extraction from audit_dotted_lemmas.py and the romaniz
 from build_abp_translit.py. Reads abp_ext/lexicon/words; writes ONLY dotted_lexicon.
 """
 import os
+import re
 import sqlite3
 import sys
 import unicodedata
@@ -67,8 +68,15 @@ def collect(conn):
         if not ext:
             skipped["no_entry"] += 1
             continue
-        if clean_text(ext["def_html"]).lstrip().startswith("[ABP]"):
-            skipped["form_note"] += 1            # form of the base lemma -> base is correct
+        # Skip ONLY genuine ABP form-notes — the εἰμί family ("[ABP] εστίν, ... Strong
+        # G2076"), which point to the real Strong's number, so the BASE lemma is the right
+        # card headword. The marker is the literal "Strong G####" pointer. A "[ABP]" entry
+        # that is a DIFFERENT word (G4521.2 σαβέκ "thicket" vs base G4521 σάββατον) carries
+        # no such pointer (at most a "See G####" cross-ref) — it must flow through and get
+        # its own row. (The old blanket "[ABP]" skip hid ~hundreds of real different-words —
+        # σαβέκ, γόμορ, ιωβήλ, γαυριόω ... 2026-06-21.)
+        if re.search(r"Strong\s+G\d", clean_text(ext["def_html"])):
+            skipped["form_note"] += 1
             continue
         correct = first_greek(ext["def_html"])
         if not correct:
