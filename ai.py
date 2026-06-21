@@ -27,6 +27,7 @@ from core import (
     ai_fingerprint, ai_cache_put, ai_cache_prune,
 )
 from views_lsj import _lsj_concept_lookup, _format_lsj_context
+from views_lexicon import _greek_cognates
 from views_notes import is_logged_in   # AI search is login-gated (it costs API money)
 
 bp = Blueprint("ai", __name__)
@@ -885,11 +886,17 @@ _CURATE_SKIP_MAX = 8
 # triggers a pointless ~7s scan.
 _PROPER_NOUN_NEED = 25
 
+# Same-root cognate supplement: how many family members we'll add as chips per query
+# (a relative only counts if it actually occurs), and how many of each one's verses to
+# pull into the pool. Kept small so a big word-family can't flood the chips or results.
+_COGNATE_CHIP_CAP = 4
+_COGNATE_VERSE_CAP = 60
+
 _ai_cache_ver: str | None = None  # computed once from prompt template + book list
 
 # Bump this integer whenever server-side search logic changes in a way that
 # affects results but doesn't change _AI_SYSTEM_TMPL (e.g. new fallback steps).
-_CACHE_CODE_VER = 34   # 34: feed same-root cognates into the LSJ context (e.g. G4520 σαββατισμός under σάββατον)
+_CACHE_CODE_VER = 35   # 35: deterministic cognate supplement — pull each Greek target's same-root family into chips + verses
 
 
 def _get_ai_cache_ver() -> str:
@@ -1190,6 +1197,70 @@ def ai_search():
         # wasted ~5s call when those already surfaced verses to show.
         verse_index, verse_order, results = _group_word_rows(rows)
         log.debug("Grouped into %d verses", len(results))
+
+        # ── Same-root cognate supplement ─────────────────────────────────────
+        # The verses come from the model's SQL, which often searches only the head
+        # word and misses its own family — a "sabbath" search finds σάββατον (G4521)
+        # but not σαββατισμός (G4520, Heb 4:9). Deterministically pull each GREEK
+        # target's same-root relatives (lexicon etymology, _greek_cognates) so the
+        # family is searched + chipped no matter what the model wrote. A relative
+        # earns a chip ONLY if it actually occurs (no dead chips), capped so a big
+        # family can't flood; the synth still names one only if its verse gets picked.
+        # Greek only (BDB has no etymology). Never fatal — a hiccup leaves results as-is.
+        try:
+            _orig_greek = [e for e in key_strongs_data if e["strongs"].startswith("G")]
+            if _orig_greek:
+                cog_conn = db_ro()
+                new_cog: list = []
+                added = 0
+                try:
+                    for e in _orig_greek:
+                        if added >= _COGNATE_CHIP_CAP:
+                            break
+                        for c in _greek_cognates(cog_conn, e["strongs_base"].split(".")[0], e.get("derivation", "")):
+                            if added >= _COGNATE_CHIP_CAP:
+                                break
+                            cbase = c["strongs"].lstrip("GgHh").split(".")[0]
+                            if cbase in _target_bases:
+                                continue
+                            occ = cog_conn.execute(
+                                "SELECT DISTINCT v.book, v.chapter, v.verse, v.id AS vid "
+                                "FROM words w JOIN verses v ON w.verse_id = v.id "
+                                "WHERE w.strongs_base = ? ORDER BY v.id LIMIT ?",
+                                (f"G{cbase}", _COGNATE_VERSE_CAP),
+                            ).fetchall()
+                            if not occ:
+                                continue              # not in the corpus → no dead chip
+                            _target_bases.add(cbase)  # a real target now: grounded + highlighted
+                            key_strongs_data.append({
+                                "strongs_base": cbase,
+                                "strongs":      f"G{cbase}",
+                                "lemma":        c.get("lemma", ""),
+                                "translit":     c.get("translit", ""),
+                                "definition":   c.get("gloss", ""),
+                                "derivation":   "",
+                            })
+                            added += 1
+                            for pr in occ:
+                                key = (pr["book"], pr["chapter"], pr["verse"])
+                                if key in verse_index:
+                                    continue
+                                words = _fetch_verse_words(cog_conn, pr["vid"])
+                                if words:
+                                    verse_index[key] = {
+                                        "ref": f"{pr['book']} {pr['chapter']}:{pr['verse']}",
+                                        "book": pr["book"], "chapter": pr["chapter"], "verse": pr["verse"],
+                                        "words": words,
+                                    }
+                                    new_cog.append(key)
+                finally:
+                    cog_conn.close()
+                if new_cog:
+                    results = results + [verse_index[k] for k in new_cog]
+                    log.info("Cognate supplement: +%d chip(s), +%d verse(s)", added, len(new_cog))
+        except Exception as e:
+            log.warning("cognate supplement failed: %s", e)
+        _mark("cognates")
 
         # ── Fetch verses cited in the explanation that SQL missed ─────────────
         cited_keys: set = set()
