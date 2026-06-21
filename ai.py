@@ -812,10 +812,10 @@ def ai_search():
         if not is_logged_in():
             return jsonify({"error": "Sign in to use AI search.", "login": True}), 401
         q = request.args.get("q", "").strip()
-        # Optional conversation context (the previous turn) for follow-up questions,
+        # Optional conversation context (recent thread turns) for follow-up questions,
         # so references like "it" / "the same word" resolve. Capped; a follow-up is
         # thread-specific so it's never cached — it always runs fresh.
-        context = request.args.get("context", "").strip()[:600]
+        context = request.args.get("context", "").strip()[:2000]
         log.debug("ai_search called: q=%r context=%r", q, context[:120])
         if not q:
             return jsonify({"error": "no query"}), 400

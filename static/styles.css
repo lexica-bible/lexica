@@ -4210,6 +4210,9 @@ button.study-verse-ref { border: none; }
 .ac-rail-item:hover { background: var(--paper); border-color: var(--rule); color: var(--ink); }
 .ac-rail-clear { flex: 0 0 auto; margin: 4px 16px 16px; align-self: flex-start; font-size: 12px; color: var(--ink-4); }
 .ac-rail-clear:hover { color: var(--ai); text-decoration: underline; }
+.ac-rail-new { flex: 0 0 auto; margin: 14px 14px 0; display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 9px 12px; border: 1px solid var(--rule); border-radius: 8px; background: var(--ctl-bg); color: var(--ink-2); font-size: 13px; font-weight: 600; }
+.ac-rail-new:hover:not(:disabled) { border-color: var(--ai); color: var(--ai); }
+.ac-rail-new:disabled { opacity: 0.45; cursor: default; }
 
 /* CENTER */
 .ac-main { min-height: 0; display: flex; flex-direction: column; background: var(--bg); }

@@ -193,16 +193,18 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
     if (isMobile) setRailOpen(false);
     setHistory(h => [q, ...h.filter(x => x !== q)].slice(0, 24));
     const idx = thread.length;
-    // Follow-up context: hand the previous turn to the backend so references like
-    // "it" / "this word" / "the same word" resolve — each ask is otherwise standalone.
-    const prev = thread[thread.length - 1];
+    // Follow-up context: hand the recent thread (capped) to the backend so references
+    // like "it" / "this word" / "the same word" resolve across the conversation —
+    // each ask is otherwise standalone. Last 6 real turns, total trimmed to ~1500 chars.
+    const ctxTurns = thread.filter(t => t && t.question && !t.loading && !t.error).slice(-6);
     let context = "";
-    if (prev && prev.question) {
-      const lem = (prev.keyStrongs || []).slice(0, 4)
-        .map(k => [k.lemma, k.translit, k.strongs].filter(Boolean).join(" "))
-        .filter(Boolean).join("; ");
-      context = `Previous question: "${prev.question.slice(0, 160)}".`
-        + (lem ? ` Key words there: ${lem}.` : "");
+    if (ctxTurns.length) {
+      context = ctxTurns.map(t => {
+        const lem = (t.keyStrongs || []).slice(0, 4)
+          .map(k => [k.lemma, k.translit, k.strongs].filter(Boolean).join(" "))
+          .filter(Boolean).join("; ");
+        return `Asked: "${(t.question || "").slice(0, 160)}".` + (lem ? ` Key words: ${lem}.` : "");
+      }).join("\n").slice(0, 1500);
     }
     setThread(t => [...t, { question: q, loading: true }]);
     try {
@@ -223,6 +225,10 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
       setThread(t => t.map((x, i) => i === idx ? { question: q, error: "Network error: " + e.message } : x));
     }
   };
+
+  // Start a clean conversation — clears the thread (back to the landing) but keeps
+  // any Word-study scope and the recent-questions rail.
+  const newThread = () => { setThread([]); setDraft(""); if (isMobile) setRailOpen(false); };
 
   // Handoff from Word study (scope) or a pushed question (ask) — consumed once.
   useEffect(() => {
@@ -249,6 +255,12 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
     <div className={"ac" + (railOpen ? " rail-open" : "")}>
       {isMobile && railOpen && <div className="ac-rail-scrim" onClick={() => setRailOpen(false)}/>}
       <aside className={"ac-rail" + (isMobile && !railOpen ? " hidden" : "")}>
+        <button className="ac-rail-new" onClick={newThread} disabled={!started}
+          title="Start a new conversation">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+            strokeWidth="2" strokeLinecap="round"><path d="M12 5v14M5 12h14"/></svg>
+          New thread
+        </button>
         <div className="ac-rail-top"><span className="ac-rail-eyebrow"><Icon.Clock/> Recent questions</span></div>
         {history.length === 0
           ? <div className="ac-rail-empty">Your session's questions collect here.</div>
