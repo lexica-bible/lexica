@@ -193,9 +193,20 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
     if (isMobile) setRailOpen(false);
     setHistory(h => [q, ...h.filter(x => x !== q)].slice(0, 24));
     const idx = thread.length;
+    // Follow-up context: hand the previous turn to the backend so references like
+    // "it" / "this word" / "the same word" resolve — each ask is otherwise standalone.
+    const prev = thread[thread.length - 1];
+    let context = "";
+    if (prev && prev.question) {
+      const lem = (prev.keyStrongs || []).slice(0, 4)
+        .map(k => [k.lemma, k.translit, k.strongs].filter(Boolean).join(" "))
+        .filter(Boolean).join("; ");
+      context = `Previous question: "${prev.question.slice(0, 160)}".`
+        + (lem ? ` Key words there: ${lem}.` : "");
+    }
     setThread(t => [...t, { question: q, loading: true }]);
     try {
-      const data = await api.aiSearch(q);
+      const data = await api.aiSearch(q, context);
       let turn;
       if (data.login) turn = { question: q, error: "Sign in to ask the corpus." };
       else if (data.out_of_scope) turn = { question: q, notice: data.explanation || "This tool searches the Greek & Hebrew Bible corpus — try a question about a word, theme, or passage." };

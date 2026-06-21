@@ -812,14 +812,18 @@ def ai_search():
         if not is_logged_in():
             return jsonify({"error": "Sign in to use AI search.", "login": True}), 401
         q = request.args.get("q", "").strip()
-        log.debug("ai_search called: q=%r", q)
+        # Optional conversation context (the previous turn) for follow-up questions,
+        # so references like "it" / "the same word" resolve. Capped; a follow-up is
+        # thread-specific so it's never cached — it always runs fresh.
+        context = request.args.get("context", "").strip()[:600]
+        log.debug("ai_search called: q=%r context=%r", q, context[:120])
         if not q:
             return jsonify({"error": "no query"}), 400
 
         if len(q) > 500:
             return jsonify({"error": "query too long (max 500 chars)"}), 400
 
-        if q in _ai_cache:
+        if not context and q in _ai_cache:
             log.debug("ai_search cache hit: q=%r", q)
             return jsonify(_ai_cache[q])
 
@@ -846,7 +850,9 @@ def ai_search():
                 "manifestations of the concept — e.g. for divine beings include both "
                 "titles (angel, holy one) and membership/kinship terms (son, child, assembly). "
                 "Return ONLY a JSON array of lowercase English strings, "
-                "e.g. [\"spirit\",\"breath\"]. No explanation.\n\nQuery: " + q
+                "e.g. [\"spirit\",\"breath\"]. No explanation.\n\n"
+                + (f"Conversation context (resolve references against it): {context}\n" if context else "")
+                + "Query: " + q
             )}],
         )
         try:
@@ -865,7 +871,14 @@ def ai_search():
         log.debug("LSJ context (%d entries): %.200s", len(lsj_entries), lsj_context)
 
         # ── Step 3: SQL generation with LSJ context ───────────────────────
-        user_content = f"{lsj_context}\n\nQuery: {q}" if lsj_context else q
+        if context:
+            _ctx = ("CONVERSATION CONTEXT — the previous turn in this thread. Use it ONLY to "
+                    "resolve references in the new question (\"it\", \"this word\", \"the same "
+                    f"word\"); answer the NEW question:\n{context}")
+            user_content = (f"{lsj_context}\n\n{_ctx}\n\nQuery: {q}" if lsj_context
+                            else f"{_ctx}\n\nQuery: {q}")
+        else:
+            user_content = f"{lsj_context}\n\nQuery: {q}" if lsj_context else q
         log.debug("Calling Haiku for SQL generation…")
         msg = _anthropic.messages.create(
             model="claude-haiku-4-5-20251001",
@@ -880,7 +893,7 @@ def ai_search():
 
         if not raw:
             log.error("AI returned empty response (stop_reason=%s)", msg.stop_reason)
-            return jsonify({"error": "AI returned an empty response — please try again."}), 500
+            return jsonify({"error": "The AI came back empty on that one — try rephrasing the question."}), 500
 
         # Extract the JSON object even if surrounded by prose or fences
         start = raw.find("{")
@@ -894,7 +907,7 @@ def ai_search():
             parsed = json.loads(candidate)
         except json.JSONDecodeError as e:
             log.error("AI response not valid JSON: %s\nraw=%r", e, raw)
-            return jsonify({"error": "AI response not valid JSON — please try again."}), 500
+            return jsonify({"error": "I couldn't read the answer for that one — try rephrasing the question."}), 500
 
         if parsed.get("out_of_scope"):
             return jsonify({"out_of_scope": True, "explanation": parsed.get("explanation", "")}), 200
@@ -1297,10 +1310,11 @@ def ai_search():
         # verses in hand); no separate grounding pass runs here anymore.
         payload = {"results": results, "total": len(results),
                    "explanation": explanation, "key_strongs": key_strongs_data}
-        _ai_cache[q] = payload
-        _persist_ai_cache(q, payload)
+        if not context:               # follow-ups are thread-specific — don't cache
+            _ai_cache[q] = payload
+            _persist_ai_cache(q, payload)
         _mark("total")
-        log.info("ai_search timing q=%r rows=%d | %s", q, len(rows), _marks)
+        log.info("ai_search timing q=%r rows=%d ctx=%d | %s", q, len(rows), len(context), _marks)
         return jsonify(payload)
 
     except Exception:

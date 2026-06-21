@@ -50,8 +50,8 @@ function _newsKey() {
 const api = {
   search: (q, phrase = false) =>
     fetch(`/api/search?q=${encodeURIComponent(q)}&phrase=${phrase ? 1 : 0}`).then(r => r.json()),
-  aiSearch: (q) =>
-    fetch(`/api/ai-search?q=${encodeURIComponent(q)}`, { headers: _authHeaders() }).then(r => r.json()),
+  aiSearch: (q, context = "") =>
+    fetch(`/api/ai-search?q=${encodeURIComponent(q)}${context ? `&context=${encodeURIComponent(context)}` : ""}`, { headers: _authHeaders() }).then(r => r.json()),
   verse: (book, chapter, verse) =>
     fetch(`/api/verse/${encodeURIComponent(book)}/${chapter}/${verse}`).then(r => r.json()),
   verseWords: (book, chapter, verse) =>
