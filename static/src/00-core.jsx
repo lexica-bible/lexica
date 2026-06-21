@@ -44,7 +44,10 @@ function _authHeaders() {
 
 // The no-login News share key (saved when someone opens /?news=<key>), if any.
 function _newsKey() {
-  try { return localStorage.getItem("lexica.news.key.v1") || ""; } catch (e) { return ""; }
+  // Prefer the saved key; fall back to the ?news= URL param so a freshly opened share
+  // link works on its very first request, before the mount effect saves the key.
+  try { const k = localStorage.getItem("lexica.news.key.v1"); if (k) return k; } catch (e) {}
+  try { return new URLSearchParams(window.location.search).get("news") || ""; } catch (e) { return ""; }
 }
 
 const api = {
