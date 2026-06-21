@@ -149,6 +149,11 @@ are discussing actually occurs in that verse. Do not cite a verse merely because
 fits the theme — the system verifies every citation against the text and visibly
 flags any that do not contain the word, so a loose citation will be marked, not
 trusted. When you mean a thematic parallel rather than an occurrence, say so in words.
+NEUTRALITY — answer from the text, NOT from how the question is framed. If the question
+presupposes a conclusion ("are X and Y the SAME?" vs "are X and Y DIFFERENT?"), do not
+simply agree with the assumption — state what the words and verses actually show, even
+when that cuts against the way the question leans. The same underlying question must get
+the same answer no matter which way it is phrased. If the text does not settle it, say so.
 
 GOOD: "Pneuma (G4151) in Genesis spans breath, wind, and divine spirit — the LXX
 rendering of ruach (H7307). At Gen 1:2 the spirit moves over the waters; at Gen
@@ -578,7 +583,11 @@ approach: the text speaks first, no imported theology.
 CITATIONS — STRICT: cite ONLY verse references that appear in the verse list given in
 the user message. Never cite a verse that is not in that list. To make a thematic
 point about a passage that is not listed, describe it in words with no chapter:verse
-citation.\
+citation.
+NEUTRALITY: answer from the verses, NOT from how the question is framed. If the question
+assumes a conclusion ("are X and Y the same?" / "...different?"), state what the text
+actually shows rather than agreeing with the assumption; the same question phrased either
+way must get the same answer. If the verses don't settle it, say so plainly.\
 """
 
 
@@ -1306,9 +1315,23 @@ def ai_search():
                 if ks["strongs_base"] not in existing_bases:
                     key_strongs_data.append(ks)
 
+        # ── Grounding check: is this answer backed by an ACTUAL occurrence? ──
+        # The search (SQL) returning rows = real corpus hits. If it found nothing
+        # and the only verses are ones the model NAMED itself, the answer counts as
+        # grounded only when at least one of those verses really contains a target
+        # word (not thematic). Otherwise it's leaning on the model's own knowledge —
+        # flag it so the UI says so plainly instead of dressing it up as evidence.
+        # No target words (a broad, non-word question) ⇒ can't word-check ⇒ don't flag.
+        if not results:
+            grounded = False
+        elif rows or not _target_bases:
+            grounded = True
+        else:
+            grounded = any(not _is_thematic(v.get("words", [])) for v in results)
+
         # The explanation is grounded in pass 2 above (which has the retrieved
         # verses in hand); no separate grounding pass runs here anymore.
-        payload = {"results": results, "total": len(results),
+        payload = {"results": results, "total": len(results), "grounded": grounded,
                    "explanation": explanation, "key_strongs": key_strongs_data}
         if not context:               # follow-ups are thread-specific — don't cache
             _ai_cache[q] = payload

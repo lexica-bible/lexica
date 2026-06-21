@@ -4310,6 +4310,8 @@ button.study-verse-ref { border: none; }
 .ac-instrongs:hover { border-bottom-color: var(--ai); }
 .ac-notice { font-size: 14.5px; line-height: 1.6; color: var(--ink-2); margin: 0; padding: 14px 16px; background: var(--ai-soft); border: 1px solid color-mix(in oklab, var(--ai) 20%, transparent); border-radius: 10px; }
 .ac-error { font-size: 14px; color: #b91c1c; margin: 0; padding: 12px 16px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px; }
+.ac-ungrounded { margin: 0 0 14px; padding: 11px 14px; background: var(--gold-soft); border: 1px solid color-mix(in oklab, var(--gold) 35%, transparent); border-radius: 10px; font-size: 13.5px; line-height: 1.55; color: var(--ink-2); text-wrap: pretty; }
+.ac-ungrounded b { font-weight: 700; color: var(--ink); }
 
 /* cited lemma chips */
 .ac-lemmas { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 22px; }

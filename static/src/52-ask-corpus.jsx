@@ -111,6 +111,13 @@ function AcTurn({ turn, textMode, onReadInContext, onLemma, onStrongs }) {
       ) : (
         <div className="ac-answer">
           <div className="ac-syn-tag"><Icon.Sparkle/> Synthesis</div>
+          {turn.grounded === false && (
+            <div className="ac-ungrounded" role="note">
+              <b>No direct occurrences found.</b> The corpus search turned up no verse that actually
+              uses this word, so the note below is general background from the AI — not verse evidence.
+              Treat it with caution and verify against the text.
+            </div>
+          )}
           <AcProse text={turn.explanation} onVerse={onReadInContext} onStrongs={onStrongs}/>
 
           {turn.keyStrongs && turn.keyStrongs.length > 0 && (
@@ -219,6 +226,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
         keyStrongs: data.key_strongs || [],
         results: flattenAiResults(data.results || []),
         total: data.total || 0,
+        grounded: data.grounded !== false,   // false only when the backend says so
       };
       setThread(t => t.map((x, i) => i === idx ? turn : x));
     } catch (e) {
