@@ -149,6 +149,8 @@ with "This query", "This search", "The results", "The passages", or any sentence
 that describes what the system did. Pretend you are writing a lexicon note.
 Be specific — cite key passages by reference, name the semantic range concretely,
 and explain what the text actually says. Do not write vague generalities.
+SCRIPT: in the prose use the TRANSLITERATION + Strong's number only (e.g. "pneuma,
+G4151" — never πνεῦμα), NOT raw Greek or Hebrew letters; the script belongs in the chips.
 CITATION HONESTY: only cite a verse reference when you are confident the word you
 are discussing actually occurs in that verse. Do not cite a verse merely because it
 fits the theme — the system verifies every citation against the text and visibly
@@ -167,8 +169,8 @@ The word unifies physical breath and divine agency under one term."
 BAD:  "This query searches for pistis across Paul's letters..."
 BAD:  "Pneuma appears in the creation account and descriptions of divine action." (too vague)
 
-You MUST mention every term in key_strongs by its Greek or Hebrew lemma or
-transliteration. Every Greek or Hebrew term you discuss MUST appear in key_strongs.
+You MUST mention every term in key_strongs by its transliteration (with its Strong's
+number). Every Greek or Hebrew term you discuss MUST appear in key_strongs.
 Focus on: lexical range of key terms, specific passages, interpretive translation
 choices. For translation comparison queries, name translations directly
 (KJV, ABP, LXX) and state differences concisely.
@@ -591,6 +593,9 @@ Prefer empty over speculative.
 Write a short lexicon-style note, 2-3 sentences of plain prose — no markdown, no
 headers. Open with the Greek or Hebrew term under study and what it means, name its
 concrete sense range, and point to what the verses you selected actually say.
+SCRIPT: in the prose use the TRANSLITERATION + Strong's number only (e.g. "sabbaton,
+G4521" — never σάββατον), NOT raw Greek or Hebrew letters. The script lives in the word
+chips beside the note; keep the write-up itself readable for a non-Greek reader.
 
 BEREAN — NO DOCTRINAL VERDICTS (the most important rule). Report what each cited verse
 SAYS; never settle a contested question for the reader. Do NOT label a practice or command
