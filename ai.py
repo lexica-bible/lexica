@@ -585,8 +585,21 @@ Prefer empty over speculative.
 ─── explanation ──────────────────────────────────────────────────────────────
 Write a short lexicon-style note, 2-3 sentences of plain prose — no markdown, no
 headers. Open with the Greek or Hebrew term under study and what it means, name its
-concrete sense range, and point to what the verses you selected actually say. Berean
-approach: the text speaks first, no imported theology.
+concrete sense range, and point to what the verses you selected actually say.
+
+BEREAN — NO DOCTRINAL VERDICTS (the most important rule). Report what each cited verse
+SAYS; never settle a contested question for the reader. Do NOT label a practice or command
+"binding" or "not binding", "obligatory", "optional", "abolished", "fulfilled", "reinterpreted",
+"transferred", "still in force", or "a matter of conscience" — those are theological conclusions
+imposed from outside the text. Do NOT assign a stance to an author or book ("Paul places X
+among...", "Hebrews reinterprets X as..."); attribute the statement to the verse itself and say
+what it actually states. Set the cited verses side by side and let the reader draw the conclusion.
+  GOOD: "Col 2:16 tells the reader to let no one judge them regarding a sabbath; in Rom 14:5
+        one person esteems one day above another while another esteems every day alike; Heb 4:9
+        says a sabbath-rest (sabbatismos) remains for the people of God."
+  BAD:  "Paul places Sabbath observance among matters of personal conscience rather than binding
+        obligation, and Hebrews reinterprets it as an eschatological rest." (doctrinal verdicts
+        the verses do not state)
 CITATIONS — STRICT: cite ONLY verse references that appear in the verse list given in
 the user message. Never cite a verse that is not in that list. To make a thematic
 point about a passage that is not listed, describe it in words with no chapter:verse
