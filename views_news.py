@@ -13,9 +13,11 @@ Read-mostly: the only write is flipping an article's review status. It never
 gathers or scores (that's the offline scripts' job) and never touches bible.db.
 """
 import json
+import math
 import os
 import re
 import sqlite3
+from collections import Counter
 
 from flask import Blueprint, jsonify, request
 
@@ -66,26 +68,54 @@ def _sig_tokens(title):
     return {w for w in words if len(w) >= 3 and w not in _STOP}
 
 
+_GROUP_SIM = 0.45    # share at least this much of the smaller headline's "rare-word
+                     # weight" to count as the SAME story (0..1)
+_GROUP_MIN_SHARED = 2   # ...and the headlines must share at least this many significant
+                        # words, so one coincidental rare word can't fuse two stories
+
+
 def _cluster(rows):
-    """Group near-identical stories (the same encyclical reported by 20 outlets) into
-    one card. Greedy: rows come in strongest-first, so the first article in a group is
-    its representative; later ones join if their wording overlaps enough (Jaccard)."""
+    """Group articles that are the SAME story (one encyclical reported by 20 outlets)
+    into one card. Headlines get paraphrased, so we don't match word-for-word: each
+    title becomes a bag of significant words WEIGHTED by how rare they are across this
+    batch (idf), and two headlines merge when the rare words they share make up most of
+    the smaller one's weight — so 'Pope Leo urges AI disarmament' joins 'Pope Leo XIV
+    urges AI disarmament in landmark encyclical' on disarmament/encyclical, while shared
+    filler like pope/leo/ai barely counts. Two guards keep it from over-merging:
+      • each headline is matched only against a group's REPRESENTATIVE (the first, i.e.
+        highest-scoring, article) — groups don't accumulate words, so they can't snowball
+        and swallow the whole feed;
+      • a merge needs at least _GROUP_MIN_SHARED shared significant words, so a lone
+        coincidental term (two unrelated 'Pentagon' stories) can't fuse them.
+    Greedy and strongest-first, so the top-scoring article represents each group."""
+    toks_list = [_sig_tokens(r["title"]) for r in rows]
+    n = len(rows) or 1
+    df = Counter()
+    for toks in toks_list:
+        for t in toks:
+            df[t] += 1
+
+    def weight(t):
+        return math.log((n + 1.0) / (df[t] + 0.5))     # rarer word -> bigger weight
+
+    def total(toks):
+        return sum(weight(t) for t in toks) or 1.0     # the headline's whole weight
+
     clusters = []
-    for r in rows:
-        toks = _sig_tokens(r["title"])
+    for r, toks in zip(rows, toks_list):
+        a_sum = total(toks)
         best, best_sim = None, 0.0
         for c in clusters:
-            inter = len(toks & c["tokens"])
-            if not inter:
+            shared = toks & c["tokens"]
+            if len(shared) < _GROUP_MIN_SHARED:
                 continue
-            sim = inter / (len(toks | c["tokens"]) or 1)
+            sim = sum(weight(t) for t in shared) / min(a_sum, c["sum"])
             if sim > best_sim:
                 best_sim, best = sim, c
-        if best and best_sim >= 0.6:
+        if best and best_sim >= _GROUP_SIM:
             best["arts"].append(r)
-            best["tokens"] |= toks            # let the signature grow a little
         else:
-            clusters.append({"rep": r, "tokens": set(toks), "arts": [r]})
+            clusters.append({"rep": r, "tokens": set(toks), "arts": [r], "sum": a_sum})
     return clusters
 
 
