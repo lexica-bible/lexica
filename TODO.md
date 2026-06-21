@@ -293,29 +293,50 @@ header still shows an "Under development" badge on these two tabs. Full record: 
 A batch of ideas about making the AI prose trustworthy and deepening the free reference shelf.
 Ranked: #1 first (cheap, highest-leverage), #2 next (best feature add), #3 is a real wiring job.
 
-1. **Citation guard for AI prose — BUILT 2026-06-21 (Ask-corpus path); two open bits below.**
-   Retrieval is NOT embeddings — it's the model writing SQL keyed off Strong's, so OCCURRENCE lists are
-   pulled straight from the DB and can't be wrong. The leak was only in the PROSE. SHIPPED (commits
-   0dae315 / 220b04f / 6e18797): a verse the model names in its explanation or adds from its own
-   knowledge is checked against the target Strong's set (`_is_thematic`); off-word ones are tagged
-   `is_thematic` → routed to the frontend "Additional references" bucket (kept, labeled "may not
-   contain the word", never primary evidence). Regime-aware (no target word ⇒ no flag, ready for a
-   broad-question mode). Pass-3 (`_grounded_explanation`) rewrites the prose from the final verse set
-   so it only cites verses on screen — CONDITIONAL (runs only when pass-1 actually mis-cited). Full
-   record: memory `project_ai_search_architecture`.
-   STILL OPEN:
-   - **PERF decision (user-flagged 2026-06-21):** pass-3 adds a Haiku call on the mis-cite path;
-     uncached search went 3-5s → ~15s when it ran unconditionally (the conditional gate fixes the
-     clean case). DECIDE: keep conditional pass-3, or DROP it and lean on the labeling backstop alone
-     for the snappiest uncached speed.
-   - **Pass-3 cutoff bug:** the divine-council synthesis truncated mid-sentence ("…(Deuteronomy") —
-     Greek/Hebrew Unicode burns tokens fast and pass-3 `max_tokens=220` is low. Raise it (or confirm
-     the cutoff was pass-1, max_tokens=1200) — was mid-investigation when the perf concern interrupted.
-   - **LSJ word blurb** (views_lsj.py) was NOT touched — it's given the dictionary entry + at most the
-     one verse on screen, so its citation risk is small, but it could get the same after-check if a
-     bad cite shows up. The interpretive lemma-comparison claims (lambanō vs syllambanō) are NOT
-     mechanically checkable and lower-risk — leave them.
-   `code: ai.py (_is_thematic, _grounded_explanation, pass-3 gate ~line 1225); static/src/50-corpus-results.jsx (Additional references label); views_lsj.py (untouched)`
+1. **AI-prose trust — Ask-corpus path heavily reworked 2026-06-21; the OPEN items below are the
+   "corpus tuning" thread handoff.** Retrieval is NOT embeddings — the model writes SQL keyed off
+   Strong's, so OCCURRENCE lists come from the DB and can't be wrong; the leak was only in the PROSE.
+   SHIPPED this round (full record: memory `project_ai_search_architecture` + `project_ai_search_redesign`):
+   - Citation guard: an off-word verse the model names/adds is tagged `is_thematic` → "Additional
+     references" (kept, labeled, never primary). Regime-aware (no target word ⇒ no flag).
+   - Grounded explanation FOLDED INTO pass-2 (separate pass-3 DELETED — the old perf/cutoff bullets
+     here are now moot). Pass-1 prose is written from memory before retrieval (wrong verse numbers
+     possible — wrote 2Th 3:3 for 2:3), so the DISPLAYED note is ALWAYS the pass-2 grounded one
+     whenever the answer names a verse, even short ones; pass-2 cites ONLY from the real verse list.
+   - Honest empty-state: payload `grounded:false` when no real occurrence was found → pale-amber
+     "no direct occurrences" caveat on the frontend (`.ac-ungrounded`).
+   - NEUTRALITY in BOTH explanation prompts (`_AI_SYSTEM_TMPL` + `_CURATION_SYSTEM`): answer from the
+     text, not the question's framing ("same?"/"different?" must match). Killed the parrot-the-framing
+     contradiction the user caught on son-of-perdition.
+   - Speed: retry is last-resort (only when SQL + cheap fallbacks all empty); pass-2 ranking skipped
+     for a small pool that cites no verse; timing instrument left ON (server log).
+   - Follow-ups carry the last 6 thread turns (`context` param, woven into term+SQL prompts) + a
+     "New thread" reset button (rail). Follow-ups never cache.
+   - TRIED + REVERTED: an SQL-prompt "steer" to prefer Strong's co-occurrence over slow `english LIKE`
+     phrase scans (commit 15f9606 → revert 487f3fb). It made Haiku botch the co-occurrence SUBQUERY
+     (`w.english` referencing the OUTER alias) → 0 rows. LESSON: don't tune SQL CONSTRUCTION blind —
+     the real win is a text index, not a prompt nudge.
+
+   STILL OPEN — corpus-tuning thread:
+   - **"Seatbelt" hard ref-check (cheap, NO slowdown — pure in-memory string check, no AI/DB call):**
+     after the explanation is final, strip/flag any `Book C:V` in the prose that isn't in the
+     found-verses set. The grounding pass makes a wrong number rare but not impossible; this guarantees
+     it. Open design Q: grammar-safe stripping (deleting a ref mid-sentence can read broken) — maybe
+     the frontend just doesn't linkify an unverified ref, or pass the verified set down and dim the rest.
+   - **Phrase-search speed + accuracy (root cause):** `english LIKE '%son of perdition%'` BOTH scans
+     the whole 600k-word table (~7s) AND misses (that literal phrase isn't in the ABP gloss). Reliable
+     fix = a real text/FTS index so "contains phrase" is fast, and/or route rare-word phrases to
+     Strong's co-occurrence (G5207+G684 found 94 hits, fast) done CAREFULLY (the blind steer above
+     failed). No AI gambling — the index is structural. (Overlaps the FTS idea under "Library in-text search".)
+   - **Residual framing lean:** neutrality stopped the flat contradiction, but the two framings still
+     close on slightly different emphases. Acceptable; tighten only if it bugs the user.
+   - **Answer-shape / curation redesign** is the same thread — see "Word study + Ask the corpus" #2
+     (spammy thread verse list + verse-selection tuning).
+   - **LSJ word blurb** (views_lsj.py) was NOT given the citation after-check — low risk (sees the
+     entry + the one on-screen verse); add only if a bad cite shows up.
+   `code: ai.py (_is_thematic + pass-2/grounding block + grounded flag + context param + NEUTRALITY in
+   _AI_SYSTEM_TMPL/_CURATION_SYSTEM); static/src/52-ask-corpus.jsx (context, newThread, .ac-ungrounded);
+   static/src/50-corpus-results.jsx; views_lsj.py (untouched)`
 2. **Feed public-domain reference works into the synthesis engine — the "clean a messy free source into
    prose" move we already do for LSJ/BDB works on the whole pre-1929 shelf.** Best picks:
    - **Trench (NT synonyms) + Girdlestone (OT synonyms)** — the STANDOUT. Grounds the very synonym answers

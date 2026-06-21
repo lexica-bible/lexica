@@ -607,22 +607,31 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   AND the cheap fallbacks (explanation-cited verses, proper-noun english LIKE) ALL come up empty —
   not the instant the SQL is empty. Saved a wasted ~5s call on Hebrew/empty searches.
 - Hebrew word bridge: BDB → kjv_strongs → ABP verses
-- **Speed shape (2026-06-21): model-bound, NOT db-bound.** Timing showed the generated SQL runs in
-  ~0.1s; each Haiku call is ~5s. A normal search = 2 calls (terms + write-SQL); the pass-2 ranking
-  call is added only when the verse pool is bigger than `_CURATE_SKIP_MAX` (8) — a small pool is
-  shown as-is (no ranking call). A temporary `log.info("ai_search timing …")` line reports per-step
-  seconds in the server log (kept on at the user's request). Floor for one search ≈ the ~5s write-SQL
-  call; the remaining trim would be folding the ~1s terms call in. The "feel-instant" option (stream
-  verses first, fill the AI note after) is a frontend change, not yet done.
-- **Citation guard (2026-06-21).** Occurrence lists are pulled by Strong's = unfakeable; the leak is
-  in the PROSE. A verse the model names in its explanation or adds from its own knowledge is checked
-  against the target Strong's set — one containing NONE of the target words is tagged `is_thematic`
-  and routed to the frontend "Additional references" bucket (kept, labeled, never shown as direct
-  evidence). REGIME-AWARE: no target word (a broad, non-word question) ⇒ no flag, so a future
-  answer-anything mode won't mislabel. The grounded explanation is now written by the pass-2
-  curation call itself (it already has the retrieved verses in hand), so it can only cite verses on
-  screen — the separate pass-3 was dropped 2026-06-21 (no extra call). Full record: memory
-  `project_ai_search_architecture`.
+- **Speed shape (2026-06-21): model-bound, NOT db-bound.** Each Haiku call ~5s; the SQL itself runs
+  ~0.1s — EXCEPT a Haiku-written `english LIKE '%phrase%'` scan of the 600k-word table, which can hit
+  ~7s (e.g. "son of perdition" — that literal phrase isn't in the ABP gloss, so LIKE both scans AND
+  misses). A search = 2 calls (terms + write-SQL) + the pass-2 grounding/curation call whenever the
+  answer ranks or names a verse (see citation guard). A temporary `log.info("ai_search timing …")`
+  line reports per-step seconds (kept on at the user's request). "Feel-instant" (stream verses first,
+  fill the note after) is a not-yet-done frontend idea.
+- **Citation guard + grounding (2026-06-21).** Occurrence lists are pulled by Strong's = unfakeable;
+  the leak is in the PROSE. A verse the model names/adds is checked against the target Strong's set —
+  one containing NONE of the target words is `is_thematic` → frontend "Additional references" (kept,
+  labeled, never primary). REGIME-AWARE: no target word (broad question) ⇒ no flag. The pass-1 prose
+  is written from MEMORY before retrieval (can get a verse number wrong — it once wrote 2Th 3:3 for
+  2:3), so the DISPLAYED explanation is ALWAYS the pass-2 GROUNDED one whenever the answer names a
+  verse, even a short one (pass-2 is told to cite ONLY from the real retrieved list). Ranking is
+  skipped only for a small pool whose prose cites nothing. Separate pass-3 dropped (folded into
+  pass-2). Full record: memory `project_ai_search_architecture`.
+- **Honest empty-state + neutrality (2026-06-21).** Payload carries `grounded: false` when the search
+  found no real occurrence (SQL 0 rows AND every shown verse is thematic/model-named); the frontend
+  shows a pale-amber "no direct occurrences" caveat instead of a confident write-up. Both explanation
+  prompts (`_AI_SYSTEM_TMPL` + `_CURATION_SYSTEM`) carry a NEUTRALITY rule — answer from the text, not
+  the question's framing ("same?" vs "different?" must give the same answer; if the text doesn't
+  settle it, say so. Killed the parrot-the-framing bug.)
+- **Follow-ups (Ask the corpus) carry the recent thread** — last 6 turns + their key lemmas, sent as a
+  `context` query param, woven into the term + SQL prompts only to resolve references ("it"/"the same
+  word"). A "New thread" button (rail) resets. Follow-ups are never cached (thread-specific).
 - Cached in ai_search_cache, ver_key=`search:<hash>` (fingerprint of system prompt +
   `_CURATION_SYSTEM` + book list + `_CACHE_CODE_VER` salt). See "AI result cache" below.
 
