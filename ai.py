@@ -856,6 +856,12 @@ def _group_word_rows(rows) -> tuple[dict, list, list]:
 # return them all anyway) — skip it and show them all, saving a ~5s model call.
 _CURATE_SKIP_MAX = 8
 
+# The proper-noun name-scan (a slow `english LIKE '%Word%'` on ~600k words) is a
+# FALLBACK for a name query Strong's can't see. Only run it when the main search is
+# this thin — otherwise a common capitalized word ("Sabbath", already found 182x)
+# triggers a pointless ~7s scan.
+_PROPER_NOUN_NEED = 25
+
 _ai_cache_ver: str | None = None  # computed once from prompt template + book list
 
 # Bump this integer whenever server-side search logic changes in a way that
@@ -1200,8 +1206,12 @@ def ai_search():
         # Proper nouns in ABP are tagged strongs='*' and invisible to Strong's-based SQL.
         # Extract capitalized words from the query and query the english field directly,
         # adding any new verses to the result pool before pass-2 curation.
+        # GATE: this scans ~600k word-glosses, so only run it when the main search came
+        # up THIN (its real job — rescuing a name query). A common capitalized word like
+        # "Sabbath" already has a Strong's number and returns plenty, so the scan there
+        # is pure waste (~7s) — skip it.
         proper_nouns = _extract_proper_nouns(q)
-        if proper_nouns:
+        if proper_nouns and len(results) < _PROPER_NOUN_NEED:
             like_clauses = " OR ".join("w.english LIKE ?" for _ in proper_nouns)
             pn_sql = f"""
                 SELECT DISTINCT v.book, v.chapter, v.verse, v.id AS vid
