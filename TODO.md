@@ -330,6 +330,17 @@ Ranked: #1 first (cheap, highest-leverage), #2 next (best feature add), #3 is a 
      words) + cross-reference WEIGHTING (each book's hub verse wins its seat). The "say ABP not LXX"
      wording fixed ITSELF once the sample spanned both testaments (data-fix > prompt rule). Proper-noun
      name-scan gated to thin results (a capitalized common word like "Sabbath" was burning ~7s).
+   - **No-doctrinal-verdict ban (3c6dbb3 + 7329302):** the write-up was RULING on contested practice
+     ("Paul places Sabbath observance among matters of personal conscience rather than binding obligation").
+     Added an explicit verdict-ban + GOOD/BAD worked example to `_CURATION_SYSTEM` (the shown pass-2 note)
+     and mirrored it into `_AI_SYSTEM_TMPL`. Now reports what each verse SAYS, lets the reader conclude.
+     Load-bearing — don't soften. Memory `project_ai_synthesis_quality`.
+   - **Same-root cognates fed into the search context (3807228):** the LSJ context block now lists each
+     Greek word's parent/child family (reusing `views_lexicon._greek_cognates`, the Word study "related"
+     finder) so the model can include relatives it never saw — e.g. σαββατισμός G4520 under σάββατον G4521
+     (the Heb 4:9 word a "Sabbath" query was missing). General, no per-word lists. GREEK ONLY (BDB has no
+     etymology) and SEMANTIC synonyms still uncovered → both wait on #2 (Trench/Girdlestone). Bumped
+     `_CACHE_CODE_VER` 33→34 (the context format isn't in the search fingerprint, so cached rows needed it).
 
    STILL OPEN — corpus-tuning thread:
    - **Stream verses first** (perceived speed): show matched verses the moment the SQL runs, fill the
@@ -353,7 +364,9 @@ Ranked: #1 first (cheap, highest-leverage), #2 next (best feature add), #3 is a 
 2. **Feed public-domain reference works into the synthesis engine — the "clean a messy free source into
    prose" move we already do for LSJ/BDB works on the whole pre-1929 shelf.** Best picks:
    - **Trench (NT synonyms) + Girdlestone (OT synonyms)** — the STANDOUT. Grounds the very synonym answers
-     the AI was improvising; authoritative, zero license cost. Pairs with #1.
+     the AI was improvising; authoritative, zero license cost. Pairs with #1. (Same-root GREEK cognates are
+     already wired into the search — 3807228; the remaining value HERE is SEMANTIC synonyms + the HEBREW
+     side, which has no etymology data to walk.)
    - Thayer's, Vine's, Strong's own defs, Gesenius — more lexicon depth, easy adds.
    - PD COMMENTARIES (Matthew Henry, Barnes, Gill, Clarke, JFB, Pulpit) — a "what the tradition says"
      layer, synthesized like LSJ. CAUTION: a commentary layer is IMPORTED interpretation — exactly what
