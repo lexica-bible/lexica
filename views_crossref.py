@@ -74,26 +74,24 @@ e.g. [1,3,7,12]. No prose, no explanation — only the array.\
 # trailing salt is a manual bump for non-prompt changes to the synthesis MESSAGE —
 # e.g. feeding the cross-refs in ABP instead of KJV — so those cached rows refresh too.
 _XREF_VER = ai_fingerprint(
-    "xref", _XREF_CURATION_SYSTEM, _XREF_SYNTHESIS_SYSTEM, "msg:abp-refs-1"
+    "xref", _XREF_CURATION_SYSTEM, _XREF_SYNTHESIS_SYSTEM, "msg:abp-refs-2"
 )
 
 
 def _abp_text(conn, abbr, chapter, verse):
-    """ABP English for one verse — its interlinear words joined in order, the same
-    rendering the reader shows. None when ABP has no matching verse (versification can
-    differ from the KJV reference) so the caller can fall back to KJV."""
+    """ABP English prose for one verse (verses.text — the clean, correctly-ordered
+    line the reader's prose mode shows). None when ABP has no matching verse
+    (versification can differ from the KJV reference) so the caller can fall back to
+    KJV. Do NOT rebuild from `words` by position — that's raw Greek order and scrambles
+    ABP's bracket-reordered English (2026-06-20)."""
     row = conn.execute(
-        "SELECT id FROM verses WHERE book=? AND chapter=? AND verse=?",
+        "SELECT text FROM verses WHERE book=? AND chapter=? AND verse=?",
         (abbr, chapter, verse),
     ).fetchone()
     if not row:
         return None
-    ws = conn.execute(
-        "SELECT english FROM words WHERE verse_id=? AND english IS NOT NULL ORDER BY position",
-        (row["id"],),
-    ).fetchall()
-    toks = [w["english"] for w in ws if w["english"]]
-    return " ".join(toks) if toks else None
+    txt = (row["text"] or "").strip()
+    return txt or None
 
 
 def prune_cache() -> int:

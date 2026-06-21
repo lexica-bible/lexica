@@ -19,22 +19,21 @@ bp = Blueprint("library", __name__)
 def verse_text(book, chapter, verse):
     conn = db()
     try:
+        # verses.text is the clean, correctly-ordered English prose (the same column
+        # the reader's prose mode + the SEO pages use). Do NOT rebuild from `words`
+        # joined by position — that's raw Greek order, so ABP's bracket-reordered
+        # English comes out scrambled (the TSK-panel garble, 2026-06-20).
         row = conn.execute(
-            "SELECT id FROM verses WHERE book=? AND chapter=? AND verse=?",
+            "SELECT text FROM verses WHERE book=? AND chapter=? AND verse=?",
             (book, chapter, verse),
         ).fetchone()
-
-        if not row:
-            return jsonify({"error": "verse not found"}), 404
-
-        words = conn.execute(
-            "SELECT english FROM words WHERE verse_id=? AND english IS NOT NULL ORDER BY position",
-            (row["id"],),
-        ).fetchall()
     finally:
         conn.close()
 
-    return jsonify({"text": " ".join(w["english"] for w in words)})
+    if not row:
+        return jsonify({"error": "verse not found"}), 404
+
+    return jsonify({"text": row["text"] or ""})
 
 
 @bp.route("/api/verse-words/<book>/<int:chapter>/<int:verse>")
