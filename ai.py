@@ -47,6 +47,11 @@ Never assert what a passage "marks", "represents", "signals", or "shows" about \
 historical development, liturgical change, or the shift from one practice to another. \
 Those are theological interpretations imposed from outside the text. Report only what \
 the cited words and phrases directly state.
+Never rule on a contested question for the reader: do NOT label a practice or command \
+"binding" or "not binding", "obligatory", "optional", "abolished", "fulfilled", \
+"reinterpreted", "transferred", "still in force", or "a matter of conscience", and do NOT \
+assign a stance to an author or book ("Paul places X among...", "Hebrews reinterprets X"). \
+Attribute every statement to the verse and say what it actually states.
 
 ─── DATABASE SCHEMA ─────────────────────────────────────────────────────────
   verses(id, book TEXT, chapter INTEGER, verse INTEGER)
