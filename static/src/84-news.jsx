@@ -42,19 +42,22 @@ function NewsStory({ story, view, onMark, readOnly }) {
           </div>
         )}
       </div>
-      {!readOnly && <div className="news-actions">
+      <div className="news-actions">
         {view === "inbox" ? (
           <>
-            <button className="news-btn news-keep" title="Keep for the episode"
-                    onClick={() => onMark(story, "keep")}>Keep</button>
-            <button className="news-btn news-dismiss" title="Hide it"
-                    onClick={() => onMark(story, "dismiss")}>Dismiss</button>
+            <button className="news-btn news-keep" disabled={readOnly}
+                    title={readOnly ? "Read-only" : "Keep for the episode"}
+                    onClick={() => !readOnly && onMark(story, "keep")}>Keep</button>
+            <button className="news-btn news-dismiss" disabled={readOnly}
+                    title={readOnly ? "Read-only" : "Hide it"}
+                    onClick={() => !readOnly && onMark(story, "dismiss")}>Dismiss</button>
           </>
         ) : (
-          <button className="news-btn" title="Back to the inbox"
-                  onClick={() => onMark(story, "new")}>Un-keep</button>
+          <button className="news-btn" disabled={readOnly}
+                  title={readOnly ? "Read-only" : "Back to the inbox"}
+                  onClick={() => !readOnly && onMark(story, "new")}>Un-keep</button>
         )}
-      </div>}
+      </div>
     </div>
   );
 }
