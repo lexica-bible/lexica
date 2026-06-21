@@ -69,15 +69,17 @@ def collect(conn):
         if not ext:
             skipped["no_entry"] += 1
             continue
-        # Skip ONLY genuine ABP form-notes — the εἰμί family ("[ABP] εστίν, ... Strong
-        # G2076"), which point to the real Strong's number, so the BASE lemma is the right
-        # card headword. The marker is the literal "Strong G####" pointer. A "[ABP]" entry
-        # that is a DIFFERENT word (G4521.2 σαβέκ "thicket" vs base G4521 σάββατον) carries
-        # no such pointer (at most a "See G####" cross-ref) — it must flow through and get
-        # its own row. (The old blanket "[ABP]" skip hid ~hundreds of real different-words —
-        # σαβέκ, γόμορ, ιωβήλ, γαυριόω ... 2026-06-21.)
+        # Skip genuine ABP form-notes, where the BASE lemma is the right card headword:
+        #   (a) the εἰμί conjugations — the WHOLE 1510.x family ("[ABP] έσται ... will be",
+        #       "[ABP] εισίν ... they are"). Only some carry a "Strong G####" pointer (the
+        #       forms that have their own Strong's number, e.g. εστίν=G2076); the future/
+        #       other tenses list only verses, so base==G1510 is the reliable test.
+        #   (b) any other entry that points to a real Strong's via "Strong G####".
+        # Everything else is a genuinely DIFFERENT word ABP parked at "nearest Strong's + a
+        # dot" (G4521.2 σαβέκ "thicket" vs base G4521 σάββατον; γόμορ, ιωβήλ, γαυριόω ...) and
+        # must get its own row. (Old blanket "[ABP]" skip hid ~hundreds of these. 2026-06-21.)
         txt = clean_text(ext["def_html"])
-        if re.search(r"Strong\s+G\d", txt):
+        if base == "G1510" or re.search(r"Strong\s+G\d", txt):
             skipped["form_note"] += 1
             continue
         correct = first_greek(ext["def_html"])
