@@ -598,18 +598,68 @@ way must get the same answer. If the verses don't settle it, say so plainly.\
 """
 
 
-def _spread_sample(results: list[dict], cap: int) -> list[dict]:
+def _xref_scores(conn, verses: list[dict]) -> dict:
+    """How cross-referenced each result verse is in Torrey's TSK (cross_references) —
+    a free 'scholars cite this a lot' importance signal. Returns {(book,ch,v): count}.
+    cross_references is keyed by kjv_verses.verse_id, so bridge each ABP coord ->
+    kjv verse_id via the books table, then count that verse's TSK references.
+    Returns {} on ANY problem (missing tables, version skew) so the caller silently
+    falls back to position order — this can never break a search."""
+    try:
+        bid = {r["abbrev"]: r["id"] for r in conn.execute("SELECT abbrev, id FROM books")}
+        inv_bid = {v: k for k, v in bid.items()}
+        coords = [(bid[v["book"]], v["chapter"], v["verse"]) for v in verses if v["book"] in bid]
+        if not coords:
+            return {}
+        vid_of_coord: dict = {}
+        for i in range(0, len(coords), 300):          # stay well under SQLite's param cap
+            chunk = coords[i:i + 300]
+            clause = " OR ".join("(book_id=? AND chapter=? AND verse_num=?)" for _ in chunk)
+            params = [x for c in chunk for x in c]
+            for r in conn.execute(
+                f"SELECT verse_id, book_id, chapter, verse_num FROM kjv_verses WHERE {clause}",
+                params,
+            ):
+                vid_of_coord[(r["book_id"], r["chapter"], r["verse_num"])] = r["verse_id"]
+        if not vid_of_coord:
+            return {}
+        cnt: dict = {}
+        vids = list(set(vid_of_coord.values()))
+        for i in range(0, len(vids), 400):
+            chunk = vids[i:i + 400]
+            ph = ",".join("?" for _ in chunk)
+            for r in conn.execute(
+                f"SELECT verse_id, count(*) AS c FROM cross_references "
+                f"WHERE verse_id IN ({ph}) GROUP BY verse_id", chunk,
+            ):
+                cnt[r["verse_id"]] = r["c"]
+        return {
+            (inv_bid[b], ch, vs): cnt.get(vid, 0)
+            for (b, ch, vs), vid in vid_of_coord.items()
+        }
+    except Exception as exc:
+        log.warning("xref scoring failed (falling back to position order): %s", exc)
+        return {}
+
+
+def _spread_sample(results: list[dict], cap: int, scores: dict | None = None) -> list[dict]:
     """Pick up to `cap` verses spread ACROSS the books they fall in — not the first
     `cap`. Ordered by verse id, the first N hits of a common word are all early-OT,
     so the synthesizer never saw the NT (an 'agape' answer cited only Genesis /
     Deuteronomy, missing John + 1 Corinthians). Round-robin one verse per book per
-    pass, in first-appearance (≈canonical) order, until the cap is reached — so every
-    book that uses the word gets a seat and no single book can dominate."""
+    pass until the cap — so every book that uses the word gets a seat and no single
+    book can dominate. When `scores` is given (TSK cross-reference counts), each
+    book's verses are ordered most-referenced first, so its one seat goes to the
+    verse that matters, not just the earliest. Ties + no-score keep position order."""
     if len(results) <= cap:
         return results
     by_book: dict = {}
     for v in results:
         by_book.setdefault(v["book"], []).append(v)
+    if scores:
+        for bucket in by_book.values():
+            bucket.sort(key=lambda v: scores.get((v["book"], v["chapter"], v["verse"]), 0),
+                        reverse=True)
     books = list(by_book.keys())
     picked: list = []
     i = 0
@@ -648,7 +698,17 @@ def _curate_primary_verses(
     else:
         input_cap, primary_cap = max(n, 1), 8
 
-    capped = _spread_sample(results, input_cap)
+    # Within each book, prefer its most cross-referenced verse so the one seat per
+    # book goes to the verse that matters, not just the earliest. Only worth scoring
+    # when we're actually subsampling; degrades to position order on any failure.
+    scores = None
+    if len(results) > input_cap:
+        sc_conn = db_ro()
+        try:
+            scores = _xref_scores(sc_conn, results)
+        finally:
+            sc_conn.close()
+    capped = _spread_sample(results, input_cap, scores)
     if capped:
         or_parts = " OR ".join(
             "(v.book=? AND v.chapter=? AND v.verse=?)" for _ in capped
@@ -800,7 +860,7 @@ _ai_cache_ver: str | None = None  # computed once from prompt template + book li
 
 # Bump this integer whenever server-side search logic changes in a way that
 # affects results but doesn't change _AI_SYSTEM_TMPL (e.g. new fallback steps).
-_CACHE_CODE_VER = 32   # 32: feed the synthesizer a spread of verses across books (was first-N = OT-biased)
+_CACHE_CODE_VER = 33   # 33: weight each book's seat by TSK cross-reference count (most-cited verse wins)
 
 
 def _get_ai_cache_ver() -> str:
