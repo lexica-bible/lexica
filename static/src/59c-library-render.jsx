@@ -332,16 +332,22 @@ const LibRender = (function () {
         // onto the word ("many,") so it renders inside. fix_bracket_punct already
         // parks the mark on the bracket's LAST word, so we snip it off here and
         // re-emit it just after the "]" — "[...dominate]." not "[...dominate.]".
-        const TRAIL = /[.,;:!?·]+$/;
+        // Also lift a trailing clause DASH (ABP's "--") outside the "]". ABP writes
+        // "...to me] -- above", but clean_english glued it onto the last word's gloss
+        // ("to me --") so it renders inside the bracket. Ordinary marks (",.;:") keep
+        // hugging the "]"; a dash gets a leading space so it reads "] --", not "]--".
+        // (2 Sam 1:26 class.) Kept as "--" to match the un-bracketed dashes elsewhere.
+        const TRAIL = /\s*(?:--|—|–|[.,;:!?·])+$/;
         let bracketTrail = "";
         let gwR = gw;
         {
           const li = gw.length - 1;
           const lastEng = (gw[li] && gw[li].english) || "";
           const m = lastEng.match(TRAIL);
-          if (m) {
-            bracketTrail = m[0];
-            gwR = gw.map((w, i) => i === li ? { ...w, english: lastEng.slice(0, m.index) } : w);
+          if (m && m.index > 0) {                 // keep at least one real word before the mark
+            const lifted = m[0].trim();
+            bracketTrail = /^(?:--|—|–)+$/.test(lifted) ? " " + lifted : lifted;
+            gwR = gw.map((w, i) => i === li ? { ...w, english: lastEng.slice(0, m.index).trimEnd() } : w);
           }
         }
         // The "[" / "]" ride the first / last word's english cell (see bracketChip), so

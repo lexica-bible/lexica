@@ -766,9 +766,17 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
                 const open = bid != null && (!prev || prev.bracket_id !== bid);
                 const close = bid != null && (!next || next.bracket_id !== bid);
                 // On the group's last word, lift trailing clause punctuation outside
-                // the "]" (mirror the reading pane: "second.]" -> "second].").
+                // the "]" (mirror the reading pane: "second.]" -> "second].", and a
+                // trailing dash "to me --]" -> "to me] --").
                 let eng = w.english || "—", trail = "";
-                if (close) { const m = (w.english || "").match(/[.,;:!?·]+$/); if (m) { trail = m[0]; eng = (w.english || "").slice(0, m.index) || "—"; } }
+                if (close) {
+                  const m = (w.english || "").match(/\s*(?:--|—|–|[.,;:!?·])+$/);
+                  if (m && m.index > 0) {
+                    const lifted = m[0].trim();
+                    trail = /^(?:--|—|–)+$/.test(lifted) ? " " + lifted : lifted;
+                    eng = (w.english || "").slice(0, m.index).trimEnd() || "—";
+                  }
+                }
                 return (
                   <div className="iword" key={i}>
                     <span className={"iw-greek" + (w.he ? " iw-heb" : "")}>{w.top || "—"}</span>
