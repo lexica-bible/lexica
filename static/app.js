@@ -1345,7 +1345,9 @@ const[corpusFilter,setCorpusFilter]=useState("all");// "all" | "ot" | "nt"
 const[corpusSort,setCorpusSort]=useState("curated");// "curated" | "canonical"
 const[corpusTextMode,setCorpusTextMode]=useState("abp");// "abp" | "kjv"
 const[isMobile,setIsMobile]=useState(()=>window.innerWidth<1100);// Remember the active tab across refreshes (guard against a stale/removed value).
-const _VIEWS=["library","lexicon","corpus","notes","study","news","about"];const[mainView,setMainView]=useState(()=>{try{const v=localStorage.getItem("lexica.view.v1");return _VIEWS.includes(v)?v:"library";}catch(e){return"library";}});useEffect(()=>{try{localStorage.setItem("lexica.view.v1",mainView);}catch(e){}},[mainView]);const[libNav,setLibNav]=useState(null);const[libCrossRef,setLibCrossRef]=useState(null);const[lexiconPendingStrongs,setLexiconPendingStrongs]=useState(null);const[corpusPending,setCorpusPending]=useState(null);// {ask} or {scope:{strongs,lemma,translit}} handed to the Ask-the-corpus tab
+const _VIEWS=["library","lexicon","corpus","notes","study","news","about"];const[mainView,setMainView]=useState(()=>{// A /?news=<key> share link (Tudor's read-only News) opens straight on the News tab —
+// decided here, synchronously, so the default Library view never flashes first.
+try{if(new URLSearchParams(window.location.search).get("news"))return"news";}catch(e){}try{const v=localStorage.getItem("lexica.view.v1");return _VIEWS.includes(v)?v:"library";}catch(e){return"library";}});useEffect(()=>{try{localStorage.setItem("lexica.view.v1",mainView);}catch(e){}},[mainView]);const[libNav,setLibNav]=useState(null);const[libCrossRef,setLibCrossRef]=useState(null);const[lexiconPendingStrongs,setLexiconPendingStrongs]=useState(null);const[corpusPending,setCorpusPending]=useState(null);// {ask} or {scope:{strongs,lemma,translit}} handed to the Ask-the-corpus tab
 const[studyPending,setStudyPending]=useState(null);// open this name-topic in Study (from the metaV sidebar)
 const[libTranslation,setLibTranslation]=useState("abp");// Which panel is the base of the detail rail ("overview" = chapter summary, "intro" =
 // chrono day intro) — so a word/xref panel labels its back link to match.
@@ -1353,7 +1355,7 @@ const[libDetailBase,setLibDetailBase]=useState("overview");const[activeNote,setA
 const[resetToken,setResetToken]=useState(null);// ?reset=<token> from a password-reset email
 // No-login News reader: true once someone has opened a /?news=<key> share link (the key
 // is saved in localStorage). Lets them see the read-only News tab without an account.
-const[newsReader,setNewsReader]=useState(()=>{try{return!!localStorage.getItem("lexica.news.key.v1");}catch(e){return false;}});const[focusMode,setFocusMode]=useState(false);// distraction-free reading: chrome hidden (library only, not remembered)
+const[newsReader,setNewsReader]=useState(()=>{try{if(new URLSearchParams(window.location.search).get("news"))return true;}catch(e){}try{return!!localStorage.getItem("lexica.news.key.v1");}catch(e){return false;}});const[focusMode,setFocusMode]=useState(false);// distraction-free reading: chrome hidden (library only, not remembered)
 // Open a note's editor — closes the word / cross-ref panels so one panel owns the slot.
 const openNote=id=>{setActiveEntry(null);setLibCrossRef(null);setActiveNote(id);};// From the Notes tab: jump to the verse in the Library, then open the editor.
 const openNoteFromList=n=>{if(n.corpus==="bible"){searchScrollRef.current=window.scrollY;setLibEverVisited(true);setMainView("library");setLibNav({book:n.book,chapter:n.chapter,highlight:n.start.verse,scroll:true,extern:true,translation:n.translation==="kjv"?"kjv":"abp"});}openNote(n.id);};useEffect(()=>{const check=()=>setIsMobile(window.innerWidth<1100);window.addEventListener("resize",check);return()=>window.removeEventListener("resize",check);},[]);// A wheel over the fixed chrome (header banner, toolbar, left nav / chrono panel)

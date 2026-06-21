@@ -20,6 +20,9 @@ function App() {
   // Remember the active tab across refreshes (guard against a stale/removed value).
   const _VIEWS = ["library", "lexicon", "corpus", "notes", "study", "news", "about"];
   const [mainView, setMainView] = useState(() => {
+    // A /?news=<key> share link (Tudor's read-only News) opens straight on the News tab —
+    // decided here, synchronously, so the default Library view never flashes first.
+    try { if (new URLSearchParams(window.location.search).get("news")) return "news"; } catch (e) {}
     try { const v = localStorage.getItem("lexica.view.v1"); return _VIEWS.includes(v) ? v : "library"; }
     catch (e) { return "library"; }
   });
@@ -38,6 +41,7 @@ function App() {
   // No-login News reader: true once someone has opened a /?news=<key> share link (the key
   // is saved in localStorage). Lets them see the read-only News tab without an account.
   const [newsReader, setNewsReader] = useState(() => {
+    try { if (new URLSearchParams(window.location.search).get("news")) return true; } catch (e) {}
     try { return !!localStorage.getItem("lexica.news.key.v1"); } catch (e) { return false; }
   });
   const [focusMode, setFocusMode] = useState(false);    // distraction-free reading: chrome hidden (library only, not remembered)
