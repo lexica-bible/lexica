@@ -53,6 +53,7 @@ def collect(conn):
         "WHERE strongs LIKE '%.%' GROUP BY strongs"
     ).fetchall()
     fixes = []
+    abp_fixes = []                               # [ABP] different-words newly promoted (for --summary)
     skipped = {"form_note": 0, "no_entry": 0, "unreadable": 0, "already_ok": 0}
     for r in rows:
         num = r["num"]
@@ -75,7 +76,8 @@ def collect(conn):
         # no such pointer (at most a "See G####" cross-ref) — it must flow through and get
         # its own row. (The old blanket "[ABP]" skip hid ~hundreds of real different-words —
         # σαβέκ, γόμορ, ιωβήλ, γαυριόω ... 2026-06-21.)
-        if re.search(r"Strong\s+G\d", clean_text(ext["def_html"])):
+        txt = clean_text(ext["def_html"])
+        if re.search(r"Strong\s+G\d", txt):
             skipped["form_note"] += 1
             continue
         correct = first_greek(ext["def_html"])
@@ -86,7 +88,10 @@ def collect(conn):
             skipped["already_ok"] += 1           # LSJ entry that already matches the base
             continue
         correct = strip_length_marks(correct)
-        fixes.append((num, shown_lemma, correct, romanize(correct, correct), r["uses"]))
+        row_fix = (num, shown_lemma, correct, romanize(correct, correct), r["uses"])
+        fixes.append(row_fix)
+        if txt.lstrip().startswith("[ABP]"):     # a "[ABP]" word that's NOT a form-note
+            abp_fixes.append(row_fix)
     # Pin the Greek-numeral letters (override any auto-derived row for the same number).
     fixes = [f for f in fixes if f[0] not in NUMERAL_OVERRIDES]
     for num, (letter, tr) in NUMERAL_OVERRIDES.items():
@@ -98,20 +103,33 @@ def collect(conn):
         ).fetchone()[0]
         fixes.append((num, base["lemma"] if base else "", letter, tr, uses))
     fixes.sort(key=lambda t: -t[4])
-    return fixes, skipped
+    abp_fixes.sort(key=lambda t: -t[4])
+    return fixes, skipped, abp_fixes
 
 
 def main():
     do_apply = "--apply" in sys.argv
     conn = sqlite3.connect(DB)
     conn.row_factory = sqlite3.Row
-    fixes, skipped = collect(conn)
+    fixes, skipped, abp_fixes = collect(conn)
 
     if not do_apply:
+        if "--summary" in sys.argv:
+            print(f"[dry-run] {len(fixes)} corrections proposed; "
+                  f"{len(abp_fixes)} of them [ABP] different-words newly promoted; "
+                  f"skipped {skipped}.")
+            print("\nSample of the newly-promoted [ABP] words (most-used first):")
+            print("dotted | shown now (base) | corrected lemma | romanization | uses")
+            for num, shown, correct, tr, uses in abp_fixes[:25]:
+                print(f"{num} | {shown} | {correct} | {tr} | {uses}")
+            print("\n(Add --apply to write the table; drop --summary for the full list.)")
+            conn.close()
+            return
         print("dotted | shown now (base) | corrected lemma | romanization | uses")
         for num, shown, correct, tr, uses in fixes:
             print(f"{num} | {shown} | {correct} | {tr} | {uses}")
-        print(f"\n[dry-run] {len(fixes)} corrections proposed; skipped {skipped}.")
+        print(f"\n[dry-run] {len(fixes)} corrections proposed "
+              f"({len(abp_fixes)} of them [ABP] different-words); skipped {skipped}.")
         print("Nothing written. Re-run with --apply to fill the dotted_lexicon table.")
         conn.close()
         return
