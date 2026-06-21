@@ -1043,15 +1043,29 @@ def ai_search():
             # Don't echo the generated SQL back to the client (info disclosure).
             return jsonify({"error": "The generated query was invalid — please rephrase and try again."}), 400
 
-        conn = db_ro()
-        try:
-            rows = conn.execute(sql).fetchall()
-        except Exception as e:
-            # Log the SQL + DB error server-side only; never return them to the client.
-            log.error("SQL execution error: %s\nSQL: %s", e, sql)
-            return jsonify({"error": "The search query could not be run — please rephrase and try again."}), 400
-        finally:
-            conn.close()
+        # Pure multi-word PHRASE query (phrase LIKEs, no Strong's-number filter): the
+        # word-gloss scan would burn ~6s on ~600k rows AND find nothing — a phrase is
+        # not contiguous in the per-word gloss. Skip it; the phrase supplement below
+        # finds these in the full verse text (~31k rows). Any Strong's-number filter
+        # means it's a real word search, so run it normally.
+        phrase_terms = [p for p in {m.lower().strip() for m in _LIKE_PHRASE_RE.findall(sql)}
+                        if " " in p]
+        has_strongs_filter = bool(
+            re.search(r"strongs(?:_base)?\s*(?:=|\bIN\b)\s*\(?\s*'?\d", sql, re.IGNORECASE)
+        )
+        if phrase_terms and not has_strongs_filter:
+            rows = []
+            log.info("Skipped word-gloss scan for phrase-only query: %r", phrase_terms)
+        else:
+            conn = db_ro()
+            try:
+                rows = conn.execute(sql).fetchall()
+            except Exception as e:
+                # Log the SQL + DB error server-side only; never return them to the client.
+                log.error("SQL execution error: %s\nSQL: %s", e, sql)
+                return jsonify({"error": "The search query could not be run — please rephrase and try again."}), 400
+            finally:
+                conn.close()
         log.debug("SQL returned %d rows", len(rows))
         _mark("sqlrun")
 
@@ -1143,14 +1157,12 @@ def ai_search():
         # merge any verses found. A verse whose text literally contains the phrase is
         # a real occurrence, so it is not thematic.
         phrase_hits = False
-        phrases = [p for p in {m.lower().strip() for m in _LIKE_PHRASE_RE.findall(sql)}
-                   if " " in p]
-        if phrases:
+        if phrase_terms:
             cand: set = set()
             new_phrase: list = []
             pf_conn = db_ro()
             try:
-                for ph in phrases:
+                for ph in phrase_terms:
                     like = f"%{ph}%"
                     for r in pf_conn.execute(
                         "SELECT book, chapter, verse FROM verses "
@@ -1187,7 +1199,7 @@ def ai_search():
             if new_phrase:
                 phrase_hits = True
                 results = results + [verse_index[k] for k in new_phrase]
-                log.debug("Phrase supplement: +%d verses for %r", len(new_phrase), phrases)
+                log.debug("Phrase supplement: +%d verses for %r", len(new_phrase), phrase_terms)
 
         # ── Last-resort retry: only if SQL + the cheap fallbacks ALL came up empty ──
         # Firing this the instant the first SQL was empty cost a wasted ~5s model call
