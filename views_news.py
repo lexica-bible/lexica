@@ -119,6 +119,26 @@ def _cluster(rows):
     return clusters
 
 
+def _group(rows, has_event):
+    """Group into story cards. Prefer the AI's event label (scripts/news/group_news.py
+    tags each article with the real-world event it covers, so wildly different headlines
+    about one encyclical share a label) — collapse by exact label. Anything not yet
+    labeled falls back to the lexical word-overlap clustering above. Rows arrive
+    strongest-first, so each group's first article is its representative."""
+    if not has_event:
+        return _cluster(rows)
+    by_event, ungrouped = {}, []
+    for r in rows:
+        ev = (r["event"] or "").strip() if r["event"] is not None else ""
+        if ev:
+            by_event.setdefault(ev, []).append(r)
+        else:
+            ungrouped.append(r)
+    clusters = [{"rep": arts[0], "arts": arts} for arts in by_event.values()]
+    clusters += _cluster(ungrouped)
+    return clusters
+
+
 def _serialize(cluster):
     rep = cluster["rep"]
     arts = sorted(cluster["arts"], key=lambda a: a["published"] or "", reverse=True)
@@ -203,16 +223,19 @@ def list_news():
     elif view == "dismissed":
         where.append("status = 'dismiss'")
 
-    sql = (f"SELECT id, url, title, source, published, score, ai_thread, ai_why, status "
-           f"FROM items WHERE {' AND '.join(where)} "
-           f"ORDER BY score DESC, published DESC")
     conn = news_db()
     try:
+        cols = [c[1] for c in conn.execute("PRAGMA table_info(items)")]
+        has_event = "event" in cols                      # set once group_news.py runs
+        sql = (f"SELECT id, url, title, source, published, score, ai_thread, ai_why, status"
+               f"{', event' if has_event else ''} "
+               f"FROM items WHERE {' AND '.join(where)} "
+               f"ORDER BY score DESC, published DESC")
         rows = conn.execute(sql, args).fetchall()
     finally:
         conn.close()
 
-    clusters = _cluster(rows)
+    clusters = _group(rows, has_event)
     stories = [_serialize(c) for c in clusters]
     if order == "date":
         stories.sort(key=lambda s: (s["published"], s["score"]), reverse=True)
