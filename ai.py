@@ -701,11 +701,54 @@ def _normalize_union_sql(sql: str) -> str:
     )
 
 
+def _group_word_rows(rows) -> tuple[dict, list, list]:
+    """Collapse word-level SQL rows into one entry per verse (ABP word shape).
+    Returns (verse_index, verse_order, results). Used for both the first query
+    and the last-resort retry."""
+    verse_index: dict = {}
+    verse_order: list = []
+    row_keys = rows[0].keys() if rows else []
+    has_word_cols = all(c in row_keys for c in ("english", "strongs_base", "strongs"))
+    for r in rows:
+        try:
+            key = (r["book"], r["chapter"], r["verse"])
+        except IndexError:
+            continue
+        if key not in verse_index:
+            verse_index[key] = {
+                "ref":     f"{r['book']} {r['chapter']}:{r['verse']}",
+                "book":    r["book"],
+                "chapter": r["chapter"],
+                "verse":   r["verse"],
+                "words":   [],
+            }
+            verse_order.append(key)
+        if not has_word_cols or not r["english"] or r["strongs_base"] == "*":
+            continue
+        verse_index[key]["words"].append({
+            "strongs":      r["strongs"],
+            "strongs_base": r["strongs_base"],
+            "is_function":  r["strongs_base"] in _FUNCTION_STRONGS,
+            "gloss":        _clean_gloss(r["english"]),
+            "lemma":        r["lemma"],
+            "translit":     r["translit"],
+            "strongs_def":  (r["strongs_def"] or "").strip(),
+            "kjv_def":      r["kjv_def"],
+            "derivation":   (r["derivation"] or "").strip(),
+        })
+    results = [verse_index[k] for k in verse_order if verse_index[k]["words"]]
+    return verse_index, verse_order, results
+
+
+# Below this many result verses, the pass-2 ranking call adds nothing (it would
+# return them all anyway) — skip it and show them all, saving a ~5s model call.
+_CURATE_SKIP_MAX = 8
+
 _ai_cache_ver: str | None = None  # computed once from prompt template + book list
 
 # Bump this integer whenever server-side search logic changes in a way that
 # affects results but doesn't change _AI_SYSTEM_TMPL (e.g. new fallback steps).
-_CACHE_CODE_VER = 27   # 27: grounded explanation folded into pass-2 (drop separate pass-3)
+_CACHE_CODE_VER = 28   # 28: retry is last-resort; skip pass-2 ranking for small pools
 
 
 def _get_ai_cache_ver() -> str:
@@ -973,83 +1016,11 @@ def ai_search():
         log.debug("SQL returned %d rows", len(rows))
         _mark("sqlrun")
 
-        # ── Retry with broader query if first SQL returned nothing ────────────
-        if not rows:
-            try:
-                retry_msg = _anthropic.messages.create(
-                    model="claude-haiku-4-5-20251001",
-                    max_tokens=1200,
-                    temperature=0,
-                    system=[{"type": "text", "text": _get_ai_system(), "cache_control": {"type": "ephemeral"}}],
-                    messages=[
-                        {"role": "user", "content": user_content},
-                        {"role": "assistant", "content": raw},
-                        {"role": "user", "content": (
-                            "That SQL returned 0 results. Broaden the approach: "
-                            "remove strict co-occurrence subqueries, expand to more "
-                            "Strong's numbers via UNION ALL, or fall back to "
-                            "english LIKE matching. Return the same JSON format."
-                        )},
-                    ],
-                )
-                retry_raw = retry_msg.content[0].text.strip()
-                r_start = retry_raw.find("{")
-                r_end   = retry_raw.rfind("}")
-                if r_start != -1 and r_end > r_start:
-                    retry_parsed = json.loads(retry_raw[r_start:r_end + 1])
-                    retry_sql = _normalize_union_sql(
-                        retry_parsed.get("sql", "").strip()
-                    )
-                    if re.match(r"^\s*SELECT\b", retry_sql, re.IGNORECASE):
-                        retry_conn = db_ro()
-                        try:
-                            retry_rows = retry_conn.execute(retry_sql).fetchall()
-                        except Exception:
-                            retry_rows = []
-                        finally:
-                            retry_conn.close()
-                        if retry_rows:
-                            rows = retry_rows
-                            sql  = retry_sql
-                            explanation = retry_parsed.get("explanation", explanation)
-                            log.debug("Retry SQL returned %d rows", len(rows))
-            except Exception as exc:
-                log.warning("AI search retry failed: %s", exc)
-
         # ── Group word-level rows into one entry per verse ───────────────────
-        verse_index = {}
-        verse_order = []
-        row_keys = rows[0].keys() if rows else []
-        has_word_cols = all(c in row_keys for c in ("english", "strongs_base", "strongs"))
-        for r in rows:
-            try:
-                key = (r["book"], r["chapter"], r["verse"])
-            except IndexError:
-                continue
-            if key not in verse_index:
-                verse_index[key] = {
-                    "ref":     f"{r['book']} {r['chapter']}:{r['verse']}",
-                    "book":    r["book"],
-                    "chapter": r["chapter"],
-                    "verse":   r["verse"],
-                    "words":   [],
-                }
-                verse_order.append(key)
-            if not has_word_cols or not r["english"] or r["strongs_base"] == "*":
-                continue
-            verse_index[key]["words"].append({
-                "strongs":      r["strongs"],
-                "strongs_base": r["strongs_base"],
-                "is_function":  r["strongs_base"] in _FUNCTION_STRONGS,
-                "gloss":        _clean_gloss(r["english"]),
-                "lemma":        r["lemma"],
-                "translit":     r["translit"],
-                "strongs_def":  (r["strongs_def"] or "").strip(),
-                "kjv_def":      r["kjv_def"],
-                "derivation":   (r["derivation"] or "").strip(),
-            })
-
-        results = [verse_index[k] for k in verse_order if verse_index[k]["words"]]
+        # The broaden-and-retry now runs as a LAST resort below (after the cheap
+        # explanation-citation + proper-noun fallbacks), so it no longer fires a
+        # wasted ~5s call when those already surfaced verses to show.
+        verse_index, verse_order, results = _group_word_rows(rows)
         log.debug("Grouped into %d verses", len(results))
 
         # ── Fetch verses cited in the explanation that SQL missed ─────────────
@@ -1125,16 +1096,70 @@ def ai_search():
                 results = results + [verse_index[k] for k in new_pn]
                 log.debug("Proper noun supplement: +%d verses for %s", len(new_pn), proper_nouns)
 
+        # ── Last-resort retry: only if SQL + the cheap fallbacks ALL came up empty ──
+        # Firing this the instant the first SQL was empty cost a wasted ~5s model call
+        # whenever the explanation's cited verses or a proper-noun match already filled
+        # results. Now it runs only when there is genuinely nothing to show.
+        if not results:
+            try:
+                retry_msg = _anthropic.messages.create(
+                    model="claude-haiku-4-5-20251001",
+                    max_tokens=1200,
+                    temperature=0,
+                    system=[{"type": "text", "text": _get_ai_system(), "cache_control": {"type": "ephemeral"}}],
+                    messages=[
+                        {"role": "user", "content": user_content},
+                        {"role": "assistant", "content": raw},
+                        {"role": "user", "content": (
+                            "That SQL returned 0 results. Broaden the approach: "
+                            "remove strict co-occurrence subqueries, expand to more "
+                            "Strong's numbers via UNION ALL, or fall back to "
+                            "english LIKE matching. Return the same JSON format."
+                        )},
+                    ],
+                )
+                retry_raw = retry_msg.content[0].text.strip()
+                r_start = retry_raw.find("{")
+                r_end   = retry_raw.rfind("}")
+                if r_start != -1 and r_end > r_start:
+                    retry_parsed = json.loads(retry_raw[r_start:r_end + 1])
+                    retry_sql = _normalize_union_sql(retry_parsed.get("sql", "").strip())
+                    if re.match(r"^\s*SELECT\b", retry_sql, re.IGNORECASE):
+                        retry_conn = db_ro()
+                        try:
+                            retry_rows = retry_conn.execute(retry_sql).fetchall()
+                        except Exception:
+                            retry_rows = []
+                        finally:
+                            retry_conn.close()
+                        if retry_rows:
+                            sql = retry_sql
+                            explanation = retry_parsed.get("explanation", explanation)
+                            r_index, _, results = _group_word_rows(retry_rows)
+                            verse_index.update(r_index)
+                            log.debug("Retry SQL returned %d rows -> %d verses",
+                                      len(retry_rows), len(results))
+            except Exception as exc:
+                log.warning("AI search retry failed: %s", exc)
+        _mark("retry")
+
         # ── Pass 2: relevance curation + grounded explanation ─────────────────
         # This call has the real retrieved verses in front of it, so its explanation
         # can only cite what was actually found — no separate grounding pass needed.
-        primary_verses_raw, additional_verses_raw, curated_expl = _curate_primary_verses(
-            q, results, key_strongs_data
-        )
+        # Skip it for a small pool: ranking is pointless when we'd show them all
+        # anyway, and it saves a ~5s model call.
+        if len(results) > _CURATE_SKIP_MAX:
+            primary_verses_raw, additional_verses_raw, curated_expl = _curate_primary_verses(
+                q, results, key_strongs_data
+            )
+            if curated_expl:
+                explanation = curated_expl  # grounded; keeps the pass-1 prose on failure
+        else:
+            primary_verses_raw = [v["ref"] for v in results]
+            additional_verses_raw = []
+            log.debug("Pass-2 skipped (%d verses <= %d) — showing all", len(results), _CURATE_SKIP_MAX)
         log.debug("Pass-2 primary_verses: %s", primary_verses_raw)
         log.debug("Pass-2 additional_verses: %s", additional_verses_raw)
-        if curated_expl:
-            explanation = curated_expl  # grounded; keeps the pass-1 prose on failure
         _mark("curate")
 
         # ── Build primary_set and fetch any missing primary verses ────────────
