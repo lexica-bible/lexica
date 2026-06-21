@@ -14,6 +14,7 @@ import re
 from flask import Blueprint, jsonify, request
 
 from core import db, db_ro, _anthropic, limiter, log, _strip_accents, ai_fingerprint
+from views_lexicon import _greek_cognates
 
 bp = Blueprint("lsj", __name__)
 
@@ -85,7 +86,7 @@ def _lsj_concept_lookup(terms: list[str]) -> list[dict]:
         for term in terms[:5]:
             pattern = f"%{term.lower()}%"
             rows = conn.execute(
-                """SELECT l.strongs, l.lemma, l.translit, lsj.summary_json, lsj.def_html
+                """SELECT l.strongs, l.lemma, l.translit, l.derivation, lsj.summary_json, lsj.def_html
                    FROM lexicon l
                    JOIN lsj ON lsj.plain = lower(strip_accents(l.lemma))
                    WHERE lower(lsj.def_html) LIKE ?
@@ -115,12 +116,27 @@ def _lsj_concept_lookup(terms: list[str]) -> list[dict]:
                         (f"{row['strongs']}.%", row["strongs"]),
                     ).fetchall()
                 ]
+                # Same-root family from the lexicon's own etymology, so the AI can SEE
+                # related forms it would otherwise never search — e.g. σαββατισμός
+                # (G4520) hanging off σάββατον (G4521). Greek-only (the etymology data
+                # lives in the Greek derivation text); a hiccup must never sink the lookup.
+                cognates = []
+                try:
+                    for c in _greek_cognates(conn, row["strongs"], row["derivation"]):
+                        cbase = c["strongs"].lstrip("Gg")
+                        if cbase in seen:
+                            continue
+                        seen.add(cbase)
+                        cognates.append(c)
+                except Exception as e:
+                    log.warning("cognate expansion failed for G%s: %s", row["strongs"], e)
                 results.append({
                     "strongs":         row["strongs"],
                     "lemma":           row["lemma"],
                     "translit":        row["translit"],
                     "semantic":        semantic,
                     "dotted_variants": variants,
+                    "cognates":        cognates,
                 })
     except Exception as e:
         log.warning("LSJ concept lookup failed: %s", e)
@@ -170,6 +186,17 @@ def _format_lsj_context(entries: list[dict]) -> str:
             vlist = ", ".join(f"G{v}" for v in sorted(variants))
             line += f" [corpus dotted variants: {vlist} — use w.strongs='...' to target specifically]"
         lines.append(line)
+        cognates = e.get("cognates", [])
+        if cognates:
+            clist = "; ".join(
+                f"{c['strongs']} {c['lemma']} ({c['translit']})"
+                + (f" — {c['gloss']}" if c.get("gloss") else "")
+                for c in cognates
+            )
+            lines.append(
+                f"      related same-root forms (include in SQL + key_strongs when they "
+                f"fit the concept): {clist}"
+            )
     return "\n".join(lines)
 
 
