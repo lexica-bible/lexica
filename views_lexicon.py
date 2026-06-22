@@ -515,18 +515,24 @@ def lexicon_english():
         h_sids = [s for s in snums if s.startswith("H")]
         if not h_sids or not _heb_ready():
             return {}
+        out = {}
         try:
             hconn = heb_db()
             try:
-                ph = ",".join("?" * len(h_sids))
-                rows = hconn.execute(
-                    f"SELECT strongs, COUNT(*) AS cnt FROM heb_words "
-                    f"WHERE strongs IN ({ph}) GROUP BY strongs", h_sids).fetchall()
+                for sid in h_sids:
+                    # Count the SAME way lexicon_profile does (_heb_match: exact number OR a
+                    # trailing-letter homograph like H1254a), so the finder's HEB number
+                    # equals the count on that word's own study page.
+                    pred, params = _heb_match(sid)
+                    row = hconn.execute(
+                        f"SELECT COUNT(*) AS cnt FROM heb_words WHERE {pred}", params).fetchone()
+                    if row and row["cnt"]:
+                        out[sid] = row["cnt"]
             finally:
                 hconn.close()
         except sqlite3.OperationalError:
             return {}
-        return {r["strongs"]: r["cnt"] for r in rows}
+        return out
 
     try:
         abp_rows, heb_rows = [], []
