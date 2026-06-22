@@ -92,7 +92,8 @@ function VerseRow({ book, chapter, verse, label, allResults, onWordClick, onRead
           // numbers; the reference button jumps into the reader to study any word.
           const citedPositions = new Set(
             (citedStrongs && citedStrongs.size)
-              ? words.filter(w => citedStrongs.has(w.strongs_base) || citedStrongs.has(strongsBare(w.strongs_base))).map(w => w.position)
+              ? words.filter(w => citedStrongs.has(w.strongs_base) || citedStrongs.has(strongsBare(w.strongs_base))
+                                || citedStrongs.has(w.strongs) || citedStrongs.has(strongsBare(w.strongs))).map(w => w.position)
               : []
           );
           const proseCtx = {

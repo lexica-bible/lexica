@@ -315,9 +315,8 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
   // Light up every form of the focused word's Strong's in the verse list.
   const citedStrongs = useMemo(() => {
     if (!profile?.strongs) return new Set();
-    const tag = profile.strongs;
-    const base = tag.split(".")[0];
-    return new Set([tag, base, base.replace(/^[GH]/i, "")]);
+    const tag = profile.strongs;              // "G4521" or, for an ABP dotted different-word, "G4521.2"
+    return new Set([tag, strongsBare(tag)]);  // match the FULL number — a dotted word lights up itself, not its base
   }, [profile?.strongs]);
 
   const handleSubmit = async (e, override) => {
@@ -515,7 +514,8 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
       {profile.derivation && (
         <section className="sec">
           <h4 className="sec-head"><span className="sec-t">Derivation</span></h4>
-          <p className="root-note">{profile.derivation}</p>
+          {/* Strong's zero-pads its cross-ref numbers (H07676); show them clean (H7676). */}
+          <p className="root-note">{profile.derivation.replace(/\b([GH])0+(\d)/g, "$1$2")}</p>
         </section>
       )}
       {profile.related && profile.related.length > 0 && (

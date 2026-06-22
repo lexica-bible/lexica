@@ -149,6 +149,53 @@ def _fold_glosses(pairs, is_func=False, drop_singletons=False, limit=None):
     return [{"gloss": g, "count": c} for g, c in items]
 
 
+def _dotted_ready(conn):
+    """True when the ABP dotted-different-word side table is built (deploy-safe guard)."""
+    try:
+        return conn.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='dotted_lexicon'"
+        ).fetchone() is not None
+    except Exception:
+        return False
+
+
+def _dotted_diff_row(conn, num):
+    """The dotted_lexicon row (lemma, translit) for a FULL dotted ABP number that is a
+    genuinely DIFFERENT word from its base (e.g. '4521.2' σαβέκ "thicket" vs base σάββατον
+    "sabbath"), else None. `num` is the bare number; dotted_lexicon is keyed by the
+    G-prefixed full number ('G4521.2')."""
+    if "." not in num or not _dotted_ready(conn):
+        return None
+    try:
+        return conn.execute(
+            "SELECT lemma, translit FROM dotted_lexicon WHERE strongs = ?", ("G" + num,)
+        ).fetchone()
+    except Exception:
+        return None
+
+
+def _abp_strongs_filter(conn, num, sid):
+    """WHERE-predicate (sql, params) picking the ABP `words` rows for a lexicon key, aware
+    of the dotted different-words side table:
+
+      • a FULL dotted different-word (in dotted_lexicon) → ONLY its own rows, matched on
+        the full bare `strongs` ('4521.2' → just σαβέκ);
+      • a BASE number → `strongs_base`, but EXCLUDING the dotted different-words parked
+        under it (so σαβέκ/G4521.2 stops counting under σάββατον/G4521; the εἰμί-family
+        form-notes, which are NOT in dotted_lexicon, correctly stay on the base).
+
+    Uses the `w` table alias and only the `words` table, so every ABP query here can drop
+    it straight into its WHERE. Deploy-safe: with no dotted_lexicon a dotted key falls back
+    to the base and the exclude is dropped. `num` = bare full number; `sid` = 'G'+base."""
+    ready = _dotted_ready(conn)
+    if ready and "." in num and conn.execute(
+            "SELECT 1 FROM dotted_lexicon WHERE strongs = ?", ("G" + num,)).fetchone():
+        return "w.strongs = ?", [num]
+    if ready:
+        return ("w.strongs_base = ? AND 'G' || w.strongs NOT IN (SELECT strongs FROM dotted_lexicon)", [sid])
+    return "w.strongs_base = ?", [sid]
+
+
 @bp.route("/api/lexicon/lookup")
 def lexicon_lookup():
     q = request.args.get("q", "").strip()
@@ -170,6 +217,11 @@ def lexicon_lookup():
                 if row:
                     return jsonify([{"strongs": row["strongs_id"], "lemma": row["lemma"] or "", "translit": row["xlit"] or "", "gloss": row["description"] or ""}])
             else:
+                dl = _dotted_diff_row(conn, num)
+                if dl:
+                    # A dotted ABP number that's its own word (σαβέκ, not base σάββατον).
+                    return jsonify([{"strongs": f"G{num}", "lemma": dl["lemma"] or "",
+                                     "translit": dl["translit"] or "", "gloss": ""}])
                 row = conn.execute(
                     "SELECT strongs, lemma, translit, kjv_def, derivation, strongs_def FROM lexicon WHERE strongs = ?",
                     (snum,)
@@ -203,8 +255,29 @@ def lexicon_lookup():
                LIMIT 10""",
             (f"%{q}%", f"%{qn}%", f"%{qn}%")
         ).fetchall()
+        # ABP dotted different-words (σαβέκ, εφούδ…) live only in dotted_lexicon, not the
+        # Greek lexicon, so search them by their own lemma/romanization too. Gloss = their
+        # most-common ABP rendering.
+        dot = []
+        if _dotted_ready(conn):
+            try:
+                dot = conn.execute(
+                    """SELECT dl.strongs, dl.lemma, dl.translit,
+                              (SELECT w.english_head FROM words w
+                                WHERE 'G' || w.strongs = dl.strongs
+                                  AND w.english_head IS NOT NULL AND w.english_head != ''
+                                GROUP BY w.english_head ORDER BY COUNT(*) DESC LIMIT 1) AS gloss
+                       FROM dotted_lexicon dl
+                       WHERE strip_accents(lower(dl.lemma)) LIKE ?
+                          OR strip_accents(lower(dl.translit)) LIKE ?
+                       LIMIT 10""",
+                    (f"%{qn}%", f"%{qn}%")
+                ).fetchall()
+            except Exception:
+                dot = []
         results = [{"strongs": f"G{r['strongs']}", "lemma": r["lemma"] or "", "translit": r["translit"] or "", "gloss": r["kjv_def"] or r["derivation"] or r["strongs_def"] or ""} for r in grk]
         results += [{"strongs": r["strongs_id"], "lemma": r["lemma"] or "", "translit": r["xlit"] or "", "gloss": r["description"] or ""} for r in heb]
+        results += [{"strongs": r["strongs"], "lemma": r["lemma"] or "", "translit": r["translit"] or "", "gloss": r["gloss"] or ""} for r in dot]
         return jsonify(results[:20])
     finally:
         conn.close()
@@ -236,19 +309,26 @@ def lexicon_english():
     def _top_glosses_abp(snums):
         if not snums:
             return {}
-        placeholders = ",".join("?" * len(snums))
+        # snums are GROUPING keys: a base 'G4521' or a dotted different-word 'G4521.2'.
+        # Filter the (indexed) strongs_base by the BASE of each key, then GROUP BY the
+        # gkey so a dotted different-word's renderings split off from its base's.
+        bases = sorted({sn.split(".")[0] for sn in snums})
+        placeholders = ",".join("?" * len(bases))
+        ready = _dotted_ready(conn)
+        dl_join = "LEFT JOIN dotted_lexicon dl ON dl.strongs = 'G' || w.strongs" if ready else ""
+        gkey = "COALESCE(dl.strongs, w.strongs_base)" if ready else "w.strongs_base"
         rows = conn.execute(f"""
-            SELECT w.strongs_base, w.english_head, COUNT(*) AS cnt
-            FROM words w {_abp_join}
+            SELECT {gkey} AS gkey, w.english_head, COUNT(*) AS cnt
+            FROM words w {dl_join} {_abp_join}
             WHERE w.strongs_base IN ({placeholders})
               AND w.english_head IS NOT NULL AND w.english_head != ''
               {_abp_where}
-            GROUP BY w.strongs_base, w.english_head
-            ORDER BY w.strongs_base, cnt DESC
-        """, (*snums, *_abp_params)).fetchall()
+            GROUP BY {gkey}, w.english_head
+            ORDER BY {gkey}, cnt DESC
+        """, (*bases, *_abp_params)).fetchall()
         out = {}
         for r in rows:
-            sn = r["strongs_base"]
+            sn = r["gkey"]
             g = r["english_head"]
             if " " in g:
                 continue
@@ -285,20 +365,28 @@ def lexicon_english():
         abp_rows, heb_rows = [], []
 
         if corpus in ("abp", "all"):
-            # ABP Greek: match by english_head
+            # ABP Greek: match by english_head. A dotted different-word (e.g. σαβέκ G4521.2,
+            # parked under σάββατον G4521) groups under its OWN full number via
+            # dotted_lexicon — own lemma/romanization, not folded into the base.
+            ready = _dotted_ready(conn)
+            dl_join = "LEFT JOIN dotted_lexicon dl ON dl.strongs = 'G' || w.strongs" if ready else ""
+            gkey = "COALESCE(dl.strongs, w.strongs_base)" if ready else "w.strongs_base"
+            lem  = "COALESCE(dl.lemma, l.lemma)"          if ready else "l.lemma"
+            tr   = "COALESCE(dl.translit, l.translit)"    if ready else "l.translit"
             abp_rows = conn.execute(f"""
-                SELECT w.strongs_base AS sbase,
-                       l.lemma AS lemma, l.translit AS translit,
+                SELECT {gkey} AS sbase,
+                       {lem} AS lemma, {tr} AS translit,
                        COUNT(*) AS cnt
                 FROM words w
                 LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base
+                {dl_join}
                 {_abp_join}
                 WHERE w.english_head = ? COLLATE NOCASE
                   AND w.strongs_base IS NOT NULL
                   AND w.strongs_base != '*'
                   AND w.strongs_base LIKE 'G%'
                   {_abp_where}
-                GROUP BY w.strongs_base
+                GROUP BY {gkey}
                 ORDER BY cnt DESC
                 LIMIT 20
             """, (q, *_abp_params)).fetchall()
@@ -380,6 +468,7 @@ def lexicon_profile(strongs):
     snum = num.split('.')[0]
     is_heb = prefix == 'H' or (not prefix and int(snum) > 5624)
     _deriv_raw = ""
+    is_diff = False   # set True below for an ABP dotted number that's its own word
     conn = db_ro()
     try:
         if is_heb:
@@ -392,25 +481,42 @@ def lexicon_profile(strongs):
             lemma, translit, definition = row["lemma"] or "", row["xlit"] or "", row["description"] or ""
             derivation = ""   # BDB has no separate etymology column
         else:
-            strongs_id = f"G{snum}"
-            row = conn.execute(
-                "SELECT lemma, translit, kjv_def, derivation, strongs_def FROM lexicon WHERE strongs = ?", (snum,)
-            ).fetchone()
-            if not row:
-                return jsonify({"error": "not found"}), 404
-            lemma = row["lemma"] or ""
-            translit = row["translit"] or ""
-            # Text-first (mirrors the word card / views_lsj.py): KJV rendering → derivation
-            # → Strong's paraphrase, so Strong's interpretive wording never leads.
-            definition = row["kjv_def"] or row["derivation"] or row["strongs_def"] or ""
-            _deriv_raw = row["derivation"] or ""
-            # Etymology for the card's Derivation section (only when it adds
-            # something the definition line isn't already showing).
-            derivation = _deriv_raw if (row["kjv_def"] or "").strip() else ""
+            dl = _dotted_diff_row(conn, num)
+            if dl:
+                # A dotted ABP number that is a genuinely DIFFERENT word from its base
+                # (e.g. G4521.2 σαβέκ "thicket", not base σάββατον "sabbath"). Its own
+                # lemma/romanization come from dotted_lexicon; the Definition section is
+                # filled client-side by /api/lsj's abp_ext lookup on the full dotted number,
+                # so we don't borrow the base lexicon entry — that's a different word. KJV
+                # has no such word (it's an LXX-only added word), so its side stays empty.
+                is_diff = True
+                strongs_id = f"G{num}"
+                lemma = dl["lemma"] or ""
+                translit = dl["translit"] or ""
+                definition = ""
+                derivation = ""
+            else:
+                strongs_id = f"G{snum}"
+                row = conn.execute(
+                    "SELECT lemma, translit, kjv_def, derivation, strongs_def FROM lexicon WHERE strongs = ?", (snum,)
+                ).fetchone()
+                if not row:
+                    return jsonify({"error": "not found"}), 404
+                lemma = row["lemma"] or ""
+                translit = row["translit"] or ""
+                # Text-first (mirrors the word card / views_lsj.py): KJV rendering → derivation
+                # → Strong's paraphrase, so Strong's interpretive wording never leads.
+                definition = row["kjv_def"] or row["derivation"] or row["strongs_def"] or ""
+                _deriv_raw = row["derivation"] or ""
+                # Etymology for the card's Derivation section (only when it adds
+                # something the definition line isn't already showing).
+                derivation = _deriv_raw if (row["kjv_def"] or "").strip() else ""
         # Corpus: default H→kjv, G→abp; override via ?corpus=
         corpus = request.args.get("corpus", "kjv" if is_heb else "abp")
         if corpus == "all":  # profile is single-corpus; 'all' would double-count NT
             corpus = "kjv" if is_heb else "abp"
+        if is_diff:          # ABP-only added word — no KJV side to toggle to
+            corpus = "abp"
         _NT = {"Mat","Mar","Luk","Joh","Act","Rom","1Co","2Co","Gal","Eph","Php","Col",
                "1Th","2Th","1Ti","2Ti","Tit","Phm","Heb","Jas","1Pe","2Pe","1Jn","2Jn","3Jn","Jud","Rev"}
         book_meta = {r["abbrev"]: {"name": r["name"], "testament": "NT" if r["abbrev"] in _NT else "OT"}
@@ -419,11 +525,12 @@ def lexicon_profile(strongs):
         abbrev_by_id = {v: k for k, v in _KJV_BOOK_ID.items()}
 
         def _abp_book_counts():  # ABP interlinear: strongs_base in words→verses
-            rows = conn.execute("""
+            pred, params = _abp_strongs_filter(conn, num, sid)
+            rows = conn.execute(f"""
                 SELECT v.book AS book, COUNT(*) AS cnt
                 FROM words w JOIN verses v ON w.verse_id = v.id
-                WHERE w.strongs_base = ? GROUP BY v.book
-            """, (sid,)).fetchall()
+                WHERE {pred} GROUP BY v.book
+            """, params).fetchall()
             return {r["book"]: r["cnt"] for r in rows}
 
         def _kjv_book_counts():  # KJV text: strongs_id in kjv_strongs→kjv_words
@@ -440,11 +547,12 @@ def lexicon_profile(strongs):
             return out
 
         def _abp_gloss_rows():
-            return conn.execute("""
-                SELECT english AS gloss, COUNT(*) AS cnt FROM words
-                WHERE strongs_base = ? AND english IS NOT NULL AND english != '' AND english != '*'
-                GROUP BY english
-            """, (sid,)).fetchall()
+            pred, params = _abp_strongs_filter(conn, num, sid)
+            return conn.execute(f"""
+                SELECT w.english AS gloss, COUNT(*) AS cnt FROM words w
+                WHERE {pred} AND w.english IS NOT NULL AND w.english != '' AND w.english != '*'
+                GROUP BY w.english
+            """, params).fetchall()
 
         def _kjv_gloss_rows():
             return conn.execute("""
@@ -468,7 +576,7 @@ def lexicon_profile(strongs):
 
         # Function-word Strong's (ἐν, the article, οὐ, καί…): label by the
         # connector inside the phrase, not the content word english_head picked.
-        is_func = (not is_heb) and snum in _FUNCTION_STRONGS
+        is_func = (not is_heb) and (not is_diff) and snum in _FUNCTION_STRONGS
 
         # Each Bible's own renderings, so the word page can show both at once
         # (ABP says "phantom", KJV says "spirit"). The active toggle still drives
@@ -477,14 +585,15 @@ def lexicon_profile(strongs):
             return _fold_glosses(((r["gloss"], r["cnt"]) for r in rows),
                                  is_func=is_func, drop_singletons=True)
         abp_glosses = _fold(_abp_gloss_rows())
-        kjv_glosses = _fold(_kjv_gloss_rows())
+        kjv_glosses = [] if is_diff else _fold(_kjv_gloss_rows())
         glosses = abp_glosses if corpus == "abp" else kjv_glosses
         # Which corpora actually have this strongs (so the UI can gray unavailable
         # toggles). Checks real data — so backfilled proper-noun Hebrew (which DO
-        # have ABP/words rows) keep ABP enabled.
-        has_abp = conn.execute("SELECT 1 FROM words WHERE strongs_base = ? LIMIT 1", (sid,)).fetchone() is not None
-        has_kjv = conn.execute("SELECT 1 FROM kjv_strongs WHERE strongs_id = ? LIMIT 1", (sid,)).fetchone() is not None
-        related = _greek_cognates(conn, snum, _deriv_raw) if not is_heb else []
+        # have ABP/words rows) keep ABP enabled. A dotted different-word is ABP-only.
+        _hp, _hpar = _abp_strongs_filter(conn, num, sid)
+        has_abp = conn.execute(f"SELECT 1 FROM words w WHERE {_hp} LIMIT 1", _hpar).fetchone() is not None
+        has_kjv = False if is_diff else (conn.execute("SELECT 1 FROM kjv_strongs WHERE strongs_id = ? LIMIT 1", (sid,)).fetchone() is not None)
+        related = [] if is_diff else (_greek_cognates(conn, snum, _deriv_raw) if not is_heb else [])
         return jsonify({"strongs": strongs_id, "lemma": lemma, "translit": translit, "definition": definition, "derivation": derivation, "related": related, "total": total, "books": books, "corpus": corpus, "glosses": glosses, "abp_glosses": abp_glosses, "kjv_glosses": kjv_glosses, "has_abp": has_abp, "has_kjv": has_kjv})
     except Exception:
         return jsonify({"error": "Server error"}), 500
@@ -497,7 +606,8 @@ def lexicon_books(strongs):
     m = re.match(r'^([GgHh]?)(\d+(?:\.\d+)?)$', strongs.strip())
     if not m:
         return jsonify({"error": "invalid"}), 400
-    prefix, snum = m.group(1).upper(), m.group(2)
+    prefix, num = m.group(1).upper(), m.group(2)
+    snum = num.split('.')[0]
     is_heb = prefix == "H"
     corpus = request.args.get("corpus", "kjv" if is_heb else "abp")
     if corpus == "all":
@@ -511,15 +621,16 @@ def lexicon_books(strongs):
                      for r in conn.execute("SELECT abbrev, name FROM books").fetchall()}
         abbrev_by_id = {v: k for k, v in _KJV_BOOK_ID.items()}
         sid = f"H{snum}" if is_heb else f"G{snum}"
-        is_func = (not is_heb) and snum.split('.')[0] in _FUNCTION_STRONGS
+        is_func = (not is_heb) and snum in _FUNCTION_STRONGS
         book_counts = {}  # corpus=all merges ABP + KJV per book (gloss-filtered)
         if corpus in ("abp", "all"):
-            for r in conn.execute("""
+            _bp, _bpar = _abp_strongs_filter(conn, num, sid)
+            for r in conn.execute(f"""
                 SELECT v.book, w.english, COUNT(*) AS cnt
                 FROM words w JOIN verses v ON w.verse_id = v.id
-                WHERE w.strongs_base = ?
+                WHERE {_bp}
                 GROUP BY v.book, w.english
-            """, (sid,)).fetchall():
+            """, _bpar).fetchall():
                 if gloss and _normalize_gloss(r["english"] or "", is_func=is_func) != gloss:
                     continue
                 book_counts[r["book"]] = book_counts.get(r["book"], 0) + r["cnt"]
@@ -551,7 +662,8 @@ def lexicon_verses(strongs, book):
     if not m:
         return jsonify([])
     prefix = m.group(1).upper()
-    snum = m.group(2).split('.')[0]
+    num = m.group(2)
+    snum = num.split('.')[0]
     is_heb = prefix == 'H' or (not prefix and int(snum) > 5624)
     corpus = request.args.get("corpus", "kjv" if is_heb else "abp")
     gloss = request.args.get("gloss", "").strip()
@@ -590,16 +702,17 @@ def lexicon_verses(strongs, book):
                 ORDER BY kw.chapter, kw.verse_num, kw.verse_pos
             """, (sid, book_id, book_id, sid)).fetchall()
         else:
-            word_rows = conn.execute("""
+            pred, pparams = _abp_strongs_filter(conn, num, sid)
+            word_rows = conn.execute(f"""
                 SELECT v.chapter, v.verse, v.text AS prose, w.english AS word, w.italic,
-                       CASE WHEN w.strongs_base = ? THEN 1 ELSE 0 END AS hl
+                       CASE WHEN {pred} THEN 1 ELSE 0 END AS hl
                 FROM verses v
                 JOIN words w ON w.verse_id = v.id
                 WHERE v.book = ? AND v.id IN (
-                    SELECT verse_id FROM words WHERE strongs_base = ?
+                    SELECT w.verse_id FROM words w WHERE {pred}
                 )
                 ORDER BY v.chapter, v.verse, w.position
-            """, (sid, book, sid)).fetchall()
+            """, (*pparams, book, *pparams)).fetchall()
         verse_prose = {}
         verse_order = []
         gloss_counts = {}
