@@ -237,9 +237,11 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   Hebrew OT, CC BY). Loaded by `scripts/load_hebrew.py`; served by the PUBLIC `views_heb.py`
   (`core.heb_db()`, no owner gate on the data). **PUBLIC for everyone, no login (2026-06-11)** —
   `hebPickable` gates on `hebAvail` (heb.db loaded), not the old `hebOwner`. Routes: `/api/hebrew/status`,
-  `/api/hebrew/chapter/<book>/<ch>`, and `/api/hebrew/verse-words/<book>/<ch>/<v>` (one verse, added
-  2026-06-13 to feed the word-detail side panel's interlinear). Full record: memory
-  `project_hebrew_ot_interlinear`.
+  `/api/hebrew/chapter/<book>/<ch>`, `/api/hebrew/verse-words/<book>/<ch>/<v>` (one verse, feeds the
+  word-detail side panel's interlinear), and `/api/hebrew/strongs-count/<H#>` (2026-06-22, feeds the rail's
+  "in Hebrew OT" link). **heb.db is now ALSO the Hebrew-word EVIDENCE source for Word study + Ask-corpus +
+  SEO (not just a reading text) — see "Hebrew word sourcing" below + memory `project_hebrew_source_swap`.**
+  Full record (the text itself): memory `project_hebrew_ot_interlinear`.
   `study.db` — authored "study modules" (built 2026-06-12/13; **topics opened to the PUBLIC 2026-06-16**):
   one `entries` table (row per topic / graph / name; `json` body + `type` + `status`).
   Served by `views_study.py` (`core.study_db()`); the **Study** tab (`static/src/55-study.jsx`). TOPICS = a
@@ -585,10 +587,21 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   - `h=true` marks the target word in each verse (rendered highlighted in gold)
   - `glosses` = per-book rendering breakdown (chips update when a book is selected)
   - Optional `?gloss=spirit` param filters verse list to a specific rendering
-- Corpus toggle: ABP (LXX OT+NT, G-numbers) | KJV (NT G-numbers, OT H-numbers)
+- **Word-source toggle (focused word): ABP · HEB · KJV · BSB** (2026-06-22) — a number's occurrences,
+  book distribution, and "renders as" in each. **Hebrew DEFAULTS to HEB = heb.db (the REAL Hebrew OT, NOT
+  the old KJV bridge); the ~150 byform/Aramaic/name numbers heb.db lacks fall back to KJV (`has_heb` false).**
+  Greek defaults to ABP. KJV/BSB stay explicit text toggles (KJV-as-text untouched). `lexicon_profile/books/
+  verses` carry per-source branches + `has_abp/has_heb/has_kjv/has_bsb` + `abp/heb/kjv/bsb_glosses`; heb/bsb
+  occurrence lists re-fetch per-verse in `VerseRow` (heb = RTL + English gloss line, bsb mirrors KJV). The
+  English-word finder shows all 4 "renders as" lines per word + a HEB/BSB filter. Full record: memory
+  `project_hebrew_source_swap`.
 - LexiconView is always-mounted (display:none) so state survives tab switches
 
-## Search Tab
+## Search Tab — DEAD (no UI caller as of 2026-06-22)
+- **The standalone Search tab is GONE from the app: `api.search` has no caller and `/api/search` is an
+  orphaned endpoint (left in views_search.py, harmless). Live search now = the Library in-text search
+  (`/api/text-search`, still used) + Word study (`/api/lexicon/*`) + Ask the corpus (`/api/ai-search`). The
+  notes below describe the dead endpoint; don't wire new work to it.**
 - Left input: lexicon/Strong's search; Right input: AI natural language query
 - **Lexicon mode**: browse-only, ABP | KJV | All corpus toggle
   - ABP: ABP words table (Greek, dotted strongs e.g. G2321.1)
@@ -608,7 +621,12 @@ Full detail: memory `project_notes_highlights`. The headline facts:
 - Empty-result retry (LAST RESORT, 2026-06-21): Haiku broadens the SQL only when the first query
   AND the cheap fallbacks (explanation-cited verses, proper-noun english LIKE) ALL come up empty —
   not the instant the SQL is empty. Saved a wasted ~5s call on Hebrew/empty searches.
-- Hebrew word bridge: BDB → kjv_strongs → ABP verses
+- **Hebrew evidence from heb.db (2026-06-22):** a Hebrew target (H-number) pulls a canonical SPREAD of its
+  REAL occurrences from heb_words (code-side supplement, mirrors the cognate/phrase ones), injected + tagged
+  with the H-number so the citation guard counts them and the answer reads grounded. The model's KJV-bridge
+  SQL (BDB → kjv_strongs → ABP) stays as a fallback. heb.db reads guarded; verses ABP's versification lacks
+  are skipped (can't display). `_CACHE_CODE_VER`→37. Display still ABP (a HEB display toggle = open Phase 2).
+  Memory `project_hebrew_source_swap`.
 - **Speed shape (2026-06-21): model-bound.** terms ~1s + write-SQL ~5s (Haiku) + pass-2 synthesis
   ~11-12s (Sonnet, scales with how many verses it reads); DB ~0.1s. **Phrase queries no longer scan
   the 600k word-gloss:** a multi-word `english LIKE '%phrase%'` is re-run against the FULL verse text

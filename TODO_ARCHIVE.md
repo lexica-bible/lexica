@@ -6,6 +6,32 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Hebrew word source: KJV bridge → real Hebrew OT (heb.db) (2026-06-22)
+
+Switched the OT Hebrew OCCURRENCE source from the KJV's reverse-engineered Strong's tagging
+(BDB → kjv_strongs → kjv_words) to the real Hebrew OT (heb.db → heb_words, STEP TAHOT) everywhere a
+Hebrew word's evidence is shown. One session, commits aa159eb…13184c9. KJV-as-a-TEXT left untouched.
+Full record + the open Phase-2 items: memory `project_hebrew_source_swap`. Highlights:
+- **Verified FIRST** with a read-only PA script (`scripts/compare_heb_source.py`): heb.db vs the bridge —
+  verse counts match ~99.8%, versification ALIGNS (heb.db is English versification, no Psalm-superscription
+  offset), and 150 H-numbers the KJV uses aren't in heb.db (mostly Strong's BYFORMS TAHOT files under the
+  parent, e.g. H3212 → H1980) → those fall back to KJV. LESSON: a data-source swap earns its trust from a
+  read-only count/versification compare before any code change.
+- **Surfaces switched:** Word study (`views_lexicon.py` — new `heb` corpus + `has_heb`/`heb_glosses`),
+  Ask-corpus (`ai.py` — code-side heb.db occurrence supplement, mirrors the cognate/phrase ones,
+  `_CACHE_CODE_VER`→37), SEO /word (`views_seo.py`), reader rail (`30-detail-panel.jsx` + new
+  `/api/hebrew/strongs-count`). Cross-DB merging is all CODE-SIDE — heb.db is never attached to the AI's SQL.
+- **BSB added as a 4th word-study source** in the same pass (toggles ABP·HEB·KJV·BSB; finder shows all four
+  "renders as" lines + a HEB/BSB filter) — the user wanted to compare how every Strong's-tagged Bible renders
+  a number.
+- **Found DEAD:** the old standalone Search tab — `api.search` has no caller, `/api/search` orphaned (left in
+  `views_search.py`, harmless). NOT switched. Live search = `/api/text-search` + Word study + Ask-corpus.
+- LESSON: heb.db `strongs` is H-prefixed/zero-stripped ("H7307"); match `strongs = ? OR strongs GLOB ?`
+  (sid+"[A-Za-z]"). Result rows MUST carry an H-prefixed strongs_base or the AI citation guard + gold
+  highlight silently miss.
+
+---
+
 ## AI-search cost meter + broken-pipe root cause (2026-06-22)
 
 Started from a SIGPIPE / "broken pipe" log line on an AI search the user flagged.

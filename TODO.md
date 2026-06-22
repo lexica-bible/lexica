@@ -428,21 +428,18 @@ Ranked: #1 first (cheap, highest-leverage), #2 next (best feature add), #3 is a 
      database license (hit us on the morphology sources). Grab original scans / known-free digitizations
      (CCEL, pre-1929 Internet Archive printings, openly-licensed morphology projects), not a random
      repackaging. `code: synthesis pattern in views_lsj.py / ai.py; would need a loader + side table per source`
-3. **Swap the OT Hebrew reference from KJV's Strong's tags to the real Hebrew OT (heb.db).** Today the
-   Hebrew word-study / AI bridge runs BDB → kjv_strongs → ABP verses — i.e. KJV's reverse-engineered
-   Strong's tagging is the OT occurrence source. We now HAVE the real Hebrew OT (heb.db, STEP TAHOT, all
-   39 books, per-word H-numbers + morph). It's richer + cleaner than KJV tags, so make heb.db the OT
-   occurrence source for word study + search. NO objection on merit. Costs: (a) cross-db wiring — the
-   Lexicon/Search tabs only know the main + KJV tables today (overlaps the "teach the tabs about other
-   corpora" item under Non-canonical); (b) versification alignment (Hebrew Psalm titles / chapter breaks
-   differ from KJV/ABP). OT-only, which matches the use. `code: ai.py Hebrew bridge; views_lexicon.py;
-   views_search.py; heb.db via core.heb_db(); memory project_hebrew_ot_interlinear`
-   **CONFIRMED 2026-06-22 — do in its OWN session; scope = EVERYTHING (AI + Word study + Search + SEO /word).**
-   Approach: CODE-SIDE pull from heb.db (no cross-db AI SQL); phase it (1: swap the verse SET, keep ABP
-   English display; 2: surface heb_words Hebrew/gloss/translit as the evidence). Watch: versification
-   (Hebrew Psalm titles / chapter breaks vs KJV/ABP), the H-number prefix/key format, DON'T break the KJV
-   corpus toggle (switch only Hebrew-word sourcing), result rows must carry strongs_base for the AI
-   citation guard + gold highlighting, deploy-safe heb.db reads. Full handoff prompt drafted 2026-06-22.
+3. ~~**Swap the OT Hebrew reference from KJV's Strong's tags to the real Hebrew OT (heb.db).**~~ **DONE +
+   PUSHED 2026-06-22** (commits aa159eb…13184c9; awaiting deploy). heb.db is now the Hebrew-WORD evidence
+   source across Word study + Ask-corpus + SEO /word + the reader rail; BSB added as a 4th word-study source
+   (toggles ABP·HEB·KJV·BSB). Verified vs the bridge FIRST (`scripts/compare_heb_source.py`: counts match
+   ~99.8%, versification aligns, 150 byform/Aramaic/name numbers fall back to KJV). KJV-as-text untouched.
+   The old `/api/search` Search tab was found DEAD (no UI caller) — not switched. Full record: memory
+   `project_hebrew_source_swap` + TODO_ARCHIVE. **STILL OPEN (Phase 2 / next session):**
+   - **Ask-corpus has NO Hebrew DISPLAY toggle** — evidence is heb.db now but it still SHOWS verses in ABP
+     (Greek LXX). Add an ABP/KJV/HEB text toggle to Ask the corpus (`VerseRow` already supports `heb`).
+   - The English-word finder's **"All"** view still finds + counts Hebrew via KJV (heb.db only kicks in under
+     the new HEB filter); switch All's Hebrew discovery/count to heb.db if the count metric matters.
+   - The user has **"small tweaks"** to the new Word-study UI he was holding until everything shipped — collect.
 
 ---
 
