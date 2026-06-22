@@ -95,6 +95,12 @@ _GLOSS_WEAK = {
 
 def _normalize_gloss(raw, is_func=False):
     import re
+    # STEP TAHOT wraps SUPPLIED English words (added for sense, no standalone
+    # Hebrew word behind them — KJV-italics style) in [ ]. They're never part of
+    # the rendering, and the outer-only strip below leaves a stray bracket glued
+    # to an inner word of a multi-word gloss ("[men of]" -> "[men"), so a clean
+    # "[men]" and a broken "[men" split into two entries. Drop the brackets first.
+    raw = raw.replace('[', ' ').replace(']', ' ')
     s = re.sub(r"'s\b", '', re.sub(r'^[^\w]+|[^\w]+$', '', raw.strip()).lower())
     words = s.split()
     if not words:
