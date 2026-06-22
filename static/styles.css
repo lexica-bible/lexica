@@ -1363,13 +1363,18 @@ input { font-family: inherit; }
 }
 /* Real Hebrew (heb.db) in a Word-study result row — RTL, Hebrew font, a touch
    larger like the reader; isolate keeps the RTL run from disturbing the LTR ref. */
+.corpus-heb-wrap { display: block; }
 .corpus-heb {
+  display: block;
   font-family: "SBL Hebrew", "Ezra SIL", "Times New Roman", var(--f-serif);
   font-size: 1.18em;
   line-height: 1.85;
   direction: rtl;
   unicode-bidi: isolate;
 }
+/* Literal English under the Hebrew (heb.db's own glosses), target word emphasized. */
+.corpus-heb-en { display: block; margin-top: 1px; color: var(--ink-4); font-size: 0.92em; line-height: 1.5; }
+.corpus-en-hit { color: var(--ink); font-weight: 600; }
 /* The matched word in any result list (Word study, Search, Library find) — ONE shared gold
    (--hl-match) hugging the word, dark text in every theme. box-decoration-break keeps the
    rounding/fill intact if a multi-word match wraps a line. */

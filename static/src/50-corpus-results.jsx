@@ -99,14 +99,27 @@ function VerseRow({ book, chapter, verse, label, allResults, onWordClick, onRead
           // H-number is in citedStrongs — get the gold "corpus-hit" highlight.
           hebWords === null
             ? <span style={{ color: "var(--ink-4)", fontSize: "13px" }}>Loading…</span>
-            : <span className="corpus-heb" dir="rtl">
-                {hebWords.map((w, i) => {
-                  const sid = w.strongs;
-                  const isCited = sid && citedStrongs != null && citedStrongs.size > 0 &&
-                    (citedStrongs.has(sid) || citedStrongs.has(sid.replace(/^[GH]/i, "")));
-                  return <React.Fragment key={i}><span className={isCited ? "corpus-hit" : undefined}>{w.hebrew}</span>{" "}</React.Fragment>;
-                })}
-              </span>
+            : (() => {
+                // Hebrew line (RTL) + a muted literal-English line below it built from
+                // heb.db's own word glosses, so a non-Hebrew reader can read the verse.
+                // The target word(s) — H-number in citedStrongs — are emphasized in both.
+                const cited = (w) => w.strongs && citedStrongs != null && citedStrongs.size > 0 &&
+                  (citedStrongs.has(w.strongs) || citedStrongs.has(w.strongs.replace(/^[GH]/i, "")));
+                return (
+                  <span className="corpus-heb-wrap">
+                    <span className="corpus-heb" dir="rtl">
+                      {hebWords.map((w, i) => (
+                        <React.Fragment key={i}><span className={cited(w) ? "corpus-hit" : undefined}>{w.hebrew}</span>{" "}</React.Fragment>
+                      ))}
+                    </span>
+                    <span className="corpus-heb-en">
+                      {hebWords.filter(w => w.gloss).map((w, i) => (
+                        <React.Fragment key={i}><span className={cited(w) ? "corpus-en-hit" : undefined}>{w.gloss}</span>{" "}</React.Fragment>
+                      ))}
+                    </span>
+                  </span>
+                );
+              })()
         ) : words === null ? (
           <span style={{ color: "var(--ink-4)", fontSize: "13px" }}>Loading…</span>
         ) : (() => {
