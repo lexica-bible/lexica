@@ -6,6 +6,28 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## AI-search cost meter + broken-pipe root cause (2026-06-22)
+
+Started from a SIGPIPE / "broken pipe" log line on an AI search the user flagged.
+- **The broken pipe was NOT just a client disconnect.** The timing log showed that search's DB step
+  (`sqlrun`) took **235s** (normally <1s) — the browser gave up during the ~4-minute hang, then the server
+  finished and the write found a closed pipe. One-off (every other search ~1s — likely momentary PA
+  $10-tier DB contention), not a code bug. LESSON: a broken pipe can be a *symptom* of a server-side stall —
+  check `sqlrun` before blaming the client.
+- **SLOW-SQL guard** (commit 04d824f): `ai.py` warns when the DB step exceeds 10s, with elapsed + rows + the
+  SQL inline → a recurrence is one grep (`SLOW SQL` in `/var/log/www.lexica.bible.*.log`), not eyeballing.
+- **Cost meter** (commit 023d57f): a `cache[haiku-sqlgen]` / `cache[sonnet-pass2]` token-split `log.info`
+  after each model call (fresh / write / read). Confirmed LIVE — the Haiku SQL prompt **caches** (write=6151,
+  over Haiku's 4096 floor; the "borderline at 4k" worry was unfounded); Sonnet pass-2 does **not** and can't
+  (its system prompt ~1,800 tok is under Sonnet's 2,048 floor + the verse payload varies). So **no free
+  caching win — don't chase it.** One "Ask the corpus" search ≈ **3¢** (Sonnet pass-2 ~75%); a repeat of the
+  same question is free (served from the saved row). The only cost levers (trim verses / move pass-2 off
+  Sonnet) are tiny or reverse the 2026-06-21 neutrality fix — left alone. Both log lines KEPT as a permanent
+  meter (user's call). Full record: memory `project_ai_search_architecture`.
+- **Surfaced, still OPEN (in TODO.md #2 "AI curation hard-tune"):** the Ask-corpus answer-shape cleanup —
+  save/reopen whole conversations (the history click re-runs a question as a follow-up today = the cache-miss
+  bug), kill the inline "see all 156" verse dump (route to Word study), recheck verse curation. PLANNED, not done.
+
 ## Three reader fixes + dotted [ABP] widening (2026-06-21)
 
 A batch of bugs the user spotted in one session:

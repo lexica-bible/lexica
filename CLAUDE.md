@@ -616,8 +616,10 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   (phrase LIKE, no Strong's-number filter) SKIPS the gloss SQL entirely — it was ~6-7s and fruitless
   (cut a live "son of perdition" 15→9s). The proper-noun name-scan only fires when results are thin
   (`< _PROPER_NOUN_NEED`) — a common capitalized word like "Sabbath" was burning ~7s on a redundant
-  scan. Timing `log.info("ai_search timing …")` kept on. "Stream verses first" = a not-yet-done
-  frontend idea. Full record: memory `project_ai_search_architecture`.
+  scan. Timing `log.info("ai_search timing …")` kept on, plus per-call `cache[haiku-sqlgen]`/
+  `cache[sonnet-pass2]` token-split lines + a `SLOW SQL` (>10s DB step) warning — a cost/stall meter
+  (grep the PA `*.log`; ~3¢/search, Haiku SQL prompt caches, Sonnet pass-2 can't). "Stream verses
+  first" = a not-yet-done frontend idea. Full record: memory `project_ai_search_architecture`.
 - **Citation guard + grounding (2026-06-21).** Occurrence lists are pulled by Strong's = unfakeable;
   the leak is in the PROSE. A verse the model names/adds is checked against the target Strong's set —
   one containing NONE of the target words is `is_thematic` → frontend "Additional references" (kept,
