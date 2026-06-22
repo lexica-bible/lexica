@@ -8,7 +8,17 @@
 // design/README.md + memory project_ai_search_redesign.)
 // ============================================================
 
-const _AC_HIST_KEY = "lexica.corpus.history.v1";
+const _AC_CONVOS_KEY = "lexica.corpus.convos.v1";
+const _AC_CONVO_MAX = 15;   // keep the most recent N conversations (browser-local)
+
+// Only the curated key passages are shown now (the old "see all 156" dump is gone),
+// so keep just those in a turn — this also keeps saved conversations small. Mirrors
+// CorpusResults' showAll=false render: when nothing was tagged primary it falls back
+// to showing everything, so in that one case keep them all (don't drop the evidence).
+function acDisplayedResults(entries) {
+  if (!entries.some(e => e.is_primary)) return entries;
+  return entries.filter(e => e.is_primary || e.is_additional);
+}
 
 // Broad starter questions (no word in scope).
 const _AC_BROAD = [
@@ -89,15 +99,18 @@ function AcProse({ text, onVerse, onStrongs, verified }) {
 
 // One answered (or in-flight) question.
 function AcTurn({ turn, textMode, onReadInContext, onLemma, onStrongs }) {
-  const [showAll, setShowAll] = useState(false);
+  const firstLem = turn.keyStrongs && turn.keyStrongs[0];   // anchor for the "see in Word study" link
   const cited = useMemo(() => _acCited(turn.keyStrongs), [turn.keyStrongs]);
   // Verses the search actually surfaced — the only ones the synthesis prose may
   // link. Anything the AI names outside this set renders un-linked (seatbelt).
+  // `turn.verified` (full retrieved ref list) is kept separate from the displayed
+  // results so trimming the verse cards never un-links a verse the answer cited.
   const verifiedRefs = useMemo(() => {
+    if (turn.verified) return new Set(turn.verified);
     const s = new Set();
     for (const e of (turn.results || [])) s.add(`${e.book}-${e.chapter}-${e.verse}`);
     return s;
-  }, [turn.results]);
+  }, [turn.verified, turn.results]);
   const primaryCount = useMemo(() => {
     if (!turn.results) return 0;
     const seen = new Set();
@@ -153,9 +166,10 @@ function AcTurn({ turn, textMode, onReadInContext, onLemma, onStrongs }) {
               <div className="ac-evidence-head">
                 <span className="ac-evidence-n">{primaryCount}</span>
                 <span className="ac-evidence-l">key {primaryCount === 1 ? "passage" : "passages"}</span>
-                {turn.total > primaryCount && (
-                  <button className="ac-seeall" onClick={() => setShowAll(v => !v)}>
-                    {showAll ? "Show less" : `See all ${turn.total}`}
+                {turn.total > primaryCount && firstLem && (
+                  <button className="ac-seeall" onClick={() => onLemma(firstLem)}
+                    title={"Browse every occurrence of " + (firstLem.translit || firstLem.lemma) + " in Word study"}>
+                    {turn.total} occurrences · see in Word study
                   </button>
                 )}
               </div>
@@ -163,7 +177,7 @@ function AcTurn({ turn, textMode, onReadInContext, onLemma, onStrongs }) {
                 allResults={turn.results}
                 primaryStrongs={turn.keyStrongs}
                 citedStrongs={cited}
-                showAll={showAll}
+                showAll={false}
                 onWordClick={() => {}}
                 onReadInContext={onReadInContext}
                 corpusSort="curated"
@@ -198,18 +212,35 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   const [textMode, setTextMode] = useState("abp");
   const [railOpen, setRailOpen] = useState(false);
   const [scope, setScope] = useState(null);   // { strongs, lemma, translit } from a Word study handoff
-  const [history, setHistory] = useState(() => {
-    try { return JSON.parse(sessionStorage.getItem(_AC_HIST_KEY) || "[]"); } catch (e) { return []; }
+  const [convos, setConvos] = useState(() => {
+    try { return JSON.parse(localStorage.getItem(_AC_CONVOS_KEY) || "[]"); } catch (e) { return []; }
   });
+  const [currentId, setCurrentId] = useState(null);   // the conversation being viewed/built (null = landing)
   const threadRef = useRef(null);
-  useEffect(() => { try { sessionStorage.setItem(_AC_HIST_KEY, JSON.stringify(history.slice(0, 24))); } catch (e) {} }, [history]);
+  useEffect(() => { try { localStorage.setItem(_AC_CONVOS_KEY, JSON.stringify(convos.slice(0, _AC_CONVO_MAX))); } catch (e) {} }, [convos]);
+
+  // Save the live conversation locally so the rail can REOPEN it later with no
+  // re-run. One entry per thread keyed by currentId; title = first question; most
+  // recent first; last _AC_CONVO_MAX kept. Loading turns are never stored.
+  useEffect(() => {
+    if (currentId == null) return;
+    const answered = thread.filter(t => t && t.question && !t.loading);
+    if (!answered.length) return;
+    setConvos(cs => {
+      const entry = { id: currentId, title: answered[0].question,
+                      turns: thread.filter(t => t && !t.loading), updated: Date.now() };
+      return [entry, ...cs.filter(c => c.id !== currentId)].slice(0, _AC_CONVO_MAX);
+    });
+  }, [thread, currentId]);
 
   const ask = async (question) => {
     const q = (question || "").trim();
     if (!q) return;
     setDraft("");
     if (isMobile) setRailOpen(false);
-    setHistory(h => [q, ...h.filter(x => x !== q)].slice(0, 24));
+    // A question from the landing (empty thread) starts a NEW conversation; a
+    // follow-up keeps the current one. The auto-save effect persists it by id.
+    if (thread.length === 0) setCurrentId("c" + Date.now().toString(36) + Math.random().toString(36).slice(2, 6));
     const idx = thread.length;
     // Follow-up context: hand the recent thread (capped) to the backend so references
     // like "it" / "this word" / "the same word" resolve across the conversation —
@@ -235,7 +266,8 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
         question: q,
         explanation: data.explanation || "",
         keyStrongs: data.key_strongs || [],
-        results: flattenAiResults(data.results || []),
+        results: acDisplayedResults(flattenAiResults(data.results || [])),
+        verified: (data.results || []).map(v => `${v.book}-${v.chapter}-${v.verse}`),
         total: data.total || 0,
         grounded: data.grounded !== false,   // false only when the backend says so
       };
@@ -246,8 +278,18 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   };
 
   // Start a clean conversation — clears the thread (back to the landing) but keeps
-  // any Word-study scope and the recent-questions rail.
-  const newThread = () => { setThread([]); setDraft(""); if (isMobile) setRailOpen(false); };
+  // any Word-study scope and the saved-conversations rail. The current thread is
+  // already saved by the effect above, so there's nothing to flush here.
+  const newThread = () => { setThread([]); setDraft(""); setCurrentId(null); if (isMobile) setRailOpen(false); };
+
+  // Reopen a saved conversation — restores its turns verbatim. NO model calls (the
+  // whole point): the answers are already in hand, so nothing re-runs.
+  const openConvo = (c) => {
+    setThread(c.turns || []);
+    setCurrentId(c.id);
+    setDraft("");
+    if (isMobile) setRailOpen(false);
+  };
 
   // Handoff from Word study (scope) or a pushed question (ask) — consumed once.
   useEffect(() => {
@@ -280,13 +322,14 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
             strokeWidth="2" strokeLinecap="round"><path d="M12 5v14M5 12h14"/></svg>
           New thread
         </button>
-        <div className="ac-rail-top"><span className="ac-rail-eyebrow"><Icon.Clock/> Recent questions</span></div>
-        {history.length === 0
-          ? <div className="ac-rail-empty">Your session's questions collect here.</div>
-          : <div className="ac-rail-list">{history.map((h, i) => (
-              <button key={i} className="ac-rail-item" onClick={() => ask(h)}>{h}</button>
+        <div className="ac-rail-top"><span className="ac-rail-eyebrow"><Icon.Clock/> Recent conversations</span></div>
+        {convos.length === 0
+          ? <div className="ac-rail-empty">Your conversations are saved here — reopen one anytime.</div>
+          : <div className="ac-rail-list">{convos.map((c) => (
+              <button key={c.id} className={"ac-rail-item" + (c.id === currentId ? " on" : "")}
+                onClick={() => openConvo(c)} title="Reopen this conversation">{c.title}</button>
             ))}</div>}
-        {history.length > 0 && <button className="ac-rail-clear" onClick={() => setHistory([])}>Clear history</button>}
+        {convos.length > 0 && <button className="ac-rail-clear" onClick={() => setConvos([])}>Clear all</button>}
       </aside>
 
       <main className="ac-main">
