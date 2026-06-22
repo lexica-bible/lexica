@@ -16,6 +16,7 @@ Imports _lsj_concept_lookup/_format_lsj_context from views_lsj
 """
 import json
 import re
+import sqlite3
 import time
 import traceback
 
@@ -962,7 +963,7 @@ _ai_cache_ver: str | None = None  # computed once from prompt template + book li
 
 # Bump this integer whenever server-side search logic changes in a way that
 # affects results but doesn't change _AI_SYSTEM_TMPL (e.g. new fallback steps).
-_CACHE_CODE_VER = 37   # 37: Hebrew occurrence supplement — H-targets pull real heb.db verses (not the KJV bridge)
+_CACHE_CODE_VER = 38   # 38: phrase supplement also scans BSB (modern English wording can match where ABP/KJV don't)
 
 
 def _get_ai_cache_ver() -> str:
@@ -1519,7 +1520,7 @@ def ai_search():
         # The AI writes a phrase as `english LIKE '%son of perdition%'`, but the
         # word-gloss splits + reorders phrases, so that scans all ~600k words AND
         # misses. Re-run the AI's OWN multi-word phrases against the readable verse
-        # text (verses.text + KJV, ~31k rows each) in code — no AI-written SQL — and
+        # text (verses.text + KJV + BSB, ~31k rows each) in code — no AI-written SQL — and
         # merge any verses found. A verse whose text literally contains the phrase is
         # a real occurrence, so it is not thematic.
         phrase_hits = False
@@ -1541,6 +1542,19 @@ def ai_search():
                         "WHERE kv.verse_text LIKE ? COLLATE NOCASE LIMIT 200", (like,)
                     ).fetchall():
                         cand.add((r["book"], r["chapter"], r["verse"]))
+                    # BSB = the app's default modern English; a phrase worded the
+                    # modern way can match BSB when it matches neither ABP's wooden
+                    # English nor KJV's "thou/thee". bsb_verses is an optional load,
+                    # so a missing table on an older db is skipped, not fatal.
+                    try:
+                        for r in pf_conn.execute(
+                            "SELECT b.abbrev AS book, bv.chapter AS chapter, bv.verse_num AS verse "
+                            "FROM bsb_verses bv JOIN books b ON b.id = bv.book_id "
+                            "WHERE bv.verse_text LIKE ? COLLATE NOCASE LIMIT 200", (like,)
+                        ).fetchall():
+                            cand.add((r["book"], r["chapter"], r["verse"]))
+                    except sqlite3.OperationalError:
+                        pass
                 for key in cand:
                     if key in verse_index:
                         continue
