@@ -465,6 +465,69 @@ def lexicon_english():
                 out[sn].append({"gloss": r["word"], "count": r["cnt"]})
         return out
 
+    # TOTAL occurrences of each found number, PER source — the count shown on each
+    # "renders as" line. These count EVERY occurrence (not just the ones rendered as
+    # the search word), and they count the SAME way the Word-study profile does
+    # (lexicon_profile's *_book_counts), so the finder's per-source number matches the
+    # number you see when you open that word. The OT/NT filter is honored (same WHERE
+    # as the gloss helpers); heb.db is OT-only so it takes no testament filter.
+    def _totals_abp(snums):
+        bases = sorted({sn.split(".")[0] for sn in snums if sn.startswith("G")})
+        if not bases:
+            return {}
+        ph = ",".join("?" * len(bases))
+        ready = _dotted_ready(conn)
+        dl_join = "LEFT JOIN dotted_lexicon dl ON dl.strongs = 'G' || w.strongs" if ready else ""
+        gkey = "COALESCE(dl.strongs, w.strongs_base)" if ready else "w.strongs_base"
+        rows = conn.execute(f"""
+            SELECT {gkey} AS gkey, COUNT(*) AS cnt
+            FROM words w {dl_join} {_abp_join}
+            WHERE w.strongs_base IN ({ph}) {_abp_where}
+            GROUP BY {gkey}
+        """, (*bases, *_abp_params)).fetchall()
+        return {r["gkey"]: r["cnt"] for r in rows}
+
+    def _totals_kjv(snums):
+        if not snums:
+            return {}
+        ph = ",".join("?" * len(snums))
+        rows = conn.execute(f"""
+            SELECT ks.strongs_id AS sid, COUNT(*) AS cnt
+            FROM kjv_words kw JOIN kjv_strongs ks ON ks.word_id = kw.word_id
+            WHERE ks.strongs_id IN ({ph}) {_kjv_where}
+            GROUP BY ks.strongs_id
+        """, snums).fetchall()
+        return {r["sid"]: r["cnt"] for r in rows}
+
+    def _totals_bsb(snums):
+        if not snums or not _bsb_ready(conn):
+            return {}
+        ph = ",".join("?" * len(snums))
+        rows = conn.execute(f"""
+            SELECT bs.strongs_id AS sid, COUNT(*) AS cnt
+            FROM bsb_words bw JOIN bsb_strongs bs ON bs.word_id = bw.word_id
+            WHERE bs.strongs_id IN ({ph}) {_bsb_where}
+            GROUP BY bs.strongs_id
+        """, snums).fetchall()
+        return {r["sid"]: r["cnt"] for r in rows}
+
+    def _totals_hebdb(snums):
+        h_sids = [s for s in snums if s.startswith("H")]
+        if not h_sids or not _heb_ready():
+            return {}
+        try:
+            hconn = heb_db()
+            try:
+                ph = ",".join("?" * len(h_sids))
+                rows = hconn.execute(
+                    f"SELECT strongs, COUNT(*) AS cnt FROM heb_words "
+                    f"WHERE strongs IN ({ph}) GROUP BY strongs", h_sids).fetchall()
+            finally:
+                hconn.close()
+        except sqlite3.OperationalError:
+            return {}
+        return {r["strongs"]: r["cnt"] for r in rows}
+
     try:
         abp_rows, heb_rows = [], []
 
@@ -597,6 +660,10 @@ def lexicon_english():
         kjv_gmap = _top_glosses_heb(all_snums)
         hebdb_gmap = _top_glosses_hebdb(all_snums)
         bsb_gmap = _top_glosses_bsb(all_snums)
+        abp_tot = _totals_abp(all_snums)
+        kjv_tot = _totals_kjv(all_snums)
+        hebdb_tot = _totals_hebdb(all_snums)
+        bsb_tot = _totals_bsb(all_snums)
 
         def _fold(gmap, sbase):
             return _fold_glosses(((g["gloss"], g["count"]) for g in gmap.get(sbase, [])), limit=8)
@@ -609,7 +676,11 @@ def lexicon_english():
                                 "abp_glosses": _fold(abp_gmap, r["sbase"]),
                                 "heb_glosses": _fold(hebdb_gmap, r["sbase"]),
                                 "kjv_glosses": _fold(kjv_gmap, r["sbase"]),
-                                "bsb_glosses": _fold(bsb_gmap, r["sbase"])})
+                                "bsb_glosses": _fold(bsb_gmap, r["sbase"]),
+                                "abp_total": abp_tot.get(r["sbase"]),
+                                "heb_total": hebdb_tot.get(r["sbase"]),
+                                "kjv_total": kjv_tot.get(r["sbase"]),
+                                "bsb_total": bsb_tot.get(r["sbase"])})
         _emit(abp_rows)
         _emit(heb_rows)
         results.sort(key=lambda x: -x["count"])

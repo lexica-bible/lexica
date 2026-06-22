@@ -439,21 +439,23 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
                       {g.lemma && <span className={"glrow-gk" + (gh ? " heb" : "")} dir={gh ? "rtl" : undefined}>{g.lemma}</span>}
                       {g.translit && <span className="glrow-tr">{g.translit}</span>}
                     </span>
+                    {/* Each source line carries that Bible's TOTAL count for the number — matches
+                        the count on the word's own study page. ABP spans OT+NT (LXX), KJV/BSB are
+                        NT-only for a Greek word; for a Hebrew number HEB is the real Hebrew OT. */}
                     {g.abp_glosses && g.abp_glosses.length > 0 && (
-                      <span className="glrow-rend"><span className="glrow-k">ABP</span><span>{g.abp_glosses.slice(0, 8).map(x => x.gloss).join(", ")}</span></span>
+                      <span className="glrow-rend"><span className="glrow-k">ABP</span><span>{g.abp_glosses.slice(0, 8).map(x => x.gloss).join(", ")}</span>{g.abp_total != null && <span className="glrow-n">{g.abp_total}</span>}</span>
                     )}
                     {g.heb_glosses && g.heb_glosses.length > 0 && (
-                      <span className="glrow-rend"><span className="glrow-k">HEB</span><span>{g.heb_glosses.slice(0, 8).map(x => x.gloss).join(", ")}</span></span>
+                      <span className="glrow-rend"><span className="glrow-k">HEB</span><span>{g.heb_glosses.slice(0, 8).map(x => x.gloss).join(", ")}</span>{g.heb_total != null && <span className="glrow-n">{g.heb_total}</span>}</span>
                     )}
                     {g.kjv_glosses && g.kjv_glosses.length > 0 && (
-                      <span className="glrow-rend"><span className="glrow-k">KJV</span><span>{g.kjv_glosses.slice(0, 8).map(x => x.gloss).join(", ")}</span></span>
+                      <span className="glrow-rend"><span className="glrow-k">KJV</span><span>{g.kjv_glosses.slice(0, 8).map(x => x.gloss).join(", ")}</span>{g.kjv_total != null && <span className="glrow-n">{g.kjv_total}</span>}</span>
                     )}
                     {g.bsb_glosses && g.bsb_glosses.length > 0 && (
-                      <span className="glrow-rend"><span className="glrow-k">BSB</span><span>{g.bsb_glosses.slice(0, 8).map(x => x.gloss).join(", ")}</span></span>
+                      <span className="glrow-rend"><span className="glrow-k">BSB</span><span>{g.bsb_glosses.slice(0, 8).map(x => x.gloss).join(", ")}</span>{g.bsb_total != null && <span className="glrow-n">{g.bsb_total}</span>}</span>
                     )}
                   </span>
-                  <span className="glrow-occ">
-                    {g.count}
+                  <span className="glrow-occ" title="Open word study">
                     <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.85" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                   </span>
                 </button>
