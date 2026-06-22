@@ -258,6 +258,29 @@ header still shows an "Under development" badge on these two tabs. Full record: 
    - **Thread-style verse list reads spammy (2026-06-20, user-flagged, bigger job):** the evidence verses
      stacked in the chat thread pile up fast. Rework how occurrences are presented in the thread (collapse /
      summarize / cap-with-see-all) so a turn isn't a wall of verses. Part of the answer-shape redesign above.
+   - **Cleanup-session plan (2026-06-22) — decisions locked, ready to build (memory `project_ai_search_redesign`):**
+     1. **History rail → save & REOPEN whole conversations (not re-run a question).** Today a "Recent
+        questions" click calls `ask(h)` (`52-ask-corpus.jsx:287`), which reuses the FOLLOW-UP path: it glues
+        the old question onto the current thread AND sends thread context → the backend treats it as a
+        follow-up, which is never result-cached → re-runs all 3 models. Confirmed live (ctx=253 on a repeat
+        of "Is hell the same as sheol?", models fired again instead of the cached answer). FIX: rail becomes
+        "Recent CONVERSATIONS" — one entry per thread (title = first question), click REOPENS the saved turns
+        (`setThread` to saved state); nothing re-runs → free + instant, and the bug is moot. "New thread"
+        already exists. Browser-local, keep last ~10–15, drop oldest. CHOSEN OVER the cheap interim fix
+        (recall = fresh standalone search); skip the interim — this supersedes it.
+     2. **Kill the "see all 156" inline dump.** The 156 = the full VERSE list behind the 12 curated KEY
+        PASSAGES. Redundant: the per-word chips already jump to Word study (the real full-occurrence browser —
+        distribution + filters), and the synth only samples a few verses, it never needs all 156 shown. DROP
+        the inline expand; keep at most a quiet "156 occurrences · see in Word study" link. Bonus: this is
+        what makes saving whole conversations (item 1) cheap — ~12 verses/turn instead of 156.
+     3. **Re-confirm verse curation maps onto the new capped display BEFORE building it.**
+        `_curate_primary_verses` was read 2026-06-22 = consistent with the 2026-06-21 design (spread sample +
+        xref-weighted seats + Sonnet pass-2 + citation guard); nothing looked off. Session task: re-confirm the
+        primary_cap tiers (8/10/12/15) and the is_primary / is_additional / "other" buckets still map cleanly
+        after the recent synth tweaks (Sonnet move, seatbelt, spread, xref weighting). NOTE: the "Additional
+        references" block only renders when the AI adds OFF-corpus verses — not on every answer (absent on the
+        hadēs/sheol query the user was looking at). `code: ai.py _curate_primary_verses + _CURATION_SYSTEM;
+        static/src/52-ask-corpus.jsx; static/src/50-corpus-results.jsx`
 4. **Auto-open the top word on an English search** (mockup does it; left as "pick a word"). Small, user's call.
    - **Book distribution now lands on "All books" (DONE 2026-06-20, commit 62f1b48).** A word search no
      longer auto-opens the busiest book + dumps its verses (`_topBook`/`_openTopBook` removed). Trade-off the
