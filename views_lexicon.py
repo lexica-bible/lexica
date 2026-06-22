@@ -357,8 +357,9 @@ def lexicon_english():
         _abp_where = f"AND v.book {_op} ({_nt_ph})"
         _abp_params = sorted(_NT)
         _kjv_where = "AND kw.book_id >= 40" if testament == "nt" else "AND kw.book_id < 40"
+        _bsb_where = "AND bw.book_id >= 40" if testament == "nt" else "AND bw.book_id < 40"
     else:
-        _abp_join = _abp_where = _kjv_where = ""
+        _abp_join = _abp_where = _kjv_where = _bsb_where = ""
         _abp_params = []
     conn = db_ro()
 
@@ -407,6 +408,53 @@ def lexicon_english():
               {_kjv_where}
             GROUP BY ks.strongs_id, kw.word
             ORDER BY ks.strongs_id, cnt DESC
+        """, snums).fetchall()
+        out = {}
+        for r in rows:
+            sn = r["strongs_id"]
+            if sn not in out:
+                out[sn] = []
+            if len(out[sn]) < 8:
+                out[sn].append({"gloss": r["word"], "count": r["cnt"]})
+        return out
+
+    def _top_glosses_hebdb(snums):
+        # Real Hebrew OT (heb.db) renderings per H-number — the "Hebrew renders as" line.
+        h_sids = [s for s in snums if s.startswith("H")]
+        if not h_sids or not _heb_ready():
+            return {}
+        out = {}
+        try:
+            hconn = heb_db()
+            try:
+                ph = ",".join("?" * len(h_sids))
+                rows = hconn.execute(
+                    f"SELECT strongs, gloss, COUNT(*) AS cnt FROM heb_words "
+                    f"WHERE strongs IN ({ph}) AND gloss IS NOT NULL AND gloss != '' "
+                    f"GROUP BY strongs, gloss ORDER BY strongs, cnt DESC", h_sids).fetchall()
+            finally:
+                hconn.close()
+        except sqlite3.OperationalError:
+            return {}
+        for r in rows:
+            out.setdefault(r["strongs"], [])
+            if len(out[r["strongs"]]) < 8:
+                out[r["strongs"]].append({"gloss": r["gloss"], "count": r["cnt"]})
+        return out
+
+    def _top_glosses_bsb(snums):
+        # BSB renderings per Strong's number — the "BSB renders as" line.
+        if not snums or not _bsb_ready(conn):
+            return {}
+        ph = ",".join("?" * len(snums))
+        rows = conn.execute(f"""
+            SELECT bs.strongs_id, bw.word, COUNT(*) AS cnt
+            FROM bsb_words bw JOIN bsb_strongs bs ON bs.word_id = bw.word_id
+            WHERE bs.strongs_id IN ({ph})
+              AND (bw.italic IS NULL OR bw.italic = 0)
+              {_bsb_where}
+            GROUP BY bs.strongs_id, bw.word
+            ORDER BY bs.strongs_id, cnt DESC
         """, snums).fetchall()
         out = {}
         for r in rows:
@@ -493,8 +541,12 @@ def lexicon_english():
         # an ABP line + a KJV line). Row COUNT stays native-per-corpus (Greek from
         # ABP, Hebrew from KJV — not summed; summing double-counts the shared Greek
         # NT). The ABP/KJV filters gate which lists fill; 'all' fills both.
-        abp_gmap = _top_glosses_abp(all_snums) if corpus in ("abp", "all") else {}
-        kjv_gmap = _top_glosses_heb(all_snums) if corpus in ("kjv", "all") else {}
+        # All four Bibles' renderings for every found word, so each row shows the full
+        # ABP / Hebrew OT / KJV / BSB comparison regardless of which corpus filter found it.
+        abp_gmap = _top_glosses_abp(all_snums)
+        kjv_gmap = _top_glosses_heb(all_snums)
+        hebdb_gmap = _top_glosses_hebdb(all_snums)
+        bsb_gmap = _top_glosses_bsb(all_snums)
 
         def _fold(gmap, sbase):
             return _fold_glosses(((g["gloss"], g["count"]) for g in gmap.get(sbase, [])), limit=8)
@@ -505,7 +557,9 @@ def lexicon_english():
                 results.append({"strongs": r["sbase"], "lemma": r["lemma"] or "",
                                 "translit": r["translit"] or "", "count": r["cnt"],
                                 "abp_glosses": _fold(abp_gmap, r["sbase"]),
-                                "kjv_glosses": _fold(kjv_gmap, r["sbase"])})
+                                "heb_glosses": _fold(hebdb_gmap, r["sbase"]),
+                                "kjv_glosses": _fold(kjv_gmap, r["sbase"]),
+                                "bsb_glosses": _fold(bsb_gmap, r["sbase"])})
         _emit(abp_rows)
         _emit(heb_rows)
         results.sort(key=lambda x: -x["count"])

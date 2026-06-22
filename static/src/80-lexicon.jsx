@@ -441,8 +441,14 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
                     {g.abp_glosses && g.abp_glosses.length > 0 && (
                       <span className="glrow-rend"><span className="glrow-k">ABP</span><span>{g.abp_glosses.slice(0, 8).map(x => x.gloss).join(", ")}</span></span>
                     )}
+                    {g.heb_glosses && g.heb_glosses.length > 0 && (
+                      <span className="glrow-rend"><span className="glrow-k">HEB</span><span>{g.heb_glosses.slice(0, 8).map(x => x.gloss).join(", ")}</span></span>
+                    )}
                     {g.kjv_glosses && g.kjv_glosses.length > 0 && (
                       <span className="glrow-rend"><span className="glrow-k">KJV</span><span>{g.kjv_glosses.slice(0, 8).map(x => x.gloss).join(", ")}</span></span>
+                    )}
+                    {g.bsb_glosses && g.bsb_glosses.length > 0 && (
+                      <span className="glrow-rend"><span className="glrow-k">BSB</span><span>{g.bsb_glosses.slice(0, 8).map(x => x.gloss).join(", ")}</span></span>
                     )}
                   </span>
                   <span className="glrow-occ">
