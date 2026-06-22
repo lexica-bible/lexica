@@ -480,25 +480,63 @@ def _word_profile(strongs: str):
             lemma, translit = row["lemma"] or "", row["translit"] or ""
             definition = _TAG_RE.sub("", row["strongs_def"] or row["kjv_def"] or "").strip()
             lang = "Greek"
-        # occurrence counts per book: ABP interlinear + KJV text (same as the lexicon "all")
+        # occurrence counts per book. A HEBREW word comes from the real Hebrew OT
+        # (heb.db) — fall back to the KJV tagging only when heb.db isn't loaded or
+        # doesn't carry the number (a byform/Aramaic/name). Greek = ABP + KJV.
         counts: dict[str, int] = {}
-        for r in conn.execute("SELECT v.book AS b, COUNT(*) AS c FROM words w JOIN verses v ON w.verse_id = v.id "
-                              "WHERE w.strongs_base = ? GROUP BY v.book", (sid,)):
-            counts[r["b"]] = counts.get(r["b"], 0) + r["c"]
-        for r in conn.execute("SELECT kw.book_id AS bid, COUNT(*) AS c FROM kjv_strongs ks "
-                              "JOIN kjv_words kw ON kw.word_id = ks.word_id WHERE ks.strongs_id = ? GROUP BY kw.book_id", (sid,)):
-            ab = _ABBR_BY_ID.get(r["bid"])
-            if ab:
-                counts[ab] = counts.get(ab, 0) + r["c"]
+        heb_ct: dict[str, int] = {}
+        if is_heb:
+            try:
+                hc = heb_db()
+                try:
+                    for r in hc.execute("SELECT book AS b, COUNT(*) AS c FROM heb_words "
+                                        "WHERE strongs = ? OR strongs GLOB ? GROUP BY book",
+                                        (sid, sid + "[A-Za-z]")):
+                        heb_ct[r["b"]] = heb_ct.get(r["b"], 0) + r["c"]
+                finally:
+                    hc.close()
+            except sqlite3.OperationalError:
+                heb_ct = {}
+        if is_heb:
+            if heb_ct:
+                counts = heb_ct
+            else:                                   # heb.db absent / no entry → KJV fallback
+                for r in conn.execute("SELECT kw.book_id AS bid, COUNT(*) AS c FROM kjv_strongs ks "
+                                      "JOIN kjv_words kw ON kw.word_id = ks.word_id WHERE ks.strongs_id = ? GROUP BY kw.book_id", (sid,)):
+                    ab = _ABBR_BY_ID.get(r["bid"])
+                    if ab:
+                        counts[ab] = counts.get(ab, 0) + r["c"]
+        else:
+            for r in conn.execute("SELECT v.book AS b, COUNT(*) AS c FROM words w JOIN verses v ON w.verse_id = v.id "
+                                  "WHERE w.strongs_base = ? GROUP BY v.book", (sid,)):
+                counts[r["b"]] = counts.get(r["b"], 0) + r["c"]
+            for r in conn.execute("SELECT kw.book_id AS bid, COUNT(*) AS c FROM kjv_strongs ks "
+                                  "JOIN kjv_words kw ON kw.word_id = ks.word_id WHERE ks.strongs_id = ? GROUP BY kw.book_id", (sid,)):
+                ab = _ABBR_BY_ID.get(r["bid"])
+                if ab:
+                    counts[ab] = counts.get(ab, 0) + r["c"]
         total = sum(counts.values())
         books = [{"slug": _BOOKS[b][1], "name": _BOOKS[b][0], "count": c}
                  for b, c in sorted(counts.items(), key=lambda x: -x[1]) if b in _BOOKS]
         # top renderings — strip the stray phrase-boundary punctuation then merge dups
         # (so "word" and "word," count as one), highest count first.
         if is_heb:
-            grows = conn.execute("SELECT kw.word AS g, COUNT(*) AS c FROM kjv_strongs ks "
-                                 "JOIN kjv_words kw ON kw.word_id = ks.word_id WHERE ks.strongs_id = ? "
-                                 "GROUP BY kw.word", (sid,)).fetchall()
+            # Real Hebrew OT renderings (heb.db); fall back to KJV when heb.db is absent.
+            grows = []
+            try:
+                hc = heb_db()
+                try:
+                    grows = hc.execute("SELECT gloss AS g, COUNT(*) AS c FROM heb_words "
+                                       "WHERE (strongs = ? OR strongs GLOB ?) AND gloss IS NOT NULL AND gloss != '' "
+                                       "GROUP BY gloss", (sid, sid + "[A-Za-z]")).fetchall()
+                finally:
+                    hc.close()
+            except sqlite3.OperationalError:
+                grows = []
+            if not grows:
+                grows = conn.execute("SELECT kw.word AS g, COUNT(*) AS c FROM kjv_strongs ks "
+                                     "JOIN kjv_words kw ON kw.word_id = ks.word_id WHERE ks.strongs_id = ? "
+                                     "GROUP BY kw.word", (sid,)).fetchall()
         else:
             grows = conn.execute("SELECT english AS g, COUNT(*) AS c FROM words WHERE strongs_base = ? "
                                  "AND english IS NOT NULL AND english NOT IN ('', '*') GROUP BY english", (sid,)).fetchall()
