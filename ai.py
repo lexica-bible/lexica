@@ -1200,6 +1200,7 @@ def ai_search():
             log.info("Skipped word-gloss scan for phrase-only query: %r", phrase_terms)
         else:
             conn = db_ro()
+            _sql_t = time.perf_counter()
             try:
                 rows = conn.execute(sql).fetchall()
             except Exception as e:
@@ -1208,6 +1209,12 @@ def ai_search():
                 return jsonify({"error": "The search query could not be run — please rephrase and try again."}), 400
             finally:
                 conn.close()
+            _sql_secs = time.perf_counter() - _sql_t
+            if _sql_secs > 10:
+                # The DB step normally runs in well under 1s; minutes means a stall
+                # (contention/locked file) or a pathological query. Make it loud +
+                # self-contained so a repeat is one grep: "SLOW SQL".
+                log.warning("SLOW SQL: %.1fs, %d rows | %s", _sql_secs, len(rows), sql)
         log.debug("SQL returned %d rows", len(rows))
         _mark("sqlrun")
 
