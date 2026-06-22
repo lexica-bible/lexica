@@ -383,17 +383,20 @@ Ranked: #1 first (cheap, highest-leverage), #2 next (best feature add), #3 is a 
      REFUSING "Is the Sabbath still binding?" as out-of-scope (returned no verses). Now: answer, withhold
      only the verdict; never deflect/rephrase. LESSON: a fuzzy boundary reads as "don't touch it" — draw
      it precisely.
+   - **Report-don't-characterize + 2 sub-fixes (d743066 + 8721341) — DONE, tested live:** post-verdict the
+     synth still CHARACTERIZED ("the sabbath instituted at creation", "Jesus reinterpreted the sabbath").
+     Fixed via the FRAME + a GOOD/BAD worked example (the exact Sabbath failure) in `_CURATION_SYSTEM` +
+     mirror — NOT a blacklist. Two clean live answers (no characterizing verbs, prose not choppy). Same
+     round: a SABBATH-vs-WEEK lexical note (σάββατον = the WEEK in "first/one of the sabbaths" — 1Co 16:2
+     etc., overrides ABP's wooden gloss) + a "no what-the-verse-doesn't-do riders" line.
+     Memory `project_ai_synthesis_quality`.
 
    STILL OPEN — corpus-tuning thread:
-   - **Soft-framing / characterizing-verbs slop (NEXT SESSION — dedicated):** post-verdict the synth still
-     CHARACTERIZES instead of reporting — "the sabbath instituted at creation" (σάββατον isn't at creation,
-     Gen 2 is the verb "rested"), "Jesus reinterpreted the sabbath" ("reinterprets" was ALREADY banned in
-     the example and leaked back via "Jesus reinterpreted"). WHY: Sonnet's commentary voice (writes well →
-     characterizes by default). FIX = tighten the FRAME + worked example so the default is "name what the
-     verse SAYS, then stop" — NOT a word blacklist (primes + whack-a-mole). RISK: characterize-vs-report is
-     a SPECTRUM; over-clamping → flat/choppy prose (same failure mode as the verdict ban over-clamping into
-     refusal), so it needs test→adjust→retest loops on live answers. Full brief + example answers to tune
-     against: memory `project_ai_synthesis_quality`.
+   - **Label thematic verses in the answer (frontend — formatting session):** a wordless cross-ref (Rom 14:5
+     on a Sabbath query — hēmera, no σάββατον) is correctly tagged thematic in the backend, but the
+     ask-corpus tab lumps primary + additional into one "KEY PASSAGES" list with no "related" marker, so it
+     reads like an occurrence. Give additional/thematic hits a label or sub-group — DON'T drop them (Gen 1:26
+     for divine council relies on the same path). `code: static/src/52-ask-corpus.jsx acDisplayedResults; static/src/50-corpus-results.jsx`
    - **Stream verses first** (perceived speed): show matched verses the moment the SQL runs, fill the
      Sonnet write-up in after (~12s of model calls is the floor). Frontend only. DECLINED for now — user
      wants synthesis quality over perceived-speed tricks; pick up only if the wait annoys real users.

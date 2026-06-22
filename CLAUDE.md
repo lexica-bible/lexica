@@ -670,8 +670,11 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   stance to an author — report the verse, let the reader conclude); contested "is X binding" questions
   are IN SCOPE (answer, withhold only the verdict — never refuse/deflect/rephrase); prose uses
   transliteration + Strong's number, NEVER raw Greek/Hebrew script (that's for the chips). All
-  LOAD-BEARING. OPEN: soft-framing verbs ("instituted at creation", "reinterpreted") still leak — a
-  frame+example tune, NOT a blacklist (whack-a-mole). Memory `project_ai_synthesis_quality`.
+  LOAD-BEARING. + REPORT, DON'T CHARACTERIZE (8721341, tested live): every clause must pin to a verse
+  that states it — killed the soft-framing slop ("instituted at creation"/"reinterpreted") via the FRAME
+  + a worked example, NOT a blacklist. + a SABBATH-vs-WEEK lexical note (σάββατον = the seven-day WEEK in
+  the "first/one of the sabbaths" idiom — 1Co 16:2 etc., overrides ABP's wooden gloss) + no "what the
+  verse doesn't do" riders. Memory `project_ai_synthesis_quality`.
 - **Follow-ups (Ask the corpus) carry the recent thread** — last 6 turns + their key lemmas, sent as a
   `context` query param, woven into the term + SQL prompts only to resolve references ("it"/"the same
   word"). A "New thread" button (rail) resets. Follow-ups are never cached (thread-specific).
