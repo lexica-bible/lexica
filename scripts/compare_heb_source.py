@@ -40,6 +40,20 @@ SAMPLES = [
 SUPERSCRIPT_PSALMS = [3, 51]
 
 
+# KJV book_id is the standard 1-66 canonical order (Gen=1 … Rev=66) — NOT the
+# `books` table's id, which is keyed differently. heb_words uses the app abbrev,
+# so we map KJV's numeric book_id to that same abbrev to compare verse sets.
+KJV_ID2AB = dict(enumerate([
+    "Gen", "Exo", "Lev", "Num", "Deu", "Jos", "Jdg", "Rth", "1Sa", "2Sa",
+    "1Ki", "2Ki", "1Ch", "2Ch", "Ezr", "Neh", "Est", "Job", "Psa", "Pro",
+    "Ecc", "Son", "Isa", "Jer", "Lam", "Eze", "Dan", "Hos", "Joe", "Amo",
+    "Oba", "Jon", "Mic", "Nah", "Hab", "Zep", "Hag", "Zec", "Mal", "Mat",
+    "Mar", "Luk", "Joh", "Act", "Rom", "1Co", "2Co", "Gal", "Eph", "Php",
+    "Col", "1Th", "2Th", "1Ti", "2Ti", "Tit", "Phm", "Heb", "Jas", "1Pe",
+    "2Pe", "1Jn", "2Jn", "3Jn", "Jud", "Rev",
+], start=1))
+
+
 def ro(path):
     if not os.path.exists(path):
         raise SystemExit(f"NOT FOUND: {path}")
@@ -90,8 +104,7 @@ def main():
     bible = ro(args.bible)
     heb = ro(args.heb)
 
-    # books: id <-> abbrev (KJV uses 1-66 book ids; heb_words uses the abbrev)
-    id2ab = {r["id"]: r["abbrev"] for r in bible.execute("SELECT id, abbrev FROM books")}
+    id2ab = KJV_ID2AB   # KJV book_id (1-66) -> app abbrev, same keys heb_words uses
 
     # ── 1. KEY FORMAT ────────────────────────────────────────────────────────
     hbar("1. heb_words.strongs KEY FORMAT")
@@ -159,8 +172,7 @@ def main():
             glosses = " ".join((w["gloss"] or "").strip() for w in words if (w["gloss"] or "").strip())
             print(f"  heb.db Psa {ch}:{v}  {glosses[:90]}")
         krow = bible.execute(
-            "SELECT verse_text FROM kjv_verses kv JOIN books b ON b.id = kv.book_id "
-            "WHERE b.abbrev='Psa' AND kv.chapter=? AND kv.verse_num=1",
+            "SELECT verse_text FROM kjv_verses WHERE book_id=19 AND chapter=? AND verse_num=1",
             (ch,),
         ).fetchone()
         print(f"  KJV    Psa {ch}:1  {(krow['verse_text'] if krow else '')[:90]}")
@@ -182,6 +194,25 @@ def main():
     print(f"in heb.db but NOT in KJV OT: {len(new_in_heb):,}  "
           f"e.g. {', '.join(sorted(new_in_heb)[:15])}")
     print(f"in bdb (lexicon) but NOT in heb.db: {len(bdb_miss):,}  (these are dictionary-only entries)")
+
+    # How much evidence those KJV-only numbers actually carry, and what they are —
+    # this is what a cold switch would stop finding Hebrew occurrences for.
+    if miss_from_heb:
+        ph = ",".join("?" * len(miss_from_heb))
+        tot = bible.execute(
+            f"SELECT COUNT(*) AS c FROM kjv_strongs WHERE strongs_id IN ({ph})",
+            tuple(miss_from_heb),
+        ).fetchone()["c"]
+        print(f"\nthose {len(miss_from_heb)} KJV-only numbers cover {tot:,} KJV word occurrences in total.")
+        print("biggest ones (occurrences · BDB lemma · xlit):")
+        rows = bible.execute(
+            f"SELECT ks.strongs_id AS s, COUNT(*) AS c, b.lemma AS lemma, b.xlit AS xlit "
+            f"FROM kjv_strongs ks LEFT JOIN bdb b ON b.strongs_id = ks.strongs_id "
+            f"WHERE ks.strongs_id IN ({ph}) GROUP BY ks.strongs_id ORDER BY c DESC LIMIT 15",
+            tuple(miss_from_heb),
+        ).fetchall()
+        for r in rows:
+            print(f"   {r['s']:<7}{r['c']:>5}  {(r['lemma'] or ''):<14}{r['xlit'] or ''}")
 
     bible.close()
     heb.close()
