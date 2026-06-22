@@ -67,16 +67,17 @@ Still open:
    `.lib-bracket-group` (`display:contents`) is still emitted. Safe to delete the rest — grep `static/src/`
    first to confirm no `.jsx` still emits them. Pure tidy-up, low priority. `code: static/styles.css bracket
    section (~line 1956)`
-4. **Word study tab still folds dotted-different-words into the BASE number — SPUN OFF to a fresh session
-   2026-06-21.** The dotted-headword fix covers the reader card, SEO `/read`, AI verse-word context, and Search —
-   all per-word via `core.dotted_lexicon_cols` (2026-06-17), and the `dotted_lexicon` table was WIDENED 2026-06-21
-   to include the [ABP]-tagged different-words (σαβέκ "thicket" etc.; only the εἰμί family + "Strong G####"
-   form-notes stay on the base). But the **Word study / Lexicon** tab still groups AND clicks through by the BASE
-   number, so σάββατον (G4521) still lists "thicket/glory" in its renders-as and searching G4521.2 opens the base.
-   FULL fix = give each dotted-different-word its own entry (regroup by full `G###.N`, exclude them from the base's
-   tallies, carry the full number through search + the reader click) + strip the zero-pad in the DERIVATION line
-   (H07676→H7676). The user wants the full fix; it was handed to its own session (spawned task, 2026-06-21).
-   `code: views_lexicon.py, static/src/80-lexicon.jsx, 00-core.jsx`
+4. **Word study tab folded dotted-different-words into the BASE number — DONE 2026-06-21 (commit 550faa1,
+   pending deploy/live-verify).** The dotted-headword fix already covered the reader card, SEO `/read`, AI
+   verse-word context, and Search (per-word via `core.dotted_lexicon_cols`, 2026-06-17). The **Word study /
+   Lexicon** tab was the last surface — it grouped AND clicked through by the BASE number. Fixed in
+   `views_lexicon.py` via `_abp_strongs_filter` (a full dotted different-word matches its own `w.strongs`; a base
+   EXCLUDES `'G'||w.strongs IN dotted_lexicon`), wired into profile/books/verses/english + `_top_glosses_abp`;
+   `lexicon_lookup` finds them by lemma; KJV side off + definition from the existing `/api/lsj` abp_ext path.
+   Frontend `citedStrongs`/VerseRow highlight the full number; derivation zero-pad stripped (H07676→H7676). Search
+   parsing + reader click already carried the full `G###.N` (the fold was 100% backend). Verify after deploy:
+   G4521.2 → σαβέκ "thicket" 1× Gen 22:13; G4521 σάββατον drops thicket/glory + count; click σαβέκ → σαβέκ.
+   `code: views_lexicon.py, static/src/80-lexicon.jsx, static/src/50-corpus-results.jsx`
 
 ---
 
