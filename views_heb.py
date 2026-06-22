@@ -143,3 +143,26 @@ def hebrew_verse_words(book, chapter, verse):
         "translit": (r["translit"] if "translit" in r.keys() else ""),
     } for r in rows]
     return jsonify({"words": words})
+
+
+@bp.route("/api/hebrew/strongs-count/<strongs>")
+def hebrew_strongs_count(strongs):
+    """How many times an H-number occurs in the Hebrew OT (heb.db) — feeds the word
+    detail rail's 'in Hebrew OT' link. Returns 0 when heb.db isn't loaded (so the
+    link just hides), matching the KJV/BSB strongs-count routes."""
+    sid = strongs.upper()
+    try:
+        conn = heb_db()
+    except sqlite3.OperationalError:
+        return jsonify({"count": 0})
+    try:
+        try:
+            row = conn.execute(
+                "SELECT COUNT(*) AS c FROM heb_words WHERE strongs = ? OR strongs GLOB ?",
+                (sid, sid + "[A-Za-z]"),
+            ).fetchone()
+        except sqlite3.OperationalError:
+            return jsonify({"count": 0})
+    finally:
+        conn.close()
+    return jsonify({"count": row["c"] if row else 0})

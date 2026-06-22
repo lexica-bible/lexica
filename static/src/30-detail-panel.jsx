@@ -266,7 +266,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   const [kjvCount, setKjvCount] = useState(null);
   useEffect(() => {
     setKjvCount(null);
-    if ((!isHebrew && !entry.isKjv) || !entry.strongs || entry.isHeb || entry.isBsb) return;   // Hebrew OT reader / BSB: no KJV cross-link
+    if (!entry.strongs || (!isHebrew && !entry.isKjv)) return;   // KJV cross-link: KJV words + ANY Hebrew word
     let cancelled = false;
     api.kjvStrongsCount(entry.strongs)
       .then(d => { if (!cancelled) setKjvCount(d.count ?? null); })
@@ -279,11 +279,24 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   const [bsbCount, setBsbCount] = useState(null);
   useEffect(() => {
     setBsbCount(null);
-    if (!entry || !entry.isBsb || !entry.strongs) return;
+    if (!entry || !entry.strongs || (!entry.isBsb && !isHebrew)) return;   // BSB words + ANY Hebrew word
     let cancelled = false;
     api.bsbStrongsCount(entry.strongs)
       .then(d => { if (!cancelled) setBsbCount(d.count ?? null); })
       .catch(() => { if (!cancelled) setBsbCount(null); });
+    return () => { cancelled = true; };
+  }, [entry && entry.strongs]);
+
+  // Hebrew OT occurrence count (heb.db) for ANY Hebrew word — the source-text tally,
+  // shown whichever reader the word was clicked from (KJV, BSB, or the Hebrew reader).
+  const [hebCount, setHebCount] = useState(null);
+  useEffect(() => {
+    setHebCount(null);
+    if (!isHebrew || !entry.strongs) return;
+    let cancelled = false;
+    api.hebStrongsCount(entry.strongs)
+      .then(d => { if (!cancelled) setHebCount(d.count ?? null); })
+      .catch(() => { if (!cancelled) setHebCount(null); });
     return () => { cancelled = true; };
   }, [entry && entry.strongs]);
 
@@ -519,9 +532,13 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   // wired. Re-enable: drop `!entry.isExtra` above + uncomment extraOcc.
   // if (entry.isExtra && extraCount !== null && extraCount > 0) sections.push("extraOcc");
   if (entry.isKjv && !isHebrew && !isPN && kjvCount !== null && kjvCount > 0) sections.push("kjvOcc");
-  if (entry.isBsb && !isPN && bsbCount !== null && bsbCount > 0) sections.push("bsbOcc");
+  if (entry.isBsb && !isPN && !isHebrew && bsbCount !== null && bsbCount > 0) sections.push("bsbOcc");
   if (!entry.isKjv && !entry.isBsb && isPN && pnCount !== null && pnCount > 0 && onNameSearch) sections.push("pnOcc");
-  if (isHebrew && !entry.isHeb && !entry.isBsb && kjvCount !== null && kjvCount > 0) sections.push("hebrewKjvOcc");
+  // A Hebrew word shows its occurrences across all Strong's-tagged Bibles: the Hebrew
+  // OT source first, then the KJV + BSB translations — each opens that source in Word study.
+  if (isHebrew && hebCount !== null && hebCount > 0) sections.push("hebrewOtOcc");
+  if (isHebrew && kjvCount !== null && kjvCount > 0) sections.push("hebrewKjvOcc");
+  if (isHebrew && bsbCount !== null && bsbCount > 0) sections.push("hebrewBsbOcc");
   // Nave's topical sits BELOW the lexicon/place cards (metaV, AI, BDB/LSJ) — it's a
   // study cross-link, not a definition, so it reads last among the reference blocks.
   if (naveData && naveData.sections.length) sections.push("naveTopical");
@@ -701,7 +718,9 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     case "bsbOcc": return (
       <section key="bsbOcc" className="sec">
         <h4 className="sec-head"><span className="sec-t">BSB Occurrences</span></h4>
-        <div className="occ-link occ-link--static"><b>{bsbCount}</b>× in BSB</div>
+        <button className="occ-link" onClick={() => onNavigateToLexicon && onNavigateToLexicon(entry.strongs, "bsb")}>
+          <b>{bsbCount}</b>× in BSB <Icon.ArrowRight/>
+        </button>
       </section>
     );
     case "pnOcc": return (
@@ -712,11 +731,27 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
         </button>
       </section>
     );
+    case "hebrewOtOcc": return (
+      <section key="hebrewOtOcc" className="sec">
+        <h4 className="sec-head"><span className="sec-t">Hebrew OT Occurrences</span></h4>
+        <button className="occ-link" onClick={() => onNavigateToLexicon && onNavigateToLexicon(entry.strongs, "heb")}>
+          <b>{hebCount}</b>× in Hebrew OT <Icon.ArrowRight/>
+        </button>
+      </section>
+    );
     case "hebrewKjvOcc": return (
       <section key="hebrewKjvOcc" className="sec">
         <h4 className="sec-head"><span className="sec-t">KJV Occurrences</span></h4>
         <button className="occ-link" onClick={() => onNavigateToLexicon && onNavigateToLexicon(entry.strongs, "kjv")}>
           <b>{kjvCount}</b>× in KJV <Icon.ArrowRight/>
+        </button>
+      </section>
+    );
+    case "hebrewBsbOcc": return (
+      <section key="hebrewBsbOcc" className="sec">
+        <h4 className="sec-head"><span className="sec-t">BSB Occurrences</span></h4>
+        <button className="occ-link" onClick={() => onNavigateToLexicon && onNavigateToLexicon(entry.strongs, "bsb")}>
+          <b>{bsbCount}</b>× in BSB <Icon.ArrowRight/>
         </button>
       </section>
     );
