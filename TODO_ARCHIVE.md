@@ -6,6 +6,32 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Demote visible KJV in the reader + BSB as the TSK xref fallback (2026-06-22)
+
+Follow-on to the Hebrew source swap below. KJV's old heavy lifting is covered now (heb.db = Hebrew
+evidence, BSB = free modern English), so the VISIBLE KJV was demoted — it stays a reference/compare
+everywhere else (word-study ABP·HEB·KJV·BSB toggle + compare untouched). Commits 7cf8524 (demote +
+xref fallback) + 849e28c (xref picker reads BSB). Full record: memories `project_hebrew_source_swap`
++ `project_ai_synthesis_quality` (which-text-for-which-AI-job).
+- **Reader source row** (static/src/59b-library-nav.jsx): desktop ABP·KJV·BSB·More → **ABP·BSB·HEB·More**;
+  KJV moved into the "More ▾" popout beside ESV/NIV; HEB grays on NT (OT-only). Deploy-safe via
+  `kjvInMore = hebShown` — if heb.db is absent the third slot falls back to KJV and KJV leaves "More".
+  Mobile flat picker sinks KJV to the END of the row (user confirmed) via a `renderPick` helper.
+- **TSK xref fallback → BSB** (views_crossref.py + 40-crossref-panel.jsx): new `_bsb_text` reads
+  `bsb_verses` (deploy-safe, swallows a missing table); displayed verse field renamed `kjv_text`→`text`
+  (BSB-or-KJV); synthesis ref_block + source line prefer ABP→BSB→KJV; the Step-1 Haiku candidate picker
+  now reads BSB too (KJV fallback) — clearer than "thou/thee" for judging links. `_XREF_VER` salt bumped to
+  `bsb-fallback-4` so cached payloads refresh (else stale rows serve the old `kjv_text` key → blank refs).
+- **HARD DECISION HELD:** the cross_references/TSK KJV verse-id skeleton is UNCHANGED — heb.db is OT-only so
+  it can't back whole-Bible OT↔NT cross-refs, and the skeleton is invisible + free; only the displayed/fed
+  fallback TEXT moved to BSB.
+- LESSON: when a cached AI payload's SHAPE or message TEXT changes (not the prompt), bump the manual salt —
+  the fingerprint covers prompts only, so a renamed field would otherwise serve stale rows with the wrong
+  key. The `snapshot_endpoints.py` golden for the non-curated xref route goes stale (re-baseline with
+  `--update` on PA after deploy) but it's not in pytest/CI.
+
+---
+
 ## Hebrew word source: KJV bridge → real Hebrew OT (heb.db) (2026-06-22)
 
 Switched the OT Hebrew OCCURRENCE source from the KJV's reverse-engineered Strong's tagging

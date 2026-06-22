@@ -142,17 +142,24 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
   dotted, per-source counts). Decide: own tab vs under About; one component vs a server template.
   `code: views_seo.py + templates/seo/ (crawlable pattern), static/src/90-app.jsx (nav/tab), or an About sub-page`
 
-- **Demote KJV in the reader + swap TSK fallback to BSB (planned 2026-06-22 — handoff prompt written, NOT
-  built).** KJV's old heavy lifting is covered now (heb.db = Hebrew evidence, BSB = free modern English), so
-  DEMOTE the *visible* KJV — keep it as a reference/compare everywhere else (word-study ABP·HEB·KJV·BSB toggle
-  + compare). (1) Desktop reader source row ABP·KJV·BSB·More → **ABP·BSB·HEB·More**, KJV into the "More ▾"
-  popout next to ESV/NIV, HEB grays on NT (OT-only); (2) mobile flat picker has no "More" tier — sink KJV to
-  the row's end; (3) TSK xref FALLBACK text KJV→BSB (only kicks in when ABP lacks a verse — the panel already
-  shows ABP first). **HARD DECISION: do NOT re-key the cross_references/TSK table off KJV** — heb.db is OT-only
-  so it can't back whole-Bible OT↔NT cross-refs, and the KJV verse-id "skeleton" is invisible to users + costs
-  nothing; only the displayed/fed fallback text moves to BSB. Full plan + line anchors: memory
-  `project_hebrew_source_swap`.
-  `code: static/src/59b-library-nav.jsx (~171-193 row + More popout + ~548-566 mobile), views_crossref.py (_abp_text@81 + kjv_text field@134/220 + synthesis@232; add _bsb_text), static/src/40-crossref-panel.jsx:54`
+- **#1 — BSB in the AI "Ask the corpus" phrase search (next session; full handoff prompt written this
+  session).** The phrase supplement re-runs the model's multi-word phrases against ABP (`verses.text`) + KJV
+  (`kjv_verses`) only; add a BSB scan (`bsb_verses JOIN books`, deploy-safe guard, same LIMIT 200, map hits
+  back to ABP for display) so a phrase worded the modern way is caught. RECALL ONLY — don't touch what the
+  synth reads/quotes (stays ABP). Bump `_CACHE_CODE_VER` 37→38. Backend-only (no app.js). Speed/cost ≈ flat
+  (one small scan, only on phrase queries; pass-2 reads a capped sample so tokens don't grow). Test live:
+  Nimrod net-check ("giant hunter" ABP vs "mighty hunter" KJV/BSB both surface Gen 10:9), then find a phrase
+  BSB words differently from BOTH KJV+ABP ("tax collector" vs KJV "publican"? — unverified). Framework: memory
+  `project_ai_synthesis_quality` (which-text-for-which-AI-job).
+  `code: ai.py phrase supplement ~1519-1568 + _CACHE_CODE_VER ~965`
+
+- **Post-deploy checklist — KJV demote + BSB xref (commits 7cf8524 + 849e28c, pushed, awaiting deploy).**
+  After the next deploy: (1) re-baseline the stale `snapshot_endpoints.py` golden
+  `api__cross-references__Joh__3__16.json` with `--update` on PA; (2) verify the live reader source row
+  (ABP·BSB·HEB·More, KJV in More, HEB grays on NT) + the xref panel shows BSB text; (3) **Nimrod fidelity
+  check** — ask the corpus about Nimrod, confirm the write-up keeps ABP "giant hunter" and doesn't leak KJV
+  "mighty hunter" (if it leaks, prompt fix in `_CURATION_SYSTEM` + mirror `_AI_SYSTEM_TMPL`). Done record:
+  TODO_ARCHIVE + memory `project_hebrew_source_swap`.
 
 - **Hebrew OT prose mode (idea — parked 2026-06-16, undecided).** Today Hebrew is locked to the
   stacked RTL interlinear chips; the Prose button is grayed in Hebrew (`hebMode`). Adding a prose flow

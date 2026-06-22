@@ -346,10 +346,13 @@ rules + gotchas; open the named memory for the backstory.
 
 **Layout**
 - Desktop toolbar (lib-bar): `[‹ Ch ›] | [Compare ▾] | [Strong's] [Interlinear] | [Chip] [Prose]`.
-  Text source lives in the LEFT NAV, not the toolbar. ABP/KJV/BSB are one-click; ESV/NIV/HEB +
-  non-canon books fold into a **"More ▾"** floating popout. The source row + Eras/Days are
-  **underline tabs**, NOT boxed segments — the source row is a 4-equal-column grid
-  (`.nav-source-seg.seg`) so a long "More" label can't shove the others.
+  Text source lives in the LEFT NAV, not the toolbar. ABP/BSB/HEB are one-click (HEB grays on NT —
+  OT-only; falls back to KJV in the slot if heb.db is absent); KJV/ESV/NIV + non-canon books fold
+  into a **"More ▾"** floating popout. (KJV was demoted into "More" 2026-06-22 — BSB is the default
+  English now; the `kjvInMore = hebShown` flag keeps KJV up top only when heb.db can't fill the slot.
+  Memory `project_hebrew_source_swap`.) The source row + Eras/Days are **underline tabs**, NOT boxed
+  segments — the source row is a 4-equal-column grid (`.nav-source-seg.seg`) so a long "More" label
+  can't shove the others.
 - Mobile cockpit (lib-toolbar, fixed at the BOTTOM/thumb-zone on the Library tab) is an
   ICON row of five EQUAL-width slots (2026-06-20): `[🔍 Search] [▷ Play] [Abbr Ch] [ⓘ Info] [⚙ Options]`.
   Center slot keeps TEXT but shows the 3-letter book abbreviation (`selBook.abbrev`, "Amo 1"), not the
@@ -546,15 +549,20 @@ Full detail: memory `project_notes_highlights`. The headline facts:
 
 ## TSK Cross-Reference Panel
 - Endpoint: GET /api/cross-references/curated/<book>/<chapter>/<verse>
-- Step 1: Haiku selects 8-10 strongest refs from full TSK list
+- Step 1: Haiku selects 8-10 strongest refs from the full TSK list, reading the candidates + the
+  source verse in BSB (KJV fallback — clearer than "thou/thee" for judging links; 2026-06-22,
+  `cand_texts`). The picker returns indices into `all_refs`, so the cross_references KJV verse-id
+  join is untouched.
 - Step 2: Sonnet (claude-sonnet-4-6) writes the synthesis — adaptive length (~100-word soft
   ceiling, runs longer for a rich link), anchored in ABP source vocabulary. Prompt carries a
   worked example. (Moved off Haiku 2026-06-09 — ONLY the synthesis is Sonnet; the Step-1 picker
   and every other AI feature stay on Haiku.) BOTH the source verse AND the curated cross-refs are
-  fed to it in ABP (2026-06-17, `_abp_text` in views_crossref.py; KJV only as a fallback when ABP's
-  versification lacks a verse) — so the write-up no longer quotes KJV "thou/thee". A `msg:` salt in
-  `_XREF_VER` was bumped so cached rows refresh (the fingerprint covers the prompts, not the
-  message text, so a message change needs the manual salt).
+  fed to it in ABP (2026-06-17, `_abp_text` in views_crossref.py); the fallback when ABP's
+  versification lacks a verse is now **BSB, then KJV** (2026-06-22, `_bsb_text`) — so the write-up
+  never quotes KJV "thou/thee". The displayed verse field is **`text`** (BSB-or-KJV; renamed from
+  `kjv_text` 2026-06-22, frontend 40-crossref-panel.jsx). A `msg:` salt in `_XREF_VER` (now
+  `bsb-fallback-4`) is bumped on any message/payload change so cached rows refresh (the fingerprint
+  covers the prompts, not the message text or payload shape).
 - Cached in ai_search_cache, key prefix `xref_cur:`/`xref_synth:`, ver_key=`xref:<hash>`
   (fingerprint of the two xref prompts — see "AI result cache" below)
 
