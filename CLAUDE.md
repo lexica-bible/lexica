@@ -59,14 +59,18 @@ Pick effort by task TYPE. When in doubt, lean higher — the plan affords it.
 ## Deployment
 - Preferred deploy: `bash ~/bible-db/scripts/deploy.sh` — pulls, runs the invariant tests, loads any
   non-canonical books WHOSE FILES THE PULL CHANGED (diffs old..new HEAD, runs only the touched
-  loaders — a plain code deploy loads nothing), and reloads the site ONLY if the tests pass. A loader
-  hiccup warns but never blocks the reload, so adding a book just needs a normal deploy.
+  loaders — a plain code deploy loads nothing), `pip install`s into the bible-env venv WHEN the pull
+  changed `requirements.txt` (2026-06-22; a failed install stops the deploy, bare-`pip` fallback if the
+  venv path is missing), and reloads the site ONLY if the tests pass. A loader hiccup warns but never
+  blocks the reload, so adding a book just needs a normal deploy.
 - Manual fallback: `cd ~/bible-db && git pull && touch /var/www/www_lexica_bible_wsgi.py`
 - PA git is set `pull.rebase false`, `merge.autoedit no` (no prompts). The database is NOT in git
   (too large) — managed directly on PA.
-- After a `requirements.txt` change: on PA, `workon bible-env` THEN `pip install -r requirements.txt`
-  — NO `--user` inside the venv (it's `/home/appssanding720/.virtualenvs/bible-env`, Python 3.11; a
-  `--user` install lands in the system 3.13 dir and is ignored). Then reload.
+- After a `requirements.txt` change: `deploy.sh` now runs the `pip install` itself (see above), so a
+  normal deploy covers it. Installing BY HAND (manual deploy): on PA, `workon bible-env` THEN
+  `pip install -r requirements.txt` — NO `--user` inside the venv (it's
+  `/home/appssanding720/.virtualenvs/bible-env`, Python 3.11; a `--user` install lands in the system
+  3.13 dir and is ignored). Then reload.
 - **Env vars / secrets live in the WSGI, NOT a `.env`.** `/var/www/www_lexica_bible_wsgi.py` sets them
   with `os.environ['KEY'] = '...'`, and those lines MUST sit ABOVE the app import (module-level reads
   like `GOOGLE_CLIENT_ID = os.environ.get(...)` run at import). `core.load_dotenv()` doesn't reliably
@@ -98,7 +102,7 @@ Pick effort by task TYPE. When in doubt, lean higher — the plan affords it.
 - **GitHub Actions** (`.github/workflows/ci.yml`) — runs on every push/PR: (1) the invariant tests
   (the `tests/test_*.py` set — strongs-join, build-invariants, folded-fixes, argmap; they build their own in-memory data, no
   bible.db needed), (2) rebuilds `app.js` and FAILS if the committed copy is stale. Repo is public; check
-  the Actions tab or query `api.github.com/repos/lexica-bible/lexica/actions/runs`. `gh` CLI NOT installed locally.
+  the Actions tab or query `api.github.com/repos/lexica-bible/lexica/actions/runs`. `gh` CLI is installed on the dev box now (2026-06-22; Claude calls it by full path) — NOT on PA. See memory `project_dependabot_workflow`.
   - **LINE-ENDINGS for the app.js check (cost a CI fail 2026-06-14; the "all CRLF" claim CORRECTED
     same day):** Keep `git config core.autocrlf false` — with `autocrlf=true` (Git-for-Windows default)
     your local `git diff` HIDES CR mismatches, so a wrong `app.js` slips past the hook and CI rejects it
@@ -114,8 +118,12 @@ Pick effort by task TYPE. When in doubt, lean higher — the plan affords it.
   — local twin of CI: rebuilds+stages app.js if a `static/src/*.jsx` is staged, then runs the tests and
   blocks the commit on failure. LOCAL DEV MACHINE ONLY — on PA it was unset (`git config --unset
   core.hooksPath`) because PA has no Node. Bypass once with `git commit --no-verify`.
-- **Dependabot** (`.github/dependabot.yml`) — weekly; opens PRs for pip/npm/actions updates. They're
-  suggestions, not auto-applied; merge on GitHub, then `pip install` on PA for pip ones.
+- **Dependabot** (`.github/dependabot.yml`) — weekly; opens PRs for pip/npm/actions updates, now
+  GROUPED (one PR per ecosystem: pip minor/patch batched + majors solo, all `@babel/*` together,
+  actions batched — 2026-06-22). Not auto-merged. **Claude can't merge/close PRs — the safety
+  classifier blocks it even with your OK, so it hands you the `gh pr merge/close` commands to run.**
+  A normal `deploy.sh` does the `pip install` after a merge. Full record: memory
+  `project_dependabot_workflow`.
 - Nightly `health_check.py --email --only-warn` email — LIVE on PA 2026-06-16 (daily PA scheduled task,
   23:53 UTC). `--only-warn` = mails ONLY when a check fails (silent on clean nights). The task's mail keys
   + `OWNER_EMAIL` are in `~/bible-db/.env` (a cron can't read the WSGI env). Memory `project_email_smtp`.
