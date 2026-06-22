@@ -1543,9 +1543,9 @@ def ai_search():
                     ).fetchall():
                         cand.add((r["book"], r["chapter"], r["verse"]))
                     # BSB = the app's default modern English; a phrase worded the
-                    # modern way can match BSB when it matches neither ABP's wooden
-                    # English nor KJV's "thou/thee". bsb_verses is an optional load,
-                    # so a missing table on an older db is skipped, not fatal.
+                    # modern way can match BSB even when neither ABP nor KJV phrases
+                    # it that way. bsb_verses is an optional load, so a missing table
+                    # on an older db is skipped, not fatal.
                     try:
                         for r in pf_conn.execute(
                             "SELECT b.abbrev AS book, bv.chapter AS chapter, bv.verse_num AS verse "
