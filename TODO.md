@@ -372,8 +372,28 @@ Ranked: #1 first (cheap, highest-leverage), #2 next (best feature add), #3 is a 
      (the Heb 4:9 word a "Sabbath" query was missing). General, no per-word lists. GREEK ONLY (BDB has no
      etymology) and SEMANTIC synonyms still uncovered → both wait on #2 (Trench/Girdlestone). Bumped
      `_CACHE_CODE_VER` 33→34 (the context format isn't in the search fingerprint, so cached rows needed it).
+   - **Deterministic cognate supplement + tightening (fea21ef, c0a0bbc):** feeding cognates into the
+     context couldn't FORCE the model to search them, so AFTER the SQL runs each GREEK target's same-root
+     family is pulled in deterministically — the relative's verses + a chip, only if it actually occurs
+     (σαββατισμός G4520/Heb 4:9 under σάββατον). `_cognate_is_tight` keeps stem-initial derivatives, drops
+     buried-root drift (εἰλικρινής off κρίνω). Greek only (Hebrew waits on #2). `_CACHE_CODE_VER`→36.
+   - **Script out of the synth prose (78d998d):** the note reads in transliteration + Strong's number,
+     never raw Greek/Hebrew letters (script stays in the chips). Both prompts. Matches the xref convention.
+   - **Contested questions IN SCOPE — don't refuse (04f8a41):** the verdict ban had over-corrected into
+     REFUSING "Is the Sabbath still binding?" as out-of-scope (returned no verses). Now: answer, withhold
+     only the verdict; never deflect/rephrase. LESSON: a fuzzy boundary reads as "don't touch it" — draw
+     it precisely.
 
    STILL OPEN — corpus-tuning thread:
+   - **Soft-framing / characterizing-verbs slop (NEXT SESSION — dedicated):** post-verdict the synth still
+     CHARACTERIZES instead of reporting — "the sabbath instituted at creation" (σάββατον isn't at creation,
+     Gen 2 is the verb "rested"), "Jesus reinterpreted the sabbath" ("reinterprets" was ALREADY banned in
+     the example and leaked back via "Jesus reinterpreted"). WHY: Sonnet's commentary voice (writes well →
+     characterizes by default). FIX = tighten the FRAME + worked example so the default is "name what the
+     verse SAYS, then stop" — NOT a word blacklist (primes + whack-a-mole). RISK: characterize-vs-report is
+     a SPECTRUM; over-clamping → flat/choppy prose (same failure mode as the verdict ban over-clamping into
+     refusal), so it needs test→adjust→retest loops on live answers. Full brief + example answers to tune
+     against: memory `project_ai_synthesis_quality`.
    - **Stream verses first** (perceived speed): show matched verses the moment the SQL runs, fill the
      Sonnet write-up in after (~12s of model calls is the floor). Frontend only. DECLINED for now — user
      wants synthesis quality over perceived-speed tricks; pick up only if the wait annoys real users.

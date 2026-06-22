@@ -642,6 +642,18 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   prompts (`_AI_SYSTEM_TMPL` + `_CURATION_SYSTEM`) carry a NEUTRALITY rule — answer from the text, not
   the question's framing ("same?" vs "different?" must give the same answer; if the text doesn't
   settle it, say so. Killed the parrot-the-framing bug.)
+- **Same-root cognate supplement (2026-06-22).** After the SQL runs, each GREEK target's same-root
+  family is pulled in deterministically (`_greek_cognates` + the `_cognate_is_tight` stem filter in
+  ai.py) — the relative's verses + a chip, but ONLY if it actually occurs (e.g. σαββατισμός G4520 /
+  Heb 4:9 under σάββατον). Greek only (BDB has no etymology). A code/context change like this isn't in
+  the search fingerprint → bump `_CACHE_CODE_VER` (now 36). Memory `project_ai_search_architecture`.
+- **Synthesis standing rules — Berean (2026-06-22).** The displayed note (`_CURATION_SYSTEM`, mirrored
+  in `_AI_SYSTEM_TMPL`): NO doctrinal verdicts (never rule a practice binding/abolished/etc. or assign a
+  stance to an author — report the verse, let the reader conclude); contested "is X binding" questions
+  are IN SCOPE (answer, withhold only the verdict — never refuse/deflect/rephrase); prose uses
+  transliteration + Strong's number, NEVER raw Greek/Hebrew script (that's for the chips). All
+  LOAD-BEARING. OPEN: soft-framing verbs ("instituted at creation", "reinterpreted") still leak — a
+  frame+example tune, NOT a blacklist (whack-a-mole). Memory `project_ai_synthesis_quality`.
 - **Follow-ups (Ask the corpus) carry the recent thread** — last 6 turns + their key lemmas, sent as a
   `context` query param, woven into the term + SQL prompts only to resolve references ("it"/"the same
   word"). A "New thread" button (rail) resets. Follow-ups are never cached (thread-specific).
