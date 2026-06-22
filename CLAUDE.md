@@ -601,8 +601,12 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   Greek defaults to ABP. KJV/BSB stay explicit text toggles (KJV-as-text untouched). `lexicon_profile/books/
   verses` carry per-source branches + `has_abp/has_heb/has_kjv/has_bsb` + `abp/heb/kjv/bsb_glosses`; heb/bsb
   occurrence lists re-fetch per-verse in `VerseRow` (heb = RTL + English gloss line, bsb mirrors KJV). The
-  English-word finder shows all 4 "renders as" lines per word + a HEB/BSB filter. Full record: memory
-  `project_hebrew_source_swap`.
+  English-word finder shows all 4 "renders as" lines per word + a HEB/BSB filter, each line carrying that
+  SOURCE'S TOTAL count (2026-06-22 — matches the word's own study page, counted the way `lexicon_profile`
+  does; the lone ambiguous count on the right was dropped; HEB total folds homographs via `_heb_match`). The
+  Hebrew object-marker אֵת H853 is dropped from the finder (`_HEB_FUNCTION_STRONGS`, the Hebrew analog of the
+  Greek function-word filter — caveat: et's "him/them" suffix forms share H853 so they drop too). Full record:
+  memory `project_hebrew_source_swap`.
 - LexiconView is always-mounted (display:none) so state survives tab switches
 
 ## Search Tab — DEAD (no UI caller as of 2026-06-22)
@@ -633,7 +637,9 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   REAL occurrences from heb_words (code-side supplement, mirrors the cognate/phrase ones), injected + tagged
   with the H-number so the citation guard counts them and the answer reads grounded. The model's KJV-bridge
   SQL (BDB → kjv_strongs → ABP) stays as a fallback. heb.db reads guarded; verses ABP's versification lacks
-  are skipped (can't display). `_CACHE_CODE_VER`→37. Display still ABP (a HEB display toggle = open Phase 2).
+  are skipped (can't display). `_CACHE_CODE_VER`→37. Verse evidence now has an **ABP/KJV/HEB display toggle**
+  (per-turn in `AcTurn`, 50/52-corpus files; a Hebrew-ONLY answer auto-shows HEB so the reader sees real
+  Hebrew not the LXX, HEB grays when no Hebrew is cited) — Phase 2 DONE 2026-06-22.
   Memory `project_hebrew_source_swap`.
 - **Speed shape (2026-06-21): model-bound.** terms ~1s + write-SQL ~5s (Haiku) + pass-2 synthesis
   ~11-12s (Sonnet, scales with how many verses it reads); DB ~0.1s. **Phrase queries no longer scan

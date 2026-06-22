@@ -142,6 +142,18 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
   dotted, per-source counts). Decide: own tab vs under About; one component vs a server template.
   `code: views_seo.py + templates/seo/ (crawlable pattern), static/src/90-app.jsx (nav/tab), or an About sub-page`
 
+- **Demote KJV in the reader + swap TSK fallback to BSB (planned 2026-06-22 — handoff prompt written, NOT
+  built).** KJV's old heavy lifting is covered now (heb.db = Hebrew evidence, BSB = free modern English), so
+  DEMOTE the *visible* KJV — keep it as a reference/compare everywhere else (word-study ABP·HEB·KJV·BSB toggle
+  + compare). (1) Desktop reader source row ABP·KJV·BSB·More → **ABP·BSB·HEB·More**, KJV into the "More ▾"
+  popout next to ESV/NIV, HEB grays on NT (OT-only); (2) mobile flat picker has no "More" tier — sink KJV to
+  the row's end; (3) TSK xref FALLBACK text KJV→BSB (only kicks in when ABP lacks a verse — the panel already
+  shows ABP first). **HARD DECISION: do NOT re-key the cross_references/TSK table off KJV** — heb.db is OT-only
+  so it can't back whole-Bible OT↔NT cross-refs, and the KJV verse-id "skeleton" is invisible to users + costs
+  nothing; only the displayed/fed fallback text moves to BSB. Full plan + line anchors: memory
+  `project_hebrew_source_swap`.
+  `code: static/src/59b-library-nav.jsx (~171-193 row + More popout + ~548-566 mobile), views_crossref.py (_abp_text@81 + kjv_text field@134/220 + synthesis@232; add _bsb_text), static/src/40-crossref-panel.jsx:54`
+
 - **Hebrew OT prose mode (idea — parked 2026-06-16, undecided).** Today Hebrew is locked to the
   stacked RTL interlinear chips; the Prose button is grayed in Hebrew (`hebMode`). Adding a prose flow
   is easy (we have hebrew / translit / gloss per word). The catch the user raised: real Hebrew reads
