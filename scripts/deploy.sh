@@ -47,6 +47,16 @@ set -e
 echo "==> Reloading the live site..."
 touch /var/www/www_lexica_bible_wsgi.py
 
+# Warm the fresh workers so the first REAL visitor doesn't eat the ~13s cold-start.
+# Each worker boots on its first hit, so fire a handful of throwaway requests to
+# spread across all 3. Failures here never matter — it's just priming.
+echo "==> Warming up the workers..."
+sleep 3
+for i in 1 2 3 4 5 6; do
+  curl -s -o /dev/null -m 30 https://www.lexica.bible/ || true
+done
+echo "    warmed."
+
 echo "==> Done. Site reloaded."
 echo "    (Reminder: after a words-table REBUILD, run health_check.py by hand —"
 echo "     it needs the real database and isn't part of this deploy.)"
