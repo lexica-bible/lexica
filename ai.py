@@ -22,7 +22,7 @@ import traceback
 from flask import Blueprint, jsonify, request
 
 from core import (
-    log, db, db_ro, _anthropic, limiter, _FUNCTION_STRONGS,
+    log, db, db_ro, heb_db, _anthropic, limiter, _FUNCTION_STRONGS,
     _serialize_word_core, _clean_gloss, _ai_cache, dotted_lexicon_cols,
     ai_fingerprint, ai_cache_get, ai_cache_put, ai_cache_prune, _strip_accents,
 )
@@ -933,6 +933,11 @@ _PROPER_NOUN_NEED = 25
 _COGNATE_CHIP_CAP = 4
 _COGNATE_VERSE_CAP = 60
 
+# Hebrew occurrence supplement: how many heb.db verses (spread across books) to pull
+# in per Hebrew target word. The curation step samples from these, so a representative
+# canonical spread matters more than completeness.
+_HEB_VERSE_CAP = 90
+
 # Greek prefixes a real derivative may carry before the parent's stem (accent-stripped).
 _GK_PREFIXES = (
     "προς", "παρα", "περι", "κατα", "μετα", "αντι", "απο", "επι", "ανα", "δια",
@@ -957,7 +962,7 @@ _ai_cache_ver: str | None = None  # computed once from prompt template + book li
 
 # Bump this integer whenever server-side search logic changes in a way that
 # affects results but doesn't change _AI_SYSTEM_TMPL (e.g. new fallback steps).
-_CACHE_CODE_VER = 36   # 36: tighten cognate family to stem-initial derivatives (drop buried-root drift like εἰλικρινής)
+_CACHE_CODE_VER = 37   # 37: Hebrew occurrence supplement — H-targets pull real heb.db verses (not the KJV bridge)
 
 
 def _get_ai_cache_ver() -> str:
@@ -1346,6 +1351,92 @@ def ai_search():
         except Exception as e:
             log.warning("cognate supplement failed: %s", e)
         _mark("cognates")
+
+        # ── Hebrew OT occurrence supplement (heb.db) ──────────────────────────
+        # A Hebrew target's occurrences come from the REAL Hebrew OT (heb_words), not
+        # the KJV's Strong's tagging the model's SQL bridges through. For each H-number
+        # in the key words, pull a canonical SPREAD of its heb.db verses and inject them,
+        # tagging each with the H-number so the citation guard + gold highlight count it
+        # as a real occurrence. heb.db reads are guarded — a missing heb.db just leaves the
+        # model's bridged results untouched. Never fatal.
+        try:
+            _heb_targets = [e for e in key_strongs_data if e["strongs"].startswith("H")]
+            if _heb_targets:
+                try:
+                    hconn = heb_db()
+                except Exception:
+                    hconn = None
+                if hconn is not None:
+                    new_heb: list = []
+                    hdb_conn = db_ro()
+                    try:
+                        for e in _heb_targets:
+                            sid = e["strongs"]                      # "H7307"
+                            base = e["strongs_base"].split(".")[0]  # "7307"
+                            try:
+                                occ = hconn.execute(
+                                    "SELECT book, chapter, verse, gloss, translit FROM heb_words "
+                                    "WHERE strongs = ? OR strongs GLOB ? "
+                                    "GROUP BY book, chapter, verse ORDER BY book, chapter, verse",
+                                    (sid, sid + "[A-Za-z]"),
+                                ).fetchall()
+                            except Exception:
+                                occ = []
+                            if not occ:
+                                continue
+                            # Round-robin across books for a canonical spread, capped.
+                            by_book: dict = {}
+                            for r in occ:
+                                by_book.setdefault(r["book"], []).append(r)
+                            spread, depth = [], 0
+                            while len(spread) < _HEB_VERSE_CAP:
+                                progressed = False
+                                for b in by_book:
+                                    if depth < len(by_book[b]):
+                                        spread.append(by_book[b][depth])
+                                        progressed = True
+                                        if len(spread) >= _HEB_VERSE_CAP:
+                                            break
+                                if not progressed:
+                                    break
+                                depth += 1
+                            _target_bases.add(base)   # grounded + highlighted
+                            for r in spread:
+                                key = (r["book"], r["chapter"], r["verse"])
+                                marker = {
+                                    "strongs": sid, "strongs_base": sid,   # H-prefixed: _is_thematic + cited match
+                                    "is_function": False,
+                                    "gloss": (r["gloss"] or "").strip(),
+                                    "lemma": e.get("lemma", ""),
+                                    "translit": e.get("translit", "") or (r["translit"] or ""),
+                                    "strongs_def": "", "kjv_def": "", "derivation": "",
+                                }
+                                if key in verse_index:
+                                    ws = verse_index[key].setdefault("words", [])
+                                    if not any((w.get("strongs_base") or "").lstrip("GH").split(".")[0] == base for w in ws):
+                                        ws.append(marker)
+                                else:
+                                    vrow = hdb_conn.execute(
+                                        "SELECT id FROM verses WHERE book=? AND chapter=? AND verse=?", key
+                                    ).fetchone()
+                                    if not vrow:
+                                        continue   # ABP versification lacks this verse — can't display it
+                                    words = _fetch_verse_words(hdb_conn, vrow["id"])
+                                    verse_index[key] = {
+                                        "ref": f"{r['book']} {r['chapter']}:{r['verse']}",
+                                        "book": r["book"], "chapter": r["chapter"], "verse": r["verse"],
+                                        "words": (words or []) + [marker],
+                                    }
+                                    new_heb.append(key)
+                    finally:
+                        hdb_conn.close()
+                        hconn.close()
+                    if new_heb:
+                        results = results + [verse_index[k] for k in new_heb]
+                        log.info("Hebrew supplement: +%d verse(s) from heb.db", len(new_heb))
+        except Exception as e:
+            log.warning("Hebrew supplement failed: %s", e)
+        _mark("hebrew")
 
         # ── Fetch verses cited in the explanation that SQL missed ─────────────
         cited_keys: set = set()
