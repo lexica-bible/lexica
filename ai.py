@@ -24,7 +24,7 @@ from flask import Blueprint, jsonify, request
 from core import (
     log, db, db_ro, _anthropic, limiter, _FUNCTION_STRONGS,
     _serialize_word_core, _clean_gloss, _ai_cache, dotted_lexicon_cols,
-    ai_fingerprint, ai_cache_put, ai_cache_prune,
+    ai_fingerprint, ai_cache_put, ai_cache_prune, _strip_accents,
 )
 from views_lsj import _lsj_concept_lookup, _format_lsj_context
 from views_lexicon import _greek_cognates
@@ -907,11 +907,31 @@ _PROPER_NOUN_NEED = 25
 _COGNATE_CHIP_CAP = 4
 _COGNATE_VERSE_CAP = 60
 
+# Greek prefixes a real derivative may carry before the parent's stem (accent-stripped).
+_GK_PREFIXES = (
+    "προς", "παρα", "περι", "κατα", "μετα", "αντι", "απο", "επι", "ανα", "δια",
+    "συν", "υπερ", "υπο", "εις", "εκ", "εν", "προ", "αμφι",
+)
+
+def _cognate_is_tight(parent_lemma: str, child_lemma: str) -> bool:
+    """Keep a same-root cognate only when the parent's stem sits at the START of the
+    child (optionally after a known Greek prefix) — a genuine derivative like
+    σαββατ-ισμός or προ+σάββατον. Drops buried-root drifts that merely CONTAIN the
+    root, e.g. εἰλι-κριν-ής hanging off κρίνω. Accent-stripped Greek comparison; too-short
+    lemmas are kept (can't judge)."""
+    p = _strip_accents(parent_lemma or "").lower()
+    c = _strip_accents(child_lemma or "").lower()
+    if len(p) < 4 or len(c) < 4:
+        return True
+    stem = p[:4]
+    cands = [c] + [c[len(pre):] for pre in _GK_PREFIXES if c.startswith(pre)]
+    return any(x.startswith(stem) for x in cands)
+
 _ai_cache_ver: str | None = None  # computed once from prompt template + book list
 
 # Bump this integer whenever server-side search logic changes in a way that
 # affects results but doesn't change _AI_SYSTEM_TMPL (e.g. new fallback steps).
-_CACHE_CODE_VER = 35   # 35: deterministic cognate supplement — pull each Greek target's same-root family into chips + verses
+_CACHE_CODE_VER = 36   # 36: tighten cognate family to stem-initial derivatives (drop buried-root drift like εἰλικρινής)
 
 
 def _get_ai_cache_ver() -> str:
@@ -1250,6 +1270,8 @@ def ai_search():
                             cbase = c["strongs"].lstrip("GgHh").split(".")[0]
                             if cbase in _target_bases:
                                 continue
+                            if not _cognate_is_tight(e.get("lemma", ""), c.get("lemma", "")):
+                                continue          # buried-root drift (e.g. εἰλικρινής off κρίνω)
                             occ = cog_conn.execute(
                                 "SELECT DISTINCT v.book, v.chapter, v.verse, v.id AS vid "
                                 "FROM words w JOIN verses v ON w.verse_id = v.id "
