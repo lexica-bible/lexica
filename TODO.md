@@ -437,6 +437,12 @@ Ranked: #1 first (cheap, highest-leverage), #2 next (best feature add), #3 is a 
    corpora" item under Non-canonical); (b) versification alignment (Hebrew Psalm titles / chapter breaks
    differ from KJV/ABP). OT-only, which matches the use. `code: ai.py Hebrew bridge; views_lexicon.py;
    views_search.py; heb.db via core.heb_db(); memory project_hebrew_ot_interlinear`
+   **CONFIRMED 2026-06-22 — do in its OWN session; scope = EVERYTHING (AI + Word study + Search + SEO /word).**
+   Approach: CODE-SIDE pull from heb.db (no cross-db AI SQL); phase it (1: swap the verse SET, keep ABP
+   English display; 2: surface heb_words Hebrew/gloss/translit as the evidence). Watch: versification
+   (Hebrew Psalm titles / chapter breaks vs KJV/ABP), the H-number prefix/key format, DON'T break the KJV
+   corpus toggle (switch only Hebrew-word sourcing), result rows must carry strongs_base for the AI
+   citation guard + gold highlighting, deploy-safe heb.db reads. Full handoff prompt drafted 2026-06-22.
 
 ---
 
