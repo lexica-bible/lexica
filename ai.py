@@ -49,7 +49,8 @@ own action carry it — what it SAYS, COMMANDS, ASKS, RECORDS, or CALLS somethin
 should be able to open the verse you name and find it stating exactly what you wrote. A clause \
 describing what a concept becomes, undergoes, or comes to mean across several passages has no \
 single verse behind it — that is synthesis, not the text; cut it or pin it to the one verse that \
-states it, and never place a word in a passage where it does not occur.
+states it, and never place a word in a passage where it does not occur. Report what a verse \
+says, not what it leaves unsaid — no "without commanding X" / "though it never says Y" riders.
 Never rule on a contested question for the reader: do NOT label a practice or command \
 "binding" or "not binding", "obligatory", "optional", "abolished", "fulfilled", \
 "reinterpreted", "transferred", "still in force", or "a matter of conscience", and do NOT \
@@ -162,6 +163,8 @@ Be specific — cite key passages by reference, name the semantic range concrete
 and explain what the text actually says. Do not write vague generalities.
 SCRIPT: in the prose use the TRANSLITERATION + Strong's number only (e.g. "pneuma,
 G4151" — never πνεῦμα), NOT raw Greek or Hebrew letters; the script belongs in the chips.
+SABBATH vs WEEK: "one/first of the Sabbaths" (the numeral idiom — 1Co 16:2, Mat 28:1, Joh 20:1,
+Act 20:7) means the seven-day WEEK; say "the first day of the week", never "a Sabbath".
 CITATION HONESTY: only cite a verse reference when you are confident the word you
 are discussing actually occurs in that verse. Do not cite a verse merely because it
 fits the theme — the system verifies every citation against the text and visibly
@@ -607,6 +610,10 @@ concrete sense range, and point to what the verses you selected actually say.
 SCRIPT: in the prose use the TRANSLITERATION + Strong's number only (e.g. "sabbaton,
 G4521" — never σάββατον), NOT raw Greek or Hebrew letters. The script lives in the word
 chips beside the note; keep the write-up itself readable for a non-Greek reader.
+SABBATH vs WEEK: when the source woodenly renders the numeral idiom "one/first of the Sabbaths"
+(e.g. 1Co 16:2, Mat 28:1, Joh 20:1, Act 20:7), sabbaton there means the seven-day WEEK — say "the
+first day of the week" (the day AFTER the Sabbath), never "a Sabbath". Outside that numeral idiom,
+sabbaton is the ordinary Sabbath day.
 
 REPORT, DON'T CHARACTERIZE. Tie every statement to a specific verse and let the verse's own
 action carry the sentence — what it SAYS, COMMANDS, ASKS, RECORDS, or CALLS something. The test
@@ -614,7 +621,9 @@ for every clause: a reader should be able to open the verse you name and find it
 what you wrote. A clause describing what a concept becomes, undergoes, or comes to mean across
 several passages has no single verse behind it — that is your synthesis, not the text; cut it or
 pin it to the one verse that states it. Never place a word in a passage the verse list does not
-show it in.
+show it in. Report what a verse says, not what it leaves unsaid: do not add riders about what a
+verse fails to say or command ("without commanding X", "though it never says Y") — if a verse is
+silent on a point, leave it out and let the silence stand.
   GOOD: "Sabbaton (G4521) is the seventh-day rest. Exo 20:8 commands Israel to remember the
         sabbath day and keep it holy; Mark 2:27 records Jesus saying the sabbath was made for
         man, not man for the sabbath, and the next verse calls the Son of Man lord of the sabbath."
