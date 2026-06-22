@@ -802,6 +802,11 @@ def _curate_primary_verses(
                 system=_CURATION_SYSTEM,
                 messages=[{"role": "user", "content": user_msg}],
             )
+            _u = msg.usage
+            log.info("cache[sonnet-pass2]: fresh=%s write=%s read=%s",
+                     _u.input_tokens,
+                     getattr(_u, "cache_creation_input_tokens", 0),
+                     getattr(_u, "cache_read_input_tokens", 0))
             if msg.stop_reason == "max_tokens":
                 log.warning("Pass-2 curation hit the word cap (attempt %d/2) — may be cut off", attempt + 1)
             raw = msg.content[0].text.strip()
@@ -1047,6 +1052,11 @@ def ai_search():
         )
         raw = msg.content[0].text.strip() if msg.content else ""
         log.debug("Haiku raw response (stop=%s): %r", msg.stop_reason, raw[:300])
+        _u = msg.usage
+        log.info("cache[haiku-sqlgen]: fresh=%s write=%s read=%s",
+                 _u.input_tokens,
+                 getattr(_u, "cache_creation_input_tokens", 0),
+                 getattr(_u, "cache_read_input_tokens", 0))
         _mark("sqlgen")
 
         if not raw:
