@@ -67,8 +67,8 @@ Still open:
    `.lib-bracket-group` (`display:contents`) is still emitted. Safe to delete the rest — grep `static/src/`
    first to confirm no `.jsx` still emits them. Pure tidy-up, low priority. `code: static/styles.css bracket
    section (~line 1956)`
-4. **Word study tab folded dotted-different-words into the BASE number — DONE 2026-06-21 (commit 550faa1,
-   pending deploy/live-verify).** The dotted-headword fix already covered the reader card, SEO `/read`, AI
+4. **Word study tab folded dotted-different-words into the BASE number — DONE + LIVE 2026-06-21 (commit
+   550faa1, user-confirmed working).** The dotted-headword fix already covered the reader card, SEO `/read`, AI
    verse-word context, and Search (per-word via `core.dotted_lexicon_cols`, 2026-06-17). The **Word study /
    Lexicon** tab was the last surface — it grouped AND clicked through by the BASE number. Fixed in
    `views_lexicon.py` via `_abp_strongs_filter` (a full dotted different-word matches its own `w.strongs`; a base
