@@ -4329,8 +4329,6 @@ button.study-verse-ref { border: none; }
 .ac-evidence-head { display: flex; align-items: baseline; gap: 7px; margin-bottom: 10px; }
 .ac-evidence-n { font-family: var(--f-mono); font-size: 16px; font-weight: 600; color: var(--ink); }
 .ac-evidence-l { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); }
-.ac-seeall { margin-left: 10px; font-size: 12.5px; color: var(--ai); }
-.ac-seeall:hover { text-decoration: underline; }
 
 /* thinking */
 .ac-answer.thinking { padding: 2px 0 4px; }

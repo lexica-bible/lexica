@@ -99,7 +99,6 @@ function AcProse({ text, onVerse, onStrongs, verified }) {
 
 // One answered (or in-flight) question.
 function AcTurn({ turn, textMode, onReadInContext, onLemma, onStrongs }) {
-  const firstLem = turn.keyStrongs && turn.keyStrongs[0];   // anchor for the "see in Word study" link
   const cited = useMemo(() => _acCited(turn.keyStrongs), [turn.keyStrongs]);
   // Verses the search actually surfaced — the only ones the synthesis prose may
   // link. Anything the AI names outside this set renders un-linked (seatbelt).
@@ -166,12 +165,6 @@ function AcTurn({ turn, textMode, onReadInContext, onLemma, onStrongs }) {
               <div className="ac-evidence-head">
                 <span className="ac-evidence-n">{primaryCount}</span>
                 <span className="ac-evidence-l">key {primaryCount === 1 ? "passage" : "passages"}</span>
-                {turn.total > primaryCount && firstLem && (
-                  <button className="ac-seeall" onClick={() => onLemma(firstLem)}
-                    title={"Browse every occurrence of " + (firstLem.translit || firstLem.lemma) + " in Word study"}>
-                    {turn.total} occurrences · see in Word study
-                  </button>
-                )}
               </div>
               <CorpusResults
                 allResults={turn.results}
