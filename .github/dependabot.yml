@@ -1,6 +1,13 @@
 # Dependabot — GitHub's built-in dependency watcher.
 # Opens a pull request when a Python or Node package you use has an update
 # (security fixes get flagged automatically). Zero maintenance after this.
+#
+# Grouping: related bumps arrive as ONE pull request instead of several.
+#   - pip: minor/patch updates batched together. A MAJOR bump still comes on its
+#          own so you can eyeball a big jump before merging.
+#   - npm: all @babel/* packages move as one PR — they're a matched set, and a
+#          major bump (7 -> 8) has to go together or the build breaks.
+#   - github-actions: batched together.
 version: 2
 updates:
   - package-ecosystem: "pip"
@@ -8,14 +15,29 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
+    groups:
+      python-deps:
+        patterns:
+          - "*"
+        update-types:
+          - "minor"
+          - "patch"
 
   - package-ecosystem: "npm"
     directory: "/"
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 5
+    groups:
+      babel:
+        patterns:
+          - "@babel/*"
 
   - package-ecosystem: "github-actions"
     directory: "/"
     schedule:
       interval: "weekly"
+    groups:
+      actions:
+        patterns:
+          - "*"

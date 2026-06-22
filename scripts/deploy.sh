@@ -44,6 +44,21 @@ run_if_changed "scripts/didache_proof/" scripts/didache_proof/load_didache.py
 [ -z "$changed" ] && echo "    (no code pulled — nothing to load)"
 set -e
 
+# Update Python packages ONLY when the pull changed requirements.txt (e.g. a merged
+# Dependabot bump). Targets the bible-env venv directly so it can't land in the wrong
+# Python. A failed install stops the deploy here — better than reloading a site that's
+# missing a package.
+if echo "$changed" | grep -qx "requirements.txt"; then
+  echo "==> requirements.txt changed — updating Python packages..."
+  venv_pip="$HOME/.virtualenvs/bible-env/bin/pip"
+  if [ -x "$venv_pip" ]; then
+    "$venv_pip" install -r requirements.txt
+  else
+    pip install -r requirements.txt
+  fi
+  echo "    packages updated."
+fi
+
 echo "==> Reloading the live site..."
 touch /var/www/www_lexica_bible_wsgi.py
 
