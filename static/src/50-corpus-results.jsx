@@ -107,28 +107,25 @@ function VerseRow({ book, chapter, verse, label, allResults, onWordClick, onRead
                 return <React.Fragment key={i}><span className={cls.trim() || undefined}>{w.word}{w.punc || ""}</span>{" "}</React.Fragment>;
               })
         ) : textMode === "heb" ? (
-          // Real Hebrew (heb.db), read right-to-left; the target word(s) — those whose
-          // H-number is in citedStrongs — get the gold "corpus-hit" highlight.
+          // Real Hebrew (heb.db) as an ALIGNED interlinear: each Hebrew word is stacked
+          // directly OVER its English gloss, and the words are laid LEFT-TO-RIGHT so a
+          // native-English reader can follow it (the letters inside each word stay
+          // right-to-left). This replaced two opposite-direction lines — Hebrew RTL +
+          // gloss LTR — that mirrored each other and never lined up. The target word(s)
+          // — H-number in citedStrongs — get the gold "corpus-hit" highlight on both rows.
           hebWords === null
             ? <span style={{ color: "var(--ink-4)", fontSize: "13px" }}>Loading…</span>
             : (() => {
-                // Hebrew line (RTL) + a muted literal-English line below it built from
-                // heb.db's own word glosses, so a non-Hebrew reader can read the verse.
-                // The target word(s) — H-number in citedStrongs — are emphasized in both.
                 const cited = (w) => w.strongs && citedStrongs != null && citedStrongs.size > 0 &&
                   (citedStrongs.has(w.strongs) || citedStrongs.has(w.strongs.replace(/^[GH]/i, "")));
                 return (
-                  <span className="corpus-heb-wrap">
-                    <span className="corpus-heb" dir="rtl">
-                      {hebWords.map((w, i) => (
-                        <React.Fragment key={i}><span className={cited(w) ? "corpus-hit" : undefined}>{w.hebrew}</span>{" "}</React.Fragment>
-                      ))}
-                    </span>
-                    <span className="corpus-heb-en">
-                      {hebWords.filter(w => w.gloss).map((w, i) => (
-                        <React.Fragment key={i}><span className={cited(w) ? "corpus-en-hit" : undefined}>{w.gloss}</span>{" "}</React.Fragment>
-                      ))}
-                    </span>
+                  <span className="corpus-heb-int">
+                    {hebWords.map((w, i) => (
+                      <span className="chi-w" key={i}>
+                        <span className={"chi-he" + (cited(w) ? " corpus-hit" : "")} dir="rtl">{w.hebrew}</span>
+                        <span className={"chi-en" + (cited(w) ? " corpus-en-hit" : "")}>{w.gloss || ""}</span>
+                      </span>
+                    ))}
                   </span>
                 );
               })()
