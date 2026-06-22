@@ -716,6 +716,9 @@ memory `project_ai_synthesis_quality`.
   mails the report via `mailer.py` (the nightly PA task; SMTP creds from `~/bible-db/.env`).
 - `fix_greek_pos_gaps.py` / `fix_bracket_gaps_absorb.py` / `fix_orphan_greek_pos.py` / `dedup_words.py` —
   targeted data repairs, all with `--dry-run`. Touch only the named column; never blanket DELETE
+- `fix_emdash.py` (`--dry-run` / `--apply`) — swaps ABP's literal `--` clause dash for an em-dash `—` in
+  `words.english` + `verses.text` (double hyphen only; single hyphens like Beer-sheba are safe). Reversible;
+  PA-only data step; RE-RUN after any words/verses rebuild (not folded into the build). Memory `project_library_bracket`.
 
 ## Rate limiting / security (2026-06-07 security pass)
 - `core.limiter` (flask-limiter, memory storage): site-wide default `300/min` per endpoint per IP

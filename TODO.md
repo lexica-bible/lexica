@@ -67,12 +67,16 @@ Still open:
    `.lib-bracket-group` (`display:contents`) is still emitted. Safe to delete the rest — grep `static/src/`
    first to confirm no `.jsx` still emits them. Pure tidy-up, low priority. `code: static/styles.css bracket
    section (~line 1956)`
-4. **Optional: the Lexicon tab still shows a dotted Strong's BASE word.** The dotted-headword fix now covers the
-   reader card, the SEO `/read` pages, the AI verse-word context, and Search — all per-word, via the shared
-   `core.dotted_lexicon_cols` helper (2026-06-17; see TODO_ARCHIVE). Only the **Lexicon** tab is left: it groups
-   AND clicks through by the BASE number end-to-end, so a display-only swap would show one word but open another.
-   Doing it right means treating a dotted-different-word as its own lexicon entry (regroup by the full `G###.N` +
-   carry the full number through the click) — a real change, low priority. `code: views_lexicon.py`
+4. **Word study tab still folds dotted-different-words into the BASE number — SPUN OFF to a fresh session
+   2026-06-21.** The dotted-headword fix covers the reader card, SEO `/read`, AI verse-word context, and Search —
+   all per-word via `core.dotted_lexicon_cols` (2026-06-17), and the `dotted_lexicon` table was WIDENED 2026-06-21
+   to include the [ABP]-tagged different-words (σαβέκ "thicket" etc.; only the εἰμί family + "Strong G####"
+   form-notes stay on the base). But the **Word study / Lexicon** tab still groups AND clicks through by the BASE
+   number, so σάββατον (G4521) still lists "thicket/glory" in its renders-as and searching G4521.2 opens the base.
+   FULL fix = give each dotted-different-word its own entry (regroup by full `G###.N`, exclude them from the base's
+   tallies, carry the full number through search + the reader click) + strip the zero-pad in the DERIVATION line
+   (H07676→H7676). The user wants the full fix; it was handed to its own session (spawned task, 2026-06-21).
+   `code: views_lexicon.py, static/src/80-lexicon.jsx, 00-core.jsx`
 
 ---
 

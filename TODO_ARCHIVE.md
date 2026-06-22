@@ -6,6 +6,31 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Three reader fixes + dotted [ABP] widening (2026-06-21)
+
+A batch of bugs the user spotted in one session:
+- **Dotted [ABP] different-words promoted** (commits 130d7e7, fe3bd48; `--summary` e6d2b87; probe 6b7d9a3).
+  `build_dotted_lexicon.py` skipped EVERY `[ABP]`-prefixed abp_ext entry as a form-note, so ~570 genuinely
+  different words ABP parks at a dotted number (G4521.2 σαβέκ "thicket" vs base σάββατον; χερούβ "cherub",
+  εφούδ "ephod", αρσενικός "male" …) wrongly showed the base word on the card. New skip = `base=="G1510" OR
+  "Strong G####" in the text`. TWO false starts: skip-by-`[ABP]`-prefix (too greedy, buried σαβέκ) and
+  skip-by-"Strong G####"-alone (missed the future-tense εἰμί forms έσται/εισίν which list only verses). dotted_lexicon
+  3049→3619 rows. Re-run with the db PATH as a positional (that was missed first run). Full record + recipe:
+  memory `project_dotted_strongs_lemma`.
+- **Result-list italic highlight** (commit 664eb1f). The "gold hugs `english_head` only" fix had covered only
+  the plain multi-word branch; the two italic branches still painted the whole slot, so a supplied italic "the"
+  lit up. Unified into one `tight && hc` block. Memory `project_ai_search_redesign`.
+- **Trailing ABP dash + em-dash** (commit b78aefb + `scripts/fix_emdash.py`). ABP's clause dash `--` glued to a
+  bracket's last word rendered INSIDE the `]`; the trail-lift now recognizes dashes (reader + detail panel) and
+  lifts them outside with a leading space. `fix_emdash.py` then swapped every `--`→`—` in words.english +
+  verses.text (double-hyphen only). Memory `project_library_bracket`.
+- STILL OPEN (handed to its own session): the Word study tab folds dotted-different-words into the base number —
+  see TODO.md #4.
+- NOTE: a model-side safety-check outage blocked git pushes for part of this session, so a couple of PA data
+  steps were run directly (sqlite `REPLACE(...,char(8212))`) instead of via the not-yet-pushed script.
+
+---
+
 ## ABP blank "G." Strong's numbers — FILLED (commit df5c624, 2026-06-20)
 
 ABP's own source left EXACTLY 5 words with a numberless "G." (a 'G' with no digits — the Strong's
