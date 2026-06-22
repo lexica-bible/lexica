@@ -150,28 +150,43 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
     </div>
   ) : null;
 
-  // "More" button: ABP/KJV/BSB stay one-click; ESV/NIV/HEB + the non-canon books live
-  // in this menu, so the row stays at four buttons no matter how many texts exist.
-  const extraActive = !nonCanon && (translation === "esv" || translation === "niv" || translation === "heb");
+  // "More" button: ABP/BSB stay one-click and HEB takes the third top slot; KJV is
+  // demoted INTO this menu beside ESV/NIV (BSB is the default English now). ESV/NIV +
+  // the non-canon books also live here, so the row stays at four buttons. Deploy-safe:
+  // if heb.db isn't loaded (hebShown false) HEB can't fill the slot, so KJV stays up
+  // top and is NOT listed in More.
+  const kjvInMore = hebShown;
+  const extraActive = !nonCanon && (
+    translation === "esv" || translation === "niv" || (kjvInMore && translation === "kjv")
+  );
   const moreActive = !!nonCanon || extraActive;
   const moreLabel = nonCanon ? (nonCanon.abbr || nonCanon.name)
     : translation === "esv" ? "ESV"
     : translation === "niv" ? "NIV"
-    : translation === "heb" ? "HEB" : "More";
+    : (kjvInMore && translation === "kjv") ? "KJV" : "More";
 
   return (
     <nav className={"nav" + (isOverlay ? " nav-overlay" : "")} aria-label="Books">
       <div className="nav-top">
         {isOverlay && <button className="nav-x" onClick={onClose} aria-label="Close">✕</button>}
       </div>
-      {/* Text-source picker — ABP/KJV/BSB one-click; ESV/NIV/HEB + non-canon in "More".
-          Wrapper is the anchor for the floating "More" popout below. */}
+      {/* Text-source picker — ABP/BSB one-click, HEB the third top slot; KJV/ESV/NIV +
+          non-canon in "More". Wrapper is the anchor for the floating "More" popout below. */}
       <div className="nav-source-wrap" ref={sourceWrapRef}>
       <div className="nav-source">
         <div className="seg nav-source-seg">
           <button className={"seg-b" + (!nonCanon && translation === "abp" ? " on" : "")} onClick={() => pickBible("abp")}>ABP</button>
-          <button className={"seg-b" + (!nonCanon && translation === "kjv" ? " on" : "")} onClick={() => pickBible("kjv")}>KJV</button>
           <button className={"seg-b" + (!nonCanon && translation === "bsb" ? " on" : "")} onClick={() => pickBible("bsb")}>BSB</button>
+          {/* Third slot = HEB (grayed on NT books — OT-only). Falls back to KJV only if
+              heb.db isn't loaded, so the row never loses its third Bible. */}
+          {hebShown ? (
+            <button className={"seg-b" + (!nonCanon && translation === "heb" ? " on" : "")}
+              disabled={!hebPickable} style={!hebPickable ? { opacity: 0.35, cursor: "default" } : undefined}
+              title={!hebPickable ? "Old Testament books only" : undefined}
+              onClick={() => { if (hebPickable) pickBible("heb"); }}>HEB</button>
+          ) : (
+            <button className={"seg-b" + (!nonCanon && translation === "kjv" ? " on" : "")} onClick={() => pickBible("kjv")}>KJV</button>
+          )}
           <button className={"seg-b nav-other-seg" + (moreActive ? " on" : "")} onClick={() => setOtherOpen(o => !o)} aria-expanded={otherOpen}>
             <span className="nav-other-lbl">{moreLabel}</span>
             <span className={"nav-other-caret" + (otherOpen ? " open" : "")}>▾</span>
@@ -180,16 +195,18 @@ function LibNavPanel({ books, selBook, setSelBook, selChapter, setSelChapter, is
       </div>
       {/* Reading-order toggle (Canonical | Chronological) lives in the top toolbar.
           The nav just reflects orderMode: era→passage list when chronological. */}
-      {/* "Other" books (ESV/NIV/HEB + non-canon) open in a floating panel anchored under the
+      {/* "Other" books (KJV/ESV/NIV + non-canon) open in a floating panel anchored under the
           source picker; a faint dim sits behind it over the book list (design 2026-06-19). */}
       {otherOpen && <div className="nav-other-dim" onClick={() => setOtherOpen(false)} />}
       {otherOpen && (
         <div className="nav-other-inline">
           {(esvOwner || nivOwner || hebShown) && (() => {
             const bibles = [
+              // KJV is demoted here only when HEB holds the top slot; if heb.db is
+              // absent (kjvInMore false) KJV stays up top and is left out of this list.
+              kjvInMore && { id: "kjv", name: "KJV" },
               esvOwner && { id: "esv", name: "ESV" },
               nivOwner && { id: "niv", name: "NIV" },
-              hebShown && { id: "heb", name: "Hebrew OT (interlinear)", disabled: !hebPickable, title: !hebPickable ? "Old Testament books only" : undefined },
             ].filter(Boolean);
             const open = openGroups.has("Bibles");
             return (
@@ -517,6 +534,16 @@ function ModesSheet({
     onTouchMove: () => clearTimeout(pressRef.current.timer),
     onTouchEnd: () => clearTimeout(pressRef.current.timer),
   });
+  // One read-picker button (tap = read, long-press = compare). KJV is rendered LAST in
+  // the row now that BSB is the default English, so it shares this helper.
+  const renderPick = (id) => {
+    const on = translation !== "heb" && compareActive.includes(id);
+    return (
+      <button key={id} className={"mseg-b"+(on?" on":"")} aria-pressed={on} {...pickHandlers(id)}>
+        {on && <span className="mseg-chk" aria-hidden="true">✓</span>}{id.toUpperCase()}
+      </button>
+    );
+  };
   return (
     <>
       <div className="sheet-scrim" onClick={onClose} />
@@ -546,14 +573,9 @@ function ModesSheet({
               <>
                 <div className="mode-hint">Tap to read · long-press to compare</div>
                 <div className="mseg text-ed text-pick">
-                  {compareAvail.map(id => {
-                    const on = translation !== "heb" && compareActive.includes(id);
-                    return (
-                      <button key={id} className={"mseg-b"+(on?" on":"")} aria-pressed={on} {...pickHandlers(id)}>
-                        {on && <span className="mseg-chk" aria-hidden="true">✓</span>}{id.toUpperCase()}
-                      </button>
-                    );
-                  })}
+                  {/* BSB is the default English now, so KJV sinks to the END of the row
+                      (after BSB/HEB) — still a one-tap peer, just last. */}
+                  {compareAvail.filter(id => id !== "kjv").map(renderPick)}
                   {hebShown && (
                     <button className={"mseg-b"+(translation === "heb" ? " on" : "")} aria-pressed={translation === "heb"}
                       disabled={!hebPickable} style={!hebPickable ? {opacity:0.35,cursor:"default"} : undefined}
@@ -563,6 +585,7 @@ function ModesSheet({
                       {translation === "heb" && <span className="mseg-chk" aria-hidden="true">✓</span>}HEB
                     </button>
                   )}
+                  {compareAvail.includes("kjv") && renderPick("kjv")}
                 </div>
               </>
             )}

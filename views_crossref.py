@@ -10,6 +10,7 @@ Editing either prompt auto-refreshes this cache and nothing else.
 """
 import json
 import re
+import sqlite3
 
 from flask import Blueprint, jsonify
 
@@ -71,10 +72,12 @@ e.g. [1,3,7,12]. No prose, no explanation — only the array.\
 
 # One fingerprint for both xref endpoints (they share a category). Editing either
 # system prompt above changes it, so cached synthesis/curation lazily refreshes. The
-# trailing salt is a manual bump for non-prompt changes to the synthesis MESSAGE —
-# e.g. feeding the cross-refs in ABP instead of KJV — so those cached rows refresh too.
+# trailing salt is a manual bump for non-prompt changes to the synthesis MESSAGE or the
+# payload shape — e.g. feeding the cross-refs in ABP instead of KJV, or (bsb-fallback-3)
+# switching the displayed/fallback text to BSB and renaming the verse field to `text`,
+# so the whole cached payload refreshes instead of serving the old `kjv_text` key.
 _XREF_VER = ai_fingerprint(
-    "xref", _XREF_CURATION_SYSTEM, _XREF_SYNTHESIS_SYSTEM, "msg:abp-refs-2"
+    "xref", _XREF_CURATION_SYSTEM, _XREF_SYNTHESIS_SYSTEM, "msg:bsb-fallback-3"
 )
 
 
@@ -91,6 +94,29 @@ def _abp_text(conn, abbr, chapter, verse):
     if not row:
         return None
     txt = (row["text"] or "").strip()
+    return txt or None
+
+
+def _bsb_text(conn, abbr, chapter, verse):
+    """BSB English prose for one verse, looked up by book abbreviation. BSB is the
+    app's default modern public-domain English, so it's the cross-ref fallback text
+    when ABP's versification has no matching verse (KJV is only the last resort).
+    Returns None when BSB has no matching verse — or when bsb_verses isn't loaded
+    (it's an optional table; an older bible.db may lack it, so the missing-table
+    error is swallowed and the caller falls back to KJV — deploy-safe)."""
+    book_id = _KJV_BOOK_ID.get(abbr)
+    if book_id is None:
+        return None
+    try:
+        row = conn.execute(
+            "SELECT verse_text FROM bsb_verses WHERE book_id=? AND chapter=? AND verse_num=?",
+            (book_id, chapter, verse),
+        ).fetchone()
+    except sqlite3.OperationalError:
+        return None
+    if not row:
+        return None
+    txt = (row["verse_text"] or "").strip()
     return txt or None
 
 
@@ -120,19 +146,20 @@ def cross_references_route(book, chapter, verse):
                ORDER BY kv.verse_id""",
             (row["verse_id"],),
         ).fetchall()
+        result = []
+        for r in refs:
+            abbrev = _KJV_BOOK_ID_REV.get(r["book_id"])
+            if abbrev:
+                result.append({
+                    "book":    abbrev,
+                    "chapter": r["chapter"],
+                    "verse":   r["verse_num"],
+                    "ref":     f"{abbrev} {r['chapter']}:{r['verse_num']}",
+                    # BSB is the displayed text now; KJV only if BSB lacks the verse.
+                    "text":    _bsb_text(conn, abbrev, r["chapter"], r["verse_num"]) or r["verse_text"],
+                })
     finally:
         conn.close()
-    result = []
-    for r in refs:
-        abbrev = _KJV_BOOK_ID_REV.get(r["book_id"])
-        if abbrev:
-            result.append({
-                "book":     abbrev,
-                "chapter":  r["chapter"],
-                "verse":    r["verse_num"],
-                "ref":      f"{abbrev} {r['chapter']}:{r['verse_num']}",
-                "kjv_text": r["verse_text"],
-            })
     return jsonify(result)
 
 
@@ -172,8 +199,10 @@ def cross_refs_curated(book, chapter, verse):
             (src["verse_id"],),
         ).fetchall()
 
-        # ABP text for the source verse so the synthesis reflects ABP vocabulary.
+        # ABP text for the source verse so the synthesis reflects ABP vocabulary;
+        # BSB as the fallback (KJV last) when ABP's versification lacks this verse.
         abp_text = _abp_text(conn, book, chapter, verse) or ""
+        bsb_src = _bsb_text(conn, book, chapter, verse) or ""
     finally:
         conn.close()
 
@@ -208,35 +237,37 @@ def cross_refs_curated(book, chapter, verse):
     if not selected_refs:
         selected_refs = list(all_refs[:8])
 
-    refs = []
-    for r in selected_refs:
-        abbrev = _KJV_BOOK_ID_REV.get(r["book_id"])
-        if abbrev:
-            refs.append({
-                "book":    abbrev,
-                "chapter": r["chapter"],
-                "verse":   r["verse_num"],
-                "ref":     f"{abbrev} {r['chapter']}:{r['verse_num']}",
-                "kjv_text": r["verse_text"],
-            })
+    # Build the displayed ref list AND the synthesis input in one read. The displayed
+    # text is BSB (the app's default English), KJV only if BSB lacks the verse. The
+    # synthesis is fed ABP first (the primary text) so the write-up quotes the same
+    # wording the panel shows, then BSB, then KJV — the TSK list is stored against
+    # KJV, which is why it used to come out in "thou/thee".
+    conn = db_ro()
+    try:
+        refs = []
+        for r in selected_refs:
+            abbrev = _KJV_BOOK_ID_REV.get(r["book_id"])
+            if abbrev:
+                refs.append({
+                    "book":    abbrev,
+                    "chapter": r["chapter"],
+                    "verse":   r["verse_num"],
+                    "ref":     f"{abbrev} {r['chapter']}:{r['verse_num']}",
+                    "text":    _bsb_text(conn, abbrev, r["chapter"], r["verse_num"]) or r["verse_text"],
+                })
+        ref_block = "\n".join(
+            f"- {_abp_text(conn, r['book'], r['chapter'], r['verse']) or r['text']}"
+            for r in refs
+        )
+    finally:
+        conn.close()
 
-    # Step 2: Synthesis from the curated set. Feed the cross-refs in ABP (the app's
-    # primary text) so the write-up quotes the same wording the panel shows — the TSK
-    # list is stored against KJV, which is why it used to come out in "thou/thee".
-    # KJV is only a fallback for a verse ABP's versification doesn't carry.
+    # Step 2: Synthesis from the curated set.
     synthesis = None
     if refs:
-        conn = db_ro()
-        try:
-            ref_block = "\n".join(
-                f"- {_abp_text(conn, r['book'], r['chapter'], r['verse']) or r['kjv_text']}"
-                for r in refs
-            )
-        finally:
-            conn.close()
         src_line = (
             f'Source (ABP): "{abp_text}"' if abp_text
-            else f'Source: "{src["verse_text"]}"'
+            else f'Source: "{bsb_src or src["verse_text"]}"'
         )
         try:
             syn_msg = _anthropic.messages.create(

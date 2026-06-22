@@ -51,7 +51,7 @@ function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation, onA
     return () => { cancelled = true; };
   }, [refs, showAbp]);
 
-  const verseText = (ref) => showAbp ? (abpTexts[ref.ref] || ref.kjv_text) : ref.kjv_text;
+  const verseText = (ref) => showAbp ? (abpTexts[ref.ref] || ref.text) : ref.text;
 
   const sourceRef = `${source.book} ${source.chapter}:${source.verse}`;
   const heroRef = `${BOOK_LABELS[source.book] || source.book} ${source.chapter}:${source.verse}`;
