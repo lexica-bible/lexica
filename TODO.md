@@ -129,6 +129,19 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
 
 ## New features
 
+- **"Learn" section — plain-language glossary / FAQ (idea — parked 2026-06-22).** The audience needs no
+  Greek/Hebrew training, so a reader who hits H7307 vs H7308, a dotted number, a letter-suffixed
+  homograph, or four different per-source counts has no in-app way to make sense of it. Add a "Learn" tab
+  (FAQ/accordion, text-first) covering: what a Strong's number is (G vs H); the texts here
+  (ABP · KJV · BSB · Hebrew OT) and why their counts differ; Hebrew vs Aramaic (the H7307/H7308 case); why
+  some numbers carry a letter (homographs — folded under the base) or a dot (ABP added words — split to
+  their own card); what the per-source counts mean; brackets `[ ]` and italics in the text; Word study vs
+  Ask the corpus. Mostly WRITING (plain, accurate, Berean) not code. Best built server-rendered like the
+  `/read` pages (views_seo.py pattern) so Google indexes "what is a Strong's number" etc. — free
+  discovery. Several entries already drafted themselves in the 2026-06-22 chat (Hebrew/Aramaic, homographs,
+  dotted, per-source counts). Decide: own tab vs under About; one component vs a server template.
+  `code: views_seo.py + templates/seo/ (crawlable pattern), static/src/90-app.jsx (nav/tab), or an About sub-page`
+
 - **Hebrew OT prose mode (idea — parked 2026-06-16, undecided).** Today Hebrew is locked to the
   stacked RTL interlinear chips; the Prose button is grayed in Hebrew (`hebMode`). Adding a prose flow
   is easy (we have hebrew / translit / gloss per word). The catch the user raised: real Hebrew reads
