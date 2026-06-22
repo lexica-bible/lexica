@@ -4343,6 +4343,13 @@ button.study-verse-ref { border: none; }
 .ac-evidence-head { display: flex; align-items: baseline; gap: 7px; margin-bottom: 10px; }
 .ac-evidence-n { font-family: var(--f-mono); font-size: 16px; font-weight: 600; color: var(--ink); }
 .ac-evidence-l { font-size: 12px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--ink-3); }
+/* display-text toggle (ABP · KJV · HEB) — underline tabs like .ws .tg; accent (not gold) */
+.ac-tm { margin-left: auto; display: inline-flex; gap: 12px; align-self: center; }
+.ac-tm-b { position: relative; font-family: var(--f-mono); font-size: 11.5px; letter-spacing: 0.04em; color: var(--ink-4); padding: 2px 1px 4px; }
+.ac-tm-b:hover:not(:disabled) { color: var(--ink-2); }
+.ac-tm-b.on { color: var(--ink); font-weight: 600; }
+.ac-tm-b.on::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--accent); border-radius: 2px; }
+.ac-tm-b:disabled { opacity: 0.35; cursor: default; }
 
 /* thinking */
 .ac-answer.thinking { padding: 2px 0 4px; }

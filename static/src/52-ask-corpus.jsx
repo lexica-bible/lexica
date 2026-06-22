@@ -98,8 +98,25 @@ function AcProse({ text, onVerse, onStrongs, verified }) {
 }
 
 // One answered (or in-flight) question.
-function AcTurn({ turn, textMode, onReadInContext, onLemma, onStrongs }) {
+function AcTurn({ turn, onReadInContext, onLemma, onStrongs }) {
   const cited = useMemo(() => _acCited(turn.keyStrongs), [turn.keyStrongs]);
+  // Display-text toggle (ABP · KJV · HEB) for THIS answer's verse evidence. The
+  // evidence is found by Strong's number, but the text shown can be the ABP (Greek
+  // LXX), the KJV, or — for a Hebrew answer — the real Hebrew OT (heb.db). A
+  // Hebrew-only answer auto-shows HEB so the reader sees the actual Hebrew rather
+  // than the LXX; a manual pick wins after that. HEB is grayed when the answer
+  // cites no Hebrew word (heb.db is OT-only — it'd render blank for Greek/NT verses).
+  const hasHeb = useMemo(() =>
+    (turn.keyStrongs || []).some(k => /^H/i.test(k.strongs || k.strongs_base || "")),
+    [turn.keyStrongs]);
+  const autoMode = useMemo(() => {
+    const ks = turn.keyStrongs || [];
+    const heb = ks.some(k => /^H/i.test(k.strongs || k.strongs_base || ""));
+    const grk = ks.some(k => /^G/i.test(k.strongs || k.strongs_base || ""));
+    return (heb && !grk) ? "heb" : "abp";   // pure-Hebrew answer → Hebrew; else ABP
+  }, [turn.keyStrongs]);
+  const [manualMode, setManualMode] = useState(null);   // null = follow autoMode
+  const textMode = manualMode || autoMode;
   // Verses the search actually surfaced — the only ones the synthesis prose may
   // link. Anything the AI names outside this set renders un-linked (seatbelt).
   // `turn.verified` (full retrieved ref list) is kept separate from the displayed
@@ -165,6 +182,15 @@ function AcTurn({ turn, textMode, onReadInContext, onLemma, onStrongs }) {
               <div className="ac-evidence-head">
                 <span className="ac-evidence-n">{primaryCount}</span>
                 <span className="ac-evidence-l">key {primaryCount === 1 ? "passage" : "passages"}</span>
+                <div className="ac-tm" role="group" aria-label="Display text">
+                  <button className={"ac-tm-b" + (textMode === "abp" ? " on" : "")}
+                    onClick={() => setManualMode("abp")} title="Show the ABP (Greek)">ABP</button>
+                  <button className={"ac-tm-b" + (textMode === "kjv" ? " on" : "")}
+                    onClick={() => setManualMode("kjv")} title="Show the KJV">KJV</button>
+                  <button className={"ac-tm-b" + (textMode === "heb" ? " on" : "")}
+                    onClick={() => setManualMode("heb")} disabled={!hasHeb}
+                    title={hasHeb ? "Show the Hebrew OT" : "No Hebrew word in this answer"}>HEB</button>
+                </div>
               </div>
               <CorpusResults
                 allResults={turn.results}
@@ -202,7 +228,6 @@ function AcComposer({ pinned, value, setValue, onSubmit, placeholder, busy }) {
 function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexicon, isMobile }) {
   const [thread, setThread] = useState([]);
   const [draft, setDraft] = useState("");
-  const [textMode, setTextMode] = useState("abp");
   const [railOpen, setRailOpen] = useState(false);
   const [scope, setScope] = useState(null);   // { strongs, lemma, translit } from a Word study handoff
   const [convos, setConvos] = useState(() => {
@@ -361,7 +386,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
             <div className="ac-thread" ref={threadRef}>
               <div className="ac-thread-col">
                 {thread.map((turn, i) => (
-                  <AcTurn key={i} turn={turn} textMode={textMode} onReadInContext={onReadInContext} onLemma={onLemma} onStrongs={onStrongs}/>
+                  <AcTurn key={i} turn={turn} onReadInContext={onReadInContext} onLemma={onLemma} onStrongs={onStrongs}/>
                 ))}
               </div>
             </div>
