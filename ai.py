@@ -24,7 +24,7 @@ from flask import Blueprint, jsonify, request
 from core import (
     log, db, db_ro, _anthropic, limiter, _FUNCTION_STRONGS,
     _serialize_word_core, _clean_gloss, _ai_cache, dotted_lexicon_cols,
-    ai_fingerprint, ai_cache_put, ai_cache_prune, _strip_accents,
+    ai_fingerprint, ai_cache_get, ai_cache_put, ai_cache_prune, _strip_accents,
 )
 from views_lsj import _lsj_concept_lookup, _format_lsj_context
 from views_lexicon import _greek_cognates
@@ -1006,9 +1006,19 @@ def ai_search():
         if len(q) > 500:
             return jsonify({"error": "query too long (max 500 chars)"}), 400
 
-        if not context and q in _ai_cache:
-            log.debug("ai_search cache hit: q=%r", q)
-            return jsonify(_ai_cache[q])
+        if not context:
+            cached = _ai_cache.get(q)
+            if cached is None:
+                # The in-memory cache is a per-process snapshot taken at startup, and
+                # PA runs several worker processes — so an answer ANOTHER worker just
+                # saved isn't in THIS worker's copy. Fall back to the shared cache
+                # table before paying for the models, and warm this worker's copy.
+                cached = ai_cache_get(q, _get_ai_cache_ver())
+                if cached is not None:
+                    _ai_cache[q] = cached
+            if cached is not None:
+                log.debug("ai_search cache hit: q=%r", q)
+                return jsonify(cached)
 
         if not _anthropic:
             return jsonify({"error": "ANTHROPIC_API_KEY not set"}), 500
