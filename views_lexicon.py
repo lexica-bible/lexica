@@ -17,6 +17,16 @@ from core import db_ro, heb_db, _KJV_BOOK_ID, _FUNCTION_STRONGS, _strip_accents
 
 bp = Blueprint("lexicon", __name__)
 
+# Hebrew grammar-glue particles to drop from the English-word FINDER, the Hebrew analog
+# of the Greek function-word drop (_FUNCTION_STRONGS). Bare H-numbers, kept DELIBERATELY
+# tiny — only the untranslatable object marker אֵת (H853, the sign of a definite direct
+# object), which a single stray KJV content-word tag was surfacing as junk (e.g.
+# "created" → H853, total 10,944). NOT real prepositions like H854 "with" / H413 "to".
+# Caveat: et's pronoun-suffix forms (ʼôtô "him", ʼôtām "them") carry the SAME number
+# H853, so they drop from the finder too — still reachable by number, and other pronoun
+# words cover "him/them". Only the finder is affected; the word page for H853 is unchanged.
+_HEB_FUNCTION_STRONGS = frozenset({"853"})
+
 
 def _greek_cognates(conn, snum, derivation):
     """Same-root family for a Greek word, derived on the fly from the lexicon's
@@ -655,6 +665,11 @@ def lexicon_english():
             heb_rows = heb_rows + [r for r in brows
                                    if not (r["sbase"].startswith("G") and r["sbase"][1:] in _FUNCTION_STRONGS)]
 
+        # Drop Hebrew grammar-glue particles (the object marker H853) — the Hebrew analog
+        # of the Greek function-word drop above. A stray KJV content-word tag shouldn't
+        # surface the object marker as a "word rendered <X>".
+        heb_rows = [r for r in heb_rows
+                    if not (r["sbase"].startswith("H") and r["sbase"][1:] in _HEB_FUNCTION_STRONGS)]
         all_snums = [r["sbase"] for r in abp_rows] + [r["sbase"] for r in heb_rows]
         # Each row carries BOTH Bibles' renderings as SEPARATE lists (the UI shows
         # an ABP line + a KJV line). Row COUNT stays native-per-corpus (Greek from
