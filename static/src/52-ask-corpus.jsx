@@ -325,8 +325,8 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
     if (last) { const r = last.getBoundingClientRect(), cr = c.getBoundingClientRect(); c.scrollTop += (r.top - cr.top) - 22; }
   }, [thread.length]);
 
-  const onLemma = (l) => { const tag = l.strongs || l.strongs_base; onNavigateToLexicon?.(tag, /^H/i.test(tag) ? "kjv" : "abp"); };
-  const onStrongs = (tag) => onNavigateToLexicon?.(tag, /^H/i.test(tag) ? "kjv" : "abp");
+  const onLemma = (l) => { const tag = l.strongs || l.strongs_base; onNavigateToLexicon?.(tag, /^H/i.test(tag) ? "heb" : "abp"); };
+  const onStrongs = (tag) => onNavigateToLexicon?.(tag, /^H/i.test(tag) ? "heb" : "abp");
   const started = thread.length > 0;
   const suggestions = acScopeSuggestions(scope);
 
