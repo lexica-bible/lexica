@@ -1361,6 +1361,15 @@ input { font-family: inherit; }
 .corpus-text {
   display: inline;
 }
+/* Real Hebrew (heb.db) in a Word-study result row — RTL, Hebrew font, a touch
+   larger like the reader; isolate keeps the RTL run from disturbing the LTR ref. */
+.corpus-heb {
+  font-family: "SBL Hebrew", "Ezra SIL", "Times New Roman", var(--f-serif);
+  font-size: 1.18em;
+  line-height: 1.85;
+  direction: rtl;
+  unicode-bidi: isolate;
+}
 /* The matched word in any result list (Word study, Search, Library find) — ONE shared gold
    (--hl-match) hugging the word, dark text in every theme. box-decoration-break keeps the
    rounding/fill intact if a multi-word match wraps a line. */

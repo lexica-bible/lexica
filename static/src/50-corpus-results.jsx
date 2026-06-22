@@ -5,6 +5,7 @@
 function VerseRow({ book, chapter, verse, label, allResults, onWordClick, onReadInContext, textMode, primaryStrongs, citedStrongs, kjvCache }) {
   const [words, setWords] = useState(null);
   const [kjvText, setKjvText] = useState(null);
+  const [hebWords, setHebWords] = useState(null);
   const [visible, setVisible] = useState(false);
   const rowRef = useRef(null);
   const downRef = useRef(null);   // pointer-down spot, to tell a clean tap from a select-drag
@@ -45,6 +46,17 @@ function VerseRow({ book, chapter, verse, label, allResults, onWordClick, onRead
     return () => { cancelled = true; };
   }, [visible, book, chapter, verse, textMode, kjvCache]);
 
+  // HEB mode: pull the verse's real Hebrew words (heb.db) to display right-to-left.
+  useEffect(() => {
+    if (!visible || textMode !== "heb") return;
+    let cancelled = false;
+    setHebWords(null);
+    api.hebVerseWords(book, chapter, verse)
+      .then(d => { if (!cancelled) setHebWords((d && d.words) || []); })
+      .catch(() => { if (!cancelled) setHebWords([]); });
+    return () => { cancelled = true; };
+  }, [visible, book, chapter, verse, textMode]);
+
   // citedStrongs is passed in from App level; the matched word(s) are highlighted in
   // the prose below. No per-word entry map — clicking a word is the reader's job now.
 
@@ -82,6 +94,19 @@ function VerseRow({ book, chapter, verse, label, allResults, onWordClick, onRead
                 // space OUTSIDE the span so a highlighted match hugs just the word
                 return <React.Fragment key={i}><span className={cls.trim() || undefined}>{w.word}{w.punc || ""}</span>{" "}</React.Fragment>;
               })
+        ) : textMode === "heb" ? (
+          // Real Hebrew (heb.db), read right-to-left; the target word(s) — those whose
+          // H-number is in citedStrongs — get the gold "corpus-hit" highlight.
+          hebWords === null
+            ? <span style={{ color: "var(--ink-4)", fontSize: "13px" }}>Loading…</span>
+            : <span className="corpus-heb" dir="rtl">
+                {hebWords.map((w, i) => {
+                  const sid = w.strongs;
+                  const isCited = sid && citedStrongs != null && citedStrongs.size > 0 &&
+                    (citedStrongs.has(sid) || citedStrongs.has(sid.replace(/^[GH]/i, "")));
+                  return <React.Fragment key={i}><span className={isCited ? "corpus-hit" : undefined}>{w.hebrew}</span>{" "}</React.Fragment>;
+                })}
+              </span>
         ) : words === null ? (
           <span style={{ color: "var(--ink-4)", fontSize: "13px" }}>Loading…</span>
         ) : (() => {

@@ -3,14 +3,17 @@
 
 The Lexicon tab's flow: smart lookup (Strong's/Greek/Hebrew/English) → word
 profile → book distribution → per-book verse list. ABP Greek comes from the
-words table; Hebrew (and KJV) from kjv_strongs/kjv_words + bdb. Gloss renderings
-are collapsed via _normalize_gloss so case/whitespace/punct variants merge.
+words table; HEBREW words now source their occurrences from the real Hebrew OT
+interlinear (heb.db → heb_words, STEP TAHOT) — the KJV's Strong's tagging is kept
+only as an explicit fallback/secondary text. Gloss renderings are collapsed via
+_normalize_gloss so case/whitespace/punct variants merge.
 """
 import re
+import sqlite3
 
 from flask import Blueprint, jsonify, request
 
-from core import db_ro, _KJV_BOOK_ID, _FUNCTION_STRONGS, _strip_accents
+from core import db_ro, heb_db, _KJV_BOOK_ID, _FUNCTION_STRONGS, _strip_accents
 
 bp = Blueprint("lexicon", __name__)
 
@@ -194,6 +197,49 @@ def _abp_strongs_filter(conn, num, sid):
     if ready:
         return ("w.strongs_base = ? AND 'G' || w.strongs NOT IN (SELECT strongs FROM dotted_lexicon)", [sid])
     return "w.strongs_base = ?", [sid]
+
+
+# ── Hebrew OT interlinear source (heb.db) ─────────────────────────────────────
+# A Hebrew word's occurrences come from the REAL Hebrew text (heb_words, STEP
+# TAHOT) rather than the KJV's Strong's tagging. heb_words.strongs is H-prefixed,
+# zero-stripped ("H7307"); a few homograph forms carry a trailing letter, matched
+# defensively the way views_seo.py does. Every read is deploy-safe: a missing or
+# older heb.db raises OperationalError, which callers treat as "no Hebrew source"
+# and fall back to KJV (so the route never 500s and an un-loaded heb.db is fine).
+def _heb_ready():
+    """True when heb.db is loaded (heb_words exists)."""
+    try:
+        c = heb_db()
+        try:
+            return c.execute("SELECT 1 FROM heb_words LIMIT 1").fetchone() is not None
+        finally:
+            c.close()
+    except sqlite3.OperationalError:
+        return False
+
+
+def _heb_match(sid):
+    """(predicate, params) selecting heb_words rows for an H-number, matching the
+    exact key OR a trailing-letter homograph form (H1254a)."""
+    return "(strongs = ? OR strongs GLOB ?)", (sid, sid + "[A-Za-z]")
+
+
+def _heb_book_counts(hconn, sid):
+    """{book abbrev: occurrence count} for an H-number across the Hebrew OT."""
+    pred, params = _heb_match(sid)
+    rows = hconn.execute(
+        f"SELECT book, COUNT(*) AS cnt FROM heb_words WHERE {pred} GROUP BY book", params
+    ).fetchall()
+    return {r["book"]: r["cnt"] for r in rows}
+
+
+def _heb_gloss_rows(hconn, sid):
+    """Raw (gloss, cnt) rows — the contextual English glosses TAHOT gives the word."""
+    pred, params = _heb_match(sid)
+    return hconn.execute(
+        f"SELECT gloss, COUNT(*) AS cnt FROM heb_words WHERE {pred} "
+        f"AND gloss IS NOT NULL AND gloss != '' GROUP BY gloss", params
+    ).fetchall()
 
 
 @bp.route("/api/lexicon/lookup")
@@ -511,17 +557,33 @@ def lexicon_profile(strongs):
                 # Etymology for the card's Derivation section (only when it adds
                 # something the definition line isn't already showing).
                 derivation = _deriv_raw if (row["kjv_def"] or "").strip() else ""
-        # Corpus: default H→kjv, G→abp; override via ?corpus=
-        corpus = request.args.get("corpus", "kjv" if is_heb else "abp")
+        sid = f"H{snum}" if is_heb else f"G{snum}"   # base lexicon key (Hebrew sources from heb.db below)
+        # Hebrew words source occurrences from the real Hebrew OT (heb.db), not the
+        # KJV's Strong's tagging. KJV stays as an explicit toggle (KJV-as-text). A few
+        # H-numbers TAHOT files under a parent lemma (byforms like H3212→H1980, Aramaic,
+        # name-compounds) aren't in heb.db → has_heb False, and the word falls back to KJV.
+        heb_counts, heb_gloss_rows, has_heb = {}, [], False
+        if is_heb and _heb_ready():
+            hconn = heb_db()
+            try:
+                heb_counts = _heb_book_counts(hconn, sid)
+                heb_gloss_rows = _heb_gloss_rows(hconn, sid)
+            finally:
+                hconn.close()
+            has_heb = bool(heb_counts)
+        # Corpus: default H→heb (KJV fallback when heb.db lacks the number), G→abp; ?corpus= overrides
+        _heb_default = "heb" if has_heb else "kjv"
+        corpus = request.args.get("corpus", _heb_default if is_heb else "abp")
         if corpus == "all":  # profile is single-corpus; 'all' would double-count NT
-            corpus = "kjv" if is_heb else "abp"
+            corpus = _heb_default if is_heb else "abp"
+        if corpus == "heb" and not has_heb:  # asked for heb but heb.db lacks this number
+            corpus = "kjv"
         if is_diff:          # ABP-only added word — no KJV side to toggle to
             corpus = "abp"
         _NT = {"Mat","Mar","Luk","Joh","Act","Rom","1Co","2Co","Gal","Eph","Php","Col",
                "1Th","2Th","1Ti","2Ti","Tit","Phm","Heb","Jas","1Pe","2Pe","1Jn","2Jn","3Jn","Jud","Rev"}
         book_meta = {r["abbrev"]: {"name": r["name"], "testament": "NT" if r["abbrev"] in _NT else "OT"}
                      for r in conn.execute("SELECT abbrev, name FROM books").fetchall()}
-        sid = f"H{snum}" if is_heb else f"G{snum}"
         abbrev_by_id = {v: k for k, v in _KJV_BOOK_ID.items()}
 
         def _abp_book_counts():  # ABP interlinear: strongs_base in words→verses
@@ -566,6 +628,9 @@ def lexicon_profile(strongs):
         if corpus in ("abp", "all"):
             for b, c in _abp_book_counts().items():
                 book_counts[b] = book_counts.get(b, 0) + c
+        if corpus == "heb":
+            for b, c in heb_counts.items():
+                book_counts[b] = book_counts.get(b, 0) + c
         if corpus in ("kjv", "all"):
             for b, c in _kjv_book_counts().items():
                 book_counts[b] = book_counts.get(b, 0) + c
@@ -586,7 +651,9 @@ def lexicon_profile(strongs):
                                  is_func=is_func, drop_singletons=True)
         abp_glosses = _fold(_abp_gloss_rows())
         kjv_glosses = [] if is_diff else _fold(_kjv_gloss_rows())
-        glosses = abp_glosses if corpus == "abp" else kjv_glosses
+        heb_glosses = _fold(heb_gloss_rows) if has_heb else []
+        glosses = (heb_glosses if corpus == "heb"
+                   else abp_glosses if corpus == "abp" else kjv_glosses)
         # Which corpora actually have this strongs (so the UI can gray unavailable
         # toggles). Checks real data — so backfilled proper-noun Hebrew (which DO
         # have ABP/words rows) keep ABP enabled. A dotted different-word is ABP-only.
@@ -594,7 +661,7 @@ def lexicon_profile(strongs):
         has_abp = conn.execute(f"SELECT 1 FROM words w WHERE {_hp} LIMIT 1", _hpar).fetchone() is not None
         has_kjv = False if is_diff else (conn.execute("SELECT 1 FROM kjv_strongs WHERE strongs_id = ? LIMIT 1", (sid,)).fetchone() is not None)
         related = [] if is_diff else (_greek_cognates(conn, snum, _deriv_raw) if not is_heb else [])
-        return jsonify({"strongs": strongs_id, "lemma": lemma, "translit": translit, "definition": definition, "derivation": derivation, "related": related, "total": total, "books": books, "corpus": corpus, "glosses": glosses, "abp_glosses": abp_glosses, "kjv_glosses": kjv_glosses, "has_abp": has_abp, "has_kjv": has_kjv})
+        return jsonify({"strongs": strongs_id, "lemma": lemma, "translit": translit, "definition": definition, "derivation": derivation, "related": related, "total": total, "books": books, "corpus": corpus, "glosses": glosses, "abp_glosses": abp_glosses, "kjv_glosses": kjv_glosses, "heb_glosses": heb_glosses, "has_abp": has_abp, "has_kjv": has_kjv, "has_heb": has_heb})
     except Exception:
         return jsonify({"error": "Server error"}), 500
     finally:
@@ -634,6 +701,18 @@ def lexicon_books(strongs):
                 if gloss and _normalize_gloss(r["english"] or "", is_func=is_func) != gloss:
                     continue
                 book_counts[r["book"]] = book_counts.get(r["book"], 0) + r["cnt"]
+        if corpus == "heb" and _heb_ready():
+            hconn = heb_db()
+            try:
+                pred, hp = _heb_match(sid)
+                for r in hconn.execute(
+                    f"SELECT book, gloss, COUNT(*) AS cnt FROM heb_words WHERE {pred} "
+                    f"GROUP BY book, gloss", hp).fetchall():
+                    if gloss and _normalize_gloss(r["gloss"] or "") != gloss:
+                        continue
+                    book_counts[r["book"]] = book_counts.get(r["book"], 0) + r["cnt"]
+            finally:
+                hconn.close()
         if corpus in ("kjv", "all"):
             for r in conn.execute("""
                 SELECT kw.book_id, kw.word AS english, COUNT(*) AS cnt
@@ -673,6 +752,38 @@ def lexicon_verses(strongs, book):
         sid = f"H{snum}" if is_heb else f"G{snum}"
         if corpus == "all":  # verse text is single-corpus; show the word's native text
             corpus = "kjv" if is_heb else "abp"
+        if corpus == "heb":
+            # Real Hebrew OT: which verses in this book carry the word (the frontend's
+            # VerseRow re-fetches each verse's Hebrew words from /api/hebrew to display
+            # + highlight, so we only return the verse keys + the rendering breakdown).
+            if not _heb_ready():
+                conn.close()
+                return jsonify({"verses": [], "glosses": []})
+            hconn = heb_db()
+            try:
+                pred, hp = _heb_match(sid)
+                occ = hconn.execute(
+                    f"SELECT chapter, verse, gloss FROM heb_words "
+                    f"WHERE book = ? AND {pred} ORDER BY chapter, verse",
+                    (book, *hp)).fetchall()
+            finally:
+                hconn.close()
+            conn.close()
+            gloss_counts, seen, vout = {}, set(), []
+            for r in occ:
+                norm = _normalize_gloss(r["gloss"] or "")
+                if norm:
+                    gloss_counts[norm] = gloss_counts.get(norm, 0) + 1
+                if gloss and norm != gloss:
+                    continue
+                key = (r["chapter"], r["verse"])
+                if key in seen:
+                    continue
+                seen.add(key)
+                vout.append({"chapter": r["chapter"], "verse": r["verse"]})
+            result_glosses = sorted([{"gloss": g, "count": c} for g, c in gloss_counts.items()],
+                                    key=lambda x: -x["count"])
+            return jsonify({"verses": vout, "glosses": result_glosses})
         if corpus == "kjv":
             book_id = _KJV_BOOK_ID.get(book)
             if not book_id:

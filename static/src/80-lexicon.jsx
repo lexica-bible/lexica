@@ -150,12 +150,14 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
     setBookGlosses(null);
     setFilteredBooks(null);
     const isHeb = /^H/i.test(strongs) || (!(/^[GgHh]/.test(strongs)) && parseInt(strongs) > 5624);
-    const c = corpusOverride ?? (isHeb ? "kjv" : "abp");  // drilling in always lands in a single corpus
+    const c = corpusOverride ?? (isHeb ? "heb" : "abp");  // Hebrew lands on the real Hebrew OT (heb.db)
     setProfileCorpus(c);
     try {
       const data = await api.lexiconProfile(strongs, c);
       if (data.error) setError(data.error);
-      else setProfile(data);
+      // Honor the source the backend actually used — a Hebrew number heb.db lacks
+      // (a byform/Aramaic/name) falls back to KJV, so reflect that in the toggle.
+      else { setProfile(data); if (data.corpus && data.corpus !== c) setProfileCorpus(data.corpus); }
     } catch (e) { setError("Failed to load word profile: " + e); }
     finally { setLoading(false); }
   };
@@ -376,8 +378,8 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
     .slice().sort((a, b) => b.count - a.count);
   const maxCount = distBooks.length ? distBooks[0].count : 1;
   const firstGloss = !profile ? "" : (
-    (((profileCorpus === "kjv" ? profile.kjv_glosses : profile.abp_glosses) || [])[0] || {}).gloss
-    || ((profile.abp_glosses || profile.kjv_glosses || [])[0] || {}).gloss || "");
+    (((profileCorpus === "heb" ? profile.heb_glosses : profileCorpus === "kjv" ? profile.kjv_glosses : profile.abp_glosses) || [])[0] || {}).gloss
+    || ((profile.heb_glosses || profile.abp_glosses || profile.kjv_glosses || [])[0] || {}).gloss || "");
   const selBookName = profile && selectedBook ? (profile.books.find(b => b.book === selectedBook)?.name || selectedBook) : "";
   const selBookCount = profile && selectedBook ? (profile.books.find(b => b.book === selectedBook)?.count ?? null) : null;
   const backToResults = () => { setProfile(null); setSelectedBook(null); setVerseList(null); };
@@ -499,6 +501,12 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
         </section>
       )}
 
+      {profile.heb_glosses && profile.heb_glosses.length > 0 && (
+        <section className="sec">
+          <h4 className="sec-head"><span className="sec-t">Hebrew renders as</span></h4>
+          {renderGlossLine("heb", null, profile.heb_glosses)}
+        </section>
+      )}
       {profile.abp_glosses && profile.abp_glosses.length > 0 && (
         <section className="sec">
           <h4 className="sec-head"><span className="sec-t">ABP renders as</span></h4>
@@ -554,7 +562,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
               label={`${selectedBook} ${v.chapter}:${v.verse}`}
               allResults={[]} onWordClick={onWordClick}
               onReadInContext={onNavigateToLibrary ? (b, c, vv) => onNavigateToLibrary(b, c, vv, profileCorpus) : undefined}
-              textMode={profileCorpus === "kjv" ? "kjv" : "greek"}
+              textMode={profileCorpus === "kjv" ? "kjv" : profileCorpus === "heb" ? "heb" : "greek"}
               primaryStrongs={null} citedStrongs={citedStrongs} kjvCache={{}}/>
           ))}
         </div>
@@ -641,6 +649,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
               <div className="mode-lbl">Edition</div>
               <div className="mseg">
                 <button className={"mseg-b" + (profileCorpus === "abp" ? " on" : "")} disabled={!profile?.has_abp} onClick={() => switchProfileCorpus("abp")}>ABP</button>
+                {isHeb && <button className={"mseg-b" + (profileCorpus === "heb" ? " on" : "")} disabled={!profile?.has_heb} onClick={() => switchProfileCorpus("heb")}>HEB</button>}
                 <button className={"mseg-b" + (profileCorpus === "kjv" ? " on" : "")} disabled={!profile?.has_kjv} onClick={() => switchProfileCorpus("kjv")}>KJV</button>
               </div>
             </div>
@@ -798,6 +807,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
                   <span className="filters-sep"/>
                   <div className="tgroup">
                     <button className={"tg" + (profileCorpus === "abp" ? " on" : "")} disabled={!profile.has_abp} onClick={() => switchProfileCorpus("abp")}>ABP</button>
+                    {isHeb && <button className={"tg" + (profileCorpus === "heb" ? " on" : "")} disabled={!profile.has_heb} onClick={() => switchProfileCorpus("heb")}>HEB</button>}
                     <button className={"tg" + (profileCorpus === "kjv" ? " on" : "")} disabled={!profile.has_kjv} onClick={() => switchProfileCorpus("kjv")}>KJV</button>
                   </div>
                 </div>
@@ -825,7 +835,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
                         allResults={[]}
                         onWordClick={onWordClick}
                         onReadInContext={onNavigateToLibrary ? (b, c, vv) => onNavigateToLibrary(b, c, vv, profileCorpus) : undefined}
-                        textMode={profileCorpus === "kjv" ? "kjv" : "greek"}
+                        textMode={profileCorpus === "kjv" ? "kjv" : profileCorpus === "heb" ? "heb" : "greek"}
                         primaryStrongs={null}
                         citedStrongs={citedStrongs}
                         kjvCache={{}}

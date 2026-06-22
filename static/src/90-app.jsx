@@ -354,7 +354,7 @@ function App() {
             onAskWord={handleAskWord}
             onNavigateToLibrary={(book, chapter, verse, corpus) => {
               searchScrollRef.current = window.scrollY;
-              setLibNav({ book, chapter, highlight: verse, scroll: true, extern: true, translation: corpus === "kjv" ? "kjv" : "abp" });
+              setLibNav({ book, chapter, highlight: verse, scroll: true, extern: true, translation: corpus === "kjv" ? "kjv" : corpus === "heb" ? "heb" : "abp" });
               setLibEverVisited(true);
               setMainView("library");
               // Same as Read-in-context: desktop queues the xref (shows now if resting on the
