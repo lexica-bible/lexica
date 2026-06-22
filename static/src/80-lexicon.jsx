@@ -12,12 +12,13 @@ const _looksLikeQuestion = (s) => /\?\s*$/.test(s) || s.split(/\s+/).filter(Bool
 // combos that can't return anything (ABP has no Hebrew; KJV's OT has no Greek)
 // while still allowing Greek in the OT via the Septuagint.
 function _sliceHasGreek(corpus, testament) {
-  if (corpus === "kjv") return testament !== "ot";   // KJV: Greek only in the NT
-  return true;                                         // ABP / All: always some Greek
+  if (corpus === "kjv" || corpus === "bsb") return testament !== "ot";   // KJV/BSB: Greek only in the NT
+  if (corpus === "heb") return false;                                     // Hebrew OT: no Greek
+  return true;                                                            // ABP / All: always some Greek
 }
 function _sliceHasHebrew(corpus, testament) {
   if (corpus === "abp") return false;                 // ABP is all Greek
-  return testament !== "nt";                           // KJV / All: Hebrew only outside the NT
+  return testament !== "nt";                           // HEB / KJV / BSB / All: Hebrew only outside the NT
 }
 function _comboOK(corpus, testament, language) {
   if (language === "greek")  return _sliceHasGreek(corpus, testament);
@@ -767,7 +768,9 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
                 <div className="tgroup">
                   <button className={"tg" + (corpus === "all" ? " on" : "")} onClick={() => switchCorpus("all")}>All</button>
                   <button className={"tg" + (corpus === "abp" ? " on" : "")} disabled={!_comboOK("abp", testament, language)} onClick={() => switchCorpus("abp")}>ABP</button>
+                  <button className={"tg" + (corpus === "heb" ? " on" : "")} disabled={!_comboOK("heb", testament, language)} onClick={() => switchCorpus("heb")}>HEB</button>
                   <button className={"tg" + (corpus === "kjv" ? " on" : "")} disabled={!_comboOK("kjv", testament, language)} onClick={() => switchCorpus("kjv")}>KJV</button>
+                  <button className={"tg" + (corpus === "bsb" ? " on" : "")} disabled={!_comboOK("bsb", testament, language)} onClick={() => switchCorpus("bsb")}>BSB</button>
                 </div>
                 <span className="filters-sep"/>
                 <div className="tgroup">

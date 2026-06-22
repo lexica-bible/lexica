@@ -536,6 +536,56 @@ def lexicon_english():
                 abp_set = {r["sbase"] for r in abp_rows}
                 heb_rows = [r for r in heb_rows if r["sbase"] not in abp_set]
 
+        if corpus == "heb" and _heb_ready():
+            # Hebrew OT discovery (heb.db): H-numbers whose real contextual gloss uses q
+            # as a whole word — the actual Hebrew source, not the KJV's tagging, so the
+            # found set + counts are a true reflection. ('All' stays ABP+KJV above.)
+            rx = re.compile(r"\b" + re.escape(q) + r"\b", re.I)
+            hconn = heb_db()
+            try:
+                grows = hconn.execute(
+                    "SELECT strongs, gloss, COUNT(*) AS cnt FROM heb_words "
+                    "WHERE strongs LIKE 'H%' AND gloss LIKE ? COLLATE NOCASE "
+                    "GROUP BY strongs, gloss", (f"%{q}%",)).fetchall()
+            finally:
+                hconn.close()
+            agg = {}
+            for r in grows:
+                if rx.search(r["gloss"] or ""):
+                    agg[r["strongs"]] = agg.get(r["strongs"], 0) + r["cnt"]
+            if agg:
+                ph = ",".join("?" * len(agg))
+                meta = {m["strongs_id"]: m for m in conn.execute(
+                    f"SELECT strongs_id, lemma, xlit FROM bdb WHERE strongs_id IN ({ph})",
+                    list(agg.keys())).fetchall()}
+                for hsid, cnt in sorted(agg.items(), key=lambda x: -x[1])[:20]:
+                    m = meta.get(hsid)
+                    heb_rows.append({"sbase": hsid,
+                                     "lemma": (m["lemma"] if m else "") or "",
+                                     "translit": (m["xlit"] if m else "") or "",
+                                     "cnt": cnt})
+
+        if corpus == "bsb" and _bsb_ready(conn):
+            # BSB discovery: the G+H numbers BSB renders as q (mirrors the KJV branch).
+            brows = conn.execute(f"""
+                SELECT bs.strongs_id AS sbase,
+                       COALESCE(l.lemma, b.lemma)   AS lemma,
+                       COALESCE(l.translit, b.xlit) AS translit,
+                       COUNT(*) AS cnt
+                FROM bsb_words bw
+                JOIN bsb_strongs bs ON bs.word_id = bw.word_id
+                LEFT JOIN lexicon l ON l.strongs_g = bs.strongs_id
+                LEFT JOIN bdb b ON b.strongs_id = bs.strongs_id AND bs.strongs_id LIKE 'H%'
+                WHERE bw.word = ? COLLATE NOCASE
+                  AND (bw.italic IS NULL OR bw.italic = 0)
+                  {_bsb_where}
+                GROUP BY bs.strongs_id
+                ORDER BY cnt DESC
+                LIMIT 10
+            """, (q,)).fetchall()
+            heb_rows = heb_rows + [r for r in brows
+                                   if not (r["sbase"].startswith("G") and r["sbase"][1:] in _FUNCTION_STRONGS)]
+
         all_snums = [r["sbase"] for r in abp_rows] + [r["sbase"] for r in heb_rows]
         # Each row carries BOTH Bibles' renderings as SEPARATE lists (the UI shows
         # an ABP line + a KJV line). Row COUNT stays native-per-corpus (Greek from
