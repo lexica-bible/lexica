@@ -73,11 +73,12 @@ e.g. [1,3,7,12]. No prose, no explanation — only the array.\
 # One fingerprint for both xref endpoints (they share a category). Editing either
 # system prompt above changes it, so cached synthesis/curation lazily refreshes. The
 # trailing salt is a manual bump for non-prompt changes to the synthesis MESSAGE or the
-# payload shape — e.g. feeding the cross-refs in ABP instead of KJV, or (bsb-fallback-3)
-# switching the displayed/fallback text to BSB and renaming the verse field to `text`,
-# so the whole cached payload refreshes instead of serving the old `kjv_text` key.
+# payload shape — e.g. feeding the cross-refs in ABP instead of KJV; switching the
+# displayed/fallback text to BSB and renaming the verse field to `text`; and
+# (bsb-fallback-4) feeding the Step-1 candidate picker BSB too (changes which refs are
+# chosen) — so the whole cached payload refreshes instead of serving a stale row.
 _XREF_VER = ai_fingerprint(
-    "xref", _XREF_CURATION_SYSTEM, _XREF_SYNTHESIS_SYSTEM, "msg:bsb-fallback-3"
+    "xref", _XREF_CURATION_SYSTEM, _XREF_SYNTHESIS_SYSTEM, "msg:bsb-fallback-4"
 )
 
 
@@ -199,6 +200,16 @@ def cross_refs_curated(book, chapter, verse):
             (src["verse_id"],),
         ).fetchall()
 
+        # Modern English (BSB, KJV fallback) for the Step-1 candidate picker — clearer
+        # than KJV "thou/thee" for judging which links are strongest. Parallel to
+        # all_refs; the picker returns indices back into all_refs, so this is prompt
+        # text only. The cross_references join itself still rides KJV verse-ids.
+        cand_texts = [
+            _bsb_text(conn, _KJV_BOOK_ID_REV.get(r["book_id"]) or "", r["chapter"], r["verse_num"])
+            or r["verse_text"]
+            for r in all_refs
+        ]
+
         # ABP text for the source verse so the synthesis reflects ABP vocabulary;
         # BSB as the fallback (KJV last) when ABP's versification lacks this verse.
         abp_text = _abp_text(conn, book, chapter, verse) or ""
@@ -209,8 +220,8 @@ def cross_refs_curated(book, chapter, verse):
     if not all_refs:
         return jsonify({"refs": [], "synthesis": None})
 
-    # Step 1: Haiku selects the 8–10 most relevant cross-refs
-    numbered = "\n".join(f"{i+1}. {r['verse_text']}" for i, r in enumerate(all_refs))
+    # Step 1: Haiku selects the 8–10 most relevant cross-refs (read in BSB, KJV fallback)
+    numbered = "\n".join(f"{i+1}. {t}" for i, t in enumerate(cand_texts))
     selected_refs = []
     try:
         sel_msg = _anthropic.messages.create(
@@ -219,7 +230,7 @@ def cross_refs_curated(book, chapter, verse):
             temperature=0,
             system=_XREF_CURATION_SYSTEM,
             messages=[{"role": "user", "content": (
-                f'Source: "{src["verse_text"]}"\n\nCandidates:\n{numbered}\n\n'
+                f'Source: "{bsb_src or src["verse_text"]}"\n\nCandidates:\n{numbered}\n\n'
                 "Return ONLY a JSON array of selected 1-based numbers."
             )}],
         )
