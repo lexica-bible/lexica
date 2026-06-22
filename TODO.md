@@ -268,6 +268,9 @@ header still shows an "Under development" badge on these two tabs. Full record: 
         (`setThread` to saved state); nothing re-runs → free + instant, and the bug is moot. "New thread"
         already exists. Browser-local, keep last ~10–15, drop oldest. CHOSEN OVER the cheap interim fix
         (recall = fresh standalone search); skip the interim — this supersedes it.
+        **ACCEPTANCE CHECK:** reopening a saved conversation must make ZERO model calls — confirm the
+        `cache[…]` log meter stays SILENT on reopen (today a recall fires all 3 calls; the fix should fire
+        none). A typed follow-up still re-running is correct (context = a different question, not cached).
      2. **Kill the "see all 156" inline dump.** The 156 = the full VERSE list behind the 12 curated KEY
         PASSAGES. Redundant: the per-word chips already jump to Word study (the real full-occurrence browser —
         distribution + filters), and the synth only samples a few verses, it never needs all 156 shown. DROP
