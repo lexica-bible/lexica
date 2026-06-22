@@ -608,7 +608,9 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   the old KJV bridge); the ~150 byform/Aramaic/name numbers heb.db lacks fall back to KJV (`has_heb` false).**
   Greek defaults to ABP. KJV/BSB stay explicit text toggles (KJV-as-text untouched). `lexicon_profile/books/
   verses` carry per-source branches + `has_abp/has_heb/has_kjv/has_bsb` + `abp/heb/kjv/bsb_glosses`; heb/bsb
-  occurrence lists re-fetch per-verse in `VerseRow` (heb = RTL + English gloss line, bsb mirrors KJV). The
+  occurrence lists re-fetch per-verse in `VerseRow` (heb = an ALIGNED interlinear: each Hebrew word
+  stacked over its gloss, laid LTR — letters stay RTL — replacing the old two-opposite-direction
+  Hebrew-line + gloss-line that never lined up; `.corpus-heb-int`/`.chi-*` CSS; bsb mirrors KJV). The
   English-word finder shows all 4 "renders as" lines per word + a HEB/BSB filter, each line carrying that
   SOURCE'S TOTAL count (2026-06-22 — matches the word's own study page, counted the way `lexicon_profile`
   does; the lone ambiguous count on the right was dropped; HEB total folds homographs via `_heb_match`). The
@@ -652,7 +654,7 @@ Full detail: memory `project_notes_highlights`. The headline facts:
 - **Speed shape (2026-06-21): model-bound.** terms ~1s + write-SQL ~5s (Haiku) + pass-2 synthesis
   ~11-12s (Sonnet, scales with how many verses it reads); DB ~0.1s. **Phrase queries no longer scan
   the 600k word-gloss:** a multi-word `english LIKE '%phrase%'` is re-run against the FULL verse text
-  (`verses.text` + `kjv_verses`, ~31k rows) in code (the phrase supplement), and a phrase-ONLY query
+  (`verses.text` + `kjv_verses` + `bsb_verses`, ~31k rows each) in code (the phrase supplement), and a phrase-ONLY query
   (phrase LIKE, no Strong's-number filter) SKIPS the gloss SQL entirely — it was ~6-7s and fruitless
   (cut a live "son of perdition" 15→9s). The proper-noun name-scan only fires when results are thin
   (`< _PROPER_NOUN_NEED`) — a common capitalized word like "Sabbath" was burning ~7s on a redundant
@@ -686,7 +688,7 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   family is pulled in deterministically (`_greek_cognates` + the `_cognate_is_tight` stem filter in
   ai.py) — the relative's verses + a chip, but ONLY if it actually occurs (e.g. σαββατισμός G4520 /
   Heb 4:9 under σάββατον). Greek only (BDB has no etymology). A code/context change like this isn't in
-  the search fingerprint → bump `_CACHE_CODE_VER` (now 36). Memory `project_ai_search_architecture`.
+  the search fingerprint → bump `_CACHE_CODE_VER` (now 38). Memory `project_ai_search_architecture`.
 - **Synthesis standing rules — Berean (2026-06-22).** The displayed note (`_CURATION_SYSTEM`, mirrored
   in `_AI_SYSTEM_TMPL`): NO doctrinal verdicts (never rule a practice binding/abolished/etc. or assign a
   stance to an author — report the verse, let the reader conclude); contested "is X binding" questions

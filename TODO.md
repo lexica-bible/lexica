@@ -142,16 +142,16 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
   dotted, per-source counts). Decide: own tab vs under About; one component vs a server template.
   `code: views_seo.py + templates/seo/ (crawlable pattern), static/src/90-app.jsx (nav/tab), or an About sub-page`
 
-- **#1 — BSB in the AI "Ask the corpus" phrase search (next session; full handoff prompt written this
-  session).** The phrase supplement re-runs the model's multi-word phrases against ABP (`verses.text`) + KJV
-  (`kjv_verses`) only; add a BSB scan (`bsb_verses JOIN books`, deploy-safe guard, same LIMIT 200, map hits
-  back to ABP for display) so a phrase worded the modern way is caught. RECALL ONLY — don't touch what the
-  synth reads/quotes (stays ABP). Bump `_CACHE_CODE_VER` 37→38. Backend-only (no app.js). Speed/cost ≈ flat
-  (one small scan, only on phrase queries; pass-2 reads a capped sample so tokens don't grow). Test live:
-  Nimrod net-check ("giant hunter" ABP vs "mighty hunter" KJV/BSB both surface Gen 10:9), then find a phrase
-  BSB words differently from BOTH KJV+ABP ("tax collector" vs KJV "publican"? — unverified). Framework: memory
-  `project_ai_synthesis_quality` (which-text-for-which-AI-job).
-  `code: ai.py phrase supplement ~1519-1568 + _CACHE_CODE_VER ~965`
+- **Post-deploy checklist — Ask-corpus + Hebrew word-study fixes (commits 136865d, 6d030b2, 966a6c3,
+  e38124a, 66ae84d; pushed, awaiting deploy).** After the next deploy, verify on the live site:
+  (1) **BSB phrase net** — search "giant hunter" (ABP wording) + "mighty hunter" (KJV/BSB wording); both
+  surface Gen 10:9. Then a phrase BSB words differently from KJV+ABP ("tax collector" vs KJV "publican")
+  now surfaces. (2) Click an H-number in an Ask-corpus answer → Word study lands on **HEB** (was KJV).
+  (3) A Hebrew word's "renders as" line has NO bracket fragments, and a supplied "[one]" no longer shows
+  as its own rendering ("mighty [one]" folds into "mighty"). (4) The HEB occurrence interlinear is now
+  ALIGNED columns (Hebrew word over its gloss, L→R). (5) **Nimrod fidelity** — ask the corpus about
+  Nimrod; the write-up should keep ABP "giant hunter", not leak KJV "mighty hunter". Done record:
+  TODO_ARCHIVE + memories `project_ai_search_architecture`, `project_hebrew_source_swap`.
 
 - **Post-deploy checklist — KJV demote + BSB xref (commits 7cf8524 + 849e28c, pushed, awaiting deploy).**
   After the next deploy: (1) re-baseline the stale `snapshot_endpoints.py` golden
@@ -429,6 +429,12 @@ Ranked: #1 first (cheap, highest-leverage), #2 next (best feature add), #3 is a 
      ask-corpus tab lumps primary + additional into one "KEY PASSAGES" list with no "related" marker, so it
      reads like an occurrence. Give additional/thematic hits a label or sub-group — DON'T drop them (Gen 1:26
      for divine council relies on the same path). `code: static/src/52-ask-corpus.jsx acDisplayedResults; static/src/50-corpus-results.jsx`
+   - **Term-pick drags in unrelated words (live 2026-06-22, "giant hunter"):** the PHRASE "giant hunter"
+     correctly found the Hebrew (gibbor H1368 + tsayid H6718, Nimrod/Gen 10) but the term/SQL step ALSO
+     surfaced two unrelated Greek words — gēras/gēraskō G1094/G1095 "old age" — as key-passage chips; the
+     synth then spent ~3 lines noting they're "unrelated... incidental." Grounding caught it, but the term
+     extraction shouldn't surface them at all. Tighten the term/SQL pick, or filter the chips to the cited
+     Strong's set, so an English-phrase query can't free-associate. `code: ai.py term extraction / key_strongs`
    - **Stream verses first** (perceived speed): show matched verses the moment the SQL runs, fill the
      Sonnet write-up in after (~12s of model calls is the floor). Frontend only. DECLINED for now — user
      wants synthesis quality over perceived-speed tricks; pick up only if the wait annoys real users.

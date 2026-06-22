@@ -6,6 +6,40 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Ask-corpus + Hebrew word-study fixes — BSB phrase net, HEB click, brackets, aligned interlinear (2026-06-22)
+
+Follow-on session after the Hebrew source swap + KJV demote (below). All pushed, awaiting the user's
+deploy. Memories `project_ai_search_architecture` + `project_hebrew_source_swap`.
+- **BSB in the AI phrase search (136865d).** The phrase supplement (re-runs the model's own multi-word
+  phrases against the readable verse text, to catch contiguous phrases the per-word gloss can't) scanned
+  ABP + KJV; added a third scan over `bsb_verses` (deploy-safe guard for a missing table) so a phrase
+  worded the modern way is caught. RECALL ONLY — a BSB hit maps back to its ABP verse and displays as ABP
+  words; the synth still reads/quotes ABP. `_CACHE_CODE_VER` 37→38. Backend-only.
+- **Ask-corpus H-number click → HEB, not KJV (6d030b2).** The synth's lemma chips + Strong's links
+  hard-coded "kjv" for H-numbers — a leftover from before the source swap. Pointed them at "heb"
+  (loadProfile still falls back to KJV for the byforms heb.db lacks). `static/src/52-ask-corpus.jsx`.
+- **TAHOT supplied-word brackets in "Hebrew renders as" (966a6c3 + e38124a).** STEP TAHOT wraps SUPPLIED
+  English words (added for sense, KJV-italics style) in `[ ]`. `_normalize_gloss` only stripped brackets
+  off a gloss's outer ends, so a bracket glued to an inner word survived ("[men of]" → broken "[men").
+  FIRST fix stripped all brackets — which EXPOSED a second bug: the last-word head-picker then chose the
+  SUPPLIED word ("mighty [one]" → "one" in Psa 45:3). FINAL: drop the whole `[..]` span and keep the real
+  word ("mighty [one]" → "mighty"); fall back to the de-bracketed gloss only when no content word remains
+  ("[men]" → "men", "the [mighty]" → "mighty"). `views_lexicon.py _normalize_gloss`. LESSON: a fix can
+  expose the next layer — the user caught the "one" before deploy.
+- **Aligned Hebrew occurrence interlinear (66ae84d).** The HEB display drew two opposite-direction lines —
+  Hebrew R→L over a gloss line L→R — so the same word sat top-right / bottom-left and nothing aligned.
+  Rebuilt as per-word columns: each Hebrew word stacked over its gloss, laid L→R (letters stay RTL via
+  dir + unicode-bidi:isolate; only the word ORDER flips). BibleHub style. heb.db has only word glosses
+  (no smooth prose) so columns are the right shape. `static/src/50-corpus-results.jsx` (VerseRow heb
+  branch) + `.corpus-heb-int`/`.chi-*` CSS.
+- **Comment reword (99ebd5b).** Dropped "ABP's wooden English" from the BSB-scan comment — the user
+  corrected me for over-characterizing ABP (the app's anchor) off one example (a Hebrew gloss line, not
+  even ABP). Memory `feedback_dont_disparage_abp`.
+
+DEAD END reconfirmed: Hebrew PROSE for the occurrence list can't exist — heb.db has only word-by-word
+glosses, no smooth translation. (The library-reader Hebrew-prose idea — a separate surface, transliteration
+L→R or Hebrew R→L — stays parked in TODO.md.)
+
 ## Demote visible KJV in the reader + BSB as the TSK xref fallback (2026-06-22)
 
 Follow-on to the Hebrew source swap below. KJV's old heavy lifting is covered now (heb.db = Hebrew
