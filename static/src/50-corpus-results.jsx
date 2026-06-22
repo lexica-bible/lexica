@@ -6,6 +6,7 @@ function VerseRow({ book, chapter, verse, label, allResults, onWordClick, onRead
   const [words, setWords] = useState(null);
   const [kjvText, setKjvText] = useState(null);
   const [hebWords, setHebWords] = useState(null);
+  const [bsbText, setBsbText] = useState(null);
   const [visible, setVisible] = useState(false);
   const rowRef = useRef(null);
   const downRef = useRef(null);   // pointer-down spot, to tell a clean tap from a select-drag
@@ -54,6 +55,17 @@ function VerseRow({ book, chapter, verse, label, allResults, onWordClick, onRead
     api.hebVerseWords(book, chapter, verse)
       .then(d => { if (!cancelled) setHebWords((d && d.words) || []); })
       .catch(() => { if (!cancelled) setHebWords([]); });
+    return () => { cancelled = true; };
+  }, [visible, book, chapter, verse, textMode]);
+
+  // BSB mode: pull the verse's BSB words (same shape as KJV) to display + highlight.
+  useEffect(() => {
+    if (!visible || textMode !== "bsb") return;
+    let cancelled = false;
+    setBsbText(null);
+    api.bsbVerseWords(book, chapter, verse)
+      .then(d => { if (!cancelled) setBsbText(Array.isArray(d) ? d : []); })
+      .catch(() => { if (!cancelled) setBsbText([]); });
     return () => { cancelled = true; };
   }, [visible, book, chapter, verse, textMode]);
 
@@ -120,6 +132,17 @@ function VerseRow({ book, chapter, verse, label, allResults, onWordClick, onRead
                   </span>
                 );
               })()
+        ) : textMode === "bsb" ? (
+          bsbText === null
+            ? <span style={{ color: "var(--ink-4)", fontSize: "13px" }}>Loading…</span>
+            : bsbText.map((w, i) => {
+                const sid = w.strongs_ids && w.strongs_ids.length ? w.strongs_ids[0] : null;
+                const sidBare = sid ? sid.replace(/^[GH]/i, "") : null;
+                const isCited = sid && citedStrongs != null && citedStrongs.size > 0 &&
+                  (citedStrongs.has(sid) || citedStrongs.has(sidBare));
+                const cls = (w.italic ? "lib-prose-italic " : "") + (isCited ? "corpus-hit" : "");
+                return <React.Fragment key={i}><span className={cls.trim() || undefined}>{w.word}{w.punc || ""}</span>{" "}</React.Fragment>;
+              })
         ) : words === null ? (
           <span style={{ color: "var(--ink-4)", fontSize: "13px" }}>Loading…</span>
         ) : (() => {

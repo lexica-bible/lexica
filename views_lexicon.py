@@ -242,6 +242,16 @@ def _heb_gloss_rows(hconn, sid):
     ).fetchall()
 
 
+def _bsb_ready(conn):
+    """True when the BSB word tables are present (deploy-safe — older DBs lack them)."""
+    try:
+        return conn.execute(
+            "SELECT 1 FROM sqlite_master WHERE type='table' AND name='bsb_strongs'"
+        ).fetchone() is not None
+    except Exception:
+        return False
+
+
 @bp.route("/api/lexicon/lookup")
 def lexicon_lookup():
     q = request.args.get("q", "").strip()
@@ -623,6 +633,30 @@ def lexicon_profile(strongs):
                 WHERE ks.strongs_id = ? GROUP BY kw.word
             """, (sid,)).fetchall()
 
+        def _bsb_book_counts():  # BSB text: strongs_id in bsb_strongs→bsb_words
+            if not _bsb_ready(conn):
+                return {}
+            rows = conn.execute("""
+                SELECT bw.book_id AS book_id, COUNT(*) AS cnt
+                FROM bsb_strongs bs JOIN bsb_words bw ON bw.word_id = bs.word_id
+                WHERE bs.strongs_id = ? GROUP BY bw.book_id
+            """, (sid,)).fetchall()
+            out = {}
+            for r in rows:
+                abbrev = abbrev_by_id.get(r["book_id"], "")
+                if abbrev:
+                    out[abbrev] = out.get(abbrev, 0) + r["cnt"]
+            return out
+
+        def _bsb_gloss_rows():
+            if not _bsb_ready(conn):
+                return []
+            return conn.execute("""
+                SELECT bw.word AS gloss, COUNT(*) AS cnt
+                FROM bsb_strongs bs JOIN bsb_words bw ON bw.word_id = bs.word_id
+                WHERE bs.strongs_id = ? GROUP BY bw.word
+            """, (sid,)).fetchall()
+
         # corpus=all merges the ABP + KJV distributions/glosses by book/rendering.
         book_counts = {}
         if corpus in ("abp", "all"):
@@ -630,6 +664,9 @@ def lexicon_profile(strongs):
                 book_counts[b] = book_counts.get(b, 0) + c
         if corpus == "heb":
             for b, c in heb_counts.items():
+                book_counts[b] = book_counts.get(b, 0) + c
+        if corpus == "bsb":
+            for b, c in _bsb_book_counts().items():
                 book_counts[b] = book_counts.get(b, 0) + c
         if corpus in ("kjv", "all"):
             for b, c in _kjv_book_counts().items():
@@ -652,7 +689,9 @@ def lexicon_profile(strongs):
         abp_glosses = _fold(_abp_gloss_rows())
         kjv_glosses = [] if is_diff else _fold(_kjv_gloss_rows())
         heb_glosses = _fold(heb_gloss_rows) if has_heb else []
+        bsb_glosses = [] if is_diff else _fold(_bsb_gloss_rows())
         glosses = (heb_glosses if corpus == "heb"
+                   else bsb_glosses if corpus == "bsb"
                    else abp_glosses if corpus == "abp" else kjv_glosses)
         # Which corpora actually have this strongs (so the UI can gray unavailable
         # toggles). Checks real data — so backfilled proper-noun Hebrew (which DO
@@ -660,8 +699,9 @@ def lexicon_profile(strongs):
         _hp, _hpar = _abp_strongs_filter(conn, num, sid)
         has_abp = conn.execute(f"SELECT 1 FROM words w WHERE {_hp} LIMIT 1", _hpar).fetchone() is not None
         has_kjv = False if is_diff else (conn.execute("SELECT 1 FROM kjv_strongs WHERE strongs_id = ? LIMIT 1", (sid,)).fetchone() is not None)
+        has_bsb = False if is_diff else (_bsb_ready(conn) and conn.execute("SELECT 1 FROM bsb_strongs WHERE strongs_id = ? LIMIT 1", (sid,)).fetchone() is not None)
         related = [] if is_diff else (_greek_cognates(conn, snum, _deriv_raw) if not is_heb else [])
-        return jsonify({"strongs": strongs_id, "lemma": lemma, "translit": translit, "definition": definition, "derivation": derivation, "related": related, "total": total, "books": books, "corpus": corpus, "glosses": glosses, "abp_glosses": abp_glosses, "kjv_glosses": kjv_glosses, "heb_glosses": heb_glosses, "has_abp": has_abp, "has_kjv": has_kjv, "has_heb": has_heb})
+        return jsonify({"strongs": strongs_id, "lemma": lemma, "translit": translit, "definition": definition, "derivation": derivation, "related": related, "total": total, "books": books, "corpus": corpus, "glosses": glosses, "abp_glosses": abp_glosses, "kjv_glosses": kjv_glosses, "heb_glosses": heb_glosses, "bsb_glosses": bsb_glosses, "has_abp": has_abp, "has_kjv": has_kjv, "has_heb": has_heb, "has_bsb": has_bsb})
     except Exception:
         return jsonify({"error": "Server error"}), 500
     finally:
@@ -725,6 +765,18 @@ def lexicon_books(strongs):
                 abbrev = abbrev_by_id.get(r["book_id"], "")
                 if abbrev:
                     book_counts[abbrev] = book_counts.get(abbrev, 0) + r["cnt"]
+        if corpus == "bsb" and _bsb_ready(conn):
+            for r in conn.execute("""
+                SELECT bw.book_id, bw.word AS english, COUNT(*) AS cnt
+                FROM bsb_strongs bs JOIN bsb_words bw ON bw.word_id = bs.word_id
+                WHERE bs.strongs_id = ?
+                GROUP BY bw.book_id, bw.word
+            """, (sid,)).fetchall():
+                if gloss and _normalize_gloss(r["english"] or "", is_func=is_func) != gloss:
+                    continue
+                abbrev = abbrev_by_id.get(r["book_id"], "")
+                if abbrev:
+                    book_counts[abbrev] = book_counts.get(abbrev, 0) + r["cnt"]
         books = [{"book": b, "name": book_meta.get(b, {}).get("name", b),
                   "testament": book_meta.get(b, {}).get("testament", ""), "count": c}
                  for b, c in sorted(book_counts.items(), key=lambda x: -x[1])]
@@ -772,6 +824,39 @@ def lexicon_verses(strongs, book):
             gloss_counts, seen, vout = {}, set(), []
             for r in occ:
                 norm = _normalize_gloss(r["gloss"] or "")
+                if norm:
+                    gloss_counts[norm] = gloss_counts.get(norm, 0) + 1
+                if gloss and norm != gloss:
+                    continue
+                key = (r["chapter"], r["verse"])
+                if key in seen:
+                    continue
+                seen.add(key)
+                vout.append({"chapter": r["chapter"], "verse": r["verse"]})
+            result_glosses = sorted([{"gloss": g, "count": c} for g, c in gloss_counts.items()],
+                                    key=lambda x: -x["count"])
+            return jsonify({"verses": vout, "glosses": result_glosses})
+        if corpus == "bsb":
+            # BSB occurrences: which verses in this book carry the word (VerseRow
+            # re-fetches each verse's BSB words from /api/bsb to display + highlight,
+            # so we only return the verse keys + the rendering breakdown).
+            if not _bsb_ready(conn):
+                conn.close()
+                return jsonify({"verses": [], "glosses": []})
+            book_id = _KJV_BOOK_ID.get(book)
+            if not book_id:
+                conn.close()
+                return jsonify({"verses": [], "glosses": []})
+            occ = conn.execute("""
+                SELECT bw.chapter, bw.verse_num AS verse, bw.word
+                FROM bsb_strongs bs JOIN bsb_words bw ON bw.word_id = bs.word_id
+                WHERE bs.strongs_id = ? AND bw.book_id = ?
+                ORDER BY bw.chapter, bw.verse_num, bw.verse_pos
+            """, (sid, book_id)).fetchall()
+            conn.close()
+            gloss_counts, seen, vout = {}, set(), []
+            for r in occ:
+                norm = _normalize_gloss(r["word"] or "", is_func=is_func)
                 if norm:
                     gloss_counts[norm] = gloss_counts.get(norm, 0) + 1
                 if gloss and norm != gloss:
