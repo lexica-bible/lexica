@@ -207,43 +207,13 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
   (memory `project_payments_donations` — Stripe/Ko-fi down; leaning PayPal/crypto/Zelle, appeal pending).
   `code: ai.py ai_search; views_notes.py (AI_DAILY_LIMITS/AI_SITE_DAILY, ai_caller/ai_quota_*); static/src/52-ask-corpus.jsx`
 
-- **Post-deploy checklist — Ask-corpus + Hebrew word-study fixes (commits 136865d, 6d030b2, 966a6c3,
-  e38124a, 66ae84d; pushed, awaiting deploy).** After the next deploy, verify on the live site:
-  (1) **BSB phrase net** — search "giant hunter" (ABP wording) + "mighty hunter" (KJV/BSB wording); both
-  surface Gen 10:9. Then a phrase BSB words differently from KJV+ABP ("tax collector" vs KJV "publican")
-  now surfaces. (2) Click an H-number in an Ask-corpus answer → Word study lands on **HEB** (was KJV).
-  (3) A Hebrew word's "renders as" line has NO bracket fragments, and a supplied "[one]" no longer shows
-  as its own rendering ("mighty [one]" folds into "mighty"). (4) The HEB occurrence interlinear is now
-  ALIGNED columns (Hebrew word over its gloss, L→R). (5) **Nimrod fidelity** — ask the corpus about
-  Nimrod; the write-up should keep ABP "giant hunter", not leak KJV "mighty hunter". Done record:
-  TODO_ARCHIVE + memories `project_ai_search_architecture`, `project_hebrew_source_swap`.
-
-- **Post-deploy checklist — KJV demote + BSB xref (commits 7cf8524 + 849e28c, pushed, awaiting deploy).**
-  After the next deploy: (1) re-baseline the stale `snapshot_endpoints.py` golden
-  `api__cross-references__Joh__3__16.json` with `--update` on PA; (2) verify the live reader source row
-  (ABP·BSB·HEB·More, KJV in More, HEB grays on NT) + the xref panel shows BSB text; (3) **Nimrod fidelity
-  check** — ask the corpus about Nimrod, confirm the write-up keeps ABP "giant hunter" and doesn't leak KJV
-  "mighty hunter" (if it leaks, prompt fix in `_CURATION_SYSTEM` + mirror `_AI_SYSTEM_TMPL`). Done record:
-  TODO_ARCHIVE + memory `project_hebrew_source_swap`.
-
-- **Post-deploy checklist — BSB in Ask-corpus + Hebrew L→R prose (commits e367753, 40147cc, fd27b57;
-  pushed, awaiting deploy).** After the next deploy: (1) ask the corpus a question → the answer's verse
-  toggle reads **ABP·BSB·KJV·HEB**, defaults to ABP, BSB renders; (2) a Hebrew (OT) answer → HEB shows ONLY
-  OT verses (no blank rows); a Greek-NT-only answer → HEB grayed; (3) in the reader on a Hebrew OT chapter the
-  **Prose** button (was grayed) flips the chips LEFT-TO-RIGHT (letters still RTL), Chip flips back — check the
-  desktop lib-bar AND the mobile reading sheet. Done record: TODO_ARCHIVE + memories `project_hebrew_source_swap`,
-  `project_hebrew_ot_interlinear`.
-
-- **Post-deploy checklist — Ask-corpus tuning (commits 1822ffa, fd4eb7c, 4b06414, e1f1713; pushed,
-  awaiting deploy).** After deploy: (1) ask a question → the answer's verse references are clickable
-  chips (a verse the search didn't surface still jumps but renders quiet/dotted, not gold); (2) the
-  evidence is ONE flat verse list — no per-chapter fold-out boxes; (3) sign in on two devices → a
-  conversation started on one shows in the other's "Recent conversations" rail (new `corpus` table in
-  notes.db, auto-creates on first sync); (4) MOBILE: a "Recent" button on the welcome/thread screen opens
-  the history rail (was unreachable before); (5) re-ask a question with different caps/punctuation → instant
-  (cache hit, no fresh search); (6) a vague "what's the Greek equivalent?" follow-up keeps its chips to the
-  actual word + direct equivalents (no doorkeeper/burning stray chips — reduced, not 100%). Done record:
-  TODO_ARCHIVE + memory `project_ai_search_redesign`.
+- **Post-deploy spot-checks for recent shipped commits — condensed 2026-06-23.** Detailed "verify after
+  deploy" checklists used to sit here for: Ask-corpus + Hebrew word-study fixes; KJV demote + BSB xref;
+  BSB-in-Ask-corpus + Hebrew L→R prose; Ask-corpus tuning. The done-records + the exact steps live in
+  TODO_ARCHIVE + memories `project_ai_search_architecture` / `project_hebrew_source_swap` /
+  `project_hebrew_ot_interlinear` / `project_ai_search_redesign`. ONE genuinely-actionable leftover on PA:
+  re-baseline the stale `snapshot_endpoints.py` golden `api__cross-references__Joh__3__16.json` with
+  `--update` (field `kjv_text`→`text`, now BSB).
 
 - ~~**Hebrew OT prose mode (parked 2026-06-16).**~~ **DONE 2026-06-22 (fd27b57).** Flavor chosen = the
   interlinear chips flipped LEFT-TO-RIGHT (word order L→R, letters still RTL) — NOT a translit/gloss prose.
@@ -299,33 +269,15 @@ Open:
 
 ---
 
-## Word click-targets — the article wrong-slot cleanup — essentially DONE (2026-06-14)
-
-Background: this is a precision upgrade, **not a bug** — every verse reads correctly. The issue is
-purely about which word you land on when you click. Almost all of it is done and live (see archive).
-
-- **Nouns "hidden behind" the word "the" — AUDIT-CLEAN (0).** Re-measured 2026-06-14 with
-  `audit_funcword_wrongslot.py` (read-only): REPAIRABLE-NOUN = **0** for both the article and the
-  article+prepositions runs. The build's folded `funcword_subject` pass already handles the noun
-  leaks, so the old "highest-volume remaining case" framing was stale — that volume is gone.
-- **The ἴδιος "own" possessive split — DONE (13 fixed, 2026-06-14).** 'his/their/its own' (ὁ G3588 +
-  ἴδιος G2398) was parked on the article slot with ἴδιος empty beside it, so clicking "own" opened
-  "the". `scripts/fix_idios_own.py` relocates the English onto the empty ἴδιος slot (same safe move
-  as `fix_funcword_subject`, greek_pos carried in brackets); 13 verses (1Co/1Ti/2Ti/2Pe/Heb),
-  confirmed against the ABP source, applied + verified (audit, health_check, bracket-order all
-  baseline). Added to the rebuild tail chain (`finish_rebuild.sh` + CLAUDE.md checklist).
-- **Split verbs that wrap the subject — DONE + LIVE (2026-06-18).** ABP gives one verb two reorder
-  numbers ("1Was 5justified" G1344) under a single Strong's; the build merged them onto the first
-  slot, dropping a bracket number + ordering the verb wrong. `_split_numbered` in
-  build_words_from_abp.py now emits one word per slot, sharing the Strong's. 308 verses, count→625,921.
-  Rom 3:4 split_merge regrafted. Memory `project_verb_split_slots`. OPTIONAL follow-up (not done): the
-  helper half ("Was") shows the same Greek lemma as the main half — could hide the Greek line on the
-  helper, but only if it reads oddly to you. Leave unless it bugs you.
-- **Remaining gray zone — left on purpose (not worth it).** 25 article-slot cases (midst, least,
-  whole, indeed, "My God"…) — all adjective/adverb/quantifier, and several are defensible Greek
-  (κατὰ μόνας = "alone"). Plus the one straggler in 1Co 3:8's *second* "his own" (split his/own
-  across the two slots, a different shape). Low value; leave unless a specific one bugs you.
-  `code: scripts/fix_idios_own.py, scripts/audit_funcword_wrongslot.py`
+## Word click-targets — article/verb wrong-slot cleanup — essentially DONE (2026-06-14…18)
+A precision upgrade (which word you land on when you click), NOT a bug — every verse reads correctly.
+DONE + LIVE: the "noun behind 'the'" leaks (audit-clean 0, handled by the build's `funcword_subject`
+pass); the ἴδιος "own" split (`fix_idios_own.py`, 13 verses); split verbs that wrap the subject
+(`_split_numbered` in build_words_from_abp.py, 308 verses, memory `project_verb_split_slots`). Full
+records: TODO_ARCHIVE + that memory. LEFT ON PURPOSE (low value): ~25 article-slot adjective/adverb cases
+(several defensible Greek, e.g. κατὰ μόνας = "alone") + the 1Co 3:8 second "his own"; and an optional
+cosmetic — the split-verb helper half repeats the Greek lemma (hide only if it reads oddly).
+`code: scripts/fix_idios_own.py, scripts/audit_funcword_wrongslot.py`
 
 ---
 
@@ -608,22 +560,10 @@ so the source language ONLY matters if we want a word-by-word original. For a He
 join on H-numbers in `/api/extra`, BDB/Hebrew routing + right-to-left chips in the reader. Not urgent
 — no Hebrew non-canonical is queued, and any of them can ship English-only today.
 
-## Detail-rail restyle + chronological views — BOTH DONE (2026-06-14)
-
-The whole right-side detail rail AND the chronological views (Days plan / Eras picker / in-reader
-chapter marker / Reading-intro rows) now share one design language. Full records: memory
-`project_side_panel_rail` + `project_chronological_tab` ("CHRONOLOGICAL VIEWS CLEANUP"). Headline:
-navy is the accent (gold only where it earns a spotlight — the open-day/era sub-rib); headers = the
-subject title; badges TIERED. The chrono pass (this session) also: rebuilt the Days marker model
-(one right-edge ✓/dot, no Today gold), one-click day = select+collapse+move-dot, navy backbone spine
-+ gold sub-rib, mobile Days stays open + no spine + bigger rows, source picker → underline tabs
-(4-equal-col grid) + floating "More" popout, Compare/More close on click-outside, and the word/xref
-back-link follows the rail base ("‹ Intro" vs "‹ Overview"). Details in TODO_ARCHIVE.md.
-
-Nothing open here — the xref-panel hero/header consistency that used to be flagged "NEXT" was
-already covered by this same rail pass (verified 2026-06-14 in `40-crossref-panel.jsx`: header =
-verse ref, `TSK` is a quiet badge on "Related passages", AI synthesis carries the navy AI badge,
-gold swept to navy). See memory `project_side_panel_rail`.
+## Detail-rail restyle + chronological views — BOTH DONE (2026-06-14), nothing open
+Right-side detail rail + chronological views (Days/Eras/marker/Reading-intro) + the xref panel all share
+one design language (navy accent, gold only where it earns a spotlight, tiered badges, subject-title
+headers). Full records: memories `project_side_panel_rail` + `project_chronological_tab` + TODO_ARCHIVE.
 
 ## Random redesign ideas (2026-06-09 brainstorm — pick any, nothing committed)
 
@@ -817,96 +757,36 @@ to include that study's verse list, or editing the study later wouldn't refresh 
 scripts/add_study_topic.py + study.db topic; views_study.py (read a topic's verses); memory
 project_study_modules + project_ai_search_architecture`
 
-### ~~Chronological reading mode~~ — DONE + LIVE 2026-06-09 (desktop + mobile)
-Read the Bible in event order, works with ANY version (ABP/KJV/BSB). Shipped as a reading-ORDER
-toggle in the Library (Canonical | Clock icon = Chronological), NOT a separate tab. Data is a static
-`static/chronological.json` (1,102 passages, 13 eras) built by `scripts/chronological/
-build_chronological.py` — no database, no backend route. Exact-range reader trims + spans chapters.
-Full record in memory `project_chronological_tab`. Polish (2026-06-13, SUPERSEDES the earlier
-single-chapter-divider suppression): EVERY chrono passage now shows a chapter heading
-(`chronoChapLabel` in 60-library.jsx `withMarks`) — single-chapter passages had been showing NO label
-at all — and partial chapters carry the verse range in the heading ("1 Chronicles 1:1–4", "Genesis
-10:1–5", derived from the loaded chapter's last verse).
-
-**365-DAY READING PLAN ("Days" view) — DONE + LIVE 2026-06-13.** `Eras | Days` toggle on the chrono
-picker (pinned; desktop nav + mobile picker). `build_chronological.py` now bins the 1,102 passages into
-365 days (balanced by verse length via a small DP, never splitting a passage, era-aligned) and bakes a
-`days` array + `day`/`verses` into `chronological.json`. Per-text progress (`lexica.plan.v1`) in the
-NEW `static/src/58-dayplan.jsx`; each day is now a small CLICK-TO-CHECK (the "Mark today complete" /
-"Set as today" buttons were DROPPED 2026-06-13 — click the mark to set your spot, click again to undo)
-and the Days list FOLLOWS your reading spot (the day holding the current passage auto-opens + gets a
-"Reading" highlight, separate from the gold plan "Today"). DECIDED: keep the source's
-verse-level interleaving (don't hand-reorder). **REFRESH-PERSISTENCE pass (2026-06-13):** reading order
-+ chrono position + compare + the chip/prose/Strong's/interlinear toggles now survive a reload,
-restored synchronously (no canonical→chrono flash); the reading pane no longer scrolls when the wheel
-is over fixed chrome (header/toolbar/nav/detail). Full records: memory `project_chronological_tab` +
+### Chronological reading mode + 365-day plan — DONE + LIVE (2026-06-09…13)
+Reading-ORDER toggle (Canonical | Chronological), any version; static `chronological.json` (1,102
+passages, 13 eras; `scripts/chronological/build_chronological.py`, no DB); exact-range trims + spans
+chapters; every passage shows a chapter heading with verse range (`withMarks`). 365-day "Days" plan
+(`Eras|Days` toggle; `58-dayplan.jsx`, click-to-check, per-text progress `lexica.plan.v1`, follows your
+spot). Refresh-persistence of order/position/compare/toggles (synchronous, no flash). DECIDED: keep the
+source's verse-level interleaving. Full records: memories `project_chronological_tab` +
 `project_refresh_persistence`. DEFERRED (user "looks good for now"): account-sync of plan progress; a
-stitched single-scroll "today's reading"; deeper per-tab persistence (Lexicon/Search/Notes/Study
-last-state + within-chapter scroll position).
+stitched single-scroll "today's reading"; deeper per-tab last-state + within-chapter scroll persistence.
 
-**CHRONOLOGICAL DAILY "READING INTRO" PANEL — DONE + LIVE 2026-06-13.** ESV-style per-reading card in
-the right detail panel (mobile = the ⓘ sheet) when reading chronologically: reading number, AI Berean
-title + summary, the era's dated timeline with the reading marked by a gold oval, and the day's
-passages. Backend NEW `views_chrono.py` (`GET /api/chrono/intro/<day>`, Haiku one-call title+summary,
-cached in ai_search_cache category `chrono`); frontend NEW `static/src/59-dayintro.jsx` (`DayIntroPanel`
-+ `TimelineStrip` + `ERA_TIMELINE` constant). Dates = LXX for the early eras + per-reading interpolated
-"c." (APPROXIMATE on purpose — not the ESV's hand-picked years). Design ported from a show_widget mock
-the user approved. Also this session (all LIVE): switch-INTO-chrono lands on the passage holding your
-current verse (`passageForRef`); the toolbar ‹ › carry the audio on a page turn (route through
-`turnPage`); single-chapter passages no longer play the WRONG chapter's audio (viewCh pinned to
-`start_ch` when there are no chapter marks); thin scrollbar on the Days list. Full record: memory
-`project_chronological_tab`.
-- **Reading-intro panel RESTYLED to match the rail — DONE + LIVE 2026-06-13** (commits d0759bd …
-  921fc05). Header = navy "Reading N" badge + era + `.detail-back` "‹ Overview" toggle (the custom
-  bottom link is gone; SummaryPanel's "‹ Intro" moved to the same slot to match); body = `.detail-hero`
-  + `.sec`/`.sec-head` sections; the AI summary carries the navy "AI" tag. TIMELINE reworked: the
-  now-bar carves the dots (paper ring) so it can't swallow a checkpoint, milestones became a lined-up
-  dot·year·label list, first dot aligned under the first bullet. NO brown — marker/hovers → `--accent`
-  (memory `feedback_no_brown`); year weight 500 (JetBrains Mono only loads 400/500, 600 faux-bolds).
-  An HTML fixed-dot timeline rebuild was tried + REVERTED (921fc05) — the SVG strip is live. Full
-  record: memory `project_chronological_tab`.
-- **xref panel consistency — DONE (was flagged NEXT; covered by the 2026-06-14 rail pass).** The
-  cross-ref panel now matches the word-study rhythm: header = verse ref (`.detail-pos`), `TSK` is a
-  quiet badge on the "Related passages" `.sec-head`, the AI synthesis is a `.sec` with the navy AI
-  badge, and the gold (TSK tag, `.dverse`/`.verse` borders + numbers, `.xref-ref`) was swept to navy.
-  Verified in `40-crossref-panel.jsx`. Memory `project_side_panel_rail`.
-- PHASE 2 (deferred): exact hand-curated per-reading dates; sub-eras (Saul/David/Solomon) with finer
-  timelines; milestone labels ON the timeline track (v1 lists them below).
+**Daily "Reading intro" panel — DONE + LIVE 2026-06-13** (restyled to the rail; the xref panel was matched
+in the 2026-06-14 rail pass). ESV-style per-reading card (mobile = the ⓘ sheet): AI Berean title+summary +
+the era's dated timeline + the day's passages. Backend `views_chrono.py` (`GET /api/chrono/intro/<day>`,
+Haiku, cached category `chrono`); frontend `59-dayintro.jsx`. Dates are APPROXIMATE "c." on purpose. Full
+record: memory `project_chronological_tab`. PHASE 2 (deferred): exact hand-curated per-reading dates;
+sub-eras (Saul/David/Solomon) finer timelines; milestone labels ON the timeline track (v1 lists them below).
 
-**MOBILE TOOLBAR RELOAD "FLASH" — FONT half FIXED 2026-06-13; chrono half DEFERRED.** The chapter/verse
-button flashed on every reload. Diagnosed on the LIVE site (chrome-devtools MCP, instrumented reload):
-two causes. (1) FIXED — the chapter number's font (JetBrains Mono) loaded ~0.7s late so the digit painted
-in a fallback then snapped; one-word fix in templates/index.html, Google-Fonts `display=swap` →
-`display=optional` (commit 1164e5f), verified gone. (2) DEFERRED (user chose to skip, low value) — in
-chronological mode the button shows the canonical label for the beat before `chronological.json` loads,
-then flips to the passage label (`chronoOn` needs the async `chrono`). If ever wanted: save
-`curPassage.label` into `lexica.lib.v1` and show it via a `chronoIntended` fallback until chrono loads.
-`code: templates/index.html (fonts); 60-library.jsx .mbar-loc + curPassage; memory project_refresh_persistence`
+**Mobile toolbar reload "flash":** FONT half FIXED (Google-Fonts `display=swap`→`display=optional`, commit
+1164e5f — KEEP it). CHRONO half DEFERRED (low value): the button shows the canonical label for one beat
+before `chronological.json` loads; if ever wanted, cache `curPassage.label` in `lexica.lib.v1` and show it
+until chrono loads. `code: templates/index.html (fonts); 60-library.jsx .mbar-loc + curPassage`
 
-### Read-along audio — DONE + LIVE (BSB + KJV public; ESV live 2026-06-13)
-Per-chapter audio on KJV/BSB/ESV (ABP has no recording). Full record: memory `project_esv_audio` +
-TODO_ARCHIVE. **BSB is live for everyone** — public-domain openbible.com Souer mp3s, no key, no
-self-hosting (`/api/bsb/audio`). Control = a play/pause ICON in the toolbar + a draggable progress
-bar. **Mobile (2026-06-11): the scrubber docks at the BOTTOM, on a strip just above the reading
-cockpit, sliding up when a chapter loads — ALL modes incl. chronological (`.lib-audio-dock`); desktop
-chrono keeps the inline bar at the playing chapter.** Chrono is scroll-aware (plays the chapter at
-~45% mid-screen, auto-advances). Audio is per WHOLE chapter (no per-verse timing). STILL OPEN:
-- ~~**Mobile dock slide-OUT animation**~~ — **DONE 2026-06-11.** The bottom scrubber now eases back
-  DOWN when the chapter/passage ends (`audio-dock-down`), matching its slide-up entry. It stays mounted
-  one beat after the audio clears (`dockClosing` in 60-library.jsx) so the exit can play; a re-open cancels it.
-- ~~**ESV audio**~~ — **DONE + LIVE 2026-06-13 (owner-only).** `ESV_API_TOKEN` set in the WSGI; uses
-  **Crossway's own ESV API** (api.esv.org) — whole-Bible Max McLean reading, `views_esv._crossway_audio_url`
-  captures the 302→signed-mp3 URL. FCBH (`FCBH_API_KEY`, NT-only) stays as the fallback if only that key
-  is set.
-- ~~**KJV audio**~~ — **DONE + LIVE 2026-06-11 (public, no key).** Single narrator + soft music
-  background (the "Firefighters for Christ" KJV reading, hosted by audiotreasure.com at
-  `/content/KJV_FF/<NN>_<Name>_<chap>.mp3`). Hotlinked like BSB — `views_kjv.kjv_audio` +
-  `api.kjvAudio` + `kjvMode` in the audio toggle; book-name tokens pinned in `_KJV_AUDIO_NAME`
-  (irregular spellings + a "Soloman" typo), Psalms = 3-digit chapters, all 66 books covered.
-  STILL OPEN: a **dramatized** KJV (multiple voices + music) = the FCBH recording, so it rides the
-  same pending Bible Brain key as ESV; swap/add it then if wanted. Self-hosting the archive.org
-  dramatized copies is off the table (FCBH owns that recording).
-- **Verse-by-verse karaoke** — needs per-verse timing data; bigger lift, parked.
+### Read-along audio — DONE + LIVE (BSB + KJV public, ESV owner-only)
+Per-chapter audio on KJV/BSB/ESV (ABP has none): BSB public openbible.com mp3s, KJV public
+audiotreasure.com (both hotlinked, no key), ESV via Crossway's own API (`ESV_API_TOKEN`, FCBH NT-only
+fallback). Play/pause icon + draggable scrubber; mobile docks at the bottom above the cockpit and is
+scroll-aware in chrono (auto-advances). Per WHOLE chapter (no per-verse timing). Full record: memory
+`project_esv_audio` + TODO_ARCHIVE. STILL OPEN: a **dramatized** KJV (multi-voice FCBH — rides the same
+pending Bible Brain key as ESV; self-hosting archive.org copies is off the table, FCBH owns it);
+**verse-by-verse karaoke** (needs per-verse timing — parked).
 `code: views_bsb.bsb_audio + views_esv.esv_audio; audio player in 60-library.jsx`
 
 ### Map tab
