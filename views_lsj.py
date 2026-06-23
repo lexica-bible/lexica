@@ -26,27 +26,33 @@ bp = Blueprint("lsj", __name__)
 # change LSJ, so we steer the summary instead (reframe, not a blacklist — see
 # project_synthesis_no_parse + project_ai_synthesis_quality). Three levers:
 #   - plain-meaning ANCHOR: the word's theology-free word_gloss (build_word_gloss.py) is
-#     fed in and the summary LEADS with it, so the attested sense ("assembly, congregation")
-#     sets the frame, not LSJ's institutional gloss (feedback_plain_meaning_not_tradition).
-#   - biblical focus: explain usage in the Greek OT (LXX) + NT; drop the classical/civic
-#     citations (Athens/Sparta/Delphi, legal codes) — background a Bible reader doesn't need.
+#     fed in and FRAMES the summary (not restated — the reader already sees it above), so the
+#     attested sense ("assembly, congregation") sets the frame, not LSJ's institutional gloss
+#     (feedback_plain_meaning_not_tradition).
+#   - biblical focus, keep the core definition: explain usage in the Greek OT (LXX) + NT and
+#     keep the entry's exact sense (ekklesia's "assembly duly summoned" = summoned/called
+#     together — don't flatten to "a group"); drop only the classical/civic citations
+#     (Athens/Sparta/Delphi, legal codes), the apparatus a Bible reader doesn't need.
 #   - plain over institutional: give the attested sense, never substitute a later
 #     ecclesiastical/doctrinal label even when the dictionary lists one.
 # Runs on Sonnet (claude-sonnet-4-6), same as xref/chapter-summary/ask-corpus (Haiku
 # over-asserts on loaded words). The reader already SEES the headword, so don't re-announce it.
 _LSJ_SYNTHESIS_SYSTEM = """\
-You are helping someone reading the Greek Bible understand a Greek word, working from its \
-plain meaning (when one is given) and a scholarly dictionary entry. Lead with the plain \
-meaning, then explain in plain modern English how the word is used in the biblical text — \
-the Greek Old Testament (Septuagint) and the New Testament. Stay with the plain, attested \
-sense: describe what the word actually denotes, and do NOT substitute a later \
-institutional, ecclesiastical, or doctrinal label for it, even if the dictionary lists \
-one. Leave out classical and civic background — ancient city-states, named historical \
-assemblies, legal codes; that material is not what a Bible reader needs. Do not invent \
-senses the word does not carry. Work from a Berean approach: the text speaks first, with \
-no imported systematic theology and no denominational assumptions. Write in plain prose — \
-no markdown, no headers, no bullet points. Do not state the word's grammatical parsing \
-(part of speech, case, number, tense, voice, mood); that is shown separately.\
+You are helping someone reading the Greek Bible understand a Greek word. You are given the \
+word's plain meaning and a scholarly dictionary entry. The reader already sees the plain \
+meaning, so do NOT open by restating it — let it frame your answer and go straight to what \
+the word precisely denotes and how it is used in the biblical text: the Greek Old Testament \
+(Septuagint) and the New Testament. Keep the exact sense the entry's core definition carries \
+— for an assembly-word, how the group is formed (e.g. summoned or called together), not a \
+flattened "group of people." Stay with the plain, attested sense: do NOT substitute a later \
+institutional, ecclesiastical, or doctrinal label for it, even if the dictionary lists one. \
+Drop the entry's classical and civic citations — ancient city-states, named historical \
+assemblies, legal codes — but keep its basic definition; that apparatus is not what a Bible \
+reader needs. Do not invent senses the word does not carry. Work from a Berean approach: the \
+text speaks first, with no imported systematic theology and no denominational assumptions. \
+Write in plain prose — no markdown, no headers, no bullet points. Do not state the word's \
+grammatical parsing (part of speech, case, number, tense, voice, mood); that is shown \
+separately.\
 """
 
 # The two user-message asks, kept as named constants so the synthesis fingerprint below
@@ -57,9 +63,9 @@ _LSJ_ASK_CTX = (
     "length — do not pad. No markdown, no headers, no bullet points."
 )
 _LSJ_ASK_GEN = (
-    "Give the word's plain meaning and how it is used in the biblical text. 2-3 sentences, 60 "
-    "words max. Let the material dictate the length — do not pad. No markdown, no headers, no "
-    "bullet points."
+    "Explain in plain terms what the word precisely denotes and how it is used in the biblical "
+    "text. 2-3 sentences, 60 words max. Let the material dictate the length — do not pad. No "
+    "markdown, no headers, no bullet points."
 )
 
 # Synthesis fingerprint — same self-healing scheme as the ai_search_cache entries. It's
