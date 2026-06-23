@@ -138,6 +138,11 @@ def _word_boundary_match(haystack: str | None, needle: str | None) -> bool:
 def db():
     conn = sqlite3.connect(DB)
     conn.row_factory = sqlite3.Row
+    # Several PA workers can touch bible.db at once (e.g. the startup cache cleanup),
+    # so wait up to 5s for another worker's write to finish rather than failing with
+    # "database is locked". Python's driver already defaults to ~5s; set it explicitly
+    # so the intent is visible and the read-only connection below gets it too.
+    conn.execute("PRAGMA busy_timeout = 5000")
     conn.create_function("strip_accents", 1, _strip_accents)
     conn.create_function("word_boundary", 2, _word_boundary_match)
     return conn
@@ -147,6 +152,7 @@ def db_ro():
     """Read-only connection for executing AI-generated SQL."""
     conn = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA busy_timeout = 5000")  # wait out a writer, don't error (see db())
     conn.create_function("strip_accents", 1, _strip_accents)
     conn.create_function("word_boundary", 2, _word_boundary_match)
     return conn

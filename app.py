@@ -3,8 +3,9 @@
 
 Thin app shell: builds the Flask app, wires the rate limiter, registers the
 domain blueprints (metav, crossref, lsj, kjv, lexicon, library, search, ai), and
-runs the three startup steps (schema migration, function-word cache, AI cache
-load). All route logic lives in the views_*/ai modules over the shared core.
+runs schema migration up front and warms the rest (function-word cache, AI cache
+load) in a background thread so a cold worker can serve the page immediately. All
+route logic lives in the views_*/ai modules over the shared core.
 
 The function-word classifier (_build_function_strongs_cache + its LSJ POS helpers)
 stays here because it's a startup step that populates core._FUNCTION_STRONGS IN
@@ -15,6 +16,7 @@ PA wsgi is UNCHANGED — `app` is still importable from this module.
 import os
 import re
 import sqlite3
+import threading
 
 from flask import Flask, jsonify, render_template, request, url_for, redirect, send_from_directory
 
@@ -319,17 +321,48 @@ def rate_limit_handler(e):
     return jsonify({"error": f"Rate limit exceeded — {e.description}"}), 429
 
 
+# Schema migration must finish before any request touches the DB, so it stays
+# synchronous — but it's a no-op on an already-migrated database, so it's cheap.
 _migrate_db()
-_build_function_strongs_cache()
-# AI result cache (ai_search_cache): one-time sweep of pre-unification rows, then
-# each synthesis category loads/prunes only its own. _load_ai_cache_from_db handles
-# the 'search' category (bulk preload + prune); the others just prune their stale rows.
-ai_cache_drop_legacy()
-_load_ai_cache_from_db()
-_prune_summary_cache()
-_prune_chrono_cache()
-_prune_xref_cache()
-_prune_metav_cache()
+
+
+# Everything below is heavy startup work the PAGE itself does NOT need: classifying
+# function words (a big lexicon×LSJ read) and loading/cleaning the saved AI answers
+# (several writes to bible.db). A freshly restarted PA worker used to run all of it
+# BEFORE it would answer even the first request — so a hard-refresh right after a
+# deploy could land on a still-booting worker and just sit there spinning. Run it in
+# a background thread, kicked off once per worker on that worker's first request (so
+# it works whatever PA's worker model is), and the worker hands back the page
+# immediately while these fill in over the next few seconds. Each step already logs
+# and swallows its own errors.
+def _warm_caches():
+    _build_function_strongs_cache()
+    # AI result cache (ai_search_cache): one-time sweep of pre-unification rows, then
+    # each synthesis category loads/prunes only its own. _load_ai_cache_from_db handles
+    # the 'search' category (bulk preload + prune); the others just prune their stale rows.
+    ai_cache_drop_legacy()
+    _load_ai_cache_from_db()
+    _prune_summary_cache()
+    _prune_chrono_cache()
+    _prune_xref_cache()
+    _prune_metav_cache()
+    log.info("Startup cache warm-up finished.")
+
+
+_warm_lock = threading.Lock()
+_warm_started = False
+
+
+@app.before_request
+def _kick_cache_warm():
+    """Spawn the one-time background cache warm-up on this worker's first request."""
+    global _warm_started
+    if _warm_started:
+        return
+    with _warm_lock:
+        if not _warm_started:
+            _warm_started = True
+            threading.Thread(target=_warm_caches, name="warm-caches", daemon=True).start()
 
 
 @app.route("/")
