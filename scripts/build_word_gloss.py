@@ -57,7 +57,11 @@ DODSON = _opt("dodson", os.path.join(
 # (CLAUDE.md "PLAIN MEANING, NOT TRADITION"): lead with the plain sense, keep the range.
 # Proposed — eyeball on --summary and add/remove freely. Keyed by base G-number.
 OVERRIDES = {
-    "G5485": "favor, kindness, goodwill",   # charis — NOT "grace" (the loaded church word)
+    # ABP tags grace/favor as G5484 (charin, 238x), NOT the dictionary's G5485 (charis,
+    # which ABP never uses) — and G5484's source gloss is the preposition "for the sake of",
+    # wrong for the noun. Override both: G5484 is what actually shows; G5485 is future-proofing.
+    "G5484": "favor, kindness, goodwill",   # charis/charin — NOT "grace", NOT "for the sake of"
+    "G5485": "favor, kindness, goodwill",   # charis (noun) — unused in ABP, kept in case a rebuild uses it
     "G4151": "spirit, breath, wind",        # pneuma — lead the primary sense; NOT "Ghost"
     "G166":  "age-long, lasting",           # aionios — from aion (an age); neither source plain
     "G1228": "slanderer, accuser",          # diabolos — the literal noun; "slanderous" is the adj
@@ -223,11 +227,19 @@ def main():
         print(f"  base numbers with NO gloss (hand-fill): {len(blank_base_sorted)} "
               f"e.g. {blank_base_sorted[:12]}")
 
+    if blank_dotted:
+        with open("gloss_dotted_blank.tsv", "w", encoding="utf-8") as f:
+            f.write("dotted_number\tlemma\n")
+            for num, lemma in sorted(blank_dotted):
+                f.write(f"{num}\t{lemma}\n")
+        print(f"  dotted with no lemma match: {len(blank_dotted)} -> gloss_dotted_blank.tsv "
+              f"e.g. {[n for n, _ in blank_dotted[:8]]}")
+
     if summary:
         lex = {r["strongs_g"]: r["lemma"] for r in
                conn.execute("SELECT strongs_g, lemma FROM lexicon WHERE strongs_g GLOB 'G*'")}
         gmap = {n: g for n, g, _ in rows}
-        check = ["G5485", "G5590", "G4561", "G1577", "G2435", "G86", "G1067", "G4151",
+        check = ["G5484", "G5590", "G4561", "G1577", "G2435", "G86", "G1067", "G4151",
                  "G26", "G907", "G3341", "G166", "G2851", "G4716", "G3875", "G3466",
                  "G2098", "G266", "G1343", "G2962", "G1228", "G3107"]
         print("\nloaded-word review — stored gloss (and what the card SHOWS via first-two-terms):")
