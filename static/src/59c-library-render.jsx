@@ -399,6 +399,7 @@ const LibRender = (function () {
       definition: "", derivation: "", is_function: false,
       isKjv: true,
       isHebrew: sid ? sid.startsWith("H") : false,
+      hebName: w.heb_name,                  // heb.db: Hebrew word is a name → allow metaV name lookup
     });
     return (
       <React.Fragment key={`${ch}-${v.verse}`}>
@@ -462,6 +463,7 @@ const LibRender = (function () {
       definition: "", derivation: "", is_function: false,
       isBsb: true,
       isHebrew: sid ? sid.startsWith("H") : false,
+      hebName: w.heb_name,                  // heb.db: Hebrew word is a name → allow metaV name lookup
     });
     return (
       <React.Fragment key={`${ch}-${v.verse}`}>

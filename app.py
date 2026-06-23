@@ -20,7 +20,7 @@ import threading
 
 from flask import Flask, jsonify, render_template, request, url_for, redirect, send_from_directory
 
-from core import log, DB, db, limiter, _FUNCTION_STRONGS, ai_cache_drop_legacy
+from core import log, DB, db, limiter, _FUNCTION_STRONGS, _HEB_NAME_STRONGS, heb_db, ai_cache_drop_legacy
 
 # LSJ part-of-speech detection for function words.
 # LSJ def_html has two POS patterns:
@@ -143,6 +143,41 @@ def _build_function_strongs_cache() -> None:
         log.info("Function word cache: %d function words identified via LSJ", len(func))
     except Exception as e:
         log.warning("Could not build function word cache (LSJ table may not exist yet): %s", e)
+
+
+def _build_heb_name_cache() -> None:
+    """Build core._HEB_NAME_STRONGS from heb.db's own morphology: the bare H-numbers whose
+    Hebrew word is a NAME (proper noun or gentilic clan), by DOMINANT use across the OT.
+    Gates the KJV/BSB reader's metaV name lookup so a common word capitalized mid-verse
+    ('Wilderness of Sinai') never pops a place card, while real names + gentilic clans still
+    do. Populated IN PLACE (clear+update) so `from core import _HEB_NAME_STRONGS` references
+    stay valid. Empty when heb.db isn't loaded — the endpoints then omit the flag and the
+    frontend falls back to the capital-letter heuristic."""
+    try:
+        conn = heb_db()
+        rows = conn.execute(
+            "SELECT strongs, morph, COUNT(*) AS n FROM heb_words "
+            "WHERE strongs GLOB 'H*' GROUP BY strongs, morph"
+        ).fetchall()
+        conn.close()
+        name_ct: dict[str, int] = {}
+        other_ct: dict[str, int] = {}
+        for r in rows:
+            num = "".join(c for c in (r["strongs"] or "") if c.isdigit())
+            code = r["morph"] or ""
+            if not num or not code:                       # no number / no grammar tag → no vote
+                continue
+            is_name = (code[0] == "N" and code[1:2] in ("p", "g")) or \
+                      (code[0] == "A" and code[1:2] == "g")     # noun proper/gentilic, adj gentilic
+            tgt = name_ct if is_name else other_ct
+            tgt[num] = tgt.get(num, 0) + (r["n"] or 0)
+        names = {num for num in (name_ct.keys() | other_ct.keys())
+                 if name_ct.get(num, 0) > other_ct.get(num, 0)}
+        _HEB_NAME_STRONGS.clear()
+        _HEB_NAME_STRONGS.update(names)
+        log.info("Hebrew name cache: %d proper-noun/gentilic Strong's from heb.db", len(names))
+    except Exception as e:
+        log.warning("Could not build Hebrew name cache (heb.db may not be loaded yet): %s", e)
 
 
 from views_metav import bp as metav_bp, prune_cache as _prune_metav_cache
@@ -337,6 +372,7 @@ _migrate_db()
 # and swallows its own errors.
 def _warm_caches():
     _build_function_strongs_cache()
+    _build_heb_name_cache()
     # AI result cache (ai_search_cache): one-time sweep of pre-unification rows, then
     # each synthesis category loads/prunes only its own. _load_ai_cache_from_db handles
     # the 'search' category (bulk preload + prune); the others just prune their stale rows.

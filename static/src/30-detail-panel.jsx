@@ -104,6 +104,13 @@ SummaryPanel._cache = {};
 // ============================================================
 // DETAIL PANEL — SIDEBAR / BOTTOM SHEET
 // ============================================================
+// metaV place comments carry a bare URL (almost always Wikipedia) tacked on the end —
+// it was never meant to show. Strip the URL (and any dangling "; "/", " separator) so the
+// card shows just the prose gloss, e.g. "river: now Wadi al Arish".
+function cleanPlaceComment(text) {
+  return String(text || "").replace(/\s*[;,]?\s*https?:\/\/\S+/g, "").trim().replace(/[;,]\s*$/, "");
+}
+
 function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onStrongsSearch, onReadInContext, onNameSearch, onNavigateToLexicon, onOpenStudyName, overviewBack, backLabel = "Overview" }) {
   const [verseText, setVerseText] = useState("");
   const [verseLoading, setVerseLoading] = useState(false);
@@ -343,8 +350,15 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     setMetavPlaceData(null);
     setMetavTab("person");
     // Skip metaV for words with a real Greek lemma — those belong to LSJ
-    // Exception: KJV/BSB words that look like proper nouns (capitalized) still go through metaV
-    const kjvIsPN = (entry.isKjv || entry.isBsb) && extractProperName(entry.pnName || entry.gloss || "") !== "";
+    // Exception: KJV/BSB words that are proper nouns still go through metaV. For Hebrew (OT)
+    // words we KNOW name-vs-common from heb.db's own grammar (entry.hebName, built at startup) —
+    // so a common word capitalized mid-verse ("Wilderness of Sinai") never pops a place card,
+    // while real names AND gentilic clans (Philistines) still do. Greek/NT words, or a missing
+    // heb.db, carry no hebName and fall back to the capital-letter heuristic.
+    const kjvIsPN = (entry.isKjv || entry.isBsb) && (
+      entry.hebName !== undefined ? entry.hebName
+                                  : extractProperName(entry.pnName || entry.gloss || "") !== ""
+    );
     if (!isPN && !kjvIsPN && entry.greek && entry.translit && entry.strongs_raw !== "2316") return;
     const name = extractProperName(entry.pnName || entry.gloss || "");
     if (!name || name.length < 2) return;
@@ -629,7 +643,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
               ) : <span className="sec-t">{isGentilic ? "Homeland" : "Biblical Place"}</span>}
               <span className="lsj-badge">metaV</span>
             </h4>
-            {metavData.comment && <p className="detail-p detail-p--meta">{metavData.comment}</p>}
+            {cleanPlaceComment(metavData.comment) && <p className="detail-p detail-p--meta">{cleanPlaceComment(metavData.comment)}</p>}
             {metavData.lat && metavData.lon
               ? <LeafletMap lat={metavData.lat} lon={metavData.lon} name={metavData.name} />
               : <p className="detail-p detail-p--meta" style={{color:"var(--ink-4)", fontStyle:"italic"}}>Location unknown</p>

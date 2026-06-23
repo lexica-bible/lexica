@@ -16,7 +16,7 @@ import sqlite3
 
 from flask import Blueprint, jsonify
 
-from core import db_ro, _KJV_BOOK_ID, _USFM_BOOK, usfm_titlecase, word_gloss_join
+from core import db_ro, _KJV_BOOK_ID, _USFM_BOOK, usfm_titlecase, word_gloss_join, _HEB_NAME_STRONGS
 
 bp = Blueprint("bsb", __name__)
 
@@ -106,7 +106,8 @@ def bsb_chapter(book, chapter):
             verses[vn] = {"verse": vn, "words": [], "verse_text": r["verse_text"], "heading": headings.get(vn)}
             order.append(vn)
         sids = [s.strip() for s in (r["strongs_ids"] or "").split(",") if s.strip()]
-        verses[vn]["words"].append({
+        sid0 = sids[0] if sids else ""
+        w_obj = {
             "word_id":   r["word_id"],
             "verse_pos": r["verse_pos"],
             "word":      r["word"],
@@ -118,7 +119,13 @@ def bsb_chapter(book, chapter):
             "lemma_gloss":   (r["lemma_gloss"] if wg_sel else "") or "",       # plain-meaning lemma gloss (word_gloss)
             "form":          (r["form"] if has_form else "") or "",            # inflected original word (side-card headword)
             "form_translit": (r["form_translit"] if has_form else "") or "",
-        })
+        }
+        # heb_name: heb.db's grammar says this Hebrew word is a NAME (proper noun or gentilic).
+        # Gates the reader's metaV name lookup. Hebrew words only, and only when the startup
+        # name-set is loaded; Greek words + a missing heb.db fall back to the capital-letter rule.
+        if _HEB_NAME_STRONGS and sid0.startswith("H"):
+            w_obj["heb_name"] = "".join(c for c in sid0 if c.isdigit()) in _HEB_NAME_STRONGS
+        verses[vn]["words"].append(w_obj)
     return jsonify([verses[v] for v in order])
 
 

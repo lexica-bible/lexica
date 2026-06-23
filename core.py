@@ -48,6 +48,13 @@ limiter = Limiter(get_remote_address, default_limits=["300 per minute"], storage
 # PLACE at startup by app.py's _build_function_strongs_cache (see module docstring).
 _FUNCTION_STRONGS: set[str] = set()
 
+# Bare H-numbers (no prefix, no byform suffix) whose Hebrew word is a NAME — a proper
+# noun or a gentilic clan — per heb.db's own OT grammar. Declared empty here; populated
+# IN PLACE at startup by app.py's _build_heb_name_cache. Gates the KJV/BSB reader's metaV
+# name lookup (views_kjv / views_bsb) so a common word capitalized mid-verse never pops a
+# bogus place/person card, while real names + gentilics still do.
+_HEB_NAME_STRONGS: set[str] = set()
+
 # In-memory L1 cache for AI-derived payloads (ai-search queries + xref synthesis/
 # curation). Shared by the AI and cross-reference blueprints; mutated IN PLACE
 # (cache[key] = payload), never reassigned, so `from core import _ai_cache`

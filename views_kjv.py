@@ -10,7 +10,7 @@ _kjv_strongs_search HELPER used by the search blueprint.
 """
 from flask import Blueprint, jsonify, request
 
-from core import db_ro, _KJV_BOOK_ID, _KJV_BOOK_ID_REV, word_gloss_join
+from core import db_ro, _KJV_BOOK_ID, _KJV_BOOK_ID_REV, word_gloss_join, _HEB_NAME_STRONGS
 
 bp = Blueprint("kjv", __name__)
 
@@ -126,7 +126,8 @@ def kjv_chapter(book, chapter):
             verses[vn] = {"verse": vn, "words": [], "verse_text": r["verse_text"], "heading": headings.get(vn)}
             order.append(vn)
         sids = [s.strip() for s in (r["strongs_ids"] or "").split(",") if s.strip()]
-        verses[vn]["words"].append({
+        sid0 = sids[0] if sids else ""
+        w_obj = {
             "word_id":   r["word_id"],
             "verse_pos": r["verse_pos"],
             "word":      r["word"],
@@ -136,7 +137,13 @@ def kjv_chapter(book, chapter):
             "lemma":     r["lemma"] or "",
             "xlit":      r["xlit"] or "",
             "lemma_gloss": (r["lemma_gloss"] if wg_sel else "") or "",
-        })
+        }
+        # heb_name: heb.db's grammar says this Hebrew word is a NAME (proper noun or gentilic).
+        # Gates the reader's metaV name lookup. Hebrew words only, and only when the startup
+        # name-set is loaded; Greek words + a missing heb.db fall back to the capital-letter rule.
+        if _HEB_NAME_STRONGS and sid0.startswith("H"):
+            w_obj["heb_name"] = "".join(c for c in sid0 if c.isdigit()) in _HEB_NAME_STRONGS
+        verses[vn]["words"].append(w_obj)
     return jsonify([verses[v] for v in order])
 
 
