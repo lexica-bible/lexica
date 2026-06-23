@@ -6,6 +6,18 @@ function stripArticles(s) {
   return s.replace(_ARTICLE_RE, "").trim() || s;
 }
 
+// A lemma's dictionary gloss from the lexicon KJV-rendering list (kjv_def) — a comma
+// list, sometimes with parenthetical KJV-isms. Trim it to a short sense ("spirit, wind")
+// to sit beside the headword lemma: drop the parentheticals, keep the first sense or two.
+function shortLemmaGloss(s) {
+  if (!s) return "";
+  const t = s.replace(/\([^)]*\)/g, " ").replace(/\s+/g, " ").trim();
+  const parts = t.split(/[,;]/).map(x => x.trim()).filter(Boolean);
+  let out = parts.slice(0, 2).join(", ").replace(/[\s,;:.\-]+$/, "");
+  if (out.length > 30 && parts[0]) out = parts[0].replace(/[\s,;:.\-]+$/, "");
+  return out;
+}
+
 // The Haiku-written blurbs (cross-ref synthesis, book/chapter summaries, person/
 // place descriptions, LSJ word study) routinely mark transliterated Greek/Hebrew in
 // markdown — *italic* and occasionally **bold**. Rendered as plain text the markers

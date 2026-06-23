@@ -1042,11 +1042,23 @@ input { font-family: inherit; }
   color: var(--ink-2);
 }
 .detail-form-w--he { font-family: var(--f-serif); }
+/* The inflected form's transliteration + this-verse english share one row, mirroring the
+   lemma's "romanization · gloss" line above so the two groups read in parallel. */
+.detail-form-trrow {
+  display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap;
+}
 .detail-form-tr {
   font-family: var(--f-serif);
   font-style: italic;
   font-size: 14px;
   color: var(--ink-3);
+}
+.detail-form-gloss {
+  font-family: var(--f-serif);
+  font-size: 15px;
+  color: var(--ink-2);
+  line-height: 1.4;
+  text-wrap: pretty;
 }
 
 .detail-section { padding: 12px 0; border-bottom: 1px solid var(--rule); }

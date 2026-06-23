@@ -508,10 +508,24 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   // The small "in this verse" line shows the inflected form — only when we have one AND
   // it differs from the headword lemma (indeclinable words can coincide → skip it).
   const heroForm = (heroInflected && heroInflected !== hero.script) ? heroInflected : "";
+  // The clicked word's CONTEXTUAL english (its sense IN THIS VERSE). When the card shows
+  // an inflected "in this verse" line, that english belongs next to the FORM it actually
+  // translates — not glued to the dictionary lemma above. Relocate it down whenever there's
+  // a form to attach it to (normal words only; for a proper noun the "gloss" is a name and
+  // stays as the headword).
+  const relocateGloss = !!(heroForm && hero.standaloneGloss && !hero.noGloss && !isPN && !metavData);
+  // Dictionary gloss for the LEMMA headword. Greek only: the lexicon KJV gloss is a clean
+  // short sense ("spirit, wind"). Hebrew/BSB carry no clean short lemma gloss (BDB is a
+  // paragraph), so their lemma shows just form + sound — the meaning sits in the BDB/LSJ
+  // section below.
+  const heroLemmaGloss = (entry.greek && entry.lemmaGloss) ? shortLemmaGloss(entry.lemmaGloss) : "";
+  // Beside the lemma up top: the dictionary gloss when we've moved the contextual one down
+  // to the form; otherwise the contextual gloss itself (today's behavior, e.g. KJV words).
+  const heroTopGloss = relocateGloss ? heroLemmaGloss : hero.standaloneGloss;
   // Show "translit · gloss" on one line whenever there's both — same for Greek and
   // Hebrew so the two cards match. Falls back to a standalone gloss line only when
   // there's no transliteration.
-  const heroInlineGloss = !!(hero.translit && hero.standaloneGloss && !hero.noGloss);
+  const heroInlineGloss = !!(hero.translit && heroTopGloss && !hero.noGloss);
 
   // Verse + place sections show an English reading text (not ABP) for Hebrew /
   // KJV-mode / BSB-mode / place words. BSB pulls BSB text; the rest pull KJV.
@@ -883,12 +897,12 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
               <div className={"detail-translit-row" + (hero.he ? " detail-translit-row-he" : "")}>
                 <span className="detail-translit">{hero.translit}</span>
                 {heroInlineGloss && (
-                  <><span className="detail-sep">·</span><span className="detail-gloss">{hero.standaloneGloss}</span></>
+                  <><span className="detail-sep">·</span><span className="detail-gloss">{heroTopGloss}</span></>
                 )}
               </div>
             )}
-            {!hero.noGloss && !heroInlineGloss && (
-              <div className="detail-gloss">{hero.standaloneGloss}</div>
+            {!hero.noGloss && !heroInlineGloss && heroTopGloss && (
+              <div className="detail-gloss">{heroTopGloss}</div>
             )}
           </div>
           {(heroForm || hero.morph) && (
@@ -898,8 +912,16 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
                 <span className={"detail-form-w" + (hero.he ? " detail-form-w--he" : "")}
                       dir={hero.he ? "rtl" : undefined}>{heroForm}</span>
               )}
-              {heroForm && heroInflectedTranslit && heroInflectedTranslit !== hero.translit && (
-                <span className="detail-form-tr">{heroInflectedTranslit}</span>
+              {heroForm && ((heroInflectedTranslit && heroInflectedTranslit !== hero.translit) || relocateGloss) && (
+                <div className="detail-form-trrow">
+                  {heroInflectedTranslit && heroInflectedTranslit !== hero.translit && (
+                    <span className="detail-form-tr">{heroInflectedTranslit}</span>
+                  )}
+                  {heroInflectedTranslit && heroInflectedTranslit !== hero.translit && relocateGloss && (
+                    <span className="detail-sep">·</span>
+                  )}
+                  {relocateGloss && <span className="detail-form-gloss">{hero.standaloneGloss}</span>}
+                </div>
               )}
               {hero.morph && <div className="detail-morph">{hero.morph}</div>}
             </div>

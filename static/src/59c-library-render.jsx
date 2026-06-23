@@ -160,6 +160,7 @@ const LibRender = (function () {
       id: `lib-${selBook.abbrev}-${ch}-${v.verse}-${w.position}`,
       ...wordEntryCore(w, { ref: `${selBook.abbrev} ${ch}:${v.verse}`, book: selBook.abbrev, chapter: ch, verse: v.verse, gloss: w.english }),
       english_head: w.english_head || "",   // hero shows the head word for a long gloss
+      lemmaGloss: w.kjv_def || "",          // lexicon KJV gloss → dictionary sense beside the lemma
       morph: w.morph || "",
       inflected: w.inflected || "",         // printed Greek form → side-card "in this verse" line
       inflectedTranslit: w.inflected_translit || "",   // its romanization (build_abp_translit.py)
