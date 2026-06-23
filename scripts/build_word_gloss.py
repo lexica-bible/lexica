@@ -246,6 +246,17 @@ def _first_word(g):
     return m.group(0) if m else ""
 
 
+def _byform_score(gloss, hg):
+    """How strongly a TBESH byform sense matches heb.db's own glosses for the number: total
+    heb.db occurrences whose gloss contains the sense's lead word. 0 = no text signal. Shared
+    by pick_hebrew and byform_audit so the chosen sense and the audit can't drift."""
+    tok = _first_word(gloss)
+    if not tok or not hg:
+        return 0
+    rx = re.compile(rf"\b{re.escape(tok)}\b")
+    return sum(c for hgl, c in hg if rx.search(hgl))
+
+
 def pick_hebrew(num, tbesh, heb_glosses):
     """TBESH gloss for a base H-number. When TBESH splits a number into byforms with different
     senses (H4057 'mouth' vs 'wilderness'), pick the sense that MATCHES how the real Hebrew
@@ -261,13 +272,33 @@ def pick_hebrew(num, tbesh, heb_glosses):
     if len(glosses) == 1:
         return normalize(glosses[0])
     hg = heb_glosses.get(canon(num), [])            # [(heb_gloss_lower, count)]
-    def score(g):
-        tok = _first_word(g)
-        if not tok or not hg:
-            return 0
-        rx = re.compile(rf"\b{re.escape(tok)}\b")
-        return sum(c for hgl, c in hg if rx.search(hgl))
-    return normalize(max(glosses, key=score))       # ties -> first (file order)
+    return normalize(max(glosses, key=lambda g: _byform_score(g, hg)))   # ties -> first (file order)
+
+
+def byform_audit(tbesh, heb_glosses):
+    """Measure the byform gap with NO sampling: for every Hebrew base TBESH splits into 2+
+    senses, did heb.db's gloss text settle which sense leads, or did we fall back to TBESH's
+    first sense (UNVERIFIED)? Returns (flipped, confirmed, fellback) of (base, gloss, detail):
+      flipped   = heb.db's wording picked a NON-first sense (the fix corrected it, e.g. midbar)
+      confirmed = heb.db's wording matched the first sense (already right)
+      fellback  = no heb.db text match -> still on TBESH's first guess, needs an eyeball."""
+    flipped, confirmed, fellback = [], [], []
+    for base, byforms in tbesh.items():
+        if not base.startswith("H") or len(byforms) < 2:
+            continue
+        glosses = list(byforms.values())
+        hg = heb_glosses.get(base, [])
+        scores = [_byform_score(g, hg) for g in glosses]
+        top = max(range(len(glosses)), key=lambda i: scores[i])    # first on ties
+        first = normalize(glosses[0])
+        cand = " | ".join(glosses)
+        if max(scores) == 0:
+            fellback.append((base, first, cand))
+        elif top != 0:
+            flipped.append((base, normalize(glosses[top]), f"was '{first}' | {cand}"))
+        else:
+            confirmed.append((base, first, cand))
+    return flipped, confirmed, fellback
 
 
 def pick_base(num, dod, tbesg_num):
@@ -343,7 +374,7 @@ def build_hebrew_rows(conn, heb_path, tbesh):
             continue
         g = pick_hebrew(num, tbesh, heb_glosses)
         (rows.append((num, g, "tbesh")) if g else blank.append(num))
-    return rows, blank
+    return rows, blank, heb_glosses
 
 
 def _review(gmap, items, label):
@@ -357,6 +388,7 @@ def _review(gmap, items, label):
 def main():
     do_apply = "--apply" in sys.argv
     summary = "--summary" in sys.argv
+    audit = "--byform-audit" in sys.argv
     conn = sqlite3.connect(DB)
     conn.row_factory = sqlite3.Row
 
@@ -367,8 +399,25 @@ def main():
           f"TBESH {len(tbesh)}")
 
     rows, blank_base, blank_dotted = build_greek_rows(conn, dod, tbesg_num, tbesg_lemma)
-    heb_rows, blank_heb = build_hebrew_rows(conn, HEB, tbesh)
+    heb_rows, blank_heb, heb_glosses = build_hebrew_rows(conn, HEB, tbesh)
     rows += heb_rows
+
+    if audit:
+        flipped, confirmed, fellback = byform_audit(tbesh, heb_glosses)
+        total = len(flipped) + len(confirmed) + len(fellback)
+        print(f"\nBYFORM AUDIT — Hebrew numbers TBESH splits into 2+ senses: {total}")
+        print(f"  flipped by heb.db (fix corrected the lead sense): {len(flipped)}")
+        print(f"  confirmed first sense (heb.db agreed)           : {len(confirmed)}")
+        print(f"  FELL BACK to first sense, NO heb.db signal      : {len(fellback)}  <- the still-unsure set")
+        with open("gloss_byform_audit.tsv", "w", encoding="utf-8") as f:
+            f.write("status\tbase\tchosen_gloss\tdetail\n")
+            for b, g, d in flipped:   f.write(f"flipped\t{b}\t{g}\t{d}\n")
+            for b, g, d in fellback:  f.write(f"fellback\t{b}\t{g}\t{d}\n")
+            for b, g, d in confirmed: f.write(f"confirmed\t{b}\t{g}\t{d}\n")
+        print("  -> gloss_byform_audit.tsv (eyeball the 'fellback' rows — that's exactly what's left)")
+        print("  flipped (heb.db changed the lead), first 25:")
+        for b, g, d in flipped[:25]:
+            print(f"    {b:6} -> {g}")
 
     by_src = {}
     for _, _, s in rows:
