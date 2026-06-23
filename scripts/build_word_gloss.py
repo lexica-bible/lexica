@@ -118,9 +118,8 @@ def canon(s):
 
 
 def canon_bf(s):
-    """Like canon() but KEEP the byform letter (H04057a -> H4057a). Lets a TBESH byform be
-    matched to its own occurrence count in heb.db, so the gloss can follow the byform that
-    actually dominates the text instead of the alphabetical-first one."""
+    """Like canon() but KEEP the byform letter (H04057a -> H4057a). Used to keep TBESH's
+    byform senses distinct when grouping them under a base number."""
     m = re.match(r"^([GH])0*(\d+)([a-z]?)$", s or "")
     return f"{m.group(1)}{m.group(2)}{m.group(3)}" if m else (s or "")
 
@@ -241,15 +240,34 @@ def load_tbesh(src):
     return out
 
 
-def pick_hebrew(num, tbesh, heb_counts_bf):
-    """TBESH gloss for a base H-number, choosing the byform that occurs MOST in heb.db. Ties
-    or no occurrence data keep TBESH's file order (= the old first-row-wins), so a number
-    heb.db doesn't carry — or whose byforms heb.db doesn't split — never gets worse."""
-    byforms = tbesh.get(canon(num))                 # {byform_canon: gloss} in file order
+def _first_word(g):
+    """First real word of a gloss, lowercased ('Wilderness (of Sinai)' -> 'wilderness')."""
+    m = re.search(r"[a-z]{3,}", (g or "").lower())
+    return m.group(0) if m else ""
+
+
+def pick_hebrew(num, tbesh, heb_glosses):
+    """TBESH gloss for a base H-number. When TBESH splits a number into byforms with different
+    senses (H4057 'mouth' vs 'wilderness'), pick the sense that MATCHES how the real Hebrew
+    text (heb.db) actually glosses the word: heb.db tags midbar plainly as H4057 but glosses
+    it 'wilderness' 271x and never 'mouth', so 'wilderness' wins. Match is on the gloss's lead
+    word against heb.db's own glosses for that number; ties or no match keep TBESH's file order
+    (= the old first-row behaviour), so a word with no signal — or whose heb.db wording differs
+    — never gets worse."""
+    byforms = tbesh.get(canon(num))
     if not byforms:
         return ""
-    best = max(byforms, key=lambda bf: heb_counts_bf.get(bf, 0))
-    return normalize(byforms[best])
+    glosses = list(byforms.values())                # one per byform, file order
+    if len(glosses) == 1:
+        return normalize(glosses[0])
+    hg = heb_glosses.get(canon(num), [])            # [(heb_gloss_lower, count)]
+    def score(g):
+        tok = _first_word(g)
+        if not tok or not hg:
+            return 0
+        rx = re.compile(rf"\b{re.escape(tok)}\b")
+        return sum(c for hgl, c in hg if rx.search(hgl))
+    return normalize(max(glosses, key=score))       # ties -> first (file order)
 
 
 def pick_base(num, dod, tbesg_num):
@@ -302,26 +320,28 @@ def build_greek_rows(conn, dod, tbesg_num, tbesg_lemma):
 def build_hebrew_rows(conn, heb_path, tbesh):
     """Hebrew rows + blanks for every base H-number the app can show a card for: KJV + BSB
     Hebrew Strong's + the heb.db OT reader, folded to base numbers (norm_h). For a number
-    TBESH splits into byforms, pick the byform that occurs most in heb.db (pick_hebrew) so
-    the card leads with the sense that actually dominates the text (midbar -> wilderness, not
+    TBESH splits into byforms, pick the sense that matches how heb.db glosses it (pick_hebrew)
+    so the card leads with the sense that actually dominates the text (midbar -> wilderness, not
     mouth) — falling back to file order where heb.db gives no count."""
-    universe, heb_counts_bf = set(), {}                 # canon_bf(byform) -> occurrences in heb.db
+    universe, heb_glosses = set(), {}                   # base H# -> [(heb_gloss_lower, count)]
     for tbl, col in (("kjv_strongs", "strongs_id"), ("bsb_strongs", "strongs_id")):
         if conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (tbl,)).fetchone():
             for r in conn.execute(f"SELECT DISTINCT {col} FROM {tbl} WHERE {col} GLOB 'H*'"):
                 universe.add(norm_h(r[0]))
     if heb_path and os.path.exists(heb_path):
         hc = sqlite3.connect(heb_path)
-        for r in hc.execute("SELECT strongs, COUNT(*) FROM heb_words WHERE strongs GLOB 'H*' GROUP BY strongs"):
-            universe.add(norm_h(r[0]))
-            heb_counts_bf[canon_bf(r[0])] = heb_counts_bf.get(canon_bf(r[0]), 0) + (r[1] or 0)
+        for strongs, gloss, cnt in hc.execute(
+                "SELECT strongs, gloss, COUNT(*) FROM heb_words WHERE strongs GLOB 'H*' GROUP BY strongs, gloss"):
+            universe.add(norm_h(strongs))
+            if gloss:
+                heb_glosses.setdefault(norm_h(strongs), []).append((gloss.lower(), cnt or 0))
         hc.close()
     rows, blank = [], []
     for num in universe:
         if num in HEBREW_OVERRIDES:
             rows.append((num, HEBREW_OVERRIDES[num], "override"))
             continue
-        g = pick_hebrew(num, tbesh, heb_counts_bf)
+        g = pick_hebrew(num, tbesh, heb_glosses)
         (rows.append((num, g, "tbesh")) if g else blank.append(num))
     return rows, blank
 
