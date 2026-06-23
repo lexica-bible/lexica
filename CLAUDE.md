@@ -505,9 +505,11 @@ rules + gotchas; open the named memory for the backstory.
   TBESG fill for LXX-extended + a few plain-meaning overrides (χάρις→"favor, kindness", πνεῦμα→"spirit,
   breath"); Hebrew = TBESH + overrides (sheol→"grave, realm of the dead", olam→"age, long duration");
   ABP dotted glossed by their OWN lemma. **ABP is WIRED + LIVE** via `core.word_gloss_cols()`; **KJV/BSB/
-  Hebrew cards + the Word study tab are WIRED + pushed (577beb0), awaiting deploy** — KJV/BSB chapter
-  endpoints use `core.word_gloss_join()`, Hebrew does a cross-db lookup, and `heroLemmaGloss` is un-gated
-  (30-detail-panel.jsx). BSB + Hebrew show the gloss (they have a form line); KJV keeps the in-verse word.
+  Hebrew cards + the Word study tab are WIRED + pushed (577beb0, 236f7a5), awaiting deploy** — KJV/BSB chapter
+  endpoints use `core.word_gloss_join()`, Hebrew does a cross-db lookup, and the card shows the plain meaning
+  up top for EVERY word with a gloss that isn't a name/place (`showLemmaGloss` in 30-detail-panel.jsx) — words
+  with an "in this verse" form line drop the contextual english onto it, no-form words (KJV, ABP-no-form) let
+  the meaning replace the in-verse word up top.
   Plain-meaning rule: "Key Design Decisions" + memory `feedback_plain_meaning_not_tradition`. Full state:
   memory `project_word_card_gloss`.
 - Rail stacks ≤3 deep: summary/Intro → xref → (word OR note). The "‹ back" link NAMES the card
