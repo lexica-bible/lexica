@@ -100,23 +100,30 @@ function AcProse({ text, onVerse, onStrongs, verified }) {
 // One answered (or in-flight) question.
 function AcTurn({ turn, onReadInContext, onLemma, onStrongs }) {
   const cited = useMemo(() => _acCited(turn.keyStrongs), [turn.keyStrongs]);
-  // Display-text toggle (ABP · KJV · HEB) for THIS answer's verse evidence. The
+  // Display-text toggle (ABP · BSB · KJV · HEB) for THIS answer's verse evidence. The
   // evidence is found by Strong's number, but the text shown can be the ABP (Greek
-  // LXX), the KJV, or — for a Hebrew answer — the real Hebrew OT (heb.db). A
-  // Hebrew-only answer auto-shows HEB so the reader sees the actual Hebrew rather
-  // than the LXX; a manual pick wins after that. HEB is grayed when the answer
-  // cites no Hebrew word (heb.db is OT-only — it'd render blank for Greek/NT verses).
-  const hasHeb = useMemo(() =>
-    (turn.keyStrongs || []).some(k => /^H/i.test(k.strongs || k.strongs_base || "")),
-    [turn.keyStrongs]);
+  // LXX), the BSB or KJV in English, or the real Hebrew OT (heb.db). heb.db is
+  // OT-only, so HEB is offered only when the answer actually cites OT verses, and in
+  // HEB mode the verse list is trimmed to those OT verses (a mixed Greek+Hebrew
+  // answer would otherwise show blank rows for its NT/Greek verses). A Hebrew-only
+  // answer auto-shows HEB so the reader sees the actual Hebrew rather than the LXX;
+  // a manual pick wins after that.
+  const hasOtVerse = useMemo(() =>
+    (turn.results || []).some(e => !NT_BOOKS.has(e.book)),
+    [turn.results]);
   const autoMode = useMemo(() => {
     const ks = turn.keyStrongs || [];
     const heb = ks.some(k => /^H/i.test(k.strongs || k.strongs_base || ""));
     const grk = ks.some(k => /^G/i.test(k.strongs || k.strongs_base || ""));
-    return (heb && !grk) ? "heb" : "abp";   // pure-Hebrew answer → Hebrew; else ABP
-  }, [turn.keyStrongs]);
+    return (heb && !grk && hasOtVerse) ? "heb" : "abp";   // pure-Hebrew answer → Hebrew; else ABP
+  }, [turn.keyStrongs, hasOtVerse]);
   const [manualMode, setManualMode] = useState(null);   // null = follow autoMode
   const textMode = manualMode || autoMode;
+  // HEB shows only OT verses (heb.db is OT-only) so the list never has blank rows.
+  const displayResults = useMemo(() => {
+    if (textMode !== "heb") return turn.results || [];
+    return (turn.results || []).filter(e => !NT_BOOKS.has(e.book));
+  }, [textMode, turn.results]);
   // Verses the search actually surfaced — the only ones the synthesis prose may
   // link. Anything the AI names outside this set renders un-linked (seatbelt).
   // `turn.verified` (full retrieved ref list) is kept separate from the displayed
@@ -128,11 +135,11 @@ function AcTurn({ turn, onReadInContext, onLemma, onStrongs }) {
     return s;
   }, [turn.verified, turn.results]);
   const primaryCount = useMemo(() => {
-    if (!turn.results) return 0;
+    if (!displayResults.length) return 0;
     const seen = new Set();
-    for (const e of turn.results) if (e.is_primary) seen.add(e.ref);
-    return seen.size || new Set(turn.results.map(e => e.ref)).size;
-  }, [turn.results]);
+    for (const e of displayResults) if (e.is_primary) seen.add(e.ref);
+    return seen.size || new Set(displayResults.map(e => e.ref)).size;
+  }, [displayResults]);
 
   return (
     <div className="ac-turn">
@@ -185,15 +192,17 @@ function AcTurn({ turn, onReadInContext, onLemma, onStrongs }) {
                 <div className="ac-tm" role="group" aria-label="Display text">
                   <button className={"ac-tm-b" + (textMode === "abp" ? " on" : "")}
                     onClick={() => setManualMode("abp")} title="Show the ABP (Greek)">ABP</button>
+                  <button className={"ac-tm-b" + (textMode === "bsb" ? " on" : "")}
+                    onClick={() => setManualMode("bsb")} title="Show the BSB (modern English)">BSB</button>
                   <button className={"ac-tm-b" + (textMode === "kjv" ? " on" : "")}
                     onClick={() => setManualMode("kjv")} title="Show the KJV">KJV</button>
                   <button className={"ac-tm-b" + (textMode === "heb" ? " on" : "")}
-                    onClick={() => setManualMode("heb")} disabled={!hasHeb}
-                    title={hasHeb ? "Show the Hebrew OT" : "No Hebrew word in this answer"}>HEB</button>
+                    onClick={() => setManualMode("heb")} disabled={!hasOtVerse}
+                    title={hasOtVerse ? "Show the Hebrew OT (Old Testament verses only)" : "No Old Testament verses in this answer"}>HEB</button>
                 </div>
               </div>
               <CorpusResults
-                allResults={turn.results}
+                allResults={displayResults}
                 primaryStrongs={turn.keyStrongs}
                 citedStrongs={cited}
                 showAll={false}
