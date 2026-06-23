@@ -117,7 +117,7 @@ const TOUR_STEPS = [
   { icon: "Book",    label: "The Library",       body: "Read in ABP Greek, KJV, or the Berean Standard Bible — on their own, in parallel, or compare them side by side. Switch between plain reading and a full interlinear (Hebrew over OT words, Greek over NT), follow the text in chronological order, or listen with read-along audio. Click any word for its lexicon entry; click any verse number for cross-references. Beyond the canon you'll also find the Apocrypha, 1 Enoch, and the Apostolic Fathers." },
   { icon: "Panel",   label: "Cross-References",  body: "Every verse connects to Torrey's Treasury of Scripture Knowledge — AI-curated to the strongest matches and synthesized into a thematic overview anchored in ABP vocabulary." },
   { icon: "Note",    label: "Notes & Highlights", body: "Highlight verses in five colors, write notes on any word or verse, drop bookmarks, and keep a free-form journal. It all saves in your browser automatically — no account required. Sign in with email or Google to sync everything across your devices." },
-  { icon: "Book",    label: "Support Lexica",    body: "Lexica is free, independent, and has no ads. It's maintained by one person who thinks serious Bible study tools shouldn't cost hundreds of dollars. If it's been useful to your studies, a small contribution keeps it running.", donate: true },
+  { icon: "Book",    label: "Get in touch",      body: "Lexica is free, independent, and has no ads — built and maintained by one person. Questions, corrections, or feedback on your studies? I'd genuinely love to hear from you.", donate: true },
 ];
 
 function GuidedTour({ onDone }) {
@@ -139,8 +139,7 @@ function GuidedTour({ onDone }) {
         <p className="tour-body">{cur.body}</p>
         {cur.donate && (
           <div className="tour-donate-btns">
-            <a className="donate-btn kofi" href="https://ko-fi.com/lexica" target="_blank" rel="noopener noreferrer">☕ Ko-fi</a>
-            <a className="donate-btn github" href="https://github.com/sponsors/jonathan-pernice" target="_blank" rel="noopener noreferrer">♥ GitHub Sponsors</a>
+            <a className="donate-btn contact" href="mailto:hello@lexica.bible">✉ hello@lexica.bible</a>
           </div>
         )}
         <div className="tour-dots">
@@ -205,11 +204,10 @@ function AboutView({ owner }) {
           <li>Translation comparisons surface where ABP, KJV, and the BSB make different rendering choices for the same source word</li>
         </ul>
 
-        <h2 className="about-h2">Support Lexica</h2>
-        <p className="about-p">Lexica is free, independent, and has no ads. It's maintained by one person who thinks serious Bible study tools shouldn't cost hundreds of dollars or require a seminary login. If it's been useful to you, a small contribution keeps the lights on.</p>
+        <h2 className="about-h2">Get in touch</h2>
+        <p className="about-p">Lexica is free, independent, and has no ads. It's maintained by one person who thinks serious Bible study tools shouldn't cost hundreds of dollars or require a seminary login. Questions, corrections, or feedback? I'd love to hear from you.</p>
         <div className="about-donate">
-          <a className="donate-btn kofi" href="https://ko-fi.com/lexica" target="_blank" rel="noopener noreferrer">☕ Ko-fi</a>
-          <a className="donate-btn github" href="https://github.com/sponsors/jonathan-pernice" target="_blank" rel="noopener noreferrer">♥ GitHub Sponsors</a>
+          <a className="donate-btn contact" href="mailto:hello@lexica.bible">✉ hello@lexica.bible</a>
         </div>
         </>
         )}
