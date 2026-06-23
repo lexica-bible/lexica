@@ -6,6 +6,23 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Word-card lemma gloss: source chosen + built — Greek + Hebrew, ABP live (2026-06-23)
+
+The card's lemma gloss used to come from `lexicon.kjv_def` (KJV-ized + alphabetical, so it led with
+"charity"/"Ghost"). Replaced with a new `word_gloss` side table: Greek = Dodson's plain ranges + TBESG fill
+for LXX-extended numbers + a few plain-meaning overrides; Hebrew = TBESH + overrides; ABP dotted words
+glossed by their OWN lemma (TBESG-lemma index, then ABP's own dictionary, then numbers/particles by hand).
+17505 rows, no blanks on the words people study. ABP card wired (`core.word_gloss_cols`, deploy-safe) and
+live-verified. **KJV/BSB/Hebrew card wiring is the one piece left — it's back in TODO.md** (the frontend
+un-gate touches the locked card, so it was held for a fresh pass). Memory: `project_word_card_gloss`.
+- Lessons (also in the feedback memories): the source was picked by a PLAIN-MEANING quality pass on the
+  LOADED words, NOT by coverage — TBESG's one-word gloss is loaded (grace/hell/propitiation), Dodson's
+  ranges win but still lead loaded on χάρις → hand-override. ABP tags grace as **G5484 (charin), never
+  G5485** — the override had to target the number ABP actually uses. Dotted scholarly-prose hapax are left
+  blank (they show the LSJ section) rather than risk a wrong auto-pulled gloss.
+
+---
+
 ## Ask-corpus tuning — functionality + cleanup (2026-06-23)
 
 Commits 1822ffa, fd4eb7c, 4b06414, e1f1713 (pushed, awaiting deploy). Visual polish deferred to Claude

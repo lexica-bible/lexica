@@ -142,6 +142,44 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
   dotted, per-source counts). Decide: own tab vs under About; one component vs a server template.
   `code: views_seo.py + templates/seo/ (crawlable pattern), static/src/90-app.jsx (nav/tab), or an About sub-page`
 
+- **"Loaded terms" word-study SERIES — authored content layer (idea — parked 2026-06-22).** Turn the
+  propitiation study into a repeatable (e.g. weekly) series. Every entry follows a fixed SEVEN-SLOT
+  skeleton (maps onto the standing word-study method):
+  1. **Loaded English term + its etymology** — where the freight comes from before any Greek (propitiation
+     → Latin *propitiatio*, pagan Roman appeasement).
+  2. **Underlying lexeme(s) + Strong's + root** (*hilaskomai* / *hilasmos* / *hilastērion* ← *hileōs*; plus
+     the Hebrew it renders, *kipper*).
+  3. **Attested semantic range**, theology stripped off.
+  4. **THE SEAM** — where the loading entered; the heart of each entry and what makes it a study not a
+     dictionary gloss (propitiation: the LXX conscripting *hilask-* to carry *kipper*, object shifting from
+     deity to sin).
+  5. **Symmetric audit** — the competing replacement gloss held to the same standard, its own motive and
+     freight included (expiation, and Dodd's discomfort with wrath).
+  6. **Case-by-case usage** — one row per occurrence: verse + grammar + which sense the text forces
+     (Heb 2:17 object = sins; Heb 9:5 furniture; Rom 3:25 contested; 1 John initiator problem).
+  7. **Most defensible rendering** — the verdict, often "not a single English word."
+
+  CADENCE (the hard part of any series) is largely solved: the lexical work is already done on a stack —
+  *charis* (favor, not infused grace), *baptizō* (immerse, medium-neutral), *metanoia* (change of mind),
+  *ekklesia* (assembly), *hamartia* (missing the mark) — each slots into the seven frames, so ~6 entries
+  are bankable before writing anything new (runway to launch and stay ahead).
+
+  This is a CURATED authored layer, not generated data, so it needs storage the generated word-study path
+  doesn't. The note proposed two new tables — `word_study` (slug/title/term/etymology/lexeme_refs/
+  semantic_range/seam/symmetric_audit/verdict/publish_date/series_tag) + `study_occurrence` (study_id/
+  verse_ref/lexeme_form/sense_analysis/contested). BUT `study.db` already stores authored entries (json
+  body + `type` + draft/published `status` — the Study tab's Topics/Graphs), so the real first question is
+  **reuse study.db with a new entry type vs. new tables.** Reuses the 3-zone Word-study layout: occurrences
+  in the center, verdict/audit in the right card, the series index in the left rail (replacing the
+  book-distribution chart on these pages).
+
+  **THE ONE FORK to settle before any schema:** a standalone **Studies** section you navigate to (cleaner
+  editorially, better for a subscribe-able weekly drop) vs. a "featured study" overlay that surfaces inside
+  Word study when a searched lexeme happens to have one authored (deepens the existing tool, rewards
+  exploration). Not exclusive — but whichever is the FRONT DOOR changes the routing and the data model's
+  emphasis.
+  `code: study.db / views_study.py + static/src/55-study.jsx (authored-entry pattern); static/src/80-lexicon.jsx (3-zone reuse); or new word_study/study_occurrence tables + a Studies route`
+
 - **Ask-corpus DAILY SPEND CAPS + follow-up limits — BUILT + PUSHED (commit c558abd; awaiting deploy).**
   Stops a logged-in user (or the whole site) running up the Anthropic bill on the paid corpus search.
   Per account/UTC-day: user 5 / berean 10 / admin unlimited (admin also NOT counted toward the site total);
@@ -283,30 +321,17 @@ purely about which word you land on when you click. Almost all of it is done and
 
 ## Word study + Ask the corpus — REDESIGNED (2026-06-19, under development)
 
-### ⚠ OPEN — Word-card lemma gloss: layout shipped, SOURCE is poor + needs rework (2026-06-22)
-The word side-card now puts the verse's English on the conjugated form and a dictionary gloss on the
-lemma (commit 297c276, LIVE pending deploy). The LAYOUT is right; the GLOSS SOURCE is not good enough.
-Full state + plan: memory `project_word_card_gloss`. **CANDIDATE source (NOT settled) = STEPBible BRIEF
-lexicons, TBESG (Greek) + TBESH (Hebrew), `Gloss` column** — CC BY, same project as heb.db, TBESG
-ABP-LXX-aware. ⚠ **Its one-word gloss is theologically LOADED on some words — χάρις→"grace" (plain
-meaning = favor/kindness). NOT usable verbatim.** (I wrongly called it "validated" off love/spirit/God;
-the user probed χάρις and it failed — see memories `feedback_plain_meaning_not_tradition` +
-`feedback_verify_before_claiming`.)
-- **NEXT, gating everything: a plain-meaning QUALITY pass on the LOADED/ambiguous words** (χάρις, ψυχή,
-  σάρξ, ἐκκλησία, ἱλαστήριον, ᾅδης…). Build a side-by-side of kjv_def vs TBESG vs Dodson; user judges each
-  → THEN pick the source (TBESG / Dodson short-ranges / TBESG-with-hand-overrides). Reading the glosses,
-  not counting them.
-- Read-only coverage audit (necessary, not sufficient): `python3 scripts/check_gloss_coverage.py bible.db
-  --heb heb.db --fetch-stepbible` ON PA → exact coverage + `gloss_tbesg_missing.tsv` / `gloss_tbesh_missing.tsv`.
-  (~10,846 Greek / ~8,723 Hebrew numbers in source vs ~5,251 used → coverage likely near-total.)
-- **Only AFTER source is settled:** load it into bible.db (primary-sense per number), swap the ABP card off
-  `kjv_def`, un-gate the lemma gloss from Greek-only so KJV/BSB/Hebrew cards show it too.
-- **3619 dotted Greek words** show their BASE number's gloss (lemma corrected by `dotted_lexicon`, gloss
-  isn't). A base-number match won't fix them → give them their own gloss by lemma lookup (separate sub-job).
-- Greek `kjv_def` coverage was 99.9% (6 blanks: G3372/G259/G4452 visible, G9825/9831/9832 not in lexicon)
-  — hand-fill any residual.
-- Re-verify 100% (quality, not just coverage) with the audit before calling it done. Bar = memory
-  `feedback_accuracy_completeness_bar`.
+### Word-card lemma gloss — Greek + Hebrew BUILT + ABP LIVE (2026-06-23); KJV/BSB/Hebrew wiring LEFT
+DONE: `word_gloss` table on PA (17505 rows — Dodson base + TBESG fill + overrides for Greek, TBESH +
+overrides for Hebrew, dotted by lemma / ABP's own dict); ABP card wired + live-verified
+(`core.word_gloss_cols`, deploy-safe, aliased `AS kjv_def`). Full record: memory `project_word_card_gloss`.
+LEFT — the careful frontend slice (do fresh, verify LIVE — can't test locally):
+- Wire KJV/BSB/Hebrew cards: their word endpoints join `word_gloss` (KJV/BSB by strongs_id; Hebrew must
+  FOLD the heb.db byform, H2617a→H2617), thread `entry.lemmaGloss`, then un-gate `heroLemmaGloss`
+  (30-detail-panel.jsx:521 is `entry.greek && …` → drop the Greek-only). CAUTION: the word card is LOCKED —
+  scope CSS to `.wd`, don't break Hebrew's hero (hero.script = bdbEntry.lemma).
+- Optional: εἰμί G1510 reads "am, exist" → could override to "to be, exist"; hand-finish the 46 dotted-hapax
+  one-liners (`gloss_dotted_blank.tsv` on PA) if 100% on those is wanted (rest show the LSJ section — fine).
 
 The Word-study / AI experience was rebuilt to the Claude-design mockups (in `design/`). LIVE but the
 header still shows an "Under development" badge on these two tabs. Full record: memory
