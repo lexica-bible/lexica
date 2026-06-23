@@ -6,6 +6,36 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Word-card lemma gloss: KJV/BSB/Hebrew + Word study wired + Hebrew byform fix — ALL LIVE (2026-06-23)
+
+Finished what the entry below started — `word_gloss` now feeds EVERY word card, not just ABP.
+- KJV/BSB chapter endpoints join it via the new `core.word_gloss_join()` (deploy-safe; folds a Hebrew
+  byform suffix in SQL). The Hebrew reader (separate `heb.db`, can't join bible.db) looks it up cross-db,
+  byform folded. Frontend threads `entry.lemmaGloss` into the 3 entry builders.
+- The card shows the plain meaning UP TOP for every word with a gloss that isn't a name/place
+  (`showLemmaGloss` in 30-detail-panel.jsx). Words with an "in this verse" form line drop the contextual
+  English onto it; no-form words (KJV, ~44% of ABP) let the meaning replace the in-verse word up top
+  (user's call). Word study tab Greek "definition" + cognate/lookup glosses lead with `word_gloss` too.
+
+HEBREW BYFORM WRONG-LEADS (the real find): TBESH splits some H-numbers into a/b senses; the build kept the
+alphabetical-first, so midbar (H4057) read "mouth" (1x homonym) not "wilderness" (271x).
+- First fix matched the heb.db byform LETTER -> FAILED: heb.db byform tagging is MIXED (some plain `H####`,
+  some `H####a`), so nothing matched and it fell back to "mouth". Caught by the dry-run still showing "mouth"
+  (the BSB card only LOOKED right because that word ALSO mis-matched a metaV place, which shows the verse's
+  own word -> see the open follow-up in TODO.md).
+- WORKING fix (9dfb25d): match the TBESH sense against heb.db's own GLOSS TEXT instead. `--byform-audit`
+  measures the rest by confidence (coverage = share of heb.db uses the picked sense covers; <0.5 = review).
+  A Claude-chat review of the audit gave 25 hand overrides (14 confident + 11 leans); residual ~294
+  low-coverage words are synonym-noise (correct, not errors). H2742 + 5 coin-tosses left as-is.
+- LESSON: don't assume a sister dataset (TBESH vs heb.db/TAHOT) tags byforms the same way — verify with a
+  live query before building on it (cost two attempts). Re-run `--byform-audit` after any rebuild.
+
+Commits: 577beb0 (wiring) -> 236f7a5 (no-form words show it too) -> 9dfb25d (gloss-text fix) ->
+2ce4255/287f63b (audit + confidence) -> ee77fb1/f2b85a2 (25 overrides). Full record: memory
+`project_word_card_gloss`. Open follow-up moved to TODO.md: metaV place/person false-positives.
+
+---
+
 ## Word-card lemma gloss: source chosen + built — Greek + Hebrew, ABP live (2026-06-23)
 
 The card's lemma gloss used to come from `lexicon.kjv_def` (KJV-ized + alphabetical, so it led with

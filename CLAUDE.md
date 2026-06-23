@@ -254,8 +254,8 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   lemma; Hebrew = TBESH + overrides. Joined via `core.word_gloss_cols()` (ABP) and `core.word_gloss_join()`
   (KJV/BSB chapter endpoints — folds a Hebrew byform in SQL); Hebrew reader does a cross-db lookup (heb.db
   can't join bible.db). All deploy-safe, aliased `AS kjv_def`/returned as `lemma_gloss`. Built by
-  `scripts/build_word_gloss.py` (`--summary`/`--apply`). ABP LIVE; KJV/BSB/Hebrew cards + Word study tab
-  WIRED + pushed (577beb0), awaiting deploy. Full record: memory `project_word_card_gloss`.
+  `scripts/build_word_gloss.py` (`--summary`/`--apply`). ABP + KJV/BSB/Hebrew cards + the Word study tab
+  ALL LIVE (2026-06-23). Full record: memory `project_word_card_gloss`.
 - `books` — book metadata (name, testament, regex)
 - `ai_search_cache` — cached AI query results and TSK synthesis
 - `kjv_verses` — KJV full verse text (31,102 verses)
@@ -504,8 +504,8 @@ rules + gotchas; open the named memory for the backstory.
   git), which REPLACED the KJV-ized `lexicon.kjv_def` ("charity"/"Ghost"). Greek = Dodson's plain ranges +
   TBESG fill for LXX-extended + a few plain-meaning overrides (χάρις→"favor, kindness", πνεῦμα→"spirit,
   breath"); Hebrew = TBESH + overrides (sheol→"grave, realm of the dead", olam→"age, long duration");
-  ABP dotted glossed by their OWN lemma. **ABP is WIRED + LIVE** via `core.word_gloss_cols()`; **KJV/BSB/
-  Hebrew cards + the Word study tab are WIRED + pushed (577beb0, 236f7a5), awaiting deploy** — KJV/BSB chapter
+  ABP dotted glossed by their OWN lemma. **All word cards + the Word study tab are LIVE (2026-06-23)** — ABP
+  via `core.word_gloss_cols()`; KJV/BSB chapter
   endpoints use `core.word_gloss_join()`, Hebrew does a cross-db lookup, and the card shows the plain meaning
   up top for EVERY word with a gloss that isn't a name/place (`showLemmaGloss` in 30-detail-panel.jsx) — words
   with an "in this verse" form line drop the contextual english onto it, no-form words (KJV, ABP-no-form) let
