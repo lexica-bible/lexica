@@ -166,37 +166,21 @@ function VerseRow({ book, chapter, verse, label, allResults, onWordClick, onRead
 }
 
 // ============================================================
-// CORPUS SEARCH — PASSAGE GROUP (collapsible book+chapter section)
+// CORPUS SEARCH — VERSE EVIDENCE LIST
 // ============================================================
-// A passage group = one book·chapter heading with its verses beneath. A flat,
-// always-open section (NOT a collapsible card) — the curated key passages are short, so
-// separate fold-out boxes were just clutter you had to open one at a time.
-function CorpusGroup({ label, verses, allResults, onWordClick, onReadInContext, textMode, primaryStrongs, citedStrongs, kjvCache }) {
+// The AI search's verse evidence renders as a plain list of occurrences — the SAME flat
+// `.vlist` look as the Word-study occurrence list (and every other verse-result list).
+// Each row self-labels with its full reference, so per-chapter headings were redundant.
+function CorpusVerseList({ verses, ...rowProps }) {
   return (
-    <div className="corpus-group">
-      <div className="corpus-group-head">
-        <Icon.Book style={{ opacity: 0.5, flexShrink: 0 }}/>
-        <span className="corpus-group-label">{label}</span>
-        <span className="corpus-group-count">{verses.length} verse{verses.length !== 1 ? "s" : ""}</span>
-      </div>
-      <div className="corpus-group-body">
-        {verses.map(v => (
-          <VerseRow
-            key={`${v.book}-${v.chapter}-${v.verse}`}
-            book={v.book}
-            chapter={v.chapter}
-            verse={v.verse}
-            label={v.ref}
-            allResults={allResults}
-            onWordClick={onWordClick}
-            onReadInContext={onReadInContext}
-            textMode={textMode}
-            primaryStrongs={primaryStrongs}
-            citedStrongs={citedStrongs}
-            kjvCache={kjvCache}
-          />
-        ))}
-      </div>
+    <div className="vlist">
+      {verses.map(v => (
+        <VerseRow
+          key={`${v.book}-${v.chapter}-${v.verse}`}
+          book={v.book} chapter={v.chapter} verse={v.verse} label={v.ref}
+          {...rowProps}
+        />
+      ))}
     </div>
   );
 }
@@ -266,40 +250,30 @@ function CorpusResults({ allResults, primaryStrongs, citedStrongs, showAll, onWo
   const hasPrimary = allResults.some(e => e.is_primary);
   const hasAdditional = allResults.some(e => e.is_additional);
 
-  const primaryGroups = hasPrimary
-    ? groups.map(g => ({ ...g, verses: g.verses.filter(v => v.is_primary) })).filter(g => g.verses.length > 0)
-    : groups;
+  // Flatten the ordered groups into plain verse lists (keep the ordering from `groups`,
+  // drop the per-chapter headings + boxes). Primary evidence first; the themed
+  // "additional" refs (may not contain the word) in their own labeled section.
+  const orderedVerses = groups.flatMap(g => g.verses);
+  const primaryVerses = hasPrimary ? orderedVerses.filter(v => v.is_primary) : orderedVerses;
+  const additionalVerses = hasAdditional ? orderedVerses.filter(v => v.is_additional) : [];
+  const otherVerses = (hasPrimary || hasAdditional)
+    ? orderedVerses.filter(v => !v.is_primary && !v.is_additional) : [];
 
-  const additionalGroups = hasAdditional
-    ? groups.map(g => ({ ...g, verses: g.verses.filter(v => v.is_additional) })).filter(g => g.verses.length > 0)
-    : [];
-
-  const otherGroups = (hasPrimary || hasAdditional)
-    ? groups.map(g => ({ ...g, verses: g.verses.filter(v => !v.is_primary && !v.is_additional) })).filter(g => g.verses.length > 0)
-    : [];
-
-  const passageGroupProps = { allResults, onWordClick, onReadInContext, textMode, primaryStrongs, citedStrongs, kjvCache };
+  const rowProps = { allResults, onWordClick, onReadInContext, textMode, primaryStrongs, citedStrongs, kjvCache };
 
   return (
     <div className="corpus-groups">
-
-      {primaryGroups.map(g => (
-        <CorpusGroup key={g.label} label={g.label} verses={g.verses} {...passageGroupProps} />
-      ))}
-      {additionalGroups.length > 0 && (
+      <CorpusVerseList verses={primaryVerses} {...rowProps} />
+      {additionalVerses.length > 0 && (
         <div className="additional-refs-section">
           <div className="additional-refs-label">
             Additional references
             <span style={{ fontWeight: 400, color: "var(--ink-4)" }}> · related by theme — may not contain the word</span>
           </div>
-          {additionalGroups.map(g => (
-            <CorpusGroup key={g.label} label={g.label} verses={g.verses} {...passageGroupProps} />
-          ))}
+          <CorpusVerseList verses={additionalVerses} {...rowProps} />
         </div>
       )}
-      {showAll && otherGroups.map(g => (
-        <CorpusGroup key={g.label} label={g.label} verses={g.verses} {...passageGroupProps} />
-      ))}
+      {showAll && otherVerses.length > 0 && <CorpusVerseList verses={otherVerses} {...rowProps} />}
     </div>
   );
 }
