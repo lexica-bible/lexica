@@ -6,6 +6,25 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Reader word card — metaV name false-positives on common OT words — FIXED + LIVE (2026-06-23, 54aafab)
+
+A common Hebrew word BSB/KJV capitalizes mid-verse (midbar "Wilderness of Sinai", H4057) tripped the reader's
+metaV NAME lookup and popped a bogus place/person card; the same capital-letter guess (`kjvIsPN`) also wrongly
+HID gentilic clans BDB tags "Adjective" (Philistines, Moabites).
+- FIX: gate the lookup on whether the Strong's is actually a NAME — `core._HEB_NAME_STRONGS`, a startup set of
+  bare H-numbers that are proper nouns or gentilics, built from heb.db's OWN morphology by DOMINANT use
+  (`app._build_heb_name_cache`, mirrors the Greek `_FUNCTION_STRONGS` cache). KJV/BSB chapter endpoints send
+  `heb_name` per Hebrew word; `30-detail-panel.jsx` gates `kjvIsPN` on `entry.hebName`. Greek/NT words + a
+  missing heb.db carry no flag → fall back to the capital-letter rule (deploy-safe). No hardcoded word lists.
+- TRIED FIRST + REVERTED: a `bdb.part_of_speech` "Proper" check. Dead end — 409 H-numbers have a BLANK tag
+  (incl. Egypt H4714), and gentilics are tagged "Adjective", so it both leaked (So/No) and hid clans.
+- Verified on heb.db: Joshua/Egypt/Philistines dominant-name; midbar + the particles al(H5921)/asher(H834)/
+  et(H853)/al-not(H408) zero-name (the "So"/"No" leakers). Also strip the bare wiki URL from metaV place
+  comments (`cleanPlaceComment`). Full record: memory `project_metav_expansion`.
+- LESSON (process): three slips this session — linkified the wiki URL instead of just stripping it (not asked),
+  guessed a table name (`metav_places_aliases`; it's `metav_place_aliases`) → query errored, and dumped a
+  ~1000-row query he had to scroll. Memory `feedback_confirm_ask_before_big_changes` (2026-06-23).
+
 ## Word-card lemma gloss: KJV/BSB/Hebrew + Word study wired + Hebrew byform fix — ALL LIVE (2026-06-23)
 
 Finished what the entry below started — `word_gloss` now feeds EVERY word card, not just ABP.

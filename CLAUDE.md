@@ -829,6 +829,12 @@ memory `project_ai_synthesis_quality`.
 ## MetaV (person/place sidebar)
 - Tables: `metav_people` (+_aliases, _groups, _relationships), `metav_places` (+_aliases; has lat/lon, strongs_g)
 - Looked up by NAME (not strongs). Frontend fetches person + place in parallel; toggle shown when both exist
+- **KJV/BSB reader word → metaV name gate (2026-06-23):** the lookup fires only when the word's Strong's is a
+  NAME (proper noun or gentilic) per `core._HEB_NAME_STRONGS` — a startup set built from heb.db morphology by
+  DOMINANT use (`app._build_heb_name_cache`, mirrors `_FUNCTION_STRONGS`; endpoints send `heb_name`,
+  `30-detail-panel.jsx` gates `kjvIsPN` on `entry.hebName`; Greek/NT + no-heb.db fall back to capitals).
+  Killed bogus place cards for common words BSB caps mid-verse (midbar "Wilderness of Sinai") without hiding
+  clans BDB tags "Adjective" (Philistines). Place comments also strip a bare wiki URL. Memory `project_metav_expansion`.
 - Hebrew proper nouns: route to metaV (person/place) with BDB stacked BELOW (KJV-style). `isHebrewWord` (any H#)
   drives BDB; `isHebrew = isHebrewWord && !isPN` drives the Hebrew hero/LSJ suppression
 - Default tab (Phase 6): trusts the word's OWN tipnr type via `pn_types` (a SET — 'person'/'place'/

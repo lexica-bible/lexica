@@ -321,16 +321,6 @@ purely about which word you land on when you click. Almost all of it is done and
 
 ## Word study + Ask the corpus — REDESIGNED (2026-06-19, under development)
 
-### Reader word card — metaV place/person false-positives on common OT words (found 2026-06-23)
-A common Hebrew word whose English is Capitalized mid-sentence in BSB/KJV trips the metaV name lookup and
-shows a bogus "Biblical Place"/"Person" card — e.g. BSB midbar in "Wilderness of Sinai" pops up an Arabah
-map. Cause: `30-detail-panel.jsx` fetches metaV by `extractProperName(entry.pnName || entry.gloss)`, and for
-KJV/BSB it treats ANY capitalized gloss as a possible proper noun (`kjvIsPN`, ~line 347). Side effect: when
-metaV matches, `relocateGloss` is suppressed, so the "in this verse" English ALSO drops off the card.
-Fix idea: gate the KJV/BSB metaV lookup on something stronger than "first letter is capital" — the word's
-Strong's is a known proper noun, or the gloss is a standalone name (not just mid-phrase capitalization).
-Verify on BSB midbar after. (Surfaced during the word_gloss byform work — see TODO_ARCHIVE.)
-
 (Word-card lemma gloss itself — KJV/BSB/Hebrew + Word study + the Hebrew byform fix — is DONE + LIVE
 2026-06-23; full record in TODO_ARCHIVE.md + memory `project_word_card_gloss`.)
 
