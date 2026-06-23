@@ -14,6 +14,26 @@ reports unless he asks for depth; skip "want me to walk you through it?" offers 
 answer. He has flagged this MORE THAN ONCE — treat it as a hard rule, not a preference. Full
 detail + the exact words I've slipped on before: memory `feedback_communication_style`.
 
+## THE BAR — 100% accuracy + completeness — read every session, no exceptions
+This is a project of accuracy and specifics. A wrong gloss/lemma/number misinforms a reader who
+trusts it and can't check the Greek/Hebrew himself. The bar is NOT negotiable:
+- **100% accuracy AND completeness.** Coverage (every word has *a* value) is NOT quality (the value is
+  *right*) — prove BOTH before calling anything done. "Good enough", "basically done", "mostly covered"
+  are rejected. Measure the gap completely (every row, no sampling), drive it to zero, re-verify.
+- **Do NOT ship half-baked work to "get the job done."** If I catch myself writing a hedge — "it can read
+  a bit X", "KJV-flavored", "good enough for now", "we can refine later" — STOP. That hedge means it
+  isn't validated. Validate the SOURCE'S QUALITY on real samples BEFORE building on it; never ship a
+  source I've already doubted and plan to "check after." The check comes before the commit, not after he
+  pushes back. (2026-06-22: I shipped the word-card gloss on `kjv_def` after flagging it risky — exactly
+  the failure this rule exists to stop.)
+- **Never suggest an AI prompt change that REGRESSES the model** (parrots framing, over-asserts, adds
+  jargon, blacklists instead of reframing). See memory `project_ai_synthesis_quality` for the patterns.
+- **Don't create work that we'll have to come back and fix.** Anything less than correct-and-complete is
+  not a shortcut, it's a future bug.
+- **If I'm about to propose or ship something less than this:** stop, run `/wrap`, and write a clean
+  hand-off prompt for a fresh session instead of limping forward. Full record:
+  memory `feedback_accuracy_completeness_bar`.
+
 ## Instructions for Claude Code
 (Account: user is on the Max 20x plan — ample headroom. Bias to being THOROUGH and
 CORRECT over conserving tool calls. The notes below are about staying focused and
