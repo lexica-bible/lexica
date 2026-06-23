@@ -19,53 +19,52 @@ from views_lexicon import _greek_cognates
 bp = Blueprint("lsj", __name__)
 
 
-# Why this prompt is shaped the way it is (2026-06-23, the G1577 ἐκκλησία case): the LSJ
-# entry ITSELF lists the loaded senses — "in NT, the Church, as a body of Christians ...
-# as a building" (the last from a 6th-c. legal code). So a faithful summary of the entry
-# reproduces "the Church / a building"; that was never a model hallucination. We can't
-# change LSJ, so we steer the summary by PROMPT (reframe, not a blacklist — see
+# This produces a plain DEFINITION of the word, not a usage survey (2026-06-23). It must NOT
+# reference the Bible, its books/sections (OT, NT, Gospels, Paul), versions (the Septuagint),
+# or where the word appears — a definition states the meaning, the way a dictionary does; the
+# reader sees the verse context elsewhere. Steered by PROMPT (reframe, not a blacklist — see
 # project_synthesis_no_parse + project_ai_synthesis_quality). Levers:
-#   - plain over institutional: give the attested sense, never substitute a later
-#     ecclesiastical/doctrinal label even when the dictionary lists one — THIS is what stops
-#     "the Church / a building" (feedback_plain_meaning_not_tradition).
-#   - biblical focus, keep the core definition: explain usage in the Greek OT (LXX) + NT and
-#     keep the entry's exact sense (ekklesia's "assembly duly summoned" = summoned/called
-#     together — don't flatten to "a group"); drop only the classical/civic citations
-#     (Athens/Sparta/Delphi, legal codes), the apparatus a Bible reader doesn't need.
-#   - don't re-announce the headword: the reader already sees the word + its short gloss.
-# We TRIED feeding the word_gloss in as a plain-meaning anchor and PULLED it (2026-06-23) —
-# it dragged the summary toward our 1-3 word gloss and flattened the entry's richer sense.
-# The prompt alone suppresses the leak, so the model reads the full entry freely. Runs on
-# Sonnet (claude-sonnet-4-6), same as xref/chapter-summary/ask-corpus (Haiku over-asserts).
+#   - plain over churchy: give the ordinary attested sense, never a traditional church word,
+#     with a worked example (χάρις=favor not grace; ἐκκλησία=assembly not the Church/building;
+#     πνεῦμα=spirit not Ghost). The χάρις leak ("grace ... God's unearned goodwill ... in Paul")
+#     showed the category rule alone misses "grace" — it reads as plain English to the model;
+#     the example pins it (feedback_plain_meaning_not_tradition).
+#   - keep the entry's exact sense (ekklesia's "duly summoned" = summoned/called together,
+#     not flattened to "a group"); drop the classical citations (cities, dates, legal codes).
+#   - no Bible references, no re-announcing the headword the reader already sees, no theology.
+# History: tried a word_gloss anchor (pulled — flattened the sense); tried a "biblical usage"
+# framing (pulled — the user wants a definition, not "in the NT it means ..."). Runs on Sonnet
+# (claude-sonnet-4-6), same as xref/chapter-summary/ask-corpus (Haiku over-asserts).
 _LSJ_SYNTHESIS_SYSTEM = """\
-You are helping someone reading the Greek Bible understand a Greek word, working from the \
-scholarly dictionary entry below. The reader already sees the word and its short gloss, so \
-do NOT open by re-announcing them — go straight to what the word precisely denotes and how \
-it is used in the biblical text: the Greek Old Testament (Septuagint) and the New Testament. \
-Keep the exact sense the entry's core definition carries \
-— for an assembly-word, how the group is formed (e.g. summoned or called together), not a \
-flattened "group of people." Stay with the plain, attested sense: do NOT substitute a later \
-institutional, ecclesiastical, or doctrinal label for it, even if the dictionary lists one. \
-Drop the entry's classical and civic citations — ancient city-states, named historical \
-assemblies, legal codes — but keep its basic definition; that apparatus is not what a Bible \
-reader needs. Do not invent senses the word does not carry. Work from a Berean approach: the \
-text speaks first, with no imported systematic theology and no denominational assumptions. \
-Write in plain prose — no markdown, no headers, no bullet points. Do not state the word's \
-grammatical parsing (part of speech, case, number, tense, voice, mood); that is shown \
-separately.\
+You are writing a short, plain-English definition of a Greek word for someone reading the \
+Greek Bible, working from the scholarly dictionary entry below. Give the word's meaning and \
+the range of senses it carries — define it, the way a dictionary states what a word means. \
+Do NOT reference the Bible, its books or sections (Old Testament, New Testament, Gospels, \
+Paul, and so on), any version or edition (such as the Septuagint), or where the word \
+appears: a definition states the meaning itself, it does not survey usage. The reader \
+already sees the word and its short gloss, so don't just re-announce them — give the fuller \
+sense. Keep the exact sense the entry's core definition carries — for an assembly-word, how \
+the group is formed (summoned or called together), not a flattened "group of people." Use \
+the plain, ordinary sense, never the traditional church word — e.g. χάρις is "favor, \
+kindness" (not "grace"), ἐκκλησία is "assembly, congregation" (not "the Church" or "a \
+building"), πνεῦμα is "spirit, breath" (not "Ghost"). Drop classical and civic citations — \
+city-states, named historical assemblies, legal codes. Do not invent senses the word does \
+not carry, and add no imported theology. Write one short definition in plain prose — no \
+markdown, no headers, no bullet points. Do not state grammatical parsing (part of speech, \
+case, number, tense, voice, mood); that is shown separately.\
 """
 
 # The two user-message asks, kept as named constants so the synthesis fingerprint below
 # covers their wording (editing either auto-refreshes the cached summaries).
 _LSJ_ASK_CTX = (
-    "Identify the sense of the word active in the verse above and explain it in plain prose. "
-    "2-3 sentences, 60 words max. Let the material dictate the length — do not pad. No "
-    "markdown, no headers, no bullet points."
+    "Define the word in plain terms — its meaning and the range of senses it carries. 2-3 "
+    "sentences, 60 words max. Let the material dictate the length — do not pad. No markdown, "
+    "no headers, no bullet points."
 )
 _LSJ_ASK_GEN = (
-    "Explain in plain terms what the word precisely denotes and how it is used in the biblical "
-    "text. 2-3 sentences, 60 words max. Let the material dictate the length — do not pad. No "
-    "markdown, no headers, no bullet points."
+    "Define the word in plain terms — its meaning and the range of senses it carries. 2-3 "
+    "sentences, 60 words max. Let the material dictate the length — do not pad. No markdown, "
+    "no headers, no bullet points."
 )
 
 # Synthesis fingerprint — same self-healing scheme as the ai_search_cache entries. It's
