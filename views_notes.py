@@ -71,7 +71,7 @@ _RESET_TTL = 3600            # a reset link is good for 1 hour
 
 # Ask-the-corpus (paid AI search) daily caps — keep the API bill bounded.
 # Per ACCOUNT per UTC day, by tier (admin is exempt entirely):
-AI_DAILY_LIMITS = {"user": 5, "berean": 10}
+AI_DAILY_LIMITS = {"user": 3, "berean": 10}
 # Whole-SITE cap per UTC day across everyone (≈ $2 at ~4¢/search). Admin use is
 # NOT counted here. Hit it and AI search pauses for all accounts until tomorrow.
 AI_SITE_DAILY = 50
