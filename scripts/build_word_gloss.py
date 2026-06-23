@@ -98,6 +98,18 @@ HEBREW_OVERRIDES = {
     "H5599": "aftergrowth",                # saphiach, self-sown crop (NOT "outpouring")
     "H1984": "to praise",                  # halal/hallelujah — dominant sense, was NOT in the byform options
     "H4541": "molten image, cast idol",    # massekah, golden-calf sense — was NOT in the byform options
+    # Tier-3 leans (Claude-chat review): nudge to the common sense; plain wording.
+    "H6696": "to confine, besiege",        # tsur (NOT "provoke")
+    "H8577": "sea monster, serpent",       # tannin (NOT "jackal", which is tannim)
+    "H7623": "to praise",                  # shabach (NOT "soothe")
+    "H7663": "to wait, hope",              # sabar (NOT "inspect")
+    "H5848": "to faint, grow weak",        # ataph (NOT "turn aside")
+    "H1238": "to empty, lay waste",        # baqaq (NOT "luxuriant")
+    "H5844": "to wrap, cover",             # atah (NOT "grasp")
+    "H2556": "to be leavened, sour",       # chamets (NOT "be red"/"oppress")
+    "H5710": "to adorn, deck",             # adah (NOT "advance")
+    "H5860": "to swoop, pounce",           # it (NOT "scream")
+    "H1933": "to be, become",              # hawah (NOT the Job 37:6 "fall")
 }
 
 # Dotted ABP numbers whose lemma is a particle/numeral with no TBESG headword, glossed by
