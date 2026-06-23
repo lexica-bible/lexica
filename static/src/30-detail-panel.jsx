@@ -514,16 +514,16 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   // a form to attach it to (normal words only; for a proper noun the "gloss" is a name and
   // stays as the headword).
   const relocateGloss = !!(heroForm && hero.standaloneGloss && !hero.noGloss && !isPN && !metavData);
-  // Dictionary gloss for the LEMMA headword — the plain-meaning `word_gloss` sense
-  // ("spirit, breath"), now threaded for ABP, KJV, BSB, and Hebrew alike (each text's
-  // chapter endpoint joins word_gloss). It only SHOWS when there's an "in this verse"
-  // form to move the contextual english down to (relocateGloss below): BSB + Hebrew
-  // have one; KJV does not, so KJV keeps showing the in-verse word, like an ABP word
-  // with no surface form.
+  // The plain-meaning `word_gloss` dictionary sense ("spirit, breath"), threaded for ABP,
+  // KJV, BSB, and Hebrew alike (each text's chapter endpoint joins word_gloss).
   const heroLemmaGloss = entry.lemmaGloss ? shortLemmaGloss(entry.lemmaGloss) : "";
-  // Beside the lemma up top: the dictionary gloss when we've moved the contextual one down
-  // to the form; otherwise the contextual gloss itself (today's behavior, e.g. KJV words).
-  const heroTopGloss = relocateGloss ? heroLemmaGloss : hero.standaloneGloss;
+  // Show that dictionary gloss up top for EVERY word that has one and isn't a name/place.
+  // When there's an "in this verse" form line, the contextual english drops onto it
+  // (relocateGloss); when there isn't (KJV, an ABP word with no printed form), the meaning
+  // simply replaces the in-verse word up top. A form word with NO gloss keeps the old
+  // behavior: empty up top, contextual english on the form line (don't duplicate it).
+  const showLemmaGloss = !!(heroLemmaGloss && !hero.noGloss && !isPN && !metavData);
+  const heroTopGloss = showLemmaGloss ? heroLemmaGloss : (relocateGloss ? "" : hero.standaloneGloss);
   // Show "translit · gloss" on one line whenever there's both — same for Greek and
   // Hebrew so the two cards match. Falls back to a standalone gloss line only when
   // there's no transliteration.
