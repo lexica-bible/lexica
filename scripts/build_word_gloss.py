@@ -82,6 +82,22 @@ HEBREW_OVERRIDES = {
     "H5769": "age, long duration",         # olam — NOT "forever/everlasting"
     "H2617": "loyal love, kindness",       # chesed — richer than TBESH's bare "kindness"
     "H853":  "marks the direct object",    # et — TBESH's "[Obj.]" is cryptic (no parens: card strips them)
+    # Byform wrong-lead fixes (audit + Claude-chat review, 2026-06-23): the gloss-text matcher
+    # grabbed a rare sense; the common one is restored here. Keyed by base H-number.
+    "H3293": "forest, wood",               # ya'ar (NOT the rare "honeycomb")
+    "H3651": "so, thus",                   # ken adverb (NOT the rare adjective "right")
+    "H6672": "noon, midday",               # tsohar (NOT the Gen 6:16 ark "roof/opening")
+    "H5492": "whirlwind, storm",           # suphah (NOT the place-name "Suphah")
+    "H2006": "if",                         # hen, Aramaic conditional (NOT "therefore")
+    "H2530": "to desire, covet",           # chamad verb (NOT the noun "precious thing")
+    "H328":  "gently, softly",             # at (NOT the rare "mutterer")
+    "H1430": "stack of grain, heap",       # gadish (NOT the Job 21:32 "tomb")
+    "H4531": "test, trial",                # massah (NOT "despair")
+    "H6872": "bundle, pouch",              # tseror (NOT the rare "pebble")
+    "H4609": "step, stair",                # maalah, ascent (NOT the idiomatic "thought")
+    "H5599": "aftergrowth",                # saphiach, self-sown crop (NOT "outpouring")
+    "H1984": "to praise",                  # halal/hallelujah — dominant sense, was NOT in the byform options
+    "H4541": "molten image, cast idol",    # massekah, golden-calf sense — was NOT in the byform options
 }
 
 # Dotted ABP numbers whose lemma is a particle/numeral with no TBESG headword, glossed by
