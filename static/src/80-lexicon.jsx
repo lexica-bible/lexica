@@ -350,7 +350,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
         else setMatches(data);
       } else {
         const data = await api.lexiconEnglish(q, corpus, testament);
-        if (data.length) { setGroupings(data); }
+        if (data.length) { setGroupings(data); setGlOpen(true); }
         else {
           // No English meaning matched — the input may be a Greek/Hebrew word
           // typed in Latin letters (e.g. "pneuma"). Fall back to the lookup,
@@ -432,7 +432,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
               return (
                 <button key={g.strongs}
                   className={"glrow" + (profile && profile.strongs === g.strongs ? " on" : "")}
-                  onClick={() => loadProfile(g.strongs, corpus === "all" ? undefined : corpus)}>
+                  onClick={() => { loadProfile(g.strongs, corpus === "all" ? undefined : corpus); setGlOpen(false); }}>
                   <span className="glrow-s">{g.strongs}</span>
                   <span className="glrow-main">
                     <span className="glrow-top">
@@ -620,10 +620,19 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
               </div>
               {occList}
             </>
+          ) : (loading && !groupings && !matches) ? (
+            <div className="wm-searching"><span className="wm-searching-spin"/>Searching…</div>
           ) : (!groupings && !matches && !error) ? (
             <div className="occ-welcome">
               <div className="occ-welcome-t">Greek &amp; Hebrew word study</div>
-              <div className="occ-welcome-s">Tap <b>Search</b> below to study a word, transliteration, or Strong's number.</div>
+              <form className="wm-search wm-welcome-search" onSubmit={handleSubmit}>
+                <WsI.Search className="wm-search-i"/>
+                <input className="wm-search-input" type="text" value={query}
+                  onChange={e => setQuery(e.target.value)} enterKeyHint="search"
+                  placeholder="Word, transliteration, Strong's…"/>
+                {query && <button type="button" className="wm-search-clear" onClick={() => setQuery("")} aria-label="Clear"><WsI.Close/></button>}
+              </form>
+              <div className="occ-welcome-s">Search a word, transliteration, or Strong's number — or tap a sample.</div>
               <div className="occ-welcome-chips">
                 {["πνεῦμα", "pistis", "G26", "spirit"].map(q => (
                   <button key={q} className="welcome-chip" onClick={() => handleSubmit(null, q)}>{q}</button>

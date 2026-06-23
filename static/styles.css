@@ -4698,6 +4698,10 @@ button.study-verse-ref { border: none; }
   .wm-search-clear:active { background: var(--bg-sunk); }
   .wm-search-hint { font-size: 12.5px; color: var(--ink-4); line-height: 1.5; padding: 0 2px; }
   .wm-search-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  /* search bar shown right on the empty word-study screen (entry point + feedback) */
+  .wm-welcome-search { margin: 2px 0 14px; text-align: left; }
+  .wm-searching { display: flex; flex-direction: column; align-items: center; gap: 12px; margin: 64px auto 0; color: var(--ink-3); font-size: 14px; }
+  .wm-searching-spin { width: 22px; height: 22px; border-radius: 50%; border: 2.5px solid var(--rule-2); border-top-color: var(--accent); animation: spin 0.7s linear infinite; }
 }
 
 /* ============================================================
