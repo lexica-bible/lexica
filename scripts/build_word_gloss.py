@@ -70,6 +70,7 @@ OVERRIDES = {
     "G4151": "spirit, breath, wind",        # pneuma — lead the primary sense; NOT "Ghost"
     "G166":  "age-long, lasting",           # aionios — from aion (an age); neither source plain
     "G1228": "slanderer, accuser",          # diabolos — the literal noun; "slanderous" is the adj
+    "G3341": "change of mind, repentance",  # metanoia — lead the plain sense, not the church term
 }
 
 # HEBREW base = TBESH's clean dictionary form; these 3 are the loaded ones it still gets
@@ -78,6 +79,7 @@ HEBREW_OVERRIDES = {
     "H7585": "grave, realm of the dead",   # sheol — NOT "hell"
     "H5769": "age, long duration",         # olam — NOT "forever/everlasting"
     "H2617": "loyal love, kindness",       # chesed — richer than TBESH's bare "kindness"
+    "H853":  "marks the direct object",    # et — TBESH's "[Obj.]" is cryptic (no parens: card strips them)
 }
 
 _ARTICLE = re.compile(r"^(?:a|an|the)\s+", re.I)
