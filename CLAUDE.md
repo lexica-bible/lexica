@@ -452,8 +452,13 @@ rules + gotchas; open the named memory for the backstory.
 - Word clicks → LSJ (G-numbers), BDB (H-numbers), or metaV (proper nouns); KJV/Hebrew route the same.
 - The side panel's Interlinear toggle FOLLOWS the reading text (KJV/BSB/Hebrew/ABP endpoints);
   Greek/Hebrew leads, English muted. ABP brackets inline.
-- Headword = the dictionary lemma (big) + a small "in this verse" inflected-form line for
-  Hebrew/BSB/ABP (ABP via the `abp_surface` side table; KJV has none).
+- Headword = the dictionary lemma (big) + its dictionary gloss; the word's *in-this-verse* English
+  now sits DOWN on the inflected "in this verse" form line (Hebrew/BSB/ABP; ABP form via `abp_surface`;
+  KJV has none). **Lemma-gloss source is PROVISIONAL + UNDER REWORK:** Greek uses lexicon `kjv_def`,
+  which is KJV-ized AND alphabetical → the lead term is often wrong ("charity" for ἀγάπη, "Ghost" for
+  πνεῦμα), so it's NOT good enough; Hebrew/BSB show no lemma gloss yet. Plan = Dodson glosses for Greek,
+  heb.db + OpenScriptures for Hebrew. Read-only audit: `scripts/check_gloss_coverage.py`. Full state +
+  the fix plan: memory `project_word_card_gloss`.
 - Rail stacks ≤3 deep: summary/Intro → xref → (word OR note). The "‹ back" link NAMES the card
   beneath it; the note card keeps just an X (DESKTOP). Word/xref panels trigger `has-detail` → compacts
   `.lib-reading` on desktop.

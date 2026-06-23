@@ -283,6 +283,23 @@ purely about which word you land on when you click. Almost all of it is done and
 
 ## Word study + Ask the corpus — REDESIGNED (2026-06-19, under development)
 
+### ⚠ OPEN — Word-card lemma gloss: layout shipped, SOURCE is poor + needs rework (2026-06-22)
+The word side-card now puts the verse's English on the conjugated form and a dictionary gloss on the
+lemma (commit 297c276, LIVE pending deploy). The LAYOUT is right; the GLOSS SOURCE is not good enough.
+Full state + plan: memory `project_word_card_gloss`. Audit tool: `scripts/check_gloss_coverage.py`
+(read-only; `python3 scripts/check_gloss_coverage.py bible.db --heb heb.db`).
+- **Greek:** uses `lexicon.kjv_def` — KJV-ized AND alphabetical, so the lead term is often wrong
+  (ἀγάπη→"charity", πνεῦμα→"Ghost"). Coverage 99.9% (6 blanks: G3372/G259/G4452 visible, G9825/9831/9832
+  not in lexicon). **Swap to Dodson glosses** (modern, public-domain; already used in the Apostolic-Fathers
+  build — check `scripts/apfathers/`). Then hand-fill the 6 blanks.
+- **3619 dotted words show their BASE number's gloss** (lemma is corrected by `dotted_lexicon`, gloss isn't
+  — a different word shows the alphabetical neighbour's meaning). Give them their own gloss (by dotted lemma).
+- **Hebrew:** no lemma gloss shipped yet (Hebrew/BSB show lemma + sound only). Add one — heb.db's own glosses
+  (most-common per number) for what it covers + OpenScriptures/Dodson-Hebrew for the byform/Aramaic/name
+  numbers heb.db lacks. (The audit's Hebrew pass needs a re-run — first run crashed, now fixed.)
+- Re-verify 100% (quality, not just coverage) with the audit before calling it done. Bar = memory
+  `feedback_accuracy_completeness_bar`.
+
 The Word-study / AI experience was rebuilt to the Claude-design mockups (in `design/`). LIVE but the
 header still shows an "Under development" badge on these two tabs. Full record: memory
 `project_ai_search_redesign`. What landed (all 4 phases + extras, pushed to master):
