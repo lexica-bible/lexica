@@ -117,6 +117,14 @@ def canon(s):
     return f"{m.group(1)}{m.group(2)}" if m else (s or "")
 
 
+def canon_bf(s):
+    """Like canon() but KEEP the byform letter (H04057a -> H4057a). Lets a TBESH byform be
+    matched to its own occurrence count in heb.db, so the gloss can follow the byform that
+    actually dominates the text instead of the alphabetical-first one."""
+    m = re.match(r"^([GH])0*(\d+)([a-z]?)$", s or "")
+    return f"{m.group(1)}{m.group(2)}{m.group(3)}" if m else (s or "")
+
+
 def norm_h(s):
     """Fold a Hebrew number to its base (H1234a -> H1234): KJV/BSB use base numbers,
     heb.db adds byform letters to split homographs."""
@@ -219,15 +227,29 @@ def parse_tbesg(src):
 
 
 def load_tbesh(src):
-    """{canon(H#) -> primary base-sense gloss} from TBESH. canon folds byforms
-    (H2617a/b -> H2617), and the first row wins = the primary sense."""
+    """{canon(H#) -> {byform_canon: gloss}} from TBESH, byforms kept SEPARATE (H4057a 'mouth'
+    vs H4057b 'wilderness') in file order. Folding to one gloss is deferred to pick_hebrew so
+    it can pick the byform that dominates the real Hebrew text — not the alphabetical-first
+    one, which for words like midbar (H4057) is the rare sense ('mouth', 1x vs 'wilderness',
+    271x). First gloss per byform wins (its primary sense)."""
     out = {}
     for c in _brief_lines(src):
         if len(c) >= 7 and c[0].startswith("H"):
             g = sense(c[6].strip())
             if g:
-                out.setdefault(canon(c[0].strip()), g)
+                out.setdefault(canon(c[0].strip()), {}).setdefault(canon_bf(c[0].strip()), g)
     return out
+
+
+def pick_hebrew(num, tbesh, heb_counts_bf):
+    """TBESH gloss for a base H-number, choosing the byform that occurs MOST in heb.db. Ties
+    or no occurrence data keep TBESH's file order (= the old first-row-wins), so a number
+    heb.db doesn't carry — or whose byforms heb.db doesn't split — never gets worse."""
+    byforms = tbesh.get(canon(num))                 # {byform_canon: gloss} in file order
+    if not byforms:
+        return ""
+    best = max(byforms, key=lambda bf: heb_counts_bf.get(bf, 0))
+    return normalize(byforms[best])
 
 
 def pick_base(num, dod, tbesg_num):
@@ -279,23 +301,27 @@ def build_greek_rows(conn, dod, tbesg_num, tbesg_lemma):
 
 def build_hebrew_rows(conn, heb_path, tbesh):
     """Hebrew rows + blanks for every base H-number the app can show a card for: KJV + BSB
-    Hebrew Strong's + the heb.db OT reader, folded to base numbers (norm_h)."""
-    universe = set()
+    Hebrew Strong's + the heb.db OT reader, folded to base numbers (norm_h). For a number
+    TBESH splits into byforms, pick the byform that occurs most in heb.db (pick_hebrew) so
+    the card leads with the sense that actually dominates the text (midbar -> wilderness, not
+    mouth) — falling back to file order where heb.db gives no count."""
+    universe, heb_counts_bf = set(), {}                 # canon_bf(byform) -> occurrences in heb.db
     for tbl, col in (("kjv_strongs", "strongs_id"), ("bsb_strongs", "strongs_id")):
         if conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?", (tbl,)).fetchone():
             for r in conn.execute(f"SELECT DISTINCT {col} FROM {tbl} WHERE {col} GLOB 'H*'"):
                 universe.add(norm_h(r[0]))
     if heb_path and os.path.exists(heb_path):
         hc = sqlite3.connect(heb_path)
-        for r in hc.execute("SELECT DISTINCT strongs FROM heb_words WHERE strongs GLOB 'H*'"):
+        for r in hc.execute("SELECT strongs, COUNT(*) FROM heb_words WHERE strongs GLOB 'H*' GROUP BY strongs"):
             universe.add(norm_h(r[0]))
+            heb_counts_bf[canon_bf(r[0])] = heb_counts_bf.get(canon_bf(r[0]), 0) + (r[1] or 0)
         hc.close()
     rows, blank = [], []
     for num in universe:
         if num in HEBREW_OVERRIDES:
             rows.append((num, HEBREW_OVERRIDES[num], "override"))
             continue
-        g = normalize(tbesh.get(canon(num), ""))
+        g = pick_hebrew(num, tbesh, heb_counts_bf)
         (rows.append((num, g, "tbesh")) if g else blank.append(num))
     return rows, blank
 
@@ -367,7 +393,8 @@ def main():
                        ("H7585", "sheol"), ("H8451", "torah"), ("H3722", "kaphar"),
                        ("H5769", "olam"), ("H6664", "tsedeq"), ("H6918", "qadosh"),
                        ("H1285", "berith"), ("H4899", "mashiach"), ("H1350", "gaal"),
-                       ("H3519", "kavod"), ("H430", "elohim")], "HEBREW")
+                       ("H3519", "kavod"), ("H430", "elohim"),
+                       ("H4057", "midbar (byform pick: want 'wilderness', not 'mouth')")], "HEBREW")
 
     if not do_apply:
         print("\n[dry-run] nothing written. Re-run with --apply to (re)build word_gloss.")
