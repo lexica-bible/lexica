@@ -275,30 +275,36 @@ def pick_hebrew(num, tbesh, heb_glosses):
     return normalize(max(glosses, key=lambda g: _byform_score(g, hg)))   # ties -> first (file order)
 
 
-def byform_audit(tbesh, heb_glosses):
-    """Measure the byform gap with NO sampling: for every Hebrew base TBESH splits into 2+
-    senses, did heb.db's gloss text settle which sense leads, or did we fall back to TBESH's
-    first sense (UNVERIFIED)? Returns (flipped, confirmed, fellback) of (base, gloss, detail):
-      flipped   = heb.db's wording picked a NON-first sense (the fix corrected it, e.g. midbar)
-      confirmed = heb.db's wording matched the first sense (already right)
-      fellback  = no heb.db text match -> still on TBESH's first guess, needs an eyeball."""
-    flipped, confirmed, fellback = [], [], []
+def byform_audit(tbesh, heb_glosses, overrides):
+    """Measure the byform gap with NO sampling, scored by CONFIDENCE. For every Hebrew base
+    TBESH splits into 2+ senses (skipping the hand-overridden ones, whose card is fixed by
+    hand), pick the sense by heb.db text (same as the build) and rate it by coverage = the
+    share of the word's heb.db occurrences the picked sense actually explains. Returns
+    (strong, weak, fellback) of (base, chosen, coverage, candidates):
+      strong   = coverage >= 0.5 — the picked sense matches most uses (trust, e.g. midbar ~1.0)
+      weak     = 0 < coverage < 0.5 — picked a minority sense; the matcher may have missed the
+                 real one (compound/synonym wording, e.g. 'lovingkindness' not matching 'kindness')
+      fellback = no text match at all — still on TBESH's first guess.
+    weak + fellback (sorted worst-first) are the review set; strong is safe."""
+    strong, weak, fellback = [], [], []
     for base, byforms in tbesh.items():
-        if not base.startswith("H") or len(byforms) < 2:
+        if not base.startswith("H") or len(byforms) < 2 or base in overrides:
             continue
         glosses = list(byforms.values())
         hg = heb_glosses.get(base, [])
+        total = sum(c for _, c in hg)
         scores = [_byform_score(g, hg) for g in glosses]
         top = max(range(len(glosses)), key=lambda i: scores[i])    # first on ties
-        first = normalize(glosses[0])
-        cand = " | ".join(glosses)
-        if max(scores) == 0:
-            fellback.append((base, first, cand))
-        elif top != 0:
-            flipped.append((base, normalize(glosses[top]), f"was '{first}' | {cand}"))
+        win = scores[top]
+        cov = (win / total) if (total and win) else 0.0
+        rec = (base, normalize(glosses[top]), round(cov, 3), " | ".join(glosses))
+        if win == 0:
+            fellback.append(rec)
+        elif cov >= 0.5:
+            strong.append(rec)
         else:
-            confirmed.append((base, first, cand))
-    return flipped, confirmed, fellback
+            weak.append(rec)
+    return strong, weak, fellback
 
 
 def pick_base(num, dod, tbesg_num):
@@ -403,21 +409,23 @@ def main():
     rows += heb_rows
 
     if audit:
-        flipped, confirmed, fellback = byform_audit(tbesh, heb_glosses)
-        total = len(flipped) + len(confirmed) + len(fellback)
-        print(f"\nBYFORM AUDIT — Hebrew numbers TBESH splits into 2+ senses: {total}")
-        print(f"  flipped by heb.db (fix corrected the lead sense): {len(flipped)}")
-        print(f"  confirmed first sense (heb.db agreed)           : {len(confirmed)}")
-        print(f"  FELL BACK to first sense, NO heb.db signal      : {len(fellback)}  <- the still-unsure set")
+        strong, weak, fellback = byform_audit(tbesh, heb_glosses, HEBREW_OVERRIDES)
+        total = len(strong) + len(weak) + len(fellback)
+        skipped = sum(1 for k in HEBREW_OVERRIDES if k.startswith("H"))
+        print(f"\nBYFORM AUDIT — Hebrew split-sense numbers (excl. {skipped} hand-overridden): {total}")
+        print(f"  STRONG signal  (picked sense covers >=50% of uses): {len(strong)}  <- trust")
+        print(f"  WEAK signal    (picked sense covers <50%)         : {len(weak)}  <- review (matcher may have missed the real sense)")
+        print(f"  NO signal      (fell back to TBESH first sense)   : {len(fellback)}  <- review")
+        weak_sorted = sorted(weak, key=lambda x: x[2])          # worst (lowest coverage) first
         with open("gloss_byform_audit.tsv", "w", encoding="utf-8") as f:
-            f.write("status\tbase\tchosen_gloss\tdetail\n")
-            for b, g, d in flipped:   f.write(f"flipped\t{b}\t{g}\t{d}\n")
-            for b, g, d in fellback:  f.write(f"fellback\t{b}\t{g}\t{d}\n")
-            for b, g, d in confirmed: f.write(f"confirmed\t{b}\t{g}\t{d}\n")
-        print("  -> gloss_byform_audit.tsv (eyeball the 'fellback' rows — that's exactly what's left)")
-        print("  flipped (heb.db changed the lead), first 25:")
-        for b, g, d in flipped[:25]:
-            print(f"    {b:6} -> {g}")
+            f.write("status\tbase\tchosen\tcoverage\tcandidates\n")
+            for b, g, c, cand in weak_sorted:        f.write(f"weak\t{b}\t{g}\t{c}\t{cand}\n")
+            for b, g, c, cand in fellback:           f.write(f"fellback\t{b}\t{g}\t{c}\t{cand}\n")
+            for b, g, c, cand in strong:             f.write(f"strong\t{b}\t{g}\t{c}\t{cand}\n")
+        print("  -> gloss_byform_audit.tsv (review 'weak' + 'fellback'; 'strong' is safe)")
+        print("  weakest picks (lowest coverage = most suspect), up to 30:")
+        for b, g, c, cand in weak_sorted[:30]:
+            print(f"    {b:6} cov={c:<5}  {g:22}  [{cand}]")
 
     by_src = {}
     for _, _, s in rows:
