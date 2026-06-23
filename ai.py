@@ -29,7 +29,8 @@ from core import (
 )
 from views_lsj import _lsj_concept_lookup, _format_lsj_context
 from views_lexicon import _greek_cognates
-from views_notes import is_logged_in   # AI search is login-gated (it costs API money)
+from views_notes import (ai_caller, ai_quota_blocked, ai_quota_count,
+                         ai_quota_status)   # AI search is login-gated + daily-capped (costs API money)
 
 bp = Blueprint("ai", __name__)
 
@@ -1049,7 +1050,8 @@ def _persist_ai_cache(query: str, payload: dict) -> None:
 @limiter.limit("200 per hour")
 def ai_search():
     try:
-        if not is_logged_in():
+        role, uid = ai_caller()
+        if role == "nologin":
             return jsonify({"error": "Sign in to use AI search.", "login": True}), 401
         q = request.args.get("q", "").strip()
         # Optional conversation context (recent thread turns) for follow-up questions,
@@ -1079,10 +1081,29 @@ def ai_search():
                     _ai_cache[qk] = cached
             if cached is not None:
                 log.debug("ai_search cache hit: q=%r", q)
-                return jsonify(cached)
+                out = dict(cached)        # don't mutate the shared cached copy
+                out["quota"] = ai_quota_status(role, uid)
+                return jsonify(out)
 
         if not _anthropic:
             return jsonify({"error": "ANTHROPIC_API_KEY not set"}), 500
+
+        # ── Daily spend guard: refuse BEFORE paying the models if this account, or
+        # the whole site, has hit today's cap. Admin is exempt. Cached answers return
+        # above this point, so re-reading them is always free. ───────────────────
+        _block = ai_quota_blocked(role, uid)
+        if _block:
+            _kind, _limit = _block
+            if _kind == "global":
+                return jsonify({
+                    "error": "Ask the corpus has reached today's limit for everyone — "
+                             "it resets tomorrow. Saved answers still work.",
+                    "global_capped": True}), 200
+            return jsonify({
+                "error": "You've used today's questions — they reset tomorrow. "
+                         "Support the site to lift your daily limit.",
+                "capped": True, "remaining": 0, "limit": _limit,
+                "quota": ai_quota_status(role, uid)}), 200
 
         # ── Timing instrument: one INFO line at the end shows where the
         # seconds go (cumulative from start). Temporary diagnostic. ──────────
@@ -1837,9 +1858,12 @@ def ai_search():
         if not context:               # follow-ups are thread-specific — don't cache
             _ai_cache[qk] = payload
             _persist_ai_cache(qk, payload)
+        ai_quota_count(role, uid)     # record the paid call (admin exempt; cache hits never reach here)
         _mark("total")
         log.info("ai_search timing q=%r rows=%d ctx=%d | %s", q, len(rows), len(context), _marks)
-        return jsonify(payload)
+        out = dict(payload)           # per-account quota rides the response, not the shared cache
+        out["quota"] = ai_quota_status(role, uid)
+        return jsonify(out)
 
     except Exception:
         log.error("Unhandled exception in ai_search:\n%s", traceback.format_exc())

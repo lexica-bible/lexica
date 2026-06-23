@@ -69,6 +69,13 @@ _MAX_BODY_BYTES = 4_000_000  # whole request
 _MIN_PASSWORD = 8
 _RESET_TTL = 3600            # a reset link is good for 1 hour
 
+# Ask-the-corpus (paid AI search) daily caps — keep the API bill bounded.
+# Per ACCOUNT per UTC day, by tier (admin is exempt entirely):
+AI_DAILY_LIMITS = {"user": 5, "berean": 10}
+# Whole-SITE cap per UTC day across everyone (≈ $2 at ~4¢/search). Admin use is
+# NOT counted here. Hit it and AI search pauses for all accounts until tomorrow.
+AI_SITE_DAILY = 50
+
 
 def _ensure_tables():
     conn = notes_db()
@@ -109,6 +116,15 @@ def _ensure_tables():
             "CREATE TABLE IF NOT EXISTS password_resets ("
             " token TEXT PRIMARY KEY, user_id INTEGER NOT NULL,"
             " created TEXT NOT NULL, expires REAL NOT NULL, used INTEGER NOT NULL DEFAULT 0)"
+        )
+        # Ask-the-corpus (paid AI search) daily usage counter (added 2026-06-22) —
+        # keeps the API bill bounded. One row per (account, UTC day); user_id 0 is the
+        # whole-site total for that day. Admin calls are never recorded. Day rollover
+        # resets it; stale rows are harmless.
+        conn.execute(
+            "CREATE TABLE IF NOT EXISTS ai_usage ("
+            " user_id INTEGER NOT NULL, day TEXT NOT NULL, n INTEGER NOT NULL DEFAULT 0,"
+            " PRIMARY KEY (user_id, day))"
         )
         # Role tier per account (added 2026-06-11). Older dbs predate the column.
         cols = [r[1] for r in conn.execute("PRAGMA table_info(users)").fetchall()]
@@ -193,6 +209,96 @@ def is_berean():
 def is_logged_in():
     """Any signed-in account (for login-gated features like AI search)."""
     return role_for_token() != "nologin"
+
+
+def ai_caller():
+    """(role, user_id) for the current request — the AI-search quota gate needs both
+    in one shot. role is 'nologin' when signed out (user_id then None)."""
+    conn = notes_db()
+    try:
+        uid = _user_for_token(conn)
+    except sqlite3.Error:
+        uid = None
+    finally:
+        conn.close()
+    return role_for_token(), uid
+
+
+def _ai_day():
+    """Today's date stamp (UTC). The daily counter resets when this rolls over."""
+    return time.strftime("%Y-%m-%d", time.gmtime())
+
+
+def ai_quota_for(role):
+    """Per-account daily question cap for a tier. None = unlimited (admin)."""
+    if role == "admin":
+        return None
+    return AI_DAILY_LIMITS.get(role, AI_DAILY_LIMITS["user"])
+
+
+def ai_quota_status(role, user_id):
+    """This account's questions-used-today + cap, for the on-screen counter. Counts
+    nothing. Admin reads back as unlimited."""
+    limit = ai_quota_for(role)
+    if limit is None:
+        return {"unlimited": True}
+    used = 0
+    if user_id:
+        conn = notes_db()
+        try:
+            row = conn.execute("SELECT n FROM ai_usage WHERE user_id=? AND day=?",
+                               (user_id, _ai_day())).fetchone()
+            used = row["n"] if row else 0
+        except sqlite3.Error:
+            used = 0
+        finally:
+            conn.close()
+    return {"used": used, "limit": limit, "remaining": max(0, limit - used)}
+
+
+def ai_quota_blocked(role, user_id):
+    """Check BEFORE a paid call. None = allow; ('global', None) = whole-site cap hit;
+    ('capped', limit) = this account's daily cap hit. Admin is never blocked. Counts
+    nothing — call ai_quota_count() after a successful paid call."""
+    if role == "admin":
+        return None
+    conn = notes_db()
+    try:
+        day = _ai_day()
+        site = conn.execute("SELECT n FROM ai_usage WHERE user_id=0 AND day=?",
+                           (day,)).fetchone()
+        if site and site["n"] >= AI_SITE_DAILY:
+            return ("global", None)
+        limit = ai_quota_for(role)
+        urow = conn.execute("SELECT n FROM ai_usage WHERE user_id=? AND day=?",
+                           (user_id, day)).fetchone()
+        if urow and urow["n"] >= limit:
+            return ("capped", limit)
+        return None
+    except sqlite3.Error:
+        return None          # a counter hiccup must never wall off the feature
+    finally:
+        conn.close()
+
+
+def ai_quota_count(role, user_id):
+    """Record one paid call: bump this account's tally AND the whole-site tally for
+    today. Admin calls are not recorded (exempt from the caps and the site total)."""
+    if role == "admin" or not user_id:
+        return
+    conn = notes_db()
+    try:
+        day = _ai_day()
+        for uid in (user_id, 0):     # 0 = the whole-site running total
+            conn.execute(
+                "INSERT INTO ai_usage (user_id, day, n) VALUES (?,?,1) "
+                "ON CONFLICT(user_id, day) DO UPDATE SET n = n + 1",
+                (uid, day))
+        conn.commit()
+    except sqlite3.Error:
+        pass
+    finally:
+        conn.close()
 
 
 def is_owner():
@@ -343,7 +449,9 @@ def me():
         conn.close()
     if not row:
         return jsonify({"error": "not signed in"}), 401
-    return jsonify({"email": row["email"], "name": row["name"] or "", "role": role_for_token()})
+    role = role_for_token()
+    return jsonify({"email": row["email"], "name": row["name"] or "", "role": role,
+                    "ai_quota": ai_quota_status(role, uid)})
 
 
 def _site_base():

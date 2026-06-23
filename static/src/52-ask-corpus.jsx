@@ -214,17 +214,27 @@ function AcTurn({ turn, onReadInContext, onLemma, onStrongs }) {
   );
 }
 
-function AcComposer({ pinned, value, setValue, onSubmit, placeholder, busy }) {
+// Follow-up questions allowed after the opening one, per conversation (cost control).
+const AC_MAX_FOLLOWUPS = 3;
+
+function AcComposer({ pinned, value, setValue, onSubmit, placeholder, busy, quota }) {
+  const go = () => { if (!busy) onSubmit(); };
+  const left = quota && !quota.unlimited ? quota.remaining : null;
   return (
     <div className={"ac-composer " + (pinned ? "pinned" : "hero")}>
       <div className="ac-field">
         <Icon.Sparkle className="ac-field-i"/>
         <input className="ac-input" value={value} onChange={e => setValue(e.target.value)}
-          onKeyDown={e => e.key === "Enter" && onSubmit()} placeholder={placeholder} />
-        <button className="ac-send" onClick={onSubmit} aria-label="Ask" disabled={busy}>
+          onKeyDown={e => e.key === "Enter" && go()} placeholder={placeholder} />
+        <button className="ac-send" onClick={go} aria-label="Ask" disabled={busy}>
           {busy ? <span className="spinner"/> : <Icon.ArrowRight/>}
         </button>
       </div>
+      {left != null && (
+        <div className="ac-quota">{left > 0
+          ? `${left} of ${quota.limit} question${quota.limit === 1 ? "" : "s"} left today`
+          : "No questions left today — resets tomorrow"}</div>
+      )}
     </div>
   );
 }
@@ -235,9 +245,21 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   const [railOpen, setRailOpen] = useState(false);
   const [scope, setScope] = useState(null);   // { strongs, lemma, translit } from a Word study handoff
   const [currentId, setCurrentId] = useState(null);   // the conversation being viewed/built (null = landing)
+  const [quota, setQuota] = useState(null);   // {used, limit, remaining} | {unlimited} — daily AI cap, from the server
   const threadRef = useRef(null);
   useNotesVersion();   // re-render when the store changes (e.g. a cross-device sync pulls convos in)
   const convos = NotesStore.corpusConvos();
+  const busy = thread.some(t => t && t.loading);   // a search is in flight — lock the composer
+
+  // Seed the "questions left today" counter on mount (signed-in only; ignored otherwise).
+  useEffect(() => {
+    let live = true;
+    fetch("/api/auth/me", { headers: _authHeaders() })
+      .then(r => (r.ok ? r.json() : null))
+      .then(d => { if (live && d && d.ai_quota) setQuota(d.ai_quota); })
+      .catch(() => {});
+    return () => { live = false; };
+  }, []);
 
   // Save the live conversation to the store so the rail can REOPEN it later with no
   // re-run. The store keeps it browser-local AND (when signed in) syncs it across
@@ -252,7 +274,24 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
 
   const ask = async (question) => {
     const q = (question || "").trim();
-    if (!q) return;
+    if (!q || busy) return;                       // ignore empty, and don't double-fire
+    const isFollow = thread.length > 0;
+    const norm = s => (s || "").trim().toLowerCase().replace(/[^\p{L}\p{N}]+/gu, " ").replace(/\s+/g, " ").trim();
+    // No repeat questions inside a conversation — don't pay to re-ask the same thing.
+    if (isFollow && thread.some(t => t && t.question && !t.local && norm(t.question) === norm(q))) {
+      setThread(t => [...t, { question: q, local: true,
+        notice: "You already asked that in this conversation — scroll up for the answer." }]);
+      setDraft("");
+      return;
+    }
+    // Follow-up cap: the opening question + up to AC_MAX_FOLLOWUPS follow-ups per thread.
+    const asked = thread.filter(t => t && t.question && !t.local).length;
+    if (isFollow && asked > AC_MAX_FOLLOWUPS) {
+      setThread(t => [...t, { question: q, local: true,
+        notice: "Follow-up limit reached for this conversation — start a new thread to keep going." }]);
+      setDraft("");
+      return;
+    }
     setDraft("");
     if (isMobile) setRailOpen(false);
     // A question from the landing (empty thread) starts a NEW conversation; a
@@ -275,8 +314,10 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
     setThread(t => [...t, { question: q, loading: true }]);
     try {
       const data = await api.aiSearch(q, context);
+      if (data.quota) setQuota(data.quota);       // refresh the "left today" counter
       let turn;
       if (data.login) turn = { question: q, error: "Sign in to ask the corpus." };
+      else if (data.capped || data.global_capped) turn = { question: q, notice: data.error };
       else if (data.out_of_scope) turn = { question: q, notice: data.explanation || "This tool searches the Greek & Hebrew Bible corpus — try a question about a word, theme, or passage." };
       else if (data.error) turn = { question: q, error: data.error };
       else turn = {
@@ -327,6 +368,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   const onLemma = (l) => { const tag = l.strongs || l.strongs_base; onNavigateToLexicon?.(tag, /^H/i.test(tag) ? "heb" : "abp"); };
   const onStrongs = (tag) => onNavigateToLexicon?.(tag, /^H/i.test(tag) ? "heb" : "abp");
   const started = thread.length > 0;
+  const followCapped = thread.filter(t => t && t.question && !t.local).length > AC_MAX_FOLLOWUPS;
   const suggestions = acScopeSuggestions(scope);
 
   return (
@@ -378,6 +420,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
                 ? <>Ask anything about <b>{scope.translit || scope.lemma}</b> across the whole of Scripture — its synonyms, its spread, the passages that carry it. Or ask a broader question.</>
                 : "A question in plain language, answered across the whole of Scripture — with the Greek and Hebrew it turns on, and the passages that carry it."}</p>
               <AcComposer pinned={false} value={draft} setValue={setDraft} onSubmit={() => ask(draft)}
+                busy={busy} quota={quota}
                 placeholder={scope ? `Ask about ${scope.translit || scope.lemma}…` : "Ask anything across the Bible…"}/>
               <div className="ac-examples">
                 {suggestions.map((ex, i) => (
@@ -395,7 +438,9 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
                 ))}
               </div>
             </div>
-            <AcComposer pinned={true} value={draft} setValue={setDraft} onSubmit={() => ask(draft)} placeholder="Ask a follow-up…"/>
+            <AcComposer pinned={true} value={draft} setValue={setDraft} onSubmit={() => ask(draft)}
+              busy={busy} quota={quota}
+              placeholder={followCapped ? "Follow-up limit reached — start a new thread" : "Ask a follow-up…"}/>
           </>
         )}
       </main>

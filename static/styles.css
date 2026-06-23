@@ -4296,6 +4296,7 @@ button.study-verse-ref { border: none; }
 .ac-composer.pinned .ac-send { width: 36px; height: 36px; }
 .ac-send:hover { background: color-mix(in oklab, var(--ai) 84%, #000); }
 .ac-send:disabled { opacity: 0.6; }
+.ac-quota { text-align: center; font-size: 12px; color: var(--ink-3); margin-top: 8px; }
 
 /* example prompts */
 .ac-examples { margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr; gap: 9px; text-align: left; }
