@@ -12,10 +12,12 @@ It reads bible.db (Greek + KJV/BSB Strong's, lexicon, bdb) and, if given, heb.db
 two .tsv files next to where you run it, so nothing is sampled away.
 
 Usage (on PythonAnywhere, where the databases live):
-  python3 scripts/check_gloss_coverage.py ~/bible-db/bible.db --heb ~/bible-db/heb.db
+  python3 scripts/check_gloss_coverage.py ~/bible-db/bible.db --heb ~/bible-db/heb.db --fetch-stepbible
+  (Dodson loads automatically from the repo; --fetch-stepbible pulls TBESG/TBESH.)
 
 Never modifies a database. Safe to run anytime.
 """
+import csv
 import os
 import re
 import sqlite3
@@ -58,6 +60,12 @@ TBESH = _opt("tbesh")
 if "--fetch-stepbible" in sys.argv:
     TBESG = TBESG or DEFAULT_TBESG_URL
     TBESH = TBESH or DEFAULT_TBESH_URL
+
+# Dodson's public-domain NT Greek lexicon — the chosen QUALITY base for the Greek
+# lemma gloss (plain ranges like "grace, favor, kindness", not TBESG's loaded one
+# church word). Ships in the repo, so it always loads with no flag; --dodson overrides.
+DODSON = _opt("dodson") or os.path.join(
+    os.path.dirname(os.path.abspath(__file__)), "apfathers", "raw", "dodson.csv")
 
 
 def has_table(conn, name):
@@ -122,6 +130,38 @@ def load_brief(src, prefix):
         g = c[6].strip()
         if g:
             out.setdefault(canon(c[0].strip()), g)       # first (primary) wins
+    return out
+
+
+def load_dodson(src):
+    """{canon('G'+number) -> brief gloss} from Dodson (scripts/apfathers/raw/dodson.csv).
+    Tab-delimited, double-quoted; col 0 = zero-padded Strong's, col 3 = the BRIEF gloss
+    (a short RANGE, e.g. 'grace, favor, kindness'). NT-only standard Strong's — no
+    LXX-extended (G6100+) and no dotted numbers; that gap is what TBESG fills."""
+    out = {}
+    rdr = csv.reader(_read_source(src).splitlines(), delimiter="\t", quotechar='"')
+    for i, row in enumerate(rdr):
+        if i == 0 or len(row) < 4:                       # header / short line
+            continue
+        num, brief = (row[0] or "").strip(), (row[3] or "").strip()
+        if num and brief:
+            out.setdefault(canon("G" + num), brief)
+        elif num and "Strong" in (row[0] or ""):         # belt-and-braces header skip
+            continue
+    return out
+
+
+def short_gloss(s):
+    """Mirror of the frontend shortLemmaGloss (static/src/00-core.jsx) so the report
+    shows what the word card ACTUALLY renders, not the raw column: drop parentheticals,
+    take the first two comma/semicolon terms (or just the first if that runs long)."""
+    if not s:
+        return ""
+    t = re.sub(r"\s+", " ", re.sub(r"\([^)]*\)", " ", s)).strip()
+    parts = [x.strip() for x in re.split(r"[,;]", t) if x.strip()]
+    out = ", ".join(parts[:2]).rstrip(" ,;:.-")
+    if len(out) > 30 and parts:
+        out = parts[0].rstrip(" ,;:.-")
     return out
 
 
@@ -322,6 +362,67 @@ if TBESH:
         say(f"  -> {len(missh)} missing written to gloss_tbesh_missing.tsv")
 else:
     say("(no Hebrew brief lexicon given — add --tbesh <path|url> or --fetch-stepbible)")
+
+# ===========================================================================
+# PART D — DODSON base + TBESG fill (the CHOSEN Greek strategy).
+# Dodson gives plain RANGES that dodge TBESG's loaded one-word church glosses,
+# but it's NT-only standard Strong's. Measure Dodson's own coverage, how much
+# TBESG must fill, and what NEITHER covers (the hand-fill residue) — so the
+# build's completeness is provable, not assumed. Also prints the three-way
+# quality table for the loaded words (the gate the source choice turned on).
+# ===========================================================================
+say("")
+say("=" * 70)
+say("PART D — DODSON base + TBESG fill  (the chosen Greek strategy)")
+say("=" * 70)
+
+dod = load_dodson(DODSON)
+bg = load_brief(TBESG, "G") if TBESG else {}
+say(f"loaded Dodson: {len(dod)} Greek (NT) numbers carry a brief gloss")
+
+d_cov = [n for n in greek_occ if canon(n) in dod]
+say(f"  ABP Greek numbers covered by Dodson alone : {len(d_cov)}/{g_total}  ({pct(len(d_cov), g_total)})")
+
+if bg:
+    fill = [n for n in greek_occ if canon(n) not in dod and canon(n) in bg]
+    both = [n for n in greek_occ if canon(n) in dod or canon(n) in bg]
+    neither = sorted(((n, greek_occ[n], lex.get(n, ("", ""))[0])
+                      for n in greek_occ if canon(n) not in dod and canon(n) not in bg),
+                     key=lambda x: -x[1])
+    say(f"  numbers TBESG must fill (Dodson lacks, TBESG has) : {len(fill)}")
+    say(f"  COMBINED Dodson+TBESG coverage : {len(both)}/{g_total}  ({pct(len(both), g_total)})")
+    say(f"  covered by NEITHER (hand-fill residue) : {len(neither)}")
+    if neither:
+        say("    top by use:")
+        for num, occ, lemma in neither[:15]:
+            say(f"      {num:10} {occ:6}x  {lemma}")
+        with open("gloss_neither.tsv", "w", encoding="utf-8") as f:
+            f.write("number\toccurrences\tlemma\n")
+            for num, occ, lemma in neither:
+                f.write(f"{num}\t{occ}\t{lemma}\n")
+        say(f"  -> full residue ({len(neither)}) written to gloss_neither.tsv")
+else:
+    say("  (add --fetch-stepbible to measure the TBESG fill + combined coverage)")
+
+if dotted_diff:
+    say(f"  dotted words ({dotted_diff}) need a gloss by LEMMA lookup, not base match (separate step)")
+
+# the quality gate, for the record: what the card shows now (kjv_def) vs TBESG vs Dodson
+LOADED_CHECK = [
+    ("G5485", "χάρις"), ("G5590", "ψυχή"), ("G4561", "σάρξ"), ("G1577", "ἐκκλησία"),
+    ("G2435", "ἱλαστήριον"), ("G86", "ᾅδης"), ("G1067", "γέεννα"), ("G4151", "πνεῦμα"),
+    ("G26", "ἀγάπη"), ("G907", "βαπτίζω"), ("G3341", "μετάνοια"), ("G166", "αἰώνιος"),
+    ("G2851", "κόλασις"), ("G4716", "σταυρός"), ("G3875", "παράκλητος"), ("G3466", "μυστήριον"),
+    ("G2098", "εὐαγγέλιον"), ("G266", "ἁμαρτία"), ("G1343", "δικαιοσύνη"), ("G2962", "κύριος"),
+    ("G1228", "διάβολος"), ("G3107", "μακάριος"),
+]
+say("")
+say("  PLAIN-MEANING quality pass (loaded words) — CARD today / TBESG / Dodson:")
+for num, name in LOADED_CHECK:
+    kd = short_gloss(lex.get(num, ("", ""))[1]) or "—"
+    tg = bg.get(canon(num), "—")
+    dd = dod.get(canon(num), "—")
+    say(f"    {num:6} {name:11} | {kd:22} | {tg:20} | {dd}")
 
 conn.close()
 with open("gloss_coverage_report.txt", "w", encoding="utf-8") as f:
