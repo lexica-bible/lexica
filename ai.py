@@ -1001,6 +1001,15 @@ def _get_ai_cache_ver() -> str:
     return _ai_cache_ver
 
 
+def _cache_key(q: str) -> str:
+    """Normalize a query so trivial differences — capitalization, surrounding or doubled
+    punctuation, extra spaces — reuse the SAME cached answer instead of paying for an
+    identical search. Only the cache key is normalized; the models still get the user's
+    original wording, and the displayed question stays the user's own text."""
+    s = re.sub(r"[^\w\s]", " ", (q or "").lower())   # punctuation → space
+    return re.sub(r"\s+", " ", s).strip()             # collapse runs of whitespace
+
+
 def _load_ai_cache_from_db() -> None:
     """Populate in-memory cache from DB; delete entries from a different version."""
     ver = _get_ai_cache_ver()
@@ -1011,7 +1020,7 @@ def _load_ai_cache_from_db() -> None:
         ).fetchall()
         for r in rows:
             try:
-                _ai_cache[r["query"]] = json.loads(r["result_json"])
+                _ai_cache[_cache_key(r["query"])] = json.loads(r["result_json"])
             except Exception:
                 pass
         conn.close()
@@ -1050,16 +1059,20 @@ def ai_search():
         if len(q) > 500:
             return jsonify({"error": "query too long (max 500 chars)"}), 400
 
+        # Cache key — caps / punctuation / extra-space variants of the same question
+        # share one answer ("Is hell the same as Sheol?" == "is hell the same as sheol").
+        qk = _cache_key(q)
+
         if not context:
-            cached = _ai_cache.get(q)
+            cached = _ai_cache.get(qk)
             if cached is None:
                 # The in-memory cache is a per-process snapshot taken at startup, and
                 # PA runs several worker processes — so an answer ANOTHER worker just
                 # saved isn't in THIS worker's copy. Fall back to the shared cache
                 # table before paying for the models, and warm this worker's copy.
-                cached = ai_cache_get(q, _get_ai_cache_ver())
+                cached = ai_cache_get(qk, _get_ai_cache_ver())
                 if cached is not None:
-                    _ai_cache[q] = cached
+                    _ai_cache[qk] = cached
             if cached is not None:
                 log.debug("ai_search cache hit: q=%r", q)
                 return jsonify(cached)
@@ -1818,8 +1831,8 @@ def ai_search():
         payload = {"results": results, "total": len(results), "grounded": grounded,
                    "explanation": explanation, "key_strongs": key_strongs_data}
         if not context:               # follow-ups are thread-specific — don't cache
-            _ai_cache[q] = payload
-            _persist_ai_cache(q, payload)
+            _ai_cache[qk] = payload
+            _persist_ai_cache(qk, payload)
         _mark("total")
         log.info("ai_search timing q=%r rows=%d ctx=%d | %s", q, len(rows), len(context), _marks)
         return jsonify(payload)
