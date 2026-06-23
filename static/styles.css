@@ -2597,14 +2597,6 @@ input { font-family: inherit; }
   transition: opacity 0.12s;
 }
 .donate-btn:hover { opacity: 0.85; }
-.donate-btn.kofi {
-  background: #ff5e5b;
-  color: #fff;
-}
-.donate-btn.github {
-  background: var(--ink);
-  color: var(--paper);
-}
 .donate-btn.contact {
   background: var(--accent);
   color: var(--paper);
