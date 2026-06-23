@@ -237,7 +237,9 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   rebuild the live bsb_verses text before writing. Source-format gotchas + the deploy step: memory `project_bsb_words`.
 - **Separate DB files (NOT bible.db, all gitignored + PA-only):** `notes.db` — user accounts/notes/
   highlights/journals + a `visits` table (owner-only visitor stats: day + daily IP+UA hash + referrer)
-  + `password_resets` (short-lived single-use reset tokens, added 2026-06-16).
+  + `password_resets` (short-lived single-use reset tokens, added 2026-06-16)
+  + a `corpus` table (saved Ask-the-corpus conversations, synced cross-device via `/api/corpus/sync`
+  the same id/newer-wins/tombstone way as notes — added 2026-06-23).
   `esv.db` — owner-only ESV text (`esv_verses`), loaded by `scripts/load_esv.py`. `niv.db` — owner-only
   NIV text (`niv_verses`), loaded by `scripts/load_niv.py`. See "Owner-only features".
   `heb.db` — **PUBLIC** Hebrew OT interlinear: `heb_words` (per word: hebrew, strongs H-number, morph,
@@ -712,6 +714,11 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   word"). A "New thread" button (rail) resets. Follow-ups are never cached (thread-specific).
 - Cached in ai_search_cache, ver_key=`search:<hash>` (fingerprint of system prompt +
   `_CURATION_SYSTEM` + book list + `_CACHE_CODE_VER` salt). See "AI result cache" below.
+- The cache ROW KEY (the query text) is NORMALIZED (`_cache_key` in ai.py: lowercase,
+  punctuation→space, collapse spaces), so caps / punctuation / extra-space variants of the same
+  question reuse one cached answer instead of paying for a fresh search (2026-06-23). Only the KEY
+  is normalized — the models still get the user's original wording. Search-path only (the other AI
+  caches key off their own raw query). Follow-ups (with `context`) are still never cached.
 
 ## AI result cache (ai_search_cache) — prompt-fingerprint scheme
 Full record: memory `project_ai_cache_unify`; the synthesis model map + the author lesson:

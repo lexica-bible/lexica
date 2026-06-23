@@ -6,6 +6,44 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Ask-corpus tuning — functionality + cleanup (2026-06-23)
+
+Commits 1822ffa, fd4eb7c, 4b06414, e1f1713 (pushed, awaiting deploy). Visual polish deferred to Claude
+design. Full record: memory `project_ai_search_redesign`.
+- **Synthesis prose cleanup (ai.py, both prompts).** The old "you MUST mention EVERY key_strongs term"
+  rule FORCED the answer to ramble about a mis-injected word, then call it "incidental" (the "giant
+  hunter" → geras case). Relaxed to "discuss only the words that bear on the question; OMIT an unrelated
+  one — don't name it to dismiss it." Added: no empty "()", cite verses BY REFERENCE (never quote the full
+  verse text). Prompt edits self-refresh the `search:` cache (no salt bump).
+- **Prose verse references all clickable (52-ask-corpus.jsx `AcProse`).** Was: a verse the AI named that
+  the search didn't retrieve fell through to plain text (looked "typed out / not clickable"). Now every
+  recognized ref is a chip that jumps to the reader; a non-retrieved one renders quiet/dotted (`.ac-ref-soft`)
+  so it doesn't imply evidence.
+- **Evidence list = ONE flat verse list (50-corpus-results.jsx).** Dropped the per-chapter book·chapter
+  headings + collapsible boxes (user: "you can only collapse one at a time"). `CorpusGroup` deleted;
+  `CorpusResults` flattens into primary / additional `.vlist`s of `VerseRow` — same look as the Word-study
+  occurrence list. `.corpus-group*` CSS now dead (left for the design pass). `VerseRow` untouched.
+- **Saved conversations sync cross-device (was localStorage-only).** New `corpus` table in notes.db +
+  `POST /api/corpus/sync` (views_notes.py, a near-copy of /api/notes/sync — id key, newer-wins, tombstones;
+  caps 60 convos / 250 KB each). Client: a corpus section in `NotesStore` (`corpusConvos`/`upsertConvo`/
+  `clearConvos`/`syncCorpusNow`), riding the same account plumbing (synced alongside notes/plan). Logged-out
+  still works browser-local. Table auto-creates on first sync (deploy = a normal pull).
+- **Mobile "Recent" button (52-ask-corpus.jsx).** ROOT BUG: `setRailOpen(true)` was never called → the
+  history rail was unreachable on mobile. Added `.ac-mobi-hist`.
+- **Cache key normalized for caps/punctuation (ai.py `_cache_key`).** "Is hell the same as Sheol?" and
+  "is hell the same as sheol" now reuse one cached answer instead of each paying for a fresh search. Only
+  the key is normalized (lowercase, punctuation→space, collapse spaces); the model still gets the original
+  wording. Search-path only.
+- **Off-topic key-word chips — TRACED + mitigated.** A temp `AISEARCH-DIAG` log (commit 05be72d, since
+  removed) printed model-picked vs cognate-added per search; live result: the cognate EXPANDER is clean
+  (only tight, real relatives). The stray chips (doorkeeper/burning under "giant hunter → Greek equivalent")
+  are the MODEL over-reaching in `key_strongs` on a vague question — non-deterministic (a re-run was clean).
+  My earlier γίγας→γηράσκω "collision" theory was wrong for this case. Fixed (e1f1713) by tightening the
+  `key_strongs` instruction to the word + direct equivalents only ("when in doubt leave it out") — reduces,
+  not 100%. A frontend chip relevance-gate was OFFERED + DECLINED (over-build for a rare cosmetic thing).
+  LESSON: instrument the deterministic code before assuming it's the culprit — it was the model, not the
+  expander.
+
 ## BSB in Ask-corpus + Hebrew left-to-right "prose" (2026-06-22, "round 2 for BSB")
 
 Frontend-only follow-on (commits e367753, 40147cc, fd27b57; pushed, awaiting deploy). Memories

@@ -169,6 +169,17 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
   desktop lib-bar AND the mobile reading sheet. Done record: TODO_ARCHIVE + memories `project_hebrew_source_swap`,
   `project_hebrew_ot_interlinear`.
 
+- **Post-deploy checklist — Ask-corpus tuning (commits 1822ffa, fd4eb7c, 4b06414, e1f1713; pushed,
+  awaiting deploy).** After deploy: (1) ask a question → the answer's verse references are clickable
+  chips (a verse the search didn't surface still jumps but renders quiet/dotted, not gold); (2) the
+  evidence is ONE flat verse list — no per-chapter fold-out boxes; (3) sign in on two devices → a
+  conversation started on one shows in the other's "Recent conversations" rail (new `corpus` table in
+  notes.db, auto-creates on first sync); (4) MOBILE: a "Recent" button on the welcome/thread screen opens
+  the history rail (was unreachable before); (5) re-ask a question with different caps/punctuation → instant
+  (cache hit, no fresh search); (6) a vague "what's the Greek equivalent?" follow-up keeps its chips to the
+  actual word + direct equivalents (no doorkeeper/burning stray chips — reduced, not 100%). Done record:
+  TODO_ARCHIVE + memory `project_ai_search_redesign`.
+
 - ~~**Hebrew OT prose mode (parked 2026-06-16).**~~ **DONE 2026-06-22 (fd27b57).** Flavor chosen = the
   interlinear chips flipped LEFT-TO-RIGHT (word order L→R, letters still RTL) — NOT a translit/gloss prose.
   See TODO_ARCHIVE + memory `project_hebrew_ot_interlinear`.
@@ -432,15 +443,26 @@ Ranked: #1 first (cheap, highest-leverage), #2 next (best feature add), #3 is a 
      ask-corpus tab lumps primary + additional into one "KEY PASSAGES" list with no "related" marker, so it
      reads like an occurrence. Give additional/thematic hits a label or sub-group — DON'T drop them (Gen 1:26
      for divine council relies on the same path). `code: static/src/52-ask-corpus.jsx acDisplayedResults; static/src/50-corpus-results.jsx`
-   - **Term-pick drags in unrelated words (live 2026-06-22, "giant hunter"):** the PHRASE "giant hunter"
-     correctly found the Hebrew (gibbor H1368 + tsayid H6718, Nimrod/Gen 10) but the term/SQL step ALSO
-     surfaced two unrelated Greek words — gēras/gēraskō G1094/G1095 "old age" — as key-passage chips; the
-     synth then spent ~3 lines noting they're "unrelated... incidental." Grounding caught it, but the term
-     extraction shouldn't surface them at all. Tighten the term/SQL pick, or filter the chips to the cited
-     Strong's set, so an English-phrase query can't free-associate. `code: ai.py term extraction / key_strongs`
+   - ~~**Term-pick drags in unrelated words (live 2026-06-22, "giant hunter").**~~ **TRACED + MITIGATED
+     2026-06-23 (e1f1713).** A temp diagnostic log proved the cognate EXPANDER is clean — the stray words
+     are the MODEL over-reaching in `key_strongs` on a vague question (the "what's the Greek equivalent?"
+     follow-up surfaced doorkeeper/burning). Fixed by tightening the `key_strongs` instruction to the word
+     + direct equivalents only (reduces, not 100% model noise; a frontend chip relevance-gate was offered +
+     DECLINED as over-build for a rare cosmetic thing). The γίγας→γηράσκω "collision" theory was NOT the
+     cause. Full record: TODO_ARCHIVE + memory `project_ai_search_redesign`.
    - **Stream verses first** (perceived speed): show matched verses the moment the SQL runs, fill the
      Sonnet write-up in after (~12s of model calls is the floor). Frontend only. DECLINED for now — user
      wants synthesis quality over perceived-speed tricks; pick up only if the wait annoys real users.
+     (NOTE: verses are ALREADY capped — Sonnet reads a spread sample of ≤60, shows ≤15; the big `rows=N`
+     in the timing log is just the raw found count, it doesn't all reach the model. So this is the only
+     real speed lever; tighter caps won't help.)
+   - **Ask-corpus RIGHT panel (3-panel parity) — IDEAS parked 2026-06-23.** Word study has 3 panels
+     (distribution · verses · word card); Ask-corpus has only the left rail + center. Add a fixed right
+     panel. RECOMMENDED = a key-word CARD rail: the answer's lemma chips as full dictionary cards
+     (definition, count, "open in Word study"), and clicking a chip focuses it there instead of leaving
+     the tab — reuses `/api/lexicon/profile` + the word-card render. Alts: a book-spread "where it lands",
+     or follow-up questions + cross-refs. Full record: memory `project_ai_search_redesign`.
+     `code: static/src/52-ask-corpus.jsx`
    - **Broad / thematic-topic answers:** sharp on word/phrase queries, thin on broad questions ("how is
      the temple reimagined in the NT") because retrieval is word-based. The bigger answer-shape work.
      User's idea, parked — revisit on his timeline.
