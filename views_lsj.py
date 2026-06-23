@@ -19,39 +19,43 @@ from views_lexicon import _greek_cognates
 bp = Blueprint("lsj", __name__)
 
 
-# The prompt leans on FRAME, not prohibition (deliberate — see project_synthesis_no_parse
-# + the 2026-06-14 AI-synthesis pass). Three framing levers replace the old blacklists:
-#   - audience: someone reading the Greek BIBLE (LXX/NT), so classical provenance is plainly
-#     off-purpose — we no longer name "Homer/Plato/Attic" (naming them only primed the leak,
-#     and we were feeding it a classical lexicon entry to summarize anyway).
-#   - source framing: the entry is "scholarly source material" to distill, so its ancient
-#     citations read as apparatus, not the answer.
-#   - reader state: the reader already SEES the word + its translation, so the synthesis
-#     picks up from there instead of re-announcing the headword (curbs self-reference).
+# The prompt is SOURCE-BOUND, not a blacklist (the standing "reframe, don't blacklist"
+# rule — see project_synthesis_no_parse + project_ai_synthesis_quality). Haiku was
+# pulling NT theology from its own training even when the entry didn't carry it — G1577
+# ἐκκλησία came back "the Church as a body of Christians or the building where they meet"
+# though the LSJ entry says no such thing (2026-06-23). Two levers fix it:
+#   - source-binding: summarize ONLY what THIS entry states; anything not in the entry is
+#     left out. That alone drops the invented "church/building" sense.
+#   - plain meaning over loaded label: keep the attested sense, never recast a plain
+#     definition as a doctrinal/institutional term (feedback_plain_meaning_not_tradition).
+# Runs on Sonnet now (claude-sonnet-4-6), same as xref/chapter-summary/ask-corpus — Haiku
+# over-asserts on loaded words. We do NOT name classical authors (naming them primed the
+# leak) and the reader already SEES the headword + gloss, so no need to re-announce it.
 _LSJ_SYNTHESIS_SYSTEM = """\
-You are explaining a Greek word to someone reading the Greek Bible — the Septuagint \
-(LXX) and New Testament. The reader is already looking at the word and its basic \
-translation; pick up from there and tell them what it means and how it is used in \
-Scripture. Work from a Berean approach: the text speaks first. The dictionary entry \
-below is scholarly source material — distill from it only what the word means and the \
-range of senses it carries in the biblical text. No imported systematic theology, no \
-denominational assumptions — follow where the words actually lead. Write in plain \
-prose, no markdown, no headers. Do not state the word's grammatical parsing (part of \
-speech, case, number, tense, voice, mood) — that is shown separately. Focus only on \
-meaning and semantic range.\
+You are helping someone reading the Greek Bible understand a Greek word by summarizing \
+the dictionary entry shown below. Work ONLY from that entry: in plain modern English, \
+give the meaning and the range of senses the entry itself states. Do not add meanings, \
+nuances, or usage from your own knowledge of the word — if the entry does not say it, \
+leave it out. Keep to the plain, attested sense; do not recast a plain definition as a \
+theological, doctrinal, or institutional term the entry never uses. Work from a Berean \
+approach: the text speaks first; follow where the entry leads, with no imported \
+systematic theology and no denominational assumptions. Write in plain prose — no \
+markdown, no headers, no bullet points. Do not state the word's grammatical parsing \
+(part of speech, case, number, tense, voice, mood); that is shown separately. Focus \
+only on meaning and semantic range.\
 """
 
 # The two user-message asks, kept as named constants so the synthesis fingerprint below
 # covers their wording (editing either auto-refreshes the cached summaries).
 _LSJ_ASK_CTX = (
-    "Identify the sense of this word active in the verse above and explain it in plain "
-    "prose. 2-3 sentences, 60 words max. Let the entry dictate the length — do not pad. "
-    "No markdown, no headers, no bullet points."
+    "From this entry, identify the sense of the word active in the verse above and explain "
+    "it in plain prose. 2-3 sentences, 60 words max. Let the entry dictate the length — do "
+    "not pad. No markdown, no headers, no bullet points."
 )
 _LSJ_ASK_GEN = (
-    "Explain what this word means and its main range of uses. 2-3 sentences, 60 words "
-    "max. Let the entry dictate the length — do not pad. No markdown, no headers, no "
-    "bullet points."
+    "Summarize what this entry shows the word means and its main range of senses. 2-3 "
+    "sentences, 60 words max. Let the entry dictate the length — do not pad. No markdown, "
+    "no headers, no bullet points."
 )
 
 # Synthesis fingerprint — same self-healing scheme as the ai_search_cache entries. It's
@@ -407,7 +411,7 @@ def lsj_summary(lemma):
 
     try:
         synth_msg = _anthropic.messages.create(
-            model="claude-haiku-4-5-20251001",
+            model="claude-sonnet-4-6",
             max_tokens=150,
             temperature=0,
             system=_LSJ_SYNTHESIS_SYSTEM,
