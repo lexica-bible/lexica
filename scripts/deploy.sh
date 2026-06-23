@@ -63,13 +63,17 @@ echo "==> Reloading the live site..."
 touch /var/www/www_lexica_bible_wsgi.py
 
 # Warm the fresh workers so the first REAL visitor doesn't eat the ~13s cold-start.
-# Each worker boots on its first hit, so fire a handful of throwaway requests to
-# spread across all 3. Failures here never matter — it's just priming.
+# PA boots each worker on its FIRST hit, so the warm-up requests must arrive AT ONCE.
+# Sequential curls keep reusing whichever worker is already free and leave the other
+# two cold — then your first refresh wedges on a cold worker and only the SECOND one
+# comes up. Fire a parallel burst instead so all 3 boot together. Give the reload a
+# few seconds to take effect first; failures here never matter — it's just priming.
 echo "==> Warming up the workers..."
-sleep 3
-for i in 1 2 3 4 5 6; do
-  curl -s -o /dev/null -m 30 https://www.lexica.bible/ || true
+sleep 5
+for i in $(seq 1 12); do
+  curl -s -o /dev/null -m 60 https://www.lexica.bible/ &
 done
+wait
 echo "    warmed."
 
 echo "==> Done. Site reloaded."
