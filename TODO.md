@@ -20,14 +20,6 @@ minor info leak closed, dead code removed, an unbounded cache capped, an endpoin
 
 Still open:
 
-0. **Full code AUDIT after the 2026-06-23 change run (NEW — a self-contained handoff prompt was written
-   for a fresh session).** Read-only pass for dead code, inconsistencies, inefficiencies, correctness risk,
-   after: the search-perf indexes (heb_words.strongs / bsb_strongs.strongs_id), the mobile word-study /
-   Ask-corpus UX fixes, the cap 5→3, and the donate→contact-email swap. Known leads to confirm/formalize:
-   the dead Search tab (`/api/search` + `api.search` orphaned); now-unused CSS from the donate-button removal
-   + the lexicon mobile changes; the `_totals_hebdb` per-H-number loop in views_lexicon.py (collapse to ONE
-   grouped query now that heb_words.strongs is indexed); repeated per-call `_heb_ready()`/`_bsb_ready()` opens.
-   `code: whole repo; views_lexicon.py; views_search.py; static/src/70-search.jsx; static/styles.css`
 1. **More automated checks (mostly done).** The test net now covers broken pages (snapshot harness) and
    the dangerous data invariants (strongs prefix, tipnr type-set, the build's guards). 2026-06-07 added
    the automation layer: GitHub auto-runs the tests + frontend build-check on every push (CI), a

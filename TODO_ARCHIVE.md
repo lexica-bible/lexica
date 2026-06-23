@@ -6,6 +6,37 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Full code audit after the 2026-06-23 change run — DONE (commits 6eaec4e, 1f36bbd)
+
+Read-only audit of the search-perf + mobile-UX + cap/email work, then the agreed cleanups. The one
+finding that MATTERED was infra, not code:
+
+- **The heb.db speed index wasn't live on PA.** The perf commit (572b754) added two by-Strong's indexes.
+  The bible.db one (`bsb_strongs`) auto-creates on every reload (app.py `_migrate_db`), but the heb.db one
+  (`idx_heb_words_strongs`) does NOT — a deploy never re-runs `load_hebrew.py` and startup never opens
+  heb.db. So the Hebrew half of the "fix the slowdown" commit was silently not applied. User created it by
+  hand on PA (`CREATE INDEX IF NOT EXISTS idx_heb_words_strongs ON heb_words(strongs)`) and confirmed the
+  Word-study "spirit" search is right again. Recorded as a standing GOTCHA in memory `project_ci_automation`:
+  heb.db indexes are ALWAYS manual on PA.
+
+Cleanups shipped:
+- **Removed the dead `/api/search` Search tab** (6eaec4e): the route + its two KJV helpers in views_search.py,
+  the unused `api.search` frontend helper, the two `/api/search` probes in snapshot_endpoints.py + their two
+  stale snapshot gold files, and the dead `.donate-btn.kofi/.github` CSS from the donate→contact swap. Kept
+  `/api/text-search` (the live Library search) — verified byte-identical. views_search.py now hosts only it.
+- **Finder heb.db churn (1f36bbd):** `lexicon_english` opened heb.db ~4-6 times per search; now ONE shared
+  lazy handle (pure-Greek searches still never touch it), plus the catch-all 500 the other lexicon routes
+  have, plus a note on the books/verses Hebrew corpus default. Each query's logic unchanged.
+
+DELIBERATELY NOT DONE: collapsing the `_totals_hebdb` per-H-number loop into one grouped read (it was on the
+audit's lead list). A homograph form (H1254a) must count under BOTH its base and the form to match the word's
+own page (commit 45282f8) — a single `GROUP BY strongs` can't express that, and the fold can't be verified
+locally (heb.db is PA-only). Left the loop, just moved it onto the shared connection. Don't re-attempt.
+LESSON: the index already made each per-number read cheap, so the loop was never the cost — the repeated
+OPENS were. Full record: memory `project_hebrew_source_swap`.
+
+---
+
 ## Search-speed fix + mobile UX + cap/contact-email pass — DONE + PUSHED (2026-06-23, commits 572b754…ede0633)
 
 A run of small shipped changes (all pushed to master; user deploys):

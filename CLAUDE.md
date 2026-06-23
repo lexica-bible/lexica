@@ -687,20 +687,11 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   memory `project_hebrew_source_swap`.
 - LexiconView is always-mounted (display:none) so state survives tab switches
 
-## Search Tab — DEAD (no UI caller as of 2026-06-22)
-- **The standalone Search tab is GONE from the app: `api.search` has no caller and `/api/search` is an
-  orphaned endpoint (left in views_search.py, harmless). Live search now = the Library in-text search
-  (`/api/text-search`, still used) + Word study (`/api/lexicon/*`) + Ask the corpus (`/api/ai-search`). The
-  notes below describe the dead endpoint; don't wire new work to it.**
-- Left input: lexicon/Strong's search; Right input: AI natural language query
-- **Lexicon mode**: browse-only, ABP | KJV | All corpus toggle
-  - ABP: ABP words table (Greek, dotted strongs e.g. G2321.1)
-  - KJV: kjv_strongs/kjv_words (standard strongs, both G and H numbers)
-  - All: ABP Greek + KJV Hebrew OT (best cross-testament view)
-  - Word groupings and chips reflect the active corpus
-- **AI mode**: study mode only, corpus filter All | OT | NT in toolbar alongside Curated | Canonical | ABP | KJV
-- Search endpoint (`/api/search`) returns `{abp_results, kjv_results, abp_groupings, kjv_groupings, variants}`
-- Search cache key prefix: `v3|`
+## Search Tab — REMOVED (2026-06-23)
+- The old standalone Search tab and its `/api/search` endpoint are GONE (route + its KJV helpers
+  + the unused `api.search` frontend helper deleted, commit 6eaec4e). **views_search.py now hosts
+  ONLY `/api/text-search`.** Live search = the Library in-text search (`/api/text-search`) + Word
+  study (`/api/lexicon/*`) + Ask the corpus (`/api/ai-search`). Don't wire new work to `/api/search`.
 
 ## AI Search
 - SQL gen + term-extraction on **Haiku**; the displayed **synthesis + verse curation (pass 2) on
