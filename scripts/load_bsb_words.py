@@ -252,6 +252,9 @@ def build(db_path, src, dry):
     conn.executescript("""
         CREATE INDEX idx_bsb_words_ref ON bsb_words (book_id, chapter, verse_num);
         CREATE INDEX idx_bsb_strongs_word ON bsb_strongs (word_id);
+        -- Look up by Strong's number (word study uses BSB as a source). Mirrors the
+        -- kjv_strongs.strongs_id index; without it those lookups scan the whole table.
+        CREATE INDEX idx_bsb_strongs_id ON bsb_strongs (strongs_id);
     """)
     conn.commit()
 

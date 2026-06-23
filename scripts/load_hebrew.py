@@ -214,6 +214,9 @@ def main():
         );
         CREATE INDEX IF NOT EXISTS idx_heb_words_bcv  ON heb_words(book, chapter, verse);
         CREATE INDEX IF NOT EXISTS idx_heb_verses_bcv ON heb_verses(book, chapter, verse);
+        -- Look up a word by its Strong's number (word study, AI search, the rail's
+        -- "in Hebrew OT" count). Without this every such lookup scans the whole OT.
+        CREATE INDEX IF NOT EXISTS idx_heb_words_strongs ON heb_words(strongs);
     """)
     # bring an older heb.db up to the current columns (so re-running upgrades in place)
     have = [r[1] for r in cur.execute("PRAGMA table_info(heb_words)")]

@@ -348,6 +348,17 @@ def _migrate_db():
             conn.commit()
         except sqlite3.OperationalError:
             pass  # KJV tables not present in this DB
+        # Same gap on BSB once it became a word-study source: bsb_strongs had only a
+        # word_id index, so every lookup by Strong's number scanned the whole table.
+        # (heb.db needs the twin index on heb_words.strongs, but startup never opens
+        # heb.db, so that one is created by load_hebrew.py / by hand on PA.)
+        try:
+            conn.execute(
+                "CREATE INDEX IF NOT EXISTS idx_bsb_strongs_id ON bsb_strongs(strongs_id)"
+            )
+            conn.commit()
+        except sqlite3.OperationalError:
+            pass  # BSB tables not present in this DB
     finally:
         conn.close()
 
