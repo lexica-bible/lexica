@@ -249,6 +249,12 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   G180 ἀκατάπαυστος). `chapter_text`/`verse_words` COALESCE it over the base `lexicon` join so the word
   card shows the right word; joined only if present (deploy-safe). Built by `scripts/build_dotted_lexicon.py`,
   audited by `scripts/audit_dotted_lemmas.py`. Full record: memory `project_dotted_strongs_lemma`.
+- `word_gloss` — plain-meaning lemma gloss for the word card (`strongs` → `gloss` + `source`). Side table in
+  bible.db (built on PA, not in git; ~17.5k rows). Greek = Dodson base + TBESG fill + overrides + dotted-by-
+  lemma; Hebrew = TBESH + overrides. Joined via `core.word_gloss_cols()` (COALESCE the dotted `G####.N`
+  over the base, suppressing the base for a dotted-DIFFERENT word; deploy-safe), aliased `AS kjv_def` so the
+  card reads it in place of the KJV-ized `lexicon.kjv_def`. Built by `scripts/build_word_gloss.py`
+  (`--summary`/`--apply`). ABP LIVE; KJV/BSB/Hebrew wiring pending. Full record: memory `project_word_card_gloss`.
 - `books` — book metadata (name, testament, regex)
 - `ai_search_cache` — cached AI query results and TSK synthesis
 - `kjv_verses` — KJV full verse text (31,102 verses)
@@ -493,16 +499,15 @@ rules + gotchas; open the named memory for the backstory.
   Greek/Hebrew leads, English muted. ABP brackets inline.
 - Headword = the dictionary lemma (big) + its dictionary gloss; the word's *in-this-verse* English
   now sits DOWN on the inflected "in this verse" form line (Hebrew/BSB/ABP; ABP form via `abp_surface`;
-  KJV has none). **Lemma-gloss source is PROVISIONAL + UNDER REWORK:** Greek uses lexicon `kjv_def`,
-  which is KJV-ized AND alphabetical → the lead term is often wrong ("charity" for ἀγάπη, "Ghost" for
-  πνεῦμα), so it's NOT good enough; Hebrew/BSB show no lemma gloss yet. **CANDIDATE source (NOT settled) =
-  STEPBible BRIEF lexicons (`Gloss` col): TBESG (Greek) + TBESH (Hebrew), CC BY, same project as heb.db,
-  TBESG ABP-LXX-aware.** ⚠ Its one-word gloss is theologically LOADED on some terms (χάρις→"grace", not
-  the plain "favor/kindness") — must NOT be taken verbatim; needs a plain-meaning quality pass on the
-  loaded words FIRST (see "Key Design Decisions" + memory `feedback_plain_meaning_not_tradition`). Dodson
-  (short ranges) is back in contention; ABP dotted (`G###.N`) need a separate lemma lookup. Read-only
-  audit measures coverage (necessary, not sufficient): `python3 scripts/check_gloss_coverage.py bible.db
-  --heb heb.db --fetch-stepbible`. Full state + plan: memory `project_word_card_gloss`.
+  KJV has none). **Lemma gloss = the `word_gloss` side table** (scripts/build_word_gloss.py; on PA, not in
+  git), which REPLACED the KJV-ized `lexicon.kjv_def` ("charity"/"Ghost"). Greek = Dodson's plain ranges +
+  TBESG fill for LXX-extended + a few plain-meaning overrides (χάρις→"favor, kindness", πνεῦμα→"spirit,
+  breath"); Hebrew = TBESH + overrides (sheol→"grave, realm of the dead", olam→"age, long duration");
+  ABP dotted glossed by their OWN lemma. **ABP is WIRED + LIVE** via `core.word_gloss_cols()` (mirrors
+  dotted_lexicon_cols, deploy-safe, aliased `AS kjv_def` in `views_library` so the frontend is unchanged);
+  **KJV/BSB/Hebrew cards still TO WIRE** (their endpoints + un-gate `heroLemmaGloss` from Greek-only).
+  Plain-meaning rule: "Key Design Decisions" + memory `feedback_plain_meaning_not_tradition`. Full state:
+  memory `project_word_card_gloss`.
 - Rail stacks ≤3 deep: summary/Intro → xref → (word OR note). The "‹ back" link NAMES the card
   beneath it; the note card keeps just an X (DESKTOP). Word/xref panels trigger `has-detail` → compacts
   `.lib-reading` on desktop.
