@@ -758,7 +758,8 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
   const esvMode     = translation === "esv";
   const nivMode     = translation === "niv";
   const kjvMode     = translation === "kjv";   // KJV has public-domain audio (no key)
-  const hebMode     = translation === "heb";   // Hebrew interlinear: always chips, no prose option
+  const hebMode     = translation === "heb";   // Hebrew interlinear chips; "prose" flips them left-to-right
+  const hebProse    = hebMode && viewMode === "prose";   // L→R word order (each word stays RTL); see .lib-heb-ltr
   const proseLocked = !!(nonCanon && nonCanon.englishOnly) || esvMode || nivMode;
   const chipMode    = !proseLocked && (viewMode === "chip" || showStrongs || showInterlinear);
   const wordMode    = chipMode;
@@ -769,7 +770,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
   const extraEnglish  = !!(nonCanon && nonCanon.englishOnly);
   const extraLineMode = extraEnglish && viewMode === "chip";
   const layoutLocked  = proseLocked && !extraEnglish;
-  const viewChipOn    = hebMode ? true : (extraEnglish ? viewMode === "chip" : chipMode);
+  const viewChipOn    = hebMode ? !hebProse : (extraEnglish ? viewMode === "chip" : chipMode);
 
   const POETRY_BOOKS = new Set(["Psa", "Pro", "Job", "Son", "Lam", "Ecc"]);
   const isPoetry = POETRY_BOOKS.has(selBook?.abbrev);
@@ -1549,12 +1550,12 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
               ><Icon.Grid/></button>
               <button
                 className={"seg-b" + (!viewChipOn ? " on" : "")}
-                disabled={hebMode || (!extraEnglish && !proseLocked && (showStrongs || showInterlinear))}
-                title="Prose view"
-                aria-label="Prose view"
+                disabled={!hebMode && !extraEnglish && !proseLocked && (showStrongs || showInterlinear)}
+                title={hebMode ? "Left-to-right view" : "Prose view"}
+                aria-label={hebMode ? "Left-to-right view" : "Prose view"}
                 aria-pressed={!viewChipOn}
-                style={hebMode || (!extraEnglish && !proseLocked && (showStrongs || showInterlinear)) ? { opacity: 0.35, cursor: "default" } : undefined}
-                onClick={() => { if (hebMode) return; if (extraEnglish) { setOpt("viewMode", "prose"); return; } if (!showStrongs && !showInterlinear) setOpt("viewMode", "prose"); }}
+                style={!hebMode && !extraEnglish && !proseLocked && (showStrongs || showInterlinear) ? { opacity: 0.35, cursor: "default" } : undefined}
+                onClick={() => { if (hebMode || extraEnglish) { setOpt("viewMode", "prose"); return; } if (!showStrongs && !showInterlinear) setOpt("viewMode", "prose"); }}
               ><Icon.Lines/></button>
             </div>
             <span className="lib-bar-sep" aria-hidden="true"/>
@@ -1867,7 +1868,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
           hebLoading ? (
             <div className="lib-loading">Loading…</div>
           ) : (
-            <div className="lib-text-words lib-heb-text">
+            <div className={"lib-text-words lib-heb-text" + (hebProse ? " lib-heb-ltr" : "")}>
               {hebVerses.map(renderHebVerse)}
             </div>
           )

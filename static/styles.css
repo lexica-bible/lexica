@@ -1956,6 +1956,10 @@ input { font-family: inherit; }
    each chip keeps its vertical stack (Hebrew word over English gloss over H-number). */
 .lib-heb-row { direction: rtl; }
 .lib-heb-content { direction: rtl; text-align: right; }
+/* "Prose" for Hebrew = the same chips flipped to read left-to-right. Only the WORD
+   order flips; each .lib-iw-heb keeps direction:rtl below, so its letters stay correct. */
+.lib-heb-ltr .lib-heb-row { direction: ltr; }
+.lib-heb-ltr .lib-heb-content { direction: ltr; text-align: left; }
 .lib-heb-word { margin: 0 3px; }
 /* The Hebrew word is the only intentionally-larger element (a different script needs
    the room to read the vowel points). The gloss + Strong's number INHERIT the base

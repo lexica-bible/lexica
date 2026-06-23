@@ -512,12 +512,13 @@ function ModesSheet({
   const { sheetRef, scrollRef } = useSwipeToDismiss(onClose);
   const activeNonCanon = nonCanonList.find(t => t.id === corpus) || null;
   const proseLocked = !!(activeNonCanon && activeNonCanon.englishOnly) || translation === "esv" || translation === "niv";   // English-only / ESV / NIV: no Greek toggles (BSB has its own per-word Strong's data)
-  const hebMode = translation === "heb";   // Hebrew interlinear: always chips, no prose option
+  const hebMode = translation === "heb";   // Hebrew interlinear chips; "prose" flips them left-to-right
+  const hebProse = hebMode && viewMode === "prose";
   const gray = proseLocked ? { opacity: 0.35, cursor: "default" } : undefined;
   // English-only "other books": Greek toggles stay locked, but line-vs-flow is allowed.
   const extraEnglish = !!(activeNonCanon && activeNonCanon.englishOnly);
   const layoutLocked = proseLocked && !extraEnglish;
-  const viewChipOn   = hebMode ? true : (extraEnglish ? viewMode === "chip" : chipMode);
+  const viewChipOn   = hebMode ? !hebProse : (extraEnglish ? viewMode === "chip" : chipMode);
   // Text picker gestures: a TAP swaps to that single Bible; a LONG-PRESS (or right-click)
   // ticks it into / out of the side-by-side compare set. One shared timer is fine (touches
   // happen one at a time); the `fired` flag stops a long-press from also firing the tap.
@@ -611,7 +612,7 @@ function ModesSheet({
             <div className="display-row">
               <div className="mseg mseg-view">
                 <button className={"mseg-b"+(viewChipOn?" on":"")} disabled={layoutLocked} style={layoutLocked?{opacity:0.35,cursor:"default"}:undefined} title={extraEnglish?"Line-by-line view":"Chip view"} aria-label={extraEnglish?"Line-by-line view":"Chip view"} aria-pressed={viewChipOn} onClick={()=>!layoutLocked&&setOpt("viewMode","chip")}><Icon.Grid/></button>
-                <button className={"mseg-b"+(!viewChipOn?" on":"")} disabled={hebMode||(!extraEnglish&&!proseLocked&&(showStrongs||showInterlinear))} style={hebMode||(!extraEnglish&&!proseLocked&&(showStrongs||showInterlinear))?{opacity:0.35}:undefined} title="Prose view" aria-label="Prose view" aria-pressed={!viewChipOn} onClick={()=>{ if(hebMode)return; if(extraEnglish){setOpt("viewMode","prose");return;} if(!showStrongs&&!showInterlinear)setOpt("viewMode","prose"); }}><Icon.Lines/></button>
+                <button className={"mseg-b"+(!viewChipOn?" on":"")} disabled={!hebMode&&!extraEnglish&&!proseLocked&&(showStrongs||showInterlinear)} style={!hebMode&&!extraEnglish&&!proseLocked&&(showStrongs||showInterlinear)?{opacity:0.35}:undefined} title={hebMode?"Left-to-right view":"Prose view"} aria-label={hebMode?"Left-to-right view":"Prose view"} aria-pressed={!viewChipOn} onClick={()=>{ if(hebMode||extraEnglish){setOpt("viewMode","prose");return;} if(!showStrongs&&!showInterlinear)setOpt("viewMode","prose"); }}><Icon.Lines/></button>
               </div>
               <div className="mseg font-picker">
                 <button className="mseg-b" onClick={() => changeFontSize(-1)}>A−</button>
