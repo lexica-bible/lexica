@@ -1598,7 +1598,9 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
           <div className="mbar-center">
             <button className="mbar-loc" onClick={() => setMobileNavOpen(true)}>
               {chronoOn ? (
-                <span className="mbar-loc-name mbar-loc-chrono">{curPassage ? curPassage.label : "—"}</span>
+                <span className="mbar-loc-name mbar-loc-chrono">{curPassage
+                  ? curPassage.book + " " + curPassage.start_ch + (curPassage.end_ch && curPassage.end_ch !== curPassage.start_ch ? "–" + curPassage.end_ch : "")
+                  : "—"}</span>
               ) : (
                 <>
                   <span className="mbar-loc-name">{nonCanon ? (nonCanon.abbr || nonCanon.name) : (selBook ? selBook.abbrev : "")}</span>
