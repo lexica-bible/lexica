@@ -1100,8 +1100,7 @@ def ai_search():
                              "it resets tomorrow. Saved answers still work.",
                     "global_capped": True}), 200
             return jsonify({
-                "error": "You've used today's questions — they reset tomorrow. "
-                         "Support the site to lift your daily limit.",
+                "error": "You've used all your free searches for today — they reset tomorrow.",
                 "capped": True, "remaining": 0, "limit": _limit,
                 "quota": ai_quota_status(role, uid)}), 200
 

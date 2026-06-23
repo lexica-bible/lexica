@@ -147,7 +147,14 @@ function AcTurn({ turn, onReadInContext, onLemma, onStrongs }) {
           <div className="ac-thinking-l">Reading across the canon…</div>
         </div>
       ) : turn.notice ? (
-        <div className="ac-answer"><p className="ac-notice">{turn.notice}</p></div>
+        <div className="ac-answer">
+          <p className="ac-notice">{turn.notice}</p>
+          {turn.capped && (
+            <a className="ac-upsell" href="mailto:hello@lexica.bible?subject=Berean%20membership">
+              Email about Berean membership for more searches →
+            </a>
+          )}
+        </div>
       ) : turn.error ? (
         <div className="ac-answer"><p className="ac-error">{turn.error}</p></div>
       ) : (
@@ -233,7 +240,7 @@ function AcComposer({ pinned, value, setValue, onSubmit, placeholder, busy, quot
       {left != null && (
         <div className="ac-quota">{left > 0
           ? `${left} of ${quota.limit} question${quota.limit === 1 ? "" : "s"} left today`
-          : "No questions left today — resets tomorrow"}</div>
+          : <>Out of searches today — resets tomorrow. <a className="ac-quota-link" href="mailto:hello@lexica.bible?subject=Berean%20membership">Ask about Berean membership ↗</a></>}</div>
       )}
     </div>
   );
@@ -317,7 +324,8 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
       if (data.quota) setQuota(data.quota);       // refresh the "left today" counter
       let turn;
       if (data.login) turn = { question: q, error: "Sign in to ask the corpus." };
-      else if (data.capped || data.global_capped) turn = { question: q, notice: data.error };
+      else if (data.capped) turn = { question: q, notice: data.error, capped: true };
+      else if (data.global_capped) turn = { question: q, notice: data.error };
       else if (data.out_of_scope) turn = { question: q, notice: data.explanation || "This tool searches the Greek & Hebrew Bible corpus — try a question about a word, theme, or passage." };
       else if (data.error) turn = { question: q, error: data.error };
       else turn = {
