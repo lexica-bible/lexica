@@ -63,6 +63,8 @@ _EMAIL_RE = re.compile(r"^[^@\s]+@[^@\s]+\.[^@\s]+$")
 _MAX_NOTES = 5000            # per account
 _MAX_NOTE_BYTES = 8000       # one anchored note's JSON
 _MAX_JOURNAL_BYTES = 64000   # one free-form journal page's JSON (long essays)
+_MAX_CONVOS = 60             # saved Ask-the-corpus conversations per account
+_MAX_CONVO_BYTES = 250000    # one conversation's JSON (its turns + verse evidence)
 _MAX_BODY_BYTES = 4_000_000  # whole request
 _MIN_PASSWORD = 8
 _RESET_TTL = 3600            # a reset link is good for 1 hour
@@ -91,6 +93,15 @@ def _ensure_tables():
         conn.execute(
             "CREATE TABLE IF NOT EXISTS plan ("
             " code TEXT PRIMARY KEY, json TEXT NOT NULL, updated TEXT NOT NULL)"
+        )
+        # Saved Ask-the-corpus conversations — one row per conversation, same
+        # id+json+updated+deleted shape as `notes` so it syncs the same way (newer
+        # `updated` wins; tombstones propagate a clear). Synced by /api/corpus/sync.
+        conn.execute(
+            "CREATE TABLE IF NOT EXISTS corpus ("
+            " code TEXT NOT NULL, id TEXT NOT NULL, json TEXT NOT NULL,"
+            " updated TEXT NOT NULL, deleted INTEGER NOT NULL DEFAULT 0,"
+            " PRIMARY KEY (code, id))"
         )
         # Password-reset links (added 2026-06-16). One short-lived single-use token
         # per request; pruned on expiry. Sending the email needs SMTP (mailer.py).
@@ -652,6 +663,79 @@ def notes_sync():
         except (ValueError, TypeError):
             continue
     return jsonify({"notes": out, "server_time": int(time.time())})
+
+
+@bp.route("/api/corpus/sync", methods=["POST"])
+@limiter.limit("200 per hour")
+def corpus_sync():
+    """Two-way sync of saved Ask-the-corpus conversations, keyed by id, newer
+    `updated` wins — the same shape as /api/notes/sync. Lets a signed-in reader pick
+    a conversation back up on another device. A conversation with deleted:true is a
+    tombstone (a 'Clear all' on one device) so the removal propagates."""
+    raw = request.get_data(cache=False) or b""
+    if len(raw) > _MAX_BODY_BYTES:
+        return jsonify({"error": "too large"}), 413
+    try:
+        body = json.loads(raw or b"{}")
+    except (ValueError, TypeError):
+        return jsonify({"error": "bad request"}), 400
+    if not isinstance(body, dict):
+        return jsonify({"error": "bad request"}), 400
+
+    _ensure_tables()
+    conn = notes_db()
+    try:
+        uid = _user_for_token(conn)
+        if uid is None:
+            return jsonify({"error": "not signed in"}), 401
+        owner = "u" + str(uid)
+
+        incoming = body.get("convos") or []
+        if not isinstance(incoming, list) or len(incoming) > _MAX_CONVOS:
+            return jsonify({"error": "bad convos"}), 400
+
+        existing = {
+            r["id"]: r["updated"]
+            for r in conn.execute("SELECT id, updated FROM corpus WHERE code = ?", (owner,))
+        }
+        for c in incoming:
+            if not isinstance(c, dict):
+                continue
+            cid = c.get("id")
+            upd = c.get("updated") or ""
+            if not isinstance(cid, str) or not cid or not isinstance(upd, str):
+                continue
+            blob = json.dumps(c, separators=(",", ":"))
+            if len(blob) > _MAX_CONVO_BYTES:
+                continue
+            if cid not in existing or upd > existing[cid]:
+                conn.execute(
+                    "INSERT OR REPLACE INTO corpus (code, id, json, updated, deleted)"
+                    " VALUES (?,?,?,?,?)",
+                    (owner, cid, blob, upd, 1 if c.get("deleted") else 0),
+                )
+                existing[cid] = upd
+        count = conn.execute("SELECT count(*) FROM corpus WHERE code = ?", (owner,)).fetchone()[0]
+        if count > _MAX_CONVOS:
+            conn.execute(
+                "DELETE FROM corpus WHERE code = ? AND id IN ("
+                " SELECT id FROM corpus WHERE code = ? ORDER BY updated ASC LIMIT ?)",
+                (owner, owner, count - _MAX_CONVOS),
+            )
+        conn.commit()
+        rows = conn.execute("SELECT json FROM corpus WHERE code = ?", (owner,)).fetchall()
+    except sqlite3.Error:
+        return jsonify({"error": "sync failed"}), 500
+    finally:
+        conn.close()
+
+    out = []
+    for r in rows:
+        try:
+            out.append(json.loads(r["json"]))
+        except (ValueError, TypeError):
+            continue
+    return jsonify({"convos": out, "server_time": int(time.time())})
 
 
 def _merge_plan(stored, incoming):

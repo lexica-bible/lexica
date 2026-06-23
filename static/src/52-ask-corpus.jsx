@@ -8,8 +8,8 @@
 // design/README.md + memory project_ai_search_redesign.)
 // ============================================================
 
-const _AC_CONVOS_KEY = "lexica.corpus.convos.v1";
-const _AC_CONVO_MAX = 15;   // keep the most recent N conversations (browser-local)
+// Saved conversations live in NotesStore (browser-local for everyone; synced across
+// devices when signed in) — see corpusConvos()/upsertConvo()/clearConvos() there.
 
 // Only the curated key passages are shown now (the old "see all 156" dump is gone),
 // so keep just those in a turn — this also keeps saved conversations small. Mirrors
@@ -79,12 +79,14 @@ function AcProse({ text, onVerse, onStrongs, verified }) {
     if (m[1]) {   // verse ref
       const key = _BOOK_LOOKUP[m[1].toLowerCase().replace(/\s+/g, "")];
       if (!key) continue;   // unknown book → leave as plain text
-      // SEATBELT: only vouch for (linkify) a verse the search actually surfaced.
-      // If the AI named a verse we never retrieved, render it as plain text — we
-      // can't verify it, so we don't link it or imply it's evidence.
-      if (verified && !verified.has(`${key}-${+m[2]}-${+m[3]}`)) continue;
+      // Every recognized reference is a chip that jumps into the reader. A verse the
+      // search actually surfaced gets the solid evidence chip; a verse the AI named that
+      // we never retrieved still jumps, but in a quieter style (the seatbelt) so it
+      // doesn't imply it's part of the evidence.
+      const ok = !verified || verified.has(`${key}-${+m[2]}-${+m[3]}`);
       if (m.index > last) out.push(text.slice(last, m.index));
-      out.push(<button key={k++} className="ac-ref" onClick={() => onVerse(key, +m[2], +m[3])}>{m[0]}</button>);
+      out.push(<button key={k++} className={"ac-ref" + (ok ? "" : " ac-ref-soft")}
+        onClick={() => onVerse(key, +m[2], +m[3])}>{m[0]}</button>);
       last = _CITE_RE.lastIndex;
     } else if (m[4]) {   // Strong's number
       if (m.index > last) out.push(text.slice(last, m.index));
@@ -232,25 +234,20 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   const [draft, setDraft] = useState("");
   const [railOpen, setRailOpen] = useState(false);
   const [scope, setScope] = useState(null);   // { strongs, lemma, translit } from a Word study handoff
-  const [convos, setConvos] = useState(() => {
-    try { return JSON.parse(localStorage.getItem(_AC_CONVOS_KEY) || "[]"); } catch (e) { return []; }
-  });
   const [currentId, setCurrentId] = useState(null);   // the conversation being viewed/built (null = landing)
   const threadRef = useRef(null);
-  useEffect(() => { try { localStorage.setItem(_AC_CONVOS_KEY, JSON.stringify(convos.slice(0, _AC_CONVO_MAX))); } catch (e) {} }, [convos]);
+  useNotesVersion();   // re-render when the store changes (e.g. a cross-device sync pulls convos in)
+  const convos = NotesStore.corpusConvos();
 
-  // Save the live conversation locally so the rail can REOPEN it later with no
-  // re-run. One entry per thread keyed by currentId; title = first question; most
-  // recent first; last _AC_CONVO_MAX kept. Loading turns are never stored.
+  // Save the live conversation to the store so the rail can REOPEN it later with no
+  // re-run. The store keeps it browser-local AND (when signed in) syncs it across
+  // devices. One entry per thread keyed by currentId; loading turns are never stored.
   useEffect(() => {
     if (currentId == null) return;
     const answered = thread.filter(t => t && t.question && !t.loading);
     if (!answered.length) return;
-    setConvos(cs => {
-      const entry = { id: currentId, title: answered[0].question,
-                      turns: thread.filter(t => t && !t.loading), updated: Date.now() };
-      return [entry, ...cs.filter(c => c.id !== currentId)].slice(0, _AC_CONVO_MAX);
-    });
+    NotesStore.upsertConvo({ id: currentId, title: answered[0].question,
+                             turns: thread.filter(t => t && !t.loading) });
   }, [thread, currentId]);
 
   const ask = async (question) => {
@@ -349,10 +346,16 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
               <button key={c.id} className={"ac-rail-item" + (c.id === currentId ? " on" : "")}
                 onClick={() => openConvo(c)} title="Reopen this conversation">{c.title}</button>
             ))}</div>}
-        {convos.length > 0 && <button className="ac-rail-clear" onClick={() => setConvos([])}>Clear all</button>}
+        {convos.length > 0 && <button className="ac-rail-clear" onClick={() => NotesStore.clearConvos()}>Clear all</button>}
       </aside>
 
       <main className="ac-main">
+        {isMobile && (
+          <button className="ac-mobi-hist" onClick={() => setRailOpen(true)}
+            title="Recent conversations">
+            <Icon.Clock/> Recent
+          </button>
+        )}
         <div className="ac-construction" role="note">
           <svg className="ac-construction-i" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
             <path d="M10.3 3.2 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.2a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/>

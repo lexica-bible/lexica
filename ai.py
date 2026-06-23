@@ -184,8 +184,12 @@ The word unifies physical breath and divine agency under one term."
 BAD:  "This query searches for pistis across Paul's letters..."
 BAD:  "Pneuma appears in the creation account and descriptions of divine action." (too vague)
 
-You MUST mention every term in key_strongs by its transliteration (with its Strong's
-number). Every Greek or Hebrew term you discuss MUST appear in key_strongs.
+Mention the key_strongs terms that actually bear on the question, by transliteration
+(with the Strong's number). If a listed term turns out unrelated to the question, leave
+it out — do NOT name a word just to call it incidental, unrelated, or coincidental.
+Every Greek or Hebrew term you discuss MUST appear in key_strongs. Cite verses by
+reference only (Book Ch:V); never quote or transcribe a verse's full text in the prose,
+and never write empty parentheses "()".
 Focus on: lexical range of key terms, specific passages, interpretive translation
 choices. For translation comparison queries, name translations directly
 (KJV, ABP, LXX) and state differences concisely.
@@ -611,6 +615,14 @@ concrete sense range, and point to what the verses you selected actually say.
 SCRIPT: in the prose use the TRANSLITERATION + Strong's number only (e.g. "sabbaton,
 G4521" — never σάββατον), NOT raw Greek or Hebrew letters. The script lives in the word
 chips beside the note; keep the write-up itself readable for a non-Greek reader.
+OMIT, DON'T DISMISS: the key words listed are CANDIDATES — discuss only those that
+actually bear on the question. If a listed word (or a verse in the pool) turns out
+unrelated, say nothing about it; never name a word just to call it incidental,
+unrelated, or coincidental. Spend the whole note on what answers the question.
+NO EMPTY PARENTHESES, NO QUOTED VERSES: never write "word ()" — give a word as its
+transliteration + Strong's number (e.g. "sabbaton, G4521") and a passage as its
+reference (Book Ch:V). Cite verses by reference only; never quote or transcribe a
+verse's full text in the prose.
 SABBATH vs WEEK: when the source woodenly renders the numeral idiom "one/first of the Sabbaths"
 (e.g. 1Co 16:2, Mat 28:1, Joh 20:1, Act 20:7), sabbaton there means the seven-day WEEK — say "the
 first day of the week" (the day AFTER the Sabbath), never "a Sabbath". Outside that numeral idiom,

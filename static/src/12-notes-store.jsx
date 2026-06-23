@@ -112,6 +112,7 @@ const NotesStore = (function () {
       applyingRemote = false;
       lastSync = Date.now();
       syncPlanNow();               // push/pull the reading-plan progress at the same moment
+      syncCorpusNow();             // …and the saved Ask-the-corpus conversations
       return { ok: true };
     } catch (e) {
       return { ok: false, error: String(e) };
@@ -168,6 +169,65 @@ const NotesStore = (function () {
         });
       } catch (e) {}
     }
+  }
+
+  // --- saved Ask-the-corpus conversations (cross-device) ---
+  // Each entry: { id, title, turns:[...], updated (ISO string), deleted? }. Browser-local
+  // for everyone; for a signed-in reader they ALSO push/pull through /api/corpus/sync, so a
+  // conversation started on the desktop is there on the phone. Newer `updated` wins by id; a
+  // deleted:true tombstone propagates a "Clear all" instead of resurrecting from another device.
+  const CORPUSKEY = "lexica.corpus.convos.v1";
+  const _CONVO_KEEP = 60;   // cap stored locally (matches the server cap)
+  function corpusLoadRaw() {
+    let a = [];
+    try { a = JSON.parse(localStorage.getItem(CORPUSKEY) || "[]"); } catch (e) {}
+    if (!Array.isArray(a)) a = [];
+    // older rows stored `updated` as a number (ms epoch) — coerce to an ISO string so it
+    // string-compares chronologically and passes the server's type check.
+    let changed = false;
+    for (const c of a) {
+      if (c && typeof c.updated === "number") { c.updated = new Date(c.updated).toISOString(); changed = true; }
+      else if (c && c.updated == null) { c.updated = new Date(0).toISOString(); changed = true; }
+    }
+    if (changed) corpusSaveRaw(a);
+    return a;
+  }
+  function corpusSaveRaw(a) { try { localStorage.setItem(CORPUSKEY, JSON.stringify(a)); } catch (e) {} }
+  function corpusMerge(incoming) {
+    if (!Array.isArray(incoming)) return;
+    const cur = corpusLoadRaw();
+    const byId = new Map(cur.map(c => [c.id, c]));
+    for (const c of incoming) {
+      if (!c || !c.id || typeof c.updated !== "string") continue;
+      const ex = byId.get(c.id);
+      if (!ex) { cur.push(c); byId.set(c.id, c); }
+      else if (c.updated > (ex.updated || "")) Object.assign(ex, c);
+    }
+    corpusSaveRaw(cur);
+  }
+  let corpusTimer = null;
+  async function syncCorpusNow() {
+    const a = getAuth();
+    if (!a || !a.token) return { ok: false, reason: "off" };
+    try {
+      const res = await fetch("/api/corpus/sync", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Authorization": "Bearer " + a.token },
+        body: JSON.stringify({ convos: corpusLoadRaw() }),
+      });
+      if (res.status === 401) { setAuth(null); return { ok: false, reason: "signed-out" }; }
+      if (!res.ok) return { ok: false, status: res.status };
+      const data = await res.json();
+      corpusMerge(data.convos || []);
+      notify();
+      return { ok: true };
+    } catch (e) { return { ok: false, error: String(e) }; }
+  }
+  function scheduleCorpusSync() {
+    const a = getAuth();
+    if (applyingRemote || !a || !a.token) return;
+    clearTimeout(corpusTimer);
+    corpusTimer = setTimeout(() => { syncCorpusNow(); }, 2500);
   }
 
   // POST a JSON body to an auth endpoint; on success store {token,email} and
@@ -399,6 +459,52 @@ const NotesStore = (function () {
     },
     syncNow,
     syncPlanNow, schedulePlanSync, clearPlan,
+
+    // --- saved Ask-the-corpus conversations ---
+    // Live (non-tombstoned) conversations, newest-edited first.
+    corpusConvos() {
+      return corpusLoadRaw().filter(c => c && !c.deleted)
+        .sort((a, b) => (b.updated || "").localeCompare(a.updated || ""));
+    },
+    // Insert or replace a conversation by id, then persist + schedule a sync. Stamps a
+    // fresh `updated` so the newest edit wins the cross-device merge; tombstones the
+    // oldest live ones past the cap so local storage stays bounded.
+    upsertConvo(entry) {
+      if (!entry || !entry.id) return;
+      const a = corpusLoadRaw();
+      const i = a.findIndex(c => c.id === entry.id);
+      const row = { ...entry, updated: new Date().toISOString(), deleted: false };
+      if (i >= 0) a[i] = { ...a[i], ...row }; else a.push(row);
+      const live = a.filter(c => !c.deleted)
+        .sort((x, y) => (y.updated || "").localeCompare(x.updated || ""));
+      if (live.length > _CONVO_KEEP) {
+        const keep = new Set(live.slice(0, _CONVO_KEEP).map(c => c.id));
+        for (const c of a) if (!c.deleted && !keep.has(c.id)) { c.deleted = true; c.turns = []; }
+      }
+      corpusSaveRaw(a);
+      notify();
+      scheduleCorpusSync();
+    },
+    // Drop one conversation (soft delete → propagates through sync).
+    removeConvo(id) {
+      const a = corpusLoadRaw();
+      const c = a.find(x => x.id === id);
+      if (!c) return;
+      Object.assign(c, { deleted: true, title: "", turns: [], updated: new Date().toISOString() });
+      corpusSaveRaw(a);
+      notify();
+      scheduleCorpusSync();
+    },
+    // Clear them all (each becomes a tombstone so the clear propagates across devices).
+    clearConvos() {
+      const a = corpusLoadRaw();
+      const now = new Date().toISOString();
+      for (const c of a) Object.assign(c, { deleted: true, title: "", turns: [], updated: now });
+      corpusSaveRaw(a);
+      notify();
+      scheduleCorpusSync();
+    },
+    syncCorpusNow, scheduleCorpusSync,
   };
 })();
 

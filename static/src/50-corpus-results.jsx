@@ -168,39 +168,35 @@ function VerseRow({ book, chapter, verse, label, allResults, onWordClick, onRead
 // ============================================================
 // CORPUS SEARCH — PASSAGE GROUP (collapsible book+chapter section)
 // ============================================================
+// A passage group = one book·chapter heading with its verses beneath. A flat,
+// always-open section (NOT a collapsible card) — the curated key passages are short, so
+// separate fold-out boxes were just clutter you had to open one at a time.
 function CorpusGroup({ label, verses, allResults, onWordClick, onReadInContext, textMode, primaryStrongs, citedStrongs, kjvCache }) {
-  const [open, setOpen] = useState(true);
   return (
     <div className="corpus-group">
-      <button
-        className={"corpus-group-head " + (open ? "open" : "")}
-        onClick={() => setOpen(o => !o)}
-      >
+      <div className="corpus-group-head">
         <Icon.Book style={{ opacity: 0.5, flexShrink: 0 }}/>
         <span className="corpus-group-label">{label}</span>
         <span className="corpus-group-count">{verses.length} verse{verses.length !== 1 ? "s" : ""}</span>
-        <span className={"corpus-chevron " + (open ? "open" : "")}/>
-      </button>
-      {open && (
-        <div className="corpus-group-body">
-          {verses.map(v => (
-            <VerseRow
-              key={`${v.book}-${v.chapter}-${v.verse}`}
-              book={v.book}
-              chapter={v.chapter}
-              verse={v.verse}
-              label={v.ref}
-              allResults={allResults}
-              onWordClick={onWordClick}
-              onReadInContext={onReadInContext}
-              textMode={textMode}
-              primaryStrongs={primaryStrongs}
-              citedStrongs={citedStrongs}
-              kjvCache={kjvCache}
-            />
-          ))}
-        </div>
-      )}
+      </div>
+      <div className="corpus-group-body">
+        {verses.map(v => (
+          <VerseRow
+            key={`${v.book}-${v.chapter}-${v.verse}`}
+            book={v.book}
+            chapter={v.chapter}
+            verse={v.verse}
+            label={v.ref}
+            allResults={allResults}
+            onWordClick={onWordClick}
+            onReadInContext={onReadInContext}
+            textMode={textMode}
+            primaryStrongs={primaryStrongs}
+            citedStrongs={citedStrongs}
+            kjvCache={kjvCache}
+          />
+        ))}
+      </div>
     </div>
   );
 }

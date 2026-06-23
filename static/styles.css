@@ -1278,26 +1278,23 @@ input { font-family: inherit; }
 .additional-refs-section .corpus-group:hover {
   opacity: 1;
 }
+/* Flat passage group — a light book·chapter heading with its verses beneath. No box
+   and no per-group collapse (the curated key passages are short — separate fold-out
+   cards were just clutter you had to open one at a time). */
 .corpus-group {
-  background: var(--paper);
-  border: 1px solid var(--rule);
-  border-radius: var(--r-lg);
-  overflow: hidden;
-  box-shadow: var(--shadow-sm);
+  background: transparent;
+  border: 0;
+  border-radius: 0;
 }
 .corpus-group-head {
   width: 100%;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 14px 20px;
-  background: var(--paper);
-  border-bottom: 1px solid transparent;
-  transition: background 0.15s, border-color 0.15s;
+  gap: 9px;
+  padding: 8px 14px 6px;
+  border-bottom: 1px solid var(--rule);
   text-align: left;
 }
-.corpus-group-head:hover { background: var(--bg); }
-.corpus-group-head.open { border-bottom-color: var(--rule); }
 .corpus-group-label {
   font-size: 13.5px;
   font-weight: 600;
@@ -4330,6 +4327,10 @@ button.study-verse-ref { border: none; }
 /* inline citations the AI already wrote, made clickable */
 .ac-ref { font-family: var(--f-mono); font-size: 12.5px; color: var(--gold); background: var(--gold-soft); padding: 1px 6px; border-radius: 5px; white-space: nowrap; letter-spacing: 0.01em; }
 .ac-ref:hover { background: color-mix(in oklab, var(--gold) 28%, var(--gold-soft)); }
+/* a reference the AI named that the search didn't surface — still jumps to the reader,
+   but quiet (no gold evidence fill) so it doesn't imply it's part of the evidence. */
+.ac-ref.ac-ref-soft { color: var(--ink-3); background: none; padding: 1px 2px; border-radius: 0; border-bottom: 1px dotted var(--ink-4); }
+.ac-ref.ac-ref-soft:hover { color: var(--ink); background: none; border-bottom-color: var(--ink-2); }
 .ac-instrongs { font-family: var(--f-mono); font-size: 0.9em; color: var(--ai); border-bottom: 1px solid color-mix(in oklab, var(--ai) 32%, transparent); white-space: nowrap; }
 .ac-instrongs:hover { border-bottom-color: var(--ai); }
 .ac-notice { font-size: 14.5px; line-height: 1.6; color: var(--ink-2); margin: 0; padding: 14px 16px; background: var(--ai-soft); border: 1px solid color-mix(in oklab, var(--ai) 20%, transparent); border-radius: 10px; }
@@ -4390,6 +4391,18 @@ button.study-verse-ref { border: none; }
      ends exactly at the visible bottom (no extra page height to scroll into). */
   .app.view-corpus .main { padding-bottom: 0; }
   .ac-thread, .ac-landing { overscroll-behavior: contain; }
+  /* mobile-only: the welcome/thread screen has no visible rail, so this opens it to
+     reach saved conversations (rendered only when isMobile). */
+  .ac-mobi-hist {
+    align-self: flex-start;
+    display: inline-flex; align-items: center; gap: 6px;
+    margin: 10px 16px 2px; padding: 6px 12px;
+    border: 1px solid var(--rule); border-radius: 999px;
+    background: var(--ctl-bg); color: var(--ink-2);
+    font-size: 12.5px; font-weight: 600;
+  }
+  .ac-mobi-hist svg { width: 13px; height: 13px; color: var(--ink-4); }
+  .ac-mobi-hist:active { background: var(--bg); }
   .ac-construction { padding: 8px 16px; font-size: 12.5px; }
   .ac-rail { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; z-index: 60; box-shadow: var(--shadow-lg); }
   .ac-rail.hidden { display: none; }
