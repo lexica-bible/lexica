@@ -34,6 +34,21 @@ trusts it and can't check the Greek/Hebrew himself. The bar is NOT negotiable:
   hand-off prompt for a fresh session instead of limping forward. Full record:
   memory `feedback_accuracy_completeness_bar`.
 
+## VERIFY BEFORE YOU CLAIM — read every session, no exceptions
+Every factual claim about the code/data/sources gets CHECKED against the actual source BEFORE I say
+it — read the file+line, run the read-only check, look at the real rows. Inferring from one or two
+lines and stating it as fact is banned. (2026-06-22: I claimed the ABP word card "shows a dictionary
+gloss" — twice — without tracing the display logic; it shows the in-verse English word in the common
+case. `relocateGloss` only swaps in the `kjv_def` gloss when the word also has an inflected form line.)
+**No clean-sweep claims:** never call something a "clean sweep / sure win / validated / stark improvement"
+from a flattering sample — check EVERY item or label it a spot-check with the rest unverified, and probe
+STRESS cases (loaded/edge), not easy ones. (2026-06-22 same session: I called TBESG "validated" off
+love/spirit/God; χάρις→"grace" — a loaded one-word gloss — broke it. Reporting a source's value ≠
+vouching it's right.)
+**Self-trigger:** if I make a claim I didn't verify, OR I catch myself having guessed, I STOP, run
+`/wrap` immediately, and write clean handoff notes for a fresh session — I do NOT keep going. Full
+record: memory `feedback_verify_before_claiming`.
+
 ## Instructions for Claude Code
 (Account: user is on the Max 20x plan — ample headroom. Bias to being THOROUGH and
 CORRECT over conserving tool calls. The notes below are about staying focused and
@@ -327,6 +342,10 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
 - Italic words in KJV (italic=1) are translator additions with no source word
 - Strong's G-numbers → lexicon/lsj tables; H-numbers → bdb table
 - No systematic theology imported — text speaks first (Berean approach)
+- PLAIN MEANING, NOT TRADITION (hard rule): glosses/word-meanings = the plain, attested sense, NEVER the
+  theologically-loaded or equivocated English (χάρις = "favor/kindness", NOT "grace"; πνεῦμα = "spirit/
+  breath", NOT "Ghost"). Give the RANGE when a word has one; a single church-word gloss is a red flag.
+  Applies to the word card, AI synthesis, lexicon, studies. Memory `feedback_plain_meaning_not_tradition`.
 - Function words (171-word set) are filtered from search results
 - Two-ending Greek adjectives (masculine & feminine share one form) show "Masculine/Feminine" on the
   word-study card when the morph source never resolves them — `decodeMorph` (00-core.jsx) checks the
@@ -476,9 +495,14 @@ rules + gotchas; open the named memory for the backstory.
   now sits DOWN on the inflected "in this verse" form line (Hebrew/BSB/ABP; ABP form via `abp_surface`;
   KJV has none). **Lemma-gloss source is PROVISIONAL + UNDER REWORK:** Greek uses lexicon `kjv_def`,
   which is KJV-ized AND alphabetical → the lead term is often wrong ("charity" for ἀγάπη, "Ghost" for
-  πνεῦμα), so it's NOT good enough; Hebrew/BSB show no lemma gloss yet. Plan = Dodson glosses for Greek,
-  heb.db + OpenScriptures for Hebrew. Read-only audit: `scripts/check_gloss_coverage.py`. Full state +
-  the fix plan: memory `project_word_card_gloss`.
+  πνεῦμα), so it's NOT good enough; Hebrew/BSB show no lemma gloss yet. **CANDIDATE source (NOT settled) =
+  STEPBible BRIEF lexicons (`Gloss` col): TBESG (Greek) + TBESH (Hebrew), CC BY, same project as heb.db,
+  TBESG ABP-LXX-aware.** ⚠ Its one-word gloss is theologically LOADED on some terms (χάρις→"grace", not
+  the plain "favor/kindness") — must NOT be taken verbatim; needs a plain-meaning quality pass on the
+  loaded words FIRST (see "Key Design Decisions" + memory `feedback_plain_meaning_not_tradition`). Dodson
+  (short ranges) is back in contention; ABP dotted (`G###.N`) need a separate lemma lookup. Read-only
+  audit measures coverage (necessary, not sufficient): `python3 scripts/check_gloss_coverage.py bible.db
+  --heb heb.db --fetch-stepbible`. Full state + plan: memory `project_word_card_gloss`.
 - Rail stacks ≤3 deep: summary/Intro → xref → (word OR note). The "‹ back" link NAMES the card
   beneath it; the note card keeps just an X (DESKTOP). Word/xref panels trigger `has-detail` → compacts
   `.lib-reading` on desktop.

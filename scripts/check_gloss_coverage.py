@@ -29,6 +29,36 @@ if not HEB and "--heb" in sys.argv:                     # allow "--heb path" too
     if i + 1 < len(sys.argv):
         HEB = sys.argv[i + 1]
 
+# STEPBible BRIEF lexicons (the proposed real gloss source). Greek = TBESG, Hebrew = TBESH,
+# both CC BY, same project as heb.db (TAHOT). Pass a local path OR a URL with --tbesg/--tbesh,
+# or --fetch-stepbible to pull both defaults straight from GitHub (PA has internet).
+DEFAULT_TBESG_URL = ("https://raw.githubusercontent.com/STEPBible/STEPBible-Data/master/Lexicons/"
+                     "TBESG%20-%20Translators%20Brief%20lexicon%20of%20Extended%20Strongs%20for%20"
+                     "Greek%20-%20STEPBible.org%20CC%20BY.txt")
+DEFAULT_TBESH_URL = ("https://raw.githubusercontent.com/STEPBible/STEPBible-Data/master/Lexicons/"
+                     "TBESH%20-%20Translators%20Brief%20lexicon%20of%20Extended%20Strongs%20for%20"
+                     "Hebrew%20-%20STEPBible.org%20CC%20BY.txt")
+
+
+def _opt(name):
+    """value of --name=val or --name val, else None."""
+    pre = f"--{name}="
+    for a in sys.argv:
+        if a.startswith(pre):
+            return a[len(pre):]
+    if f"--{name}" in sys.argv:
+        i = sys.argv.index(f"--{name}")
+        if i + 1 < len(sys.argv) and not sys.argv[i + 1].startswith("--"):
+            return sys.argv[i + 1]
+    return None
+
+
+TBESG = _opt("tbesg")
+TBESH = _opt("tbesh")
+if "--fetch-stepbible" in sys.argv:
+    TBESG = TBESG or DEFAULT_TBESG_URL
+    TBESH = TBESH or DEFAULT_TBESH_URL
+
 
 def has_table(conn, name):
     return conn.execute(
@@ -45,6 +75,54 @@ def norm_h(s):
 
 def pct(a, b):
     return f"{(100.0 * a / b):.1f}%" if b else "—"
+
+
+def canon(s):
+    """Fold a Strong's number for matching across numbering schemes: TBESG/TBESH
+    zero-pad (G0026, H0430) but our tables don't (G26, H430); heb.db adds byform
+    letters (H0430a). canon('G0026')==canon('G26')=='G26'; canon('H0430a')=='H430'."""
+    m = re.match(r"^([GH])0*(\d+)", s or "")
+    return f"{m.group(1)}{m.group(2)}" if m else (s or "")
+
+
+def _read_source(src):
+    """Read a STEPBible brief-lexicon file from a local path or an http(s) URL."""
+    if re.match(r"^https?://", src):
+        import urllib.request
+        req = urllib.request.Request(src, headers={"User-Agent": "bible-db/1.0"})
+        with urllib.request.urlopen(req) as r:
+            return r.read().decode("utf-8")
+    with open(src, encoding="utf-8") as f:
+        return f.read()
+
+
+def load_brief(src, prefix):
+    """{canon(base number) -> primary short gloss} from a STEPBible TBESG/TBESH file.
+    Skips the multi-section preamble (anchors on the 'eStrong … Gloss' data header),
+    skips the interspersed '$====' person/place blocks, and reads col 0 (eStrong) +
+    col 6 (Gloss). The file is ordered base-sense-first, so the FIRST row for a number
+    is its primary sense — later rows are compounds/byforms (G0001H 'ah!', H0430I
+    '(Gibeath)-elohim'). This is an audit (does a gloss EXIST?), not the final builder."""
+    lines = _read_source(src).splitlines()
+    start = None
+    for i, ln in enumerate(lines):
+        c = ln.split("\t")
+        if c and c[0].strip().rstrip("#") == "eStrong" and "Gloss" in ln:
+            start = i + 1
+            break
+    if start is None:
+        raise SystemExit(f"  !! could not find the data header in {src}")
+    out = {}
+    for ln in lines[start:]:
+        if not ln.strip() or ln.startswith("$"):        # blank / section marker
+            continue
+        c = ln.split("\t")
+        if len(c) < 7 or not c[0].startswith(prefix):
+            continue
+        g = c[6].strip()
+        if g:
+            out.setdefault(canon(c[0].strip()), g)       # first (primary) wins
+    return out
 
 
 conn = sqlite3.connect(DB)
@@ -189,6 +267,61 @@ if need:
         for num, occ, in_bdb in need:
             f.write(f"{num}\t{occ}\t{'yes' if in_bdb else 'no'}\n")
     say(f"  -> full list ({len(need)}) written to gloss_gap_hebrew.tsv")
+
+# ===========================================================================
+# PART C — STEPBible BRIEF glosses (TBESG / TBESH) — the PROPOSED real source.
+# How many of the numbers we actually use get a clean short gloss from it, and
+# which don't (so we know the gap completely before swapping anything in).
+# ===========================================================================
+say("")
+say("=" * 70)
+say("PART C — STEPBible brief glosses  (TBESG = Greek, TBESH = Hebrew)")
+say("=" * 70)
+
+if TBESG:
+    brief_g = load_brief(TBESG, "G")
+    say(f"loaded TBESG: {len(brief_g)} Greek base numbers carry a brief gloss")
+    cov = [n for n in greek_occ if canon(n) in brief_g]
+    miss = sorted(((n, greek_occ[n]) for n in greek_occ if canon(n) not in brief_g),
+                  key=lambda x: -x[1])
+    say(f"  ABP Greek numbers covered by TBESG : {len(cov)}/{g_total}  ({pct(len(cov), g_total)})")
+    say(f"  NOT in TBESG                        : {len(miss)}")
+    say("  quality spot-check (kjv_def vs TBESG):")
+    for p in ("G26", "G4151", "G25", "G5485", "G40"):
+        kd = (lex.get(p, ("", ""))[1] or "").replace("\n", " ")
+        say(f"    {p:7} kjv_def={kd[:34]!r:38} TBESG={brief_g.get(p, '')!r}")
+    if dotted_diff:
+        say(f"  NOTE: the {dotted_diff} dotted-different words won't be fixed by a base-number "
+            f"match — they need a lemma lookup (separate job).")
+    if miss:
+        with open("gloss_tbesg_missing.tsv", "w", encoding="utf-8") as f:
+            f.write("number\toccurrences\n")
+            for n, o in miss:
+                f.write(f"{n}\t{o}\n")
+        say(f"  -> {len(miss)} missing written to gloss_tbesg_missing.tsv")
+else:
+    say("(no Greek brief lexicon given — add --tbesg <path|url> or --fetch-stepbible)")
+
+say("")
+if TBESH:
+    brief_h = load_brief(TBESH, "H")
+    say(f"loaded TBESH: {len(brief_h)} Hebrew base numbers carry a brief gloss")
+    covh = [n for n in heb_universe if canon(n) in brief_h]
+    missh = sorted(((n, heb_universe[n]) for n in heb_universe if canon(n) not in brief_h),
+                   key=lambda x: -x[1])
+    say(f"  Hebrew numbers covered by TBESH : {len(covh)}/{h_total}  ({pct(len(covh), h_total)})")
+    say(f"  NOT in TBESH                     : {len(missh)}")
+    say("  quality spot-check (TBESH gloss):")
+    for p in ("H430", "H7307", "H120", "H1", "H853"):
+        say(f"    {p:7} TBESH={brief_h.get(p, '')!r}")
+    if missh:
+        with open("gloss_tbesh_missing.tsv", "w", encoding="utf-8") as f:
+            f.write("number\toccurrences\n")
+            for n, o in missh:
+                f.write(f"{n}\t{o}\n")
+        say(f"  -> {len(missh)} missing written to gloss_tbesh_missing.tsv")
+else:
+    say("(no Hebrew brief lexicon given — add --tbesh <path|url> or --fetch-stepbible)")
 
 conn.close()
 with open("gloss_coverage_report.txt", "w", encoding="utf-8") as f:

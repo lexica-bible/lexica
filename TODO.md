@@ -286,17 +286,25 @@ purely about which word you land on when you click. Almost all of it is done and
 ### ⚠ OPEN — Word-card lemma gloss: layout shipped, SOURCE is poor + needs rework (2026-06-22)
 The word side-card now puts the verse's English on the conjugated form and a dictionary gloss on the
 lemma (commit 297c276, LIVE pending deploy). The LAYOUT is right; the GLOSS SOURCE is not good enough.
-Full state + plan: memory `project_word_card_gloss`. Audit tool: `scripts/check_gloss_coverage.py`
-(read-only; `python3 scripts/check_gloss_coverage.py bible.db --heb heb.db`).
-- **Greek:** uses `lexicon.kjv_def` — KJV-ized AND alphabetical, so the lead term is often wrong
-  (ἀγάπη→"charity", πνεῦμα→"Ghost"). Coverage 99.9% (6 blanks: G3372/G259/G4452 visible, G9825/9831/9832
-  not in lexicon). **Swap to Dodson glosses** (modern, public-domain; already used in the Apostolic-Fathers
-  build — check `scripts/apfathers/`). Then hand-fill the 6 blanks.
-- **3619 dotted words show their BASE number's gloss** (lemma is corrected by `dotted_lexicon`, gloss isn't
-  — a different word shows the alphabetical neighbour's meaning). Give them their own gloss (by dotted lemma).
-- **Hebrew:** no lemma gloss shipped yet (Hebrew/BSB show lemma + sound only). Add one — heb.db's own glosses
-  (most-common per number) for what it covers + OpenScriptures/Dodson-Hebrew for the byform/Aramaic/name
-  numbers heb.db lacks. (The audit's Hebrew pass needs a re-run — first run crashed, now fixed.)
+Full state + plan: memory `project_word_card_gloss`. **CANDIDATE source (NOT settled) = STEPBible BRIEF
+lexicons, TBESG (Greek) + TBESH (Hebrew), `Gloss` column** — CC BY, same project as heb.db, TBESG
+ABP-LXX-aware. ⚠ **Its one-word gloss is theologically LOADED on some words — χάρις→"grace" (plain
+meaning = favor/kindness). NOT usable verbatim.** (I wrongly called it "validated" off love/spirit/God;
+the user probed χάρις and it failed — see memories `feedback_plain_meaning_not_tradition` +
+`feedback_verify_before_claiming`.)
+- **NEXT, gating everything: a plain-meaning QUALITY pass on the LOADED/ambiguous words** (χάρις, ψυχή,
+  σάρξ, ἐκκλησία, ἱλαστήριον, ᾅδης…). Build a side-by-side of kjv_def vs TBESG vs Dodson; user judges each
+  → THEN pick the source (TBESG / Dodson short-ranges / TBESG-with-hand-overrides). Reading the glosses,
+  not counting them.
+- Read-only coverage audit (necessary, not sufficient): `python3 scripts/check_gloss_coverage.py bible.db
+  --heb heb.db --fetch-stepbible` ON PA → exact coverage + `gloss_tbesg_missing.tsv` / `gloss_tbesh_missing.tsv`.
+  (~10,846 Greek / ~8,723 Hebrew numbers in source vs ~5,251 used → coverage likely near-total.)
+- **Only AFTER source is settled:** load it into bible.db (primary-sense per number), swap the ABP card off
+  `kjv_def`, un-gate the lemma gloss from Greek-only so KJV/BSB/Hebrew cards show it too.
+- **3619 dotted Greek words** show their BASE number's gloss (lemma corrected by `dotted_lexicon`, gloss
+  isn't). A base-number match won't fix them → give them their own gloss by lemma lookup (separate sub-job).
+- Greek `kjv_def` coverage was 99.9% (6 blanks: G3372/G259/G4452 visible, G9825/9831/9832 not in lexicon)
+  — hand-fill any residual.
 - Re-verify 100% (quality, not just coverage) with the audit before calling it done. Bar = memory
   `feedback_accuracy_completeness_bar`.
 
