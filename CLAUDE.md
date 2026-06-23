@@ -239,7 +239,9 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   highlights/journals + a `visits` table (owner-only visitor stats: day + daily IP+UA hash + referrer)
   + `password_resets` (short-lived single-use reset tokens, added 2026-06-16)
   + a `corpus` table (saved Ask-the-corpus conversations, synced cross-device via `/api/corpus/sync`
-  the same id/newer-wins/tombstone way as notes — added 2026-06-23).
+  the same id/newer-wins/tombstone way as notes — added 2026-06-23)
+  + an `ai_usage` table (Ask-corpus daily spend caps — per-account + whole-site question counts per
+  UTC day; user_id 0 = the site total; added 2026-06-22).
   `esv.db` — owner-only ESV text (`esv_verses`), loaded by `scripts/load_esv.py`. `niv.db` — owner-only
   NIV text (`niv_verses`), loaded by `scripts/load_niv.py`. See "Owner-only features".
   `heb.db` — **PUBLIC** Hebrew OT interlinear: `heb_words` (per word: hebrew, strongs H-number, morph,
@@ -646,6 +648,14 @@ Full detail: memory `project_notes_highlights`. The headline facts:
 - SQL gen + term-extraction on **Haiku**; the displayed **synthesis + verse curation (pass 2) on
   Sonnet** (`claude-sonnet-4-6`, 2026-06-21 — Haiku parroted the question's framing on nuanced
   "same vs different" questions and over-asserts; same lesson as xref/summary)
+- **Daily spend caps (2026-06-22).** Ask-corpus is capped per account/UTC-day (user 5 / berean 10 /
+  admin unlimited + uncounted) AND by a whole-site daily ceiling (~50 ≈ $2). Enforced server-side in
+  `ai_search` BEFORE any model runs (`ai_caller`/`ai_quota_blocked`/`ai_quota_count` in views_notes.py;
+  counts in notes.db `ai_usage`); cached/reopened answers never count, counted only on success. Knobs =
+  `AI_DAILY_LIMITS` + `AI_SITE_DAILY` atop views_notes.py. Frontend (52-ask-corpus.jsx): 3 follow-ups
+  per thread, a repeated question in a thread doesn't fire, composer locks mid-search, "N left today"
+  counter. The no-login News share link can't use corpus (login-gated; the news key isn't auth), so the
+  site cap covers every non-admin search. Full record: memory `project_ai_spend_caps`.
 - Berean system prompt — no imported theology
 - key_strongs: up to 10 chips (6 Greek + 4 Hebrew max)
 - Empty-result retry (LAST RESORT, 2026-06-21): Haiku broadens the SQL only when the first query

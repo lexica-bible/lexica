@@ -142,6 +142,23 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
   dotted, per-source counts). Decide: own tab vs under About; one component vs a server template.
   `code: views_seo.py + templates/seo/ (crawlable pattern), static/src/90-app.jsx (nav/tab), or an About sub-page`
 
+- **Ask-corpus DAILY SPEND CAPS + follow-up limits — BUILT + PUSHED (commit c558abd; awaiting deploy).**
+  Stops a logged-in user (or the whole site) running up the Anthropic bill on the paid corpus search.
+  Per account/UTC-day: user 5 / berean 10 / admin unlimited (admin also NOT counted toward the site total);
+  whole-site ceiling ~50/day ≈ $2 (`AI_SITE_DAILY`); 3 follow-ups per conversation; a repeated question in a
+  thread doesn't fire. All server-enforced in `ai_search` before any model runs; counts in notes.db
+  `ai_usage`; cached/reopened answers never count. Knobs = `AI_DAILY_LIMITS`/`AI_SITE_DAILY` atop
+  views_notes.py. Frontend: composer locks mid-search + "N left today" counter. Full record: memory
+  `project_ai_spend_caps`.
+  AFTER DEPLOY, verify on a NON-admin throwaway account (admin is exempt + sees no counter): (1) the composer
+  shows "5 of 5 left today" and counts down; (2) the 6th question is refused with the "you've used today's
+  questions" notice and NO model call; (3) a 4th follow-up in one thread is blocked ("start a new thread");
+  (4) re-asking the same thing in a thread doesn't fire; (5) reopening a saved conversation / a cache-hit
+  re-ask does NOT decrement the counter. OPEN follow-up: wire the real donate link into the "support the site
+  to lift your daily limit" nudge once payments are sorted (memory `project_payments_donations` — Stripe/Ko-fi
+  is down; leaning PayPal/crypto/Zelle, appeal pending).
+  `code: ai.py ai_search; views_notes.py (AI_DAILY_LIMITS/AI_SITE_DAILY, ai_caller/ai_quota_*); static/src/52-ask-corpus.jsx`
+
 - **Post-deploy checklist — Ask-corpus + Hebrew word-study fixes (commits 136865d, 6d030b2, 966a6c3,
   e38124a, 66ae84d; pushed, awaiting deploy).** After the next deploy, verify on the live site:
   (1) **BSB phrase net** — search "giant hunter" (ABP wording) + "mighty hunter" (KJV/BSB wording); both
