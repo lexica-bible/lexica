@@ -6,6 +6,34 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Search-speed fix + mobile UX + cap/contact-email pass — DONE + PUSHED (2026-06-23, commits 572b754…ede0633)
+
+A run of small shipped changes (all pushed to master; user deploys):
+- **"All searches slow" = MISSING INDEXES (root-caused, 572b754).** The recent Hebrew-source swap + BSB-as-
+  a-word-study-source started looking words up BY STRONG'S NUMBER in two tables with no index on that column,
+  so every lookup full-scanned: heb.db `heb_words.strongs` and bible.db `bsb_strongs.strongs_id`. The Word-study
+  English finder runs several per search (one a per-H-number loop), so it stacked many full scans. FIX: added
+  `idx_heb_words_strongs` (load_hebrew.py) + `idx_bsb_strongs_id` (load_bsb_words.py + the app.py startup
+  self-heal beside the kjv ones). Confirmed missing live via `PRAGMA index_list`, created by hand on PA for an
+  instant fix. LESSON (same one app.py already learned for kjv): a new by-Strong's table needs a strongs index.
+  Full record: memory `project_hebrew_source_swap`.
+- **Mobile word study:** inline search bar + "Searching…" on the empty screen; English multi-result list
+  auto-collapses on pick (desktop + mobile). (b6ab11d)
+- **Mobile Ask the corpus:** a "New search" button so a fresh thread is reachable (was buried in the history
+  rail). (f3c99a2)
+- **Greek/Hebrew match list (mobile):** one flex line that shrinks to fit — fixed right-edge overflow + the
+  dead space under short rows (the desktop fixed-column grid was wider than a phone). (ede0633)
+- **Chrono mobile cockpit:** shows the short "Gen 1–3" abbrev label, not the full passage name. (5ca22f4)
+- **Daily cap user tier 5→3** (views_notes.py `AI_DAILY_LIMITS`); at the cap a "Berean membership" nudge links
+  `bereans@lexica.bible`, replacing the dead "support the site" donate text. (6321534, b0f8668, 2b92662)
+- **Donate buttons → contact email:** the processor-dead Ko-fi / GitHub Sponsors buttons were removed from the
+  welcome-tour final step + About; replaced with `mailto:hello@lexica.bible` and copy reframed "Support
+  Lexica"→"Get in touch". (6b969ef) Inbound mail (hello@ + bereans@) now forwards to Proton via **Cloudflare
+  Email Routing** (send-only Resend can't receive). Full records: memories `project_email_smtp`,
+  `project_payments_donations`, `project_ai_spend_caps`, `project_ai_search_redesign`, `project_chronological_tab`.
+
+---
+
 ## Reader word card — metaV name false-positives on common OT words — FIXED + LIVE (2026-06-23, 54aafab)
 
 A common Hebrew word BSB/KJV capitalizes mid-verse (midbar "Wilderness of Sinai", H4057) tripped the reader's

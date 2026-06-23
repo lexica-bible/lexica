@@ -706,7 +706,8 @@ Full detail: memory `project_notes_highlights`. The headline facts:
 - SQL gen + term-extraction on **Haiku**; the displayed **synthesis + verse curation (pass 2) on
   Sonnet** (`claude-sonnet-4-6`, 2026-06-21 — Haiku parroted the question's framing on nuanced
   "same vs different" questions and over-asserts; same lesson as xref/summary)
-- **Daily spend caps (2026-06-22).** Ask-corpus is capped per account/UTC-day (user 5 / berean 10 /
+- **Daily spend caps (2026-06-22; user tier lowered 5→3 on 2026-06-23).** Ask-corpus is capped per
+  account/UTC-day (user 3 / berean 10 /
   admin unlimited + uncounted) AND by a whole-site daily ceiling (~50 ≈ $2). Enforced server-side in
   `ai_search` BEFORE any model runs (`ai_caller`/`ai_quota_blocked`/`ai_quota_count` in views_notes.py;
   counts in notes.db `ai_usage`); cached/reopened answers never count, counted only on success. Knobs =
