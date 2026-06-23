@@ -4649,16 +4649,16 @@ button.study-verse-ref { border: none; }
   .wm .glsenses { margin: 0 0 16px; }
   .wm .corpus-text { font-size: 16px; line-height: 1.56; }
   /* Greek/Hebrew match list on a phone: the desktop fixed-column grid
-     (64/140/140/1fr) is wider than the screen — it spilled past the right edge
-     and the gloss wrapped, leaving dead space below short rows. Put each result
-     on ONE line and let the translit/gloss shrink (ellipsis) to fit; keep the
-     Strong's number + lemma intact so a long one like G4153.1 isn't cut. */
+     (64/140/140/1fr) is wider than the screen. Lay each result in TWO lines —
+     line 1 = Strong's number + lemma, line 2 = transliteration + gloss — so
+     nothing is cut (a long G4153.1 no longer clips the translit with "…"). The
+     lemma grows to fill line 1, which forces the translit + gloss to wrap below. */
   .lexicon-matches { margin-top: 14px; }
-  .lexicon-match-row { display: flex; align-items: baseline; gap: 8px; }
-  .lexicon-match-strongs { flex: 0 0 auto; }
-  .lexicon-match-lemma { flex: 0 0 auto; }
-  .lexicon-match-translit { flex: 0 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .lexicon-match-gloss { flex: 1 1 auto; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .lexicon-match-row { display: flex; flex-wrap: wrap; align-items: baseline; column-gap: 8px; row-gap: 3px; }
+  .lexicon-match-strongs { flex: 0 0 auto; align-self: center; }
+  .lexicon-match-lemma { flex: 1 1 auto; min-width: 0; }
+  .lexicon-match-translit { flex: 0 0 auto; }
+  .lexicon-match-gloss { flex: 1 1 auto; min-width: 0; }
 
   /* bottom tools bar — icon-only, same height as the top nav + library cockpit */
   .wm-tabs {
