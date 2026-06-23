@@ -6,6 +6,28 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## BSB in Ask-corpus + Hebrew left-to-right "prose" (2026-06-22, "round 2 for BSB")
+
+Frontend-only follow-on (commits e367753, 40147cc, fd27b57; pushed, awaiting deploy). Memories
+`project_hebrew_source_swap` + `project_hebrew_ot_interlinear`.
+- **BSB added to the Ask-corpus answer's verse-text toggle (e367753).** Was ABP·KJV·HEB → now
+  ABP·BSB·KJV·HEB. The shared `VerseRow` (50-corpus-results.jsx) + `api.bsbVerseWords` already rendered
+  BSB (Word study used them), so it was just the missing button + a small `.ac-tm` gap trim so four fit on
+  a phone. `static/src/52-ask-corpus.jsx`.
+- **HEB scoped to OT verses + default always ABP (e367753 then 40147cc).** HEB used to gray on "no Hebrew
+  word cited" and auto-show for a pure-Hebrew answer. Now: HEB grays unless the answer has OT verses
+  (`hasOtVerse` = any result whose book isn't in `NT_BOOKS`), and HEB mode shows ONLY those OT verses — so a
+  mixed Greek+Hebrew answer no longer renders blank rows (heb.db is OT-only). The auto-show-HEB behavior was
+  REMOVED (40147cc) — the user never asked for it; every answer now defaults to ABP and the reader flips
+  manually. (The auto-HEB predated this work; I carried it forward by mistake, then pulled it.)
+- **Hebrew "Prose" in the reader = the chips flipped LEFT-TO-RIGHT (fd27b57).** CLOSES the parked "Hebrew
+  OT prose mode — pick the flavor" idea. The Prose button (was grayed for Hebrew) toggles `viewMode` + a
+  `.lib-heb-ltr` class that sets the row/content `direction:ltr`; only the WORD order flips L→R, each
+  `.lib-iw-heb` keeps `direction:rtl` so the letters stay correct. A true L→R read of the LETTERS is
+  impossible/backwards (what the prior session meant by "impossible") — flipping word ORDER sidesteps it.
+  Strong's/Interlinear still work. Wired in 60-library.jsx (lib-bar + render) + 59b-library-nav.jsx (mobile
+  ModesSheet). Flag `hebProse = hebMode && viewMode==="prose"`. Matches the Ask-corpus Hebrew layout.
+
 ## Ask-corpus + Hebrew word-study fixes — BSB phrase net, HEB click, brackets, aligned interlinear (2026-06-22)
 
 Follow-on session after the Hebrew source swap + KJV demote (below). All pushed, awaiting the user's

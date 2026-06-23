@@ -395,6 +395,12 @@ rules + gotchas; open the named memory for the backstory.
 - Chip = every word clickable, interlinear stack (Greek → English → Strong's). Prose = plain inline,
   only verse numbers tappable. KJV locks Prose to English. English-only non-canon books: the Chip
   toggle gives a verse-per-line layout (`renderExtraLines`); Strong's/Interlinear stay locked.
+- **Hebrew "Prose" = the same interlinear chips flipped LEFT-TO-RIGHT** (2026-06-22): the Prose button
+  (was grayed in Hebrew) toggles `viewMode` and a `.lib-heb-ltr` class that sets the row/content
+  `direction:ltr` — only the WORD order flips; each `.lib-iw-heb` keeps its own `direction:rtl` so the
+  letters stay correct. Strong's/Interlinear still work in it. Flag `hebProse = hebMode && viewMode==="prose"`
+  in BOTH 60-library.jsx (desktop lib-bar + render) and 59b-library-nav.jsx (mobile ModesSheet). Matches the
+  Ask-corpus Hebrew layout. Memory `project_hebrew_ot_interlinear`.
 - **Chip-vs-prose for verses shown OUTSIDE the reader** (memory `project_lexicon_tab`): CHIP (ABP
   brackets + punctuation outside `]`) = reading pane + side-card interlinear. PROSE (plain, no
   brackets) = TSK xref, Study verses, side-card quote, in-text find list, AND Search + Lexicon result
@@ -647,9 +653,11 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   REAL occurrences from heb_words (code-side supplement, mirrors the cognate/phrase ones), injected + tagged
   with the H-number so the citation guard counts them and the answer reads grounded. The model's KJV-bridge
   SQL (BDB → kjv_strongs → ABP) stays as a fallback. heb.db reads guarded; verses ABP's versification lacks
-  are skipped (can't display). `_CACHE_CODE_VER`→37. Verse evidence now has an **ABP/KJV/HEB display toggle**
-  (per-turn in `AcTurn`, 50/52-corpus files; a Hebrew-ONLY answer auto-shows HEB so the reader sees real
-  Hebrew not the LXX, HEB grays when no Hebrew is cited) — Phase 2 DONE 2026-06-22.
+  are skipped (can't display). `_CACHE_CODE_VER`→37. Verse evidence has an **ABP·BSB·KJV·HEB display toggle**
+  (per-turn in `AcTurn`, 50/52-corpus files; the shared `VerseRow` already renders all four). It ALWAYS
+  defaults to ABP — the old auto-show-HEB-for-Hebrew-answers was dropped 2026-06-22 (user's call). HEB grays
+  unless the answer has OT verses, and shows ONLY those OT verses when picked (heb.db is OT-only, so a mixed
+  Greek+Hebrew answer no longer renders blank rows) — gate is `hasOtVerse` = any non-`NT_BOOKS` result.
   Memory `project_hebrew_source_swap`.
 - **Speed shape (2026-06-21): model-bound.** terms ~1s + write-SQL ~5s (Haiku) + pass-2 synthesis
   ~11-12s (Sonnet, scales with how many verses it reads); DB ~0.1s. **Phrase queries no longer scan

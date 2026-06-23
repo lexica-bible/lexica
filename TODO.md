@@ -161,14 +161,17 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
   "mighty hunter" (if it leaks, prompt fix in `_CURATION_SYSTEM` + mirror `_AI_SYSTEM_TMPL`). Done record:
   TODO_ARCHIVE + memory `project_hebrew_source_swap`.
 
-- **Hebrew OT prose mode (idea — parked 2026-06-16, undecided).** Today Hebrew is locked to the
-  stacked RTL interlinear chips; the Prose button is grayed in Hebrew (`hebMode`). Adding a prose flow
-  is easy (we have hebrew / translit / gloss per word). The catch the user raised: real Hebrew reads
-  right-to-left, so a true LEFT-to-right read can't be the Hebrew letters — it has to be the
-  transliteration (sounded-out Hebrew, L→R, e.g. "bereshit bara elohim…") or the word-for-word English
-  gloss (rough, KJV/BSB already do smooth English). Could also offer real Hebrew prose flowing R→L.
-  User asked which flavor → "not sure, save for later." Pick the flavor before building.
-  `code: static/src/60-library.jsx:742 (hebMode), :1527/:1841 (prose lock + heb render), static/src/59c-library-render.jsx:75 (renderHebVerse)`
+- **Post-deploy checklist — BSB in Ask-corpus + Hebrew L→R prose (commits e367753, 40147cc, fd27b57;
+  pushed, awaiting deploy).** After the next deploy: (1) ask the corpus a question → the answer's verse
+  toggle reads **ABP·BSB·KJV·HEB**, defaults to ABP, BSB renders; (2) a Hebrew (OT) answer → HEB shows ONLY
+  OT verses (no blank rows); a Greek-NT-only answer → HEB grayed; (3) in the reader on a Hebrew OT chapter the
+  **Prose** button (was grayed) flips the chips LEFT-TO-RIGHT (letters still RTL), Chip flips back — check the
+  desktop lib-bar AND the mobile reading sheet. Done record: TODO_ARCHIVE + memories `project_hebrew_source_swap`,
+  `project_hebrew_ot_interlinear`.
+
+- ~~**Hebrew OT prose mode (parked 2026-06-16).**~~ **DONE 2026-06-22 (fd27b57).** Flavor chosen = the
+  interlinear chips flipped LEFT-TO-RIGHT (word order L→R, letters still RTL) — NOT a translit/gloss prose.
+  See TODO_ARCHIVE + memory `project_hebrew_ot_interlinear`.
 
 - ~~**Notes feature.**~~ **DONE 2026-06-09** (notes + highlights + bookmarks + accounts). Study
   notes, color highlights, and bookmarks in the Library (drag-select, or a verse-number menu);
