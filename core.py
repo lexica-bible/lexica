@@ -384,6 +384,29 @@ def dotted_lexicon_cols(conn, base_lemma="l.lemma", base_translit="l.translit", 
             f"LEFT JOIN dotted_lexicon dl ON dl.strongs = 'G' || {strongs_col}")
 
 
+def word_gloss_cols(conn, strongs_col="w.strongs", base_col="w.strongs_base",
+                    dotted_alias="dl", fallback="l.kjv_def"):
+    """Plain-meaning lemma gloss from the `word_gloss` side table (scripts/build_word_gloss.py).
+    Mirrors the dotted_lexicon lemma logic so the gloss tracks the SAME word as the headword:
+    a dotted-different word (one present in dotted_lexicon, alias `dotted_alias`) shows its OWN
+    gloss and NEVER its base's — if it has none, NULL, so the card falls back to its LSJ section;
+    a base or εἰμί-form word shows the base number's gloss. Returns (gloss_expr, joins). The
+    caller selects `{gloss_expr} AS kjv_def` and drops `{joins}` into FROM (per-word queries only).
+    Deploy-safe: before the table is built, returns the fallback column + no join, so the reader's
+    gloss is unchanged. Pass dotted_alias=None when dotted_lexicon isn't joined."""
+    if not conn.execute(
+        "SELECT 1 FROM sqlite_master WHERE type='table' AND name='word_gloss'"
+    ).fetchone():
+        return fallback, ""
+    own = f"LEFT JOIN word_gloss wgd ON wgd.strongs = 'G' || {strongs_col}"
+    if dotted_alias:                                   # suppress the base gloss for a dotted-DIFFERENT word
+        base = (f"LEFT JOIN word_gloss wgb ON wgb.strongs = {base_col} "
+                f"AND {dotted_alias}.strongs IS NULL")
+    else:
+        base = f"LEFT JOIN word_gloss wgb ON wgb.strongs = {base_col}"
+    return "COALESCE(wgd.gloss, wgb.gloss)", f"{own} {base}"
+
+
 def _clean_gloss(s: str | None) -> str | None:
     """Strip trailing punctuation that ABP interlinear leaves on phrase-boundary words."""
     if not s:

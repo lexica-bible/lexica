@@ -10,7 +10,7 @@ import re
 
 from flask import Blueprint, jsonify
 
-from core import db, _serialize_word_core, _FUNCTION_STRONGS
+from core import db, _serialize_word_core, _FUNCTION_STRONGS, word_gloss_cols
 
 bp = Blueprint("library", __name__)
 
@@ -55,15 +55,18 @@ def verse_words(book, chapter, verse):
         tr_sel  = "COALESCE(dl.translit, l.translit) AS translit" if has_dotted else "l.translit"
         dl_join = ("LEFT JOIN dotted_lexicon dl ON dl.strongs = 'G' || w.strongs"
                    if has_dotted else "")
+        # Plain-meaning lemma gloss (scripts/build_word_gloss.py); replaces the KJV-ized
+        # l.kjv_def. Falls back to l.kjv_def until that table is built (deploy-safe).
+        gloss_sel, wg_join = word_gloss_cols(conn, dotted_alias=("dl" if has_dotted else None))
         wrows = conn.execute(
             f"""SELECT w.position, w.english, w.english_head, w.greek_pos, w.bracket_id, w.italic,
                       COALESCE(w.italic_words, '') AS italic_words,
                       w.strongs_base, w.strongs, w.is_pn, w.morph,
-                      {lem_sel}, {tr_sel}, l.kjv_def, l.strongs_def, l.derivation,
+                      {lem_sel}, {tr_sel}, {gloss_sel} AS kjv_def, l.strongs_def, l.derivation,
                       t.entity_type AS pn_type, t.entity_types AS pn_types
                FROM words w
                LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base
-               {dl_join}
+               {dl_join} {wg_join}
                LEFT JOIN tipnr t ON t.strongs = w.strongs_base
                WHERE w.verse_id = ?
                ORDER BY w.position""",
@@ -220,9 +223,11 @@ def chapter_text(book, chapter):
         tr_sel  = "COALESCE(dl.translit, l.translit) AS translit" if has_dotted else "l.translit"
         dl_join = ("LEFT JOIN dotted_lexicon dl ON dl.strongs = 'G' || w.strongs"
                    if has_dotted else "")
+        # Plain-meaning lemma gloss over l.kjv_def (deploy-safe; see verse_words).
+        gloss_sel, wg_join = word_gloss_cols(conn, dotted_alias=("dl" if has_dotted else None))
         rows = conn.execute(
             f"""SELECT v.verse, v.text AS prose, w.position, w.english, w.english_head, w.strongs_base, w.strongs,
-                      {lem_sel}, {tr_sel}, l.kjv_def, w.greek_pos, w.bracket_id, w.italic, w.is_pn, w.morph,
+                      {lem_sel}, {tr_sel}, {gloss_sel} AS kjv_def, w.greek_pos, w.bracket_id, w.italic, w.is_pn, w.morph,
                       COALESCE(w.italic_words, '') AS italic_words,
                       COALESCE(w.smcap_words,  '') AS smcap_words,
                       t.entity_type AS pn_type, t.entity_types AS pn_types,
@@ -230,7 +235,7 @@ def chapter_text(book, chapter):
                FROM verses v
                JOIN words w ON w.verse_id = v.id
                LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base
-               {dl_join}
+               {dl_join} {wg_join}
                LEFT JOIN tipnr t ON t.strongs = w.strongs_base
                LEFT JOIN pericopes p ON p.book = v.book AND p.chapter = v.chapter AND p.verse = v.verse
                {surf_join}
