@@ -354,6 +354,25 @@ if TBESH:
     say("  quality spot-check (TBESH gloss):")
     for p in ("H430", "H7307", "H120", "H1", "H853"):
         say(f"    {p:7} TBESH={brief_h.get(p, '')!r}")
+    # The Hebrew gate (parallel to the Greek one in PART D): heb.db's OWN gloss is the
+    # natural plain base (it IS the real Hebrew OT); TBESH is the brief fill. Same loaded-
+    # word scrutiny applies (a one-word church gloss is the red flag). The plain sense in
+    # parens is a SUGGESTION for the reader to judge — not a verdict.
+    say("")
+    say("  PLAIN-MEANING quality pass (loaded HEBREW words) — heb.db own gloss / TBESH:")
+    HEB_LOADED = [
+        ("H7307", "ruach", "wind/breath/spirit"), ("H5315", "nephesh", "life/person/soul"),
+        ("H2617", "chesed", "loyal love/kindness"), ("H7585", "sheol", "grave/realm of the dead"),
+        ("H8451", "torah", "instruction/teaching"), ("H3722", "kaphar", "cover/atone"),
+        ("H5769", "olam", "age/long duration"), ("H6664", "tsedeq", "rightness/justice"),
+        ("H6918", "qadosh", "set apart/holy"), ("H1285", "berith", "covenant/agreement"),
+        ("H4899", "mashiach", "anointed one"), ("H1350", "gaal", "redeem (as kinsman)"),
+        ("H3519", "kavod", "weight/honor/glory"), ("H430", "elohim", "God/gods"),
+    ]
+    for num, tr, plain in HEB_LOADED:
+        hg = heb_gloss.get(norm_h(num), "—")
+        th = brief_h.get(canon(num), "—")
+        say(f"    {num:6} {tr:9} | heb.db={hg:22.22} | TBESH={th:16.16} | (plain: {plain})")
     if missh:
         with open("gloss_tbesh_missing.tsv", "w", encoding="utf-8") as f:
             f.write("number\toccurrences\n")
