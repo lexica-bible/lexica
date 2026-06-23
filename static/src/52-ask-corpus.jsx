@@ -399,10 +399,20 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
           <span><b>Under construction</b> — answers can be rough or incomplete while this tab is being tuned.</span>
         </div>
         {isMobile && (
-          <button className="ac-mobi-hist" onClick={() => setRailOpen(true)}
-            title="Recent conversations">
-            <Icon.Clock/> Recent
-          </button>
+          <div className="ac-mobi-actions">
+            {started && (
+              <button className="ac-mobi-new" onClick={newThread}
+                title="Start a new conversation">
+                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                  strokeWidth="2" strokeLinecap="round"><path d="M12 5v14M5 12h14"/></svg>
+                New search
+              </button>
+            )}
+            <button className="ac-mobi-hist" onClick={() => setRailOpen(true)}
+              title="Recent conversations">
+              <Icon.Clock/> Recent
+            </button>
+          </div>
         )}
         {!started ? (
           <div className="ac-landing">

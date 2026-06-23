@@ -4416,6 +4416,17 @@ button.study-verse-ref { border: none; }
   }
   .ac-mobi-hist svg { width: 13px; height: 13px; color: var(--ink-4); }
   .ac-mobi-hist:active { background: var(--bg); }
+  /* mobile action row: start a fresh search (primary, AI accent) + reach saved convos */
+  .ac-mobi-actions { display: flex; align-items: center; gap: 8px; margin: 10px 16px 2px; }
+  .ac-mobi-actions .ac-mobi-hist { align-self: auto; margin: 0; }
+  .ac-mobi-new {
+    display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;
+    border: 1px solid var(--ai); border-radius: 999px;
+    background: color-mix(in oklab, var(--ai) 10%, var(--ctl-bg)); color: var(--ai);
+    font-size: 12.5px; font-weight: 600;
+  }
+  .ac-mobi-new svg { color: var(--ai); }
+  .ac-mobi-new:active { background: color-mix(in oklab, var(--ai) 18%, var(--ctl-bg)); }
   .ac-construction { padding: 8px 16px; font-size: 12.5px; }
   .ac-rail { position: fixed; top: 0; left: 0; bottom: 0; width: 280px; z-index: 60; box-shadow: var(--shadow-lg); }
   .ac-rail.hidden { display: none; }
