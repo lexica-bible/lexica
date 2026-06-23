@@ -321,21 +321,19 @@ purely about which word you land on when you click. Almost all of it is done and
 
 ## Word study + Ask the corpus — REDESIGNED (2026-06-19, under development)
 
-### Word-card lemma gloss — Greek + Hebrew BUILT + ABP LIVE (2026-06-23); KJV/BSB/Hebrew wiring LEFT
+### Word-card lemma gloss — BUILT + ABP LIVE; KJV/BSB/Hebrew + Word study WIRED + pushed (577beb0, 2026-06-23)
 DONE: `word_gloss` table on PA (17505 rows — Dodson base + TBESG fill + overrides for Greek, TBESH +
 overrides for Hebrew, dotted by lemma / ABP's own dict); ABP card wired + live-verified
 (`core.word_gloss_cols`, deploy-safe, aliased `AS kjv_def`). Full record: memory `project_word_card_gloss`.
-LEFT — the careful frontend slice (do fresh, verify LIVE — can't test locally):
-- Wire KJV/BSB/Hebrew cards: their word endpoints join `word_gloss` (KJV/BSB by strongs_id; Hebrew must
-  FOLD the heb.db byform, H2617a→H2617), thread `entry.lemmaGloss`, then un-gate `heroLemmaGloss`
-  (30-detail-panel.jsx:521 is `entry.greek && …` → drop the Greek-only). CAUTION: the word card is LOCKED —
-  scope CSS to `.wd`, don't break Hebrew's hero (hero.script = bdbEntry.lemma).
-- **Word study tab (`views_lexicon`):** its dictionary MEANING still comes from `kjv_def` — switch the
-  focused-word card + the search-result glosses + the cognate/"related" chips to `word_gloss` (same join by
-  number). LEAVE the "renders as ×N" counts (real corpus renderings, not a dictionary gloss). The headword
-  WORD is already right there (dotted fix is live). Same surfaces use it: lexicon_profile / lexicon_lookup / _cognates.
-- Optional: εἰμί G1510 reads "am, exist" → could override to "to be, exist"; hand-finish the 46 dotted-hapax
-  one-liners (`gloss_dotted_blank.tsv` on PA) if 100% on those is wanted (rest show the LSJ section — fine).
+WIRED + pushed (commit 577beb0) — **awaiting deploy + LIVE verify (can't test locally):**
+- KJV/BSB/Hebrew cards: endpoints return a `lemma_gloss` field. KJV/BSB use the new `core.word_gloss_join()`
+  (deploy-safe, folds a Hebrew byform in SQL); Hebrew (separate db) looks word_gloss up from bible.db with the
+  byform folded. Frontend threads `entry.lemmaGloss` into the 3 entry builders + un-gated `heroLemmaGloss`.
+  BSB + Hebrew show it (they have a form line); KJV keeps the in-verse word (no form line) — expected.
+- Word study tab (`views_lexicon`): Greek dictionary MEANING leads with `word_gloss` (lexicon_profile /
+  lexicon_lookup / _greek_cognates), falls back to kjv_def. "renders as ×N" counts left alone.
+- εἰμί G1510 → "to be, exist" override added to build_word_gloss.py — effective only on the next `--apply` run.
+- Optional still-open: hand-finish the 46 dotted-hapax one-liners (`gloss_dotted_blank.tsv` on PA) if 100% wanted.
 
 The Word-study / AI experience was rebuilt to the Claude-design mockups (in `design/`). LIVE but the
 header still shows an "Under development" badge on these two tabs. Full record: memory

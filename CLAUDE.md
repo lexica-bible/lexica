@@ -251,10 +251,11 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   audited by `scripts/audit_dotted_lemmas.py`. Full record: memory `project_dotted_strongs_lemma`.
 - `word_gloss` — plain-meaning lemma gloss for the word card (`strongs` → `gloss` + `source`). Side table in
   bible.db (built on PA, not in git; ~17.5k rows). Greek = Dodson base + TBESG fill + overrides + dotted-by-
-  lemma; Hebrew = TBESH + overrides. Joined via `core.word_gloss_cols()` (COALESCE the dotted `G####.N`
-  over the base, suppressing the base for a dotted-DIFFERENT word; deploy-safe), aliased `AS kjv_def` so the
-  card reads it in place of the KJV-ized `lexicon.kjv_def`. Built by `scripts/build_word_gloss.py`
-  (`--summary`/`--apply`). ABP LIVE; KJV/BSB/Hebrew wiring pending. Full record: memory `project_word_card_gloss`.
+  lemma; Hebrew = TBESH + overrides. Joined via `core.word_gloss_cols()` (ABP) and `core.word_gloss_join()`
+  (KJV/BSB chapter endpoints — folds a Hebrew byform in SQL); Hebrew reader does a cross-db lookup (heb.db
+  can't join bible.db). All deploy-safe, aliased `AS kjv_def`/returned as `lemma_gloss`. Built by
+  `scripts/build_word_gloss.py` (`--summary`/`--apply`). ABP LIVE; KJV/BSB/Hebrew cards + Word study tab
+  WIRED + pushed (577beb0), awaiting deploy. Full record: memory `project_word_card_gloss`.
 - `books` — book metadata (name, testament, regex)
 - `ai_search_cache` — cached AI query results and TSK synthesis
 - `kjv_verses` — KJV full verse text (31,102 verses)
@@ -503,9 +504,10 @@ rules + gotchas; open the named memory for the backstory.
   git), which REPLACED the KJV-ized `lexicon.kjv_def` ("charity"/"Ghost"). Greek = Dodson's plain ranges +
   TBESG fill for LXX-extended + a few plain-meaning overrides (χάρις→"favor, kindness", πνεῦμα→"spirit,
   breath"); Hebrew = TBESH + overrides (sheol→"grave, realm of the dead", olam→"age, long duration");
-  ABP dotted glossed by their OWN lemma. **ABP is WIRED + LIVE** via `core.word_gloss_cols()` (mirrors
-  dotted_lexicon_cols, deploy-safe, aliased `AS kjv_def` in `views_library` so the frontend is unchanged);
-  **KJV/BSB/Hebrew cards still TO WIRE** (their endpoints + un-gate `heroLemmaGloss` from Greek-only).
+  ABP dotted glossed by their OWN lemma. **ABP is WIRED + LIVE** via `core.word_gloss_cols()`; **KJV/BSB/
+  Hebrew cards + the Word study tab are WIRED + pushed (577beb0), awaiting deploy** — KJV/BSB chapter
+  endpoints use `core.word_gloss_join()`, Hebrew does a cross-db lookup, and `heroLemmaGloss` is un-gated
+  (30-detail-panel.jsx). BSB + Hebrew show the gloss (they have a form line); KJV keeps the in-verse word.
   Plain-meaning rule: "Key Design Decisions" + memory `feedback_plain_meaning_not_tradition`. Full state:
   memory `project_word_card_gloss`.
 - Rail stacks ≤3 deep: summary/Intro → xref → (word OR note). The "‹ back" link NAMES the card
