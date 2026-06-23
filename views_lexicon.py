@@ -253,6 +253,22 @@ def _heb_ready():
         return False
 
 
+def _open_heb():
+    """Open heb.db ONCE and confirm it's loaded, else None (deploy-safe). Lets a single
+    request share one handle instead of each by-Strong's lookup re-opening + re-probing
+    heb.db (the finder ran several per search). Caller closes it."""
+    try:
+        h = heb_db()
+    except sqlite3.OperationalError:
+        return None
+    try:
+        h.execute("SELECT 1 FROM heb_words LIMIT 1").fetchone()
+        return h
+    except sqlite3.OperationalError:
+        h.close()
+        return None
+
+
 def _heb_match(sid):
     """(predicate, params) selecting heb_words rows for an H-number, matching the
     exact key OR a trailing-letter homograph form (H1254a)."""
@@ -399,6 +415,15 @@ def lexicon_english():
         _abp_join = _abp_where = _kjv_where = _bsb_where = ""
         _abp_params = []
     conn = db_ro()
+    # Open heb.db at most ONCE per request (lazily — pure-Greek searches never touch it),
+    # shared by the Hebrew gloss/total helpers + the Hebrew discovery branch instead of
+    # each re-opening + re-probing. Closed in the finally below.
+    _heb_state = {"opened": False, "conn": None}
+    def _heb_conn():
+        if not _heb_state["opened"]:
+            _heb_state["opened"] = True
+            _heb_state["conn"] = _open_heb()
+        return _heb_state["conn"]
 
     def _top_glosses_abp(snums):
         if not snums:
@@ -458,19 +483,16 @@ def lexicon_english():
     def _top_glosses_hebdb(snums):
         # Real Hebrew OT (heb.db) renderings per H-number — the "Hebrew renders as" line.
         h_sids = [s for s in snums if s.startswith("H")]
-        if not h_sids or not _heb_ready():
+        hconn = _heb_conn() if h_sids else None
+        if not h_sids or hconn is None:
             return {}
         out = {}
+        ph = ",".join("?" * len(h_sids))
         try:
-            hconn = heb_db()
-            try:
-                ph = ",".join("?" * len(h_sids))
-                rows = hconn.execute(
-                    f"SELECT strongs, gloss, COUNT(*) AS cnt FROM heb_words "
-                    f"WHERE strongs IN ({ph}) AND gloss IS NOT NULL AND gloss != '' "
-                    f"GROUP BY strongs, gloss ORDER BY strongs, cnt DESC", h_sids).fetchall()
-            finally:
-                hconn.close()
+            rows = hconn.execute(
+                f"SELECT strongs, gloss, COUNT(*) AS cnt FROM heb_words "
+                f"WHERE strongs IN ({ph}) AND gloss IS NOT NULL AND gloss != '' "
+                f"GROUP BY strongs, gloss ORDER BY strongs, cnt DESC", h_sids).fetchall()
         except sqlite3.OperationalError:
             return {}
         for r in rows:
@@ -550,23 +572,22 @@ def lexicon_english():
 
     def _totals_hebdb(snums):
         h_sids = [s for s in snums if s.startswith("H")]
-        if not h_sids or not _heb_ready():
+        hconn = _heb_conn() if h_sids else None
+        if not h_sids or hconn is None:
             return {}
         out = {}
         try:
-            hconn = heb_db()
-            try:
-                for sid in h_sids:
-                    # Count the SAME way lexicon_profile does (_heb_match: exact number OR a
-                    # trailing-letter homograph like H1254a), so the finder's HEB number
-                    # equals the count on that word's own study page.
-                    pred, params = _heb_match(sid)
-                    row = hconn.execute(
-                        f"SELECT COUNT(*) AS cnt FROM heb_words WHERE {pred}", params).fetchone()
-                    if row and row["cnt"]:
-                        out[sid] = row["cnt"]
-            finally:
-                hconn.close()
+            for sid in h_sids:
+                # Count the SAME way lexicon_profile does (_heb_match: exact number OR a
+                # trailing-letter homograph like H1254a), so the finder's HEB number
+                # equals the count on that word's own study page. One read per number on
+                # the shared (indexed) connection — homograph forms must count under both
+                # the base AND the form, which a single GROUP BY strongs can't express.
+                pred, params = _heb_match(sid)
+                row = hconn.execute(
+                    f"SELECT COUNT(*) AS cnt FROM heb_words WHERE {pred}", params).fetchone()
+                if row and row["cnt"]:
+                    out[sid] = row["cnt"]
         except sqlite3.OperationalError:
             return {}
         return out
@@ -642,19 +663,16 @@ def lexicon_english():
                 abp_set = {r["sbase"] for r in abp_rows}
                 heb_rows = [r for r in heb_rows if r["sbase"] not in abp_set]
 
-        if corpus == "heb" and _heb_ready():
+        _hdisc = _heb_conn() if corpus == "heb" else None
+        if _hdisc is not None:
             # Hebrew OT discovery (heb.db): H-numbers whose real contextual gloss uses q
             # as a whole word — the actual Hebrew source, not the KJV's tagging, so the
             # found set + counts are a true reflection. ('All' stays ABP+KJV above.)
             rx = re.compile(r"\b" + re.escape(q) + r"\b", re.I)
-            hconn = heb_db()
-            try:
-                grows = hconn.execute(
-                    "SELECT strongs, gloss, COUNT(*) AS cnt FROM heb_words "
-                    "WHERE strongs LIKE 'H%' AND gloss LIKE ? COLLATE NOCASE "
-                    "GROUP BY strongs, gloss", (f"%{q}%",)).fetchall()
-            finally:
-                hconn.close()
+            grows = _hdisc.execute(
+                "SELECT strongs, gloss, COUNT(*) AS cnt FROM heb_words "
+                "WHERE strongs LIKE 'H%' AND gloss LIKE ? COLLATE NOCASE "
+                "GROUP BY strongs, gloss", (f"%{q}%",)).fetchall()
             agg = {}
             for r in grows:
                 if rx.search(r["gloss"] or ""):
@@ -733,8 +751,12 @@ def lexicon_english():
         _emit(heb_rows)
         results.sort(key=lambda x: -x["count"])
         return jsonify(results)
+    except Exception:
+        return jsonify({"error": "Server error"}), 500
     finally:
         conn.close()
+        if _heb_state["conn"] is not None:
+            _heb_state["conn"].close()
 
 
 @bp.route("/api/lexicon/profile/<strongs>")
@@ -944,6 +966,10 @@ def lexicon_books(strongs):
     prefix, num = m.group(1).upper(), m.group(2)
     snum = num.split('.')[0]
     is_heb = prefix == "H"
+    # The frontend always passes ?corpus= (the profile's chosen source), so this default is
+    # only a bare-call fallback — "kjv" is the universally-present one (heb.db may lack a
+    # byform/Aramaic number, which is why this doesn't default Hebrew to "heb" like the
+    # profile does).
     corpus = request.args.get("corpus", "kjv" if is_heb else "abp")
     if corpus == "all":
         corpus = "kjv" if is_heb else "abp"
@@ -1024,6 +1050,10 @@ def lexicon_verses(strongs, book):
     num = m.group(2)
     snum = num.split('.')[0]
     is_heb = prefix == 'H' or (not prefix and int(snum) > 5624)
+    # The frontend always passes ?corpus= (the profile's chosen source), so this default is
+    # only a bare-call fallback — "kjv" is the universally-present one (heb.db may lack a
+    # byform/Aramaic number, which is why this doesn't default Hebrew to "heb" like the
+    # profile does).
     corpus = request.args.get("corpus", "kjv" if is_heb else "abp")
     gloss = request.args.get("gloss", "").strip()
     is_func = (not is_heb) and snum in _FUNCTION_STRONGS
