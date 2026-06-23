@@ -19,43 +19,47 @@ from views_lexicon import _greek_cognates
 bp = Blueprint("lsj", __name__)
 
 
-# The prompt is SOURCE-BOUND, not a blacklist (the standing "reframe, don't blacklist"
-# rule — see project_synthesis_no_parse + project_ai_synthesis_quality). Haiku was
-# pulling NT theology from its own training even when the entry didn't carry it — G1577
-# ἐκκλησία came back "the Church as a body of Christians or the building where they meet"
-# though the LSJ entry says no such thing (2026-06-23). Two levers fix it:
-#   - source-binding: summarize ONLY what THIS entry states; anything not in the entry is
-#     left out. That alone drops the invented "church/building" sense.
-#   - plain meaning over loaded label: keep the attested sense, never recast a plain
-#     definition as a doctrinal/institutional term (feedback_plain_meaning_not_tradition).
-# Runs on Sonnet now (claude-sonnet-4-6), same as xref/chapter-summary/ask-corpus — Haiku
-# over-asserts on loaded words. We do NOT name classical authors (naming them primed the
-# leak) and the reader already SEES the headword + gloss, so no need to re-announce it.
+# Why this prompt is shaped the way it is (2026-06-23, the G1577 ἐκκλησία case): the LSJ
+# entry ITSELF lists the loaded senses — "in NT, the Church, as a body of Christians ...
+# as a building" (the last from a 6th-c. legal code). So a faithful summary of the entry
+# reproduces "the Church / a building"; that was never a model hallucination. We can't
+# change LSJ, so we steer the summary instead (reframe, not a blacklist — see
+# project_synthesis_no_parse + project_ai_synthesis_quality). Three levers:
+#   - plain-meaning ANCHOR: the word's theology-free word_gloss (build_word_gloss.py) is
+#     fed in and the summary LEADS with it, so the attested sense ("assembly, congregation")
+#     sets the frame, not LSJ's institutional gloss (feedback_plain_meaning_not_tradition).
+#   - biblical focus: explain usage in the Greek OT (LXX) + NT; drop the classical/civic
+#     citations (Athens/Sparta/Delphi, legal codes) — background a Bible reader doesn't need.
+#   - plain over institutional: give the attested sense, never substitute a later
+#     ecclesiastical/doctrinal label even when the dictionary lists one.
+# Runs on Sonnet (claude-sonnet-4-6), same as xref/chapter-summary/ask-corpus (Haiku
+# over-asserts on loaded words). The reader already SEES the headword, so don't re-announce it.
 _LSJ_SYNTHESIS_SYSTEM = """\
-You are helping someone reading the Greek Bible understand a Greek word by summarizing \
-the dictionary entry shown below. Work ONLY from that entry: in plain modern English, \
-give the meaning and the range of senses the entry itself states. Do not add meanings, \
-nuances, or usage from your own knowledge of the word — if the entry does not say it, \
-leave it out. Keep to the plain, attested sense; do not recast a plain definition as a \
-theological, doctrinal, or institutional term the entry never uses. Work from a Berean \
-approach: the text speaks first; follow where the entry leads, with no imported \
-systematic theology and no denominational assumptions. Write in plain prose — no \
-markdown, no headers, no bullet points. Do not state the word's grammatical parsing \
-(part of speech, case, number, tense, voice, mood); that is shown separately. Focus \
-only on meaning and semantic range.\
+You are helping someone reading the Greek Bible understand a Greek word, working from its \
+plain meaning (when one is given) and a scholarly dictionary entry. Lead with the plain \
+meaning, then explain in plain modern English how the word is used in the biblical text — \
+the Greek Old Testament (Septuagint) and the New Testament. Stay with the plain, attested \
+sense: describe what the word actually denotes, and do NOT substitute a later \
+institutional, ecclesiastical, or doctrinal label for it, even if the dictionary lists \
+one. Leave out classical and civic background — ancient city-states, named historical \
+assemblies, legal codes; that material is not what a Bible reader needs. Do not invent \
+senses the word does not carry. Work from a Berean approach: the text speaks first, with \
+no imported systematic theology and no denominational assumptions. Write in plain prose — \
+no markdown, no headers, no bullet points. Do not state the word's grammatical parsing \
+(part of speech, case, number, tense, voice, mood); that is shown separately.\
 """
 
 # The two user-message asks, kept as named constants so the synthesis fingerprint below
 # covers their wording (editing either auto-refreshes the cached summaries).
 _LSJ_ASK_CTX = (
-    "From this entry, identify the sense of the word active in the verse above and explain "
-    "it in plain prose. 2-3 sentences, 60 words max. Let the entry dictate the length — do "
-    "not pad. No markdown, no headers, no bullet points."
+    "Identify the sense of the word active in the verse above and explain it in plain prose, "
+    "anchored in its plain meaning. 2-3 sentences, 60 words max. Let the material dictate the "
+    "length — do not pad. No markdown, no headers, no bullet points."
 )
 _LSJ_ASK_GEN = (
-    "Summarize what this entry shows the word means and its main range of senses. 2-3 "
-    "sentences, 60 words max. Let the entry dictate the length — do not pad. No markdown, "
-    "no headers, no bullet points."
+    "Give the word's plain meaning and how it is used in the biblical text. 2-3 sentences, 60 "
+    "words max. Let the material dictate the length — do not pad. No markdown, no headers, no "
+    "bullet points."
 )
 
 # Synthesis fingerprint — same self-healing scheme as the ai_search_cache entries. It's
@@ -311,6 +315,7 @@ def lsj_summary(lemma):
     exact_key = None
     abp_strongs = None
     row = None
+    plain_gloss = ""
     try:
         if "." in strongs_param:
             snum = strongs_param.lstrip("Gg")
@@ -346,6 +351,28 @@ def lsj_summary(lemma):
                     row = None
             if row:
                 exact_key = row["key"]
+        # Plain-meaning anchor: the theology-free word_gloss for this word, bridged
+        # lemma -> lexicon -> word_gloss (the table is keyed by the prefixed Strong's).
+        # Fed to the synth so it LEADS with the attested sense rather than LSJ's loaded
+        # institutional gloss. Best-effort: a miss just means no anchor line.
+        if row:
+            try:
+                if conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='word_gloss'").fetchone():
+                    lem = exact_key or lemma
+                    grow = conn.execute(
+                        "SELECT wg.gloss FROM lexicon l JOIN word_gloss wg ON wg.strongs = 'G' || l.strongs "
+                        "WHERE l.lemma = ? LIMIT 1", (lem,)
+                    ).fetchone()
+                    if not grow:                              # LSJ key vs lexicon lemma can differ by accents
+                        lp = _strip_accents(lem).lower().replace('-', '')
+                        grow = conn.execute(
+                            "SELECT wg.gloss FROM lexicon l JOIN word_gloss wg ON wg.strongs = 'G' || l.strongs "
+                            "WHERE lower(strip_accents(replace(l.lemma,'-',''))) = ? LIMIT 1", (lp,)
+                        ).fetchone()
+                    if grow and grow["gloss"]:
+                        plain_gloss = grow["gloss"].strip()
+            except Exception as e:
+                log.warning("word_gloss anchor lookup failed: %s", e)
     finally:
         conn.close()
     if not row:
@@ -397,15 +424,18 @@ def lsj_summary(lemma):
         if not verse_text:
             actual_ctx = False  # fall back to general if verse not found
 
+    anchor = f"Plain meaning of the word (your anchor): {plain_gloss}\n\n" if plain_gloss else ""
     if actual_ctx:
         user_content = (
-            f"Verse: {book} {chapter}:{verse_n} — {verse_text}\n\n"
-            f"LSJ entry for {lemma}:\n{plain_def[:2000]}\n\n"
+            anchor
+            + f"Verse: {book} {chapter}:{verse_n} — {verse_text}\n\n"
+            + f"Dictionary entry for {lemma}:\n{plain_def[:2000]}\n\n"
             + _LSJ_ASK_CTX
         )
     else:
         user_content = (
-            f"LSJ entry for {lemma}:\n{plain_def[:2000]}\n\n"
+            anchor
+            + f"Dictionary entry for {lemma}:\n{plain_def[:2000]}\n\n"
             + _LSJ_ASK_GEN
         )
 
