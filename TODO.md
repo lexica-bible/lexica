@@ -330,6 +330,10 @@ LEFT — the careful frontend slice (do fresh, verify LIVE — can't test locall
   FOLD the heb.db byform, H2617a→H2617), thread `entry.lemmaGloss`, then un-gate `heroLemmaGloss`
   (30-detail-panel.jsx:521 is `entry.greek && …` → drop the Greek-only). CAUTION: the word card is LOCKED —
   scope CSS to `.wd`, don't break Hebrew's hero (hero.script = bdbEntry.lemma).
+- **Word study tab (`views_lexicon`):** its dictionary MEANING still comes from `kjv_def` — switch the
+  focused-word card + the search-result glosses + the cognate/"related" chips to `word_gloss` (same join by
+  number). LEAVE the "renders as ×N" counts (real corpus renderings, not a dictionary gloss). The headword
+  WORD is already right there (dotted fix is live). Same surfaces use it: lexicon_profile / lexicon_lookup / _cognates.
 - Optional: εἰμί G1510 reads "am, exist" → could override to "to be, exist"; hand-finish the 46 dotted-hapax
   one-liners (`gloss_dotted_blank.tsv` on PA) if 100% on those is wanted (rest show the LSJ section — fine).
 
