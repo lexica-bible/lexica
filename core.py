@@ -407,6 +407,28 @@ def word_gloss_cols(conn, strongs_col="w.strongs", base_col="w.strongs_base",
     return "COALESCE(wgd.gloss, wgb.gloss)", f"{own} {base}"
 
 
+def word_gloss_join(conn, strongs_col, alias="wg"):
+    """Plain-meaning lemma gloss (scripts/build_word_gloss.py) for the KJV/BSB chapter
+    endpoints — any per-word query that GROUP_CONCATs a single fully-prefixed Strong's
+    column (e.g. 'ks.strongs_id'). Returns (select_fragment, join_fragment): the caller
+    appends `{select_fragment}` to its SELECT list (it starts with a comma and yields
+    `lemma_gloss`) and drops `{join_fragment}` into FROM. A Hebrew byform suffix (H1234a)
+    folds to the base word_gloss key (which stores byforms collapsed); a no-op for Greek
+    and base numbers. Deploy-safe: before word_gloss is built, returns ('', '') so the
+    query is unchanged. word_gloss has no dotted Greek (KJV/BSB never use dotted), so a
+    plain key match is right here — unlike the ABP-only word_gloss_cols."""
+    if not conn.execute(
+        "SELECT 1 FROM sqlite_master WHERE type='table' AND name='word_gloss'"
+    ).fetchone():
+        return "", ""
+    sel = f", MAX({alias}.gloss) AS lemma_gloss"
+    join = (f"LEFT JOIN word_gloss {alias} ON {alias}.strongs = "
+            f"(CASE WHEN {strongs_col} GLOB 'H*[a-z]' "
+            f"THEN substr({strongs_col}, 1, length({strongs_col}) - 1) "
+            f"ELSE {strongs_col} END)")
+    return sel, join
+
+
 def _clean_gloss(s: str | None) -> str | None:
     """Strip trailing punctuation that ABP interlinear leaves on phrase-boundary words."""
     if not s:

@@ -20,6 +20,7 @@ Endpoints:
   GET /api/hebrew/chapter/<book>/<chapter>        -> [{verse, heading, words:[...]}]
   GET /api/hebrew/verse-words/<book>/<ch>/<verse> -> {words:[...]}  (one verse, for the side card)
 """
+import re
 import sqlite3
 
 from flask import Blueprint, jsonify
@@ -29,6 +30,16 @@ from views_notes import is_owner as _is_owner   # only to gate VISIBILITY during
 
 
 bp = Blueprint("hebrew", __name__)
+
+_HNUM_RE = re.compile(r"^(H\d+)[a-z]?$")
+
+
+def _norm_h(s):
+    """Fold a heb.db byform number to its base (H1234a -> H1234). word_gloss (in bible.db,
+    NOT heb.db) stores byforms collapsed, so the cross-db gloss lookup keys off the base —
+    mirrors scripts/build_word_gloss.norm_h."""
+    m = _HNUM_RE.match(s or "")
+    return m.group(1) if m else (s or "")
 
 
 @bp.route("/api/hebrew/status")
@@ -75,8 +86,11 @@ def hebrew_chapter(book, chapter):
     finally:
         conn.close()
 
-    # section headings (shared) from bible.db's pericopes, same as niv/esv
-    headings = {}
+    # section headings (shared) + the plain-meaning lemma gloss both live in bible.db
+    # (heb.db can't join across files), so grab them in one bible.db connection. The
+    # gloss feeds the word-card hero, same source ABP/KJV/BSB read; keyed by the base
+    # H-number (byforms folded), deploy-safe (skipped until word_gloss is built).
+    headings, gloss_map = {}, {}
     try:
         bconn = db_ro()
         try:
@@ -85,6 +99,15 @@ def hebrew_chapter(book, chapter):
                 (book, chapter),
             ):
                 headings[r["verse"]] = r["heading"]
+            bases = {_norm_h(r["strongs"]) for r in rows if r["strongs"]}
+            if bases and bconn.execute(
+                "SELECT 1 FROM sqlite_master WHERE type='table' AND name='word_gloss'"
+            ).fetchone():
+                ph = ",".join("?" * len(bases))
+                for g in bconn.execute(
+                    f"SELECT strongs, gloss FROM word_gloss WHERE strongs IN ({ph})", tuple(bases)
+                ):
+                    gloss_map[g["strongs"]] = g["gloss"] or ""
         finally:
             bconn.close()
     except sqlite3.OperationalError:
@@ -103,6 +126,7 @@ def hebrew_chapter(book, chapter):
             "strongs": r["strongs"],
             "morph": r["morph"],
             "gloss": r["gloss"],
+            "lemma_gloss": gloss_map.get(_norm_h(r["strongs"]), ""),   # plain-meaning dictionary sense
             "translit": (r["translit"] if "translit" in r.keys() else ""),
             "grammar": (r["grammar"] if "grammar" in r.keys() else ""),
         })

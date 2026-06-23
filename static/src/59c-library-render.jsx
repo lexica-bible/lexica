@@ -114,6 +114,7 @@ const LibRender = (function () {
       inflected: w.hebrew || "",            // pointed word as it appears → big side-card headword
       inflectedTranslit: w.translit || "",
       gloss: w.gloss || "",
+      lemmaGloss: w.lemma_gloss || "",      // plain-meaning dictionary sense (word_gloss) beside the lemma
       hebrew: w.hebrew,
       morph: w.morph || "",
       grammar: w.grammar || "",
@@ -390,6 +391,7 @@ const LibRender = (function () {
       greek: w.lemma || "",
       translit: w.xlit || "",
       gloss: w.word,
+      lemmaGloss: w.lemma_gloss || "",      // plain-meaning dictionary sense (word_gloss) beside the lemma
       ref: `${selBook.abbrev} ${ch}:${v.verse}`,
       book: selBook.abbrev,
       chapter: ch,
@@ -452,6 +454,7 @@ const LibRender = (function () {
       inflected: w.form || "",              // original word as printed (Berean tables) → big side-card headword
       inflectedTranslit: w.form_translit || "",
       gloss: w.word,
+      lemmaGloss: w.lemma_gloss || "",      // plain-meaning dictionary sense (word_gloss) beside the lemma
       ref: `${selBook.abbrev} ${ch}:${v.verse}`,
       book: selBook.abbrev,
       chapter: ch,

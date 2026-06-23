@@ -28,6 +28,19 @@ bp = Blueprint("lexicon", __name__)
 _HEB_FUNCTION_STRONGS = frozenset({"853"})
 
 
+def _word_gloss(conn, key):
+    """Plain-meaning gloss from the word_gloss side table (scripts/build_word_gloss.py) for
+    a full Strong's key ('G4151', 'G4521.2'). This is the plain sense that REPLACES the
+    KJV-ized lexicon.kjv_def as the word-study card's dictionary meaning — the same source
+    the reader word card reads. '' when the table isn't built or has no row, so every caller
+    falls back to kjv_def and a deploy before the data is safe."""
+    try:
+        r = conn.execute("SELECT gloss FROM word_gloss WHERE strongs = ?", (key,)).fetchone()
+    except sqlite3.OperationalError:
+        return ""
+    return (r["gloss"] or "").strip() if r else ""
+
+
 def _greek_cognates(conn, snum, derivation):
     """Same-root family for a Greek word, derived on the fly from the lexicon's
     `derivation` text (no extra table): parent(s) = the G-numbers THIS word comes
@@ -45,7 +58,7 @@ def _greek_cognates(conn, snum, derivation):
         ).fetchone()
         if not r or not r["lemma"]:
             return
-        g = (r["kjv_def"] or r["strongs_def"] or "").strip()
+        g = (_word_gloss(conn, f"G{sn}") or r["kjv_def"] or r["strongs_def"] or "").strip()
         g = re.split(r"[;,]", g)[0][:36] if g else ""
         out.append({"strongs": f"G{sn}", "lemma": r["lemma"], "translit": r["translit"] or "", "gloss": g})
 
@@ -305,10 +318,11 @@ def lexicon_lookup():
                     (snum,)
                 ).fetchone()
                 if row:
-                    # Text-first gloss (mirrors the word card / views_lsj.py): KJV rendering
-                    # → derivation → Strong's paraphrase, so Strong's interpretive wording
-                    # (e.g. G5020 "eternal torment") never leads.
-                    gloss = row["kjv_def"] or row["derivation"] or row["strongs_def"] or ""
+                    # Plain-meaning gloss (word_gloss) leads; then the text-first chain
+                    # (KJV rendering → derivation → Strong's paraphrase) so Strong's
+                    # interpretive wording (e.g. G5020 "eternal torment") never leads.
+                    gloss = (_word_gloss(conn, f"G{row['strongs']}")
+                             or row["kjv_def"] or row["derivation"] or row["strongs_def"] or "")
                     return jsonify([{"strongs": f"G{row['strongs']}", "lemma": row["lemma"] or "", "translit": row["translit"] or "", "gloss": gloss}])
             return jsonify([])
         # English/transliteration search — Greek lexicon + Hebrew BDB. The
@@ -353,7 +367,8 @@ def lexicon_lookup():
                 ).fetchall()
             except Exception:
                 dot = []
-        results = [{"strongs": f"G{r['strongs']}", "lemma": r["lemma"] or "", "translit": r["translit"] or "", "gloss": r["kjv_def"] or r["derivation"] or r["strongs_def"] or ""} for r in grk]
+        results = [{"strongs": f"G{r['strongs']}", "lemma": r["lemma"] or "", "translit": r["translit"] or "",
+                    "gloss": _word_gloss(conn, f"G{r['strongs']}") or r["kjv_def"] or r["derivation"] or r["strongs_def"] or ""} for r in grk]
         results += [{"strongs": r["strongs_id"], "lemma": r["lemma"] or "", "translit": r["xlit"] or "", "gloss": r["description"] or ""} for r in heb]
         results += [{"strongs": r["strongs"], "lemma": r["lemma"] or "", "translit": r["translit"] or "", "gloss": r["gloss"] or ""} for r in dot]
         return jsonify(results[:20])
@@ -757,7 +772,10 @@ def lexicon_profile(strongs):
                 strongs_id = f"G{num}"
                 lemma = dl["lemma"] or ""
                 translit = dl["translit"] or ""
-                definition = ""
+                # Its own plain gloss by the FULL dotted key (word_gloss glosses dotted-
+                # different words by their own lemma); else "" and the client LSJ/abp_ext
+                # lookup fills the Definition section.
+                definition = _word_gloss(conn, f"G{num}")
                 derivation = ""
             else:
                 strongs_id = f"G{snum}"
@@ -768,9 +786,11 @@ def lexicon_profile(strongs):
                     return jsonify({"error": "not found"}), 404
                 lemma = row["lemma"] or ""
                 translit = row["translit"] or ""
-                # Text-first (mirrors the word card / views_lsj.py): KJV rendering → derivation
-                # → Strong's paraphrase, so Strong's interpretive wording never leads.
-                definition = row["kjv_def"] or row["derivation"] or row["strongs_def"] or ""
+                # Plain-meaning gloss (word_gloss) leads — same dictionary sense the reader
+                # card shows — then the text-first chain (KJV rendering → derivation →
+                # Strong's paraphrase) so Strong's interpretive wording never leads.
+                definition = (_word_gloss(conn, strongs_id)
+                              or row["kjv_def"] or row["derivation"] or row["strongs_def"] or "")
                 _deriv_raw = row["derivation"] or ""
                 # Etymology for the card's Derivation section (only when it adds
                 # something the definition line isn't already showing).

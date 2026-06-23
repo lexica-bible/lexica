@@ -514,11 +514,13 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   // a form to attach it to (normal words only; for a proper noun the "gloss" is a name and
   // stays as the headword).
   const relocateGloss = !!(heroForm && hero.standaloneGloss && !hero.noGloss && !isPN && !metavData);
-  // Dictionary gloss for the LEMMA headword. Greek only: the lexicon KJV gloss is a clean
-  // short sense ("spirit, wind"). Hebrew/BSB carry no clean short lemma gloss (BDB is a
-  // paragraph), so their lemma shows just form + sound — the meaning sits in the BDB/LSJ
-  // section below.
-  const heroLemmaGloss = (entry.greek && entry.lemmaGloss) ? shortLemmaGloss(entry.lemmaGloss) : "";
+  // Dictionary gloss for the LEMMA headword — the plain-meaning `word_gloss` sense
+  // ("spirit, breath"), now threaded for ABP, KJV, BSB, and Hebrew alike (each text's
+  // chapter endpoint joins word_gloss). It only SHOWS when there's an "in this verse"
+  // form to move the contextual english down to (relocateGloss below): BSB + Hebrew
+  // have one; KJV does not, so KJV keeps showing the in-verse word, like an ABP word
+  // with no surface form.
+  const heroLemmaGloss = entry.lemmaGloss ? shortLemmaGloss(entry.lemmaGloss) : "";
   // Beside the lemma up top: the dictionary gloss when we've moved the contextual one down
   // to the form; otherwise the contextual gloss itself (today's behavior, e.g. KJV words).
   const heroTopGloss = relocateGloss ? heroLemmaGloss : hero.standaloneGloss;

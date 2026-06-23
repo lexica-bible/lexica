@@ -10,7 +10,7 @@ _kjv_strongs_search HELPER used by the search blueprint.
 """
 from flask import Blueprint, jsonify, request
 
-from core import db_ro, _KJV_BOOK_ID, _KJV_BOOK_ID_REV
+from core import db_ro, _KJV_BOOK_ID, _KJV_BOOK_ID_REV, word_gloss_join
 
 bp = Blueprint("kjv", __name__)
 
@@ -90,18 +90,23 @@ def kjv_chapter(book, chapter):
         return jsonify([])
     conn = db_ro()
     try:
-        rows = conn.execute("""
+        # Plain-meaning lemma gloss (scripts/build_word_gloss.py) for the word-card hero —
+        # same source ABP reads. Keyed by the full Strong's; a Hebrew byform suffix
+        # (H1234a) folds to the base word_gloss key. Deploy-safe: skipped until built.
+        wg_sel, wg_join = word_gloss_join(conn, "ks.strongs_id")
+        rows = conn.execute(f"""
             SELECT kw.verse_num, kw.word_id, kw.verse_pos, kw.word, kw.italic, kw.punc,
                    GROUP_CONCAT(ks.strongs_id) AS strongs_ids,
                    kv.verse_text,
                    MAX(COALESCE(bdb.lemma, lex.lemma)) AS lemma,
-                   MAX(COALESCE(bdb.xlit, lex.translit)) AS xlit
+                   MAX(COALESCE(bdb.xlit, lex.translit)) AS xlit{wg_sel}
             FROM kjv_words kw
             LEFT JOIN kjv_strongs ks ON ks.word_id = kw.word_id
             LEFT JOIN kjv_verses kv ON kv.book_id = kw.book_id
                 AND kv.chapter = kw.chapter AND kv.verse_num = kw.verse_num
             LEFT JOIN bdb ON bdb.strongs_id = ks.strongs_id AND ks.strongs_id LIKE 'H%'
             LEFT JOIN lexicon lex ON lex.strongs_g = ks.strongs_id
+            {wg_join}
             WHERE kw.book_id = ? AND kw.chapter = ?
             GROUP BY kw.word_id, kw.verse_num, kw.verse_pos, kw.word, kw.italic, kw.punc, kv.verse_text
             ORDER BY kw.verse_num, kw.verse_pos
@@ -130,6 +135,7 @@ def kjv_chapter(book, chapter):
             "strongs_ids": sids,
             "lemma":     r["lemma"] or "",
             "xlit":      r["xlit"] or "",
+            "lemma_gloss": (r["lemma_gloss"] if wg_sel else "") or "",
         })
     return jsonify([verses[v] for v in order])
 

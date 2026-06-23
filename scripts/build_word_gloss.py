@@ -72,6 +72,7 @@ OVERRIDES = {
     "G166":  "age-long, lasting",           # aionios — from aion (an age); neither source plain
     "G1228": "slanderer, accuser",          # diabolos — the literal noun; "slanderous" is the adj
     "G3341": "change of mind, repentance",  # metanoia — lead the plain sense, not the church term
+    "G1510": "to be, exist",                # eimi — the plain copula, not a first-person paraphrase
 }
 
 # HEBREW base = TBESH's clean dictionary form; these 3 are the loaded ones it still gets

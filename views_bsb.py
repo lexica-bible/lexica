@@ -16,7 +16,7 @@ import sqlite3
 
 from flask import Blueprint, jsonify
 
-from core import db_ro, _KJV_BOOK_ID, _USFM_BOOK, usfm_titlecase
+from core import db_ro, _KJV_BOOK_ID, _USFM_BOOK, usfm_titlecase, word_gloss_join
 
 bp = Blueprint("bsb", __name__)
 
@@ -53,18 +53,22 @@ def bsb_chapter(book, chapter):
             has_form = "form" in bw_cols
             fsel = "bw.form, bw.form_translit," if has_form else ""
             fgrp = ", bw.form, bw.form_translit" if has_form else ""
+            # Plain-meaning lemma gloss for the word-card hero — same source ABP reads,
+            # deploy-safe, Hebrew byforms folded to the base key (see core.word_gloss_join).
+            wg_sel, wg_join = word_gloss_join(conn, "bs.strongs_id")
             word_rows = conn.execute(f"""
                 SELECT bw.verse_num, bw.word_id, bw.verse_pos, bw.word, bw.italic, bw.punc, {fsel}
                        GROUP_CONCAT(bs.strongs_id) AS strongs_ids,
                        bv.verse_text,
                        MAX(COALESCE(bdb.lemma, lex.lemma))   AS lemma,
-                       MAX(COALESCE(bdb.xlit, lex.translit)) AS xlit
+                       MAX(COALESCE(bdb.xlit, lex.translit)) AS xlit{wg_sel}
                 FROM bsb_words bw
                 LEFT JOIN bsb_strongs bs ON bs.word_id = bw.word_id
                 LEFT JOIN bsb_verses bv ON bv.book_id = bw.book_id
                     AND bv.chapter = bw.chapter AND bv.verse_num = bw.verse_num
                 LEFT JOIN bdb ON bdb.strongs_id = bs.strongs_id AND bs.strongs_id LIKE 'H%'
                 LEFT JOIN lexicon lex ON lex.strongs_g = bs.strongs_id
+                {wg_join}
                 WHERE bw.book_id = ? AND bw.chapter = ?
                 GROUP BY bw.word_id, bw.verse_num, bw.verse_pos, bw.word, bw.italic, bw.punc, bv.verse_text{fgrp}
                 ORDER BY bw.verse_num, bw.verse_pos
@@ -111,6 +115,7 @@ def bsb_chapter(book, chapter):
             "strongs_ids": sids,
             "lemma":     r["lemma"] or "",
             "xlit":      r["xlit"] or "",
+            "lemma_gloss":   (r["lemma_gloss"] if wg_sel else "") or "",       # plain-meaning lemma gloss (word_gloss)
             "form":          (r["form"] if has_form else "") or "",            # inflected original word (side-card headword)
             "form_translit": (r["form_translit"] if has_form else "") or "",
         })
