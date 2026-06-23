@@ -1195,6 +1195,14 @@ input { font-family: inherit; }
   margin: 4px 0 0;
 }
 
+/* LSJ Summary | Full-entry toggle — underline tabs (no box), same language as the
+   .ws .tg tabs. Accent underline on the active tab, never gold. */
+.lsj-tg-row { display: flex; gap: 16px; margin: 2px 0 10px; }
+.lsj-tg { position: relative; font-size: 12.5px; color: var(--ink-4); background: none; border: 0; padding: 1px 1px 4px; cursor: pointer; letter-spacing: 0.02em; font-family: inherit; }
+.lsj-tg:hover { color: var(--ink-2); }
+.lsj-tg.on { color: var(--ink); font-weight: 600; }
+.lsj-tg.on::after { content: ""; position: absolute; left: 0; right: 0; bottom: 0; height: 2px; background: var(--accent); border-radius: 2px; }
+
 /* Full / raw LSJ */
 .lsj-def {
   font-family: var(--f-serif);

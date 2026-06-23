@@ -715,9 +715,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
         {lsjLoading ? (
           <div className="lsj-def lsj-def--loading">Loading…</div>
         ) : lsjEntry ? (
-          lsjEntry.source === "strongs"
-            ? <div className="lsj-def" dangerouslySetInnerHTML={{ __html: lsjEntry.def_html }} />
-            : <LsjSummary data={lsjSummary} loading={lsjSummaryLoading} />
+          <LsjBody lsjEntry={lsjEntry} lsjSummary={lsjSummary} summaryLoading={lsjSummaryLoading} />
         ) : (
           <div className="lsj-def lsj-def--loading">Not found.</div>
         )}

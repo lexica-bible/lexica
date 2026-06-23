@@ -77,6 +77,36 @@ function LsjSummary({ data, loading }) {
   return <p className="lsj-synthesis">{renderInlineMd(data.summary)}</p>;
 }
 
+// The LSJ card body: the AI sense-summary by default, with an underline toggle to show
+// the FULL raw dictionary entry (lsjEntry.def_html — already fetched). Shared by the
+// Library word card (30-detail-panel) and the Word study tab (80-lexicon) so the two
+// can't drift. A Strong's-fallback entry has no synthesis — it's raw text, no toggle.
+function LsjBody({ lsjEntry, lsjSummary, summaryLoading }) {
+  const [showFull, setShowFull] = React.useState(false);
+  React.useEffect(() => { setShowFull(false); }, [lsjEntry && lsjEntry.key]);
+  if (!lsjEntry) return null;
+  if (lsjEntry.source === "strongs")
+    return <div className="lsj-def" dangerouslySetInnerHTML={{ __html: lsjEntry.def_html }} />;
+  const hasFull = !!lsjEntry.def_html;
+  const summaryEmpty = !summaryLoading && !(lsjSummary && lsjSummary.summary);
+  // Summary view = the AI synthesis, falling back to the raw entry when the synthesis is
+  // empty (the old word-study behavior). The toggle forces the full entry either way.
+  const body = ((showFull || summaryEmpty) && hasFull)
+    ? <div className="lsj-def" dangerouslySetInnerHTML={{ __html: lsjEntry.def_html }} />
+    : <LsjSummary data={lsjSummary} loading={summaryLoading} />;
+  return (
+    <>
+      {hasFull && (
+        <div className="lsj-tg-row">
+          <button className={"lsj-tg" + (!showFull ? " on" : "")} onClick={() => setShowFull(false)}>Summary</button>
+          <button className={"lsj-tg" + (showFull ? " on" : "")} onClick={() => setShowFull(true)}>Full entry</button>
+        </div>
+      )}
+      {body}
+    </>
+  );
+}
+
 // Google-Maps-style bottom-sheet dismissal: drag the WHOLE card down to close.
 // Grabbing the card's top chrome (the handle/header — anything outside the
 // scrolling body) ALWAYS arms the drag, no matter where the body is scrolled.

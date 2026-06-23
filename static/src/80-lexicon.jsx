@@ -500,13 +500,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
               ? <div className="lsj-def lsj-def--loading">Loading…</div>
               : !lsjEntry
                 ? <p className="lsj">{profile.definition}</p>
-                : lsjEntry.source === "strongs"
-                  ? <div className="lsj-def" dangerouslySetInnerHTML={{ __html: lsjEntry.def_html }} />
-                  : lsjSummaryLoading
-                    ? <LsjSummary data={null} loading={true} />
-                    : (lsjSummary && lsjSummary.summary)
-                      ? <LsjSummary data={lsjSummary} loading={false} />
-                      : <div className="lsj-def" dangerouslySetInnerHTML={{ __html: lsjEntry.def_html }} />}
+                : <LsjBody lsjEntry={lsjEntry} lsjSummary={lsjSummary} summaryLoading={lsjSummaryLoading} />}
         </section>
       )}
 
