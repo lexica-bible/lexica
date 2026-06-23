@@ -24,6 +24,7 @@ lexicon, dotted_lexicon, heb.db). Deploy-safe: the /api/* joins read it only if 
 
 Re-run after a words rebuild (run build_dotted_lexicon first). Reads heb.db read-only.
 """
+import html
 import os
 import re
 import sqlite3
@@ -82,6 +83,20 @@ HEBREW_OVERRIDES = {
     "H853":  "marks the direct object",    # et — TBESH's "[Obj.]" is cryptic (no parens: card strips them)
 }
 
+# Dotted ABP numbers whose lemma is a particle/numeral with no TBESG headword, glossed by
+# hand because they're definitional, not guesses (verifiable from the abp_ext entry): the
+# spelled-out numbers + a few standard particles. Everything else dotted comes from the
+# TBESG lemma index or ABP's own gloss (abp_gloss); the rest fall back to the LSJ section.
+DOTTED_OVERRIDES = {
+    "G1501.1": "twenty-two", "G1768.1": "ninety-eight", "G1768.3": "ninety-five",
+    "G3589.4": "eighty-three", "G3589.5": "eightieth", "G5144.9": "thirty-three",
+    "G4001.3": "fivefold", "G4004.4": "fifty years old", "G1835.4": "sixty years old",
+    "G2193.2": "six",                          # the numeral letter stigma (ϛ) = 6
+    "G3766.2": "by no means, certainly not",   # ou me
+    "G438.1": "instead of, for", "G446.2": "instead of, for",   # anti (elided)
+    "G1758.1": "there, where", "G3748.1": "anything whatever",
+}
+
 _ARTICLE = re.compile(r"^(?:a|an|the)\s+", re.I)
 
 
@@ -113,6 +128,27 @@ def bare(s):
     breathing differences (dotted_lexicon lemma vs TBESG's Greek column)."""
     d = unicodedata.normalize("NFD", s or "")
     return "".join(c for c in d if not unicodedata.combining(c)).lower().strip()
+
+
+def clean_text(def_html):
+    """Drop tags + decode entities from an abp_ext definition (same as audit_dotted_lemmas)."""
+    return html.unescape(re.sub(r"<[^>]+>", "", def_html or ""))
+
+
+def abp_gloss(clean):
+    """ABP's OWN short gloss from a cleaned abp_ext entry, but ONLY the clean
+    '[ABP] <lemma>, <gloss>' form (authoritative + short, e.g. 'prance', 'seraphim').
+    Returns '' for the [MLSJ]/[LSJ]/[GEL] prose entries — pulling a 2-word sense from
+    those risks junk, so they fall back to the LSJ section on the card."""
+    if not clean or not clean.lstrip().startswith("[ABP]"):
+        return ""
+    after = clean.split("]", 1)[1]              # drop the [ABP] tag
+    if "," not in after:
+        return ""
+    after = after.split(",", 1)[1]              # text after "lemma,"
+    after = re.split(r"\s{2,}|See also|\[", after, 1)[0]   # stop at refs / cross-link / next tag
+    g = normalize(after)
+    return g if g and len(g) <= 40 and re.search(r"[a-z]", g) else ""
 
 
 def normalize(g):
@@ -206,9 +242,10 @@ def pick_base(num, dod, tbesg_num):
 
 
 def pick_dotted(full_num, lemma, tbesg_lemma):
-    """Gloss + source for a dotted G####.N number: its own lemma looked up in TBESG."""
-    if full_num in OVERRIDES:
-        return OVERRIDES[full_num], "override"
+    """Gloss + source for a dotted G####.N number: hand override, else its own lemma
+    looked up in TBESG. (ABP's own gloss is tried after this, in build_greek_rows.)"""
+    if full_num in DOTTED_OVERRIDES:
+        return DOTTED_OVERRIDES[full_num], "override"
     g = tbesg_lemma.get(bare(lemma))
     return (normalize(g), "dotted-lemma") if g else ("", "")
 
@@ -224,8 +261,17 @@ def build_greek_rows(conn, dod, tbesg_num, tbesg_lemma):
     dotted_lemma = {}
     if conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='dotted_lexicon'").fetchone():
         dotted_lemma = {r[0]: r[1] for r in conn.execute("SELECT strongs, lemma FROM dotted_lexicon")}
+    abp = {}                                               # dotted ABP dict entries, both key forms
+    if conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='abp_ext'").fetchone():
+        for r in conn.execute("SELECT trim(strongs) s, def_html FROM abp_ext WHERE strongs LIKE '%.%'"):
+            abp[r[0]] = r[1]
     for full_num, lemma in dotted_lemma.items():           # keys already "G####.N"
         gloss, src = pick_dotted(full_num, lemma, tbesg_lemma)
+        if not gloss:                                      # ABP's own gloss before giving up
+            raw = abp.get(full_num) or abp.get(full_num.lstrip("G"))
+            g = abp_gloss(clean_text(raw)) if raw else ""
+            if g:
+                gloss, src = g, "abp-ext"
         (rows.append((full_num, gloss, src)) if gloss else blank_dotted.append((full_num, lemma)))
     return rows, blank_base, blank_dotted
 
@@ -297,8 +343,16 @@ def main():
             f.write("dotted_number\tlemma\n")
             for num, lemma in sorted(blank_dotted):
                 f.write(f"{num}\t{lemma}\n")
-        print(f"  dotted with no lemma match: {len(blank_dotted)} -> gloss_dotted_blank.tsv "
-              f"e.g. {[n for n, _ in blank_dotted[:8]]}")
+        print(f"  dotted with NO gloss (show LSJ section instead): {len(blank_dotted)} -> "
+              f"gloss_dotted_blank.tsv e.g. {[n for n, _ in blank_dotted[:8]]}")
+
+    abp_rows = sorted((n, g) for n, g, s in rows if s == "abp-ext")
+    if abp_rows:
+        with open("gloss_dotted_abp.tsv", "w", encoding="utf-8") as f:
+            f.write("dotted_number\tgloss\n")
+            for n, g in abp_rows:
+                f.write(f"{n}\t{g}\n")
+        print(f"  dotted glossed from ABP's own dict: {len(abp_rows)} -> gloss_dotted_abp.tsv (eyeball these)")
 
     if summary:
         gmap = {n: g for n, g, _ in rows}
