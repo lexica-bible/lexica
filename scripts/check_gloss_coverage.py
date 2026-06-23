@@ -151,6 +151,7 @@ heb_gloss = {}          # base H-number -> best (most common) short gloss
 heb_occ = Counter()
 if HEB and os.path.exists(HEB):
     hc = sqlite3.connect(HEB)
+    hc.row_factory = sqlite3.Row
     counts = defaultdict(Counter)
     for r in hc.execute("SELECT strongs, gloss FROM heb_words WHERE strongs IS NOT NULL AND strongs<>''"):
         base = norm_h(r["strongs"])
