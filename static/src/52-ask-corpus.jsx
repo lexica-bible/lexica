@@ -150,7 +150,7 @@ function AcTurn({ turn, onReadInContext, onLemma, onStrongs }) {
         <div className="ac-answer">
           <p className="ac-notice">{turn.notice}</p>
           {turn.capped && (
-            <a className="ac-upsell" href="mailto:hello@lexica.bible?subject=Berean%20membership">
+            <a className="ac-upsell" href="mailto:bereans@lexica.bible?subject=Berean%20membership">
               Email about Berean membership for more searches →
             </a>
           )}
@@ -240,7 +240,7 @@ function AcComposer({ pinned, value, setValue, onSubmit, placeholder, busy, quot
       {left != null && (
         <div className="ac-quota">{left > 0
           ? `${left} of ${quota.limit} question${quota.limit === 1 ? "" : "s"} left today`
-          : <>Out of searches today — resets tomorrow. <a className="ac-quota-link" href="mailto:hello@lexica.bible?subject=Berean%20membership">Ask about Berean membership ↗</a></>}</div>
+          : <>Out of searches today — resets tomorrow. <a className="ac-quota-link" href="mailto:bereans@lexica.bible?subject=Berean%20membership">Ask about Berean membership ↗</a></>}</div>
       )}
     </div>
   );
