@@ -199,6 +199,10 @@ Hebrew). For OT concepts, include both the Greek G-number (ABP) and the Hebrew H
 (ruach). Give Greek and Hebrew equal priority; do not omit one just because the
 explanation focuses on the other. Use "H" prefix for Hebrew, "G" prefix or bare digits
 for Greek. Omit particles, articles, prepositions, and other function words.
+Include ONLY the word(s) actually under discussion and their direct synonyms or
+equivalents — never a number that is merely loosely associated, thematically adjacent,
+or coincidentally similar in meaning. A stray number here becomes an off-topic word chip,
+so when in doubt, leave it out.
 
 sql — SELECT only. Never INSERT, UPDATE, DELETE, DROP.
 Proper nouns (people, places) are tagged strongs = '*' — no Strong's number exists.
@@ -1244,13 +1248,6 @@ def ai_search():
             finally:
                 ks_conn.close()
 
-        # TEMP DIAG (chip-source hunt): what the MODEL picked, before the cognate
-        # expander runs. Pair with the "cognate-added" lines below to see which step
-        # introduced an off-topic chip. Grep tag: AISEARCH-DIAG.
-        log.info("AISEARCH-DIAG model-picked [%d]: %s", len(key_strongs_data),
-                 " | ".join(f"{e['strongs']} {e.get('lemma','')}={(e.get('definition','') or '')[:28]}"
-                            for e in key_strongs_data))
-
         # ── Citation guard ───────────────────────────────────────────────────
         # The bare base numbers of the target words (dots stripped), e.g.
         # {"4815","1818"}. Verses injected from the model's PROSE or its
@@ -1364,14 +1361,6 @@ def ai_search():
                                 "derivation":   "",
                             })
                             added += 1
-                            # TEMP DIAG: this cognate passed the tightness gate — show its
-                            # PARENT + the 4-char stem that matched, so an off-topic add
-                            # (e.g. "burning" under "mighty") points straight at the rule.
-                            log.info("AISEARCH-DIAG cognate-added: %s %s=%s  <- parent %s %s  [stem %r vs %r]",
-                                     c["strongs"], c.get("lemma", ""), (c.get("gloss", "") or "")[:28],
-                                     e["strongs"], e.get("lemma", ""),
-                                     _strip_accents(e.get("lemma", "") or "").lower()[:4],
-                                     _strip_accents(c.get("lemma", "") or "").lower())
                             for pr in occ:
                                 key = (pr["book"], pr["chapter"], pr["verse"])
                                 if key in verse_index:
