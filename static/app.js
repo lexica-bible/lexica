@@ -462,15 +462,13 @@ if(verified&&!verified.has(`${key}-${+m[2]}-${+m[3]}`))continue;if(m.index>last)
 if(m.index>last)out.push(text.slice(last,m.index));const tag=m[4].toUpperCase()+m[5];out.push(/*#__PURE__*/React.createElement("button",{key:k++,className:"ac-instrongs",onClick:()=>onStrongs(tag)},m[0]));last=_CITE_RE.lastIndex;}}if(last<text.length)out.push(text.slice(last));return/*#__PURE__*/React.createElement("p",{className:"ac-prose"},out);}// One answered (or in-flight) question.
 function AcTurn({turn,onReadInContext,onLemma,onStrongs}){const cited=useMemo(()=>_acCited(turn.keyStrongs),[turn.keyStrongs]);// Display-text toggle (ABP · BSB · KJV · HEB) for THIS answer's verse evidence. The
 // evidence is found by Strong's number, but the text shown can be the ABP (Greek
-// LXX), the BSB or KJV in English, or the real Hebrew OT (heb.db). heb.db is
+// LXX), the BSB or KJV in English, or the real Hebrew OT (heb.db). It always
+// defaults to ABP (the corpus anchor); the reader flips it manually. heb.db is
 // OT-only, so HEB is offered only when the answer actually cites OT verses, and in
 // HEB mode the verse list is trimmed to those OT verses (a mixed Greek+Hebrew
-// answer would otherwise show blank rows for its NT/Greek verses). A Hebrew-only
-// answer auto-shows HEB so the reader sees the actual Hebrew rather than the LXX;
-// a manual pick wins after that.
-const hasOtVerse=useMemo(()=>(turn.results||[]).some(e=>!NT_BOOKS.has(e.book)),[turn.results]);const autoMode=useMemo(()=>{const ks=turn.keyStrongs||[];const heb=ks.some(k=>/^H/i.test(k.strongs||k.strongs_base||""));const grk=ks.some(k=>/^G/i.test(k.strongs||k.strongs_base||""));return heb&&!grk&&hasOtVerse?"heb":"abp";// pure-Hebrew answer → Hebrew; else ABP
-},[turn.keyStrongs,hasOtVerse]);const[manualMode,setManualMode]=useState(null);// null = follow autoMode
-const textMode=manualMode||autoMode;// HEB shows only OT verses (heb.db is OT-only) so the list never has blank rows.
+// answer would otherwise show blank rows for its NT/Greek verses).
+const hasOtVerse=useMemo(()=>(turn.results||[]).some(e=>!NT_BOOKS.has(e.book)),[turn.results]);const[manualMode,setManualMode]=useState(null);// null = default (ABP)
+const textMode=manualMode||"abp";// HEB shows only OT verses (heb.db is OT-only) so the list never has blank rows.
 const displayResults=useMemo(()=>{if(textMode!=="heb")return turn.results||[];return(turn.results||[]).filter(e=>!NT_BOOKS.has(e.book));},[textMode,turn.results]);// Verses the search actually surfaced — the only ones the synthesis prose may
 // link. Anything the AI names outside this set renders un-linked (seatbelt).
 // `turn.verified` (full retrieved ref list) is kept separate from the displayed

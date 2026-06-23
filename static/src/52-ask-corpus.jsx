@@ -102,23 +102,16 @@ function AcTurn({ turn, onReadInContext, onLemma, onStrongs }) {
   const cited = useMemo(() => _acCited(turn.keyStrongs), [turn.keyStrongs]);
   // Display-text toggle (ABP · BSB · KJV · HEB) for THIS answer's verse evidence. The
   // evidence is found by Strong's number, but the text shown can be the ABP (Greek
-  // LXX), the BSB or KJV in English, or the real Hebrew OT (heb.db). heb.db is
+  // LXX), the BSB or KJV in English, or the real Hebrew OT (heb.db). It always
+  // defaults to ABP (the corpus anchor); the reader flips it manually. heb.db is
   // OT-only, so HEB is offered only when the answer actually cites OT verses, and in
   // HEB mode the verse list is trimmed to those OT verses (a mixed Greek+Hebrew
-  // answer would otherwise show blank rows for its NT/Greek verses). A Hebrew-only
-  // answer auto-shows HEB so the reader sees the actual Hebrew rather than the LXX;
-  // a manual pick wins after that.
+  // answer would otherwise show blank rows for its NT/Greek verses).
   const hasOtVerse = useMemo(() =>
     (turn.results || []).some(e => !NT_BOOKS.has(e.book)),
     [turn.results]);
-  const autoMode = useMemo(() => {
-    const ks = turn.keyStrongs || [];
-    const heb = ks.some(k => /^H/i.test(k.strongs || k.strongs_base || ""));
-    const grk = ks.some(k => /^G/i.test(k.strongs || k.strongs_base || ""));
-    return (heb && !grk && hasOtVerse) ? "heb" : "abp";   // pure-Hebrew answer → Hebrew; else ABP
-  }, [turn.keyStrongs, hasOtVerse]);
-  const [manualMode, setManualMode] = useState(null);   // null = follow autoMode
-  const textMode = manualMode || autoMode;
+  const [manualMode, setManualMode] = useState(null);   // null = default (ABP)
+  const textMode = manualMode || "abp";
   // HEB shows only OT verses (heb.db is OT-only) so the list never has blank rows.
   const displayResults = useMemo(() => {
     if (textMode !== "heb") return turn.results || [];
