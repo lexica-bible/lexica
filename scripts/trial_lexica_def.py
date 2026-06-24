@@ -145,6 +145,7 @@ MODEL_HAIKU  = "claude-haiku-4-5-20251001"   # LSJ-source definition (clean word
 MODEL_SONNET = "claude-sonnet-4-6"           # verse-bears-out check + verse-grounded definition
 BUDGET         = 40                          # verses fed to the verse engine / bears-out check
 LONG_THRESHOLD = 2500                        # LSJ entry >= this many chars -> straight to verse (no check)
+STUB_FLOOR     = 80                          # entry < this = a cross-ref stub ("v. χάρις"), not a real entry
 MAX_TOKENS     = 1500
 
 # Sequence: easy confirmation words first, then a known CALQUE early to validate the branch
@@ -387,8 +388,9 @@ def route(client, entry, long_threshold, verse_msg):
     """Length pre-filter + verse-bears-out check:
        - no entry / LONG entry  -> divergent (verse-ground), no model call
        - SHORT entry            -> Sonnet bears-out check decides."""
-    if not entry:
-        return {"verdict": "divergent", "reason": "no LSJ entry - verse-ground by default"}
+    if not entry or len(entry) < STUB_FLOOR:
+        why = "no LSJ entry" if not entry else f"stub/cross-ref entry ({len(entry)} chars)"
+        return {"verdict": "divergent", "reason": f"{why} - verse-ground by default"}
     if len(entry) >= long_threshold:
         return {"verdict": "divergent",
                 "reason": f"long LSJ entry ({len(entry)} chars >= {long_threshold}) - auto verse-ground, no check"}
@@ -490,6 +492,8 @@ def main():
         if args.dry_run:
             if not entry:
                 lr = "VERSE (no LSJ entry)"
+            elif len(entry) < STUB_FLOOR:
+                lr = f"VERSE (stub/cross-ref entry, {len(entry)} chars)"
             elif len(entry) >= args.long:
                 lr = f"VERSE (long entry, {len(entry)} >= {args.long})"
             else:
