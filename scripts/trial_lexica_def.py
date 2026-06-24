@@ -218,7 +218,10 @@ CONTESTED = OrderedDict([
         ],
         "note": "forensic and covenant-membership share the declarative mechanism; "
                 "they split on content, not declare-vs-make",
-        "graph_ref": None,
+        # salvation_how maps the dikaioō-sense JOINT: forensic + infused match two frames above; it
+        # ALSO carries a demonstrate/vindicate node (James) the frames don't name, and has NO
+        # covenant-membership/NPP node — "see the full map" doesn't promise frame-by-frame parity.
+        "graph_ref": "salvation_how:def_dikaioo_forensic|def_dikaioo_infused|def_dikaioo_demonstrate",
     }),
     ("G166", {
         "lemma": "aionios", "gloss": "eternal / age-long",
