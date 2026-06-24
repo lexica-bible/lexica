@@ -512,6 +512,25 @@ def assemble(conn, sid, lemma, translit, raw):
     return entry
 
 
+def validate_entry(entry):
+    """Tell a LEGITIMATELY-empty field from a PARSE FAILURE wearing the same blank. The fields here
+    are the ones where empty is NEVER legitimate, so an empty one means the splitter couldn't read
+    the model's output — a loud error that must refuse to write the row, not a silent blank that
+    reads as clean at scale (the numbered-book lesson). Range / gloss_notes / coverage are NOT here
+    on purpose: empty is a fine graceful degrade for those scholar fields. Returns problems ([]=ok)."""
+    problems = []
+    if not entry["sense_headlines"]:
+        problems.append(
+            f"sense_headlines empty — the splitter found no '**N. …**' headlines "
+            f"(senses_block {len(entry['senses_block'])} chars). The glance has nothing to show; "
+            f"this is a parse failure, not a blank field.")
+    if entry["strongs"] in _CONTESTED_BY_SID and not entry["fork"]:
+        problems.append(
+            "contested word but fork is missing — the fairness gate would be silently dropped. "
+            "Check the CONTESTED register.")
+    return problems
+
+
 def ensure_table(conn):
     conn.execute("""
         CREATE TABLE IF NOT EXISTS lexica_def (
@@ -590,6 +609,7 @@ def main():
         import anthropic
         client = anthropic.Anthropic(api_key=get_key())
 
+    failures = []
     for sid in targets:
         print("\n" + "=" * 78)
         print(f"{sid}")
@@ -627,6 +647,14 @@ def main():
         entry["synth_ver"] = stamp
         show_entry(entry)
 
+        problems = validate_entry(entry)
+        if problems:
+            print("  ✗ PARSE FAILURE — NOT written (a load-bearing field came back empty):")
+            for p in problems:
+                print("      - " + p)
+            failures.append(sid)
+            continue                              # never write an incomplete row
+
         if args.apply:
             conn.execute(
                 "INSERT OR REPLACE INTO lexica_def (strongs, lemma, translit, def_json, synth_ver, updated) "
@@ -639,6 +667,9 @@ def main():
             print("  [dry run — not written]")
 
     conn.close()
+    if failures:
+        sys.exit(f"\n{len(failures)} word(s) FAILED to parse and were NOT written: "
+                 f"{', '.join(failures)}  (fix the splitter, then re-run --resplit --apply)")
 
 
 if __name__ == "__main__":
