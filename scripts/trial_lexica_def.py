@@ -389,6 +389,8 @@ def main():
     ap.add_argument("--dry-run", action="store_true", help="show inputs; NO model calls (free)")
     ap.add_argument("--verses", action="store_true", help="also print the fed occurrences")
     ap.add_argument("--budget", type=int, default=BUDGET)
+    ap.add_argument("--engine", choices=["auto", "verse", "lsj"], default="auto",
+                    help="force an engine instead of letting the router decide")
     args = ap.parse_args()
 
     conn = sqlite3.connect(f"file:{args.db}?mode=ro", uri=True)
@@ -437,15 +439,21 @@ def main():
             print("[dry run - router + definition skipped]")
             continue
 
-        verdict = route(client, gset, entry)
-        v = (verdict.get("verdict") or "").lower()
-        print(f"ROUTER (Haiku): {v.upper()} - {verdict.get('reason','')}")
-        if verdict.get("unmapped_renders"):
-            print("  unmapped renders: " + ", ".join(verdict["unmapped_renders"]))
-        if verdict.get("abandoned_lead_senses"):
-            print("  abandoned lead senses: " + ", ".join(verdict["abandoned_lead_senses"]))
+        if args.engine == "auto":
+            verdict = route(client, gset, entry)
+            v = (verdict.get("verdict") or "").lower()
+            print(f"ROUTER (Haiku): {v.upper()} - {verdict.get('reason','')}")
+            if verdict.get("unmapped_renders"):
+                print("  unmapped renders: " + ", ".join(verdict["unmapped_renders"]))
+            if verdict.get("abandoned_lead_senses"):
+                print("  abandoned lead senses: " + ", ".join(verdict["abandoned_lead_senses"]))
+            engine = "lsj" if (v == "clean" and entry) else "verse"
+        else:
+            verdict = {}
+            engine = "verse" if (args.engine == "lsj" and not entry) else args.engine
+            print(f"ENGINE forced -> {engine}")
 
-        if v == "clean" and entry:
+        if engine == "lsj":
             print("ENGINE: Haiku (LSJ-source)")
             out = model_text(client, MODEL_HAIKU, LSJ_SOURCE_PROMPT, entry[:8000])
             print("definition:\n" + out)
