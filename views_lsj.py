@@ -19,40 +19,43 @@ from views_lexicon import _greek_cognates
 bp = Blueprint("lsj", __name__)
 
 
-# The prompt leans on FRAME, not prohibition (deliberate — see project_synthesis_no_parse
-# + the 2026-06-14 AI-synthesis pass). Three framing levers replace the old blacklists:
-#   - audience: someone reading the Greek BIBLE (LXX/NT), so classical provenance is plainly
-#     off-purpose — we no longer name "Homer/Plato/Attic" (naming them only primed the leak,
-#     and we were feeding it a classical lexicon entry to summarize anyway).
-#   - source framing: the entry is "scholarly source material" to distill, so its ancient
-#     citations read as apparatus, not the answer.
-#   - reader state: the reader already SEES the word + its translation, so the synthesis
-#     picks up from there instead of re-announcing the headword (curbs self-reference).
+# Writes a plain DEFINITION of the word — its central everyday meaning + the one or two other
+# senses the entry clearly draws — opening with the meaning itself (no "this word means …"),
+# NOT a usage survey (2026-06-23, settled after a prompt review). Runs on HAIKU. Reframe, not a
+# blacklist (project_synthesis_no_parse + project_ai_synthesis_quality). The standing levers:
+#   - open with the meaning, no preface; don't name the books or organize senses by where the
+#     word appears — give what it means, not where it's used.
+#   - Koine anchor without naming a text: "common Koine sense, not specialized classical-era
+#     detail" keeps Haiku off the classical reading (Athens) for split words, while NOT
+#     suppressing the civic sense for words whose Koine meaning IS civic (leitourgia, polites).
+#   - plain over churchy: the χάρις=favor-not-grace / πνεῦμα=spirit-not-ghost example carries the
+#     theological-drift guard the Koine anchor alone misses (feedback_plain_meaning_not_tradition).
+# LIMIT (by design): on a classical-FIRST entry like ekklesia, LSJ leads with Athens and labels
+# no eras, so Haiku can still pick the wrong sense — no prompt extracts a sense the source buries.
+# Those ~dozen loaded lemmas (ekklesia, charis, pistis, dikaioō, the sacrifice words …) are to be
+# handled by a PER-WORD override shown DIRECTLY (a hand-written gloss, no model call) — NOT built
+# yet. BDAG would fix them at the source but it's copyrighted / not in our data; Sonnet is held
+# in reserve for a mid-tier only if one shows up empirically.
+# History: tried Sonnet + source-bind + a word_gloss anchor + a "biblical usage" framing — all
+# pulled; this Haiku definition prompt is the kept version.
 _LSJ_SYNTHESIS_SYSTEM = """\
-You are explaining a Greek word to someone reading the Greek Bible — the Septuagint \
-(LXX) and New Testament. The reader is already looking at the word and its basic \
-translation; pick up from there and tell them what it means and how it is used in \
-Scripture. Work from a Berean approach: the text speaks first. The dictionary entry \
-below is scholarly source material — distill from it only what the word means and the \
-range of senses it carries in the biblical text. No imported systematic theology, no \
-denominational assumptions — follow where the words actually lead. Write in plain \
-prose, no markdown, no headers. Do not state the word's grammatical parsing (part of \
-speech, case, number, tense, voice, mood) — that is shown separately. Focus only on \
-meaning and semantic range.\
+Define the Greek word below from the dictionary entry provided. Open with the meaning itself \
+— your first words are the definition, with no preface (not the word, not "this word means," \
+not "it refers to"). State its central, everyday meaning — the common Koine sense, not \
+specialized classical-era detail — plus the one or two other senses the entry clearly draws. \
+Prefer everyday words over specialized religious vocabulary (e.g. χάρις is favor or goodwill, \
+not grace; πνεῦμα is spirit or breath, not ghost). Do not organize the senses by where the \
+word appears or name the texts it appears in; give what the word means, not where it is used. \
+Add nothing from doctrine, theology, or your own knowledge beyond what the entry gives. \
+Ignore the entry's citations, source references, and grammatical notes. Write one short \
+paragraph of plain prose, no markdown.\
 """
 
-# The two user-message asks, kept as named constants so the synthesis fingerprint below
-# covers their wording (editing either auto-refreshes the cached summaries).
-_LSJ_ASK_CTX = (
-    "Identify the sense of this word active in the verse above and explain it in plain "
-    "prose. 2-3 sentences, 60 words max. Let the entry dictate the length — do not pad. "
-    "No markdown, no headers, no bullet points."
-)
-_LSJ_ASK_GEN = (
-    "Explain what this word means and its main range of uses. 2-3 sentences, 60 words "
-    "max. Let the entry dictate the length — do not pad. No markdown, no headers, no "
-    "bullet points."
-)
+# The full instruction lives in _LSJ_SYNTHESIS_SYSTEM; the user message carries only the entry.
+# These stay (empty) so the fingerprint signature is stable. Editing the system prompt above
+# refreshes the cached summaries.
+_LSJ_ASK_CTX = ""
+_LSJ_ASK_GEN = ""
 
 # Synthesis fingerprint — same self-healing scheme as the ai_search_cache entries. It's
 # stamped into each stored summary (summary_json["_synth_ver"]); when the prompt above
@@ -396,12 +399,12 @@ def lsj_summary(lemma):
     if actual_ctx:
         user_content = (
             f"Verse: {book} {chapter}:{verse_n} — {verse_text}\n\n"
-            f"LSJ entry for {lemma}:\n{plain_def[:2000]}\n\n"
+            f"Dictionary entry for {lemma}:\n{plain_def[:2000]}\n\n"
             + _LSJ_ASK_CTX
         )
     else:
         user_content = (
-            f"LSJ entry for {lemma}:\n{plain_def[:2000]}\n\n"
+            f"Dictionary entry for {lemma}:\n{plain_def[:2000]}\n\n"
             + _LSJ_ASK_GEN
         )
 
