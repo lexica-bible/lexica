@@ -38,34 +38,44 @@ from collections import OrderedDict, Counter
 # ══════════════════════════════════════════════════════════════════════════════
 # PROMPT 1 — THE ROUTER's verse-bears-out check (Sonnet). Runs ONLY on SHORT entries;
 # long / missing entries skip it and go straight to verse-grounding.
+# Reframed v2 (2026-06-23): the v1 "does the usage FIT LSJ" test was blind to freight LSJ
+# itself canonizes as its lead sense (aionios -> LSJ leads "eternal" AND files the biblical
+# verses under it, so "fits" was trivially yes). v2 inverts it: derive the sense from the
+# bare contexts first, then ask whether LSJ's LEAD gloss claims MORE than the contexts require.
 # ══════════════════════════════════════════════════════════════════════════════
 BEARS_OUT_PROMPT = """\
-You decide whether a Greek word's BIBLICAL USAGE matches its classical dictionary entry, or has
-diverged from it.
+You decide whether a Greek word should be defined from its classical dictionary entry (LSJ) or
+from its own biblical usage. The danger you guard against: LSJ's leading gloss sometimes claims
+MORE than the biblical contexts actually establish, and defining from LSJ would then load the
+word with meaning the text does not carry.
 
 You are given:
-- the word's full LSJ entry
-- a sample of occurrences from the Greek Bible: each a verse with the word's rendering marked
+- the word's LSJ entry
+- a sample of biblical occurrences: each a verse with the word's rendering marked
 
-Work from the occurrences, not from outside knowledge of the word.
+Method:
+1. First, IGNORING both LSJ's glosses and the English renderings, read the occurrences and decide
+   what the bare contexts actually require the word to mean - the least that must be true for the
+   word to fit every verse.
+2. Then look at LSJ's LEADING gloss (its primary, first-listed sense).
+3. Compare. The word is DIVERGENT if EITHER:
+   a) LSJ's leading gloss claims MORE than the contexts require - more abstract, more absolute,
+      more metaphysical, or more theologically loaded than the bare verses establish (e.g. LSJ
+      says "eternal, timeless" where the contexts only require "lasting for an age, perpetual,
+      or ancient"). Defining from LSJ would over-read the text.
+   b) the usage carries a sense LSJ does not have at all.
+   Otherwise the word is CLEAN: LSJ's leading gloss matches what the contexts require, so LSJ
+   is a safe source to define from.
 
-Check two things:
-1. Does the usage carry a sense the LSJ entry does NOT have? (the word gained a sense)
-2. Does the LSJ entry LEAD with a sense (its first / primary sense) that the usage does NOT
-   bear out? (the word was repurposed - a calque)
-
-LSJ carrying extra MINOR senses the Bible simply doesn't use is NOT divergence - a concrete word
-naturally uses only part of its range. Flag an unused LSJ sense only when it is the entry's
-PRIMARY / leading sense.
+Do not flag a word just because LSJ also lists extra MINOR senses the Bible doesn't use - that
+is normal. The test is LSJ's LEADING gloss versus what the contexts require.
 
 Return JSON only, nothing else:
 {"verdict": "clean" | "divergent",
- "lsj_lead_not_used": ["short sense", ...],
- "uses_not_in_lsj": ["short description", ...],
+ "context_requires": "the bare sense the verses establish, one phrase",
+ "lsj_lead": "LSJ's leading gloss, one phrase",
+ "overread": "how LSJ's lead exceeds the contexts, or empty string if it does not",
  "reason": "one sentence"}
-
-Use "clean" only when the usage sits within the entry's senses AND the entry's lead sense is
-used. Otherwise "divergent".
 """
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -510,10 +520,11 @@ def main():
             verdict = route(client, entry, args.long, vmsg)
             v = (verdict.get("verdict") or "").lower()
             print(f"ROUTER: {v.upper()} - {verdict.get('reason','')}")
-            for k, label in (("lsj_lead_not_used", "LSJ lead sense not used"),
-                             ("uses_not_in_lsj", "uses not in LSJ")):
+            for k, label in (("context_requires", "context requires"),
+                             ("lsj_lead", "LSJ lead"),
+                             ("overread", "over-read")):
                 if verdict.get(k):
-                    print(f"  {label}: " + ", ".join(verdict[k]))
+                    print(f"  {label}: {verdict[k]}")
             engine = "lsj" if (v == "clean" and entry) else "verse"
         else:
             verdict = {}
@@ -532,10 +543,8 @@ def main():
             out = model_text(client, MODEL_SONNET, VERSE_PROMPT, verse_user_msg(sid, translit, gset, ctx))
             print("definition:\n" + out)
             flags = []
-            if verdict.get("uses_not_in_lsj"):
-                flags.append("uses not in LSJ: " + ", ".join(verdict["uses_not_in_lsj"]))
-            if verdict.get("lsj_lead_not_used"):
-                flags.append("LSJ lead sense abandoned: " + ", ".join(verdict["lsj_lead_not_used"]))
+            if verdict.get("overread"):
+                flags.append("LSJ over-reads: " + verdict["overread"])
             print("PROVENANCE: " + ("; ".join(flags) if flags else "(verse-grounded; mark senses not in LSJ 'attested in usage, not in LSJ')"))
 
     conn.close()
