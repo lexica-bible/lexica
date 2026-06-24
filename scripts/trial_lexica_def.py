@@ -85,8 +85,7 @@ No preamble, no restating the lemma, no closing summary.
 """
 
 MODEL      = "claude-sonnet-4-6"   # Sonnet: discrimination under resistance, not compression
-BUDGET     = 36                    # verses fed to the model per word
-PER_CAP    = 4                     # floor on max verses from one rendering (scales up if few renderings)
+BUDGET     = 40                    # verses fed to the model per word
 MAX_TOKENS = 1500
 
 # The dozen: (G-number, transliteration, note). Greek-only this round (Hebrew side next).
@@ -169,9 +168,13 @@ def occurrences(conn, pred, params):
     """, params).fetchall()
 
 
-def select_spread(occs, budget, per_cap):
-    """Stratify by rendering so the gloss RANGE (incl. rare/edge renderings) is represented,
-    not just the dominant gloss. Within a rendering, spread across books."""
+def select_spread(occs, budget):
+    """Pick a sample that surfaces the word's SENSE range, not just its commonest use:
+      - every rendering gets a floor of seats (distinct senses + rare/edge uses represented),
+      - the rest is filled proportionally to frequency (the dominant sense gets due weight),
+      - within a rendering, verses spread across TESTAMENT first then book, so a sense that
+        hides inside the dominant rendering across OT/NT (charis = "favor" in both, the relational
+        OT favor vs the NT divine favor) isn't squeezed out by book-spread alone."""
     groups = OrderedDict()
     for o in occs:
         groups.setdefault((o["rend"] or "").lower(), []).append(o)
@@ -179,53 +182,58 @@ def select_spread(occs, budget, per_cap):
     n = len(by_freq)
     if n == 0:
         return []
-    cap = max(per_cap, math.ceil(budget / n))
-    used_books = Counter()
+    counts = {rend: len(g) for rend, g in by_freq}
+    used_t = Counter()        # testament (OT/NT) usage
+    used_b = Counter()        # book usage
     taken_ids = set()
-    taken_count = Counter()
+    taken = Counter()
     selected = []
 
-    def pick(gocc):
-        rem = [o for o in gocc if id(o) not in taken_ids]
+    def tm(o):
+        return "NT" if o["book"] in NT_BOOKS else "OT"
+
+    def pick(g):
+        rem = [o for o in g if id(o) not in taken_ids]
         if not rem:
             return None
-        return min(rem, key=lambda o: used_books[o["book"]])  # least-used book = spread
+        return min(rem, key=lambda o: (used_t[tm(o)], used_b[o["book"]]))  # balance testament, then book
 
     def add(rend, o):
-        taken_ids.add(id(o)); taken_count[rend] += 1
-        used_books[o["book"]] += 1; selected.append(o)
+        taken_ids.add(id(o)); taken[rend] += 1
+        used_t[tm(o)] += 1; used_b[o["book"]] += 1; selected.append(o)
 
-    # Round 1: one verse per rendering (edge cases in). If there are MORE renderings than the
-    # budget, interleave rarest+commonest so the edges still get seats.
     if n > budget:
+        # more renderings than seats: interleave rarest+commonest so the edges still get in, 1 each
         order, lo, hi = [], 0, n - 1
         while lo <= hi and len(order) < budget:
-            order.append(by_freq[hi]); hi -= 1           # rarest first
+            order.append(by_freq[hi]); hi -= 1
             if lo <= hi and len(order) < budget:
-                order.append(by_freq[lo]); lo += 1       # then a common one
-        round1 = order
+                order.append(by_freq[lo]); lo += 1
+        for rend, g in order:
+            o = pick(g)
+            if o is not None:
+                add(rend, o)
     else:
-        round1 = by_freq
-    for rend, gocc in round1:
-        o = pick(gocc)
-        if o is not None:
-            add(rend, o)
+        floor = max(1, min(3, budget // (2 * n)))
+        for rend, g in by_freq:
+            for _ in range(min(floor, counts[rend])):
+                if len(selected) >= budget:
+                    break
+                o = pick(g)
+                if o is not None:
+                    add(rend, o)
 
-    # Fill the rest, round-robin common-first, capped per rendering.
+    # proportional fill of the remainder (dominant rendering gets due weight, testament-balanced)
     while len(selected) < budget:
-        progressed = False
-        for rend, gocc in by_freq:
-            if len(selected) >= budget:
-                break
-            if taken_count[rend] >= cap:
-                continue
-            o = pick(gocc)
-            if o is None:
-                continue
-            add(rend, o); progressed = True
-        if not progressed:
+        cand = [(rend, g) for rend, g in by_freq if taken[rend] < counts[rend]]
+        if not cand:
             break
-    # present in canonical-ish order (by verse id) for readability
+        rend, g = max(cand, key=lambda rg: counts[rg[0]] / (taken[rg[0]] + 1))
+        o = pick(g)
+        if o is None:
+            counts[rend] = taken[rend]   # exhausted; stop reconsidering it
+            continue
+        add(rend, o)
     return sorted(selected, key=lambda o: o["vid"])
 
 
@@ -289,7 +297,7 @@ def main():
         pred, params = abp_filter(conn, sid)
         gset = gloss_set(conn, pred, params)
         occs = occurrences(conn, pred, params)
-        sample = select_spread(occs, args.budget, PER_CAP)
+        sample = select_spread(occs, args.budget)
         ctx = fetch_context(conn, sample, has_surface)
         ot = sum(1 for c in ctx if c[0] not in NT_BOOKS)
         nt = len(ctx) - ot
