@@ -2,34 +2,35 @@
 """
 trial_lexica_def.py  —  BAKE-OFF for the "Lexica dictionary" idea (throwaway test rig).
 
-DIVERGENCE-ROUTED design (per chat review, 2026-06-23):
+FINAL design (2026-06-24): ONE engine — verse-grounded (Sonnet) defines EVERY word from its own
+attested use (VERSE_PROMPT). LSJ is display-only, never a source. The old LSJ-source ROUTER
+(length pre-filter + "bears-out" check + Haiku LSJ-source engine) is the KILLED approach, kept
+below ONLY as the record — don't port it. Why it died: freight LSJ canonizes as its LEAD sense
+(aionios -> "eternal") leaves no gap for any compare-to-LSJ check to catch. See memory
+project_lexica_dictionary.
 
-  For each Greek lemma, a ROUTER picks the engine (chat design, 2026-06-23):
-    - LSJ entry MISSING or LONG (multi-sense, where classical freight hides) -> verse-grounded
-      def (Sonnet), with NO routing model call. (psyche's 13k-char entry lands here.)
-    - SHORT LSJ entry -> a Sonnet "bears-out" check: does the biblical usage actually carry
-      LSJ's senses, and is LSJ's LEAD sense used?
-        clean     -> LSJ-as-source def (Haiku)   (bread: short entry, usage = LSJ)
-        divergent -> verse-grounded def (Sonnet) + provenance flag
-  Verse-grounded senses get a PROVENANCE flag ("attested in usage, not in LSJ"); never
-  silently merged into LSJ's list.
+THE CONTESTED-WORD FAIRNESS GATE (this file's current job, chat design 2026-06-24):
+a word on the hand-authored CONTESTED list is, by MEMBERSHIP ALONE, read more than one way.
+After its verse def is written, the gate appends a hand-authored fork block: the attested core,
+then each live reading named with its tradition, then a "full map" pointer ONLY where a real
+argument graph maps the split. NO model, NO detector, NO second pass — we distrust the model's
+fork CONTENT enough to hand-author it, so we distrust its fork DETECTION too (and the dikaioo
+collapse was invisible from the output anyway: nothing to detect, no surface to fool). "Catch"
+(the dikaioo HOLD condition) = surface the fork INLINE; it does NOT mean "link to a graph".
+graph_ref is nullable — 4 of 5 are null today, and the links light up per-word as argument
+graphs get authored. Edit the CONTESTED block to tune the forks.
 
-  No BDAG / NT lexicon (it bakes the theology call into the lexeme). Hebrew is out -
-  Greek defined from Greek.
-
-  Calibrate the long/short cutoff cheaply: `--dry-run` prints each word's entry length and
-  which branch it takes, no model calls. Set --long from that before spending on a full run.
-
-Throwaway. Read-only on bible.db. Runs on PA (bible.db + the model key live there).
+Throwaway. Read-only on bible.db. The verse engine runs on PA (bible.db + the model key live
+there); the fairness gate is pure Python (no db, no model), so `--show-forks` runs ANYWHERE.
 
   workon bible-env
   export ANTHROPIC_API_KEY=$(grep -oE "sk-ant-[A-Za-z0-9_-]+" /var/www/www_lexica_bible_wsgi.py)
-  python scripts/trial_lexica_def.py --dry-run --verses --word G5590   # inspect inputs, FREE (no model)
-  python scripts/trial_lexica_def.py --word G5590                      # one word: route + define
-  python scripts/trial_lexica_def.py                                   # the whole set, in sequence
+  python scripts/trial_lexica_def.py --show-forks                       # the fork blocks, FREE (no db/model)
+  python scripts/trial_lexica_def.py --dry-run --verses --word G1344    # inspect inputs + the fork it'd append
+  python scripts/trial_lexica_def.py --word G1344                       # define dikaioo + append its fork
+  python scripts/trial_lexica_def.py --engine verse                     # the whole set, one verse engine
 
-Iterating prompts: edit the three blocks below (BEARS_OUT_PROMPT / LSJ_SOURCE_PROMPT /
-VERSE_PROMPT) and re-run. Nothing else to touch.
+Iterating: edit VERSE_PROMPT (the definition) or CONTESTED (the forks) below and re-run.
 """
 
 import argparse, html, json, os, re, sqlite3, sys, unicodedata
@@ -185,6 +186,93 @@ OVERRIDES = {
     "G3056": "a word, statement, or message - what is said or spoken; also an account or reckoning, and the reason or ground behind something",
     "G4151": "breath or wind; the breath of life; and so spirit - the immaterial part of a person, or a spiritual being",
 }
+
+# ══════════════════════════════════════════════════════════════════════════════
+# THE CONTESTED-WORD FAIRNESS GATE — the hand-authored fork register (chat design 2026-06-24).
+# A word in here is, by MEMBERSHIP ALONE, flagged "read more than one way": after its verse def
+# is written, render_fork() appends the block below verbatim. NO model, NO detector — we distrust
+# the model's fork CONTENT enough to hand-author it, so we distrust its fork DETECTION too.
+#
+# Each entry: core = the attested sense both/all sides grant; frames = the live readings, each
+# (label, tradition, gloss); graph_ref = "<study_id>:<claimid>|<claimid>" pointing at the
+# argument graph that maps the split, or None until one is authored (4 of 5 are None today).
+#
+# DATA NOTES (deliberately diverge from the chat spec — source/corpus beats the chat on data):
+#   - charis: ABP tags it G5484 (the form χάριν), NOT the textbook G5485 (whose lexicon/LSJ entry
+#     is an empty stub). The corpus words carry G5484, so the gate MUST fire on G5484 or it never
+#     triggers on charis. Keyed under G5484 (+ G5485 as an alias).
+#   - the baptism graph's study id is "baptism_who" (not "baptism"); claim ids
+#     def_grace_infused / obj_grace_charis are verbatim from scripts/add_study_graph.py.
+# ══════════════════════════════════════════════════════════════════════════════
+CONTESTED = OrderedDict([
+    ("G1344", {
+        "lemma": "dikaioō", "gloss": "justify",
+        "core": "to deem, treat, or pronounce just; to set right, hold to be in the right",
+        "frames": [
+            ("forensic / imputed", "Reformation",
+             "a legal verdict — righteous status declared, not moral change"),
+            ("transformative / infused", "Catholic / Trent",
+             "actually made righteous; the -oō verb as factitive (James 2)"),
+            ("covenant-membership", "New Perspective",
+             "declarative, but about who belongs to God's people — not imputed moral righteousness"),
+        ],
+        "note": "forensic and covenant-membership share the declarative mechanism; "
+                "they split on content, not declare-vs-make",
+        "graph_ref": None,
+    }),
+    ("G166", {
+        "lemma": "aionios", "gloss": "eternal / age-long",
+        "core": "pertaining to an age; long-lasting, ancient",
+        "frames": [
+            ("unending duration", "—", "everlasting, without end"),
+            ("of-the-coming-age / qualitative", "inaugurated-eschatology",
+             "belonging to the age to come; a quality of life, not only its length"),
+        ],
+        "graph_ref": None,
+    }),
+    ("G5484", {
+        "lemma": "charis", "gloss": "favor / grace",
+        "aliases": ["G5485"],   # textbook number; G5484 is the one ABP actually tags
+        "core": "favor, goodwill, gift",
+        "frames": [
+            ("unmerited favor by faith", "Reformed",
+             "God's gracious disposition, received by faith"),
+            ("infused grace", "sacramental", "a quality imparted by a rite"),
+        ],
+        "graph_ref": "baptism_who:def_grace_infused|obj_grace_charis",
+    }),
+    ("G4561", {
+        "lemma": "sarx", "gloss": "flesh",
+        "core": "body, human being, mortal nature",
+        "frames": [
+            ("embodied humanity", "—", "the physical/human, morally neutral"),
+            ("sin-principle", "—",
+             "the disposition opposed to the Spirit; NIV 'sinful nature' — itself a contested gloss"),
+        ],
+        "graph_ref": None,
+    }),
+    ("G1577", {
+        "lemma": "ekklesia", "gloss": "assembly / church",
+        "core": "an assembly; a convened gathering or congregation",
+        "etymology_note": "ek-kaleō, 'called out' — etymologizing gloss, not a sense felt in "
+                          "usage; flag, don't seat in core",
+        "frames": [
+            ("local congregation", "—", "a particular gathered body in a place"),
+            ("universal body of believers", "invisible-church",
+             "all believers across time; visible institution not implied"),
+            ("institutional Church", "hierarchical / sacramental",
+             "the visible, structured Church as an entity"),
+        ],
+        "graph_ref": None,
+    }),
+])
+
+# membership index: every Strong's number (primary + aliases) -> its entry
+_CONTESTED_BY_SID = {}
+for _sid, _e in CONTESTED.items():
+    _CONTESTED_BY_SID[_sid] = _e
+    for _a in _e.get("aliases", []):
+        _CONTESTED_BY_SID[_a] = _e
 
 NT_BOOKS = {"Mat","Mar","Luk","Joh","Act","Rom","1Co","2Co","Gal","Eph","Php","Col",
             "1Th","2Th","1Ti","2Ti","Tit","Phm","Heb","Jas","1Pe","2Pe","1Jn","2Jn","3Jn","Jud","Rev"}
@@ -387,6 +475,26 @@ def verse_user_msg(sid, translit, gset, ctx):
     return "\n".join(lines)
 
 
+def render_fork(entry):
+    """The fairness block appended to a contested word's definition. Model-free: lays out the
+    hand-authored fork verbatim — core, then each live reading (label, tradition, gloss), then a
+    pointer to the argument graph that maps the split. In the APP the pointer line is shown ONLY
+    when graph_ref is set; here we print "(none authored yet)" so the trial shows the real state."""
+    L = ["", "── CONTESTED WORD — the definition above does not settle this ──",
+         f"Core (attested): {entry['core']}"]
+    if entry.get("etymology_note"):
+        L.append(f"  (etymology flag: {entry['etymology_note']})")
+    L.append("Read more than one way:")
+    for label, tradition, gloss in entry["frames"]:
+        trad = "" if tradition in ("", "—") else f" [{tradition}]"
+        L.append(f"  • {label}{trad}: {gloss}")
+    if entry.get("note"):
+        L.append(f"Note: {entry['note']}")
+    ref = entry.get("graph_ref")
+    L.append(f"Full argument map: {ref}" if ref else "Full argument map: (none authored yet)")
+    return "\n".join(L)
+
+
 def model_text(client, model, system, user, max_tokens=MAX_TOKENS):
     msg = client.messages.create(
         model=model, max_tokens=max_tokens, system=system,
@@ -450,7 +558,17 @@ def main():
                     help="LSJ entry >= this many chars routes straight to verse-grounding")
     ap.add_argument("--audit", action="store_true",
                     help="prove a definition's citations: check each cited verse really contains the word (no model)")
+    ap.add_argument("--show-forks", action="store_true",
+                    help="print every contested word's fairness fork block; NO db, NO model (runs anywhere)")
     args = ap.parse_args()
+
+    if args.show_forks:
+        for sid, e in CONTESTED.items():
+            extra = (" (+" + ", ".join(e["aliases"]) + ")") if e.get("aliases") else ""
+            print("\n" + "=" * 78)
+            print(f'{sid}{extra}  {e["lemma"]}  "{e["gloss"]}"  -- graph_ref: {e.get("graph_ref")}')
+            print(render_fork(e))
+        return
 
     conn = sqlite3.connect(f"file:{args.db}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
@@ -512,6 +630,10 @@ def main():
             if args.verses:
                 print(verse_user_msg(sid, translit, gset, ctx))
                 print("-" * 78)
+            ce = _CONTESTED_BY_SID.get(sid)
+            if ce:
+                print("contested word -> fork the gate would append:")
+                print(render_fork(ce))
             print("[dry run - model calls skipped]")
             continue
 
@@ -546,6 +668,12 @@ def main():
             if verdict.get("overread"):
                 flags.append("LSJ over-reads: " + verdict["overread"])
             print("PROVENANCE: " + ("; ".join(flags) if flags else "(verse-grounded; mark senses not in LSJ 'attested in usage, not in LSJ')"))
+
+        # FAIRNESS GATE — membership-triggered, model-free: a contested word ALWAYS gets its
+        # hand-authored fork appended, regardless of what the definition above said.
+        ce = _CONTESTED_BY_SID.get(sid)
+        if ce:
+            print(render_fork(ce))
 
     conn.close()
 
