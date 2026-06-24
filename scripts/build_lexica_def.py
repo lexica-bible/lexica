@@ -36,7 +36,7 @@ PILOT = ["G5590", "G1344"]
 MODEL_SONNET = "claude-sonnet-4-6"   # the verse-grounded definition engine
 BUDGET       = 40                    # occurrences fed to the engine
 MAX_TOKENS   = 1500
-SPLIT_VER    = "split1"              # bump when split_definition() changes (re-split signal)
+SPLIT_VER    = "split2"              # which split_definition() wrote a row (stored for traceability; NOT in the skip-stamp)
 
 # ── PROMPT — VERSE-GROUNDED definition (Sonnet). VERBATIM from the trial rig. FROZEN. ────────
 VERSE_PROMPT = """\
@@ -402,11 +402,16 @@ def run_citation_gate(conn, sid, refs):
 # ══════════════════════════════════════════════════════════════════════════════════════════════
 # NEW — split the engine's prose into display fields, build verses[], assemble the entry.
 # ══════════════════════════════════════════════════════════════════════════════════════════════
-# A section header line: bold (** or *) then one of the stable section titles. Case-insensitive,
-# tolerant of a trailing ":" / parenthetical (dikaioo uses caps "**SENSES**", psyche uses title
-# case "**Senses** (ordered by frequency...):"). This is the ONLY structure we depend on across
-# words — plus the bold numbered sense headlines below — so a formatting quirk degrades gracefully.
-_SECTION_RE = re.compile(r'^\s*\*{1,2}\s*(senses|range|gloss notes|coverage)\b', re.I)
+# A section header line: one of the stable section titles at the line start, bold or not, with the
+# rest of the line (if any) captured as the section's first body line. Case-insensitive, tolerant
+# of trailing ":" / "**" / a "(ordered ...)" tail. Handles every header shape seen so far:
+#   "**SENSES**"                              (dikaioo, caps, header alone)
+#   "**Senses** (ordered by frequency...):"   (psyche, title case + parenthetical)
+#   "**Range:** The word stretches from ..."  (label AND text on one line — was being dropped)
+#   "Range:"                                  (un-bolded label)
+# This (plus the bold numbered sense headlines below) is the ONLY structure we depend on across
+# words, so a formatting quirk degrades gracefully — never a ref mis-filed under the wrong sense.
+_SECTION_RE = re.compile(r'^\s*\*{0,2}\s*(senses|range|gloss notes|coverage)\b[\s:*]*(.*?)\s*$', re.I)
 # A sense headline: a bold span starting with "N." — **1. ...**. The elaboration after it (whether
 # on the same line behind a dash, dikaioo-style, or on the next line, psyche-style) is NOT captured.
 _HEADLINE_RE = re.compile(r'\*\*\s*(\d+\.[^*]+?)\s*\*\*')
@@ -426,6 +431,11 @@ def split_definition(prose):
         if m:
             cur = m.group(1).lower()
             sections.setdefault(cur, [])
+            rest = m.group(2).strip()
+            if re.fullmatch(r'\(.*?\)\s*:?', rest):   # a lone "(ordered ...):" tail — not body text
+                rest = ""
+            if rest:                                  # label AND text shared one line — keep the text
+                sections[cur].append(rest)
             continue
         if cur is not None:
             sections[cur].append(ln)
@@ -477,7 +487,10 @@ def fork_field(sid):
 
 
 def synth_ver():
-    return "lexica:" + hashlib.sha1((VERSE_PROMPT + "|" + SPLIT_VER).encode("utf-8")).hexdigest()[:12]
+    # Identity of the MODEL output only (the prompt). Drives "skip regeneration if unchanged".
+    # The splitter version is deliberately NOT in here — splitter changes are applied via --resplit
+    # (no model call), so a splitter tweak must never trigger a wasteful re-generation on --apply.
+    return "lexica:" + hashlib.sha1(VERSE_PROMPT.encode("utf-8")).hexdigest()[:12]
 
 
 def assemble(conn, sid, lemma, translit, raw):
@@ -492,6 +505,7 @@ def assemble(conn, sid, lemma, translit, raw):
         "fork":       fork_field(sid),
         "verses":     build_verses(conn, refs),
         "provenance": "verse-grounded · LEXICA",
+        "split_ver":  SPLIT_VER,
         "audit":      run_citation_gate(conn, sid, refs),
         "raw":        raw,                # kept so an improved splitter can re-split, no model call
     }
