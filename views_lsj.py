@@ -19,53 +19,40 @@ from views_lexicon import _greek_cognates
 bp = Blueprint("lsj", __name__)
 
 
-# This produces a plain DEFINITION of the word, not a usage survey (2026-06-23). It must NOT
-# reference the Bible, its books/sections (OT, NT, Gospels, Paul), versions (the Septuagint),
-# or where the word appears — a definition states the meaning, the way a dictionary does; the
-# reader sees the verse context elsewhere. Steered by PROMPT (reframe, not a blacklist — see
-# project_synthesis_no_parse + project_ai_synthesis_quality). Levers:
-#   - plain over churchy: give the ordinary attested sense, never a traditional church word,
-#     with a worked example (χάρις=favor not grace; ἐκκλησία=assembly not the Church/building;
-#     πνεῦμα=spirit not Ghost). The χάρις leak ("grace ... God's unearned goodwill ... in Paul")
-#     showed the category rule alone misses "grace" — it reads as plain English to the model;
-#     the example pins it (feedback_plain_meaning_not_tradition).
-#   - keep the entry's exact sense (ekklesia's "duly summoned" = summoned/called together,
-#     not flattened to "a group"); drop the classical citations (cities, dates, legal codes).
-#   - no Bible references, no re-announcing the headword the reader already sees, no theology.
+# Writes a plain DEFINITION of the word — its central ordinary meaning, plus the two or three
+# distinct senses the entry draws — NOT a usage survey (2026-06-23, tightened after a prompt
+# review). Reframe, not a blacklist (project_synthesis_no_parse + project_ai_synthesis_quality).
+# The review caught three faults in the older version, all fixed here:
+#   - it asked for both "the range of senses" (broad) AND "the exact/plain sense" (narrow), so
+#     the model oscillated. Now: central meaning, name 2-3 senses only if clearly distinct.
+#   - "drop civic citations" fought "keep ekklesia's summoned-assembly sense" (the summoned
+#     reading IS the civic sense). The assembly-formation rule is GONE from this global prompt;
+#     ekklesia reads as flat "assembly, gathering" (the honest Koine gloss). Its "convened, not
+#     a crowd" shade belongs in a PER-WORD note, not here (see NEXT).
+#   - the long "not the Church/Ghost/Paul/Septuagint" stack over-applied (forced "not the Word"
+#     onto λόγος) and seeded those tokens. Cut to one positive rule + 2 examples.
+# "do not flatten distinctions the entry draws" is the don't-flatten point, generalized.
+# NEXT (not built): per-word sense overrides for the ~20-30 loaded lemmas (charis, pistis,
+# dikaioō, logos, sōzō, ekklesia …) + route those to Sonnet, the bulk to Haiku (cached, so the
+# Sonnet share amortizes). For now ALL words run on Sonnet (claude-sonnet-4-6).
 # History: tried a word_gloss anchor (pulled — flattened the sense); tried a "biblical usage"
-# framing (pulled — the user wants a definition, not "in the NT it means ..."). Runs on Sonnet
-# (claude-sonnet-4-6), same as xref/chapter-summary/ask-corpus (Haiku over-asserts).
+# survey framing (pulled — a definition doesn't say "in the NT it means ...").
 _LSJ_SYNTHESIS_SYSTEM = """\
-You are writing a short, plain-English definition of a Greek word for someone reading the \
-Greek Bible, working from the scholarly dictionary entry below. Give the word's meaning and \
-the range of senses it carries — define it, the way a dictionary states what a word means. \
-Do NOT reference the Bible, its books or sections (Old Testament, New Testament, Gospels, \
-Paul, and so on), any version or edition (such as the Septuagint), or where the word \
-appears: a definition states the meaning itself, it does not survey usage. The reader \
-already sees the word and its short gloss, so don't just re-announce them — give the fuller \
-sense. Keep the exact sense the entry's core definition carries — for an assembly-word, how \
-the group is formed (summoned or called together), not a flattened "group of people." Use \
-the plain, ordinary sense, never the traditional church word — e.g. χάρις is "favor, \
-kindness" (not "grace"), ἐκκλησία is "assembly, congregation" (not "the Church" or "a \
-building"), πνεῦμα is "spirit, breath" (not "Ghost"). Drop classical and civic citations — \
-city-states, named historical assemblies, legal codes. Do not invent senses the word does \
-not carry, and add no imported theology. Write one short definition in plain prose — no \
-markdown, no headers, no bullet points. Do not state grammatical parsing (part of speech, \
-case, number, tense, voice, mood); that is shown separately.\
+Define the Greek word below in plain modern English, working only from the dictionary entry \
+provided. State its central, ordinary meaning; if it carries two or three clearly distinct \
+senses, name them. Prefer everyday words over specialized religious vocabulary (e.g. χάρις \
+is favor or goodwill, not grace; πνεῦμα is spirit or breath, not ghost). Use only senses the \
+entry actually gives — add nothing from doctrine, theology, or your own knowledge, and do \
+not flatten distinctions the entry draws. Ignore the entry's citations, source references, \
+and grammatical notes; you are stating what the word means, not where it is used. Write one \
+short paragraph of plain prose, no markdown.\
 """
 
-# The two user-message asks, kept as named constants so the synthesis fingerprint below
-# covers their wording (editing either auto-refreshes the cached summaries).
-_LSJ_ASK_CTX = (
-    "Define the word in plain terms — its meaning and the range of senses it carries. 2-3 "
-    "sentences, 60 words max. Let the material dictate the length — do not pad. No markdown, "
-    "no headers, no bullet points."
-)
-_LSJ_ASK_GEN = (
-    "Define the word in plain terms — its meaning and the range of senses it carries. 2-3 "
-    "sentences, 60 words max. Let the material dictate the length — do not pad. No markdown, "
-    "no headers, no bullet points."
-)
+# The full instruction now lives in _LSJ_SYNTHESIS_SYSTEM; the user message carries only the
+# entry. These stay (empty) so the fingerprint signature is stable and a per-context ask can
+# slot back later. Editing the system prompt above refreshes the cached summaries.
+_LSJ_ASK_CTX = ""
+_LSJ_ASK_GEN = ""
 
 # Synthesis fingerprint — same self-healing scheme as the ai_search_cache entries. It's
 # stamped into each stored summary (summary_json["_synth_ver"]); when the prompt above
