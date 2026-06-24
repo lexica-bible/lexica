@@ -2641,6 +2641,7 @@ input { font-family: inherit; }
   background: #ff5e5b;
   color: #fff;
 }
+.acct-kofi { margin-top: 8px; }
 
 /* ── metaV sidebar ───────────────────────────────────────────── */
 .lib-word-pn { color: var(--ink); }

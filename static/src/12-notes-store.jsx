@@ -343,7 +343,7 @@ const NotesStore = (function () {
 
     // --- account API ---
     auth: getAuth,
-    authInfo() { const a = getAuth(); return { email: a && a.email, name: a && a.name, token: a && a.token, syncing, last: lastSync }; },
+    authInfo() { const a = getAuth(); return { email: a && a.email, name: a && a.name, role: a && a.role, token: a && a.token, syncing, last: lastSync }; },
     signup(email, password) { return authPost("/api/auth/signup", email, password); },
     login(email, password) { return authPost("/api/auth/login", email, password); },
     // Ask the server to email a reset link. Always resolves ok (the server never
@@ -409,7 +409,7 @@ const NotesStore = (function () {
         const res = await fetch("/api/auth/me", { headers: { "Authorization": "Bearer " + a.token } });
         if (!res.ok) return;
         const data = await res.json().catch(() => ({}));
-        if (data && data.email) setAuth({ ...a, email: data.email, name: data.name || null });
+        if (data && data.email) setAuth({ ...a, email: data.email, name: data.name || null, role: data.role || "user" });
       } catch (e) {}
     },
     // Sign in with the signed token Google handed the browser.

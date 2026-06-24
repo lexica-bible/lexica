@@ -501,6 +501,14 @@ function AccountModal({ onClose, anchored }) {
           <div className="acct-empty">Set a password to also sign in without Google.</div>
         </div>
 
+        {acct.role === "user" && (
+          <div className="acct-sec">
+            <div className="acct-sec-h">Support Lexica</div>
+            <div className="acct-empty">Lexica is free and built by one person. If it's useful to you, a small tip on Ko-fi helps keep it running.</div>
+            <a className="donate-btn kofi acct-kofi" href="https://ko-fi.com/lexica" target="_blank" rel="noopener noreferrer">☕ Support on Ko-fi</a>
+          </div>
+        )}
+
         <button className="auth-submit acct-logout" onClick={() => { NotesStore.logout(); onClose(); }}>Log out</button>
 
         <div className="acct-sec">
