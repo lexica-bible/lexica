@@ -1,6 +1,9 @@
 *.db
 *.db-shm
 *.db-wal
+# Cold-start scan caches (rebuilt per host from the local DB mtime; PA-local)
+cache_funcwords.json
+cache_hebnames.json
 __pycache__/
 *.pyc
 .claude/*

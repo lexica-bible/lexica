@@ -13,6 +13,7 @@ PLACE — keeping it out of the view modules avoids an import cycle.
 
 PA wsgi is UNCHANGED — `app` is still importable from this module.
 """
+import json
 import os
 import re
 import sqlite3
@@ -20,7 +21,40 @@ import threading
 
 from flask import Flask, jsonify, render_template, request, url_for, redirect, send_from_directory
 
-from core import log, DB, db, limiter, _FUNCTION_STRONGS, _HEB_NAME_STRONGS, heb_db, ai_cache_drop_legacy
+from core import log, DB, HEB_DB, db, limiter, _FUNCTION_STRONGS, _HEB_NAME_STRONGS, heb_db, ai_cache_drop_legacy
+
+
+_CACHE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+
+def _disk_cached_set(name, source_db, compute):
+    """Load a precomputed Strong's set from a small JSON file next to the app,
+    keyed to source_db's modified-time. Recompute + rewrite ONLY when the DB
+    changed (or the file is missing/unreadable) — otherwise just read the file.
+    The two startup scans below (lexicon×LSJ function-word classify, heb_words
+    name classify) are the heavy part of a cold worker's warm-up; turning each
+    into a fast file read stops a freshly recycled PA worker from stealing CPU
+    from the page request sitting behind it. Auto-refreshes on any data rebuild
+    (the DB mtime moves), so it can't go stale."""
+    path = os.path.join(_CACHE_DIR, name)
+    try:
+        src_mtime = int(os.path.getmtime(source_db))
+    except OSError:
+        src_mtime = 0
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            blob = json.load(f)
+        if blob.get("mtime") == src_mtime:
+            return blob["items"]
+    except (OSError, ValueError, KeyError):
+        pass
+    items = sorted(compute())
+    try:
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump({"mtime": src_mtime, "items": items}, f)
+    except OSError:
+        pass
+    return items
 
 # LSJ part-of-speech detection for function words.
 # LSJ def_html has two POS patterns:
@@ -121,26 +155,36 @@ _FUNCTION_STRONGS_OVERRIDE: frozenset[str] = frozenset({
 })
 
 
+def _compute_function_strongs_from_db() -> set[str]:
+    """The heavy step: classify lexicon entries content/function via LSJ def_html.
+    Returns the DB-derived set only (the code-defined OVERRIDE set is folded in by
+    the caller, so editing it takes effect immediately without busting the file
+    cache, which is keyed to the DB's mtime — not the code)."""
+    conn = db()
+    rows = conn.execute(
+        """SELECT l.strongs, lsj.def_html
+           FROM lexicon l
+           JOIN lsj ON lsj.plain = lower(strip_accents(l.lemma))"""
+    ).fetchall()
+    conn.close()
+    func: set[str] = set()
+    for row in rows:
+        if _is_lsj_function_word(row["def_html"]):
+            func.add(row["strongs"])
+    return func
+
+
 def _build_function_strongs_cache() -> None:
-    """Classify lexicon entries as content/function using LSJ def_html; runs once at startup.
-    Populates core._FUNCTION_STRONGS IN PLACE (clear+update, never reassign) so that
-    `from core import _FUNCTION_STRONGS` references in the view modules stay valid."""
+    """Populate core._FUNCTION_STRONGS IN PLACE (clear+update, never reassign) so
+    `from core import _FUNCTION_STRONGS` references in the view modules stay valid.
+    The heavy DB classify is disk-cached; the OVERRIDE set is unioned in fresh each
+    time so a code edit to it lands without a data rebuild."""
     try:
-        conn = db()
-        rows = conn.execute(
-            """SELECT l.strongs, lsj.def_html
-               FROM lexicon l
-               JOIN lsj ON lsj.plain = lower(strip_accents(l.lemma))"""
-        ).fetchall()
-        conn.close()
-        func: set[str] = set()
-        for row in rows:
-            if _is_lsj_function_word(row["def_html"]):
-                func.add(row["strongs"])
-        func |= _FUNCTION_STRONGS_OVERRIDE
+        items = _disk_cached_set("cache_funcwords.json", DB, _compute_function_strongs_from_db)
         _FUNCTION_STRONGS.clear()
-        _FUNCTION_STRONGS.update(func)
-        log.info("Function word cache: %d function words identified via LSJ", len(func))
+        _FUNCTION_STRONGS.update(items)
+        _FUNCTION_STRONGS.update(_FUNCTION_STRONGS_OVERRIDE)
+        log.info("Function word cache: %d function words (LSJ + overrides)", len(_FUNCTION_STRONGS))
     except Exception as e:
         log.warning("Could not build function word cache (LSJ table may not exist yet): %s", e)
 
@@ -153,7 +197,7 @@ def _build_heb_name_cache() -> None:
     do. Populated IN PLACE (clear+update) so `from core import _HEB_NAME_STRONGS` references
     stay valid. Empty when heb.db isn't loaded — the endpoints then omit the flag and the
     frontend falls back to the capital-letter heuristic."""
-    try:
+    def _compute() -> set[str]:
         conn = heb_db()
         rows = conn.execute(
             "SELECT strongs, morph, COUNT(*) AS n FROM heb_words "
@@ -171,11 +215,13 @@ def _build_heb_name_cache() -> None:
                       (code[0] == "A" and code[1:2] == "g")     # noun proper/gentilic, adj gentilic
             tgt = name_ct if is_name else other_ct
             tgt[num] = tgt.get(num, 0) + (r["n"] or 0)
-        names = {num for num in (name_ct.keys() | other_ct.keys())
-                 if name_ct.get(num, 0) > other_ct.get(num, 0)}
+        return {num for num in (name_ct.keys() | other_ct.keys())
+                if name_ct.get(num, 0) > other_ct.get(num, 0)}
+    try:
+        items = _disk_cached_set("cache_hebnames.json", HEB_DB, _compute)
         _HEB_NAME_STRONGS.clear()
-        _HEB_NAME_STRONGS.update(names)
-        log.info("Hebrew name cache: %d proper-noun/gentilic Strong's from heb.db", len(names))
+        _HEB_NAME_STRONGS.update(items)
+        log.info("Hebrew name cache: %d proper-noun/gentilic Strong's from heb.db", len(_HEB_NAME_STRONGS))
     except Exception as e:
         log.warning("Could not build Hebrew name cache (heb.db may not be loaded yet): %s", e)
 
