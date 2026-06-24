@@ -4,22 +4,21 @@ trial_lexica_def.py  —  BAKE-OFF for the "Lexica dictionary" idea (throwaway t
 
 DIVERGENCE-ROUTED design (per chat review, 2026-06-23):
 
-  For each Greek lemma, a ROUTER (Haiku) compares how ABP rendered the word against its
-  full LSJ entry, and picks the engine:
-    - CLEAN  (every rendering sits on a sense in the LSJ entry)  -> LSJ-as-source def (Haiku)
-    - DIVERGENT (a rendering won't sit on any LSJ sense - EITHER direction:
-        a) LSJ leads with a sense ABP never renders  = calque   (psyche/soul, doxa/glory)
-        b) ABP renders a sense no LSJ sense covers    = LSJ gap)
-                                                       -> verse-grounded def (Sonnet)
-  One flag drives both the engine and the model. Verse-grounded senses get a PROVENANCE
-  flag ("attested in usage, not in LSJ"); they are never silently merged into LSJ's list.
+  For each Greek lemma, a ROUTER picks the engine (chat design, 2026-06-23):
+    - LSJ entry MISSING or LONG (multi-sense, where classical freight hides) -> verse-grounded
+      def (Sonnet), with NO routing model call. (psyche's 13k-char entry lands here.)
+    - SHORT LSJ entry -> a Sonnet "bears-out" check: does the biblical usage actually carry
+      LSJ's senses, and is LSJ's LEAD sense used?
+        clean     -> LSJ-as-source def (Haiku)   (bread: short entry, usage = LSJ)
+        divergent -> verse-grounded def (Sonnet) + provenance flag
+  Verse-grounded senses get a PROVENANCE flag ("attested in usage, not in LSJ"); never
+  silently merged into LSJ's list.
 
   No BDAG / NT lexicon (it bakes the theology call into the lexeme). Hebrew is out -
   Greek defined from Greek.
 
-  TRIAL simplification (flagged): the router compares against the FULL LSJ entry in one
-  shot. That is the "check raw LSJ" step, so it can't false-flag a buried sub-entry sense;
-  it just skips the cheaper digest-first pre-pass we'd add in the real build for cost.
+  Calibrate the long/short cutoff cheaply: `--dry-run` prints each word's entry length and
+  which branch it takes, no model calls. Set --long from that before spending on a full run.
 
 Throwaway. Read-only on bible.db. Runs on PA (bible.db + the model key live there).
 
@@ -29,7 +28,7 @@ Throwaway. Read-only on bible.db. Runs on PA (bible.db + the model key live ther
   python scripts/trial_lexica_def.py --word G5590                      # one word: route + define
   python scripts/trial_lexica_def.py                                   # the whole set, in sequence
 
-Iterating prompts: edit the three blocks below (ROUTER_PROMPT / LSJ_SOURCE_PROMPT /
+Iterating prompts: edit the three blocks below (BEARS_OUT_PROMPT / LSJ_SOURCE_PROMPT /
 VERSE_PROMPT) and re-run. Nothing else to touch.
 """
 
@@ -37,37 +36,36 @@ import argparse, html, json, os, re, sqlite3, sys, unicodedata
 from collections import OrderedDict, Counter
 
 # ══════════════════════════════════════════════════════════════════════════════
-# PROMPT 1 — THE ROUTER (Haiku). Decides clean vs divergent.
+# PROMPT 1 — THE ROUTER's verse-bears-out check (Sonnet). Runs ONLY on SHORT entries;
+# long / missing entries skip it and go straight to verse-grounding.
 # ══════════════════════════════════════════════════════════════════════════════
-ROUTER_PROMPT = """\
-You route a Greek word to one of two definition engines by comparing how one translation
-rendered it against its classical dictionary entry.
+BEARS_OUT_PROMPT = """\
+You decide whether a Greek word's BIBLICAL USAGE matches its classical dictionary entry, or has
+diverged from it.
 
 You are given:
-- the word's full LSJ dictionary entry
-- the set of English renderings the translation (ABP) used for the word across the Greek
-  Bible, with counts
+- the word's full LSJ entry
+- a sample of occurrences from the Greek Bible: each a verse with the word's rendering marked
 
-Decide whether EVERY rendering sits on a sense present somewhere in the LSJ entry, including
-its sub-entries and minor senses. Judge meaning, not wording: a rendering "sits on" a sense
-if the entry expresses that sense in any words (synonyms and paraphrase count). Use ONLY the
-entry provided; do not rely on outside knowledge of the word.
+Work from the occurrences, not from outside knowledge of the word.
 
-Flag two kinds of divergence:
-- unmapped rendering: a rendering that maps onto NO sense anywhere in the entry (the word has
-  gained a sense LSJ does not carry).
-- abandoned lead sense: a sense the entry LEADS with (its first / primary senses) that NONE
-  of the renderings reflect (the translation has dropped the word's primary classical sense
-  - a calque).
+Check two things:
+1. Does the usage carry a sense the LSJ entry does NOT have? (the word gained a sense)
+2. Does the LSJ entry LEAD with a sense (its first / primary sense) that the usage does NOT
+   bear out? (the word was repurposed - a calque)
+
+LSJ carrying extra MINOR senses the Bible simply doesn't use is NOT divergence - a concrete word
+naturally uses only part of its range. Flag an unused LSJ sense only when it is the entry's
+PRIMARY / leading sense.
 
 Return JSON only, nothing else:
 {"verdict": "clean" | "divergent",
- "unmapped_renders": ["rendering", ...],
- "abandoned_lead_senses": ["short sense", ...],
+ "lsj_lead_not_used": ["short sense", ...],
+ "uses_not_in_lsj": ["short description", ...],
  "reason": "one sentence"}
 
-Use "clean" only when there are no unmapped renderings AND no abandoned lead sense.
-Otherwise "divergent".
+Use "clean" only when the usage sits within the entry's senses AND the entry's lead sense is
+used. Otherwise "divergent".
 """
 
 # ══════════════════════════════════════════════════════════════════════════════
@@ -143,10 +141,11 @@ Output (compact, dictionary-entry style):
 No preamble, no restating the lemma, no closing summary.
 """
 
-MODEL_HAIKU  = "claude-haiku-4-5-20251001"   # router + LSJ-source definition
-MODEL_SONNET = "claude-sonnet-4-6"           # verse-grounded definition (discrimination task)
-BUDGET     = 40                              # verses fed to the verse-grounded engine per word
-MAX_TOKENS = 1500
+MODEL_HAIKU  = "claude-haiku-4-5-20251001"   # LSJ-source definition (clean words)
+MODEL_SONNET = "claude-sonnet-4-6"           # verse-bears-out check + verse-grounded definition
+BUDGET         = 40                          # verses fed to the verse engine / bears-out check
+LONG_THRESHOLD = 2500                        # LSJ entry >= this many chars -> straight to verse (no check)
+MAX_TOKENS     = 1500
 
 # Sequence: easy confirmation words first, then a known CALQUE early to validate the branch
 # (psyche/doxa SHOULD route divergent). Then the rest.
@@ -384,18 +383,20 @@ def model_text(client, model, system, user, max_tokens=MAX_TOKENS):
     return "".join(b.text for b in msg.content if getattr(b, "type", "") == "text").strip()
 
 
-def route(client, gset, entry):
-    """Haiku router -> {verdict, unmapped_renders, abandoned_lead_senses, reason}."""
+def route(client, entry, long_threshold, verse_msg):
+    """Length pre-filter + verse-bears-out check:
+       - no entry / LONG entry  -> divergent (verse-ground), no model call
+       - SHORT entry            -> Sonnet bears-out check decides."""
     if not entry:
-        return {"verdict": "divergent", "unmapped_renders": [], "abandoned_lead_senses": [],
-                "reason": "no LSJ entry found - routing to verse-grounding by default"}
-    renders = "; ".join(f"{g} ({c})" for g, c in gset[:25])
-    user = f"LSJ ENTRY:\n{entry[:6000]}\n\nABP RENDERINGS:\n{renders}"
-    txt = model_text(client, MODEL_HAIKU, ROUTER_PROMPT, user, max_tokens=600)
+        return {"verdict": "divergent", "reason": "no LSJ entry - verse-ground by default"}
+    if len(entry) >= long_threshold:
+        return {"verdict": "divergent",
+                "reason": f"long LSJ entry ({len(entry)} chars >= {long_threshold}) - auto verse-ground, no check"}
+    user = f"LSJ ENTRY:\n{entry}\n\nBIBLICAL OCCURRENCES:\n{verse_msg}"
+    txt = model_text(client, MODEL_SONNET, BEARS_OUT_PROMPT, user, max_tokens=700)
     v = parse_json(txt)
     if not v:
-        return {"verdict": "divergent", "unmapped_renders": [], "abandoned_lead_senses": [],
-                "reason": "router output unparseable: " + txt[:160]}
+        return {"verdict": "divergent", "reason": "bears-out check unparseable: " + txt[:160]}
     return v
 
 
@@ -433,6 +434,8 @@ def main():
     ap.add_argument("--budget", type=int, default=BUDGET)
     ap.add_argument("--engine", choices=["auto", "verse", "lsj"], default="auto",
                     help="force an engine instead of letting the router decide")
+    ap.add_argument("--long", type=int, default=LONG_THRESHOLD,
+                    help="LSJ entry >= this many chars routes straight to verse-grounding")
     ap.add_argument("--audit", action="store_true",
                     help="prove a definition's citations: check each cited verse really contains the word (no model)")
     args = ap.parse_args()
@@ -485,20 +488,28 @@ def main():
         print("-" * 78)
 
         if args.dry_run:
+            if not entry:
+                lr = "VERSE (no LSJ entry)"
+            elif len(entry) >= args.long:
+                lr = f"VERSE (long entry, {len(entry)} >= {args.long})"
+            else:
+                lr = f"SHORT ({len(entry)} chars) -> bears-out check would decide"
+            print(f"length-route: {lr}")
             if args.verses:
                 print(verse_user_msg(sid, translit, gset, ctx))
                 print("-" * 78)
-            print("[dry run - router + definition skipped]")
+            print("[dry run - model calls skipped]")
             continue
 
         if args.engine == "auto":
-            verdict = route(client, gset, entry)
+            vmsg = verse_user_msg(sid, translit, gset, ctx)
+            verdict = route(client, entry, args.long, vmsg)
             v = (verdict.get("verdict") or "").lower()
-            print(f"ROUTER (Haiku): {v.upper()} - {verdict.get('reason','')}")
-            if verdict.get("unmapped_renders"):
-                print("  unmapped renders: " + ", ".join(verdict["unmapped_renders"]))
-            if verdict.get("abandoned_lead_senses"):
-                print("  abandoned lead senses: " + ", ".join(verdict["abandoned_lead_senses"]))
+            print(f"ROUTER: {v.upper()} - {verdict.get('reason','')}")
+            for k, label in (("lsj_lead_not_used", "LSJ lead sense not used"),
+                             ("uses_not_in_lsj", "uses not in LSJ")):
+                if verdict.get(k):
+                    print(f"  {label}: " + ", ".join(verdict[k]))
             engine = "lsj" if (v == "clean" and entry) else "verse"
         else:
             verdict = {}
@@ -517,11 +528,11 @@ def main():
             out = model_text(client, MODEL_SONNET, VERSE_PROMPT, verse_user_msg(sid, translit, gset, ctx))
             print("definition:\n" + out)
             flags = []
-            if verdict.get("unmapped_renders"):
-                flags.append("renders not in LSJ: " + ", ".join(verdict["unmapped_renders"]))
-            if verdict.get("abandoned_lead_senses"):
-                flags.append("LSJ lead-sense abandoned: " + ", ".join(verdict["abandoned_lead_senses"]))
-            print("PROVENANCE: " + ("; ".join(flags) if flags else "(divergent; senses above not in LSJ carry 'attested in usage, not in LSJ')"))
+            if verdict.get("uses_not_in_lsj"):
+                flags.append("uses not in LSJ: " + ", ".join(verdict["uses_not_in_lsj"]))
+            if verdict.get("lsj_lead_not_used"):
+                flags.append("LSJ lead sense abandoned: " + ", ".join(verdict["lsj_lead_not_used"]))
+            print("PROVENANCE: " + ("; ".join(flags) if flags else "(verse-grounded; mark senses not in LSJ 'attested in usage, not in LSJ')"))
 
     conn.close()
 
