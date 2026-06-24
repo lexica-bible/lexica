@@ -179,6 +179,23 @@ OVERRIDES = {
 NT_BOOKS = {"Mat","Mar","Luk","Joh","Act","Rom","1Co","2Co","Gal","Eph","Php","Col",
             "1Th","2Th","1Ti","2Ti","Tit","Phm","Heb","Jas","1Pe","2Pe","1Jn","2Jn","3Jn","Jud","Rev"}
 
+# PROOF set: the verses a verse-grounded definition cited, (ref, sense#), so --audit can confirm
+# each one really contains the target word in ABP and print the text to check it supports its sense.
+# Seeded with the psyche (G5590) run from 2026-06-23.
+AUDIT = {
+    "G5590": [
+        ("Deu 10:22", 1), ("Exo 12:15", 1), ("Num 19:18", 1), ("Rom 2:9", 1), ("Rev 16:3", 1),
+        ("Jos 9:24", 2), ("1Ki 1:12", 2), ("Jdg 5:18", 2), ("Jas 5:20", 2), ("1Jn 3:16", 2),
+        ("Php 2:30", 2), ("Act 20:10", 2), ("Luk 9:56", 2), ("1Th 2:8", 2), ("Mar 8:36", 2), ("Mat 10:28", 2),
+        ("Gen 1:30", 3), ("Lev 11:46", 3), ("Gen 2:7", 3), ("1Co 15:45", 3),
+        ("1Sa 1:10", 4), ("2Sa 3:21", 4), ("Job 21:8", 4), ("2Ki 2:2", 4), ("1Ch 12:38", 4),
+        ("Pro 2:10", 4), ("Col 3:23", 4), ("Eph 6:6", 4), ("2Co 1:23", 4), ("2Pe 2:8", 4),
+        ("3Jn 1:2", 4), ("1Pe 2:11", 4), ("Psa 19:7", 4), ("Heb 4:12", 4), ("Rth 4:15", 4),
+        ("Est 7:3", 4), ("Joh 10:24", 4),
+        ("Isa 5:14", 5),
+    ],
+}
+
 
 def get_key():
     k = os.environ.get("ANTHROPIC_API_KEY")
@@ -382,6 +399,31 @@ def route(client, gset, entry):
     return v
 
 
+def audit(conn, sid):
+    """Prove a verse-grounded definition's citations: for each verse it cited, confirm the
+    verse actually carries the target word in ABP (PASS), and print the ABP text so the
+    sense it was assigned to can be checked. A MISS = the verse has no G-number occurrence
+    (a bad citation OR ABP versification drift — the printed text tells which)."""
+    refs = AUDIT.get(sid)
+    if not refs:
+        print(f"(no audit set embedded for {sid})")
+        return
+    pred, params = abp_filter(conn, sid)
+    keyset = {(o["book"], int(o["ch"]), int(o["vs"])) for o in occurrences(conn, pred, params)}
+    npass = 0
+    for ref, sense in refs:
+        book, cv = ref.rsplit(" ", 1)
+        ch, vs = (int(x) for x in cv.split(":"))
+        present = (book, ch, vs) in keyset
+        npass += present
+        row = conn.execute("SELECT text FROM verses WHERE book=? AND chapter=? AND verse=?",
+                           (book, ch, vs)).fetchone()
+        text = row["text"] if row else "(verse not found in ABP)"
+        print(f"[{'PASS' if present else 'MISS'}] sense {sense}  {ref}")
+        print(f"        {text}")
+    print(f"\n{npass}/{len(refs)} cited verses actually contain {sid} in ABP.")
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--db", default=os.path.expanduser("~/bible-db/bible.db"))
@@ -391,6 +433,8 @@ def main():
     ap.add_argument("--budget", type=int, default=BUDGET)
     ap.add_argument("--engine", choices=["auto", "verse", "lsj"], default="auto",
                     help="force an engine instead of letting the router decide")
+    ap.add_argument("--audit", action="store_true",
+                    help="prove a definition's citations: check each cited verse really contains the word (no model)")
     args = ap.parse_args()
 
     conn = sqlite3.connect(f"file:{args.db}?mode=ro", uri=True)
@@ -399,7 +443,7 @@ def main():
     has_surface = table_exists(conn, "abp_surface")
 
     client = None
-    if not args.dry_run:
+    if not args.dry_run and not args.audit:
         import anthropic
         client = anthropic.Anthropic(api_key=get_key())
 
@@ -411,6 +455,14 @@ def main():
         words = match if match else [(target, "?", "ad-hoc")]
     else:
         words = WORDS
+
+    if args.audit:
+        for sid, translit, note in words:
+            print("\n" + "=" * 78)
+            print(f"{sid}  {translit}  ({note})  -- citation audit")
+            audit(conn, sid)
+        conn.close()
+        return
 
     for sid, translit, note in words:
         pred, params = abp_filter(conn, sid)
