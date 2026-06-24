@@ -237,6 +237,7 @@ from views_heb import bp as heb_bp
 from views_stats import bp as stats_bp
 from views_news import bp as news_bp
 from views_lexicon import bp as lexicon_bp
+from views_lexica import bp as lexica_bp
 from views_library import bp as library_bp
 from views_search import bp as search_bp
 from views_summary import bp as summary_bp, prune_cache as _prune_summary_cache
@@ -282,6 +283,7 @@ app.register_blueprint(heb_bp)
 app.register_blueprint(stats_bp)
 app.register_blueprint(news_bp)
 app.register_blueprint(lexicon_bp)
+app.register_blueprint(lexica_bp)
 app.register_blueprint(library_bp)
 app.register_blueprint(search_bp)
 app.register_blueprint(summary_bp)
