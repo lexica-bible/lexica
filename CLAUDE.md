@@ -802,7 +802,11 @@ memory `project_ai_synthesis_quality`.
 - LSJ word-study summaries live in `lsj.summary_json` / `abp_ext.summary_json`, NOT this table, but
   self-heal the same way: a `_synth_ver` stamp (= `ai_fingerprint("lsj", ...)` in views_lsj.py) is
   checked on read and dropped/regenerated when the prompt changes — so editing the LSJ prompt
-  auto-refreshes too, no clear script needed.
+  auto-refreshes too, no clear script needed. The LSJ blurb is a Haiku **"definition"** prompt (open
+  with the meaning; Koine anchor, no book-naming; favor-not-grace example) + per-word **"Lexica"
+  overrides** shown DIRECTLY, no model call, for the loaded lemmas LSJ leads classical on
+  (`_LSJ_OVERRIDES`/`_ovkey` in views_lsj.py — badged "Lexica" not LSJ; the Summary|Full-entry toggle
+  still shows raw LSJ). Full record: memory `project_lsj_overrides`.
 
 ## BibleHub ABP Scrape
 - Scraper: `scripts/scrape_biblehub_abp.py` — captures strongs, greek_pos, italic (last-word

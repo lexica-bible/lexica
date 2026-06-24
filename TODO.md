@@ -42,8 +42,10 @@ Still open:
    b98517f then 5f38d25); the AI-search xref enrichment is on Sonnet too (21aa95a). STILL OPEN: (a) the
    shared VOICE snippet in core.py was never built — xref/chapter carry their own wording; (b) person/place
    (`_PN_SYSTEM`, Haiku, "1-2 sentences") is CORRECT as a hard cap — leave it, do NOT convert to adaptive;
-   (c) LSJ word-study blurb CONFIRMED hard-capped (2-3 sentences / 60 words) — fine as-is (checked
-   during the 2026-06-14 framing pass).
+   (c) LSJ word-study blurb REWRITTEN 2026-06-23 — now a Haiku "definition" prompt (open with the
+   meaning; Koine anchor, no book-naming; one short paragraph; the asks were emptied) + per-word
+   "Lexica" overrides shown directly. The old 2-3-sentence cap is gone. Full record: memory
+   `project_lsj_overrides` (+ the override follow-ups under "New features").
    (d) Book-blurb AUTHOR work DONE 2026-06-13: added the two textually-named scribes (Jeremiah/Baruch,
    Paul/Tertius). Tried folding metaV's traditional names for the anonymous books (Job=Moses etc.) —
    REVERTED: forcing Haiku to name a disputed author made it over-assert. See archive. OPEN, optional:
@@ -128,6 +130,22 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
 ---
 
 ## New features
+
+- **LSJ "Lexica" overrides — DONE + LIVE 2026-06-23; a few words still open.** The LSJ word-study
+  blurb is now a Haiku "definition" prompt for the bulk + per-word hand-written **"Lexica" overrides**
+  shown directly (no model call) for the loaded lemmas LSJ leads classical on. 6 seeded (ekklesia,
+  leitourgia, βαπτίζω, χάρις/χάριν, λόγος, πνεῦμα). Mechanism + the whole story: memory
+  `project_lsj_overrides`. OPEN:
+  1. **αἰώνιος G166** override — word the gloss (lead with the age-long sense, "eternal" as one reading
+     not the headline) and add one line to `_LSJ_OVERRIDES`.
+  2. **δικαιόω G1344** — borderline; decide whether to pin it (chat would, CC cleared it).
+  3. **Strong's-fallback loaded words** (no LSJ entry → raw Strong's def, MORE loaded than LSJ): keep
+     Strong's for now, curate later. Plus the deferred preference: for fallback words, show **nothing**
+     rather than a DUPLICATE of the headword gloss.
+  4. Adding a word later = one line in `_LSJ_OVERRIDES` (no mechanism change). Could grow into a
+     curated "Lexica dictionary" over time — the audit method (run Haiku, the loaded word leads with
+     Athens/grace, write one line) is sustainable.
+  `code: views_lsj.py _LSJ_OVERRIDES/_ovkey + lsj_summary; static/src/30-detail-panel.jsx + 80-lexicon.jsx (Lexica badge); 20-shared-components.jsx LsjBody`
 
 - **"Learn" section — plain-language glossary / FAQ (idea — parked 2026-06-22).** The audience needs no
   Greek/Hebrew training, so a reader who hits H7307 vs H7308, a dotted number, a letter-suffixed
