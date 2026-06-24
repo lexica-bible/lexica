@@ -91,7 +91,7 @@ MAX_TOKENS = 1500
 
 # The dozen: (G-number, transliteration, note). Greek-only this round (Hebrew side next).
 WORDS = [
-    ("G5485", "charis",     "favor / grace   <- the one"),
+    ("G5484", "charin",     "favor, kindness, + 'for the sake of'   <- the one (ABP tags it G5484, not 5485)"),
     ("G4151", "pneuma",     "spirit / breath / ghost"),
     ("G3056", "logos",      "word / account / reason"),
     ("G1577", "ekklesia",   "assembly / church (LSJ classical blind spot)"),
@@ -111,7 +111,7 @@ OVERRIDES = {
     "G1577": "assembly, congregation; a gathered body convened for a common purpose",
     "G3009": "service, ministry; the performance of a public duty or sacred service - and so priestly or religious ministration",
     "G907":  "to dip, immerse, or plunge; to submerge or be overwhelmed; and as a religious act, to immerse - a ritual washing",
-    "G5485": "favor, goodwill, or kindness; thanks or gratitude; the charm or elegance that pleases; and, used adverbially, for the sake of or because of",
+    "G5484": "favor, goodwill, or kindness; thanks or gratitude; the charm or elegance that pleases; and, used adverbially, for the sake of or because of",
     "G3056": "a word, statement, or message - what is said or spoken; also an account or reckoning, and the reason or ground behind something",
     "G4151": "breath or wind; the breath of life; and so spirit - the immaterial part of a person, or a spiritual being",
 }
@@ -276,9 +276,14 @@ def main():
         import anthropic
         client = anthropic.Anthropic(api_key=get_key())
 
-    words = [w for w in WORDS if (not args.word or w[0].upper() == args.word.upper())]
-    if not words:
-        sys.exit(f"{args.word} is not in the trial set.")
+    if args.word:
+        target = args.word.upper()
+        if target[:1] not in ("G", "H"):
+            target = "G" + target          # allow a bare number, e.g. --word 5484
+        match = [w for w in WORDS if w[0].upper() == target]
+        words = match if match else [(target, "?", "ad-hoc")]
+    else:
+        words = WORDS
 
     for sid, translit, note in words:
         pred, params = abp_filter(conn, sid)
