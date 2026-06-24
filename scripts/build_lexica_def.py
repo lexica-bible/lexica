@@ -30,8 +30,12 @@ verbatim lift of the trial rig — the proven parts. The NEW code here is split_
 import argparse, datetime, hashlib, html, json, os, re, sqlite3, sys, unicodedata
 from collections import OrderedDict, Counter
 
-# ── pilot set: the 2-word pilot — psyche (fork-absent) + dikaioo (fork-present) ──────────────
-PILOT = ["G5590", "G1344"]
+# ── build set: psyche (control, fork-absent) + the 5 frozen contested forks. psyche + dikaioo are
+# already built (they skip on a stamp match); charis (G5484 — the number ABP actually tags, second
+# live graph baptism_who), aionios, sarx, ekklesia are the four remaining forks — already audited +
+# frozen, so building them is pure pipe-exercise: the splitter and the loud-fail guard get their
+# first run on words they weren't tuned on, with zero new authoring risk.
+PILOT = ["G5590", "G1344", "G5484", "G166", "G4561", "G1577"]
 
 MODEL_SONNET = "claude-sonnet-4-6"   # the verse-grounded definition engine
 BUDGET       = 40                    # occurrences fed to the engine
