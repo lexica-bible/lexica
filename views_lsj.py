@@ -70,7 +70,7 @@ _LSJ_OVERRIDES = {
     "εκκλησια":   "assembly, congregation; a gathered body convened for a common purpose",                                              # G1577 ἐκκλησία
     "λειτουργια": "service, ministry; the performance of a public duty or sacred service — and so priestly or religious ministration",  # G3009 λειτουργία
     "βαπτιζω":    "to dip, immerse, or plunge; to submerge or be overwhelmed; and as a religious act, to immerse — a ritual washing",    # G907 βαπτίζω
-    "χαρισ":      "favor, goodwill, or kindness shown toward another; also thanks or gratitude; and the gracefulness or charm that makes something pleasing",  # G5485 χάρις
+    "χαρισ":      "favor, goodwill, or kindness; thanks or gratitude; the gracefulness or charm that pleases; and, used adverbially, for the sake of or because of",  # G5485 χάρις + G5484 χάριν (acc. used as preposition; both resolve via this lemma)
     "λογοσ":      "a word, statement, or message — what is said or spoken; also an account or reckoning, and the reason or ground behind something",            # G3056 λόγος
     "πνευμα":     "breath or wind; the breath of life; and so spirit — the immaterial part of a person, or a spiritual being",           # G4151 πνεῦμα
     # G166 αἰώνιος — pending the user's wording; G1344 δικαιόω — held (borderline)
