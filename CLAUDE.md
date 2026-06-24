@@ -256,6 +256,17 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   can't join bible.db). All deploy-safe, aliased `AS kjv_def`/returned as `lemma_gloss`. Built by
   `scripts/build_word_gloss.py` (`--summary`/`--apply`). ABP + KJV/BSB/Hebrew cards + the Word study tab
   ALL LIVE (2026-06-23). Full record: memory `project_word_card_gloss`.
+- `lexica_def` — the **Lexica dictionary** entry per word: our OWN verse-grounded definition (written from the
+  Bible's own usage, not LSJ's classical glosses). Side table in bible.db (built on PA, not in git). One row =
+  the frozen fields `sense_headlines`/`senses_block`/`range`/`gloss_notes`/`coverage` + `fork` (contested-word
+  readings + a Study-graph link) + `verses` + `audit` (citation-gate badge) + `raw` (so a better splitter
+  re-splits with NO model call). Built by `scripts/build_lexica_def.py` (frozen `VERSE_PROMPT` → Sonnet → split
+  → citation gate → fork → write; `--apply` build / `--resplit --apply` re-split stored raw, free). Served by
+  `views_lexica.py` `/api/lexica/<strongs>` → the `LexicaBody` card (20-shared-components, BESIDE `LsjBody`;
+  `30-detail-panel.jsx` branches `case "lsj"`). **ADMIN-ONLY during rollout** (`LEXICA_ADMIN_ONLY` on
+  `is_admin()`; non-admins get 404 → the normal LSJ card, deploy-safe). LIVE on 6 words (psychē + the 5
+  contested forks dikaioō/charis-G5484/aionios/sarx/ekklesia) 2026-06-24. Full record + the owed card review:
+  memory `project_lexica_dictionary`.
 - `books` — book metadata (name, testament, regex)
 - `ai_search_cache` — cached AI query results and TSK synthesis
 - `kjv_verses` — KJV full verse text (31,102 verses)
