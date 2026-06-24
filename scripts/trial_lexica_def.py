@@ -20,6 +20,15 @@ collapse was invisible from the output anyway: nothing to detect, no surface to 
 graph_ref is nullable — 4 of 5 are null today, and the links light up per-word as argument
 graphs get authored. Edit the CONTESTED block to tune the forks.
 
+THE CITATION GATE (the backstop for the ~5,000 words NOT on the contested list — the fork gate
+protects the contested few, this keeps the honest many grounded). A SEPARATE audit pass (NOT
+generation-time enforcement) over what the engine already wrote: every verse a definition cites
+must CONTAIN the lemma, matched on the Strong's TAG (inflection-proof), never the surface string.
+It splits misses two ways — TAGGING (the word IS there but the tag missed it: a data bug) vs REAL
+(the verse lacks the word: the hallucination we're hunting) — so a tagging gap can't masquerade as
+an engine fault. Runs automatically after every verse def; `--audit --word G5590` reproduces the
+psychē hand-audit (38/38) with no human in the loop.
+
 Throwaway. Read-only on bible.db. The verse engine runs on PA (bible.db + the model key live
 there); the fairness gate is pure Python (no db, no model), so `--show-forks` runs ANYWHERE.
 
@@ -29,6 +38,7 @@ there); the fairness gate is pure Python (no db, no model), so `--show-forks` ru
   python scripts/trial_lexica_def.py --dry-run --verses --word G1344    # inspect inputs + the fork it'd append
   python scripts/trial_lexica_def.py --word G1344                       # define dikaioo + append its fork
   python scripts/trial_lexica_def.py --engine verse                     # the whole set, one verse engine
+  python scripts/trial_lexica_def.py --audit --word G5590               # CITATION GATE proof: reproduce psychē 38/38
 
 Iterating: edit VERSE_PROMPT (the definition) or CONTESTED (the forks) below and re-run.
 """
@@ -523,29 +533,113 @@ def route(client, entry, long_threshold, verse_msg):
     return v
 
 
-def audit(conn, sid):
-    """Prove a verse-grounded definition's citations: for each verse it cited, confirm the
-    verse actually carries the target word in ABP (PASS), and print the ABP text so the
-    sense it was assigned to can be checked. A MISS = the verse has no G-number occurrence
-    (a bad citation OR ABP versification drift — the printed text tells which)."""
-    refs = AUDIT.get(sid)
-    if not refs:
-        print(f"(no audit set embedded for {sid})")
-        return
+# A verse ref as the engine emits it — an ABP book abbrev + ch:vs. Two abbrev shapes: a NUMBERED
+# book is digit+Cap+lower ("1Jn", "2Co", "1Sa"); an unnumbered one is Cap+2-lower ("Deu", "Mat").
+# (An earlier \d?[A-Z][a-z]{2} silently dropped the numbered books — they have only ONE trailing
+# lowercase.) The model echoes back the abbrevs we feed it, so this matches its own output. A range
+# like "10:22-24" grabs the first verse.
+_REF_RE = re.compile(r"\b(\d[A-Z][a-z]|[A-Z][a-z]{2})\s+(\d+):(\d+)")
+
+
+def cited_refs(text):
+    """Pull the verse refs (book, ch, vs) out of a generated definition — de-duped, in order."""
+    seen, out = set(), []
+    for bk, ch, vs in _REF_RE.findall(text or ""):
+        key = (bk, int(ch), int(vs))
+        if key not in seen:
+            seen.add(key)
+            out.append(key)
+    return out
+
+
+def strict_keyset(conn, sid):
+    """Verses that contain the lemma by the SAME rule the engine drew its evidence from: a token
+    tagged with the target Strong's number (prefixed base form; dotted variants excluded)."""
     pred, params = abp_filter(conn, sid)
-    keyset = {(o["book"], int(o["ch"]), int(o["vs"])) for o in occurrences(conn, pred, params)}
-    npass = 0
-    for ref, sense in refs:
-        book, cv = ref.rsplit(" ", 1)
-        ch, vs = (int(x) for x in cv.split(":"))
-        present = (book, ch, vs) in keyset
-        npass += present
+    return {(o["book"], int(o["ch"]), int(o["vs"])) for o in occurrences(conn, pred, params)}
+
+
+def loose_keyset(conn, sid):
+    """Verses where the bare Strong's number shows up in ANY form — ignoring the strict base/prefix
+    format and the dotted-exclusion. A cited verse that MISSES the strict tag but HITS this is a
+    TAGGING gap (the number IS there; the strict tag didn't catch it — e.g. the strongs_base prefix
+    bug class, or a dotted variant), NOT a hallucination. This is the second signal that tells the
+    two miss-buckets apart."""
+    num = sid[1:]  # drop the G/H
+    rows = conn.execute("""
+        SELECT DISTINCT v.book AS book, v.chapter AS ch, v.verse AS vs
+        FROM verses v JOIN words w ON w.verse_id = v.id
+        WHERE w.strongs = ? OR w.strongs LIKE ? OR w.strongs_base = ? OR w.strongs_base = ?
+    """, (num, num + ".%", sid, num)).fetchall()
+    return {(r["book"], int(r["ch"]), int(r["vs"])) for r in rows}
+
+
+def verse_exists(conn, book, ch, vs):
+    return conn.execute("SELECT 1 FROM verses WHERE book=? AND chapter=? AND verse=?",
+                        (book, ch, vs)).fetchone() is not None
+
+
+def audit_citations(conn, sid, refs, notes=None):
+    """THE CITATION GATE. Every verse a definition cites must contain the lemma — matched on the
+    Strong's TAG (inflection-proof: psyches/psychen/psychai all carry the same number; a bare-lemma
+    thin-inflection word carries it fine too), NEVER on the surface string. Per-verse verdict + a
+    bucketed miss rate. The buckets:
+      PASS          — a token in the verse carries the target number (strict tag).
+      MISS-tagging  — the number IS in the verse but not under the strict tag (prefix-bug class / a
+                      dotted variant): a DATA problem, not a hallucination — debug the tagging.
+      MISS-real     — the verse exists but genuinely lacks the word: the model reached for a verse
+                      that fit its gloss but doesn't contain the lemma. THIS is what the gate catches.
+      MISS-noverse  — the cited ref isn't in ABP at all (bad ref, or versification drift -> remap).
+    The tagging/real split is the whole point: without it a tagging gap masquerades as a
+    hallucination and we'd debug the wrong layer."""
+    strict = strict_keyset(conn, sid)
+    loose = loose_keyset(conn, sid)
+    tally = Counter()
+    for book, ch, vs in refs:
+        key = (book, ch, vs)
+        if key in strict:
+            verdict = "PASS"
+        elif key in loose:
+            verdict = "MISS-tagging"
+        elif verse_exists(conn, book, ch, vs):
+            verdict = "MISS-real"
+        else:
+            verdict = "MISS-noverse"
+        tally[verdict] += 1
         row = conn.execute("SELECT text FROM verses WHERE book=? AND chapter=? AND verse=?",
                            (book, ch, vs)).fetchone()
-        text = row["text"] if row else "(verse not found in ABP)"
-        print(f"[{'PASS' if present else 'MISS'}] sense {sense}  {ref}")
+        text = row["text"] if row else "(verse not in ABP)"
+        note = f"  [{notes[key]}]" if notes and key in notes else ""
+        print(f"[{verdict}] {book} {ch}:{vs}{note}")
         print(f"        {text}")
-    print(f"\n{npass}/{len(refs)} cited verses actually contain {sid} in ABP.")
+    total = sum(tally.values())
+    npass = tally["PASS"]
+    print(f"\n{npass}/{total} cited verses contain {sid} by Strong's tag (miss rate {total - npass}/{total}).")
+    if total - npass:
+        print(f"  misses -> tagging: {tally['MISS-tagging']} | real: {tally['MISS-real']} | "
+              f"no-verse: {tally['MISS-noverse']}")
+        print("  TAGGING / no-verse = a DATA or ref problem (the word IS there, or the ref is off) — fix the data, not the engine.")
+        print("  REAL = the engine cited a verse without the word — the hallucination the gate exists to catch.")
+    return tally
+
+
+def audit(conn, sid):
+    """Run the citation gate on the SEEDED proof refs for a word (no model). psychē (G5590) is
+    seeded from the 2026-06-23 hand-audit, so this must reproduce 38/38 automatically. Any miss on
+    psychē: suspect a TAGGING bug FIRST — psychē is well-attested, so a real miss would be surprising,
+    and a matching bug (not the engine) is the likely cause."""
+    refs_raw = AUDIT.get(sid)
+    if not refs_raw:
+        print(f"(no seeded proof refs for {sid}; run the engine and the gate audits its live citations)")
+        return
+    refs, notes = [], {}
+    for ref, sense in refs_raw:
+        book, cv = ref.rsplit(" ", 1)
+        ch, vs = (int(x) for x in cv.split(":"))
+        key = (book, ch, vs)
+        refs.append(key)
+        notes[key] = f"sense {sense}"
+    audit_citations(conn, sid, refs, notes)
 
 
 def main():
@@ -671,6 +765,14 @@ def main():
             if verdict.get("overread"):
                 flags.append("LSJ over-reads: " + verdict["overread"])
             print("PROVENANCE: " + ("; ".join(flags) if flags else "(verse-grounded; mark senses not in LSJ 'attested in usage, not in LSJ')"))
+            # CITATION GATE — audit the verses THIS definition actually cited (runs on EVERY word,
+            # not a curated set): each must contain the lemma by Strong's tag; tagging vs real misses split.
+            refs = cited_refs(out)
+            print(f"\nCITATION GATE — {len(refs)} verse(s) cited in the definition:")
+            if refs:
+                audit_citations(conn, sid, refs)
+            else:
+                print("  (no parseable verse refs found in the output)")
 
         # FAIRNESS GATE — membership-triggered, model-free: a contested word ALWAYS gets its
         # hand-authored fork appended, regardless of what the definition above said.
