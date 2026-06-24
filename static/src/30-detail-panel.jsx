@@ -708,9 +708,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     case "lsj": return (
       <section key="lsj" className="sec">
         <h4 className="sec-head">
-          {lsjEntry && lsjEntry.source === "abp_ext"
-            ? <><span className="sec-t">ABP Extended</span><span className="abp-badge">ABP EXT</span></>
-            : <><span className="sec-t">Liddell-Scott-Jones</span><span className="lsj-badge">LSJ</span></>}
+          {lsjSummary && lsjSummary.override
+            ? <><span className="sec-t">Definition</span><span className="lsj-badge" title="Lexica editorial gloss — plain biblical sense foregrounded">Lexica</span></>
+            : lsjEntry && lsjEntry.source === "abp_ext"
+              ? <><span className="sec-t">ABP Extended</span><span className="abp-badge">ABP EXT</span></>
+              : <><span className="sec-t">Liddell-Scott-Jones</span><span className="lsj-badge">LSJ</span></>}
         </h4>
         {lsjLoading ? (
           <div className="lsj-def lsj-def--loading">Loading…</div>

@@ -57,6 +57,25 @@ paragraph of plain prose, no markdown.\
 _LSJ_ASK_CTX = ""
 _LSJ_ASK_GEN = ""
 
+# Per-word plain-meaning overrides shown DIRECTLY (no model call) for the loaded lemmas where
+# LSJ leads with the wrong sense (classical-first) or defines the word with itself. The card
+# shows this hand-written gloss as the Summary, badged "Lexica" — our editorial gloss, NOT LSJ
+# (the Full-entry toggle still shows the raw LSJ). Hand-written + reviewed with Claude chat,
+# 2026-06-23. Keyed by the accent-stripped, de-hyphenated, final-sigma-folded lowercase headword
+# so the lookup is a free dict hit (no DB). Each line is commented with its Strong's + word.
+def _ovkey(s):
+    return _strip_accents(s or "").lower().replace("-", "").replace("ς", "σ")
+
+_LSJ_OVERRIDES = {
+    "εκκλησια":   "assembly, congregation; a gathered body convened for a common purpose",                                              # G1577 ἐκκλησία
+    "λειτουργια": "service, ministry; the performance of a public duty or sacred service — and so priestly or religious ministration",  # G3009 λειτουργία
+    "βαπτιζω":    "to dip, immerse, or plunge; to submerge or be overwhelmed; and as a religious act, to immerse — a ritual washing",    # G907 βαπτίζω
+    "χαρισ":      "favor, goodwill, or kindness shown toward another; also thanks or gratitude; and the gracefulness or charm that makes something pleasing",  # G5485 χάρις
+    "λογοσ":      "a word, statement, or message — what is said or spoken; also an account or reckoning, and the reason or ground behind something",            # G3056 λόγος
+    "πνευμα":     "breath or wind; the breath of life; and so spirit — the immaterial part of a person, or a spiritual being",           # G4151 πνεῦμα
+    # G166 αἰώνιος — pending the user's wording; G1344 δικαιόω — held (borderline)
+}
+
 # Synthesis fingerprint — same self-healing scheme as the ai_search_cache entries. It's
 # stamped into each stored summary (summary_json["_synth_ver"]); when the prompt above
 # changes, the stamp no longer matches and the old summary is dropped + regenerated on
@@ -296,6 +315,12 @@ def lsj_summary(lemma):
     chapter = request.args.get("chapter", "").strip()
     verse_n = request.args.get("verse", "").strip()
     has_ctx = bool(book and chapter and verse_n)
+
+    # Per-word override: a hand-written plain gloss shown directly, no model call. Wins over the
+    # synth + cache (static, always-correct for the loaded lemmas LSJ fights us on); badged "Lexica".
+    ov = _LSJ_OVERRIDES.get(_ovkey(lemma))
+    if ov:
+        return jsonify({"summary": ov, "contextual": False, "override": True})
 
     base_key = f"abp:{strongs_param}" if ("." in strongs_param) else lemma
     mem_key  = (f"ctx:{base_key}:{book}.{chapter}.{verse_n}"

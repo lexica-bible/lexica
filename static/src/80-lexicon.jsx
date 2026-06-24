@@ -491,7 +491,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
             {!/^G/i.test(profile.strongs)
               ? <span className="bdb-badge">BDB</span>
               : (!lsjLoading && lsjEntry)
-                ? <span className="lsj-badge">{lsjEntry.source === "strongs" ? "Strong's" : lsjEntry.source === "abp_ext" ? "ABP" : "LSJ"}</span>
+                ? <span className="lsj-badge" title={lsjSummary && lsjSummary.override ? "Lexica editorial gloss — plain biblical sense foregrounded" : undefined}>{(lsjSummary && lsjSummary.override) ? "Lexica" : lsjEntry.source === "strongs" ? "Strong's" : lsjEntry.source === "abp_ext" ? "ABP" : "LSJ"}</span>
                 : null}
           </h4>
           {!/^G/i.test(profile.strongs)
