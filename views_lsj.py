@@ -19,40 +19,40 @@ from views_lexicon import _greek_cognates
 bp = Blueprint("lsj", __name__)
 
 
-# Writes a plain DEFINITION of the word — its central ordinary meaning, plus the two or three
-# distinct senses the entry draws — NOT a usage survey (2026-06-23, tightened after a prompt
-# review). Reframe, not a blacklist (project_synthesis_no_parse + project_ai_synthesis_quality).
-# The review caught three faults in the older version, all fixed here:
-#   - it asked for both "the range of senses" (broad) AND "the exact/plain sense" (narrow), so
-#     the model oscillated. Now: central meaning, name 2-3 senses only if clearly distinct.
-#   - "drop civic citations" fought "keep ekklesia's summoned-assembly sense" (the summoned
-#     reading IS the civic sense). The assembly-formation rule is GONE from this global prompt;
-#     ekklesia reads as flat "assembly, gathering" (the honest Koine gloss). Its "convened, not
-#     a crowd" shade belongs in a PER-WORD note, not here (see NEXT).
-#   - the long "not the Church/Ghost/Paul/Septuagint" stack over-applied (forced "not the Word"
-#     onto λόγος) and seeded those tokens. Cut to one positive rule + 2 examples.
-# "do not flatten distinctions the entry draws" is the don't-flatten point, generalized.
-# NEXT (not built): per-word sense overrides for the ~20-30 loaded lemmas (charis, pistis,
-# dikaioō, logos, sōzō, ekklesia …) + route those to Sonnet, the bulk to Haiku (cached, so the
-# Sonnet share amortizes). For now ALL words run on Sonnet (claude-sonnet-4-6).
-# History: tried a word_gloss anchor (pulled — flattened the sense); tried a "biblical usage"
-# survey framing (pulled — a definition doesn't say "in the NT it means ...").
+# The prompt leans on FRAME, not prohibition (deliberate — see project_synthesis_no_parse
+# + the 2026-06-14 AI-synthesis pass). Three framing levers replace the old blacklists:
+#   - audience: someone reading the Greek BIBLE (LXX/NT), so classical provenance is plainly
+#     off-purpose — we no longer name "Homer/Plato/Attic" (naming them only primed the leak,
+#     and we were feeding it a classical lexicon entry to summarize anyway).
+#   - source framing: the entry is "scholarly source material" to distill, so its ancient
+#     citations read as apparatus, not the answer.
+#   - reader state: the reader already SEES the word + its translation, so the synthesis
+#     picks up from there instead of re-announcing the headword (curbs self-reference).
 _LSJ_SYNTHESIS_SYSTEM = """\
-Define the Greek word below in plain modern English, working only from the dictionary entry \
-provided. State its central, ordinary meaning; if it carries two or three clearly distinct \
-senses, name them. Prefer everyday words over specialized religious vocabulary (e.g. χάρις \
-is favor or goodwill, not grace; πνεῦμα is spirit or breath, not ghost). Use only senses the \
-entry actually gives — add nothing from doctrine, theology, or your own knowledge, and do \
-not flatten distinctions the entry draws. Ignore the entry's citations, source references, \
-and grammatical notes; you are stating what the word means, not where it is used. Write one \
-short paragraph of plain prose, no markdown.\
+You are explaining a Greek word to someone reading the Greek Bible — the Septuagint \
+(LXX) and New Testament. The reader is already looking at the word and its basic \
+translation; pick up from there and tell them what it means and how it is used in \
+Scripture. Work from a Berean approach: the text speaks first. The dictionary entry \
+below is scholarly source material — distill from it only what the word means and the \
+range of senses it carries in the biblical text. No imported systematic theology, no \
+denominational assumptions — follow where the words actually lead. Write in plain \
+prose, no markdown, no headers. Do not state the word's grammatical parsing (part of \
+speech, case, number, tense, voice, mood) — that is shown separately. Focus only on \
+meaning and semantic range.\
 """
 
-# The full instruction now lives in _LSJ_SYNTHESIS_SYSTEM; the user message carries only the
-# entry. These stay (empty) so the fingerprint signature is stable and a per-context ask can
-# slot back later. Editing the system prompt above refreshes the cached summaries.
-_LSJ_ASK_CTX = ""
-_LSJ_ASK_GEN = ""
+# The two user-message asks, kept as named constants so the synthesis fingerprint below
+# covers their wording (editing either auto-refreshes the cached summaries).
+_LSJ_ASK_CTX = (
+    "Identify the sense of this word active in the verse above and explain it in plain "
+    "prose. 2-3 sentences, 60 words max. Let the entry dictate the length — do not pad. "
+    "No markdown, no headers, no bullet points."
+)
+_LSJ_ASK_GEN = (
+    "Explain what this word means and its main range of uses. 2-3 sentences, 60 words "
+    "max. Let the entry dictate the length — do not pad. No markdown, no headers, no "
+    "bullet points."
+)
 
 # Synthesis fingerprint — same self-healing scheme as the ai_search_cache entries. It's
 # stamped into each stored summary (summary_json["_synth_ver"]); when the prompt above
@@ -396,18 +396,18 @@ def lsj_summary(lemma):
     if actual_ctx:
         user_content = (
             f"Verse: {book} {chapter}:{verse_n} — {verse_text}\n\n"
-            f"Dictionary entry for {lemma}:\n{plain_def[:2000]}\n\n"
+            f"LSJ entry for {lemma}:\n{plain_def[:2000]}\n\n"
             + _LSJ_ASK_CTX
         )
     else:
         user_content = (
-            f"Dictionary entry for {lemma}:\n{plain_def[:2000]}\n\n"
+            f"LSJ entry for {lemma}:\n{plain_def[:2000]}\n\n"
             + _LSJ_ASK_GEN
         )
 
     try:
         synth_msg = _anthropic.messages.create(
-            model="claude-sonnet-4-6",
+            model="claude-haiku-4-5-20251001",
             max_tokens=150,
             temperature=0,
             system=_LSJ_SYNTHESIS_SYSTEM,
