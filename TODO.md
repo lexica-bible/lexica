@@ -139,6 +139,8 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
   1. **αἰώνιος G166** override — word the gloss (lead with the age-long sense, "eternal" as one reading
      not the headline) and add one line to `_LSJ_OVERRIDES`.
   2. **δικαιόω G1344** — borderline; decide whether to pin it (chat would, CC cleared it).
+     **2026-06-23: #1 and #2 are now folded into the "Lexica dictionary" item below — for a CONTESTED word,
+     verse-ground it + run the fairness check; do NOT hand-write an asserting override. HOLD δικαιόω.**
   3. **Strong's-fallback loaded words** (no LSJ entry → raw Strong's def, MORE loaded than LSJ): keep
      Strong's for now, curate later. Plus the deferred preference: for fallback words, show **nothing**
      rather than a DUPLICATE of the headword gloss.
@@ -146,6 +148,82 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
      curated "Lexica dictionary" over time — the audit method (run Haiku, the loaded word leads with
      Athens/grace, write one line) is sustainable.
   `code: views_lsj.py _LSJ_OVERRIDES/_ovkey + lsj_summary; static/src/30-detail-panel.jsx + 80-lexicon.jsx (Lexica badge); 20-shared-components.jsx LsjBody`
+
+- **Two-tier word entry — Summary = the gloss, Expanded = the EVIDENCE (idea — parked 2026-06-23).**
+  Builds on the existing Summary | Full-entry tabs. The governing rule: the summary asserts the meaning;
+  the expanded tier only earns its place if it shows the reader something they can CHECK, not more words
+  to take on authority. **Anything that makes the reader trust us more is bloat; anything that lets the
+  reader verify us is value.** What goes in each tier:
+  - **Summary tier** — the gloss as it is now (Koine sense first, plain words, "Lexica"-tagged on overrides).
+  - **Expanded tier — three things, all auditable:**
+    1. **Render breakdown as PERCENTAGES of the word's own usage**, with the rare senses linked to their
+       actual verses — "in this corpus it lands as favor 94%, gratitude 2%, favorable <1%." We already own
+       this data (the distribution rail: 243 occurrences, favor 229 / favors 7 / gratitude 5); the move is
+       to make it PART of the entry, not a sidebar. Tells the reader how load-bearing each sense really is —
+       no published lexicon does this. Highest-value, mostly wiring data we already have.
+    2. **One worked-example verse per distinct sense** — the actual line where favor fires, the actual line
+       where gratitude fires, inline. Turns a gloss from an assertion into a demonstration. Cheap (pick from
+       the occurrences we have); the judgment is which verse cleanest shows each sense.
+    3. **A one-line provenance "seam" on the LOADED words ONLY** (χάρις, ekklesia, βαπτίζω — the override
+       set) — where the common English gloss came from and why we didn't use it ("commonly rendered 'grace';
+       attested range is favor/goodwill/thanks, the theological sense developing later"). This is the Berean
+       contribution distilled. RESTRAINT is the value: most words get clean gloss + evidence, full stop; only
+       the loaded dozen earn the seam-note. On every word it becomes editorializing noise.
+  - **HARD don'ts (this is where "add value" goes wrong — all rebuild the systematic-theology web the method
+    rejects):** NO etymology as a headline (root ≠ meaning — the biggest word-study fallacy; bury it in
+    Expanded, explicitly labeled history-not-meaning, or leave it out); NO "related theological concepts"
+    cross-refs (χάρις → see justification/faith/salvation) — word relationships come from the TEXT (TSK-style
+    verse links) not a doctrinal schema; NO our-own commentary on what the word "really means" theologically
+    (show the range + usage, the reader does the theology — same humility as the argument graph). The wrong
+    value (more glosses, etymology, theological cross-refs, commentary) makes the entry both more complex AND
+    less trustworthy; the right value (usage data, worked examples, the labeled seam) makes it richer AND more
+    honest because all of it points back to the text. Add depth ONLY along the axis of "let the reader check."
+  - **WHERE it goes (2026-06-23):** mostly **Word study**, summary shared.
+    - **Summary (gloss)** → BOTH cards (they already share the same `.detail-*`/`.sec` classes).
+    - **Expanded evidence (percentages + worked-example verses + seam)** → **Word study tab**, because the
+      distribution data is ALREADY on screen there (the rail) — folding it into the entry is mostly wiring
+      data that's already loaded. The Library reader card stays the quick in-flow lookup (gloss only); the
+      percentages/examples would crowd it, especially the mobile bottom sheet.
+    - **The one-line seam on loaded words** → Word study for sure; OPTIONALLY a single line in the Library
+      card too (it's small, and the reader meets χάρις etc. in context right there).
+    - **CAUTION:** the two cards share LOCKED CSS — any expanded section must be scoped to `.wd` so it can't
+      leak into the Library word card (the user's locked it). Another reason the heavy tier lives in Word study.
+  `code: views_lsj.py (Summary|Full-entry, _LSJ_OVERRIDES for the seam); static/src/80-lexicon.jsx (distribution data already there) + 30-detail-panel.jsx`
+
+- **"Lexica dictionary" — verse-grounded word definitions (both quality gates BUILT in the trial rig 2026-06-24; NOT yet wired into the app).**
+  Our own word definitions written from the Bible's OWN usage, replacing LSJ's classical glosses as the
+  word-card / word-study MEANING source. **ONE engine: verse-ground EVERY def (Sonnet)** — feed the model the
+  word's renderings + a spread of its real occurrences, define FROM the usage under the plain-meaning rule.
+  **LSJ becomes DISPLAY-ONLY** (full entry behind the toggle, never generative). The size/concreteness ROUTER
+  + the cheap LSJ-source path were SCRAPPED: bundled freight (aionios — LSJ leads "lasting for an age, perpetual,
+  ETERNAL" in one breath) is uncatchable by ANY compare-to-LSJ check, and LSJ-source only ever helped concrete
+  words where verse-grounding gives the same answer. Trial proved psyche / aionios / bread. Full why + the spec:
+  memory `project_lexica_dictionary`. Artifact `scripts/trial_lexica_def.py` (`--engine verse` = the final mode;
+  the router / bears-out / LSJ-source code in it is the KILLED approach, kept only as the record).
+  **BUILT THIS SESSION (2026-06-24, trial rig — commits 8c4777c / 5af239d / 061cd37):**
+  - ✅ **Contested-word FAIRNESS GATE** — membership-triggered + MODEL-FREE: a word on the 5-frozen list
+    (dikaioō, aionios, charis, sarx, ekklesia) ALWAYS gets a hand-authored fork block appended (no detector,
+    no second pass — we distrust the model's fork DETECTION as much as its content; the dikaioō collapse was
+    invisible from the output anyway). Surfaces the fork inline; `graph_ref` nullable (links light up per word).
+    **dikaioō OFF HOLD** — its 3-way fork shows inline, wired to the live `salvation_how` graph; charis wired to
+    `baptism_who`. Data fix: charis fires on G5484, not the textbook stub G5485.
+  - ✅ **Citation gate** — audit-time pass (can't break the engine), every cited verse must contain the lemma by
+    the Strong's TAG (inflection-proof), misses split TAGGING (data bug — caught via a looser bare-number check)
+    vs REAL (hallucination) + no-verse (bad ref / versification drift → REMAP; esp. Psalms, ABP uses Greek/LXX
+    numbering). Reproduced psychē 38/38 on PA. (`--audit` was the seed; now the real gate, runs on every word's
+    citations; the ref parser caught + fixed a numbered-book bug, 1Jn/1Co were being dropped.)
+  **REMAINING — both PLUMBING, not epistemics (the theology/architecture calls are settled; less to decide, more
+  to connect):**
+  - **Depth-then-compress display:** store the FULL def, the card is a display trim (one write, two views — the
+    LSJ summary/full-entry pattern). THE one real decision: WHAT SURVIVES THE TRIM — the fork block + grounding
+    verses are the LAST things to compress (they're the whole point); don't shorten the prompt to fit a card.
+  - **Wire the engine + both gates into the app** — out of the trial script into def-generation + the word card +
+    Word study tab. The biggest remaining piece.
+  - Follow-up (small, not blocking): the fork gate names a covenant-membership/NPP reading for dikaioō that
+    `salvation_how` has no node for — add one to that graph (via add_study_graph_salvation.py) so the link lands.
+  This SUPERSEDES the αἰώνιος / δικαιόω open items under "LSJ 'Lexica' overrides" above — don't hand-write an
+  asserting override for a contested word; verse-ground it + the fork gate. The 6 live overrides stay until this ships.
+  `code: scripts/trial_lexica_def.py (spec); future views_lsj.py / a new def side table; static/src/30-detail-panel.jsx + 80-lexicon.jsx; argument graphs in study.db / views_study.py; memory project_lexica_dictionary`
 
 - **"Learn" section — plain-language glossary / FAQ (idea — parked 2026-06-22).** The audience needs no
   Greek/Hebrew training, so a reader who hits H7307 vs H7308, a dotted number, a letter-suffixed
