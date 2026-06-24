@@ -2,36 +2,95 @@
 """
 trial_lexica_def.py  —  BAKE-OFF for the "Lexica dictionary" idea (throwaway test rig).
 
-For a handful of Greek lemmas it:
-  1. pulls the lemma's FULL ABP breadth from bible.db — every rendering with counts
-     (the "renders as" set) + every occurrence (LXX Old Testament + Greek New Testament),
-  2. picks a SPREAD of verses across the rendering range — NOT top-N. Every distinct
-     rendering, including the rare/edge ones, is guaranteed a seat, because that is where
-     the sense boundaries show. The dominant gloss is capped so it can't eat the sample.
-  3. hands the gloss set + the verses (context = the PRIMARY evidence) to Sonnet with the
-     definition prompt below,
-  4. prints, per word, side by side:   renders-as  ·  current override  ·  grounded def.
+DIVERGENCE-ROUTED design (per chat review, 2026-06-23):
 
-NOT the feature — a test to see what the approach actually produces before we build anything.
-Read-only on bible.db. Runs on PA (bible.db + the model key live there).
+  For each Greek lemma, a ROUTER (Haiku) compares how ABP rendered the word against its
+  full LSJ entry, and picks the engine:
+    - CLEAN  (every rendering sits on a sense in the LSJ entry)  -> LSJ-as-source def (Haiku)
+    - DIVERGENT (a rendering won't sit on any LSJ sense - EITHER direction:
+        a) LSJ leads with a sense ABP never renders  = calque   (psyche/soul, doxa/glory)
+        b) ABP renders a sense no LSJ sense covers    = LSJ gap)
+                                                       -> verse-grounded def (Sonnet)
+  One flag drives both the engine and the model. Verse-grounded senses get a PROVENANCE
+  flag ("attested in usage, not in LSJ"); they are never silently merged into LSJ's list.
+
+  No BDAG / NT lexicon (it bakes the theology call into the lexeme). Hebrew is out -
+  Greek defined from Greek.
+
+  TRIAL simplification (flagged): the router compares against the FULL LSJ entry in one
+  shot. That is the "check raw LSJ" step, so it can't false-flag a buried sub-entry sense;
+  it just skips the cheaper digest-first pre-pass we'd add in the real build for cost.
+
+Throwaway. Read-only on bible.db. Runs on PA (bible.db + the model key live there).
 
   workon bible-env
-  # key: copy from the WSGI  (grep ANTHROPIC /var/www/www_lexica_bible_wsgi.py)  OR add it to ~/bible-db/.env
-  export ANTHROPIC_API_KEY=...
-  python scripts/trial_lexica_def.py --dry-run --verses --word G5485   # eyeball the spread, FREE (no model)
-  python scripts/trial_lexica_def.py --word G5485                      # one word, real run
-  python scripts/trial_lexica_def.py                                   # all 12
+  export ANTHROPIC_API_KEY=$(grep -oE "sk-ant-[A-Za-z0-9_-]+" /var/www/www_lexica_bible_wsgi.py)
+  python scripts/trial_lexica_def.py --dry-run --verses --word G5590   # inspect inputs, FREE (no model)
+  python scripts/trial_lexica_def.py --word G5590                      # one word: route + define
+  python scripts/trial_lexica_def.py                                   # the whole set, in sequence
 
-Iterating the prompt: edit SYSTEM_PROMPT below and re-run. Nothing else to touch.
+Iterating prompts: edit the three blocks below (ROUTER_PROMPT / LSJ_SOURCE_PROMPT /
+VERSE_PROMPT) and re-run. Nothing else to touch.
 """
 
-import argparse, math, os, sqlite3, sys
+import argparse, html, json, os, re, sqlite3, sys, unicodedata
 from collections import OrderedDict, Counter
 
 # ══════════════════════════════════════════════════════════════════════════════
-# THE PROMPT — edit this block, re-run.  (from chat, 2026-06-23)
+# PROMPT 1 — THE ROUTER (Haiku). Decides clean vs divergent.
 # ══════════════════════════════════════════════════════════════════════════════
-SYSTEM_PROMPT = """\
+ROUTER_PROMPT = """\
+You route a Greek word to one of two definition engines by comparing how one translation
+rendered it against its classical dictionary entry.
+
+You are given:
+- the word's full LSJ dictionary entry
+- the set of English renderings the translation (ABP) used for the word across the Greek
+  Bible, with counts
+
+Decide whether EVERY rendering sits on a sense present somewhere in the LSJ entry, including
+its sub-entries and minor senses. Judge meaning, not wording: a rendering "sits on" a sense
+if the entry expresses that sense in any words (synonyms and paraphrase count). Use ONLY the
+entry provided; do not rely on outside knowledge of the word.
+
+Flag two kinds of divergence:
+- unmapped rendering: a rendering that maps onto NO sense anywhere in the entry (the word has
+  gained a sense LSJ does not carry).
+- abandoned lead sense: a sense the entry LEADS with (its first / primary senses) that NONE
+  of the renderings reflect (the translation has dropped the word's primary classical sense
+  - a calque).
+
+Return JSON only, nothing else:
+{"verdict": "clean" | "divergent",
+ "unmapped_renders": ["rendering", ...],
+ "abandoned_lead_senses": ["short sense", ...],
+ "reason": "one sentence"}
+
+Use "clean" only when there are no unmapped renderings AND no abandoned lead sense.
+Otherwise "divergent".
+"""
+
+# ══════════════════════════════════════════════════════════════════════════════
+# PROMPT 2 — LSJ-AS-SOURCE definition (Haiku), for CLEAN words.
+# (verbatim from views_lsj.py _LSJ_SYNTHESIS_SYSTEM)
+# ══════════════════════════════════════════════════════════════════════════════
+LSJ_SOURCE_PROMPT = """\
+Define the Greek word below from the dictionary entry provided. Open with the meaning itself \
+— your first words are the definition, with no preface (not the word, not "this word means," \
+not "it refers to"). State its central, everyday meaning — the common Koine sense, not \
+specialized classical-era detail — plus the one or two other senses the entry clearly draws. \
+Prefer everyday words over specialized religious vocabulary (e.g. χάρις is favor or goodwill, \
+not grace; πνεῦμα is spirit or breath, not ghost). Do not organize the senses by where the \
+word appears or name the texts it appears in; give what the word means, not where it is used. \
+Add nothing from doctrine, theology, or your own knowledge beyond what the entry gives. \
+Ignore the entry's citations, source references, and grammatical notes. Write one short \
+paragraph of plain prose, no markdown.\
+"""
+
+# ══════════════════════════════════════════════════════════════════════════════
+# PROMPT 3 — VERSE-GROUNDED definition (Sonnet), for DIVERGENT words.  (from chat)
+# ══════════════════════════════════════════════════════════════════════════════
+VERSE_PROMPT = """\
 You define a biblical lemma from its own attested use. You are given:
 - the lemma (Strong's number, original-language form, transliteration)
 - the translation gloss set: the English words a translation used to render
@@ -84,28 +143,30 @@ Output (compact, dictionary-entry style):
 No preamble, no restating the lemma, no closing summary.
 """
 
-MODEL      = "claude-sonnet-4-6"   # Sonnet: discrimination under resistance, not compression
-BUDGET     = 40                    # verses fed to the model per word
+MODEL_HAIKU  = "claude-haiku-4-5-20251001"   # router + LSJ-source definition
+MODEL_SONNET = "claude-sonnet-4-6"           # verse-grounded definition (discrimination task)
+BUDGET     = 40                              # verses fed to the verse-grounded engine per word
 MAX_TOKENS = 1500
 
-# The dozen: (G-number, transliteration, note). Greek-only this round (Hebrew side next).
+# Sequence: easy confirmation words first, then a known CALQUE early to validate the branch
+# (psyche/doxa SHOULD route divergent). Then the rest.
 WORDS = [
-    ("G5484", "charin",     "favor, kindness, + 'for the sake of'   <- the one (ABP tags it G5484, not 5485)"),
+    ("G740",  "artos",      "bread  -- easy control (expect CLEAN -> Haiku/LSJ)"),
+    ("G3056", "logos",      "word / account / reason  -- maps to LSJ (expect CLEAN-ish)"),
+    ("G5590", "psyche",     "soul / life  -- CALQUE TEST (expect DIVERGENT -> Sonnet/verse)"),
+    ("G1391", "doxa",       "glory / opinion  -- CALQUE TEST (LSJ leads 'opinion')"),
+    ("G5484", "charin",     "favor, kindness  -- (ABP tags charis as G5484, not 5485)"),
     ("G4151", "pneuma",     "spirit / breath / ghost"),
-    ("G3056", "logos",      "word / account / reason"),
     ("G1577", "ekklesia",   "assembly / church (LSJ classical blind spot)"),
     ("G907",  "baptizo",    "immerse / baptize"),
     ("G3009", "leitourgia", "service / ministry"),
     ("G166",  "aionios",    "eternal / age-long  (override pending)"),
     ("G1344", "dikaioo",    "justify / make righteous  (held)"),
     ("G4102", "pistis",     "faith / trust"),
-    ("G5590", "psyche",     "soul / life"),
     ("G4561", "sarx",       "flesh"),
-    ("G740",  "artos",      "bread  (easy control)"),
 ]
 
-# Current hand-written overrides (verbatim from views_lsj.py _LSJ_OVERRIDES), by G-number,
-# for the side-by-side. Words not listed have no override today.
+# Current hand-written overrides (verbatim from views_lsj.py _LSJ_OVERRIDES), for the side-by-side.
 OVERRIDES = {
     "G1577": "assembly, congregation; a gathered body convened for a common purpose",
     "G3009": "service, ministry; the performance of a public duty or sacred service - and so priestly or religious ministration",
@@ -133,14 +194,37 @@ def get_key():
              "or add a line to ~/bible-db/.env, then re-run. (Or use --dry-run for no model calls.)")
 
 
+def strip_accents(s):
+    if s is None:
+        return s
+    return "".join(c for c in unicodedata.normalize("NFD", s) if unicodedata.category(c) != "Mn")
+
+
+def strip_html(s):
+    if not s:
+        return ""
+    s = re.sub(r"<[^>]+>", " ", s)
+    s = html.unescape(s)
+    return re.sub(r"\s+", " ", s).strip()
+
+
+def parse_json(txt):
+    m = re.search(r"\{.*\}", txt, re.S)
+    if not m:
+        return None
+    try:
+        return json.loads(m.group(0))
+    except Exception:
+        return None
+
+
 def table_exists(conn, name):
     return conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?",
                         (name,)).fetchone() is not None
 
 
 def abp_filter(conn, sid):
-    """WHERE predicate (sql, params) for a clean base G-number, mirroring
-    views_lexicon._abp_strongs_filter: exclude dotted different-words parked under the base."""
+    """WHERE predicate for a clean base G-number, mirroring views_lexicon._abp_strongs_filter."""
     if table_exists(conn, "dotted_lexicon"):
         return ("w.strongs_base = ? AND 'G' || w.strongs NOT IN (SELECT strongs FROM dotted_lexicon)", [sid])
     return ("w.strongs_base = ?", [sid])
@@ -158,7 +242,6 @@ def gloss_set(conn, pred, params):
 
 
 def occurrences(conn, pred, params):
-    """Light row per occurrence (no prose yet) so sampling doesn't haul thousands of verse texts."""
     return conn.execute(f"""
         SELECT v.book AS book, v.chapter AS ch, v.verse AS vs,
                w.english_head AS rend, w.verse_id AS vid, w.position AS pos
@@ -168,13 +251,27 @@ def occurrences(conn, pred, params):
     """, params).fetchall()
 
 
+def lsj_entry(conn, sid):
+    """(lemma, full-entry-text) for a Strong's number: lexicon maps number->lemma, lsj holds the
+    full entry. Accent-stripped fallback mirrors views_lsj. Returns (lemma, None) if no entry."""
+    r = conn.execute("SELECT lemma FROM lexicon WHERE strongs_g = ?", (sid,)).fetchone()
+    if not r or not r["lemma"]:
+        return None, None
+    lemma = r["lemma"]
+    row = conn.execute("SELECT def_html FROM lsj WHERE key = ?", (lemma,)).fetchone()
+    if not row:
+        plain = strip_accents(lemma).lower().replace("-", "")
+        row = conn.execute(
+            "SELECT def_html FROM lsj WHERE lower(strip_accents(replace(key,'-',''))) = ? "
+            "AND key NOT LIKE '-%'", (plain,)).fetchone()
+    if not row or not row["def_html"]:
+        return lemma, None
+    return lemma, strip_html(row["def_html"])
+
+
 def select_spread(occs, budget):
-    """Pick a sample that surfaces the word's SENSE range, not just its commonest use:
-      - every rendering gets a floor of seats (distinct senses + rare/edge uses represented),
-      - the rest is filled proportionally to frequency (the dominant sense gets due weight),
-      - within a rendering, verses spread across TESTAMENT first then book, so a sense that
-        hides inside the dominant rendering across OT/NT (charis = "favor" in both, the relational
-        OT favor vs the NT divine favor) isn't squeezed out by book-spread alone."""
+    """Sample that surfaces the SENSE range, not just the commonest use: per-rendering floor +
+    proportional fill, balancing TESTAMENT (OT/NT) then book within each rendering."""
     groups = OrderedDict()
     for o in occs:
         groups.setdefault((o["rend"] or "").lower(), []).append(o)
@@ -183,8 +280,8 @@ def select_spread(occs, budget):
     if n == 0:
         return []
     counts = {rend: len(g) for rend, g in by_freq}
-    used_t = Counter()        # testament (OT/NT) usage
-    used_b = Counter()        # book usage
+    used_t = Counter()
+    used_b = Counter()
     taken_ids = set()
     taken = Counter()
     selected = []
@@ -196,14 +293,13 @@ def select_spread(occs, budget):
         rem = [o for o in g if id(o) not in taken_ids]
         if not rem:
             return None
-        return min(rem, key=lambda o: (used_t[tm(o)], used_b[o["book"]]))  # balance testament, then book
+        return min(rem, key=lambda o: (used_t[tm(o)], used_b[o["book"]]))
 
     def add(rend, o):
         taken_ids.add(id(o)); taken[rend] += 1
         used_t[tm(o)] += 1; used_b[o["book"]] += 1; selected.append(o)
 
     if n > budget:
-        # more renderings than seats: interleave rarest+commonest so the edges still get in, 1 each
         order, lo, hi = [], 0, n - 1
         while lo <= hi and len(order) < budget:
             order.append(by_freq[hi]); hi -= 1
@@ -223,7 +319,6 @@ def select_spread(occs, budget):
                 if o is not None:
                     add(rend, o)
 
-    # proportional fill of the remainder (dominant rendering gets due weight, testament-balanced)
     while len(selected) < budget:
         cand = [(rend, g) for rend, g in by_freq if taken[rend] < counts[rend]]
         if not cand:
@@ -231,14 +326,13 @@ def select_spread(occs, budget):
         rend, g = max(cand, key=lambda rg: counts[rg[0]] / (taken[rg[0]] + 1))
         o = pick(g)
         if o is None:
-            counts[rend] = taken[rend]   # exhausted; stop reconsidering it
+            counts[rend] = taken[rend]
             continue
         add(rend, o)
     return sorted(selected, key=lambda o: o["vid"])
 
 
 def fetch_context(conn, occs, has_surface):
-    """Pull verse prose (+ the inflected form when abp_surface has it) for the chosen occs."""
     out = []
     for o in occs:
         row = conn.execute("SELECT text FROM verses WHERE id=?", (o["vid"],)).fetchone()
@@ -253,7 +347,7 @@ def fetch_context(conn, occs, has_surface):
     return out
 
 
-def build_user_msg(sid, translit, gset, ctx):
+def verse_user_msg(sid, translit, gset, ctx):
     lines = [f"LEMMA: {sid}  ({translit})", ""]
     lines.append("TRANSLATION GLOSS SET (one translation's renderings, with counts):")
     lines.append("  " + "; ".join(f"{g} ({c})" for g, c in gset[:25]))
@@ -266,17 +360,40 @@ def build_user_msg(sid, translit, gset, ctx):
     return "\n".join(lines)
 
 
+def model_text(client, model, system, user, max_tokens=MAX_TOKENS):
+    msg = client.messages.create(
+        model=model, max_tokens=max_tokens, system=system,
+        messages=[{"role": "user", "content": user}])
+    return "".join(b.text for b in msg.content if getattr(b, "type", "") == "text").strip()
+
+
+def route(client, gset, entry):
+    """Haiku router -> {verdict, unmapped_renders, abandoned_lead_senses, reason}."""
+    if not entry:
+        return {"verdict": "divergent", "unmapped_renders": [], "abandoned_lead_senses": [],
+                "reason": "no LSJ entry found - routing to verse-grounding by default"}
+    renders = "; ".join(f"{g} ({c})" for g, c in gset[:25])
+    user = f"LSJ ENTRY:\n{entry[:6000]}\n\nABP RENDERINGS:\n{renders}"
+    txt = model_text(client, MODEL_HAIKU, ROUTER_PROMPT, user, max_tokens=600)
+    v = parse_json(txt)
+    if not v:
+        return {"verdict": "divergent", "unmapped_renders": [], "abandoned_lead_senses": [],
+                "reason": "router output unparseable: " + txt[:160]}
+    return v
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--db", default=os.path.expanduser("~/bible-db/bible.db"))
-    ap.add_argument("--word", help="run a single G-number, e.g. G5485")
-    ap.add_argument("--dry-run", action="store_true", help="show what we'd feed; NO model calls (free)")
+    ap.add_argument("--word", help="run a single G-number, e.g. G5590")
+    ap.add_argument("--dry-run", action="store_true", help="show inputs; NO model calls (free)")
     ap.add_argument("--verses", action="store_true", help="also print the fed occurrences")
     ap.add_argument("--budget", type=int, default=BUDGET)
     args = ap.parse_args()
 
     conn = sqlite3.connect(f"file:{args.db}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
+    conn.create_function("strip_accents", 1, strip_accents)
     has_surface = table_exists(conn, "abp_surface")
 
     client = None
@@ -287,7 +404,7 @@ def main():
     if args.word:
         target = args.word.upper()
         if target[:1] not in ("G", "H"):
-            target = "G" + target          # allow a bare number, e.g. --word 5484
+            target = "G" + target
         match = [w for w in WORDS if w[0].upper() == target]
         words = match if match else [(target, "?", "ad-hoc")]
     else:
@@ -299,6 +416,7 @@ def main():
         occs = occurrences(conn, pred, params)
         sample = select_spread(occs, args.budget)
         ctx = fetch_context(conn, sample, has_surface)
+        lemma, entry = lsj_entry(conn, sid)
         ot = sum(1 for c in ctx if c[0] not in NT_BOOKS)
         nt = len(ctx) - ot
 
@@ -306,24 +424,44 @@ def main():
         print(f"{sid}  {translit}  ({note})")
         print(f"occurrences: {len(occs)} total | {len(gset)} renderings | fed {len(ctx)}  ({ot} OT / {nt} NT)")
         print("renders as: " + ", ".join(f"{g} {c}" for g, c in gset[:12]) + (" ..." if len(gset) > 12 else ""))
-        print("-" * 78)
+        print(f"LSJ: {lemma or '(no lexicon lemma)'}  " +
+              (f"[entry {len(entry)} chars]" if entry else "[NO LSJ ENTRY]"))
         ov = OVERRIDES.get(sid)
         print("current override: " + (ov if ov else "(none today)"))
         print("-" * 78)
-        user_msg = build_user_msg(sid, translit, gset, ctx)
-        if args.verses:
-            print(user_msg)
-            print("-" * 78)
+
         if args.dry_run:
-            print("grounded (Sonnet): [dry run - not called]")
+            if args.verses:
+                print(verse_user_msg(sid, translit, gset, ctx))
+                print("-" * 78)
+            print("[dry run - router + definition skipped]")
             continue
-        msg = client.messages.create(
-            model=MODEL, max_tokens=MAX_TOKENS,
-            system=SYSTEM_PROMPT,
-            messages=[{"role": "user", "content": user_msg}],
-        )
-        out = "".join(b.text for b in msg.content if getattr(b, "type", "") == "text")
-        print("grounded (Sonnet):\n" + out.strip())
+
+        verdict = route(client, gset, entry)
+        v = (verdict.get("verdict") or "").lower()
+        print(f"ROUTER (Haiku): {v.upper()} - {verdict.get('reason','')}")
+        if verdict.get("unmapped_renders"):
+            print("  unmapped renders: " + ", ".join(verdict["unmapped_renders"]))
+        if verdict.get("abandoned_lead_senses"):
+            print("  abandoned lead senses: " + ", ".join(verdict["abandoned_lead_senses"]))
+
+        if v == "clean" and entry:
+            print("ENGINE: Haiku (LSJ-source)")
+            out = model_text(client, MODEL_HAIKU, LSJ_SOURCE_PROMPT, entry[:8000])
+            print("definition:\n" + out)
+        else:
+            print("ENGINE: Sonnet (verse-grounded)")
+            if args.verses:
+                print(verse_user_msg(sid, translit, gset, ctx))
+                print("- - -")
+            out = model_text(client, MODEL_SONNET, VERSE_PROMPT, verse_user_msg(sid, translit, gset, ctx))
+            print("definition:\n" + out)
+            flags = []
+            if verdict.get("unmapped_renders"):
+                flags.append("renders not in LSJ: " + ", ".join(verdict["unmapped_renders"]))
+            if verdict.get("abandoned_lead_senses"):
+                flags.append("LSJ lead-sense abandoned: " + ", ".join(verdict["abandoned_lead_senses"]))
+            print("PROVENANCE: " + ("; ".join(flags) if flags else "(divergent; senses above not in LSJ carry 'attested in usage, not in LSJ')"))
 
     conn.close()
 
