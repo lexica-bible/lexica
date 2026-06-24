@@ -140,6 +140,7 @@ function GuidedTour({ onDone }) {
         {cur.donate && (
           <div className="tour-donate-btns">
             <a className="donate-btn contact" href="mailto:hello@lexica.bible">✉ hello@lexica.bible</a>
+            <a className="donate-btn paypal" href="https://paypal.me/LexicaBible" target="_blank" rel="noopener noreferrer">♥ Support via PayPal</a>
           </div>
         )}
         <div className="tour-dots">
@@ -208,6 +209,7 @@ function AboutView({ owner }) {
         <p className="about-p">Lexica is free, independent, and has no ads. It's maintained by one person who thinks serious Bible study tools shouldn't cost hundreds of dollars or require a seminary login. Questions, corrections, or feedback? I'd love to hear from you.</p>
         <div className="about-donate">
           <a className="donate-btn contact" href="mailto:hello@lexica.bible">✉ hello@lexica.bible</a>
+          <a className="donate-btn paypal" href="https://paypal.me/LexicaBible" target="_blank" rel="noopener noreferrer">♥ Support via PayPal</a>
         </div>
         </>
         )}
