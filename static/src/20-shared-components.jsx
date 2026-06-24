@@ -107,6 +107,88 @@ function LsjBody({ lsjEntry, lsjSummary, summaryLoading }) {
   );
 }
 
+// ============================================================
+// LEXICA DICTIONARY CARD (verse-grounded definition)
+// ============================================================
+// Renders ONLY when a word has a Lexica entry (admin-only during rollout); every other word keeps
+// the LsjBody path above untouched. Three depths via the shared toggle: Meaning (the glance) ·
+// Full entry · LSJ (raw classical entry, display-only). The contested-word fork shows in BOTH
+// Meaning and Full — it never folds away. All visuals use dedicated .lex-* classes so nothing
+// leaks into the locked LSJ / Library word card.
+function LexicaFork({ fork }) {
+  if (!fork) return null;
+  return (
+    <div className="lex-fork">
+      <div className="lex-fork-head">Contested — the meaning above doesn't settle this</div>
+      {fork.core && <div className="lex-fork-core"><span className="lex-fork-corelbl">Core (all agree):</span> {fork.core}</div>}
+      <div className="lex-fork-frames">
+        {(fork.frames || []).map((f, i) => (
+          <div key={i} className="lex-fork-frame">
+            <span className="lex-fork-label">{f.label}</span>
+            {f.tradition && f.tradition !== "—" && <span className="lex-fork-trad"> · {f.tradition}</span>}
+            {f.gloss && <span className="lex-fork-gloss"> — {f.gloss}</span>}
+          </div>
+        ))}
+      </div>
+      {fork.note && <div className="lex-fork-note">{fork.note}</div>}
+      {fork.graph_ref && <div className="lex-fork-map">Full argument map · Study › Graphs</div>}
+    </div>
+  );
+}
+
+function LexicaVerses({ verses }) {
+  if (!verses || !verses.length) return null;
+  return (
+    <div className="lex-verses">
+      {verses.map((v, i) => (
+        <div key={i} className="lex-verse"><span className="lex-vref">{v.ref}</span> {v.text}</div>
+      ))}
+    </div>
+  );
+}
+
+function LexicaBody({ lexica, lsjEntry }) {
+  const [view, setView] = React.useState("meaning");
+  React.useEffect(() => { setView("meaning"); }, [lexica && lexica.strongs]);
+  if (!lexica) return null;
+  const audit = lexica.audit || {};
+  const fork = lexica.fork;
+  const hasLsj = !!(lsjEntry && lsjEntry.def_html);
+  const glanceVerses = (lexica.verses || []).slice(0, 2);
+  return (
+    <>
+      {audit.total ? (
+        <div className="lex-verified">{"✓"} {audit.pass}/{audit.total} cited verses verified</div>
+      ) : null}
+      <div className="lsj-tg-row">
+        <button className={"lsj-tg" + (view === "meaning" ? " on" : "")} onClick={() => setView("meaning")}>Meaning</button>
+        <button className={"lsj-tg" + (view === "full" ? " on" : "")} onClick={() => setView("full")}>Full entry</button>
+        {hasLsj && <button className={"lsj-tg" + (view === "lsj" ? " on" : "")} onClick={() => setView("lsj")}>LSJ</button>}
+      </div>
+      {view === "lsj" && hasLsj ? (
+        <div className="lsj-def" dangerouslySetInnerHTML={{ __html: lsjEntry.def_html }} />
+      ) : view === "full" ? (
+        <div className="lex-full">
+          <div className="lex-prose">{renderInlineMd(lexica.senses_block || "")}</div>
+          {fork && <LexicaFork fork={fork} />}
+          {lexica.range && <div className="lex-block"><span className="lex-lbl">Range</span> {lexica.range}</div>}
+          {lexica.gloss_notes && <div className="lex-block"><span className="lex-lbl">Gloss notes</span><div className="lex-prose lex-notes">{renderInlineMd(lexica.gloss_notes)}</div></div>}
+          {lexica.coverage && <div className="lex-block"><span className="lex-lbl">Coverage</span> {lexica.coverage}</div>}
+          <LexicaVerses verses={lexica.verses} />
+        </div>
+      ) : (
+        <div className="lex-glance">
+          <ol className="lex-senses">
+            {(lexica.sense_headlines || []).map((h, i) => <li key={i}>{h}</li>)}
+          </ol>
+          {fork && <LexicaFork fork={fork} />}
+          <LexicaVerses verses={glanceVerses} />
+        </div>
+      )}
+    </>
+  );
+}
+
 // Google-Maps-style bottom-sheet dismissal: drag the WHOLE card down to close.
 // Grabbing the card's top chrome (the handle/header — anything outside the
 // scrolling body) ALWAYS arms the drag, no matter where the body is scrolled.

@@ -91,6 +91,12 @@ const api = {
     const qs = p.toString() ? `?${p}` : '';
     return fetch(`/api/lsj-summary/${encodeURIComponent(path)}${qs}`).then(r => r.json());
   },
+  // Lexica dictionary entry (verse-grounded). Sends the bearer token: the server gates these to
+  // admins during rollout, so a non-admin / logged-out caller gets 404 and the card falls back to LSJ.
+  lexica: (strongs) => {
+    if (!strongs) return Promise.resolve({ error: 'not found' });
+    return fetch(`/api/lexica/${encodeURIComponent(strongs)}`, { headers: _authHeaders() }).then(r => r.json());
+  },
   books: () =>
     fetch("/api/books").then(r => r.json()),
   chronological: () =>

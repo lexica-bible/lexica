@@ -452,6 +452,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   const [lsjLoading, setLsjLoading] = useState(false);
   const [lsjSummary, setLsjSummary] = useState(null);
   const [lsjSummaryLoading, setLsjSummaryLoading] = useState(false);
+  const [lexica, setLexica] = useState(null);
 
   useEffect(() => {
     setLsjEntry(null);
@@ -486,6 +487,23 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       .finally(() => { if (!cancelled) setLsjSummaryLoading(false); });
     return () => { cancelled = true; };
   }, [lsjEntry && lsjEntry.key, entry && entry.id]);
+
+  // Lexica dictionary entry (verse-grounded), keyed by Strong's. Admin-only during rollout — the
+  // server 404s for everyone else, so only fetch when signed in (skips the call for the logged-out
+  // public). When present it REPLACES the LSJ card body + the up-top plain gloss; when absent the
+  // card is exactly as before.
+  useEffect(() => {
+    setLexica(null);
+    const sb = entry && entry.strongs_base;
+    let signedIn = false;
+    try { signedIn = !!(typeof NotesStore !== "undefined" && NotesStore.auth() && NotesStore.auth().token); } catch (e) {}
+    if (!sb || sb === "*" || !signedIn) return;
+    let cancelled = false;
+    api.lexica(sb)
+      .then(d => { if (!cancelled) setLexica(d && !d.error ? d : null); })
+      .catch(() => { if (!cancelled) setLexica(null); });
+    return () => { cancelled = true; };
+  }, [entry && entry.id]);
 
   if (!entry) return null;
 
@@ -536,7 +554,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   // (relocateGloss); when there isn't (KJV, an ABP word with no printed form), the meaning
   // simply replaces the in-verse word up top. A form word with NO gloss keeps the old
   // behavior: empty up top, contextual english on the form line (don't duplicate it).
-  const showLemmaGloss = !!(heroLemmaGloss && !hero.noGloss && !isPN && !metavData);
+  const showLemmaGloss = !!(heroLemmaGloss && !hero.noGloss && !isPN && !metavData && !lexica);
   const heroTopGloss = showLemmaGloss ? heroLemmaGloss : (relocateGloss ? "" : hero.standaloneGloss);
   // Show "translit · gloss" on one line whenever there's both — same for Greek and
   // Hebrew so the two cards match. Falls back to a standalone gloss line only when
@@ -708,13 +726,17 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     case "lsj": return (
       <section key="lsj" className="sec">
         <h4 className="sec-head">
-          {lsjSummary && lsjSummary.override
+          {lexica
+            ? <><span className="sec-t">Definition</span><span className="lsj-badge" title="Lexica dictionary — defined from the Bible's own usage">Lexica</span></>
+            : lsjSummary && lsjSummary.override
             ? <><span className="sec-t">Definition</span><span className="lsj-badge" title="Lexica editorial gloss — plain biblical sense foregrounded">Lexica</span></>
             : lsjEntry && lsjEntry.source === "abp_ext"
               ? <><span className="sec-t">ABP Extended</span><span className="abp-badge">ABP EXT</span></>
               : <><span className="sec-t">Liddell-Scott-Jones</span><span className="lsj-badge">LSJ</span></>}
         </h4>
-        {lsjLoading ? (
+        {lexica ? (
+          <LexicaBody lexica={lexica} lsjEntry={lsjEntry} />
+        ) : lsjLoading ? (
           <div className="lsj-def lsj-def--loading">Loading…</div>
         ) : lsjEntry ? (
           <LsjBody lsjEntry={lsjEntry} lsjSummary={lsjSummary} summaryLoading={lsjSummaryLoading} />

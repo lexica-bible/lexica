@@ -1257,6 +1257,34 @@ input { font-family: inherit; }
 .detail-p--meta { margin-top: 8px; }
 .link-btn--strong { font-weight: 600; }
 
+/* ── Lexica dictionary card (verse-grounded). Dedicated .lex-* so nothing leaks into the locked
+   LSJ / Library word card; reuses .lsj-tg-row/.lsj-tg for the Meaning/Full entry/LSJ toggle. */
+.lex-verified { font-size: 11px; color: var(--ink-4); margin: 0 0 8px; letter-spacing: 0.02em; }
+.lex-senses { margin: 0; padding-left: 18px; font-family: var(--f-serif); font-size: 14px; line-height: 1.5; color: var(--ink); }
+.lex-senses li { margin-top: 5px; }
+.lex-senses li:first-child { margin-top: 0; }
+.lex-prose { font-family: var(--f-serif); font-size: 14px; line-height: 1.6; color: var(--ink-2); white-space: pre-wrap; }
+.lex-block { margin-top: 14px; }
+.lex-lbl { display: block; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-4); margin-bottom: 3px; }
+.lex-notes { font-size: 13px; }
+.lex-fork { margin-top: 14px; padding: 11px 13px; border-radius: 8px;
+  background: color-mix(in srgb, var(--accent) 7%, var(--paper));
+  border: 1px solid color-mix(in srgb, var(--accent) 26%, var(--paper)); }
+.lex-fork-head { font-size: 12px; font-weight: 600; color: var(--accent); letter-spacing: 0.01em; }
+.lex-fork-core { font-family: var(--f-serif); font-size: 13.5px; color: var(--ink); margin-top: 7px; }
+.lex-fork-corelbl { font-weight: 600; }
+.lex-fork-frames { font-family: var(--f-serif); font-size: 13.5px; line-height: 1.5; color: var(--ink); margin-top: 9px; }
+.lex-fork-frame { margin-top: 5px; }
+.lex-fork-frame:first-child { margin-top: 0; }
+.lex-fork-label { font-weight: 600; }
+.lex-fork-trad { color: var(--ink-4); }
+.lex-fork-note { font-size: 12px; font-style: italic; color: var(--ink-4); margin-top: 9px; }
+.lex-fork-map { font-size: 12px; color: var(--accent); margin-top: 9px; }
+.lex-verses { margin-top: 13px; font-family: var(--f-serif); font-size: 12.5px; line-height: 1.5; color: var(--ink-4); }
+.lex-verse { margin-top: 5px; }
+.lex-verse:first-child { margin-top: 0; }
+.lex-vref { font-weight: 600; color: var(--ink); }
+
 /* ============================================================
    RESULTS CONTROLS
 ============================================================ */
