@@ -33,8 +33,10 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--db", default=os.path.expanduser("~/bible-db/bible.db"))
     ap.add_argument("--word", required=True, help="G/H number, e.g. G5484")
-    ap.add_argument("--old", required=True, help="exact text in the stored raw to replace (must occur once)")
-    ap.add_argument("--new", required=True, help="replacement text")
+    ap.add_argument("--old", help="exact text in the stored raw to replace (must occur once)")
+    ap.add_argument("--new", help="replacement text")
+    ap.add_argument("--show-raw", action="store_true", dest="show_raw",
+                    help="print the stored raw prose and exit — to craft an exact --old/--new edit")
     ap.add_argument("--apply", action="store_true", help="write the row (default: dry-run, show only)")
     args = ap.parse_args()
 
@@ -51,6 +53,13 @@ def main():
         sys.exit(f"no stored Lexica row for {sid}")
     e = json.loads(row["def_json"])
     raw = e.get("raw", "")
+    if args.show_raw:
+        print(f"\n===== {sid}  {e.get('lemma','')} — stored raw prose =====\n")
+        print(raw)
+        conn.close()
+        return
+    if not args.old or not args.new:
+        sys.exit("pass --old AND --new (exact text to replace), or --show-raw to dump the raw.")
     n = raw.count(args.old)
     if n != 1:
         sys.exit(f"--old must match the stored raw EXACTLY ONCE; found {n}. Aborting (nothing changed).")
