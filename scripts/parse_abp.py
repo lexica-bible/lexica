@@ -77,7 +77,7 @@ _PRESERVE_CASE = frozenset({
 })
 
 
-def _head_word(text: str) -> str | None:
+def _head_word(text: str, italic_words=None) -> str | None:
     """Last non-function word of the gloss — primary search token.
 
     Preserves capitalization for theological terms (God, Lord, Spirit etc.)
@@ -85,28 +85,43 @@ def _head_word(text: str) -> str | None:
     Filters copulas and noise words (is, are, was, vain etc.).
 
     'God made' -> 'made', 'my spirit' -> 'spirit', 'the LORD said' -> 'said'.
+
+    italic_words: the gloss words ABP marked as translator ADDITIONS (no Greek
+    word behind them). When given, they are skipped along with function/stop
+    words, so the head is the Greek word's OWN rendering and never a borrowed
+    neighbour: 'take favor' (favor italic) -> 'take', not 'favor'. If EVERY
+    content word is an addition (e.g. an article slot whose only real word was
+    added), we fall back to the plain last-non-function pick, so no existing
+    caller regresses and bare-function slots are left exactly as before.
     """
     if not text:
         return None
     raw_tokens = text.split()
-    for raw_tok in reversed(raw_tokens):
-        clean = re.sub(r"[^\w]", "", raw_tok)
-        if not clean:
-            continue
-        lower = clean.lower()
-        if lower in _FUNCTION_WORDS:
-            continue
-        if lower in _HEAD_STOP:
-            continue
-        # Normalize possessives: Lord's -> Lord, God's -> God
-        if clean.endswith("'s") or clean.endswith("s'"):
-            clean = re.sub(r"'s$|s'$", "", clean)
+    skip_italic = {w.strip().lower() for w in italic_words} if italic_words else None
+
+    def _pick(drop_italic):
+        for raw_tok in reversed(raw_tokens):
+            clean = re.sub(r"[^\w]", "", raw_tok)
+            if not clean:
+                continue
             lower = clean.lower()
-        # Preserve case for theological terms, lowercase everything else
-        if clean in _PRESERVE_CASE:
-            return clean
-        return lower
-    return None  # gloss is all function/stop words
+            if lower in _FUNCTION_WORDS or lower in _HEAD_STOP:
+                continue
+            if drop_italic and skip_italic and lower in skip_italic:
+                continue
+            # Normalize possessives: Lord's -> Lord, God's -> God
+            if clean.endswith("'s") or clean.endswith("s'"):
+                clean = re.sub(r"'s$|s'$", "", clean)
+                lower = clean.lower()
+            # Preserve case for theological terms, lowercase everything else
+            return clean if clean in _PRESERVE_CASE else lower
+        return None
+
+    if skip_italic:
+        head = _pick(True)
+        if head is not None:
+            return head
+    return _pick(False)  # gloss is all function/stop (or all added) words
 
 
 def parse_words(verse_text: str) -> list:

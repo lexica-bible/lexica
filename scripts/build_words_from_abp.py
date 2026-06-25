@@ -29,14 +29,26 @@ except ImportError:
     _FUNCTION_WORDS = frozenset()
     _HEAD_STOP = frozenset()
 
-    def _head_word(text):
+    def _head_word(text, italic_words=None):
         if not text:
             return None
+        skip = {w.strip().lower() for w in italic_words} if italic_words else set()
         words = re.sub(r"[^\w]", " ", text).split()
-        for w in words:
-            if w.lower() not in _ARTICLES:
+
+        def pick(drop):
+            for w in words:
+                lw = w.lower()
+                if lw in _ARTICLES:
+                    continue
+                if drop and lw in skip:
+                    continue
                 return w
-        return words[0] if words else None
+            return None
+        if skip:
+            h = pick(True)
+            if h is not None:
+                return h
+        return pick(False) or (words[0] if words else None)
 
 
 try:
@@ -1184,6 +1196,28 @@ def _greek_pos_backfill(rows: list) -> None:
         rows[i] = rows[i][:5] + (gp,) + rows[i][6:]
 
 
+def _strip_italic_heads(rows: list) -> None:
+    """Final pass: a slot's search head must be its OWN word, never a translator-
+    ADDED (italic) one. ABP marks added words italic; an added word has no Greek
+    behind it, so letting it become the head mislabels the Greek word in the
+    Word-study finder — 'take favor' (favor italic) made λαμβάνω/G2983 surface
+    under a search for "favor". Recompute the head skipping italics for any
+    multi-word gloss that carries italic markings; _head_word falls back to the
+    plain pick when every content word is added, so bare article slots are left
+    exactly as before. Touches english_head (idx 2) ONLY — never strongs/italic.
+    Re-runnable: a row already on its own word won't change."""
+    for i, r in enumerate(rows):
+        eng, iw = r[1], r[8]
+        if not eng or " " not in eng or not iw:
+            continue
+        italic_set = {w.strip().lower() for w in iw.split(",") if w.strip()}
+        if not italic_set:
+            continue
+        new_head = _head_word(eng, italic_set)
+        if new_head != r[2]:
+            rows[i] = r[:2] + (new_head,) + r[3:]
+
+
 def build_verse_words(abp_words: list, bh_rows: list, lex: dict = None) -> list:
     """
     Combine ABP word list with BH metadata.
@@ -1280,6 +1314,7 @@ def build_verse_words(abp_words: list, bh_rows: list, lex: dict = None) -> list:
     _lord_oath_fix(rows)
     _numeral_gloss_fill(rows)
     _greek_pos_backfill(rows)
+    _strip_italic_heads(rows)   # LAST: head must be the slot's own word, not an added (italic) one
 
     # Strip temporary abp_pos (idx 10); keep morph (11) + lemma (12) as the last two columns.
     return [r[:10] + (r[11], r[12]) for r in rows]
