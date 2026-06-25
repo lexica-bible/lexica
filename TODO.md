@@ -190,7 +190,7 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
       leak into the Library word card (the user's locked it). Another reason the heavy tier lives in Word study.
   `code: views_lsj.py (Summary|Full-entry, _LSJ_OVERRIDES for the seam); static/src/80-lexicon.jsx (distribution data already there) + 30-detail-panel.jsx`
 
-- **"Lexica dictionary" — verse-grounded word definitions (both quality gates BUILT in the trial rig 2026-06-24; NOT yet wired into the app).**
+- **"Lexica dictionary" — verse-grounded word definitions (LIVE admin-only on 6 words 2026-06-24; card review + surgical field fixes 2026-06-24/25).**
   Our own word definitions written from the Bible's OWN usage, replacing LSJ's classical glosses as the
   word-card / word-study MEANING source. **ONE engine: verse-ground EVERY def (Sonnet)** — feed the model the
   word's renderings + a spread of its real occurrences, define FROM the usage under the plain-meaning rule.
@@ -212,13 +212,17 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
     vs REAL (hallucination) + no-verse (bad ref / versification drift → REMAP; esp. Psalms, ABP uses Greek/LXX
     numbering). Reproduced psychē 38/38 on PA. (`--audit` was the seed; now the real gate, runs on every word's
     citations; the ref parser caught + fixed a numbered-book bug, 1Jn/1Co were being dropped.)
-  **REMAINING — both PLUMBING, not epistemics (the theology/architecture calls are settled; less to decide, more
-  to connect):**
-  - **Depth-then-compress display:** store the FULL def, the card is a display trim (one write, two views — the
-    LSJ summary/full-entry pattern). THE one real decision: WHAT SURVIVES THE TRIM — the fork block + grounding
-    verses are the LAST things to compress (they're the whole point); don't shorten the prompt to fit a card.
-  - **Wire the engine + both gates into the app** — out of the trial script into def-generation + the word card +
-    Word study tab. The biggest remaining piece.
+  **REMAINING:**
+  - ✅ **Wire the engine + both gates into the app** — DONE 2026-06-24: `build_lexica_def.py` + the `lexica_def`
+    table + `views_lexica.py` + the `LexicaBody` card, LIVE admin-only on the 6 words (`LEXICA_ADMIN_ONLY` flips
+    it public). Surgical raw fixes via `scripts/fix_lexica_raw.py`; `MAX_TOKENS` raised 1500→3000 (was truncating).
+  - **VERSE_PROMPT sense-count instability (NEXT — surfaced in the 2026-06-24/25 card review).** The prompt never
+    says where one sense ENDS vs a sub-use, so the model over-splits: a fresh psychē re-ran 4→6 senses, charis
+    came out at 7. Fix the FRAME (sense-vs-sub-use boundary), then re-run the set. psychē is KEPT at its vetted
+    4-sense version as the measuring stick — do NOT re-generate it until the prompt's fixed. Folds in the parked
+    charis 7-sense DENSITY + psychē sense-count questions.
+  - **Depth-then-compress display:** the card already has Meaning / Full entry / LSJ; the open call is the density
+    TRIM (glance vs full — the fork block + grounding verses compress LAST). Ties to the prompt fix above.
   - Follow-up (small, not blocking): the fork gate names a covenant-membership/NPP reading for dikaioō that
     `salvation_how` has no node for — add one to that graph (via add_study_graph_salvation.py) so the link lands.
   - Follow-up (hardening, not blocking — 2026-06-24 card review): the citation gate only sees refs shaped
