@@ -182,6 +182,8 @@ def main():
                     help="also print a full NEW definition (first run) per word")
     ap.add_argument("--all-headlines", action="store_true",
                     help="print EVERY run's sense headlines (see what the low-count runs merged)")
+    ap.add_argument("--new-only", action="store_true",
+                    help="skip the OLD control runs (OLD is already characterized) — half the calls")
     args = ap.parse_args()
 
     if args.show_prompts:
@@ -212,9 +214,11 @@ def main():
         print(f"  evidence: {ev['total']} occ | {len(ev['gset'])} renderings | "
               f"fed {len(ev['ctx'])} ({ev['ot']} OT / {ev['nt']} NT)")
 
-        old_runs = [run_once(client, OLD_PROMPT, conn, sid, ev) for _ in range(args.runs)]
+        old_runs = [] if args.new_only else \
+            [run_once(client, OLD_PROMPT, conn, sid, ev) for _ in range(args.runs)]
         new_runs = [run_once(client, NEW_PROMPT, conn, sid, ev) for _ in range(args.runs)]
-        print(f"  OLD prompt:  {dist_line(old_runs)}")
+        if old_runs:
+            print(f"  OLD prompt:  {dist_line(old_runs)}")
         print(f"  NEW prompt:  {dist_line(new_runs)}")
 
         # show WHICH senses the NEW prompt produced (guards against UNDER-splitting — losing
@@ -237,14 +241,15 @@ def main():
                     hs = " | ".join((h[:55] + "…") if len(h) > 55 else h
                                     for h in r["headlines"]) or "(none — splitter found no senses)"
                     print(f"    #{k} ({r['n']}): {hs}")
-            runs_lines("OLD", old_runs)
+            if old_runs:
+                runs_lines("OLD", old_runs)
             runs_lines("NEW", new_runs)
 
         if args.show_defs:
             print("  --- full NEW definition (first run) ---")
             print("  " + new_runs[0]["raw"].replace("\n", "\n  "))
 
-        om = sum(r["n"] for r in old_runs) / args.runs
+        om = sum(r["n"] for r in old_runs) / len(old_runs) if old_runs else None
         nm = sum(r["n"] for r in new_runs) / args.runs
         summary.append((sid, label, om, nm, base))
 
@@ -253,7 +258,8 @@ def main():
     print("SUMMARY — mean sense count, OLD -> NEW:")
     for sid, label, om, nm, base in summary:
         b = f"   (baseline {base})" if base else ""
-        print(f"  {sid:6} {label:10} {om:.1f} -> {nm:.1f}{b}")
+        o = f"{om:.1f}" if om is not None else "—"
+        print(f"  {sid:6} {label:10} {o} -> {nm:.1f}{b}")
 
 
 if __name__ == "__main__":
