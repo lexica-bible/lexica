@@ -27,6 +27,21 @@ bp = Blueprint("lexicon", __name__)
 # words cover "him/them". Only the finder is affected; the word page for H853 is unchanged.
 _HEB_FUNCTION_STRONGS = frozenset({"853"})
 
+# Canonical book ordering for the cross-book "All books" occurrence list. ABP's
+# verses.book (and heb_words.book) are TEXT abbreviations, so a plain ORDER BY sorts
+# ALPHABETICALLY — this CASE maps each abbrev to its 1-66 Bible order (same idea as
+# views_search._ABP_RANK_SQL). Built from a trusted constant, safe to interpolate; it
+# reads the bare `book` column, so it drops straight into a verses/heb_words query.
+_BOOK_RANK_SQL = "CASE book " + " ".join(
+    f"WHEN '{ab}' THEN {oid}" for ab, oid in _KJV_BOOK_ID.items()
+) + " ELSE 999 END"
+
+# Render guard for the "All books" list: a few function words (the article, καί, αὐτός…)
+# occur tens of thousands of times — listing every one would flood the browser with no
+# value. Cap the list here and flag it `truncated`; narrowing by book or rendering reaches
+# the rest. Every real content word (κύριος, θεός, λέγω …) fits well under this.
+_ALL_VERSES_CAP = 6000
+
 
 def _word_gloss(conn, key):
     """Plain-meaning gloss from the word_gloss side table (scripts/build_word_gloss.py) for
@@ -1041,6 +1056,119 @@ def lexicon_books(strongs):
         conn.close()
 
 
+def _all_books_verses(conn, corpus, num, snum, sid, is_heb, is_func, gloss, testament, cap):
+    """Cross-book occurrence list for the word-study 'All books' default: every verse that
+    carries the target Strong's, in canonical order, each tagged with its book abbrev.
+    Returns (verses, truncated). Lightweight keys only — the frontend's VerseRow re-fetches
+    each verse's words to display/highlight, so we never render text here. `testament` =
+    all|ot|nt (ot = book 1-39, nt = 40-66; heb.db is OT-only). When a `gloss` is set the
+    rendering filter mirrors the per-book branches exactly (same _normalize_gloss compare).
+    `cap` bounds the pathological function words; we fetch one extra to detect truncation."""
+    over = cap + 1
+    abbrev_by_id = {v: k for k, v in _KJV_BOOK_ID.items()}
+
+    if corpus == "heb":
+        if testament == "nt" or not _heb_ready():
+            return [], False          # heb.db is OT-only
+        hconn = heb_db()
+        try:
+            pred, hp = _heb_match(sid)
+            if gloss:
+                rows = hconn.execute(
+                    f"SELECT book, chapter, verse, gloss FROM heb_words WHERE {pred} "
+                    f"ORDER BY {_BOOK_RANK_SQL}, chapter, verse", hp).fetchall()
+                seen, out = set(), []
+                for r in rows:
+                    if _normalize_gloss(r["gloss"] or "") != gloss:
+                        continue
+                    key = (r["book"], r["chapter"], r["verse"])
+                    if key in seen:
+                        continue
+                    seen.add(key)
+                    out.append({"book": r["book"], "chapter": r["chapter"], "verse": r["verse"]})
+                    if len(out) >= over:
+                        break
+            else:
+                rows = hconn.execute(
+                    f"SELECT DISTINCT book, chapter, verse FROM heb_words WHERE {pred} "
+                    f"ORDER BY {_BOOK_RANK_SQL}, chapter, verse LIMIT ?", (*hp, over)).fetchall()
+                out = [{"book": r["book"], "chapter": r["chapter"], "verse": r["verse"]} for r in rows]
+        finally:
+            hconn.close()
+        return out[:cap], len(out) > cap
+
+    if corpus in ("kjv", "bsb"):
+        if corpus == "bsb" and not _bsb_ready(conn):
+            return [], False
+        wt, st = ("bsb_words", "bsb_strongs") if corpus == "bsb" else ("kjv_words", "kjv_strongs")
+        tcond = " AND w.book_id <= 39" if testament == "ot" else " AND w.book_id >= 40" if testament == "nt" else ""
+        if gloss:
+            rows = conn.execute(f"""
+                SELECT w.book_id AS book_id, w.chapter AS chapter, w.verse_num AS verse, w.word AS word
+                FROM {st} s JOIN {wt} w ON w.word_id = s.word_id
+                WHERE s.strongs_id = ?{tcond}
+                ORDER BY w.book_id, w.chapter, w.verse_num, w.verse_pos
+            """, (sid,)).fetchall()
+            seen, out = set(), []
+            for r in rows:
+                if _normalize_gloss(r["word"] or "", is_func=is_func) != gloss:
+                    continue
+                key = (r["book_id"], r["chapter"], r["verse"])
+                if key in seen:
+                    continue
+                seen.add(key)
+                ab = abbrev_by_id.get(r["book_id"])
+                if ab:
+                    out.append({"book": ab, "chapter": r["chapter"], "verse": r["verse"]})
+                    if len(out) >= over:
+                        break
+        else:
+            rows = conn.execute(f"""
+                SELECT DISTINCT w.book_id AS book_id, w.chapter AS chapter, w.verse_num AS verse
+                FROM {st} s JOIN {wt} w ON w.word_id = s.word_id
+                WHERE s.strongs_id = ?{tcond}
+                ORDER BY w.book_id, w.chapter, w.verse_num LIMIT ?
+            """, (sid, over)).fetchall()
+            out = []
+            for r in rows:
+                ab = abbrev_by_id.get(r["book_id"])
+                if ab:
+                    out.append({"book": ab, "chapter": r["chapter"], "verse": r["verse"]})
+        return out[:cap], len(out) > cap
+
+    # ABP (default): the words table joined to verses.
+    pred, pparams = _abp_strongs_filter(conn, num, sid)
+    tcond = (f" AND ({_BOOK_RANK_SQL}) <= 39" if testament == "ot"
+             else f" AND ({_BOOK_RANK_SQL}) >= 40" if testament == "nt" else "")
+    if gloss:
+        rows = conn.execute(f"""
+            SELECT v.book AS book, v.chapter AS chapter, v.verse AS verse, w.english AS word
+            FROM verses v JOIN words w ON w.verse_id = v.id
+            WHERE {pred}{tcond}
+            ORDER BY ({_BOOK_RANK_SQL}), v.chapter, v.verse, w.position
+        """, pparams).fetchall()
+        seen, out = set(), []
+        for r in rows:
+            if _normalize_gloss(r["word"] or "", is_func=is_func) != gloss:
+                continue
+            key = (r["book"], r["chapter"], r["verse"])
+            if key in seen:
+                continue
+            seen.add(key)
+            out.append({"book": r["book"], "chapter": r["chapter"], "verse": r["verse"]})
+            if len(out) >= over:
+                break
+    else:
+        rows = conn.execute(f"""
+            SELECT v.book AS book, v.chapter AS chapter, v.verse AS verse
+            FROM verses v
+            WHERE v.id IN (SELECT w.verse_id FROM words w WHERE {pred}){tcond}
+            ORDER BY ({_BOOK_RANK_SQL}), v.chapter, v.verse LIMIT ?
+        """, (*pparams, over)).fetchall()
+        out = [{"book": r["book"], "chapter": r["chapter"], "verse": r["verse"]} for r in rows]
+    return out[:cap], len(out) > cap
+
+
 @bp.route("/api/lexicon/verses/<strongs>/<book>")
 def lexicon_verses(strongs, book):
     m = re.match(r'^([GgHh]?)(\d+(?:\.\d+)?)$', strongs.strip())
@@ -1062,6 +1190,16 @@ def lexicon_verses(strongs, book):
         sid = f"H{snum}" if is_heb else f"G{snum}"
         if corpus == "all":  # verse text is single-corpus; show the word's native text
             corpus = "kjv" if is_heb else "abp"
+        if book == "all":
+            # The default word-study view: list EVERY occurrence across the whole Bible,
+            # canonically ordered. The book rail / OT-NT tabs / rendering chips narrow it.
+            testament = request.args.get("testament", "all").strip().lower()
+            if testament not in ("all", "ot", "nt"):
+                testament = "all"
+            vout, truncated = _all_books_verses(
+                conn, corpus, num, snum, sid, is_heb, is_func, gloss, testament, _ALL_VERSES_CAP)
+            conn.close()
+            return jsonify({"verses": vout, "glosses": [], "truncated": truncated})
         if corpus == "heb":
             # Real Hebrew OT: which verses in this book carry the word (the frontend's
             # VerseRow re-fetches each verse's Hebrew words from /api/hebrew to display

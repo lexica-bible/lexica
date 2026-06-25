@@ -271,8 +271,8 @@ const api = {
     fetch(`/api/lexicon/lookup?q=${encodeURIComponent(q)}`).then(r => r.json()),
   lexiconProfile: (strongs, corpus) =>
     fetch(`/api/lexicon/profile/${encodeURIComponent(strongs)}${corpus ? `?corpus=${corpus}` : ""}`).then(r => r.json()),
-  lexiconVerses: (strongs, book, corpus, gloss) =>
-    fetch(`/api/lexicon/verses/${encodeURIComponent(strongs)}/${encodeURIComponent(book)}?corpus=${corpus}${gloss ? `&gloss=${encodeURIComponent(gloss)}` : ""}`).then(r => r.json()),
+  lexiconVerses: (strongs, book, corpus, gloss, testament) =>
+    fetch(`/api/lexicon/verses/${encodeURIComponent(strongs)}/${encodeURIComponent(book)}?corpus=${corpus}${gloss ? `&gloss=${encodeURIComponent(gloss)}` : ""}${testament && testament !== "all" ? `&testament=${encodeURIComponent(testament)}` : ""}`).then(r => r.json()),
   lexiconBooks: (strongs, corpus, gloss) =>
     fetch(`/api/lexicon/books/${encodeURIComponent(strongs)}?corpus=${corpus}${gloss ? `&gloss=${encodeURIComponent(gloss)}` : ""}`).then(r => r.json()),
   lexiconEnglish: (q, corpus, testament) =>

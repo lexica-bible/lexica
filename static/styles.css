@@ -4568,6 +4568,7 @@ button.study-verse-ref { border: none; }
 .occ-reset { font-size: 12px; color: var(--accent); }
 .occ-reset:hover { text-decoration: underline; }
 .occ-empty { padding: 28px 10px; font-size: 13.5px; color: var(--ink-3); line-height: 1.55; font-family: var(--f-serif); }
+.occ-trunc { padding: 4px 2px 10px; font-size: 12px; color: var(--ink-3); line-height: 1.45; }
 .occ-welcome { max-width: 460px; margin: 60px auto 0; text-align: center; }
 .occ-welcome-t { font-family: var(--f-serif); font-size: 24px; font-weight: 600; color: var(--ink); margin-bottom: 8px; letter-spacing: -0.01em; }
 .occ-welcome-s { font-size: 14px; color: var(--ink-3); line-height: 1.55; margin-bottom: 20px; }

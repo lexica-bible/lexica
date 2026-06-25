@@ -89,6 +89,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
   const [error, setError] = useState(null);
   const [selectedGloss, setSelectedGloss] = useState(null);
   const [bookGlosses, setBookGlosses] = useState(null);
+  const [allTruncated, setAllTruncated] = useState(false);  // "All books" list hit the render cap
   const [filteredBooks, setFilteredBooks] = useState(null);
   const [groupings, setGroupings] = useState(null);
   const [pendingGloss, setPendingGloss] = useState(null);
@@ -169,6 +170,28 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
       setPendingGloss(null);
     }
   }, [profile, pendingGloss]);
+
+  // The default "All books" view: with a word in focus and no specific book picked,
+  // the occurrences pane lists EVERY occurrence across the Bible. The book rail, the
+  // OT/NT tabs, and the rendering chips just narrow this list — so re-fetch whenever
+  // any of those filters change (a picked book is handled imperatively by selectBook).
+  // Gated on !loading so a profile/corpus reload in flight fires this exactly once.
+  useEffect(() => {
+    if (!profile || selectedBook || loading) return;
+    let cancelled = false;
+    setVerseLoading(true);
+    setVerseList(null);
+    setAllTruncated(false);
+    api.lexiconVerses(profile.strongs, "all", profileCorpus, selectedGloss, testament)
+      .then(d => {
+        if (cancelled) return;
+        if (d.error) setVerseList([{ error: d.error }]);
+        else { setVerseList(d.verses || []); setAllTruncated(!!d.truncated); }
+      })
+      .catch(e => { if (!cancelled) setVerseList([{ error: String(e) }]); })
+      .finally(() => { if (!cancelled) setVerseLoading(false); });
+    return () => { cancelled = true; };
+  }, [profile, profileCorpus, selectedBook, selectedGloss, testament, loading]);
 
   // Search-results scope toggle (All / ABP / KJV). Only shown when no word is
   // in focus; re-runs the English search in that corpus.
@@ -560,20 +583,25 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
   if (isMobile) {
     const tLabel = testament === "all" ? "All" : testament.toUpperCase();
     const occList = (
-      !selectedBook ? <div className="occ-empty">Open <b>Distribution</b> below to pick a book.</div>
-      : verseLoading ? <div className="occ-empty">Loading…</div>
-      : (verseList && verseList[0] && verseList[0].error) ? <div className="occ-empty" style={{ color: "var(--danger, #b91c1c)" }}>{verseList[0].error}</div>
-      : (verseList && verseList.length) ? (
+      verseLoading || !verseList ? <div className="occ-empty">Loading…</div>
+      : (verseList[0] && verseList[0].error) ? <div className="occ-empty" style={{ color: "var(--danger, #b91c1c)" }}>{verseList[0].error}</div>
+      : (verseList.length) ? (
         <div className="vlist">
-          {verseList.map(v => (
-            <VerseRow key={`${selectedBook}-${v.chapter}-${v.verse}`}
-              book={selectedBook} chapter={v.chapter} verse={v.verse}
-              label={`${selectedBook} ${v.chapter}:${v.verse}`}
+          {!selectedBook && allTruncated && (
+            <div className="occ-trunc">First {verseList.length.toLocaleString()} — pick a book or rendering to see the rest.</div>
+          )}
+          {verseList.map(v => {
+            const vb = v.book || selectedBook;
+            return (
+            <VerseRow key={`${vb}-${v.chapter}-${v.verse}`}
+              book={vb} chapter={v.chapter} verse={v.verse}
+              label={`${vb} ${v.chapter}:${v.verse}`}
               allResults={[]} onWordClick={onWordClick}
               onReadInContext={onNavigateToLibrary ? (b, c, vv) => onNavigateToLibrary(b, c, vv, profileCorpus) : undefined}
               textMode={profileCorpus === "kjv" ? "kjv" : profileCorpus === "heb" ? "heb" : profileCorpus === "bsb" ? "bsb" : "greek"}
               primaryStrongs={null} citedStrongs={citedStrongs} kjvCache={{}}/>
-          ))}
+            );
+          })}
         </div>
       ) : <div className="occ-empty">No verses.</div>
     );
@@ -839,21 +867,25 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
                     <span>Showing <b>{selBookName}</b>{selBookCount != null ? ` · ${selBookCount} occurrence${selBookCount === 1 ? "" : "s"}` : ""}{selectedGloss ? ` · rendered “${selectedGloss}”` : ""}</span>
                     <button className="occ-reset" onClick={() => { setSelectedBook(null); setVerseList(null); setBookGlosses(null); }}>All books</button>
                   </div>
+                ) : allTruncated && verseList && verseList.length ? (
+                  <div className="occ-filter">
+                    <span>Showing the first {verseList.length.toLocaleString()} — pick a book or rendering at left to see the rest.</span>
+                  </div>
                 ) : null}
 
-                {!selectedBook ? (
-                  <div className="occ-empty">Pick a book at left to read its occurrences.</div>
-                ) : verseLoading ? (
+                {verseLoading || !verseList ? (
                   <div className="occ-empty">Loading…</div>
-                ) : (verseList && verseList[0] && verseList[0].error) ? (
+                ) : (verseList[0] && verseList[0].error) ? (
                   <div className="occ-empty" style={{ color: "var(--danger, #b91c1c)" }}>{verseList[0].error}</div>
-                ) : (verseList && verseList.length) ? (
+                ) : (verseList.length) ? (
                   <div className="vlist">
-                    {verseList.map(v => (
+                    {verseList.map(v => {
+                      const vb = v.book || selectedBook;
+                      return (
                       <VerseRow
-                        key={`${selectedBook}-${v.chapter}-${v.verse}`}
-                        book={selectedBook} chapter={v.chapter} verse={v.verse}
-                        label={`${selectedBook} ${v.chapter}:${v.verse}`}
+                        key={`${vb}-${v.chapter}-${v.verse}`}
+                        book={vb} chapter={v.chapter} verse={v.verse}
+                        label={`${vb} ${v.chapter}:${v.verse}`}
                         allResults={[]}
                         onWordClick={onWordClick}
                         onReadInContext={onNavigateToLibrary ? (b, c, vv) => onNavigateToLibrary(b, c, vv, profileCorpus) : undefined}
@@ -862,7 +894,8 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
                         citedStrongs={citedStrongs}
                         kjvCache={{}}
                       />
-                    ))}
+                      );
+                    })}
                   </div>
                 ) : (
                   <div className="occ-empty">No verses.</div>
