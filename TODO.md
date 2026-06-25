@@ -138,13 +138,21 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
   Closed class, hand-authored in `structural.py` (no model, no PA data build), served by `/api/lexica` (own
   gate `STRUCTURAL_ADMIN_ONLY`, currently public). DONE + LIVE: εἰμί (copula; ~7,800 dotted forms inherit it +
   show their own parse) + 17 prepositions (case-rows where the case cuts the relation; verse lines verbatim
-  ABP). OPEN: (1) conjunctions/particles/negatives batch (~38) then the article — the FIVE typology cards
+  ABP) + a glance/full split on the card (Function tab = finding + use-boundary pointer, Full entry = the rest;
+  eimi splits, the shorter prepositions collapse to one view) + the dotted-routing GATE in `structural_entry`
+  (decodable form → card; declared idiom ἀνὰ μέσον → one-line content note; any other parked dotted word →
+  falls through to its own entry — so future batch cards can't re-create the seam). OPEN: (1) conjunctions/particles/negatives batch (~38) then the article — the FIVE typology cards
   (ὅτι/ὡς/εἰ/ἐάν/ἵνα) are the real work (3 verbatim-ABP exemplars each, each a gloss-must-show-the-exemplar
   risk); the ~12 plain connectives (καί, δέ, …) + negatives (οὐ/μή + compounds) are an easy tail; (2) live-case
   HIGHLIGHT for prepositions (light the row matching the object's case from morph; the whole table already
   shows, so polish — wire with the verse live-pull); (3) the demonstrative/pronoun "referent" card (step b:
   touto, autos, ὁ δέ, ἰδού, οὐδείς, μηδείς — a DISTINCT card, points to a referent, cross-refs εἰμί at the
-  Last Supper; build + prove SECOND). Full record + the locked build rules: memory `project_structural_deictic_cards`.
+  Last Supper; build + prove SECOND). (4) ἀνὰ μέσον card headword mismatch — the dotted-word table
+  (dotted_lexicon) reads the mashed one-word "ἀνάμεσος / in between" (built from ABP's first Greek word), which
+  now clashes with the correct idiom note below it ("ἀνὰ μέσον / in the midst of, between"). Pin G303.1 to
+  "ἀνὰ μέσον" (translit "ana meson") via a builder override like `NUMERAL_OVERRIDES` in build_dotted_lexicon.py
+  + match the gloss; PA data re-runs, pending JP's go (the headword was wrong before today, the note only
+  exposed it). Full record + the locked build rules: memory `project_structural_deictic_cards`.
   `code: structural.py, views_lexica.py, static/src/20-shared-components.jsx, static/src/30-detail-panel.jsx`
 
 - **LSJ "Lexica" overrides — DONE + LIVE 2026-06-23; a few words still open.** The LSJ word-study

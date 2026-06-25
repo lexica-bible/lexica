@@ -289,13 +289,19 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   states the word's grammatical FUNCTION + the construction relations it appears in (provenance tag GRAMMAR).
   Hand-authored in `structural.py` (a code dict keyed by BASE Strong's — NO model, NO PA data build; normal
   code deploy), served by `views_lexica.py` `/api/lexica/<strongs>` which resolves a structural base FIRST
-  (own gate `STRUCTURAL_ADMIN_ONLY`, currently False = public). A structural word's dotted forms INHERIT the
-  one lemma entry (εἰμί's ~7,800 conjugates show their own parse, decoded from the dot; prepositions are
-  bare-tagged, no inheritance). Card = `StructuralBody` (20-shared-components.jsx); `30-detail-panel.jsx`
-  branches it inside `case "lsj"` on `lexica.kind==="structural"` ("Grammar" badge); `.gram-*` CSS. LIVE: εἰμί
-  (copula) + 17 prepositions; **card verse lines are verbatim ABP** (a Greek-construction card — ABP is the
-  right source even for a KJV reader). Full record + the locked build rules (cut-by-form / list-by-context,
-  verbatim-ABP, contested-fork prepositions): memory `project_structural_deictic_cards`.
+  (own gate `STRUCTURAL_ADMIN_ONLY`, currently False = public). **`structural_entry` routes a dotted number
+  three ways through ONE gate (invariant — keeps every card seam-free):** a decodable FORM of the base → the
+  card + its own parse (εἰμί's ~7,800 conjugates, decoded from the dot); a declared frozen IDIOM (ἀνὰ μέσον
+  G303.1, in `_IDIOMS`) → a one-line CONTENT note (`kind:"idiom"`, "Phrase/Idiom" header); ANY other dotted
+  child (a different word ABP parked at "nearest Strong's + a dot", e.g. G303.2 "stairs") → None → falls
+  through to its own word entry, so a parked number never borrows the card. Card = `StructuralBody`
+  (20-shared-components.jsx) with a **glance/full split** (the "Function" tab = the finding + a use-boundary
+  pointer; "Full entry" = scope/relations/cross-refs — eimi splits, the shorter prepositions collapse to one
+  view); `30-detail-panel.jsx` branches `case "lsj"` on `lexica.kind` ("Grammar"/"Idiom" badge); `.gram-*`
+  CSS. LIVE: εἰμί (copula) + 17 prepositions + the ἀνὰ μέσον idiom note; **card verse lines are verbatim ABP**
+  (a Greek-construction card — ABP is the right source even for a KJV reader). Full record + the locked build
+  rules (cut-by-form / list-by-context, verbatim-ABP, contested-fork prepositions, the dotted-routing gate):
+  memory `project_structural_deictic_cards`.
 - `books` — book metadata (name, testament, regex)
 - `ai_search_cache` — cached AI query results and TSK synthesis
 - `kjv_verses` — KJV full verse text (31,102 verses)
