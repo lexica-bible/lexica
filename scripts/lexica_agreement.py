@@ -26,6 +26,9 @@ core sense holes BELOW it — so support count alone can rank a fold ABOVE a hol
 second column, per verse: not just how often it is cited, but WHO it keeps company with — which
 other verses share its sense across the draws. A verse that keeps support and merely regroups is
 folding; a verse that loses support, or whose core partner stops travelling with it, is holing.
+(Company is counted ONCE PER DRAW — a pair sharing a sense, or both being cited, counts a single
+draw no matter what the engine does inside it — so a stuttered draw that repeats a sense can't push
+a count past the draw total; a draw's near-duplicate senses are also collapsed by verse set first.)
 
 ────────────────────────────────────────────────────────────────────────────────────────────────
 THE HOLE-vs-FOLD PROCEDURE  (how to read the output — this is the actual gate)
@@ -218,16 +221,61 @@ def per_sense(senses_block):
     return out
 
 
+DEDUP_JACCARD = 0.6   # within ONE draw, two senses whose grounding-verse sets overlap at least this
+                      # much are the SAME job stuttered (the engine sometimes repeats a sense under a
+                      # reworded headline). Wide margin: true stutters overlap ~0.85+, genuinely
+                      # distinct senses in a draw overlap <0.3, so the exact value is not load-bearing.
+
+
+def _jaccard(a, b):
+    if not a and not b:
+        return 0.0
+    return len(a & b) / len(a | b)
+
+
+def merge_near_dup_senses(senses):
+    """Within ONE draw, collapse senses that are the same job stuttered (near-identical grounding
+    verses) into one. Left alone a stutter (a) inflates the sense count and (b) made a verse-pair
+    'share a sense' more than once in a single draw, pushing company counts ABOVE the draw total
+    (psyche draw 9 came back '9 senses', really ~5 — and produced impossible '13/10' numbers). We merge
+    by VERSE SET, never by headline text (text varies every run by design). The company math is also
+    fixed independently (a pair counts once per draw), so this dedup makes the COUNT honest and surfaces
+    the stutter — it is NOT what keeps company in range. Returns (merged, n_before, n_after); each merged
+    sense = {headlines:[...], refs:[...]}."""
+    items = []
+    for s in senses:
+        hl = s.get("headlines") or ([s["headline"]] if s.get("headline") else [])
+        items.append({"headlines": list(hl), "refs": list(s["refs"]),
+                      "set": set(tuple(r) for r in s["refs"])})
+    merged = []
+    for it in items:
+        hit = next((m for m in merged if _jaccard(it["set"], m["set"]) >= DEDUP_JACCARD), None)
+        if hit:
+            hit["headlines"] += it["headlines"]
+            hit["set"] |= it["set"]
+            have = set(hit["refs"])
+            for r in it["refs"]:
+                if r not in have:
+                    hit["refs"].append(r)
+                    have.add(r)
+        else:
+            merged.append(it)
+    return [{"headlines": m["headlines"], "refs": m["refs"]} for m in merged], len(senses), len(merged)
+
+
 def parse_draw(conn, sid, raw):
-    """raw prose -> {raw, senses[], count, audit}. count is taken the card's way (split_definition);
-    senses[] carries each sense's refs for the cross-draw vote; audit is the free hallucination guard."""
+    """raw prose -> {raw, senses[], count, raw_count, audit}. senses[] carries each sense's headlines +
+    refs for the cross-draw vote, with a stuttered draw's near-duplicate senses collapsed by verse set;
+    count = the DISTINCT-job count (raw_count = what the engine emitted; raw_count > count ⇒ a stutter);
+    audit is the free hallucination guard."""
     fields = B.split_definition(raw)
-    senses = per_sense(fields["senses_block"])
+    senses, n_before, n_after = merge_near_dup_senses(per_sense(fields["senses_block"]))
     refs = B.cited_refs(raw)
     return {
         "raw": raw,
         "senses": senses,
-        "count": len(fields["sense_headlines"]),
+        "count": n_after,
+        "raw_count": n_before,
         "audit": B.run_citation_gate(conn, sid, refs),
     }
 
@@ -240,28 +288,38 @@ def verse_company(draws):
     those draws (COMPANY). Support alone misleads — a droppable sub-use can sit at full support while
     a core sense holes below it — so the company is the second column: a verse that keeps support AND
     merely regroups is folding; one that loses support or whose core partner stops travelling with it
-    is holing. Label-free, threshold-free: just co-citation counts the reader can verify against the
-    per-draw lists. Returns (support, same_sense, co_cited, cite_draws, n)."""
+    is holing. Label-free, threshold-free. A verse-pair is counted AT MOST ONCE PER DRAW (whether they
+    share a sense, and whether both are cited), so a stuttered draw repeating a sense can never push a
+    count past the draw total — same_sense <= co_cited <= n, always. Returns
+    (support, same_sense, co_cited, cite_draws, n)."""
     n = len(draws)
     support = Counter()            # v -> #draws citing v anywhere
     cite_draws = {}                # v -> set(draw idx) citing v
-    same_sense = {}               # v -> Counter(w -> #draws v,w share a sense)
-    co_cited = {}                 # v -> Counter(w -> #draws both v,w cited anywhere)
+    same_sense = {}                # v -> Counter(w -> #draws v,w share a sense)  (<= n)
+    co_cited = {}                  # v -> Counter(w -> #draws both v,w cited)     (<= n)
     for di, d in enumerate(draws):
         sense_sets = [set(tuple(r) for r in s["refs"]) for s in d["senses"]]
-        all_v = set().union(*sense_sets) if sense_sets else set()
+        all_v = sorted(set().union(*sense_sets)) if sense_sets else []
         for v in all_v:
             support[v] += 1
             cite_draws.setdefault(v, set()).add(di)
-        for v in all_v:
-            for w in all_v:
-                if v != w:
-                    co_cited.setdefault(v, Counter())[w] += 1
+        # co-cited: each unordered pair once per draw
+        for i in range(len(all_v)):
+            for j in range(i + 1, len(all_v)):
+                v, x = all_v[i], all_v[j]
+                co_cited.setdefault(v, Counter())[x] += 1
+                co_cited.setdefault(x, Counter())[v] += 1
+        # same-sense: a pair once per draw if it shares ANY sense (a set, so a stutter or a sub-use
+        # double-citation cannot inflate it past the draw total)
+        same_pairs = set()
         for ss in sense_sets:
-            for v in ss:
-                for w in ss:
-                    if v != w:
-                        same_sense.setdefault(v, Counter())[w] += 1
+            sv = sorted(ss)
+            for i in range(len(sv)):
+                for j in range(i + 1, len(sv)):
+                    same_pairs.add((sv[i], sv[j]))
+        for a, b in same_pairs:
+            same_sense.setdefault(a, Counter())[b] += 1
+            same_sense.setdefault(b, Counter())[a] += 1
     return support, same_sense, co_cited, cite_draws, n
 
 
@@ -302,19 +360,30 @@ def render_report(sid, lemma, translit, prompt_name, ev, draws):
     if bad:
         w(f"  !! citation real-miss (possible hallucinated verse) in draw(s): "
           + ", ".join(f"#{i}({r})" for i, r in bad))
+    stut = [(i + 1, d["raw_count"], d["count"]) for i, d in enumerate(draws)
+            if d.get("raw_count", d["count"]) > d["count"]]
+    if stut:
+        w("  !! v3 STUTTER — engine repeated a sense under a reworded headline (collapsed by verse set): "
+          + ", ".join(f"draw {i} {a}->{b}" for i, a, b in stut))
 
     # 1 — PER-DRAW SENSES: the ground truth
     w("")
     w("  -- PER-DRAW SENSES (headline -- grounding verses) -- THE GROUND TRUTH --")
     for i, d in enumerate(draws, 1):
-        w(f"  draw {i:>2}  [{d['count']} senses]")
+        extra = f", collapsed from {d['raw_count']}" if d.get("raw_count", d["count"]) > d["count"] else ""
+        w(f"  draw {i:>2}  [{d['count']} senses{extra}]")
         for j, s in enumerate(d["senses"], 1):
+            head = " / ".join(s.get("headlines") or [s.get("headline", "")])
             refs = ", ".join(fmt_ref(r) for r in s["refs"]) or "(no refs cited)"
-            w(f"      {j}. {s['headline']}")
+            w(f"      {j}. {head}")
             w(f"           {refs}")
 
     # 2 — PER-VERSE SUPPORT + COMPANY: support shows the drop, company tells fold from hole
     support, same_sense, co_cited, cite_draws, _ = verse_company(draws)
+    worst = max((c for cc in same_sense.values() for c in cc.values()), default=0)
+    if worst > n:
+        w(f"  !! INTERNAL: a company count hit {worst} > N={n} — a draw still repeats a pair across")
+        w(f"     senses (dedup missed a stutter); the numbers below are NOT trustworthy. Fix before use.")
     w("")
     w("  -- PER-VERSE SUPPORT + COMPANY -- support shows a drop; company tells fold from hole --")
     w("     \"with: REF a/b\" = shared a sense in a of the b draws that cite both; a < b means it migrates.")
@@ -383,8 +452,9 @@ def save_run(save_dir, sid, prompt_name, ev, draws, report_lines):
         "prompt": prompt_name, "prompt_sha1": hashlib.sha1(PROMPTS[prompt_name].encode()).hexdigest()[:12],
         "runs": len(draws),
         "evidence": {k: ev[k] for k in ("total", "renderings", "fed", "ot")},
-        "draws": [{"raw": d["raw"], "count": d["count"], "audit": d["audit"],
-                   "senses": [{"headline": s["headline"],
+        "draws": [{"raw": d["raw"], "count": d["count"], "raw_count": d.get("raw_count", d["count"]),
+                   "audit": d["audit"],
+                   "senses": [{"headlines": s.get("headlines") or [s.get("headline", "")],
                                "refs": [fmt_ref(r) for r in s["refs"]]} for s in d["senses"]]}
                   for d in draws],
         "report": "\n".join(report_lines),
@@ -397,16 +467,22 @@ def save_run(save_dir, sid, prompt_name, ev, draws, report_lines):
 
 
 def from_json(path):
-    """Re-read a saved run and re-render the report — FREE, no model. Lets the reader (or a better
-    report) re-analyse the SAME draws without paying for generation again."""
+    """Re-read a saved run and re-render the report — FREE, no model. Re-applies the CURRENT splitter
+    rules (the within-draw stutter collapse) to the stored draws, so an OLD run saved before a fix is
+    re-analysed correctly without paying for generation again. Handles both the new senses shape
+    ({headlines:[...]}) and the old one ({headline:...})."""
     with open(os.path.expanduser(path), encoding="utf-8") as f:
         p = json.load(f)
     def to_tuple(s):
         m = re.match(r'(\S+)\s+(\d+):(\d+)', s)
         return (m.group(1), int(m.group(2)), int(m.group(3))) if m else (s, 0, 0)
-    draws = [{"raw": d.get("raw", ""), "count": d["count"], "audit": d["audit"],
-              "senses": [{"headline": s["headline"], "refs": [to_tuple(x) for x in s["refs"]]}
-                         for s in d["senses"]]} for d in p["draws"]]
+    draws = []
+    for d in p["draws"]:
+        loaded = [{"headlines": s.get("headlines") or ([s["headline"]] if s.get("headline") else []),
+                   "refs": [to_tuple(x) for x in s["refs"]]} for s in d["senses"]]
+        senses, nb, na = merge_near_dup_senses(loaded)
+        draws.append({"raw": d.get("raw", ""), "count": na, "raw_count": nb,
+                      "audit": d["audit"], "senses": senses})
     ev = {"lemma": p["lemma"], "translit": p["translit"], "renderings": p["evidence"]["renderings"],
           "total": p["evidence"]["total"], "fed": p["evidence"]["fed"], "ot": p["evidence"]["ot"]}
     print("\n".join(render_report(p["strongs"], p["lemma"], p["translit"], p["prompt"], ev, draws)))
