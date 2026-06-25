@@ -891,6 +891,11 @@ memory `project_ai_synthesis_quality`.
 - `fix_emdash.py` (`--dry-run` / `--apply`) — swaps ABP's literal `--` clause dash for an em-dash `—` in
   `words.english` + `verses.text` (double hyphen only; single hyphens like Beer-sheba are safe). Reversible;
   PA-only data step; RE-RUN after any words/verses rebuild (not folded into the build). Memory `project_library_bracket`.
+- `fix_italic_heads.py` (`--dry-run` / `--apply`, `--strongs G####`, `--all`) — makes a slot's SEARCH LABEL
+  (`words.english_head`, what the Word-study finder matches) its OWN rendering, never a translator-added
+  (italic) word ("take favor" had labeled λαμβάνω/G2983 "favor"). english_head ONLY; re-runnable. UNLIKE the
+  others this IS build-folded (`_strip_italic_heads` in build_words_from_abp.py), so a normal rebuild
+  reproduces it — no re-run needed. 4,409 fixed 2026-06-25. Memory `project_english_head_label`.
 
 ## Rate limiting / security (2026-06-07 security pass)
 - `core.limiter` (flask-limiter, memory storage): site-wide default `300/min` per endpoint per IP

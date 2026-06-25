@@ -6,6 +6,32 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Word-study search LABEL — pick the slot's OWN word, not an added (italic) one — DONE 2026-06-25
+
+From a user report: the Word-study "favor" search listed λαμβάνω/G2983 (a take/receive word). Root —
+`words.english_head` (the one English word the finder matches a word by) was the LAST real word of the
+gloss (`parse_abp._head_word`). When ABP appends a translator-ADDED (italic) word it became the label:
+Lev 19:15 "take favor" (favor italic) labeled λαμβάνω "favor". ~6,720 multi-word glosses carried an
+added word as their head; the finder drops function words but λαμβάνω is a content word, so it slipped.
+
+FIX (commit 025e6a8): `_head_word(text, italic_words)` now skips italic (added) words too, falling back
+to the plain pick only when EVERY content word is added (bare article slots unchanged — no regression).
+Carried into the build as a final pass `_strip_italic_heads` so a rebuild reproduces it (no re-run
+needed — UNLIKE the other fix_*.py). Live data repaired by `scripts/fix_italic_heads.py` (`--apply`;
+`--strongs G####`/`--all` to review; touches english_head ONLY; re-runnable, a 2nd run reports 0).
+**4,409 labels corrected**; the other ~2,300 correctly fell back. Lambano's 22 all land on the verb;
+broad sample overwhelmingly right (dry land→dry, seven times→seven, procreated, behold, unleavened).
+Proved the rule on the 30-row sample locally before touching PA; invariant tests 22/22. Full record:
+memory `project_english_head_label`.
+
+LEFT ON PURPOSE (not regressions — all follow ABP's own italic marking): verb + a NON-italic tail
+particle ("went forth"→forth, "went down"→down) still labels on the tail (the tail isn't an added word,
+so italic-skip can't catch it — needs a part-of-speech rule); and a few where ABP marked the NOUN as
+the added word, so the label lands on a modifier ("round about place"→round G4066, "young man"→young
+G3495). Spot-fixable via `--strongs`. Open follow-up kept in TODO.md.
+
+---
+
 ## Two reader bug-fixes — dotted-cognate Lexica routing + Bible-switch-after-search — DONE 2026-06-25
 
 Both frontend-only, found while reviewing the ekklēsia word card. Pushed (`87d1555`, `77c538e`); deploy is a

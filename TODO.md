@@ -429,6 +429,20 @@ cosmetic — the split-verb helper half repeats the Greek lemma (hide only if it
 
 ---
 
+## Word-study search LABEL on multi-word glosses — verb+tail follow-up (open, low priority)
+Sister to the click-target cleanup above, but about the search LABEL (`words.english_head`, the one
+word the Word-study finder matches a word by), not the click slot. The translator-ADDED-word case is
+DONE 2026-06-25 — `_head_word` now skips italic (added) words, 4,409 labels fixed via
+`fix_italic_heads.py` (build-folded as `_strip_italic_heads`). Full record: TODO_ARCHIVE + memory
+`project_english_head_label`. STILL OPEN, left on purpose: a verb followed by a NON-italic tail
+particle still labels on the tail ("went forth"→forth, "he went down"→down). The tail isn't an added
+word, so the italic-skip can't catch it — it needs a part-of-speech rule (label a verb-slot on the
+verb, using `greek_pos`/`morph`). Low value: the tail still carries the verb's sense, and these don't
+surface as junk the way "favor"→λαμβάνω did. Pick up only if it bugs you.
+`code: scripts/parse_abp.py _head_word (needs greek_pos/morph awareness)`
+
+---
+
 ## Word study + Ask the corpus — REDESIGNED (2026-06-19, under development)
 
 (Word-card lemma gloss itself — KJV/BSB/Hebrew + Word study + the Hebrew byform fix — is DONE + LIVE
