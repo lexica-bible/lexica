@@ -1,56 +1,48 @@
 # Handoff — next session
 
-## Lexica dictionary: verify the pin on PA, then promote v3
+## Lexica dictionary: ONE step left — rebuild the six through the reviewer
 
 **Read memory `project_lexica_dictionary` first** — the SIX-WORD RUN block + the softened prompt
 rule — before touching anything.
 
-### Where we are
-- The agreement reviewer (`scripts/lexica_agreement.py`, read-only, PA-only) is built + proven on the
-  6 pilot words — no holes.
-- **CODE DONE, NOT YET APPLIED/VERIFIED ON PA (commits `c777ea5` + `62a7a7d`, pushed):** the 3
-  frame-leakers — dikaioō (G1344), charis (G5484), aionios (G166) — have their neutral core
-  HAND-PINNED in code. The fork's existing hand-authored `core` is lifted to the definition's lead
-  (`entry.pinned_core`); the model's framed senses sit below it under an **"Attested uses"** label;
-  the fork drops its duplicate "Core (all agree)" line when pinned. Pure display — done in
-  `assemble()`, so it applies via `--resplit` with NO model call. The 3 cores were confirmed
-  fork-neutral (charis + aionios clean; dikaioō neutral by spanning declare *and* make on purpose).
-  `62a7a7d` fixed a `show_entry` crash (it still read the suppressed fork `core` → KeyError on the
-  first pinned word, so the PA dry-run died on dikaioō). **The applied, working pin on the 3 cards is
-  NOT confirmed yet — do Step 1 below first.**
-- psychē, sarx, ekklēsia — clean cores, gate-ship as-is, untouched.
+### Where we are (almost done)
+- **Pins APPLIED + VERIFIED on PA.** The 3 frame-leakers — dikaioō (G1344), charis (G5484),
+  aionios (G166) — have their neutral core hand-pinned: it leads the card, the model's framed senses
+  sit below as **"Attested uses,"** the fork shows the frames cleanly with no repeated core line. JP
+  confirmed the 3 cards render the neutral core first. (Commits `c777ea5` pin + `62a7a7d` a
+  `show_entry` crash fix.) psychē / sarx / ekklēsia gate-ship as-is, untouched.
+- **v3 PROMOTED (commit `eb09636`).** `build_lexica_def.VERSE_PROMPT` is now the proven sub-use-test
+  prompt, confirmed **byte-for-byte** identical to the reviewer's frozen V3 + the trial copy
+  (sha1 `32ba5b6e704a52c3`, 3637 chars) by an actual diff this round — not recollection. The reviewer's
+  report label is now dynamic, so it reads "(the live engine)" for v3.
 
-### Step 1 — PA-verify the pin (FREE, no model call — do this first)
-After a normal deploy (the pull brings the new `app.js` + script):
+### The only remaining step — rebuild the six through the reviewer, then apply
+On PA (`git pull` first to get `eb09636`):
 1. `workon bible-env`
-2. `python scripts/build_lexica_def.py --resplit --dry-run` — eyeball the **PINNED CORE** line on the
-   3 leakers (others unchanged). No write, no cost.
-3. If it reads right: `python scripts/build_lexica_def.py --resplit --apply` — re-splits all 6 from
-   stored raw and writes; the 3 get the pinned core, the other 3 are rewritten identically. Free.
-   **(Required — the old stored rows have no `pinned_core`; the card change alone won't show it until
-   the rows are rewritten.)**
-4. Reload the site, open the 3 cards (admin), confirm: neutral core LEADS, framed senses read as
-   "Attested uses" below, fork shows the frames with no repeated core line.
+2. `export ANTHROPIC_API_KEY=$(grep -oE "sk-ant-[A-Za-z0-9_-]+" /var/www/www_lexica_bible_wsgi.py)`
+3. **Review (never a blind single draw):** `python scripts/lexica_agreement.py --runs 10`
+   (all six, ~$1.80, ~10–15 min). Read each word's "YOUR CALL" line — confirm **STABLE / no hole**
+   (a whole sense dropping across draws). It's the proven prompt, so expect the same clean result as
+   the 2026-06-25 run; the 3 pinned words may still wobble *frame* in the senses — that's fine, the
+   pin leads the card. A HOLE (not a frame wobble) is the only thing that should stop the apply.
+4. **If all six are clean:** `python scripts/build_lexica_def.py --apply` — rebuilds all six under v3
+   (the stamp changed, so it regenerates; the 3 leakers get the pinned core on top). ~$0.18.
+5. Reload, spot-check the six cards.
 
-### Step 2 — the remaining gate: promote v3 + rebuild the six through the reviewer
-Only after the pin reads right on the 3 cards:
-1. Promote v3 (frozen in `lexica_agreement.py` / `trial_lexica_prompt.py`) into
-   `build_lexica_def.VERSE_PROMPT`. Changes the synth stamp → the six regenerate on the next `--apply`.
-2. Rebuild all six THROUGH the reviewer (`lexica_agreement.py --runs 10`) — never a blind single
-   draw. The pin rides on top of whatever v3 draws (it's display-side), so the leakers stay neutral-led.
+When the six rebuild clean on the promoted-and-diffed v3, **this whole arc is discharged.** The next
+horizon is the full-dictionary build (roll out top-down by word frequency; the reviewer is the gate,
+the pin pattern is the contested-word fix).
 
 ### Already decided — do NOT re-litigate
 - Plan A (pure engine + agreement gate). Hand-pin only the contested *core* (surgical) — DONE for the 3.
-- **No prompt-tuning the 3 to fix the leak.** Priors live in the model's training, not the verses; and
-  the reviewer reads *steady-vs-varying, not neutral* — a prompt could make a core steadily commit to one
+- **No prompt-tuning the 3 to fix the leak.** Priors live in the model's training, not the verses; the
+  reviewer reads *steady-vs-varying, not neutral*, so a prompt could make a core steadily commit to one
   contested frame and read "clean." A human settles a contested core either way. Revisit a prompt pass
   only when hand-pinning becomes a chore (more fork-bearers need it than not + clear benefit) — judgment,
   not a count.
-- **v3 stays frozen until Step 1 is verified** — promoting early auto-builds the leakers; the pin keeps
-  them neutral-led, but verify the pin in isolation first (one change at a time).
 - Keep the reviewer's per-draw lists in the report permanently (audit layer for the company column).
 
-### Predictive rule (for the full build later)
+### Predictive rule (for the full build)
 A fork-word leaks when its contested frame is **statable as a definition** (forensic, infused-grace,
 duration) → hand-pin the core. It stays clean when the frame is a **construction on a plain sense**
 (sin-nature on flesh, the-Church on assembly) → gate-ship. Pre-sort fork-bearers by this; don't find
