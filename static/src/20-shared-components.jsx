@@ -242,10 +242,21 @@ function StructuralBody({ data, lsjEntry }) {
   if (!data) return null;
   const hasLsj = !!(lsjEntry && lsjEntry.def_html);
   const form = data.form;
+  // GLANCE / FULL split — the SAME view-state + .lsj-tg toggle LexicaBody uses (Meaning / Full
+  // entry). "Function" is the glance: just the finding (data.function). A card splits ONLY when
+  // it carries a deeper narrative layer below the finding — scope, the contested-case flag, the
+  // underspecified note, or a cross-ref callout — which today is eimi (the copula) alone. A
+  // preposition is just the finding + a short case-row table + the straddle note, already
+  // glance-sized, so there is nothing worth hiding: no Full tab, the single view shows
+  // everything (collapse-to-one). hasMore drives both the tab and what each view renders.
+  const hasMore = !!(data.scope || data.scope_contested || data.underspecified ||
+                     (data.crossref && data.crossref.note));
+  const showDetail = !hasMore || view === "full";
   return (
     <>
       <div className="lsj-tg-row">
         <button className={"lsj-tg" + (view === "fn" ? " on" : "")} onClick={() => setView("fn")}>Function</button>
+        {hasMore && <button className={"lsj-tg" + (view === "full" ? " on" : "")} onClick={() => setView("full")}>Full entry</button>}
         {hasLsj && <button className={"lsj-tg" + (view === "lsj" ? " on" : "")} onClick={() => setView("lsj")}>LSJ</button>}
       </div>
       {view === "lsj" && hasLsj ? (
@@ -256,36 +267,52 @@ function StructuralBody({ data, lsjEntry }) {
             <div className="gram-form">This form: <b>{form.parse}</b>{form.gloss ? " — “" + form.gloss + "”" : ""}</div>
           )}
           {data.function && <div className="gram-fn">{data.function}</div>}
-          {data.scope && (
-            <div className="lex-block">
-              <span className="lex-lbl">Linking use only — the absolute “I am” is separate</span>
-              <div className="lex-notes">{data.scope}</div>
-            </div>
+          {/* GLANCE boundary pointer: the finding describes the LINKING use only, but the same
+             lemma also carries the existential "I am" (Exo 3:14, John 8:58). Without this line the
+             glance would speak for the whole word while covering one use — the existential
+             overclaim. The full scope paragraph + the 8:58 flag stay in Full; glance just points
+             to the boundary. Gated on data.scope, so only a card with a use-boundary (eimi) shows
+             it; prepositions never do.
+             NOTE — this line is AUTHORED per card, not a template: its wording names εἰμί's "I am".
+             A future deep card whose deeper layer is a sense typology rather than a separate-use
+             scope (a conjunction like ὅτι / ὡς / εἰ) would point to a DIFFERENT boundary and needs
+             its own gate + its own sentence — same as the verse exemplars are per-card, not
+             find-replace. */}
+          {!showDetail && data.scope && (
+            <div className="gram-bound">This covers the linking use; the absolute “I am” (asserting existence) is a separate use — <button type="button" className="gram-bound-link" onClick={() => setView("full")}>see Full entry</button>.</div>
           )}
-          {data.scope_contested && <div className="gram-xref">{data.scope_contested}</div>}
-          {data.underspecified && (
-            <div className="lex-block">
-              <span className="lex-lbl">The verb doesn’t settle the relation</span>
-              <div className="lex-notes">{data.underspecified}</div>
-            </div>
-          )}
-          {(data.relations || []).length > 0 && (
-            <div className="lex-block">
-              <span className="lex-lbl">{data.relation_label || "What the predicate supplies — relation, not sense"}</span>
-              {data.relation_lead && <div className="lex-notes gram-rlead">{data.relation_lead}</div>}
-              <ul className="gram-clist">
-                {data.relations.map((c, i) => (
-                  <li key={i} className="gram-citem">
-                    <div><span className="gram-ctype">{c.type}</span>{c.note ? <span className="gram-cnote"> — {c.note}</span> : null}</div>
-                    {c.ref && <div className="lex-verse"><span className="lex-vref">{c.ref}</span> {c.text}</div>}
-                  </li>
-                ))}
-              </ul>
-              {data.relation_tail && <div className="lex-notes gram-rtail">{data.relation_tail}</div>}
-            </div>
-          )}
-          {data.crossref && data.crossref.note && <div className="gram-xref">{data.crossref.note}</div>}
-          {data.straddle && <div className="gram-straddle">{data.straddle}</div>}
+          {showDetail && <>
+            {data.scope && (
+              <div className="lex-block">
+                <span className="lex-lbl">Linking use only — the absolute “I am” is separate</span>
+                <div className="lex-notes">{data.scope}</div>
+              </div>
+            )}
+            {data.scope_contested && <div className="gram-xref">{data.scope_contested}</div>}
+            {data.underspecified && (
+              <div className="lex-block">
+                <span className="lex-lbl">The verb doesn’t settle the relation</span>
+                <div className="lex-notes">{data.underspecified}</div>
+              </div>
+            )}
+            {(data.relations || []).length > 0 && (
+              <div className="lex-block">
+                <span className="lex-lbl">{data.relation_label || "What the predicate supplies — relation, not sense"}</span>
+                {data.relation_lead && <div className="lex-notes gram-rlead">{data.relation_lead}</div>}
+                <ul className="gram-clist">
+                  {data.relations.map((c, i) => (
+                    <li key={i} className="gram-citem">
+                      <div><span className="gram-ctype">{c.type}</span>{c.note ? <span className="gram-cnote"> — {c.note}</span> : null}</div>
+                      {c.ref && <div className="lex-verse"><span className="lex-vref">{c.ref}</span> {c.text}</div>}
+                    </li>
+                  ))}
+                </ul>
+                {data.relation_tail && <div className="lex-notes gram-rtail">{data.relation_tail}</div>}
+              </div>
+            )}
+            {data.crossref && data.crossref.note && <div className="gram-xref">{data.crossref.note}</div>}
+            {data.straddle && <div className="gram-straddle">{data.straddle}</div>}
+          </>}
         </div>
       )}
     </>

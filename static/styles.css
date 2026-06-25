@@ -1297,6 +1297,10 @@ input { font-family: inherit; }
    .gram-* so nothing leaks into the locked Lexica / Library word card. */
 .gram-form { font-size: 12px; color: var(--ink-4); margin-bottom: 9px; }
 .gram-fn { font-size: 13.5px; line-height: 1.55; }
+/* Glance-only use-boundary pointer (eimi): readable but secondary to the finding above it. */
+.gram-bound { margin-top: 9px; font-size: 12.5px; line-height: 1.5; color: var(--ink-2); }
+.gram-bound-link { font: inherit; color: var(--accent); background: none; border: 0; padding: 0; cursor: pointer; text-decoration: underline; }
+.gram-bound-link:hover { text-decoration: none; }
 .gram-clist { list-style: none; margin: 4px 0 0; padding: 0; }
 .gram-citem { margin-top: 11px; }
 .gram-citem:first-child { margin-top: 0; }
