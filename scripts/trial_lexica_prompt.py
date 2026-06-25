@@ -94,10 +94,9 @@ Constraints:
 - Define the word; do not adjudicate what doctrine rests on it.
 
 Output (compact, dictionary-entry style):
-- Senses: head each one with a bold number - **1. ...**, **2. ...** - then a short
-  gloss-free characterization with grounding references in parentheses; order by
-  frequency in the supplied set. Where a sense carries a notable sub-use, note it
-  within that sense's line, not as a separate sense.
+- Senses: each a short gloss-free characterization with grounding references in
+  parentheses, ordered by frequency in the supplied set. Where a sense carries a
+  notable sub-use, note it within that sense's line, not as a separate sense.
 - Range: one line on how far the word stretches and what moves it.
 - Gloss notes: only where a gloss narrows, loads, or diverges from what the
   contexts support. Name the gloss and the divergence. Omit the line if nothing
