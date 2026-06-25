@@ -190,7 +190,7 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
       leak into the Library word card (the user's locked it). Another reason the heavy tier lives in Word study.
   `code: views_lsj.py (Summary|Full-entry, _LSJ_OVERRIDES for the seam); static/src/80-lexicon.jsx (distribution data already there) + 30-detail-panel.jsx`
 
-- **"Lexica dictionary" — verse-grounded word definitions (LIVE admin-only on 6 words 2026-06-24; card review + surgical field fixes 2026-06-24/25).**
+- **"Lexica dictionary" — verse-grounded word definitions. PILOT SHIPPED 2026-06-25 (admin-only, 6 words): v3 prompt promoted+diff-locked, the 3 frame-leakers hand-pinned, six rebuilt live. ✅ Pilot arc discharged — what's left is the FULL build (see "NEXT" below) + 2 open sub-items (Step 4 judge, the no-verse lint).**
   Our own word definitions written from the Bible's OWN usage, replacing LSJ's classical glosses as the
   word-card / word-study MEANING source. **ONE engine: verse-ground EVERY def (Sonnet)** — feed the model the
   word's renderings + a spread of its real occurrences, define FROM the usage under the plain-meaning rule.
@@ -244,9 +244,14 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
     held **0/10 stutter across all six** = proven, but STAYS in the rig — promoting auto-builds the three leakers +
     ships the leak. Tool fixes shipped (0178448): book-typo guard before the company math + downgraded the pair-drop
     "HOLE" lean to a BACK-CHECK flag (over-calls on a marginal sub-sense); per-draw lists KEPT permanently as the
-    audit layer. **NEXT: hand-pin dikaioō / charis / aionios cores (fork-style), THEN promote v3 + rebuild the six
-    through the reviewer together** (never a blind single draw). (Plan B — hand-curate full sense lists — REJECTED:
-    re-imports BDAG-authority, doesn't scale; hand-pinning only the CONTESTED core is the surgical version.)
+    audit layer. **✅ ALL DONE 2026-06-25: cores hand-pinned (display override in `assemble()` — `pin_core` in
+    CONTESTED leads the card, model senses demoted to "Attested uses"), v3 promoted+diff-locked, six rebuilt live.**
+    (Plan B — hand-curate full sense lists — REJECTED: re-imports BDAG-authority, doesn't scale; hand-pinning only
+    the CONTESTED core is the surgical version.) **NEXT HORIZON = the FULL dictionary build — its OWN session, NOT a
+    roll-on.** Step one: PRE-SORT fork-bearers by the frame-leak rule (above) — pin frames statable as a definition,
+    gate-ship constructions on a plain sense; do NOT auto-build without the sort or it ships leakers at scale. Reviewer
+    re-run before a write is OPTIONAL (it certifies prompt stability, not the written bytes — the `--apply` citation
+    gate does that). Open review note: aionios's rebuilt demoted sense 2 leans qualitative — chat-review, not a blocker.
   - **OPEN for Step 4 — the significance judge.** Pure voting sees that something varied, not whether it MATTERS (a real
     hole and a fine fold both vary). Human eyes now; at scale a model pass OR spot-check-is-the-ceiling — unproven either
     way. Same blind spot as the citation gate, one layer up.
