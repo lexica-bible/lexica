@@ -790,7 +790,7 @@ def main():
                 "INSERT OR REPLACE INTO lexica_def (strongs, lemma, translit, def_json, synth_ver, updated) "
                 "VALUES (?,?,?,?,?,?)",
                 (sid, lemma, translit, json.dumps(entry, ensure_ascii=False), stamp,
-                 datetime.datetime.utcnow().isoformat(timespec="seconds")))
+                 datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None).isoformat(timespec="seconds")))
             conn.commit()
             print("  → written to lexica_def.")
         else:

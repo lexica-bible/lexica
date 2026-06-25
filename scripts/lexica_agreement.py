@@ -474,7 +474,7 @@ def save_run(save_dir, sid, prompt_name, ev, draws, report_lines, valid_books=No
     """Persist the whole run so the review needs the model ONCE: re-read free with --from-json,
     and Step 3 can lift a reviewed draw's raw to ship. JSON holds raw + parsed senses per draw, plus
     the valid-book set so a --from-json re-read applies the same typo filter with no db."""
-    ts = datetime.datetime.utcnow().strftime("%Y%m%d-%H%M%S")
+    ts = datetime.datetime.now(datetime.timezone.utc).replace(tzinfo=None).strftime("%Y%m%d-%H%M%S")
     base = os.path.join(os.path.expanduser(save_dir), f"agreement_{sid}_{prompt_name}_{ts}")
     payload = {
         "strongs": sid, "lemma": ev["lemma"], "translit": ev["translit"],
