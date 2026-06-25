@@ -1,0 +1,88 @@
+#!/usr/bin/env python3
+"""
+fix_lexica_raw.py — surgical correction of a stored Lexica entry's RAW model prose, then
+re-assemble the entry from the corrected text (NO model call).
+
+For one-off artifacts in the model's own output — a doubled reference, a malformed citation —
+that aren't worth a full re-generation, and that we explicitly do NOT want to re-generate
+because regenerating would replace proven, reviewed prose with a fresh (unreviewed) draft.
+
+It does an EXACT string replacement on the stored raw (the text must occur exactly once, or it
+aborts), then runs the canonical assemble() from build_lexica_def — which re-splits the display
+fields, rebuilds verses[], and re-runs the citation gate — shows the result, and on --apply
+writes the one row back. The engine stamp (synth_ver) is preserved: a surgical edit of the raw
+is not a new generation, so the entry's identity is unchanged.
+
+PA-ONLY (bible.db lives on PA). Reads words / verses for the citation gate; WRITES ONLY its own
+row in lexica_def. --dry-run is the DEFAULT — pass --apply to write.
+
+  # charis G5484 sense-6: the model wrote "1Ti—" (no verse) for 1 Timothy's grace+peace greeting,
+  # which is 1Ti 1:2; it also used a comma where the list uses semicolons.
+  python scripts/fix_lexica_raw.py --word G5484 \
+      --old "2Th 1:2; 1Ti—, Gal 1:3" --new "2Th 1:2; 1Ti 1:2; Gal 1:3"            # show, no write
+  python scripts/fix_lexica_raw.py --word G5484 \
+      --old "2Th 1:2; 1Ti—, Gal 1:3" --new "2Th 1:2; 1Ti 1:2; Gal 1:3" --apply    # write
+"""
+import argparse, datetime, json, os, sqlite3, sys
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+import build_lexica_def as B
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("--db", default=os.path.expanduser("~/bible-db/bible.db"))
+    ap.add_argument("--word", required=True, help="G/H number, e.g. G5484")
+    ap.add_argument("--old", required=True, help="exact text in the stored raw to replace (must occur once)")
+    ap.add_argument("--new", required=True, help="replacement text")
+    ap.add_argument("--apply", action="store_true", help="write the row (default: dry-run, show only)")
+    args = ap.parse_args()
+
+    sid = args.word.upper()
+    if sid[:1] not in ("G", "H"):
+        sid = "G" + sid
+
+    conn = sqlite3.connect(args.db)
+    conn.row_factory = sqlite3.Row
+    conn.create_function("strip_accents", 1, B.strip_accents)
+
+    row = conn.execute("SELECT def_json, synth_ver FROM lexica_def WHERE strongs=?", (sid,)).fetchone()
+    if not row or not row["def_json"]:
+        sys.exit(f"no stored Lexica row for {sid}")
+    e = json.loads(row["def_json"])
+    raw = e.get("raw", "")
+    n = raw.count(args.old)
+    if n != 1:
+        sys.exit(f"--old must match the stored raw EXACTLY ONCE; found {n}. Aborting (nothing changed).")
+
+    raw2 = raw.replace(args.old, args.new)
+    print(f"\n{sid}  {e.get('lemma','')}")
+    print(f"  -  {args.old}")
+    print(f"  +  {args.new}")
+
+    entry = B.assemble(conn, sid, e.get("lemma") or sid, e.get("translit") or "", raw2)
+    entry["synth_ver"] = row["synth_ver"] or B.synth_ver()   # surgical edit ≠ new generation: keep the stamp
+    B.show_entry(entry)
+
+    problems = B.validate_entry(entry)
+    if problems:
+        print("  ✗ PARSE FAILURE — not written:")
+        for p in problems:
+            print("     - " + p)
+        sys.exit(1)
+
+    if args.apply:
+        conn.execute(
+            "INSERT OR REPLACE INTO lexica_def (strongs, lemma, translit, def_json, synth_ver, updated) "
+            "VALUES (?,?,?,?,?,?)",
+            (sid, entry["lemma"], entry["translit"], json.dumps(entry, ensure_ascii=False),
+             entry["synth_ver"], datetime.datetime.utcnow().isoformat(timespec="seconds")))
+        conn.commit()
+        print("  → written to lexica_def.")
+    else:
+        print("  [dry run — not written]")
+    conn.close()
+
+
+if __name__ == "__main__":
+    main()

@@ -39,7 +39,11 @@ PILOT = ["G5590", "G1344", "G5484", "G166", "G4561", "G1577"]
 
 MODEL_SONNET = "claude-sonnet-4-6"   # the verse-grounded definition engine
 BUDGET       = 40                    # occurrences fed to the engine
-MAX_TOKENS   = 1500
+MAX_TOKENS   = 3000                  # output ceiling. Was 1500 — too low: it cut psyche's last gloss
+                                     # note off mid-sentence (a 5-sense, ref-dense entry runs long).
+                                     # Deliberately NOT in synth_ver(), so raising it does NOT
+                                     # force-regenerate entries that came back complete — re-run a
+                                     # truncated word on its own with --force.
 SPLIT_VER    = "split2"              # which split_definition() wrote a row (stored for traceability; NOT in the skip-stamp)
 
 # ── PROMPT — VERSE-GROUNDED definition (Sonnet). VERBATIM from the trial rig. FROZEN. ────────
