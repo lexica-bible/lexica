@@ -151,7 +151,7 @@ function AcTurn({ turn, onReadInContext, onLemma, onStrongs }) {
           <p className="ac-notice">{turn.notice}</p>
           {turn.capped && (
             <a className="ac-upsell" href="https://ko-fi.com/lexica" target="_blank" rel="noopener noreferrer">
-              Become a Berean — unlimited searches + ESV/NIV. Subscribe on Ko-fi ↗
+              Become a Berean — more searches a day + ESV &amp; NIV. Subscribe on Ko-fi ↗
             </a>
           )}
         </div>
