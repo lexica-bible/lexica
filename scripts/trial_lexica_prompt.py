@@ -181,6 +181,8 @@ def main():
     ap.add_argument("--show-prompts", action="store_true", help="OLD->NEW diff, no db/model")
     ap.add_argument("--show-defs", action="store_true",
                     help="also print a full NEW definition (first run) per word")
+    ap.add_argument("--all-headlines", action="store_true",
+                    help="print EVERY run's sense headlines (see what the low-count runs merged)")
     args = ap.parse_args()
 
     if args.show_prompts:
@@ -228,6 +230,16 @@ def main():
             hit = sum(1 for r in new_runs if r["n"] == base)
             mark = "OK" if hit >= (args.runs + 1) // 2 else "MISS"
             print(f"  baseline check: NEW hit {base} senses in {hit}/{args.runs} runs  [{mark}]")
+
+        if args.all_headlines:
+            def runs_lines(tag, runs):
+                print(f"  all {tag} runs:")
+                for k, r in enumerate(runs, 1):
+                    hs = " | ".join((h[:55] + "…") if len(h) > 55 else h
+                                    for h in r["headlines"]) or "(none — splitter found no senses)"
+                    print(f"    #{k} ({r['n']}): {hs}")
+            runs_lines("OLD", old_runs)
+            runs_lines("NEW", new_runs)
 
         if args.show_defs:
             print("  --- full NEW definition (first run) ---")
