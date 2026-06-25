@@ -602,7 +602,10 @@ def show_entry(entry):
           (f"  (misses — tagging {a['tagging']} / real {a['real']} / no-verse {a['noverse']})" if a['total']-a['pass'] else ""))
     if entry["fork"]:
         f = entry["fork"]
-        print(f"  FORK (contested): core = {f['core']}")
+        # core is suppressed in the fork for a pinned word (it leads above as PINNED CORE), so read
+        # it safely — f['core'] is absent exactly when pinned_core carries it.
+        print(f"  FORK (contested): core = {f['core']}" if f.get("core")
+              else "  FORK (contested): core PINNED above (suppressed here, not repeated)")
         for fr in f["frames"]:
             trad = "" if fr["tradition"] in ("", "—") else f" [{fr['tradition']}]"
             print(f"     • {fr['label']}{trad}: {fr['gloss']}")
