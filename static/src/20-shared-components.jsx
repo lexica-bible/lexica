@@ -286,7 +286,6 @@ function StructuralBody({ data, lsjEntry }) {
           )}
           {data.crossref && data.crossref.note && <div className="gram-xref">{data.crossref.note}</div>}
           {data.straddle && <div className="gram-straddle">{data.straddle}</div>}
-          {data.provenance && <div className="gram-prov">{data.provenance}</div>}
         </div>
       )}
     </>
