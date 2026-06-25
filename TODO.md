@@ -226,12 +226,17 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
     dropped once), and the count metric can't see that. The citation gate can't either — it PASSED the run missing a
     sense (real verses, dropped sense). Through-line: **every automatic gate sees PRESENCE, not SIGNIFICANCE.** So
     safety isn't a better prompt, it's a REVIEWER. Full record: memory `project_lexica_dictionary` (PROMPT SESSION block).
-  - **NEXT (cold start): stand up the AGREEMENT REVIEWER on the 6 pilot words (Plan A, scenario-2).** Build a word a few
-    times; **a sense present in SOME draws but absent in others is the flag** (draws voting, no answer key → scales to
-    the tail). Trust the engine, IGNORE near-duplicate folds (the life-cluster fold is fine), flag only vanish-or-resurrect
-    of a whole sense. Settle hole-vs-fold as a procedure (judge = your eyes via the rig's `--all-headlines`), THEN
-    promote v3 + rebuild the six THROUGH the check together (never a blind single-draw rebuild). (Plan B — hand-curate
-    sense lists — REJECTED: contradicts "trust the engine," re-imports BDAG-authority, doesn't scale.)
+  - **AGREEMENT REVIEWER — BUILT 2026-06-24 (`scripts/lexica_agreement.py`), logic-validated, PENDING the PA run.**
+    The standing safety gate (Plan A, scenario-2): draw a word N× on the same evidence; **a sense present in SOME
+    draws but absent in others is the flag** (draws voting, no answer key → scales to the tail). Read-only, PA-only,
+    reuses build_lexica_def's frozen helpers; `--prompt v3` (default) | `live`; saves each run to JSON (`--from-json`
+    re-reads free). Three PRESENCE views (per-draw senses · ref-cluster · per-verse support), none a verdict; the
+    HOLE-vs-FOLD procedure is in its docstring (trust the engine, IGNORE near-duplicate folds, flag only
+    vanish-or-resurrect of a whole job). Validated on synthetic psyche ground truth. **NEXT (needs PA):**
+    `python scripts/lexica_agreement.py --word G5590 --runs 10` (canary — must surface the known 1/10 inner-self
+    hole + appetite fold), then the full six; settle the procedure on real draws, THEN promote v3 + rebuild the six
+    THROUGH the check together (never a blind single draw). (Plan B — hand-curate sense lists — REJECTED:
+    contradicts "trust the engine," re-imports BDAG-authority, doesn't scale.)
   - **OPEN for Step 4 — the significance judge.** Pure voting sees that something varied, not whether it MATTERS (a real
     hole and a fine fold both vary). Human eyes now; at scale a model pass OR spot-check-is-the-ceiling — unproven either
     way. Same blind spot as the citation gate, one layer up.
