@@ -220,7 +220,8 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
     A throwaway distribution rig (`scripts/trial_lexica_prompt.py`) ran the live prompt vs a v3 candidate (sub-use
     test reframed on **same-job vs different-job**, symmetric no-over-split/no-over-merge, dropped the "few and broad"
     thumb) N times on psychē, same evidence. v3 is tighter (mode 4 not 5, no format breaks, no hallucinated verses)
-    and is FROZEN IN THE RIG, but NOT promoted (live engine untouched). LESSON: **no achievable prompt stabilizes the
+    and is FROZEN IN THE RIG, but NOT promoted — tighter ≠ proven, don't promote before the reviewer's standing
+    (live engine untouched). LESSON: **no achievable prompt stabilizes the
     sense STRUCTURE** — the count clusters at 4 but the runs hit it by DIFFERENT senses (appetite leaks back; inner-self
     dropped once), and the count metric can't see that. The citation gate can't either — it PASSED the run missing a
     sense (real verses, dropped sense). Through-line: **every automatic gate sees PRESENCE, not SIGNIFICANCE.** So
