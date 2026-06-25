@@ -8,13 +8,16 @@ rule — before touching anything.
 ### Where we are
 - The agreement reviewer (`scripts/lexica_agreement.py`, read-only, PA-only) is built + proven on the
   6 pilot words — no holes.
-- **DONE this session (commit `c777ea5`, pushed):** the 3 frame-leakers — dikaioō (G1344),
-  charis (G5484), aionios (G166) — have their neutral core HAND-PINNED. The fork's existing
-  hand-authored `core` is now lifted to the definition's lead (`entry.pinned_core`); the model's
-  framed senses sit below it under an **"Attested uses"** label; the fork drops its duplicate
-  "Core (all agree)" line when pinned. Pure display — done in `assemble()`, so it applies via
-  `--resplit` with NO model call. The 3 cores were confirmed fork-neutral before pinning (charis +
-  aionios clean; dikaioō neutral by spanning declare *and* make on purpose).
+- **CODE DONE, NOT YET APPLIED/VERIFIED ON PA (commits `c777ea5` + `62a7a7d`, pushed):** the 3
+  frame-leakers — dikaioō (G1344), charis (G5484), aionios (G166) — have their neutral core
+  HAND-PINNED in code. The fork's existing hand-authored `core` is lifted to the definition's lead
+  (`entry.pinned_core`); the model's framed senses sit below it under an **"Attested uses"** label;
+  the fork drops its duplicate "Core (all agree)" line when pinned. Pure display — done in
+  `assemble()`, so it applies via `--resplit` with NO model call. The 3 cores were confirmed
+  fork-neutral (charis + aionios clean; dikaioō neutral by spanning declare *and* make on purpose).
+  `62a7a7d` fixed a `show_entry` crash (it still read the suppressed fork `core` → KeyError on the
+  first pinned word, so the PA dry-run died on dikaioō). **The applied, working pin on the 3 cards is
+  NOT confirmed yet — do Step 1 below first.**
 - psychē, sarx, ekklēsia — clean cores, gate-ship as-is, untouched.
 
 ### Step 1 — PA-verify the pin (FREE, no model call — do this first)
