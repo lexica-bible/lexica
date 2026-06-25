@@ -21,7 +21,7 @@ bp = Blueprint("lexica", __name__)
 # half-tested entry. ONE global flag — flip to False to go public (a single milestone, not a
 # per-word rollout). If we later promote entries individually, a `public` column on lexica_def is
 # the clean add. Mirrors views_heb's "gate VISIBILITY during rollout".
-LEXICA_ADMIN_ONLY = True
+LEXICA_ADMIN_ONLY = False   # PUBLIC 2026-06-25 — rollout over; served to everyone, incl. logged-out
 
 
 def _has_lexica(conn):

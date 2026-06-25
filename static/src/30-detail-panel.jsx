@@ -500,9 +500,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     // instead of borrowing the base word's definition. Keyed by strongs_base, every one of the
     // ~3619 dotted words would inherit its base's entry once that base is built.
     const sn = entry && (entry.strongs_raw || entry.strongs_base);
-    let signedIn = false;
-    try { signedIn = !!(typeof NotesStore !== "undefined" && NotesStore.auth() && NotesStore.auth().token); } catch (e) {}
-    if (!sn || sn === "*" || !signedIn) return;
+    if (!sn || sn === "*") return;
     let cancelled = false;
     api.lexica(sn)
       .then(d => { if (!cancelled) setLexica(d && !d.error ? d : null); })
