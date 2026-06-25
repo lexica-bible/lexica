@@ -221,6 +221,10 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
     Word study tab. The biggest remaining piece.
   - Follow-up (small, not blocking): the fork gate names a covenant-membership/NPP reading for dikaioō that
     `salvation_how` has no node for — add one to that graph (via add_study_graph_salvation.py) so the link lands.
+  - Follow-up (hardening, not blocking — 2026-06-24 card review): the citation gate only sees refs shaped
+    `Book ch:vs`. A malformed ref with no chapter:verse (the charis `1Ti—` the model wrote for 1Ti 1:2) is
+    INVISIBLE to it — neither pass nor miss, so it slips through silently. Add a lint that flags a book-abbrev
+    token in the prose NOT followed by `chapter:verse`. (`cited_refs` / `_REF_RE` in build_lexica_def.py.)
   This SUPERSEDES the αἰώνιος / δικαιόω open items under "LSJ 'Lexica' overrides" above — don't hand-write an
   asserting override for a contested word; verse-ground it + the fork gate. The 6 live overrides stay until this ships.
   `code: scripts/trial_lexica_def.py (spec); future views_lsj.py / a new def side table; static/src/30-detail-panel.jsx + 80-lexicon.jsx; argument graphs in study.db / views_study.py; memory project_lexica_dictionary`
