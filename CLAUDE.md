@@ -682,6 +682,13 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   - `h=true` marks the target word in each verse (rendered highlighted in gold)
   - `glosses` = per-book rendering breakdown (chips update when a book is selected)
   - Optional `?gloss=spirit` param filters verse list to a specific rendering
+  - **`<book>` accepts `all`** (2026-06-24): the default "All books" view lists EVERY occurrence
+    across the Bible in canonical order (was a "pick a book" prompt). `_all_books_verses()` in
+    views_lexicon.py serves it for all four sources, returns lightweight verse keys each tagged with
+    its `book` (the lazy `VerseRow` re-fetches text), honors `?testament=ot|nt`, and caps at
+    `_ALL_VERSES_CAP` (6000) with a `truncated` flag for the ~10 mega-frequency function words. The
+    book rail / OT-NT tabs / rendering chips all narrow it. The occurrence list (all-books OR a single
+    book) renders **50 at a time with a "See more" (+50)** button (80-lexicon.jsx `visibleCount`).
 - **Word-source toggle (focused word): ABP · HEB · KJV · BSB** (2026-06-22) — a number's occurrences,
   book distribution, and "renders as" in each. **Hebrew DEFAULTS to HEB = heb.db (the REAL Hebrew OT, NOT
   the old KJV bridge); the ~150 byform/Aramaic/name numbers heb.db lacks fall back to KJV (`has_heb` false).**

@@ -450,8 +450,14 @@ header still shows an "Under development" badge on these two tabs. Full record: 
 4. **Auto-open the top word on an English search** (mockup does it; left as "pick a word"). Small, user's call.
    - **Book distribution now lands on "All books" (DONE 2026-06-20, commit 62f1b48).** A word search no
      longer auto-opens the busiest book + dumps its verses (`_topBook`/`_openTopBook` removed). Trade-off the
-     user accepted: the center verse column is then empty ("pick a book"). OPEN/LATER: put real landing
-     content in that empty center. (Reverted once mid-session by mistake, then reapplied — KEEP it.)
+     user accepted: the center verse column is then empty ("pick a book"). (Reverted once mid-session by
+     mistake, then reapplied — KEEP it.)
+     - **Empty-center landing CLOSED 2026-06-24 (commits fbcf6f1 + e7d7ef2).** "All books" now LISTS every
+       occurrence across the Bible (new `book="all"` path + `_all_books_verses()` in views_lexicon.py, all
+       four sources, `?testament=` filter, capped 6000 w/ `truncated`); the occurrence list pages **50 at a
+       time with "See more" (+50)** (`visibleCount` in 80-lexicon.jsx). Book rail / OT-NT tabs / rendering
+       chips narrow it. Lazy `VerseRow` keeps it light. `code: views_lexicon.py, static/src/80-lexicon.jsx,
+       static/src/00-core.jsx (lexiconVerses testament arg), static/styles.css (.occ-more/.occ-trunc)`
    - **"All" on the Word-study ABP/KJV toggle = PARKED.** Not an oversight: a merged All double-counts the NT
      (ABP + KJV both tag the same NT verses); backend `lexicon_profile` deliberately collapses `corpus=all`.
      Needs a rule for counting the NT before building. Memory `project_ai_search_redesign`.
