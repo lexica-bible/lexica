@@ -557,7 +557,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   // (relocateGloss); when there isn't (KJV, an ABP word with no printed form), the meaning
   // simply replaces the in-verse word up top. A form word with NO gloss keeps the old
   // behavior: empty up top, contextual english on the form line (don't duplicate it).
-  const showLemmaGloss = !!(heroLemmaGloss && !hero.noGloss && !isPN && !metavData && !lexica);
+  const showLemmaGloss = !!(heroLemmaGloss && !hero.noGloss && !isPN && !metavData);
   const heroTopGloss = showLemmaGloss ? heroLemmaGloss : (relocateGloss ? "" : hero.standaloneGloss);
   // Show "translit · gloss" on one line whenever there's both — same for Greek and
   // Hebrew so the two cards match. Falls back to a standalone gloss line only when
@@ -574,7 +574,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   if (metavLoading || metavPersonData || metavPlaceData) sections.push("metav");
   if (aiDescription || aiDescLoading) sections.push("aidesc");
   if (isHebrewWord) sections.push("bdb");
-  else if ((!isPN || (metavType === "place" && metavData?.strongs_g?.length > 0)) && metavType !== "person"
+  // metavType "person" normally suppresses the definition (a real proper-noun person has no
+  // useful lexical entry). EXCEPT θεός (G2316): a common noun that name-matches the "God" metaV
+  // person — it keeps that card AND still shows its definition below it.
+  else if ((!isPN || (metavType === "place" && metavData?.strongs_g?.length > 0))
+           && (metavType !== "person" || entry.strongs_raw === "2316")
            && !aiDescription && !aiDescLoading
            && (entry.greek || entry.strongs_raw || metavData?.strongs_g?.length > 0)) sections.push("lsj");
   if (!isHebrew && !isPN && !entry.isKjv && !entry.isBsb && !entry.isExtra && abpCount !== null && abpCount > 0) sections.push("abpOcc");
