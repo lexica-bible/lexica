@@ -267,7 +267,11 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   `30-detail-panel.jsx` branches `case "lsj"`). **ADMIN-ONLY during rollout** (`LEXICA_ADMIN_ONLY` on
   `is_admin()`; non-admins get 404 → the normal LSJ card, deploy-safe). LIVE on 6 words (psychē + the 5
   contested forks dikaioō/charis-G5484/aionios/sarx/ekklesia) 2026-06-24; card review + field fixes 2026-06-24/25.
-  Full record: memory `project_lexica_dictionary`.
+  **Batch-build safety gate before scaling past the 6 = the agreement reviewer `scripts/lexica_agreement.py`**
+  (read-only, PA-only; draws a word N×, flags a sense present in some draws but absent in others — per-verse
+  SUPPORT+COMPANY tells a fold from a hole; proven on the 6, 2026-06-25). A v3 prompt candidate is frozen in the
+  rig, NOT promoted (live still on the frozen `VERSE_PROMPT`); a contested word whose core leaks a fork frame gets
+  its core HAND-PINNED, not prompt-tuned. Full record: memory `project_lexica_dictionary`.
 - `books` — book metadata (name, testament, regex)
 - `ai_search_cache` — cached AI query results and TSK synthesis
 - `kjv_verses` — KJV full verse text (31,102 verses)
