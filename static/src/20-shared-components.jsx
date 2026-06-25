@@ -169,6 +169,10 @@ function LexicaBody({ lexica, lsjEntry }) {
   const fork = lexica.fork;
   const hasLsj = !!(lsjEntry && lsjEntry.def_html);
   const glanceVerses = (lexica.verses || []).slice(0, 2);
+  // Per-sense LXX provenance (Option B). prov[i].lxx marks a sense resting heavily on Greek-OT
+  // (Septuagint) citations; provSenses is the 1-based list for the full-view summary block.
+  const prov = lexica.sense_prov || [];
+  const provSenses = prov.map((p, i) => (p && p.lxx ? i + 1 : 0)).filter(Boolean);
   return (
     <>
       {audit.total ? (
@@ -185,6 +189,16 @@ function LexicaBody({ lexica, lsjEntry }) {
         <div className="lex-full">
           <LexicaPinnedCore core={lexica.pinned_core} />
           <div className="lex-prose">{renderInlineMd(lexica.senses_block || "")}</div>
+          {provSenses.length > 0 && (
+            <div className="lex-block">
+              <span className="lex-lbl">Septuagint provenance</span>
+              <div className="lex-notes">
+                {provSenses.length > 1 ? "Senses " : "Sense "}{provSenses.join(", ")}
+                {provSenses.length > 1 ? " rest" : " rests"} largely on Septuagint (Greek-OT)
+                usage — their citations are mostly Old Testament, where the Greek renders Hebrew.
+              </div>
+            </div>
+          )}
           {fork && <LexicaFork fork={fork} />}
           {lexica.range && <div className="lex-block"><span className="lex-lbl">Range</span> {lexica.range}</div>}
           {lexica.gloss_notes && <div className="lex-block"><span className="lex-lbl">Gloss notes</span><div className="lex-prose lex-notes">{renderInlineMd(lexica.gloss_notes)}</div></div>}
@@ -195,7 +209,14 @@ function LexicaBody({ lexica, lsjEntry }) {
         <div className="lex-glance">
           <LexicaPinnedCore core={lexica.pinned_core} />
           <ol className="lex-senses">
-            {(lexica.sense_headlines || []).map((h, i) => <li key={i}>{h}</li>)}
+            {(lexica.sense_headlines || []).map((h, i) => (
+              <li key={i}>
+                {h}
+                {prov[i] && prov[i].lxx && (
+                  <span className="lex-prov">rests on Septuagint (Greek-OT) usage</span>
+                )}
+              </li>
+            ))}
           </ol>
           {fork && <LexicaFork fork={fork} />}
           <LexicaVerses verses={glanceVerses} />

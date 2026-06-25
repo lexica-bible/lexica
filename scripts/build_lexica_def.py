@@ -46,6 +46,17 @@ MAX_TOKENS   = 3000                  # output ceiling. Was 1500 — too low: it 
                                      # truncated word on its own with --force.
 SPLIT_VER    = "split2"              # which split_definition() wrote a row (stored for traceability; NOT in the skip-stamp)
 
+# ── Option B — LXX provenance flag. A Greek card's OT citations are all Septuagint (ABP's OT IS
+# the LXX), so a sense grounded heavily in OT verses is resting on translation-Greek, not native
+# Koine. We flag that with a subordinate "rests on Septuagint usage" note so a reader doesn't read
+# NT behavior into a sense the LXX carries. PURE DERIVATION from the stored citations (each ref's
+# book = OT or NT) — no model, no new data, recomputed every build/--resplit. Fires only on a HIGH,
+# well-attested OT share, set against the real census (2026-06-25): >= 80% OT AND >= 4 OT refs.
+# The 4-ref floor drops thin 3/0 senses where "rests on the LXX" would over-claim on too few
+# verses (the count-lies rule) — it cost one real thin Hebraism (logos "matter", dabar) on purpose.
+LXX_THRESHOLD = 80   # a sense's cited verses must be at least this % OT (Septuagint)
+LXX_MIN_OT    = 4    # AND carry at least this many OT refs, so the claim isn't made on a thin sample
+
 # ── PROMPT — VERSE-GROUNDED definition (Sonnet). v3 (promoted 2026-06-25, after the 3 frame-leaker
 # cores were hand-pinned): adds the sub-use test (same-job vs different-job) + a symmetric
 # no-over-split/no-over-merge constraint. Proven 0/10 format stutter across the six in the agreement
@@ -511,6 +522,34 @@ def split_definition(prose):
     }
 
 
+def sense_provenance(senses_block):
+    """Per-sense LXX provenance, ALIGNED to sense_headlines order. Splits the Senses prose at the
+    same bold '**N. …**' markers the headlines come from, counts each sense's grounding refs by
+    testament (OT = Septuagint / NT = Koine), and decides whether the subordinate LXX note fires
+    (high + well-attested OT share). Derived from the stored citations only — no model. Returns
+    [{ot, nt, lxx}], one per sense, in headline order, so the card can hang the note per sense."""
+    block = senses_block or ""
+    ms = list(_HEADLINE_RE.finditer(block))
+    out = []
+    for i, m in enumerate(ms):
+        start = m.end()
+        end = ms[i + 1].start() if i + 1 < len(ms) else len(block)
+        seen, ot, nt = set(), 0, 0
+        for bk, ch, vs in _REF_RE.findall(block[start:end]):
+            key = (bk, ch, vs)
+            if key in seen:
+                continue
+            seen.add(key)
+            if bk in NT_BOOKS:
+                nt += 1
+            else:
+                ot += 1
+        tot = ot + nt
+        lxx = bool(tot and ot >= LXX_MIN_OT and (100 * ot / tot) >= LXX_THRESHOLD)
+        out.append({"ot": ot, "nt": nt, "lxx": lxx})
+    return out
+
+
 def build_verses(conn, refs):
     """Cited refs -> [{ref, text}] in order, ABP prose text. Skips refs ABP doesn't carry."""
     out = []
@@ -560,6 +599,10 @@ def assemble(conn, sid, lemma, translit, raw):
         "lemma":    lemma,
         "translit": translit,
         **fields,
+        # Per-sense LXX provenance, aligned to sense_headlines (Option B). Derived from the stored
+        # citations, recomputed on every build/--resplit — no model. Drives the subordinate
+        # "rests on Septuagint usage" note on senses that lean heavily Greek-OT.
+        "sense_prov": sense_provenance(fields["senses_block"]),
         # HAND-PINNED CORE (frame-leakers only): the neutral, hand-authored core leads the card and
         # the model's framed senses sit below it as attested uses. None for every other word — the
         # model's own senses lead as usual. Lifted from CONTESTED so a --resplit (no model call)
@@ -630,6 +673,9 @@ def show_entry(entry):
     print(f"  sense_headlines ({len(entry['sense_headlines'])}) — the glance list:")
     for i, h in enumerate(entry["sense_headlines"], 1):
         print(f"     {i}. {h}")
+    prov = entry.get("sense_prov") or []
+    hits = [str(i + 1) for i, p in enumerate(prov) if p.get("lxx")]
+    print(f"  LXX provenance note fires on sense(s): {', '.join(hits) if hits else '(none)'}")
     print(f"  senses_block: {len(entry['senses_block'])} chars (full prose, kept verbatim)")
     print(f"  range:       {entry['range'] or '(empty)'}")
     print(f"  gloss_notes: {(entry['gloss_notes'][:400] + ' …') if len(entry['gloss_notes'])>400 else (entry['gloss_notes'] or '(empty)')}")
@@ -660,6 +706,10 @@ def main():
     ap.add_argument("--resplit", action="store_true",
                     help="re-split the STORED raw prose into fields — no model call (after a splitter change)")
     ap.add_argument("--force", action="store_true", help="rebuild even if the stamp matches")
+    ap.add_argument("--all", action="store_true",
+                    help="target EVERY built word in lexica_def (use with --resplit to roll a "
+                         "derivation change — e.g. the LXX provenance note — across the whole batch, "
+                         "no model call)")
     ap.add_argument("--budget", type=int, default=BUDGET)
     args = ap.parse_args()
 
@@ -673,6 +723,12 @@ def main():
     conn = sqlite3.connect(args.db)
     conn.row_factory = sqlite3.Row
     conn.create_function("strip_accents", 1, strip_accents)
+    if args.all:
+        if not table_exists(conn, "lexica_def"):
+            sys.exit("--all needs lexica_def built already (nothing to roll across).")
+        targets = [r["strongs"] for r in
+                   conn.execute("SELECT strongs FROM lexica_def ORDER BY strongs").fetchall()]
+        print(f"--all: targeting {len(targets)} built word(s).")
     if args.apply:
         ensure_table(conn)
     has_surface = table_exists(conn, "abp_surface")

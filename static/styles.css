@@ -1268,6 +1268,8 @@ input { font-family: inherit; }
 .lex-senses { margin: 0; padding-left: 18px; font-family: var(--f-serif); font-size: 14px; line-height: 1.5; color: var(--ink); }
 .lex-senses li { margin-top: 5px; }
 .lex-senses li:first-child { margin-top: 0; }
+/* Option B — subordinate per-sense LXX provenance flag (mirrors .lex-fork-note: small, italic, muted). */
+.lex-prov { display: block; font-size: 11.5px; font-style: italic; color: var(--ink-4); margin-top: 2px; }
 .lex-prose { font-family: var(--f-serif); font-size: 14px; line-height: 1.6; color: var(--ink-2); white-space: pre-wrap; }
 .lex-block { margin-top: 14px; }
 .lex-lbl { display: block; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-4); margin-bottom: 3px; }
