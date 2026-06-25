@@ -190,7 +190,7 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
       leak into the Library word card (the user's locked it). Another reason the heavy tier lives in Word study.
   `code: views_lsj.py (Summary|Full-entry, _LSJ_OVERRIDES for the seam); static/src/80-lexicon.jsx (distribution data already there) + 30-detail-panel.jsx`
 
-- **"Lexica dictionary" — verse-grounded word definitions. PILOT SHIPPED 2026-06-25 (admin-only, 6 words): v3 prompt promoted+diff-locked, the 3 frame-leakers hand-pinned, six rebuilt live. ✅ Pilot arc discharged — what's left is the FULL build (see "NEXT" below) + 2 open sub-items (Step 4 judge, the no-verse lint).**
+- **"Lexica dictionary" — verse-grounded word definitions. PILOT SHIPPED (6 words) → FULL-BUILD BATCH 1 DONE (12 words) → OPENED PUBLIC, all 2026-06-25 (`LEXICA_ADMIN_ONLY=False`, ~18 cards live to everyone incl. logged-out). ✅ Pilot + first scaled batch discharged. NEXT = the batch-2 PRE-SORT/PIPELINE script (scoped, not built); open sub-items: Step 4 significance judge, the no-verse lint, + verbs and Hebrew first-batches (separate tracks).**
   Our own word definitions written from the Bible's OWN usage, replacing LSJ's classical glosses as the
   word-card / word-study MEANING source. **ONE engine: verse-ground EVERY def (Sonnet)** — feed the model the
   word's renderings + a spread of its real occurrences, define FROM the usage under the plain-meaning rule.
@@ -214,8 +214,8 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
     citations; the ref parser caught + fixed a numbered-book bug, 1Jn/1Co were being dropped.)
   **REMAINING:**
   - ✅ **Wire the engine + both gates into the app** — DONE 2026-06-24: `build_lexica_def.py` + the `lexica_def`
-    table + `views_lexica.py` + the `LexicaBody` card, LIVE admin-only on the 6 words (`LEXICA_ADMIN_ONLY` flips
-    it public). Surgical raw fixes via `scripts/fix_lexica_raw.py`; `MAX_TOKENS` raised 1500→3000 (was truncating).
+    table + `views_lexica.py` + the `LexicaBody` card. **PUBLIC 2026-06-25** (`LEXICA_ADMIN_ONLY=False`; was admin-only
+    during rollout). Surgical raw fixes via `scripts/fix_lexica_raw.py`; `MAX_TOKENS` raised 1500→3000 (was truncating).
   - ~~**VERSE_PROMPT sense-count fix**~~ → **DISSOLVED 2026-06-24 — the fix didn't prove out, and that's the finding.**
     A throwaway distribution rig (`scripts/trial_lexica_prompt.py`) ran the live prompt vs a v3 candidate (sub-use
     test reframed on **same-job vs different-job**, symmetric no-over-split/no-over-merge, dropped the "few and broad"
@@ -251,7 +251,8 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
     roll-on.** Step one: PRE-SORT fork-bearers by the frame-leak rule (above) — pin frames statable as a definition,
     gate-ship constructions on a plain sense; do NOT auto-build without the sort or it ships leakers at scale. Reviewer
     re-run before a write is OPTIONAL (it certifies prompt stability, not the written bytes — the `--apply` citation
-    gate does that). Open review note: aionios's rebuilt demoted sense 2 leans qualitative — chat-review, not a blocker.
+    gate does that). Open review note RESOLVED 2026-06-25: aionios sense 2 + range neutralized via fix_lexica_raw (dropped the qualitative/divine-order framing; duration-vs-qualitative left to the fork); psychē sense-4 headline tightened the same day.
+  - **FULL-BUILD BATCH 1 DONE 2026-06-25 (12 nouns) + OPENED PUBLIC; a 3-tier ship-gate locked.** Built 9 clean nouns + logos (gate-ship) + Christos (DEFINED, not metaV; lead left name-first by frequency) + pneuma (pinned, NEW 3-way fork person/mode/power in `CONTESTED`). The gate earned it — caught huios + pneuma inventory wobble at `--runs 3`, settled at `--runs 10`. THREE FINDINGS (full record in memory): (1) the gate predicts inventory wobble a single draw + eyeball can't see; (2) **LOADED-REFERENT is a 3rd gate-trigger the agreement gate is BLIND to** (kyrios passed "stable" but defined the word AS its referent — route divine names/titles to EYEBALL via the name-set, not `--runs N`); (3) **"inventory and fork are the same seam"** — a contested word's sense WORDING can lean a fork frame even with the core pinned (pneuma sense 2 leaned "power"), so the senses under a pin need a fork-neutrality pass too. **NEXT = batch-2 PRE-SORT / PIPELINE script (scoped, NOT built):** one driver sorts a G-number list into the 3 tiers, runs tiers 1-2 itself (gate-before-build owned by the driver), hands tier 3 to JP; signals = freq + fork-membership + polysemy proxy (renderings-count) + loaded-referent flag; calibrate DIRECTION now, numeric cutoffs over volume (conservative; unsure → tier UP). Verbs + Hebrew = separate first-batches. `code: scripts/build_lexica_def.py (CONTESTED has pneuma G4151) · scripts/lexica_agreement.py · views_lexica.py LEXICA_ADMIN_ONLY=False`
   - **OPEN for Step 4 — the significance judge.** Pure voting sees that something varied, not whether it MATTERS (a real
     hole and a fine fold both vary). Human eyes now; at scale a model pass OR spot-check-is-the-ceiling — unproven either
     way. Same blind spot as the citation gate, one layer up.

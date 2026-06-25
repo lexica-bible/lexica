@@ -264,9 +264,9 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   → citation gate → fork → write; `--apply` build / `--resplit --apply` re-split stored raw, free; surgical raw
   typo-fixes via `scripts/fix_lexica_raw.py`, no model call). Served by
   `views_lexica.py` `/api/lexica/<strongs>` → the `LexicaBody` card (20-shared-components, BESIDE `LsjBody`;
-  `30-detail-panel.jsx` branches `case "lsj"`). **ADMIN-ONLY during rollout** (`LEXICA_ADMIN_ONLY` on
-  `is_admin()`; non-admins get 404 → the normal LSJ card, deploy-safe). LIVE admin-only on 6 words (psychē +
-  the 5 contested forks dikaioō/charis-G5484/aionios/sarx/ekklesia). **PILOT SHIPPED 2026-06-25:** the v3
+  `30-detail-panel.jsx` branches `case "lsj"`). **PUBLIC since 2026-06-25** (`LEXICA_ADMIN_ONLY=False`; serves everyone incl. logged-out — a word with
+  no entry 404s → the normal LSJ card, deploy-safe; flip the flag back to re-gate). LIVE on ~18 words: the 6
+  pilot (psychē + the 5 contested forks dikaioō/charis-G5484/aionios/sarx/ekklesia) + 12 from full-build BATCH 1. **PILOT SHIPPED 2026-06-25:** the v3
   sub-use-test prompt is promoted into `VERSE_PROMPT` (diff-locked vs the reviewer's frozen V3); the 3
   frame-leakers (dikaioō/charis/aionios) are HAND-PINNED — `pin_core` in `CONTESTED` lifts the neutral fork
   core to `entry.pinned_core`, which LEADS the card while the model's framed senses drop below as "Attested
@@ -274,9 +274,10 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   gate-ship. **Batch-build safety gate = the agreement reviewer `scripts/lexica_agreement.py`** (read-only,
   PA-only; draws a word N×, per-verse SUPPORT+COMPANY tells a fold from a hole) — it certifies PROMPT stability,
   NOT the written draw (the `--apply` citation gate does that), so a reviewer re-run before a write is OPTIONAL
-  once the prompt is diff-locked. **Next = the FULL dictionary build (its OWN session):** pre-sort fork-bearers
-  by the frame-leak rule (pin a frame statable as a definition; gate-ship a construction on a plain sense) —
-  don't auto-build without the sort or it ships leakers at scale. Full record: memory `project_lexica_dictionary`.
+  once the prompt is diff-locked. **Full-build BATCH 1 DONE 2026-06-25** (12 words, the calibration batch; tiers proved out — 3-tier ship-gate:
+  concrete/low-polysemy build-one-draw · mid-polysemy `lexica_agreement --runs 3` · high-polysemy/contested/
+  loaded-referent `--runs 10`-or-eyes). **Next = the batch-2 PRE-SORT/PIPELINE script (scoped, not built).** Full
+  record: memory `project_lexica_dictionary`.
 - `books` — book metadata (name, testament, regex)
 - `ai_search_cache` — cached AI query results and TSK synthesis
 - `kjv_verses` — KJV full verse text (31,102 verses)
