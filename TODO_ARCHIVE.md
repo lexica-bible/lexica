@@ -6,6 +6,39 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Donations live via Ko-fi + GitHub Sponsors ruled out — DONE 2026-06-24
+
+First working donate path since Stripe closed his account (which had killed Ko-fi). Full record: memory
+`project_payments_donations`.
+
+- **In-app donate button.** Beside the `hello@lexica.bible` contact button on the welcome-tour final card + the
+  About page (`static/src/70-search.jsx`). Started as `♥ Support via PayPal` → paypal.me/LexicaBible (dfa5c71),
+  then SWAPPED to `☕ Support on Ko-fi` → ko-fi.com/lexica (6e3b9fa) — Ko-fi gives a real donation page
+  (one-off/monthly/tiers) vs PayPal.me's bare send-money box. `.donate-btn.kofi` brand-coral CSS.
+- **Account-menu Support link (2bf08d5).** A quiet "Support on Ko-fi" row in the AccountModal, shown ONLY to
+  role `user` (hidden from berean+admin — don't nag people who already pay/run it). Needed the client to know
+  the role: `/api/auth/me` already returned it but the store dropped it — now `refreshAccount()` captures `role`
+  into auth state + `authInfo()` exposes it (display-only; real gates stay server-side).
+- **Cap CTA → Ko-fi (2bf08d5).** The Ask-corpus "out of searches" nudge now points to Ko-fi to become a Berean
+  (was the `bereans@` email). The CLAIM step (which account to upgrade — a Ko-fi payment can't tell the app who
+  they are) moves to the Ko-fi membership welcome message → email `bereans@` → admin grants the role.
+- **GitHub repo Sponsor button (dec076f → a8a5d58).** `.github/FUNDING.yml` = `ko_fi: lexica` (dropped the
+  PayPal.me `custom` line so it's Ko-fi-only). Needs repo Settings → Features → "Sponsorships" ticked to show.
+- **Accuracy fix (8edb463).** First cap CTA said "unlimited searches" — WRONG; berean is 10/day
+  (`AI_DAILY_LIMITS`). User caught it. Reworded to number-agnostic "more searches a day" so the copy can't drift
+  from the cap. Don't write "unlimited".
+
+**Lessons / don't-redo:**
+- **GitHub Sponsors is a DEAD END for him — don't re-pitch it.** It dropped PayPal Feb 2023 and pays out ONLY
+  via Stripe Connect (or a fiscal host like Open Source Collective). He's Stripe-banned, so the program is
+  blocked; the FUNDING.yml button is the workaround (no Stripe, no enrollment).
+- **Ko-fi takes 0% on tips/donations** (free plan, forever) — only PayPal's ~3% + $0.30 processing. The 5% Ko-fi
+  cut is ONLY for memberships/shop/monthly; Ko-fi Gold ($12/mo) waives that.
+- Ko-fi is PayPal-backed for him (he set PayPal as its processor), so money lands in his PayPal;
+  paypal.me/LexicaBible still works under the hood.
+
+Commits: dfa5c71, dec076f, 6e3b9fa, a8a5d58, 2bf08d5, 8edb463.
+
 ## Full code audit after the 2026-06-23 change run — DONE (commits 6eaec4e, 1f36bbd)
 
 Read-only audit of the search-perf + mobile-UX + cap/email work, then the agreed cleanups. The one

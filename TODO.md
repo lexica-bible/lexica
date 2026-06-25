@@ -289,11 +289,20 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
   shows "3 of 3 left today" and counts down; (2) the 4th question is refused with the "you've used all your
   free searches" notice and NO model call; (3) a 4th follow-up in one thread is blocked ("start a new thread");
   (4) re-asking the same thing in a thread doesn't fire; (5) reopening a saved conversation / a cache-hit
-  re-ask does NOT decrement the counter. DONE 2026-06-23: the cap nudge now links `bereans@lexica.bible` for
-  Berean membership (the dead "support the site" donate text was dropped — `.ac-upsell`/`.ac-quota-link`).
-  STILL OPEN: a real donate link/button (separate from membership) once payments are sorted
-  (memory `project_payments_donations` — Stripe/Ko-fi down; leaning PayPal/crypto/Zelle, appeal pending).
+  re-ask does NOT decrement the counter. DONE 2026-06-24: the cap nudge (`.ac-upsell`/`.ac-quota-link`) now
+  links **Ko-fi** ("Become a Berean — subscribe on Ko-fi"; was the `bereans@` email on 06-23). Donations are
+  now LIVE via Ko-fi and the donate buttons shipped — see the Ko-fi archive entry + memory
+  `project_payments_donations`.
   `code: ai.py ai_search; views_notes.py (AI_DAILY_LIMITS/AI_SITE_DAILY, ai_caller/ai_quota_*); static/src/52-ask-corpus.jsx`
+
+- **Ko-fi / Berean upgrades — manual for now (2026-06-24).** Donations are live via Ko-fi (full record in
+  TODO_ARCHIVE + memory `project_payments_donations`). Becoming a Berean is a MANUAL admin grant: the
+  subscriber emails `bereans@` from their account address → admin flips the role on the Admin page.
+  - USER-SIDE owed: set up the monthly **"Berean" membership tier** on Ko-fi + put the claim instructions in
+    its welcome message (the cap CTA points people there; without the tier the link still works for one-off tips).
+  - OPEN (optional, low priority): a Ko-fi webhook → auto-set the berean role so there's no email-claim step.
+  - Berean daily cap stays **10** (`AI_DAILY_LIMITS`); user declined a bump to 15, "revisit later".
+  `code: views_notes.py (role grant / AI_DAILY_LIMITS); a new Ko-fi webhook endpoint if automated`
 
 - **Post-deploy spot-checks for recent shipped commits — condensed 2026-06-23.** Detailed "verify after
   deploy" checklists used to sit here for: Ask-corpus + Hebrew word-study fixes; KJV demote + BSB xref;
