@@ -65,11 +65,30 @@ def verdict(ot, nt):
     return "mostly NT"
 
 
+def fires(ot, nt, thr, min_ot):
+    """Does the LXX note fire for this sense? Needs a HIGH OT share AND a real OT floor, so a
+    thin one-ref sense or a mixed sense never trips it."""
+    tot = ot + nt
+    if tot == 0 or ot < min_ot:
+        return False
+    return (100 * ot / tot) >= thr
+
+
+# The subordinate note text (as it would render under a qualifying sense).
+LXX_NOTE = "rests on Septuagint usage (Greek OT)"
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--db", default=os.path.expanduser("~/bible-db/bible.db"))
     ap.add_argument("--word", help="one G-number, e.g. G4151")
     ap.add_argument("--refs", action="store_true", help="list each sense's refs")
+    ap.add_argument("--preview", action="store_true",
+                    help="render each real card BEFORE/AFTER the LXX note at --threshold")
+    ap.add_argument("--threshold", type=int, default=80,
+                    help="OT-share %% a sense must reach for the note to fire (default 80)")
+    ap.add_argument("--min-ot", type=int, default=3, dest="min_ot",
+                    help="min OT refs a sense needs before the note can fire (default 3)")
     args = ap.parse_args()
 
     conn = sqlite3.connect(args.db)
@@ -93,9 +112,8 @@ def main():
     if not rows:
         sys.exit("no matching built cards.")
 
-    tot_senses = lxx_resting = split_senses = 0
-    words_with_lxx_core = []   # word leads (sense 1) on LXX
-
+    # Parse every card once into (strongs, lemma, [(headline, ot, nt)]).
+    cards = []
     for r in rows:
         try:
             d = json.loads(r["def_json"])
@@ -104,26 +122,56 @@ def main():
             continue
         # re-derive senses from the stored raw so this matches the card exactly
         sb = split_definition(d.get("raw", "")).get("senses_block", "") or d.get("senses_block", "")
-        chunks = sense_chunks(sb)
-        print(f"\n{'='*70}\n{r['strongs']}  {r['lemma']}   ({len(chunks)} senses)")
-        for i, (hl, body) in enumerate(chunks, 1):
+        senses = []
+        for hl, body in sense_chunks(sb):
             ot, nt = classify(body)
+            refs = [f"{bk} {ch}:{vs}" for bk, ch, vs in dict.fromkeys(_REF_RE.findall(body))]
+            senses.append((hl, ot, nt, refs))
+        cards.append((r["strongs"], r["lemma"], senses))
+
+    if args.preview:
+        print(f"# LXX-note preview — note fires when OT-share >= {args.threshold}% "
+              f"AND OT refs >= {args.min_ot}")
+        fired = total = 0
+        for sid, lemma, senses in cards:
+            print(f"\n{'='*70}\n{sid}  {lemma}")
+            print("  BEFORE:")
+            for i, (hl, ot, nt, refs) in enumerate(senses, 1):
+                print(f"    {i}. {hl}")
+            print("  AFTER:")
+            for i, (hl, ot, nt, refs) in enumerate(senses, 1):
+                total += 1
+                tot = ot + nt
+                pct = round(100 * ot / tot) if tot else 0
+                on = fires(ot, nt, args.threshold, args.min_ot)
+                fired += 1 if on else 0
+                print(f"    {i}. {hl}   [OT {ot}/NT {nt} = {pct}% OT]")
+                if on:
+                    print(f"          — {LXX_NOTE}")
+        print(f"\n{'='*70}\nnote fires on {fired} of {total} senses "
+              f"at >= {args.threshold}% (min {args.min_ot} OT).")
+        return
+
+    # default: the census
+    tot_senses = lxx_resting = split_senses = 0
+    words_with_lxx_core = []   # word leads (sense 1) on LXX
+    for sid, lemma, senses in cards:
+        print(f"\n{'='*70}\n{sid}  {lemma}   ({len(senses)} senses)")
+        for i, (hl, ot, nt, refs) in enumerate(senses, 1):
             v = verdict(ot, nt)
             tot_senses += 1
             if v in ("ENTIRELY LXX", "mostly LXX"):
                 lxx_resting += 1
                 if i == 1:
-                    words_with_lxx_core.append(f"{r['strongs']} {r['lemma']}")
+                    words_with_lxx_core.append(f"{sid} {lemma}")
             if v == "split":
                 split_senses += 1
             flag = "  <<< LXX-resting" if v in ("ENTIRELY LXX", "mostly LXX") else ""
             print(f"   {i}. OT {ot:2d} / NT {nt:2d}  [{v}]{flag}  — {hl[:60]}")
             if args.refs:
-                refs = [f"{bk} {ch}:{vs}" for bk, ch, vs in
-                        dict.fromkeys(_REF_RE.findall(body))]
                 print(f"        {', '.join(refs)}")
 
-    print(f"\n{'='*70}\nTOTALS across {len(rows)} card(s):")
+    print(f"\n{'='*70}\nTOTALS across {len(cards)} card(s):")
     print(f"   senses total:        {tot_senses}")
     print(f"   mostly/entirely LXX: {lxx_resting}  ({100*lxx_resting//max(tot_senses,1)}%)")
     print(f"   even split OT=NT:    {split_senses}")
