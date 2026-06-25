@@ -397,19 +397,62 @@ _STRUCTURAL = {
 _FORM_DECODERS = {"eimi": eimi_form}
 
 
+# --- Dotted IDIOMS: the CONTENT side of a structural word's straddle --------------------------
+# ABP gives a frozen phrase its OWN dotted number parked on a preposition's base — ἀνὰ μέσον is
+# G303.1 (336×), the set phrase "in the midst of, between", parked on the preposition ἀνά (G303).
+# That phrase is NOT ἀνά's grammatical card; it's a fixed expression with a plain meaning. So it
+# routes to a one-line CONTENT note (kind "idiom"), never the structural relation card: click the
+# phrase and you get what it MEANS, not the distributive use of the bare preposition.
+# CLOSED SET — verified 2026-06-25 across the whole ABP corpus: ἀνὰ μέσον is the ONLY genuine
+# frozen idiom of a structural word. Every OTHER dotted child of a structural number is a different
+# word ABP parked at "nearest Strong's + dot" (G303.2 "stairs", G235.1 "barter", G3588.2 "oboli",
+# …); those are NOT declared here and fall through to their own existing word entry. Keyed by the
+# FULL dotted number, G-prefixed.
+_IDIOMS = {
+    "G303.1": {
+        "phrase": "ἀνὰ μέσον",
+        "note": "A fixed phrase meaning “in the midst of, between.” ἀνά here is frozen into a set "
+                "expression — its plain meaning, not the distributive use of the bare preposition.",
+    },
+}
+
+
 def structural_entry(strongs):
-    """Return the ready-to-serve structural card for a normalized Strong's number (e.g.
-    'G1510.2.3' or 'G1510'), with a per-form parse stamp when a dotted conjugate was clicked,
-    or None if this base has no structural entry."""
+    """Return the ready-to-serve card for a normalized Strong's number, or None to fall through to
+    the normal word entry. THREE exits through one gate:
+      • a declared dotted IDIOM (ἀνὰ μέσον, G303.1) -> a one-line CONTENT note (kind "idiom");
+      • the bare structural lemma (G1510, G303, …) OR a decodable FORM-child of it (eimi's dotted
+        conjugates G1510.2.3 -> a parse stamp) -> the structural card;
+      • any OTHER dotted child (a different word ABP parked at "nearest Strong's + dot", e.g.
+        G303.2 "stairs") -> None, so it lands on its OWN content entry instead of borrowing this
+        word's structural card. This gate keeps every future batch card seam-free: a parked number
+        can never inherit the card just because its base became structural.
+    """
+    # 1) Declared idiom — the content side of a straddle. Checked FIRST so the phrase never inherits
+    #    its base preposition's grammatical card.
+    idiom = _IDIOMS.get(strongs)
+    if idiom:
+        return dict(idiom, kind="idiom", strongs=strongs)
+
     base = strongs.split(".")[0]
     spec = _STRUCTURAL.get(base)
     if not spec:
         return None
+
+    # 2) A dotted child of a structural word earns the structural card ONLY if it decodes to a real
+    #    grammatical FORM (eimi's conjugations). Otherwise it is a different parked word, not this
+    #    lemma — fall through (None) to its own entry (abp_ext / dotted_lexicon).
+    if "." in strongs:
+        decoder = _FORM_DECODERS.get(spec.get("forms"))
+        form = decoder(strongs) if decoder else None
+        if not form:
+            return None
+        entry = copy.deepcopy(spec)
+        entry["form"] = form
+        entry.pop("forms", None)
+        return entry
+
+    # 3) The bare structural lemma.
     entry = copy.deepcopy(spec)
-    decoder = _FORM_DECODERS.get(spec.get("forms"))
-    if decoder and "." in strongs:
-        form = decoder(strongs)
-        if form:
-            entry["form"] = form
     entry.pop("forms", None)       # internal routing field, not for the browser
     return entry

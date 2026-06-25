@@ -732,10 +732,13 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     );
     case "lsj": {
       const structural = !!(lexica && lexica.kind === "structural");
+      const idiom = !!(lexica && lexica.kind === "idiom");   // dotted frozen phrase (ἀνὰ μέσον) — a content note, not the structural card
       return (
       <section key="lsj" className="sec">
         <h4 className="sec-head">
-          {structural
+          {idiom
+            ? <><span className="sec-t">Phrase</span><span className="lsj-badge" title="A fixed phrase (idiom) — its plain meaning, not a grammatical relation">Idiom</span></>
+            : structural
             ? <><span className="sec-t">Function</span><span className="lsj-badge" title="Structural word — its grammatical function, not a sense list">Grammar</span></>
             : lexica
             ? <><span className="sec-t">Definition</span><span className="lsj-badge" title="Lexica dictionary — defined from the Bible's own usage">Lexica</span></>
@@ -745,7 +748,9 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
               ? <><span className="sec-t">ABP Extended</span><span className="abp-badge">ABP EXT</span></>
               : <><span className="sec-t">Liddell-Scott-Jones</span><span className="lsj-badge">LSJ</span></>}
         </h4>
-        {structural ? (
+        {idiom ? (
+          <div className="gram"><p className="gram-fn"><b>{lexica.phrase}</b> — {lexica.note}</p></div>
+        ) : structural ? (
           <StructuralBody data={lexica} lsjEntry={lsjEntry} />
         ) : lexica ? (
           <LexicaBody lexica={lexica} lsjEntry={lsjEntry} />
