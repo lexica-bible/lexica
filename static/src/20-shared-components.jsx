@@ -226,6 +226,72 @@ function LexicaBody({ lexica, lsjEntry }) {
   );
 }
 
+// ============================================================
+// STRUCTURAL / FUNCTION-WORD CARD (grammatical function, not a sense list)
+// ============================================================
+// For words whose meaning resolves OUTSIDE the lexeme — the copula εἰμί first. Verse-grounding
+// would mislocate the context's meaning onto the verb; instead this states the verb's FUNCTION,
+// flags that it's underspecified, and shows the construction TYPES it appears in (patterns, not
+// senses). The entry is written once on the lemma; a clicked conjugate inherits it and shows its
+// own parse (data.form). Reuses .lex-block/.lex-lbl/.lex-verse so it can't drift; the
+// function-card-only bits are .gram-*. Provenance = GRAMMAR (a grammatical claim, not an attested
+// sense — see structural.py).
+function StructuralBody({ data, lsjEntry }) {
+  const [view, setView] = React.useState("fn");
+  React.useEffect(() => { setView("fn"); }, [data && data.strongs]);
+  if (!data) return null;
+  const hasLsj = !!(lsjEntry && lsjEntry.def_html);
+  const form = data.form;
+  return (
+    <>
+      <div className="lsj-tg-row">
+        <button className={"lsj-tg" + (view === "fn" ? " on" : "")} onClick={() => setView("fn")}>Function</button>
+        {hasLsj && <button className={"lsj-tg" + (view === "lsj" ? " on" : "")} onClick={() => setView("lsj")}>LSJ</button>}
+      </div>
+      {view === "lsj" && hasLsj ? (
+        <div className="lsj-def" dangerouslySetInnerHTML={{ __html: lsjEntry.def_html }} />
+      ) : (
+        <div className="gram">
+          {form && form.parse && (
+            <div className="gram-form">This form: <b>{form.parse}</b>{form.gloss ? " — “" + form.gloss + "”" : ""}</div>
+          )}
+          {data.function && <div className="gram-fn">{data.function}</div>}
+          {data.scope && (
+            <div className="lex-block">
+              <span className="lex-lbl">Linking use only — the absolute “I am” is separate</span>
+              <div className="lex-notes">{data.scope}</div>
+            </div>
+          )}
+          {data.scope_contested && <div className="gram-xref">{data.scope_contested}</div>}
+          {data.underspecified && (
+            <div className="lex-block">
+              <span className="lex-lbl">The verb doesn’t settle the relation</span>
+              <div className="lex-notes">{data.underspecified}</div>
+            </div>
+          )}
+          {(data.relations || []).length > 0 && (
+            <div className="lex-block">
+              <span className="lex-lbl">What the predicate supplies — relation, not sense</span>
+              {data.relation_lead && <div className="lex-notes gram-rlead">{data.relation_lead}</div>}
+              <ul className="gram-clist">
+                {data.relations.map((c, i) => (
+                  <li key={i} className="gram-citem">
+                    <div><span className="gram-ctype">{c.type}</span>{c.note ? <span className="gram-cnote"> — {c.note}</span> : null}</div>
+                    {c.ref && <div className="lex-verse"><span className="lex-vref">{c.ref}</span> {c.text}</div>}
+                  </li>
+                ))}
+              </ul>
+              {data.relation_tail && <div className="lex-notes gram-rtail">{data.relation_tail}</div>}
+            </div>
+          )}
+          {data.crossref && data.crossref.note && <div className="gram-xref">{data.crossref.note}</div>}
+          {data.provenance && <div className="gram-prov">{data.provenance}</div>}
+        </div>
+      )}
+    </>
+  );
+}
+
 // Google-Maps-style bottom-sheet dismissal: drag the WHOLE card down to close.
 // Grabbing the card's top chrome (the handle/header — anything outside the
 // scrolling body) ALWAYS arms the drag, no matter where the body is scrolled.

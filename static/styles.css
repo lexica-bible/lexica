@@ -1292,6 +1292,23 @@ input { font-family: inherit; }
 .lex-verse:first-child { margin-top: 0; }
 .lex-vref { font-weight: 600; color: var(--ink); }
 
+/* Structural / function-word card (StructuralBody) — eimi etc. Reuses .lex-block / .lex-lbl /
+   .lex-notes / .lex-verse / .lex-vref; only the function-card-specific bits are new. Scoped
+   .gram-* so nothing leaks into the locked Lexica / Library word card. */
+.gram-form { font-size: 12px; color: var(--ink-4); margin-bottom: 9px; }
+.gram-fn { font-size: 13.5px; line-height: 1.55; }
+.gram-clist { list-style: none; margin: 4px 0 0; padding: 0; }
+.gram-citem { margin-top: 11px; }
+.gram-citem:first-child { margin-top: 0; }
+.gram-ctype { font-weight: 600; color: var(--accent); }
+.gram-cnote { color: var(--ink-4); font-size: 12.5px; }
+.gram-rlead { margin-bottom: 9px; }
+.gram-rtail { margin-top: 10px; font-style: italic; color: var(--ink-4); }
+.gram-xref { margin-top: 14px; padding: 11px 13px; border-radius: 8px; font-size: 12.5px; line-height: 1.5;
+  background: color-mix(in srgb, var(--accent) 7%, var(--paper));
+  border: 1px solid color-mix(in srgb, var(--accent) 26%, var(--paper)); }
+.gram-prov { margin-top: 14px; font-size: 9.5px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-4); }
+
 /* ============================================================
    RESULTS CONTROLS
 ============================================================ */

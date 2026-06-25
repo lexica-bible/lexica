@@ -11,6 +11,7 @@ import json
 from flask import Blueprint, jsonify
 
 from core import db_ro, log
+from structural import structural_entry
 from views_notes import is_admin
 
 bp = Blueprint("lexica", __name__)
@@ -23,6 +24,11 @@ bp = Blueprint("lexica", __name__)
 # the clean add. Mirrors views_heb's "gate VISIBILITY during rollout".
 LEXICA_ADMIN_ONLY = False   # PUBLIC 2026-06-25 — rollout over; served to everyone, incl. logged-out
 
+# Structural / function-word cards (eimi, …) have their OWN rollout gate, independent of the
+# verse-grounded dictionary above. PUBLIC — live for all users, incl. logged-out (JP's call
+# 2026-06-25; no admin gating going forward). Flip back to True only to re-gate. (See structural.py.)
+STRUCTURAL_ADMIN_ONLY = False
+
 
 def _has_lexica(conn):
     return conn.execute(
@@ -32,13 +38,23 @@ def _has_lexica(conn):
 
 @bp.route("/api/lexica/<strongs>")
 def lexica_def(strongs):
-    """The stored Lexica entry for a Strong's number, or 404 (word has none / table not built /
-    viewer isn't an admin during rollout)."""
-    if LEXICA_ADMIN_ONLY and not is_admin():
-        return jsonify({"error": "not found"}), 404      # admin-only rollout — non-admins fall through to LSJ
+    """The Lexica entry for a Strong's number — first a hand-authored STRUCTURAL/function card
+    (eimi etc.), else the stored verse-grounded entry — or 404 (word has none / table not built /
+    viewer isn't an admin during rollout), which makes the card fall back to LSJ."""
     sid = (strongs or "").strip().upper()
     if sid[:1] not in ("G", "H"):
         sid = "G" + sid
+    # Structural / function-word card: a different entry TYPE (the word's grammatical function, not
+    # a verse-grounded sense list). Hand-authored + served straight from structural.py — no table,
+    # so no PA data build. A dotted conjugate (G1510.2.3) resolves to its lemma's one entry and
+    # carries its own parse stamp. Its OWN rollout gate so eimi can be proven before going public.
+    se = structural_entry(sid)
+    if se is not None:
+        if STRUCTURAL_ADMIN_ONLY and not is_admin():
+            return jsonify({"error": "not found"}), 404
+        return jsonify(se)
+    if LEXICA_ADMIN_ONLY and not is_admin():
+        return jsonify({"error": "not found"}), 404      # admin-only rollout — non-admins fall through to LSJ
     conn = db_ro()
     try:
         if not _has_lexica(conn):

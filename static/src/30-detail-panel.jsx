@@ -730,10 +730,14 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
         )}
       </section>
     );
-    case "lsj": return (
+    case "lsj": {
+      const structural = !!(lexica && lexica.kind === "structural");
+      return (
       <section key="lsj" className="sec">
         <h4 className="sec-head">
-          {lexica
+          {structural
+            ? <><span className="sec-t">Function</span><span className="lsj-badge" title="Structural word — its grammatical function, not a sense list">Grammar</span></>
+            : lexica
             ? <><span className="sec-t">Definition</span><span className="lsj-badge" title="Lexica dictionary — defined from the Bible's own usage">Lexica</span></>
             : lsjSummary && lsjSummary.override
             ? <><span className="sec-t">Definition</span><span className="lsj-badge" title="Lexica editorial gloss — plain biblical sense foregrounded">Lexica</span></>
@@ -741,7 +745,9 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
               ? <><span className="sec-t">ABP Extended</span><span className="abp-badge">ABP EXT</span></>
               : <><span className="sec-t">Liddell-Scott-Jones</span><span className="lsj-badge">LSJ</span></>}
         </h4>
-        {lexica ? (
+        {structural ? (
+          <StructuralBody data={lexica} lsjEntry={lsjEntry} />
+        ) : lexica ? (
           <LexicaBody lexica={lexica} lsjEntry={lsjEntry} />
         ) : lsjLoading ? (
           <div className="lsj-def lsj-def--loading">Loading…</div>
@@ -751,7 +757,8 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
           <div className="lsj-def lsj-def--loading">Not found.</div>
         )}
       </section>
-    );
+      );
+    }
     case "abpOcc": return (
       <section key="abpOcc" className="sec">
         <h4 className="sec-head"><span className="sec-t">{entry.isExtra ? "Occurrences in Scripture" : "ABP Occurrences"}</span></h4>
