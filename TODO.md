@@ -237,7 +237,10 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
     frame draw-to-draw) → do NOT auto-ship, **hand-pin the core** before live (like the fork). PREDICTIVE RULE: a
     fork-word leaks when its contested frame is statable as a DEFINITION (forensic / infused-grace / duration);
     stays clean when it's a CONSTRUCTION on a plain sense (sin-nature, the-Church) — pre-sort fork-bearers by this,
-    don't find leakers one at a time. **Do NOT fix leak in the prompt** (priors win; hand-pin, like the fork). v3
+    don't find leakers one at a time. **Prompt-tuning the three = wrong loop NOW (judgment, not forever):** priors are in the model's training, not
+    the verses; and the reviewer reads steady-vs-varying NOT neutral — a prompt could make a core steadily commit
+    to one contested frame and read "clean", so a human settles a contested core either way. Hand-pin the three;
+    revisit a prompt pass only when hand-pinning is a CHORE (more fork-bearers need it than not + clear benefit). v3
     held **0/10 stutter across all six** = proven, but STAYS in the rig — promoting auto-builds the three leakers +
     ships the leak. Tool fixes shipped (0178448): book-typo guard before the company math + downgraded the pair-drop
     "HOLE" lean to a BACK-CHECK flag (over-calls on a marginal sub-sense); per-draw lists KEPT permanently as the
