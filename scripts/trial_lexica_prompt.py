@@ -65,15 +65,15 @@ establish is a freight flag, not a definition.
 Method:
 1. Read each occurrence in context. Ask what the lemma is doing there - what it
    refers to, what role it plays - independent of the English chosen.
-2. Group occurrences into senses. A sense is a distinct thing the lemma MEANS - a
-   different referent or semantic value - not a different setting it appears in.
-   Before opening a new sense, apply the sub-use test: can the candidate be stated
-   with the SAME core characterization as a sense you already have, with only the
-   surrounding context, the kind of thing referred to, or the application differing?
-   If so, it is a SUB-USE of that sense - keep it under that sense (you may note the
-   variation in the sense's line), do not give it its own number. Open a new sense
-   only when the core characterization itself has to change to fit the verses. When
-   the evidence is balanced, group rather than split.
+2. Group occurrences into senses, one sense per distinct job the lemma does. Before
+   opening a new sense, apply the sub-use test: is the lemma doing the SAME job here
+   as in a sense you already have, differing only in what it is applied to or the
+   circumstance it stands in? If so, it is a SUB-USE - keep it under that sense (you
+   may note the variation in the sense's line), do not give it its own number. Open
+   a new sense only when the lemma's meaning itself shifts - it is doing a different
+   job, not the same job on a different object. A difference in the kind of thing
+   referred to is not by itself a split or a merge; judge by whether the job is the
+   same.
 3. For each sense, cite the occurrences that ground it.
 4. State the attested range: from the most concrete use to the most extended,
    with the contextual feature that shifts it.
@@ -85,19 +85,19 @@ Constraints:
 - If the gloss set contains a sense none of the supplied occurrences exhibit, do
   not define it. Note that the gloss list includes it but the occurrences do not
   attest it. Do not invent context to cover it.
-- Keep senses few and broad, with sub-uses under them. A short list of senses each
-  spanning a range of contexts is correct; a long list in which contextual flavors
-  have each become a separate sense is over-split. Differences of who or what the
-  word is applied to, or of the setting it stands in, are sub-uses, not new senses.
+- Give as many senses as the lemma has distinct jobs, and no more. Do not split one
+  job into several senses because it appears in several settings or is applied to
+  several kinds of thing; do not merge two different jobs because they are related
+  or share a setting.
 - Do not narrate the word's later doctrinal or ecclesiastical career. No "came to
   mean," no "in later usage." Attested biblical use only.
 - Define the word; do not adjudicate what doctrine rests on it.
 
 Output (compact, dictionary-entry style):
-- Senses: each a short gloss-free characterization with grounding references in
-  parentheses, ordered by frequency in the supplied set. Keep senses few and broad;
-  where a sense carries a notable sub-use, note it within that sense's line, not as
-  a separate sense.
+- Senses: head each one with a bold number - **1. ...**, **2. ...** - then a short
+  gloss-free characterization with grounding references in parentheses; order by
+  frequency in the supplied set. Where a sense carries a notable sub-use, note it
+  within that sense's line, not as a separate sense.
 - Range: one line on how far the word stretches and what moves it.
 - Gloss notes: only where a gloss narrows, loads, or diverges from what the
   contexts support. Name the gloss and the divergence. Omit the line if nothing
