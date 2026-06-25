@@ -3,12 +3,12 @@
 lexica_agreement.py  —  the AGREEMENT REVIEWER for the Lexica dictionary engine.
 
 WHY THIS EXISTS (read once).
-The verse engine's output is a DRAW. Run the same word on the same evidence twice and the
-sense STRUCTURE wobbles: psyche came back 4 senses one batch, then a different 4, then 2 — same
-prompt, same verses. Step 1 tried to cure that with a better prompt and it did NOT cure: the
-residual wobble is the MEDIUM, not a tuning bug. So the safety mechanism is not a perfect prompt;
-it is THIS — build a word several times and let the draws VOTE. A sense (a distinct JOB the lemma
-does) that is present in some draws and absent in others is the flag.
+The verse engine's output is a DRAW. Run the same word on the same evidence twice and the sense
+STRUCTURE wobbles: psyche came back 4 senses one batch, then a different 4, then 2 — same prompt,
+same verses. Step 1 tried to cure that with a better prompt and it did NOT cure: the residual
+wobble is the MEDIUM, not a tuning bug. So the safety mechanism is not a perfect prompt; it is
+THIS — build a word several times and let the draws VOTE. A sense (a distinct JOB the lemma does)
+that is present in some draws and absent in others is the flag.
 
 WHAT THE COUNT MISSES (the finding that forced this rig to exist).
 Sense COUNT lies. psyche clustered at 4 — but the runs hit 4 by DIFFERENT senses (some had the
@@ -19,32 +19,39 @@ presence ACROSS DRAWS (the vote), which IS automatable. The SIGNIFICANCE call �
 sense MATTER (a real hole) or not (a fine fold) — is left to human eyes, by design, for now.
 (Whether a model can ever carry significance is Step 4, named and deferred.)
 
+WHY SUPPORT COUNT ALONE IS NOT ENOUGH (the second trap, same shape as the first).
+"How many draws cite this verse" looks like the whole answer and is not. A verse can stay fully
+cited while MIGRATING to a different sense; and a droppable sub-use can sit at FULL support while a
+core sense holes BELOW it — so support count alone can rank a fold ABOVE a hole. The fix is a
+second column, per verse: not just how often it is cited, but WHO it keeps company with — which
+other verses share its sense across the draws. A verse that keeps support and merely regroups is
+folding; a verse that loses support, or whose core partner stops travelling with it, is holing.
+
 ────────────────────────────────────────────────────────────────────────────────────────────────
 THE HOLE-vs-FOLD PROCEDURE  (how to read the output — this is the actual gate)
 ────────────────────────────────────────────────────────────────────────────────────────────────
-  1. Read the PER-DRAW SENSES. That is the ground truth; everything below it is an aid.
+  1. Read the PER-DRAW SENSES. That is the ground truth; everything below it is a summary of it.
   2. Find the CONSENSUS structure: the jobs that appear in (nearly) every draw. Those are stable.
-  3. Find the WOBBLES: any job present in some draws, absent in others. The rig surfaces these two
-     ways, neither of which is a verdict —
-       • JOB CLUSTERS — senses grouped across draws by a shared grounding verse. ROUGH (a fold
-         draw can bridge two real jobs into one cluster; a job grounded on different verses can
-         split). Use it to PROPOSE candidates, then check by eye.
-       • PER-VERSE SUPPORT — how many draws cite each grounding verse. This is the clean presence
-         skeleton: a verse cited in every draw is stable; a verse that loses support in some draws
-         is exactly where a sense may be holing.
-  4. Call each wobble HOLE or FOLD — THIS is the judgment, and it is YOURS:
-       FOLD (benign): in the draws that "lack" the job, its meaning is still there — tucked under a
-         neighbouring sense. Its grounding verses are still cited; the broader sense's wording
-         covers the sub-use. Only the seam moved. Per the scenario-2 calibration, IGNORE folds
-         (e.g. life-at-stake under the animating-life principle; appetite under the inner self).
-       HOLE (disqualifying): in the draws that lack the job, the meaning is GONE — its verses drop
-         out (per-verse support falls in those draws) or land under a sense that does not cover that
-         meaning, and nothing else in the draw carries the job. A reader of that draw would never
-         learn the word carries that sense.
-     THE TEST that separates them: take the wobble job's grounding verses; in a draw WITHOUT the
-     job's own sense, are those verses STILL CITED under a fair neighbour (FOLD) or DROPPED /
-     mis-housed (HOLE)? Per-verse support is the quick read — a job whose verses keep full support
-     across draws is folding; a job whose verses lose support in some draws is holing.
+  3. Find the WOBBLES with the two columns the rig prints, neither of which is a verdict:
+       • PER-VERSE SUPPORT — how many draws cite each grounding verse. A verse cited in every draw
+         is present; a verse that loses support in some draws is where a sense may be holing.
+       • PER-VERSE COMPANY — WHO each verse shares a sense with across the draws. This is the column
+         support alone can't give you: a verse can stay fully cited while MIGRATING to another sense,
+         and a sub-use can sit at FULL support while a core sense holes below it. The company tells
+         a regroup (fold) apart from a defection (hole).
+  4. Call each wobble HOLE or FOLD — THIS is the judgment, and it is YOURS. The discriminator:
+       FOLD (benign): the meaning never leaves — its verses keep (near-)full support across draws,
+         they just REGROUP (the same verses sit under their own sense some runs, tucked under a
+         neighbour other runs). Only the seam moved. Per scenario-2, IGNORE folds (e.g. appetite
+         under the inner self; life-at-stake under the animating-life principle).
+       HOLE (disqualifying): the meaning actually leaves — its verses LOSE support in some draws,
+         or its core pair DISSOLVES (one verse drops, the other defects to an unrelated sense), and
+         nothing in those draws carries the job. A reader of that draw would never learn the word
+         carries that sense.
+     THE TEST: take the wobble's grounding verses. Do they keep support and merely regroup (FOLD),
+     or does their support fall / the pair break apart (HOLE)? Read SUPPORT for the drop and COMPANY
+     for regroup-vs-defect — a verse that drops while its main partner ALSO drops is a dissolving
+     sense (hole); a verse that drops while its partner stays cited is re-shelved (fold).
   5. VERDICT for the word:
        no wobbles, or every wobble is a fold  ->  STABLE.  Safe to ship from a single draw.
        any wobble is a hole                   ->  UNSTABLE. Do NOT ship a blind single draw — the
@@ -52,9 +59,14 @@ THE HOLE-vs-FOLD PROCEDURE  (how to read the output — this is the actual gate)
          realised by a draw the reviewer has confirmed carries every stable job with no hole.
          (Selecting/writing that specific reviewed draw is Step 3 wiring, NOT built here.)
 
+  READ IT COLD. The honest test of this reviewer is whether the split is FORCED by the numbers, not
+  read in from what you already expect. Cover the expectation; if a hole is real it shows as a
+  support drop whose partner also leaves — derivable from the columns without a prior. That is the
+  whole point: at the rare-word tail you will have no prior.
+
   CALIBRATION (scenario-2, locked): trust the engine; ignore near-duplicate folds; flag only the
   VANISH-OR-RESURRECT of a whole job. Don't nitpick wording — senses are worded differently every
-  run by design, which is why this rig never string-matches them.
+  run by design, which is why this rig never string-matches them (it aligns on grounding verses).
 
 ────────────────────────────────────────────────────────────────────────────────────────────────
 SCOPE / SAFETY
@@ -221,70 +233,36 @@ def parse_draw(conn, sid, raw):
 
 
 # ══════════════════════════════════════════════════════════════════════════════════════════════
-# The two cross-draw views — both PRESENCE only, never a significance verdict.
+# The cross-draw view — PRESENCE + COMPANY, never a significance verdict.
 # ══════════════════════════════════════════════════════════════════════════════════════════════
-def cluster_jobs(draws):
-    """ROUGH job clusters. Every sense (from every draw) is a node; two senses are linked if they
-    share a grounding verse; connected components are candidate 'jobs'. Caveats baked in: a single
-    draw contributing 2+ senses to one cluster means the cluster BRIDGED a real split (over-merge) —
-    flagged so the reader distrusts it. Senses with no refs can't be aligned and stay singletons.
-    This PROPOSES wobbles; it never decides hole vs fold. Returns clusters sorted by support."""
-    nodes = []   # (draw_idx, sense_idx, headline, frozenset(refs))
+def verse_company(draws):
+    """Per grounding verse: how many draws cite it (SUPPORT) and WHO it shares a sense with across
+    those draws (COMPANY). Support alone misleads — a droppable sub-use can sit at full support while
+    a core sense holes below it — so the company is the second column: a verse that keeps support AND
+    merely regroups is folding; one that loses support or whose core partner stops travelling with it
+    is holing. Label-free, threshold-free: just co-citation counts the reader can verify against the
+    per-draw lists. Returns (support, same_sense, co_cited, cite_draws, n)."""
+    n = len(draws)
+    support = Counter()            # v -> #draws citing v anywhere
+    cite_draws = {}                # v -> set(draw idx) citing v
+    same_sense = {}               # v -> Counter(w -> #draws v,w share a sense)
+    co_cited = {}                 # v -> Counter(w -> #draws both v,w cited anywhere)
     for di, d in enumerate(draws):
-        for si, s in enumerate(d["senses"]):
-            nodes.append((di, si, s["headline"], frozenset(tuple(r) for r in s["refs"])))
-    parent = list(range(len(nodes)))
-
-    def find(x):
-        while parent[x] != x:
-            parent[x] = parent[parent[x]]
-            x = parent[x]
-        return x
-
-    def union(a, b):
-        ra, rb = find(a), find(b)
-        if ra != rb:
-            parent[ra] = rb
-
-    by_ref = {}
-    for idx, (_, _, _, refs) in enumerate(nodes):
-        for r in refs:
-            by_ref.setdefault(r, []).append(idx)
-    for idxs in by_ref.values():
-        for k in range(1, len(idxs)):
-            union(idxs[0], idxs[k])
-
-    comps = OrderedDict()
-    for idx in range(len(nodes)):
-        comps.setdefault(find(idx), []).append(nodes[idx])
-
-    clusters = []
-    for members in comps.values():
-        per_draw = Counter(m[0] for m in members)
-        clusters.append({
-            "headlines": [m[2] for m in members],
-            "draws_present": sorted(per_draw),
-            "support": len(per_draw),
-            "bridged": max(per_draw.values()),     # >1 ⇒ a draw put 2+ senses here ⇒ over-merge
-            "refless": all(not m[3] for m in members),
-        })
-    clusters.sort(key=lambda c: (-c["support"], -len(c["headlines"])))
-    return clusters
-
-
-def verse_support(draws):
-    """For each grounding verse, how many draws cite it (anywhere). The clean presence skeleton:
-    a verse cited in every draw is stable; a verse that loses support in some draws is where a
-    sense may be holing. No clustering, no labels, no verdict. Returns {ref_tuple: count}."""
-    cnt = Counter()
-    for d in draws:
-        seen = set()
-        for s in d["senses"]:
-            for r in s["refs"]:
-                seen.add(tuple(r))
-        for r in seen:
-            cnt[r] += 1
-    return cnt
+        sense_sets = [set(tuple(r) for r in s["refs"]) for s in d["senses"]]
+        all_v = set().union(*sense_sets) if sense_sets else set()
+        for v in all_v:
+            support[v] += 1
+            cite_draws.setdefault(v, set()).add(di)
+        for v in all_v:
+            for w in all_v:
+                if v != w:
+                    co_cited.setdefault(v, Counter())[w] += 1
+        for ss in sense_sets:
+            for v in ss:
+                for w in ss:
+                    if v != w:
+                        same_sense.setdefault(v, Counter())[w] += 1
+    return support, same_sense, co_cited, cite_draws, n
 
 
 # ══════════════════════════════════════════════════════════════════════════════════════════════
@@ -295,8 +273,8 @@ def fmt_ref(r):
 
 
 def render_report(sid, lemma, translit, prompt_name, ev, draws):
-    """Build the human report (a list of lines). PRESENCE is computed; SIGNIFICANCE is left blank
-    for the reader to fill — every word ends with a 'YOUR CALL' line, per the procedure up top."""
+    """Build the human report (a list of lines). PRESENCE + COMPANY are computed; SIGNIFICANCE is
+    left blank for the reader to fill — every word ends with a 'YOUR CALL' line, per the procedure."""
     L = []
     def w(s=""):
         L.append(s)
@@ -304,9 +282,9 @@ def render_report(sid, lemma, translit, prompt_name, ev, draws):
     n = len(draws)
     w("=" * 92)
     w(f"{sid}  {LABELS.get(sid, lemma)}   ({translit})    prompt: {prompt_name.upper()}"
-      + ("   ⚠ candidate, NOT the live engine" if prompt_name == "v3" else "   (the live engine)"))
+      + ("   ** candidate, NOT the live engine **" if prompt_name == "v3" else "   (the live engine)"))
     w(f"  evidence: {ev['total']} occurrences | {ev['renderings']} renderings | "
-      f"fed {ev['fed']} ({ev['ot']} OT / {ev['fed'] - ev['ot']} NT)   ·   N = {n} draws")
+      f"fed {ev['fed']} ({ev['ot']} OT / {ev['fed'] - ev['ot']} NT)   .   N = {n} draws")
     if sid in B._CONTESTED_BY_SID:
         w("  (contested word: its fork block is deterministic + constant across draws — not reviewed here)")
 
@@ -319,15 +297,15 @@ def render_report(sid, lemma, translit, prompt_name, ev, draws):
       f"— a clustered count is necessary but NOT sufficient; the structure is the read.")
     zero = [i + 1 for i, d in enumerate(draws) if d["count"] == 0]
     if zero:
-        w(f"  ⚠ {len(zero)} draw(s) parsed to 0 senses (format break — inspect raw): {zero}")
+        w(f"  !! {len(zero)} draw(s) parsed to 0 senses (format break — inspect raw): {zero}")
     bad = [(i + 1, d["audit"]["real"]) for i, d in enumerate(draws) if d["audit"]["real"]]
     if bad:
-        w(f"  ⚠ citation real-miss (possible hallucinated verse) in draw(s): "
+        w(f"  !! citation real-miss (possible hallucinated verse) in draw(s): "
           + ", ".join(f"#{i}({r})" for i, r in bad))
 
     # 1 — PER-DRAW SENSES: the ground truth
     w("")
-    w("  ── PER-DRAW SENSES (headline — grounding verses) — THE GROUND TRUTH ──")
+    w("  -- PER-DRAW SENSES (headline -- grounding verses) -- THE GROUND TRUTH --")
     for i, d in enumerate(draws, 1):
         w(f"  draw {i:>2}  [{d['count']} senses]")
         for j, s in enumerate(d["senses"], 1):
@@ -335,63 +313,47 @@ def render_report(sid, lemma, translit, prompt_name, ev, draws):
             w(f"      {j}. {s['headline']}")
             w(f"           {refs}")
 
-    # 2 — JOB CLUSTERS (rough aid)
-    clusters = cluster_jobs(draws)
+    # 2 — PER-VERSE SUPPORT + COMPANY: support shows the drop, company tells fold from hole
+    support, same_sense, co_cited, cite_draws, _ = verse_company(draws)
     w("")
-    w("  ── JOB CLUSTERS (rough — grouped by a shared grounding verse; verify by eye) ──")
-    for ci, c in enumerate(clusters):
-        tag = chr(ord('A') + ci) if ci < 26 else f"#{ci}"
-        absent = [k + 1 for k in range(n) if k not in c["draws_present"]]
-        flag = "" if c["support"] == n else f"   ◄ WOBBLE (absent in draws {absent})"
-        note = ""
-        if c["bridged"] > 1:
-            note = "   [bridges 2+ senses within a draw — likely over-merged, read by eye]"
-        if c["refless"]:
-            note = "   [no refs — could not be aligned; read by eye]"
-        w(f"  cluster {tag}   support {c['support']}/{n}{flag}{note}")
-        seen, reps = set(), []
-        for h in c["headlines"]:
-            key = h.lower()
-            if key not in seen:
-                seen.add(key)
-                reps.append(h)
-        for h in reps[:4]:
-            w(f"        · {h}")
-        if len(reps) > 4:
-            w(f"        · … and {len(reps) - 4} more wordings")
+    w("  -- PER-VERSE SUPPORT + COMPANY -- support shows a drop; company tells fold from hole --")
+    w("     \"with: REF a/b\" = shared a sense in a of the b draws that cite both; a < b means it migrates.")
+    w("     (a sub-use can sit at FULL support while a core sense holes below it -- read BOTH columns.)")
+    order = sorted(support, key=lambda v: (-support[v], fmt_ref(v)))
+    for v in order:
+        miss = sorted(set(range(n)) - cite_draws.get(v, set()))
+        drop = f"   <-- drops in draws {[m + 1 for m in miss]}" if miss else ""
+        sm, cc = same_sense.get(v, Counter()), co_cited.get(v, Counter())
+        parts = [f"{fmt_ref(pw)} {a}/{cc.get(pw, a)}" for pw, a in sm.most_common(4)]
+        comp = ("  with: " + ", ".join(parts)) if parts else "  (stood alone in its own sense)"
+        w(f"      {fmt_ref(v):<13} {support[v]}/{n}{comp}{drop}")
 
-    # 3 — PER-VERSE SUPPORT: the clean presence skeleton
-    cnt = verse_support(draws)
+    # 3 — WOBBLES: drive the call off a support-drop, with a fold/hole LEAN from the partners
+    drops = [v for v in order if set(range(n)) - cite_draws.get(v, set())]
     w("")
-    w("  ── PER-VERSE SUPPORT (draws citing each grounding verse) — the presence skeleton ──")
-    full = sorted([r for r, c in cnt.items() if c == n], key=fmt_ref)
-    w(f"  full support ({n}/{n}) — stable skeleton ({len(full)} verses):")
-    if full:
-        w("      " + ", ".join(fmt_ref(r) for r in full))
-    partial = sorted([(r, c) for r, c in cnt.items() if c < n], key=lambda rc: (rc[1], fmt_ref(rc[0])))
-    w(f"  presence wobble (<{n}/{n}) — inspect the sense each anchors ({len(partial)} verses):")
-    for r, c in partial:
-        miss = [k + 1 for k in range(n) if r not in
-                {tuple(x) for d in [draws[k]] for s in d["senses"] for x in s["refs"]}]
-        w(f"      {fmt_ref(r):<14} {c}/{n}   missing in draws {miss}")
-
-    # 4 — WOBBLE summary + the call the reader must make
-    wob = [c for c in clusters if 1 <= c["support"] < n and not c["refless"]]
-    w("")
-    w("  ── WOBBLES TO JUDGE (apply HOLE-vs-FOLD; the procedure is at the top of this file) ──")
-    if not wob and not partial:
-        w("  none — every job and every grounding verse holds across all draws. Looks STABLE.")
+    w("  -- WOBBLES TO JUDGE (apply HOLE-vs-FOLD; full procedure at the top of this file) --")
+    if not drops:
+        w("  no verse loses support -- every cited meaning holds across all draws. Looks STABLE.")
+        w("  (Skim the company column: a once-tight pair that splits -- a/b well below 1 -- is a")
+        w("   dissolving sense even without a drop; otherwise migration is just a fold/seam, fine.)")
     else:
-        for ci, c in enumerate(clusters):
-            if c in wob:
-                tag = chr(ord('A') + ci) if ci < 26 else f"#{ci}"
-                absent = [k + 1 for k in range(n) if k not in c["draws_present"]]
-                rep = c["headlines"][0] if c["headlines"] else "(?)"
-                w(f"  • cluster {tag} \"{rep}\" — support {c['support']}/{n}, absent in draws {absent}.")
-                w(f"      In those draws: is this FOLDED under a neighbour (fine) or a HOLE (flag)?")
-        if partial and not wob:
-            w("  • only per-verse citation jitter (no whole job vanished) — usually fold/noise; "
-              "skim the low-support verses above to be sure.")
+        w("  these verses leave some draws -- for each, is the meaning RE-SHELVED under a surviving")
+        w("  sense (FOLD, fine) or GONE (HOLE, flag)? The lean below is from the partners, not a verdict:")
+        for v in drops:
+            miss = sorted(set(range(n)) - cite_draws.get(v, set()))
+            sm = same_sense.get(v, Counter())
+            lean = ""
+            if sm:
+                pw = sm.most_common(1)[0][0]
+                pmiss = sorted(set(range(n)) - cite_draws.get(pw, set()))
+                shared = sorted(set(miss) & set(pmiss))
+                if shared:
+                    lean = (f" -- its main partner {fmt_ref(pw)} ALSO leaves draws "
+                            f"{[m + 1 for m in shared]}: the pair dissolves -> leans HOLE")
+                else:
+                    lean = (f" -- its main partner {fmt_ref(pw)} stays cited: the meaning may be "
+                            f"re-shelved -> leans FOLD")
+            w(f"      {fmt_ref(v):<13} {support[v]}/{n}, absent in {[m + 1 for m in miss]}{lean}")
     w("")
     w(f"  => YOUR CALL for {LABELS.get(sid, sid)}:  STABLE (ship from one draw)  |  "
       f"UNSTABLE-HOLE (name the dropped job)")
@@ -439,7 +401,6 @@ def from_json(path):
     report) re-analyse the SAME draws without paying for generation again."""
     with open(os.path.expanduser(path), encoding="utf-8") as f:
         p = json.load(f)
-    # rebuild the in-memory draw shape the renderer expects (refs back to tuples)
     def to_tuple(s):
         m = re.match(r'(\S+)\s+(\d+):(\d+)', s)
         return (m.group(1), int(m.group(2)), int(m.group(3))) if m else (s, 0, 0)
@@ -490,7 +451,7 @@ def main():
         if not ev["ctx"]:
             print(f"\n{sid}: no occurrences — skip.")
             continue
-        print(f"\n{sid} {LABELS.get(sid, '')}: drawing {args.runs}× …", flush=True)
+        print(f"\n{sid} {LABELS.get(sid, '')}: drawing {args.runs}x …", flush=True)
         draws = []
         for k in range(args.runs):
             raw = draw_once(client, system, sid, ev["translit"], ev["gset"], ev["ctx"])

@@ -230,9 +230,11 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
     The standing safety gate (Plan A, scenario-2): draw a word N× on the same evidence; **a sense present in SOME
     draws but absent in others is the flag** (draws voting, no answer key → scales to the tail). Read-only, PA-only,
     reuses build_lexica_def's frozen helpers; `--prompt v3` (default) | `live`; saves each run to JSON (`--from-json`
-    re-reads free). Three PRESENCE views (per-draw senses · ref-cluster · per-verse support), none a verdict; the
-    HOLE-vs-FOLD procedure is in its docstring (trust the engine, IGNORE near-duplicate folds, flag only
-    vanish-or-resurrect of a whole job). Validated on synthetic psyche ground truth. **NEXT (needs PA):**
+    re-reads free). PRESENCE views (per-draw senses · per-verse SUPPORT+COMPANY), none a verdict; the HOLE-vs-FOLD
+    procedure is in its docstring (trust the engine, IGNORE near-duplicate folds, flag only vanish-or-resurrect of
+    a whole job). KEY: support count alone misleads (a fold can sit at full support above a holed core sense), so
+    the COMPANY column — who each verse shares a sense with across draws — is the discriminator; validated on a
+    faithful psyche synthetic incl. the masked-hole case. **NEXT (needs PA):**
     `python scripts/lexica_agreement.py --word G5590 --runs 10` (canary — must surface the known 1/10 inner-self
     hole + appetite fold), then the full six; settle the procedure on real draws, THEN promote v3 + rebuild the six
     THROUGH the check together (never a blind single draw). (Plan B — hand-curate sense lists — REJECTED:
