@@ -494,12 +494,17 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   // card is exactly as before.
   useEffect(() => {
     setLexica(null);
-    const sb = entry && entry.strongs_base;
+    // Look the entry up by the FULL number (strongs_raw keeps the dotted ".N"), NOT strongs_base
+    // (which drops it). A dotted cognate — ekklesiazo G1577.1 / ekklesiastes G1577.2 sitting under
+    // ekklesia G1577 — must fetch its OWN number so it 404s and falls through to its own LSJ card,
+    // instead of borrowing the base word's definition. Keyed by strongs_base, every one of the
+    // ~3619 dotted words would inherit its base's entry once that base is built.
+    const sn = entry && (entry.strongs_raw || entry.strongs_base);
     let signedIn = false;
     try { signedIn = !!(typeof NotesStore !== "undefined" && NotesStore.auth() && NotesStore.auth().token); } catch (e) {}
-    if (!sb || sb === "*" || !signedIn) return;
+    if (!sn || sn === "*" || !signedIn) return;
     let cancelled = false;
-    api.lexica(sb)
+    api.lexica(sn)
       .then(d => { if (!cancelled) setLexica(d && !d.error ? d : null); })
       .catch(() => { if (!cancelled) setLexica(null); });
     return () => { cancelled = true; };

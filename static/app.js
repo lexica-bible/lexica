@@ -334,7 +334,12 @@ api.lsjSummary(lsjEntry.key,summaryStrongs).then(d=>{if(!cancelled)setLsjSummary
 // server 404s for everyone else, so only fetch when signed in (skips the call for the logged-out
 // public). When present it REPLACES the LSJ card body + the up-top plain gloss; when absent the
 // card is exactly as before.
-useEffect(()=>{setLexica(null);const sb=entry&&entry.strongs_base;let signedIn=false;try{signedIn=!!(typeof NotesStore!=="undefined"&&NotesStore.auth()&&NotesStore.auth().token);}catch(e){}if(!sb||sb==="*"||!signedIn)return;let cancelled=false;api.lexica(sb).then(d=>{if(!cancelled)setLexica(d&&!d.error?d:null);}).catch(()=>{if(!cancelled)setLexica(null);});return()=>{cancelled=true;};},[entry&&entry.id]);if(!entry)return null;const barWidth=Math.min(100,occurrences/Math.max(1,totalResults)*100);const morphLine=entry.greek&&!isHebrew?decodeMorph(entry.morph,entry.greek,entry.strongs_base):isHebrew?entry.grammar||"":"";// Hebrew: the decoded TAHOT grammar, same card slot as Greek
+useEffect(()=>{setLexica(null);// Look the entry up by the FULL number (strongs_raw keeps the dotted ".N"), NOT strongs_base
+// (which drops it). A dotted cognate — ekklesiazo G1577.1 / ekklesiastes G1577.2 sitting under
+// ekklesia G1577 — must fetch its OWN number so it 404s and falls through to its own LSJ card,
+// instead of borrowing the base word's definition. Keyed by strongs_base, every one of the
+// ~3619 dotted words would inherit its base's entry once that base is built.
+const sn=entry&&(entry.strongs_raw||entry.strongs_base);let signedIn=false;try{signedIn=!!(typeof NotesStore!=="undefined"&&NotesStore.auth()&&NotesStore.auth().token);}catch(e){}if(!sn||sn==="*"||!signedIn)return;let cancelled=false;api.lexica(sn).then(d=>{if(!cancelled)setLexica(d&&!d.error?d:null);}).catch(()=>{if(!cancelled)setLexica(null);});return()=>{cancelled=true;};},[entry&&entry.id]);if(!entry)return null;const barWidth=Math.min(100,occurrences/Math.max(1,totalResults)*100);const morphLine=entry.greek&&!isHebrew?decodeMorph(entry.morph,entry.greek,entry.strongs_base):isHebrew?entry.grammar||"":"";// Hebrew: the decoded TAHOT grammar, same card slot as Greek
 const{sheetRef,scrollRef}=useSwipeToDismiss(onClose);// --------------------------------------------------------------------------
 // Panel descriptor — resolve the isPN / isHebrew / metavType tangle into ONE
 // place: a `hero` block and an ordered `sections` list. The return below is
