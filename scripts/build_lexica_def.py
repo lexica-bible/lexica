@@ -46,7 +46,10 @@ MAX_TOKENS   = 3000                  # output ceiling. Was 1500 — too low: it 
                                      # truncated word on its own with --force.
 SPLIT_VER    = "split2"              # which split_definition() wrote a row (stored for traceability; NOT in the skip-stamp)
 
-# ── PROMPT — VERSE-GROUNDED definition (Sonnet). VERBATIM from the trial rig. FROZEN. ────────
+# ── PROMPT — VERSE-GROUNDED definition (Sonnet). v3 (promoted 2026-06-25, after the 3 frame-leaker
+# cores were hand-pinned): adds the sub-use test (same-job vs different-job) + a symmetric
+# no-over-split/no-over-merge constraint. Proven 0/10 format stutter across the six in the agreement
+# reviewer. KEEP IN SYNC with lexica_agreement.V3_PROMPT (the reviewer soft-asserts they match). ───
 VERSE_PROMPT = """\
 You define a biblical lemma from its own attested use. You are given:
 - the lemma (Strong's number, original-language form, transliteration)
@@ -69,9 +72,15 @@ establish is a freight flag, not a definition.
 Method:
 1. Read each occurrence in context. Ask what the lemma is doing there - what it
    refers to, what role it plays - independent of the English chosen.
-2. Group occurrences into the distinct senses the contexts actually require. Two
-   occurrences share a sense only if the contexts, not the glosses, put them
-   together.
+2. Group occurrences into senses, one sense per distinct job the lemma does. Before
+   opening a new sense, apply the sub-use test: is the lemma doing the SAME job here
+   as in a sense you already have, differing only in what it is applied to or the
+   circumstance it stands in? If so, it is a SUB-USE - keep it under that sense (you
+   may note the variation in the sense's line), do not give it its own number. Open
+   a new sense only when the lemma's meaning itself shifts - it is doing a different
+   job, not the same job on a different object. A difference in the kind of thing
+   referred to is not by itself a split or a merge; judge by whether the job is the
+   same.
 3. For each sense, cite the occurrences that ground it.
 4. State the attested range: from the most concrete use to the most extended,
    with the contextual feature that shifts it.
@@ -83,13 +92,18 @@ Constraints:
 - If the gloss set contains a sense none of the supplied occurrences exhibit, do
   not define it. Note that the gloss list includes it but the occurrences do not
   attest it. Do not invent context to cover it.
+- Give as many senses as the lemma has distinct jobs, and no more. Do not split one
+  job into several senses because it appears in several settings or is applied to
+  several kinds of thing; do not merge two different jobs because they are related
+  or share a setting.
 - Do not narrate the word's later doctrinal or ecclesiastical career. No "came to
   mean," no "in later usage." Attested biblical use only.
 - Define the word; do not adjudicate what doctrine rests on it.
 
 Output (compact, dictionary-entry style):
 - Senses: each a short gloss-free characterization with grounding references in
-  parentheses, ordered by frequency in the supplied set.
+  parentheses, ordered by frequency in the supplied set. Where a sense carries a
+  notable sub-use, note it within that sense's line, not as a separate sense.
 - Range: one line on how far the word stretches and what moves it.
 - Gloss notes: only where a gloss narrows, loads, or diverges from what the
   contexts support. Name the gloss and the divergence. Omit the line if nothing

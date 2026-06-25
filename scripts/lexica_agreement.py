@@ -121,8 +121,8 @@ LABELS = {"G5590": "psyche", "G1344": "dikaioo", "G5484": "charis",
 # engine). "v3" = the candidate from the prompt session — same-job/different-job sub-use test,
 # symmetric no-over-split/no-over-merge. It is carried here as a SELF-CONTAINED frozen copy so the
 # reviewer survives the throwaway trial_lexica_prompt.py being deleted; if that rig is still present
-# we soft-assert the two copies have not drifted. v3 is promoted into build_lexica_def only after
-# the six pass review — until then the live engine is untouched. ───────────────────────────────────
+# we soft-assert the two copies have not drifted. v3 was PROMOTED into build_lexica_def 2026-06-25
+# (after the six passed review + the 3 leaker cores were pinned), so "live" == "v3" now. ────────────
 V3_PROMPT = """\
 You define a biblical lemma from its own attested use. You are given:
 - the lemma (Strong's number, original-language form, transliteration)
@@ -356,7 +356,8 @@ def render_report(sid, lemma, translit, prompt_name, ev, draws, valid_books=None
     n = len(draws)
     w("=" * 92)
     w(f"{sid}  {LABELS.get(sid, lemma)}   ({translit})    prompt: {prompt_name.upper()}"
-      + ("   ** candidate, NOT the live engine **" if prompt_name == "v3" else "   (the live engine)"))
+      + ("   (the live engine)" if PROMPTS[prompt_name] == B.VERSE_PROMPT
+         else "   ** candidate, NOT the live engine **"))
     w(f"  evidence: {ev['total']} occurrences | {ev['renderings']} renderings | "
       f"fed {ev['fed']} ({ev['ot']} OT / {ev['fed'] - ev['ot']} NT)   .   N = {n} draws")
     if sid in B._CONTESTED_BY_SID:
