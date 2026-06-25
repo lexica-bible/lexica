@@ -216,13 +216,26 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
   - ✅ **Wire the engine + both gates into the app** — DONE 2026-06-24: `build_lexica_def.py` + the `lexica_def`
     table + `views_lexica.py` + the `LexicaBody` card, LIVE admin-only on the 6 words (`LEXICA_ADMIN_ONLY` flips
     it public). Surgical raw fixes via `scripts/fix_lexica_raw.py`; `MAX_TOKENS` raised 1500→3000 (was truncating).
-  - **VERSE_PROMPT sense-count instability (NEXT — surfaced in the 2026-06-24/25 card review).** The prompt never
-    says where one sense ENDS vs a sub-use, so the model over-splits: a fresh psychē re-ran 4→6 senses, charis
-    came out at 7. Fix the FRAME (sense-vs-sub-use boundary), then re-run the set. psychē is KEPT at its vetted
-    4-sense version as the measuring stick — do NOT re-generate it until the prompt's fixed. Folds in the parked
-    charis 7-sense DENSITY + psychē sense-count questions.
+  - ~~**VERSE_PROMPT sense-count fix**~~ → **DISSOLVED 2026-06-24 — the fix didn't prove out, and that's the finding.**
+    A throwaway distribution rig (`scripts/trial_lexica_prompt.py`) ran the live prompt vs a v3 candidate (sub-use
+    test reframed on **same-job vs different-job**, symmetric no-over-split/no-over-merge, dropped the "few and broad"
+    thumb) N times on psychē, same evidence. v3 is tighter (mode 4 not 5, no format breaks, no hallucinated verses)
+    and is FROZEN IN THE RIG, but NOT promoted (live engine untouched). LESSON: **no achievable prompt stabilizes the
+    sense STRUCTURE** — the count clusters at 4 but the runs hit it by DIFFERENT senses (appetite leaks back; inner-self
+    dropped once), and the count metric can't see that. The citation gate can't either — it PASSED the run missing a
+    sense (real verses, dropped sense). Through-line: **every automatic gate sees PRESENCE, not SIGNIFICANCE.** So
+    safety isn't a better prompt, it's a REVIEWER. Full record: memory `project_lexica_dictionary` (PROMPT SESSION block).
+  - **NEXT (cold start): stand up the AGREEMENT REVIEWER on the 6 pilot words (Plan A, scenario-2).** Build a word a few
+    times; **a sense present in SOME draws but absent in others is the flag** (draws voting, no answer key → scales to
+    the tail). Trust the engine, IGNORE near-duplicate folds (the life-cluster fold is fine), flag only vanish-or-resurrect
+    of a whole sense. Settle hole-vs-fold as a procedure (judge = your eyes via the rig's `--all-headlines`), THEN
+    promote v3 + rebuild the six THROUGH the check together (never a blind single-draw rebuild). (Plan B — hand-curate
+    sense lists — REJECTED: contradicts "trust the engine," re-imports BDAG-authority, doesn't scale.)
+  - **OPEN for Step 4 — the significance judge.** Pure voting sees that something varied, not whether it MATTERS (a real
+    hole and a fine fold both vary). Human eyes now; at scale a model pass OR spot-check-is-the-ceiling — unproven either
+    way. Same blind spot as the citation gate, one layer up.
   - **Depth-then-compress display:** the card already has Meaning / Full entry / LSJ; the open call is the density
-    TRIM (glance vs full — the fork block + grounding verses compress LAST). Ties to the prompt fix above.
+    TRIM (glance vs full — the fork block + grounding verses compress LAST). Pick up after the reviewer above.
   - Follow-up (small, not blocking): the fork gate names a covenant-membership/NPP reading for dikaioō that
     `salvation_how` has no node for — add one to that graph (via add_study_graph_salvation.py) so the link lands.
   - Follow-up (hardening, not blocking — 2026-06-24 card review): the citation gate only sees refs shaped
