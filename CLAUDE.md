@@ -276,7 +276,12 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   NOT the written draw (the `--apply` citation gate does that), so a reviewer re-run before a write is OPTIONAL
   once the prompt is diff-locked. **Full-build BATCH 1 DONE 2026-06-25** (12 words, the calibration batch; tiers proved out — 3-tier ship-gate:
   concrete/low-polysemy build-one-draw · mid-polysemy `lexica_agreement --runs 3` · high-polysemy/contested/
-  loaded-referent `--runs 10`-or-eyes). **Next = the batch-2 PRE-SORT/PIPELINE script (scoped, not built).** Full
+  loaded-referent `--runs 10`-or-eyes). **Next = the batch-2 PRE-SORT/PIPELINE script (scoped, not built).**
+  **LXX-provenance note (Option B) LIVE 2026-06-25:** a subordinate "rests on Septuagint (Greek-OT) usage" flag
+  on senses grounded ≥80% OT (≥4 OT refs) — `sense_provenance()` derives it from the stored citations (book =
+  OT/NT), NO model, recomputed on every build/`--resplit` (`--all` rolls it across the whole batch). Fires only
+  on the real calques (ekklesia/aionios/charis/dikaioō/Christos), silent on both-testament words
+  (pneuma/theos/kyrios). Threshold set against a real census — `scripts/audit_lxx_provenance.py --preview`. Full
   record: memory `project_lexica_dictionary`.
 - `books` — book metadata (name, testament, regex)
 - `ai_search_cache` — cached AI query results and TSK synthesis
