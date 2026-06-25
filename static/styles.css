@@ -1260,6 +1260,11 @@ input { font-family: inherit; }
 /* ── Lexica dictionary card (verse-grounded). Dedicated .lex-* so nothing leaks into the locked
    LSJ / Library word card; reuses .lsj-tg-row/.lsj-tg for the Meaning/Full entry/LSJ toggle. */
 .lex-verified { font-size: 11px; color: var(--ink-4); margin: 0 0 8px; letter-spacing: 0.02em; }
+/* Hand-pinned neutral core (frame-leakers): the settled meaning leads the card, calm/authoritative
+   (a quiet accent bar), with the model's senses demoted under the "Attested uses" label below it. */
+.lex-core { font-family: var(--f-serif); font-size: 15px; line-height: 1.5; color: var(--ink);
+  padding-left: 11px; border-left: 2px solid color-mix(in srgb, var(--accent) 45%, var(--paper)); }
+.lex-uses-lbl { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-4); margin: 12px 0 5px; }
 .lex-senses { margin: 0; padding-left: 18px; font-family: var(--f-serif); font-size: 14px; line-height: 1.5; color: var(--ink); }
 .lex-senses li { margin-top: 5px; }
 .lex-senses li:first-child { margin-top: 0; }

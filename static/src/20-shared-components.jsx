@@ -147,6 +147,20 @@ function LexicaVerses({ verses }) {
   );
 }
 
+// Frame-leakers (dikaioō / charis / aionios) carry a hand-pinned neutral core: the model's own
+// senses pre-pick a contested frame draw to draw, so the settled core leads the card and those
+// senses drop below it as "Attested uses". Present only when build_lexica_def pinned it; every
+// other word has no pinned_core and its senses lead as usual.
+function LexicaPinnedCore({ core }) {
+  if (!core) return null;
+  return (
+    <>
+      <div className="lex-core">{core}</div>
+      <div className="lex-uses-lbl">Attested uses</div>
+    </>
+  );
+}
+
 function LexicaBody({ lexica, lsjEntry }) {
   const [view, setView] = React.useState("meaning");
   React.useEffect(() => { setView("meaning"); }, [lexica && lexica.strongs]);
@@ -169,6 +183,7 @@ function LexicaBody({ lexica, lsjEntry }) {
         <div className="lsj-def" dangerouslySetInnerHTML={{ __html: lsjEntry.def_html }} />
       ) : view === "full" ? (
         <div className="lex-full">
+          <LexicaPinnedCore core={lexica.pinned_core} />
           <div className="lex-prose">{renderInlineMd(lexica.senses_block || "")}</div>
           {fork && <LexicaFork fork={fork} />}
           {lexica.range && <div className="lex-block"><span className="lex-lbl">Range</span> {lexica.range}</div>}
@@ -178,6 +193,7 @@ function LexicaBody({ lexica, lsjEntry }) {
         </div>
       ) : (
         <div className="lex-glance">
+          <LexicaPinnedCore core={lexica.pinned_core} />
           <ol className="lex-senses">
             {(lexica.sense_headlines || []).map((h, i) => <li key={i}>{h}</li>)}
           </ol>

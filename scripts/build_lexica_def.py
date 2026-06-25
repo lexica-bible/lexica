@@ -110,6 +110,12 @@ NT_BOOKS = {"Mat","Mar","Luk","Joh","Act","Rom","1Co","2Co","Gal","Eph","Php","C
 CONTESTED = OrderedDict([
     ("G1344", {
         "lemma": "dikaioō", "gloss": "justify",
+        # FRAME-LEAK (agreement run 2026-06-25): the model's senses pre-pick a fork frame draw to
+        # draw, so the neutral hand-authored core below is PINNED as the definition's lead
+        # (entry.pinned_core) and the model's framed senses are demoted to attested uses beneath it.
+        # The contest itself lives in the fork. Only the three frame-statable-as-definition leakers
+        # carry this; sarx/ekklesia layer their freight on a plain sense and gate-ship without it.
+        "pin_core": True,
         "core": "to deem, treat, or pronounce just; to set right, hold to be in the right",
         "frames": [
             ("forensic / imputed", "Reformation",
@@ -125,6 +131,7 @@ CONTESTED = OrderedDict([
     }),
     ("G166", {
         "lemma": "aionios", "gloss": "eternal / age-long",
+        "pin_core": True,   # frame-leak — neutral core pinned as the lead (see G1344)
         "core": "pertaining to an age; long-lasting, ancient",
         "frames": [
             ("unending duration", "—", "everlasting, without end"),
@@ -136,6 +143,7 @@ CONTESTED = OrderedDict([
     ("G5484", {
         "lemma": "charis", "gloss": "favor / grace",
         "aliases": ["G5485"],
+        "pin_core": True,   # frame-leak — neutral core pinned as the lead (see G1344)
         "core": "favor, goodwill, gift",
         "frames": [
             ("unmerited favor by faith", "Reformed",
@@ -487,6 +495,10 @@ def fork_field(sid):
         "frames": [{"label": l, "tradition": t, "gloss": g} for (l, t, g) in e["frames"]],
         "graph_ref": e.get("graph_ref"),
     }
+    if e.get("pin_core"):
+        # frame-leaker: the core is promoted to the entry's lead (pinned_core) so the definition
+        # stops pre-picking a frame; don't ALSO repeat it inside the fork as "Core (all agree)".
+        fork.pop("core")
     if e.get("note"):
         fork["note"] = e["note"]
     if e.get("etymology_note"):
@@ -505,11 +517,17 @@ def assemble(conn, sid, lemma, translit, raw):
     """raw model prose -> the full stored entry (the frozen field shape)."""
     fields = split_definition(raw)
     refs = cited_refs(raw)
+    ce = _CONTESTED_BY_SID.get(sid)
     entry = {
         "strongs":  sid,
         "lemma":    lemma,
         "translit": translit,
         **fields,
+        # HAND-PINNED CORE (frame-leakers only): the neutral, hand-authored core leads the card and
+        # the model's framed senses sit below it as attested uses. None for every other word — the
+        # model's own senses lead as usual. Lifted from CONTESTED so a --resplit (no model call)
+        # applies it; nothing about the stored raw changes.
+        "pinned_core": (ce["core"] if (ce and ce.get("pin_core")) else None),
         "fork":       fork_field(sid),
         "verses":     build_verses(conn, refs),
         "provenance": "verse-grounded · LEXICA",
@@ -536,6 +554,11 @@ def validate_entry(entry):
         problems.append(
             "contested word but fork is missing — the fairness gate would be silently dropped. "
             "Check the CONTESTED register.")
+    ce = _CONTESTED_BY_SID.get(entry["strongs"])
+    if ce and ce.get("pin_core") and not entry.get("pinned_core"):
+        problems.append(
+            "pin_core is set but pinned_core came back empty — the frame-leak core wasn't lifted, "
+            "so the definition would still lead with the model's framed senses. Check CONTESTED 'core'.")
     return problems
 
 
@@ -564,6 +587,9 @@ def show_entry(entry):
     """Print the assembled fields so a human can eyeball the split before --apply writes."""
     a = entry["audit"]
     print(f"\n  lemma: {entry['lemma']}  ({entry['translit']})   stamp {entry.get('synth_ver','')}")
+    if entry.get("pinned_core"):
+        print(f"  PINNED CORE (leads the card; the senses below read as attested uses):")
+        print(f"     → {entry['pinned_core']}")
     print(f"  sense_headlines ({len(entry['sense_headlines'])}) — the glance list:")
     for i, h in enumerate(entry["sense_headlines"], 1):
         print(f"     {i}. {h}")
