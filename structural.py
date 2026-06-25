@@ -76,8 +76,8 @@ _STRUCTURAL = {
                     "predicate (“A is B”) and asserts only the connection; what the connection "
                     "MEANS is supplied by the predicate, not by the verb.",
         "scope": "This card covers the linking use. εἰμί also has an absolute use, where the verb "
-                 "itself is the predicate and asserts existence or presence — “I am the One who "
-                 "is” (Exodus 3:14), “in the beginning was the Word” (John 1:1). There the meaning "
+                 "itself is the predicate and asserts existence or presence — “I am the one being” "
+                 "(Exodus 3:14), “in the beginning was the word” (John 1:1). There the meaning "
                  "is IN the verb; that is a distinct use, not the linking one described here.",
         "scope_contested": "John 8:58 (“before Abraham existed, I am”) is the disputed case — "
                            "whether that “I am” is the absolute self-naming that echoes Exodus "
@@ -135,10 +135,10 @@ _STRUCTURAL = {
             {"case": "gen", "type": "+ genitive",
              "note": "through; by means of — the channel or intermediary something passes through "
                      "(not the ultimate doer — that is ὑπό+gen)",
-             "ref": "John 1:3", "text": "through him all things came to be"},
+             "ref": "Matthew 1:22", "text": "spoken by the Lord through the prophet"},
             {"case": "acc", "type": "+ accusative",
              "note": "because of; for the sake of — the reason or cause",
-             "ref": "Mark 2:27", "text": "the Sabbath came to be on account of man"},
+             "ref": "Mark 2:27", "text": "the Sabbath on account of man exists"},
         ],
         "straddle": "Frozen into a fixed phrase, or fused onto a verb as a διά- compound, διά stops "
                     "marking a live relation — that use belongs to the word’s plain meaning, not here.",
@@ -155,7 +155,7 @@ _STRUCTURAL = {
         "relations": [
             {"case": "gen", "type": "+ genitive",
              "note": "against — hostile opposition (also, spatially, ‘down from’)",
-             "ref": "Matthew 12:30", "text": "the one not with me is against me"},
+             "ref": "Matthew 12:30", "text": "the one not being with me is against me"},
             {"case": "acc", "type": "+ accusative", "note": "according to; along; throughout",
              "ref": "1 Corinthians 15:3", "text": "Christ died … according to the scriptures"},
         ],
@@ -171,7 +171,7 @@ _STRUCTURAL = {
         "relation_lead": "Same word, two relations — set by the case of what follows, not by μετά:",
         "relations": [
             {"case": "gen", "type": "+ genitive", "note": "with — accompaniment, in company with",
-             "ref": "Matthew 1:23", "text": "Emmanuel — God with us"},
+             "ref": "Matthew 1:23", "text": "God with us"},
             {"case": "acc", "type": "+ accusative", "note": "after — later in time or order",
              "ref": "Matthew 17:1", "text": "after six days"},
         ],
@@ -187,9 +187,9 @@ _STRUCTURAL = {
         "relation_lead": "Same word, two relations — set by the case of what follows, not by περί:",
         "relations": [
             {"case": "gen", "type": "+ genitive", "note": "concerning; about — the topic in view",
-             "ref": "John 1:22", "text": "what do you say concerning yourself?"},
+             "ref": "John 1:22", "text": "what say you concerning yourself?"},
             {"case": "acc", "type": "+ accusative", "note": "around — encircling a place or person",
-             "ref": "Mark 3:34", "text": "those sitting around him"},
+             "ref": "Mark 3:34", "text": "the ones sitting around him"},
         ],
         "straddle": "Fused into a compound verb (a περι- verb, often ‘around’), περί stops marking a "
                     "live relation — that use is the word’s plain meaning, not here.",
@@ -236,11 +236,11 @@ _STRUCTURAL = {
         "relation_lead": "Same word, three relations — set by the case of what follows, not by ἐπί:",
         "relations": [
             {"case": "gen", "type": "+ genitive", "note": "on, upon (at rest); in the time of",
-             "ref": "Matthew 6:10", "text": "your will be done … upon the earth"},
+             "ref": "Matthew 6:10", "text": "as in heaven also upon the earth"},
             {"case": "dat", "type": "+ dative", "note": "on, at; on the basis of (ground, occasion)",
-             "ref": "Matthew 4:4", "text": "man shall not live by bread alone"},
+             "ref": "Matthew 4:4", "text": "not by bread alone shall a man live"},
             {"case": "acc", "type": "+ accusative", "note": "onto, over, against (motion, extent)",
-             "ref": "Matthew 5:15", "text": "they put the lamp upon the lampstand"},
+             "ref": "Matthew 5:15", "text": "put it … upon the lamp-stand"},
         ],
         "straddle": "Fused into a compound verb (an ἐπι- verb), ἐπί stops marking a live relation — "
                     "that use is the word’s plain meaning, not here.",
@@ -254,11 +254,11 @@ _STRUCTURAL = {
         "relation_lead": "Same word, three relations — set by the case of what follows, not by παρά:",
         "relations": [
             {"case": "gen", "type": "+ genitive", "note": "from — a person as the source",
-             "ref": "John 16:27", "text": "I came forth from God"},
+             "ref": "John 16:27", "text": "I have come forth from God"},
             {"case": "dat", "type": "+ dative", "note": "with, beside — in someone’s presence",
-             "ref": "John 17:5", "text": "the glory I had with you"},
+             "ref": "John 17:5", "text": "the glory which I had … with you"},
             {"case": "acc", "type": "+ accusative", "note": "alongside; contrary to; than (comparison)",
-             "ref": "Matthew 13:1", "text": "he sat down beside the sea"},
+             "ref": "Matthew 13:1", "text": "he sat down by the sea"},
         ],
         "straddle": "Fused into a compound verb (a παρα- verb), παρά stops marking a live relation — "
                     "that use is the word’s plain meaning, not here.",
@@ -288,7 +288,7 @@ _STRUCTURAL = {
         "relation_label": "What it marks (one case — context fills the range)",
         "relations": [
             {"type": "into; to; for", "note": "goal, direction, or purpose",
-             "ref": "Matthew 2:1", "text": "the magi came to Jerusalem"},
+             "ref": "Matthew 2:1", "text": "magi from the east came unto Jerusalem"},
         ],
         "straddle": "Fused into an εἰς- compound verb, εἰς stops marking a live relation — that use "
                     "is the word’s plain meaning, not here.",
@@ -301,7 +301,7 @@ _STRUCTURAL = {
         "relation_label": "What it marks (one case — context fills the range)",
         "relations": [
             {"type": "out of; from", "note": "source, origin, or cause",
-             "ref": "John 1:13", "text": "born … of God"},
+             "ref": "John 1:13", "text": "from God were born"},
         ],
         "straddle": "Fused into an ἐκ-/ἐξ- compound verb, ἐκ stops marking a live relation — that "
                     "use is the word’s plain meaning, not here.",
@@ -314,7 +314,7 @@ _STRUCTURAL = {
         "relation_label": "What it marks (one case — context fills the range)",
         "relations": [
             {"type": "from; away from", "note": "separation, distance, or source",
-             "ref": "Matthew 1:21", "text": "he will deliver his people from their sins"},
+             "ref": "Matthew 1:21", "text": "he shall deliver his people from their sins"},
         ],
         "straddle": "Fused into an ἀπο- compound verb, ἀπό stops marking a live relation — that use "
                     "is the word’s plain meaning, not here.",
@@ -327,7 +327,7 @@ _STRUCTURAL = {
         "relation_label": "What it marks (one case — context fills the range)",
         "relations": [
             {"type": "before", "note": "earlier in time, in front in place, or ahead in rank",
-             "ref": "John 17:5", "text": "the glory I had … before the world was"},
+             "ref": "John 17:5", "text": "before the world being in existence"},
         ],
         "straddle": "Fused into a προ- compound verb, πρό stops marking a live relation — that use "
                     "is the word’s plain meaning, not here.",
@@ -386,7 +386,7 @@ _STRUCTURAL = {
         "relation_label": "What it marks (one case — context fills the range)",
         "relations": [
             {"type": "to; toward; with", "note": "motion toward, or relationship/address",
-             "ref": "John 1:1", "text": "the Word was with God"},
+             "ref": "John 1:1", "text": "the word was with God"},
         ],
         "straddle": "Fused into a προς- compound verb, πρός stops marking a live relation — that use "
                     "is the word’s plain meaning, not here.",
