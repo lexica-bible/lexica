@@ -90,6 +90,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
   const [selectedGloss, setSelectedGloss] = useState(null);
   const [bookGlosses, setBookGlosses] = useState(null);
   const [allTruncated, setAllTruncated] = useState(false);  // "All books" list hit the render cap
+  const [visibleCount, setVisibleCount] = useState(50);     // occurrences shown so far; "See more" adds 50
   const [filteredBooks, setFilteredBooks] = useState(null);
   const [groupings, setGroupings] = useState(null);
   const [pendingGloss, setPendingGloss] = useState(null);
@@ -192,6 +193,10 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
       .finally(() => { if (!cancelled) setVerseLoading(false); });
     return () => { cancelled = true; };
   }, [profile, profileCorpus, selectedBook, selectedGloss, testament, loading]);
+
+  // Any change of word / source / book / rendering / testament means a fresh
+  // occurrence list — start back at the first 50 (the "See more" page size).
+  useEffect(() => { setVisibleCount(50); }, [profile, profileCorpus, selectedBook, selectedGloss, testament]);
 
   // Search-results scope toggle (All / ABP / KJV). Only shown when no word is
   // in focus; re-runs the English search in that corpus.
@@ -590,7 +595,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
           {!selectedBook && allTruncated && (
             <div className="occ-trunc">First {verseList.length.toLocaleString()} — pick a book or rendering to see the rest.</div>
           )}
-          {verseList.map(v => {
+          {verseList.slice(0, visibleCount).map(v => {
             const vb = v.book || selectedBook;
             return (
             <VerseRow key={`${vb}-${v.chapter}-${v.verse}`}
@@ -602,6 +607,11 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
               primaryStrongs={null} citedStrongs={citedStrongs} kjvCache={{}}/>
             );
           })}
+          {verseList.length > visibleCount && (
+            <button className="occ-more" onClick={() => setVisibleCount(c => c + 50)}>
+              See more <span className="occ-more-n">({Math.min(visibleCount, verseList.length).toLocaleString()} of {verseList.length.toLocaleString()})</span>
+            </button>
+          )}
         </div>
       ) : <div className="occ-empty">No verses.</div>
     );
@@ -869,7 +879,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
                   </div>
                 ) : allTruncated && verseList && verseList.length ? (
                   <div className="occ-filter">
-                    <span>Showing the first {verseList.length.toLocaleString()} — pick a book or rendering at left to see the rest.</span>
+                    <span>Only the first {verseList.length.toLocaleString()} occurrences are listed — pick a book or rendering at left to reach the rest.</span>
                   </div>
                 ) : null}
 
@@ -879,7 +889,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
                   <div className="occ-empty" style={{ color: "var(--danger, #b91c1c)" }}>{verseList[0].error}</div>
                 ) : (verseList.length) ? (
                   <div className="vlist">
-                    {verseList.map(v => {
+                    {verseList.slice(0, visibleCount).map(v => {
                       const vb = v.book || selectedBook;
                       return (
                       <VerseRow
@@ -896,6 +906,11 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
                       />
                       );
                     })}
+                    {verseList.length > visibleCount && (
+                      <button className="occ-more" onClick={() => setVisibleCount(c => c + 50)}>
+                        See more <span className="occ-more-n">({Math.min(visibleCount, verseList.length).toLocaleString()} of {verseList.length.toLocaleString()})</span>
+                      </button>
+                    )}
                   </div>
                 ) : (
                   <div className="occ-empty">No verses.</div>
