@@ -85,6 +85,13 @@ SCOPE / SAFETY
     CONSTANT across draws and is excluded from the agreement question — this reviews the SENSES.
   • Each run is saved to a JSON (raw of every draw + parsed senses) so the review needs the model
     ONCE: re-read it free with --from-json, and Step 3 can pick a reviewed draw's raw to ship.
+  • KEEP THE PER-DRAW LISTS IN THE REPORT — PERMANENTLY. They are the audit layer FOR the company
+    column, not redundant with it. The self-check only screams on VISIBLE corruption (a count above the
+    draw total — the >10 bug). A silent mis-merge that produces sane-LOOKING company numbers has nothing
+    to catch it except a human dropping to the per-draw layer (which is exactly how the >10 bug was
+    caught). The day the lists are stripped is the day a plausible-but-wrong company number has nothing
+    to check it against. Same presence-vs-significance lesson: the column says verses travel together,
+    the per-draw lists are the only place to confirm the company count was COMPUTED right.
 
   workon bible-env
   export ANTHROPIC_API_KEY=$(grep -oE "sk-ant-[A-Za-z0-9_-]+" /var/www/www_lexica_bible_wsgi.py)
@@ -363,8 +370,9 @@ def render_report(sid, lemma, translit, prompt_name, ev, draws):
     stut = [(i + 1, d["raw_count"], d["count"]) for i, d in enumerate(draws)
             if d.get("raw_count", d["count"]) > d["count"]]
     if stut:
-        w("  !! v3 STUTTER — engine repeated a sense under a reworded headline (collapsed by verse set): "
-          + ", ".join(f"draw {i} {a}->{b}" for i, a, b in stut))
+        w(f"  !! v3 STUTTER rate {len(stut)}/{n} — engine repeated a sense under a reworded headline, "
+          f"collapsed by verse set (a RISING rate on a word = the engine can't hold a stable sense list "
+          f"for it — a finding, not just noise): " + ", ".join(f"draw {i} {a}->{b}" for i, a, b in stut))
 
     # 1 — PER-DRAW SENSES: the ground truth
     w("")
@@ -522,6 +530,7 @@ def main():
     import anthropic
     client = anthropic.Anthropic(api_key=B.get_key())
 
+    stutter_rates = []   # (label, n_stuttered_draws, runs) — banked + summarised across the set
     for sid in targets:
         ev = evidence_summary(conn, sid, args.budget, has_surface)
         if not ev["ctx"]:
@@ -535,9 +544,18 @@ def main():
             print(f"   draw {k + 1}/{args.runs}: {draws[-1]['count']} senses", flush=True)
         report = render_report(sid, ev["lemma"], ev["translit"], args.prompt, ev, draws)
         print("\n".join(report))
+        nst = sum(1 for d in draws if d.get("raw_count", d["count"]) > d["count"])
+        stutter_rates.append((LABELS.get(sid, sid), nst, len(draws)))
         if not args.no_save:
             base = save_run(args.save_dir, sid, args.prompt, ev, draws, report)
             print(f"\n  saved: {base}.json  (+ .txt)")
+
+    if len(stutter_rates) > 1:
+        print("\n" + "=" * 92)
+        print("STUTTER RATE across the set (a word that stutters MORE = the engine struggles to hold a")
+        print("stable sense list for it — a tail signal worth reading, not just dedupe noise):")
+        for label, nst, runs in sorted(stutter_rates, key=lambda r: -r[1] / r[2]):
+            print(f"   {label:10} {nst}/{runs}")
 
     conn.close()
 
