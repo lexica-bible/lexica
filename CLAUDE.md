@@ -284,6 +284,18 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   on the real calques (ekklesia/aionios/charis/dikaioō/Christos), silent on both-testament words
   (pneuma/theos/kyrios). Threshold set against a real census — `scripts/audit_lxx_provenance.py --preview`. Full
   record: memory `project_lexica_dictionary`.
+- **Structural / function-word card** — a NEW word-card entry TYPE (beside the Lexica dictionary + LSJ) for
+  words whose meaning resolves OUTSIDE the lexeme (the copula, prepositions, …): instead of a sense list it
+  states the word's grammatical FUNCTION + the construction relations it appears in (provenance tag GRAMMAR).
+  Hand-authored in `structural.py` (a code dict keyed by BASE Strong's — NO model, NO PA data build; normal
+  code deploy), served by `views_lexica.py` `/api/lexica/<strongs>` which resolves a structural base FIRST
+  (own gate `STRUCTURAL_ADMIN_ONLY`, currently False = public). A structural word's dotted forms INHERIT the
+  one lemma entry (εἰμί's ~7,800 conjugates show their own parse, decoded from the dot; prepositions are
+  bare-tagged, no inheritance). Card = `StructuralBody` (20-shared-components.jsx); `30-detail-panel.jsx`
+  branches it inside `case "lsj"` on `lexica.kind==="structural"` ("Grammar" badge); `.gram-*` CSS. LIVE: εἰμί
+  (copula) + 17 prepositions; **card verse lines are verbatim ABP** (a Greek-construction card — ABP is the
+  right source even for a KJV reader). Full record + the locked build rules (cut-by-form / list-by-context,
+  verbatim-ABP, contested-fork prepositions): memory `project_structural_deictic_cards`.
 - `books` — book metadata (name, testament, regex)
 - `ai_search_cache` — cached AI query results and TSK synthesis
 - `kjv_verses` — KJV full verse text (31,102 verses)

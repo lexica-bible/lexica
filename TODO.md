@@ -131,6 +131,22 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
 
 ## New features
 
+- **Structural / function-word word-cards — NEW + LIVE 2026-06-25; eimi + 17 prepositions shipped, more open.**
+  A new word-card entry TYPE beside the Lexica dictionary + LSJ, for words whose meaning resolves OUTSIDE the
+  lexeme (the copula, prepositions, article, conjunctions, particles, negatives): instead of a sense list it
+  states the word's grammatical FUNCTION + the construction relations it appears in (provenance tag GRAMMAR).
+  Closed class, hand-authored in `structural.py` (no model, no PA data build), served by `/api/lexica` (own
+  gate `STRUCTURAL_ADMIN_ONLY`, currently public). DONE + LIVE: εἰμί (copula; ~7,800 dotted forms inherit it +
+  show their own parse) + 17 prepositions (case-rows where the case cuts the relation; verse lines verbatim
+  ABP). OPEN: (1) conjunctions/particles/negatives batch (~38) then the article — the FIVE typology cards
+  (ὅτι/ὡς/εἰ/ἐάν/ἵνα) are the real work (3 verbatim-ABP exemplars each, each a gloss-must-show-the-exemplar
+  risk); the ~12 plain connectives (καί, δέ, …) + negatives (οὐ/μή + compounds) are an easy tail; (2) live-case
+  HIGHLIGHT for prepositions (light the row matching the object's case from morph; the whole table already
+  shows, so polish — wire with the verse live-pull); (3) the demonstrative/pronoun "referent" card (step b:
+  touto, autos, ὁ δέ, ἰδού, οὐδείς, μηδείς — a DISTINCT card, points to a referent, cross-refs εἰμί at the
+  Last Supper; build + prove SECOND). Full record + the locked build rules: memory `project_structural_deictic_cards`.
+  `code: structural.py, views_lexica.py, static/src/20-shared-components.jsx, static/src/30-detail-panel.jsx`
+
 - **LSJ "Lexica" overrides — DONE + LIVE 2026-06-23; a few words still open.** The LSJ word-study
   blurb is now a Haiku "definition" prompt for the bulk + per-word hand-written **"Lexica" overrides**
   shown directly (no model call) for the loaded lemmas LSJ leads classical on. 6 seeded (ekklesia,
