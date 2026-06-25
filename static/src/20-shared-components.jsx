@@ -271,7 +271,7 @@ function StructuralBody({ data, lsjEntry }) {
           )}
           {(data.relations || []).length > 0 && (
             <div className="lex-block">
-              <span className="lex-lbl">What the predicate supplies — relation, not sense</span>
+              <span className="lex-lbl">{data.relation_label || "What the predicate supplies — relation, not sense"}</span>
               {data.relation_lead && <div className="lex-notes gram-rlead">{data.relation_lead}</div>}
               <ul className="gram-clist">
                 {data.relations.map((c, i) => (
@@ -285,6 +285,7 @@ function StructuralBody({ data, lsjEntry }) {
             </div>
           )}
           {data.crossref && data.crossref.note && <div className="gram-xref">{data.crossref.note}</div>}
+          {data.straddle && <div className="gram-straddle">{data.straddle}</div>}
           {data.provenance && <div className="gram-prov">{data.provenance}</div>}
         </div>
       )}

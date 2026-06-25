@@ -119,6 +119,279 @@ _STRUCTURAL = {
         },
         "provenance": "GRAMMAR",
     },
+    # PREPOSITION (proof of the case-row card — one card per lemma, case-relations as internal rows;
+    # "cut by form" survives as the card's structure, the routing stays one card). diá takes gen +
+    # acc with distinct relations. No dot inheritance (prepositions are bare-tagged); no form stamp.
+    "G1223": {
+        "kind": "structural",
+        "strongs": "G1223",
+        "lemma": "διά",
+        "function": "διά is a preposition — it marks how its object relates to the rest of the "
+                    "clause. Which relation it marks is fixed by the CASE of that object — "
+                    "ordinarily visible in the form of what follows.",
+        "relation_label": "The object’s case makes the cut",
+        "relation_lead": "Same word, two relations — set by the case of what follows, not by διά:",
+        "relations": [
+            {"case": "gen", "type": "+ genitive",
+             "note": "through; by means of — the channel or intermediary something passes through "
+                     "(not the ultimate doer — that is ὑπό+gen)",
+             "ref": "John 1:3", "text": "through him all things came to be"},
+            {"case": "acc", "type": "+ accusative",
+             "note": "because of; for the sake of — the reason or cause",
+             "ref": "Mark 2:27", "text": "the Sabbath came to be on account of man"},
+        ],
+        "straddle": "Frozen into a fixed phrase, or fused onto a verb as a διά- compound, διά stops "
+                    "marking a live relation — that use belongs to the word’s plain meaning, not here.",
+        "provenance": "GRAMMAR",
+    },
+
+    # ---- MULTI-CASE prepositions: case-rows (the form-cut), one card per lemma ----
+    "G2596": {
+        "kind": "structural", "strongs": "G2596", "lemma": "κατά",
+        "function": "κατά is a preposition — which relation it marks is fixed by the CASE of its "
+                    "object, ordinarily visible in the form of what follows.",
+        "relation_label": "The object’s case makes the cut",
+        "relation_lead": "Same word, two relations — set by the case of what follows, not by κατά:",
+        "relations": [
+            {"case": "gen", "type": "+ genitive",
+             "note": "against — hostile opposition (also, spatially, ‘down from’)",
+             "ref": "Matthew 12:30", "text": "the one not with me is against me"},
+            {"case": "acc", "type": "+ accusative", "note": "according to; along; throughout",
+             "ref": "1 Corinthians 15:3", "text": "Christ died … according to the scriptures"},
+        ],
+        "straddle": "Fused into a compound verb (a κατα- verb), κατά stops marking a live relation — "
+                    "that use is the word’s plain meaning, not here.",
+        "provenance": "GRAMMAR",
+    },
+    "G3326": {
+        "kind": "structural", "strongs": "G3326", "lemma": "μετά",
+        "function": "μετά is a preposition — which relation it marks is fixed by the CASE of its "
+                    "object, ordinarily visible in the form of what follows.",
+        "relation_label": "The object’s case makes the cut",
+        "relation_lead": "Same word, two relations — set by the case of what follows, not by μετά:",
+        "relations": [
+            {"case": "gen", "type": "+ genitive", "note": "with — accompaniment, in company with",
+             "ref": "Matthew 1:23", "text": "Emmanuel — God with us"},
+            {"case": "acc", "type": "+ accusative", "note": "after — later in time or order",
+             "ref": "Matthew 17:1", "text": "after six days"},
+        ],
+        "straddle": "Fused into a compound verb (a μετα- verb, often ‘change’), μετά stops marking a "
+                    "live relation — that use is the word’s plain meaning, not here.",
+        "provenance": "GRAMMAR",
+    },
+    "G4012": {
+        "kind": "structural", "strongs": "G4012", "lemma": "περί",
+        "function": "περί is a preposition — which relation it marks is fixed by the CASE of its "
+                    "object, ordinarily visible in the form of what follows.",
+        "relation_label": "The object’s case makes the cut",
+        "relation_lead": "Same word, two relations — set by the case of what follows, not by περί:",
+        "relations": [
+            {"case": "gen", "type": "+ genitive", "note": "concerning; about — the topic in view",
+             "ref": "John 1:22", "text": "what do you say concerning yourself?"},
+            {"case": "acc", "type": "+ accusative", "note": "around — encircling a place or person",
+             "ref": "Mark 3:34", "text": "those sitting around him"},
+        ],
+        "straddle": "Fused into a compound verb (a περι- verb, often ‘around’), περί stops marking a "
+                    "live relation — that use is the word’s plain meaning, not here.",
+        "provenance": "GRAMMAR",
+    },
+    "G5228": {
+        "kind": "structural", "strongs": "G5228", "lemma": "ὑπέρ",
+        "function": "ὑπέρ is a preposition — which relation it marks is fixed by the CASE of its "
+                    "object, ordinarily visible in the form of what follows.",
+        "relation_label": "The object’s case makes the cut",
+        "relation_lead": "Same word, two relations — set by the case of what follows, not by ὑπέρ:",
+        "relations": [
+            {"case": "gen", "type": "+ genitive", "note": "for; on behalf of — to someone’s benefit",
+             "ref": "Romans 5:8", "text": "Christ died for us"},
+            {"case": "acc", "type": "+ accusative", "note": "above; beyond — surpassing",
+             "ref": "Philippians 2:9", "text": "the name above every name"},
+        ],
+        "straddle": "Fused into a compound verb (a ὑπερ- verb, ‘over/excess’), ὑπέρ stops marking a "
+                    "live relation — that use is the word’s plain meaning, not here.",
+        "provenance": "GRAMMAR",
+    },
+    "G5259": {
+        "kind": "structural", "strongs": "G5259", "lemma": "ὑπό",
+        "function": "ὑπό is a preposition — which relation it marks is fixed by the CASE of its "
+                    "object, ordinarily visible in the form of what follows.",
+        "relation_label": "The object’s case makes the cut",
+        "relation_lead": "Same word, two relations — set by the case of what follows, not by ὑπό:",
+        "relations": [
+            {"case": "gen", "type": "+ genitive",
+             "note": "by — the doer/agent (the ultimate cause, esp. of a passive verb)",
+             "ref": "Matthew 4:1", "text": "to be tested by the devil"},
+            {"case": "acc", "type": "+ accusative", "note": "under — place or subjection",
+             "ref": "Matthew 8:8", "text": "you should enter under my roof"},
+        ],
+        "straddle": "Fused into a compound verb (a ὑπο- verb, ‘under’), ὑπό stops marking a live "
+                    "relation — that use is the word’s plain meaning, not here.",
+        "provenance": "GRAMMAR",
+    },
+    "G1909": {
+        "kind": "structural", "strongs": "G1909", "lemma": "ἐπί",
+        "function": "ἐπί is a preposition — which relation it marks is fixed by the CASE of its "
+                    "object (it takes all three), ordinarily visible in the form of what follows.",
+        "relation_label": "The object’s case makes the cut",
+        "relation_lead": "Same word, three relations — set by the case of what follows, not by ἐπί:",
+        "relations": [
+            {"case": "gen", "type": "+ genitive", "note": "on, upon (at rest); in the time of",
+             "ref": "Matthew 6:10", "text": "your will be done … upon the earth"},
+            {"case": "dat", "type": "+ dative", "note": "on, at; on the basis of (ground, occasion)",
+             "ref": "Matthew 4:4", "text": "man shall not live by bread alone"},
+            {"case": "acc", "type": "+ accusative", "note": "onto, over, against (motion, extent)",
+             "ref": "Matthew 5:15", "text": "they put the lamp upon the lampstand"},
+        ],
+        "straddle": "Fused into a compound verb (an ἐπι- verb), ἐπί stops marking a live relation — "
+                    "that use is the word’s plain meaning, not here.",
+        "provenance": "GRAMMAR",
+    },
+    "G3844": {
+        "kind": "structural", "strongs": "G3844", "lemma": "παρά",
+        "function": "παρά is a preposition — which relation it marks is fixed by the CASE of its "
+                    "object (it takes all three), ordinarily visible in the form of what follows.",
+        "relation_label": "The object’s case makes the cut",
+        "relation_lead": "Same word, three relations — set by the case of what follows, not by παρά:",
+        "relations": [
+            {"case": "gen", "type": "+ genitive", "note": "from — a person as the source",
+             "ref": "John 16:27", "text": "I came forth from God"},
+            {"case": "dat", "type": "+ dative", "note": "with, beside — in someone’s presence",
+             "ref": "John 17:5", "text": "the glory I had with you"},
+            {"case": "acc", "type": "+ accusative", "note": "alongside; contrary to; than (comparison)",
+             "ref": "Matthew 13:1", "text": "he sat down beside the sea"},
+        ],
+        "straddle": "Fused into a compound verb (a παρα- verb), παρά stops marking a live relation — "
+                    "that use is the word’s plain meaning, not here.",
+        "provenance": "GRAMMAR",
+    },
+
+    # ---- SINGLE-CASE prepositions: one case, so no form-cut — one card, range filled by context ----
+    "G1722": {
+        "kind": "structural", "strongs": "G1722", "lemma": "ἐν",
+        "function": "ἐν is a preposition (with the dative). It sets its object as the surrounding "
+                    "setting; which shade — place, sphere, time, or means — is filled by context, "
+                    "since ἐν works with a single case.",
+        "relation_label": "What it marks (one case — context, not case, fills the range)",
+        "relations": [
+            {"type": "in; among; by; at",
+             "note": "location, sphere, time, or instrument — context picks which",
+             "ref": "John 1:1", "text": "in the beginning"},
+        ],
+        "straddle": "Frozen in a fixed phrase (ἐν Χριστῷ, ‘in Christ’) or fused into an ἐν- compound, "
+                    "ἐν stops marking a live relation — that use is the word’s plain meaning, not here.",
+        "provenance": "GRAMMAR",
+    },
+    "G1519": {
+        "kind": "structural", "strongs": "G1519", "lemma": "εἰς",
+        "function": "εἰς is a preposition (with the accusative). It marks the goal or direction "
+                    "its object stands as; the shade — into, to, for, against — is filled by context.",
+        "relation_label": "What it marks (one case — context fills the range)",
+        "relations": [
+            {"type": "into; to; for", "note": "goal, direction, or purpose",
+             "ref": "Matthew 2:1", "text": "the magi came to Jerusalem"},
+        ],
+        "straddle": "Fused into an εἰς- compound verb, εἰς stops marking a live relation — that use "
+                    "is the word’s plain meaning, not here.",
+        "provenance": "GRAMMAR",
+    },
+    "G1537": {
+        "kind": "structural", "strongs": "G1537", "lemma": "ἐκ",
+        "function": "ἐκ is a preposition (with the genitive). It marks its object as the source or "
+                    "origin something comes out of; the shade is filled by context.",
+        "relation_label": "What it marks (one case — context fills the range)",
+        "relations": [
+            {"type": "out of; from", "note": "source, origin, or cause",
+             "ref": "John 1:13", "text": "born … of God"},
+        ],
+        "straddle": "Fused into an ἐκ-/ἐξ- compound verb, ἐκ stops marking a live relation — that "
+                    "use is the word’s plain meaning, not here.",
+        "provenance": "GRAMMAR",
+    },
+    "G575": {
+        "kind": "structural", "strongs": "G575", "lemma": "ἀπό",
+        "function": "ἀπό is a preposition (with the genitive). It marks separation or departure "
+                    "from its object; the shade is filled by context.",
+        "relation_label": "What it marks (one case — context fills the range)",
+        "relations": [
+            {"type": "from; away from", "note": "separation, distance, or source",
+             "ref": "Matthew 1:21", "text": "he will deliver his people from their sins"},
+        ],
+        "straddle": "Fused into an ἀπο- compound verb, ἀπό stops marking a live relation — that use "
+                    "is the word’s plain meaning, not here.",
+        "provenance": "GRAMMAR",
+    },
+    "G4253": {
+        "kind": "structural", "strongs": "G4253", "lemma": "πρό",
+        "function": "πρό is a preposition (with the genitive). It marks its object as what comes "
+                    "before — in time, place, or rank; the shade is filled by context.",
+        "relation_label": "What it marks (one case — context fills the range)",
+        "relations": [
+            {"type": "before", "note": "earlier in time, in front in place, or ahead in rank",
+             "ref": "John 17:5", "text": "the glory I had … before the world was"},
+        ],
+        "straddle": "Fused into a προ- compound verb, πρό stops marking a live relation — that use "
+                    "is the word’s plain meaning, not here.",
+        "provenance": "GRAMMAR",
+    },
+    "G4862": {
+        "kind": "structural", "strongs": "G4862", "lemma": "σύν",
+        "function": "σύν is a preposition (with the dative). It marks association — its object "
+                    "together with the subject; the shade is filled by context.",
+        "relation_label": "What it marks (one case — context fills the range)",
+        "relations": [
+            {"type": "with; together with", "note": "association, accompaniment",
+             "ref": "Philippians 1:23", "text": "to be with Christ"},
+        ],
+        "straddle": "Fused into a συν- compound verb, σύν stops marking a live relation — that use "
+                    "is the word’s plain meaning, not here.",
+        "provenance": "GRAMMAR",
+    },
+    # ἀντί is a CONTESTED-FORK preposition (like a loaded content word): at Mat 20:28 "a ransom
+    # ἀντὶ many", substitution ("instead of") vs representation ("on behalf of") is live theological
+    # ground. The lex-talionis exemplar below is the clean substitution case — KEEP it; any future
+    # 2nd exemplar / highlight that reaches Mat 20:28 must SURFACE that fork, never quietly resolve it.
+    "G473": {
+        "kind": "structural", "strongs": "G473", "lemma": "ἀντί",
+        "function": "ἀντί is a preposition (with the genitive). It marks exchange or substitution — "
+                    "one thing in the place of another; the shade is filled by context.",
+        "relation_label": "What it marks (one case — context fills the range)",
+        "relations": [
+            {"type": "instead of; in place of; for", "note": "exchange, substitution, equivalence",
+             "ref": "Matthew 5:38", "text": "an eye for an eye"},
+        ],
+        "straddle": "Fused into an ἀντι- compound (often ‘against/opposite’), ἀντί stops marking a "
+                    "live relation — that use is the word’s plain meaning, not here.",
+        "provenance": "GRAMMAR",
+    },
+    "G303": {
+        "kind": "structural", "strongs": "G303", "lemma": "ἀνά",
+        "function": "ἀνά is a rare preposition (with the accusative). On its own it marks "
+                    "distribution — ‘so much each’. (Its common phrase ἀνὰ μέσον ‘in the midst of’ "
+                    "is a fixed expression ABP tags as its own number, G303.1 — a frozen idiom, the "
+                    "word’s plain meaning, not this relation.)",
+        "relation_label": "What it marks (one case — context fills the range)",
+        "relations": [
+            {"type": "each (distributive)", "note": "so much apiece",
+             "ref": "Matthew 20:9", "text": "they received each a denarius"},
+        ],
+        "straddle": "In ἀνὰ μέσον (‘in the midst’) and ἀνα- compound verbs, ἀνά stops marking this "
+                    "distributive relation — that use is the word’s plain meaning, not here.",
+        "provenance": "GRAMMAR",
+    },
+    "G4314": {
+        "kind": "structural", "strongs": "G4314", "lemma": "πρός",
+        "function": "πρός is a preposition (in the NT, with the accusative). It marks direction "
+                    "toward, or relationship with, its object; the shade is filled by context. "
+                    "(Rare +dative ‘at/near’ and +genitive uses to confirm at build time.)",
+        "relation_label": "What it marks (one case — context fills the range)",
+        "relations": [
+            {"type": "to; toward; with", "note": "motion toward, or relationship/address",
+             "ref": "John 1:1", "text": "the Word was with God"},
+        ],
+        "straddle": "Fused into a προς- compound verb, πρός stops marking a live relation — that use "
+                    "is the word’s plain meaning, not here.",
+        "provenance": "GRAMMAR",
+    },
 }
 
 _FORM_DECODERS = {"eimi": eimi_form}
