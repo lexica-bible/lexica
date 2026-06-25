@@ -190,6 +190,29 @@ CONTESTED = OrderedDict([
         ],
         "graph_ref": None,
     }),
+    ("G4151", {
+        "lemma": "pneuma", "gloss": "spirit / breath / wind",
+        # FRAME-LEAK: the model leads with "the Holy Spirit, third person of the Trinity"; pin the
+        # neutral range so the divine-Spirit reading (person / mode / power) lives in the fork, not
+        # the lead. Tightened to a one-line gloss (not a six-way sense list) after JP's chat check —
+        # the engine's generated senses carry the detail below under "Attested uses".
+        "pin_core": True,
+        "core": "breath, wind, or the immaterial spirit — of a person, a spirit-being, or God",
+        "frames": [
+            ("divine person", "Nicene / Trinitarian",
+             "the Holy Spirit as a distinct person of the Godhead — who acts, speaks, and can be "
+             "grieved (Acts 13:2; Eph 4:30)"),
+            ("a mode of the one God", "modalist / Oneness / Sabellian",
+             "not a distinct person but God himself in his spiritual activity — fully divine, not a "
+             "third alongside Father and Son"),
+            ("God's active power and presence", "non-Trinitarian / Unitarian",
+             "God's own outreaching breath, presence, and power at work — not a distinct person, "
+             "paralleled with 'the power of the Most High' (Luke 1:35)"),
+        ],
+        "note": "the fork touches ONLY the divine-Spirit use; the wind, breath, life, inner-spirit, "
+                "and spirit-being senses are uncontested",
+        "graph_ref": None,
+    }),
 ])
 _CONTESTED_BY_SID = {}
 for _sid, _e in CONTESTED.items():
