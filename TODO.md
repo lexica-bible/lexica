@@ -226,19 +226,24 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
     dropped once), and the count metric can't see that. The citation gate can't either — it PASSED the run missing a
     sense (real verses, dropped sense). Through-line: **every automatic gate sees PRESENCE, not SIGNIFICANCE.** So
     safety isn't a better prompt, it's a REVIEWER. Full record: memory `project_lexica_dictionary` (PROMPT SESSION block).
-  - **AGREEMENT REVIEWER — BUILT 2026-06-24 (`scripts/lexica_agreement.py`), logic-validated, PENDING the PA run.**
+  - **AGREEMENT REVIEWER — BUILT + PROVEN on the six (`scripts/lexica_agreement.py`), 2026-06-24/25.**
     The standing safety gate (Plan A, scenario-2): draw a word N× on the same evidence; **a sense present in SOME
-    draws but absent in others is the flag** (draws voting, no answer key → scales to the tail). Read-only, PA-only,
-    reuses build_lexica_def's frozen helpers; `--prompt v3` (default) | `live`; saves each run to JSON (`--from-json`
-    re-reads free). PRESENCE views (per-draw senses · per-verse SUPPORT+COMPANY), none a verdict; the HOLE-vs-FOLD
-    procedure is in its docstring (trust the engine, IGNORE near-duplicate folds, flag only vanish-or-resurrect of
-    a whole job). KEY: support count alone misleads (a fold can sit at full support above a holed core sense), so
-    the COMPANY column — who each verse shares a sense with across draws — is the discriminator; validated on a
-    faithful psyche synthetic incl. the masked-hole case. **NEXT (needs PA):**
-    `python scripts/lexica_agreement.py --word G5590 --runs 10` (canary — must surface the known 1/10 inner-self
-    hole + appetite fold), then the full six; settle the procedure on real draws, THEN promote v3 + rebuild the six
-    THROUGH the check together (never a blind single draw). (Plan B — hand-curate sense lists — REJECTED:
-    contradicts "trust the engine," re-imports BDAG-authority, doesn't scale.)
+    draws but absent in others is the flag** (draws voting, no answer key → scales to the tail). Read-only, PA-only;
+    `--prompt v3` (default) | `live`; saves each run to JSON (`--from-json` re-reads free). PRESENCE views (per-draw
+    senses · per-verse SUPPORT+COMPANY), none a verdict. KEY: support count alone misleads (a fold can sit at full
+    support above a holed core sense), so the COMPANY column — who each verse shares a sense with across draws — is
+    the discriminator. **SIX-WORD RUN READ 2026-06-25: NO holes on any of the six.** SHIP SPLIT — **psychē / sarx /
+    ekklēsia = clean, gate-ship as-is**; **dikaioō / charis / aionios = FRAME-LEAK** (the core pre-picks a fork
+    frame draw-to-draw) → do NOT auto-ship, **hand-pin the core** before live (like the fork). PREDICTIVE RULE: a
+    fork-word leaks when its contested frame is statable as a DEFINITION (forensic / infused-grace / duration);
+    stays clean when it's a CONSTRUCTION on a plain sense (sin-nature, the-Church) — pre-sort fork-bearers by this,
+    don't find leakers one at a time. **Do NOT fix leak in the prompt** (priors win; hand-pin, like the fork). v3
+    held **0/10 stutter across all six** = proven, but STAYS in the rig — promoting auto-builds the three leakers +
+    ships the leak. Tool fixes shipped (0178448): book-typo guard before the company math + downgraded the pair-drop
+    "HOLE" lean to a BACK-CHECK flag (over-calls on a marginal sub-sense); per-draw lists KEPT permanently as the
+    audit layer. **NEXT: hand-pin dikaioō / charis / aionios cores (fork-style), THEN promote v3 + rebuild the six
+    through the reviewer together** (never a blind single draw). (Plan B — hand-curate full sense lists — REJECTED:
+    re-imports BDAG-authority, doesn't scale; hand-pinning only the CONTESTED core is the surgical version.)
   - **OPEN for Step 4 — the significance judge.** Pure voting sees that something varied, not whether it MATTERS (a real
     hole and a fine fold both vary). Human eyes now; at scale a model pass OR spot-check-is-the-ceiling — unproven either
     way. Same blind spot as the citation gate, one layer up.
