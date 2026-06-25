@@ -1224,7 +1224,12 @@ const activeRangeId=(SEARCH_RANGES.find(r=>r.from===searchFrom&&r.to===searchTo)
 // re-runs on Enter — it's typed, so we don't fire on every keystroke.)
 useEffect(()=>{if(!didSearchRef.current||!searchQ.trim()||!readCorpus)return;runTextSearch();},[searchMode,searchPartial,searchCase,searchFrom,searchTo]);// Jump to a hit. Bible → the shared nav path (loads chapter, highlights +
 // scrolls). Non-canonical → same text, just switch to that chapter.
-const jumpToResult=r=>{setSearchOpen(false);if(corpus==="bible"){onNavChange?.({book:r.book,chapter:r.chapter,highlight:r.verse,scroll:true,translation});}else{setSelChapter(r.chapter);}};const showStrongs=libOptions.showStrongs||false;const showInterlinear=libOptions.showInterlinear||false;const viewMode=libOptions.viewMode||"chip";const setOpt=(key,val)=>setLibOptions(prev=>({...prev,[key]:val}));// English-only non-canonical texts (e.g. 1 Enoch) and ESV/NIV (no per-word data)
+const jumpToResult=r=>{setSearchOpen(false);if(corpus==="bible"){// Don't pin `translation` here: an in-text search result lands in the text you're already
+// reading, so it never needs to force a version. Baking it in left a sticky nav.translation
+// that the version-switch re-scroll (deps:[translation]) re-emitted and the nav effect's
+// `if (nav.translation) setTranslation(...)` re-applied — snapping you back to the searched
+// version on every Bible switch (the "can't change Bibles after a search" lock).
+onNavChange?.({book:r.book,chapter:r.chapter,highlight:r.verse,scroll:true});}else{setSelChapter(r.chapter);}};const showStrongs=libOptions.showStrongs||false;const showInterlinear=libOptions.showInterlinear||false;const viewMode=libOptions.viewMode||"chip";const setOpt=(key,val)=>setLibOptions(prev=>({...prev,[key]:val}));// English-only non-canonical texts (e.g. 1 Enoch) and ESV/NIV (no per-word data)
 // are locked to Prose and the Greek/Strong's toggles (Strong's / Interlinear /
 // Chip) are disabled and grayed out. BSB now has its own per-word Strong's data
 // (bsb_words), so it is NOT prose-locked — it gets chip mode like KJV.

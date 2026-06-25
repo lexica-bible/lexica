@@ -740,7 +740,12 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
   const jumpToResult = (r) => {
     setSearchOpen(false);
     if (corpus === "bible") {
-      onNavChange?.({ book: r.book, chapter: r.chapter, highlight: r.verse, scroll: true, translation });
+      // Don't pin `translation` here: an in-text search result lands in the text you're already
+      // reading, so it never needs to force a version. Baking it in left a sticky nav.translation
+      // that the version-switch re-scroll (deps:[translation]) re-emitted and the nav effect's
+      // `if (nav.translation) setTranslation(...)` re-applied — snapping you back to the searched
+      // version on every Bible switch (the "can't change Bibles after a search" lock).
+      onNavChange?.({ book: r.book, chapter: r.chapter, highlight: r.verse, scroll: true });
     } else {
       setSelChapter(r.chapter);
     }
