@@ -6,6 +6,30 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Two reader bug-fixes — dotted-cognate Lexica routing + Bible-switch-after-search — DONE 2026-06-25
+
+Both frontend-only, found while reviewing the ekklēsia word card. Pushed (`87d1555`, `77c538e`); deploy is a
+normal pull. Detail: memory `project_lexica_dictionary` (dotted) + the commit messages.
+
+- **A dotted cognate borrowed its base word's Lexica definition.** The card fetched `/api/lexica/<strongs_base>`,
+  and `strongs_base` drops ABP's dotted ".N", so G1577.1 ἐκκλησιάζω (verb) + G1577.2 ἐκκλησιαστής (agent noun)
+  both showed ekklēsia's (G1577) noun senses under their own correct headword. FIX: fetch by the FULL number
+  (`entry.strongs_raw`, keeps the dot) in `30-detail-panel.jsx` → a dotted word 404s and falls through to its own
+  abp_ext/LSJ entry. STANDING RULE: the Lexica / word-card fetch must use the full dotted number, never
+  `strongs_base` — `dotted_lexicon` has 3619 words that would mis-route at full-dictionary scale. The six built
+  entries were never wrong in CONTENT (`abp_filter` excludes dotted from a base's evidence); pure display routing.
+
+- **Couldn't switch Bibles after clicking an in-text search result.** `jumpToResult` baked the current
+  `translation` into the persistent `nav`. Because a search jump ALSO sets a `highlight`, the switch-version
+  re-scroll effect (`useEffect [translation]`) re-emitted that nav on every version click, and the nav effect's
+  `if (nav.translation) setTranslation(nav.translation)` re-applied the stale version — snapping you back. FIX
+  (`60-library.jsx:743`): drop `translation` from the search-result nav (you're searching the text you're already
+  in, so it never needs to force a version). Switching works again AND still re-scrolls to the found verse.
+  LESSON: don't put `translation` in a `nav` that also carries a `highlight` — line 404 re-applies it every time
+  that nav re-fires.
+
+---
+
 ## Donations live via Ko-fi + GitHub Sponsors ruled out — DONE 2026-06-24
 
 First working donate path since Stripe closed his account (which had killed Ko-fi). Full record: memory

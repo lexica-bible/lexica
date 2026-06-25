@@ -263,6 +263,15 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
     `Book ch:vs`. A malformed ref with no chapter:verse (the charis `1Ti—` the model wrote for 1Ti 1:2) is
     INVISIBLE to it — neither pass nor miss, so it slips through silently. Add a lint that flags a book-abbrev
     token in the prose NOT followed by `chapter:verse`. (`cited_refs` / `_REF_RE` in build_lexica_def.py.)
+  - ✅ **Dotted-cognate collision — FIXED 2026-06-25 (commit 87d1555), with a rule for the full build.** The word
+    card fetched the Lexica entry by `strongs_base` (drops ABP's ".N"), so a dotted cognate inherited its BASE
+    word's def — G1577.1 ἐκκλησιάζω (verb) and G1577.2 ἐκκλησιαστής (agent noun) showed ekklēsia's noun senses.
+    Now fetched by the FULL number (`entry.strongs_raw`) → a dotted word 404s and falls through to its own
+    abp_ext/LSJ entry; non-dotted unchanged. **The FULL build MUST keep the Lexica/word-card fetch on the full
+    number** (or author cognate defs on their own dotted numbers) — `dotted_lexicon` has 3619 such words, so
+    re-keying on `strongs_base` would mis-route them all. The six built entries' content was never affected
+    (`abp_filter` excludes dotted from a base's evidence — pure display routing bug). Memory
+    `project_lexica_dictionary` + `project_dotted_strongs_lemma`. `code: static/src/30-detail-panel.jsx api.lexica fetch`
   This SUPERSEDES the αἰώνιος / δικαιόω open items under "LSJ 'Lexica' overrides" above — don't hand-write an
   asserting override for a contested word; verse-ground it + the fork gate. The 6 live overrides stay until this ships.
   `code: scripts/trial_lexica_def.py (spec); future views_lsj.py / a new def side table; static/src/30-detail-panel.jsx + 80-lexicon.jsx; argument graphs in study.db / views_study.py; memory project_lexica_dictionary`
