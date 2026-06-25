@@ -53,8 +53,11 @@ THE HOLE-vs-FOLD PROCEDURE  (how to read the output — this is the actual gate)
          carries that sense.
      THE TEST: take the wobble's grounding verses. Do they keep support and merely regroup (FOLD),
      or does their support fall / the pair break apart (HOLE)? Read SUPPORT for the drop and COMPANY
-     for regroup-vs-defect — a verse that drops while its main partner ALSO drops is a dissolving
-     sense (hole); a verse that drops while its partner stays cited is re-shelved (fold).
+     for regroup-vs-defect — a verse that drops while its partner stays cited is re-shelved (fold). A
+     verse that drops while its main partner ALSO drops is a BACK-CHECK flag, NOT an auto-hole: a small
+     MARGINAL sub-sense that drops as a unit looks identical on the counts, and that is a fine fold. Go
+     to the per-draw lists and ask whether a whole DISTINCT job vanished (hole) or only a marginal
+     sub-sense folded away (fine). The flag finds candidates; the per-draw lists make the call.
   5. VERDICT for the word:
        no wobbles, or every wobble is a fold  ->  STABLE.  Safe to ship from a single draw.
        any wobble is a hole                   ->  UNSTABLE. Do NOT ship a blind single draw — the
@@ -290,22 +293,25 @@ def parse_draw(conn, sid, raw):
 # ══════════════════════════════════════════════════════════════════════════════════════════════
 # The cross-draw view — PRESENCE + COMPANY, never a significance verdict.
 # ══════════════════════════════════════════════════════════════════════════════════════════════
-def verse_company(draws):
+def verse_company(draws, valid_books=None):
     """Per grounding verse: how many draws cite it (SUPPORT) and WHO it shares a sense with across
     those draws (COMPANY). Support alone misleads — a droppable sub-use can sit at full support while
     a core sense holes below it — so the company is the second column: a verse that keeps support AND
     merely regroups is folding; one that loses support or whose core partner stops travelling with it
     is holing. Label-free, threshold-free. A verse-pair is counted AT MOST ONCE PER DRAW (whether they
     share a sense, and whether both are cited), so a stuttered draw repeating a sense can never push a
-    count past the draw total — same_sense <= co_cited <= n, always. Returns
-    (support, same_sense, co_cited, cite_draws, n)."""
+    count past the draw total — same_sense <= co_cited <= n, always. A ref whose book is not in
+    valid_books (a model typo like '2Ko' for '2Co') is dropped here so it can't spawn a phantom
+    low-support verse. Returns (support, same_sense, co_cited, cite_draws, n)."""
+    def ok(r):
+        return valid_books is None or r[0] in valid_books
     n = len(draws)
     support = Counter()            # v -> #draws citing v anywhere
     cite_draws = {}                # v -> set(draw idx) citing v
     same_sense = {}                # v -> Counter(w -> #draws v,w share a sense)  (<= n)
     co_cited = {}                  # v -> Counter(w -> #draws both v,w cited)     (<= n)
     for di, d in enumerate(draws):
-        sense_sets = [set(tuple(r) for r in s["refs"]) for s in d["senses"]]
+        sense_sets = [set(tuple(r) for r in s["refs"] if ok(tuple(r))) for s in d["senses"]]
         all_v = sorted(set().union(*sense_sets)) if sense_sets else []
         for v in all_v:
             support[v] += 1
@@ -337,12 +343,15 @@ def fmt_ref(r):
     return f"{r[0]} {int(r[1])}:{int(r[2])}"
 
 
-def render_report(sid, lemma, translit, prompt_name, ev, draws):
+def render_report(sid, lemma, translit, prompt_name, ev, draws, valid_books=None):
     """Build the human report (a list of lines). PRESENCE + COMPANY are computed; SIGNIFICANCE is
     left blank for the reader to fill — every word ends with a 'YOUR CALL' line, per the procedure."""
     L = []
     def w(s=""):
         L.append(s)
+
+    def bad_book(r):
+        return valid_books is not None and r[0] not in valid_books
 
     n = len(draws)
     w("=" * 92)
@@ -373,6 +382,12 @@ def render_report(sid, lemma, translit, prompt_name, ev, draws):
         w(f"  !! v3 STUTTER rate {len(stut)}/{n} — engine repeated a sense under a reworded headline, "
           f"collapsed by verse set (a RISING rate on a word = the engine can't hold a stable sense list "
           f"for it — a finding, not just noise): " + ", ".join(f"draw {i} {a}->{b}" for i, a, b in stut))
+    typos = [(i + 1, fmt_ref(r)) for i, d in enumerate(draws)
+             for s in d["senses"] for r in s["refs"] if bad_book(r)]
+    if typos:
+        w("  !! unknown-book refs — dropped from the company math so they can't spawn a phantom verse "
+          "(likely model typos; check the draw): "
+          + ", ".join(f"{ref} [draw {i}]" for i, ref in typos))
 
     # 1 — PER-DRAW SENSES: the ground truth
     w("")
@@ -382,12 +397,13 @@ def render_report(sid, lemma, translit, prompt_name, ev, draws):
         w(f"  draw {i:>2}  [{d['count']} senses{extra}]")
         for j, s in enumerate(d["senses"], 1):
             head = " / ".join(s.get("headlines") or [s.get("headline", "")])
-            refs = ", ".join(fmt_ref(r) for r in s["refs"]) or "(no refs cited)"
+            refs = ", ".join(fmt_ref(r) + ("(?)" if bad_book(r) else "") for r in s["refs"]) \
+                or "(no refs cited)"
             w(f"      {j}. {head}")
             w(f"           {refs}")
 
     # 2 — PER-VERSE SUPPORT + COMPANY: support shows the drop, company tells fold from hole
-    support, same_sense, co_cited, cite_draws, _ = verse_company(draws)
+    support, same_sense, co_cited, cite_draws, _ = verse_company(draws, valid_books)
     worst = max((c for cc in same_sense.values() for c in cc.values()), default=0)
     if worst > n:
         w(f"  !! INTERNAL: a company count hit {worst} > N={n} — a draw still repeats a pair across")
@@ -415,7 +431,9 @@ def render_report(sid, lemma, translit, prompt_name, ev, draws):
         w("   dissolving sense even without a drop; otherwise migration is just a fold/seam, fine.)")
     else:
         w("  these verses leave some draws -- for each, is the meaning RE-SHELVED under a surviving")
-        w("  sense (FOLD, fine) or GONE (HOLE, flag)? The lean below is from the partners, not a verdict:")
+        w("  sense (FOLD, fine) or GONE (HOLE, flag)? The hint below is from the partners; it is a")
+        w("  FLAG TO BACK-CHECK against the per-draw lists, NOT a verdict — it over-calls on a small")
+        w("  marginal sub-sense that drops as a unit (that looks identical to a hole on the counts):")
         for v in drops:
             miss = sorted(set(range(n)) - cite_draws.get(v, set()))
             sm = same_sense.get(v, Counter())
@@ -426,10 +444,11 @@ def render_report(sid, lemma, translit, prompt_name, ev, draws):
                 shared = sorted(set(miss) & set(pmiss))
                 if shared:
                     lean = (f" -- its main partner {fmt_ref(pw)} ALSO leaves draws "
-                            f"{[m + 1 for m in shared]}: the pair dissolves -> leans HOLE")
+                            f"{[m + 1 for m in shared]}: pair drops together -> BACK-CHECK the draws "
+                            f"(a whole distinct job gone = hole; a marginal sub-sense folding away = fine)")
                 else:
-                    lean = (f" -- its main partner {fmt_ref(pw)} stays cited: the meaning may be "
-                            f"re-shelved -> leans FOLD")
+                    lean = (f" -- its main partner {fmt_ref(pw)} stays cited: the meaning is "
+                            f"re-shelved -> fold")
             w(f"      {fmt_ref(v):<13} {support[v]}/{n}, absent in {[m + 1 for m in miss]}{lean}")
     w("")
     w(f"  => YOUR CALL for {LABELS.get(sid, sid)}:  STABLE (ship from one draw)  |  "
@@ -450,15 +469,16 @@ def evidence_summary(conn, sid, budget, has_surface):
             "total": len(occs), "renderings": len(gset), "fed": len(ctx), "ot": ot}
 
 
-def save_run(save_dir, sid, prompt_name, ev, draws, report_lines):
+def save_run(save_dir, sid, prompt_name, ev, draws, report_lines, valid_books=None):
     """Persist the whole run so the review needs the model ONCE: re-read free with --from-json,
-    and Step 3 can lift a reviewed draw's raw to ship. JSON holds raw + parsed senses per draw."""
+    and Step 3 can lift a reviewed draw's raw to ship. JSON holds raw + parsed senses per draw, plus
+    the valid-book set so a --from-json re-read applies the same typo filter with no db."""
     ts = datetime.datetime.utcnow().strftime("%Y%m%d-%H%M%S")
     base = os.path.join(os.path.expanduser(save_dir), f"agreement_{sid}_{prompt_name}_{ts}")
     payload = {
         "strongs": sid, "lemma": ev["lemma"], "translit": ev["translit"],
         "prompt": prompt_name, "prompt_sha1": hashlib.sha1(PROMPTS[prompt_name].encode()).hexdigest()[:12],
-        "runs": len(draws),
+        "runs": len(draws), "valid_books": sorted(valid_books) if valid_books else None,
         "evidence": {k: ev[k] for k in ("total", "renderings", "fed", "ot")},
         "draws": [{"raw": d["raw"], "count": d["count"], "raw_count": d.get("raw_count", d["count"]),
                    "audit": d["audit"],
@@ -493,7 +513,8 @@ def from_json(path):
                       "audit": d["audit"], "senses": senses})
     ev = {"lemma": p["lemma"], "translit": p["translit"], "renderings": p["evidence"]["renderings"],
           "total": p["evidence"]["total"], "fed": p["evidence"]["fed"], "ot": p["evidence"]["ot"]}
-    print("\n".join(render_report(p["strongs"], p["lemma"], p["translit"], p["prompt"], ev, draws)))
+    vb = set(p["valid_books"]) if p.get("valid_books") else None
+    print("\n".join(render_report(p["strongs"], p["lemma"], p["translit"], p["prompt"], ev, draws, vb)))
 
 
 def main():
@@ -526,6 +547,7 @@ def main():
     conn.row_factory = sqlite3.Row
     conn.create_function("strip_accents", 1, B.strip_accents)
     has_surface = B.table_exists(conn, "abp_surface")
+    valid_books = {row["book"] for row in conn.execute("SELECT DISTINCT book FROM verses")}
 
     import anthropic
     client = anthropic.Anthropic(api_key=B.get_key())
@@ -542,12 +564,12 @@ def main():
             raw = draw_once(client, system, sid, ev["translit"], ev["gset"], ev["ctx"])
             draws.append(parse_draw(conn, sid, raw))
             print(f"   draw {k + 1}/{args.runs}: {draws[-1]['count']} senses", flush=True)
-        report = render_report(sid, ev["lemma"], ev["translit"], args.prompt, ev, draws)
+        report = render_report(sid, ev["lemma"], ev["translit"], args.prompt, ev, draws, valid_books)
         print("\n".join(report))
         nst = sum(1 for d in draws if d.get("raw_count", d["count"]) > d["count"])
         stutter_rates.append((LABELS.get(sid, sid), nst, len(draws)))
         if not args.no_save:
-            base = save_run(args.save_dir, sid, args.prompt, ev, draws, report)
+            base = save_run(args.save_dir, sid, args.prompt, ev, draws, report, valid_books)
             print(f"\n  saved: {base}.json  (+ .txt)")
 
     if len(stutter_rates) > 1:
