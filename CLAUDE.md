@@ -258,7 +258,8 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   ALL LIVE (2026-06-23). Full record: memory `project_word_card_gloss`.
 - `lexica_def` — the **Lexica dictionary** entry per word: our OWN verse-grounded definition (written from the
   Bible's own usage, not LSJ's classical glosses). Side table in bible.db (built on PA, not in git). One row =
-  the frozen fields `sense_headlines`/`senses_block`/`range`/`gloss_notes`/`coverage` + `fork` (contested-word
+  the frozen fields `sense_headlines`/`senses_block`/`range`/`gloss_notes`/`coverage` + `sense_prov` (per-sense
+  LXX-provenance flag, Option B) + `fork` (contested-word
   readings + a Study-graph link) + `verses` + `audit` (citation-gate badge) + `raw` (so a better splitter
   re-splits with NO model call). Built by `scripts/build_lexica_def.py` (frozen `VERSE_PROMPT` → Sonnet → split
   → citation gate → fork → write; `--apply` build / `--resplit --apply` re-split stored raw, free; surgical raw

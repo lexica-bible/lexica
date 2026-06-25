@@ -169,6 +169,9 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
        attested range is favor/goodwill/thanks, the theological sense developing later"). This is the Berean
        contribution distilled. RESTRAINT is the value: most words get clean gloss + evidence, full stop; only
        the loaded dozen earn the seam-note. On every word it becomes editorializing noise.
+       *(STILL OPEN — and DISTINCT from the auto-derived citation-provenance "rests on Septuagint usage"
+       note shipped 2026-06-25: that one flags a sense whose verse evidence is mostly Greek-OT/LXX; THIS
+       seam is the hand-authored history of where the English GLOSS came from. They coexist.)*
   - **HARD don'ts (this is where "add value" goes wrong — all rebuild the systematic-theology web the method
     rejects):** NO etymology as a headline (root ≠ meaning — the biggest word-study fallacy; bury it in
     Expanded, explicitly labeled history-not-meaning, or leave it out); NO "related theological concepts"
@@ -190,7 +193,7 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
       leak into the Library word card (the user's locked it). Another reason the heavy tier lives in Word study.
   `code: views_lsj.py (Summary|Full-entry, _LSJ_OVERRIDES for the seam); static/src/80-lexicon.jsx (distribution data already there) + 30-detail-panel.jsx`
 
-- **"Lexica dictionary" — verse-grounded word definitions. PILOT SHIPPED (6 words) → FULL-BUILD BATCH 1 DONE (12 words) → OPENED PUBLIC, all 2026-06-25 (`LEXICA_ADMIN_ONLY=False`, ~18 cards live to everyone incl. logged-out). ✅ Pilot + first scaled batch discharged. NEXT = the batch-2 PRE-SORT/PIPELINE script (scoped, not built); open sub-items: Step 4 significance judge, the no-verse lint, + verbs and Hebrew first-batches (separate tracks).**
+- **"Lexica dictionary" — verse-grounded word definitions. PILOT SHIPPED (6 words) → FULL-BUILD BATCH 1 DONE (12 words) → OPENED PUBLIC, all 2026-06-25 (`LEXICA_ADMIN_ONLY=False`, ~18 cards live to everyone incl. logged-out). ✅ Pilot + first scaled batch discharged. **✅ LXX-provenance note (Option B) + 3 pneuma sense-fixes DONE 2026-06-25** — a per-sense "rests on Septuagint (Greek-OT) usage" flag on senses grounded ≥80% OT (≥4 refs), auto-derived in `assemble()` (`sense_provenance`, no model), fires on the 5 calques only; census tool `scripts/audit_lxx_provenance.py`; pneuma Psa 76:12 moved + Jude 1:19 / 2Ti 1:7 flagged via `fix_lexica_raw.py`. NEXT = the batch-2 PRE-SORT/PIPELINE script (scoped, not built); open sub-items: **re-check the 80/min-4 LXX cutoff at scale** (it's tuned on 18 words), Step 4 significance judge, the no-verse lint, + verbs and Hebrew first-batches (separate tracks).**
   Our own word definitions written from the Bible's OWN usage, replacing LSJ's classical glosses as the
   word-card / word-study MEANING source. **ONE engine: verse-ground EVERY def (Sonnet)** — feed the model the
   word's renderings + a spread of its real occurrences, define FROM the usage under the plain-meaning rule.
