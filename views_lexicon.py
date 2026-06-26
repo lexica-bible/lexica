@@ -56,6 +56,30 @@ def _word_gloss(conn, key):
     return (r["gloss"] or "").strip() if r else ""
 
 
+def _norm_lemma(s):
+    """Accent-stripped, lowercased, hyphen/final-sigma-folded form — the indexed
+    `lemma_plain` key (scripts/add_lemma_plain.py / load_lexicon._norm_lemma; keep the
+    three in lockstep). A Greek/Hebrew word typed with OR without accents matches by
+    equality against the stored value."""
+    return (_strip_accents(s or "") or "").lower().replace("-", "").replace("ς", "σ")
+
+
+# Per-process cache of which tables carry the indexed lemma_plain column (the search
+# over-match fix). False until scripts/add_lemma_plain.py runs on PA → the lookup falls
+# back to the old substring behavior, so a code deploy BEFORE the data step is safe.
+_LEMMA_PLAIN_OK = {}
+
+
+def _has_lemma_plain(conn, table):
+    if table not in _LEMMA_PLAIN_OK:
+        try:
+            cols = {r[1] for r in conn.execute(f"PRAGMA table_info({table})").fetchall()}
+            _LEMMA_PLAIN_OK[table] = "lemma_plain" in cols
+        except sqlite3.OperationalError:
+            _LEMMA_PLAIN_OK[table] = False
+    return _LEMMA_PLAIN_OK[table]
+
+
 def _greek_cognates(conn, snum, derivation):
     """Same-root family for a Greek word, derived on the fly from the lexicon's
     `derivation` text (no extra table): parent(s) = the G-numbers THIS word comes
@@ -362,6 +386,41 @@ def lexicon_lookup():
         # accented form ("pneûma"), and Greek/Hebrew typed without accents/points
         # still matches. Definition matches keep the raw query.
         qn = (_strip_accents(q) or q).lower()
+
+        def _grk_row(r, match):
+            return {"strongs": f"G{r['strongs']}", "lemma": r["lemma"] or "",
+                    "translit": r["translit"] or "",
+                    "gloss": _word_gloss(conn, f"G{r['strongs']}") or r["kjv_def"]
+                             or r["derivation"] or r["strongs_def"] or "", "match": match}
+
+        def _heb_row(r, match):
+            return {"strongs": r["strongs_id"], "lemma": r["lemma"] or "",
+                    "translit": r["xlit"] or "", "gloss": r["description"] or "", "match": match}
+
+        # ── 1) EXACT lemma match FIRST — indexed (lemma_plain), instant, and the right
+        # answer. A typed word IS its dictionary headword in the common case, so this is
+        # what the user wants; it also dodges the over-match (ἵνα returns ἵνα, not every
+        # lemma CONTAINING "ινα"). lemma_plain is built by scripts/add_lemma_plain.py;
+        # _has_lemma_plain is False until that runs, so the code is safe to deploy first.
+        qexact = _norm_lemma(q)
+        exact = []
+        if qexact:
+            if _has_lemma_plain(conn, "lexicon"):
+                exact += [_grk_row(r, "exact") for r in conn.execute(
+                    """SELECT strongs, lemma, translit, kjv_def, derivation, strongs_def
+                       FROM lexicon WHERE lemma_plain = ? LIMIT 15""", (qexact,)).fetchall()]
+            if _has_lemma_plain(conn, "bdb"):
+                exact += [_heb_row(r, "exact") for r in conn.execute(
+                    """SELECT strongs_id, lemma, xlit, description
+                       FROM bdb WHERE lemma_plain = ? LIMIT 10""", (qexact,)).fetchall()]
+        # An exact lemma hit IS the answer — return it WITHOUT the slow substring scan
+        # below (that full-table LIKE is the cost; only pay it when there's no exact word).
+        if exact:
+            return jsonify(exact[:20])
+
+        # ── 2) No exact lemma — fall back to the substring "contains" search (translit,
+        # definitions, and the accent-stripped lemma). This is the only path that pays the
+        # full-table scan, and only when the typed word isn't a headword.
         grk = conn.execute(
             """SELECT strongs, lemma, translit, kjv_def, derivation, strongs_def FROM lexicon
                WHERE strongs_def LIKE ? OR kjv_def LIKE ?
@@ -398,10 +457,10 @@ def lexicon_lookup():
                 ).fetchall()
             except Exception:
                 dot = []
-        results = [{"strongs": f"G{r['strongs']}", "lemma": r["lemma"] or "", "translit": r["translit"] or "",
-                    "gloss": _word_gloss(conn, f"G{r['strongs']}") or r["kjv_def"] or r["derivation"] or r["strongs_def"] or ""} for r in grk]
-        results += [{"strongs": r["strongs_id"], "lemma": r["lemma"] or "", "translit": r["xlit"] or "", "gloss": r["description"] or ""} for r in heb]
-        results += [{"strongs": r["strongs"], "lemma": r["lemma"] or "", "translit": r["translit"] or "", "gloss": r["gloss"] or ""} for r in dot]
+        results = [_grk_row(r, "contains") for r in grk]
+        results += [_heb_row(r, "contains") for r in heb]
+        results += [{"strongs": r["strongs"], "lemma": r["lemma"] or "", "translit": r["translit"] or "",
+                     "gloss": r["gloss"] or "", "match": "contains"} for r in dot]
         return jsonify(results[:20])
     finally:
         conn.close()
