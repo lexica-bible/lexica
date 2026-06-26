@@ -509,17 +509,17 @@ Full record + the audit numbers: memory `project_pn_subject_verb_fold`.
 
 ---
 
-## Word-study Greek search over-matches + slow (2026-06-26, diagnosed, NOT fixed)
-Typing a short Greek word (ἵνα) in Word study returns ~17 junk hits (γάγγραινα, εἶναι, σίναπι, Σινᾶ…)
-and is slow. Cause: `/api/lexicon/lookup` (`lexicon_lookup()` in views_lexicon.py ~321) matches Greek
-input as `strip_accents(lower(lemma)) LIKE '%ινα%'` — a substring on the accent-stripped headword, so
-every lemma CONTAINING "ινα" matches; no ORDER BY, so the exact ἵνα is buried. Slow because the
-leading-wildcard LIKE can't use an index, `lexicon.lemma` has no index/normalized column, and
-`strip_accents` is a per-row Python callback → full scan of ~5,600 Greek rows (+ BDB) every search.
-Fix: add a stored, INDEXED normalized-lemma column (precedent: `lsj.plain`), make exact equality on it
-the primary path, rank Strong's-number + exact-lemma hits first, demote substring to a separate
-"contains" section/toggle. Full record: memory `project_lexicon_search_overmatch`.
-`code: views_lexicon.py lexicon_lookup, scripts/load_lexicon.py, static/src/80-lexicon.jsx`
+## Word-study Greek search over-match + slow — FIXED in code 2026-06-26, PENDING PA data step
+Was: typing a short Greek word (ἵνα) returned ~17 junk hits (γάγγραινα, εἶναι, Σινᾶ…) and was slow,
+because `lexicon_lookup()` matched a substring LIKE on the accent-stripped lemma (full scan, no index,
+over-match, no ranking). FIX SHIPPED (535150d): indexed `lemma_plain` column on `lexicon` + `bdb`
+(`scripts/add_lemma_plain.py`, folded into `load_lexicon.py`), and `lexicon_lookup()` now does EXACT
+`lemma_plain = ?` first — instant, and it short-circuits the substring scan (which runs only as a
+"contains" fallback). Deploy-safe (`_has_lemma_plain` guard → old behavior until the column exists).
+**TO GO LIVE on PA:** deploy, then `python3 scripts/add_lemma_plain.py bible.db` (dry run) → `--apply`
+→ reload. Optional future polish: a frontend "contains" caption (each result already carries a `match`
+field). Full record: memory `project_lexicon_search_overmatch`.
+`code: views_lexicon.py lexicon_lookup, scripts/add_lemma_plain.py, scripts/load_lexicon.py`
 
 ---
 
