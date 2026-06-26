@@ -250,7 +250,7 @@ function StructuralBody({ data, lsjEntry }) {
   // glance-sized, so there is nothing worth hiding: no Full tab, the single view shows
   // everything (collapse-to-one). hasMore drives both the tab and what each view renders.
   const hasMore = !!(data.scope || data.scope_contested || data.underspecified ||
-                     (data.crossref && data.crossref.note));
+                     (data.crossref && data.crossref.note) || data.glance);
   const showDetail = !hasMore || view === "full";
   return (
     <>
@@ -280,6 +280,18 @@ function StructuralBody({ data, lsjEntry }) {
              find-replace. */}
           {!showDetail && data.scope && (
             <div className="gram-bound">This covers the linking use; the absolute “I am” (asserting existence) is a separate use — <button type="button" className="gram-bound-link" onClick={() => setView("full")}>see Full entry</button>.</div>
+          )}
+          {/* GLANCE pointer for a TYPOLOGY card (a conjunction like ὅτι). This differs from eimi's
+             pointer above in WHERE it points. Eimi points OUT — to the existential “I am”, a
+             DIFFERENT function the copula card scopes itself away from. A typology pointer points
+             IN — it flags the easy-to-miss member of THIS card's own sense list (ὅτι's recitative),
+             which the finding already covers. Keep that distinction: the in/out-of-scope line is
+             exactly the eimi/existential line, and blurring it misframes the word. Gated on
+             data.glance (typology cards); eimi has only data.scope, never glance, so the two are
+             disjoint — eimi shows ONE pointer, not two. Authored per card in structural.py, ending
+             just before the link. */}
+          {!showDetail && data.glance && (
+            <div className="gram-bound">{data.glance} <button type="button" className="gram-bound-link" onClick={() => setView("full")}>see Full entry</button>.</div>
           )}
           {showDetail && <>
             {data.scope && (

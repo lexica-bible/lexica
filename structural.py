@@ -392,6 +392,284 @@ _STRUCTURAL = {
                     "is the word’s plain meaning, not here.",
         "provenance": "GRAMMAR",
     },
+
+    # ---- CONJUNCTIONS ----
+    # TYPOLOGY card (no form selects the sense — context does, so ONE card with the senses listed
+    # under one finding; the eimi pattern, NOT a card per sense). ὅτι's three jobs — content,
+    # reason, quotation-frame — are ALL the same function (a subordinator introducing a clause);
+    # they are not separate functions. So unlike eimi (whose existential use is a DIFFERENT
+    # function the copula card scopes itself away from), ὅτι's finding covers all three, and the
+    # glance pointer points INTO the typology (flagging recitative, the easy-to-miss member),
+    # never OUT to something the card doesn't cover. Exemplars are verbatim ABP, verified — the
+    # recitative (John 1:32) survives only because ABP is literal; the first-person “I saw” proves
+    # it's a quote, not reported content.
+    "G3754": {
+        "kind": "structural",
+        "strongs": "G3754",
+        "lemma": "ὅτι",
+        "function": "ὅτι is a subordinating conjunction — it introduces a clause and links it to "
+                    "the word that governs it, but it does not itself fix what that clause DOES. "
+                    "Whether the clause gives the content of a verb of saying or knowing (“that …”), "
+                    "gives a reason (“because …”), or frames direct speech as a quotation is set by "
+                    "the governing verb and the context, not by ὅτι.",
+        "glance": "The one to watch is the recitative: before direct speech ὅτι is an untranslated "
+                  "quotation mark that smooth English drops —",
+        "relation_label": "What the ὅτι-clause does — context makes the cut, not ὅτι",
+        "relation_lead": "Same word, three jobs — told apart by the governing verb and context:",
+        "relations": [
+            {"type": "that (content)",
+             "note": "the clause is the CONTENT of a verb of knowing, saying, or perceiving",
+             "ref": "John 3:2",
+             "text": "we know that from God you have come as a teacher"},
+            {"type": "because (reason)",
+             "note": "the clause gives the GROUND or reason for what was just said",
+             "ref": "1 John 2:13",
+             "text": "I write to you, fathers, because you have known the one from the beginning"},
+            {"type": "quotation (recitative)",
+             "note": "the clause IS direct speech — ὅτι frames it like opening quote marks, left "
+                     "untranslated in smooth English; the comma and the shift into first-person "
+                     "speech are the tell",
+             "ref": "John 1:32",
+             "text": "saying that, I saw the spirit descending as a dove from out of heaven"},
+        ],
+        "provenance": "GRAMMAR",
+    },
+
+    # TYPOLOGY card — ὡς, four context-set relations (no form selects them). Glance points INTO
+    # the list, flagging the approximation use (ὡς + a number = “about”), the one a reader who
+    # knows ὡς only as “like” would miss.
+    "G5613": {
+        "kind": "structural",
+        "strongs": "G5613",
+        "lemma": "ὡς",
+        "function": "ὡς is a connector whose relation is set by what flanks it — it can mark a "
+                    "comparison (“as, like”), a point in time (“when, while”), an approximation "
+                    "before a number (“about”), or reported content (“how, that”). The context "
+                    "picks which; ὡς itself does not.",
+        "glance": "The surprising one is ὡς before a number — there it means “about, "
+                  "approximately,” not “like” —",
+        "relation_label": "What ὡς marks — context makes the cut, not ὡς",
+        "relation_lead": "Same word, four relations — set by the flanking words:",
+        "relations": [
+            {"type": "as; like (comparison)",
+             "note": "measures one thing against another",
+             "ref": "Matthew 22:39",
+             "text": "you shall love your neighbor as yourself"},
+            {"type": "when; while (time)",
+             "note": "fixes the clause at a point in time",
+             "ref": "John 19:33",
+             "text": "when they saw him already having died, they did not break his legs"},
+            {"type": "about (with a number)",
+             "note": "rounds a figure — approximately",
+             "ref": "Acts 13:18",
+             "text": "about forty years time he bore with them in the wilderness"},
+            {"type": "how; that (content)",
+             "note": "introduces reported content, much like ὅτι",
+             "ref": "Romans 1:9",
+             "text": "how continually I make mention of you"},
+        ],
+        "provenance": "GRAMMAR",
+    },
+
+    # TYPOLOGY card — εἰ. Glance flags the oath-negative, the use a smooth translation deletes:
+    # in a Hebraic oath εἰ (“if”) is a strong NO. ABP keeps it literal (“Shall they … no”), so the
+    # construction survives only here — verbatim ABP, not a paraphrase.
+    "G1487": {
+        "kind": "structural",
+        "strongs": "G1487",
+        "lemma": "εἰ",
+        "function": "εἰ supposes a case — ordinarily a real or granted one (“if …”). What that "
+                    "supposing DOES is set by context: it can frame a plain condition, pose an "
+                    "indirect question (“whether …”), or, inside a Hebraic oath, stand as a strong "
+                    "negative. εἰ marks the supposition; the context settles its force.",
+        "glance": "The one to watch is the oath-negative — inside an oath εἰ (“if”) is a strong "
+                  "NO, not a real condition —",
+        "relation_label": "What εἰ supposes — context makes the cut, not εἰ",
+        "relation_lead": "Same word, three forces — set by context:",
+        "relations": [
+            {"type": "if (condition)",
+             "note": "supposes a case as real or granted",
+             "ref": "Matthew 4:3",
+             "text": "If you are son of God, speak that these stones should become bread loaves"},
+            {"type": "whether (indirect question)",
+             "note": "supposes both sides of a question being weighed",
+             "ref": "Acts 26:23",
+             "text": "whether the Christ is susceptible of suffering"},
+            {"type": "oath-negative (surely not)",
+             "note": "in a Hebraic oath, “if” is a strong NO — ABP keeps the construction literal, "
+                     "as a question answered “no”",
+             "ref": "Hebrews 3:11",
+             "text": "I swore by an oath in my wrath, Shall they enter into my rest, no."},
+        ],
+        "provenance": "GRAMMAR",
+    },
+
+    # SINGLE-USE card — ἐάν is connective-grade (one relation), but its finding is worth stating:
+    # it is the subjunctive twin of εἰ. No glance split (no deep layer) — renders flat.
+    "G1437": {
+        "kind": "structural",
+        "strongs": "G1437",
+        "lemma": "ἐάν",
+        "function": "ἐάν is the conditional conjunction for a supposed or potential case — “if, in "
+                    "the event that; whenever.” It is the hypothetical twin of εἰ: where εἰ "
+                    "supposes a case as real or granted, ἐάν supposes one that may or may not come "
+                    "about, and its verb takes the “should / may” form to show it.",
+        "relation_label": "What ἐάν marks (one use — the verb’s “should” form is the tell)",
+        "relations": [
+            {"type": "if; whenever (potential)",
+             "note": "supposes a case that may or may not come about",
+             "ref": "1 John 1:9",
+             "text": "If we should acknowledge our sins, he is trustworthy and just"},
+        ],
+        "provenance": "GRAMMAR",
+    },
+
+    # ---- PLAIN CONNECTIVES ----
+    # One job each, force set by context — no internal typology, no glance split (flat cards).
+    # “καί is καί”: the and/also/even flip is one connective, not separate senses.
+    "G2532": {
+        "kind": "structural", "strongs": "G2532", "lemma": "καί",
+        "function": "καί is the basic connecting word — it ties together words, phrases, and "
+                    "clauses. Its English flips with context (and / also / even), but that is one "
+                    "connective doing one job, not a set of separate meanings.",
+        "relation_label": "What it does (force set by context, not a sense cut)",
+        "relations": [
+            {"type": "and; also; even", "note": "joins items, adds (“also”), or heightens (“even”)",
+             "ref": "John 1:1", "text": "and the word was with God"},
+        ],
+        "provenance": "GRAMMAR",
+    },
+    "G1161": {
+        "kind": "structural", "strongs": "G1161", "lemma": "δέ",
+        "function": "δέ is the mild connective — it carries the account forward, often with a "
+                    "light turn. Context sets whether it reads as “and” (continuing) or “but” "
+                    "(turning); the step it marks is gentle either way.",
+        "relation_label": "What it does (force set by context)",
+        "relations": [
+            {"type": "and; but (mild)", "note": "continues, or lightly contrasts, what precedes",
+             "ref": "Matthew 4:4", "text": "And responding he said"},
+        ],
+        "provenance": "GRAMMAR",
+    },
+    "G1063": {
+        "kind": "structural", "strongs": "G1063", "lemma": "γάρ",
+        "function": "γάρ looks back — it gives the ground or explanation for what was just said "
+                    "(“for, because”). It never opens its clause (it sits second in the Greek), so "
+                    "it always points to the statement before it.",
+        "relation_label": "What it does (force set by context)",
+        "relations": [
+            {"type": "for (explains, grounds)", "note": "gives the reason or basis for what precedes",
+             "ref": "Matthew 6:34", "text": "for tomorrow shall be anxious for the things of itself"},
+        ],
+        "provenance": "GRAMMAR",
+    },
+    "G3767": {
+        "kind": "structural", "strongs": "G3767", "lemma": "οὖν",
+        "function": "οὖν draws an inference — it ties what follows to what came before as its "
+                    "consequence (“therefore, then”). In narrative it can simply resume the thread "
+                    "(“so, then”); context sets which.",
+        "relation_label": "What it does (force set by context)",
+        "relations": [
+            {"type": "therefore; then", "note": "draws a conclusion, or resumes the account",
+             "ref": "Matthew 1:17", "text": "All then the generations from Abraham unto David"},
+        ],
+        "provenance": "GRAMMAR",
+    },
+    "G235": {
+        "kind": "structural", "strongs": "G235", "lemma": "ἀλλά",
+        "function": "ἀλλά is the strong adversative — it sets what follows AGAINST what precedes "
+                    "(“but, rather”). Heavier than δέ: it does not merely turn the thread, it "
+                    "opposes or corrects.",
+        "relation_label": "What it does (force set by context)",
+        "relations": [
+            {"type": "but; rather", "note": "marks a strong contrast or correction",
+             "ref": "Matthew 4:4", "text": "but by every word coming forth by the mouth of God"},
+        ],
+        "provenance": "GRAMMAR",
+    },
+    "G3303": {
+        "kind": "structural", "strongs": "G3303", "lemma": "μέν",
+        "function": "μέν sets up a balance — it flags one side (“on one hand; indeed”) with a "
+                    "following δέ answering it (“on the other”). It points forward to that pairing; "
+                    "context supplies the answering clause.",
+        "relation_label": "What it does (force set by context)",
+        "relations": [
+            {"type": "indeed; on one hand", "note": "flags one half of a μέν … δέ pairing",
+             "ref": "Acts 11:16",
+             "text": "John indeed immersed in water, but you shall be immersed in holy spirit"},
+        ],
+        "provenance": "GRAMMAR",
+    },
+    "G5620": {
+        "kind": "structural", "strongs": "G5620", "lemma": "ὥστε",
+        "function": "ὥστε marks a result — it ties what follows to what precedes as its outcome "
+                    "(“so that, so then, therefore”). It points back to the cause and states what "
+                    "came of it.",
+        "relation_label": "What it does (force set by context)",
+        "relations": [
+            {"type": "so that; so (result)", "note": "states the outcome of what precedes",
+             "ref": "Mark 2:12", "text": "so that all were amazed, and glorified God"},
+        ],
+        "provenance": "GRAMMAR",
+    },
+    "G3753": {
+        "kind": "structural", "strongs": "G3753", "lemma": "ὅτε",
+        "function": "ὅτε is the plain temporal connective — it fixes a clause at a point in time "
+                    "(“when”). Where ὡς-as-“when” is one job among several, ὅτε does only this.",
+        "relation_label": "What it does (force set by context)",
+        "relations": [
+            {"type": "when", "note": "marks the time at which something happens",
+             "ref": "Matthew 7:28", "text": "when Jesus completed these words"},
+        ],
+        "provenance": "GRAMMAR",
+    },
+    "G3704": {
+        "kind": "structural", "strongs": "G3704", "lemma": "ὅπως",
+        "function": "ὅπως marks purpose — it ties a clause to an aim (“so that, in order that”). "
+                    "Close in force to ἵνα; context supplies the goal in view.",
+        "relation_label": "What it does (force set by context)",
+        "relations": [
+            {"type": "so that; in order that", "note": "marks the aim or goal",
+             "ref": "Matthew 2:8", "text": "so that I also having come should do obeisance to him"},
+        ],
+        "provenance": "GRAMMAR",
+    },
+    "G1352": {
+        "kind": "structural", "strongs": "G1352", "lemma": "διό",
+        "function": "διό draws a conclusion — it ties what follows to what precedes as the thing "
+                    "that follows from it (“therefore, wherefore”). A tight inferential link: “for "
+                    "this reason.”",
+        "relation_label": "What it does (force set by context)",
+        "relations": [
+            {"type": "therefore; wherefore", "note": "draws a conclusion from what precedes",
+             "ref": "2 Corinthians 4:13", "text": "I trusted, therefore I spoke"},
+        ],
+        "provenance": "GRAMMAR",
+    },
+    "G2228": {
+        "kind": "structural", "strongs": "G2228", "lemma": "ἤ",
+        "function": "ἤ sets alternatives — it offers a choice between options (“or”), and in a "
+                    "comparison it marks the thing compared against (“than”). Context picks which.",
+        "relation_label": "What it does (force set by context)",
+        "relations": [
+            {"type": "or; than", "note": "marks an alternative, or the standard in a comparison",
+             "ref": "Matthew 12:25",
+             "text": "every city or house being portioned out against itself"},
+        ],
+        "provenance": "GRAMMAR",
+    },
+    "G5037": {
+        "kind": "structural", "strongs": "G5037", "lemma": "τε",
+        "function": "τε is the close-binding connective — a lighter “and” that ties items into a "
+                    "single set, often paired (“both … and”). Tighter than καί: it groups things "
+                    "as belonging together.",
+        "relation_label": "What it does (force set by context)",
+        "relations": [
+            {"type": "and; both … and", "note": "binds items closely into one group",
+             "ref": "Acts 8:38", "text": "both Philip and the eunuch"},
+        ],
+        "provenance": "GRAMMAR",
+    },
 }
 
 _FORM_DECODERS = {"eimi": eimi_form}
