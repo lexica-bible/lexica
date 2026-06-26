@@ -37,6 +37,15 @@ NUMERAL_OVERRIDES = {
     "2193.2": ("ϛ", "stigma"),   # 6
 }
 
+# A frozen multi-word idiom ABP parks at a dotted number reads as ONE chip in the reader
+# (G303.1 = ἀνὰ μέσον, "in the midst of, between"). The auto-derivation glues it to the
+# base neighbour (ανά + μέσος → "ανάμέσος"), so pin the phrase + its romanization VERBATIM
+# here — same scheme as the converter (grave folded to acute) — so the reader interlinear
+# matches the structural idiom card (structural.py _IDIOMS["G303.1"]).
+PHRASE_OVERRIDES = {
+    "303.1": ("ἀνὰ μέσον", "aná méson"),
+}
+
 # LSJ headwords carry vowel-length marks (breve/macron, e.g. τραυμᾰτίας); strip them
 # so the stored lemma reads clean like the rest of the dictionary (τραυματίας). These
 # are the only Greek uses of combining breve (0x306) / macron (0x304); real accents
@@ -104,6 +113,13 @@ def collect(conn):
             "SELECT COUNT(*) FROM words WHERE strongs = ?", (num,)
         ).fetchone()[0]
         fixes.append((num, base["lemma"] if base else "", letter, tr, uses))
+    # Pin the hand-authored idiom phrases (override any glued auto-derived row).
+    fixes = [f for f in fixes if f[0] not in PHRASE_OVERRIDES]
+    for num, (phrase, tr) in PHRASE_OVERRIDES.items():
+        uses = conn.execute(
+            "SELECT COUNT(*) FROM words WHERE strongs = ?", (num,)
+        ).fetchone()[0]
+        fixes.append((num, "", phrase, tr, uses))
     fixes.sort(key=lambda t: -t[4])
     abp_fixes.sort(key=lambda t: -t[4])
     return fixes, skipped, abp_fixes

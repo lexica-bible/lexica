@@ -376,8 +376,10 @@ const heroInflected=(entry.inflected||"").trim();const heroInflectedTranslit=(en
 // VERBATIM — the dotted_lexicon row's base-neighbour lemma + the ABP romanizer mangle a two-word
 // phrase ("ἀνάμέσος / anámésos"). Use the authored phrase/translit, never entry.greek/entry.translit.
 const idiomHdr=lexica&&lexica.kind==="idiom"?lexica:null;const hero={he:isHebrew,noGloss:isPN&&!entry.greek&&!isHebrew,script:idiomHdr?idiomHdr.phrase:isHebrew?bdbEntry?.lemma||entry.gloss:entry.greek||nameOrGloss,translit:idiomHdr?idiomHdr.translit:isHebrew?bdbEntry?.xlit:entry.translit,standaloneGloss:trimTail(isPN||metavData?properName:entry.greek&&(entry.gloss||"").trim().split(/\s+/).length>2?entry.english_head||entry.gloss:entry.gloss),morph:morphLine};// The small "in this verse" line shows the inflected form — only when we have one AND
-// it differs from the headword lemma (indeclinable words can coincide → skip it).
-const heroForm=heroInflected&&heroInflected!==hero.script?heroInflected:"";// The clicked word's CONTEXTUAL english (its sense IN THIS VERSE). When the card shows
+// it differs from the headword lemma (indeclinable words can coincide → skip it). For an
+// idiom the abp_surface form is the same phrase in bh's accent-only spelling (αναμέσον) —
+// redundant + mangled-looking next to the authored lemma, so drop it.
+const heroForm=!idiomHdr&&heroInflected&&heroInflected!==hero.script?heroInflected:"";// The clicked word's CONTEXTUAL english (its sense IN THIS VERSE). When the card shows
 // an inflected "in this verse" line, that english belongs next to the FORM it actually
 // translates — not glued to the dictionary lemma above. Relocate it down whenever there's
 // a form to attach it to (normal words only; for a proper noun the "gloss" is a name and
