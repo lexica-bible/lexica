@@ -524,6 +524,53 @@ _STRUCTURAL = {
         "provenance": "GRAMMAR",
     },
 
+    # ---- ἵνα: PURPOSE conjunction carrying a flagged GRAMMATICAL debate (NOT a fork) ----
+    # Single-function like ἐάν above (one job — purpose), but it SPLITS glance/full because a
+    # contested-grammar flag sits below the finding. The flag rides scope_contested (the generalized
+    # "contested-case flag" StructuralBody splits on — eimi's John 8:58 field) + a glance pointer; it
+    # is NOT a sense row and NOT a fork. The debate: whether ἵνα ever marks pure RESULT (the "ekbatic
+    # ἵνα") instead of purpose — a question about the PARTICLE's grammatical range.
+    #   STRUCTURAL-WORD CONTEST RULE (ἵνα = the worked example): a structural word whose GRAMMAR is
+    #   settled but whose APPLICATION is doctrinally contested at specific verses does NOT get a
+    #   fairness-gate fork. Those forks are for CONTENT words whose senses are contested between
+    #   reading-communities (dikaioō: forensic / infused / covenant). A structural word's senses are
+    #   not the contested thing — what's contested is WHICH settled sense applies in a given verse, a
+    #   passage-level question, not a lexical one. So the card stays grammatically honest, and the
+    #   loaded verses point OUT to an argument graph where the doctrinal contest is mapped (the lexeme
+    #   is innocent; the passage is contested). This is distinct from a content fork, where the
+    #   lexeme's OWN senses fork (dikaioō -> salvation_how).
+    #   The hardening verses (Mark 4:12, Matt 13:13ff, John 12:40) are exactly where which-sense-
+    #   applies becomes the doctrinal fight, so per the structural-exemplar rule they CANNOT be the
+    #   teaching verse. The exemplar is therefore a PLAIN purpose ἵνα (Mark 3:14 — mundane, no
+    #   predestination weight), verbatim ABP, tag-verified G2443, bracket-clean.
+    #   DEFERRED: the hardening graph + the verse-pointer do NOT exist yet (nothing to point to), so
+    #   NO fork, NO fairness-gate entry, NO pointer is wired here — just the structural card; the
+    #   pointer gets added later, when the graph is built. Telic twin of ὅπως (G3704, below). No
+    #   dotted children in the corpus (scanned).
+    "G2443": {
+        "kind": "structural",
+        "strongs": "G2443",
+        "lemma": "ἵνα",
+        "function": "ἵνα marks purpose — it ties a clause to an action as its aim or goal "
+                    "(“in order that, so that”). The ἵνα-clause says what the action is FOR; its verb "
+                    "stands in the “should / may” (subjunctive) form.",
+        "glance": "There is one debated grammatical point — whether ἵνα can ever mark pure result "
+                  "(an outcome that follows) rather than purpose (an aim intended) —",
+        "scope_contested": "Whether ἵνα ever marks pure result — an outcome that simply followed, not "
+                           "an aim that was intended — is a debated point of Koine grammar. Some read "
+                           "a “result (ekbatic) ἵνα” where a clause looks more like a consequence than "
+                           "a goal; others hold that ἵνα always keeps its purpose force. It is a "
+                           "grammatical question about the particle’s range — flagged here, not "
+                           "settled, and not a doctrinal one.",
+        "relation_label": "What ἵνα marks",
+        "relations": [
+            {"type": "purpose (aim, goal)",
+             "note": "marks what an action is for — “in order that”",
+             "ref": "Mark 3:14", "text": "he appointed twelve that they might be with him"},
+        ],
+        "provenance": "GRAMMAR",
+    },
+
     # ---- PLAIN CONNECTIVES ----
     # One job each, force set by context — no internal typology, no glance split (flat cards).
     # “καί is καί”: the and/also/even flip is one connective, not separate senses.

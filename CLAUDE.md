@@ -304,9 +304,16 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   CUT** — two lexemes split by fact (οὐ, indicative) vs non-fact (μή — typology, glance flags "lest"), both
   carrying a Matthew 5:17 minimal-pair cross-ref + the compounds οὐδέ/μηδέ/οὔτε/μήτε/οὐχί inheriting + naming
   the base split; the ARTICLE ὁ (definite-marker + substantivizer + the "not English 'the'" underspecification
-  finding, glance/full; pronominal ὁ δέ flagged → step b). **The structural inventory is now COMPLETE except
-  ἵνα** (still HELD OUT — purpose-vs-result is a theological fork, its own session; G2443 falls through, no
-  routing changed). Frontend tweaks: the underspecified-block label is now authored per card (eimi default
+  finding, glance/full; pronominal ὁ δέ flagged → step b) + **ἵνα** (G2443, 2026-06-26 — purpose; the result/ekbatic debate flagged as a GRAMMATICAL
+  (not doctrinal) question, glance/full via the contested-flag; exemplar Mark 3:14, a plain uncontested purpose,
+  NOT the hardening verses). **The structural inventory is now COMPLETE.** **STRUCTURAL-WORD CONTEST RULE** (ἵνα
+  = the worked example): a structural word with SETTLED grammar but a doctrinally-CONTESTED application at
+  specific verses does NOT get a fairness-gate fork — the card stays grammatically honest, and the loaded verses
+  point OUT to an argument graph where the contest is mapped (the lexeme is innocent; the passage is contested).
+  UNLIKE a content-word fork, where the lexeme's OWN senses fork (dikaioō → salvation_how). ἵνα's pointer is
+  DEFERRED — its Isaiah-6 hardening graph isn't built yet (the next Lexica piece; evidence = the Hebrew-imperative
+  → LXX passive+μήποτε → Synoptic ἵνα/ὅτι chain, run through the standard argmap + five-check review). Frontend
+  tweaks: the underspecified-block label is now authored per card (eimi default
   unchanged); a lone cross-ref no longer triggers the glance/full split (so flat οὐ keeps its Mat 5:17 line
   without a Full tab). **card verse lines are verbatim ABP**
   (a Greek-construction card — ABP is the right source even for a KJV reader). Full record + the locked build
