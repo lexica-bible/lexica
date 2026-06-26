@@ -131,7 +131,7 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
 
 ## New features
 
-- **Structural / function-word word-cards — NEW + LIVE; build inventory COMPLETE except ἵνα.**
+- **Structural / function-word word-cards — NEW + LIVE; build inventory COMPLETE.**
   A new word-card entry TYPE beside the Lexica dictionary + LSJ, for words whose meaning resolves OUTSIDE the
   lexeme (the copula, prepositions, article, conjunctions, particles, negatives): instead of a sense list it
   states the word's grammatical FUNCTION + the construction relations it appears in (provenance tag GRAMMAR).
@@ -152,22 +152,32 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
   + substantivizer + "not English the" underspecification, glance/full; pronominal ὁ δέ flagged → step b). Two
   frontend tweaks: per-card underspecified-block label (eimi default unchanged); a lone cross-ref no longer
   triggers the glance/full split (flat οὐ keeps its Mat 5:17 line, no Full tab).
-  OPEN: (1) ἵνα DEFERRED to its own session — the ONLY structural lemma left to build. purpose-vs-result is
-  mostly a clean grammatical cut, but in the divine-intent/predestination verses which-sense-applies is itself
-  a live theological fork, so it sits on the seam between the structural card and the fairness-gate/argument-graph
-  machinery (build it fork-aware, or keep it a pure structural cut — an architecture call); the routing gate
-  already passes it through (G2443 → its normal entry), so building it later is purely additive.
-  (2) live-case
+  + ἵνα G2443 (2026-06-26, commit d7518b1): purpose card; the result/ekbatic debate flagged as a GRAMMATICAL
+  (not doctrinal) question (glance/full via the contested-flag), exemplar Mark 3:14 — NOT the hardening verses.
+  The old purpose-vs-result seam is RESOLVED by the STRUCTURAL-WORD CONTEST RULE: a structural word with settled
+  grammar but a doctrinally-contested APPLICATION stays grammatically honest and points the loaded verses OUT to
+  an argument graph — it does NOT fork the lexeme (fairness forks are for content words like dikaioō). ἵνα's
+  verse-pointer is pending its hardening graph (own follow-up below).
+  OPEN: (1) live-case
   HIGHLIGHT for prepositions (light the row matching the object's case from morph; the whole table already
-  shows, so polish — wire with the verse live-pull); (3) the demonstrative/pronoun "referent" card (step b:
+  shows, so polish — wire with the verse live-pull); (2) the demonstrative/pronoun "referent" card (step b:
   touto, autos, ὁ δέ, ἰδού, οὐδείς, μηδείς — a DISTINCT card, points to a referent, cross-refs εἰμί at the
-  Last Supper; build + prove SECOND). (4) ἀνὰ μέσον card headword mismatch — the dotted-word table
+  Last Supper; build + prove SECOND). (3) ἀνὰ μέσον card headword mismatch — the dotted-word table
   (dotted_lexicon) reads the mashed one-word "ἀνάμεσος / in between" (built from ABP's first Greek word), which
   now clashes with the correct idiom note below it ("ἀνὰ μέσον / in the midst of, between"). Pin G303.1 to
   "ἀνὰ μέσον" (translit "ana meson") via a builder override like `NUMERAL_OVERRIDES` in build_dotted_lexicon.py
   + match the gloss; PA data re-runs, pending JP's go (the headword was wrong before today, the note only
   exposed it). Full record + the locked build rules: memory `project_structural_deictic_cards`.
   `code: structural.py, views_lexica.py, static/src/20-shared-components.jsx, static/src/30-detail-panel.jsx`
+
+- **ἵνα's hardening argument-graph (Isaiah 6) — the next real Lexica piece; ἵνα's deferred verse-pointer lands here.**
+  ἵνα G2443 shipped as a pure structural card (above); per the contest rule the doctrinal contest at the hardening
+  verses (Mark 4:12, Matt 13:13ff, John 12:40) does NOT live on the word — it goes in an argument graph, and those
+  verses point AT it. The graph isn't built yet. Evidence structure = the translation chain: Hebrew imperative
+  (Isa 6:9-10) → LXX passive + μήποτε → the Synoptic ἵνα/ὅτι split. Build through the standard graph framework
+  (`scripts/add_study_graph.py` + `argmap.py`) + the five-check review, THEN wire the three verses' pointers.
+  Full record: memory `project_structural_deictic_cards` (+ `feedback_claude_chat_collab` for the review).
+  `code: study.db (add_study_graph.py), argmap.py, structural.py (verse-pointer wiring, later)`
 
 - **LSJ "Lexica" overrides — DONE + LIVE 2026-06-23; a few words still open.** The LSJ word-study
   blurb is now a Haiku "definition" prompt for the bulk + per-word hand-written **"Lexica" overrides**

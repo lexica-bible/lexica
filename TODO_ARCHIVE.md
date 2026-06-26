@@ -6,6 +6,26 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## ἵνα structural card + the STRUCTURAL-WORD CONTEST RULE — DONE 2026-06-26
+
+ἵνα G2443 shipped as a PURE structural card (commit d7518b1) — purpose finding, exemplar Mark 3:14 (a plain
+uncontested purpose, NOT the hardening verses). The long-held-out question — is ἵνα a structural card, or does
+purpose-vs-result need a fork? — is RESOLVED: the result/ekbatic debate is a GRAMMATICAL (not doctrinal)
+question, flagged ON the card (glance/full via the contested-flag), NOT a fork. Additive: G2443 was already
+falling through, so no routing/frontend change.
+
+The verdict worth keeping — **STRUCTURAL-WORD CONTEST RULE:** a structural word whose grammar is settled but
+whose APPLICATION is doctrinally contested at specific verses does NOT get a fairness-gate fork. Fairness forks
+are for CONTENT words whose senses are contested between reading-communities (dikaioō: forensic/infused/
+covenant). A structural word's senses aren't the contested thing — what's contested is WHICH settled sense
+applies in a given verse (a passage-level question, not a lexical one). So the card stays grammatically honest
+and the loaded verses point OUT to an argument graph: the lexeme is innocent, the passage is contested. Forking
+it would teach a falsehood about the grammar to "solve" a problem the word doesn't own.
+
+STILL OPEN (moved to TODO.md): the Isaiah-6 hardening argument-graph — ἵνα's verse-pointer target — isn't built;
+its evidence is the Hebrew-imperative → LXX passive + μήποτε → Synoptic ἵνα/ὅτι translation chain. Full record:
+memory `project_structural_deictic_cards`.
+
 ## Word-study search LABEL — pick the slot's OWN word, not an added (italic) one — DONE 2026-06-25
 
 From a user report: the Word-study "favor" search listed λαμβάνω/G2983 (a take/receive word). Root —
