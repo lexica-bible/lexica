@@ -73,6 +73,12 @@ OVERRIDES = {
     "G1228": "slanderer, accuser",          # diabolos — the literal noun; "slanderous" is the adj
     "G3341": "change of mind, repentance",  # metanoia — lead the plain sense, not the church term
     "G1510": "to be, exist",                # eimi — the plain copula, not a first-person paraphrase
+    # dikaioō — the verb FORKS (made-just / declared-just / shown-just) and the header must
+    # pick NONE. This is a fork-neutral compression of the Lexica engine's core ("deem, treat,
+    # or pronounce just"), NOT Dodson's "make righteous" (transformative fork) and NOT a
+    # "declare/acquit" gloss (forensic fork). The override's job here isn't "the correct sense"
+    # (there isn't one) — it's "a header that matches the body's neutral core, refusing the fork".
+    "G1344": "deem or treat as just",
 }
 
 # HEBREW base = TBESH's clean dictionary form; these 3 are the loaded ones it still gets
