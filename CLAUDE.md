@@ -299,9 +299,16 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   pointer; "Full entry" = scope/relations/cross-refs — eimi splits, the shorter prepositions collapse to one
   view); `30-detail-panel.jsx` branches `case "lsj"` on `lexica.kind` ("Grammar"/"Idiom" badge); `.gram-*`
   CSS. LIVE: εἰμί (copula) + 17 prepositions + the ἀνὰ μέσον idiom note + the CONJUNCTION batch (ὅτι/ὡς/εἰ
-  typology cards w/ glance-full split; ἐάν + 12 connectives flat — shipped 2026-06-25; **ἵνα HELD OUT** —
-  purpose-vs-result is a theological fork, deferred to its own session; G2443 falls through, no routing
-  changed); **card verse lines are verbatim ABP**
+  typology + ἐάν + 12 connectives, 2026-06-25) + the PARTICLE/NEGATIVE/ARTICLE batch (2026-06-26): ἄν (the
+  eimi-analog — one use, the underspecification IS the finding, glance/full); δή/γε; the **οὐ/μή MECHANISM
+  CUT** — two lexemes split by fact (οὐ, indicative) vs non-fact (μή — typology, glance flags "lest"), both
+  carrying a Matthew 5:17 minimal-pair cross-ref + the compounds οὐδέ/μηδέ/οὔτε/μήτε/οὐχί inheriting + naming
+  the base split; the ARTICLE ὁ (definite-marker + substantivizer + the "not English 'the'" underspecification
+  finding, glance/full; pronominal ὁ δέ flagged → step b). **The structural inventory is now COMPLETE except
+  ἵνα** (still HELD OUT — purpose-vs-result is a theological fork, its own session; G2443 falls through, no
+  routing changed). Frontend tweaks: the underspecified-block label is now authored per card (eimi default
+  unchanged); a lone cross-ref no longer triggers the glance/full split (so flat οὐ keeps its Mat 5:17 line
+  without a Full tab). **card verse lines are verbatim ABP**
   (a Greek-construction card — ABP is the right source even for a KJV reader). Full record + the locked build
   rules (cut-by-form / list-by-context, verbatim-ABP, contested-fork prepositions, the dotted-routing gate):
   memory `project_structural_deictic_cards`.

@@ -131,7 +131,7 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
 
 ## New features
 
-- **Structural / function-word word-cards — NEW + LIVE; eimi + 17 prepositions + the conjunction batch shipped, more open.**
+- **Structural / function-word word-cards — NEW + LIVE; build inventory COMPLETE except ἵνα.**
   A new word-card entry TYPE beside the Lexica dictionary + LSJ, for words whose meaning resolves OUTSIDE the
   lexeme (the copula, prepositions, article, conjunctions, particles, negatives): instead of a sense list it
   states the word's grammatical FUNCTION + the construction relations it appears in (provenance tag GRAMMAR).
@@ -145,12 +145,18 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
   (2026-06-25): ὅτι/ὡς/εἰ typology cards (context-set senses, no form to cut on — glance/full split, an authored
   `glance` pointer flags the easy-to-miss member: ὅτι recitative, ὡς approximation, εἰ oath-negative) + ἐάν +
   the 12 plain connectives (καί δέ γάρ οὖν ἀλλά μέν ὥστε ὅτε ὅπως διό ἤ τε), all exemplars verbatim ABP.
-  OPEN: (1) ἵνα DEFERRED to its own session — purpose-vs-result is mostly a clean grammatical cut, but in the
-  divine-intent/predestination verses which-sense-applies is itself a live theological fork, so it sits on the
-  seam between the structural card and the fairness-gate/argument-graph machinery (build it fork-aware, or keep
-  it a pure structural cut — an architecture call); the routing gate already passes it through (G2443 → its
-  normal entry), so building it later is purely additive. Remaining structural inventory: the NEGATIVES (οὐ/μή +
-  οὐδέ/μηδέ/οὔτε/μήτε/οὐχί, 7), the PARTICLES (ἄν etc., ~3), and the ARTICLE (ὁ; + ὁ δέ pronominal → step b);
+  + the PARTICLE/NEGATIVE/ARTICLE batch (2026-06-26, the last tranche): ἄν (the eimi-analog — one use, the
+  underspecification stated AS the finding, glance/full) + δή/γε; the οὐ/μή MECHANISM CUT (two lexemes split by
+  fact-vs-non-fact — οὐ flat, μή a typology w/ glance flagging "lest"; both carry a Matthew 5:17 minimal-pair
+  cross-ref) + the compounds οὐδέ/μηδέ/οὔτε/μήτε/οὐχί each naming its base + twin; the ARTICLE ὁ (definite-marker
+  + substantivizer + "not English the" underspecification, glance/full; pronominal ὁ δέ flagged → step b). Two
+  frontend tweaks: per-card underspecified-block label (eimi default unchanged); a lone cross-ref no longer
+  triggers the glance/full split (flat οὐ keeps its Mat 5:17 line, no Full tab).
+  OPEN: (1) ἵνα DEFERRED to its own session — the ONLY structural lemma left to build. purpose-vs-result is
+  mostly a clean grammatical cut, but in the divine-intent/predestination verses which-sense-applies is itself
+  a live theological fork, so it sits on the seam between the structural card and the fairness-gate/argument-graph
+  machinery (build it fork-aware, or keep it a pure structural cut — an architecture call); the routing gate
+  already passes it through (G2443 → its normal entry), so building it later is purely additive.
   (2) live-case
   HIGHLIGHT for prepositions (light the row matching the object's case from morph; the whole table already
   shows, so polish — wire with the verse live-pull); (3) the demonstrative/pronoun "referent" card (step b:
