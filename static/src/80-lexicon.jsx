@@ -375,7 +375,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
         const data = await api.lexiconLookup(q);
         if (!data.length) setError("No matches found.");
         else if (data.length === 1) loadProfile(data[0].strongs);
-        else setMatches(data);
+        else { setMatches(data); setGlOpen(true); }
       } else {
         const data = await api.lexiconEnglish(q, corpus, testament);
         if (data.length) { setGroupings(data); setGlOpen(true); }
@@ -386,7 +386,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
           const alt = await api.lexiconLookup(q);
           if (!alt.length) setError("No matches found for \"" + q + "\".");
           else if (alt.length === 1) loadProfile(alt[0].strongs);
-          else setMatches(alt);
+          else { setMatches(alt); setGlOpen(true); }
         }
       }
     } catch { setError("Search failed."); }
@@ -491,6 +491,53 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
             })}
           </div>
         )
+      )}
+    </div>
+  );
+
+  // Greek/Hebrew word-match list (from /api/lexicon/lookup). Same collapsible card
+  // shell as the English renderSenses() so picking a result COLLAPSES the list (shows
+  // the chosen word in the header) instead of making it vanish — they share .glsenses.
+  const renderMatches = () => (
+    <div className={"glsenses" + (glOpen ? " open" : "")}>
+      <button className="glsenses-head" aria-expanded={glOpen} onClick={() => setGlOpen(o => !o)}>
+        <span className="glsenses-l">
+          <b>{matches.length}</b> {matches.length === 1 ? "match" : "matches"} for “{query.trim()}”
+        </span>
+        {!glOpen && profile && (
+          <span className="glsenses-cur">
+            <span className={"glsenses-cur-gk" + (isHeb ? " heb" : "")} dir={isHeb ? "rtl" : undefined}>{profile.lemma}</span>
+            <span className="glsenses-cur-tr">{profile.translit}{occCount ? ` · ${occCount}` : ""}</span>
+          </span>
+        )}
+        <span className="glsenses-tog">
+          {glOpen ? "Collapse" : "Expand"}
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+        </span>
+      </button>
+      {glOpen && (
+        <div className="glsenses-rows">
+          {matches.map(m => {
+            const mh = m.strongs[0] === "H";
+            return (
+              <button key={m.strongs}
+                className={"glrow" + (profile && profile.strongs === m.strongs ? " on" : "")}
+                onClick={() => { loadProfile(m.strongs); setGlOpen(false); }}>
+                <span className="glrow-s">{m.strongs}</span>
+                <span className="glrow-main">
+                  <span className="glrow-top">
+                    {m.lemma && <span className={"glrow-gk" + (mh ? " heb" : "")} dir={mh ? "rtl" : undefined}>{m.lemma}</span>}
+                    {m.translit && <span className="glrow-tr">{m.translit}</span>}
+                  </span>
+                  {m.gloss && <span className="glrow-rend"><span>{m.gloss}</span></span>}
+                </span>
+                <span className="glrow-occ" title="Open word study">
+                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.85" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                </span>
+              </button>
+            );
+          })}
+        </div>
       )}
     </div>
   );
@@ -631,18 +678,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
         <div className="wm-main">
           {error && <p className="lexicon-error">{error}</p>}
           {groupings && renderSenses()}
-          {matches && !profile && (
-            <div className="lexicon-matches">
-              {matches.map(m => (
-                <button key={m.strongs} className="lexicon-match-row" onClick={() => loadProfile(m.strongs)}>
-                  <span className="lexicon-match-strongs">{m.strongs}</span>
-                  <span className="lexicon-match-lemma">{m.lemma}</span>
-                  <span className="lexicon-match-translit">{m.translit}</span>
-                  <span className="lexicon-match-gloss">{m.gloss}</span>
-                </button>
-              ))}
-            </div>
-          )}
+          {matches && renderMatches()}
           {profile ? (
             <>
               <div className="wm-occhead">
