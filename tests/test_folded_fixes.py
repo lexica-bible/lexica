@@ -313,6 +313,45 @@ def test_iter_source_tokens():
     check("iter: trailing 'be found' peeled outside the ']'", len(trailing), 1)
 
 
+# ── 11. proper-noun subject split (post-insert DB fold, like fill_blank_strongs) ──
+def test_pn_subject_split():
+    import sqlite3
+    if B.apply_pn_subject_split is None:
+        check("pn-subject fold importable", False, True)
+        return
+    con = sqlite3.connect(":memory:")
+    con.execute("CREATE TABLE verses(id INTEGER PRIMARY KEY, book TEXT, chapter INT, verse INT)")
+    con.execute("CREATE TABLE words(verse_id INT, position INT, english TEXT, english_head TEXT,"
+                " strongs TEXT, strongs_base TEXT, greek_pos INT, bracket_id INT, italic INT,"
+                " italic_words TEXT, smcap_words TEXT, morph TEXT, lemma TEXT, is_pn INT DEFAULT 0)")
+    con.execute("CREATE TABLE tipnr(name TEXT)")
+    con.execute("INSERT INTO tipnr VALUES('David')")
+    con.execute("INSERT INTO verses VALUES(1,'1Sa',16,23)")     # flat, unbracketed
+    con.execute("INSERT INTO verses VALUES(2,'1Sa',1,8)")       # bracketed -> skip
+
+    def w(vid, pos, eng, sbase, bid=None, ispn=0, head=None, lemma=None):
+        con.execute("INSERT INTO words(verse_id,position,english,english_head,strongs,strongs_base,"
+                    "greek_pos,bracket_id,italic,italic_words,smcap_words,morph,lemma,is_pn)"
+                    " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                    (vid, pos, eng, head, sbase.lstrip("GH"), sbase, None, bid, 0, "", "", None, lemma, ispn))
+
+    w(1, 1, "David took", "G2983", head="took", lemma="lambano")   # name glued on the verb
+    w(1, 2, "", "*", ispn=1)                                        # David's empty G* slot
+    w(2, 1, "David said", "G2036", bid=7, head="said")              # inside a bracket
+    w(2, 2, "", "*", bid=7, ispn=1)
+
+    n = B.apply_pn_subject_split(con, apply=True, log=lambda *a: None)
+    con.commit()
+    flat = {r[0]: (r[1], r[2]) for r in con.execute(
+        "SELECT position,english,strongs_base FROM words WHERE verse_id=1 ORDER BY position")}
+    check("flat: one split", n, 1)
+    check("flat: name on lower slot, '*' for import_tipnr", flat[1], ("David", "*"))
+    check("flat: verb on higher slot, keeps its number", flat[2], ("took", "G2983"))
+    br = [tuple(r) for r in con.execute(
+        "SELECT english,strongs_base FROM words WHERE verse_id=2 ORDER BY position")]
+    check("bracketed merge left untouched", br, [("David said", "G2036"), ("", "*")])
+
+
 def main():
     try:
         sys.stdout.reconfigure(encoding="utf-8")

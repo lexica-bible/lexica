@@ -66,6 +66,15 @@ try:
 except ImportError:
     apply_blank_strongs_fills = None
 
+try:
+    # Subject NAMES merged onto their verb's cell ("David took" on λαμβάνω, the name's
+    # own G* slot left empty) — split back out so the name is its own clickable word.
+    # Folded as a finishing step (needs the tipnr roster + G-prefixed bases, both present
+    # after copy-first) so a rebuild reproduces it. See fix_pn_subject_merge.py.
+    from fix_pn_subject_merge import run as apply_pn_subject_split
+except ImportError:
+    apply_pn_subject_split = None
+
 BASE_DIR    = Path(__file__).parent.parent
 ABP_OT_ZIP  = BASE_DIR / "abp_ot_texts.zip"
 ABP_NT_ZIP  = BASE_DIR / "abp_nt_texts.zip"
@@ -1461,6 +1470,18 @@ def run(bible_db: str, scrape_db: str) -> None:
         n_fill = apply_blank_strongs_fills(main, apply=True, log=lambda _m: None)
         main.commit()
         print(f"  Filled {n_fill} blank-Strong's word(s) (Zec 9:11 class).")
+
+    # Split subject names merged onto their verb back onto their own '*' slot, so the
+    # name is clickable and import_tipnr (run next) resolves it. Same fix as the
+    # standalone fix_pn_subject_merge.py. Needs the tipnr roster (present after a
+    # copy-first rebuild); silent no-op if it's missing. Bracketed cases are skipped.
+    if apply_pn_subject_split:
+        try:
+            n_pn = apply_pn_subject_split(main, apply=True, log=lambda *_a: None)
+            main.commit()
+            print(f"  Split {n_pn:,} merged subject-name(s) — run import_tipnr next to resolve them.")
+        except Exception as e:                       # e.g. no tipnr table on a first-ever build
+            print(f"  (subject-name split skipped: {e})")
 
     main.close()
     scrape.close()

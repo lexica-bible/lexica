@@ -123,6 +123,14 @@ def _empty_star_pos(conn, vid, pos):
 
 
 def run(conn, apply=False, log=print):
+    # Self-contained for both callers (the CLI here AND the build fold in
+    # build_words_from_abp.py): set our own row mode, and only write is_pn if the
+    # column exists yet (a fresh rebuild adds it later, in import_tipnr).
+    conn.row_factory = sqlite3.Row
+    has_is_pn = any(r[1] == "is_pn" for r in conn.execute("PRAGMA table_info(words)"))
+    pn1 = ", is_pn=1" if has_is_pn else ""
+    pn0 = ", is_pn=0" if has_is_pn else ""
+
     names = set()
     for r in conn.execute("SELECT name FROM tipnr"):
         nm = (r["name"] or "").strip().lower()
@@ -130,14 +138,16 @@ def run(conn, apply=False, log=print):
             names.add(nm)
     log(f"Known proper-noun names: {len(names):,}\n")
 
+    # On a fresh rebuild is_pn doesn't exist yet (import_tipnr adds it after); the
+    # real-number + name checks already exclude resolved names, so drop the filter then.
+    pn_where = " AND w.is_pn = 0" if has_is_pn else ""
     rows = conn.execute(
-        """SELECT w.verse_id, w.position, v.book, v.chapter, v.verse,
+        f"""SELECT w.verse_id, w.position, v.book, v.chapter, v.verse,
                   w.english, w.strongs, w.strongs_base, w.greek_pos, w.bracket_id,
                   w.italic, w.italic_words, w.smcap_words, w.morph, w.lemma
            FROM words w JOIN verses v ON v.id = w.verse_id
-           WHERE w.is_pn = 0
-             AND w.english LIKE '% %'
-             AND w.strongs_base GLOB '[GH][0-9]*'
+           WHERE w.english LIKE '% %'
+             AND w.strongs_base GLOB '[GH][0-9]*'{pn_where}
            ORDER BY v.id, w.position"""
     ).fetchall()
 
@@ -179,14 +189,14 @@ def run(conn, apply=False, log=print):
             conn.execute(
                 "UPDATE words SET english=?, english_head=?, strongs='*', strongs_base='*',"
                 " greek_pos=NULL, bracket_id=NULL, italic=0, italic_words='', smcap_words='',"
-                " morph=NULL, lemma=NULL, is_pn=1 WHERE verse_id=? AND position=?",
+                f" morph=NULL, lemma=NULL{pn1} WHERE verse_id=? AND position=?",
                 (name_part, _head_word(name_part), vid, lower_pos),
             )
             # verb -> the HIGHER position: keeps the merged cell's number + lemma/morph
             conn.execute(
                 "UPDATE words SET english=?, english_head=?, strongs=?, strongs_base=?,"
                 " greek_pos=?, bracket_id=?, italic=?, italic_words=?, smcap_words=?,"
-                " morph=?, lemma=?, is_pn=0 WHERE verse_id=? AND position=?",
+                f" morph=?, lemma=?{pn0} WHERE verse_id=? AND position=?",
                 (verb_part, _head_word(verb_part), r["strongs"], r["strongs_base"],
                  r["greek_pos"], r["bracket_id"], r["italic"], r["italic_words"],
                  r["smcap_words"], r["morph"], r["lemma"], vid, higher_pos),
