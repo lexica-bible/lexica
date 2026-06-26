@@ -298,7 +298,10 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   (20-shared-components.jsx) with a **glance/full split** (the "Function" tab = the finding + a use-boundary
   pointer; "Full entry" = scope/relations/cross-refs — eimi splits, the shorter prepositions collapse to one
   view); `30-detail-panel.jsx` branches `case "lsj"` on `lexica.kind` ("Grammar"/"Idiom" badge); `.gram-*`
-  CSS. LIVE: εἰμί (copula) + 17 prepositions + the ἀνὰ μέσον idiom note; **card verse lines are verbatim ABP**
+  CSS. LIVE: εἰμί (copula) + 17 prepositions + the ἀνὰ μέσον idiom note + the CONJUNCTION batch (ὅτι/ὡς/εἰ
+  typology cards w/ glance-full split; ἐάν + 12 connectives flat — shipped 2026-06-25; **ἵνα HELD OUT** —
+  purpose-vs-result is a theological fork, deferred to its own session; G2443 falls through, no routing
+  changed); **card verse lines are verbatim ABP**
   (a Greek-construction card — ABP is the right source even for a KJV reader). Full record + the locked build
   rules (cut-by-form / list-by-context, verbatim-ABP, contested-fork prepositions, the dotted-routing gate):
   memory `project_structural_deictic_cards`.
