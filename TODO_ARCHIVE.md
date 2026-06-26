@@ -6,6 +6,37 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Word-study search over-match + slow — FIXED + LIVE 2026-06-26 (+ 2 match-list UI fixes)
+Typing a short Greek word (ἵνα) returned ~17 junk hits (γάγγραινα, εἶναι, Σινᾶ…) and was slow:
+`lexicon_lookup()` matched a substring LIKE on the accent-stripped lemma — a leading-wildcard scan,
+no index, no ranking, so it over-matched anything CONTAINING the letters and buried the exact word.
+FIX (535150d): an indexed `lemma_plain` column (accent-stripped/lowercased/final-sigma-folded) on
+`lexicon` + `bdb` (`scripts/add_lemma_plain.py`, folded into `load_lexicon.py`); the lookup matches
+EXACT `lemma_plain = ?` first and short-circuits — the substring scan now runs only as a "contains"
+fallback when the typed word isn't a headword. LIVE on PA (lexicon 5,523 + bdb 8,674 rows); ἵνα → ἵνα,
+Hebrew רוח → H7304–H7308, both instant. Deploy-safe (`_has_lemma_plain` guard). **LESSON: never leave
+a search on a leading-wildcard `LIKE '%x%'` — store a normalized, indexed key and match it exactly.**
+Two follow-on Word-study match-list UI fixes the same session (63ccedf, 6d33ada): the Greek/Hebrew
+match list now COLLAPSES into a header when you pick a word (was vanishing — it was gated on
+`!profile`; now uses the same `.glsenses` card as the English results via `renderMatches`), and each
+match row shows the per-source "used as" renderings (ABP/HEB/KJV/BSB + totals) instead of one
+dictionary gloss — new `_render_glosses_all()` in views_lexicon.py, a standalone twin of
+`lexicon_english`'s builders (kept separate so that path can't regress; enriches multi-result lists
+only). Full record: memory `project_lexicon_search_overmatch`.
+
+## Proper-noun SUBJECT folded onto its verb — DONE + LIVE 2026-06-26
+Corpus-wide: where ABP put a subject NAME right after its verb, the build crammed the name onto the
+verb's cell and left the name's own Greek word (a bare `G*` slot) blank/untagged, so "David took" read
+as G2983 (took) and the name wasn't clickable. ~2,300 real cases (the 634 with no adjacent `*` slot —
+false alarms + "David said"-type verbs with NO `G*`, where ABP merely supplied the subject — were
+correctly LEFT ALONE). FIXED by `scripts/fix_pn_subject_merge.py`: the name goes on the LOWER of the
+two adjacent slots and the verb on the higher, so BOTH reading modes show "David took" name-first
+(matching the ABP source) with NO bracket added — chip mode only reorders inside brackets, so a bracket
+would NOT have fixed chip order (the earlier "#2 = bracket-reorder" theory was WRONG; corrected against
+the render code). Applied on PA (~2,278 flat + 19 bracketed), import_tipnr resolved the new name slots,
+surface/translit rebuilt; build-folded so a rebuild reproduces it. `scripts/fix_tamar_subject.py` was
+the wrong (insert) approach and was DELETED. Full record: memory `project_pn_subject_verb_fold`.
+
 ## ἵνα structural card + the STRUCTURAL-WORD CONTEST RULE — DONE 2026-06-26
 
 ἵνα G2443 shipped as a PURE structural card (commit d7518b1) — purpose finding, exemplar Mark 3:14 (a plain
