@@ -42,15 +42,23 @@ def main():
     conn = sqlite3.connect(args.db)
     conn.row_factory = sqlite3.Row
 
-    # 1. NAME set — single-word capitalized proper-noun heads.
+    # 1. NAME set — the authoritative proper-noun roster from the tipnr table
+    # (matched case-insensitively). Using english_head was unreliable: it missed
+    # real names (Tamar) and let common words (God) in. Fall back to capitalized
+    # tokens from is_pn=1 cells only if tipnr isn't present.
     names = set()
-    for r in conn.execute(
-        "SELECT DISTINCT english_head FROM words WHERE is_pn=1 AND english_head IS NOT NULL"
-    ):
-        h = (r["english_head"] or "").strip()
-        if h and " " not in h and h[0].isupper() and h.isalpha():
-            names.add(h)
-    print(f"Known single-word names: {len(names):,}\n")
+    try:
+        for r in conn.execute("SELECT name FROM tipnr"):
+            nm = (r["name"] or "").strip().lower()
+            if len(nm) > 1:
+                names.add(nm)
+    except sqlite3.OperationalError:
+        pass
+    if not names:
+        for r in conn.execute("SELECT english FROM words WHERE is_pn=1"):
+            for tok in re.findall(r"[A-Z][a-z'\-]{2,}", r["english"] or ""):
+                names.add(tok.lower())
+    print(f"Known proper-noun names: {len(names):,}\n")
 
     # 2. Scan non-PN, real-numbered, multi-word cells whose first word is a name.
     rows = conn.execute(
@@ -65,7 +73,7 @@ def main():
     hits = []
     for r in rows:
         fw = _first_word(r["english"])
-        if fw and fw in names:
+        if fw and fw[0].isupper() and fw.lower() in names:
             hits.append((fw, r["book"], r["chapter"], r["verse"],
                          r["english"], r["strongs_base"]))
 
