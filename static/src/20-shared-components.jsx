@@ -244,13 +244,14 @@ function StructuralBody({ data, lsjEntry }) {
   const form = data.form;
   // GLANCE / FULL split — the SAME view-state + .lsj-tg toggle LexicaBody uses (Meaning / Full
   // entry). "Function" is the glance: just the finding (data.function). A card splits ONLY when
-  // it carries a deeper narrative layer below the finding — scope, the contested-case flag, the
-  // underspecified note, or a cross-ref callout — which today is eimi (the copula) alone. A
-  // preposition is just the finding + a short case-row table + the straddle note, already
-  // glance-sized, so there is nothing worth hiding: no Full tab, the single view shows
-  // everything (collapse-to-one). hasMore drives both the tab and what each view renders.
-  const hasMore = !!(data.scope || data.scope_contested || data.underspecified ||
-                     (data.crossref && data.crossref.note) || data.glance);
+  // it carries a deeper narrative layer below the finding — a use-boundary scope, the
+  // contested-case flag, an underspecified note, or a sense typology (data.glance). A lone
+  // cross-ref is NOT a deep layer: it does not trigger a split, so a flat card (οὐ) can carry a
+  // one-line cross-ref pointer in its single view without sprouting a Full tab; on a card that
+  // already splits (eimi, μή) the cross-ref rides along in Full. A preposition is just the
+  // finding + a short case-row table + the straddle note, already glance-sized — no Full tab, the
+  // single view shows everything (collapse-to-one). hasMore drives both the tab and each view.
+  const hasMore = !!(data.scope || data.scope_contested || data.underspecified || data.glance);
   const showDetail = !hasMore || view === "full";
   return (
     <>
@@ -303,7 +304,10 @@ function StructuralBody({ data, lsjEntry }) {
             {data.scope_contested && <div className="gram-xref">{data.scope_contested}</div>}
             {data.underspecified && (
               <div className="lex-block">
-                <span className="lex-lbl">The verb doesn’t settle the relation</span>
+                {/* Label is authored per card (data.underspecified_label) — eimi's copula finding
+                   is "...the relation"; ἄν's particle finding is "...the contingency". Default
+                   keeps eimi byte-identical. */}
+                <span className="lex-lbl">{data.underspecified_label || "The verb doesn’t settle the relation"}</span>
                 <div className="lex-notes">{data.underspecified}</div>
               </div>
             )}

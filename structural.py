@@ -670,6 +670,265 @@ _STRUCTURAL = {
         ],
         "provenance": "GRAMMAR",
     },
+
+    # ---- PARTICLES ----
+    # ἄν — the modal / contingency particle. The particle analog of εἰμί: a pure FUNCTION word with
+    # no English of its own, whose deep layer is an UNDERSPECIFICATION finding worth stating (the
+    # verb's form alone doesn't settle whether its action is actual or merely supposed — ἄν is what
+    # tips it). ONE structural use, NO sense typology. The glance/full split turns on that finding,
+    # so the split is gated on data.glance + data.underspecified (NOT data.scope — ἄν has no
+    # separate-use boundary the way the copula does, so its glance points INTO the finding, like the
+    # conjunction cards, never OUT). underspecified_label is authored ("...contingency", not the
+    # copula's "...relation"). Exemplars woven into the finding are verbatim ABP, verified vs local
+    # abp_texts: Acts 2:21 (generalizing relative + subjunctive) + 1 John 2:19 (contrary-to-fact, ἄν
+    # in the unreal apodosis). G302 has no dotted children (scanned) — nothing to route.
+    "G302": {
+        "kind": "structural",
+        "strongs": "G302",
+        "lemma": "ἄν",
+        "function": "ἄν is a modal particle — it carries no English word of its own. It marks the "
+                    "verb’s action as contingent: potential, conditional, or generalized, rather "
+                    "than a flat statement of fact. What KIND of contingency is set by the verb’s "
+                    "form and the construction around it, not by ἄν itself.",
+        "glance": "There is a deeper point — the verb’s form alone doesn’t settle whether its "
+                  "action is meant as real or merely supposed; ἄν is what tips it —",
+        "underspecified_label": "The verb alone doesn’t settle the contingency",
+        "underspecified": "By itself the verb’s form does not say whether its action is meant as "
+                          "actual or as merely supposed — ἄν is the tell that tips it toward "
+                          "contingent, and it has no separate word: it folds into the construction. "
+                          "On a relative or temporal word, with the verb in its “should / may” "
+                          "form, it makes the clause open-ended — “all who ever should call upon "
+                          "the name of the Lord shall be delivered” (Acts 2:21), where “who” "
+                          "becomes “whoever.” In the result-half of an unfulfilled condition it "
+                          "marks what would have been but was not — “if they were of us, they would "
+                          "have remained with us” (1 John 2:19). Take ἄν away and “whoever” narrows "
+                          "to a definite “who,” and “would have remained” flattens to a plain "
+                          "“remained”: the contingency rides on the particle, not the verb.",
+        "provenance": "GRAMMAR",
+    },
+    # δή + γε — emphatic/discourse particles, one finding each (flat). Postpositive/enclitic, so the
+    # γάρ-at-Mat-1:21 failure mode applies: each exemplar was tag-verified to carry the base lemma
+    # on the quoted English word (both render "indeed", which ABP also uses for μέν G3303 — so the
+    # SPECIFIC "indeed" was confirmed G1211 / G1065, not μέν). Dotted children G1211.1 ("strikes")
+    # and G1065.1 ("troop") are parked different-words — they fall through the gate, not carded.
+    "G1211": {
+        "kind": "structural", "strongs": "G1211", "lemma": "δή",
+        "function": "δή is an emphatic particle — it lends insistence or immediacy, most often "
+                    "pressing a command home: “now, then, by all means; indeed.” It adds urgency to "
+                    "what is said; it does not change what the words mean.",
+        "relation_label": "What it does (force set by context)",
+        "relations": [
+            {"type": "indeed; now; then (urging)",
+             "note": "presses a command, or underlines a statement",
+             "ref": "Acts 13:2", "text": "Separate indeed to me Barnabas and Saul"},
+        ],
+        "provenance": "GRAMMAR",
+    },
+    "G1065": {
+        "kind": "structural", "strongs": "G1065", "lemma": "γε",
+        "function": "γε is an intensive particle — it singles out and emphasizes the word it "
+                    "attaches to: “indeed, even, at least, in fact.” It adds focus or force to that "
+                    "one word; context sets whether the shade is emphatic (“indeed”) or limiting "
+                    "(“at least”).",
+        "relation_label": "What it does (force set by context)",
+        "relations": [
+            {"type": "indeed; even; at least",
+             "note": "emphasizes or restricts the word it attaches to",
+             "ref": "Romans 8:32", "text": "The one who indeed his own son spared not"},
+        ],
+        "provenance": "GRAMMAR",
+    },
+
+    # ---- NEGATIVES ----
+    # THE MECHANISM CUT: Greek has TWO negatives, split by what they scope — οὐ (G3756) negates a
+    # flat assertion of fact (goes with the indicative); μή (G3361) negates everything that is NOT a
+    # flat assertion (commands, purposes, wishes, suppositions, participles + questions slanted
+    # toward "no"). TWO entries (distinct lexemes, "cut by form"), each stating its half and naming
+    # the other. Both render as English "not", so each exemplar is picked so the CONSTRUCTION is
+    # visible (Face-1 of the exemplar rule), verbatim + tag-verified vs local abp_texts. ABP does
+    # NOT render the μή-question's "no"-slant visibly (Joh 4:12/8:53 read neutral), so that use is
+    # named in the finding, not shown as a row. The compounds οὐδέ/μηδέ/οὔτε/μήτε/οὐχί inherit this
+    # base split. Neither base has dotted children (scanned). BOTH cards carry a cross-ref to
+    # Matthew 5:17 — the cleanest minimal pair in the corpus, where μή ("you should not think") and
+    # οὐ ("I came not") sit in one sentence with the choice visible and motivated; it self-
+    # demonstrates the cut without breaking the per-word model (eimi's Last-Supper-crossref move).
+    # The cross-ref does NOT split οὐ (it stays flat) — a lone crossref no longer triggers hasMore.
+    "G3756": {
+        "kind": "structural", "strongs": "G3756", "lemma": "οὐ",
+        "function": "οὐ is the factual negative. It denies a statement of fact and pairs with the "
+                    "indicative — the mood that asserts what is or is not the case. Greek splits "
+                    "“not” into two words by what is being denied, and οὐ takes the factual half: a "
+                    "flat “this is not so.” (Everything that is not a flat assertion — commands, "
+                    "purposes, suppositions — takes its counterpart μή.)",
+        "relation_label": "What it negates",
+        "relations": [
+            {"type": "a statement of fact",
+             "note": "denies what is or is not the case; pairs with the indicative",
+             "ref": "Matthew 5:17", "text": "I came not to depose, but to fulfill"},
+        ],
+        "crossref": {
+            "ref": "Matthew 5:17",
+            "note": "Both negatives appear together at Matthew 5:17 — μή on the forbidden thought "
+                    "(“you should not think”), οὐ on the flat denial (“I came not to depose”). The "
+                    "choice of negative is visible and motivated in one sentence.",
+        },
+        "provenance": "GRAMMAR",
+    },
+    # μή — typology card (the ὅτι shape: several jobs told apart by context, ONE card). Glance flags
+    # "lest" (the easy-to-miss member: a negative that is a whole subordinator, not a pre-posed
+    # "not") and points INTO the list. The three rows span the non-indicative moods — command
+    # (imperative), purpose (subjunctive), wish (optative) — all verbatim ABP, tag-verified G3361.
+    "G3361": {
+        "kind": "structural", "strongs": "G3361", "lemma": "μή",
+        "function": "μή is the other negative. Where οὐ denies a fact, μή negates everything that "
+                    "is not a flat assertion — a command, a purpose, a wish, a supposition — and it "
+                    "pairs with the non-indicative moods, the realm of will and possibility. It "
+                    "also slants a question toward the answer “no.” The English word is still just "
+                    "“not”; which negative Greek reaches for tells you what KIND of thing is being "
+                    "denied. (For a plain denial of fact, Greek uses οὐ.)",
+        "glance": "The one to watch is “lest” — there μή is not a pre-posed “not” but a whole word, "
+                  "heading off an outcome to be guarded against —",
+        "relation_label": "What μή negates — context picks which, not μή",
+        "relation_lead": "Same word, several jobs — each negating something other than a flat fact:",
+        "relations": [
+            {"type": "a command (prohibition)",
+             "note": "with an imperative or a “should” verb — “do not …”",
+             "ref": "Matthew 10:31", "text": "Do not then fear!"},
+            {"type": "a purpose, guarded against (“lest”)",
+             "note": "heads off a feared or unwanted outcome",
+             "ref": "1 Corinthians 10:12", "text": "take heed lest he should fall!"},
+            {"type": "a wish, rejected (“may it not be!”)",
+             "note": "negates a wish or supposed possibility — Paul’s emphatic refusal",
+             "ref": "Romans 6:2", "text": "May it not be."},
+        ],
+        "crossref": {
+            "ref": "Matthew 5:17",
+            "note": "Both negatives appear together at Matthew 5:17 — μή on the forbidden thought "
+                    "(“you should not think”), οὐ on the flat denial (“I came not to depose”). The "
+                    "choice of negative is visible and motivated in one sentence.",
+        },
+        "provenance": "GRAMMAR",
+    },
+    # COMPOUND negatives — each inherits the base cut: the οὐ-family (οὐδέ/οὔτε/οὐχί) negates fact
+    # (indicative); the μή-family (μηδέ/μήτε) negates the non-factual (commands, oaths, suppositions).
+    # Each card names its base and its twin so the family reads as one mechanism. Flat one-finding
+    # cards; exemplars verbatim + tag-verified. None has dotted children (scanned).
+    "G3761": {
+        "kind": "structural", "strongs": "G3761", "lemma": "οὐδέ",
+        "function": "οὐδέ is the factual negative οὐ joined with δέ — “and not, not even, neither.” "
+                    "Like its base οὐ it denies a matter of fact (it goes with the indicative), and "
+                    "it adds to or caps the denial (“not even …”). Its non-factual twin, used in "
+                    "commands and the like, is μηδέ.",
+        "relation_label": "What it does",
+        "relations": [
+            {"type": "not even; and not; neither",
+             "note": "denies a fact, adding to or capping it",
+             "ref": "Matthew 6:29",
+             "text": "not even Solomon in all his glory was clothed as one of these"},
+        ],
+        "provenance": "GRAMMAR",
+    },
+    "G3366": {
+        "kind": "structural", "strongs": "G3366", "lemma": "μηδέ",
+        "function": "μηδέ is the non-factual negative μή joined with δέ — “and not, not even, nor.” "
+                    "Like its base μή it negates within a command, purpose, or supposition rather "
+                    "than a flat fact, carrying the prohibition on to a further item (“do not …, "
+                    "nor …”). Its factual twin is οὐδέ.",
+        "relation_label": "What it does",
+        "relations": [
+            {"type": "nor; and not; not even",
+             "note": "extends a prohibition or non-factual negation to a further item",
+             "ref": "1 John 2:15", "text": "Do not love the world, nor the things in the world!"},
+        ],
+        "provenance": "GRAMMAR",
+    },
+    "G3777": {
+        "kind": "structural", "strongs": "G3777", "lemma": "οὔτε",
+        "function": "οὔτε is the factual negative οὐ joined with τε — the correlative “neither … "
+                    "nor.” Like its base οὐ it denies matters of fact (with the indicative), "
+                    "pairing two or more denials into one series. Its non-factual twin is μήτε.",
+        "relation_label": "What it does",
+        "relations": [
+            {"type": "neither … nor",
+             "note": "denies two or more things together, as facts",
+             "ref": "Matthew 22:30", "text": "neither they marry, nor give in marriage"},
+        ],
+        "provenance": "GRAMMAR",
+    },
+    "G3383": {
+        "kind": "structural", "strongs": "G3383", "lemma": "μήτε",
+        "function": "μήτε is the non-factual negative μή joined with τε — the correlative “neither "
+                    "… nor.” Like its base μή it negates within commands, oaths, and suppositions "
+                    "rather than flat facts, joining the items into one series. Its factual twin is "
+                    "οὔτε.",
+        "relation_label": "What it does",
+        "relations": [
+            {"type": "neither … nor",
+             "note": "joins two or more items under one prohibition or non-factual negation",
+             "ref": "Matthew 5:34", "text": "Do not swear by an oath wholly; nor on the heaven"},
+        ],
+        "provenance": "GRAMMAR",
+    },
+    "G3780": {
+        "kind": "structural", "strongs": "G3780", "lemma": "οὐχί",
+        "function": "οὐχί is the strengthened form of the factual negative οὐ — an emphatic “not at "
+                    "all; no indeed.” It denies a fact with extra force, and often heads a question "
+                    "that expects the answer “yes” (“Is it not …?”). It has no μή-side twin — it is "
+                    "simply οὐ, intensified.",
+        "relation_label": "What it does",
+        "relations": [
+            {"type": "no!; not at all (emphatic)",
+             "note": "an emphatic denial; also heads a question slanted toward “yes”",
+             "ref": "Luke 13:3", "text": "No, I say to you"},
+        ],
+        "provenance": "GRAMMAR",
+    },
+
+    # ---- THE ARTICLE ----
+    # ὁ — the definite article. STRUCTURAL USE ONLY (definite marker + substantivizer; it also bears
+    # case/gender/number). Like ἄν it carries an underspecification finding worth stating (Greek's
+    # article is NOT a one-to-one "the"), so it splits glance/full (data.glance + data.underspecified;
+    # NOT data.scope — its glance points INTO the finding, not OUT to a separate use). The standalone
+    # PRONOMINAL use (ὁ δέ "and he"; ὁ μέν … ὁ δέ "the one … the other") resolves at the REFERENT, not
+    # the noun — flagged in the straddle as handled separately, DEFERRED to step b (the demonstrative/
+    # pronoun card); not built here. Dotted children G3588.1 ("sharp points", Job 41:30) + G3588.2
+    # ("oboli", 7×) are parked different-words — they fall through the gate (no "forms" key), not carded.
+    "G3588": {
+        "kind": "structural", "strongs": "G3588", "lemma": "ὁ",
+        "function": "ὁ is the definite article. It marks its noun as definite — a particular, "
+                    "identifiable one — and it carries the case, gender, and number that show how "
+                    "the noun fits the sentence. It also works as a substantivizer: set in front of "
+                    "an adjective, a participle, or a whole phrase, it turns that into a noun — “the "
+                    "poor,” “the one who believes.”",
+        "glance": "Greek’s article is not a one-to-one match for English “the” — its presence or "
+                  "absence carries weight English often can’t show, and translators add or drop "
+                  "“the” freely —",
+        "underspecified_label": "Greek’s article is not English “the”",
+        "underspecified": "Greek uses and omits the article on principles English does not share — "
+                          "it can stand with abstract nouns, with proper names, even in front of a "
+                          "whole clause, and it is regularly left untranslated, or supplied where "
+                          "Greek has none. So its presence is not simply “the,” nor its absence "
+                          "“a”: what the article is doing — marking a definite noun, turning a word "
+                          "into a noun, or just carrying the grammatical case — is read off the "
+                          "construction, not off an English equivalent. Mapped straight onto “the,” "
+                          "it gets both over- and under-read.",
+        "relation_label": "What the article does — context picks which",
+        "relation_lead": "One word, two jobs (besides carrying case, gender, and number):",
+        "relations": [
+            {"type": "definite marker",
+             "note": "marks the noun as a particular, identifiable one",
+             "ref": "Matthew 16:16", "text": "You are the Christ"},
+            {"type": "substantivizer",
+             "note": "turns a participle, adjective, or phrase into a noun — its most distinctive "
+                     "job, and the one English can least do one-to-one",
+             "ref": "John 11:25", "text": "The one believing in me"},
+        ],
+        "straddle": "Standing alone, without a noun, ὁ can work as a pronoun — “ὁ δέ” (“and he, but "
+                    "he”), or “ὁ μέν … ὁ δέ” (“the one … the other”). There it points at someone "
+                    "already in view rather than marking a noun, so its meaning resolves at the "
+                    "referent, not here — that use is handled separately.",
+        "provenance": "GRAMMAR",
+    },
 }
 
 _FORM_DECODERS = {"eimi": eimi_form}
