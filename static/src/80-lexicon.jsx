@@ -529,7 +529,23 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
                     {m.lemma && <span className={"glrow-gk" + (mh ? " heb" : "")} dir={mh ? "rtl" : undefined}>{m.lemma}</span>}
                     {m.translit && <span className="glrow-tr">{m.translit}</span>}
                   </span>
-                  {m.gloss && <span className="glrow-rend"><span>{m.gloss}</span></span>}
+                  {/* "used as" renderings per source — same lines as the English finder.
+                      Falls back to the plain gloss for a row with no renderings. */}
+                  {m.abp_glosses && m.abp_glosses.length > 0 && (
+                    <span className="glrow-rend"><span className="glrow-k">ABP</span><span>{m.abp_glosses.slice(0, 8).map(x => x.gloss).join(", ")}</span>{m.abp_total != null && <span className="glrow-n">{m.abp_total}</span>}</span>
+                  )}
+                  {m.heb_glosses && m.heb_glosses.length > 0 && (
+                    <span className="glrow-rend"><span className="glrow-k">HEB</span><span>{m.heb_glosses.slice(0, 8).map(x => x.gloss).join(", ")}</span>{m.heb_total != null && <span className="glrow-n">{m.heb_total}</span>}</span>
+                  )}
+                  {m.kjv_glosses && m.kjv_glosses.length > 0 && (
+                    <span className="glrow-rend"><span className="glrow-k">KJV</span><span>{m.kjv_glosses.slice(0, 8).map(x => x.gloss).join(", ")}</span>{m.kjv_total != null && <span className="glrow-n">{m.kjv_total}</span>}</span>
+                  )}
+                  {m.bsb_glosses && m.bsb_glosses.length > 0 && (
+                    <span className="glrow-rend"><span className="glrow-k">BSB</span><span>{m.bsb_glosses.slice(0, 8).map(x => x.gloss).join(", ")}</span>{m.bsb_total != null && <span className="glrow-n">{m.bsb_total}</span>}</span>
+                  )}
+                  {!(m.abp_glosses && m.abp_glosses.length) && !(m.heb_glosses && m.heb_glosses.length)
+                    && !(m.kjv_glosses && m.kjv_glosses.length) && !(m.bsb_glosses && m.bsb_glosses.length)
+                    && m.gloss && <span className="glrow-rend"><span>{m.gloss}</span></span>}
                 </span>
                 <span className="glrow-occ" title="Open word study">
                   <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.85" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>

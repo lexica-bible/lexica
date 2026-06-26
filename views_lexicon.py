@@ -342,12 +342,125 @@ def _bsb_ready(conn):
         return False
 
 
+def _render_glosses_all(conn, snums):
+    """Per-source 'used as' renderings (+ totals) for a list of Strong's keys — the same
+    ABP / Hebrew-OT / KJV / BSB lines the English word-finder shows, but with NO testament
+    filter (the lookup shows all). Keyed by the input strongs string ('G4151', 'H7307',
+    dotted 'G4153.2'). Standalone twin of lexicon_english's nested gloss builders, kept
+    separate so it can't regress that path; reuses the module helpers and opens heb.db once."""
+    snums = list(dict.fromkeys(s for s in snums if s))
+    if not snums:
+        return {}
+    out = {s: {} for s in snums}
+    greek = [s for s in snums if s.startswith("G")]
+    h_sids = [s for s in snums if s.startswith("H")]
+
+    def _attach(field, gmap):
+        for s, pairs in gmap.items():
+            if s in out and pairs:
+                out[s][field] = _fold_glosses(pairs, limit=8)
+
+    # ABP (words.english_head), base-or-dotted key — single-word renderings only.
+    if greek:
+        bases = sorted({s.split(".")[0] for s in greek})
+        ph = ",".join("?" * len(bases))
+        ready = _dotted_ready(conn)
+        dl_join = "LEFT JOIN dotted_lexicon dl ON dl.strongs = 'G' || w.strongs" if ready else ""
+        gkey = "COALESCE(dl.strongs, w.strongs_base)" if ready else "w.strongs_base"
+        gmap = {}
+        for r in conn.execute(f"""
+            SELECT {gkey} AS gkey, w.english_head, COUNT(*) AS cnt
+            FROM words w {dl_join}
+            WHERE w.strongs_base IN ({ph})
+              AND w.english_head IS NOT NULL AND w.english_head != ''
+            GROUP BY {gkey}, w.english_head ORDER BY {gkey}, cnt DESC""", bases).fetchall():
+            if " " not in (r["english_head"] or " "):
+                gmap.setdefault(r["gkey"], []).append((r["english_head"], r["cnt"]))
+        _attach("abp_glosses", gmap)
+        for r in conn.execute(f"""
+            SELECT {gkey} AS gkey, COUNT(*) AS cnt FROM words w {dl_join}
+            WHERE w.strongs_base IN ({ph}) GROUP BY {gkey}""", bases).fetchall():
+            if r["gkey"] in out:
+                out[r["gkey"]]["abp_total"] = r["cnt"]
+
+    # KJV (G+H keys) and BSB — both key off the full G/H-prefixed strongs.
+    ph = ",".join("?" * len(snums))
+    kg = {}
+    for r in conn.execute(f"""
+        SELECT ks.strongs_id AS sid, kw.word, COUNT(*) AS cnt
+        FROM kjv_words kw JOIN kjv_strongs ks ON ks.word_id = kw.word_id
+        WHERE ks.strongs_id IN ({ph}) AND (kw.italic IS NULL OR kw.italic = 0)
+        GROUP BY ks.strongs_id, kw.word ORDER BY ks.strongs_id, cnt DESC""", snums).fetchall():
+        kg.setdefault(r["sid"], []).append((r["word"], r["cnt"]))
+    _attach("kjv_glosses", kg)
+    for r in conn.execute(f"""
+        SELECT ks.strongs_id AS sid, COUNT(*) AS cnt
+        FROM kjv_words kw JOIN kjv_strongs ks ON ks.word_id = kw.word_id
+        WHERE ks.strongs_id IN ({ph}) GROUP BY ks.strongs_id""", snums).fetchall():
+        if r["sid"] in out:
+            out[r["sid"]]["kjv_total"] = r["cnt"]
+
+    if _bsb_ready(conn):
+        bg = {}
+        for r in conn.execute(f"""
+            SELECT bs.strongs_id AS sid, bw.word, COUNT(*) AS cnt
+            FROM bsb_words bw JOIN bsb_strongs bs ON bs.word_id = bw.word_id
+            WHERE bs.strongs_id IN ({ph}) AND (bw.italic IS NULL OR bw.italic = 0)
+            GROUP BY bs.strongs_id, bw.word ORDER BY bs.strongs_id, cnt DESC""", snums).fetchall():
+            bg.setdefault(r["sid"], []).append((r["word"], r["cnt"]))
+        _attach("bsb_glosses", bg)
+        for r in conn.execute(f"""
+            SELECT bs.strongs_id AS sid, COUNT(*) AS cnt
+            FROM bsb_words bw JOIN bsb_strongs bs ON bs.word_id = bw.word_id
+            WHERE bs.strongs_id IN ({ph}) GROUP BY bs.strongs_id""", snums).fetchall():
+            if r["sid"] in out:
+                out[r["sid"]]["bsb_total"] = r["cnt"]
+
+    # Hebrew OT (heb.db) renderings + totals for any H-numbers.
+    if h_sids:
+        hconn = _open_heb()
+        if hconn is not None:
+            try:
+                hph = ",".join("?" * len(h_sids))
+                hg = {}
+                for r in hconn.execute(
+                    f"SELECT strongs, gloss, COUNT(*) AS cnt FROM heb_words "
+                    f"WHERE strongs IN ({hph}) AND gloss IS NOT NULL AND gloss != '' "
+                    f"GROUP BY strongs, gloss ORDER BY strongs, cnt DESC", h_sids).fetchall():
+                    hg.setdefault(r["strongs"], []).append((r["gloss"], r["cnt"]))
+                _attach("heb_glosses", hg)
+                for s in h_sids:
+                    pred, params = _heb_match(s)
+                    row = hconn.execute(
+                        f"SELECT COUNT(*) AS cnt FROM heb_words WHERE {pred}", params).fetchone()
+                    if row and row["cnt"]:
+                        out[s]["heb_total"] = row["cnt"]
+            except sqlite3.OperationalError:
+                pass
+            finally:
+                hconn.close()
+    return out
+
+
 @bp.route("/api/lexicon/lookup")
 def lexicon_lookup():
     q = request.args.get("q", "").strip()
     if not q:
         return jsonify([])
     conn = db_ro()
+
+    def _finish(rows):
+        # Attach each match's per-source "used as" renderings (ABP/HEB/KJV/BSB lines +
+        # totals), the same the English finder shows — but ONLY for a multi-result list.
+        # A single hit auto-opens its word card (which carries its own renderings), so
+        # skip the enrichment there and keep the common exact lookup instant.
+        rows = rows[:20]
+        if len(rows) > 1:
+            enr = _render_glosses_all(conn, [r["strongs"] for r in rows])
+            for r in rows:
+                r.update(enr.get(r["strongs"], {}))
+        return jsonify(rows)
+
     try:
         m = re.match(r'^([GgHh]?)(\d+(?:\.\d+)?)$', q)
         if m:
@@ -416,7 +529,7 @@ def lexicon_lookup():
         # An exact lemma hit IS the answer — return it WITHOUT the slow substring scan
         # below (that full-table LIKE is the cost; only pay it when there's no exact word).
         if exact:
-            return jsonify(exact[:20])
+            return _finish(exact)
 
         # ── 2) No exact lemma — fall back to the substring "contains" search (translit,
         # definitions, and the accent-stripped lemma). This is the only path that pays the
@@ -461,7 +574,7 @@ def lexicon_lookup():
         results += [_heb_row(r, "contains") for r in heb]
         results += [{"strongs": r["strongs"], "lemma": r["lemma"] or "", "translit": r["translit"] or "",
                      "gloss": r["gloss"] or "", "match": "contains"} for r in dot]
-        return jsonify(results[:20])
+        return _finish(results)
     finally:
         conn.close()
 
