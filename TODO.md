@@ -131,7 +131,7 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
 
 ## New features
 
-- **Structural / function-word word-cards — NEW + LIVE 2026-06-25; eimi + 17 prepositions shipped, more open.**
+- **Structural / function-word word-cards — NEW + LIVE; eimi + 17 prepositions + the conjunction batch shipped, more open.**
   A new word-card entry TYPE beside the Lexica dictionary + LSJ, for words whose meaning resolves OUTSIDE the
   lexeme (the copula, prepositions, article, conjunctions, particles, negatives): instead of a sense list it
   states the word's grammatical FUNCTION + the construction relations it appears in (provenance tag GRAMMAR).
@@ -141,9 +141,17 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
   ABP) + a glance/full split on the card (Function tab = finding + use-boundary pointer, Full entry = the rest;
   eimi splits, the shorter prepositions collapse to one view) + the dotted-routing GATE in `structural_entry`
   (decodable form → card; declared idiom ἀνὰ μέσον → one-line content note; any other parked dotted word →
-  falls through to its own entry — so future batch cards can't re-create the seam). OPEN: (1) conjunctions/particles/negatives batch (~38) then the article — the FIVE typology cards
-  (ὅτι/ὡς/εἰ/ἐάν/ἵνα) are the real work (3 verbatim-ABP exemplars each, each a gloss-must-show-the-exemplar
-  risk); the ~12 plain connectives (καί, δέ, …) + negatives (οὐ/μή + compounds) are an easy tail; (2) live-case
+  falls through to its own entry — so future batch cards can't re-create the seam) + the CONJUNCTION batch
+  (2026-06-25): ὅτι/ὡς/εἰ typology cards (context-set senses, no form to cut on — glance/full split, an authored
+  `glance` pointer flags the easy-to-miss member: ὅτι recitative, ὡς approximation, εἰ oath-negative) + ἐάν +
+  the 12 plain connectives (καί δέ γάρ οὖν ἀλλά μέν ὥστε ὅτε ὅπως διό ἤ τε), all exemplars verbatim ABP.
+  OPEN: (1) ἵνα DEFERRED to its own session — purpose-vs-result is mostly a clean grammatical cut, but in the
+  divine-intent/predestination verses which-sense-applies is itself a live theological fork, so it sits on the
+  seam between the structural card and the fairness-gate/argument-graph machinery (build it fork-aware, or keep
+  it a pure structural cut — an architecture call); the routing gate already passes it through (G2443 → its
+  normal entry), so building it later is purely additive. Remaining structural inventory: the NEGATIVES (οὐ/μή +
+  οὐδέ/μηδέ/οὔτε/μήτε/οὐχί, 7), the PARTICLES (ἄν etc., ~3), and the ARTICLE (ὁ; + ὁ δέ pronominal → step b);
+  (2) live-case
   HIGHLIGHT for prepositions (light the row matching the object's case from morph; the whole table already
   shows, so polish — wire with the verse live-pull); (3) the demonstrative/pronoun "referent" card (step b:
   touto, autos, ὁ δέ, ἰδού, οὐδείς, μηδείς — a DISTINCT card, points to a referent, cross-refs εἰμί at the
