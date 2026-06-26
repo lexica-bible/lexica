@@ -942,6 +942,12 @@ memory `project_ai_synthesis_quality`.
   (italic) word ("take favor" had labeled λαμβάνω/G2983 "favor"). english_head ONLY; re-runnable. UNLIKE the
   others this IS build-folded (`_strip_italic_heads` in build_words_from_abp.py), so a normal rebuild
   reproduces it — no re-run needed. 4,409 fixed 2026-06-25. Memory `project_english_head_label`.
+- `fix_pn_subject_merge.py` (`--apply` / `--list-skipped`, dry-run default) — splits a subject NAME that
+  ABP crammed onto its verb's cell back onto its own clickable `*` slot (name on the LOWER slot, verb keeps
+  its number; bracketed cases keep both in-bracket sharing the reorder number so reading order is unchanged).
+  2,297 fixed 2026-06-26 (2,278 flat + 19 bracketed). Build-folded (`apply_pn_subject_split`, runs after
+  insert, BEFORE import_tipnr resolves the new name slots). After `--apply`: re-run import_tipnr →
+  build_abp_surface → build_abp_translit. Memory `project_pn_subject_verb_fold`.
 
 ## Rate limiting / security (2026-06-07 security pass)
 - `core.limiter` (flask-limiter, memory storage): site-wide default `300/min` per endpoint per IP
