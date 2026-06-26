@@ -188,7 +188,7 @@ def abp_gloss(clean):
     if "," not in after:
         return ""
     after = after.split(",", 1)[1]              # text after "lemma,"
-    after = re.split(r"\s{2,}|See also|\[", after, 1)[0]   # stop at refs / cross-link / next tag
+    after = re.split(r"\s{2,}|See also|\[", after, maxsplit=1)[0]   # stop at refs / cross-link / next tag
     g = normalize(after)
     return g if g and len(g) <= 40 and re.search(r"[a-z]", g) else ""
 
