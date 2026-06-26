@@ -531,11 +531,15 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   // the inflected form shows on a small "in this verse" line just beneath it.
   const heroInflected = (entry.inflected || "").trim();
   const heroInflectedTranslit = (entry.inflectedTranslit || "").trim();
+  // Dotted frozen idiom (ἀνὰ μέσον, G303.1): the header is HAND-AUTHORED in structural.py and shown
+  // VERBATIM — the dotted_lexicon row's base-neighbour lemma + the ABP romanizer mangle a two-word
+  // phrase ("ἀνάμέσος / anámésos"). Use the authored phrase/translit, never entry.greek/entry.translit.
+  const idiomHdr = (lexica && lexica.kind === "idiom") ? lexica : null;
   const hero = {
     he: isHebrew,
     noGloss: isPN && !entry.greek && !isHebrew,
-    script: isHebrew ? (bdbEntry?.lemma || entry.gloss) : (entry.greek || nameOrGloss),
-    translit: isHebrew ? bdbEntry?.xlit : entry.translit,
+    script: idiomHdr ? idiomHdr.phrase : (isHebrew ? (bdbEntry?.lemma || entry.gloss) : (entry.greek || nameOrGloss)),
+    translit: idiomHdr ? idiomHdr.translit : (isHebrew ? bdbEntry?.xlit : entry.translit),
     standaloneGloss: trimTail((isPN || metavData) ? properName
       : (entry.greek && (entry.gloss || "").trim().split(/\s+/).length > 2 ? (entry.english_head || entry.gloss) : entry.gloss)),
     morph: morphLine,

@@ -995,6 +995,11 @@ _FORM_DECODERS = {"eimi": eimi_form}
 _IDIOMS = {
     "G303.1": {
         "phrase": "ἀνὰ μέσον",
+        # Hand-authored header, displayed VERBATIM — the card hero must NOT source the lemma +
+        # romanization from the dotted_lexicon row (its base-neighbour lemma μέσος + the ABP
+        # romanization converter mangle a two-word idiom into "ἀνάμέσος / anámésos"). The translit
+        # follows the converter's own scheme (grave folded to acute) so it matches every other card.
+        "translit": "aná méson",
         "note": "A fixed phrase meaning “in the midst of, between.” ἀνά here is frozen into a set "
                 "expression — its plain meaning, not the distributive use of the bare preposition.",
     },

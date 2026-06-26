@@ -372,7 +372,10 @@ const properName=extractProperName(entry.gloss);const nameOrGloss=isPN||metavDat
 // the click. The dictionary form (lemma) stays the BIG headword for EVERY text, so the
 // card's headline word means the same thing everywhere (ABP/KJV have no surface form);
 // the inflected form shows on a small "in this verse" line just beneath it.
-const heroInflected=(entry.inflected||"").trim();const heroInflectedTranslit=(entry.inflectedTranslit||"").trim();const hero={he:isHebrew,noGloss:isPN&&!entry.greek&&!isHebrew,script:isHebrew?bdbEntry?.lemma||entry.gloss:entry.greek||nameOrGloss,translit:isHebrew?bdbEntry?.xlit:entry.translit,standaloneGloss:trimTail(isPN||metavData?properName:entry.greek&&(entry.gloss||"").trim().split(/\s+/).length>2?entry.english_head||entry.gloss:entry.gloss),morph:morphLine};// The small "in this verse" line shows the inflected form — only when we have one AND
+const heroInflected=(entry.inflected||"").trim();const heroInflectedTranslit=(entry.inflectedTranslit||"").trim();// Dotted frozen idiom (ἀνὰ μέσον, G303.1): the header is HAND-AUTHORED in structural.py and shown
+// VERBATIM — the dotted_lexicon row's base-neighbour lemma + the ABP romanizer mangle a two-word
+// phrase ("ἀνάμέσος / anámésos"). Use the authored phrase/translit, never entry.greek/entry.translit.
+const idiomHdr=lexica&&lexica.kind==="idiom"?lexica:null;const hero={he:isHebrew,noGloss:isPN&&!entry.greek&&!isHebrew,script:idiomHdr?idiomHdr.phrase:isHebrew?bdbEntry?.lemma||entry.gloss:entry.greek||nameOrGloss,translit:idiomHdr?idiomHdr.translit:isHebrew?bdbEntry?.xlit:entry.translit,standaloneGloss:trimTail(isPN||metavData?properName:entry.greek&&(entry.gloss||"").trim().split(/\s+/).length>2?entry.english_head||entry.gloss:entry.gloss),morph:morphLine};// The small "in this verse" line shows the inflected form — only when we have one AND
 // it differs from the headword lemma (indeclinable words can coincide → skip it).
 const heroForm=heroInflected&&heroInflected!==hero.script?heroInflected:"";// The clicked word's CONTEXTUAL english (its sense IN THIS VERSE). When the card shows
 // an inflected "in this verse" line, that english belongs next to the FORM it actually
