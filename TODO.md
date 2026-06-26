@@ -481,6 +481,48 @@ cosmetic — the split-verb helper half repeats the Greek lemma (hide only if it
 
 ---
 
+## Proper-noun SUBJECT folded onto its verb — corpus-wide (2026-06-26, diagnosed, NOT fixed)
+A bigger sibling of the click-target work above. Where ABP has a subject NAME right after its verb
+(Greek order verb-then-subject), the build crammed the name's English + Strong's number onto the
+VERB's cell and left the name's own Greek word (a bare `G*` slot) blank — so e.g. "David took" reads
+as G2983 (took) and David isn't its own clickable, numbered word. The displayed English already
+matches eSword ("David took"); what's lost is the subject Greek word's OWN number ("it's the strongs
+notes that are crammed"). Started as a single "Tamar mistagged in Gen 38" report; it's everywhere.
+
+Scope (two READ-ONLY audits, both committed + KEEP): `scripts/audit_pn_verb_merge.py` (names from the
+`tipnr` table) flags 2,934 candidates across 281 names; `scripts/audit_pn_placeholder.py` splits them:
+**2,300 have an adjacent empty `*` slot = the real work**; 634 don't and are LEFT ALONE — false alarms
+("On account of"=διά, "So that"=ὥστε, "On the"=article, "LORD —", "Put aside") PLUS real subject names
+with NO `G*` at all (e.g. "David said" 1Sa 17:26 — no Greek word there, ABP supplied the subject; a
+split would invent a manuscript word → forbidden).
+
+**THE FIX = #2 (user's locked call — do not propose any other).** For the ~2,300: move the name onto
+its own existing slot, give it the name's number (import_tipnr resolves it once it has english), AND
+**bracket-reorder** so chips still read "David took" (chip mode reorders ONLY inside brackets, so the
+bracket is required — plain split would read "took David", deviating from eSword). Delicate word-order
+machinery, corpus-wide — a real project. Tamar's 6 (Gen 38:26, Rth 4:12, 2Sa 13:8/10/19/20) are PART
+of this class, same fix. **`scripts/fix_tamar_subject.py` is WRONG (it INSERTS a word + assumes
+no-slot) — delete or rewrite it for #2; do NOT run it.** Likely belongs in the build (dual-pattern
+like `fill_blank_strongs`); after applying re-run import_tipnr (+ surface/translit if positions move).
+Full record + the audit numbers: memory `project_pn_subject_verb_fold`.
+`code: scripts/build_words_from_abp.py, scripts/import_tipnr.py, scripts/audit_pn_verb_merge.py, scripts/audit_pn_placeholder.py`
+
+---
+
+## Word-study Greek search over-matches + slow (2026-06-26, diagnosed, NOT fixed)
+Typing a short Greek word (ἵνα) in Word study returns ~17 junk hits (γάγγραινα, εἶναι, σίναπι, Σινᾶ…)
+and is slow. Cause: `/api/lexicon/lookup` (`lexicon_lookup()` in views_lexicon.py ~321) matches Greek
+input as `strip_accents(lower(lemma)) LIKE '%ινα%'` — a substring on the accent-stripped headword, so
+every lemma CONTAINING "ινα" matches; no ORDER BY, so the exact ἵνα is buried. Slow because the
+leading-wildcard LIKE can't use an index, `lexicon.lemma` has no index/normalized column, and
+`strip_accents` is a per-row Python callback → full scan of ~5,600 Greek rows (+ BDB) every search.
+Fix: add a stored, INDEXED normalized-lemma column (precedent: `lsj.plain`), make exact equality on it
+the primary path, rank Strong's-number + exact-lemma hits first, demote substring to a separate
+"contains" section/toggle. Full record: memory `project_lexicon_search_overmatch`.
+`code: views_lexicon.py lexicon_lookup, scripts/load_lexicon.py, static/src/80-lexicon.jsx`
+
+---
+
 ## Word-study search LABEL on multi-word glosses — verb+tail follow-up (open, low priority)
 Sister to the click-target cleanup above, but about the search LABEL (`words.english_head`, the one
 word the Word-study finder matches a word by), not the click slot. The translator-ADDED-word case is
