@@ -73,6 +73,12 @@ def _first_word(eng):
     return m.group(0) if m else None
 
 
+# Roster names that LEAD a cell but are NOT a verb-subject here — a place/gentilic
+# heading a non-verb phrase ("On account of this" = the preposition διά; "Hebrew
+# servant" = adjective+noun). Excluded so we don't mint a bogus clickable name.
+_NOT_SUBJECT = {"on", "hebrew"}
+
+
 def _peel_name(eng, names):
     """Split a merged cell into (name_part, verb_part). Peels the LONGEST leading
     run of words that forms a roster name (most names are one word), leaving at
@@ -90,9 +96,13 @@ def _peel_name(eng, names):
         if not (fw and fw.lower() in names):
             return None
         best = 1
-    name_part = " ".join(toks[:best])
+    # Trim trailing punctuation off the name so it matches the metaV name lookup
+    # ("Moses," -> "Moses"); the canonical prose keeps the real punctuation.
+    name_part = " ".join(toks[:best]).rstrip(".,;:!?'\"")
     verb_part = " ".join(toks[best:])
     if not name_part.strip() or not verb_part.strip():
+        return None
+    if name_part.lower() in _NOT_SUBJECT:
         return None
     return name_part, verb_part
 
