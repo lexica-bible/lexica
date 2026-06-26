@@ -327,29 +327,41 @@ def test_pn_subject_split():
     con.execute("CREATE TABLE tipnr(name TEXT)")
     con.execute("INSERT INTO tipnr VALUES('David')")
     con.execute("INSERT INTO verses VALUES(1,'1Sa',16,23)")     # flat, unbracketed
-    con.execute("INSERT INTO verses VALUES(2,'1Sa',1,8)")       # bracketed -> skip
+    con.execute("INSERT INTO verses VALUES(2,'1Ch',11,7)")      # bracketed after-shape -> split
+    con.execute("INSERT INTO verses VALUES(3,'X',1,1)")         # bracketed before-shape -> skip
 
-    def w(vid, pos, eng, sbase, bid=None, ispn=0, head=None, lemma=None):
+    def w(vid, pos, eng, sbase, gp=None, bid=None, ispn=0, head=None, lemma=None):
         con.execute("INSERT INTO words(verse_id,position,english,english_head,strongs,strongs_base,"
                     "greek_pos,bracket_id,italic,italic_words,smcap_words,morph,lemma,is_pn)"
                     " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
-                    (vid, pos, eng, head, sbase.lstrip("GH"), sbase, None, bid, 0, "", "", None, lemma, ispn))
+                    (vid, pos, eng, head, sbase.lstrip("GH"), sbase, gp, bid, 0, "", "", None, lemma, ispn))
 
+    # flat case
     w(1, 1, "David took", "G2983", head="took", lemma="lambano")   # name glued on the verb
     w(1, 2, "", "*", ispn=1)                                        # David's empty G* slot
-    w(2, 1, "David said", "G2036", bid=7, head="said")              # inside a bracket
-    w(2, 2, "", "*", bid=7, ispn=1)
+    # bracketed after-shape: name reads first (gpos1), empty '*' right after, in bracket 7
+    w(2, 1, "David stayed", "G2523", gp=1, bid=7, head="stayed")
+    w(2, 2, "", "*", gp=None, bid=7, ispn=1)
+    # bracketed BEFORE-shape (empty slot precedes the merge): unsupported -> skipped
+    w(3, 1, "", "*", gp=None, bid=8, ispn=1)
+    w(3, 2, "Moses said", "G2036", gp=1, bid=8, head="said")
 
     n = B.apply_pn_subject_split(con, apply=True, log=lambda *a: None)
     con.commit()
     flat = {r[0]: (r[1], r[2]) for r in con.execute(
         "SELECT position,english,strongs_base FROM words WHERE verse_id=1 ORDER BY position")}
-    check("flat: one split", n, 1)
+    check("flat: two splits total (flat + bracketed)", n, 2)
     check("flat: name on lower slot, '*' for import_tipnr", flat[1], ("David", "*"))
     check("flat: verb on higher slot, keeps its number", flat[2], ("took", "G2983"))
-    br = [tuple(r) for r in con.execute(
-        "SELECT english,strongs_base FROM words WHERE verse_id=2 ORDER BY position")]
-    check("bracketed merge left untouched", br, [("David said", "G2036"), ("", "*")])
+    # bracketed: name + verb both stay in bracket 7 sharing greek_pos 1 (name reads first)
+    brk = {r[0]: (r[1], r[2], r[3], r[4]) for r in con.execute(
+        "SELECT position,english,strongs_base,greek_pos,bracket_id FROM words WHERE verse_id=2 ORDER BY position")}
+    check("bracketed: name on lower slot in-bracket, reorder# kept", brk[1], ("David", "*", 1, 7))
+    check("bracketed: verb on higher slot, same reorder# + bracket", brk[2], ("stayed", "G2523", 1, 7))
+    # before-shape bracketed: left untouched
+    bef = [tuple(r) for r in con.execute(
+        "SELECT english,strongs_base FROM words WHERE verse_id=3 ORDER BY position")]
+    check("bracketed before-shape skipped", bef, [("", "*"), ("Moses said", "G2036")])
 
 
 def main():

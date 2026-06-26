@@ -36,12 +36,18 @@ WHY this differs from the LORD-oath / pronoun folds (which leave the verb FIRST 
 chip): those mirror ABP's OWN bracket-reordered cases. These flat cells are NOT
 reordered in the source — ABP prints them name-first — so we keep name-first.
 
+BRACKETED cases (ABP reorder brackets, e.g. Gen 18:7 "[to the oxen Abraham ran]"):
+  the name + verb both STAY in the bracket, each carrying the merged cell's reorder
+  number (greek_pos), so prose still reads "Name verb" exactly as before — the name
+  reads first, the verb ties on the reorder number and falls in right after it by
+  position. The verb's slot joins the bracket if it wasn't already in it. Only the
+  "empty slot right after the merged cell" shape is handled (all known cases); a
+  bracketed BEFORE-shape (none seen) is skipped so a bracket is never reordered blind.
+
 SCOPE / SAFETY:
   - Detection is identical to scripts/audit_pn_placeholder.py (tipnr name roster,
     is_pn=0 multi-word real-number cell whose first word is a name, with an
     adjacent empty '*' slot) — so the count matches that audit (~2,300).
-  - A merged cell (or its empty slot) that sits INSIDE a bracket is SKIPPED and
-    reported — reordering a bracket member is delicate and handled separately.
   - The 634 no-slot cases are never touched (no adjacent empty slot to fill).
   - Read-only by default; --apply writes. Each fix only fires while the cell still
     looks merged, so re-running is safe (already-split rows are skipped).
@@ -217,9 +223,14 @@ def run(conn, apply=False, log=print):
             no_slot += 1
             continue
         epos, ebid = slot
-        # Both the merged cell and its empty slot must be bracket-free — a bracket
-        # member needs its greek_pos relationships preserved (handled separately).
-        if r["bracket_id"] is not None or ebid is not None:
+        # Bracketed cells: keep BOTH the name and the verb inside the bracket, each
+        # carrying the merged cell's reorder number (greek_pos), so prose still reads
+        # "Name verb" — the name reads first, the verb ties on greek_pos and falls in
+        # right after it by position. Only the "empty slot right after the merged cell"
+        # shape is handled (all known bracketed cases); a bracketed BEFORE-shape (none
+        # seen) is left to a manual look so we never reorder a bracket blind.
+        after = (epos == r["position"] + 1)
+        if (r["bracket_id"] is not None or ebid is not None) and not after:
             skipped_bracket += 1
             continue
         split = _peel_name(r["english"], names)
@@ -235,14 +246,17 @@ def run(conn, apply=False, log=print):
             f'  ->  {name_part!r} (*) + {verb_part!r}')
 
         if apply:
-            # name -> the LOWER position: a fresh '*' proper-noun slot for import_tipnr
+            # name -> the LOWER position: a fresh '*' proper-noun slot for import_tipnr.
+            # It inherits the merged cell's bracket + reorder number (both None when the
+            # cell was unbracketed — the flat case), so a bracketed name reads first.
             conn.execute(
                 "UPDATE words SET english=?, english_head=?, strongs='*', strongs_base='*',"
-                " greek_pos=NULL, bracket_id=NULL, italic=0, italic_words='', smcap_words='',"
+                " greek_pos=?, bracket_id=?, italic=0, italic_words='', smcap_words='',"
                 f" morph=NULL, lemma=NULL{pn1} WHERE verse_id=? AND position=?",
-                (name_part, _head_word(name_part), vid, lower_pos),
+                (name_part, _head_word(name_part), r["greek_pos"], r["bracket_id"], vid, lower_pos),
             )
             # verb -> the HIGHER position: keeps the merged cell's number + lemma/morph
+            # AND its bracket + reorder number (so it stays beside the name in the clause)
             conn.execute(
                 "UPDATE words SET english=?, english_head=?, strongs=?, strongs_base=?,"
                 " greek_pos=?, bracket_id=?, italic=?, italic_words=?, smcap_words=?,"
