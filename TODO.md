@@ -162,12 +162,11 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
   HIGHLIGHT for prepositions (light the row matching the object's case from morph; the whole table already
   shows, so polish — wire with the verse live-pull); (2) the demonstrative/pronoun "referent" card (step b:
   touto, autos, ὁ δέ, ἰδού, οὐδείς, μηδείς — a DISTINCT card, points to a referent, cross-refs εἰμί at the
-  Last Supper; build + prove SECOND). (3) ἀνὰ μέσον card headword mismatch — the dotted-word table
-  (dotted_lexicon) reads the mashed one-word "ἀνάμεσος / in between" (built from ABP's first Greek word), which
-  now clashes with the correct idiom note below it ("ἀνὰ μέσον / in the midst of, between"). Pin G303.1 to
-  "ἀνὰ μέσον" (translit "ana meson") via a builder override like `NUMERAL_OVERRIDES` in build_dotted_lexicon.py
-  + match the gloss; PA data re-runs, pending JP's go (the headword was wrong before today, the note only
-  exposed it). Full record + the locked build rules: memory `project_structural_deictic_cards`.
+  Last Supper; build + prove SECOND). [(3) ἀνὰ μέσον card headword mismatch — DONE + LIVE 2026-06-26: hero
+  shows the hand-authored phrase+translit verbatim from `_IDIOMS`, abp_surface "in this verse" line suppressed
+  for idioms, and the reader chip + word-study search pinned via `PHRASE_OVERRIDES` in build_dotted_lexicon.py
+  (live `--apply` re-run done). See memory `project_structural_deictic_cards` / `project_dotted_strongs_lemma`.]
+  Full record + the locked build rules: memory `project_structural_deictic_cards`.
   `code: structural.py, views_lexica.py, static/src/20-shared-components.jsx, static/src/30-detail-panel.jsx`
 
 - **ἵνα's hardening argument-graph (Isaiah 6) — the next real Lexica piece; ἵνα's deferred verse-pointer lands here.**

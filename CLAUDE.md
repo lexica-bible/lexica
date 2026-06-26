@@ -296,7 +296,11 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   (own gate `STRUCTURAL_ADMIN_ONLY`, currently False = public). **`structural_entry` routes a dotted number
   three ways through ONE gate (invariant — keeps every card seam-free):** a decodable FORM of the base → the
   card + its own parse (εἰμί's ~7,800 conjugates, decoded from the dot); a declared frozen IDIOM (ἀνὰ μέσον
-  G303.1, in `_IDIOMS`) → a one-line CONTENT note (`kind:"idiom"`, "Phrase/Idiom" header); ANY other dotted
+  G303.1, in `_IDIOMS`) → a one-line CONTENT note (`kind:"idiom"`, "Phrase/Idiom" header — its card hero shows
+  the `_IDIOMS` phrase + a hand-authored `translit` VERBATIM, never the dotted_lexicon lemma/romanizer that
+  mangle a two-word phrase, and the abp_surface "in this verse" line is suppressed; the reader chip + word-study
+  search read dotted_lexicon directly so the same phrase is pinned there via `PHRASE_OVERRIDES` in
+  build_dotted_lexicon.py — 2026-06-26); ANY other dotted
   child (a different word ABP parked at "nearest Strong's + a dot", e.g. G303.2 "stairs") → None → falls
   through to its own word entry, so a parked number never borrows the card. Card = `StructuralBody`
   (20-shared-components.jsx) with a **glance/full split** (the "Function" tab = the finding + a use-boundary
