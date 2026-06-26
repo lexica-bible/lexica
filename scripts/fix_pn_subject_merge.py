@@ -122,6 +122,56 @@ def _empty_star_pos(conn, vid, pos):
     return None
 
 
+def list_skipped(conn, log=print):
+    """Read-only: print the BRACKETED merged-name cases that run() skips, each with a
+    local window of the verse (positions, greek_pos, bracket_id) so the reorder layout
+    is visible before we design their separate fix. Writes nothing."""
+    conn.row_factory = sqlite3.Row
+    has_is_pn = any(r[1] == "is_pn" for r in conn.execute("PRAGMA table_info(words)"))
+    names = set()
+    for r in conn.execute("SELECT name FROM tipnr"):
+        nm = (r["name"] or "").strip().lower()
+        if len(nm) > 1:
+            names.add(nm)
+    pn_where = " AND w.is_pn = 0" if has_is_pn else ""
+    rows = conn.execute(
+        f"""SELECT w.verse_id, w.position, v.book, v.chapter, v.verse,
+                  w.english, w.strongs_base, w.bracket_id
+           FROM words w JOIN verses v ON v.id = w.verse_id
+           WHERE w.english LIKE '% %'
+             AND w.strongs_base GLOB '[GH][0-9]*'{pn_where}
+           ORDER BY v.id, w.position"""
+    ).fetchall()
+    n = 0
+    for r in rows:
+        fw = _first_word(r["english"])
+        if not (fw and fw[0].isupper() and fw.lower() in names):
+            continue
+        slot = _empty_star_pos(conn, r["verse_id"], r["position"])
+        if slot is None:
+            continue
+        epos, ebid = slot
+        if r["bracket_id"] is None and ebid is None:
+            continue                              # handled by run(), not skipped
+        if _peel_name(r["english"], names) is None:
+            continue
+        n += 1
+        vid, mpos = r["verse_id"], r["position"]
+        log(f'\n#{n}  {r["book"]} {r["chapter"]}:{r["verse"]}   '
+            f'merged={r["english"]!r} ({r["strongs_base"]})  empty * at pos {epos}')
+        lo, hi = min(mpos, epos) - 1, max(mpos, epos) + 1
+        for g in conn.execute(
+                "SELECT position, greek_pos, bracket_id, english, strongs_base FROM words"
+                " WHERE verse_id=? AND position BETWEEN ? AND ? ORDER BY position",
+                (vid, lo, hi)):
+            mark = " <- name-on-verb" if g["position"] == mpos else (
+                   " <- empty * slot" if g["position"] == epos else "")
+            log(f'     pos {g["position"]:>3}  gpos {str(g["greek_pos"]):>4}  '
+                f'bid {str(g["bracket_id"]):>4}  {g["strongs_base"]:<7} {g["english"]!r}{mark}')
+    log(f"\n{n} bracketed case(s) — these are what --apply skips.")
+    return n
+
+
 def run(conn, apply=False, log=print):
     # Self-contained for both callers (the CLI here AND the build fold in
     # build_words_from_abp.py): set our own row mode, and only write is_pn if the
@@ -220,10 +270,16 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("db")
     ap.add_argument("--apply", action="store_true", help="write changes (default = dry run)")
+    ap.add_argument("--list-skipped", action="store_true",
+                    help="read-only: show the bracketed cases --apply skips, with context")
     args = ap.parse_args()
 
     conn = sqlite3.connect(args.db)
     conn.row_factory = sqlite3.Row
+    if args.list_skipped:
+        list_skipped(conn)
+        conn.close()
+        return
     n = run(conn, apply=args.apply)
     if args.apply:
         conn.commit()
