@@ -58,8 +58,10 @@ def main():
         print(raw)
         conn.close()
         return
-    if not args.old or not args.new:
+    if args.old is None or args.new is None:
         sys.exit("pass --old AND --new (exact text to replace), or --show-raw to dump the raw.")
+    # --new "" is a legitimate CUT (delete the matched text), not a missing arg — so test for
+    # None, not falsiness. The exact-once guard below still protects against a bad --old.
     n = raw.count(args.old)
     if n != 1:
         sys.exit(f"--old must match the stored raw EXACTLY ONCE; found {n}. Aborting (nothing changed).")
