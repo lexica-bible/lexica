@@ -224,6 +224,62 @@ CONTESTED = OrderedDict([
                 "and spirit-being senses are uncontested",
         "graph_ref": None,
     }),
+    ("G2316", {
+        "lemma": "theos", "gloss": "God / god",
+        # The model's Sense 1 closes by reading John 1:1c as settled identity ("the word ... identifies
+        # the Logos both as with this being and as being this being"). That one sentence is pulled from
+        # the raw (fix_lexica_raw.py) and the contest moves here. The fork is NARROW: it touches the
+        # anarthrous predicate in John 1:1c (θεὸς ἦν ὁ λόγος) ONLY — every other use (creator, lesser/
+        # fabricated gods, human magistrates) is uncontested and stays in the senses. No pin_core: once
+        # the verdict sentence is cut, Sense 1 leads neutral on its own (the sarx/ekklesia pattern).
+        "core": "the one sovereign creator — named, invoked, prayed to, spoken of as acting in "
+                "history; in the plural or of foreign cult, lesser or fabricated 'gods'; of human "
+                "officeholders, magistrates set in authority",
+        "frames": [
+            ("shared divine nature", "Nicene / Trinitarian",
+             "the anarthrous predicate ascribes God's own nature to the Word — 'what God was, the "
+             "Word was also' (Harner's qualitative reading): divine in kind, a distinct person from "
+             "ho theos (the Father)"),
+            ("identity", "modalist / Oneness / Sabellian",
+             "the Word is the one God himself — the clause read as fully convertible, no distinction "
+             "of persons"),
+            ("a divine being, subordinate", "Arian / non-Trinitarian",
+             "'the Word was a god' — the anarthrous predicate read as indefinite: a divine being "
+             "lesser than and distinct from ho theos"),
+        ],
+        "note": "the qualitative reading is Harner's, not Colwell's — Colwell's Rule only says a "
+                "DEFINITE preverbal predicate tends to drop the article, which says nothing about "
+                "whether the anarthrous theos here is definite. The apologetic Colwell-inversion "
+                "('the dropped article proves the Word is God') is exactly what this fork "
+                "neutralizes, so no frame rests on it. The fork touches John 1:1c only.",
+        "graph_ref": None,
+    }),
+    ("G2962", {
+        "lemma": "kyrios", "gloss": "lord / master",
+        # Scope like pneuma: the SENSE isn't contested — "lord, master," applied both to the God of
+        # Israel and to Jesus, is plainly attested and stays in the core. What's contested is the
+        # IMPLICATION when a NT writer takes a text that named YHWH (or the exclusive "one Lord"
+        # confession) and applies the same lemma to Jesus. The fork is bounded to that title-transfer
+        # citation set ONLY; ordinary kyrios — God, Jesus, or a human master — never fires it.
+        "core": "lord, master — the holder of sovereign or practical authority: the God of Israel, "
+                "the Lord Jesus, or a human owner/ruler over others",
+        "frames": [
+            ("shared divine identity", "Nicene / Trinitarian",
+             "applying a YHWH text to Jesus identifies him with the one Lord — the divine name "
+             "carried across (Rom 10:13; Heb 1:10)"),
+            ("delegated lordship", "non-Trinitarian / Unitarian",
+             "the title is bestowed on the man Jesus by God — 'God has made him Lord' (Phil 2:9-11) "
+             "— an appointed sovereignty, not the uncreated name"),
+            ("the one Lord, manifested", "modalist / Oneness",
+             "no distinction of persons: the one Lord named in the OT is the same Lord present in "
+             "Jesus (Jude 1:4)"),
+        ],
+        "note": "the fork touches ONLY the title-transfer cases — where a YHWH text or the exclusive "
+                "'one Lord' confession is applied to Jesus (Rom 10:13, Heb 1:10, Phil 2:9-11, "
+                "Jude 1:4). It does not fire on ordinary uses of kyrios for God, for Jesus, or for a "
+                "human master.",
+        "graph_ref": None,
+    }),
 ])
 _CONTESTED_BY_SID = {}
 for _sid, _e in CONTESTED.items():
