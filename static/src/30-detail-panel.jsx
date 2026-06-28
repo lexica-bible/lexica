@@ -496,6 +496,13 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   const [lsjSummary, setLsjSummary] = useState(null);
   const [lsjSummaryLoading, setLsjSummaryLoading] = useState(false);
   const [lexica, setLexica] = useState(null);
+  // The Lexica fork lookup needs its OWN loading flag (init true when a lookup runs at mount)
+  // so the Definition block can wait for it before drawing the LSJ fallback — without it a
+  // fork word (θεός) paints the LSJ card first, then swaps to the Lexica card when this lands.
+  const [lexicaLoading, setLexicaLoading] = useState(() => {
+    const sn = entry && (entry.strongs_raw || entry.strongs_base);
+    return !!(sn && sn !== "*");
+  });
 
   useEffect(() => {
     setLsjEntry(null);
@@ -543,11 +550,13 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     // instead of borrowing the base word's definition. Keyed by strongs_base, every one of the
     // ~3619 dotted words would inherit its base's entry once that base is built.
     const sn = entry && (entry.strongs_raw || entry.strongs_base);
-    if (!sn || sn === "*") return;
+    if (!sn || sn === "*") { setLexicaLoading(false); return; }
     let cancelled = false;
+    setLexicaLoading(true);
     api.lexica(sn)
       .then(d => { if (!cancelled) setLexica(d && !d.error ? d : null); })
-      .catch(() => { if (!cancelled) setLexica(null); });
+      .catch(() => { if (!cancelled) setLexica(null); })
+      .finally(() => { if (!cancelled) setLexicaLoading(false); });
     return () => { cancelled = true; };
   }, [entry && entry.id]);
 
@@ -845,10 +854,18 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     case "lsj": {
       const structural = !!(lexica && lexica.kind === "structural");
       const idiom = !!(lexica && lexica.kind === "idiom");   // dotted frozen phrase (ἀνὰ μέσον) — a content note, not the structural card
+      // The Definition block draws from TWO lookups: the Lexica fork entry (the intended card
+      // when it exists) and LSJ (the fallback). Until the Lexica lookup resolves we don't know
+      // WHICH card this is, so hold the whole block neutral ("Definition · Loading…") instead of
+      // painting the LSJ card first and swapping to the Lexica card (the θεός fork flash). Same
+      // rule as the frame-0 fix: a block stays neutral until its own lookup resolves.
+      const defnLoading = (lexicaLoading || lsjLoading) && !lexica;
       return (
       <section key="lsj" className="sec">
         <h4 className="sec-head">
-          {idiom
+          {defnLoading
+            ? <span className="sec-t">Definition</span>
+            : idiom
             ? <><span className="sec-t">Phrase</span><span className="lsj-badge" title="A fixed phrase (idiom) — its plain meaning, not a grammatical relation">Idiom</span></>
             : structural
             ? <><span className="sec-t">Function</span><span className="lsj-badge" title="Structural word — its grammatical function, not a sense list">Grammar</span></>
@@ -860,7 +877,9 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
               ? <><span className="sec-t">ABP Extended</span><span className="abp-badge">ABP EXT</span></>
               : <><span className="sec-t">Liddell-Scott-Jones</span><span className="lsj-badge">LSJ</span></>}
         </h4>
-        {idiom ? (
+        {defnLoading ? (
+          <div className="lsj-def lsj-def--loading">Loading…</div>
+        ) : idiom ? (
           <div className="gram"><p className="gram-fn"><b>{lexica.phrase}</b> — {lexica.note}</p></div>
         ) : structural ? (
           <StructuralBody data={lexica} lsjEntry={lsjEntry} />
