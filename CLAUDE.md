@@ -1019,7 +1019,7 @@ memory `project_ai_synthesis_quality`.
   older copies, and a `.info` manifest per copy so `--list` shows row counts instantly. Restore =
   pick a stamp from `--list`, `gunzip -c` (or cp) over a `.new`, swap with the reversible `mv`.
   **`study.db` is the one irreplaceable file (hand-authored argument graphs, no rebuild script).**
-  Run daily from the PA Tasks tab. Full record: memory `project_db_backups`.
+  LIVE as a daily PA scheduled task (13:30 UTC, `--keep 7`). Full record: memory `project_db_backups`.
 
 ## Words rebuild checklist (if you ever rebuild the words table)
 The full step-by-step lives in the **`/rebuild-words`** slash command
