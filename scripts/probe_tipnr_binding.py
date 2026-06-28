@@ -150,9 +150,20 @@ def parse_tipnr(lines):
         else:
             if not cur:
                 continue
-            m = re.search(r"reference=([^\t]*)", line)
-            if m:
-                for tok in m.group(1).split(";"):
+            # The EXHAUSTIVE ref list is the tab-field immediately AFTER the
+            # "reference=..." field. That reference= field is only the truncated
+            # "first refs" used to build a STEP link (capped ~40), so reading it
+            # under-counts high-frequency names. Fall back to it only if there is
+            # no following field.
+            # The "reference=..." marker sits inside a pipe-delimited STEP-link field,
+            # so match CONTAINS, then take the next TAB field (the exhaustive list).
+            ref_blob = None
+            for i, f in enumerate(parts):
+                if "reference=" in f:
+                    ref_blob = parts[i + 1] if i + 1 < len(parts) else f.split("reference=", 1)[1]
+                    break
+            if ref_blob:
+                for tok in ref_blob.split(";"):
                     r = parse_ref(tok)
                     if r and r[0] == "UNMAPPED":
                         cur["unmapped"].add(r[1])
