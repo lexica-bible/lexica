@@ -90,6 +90,18 @@ def parse_ref(tok):
     return (bk, int(cm.group()), int(vm.group()))
 
 
+def clean_summary(s):
+    """TIPNR #Summary -> plain text. Unwraps <ref=..>X</ref> / <strong=..>X</strong>
+    to their inner text, drops <br> and the leading '#', collapses whitespace."""
+    if not s:
+        return ""
+    s = re.sub(r"<(?:ref|strong)[^>]*>(.*?)</(?:ref|strong)>", r"\1", s)
+    s = re.sub(r"<br\s*/?>", " ", s)
+    s = re.sub(r"<[^>]+>", "", s)
+    s = s.lstrip("#").strip()
+    return re.sub(r"\s+", " ", s)
+
+
 # ── WS1 — documented versification map ──────────────────────────────────────
 # DERIVE the offset from DOCUMENTED Hebrew/Greek-vs-English numbering differences
 # ONLY. The deltas seen in the data merely VALIDATE — a candidate remap counts only
@@ -249,11 +261,23 @@ def parse_tipnr(lines):
             head = norm_name(f0.split("@")[0])
             if not head:
                 continue
+            # Main-record columns (legend lines 76 / 226):
+            #   PERSON: 0 Name=uStrong | 1 Description | 2 Parents | 3 Siblings |
+            #           4 Partners | 5 Offspring | 6 Tribe/Nation | 7 #Summary | 8 Type
+            #   PLACE : 0 Name=uStrong | 1 OpenBible-near | 2 Founder | 3 People-there |
+            #           4 GoogleMap | 5 Palopenmaps | 6 Geo-area | 7 #Summary | 8 Type
+            # Binding uses ONLY spellings/bases/refs; desc/area/summary/gender are
+            # card-display ENRICHMENT (the entity's own identity content).
+            def _col(i):
+                return parts[i].strip() if len(parts) > i else ""
             cur = {
                 "head": head, "uniq": f0.split("=")[0].strip(), "section": section,
                 "spellings": {head}, "bases": set(), "refs": set(),
-                "parents": parts[2].strip() if len(parts) > 2 else "",
-                "offspring": parts[5].strip() if len(parts) > 5 else "",
+                "parents": _col(2), "offspring": _col(5),
+                "desc": _col(1),                 # person: human label; place: geo-near
+                "area": _col(6),                 # Tribe/Nation (person) | Geo-area (place)
+                "summary": clean_summary(_col(7)),
+                "gender": _col(8) if _col(8) in ("Male", "Female") else "",
             }
             b = norm_base(f0.split("=", 1)[1]) if "=" in f0 else ""
             if b:
