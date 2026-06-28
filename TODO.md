@@ -14,6 +14,14 @@ Issues surfaced 2026-06-28. #1 ("LORD the" word flip), #2 (proper-noun / entity 
   lemma — LOW priority, pre-existing, NOT from the restore. These are the by-design skips of the cautious
   G1473→G846 retag (it refuses to guess reflexives + no-morph cells). Consistent with the build. Future
   cleanup only. code: the g1473_gloss_retag fold in build_words_from_abp.py / lxx_align.
+- **Bound entity card — entity-filtered "Appears N×" list (the one card follow-up).** The bound card's
+  display fixes shipped (occurrence LINK restored, the referent-flip remount, BDB caveat, frame-0 loading —
+  all in TODO_ARCHIVE Issue 2). What's left: the "Appears N×" count is THIS entity's (Eden = 13), but the
+  link opens the word's FULL Strong's occurrence list (every Eden) — count and destination don't match. The
+  occurrence list can only filter by Strong's number + book, NOT by bound entity (it never touches the
+  Issue-2 tables). A real match needs a NEW endpoint serving the entity's own refs (`tipnr_entity_refs`) +
+  Word-study UI to show that list. The link is intentionally NOT reverted to plain text. code: views_metav.py
+  `/api/metav/entity` (add a refs list) + 30-detail-panel.jsx `pnbound-appears` + 80-lexicon.jsx occurrences.
 
 ---
 

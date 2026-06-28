@@ -24,6 +24,20 @@ use-before-declare white-screened the app and neither the build nor the tests ca
 browser); the map staying hidden on an ambiguous place (Eden) is the guard working, not a bug. Full
 record + numbers + the design brief: memory `project_entity_resolution_rebuild` + `entity_resolution_rebuild.md`.
 
+**Bound-card display polish — 2026-06-28 (follow-on; pushed, deploy pending).** Three fixes after the build,
+caught by review of the LIVE card: (1) "Appears N×" is a working LINK to the word's occurrence list again
+(it had become plain text); (2) the card no longer paints the PREVIOUS word's identity for a beat before the
+bind lands — the rail panel was REUSED across clicks and cleared its referent state in an effect that runs
+after the first paint, so it showed e.g. Adam's person card under the "Eden" header, then swapped to the
+Mesopotamia place. Fix = remount the panel per word (`key={activeEntry.id}` on both DetailPanel instances in
+90-app.jsx); settled cards are byte-identical so unbound words are unchanged. (3) A fixed caveat under the BDB
+block when a bound card shows ("dictionary entry for the word, all its meanings, not only this place/person" —
+static, no referent-detection). Plus a general FRAME-0 rule: BDB + LSJ flashed "Not found" for one frame
+before their own lookup ran — start their loading flag true at mount so the first frame is "Loading…". KEY
+LESSON: verify a transient UI bug in the LOADING frames, not just the settled DOM (a `MutationObserver` that
+records each distinct frame catches the stale paint). The one remaining follow-up (entity-filtered "Appears
+N×" list) is in TODO.md. Commits 17d8d73 / 900c945 / f3ddfb9. Memory `project_entity_resolution_rebuild`.
+
 ## εἰμί ("to be") subject merge — FIXED + LIVE 2026-06-28 (PN-subject fold, Issue 4)
 Last of the 2026-06-28 issue batch. A proper-noun subject of the copula was glued onto the εἰμί (G1510)
 verb's cell with the subject's own Greek word floated as a trailing empty `*` — same defect as the big
