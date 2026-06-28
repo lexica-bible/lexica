@@ -357,6 +357,74 @@ def main():
               f"strongs/headword-catch={d.get('strongs',0)} "
               f"versification(soft)={d.get('soft',0)} hard={d.get('hard',0)}")
 
+    # ── NUMBER-DISAGREEMENT + CORROBORATION (over the BOUND set) ─────────────
+    # How is each bound occurrence supported? name+verse is solid (the stored
+    # number is just metadata there); number+verse-ONLY rests on the stored
+    # Strong's, which is first-wins-polluted -> the fragile binds. We MEASURE the
+    # pollution on the name+verse binds (true entity known) and read that rate
+    # across the number-only binds as the confident-wrong risk.
+    nv = nv_disagree = nv_hasnum = 0
+    num_only = 0
+    nv_nm = nv_dis_nm = numonly_nm = 0      # restricted to the NO-metaV tier
+    for r in occ_rows:
+        nm = norm_name(r["label"])
+        if not nm:
+            continue
+        bk = BOOKNUM.get((r["book"] or "").lower())
+        if bk is None:
+            continue
+        V = (bk, r["ch"], r["vs"])
+        B = norm_base(r["base"])
+        nometa = (nm not in person_ids and nm not in place_ids)
+        name_hits = [i for i in name_idx.get(nm, set()) if V in ents[i]["refs"]]
+        if name_hits:
+            nv += 1
+            if nometa:
+                nv_nm += 1
+            if B:
+                nv_hasnum += 1
+                true_bases = set().union(*(ents[i]["bases"] for i in name_hits))
+                if B not in true_bases:
+                    nv_disagree += 1
+                    if nometa:
+                        nv_dis_nm += 1
+        elif B and any(V in ents[i]["refs"] for i in base_idx.get(B, set())):
+            num_only += 1
+            if nometa:
+                numonly_nm += 1
+    print("\n" + "=" * 72)
+    print("NUMBER-DISAGREEMENT + CORROBORATION (bound occurrences)")
+    print(f"  name+verse binds (solid; number is metadata): {nv:,}")
+    print(f"     stored number DISAGREES with that entity : {nv_disagree:,}"
+          + (f"  ({100*nv_disagree/nv_hasnum:.1f}% of {nv_hasnum:,} that carry a number)"
+             if nv_hasnum else ""))
+    print(f"  number+verse-ONLY binds (no name link)      : {num_only:,}  <- rest on the polluted number")
+    if nv_hasnum:
+        rate = nv_disagree / nv_hasnum
+        print(f"  -> est. confident-wrong among those         : ~{num_only*rate:,.0f}"
+              f"  (number-only x pollution {100*rate:.1f}%)")
+    print(f"  NO-metaV tier: name+verse {nv_nm:,} (real) vs number-only {numonly_nm:,} (number-reliant)"
+          + (f"; pollution {100*nv_dis_nm/nv_nm:.1f}%" if nv_nm else ""))
+
+    # ── CUSHI 2Sa RUNNER — Workstream-2 proof ───────────────────────────────
+    # Descent into the – Group sub-record already works; the floor cause is the
+    # stored NUMBER (not H3569) + the surface "Cushi" not matching Cush's "Cushite".
+    print("\n" + "=" * 72)
+    print("CUSHI 2Sa RUNNER — Workstream-2 proof (cause of the 6 hard misses)")
+    cush = next((e for e in ents if e["head"] == "cush" and e["section"] == "place"), None)
+    print(f"  Cush@Gen.2.13 carries 2Sa.18.21 (Group descent works)? "
+          f"{bool(cush and (10, 18, 21) in cush['refs'])}")
+    print(f"  Cush bases={sorted(cush['bases']) if cush else '-'}   "
+          f"'cushi' among Cush spellings? {('cushi' in cush['spellings']) if cush else '-'}")
+    for r in conn.execute(f"""
+            SELECT v.chapter AS ch, v.verse AS vs, w.english_head AS h, w.strongs_base AS b
+            FROM words w JOIN verses v ON v.id = w.verse_id
+            WHERE {pn_where} AND v.book='2Sa' AND lower(w.english_head) LIKE 'cushi%'
+            ORDER BY v.chapter, v.verse""").fetchall():
+        reaches = bool(cush and norm_base(r["b"]) in cush["bases"])
+        print(f"     2Sa {r['ch']}:{r['vs']}  head={r['h']!r}  stored={r['b']!r}  "
+              f"reaches Cush by #? {reaches}")
+
     conn.close()
     print("\nDone. (read-only — nothing was changed)")
 
