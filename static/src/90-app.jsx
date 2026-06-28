@@ -369,8 +369,13 @@ function App() {
         </div>
       </main>
 
+      {/* key={id} remounts the panel for every distinct word so referent-specific state
+          (the verse-bound entity, metaV person/place, AI blurb) starts fresh — without it
+          the reused panel paints the PREVIOUS word's identity on the first frame, then
+          swaps once the bind resolves (the Eden "garden → Mesopotamia" flip). */}
       {showWord && !isMobile && (
         <DetailPanel
+          key={activeEntry.id}
           entry={activeEntry}
           isMobile={false}
           onClose={() => setActiveEntry(null)}
@@ -388,6 +393,7 @@ function App() {
         <>
           <div className="sheet-scrim" onClick={() => setActiveEntry(null)}/>
           <DetailPanel
+            key={activeEntry.id}
             entry={activeEntry}
             isMobile={true}
             onClose={() => setActiveEntry(null)}

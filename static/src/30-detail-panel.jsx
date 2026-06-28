@@ -458,9 +458,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     return () => { cancelled = true; };
   }, [entry && entry.id, metavData, metavLoading, boundLoading, boundEntity]);
 
-  // Hebrew BDB lookup
+  // Hebrew BDB lookup. Start loading=true for a Hebrew word so a fresh mount's first
+  // frame shows "Loading…", never a premature "Not found in BDB" before the lookup runs
+  // (only Hebrew words render the BDB block, so this is inert for everything else).
   const [bdbEntry, setBdbEntry] = useState(null);
-  const [bdbLoading, setBdbLoading] = useState(false);
+  const [bdbLoading, setBdbLoading] = useState(!!isHebrewWord);
   useEffect(() => {
     setBdbEntry(null);
     if (!isHebrewWord || !entry.strongs) return;
@@ -824,6 +826,13 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             {bdbEntry.pronounce && <div className="bdb-xlit"><span className="bdb-pronounce">{bdbEntry.pronounce}</span></div>}
             {bdbEntry.part_of_speech && <span className="bdb-pos-badge">{bdbEntry.part_of_speech}</span>}
             {bdbEntry.description && <p className="detail-p detail-p--meta">{bdbEntry.description}</p>}
+            {/* Under a verse-bound entity the BDB entry is the dictionary's, keyed by the
+                shared word — it covers every sense, so it can describe a different referent
+                than the one this verse names (the "Adam's home" gloss under the Assyrian
+                Eden). Fixed line, makes no per-referent claim, no detection logic. */}
+            {boundEntity && (
+              <p className="detail-ai-caveat">Dictionary entry for the word — all its meanings, not only {boundEntity.section === "place" ? "this place" : boundEntity.section === "person" ? "this person" : "this name"}.</p>
+            )}
           </div>
         ) : (
           <div className="lsj-def lsj-def--loading">Not found in BDB.</div>
