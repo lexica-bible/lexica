@@ -329,12 +329,17 @@ const pnList=(entry&&entry.pn_types||"").toLowerCase().split(",").map(s=>s.trim(
 // the pn_binding tables. When present it replaces the name-guess metaV card AND the
 // AI blurb with a sourced identity. 404 -> null -> the old name-path shows. Declared
 // BEFORE the metaV effect because that effect gates on it (deps + body).
-const[boundEntity,setBoundEntity]=useState(null);const[boundLoading,setBoundLoading]=useState(false);useEffect(()=>{setBoundEntity(null);const bn=extractProperName(entry.pnName||entry.gloss||"");if(!bn||bn.length<2||!entry.book||!entry.chapter||!entry.verse){setBoundLoading(false);return;}let cancelled=false;setBoundLoading(true);api.metavEntity(bn,entry.book,entry.chapter,entry.verse).then(d=>{if(!cancelled)setBoundEntity(d&&d.bound?d:null);}).catch(()=>{}).finally(()=>{if(!cancelled)setBoundLoading(false);});return()=>{cancelled=true;};},[entry&&entry.id]);useEffect(()=>{setMetavPersonData(null);setMetavPlaceData(null);setMetavTab("person");// A verified verse-bind (Issue 2) OWNS the card: skip the name-based metaV lookup
+const[boundEntity,setBoundEntity]=useState(null);const[boundLoading,setBoundLoading]=useState(false);// Synchronous "a bind is being checked for this entry" flag. The metaV effect runs
+// right after this one in the SAME commit and reads it to skip firing a name lookup
+// before the async boundLoading state flips — without it the metaV fetch races ahead
+// on the first render and strands a "Looking up…" loader.
+const bindPendingRef=useRef(false);useEffect(()=>{setBoundEntity(null);const bn=extractProperName(entry.pnName||entry.gloss||"");if(!bn||bn.length<2||!entry.book||!entry.chapter||!entry.verse){bindPendingRef.current=false;setBoundLoading(false);return;}bindPendingRef.current=true;let cancelled=false;setBoundLoading(true);api.metavEntity(bn,entry.book,entry.chapter,entry.verse).then(d=>{if(!cancelled)setBoundEntity(d&&d.bound?d:null);}).catch(()=>{}).finally(()=>{bindPendingRef.current=false;if(!cancelled)setBoundLoading(false);});return()=>{cancelled=true;};},[entry&&entry.id]);useEffect(()=>{setMetavPersonData(null);setMetavPlaceData(null);setMetavTab("person");setMetavLoading(false);// cleared each run; the proceed-path re-sets it true below
+// A verified verse-bind (Issue 2) OWNS the card: skip the name-based metaV lookup
 // entirely. This is the single gate that kills EVERY downstream name-based section
 // at once — the person/place card, its Groups, Nave's topical (needs metaV data),
-// and the place-LSJ definition all derive from this fetch. Wait until the (fast)
-// bind lookup resolves so we never fire a name lookup for a word we'll bind.
-if(boundLoading)return;if(boundEntity)return;// Skip metaV for words with a real Greek lemma — those belong to LSJ
+// and the place-LSJ definition all derive from this fetch. The ref is set
+// synchronously by the bind effect above; boundEntity catches the resolved bind.
+if(bindPendingRef.current||boundEntity)return;// Skip metaV for words with a real Greek lemma — those belong to LSJ
 // Exception: KJV/BSB words that are proper nouns still go through metaV. For Hebrew (OT)
 // words we KNOW name-vs-common from heb.db's own grammar (entry.hebName, built at startup) —
 // so a common word capitalized mid-verse ("Wilderness of Sinai") never pops a place card,
