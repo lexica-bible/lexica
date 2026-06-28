@@ -6,6 +6,24 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Proper-noun / entity resolution rebuild — BUILT + LIVE 2026-06-28 (Issue 2)
+Click a proper noun and the card now describes the RIGHT person/place for THAT verse, not a
+same-named one (the "Cushi → Acts", "Eden → wrong place" bug). The old cards looked up the entity
+by NAME alone (which can't tell three Cushis or four Edens apart); now every occurrence is bound to
+a specific entity from the TIPNR proper-noun database, and the card shows that entity's own sourced
+description. 14,817 clicks bind correctly; the rest fall back to the safe summary — **zero
+confident-wrong** (a wrong-but-confident card is weighted a loss, so we accept a lower match rate to
+kill it). Built in the design brief's order: a shared engine (`entity_resolution.py`), a documented
+versification map, name normalization (gentilic + KJV/LXX spellings, hyphen compounds), the binder,
+the Cushi 6-slot number fix, the hand-check of the leftovers, and the card. Tables `pn_binding` /
+`tipnr_entities` / `tipnr_entity_refs` (PA-only, rebuilt by `build_entity_binding.py --apply`); served
+by `/api/metav/entity`. Re-run the build + the Cushi fix after any words rebuild.
+Lessons worth keeping: TIPNR uses DIFFERENT columns for places vs persons (reading them the same put a
+maps-URL under "Children"); a React state must be declared before the effect that depends on it (a
+use-before-declare white-screened the app and neither the build nor the tests catch it — needs a
+browser); the map staying hidden on an ambiguous place (Eden) is the guard working, not a bug. Full
+record + numbers + the design brief: memory `project_entity_resolution_rebuild` + `entity_resolution_rebuild.md`.
+
 ## εἰμί ("to be") subject merge — FIXED + LIVE 2026-06-28 (PN-subject fold, Issue 4)
 Last of the 2026-06-28 issue batch. A proper-noun subject of the copula was glued onto the εἰμί (G1510)
 verb's cell with the subject's own Greek word floated as a trailing empty `*` — same defect as the big

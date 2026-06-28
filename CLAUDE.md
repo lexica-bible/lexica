@@ -135,7 +135,7 @@ Pick effort by task TYPE. When in doubt, lean higher — the plan affords it.
 
 ## CI / automation (added 2026-06-07)
 - **GitHub Actions** (`.github/workflows/ci.yml`) — runs on every push/PR: (1) the invariant tests
-  (the `tests/test_*.py` set — strongs-join, build-invariants, folded-fixes, argmap; they build their own in-memory data, no
+  (the `tests/test_*.py` set — strongs-join, build-invariants, folded-fixes, argmap, versification; they build their own in-memory data, no
   bible.db needed), (2) rebuilds `app.js` and FAILS if the committed copy is stale. Repo is public; check
   the Actions tab or query `api.github.com/repos/lexica-bible/lexica/actions/runs`. `gh` CLI is installed on the dev box now (2026-06-22; Claude calls it by full path) — NOT on PA. See memory `project_dependabot_workflow`.
   - **LINE-ENDINGS for the app.js check (cost a CI fail 2026-06-14; the "all CRLF" claim CORRECTED
@@ -259,6 +259,14 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   G180 ἀκατάπαυστος). `chapter_text`/`verse_words` COALESCE it over the base `lexicon` join so the word
   card shows the right word; joined only if present (deploy-safe). Built by `scripts/build_dotted_lexicon.py`,
   audited by `scripts/audit_dotted_lemmas.py`. Full record: memory `project_dotted_strongs_lemma`.
+- `pn_binding` / `tipnr_entities` / `tipnr_entity_refs` — the Issue-2 entity-binding tables (PA-only, NOT in
+  git; rebuilt by `scripts/build_entity_binding.py --apply`, which writes ONLY these, never words/verses).
+  `pn_binding(book,chapter,verse,name,entity_uniq,kind,rule,render,hot,tier)` keyed (book,ch,vs,name) maps a
+  PN occurrence → its verse-correct TIPNR entity (render=1 rows only; a floor = no row → Fix A); `tipnr_entities`
+  = the entity's own card content (uniq/head/section/gender/area/descr/summary/bases/parents+offspring, kin
+  for PERSONS only); `tipnr_entity_refs` = its reference list. Served by `/api/metav/entity` → the `.pnbound`
+  card. Re-run `--apply` after a words rebuild (it re-tiers from live metaV each run). Memory
+  `project_entity_resolution_rebuild`.
 - `word_gloss` — plain-meaning lemma gloss for the word card (`strongs` → `gloss` + `source`). Side table in
   bible.db (built on PA, not in git; ~17.5k rows). Greek = Dodson base + TBESG fill + overrides + dotted-by-
   lemma; Hebrew = TBESH + overrides. Joined via `core.word_gloss_cols()` (ABP) and `core.word_gloss_join()`
@@ -941,9 +949,17 @@ memory `project_ai_synthesis_quality`.
   book/ch/verse ("describe the one AT this reference"; cached per-reference `pn:<name>:<bk><ch>:<v>`;
   badged "not verse-checked"). Fills entries with no metaV/BDB data. The place endpoint also withholds
   the map pin when the name maps to >1 place or the matched row lacks its own coords. Both = **Fix A**,
-  the floor for Issue 2 (proper-noun cards resolve by NAME STRING — nothing binds a word to a TIPNR
-  entity); the full occurrence-binding rework is DESIGNED in `entity_resolution_rebuild.md` (not built).
-  Memory `project_entity_resolution_rebuild`.
+  the permanent floor under whatever the binder below can't bind.
+- **VERSE-BOUND ENTITY CARD — the Issue-2 rebuild, LIVE 2026-06-28.** A PN click now first asks
+  `GET /api/metav/entity/<name>?book=&chapter=&verse=` (views_metav.py) for the verse-CORRECT TIPNR entity
+  (from `pn_binding`); when bound it LEADS the rail with a sourced `.pnbound` card (canonical name + TIPNR
+  description + kin + region + "Appears N×" + "Matched to this verse" + a TIPNR badge) and a bind GATES the
+  whole name-based metaV fetch (kills the name-guess person/place card + its Groups + Nave's + place-LSJ at
+  once). 404 → the old name-path + Fix A, byte-same (deploy-safe). 14,817 binds, zero confident-wrong; TIPNR
+  is the identity spine, metaV is enrichment only. Engine = **`entity_resolution.py`** (repo root, pure
+  logic); tables built by `scripts/build_entity_binding.py --apply`. **The map staying hidden on an
+  ambiguous bound place (Eden) is Fix A's guard working, NOT a bug.** Full record + the build-order +
+  lessons: memory `project_entity_resolution_rebuild`.
 - CRITICAL: the lexicon join is `LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base` (Phase 1 indexed key).
   strongs_g only ever holds 'G…', so a Hebrew H-number can never match — this STRUCTURALLY replaced the old
   `SUBSTR(strongs_base,2) ... LIKE 'G%'` guard that a Hebrew H121 used to slip past (bogus Greek G121 lemma
@@ -979,6 +995,11 @@ memory `project_ai_synthesis_quality`.
   (`apply_pn_subject_split`, runs after insert, BEFORE import_tipnr resolves the new name slots). After
   `--apply`: re-run import_tipnr → build_abp_surface → build_abp_translit. Audit for the εἰμί class:
   `scripts/audit_eimi_subject_merge.py`. Memory `project_pn_subject_verb_fold`.
+- `build_entity_binding.py` (dry-run default / `--apply`) + `fix_cushi_strongs.py` (dry-run default /
+  `--apply`) — the Issue-2 entity-binding build + the Cushi by-verse Strong's correction (6 "Cushi*" slots in
+  2Sa 18, H3570→H3569, never global). Both PA-only, reversible; **re-run BOTH after any words rebuild**
+  (build_entity_binding re-tiers from live metaV; the Cushi fix is re-introduced by a rebuild). Binder logic
+  lives in `entity_resolution.py`. Memory `project_entity_resolution_rebuild`.
 
 ## Rate limiting / security (2026-06-07 security pass)
 - `core.limiter` (flask-limiter, memory storage): site-wide default `300/min` per endpoint per IP
