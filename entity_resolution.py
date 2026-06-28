@@ -199,7 +199,7 @@ VARIANT_ALIASES = {
     'maachathite': 'maacah',  'maachathites': 'maacah',  'mede': 'media',
     'medes': 'media',  'median': 'media',  'melchisedek': 'melchizedek',
     'michaiah': 'micaiah',  'midianite': 'midian',  'midianites': 'midian',
-    'mizraim': 'egypt',  'moabite': 'moab',  'moabites': 'moab',
+    'mizpeh': 'mizpah',  'mizraim': 'egypt',  'moabite': 'moab',  'moabites': 'moab',
     'naasson': 'nahshon',  'nabuzar-adan': 'nebuzaradan',  'nabuzar-ardan': 'nebuzaradan',
     'nabuzaradan': 'nebuzaradan',  'nabuzarardan': 'nebuzaradan',  'nazarene': 'nazareth',
     'negev': 'negeb',  'nethaneel': 'nethanel',  'netophathite': 'netophah',
