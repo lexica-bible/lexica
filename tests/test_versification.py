@@ -77,6 +77,38 @@ def test_floor_class_books_have_no_documented_offset():
     assert er.documented_remaps(1, 2, 13) == []    # Genesis
 
 
+# ── WS2 name normalization ───────────────────────────────────────────────────
+def test_gentilic_roots_strip_endings():
+    # the root we need must be among the candidates; extra safe candidates (e.g.
+    # 'cushites' also yields 'cushite' via -s) are fine — number-guarded downstream.
+    assert "cush" in er.gentilic_roots("Cushites")
+    assert er.gentilic_roots("cushite") == {"cush"}
+    assert er.gentilic_roots("Cushi") == {"cush"}        # the -i Hebrew gentilic
+    assert er.gentilic_roots("Moabite") == {"moab"}
+    assert "israel" in er.gentilic_roots("Israelites")
+    # short fragments are not produced (no 1-2 char roots)
+    assert "e" not in er.gentilic_roots("Eli")
+
+
+def test_name_variants_hits_the_brief_canaries():
+    # the four named WS2/WS3 transliteration canaries
+    assert "perez" in er.name_variants("Pharez")
+    assert "jehoiachin" in er.name_variants("Jeconiah")
+    assert "shealtiel" in er.name_variants("Salathiel")
+    assert "egypt" in er.name_variants("Mizraim")
+    # cushi reaches cush by stem (the runner — still number-guarded + needs step 4)
+    assert "cush" in er.name_variants("Cushi")
+    # irregular gentilic via stem -> alias chain
+    assert "heth" in er.name_variants("Hittites")
+
+
+def test_name_variants_excludes_the_exact_name():
+    # the exact normalized name is the binder's UNGUARDED tier-1 path, never a
+    # fuzzy variant — so it must not appear in the fuzzy candidate set.
+    assert "judah" not in er.name_variants("Judah")
+    assert er.name_variants("Zogwxyz") == set()   # nothing matches -> empty
+
+
 if __name__ == "__main__":
     import traceback
     fns = [v for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]

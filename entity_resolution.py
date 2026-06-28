@@ -128,3 +128,83 @@ def documented_remaps(bk, ch, vs):
         if ch == 3 and vs >= 19:
             out.append((39, 4, vs - 18, "Mal3/4"))
     return out
+
+
+# ── WS2 — name normalization (gentilic + KJV/LXX transliteration) ────────────
+# ONE lever. A surface name the corpus prints ("Cushi", "Pharez", "Cushites") often
+# isn't a TIPNR headword/spelling, so today it falls onto the polluted stored-number
+# path. Normalization expands it to the entity's real name so it can bind by
+# NAME+VERSE (robust) instead. These are FUZZY matches — the binder requires the
+# stored number to ALSO sit in the entity's cluster before it renders one (fuzzy can
+# over-match), so an over-broad stem here floors, never mis-binds.
+#
+# Two parts:
+#   1. Algorithmic gentilic stemming  — strip the Hebrew/English gentilic endings
+#      (-ites/-ite/-itess/-im/-i/-s) to reach the root place/person. General, so it
+#      covers the long tail (cushite/cushites/cushi -> cush, moabite -> moab) without
+#      a hand list.
+#   2. VARIANT_ALIASES — the IRREGULAR cases stemming can't reach: KJV/LXX/Greek
+#      spellings (pharez->perez, salathiel->shealtiel) and translated names
+#      (mizraim->egypt). Seeded with the brief's named canaries + the clearly-valuable
+#      spelling variants; import_tipnr.py keeps a fuller curated map for its own match
+#      pass — reconcile the two when the binder is wired (a follow-up, tracked).
+
+# variant (already norm_name'd) -> canonical TIPNR name. Number-guarded downstream.
+VARIANT_ALIASES = {
+    # --- the brief's named canaries (WS2/WS3) ---
+    "pharez": "perez",           # KJV -> Hebrew
+    "jeconiah": "jehoiachin", "jechoniah": "jehoiachin", "jechonias": "jehoiachin",
+    "coniah": "jehoiachin",
+    "salathiel": "shealtiel",    # LXX/Greek -> Hebrew
+    "mizraim": "egypt",          # Hebrew name -> English place
+    # --- high-value non-gentilic spelling variants (KJV/LXX vs Hebrew) ---
+    "juda": "judah", "esrom": "hezron", "zara": "zerah", "zarah": "zerah",
+    "enos": "enosh", "sophar": "zophar", "rama": "ramah", "aminadab": "amminadab",
+    "naasson": "nahshon", "urijah": "uriah", "michaiah": "micaiah",
+    "nabuzaradan": "nebuzaradan", "helkiah": "hilkiah", "bezaleel": "bezalel",
+    "josedech": "jehozadak", "baldad": "bildad", "nethaneel": "nethanel",
+    "hadarezer": "hadadezer", "elias": "elijah", "esaias": "isaiah",
+    "jeremias": "jeremiah", "ezechias": "hezekiah", "ozias": "uzziah",
+    "josias": "josiah", "joatham": "jotham", "zacharias": "zechariah",
+    "zachariah": "zechariah", "melchisedek": "melchizedek", "abijam": "abijah",
+    # --- irregular gentilics stemming can't reach (root != stripped stem) ---
+    "jew": "judah", "jews": "judah", "hittite": "heth", "hittites": "heth",
+    "ethiopia": "cush", "ethiopian": "cush", "ethiopians": "cush",
+    "levite": "levi", "levites": "levi", "mede": "media", "medes": "media",
+}
+
+# Ordered longest-first so '-itess'/'-ites' win before '-ite'/'-s', and the broad
+# '-i'/'-s' fire last. Each yields ONE candidate root if the remainder is long enough.
+_GENTILIC_SUFFIXES = ("itesses", "itess", "ites", "ite", "im", "i", "s")
+_MIN_ROOT = 3   # don't stem down to a 1-2 char fragment that hits noise
+
+
+def gentilic_roots(name):
+    """Surface gentilic/plural -> candidate root name(s). 'cushites'->{'cush'},
+    'cushi'->{'cush'}, 'moabite'->{'moab'}. A SET (a name can match >1 suffix)."""
+    n = norm_name(name)
+    roots = set()
+    for suf in _GENTILIC_SUFFIXES:
+        if n.endswith(suf) and len(n) - len(suf) >= _MIN_ROOT:
+            roots.add(n[: -len(suf)])
+    roots.discard(n)
+    return roots
+
+
+def name_variants(name):
+    """All FUZZY canonical candidates for a surface name (the exact norm_name is NOT
+    included — the binder tries that first, unguarded; everything here is number-
+    guarded). Union of the alias map and gentilic stems, plus the alias of a stem
+    (e.g. 'cushites' -> stem 'cush'; 'hittites' -> stem 'hittite' -> alias 'heth')."""
+    n = norm_name(name)
+    out = set()
+    mapped = VARIANT_ALIASES.get(n)
+    if mapped:
+        out.add(mapped)
+    for r in gentilic_roots(n):
+        out.add(r)
+        if r in VARIANT_ALIASES:
+            out.add(VARIANT_ALIASES[r])
+    out.discard(n)
+    out.discard("")
+    return out
