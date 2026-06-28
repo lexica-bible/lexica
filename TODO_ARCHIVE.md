@@ -6,6 +6,23 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## εἰμί ("to be") subject merge — FIXED + LIVE 2026-06-28 (PN-subject fold, Issue 4)
+Last of the 2026-06-28 issue batch. A proper-noun subject of the copula was glued onto the εἰμί (G1510)
+verb's cell with the subject's own Greek word floated as a trailing empty `*` — same defect as the big
+PN-subject fold but MISSED because the subject isn't in the tipnr name roster. Expected ~47 from the
+source, but the live still-merged count was only **2**: Sarai (Gen 11:30 "Sarai was"), Crete (Zep 2:6
+"Crete shall be") — the corpus-wide fold had already swept the named-roster rest. FIX (commit c4a11ae):
+`fix_pn_subject_merge.py` extended with `_peel_eimi` (single leading word → name, rest → verb) and a
+gate that fires on G1510 + capitalized non-roster lead + adjacent empty `*`, minus sentence-initial
+function leads (`_FUNCTION_LEAD`, moved into the fix as the one source of truth; the audit imports it).
+Conservative: unbracketed slot-after shape only. The third εἰμί+empty-`*` cell, 2Ki 10:15 "It is.", is
+correctly skipped (function lead). Applied on PA → import_tipnr → surface → translit; dry-run 0, audit
+0, health_check 0/0. Folds into the build via the same `run()`; 3 new tests (1 positive + 2 negatives).
+Restore note: this came right after closing out the bible.db scare/restore — that replay was re-verified
+clean first (PN-subject + italic-heads both 0, health_check 0/0). Memory `project_pn_subject_verb_fold`.
+
+---
+
 ## Word-study search over-match + slow — FIXED + LIVE 2026-06-26 (+ 2 match-list UI fixes)
 Typing a short Greek word (ἵνα) returned ~17 junk hits (γάγγραινα, εἶναι, Σινᾶ…) and was slow:
 `lexicon_lookup()` matched a substring LIKE on the accent-stripped lemma — a leading-wildcard scan,

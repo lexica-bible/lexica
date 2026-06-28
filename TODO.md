@@ -9,12 +9,7 @@ spot. You can skip those lines.
 
 ## Open word-study/data issues — DIAGNOSED, not yet fixed (2026-06-28)
 Issues surfaced 2026-06-28. #1 ("LORD the" word flip), #3 (θυμός "thyme"), and #4 (εἰμί merge) are
-DONE + LIVE. These remain:
-- ~~**εἰμί chip over-merge (Zep 2:6 "Crete shall be")**~~ — DONE + LIVE 2026-06-28 (commit c4a11ae).
-  The live still-merged count was only **2** (Sarai Gen 11:30, Crete Zep 2:6), not 47 — the corpus-wide
-  PN-subject fold had already handled the rest. `fix_pn_subject_merge.py` extended with `_peel_eimi` +
-  the εἰμί+empty-`*` gate (function-lead filter; unbracketed slot-after only); applied on PA, dry-run +
-  audit now 0. Folds into the build. See [[project_pn_subject_verb_fold]].
+DONE + LIVE (in TODO_ARCHIVE.md). These remain:
 - **Proper-noun / entity resolution rework** (Zep 1:1 "Cushi" → Acts verses; "Eden" maps to the wrong
   place) — PARKED for a max-effort session. metaV / biblical-reference / map cards resolve by NAME STRING,
   not the specific TIPNR id bound at THIS occurrence, so homonyms collide across testaments. Diagnose the
