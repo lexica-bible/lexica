@@ -75,6 +75,14 @@ try:
 except ImportError:
     apply_pn_subject_split = None
 
+try:
+    # Re-clean english_head AFTER the subject-name split (which rewrites heads without the
+    # italic set). Runs post-insert because the split is post-insert; the pre-insert
+    # _strip_italic_heads pass can't see the split's new cells. See fix_italic_heads.py.
+    from fix_italic_heads import run as apply_italic_heads
+except ImportError:
+    apply_italic_heads = None
+
 BASE_DIR    = Path(__file__).parent.parent
 ABP_OT_ZIP  = BASE_DIR / "abp_ot_texts.zip"
 ABP_NT_ZIP  = BASE_DIR / "abp_nt_texts.zip"
@@ -1503,6 +1511,19 @@ def run(bible_db: str, scrape_db: str) -> None:
             print(f"  Split {n_pn:,} merged subject-name(s) — run import_tipnr next to resolve them.")
         except Exception as e:                       # e.g. no tipnr table on a first-ever build
             print(f"  (subject-name split skipped: {e})")
+
+    # AFTER the split: re-clean english_head so a split verb whose gloss ends in a
+    # translator-added word doesn't keep that added word as its search label. The
+    # pre-insert _strip_italic_heads pass ran before the split, so this closes the
+    # ordering gap and makes a rebuild self-heal (only PN-split cells change; the bulk
+    # was already cleaned, so it stays byte-identical there).
+    if apply_italic_heads:
+        try:
+            n_ih = len(apply_italic_heads(main, apply=True, log=lambda *_a: None))
+            main.commit()
+            print(f"  Re-cleaned {n_ih} italic head label(s) after the subject-name split.")
+        except Exception as e:
+            print(f"  (italic-head re-clean skipped: {e})")
 
     main.close()
     scrape.close()

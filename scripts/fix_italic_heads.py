@@ -32,26 +32,20 @@ from parse_abp import _head_word
 DB = os.path.expanduser("~/bible-db/bible.db")
 
 
-def main():
-    argv = sys.argv[1:]
-    do_apply = "--apply" in argv
-    show_all = "--all" in argv
-    only = None
-    if "--strongs" in argv:
-        only = argv[argv.index("--strongs") + 1].upper()
-    limit = 40
-    if "--limit" in argv:
-        limit = int(argv[argv.index("--limit") + 1])
-
-    conn = sqlite3.connect(DB)
+def run(conn, apply=False, log=print, only=None):
+    """Recompute words.english_head, skipping translator-ADDED (italic) words, for every
+    multi-word gloss that carries one. Returns the list of changed rows
+    (verse_id, position, ref, english, old_head, new_head, strongs_base); writes only on
+    apply. Self-contained (sets its own row mode) so the build can call it post-insert,
+    AFTER the subject-name split — that split rewrites heads via _head_word WITHOUT the
+    italic set, so a split verb whose gloss ends in an added word would otherwise keep it
+    as its label. See build_words_from_abp.py + test_italic_heads_after_pn_split."""
     conn.row_factory = sqlite3.Row
-
     where = "w.english LIKE '% %' AND COALESCE(w.italic_words,'') != ''"
     params = []
     if only:
         where += " AND w.strongs_base = ?"
         params.append(only)
-
     rows = conn.execute(
         f"""SELECT w.verse_id, w.position, v.book, v.chapter, v.verse,
                    w.english, w.english_head, w.italic_words, w.strongs_base
@@ -73,7 +67,39 @@ def main():
         ref = f'{r["book"]} {r["chapter"]}:{r["verse"]}'
         changes.append((r["verse_id"], r["position"], ref, r["english"], old_head, new_head, r["strongs_base"]))
 
-    print(f"scanned (multi-word glosses carrying an added/italic word): {len(rows)}")
+    if apply and changes:
+        conn.executemany(
+            "UPDATE words SET english_head = ? WHERE verse_id = ? AND position = ?",
+            [(new, vid, pos) for (vid, pos, _, _, _, new, _) in changes],
+        )
+        conn.commit()
+    return changes
+
+
+def main():
+    argv = sys.argv[1:]
+    do_apply = "--apply" in argv
+    show_all = "--all" in argv
+    only = None
+    if "--strongs" in argv:
+        only = argv[argv.index("--strongs") + 1].upper()
+    limit = 40
+    if "--limit" in argv:
+        limit = int(argv[argv.index("--limit") + 1])
+
+    conn = sqlite3.connect(DB)
+    conn.row_factory = sqlite3.Row
+
+    scanned = conn.execute(
+        "SELECT count(*) FROM words w"
+        " WHERE w.english LIKE '% %' AND COALESCE(w.italic_words,'') != ''"
+        + (" AND w.strongs_base = ?" if only else ""),
+        ([only] if only else []),
+    ).fetchone()[0]
+
+    changes = run(conn, apply=do_apply, only=only)
+
+    print(f"scanned (multi-word glosses carrying an added/italic word): {scanned}")
     print(f"labels that change (head was an added word, a real word exists): {len(changes)}")
 
     if not do_apply:
@@ -83,17 +109,10 @@ def main():
             for _, _, ref, eng, old, new, sb in shown:
                 print(f'  {ref:>14}  {sb:<8} | {eng:<28} | {old}  ->  {new}')
         print(f"\n[dry-run] nothing written. Re-run with --apply to rewrite {len(changes)} labels.")
-        conn.close()
-        return
-
-    conn.executemany(
-        "UPDATE words SET english_head = ? WHERE verse_id = ? AND position = ?",
-        [(new, vid, pos) for (vid, pos, _, _, _, new, _) in changes],
-    )
-    conn.commit()
+    else:
+        print(f"\nDone. Rewrote {len(changes)} labels (words.english_head only).")
+        print("Re-run WITHOUT --apply to confirm it reports 0 changes (re-runnable check).")
     conn.close()
-    print(f"\nDone. Rewrote {len(changes)} labels (words.english_head only).")
-    print("Re-run WITHOUT --apply to confirm it reports 0 changes (re-runnable check).")
 
 
 if __name__ == "__main__":

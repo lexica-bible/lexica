@@ -364,6 +364,50 @@ def test_pn_subject_split():
     check("bracketed before-shape skipped", bef, [("", "*"), ("Moses said", "G2036")])
 
 
+# ── 11b. italic-head re-clean runs AFTER the PN-subject split ───────────────────
+def test_italic_heads_after_pn_split():
+    # The subject-name split rewrites english_head via _head_word WITHOUT the italic
+    # set, so a split verb whose gloss ends in a translator-ADDED word keeps that added
+    # word as its label. The build now runs the italic-head pass AFTER the split to fix
+    # it (the ordering gap that left 12 mislabeled cells live after a restore replay).
+    import sqlite3
+    if B.apply_pn_subject_split is None or getattr(B, "apply_italic_heads", None) is None:
+        check("pn-split + italic-head folds importable", False, True)
+        return
+    con = sqlite3.connect(":memory:")
+    con.execute("CREATE TABLE verses(id INTEGER PRIMARY KEY, book TEXT, chapter INT, verse INT)")
+    con.execute("CREATE TABLE words(verse_id INT, position INT, english TEXT, english_head TEXT,"
+                " strongs TEXT, strongs_base TEXT, greek_pos INT, bracket_id INT, italic INT,"
+                " italic_words TEXT, smcap_words TEXT, morph TEXT, lemma TEXT, is_pn INT DEFAULT 0)")
+    con.execute("CREATE TABLE tipnr(name TEXT)")
+    con.execute("INSERT INTO tipnr VALUES('David')")
+    con.execute("INSERT INTO verses VALUES(1,'1Sa',1,1)")
+    # "David take favor" glued on the verb; 'favor' is a translator addition (italic).
+    con.execute("INSERT INTO words(verse_id,position,english,english_head,strongs,strongs_base,"
+                "greek_pos,bracket_id,italic,italic_words,smcap_words,morph,lemma,is_pn)"
+                " VALUES(1,1,'David take favor','take','2983','G2983',NULL,NULL,0,'favor','',NULL,NULL,0)")
+    con.execute("INSERT INTO words(verse_id,position,english,english_head,strongs,strongs_base,"
+                "greek_pos,bracket_id,italic,italic_words,smcap_words,morph,lemma,is_pn)"
+                " VALUES(1,2,'',NULL,'*','*',NULL,NULL,0,'',NULL,NULL,NULL,1)")
+
+    B.apply_pn_subject_split(con, apply=True, log=lambda *a: None)
+    con.commit()
+    # name -> pos1, verb 'take favor' -> pos2; its head was recomputed WITHOUT the italic
+    # set, so it (wrongly) became the added word 'favor'.
+    head_before = con.execute(
+        "SELECT english_head FROM words WHERE verse_id=1 AND position=2").fetchone()[0]
+    check("pre-pass: split verb head is the added word", head_before, "favor")
+
+    B.apply_italic_heads(con, apply=True, log=lambda *a: None)
+    head_after = con.execute(
+        "SELECT english_head FROM words WHERE verse_id=1 AND position=2").fetchone()[0]
+    check("post-pass: head re-cleaned to the real word", head_after, "take")
+
+    # re-runnable: a second pass changes nothing
+    again = B.apply_italic_heads(con, apply=True, log=lambda *a: None)
+    check("post-pass is re-runnable (0 on second run)", len(again), 0)
+
+
 def main():
     try:
         sys.stdout.reconfigure(encoding="utf-8")
