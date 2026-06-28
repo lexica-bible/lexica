@@ -667,6 +667,12 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       const area = clean(be.area);
       // don't repeat the region when the description already names it (Eden: "…in Mesopotamia")
       const showArea = area && !(line && line.toLowerCase().includes(area.toLowerCase()));
+      // "Appears N×" links to the word's occurrence list in Word study (the source that
+      // matches the reading text), the way the KJV/Hebrew occurrence rows do. The count is
+      // this entity's verified reference total; the list is the word's full Strong's set,
+      // so a name shared by more than one place (Eden) shows a few more there.
+      const occCorpus = entry.isKjv ? "kjv" : entry.isBsb ? "bsb" : isHebrewWord ? "heb" : "abp";
+      const canOcc = !!(onNavigateToLexicon && entry.strongs);
       return (
         <section key="boundEntity" className="sec pnbound">
           <h4 className="sec-head"><span className="sec-t">{label}</span><span className="bdb-badge">TIPNR</span></h4>
@@ -679,8 +685,12 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
               <div><span className="pnbound-lbl">Children</span> {be.offspring.join(", ")}</div>)}
             {showArea && (
               <div><span className="pnbound-lbl">{be.section === "place" ? "Region" : "Tribe"}</span> {area}</div>)}
-            {be.ref_count > 0 && (
-              <div className="pnbound-appears">Appears {be.ref_count}× in scripture</div>)}
+            {be.ref_count > 0 && (canOcc
+              ? <button className="pnbound-appears pnbound-appears--link"
+                        onClick={() => onNavigateToLexicon(entry.strongs, occCorpus)}>
+                  Appears {be.ref_count}× in scripture <Icon.ArrowRight/>
+                </button>
+              : <div className="pnbound-appears">Appears {be.ref_count}× in scripture</div>)}
           </div>
           <div className="pnbound-badge">Matched to this verse</div>
         </section>

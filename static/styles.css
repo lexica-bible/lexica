@@ -2741,6 +2741,14 @@ input { font-family: inherit; }
   color: var(--ink-3);
 }
 .pnbound-appears { color: var(--ink-3); font-style: italic; }
+.pnbound-appears--link {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: none; border: 0; padding: 0; cursor: pointer;
+  font-family: inherit; font-size: 13px; font-style: italic;
+  color: var(--accent);
+}
+.pnbound-appears--link:hover { text-decoration: underline; }
+.pnbound-appears--link svg { width: 13px; height: 13px; }
 .pnbound-badge {
   margin-top: 12px;
   display: inline-block;
