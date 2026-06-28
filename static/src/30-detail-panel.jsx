@@ -349,6 +349,13 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     setMetavPersonData(null);
     setMetavPlaceData(null);
     setMetavTab("person");
+    // A verified verse-bind (Issue 2) OWNS the card: skip the name-based metaV lookup
+    // entirely. This is the single gate that kills EVERY downstream name-based section
+    // at once — the person/place card, its Groups, Nave's topical (needs metaV data),
+    // and the place-LSJ definition all derive from this fetch. Wait until the (fast)
+    // bind lookup resolves so we never fire a name lookup for a word we'll bind.
+    if (boundLoading) return;
+    if (boundEntity) return;
     // Skip metaV for words with a real Greek lemma — those belong to LSJ
     // Exception: KJV/BSB words that are proper nouns still go through metaV. For Hebrew (OT)
     // words we KNOW name-vs-common from heb.db's own grammar (entry.hebName, built at startup) —
@@ -396,7 +403,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       setMetavLoading(false);
     }).catch(() => { if (!cancelled) setMetavLoading(false); });
     return () => { cancelled = true; };
-  }, [entry && entry.id]);
+  }, [entry && entry.id, boundLoading, boundEntity]);
 
   // Verse-bound TIPNR entity (Issue 2): the VERIFIED person/place for THIS click,
   // from the pn_binding tables. When present it replaces the name-guess metaV card
@@ -599,11 +606,12 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   // Ordered list of stacked sections. BDB and LSJ are mutually exclusive (Hebrew
   // gets BDB; everything else may get LSJ) — same either/or as the old ternary.
   const sections = [];
-  // A verified verse-bind (Issue 2) leads and REPLACES the name-guess metaV card +
-  // the AI blurb. While it's resolving we hold those back to avoid a wrong-card flash.
-  if (boundLoading || boundEntity) sections.push("boundEntity");
-  if (!boundLoading && !boundEntity && (metavLoading || metavPersonData || metavPlaceData)) sections.push("metav");
-  if (!boundLoading && !boundEntity && (aiDescription || aiDescLoading)) sections.push("aidesc");
+  // A verified verse-bind (Issue 2) leads the card. metaV/aidesc data is only fetched
+  // when there is NO bind (the fetches above wait on the bind), so their own push
+  // conditions already evaluate false under a bind — nothing name-based leaks through.
+  if (boundEntity) sections.push("boundEntity");
+  if (metavLoading || metavPersonData || metavPlaceData) sections.push("metav");
+  if (aiDescription || aiDescLoading) sections.push("aidesc");
   if (isHebrewWord) sections.push("bdb");
   // metavType "person" normally suppresses the definition (a real proper-noun person has no
   // useful lexical entry). EXCEPT θεός (G2316): a common noun that name-matches the "God" metaV

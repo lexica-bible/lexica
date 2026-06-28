@@ -325,7 +325,12 @@ const[naveData,setNaveData]=useState(null);useEffect(()=>{setNaveData(null);if(!
 // suppress the Person/Place toggle. When pn_types is ambiguous ('person,place':
 // a strongs shared by a genuine person AND place — Adam, Dan) or absent (a
 // non-Library entry, or no tipnr row), keep the toggle so the user can see both.
-const pnList=(entry&&entry.pn_types||"").toLowerCase().split(",").map(s=>s.trim()).filter(Boolean);const pnSingle=pnList.length===1&&(pnList[0]==="person"||pnList[0]==="place")?pnList[0]:null;const metavPinned=pnSingle==="person"&&metavPersonData?"person":pnSingle==="place"&&metavPlaceData?"place":null;const metavHasBoth=!!(metavPersonData&&metavPlaceData)&&!metavPinned;const metavType=metavPinned?metavPinned:metavHasBoth?metavTab:metavPersonData?"person":metavPlaceData?"place":null;const metavData=metavType==="person"?metavPersonData:metavType==="place"?metavPlaceData:null;useEffect(()=>{setMetavPersonData(null);setMetavPlaceData(null);setMetavTab("person");// Skip metaV for words with a real Greek lemma — those belong to LSJ
+const pnList=(entry&&entry.pn_types||"").toLowerCase().split(",").map(s=>s.trim()).filter(Boolean);const pnSingle=pnList.length===1&&(pnList[0]==="person"||pnList[0]==="place")?pnList[0]:null;const metavPinned=pnSingle==="person"&&metavPersonData?"person":pnSingle==="place"&&metavPlaceData?"place":null;const metavHasBoth=!!(metavPersonData&&metavPlaceData)&&!metavPinned;const metavType=metavPinned?metavPinned:metavHasBoth?metavTab:metavPersonData?"person":metavPlaceData?"place":null;const metavData=metavType==="person"?metavPersonData:metavType==="place"?metavPlaceData:null;useEffect(()=>{setMetavPersonData(null);setMetavPlaceData(null);setMetavTab("person");// A verified verse-bind (Issue 2) OWNS the card: skip the name-based metaV lookup
+// entirely. This is the single gate that kills EVERY downstream name-based section
+// at once — the person/place card, its Groups, Nave's topical (needs metaV data),
+// and the place-LSJ definition all derive from this fetch. Wait until the (fast)
+// bind lookup resolves so we never fire a name lookup for a word we'll bind.
+if(boundLoading)return;if(boundEntity)return;// Skip metaV for words with a real Greek lemma — those belong to LSJ
 // Exception: KJV/BSB words that are proper nouns still go through metaV. For Hebrew (OT)
 // words we KNOW name-vs-common from heb.db's own grammar (entry.hebName, built at startup) —
 // so a common word capitalized mid-verse ("Wilderness of Sinai") never pops a place card,
@@ -340,7 +345,7 @@ const kjvIsPN=(entry.isKjv||entry.isBsb)&&(entry.hebName!==undefined?entry.hebNa
 // the strongs_g heuristic — flip to Place only when the place's own (G-)
 // strongs matches the clicked word's strongs_base. (Legacy pn_type is NOT
 // used: tipnr.strongs was a PK so it stored whichever type imported last.)
-const pnTypes=(entry.pn_types||"").toLowerCase().split(",").map(s=>s.trim()).filter(Boolean);let tab;if(pnTypes.length===1&&pnTypes[0]==="person")tab="person";else if(pnTypes.length===1&&pnTypes[0]==="place")tab="place";else{const placeStrongsMatch=!ld.error&&!!ld.strongs_g&&!!entry.strongs_base&&ld.strongs_g.split(/[^GH0-9.]+/i).map(s=>s.toUpperCase()).includes(entry.strongs_base.toUpperCase());tab=placeStrongsMatch?"place":"person";}setMetavTab(tab);setMetavLoading(false);}).catch(()=>{if(!cancelled)setMetavLoading(false);});return()=>{cancelled=true;};},[entry&&entry.id]);// Verse-bound TIPNR entity (Issue 2): the VERIFIED person/place for THIS click,
+const pnTypes=(entry.pn_types||"").toLowerCase().split(",").map(s=>s.trim()).filter(Boolean);let tab;if(pnTypes.length===1&&pnTypes[0]==="person")tab="person";else if(pnTypes.length===1&&pnTypes[0]==="place")tab="place";else{const placeStrongsMatch=!ld.error&&!!ld.strongs_g&&!!entry.strongs_base&&ld.strongs_g.split(/[^GH0-9.]+/i).map(s=>s.toUpperCase()).includes(entry.strongs_base.toUpperCase());tab=placeStrongsMatch?"place":"person";}setMetavTab(tab);setMetavLoading(false);}).catch(()=>{if(!cancelled)setMetavLoading(false);});return()=>{cancelled=true;};},[entry&&entry.id,boundLoading,boundEntity]);// Verse-bound TIPNR entity (Issue 2): the VERIFIED person/place for THIS click,
 // from the pn_binding tables. When present it replaces the name-guess metaV card
 // AND the AI blurb with a sourced identity. 404 -> null -> the old name-path shows.
 const[boundEntity,setBoundEntity]=useState(null);const[boundLoading,setBoundLoading]=useState(false);useEffect(()=>{setBoundEntity(null);const bn=extractProperName(entry.pnName||entry.gloss||"");if(!bn||bn.length<2||!entry.book||!entry.chapter||!entry.verse){setBoundLoading(false);return;}let cancelled=false;setBoundLoading(true);api.metavEntity(bn,entry.book,entry.chapter,entry.verse).then(d=>{if(!cancelled)setBoundEntity(d&&d.bound?d:null);}).catch(()=>{}).finally(()=>{if(!cancelled)setBoundLoading(false);});return()=>{cancelled=true;};},[entry&&entry.id]);// AI description fallback for PN entries with no metaV data
@@ -402,9 +407,10 @@ const heroInlineGloss=!!(hero.translit&&heroTopGloss&&!hero.noGloss);// Verse + 
 // KJV-mode / BSB-mode / place words. BSB pulls BSB text; the rest pull KJV.
 const useKjvText=entry.isKjv||entry.isBsb||isHebrew||metavType==="place"&&!isPN;// Ordered list of stacked sections. BDB and LSJ are mutually exclusive (Hebrew
 // gets BDB; everything else may get LSJ) — same either/or as the old ternary.
-const sections=[];// A verified verse-bind (Issue 2) leads and REPLACES the name-guess metaV card +
-// the AI blurb. While it's resolving we hold those back to avoid a wrong-card flash.
-if(boundLoading||boundEntity)sections.push("boundEntity");if(!boundLoading&&!boundEntity&&(metavLoading||metavPersonData||metavPlaceData))sections.push("metav");if(!boundLoading&&!boundEntity&&(aiDescription||aiDescLoading))sections.push("aidesc");if(isHebrewWord)sections.push("bdb");// metavType "person" normally suppresses the definition (a real proper-noun person has no
+const sections=[];// A verified verse-bind (Issue 2) leads the card. metaV/aidesc data is only fetched
+// when there is NO bind (the fetches above wait on the bind), so their own push
+// conditions already evaluate false under a bind — nothing name-based leaks through.
+if(boundEntity)sections.push("boundEntity");if(metavLoading||metavPersonData||metavPlaceData)sections.push("metav");if(aiDescription||aiDescLoading)sections.push("aidesc");if(isHebrewWord)sections.push("bdb");// metavType "person" normally suppresses the definition (a real proper-noun person has no
 // useful lexical entry). EXCEPT θεός (G2316): a common noun that name-matches the "God" metaV
 // person — it keeps that card AND still shows its definition below it.
 else if((!isPN||metavType==="place"&&metavData?.strongs_g?.length>0)&&(metavType!=="person"||entry.strongs_raw==="2316")&&!aiDescription&&!aiDescLoading&&(entry.greek||entry.strongs_raw||metavData?.strongs_g?.length>0))sections.push("lsj");if(!isHebrew&&!isPN&&!entry.isKjv&&!entry.isBsb&&!entry.isExtra&&abpCount!==null&&abpCount>0)sections.push("abpOcc");// Non-canon "other" books (Apostolic Fathers chip mode): suppress the occurrence
