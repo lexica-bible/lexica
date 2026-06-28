@@ -257,7 +257,8 @@ def main():
         w.execute("DROP TABLE IF EXISTS tipnr_entities")
         w.execute("""CREATE TABLE tipnr_entities(
             uniq TEXT PRIMARY KEY, head TEXT, section TEXT, gender TEXT,
-            area TEXT, descr TEXT, summary TEXT, bases TEXT)""")
+            area TEXT, descr TEXT, summary TEXT, bases TEXT,
+            parents TEXT, offspring TEXT)""")
         w.execute("""CREATE TABLE tipnr_entity_refs(
             uniq TEXT, book INTEGER, chapter INTEGER, verse INTEGER)""")
         w.execute("""CREATE TABLE pn_binding(
@@ -266,9 +267,10 @@ def main():
             tier INTEGER)""")
         for u in sorted(used):
             e = by_uniq[u]
-            w.execute("INSERT OR REPLACE INTO tipnr_entities VALUES(?,?,?,?,?,?,?,?)",
+            w.execute("INSERT OR REPLACE INTO tipnr_entities VALUES(?,?,?,?,?,?,?,?,?,?)",
                       (u, e["head"], e["section"], e["gender"], e["area"],
-                       e["desc"], e["summary"], ",".join(sorted(e["bases"]))))
+                       e["desc"], e["summary"], ",".join(sorted(e["bases"])),
+                       e["parents"], e["offspring"]))
             w.executemany("INSERT INTO tipnr_entity_refs VALUES(?,?,?,?)",
                           [(u, bk, ch, vs) for (bk, ch, vs) in sorted(e["refs"])])
         for (bk, ch, vs, nm), (state, uniq, kind, rule, tier) in group.items():

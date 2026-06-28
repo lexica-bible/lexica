@@ -398,12 +398,34 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     return () => { cancelled = true; };
   }, [entry && entry.id]);
 
+  // Verse-bound TIPNR entity (Issue 2): the VERIFIED person/place for THIS click,
+  // from the pn_binding tables. When present it replaces the name-guess metaV card
+  // AND the AI blurb with a sourced identity. 404 -> null -> the old name-path shows.
+  const [boundEntity, setBoundEntity] = useState(null);
+  const [boundLoading, setBoundLoading] = useState(false);
+  useEffect(() => {
+    setBoundEntity(null);
+    const bn = extractProperName(entry.pnName || entry.gloss || "");
+    if (!bn || bn.length < 2 || !entry.book || !entry.chapter || !entry.verse) {
+      setBoundLoading(false);
+      return;
+    }
+    let cancelled = false;
+    setBoundLoading(true);
+    api.metavEntity(bn, entry.book, entry.chapter, entry.verse)
+      .then(d => { if (!cancelled) setBoundEntity(d && d.bound ? d : null); })
+      .catch(() => {})
+      .finally(() => { if (!cancelled) setBoundLoading(false); });
+    return () => { cancelled = true; };
+  }, [entry && entry.id]);
+
   // AI description fallback for PN entries with no metaV data
   const [aiDescription, setAiDescription] = useState(null);
   const [aiDescLoading, setAiDescLoading] = useState(false);
   useEffect(() => {
     setAiDescription(null);
     setAiDescLoading(false);
+    if (boundLoading || boundEntity) return;   // a verified bind replaces the AI blurb
     if (metavLoading) return;
     if (metavData && metavType === "person" && !isGentilic) return; // rich person bio replaces AI; groups still get the summary
     if (metavData && metavType === "place" && metavData.strongs_g?.length > 0) return; // place has LSJ via strongs_g
@@ -418,7 +440,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       .catch(() => {})
       .finally(() => { if (!cancelled) setAiDescLoading(false); });
     return () => { cancelled = true; };
-  }, [entry && entry.id, metavData, metavLoading]);
+  }, [entry && entry.id, metavData, metavLoading, boundLoading, boundEntity]);
 
   // Hebrew BDB lookup
   const [bdbEntry, setBdbEntry] = useState(null);
@@ -577,8 +599,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   // Ordered list of stacked sections. BDB and LSJ are mutually exclusive (Hebrew
   // gets BDB; everything else may get LSJ) — same either/or as the old ternary.
   const sections = [];
-  if (metavLoading || metavPersonData || metavPlaceData) sections.push("metav");
-  if (aiDescription || aiDescLoading) sections.push("aidesc");
+  // A verified verse-bind (Issue 2) leads and REPLACES the name-guess metaV card +
+  // the AI blurb. While it's resolving we hold those back to avoid a wrong-card flash.
+  if (boundLoading || boundEntity) sections.push("boundEntity");
+  if (!boundLoading && !boundEntity && (metavLoading || metavPersonData || metavPlaceData)) sections.push("metav");
+  if (!boundLoading && !boundEntity && (aiDescription || aiDescLoading)) sections.push("aidesc");
   if (isHebrewWord) sections.push("bdb");
   // metavType "person" normally suppresses the definition (a real proper-noun person has no
   // useful lexical entry). EXCEPT θεός (G2316): a common noun that name-matches the "God" metaV
@@ -609,6 +634,36 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
 
   const renderSection = (id) => {
     switch (id) {
+    case "boundEntity": {
+      if (boundLoading && !boundEntity)
+        return <section key="boundEntity" className="sec pnbound"><div className="lsj-def lsj-def--loading">Looking up…</div></section>;
+      if (!boundEntity) return null;
+      const be = boundEntity;
+      const label = be.section === "place" ? "Place" : be.section === "person" ? "Person" : "Identity";
+      // a clean one-liner: the person 'desc' is short; for a place fall to the
+      // summary's first clause (before "first/only mentioned").
+      let line = (be.desc && be.desc.toLowerCase() !== be.name.toLowerCase() && be.desc.length > 4) ? be.desc : "";
+      if (!line && be.summary)
+        line = be.summary.split(/,?\s*(?:first mentioned|only mentioned|referred to)/i)[0].replace(/\(+$/, "").trim();
+      return (
+        <section key="boundEntity" className="sec pnbound">
+          <h4 className="sec-head"><span className="sec-t">{label}</span></h4>
+          <div className="pnbound-name">{be.name}</div>
+          {line && <p className="pnbound-desc">{line}</p>}
+          <div className="pnbound-facts">
+            {be.parents && be.parents.length > 0 && (
+              <div><span className="pnbound-lbl">Parents</span> {be.parents.join(", ")}</div>)}
+            {be.offspring && be.offspring.length > 0 && (
+              <div><span className="pnbound-lbl">Children</span> {be.offspring.join(", ")}</div>)}
+            {be.area && (
+              <div><span className="pnbound-lbl">{be.section === "place" ? "Region" : "Tribe"}</span> {be.area}</div>)}
+            {be.ref_count > 0 && (
+              <div className="pnbound-appears">Appears {be.ref_count}× in scripture</div>)}
+          </div>
+          <div className="pnbound-badge">Matched to this verse</div>
+        </section>
+      );
+    }
     case "metav": return (
       <section key="metav" className="sec">
         {metavLoading ? (

@@ -4,6 +4,11 @@
 # Cold-start scan caches (rebuilt per host from the local DB mtime; PA-local)
 cache_funcwords.json
 cache_hebnames.json
+# Generated diagnostic dumps (entity-resolution build + tipnr import); regenerated each run
+scripts/pn_binding_numonly.txt
+scripts/pn_binding_hot.txt
+scripts/pn_tier3_versification.txt
+unmatched_pn.txt
 __pycache__/
 *.pyc
 .claude/*

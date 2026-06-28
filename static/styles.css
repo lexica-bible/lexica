@@ -2718,6 +2718,40 @@ input { font-family: inherit; }
 }
 .metav-map-link:hover { text-decoration: underline; }
 
+/* ── Verified verse-bound entity card (Issue 2) ──────────────── */
+.pnbound-name {
+  font-family: var(--f-serif);
+  font-size: 19px;
+  font-weight: 600;
+  color: var(--ink);
+  line-height: 1.2;
+}
+.pnbound-desc {
+  margin: 5px 0 10px;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+.pnbound-facts { display: flex; flex-direction: column; gap: 4px; font-size: 13px; }
+.pnbound-facts > div { color: var(--ink-2); }
+.pnbound-lbl {
+  display: inline-block;
+  min-width: 58px;
+  font-weight: 600;
+  color: var(--ink-3);
+}
+.pnbound-appears { color: var(--ink-3); font-style: italic; }
+.pnbound-badge {
+  margin-top: 12px;
+  display: inline-block;
+  font-size: 11.5px;
+  letter-spacing: .02em;
+  color: var(--accent);
+  border: 1px solid color-mix(in oklab, var(--accent) 35%, transparent);
+  border-radius: 4px;
+  padding: 2px 7px;
+}
+
 /* ── Leaflet mini-map ────────────────────────────────────────── */
 .metav-leaflet-map {
   width: 100%;

@@ -11,6 +11,7 @@ from core import (
     db, db_ro, _anthropic, log,
     ai_fingerprint, ai_cache_get, ai_cache_put, ai_cache_prune,
 )
+from entity_resolution import book_num, norm_name
 
 bp = Blueprint("metav", __name__)
 
@@ -246,6 +247,75 @@ def metav_place(name):
         "lon":       row["lon"] if show_pin else None,
         "ambiguous": ambiguous,
         "strongs_g": row["strongs_g"] or "",
+    })
+
+
+def _kin_names(blob, cap=8):
+    """TIPNR parents/offspring 'Ham@Gen.5.32-1Ch + , Cush@Gen.10.6' -> ['Ham','Cush'].
+    Names sit before '@'; '+' splits father/mother, ',' splits a list."""
+    import re as _re
+    out = []
+    for tok in _re.split(r"[,+]", blob or ""):
+        nm = tok.split("@")[0].strip().rstrip("(adf)").strip()
+        if nm and nm not in out:
+            out.append(nm)
+    return out[:cap]
+
+
+@bp.route("/api/metav/entity/<path:name>")
+def metav_entity(name):
+    """The VERSE-BOUND TIPNR entity for a proper-noun click (Issue 2 rebuild). Returns
+    the verified entity (the right one for THIS verse) from the pn_binding side table,
+    its own grounded description + kin + reference count — so the card states a sourced
+    identity instead of a name-guess. 404 -> the frontend falls back to the name-path +
+    Fix A blurb. Deploy-safe: if the binding tables aren't built yet, always 404."""
+    book = (request.args.get("book") or "").strip()
+    ch = (request.args.get("chapter") or "").strip()
+    vs = (request.args.get("verse") or "").strip()
+    bk = book_num(book)
+    if not (bk and ch.isdigit() and vs.isdigit()):
+        return jsonify({"error": "need book/chapter/verse"}), 400
+
+    conn = db_ro()
+    try:
+        have = {r[0] for r in conn.execute(
+            "SELECT name FROM sqlite_master WHERE type='table' AND name IN "
+            "('pn_binding','tipnr_entities','tipnr_entity_refs')")}
+        if {"pn_binding", "tipnr_entities"} - have:
+            return jsonify({"error": "not found"}), 404
+        b = conn.execute(
+            "SELECT entity_uniq, kind, tier FROM pn_binding "
+            "WHERE book=? AND chapter=? AND verse=? AND name=? AND render=1 LIMIT 1",
+            (bk, int(ch), int(vs), norm_name(name))).fetchone()
+        if not b:
+            return jsonify({"error": "not found"}), 404
+        e = conn.execute(
+            "SELECT uniq, head, section, gender, area, descr, summary, parents, offspring "
+            "FROM tipnr_entities WHERE uniq = ?", (b["entity_uniq"],)).fetchone()
+        if not e:
+            return jsonify({"error": "not found"}), 404
+        ref_count = conn.execute(
+            "SELECT COUNT(*) FROM tipnr_entity_refs WHERE uniq = ?", (e["uniq"],)
+        ).fetchone()[0] if "tipnr_entity_refs" in have else 0
+    finally:
+        conn.close()
+
+    # display name keeps TIPNR's original casing (uniq = 'Name@FirstRef')
+    disp = e["uniq"].split("@")[0].replace("_", " ")
+    return jsonify({
+        "bound":     True,
+        "uniq":      e["uniq"],
+        "name":      disp,
+        "section":   e["section"] or "",
+        "gender":    e["gender"] or "",
+        "area":      e["area"] or "",
+        "desc":      e["descr"] or "",
+        "summary":   e["summary"] or "",
+        "parents":   _kin_names(e["parents"]),
+        "offspring": _kin_names(e["offspring"]),
+        "ref_count": ref_count,
+        "kind":      b["kind"] or "",
+        "tier":      b["tier"],
     })
 
 

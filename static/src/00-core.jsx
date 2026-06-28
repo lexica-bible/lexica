@@ -266,6 +266,8 @@ const api = {
   },
   metavPlace: (name) =>
     fetch(`/api/metav/place/${encodeURIComponent(name)}`).then(r => r.json()),
+  metavEntity: (name, book, chapter, verse) =>
+    fetch(`/api/metav/entity/${encodeURIComponent(name)}?book=${encodeURIComponent(book)}&chapter=${chapter}&verse=${verse}`).then(r => r.json()),
   bdb: (sid) =>
     fetch(`/api/bdb/${encodeURIComponent(sid)}`).then(r => r.json()),
   crossRefsCurated: (book, chapter, verse) =>
