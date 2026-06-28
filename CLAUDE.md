@@ -937,8 +937,13 @@ memory `project_ai_synthesis_quality`.
   pn_types (the set) is trustworthy.
 - Gentilics (`/ites?$/`: Hivite, Sinite…): card labeled "People / Clan", place header "Homeland", AI summary
   fires on the clan tab. Kept as persons (Table-of-Nations genealogy is the value; only Jebusite has map coords)
-- AI curation: `/api/metav/ai-description/<name>` — Haiku, 1-2 sentences, text-first prompt, cached in
-  ai_search_cache (`pn:` key). Fills entries with no metaV/BDB data
+- AI curation: `/api/metav/ai-description/<name>` — Haiku, 1-2 sentences, SCOPED to the clicked
+  book/ch/verse ("describe the one AT this reference"; cached per-reference `pn:<name>:<bk><ch>:<v>`;
+  badged "not verse-checked"). Fills entries with no metaV/BDB data. The place endpoint also withholds
+  the map pin when the name maps to >1 place or the matched row lacks its own coords. Both = **Fix A**,
+  the floor for Issue 2 (proper-noun cards resolve by NAME STRING — nothing binds a word to a TIPNR
+  entity); the full occurrence-binding rework is DESIGNED in `entity_resolution_rebuild.md` (not built).
+  Memory `project_entity_resolution_rebuild`.
 - CRITICAL: the lexicon join is `LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base` (Phase 1 indexed key).
   strongs_g only ever holds 'G…', so a Hebrew H-number can never match — this STRUCTURALLY replaced the old
   `SUBSTR(strongs_base,2) ... LIKE 'G%'` guard that a Hebrew H121 used to slip past (bogus Greek G121 lemma

@@ -11,9 +11,16 @@ spot. You can skip those lines.
 Issues surfaced 2026-06-28. #1 ("LORD the" word flip), #3 (θυμός "thyme"), and #4 (εἰμί merge) are
 DONE + LIVE (in TODO_ARCHIVE.md). These remain:
 - **Proper-noun / entity resolution rework** (Zep 1:1 "Cushi" → Acts verses; "Eden" maps to the wrong
-  place) — PARKED for a max-effort session. metaV / biblical-reference / map cards resolve by NAME STRING,
-  not the specific TIPNR id bound at THIS occurrence, so homonyms collide across testaments. Diagnose the
-  bind path end-to-end, then propose binding each occurrence to one id at import. code: views_metav.py.
+  place) — DIAGNOSED end-to-end + Fix A SHIPPED + full rebuild DESIGNED (2026-06-28); the BUILD is the open
+  piece. Root cause CONFIRMED in code: metaV/blurb/map cards resolve by NAME STRING, nothing binds a word to
+  a TIPNR entity (`import_tipnr` stamps only a Strong's number and strips TIPNR's `@`-id + reference lists).
+  **Fix A LIVE** (verse-scoped PN AI blurb + map-pin guard — the permanent floor; `views_metav.py` +
+  `30-detail-panel.jsx`). **Design committed: `entity_resolution_rebuild.md`** — verse-primary name-first
+  binder, render-only-if-verse-corroborates, 3 tiers (bind ambiguous + no-metaV, LEAVE the working metaV
+  name-path), WS1 versification map = 117 documented offsets, WS2/WS3 name normalization + the Cushi-6
+  by-verse number fix, metaV enrichment-only. 3 read-only probes committed (`scripts/probe_tipnr_fullset.py`,
+  `audit_entity_resolution.py`, `probe_tipnr_binding.py`). **NEXT = the build** (its own session; build-order
+  is the brief's last section). Memory `project_entity_resolution_rebuild`. code: views_metav.py, entity_resolution_rebuild.md.
 - **~48 G1473 (ἐγώ) cells reading 3rd-person reflexives** ("himself/themselves/itself") with a blank
   lemma — LOW priority, pre-existing, NOT from the restore. These are the by-design skips of the cautious
   G1473→G846 retag (it refuses to guess reflexives + no-morph cells). Consistent with the build. Future
