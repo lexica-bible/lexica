@@ -118,7 +118,7 @@ def main():
     stat = {t: defaultdict(int) for t in (1, 2, 3)}     # tier -> kind -> count
     group = {}                                           # (bk,ch,vs,name) -> binding state
     versification = defaultdict(int)
-    numonly_dump, hot_dump = [], []
+    numonly_dump, hot_dump, tier3_vers = [], [], []
 
     for r in occ_rows:
         nm = er.norm_name(r["label"])
@@ -138,6 +138,13 @@ def main():
             versification[b.rule] += 1
         if tier == 3:
             stat[3]["skipped"] += 1            # left on the name-path, not bound
+            # the WS1 recoveries we DON'T bind: prove they RENDER (binder said so) AND
+            # sit on an unambiguous name (so the live name-path returns the right one),
+            # vs. silently landing in a floor bucket (which would be the ordering bug).
+            if b.kind == "versification":
+                np = len(person_ids.get(nm, ())); npl = len(place_ids.get(nm, ()))
+                tier3_vers.append((nm, r["book"], r["ch"], r["vs"],
+                                   ents[b.entity]["uniq"], np, npl))
             continue
         key = (bk, r["ch"], r["vs"], nm)
         prev = group.get(key)
@@ -194,6 +201,24 @@ def main():
     print(f"  Tier 3 (already handled by the name-path): {stat[3]['versification']:,}")
     for rule, n in sorted(versification.items(), key=lambda kv: -kv[1]):
         print(f"     {rule:22} {n:5}")
+    # The Tier-3 share is "good news" ONLY if those occurrences RENDER on the existing
+    # name-path, not sit in a floor. Every one here was classed versification => the
+    # binder RENDERS it (a floor would show in number_only/none instead). And each is
+    # an UNAMBIGUOUS name (<=1 person, <=1 place), so the live name-path returns that
+    # one entity. Prove both; flag any exception loudly.
+    if tier3_vers:
+        ambl = [t for t in tier3_vers if t[5] > 1 or t[6] > 1 or (t[5] and t[6])]
+        names = sorted({t[0] for t in tier3_vers})
+        print(f"\n  Tier-3 WS1 recoveries — render-not-floor check: {len(tier3_vers)} occ, "
+              f"{len(names)} names")
+        print(f"     all classed 'versification' => binder RENDERS them (0 floored here)")
+        print(f"     on an ambiguous name (name-path could pick wrong): {len(ambl)} "
+              f"{'<- INVESTIGATE' if ambl else '(none — name-path is safe)'}")
+        print(f"     names: {', '.join(names[:16])}{' ...' if len(names) > 16 else ''}")
+        here = os.path.dirname(os.path.abspath(__file__))
+        with open(os.path.join(here, "pn_tier3_versification.txt"), "w", encoding="utf-8") as fh:
+            for nm, bk, ch, vs, uniq, np, npl in sorted(tier3_vers):
+                fh.write(f"{nm}\t{bk} {ch}:{vs}\t-> {uniq}\tperson_rows={np} place_rows={npl}\n")
 
     # collapse the grouped per-(name,verse) decisions
     g_render = sum(1 for v in group.values() if v[0] == "render")
