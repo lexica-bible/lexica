@@ -2,6 +2,10 @@
 
 Open work only. Finished and scrapped items (with the gory details) are in [TODO_ARCHIVE.md](TODO_ARCHIVE.md).
 
+> **REMINDER (2026-06-28):** add the daily DB backup as a scheduled task in the PA **Tasks** tab —
+> `cd ~/bible-db && python3 scripts/backup_db.py >> ~/db_backups/backup.log 2>&1`. The script is live
+> and a first backup was taken by hand; only the recurring schedule is still to set.
+
 Each item ends with a small `code:` line — that's just a pointer for Claude to find the right
 spot. You can skip those lines.
 

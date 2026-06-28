@@ -64,20 +64,32 @@ def main():
               f'"{f["stored"]}"  ->  "{f["clean_has"]}"')
 
     if args.apply:
+        # Each swap moves a stranded determiner ONE slot left (past its noun). In a list
+        # ("the A the B the C") several articles are stranded in a row, so it converges in
+        # a few passes — like one bubble-sort pass each. A swap only ever fires toward the
+        # clean verses.text order, so this is monotonic (no oscillation). Loop until stable.
         cur = conn.cursor()
-        for f in flips:
-            # swap the two slots' position values (determiner moves ahead of its noun).
-            # Two-step via a scratch position so the unique (verse,position) pairing
-            # never collides mid-swap.
-            cur.execute("UPDATE words SET position=-1 WHERE verse_id=? AND position=?",
-                        (f["vid"], f["noun_pos"]))
-            cur.execute("UPDATE words SET position=? WHERE verse_id=? AND position=?",
-                        (f["noun_pos"], f["vid"], f["det_pos"]))
-            cur.execute("UPDATE words SET position=? WHERE verse_id=? AND position=-1",
-                        (f["det_pos"], f["vid"]))
-        conn.commit()
-        print(f"\nApplied: swapped {len(flips)} stranded determiner(s).")
-        print("Now re-run on PA: build_abp_surface.py, build_abp_translit.py, then audit_split_flip.py (must read 0).")
+        total = passes = 0
+        while True:
+            batch = find_flips(conn)
+            if not batch:
+                break
+            for f in batch:
+                # swap the two slots' position values via a scratch position so the unique
+                # (verse, position) pairing never collides mid-swap.
+                cur.execute("UPDATE words SET position=-1 WHERE verse_id=? AND position=?",
+                            (f["vid"], f["noun_pos"]))
+                cur.execute("UPDATE words SET position=? WHERE verse_id=? AND position=?",
+                            (f["noun_pos"], f["vid"], f["det_pos"]))
+                cur.execute("UPDATE words SET position=? WHERE verse_id=? AND position=-1",
+                            (f["det_pos"], f["vid"]))
+            conn.commit()
+            total += len(batch)
+            passes += 1
+            if passes > 50:
+                print("  !! still flipped after 50 passes — stopping, investigate."); break
+        print(f"\nApplied: {total} swap(s) over {passes} pass(es). Re-run audit_split_flip.py "
+              f"(must read 0), then build_abp_surface.py + build_abp_translit.py (positions moved).")
     else:
         print("\nDRY RUN — nothing written. Re-run with --apply once the swaps look right.")
     conn.close()

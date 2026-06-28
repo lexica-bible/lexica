@@ -446,11 +446,12 @@ def _split_compounds(rows: list, lex: dict, carry: bool = False) -> None:
         # after a kept word ("of this possession", "he is a prophet") stays put.
         apply_leading_run = True
         taken: dict = {}          # slot index -> [gloss words] in reading order
+        taken_gi: dict = {}       # slot index -> its first word's index in the SOURCE phrase
         own = []
         seen_own = False
         pending = []              # held leading subject/aux words awaiting a verb slot
 
-        for word in gloss_words:
+        for gi, word in enumerate(gloss_words):
             norm = _NORM.sub("", word).lower()
             if not norm:
                 if pending:
@@ -480,6 +481,7 @@ def _split_compounds(rows: list, lex: dict, carry: bool = False) -> None:
                 if slot_def and norm in slot_def:
                     # held leading pronouns/aux ride to the verb's slot ("I see")
                     taken[j] = pending + [word]
+                    taken_gi[j] = gi - len(pending)   # leftmost source-phrase index of this group
                     pending = []
                     placed = True
                     break
@@ -519,10 +521,16 @@ def _split_compounds(rows: list, lex: dict, carry: bool = False) -> None:
         rows[i] = (pos_i, new_eng, _head_word(new_eng) if new_eng else None,
                    strongs, sbase, None, bid, italic, iw, sw, abp_pos_i, morph_i, lemma_i)
 
-        for j in sorted(taken.keys()):
-            p_i, p_j = rows[i][0], rows[j][0]
-            rows[i] = (p_j,) + rows[i][1:]
-            rows[j] = (p_i,) + rows[j][1:]
+        # Front the spread-out words in SOURCE PHRASE order (their index in the original
+        # gloss, taken_gi), NOT Greek slot order — else "the LORD" flips to "LORD the"
+        # (the article's Greek slot sits after the noun's). Sorting by the explicit gloss
+        # index fronts a whole RUN of spread words in one shot (a list "the A the B the C"),
+        # not just a single pair, and never leans on dict insertion order. The verb/head
+        # (slot i, the kept "own" words) always sorts LAST — it's the tail of the gloss.
+        front = sorted(taken.keys(), key=lambda j: taken_gi[j])
+        involved = sorted([rows[i][0]] + [rows[j][0] for j in taken])
+        for slot, new_pos in zip(front + [i], involved):
+            rows[slot] = (new_pos,) + rows[slot][1:]
 
     rows.sort(key=lambda r: r[0])
 

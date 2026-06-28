@@ -97,7 +97,9 @@ one rebuilt (DELETE only ever hits the copy). The build also makes its own `bibl
    (CHIP genuine ≈ 2 = the known Jon 4:9 twin-bracket FPs, not garbles) → `scan_strongs_cross.py`
    (FUNCTION-anchor 0) → `audit_lord_strongs.py` (WRONG-SLOT REPAIRABLE 0) →
    `audit_funcword_wrongslot.py --preps` (REPAIRABLE-NOUN ≈ 0) → `scan_content_filler_tags.py`
-   (G2316 0) → `audit_corpus_tier1.py` (A1 ≈ 176) → `audit_corpus_tier2.py bible_test.db --rahlfs
+   (G2316 0) → `audit_split_flip.py bible_test.db` (**MUST be 0** — the "LORD the" determiner-flip
+   guard; if non-zero the `_split_compounds` source-phrase-order fix regressed, don't swap) →
+   `audit_corpus_tier1.py` (A1 ≈ 176) → `audit_corpus_tier2.py bible_test.db --rahlfs
    ~/LXX-Rahlfs-1935 --tagnt ~/TAGNT_*.txt` (~92%).
 7. Spot-check: Greek (Eze 31:9 "were jealous of" → ζηλόω), proper noun (1Chr 1:1 "Adam" → H121,
    opens metaV), LORD dual-order (1Ch 13:10 chip → "<verb> · the LORD").
