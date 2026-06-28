@@ -79,10 +79,19 @@ _STRUCTURAL = {
                  "itself is the predicate and asserts existence or presence — “I am the one being” "
                  "(Exodus 3:14), “in the beginning was the word” (John 1:1). There the meaning "
                  "is IN the verb; that is a distinct use, not the linking one described here.",
-        "scope_contested": "John 8:58 (“before Abraham existed, I am”) is the disputed case — "
-                           "whether that “I am” is the absolute self-naming that echoes Exodus "
-                           "3:14 and Isaiah 43:10, or a thinner statement of existence, is itself "
-                           "contested. Flagged here, not settled.",
+        "scope_contested": "John 8:58 (“before Abraham existed, I am”) is the disputed case. The "
+                           "bare “I am” echoes Isaiah’s self-declaration (“I am; before me no god "
+                           "was formed,” Isaiah 43:10; 46:4), not Exodus 3:14 — Exodus reads “I am "
+                           "the one being,” and that added name, “the one being,” is the part Jesus "
+                           "does not say. But the Isaiah form it does echo is itself an exclusive "
+                           "claim of deity, so moving the cross-reference from Exodus to Isaiah does "
+                           "not lower it: a reading that hears only ordinary existence can no longer "
+                           "rest on “it isn’t the divine name,” and now stands on the grammar alone — "
+                           "the present tense reaching back before a past event, a construction Greek "
+                           "uses elsewhere without any claim to deity. Whether the “I am” invokes "
+                           "Isaiah’s self-declaration or the “before Abraham came to be” clause is "
+                           "doing plain durative work, the verb does not decide. Flagged here, not "
+                           "settled.",
         "underspecified": "In the linking use the verb does not say what KIND of connection — the "
                           "predicate sets it. The one grammatical tell is the article on the "
                           "predicate: with it the predicate tends to identify (“you are THE Christ”), "
