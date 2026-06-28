@@ -78,7 +78,11 @@ check("english with leftover bracket chars [ or ]",
       "SELECT count(*) FROM words WHERE english LIKE '%[%' OR english LIKE '%]%'")
 
 check("english starting with a stray digit  [parse leak]",
-      "SELECT count(*) FROM words WHERE english GLOB '[0-9]*'")
+      # Rev 13:18 is exempt: ABP renders the number of the beast (666) as the Greek
+      # numeral split into the words "600", "60", "6" — legit content, not a parse leak.
+      """SELECT count(*) FROM words WHERE english GLOB '[0-9]*'
+           AND verse_id NOT IN (
+             SELECT id FROM verses WHERE book='Rev' AND chapter=13 AND verse=18)""")
 
 # ── strongs range / lexicon coverage ─────────────────────────────────────────
 # NOTE: proper nouns excluded — TIPNR assigns valid EXTENDED numbers (G9xxx/H9xxx)
