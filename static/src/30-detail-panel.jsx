@@ -489,7 +489,10 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   }, [entry && entry.id]);
 
   const [lsjEntry, setLsjEntry] = useState(null);
-  const [lsjLoading, setLsjLoading] = useState(false);
+  // Same frame-0 rule as BDB: start loading=true when a lookup will run at mount, so a
+  // fresh mount shows "Loading…" rather than a premature "Not found." before the LSJ
+  // lookup has even started (placeStrongs is null at mount, so it's not in the condition).
+  const [lsjLoading, setLsjLoading] = useState(() => !isHebrew && !!(entry && (entry.greek || entry.strongs_raw)));
   const [lsjSummary, setLsjSummary] = useState(null);
   const [lsjSummaryLoading, setLsjSummaryLoading] = useState(false);
   const [lexica, setLexica] = useState(null);
