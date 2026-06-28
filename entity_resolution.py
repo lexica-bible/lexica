@@ -208,3 +208,182 @@ def name_variants(name):
     out.discard(n)
     out.discard("")
     return out
+
+
+# ── TIPNR rich parse ─────────────────────────────────────────────────────────
+# Ported faithfully from probe_tipnr_fullset.parse_tipnr (the parse that produced
+# the committed Issue-2 numbers) so the build path and the probe agree. Each entity
+# keeps: headword name, ALL spellings (headword + sub UniqueNames + ESV/KJV/NIV
+# translated tokens + Greek/Aramaic forms), ALL base Strong's, section, parents/
+# offspring names, and the exhaustive reference set. `uniq` (Name@FirstRef) is the
+# stable entity id.
+def parse_tipnr(lines):
+    ents = []
+    section = "other"
+    cur = None
+
+    def close(c):
+        if c:
+            ents.append(c)
+
+    for line in lines:
+        if line.startswith("$=========="):
+            close(cur); cur = None
+            low = line.lower()
+            section = "person" if "person" in low else "place" if "place" in low else "other"
+            continue
+        if not line.strip():
+            continue
+        stripped = line.lstrip()
+        if stripped[:1] in ("=", "‖", "#", "*", "@") or stripped.startswith("UnifiedName") \
+                or stripped.startswith("UniqueName"):
+            continue
+        is_sub = line[0] in (" ", "\t") or stripped.startswith("–")
+        parts = line.split("\t")
+
+        if not is_sub:
+            close(cur); cur = None
+            f0 = parts[0].strip()
+            if "@" not in f0:
+                continue
+            head = norm_name(f0.split("@")[0])
+            if not head:
+                continue
+            cur = {
+                "head": head, "uniq": f0.split("=")[0].strip(), "section": section,
+                "spellings": {head}, "bases": set(), "refs": set(),
+                "parents": parts[2].strip() if len(parts) > 2 else "",
+                "offspring": parts[5].strip() if len(parts) > 5 else "",
+            }
+            b = norm_base(f0.split("=", 1)[1]) if "=" in f0 else ""
+            if b:
+                cur["bases"].add(b)
+        else:
+            if not cur:
+                continue
+            # sub-record: col1 = UniqueName (AltName@..), col2 = dStrong«eStrong,
+            # col3 = translated name (ESV,KJV,NIV). Mine spellings + base + refs.
+            if len(parts) > 1 and "@" in parts[1]:
+                cur["spellings"].add(norm_name(parts[1].split("@")[0]))
+            if len(parts) > 2 and "«" in parts[2]:
+                b = norm_base(parts[2].split("«")[0])
+                if b:
+                    cur["bases"].add(b)
+            if len(parts) > 3 and parts[3].strip():
+                for tok in re.split(r"[,/()]", parts[3]):
+                    w = norm_name(tok)
+                    if w and re.match(r"^[a-z][a-z' -]+$", w):
+                        cur["spellings"].add(w)
+            ref_blob = None
+            for i, f in enumerate(parts):
+                if "reference=" in f:
+                    ref_blob = parts[i + 1] if i + 1 < len(parts) else f.split("reference=", 1)[1]
+                    break
+            if ref_blob:
+                for tok in ref_blob.split(";"):
+                    r = parse_ref(tok)
+                    if r:
+                        cur["refs"].add(r)
+    close(cur)
+    return ents
+
+
+def build_indexes(ents):
+    """spelling -> {entity idx}, base Strong's -> {entity idx}."""
+    from collections import defaultdict
+    name_idx, base_idx = defaultdict(set), defaultdict(set)
+    for i, e in enumerate(ents):
+        for s in e["spellings"]:
+            name_idx[s].add(i)
+        for b in e["bases"]:
+            base_idx[b].add(i)
+    return name_idx, base_idx
+
+
+# ── The binder + global render rule ──────────────────────────────────────────
+# Objective: rendered-and-correct with ZERO confident-wrong. The render rule is the
+# spine — a bind RENDERS only when the clicked verse corroborates it (the verse is in
+# the bound entity's reference list, after the versification map). Otherwise it FLOORS
+# (Fix A handles the floor). A number-only link (no name match) is the confident-wrong
+# path and NEVER renders; ≥2 same-name entities at one verse FLOOR as HOT (hand-check).
+class Bind:
+    __slots__ = ("entity", "kind", "rule", "render", "hot", "candidates")
+
+    def __init__(self, entity=None, kind="none", rule="", render=False, hot=False,
+                 candidates=None):
+        self.entity = entity            # bound entity idx, or None when floored
+        self.kind = kind                # exact|fuzzy|versification|multi|number_only|none
+        self.rule = rule                # versification rule name, when kind=versification
+        self.render = render            # True = render the bound entity; False = floor
+        self.hot = hot                  # flagged for hand-verification
+        self.candidates = candidates or []   # colliding entity idxs (multi / number_only)
+
+    def __repr__(self):
+        return (f"Bind(entity={self.entity}, kind={self.kind!r}, rule={self.rule!r}, "
+                f"render={self.render}, hot={self.hot}, candidates={self.candidates})")
+
+
+def _verse_in_entity(ent, bk, ch, vs):
+    """(True, '') if the entity lists this verse directly; (True, rule) if it lists a
+    DOCUMENTED versification remap of it (WS1 — serves every tier); (False, None) else.
+    The remap is a pure correct-bind recovery: the entity is already the right one,
+    only the verse number moved."""
+    if (bk, ch, vs) in ent["refs"]:
+        return True, ""
+    for (b2, c2, v2, rule) in documented_remaps(bk, ch, vs):
+        if (b2, c2, v2) in ent["refs"]:
+            return True, rule
+    return False, None
+
+
+def bind_occurrence(ents, name_idx, base_idx, name, bk, ch, vs, base):
+    """Decide the bind for one proper-noun occurrence. Verse-primary, name-first.
+
+    name : the printed surface label (will be norm_name'd)
+    bk/ch/vs : canonical book number + chapter + verse of the click
+    base : the stored strongs_base (metadata behind the name link)
+
+    Returns a Bind. render=True only on a single corroborated name match (exact, or
+    fuzzy WITH number agreement, possibly via a documented versification offset)."""
+    n = norm_name(name)
+    B = norm_base(base)
+    if bk is None:
+        return Bind(kind="none")
+
+    # 1. EXACT name + verse (number is just metadata here). Versification serves it.
+    exact, exact_rule = [], ""
+    for i in name_idx.get(n, ()):
+        ok, rule = _verse_in_entity(ents[i], bk, ch, vs)
+        if ok:
+            exact.append(i)
+            if rule and not exact_rule:
+                exact_rule = rule
+    if exact:
+        if len(set(exact)) == 1:
+            kind = "versification" if exact_rule else "exact"
+            return Bind(entity=exact[0], kind=kind, rule=exact_rule, render=True)
+        # ≥2 distinct same-name entities list this verse -> never guess. Floor, HOT.
+        return Bind(kind="multi", hot=True, candidates=sorted(set(exact)))
+
+    # 2. FUZZY name + verse — only with the SECOND key (stored number agrees), since
+    #    normalization can over-match.
+    fuzzy = set()
+    for cand in name_variants(n):
+        for i in name_idx.get(cand, ()):
+            ok, _ = _verse_in_entity(ents[i], bk, ch, vs)
+            if ok and B and B in ents[i]["bases"]:
+                fuzzy.add(i)
+    if fuzzy:
+        if len(fuzzy) == 1:
+            return Bind(entity=next(iter(fuzzy)), kind="fuzzy", render=True)
+        return Bind(kind="multi", hot=True, candidates=sorted(fuzzy))
+
+    # 3. NUMBER-only (base matches a verse, but no name link at all) -> the
+    #    confident-wrong path. Floor; surface for the residual hand-check.
+    if B:
+        numonly = sorted(i for i in base_idx.get(B, ()) if (bk, ch, vs) in ents[i]["refs"])
+        if numonly:
+            return Bind(kind="number_only", candidates=numonly)
+
+    # 4. nothing corroborates -> floor (referent-known / genuine miss).
+    return Bind(kind="none")

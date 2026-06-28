@@ -109,6 +109,77 @@ def test_name_variants_excludes_the_exact_name():
     assert er.name_variants("Zogwxyz") == set()   # nothing matches -> empty
 
 
+# ── The binder + global render rule ──────────────────────────────────────────
+def _fixture():
+    """Hand-built TIPNR entities (no parsing) so the binder logic is explicit.
+    e0 Cush (place, the Cushite numbers), e1 Cushi (person, the mis-stored H3570),
+    two same-verse Edens (e2/e3, the multi case), e4 Asaph (Psalms superscription)."""
+    ents = [
+        {"head": "cush", "section": "place",
+         "spellings": {"cush", "cushite", "cushites"}, "bases": {"H3568", "H3569"},
+         "refs": {(1, 2, 13), (10, 18, 21)}},                       # Gen 2:13, 2Sa 18:21
+        {"head": "cushi", "section": "person",
+         "spellings": {"cushi"}, "bases": {"H3570"}, "refs": {(36, 1, 1)}},  # Zep 1:1
+        {"head": "eden", "section": "place",
+         "spellings": {"eden"}, "bases": {"H5731"}, "refs": {(1, 2, 8)}},
+        {"head": "eden", "section": "person",
+         "spellings": {"eden"}, "bases": {"H5729"}, "refs": {(1, 2, 8), (13, 4, 17)}},
+        {"head": "asaph", "section": "person",
+         "spellings": {"asaph"}, "bases": {"H623"}, "refs": {(19, 50, 2)}},
+    ]
+    name_idx, base_idx = er.build_indexes(ents)
+    return ents, name_idx, base_idx
+
+
+def _bind(name, bk, ch, vs, base):
+    ents, name_idx, base_idx = _fixture()
+    return er.bind_occurrence(ents, name_idx, base_idx, name, bk, ch, vs, base)
+
+
+def test_exact_name_verse_renders_number_is_metadata():
+    b = _bind("Cush", 1, 2, 13, "H3568")
+    assert b.render and b.kind == "exact" and b.entity == 0
+    # a WRONG/polluted number on an exact name+verse hit is ignored — still renders.
+    b2 = _bind("Cush", 1, 2, 13, "H9999")
+    assert b2.render and b2.kind == "exact" and b2.entity == 0
+
+
+def test_number_only_never_renders():
+    # name matches nothing at the verse, but the stored number does -> confident-wrong
+    # path, must FLOOR (the disease the rebuild kills).
+    b = _bind("Zzz", 36, 1, 1, "H3570")
+    assert not b.render and b.kind == "number_only" and b.candidates == [1]
+
+
+def test_multi_same_name_at_one_verse_floors_hot():
+    b = _bind("Eden", 1, 2, 8, "H5731")
+    assert not b.render and b.kind == "multi" and b.hot and b.candidates == [2, 3]
+
+
+def test_versification_recovers_psalms_superscription():
+    # Asaph printed at Psa 50:1; entity lists 50:2 (Hebrew +1). The map recovers it.
+    b = _bind("Asaph", 19, 50, 1, "H623")
+    assert b.render and b.kind == "versification" and b.rule == "Psa:superscription" \
+        and b.entity == 4
+
+
+def test_no_corroboration_floors():
+    b = _bind("Nobody", 5, 5, 5, "")
+    assert not b.render and b.kind == "none" and b.entity is None
+
+
+def test_cushi_runner_needs_the_by_verse_number_fix():
+    # The WS2 canary: 'Cushi' at 2Sa 18:21 stems to Cush, which lists the verse.
+    # BEFORE step 4 the stored number is H3570 (not in Cush's cluster) -> fuzzy's
+    # second key fails -> floor (honest, no wrong card).
+    pre = _bind("Cushi", 10, 18, 21, "H3570")
+    assert not pre.render
+    # AFTER the by-verse fix (H3569, the Cushite form, IS in Cush's cluster) -> the
+    # number agrees, so it binds & renders by name+verse.
+    post = _bind("Cushi", 10, 18, 21, "H3569")
+    assert post.render and post.kind == "fuzzy" and post.entity == 0
+
+
 if __name__ == "__main__":
     import traceback
     fns = [v for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]
