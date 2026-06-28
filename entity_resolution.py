@@ -161,28 +161,57 @@ def documented_remaps(bk, ch, vs):
 #      spelling variants; import_tipnr.py keeps a fuller curated map for its own match
 #      pass — reconcile the two when the binder is wired (a follow-up, tracked).
 
-# variant (already norm_name'd) -> canonical TIPNR name. Number-guarded downstream.
+# variant (already norm_name'd) -> canonical TIPNR name. Number-guarded downstream,
+# so an imperfect entry can only floor, never mis-bind. Sourced from import_tipnr.py's
+# curated ALIASES (its proven name-match knowledge) PLUS a hand-verified batch closing
+# the residual the hand-check turned up (sor->tyre, libna->libnah, ...); every target
+# was confirmed to exist in TIPNR. import_tipnr's DIRECT (name->Strong's) was NOT
+# auto-folded — resolving a shared number to one entity head mis-fires (baalpeor->baal,
+# bashemath->adah), and the hyphen compounds are handled by _compact instead. Keep this
+# in step with import_tipnr.ALIASES on a future unification (tracked).
 VARIANT_ALIASES = {
-    # --- the brief's named canaries (WS2/WS3) ---
-    "pharez": "perez",           # KJV -> Hebrew
-    "jeconiah": "jehoiachin", "jechoniah": "jehoiachin", "jechonias": "jehoiachin",
-    "coniah": "jehoiachin",
-    "salathiel": "shealtiel",    # LXX/Greek -> Hebrew
-    "mizraim": "egypt",          # Hebrew name -> English place
-    # --- high-value non-gentilic spelling variants (KJV/LXX vs Hebrew) ---
-    "juda": "judah", "esrom": "hezron", "zara": "zerah", "zarah": "zerah",
-    "enos": "enosh", "sophar": "zophar", "rama": "ramah", "aminadab": "amminadab",
-    "naasson": "nahshon", "urijah": "uriah", "michaiah": "micaiah",
-    "nabuzaradan": "nebuzaradan", "helkiah": "hilkiah", "bezaleel": "bezalel",
-    "josedech": "jehozadak", "baldad": "bildad", "nethaneel": "nethanel",
-    "hadarezer": "hadadezer", "elias": "elijah", "esaias": "isaiah",
-    "jeremias": "jeremiah", "ezechias": "hezekiah", "ozias": "uzziah",
-    "josias": "josiah", "joatham": "jotham", "zacharias": "zechariah",
-    "zachariah": "zechariah", "melchisedek": "melchizedek", "abijam": "abijah",
-    # --- irregular gentilics stemming can't reach (root != stripped stem) ---
-    "jew": "judah", "jews": "judah", "hittite": "heth", "hittites": "heth",
-    "ethiopia": "cush", "ethiopian": "cush", "ethiopians": "cush",
-    "levite": "levi", "levites": "levi", "mede": "media", "medes": "media",
+    'abijam': 'abijah',  'aholibamah': 'oholibamah',  'ajalon': 'aijalon',
+    'aminadab': 'amminadab',  'ammonite': 'ammon',  'ammonites': 'ammon',
+    'amorites': 'amorite',  'arabian': 'arabia',  'arabians': 'arabia',
+    'ashdodite': 'ashdod',  'ashdodites': 'ashdod',  'assyrian': 'assyria',
+    'assyrians': 'assyria',  'baalim': 'baal',  'babylonians': 'babylon',
+    'baldad': 'bildad',  'bezaleel': 'bezalel',  'canaanite': 'canaan',
+    'canaanites': 'canaan',  'carmelite': 'carmel',  'carmelites': 'carmel',
+    'chaldean': 'chaldea',  'chaldeans': 'chaldea',  'cherethite': 'cherethites',
+    'chittim': 'kittim',  'coniah': 'jehoiachin',  'cushite': 'cush',
+    'cushites': 'cush',  'edomite': 'edom',  'edomites': 'edom',
+    'egyptian': 'egypt',  'egyptians': 'egypt',  'elamite': 'elam',
+    'elamites': 'elam',  'elias': 'elijah',  'elisaios': 'elisha',
+    'enos': 'enosh',  'esaias': 'isaiah',  'esrom': 'hezron',
+    'ethiopia': 'cush',  'ethiopian': 'cush',  'ethiopians': 'cush',
+    'ezechias': 'hezekiah',  'ezion': 'ezion-geber',  'gadite': 'gad',
+    'gadites': 'gad',  'gileadite': 'gilead',  'gileadites': 'gilead',
+    'gittite': 'gath',  'gittites': 'gath',  'hadarezer': 'hadadezer',
+    'hashub': 'hasshub',  'helkiah': 'hilkiah',  'hittite': 'heth',
+    'hittites': 'heth',  'hivites': 'hivite',  'hodijah': 'hodiah',
+    'israelite': 'israel',  'israelites': 'israel',  'jabish': 'jabesh',
+    'jechoniah': 'jehoiachin',  'jechonias': 'jehoiachin',  'jeconiah': 'jehoiachin',
+    'jeremias': 'jeremiah',  'jew': 'judah',  'jews': 'judah',
+    'jezreelite': 'jezreel',  'jezreelites': 'jezreel',  'joatham': 'jotham',
+    'josedech': 'jehozadak',  'josias': 'josiah',  'juda': 'judah',
+    'kirjathaim': 'kiriathaim',  'kirjathjearim': 'kiriath-jearim',  'levite': 'levi',
+    'levites': 'levi',  'libna': 'libnah',  'maachah': 'maacah',
+    'maachathite': 'maacah',  'maachathites': 'maacah',  'mede': 'media',
+    'medes': 'media',  'median': 'media',  'melchisedek': 'melchizedek',
+    'michaiah': 'micaiah',  'midianite': 'midian',  'midianites': 'midian',
+    'mizraim': 'egypt',  'moabite': 'moab',  'moabites': 'moab',
+    'naasson': 'nahshon',  'nabuzar-adan': 'nebuzaradan',  'nabuzar-ardan': 'nebuzaradan',
+    'nabuzaradan': 'nebuzaradan',  'nabuzarardan': 'nebuzaradan',  'nazarene': 'nazareth',
+    'negev': 'negeb',  'nethaneel': 'nethanel',  'netophathite': 'netophah',
+    'netophathites': 'netophah',  'ozias': 'uzziah',  'pashur': 'pashhur',
+    'persian': 'persia',  'persians': 'persia',  'pharez': 'perez',
+    'pharisees': 'pharisee',  'philistine': 'philistia',  'philistines': 'philistia',
+    'rama': 'ramah',  'sadducees': 'sadducee',  'salathiel': 'shealtiel',
+    'sephela': 'shephelah',  'shilonite': 'shiloh',  'sidonian': 'sidon',
+    'sidonians': 'sidon',  'sophar': 'zophar',  'sor': 'tyre',
+    'tanis': 'zoan',  'tizrah': 'tirzah',  'urijah': 'uriah',
+    'zachariah': 'zechariah',  'zacharias': 'zechariah',  'zara': 'zerah',
+    'zarah': 'zerah',  'ziglag': 'ziklag',
 }
 
 # Ordered longest-first so '-itess'/'-ites' win before '-ite'/'-s', and the broad
@@ -312,16 +341,28 @@ def parse_tipnr(lines):
     return ents
 
 
+def _compact(s):
+    """Hyphen/space-insensitive form: 'beth-shemesh' / 'beth shemesh' -> 'bethshemesh'.
+    The corpus often writes a compound name solid where TIPNR hyphenates it."""
+    return norm_name(s).replace("-", "").replace(" ", "")
+
+
 def build_indexes(ents):
-    """spelling -> {entity idx}, base Strong's -> {entity idx}."""
+    """spelling -> {entity idx}; base Strong's -> {entity idx}; AND a compact
+    (hyphen/space-stripped) index of the spellings that CARRY a hyphen/space — used
+    only on the number-guarded fuzzy path, never the exact one (compacting can
+    collide, e.g. 'baal-peor' the place vs 'baal' the god)."""
     from collections import defaultdict
-    name_idx, base_idx = defaultdict(set), defaultdict(set)
+    name_idx, base_idx, compact_idx = defaultdict(set), defaultdict(set), defaultdict(set)
     for i, e in enumerate(ents):
         for s in e["spellings"]:
             name_idx[s].add(i)
+            c = _compact(s)
+            if c and c != s:
+                compact_idx[c].add(i)
         for b in e["bases"]:
             base_idx[b].add(i)
-    return name_idx, base_idx
+    return name_idx, base_idx, compact_idx
 
 
 # ── The binder + global render rule ──────────────────────────────────────────
@@ -360,7 +401,7 @@ def _verse_in_entity(ent, bk, ch, vs):
     return False, None
 
 
-def bind_occurrence(ents, name_idx, base_idx, name, bk, ch, vs, base):
+def bind_occurrence(ents, name_idx, base_idx, compact_idx, name, bk, ch, vs, base):
     """Decide the bind for one proper-noun occurrence. Verse-primary, name-first.
 
     name : the printed surface label (will be norm_name'd)
@@ -390,13 +431,15 @@ def bind_occurrence(ents, name_idx, base_idx, name, bk, ch, vs, base):
         return Bind(kind="multi", hot=True, candidates=sorted(set(exact)))
 
     # 2. FUZZY name + verse — only with the SECOND key (stored number agrees), since
-    #    normalization can over-match.
+    #    normalization can over-match. Candidates = alias/gentilic variants AND the
+    #    hyphen/space-insensitive (compact) match.
     fuzzy = set()
-    for cand in name_variants(n):
-        for i in name_idx.get(cand, ()):
-            ok, _ = _verse_in_entity(ents[i], bk, ch, vs)
-            if ok and B and B in ents[i]["bases"]:
-                fuzzy.add(i)
+    cands = {i for cand in name_variants(n) for i in name_idx.get(cand, ())}
+    cands |= compact_idx.get(_compact(n), set())
+    for i in cands:
+        ok, _ = _verse_in_entity(ents[i], bk, ch, vs)
+        if ok and B and B in ents[i]["bases"]:
+            fuzzy.add(i)
     if fuzzy:
         if len(fuzzy) == 1:
             return Bind(entity=next(iter(fuzzy)), kind="fuzzy", render=True)

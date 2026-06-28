@@ -95,13 +95,13 @@ def main():
 
     # ── acceptance (a): would these render Cush/Cushite at H3569? ──────────────
     ents = er.parse_tipnr(load_tipnr())
-    name_idx, base_idx = er.build_indexes(ents)
+    name_idx, base_idx, compact_idx = er.build_indexes(ents)
     print("\nAcceptance (a) — would the corrected slots render Cush/Cushite?")
     all_ok = True
     for r in rows:
         if er.norm_base(r["base"]) not in (FROM_NUM, TO_NUM):
             continue
-        b = er.bind_occurrence(ents, name_idx, base_idx,
+        b = er.bind_occurrence(ents, name_idx, base_idx, compact_idx,
                                r["head"] or "Cushi", er.book_num(BOOK), r["ch"], r["vs"], TO_NUM)
         who = ents[b.entity]["uniq"] if b.render else "—"
         ok = b.render and ents[b.entity]["head"] == "cush"

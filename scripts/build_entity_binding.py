@@ -87,7 +87,7 @@ def scope_tier(name, ambiguous, person_ids, place_ids):
 def main():
     print(f"{'[APPLY] ' if APPLY else '[DRY-RUN] '}build_entity_binding -> {DB}\n")
     ents = er.parse_tipnr(load_tipnr())
-    name_idx, base_idx = er.build_indexes(ents)
+    name_idx, base_idx, compact_idx = er.build_indexes(ents)
     print(f"Parsed {len(ents):,} TIPNR entities, {len(name_idx):,} distinct spellings\n")
 
     conn = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)
@@ -132,7 +132,7 @@ def main():
         # Bind EVERY tier for the stats (so WS1 versification is counted across all
         # tiers — most superscription recoveries are Tier-3 names like David/Asaph),
         # but only Tier 1/2 results are written to the binding tables below.
-        b = er.bind_occurrence(ents, name_idx, base_idx, nm, bk, r["ch"], r["vs"], r["base"])
+        b = er.bind_occurrence(ents, name_idx, base_idx, compact_idx, nm, bk, r["ch"], r["vs"], r["base"])
         stat[tier][b.kind] += 1
         if b.kind == "versification":
             versification[b.rule] += 1

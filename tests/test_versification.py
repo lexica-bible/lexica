@@ -126,14 +126,18 @@ def _fixture():
          "spellings": {"eden"}, "bases": {"H5729"}, "refs": {(1, 2, 8), (13, 4, 17)}},
         {"head": "asaph", "section": "person",
          "spellings": {"asaph"}, "bases": {"H623"}, "refs": {(19, 50, 2)}},
+        {"head": "beth-shemesh", "section": "place",      # the corpus writes it solid
+         "spellings": {"beth-shemesh"}, "bases": {"H1053"}, "refs": {(6, 15, 10)}},
+        {"head": "perez", "section": "person",            # KJV "Pharez" -> alias
+         "spellings": {"perez"}, "bases": {"H6557"}, "refs": {(1, 38, 29)}},
     ]
-    name_idx, base_idx = er.build_indexes(ents)
-    return ents, name_idx, base_idx
+    name_idx, base_idx, compact_idx = er.build_indexes(ents)
+    return ents, name_idx, base_idx, compact_idx
 
 
 def _bind(name, bk, ch, vs, base):
-    ents, name_idx, base_idx = _fixture()
-    return er.bind_occurrence(ents, name_idx, base_idx, name, bk, ch, vs, base)
+    ents, name_idx, base_idx, compact_idx = _fixture()
+    return er.bind_occurrence(ents, name_idx, base_idx, compact_idx, name, bk, ch, vs, base)
 
 
 def test_exact_name_verse_renders_number_is_metadata():
@@ -166,6 +170,22 @@ def test_versification_recovers_psalms_superscription():
 def test_no_corroboration_floors():
     b = _bind("Nobody", 5, 5, 5, "")
     assert not b.render and b.kind == "none" and b.entity is None
+
+
+def test_hyphen_insensitive_match_is_number_guarded():
+    # corpus 'Bethshemesh' (solid) reaches TIPNR 'beth-shemesh' via the compact index,
+    # but only renders when the stored number also agrees (compacting can collide).
+    ok = _bind("Bethshemesh", 6, 15, 10, "H1053")
+    assert ok.render and ok.kind == "fuzzy" and ok.entity == 5
+    bad = _bind("Bethshemesh", 6, 15, 10, "H9999")    # number disagrees -> floor
+    assert not bad.render
+
+
+def test_alias_match_renders_with_number():
+    # KJV 'Pharez' -> alias 'perez'; renders only with the number (fuzzy second key).
+    ok = _bind("Pharez", 1, 38, 29, "H6557")
+    assert ok.render and ok.kind == "fuzzy" and ok.entity == 6
+    assert not _bind("Pharez", 1, 38, 29, "H1").render   # wrong number -> floor
 
 
 def test_cushi_runner_needs_the_by_verse_number_fix():
