@@ -11,6 +11,26 @@ spot. You can skip those lines.
 
 ---
 
+## Open word-study/data issues — DIAGNOSED, not yet fixed (2026-06-28)
+Three issues surfaced this session. #1 ("LORD the" word flip) is DONE + LIVE. These three remain:
+- **G2372 θυμός shows an LSJ "thyme" entry** — `/api/lsj` resolves θυμός (rage/passion) to the
+  homograph headword `θύμον` (Cretan thyme). Same class as the χόος→χοῦς diacritic collision. Confirmed
+  live. NEXT: dump the lexicon lemma for 2372 + every θυμ-/θύμ- key in `lsj` to see whether a real "rage"
+  entry exists, then fix the exact-match/fallback in `views_lsj.py` and scan for other homograph hits.
+  code: views_lsj.py `_resolve_lsj_xref` / the exact-key + accent-stripped fallback in `lsj_lookup`.
+- **εἰμί chip over-merge (Zep 2:6 "Crete shall be")** — a proper-noun subject is glued onto the εἰμί
+  verb's cell with a trailing empty `G*`; 47 such spots in the ABP source (David was, Jonah was, …).
+  Same family as the PN-subject fold ([[project_pn_subject_verb_fold]]) but missed because the name isn't
+  in the tipnr roster — the empty `G*` is itself proof a name belongs there. NEXT: get the live still-merged
+  count, extend the fold to fire on the εἰμί+empty-`G*` shape regardless of roster.
+  code: scripts/fix_pn_subject_merge.py detection; the εἰμί base is 1510.
+- **Proper-noun / entity resolution rework** (Zep 1:1 "Cushi" → Acts verses; "Eden" maps to the wrong
+  place) — PARKED for a max-effort session. metaV / biblical-reference / map cards resolve by NAME STRING,
+  not the specific TIPNR id bound at THIS occurrence, so homonyms collide across testaments. Diagnose the
+  bind path end-to-end, then propose binding each occurrence to one id at import. code: views_metav.py.
+
+---
+
 ## Code health / cleanup
 
 The big rework is finished — all six phases are done and live (see the memory notes

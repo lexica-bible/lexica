@@ -951,6 +951,12 @@ memory `project_ai_synthesis_quality`.
   mails the report via `mailer.py` (the nightly PA task; SMTP creds from `~/bible-db/.env`).
 - `fix_greek_pos_gaps.py` / `fix_bracket_gaps_absorb.py` / `fix_orphan_greek_pos.py` / `dedup_words.py` —
   targeted data repairs, all with `--dry-run`. Touch only the named column; never blanket DELETE
+- `audit_split_flip.py <db>` (READ-ONLY) + `fix_split_flip.py <db> [--apply]` — the "LORD the" flip
+  (a determiner stranded AFTER its noun, vs the clean `verses.text`). Audit shares its detector with the
+  fixer (`find_flips`) so they can't drift; the fixer swaps each pair toward `verses.text` order and LOOPS
+  to convergence (a list "the A the B" needs several monotonic passes). Root-fixed in the build
+  (`_split_compounds` fronts spread words in source-phrase order), so this is a one-time live cleanup;
+  re-run surface+translit after `--apply`. 283 verses fixed + verified 2026-06-28. Memory `project_split_compounds_flip`.
 - `fix_emdash.py` (`--dry-run` / `--apply`) — swaps ABP's literal `--` clause dash for an em-dash `—` in
   `words.english` + `verses.text` (double hyphen only; single hyphens like Beer-sheba are safe). Reversible;
   PA-only data step; RE-RUN after any words/verses rebuild (not folded into the build). Memory `project_library_bracket`.
@@ -995,6 +1001,22 @@ memory `project_ai_synthesis_quality`.
   (a) clears `is_pn` and proper-noun Strong's, and (b) historically stripped the G prefix
   off strongs_base. The script is now patched (prefixes at INSERT, prints a reminder), but
   after ANY run you MUST re-run `import_tipnr.py` and verify the strongs_base invariant above.
+- **The rebuild scripts NEVER write the live db (2026-06-28, after a parallel session blanked
+  bible.db).** `build_words_from_abp.py` + `build_words_from_bh.py` now build into a throwaway
+  `bible.db.new` copy (a consistent online snapshot of the live db); the live file is never opened
+  for writing, and you swap the copy in by hand with one reversible move. The in-place
+  `DELETE FROM words` is gone. Full record: memory `project_db_backups`.
+
+## Backups — `scripts/backup_db.py` (added 2026-06-28)
+- The live dbs are PA-only + not in git, and a careless session has blanked bible.db. `backup_db.py`
+  is the floor: a daily, VERIFIED, rotating backup of EVERY live db (auto-discovers `*.db` —
+  bible/notes/study/esv/niv/heb/news/bh_scrape), kept in `~/db_backups/` OUTSIDE the repo so a
+  folder-nuke can't reach them. Uses SQLite's online `.backup()` (safe on a live WAL db, no torn
+  copy), a `PRAGMA quick_check` gate (a bad copy never rotates out a good one), gzip + chmod 0444 on
+  older copies, and a `.info` manifest per copy so `--list` shows row counts instantly. Restore =
+  pick a stamp from `--list`, `gunzip -c` (or cp) over a `.new`, swap with the reversible `mv`.
+  **`study.db` is the one irreplaceable file (hand-authored argument graphs, no rebuild script).**
+  Run daily from the PA Tasks tab. Full record: memory `project_db_backups`.
 
 ## Words rebuild checklist (if you ever rebuild the words table)
 The full step-by-step lives in the **`/rebuild-words`** slash command
