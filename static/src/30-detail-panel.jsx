@@ -345,6 +345,29 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     ? metavPinned
     : (metavHasBoth ? metavTab : (metavPersonData ? "person" : metavPlaceData ? "place" : null));
   const metavData = metavType === "person" ? metavPersonData : metavType === "place" ? metavPlaceData : null;
+
+  // Verse-bound TIPNR entity (Issue 2): the VERIFIED person/place for THIS click, from
+  // the pn_binding tables. When present it replaces the name-guess metaV card AND the
+  // AI blurb with a sourced identity. 404 -> null -> the old name-path shows. Declared
+  // BEFORE the metaV effect because that effect gates on it (deps + body).
+  const [boundEntity, setBoundEntity] = useState(null);
+  const [boundLoading, setBoundLoading] = useState(false);
+  useEffect(() => {
+    setBoundEntity(null);
+    const bn = extractProperName(entry.pnName || entry.gloss || "");
+    if (!bn || bn.length < 2 || !entry.book || !entry.chapter || !entry.verse) {
+      setBoundLoading(false);
+      return;
+    }
+    let cancelled = false;
+    setBoundLoading(true);
+    api.metavEntity(bn, entry.book, entry.chapter, entry.verse)
+      .then(d => { if (!cancelled) setBoundEntity(d && d.bound ? d : null); })
+      .catch(() => {})
+      .finally(() => { if (!cancelled) setBoundLoading(false); });
+    return () => { cancelled = true; };
+  }, [entry && entry.id]);
+
   useEffect(() => {
     setMetavPersonData(null);
     setMetavPlaceData(null);
@@ -404,27 +427,6 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     }).catch(() => { if (!cancelled) setMetavLoading(false); });
     return () => { cancelled = true; };
   }, [entry && entry.id, boundLoading, boundEntity]);
-
-  // Verse-bound TIPNR entity (Issue 2): the VERIFIED person/place for THIS click,
-  // from the pn_binding tables. When present it replaces the name-guess metaV card
-  // AND the AI blurb with a sourced identity. 404 -> null -> the old name-path shows.
-  const [boundEntity, setBoundEntity] = useState(null);
-  const [boundLoading, setBoundLoading] = useState(false);
-  useEffect(() => {
-    setBoundEntity(null);
-    const bn = extractProperName(entry.pnName || entry.gloss || "");
-    if (!bn || bn.length < 2 || !entry.book || !entry.chapter || !entry.verse) {
-      setBoundLoading(false);
-      return;
-    }
-    let cancelled = false;
-    setBoundLoading(true);
-    api.metavEntity(bn, entry.book, entry.chapter, entry.verse)
-      .then(d => { if (!cancelled) setBoundEntity(d && d.bound ? d : null); })
-      .catch(() => {})
-      .finally(() => { if (!cancelled) setBoundLoading(false); });
-    return () => { cancelled = true; };
-  }, [entry && entry.id]);
 
   // AI description fallback for PN entries with no metaV data
   const [aiDescription, setAiDescription] = useState(null);
