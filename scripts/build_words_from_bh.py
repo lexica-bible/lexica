@@ -267,21 +267,31 @@ def run(bible_db: str, scrape_db: str) -> None:
     bh_word_count = scrape.execute("SELECT COUNT(*) FROM bh_words").fetchone()[0]
     print(f"BH verses: {bh_verse_count:,}  words: {bh_word_count:,}")
 
-    ans = input(
-        "\nThis will DELETE all rows from words and rebuild from BH data.\n"
-        "Type 'rebuild' to confirm: "
-    ).strip()
+    target = bible_db + ".new"
+    print(
+        "\nThis rebuilds the words table from BH data.\n"
+        f"  SAFE BY DESIGN: it builds into a COPY ({target}); the live {bible_db} is\n"
+        "  NEVER touched. Swap the copy in by hand at the end (one reversible move).\n"
+    )
+    ans = input("Type 'rebuild' to confirm: ").strip()
     if ans != "rebuild":
         print("Aborted.")
         scrape.close()
         return
 
-    main = sqlite3.connect(bible_db)
-
-    bak = Path(bible_db).with_suffix(".db.bak")
-    print(f"Backing up {bible_db} → {bak} …")
-    shutil.copy2(bible_db, bak)
-    print("Backup done.")
+    # Build into a throwaway copy, NEVER the live file — a consistent online snapshot
+    # (folds in the WAL), not a raw cp. The DELETE FROM words below hits the copy only.
+    for sidecar in (target, target + "-wal", target + "-shm"):
+        if Path(sidecar).exists():
+            Path(sidecar).unlink()
+    print(f"Snapshotting live {bible_db} → {target} …")
+    _live = sqlite3.connect(f"file:{bible_db}?mode=ro", uri=True)
+    main = sqlite3.connect(target)
+    try:
+        _live.backup(main)
+    finally:
+        _live.close()
+    print("Snapshot done — the live db is untouched from here on.")
 
     lex = _load_lexicon(main)
     print(f"Lexicon entries loaded: {len(lex):,}")
@@ -356,6 +366,10 @@ def run(bible_db: str, scrape_db: str) -> None:
     print("── Results ──────────────────────────────────────────────────")
     print(f"  Words inserted: {inserted:,}")
     print(f"  Verses skipped: {skipped:,}")
+    print(f"\n  Built into: {target}   (live {bible_db} untouched)")
+    print(f"  Run the dependent builders against the COPY, then swap — REVERSIBLE:")
+    print(f"      mv {bible_db} {bible_db}.bak-$(date +%F) && rm -f {bible_db}-wal {bible_db}-shm \\")
+    print(f"        && mv {target} {bible_db} && touch /var/www/www_lexica_bible_wsgi.py")
 
 
 def run_test(bible_db: str, scrape_db: str, book: str = "genesis", chapter: int = 1) -> None:

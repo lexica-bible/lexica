@@ -1370,20 +1370,33 @@ def run(bible_db: str, scrape_db: str) -> None:
     bh_wc = scrape.execute("SELECT COUNT(*) FROM bh_words").fetchone()[0]
     print(f"BH words: {bh_wc:,}")
 
-    ans = input(
-        "\nThis will DELETE all rows from words and rebuild from ABP text + BH metadata.\n"
-        "Type 'rebuild' to confirm: "
-    ).strip()
+    target = bible_db + ".new"
+    print(
+        "\nThis rebuilds the words table from ABP text + BH metadata.\n"
+        f"  SAFE BY DESIGN: it builds into a COPY ({target}); the live {bible_db} is\n"
+        "  NEVER touched. You swap the copy in by hand at the end (one reversible move),\n"
+        "  so a crash or a bad rebuild can only ever damage the throwaway copy.\n"
+    )
+    ans = input("Type 'rebuild' to confirm: ").strip()
     if ans != "rebuild":
         print("Aborted.")
         scrape.close()
         return
 
-    main = sqlite3.connect(bible_db)
-    bak  = Path(bible_db).with_suffix(".db.bak")
-    print(f"Backing up → {bak} …")
-    shutil.copy2(bible_db, bak)
-    print("Backup done.")
+    # Build into a throwaway copy, NEVER the live file. The copy is a CONSISTENT
+    # online snapshot of the live db (folds in the WAL), not a raw cp that could tear.
+    # Everything below — the DELETE FROM words included — runs on this copy only.
+    for sidecar in (target, target + "-wal", target + "-shm"):
+        if Path(sidecar).exists():
+            Path(sidecar).unlink()
+    print(f"Snapshotting live {bible_db} → {target} …")
+    _live = sqlite3.connect(f"file:{bible_db}?mode=ro", uri=True)
+    main = sqlite3.connect(target)
+    try:
+        _live.backup(main)
+    finally:
+        _live.close()
+    print("Snapshot done — the live db is untouched from here on.")
 
     main_cols = {r[1] for r in main.execute("PRAGMA table_info(words)")}
     for col in ("italic_words", "smcap_words", "morph", "lemma"):
@@ -1493,9 +1506,17 @@ def run(bible_db: str, scrape_db: str) -> None:
     print(f"\n── Results ─────────────────────────────────────────────")
     print(f"  Words inserted: {inserted:,}")
     print(f"  Verses skipped: {skipped:,}")
-    print(f"\n⚠️  This rebuild CLEARED words.is_pn and proper-noun Strong's.")
-    print(f"    You MUST re-run the proper-noun import next:")
-    print(f"      python3 scripts/import_tipnr.py bible.db")
+    print(f"\n  Built into: {target}   (live {bible_db} untouched)")
+    print(f"\n  NEXT — run the dependent builders against the COPY, then swap it in.")
+    print(f"  This rebuild CLEARED is_pn / proper-noun Strong's, so import_tipnr is required:")
+    print(f"      python3 scripts/import_tipnr.py {target}")
+    print(f"      python3 scripts/build_abp_surface.py {target} --bh {scrape_db}")
+    print(f"      python3 scripts/build_abp_translit.py {target}")
+    print(f"      # + the rest of the /rebuild-words checklist (dotted, two-ending, word_gloss)")
+    print(f"      python3 scripts/audit_split_flip.py {target}     # must read 0")
+    print(f"\n  Then swap it in — REVERSIBLE, one mv undoes it:")
+    print(f"      mv {bible_db} {bible_db}.bak-$(date +%F) && rm -f {bible_db}-wal {bible_db}-shm \\")
+    print(f"        && mv {target} {bible_db} && touch /var/www/www_lexica_bible_wsgi.py")
 
 
 def run_test(scrape_db: str, book_abbrev: str = "Gen", chapter: int = 1,
