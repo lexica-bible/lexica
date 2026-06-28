@@ -282,6 +282,13 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   once the prompt is diff-locked. **Full-build BATCH 1 DONE 2026-06-25** (12 words, the calibration batch; tiers proved out — 3-tier ship-gate:
   concrete/low-polysemy build-one-draw · mid-polysemy `lexica_agreement --runs 3` · high-polysemy/contested/
   loaded-referent `--runs 10`-or-eyes). **Next = the batch-2 PRE-SORT/PIPELINE script (scoped, not built).**
+  **θεός G2316 + κύριος G2962 FORKED 2026-06-27** (batch-1 had shipped them pure-engine — the loaded-referent
+  blind spot the batch-1 finding flagged): hand-added to `CONTESTED` as membership-only forks (no `pin_core`,
+  the sarx/ekklesia pattern). θεός = a NARROW John 1:1c anarthrous-predicate fork (the baked "identifies the
+  Logos as/being God" verdict line cut from the stored raw via `fix_lexica_raw.py`; qualitative reading credited
+  to Harner, NOT Colwell — the Colwell-inversion is what it neutralizes). κύριος = a title-transfer fork bound
+  to the OT-YHWH-applied-to-Jesus set ONLY (Rom 10:13/Heb 1:10/Phil 2:9-11/Jude 1:4), core sense uncontested.
+  `fix_lexica_raw.py` now accepts an empty `--new` (a text CUT, not just a swap).
   **LXX-provenance note (Option B) LIVE 2026-06-25:** a subordinate "rests on Septuagint (Greek-OT) usage" flag
   on senses grounded ≥80% OT (≥4 OT refs) — `sense_provenance()` derives it from the stored citations (book =
   OT/NT), NO model, recomputed on every build/`--resplit` (`--all` rolls it across the whole batch). Fires only
