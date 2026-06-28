@@ -32,7 +32,7 @@ import re
 import sys
 import sqlite3
 import urllib.request
-from collections import defaultdict
+from collections import defaultdict, Counter
 
 DB = sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith("--") else \
     "/home/appssanding720/bible-db/bible.db"
@@ -424,6 +424,113 @@ def main():
         reaches = bool(cush and norm_base(r["b"]) in cush["bases"])
         print(f"     2Sa {r['ch']}:{r['vs']}  head={r['h']!r}  stored={r['b']!r}  "
               f"reaches Cush by #? {reaches}")
+    # WS2 add: footprint of H3570 — proves the correction must target the 6 2Sa
+    # slots BY VERSE, not a global number swap (Jer 36:14 Cushi is correctly H3570).
+    n3570 = conn.execute(f"""SELECT v.book AS book, COUNT(*) AS c
+        FROM words w JOIN verses v ON v.id=w.verse_id
+        WHERE {pn_where} AND w.strongs_base='H3570' GROUP BY v.book""").fetchall()
+    print(f"  H3570 footprint (number we'd correct FROM): "
+          + (", ".join(f"{r['book']}={r['c']}" for r in n3570) or "none"))
+    print("  -> fix the 6 2Sa slots BY VERSE; a global H3570->H3569 swap would clobber Jer.")
+
+    # ── WS1 — soft-miss split: offset-recoverable vs pronoun-gap residual ────
+    def chap_ref_vs(nm, B, bk, ch):
+        out = set()
+        for i in name_idx.get(nm, set()) | (base_idx.get(B, set()) if B else set()):
+            for (b2, c2, v2) in ents[i]["refs"]:
+                if b2 == bk and c2 == ch:
+                    out.add(v2)
+        return out
+
+    soft_deltas = defaultdict(list)       # ABP book -> [nearest-delta,...]
+    for r in occ_rows:
+        nm = norm_name(r["label"])
+        if not nm:
+            continue
+        bk = BOOKNUM.get((r["book"] or "").lower())
+        if bk is None:
+            continue
+        V = (bk, r["ch"], r["vs"])
+        B = norm_base(r["base"])
+        if [i for i in name_idx.get(nm, set()) if V in ents[i]["refs"]]:
+            continue                       # name+verse bound
+        if B and any(V in ents[i]["refs"] for i in base_idx.get(B, set())):
+            continue                       # number+verse bound
+        cvs = chap_ref_vs(nm, B, bk, r["ch"])
+        if not cvs:
+            continue                       # hard, not soft
+        nearest = min(cvs, key=lambda x: abs(x - r["vs"]))
+        soft_deltas[r["book"]].append(r["vs"] - nearest)
+
+    off_recover = pron_gap = 0
+    book_rows = []
+    for book, ds in soft_deltas.items():
+        c = Counter(ds)
+        mode_d, mode_n = c.most_common(1)[0]
+        tot = len(ds)
+        # a CONSISTENT non-zero shift across >=3 misses, majority on one delta =>
+        # a real versification offset; anything else is pronoun-gap / noise.
+        if tot >= 3 and mode_d != 0 and mode_n / tot >= 0.5:
+            off_recover += mode_n
+            pron_gap += tot - mode_n
+            book_rows.append((tot, book, f"offset d{mode_d:+d} ({mode_n}/{tot})"))
+        else:
+            pron_gap += tot
+            book_rows.append((tot, book, f"pronoun-gap (top d{mode_d:+d} {mode_n}/{tot})"))
+    print("\n" + "=" * 72)
+    print("WS1 — SOFT-MISS SPLIT (offset-recoverable vs pronoun-gap residual)")
+    print(f"  offset-recoverable (consistent shift)  : {off_recover:,}")
+    print(f"  pronoun-gap residual ('referent-known' floor class): {pron_gap:,}")
+    print("  per book (soft count / call):")
+    for tot, book, tag in sorted(book_rows, reverse=True)[:25]:
+        print(f"     {book:4} {tot:5}   {tag}")
+
+    # ── WS3 — residual dump: number-only binds (suspicion-ranked) + ordered-multi ──
+    nv_slots = defaultdict(int)            # (name, verse) -> #word-slots of that name
+    for r in occ_rows:
+        nm = norm_name(r["label"])
+        bk = BOOKNUM.get((r["book"] or "").lower())
+        if nm and bk is not None:
+            nv_slots[(nm, (bk, r["ch"], r["vs"]))] += 1
+
+    numonly, ordmulti = [], []
+    for r in occ_rows:
+        nm = norm_name(r["label"])
+        if not nm:
+            continue
+        bk = BOOKNUM.get((r["book"] or "").lower())
+        if bk is None:
+            continue
+        V = (bk, r["ch"], r["vs"])
+        B = norm_base(r["base"])
+        nh = [i for i in name_idx.get(nm, set()) if V in ents[i]["refs"]]
+        if nh:
+            if len(nh) >= 2 and nv_slots[(nm, V)] == len(nh):
+                ordmulti.append((nm, r["book"], r["ch"], r["vs"],
+                                 sorted({ents[i]["head"] for i in nh})))
+            continue
+        if B:
+            bh = [i for i in base_idx.get(B, set()) if V in ents[i]["refs"]]
+            if bh:
+                heads = sorted({ents[i]["head"] for i in bh})
+                shared = len(base_idx.get(B, set())) >= 2
+                nostem = all(h[:3] != nm[:3] for h in heads)
+                numonly.append((nm, r["book"], r["ch"], r["vs"], B, heads, shared, nostem))
+
+    flagged = [x for x in numonly if x[6] or x[7]]
+    print("\n" + "=" * 72)
+    print("WS3 — RESIDUAL DUMP (the binds resting on the polluted number)")
+    print(f"  number-only binds total                : {len(numonly):,}")
+    print(f"  flagged (shared-# OR no-stem) HAND-CHECK: {len(flagged):,}")
+    print(f"  ordered-multi binds (positional) HOT    : {len(ordmulti):,}")
+    print("  --- flagged number-only (first 30) ---")
+    for nm, bk, ch, vs, B, heads, shared, nostem in flagged[:30]:
+        fl = " ".join([t for t, on in (("shared#", shared), ("no-stem", nostem)) if on])
+        print(f"     {nm:14} {bk} {ch}:{vs:<3} #{B:6} -> {heads}  [{fl}]")
+    if ordmulti:
+        print("  --- ordered-multi HOT (first 15) ---")
+        for nm, bk, ch, vs, heads in ordmulti[:15]:
+            print(f"     {nm:14} {bk} {ch}:{vs:<3} -> {heads}")
 
     conn.close()
     print("\nDone. (read-only — nothing was changed)")
