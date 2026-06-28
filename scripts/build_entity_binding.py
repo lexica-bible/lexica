@@ -129,13 +129,16 @@ def main():
         if bk is None:
             stat[tier]["bookmiss"] += 1
             continue
-        if tier == 3:
-            stat[3]["skipped"] += 1            # left on the name-path, not bound
-            continue
+        # Bind EVERY tier for the stats (so WS1 versification is counted across all
+        # tiers — most superscription recoveries are Tier-3 names like David/Asaph),
+        # but only Tier 1/2 results are written to the binding tables below.
         b = er.bind_occurrence(ents, name_idx, base_idx, nm, bk, r["ch"], r["vs"], r["base"])
         stat[tier][b.kind] += 1
         if b.kind == "versification":
             versification[b.rule] += 1
+        if tier == 3:
+            stat[3]["skipped"] += 1            # left on the name-path, not bound
+            continue
         key = (bk, r["ch"], r["vs"], nm)
         prev = group.get(key)
         if b.render:
@@ -185,7 +188,10 @@ def main():
 
     print("\n" + "=" * 72)
     print("WS1 versification recoveries (documented + landed)")
-    print(f"  total: {sum(versification.values()):,}   (expect ~117: 116 Psa + 1 Num)")
+    in_scope = stat[1]["versification"] + stat[2]["versification"]
+    print(f"  ALL tiers : {sum(versification.values()):,}   (expect ~117: 116 Psa + 1 Num)")
+    print(f"  in-scope (Tier 1+2, actually bound): {in_scope:,}")
+    print(f"  Tier 3 (already handled by the name-path): {stat[3]['versification']:,}")
     for rule, n in sorted(versification.items(), key=lambda kv: -kv[1]):
         print(f"     {rule:22} {n:5}")
 
