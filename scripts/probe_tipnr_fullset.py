@@ -433,16 +433,31 @@ def main():
           + (", ".join(f"{r['book']}={r['c']}" for r in n3570) or "none"))
     print("  -> fix the 6 2Sa slots BY VERSE; a global H3570->H3569 swap would clobber Jer.")
 
-    # ── WS1 — soft-miss split: offset-recoverable vs pronoun-gap residual ────
-    def chap_ref_vs(nm, B, bk, ch):
-        out = set()
-        for i in name_idx.get(nm, set()) | (base_idx.get(B, set()) if B else set()):
-            for (b2, c2, v2) in ents[i]["refs"]:
-                if b2 == bk and c2 == ch:
-                    out.add(v2)
+    # ── WS1 — PER-CHAPTER DOCUMENTED versification map ──────────────────────
+    # DERIVE the offset from documented Hebrew/Greek-vs-English differences only;
+    # the deltas merely VALIDATE (a documented remap must LAND on a same-name
+    # entity's ref to count). A rule encoded wrong simply won't land -> floors,
+    # never a false recovery. Everything with no documented rule floors as the
+    # 'referent-known, not-named' class. Documented rules (verified, not recalled):
+    #   Psa  : superscription -> body verse is +1 vs English (data: 121/123 at -1).
+    #   Num  : English 16:36-50 = Hebrew 17:1-15  (Korah chapters).
+    #   Mal  : English 4:1-6    = Hebrew 3:19-24.
+    # Lev / Est carry NO clean verse-offset rule (Esther's diffs are content
+    # additions, not a shift) -> floored, as directed.
+    def doc_remaps(book, ch, vs):
+        out = []                                   # (esv_ch, esv_vs, rule)
+        if book == "Psa":
+            out.append((ch, vs + 1, "Psa:superscription"))
+        elif book == "Num":
+            if ch == 17 and vs <= 15:  out.append((16, vs + 35, "Num16/17"))
+            elif ch == 17:             out.append((17, vs - 15, "Num16/17"))
+        elif book == "Mal":
+            if ch == 3 and vs >= 19:   out.append((4, vs - 18, "Mal3/4"))
         return out
 
-    soft_deltas = defaultdict(list)       # ABP book -> [nearest-delta,...]
+    recovered = defaultdict(int)                   # rule -> count
+    floored_total = 0
+    floored_deltas = defaultdict(list)             # (book,ch) -> [nearest same-ch delta]
     for r in occ_rows:
         nm = norm_name(r["label"])
         if not nm:
@@ -453,37 +468,43 @@ def main():
         V = (bk, r["ch"], r["vs"])
         B = norm_base(r["base"])
         if [i for i in name_idx.get(nm, set()) if V in ents[i]["refs"]]:
-            continue                       # name+verse bound
+            continue                               # name+verse bound
         if B and any(V in ents[i]["refs"] for i in base_idx.get(B, set())):
-            continue                       # number+verse bound
-        cvs = chap_ref_vs(nm, B, bk, r["ch"])
-        if not cvs:
-            continue                       # hard, not soft
-        nearest = min(cvs, key=lambda x: abs(x - r["vs"]))
-        soft_deltas[r["book"]].append(r["vs"] - nearest)
+            continue                               # number+verse bound
+        ncands = name_idx.get(nm, set())
+        hit = next((rule for (ec, ev, rule) in doc_remaps(r["book"], r["ch"], r["vs"])
+                    if any((bk, ec, ev) in ents[i]["refs"] for i in ncands)), None)
+        if hit:
+            recovered[hit] += 1
+            continue
+        floored_total += 1
+        cvs = [v2 for i in ncands for (b2, c2, v2) in ents[i]["refs"]
+               if b2 == bk and c2 == r["ch"]]
+        if cvs:
+            floored_deltas[(r["book"], r["ch"])].append(
+                r["vs"] - min(cvs, key=lambda x: abs(x - r["vs"])))
 
-    off_recover = pron_gap = 0
-    book_rows = []
-    for book, ds in soft_deltas.items():
-        c = Counter(ds)
-        mode_d, mode_n = c.most_common(1)[0]
-        tot = len(ds)
-        # a CONSISTENT non-zero shift across >=3 misses, majority on one delta =>
-        # a real versification offset; anything else is pronoun-gap / noise.
-        if tot >= 3 and mode_d != 0 and mode_n / tot >= 0.5:
-            off_recover += mode_n
-            pron_gap += tot - mode_n
-            book_rows.append((tot, book, f"offset d{mode_d:+d} ({mode_n}/{tot})"))
-        else:
-            pron_gap += tot
-            book_rows.append((tot, book, f"pronoun-gap (top d{mode_d:+d} {mode_n}/{tot})"))
     print("\n" + "=" * 72)
-    print("WS1 — SOFT-MISS SPLIT (offset-recoverable vs pronoun-gap residual)")
-    print(f"  offset-recoverable (consistent shift)  : {off_recover:,}")
-    print(f"  pronoun-gap residual ('referent-known' floor class): {pron_gap:,}")
-    print("  per book (soft count / call):")
-    for tot, book, tag in sorted(book_rows, reverse=True)[:25]:
-        print(f"     {book:4} {tot:5}   {tag}")
+    print("WS1 — PER-CHAPTER DOCUMENTED MAP (offset-recoverable vs floor)")
+    print(f"  offset-recoverable (documented + landed): {sum(recovered.values()):,}")
+    for rule, n in sorted(recovered.items(), key=lambda kv: -kv[1]):
+        print(f"     {rule:22} {n:5}")
+    print(f"  floored ('referent-known' class)        : {floored_total:,}")
+    print("  Lev / Est: no documented offset rule -> floored (as directed).")
+    # Safety net: a FLOORED chapter with a consistent non-zero delta may be a hidden
+    # shift. FLAG it for documented-rule lookup — never auto-recover (that's fitting).
+    flags = []
+    for (book, ch), ds in floored_deltas.items():
+        if len(ds) >= 3:
+            md, mn = Counter(ds).most_common(1)[0]
+            if md != 0 and mn / len(ds) >= 0.6:
+                flags.append((mn, len(ds), book, ch, md))
+    if flags:
+        print("  --- hidden-offset FLAGS (verify vs documented table, don't auto-add) ---")
+        for mn, tot, book, ch, md in sorted(flags, reverse=True)[:15]:
+            print(f"     {book} {ch}: delta {md:+d} on {mn}/{tot} floored misses")
+    else:
+        print("  no floored chapter shows a consistent hidden offset.")
 
     # ── WS3 — residual dump: number-only binds (suspicion-ranked) + ordered-multi ──
     nv_slots = defaultdict(int)            # (name, verse) -> #word-slots of that name
