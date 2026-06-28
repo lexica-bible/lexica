@@ -8,18 +8,21 @@ spot. You can skip those lines.
 ---
 
 ## Open word-study/data issues — DIAGNOSED, not yet fixed (2026-06-28)
-Issues surfaced 2026-06-28. #1 ("LORD the" word flip) and #3 (θυμός "thyme") are DONE + LIVE.
-These remain:
-- **εἰμί chip over-merge (Zep 2:6 "Crete shall be")** — a proper-noun subject is glued onto the εἰμί
-  verb's cell with a trailing empty `G*`; 47 such spots in the ABP source (David was, Jonah was, …).
-  Same family as the PN-subject fold ([[project_pn_subject_verb_fold]]) but missed because the name isn't
-  in the tipnr roster — the empty `G*` is itself proof a name belongs there. NEXT: get the live still-merged
-  count, extend the fold to fire on the εἰμί+empty-`G*` shape regardless of roster.
-  code: scripts/fix_pn_subject_merge.py detection; the εἰμί base is 1510.
+Issues surfaced 2026-06-28. #1 ("LORD the" word flip), #3 (θυμός "thyme"), and #4 (εἰμί merge) are
+DONE + LIVE. These remain:
+- ~~**εἰμί chip over-merge (Zep 2:6 "Crete shall be")**~~ — DONE + LIVE 2026-06-28 (commit c4a11ae).
+  The live still-merged count was only **2** (Sarai Gen 11:30, Crete Zep 2:6), not 47 — the corpus-wide
+  PN-subject fold had already handled the rest. `fix_pn_subject_merge.py` extended with `_peel_eimi` +
+  the εἰμί+empty-`*` gate (function-lead filter; unbracketed slot-after only); applied on PA, dry-run +
+  audit now 0. Folds into the build. See [[project_pn_subject_verb_fold]].
 - **Proper-noun / entity resolution rework** (Zep 1:1 "Cushi" → Acts verses; "Eden" maps to the wrong
   place) — PARKED for a max-effort session. metaV / biblical-reference / map cards resolve by NAME STRING,
   not the specific TIPNR id bound at THIS occurrence, so homonyms collide across testaments. Diagnose the
   bind path end-to-end, then propose binding each occurrence to one id at import. code: views_metav.py.
+- **~48 G1473 (ἐγώ) cells reading 3rd-person reflexives** ("himself/themselves/itself") with a blank
+  lemma — LOW priority, pre-existing, NOT from the restore. These are the by-design skips of the cautious
+  G1473→G846 retag (it refuses to guess reflexives + no-morph cells). Consistent with the build. Future
+  cleanup only. code: the g1473_gloss_retag fold in build_words_from_abp.py / lxx_align.
 
 ---
 
