@@ -27,4 +27,5 @@ python tests/test_strongs_join.py >/dev/null
 python tests/test_build_invariants.py >/dev/null
 python tests/test_folded_fixes.py >/dev/null
 python tests/test_argmap.py >/dev/null
+python tests/test_versification.py >/dev/null
 echo "pre-commit: all checks passed."

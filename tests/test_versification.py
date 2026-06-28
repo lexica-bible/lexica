@@ -1,0 +1,93 @@
+#!/usr/bin/env python3
+"""Engine tests for entity_resolution.py — pure logic, no database (like the other
+invariant tests). Locks the WS1 documented versification map + the shared book/name
+helpers so a future edit can't silently change which references the binder will test.
+
+Run:  python -m pytest tests/test_versification.py   (or)   python tests/test_versification.py
+"""
+import os
+import sys
+
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+import entity_resolution as er
+
+
+# ── book / name / ref helpers ───────────────────────────────────────────────
+def test_book_num_abp_and_tipnr_spellings_agree():
+    # ABP spellings and TIPNR spellings must resolve to the SAME canonical number.
+    assert er.book_num("Psa") == 19 and er.book_num("psalm") == 19
+    assert er.book_num("Num") == 4
+    assert er.book_num("Mal") == 39
+    assert er.book_num("Eze") == er.book_num("Ezk") == 26   # ABP vs TIPNR
+    assert er.book_num("Joe") == er.book_num("Jol") == 29
+    assert er.book_num("Mar") == er.book_num("Mrk") == 41
+    assert er.book_num("Rth") == er.book_num("Rut") == 8
+    assert er.book_num("nope") is None and er.book_num("") is None
+
+
+def test_norm_name_strips_trailing_punctuation_and_lowers():
+    assert er.norm_name("Eden,") == "eden"
+    assert er.norm_name("  Beth-el. ") == "beth-el"   # internal hyphen kept
+    assert er.norm_name("CUSHI") == "cushi"
+    assert er.norm_name("") == "" and er.norm_name(None) == ""
+
+
+def test_norm_base_prefixed_and_zero_padded():
+    assert er.norm_base("H0175A") == "H175"
+    assert er.norm_base("G0002") == "G2"
+    assert er.norm_base("H3569") == "H3569"
+    assert er.norm_base("") == "" and er.norm_base("*") == ""
+
+
+def test_parse_ref_handles_lxx_letters_and_unknown_books():
+    assert er.parse_ref("Ezk.31.18a") == (26, 31, 18)     # letter suffix -> start
+    assert er.parse_ref("LXX Psa.3.2") == (19, 3, 2)       # LXX prefix stripped
+    assert er.parse_ref("Gen.2.13") == (1, 2, 13)
+    assert er.parse_ref("Foo.1.1") is None                 # unknown book
+    assert er.parse_ref("Gen.1") is None                   # not enough parts
+
+
+# ── WS1 versification map ────────────────────────────────────────────────────
+def test_psalms_superscription_plus_one():
+    assert er.documented_remaps(19, 3, 1) == [(19, 3, 2, "Psa:superscription")]
+    assert er.documented_remaps(19, 51, 5) == [(19, 51, 6, "Psa:superscription")]
+
+
+def test_numbers_16_17_korah_both_directions():
+    # English 16:36-50 == Hebrew 17:1-15
+    assert er.documented_remaps(4, 17, 1) == [(4, 16, 36, "Num16/17")]
+    assert er.documented_remaps(4, 17, 15) == [(4, 16, 50, "Num16/17")]
+    # a Numbers-17 verse past v15 maps back to English 17:(v-15)
+    assert er.documented_remaps(4, 17, 16) == [(4, 17, 1, "Num16/17")]
+    # other Numbers chapters carry no offset
+    assert er.documented_remaps(4, 16, 1) == []
+
+
+def test_malachi_3_4():
+    assert er.documented_remaps(39, 3, 19) == [(39, 4, 1, "Mal3/4")]
+    assert er.documented_remaps(39, 3, 18) == []   # below the split point
+
+
+def test_floor_class_books_have_no_documented_offset():
+    # Lev / Est / Lam carry NO clean verse-offset rule -> floored by design.
+    for bk in (3, 17, 25):           # Leviticus, Esther, Lamentations
+        assert er.documented_remaps(bk, 1, 1) == []
+    # an ordinary narrative book too
+    assert er.documented_remaps(1, 2, 13) == []    # Genesis
+
+
+if __name__ == "__main__":
+    import traceback
+    fns = [v for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]
+    failed = 0
+    for fn in fns:
+        try:
+            fn()
+            print(f"  ok   {fn.__name__}")
+        except Exception:
+            failed += 1
+            print(f"  FAIL {fn.__name__}")
+            traceback.print_exc()
+    print(f"\n{len(fns) - failed}/{len(fns)} passed")
+    sys.exit(1 if failed else 0)
