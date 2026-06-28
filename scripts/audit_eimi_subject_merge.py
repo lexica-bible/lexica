@@ -36,19 +36,11 @@ import sqlite3
 import sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from fix_pn_subject_merge import _first_word, _empty_star_pos
+from fix_pn_subject_merge import _first_word, _empty_star_pos, _FUNCTION_LEAD
 
-# Capitalized leads that are sentence-initial English, not proper nouns. An εἰμί peel
-# must skip these — they'd mint a bogus clickable "name". Flagged, not silently dropped.
-_FUNCTION_LEAD = {
-    "the", "a", "an", "and", "then", "but", "so", "now", "for", "yet", "or", "nor",
-    "there", "here", "this", "that", "these", "those", "such", "all", "both", "each",
-    "he", "she", "it", "they", "we", "you", "i", "who", "what", "when", "where",
-    "which", "while", "whose", "him", "her", "his", "their", "its", "my", "your",
-    "if", "behold", "yes", "no", "not", "in", "on", "at", "by", "to", "of", "as",
-    "how", "why", "thus", "also", "even", "still", "let", "do", "did", "shall",
-    "will", "may", "thou", "thee", "ye",
-}
+# _FUNCTION_LEAD (capitalized sentence-initial words that are NOT proper nouns) is
+# defined in fix_pn_subject_merge.py — the εἰμί peel and this audit share one copy so
+# they can't drift.
 
 
 def main():

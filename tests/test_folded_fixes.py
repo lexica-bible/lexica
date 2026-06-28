@@ -364,6 +364,59 @@ def test_pn_subject_split():
     check("bracketed before-shape skipped", bef, [("", "*"), ("Moses said", "G2036")])
 
 
+# ── 11c. εἰμί (copula) subject split — Issue 4 (non-roster subjects) ─────────────
+def test_eimi_subject_split():
+    import sqlite3
+    if B.apply_pn_subject_split is None:
+        check("pn-subject fold importable (eimi)", False, True)
+        return
+    con = sqlite3.connect(":memory:")
+    con.execute("CREATE TABLE verses(id INTEGER PRIMARY KEY, book TEXT, chapter INT, verse INT)")
+    con.execute("CREATE TABLE words(verse_id INT, position INT, english TEXT, english_head TEXT,"
+                " strongs TEXT, strongs_base TEXT, greek_pos INT, bracket_id INT, italic INT,"
+                " italic_words TEXT, smcap_words TEXT, morph TEXT, lemma TEXT, is_pn INT DEFAULT 0)")
+    con.execute("CREATE TABLE tipnr(name TEXT)")
+    con.execute("INSERT INTO tipnr VALUES('David')")      # the εἰμί subjects are NOT in the roster
+    con.execute("INSERT INTO verses VALUES(1,'Gen',11,30)")   # 'Sarai was'        -> split
+    con.execute("INSERT INTO verses VALUES(2,'2Ki',10,15)")   # 'It is.' func lead -> skip
+    con.execute("INSERT INTO verses VALUES(3,'Zep',2,6)")     # cap lead, NO empty * -> skip
+
+    def w(vid, pos, eng, sbase, gp=None, bid=None, ispn=0, head=None):
+        con.execute("INSERT INTO words(verse_id,position,english,english_head,strongs,strongs_base,"
+                    "greek_pos,bracket_id,italic,italic_words,smcap_words,morph,lemma,is_pn)"
+                    " VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)",
+                    (vid, pos, eng, head, sbase.lstrip("GH"), sbase, gp, bid, 0, "", "", None, None, ispn))
+
+    # POSITIVE: copula subject not in roster, empty '*' right after -> split
+    w(1, 0, "And", "G2532", head="and")
+    w(1, 1, "Sarai was", "G1510", head="was")
+    w(1, 2, "", "*", ispn=1)
+    w(1, 3, "sterile,", "G4723", head="sterile")
+    # NEGATIVE 1: function-word lead 'It is.' WITH an empty '*' -> must NOT peel
+    w(2, 1, "It is.", "G1510", head="is")
+    w(2, 2, "", "*", ispn=1)
+    # NEGATIVE 2: capitalized non-roster lead but NO adjacent empty '*' -> must NOT peel
+    w(3, 1, "Crete shall be", "G1510", head="be")
+    w(3, 2, "a pasture", "G3542", head="pasture")
+
+    B.apply_pn_subject_split(con, apply=True, log=lambda *a: None)
+    con.commit()
+
+    eimi = {r[0]: (r[1], r[2]) for r in con.execute(
+        "SELECT position,english,strongs_base FROM words WHERE verse_id=1 ORDER BY position")}
+    check("εἰμί: name on lower slot as '*' for import_tipnr", eimi[1], ("Sarai", "*"))
+    check("εἰμί: verb on higher slot keeps G1510", eimi[2], ("was", "G1510"))
+
+    func = [tuple(r) for r in con.execute(
+        "SELECT english,strongs_base FROM words WHERE verse_id=2 ORDER BY position")]
+    check("εἰμί: function lead + empty '*' -> untouched", func, [("It is.", "G1510"), ("", "*")])
+
+    noslot = [tuple(r) for r in con.execute(
+        "SELECT english,strongs_base FROM words WHERE verse_id=3 ORDER BY position")]
+    check("εἰμί: capitalized lead + no empty '*' -> untouched", noslot,
+          [("Crete shall be", "G1510"), ("a pasture", "G3542")])
+
+
 # ── 11b. italic-head re-clean runs AFTER the PN-subject split ───────────────────
 def test_italic_heads_after_pn_split():
     # The subject-name split rewrites english_head via _head_word WITHOUT the italic

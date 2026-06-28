@@ -44,6 +44,15 @@ BRACKETED cases (ABP reorder brackets, e.g. Gen 18:7 "[to the oxen Abraham ran]"
   "empty slot right after the merged cell" shape is handled (all known cases); a
   bracketed BEFORE-shape (none seen) is skipped so a bracket is never reordered blind.
 
+εἰμί ("to be") cases (Issue 4): the subject of a copula ("Sarai was", "Crete shall be")
+  is NOT in the tipnr roster, so the roster peel above never caught it — but ABP still
+  floated the subject's own Greek word as a trailing empty '*', the same proof a name
+  belongs there. So a cell on strongs_base G1510 with a Capitalized lead and an adjacent
+  empty '*' is split too: the single leading word becomes the '*' name slot, the rest
+  stays the verb. A sentence-initial function lead ("It is.") is filtered out
+  (_FUNCTION_LEAD); the εἰμί path runs ONLY on the clean unbracketed slot-after shape
+  (both live cases — Gen 11:30, Zep 2:6). Audit: scripts/audit_eimi_subject_merge.py.
+
 SCOPE / SAFETY:
   - Detection is identical to scripts/audit_pn_placeholder.py (tipnr name roster,
     is_pn=0 multi-word real-number cell whose first word is a name, with an
@@ -84,6 +93,19 @@ def _first_word(eng):
 # servant" = adjective+noun). Excluded so we don't mint a bogus clickable name.
 _NOT_SUBJECT = {"on", "hebrew"}
 
+# Capitalized leads that are sentence-initial English, not proper nouns. The εἰμί path
+# (below) must skip these — peeling one would mint a bogus clickable "name" ("It is.").
+# Single source of truth; audit_eimi_subject_merge.py imports it from here.
+_FUNCTION_LEAD = {
+    "the", "a", "an", "and", "then", "but", "so", "now", "for", "yet", "or", "nor",
+    "there", "here", "this", "that", "these", "those", "such", "all", "both", "each",
+    "he", "she", "it", "they", "we", "you", "i", "who", "what", "when", "where",
+    "which", "while", "whose", "him", "her", "his", "their", "its", "my", "your",
+    "if", "behold", "yes", "no", "not", "in", "on", "at", "by", "to", "of", "as",
+    "how", "why", "thus", "also", "even", "still", "let", "do", "did", "shall",
+    "will", "may", "thou", "thee", "ye",
+}
+
 
 def _peel_name(eng, names):
     """Split a merged cell into (name_part, verb_part). Peels the LONGEST leading
@@ -109,6 +131,22 @@ def _peel_name(eng, names):
     if not name_part.strip() or not verb_part.strip():
         return None
     if name_part.lower() in _NOT_SUBJECT:
+        return None
+    return name_part, verb_part
+
+
+def _peel_eimi(eng):
+    """Peel an εἰμί (copula) subject merge whose subject is NOT in the tipnr roster
+    ("Sarai was" -> "Sarai" + "was"; "Crete shall be" -> "Crete" + "shall be"). The
+    floated empty '*' is a SINGLE Greek slot, so we peel exactly one leading word as the
+    name and leave the rest as the verb. Both live cases are single-word names; a hit
+    with more than that surfaces in the dry run for an eyeball. Returns (name, verb)."""
+    toks = eng.split()
+    if len(toks) < 2:
+        return None
+    name_part = toks[0].rstrip(".,;:!?'\"")
+    verb_part = " ".join(toks[1:]).strip()
+    if not name_part or not verb_part:
         return None
     return name_part, verb_part
 
@@ -210,12 +248,23 @@ def run(conn, apply=False, log=print):
     fixed = 0
     skipped_bracket = 0
     skipped_split = 0
+    skipped_eimi = 0
     no_slot = 0
     by_name = {}
 
     for r in rows:
         fw = _first_word(r["english"])
-        if not (fw and fw[0].isupper() and fw.lower() in names):
+        if not (fw and fw[0].isupper()):
+            continue
+        is_roster = fw.lower() in names
+        # εἰμί (G1510) copula merges: the subject is NOT in the tipnr roster, but the
+        # adjacent empty '*' slot is ABP's own proof a proper-noun word belongs there
+        # ("Sarai was", "Crete shall be"). Peel the single Capitalized lead as the name;
+        # a sentence-initial function lead ("It is.") is filtered out (_FUNCTION_LEAD).
+        is_eimi = (r["strongs_base"] == "G1510"
+                   and not is_roster
+                   and fw.lower() not in _FUNCTION_LEAD)
+        if not (is_roster or is_eimi):
             continue
         vid, mpos = r["verse_id"], r["position"]
         slot = _empty_star_pos(conn, vid, mpos)
@@ -223,17 +272,24 @@ def run(conn, apply=False, log=print):
             no_slot += 1
             continue
         epos, ebid = slot
-        # Bracketed cells: keep BOTH the name and the verb inside the bracket, each
+        after = (epos == r["position"] + 1)
+        bracketed = (r["bracket_id"] is not None or ebid is not None)
+        # The εἰμί path is conservative: only the clean unbracketed slot-AFTER shape
+        # (every known case). A bracketed or slot-BEFORE εἰμί is left for a manual look
+        # so we never reorder a bracket — or peel a reversed slot — blind.
+        if is_eimi and (bracketed or not after):
+            skipped_eimi += 1
+            continue
+        # Bracketed roster cells: keep BOTH the name and the verb inside the bracket, each
         # carrying the merged cell's reorder number (greek_pos), so prose still reads
         # "Name verb" — the name reads first, the verb ties on greek_pos and falls in
         # right after it by position. Only the "empty slot right after the merged cell"
         # shape is handled (all known bracketed cases); a bracketed BEFORE-shape (none
         # seen) is left to a manual look so we never reorder a bracket blind.
-        after = (epos == r["position"] + 1)
-        if (r["bracket_id"] is not None or ebid is not None) and not after:
+        if bracketed and not after:
             skipped_bracket += 1
             continue
-        split = _peel_name(r["english"], names)
+        split = _peel_name(r["english"], names) if is_roster else _peel_eimi(r["english"])
         if split is None:
             skipped_split += 1
             continue
@@ -276,6 +332,7 @@ def run(conn, apply=False, log=print):
     log(f"\nWould split {fixed:,} merged name(s) across {len(by_name):,} names.")
     log(f"  skipped (bracketed cell/slot): {skipped_bracket:,}  <- handled separately")
     log(f"  skipped (couldn't peel name) : {skipped_split:,}")
+    log(f"  skipped (εἰμί bracketed/before): {skipped_eimi:,}  <- left for a manual look")
     log(f"  no adjacent empty slot       : {no_slot:,}  <- left alone (correct as-is)")
     return fixed
 
