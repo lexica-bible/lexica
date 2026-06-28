@@ -661,9 +661,9 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
           <div className="pnbound-name">{be.name}</div>
           {line && <p className="pnbound-desc">{line}</p>}
           <div className="pnbound-facts">
-            {be.parents && be.parents.length > 0 && (
+            {be.section === "person" && be.parents && be.parents.length > 0 && (
               <div><span className="pnbound-lbl">Parents</span> {be.parents.join(", ")}</div>)}
-            {be.offspring && be.offspring.length > 0 && (
+            {be.section === "person" && be.offspring && be.offspring.length > 0 && (
               <div><span className="pnbound-lbl">Children</span> {be.offspring.join(", ")}</div>)}
             {be.area && (
               <div><span className="pnbound-lbl">{be.section === "place" ? "Region" : "Tribe"}</span> {be.area}</div>)}

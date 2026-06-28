@@ -257,7 +257,7 @@ def _kin_names(blob, cap=8):
     out = []
     for tok in _re.split(r"[,+]", blob or ""):
         nm = tok.split("@")[0].strip().rstrip("(adf)").strip()
-        if nm and nm not in out:
+        if nm and "/" not in nm and "http" not in nm.lower() and nm not in out:
             out.append(nm)
     return out[:cap]
 

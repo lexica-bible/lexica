@@ -267,10 +267,13 @@ def main():
             tier INTEGER)""")
         for u in sorted(used):
             e = by_uniq[u]
+            # parents/offspring columns are kin for PERSONS only; for a place those
+            # same TIPNR columns are founder/maps-URL, not children — store blank.
+            person = e["section"] == "person"
             w.execute("INSERT OR REPLACE INTO tipnr_entities VALUES(?,?,?,?,?,?,?,?,?,?)",
                       (u, e["head"], e["section"], e["gender"], e["area"],
                        e["desc"], e["summary"], ",".join(sorted(e["bases"])),
-                       e["parents"], e["offspring"]))
+                       e["parents"] if person else "", e["offspring"] if person else ""))
             w.executemany("INSERT INTO tipnr_entity_refs VALUES(?,?,?,?)",
                           [(u, bk, ch, vs) for (bk, ch, vs) in sorted(e["refs"])])
         for (bk, ch, vs, nm), (state, uniq, kind, rule, tier) in group.items():
