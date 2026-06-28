@@ -241,37 +241,52 @@ def main():
           AND COALESCE(NULLIF(w.english_head,''), w.english) != ''
     """).fetchall()
 
-    # ── RATE 1 over the whole ambiguous set ─────────────────────────────────
-    buckets = defaultdict(int)
+    # ── RATE 1 — run the binder over EVERY occurring proper-noun name, split
+    #    into the AMBIGUOUS set (what C binds) and the UNAMBIGUOUS set (what C
+    #    fast-paths on name only). The unambiguous bind rate is the B-vs-C decider:
+    #    if it's ~as good as the ambiguous set, B (bind everyone, name-path as the
+    #    fallback) regresses nobody and deletes C's scoping machinery. The
+    #    unambiguous set is split again: names WITH a metaV row (a working name-card
+    #    -> a bind miss is a regression risk) vs names with NO metaV row (today they
+    #    get a bare AI blurb -> binding is pure upside, no card to regress). ─────
+    G = {k: defaultdict(int) for k in ("amb", "unamb", "unamb_meta", "unamb_nometa")}
     per_name = defaultdict(lambda: defaultdict(int))
-    occ_set_names = set()
+    names_seen = {"amb": set(), "unamb": set()}
     for r in occ_rows:
         nm = norm_name(r["label"])
-        if nm not in ambiguous:
+        if not nm:
             continue
-        occ_set_names.add(nm)
+        grp = "amb" if nm in ambiguous else "unamb"
+        names_seen[grp].add(nm)
         bk = BOOKNUM.get((r["book"] or "").lower())
-        if bk is None:
-            buckets["hard"] += 1; per_name[nm]["hard"] += 1; continue
-        b = norm_base(r["base"])
-        cat = classify(nm, bk, r["ch"], r["vs"], b)
-        buckets[cat] += 1
+        cat = "hard" if bk is None else classify(nm, bk, r["ch"], r["vs"], norm_base(r["base"]))
+        G[grp][cat] += 1
         per_name[nm][cat] += 1
+        if grp == "unamb":
+            G["unamb_nometa" if (nm not in person_ids and nm not in place_ids)
+              else "unamb_meta"][cat] += 1
 
-    total = sum(buckets.values())
-    bound = buckets["clean"] + buckets["variant"] + buckets["strongs"]
-    print("=" * 72)
-    print(f"RATE 1 — verse -> TIPNR-entity BIND, over the ambiguous set")
-    print(f"  ambiguous names total (metaV)        : {len(ambiguous):,}")
-    print(f"  ambiguous names occurring in text     : {len(occ_set_names):,}")
-    print(f"  occurrences on an ambiguous name      : {total:,}")
-    if total:
-        print(f"  BOUND                                 : {bound:,}  ({100*bound/total:.1f}%)")
-        print(f"     clean   (headword name+verse)      : {buckets['clean']:,}")
-        print(f"     variant (other spelling+verse)     : {buckets['variant']:,}")
-        print(f"     strongs (across headword, by #)    : {buckets['strongs']:,}  <- headword-artifact catches")
-        print(f"  soft miss (versification/locality)    : {buckets['soft']:,}  ({100*buckets['soft']/total:.1f}%)")
-        print(f"  HARD unbindable                       : {buckets['hard']:,}  ({100*buckets['hard']/total:.1f}%)")
+    def report(title, b):
+        tot = sum(b.values())
+        print("=" * 72)
+        print(title)
+        if not tot:
+            print("  (no occurrences)"); return
+        bound = b["clean"] + b["variant"] + b["strongs"]
+        print(f"  occurrences                           : {tot:,}")
+        print(f"  BOUND                                 : {bound:,}  ({100*bound/tot:.1f}%)")
+        print(f"     clean / variant / strongs(by #)    : {b['clean']:,} / {b['variant']:,} / {b['strongs']:,}")
+        print(f"  soft miss (versification/locality)    : {b['soft']:,}  ({100*b['soft']/tot:.1f}%)")
+        print(f"  HARD unbindable                       : {b['hard']:,}  ({100*b['hard']/tot:.1f}%)")
+
+    report(f"RATE 1 — AMBIGUOUS set ({len(names_seen['amb']):,} names) — what C binds",
+           G["amb"])
+    report(f"RATE 1 — UNAMBIGUOUS set ({len(names_seen['unamb']):,} names) — *** the B-vs-C decider ***",
+           G["unamb"])
+    report("   - unambiguous WITH a metaV row (regression-risk group if bind misses)",
+           G["unamb_meta"])
+    report("   - unambiguous with NO metaV row (today = bare AI blurb; binding = upside)",
+           G["unamb_nometa"])
 
     # ── RATE 2 — people bridge (relationship-keyed) over ambiguous persons ───
     def rel_names(pid):
