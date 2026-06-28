@@ -54,15 +54,12 @@ def first_tok(s):
     return m.group(0) if m else None
 
 
-def main():
-    ap = argparse.ArgumentParser()
-    ap.add_argument("db")
-    ap.add_argument("--list", action="store_true", help="print every flipped verse")
-    args = ap.parse_args()
-
-    conn = sqlite3.connect(f"file:{args.db}?mode=ro", uri=True)
+def find_flips(conn):
+    """READ-ONLY detection, shared by the audit CLI here AND scripts/fix_split_flip.py
+    so the two can never drift. Returns one dict per stranded determiner:
+        {vid, ref, noun_pos, det_pos, noun, det, stored, clean_has}
+    noun_pos / det_pos are the words.position values of the two slots to swap."""
     conn.row_factory = sqlite3.Row
-
     rows = conn.execute(
         """SELECT v.id AS vid, v.book, v.chapter, v.verse, v.text AS clean,
                   w.position, w.english, w.strongs_base, w.bracket_id
@@ -104,9 +101,22 @@ def main():
             bad = re.search(rf"\b{nl}\s+{det}\b", clean_l)
             if good and not bad:
                 flips.append({
-                    "ref": f"{book} {ch}:{vs}", "noun": noun, "det": det,
+                    "vid": vid, "ref": f"{book} {ch}:{vs}",
+                    "noun_pos": a["position"], "det_pos": b["position"],
+                    "noun": noun, "det": det,
                     "stored": f"{ae} {be}", "clean_has": f"{det} {noun}",
                 })
+    return flips
+
+
+def main():
+    ap = argparse.ArgumentParser()
+    ap.add_argument("db")
+    ap.add_argument("--list", action="store_true", help="print every flipped verse")
+    args = ap.parse_args()
+
+    conn = sqlite3.connect(f"file:{args.db}?mode=ro", uri=True)
+    flips = find_flips(conn)
     conn.close()
 
     print(f"READ-ONLY split-flip audit -> {args.db}")
