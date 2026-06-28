@@ -657,14 +657,19 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       if (!boundEntity) return null;
       const be = boundEntity;
       const label = be.section === "place" ? "Place" : be.section === "person" ? "Person" : "Identity";
+      const clean = s => (s || "").replace(/\s*\(\?\)/g, "").trim();   // drop TIPNR's "(?)" uncertainty marker
       // a clean one-liner: the person 'desc' is short; for a place fall to the
       // summary's first clause (before "first/only mentioned").
       let line = (be.desc && be.desc.toLowerCase() !== be.name.toLowerCase() && be.desc.length > 4) ? be.desc : "";
       if (!line && be.summary)
-        line = be.summary.split(/,?\s*(?:first mentioned|only mentioned|referred to)/i)[0].replace(/\(+$/, "").trim();
+        line = be.summary.split(/,?\s*(?:first mentioned|only mentioned|referred to)/i)[0].replace(/\(+$/, "");
+      line = clean(line);
+      const area = clean(be.area);
+      // don't repeat the region when the description already names it (Eden: "…in Mesopotamia")
+      const showArea = area && !(line && line.toLowerCase().includes(area.toLowerCase()));
       return (
         <section key="boundEntity" className="sec pnbound">
-          <h4 className="sec-head"><span className="sec-t">{label}</span></h4>
+          <h4 className="sec-head"><span className="sec-t">{label}</span><span className="bdb-badge">TIPNR</span></h4>
           <div className="pnbound-name">{be.name}</div>
           {line && <p className="pnbound-desc">{line}</p>}
           <div className="pnbound-facts">
@@ -672,8 +677,8 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
               <div><span className="pnbound-lbl">Parents</span> {be.parents.join(", ")}</div>)}
             {be.section === "person" && be.offspring && be.offspring.length > 0 && (
               <div><span className="pnbound-lbl">Children</span> {be.offspring.join(", ")}</div>)}
-            {be.area && (
-              <div><span className="pnbound-lbl">{be.section === "place" ? "Region" : "Tribe"}</span> {be.area}</div>)}
+            {showArea && (
+              <div><span className="pnbound-lbl">{be.section === "place" ? "Region" : "Tribe"}</span> {area}</div>)}
             {be.ref_count > 0 && (
               <div className="pnbound-appears">Appears {be.ref_count}× in scripture</div>)}
           </div>
