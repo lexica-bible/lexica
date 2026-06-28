@@ -131,6 +131,26 @@ def _strip_accents(s: str | None) -> str | None:
     )
 
 
+# Vowel-LENGTH marks only — macron (U+0304) and breve (U+0306). Stripping JUST these
+# (and keeping the accent/breathing) lets a plain-vowel lexicon lemma match an LSJ
+# headword that carries a length mark — θυμός -> θῡμός — WITHOUT collapsing a true
+# accent homograph like θύμος "thyme" onto it (its accent sits on the other vowel).
+# This is the middle tier in the LSJ lookup, inserted between the exact-key match and
+# the broad strip_accents fallback (views_lsj). See scripts/audit_lsj_tier_diff.py.
+_LENGTH_MARKS = frozenset({"̄", "̆"})
+
+
+def _strip_length_marks(s: str | None) -> str | None:
+    """Remove only vowel-length marks (macron/breve); keep accents & breathings."""
+    if not s:
+        return s
+    import unicodedata
+    return unicodedata.normalize(
+        "NFC",
+        "".join(c for c in unicodedata.normalize("NFD", s) if c not in _LENGTH_MARKS),
+    )
+
+
 def _word_boundary_match(haystack: str | None, needle: str | None) -> bool:
     """SQLite custom function: True if needle appears as a complete word in haystack."""
     if not haystack or not needle:
@@ -151,6 +171,7 @@ def db():
     # so the intent is visible and the read-only connection below gets it too.
     conn.execute("PRAGMA busy_timeout = 5000")
     conn.create_function("strip_accents", 1, _strip_accents)
+    conn.create_function("strip_length", 1, _strip_length_marks)
     conn.create_function("word_boundary", 2, _word_boundary_match)
     return conn
 
@@ -161,6 +182,7 @@ def db_ro():
     conn.row_factory = sqlite3.Row
     conn.execute("PRAGMA busy_timeout = 5000")  # wait out a writer, don't error (see db())
     conn.create_function("strip_accents", 1, _strip_accents)
+    conn.create_function("strip_length", 1, _strip_length_marks)
     conn.create_function("word_boundary", 2, _word_boundary_match)
     return conn
 

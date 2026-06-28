@@ -13,7 +13,10 @@ import re
 
 from flask import Blueprint, jsonify, request
 
-from core import db, db_ro, _anthropic, limiter, log, _strip_accents, ai_fingerprint
+from core import (
+    db, db_ro, _anthropic, limiter, log,
+    _strip_accents, _strip_length_marks, ai_fingerprint,
+)
 from views_lexicon import _greek_cognates
 
 bp = Blueprint("lsj", __name__)
@@ -241,9 +244,20 @@ def lsj_lookup(lemma):
             snum = strongs_param
             abp_row = None
         plain = _strip_accents(lemma).lower().replace('-', '')
+        flen = _strip_length_marks(lemma).lower().replace('-', '')
         row = conn.execute(
             "SELECT key, translit, def_html FROM lsj WHERE key = ?", (lemma,)
         ).fetchone()
+        # Middle tier: match on vowel-LENGTH-stripped key (accents kept). Resolves a
+        # plain-vowel lemma to its length-marked headword (θυμός -> θῡμός) without
+        # collapsing a true accent homograph (θύμος "thyme"). Inserted AHEAD of the
+        # broad strip_accents fallback, which stays as the last-resort net.
+        if not row and flen:
+            row = conn.execute(
+                "SELECT key, translit, def_html FROM lsj"
+                " WHERE lower(strip_length(replace(key,'-',''))) = ?"
+                "   AND key NOT LIKE '-%'", (flen,)
+            ).fetchone()
         if not row and plain:
             row = conn.execute(
                 "SELECT key, translit, def_html FROM lsj"
@@ -353,9 +367,18 @@ def lsj_summary(lemma):
                 row = None
         else:
             plain = _strip_accents(lemma).lower().replace('-', '')
+            flen = _strip_length_marks(lemma).lower().replace('-', '')
             row = conn.execute(
                 "SELECT key, def_html, summary_json FROM lsj WHERE key = ?", (lemma,)
             ).fetchone()
+            # Middle tier (see lsj_lookup): length-stripped match ahead of the broad
+            # strip_accents fallback, so θυμός resolves to θῡμός not the θύμον thyme stub.
+            if not row and flen:
+                row = conn.execute(
+                    "SELECT key, def_html, summary_json FROM lsj"
+                    " WHERE lower(strip_length(replace(key,'-',''))) = ?"
+                    "   AND key NOT LIKE '-%'", (flen,)
+                ).fetchone()
             if not row and plain:
                 row = conn.execute(
                     "SELECT key, def_html, summary_json FROM lsj"
