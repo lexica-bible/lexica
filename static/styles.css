@@ -1255,6 +1255,9 @@ input { font-family: inherit; }
 .lsj-badge--accent { background: var(--accent); color: var(--paper); border-color: var(--accent); }
 .lsj-def--loading { color: var(--ink-4); font-style: italic; padding: 8px 0; }
 .detail-p--meta { margin-top: 8px; }
+/* Honest label under the AI person/place blurb — it's constrained model prose
+   scoped to the clicked verse, NOT a verse-checked fact. Always shown. */
+.detail-ai-caveat { margin-top: 5px; font-size: 11px; font-style: italic; color: var(--ink-4); }
 .link-btn--strong { font-weight: 600; }
 
 /* ── Lexica dictionary card (verse-grounded). Dedicated .lex-* so nothing leaks into the locked

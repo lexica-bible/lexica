@@ -413,7 +413,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     if (!name || name.length < 2) return;
     let cancelled = false;
     setAiDescLoading(true);
-    api.metavAiDescription(name)
+    api.metavAiDescription(name, entry.book, entry.chapter, entry.verse)
       .then(d => { if (!cancelled && !d.error) setAiDescription(d.description || null); })
       .catch(() => {})
       .finally(() => { if (!cancelled) setAiDescLoading(false); });
@@ -677,7 +677,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             {cleanPlaceComment(metavData.comment) && <p className="detail-p detail-p--meta">{cleanPlaceComment(metavData.comment)}</p>}
             {metavData.lat && metavData.lon
               ? <LeafletMap lat={metavData.lat} lon={metavData.lon} name={metavData.name} />
-              : <p className="detail-p detail-p--meta" style={{color:"var(--ink-4)", fontStyle:"italic"}}>Location unknown</p>
+              : <p className="detail-p detail-p--meta" style={{color:"var(--ink-4)", fontStyle:"italic"}}>
+                  {metavData.ambiguous
+                    ? "Several places share this name — map hidden to avoid a wrong location."
+                    : "Location unknown"}
+                </p>
             }
           </div>
         ) : null}
@@ -716,7 +720,10 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
         <h4 className="sec-head"><span className="sec-t">{metavType === "place" ? "Biblical Place" : "Biblical Reference"}</span><span className="lsj-badge lsj-badge--accent">AI</span></h4>
         {aiDescLoading
           ? <div className="lsj-def lsj-def--loading">Looking up…</div>
-          : <p className="detail-p detail-p--meta">{renderInlineMd(aiDescription)}</p>
+          : <>
+              <p className="detail-p detail-p--meta">{renderInlineMd(aiDescription)}</p>
+              <p className="detail-ai-caveat">AI summary for this reference — not verse-checked.</p>
+            </>
         }
       </section>
     );

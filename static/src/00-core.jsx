@@ -259,8 +259,11 @@ const api = {
     fetch(`/api/pn-count/${encodeURIComponent(name)}`).then(r => r.json()),
   metavPerson: (name) =>
     fetch(`/api/metav/person/${encodeURIComponent(name)}`).then(r => r.json()),
-  metavAiDescription: (name) =>
-    fetch(`/api/metav/ai-description/${encodeURIComponent(name)}`).then(r => r.json()),
+  metavAiDescription: (name, book, chapter, verse) => {
+    const q = (book && chapter && verse)
+      ? `?book=${encodeURIComponent(book)}&chapter=${chapter}&verse=${verse}` : "";
+    return fetch(`/api/metav/ai-description/${encodeURIComponent(name)}${q}`).then(r => r.json());
+  },
   metavPlace: (name) =>
     fetch(`/api/metav/place/${encodeURIComponent(name)}`).then(r => r.json()),
   bdb: (sid) =>
