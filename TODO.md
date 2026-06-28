@@ -2,22 +2,14 @@
 
 Open work only. Finished and scrapped items (with the gory details) are in [TODO_ARCHIVE.md](TODO_ARCHIVE.md).
 
-> **REMINDER (2026-06-28):** add the daily DB backup as a scheduled task in the PA **Tasks** tab —
-> `cd ~/bible-db && python3 scripts/backup_db.py >> ~/db_backups/backup.log 2>&1`. The script is live
-> and a first backup was taken by hand; only the recurring schedule is still to set.
-
 Each item ends with a small `code:` line — that's just a pointer for Claude to find the right
 spot. You can skip those lines.
 
 ---
 
 ## Open word-study/data issues — DIAGNOSED, not yet fixed (2026-06-28)
-Three issues surfaced this session. #1 ("LORD the" word flip) is DONE + LIVE. These three remain:
-- **G2372 θυμός shows an LSJ "thyme" entry** — `/api/lsj` resolves θυμός (rage/passion) to the
-  homograph headword `θύμον` (Cretan thyme). Same class as the χόος→χοῦς diacritic collision. Confirmed
-  live. NEXT: dump the lexicon lemma for 2372 + every θυμ-/θύμ- key in `lsj` to see whether a real "rage"
-  entry exists, then fix the exact-match/fallback in `views_lsj.py` and scan for other homograph hits.
-  code: views_lsj.py `_resolve_lsj_xref` / the exact-key + accent-stripped fallback in `lsj_lookup`.
+Issues surfaced 2026-06-28. #1 ("LORD the" word flip) and #3 (θυμός "thyme") are DONE + LIVE.
+These remain:
 - **εἰμί chip over-merge (Zep 2:6 "Crete shall be")** — a proper-noun subject is glued onto the εἰμί
   verb's cell with a trailing empty `G*`; 47 such spots in the ABP source (David was, Jonah was, …).
   Same family as the PN-subject fold ([[project_pn_subject_verb_fold]]) but missed because the name isn't
