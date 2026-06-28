@@ -352,6 +352,12 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   // BEFORE the metaV effect because that effect gates on it (deps + body).
   const [boundEntity, setBoundEntity] = useState(null);
   const [boundLoading, setBoundLoading] = useState(false);
+  // The bound entity's OWN verse list — the actual N references behind "Appears N×".
+  // Fetched lazily the first time the reader expands it. The panel remounts per word
+  // (key=id), so these reset for each new word; no manual reset needed.
+  const [refsOpen, setRefsOpen] = useState(false);
+  const [entityRefs, setEntityRefs] = useState(null);   // null = not fetched yet (stays "Loading…")
+  const [refsShown, setRefsShown] = useState(50);
   // Synchronous "a bind is being checked for this entry" flag. The metaV effect runs
   // right after this one in the SAME commit and reads it to skip firing a name lookup
   // before the async boundLoading state flips — without it the metaV fetch races ahead
@@ -374,6 +380,16 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       .finally(() => { bindPendingRef.current = false; if (!cancelled) setBoundLoading(false); });
     return () => { cancelled = true; };
   }, [entry && entry.id]);
+
+  // Lazy-load the bound entity's verse list the first time "Appears N×" is expanded.
+  useEffect(() => {
+    if (!refsOpen || entityRefs !== null || !(boundEntity && boundEntity.uniq)) return;
+    let cancelled = false;
+    api.metavEntityRefs(boundEntity.uniq)
+      .then(d => { if (!cancelled) setEntityRefs((d && d.refs) || []); })
+      .catch(() => { if (!cancelled) setEntityRefs([]); });
+    return () => { cancelled = true; };
+  }, [refsOpen, boundEntity && boundEntity.uniq]);
 
   useEffect(() => {
     setMetavPersonData(null);
@@ -681,12 +697,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       const area = clean(be.area);
       // don't repeat the region when the description already names it (Eden: "…in Mesopotamia")
       const showArea = area && !(line && line.toLowerCase().includes(area.toLowerCase()));
-      // "Appears N×" links to the word's occurrence list in Word study (the source that
-      // matches the reading text), the way the KJV/Hebrew occurrence rows do. The count is
-      // this entity's verified reference total; the list is the word's full Strong's set,
-      // so a name shared by more than one place (Eden) shows a few more there.
-      const occCorpus = entry.isKjv ? "kjv" : entry.isBsb ? "bsb" : isHebrewWord ? "heb" : "abp";
-      const canOcc = !!(onNavigateToLexicon && entry.strongs);
+      // "Appears N×" expands THIS entity's own verses (tipnr_entity_refs) — the actual N,
+      // not the word's full Strong's set. Each reference jumps to that verse in the reader.
+      // (The old link went to the lemma-wide Word-study list, which over-counts a name
+      // shared by more than one referent — Eden the garden vs. the Assyrian place.)
+      const canRefs = !!(onReadInContext && be.uniq && be.ref_count > 0);
       return (
         <section key="boundEntity" className="sec pnbound">
           <h4 className="sec-head"><span className="sec-t">{label}</span><span className="bdb-badge">TIPNR</span></h4>
@@ -699,13 +714,41 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
               <div><span className="pnbound-lbl">Children</span> {be.offspring.join(", ")}</div>)}
             {showArea && (
               <div><span className="pnbound-lbl">{be.section === "place" ? "Region" : "Tribe"}</span> {area}</div>)}
-            {be.ref_count > 0 && (canOcc
-              ? <button className="pnbound-appears pnbound-appears--link"
-                        onClick={() => onNavigateToLexicon(entry.strongs, occCorpus)}>
-                  Appears {be.ref_count}× in scripture <Icon.ArrowRight/>
+            {be.ref_count > 0 && (canRefs
+              ? <button className="pnbound-appears pnbound-appears--link" aria-expanded={refsOpen}
+                        onClick={() => setRefsOpen(o => !o)}>
+                  Appears {be.ref_count}× in scripture
+                  <Icon.ArrowRight className={"pnbound-caret" + (refsOpen ? " is-open" : "")}/>
                 </button>
               : <div className="pnbound-appears">Appears {be.ref_count}× in scripture</div>)}
           </div>
+          {refsOpen && (
+            <div className="pnbound-refs">
+              {entityRefs === null ? (
+                <div className="lsj-def lsj-def--loading">Loading…</div>
+              ) : entityRefs.length ? (
+                <>
+                  {entityRefs.slice(0, refsShown).map((r, i) => {
+                    const ab = BOOK_ABBREVS[r.book - 1];
+                    if (!ab) return null;
+                    return (
+                      <button key={i} className="pnbound-ref"
+                              onClick={() => onReadInContext(ab, r.chapter, r.verse)}>
+                        {(BOOK_LABELS[ab] || ab) + " " + r.chapter + ":" + r.verse}
+                      </button>
+                    );
+                  })}
+                  {entityRefs.length > refsShown && (
+                    <button className="pnbound-ref-more" onClick={() => setRefsShown(n => n + 50)}>
+                      See more ({entityRefs.length - refsShown})
+                    </button>
+                  )}
+                </>
+              ) : (
+                <div className="pnbound-appears">No references found.</div>
+              )}
+            </div>
+          )}
           <div className="pnbound-badge">Matched to this verse</div>
         </section>
       );
