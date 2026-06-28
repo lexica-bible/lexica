@@ -226,7 +226,13 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   the reader's prose mode + SEO pages use). NEVER rebuild a single verse from `words` joined by
   `position` — that's raw Greek order and SCRAMBLES ABP's bracket-reordered English. (2026-06-21
   TSK-panel garble: `/api/verse` and `views_crossref._abp_text` were stitching words by position;
-  both now read `verses.text`.)
+  both now read `verses.text`.) NARROW EXCEPTION — don't let this rule excuse a real data bug: a
+  "LORD the"-style flip (a determiner stranded AFTER its noun) is NOT the expected bracket scramble,
+  it's a `_split_compounds` BUILD bug — when it fronts the words it spread onto blank Greek slots it
+  lines them up in Greek order instead of the source English order. Fixed in the build split step
+  (preserve source English order when fronting), so the right order is baked back into `words` and the
+  reader needs no change. Find the full set with `scripts/audit_split_flip.py` (read-only). Distinct
+  from genuinely bracket-reordered verses, where the rule above still holds.
 - `words` — ABP word-level interlinear, Strong's tagged. Columns: english, english_head, strongs, strongs_base, greek_pos, bracket_id, italic, italic_words, smcap_words, is_pn, morph, lemma. The displayed Greek lemma is joined live from `lexicon` via `LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base` (the indexed G-prefixed key added in Phase 1; replaced the old `SUBSTR(strongs_base,2)` join — this is why strongs_base MUST stay G/H-prefixed). `is_pn=1` marks proper nouns (set by import_tipnr.py). `morph`/`lemma` columns added rebuild #6 (~78% populated).
 - `abp_surface` — `(verse_id, position, form, translit)` side table of the PRINTED (inflected) Greek per ABP word,
   feeding the word-study side-card "in this verse" line (ABP's source has no Greek surface words). Built read-only
