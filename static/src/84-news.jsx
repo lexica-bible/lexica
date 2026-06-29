@@ -114,6 +114,7 @@ function NewsView() {
   };
 
   const isAdmin = !!(meta && meta.owner);
+  const canReview = !!(meta && meta.can_write);
   const canRead = !!(meta && (meta.owner || meta.reader));
   if (!meta) return <div className="news-view"><div className="news-empty">Loading…</div></div>;
   if (!canRead) return <div className="news-view"><div className="news-empty">Not available.</div></div>;
@@ -198,7 +199,7 @@ function NewsView() {
           <div className="news-count">{stories.length} stories</div>
           <div className="news-list">
             {stories.map((s, i) => (
-              <NewsStory key={s.ids[0] + "-" + i} story={s} view={view} onMark={mark} readOnly={!isAdmin} />
+              <NewsStory key={s.ids[0] + "-" + i} story={s} view={view} onMark={mark} readOnly={!canReview} />
             ))}
           </div>
         </>

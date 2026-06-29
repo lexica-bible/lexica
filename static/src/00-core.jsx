@@ -224,12 +224,14 @@ const api = {
     return fetch(`/api/news/list${qs ? "?" + qs : ""}`, { headers: _authHeaders() })
       .then(r => r.ok ? r.json() : { stories: [] }).catch(() => ({ stories: [] }));
   },
-  newsStatus: (ids, status) =>
-    fetch(`/api/news/status`, {
+  newsStatus: (ids, status) => {
+    const k = _newsKey();
+    return fetch(`/api/news/status`, {
       method: "POST",
-      headers: { "Content-Type": "application/json", ..._authHeaders() },
+      headers: { "Content-Type": "application/json", ..._authHeaders(), ...(k ? { "X-News-Key": k } : {}) },
       body: JSON.stringify({ ids, status }),
-    }).then(r => r.ok ? r.json() : { ok: false }).catch(() => ({ ok: false })),
+    }).then(r => r.ok ? r.json() : { ok: false }).catch(() => ({ ok: false }));
+  },
   // Study modules (admin-only) — authored study content in study.db.
   studyEntries: (type) =>
     fetch(`/api/study/entries${type && type !== "all" ? `?type=${encodeURIComponent(type)}` : ""}`, { headers: _authHeaders() })

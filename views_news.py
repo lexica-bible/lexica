@@ -287,7 +287,7 @@ def meta():
         return jsonify({"owner": False, "reader": False, "available": False})
     if not _available():
         return jsonify({"owner": admin, "reader": reader, "available": False, "labels": THREAD_LABELS})
-    rid, _ = _reviewer()
+    rid, can_write = _reviewer()
     conn = news_db()
     try:
         _ensure_reviews(conn)
@@ -305,7 +305,7 @@ def meta():
     finally:
         conn.close()
     return jsonify({"owner": admin, "reader": reader, "available": True,
-                    "labels": THREAD_LABELS, "counts": counts,
+                    "labels": THREAD_LABELS, "counts": counts, "can_write": can_write,
                     "reviewer": rid, "reviewer_name": _reviewer_label(rid)})
 
 
