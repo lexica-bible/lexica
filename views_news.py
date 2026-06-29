@@ -307,6 +307,32 @@ def _serialize(cluster):
     }
 
 
+# Recency-weighted DEFAULT sort. The feed ranks story cards by PEAK score, which floats
+# an old-but-high cluster above fresher coverage. We dock a small staleness penalty keyed
+# off the cluster's NEWEST sibling: GRACE days free, then RATE/day, capped at CAP. So a
+# story breaking today still tops a 3-week-old 9 (a 20-day-old 9 -> ~7.2 vs a fresh 8 ->
+# 8.0), but the cap means recency can NEVER overturn more than a CAP-point real gap — it's
+# a weight, not a score override. A long-running real story keeps a fresh face because the
+# penalty reads its NEWEST article, so continued coverage = age 0 = no dock. Steepen RATE
+# to 0.15 only if an old-but-high card keeps holding the top slot (watch card #1 a few days).
+_FEED_GRACE_DAYS = 2
+_FEED_RATE = 0.1
+_FEED_CAP = 2.0
+
+
+def _staleness_penalty(published):
+    """Days-old dock for a cluster, from its newest article's date ('YYYY-MM-DD')."""
+    d = (published or "")[:10]
+    if not d:
+        return 0.0
+    try:
+        today = datetime.datetime.now(datetime.timezone.utc).date()
+        age = (today - datetime.date.fromisoformat(d)).days
+    except ValueError:
+        return 0.0
+    return min(_FEED_CAP, max(0.0, (age - _FEED_GRACE_DAYS) * _FEED_RATE))
+
+
 @bp.route("/api/news/meta", methods=["GET"])
 def meta():
     """Drives the tab: is the viewer admin, is news.db loaded, the thread names, and
@@ -397,7 +423,10 @@ def list_news():
     if order == "date":
         stories.sort(key=lambda s: (s["published"], s["score"]), reverse=True)
     else:
-        stories.sort(key=lambda s: (s["score"], s["published"]), reverse=True)
+        # Default: recency-weighted score (see _staleness_penalty). Published stays the
+        # tie-break so equal effective scores still favor the fresher card.
+        stories.sort(key=lambda s: (s["score"] - _staleness_penalty(s["published"]),
+                                    s["published"]), reverse=True)
     return jsonify({"stories": stories[:300], "available": True})
 
 
