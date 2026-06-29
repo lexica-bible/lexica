@@ -12,6 +12,16 @@ function _newsDaysAgo(n) {
   return new Date(Date.now() - n * 86400000).toISOString().slice(0, 10);
 }
 
+// Empty-state mark for the inspect zone (newspaper), sized to match Word study's.
+const NEWS_INSPECT_ICON = (
+  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+       strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M4 5h13a1 1 0 0 1 1 1v12a2 2 0 0 0 2 2H6a2 2 0 0 1-2-2V5Z"/>
+    <path d="M18 8h2a1 1 0 0 1 1 1v9a2 2 0 0 1-2 2"/>
+    <path d="M8 8h6M8 12h6M8 16h4"/>
+  </svg>
+);
+
 function _scoreTier(score) {
   return score >= 8 ? "hi" : score >= 6 ? "mid" : "lo";
 }
@@ -102,9 +112,7 @@ function NewsRatRow({ m, label }) {
 // score but the FACE article's headline — and those can be two different articles,
 // so we surface both rows explicitly, plus the other sources by score.
 function NewsRationale({ story }) {
-  if (!story) {
-    return <div className="news-inspect-empty">Select a story to see why it scored against the two-beast framework.</div>;
-  }
+  if (!story) return null;   // the unselected state is the shared <ZoneEmpty> in the inspect slot
   const members = story.members || [];
   const byId = (id) => members.find(m => m.id === id);
   const peak = byId(story.peak_id);
@@ -306,33 +314,37 @@ function NewsView({ isMobile }) {
     );
   }
 
-  // ---------------- DESKTOP: three-zone shell -----------------------------------
-  return (
-    <div className="news-shell">
-      <aside className="news-rail">
-        {viewsToggle}
-        {view === "inbox" && <div className="news-rail-filters">{inboxFilters}</div>}
-        {view === "kept" && (
-          <div className="news-rail-filters">
-            <button className="news-btn news-keep" onClick={copyShortlist}
-                    disabled={!stories || !stories.length}>Copy shortlist</button>
-            {flash && <span className="news-flash">{flash}</span>}
-          </div>
-        )}
-        <div className="news-rail-threadlabel">Threads</div>
-        {threadList}
-        {meta.reviewer_name ? (
-          <div className="news-rail-asline" title="Keep/Dismiss are recorded under this reviewer">
-            Reviewing as <strong>{meta.reviewer_name}</strong>
-          </div>
-        ) : null}
-      </aside>
-
-      <section className="news-feed">{feedInner}</section>
-
-      <aside className="news-inspect">
-        <NewsRationale story={selected} />
-      </aside>
+  // ---------------- DESKTOP: the shared three-zone frame ------------------------
+  const rail = (
+    <div className="news-rail">
+      {viewsToggle}
+      {view === "inbox" && <div className="news-rail-filters">{inboxFilters}</div>}
+      {view === "kept" && (
+        <div className="news-rail-filters">
+          <button className="news-btn news-keep" onClick={copyShortlist}
+                  disabled={!stories || !stories.length}>Copy shortlist</button>
+          {flash && <span className="news-flash">{flash}</span>}
+        </div>
+      )}
+      <div className="news-rail-threadlabel">Threads</div>
+      {threadList}
+      {meta.reviewer_name ? (
+        <div className="news-rail-asline" title="Keep/Dismiss are recorded under this reviewer">
+          Reviewing as <strong>{meta.reviewer_name}</strong>
+        </div>
+      ) : null}
     </div>
+  );
+
+  return (
+    <ThreeZone
+      className="news-frame"
+      rail={rail}
+      center={<div className="news-feed">{feedInner}</div>}
+      inspect={selected
+        ? <NewsRationale story={selected} />
+        : <ZoneEmpty icon={NEWS_INSPECT_ICON} title="No story selected"
+            sub="Select a story to see why it scored against the two-beast framework." />}
+    />
   );
 }

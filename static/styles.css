@@ -4925,19 +4925,14 @@ button.study-verse-ref { border: none; }
 .news-dismiss:hover { border-color: var(--ink-4); color: var(--ink-3); }
 
 .news-story-sel { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
-.news-shell .news-story { cursor: pointer; }
+.news-feed .news-story { cursor: pointer; }
 
-/* ---- three-zone shell (desktop) ---------------------------------------------
-   LEFT navigate (thin rail) · CENTER feed · RIGHT inspect. Fills the area under
-   the navy header; the feed + inspect scroll inside their own columns. */
-.news-shell {
-  display: grid;
-  grid-template-columns: 232px minmax(0, 1fr) var(--news-inspect-w, 360px);
-  height: calc(100vh - var(--hdr-h));
-  min-height: 0;
-}
-.news-rail {
-  border-right: 1px solid var(--rule);
+/* ---- News mounted on the shared three-zone frame ----------------------------
+   The frame (widths 224/fill/460, the over-header inspect panel, height, theme,
+   cross-line, empty state) comes from .zshell/.zrail/.zcenter/.zinspect/.zempty.
+   These rules style only what lives INSIDE News's three zones. */
+.news-rail {                 /* fills the shared .zrail; its sand bg + border come from .zrail */
+  flex: 1; min-height: 0;
   padding: 18px 16px;
   overflow-y: auto;
   display: flex;
@@ -4960,12 +4955,16 @@ button.study-verse-ref { border: none; }
   font-size: 12px; color: var(--muted); }
 .news-rail-asline strong { color: var(--ink); font-weight: 600; }
 
-.news-feed { overflow-y: auto; padding: 20px 24px 80px; }
+.news-feed { flex: 1; min-height: 0; overflow-y: auto; padding: 20px 24px 80px; }
 
-.news-inspect { border-left: 1px solid var(--rule); overflow-y: auto; padding: 20px 18px 80px;
-  background: var(--bg); }
-.news-inspect-empty { color: var(--ink-4); font-size: 13.5px; line-height: 1.5;
-  padding: 40px 6px; text-align: center; }
+/* RIGHT inspect — content inside the shared .zinspect (fixed, over the navy bar).
+   Top-pad past the header and draw the same cross-line the empty state uses. */
+.news-inspect-body { flex: 1; min-height: 0; overflow-y: auto; position: relative;
+  padding: calc(var(--hdr-h) + 18px) 18px 80px; }
+@media (min-width: 1100px) {
+  .news-inspect-body::before { content: ""; position: absolute; top: var(--hdr-h);
+    left: 0; right: 0; height: 1px; background: var(--rule); }
+}
 .news-inspect-h { font-size: 12px; font-weight: 600; text-transform: uppercase;
   letter-spacing: 0.05em; color: var(--ink-4); margin-bottom: 14px; }
 .news-inspect-sub { font-size: 11.5px; font-weight: 600; text-transform: uppercase;
