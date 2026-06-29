@@ -6,6 +6,33 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Navigation-state audit — DONE + LIVE 2026-06-29
+The reader's side panels and the gold "you are here" marker drifted out of sync with the text.
+One root cause behind several "different" bugs: the reader's real position lives in the reader
+(`selBook`/`selChapter`), but the side-panel cards + the marker live in the app shell — browsing
+INSIDE the reader (book list, chapter chip, page turn, chrono step) moved the reader without telling
+the shell, and the shell's nav object leaked stale fields forward. Symptoms, all confirmed broken on
+live then fixed + re-verified desktop AND mobile: cross-ref/word panel stuck on the old book after a
+book click; gold highlight bleeding onto a coincidental verse in the next chapter; flip
+chrono→canonical dropped the current book; switch text then turn the page snapped back to the old
+text. Fix: ONE reconcile point — the reader reports every move (`onReaderPos`), the shell keeps
+whatever matches the new spot and drops the rest (`handleReaderPos`). Plus: clean nav object on page
+turn (no stale spread), keep the book on chrono→canonical, SummaryPanel remount key, News empty-state
+waits for its data. Repro 4 ("word-study jump wrong verse") was the highlight bleed, gone with the
+reconcile — the jump itself never actually failed. Lesson: don't let a browse handler change the
+reader position without going through the reconcile, and never spread the old nav bag into a new nav.
+Commit bc47330. Full record: memory `project_nav_reconcile`.
+
+## Firefox cold-load / app.js caching — DONE + LIVE 2026-06-29
+News (and the whole app) "popped in ~1s late" in Firefox, fine in Chrome. Cause: PythonAnywhere's
+static server sends the 543KB app.js with no cache instruction, so Firefox re-downloaded it every
+load (~0.6s measured); Chrome guessed it could cache and was fine. PA's `/static/` mapping has no
+knob for cache headers. Fix: serve the bundle from a Flask route (`/assets/app.js`) with a year-long
+immutable cache; the `?v=<mtime>` cache-bust keeps it deploy-safe; gzip preserved (verified on live).
+A residual ~1s on a genuinely cold Firefox load (the News tab's two small data fetches) was left
+as-is per the user — not worth more time. Commit 6808b32. Full record: memory
+`project_static_cache_header`.
+
 ## Proper-noun / entity resolution rebuild — BUILT + LIVE 2026-06-28 (Issue 2)
 Click a proper noun and the card now describes the RIGHT person/place for THAT verse, not a
 same-named one (the "Cushi → Acts", "Eden → wrong place" bug). The old cards looked up the entity

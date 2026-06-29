@@ -175,6 +175,13 @@ Pick effort by task TYPE. When in doubt, lean higher — the plan affords it.
   One-time setup: `npm install`. Commit BOTH the .jsx source AND the rebuilt app.js.
 - The build runs LOCALLY (Node is on the dev machine, not needed on PA). PA deploy is
   unchanged — it just `git pull`s the already-compiled app.js.
+- **app.js is served from a Flask route, NOT `/static/`** (2026-06-29): `/assets/app.js`
+  (`app_bundle` in app.py) sends it with `Cache-Control: public, max-age=31536000, immutable`.
+  PA's `/static/` mapping can't set a cache header, so the 543KB bundle was re-downloaded every
+  load in Firefox. The template loads it via `bundle_url()`, which keeps the `?v=<mtime>`
+  cache-bust, so a deploy changes the URL and the long cache never serves a stale bundle (gzip is
+  preserved). Everything else stays on `/static/`. Don't try to fix static caching in Flask config
+  — PA serves `/static/`, Flask never sees it. Memory `project_static_cache_header`.
 - Why concat-then-compile (not `babel <dir>`): one unit emits Babel's spread helper
   once and reproduces the old single-file output exactly (the src files joined by "\n"
   reconstruct the original app.jsx).
@@ -582,6 +589,16 @@ rules + gotchas; open the named memory for the backstory.
 - **Chrono jump rule:** an EXTERNAL jump (Search/Lexicon/Notes — flagged `nav.extern`) drops the
   reader back to canonical; an IN-READER jump (verse-number xref, word panel, chasing an xref) STAYS
   chronological (moves `chronoPos` to the passage). Either way `chronoPos` survives.
+- **Rail + jump-marker reconcile (2026-06-29):** the reader's real position lives in LibraryView
+  (`selBook`/`selChapter`); the rail cards (`libCrossRef`/`activeEntry`/`activeNote`) + the gold
+  jump-marker (`libNav`) live in App. LibraryView reports every move via `onReaderPos`; App's
+  `handleReaderPos` keeps a card/marker that MATCHES the new book+chapter and drops the rest (an
+  external jump set its card to the same verse it lands on, so it survives; a restored spot has no
+  book yet but the right chapter, also kept). This is the ONE place that keeps them in step — don't
+  add a browse handler that moves `selBook`/`selChapter` without it, and never spread the old `nav`
+  bag into a new one (a stale `translation`/`extern` rides along — the page-turn text-snap bug). Also
+  here: `setOrder` canonical keeps the passage's book; `turnPage` emits a clean nav object. Memory
+  `project_nav_reconcile`.
 - Clicking a verse number opens the TSK Cross-Reference panel. Desktop link-over from Search/Lexicon
   auto-opens that verse's xref card over the chapter summary (tucked under any open word/note card).
 

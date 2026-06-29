@@ -17,13 +17,6 @@ Issues surfaced 2026-06-28. #1 ("LORD the" word flip), #2 (proper-noun / entity 
   (The bound-entity card occurrence follow-up is DONE + LIVE — the card now shows the real
   ABP/Hebrew OT/KJV/BSB occurrence controls; see TODO_ARCHIVE.md.)
 
-## Open (next session)
-- **Nav-state audit — NOT started, fresh scope.** Audit the reader's navigation-state handling end to
-  end: chrono vs canonical jumps, the `extern` flag (external jump → canonical, in-reader jump → stays
-  chrono), where a jump lands (upper third), and panel/rail restore across jumps. No diagnosis yet — the
-  user flagged it as a thread to open. code: 90-app.jsx `handleReadInContext` / `handleNavigateToLexicon` /
-  `setLibNav`; 60-library.jsx nav handling.
-
 ---
 
 ## Code health / cleanup
