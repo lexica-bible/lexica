@@ -34,6 +34,28 @@ does the engine stay HONEST when starved, or manufacture senses to fill the temp
 - Open follow-up (logged in TODO): point `lexica_agreement.per_sense` at `_sense_spans` before the batch
   build (it still keys bold-only — a plain draw would read as a phantom sense-count wobble).
 
+## Numbered-book citation bug (Lexica engine) — FIXED 2026-06-28, commit 632e54a
+Surfaced by the διάδοχος G1240 draws in the stress run above. The verse-ref parser wanted the numeral
+GLUED to the book (`2Ch`); when a draw wrote it SPACED (`2 Chr 26:11`), the space orphaned the `2`, the
+plain-book branch grabbed a bare `Chr` that matches no real book code, the citation gate logged no-verse,
+and the sense read ungrounded — though the verse is real. NOT manufacturing.
+- **Fix is parser-side, VERSE_PROMPT frozen.** The numbered branch now allows a separator + uncapped
+  letters; `_norm_book` maps the label back to the stored code (all 8 numbered families, built against the
+  real `SELECT DISTINCT book` list) by RE-ATTACHING the numeral already in the text — it never guesses
+  1-vs-2. `cited_refs` + `sense_provenance` + `audit_lxx_provenance` routed through it; `trial_lexica_def`
+  patched for parity; `stress_lexica_rare` needed no change (it rides `cited_refs`).
+- **A verse-list disambiguation resolver was designed, then REJECTED** (the dump's catch) — the numeral is
+  in the source, so recover-don't-infer is strictly safer, no homograph risk. Lesson worth keeping.
+- **Verified read-only on PA** (`confirm_numbered_ref_fix.py`): the two διάδοχος refs → 2Ch/1Ch, 2/2 pass;
+  nothing that already resolved moved book or testament; no shipped card affected (the spaced refs lived
+  only in the stress dumps, never in `lexica_def`).
+- **Audit blind spot it closes:** pre-fix, the short `1 Ch 18:17` form VANISHED rather than logging as a
+  miss, so the stress run's gate numbers under-counted on numbered books — the engine was slightly MORE
+  honest than the harness could measure. Doesn't move the occ≥2 cutoff; an audit re-run for build-out now
+  counts them. Full record: memory `project_lexica_dictionary`.
+- **Open sibling gap (still in TODO):** a ref with no chapter:verse (the charis `1Ti—`) is still invisible
+  to the gate — a separate lint.
+
 ## Small doc/UI cleanup pass — DONE 2026-06-28
 A batch of small finishes, all committed + pushed to master:
 - **Cockpit Play/Pause icons → thin outlines** (`static/src/10-icons.jsx`, commit 3cc3c45). Were filled
