@@ -617,6 +617,46 @@ follow-up is **#4 (parallelize the cognate + Hebrew DB loops)** above — multi-
   call); git confirms no later commit touched `stories.sort`, so the watch-card-#1 read is clean and active NOW. A
   reviewer note that called it "parked for a solo ship" was wrong — don't re-litigate.
 
+### Clustering / taxonomy / re-tuning — investigated 2026-06-29 (2 shipped, 1 parked-with-plan, 1 waiting)
+- **✅ ai_moralized RENAME + labeler phase-sibling NUDGE SHIPPED 2026-06-29 (fa46786).** (1) Thread label was "RCC
+  courting tech" but the confirmed catch is the actor-LESS buy/sell economic-control rail (UN digital ID, UK
+  mandatory-to-work, Worldcoin, CBDC). Renamed actor-neutral: queries.py label → "Economic & tech control
+  tightening — AI, digital ID, CBDC, payment mandates", THREAD_LABELS short "RCC × tech" → "Economic/tech control".
+  LABEL-ONLY — thread key `ai_moralized` + searches + the catch are unchanged, so NO rescore (items keep their
+  ai_thread, just display under the new name; frontend reads labels from the API, no app.js). (2) `group_news.py`
+  SYSTEM gained one rule forbidding a later-PHASE sibling label (launch/reaction/vote/follow-up) of an
+  already-labeled event — bites only on a future `--regroup`. Goes live on a normal deploy.
+- **✅ ENCYCLICAL event-split FIXED (data, on PA).** "Pope Leo AI Encyclical" (398) + "...Encyclical Launch" (168)
+  were one encyclical split across two event labels (cards collapse by EXACT label, so two cards). One-time
+  reversible merge: `UPDATE items SET event='Pope Leo AI Encyclical' WHERE event='Pope Leo AI Encyclical Launch'`
+  → one ~566 card. Confirmed a ONE-OFF, not a phase-split class (the prefix-sibling query found only this pair).
+- **⏳ CLUSTERING topic-bucketing (over-merge) — PARKED, diagnosed, plan ready. The real granularity problem.**
+  The Sunday-Laws→NJ-mall "smell" turned out to be the OPPOSITE of the encyclical: the NJ mall story isn't a
+  sibling label, it's BURIED inside a broad topic label "Sunday Rest Laws Debate" that fuses ~10 unrelated events
+  (Poland trade ban, NJ mall lawsuit, NY Chick-fil-A bill, USPS ruling…). Confirmed a CLASS on a 2nd independent
+  bucket: "Vatican Ecumenical Outreach" (83) = ~15 different ecumenical events (King Charles prayer, 1054 anathema,
+  WCC visit, Mennonite healing…) under one theme label. Mechanism: the labeler tags by THEME when there's no single
+  dominant event → one card lies "83 sources" and inflates the shape panel's "biggest clusters". FIX (not a
+  one-liner): sharpen the `group_news.py` rules so an event = one specific bill/lawsuit/report/ruling, and
+  different countries/bills on the same theme are DIFFERENT events (draft wording lives in the 2026-06-29 session
+  thread + the memory block). DELICATE — push too hard and it re-fragments the GOOD one-event clusters (the
+  encyclical 566 MUST stay merged). LAND IT SAFELY: commit the prompt → `cp news.db news.db.pre-regroup` (instant
+  rollback) → `group_news.py --regroup` (Haiku, pennies) → re-run the label-landscape query; keep only if
+  ecumenism/Sunday split sensibly AND the encyclical stays one ~566 cluster, else `mv` back and tighten. Cost isn't
+  the worry, quality is. `code: scripts/news/group_news.py SYSTEM; views_news.py _group (collapse by exact label)`
+- **⏳ RE-TUNING the scorer from Tudor's Dismiss — WAITING on volume (do NOT auto-loop).** Plan: pull Tudor's
+  dismissed-at-6+ grouped by thread (high score + dismissed = a false-positive thread), hand-sharpen that thread's
+  label with reviewed diffs. HARD TRAP (do not cross): human-label-tuning ONLY — never wire Dismiss into an
+  auto-adjusting score (it would bend the feed toward agreement and stop surfacing challenging stories — poison for
+  a worldview watch; and the reviewer is Tudor, not the two-beast brief). GATE this session = not enough yet:
+  Tudor's reviews = 1 keep, 0 dismisses at 6+ (`SELECT r.reviewer,r.status,COUNT(*) FROM reviews r JOIN items i ON
+  i.id=r.item_id WHERE i.score>=6 GROUP BY r.reviewer,r.status`). Re-run in a couple weeks; act when the `k…/dismiss`
+  bucket reaches ~15-20.
+- **OPS — news.db CLI footgun.** A bare `sqlite3 news.db ...` run from `~` CREATES an empty `~/news.db` decoy (sqlite
+  makes the file on open) that catches relative-path commands and looks like a blanked DB. ALWAYS full-path
+  (`~/bible-db/news.db`) or `cd ~/bible-db` first. The real file (`NEWS_DB`, core.py) is `~/bible-db/news.db`; backups
+  are covered by `backup_db.py` (auto-discovers every `*.db`). `rm ~/news.db` to clear the decoy.
+
 ---
 
 ## Word study + Ask the corpus — REDESIGNED (2026-06-19, under development)
