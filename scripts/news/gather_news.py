@@ -3,7 +3,7 @@
 gather_news.py — pull the watch-list searches into news.db.
 
 WHAT IT DOES
-  - Reads the search list in queries.py (the 12 threads).
+  - Reads the search list in queries.py (the 10 threads).
   - Runs each search against Google News, which returns a feed for ANY query.
   - Saves each article into news.db (its own file, like notes.db/esv.db — kept out
     of bible.db and out of git). One row per article, deduped by its web address.

@@ -27,22 +27,20 @@ from views_notes import is_admin
 
 bp = Blueprint("news", __name__)
 
-# Display names for the gatherer's 12 threads. KEEP IN SYNC with the THREADS keys
+# Display names for the gatherer's 10 threads. KEEP IN SYNC with the THREADS keys
 # in scripts/news/queries.py (small + static, so duplicated here rather than
 # importing across the scripts/ boundary). "new" = the AI flagged a fresh angle.
 THREAD_LABELS = {
-    "exposure_to_moral_authority": "Exposure → moral authority",
     "papacy_moral_authority": "Papacy as moral authority",
-    "american_pope": "The American pope",
-    "encyclical_political": "Encyclicals going political",
-    "ai_moralized": "AI being moralized",
-    "legislating_morality": "Legislating morality",
-    "ecumenism": "Ecumenism",
-    "jesuits": "Jesuits",
-    "trump_vs_leo": "Trump vs. Pope Leo",
-    "alien_agenda": "Alien / UFO agenda",
-    "protestants_to_rome": "Protestants → Rome",
-    "financial_control": "Financial control",
+    "american_pope": "Vatican–US relations",
+    "encyclical_political": "Encyclicals / doctrine going political",
+    "ai_moralized": "RCC × tech",
+    "legislating_morality": "Legislating worship/morality",
+    "ecumenism": "Ecumenism under Rome",
+    "alien_agenda": "Alien / UFO disclosure",
+    "culture_shaping": "Culture shaping",
+    "political_realignment": "Political realignment",
+    "sabbath_sunday": "Sabbath / Sunday law",
     "new": "New angle",
 }
 

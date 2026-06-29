@@ -7,7 +7,7 @@ turned into one or more plain news SEARCHES. The gatherer runs every search
 against Google News (which hands back a feed for any query), so we pull whatever
 the whole web surfaced for that idea — not just a handful of prophecy blogs.
 
-The underlying story all 12 threads serve (this is also fed to the AI scorer):
+The underlying story all 10 threads serve (this is also fed to the AI scorer):
 
     Manufactured crisis -> public cry for moral order -> all authority (states,
     denominations, even tech/AI) consolidating under Rome, with America as the
@@ -23,76 +23,63 @@ search drowns the feed in noise the AI then has to throw away.
 """
 
 THREADS = {
-    "exposure_to_moral_authority": {
-        "label": "Dark-to-light: scandal exposed → cry for a moral authority",
-        "searches": [
-            '"deep state" exposed corruption church',
-            'moral crisis "need for" moral leadership society',
-            'scandal trust institutions collapse church authority',
-        ],
-    },
     "papacy_moral_authority": {
         "label": "Papacy stepping in as the world's moral authority",
         "searches": [
             'Vatican global ethics governance',
             'Pope moral authority world leaders',
             'Holy See United Nations moral',
+            'scandal institutions church authority',
         ],
     },
     "american_pope": {
-        "label": "Pope Leo XIV (the American pope) and US–Vatican convergence",
+        "label": "Vatican–US relations (Pope Leo XIV, Trump, White House–Holy See)",
         "searches": [
             '"Pope Leo" America',
-            '"Pope Leo XIV"',
-            'American pope United States Vatican',
+            'Trump Vatican',
+            'White House Holy See',
+            'Pope Leo XIV United States',
         ],
     },
     "encyclical_political": {
         "label": "Encyclicals / Vatican doctrine going political",
         "searches": [
             'Pope encyclical',
-            'Vatican encyclical artificial intelligence',
-            'papal document ethics technology',
+            'Vatican encyclical economy OR finance',
+            'papal document climate',
+            'Vatican statement war OR peace',
+            'encyclical politics OR corruption',
         ],
     },
     "ai_moralized": {
-        "label": "AI being 'moralized' — tech courting the Vatican",
+        "label": "Roman Catholic Church courting tech — AI, crypto, digital ID, robotics",
         "searches": [
             'Vatican artificial intelligence ethics',
             'AI companies Vatican meeting',
-            'Anthropic OR OpenAI Vatican OR Pope',
-            'AI regulation moral framework church',
+            'Vatican crypto OR bitcoin',
+            'Pope CBDC OR digital currency',
+            'Church digital ID statement',
+            'Vatican robotics ethics',
         ],
     },
     "legislating_morality": {
-        "label": "Legislating worship/morality (first four commandments, blasphemy)",
+        "label": "Legislating worship/morality (blasphemy, religious observance)",
         "searches": [
             'blasphemy law',
-            'Sunday rest law legislation',
-            'religious observance mandate law',
+            'religious observance mandate',
+            'morality legislation religious',
         ],
     },
     "ecumenism": {
-        "label": "Ecumenism / interfaith unity under Rome",
+        "label": "Ecumenism / denominations folding back into Rome",
         "searches": [
             'ecumenism Christian unity Rome',
             'interfaith declaration Vatican',
-            'church unity movement Pope',
-        ],
-    },
-    "jesuits": {
-        "label": "Jesuit statements / signaling",
-        "searches": [
-            'Jesuits statement',
-            'Society of Jesus peace',
-        ],
-    },
-    "trump_vs_leo": {
-        "label": "Trump vs. Pope Leo (the two beasts circling)",
-        "searches": [
-            'Trump Pope Leo',
-            'Trump Vatican',
-            'White House Holy See tension OR meeting',
+            'Anglican OR Lutheran full communion Catholic',
+            'Orthodox Catholic unity',
+            'evangelicalism decline',
+            'Protestant denomination collapse',
+            'evangelical Catholic conversion',
         ],
     },
     "alien_agenda": {
@@ -100,23 +87,42 @@ THREADS = {
         "searches": [
             'UFO disclosure congress OR Pentagon',
             'UAP disclosure government',
-            'pastors briefed extraterrestrial OR aliens',
+            'pastors briefed extraterrestrial',
         ],
     },
-    "protestants_to_rome": {
-        "label": "Protestants / denominations folding back into Rome",
+    "culture_shaping": {
+        "label": "Culture being shaped toward faith/Rome (conversions, media, revivals)",
         "searches": [
-            'evangelical Catholic unity Rome',
-            'Protestant denomination reconciliation Vatican',
-            'Anglican OR Lutheran full communion Catholic',
+            'celebrity conversion Catholicism',
+            'musician OR rapper faith God',
+            'movie OR show Catholic theme',
+            'influencer suddenly religious',
+            'NASA God OR Jesus',
+            'Eucharistic miracle',
+            'Marian apparition',
+            'Muslim conversion Christianity',
+            'Iran house church revival',
+            'Jewish believers Jesus',
         ],
     },
-    "financial_control": {
-        "label": "Financial control signals (CBDC, digital ID, cashless)",
+    "political_realignment": {
+        "label": "Political left/right realigning around religion & morality",
         "searches": [
-            'central bank digital currency CBDC',
-            'digital ID payments mandate',
-            'cashless society control de-dollarization',
+            'left religion morality shift',
+            'conservatives away from Zionism',
+            'right toward Catholicism',
+            'left right common ground social issues',
+            'secularism decline religion',
+        ],
+    },
+    "sabbath_sunday": {
+        "label": "Sabbath / Sunday-law legislation",
+        "searches": [
+            'Sunday rest law legislation',
+            'Sunday closing law',
+            'European Sunday Alliance',
+            'anti-Sabbath OR Sabbath observance',
+            'day of rest mandate',
         ],
     },
 }
