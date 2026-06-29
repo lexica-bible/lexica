@@ -4618,9 +4618,9 @@ button.study-verse-ref { border: none; }
 }
 
 /* LEFT — distribution rail (frame in .zrail; this holds only the rail's own bits) */
-/* Height matches the center .searchbar (14 + 46px field + 14 + 1px border) so the
+/* Height matches the center .searchbar (12 + 34px field + 12 + 1px border) so the
    rail's divider line meets the search box's line cleanly across the column gap. */
-.brail-top { flex: 0 0 auto; box-sizing: border-box; height: 75px; display: flex; flex-direction: column; justify-content: center; padding: 0 18px; border-bottom: 1px solid var(--rule); }
+.brail-top { flex: 0 0 auto; box-sizing: border-box; height: 59px; display: flex; flex-direction: column; justify-content: center; padding: 0 18px; border-bottom: 1px solid var(--rule); }
 .brail-eyebrow { font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; color: var(--ink-3); }
 .brail-sub { font-size: 12px; color: var(--ink-4); margin-top: 5px; }
 .brail-gk { font-family: var(--f-greek); color: var(--ink-2); font-size: 14px; }
@@ -4641,7 +4641,7 @@ button.study-verse-ref { border: none; }
 .brow-all.on { background: var(--navy); }
 
 /* CENTER — search + occurrences (frame in .zcenter; below are the center's own bits) */
-.ws .searchbar { flex: 0 0 auto; padding: 14px 28px; border-bottom: 1px solid var(--rule); background: color-mix(in oklab, var(--bg) 82%, var(--paper)); }
+.ws .searchbar { flex: 0 0 auto; padding: 12px 28px; border-bottom: 1px solid var(--rule); background: color-mix(in oklab, var(--bg) 82%, var(--paper)); }
 .ws .searchbar-in { display: flex; align-items: center; gap: 16px; }
 .ws .searchbar-in .search-field { flex: 0 1 540px; min-width: 0; }
 /* "Ask AI about X" — appears to the RIGHT of the search bar once a word is loaded
@@ -4656,13 +4656,13 @@ button.study-verse-ref { border: none; }
 }
 .searchbar-ask:hover { background: color-mix(in oklab, var(--ai) 12%, transparent); border-color: var(--ai); }
 .searchbar-ask svg { flex: 0 0 auto; width: 15px; height: 15px; }
-.ws .search-field { display: flex; align-items: center; gap: 10px; background: var(--paper); border: 1px solid var(--rule-2); border-radius: 11px; padding: 0 8px 0 14px; height: 46px; box-shadow: var(--shadow-sm); transition: border-color 0.15s, box-shadow 0.15s; }
+.ws .search-field { display: flex; align-items: center; gap: 10px; background: var(--paper); border: 1px solid var(--rule-2); border-radius: 11px; padding: 0 8px 0 14px; height: 34px; box-shadow: var(--shadow-sm); transition: border-color 0.15s, box-shadow 0.15s; }
 .ws .search-field:focus-within { border-color: var(--accent); box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 12%, transparent); }
 .search-i { color: var(--ink-3); flex: 0 0 17px; transition: color 0.15s; }
 .ws .search-field:focus-within .search-i { color: var(--accent); }
 .ws .search-input { flex: 1; border: 0; outline: 0; background: transparent; font-size: 16px; color: var(--ink); letter-spacing: -0.005em; }
 .ws .search-input::placeholder { color: var(--ink-4); }
-.ws .search-go { width: 38px; height: 38px; border-radius: 8px; background: var(--navy); color: #fff; display: grid; place-items: center; flex: 0 0 auto; }
+.ws .search-go { width: 28px; height: 28px; border-radius: 7px; background: var(--navy); color: #fff; display: grid; place-items: center; flex: 0 0 auto; }
 .ws .search-go:hover { background: var(--navy-2); }
 .ws .search-hint { margin-top: 9px; font-size: 12px; color: var(--ink-4); }
 .results-scroll { flex: 1; overflow-y: auto; }
