@@ -26,6 +26,20 @@ Issues surfaced 2026-06-28. #1 ("LORD the" word flip), #2 (proper-noun / entity 
 
 ---
 
+## Three-zone shell — migrate the remaining tabs (2026-06-29)
+The shared navigate/read/inspect frame is LIVE on Word study + News (memory
+`project_three_zone_shell`). Bring the rest onto it so there's one frame, not hand-rolled look-alikes:
+- **Notes** — center flips to an editor; the frame is content-agnostic so it's safe (verified).
+- **Ask the corpus** — same frame.
+- **Library** — LAST. Heaviest, most-locked tab; own classes (`.library`/`.lib-reading`/`.detail-side`),
+  toolbar/nav-drawer/audio/compare/focus-mode, and its right panel is OPTIONAL. Its own scoped commit +
+  the zero-drift computed-style diff, not a drop-in.
+- Also deferred (its own session, see `project_news_watch`): News feed SORT recency — feed still ranks
+  pure score, no time-decay, so old-but-high clusters float up.
+  code: static/src/20-shared-components.jsx (.zshell*), 80-lexicon.jsx, 84-news.jsx, styles.css
+
+---
+
 ## Code health / cleanup
 
 The big rework is finished — all six phases are done and live (see the memory notes

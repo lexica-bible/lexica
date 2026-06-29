@@ -491,6 +491,20 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
 - JS thresholds: `navVisible >= 1100`, `isMobile < 1100`, `desktopBar` removed (two states only)
 - CSS: `@media (max-width: 1099px)` / `@media (min-width: 1100px)` — no other breakpoints except 520px for very small phones
 
+## Three-zone shell (shared workspace frame)
+The unified navigate / read / inspect layout — ONE source of truth for the frame: `.zshell` (grid
+224px rail + fill center, reserves the right strip), `.zrail` (left, sand), `.zcenter` (center,
+fills), `.zinspect` (right — `position:fixed` `--sidebar-w` panel floating over the navy header),
+plus `.zempty*` (icon + bold title + subtitle, with the cross-line) — all in styles.css. Components
+`ThreeZone` + `ZoneEmpty` in `static/src/20-shared-components.jsx`. **Share the FRAME, not the
+CONTENTS** — each tab's inner styling stays tab-local; never pull a tab's card/feed styling into the
+`.z*` classes. LIVE on **Word study** (re-pointed its `.ws/.brail/.center/.wd` markup onto the shared
+classes) and **News**. Still to migrate: Notes, Ask the corpus, then Library LAST (heaviest, own
+classes `.library/.lib-reading/.detail-side`, optional right panel — its own scoped job). Re-pointing
+a LOCKED tab onto the shell is a zero-drift gate: keep shared values identical, prove it by diffing
+computed styles in a headless browser (chrome-devtools MCP) before committing. Full record: memory
+`project_three_zone_shell`.
+
 ## Library Tab
 Full per-feature history lives in memory (each block names its file). This keeps the standing
 rules + gotchas; open the named memory for the backstory.
