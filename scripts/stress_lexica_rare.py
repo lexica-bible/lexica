@@ -98,23 +98,29 @@ def gather_evidence(conn, sid, budget, has_surface):
             "occ": len(occs), "fed": len(ctx), "ot": ot, "renderings": len(gset)}
 
 
-def sense_grounding(senses_block, present):
-    """Per numbered sense: its headline, how many refs it cites, and how many of those refs actually
-    contain the lemma (membership in `present`, the loose keyset — the word IS there in some form, so
-    a tagging quirk is not mistaken for invention). A sense with 0 grounded refs rests on no real
-    occurrence — that is the manufactured sense, named. Reuses the live splitter's headline regex so
-    the senses match the card exactly."""
+# Count senses TOLERANTLY. A sense header is a line that starts with an optional bold marker then
+# "N." or "N)". The LIVE engine splitter (build_lexica_def._HEADLINE_RE) only recognizes BOLD
+# "**N.**", so when a draw numbers its senses plainly (no bold) sense_headlines comes back EMPTY —
+# which is why the first summary read bathmos/thea as 0 senses. We count the real headers here for
+# the STRESS measurement; we do NOT touch the frozen engine. (The bold-vs-plain mismatch is itself a
+# finding: in production a plain-numbered draw fails validate_entry and the word would be refused.)
+_SENSE_HDR = re.compile(r'(?m)^[ \t]*(?:\*{1,2}\s*)?(\d+)[.)]\s+')
+
+
+def parse_senses(senses_block):
+    """Split the Senses prose into [{headline, refs}] at every numbered header (bold OR plain). The
+    refs are pulled from each sense's own chunk so grounding can be checked per sense."""
     block = senses_block or ""
-    marks = list(B._HEADLINE_RE.finditer(block))
+    marks = list(_SENSE_HDR.finditer(block))
     out = []
     for i, m in enumerate(marks):
         start = m.start()
         end = marks[i + 1].start() if i + 1 < len(marks) else len(block)
         chunk = block[start:end]
-        headline = re.sub(r'^\d+\.\s*', '', m.group(1)).strip()
-        refs = B.cited_refs(chunk)
-        grounded = sum(1 for r in refs if r in present)
-        out.append({"headline": headline, "refs": len(refs), "grounded": grounded})
+        first = next((ln for ln in chunk.splitlines() if ln.strip()), "")
+        headline = re.sub(r'^[ \t]*(?:\*{1,2}\s*)?\d+[.)]\s*', '', first)
+        headline = re.sub(r'\*+', '', headline).strip()
+        out.append({"headline": headline, "refs": B.cited_refs(chunk)})
     return out
 
 
@@ -122,7 +128,8 @@ def analyze(conn, sid, ev, entries):
     """Compute the detectors across the draws. Returns a dict the report + summary both read."""
     occ = ev["occ"]
     present = B.loose_keyset(conn, sid)           # verses where the word genuinely appears, any form
-    counts = [len(e["sense_headlines"]) for e in entries]
+    senses = [parse_senses(e["senses_block"]) for e in entries]   # tolerant: bold OR plain headers
+    counts = [len(s) for s in senses]
     spread = dict(sorted(Counter(counts).items()))
     real = [e["audit"]["real"] for e in entries]
     tagging = [e["audit"]["tagging"] for e in entries]
@@ -138,8 +145,10 @@ def analyze(conn, sid, ev, entries):
     soft_pad = [(c >= 2 and c <= occ and 2 * c > occ) for c in counts]
     # the sharp identifier: which sense(s) in each draw rest on NO real occurrence (named headlines),
     # so we can see if the same invented job repeats across draws (prompt-induced) or flickers (noise).
-    grounding = [sense_grounding(e["senses_block"], present) for e in entries]
-    ungrounded = [[s["headline"] for s in g if s["grounded"] == 0] for g in grounding]
+    grounding = [[{"headline": s["headline"], "refs": len(s["refs"]),
+                   "grounded": sum(1 for r in s["refs"] if r in present)} for s in sl]
+                 for sl in senses]
+    ungrounded = [[g["headline"] for g in gl if g["grounded"] == 0] for gl in grounding]
     return {
         "occ": occ, "fed": ev["fed"],
         "counts": counts, "spread": spread, "max_senses": max(counts), "min_senses": min(counts),
@@ -200,8 +209,9 @@ def render_word(sid, ev, entries, det):
 
     for i, e in enumerate(entries, 1):
         w("")
-        gt = "  !! senses > occ" if len(e["sense_headlines"]) > det["occ"] else ""
-        w(f"  ----- DRAW {i}  [{len(e['sense_headlines'])} senses]  audit "
+        c = det["counts"][i - 1]
+        gt = "  !! senses > occ" if c > det["occ"] else ""
+        w(f"  ----- DRAW {i}  [{c} senses]  audit "
           f"{e['audit']['pass']}/{e['audit']['total']}{gt} -----")
         if e["senses_block"]:
             for ln in e["senses_block"].splitlines():
@@ -285,6 +295,50 @@ def save(save_dir, sid, lemma, translit, ev, entries, det, report_lines):
     return base
 
 
+def resummarize(save_dir, db):
+    """Rebuild the summary table from the saved JSON dumps — no model, no rebuild. Re-counts senses
+    with the tolerant (bold-OR-plain) parser, re-derives every sense-parse-dependent flag, and prints
+    a confirmation of the two controls so the fix is visible. Read-only on bible.db (for grounding)."""
+    import glob
+    latest = {}
+    for p in sorted(glob.glob(os.path.join(save_dir, "stress_G*.json"))):
+        sid = os.path.basename(p).split("_")[1]
+        latest[sid] = p                      # sorted ascending -> newest timestamp wins per word
+    if not latest:
+        sys.exit(f"no stress_*.json dumps found in {save_dir}")
+    conn = sqlite3.connect(f"file:{db}?mode=ro", uri=True)
+    conn.row_factory = sqlite3.Row
+    conn.create_function("strip_accents", 1, B.strip_accents)
+    rows = []
+    for sid, p in latest.items():
+        with open(p, encoding="utf-8") as f:
+            j = json.load(f)
+        ev = {"occ": j["occ"], "fed": j["fed"], "ot": j.get("ot", 0),
+              "renderings": j.get("renderings", 0), "lemma": j["lemma"], "translit": j["translit"]}
+        det = analyze(conn, sid, ev, j["draws"])
+        rows.append({"sid": sid, "lemma": j["lemma"], "det": det})
+    rows.sort(key=lambda r: TARGETS.index(r["sid"]) if r["sid"] in TARGETS else 99)
+
+    print(f"re-summarized {len(rows)} word(s) from {save_dir} (no model).\n")
+    print("CONFIRM — the two controls, re-counted with the fixed parser:")
+    for sid in ("G898", "G2299"):
+        r = next((x for x in rows if x["sid"] == sid), None)
+        if not r:
+            continue
+        print(f"  {sid} {r['lemma']}  counts/draw {r['det']['counts']}  spread {r['det']['spread']}")
+        for k, gl in enumerate(r["det"]["grounding"], 1):
+            heads = " | ".join(f"{g['headline']} ({g['grounded']}/{g['refs']})" for g in gl) or "(none)"
+            print(f"     draw{k}: {heads}")
+    print()
+    summary = render_summary(rows)
+    print("\n".join(summary))
+    sp = os.path.join(save_dir, "SUMMARY_fixed_" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S") + ".txt")
+    with open(sp, "w", encoding="utf-8") as f:
+        f.write("\n".join(summary) + "\n")
+    print(f"\nsaved: {sp}")
+    conn.close()
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--db", default=os.path.expanduser("~/bible-db/bible.db"))
@@ -293,6 +347,9 @@ def main():
     ap.add_argument("--budget", type=int, default=B.BUDGET)
     ap.add_argument("--save-dir", default="~/lexica_stress",
                     help="scratch folder OUTSIDE the repo for the dumps (default ~/lexica_stress)")
+    ap.add_argument("--resummarize", action="store_true",
+                    help="rebuild the summary table from the saved JSON dumps in --save-dir "
+                         "(no model, no rebuild) — used after a parser fix")
     args = ap.parse_args()
 
     try:
@@ -302,6 +359,10 @@ def main():
 
     save_dir = os.path.expanduser(args.save_dir)
     os.makedirs(save_dir, exist_ok=True)
+
+    if args.resummarize:
+        resummarize(save_dir, args.db)
+        return
 
     targets = [args.word.upper()] if args.word else list(TARGETS)
     targets = [("G" + t if t[:1] not in ("G", "H") else t) for t in targets]
@@ -333,7 +394,7 @@ def main():
             raw = B.model_prose(client, sid, ev["translit"], ev["gset"], ev["ctx"])
             entry = B.assemble(conn, sid, ev["lemma"], ev["translit"], raw)
             entries.append(entry)
-            print(f"   draw {k+1}/{args.runs}: {len(entry['sense_headlines'])} senses, "
+            print(f"   draw {k+1}/{args.runs}: {len(parse_senses(entry['senses_block']))} senses, "
                   f"audit {entry['audit']['pass']}/{entry['audit']['total']} "
                   f"(real {entry['audit']['real']})", flush=True)
         det = analyze(conn, sid, ev, entries)
