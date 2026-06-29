@@ -65,6 +65,45 @@ function _newsKey() {
 const api = {
   aiSearch: (q, context = "") =>
     fetch(`/api/ai-search?q=${encodeURIComponent(q)}${context ? `&context=${encodeURIComponent(context)}` : ""}`, { headers: _authHeaders() }).then(r => r.json()),
+  // Streamed Ask-the-corpus: the panel arrives first, the synthesis prose streams in
+  // word-by-word, the verse evidence lands at the tail. A cache hit (or a quota / login /
+  // error reply) comes back as one-lump JSON instead — detected by content type — and is
+  // handed straight to onDone, exactly like the old aiSearch.
+  aiSearchStream: async (q, context, { onPanel, onDelta, onDone, onError }) => {
+    const url = `/api/ai-search?q=${encodeURIComponent(q)}${context ? `&context=${encodeURIComponent(context)}` : ""}`;
+    const resp = await fetch(url, { headers: _authHeaders() });
+    if (!(resp.headers.get("content-type") || "").includes("text/event-stream")) {
+      let data; try { data = await resp.json(); } catch (e) { data = { error: "Couldn't read the answer." }; }
+      onDone(data);
+      return;
+    }
+    const reader = resp.body.getReader();
+    const dec = new TextDecoder();
+    let buf = "";
+    const handle = (frame) => {
+      let name = "", data = "";
+      for (const line of frame.split("\n")) {
+        if (line.startsWith("event:")) name = line.slice(6).trim();
+        else if (line.startsWith("data:")) data = line.slice(5).trim();
+      }
+      if (!name || !data) return;
+      let obj; try { obj = JSON.parse(data); } catch (e) { return; }
+      if (name === "panel") onPanel(obj);
+      else if (name === "delta") onDelta(obj.t || "");
+      else if (name === "done") onDone(obj);
+      else if (name === "error") onError(obj);
+    };
+    for (;;) {
+      const { value, done } = await reader.read();
+      if (done) break;
+      buf += dec.decode(value, { stream: true });
+      let i;
+      while ((i = buf.indexOf("\n\n")) !== -1) {
+        const frame = buf.slice(0, i); buf = buf.slice(i + 2);
+        if (frame.trim()) handle(frame);
+      }
+    }
+  },
   verse: (book, chapter, verse) =>
     fetch(`/api/verse/${encodeURIComponent(book)}/${chapter}/${verse}`).then(r => r.json()),
   verseWords: (book, chapter, verse) =>

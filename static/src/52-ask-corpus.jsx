@@ -309,7 +309,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   const threadRef = useRef(null);
   useNotesVersion();   // re-render when the store changes (e.g. a cross-device sync pulls convos in)
   const convos = NotesStore.corpusConvos();
-  const busy = thread.some(t => t && t.loading);   // a search is in flight — lock the composer
+  const busy = thread.some(t => t && (t.loading || t.streaming));   // a search is in flight (or streaming) — lock the composer
 
   // Seed the "questions left today" counter on mount (signed-in only; ignored otherwise).
   useEffect(() => {
@@ -326,10 +326,11 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   // devices. One entry per thread keyed by currentId; loading turns are never stored.
   useEffect(() => {
     if (currentId == null) return;
-    const answered = thread.filter(t => t && t.question && !t.loading);
+    // A streaming turn is incomplete — don't save it until the `done` payload lands.
+    const answered = thread.filter(t => t && t.question && !t.loading && !t.streaming);
     if (!answered.length) return;
     NotesStore.upsertConvo({ id: currentId, title: answered[0].question,
-                             turns: thread.filter(t => t && !t.loading) });
+                             turns: thread.filter(t => t && !t.loading && !t.streaming) });
   }, [thread, currentId]);
 
   const ask = async (question) => {
@@ -372,16 +373,14 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
       }).join("\n").slice(0, 1500);
     }
     setThread(t => [...t, { question: q, loading: true }]);
-    try {
-      const data = await api.aiSearch(q, context);
-      if (data.quota) setQuota(data.quota);       // refresh the "left today" counter
-      let turn;
-      if (data.login) turn = { question: q, error: "Sign in to ask the corpus." };
-      else if (data.capped) turn = { question: q, notice: data.error, capped: true };
-      else if (data.global_capped) turn = { question: q, notice: data.error };
-      else if (data.out_of_scope) turn = { question: q, notice: data.explanation || "This tool searches the Greek & Hebrew Bible corpus — try a question about a word, theme, or passage." };
-      else if (data.error) turn = { question: q, error: data.error };
-      else turn = {
+    // buildTurn maps a finished payload (streamed OR a one-lump cache hit) to a turn.
+    const buildTurn = (data) => {
+      if (data.login) return { question: q, error: "Sign in to ask the corpus." };
+      if (data.capped) return { question: q, notice: data.error, capped: true };
+      if (data.global_capped) return { question: q, notice: data.error };
+      if (data.out_of_scope) return { question: q, notice: data.explanation || "This tool searches the Greek & Hebrew Bible corpus — try a question about a word, theme, or passage." };
+      if (data.error) return { question: q, error: data.error };
+      return {
         question: q,
         explanation: data.explanation || "",
         keyStrongs: data.key_strongs || [],
@@ -391,7 +390,24 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
         grounded: data.grounded !== false,   // false only when the backend says so
         panel: data.panel || null,           // computed lexical-texture panel (may be absent)
       };
-      setThread(t => t.map((x, i) => i === idx ? turn : x));
+    };
+    try {
+      await api.aiSearchStream(q, context, {
+        // Panel first: switch out of the "thinking" state and show it while the synthesis writes.
+        onPanel: (d) => setThread(t => t.map((x, i) => i === idx
+          ? { question: q, streaming: true, panel: d.panel || null, explanation: "" } : x)),
+        // Prose streams in word-by-word; append to the live turn (guard on `streaming` so a
+        // late delta can't clobber a turn the `done` payload has already finalized).
+        onDelta: (text) => setThread(t => t.map((x, i) => (i === idx && x && x.streaming)
+          ? { ...x, explanation: (x.explanation || "") + text } : x)),
+        // Done (or a one-lump cache hit): the authoritative payload replaces the turn.
+        onDone: (data) => {
+          if (data.quota) setQuota(data.quota);     // refresh the "left today" counter
+          setThread(t => t.map((x, i) => i === idx ? buildTurn(data) : x));
+        },
+        onError: (data) => setThread(t => t.map((x, i) => i === idx
+          ? { question: q, error: data.error || "Something went wrong on that one." } : x)),
+      });
     } catch (e) {
       setThread(t => t.map((x, i) => i === idx ? { question: q, error: "Network error: " + e.message } : x));
     }

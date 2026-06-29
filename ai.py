@@ -20,7 +20,7 @@ import sqlite3
 import time
 import traceback
 
-from flask import Blueprint, jsonify, request
+from flask import Blueprint, Response, jsonify, request, stream_with_context
 
 from core import (
     log, db, db_ro, heb_db, _anthropic, limiter, _FUNCTION_STRONGS,
@@ -802,22 +802,12 @@ def _parse_curation(raw: str):
     return primary, additional, explanation
 
 
-def _curate_primary_verses(
+def _curation_prompt(
     query: str, results: list[dict], key_strongs_data: list[dict] | None = None
-) -> tuple[list[str], list[str], str]:
-    """Pass 2: send actual verse texts to Sonnet — picks the evidence verses AND
-    writes the grounded explanation in the same call. The model has the real
-    retrieved verses in front of it here, so its note can only cite what was
-    actually found (no separate grounding pass needed).
-
-    Returns (primary_refs, additional_refs, explanation). primary_refs are curated
-    from the SQL results; additional_refs are scholarly additions from Haiku's
-    training knowledge that the SQL query missed (capped at 12, caller validates
-    against DB); explanation is the grounded note ("" on any failure).
-    """
-    if not results or not _anthropic:
-        return [], [], ""
-
+) -> tuple[str, int]:
+    """Build the pass-2 user message + the primary-verse cap. Shared by the streamed and
+    non-streamed curation paths so both feed Sonnet the IDENTICAL prompt — streaming
+    changes only how the answer reaches the reader, never what the model is asked."""
     # Scale input window and primary target with result pool size.
     n = len(results)
     if n >= 200:
@@ -872,7 +862,6 @@ def _curate_primary_verses(
         f"{e.get('strongs', '')} {e.get('lemma', '')}".strip()
         for e in (key_strongs_data or [])[:10]
     )
-
     user_msg = (
         f"Query: {query}\n"
         f"Key word(s) under study: {terms}\n"
@@ -880,19 +869,29 @@ def _curate_primary_verses(
         f"===VERSES=== marker and up to {primary_cap} primary verses as JSON.\n\n"
         f"Verses:\n{verse_list}"
     )
+    return user_msg, primary_cap
 
-    # Pass 2 occasionally comes back unreadable or gets cut off on a long answer.
-    # When that happens the caller silently falls back to the pass-1 prose — the
-    # from-memory draft written before retrieval, the one that can name a wrong
-    # verse. Guard it three ways: a roomier word budget (was 850 — overflow was the
-    # main cause), an explicit cut-off warning so we SEE it, and one retry (catches a
-    # transient API hiccup) before we accept the downgrade.
+
+def _curate_primary_verses(
+    query: str, results: list[dict], key_strongs_data: list[dict] | None = None
+) -> tuple[list[str], list[str], str]:
+    """Pass 2, NON-STREAMED — the fallback path AND the floor under the streamed path.
+    Sends the real verse texts to Sonnet, which picks the evidence verses AND writes the
+    grounded explanation in one call. Returns (primary_refs, additional_refs, explanation);
+    a malformed tail is retried once, then degrades to ([], [], "") so the caller keeps the
+    from-memory prose with NO verse split — never wrong picks.
+    """
+    if not results or not _anthropic:
+        return [], [], ""
+    user_msg, primary_cap = _curation_prompt(query, results, key_strongs_data)
+    # Pass 2 occasionally comes back unreadable or cut off on a long answer. Guard it: a
+    # roomier word budget, an explicit cut-off warning, and one retry (a transient API
+    # hiccup) before the downgrade. The tail-parse is fail-closed (_parse_curation).
     for attempt in range(2):
         try:
             msg = _anthropic.messages.create(
-                # Sonnet writes the displayed synthesis (grounded note) + curates the
-                # verses — markedly better prose/reasoning than Haiku, same as the xref
-                # + chapter-summary syntheses. Term-extraction + SQL-gen stay on Haiku.
+                # Sonnet writes the displayed synthesis + curates the verses — markedly
+                # better prose/reasoning than Haiku (same as the xref + chapter summaries).
                 model="claude-sonnet-4-6",
                 max_tokens=1400,
                 temperature=0,
@@ -906,8 +905,7 @@ def _curate_primary_verses(
                      getattr(_u, "cache_read_input_tokens", 0))
             if msg.stop_reason == "max_tokens":
                 log.warning("Pass-2 curation hit the word cap (attempt %d/2) — may be cut off", attempt + 1)
-            raw = msg.content[0].text.strip()
-            parsed = _parse_curation(raw)
+            parsed = _parse_curation(msg.content[0].text.strip())
             if parsed is None:
                 raise ValueError("pass-2 tail did not parse (fail-closed)")
             primary, additional, explanation = parsed
@@ -915,6 +913,214 @@ def _curate_primary_verses(
         except Exception as exc:
             log.warning("Pass-2 curation failed/unparseable (attempt %d/2): %s", attempt + 1, exc)
     return [], [], ""
+
+
+def _streamable_prose(full: str, hold: int) -> str:
+    """The synthesis prose safe to show so far: everything BEFORE the ===VERSES=== marker
+    once it appears, or — until then — all but the last `hold` characters, so a half-arrived
+    marker ("===VER") never flashes on screen. The JSON picks tail is never returned, so it
+    can never reach the reader as text."""
+    i = full.find(_CURATION_MARK)
+    if i != -1:
+        return full[:i]
+    return full[:max(0, len(full) - hold)]
+
+
+def _stream_curation(
+    query: str, results: list[dict], key_strongs_data: list[dict] | None = None
+):
+    """Pass 2, STREAMED. A generator that YIELDS prose-delta strings as Sonnet writes the
+    synthesis (the JSON picks tail is withheld), then RETURNS the parsed outcome:
+      - (primary, additional, explanation) : a clean tail; use these picks.
+      - (None, None, streamed_prose)       : the tail would not parse; the caller FLOORS it
+        (re-runs the non-streamed curate for clean picks) and keeps this prose. Never wrong.
+      - None                                : nothing to curate (no results / no client).
+    """
+    if not results or not _anthropic:
+        return None
+    user_msg, primary_cap = _curation_prompt(query, results, key_strongs_data)
+    hold = len(_CURATION_MARK)
+    full, emitted = "", 0
+    with _anthropic.messages.stream(
+        model="claude-sonnet-4-6",
+        max_tokens=1400,
+        temperature=0,
+        system=_CURATION_SYSTEM,
+        messages=[{"role": "user", "content": user_msg}],
+    ) as stream:
+        for chunk in stream.text_stream:
+            full += chunk
+            safe = _streamable_prose(full, hold)
+            if len(safe) > emitted:
+                yield safe[emitted:]
+                emitted = len(safe)
+        final = stream.get_final_message()
+    raw = final.content[0].text if final.content else full
+    # Flush any prose held back behind a possible partial marker.
+    safe = _streamable_prose(raw, 0)
+    if len(safe) > emitted:
+        yield safe[emitted:]
+    try:
+        _u = final.usage
+        log.info("cache[sonnet-pass2-stream]: fresh=%s read=%s",
+                 _u.input_tokens, getattr(_u, "cache_read_input_tokens", 0))
+    except Exception:
+        pass
+    parsed = _parse_curation(raw)
+    if parsed is not None:
+        primary, additional, explanation = parsed
+        return primary[:primary_cap], additional[:12], explanation
+    return None, None, _streamable_prose(raw, 0).strip()
+
+
+def _sse(event: str, obj) -> str:
+    """One Server-Sent Event frame: an event name + a single-line JSON payload. json.dumps
+    escapes any newlines in the data (e.g. paragraph breaks in a prose delta), so every
+    frame is two lines + a blank — the wire shape the frontend splits on."""
+    return f"event: {event}\ndata: {json.dumps(obj, ensure_ascii=False)}\n\n"
+
+
+def _assemble_payload(q, results, verse_index, key_strongs_data,
+                      primary_verses_raw, additional_verses_raw, explanation,
+                      rows, phrase_hits, target_bases, panel):
+    """Post-curation assembly (shared end-stage, lifted out of the route so the streaming
+    generator can run it once the prose has streamed): fold the curated picks into the
+    pool, fetch any named verses the SQL missed, tag is_primary / is_additional, inject the
+    hardcoded divine-council corpus, decide grounding, sort canonically, build the payload."""
+    # ── Build primary_set and fetch any missing primary verses ────────────
+    dc_query = bool(_DIVINE_COUNCIL_RE.search(q))
+    primary_set: set = set()
+    for ref_str in primary_verses_raw:
+        m = _VERSE_REF_PARSE_RE.search(str(ref_str).strip())
+        if m:
+            primary_set.add((_norm_book(m.group(1)), int(m.group(2)), int(m.group(3))))
+
+    # ── Hardcoded corpora — injected regardless of model output ──────────
+    if dc_query:
+        primary_set.update(_DIVINE_COUNCIL_VERSES)
+        log.debug("Divine council corpus injected: %d verses", len(_DIVINE_COUNCIL_VERSES))
+
+    missing_primary = [k for k in primary_set if k not in verse_index]
+    if missing_primary:
+        prim_conn = db_ro()
+        new_primary = []
+        try:
+            for key in missing_primary:
+                book, chapter, verse_num = key
+                vrow = prim_conn.execute(
+                    "SELECT id FROM verses WHERE book=? AND chapter=? AND verse=?",
+                    (book, chapter, verse_num),
+                ).fetchone()
+                if not vrow:
+                    continue
+                words = _fetch_verse_words(prim_conn, vrow["id"])
+                if words:
+                    verse_index[key] = {
+                        "ref": f"{book} {chapter}:{verse_num}",
+                        "book": book, "chapter": chapter, "verse": verse_num,
+                        "words": words,
+                    }
+                    new_primary.append(key)
+                    log.debug("Primary verse fetched: %s %d:%d", book, chapter, verse_num)
+        finally:
+            prim_conn.close()
+        if new_primary:
+            results = [verse_index[k] for k in new_primary] + results
+
+    # ── Validate and fetch additional verses from the model's knowledge ───
+    additional_set: set = set()
+    for ref_str in additional_verses_raw:
+        m = _VERSE_REF_PARSE_RE.search(str(ref_str).strip())
+        if m:
+            additional_set.add(
+                (_norm_book(m.group(1)), int(m.group(2)), int(m.group(3)))
+            )
+
+    if additional_set:
+        add_conn = db_ro()
+        new_additional: list = []
+        try:
+            for key in additional_set:
+                book, chapter, verse_num = key
+                vrow = add_conn.execute(
+                    "SELECT id FROM verses WHERE book=? AND chapter=? AND verse=?",
+                    (book, chapter, verse_num),
+                ).fetchone()
+                if not vrow:
+                    log.debug(
+                        "Additional verse not in DB (dropped): %s %d:%d",
+                        book, chapter, verse_num,
+                    )
+                    continue
+                if key in verse_index:
+                    continue
+                words = _fetch_verse_words(add_conn, vrow["id"])
+                if words:
+                    verse_index[key] = {
+                        "ref": f"{book} {chapter}:{verse_num}",
+                        "book": book, "chapter": chapter, "verse": verse_num,
+                        "words": words,
+                        "is_thematic": _is_thematic(words),
+                    }
+                    new_additional.append(key)
+                    log.debug(
+                        "Additional verse fetched: %s %d:%d", book, chapter, verse_num
+                    )
+        finally:
+            add_conn.close()
+        if new_additional:
+            results = [verse_index[k] for k in new_additional] + results
+
+    # ── Tag is_primary / is_additional on every result verse ─────────────
+    for v in results:
+        key = (v["book"], v["chapter"], v["verse"])
+        thematic = v.get("is_thematic", False)
+        if dc_query:
+            v["is_primary"] = key in _DIVINE_COUNCIL_VERSES
+        else:
+            v["is_primary"] = (key in primary_set) and not thematic
+        v["is_additional"] = thematic or ((key in additional_set) and not v["is_primary"])
+
+    # ── Sort in canonical book order (books.id) then chapter/verse ────────
+    ord_conn = db_ro()
+    try:
+        book_order = {
+            r["abbrev"]: r["id"]
+            for r in ord_conn.execute(
+                "SELECT abbrev, id FROM books ORDER BY id"
+            ).fetchall()
+        }
+    finally:
+        ord_conn.close()
+    results.sort(
+        key=lambda v: (book_order.get(v["book"], 9999), v["chapter"], v["verse"])
+    )
+
+    # ── Hardcoded divine council key_strongs ─────────────────────────────
+    if dc_query:
+        dc_strongs = [
+            {"strongs_base": "5207", "strongs": "G5207", "lemma": "υἱός",    "translit": "huiós",   "definition": "", "derivation": ""},
+            {"strongs_base": "2316", "strongs": "G2316", "lemma": "θεός",    "translit": "theós",   "definition": "", "derivation": ""},
+            {"strongs_base": "5475", "strongs": "H5475", "lemma": "סוֹד",    "translit": "sôd",     "definition": "", "derivation": ""},
+            {"strongs_base": "5712", "strongs": "H5712", "lemma": "עֵדָה",   "translit": "ʿēdâh",  "definition": "", "derivation": ""},
+            {"strongs_base": "1121", "strongs": "H1121", "lemma": "בֵּן",    "translit": "bēn",     "definition": "", "derivation": ""},
+            {"strongs_base": "430",  "strongs": "H430",  "lemma": "אֱלֹהִים","translit": "ʾĕlōhîm","definition": "", "derivation": ""},
+        ]
+        existing_bases = {k["strongs_base"] for k in key_strongs_data}
+        for ks in dc_strongs:
+            if ks["strongs_base"] not in existing_bases:
+                key_strongs_data.append(ks)
+
+    # ── Grounding: is the answer backed by a REAL occurrence, or just model knowledge? ──
+    if not results:
+        grounded = False
+    elif rows or phrase_hits or not target_bases:
+        grounded = True
+    else:
+        grounded = any(not _is_thematic(v.get("words", [])) for v in results)
+
+    return {"results": results, "total": len(results), "grounded": grounded,
+            "explanation": explanation, "key_strongs": key_strongs_data, "panel": panel}
 
 
 def _normalize_union_sql(sql: str) -> str:
@@ -1733,206 +1939,85 @@ def ai_search():
                 log.warning("AI search retry failed: %s", exc)
         _mark("retry")
 
-        # ── Pass 2: relevance curation + grounded explanation ─────────────────
-        # This call has the real retrieved verses in front of it, so its explanation
-        # cites the CORRECT references from that list. The pass-1 prose is written from
-        # memory BEFORE retrieval and can get a verse number wrong (e.g. 2Th 3:3 for
-        # 2:3), so we must NOT display it whenever it names a verse.
-        # Rule: ground the explanation if the pool is big enough to rank OR the prose
-        # cites any verse (so its number is checked against the text). Skip the call
-        # only for a small pool whose prose cites nothing to verify. Ranking is still
-        # skipped for a small pool (show them all).
+        # ── Pass 2 + assembly, STREAMED ───────────────────────────────────────
+        # The synthesis is the dominant slice and the last thing produced, so we stream
+        # it instead of making the reader wait for the whole answer: the panel (already
+        # known from the pre-pass-2 key words) goes out FIRST, the synthesis prose streams
+        # live as Sonnet writes it, and the verse evidence lands at the tail. The fail-
+        # closed pick-parse (_parse_curation) sits IN FRONT of the reorder — a malformed
+        # tail never marks wrong verses, it re-runs the non-streamed curate for clean
+        # picks. Cache hits returned above this point stay one-lump (no streaming).
         small_pool  = len(results) <= _CURATE_SKIP_MAX
         cites_verse = bool(_get_verse_ref_re().findall(explanation))
-        if not small_pool or cites_verse:
-            primary_verses_raw, additional_verses_raw, curated_expl = _curate_primary_verses(
-                q, results, key_strongs_data
-            )
-            if curated_expl:
-                explanation = curated_expl  # grounded; keeps the pass-1 prose on failure
-            if small_pool:                  # small pool: show them all, ranking is moot
-                primary_verses_raw = [v["ref"] for v in results]
-                additional_verses_raw = []
-        else:
-            primary_verses_raw = [v["ref"] for v in results]
-            additional_verses_raw = []
-            log.debug("Pass-2 skipped (%d verses, prose cites no verse) — showing all", len(results))
-        log.debug("Pass-2 primary_verses: %s", primary_verses_raw)
-        log.debug("Pass-2 additional_verses: %s", additional_verses_raw)
-        _mark("curate")
+        pass1_expl  = explanation        # the from-memory floor of last resort
 
-        # ── Build primary_set and fetch any missing primary verses ────────────
-        dc_query = bool(_DIVINE_COUNCIL_RE.search(q))
-        primary_set: set = set()
-        for ref_str in primary_verses_raw:
-            m = _VERSE_REF_PARSE_RE.search(str(ref_str).strip())
-            if m:
-                primary_set.add((_norm_book(m.group(1)), int(m.group(2)), int(m.group(3))))
-
-        # ── Hardcoded corpora — injected regardless of Haiku output ──────────
-        if dc_query:
-            primary_set.update(_DIVINE_COUNCIL_VERSES)
-            log.debug("Divine council corpus injected: %d verses", len(_DIVINE_COUNCIL_VERSES))
-
-        missing_primary = [k for k in primary_set if k not in verse_index]
-        if missing_primary:
-            prim_conn = db_ro()
-            new_primary = []
+        def _gen():
+            expl = pass1_expl
+            primary_raw, additional_raw = [], []
             try:
-                for key in missing_primary:
-                    book, chapter, verse_num = key
-                    vrow = prim_conn.execute(
-                        "SELECT id FROM verses WHERE book=? AND chapter=? AND verse=?",
-                        (book, chapter, verse_num),
-                    ).fetchone()
-                    if not vrow:
-                        continue
-                    words = _fetch_verse_words(prim_conn, vrow["id"])
-                    if words:
-                        verse_index[key] = {
-                            "ref": f"{book} {chapter}:{verse_num}",
-                            "book": book, "chapter": chapter, "verse": verse_num,
-                            "words": words,
-                        }
-                        new_primary.append(key)
-                        log.debug("Primary verse fetched: %s %d:%d", book, chapter, verse_num)
-            finally:
-                prim_conn.close()
-            if new_primary:
-                results = [verse_index[k] for k in new_primary] + results
+                # Panel first — independent of curation (it only needs the pre-pass-2 heads).
+                try:
+                    _panel = corpus_panel.build_panel(_panel_heads)
+                except Exception as _pe:     # belt-and-suspenders — build_panel self-guards
+                    log.warning("corpus panel failed: %s", _pe)
+                    _panel = None
+                yield _sse("panel", {"panel": _panel})
+                _mark("panel")
 
-        # ── Validate and fetch additional verses from Haiku's knowledge ───────
-        # These are inferential scholarly citations that the SQL query couldn't
-        # reach (e.g. Gen 1:26 for divine council — implied by plural pronouns,
-        # not by any "divine being" Strong's number). Each ref is checked against
-        # the DB before use; hallucinated refs are silently dropped.
-        additional_set: set = set()
-        for ref_str in additional_verses_raw:
-            m = _VERSE_REF_PARSE_RE.search(str(ref_str).strip())
-            if m:
-                additional_set.add(
-                    (_norm_book(m.group(1)), int(m.group(2)), int(m.group(3)))
+                # The synthesis streams live. The floor (_parse_curation) decides the
+                # picks; a bad tail re-runs the non-streamed curate for clean picks and
+                # keeps the streamed prose — never a wrong-verse split.
+                if not small_pool or cites_verse:
+                    cur = _stream_curation(q, results, key_strongs_data)
+                    res = None
+                    try:
+                        while True:
+                            yield _sse("delta", {"t": next(cur)})
+                    except StopIteration as stop:
+                        res = stop.value
+                    if res is None:
+                        pass                  # nothing to curate — keep the pass-1 prose
+                    elif res[0] is None:
+                        # streamed tail unparseable → FLOOR: clean picks from the non-streamed curate
+                        primary_raw, additional_raw, _fe = _curate_primary_verses(q, results, key_strongs_data)
+                        expl = res[2] or _fe or expl
+                    else:
+                        primary_raw, additional_raw, curated = res
+                        if curated:
+                            expl = curated
+                    if small_pool:            # small pool: show them all, ranking is moot
+                        primary_raw = [v["ref"] for v in results]
+                        additional_raw = []
+                else:
+                    primary_raw = [v["ref"] for v in results]
+                    additional_raw = []
+                    log.debug("Pass-2 skipped (%d verses, prose cites no verse) — showing all", len(results))
+                _mark("curate")
+
+                payload = _assemble_payload(
+                    q, results, verse_index, key_strongs_data,
+                    primary_raw, additional_raw, expl, rows, phrase_hits, _target_bases, _panel,
                 )
+                if not context:               # follow-ups are thread-specific — don't cache
+                    _ai_cache[qk] = payload
+                    _persist_ai_cache(qk, payload)
+                ai_quota_count(role, uid)     # record the paid call (admin exempt; cache hits never reach here)
+                _mark("total")
+                log.info("ai_search timing q=%r rows=%d ctx=%d | %s", q, len(rows), len(context), _marks)
+                out = dict(payload)           # per-account quota rides the response, not the shared cache
+                out["quota"] = ai_quota_status(role, uid)
+                yield _sse("done", out)
+            except Exception:
+                log.error("Streamed ai_search failed:\n%s", traceback.format_exc())
+                yield _sse("error", {"error": "Internal server error — see console for details"})
 
-        if additional_set:
-            add_conn = db_ro()
-            new_additional: list = []
-            try:
-                for key in additional_set:
-                    book, chapter, verse_num = key
-                    vrow = add_conn.execute(
-                        "SELECT id FROM verses WHERE book=? AND chapter=? AND verse=?",
-                        (book, chapter, verse_num),
-                    ).fetchone()
-                    if not vrow:
-                        log.debug(
-                            "Additional verse not in DB (dropped): %s %d:%d",
-                            book, chapter, verse_num,
-                        )
-                        continue
-                    if key in verse_index:
-                        continue
-                    words = _fetch_verse_words(add_conn, vrow["id"])
-                    if words:
-                        verse_index[key] = {
-                            "ref": f"{book} {chapter}:{verse_num}",
-                            "book": book, "chapter": chapter, "verse": verse_num,
-                            "words": words,
-                            "is_thematic": _is_thematic(words),
-                        }
-                        new_additional.append(key)
-                        log.debug(
-                            "Additional verse fetched: %s %d:%d", book, chapter, verse_num
-                        )
-            finally:
-                add_conn.close()
-            if new_additional:
-                results = [verse_index[k] for k in new_additional] + results
-
-        # ── Tag is_primary / is_additional on every result verse ─────────────
-        # A THEMATIC verse (cited/added but containing none of the target words)
-        # can never be primary evidence — it routes to the "Additional references"
-        # bucket so it reads as context, not proof.
-        for v in results:
-            key = (v["book"], v["chapter"], v["verse"])
-            thematic = v.get("is_thematic", False)
-            if dc_query:
-                v["is_primary"] = key in _DIVINE_COUNCIL_VERSES
-            else:
-                v["is_primary"] = (key in primary_set) and not thematic
-            v["is_additional"] = thematic or ((key in additional_set) and not v["is_primary"])
-
-        # ── Sort in canonical book order (books.id) then chapter/verse ────────
-        ord_conn = db_ro()
-        try:
-            book_order = {
-                r["abbrev"]: r["id"]
-                for r in ord_conn.execute(
-                    "SELECT abbrev, id FROM books ORDER BY id"
-                ).fetchall()
-            }
-        finally:
-            ord_conn.close()
-        results.sort(
-            key=lambda v: (book_order.get(v["book"], 9999), v["chapter"], v["verse"])
+        # X-Accel-Buffering: no is the whole fix for the dump — it tells PA's nginx not to
+        # buffer the response. The path already streams (proved by /api/_streamtest).
+        return Response(
+            stream_with_context(_gen()),
+            mimetype="text/event-stream",
+            headers={"Cache-Control": "no-cache", "X-Accel-Buffering": "no"},
         )
-
-        # ── Hardcoded divine council key_strongs ─────────────────────────────
-        if dc_query:
-            dc_strongs = [
-                {"strongs_base": "5207", "strongs": "G5207", "lemma": "υἱός",    "translit": "huiós",   "definition": "", "derivation": ""},
-                {"strongs_base": "2316", "strongs": "G2316", "lemma": "θεός",    "translit": "theós",   "definition": "", "derivation": ""},
-                {"strongs_base": "5475", "strongs": "H5475", "lemma": "סוֹד",    "translit": "sôd",     "definition": "", "derivation": ""},
-                {"strongs_base": "5712", "strongs": "H5712", "lemma": "עֵדָה",   "translit": "ʿēdâh",  "definition": "", "derivation": ""},
-                {"strongs_base": "1121", "strongs": "H1121", "lemma": "בֵּן",    "translit": "bēn",     "definition": "", "derivation": ""},
-                {"strongs_base": "430",  "strongs": "H430",  "lemma": "אֱלֹהִים","translit": "ʾĕlōhîm","definition": "", "derivation": ""},
-            ]
-            existing_bases = {k["strongs_base"] for k in key_strongs_data}
-            for ks in dc_strongs:
-                if ks["strongs_base"] not in existing_bases:
-                    key_strongs_data.append(ks)
-
-        # ── Grounding check: is this answer backed by an ACTUAL occurrence? ──
-        # The search (SQL) returning rows = real corpus hits. If it found nothing
-        # and the only verses are ones the model NAMED itself, the answer counts as
-        # grounded only when at least one of those verses really contains a target
-        # word (not thematic). Otherwise it's leaning on the model's own knowledge —
-        # flag it so the UI says so plainly instead of dressing it up as evidence.
-        # No target words (a broad, non-word question) ⇒ can't word-check ⇒ don't flag.
-        if not results:
-            grounded = False
-        elif rows or phrase_hits or not _target_bases:
-            grounded = True
-        else:
-            grounded = any(not _is_thematic(v.get("words", [])) for v in results)
-
-        # ── Lexical-texture panel (deterministic, no model call) ──────────────
-        # Computed STRUCTURE above the note: each query word's family distribution by
-        # count (fact), with a visible boundary. Built HERE — after the answer is
-        # assembled — behind a tight deadline and dropped on any miss, so it can only
-        # add a little tail to an already model-bound search, never front-load or break
-        # it. None when there's no clean head (it NEVER manufactures). See corpus_panel.py.
-        try:
-            _panel = corpus_panel.build_panel(_panel_heads)
-        except Exception as _pe:                 # belt-and-suspenders — build_panel self-guards
-            log.warning("corpus panel failed: %s", _pe)
-            _panel = None
-        _mark("panel")
-
-        # The explanation is grounded in pass 2 above (which has the retrieved
-        # verses in hand); no separate grounding pass runs here anymore.
-        payload = {"results": results, "total": len(results), "grounded": grounded,
-                   "explanation": explanation, "key_strongs": key_strongs_data,
-                   "panel": _panel}
-        if not context:               # follow-ups are thread-specific — don't cache
-            _ai_cache[qk] = payload
-            _persist_ai_cache(qk, payload)
-        ai_quota_count(role, uid)     # record the paid call (admin exempt; cache hits never reach here)
-        _mark("total")
-        log.info("ai_search timing q=%r rows=%d ctx=%d | %s", q, len(rows), len(context), _marks)
-        out = dict(payload)           # per-account quota rides the response, not the shared cache
-        out["quota"] = ai_quota_status(role, uid)
-        return jsonify(out)
 
     except Exception:
         log.error("Unhandled exception in ai_search:\n%s", traceback.format_exc())
