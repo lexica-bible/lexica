@@ -52,7 +52,7 @@ THREADS = {
         ],
     },
     "ai_moralized": {
-        "label": "Roman Catholic Church courting tech — AI, crypto, digital ID, robotics",
+        "label": "Economic & tech control tightening — AI, digital ID, CBDC, payment mandates",
         "searches": [
             'Vatican artificial intelligence ethics',
             'AI companies Vatican meeting',

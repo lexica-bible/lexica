@@ -83,6 +83,9 @@ Rules:
   "Vatican AI Ethics Commission".
 - REUSE an existing label (you'll be given the ones already in use) whenever a headline
   fits it. Only invent a new label when none fits.
+- Do NOT create a separate label for a LATER PHASE of an event you have already
+  labeled (its launch, release, reaction, vote, ruling, or follow-up) — reuse the base
+  label so all coverage of one event stays in one card.
 
 Return ONLY a JSON array, one object per headline, keys exactly: id, event."""
 

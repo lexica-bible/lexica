@@ -36,7 +36,7 @@ THREAD_LABELS = {
     "papacy_moral_authority": "Papacy as moral authority",
     "american_pope": "Vatican–US relations",
     "encyclical_political": "Encyclicals / doctrine going political",
-    "ai_moralized": "RCC × tech",
+    "ai_moralized": "Economic/tech control",
     "legislating_morality": "Legislating worship/morality",
     "ecumenism": "Ecumenism under Rome",
     "alien_agenda": "Alien / UFO disclosure",
