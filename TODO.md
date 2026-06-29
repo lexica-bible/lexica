@@ -34,9 +34,8 @@ The shared navigate/read/inspect frame is LIVE on Word study + News (memory
 - **Library** — LAST. Heaviest, most-locked tab; own classes (`.library`/`.lib-reading`/`.detail-side`),
   toolbar/nav-drawer/audio/compare/focus-mode, and its right panel is OPTIONAL. Its own scoped commit +
   the zero-drift computed-style diff, not a drop-in.
-- Also deferred (its own session, see `project_news_watch`): News feed SORT recency — feed still ranks
-  pure score, no time-decay, so old-but-high clusters float up.
   code: static/src/20-shared-components.jsx (.zshell*), 80-lexicon.jsx, 84-news.jsx, styles.css
+  (News feed SORT recency is now DONE — shipped 2026-06-29, see the News feed section below.)
 
 ---
 
@@ -565,7 +564,7 @@ follow-up is **#4 (parallelize the cognate + Hebrew DB loops)** above — multi-
 
 ---
 
-## News feed (Tudor) — recency (FACE done; SORT deferred)
+## News feed (Tudor) — recency (FACE + SORT done)
 
 - **✅ FACE-FIX SHIPPED 2026-06-29 (24cd7bd).** Card headline = the strongest article within 14 days of the
   cluster's newest sibling (`_pick_face`/`_serialize` in views_news.py, `FACE_WINDOW=14`), not the all-time top
@@ -582,13 +581,20 @@ follow-up is **#4 (parallelize the cognate + Hebrew DB loops)** above — multi-
   capability, and `api.newsStatus` never sent the share key on the write POST. Fix: `/api/news/meta` returns
   `can_write`, buttons gate on it, and `newsStatus` sends `X-News-Key`. Acceptance re-confirmed (share-key →
   `k<tag>`, admin → `u<id>`, no pooling). Full record: memory `project_news_watch`.
-- **DEFERRED — feed SORT recency (own session, don't act mid-build).** The feed still ranks by score with no
-  time-decay, so old-but-high clusters (~29) float into the top band, and the ~61 old clusters with no fresh
-  sibling can't be helped by the face-fix. Decide at that time: face-fix-only (current) vs a gentle recency
-  tie-break on "Top score" vs a new blended "Surfacing" default sort (JP leaned face-fix-first — see how it
-  reads live before touching sort). Watch-only sub-note: the source-junk-headline filter (one instance so far)
-  rides any future sort change if a 2nd junk face appears. Full spec: memory `project_news_watch`.
-  `code: views_news.py list_news ORDER BY / stories.sort`
+- **✅ FEED SORT RECENCY SHIPPED 2026-06-29 (e77135b) — the deferred half.** Default sort now docks a small
+  staleness penalty off each cluster's NEWEST sibling: 2 grace days, 0.1/day, capped at 2.0 points. A story
+  breaking today still tops a 3-week-old 9 (cap = weight, not a score override); a long-running story keeps a
+  fresh face via continued coverage (newest article = age 0 = no dock). Chosen over the opt-in "Recent" option
+  (one formula, JP picked default). Backend-only (`_staleness_penalty` + the `else` sort branch in views_news.py);
+  the "Newest" pure-date option is untouched. WATCH: card #1 a few days — steepen `_FEED_RATE` 0.1→0.15 only if
+  old-but-high keeps holding the top. Source-junk-headline filter (one instance) still rides a future change if a
+  2nd junk face appears. Full record: memory `project_news_watch`.
+- **✅ REVERSIBLE TRIAGE + DISMISSED VIEW SHIPPED 2026-06-29 (acfe84b).** Third View in the rail (Inbox / Kept /
+  Dismissed). Kept and Dismissed cards get "Back to Inbox" (clears the review row — card re-surfaces in inbox at
+  its normal score/recency spot) + a one-tap flip to the other state. Backend status POST gained "clear" (DELETEs
+  the reviewer's row — absence = unreviewed, no sentinel in counts); clear/flip ride the same scoped `_reviewer()`
+  id, gate on `can_write`. Full record: memory `project_news_watch`.
+  `code: views_news.py set_status + stories.sort · static/src/84-news.jsx`
 
 ---
 
