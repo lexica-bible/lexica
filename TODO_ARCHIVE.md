@@ -35,8 +35,22 @@ block when a bound card shows ("dictionary entry for the word, all its meanings,
 static, no referent-detection). Plus a general FRAME-0 rule: BDB + LSJ flashed "Not found" for one frame
 before their own lookup ran — start their loading flag true at mount so the first frame is "Loading…". KEY
 LESSON: verify a transient UI bug in the LOADING frames, not just the settled DOM (a `MutationObserver` that
-records each distinct frame catches the stale paint). The one remaining follow-up (entity-filtered "Appears
-N×" list) is in TODO.md. Commits 17d8d73 / 900c945 / f3ddfb9. Memory `project_entity_resolution_rebuild`.
+records each distinct frame catches the stale paint). Commits 17d8d73 / 900c945 / f3ddfb9. Memory `project_entity_resolution_rebuild`.
+
+**Bound-card occurrences — DONE + LIVE 2026-06-28 (the "Appears N×" follow-up, resolved a different way).**
+The open question was: the count was the entity's (Eden 13) but the link opened the word's full list (every
+Eden). Resolved by making the bound card show the REAL word-occurrence controls every other word has —
+ABP + Hebrew OT + KJV + BSB, keyed to the entity's own number, each showing the actual word in every verse —
+instead of an entity-only verse-pointer list. The card was a one-off: the Hebrew occurrence counts + sections
+were gated off for any proper noun; now a bound entity un-gates them (off `boundEntity` + `isHebrewWord`).
+The ABP count needed a new `/api/strongs-count/<n>?by=base` (a backfilled PN's bare `strongs` is '*', so it's
+only countable on `strongs_base`). KEY FINDING (don't re-investigate): there is NO viable "pure Greek" option
+for OT names — TIPNR's Greek form (Eden = εδεμ) is a STEPBible-extended number (G9827) our lexicon lacks and
+ABP never uses; ABP individuates the name (Gen 2:8 = παράδεισος G3857 "garden" + a separate "Eden" word) and
+those Greek occurrences already surface via the Hebrew base. A TIPNR ref-list ("Where this place appears", a
+new `/api/metav/entity-refs` endpoint + inline verse list) was BUILT then REMOVED in the same arc — it listed
+pointers, some without the word, so the real occurrence controls supersede it (endpoint + helper deleted).
+Commits 3d4ab60 / f4dfecf / f81a295 / 359220b (deploy pending). Memory `project_entity_resolution_rebuild`.
 
 ## εἰμί ("to be") subject merge — FIXED + LIVE 2026-06-28 (PN-subject fold, Issue 4)
 Last of the 2026-06-28 issue batch. A proper-noun subject of the copula was glued onto the εἰμί (G1510)

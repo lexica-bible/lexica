@@ -953,13 +953,21 @@ memory `project_ai_synthesis_quality`.
 - **VERSE-BOUND ENTITY CARD — the Issue-2 rebuild, LIVE 2026-06-28.** A PN click now first asks
   `GET /api/metav/entity/<name>?book=&chapter=&verse=` (views_metav.py) for the verse-CORRECT TIPNR entity
   (from `pn_binding`); when bound it LEADS the rail with a sourced `.pnbound` card (canonical name + TIPNR
-  description + kin + region + "Appears N×" + "Matched to this verse" + a TIPNR badge) and a bind GATES the
-  whole name-based metaV fetch (kills the name-guess person/place card + its Groups + Nave's + place-LSJ at
-  once). 404 → the old name-path + Fix A, byte-same (deploy-safe). 14,817 binds, zero confident-wrong; TIPNR
-  is the identity spine, metaV is enrichment only. Engine = **`entity_resolution.py`** (repo root, pure
-  logic); tables built by `scripts/build_entity_binding.py --apply`. **The map staying hidden on an
-  ambiguous bound place (Eden) is Fix A's guard working, NOT a bug.** Full record + the build-order +
-  lessons: memory `project_entity_resolution_rebuild`.
+  description + kin + region + "Matched to this verse" + a TIPNR badge), FOLLOWED by the standard
+  word-occurrence controls keyed to the entity's OWN number (ABP + Hebrew OT + KJV + BSB — each shows the
+  real word in every verse). A bind GATES the whole name-based metaV fetch (kills the name-guess person/place
+  card + its Groups + Nave's + place-LSJ at once). 404 → the old name-path + Fix A, byte-same (deploy-safe).
+  14,817 binds, zero confident-wrong; TIPNR is the identity spine, metaV is enrichment only. Engine =
+  **`entity_resolution.py`** (repo root, pure logic); tables built by `scripts/build_entity_binding.py --apply`.
+  **The map staying hidden on an ambiguous bound place (Eden) is Fix A's guard working, NOT a bug.**
+  **Bound-card occurrences (2026-06-28 follow-on):** these PNs carry a real Strong's on `strongs_base` but a
+  bare `strongs='*'` (TIPNR backfilled the number), so the bound card un-gates the standard occurrence sections
+  for a PN and the ABP count comes from `/api/strongs-count/<n>?by=base` (counts on strongs_base, not the '*'
+  bare column). OT names key to HEBREW on purpose — TIPNR's Greek form is a STEP-extended number (G9827) our
+  lexicon lacks and ABP never uses; the ABP Greek occurrences still surface via the Hebrew base. **Don't
+  re-pitch a "pure Greek" re-key.** (The old "Appears N×" TIPNR ref-list was tried then removed — it listed
+  verse pointers, some without the word; the real occurrence controls supersede it.) Full record + the
+  build-order + lessons: memory `project_entity_resolution_rebuild`.
 - CRITICAL: the lexicon join is `LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base` (Phase 1 indexed key).
   strongs_g only ever holds 'G…', so a Hebrew H-number can never match — this STRUCTURALLY replaced the old
   `SUBSTR(strongs_base,2) ... LIKE 'G%'` guard that a Hebrew H121 used to slip past (bogus Greek G121 lemma
