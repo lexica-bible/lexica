@@ -32,8 +32,11 @@ WHY THIS IS HONEST, NOT CLEAN
   The deliverable is deliberately NOT a tidy auto-list. It is a family WITH its inclusion rule
   stated and the marginal words shown with the evidence (which signals fired, the matched word,
   occurrence count). Same discipline as the panel: show the boundary, don't hide it. Hebrew is
-  weaker than Greek (no etymology, no root field) so it surfaces MORE as borderline — stated, not
-  papered over. The robust Hebrew bridge is the LXX seam (separate view), a later refinement.
+  weaker than Greek (no root field): we APPROXIMATE the root by stripping a trailing affix and match
+  by containment; a SHORT root (≤2 consonants, e.g. esh אש) is too ambiguous to propose on its own,
+  so it gloss-anchors instead of dumping an unreviewable pile. This is stated in the output, never
+  papered over as "Hebrew just runs fatter". The robust long-term Hebrew bridge is full triliteral
+  derivation and/or the LXX seam (separate views) — both later refinements.
 
 RUN IT (on PythonAnywhere — bible.db + heb.db are PA-only):
     workon bible-env
@@ -90,6 +93,19 @@ def _heb_root(s):
         if "א" <= ch <= "ת":
             out.append(_HEB_FINALS.get(ch, ch))
     return "".join(out)
+
+
+def _heb_rootify(cons):
+    """Approximate the triliteral root from a lemma's consonant skeleton by stripping ONE common
+    trailing affix (feminine -ה, plural -ות/-ים): 'אהבה'->'אהב' so the verb 'אהב' matches its noun.
+    NOT a full morphological analyzer — Hebrew morphology is nasty (weak/hollow/geminate roots,
+    preformatives). Matching uses CONTAINMENT, which already absorbs a leading preformative
+    (mishbath משבת ⊃ שבת) without a risky leading strip, so only the trailing affix is handled here."""
+    if len(cons) >= 4 and cons.endswith(("ות", "ים")):
+        return cons[:-2]
+    if len(cons) >= 4 and cons.endswith("ה"):
+        return cons[:-1]
+    return cons
 
 
 def _norm_word(w):
@@ -194,16 +210,19 @@ def assemble_greek(conn, num, stem, terms):
 
 
 def assemble_hebrew(conn, hconn, num, root, terms):
-    """Candidates near a Hebrew head: consonant-skeleton (from bdb.lemma) prefix/substring is the
-    STEM signal; gloss confirms below. Substring only for roots ≥3 letters (a 2-letter root matches
-    half the lexicon, so those stay prefix-only)."""
-    cand = {}   # STEM-proposed ONLY (consonant skeleton). Gloss confirms below, never discovers.
-    use_sub = len(root) >= 3
+    """Candidates near a Hebrew head, root-anchored. The head root is the affix-stripped consonant
+    skeleton; a candidate is proposed when that root is CONTAINED in its skeleton (containment, not
+    prefix — containment absorbs a leading preformative, so mishbath משבת ⊃ שבת is caught). A SHORT
+    root (≤2 consonants, e.g. esh אש) is contained in a huge slice of a consonantal lexicon ("which",
+    "Assyria", "woman"...), so it is too weak to propose on its own — there we additionally REQUIRE
+    the gloss to confirm (gloss-anchored), stated in the output. Gloss confirms; it never discovers."""
+    short = len(root) < 3
+    cand = {}
     for r in conn.execute("SELECT strongs_id, xlit, lemma FROM bdb"):
-        lp = _heb_root(r["lemma"])
-        if not lp or not root:
+        sk = _heb_root(r["lemma"])
+        if not sk or not root:
             continue
-        if lp.startswith(root) or (use_sub and root in lp):
+        if root in sk:
             base = (r["strongs_id"] or "").lstrip("H")
             if base:
                 cand.setdefault(base, {})["xlit"] = r["xlit"] or ""
@@ -213,6 +232,8 @@ def assemble_hebrew(conn, hconn, num, root, terms):
             continue
         gloss = _wg(conn, f"H{base}")
         ghit = _gloss_hits(gloss, terms)
+        if short and not ghit:
+            continue   # short root: the root signal alone is near-meaningless → require the gloss
         rows.append({
             "lang": "H", "num": base, "translit": d.get("xlit") or "",
             "gloss": gloss, "occ": _heb_occ(hconn, base),
@@ -225,7 +246,7 @@ def assemble_hebrew(conn, hconn, num, root, terms):
 def print_head(lang, num, translit, gloss, stem, terms):
     s = translit or "?"
     print(f"\n  HEAD  {lang}{num}  {s}  —  \"{gloss or '(no gloss)'}\"")
-    label = "stem (translit prefix)" if lang == "G" else "root (lemma consonants)"
+    label = "stem (translit prefix)" if lang == "G" else "root (affix-stripped)"
     print(f"        {label}: '{stem}'    gloss-terms: {sorted(terms) or '—'}")
 
 
@@ -256,12 +277,15 @@ def run_head(conn, hconn, head):
         rows = assemble_greek(conn, num, stem, terms)
     else:
         lemma, xlit, plain, gloss = _heb_head(conn, num)
-        # Hebrew "root" = the head's consonant skeleton (from bdb.lemma); 2-letter heads stay prefix-only.
-        root = (plain or "").strip()
+        # Hebrew "root" = affix-stripped consonant skeleton (no root field in the data — a heuristic).
+        root = _heb_rootify((plain or "").strip())
         terms = _gloss_terms(gloss)
         print_head("H", num, xlit, gloss, root, terms)
-        print("        NOTE: Hebrew has no etymology/root field — only consonant overlap + gloss. Its")
-        print("        BORDERLINE pile runs FATTER than Greek by nature (data-honesty, not a malfunction).")
+        print("        NOTE: Hebrew root is APPROXIMATE (affix-stripped consonants, matched by")
+        print("        containment) — there is no root field in the data, so this is a heuristic.")
+        if len(root) < 3:
+            print(f"        SHORT ROOT '{root}' (≤2 consonants) → GLOSS-ANCHORED: root-only matches are")
+            print("        suppressed (a 2-consonant root nets junk like asher 'which', Asshur 'Assyria').")
         rows = assemble_hebrew(conn, hconn, num, root, terms)
 
     # Stem proposes every candidate (stem_ok always True); gloss confirms. Drop dead (0 occ).
