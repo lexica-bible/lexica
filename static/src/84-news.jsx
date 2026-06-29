@@ -198,7 +198,9 @@ function NewsView({ isMobile }) {
   }, [meta, view, minScore, thread, order, since]);
 
   const mark = (story, status) => {
-    api.newsStatus(story.ids, status);
+    // Refresh the tab counts after the write lands (meta is otherwise only fetched on
+    // mount, so the Kept/Dismissed badge would stay stale until a reload).
+    api.newsStatus(story.ids, status).then(() => api.newsMeta().then(setMeta));
     setStories(ss => (ss || []).filter(s => s !== story));   // drop it from the current list
   };
 
