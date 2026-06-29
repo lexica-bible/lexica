@@ -272,8 +272,6 @@ const api = {
     fetch(`/api/metav/place/${encodeURIComponent(name)}`).then(r => r.json()),
   metavEntity: (name, book, chapter, verse) =>
     fetch(`/api/metav/entity/${encodeURIComponent(name)}?book=${encodeURIComponent(book)}&chapter=${chapter}&verse=${verse}`).then(r => r.json()),
-  metavEntityRefs: (uniq) =>
-    fetch(`/api/metav/entity-refs/${encodeURIComponent(uniq)}`).then(r => r.json()),
   bdb: (sid) =>
     fetch(`/api/bdb/${encodeURIComponent(sid)}`).then(r => r.json()),
   crossRefsCurated: (book, chapter, verse) =>
@@ -512,9 +510,8 @@ const NT_BOOKS = new Set([
   "1Pe","2Pe","1Jn","2Jn","3Jn","Jud","Rev",
 ]);
 
-// Canonical 1..66 order; index 0 = Genesis. BOOK_ABBREVS[n-1] turns a 1-based book
-// number (e.g. tipnr_entity_refs.book) into the reader abbreviation used everywhere else.
-const BOOK_ABBREVS = [
+const BOOK_ORDER = {};
+[
   "Gen","Exo","Lev","Num","Deu","Jos","Jdg","Rth","1Sa","2Sa",
   "1Ki","2Ki","1Ch","2Ch","Ezr","Neh","Est","Job","Psa","Pro",
   "Ecc","Son","Isa","Jer","Lam","Eze","Dan","Hos","Joe","Amo",
@@ -522,9 +519,7 @@ const BOOK_ABBREVS = [
   "Mat","Mar","Luk","Joh","Act","Rom","1Co","2Co","Gal","Eph",
   "Php","Col","1Th","2Th","1Ti","2Ti","Tit","Phm","Heb","Jas",
   "1Pe","2Pe","1Jn","2Jn","3Jn","Jud","Rev",
-];
-const BOOK_ORDER = {};
-BOOK_ABBREVS.forEach((b, i) => { BOOK_ORDER[b] = i; });
+].forEach((b, i) => { BOOK_ORDER[b] = i; });
 
 const BOOK_LABELS = {
   Gen: "Genesis",      Exo: "Exodus",       Lev: "Leviticus",    Num: "Numbers",

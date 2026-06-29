@@ -319,30 +319,6 @@ def metav_entity(name):
     })
 
 
-@bp.route("/api/metav/entity-refs/<path:uniq>")
-def metav_entity_refs(uniq):
-    """The verse list for a bound TIPNR entity (Issue 2 follow-on). The bound card's
-    'Appears N×' count is entity-scoped (tipnr_entity_refs), but the old link sent the
-    reader to the lemma-wide Word-study list; this serves the entity's OWN verses so the
-    destination matches the count. Read-only. book is the canonical 1..66 number — the
-    frontend maps it to its reader abbreviation. Deploy-safe: if the binding table isn't
-    built yet, returns an empty list."""
-    conn = db_ro()
-    try:
-        have = conn.execute(
-            "SELECT name FROM sqlite_master WHERE type='table' AND name='tipnr_entity_refs'"
-        ).fetchone()
-        if not have:
-            return jsonify({"refs": [], "count": 0})
-        rows = conn.execute(
-            "SELECT book, chapter, verse FROM tipnr_entity_refs WHERE uniq=? "
-            "ORDER BY book, chapter, verse", (uniq,)).fetchall()
-    finally:
-        conn.close()
-    refs = [{"book": r["book"], "chapter": r["chapter"], "verse": r["verse"]} for r in rows]
-    return jsonify({"refs": refs, "count": len(refs)})
-
-
 @bp.route("/api/strongs-count/<strongs_base>")
 def strongs_count_route(strongs_base):
     if strongs_base == "*":

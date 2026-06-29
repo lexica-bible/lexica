@@ -368,12 +368,6 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   // BEFORE the metaV effect because that effect gates on it (deps + body).
   const [boundEntity, setBoundEntity] = useState(null);
   const [boundLoading, setBoundLoading] = useState(false);
-  // The bound entity's OWN verse list — the actual N references behind "Appears N×".
-  // Fetched lazily the first time the reader expands it. The panel remounts per word
-  // (key=id), so these reset for each new word; no manual reset needed.
-  const [refsOpen, setRefsOpen] = useState(false);
-  const [entityRefs, setEntityRefs] = useState(null);   // null = not fetched yet (stays "Loading…")
-  const [refsShown, setRefsShown] = useState(50);
   // Synchronous "a bind is being checked for this entry" flag. The metaV effect runs
   // right after this one in the SAME commit and reads it to skip firing a name lookup
   // before the async boundLoading state flips — without it the metaV fetch races ahead
@@ -396,16 +390,6 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       .finally(() => { bindPendingRef.current = false; if (!cancelled) setBoundLoading(false); });
     return () => { cancelled = true; };
   }, [entry && entry.id]);
-
-  // Lazy-load the bound entity's verse list the first time "Appears N×" is expanded.
-  useEffect(() => {
-    if (!refsOpen || entityRefs !== null || !(boundEntity && boundEntity.uniq)) return;
-    let cancelled = false;
-    api.metavEntityRefs(boundEntity.uniq)
-      .then(d => { if (!cancelled) setEntityRefs((d && d.refs) || []); })
-      .catch(() => { if (!cancelled) setEntityRefs([]); });
-    return () => { cancelled = true; };
-  }, [refsOpen, boundEntity && boundEntity.uniq]);
 
   useEffect(() => {
     setMetavPersonData(null);
@@ -712,7 +696,6 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       if (!boundEntity) return null;
       const be = boundEntity;
       const label = be.section === "place" ? "Place" : be.section === "person" ? "Person" : "Identity";
-      const noun = be.section === "place" ? "place" : be.section === "person" ? "person" : "name";
       const clean = s => (s || "").replace(/\s*\(\?\)/g, "").trim();   // drop TIPNR's "(?)" uncertainty marker
       // a clean one-liner: the person 'desc' is short; for a place fall to the
       // summary's first clause (before "first/only mentioned").
@@ -723,12 +706,9 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       const area = clean(be.area);
       // don't repeat the region when the description already names it (Eden: "…in Mesopotamia")
       const showArea = area && !(line && line.toLowerCase().includes(area.toLowerCase()));
-      // "Where this {place/person} appears" expands THIS entity's own verses
-      // (tipnr_entity_refs) — the actual N for this referent. Each reference jumps to that
-      // verse in the reader. This is the ENTITY-scoped list; the word's full occurrence list
-      // (every referent that shares the Strong's number — Eden the garden vs. the Assyrian
-      // place) is the standard "× in Hebrew OT / ABP" control shown as its own section below.
-      const canRefs = !!(onReadInContext && be.uniq && be.ref_count > 0);
+      // The entity's verses are no longer listed here — the standard occurrence controls
+      // below ("× in ABP / Hebrew OT / KJV / BSB") show the real word in each verse, which
+      // supersedes the old TIPNR ref-list (it listed verse pointers, some without the word).
       return (
         <section key="boundEntity" className="sec pnbound">
           <h4 className="sec-head"><span className="sec-t">{label}</span><span className="bdb-badge">TIPNR</span></h4>
@@ -741,41 +721,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
               <div><span className="pnbound-lbl">Children</span> {be.offspring.join(", ")}</div>)}
             {showArea && (
               <div><span className="pnbound-lbl">{be.section === "place" ? "Region" : "Tribe"}</span> {area}</div>)}
-            {be.ref_count > 0 && (canRefs
-              ? <button className="pnbound-appears pnbound-appears--link" aria-expanded={refsOpen}
-                        onClick={() => setRefsOpen(o => !o)}>
-                  Where this {noun} appears ({be.ref_count})
-                  <Icon.ArrowRight className={"pnbound-caret" + (refsOpen ? " is-open" : "")}/>
-                </button>
-              : <div className="pnbound-appears">Named in {be.ref_count} verses</div>)}
           </div>
-          {refsOpen && (
-            <div className="pnbound-refs">
-              {entityRefs === null ? (
-                <div className="lsj-def lsj-def--loading">Loading…</div>
-              ) : entityRefs.length ? (
-                <>
-                  {entityRefs.slice(0, refsShown).map((r, i) => {
-                    const ab = BOOK_ABBREVS[r.book - 1];
-                    if (!ab) return null;
-                    return (
-                      <button key={i} className="pnbound-ref"
-                              onClick={() => onReadInContext(ab, r.chapter, r.verse)}>
-                        {(BOOK_LABELS[ab] || ab) + " " + r.chapter + ":" + r.verse}
-                      </button>
-                    );
-                  })}
-                  {entityRefs.length > refsShown && (
-                    <button className="pnbound-ref-more" onClick={() => setRefsShown(n => n + 50)}>
-                      See more ({entityRefs.length - refsShown})
-                    </button>
-                  )}
-                </>
-              ) : (
-                <div className="pnbound-appears">No references found.</div>
-              )}
-            </div>
-          )}
           <div className="pnbound-badge">Matched to this verse</div>
         </section>
       );

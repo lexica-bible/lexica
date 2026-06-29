@@ -2740,34 +2740,6 @@ input { font-family: inherit; }
   font-weight: 600;
   color: var(--ink-3);
 }
-.pnbound-appears { color: var(--ink-3); font-style: italic; }
-.pnbound-appears--link {
-  display: inline-flex; align-items: center; gap: 5px;
-  background: none; border: 0; padding: 0; cursor: pointer;
-  font-family: inherit; font-size: 13px; font-style: italic;
-  color: var(--accent);
-}
-.pnbound-appears--link:hover { text-decoration: underline; }
-.pnbound-appears--link svg { width: 13px; height: 13px; }
-.pnbound-caret { transition: transform .15s ease; }
-.pnbound-caret.is-open { transform: rotate(90deg); }
-/* the entity's own verse list, revealed under "Appears N×" */
-.pnbound-refs { display: flex; flex-direction: column; gap: 1px; margin-top: 8px; }
-.pnbound-ref {
-  text-align: left; background: none; border: 0; cursor: pointer;
-  padding: 4px 6px; border-radius: 4px;
-  font-family: var(--f-serif); font-size: 13px; color: var(--accent);
-}
-.pnbound-ref:hover {
-  background: color-mix(in oklab, var(--accent) 8%, transparent);
-  text-decoration: underline;
-}
-.pnbound-ref-more {
-  text-align: left; background: none; border: 0; cursor: pointer;
-  padding: 4px 6px; margin-top: 2px;
-  font-size: 12.5px; font-style: italic; color: var(--ink-3);
-}
-.pnbound-ref-more:hover { text-decoration: underline; }
 .pnbound-badge {
   margin-top: 12px;
   display: inline-block;
