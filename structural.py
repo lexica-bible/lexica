@@ -12,7 +12,7 @@ the construction TYPES it appears in (patterns, not senses).
 
 CLOSED CLASS, hand-authored, served directly — no model, no PA data build. Same spirit as
 the _LSJ_OVERRIDES register: edit here, ship on a normal code deploy. Provenance tag =
-GRAMMAR, kept distinct from LEXICA/LSJ/MM because "this is the copula's grammatical
+GRAMMAR, kept distinct from LEXICA/LSJ because "this is the copula's grammatical
 function" is a different KIND of claim than "this sense is attested in usage".
 
 INHERITANCE: the explanation is written ONCE, on the lemma (G1510). ABP tags every
