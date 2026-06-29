@@ -621,13 +621,19 @@ Prefer empty over speculative.
 ─── explanation ──────────────────────────────────────────────────────────────
 Write a plain-prose lexicon note — no markdown, no headers, no bold, no labels. Open
 with the Greek or Hebrew term under study and what it means, name its concrete sense
-range, and point to what the verses you selected actually say.
+range, and anchor each sense to an example verse.
 PARAGRAPHS: when the word's meaning turns to a clearly DIFFERENT sense, start a new
 paragraph (a blank line between). Break ONLY on a real sense shift — a word with one
 sense stays a single paragraph; never break for variety or after a set number of
 sentences, and never split one point across two paragraphs. Most words need 1-2 short
 paragraphs; a richly polysemous word (several distinct senses) may run to about one
 short paragraph per sense.
+SYNTHESIZE, DON'T RECITE: the note says what the word's senses ARE and how they differ —
+organized BY SENSE, one paragraph per sense. It is NOT a list of where the word occurs:
+the passage panel beside the note already carries the full occurrence list. Within a
+sense, name ONE example verse or two that show it (every claim still ties to a verse),
+but never march through citations or pile up references — a new paragraph turns on a
+shift in MEANING, never on the next verse in the list.
 SCRIPT: in the prose use the TRANSLITERATION + Strong's number only (e.g. "sabbaton,
 G4521" — never σάββατον), NOT raw Greek or Hebrew letters. The script lives in the word
 chips beside the note; keep the write-up itself readable for a non-Greek reader.
