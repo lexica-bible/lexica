@@ -804,11 +804,11 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
   }
 
   return (
-    <div className={"ws" + (isMobile ? " is-mobile" : "")}>
+    <div className={"zshell ws" + (isMobile ? " is-mobile" : "")}>
 
       {/* LEFT — distribution rail (empty state before a word is studied) */}
       {isMobile && railOpen && <div className="rail-scrim" onClick={() => setRailOpen(false)}/>}
-      <aside className={"brail" + (isMobile && !railOpen ? " hidden" : "")}>
+      <aside className={"zrail brail" + (isMobile && !railOpen ? " hidden" : "")}>
         {profile ? (
           <>
             <div className="brail-top">
@@ -826,7 +826,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
       </aside>
 
       {/* CENTER — search + occurrences / results */}
-      <main className="center">
+      <main className="zcenter center">
         <div className="searchbar">
           <div className="searchbar-in">
             <form className="search-field" onSubmit={handleSubmit}>
@@ -988,7 +988,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
 
       {/* RIGHT — word detail card (empty state before a word is studied) */}
       {isMobile && detailOpen && <div className="wd-scrim" onClick={() => setDetailOpen(false)}/>}
-      <aside className={"wd" + (isMobile && !detailOpen ? " hidden" : "")}>
+      <aside className={"zinspect wd" + (isMobile && !detailOpen ? " hidden" : "")}>
         {profile ? (
           <>
           <div className="detail-head">
@@ -1000,11 +1000,9 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
           <div className="detail-body">{renderWordCardInner()}</div>
           </>
         ) : (
-          <div className="empty-pane">
-            <div className="empty-mark"><Icon.Book width="30" height="30"/></div>
-            <div className="empty-t">No word selected</div>
-            <div className="empty-s">Search a Greek or Hebrew word, a transliteration, or a Strong's number to study it here.</div>
-          </div>
+          <ZoneEmpty icon={<Icon.Book width="30" height="30"/>}
+            title="No word selected"
+            sub="Search a Greek or Hebrew word, a transliteration, or a Strong's number to study it here."/>
         )}
       </aside>
     </div>

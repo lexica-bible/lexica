@@ -4576,23 +4576,48 @@ button.study-verse-ref { border: none; }
    Left = distribution rail · center = search + occurrences · right = word card.
    (Phase 2 of the study/AI redesign — see design/README.md.)
 ============================================================ */
-.ws {
+/* ============================================================
+   THREE-ZONE SHELL — the shared navigate / read / inspect frame
+   The structural covenant every workspace tab makes: a thin LEFT rail (224px,
+   sand), a CENTER that fills, and a RIGHT inspect panel (--sidebar-w) pinned
+   over the navy header. STRUCTURE ONLY — the zone CONTENTS stay tab-local
+   (Word study's word card, News's feed + rationale, etc. never live here).
+   Word study (.ws) and News (.news-shell) both render these classes; this is
+   the one source of truth for the frame's widths, spacing, and behavior.
+   ============================================================ */
+.zshell {
   display: grid;
-  /* Mirror the Library: 224px left rail (= the book nav) + center fills.
-     The right word card is pulled out of the grid (position:fixed, below) and
-     floats over the navy header, so reserve its strip with padding-right. */
+  /* 224px left rail (= the Library book nav width) + center fills. The right
+     inspect panel is pulled out of the grid (position:fixed below) and floats
+     over the navy header, so reserve its strip with padding-right. */
   grid-template-columns: 224px minmax(0, 1fr);
   padding-right: var(--sidebar-w);
   height: calc(100vh - var(--hdr-h));
   min-height: 0;
 }
-.ws.center-only { grid-template-columns: minmax(0, 1fr); }
-@media (min-width: 1100px) and (max-width: 1320px) {
-  .ws { grid-template-columns: 224px minmax(0, 1fr); }
+.zshell.center-only { grid-template-columns: minmax(0, 1fr); }
+.zrail { border-right: 1px solid var(--rule); background: var(--bg-sunk); min-height: 0; display: flex; flex-direction: column; }
+.zcenter { min-height: 0; display: flex; flex-direction: column; background: var(--bg); }
+.zinspect {
+  position: fixed; top: 0; right: 0; bottom: 0;
+  width: var(--sidebar-w);
+  z-index: 40;
+  border-left: 1px solid var(--rule);
+  background: var(--paper);
+  display: flex; flex-direction: column;
+}
+/* shared empty state: icon mark + bold title + subtitle, with the cross-line
+   that continues the header's bottom edge across the inspect panel (desktop). */
+.zempty { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 48px 28px; height: 100%; }
+.zempty-mark { color: var(--ink-4); margin-bottom: 16px; }
+.zempty-t { font-family: var(--f-serif); font-size: 19px; color: var(--ink); margin-bottom: 6px; }
+.zempty-s { font-size: 13px; color: var(--ink-3); max-width: 280px; line-height: 1.5; }
+@media (min-width: 1100px) {
+  .zinspect .zempty { position: relative; }
+  .zinspect .zempty::before { content: ""; position: absolute; top: var(--hdr-h); left: 0; right: 0; height: 1px; background: var(--rule); }
 }
 
-/* LEFT — distribution rail */
-.brail { border-right: 1px solid var(--rule); background: var(--bg-sunk); min-height: 0; display: flex; flex-direction: column; }
+/* LEFT — distribution rail (frame in .zrail; this holds only the rail's own bits) */
 /* Height matches the center .searchbar (14 + 46px field + 14 + 1px border) so the
    rail's divider line meets the search box's line cleanly across the column gap. */
 .brail-top { flex: 0 0 auto; box-sizing: border-box; height: 75px; display: flex; flex-direction: column; justify-content: center; padding: 0 18px; border-bottom: 1px solid var(--rule); }
@@ -4615,8 +4640,7 @@ button.study-verse-ref { border: none; }
 .brow-all .brow-name { font-weight: 600; color: var(--ink); }
 .brow-all.on { background: var(--navy); }
 
-/* CENTER — search + occurrences */
-.ws .center { min-height: 0; display: flex; flex-direction: column; background: var(--bg); }
+/* CENTER — search + occurrences (frame in .zcenter; below are the center's own bits) */
 .ws .searchbar { flex: 0 0 auto; padding: 14px 28px; border-bottom: 1px solid var(--rule); background: color-mix(in oklab, var(--bg) 82%, var(--paper)); }
 .ws .searchbar-in { display: flex; align-items: center; gap: 16px; }
 .ws .searchbar-in .search-field { flex: 0 1 540px; min-width: 0; }
@@ -4670,18 +4694,7 @@ button.study-verse-ref { border: none; }
 .welcome-chip { font-family: var(--f-greek); font-size: 15px; color: var(--ink-2); padding: 7px 14px; border-radius: 999px; background: var(--paper); border: 1px solid var(--rule); }
 .welcome-chip:hover { border-color: var(--accent); color: var(--accent); }
 
-/* RIGHT — word detail card */
-/* Right word card mirrors the Library's .detail-side: pinned to the top-right,
-   floating over the navy header (z 40 > header's 30), one clean full-height
-   left border. Always shown on this tab (empty state included). */
-.wd {
-  position: fixed; top: 0; right: 0; bottom: 0;
-  width: var(--sidebar-w);
-  z-index: 40;
-  border-left: 1px solid var(--rule);
-  background: var(--paper);
-  display: flex; flex-direction: column;
-}
+/* RIGHT — word detail card (frame in .zinspect; below are the card's own bits) */
 /* Card header matches the navy header height so its bottom rule continues the
    blue→white line straight across — same trick as .detail-side .detail-head.
    The Strong's number inherits the shared 18px so it matches the Library card. */
@@ -4703,18 +4716,8 @@ button.study-verse-ref { border: none; }
 /* flat occurrence list (plain verse rows, no collapsible group) */
 .vlist { display: flex; flex-direction: column; }
 
-/* empty states (3-pane frame shows before a word is studied) */
+/* left-rail empty note (the right inspect empty state is the shared .zempty) */
 .brail-empty { padding: 22px 18px; font-size: 13px; color: var(--ink-4); line-height: 1.55; }
-.empty-pane { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; padding: 48px 28px; height: 100%; }
-/* Keep the cross-line in the empty state too (desktop only — mobile has no navy bar),
-   so the divider continues the bar's edge before a word is even picked. */
-@media (min-width: 1100px) {
-  .wd .empty-pane { position: relative; }
-  .wd .empty-pane::before { content: ""; position: absolute; top: var(--hdr-h); left: 0; right: 0; height: 1px; background: var(--rule); }
-}
-.empty-mark { color: var(--ink-4); margin-bottom: 16px; }
-.empty-t { font-family: var(--f-serif); font-size: 19px; color: var(--ink); margin-bottom: 6px; }
-.empty-s { font-size: 13px; color: var(--ink-3); max-width: 280px; line-height: 1.5; }
 
 /* mobile panel-toggle bar (center) */
 .ws-mobi { display: none; }
