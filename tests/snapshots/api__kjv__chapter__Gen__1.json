@@ -7,6 +7,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -17,6 +18,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 1,
@@ -25,8 +27,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רֵאשִׁית",
+        "lemma_gloss": "first",
         "punc": "",
         "strongs_ids": [
           "H7225"
@@ -37,8 +41,10 @@
         "xlit": "rêʼshîyth"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -49,8 +55,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "בָּרָא",
+        "lemma_gloss": "to create",
         "punc": "",
         "strongs_ids": [
           "H1254",
@@ -64,6 +72,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 5,
@@ -72,8 +81,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "שָׁמַיִם",
+        "lemma_gloss": "heaven",
         "punc": "",
         "strongs_ids": [
           "H8064"
@@ -84,8 +95,10 @@
         "xlit": "shâmayim"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֵת",
+        "lemma_gloss": "marks the direct object",
         "punc": "",
         "strongs_ids": [
           "H853"
@@ -98,6 +111,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 8,
@@ -106,8 +120,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֶרֶץ",
+        "lemma_gloss": "land",
         "punc": ".",
         "strongs_ids": [
           "H776"
@@ -127,6 +143,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -137,6 +154,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 1,
@@ -145,8 +163,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֶרֶץ",
+        "lemma_gloss": "land",
         "punc": "",
         "strongs_ids": [
           "H776"
@@ -157,8 +177,10 @@
         "xlit": "ʼerets"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "הָיָה",
+        "lemma_gloss": "to be",
         "punc": "",
         "strongs_ids": [
           "H1961"
@@ -171,6 +193,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 4,
@@ -179,8 +202,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "תֹּהוּ",
+        "lemma_gloss": "formlessness",
         "punc": ",",
         "strongs_ids": [
           "H8414"
@@ -193,6 +218,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 6,
@@ -201,8 +227,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "בֹּהוּ",
+        "lemma_gloss": "void",
         "punc": ";",
         "strongs_ids": [
           "H922"
@@ -215,6 +243,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 8,
@@ -223,8 +252,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "חֹשֶׁךְ",
+        "lemma_gloss": "darkness",
         "punc": "",
         "strongs_ids": [
           "H2822"
@@ -237,6 +268,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 10,
@@ -247,6 +279,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 11,
@@ -257,6 +290,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 12,
@@ -265,8 +299,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "פָּנִים",
+        "lemma_gloss": "face",
         "punc": "",
         "strongs_ids": [
           "H6440"
@@ -279,6 +315,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 14,
@@ -289,6 +326,7 @@
       {
         "italic": true,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 15,
@@ -297,8 +335,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "תְּהוֹם",
+        "lemma_gloss": "abyss",
         "punc": ".",
         "strongs_ids": [
           "H8415"
@@ -311,6 +351,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 17,
@@ -321,6 +362,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 18,
@@ -329,8 +371,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רוּחַ",
+        "lemma_gloss": "spirit",
         "punc": "",
         "strongs_ids": [
           "H7307"
@@ -343,6 +387,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 20,
@@ -351,8 +396,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -363,8 +410,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רָחַף",
+        "lemma_gloss": "be weak",
         "punc": "",
         "strongs_ids": [
           "H7363"
@@ -375,8 +424,10 @@
         "xlit": "râchaph"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "עַל",
+        "lemma_gloss": "upon",
         "punc": "",
         "strongs_ids": [
           "H5921"
@@ -389,6 +440,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 24,
@@ -397,8 +449,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "פָּנִים",
+        "lemma_gloss": "face",
         "punc": "",
         "strongs_ids": [
           "H6440"
@@ -411,6 +465,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 26,
@@ -421,6 +476,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 27,
@@ -429,8 +485,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מַיִם",
+        "lemma_gloss": "water",
         "punc": ".",
         "strongs_ids": [
           "H4325"
@@ -450,6 +508,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -458,8 +517,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -470,8 +531,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אָמַר",
+        "lemma_gloss": "to say",
         "punc": ",",
         "strongs_ids": [
           "H559"
@@ -484,6 +547,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -494,6 +558,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 4,
@@ -502,8 +567,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "הָיָה",
+        "lemma_gloss": "to be",
         "punc": "",
         "strongs_ids": [
           "H1961"
@@ -514,8 +581,10 @@
         "xlit": "hâyâh"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אוֹר",
+        "lemma_gloss": "light",
         "punc": ":",
         "strongs_ids": [
           "H216"
@@ -528,6 +597,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -538,6 +608,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 8,
@@ -548,6 +619,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -556,8 +628,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אוֹר",
+        "lemma_gloss": "light",
         "punc": ".",
         "strongs_ids": [
           "H216"
@@ -577,6 +651,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -585,8 +660,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -597,8 +674,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רָאָה",
+        "lemma_gloss": "to see",
         "punc": "",
         "strongs_ids": [
           "H7200",
@@ -612,6 +691,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -620,8 +700,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אוֹר",
+        "lemma_gloss": "light",
         "punc": ",",
         "strongs_ids": [
           "H216"
@@ -632,8 +714,10 @@
         "xlit": "ʼôwr"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "כִּי",
+        "lemma_gloss": "for",
         "punc": "",
         "strongs_ids": [
           "H3588"
@@ -646,6 +730,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 6,
@@ -656,6 +741,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -664,8 +750,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "טוֹב",
+        "lemma_gloss": "good",
         "punc": ":",
         "strongs_ids": [
           "H2896"
@@ -678,6 +766,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -686,8 +775,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": true,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -698,8 +789,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": true,
         "lemma": "בָּדַל",
+        "lemma_gloss": "to separate",
         "punc": "",
         "strongs_ids": [
           "H914",
@@ -713,6 +806,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 12,
@@ -721,8 +815,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אוֹר",
+        "lemma_gloss": "light",
         "punc": "",
         "strongs_ids": [
           "H216"
@@ -733,8 +829,10 @@
         "xlit": "ʼôwr"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "בֵּין",
+        "lemma_gloss": "between",
         "punc": "",
         "strongs_ids": [
           "H996"
@@ -747,6 +845,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 15,
@@ -755,8 +854,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "חֹשֶׁךְ",
+        "lemma_gloss": "darkness",
         "punc": ".",
         "strongs_ids": [
           "H2822"
@@ -776,6 +877,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -784,8 +886,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -796,8 +900,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "קָרָא",
+        "lemma_gloss": "to call",
         "punc": "",
         "strongs_ids": [
           "H7121"
@@ -810,6 +916,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -818,8 +925,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אוֹר",
+        "lemma_gloss": "light",
         "punc": "",
         "strongs_ids": [
           "H216"
@@ -830,8 +939,10 @@
         "xlit": "ʼôwr"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "יוֹם",
+        "lemma_gloss": "day",
         "punc": ",",
         "strongs_ids": [
           "H3117"
@@ -844,6 +955,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 6,
@@ -854,6 +966,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -862,8 +975,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "חֹשֶׁךְ",
+        "lemma_gloss": "darkness",
         "punc": "",
         "strongs_ids": [
           "H2822"
@@ -876,6 +991,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -884,8 +1000,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "קָרָא",
+        "lemma_gloss": "to call",
         "punc": "",
         "strongs_ids": [
           "H7121"
@@ -896,8 +1014,10 @@
         "xlit": "qârâʼ"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "לַיִל",
+        "lemma_gloss": "night",
         "punc": ".",
         "strongs_ids": [
           "H3915"
@@ -910,6 +1030,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 12,
@@ -920,6 +1041,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 13,
@@ -928,8 +1050,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "עֶרֶב",
+        "lemma_gloss": "evening",
         "punc": "",
         "strongs_ids": [
           "H6153"
@@ -942,6 +1066,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 15,
@@ -952,6 +1077,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 16,
@@ -960,8 +1086,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "בֹּקֶר",
+        "lemma_gloss": "morning",
         "punc": "",
         "strongs_ids": [
           "H1242"
@@ -974,6 +1102,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 18,
@@ -984,6 +1113,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 19,
@@ -992,8 +1122,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֶחָד",
+        "lemma_gloss": "one",
         "punc": "",
         "strongs_ids": [
           "H259"
@@ -1004,8 +1136,10 @@
         "xlit": "ʼechâd"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "יוֹם",
+        "lemma_gloss": "day",
         "punc": ".",
         "strongs_ids": [
           "H3117"
@@ -1025,6 +1159,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -1033,8 +1168,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -1045,8 +1182,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אָמַר",
+        "lemma_gloss": "to say",
         "punc": ",",
         "strongs_ids": [
           "H559"
@@ -1059,6 +1198,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -1069,6 +1209,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 4,
@@ -1079,6 +1220,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 5,
@@ -1089,6 +1231,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 6,
@@ -1097,8 +1240,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רָקִיעַ",
+        "lemma_gloss": "expanse",
         "punc": "",
         "strongs_ids": [
           "H7549"
@@ -1111,6 +1256,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 8,
@@ -1121,6 +1267,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -1129,8 +1276,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "תָּוֶךְ",
+        "lemma_gloss": "midst",
         "punc": "",
         "strongs_ids": [
           "H8432"
@@ -1143,6 +1292,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 11,
@@ -1153,6 +1303,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 12,
@@ -1161,8 +1312,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מַיִם",
+        "lemma_gloss": "water",
         "punc": ",",
         "strongs_ids": [
           "H4325"
@@ -1175,6 +1328,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 14,
@@ -1185,6 +1339,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 15,
@@ -1195,6 +1350,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 16,
@@ -1203,8 +1359,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "בָּדַל",
+        "lemma_gloss": "to separate",
         "punc": "",
         "strongs_ids": [
           "H914"
@@ -1217,6 +1375,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 18,
@@ -1225,8 +1384,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מַיִם",
+        "lemma_gloss": "water",
         "punc": "",
         "strongs_ids": [
           "H4325"
@@ -1239,6 +1400,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 20,
@@ -1249,6 +1411,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 21,
@@ -1257,8 +1420,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מַיִם",
+        "lemma_gloss": "water",
         "punc": ".",
         "strongs_ids": [
           "H4325"
@@ -1278,6 +1443,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -1286,8 +1452,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -1298,8 +1466,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "עָשָׂה",
+        "lemma_gloss": "to make",
         "punc": "",
         "strongs_ids": [
           "H6213"
@@ -1312,6 +1482,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -1320,8 +1491,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רָקִיעַ",
+        "lemma_gloss": "expanse",
         "punc": ",",
         "strongs_ids": [
           "H7549"
@@ -1334,6 +1507,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 5,
@@ -1342,8 +1516,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "בָּדַל",
+        "lemma_gloss": "to separate",
         "punc": "",
         "strongs_ids": [
           "H914"
@@ -1356,6 +1532,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -1364,8 +1541,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מַיִם",
+        "lemma_gloss": "water",
         "punc": "",
         "strongs_ids": [
           "H4325"
@@ -1376,8 +1555,10 @@
         "xlit": "mayim"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֲשֶׁר",
+        "lemma_gloss": "which",
         "punc": "",
         "strongs_ids": [
           "H834"
@@ -1390,6 +1571,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 10,
@@ -1398,8 +1580,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "תַּחַת",
+        "lemma_gloss": "underneath",
         "punc": "",
         "strongs_ids": [
           "H8478"
@@ -1412,6 +1596,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 12,
@@ -1420,8 +1605,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רָקִיעַ",
+        "lemma_gloss": "expanse",
         "punc": "",
         "strongs_ids": [
           "H7549"
@@ -1434,6 +1621,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 14,
@@ -1444,6 +1632,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 15,
@@ -1452,8 +1641,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": true,
         "lemma": "מַיִם",
+        "lemma_gloss": "water",
         "punc": "",
         "strongs_ids": [
           "H4325"
@@ -1464,8 +1655,10 @@
         "xlit": "mayim"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֲשֶׁר",
+        "lemma_gloss": "which",
         "punc": "",
         "strongs_ids": [
           "H834"
@@ -1478,6 +1671,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 18,
@@ -1486,8 +1680,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "עַל",
+        "lemma_gloss": "upon",
         "punc": "",
         "strongs_ids": [
           "H5921"
@@ -1500,6 +1696,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 20,
@@ -1508,8 +1705,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רָקִיעַ",
+        "lemma_gloss": "expanse",
         "punc": ":",
         "strongs_ids": [
           "H7549"
@@ -1522,6 +1721,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 22,
@@ -1532,6 +1732,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 23,
@@ -1542,6 +1743,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 24,
@@ -1550,8 +1752,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "כֵּן",
+        "lemma_gloss": "so, thus",
         "punc": ".",
         "strongs_ids": [
           "H3651"
@@ -1571,6 +1775,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -1579,8 +1784,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -1591,8 +1798,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "קָרָא",
+        "lemma_gloss": "to call",
         "punc": "",
         "strongs_ids": [
           "H7121"
@@ -1605,6 +1814,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -1613,8 +1823,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רָקִיעַ",
+        "lemma_gloss": "expanse",
         "punc": "",
         "strongs_ids": [
           "H7549"
@@ -1625,8 +1837,10 @@
         "xlit": "râqîyaʻ"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "שָׁמַיִם",
+        "lemma_gloss": "heaven",
         "punc": ".",
         "strongs_ids": [
           "H8064"
@@ -1639,6 +1853,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 6,
@@ -1649,6 +1864,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -1657,8 +1873,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "עֶרֶב",
+        "lemma_gloss": "evening",
         "punc": "",
         "strongs_ids": [
           "H6153"
@@ -1671,6 +1889,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -1681,6 +1900,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 10,
@@ -1689,8 +1909,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "בֹּקֶר",
+        "lemma_gloss": "morning",
         "punc": "",
         "strongs_ids": [
           "H1242"
@@ -1703,6 +1925,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 12,
@@ -1713,6 +1936,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 13,
@@ -1721,8 +1945,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "שֵׁנִי",
+        "lemma_gloss": "second",
         "punc": "",
         "strongs_ids": [
           "H8145"
@@ -1733,8 +1959,10 @@
         "xlit": "shênîy"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "יוֹם",
+        "lemma_gloss": "day",
         "punc": ".",
         "strongs_ids": [
           "H3117"
@@ -1754,6 +1982,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -1762,8 +1991,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -1774,8 +2005,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אָמַר",
+        "lemma_gloss": "to say",
         "punc": ",",
         "strongs_ids": [
           "H559"
@@ -1788,6 +2021,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -1798,6 +2032,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 4,
@@ -1806,8 +2041,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מַיִם",
+        "lemma_gloss": "water",
         "punc": "",
         "strongs_ids": [
           "H4325"
@@ -1820,6 +2057,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 6,
@@ -1830,6 +2068,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -1838,8 +2077,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "שָׁמַיִם",
+        "lemma_gloss": "heaven",
         "punc": "",
         "strongs_ids": [
           "H8064"
@@ -1852,6 +2093,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -1862,6 +2104,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 10,
@@ -1870,8 +2113,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "קָוָה",
+        "lemma_gloss": "to await",
         "punc": "",
         "strongs_ids": [
           "H6960"
@@ -1882,8 +2127,10 @@
         "xlit": "qâvâh"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֵל",
+        "lemma_gloss": "to(wards)",
         "punc": "",
         "strongs_ids": [
           "H413"
@@ -1894,8 +2141,10 @@
         "xlit": "ʼêl"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֶחָד",
+        "lemma_gloss": "one",
         "punc": "",
         "strongs_ids": [
           "H259"
@@ -1906,8 +2155,10 @@
         "xlit": "ʼechâd"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מָקוֹם",
+        "lemma_gloss": "place",
         "punc": ",",
         "strongs_ids": [
           "H4725"
@@ -1920,6 +2171,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 15,
@@ -1930,6 +2182,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 16,
@@ -1940,6 +2193,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 17,
@@ -1948,8 +2202,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "יַבָּשָׁה",
+        "lemma_gloss": "dry land",
         "punc": "",
         "strongs_ids": [
           "H3004"
@@ -1962,6 +2218,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 19,
@@ -1970,8 +2227,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רָאָה",
+        "lemma_gloss": "to see",
         "punc": ":",
         "strongs_ids": [
           "H7200"
@@ -1984,6 +2243,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 21,
@@ -1994,6 +2254,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 22,
@@ -2004,6 +2265,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 23,
@@ -2014,6 +2276,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": ".",
         "strongs_ids": [],
         "verse_pos": 24,
@@ -2031,6 +2294,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -2039,8 +2303,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -2051,8 +2317,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "קָרָא",
+        "lemma_gloss": "to call",
         "punc": "",
         "strongs_ids": [
           "H7121"
@@ -2065,6 +2333,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -2073,8 +2342,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "יַבָּשָׁה",
+        "lemma_gloss": "dry land",
         "punc": "",
         "strongs_ids": [
           "H3004"
@@ -2087,6 +2358,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 5,
@@ -2095,8 +2367,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֶרֶץ",
+        "lemma_gloss": "land",
         "punc": ";",
         "strongs_ids": [
           "H776"
@@ -2109,6 +2383,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -2119,6 +2394,7 @@
       {
         "italic": true,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 8,
@@ -2129,6 +2405,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -2137,8 +2414,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מִקְוֶה",
+        "lemma_gloss": "hope",
         "punc": "",
         "strongs_ids": [
           "H4723"
@@ -2151,6 +2430,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 11,
@@ -2161,6 +2441,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 12,
@@ -2169,8 +2450,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מַיִם",
+        "lemma_gloss": "water",
         "punc": "",
         "strongs_ids": [
           "H4325"
@@ -2181,8 +2464,10 @@
         "xlit": "mayim"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "קָרָא",
+        "lemma_gloss": "to call",
         "punc": "",
         "strongs_ids": [
           "H7121"
@@ -2195,6 +2480,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 15,
@@ -2203,8 +2489,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "יָם",
+        "lemma_gloss": "sea",
         "punc": ":",
         "strongs_ids": [
           "H3220"
@@ -2217,6 +2505,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 17,
@@ -2225,8 +2514,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -2237,8 +2528,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רָאָה",
+        "lemma_gloss": "to see",
         "punc": "",
         "strongs_ids": [
           "H7200"
@@ -2251,6 +2544,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 20,
@@ -2261,6 +2555,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 21,
@@ -2271,6 +2566,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 22,
@@ -2279,8 +2575,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "טוֹב",
+        "lemma_gloss": "good",
         "punc": ".",
         "strongs_ids": [
           "H2896"
@@ -2300,6 +2598,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -2308,8 +2607,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -2320,8 +2621,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אָמַר",
+        "lemma_gloss": "to say",
         "punc": ",",
         "strongs_ids": [
           "H559"
@@ -2334,6 +2637,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -2344,6 +2648,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 4,
@@ -2352,8 +2657,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֶרֶץ",
+        "lemma_gloss": "land",
         "punc": "",
         "strongs_ids": [
           "H776"
@@ -2366,6 +2673,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 6,
@@ -2374,8 +2682,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "דָּשָׁא",
+        "lemma_gloss": "to sprout",
         "punc": "",
         "strongs_ids": [
           "H1876"
@@ -2386,8 +2696,10 @@
         "xlit": "dâshâʼ"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "דֶּשֶׁא",
+        "lemma_gloss": "grass",
         "punc": ",",
         "strongs_ids": [
           "H1877"
@@ -2400,6 +2712,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -2408,8 +2721,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "עֶשֶׂב",
+        "lemma_gloss": "vegetation",
         "punc": "",
         "strongs_ids": [
           "H6212"
@@ -2420,8 +2735,10 @@
         "xlit": "ʻeseb"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "זָרַע",
+        "lemma_gloss": "to sow",
         "punc": "",
         "strongs_ids": [
           "H2232"
@@ -2432,8 +2749,10 @@
         "xlit": "zâraʻ"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "זֶרַע",
+        "lemma_gloss": "seed",
         "punc": ",",
         "strongs_ids": [
           "H2233"
@@ -2446,6 +2765,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 13,
@@ -2456,6 +2776,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 14,
@@ -2464,8 +2785,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "פְּרִי",
+        "lemma_gloss": "fruit",
         "punc": "",
         "strongs_ids": [
           "H6529"
@@ -2476,8 +2799,10 @@
         "xlit": "pᵉrîy"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "עֵץ",
+        "lemma_gloss": "tree",
         "punc": "",
         "strongs_ids": [
           "H6086"
@@ -2488,8 +2813,10 @@
         "xlit": "ʻêts"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "עָשָׂה",
+        "lemma_gloss": "to make",
         "punc": "",
         "strongs_ids": [
           "H6213"
@@ -2500,8 +2827,10 @@
         "xlit": "ʻâsâh"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "פְּרִי",
+        "lemma_gloss": "fruit",
         "punc": "",
         "strongs_ids": [
           "H6529"
@@ -2514,6 +2843,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 19,
@@ -2524,6 +2854,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 20,
@@ -2532,8 +2863,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": true,
         "lemma": "מִין",
+        "lemma_gloss": "kind",
         "punc": ",",
         "strongs_ids": [
           "H4327"
@@ -2544,8 +2877,10 @@
         "xlit": "mîyn"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֲשֶׁר",
+        "lemma_gloss": "which",
         "punc": "",
         "strongs_ids": [
           "H834"
@@ -2556,8 +2891,10 @@
         "xlit": "ʼăsher"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "זֶרַע",
+        "lemma_gloss": "seed",
         "punc": "",
         "strongs_ids": [
           "H2233"
@@ -2570,6 +2907,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 24,
@@ -2580,6 +2918,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 25,
@@ -2590,6 +2929,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": ",",
         "strongs_ids": [],
         "verse_pos": 26,
@@ -2600,6 +2940,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 27,
@@ -2610,6 +2951,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 28,
@@ -2618,8 +2960,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֶרֶץ",
+        "lemma_gloss": "land",
         "punc": ":",
         "strongs_ids": [
           "H776"
@@ -2632,6 +2976,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 30,
@@ -2642,6 +2987,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 31,
@@ -2652,6 +2998,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 32,
@@ -2662,6 +3009,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": ".",
         "strongs_ids": [],
         "verse_pos": 33,
@@ -2679,6 +3027,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -2689,6 +3038,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 1,
@@ -2697,8 +3047,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֶרֶץ",
+        "lemma_gloss": "land",
         "punc": "",
         "strongs_ids": [
           "H776"
@@ -2711,6 +3063,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -2719,8 +3072,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "יָצָא",
+        "lemma_gloss": "to come out",
         "punc": "",
         "strongs_ids": [
           "H3318"
@@ -2731,8 +3086,10 @@
         "xlit": "yâtsâʼ"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "דֶּשֶׁא",
+        "lemma_gloss": "grass",
         "punc": ",",
         "strongs_ids": [
           "H1877"
@@ -2745,6 +3102,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 6,
@@ -2753,8 +3111,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "עֶשֶׂב",
+        "lemma_gloss": "vegetation",
         "punc": "",
         "strongs_ids": [
           "H6212"
@@ -2765,8 +3125,10 @@
         "xlit": "ʻeseb"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "זָרַע",
+        "lemma_gloss": "to sow",
         "punc": "",
         "strongs_ids": [
           "H2232"
@@ -2777,8 +3139,10 @@
         "xlit": "zâraʻ"
       },
       {
+        "heb_name": false,
         "italic": true,
         "lemma": "זֶרַע",
+        "lemma_gloss": "seed",
         "punc": "",
         "strongs_ids": [
           "H2233"
@@ -2791,6 +3155,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 10,
@@ -2801,6 +3166,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 11,
@@ -2809,8 +3175,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מִין",
+        "lemma_gloss": "kind",
         "punc": ",",
         "strongs_ids": [
           "H4327"
@@ -2823,6 +3191,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 13,
@@ -2833,6 +3202,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 14,
@@ -2841,8 +3211,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "עֵץ",
+        "lemma_gloss": "tree",
         "punc": "",
         "strongs_ids": [
           "H6086"
@@ -2853,8 +3225,10 @@
         "xlit": "ʻêts"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "עָשָׂה",
+        "lemma_gloss": "to make",
         "punc": "",
         "strongs_ids": [
           "H6213"
@@ -2865,8 +3239,10 @@
         "xlit": "ʻâsâh"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "פְּרִי",
+        "lemma_gloss": "fruit",
         "punc": ",",
         "strongs_ids": [
           "H6529"
@@ -2879,6 +3255,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 18,
@@ -2887,8 +3264,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "זֶרַע",
+        "lemma_gloss": "seed",
         "punc": "",
         "strongs_ids": [
           "H2233"
@@ -2901,6 +3280,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 20,
@@ -2911,6 +3291,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 21,
@@ -2921,6 +3302,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": ",",
         "strongs_ids": [],
         "verse_pos": 22,
@@ -2931,6 +3313,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 23,
@@ -2941,6 +3324,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 24,
@@ -2949,8 +3333,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מִין",
+        "lemma_gloss": "kind",
         "punc": ":",
         "strongs_ids": [
           "H4327"
@@ -2963,6 +3349,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 26,
@@ -2971,8 +3358,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -2983,8 +3372,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רָאָה",
+        "lemma_gloss": "to see",
         "punc": "",
         "strongs_ids": [
           "H7200"
@@ -2997,6 +3388,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 29,
@@ -3007,6 +3399,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 30,
@@ -3017,6 +3410,7 @@
       {
         "italic": true,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 31,
@@ -3025,8 +3419,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "טוֹב",
+        "lemma_gloss": "good",
         "punc": ".",
         "strongs_ids": [
           "H2896"
@@ -3046,6 +3442,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -3056,6 +3453,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 1,
@@ -3064,8 +3462,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "עֶרֶב",
+        "lemma_gloss": "evening",
         "punc": "",
         "strongs_ids": [
           "H6153"
@@ -3078,6 +3478,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -3088,6 +3489,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 4,
@@ -3096,8 +3498,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "בֹּקֶר",
+        "lemma_gloss": "morning",
         "punc": "",
         "strongs_ids": [
           "H1242"
@@ -3110,6 +3514,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 6,
@@ -3120,6 +3525,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -3128,8 +3534,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "שְׁלִישִׁי",
+        "lemma_gloss": "third",
         "punc": "",
         "strongs_ids": [
           "H7992"
@@ -3140,8 +3548,10 @@
         "xlit": "shᵉlîyshîy"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "יוֹם",
+        "lemma_gloss": "day",
         "punc": ".",
         "strongs_ids": [
           "H3117"
@@ -3161,6 +3571,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -3169,8 +3580,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -3181,8 +3594,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אָמַר",
+        "lemma_gloss": "to say",
         "punc": ",",
         "strongs_ids": [
           "H559"
@@ -3195,6 +3610,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -3205,6 +3621,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 4,
@@ -3215,6 +3632,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 5,
@@ -3223,8 +3641,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מָאוֹר",
+        "lemma_gloss": "light",
         "punc": "",
         "strongs_ids": [
           "H3974"
@@ -3237,6 +3657,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -3247,6 +3668,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 8,
@@ -3255,8 +3677,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רָקִיעַ",
+        "lemma_gloss": "expanse",
         "punc": "",
         "strongs_ids": [
           "H7549"
@@ -3269,6 +3693,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 10,
@@ -3279,6 +3704,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 11,
@@ -3287,8 +3713,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "שָׁמַיִם",
+        "lemma_gloss": "heaven",
         "punc": "",
         "strongs_ids": [
           "H8064"
@@ -3301,6 +3729,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 13,
@@ -3309,8 +3738,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "בָּדַל",
+        "lemma_gloss": "to separate",
         "punc": "",
         "strongs_ids": [
           "H914"
@@ -3323,6 +3754,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 15,
@@ -3331,8 +3763,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "יוֹם",
+        "lemma_gloss": "day",
         "punc": "",
         "strongs_ids": [
           "H3117"
@@ -3345,6 +3779,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 17,
@@ -3355,6 +3790,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 18,
@@ -3363,8 +3799,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "לַיִל",
+        "lemma_gloss": "night",
         "punc": ";",
         "strongs_ids": [
           "H3915"
@@ -3377,6 +3815,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 20,
@@ -3387,6 +3826,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 21,
@@ -3397,6 +3837,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 22,
@@ -3407,6 +3848,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 23,
@@ -3417,6 +3859,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 24,
@@ -3425,8 +3868,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אוֹת",
+        "lemma_gloss": "sign",
         "punc": ",",
         "strongs_ids": [
           "H226"
@@ -3439,6 +3884,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 26,
@@ -3449,6 +3895,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 27,
@@ -3457,8 +3904,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מוֹעֵד",
+        "lemma_gloss": "meeting",
         "punc": ",",
         "strongs_ids": [
           "H4150"
@@ -3471,6 +3920,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 29,
@@ -3481,6 +3931,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 30,
@@ -3489,8 +3940,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "יוֹם",
+        "lemma_gloss": "day",
         "punc": ",",
         "strongs_ids": [
           "H3117"
@@ -3503,6 +3956,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 32,
@@ -3511,8 +3965,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "שָׁנֶה",
+        "lemma_gloss": "year",
         "punc": ":",
         "strongs_ids": [
           "H8141"
@@ -3532,6 +3988,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -3542,6 +3999,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 1,
@@ -3552,6 +4010,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 2,
@@ -3562,6 +4021,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -3572,6 +4032,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 4,
@@ -3580,8 +4041,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מָאוֹר",
+        "lemma_gloss": "light",
         "punc": "",
         "strongs_ids": [
           "H3974"
@@ -3594,6 +4057,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 6,
@@ -3604,6 +4068,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -3612,8 +4077,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רָקִיעַ",
+        "lemma_gloss": "expanse",
         "punc": "",
         "strongs_ids": [
           "H7549"
@@ -3626,6 +4093,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -3636,6 +4104,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 10,
@@ -3644,8 +4113,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "שָׁמַיִם",
+        "lemma_gloss": "heaven",
         "punc": "",
         "strongs_ids": [
           "H8064"
@@ -3658,6 +4129,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 12,
@@ -3668,6 +4140,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 13,
@@ -3676,8 +4149,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אוֹר",
+        "lemma_gloss": "to light",
         "punc": "",
         "strongs_ids": [
           "H215"
@@ -3690,6 +4165,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 15,
@@ -3700,6 +4176,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 16,
@@ -3708,8 +4185,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֶרֶץ",
+        "lemma_gloss": "land",
         "punc": ":",
         "strongs_ids": [
           "H776"
@@ -3722,6 +4201,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 18,
@@ -3732,6 +4212,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 19,
@@ -3742,6 +4223,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 20,
@@ -3752,6 +4234,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": ".",
         "strongs_ids": [],
         "verse_pos": 21,
@@ -3769,6 +4252,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -3777,8 +4261,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -3789,8 +4275,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "עָשָׂה",
+        "lemma_gloss": "to make",
         "punc": "",
         "strongs_ids": [
           "H6213"
@@ -3801,8 +4289,10 @@
         "xlit": "ʻâsâh"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "שְׁנַיִם",
+        "lemma_gloss": "two",
         "punc": "",
         "strongs_ids": [
           "H8147"
@@ -3813,8 +4303,10 @@
         "xlit": "shᵉnayim"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "גָּדוֹל",
+        "lemma_gloss": "great",
         "punc": "",
         "strongs_ids": [
           "H1419"
@@ -3825,8 +4317,10 @@
         "xlit": "gâdôwl"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מָאוֹר",
+        "lemma_gloss": "light",
         "punc": ";",
         "strongs_ids": [
           "H3974"
@@ -3839,6 +4333,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 6,
@@ -3847,8 +4342,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "גָּדוֹל",
+        "lemma_gloss": "great",
         "punc": "",
         "strongs_ids": [
           "H1419"
@@ -3859,8 +4356,10 @@
         "xlit": "gâdôwl"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מָאוֹר",
+        "lemma_gloss": "light",
         "punc": "",
         "strongs_ids": [
           "H3974"
@@ -3873,6 +4372,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -3881,8 +4381,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מֶמְשָׁלָה",
+        "lemma_gloss": "dominion",
         "punc": "",
         "strongs_ids": [
           "H4475"
@@ -3895,6 +4397,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 11,
@@ -3903,8 +4406,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "יוֹם",
+        "lemma_gloss": "day",
         "punc": ",",
         "strongs_ids": [
           "H3117"
@@ -3917,6 +4422,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 13,
@@ -3927,6 +4433,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 14,
@@ -3935,8 +4442,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "קָטָן",
+        "lemma_gloss": "small",
         "punc": "",
         "strongs_ids": [
           "H6996"
@@ -3947,8 +4456,10 @@
         "xlit": "qâṭân"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מָאוֹר",
+        "lemma_gloss": "light",
         "punc": "",
         "strongs_ids": [
           "H3974"
@@ -3961,6 +4472,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 17,
@@ -3969,8 +4481,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מֶמְשָׁלָה",
+        "lemma_gloss": "dominion",
         "punc": "",
         "strongs_ids": [
           "H4475"
@@ -3983,6 +4497,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 19,
@@ -3991,8 +4506,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "לַיִל",
+        "lemma_gloss": "night",
         "punc": ":",
         "strongs_ids": [
           "H3915"
@@ -4005,6 +4522,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 21,
@@ -4015,6 +4533,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 22,
@@ -4025,6 +4544,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 23,
@@ -4033,8 +4553,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "כּוֹכָב",
+        "lemma_gloss": "star",
         "punc": "",
         "strongs_ids": [
           "H3556"
@@ -4047,6 +4569,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": ".",
         "strongs_ids": [],
         "verse_pos": 25,
@@ -4064,6 +4587,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -4072,8 +4596,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -4084,8 +4610,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "נָתַן",
+        "lemma_gloss": "to give",
         "punc": "",
         "strongs_ids": [
           "H5414"
@@ -4098,6 +4626,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -4108,6 +4637,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 4,
@@ -4118,6 +4648,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 5,
@@ -4126,8 +4657,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רָקִיעַ",
+        "lemma_gloss": "expanse",
         "punc": "",
         "strongs_ids": [
           "H7549"
@@ -4140,6 +4673,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -4150,6 +4684,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 8,
@@ -4158,8 +4693,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "שָׁמַיִם",
+        "lemma_gloss": "heaven",
         "punc": "",
         "strongs_ids": [
           "H8064"
@@ -4172,6 +4709,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 10,
@@ -4182,6 +4720,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 11,
@@ -4190,8 +4729,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אוֹר",
+        "lemma_gloss": "to light",
         "punc": "",
         "strongs_ids": [
           "H215"
@@ -4204,6 +4745,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 13,
@@ -4214,6 +4756,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 14,
@@ -4222,8 +4765,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֶרֶץ",
+        "lemma_gloss": "land",
         "punc": ",",
         "strongs_ids": [
           "H776"
@@ -4243,6 +4788,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -4253,6 +4799,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 1,
@@ -4261,8 +4808,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מָשַׁל",
+        "lemma_gloss": "to rule",
         "punc": "",
         "strongs_ids": [
           "H4910"
@@ -4275,6 +4824,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -4285,6 +4835,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 4,
@@ -4293,8 +4844,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "יוֹם",
+        "lemma_gloss": "day",
         "punc": "",
         "strongs_ids": [
           "H3117"
@@ -4307,6 +4860,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 6,
@@ -4317,6 +4871,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -4327,6 +4882,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 8,
@@ -4335,8 +4891,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "לַיִל",
+        "lemma_gloss": "night",
         "punc": ",",
         "strongs_ids": [
           "H3915"
@@ -4349,6 +4907,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 10,
@@ -4359,6 +4918,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 11,
@@ -4367,8 +4927,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "בָּדַל",
+        "lemma_gloss": "to separate",
         "punc": "",
         "strongs_ids": [
           "H914"
@@ -4381,6 +4943,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 13,
@@ -4389,8 +4952,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אוֹר",
+        "lemma_gloss": "light",
         "punc": "",
         "strongs_ids": [
           "H216"
@@ -4403,6 +4968,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 15,
@@ -4413,6 +4979,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 16,
@@ -4421,8 +4988,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "חֹשֶׁךְ",
+        "lemma_gloss": "darkness",
         "punc": ":",
         "strongs_ids": [
           "H2822"
@@ -4435,6 +5004,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 18,
@@ -4443,8 +5013,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -4455,8 +5027,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רָאָה",
+        "lemma_gloss": "to see",
         "punc": "",
         "strongs_ids": [
           "H7200"
@@ -4469,6 +5043,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 21,
@@ -4479,6 +5054,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 22,
@@ -4489,6 +5065,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 23,
@@ -4497,8 +5074,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "טוֹב",
+        "lemma_gloss": "good",
         "punc": ".",
         "strongs_ids": [
           "H2896"
@@ -4518,6 +5097,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -4528,6 +5108,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 1,
@@ -4536,8 +5117,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "עֶרֶב",
+        "lemma_gloss": "evening",
         "punc": "",
         "strongs_ids": [
           "H6153"
@@ -4550,6 +5133,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -4560,6 +5144,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 4,
@@ -4568,8 +5153,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "בֹּקֶר",
+        "lemma_gloss": "morning",
         "punc": "",
         "strongs_ids": [
           "H1242"
@@ -4582,6 +5169,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 6,
@@ -4592,6 +5180,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -4600,8 +5189,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רְבִיעִי",
+        "lemma_gloss": "fourth",
         "punc": "",
         "strongs_ids": [
           "H7243"
@@ -4612,8 +5203,10 @@
         "xlit": "rᵉbîyʻîy"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "יוֹם",
+        "lemma_gloss": "day",
         "punc": ".",
         "strongs_ids": [
           "H3117"
@@ -4633,6 +5226,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -4641,8 +5235,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -4653,8 +5249,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אָמַר",
+        "lemma_gloss": "to say",
         "punc": ",",
         "strongs_ids": [
           "H559"
@@ -4667,6 +5265,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -4677,6 +5276,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 4,
@@ -4685,8 +5285,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מַיִם",
+        "lemma_gloss": "water",
         "punc": "",
         "strongs_ids": [
           "H4325"
@@ -4699,6 +5301,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 6,
@@ -4709,6 +5312,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -4717,8 +5321,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "שָׁרַץ",
+        "lemma_gloss": "to swarm",
         "punc": "",
         "strongs_ids": [
           "H8317"
@@ -4731,6 +5337,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -4741,6 +5348,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 10,
@@ -4749,8 +5357,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "שֶׁרֶץ",
+        "lemma_gloss": "swarm",
         "punc": "",
         "strongs_ids": [
           "H8318"
@@ -4763,6 +5373,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 12,
@@ -4771,8 +5382,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "נֶפֶשׁ",
+        "lemma_gloss": "soul",
         "punc": "",
         "strongs_ids": [
           "H5315"
@@ -4783,8 +5396,10 @@
         "xlit": "nephesh"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "חַי",
+        "lemma_gloss": "life",
         "punc": ",",
         "strongs_ids": [
           "H2416"
@@ -4797,6 +5412,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 15,
@@ -4805,8 +5421,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "עוֹף",
+        "lemma_gloss": "bird",
         "punc": "",
         "strongs_ids": [
           "H5775"
@@ -4819,6 +5437,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 17,
@@ -4829,6 +5448,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 18,
@@ -4837,8 +5457,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "עוּף",
+        "lemma_gloss": "to fly",
         "punc": "",
         "strongs_ids": [
           "H5774"
@@ -4849,8 +5471,10 @@
         "xlit": "ʻûwph"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "עַל",
+        "lemma_gloss": "upon",
         "punc": "",
         "strongs_ids": [
           "H5921"
@@ -4863,6 +5487,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 21,
@@ -4871,8 +5496,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֶרֶץ",
+        "lemma_gloss": "land",
         "punc": "",
         "strongs_ids": [
           "H776"
@@ -4885,6 +5512,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 23,
@@ -4895,6 +5523,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 24,
@@ -4903,8 +5532,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": true,
         "lemma": "פָּנִים",
+        "lemma_gloss": "face",
         "punc": "",
         "strongs_ids": [
           "H6440"
@@ -4915,8 +5546,10 @@
         "xlit": "pânîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רָקִיעַ",
+        "lemma_gloss": "expanse",
         "punc": "",
         "strongs_ids": [
           "H7549"
@@ -4929,6 +5562,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 27,
@@ -4937,8 +5571,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "שָׁמַיִם",
+        "lemma_gloss": "heaven",
         "punc": ".",
         "strongs_ids": [
           "H8064"
@@ -4958,6 +5594,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -4966,8 +5603,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -4978,8 +5617,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "בָּרָא",
+        "lemma_gloss": "to create",
         "punc": "",
         "strongs_ids": [
           "H1254"
@@ -4990,8 +5631,10 @@
         "xlit": "bârâʼ"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "גָּדוֹל",
+        "lemma_gloss": "great",
         "punc": "",
         "strongs_ids": [
           "H1419"
@@ -5002,8 +5645,10 @@
         "xlit": "gâdôwl"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "תַּנִּין",
+        "lemma_gloss": "sea monster, serpent",
         "punc": ",",
         "strongs_ids": [
           "H8577"
@@ -5016,6 +5661,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 5,
@@ -5026,6 +5672,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 6,
@@ -5034,8 +5681,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "חַי",
+        "lemma_gloss": "life",
         "punc": "",
         "strongs_ids": [
           "H2416"
@@ -5046,8 +5695,10 @@
         "xlit": "chay"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "נֶפֶשׁ",
+        "lemma_gloss": "soul",
         "punc": "",
         "strongs_ids": [
           "H5315"
@@ -5060,6 +5711,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -5068,8 +5720,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רָמַשׂ",
+        "lemma_gloss": "to creep",
         "punc": ",",
         "strongs_ids": [
           "H7430"
@@ -5082,6 +5736,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 11,
@@ -5092,6 +5747,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 12,
@@ -5100,8 +5756,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מַיִם",
+        "lemma_gloss": "water",
         "punc": "",
         "strongs_ids": [
           "H4325"
@@ -5114,6 +5772,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 14,
@@ -5124,6 +5783,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 15,
@@ -5132,8 +5792,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "שָׁרַץ",
+        "lemma_gloss": "to swarm",
         "punc": ",",
         "strongs_ids": [
           "H8317"
@@ -5146,6 +5808,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 17,
@@ -5156,6 +5819,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 18,
@@ -5164,8 +5828,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מִין",
+        "lemma_gloss": "kind",
         "punc": ",",
         "strongs_ids": [
           "H4327"
@@ -5178,6 +5844,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 20,
@@ -5188,6 +5855,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 21,
@@ -5196,8 +5864,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "כָּנָף",
+        "lemma_gloss": "wing",
         "punc": "",
         "strongs_ids": [
           "H3671"
@@ -5208,8 +5878,10 @@
         "xlit": "kânâph"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "עוֹף",
+        "lemma_gloss": "bird",
         "punc": "",
         "strongs_ids": [
           "H5775"
@@ -5222,6 +5894,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 24,
@@ -5232,6 +5905,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 25,
@@ -5240,8 +5914,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מִין",
+        "lemma_gloss": "kind",
         "punc": ":",
         "strongs_ids": [
           "H4327"
@@ -5254,6 +5930,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 27,
@@ -5262,8 +5939,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -5274,8 +5953,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רָאָה",
+        "lemma_gloss": "to see",
         "punc": "",
         "strongs_ids": [
           "H7200"
@@ -5288,6 +5969,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 30,
@@ -5298,6 +5980,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 31,
@@ -5308,6 +5991,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 32,
@@ -5316,8 +6000,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "טוֹב",
+        "lemma_gloss": "good",
         "punc": ".",
         "strongs_ids": [
           "H2896"
@@ -5337,6 +6023,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -5345,8 +6032,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -5357,8 +6046,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "בָרַךְ",
+        "lemma_gloss": "to bless",
         "punc": "",
         "strongs_ids": [
           "H1288"
@@ -5371,6 +6062,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": ",",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -5379,8 +6071,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אָמַר",
+        "lemma_gloss": "to say",
         "punc": ",",
         "strongs_ids": [
           "H559"
@@ -5393,6 +6087,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 5,
@@ -5401,8 +6096,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "פָּרָה",
+        "lemma_gloss": "be fruitful",
         "punc": ",",
         "strongs_ids": [
           "H6509"
@@ -5415,6 +6112,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -5423,8 +6121,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רָבָה",
+        "lemma_gloss": "to multiply",
         "punc": ",",
         "strongs_ids": [
           "H7235"
@@ -5437,6 +6137,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -5445,8 +6146,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מָלֵא",
+        "lemma_gloss": "to fill",
         "punc": "",
         "strongs_ids": [
           "H4390"
@@ -5459,6 +6162,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 11,
@@ -5467,8 +6171,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מַיִם",
+        "lemma_gloss": "water",
         "punc": "",
         "strongs_ids": [
           "H4325"
@@ -5481,6 +6187,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 13,
@@ -5491,6 +6198,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 14,
@@ -5499,8 +6207,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "יָם",
+        "lemma_gloss": "sea",
         "punc": ",",
         "strongs_ids": [
           "H3220"
@@ -5513,6 +6223,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 16,
@@ -5523,6 +6234,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 17,
@@ -5531,8 +6243,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "עוֹף",
+        "lemma_gloss": "bird",
         "punc": "",
         "strongs_ids": [
           "H5775"
@@ -5543,8 +6257,10 @@
         "xlit": "ʻôwph"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רָבָה",
+        "lemma_gloss": "to multiply",
         "punc": "",
         "strongs_ids": [
           "H7235"
@@ -5557,6 +6273,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 20,
@@ -5567,6 +6284,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 21,
@@ -5575,8 +6293,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֶרֶץ",
+        "lemma_gloss": "land",
         "punc": ".",
         "strongs_ids": [
           "H776"
@@ -5596,6 +6316,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -5606,6 +6327,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 1,
@@ -5614,8 +6336,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "עֶרֶב",
+        "lemma_gloss": "evening",
         "punc": "",
         "strongs_ids": [
           "H6153"
@@ -5628,6 +6352,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -5638,6 +6363,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 4,
@@ -5646,8 +6372,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "בֹּקֶר",
+        "lemma_gloss": "morning",
         "punc": "",
         "strongs_ids": [
           "H1242"
@@ -5660,6 +6388,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 6,
@@ -5670,6 +6399,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -5678,8 +6408,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "חֲמִישִׁי",
+        "lemma_gloss": "fifth",
         "punc": "",
         "strongs_ids": [
           "H2549"
@@ -5690,8 +6422,10 @@
         "xlit": "chămîyshîy"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "יוֹם",
+        "lemma_gloss": "day",
         "punc": ".",
         "strongs_ids": [
           "H3117"
@@ -5711,6 +6445,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -5719,8 +6454,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -5731,8 +6468,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אָמַר",
+        "lemma_gloss": "to say",
         "punc": ",",
         "strongs_ids": [
           "H559"
@@ -5745,6 +6484,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -5755,6 +6495,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 4,
@@ -5763,8 +6504,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֶרֶץ",
+        "lemma_gloss": "land",
         "punc": "",
         "strongs_ids": [
           "H776"
@@ -5777,6 +6520,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 6,
@@ -5785,8 +6529,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "יָצָא",
+        "lemma_gloss": "to come out",
         "punc": "",
         "strongs_ids": [
           "H3318"
@@ -5799,6 +6545,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 8,
@@ -5807,8 +6554,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "חַי",
+        "lemma_gloss": "life",
         "punc": "",
         "strongs_ids": [
           "H2416"
@@ -5819,8 +6568,10 @@
         "xlit": "chay"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "נֶפֶשׁ",
+        "lemma_gloss": "soul",
         "punc": "",
         "strongs_ids": [
           "H5315"
@@ -5833,6 +6584,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 11,
@@ -5843,6 +6595,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 12,
@@ -5851,8 +6604,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מִין",
+        "lemma_gloss": "kind",
         "punc": ",",
         "strongs_ids": [
           "H4327"
@@ -5863,8 +6618,10 @@
         "xlit": "mîyn"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "בְּהֵמָה",
+        "lemma_gloss": "animal",
         "punc": ",",
         "strongs_ids": [
           "H929"
@@ -5877,6 +6634,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 15,
@@ -5887,6 +6645,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 16,
@@ -5895,8 +6654,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רֶמֶשׂ",
+        "lemma_gloss": "creeping",
         "punc": ",",
         "strongs_ids": [
           "H7431"
@@ -5909,6 +6670,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 18,
@@ -5917,8 +6679,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "חַי",
+        "lemma_gloss": "life",
         "punc": "",
         "strongs_ids": [
           "H2416"
@@ -5931,6 +6695,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 20,
@@ -5941,6 +6706,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 21,
@@ -5949,8 +6715,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֶרֶץ",
+        "lemma_gloss": "land",
         "punc": "",
         "strongs_ids": [
           "H776"
@@ -5963,6 +6731,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 23,
@@ -5973,6 +6742,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 24,
@@ -5981,8 +6751,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מִין",
+        "lemma_gloss": "kind",
         "punc": ":",
         "strongs_ids": [
           "H4327"
@@ -5995,6 +6767,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 26,
@@ -6005,6 +6778,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 27,
@@ -6015,6 +6789,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 28,
@@ -6025,6 +6800,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": ".",
         "strongs_ids": [],
         "verse_pos": 29,
@@ -6042,6 +6818,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -6050,8 +6827,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -6062,8 +6841,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "עָשָׂה",
+        "lemma_gloss": "to make",
         "punc": "",
         "strongs_ids": [
           "H6213"
@@ -6076,6 +6857,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -6084,8 +6866,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "חַי",
+        "lemma_gloss": "life",
         "punc": "",
         "strongs_ids": [
           "H2416"
@@ -6098,6 +6882,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 5,
@@ -6108,6 +6893,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 6,
@@ -6116,8 +6902,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֶרֶץ",
+        "lemma_gloss": "land",
         "punc": "",
         "strongs_ids": [
           "H776"
@@ -6130,6 +6918,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 8,
@@ -6140,6 +6929,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -6148,8 +6938,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מִין",
+        "lemma_gloss": "kind",
         "punc": ",",
         "strongs_ids": [
           "H4327"
@@ -6162,6 +6954,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 11,
@@ -6170,8 +6963,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "בְּהֵמָה",
+        "lemma_gloss": "animal",
         "punc": "",
         "strongs_ids": [
           "H929"
@@ -6184,6 +6979,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 13,
@@ -6194,6 +6990,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 14,
@@ -6202,8 +6999,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מִין",
+        "lemma_gloss": "kind",
         "punc": ",",
         "strongs_ids": [
           "H4327"
@@ -6216,6 +7015,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 16,
@@ -6226,6 +7026,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 17,
@@ -6236,6 +7037,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 18,
@@ -6246,6 +7048,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 19,
@@ -6254,8 +7057,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רֶמֶשׂ",
+        "lemma_gloss": "creeping",
         "punc": "",
         "strongs_ids": [
           "H7431"
@@ -6268,6 +7073,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 21,
@@ -6278,6 +7084,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 22,
@@ -6286,8 +7093,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֲדָמָה",
+        "lemma_gloss": "land",
         "punc": "",
         "strongs_ids": [
           "H127"
@@ -6300,6 +7109,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 24,
@@ -6310,6 +7120,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 25,
@@ -6318,8 +7129,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מִין",
+        "lemma_gloss": "kind",
         "punc": ":",
         "strongs_ids": [
           "H4327"
@@ -6332,6 +7145,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 27,
@@ -6340,8 +7154,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -6352,8 +7168,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רָאָה",
+        "lemma_gloss": "to see",
         "punc": "",
         "strongs_ids": [
           "H7200"
@@ -6366,6 +7184,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 30,
@@ -6376,6 +7195,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 31,
@@ -6386,6 +7206,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 32,
@@ -6394,8 +7215,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "טוֹב",
+        "lemma_gloss": "good",
         "punc": ".",
         "strongs_ids": [
           "H2896"
@@ -6415,6 +7238,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -6423,8 +7247,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -6435,8 +7261,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אָמַר",
+        "lemma_gloss": "to say",
         "punc": ",",
         "strongs_ids": [
           "H559"
@@ -6449,6 +7277,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -6459,6 +7288,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 4,
@@ -6467,8 +7297,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "עָשָׂה",
+        "lemma_gloss": "to make",
         "punc": "",
         "strongs_ids": [
           "H6213"
@@ -6479,8 +7311,10 @@
         "xlit": "ʻâsâh"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אָדָם",
+        "lemma_gloss": "man",
         "punc": "",
         "strongs_ids": [
           "H120"
@@ -6493,6 +7327,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -6503,6 +7338,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 8,
@@ -6511,8 +7347,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "צֶלֶם",
+        "lemma_gloss": "image",
         "punc": ",",
         "strongs_ids": [
           "H6754"
@@ -6525,6 +7363,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 10,
@@ -6535,6 +7374,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 11,
@@ -6543,8 +7383,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "דְּמוּת",
+        "lemma_gloss": "likeness",
         "punc": ":",
         "strongs_ids": [
           "H1823"
@@ -6557,6 +7399,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 13,
@@ -6567,6 +7410,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 14,
@@ -6577,6 +7421,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 15,
@@ -6587,6 +7432,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 16,
@@ -6595,8 +7441,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רָדָה",
+        "lemma_gloss": "to rule",
         "punc": "",
         "strongs_ids": [
           "H7287"
@@ -6609,6 +7457,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 18,
@@ -6619,6 +7468,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 19,
@@ -6627,8 +7477,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "דָּגָה",
+        "lemma_gloss": "fish",
         "punc": "",
         "strongs_ids": [
           "H1710"
@@ -6641,6 +7493,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 21,
@@ -6651,6 +7504,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 22,
@@ -6659,8 +7513,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "יָם",
+        "lemma_gloss": "sea",
         "punc": ",",
         "strongs_ids": [
           "H3220"
@@ -6673,6 +7529,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 24,
@@ -6683,6 +7540,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 25,
@@ -6693,6 +7551,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 26,
@@ -6701,8 +7560,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "עוֹף",
+        "lemma_gloss": "bird",
         "punc": "",
         "strongs_ids": [
           "H5775"
@@ -6715,6 +7576,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 28,
@@ -6725,6 +7587,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 29,
@@ -6733,8 +7596,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "שָׁמַיִם",
+        "lemma_gloss": "heaven",
         "punc": ",",
         "strongs_ids": [
           "H8064"
@@ -6747,6 +7612,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 31,
@@ -6757,6 +7623,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 32,
@@ -6767,6 +7634,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 33,
@@ -6775,8 +7643,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "בְּהֵמָה",
+        "lemma_gloss": "animal",
         "punc": ",",
         "strongs_ids": [
           "H929"
@@ -6789,6 +7659,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 35,
@@ -6799,6 +7670,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 36,
@@ -6809,6 +7681,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 37,
@@ -6819,6 +7692,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 38,
@@ -6827,8 +7701,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֶרֶץ",
+        "lemma_gloss": "land",
         "punc": ",",
         "strongs_ids": [
           "H776"
@@ -6841,6 +7717,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 40,
@@ -6851,6 +7728,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 41,
@@ -6861,6 +7739,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 42,
@@ -6871,6 +7750,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 43,
@@ -6879,8 +7759,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רֶמֶשׂ",
+        "lemma_gloss": "creeping",
         "punc": "",
         "strongs_ids": [
           "H7431"
@@ -6893,6 +7775,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 45,
@@ -6901,8 +7784,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רָמַשׂ",
+        "lemma_gloss": "to creep",
         "punc": "",
         "strongs_ids": [
           "H7430"
@@ -6915,6 +7800,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 47,
@@ -6925,6 +7811,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 48,
@@ -6933,8 +7820,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֶרֶץ",
+        "lemma_gloss": "land",
         "punc": ".",
         "strongs_ids": [
           "H776"
@@ -6954,6 +7843,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -6962,8 +7852,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -6974,8 +7866,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "בָּרָא",
+        "lemma_gloss": "to create",
         "punc": "",
         "strongs_ids": [
           "H1254"
@@ -6986,8 +7880,10 @@
         "xlit": "bârâʼ"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אָדָם",
+        "lemma_gloss": "man",
         "punc": "",
         "strongs_ids": [
           "H120"
@@ -7000,6 +7896,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 4,
@@ -7010,6 +7907,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 5,
@@ -7020,6 +7918,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 6,
@@ -7028,8 +7927,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "צֶלֶם",
+        "lemma_gloss": "image",
         "punc": ",",
         "strongs_ids": [
           "H6754"
@@ -7042,6 +7943,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 8,
@@ -7052,6 +7954,7 @@
       {
         "italic": true,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -7060,8 +7963,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "צֶלֶם",
+        "lemma_gloss": "image",
         "punc": "",
         "strongs_ids": [
           "H6754"
@@ -7074,6 +7979,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 11,
@@ -7082,8 +7988,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -7094,8 +8002,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "בָּרָא",
+        "lemma_gloss": "to create",
         "punc": "",
         "strongs_ids": [
           "H1254"
@@ -7108,6 +8018,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 14,
@@ -7118,6 +8029,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": ";",
         "strongs_ids": [],
         "verse_pos": 15,
@@ -7126,8 +8038,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "זָכָר",
+        "lemma_gloss": "male",
         "punc": "",
         "strongs_ids": [
           "H2145"
@@ -7140,6 +8054,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 17,
@@ -7148,8 +8063,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "נְקֵבָה",
+        "lemma_gloss": "female",
         "punc": "",
         "strongs_ids": [
           "H5347"
@@ -7160,8 +8077,10 @@
         "xlit": "nᵉqêbâh"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "בָּרָא",
+        "lemma_gloss": "to create",
         "punc": "",
         "strongs_ids": [
           "H1254"
@@ -7174,6 +8093,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 20,
@@ -7184,6 +8104,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": ".",
         "strongs_ids": [],
         "verse_pos": 21,
@@ -7201,6 +8122,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -7209,8 +8131,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -7221,8 +8145,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "בָרַךְ",
+        "lemma_gloss": "to bless",
         "punc": "",
         "strongs_ids": [
           "H1288"
@@ -7235,6 +8161,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": ",",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -7245,6 +8172,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 4,
@@ -7253,8 +8181,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -7265,8 +8195,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אָמַר",
+        "lemma_gloss": "to say",
         "punc": "",
         "strongs_ids": [
           "H559"
@@ -7279,6 +8211,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -7289,6 +8222,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": ",",
         "strongs_ids": [],
         "verse_pos": 8,
@@ -7299,6 +8233,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -7307,8 +8242,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "פָּרָה",
+        "lemma_gloss": "be fruitful",
         "punc": ",",
         "strongs_ids": [
           "H6509"
@@ -7321,6 +8258,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 11,
@@ -7329,8 +8267,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רָבָה",
+        "lemma_gloss": "to multiply",
         "punc": ",",
         "strongs_ids": [
           "H7235"
@@ -7343,6 +8283,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 13,
@@ -7351,8 +8292,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מָלֵא",
+        "lemma_gloss": "to fill",
         "punc": "",
         "strongs_ids": [
           "H4390"
@@ -7365,6 +8308,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 15,
@@ -7373,8 +8317,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֶרֶץ",
+        "lemma_gloss": "land",
         "punc": ",",
         "strongs_ids": [
           "H776"
@@ -7387,6 +8333,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 17,
@@ -7397,6 +8344,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 18,
@@ -7405,8 +8353,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "כָּבַשׁ",
+        "lemma_gloss": "to subdue",
         "punc": ":",
         "strongs_ids": [
           "H3533"
@@ -7419,6 +8369,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 20,
@@ -7429,6 +8380,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 21,
@@ -7437,8 +8389,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רָדָה",
+        "lemma_gloss": "to rule",
         "punc": "",
         "strongs_ids": [
           "H7287"
@@ -7451,6 +8405,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 23,
@@ -7461,6 +8416,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 24,
@@ -7469,8 +8425,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "דָּגָה",
+        "lemma_gloss": "fish",
         "punc": "",
         "strongs_ids": [
           "H1710"
@@ -7483,6 +8441,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 26,
@@ -7493,6 +8452,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 27,
@@ -7501,8 +8461,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "יָם",
+        "lemma_gloss": "sea",
         "punc": ",",
         "strongs_ids": [
           "H3220"
@@ -7515,6 +8477,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 29,
@@ -7525,6 +8488,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 30,
@@ -7535,6 +8499,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 31,
@@ -7543,8 +8508,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "עוֹף",
+        "lemma_gloss": "bird",
         "punc": "",
         "strongs_ids": [
           "H5775"
@@ -7557,6 +8524,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 33,
@@ -7567,6 +8535,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 34,
@@ -7575,8 +8544,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "שָׁמַיִם",
+        "lemma_gloss": "heaven",
         "punc": ",",
         "strongs_ids": [
           "H8064"
@@ -7589,6 +8560,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 36,
@@ -7599,6 +8571,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 37,
@@ -7609,6 +8582,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 38,
@@ -7619,6 +8593,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 39,
@@ -7627,8 +8602,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "חַי",
+        "lemma_gloss": "life",
         "punc": "",
         "strongs_ids": [
           "H2416"
@@ -7641,6 +8618,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 41,
@@ -7649,8 +8627,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רָמַשׂ",
+        "lemma_gloss": "to creep",
         "punc": "",
         "strongs_ids": [
           "H7430"
@@ -7663,6 +8643,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 43,
@@ -7673,6 +8654,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 44,
@@ -7681,8 +8663,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֶרֶץ",
+        "lemma_gloss": "land",
         "punc": ".",
         "strongs_ids": [
           "H776"
@@ -7702,6 +8686,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -7710,8 +8695,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -7722,8 +8709,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אָמַר",
+        "lemma_gloss": "to say",
         "punc": ",",
         "strongs_ids": [
           "H559"
@@ -7734,8 +8723,10 @@
         "xlit": "ʼâmar"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "הִנֵּה",
+        "lemma_gloss": "behold",
         "punc": ",",
         "strongs_ids": [
           "H2009"
@@ -7748,6 +8739,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 4,
@@ -7758,6 +8750,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 5,
@@ -7766,8 +8759,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "נָתַן",
+        "lemma_gloss": "to give",
         "punc": "",
         "strongs_ids": [
           "H5414"
@@ -7780,6 +8775,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -7790,6 +8786,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 8,
@@ -7798,8 +8795,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "עֶשֶׂב",
+        "lemma_gloss": "vegetation",
         "punc": "",
         "strongs_ids": [
           "H6212"
@@ -7810,8 +8809,10 @@
         "xlit": "ʻeseb"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "זָרַע",
+        "lemma_gloss": "to sow",
         "punc": "",
         "strongs_ids": [
           "H2232"
@@ -7822,8 +8823,10 @@
         "xlit": "zâraʻ"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "זֶרַע",
+        "lemma_gloss": "seed",
         "punc": ",",
         "strongs_ids": [
           "H2233"
@@ -7836,6 +8839,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 12,
@@ -7846,6 +8850,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 13,
@@ -7856,6 +8861,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 14,
@@ -7866,6 +8872,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 15,
@@ -7874,8 +8881,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "פָּנִים",
+        "lemma_gloss": "face",
         "punc": "",
         "strongs_ids": [
           "H6440"
@@ -7888,6 +8897,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 17,
@@ -7898,6 +8908,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 18,
@@ -7908,6 +8919,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 19,
@@ -7916,8 +8928,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": true,
         "lemma": "אֶרֶץ",
+        "lemma_gloss": "land",
         "punc": ",",
         "strongs_ids": [
           "H776"
@@ -7930,6 +8944,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 21,
@@ -7940,6 +8955,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 22,
@@ -7948,8 +8964,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "עֵץ",
+        "lemma_gloss": "tree",
         "punc": ",",
         "strongs_ids": [
           "H6086"
@@ -7962,6 +8980,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 24,
@@ -7972,6 +8991,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 25,
@@ -7982,6 +9002,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 26,
@@ -7992,6 +9013,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 27,
@@ -8002,6 +9024,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 28,
@@ -8010,8 +9033,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "פְּרִי",
+        "lemma_gloss": "fruit",
         "punc": "",
         "strongs_ids": [
           "H6529"
@@ -8024,6 +9049,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 30,
@@ -8034,6 +9060,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 31,
@@ -8042,8 +9069,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "עֵץ",
+        "lemma_gloss": "tree",
         "punc": "",
         "strongs_ids": [
           "H6086"
@@ -8054,8 +9083,10 @@
         "xlit": "ʻêts"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "זָרַע",
+        "lemma_gloss": "to sow",
         "punc": "",
         "strongs_ids": [
           "H2232"
@@ -8066,8 +9097,10 @@
         "xlit": "zâraʻ"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "זֶרַע",
+        "lemma_gloss": "seed",
         "punc": ";",
         "strongs_ids": [
           "H2233"
@@ -8080,6 +9113,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 35,
@@ -8090,6 +9124,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 36,
@@ -8100,6 +9135,7 @@
       {
         "italic": true,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 37,
@@ -8110,6 +9146,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 38,
@@ -8118,8 +9155,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "הָיָה",
+        "lemma_gloss": "to be",
         "punc": "",
         "strongs_ids": [
           "H1961"
@@ -8132,6 +9171,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 40,
@@ -8140,8 +9180,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אׇכְלָה",
+        "lemma_gloss": "food",
         "punc": ".",
         "strongs_ids": [
           "H402"
@@ -8161,6 +9203,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -8171,6 +9214,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 1,
@@ -8181,6 +9225,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 2,
@@ -8189,8 +9234,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "חַי",
+        "lemma_gloss": "life",
         "punc": "",
         "strongs_ids": [
           "H2416"
@@ -8203,6 +9250,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 4,
@@ -8213,6 +9261,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 5,
@@ -8221,8 +9270,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֶרֶץ",
+        "lemma_gloss": "land",
         "punc": ",",
         "strongs_ids": [
           "H776"
@@ -8235,6 +9286,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -8245,6 +9297,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 8,
@@ -8255,6 +9308,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -8263,8 +9317,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "עוֹף",
+        "lemma_gloss": "bird",
         "punc": "",
         "strongs_ids": [
           "H5775"
@@ -8277,6 +9333,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 11,
@@ -8287,6 +9344,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 12,
@@ -8295,8 +9353,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "שָׁמַיִם",
+        "lemma_gloss": "heaven",
         "punc": ",",
         "strongs_ids": [
           "H8064"
@@ -8309,6 +9369,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 14,
@@ -8319,6 +9380,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 15,
@@ -8329,6 +9391,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 16,
@@ -8339,6 +9402,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 17,
@@ -8349,6 +9413,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 18,
@@ -8357,8 +9422,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רָמַשׂ",
+        "lemma_gloss": "to creep",
         "punc": "",
         "strongs_ids": [
           "H7430"
@@ -8371,6 +9438,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 20,
@@ -8381,6 +9449,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 21,
@@ -8389,8 +9458,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֶרֶץ",
+        "lemma_gloss": "land",
         "punc": ",",
         "strongs_ids": [
           "H776"
@@ -8403,6 +9474,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 23,
@@ -8413,6 +9485,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 24,
@@ -8423,6 +9496,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 25,
@@ -8431,8 +9505,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "נֶפֶשׁ",
+        "lemma_gloss": "soul",
         "punc": ",",
         "strongs_ids": [
           "H2416",
@@ -8446,6 +9522,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 27,
@@ -8456,6 +9533,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 28,
@@ -8466,6 +9544,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 29,
@@ -8476,6 +9555,7 @@
       {
         "italic": true,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 30,
@@ -8484,8 +9564,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": true,
         "lemma": "יֶרֶק",
+        "lemma_gloss": "green",
         "punc": "",
         "strongs_ids": [
           "H3418"
@@ -8496,8 +9578,10 @@
         "xlit": "yereq"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "עֶשֶׂב",
+        "lemma_gloss": "vegetation",
         "punc": "",
         "strongs_ids": [
           "H6212"
@@ -8510,6 +9594,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 33,
@@ -8518,8 +9603,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": true,
         "lemma": "אׇכְלָה",
+        "lemma_gloss": "food",
         "punc": ":",
         "strongs_ids": [
           "H402"
@@ -8532,6 +9619,7 @@
       {
         "italic": true,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 35,
@@ -8542,6 +9630,7 @@
       {
         "italic": true,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 36,
@@ -8552,6 +9641,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 37,
@@ -8562,6 +9652,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": ".",
         "strongs_ids": [],
         "verse_pos": 38,
@@ -8579,6 +9670,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -8587,8 +9679,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֱלֹהִים",
+        "lemma_gloss": "God",
         "punc": "",
         "strongs_ids": [
           "H430"
@@ -8599,8 +9693,10 @@
         "xlit": "ʼĕlôhîym"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "רָאָה",
+        "lemma_gloss": "to see",
         "punc": "",
         "strongs_ids": [
           "H7200"
@@ -8613,6 +9709,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -8623,6 +9720,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 4,
@@ -8631,8 +9729,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "אֲשֶׁר",
+        "lemma_gloss": "which",
         "punc": "",
         "strongs_ids": [
           "H834"
@@ -8645,6 +9745,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 6,
@@ -8655,6 +9756,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -8663,8 +9765,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "עָשָׂה",
+        "lemma_gloss": "to make",
         "punc": ",",
         "strongs_ids": [
           "H6213"
@@ -8677,6 +9781,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": ",",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -8687,6 +9792,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": ",",
         "strongs_ids": [],
         "verse_pos": 10,
@@ -8697,6 +9803,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 11,
@@ -8707,6 +9814,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 12,
@@ -8715,8 +9823,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "מְאֹד",
+        "lemma_gloss": "much",
         "punc": "",
         "strongs_ids": [
           "H3966"
@@ -8727,8 +9837,10 @@
         "xlit": "mᵉʼôd"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "טוֹב",
+        "lemma_gloss": "good",
         "punc": ".",
         "strongs_ids": [
           "H2896"
@@ -8741,6 +9853,7 @@
       {
         "italic": true,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 15,
@@ -8751,6 +9864,7 @@
       {
         "italic": true,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 16,
@@ -8759,8 +9873,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "עֶרֶב",
+        "lemma_gloss": "evening",
         "punc": "",
         "strongs_ids": [
           "H6153"
@@ -8773,6 +9889,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 18,
@@ -8783,6 +9900,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 19,
@@ -8791,8 +9909,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "בֹּקֶר",
+        "lemma_gloss": "morning",
         "punc": "",
         "strongs_ids": [
           "H1242"
@@ -8805,6 +9925,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 21,
@@ -8815,6 +9936,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 22,
@@ -8823,8 +9945,10 @@
         "xlit": ""
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "שִׁשִּׁי",
+        "lemma_gloss": "sixth",
         "punc": "",
         "strongs_ids": [
           "H8345"
@@ -8835,8 +9959,10 @@
         "xlit": "shishshîy"
       },
       {
+        "heb_name": false,
         "italic": false,
         "lemma": "יוֹם",
+        "lemma_gloss": "day",
         "punc": ".",
         "strongs_ids": [
           "H3117"

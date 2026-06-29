@@ -163,6 +163,12 @@
       "testament": "OT"
     },
     {
+      "book": "Exo",
+      "count": 6,
+      "name": "Exodus",
+      "testament": "OT"
+    },
+    {
       "book": "Jer",
       "count": 6,
       "name": "Jeremiah",
@@ -178,12 +184,6 @@
       "book": "2Ki",
       "count": 5,
       "name": "2 Kings",
-      "testament": "OT"
-    },
-    {
-      "book": "Exo",
-      "count": 5,
-      "name": "Exodus",
       "testament": "OT"
     },
     {

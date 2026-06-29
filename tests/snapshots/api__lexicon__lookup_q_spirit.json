@@ -1,121 +1,974 @@
 [
   {
-    "gloss": "hard-heartedness, i.e. (specially), destitution of (spiritual) perception",
+    "abp_glosses": [
+      {
+        "count": 5,
+        "gloss": "heart"
+      }
+    ],
+    "abp_total": 5,
+    "bsb_glosses": [
+      {
+        "count": 3,
+        "gloss": "heart"
+      }
+    ],
+    "bsb_total": 3,
+    "gloss": "hardness of heart",
+    "kjv_glosses": [
+      {
+        "count": 2,
+        "gloss": "heart"
+      },
+      {
+        "count": 2,
+        "gloss": "hardness"
+      },
+      {
+        "count": 1,
+        "gloss": "hearts"
+      }
+    ],
+    "kjv_total": 5,
     "lemma": "σκληροκαρδία",
+    "match": "contains",
     "strongs": "G4641",
     "translit": "sklērokardía"
   },
   {
-    "gloss": "of similar spirit",
+    "abp_glosses": [
+      {
+        "count": 2,
+        "gloss": "likeminded"
+      }
+    ],
+    "abp_total": 2,
+    "bsb_glosses": [
+      {
+        "count": 1,
+        "gloss": "like"
+      }
+    ],
+    "bsb_total": 1,
+    "gloss": "like-minded",
+    "kjv_glosses": [
+      {
+        "count": 1,
+        "gloss": "likeminded"
+      }
+    ],
+    "kjv_total": 1,
     "lemma": "ἰσόψυχος",
+    "match": "contains",
     "strongs": "G2473",
     "translit": "isópsychos"
   },
   {
-    "gloss": "forward in spirit, i.e. predisposed; neuter (as noun) alacrity",
+    "abp_glosses": [
+      {
+        "count": 5,
+        "gloss": "eager"
+      },
+      {
+        "count": 1,
+        "gloss": "eagerness"
+      }
+    ],
+    "abp_total": 6,
+    "bsb_total": 3,
+    "gloss": "eager, ready, willing",
+    "kjv_glosses": [
+      {
+        "count": 2,
+        "gloss": "ready"
+      },
+      {
+        "count": 1,
+        "gloss": "willing"
+      }
+    ],
+    "kjv_total": 3,
     "lemma": "πρόθυμος",
+    "match": "contains",
     "strongs": "G4289",
     "translit": "próthymos"
   },
   {
-    "gloss": "a dæmon or supernatural spirit (of a bad nature)",
+    "abp_glosses": [
+      {
+        "count": 3,
+        "gloss": "daimons"
+      },
+      {
+        "count": 1,
+        "gloss": "demons"
+      },
+      {
+        "count": 1,
+        "gloss": "demon"
+      }
+    ],
+    "abp_total": 5,
+    "bsb_glosses": [
+      {
+        "count": 1,
+        "gloss": "demons"
+      }
+    ],
+    "bsb_total": 1,
+    "gloss": "evil-spirit, demon",
+    "kjv_glosses": [
+      {
+        "count": 4,
+        "gloss": "devils"
+      },
+      {
+        "count": 1,
+        "gloss": "devil"
+      }
+    ],
+    "kjv_total": 5,
     "lemma": "δαίμων",
+    "match": "contains",
     "strongs": "G1142",
     "translit": "daímōn"
   },
   {
-    "gloss": "ruin or loss (physical, spiritual or eternal)",
+    "abp_glosses": [
+      {
+        "count": 87,
+        "gloss": "destruction"
+      },
+      {
+        "count": 4,
+        "gloss": "loss"
+      },
+      {
+        "count": 1,
+        "gloss": "lost"
+      },
+      {
+        "count": 1,
+        "gloss": "destructive"
+      }
+    ],
+    "abp_total": 93,
+    "bsb_glosses": [
+      {
+        "count": 13,
+        "gloss": "destruction"
+      },
+      {
+        "count": 2,
+        "gloss": "waste"
+      },
+      {
+        "count": 1,
+        "gloss": "destructive"
+      },
+      {
+        "count": 1,
+        "gloss": "destroyed"
+      }
+    ],
+    "bsb_total": 17,
+    "gloss": "destruction, ruin, loss",
+    "kjv_glosses": [
+      {
+        "count": 8,
+        "gloss": "perdition"
+      },
+      {
+        "count": 5,
+        "gloss": "destruction"
+      },
+      {
+        "count": 2,
+        "gloss": "waste"
+      },
+      {
+        "count": 1,
+        "gloss": "ways"
+      },
+      {
+        "count": 1,
+        "gloss": "perish"
+      },
+      {
+        "count": 1,
+        "gloss": "die"
+      },
+      {
+        "count": 1,
+        "gloss": "damnation"
+      },
+      {
+        "count": 1,
+        "gloss": "damnable"
+      }
+    ],
+    "kjv_total": 20,
     "lemma": "ἀπώλεια",
+    "match": "contains",
     "strongs": "G684",
     "translit": "apṓleia"
   },
   {
-    "gloss": "little-spirited, i.e. faint-hearted",
+    "abp_glosses": [
+      {
+        "count": 6,
+        "gloss": "fainthearted"
+      },
+      {
+        "count": 1,
+        "gloss": "hearted"
+      }
+    ],
+    "abp_total": 7,
+    "bsb_glosses": [
+      {
+        "count": 1,
+        "gloss": "fainthearted"
+      }
+    ],
+    "bsb_total": 1,
+    "gloss": "faint-hearted",
+    "kjv_glosses": [
+      {
+        "count": 1,
+        "gloss": "feebleminded"
+      }
+    ],
+    "kjv_total": 1,
     "lemma": "ὀλιγόψυχος",
+    "match": "contains",
     "strongs": "G3642",
     "translit": "oligópsychos"
   },
   {
-    "gloss": "co-spirited, i.e. similar in sentiment",
+    "abp_glosses": [
+      {
+        "count": 1,
+        "gloss": "unanimous"
+      }
+    ],
+    "abp_total": 1,
+    "bsb_total": 1,
+    "gloss": "of one accord",
+    "kjv_glosses": [
+      {
+        "count": 1,
+        "gloss": "accord"
+      }
+    ],
+    "kjv_total": 1,
     "lemma": "σύμψυχος",
+    "match": "contains",
     "strongs": "G4861",
     "translit": "sýmpsychos"
   },
   {
-    "gloss": "a hut or temporary residence, i.e. (figuratively) the human body (as the abode of the spirit)",
+    "abp_glosses": [
+      {
+        "count": 2,
+        "gloss": "tent"
+      }
+    ],
+    "abp_total": 2,
+    "bsb_glosses": [
+      {
+        "count": 2,
+        "gloss": "tent"
+      }
+    ],
+    "bsb_total": 2,
+    "gloss": "tent",
+    "kjv_glosses": [
+      {
+        "count": 2,
+        "gloss": "tabernacle"
+      }
+    ],
+    "kjv_total": 2,
     "lemma": "σκῆνος",
+    "match": "contains",
     "strongs": "G4636",
     "translit": "skēnos"
   },
   {
-    "gloss": "to inter in company with, i.e. (figuratively) to assimilate spiritually (to Christ by a sepulture as to sin)",
+    "abp_glosses": [
+      {
+        "count": 2,
+        "gloss": "together"
+      }
+    ],
+    "abp_total": 2,
+    "bsb_glosses": [
+      {
+        "count": 2,
+        "gloss": "buried"
+      }
+    ],
+    "bsb_total": 2,
+    "gloss": "bury along with",
+    "kjv_glosses": [
+      {
+        "count": 2,
+        "gloss": "with"
+      }
+    ],
+    "kjv_total": 2,
     "lemma": "συνθάπτω",
+    "match": "contains",
     "strongs": "G4916",
     "translit": "syntháptō"
   },
   {
-    "gloss": "to crush together, i.e. (figuratively) to dispirit",
+    "abp_glosses": [
+      {
+        "count": 1,
+        "gloss": "breaking"
+      }
+    ],
+    "abp_total": 1,
+    "bsb_glosses": [
+      {
+        "count": 1,
+        "gloss": "breaking"
+      }
+    ],
+    "bsb_total": 1,
+    "gloss": "break in pieces, crush, thoroughly weaken",
+    "kjv_glosses": [
+      {
+        "count": 1,
+        "gloss": "break"
+      }
+    ],
+    "kjv_total": 1,
     "lemma": "συνθρύπτω",
+    "match": "contains",
     "strongs": "G4919",
     "translit": "synthrýptō"
   },
   {
-    "gloss": "sleep, i.e. (figuratively) spiritual torpor",
+    "abp_glosses": [
+      {
+        "count": 41,
+        "gloss": "sleep"
+      }
+    ],
+    "abp_total": 41,
+    "bsb_glosses": [
+      {
+        "count": 2,
+        "gloss": "sleep"
+      },
+      {
+        "count": 1,
+        "gloss": "asleep"
+      }
+    ],
+    "bsb_total": 4,
+    "gloss": "sleep",
+    "kjv_glosses": [
+      {
+        "count": 6,
+        "gloss": "sleep"
+      }
+    ],
+    "kjv_total": 6,
     "lemma": "ὕπνος",
+    "match": "contains",
     "strongs": "G5258",
     "translit": "hýpnos"
   },
   {
-    "gloss": "to have faith (in, upon, or with respect to, a person or thing), i.e. credit; by implication, to entrust (especially one's spiritual well-being to Christ)",
+    "abp_glosses": [
+      {
+        "count": 82,
+        "gloss": "believe"
+      },
+      {
+        "count": 49,
+        "gloss": "believed"
+      },
+      {
+        "count": 47,
+        "gloss": "believing"
+      },
+      {
+        "count": 44,
+        "gloss": "trust"
+      },
+      {
+        "count": 28,
+        "gloss": "trusted"
+      },
+      {
+        "count": 23,
+        "gloss": "trusting"
+      },
+      {
+        "count": 4,
+        "gloss": "trusts"
+      },
+      {
+        "count": 3,
+        "gloss": "entrusted"
+      }
+    ],
+    "abp_total": 297,
+    "bsb_glosses": [
+      {
+        "count": 112,
+        "gloss": "believe"
+      },
+      {
+        "count": 62,
+        "gloss": "believed"
+      },
+      {
+        "count": 29,
+        "gloss": "believes"
+      },
+      {
+        "count": 9,
+        "gloss": "believers"
+      },
+      {
+        "count": 4,
+        "gloss": "entrusted"
+      },
+      {
+        "count": 3,
+        "gloss": "believing"
+      },
+      {
+        "count": 2,
+        "gloss": "entrust"
+      },
+      {
+        "count": 1,
+        "gloss": "took"
+      }
+    ],
+    "bsb_total": 241,
+    "gloss": "believe, have faith in",
+    "kjv_glosses": [
+      {
+        "count": 112,
+        "gloss": "believe"
+      },
+      {
+        "count": 75,
+        "gloss": "believed"
+      },
+      {
+        "count": 31,
+        "gloss": "believeth"
+      },
+      {
+        "count": 6,
+        "gloss": "believing"
+      },
+      {
+        "count": 5,
+        "gloss": "ye"
+      },
+      {
+        "count": 4,
+        "gloss": "thou"
+      },
+      {
+        "count": 4,
+        "gloss": "believest"
+      },
+      {
+        "count": 3,
+        "gloss": "will"
+      }
+    ],
+    "kjv_total": 264,
     "lemma": "πιστεύω",
+    "match": "contains",
     "strongs": "G4100",
     "translit": "pisteúō"
   },
   {
-    "gloss": "to be frank in utterance, or confident in spirit and demeanor",
+    "abp_glosses": [
+      {
+        "count": 13,
+        "gloss": "openly"
+      },
+      {
+        "count": 1,
+        "gloss": "speaking"
+      }
+    ],
+    "abp_total": 14,
+    "bsb_glosses": [
+      {
+        "count": 2,
+        "gloss": "boldly"
+      },
+      {
+        "count": 1,
+        "gloss": "bold"
+      },
+      {
+        "count": 1,
+        "gloss": "freely"
+      },
+      {
+        "count": 1,
+        "gloss": "fearlessly"
+      }
+    ],
+    "bsb_total": 9,
+    "gloss": "speak freely, boldly",
+    "kjv_glosses": [
+      {
+        "count": 6,
+        "gloss": "boldly"
+      },
+      {
+        "count": 2,
+        "gloss": "bold"
+      },
+      {
+        "count": 1,
+        "gloss": "freely"
+      }
+    ],
+    "kjv_total": 9,
     "lemma": "παῤῥησιάζομαι",
+    "match": "contains",
     "strongs": "G3955",
     "translit": "parrhēsiázomai"
   },
   {
-    "gloss": "graciousness (as gratifying), of manner or act (abstract or concrete; literal, figurative or spiritual; especially the divine influence upon the heart, and its reflection in the life; including gratitude)",
+    "bsb_glosses": [
+      {
+        "count": 106,
+        "gloss": "grace"
+      },
+      {
+        "count": 4,
+        "gloss": "favor"
+      },
+      {
+        "count": 3,
+        "gloss": "thank"
+      },
+      {
+        "count": 3,
+        "gloss": "credit"
+      },
+      {
+        "count": 2,
+        "gloss": "gratitude"
+      },
+      {
+        "count": 2,
+        "gloss": "gracious"
+      },
+      {
+        "count": 2,
+        "gloss": "gift"
+      },
+      {
+        "count": 1,
+        "gloss": "thankfulness"
+      }
+    ],
+    "bsb_total": 153,
+    "gloss": "acceptable, benefit, favour, gift, grace(- ious), joy, liberality, pleasure, thank(-s, -worthy)",
+    "kjv_glosses": [
+      {
+        "count": 128,
+        "gloss": "grace"
+      },
+      {
+        "count": 6,
+        "gloss": "thank"
+      },
+      {
+        "count": 6,
+        "gloss": "favour"
+      },
+      {
+        "count": 4,
+        "gloss": "thanks"
+      },
+      {
+        "count": 2,
+        "gloss": "pleasure"
+      },
+      {
+        "count": 1,
+        "gloss": "thankworthy"
+      },
+      {
+        "count": 1,
+        "gloss": "thanked"
+      },
+      {
+        "count": 1,
+        "gloss": "liberality"
+      }
+    ],
+    "kjv_total": 156,
     "lemma": "χάρις",
+    "match": "contains",
     "strongs": "G5485",
     "translit": "cháris"
   },
   {
-    "gloss": "(properly concrete) a (mere) show (\"phantasm\"), i.e. spectre",
+    "abp_glosses": [
+      {
+        "count": 2,
+        "gloss": "phantom"
+      }
+    ],
+    "abp_total": 2,
+    "bsb_glosses": [
+      {
+        "count": 2,
+        "gloss": "ghost"
+      }
+    ],
+    "bsb_total": 2,
+    "gloss": "apparition, ghost, spirit",
+    "kjv_glosses": [
+      {
+        "count": 2,
+        "gloss": "spirit"
+      }
+    ],
+    "kjv_total": 2,
     "lemma": "φάντασμα",
+    "match": "contains",
     "strongs": "G5326",
     "translit": "phántasma"
   },
   {
+    "bsb_glosses": [
+      {
+        "count": 9,
+        "gloss": "mediums"
+      },
+      {
+        "count": 5,
+        "gloss": "medium"
+      },
+      {
+        "count": 2,
+        "gloss": "spirit"
+      },
+      {
+        "count": 1,
+        "gloss": "wineskin"
+      }
+    ],
+    "bsb_total": 17,
     "gloss": "from the same as אָב (apparently through the idea of prattling a father's name); properly, a mumble, i.e. a water skin (from its hollow sound); hence a necromancer (ventriloquist, as from a jar); bottle, familiar spirit.",
+    "heb_glosses": [
+      {
+        "count": 7,
+        "gloss": "necromancers"
+      },
+      {
+        "count": 5,
+        "gloss": "necromancer"
+      },
+      {
+        "count": 4,
+        "gloss": "necromancy"
+      },
+      {
+        "count": 1,
+        "gloss": "wineskins"
+      }
+    ],
+    "heb_total": 17,
+    "kjv_glosses": [
+      {
+        "count": 9,
+        "gloss": "spirits"
+      },
+      {
+        "count": 7,
+        "gloss": "spirit"
+      },
+      {
+        "count": 1,
+        "gloss": "bottles"
+      }
+    ],
+    "kjv_total": 17,
     "lemma": "אוֹב",
+    "match": "contains",
     "strongs": "H178",
     "translit": "ʼôwb"
   },
   {
+    "bsb_glosses": [
+      {
+        "count": 6,
+        "gloss": "deaf"
+      },
+      {
+        "count": 1,
+        "gloss": "shuts"
+      },
+      {
+        "count": 1,
+        "gloss": "man"
+      }
+    ],
+    "bsb_total": 9,
     "gloss": "from חָרַשׁ; deaf (whether literally or spiritual); deaf.",
+    "heb_glosses": [
+      {
+        "count": 9,
+        "gloss": "deaf"
+      }
+    ],
+    "heb_total": 9,
+    "kjv_glosses": [
+      {
+        "count": 8,
+        "gloss": "deaf"
+      }
+    ],
+    "kjv_total": 9,
     "lemma": "חֵרֵשׁ",
+    "match": "contains",
     "strongs": "H2795",
     "translit": "chêrêsh"
   },
   {
+    "bsb_glosses": [
+      {
+        "count": 14,
+        "gloss": "breath"
+      },
+      {
+        "count": 4,
+        "gloss": "breathed"
+      },
+      {
+        "count": 2,
+        "gloss": "blast"
+      },
+      {
+        "count": 2,
+        "gloss": "spirit"
+      },
+      {
+        "count": 1,
+        "gloss": "life"
+      },
+      {
+        "count": 1,
+        "gloss": "breathes"
+      }
+    ],
+    "bsb_total": 24,
     "gloss": "from נָשַׁם; a puff, i.e. wind, angry or vital breath, divine inspiration, intellect. or (concretely) an animal; blast, (that) breath(-eth), inspiration, soul, spirit.",
+    "heb_glosses": [
+      {
+        "count": 16,
+        "gloss": "breath"
+      },
+      {
+        "count": 6,
+        "gloss": "thing"
+      },
+      {
+        "count": 1,
+        "gloss": "breathing"
+      },
+      {
+        "count": 1,
+        "gloss": "breaths"
+      }
+    ],
+    "heb_total": 24,
+    "kjv_glosses": [
+      {
+        "count": 11,
+        "gloss": "breath"
+      },
+      {
+        "count": 3,
+        "gloss": "blast"
+      },
+      {
+        "count": 2,
+        "gloss": "spirit"
+      },
+      {
+        "count": 2,
+        "gloss": "breathed"
+      },
+      {
+        "count": 2,
+        "gloss": "breathe"
+      },
+      {
+        "count": 1,
+        "gloss": "souls"
+      },
+      {
+        "count": 1,
+        "gloss": "of"
+      },
+      {
+        "count": 1,
+        "gloss": "inspiration"
+      }
+    ],
+    "kjv_total": 24,
     "lemma": "נְשָׁמָה",
+    "match": "contains",
     "strongs": "H5397",
     "translit": "nᵉshâmâh"
   },
   {
+    "bsb_glosses": [
+      {
+        "count": 1,
+        "gloss": "broken"
+      }
+    ],
+    "bsb_total": 1,
     "gloss": "from קָצַר; shortness (of spirit), i.e. impatience; anguish.",
+    "heb_glosses": [
+      {
+        "count": 1,
+        "gloss": "shortness"
+      }
+    ],
+    "heb_total": 1,
+    "kjv_glosses": [
+      {
+        "count": 1,
+        "gloss": "anguish"
+      }
+    ],
+    "kjv_total": 1,
     "lemma": "קֹצֶר",
+    "match": "contains",
     "strongs": "H7115",
     "translit": "qôtser"
   },
   {
+    "bsb_glosses": [
+      {
+        "count": 189,
+        "gloss": "spirit"
+      },
+      {
+        "count": 87,
+        "gloss": "wind"
+      },
+      {
+        "count": 34,
+        "gloss": "breath"
+      },
+      {
+        "count": 8,
+        "gloss": "winds"
+      },
+      {
+        "count": 5,
+        "gloss": "spirits"
+      },
+      {
+        "count": 4,
+        "gloss": "side"
+      },
+      {
+        "count": 3,
+        "gloss": "sides"
+      },
+      {
+        "count": 3,
+        "gloss": "feeling"
+      }
+    ],
+    "bsb_total": 371,
     "gloss": "from רוּחַ; wind; by resemblance breath, i.e. a sensible (or even violent) exhalation; figuratively, life, anger, unsubstantiality; by extension, a region of the sky; by resemblance spirit, but only of a rational being (including its expression and functions); air, anger, blast, breath, [idiom] cool, courage, mind, [idiom] quarter, [idiom] side, spirit(-ual), tempest, [idiom] vain, (whirl-) wind(-y).",
+    "heb_glosses": [
+      {
+        "count": 218,
+        "gloss": "spirit"
+      },
+      {
+        "count": 104,
+        "gloss": "wind"
+      },
+      {
+        "count": 38,
+        "gloss": "breath"
+      },
+      {
+        "count": 8,
+        "gloss": "winds"
+      },
+      {
+        "count": 5,
+        "gloss": "side"
+      },
+      {
+        "count": 3,
+        "gloss": "spirits"
+      },
+      {
+        "count": 2,
+        "gloss": "sides"
+      }
+    ],
+    "heb_total": 378,
+    "kjv_glosses": [
+      {
+        "count": 218,
+        "gloss": "spirit"
+      },
+      {
+        "count": 80,
+        "gloss": "wind"
+      },
+      {
+        "count": 28,
+        "gloss": "breath"
+      },
+      {
+        "count": 11,
+        "gloss": "winds"
+      },
+      {
+        "count": 5,
+        "gloss": "side"
+      },
+      {
+        "count": 5,
+        "gloss": "mind"
+      },
+      {
+        "count": 4,
+        "gloss": "spirits"
+      },
+      {
+        "count": 4,
+        "gloss": "blast"
+      }
+    ],
+    "kjv_total": 378,
     "lemma": "רוּחַ",
+    "match": "contains",
     "strongs": "H7307",
     "translit": "rûwach"
   }

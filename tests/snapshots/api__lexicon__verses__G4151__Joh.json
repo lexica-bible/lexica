@@ -23,12 +23,12 @@
         {
           "h": false,
           "i": 0,
-          "w": "John witnessed,"
+          "w": "John"
         },
         {
           "h": false,
           "i": 0,
-          "w": ""
+          "w": "witnessed,"
         },
         {
           "h": false,
@@ -536,12 +536,12 @@
         {
           "h": false,
           "i": 0,
-          "w": "you know not"
+          "w": "you know"
         },
         {
           "h": false,
           "i": 0,
-          "w": ""
+          "w": "not"
         },
         {
           "h": false,
@@ -688,7 +688,12 @@
         {
           "h": false,
           "i": 0,
-          "w": "does give"
+          "w": "does"
+        },
+        {
+          "h": false,
+          "i": 0,
+          "w": "give"
         },
         {
           "h": false,
@@ -923,7 +928,7 @@
     },
     {
       "chapter": 6,
-      "text": "The spirit is the one restoring to life, the flesh does not benefit anyone; the sayings which I speak to you -- it is spirit, and it is life.",
+      "text": "The spirit is the one restoring to life, the flesh does not benefit anyone; the sayings which I speak to you — it is spirit, and it is life.",
       "verse": 63,
       "words": [
         {
@@ -1004,7 +1009,7 @@
         {
           "h": false,
           "i": 0,
-          "w": "to you --"
+          "w": "to you —"
         },
         {
           "h": true,
@@ -1534,12 +1539,12 @@
         {
           "h": false,
           "i": 0,
-          "w": "comforter,"
+          "w": "the"
         },
         {
           "h": false,
           "i": 0,
-          "w": "the"
+          "w": "comforter,"
         },
         {
           "h": true,
@@ -1716,12 +1721,12 @@
         {
           "h": false,
           "i": 0,
-          "w": "father,"
+          "w": "the"
         },
         {
           "h": false,
           "i": 0,
-          "w": "the"
+          "w": "father,"
         },
         {
           "h": true,
@@ -1873,7 +1878,12 @@
         {
           "h": false,
           "i": 0,
-          "w": "he shall speak"
+          "w": "he shall"
+        },
+        {
+          "h": false,
+          "i": 0,
+          "w": "speak"
         },
         {
           "h": false,

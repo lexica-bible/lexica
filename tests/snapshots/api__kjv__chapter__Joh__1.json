@@ -7,6 +7,7 @@
       {
         "italic": false,
         "lemma": "ἐν",
+        "lemma_gloss": "in, on, among",
         "punc": "",
         "strongs_ids": [
           "G1722"
@@ -19,6 +20,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 1,
@@ -29,6 +31,7 @@
       {
         "italic": false,
         "lemma": "ἀρχή",
+        "lemma_gloss": "ruler, beginning",
         "punc": "",
         "strongs_ids": [
           "G746"
@@ -41,6 +44,7 @@
       {
         "italic": false,
         "lemma": "ἦν",
+        "lemma_gloss": "was",
         "punc": "",
         "strongs_ids": [
           "G2258"
@@ -53,6 +57,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 4,
@@ -63,6 +68,7 @@
       {
         "italic": false,
         "lemma": "λόγος",
+        "lemma_gloss": "word, speech, divine utterance, analogy",
         "punc": ",",
         "strongs_ids": [
           "G3056"
@@ -75,6 +81,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -87,6 +94,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -97,6 +105,7 @@
       {
         "italic": false,
         "lemma": "λόγος",
+        "lemma_gloss": "word, speech, divine utterance, analogy",
         "punc": "",
         "strongs_ids": [
           "G3056"
@@ -109,6 +118,7 @@
       {
         "italic": false,
         "lemma": "ἦν",
+        "lemma_gloss": "was",
         "punc": "",
         "strongs_ids": [
           "G2258"
@@ -121,6 +131,7 @@
       {
         "italic": false,
         "lemma": "πρός",
+        "lemma_gloss": "to, towards, with",
         "punc": "",
         "strongs_ids": [
           "G4314"
@@ -133,6 +144,7 @@
       {
         "italic": false,
         "lemma": "θεός",
+        "lemma_gloss": "God, a god",
         "punc": ",",
         "strongs_ids": [
           "G2316"
@@ -145,6 +157,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -157,6 +170,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 13,
@@ -167,6 +181,7 @@
       {
         "italic": false,
         "lemma": "λόγος",
+        "lemma_gloss": "word, speech, divine utterance, analogy",
         "punc": "",
         "strongs_ids": [
           "G3056"
@@ -179,6 +194,7 @@
       {
         "italic": false,
         "lemma": "ἦν",
+        "lemma_gloss": "was",
         "punc": "",
         "strongs_ids": [
           "G2258"
@@ -191,6 +207,7 @@
       {
         "italic": false,
         "lemma": "θεός",
+        "lemma_gloss": "God, a god",
         "punc": ".",
         "strongs_ids": [
           "G2316"
@@ -210,6 +227,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -220,6 +238,7 @@
       {
         "italic": false,
         "lemma": "οὗτος",
+        "lemma_gloss": "this, he, she, it",
         "punc": "",
         "strongs_ids": [
           "G3778"
@@ -232,6 +251,7 @@
       {
         "italic": false,
         "lemma": "ἦν",
+        "lemma_gloss": "was",
         "punc": "",
         "strongs_ids": [
           "G2258"
@@ -244,6 +264,7 @@
       {
         "italic": false,
         "lemma": "ἐν",
+        "lemma_gloss": "in, on, among",
         "punc": "",
         "strongs_ids": [
           "G1722"
@@ -256,6 +277,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 4,
@@ -266,6 +288,7 @@
       {
         "italic": false,
         "lemma": "ἀρχή",
+        "lemma_gloss": "ruler, beginning",
         "punc": "",
         "strongs_ids": [
           "G746"
@@ -278,6 +301,7 @@
       {
         "italic": false,
         "lemma": "πρός",
+        "lemma_gloss": "to, towards, with",
         "punc": "",
         "strongs_ids": [
           "G4314"
@@ -290,6 +314,7 @@
       {
         "italic": false,
         "lemma": "θεός",
+        "lemma_gloss": "God, a god",
         "punc": ".",
         "strongs_ids": [
           "G2316"
@@ -309,6 +334,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -319,6 +345,7 @@
       {
         "italic": false,
         "lemma": "πᾶς",
+        "lemma_gloss": "all, the whole, every kind of",
         "punc": "",
         "strongs_ids": [
           "G3956"
@@ -331,6 +358,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 2,
@@ -341,6 +369,7 @@
       {
         "italic": false,
         "lemma": "γίνομαι",
+        "lemma_gloss": "come into being, am born",
         "punc": "",
         "strongs_ids": [
           "G1096"
@@ -353,6 +382,7 @@
       {
         "italic": false,
         "lemma": "διά",
+        "lemma_gloss": "through, on account of",
         "punc": "",
         "strongs_ids": [
           "G1223"
@@ -365,6 +395,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": ";",
         "strongs_ids": [
           "G846"
@@ -377,6 +408,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -389,6 +421,7 @@
       {
         "italic": false,
         "lemma": "χωρίς",
+        "lemma_gloss": "apart from, without",
         "punc": "",
         "strongs_ids": [
           "G5565"
@@ -401,6 +434,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": "",
         "strongs_ids": [
           "G846"
@@ -413,6 +447,7 @@
       {
         "italic": false,
         "lemma": "γίνομαι",
+        "lemma_gloss": "come into being, am born",
         "punc": "",
         "strongs_ids": [
           "G1096"
@@ -425,6 +460,7 @@
       {
         "italic": false,
         "lemma": "οὐδέ",
+        "lemma_gloss": "neither, nor, not even",
         "punc": "",
         "strongs_ids": [
           "G3761"
@@ -437,6 +473,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 11,
@@ -447,6 +484,7 @@
       {
         "italic": false,
         "lemma": "εἷς",
+        "lemma_gloss": "one",
         "punc": "",
         "strongs_ids": [
           "G1520"
@@ -459,6 +497,7 @@
       {
         "italic": false,
         "lemma": "γίνομαι",
+        "lemma_gloss": "come into being, am born",
         "punc": "",
         "strongs_ids": [
           "G1096"
@@ -471,6 +510,7 @@
       {
         "italic": false,
         "lemma": "ὅς",
+        "lemma_gloss": "who, which, what, that",
         "punc": "",
         "strongs_ids": [
           "G3739"
@@ -483,6 +523,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 15,
@@ -493,6 +534,7 @@
       {
         "italic": false,
         "lemma": "γίνομαι",
+        "lemma_gloss": "come into being, am born",
         "punc": ".",
         "strongs_ids": [
           "G1096"
@@ -512,6 +554,7 @@
       {
         "italic": false,
         "lemma": "ἐν",
+        "lemma_gloss": "in, on, among",
         "punc": "",
         "strongs_ids": [
           "G1722"
@@ -524,6 +567,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": "",
         "strongs_ids": [
           "G846"
@@ -536,6 +580,7 @@
       {
         "italic": false,
         "lemma": "ἦν",
+        "lemma_gloss": "was",
         "punc": "",
         "strongs_ids": [
           "G2258"
@@ -548,6 +593,7 @@
       {
         "italic": false,
         "lemma": "ζωή",
+        "lemma_gloss": "life",
         "punc": ";",
         "strongs_ids": [
           "G2222"
@@ -560,6 +606,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -572,6 +619,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 5,
@@ -582,6 +630,7 @@
       {
         "italic": false,
         "lemma": "ζωή",
+        "lemma_gloss": "life",
         "punc": "",
         "strongs_ids": [
           "G2222"
@@ -594,6 +643,7 @@
       {
         "italic": false,
         "lemma": "ἦν",
+        "lemma_gloss": "was",
         "punc": "",
         "strongs_ids": [
           "G2258"
@@ -606,6 +656,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 8,
@@ -616,6 +667,7 @@
       {
         "italic": false,
         "lemma": "φῶς",
+        "lemma_gloss": "light, a source of light",
         "punc": "",
         "strongs_ids": [
           "G5457"
@@ -628,6 +680,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 10,
@@ -638,6 +691,7 @@
       {
         "italic": false,
         "lemma": "ἄνθρωπος",
+        "lemma_gloss": "man, one of the human race",
         "punc": ".",
         "strongs_ids": [
           "G444"
@@ -657,6 +711,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -669,6 +724,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 1,
@@ -679,6 +735,7 @@
       {
         "italic": false,
         "lemma": "φῶς",
+        "lemma_gloss": "light, a source of light",
         "punc": "",
         "strongs_ids": [
           "G5457"
@@ -691,6 +748,7 @@
       {
         "italic": false,
         "lemma": "φαίνω",
+        "lemma_gloss": "shine, appear, seem",
         "punc": "",
         "strongs_ids": [
           "G5316"
@@ -703,6 +761,7 @@
       {
         "italic": false,
         "lemma": "ἐν",
+        "lemma_gloss": "in, on, among",
         "punc": "",
         "strongs_ids": [
           "G1722"
@@ -715,6 +774,7 @@
       {
         "italic": false,
         "lemma": "σκοτία",
+        "lemma_gloss": "darkness",
         "punc": ";",
         "strongs_ids": [
           "G4653"
@@ -727,6 +787,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -739,6 +800,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -749,6 +811,7 @@
       {
         "italic": false,
         "lemma": "σκοτία",
+        "lemma_gloss": "darkness",
         "punc": "",
         "strongs_ids": [
           "G4653"
@@ -761,6 +824,7 @@
       {
         "italic": false,
         "lemma": "καταλαμβάνω",
+        "lemma_gloss": "seize tight hold of, overtake, comprehend",
         "punc": "",
         "strongs_ids": [
           "G2638"
@@ -773,6 +837,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": "",
         "strongs_ids": [
           "G846"
@@ -785,6 +850,7 @@
       {
         "italic": false,
         "lemma": "οὐ",
+        "lemma_gloss": "no, not",
         "punc": ".",
         "strongs_ids": [
           "G3756"
@@ -804,6 +870,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -814,6 +881,7 @@
       {
         "italic": false,
         "lemma": "γίνομαι",
+        "lemma_gloss": "come into being, am born",
         "punc": "",
         "strongs_ids": [
           "G1096"
@@ -826,6 +894,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 2,
@@ -836,6 +905,7 @@
       {
         "italic": false,
         "lemma": "ἄνθρωπος",
+        "lemma_gloss": "man, one of the human race",
         "punc": "",
         "strongs_ids": [
           "G444"
@@ -848,6 +918,7 @@
       {
         "italic": false,
         "lemma": "ἀποστέλλω",
+        "lemma_gloss": "send forth, send, send away, dismiss",
         "punc": "",
         "strongs_ids": [
           "G649"
@@ -860,6 +931,7 @@
       {
         "italic": false,
         "lemma": "παρά",
+        "lemma_gloss": "from, in the presence of",
         "punc": "",
         "strongs_ids": [
           "G3844"
@@ -872,6 +944,7 @@
       {
         "italic": false,
         "lemma": "θεός",
+        "lemma_gloss": "God, a god",
         "punc": ",",
         "strongs_ids": [
           "G2316"
@@ -884,6 +957,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": "",
         "strongs_ids": [
           "G846"
@@ -896,6 +970,7 @@
       {
         "italic": false,
         "lemma": "ὄνομα",
+        "lemma_gloss": "name, character, reputation",
         "punc": "",
         "strongs_ids": [
           "G3686"
@@ -908,6 +983,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -918,6 +994,7 @@
       {
         "italic": false,
         "lemma": "Ἰωάννης",
+        "lemma_gloss": "John",
         "punc": ".",
         "strongs_ids": [
           "G2491"
@@ -937,6 +1014,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -947,6 +1025,7 @@
       {
         "italic": false,
         "lemma": "οὗτος",
+        "lemma_gloss": "this, he, she, it",
         "punc": "",
         "strongs_ids": [
           "G3778"
@@ -959,6 +1038,7 @@
       {
         "italic": false,
         "lemma": "ἔρχομαι",
+        "lemma_gloss": "come, go",
         "punc": "",
         "strongs_ids": [
           "G2064"
@@ -971,6 +1051,7 @@
       {
         "italic": false,
         "lemma": "εἰς",
+        "lemma_gloss": "into, in, among, till, for",
         "punc": "",
         "strongs_ids": [
           "G1519"
@@ -983,6 +1064,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 4,
@@ -993,6 +1075,7 @@
       {
         "italic": false,
         "lemma": "μαρτυρία",
+        "lemma_gloss": "witness, evidence, testimony",
         "punc": ",",
         "strongs_ids": [
           "G3141"
@@ -1005,6 +1088,7 @@
       {
         "italic": false,
         "lemma": "ἵνα",
+        "lemma_gloss": "in order that, so that",
         "punc": "",
         "strongs_ids": [
           "G2443"
@@ -1017,6 +1101,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -1027,6 +1112,7 @@
       {
         "italic": false,
         "lemma": "μαρτυρέω",
+        "lemma_gloss": "witness, testify",
         "punc": "",
         "strongs_ids": [
           "G3140"
@@ -1039,6 +1125,7 @@
       {
         "italic": false,
         "lemma": "περί",
+        "lemma_gloss": "about, concerning, around",
         "punc": "",
         "strongs_ids": [
           "G4012"
@@ -1051,6 +1138,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 10,
@@ -1061,6 +1149,7 @@
       {
         "italic": false,
         "lemma": "φῶς",
+        "lemma_gloss": "light, a source of light",
         "punc": ",",
         "strongs_ids": [
           "G5457"
@@ -1073,6 +1162,7 @@
       {
         "italic": false,
         "lemma": "ἵνα",
+        "lemma_gloss": "in order that, so that",
         "punc": "",
         "strongs_ids": [
           "G2443"
@@ -1085,6 +1175,7 @@
       {
         "italic": false,
         "lemma": "πᾶς",
+        "lemma_gloss": "all, the whole, every kind of",
         "punc": "",
         "strongs_ids": [
           "G3956"
@@ -1097,6 +1188,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 14,
@@ -1107,6 +1199,7 @@
       {
         "italic": false,
         "lemma": "διά",
+        "lemma_gloss": "through, on account of",
         "punc": "",
         "strongs_ids": [
           "G1223"
@@ -1119,6 +1212,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": "",
         "strongs_ids": [
           "G846"
@@ -1131,6 +1225,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 17,
@@ -1141,6 +1236,7 @@
       {
         "italic": false,
         "lemma": "πιστεύω",
+        "lemma_gloss": "believe, have faith in",
         "punc": ".",
         "strongs_ids": [
           "G4100"
@@ -1160,6 +1256,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -1170,6 +1267,7 @@
       {
         "italic": false,
         "lemma": "ἦν",
+        "lemma_gloss": "was",
         "punc": "",
         "strongs_ids": [
           "G2258"
@@ -1182,6 +1280,7 @@
       {
         "italic": false,
         "lemma": "οὐ",
+        "lemma_gloss": "no, not",
         "punc": "",
         "strongs_ids": [
           "G3756"
@@ -1194,6 +1293,7 @@
       {
         "italic": false,
         "lemma": "ἐκεῖνος",
+        "lemma_gloss": "that, that one there, yonder",
         "punc": "",
         "strongs_ids": [
           "G1565"
@@ -1206,6 +1306,7 @@
       {
         "italic": false,
         "lemma": "φῶς",
+        "lemma_gloss": "light, a source of light",
         "punc": ",",
         "strongs_ids": [
           "G5457"
@@ -1218,6 +1319,7 @@
       {
         "italic": false,
         "lemma": "ἀλλά",
+        "lemma_gloss": "but, except",
         "punc": "",
         "strongs_ids": [
           "G235"
@@ -1230,6 +1332,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 6,
@@ -1240,6 +1343,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -1250,6 +1354,7 @@
       {
         "italic": false,
         "lemma": "ἵνα",
+        "lemma_gloss": "in order that, so that",
         "punc": "",
         "strongs_ids": [
           "G2443"
@@ -1262,6 +1367,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -1272,6 +1378,7 @@
       {
         "italic": false,
         "lemma": "μαρτυρέω",
+        "lemma_gloss": "witness, testify",
         "punc": "",
         "strongs_ids": [
           "G3140"
@@ -1284,6 +1391,7 @@
       {
         "italic": true,
         "lemma": "περί",
+        "lemma_gloss": "about, concerning, around",
         "punc": "",
         "strongs_ids": [
           "G4012"
@@ -1296,6 +1404,7 @@
       {
         "italic": true,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 12,
@@ -1306,6 +1415,7 @@
       {
         "italic": false,
         "lemma": "φῶς",
+        "lemma_gloss": "light, a source of light",
         "punc": ".",
         "strongs_ids": [
           "G5457"
@@ -1325,6 +1435,7 @@
       {
         "italic": true,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -1335,6 +1446,7 @@
       {
         "italic": false,
         "lemma": "ἦν",
+        "lemma_gloss": "was",
         "punc": "",
         "strongs_ids": [
           "G2258"
@@ -1347,6 +1459,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 2,
@@ -1357,6 +1470,7 @@
       {
         "italic": false,
         "lemma": "ἀληθινός",
+        "lemma_gloss": "true, real, genuine",
         "punc": "",
         "strongs_ids": [
           "G228"
@@ -1369,6 +1483,7 @@
       {
         "italic": false,
         "lemma": "φῶς",
+        "lemma_gloss": "light, a source of light",
         "punc": ",",
         "strongs_ids": [
           "G5457"
@@ -1381,6 +1496,7 @@
       {
         "italic": false,
         "lemma": "ὅς",
+        "lemma_gloss": "who, which, what, that",
         "punc": "",
         "strongs_ids": [
           "G3739"
@@ -1393,6 +1509,7 @@
       {
         "italic": false,
         "lemma": "φωτίζω",
+        "lemma_gloss": "illuminate, bring to light",
         "punc": "",
         "strongs_ids": [
           "G5461"
@@ -1405,6 +1522,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -1415,6 +1533,7 @@
       {
         "italic": false,
         "lemma": "ἄνθρωπος",
+        "lemma_gloss": "man, one of the human race",
         "punc": "",
         "strongs_ids": [
           "G444"
@@ -1427,6 +1546,7 @@
       {
         "italic": false,
         "lemma": "πᾶς",
+        "lemma_gloss": "all, the whole, every kind of",
         "punc": "",
         "strongs_ids": [
           "G3956"
@@ -1439,6 +1559,7 @@
       {
         "italic": false,
         "lemma": "ἔρχομαι",
+        "lemma_gloss": "come, go",
         "punc": "",
         "strongs_ids": [
           "G2064"
@@ -1451,6 +1572,7 @@
       {
         "italic": false,
         "lemma": "εἰς",
+        "lemma_gloss": "into, in, among, till, for",
         "punc": "",
         "strongs_ids": [
           "G1519"
@@ -1463,6 +1585,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 12,
@@ -1473,6 +1596,7 @@
       {
         "italic": false,
         "lemma": "κόσμος",
+        "lemma_gloss": "world, universe",
         "punc": ".",
         "strongs_ids": [
           "G2889"
@@ -1492,6 +1616,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -1502,6 +1627,7 @@
       {
         "italic": false,
         "lemma": "ἦν",
+        "lemma_gloss": "was",
         "punc": "",
         "strongs_ids": [
           "G2258"
@@ -1514,6 +1640,7 @@
       {
         "italic": false,
         "lemma": "ἐν",
+        "lemma_gloss": "in, on, among",
         "punc": "",
         "strongs_ids": [
           "G1722"
@@ -1526,6 +1653,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -1536,6 +1664,7 @@
       {
         "italic": false,
         "lemma": "κόσμος",
+        "lemma_gloss": "world, universe",
         "punc": ",",
         "strongs_ids": [
           "G2889"
@@ -1548,6 +1677,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -1560,6 +1690,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 6,
@@ -1570,6 +1701,7 @@
       {
         "italic": false,
         "lemma": "κόσμος",
+        "lemma_gloss": "world, universe",
         "punc": "",
         "strongs_ids": [
           "G2889"
@@ -1582,6 +1714,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 8,
@@ -1592,6 +1725,7 @@
       {
         "italic": false,
         "lemma": "γίνομαι",
+        "lemma_gloss": "come into being, am born",
         "punc": "",
         "strongs_ids": [
           "G1096"
@@ -1604,6 +1738,7 @@
       {
         "italic": false,
         "lemma": "διά",
+        "lemma_gloss": "through, on account of",
         "punc": "",
         "strongs_ids": [
           "G1223"
@@ -1616,6 +1751,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": ",",
         "strongs_ids": [
           "G846"
@@ -1628,6 +1764,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -1640,6 +1777,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 13,
@@ -1650,6 +1788,7 @@
       {
         "italic": false,
         "lemma": "κόσμος",
+        "lemma_gloss": "world, universe",
         "punc": "",
         "strongs_ids": [
           "G2889"
@@ -1662,6 +1801,7 @@
       {
         "italic": false,
         "lemma": "γινώσκω",
+        "lemma_gloss": "come to know, learn, realize",
         "punc": "",
         "strongs_ids": [
           "G1097"
@@ -1674,6 +1814,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": "",
         "strongs_ids": [
           "G846"
@@ -1686,6 +1827,7 @@
       {
         "italic": false,
         "lemma": "οὐ",
+        "lemma_gloss": "no, not",
         "punc": ".",
         "strongs_ids": [
           "G3756"
@@ -1705,6 +1847,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -1715,6 +1858,7 @@
       {
         "italic": false,
         "lemma": "ἔρχομαι",
+        "lemma_gloss": "come, go",
         "punc": "",
         "strongs_ids": [
           "G2064"
@@ -1727,6 +1871,7 @@
       {
         "italic": false,
         "lemma": "εἰς",
+        "lemma_gloss": "into, in, among, till, for",
         "punc": "",
         "strongs_ids": [
           "G1519"
@@ -1739,6 +1884,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -1749,6 +1895,7 @@
       {
         "italic": false,
         "lemma": "ἴδιος",
+        "lemma_gloss": "one's own, private, personal",
         "punc": ",",
         "strongs_ids": [
           "G2398"
@@ -1761,6 +1908,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -1773,6 +1921,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 6,
@@ -1783,6 +1932,7 @@
       {
         "italic": false,
         "lemma": "ἴδιος",
+        "lemma_gloss": "one's own, private, personal",
         "punc": "",
         "strongs_ids": [
           "G2398"
@@ -1795,6 +1945,7 @@
       {
         "italic": false,
         "lemma": "παραλαμβάνω",
+        "lemma_gloss": "take, receive",
         "punc": "",
         "strongs_ids": [
           "G3880"
@@ -1807,6 +1958,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": "",
         "strongs_ids": [
           "G846"
@@ -1819,6 +1971,7 @@
       {
         "italic": false,
         "lemma": "οὐ",
+        "lemma_gloss": "no, not",
         "punc": ".",
         "strongs_ids": [
           "G3756"
@@ -1838,6 +1991,7 @@
       {
         "italic": false,
         "lemma": "δέ",
+        "lemma_gloss": "but, on the other hand, and",
         "punc": "",
         "strongs_ids": [
           "G1161"
@@ -1850,6 +2004,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 1,
@@ -1860,6 +2015,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 2,
@@ -1870,6 +2026,7 @@
       {
         "italic": false,
         "lemma": "ὅσος",
+        "lemma_gloss": "how much, how great, how many",
         "punc": "",
         "strongs_ids": [
           "G3745"
@@ -1882,6 +2039,7 @@
       {
         "italic": false,
         "lemma": "λαμβάνω",
+        "lemma_gloss": "receive, take",
         "punc": "",
         "strongs_ids": [
           "G2983"
@@ -1894,6 +2052,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": ",",
         "strongs_ids": [
           "G846"
@@ -1906,6 +2065,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 6,
@@ -1916,6 +2076,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": "",
         "strongs_ids": [
           "G846"
@@ -1928,6 +2089,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 8,
@@ -1938,6 +2100,7 @@
       {
         "italic": false,
         "lemma": "δίδωμι",
+        "lemma_gloss": "offer, give",
         "punc": "",
         "strongs_ids": [
           "G1325"
@@ -1950,6 +2113,7 @@
       {
         "italic": false,
         "lemma": "ἐξουσία",
+        "lemma_gloss": "power, authority, weight",
         "punc": "",
         "strongs_ids": [
           "G1849"
@@ -1962,6 +2126,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 11,
@@ -1972,6 +2137,7 @@
       {
         "italic": false,
         "lemma": "γίνομαι",
+        "lemma_gloss": "come into being, am born",
         "punc": "",
         "strongs_ids": [
           "G1096"
@@ -1984,6 +2150,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 13,
@@ -1994,6 +2161,7 @@
       {
         "italic": false,
         "lemma": "τέκνον",
+        "lemma_gloss": "child, descendent, inhabitant",
         "punc": "",
         "strongs_ids": [
           "G5043"
@@ -2006,6 +2174,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 15,
@@ -2016,6 +2185,7 @@
       {
         "italic": false,
         "lemma": "θεός",
+        "lemma_gloss": "God, a god",
         "punc": ",",
         "strongs_ids": [
           "G2316"
@@ -2028,6 +2198,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 17,
@@ -2038,6 +2209,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 18,
@@ -2048,6 +2220,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 19,
@@ -2058,6 +2231,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 20,
@@ -2068,6 +2242,7 @@
       {
         "italic": false,
         "lemma": "πιστεύω",
+        "lemma_gloss": "believe, have faith in",
         "punc": "",
         "strongs_ids": [
           "G4100"
@@ -2080,6 +2255,7 @@
       {
         "italic": false,
         "lemma": "εἰς",
+        "lemma_gloss": "into, in, among, till, for",
         "punc": "",
         "strongs_ids": [
           "G1519"
@@ -2092,6 +2268,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": "",
         "strongs_ids": [
           "G846"
@@ -2104,6 +2281,7 @@
       {
         "italic": false,
         "lemma": "ὄνομα",
+        "lemma_gloss": "name, character, reputation",
         "punc": ":",
         "strongs_ids": [
           "G3686"
@@ -2123,6 +2301,7 @@
       {
         "italic": false,
         "lemma": "ὅς",
+        "lemma_gloss": "who, which, what, that",
         "punc": "",
         "strongs_ids": [
           "G3739"
@@ -2135,6 +2314,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 1,
@@ -2145,6 +2325,7 @@
       {
         "italic": false,
         "lemma": "γεννάω",
+        "lemma_gloss": "beget, bring forth, give birth to",
         "punc": ",",
         "strongs_ids": [
           "G1080"
@@ -2157,6 +2338,7 @@
       {
         "italic": false,
         "lemma": "οὐ",
+        "lemma_gloss": "no, not",
         "punc": "",
         "strongs_ids": [
           "G3756"
@@ -2169,6 +2351,7 @@
       {
         "italic": false,
         "lemma": "ἐκ",
+        "lemma_gloss": "from out, out from among, from",
         "punc": "",
         "strongs_ids": [
           "G1537"
@@ -2181,6 +2364,7 @@
       {
         "italic": false,
         "lemma": "αἷμα",
+        "lemma_gloss": "blood",
         "punc": ",",
         "strongs_ids": [
           "G129"
@@ -2193,6 +2377,7 @@
       {
         "italic": false,
         "lemma": "οὐδέ",
+        "lemma_gloss": "neither, nor, not even",
         "punc": "",
         "strongs_ids": [
           "G3761"
@@ -2205,6 +2390,7 @@
       {
         "italic": false,
         "lemma": "ἐκ",
+        "lemma_gloss": "from out, out from among, from",
         "punc": "",
         "strongs_ids": [
           "G1537"
@@ -2217,6 +2403,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 8,
@@ -2227,6 +2414,7 @@
       {
         "italic": false,
         "lemma": "θέλημα",
+        "lemma_gloss": "will, wish, desire",
         "punc": "",
         "strongs_ids": [
           "G2307"
@@ -2239,6 +2427,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 10,
@@ -2249,6 +2438,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 11,
@@ -2259,6 +2449,7 @@
       {
         "italic": false,
         "lemma": "σάρξ",
+        "lemma_gloss": "flesh, body",
         "punc": ",",
         "strongs_ids": [
           "G4561"
@@ -2271,6 +2462,7 @@
       {
         "italic": false,
         "lemma": "οὐδέ",
+        "lemma_gloss": "neither, nor, not even",
         "punc": "",
         "strongs_ids": [
           "G3761"
@@ -2283,6 +2475,7 @@
       {
         "italic": false,
         "lemma": "ἐκ",
+        "lemma_gloss": "from out, out from among, from",
         "punc": "",
         "strongs_ids": [
           "G1537"
@@ -2295,6 +2488,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 15,
@@ -2305,6 +2499,7 @@
       {
         "italic": false,
         "lemma": "θέλημα",
+        "lemma_gloss": "will, wish, desire",
         "punc": "",
         "strongs_ids": [
           "G2307"
@@ -2317,6 +2512,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 17,
@@ -2327,6 +2523,7 @@
       {
         "italic": false,
         "lemma": "ἀνήρ",
+        "lemma_gloss": "male human being, a man",
         "punc": ",",
         "strongs_ids": [
           "G435"
@@ -2339,6 +2536,7 @@
       {
         "italic": false,
         "lemma": "ἀλλά",
+        "lemma_gloss": "but, except",
         "punc": "",
         "strongs_ids": [
           "G235"
@@ -2351,6 +2549,7 @@
       {
         "italic": false,
         "lemma": "ἐκ",
+        "lemma_gloss": "from out, out from among, from",
         "punc": "",
         "strongs_ids": [
           "G1537"
@@ -2363,6 +2562,7 @@
       {
         "italic": false,
         "lemma": "θεός",
+        "lemma_gloss": "God, a god",
         "punc": ".",
         "strongs_ids": [
           "G2316"
@@ -2382,6 +2582,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -2394,6 +2595,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 1,
@@ -2404,6 +2606,7 @@
       {
         "italic": false,
         "lemma": "λόγος",
+        "lemma_gloss": "word, speech, divine utterance, analogy",
         "punc": "",
         "strongs_ids": [
           "G3056"
@@ -2416,6 +2619,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -2426,6 +2630,7 @@
       {
         "italic": false,
         "lemma": "γίνομαι",
+        "lemma_gloss": "come into being, am born",
         "punc": "",
         "strongs_ids": [
           "G1096"
@@ -2438,6 +2643,7 @@
       {
         "italic": false,
         "lemma": "σάρξ",
+        "lemma_gloss": "flesh, body",
         "punc": ",",
         "strongs_ids": [
           "G4561"
@@ -2450,6 +2656,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -2462,6 +2669,7 @@
       {
         "italic": false,
         "lemma": "σκηνόω",
+        "lemma_gloss": "dwell as in a tent, encamp",
         "punc": "",
         "strongs_ids": [
           "G4637"
@@ -2474,6 +2682,7 @@
       {
         "italic": false,
         "lemma": "ἐν",
+        "lemma_gloss": "in, on, among",
         "punc": "",
         "strongs_ids": [
           "G1722"
@@ -2486,6 +2695,7 @@
       {
         "italic": false,
         "lemma": "ἡμῖν",
+        "lemma_gloss": "to us",
         "punc": ",",
         "strongs_ids": [
           "G2254",
@@ -2499,6 +2709,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 10,
@@ -2509,6 +2720,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 11,
@@ -2519,6 +2731,7 @@
       {
         "italic": false,
         "lemma": "θεάομαι",
+        "lemma_gloss": "see, behold, contemplate, visit",
         "punc": "",
         "strongs_ids": [
           "G2300"
@@ -2531,6 +2744,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": "",
         "strongs_ids": [
           "G846"
@@ -2543,6 +2757,7 @@
       {
         "italic": false,
         "lemma": "δόξα",
+        "lemma_gloss": "honor, renown, glory splendor",
         "punc": ",",
         "strongs_ids": [
           "G1391"
@@ -2555,6 +2770,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 15,
@@ -2565,6 +2781,7 @@
       {
         "italic": false,
         "lemma": "δόξα",
+        "lemma_gloss": "honor, renown, glory splendor",
         "punc": "",
         "strongs_ids": [
           "G1391"
@@ -2577,6 +2794,7 @@
       {
         "italic": false,
         "lemma": "ὡς",
+        "lemma_gloss": "as, like as, how, while, so that",
         "punc": "",
         "strongs_ids": [
           "G5613"
@@ -2589,6 +2807,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 18,
@@ -2599,6 +2818,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 19,
@@ -2609,6 +2829,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 20,
@@ -2619,6 +2840,7 @@
       {
         "italic": false,
         "lemma": "μονογενής",
+        "lemma_gloss": "only, only-begotten, unique",
         "punc": "",
         "strongs_ids": [
           "G3439"
@@ -2631,6 +2853,7 @@
       {
         "italic": false,
         "lemma": "παρά",
+        "lemma_gloss": "from, in the presence of",
         "punc": "",
         "strongs_ids": [
           "G3844"
@@ -2643,6 +2866,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 23,
@@ -2653,6 +2877,7 @@
       {
         "italic": false,
         "lemma": "πατήρ",
+        "lemma_gloss": "father, ancestor",
         "punc": ",",
         "strongs_ids": [
           "G3962"
@@ -2665,6 +2890,7 @@
       {
         "italic": false,
         "lemma": "πλήρης",
+        "lemma_gloss": "full",
         "punc": "",
         "strongs_ids": [
           "G4134"
@@ -2677,6 +2903,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 26,
@@ -2687,6 +2914,7 @@
       {
         "italic": false,
         "lemma": "χάρις",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [
           "G5485"
@@ -2699,6 +2927,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -2711,6 +2940,7 @@
       {
         "italic": false,
         "lemma": "ἀλήθεια",
+        "lemma_gloss": "truth",
         "punc": ".",
         "strongs_ids": [
           "G225"
@@ -2730,6 +2960,7 @@
       {
         "italic": false,
         "lemma": "Ἰωάννης",
+        "lemma_gloss": "John",
         "punc": "",
         "strongs_ids": [
           "G2491"
@@ -2742,6 +2973,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 1,
@@ -2752,6 +2984,7 @@
       {
         "italic": false,
         "lemma": "μαρτυρέω",
+        "lemma_gloss": "witness, testify",
         "punc": "",
         "strongs_ids": [
           "G3140"
@@ -2764,6 +2997,7 @@
       {
         "italic": false,
         "lemma": "περί",
+        "lemma_gloss": "about, concerning, around",
         "punc": "",
         "strongs_ids": [
           "G4012"
@@ -2776,6 +3010,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": ",",
         "strongs_ids": [
           "G846"
@@ -2788,6 +3023,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -2800,6 +3036,7 @@
       {
         "italic": false,
         "lemma": "κράζω",
+        "lemma_gloss": "cry aloud, shriek",
         "punc": ",",
         "strongs_ids": [
           "G2896"
@@ -2812,6 +3049,7 @@
       {
         "italic": false,
         "lemma": "λέγω",
+        "lemma_gloss": "say, speak",
         "punc": ",",
         "strongs_ids": [
           "G3004"
@@ -2824,6 +3062,7 @@
       {
         "italic": false,
         "lemma": "οὗτος",
+        "lemma_gloss": "this, he, she, it",
         "punc": "",
         "strongs_ids": [
           "G3778"
@@ -2836,6 +3075,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -2846,6 +3086,7 @@
       {
         "italic": false,
         "lemma": "ἦν",
+        "lemma_gloss": "was",
         "punc": "",
         "strongs_ids": [
           "G2258"
@@ -2858,6 +3099,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 11,
@@ -2868,6 +3110,7 @@
       {
         "italic": false,
         "lemma": "ὅς",
+        "lemma_gloss": "who, which, what, that",
         "punc": "",
         "strongs_ids": [
           "G3739"
@@ -2880,6 +3123,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 13,
@@ -2890,6 +3134,7 @@
       {
         "italic": false,
         "lemma": "ἔπω",
+        "lemma_gloss": "to say",
         "punc": ",",
         "strongs_ids": [
           "G2036"
@@ -2902,6 +3147,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 15,
@@ -2912,6 +3158,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 16,
@@ -2922,6 +3169,7 @@
       {
         "italic": false,
         "lemma": "ἔρχομαι",
+        "lemma_gloss": "come, go",
         "punc": "",
         "strongs_ids": [
           "G2064"
@@ -2934,6 +3182,7 @@
       {
         "italic": false,
         "lemma": "ὀπίσω",
+        "lemma_gloss": "behind, after",
         "punc": "",
         "strongs_ids": [
           "G3694"
@@ -2946,6 +3195,7 @@
       {
         "italic": false,
         "lemma": "μοῦ",
+        "lemma_gloss": "of me",
         "punc": "",
         "strongs_ids": [
           "G3450"
@@ -2958,6 +3208,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 20,
@@ -2968,6 +3219,7 @@
       {
         "italic": false,
         "lemma": "γίνομαι",
+        "lemma_gloss": "come into being, am born",
         "punc": "",
         "strongs_ids": [
           "G1096"
@@ -2980,6 +3232,7 @@
       {
         "italic": false,
         "lemma": "ἔμπροσθεν",
+        "lemma_gloss": "in front, before the face",
         "punc": "",
         "strongs_ids": [
           "G1715"
@@ -2992,6 +3245,7 @@
       {
         "italic": false,
         "lemma": "μοῦ",
+        "lemma_gloss": "of me",
         "punc": ":",
         "strongs_ids": [
           "G3450"
@@ -3004,6 +3258,7 @@
       {
         "italic": false,
         "lemma": "ὅτι",
+        "lemma_gloss": "that, since, because",
         "punc": "",
         "strongs_ids": [
           "G3754"
@@ -3016,6 +3271,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 25,
@@ -3026,6 +3282,7 @@
       {
         "italic": false,
         "lemma": "ἦν",
+        "lemma_gloss": "was",
         "punc": "",
         "strongs_ids": [
           "G2258"
@@ -3038,6 +3295,7 @@
       {
         "italic": false,
         "lemma": "πρῶτος",
+        "lemma_gloss": "first, before",
         "punc": "",
         "strongs_ids": [
           "G4413"
@@ -3050,6 +3308,7 @@
       {
         "italic": false,
         "lemma": "μοῦ",
+        "lemma_gloss": "of me",
         "punc": ".",
         "strongs_ids": [
           "G3450"
@@ -3069,6 +3328,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -3081,6 +3341,7 @@
       {
         "italic": false,
         "lemma": "ἐκ",
+        "lemma_gloss": "from out, out from among, from",
         "punc": "",
         "strongs_ids": [
           "G1537"
@@ -3093,6 +3354,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": "",
         "strongs_ids": [
           "G846"
@@ -3105,6 +3367,7 @@
       {
         "italic": false,
         "lemma": "πλήρωμα",
+        "lemma_gloss": "fullness, fulfillment, completion",
         "punc": "",
         "strongs_ids": [
           "G4138"
@@ -3117,6 +3380,7 @@
       {
         "italic": false,
         "lemma": "λαμβάνω",
+        "lemma_gloss": "receive, take",
         "punc": "",
         "strongs_ids": [
           "G2983"
@@ -3129,6 +3393,7 @@
       {
         "italic": false,
         "lemma": "πᾶς",
+        "lemma_gloss": "all, the whole, every kind of",
         "punc": "",
         "strongs_ids": [
           "G3956"
@@ -3141,6 +3406,7 @@
       {
         "italic": false,
         "lemma": "ἡμεῖς",
+        "lemma_gloss": "we",
         "punc": "",
         "strongs_ids": [
           "G2249"
@@ -3153,6 +3419,7 @@
       {
         "italic": false,
         "lemma": "λαμβάνω",
+        "lemma_gloss": "receive, take",
         "punc": ",",
         "strongs_ids": [
           "G2983"
@@ -3165,6 +3432,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -3177,6 +3445,7 @@
       {
         "italic": false,
         "lemma": "χάρις",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [
           "G5485"
@@ -3189,6 +3458,7 @@
       {
         "italic": false,
         "lemma": "ἀντί",
+        "lemma_gloss": "instead of, for",
         "punc": "",
         "strongs_ids": [
           "G473"
@@ -3201,6 +3471,7 @@
       {
         "italic": false,
         "lemma": "χάρις",
+        "lemma_gloss": "",
         "punc": ".",
         "strongs_ids": [
           "G5485"
@@ -3220,6 +3491,7 @@
       {
         "italic": false,
         "lemma": "ὅτι",
+        "lemma_gloss": "that, since, because",
         "punc": "",
         "strongs_ids": [
           "G3754"
@@ -3232,6 +3504,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 1,
@@ -3242,6 +3515,7 @@
       {
         "italic": false,
         "lemma": "νόμος",
+        "lemma_gloss": "law, the Mosaic Law",
         "punc": "",
         "strongs_ids": [
           "G3551"
@@ -3254,6 +3528,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -3264,6 +3539,7 @@
       {
         "italic": false,
         "lemma": "δίδωμι",
+        "lemma_gloss": "offer, give",
         "punc": "",
         "strongs_ids": [
           "G1325"
@@ -3276,6 +3552,7 @@
       {
         "italic": false,
         "lemma": "διά",
+        "lemma_gloss": "through, on account of",
         "punc": "",
         "strongs_ids": [
           "G1223"
@@ -3288,6 +3565,7 @@
       {
         "italic": false,
         "lemma": "Μωσεύς",
+        "lemma_gloss": "",
         "punc": ",",
         "strongs_ids": [
           "G3475"
@@ -3300,6 +3578,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -3310,6 +3589,7 @@
       {
         "italic": false,
         "lemma": "χάρις",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [
           "G5485"
@@ -3322,6 +3602,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -3334,6 +3615,7 @@
       {
         "italic": false,
         "lemma": "ἀλήθεια",
+        "lemma_gloss": "truth",
         "punc": "",
         "strongs_ids": [
           "G225"
@@ -3346,6 +3628,7 @@
       {
         "italic": false,
         "lemma": "γίνομαι",
+        "lemma_gloss": "come into being, am born",
         "punc": "",
         "strongs_ids": [
           "G1096"
@@ -3358,6 +3641,7 @@
       {
         "italic": true,
         "lemma": "διά",
+        "lemma_gloss": "through, on account of",
         "punc": "",
         "strongs_ids": [
           "G1223"
@@ -3370,6 +3654,7 @@
       {
         "italic": false,
         "lemma": "Ἰησοῦς",
+        "lemma_gloss": "Jesus",
         "punc": "",
         "strongs_ids": [
           "G2424"
@@ -3382,6 +3667,7 @@
       {
         "italic": false,
         "lemma": "Χριστός",
+        "lemma_gloss": "anointed, the Messiah, the Christ",
         "punc": ".",
         "strongs_ids": [
           "G5547"
@@ -3401,6 +3687,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -3411,6 +3698,7 @@
       {
         "italic": false,
         "lemma": "οὐδείς",
+        "lemma_gloss": "no one, none, nothing",
         "punc": "",
         "strongs_ids": [
           "G3762"
@@ -3423,6 +3711,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 2,
@@ -3433,6 +3722,7 @@
       {
         "italic": false,
         "lemma": "ὁράω",
+        "lemma_gloss": "see, look upon, experience",
         "punc": "",
         "strongs_ids": [
           "G3708"
@@ -3445,6 +3735,7 @@
       {
         "italic": false,
         "lemma": "θεός",
+        "lemma_gloss": "God, a god",
         "punc": "",
         "strongs_ids": [
           "G2316"
@@ -3457,6 +3748,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 5,
@@ -3467,6 +3759,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 6,
@@ -3477,6 +3770,7 @@
       {
         "italic": false,
         "lemma": "πώποτε",
+        "lemma_gloss": "at any time, ever",
         "punc": ";",
         "strongs_ids": [
           "G4455"
@@ -3489,6 +3783,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 8,
@@ -3499,6 +3794,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -3509,6 +3805,7 @@
       {
         "italic": false,
         "lemma": "μονογενής",
+        "lemma_gloss": "only, only-begotten, unique",
         "punc": "",
         "strongs_ids": [
           "G3439"
@@ -3521,6 +3818,7 @@
       {
         "italic": false,
         "lemma": "υἱός",
+        "lemma_gloss": "son, descendent",
         "punc": ",",
         "strongs_ids": [
           "G5207"
@@ -3533,6 +3831,7 @@
       {
         "italic": false,
         "lemma": "ὁ",
+        "lemma_gloss": "the",
         "punc": "",
         "strongs_ids": [
           "G3588"
@@ -3545,6 +3844,7 @@
       {
         "italic": false,
         "lemma": "ὤν",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [
           "G5607"
@@ -3557,6 +3857,7 @@
       {
         "italic": false,
         "lemma": "εἰς",
+        "lemma_gloss": "into, in, among, till, for",
         "punc": "",
         "strongs_ids": [
           "G1519"
@@ -3569,6 +3870,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 15,
@@ -3579,6 +3881,7 @@
       {
         "italic": false,
         "lemma": "κόλπος",
+        "lemma_gloss": "bosom, bosom of a garment, a bay, gulf",
         "punc": "",
         "strongs_ids": [
           "G2859"
@@ -3591,6 +3894,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 17,
@@ -3601,6 +3905,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 18,
@@ -3611,6 +3916,7 @@
       {
         "italic": false,
         "lemma": "πατήρ",
+        "lemma_gloss": "father, ancestor",
         "punc": ",",
         "strongs_ids": [
           "G3962"
@@ -3623,6 +3929,7 @@
       {
         "italic": false,
         "lemma": "ἐκεῖνος",
+        "lemma_gloss": "that, that one there, yonder",
         "punc": "",
         "strongs_ids": [
           "G1565"
@@ -3635,6 +3942,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 21,
@@ -3645,6 +3953,7 @@
       {
         "italic": false,
         "lemma": "ἐξηγέομαι",
+        "lemma_gloss": "explain, make declaration",
         "punc": "",
         "strongs_ids": [
           "G1834"
@@ -3657,6 +3966,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": ".",
         "strongs_ids": [],
         "verse_pos": 23,
@@ -3674,6 +3984,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -3686,6 +3997,7 @@
       {
         "italic": false,
         "lemma": "οὗτος",
+        "lemma_gloss": "this, he, she, it",
         "punc": "",
         "strongs_ids": [
           "G3778"
@@ -3698,6 +4010,7 @@
       {
         "italic": false,
         "lemma": "ἐστί",
+        "lemma_gloss": "he is",
         "punc": "",
         "strongs_ids": [
           "G2076"
@@ -3710,6 +4023,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -3720,6 +4034,7 @@
       {
         "italic": false,
         "lemma": "μαρτυρία",
+        "lemma_gloss": "witness, evidence, testimony",
         "punc": "",
         "strongs_ids": [
           "G3141"
@@ -3732,6 +4047,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 5,
@@ -3742,6 +4058,7 @@
       {
         "italic": false,
         "lemma": "Ἰωάννης",
+        "lemma_gloss": "John",
         "punc": ",",
         "strongs_ids": [
           "G2491"
@@ -3754,6 +4071,7 @@
       {
         "italic": false,
         "lemma": "ὅτε",
+        "lemma_gloss": "when",
         "punc": "",
         "strongs_ids": [
           "G3753"
@@ -3766,6 +4084,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 8,
@@ -3776,6 +4095,7 @@
       {
         "italic": false,
         "lemma": "Ἰουδαῖος",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [
           "G2453"
@@ -3788,6 +4108,7 @@
       {
         "italic": false,
         "lemma": "ἀποστέλλω",
+        "lemma_gloss": "send forth, send, send away, dismiss",
         "punc": "",
         "strongs_ids": [
           "G649"
@@ -3800,6 +4121,7 @@
       {
         "italic": false,
         "lemma": "ἱερεύς",
+        "lemma_gloss": "priest",
         "punc": "",
         "strongs_ids": [
           "G2409"
@@ -3812,6 +4134,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -3824,6 +4147,7 @@
       {
         "italic": false,
         "lemma": "Λευΐτης",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [
           "G3019"
@@ -3836,6 +4160,7 @@
       {
         "italic": false,
         "lemma": "ἐκ",
+        "lemma_gloss": "from out, out from among, from",
         "punc": "",
         "strongs_ids": [
           "G1537"
@@ -3848,6 +4173,7 @@
       {
         "italic": false,
         "lemma": "Ἱεροσόλυμα",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [
           "G2414"
@@ -3860,6 +4186,7 @@
       {
         "italic": false,
         "lemma": "ἵνα",
+        "lemma_gloss": "in order that, so that",
         "punc": "",
         "strongs_ids": [
           "G2443"
@@ -3872,6 +4199,7 @@
       {
         "italic": false,
         "lemma": "ἐρωτάω",
+        "lemma_gloss": "ask, question, request",
         "punc": "",
         "strongs_ids": [
           "G2065"
@@ -3884,6 +4212,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": ",",
         "strongs_ids": [
           "G846"
@@ -3896,6 +4225,7 @@
       {
         "italic": false,
         "lemma": "τίς",
+        "lemma_gloss": "who, which, what",
         "punc": "",
         "strongs_ids": [
           "G5101"
@@ -3908,6 +4238,7 @@
       {
         "italic": false,
         "lemma": "εἶ",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [
           "G1488"
@@ -3920,6 +4251,7 @@
       {
         "italic": false,
         "lemma": "σύ",
+        "lemma_gloss": "you",
         "punc": "?",
         "strongs_ids": [
           "G4771"
@@ -3939,6 +4271,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -3951,6 +4284,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 1,
@@ -3961,6 +4295,7 @@
       {
         "italic": false,
         "lemma": "ὁμολογέω",
+        "lemma_gloss": "confess, profess, acknowledge, praise",
         "punc": ",",
         "strongs_ids": [
           "G3670"
@@ -3973,6 +4308,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -3985,6 +4321,7 @@
       {
         "italic": false,
         "lemma": "ἀρνέομαι",
+        "lemma_gloss": "deny, repudiate",
         "punc": "",
         "strongs_ids": [
           "G720"
@@ -3997,6 +4334,7 @@
       {
         "italic": false,
         "lemma": "οὐ",
+        "lemma_gloss": "no, not",
         "punc": ";",
         "strongs_ids": [
           "G3756"
@@ -4009,6 +4347,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -4021,6 +4360,7 @@
       {
         "italic": false,
         "lemma": "ὅτι",
+        "lemma_gloss": "that, since, because",
         "punc": ",",
         "strongs_ids": [
           "G3670",
@@ -4034,6 +4374,7 @@
       {
         "italic": false,
         "lemma": "ἐγώ",
+        "lemma_gloss": "I",
         "punc": "",
         "strongs_ids": [
           "G1473"
@@ -4046,6 +4387,7 @@
       {
         "italic": false,
         "lemma": "εἰμί",
+        "lemma_gloss": "to be, exist",
         "punc": "",
         "strongs_ids": [
           "G1510"
@@ -4058,6 +4400,7 @@
       {
         "italic": false,
         "lemma": "οὐ",
+        "lemma_gloss": "no, not",
         "punc": "",
         "strongs_ids": [
           "G3756"
@@ -4070,6 +4413,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 11,
@@ -4080,6 +4424,7 @@
       {
         "italic": false,
         "lemma": "Χριστός",
+        "lemma_gloss": "anointed, the Messiah, the Christ",
         "punc": ".",
         "strongs_ids": [
           "G5547"
@@ -4099,6 +4444,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -4111,6 +4457,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 1,
@@ -4121,6 +4468,7 @@
       {
         "italic": false,
         "lemma": "ἐρωτάω",
+        "lemma_gloss": "ask, question, request",
         "punc": "",
         "strongs_ids": [
           "G2065"
@@ -4133,6 +4481,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": ",",
         "strongs_ids": [
           "G846"
@@ -4145,6 +4494,7 @@
       {
         "italic": false,
         "lemma": "τίς",
+        "lemma_gloss": "who, which, what",
         "punc": "",
         "strongs_ids": [
           "G5101"
@@ -4157,6 +4507,7 @@
       {
         "italic": false,
         "lemma": "οὖν",
+        "lemma_gloss": "therefore, then",
         "punc": "?",
         "strongs_ids": [
           "G3767"
@@ -4169,6 +4520,7 @@
       {
         "italic": false,
         "lemma": "εἶ",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [
           "G1488"
@@ -4181,6 +4533,7 @@
       {
         "italic": false,
         "lemma": "σύ",
+        "lemma_gloss": "you",
         "punc": "",
         "strongs_ids": [
           "G4771"
@@ -4193,6 +4546,7 @@
       {
         "italic": false,
         "lemma": "Ἡλίας",
+        "lemma_gloss": "",
         "punc": "?",
         "strongs_ids": [
           "G2243"
@@ -4205,6 +4559,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -4217,6 +4572,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 10,
@@ -4227,6 +4583,7 @@
       {
         "italic": false,
         "lemma": "λέγω",
+        "lemma_gloss": "say, speak",
         "punc": ",",
         "strongs_ids": [
           "G3004"
@@ -4239,6 +4596,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 12,
@@ -4249,6 +4607,7 @@
       {
         "italic": false,
         "lemma": "εἰμί",
+        "lemma_gloss": "to be, exist",
         "punc": "",
         "strongs_ids": [
           "G1510"
@@ -4261,6 +4620,7 @@
       {
         "italic": false,
         "lemma": "οὐ",
+        "lemma_gloss": "no, not",
         "punc": ".",
         "strongs_ids": [
           "G3756"
@@ -4273,6 +4633,7 @@
       {
         "italic": false,
         "lemma": "εἶ",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [
           "G1488"
@@ -4285,6 +4646,7 @@
       {
         "italic": false,
         "lemma": "σύ",
+        "lemma_gloss": "you",
         "punc": "",
         "strongs_ids": [
           "G4771"
@@ -4297,6 +4659,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 17,
@@ -4307,6 +4670,7 @@
       {
         "italic": false,
         "lemma": "προφήτης",
+        "lemma_gloss": "prophet, poet",
         "punc": "?",
         "strongs_ids": [
           "G4396"
@@ -4319,6 +4683,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -4331,6 +4696,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 20,
@@ -4341,6 +4707,7 @@
       {
         "italic": false,
         "lemma": "ἀποκρίνομαι",
+        "lemma_gloss": "answer, reply",
         "punc": ",",
         "strongs_ids": [
           "G611"
@@ -4353,6 +4720,7 @@
       {
         "italic": false,
         "lemma": "οὐ",
+        "lemma_gloss": "no, not",
         "punc": ".",
         "strongs_ids": [
           "G3756"
@@ -4372,6 +4740,7 @@
       {
         "italic": false,
         "lemma": "οὖν",
+        "lemma_gloss": "therefore, then",
         "punc": "",
         "strongs_ids": [
           "G3767"
@@ -4384,6 +4753,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 1,
@@ -4394,6 +4764,7 @@
       {
         "italic": false,
         "lemma": "ἔπω",
+        "lemma_gloss": "to say",
         "punc": "",
         "strongs_ids": [
           "G2036"
@@ -4406,6 +4777,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -4416,6 +4788,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": ",",
         "strongs_ids": [
           "G846"
@@ -4428,6 +4801,7 @@
       {
         "italic": false,
         "lemma": "τίς",
+        "lemma_gloss": "who, which, what",
         "punc": "",
         "strongs_ids": [
           "G5101"
@@ -4440,6 +4814,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 6,
@@ -4450,6 +4825,7 @@
       {
         "italic": false,
         "lemma": "εἶ",
+        "lemma_gloss": "",
         "punc": "?",
         "strongs_ids": [
           "G1488"
@@ -4462,6 +4838,7 @@
       {
         "italic": false,
         "lemma": "ἵνα",
+        "lemma_gloss": "in order that, so that",
         "punc": "",
         "strongs_ids": [
           "G2443"
@@ -4474,6 +4851,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -4484,6 +4862,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 10,
@@ -4494,6 +4873,7 @@
       {
         "italic": false,
         "lemma": "δίδωμι",
+        "lemma_gloss": "offer, give",
         "punc": "",
         "strongs_ids": [
           "G1325"
@@ -4506,6 +4886,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 12,
@@ -4516,6 +4897,7 @@
       {
         "italic": false,
         "lemma": "ἀπόκρισις",
+        "lemma_gloss": "answer, reply",
         "punc": "",
         "strongs_ids": [
           "G612"
@@ -4528,6 +4910,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 14,
@@ -4538,6 +4921,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 15,
@@ -4548,6 +4932,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 16,
@@ -4558,6 +4943,7 @@
       {
         "italic": false,
         "lemma": "πέμπω",
+        "lemma_gloss": "send",
         "punc": "",
         "strongs_ids": [
           "G3992"
@@ -4570,6 +4956,7 @@
       {
         "italic": false,
         "lemma": "ἡμᾶς",
+        "lemma_gloss": "us",
         "punc": ".",
         "strongs_ids": [
           "G2248"
@@ -4582,6 +4969,7 @@
       {
         "italic": false,
         "lemma": "τίς",
+        "lemma_gloss": "who, which, what",
         "punc": "",
         "strongs_ids": [
           "G5101"
@@ -4594,6 +4982,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 20,
@@ -4604,6 +4993,7 @@
       {
         "italic": false,
         "lemma": "λέγω",
+        "lemma_gloss": "say, speak",
         "punc": "",
         "strongs_ids": [
           "G3004"
@@ -4616,6 +5006,7 @@
       {
         "italic": false,
         "lemma": "περί",
+        "lemma_gloss": "about, concerning, around",
         "punc": "",
         "strongs_ids": [
           "G4012"
@@ -4628,6 +5019,7 @@
       {
         "italic": false,
         "lemma": "σεαυτοῦ",
+        "lemma_gloss": "of yourself",
         "punc": "?",
         "strongs_ids": [
           "G4572"
@@ -4647,6 +5039,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -4657,6 +5050,7 @@
       {
         "italic": false,
         "lemma": "φημί",
+        "lemma_gloss": "say",
         "punc": ",",
         "strongs_ids": [
           "G5346"
@@ -4669,6 +5063,7 @@
       {
         "italic": false,
         "lemma": "ἐγώ",
+        "lemma_gloss": "I",
         "punc": "",
         "strongs_ids": [
           "G1473"
@@ -4681,6 +5076,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -4691,6 +5087,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 4,
@@ -4701,6 +5098,7 @@
       {
         "italic": true,
         "lemma": "φωνή",
+        "lemma_gloss": "sound, noise, voice",
         "punc": "",
         "strongs_ids": [
           "G5456"
@@ -4713,6 +5111,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 6,
@@ -4723,6 +5122,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -4733,6 +5133,7 @@
       {
         "italic": false,
         "lemma": "βοάω",
+        "lemma_gloss": "shout, call aloud",
         "punc": "",
         "strongs_ids": [
           "G994"
@@ -4745,6 +5146,7 @@
       {
         "italic": false,
         "lemma": "ἐν",
+        "lemma_gloss": "in, on, among",
         "punc": "",
         "strongs_ids": [
           "G1722"
@@ -4757,6 +5159,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 10,
@@ -4767,6 +5170,7 @@
       {
         "italic": false,
         "lemma": "ἔρημος",
+        "lemma_gloss": "deserted, desolate, a desert",
         "punc": ",",
         "strongs_ids": [
           "G2048"
@@ -4779,6 +5183,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 12,
@@ -4789,6 +5194,7 @@
       {
         "italic": false,
         "lemma": "εὐθύνω",
+        "lemma_gloss": "make straight, guide, steer",
         "punc": "",
         "strongs_ids": [
           "G2116"
@@ -4801,6 +5207,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 14,
@@ -4811,6 +5218,7 @@
       {
         "italic": false,
         "lemma": "ὁδός",
+        "lemma_gloss": "way, road, journey",
         "punc": "",
         "strongs_ids": [
           "G3598"
@@ -4823,6 +5231,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 16,
@@ -4833,6 +5242,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 17,
@@ -4843,6 +5253,7 @@
       {
         "italic": false,
         "lemma": "κύριος",
+        "lemma_gloss": "lord, master, sir",
         "punc": ",",
         "strongs_ids": [
           "G2962"
@@ -4855,6 +5266,7 @@
       {
         "italic": false,
         "lemma": "καθώς",
+        "lemma_gloss": "just as, as",
         "punc": "",
         "strongs_ids": [
           "G2531"
@@ -4867,6 +5279,7 @@
       {
         "italic": false,
         "lemma": "ἔπω",
+        "lemma_gloss": "to say",
         "punc": "",
         "strongs_ids": [
           "G2036"
@@ -4879,6 +5292,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 21,
@@ -4889,6 +5303,7 @@
       {
         "italic": false,
         "lemma": "προφήτης",
+        "lemma_gloss": "prophet, poet",
         "punc": "",
         "strongs_ids": [
           "G4396"
@@ -4901,6 +5316,7 @@
       {
         "italic": false,
         "lemma": "Ἡσαΐας",
+        "lemma_gloss": "",
         "punc": ".",
         "strongs_ids": [
           "G2268"
@@ -4920,6 +5336,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -4932,6 +5349,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 1,
@@ -4942,6 +5360,7 @@
       {
         "italic": false,
         "lemma": "ὁ",
+        "lemma_gloss": "the",
         "punc": "",
         "strongs_ids": [
           "G3588"
@@ -4954,6 +5373,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -4964,6 +5384,7 @@
       {
         "italic": false,
         "lemma": "ἀποστέλλω",
+        "lemma_gloss": "send forth, send, send away, dismiss",
         "punc": "",
         "strongs_ids": [
           "G649"
@@ -4976,6 +5397,7 @@
       {
         "italic": false,
         "lemma": "ἦν",
+        "lemma_gloss": "was",
         "punc": "",
         "strongs_ids": [
           "G2258"
@@ -4988,6 +5410,7 @@
       {
         "italic": false,
         "lemma": "ἐκ",
+        "lemma_gloss": "from out, out from among, from",
         "punc": "",
         "strongs_ids": [
           "G1537"
@@ -5000,6 +5423,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -5010,6 +5434,7 @@
       {
         "italic": false,
         "lemma": "Φαρισαῖος",
+        "lemma_gloss": "Pharisee",
         "punc": ".",
         "strongs_ids": [
           "G5330"
@@ -5029,6 +5454,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -5041,6 +5467,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 1,
@@ -5051,6 +5478,7 @@
       {
         "italic": false,
         "lemma": "ἐρωτάω",
+        "lemma_gloss": "ask, question, request",
         "punc": "",
         "strongs_ids": [
           "G2065"
@@ -5063,6 +5491,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": ",",
         "strongs_ids": [
           "G846"
@@ -5075,6 +5504,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -5087,6 +5517,7 @@
       {
         "italic": false,
         "lemma": "ἔπω",
+        "lemma_gloss": "to say",
         "punc": "",
         "strongs_ids": [
           "G2036"
@@ -5099,6 +5530,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 6,
@@ -5109,6 +5541,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": ",",
         "strongs_ids": [
           "G846"
@@ -5121,6 +5554,7 @@
       {
         "italic": false,
         "lemma": "τίς",
+        "lemma_gloss": "who, which, what",
         "punc": "",
         "strongs_ids": [
           "G5101"
@@ -5133,6 +5567,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -5143,6 +5578,7 @@
       {
         "italic": false,
         "lemma": "βαπτίζω",
+        "lemma_gloss": "dip, submerge, baptize",
         "punc": "",
         "strongs_ids": [
           "G907"
@@ -5155,6 +5591,7 @@
       {
         "italic": false,
         "lemma": "οὖν",
+        "lemma_gloss": "therefore, then",
         "punc": ",",
         "strongs_ids": [
           "G3767"
@@ -5167,6 +5604,7 @@
       {
         "italic": false,
         "lemma": "εἰ",
+        "lemma_gloss": "if",
         "punc": "",
         "strongs_ids": [
           "G1487"
@@ -5179,6 +5617,7 @@
       {
         "italic": false,
         "lemma": "σύ",
+        "lemma_gloss": "you",
         "punc": "",
         "strongs_ids": [
           "G4771"
@@ -5191,6 +5630,7 @@
       {
         "italic": false,
         "lemma": "εἶ",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [
           "G1488"
@@ -5203,6 +5643,7 @@
       {
         "italic": false,
         "lemma": "οὐ",
+        "lemma_gloss": "no, not",
         "punc": "",
         "strongs_ids": [
           "G3756"
@@ -5215,6 +5656,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 16,
@@ -5225,6 +5667,7 @@
       {
         "italic": false,
         "lemma": "Χριστός",
+        "lemma_gloss": "anointed, the Messiah, the Christ",
         "punc": ",",
         "strongs_ids": [
           "G5547"
@@ -5237,6 +5680,7 @@
       {
         "italic": false,
         "lemma": "οὔτε",
+        "lemma_gloss": "and not, neither, nor",
         "punc": "",
         "strongs_ids": [
           "G3777"
@@ -5249,6 +5693,7 @@
       {
         "italic": false,
         "lemma": "Ἡλίας",
+        "lemma_gloss": "",
         "punc": ",",
         "strongs_ids": [
           "G2243"
@@ -5261,6 +5706,7 @@
       {
         "italic": false,
         "lemma": "οὔτε",
+        "lemma_gloss": "and not, neither, nor",
         "punc": "",
         "strongs_ids": [
           "G3777"
@@ -5273,6 +5719,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 21,
@@ -5283,6 +5730,7 @@
       {
         "italic": false,
         "lemma": "προφήτης",
+        "lemma_gloss": "prophet, poet",
         "punc": "?",
         "strongs_ids": [
           "G4396"
@@ -5302,6 +5750,7 @@
       {
         "italic": false,
         "lemma": "Ἰωάννης",
+        "lemma_gloss": "John",
         "punc": "",
         "strongs_ids": [
           "G2491"
@@ -5314,6 +5763,7 @@
       {
         "italic": false,
         "lemma": "ἀποκρίνομαι",
+        "lemma_gloss": "answer, reply",
         "punc": "",
         "strongs_ids": [
           "G611"
@@ -5326,6 +5776,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": ",",
         "strongs_ids": [
           "G846"
@@ -5338,6 +5789,7 @@
       {
         "italic": false,
         "lemma": "λέγω",
+        "lemma_gloss": "say, speak",
         "punc": ",",
         "strongs_ids": [
           "G3004"
@@ -5350,6 +5802,7 @@
       {
         "italic": false,
         "lemma": "ἐγώ",
+        "lemma_gloss": "I",
         "punc": "",
         "strongs_ids": [
           "G1473"
@@ -5362,6 +5815,7 @@
       {
         "italic": false,
         "lemma": "βαπτίζω",
+        "lemma_gloss": "dip, submerge, baptize",
         "punc": "",
         "strongs_ids": [
           "G907"
@@ -5374,6 +5828,7 @@
       {
         "italic": false,
         "lemma": "ἐν",
+        "lemma_gloss": "in, on, among",
         "punc": "",
         "strongs_ids": [
           "G1722"
@@ -5386,6 +5841,7 @@
       {
         "italic": false,
         "lemma": "ὕδωρ",
+        "lemma_gloss": "water",
         "punc": ":",
         "strongs_ids": [
           "G5204"
@@ -5398,6 +5854,7 @@
       {
         "italic": false,
         "lemma": "δέ",
+        "lemma_gloss": "but, on the other hand, and",
         "punc": "",
         "strongs_ids": [
           "G1161"
@@ -5410,6 +5867,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -5420,6 +5878,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 10,
@@ -5430,6 +5889,7 @@
       {
         "italic": false,
         "lemma": "ἵστημι",
+        "lemma_gloss": "cause to stand, stand",
         "punc": "",
         "strongs_ids": [
           "G2476"
@@ -5442,6 +5902,7 @@
       {
         "italic": false,
         "lemma": "μέσος",
+        "lemma_gloss": "middle, in the middle",
         "punc": "",
         "strongs_ids": [
           "G3319"
@@ -5454,6 +5915,7 @@
       {
         "italic": false,
         "lemma": "ὑμῶν",
+        "lemma_gloss": "of you",
         "punc": ",",
         "strongs_ids": [
           "G5216"
@@ -5466,6 +5928,7 @@
       {
         "italic": false,
         "lemma": "ὅς",
+        "lemma_gloss": "who, which, what, that",
         "punc": "",
         "strongs_ids": [
           "G3739"
@@ -5478,6 +5941,7 @@
       {
         "italic": false,
         "lemma": "ὑμεῖς",
+        "lemma_gloss": "you",
         "punc": "",
         "strongs_ids": [
           "G5210"
@@ -5490,6 +5954,7 @@
       {
         "italic": false,
         "lemma": "εἴδω",
+        "lemma_gloss": "know, remember",
         "punc": "",
         "strongs_ids": [
           "G1492"
@@ -5502,6 +5967,7 @@
       {
         "italic": false,
         "lemma": "οὐ",
+        "lemma_gloss": "no, not",
         "punc": ";",
         "strongs_ids": [
           "G3756"
@@ -5521,6 +5987,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": "",
         "strongs_ids": [
           "G846"
@@ -5533,6 +6000,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 1,
@@ -5543,6 +6011,7 @@
       {
         "italic": false,
         "lemma": "ἐστί",
+        "lemma_gloss": "he is",
         "punc": ",",
         "strongs_ids": [
           "G2076"
@@ -5555,6 +6024,7 @@
       {
         "italic": false,
         "lemma": "ὅς",
+        "lemma_gloss": "who, which, what, that",
         "punc": "",
         "strongs_ids": [
           "G3739"
@@ -5567,6 +6037,7 @@
       {
         "italic": false,
         "lemma": "ἔρχομαι",
+        "lemma_gloss": "come, go",
         "punc": "",
         "strongs_ids": [
           "G2064"
@@ -5579,6 +6050,7 @@
       {
         "italic": false,
         "lemma": "ὀπίσω",
+        "lemma_gloss": "behind, after",
         "punc": "",
         "strongs_ids": [
           "G3694"
@@ -5591,6 +6063,7 @@
       {
         "italic": false,
         "lemma": "μοῦ",
+        "lemma_gloss": "of me",
         "punc": "",
         "strongs_ids": [
           "G3450"
@@ -5603,6 +6076,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -5613,6 +6087,7 @@
       {
         "italic": false,
         "lemma": "γίνομαι",
+        "lemma_gloss": "come into being, am born",
         "punc": "",
         "strongs_ids": [
           "G1096"
@@ -5625,6 +6100,7 @@
       {
         "italic": false,
         "lemma": "ἔμπροσθεν",
+        "lemma_gloss": "in front, before the face",
         "punc": "",
         "strongs_ids": [
           "G1715"
@@ -5637,6 +6113,7 @@
       {
         "italic": false,
         "lemma": "μοῦ",
+        "lemma_gloss": "of me",
         "punc": ",",
         "strongs_ids": [
           "G3450"
@@ -5649,6 +6126,7 @@
       {
         "italic": false,
         "lemma": "ὅς",
+        "lemma_gloss": "who, which, what, that",
         "punc": "",
         "strongs_ids": [
           "G3739",
@@ -5662,6 +6140,7 @@
       {
         "italic": false,
         "lemma": "ὑπόδημα",
+        "lemma_gloss": "sandal",
         "punc": "",
         "strongs_ids": [
           "G5266"
@@ -5674,6 +6153,7 @@
       {
         "italic": false,
         "lemma": "ἱμάς",
+        "lemma_gloss": "thong, strap",
         "punc": "",
         "strongs_ids": [
           "G2438"
@@ -5686,6 +6166,7 @@
       {
         "italic": false,
         "lemma": "ἐγώ",
+        "lemma_gloss": "I",
         "punc": "",
         "strongs_ids": [
           "G1473"
@@ -5698,6 +6179,7 @@
       {
         "italic": false,
         "lemma": "εἰμί",
+        "lemma_gloss": "to be, exist",
         "punc": "",
         "strongs_ids": [
           "G1510"
@@ -5710,6 +6192,7 @@
       {
         "italic": false,
         "lemma": "οὐ",
+        "lemma_gloss": "no, not",
         "punc": "",
         "strongs_ids": [
           "G3756"
@@ -5722,6 +6205,7 @@
       {
         "italic": false,
         "lemma": "ἄξιος",
+        "lemma_gloss": "worthy, worthy of, deserving",
         "punc": "",
         "strongs_ids": [
           "G514"
@@ -5734,6 +6218,7 @@
       {
         "italic": false,
         "lemma": "ἵνα",
+        "lemma_gloss": "in order that, so that",
         "punc": "",
         "strongs_ids": [
           "G2443"
@@ -5746,6 +6231,7 @@
       {
         "italic": false,
         "lemma": "λύω",
+        "lemma_gloss": "loose, untie, release, destroy",
         "punc": ".",
         "strongs_ids": [
           "G3089"
@@ -5765,6 +6251,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -5775,6 +6262,7 @@
       {
         "italic": false,
         "lemma": "ταῦτα",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [
           "G5023"
@@ -5787,6 +6275,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 2,
@@ -5797,6 +6286,7 @@
       {
         "italic": false,
         "lemma": "γίνομαι",
+        "lemma_gloss": "come into being, am born",
         "punc": "",
         "strongs_ids": [
           "G1096"
@@ -5809,6 +6299,7 @@
       {
         "italic": false,
         "lemma": "ἐν",
+        "lemma_gloss": "in, on, among",
         "punc": "",
         "strongs_ids": [
           "G1722"
@@ -5821,6 +6312,7 @@
       {
         "italic": false,
         "lemma": "Βηθαβαρά",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [
           "G962"
@@ -5833,6 +6325,7 @@
       {
         "italic": false,
         "lemma": "πέραν",
+        "lemma_gloss": "over, beyond",
         "punc": "",
         "strongs_ids": [
           "G4008"
@@ -5845,6 +6338,7 @@
       {
         "italic": false,
         "lemma": "Ἰορδάνης",
+        "lemma_gloss": "",
         "punc": ",",
         "strongs_ids": [
           "G2446"
@@ -5857,6 +6351,7 @@
       {
         "italic": false,
         "lemma": "ὅπου",
+        "lemma_gloss": "where, whither",
         "punc": "",
         "strongs_ids": [
           "G3699"
@@ -5869,6 +6364,7 @@
       {
         "italic": false,
         "lemma": "Ἰωάννης",
+        "lemma_gloss": "John",
         "punc": "",
         "strongs_ids": [
           "G2491"
@@ -5881,6 +6377,7 @@
       {
         "italic": false,
         "lemma": "ἦν",
+        "lemma_gloss": "was",
         "punc": "",
         "strongs_ids": [
           "G2258"
@@ -5893,6 +6390,7 @@
       {
         "italic": false,
         "lemma": "βαπτίζω",
+        "lemma_gloss": "dip, submerge, baptize",
         "punc": ".",
         "strongs_ids": [
           "G907"
@@ -5912,6 +6410,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -5922,6 +6421,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 1,
@@ -5932,6 +6432,7 @@
       {
         "italic": false,
         "lemma": "ἐπαύριον",
+        "lemma_gloss": "tomorrow",
         "punc": "",
         "strongs_ids": [
           "G1887"
@@ -5944,6 +6445,7 @@
       {
         "italic": false,
         "lemma": "Ἰωάννης",
+        "lemma_gloss": "John",
         "punc": "",
         "strongs_ids": [
           "G2491"
@@ -5956,6 +6458,7 @@
       {
         "italic": false,
         "lemma": "βλέπω",
+        "lemma_gloss": "look, see",
         "punc": "",
         "strongs_ids": [
           "G991"
@@ -5968,6 +6471,7 @@
       {
         "italic": false,
         "lemma": "Ἰησοῦς",
+        "lemma_gloss": "Jesus",
         "punc": "",
         "strongs_ids": [
           "G2424"
@@ -5980,6 +6484,7 @@
       {
         "italic": false,
         "lemma": "ἔρχομαι",
+        "lemma_gloss": "come, go",
         "punc": "",
         "strongs_ids": [
           "G2064"
@@ -5992,6 +6497,7 @@
       {
         "italic": false,
         "lemma": "πρός",
+        "lemma_gloss": "to, towards, with",
         "punc": "",
         "strongs_ids": [
           "G4314"
@@ -6004,6 +6510,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": ",",
         "strongs_ids": [
           "G846"
@@ -6016,6 +6523,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -6028,6 +6536,7 @@
       {
         "italic": false,
         "lemma": "λέγω",
+        "lemma_gloss": "say, speak",
         "punc": ",",
         "strongs_ids": [
           "G3004"
@@ -6040,6 +6549,7 @@
       {
         "italic": false,
         "lemma": "ἴδε",
+        "lemma_gloss": "See! Lo! Behold! Look!",
         "punc": "",
         "strongs_ids": [
           "G2396"
@@ -6052,6 +6562,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 12,
@@ -6062,6 +6573,7 @@
       {
         "italic": false,
         "lemma": "ἀμνός",
+        "lemma_gloss": "lamb",
         "punc": "",
         "strongs_ids": [
           "G286"
@@ -6074,6 +6586,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 14,
@@ -6084,6 +6597,7 @@
       {
         "italic": false,
         "lemma": "θεός",
+        "lemma_gloss": "God, a god",
         "punc": ",",
         "strongs_ids": [
           "G2316"
@@ -6096,6 +6610,7 @@
       {
         "italic": false,
         "lemma": "ὁ",
+        "lemma_gloss": "the",
         "punc": "",
         "strongs_ids": [
           "G3588"
@@ -6108,6 +6623,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 17,
@@ -6118,6 +6634,7 @@
       {
         "italic": false,
         "lemma": "αἴρω",
+        "lemma_gloss": "raise, lift up",
         "punc": "",
         "strongs_ids": [
           "G142"
@@ -6130,6 +6647,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 19,
@@ -6140,6 +6658,7 @@
       {
         "italic": false,
         "lemma": "ἁμαρτία",
+        "lemma_gloss": "sin",
         "punc": "",
         "strongs_ids": [
           "G266"
@@ -6152,6 +6671,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 21,
@@ -6162,6 +6682,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 22,
@@ -6172,6 +6693,7 @@
       {
         "italic": false,
         "lemma": "κόσμος",
+        "lemma_gloss": "world, universe",
         "punc": ".",
         "strongs_ids": [
           "G2889"
@@ -6191,6 +6713,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -6201,6 +6724,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 1,
@@ -6211,6 +6735,7 @@
       {
         "italic": false,
         "lemma": "ἐστί",
+        "lemma_gloss": "he is",
         "punc": "",
         "strongs_ids": [
           "G2076"
@@ -6223,6 +6748,7 @@
       {
         "italic": false,
         "lemma": "περί",
+        "lemma_gloss": "about, concerning, around",
         "punc": "",
         "strongs_ids": [
           "G4012"
@@ -6235,6 +6761,7 @@
       {
         "italic": false,
         "lemma": "ὅς",
+        "lemma_gloss": "who, which, what, that",
         "punc": "",
         "strongs_ids": [
           "G3739"
@@ -6247,6 +6774,7 @@
       {
         "italic": false,
         "lemma": "ἐγώ",
+        "lemma_gloss": "I",
         "punc": "",
         "strongs_ids": [
           "G1473"
@@ -6259,6 +6787,7 @@
       {
         "italic": false,
         "lemma": "ἔπω",
+        "lemma_gloss": "to say",
         "punc": ",",
         "strongs_ids": [
           "G2036"
@@ -6271,6 +6800,7 @@
       {
         "italic": false,
         "lemma": "ὀπίσω",
+        "lemma_gloss": "behind, after",
         "punc": "",
         "strongs_ids": [
           "G3694"
@@ -6283,6 +6813,7 @@
       {
         "italic": false,
         "lemma": "μοῦ",
+        "lemma_gloss": "of me",
         "punc": "",
         "strongs_ids": [
           "G3450"
@@ -6295,6 +6826,7 @@
       {
         "italic": false,
         "lemma": "ἔρχομαι",
+        "lemma_gloss": "come, go",
         "punc": "",
         "strongs_ids": [
           "G2064"
@@ -6307,6 +6839,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 10,
@@ -6317,6 +6850,7 @@
       {
         "italic": false,
         "lemma": "ἀνήρ",
+        "lemma_gloss": "male human being, a man",
         "punc": "",
         "strongs_ids": [
           "G435"
@@ -6329,6 +6863,7 @@
       {
         "italic": false,
         "lemma": "ὅς",
+        "lemma_gloss": "who, which, what, that",
         "punc": "",
         "strongs_ids": [
           "G3739"
@@ -6341,6 +6876,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 13,
@@ -6351,6 +6887,7 @@
       {
         "italic": false,
         "lemma": "γίνομαι",
+        "lemma_gloss": "come into being, am born",
         "punc": "",
         "strongs_ids": [
           "G1096"
@@ -6363,6 +6900,7 @@
       {
         "italic": false,
         "lemma": "ἔμπροσθεν",
+        "lemma_gloss": "in front, before the face",
         "punc": "",
         "strongs_ids": [
           "G1715"
@@ -6375,6 +6913,7 @@
       {
         "italic": false,
         "lemma": "μοῦ",
+        "lemma_gloss": "of me",
         "punc": ":",
         "strongs_ids": [
           "G3450"
@@ -6387,6 +6926,7 @@
       {
         "italic": false,
         "lemma": "ὅτι",
+        "lemma_gloss": "that, since, because",
         "punc": "",
         "strongs_ids": [
           "G3754"
@@ -6399,6 +6939,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 18,
@@ -6409,6 +6950,7 @@
       {
         "italic": false,
         "lemma": "ἦν",
+        "lemma_gloss": "was",
         "punc": "",
         "strongs_ids": [
           "G2258"
@@ -6421,6 +6963,7 @@
       {
         "italic": false,
         "lemma": "πρῶτος",
+        "lemma_gloss": "first, before",
         "punc": "",
         "strongs_ids": [
           "G4413"
@@ -6433,6 +6976,7 @@
       {
         "italic": false,
         "lemma": "μοῦ",
+        "lemma_gloss": "of me",
         "punc": ".",
         "strongs_ids": [
           "G3450"
@@ -6452,6 +6996,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -6462,6 +7007,7 @@
       {
         "italic": false,
         "lemma": "κἀγώ",
+        "lemma_gloss": "also, I too",
         "punc": "",
         "strongs_ids": [
           "G2504"
@@ -6474,6 +7020,7 @@
       {
         "italic": false,
         "lemma": "εἴδω",
+        "lemma_gloss": "know, remember",
         "punc": "",
         "strongs_ids": [
           "G1492"
@@ -6486,6 +7033,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": "",
         "strongs_ids": [
           "G846"
@@ -6498,6 +7046,7 @@
       {
         "italic": false,
         "lemma": "οὐ",
+        "lemma_gloss": "no, not",
         "punc": ":",
         "strongs_ids": [
           "G3756"
@@ -6510,6 +7059,7 @@
       {
         "italic": false,
         "lemma": "ἀλλά",
+        "lemma_gloss": "but, except",
         "punc": "",
         "strongs_ids": [
           "G235"
@@ -6522,6 +7072,7 @@
       {
         "italic": false,
         "lemma": "ἵνα",
+        "lemma_gloss": "in order that, so that",
         "punc": "",
         "strongs_ids": [
           "G2443"
@@ -6534,6 +7085,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -6544,6 +7096,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 8,
@@ -6554,6 +7107,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -6564,6 +7118,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 10,
@@ -6574,6 +7129,7 @@
       {
         "italic": false,
         "lemma": "φανερόω",
+        "lemma_gloss": "make clear, visible, or manifest",
         "punc": "",
         "strongs_ids": [
           "G5319"
@@ -6586,6 +7142,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 12,
@@ -6596,6 +7153,7 @@
       {
         "italic": false,
         "lemma": "Ἰσραήλ",
+        "lemma_gloss": "",
         "punc": ",",
         "strongs_ids": [
           "G2474"
@@ -6608,6 +7166,7 @@
       {
         "italic": false,
         "lemma": "τοῦτο",
+        "lemma_gloss": "through, on account of",
         "punc": "",
         "strongs_ids": [
           "G1223",
@@ -6621,6 +7180,7 @@
       {
         "italic": false,
         "lemma": "ἔρχομαι",
+        "lemma_gloss": "come, go",
         "punc": "",
         "strongs_ids": [
           "G2064"
@@ -6633,6 +7193,7 @@
       {
         "italic": false,
         "lemma": "ἐγώ",
+        "lemma_gloss": "I",
         "punc": "",
         "strongs_ids": [
           "G1473"
@@ -6645,6 +7206,7 @@
       {
         "italic": false,
         "lemma": "ἔρχομαι",
+        "lemma_gloss": "come, go",
         "punc": "",
         "strongs_ids": [
           "G2064"
@@ -6657,6 +7219,7 @@
       {
         "italic": false,
         "lemma": "βαπτίζω",
+        "lemma_gloss": "dip, submerge, baptize",
         "punc": "",
         "strongs_ids": [
           "G907"
@@ -6669,6 +7232,7 @@
       {
         "italic": false,
         "lemma": "ἐν",
+        "lemma_gloss": "in, on, among",
         "punc": "",
         "strongs_ids": [
           "G1722"
@@ -6681,6 +7245,7 @@
       {
         "italic": false,
         "lemma": "ὕδωρ",
+        "lemma_gloss": "water",
         "punc": ".",
         "strongs_ids": [
           "G5204"
@@ -6700,6 +7265,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -6712,6 +7278,7 @@
       {
         "italic": false,
         "lemma": "Ἰωάννης",
+        "lemma_gloss": "John",
         "punc": "",
         "strongs_ids": [
           "G2491"
@@ -6724,6 +7291,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 2,
@@ -6734,6 +7302,7 @@
       {
         "italic": false,
         "lemma": "μαρτυρέω",
+        "lemma_gloss": "witness, testify",
         "punc": ",",
         "strongs_ids": [
           "G3140"
@@ -6746,6 +7315,7 @@
       {
         "italic": false,
         "lemma": "ὅτι",
+        "lemma_gloss": "that, since, because",
         "punc": ",",
         "strongs_ids": [
           "G3004",
@@ -6759,6 +7329,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 5,
@@ -6769,6 +7340,7 @@
       {
         "italic": false,
         "lemma": "θεάομαι",
+        "lemma_gloss": "see, behold, contemplate, visit",
         "punc": "",
         "strongs_ids": [
           "G2300"
@@ -6781,6 +7353,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -6791,6 +7364,7 @@
       {
         "italic": false,
         "lemma": "πνεῦμα",
+        "lemma_gloss": "spirit, breath, wind",
         "punc": "",
         "strongs_ids": [
           "G4151"
@@ -6803,6 +7377,7 @@
       {
         "italic": false,
         "lemma": "καταβαίνω",
+        "lemma_gloss": "go down, come down",
         "punc": "",
         "strongs_ids": [
           "G2597"
@@ -6815,6 +7390,7 @@
       {
         "italic": false,
         "lemma": "ἐκ",
+        "lemma_gloss": "from out, out from among, from",
         "punc": "",
         "strongs_ids": [
           "G1537"
@@ -6827,6 +7403,7 @@
       {
         "italic": false,
         "lemma": "οὐρανός",
+        "lemma_gloss": "sky, the heaven",
         "punc": "",
         "strongs_ids": [
           "G3772"
@@ -6839,6 +7416,7 @@
       {
         "italic": false,
         "lemma": "ὡσεί",
+        "lemma_gloss": "as if, as it were, like, about",
         "punc": "",
         "strongs_ids": [
           "G5616"
@@ -6851,6 +7429,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 13,
@@ -6861,6 +7440,7 @@
       {
         "italic": false,
         "lemma": "περιστερά",
+        "lemma_gloss": "dove",
         "punc": ",",
         "strongs_ids": [
           "G4058"
@@ -6873,6 +7453,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -6885,6 +7466,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 16,
@@ -6895,6 +7477,7 @@
       {
         "italic": false,
         "lemma": "μένω",
+        "lemma_gloss": "remain, abide",
         "punc": "",
         "strongs_ids": [
           "G3306"
@@ -6907,6 +7490,7 @@
       {
         "italic": false,
         "lemma": "ἐπί",
+        "lemma_gloss": "on, to, against, on the basis of, at",
         "punc": "",
         "strongs_ids": [
           "G1909"
@@ -6919,6 +7503,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": ".",
         "strongs_ids": [
           "G846"
@@ -6938,6 +7523,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -6948,6 +7534,7 @@
       {
         "italic": false,
         "lemma": "κἀγώ",
+        "lemma_gloss": "also, I too",
         "punc": "",
         "strongs_ids": [
           "G2504"
@@ -6960,6 +7547,7 @@
       {
         "italic": false,
         "lemma": "εἴδω",
+        "lemma_gloss": "know, remember",
         "punc": "",
         "strongs_ids": [
           "G1492"
@@ -6972,6 +7560,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": "",
         "strongs_ids": [
           "G846"
@@ -6984,6 +7573,7 @@
       {
         "italic": false,
         "lemma": "οὐ",
+        "lemma_gloss": "no, not",
         "punc": ":",
         "strongs_ids": [
           "G3756"
@@ -6996,6 +7586,7 @@
       {
         "italic": false,
         "lemma": "ἀλλά",
+        "lemma_gloss": "but, except",
         "punc": "",
         "strongs_ids": [
           "G235"
@@ -7008,6 +7599,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 6,
@@ -7018,6 +7610,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -7028,6 +7621,7 @@
       {
         "italic": false,
         "lemma": "πέμπω",
+        "lemma_gloss": "send",
         "punc": "",
         "strongs_ids": [
           "G3992"
@@ -7040,6 +7634,7 @@
       {
         "italic": false,
         "lemma": "μέ",
+        "lemma_gloss": "me",
         "punc": "",
         "strongs_ids": [
           "G3165"
@@ -7052,6 +7647,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 10,
@@ -7062,6 +7658,7 @@
       {
         "italic": false,
         "lemma": "βαπτίζω",
+        "lemma_gloss": "dip, submerge, baptize",
         "punc": "",
         "strongs_ids": [
           "G907"
@@ -7074,6 +7671,7 @@
       {
         "italic": false,
         "lemma": "ἐν",
+        "lemma_gloss": "in, on, among",
         "punc": "",
         "strongs_ids": [
           "G1722"
@@ -7086,6 +7684,7 @@
       {
         "italic": false,
         "lemma": "ὕδωρ",
+        "lemma_gloss": "water",
         "punc": ",",
         "strongs_ids": [
           "G5204"
@@ -7098,6 +7697,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 14,
@@ -7108,6 +7708,7 @@
       {
         "italic": false,
         "lemma": "ἐκεῖνος",
+        "lemma_gloss": "that, that one there, yonder",
         "punc": "",
         "strongs_ids": [
           "G1565"
@@ -7120,6 +7721,7 @@
       {
         "italic": false,
         "lemma": "ἔπω",
+        "lemma_gloss": "to say",
         "punc": "",
         "strongs_ids": [
           "G2036"
@@ -7132,6 +7734,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 17,
@@ -7142,6 +7745,7 @@
       {
         "italic": false,
         "lemma": "μοί",
+        "lemma_gloss": "to me",
         "punc": ",",
         "strongs_ids": [
           "G3427"
@@ -7154,6 +7758,7 @@
       {
         "italic": false,
         "lemma": "ἐπί",
+        "lemma_gloss": "on, to, against, on the basis of, at",
         "punc": "",
         "strongs_ids": [
           "G1909"
@@ -7166,6 +7771,7 @@
       {
         "italic": false,
         "lemma": "ἄν",
+        "lemma_gloss": "untranslatable word that makes a statement contingent",
         "punc": "",
         "strongs_ids": [
           "G302"
@@ -7178,6 +7784,7 @@
       {
         "italic": false,
         "lemma": "ὅς",
+        "lemma_gloss": "who, which, what, that",
         "punc": "",
         "strongs_ids": [
           "G3739"
@@ -7190,6 +7797,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 22,
@@ -7200,6 +7808,7 @@
       {
         "italic": false,
         "lemma": "εἴδω",
+        "lemma_gloss": "know, remember",
         "punc": "",
         "strongs_ids": [
           "G1492"
@@ -7212,6 +7821,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 24,
@@ -7222,6 +7832,7 @@
       {
         "italic": false,
         "lemma": "πνεῦμα",
+        "lemma_gloss": "spirit, breath, wind",
         "punc": "",
         "strongs_ids": [
           "G4151"
@@ -7234,6 +7845,7 @@
       {
         "italic": false,
         "lemma": "καταβαίνω",
+        "lemma_gloss": "go down, come down",
         "punc": ",",
         "strongs_ids": [
           "G2597"
@@ -7246,6 +7858,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -7258,6 +7871,7 @@
       {
         "italic": false,
         "lemma": "μένω",
+        "lemma_gloss": "remain, abide",
         "punc": "",
         "strongs_ids": [
           "G3306"
@@ -7270,6 +7884,7 @@
       {
         "italic": false,
         "lemma": "ἐπί",
+        "lemma_gloss": "on, to, against, on the basis of, at",
         "punc": "",
         "strongs_ids": [
           "G1909"
@@ -7282,6 +7897,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": ",",
         "strongs_ids": [
           "G846"
@@ -7294,6 +7910,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 31,
@@ -7304,6 +7921,7 @@
       {
         "italic": false,
         "lemma": "οὗτος",
+        "lemma_gloss": "this, he, she, it",
         "punc": "",
         "strongs_ids": [
           "G3778"
@@ -7316,6 +7934,7 @@
       {
         "italic": false,
         "lemma": "ἐστί",
+        "lemma_gloss": "he is",
         "punc": "",
         "strongs_ids": [
           "G2076"
@@ -7328,6 +7947,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 34,
@@ -7338,6 +7958,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 35,
@@ -7348,6 +7969,7 @@
       {
         "italic": false,
         "lemma": "βαπτίζω",
+        "lemma_gloss": "dip, submerge, baptize",
         "punc": "",
         "strongs_ids": [
           "G907"
@@ -7360,6 +7982,7 @@
       {
         "italic": false,
         "lemma": "ἐν",
+        "lemma_gloss": "in, on, among",
         "punc": "",
         "strongs_ids": [
           "G1722"
@@ -7372,6 +7995,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 38,
@@ -7382,6 +8006,7 @@
       {
         "italic": false,
         "lemma": "ἅγιος",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [
           "G40"
@@ -7394,6 +8019,7 @@
       {
         "italic": false,
         "lemma": "πνεῦμα",
+        "lemma_gloss": "spirit, breath, wind",
         "punc": ".",
         "strongs_ids": [
           "G4151"
@@ -7413,6 +8039,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -7423,6 +8050,7 @@
       {
         "italic": false,
         "lemma": "κἀγώ",
+        "lemma_gloss": "also, I too",
         "punc": "",
         "strongs_ids": [
           "G2504"
@@ -7435,6 +8063,7 @@
       {
         "italic": false,
         "lemma": "ὁράω",
+        "lemma_gloss": "see, look upon, experience",
         "punc": ",",
         "strongs_ids": [
           "G3708"
@@ -7447,6 +8076,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -7459,6 +8089,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 4,
@@ -7469,6 +8100,7 @@
       {
         "italic": false,
         "lemma": "μαρτυρέω",
+        "lemma_gloss": "witness, testify",
         "punc": "",
         "strongs_ids": [
           "G3140"
@@ -7481,6 +8113,7 @@
       {
         "italic": false,
         "lemma": "ὅτι",
+        "lemma_gloss": "that, since, because",
         "punc": "",
         "strongs_ids": [
           "G3754"
@@ -7493,6 +8126,7 @@
       {
         "italic": false,
         "lemma": "οὗτος",
+        "lemma_gloss": "this, he, she, it",
         "punc": "",
         "strongs_ids": [
           "G3778"
@@ -7505,6 +8139,7 @@
       {
         "italic": false,
         "lemma": "ἐστί",
+        "lemma_gloss": "he is",
         "punc": "",
         "strongs_ids": [
           "G2076"
@@ -7517,6 +8152,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -7527,6 +8163,7 @@
       {
         "italic": false,
         "lemma": "υἱός",
+        "lemma_gloss": "son, descendent",
         "punc": "",
         "strongs_ids": [
           "G5207"
@@ -7539,6 +8176,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 11,
@@ -7549,6 +8187,7 @@
       {
         "italic": false,
         "lemma": "θεός",
+        "lemma_gloss": "God, a god",
         "punc": ".",
         "strongs_ids": [
           "G2316"
@@ -7568,6 +8207,7 @@
       {
         "italic": false,
         "lemma": "πάλιν",
+        "lemma_gloss": "again, further, on the other hand",
         "punc": "",
         "strongs_ids": [
           "G3825"
@@ -7580,6 +8220,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 1,
@@ -7590,6 +8231,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 2,
@@ -7600,6 +8242,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -7610,6 +8253,7 @@
       {
         "italic": false,
         "lemma": "ἐπαύριον",
+        "lemma_gloss": "tomorrow",
         "punc": "",
         "strongs_ids": [
           "G1887"
@@ -7622,6 +8266,7 @@
       {
         "italic": false,
         "lemma": "Ἰωάννης",
+        "lemma_gloss": "John",
         "punc": "",
         "strongs_ids": [
           "G2491"
@@ -7634,6 +8279,7 @@
       {
         "italic": false,
         "lemma": "ἵστημι",
+        "lemma_gloss": "cause to stand, stand",
         "punc": ",",
         "strongs_ids": [
           "G2476"
@@ -7646,6 +8292,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -7658,6 +8305,7 @@
       {
         "italic": false,
         "lemma": "δύο",
+        "lemma_gloss": "two",
         "punc": "",
         "strongs_ids": [
           "G1417"
@@ -7670,6 +8318,7 @@
       {
         "italic": false,
         "lemma": "ἐκ",
+        "lemma_gloss": "from out, out from among, from",
         "punc": "",
         "strongs_ids": [
           "G1537"
@@ -7682,6 +8331,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": "",
         "strongs_ids": [
           "G846"
@@ -7694,6 +8344,7 @@
       {
         "italic": false,
         "lemma": "μαθητής",
+        "lemma_gloss": "learner, disciple, pupil",
         "punc": ";",
         "strongs_ids": [
           "G3101"
@@ -7713,6 +8364,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -7725,6 +8377,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 1,
@@ -7735,6 +8388,7 @@
       {
         "italic": false,
         "lemma": "ἐμβλέπω",
+        "lemma_gloss": "look into, look upon",
         "punc": "",
         "strongs_ids": [
           "G1689"
@@ -7747,6 +8401,7 @@
       {
         "italic": false,
         "lemma": "Ἰησοῦς",
+        "lemma_gloss": "Jesus",
         "punc": "",
         "strongs_ids": [
           "G2424"
@@ -7759,6 +8414,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 4,
@@ -7769,6 +8425,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 5,
@@ -7779,6 +8436,7 @@
       {
         "italic": false,
         "lemma": "περιπατέω",
+        "lemma_gloss": "walk, conduct my life",
         "punc": ",",
         "strongs_ids": [
           "G4043"
@@ -7791,6 +8449,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -7801,6 +8460,7 @@
       {
         "italic": false,
         "lemma": "λέγω",
+        "lemma_gloss": "say, speak",
         "punc": ",",
         "strongs_ids": [
           "G3004"
@@ -7813,6 +8473,7 @@
       {
         "italic": false,
         "lemma": "ἴδε",
+        "lemma_gloss": "See! Lo! Behold! Look!",
         "punc": "",
         "strongs_ids": [
           "G2396"
@@ -7825,6 +8486,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 10,
@@ -7835,6 +8497,7 @@
       {
         "italic": false,
         "lemma": "ἀμνός",
+        "lemma_gloss": "lamb",
         "punc": "",
         "strongs_ids": [
           "G286"
@@ -7847,6 +8510,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 12,
@@ -7857,6 +8521,7 @@
       {
         "italic": false,
         "lemma": "θεός",
+        "lemma_gloss": "God, a god",
         "punc": "!",
         "strongs_ids": [
           "G2316"
@@ -7876,6 +8541,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -7888,6 +8554,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 1,
@@ -7898,6 +8565,7 @@
       {
         "italic": false,
         "lemma": "δύο",
+        "lemma_gloss": "two",
         "punc": "",
         "strongs_ids": [
           "G1417"
@@ -7910,6 +8578,7 @@
       {
         "italic": false,
         "lemma": "μαθητής",
+        "lemma_gloss": "learner, disciple, pupil",
         "punc": "",
         "strongs_ids": [
           "G3101"
@@ -7922,6 +8591,7 @@
       {
         "italic": false,
         "lemma": "ἀκούω",
+        "lemma_gloss": "hear, listen",
         "punc": "",
         "strongs_ids": [
           "G191"
@@ -7934,6 +8604,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": "",
         "strongs_ids": [
           "G846"
@@ -7946,6 +8617,7 @@
       {
         "italic": false,
         "lemma": "λαλέω",
+        "lemma_gloss": "speak, say",
         "punc": ",",
         "strongs_ids": [
           "G2980"
@@ -7958,6 +8630,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -7970,6 +8643,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 8,
@@ -7980,6 +8654,7 @@
       {
         "italic": false,
         "lemma": "ἀκολουθέω",
+        "lemma_gloss": "accompany, attend, follow",
         "punc": "",
         "strongs_ids": [
           "G190"
@@ -7992,6 +8667,7 @@
       {
         "italic": false,
         "lemma": "Ἰησοῦς",
+        "lemma_gloss": "Jesus",
         "punc": ".",
         "strongs_ids": [
           "G2424"
@@ -8011,6 +8687,7 @@
       {
         "italic": false,
         "lemma": "δέ",
+        "lemma_gloss": "but, on the other hand, and",
         "punc": "",
         "strongs_ids": [
           "G1161"
@@ -8023,6 +8700,7 @@
       {
         "italic": false,
         "lemma": "Ἰησοῦς",
+        "lemma_gloss": "Jesus",
         "punc": "",
         "strongs_ids": [
           "G2424"
@@ -8035,6 +8713,7 @@
       {
         "italic": false,
         "lemma": "στρέφω",
+        "lemma_gloss": "turn, am converted, change",
         "punc": ",",
         "strongs_ids": [
           "G4762"
@@ -8047,6 +8726,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -8059,6 +8739,7 @@
       {
         "italic": false,
         "lemma": "θεάομαι",
+        "lemma_gloss": "see, behold, contemplate, visit",
         "punc": "",
         "strongs_ids": [
           "G2300"
@@ -8071,6 +8752,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": "",
         "strongs_ids": [
           "G846"
@@ -8083,6 +8765,7 @@
       {
         "italic": false,
         "lemma": "ἀκολουθέω",
+        "lemma_gloss": "accompany, attend, follow",
         "punc": ",",
         "strongs_ids": [
           "G190"
@@ -8095,6 +8778,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -8105,6 +8789,7 @@
       {
         "italic": false,
         "lemma": "λέγω",
+        "lemma_gloss": "say, speak",
         "punc": "",
         "strongs_ids": [
           "G3004"
@@ -8117,6 +8802,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -8127,6 +8813,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": ",",
         "strongs_ids": [
           "G846"
@@ -8139,6 +8826,7 @@
       {
         "italic": false,
         "lemma": "τίς",
+        "lemma_gloss": "who, which, what",
         "punc": "",
         "strongs_ids": [
           "G5101"
@@ -8151,6 +8839,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 12,
@@ -8161,6 +8850,7 @@
       {
         "italic": false,
         "lemma": "ζητέω",
+        "lemma_gloss": "seek, search for, desire",
         "punc": "?",
         "strongs_ids": [
           "G1161",
@@ -8174,6 +8864,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 14,
@@ -8184,6 +8875,7 @@
       {
         "italic": false,
         "lemma": "ἔπω",
+        "lemma_gloss": "to say",
         "punc": "",
         "strongs_ids": [
           "G2036"
@@ -8196,6 +8888,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 16,
@@ -8206,6 +8899,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": ",",
         "strongs_ids": [
           "G846"
@@ -8218,6 +8912,7 @@
       {
         "italic": false,
         "lemma": "ῥαββί",
+        "lemma_gloss": "who, which, what, that",
         "punc": ",",
         "strongs_ids": [
           "G3739",
@@ -8231,6 +8926,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 19,
@@ -8241,6 +8937,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 20,
@@ -8251,6 +8948,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 21,
@@ -8261,6 +8959,7 @@
       {
         "italic": false,
         "lemma": "λέγω",
+        "lemma_gloss": "say, speak",
         "punc": ",",
         "strongs_ids": [
           "G3004"
@@ -8273,6 +8972,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 23,
@@ -8283,6 +8983,7 @@
       {
         "italic": false,
         "lemma": "ἑρμηνεύω",
+        "lemma_gloss": "translate, interpret",
         "punc": ",",
         "strongs_ids": [
           "G2059"
@@ -8295,6 +8996,7 @@
       {
         "italic": false,
         "lemma": "διδάσκαλος",
+        "lemma_gloss": "teacher",
         "punc": ",",
         "strongs_ids": [
           "G1320"
@@ -8307,6 +9009,7 @@
       {
         "italic": false,
         "lemma": "ποῦ",
+        "lemma_gloss": "where, whither",
         "punc": "",
         "strongs_ids": [
           "G4226"
@@ -8319,6 +9022,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 27,
@@ -8329,6 +9033,7 @@
       {
         "italic": false,
         "lemma": "μένω",
+        "lemma_gloss": "remain, abide",
         "punc": "?",
         "strongs_ids": [
           "G3306"
@@ -8348,6 +9053,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -8358,6 +9064,7 @@
       {
         "italic": false,
         "lemma": "λέγω",
+        "lemma_gloss": "say, speak",
         "punc": "",
         "strongs_ids": [
           "G3004"
@@ -8370,6 +9077,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 2,
@@ -8380,6 +9088,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": ",",
         "strongs_ids": [
           "G846"
@@ -8392,6 +9101,7 @@
       {
         "italic": false,
         "lemma": "ἔρχομαι",
+        "lemma_gloss": "come, go",
         "punc": "",
         "strongs_ids": [
           "G2064"
@@ -8404,6 +9114,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -8416,6 +9127,7 @@
       {
         "italic": false,
         "lemma": "εἴδω",
+        "lemma_gloss": "know, remember",
         "punc": ".",
         "strongs_ids": [
           "G1492"
@@ -8428,6 +9140,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -8438,6 +9151,7 @@
       {
         "italic": false,
         "lemma": "ἔρχομαι",
+        "lemma_gloss": "come, go",
         "punc": "",
         "strongs_ids": [
           "G2064"
@@ -8450,6 +9164,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -8462,6 +9177,7 @@
       {
         "italic": false,
         "lemma": "εἴδω",
+        "lemma_gloss": "know, remember",
         "punc": "",
         "strongs_ids": [
           "G1492"
@@ -8474,6 +9190,7 @@
       {
         "italic": false,
         "lemma": "ποῦ",
+        "lemma_gloss": "where, whither",
         "punc": "",
         "strongs_ids": [
           "G4226"
@@ -8486,6 +9203,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 12,
@@ -8496,6 +9214,7 @@
       {
         "italic": false,
         "lemma": "μένω",
+        "lemma_gloss": "remain, abide",
         "punc": ",",
         "strongs_ids": [
           "G3306"
@@ -8508,6 +9227,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -8520,6 +9240,7 @@
       {
         "italic": false,
         "lemma": "μένω",
+        "lemma_gloss": "remain, abide",
         "punc": "",
         "strongs_ids": [
           "G3306"
@@ -8532,6 +9253,7 @@
       {
         "italic": false,
         "lemma": "παρά",
+        "lemma_gloss": "from, in the presence of",
         "punc": "",
         "strongs_ids": [
           "G3844"
@@ -8544,6 +9266,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": "",
         "strongs_ids": [
           "G846"
@@ -8556,6 +9279,7 @@
       {
         "italic": false,
         "lemma": "ἐκεῖνος",
+        "lemma_gloss": "that, that one there, yonder",
         "punc": "",
         "strongs_ids": [
           "G1565"
@@ -8568,6 +9292,7 @@
       {
         "italic": false,
         "lemma": "ἡμέρα",
+        "lemma_gloss": "day",
         "punc": ":",
         "strongs_ids": [
           "G2250"
@@ -8580,6 +9305,7 @@
       {
         "italic": false,
         "lemma": "δέ",
+        "lemma_gloss": "but, on the other hand, and",
         "punc": "",
         "strongs_ids": [
           "G1161"
@@ -8592,6 +9318,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 21,
@@ -8602,6 +9329,7 @@
       {
         "italic": false,
         "lemma": "ἦν",
+        "lemma_gloss": "was",
         "punc": "",
         "strongs_ids": [
           "G2258"
@@ -8614,6 +9342,7 @@
       {
         "italic": false,
         "lemma": "ὡς",
+        "lemma_gloss": "as, like as, how, while, so that",
         "punc": "",
         "strongs_ids": [
           "G5613"
@@ -8626,6 +9355,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 24,
@@ -8636,6 +9366,7 @@
       {
         "italic": false,
         "lemma": "δέκατος",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [
           "G1182"
@@ -8648,6 +9379,7 @@
       {
         "italic": false,
         "lemma": "ὥρα",
+        "lemma_gloss": "hour, season",
         "punc": ".",
         "strongs_ids": [
           "G5610"
@@ -8667,6 +9399,7 @@
       {
         "italic": false,
         "lemma": "εἷς",
+        "lemma_gloss": "one",
         "punc": "",
         "strongs_ids": [
           "G1520"
@@ -8679,6 +9412,7 @@
       {
         "italic": false,
         "lemma": "ἐκ",
+        "lemma_gloss": "from out, out from among, from",
         "punc": "",
         "strongs_ids": [
           "G1537"
@@ -8691,6 +9425,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 2,
@@ -8701,6 +9436,7 @@
       {
         "italic": false,
         "lemma": "δύο",
+        "lemma_gloss": "two",
         "punc": "",
         "strongs_ids": [
           "G1417"
@@ -8713,6 +9449,7 @@
       {
         "italic": false,
         "lemma": "ὁ",
+        "lemma_gloss": "the",
         "punc": "",
         "strongs_ids": [
           "G3588"
@@ -8725,6 +9462,7 @@
       {
         "italic": false,
         "lemma": "ἀκούω",
+        "lemma_gloss": "hear, listen",
         "punc": "",
         "strongs_ids": [
           "G191",
@@ -8738,6 +9476,7 @@
       {
         "italic": false,
         "lemma": "Ἰωάννης",
+        "lemma_gloss": "John",
         "punc": "",
         "strongs_ids": [
           "G2491"
@@ -8750,6 +9489,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": ",",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -8760,6 +9500,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -8772,6 +9513,7 @@
       {
         "italic": false,
         "lemma": "ἀκολουθέω",
+        "lemma_gloss": "accompany, attend, follow",
         "punc": "",
         "strongs_ids": [
           "G190"
@@ -8784,6 +9526,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": ",",
         "strongs_ids": [
           "G846"
@@ -8796,6 +9539,7 @@
       {
         "italic": false,
         "lemma": "ἦν",
+        "lemma_gloss": "was",
         "punc": "",
         "strongs_ids": [
           "G2258"
@@ -8808,6 +9552,7 @@
       {
         "italic": false,
         "lemma": "Ἀνδρέας",
+        "lemma_gloss": "Andrew",
         "punc": ",",
         "strongs_ids": [
           "G406"
@@ -8820,6 +9565,7 @@
       {
         "italic": true,
         "lemma": "Σίμων",
+        "lemma_gloss": "Simon",
         "punc": "",
         "strongs_ids": [
           "G4613"
@@ -8832,6 +9578,7 @@
       {
         "italic": false,
         "lemma": "Πέτρος",
+        "lemma_gloss": "Peter",
         "punc": "",
         "strongs_ids": [
           "G4074"
@@ -8844,6 +9591,7 @@
       {
         "italic": false,
         "lemma": "ἀδελφός",
+        "lemma_gloss": "brother",
         "punc": ".",
         "strongs_ids": [
           "G80"
@@ -8863,6 +9611,7 @@
       {
         "italic": false,
         "lemma": "οὗτος",
+        "lemma_gloss": "this, he, she, it",
         "punc": "",
         "strongs_ids": [
           "G3778"
@@ -8875,6 +9624,7 @@
       {
         "italic": false,
         "lemma": "πρῶτος",
+        "lemma_gloss": "first, before",
         "punc": "",
         "strongs_ids": [
           "G4413"
@@ -8887,6 +9637,7 @@
       {
         "italic": false,
         "lemma": "εὑρίσκω",
+        "lemma_gloss": "find",
         "punc": "",
         "strongs_ids": [
           "G2147"
@@ -8899,6 +9650,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -8909,6 +9661,7 @@
       {
         "italic": false,
         "lemma": "ἴδιος",
+        "lemma_gloss": "one's own, private, personal",
         "punc": "",
         "strongs_ids": [
           "G2398"
@@ -8921,6 +9674,7 @@
       {
         "italic": false,
         "lemma": "ἀδελφός",
+        "lemma_gloss": "brother",
         "punc": "",
         "strongs_ids": [
           "G80"
@@ -8933,6 +9687,7 @@
       {
         "italic": false,
         "lemma": "Σίμων",
+        "lemma_gloss": "Simon",
         "punc": ",",
         "strongs_ids": [
           "G4613"
@@ -8945,6 +9700,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -8957,6 +9713,7 @@
       {
         "italic": false,
         "lemma": "λέγω",
+        "lemma_gloss": "say, speak",
         "punc": "",
         "strongs_ids": [
           "G3004"
@@ -8969,6 +9726,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -8979,6 +9737,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": ",",
         "strongs_ids": [
           "G846"
@@ -8991,6 +9750,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 11,
@@ -9001,6 +9761,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 12,
@@ -9011,6 +9772,7 @@
       {
         "italic": false,
         "lemma": "εὑρίσκω",
+        "lemma_gloss": "find",
         "punc": "",
         "strongs_ids": [
           "G2147"
@@ -9023,6 +9785,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 14,
@@ -9033,6 +9796,7 @@
       {
         "italic": false,
         "lemma": "Μεσσίας",
+        "lemma_gloss": "Messiah",
         "punc": ",",
         "strongs_ids": [
           "G3323"
@@ -9045,6 +9809,7 @@
       {
         "italic": false,
         "lemma": "ὅς",
+        "lemma_gloss": "who, which, what, that",
         "punc": "",
         "strongs_ids": [
           "G3739"
@@ -9057,6 +9822,7 @@
       {
         "italic": false,
         "lemma": "ἐστί",
+        "lemma_gloss": "he is",
         "punc": ",",
         "strongs_ids": [
           "G2076"
@@ -9069,6 +9835,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 18,
@@ -9079,6 +9846,7 @@
       {
         "italic": false,
         "lemma": "μεθερμηνεύω",
+        "lemma_gloss": "translate, interpret",
         "punc": ",",
         "strongs_ids": [
           "G3177"
@@ -9091,6 +9859,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 20,
@@ -9101,6 +9870,7 @@
       {
         "italic": false,
         "lemma": "Χριστός",
+        "lemma_gloss": "anointed, the Messiah, the Christ",
         "punc": ".",
         "strongs_ids": [
           "G5547"
@@ -9120,6 +9890,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -9132,6 +9903,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 1,
@@ -9142,6 +9914,7 @@
       {
         "italic": false,
         "lemma": "ἄγω",
+        "lemma_gloss": "lead",
         "punc": "",
         "strongs_ids": [
           "G71"
@@ -9154,6 +9927,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": "",
         "strongs_ids": [
           "G846"
@@ -9166,6 +9940,7 @@
       {
         "italic": false,
         "lemma": "πρός",
+        "lemma_gloss": "to, towards, with",
         "punc": "",
         "strongs_ids": [
           "G4314"
@@ -9178,6 +9953,7 @@
       {
         "italic": false,
         "lemma": "Ἰησοῦς",
+        "lemma_gloss": "Jesus",
         "punc": ".",
         "strongs_ids": [
           "G2424"
@@ -9190,6 +9966,7 @@
       {
         "italic": false,
         "lemma": "δέ",
+        "lemma_gloss": "but, on the other hand, and",
         "punc": "",
         "strongs_ids": [
           "G1161"
@@ -9202,6 +9979,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -9212,6 +9990,7 @@
       {
         "italic": false,
         "lemma": "Ἰησοῦς",
+        "lemma_gloss": "Jesus",
         "punc": "",
         "strongs_ids": [
           "G2424"
@@ -9224,6 +10003,7 @@
       {
         "italic": false,
         "lemma": "ἐμβλέπω",
+        "lemma_gloss": "look into, look upon",
         "punc": "",
         "strongs_ids": [
           "G1689"
@@ -9236,6 +10016,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": ",",
         "strongs_ids": [
           "G846"
@@ -9248,6 +10029,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 11,
@@ -9258,6 +10040,7 @@
       {
         "italic": false,
         "lemma": "ἔπω",
+        "lemma_gloss": "to say",
         "punc": ",",
         "strongs_ids": [
           "G2036"
@@ -9270,6 +10053,7 @@
       {
         "italic": false,
         "lemma": "σύ",
+        "lemma_gloss": "you",
         "punc": "",
         "strongs_ids": [
           "G4771"
@@ -9282,6 +10066,7 @@
       {
         "italic": false,
         "lemma": "εἶ",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [
           "G1488"
@@ -9294,6 +10079,7 @@
       {
         "italic": false,
         "lemma": "Σίμων",
+        "lemma_gloss": "Simon",
         "punc": "",
         "strongs_ids": [
           "G4613"
@@ -9306,6 +10092,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 16,
@@ -9316,6 +10103,7 @@
       {
         "italic": false,
         "lemma": "υἱός",
+        "lemma_gloss": "son, descendent",
         "punc": "",
         "strongs_ids": [
           "G5207"
@@ -9328,6 +10116,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 18,
@@ -9338,6 +10127,7 @@
       {
         "italic": false,
         "lemma": "Ἰωνᾶς",
+        "lemma_gloss": "",
         "punc": ":",
         "strongs_ids": [
           "G2495"
@@ -9350,6 +10140,7 @@
       {
         "italic": false,
         "lemma": "σύ",
+        "lemma_gloss": "you",
         "punc": "",
         "strongs_ids": [
           "G4771"
@@ -9362,6 +10153,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 21,
@@ -9372,6 +10164,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 22,
@@ -9382,6 +10175,7 @@
       {
         "italic": false,
         "lemma": "καλέω",
+        "lemma_gloss": "call, invite, name",
         "punc": "",
         "strongs_ids": [
           "G2564"
@@ -9394,6 +10188,7 @@
       {
         "italic": false,
         "lemma": "Κηφᾶς",
+        "lemma_gloss": "Cephas",
         "punc": ",",
         "strongs_ids": [
           "G2786"
@@ -9406,6 +10201,7 @@
       {
         "italic": false,
         "lemma": "ὅς",
+        "lemma_gloss": "who, which, what, that",
         "punc": "",
         "strongs_ids": [
           "G3739"
@@ -9418,6 +10214,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 26,
@@ -9428,6 +10225,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 27,
@@ -9438,6 +10236,7 @@
       {
         "italic": false,
         "lemma": "ἑρμηνεύω",
+        "lemma_gloss": "translate, interpret",
         "punc": ",",
         "strongs_ids": [
           "G2059"
@@ -9450,6 +10249,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 29,
@@ -9460,6 +10260,7 @@
       {
         "italic": false,
         "lemma": "Πέτρος",
+        "lemma_gloss": "Peter",
         "punc": ".",
         "strongs_ids": [
           "G4074"
@@ -9479,6 +10280,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 0,
@@ -9489,6 +10291,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 1,
@@ -9499,6 +10302,7 @@
       {
         "italic": false,
         "lemma": "ἐπαύριον",
+        "lemma_gloss": "tomorrow",
         "punc": "",
         "strongs_ids": [
           "G1887"
@@ -9511,6 +10315,7 @@
       {
         "italic": false,
         "lemma": "Ἰησοῦς",
+        "lemma_gloss": "Jesus",
         "punc": "",
         "strongs_ids": [
           "G2424"
@@ -9523,6 +10328,7 @@
       {
         "italic": false,
         "lemma": "θέλω",
+        "lemma_gloss": "will, wish, desire",
         "punc": "",
         "strongs_ids": [
           "G2309"
@@ -9535,6 +10341,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 5,
@@ -9545,6 +10352,7 @@
       {
         "italic": false,
         "lemma": "ἐξέρχομαι",
+        "lemma_gloss": "go out, come out",
         "punc": "",
         "strongs_ids": [
           "G1831"
@@ -9557,6 +10365,7 @@
       {
         "italic": false,
         "lemma": "εἰς",
+        "lemma_gloss": "into, in, among, till, for",
         "punc": "",
         "strongs_ids": [
           "G1519"
@@ -9569,6 +10378,7 @@
       {
         "italic": false,
         "lemma": "Γαλιλαία",
+        "lemma_gloss": "",
         "punc": ",",
         "strongs_ids": [
           "G1056"
@@ -9581,6 +10391,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -9593,6 +10404,7 @@
       {
         "italic": false,
         "lemma": "εὑρίσκω",
+        "lemma_gloss": "find",
         "punc": "",
         "strongs_ids": [
           "G2147"
@@ -9605,6 +10417,7 @@
       {
         "italic": false,
         "lemma": "Φίλιππος",
+        "lemma_gloss": "Philip",
         "punc": ",",
         "strongs_ids": [
           "G5376"
@@ -9617,6 +10430,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -9629,6 +10443,7 @@
       {
         "italic": false,
         "lemma": "λέγω",
+        "lemma_gloss": "say, speak",
         "punc": "",
         "strongs_ids": [
           "G3004"
@@ -9641,6 +10456,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 14,
@@ -9651,6 +10467,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": ",",
         "strongs_ids": [
           "G846"
@@ -9663,6 +10480,7 @@
       {
         "italic": false,
         "lemma": "ἀκολουθέω",
+        "lemma_gloss": "accompany, attend, follow",
         "punc": "",
         "strongs_ids": [
           "G190"
@@ -9675,6 +10493,7 @@
       {
         "italic": false,
         "lemma": "μοί",
+        "lemma_gloss": "to me",
         "punc": ".",
         "strongs_ids": [
           "G3427"
@@ -9694,6 +10513,7 @@
       {
         "italic": false,
         "lemma": "δέ",
+        "lemma_gloss": "but, on the other hand, and",
         "punc": "",
         "strongs_ids": [
           "G1161"
@@ -9706,6 +10526,7 @@
       {
         "italic": false,
         "lemma": "Φίλιππος",
+        "lemma_gloss": "Philip",
         "punc": "",
         "strongs_ids": [
           "G5376"
@@ -9718,6 +10539,7 @@
       {
         "italic": false,
         "lemma": "ἦν",
+        "lemma_gloss": "was",
         "punc": "",
         "strongs_ids": [
           "G2258"
@@ -9730,6 +10552,7 @@
       {
         "italic": false,
         "lemma": "ἀπό",
+        "lemma_gloss": "from, away from",
         "punc": "",
         "strongs_ids": [
           "G575"
@@ -9742,6 +10565,7 @@
       {
         "italic": false,
         "lemma": "Βηθσαϊδά",
+        "lemma_gloss": "Bethsaida",
         "punc": ",",
         "strongs_ids": [
           "G966"
@@ -9754,6 +10578,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 5,
@@ -9764,6 +10589,7 @@
       {
         "italic": false,
         "lemma": "πόλις",
+        "lemma_gloss": "city",
         "punc": "",
         "strongs_ids": [
           "G4172"
@@ -9776,6 +10602,7 @@
       {
         "italic": false,
         "lemma": "ἐκ",
+        "lemma_gloss": "from out, out from among, from",
         "punc": "",
         "strongs_ids": [
           "G1537"
@@ -9788,6 +10615,7 @@
       {
         "italic": false,
         "lemma": "Ἀνδρέας",
+        "lemma_gloss": "Andrew",
         "punc": "",
         "strongs_ids": [
           "G406"
@@ -9800,6 +10628,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -9812,6 +10641,7 @@
       {
         "italic": false,
         "lemma": "Πέτρος",
+        "lemma_gloss": "Peter",
         "punc": ".",
         "strongs_ids": [
           "G4074"
@@ -9831,6 +10661,7 @@
       {
         "italic": false,
         "lemma": "Φίλιππος",
+        "lemma_gloss": "Philip",
         "punc": "",
         "strongs_ids": [
           "G5376"
@@ -9843,6 +10674,7 @@
       {
         "italic": false,
         "lemma": "εὑρίσκω",
+        "lemma_gloss": "find",
         "punc": "",
         "strongs_ids": [
           "G2147"
@@ -9855,6 +10687,7 @@
       {
         "italic": false,
         "lemma": "Ναθαναήλ",
+        "lemma_gloss": "Nathanael",
         "punc": ",",
         "strongs_ids": [
           "G3482"
@@ -9867,6 +10700,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -9879,6 +10713,7 @@
       {
         "italic": false,
         "lemma": "λέγω",
+        "lemma_gloss": "say, speak",
         "punc": "",
         "strongs_ids": [
           "G3004"
@@ -9891,6 +10726,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 5,
@@ -9901,6 +10737,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": ",",
         "strongs_ids": [
           "G846"
@@ -9913,6 +10750,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -9923,6 +10761,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 8,
@@ -9933,6 +10772,7 @@
       {
         "italic": false,
         "lemma": "εὑρίσκω",
+        "lemma_gloss": "find",
         "punc": "",
         "strongs_ids": [
           "G2147"
@@ -9945,6 +10785,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": ",",
         "strongs_ids": [],
         "verse_pos": 10,
@@ -9955,6 +10796,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 11,
@@ -9965,6 +10807,7 @@
       {
         "italic": false,
         "lemma": "ὅς",
+        "lemma_gloss": "who, which, what, that",
         "punc": "",
         "strongs_ids": [
           "G3739"
@@ -9977,6 +10820,7 @@
       {
         "italic": false,
         "lemma": "Μωσεύς",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [
           "G3475"
@@ -9989,6 +10833,7 @@
       {
         "italic": false,
         "lemma": "ἐν",
+        "lemma_gloss": "in, on, among",
         "punc": "",
         "strongs_ids": [
           "G1722"
@@ -10001,6 +10846,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 15,
@@ -10011,6 +10857,7 @@
       {
         "italic": false,
         "lemma": "νόμος",
+        "lemma_gloss": "law, the Mosaic Law",
         "punc": ",",
         "strongs_ids": [
           "G3551"
@@ -10023,6 +10870,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -10035,6 +10883,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 18,
@@ -10045,6 +10894,7 @@
       {
         "italic": false,
         "lemma": "προφήτης",
+        "lemma_gloss": "prophet, poet",
         "punc": ",",
         "strongs_ids": [
           "G4396"
@@ -10057,6 +10907,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 20,
@@ -10067,6 +10918,7 @@
       {
         "italic": false,
         "lemma": "γράφω",
+        "lemma_gloss": "write",
         "punc": ",",
         "strongs_ids": [
           "G1125"
@@ -10079,6 +10931,7 @@
       {
         "italic": false,
         "lemma": "Ἰησοῦς",
+        "lemma_gloss": "Jesus",
         "punc": "",
         "strongs_ids": [
           "G2424"
@@ -10091,6 +10944,7 @@
       {
         "italic": false,
         "lemma": "ἀπό",
+        "lemma_gloss": "from, away from",
         "punc": "",
         "strongs_ids": [
           "G575"
@@ -10103,6 +10957,7 @@
       {
         "italic": false,
         "lemma": "Ναζαρέθ",
+        "lemma_gloss": "Nazareth",
         "punc": ",",
         "strongs_ids": [
           "G3478"
@@ -10115,6 +10970,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 25,
@@ -10125,6 +10981,7 @@
       {
         "italic": false,
         "lemma": "υἱός",
+        "lemma_gloss": "son, descendent",
         "punc": "",
         "strongs_ids": [
           "G5207"
@@ -10137,6 +10994,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 27,
@@ -10147,6 +11005,7 @@
       {
         "italic": false,
         "lemma": "Ἰωσήφ",
+        "lemma_gloss": "Joseph",
         "punc": ".",
         "strongs_ids": [
           "G2501"
@@ -10166,6 +11025,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -10178,6 +11038,7 @@
       {
         "italic": false,
         "lemma": "Ναθαναήλ",
+        "lemma_gloss": "Nathanael",
         "punc": "",
         "strongs_ids": [
           "G3482"
@@ -10190,6 +11051,7 @@
       {
         "italic": false,
         "lemma": "ἔπω",
+        "lemma_gloss": "to say",
         "punc": "",
         "strongs_ids": [
           "G2036"
@@ -10202,6 +11064,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -10212,6 +11075,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": ",",
         "strongs_ids": [
           "G846"
@@ -10224,6 +11088,7 @@
       {
         "italic": false,
         "lemma": "δύναμαι",
+        "lemma_gloss": "am powerful, am able",
         "punc": "",
         "strongs_ids": [
           "G1410"
@@ -10236,6 +11101,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 6,
@@ -10246,6 +11112,7 @@
       {
         "italic": false,
         "lemma": "τὶς",
+        "lemma_gloss": "any one, some one",
         "punc": "",
         "strongs_ids": [
           "G5100"
@@ -10258,6 +11125,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 8,
@@ -10268,6 +11136,7 @@
       {
         "italic": false,
         "lemma": "ἀγαθός",
+        "lemma_gloss": "good",
         "punc": "",
         "strongs_ids": [
           "G18"
@@ -10280,6 +11149,7 @@
       {
         "italic": false,
         "lemma": "εἶναι",
+        "lemma_gloss": "to exist",
         "punc": "",
         "strongs_ids": [
           "G1511"
@@ -10292,6 +11162,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 11,
@@ -10302,6 +11173,7 @@
       {
         "italic": false,
         "lemma": "ἐκ",
+        "lemma_gloss": "from out, out from among, from",
         "punc": "",
         "strongs_ids": [
           "G1537"
@@ -10314,6 +11186,7 @@
       {
         "italic": false,
         "lemma": "Ναζαρέθ",
+        "lemma_gloss": "Nazareth",
         "punc": "?",
         "strongs_ids": [
           "G3478"
@@ -10326,6 +11199,7 @@
       {
         "italic": false,
         "lemma": "Φίλιππος",
+        "lemma_gloss": "Philip",
         "punc": "",
         "strongs_ids": [
           "G5376"
@@ -10338,6 +11212,7 @@
       {
         "italic": false,
         "lemma": "λέγω",
+        "lemma_gloss": "say, speak",
         "punc": "",
         "strongs_ids": [
           "G3004"
@@ -10350,6 +11225,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 16,
@@ -10360,6 +11236,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": ",",
         "strongs_ids": [
           "G846"
@@ -10372,6 +11249,7 @@
       {
         "italic": false,
         "lemma": "ἔρχομαι",
+        "lemma_gloss": "come, go",
         "punc": "",
         "strongs_ids": [
           "G2064"
@@ -10384,6 +11262,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -10396,6 +11275,7 @@
       {
         "italic": false,
         "lemma": "εἴδω",
+        "lemma_gloss": "know, remember",
         "punc": ".",
         "strongs_ids": [
           "G1492"
@@ -10415,6 +11295,7 @@
       {
         "italic": false,
         "lemma": "Ἰησοῦς",
+        "lemma_gloss": "Jesus",
         "punc": "",
         "strongs_ids": [
           "G2424"
@@ -10427,6 +11308,7 @@
       {
         "italic": false,
         "lemma": "εἴδω",
+        "lemma_gloss": "know, remember",
         "punc": "",
         "strongs_ids": [
           "G1492"
@@ -10439,6 +11321,7 @@
       {
         "italic": false,
         "lemma": "Ναθαναήλ",
+        "lemma_gloss": "Nathanael",
         "punc": "",
         "strongs_ids": [
           "G3482"
@@ -10451,6 +11334,7 @@
       {
         "italic": false,
         "lemma": "ἔρχομαι",
+        "lemma_gloss": "come, go",
         "punc": "",
         "strongs_ids": [
           "G2064"
@@ -10463,6 +11347,7 @@
       {
         "italic": false,
         "lemma": "πρός",
+        "lemma_gloss": "to, towards, with",
         "punc": "",
         "strongs_ids": [
           "G4314"
@@ -10475,6 +11360,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": ",",
         "strongs_ids": [
           "G846"
@@ -10487,6 +11373,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -10499,6 +11386,7 @@
       {
         "italic": false,
         "lemma": "λέγω",
+        "lemma_gloss": "say, speak",
         "punc": "",
         "strongs_ids": [
           "G3004"
@@ -10511,6 +11399,7 @@
       {
         "italic": false,
         "lemma": "περί",
+        "lemma_gloss": "about, concerning, around",
         "punc": "",
         "strongs_ids": [
           "G4012"
@@ -10523,6 +11412,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": ",",
         "strongs_ids": [
           "G846"
@@ -10535,6 +11425,7 @@
       {
         "italic": false,
         "lemma": "ἴδε",
+        "lemma_gloss": "See! Lo! Behold! Look!",
         "punc": "",
         "strongs_ids": [
           "G2396"
@@ -10547,6 +11438,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 11,
@@ -10557,6 +11449,7 @@
       {
         "italic": false,
         "lemma": "Ἰσραηλίτης",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [
           "G2475"
@@ -10569,6 +11462,7 @@
       {
         "italic": false,
         "lemma": "ἀληθῶς",
+        "lemma_gloss": "truly, really, certainly",
         "punc": ",",
         "strongs_ids": [
           "G230"
@@ -10581,6 +11475,7 @@
       {
         "italic": false,
         "lemma": "ἐν",
+        "lemma_gloss": "in, on, among",
         "punc": "",
         "strongs_ids": [
           "G1722"
@@ -10593,6 +11488,7 @@
       {
         "italic": false,
         "lemma": "ὅς",
+        "lemma_gloss": "who, which, what, that",
         "punc": "",
         "strongs_ids": [
           "G3739"
@@ -10605,6 +11501,7 @@
       {
         "italic": false,
         "lemma": "ἐστί",
+        "lemma_gloss": "he is",
         "punc": "",
         "strongs_ids": [
           "G2076"
@@ -10617,6 +11514,7 @@
       {
         "italic": false,
         "lemma": "οὐ",
+        "lemma_gloss": "no, not",
         "punc": "",
         "strongs_ids": [
           "G3756"
@@ -10629,6 +11527,7 @@
       {
         "italic": false,
         "lemma": "δόλος",
+        "lemma_gloss": "deceit, guile, treachery",
         "punc": "!",
         "strongs_ids": [
           "G1388"
@@ -10648,6 +11547,7 @@
       {
         "italic": false,
         "lemma": "Ναθαναήλ",
+        "lemma_gloss": "Nathanael",
         "punc": "",
         "strongs_ids": [
           "G3482"
@@ -10660,6 +11560,7 @@
       {
         "italic": false,
         "lemma": "λέγω",
+        "lemma_gloss": "say, speak",
         "punc": "",
         "strongs_ids": [
           "G3004"
@@ -10672,6 +11573,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 2,
@@ -10682,6 +11584,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": ",",
         "strongs_ids": [
           "G846"
@@ -10694,6 +11597,7 @@
       {
         "italic": false,
         "lemma": "πόθεν",
+        "lemma_gloss": "whence",
         "punc": "",
         "strongs_ids": [
           "G4159"
@@ -10706,6 +11610,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 5,
@@ -10716,6 +11621,7 @@
       {
         "italic": false,
         "lemma": "γινώσκω",
+        "lemma_gloss": "come to know, learn, realize",
         "punc": "",
         "strongs_ids": [
           "G1097"
@@ -10728,6 +11634,7 @@
       {
         "italic": false,
         "lemma": "μέ",
+        "lemma_gloss": "me",
         "punc": "?",
         "strongs_ids": [
           "G3165"
@@ -10740,6 +11647,7 @@
       {
         "italic": false,
         "lemma": "Ἰησοῦς",
+        "lemma_gloss": "Jesus",
         "punc": "",
         "strongs_ids": [
           "G2424"
@@ -10752,6 +11660,7 @@
       {
         "italic": false,
         "lemma": "ἀποκρίνομαι",
+        "lemma_gloss": "answer, reply",
         "punc": "",
         "strongs_ids": [
           "G611"
@@ -10764,6 +11673,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -10776,6 +11686,7 @@
       {
         "italic": false,
         "lemma": "ἔπω",
+        "lemma_gloss": "to say",
         "punc": "",
         "strongs_ids": [
           "G2036"
@@ -10788,6 +11699,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 12,
@@ -10798,6 +11710,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": ",",
         "strongs_ids": [
           "G846"
@@ -10810,6 +11723,7 @@
       {
         "italic": false,
         "lemma": "πρό",
+        "lemma_gloss": "before",
         "punc": "",
         "strongs_ids": [
           "G4253"
@@ -10822,6 +11736,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 15,
@@ -10832,6 +11747,7 @@
       {
         "italic": false,
         "lemma": "Φίλιππος",
+        "lemma_gloss": "Philip",
         "punc": "",
         "strongs_ids": [
           "G5376"
@@ -10844,6 +11760,7 @@
       {
         "italic": false,
         "lemma": "φωνέω",
+        "lemma_gloss": "crow, shout, summon",
         "punc": "",
         "strongs_ids": [
           "G5455"
@@ -10856,6 +11773,7 @@
       {
         "italic": false,
         "lemma": "σέ",
+        "lemma_gloss": "you",
         "punc": ",",
         "strongs_ids": [
           "G4571"
@@ -10868,6 +11786,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 19,
@@ -10878,6 +11797,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 20,
@@ -10888,6 +11808,7 @@
       {
         "italic": false,
         "lemma": "ὤν",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [
           "G5607"
@@ -10900,6 +11821,7 @@
       {
         "italic": false,
         "lemma": "ὑπό",
+        "lemma_gloss": "by, under, about",
         "punc": "",
         "strongs_ids": [
           "G5259"
@@ -10912,6 +11834,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 23,
@@ -10922,6 +11845,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 24,
@@ -10932,6 +11856,7 @@
       {
         "italic": false,
         "lemma": "συκῆ",
+        "lemma_gloss": "fig-tree",
         "punc": ",",
         "strongs_ids": [
           "G4808"
@@ -10944,6 +11869,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 26,
@@ -10954,6 +11880,7 @@
       {
         "italic": false,
         "lemma": "εἴδω",
+        "lemma_gloss": "know, remember",
         "punc": "",
         "strongs_ids": [
           "G1492"
@@ -10966,6 +11893,7 @@
       {
         "italic": false,
         "lemma": "σέ",
+        "lemma_gloss": "you",
         "punc": ".",
         "strongs_ids": [
           "G4571"
@@ -10985,6 +11913,7 @@
       {
         "italic": false,
         "lemma": "Ναθαναήλ",
+        "lemma_gloss": "Nathanael",
         "punc": "",
         "strongs_ids": [
           "G3482"
@@ -10997,6 +11926,7 @@
       {
         "italic": false,
         "lemma": "ἀποκρίνομαι",
+        "lemma_gloss": "answer, reply",
         "punc": "",
         "strongs_ids": [
           "G611"
@@ -11009,6 +11939,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -11021,6 +11952,7 @@
       {
         "italic": false,
         "lemma": "λέγω",
+        "lemma_gloss": "say, speak",
         "punc": "",
         "strongs_ids": [
           "G3004"
@@ -11033,6 +11965,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 4,
@@ -11043,6 +11976,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": ",",
         "strongs_ids": [
           "G846"
@@ -11055,6 +11989,7 @@
       {
         "italic": false,
         "lemma": "ῥαββί",
+        "lemma_gloss": "Rabbi, my master, teacher",
         "punc": ",",
         "strongs_ids": [
           "G4461"
@@ -11067,6 +12002,7 @@
       {
         "italic": false,
         "lemma": "σύ",
+        "lemma_gloss": "you",
         "punc": "",
         "strongs_ids": [
           "G4771"
@@ -11079,6 +12015,7 @@
       {
         "italic": false,
         "lemma": "εἶ",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [
           "G1488"
@@ -11091,6 +12028,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -11101,6 +12039,7 @@
       {
         "italic": false,
         "lemma": "υἱός",
+        "lemma_gloss": "son, descendent",
         "punc": "",
         "strongs_ids": [
           "G5207"
@@ -11113,6 +12052,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 11,
@@ -11123,6 +12063,7 @@
       {
         "italic": false,
         "lemma": "θεός",
+        "lemma_gloss": "God, a god",
         "punc": ";",
         "strongs_ids": [
           "G2316"
@@ -11135,6 +12076,7 @@
       {
         "italic": false,
         "lemma": "σύ",
+        "lemma_gloss": "you",
         "punc": "",
         "strongs_ids": [
           "G4771"
@@ -11147,6 +12089,7 @@
       {
         "italic": false,
         "lemma": "εἶ",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [
           "G1488"
@@ -11159,6 +12102,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 15,
@@ -11169,6 +12113,7 @@
       {
         "italic": false,
         "lemma": "βασιλεύς",
+        "lemma_gloss": "king, ruler, emperor",
         "punc": "",
         "strongs_ids": [
           "G935"
@@ -11181,6 +12126,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 17,
@@ -11191,6 +12137,7 @@
       {
         "italic": false,
         "lemma": "Ἰσραήλ",
+        "lemma_gloss": "",
         "punc": ".",
         "strongs_ids": [
           "G2474"
@@ -11210,6 +12157,7 @@
       {
         "italic": false,
         "lemma": "Ἰησοῦς",
+        "lemma_gloss": "Jesus",
         "punc": "",
         "strongs_ids": [
           "G2424"
@@ -11222,6 +12170,7 @@
       {
         "italic": false,
         "lemma": "ἀποκρίνομαι",
+        "lemma_gloss": "answer, reply",
         "punc": "",
         "strongs_ids": [
           "G611"
@@ -11234,6 +12183,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -11246,6 +12196,7 @@
       {
         "italic": false,
         "lemma": "ἔπω",
+        "lemma_gloss": "to say",
         "punc": "",
         "strongs_ids": [
           "G2036"
@@ -11258,6 +12209,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 4,
@@ -11268,6 +12220,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": ",",
         "strongs_ids": [
           "G846"
@@ -11280,6 +12233,7 @@
       {
         "italic": false,
         "lemma": "ὅτι",
+        "lemma_gloss": "that, since, because",
         "punc": "",
         "strongs_ids": [
           "G3754"
@@ -11292,6 +12246,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -11302,6 +12257,7 @@
       {
         "italic": false,
         "lemma": "ἔπω",
+        "lemma_gloss": "to say",
         "punc": "",
         "strongs_ids": [
           "G2036"
@@ -11314,6 +12270,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -11324,6 +12281,7 @@
       {
         "italic": false,
         "lemma": "σοί",
+        "lemma_gloss": "you",
         "punc": ",",
         "strongs_ids": [
           "G4671"
@@ -11336,6 +12294,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 11,
@@ -11346,6 +12305,7 @@
       {
         "italic": false,
         "lemma": "εἴδω",
+        "lemma_gloss": "know, remember",
         "punc": "",
         "strongs_ids": [
           "G1492"
@@ -11358,6 +12318,7 @@
       {
         "italic": false,
         "lemma": "σέ",
+        "lemma_gloss": "you",
         "punc": "",
         "strongs_ids": [
           "G4571"
@@ -11370,6 +12331,7 @@
       {
         "italic": false,
         "lemma": "ὑποκάτω",
+        "lemma_gloss": "underneath",
         "punc": "",
         "strongs_ids": [
           "G5270"
@@ -11382,6 +12344,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 15,
@@ -11392,6 +12355,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 16,
@@ -11402,6 +12366,7 @@
       {
         "italic": false,
         "lemma": "συκῆ",
+        "lemma_gloss": "fig-tree",
         "punc": ",",
         "strongs_ids": [
           "G4808"
@@ -11414,6 +12379,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 18,
@@ -11424,6 +12390,7 @@
       {
         "italic": false,
         "lemma": "πιστεύω",
+        "lemma_gloss": "believe, have faith in",
         "punc": "?",
         "strongs_ids": [
           "G4100"
@@ -11436,6 +12403,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 20,
@@ -11446,6 +12414,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 21,
@@ -11456,6 +12425,7 @@
       {
         "italic": false,
         "lemma": "ὀπτάνομαι",
+        "lemma_gloss": "appear, am seen",
         "punc": "",
         "strongs_ids": [
           "G3700"
@@ -11468,6 +12438,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 23,
@@ -11478,6 +12449,7 @@
       {
         "italic": false,
         "lemma": "μείζων",
+        "lemma_gloss": "greater, greatest",
         "punc": "",
         "strongs_ids": [
           "G3187"
@@ -11490,6 +12462,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 25,
@@ -11500,6 +12473,7 @@
       {
         "italic": false,
         "lemma": "τούτων",
+        "lemma_gloss": "of these",
         "punc": ".",
         "strongs_ids": [
           "G5130"
@@ -11519,6 +12493,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -11531,6 +12506,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 1,
@@ -11541,6 +12517,7 @@
       {
         "italic": false,
         "lemma": "λέγω",
+        "lemma_gloss": "say, speak",
         "punc": "",
         "strongs_ids": [
           "G3004"
@@ -11553,6 +12530,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 3,
@@ -11563,6 +12541,7 @@
       {
         "italic": false,
         "lemma": "αὐτός",
+        "lemma_gloss": "he, she, it, they, them, same",
         "punc": ",",
         "strongs_ids": [
           "G846"
@@ -11575,6 +12554,7 @@
       {
         "italic": false,
         "lemma": "ἀμήν",
+        "lemma_gloss": "verily, truly, amen, so let it be",
         "punc": ",",
         "strongs_ids": [
           "G281"
@@ -11587,6 +12567,7 @@
       {
         "italic": false,
         "lemma": "ἀμήν",
+        "lemma_gloss": "verily, truly, amen, so let it be",
         "punc": ",",
         "strongs_ids": [
           "G281"
@@ -11599,6 +12580,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 7,
@@ -11609,6 +12591,7 @@
       {
         "italic": false,
         "lemma": "λέγω",
+        "lemma_gloss": "say, speak",
         "punc": "",
         "strongs_ids": [
           "G3004"
@@ -11621,6 +12604,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 9,
@@ -11631,6 +12615,7 @@
       {
         "italic": false,
         "lemma": "ὑμῖν",
+        "lemma_gloss": "to you",
         "punc": ",",
         "strongs_ids": [
           "G5213"
@@ -11643,6 +12628,7 @@
       {
         "italic": false,
         "lemma": "ἀπό",
+        "lemma_gloss": "from, away from",
         "punc": "",
         "strongs_ids": [
           "G575"
@@ -11655,6 +12641,7 @@
       {
         "italic": false,
         "lemma": "ἄρτι",
+        "lemma_gloss": "now, just now",
         "punc": "",
         "strongs_ids": [
           "G737"
@@ -11667,6 +12654,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 13,
@@ -11677,6 +12665,7 @@
       {
         "italic": false,
         "lemma": "ὀπτάνομαι",
+        "lemma_gloss": "appear, am seen",
         "punc": "",
         "strongs_ids": [
           "G3700"
@@ -11689,6 +12678,7 @@
       {
         "italic": false,
         "lemma": "οὐρανός",
+        "lemma_gloss": "sky, the heaven",
         "punc": "",
         "strongs_ids": [
           "G3772"
@@ -11701,6 +12691,7 @@
       {
         "italic": false,
         "lemma": "ἀνοίγω",
+        "lemma_gloss": "open",
         "punc": ",",
         "strongs_ids": [
           "G455"
@@ -11713,6 +12704,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -11725,6 +12717,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 18,
@@ -11735,6 +12728,7 @@
       {
         "italic": false,
         "lemma": "ἄγγελος",
+        "lemma_gloss": "angel, messenger",
         "punc": "",
         "strongs_ids": [
           "G32"
@@ -11747,6 +12741,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 20,
@@ -11757,6 +12752,7 @@
       {
         "italic": false,
         "lemma": "θεός",
+        "lemma_gloss": "God, a god",
         "punc": "",
         "strongs_ids": [
           "G2316"
@@ -11769,6 +12765,7 @@
       {
         "italic": false,
         "lemma": "ἀναβαίνω",
+        "lemma_gloss": "go up, mount, ascend",
         "punc": "",
         "strongs_ids": [
           "G305"
@@ -11781,6 +12778,7 @@
       {
         "italic": false,
         "lemma": "καί",
+        "lemma_gloss": "and, even, also, namely",
         "punc": "",
         "strongs_ids": [
           "G2532"
@@ -11793,6 +12791,7 @@
       {
         "italic": false,
         "lemma": "καταβαίνω",
+        "lemma_gloss": "go down, come down",
         "punc": "",
         "strongs_ids": [
           "G2597"
@@ -11805,6 +12804,7 @@
       {
         "italic": false,
         "lemma": "ἐπί",
+        "lemma_gloss": "on, to, against, on the basis of, at",
         "punc": "",
         "strongs_ids": [
           "G1909"
@@ -11817,6 +12817,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 26,
@@ -11827,6 +12828,7 @@
       {
         "italic": false,
         "lemma": "υἱός",
+        "lemma_gloss": "son, descendent",
         "punc": "",
         "strongs_ids": [
           "G5207"
@@ -11839,6 +12841,7 @@
       {
         "italic": false,
         "lemma": "",
+        "lemma_gloss": "",
         "punc": "",
         "strongs_ids": [],
         "verse_pos": 28,
@@ -11849,6 +12852,7 @@
       {
         "italic": false,
         "lemma": "ἄνθρωπος",
+        "lemma_gloss": "man, one of the human race",
         "punc": ".",
         "strongs_ids": [
           "G444"

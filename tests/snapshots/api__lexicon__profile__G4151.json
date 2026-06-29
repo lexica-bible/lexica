@@ -1,4 +1,30 @@
 {
+  "abp_glosses": [
+    {
+      "count": 564,
+      "gloss": "spirit"
+    },
+    {
+      "count": 43,
+      "gloss": "wind"
+    },
+    {
+      "count": 37,
+      "gloss": "spirits"
+    },
+    {
+      "count": 29,
+      "gloss": "breath"
+    },
+    {
+      "count": 2,
+      "gloss": "winds"
+    },
+    {
+      "count": 1,
+      "gloss": "harvest"
+    }
+  ],
   "books": [
     {
       "book": "Act",
@@ -163,6 +189,12 @@
       "testament": "OT"
     },
     {
+      "book": "Exo",
+      "count": 6,
+      "name": "Exodus",
+      "testament": "OT"
+    },
+    {
       "book": "Jer",
       "count": 6,
       "name": "Jeremiah",
@@ -178,12 +210,6 @@
       "book": "2Ki",
       "count": 5,
       "name": "2 Kings",
-      "testament": "OT"
-    },
-    {
-      "book": "Exo",
-      "count": 5,
-      "name": "Exodus",
       "testament": "OT"
     },
     {
@@ -343,8 +369,47 @@
       "testament": "NT"
     }
   ],
+  "bsb_glosses": [
+    {
+      "count": 336,
+      "gloss": "spirit"
+    },
+    {
+      "count": 33,
+      "gloss": "spirits"
+    },
+    {
+      "count": 3,
+      "gloss": "breath"
+    },
+    {
+      "count": 1,
+      "gloss": "drink"
+    },
+    {
+      "count": 1,
+      "gloss": "spirit’s"
+    },
+    {
+      "count": 1,
+      "gloss": "who"
+    },
+    {
+      "count": 1,
+      "gloss": "gifts"
+    },
+    {
+      "count": 1,
+      "gloss": "wind"
+    },
+    {
+      "count": 1,
+      "gloss": "winds"
+    }
+  ],
   "corpus": "abp",
-  "definition": "a current of air, i.e. breath (blast) or a breeze; by analogy or figuratively, a spirit, i.e. (human) the rational soul, (by implication) vital principle, mental disposition, etc., or (superhuman) an angel, demon, or (divine) God, Christ's spirit, the Holy Spirit",
+  "definition": "spirit, breath, wind",
+  "derivation": "from G4154 (πνέω);",
   "glosses": [
     {
       "count": 564,
@@ -372,9 +437,64 @@
     }
   ],
   "has_abp": true,
+  "has_bsb": true,
+  "has_heb": false,
   "has_kjv": true,
+  "heb_glosses": [],
+  "kjv_glosses": [
+    {
+      "count": 255,
+      "gloss": "spirit"
+    },
+    {
+      "count": 91,
+      "gloss": "ghost"
+    },
+    {
+      "count": 32,
+      "gloss": "spirits"
+    },
+    {
+      "count": 1,
+      "gloss": "also"
+    },
+    {
+      "count": 1,
+      "gloss": "itself"
+    },
+    {
+      "count": 1,
+      "gloss": "life"
+    },
+    {
+      "count": 1,
+      "gloss": "spiritual"
+    },
+    {
+      "count": 1,
+      "gloss": "spiritually"
+    },
+    {
+      "count": 1,
+      "gloss": "wind"
+    }
+  ],
   "lemma": "πνεῦμα",
+  "related": [
+    {
+      "gloss": "blow",
+      "lemma": "πνέω",
+      "strongs": "G4154",
+      "translit": "pnéō"
+    },
+    {
+      "gloss": "spiritual",
+      "lemma": "πνευματικός",
+      "strongs": "G4152",
+      "translit": "pneumatikós"
+    }
+  ],
   "strongs": "G4151",
-  "total": 676,
+  "total": 677,
   "translit": "pneûma"
 }
