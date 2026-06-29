@@ -610,6 +610,12 @@ follow-up is **#4 (parallelize the cognate + Hebrew DB loops)** above — multi-
   the render path read `d.stories` correctly all along; don't invent a "shape mismatch" fix for code that reads
   right, get the live response body / confirm the deploy first. `code: views_news.py meta() + _count_view_clusters
   · static/src/84-news.jsx`
+- **✅ LIVE TAB-COUNT BADGE SHIPPED 2026-06-29 (71da283).** Kept/Dismissed badge read `meta.counts` (fetched only
+  on mount) → stayed stale until reload after a triage action. Fix: the single `mark` handler refetches meta after
+  the write; all six buttons (keep/dismiss/clear/both flips) route through it, so reversals tick the badge down too.
+- **NOTE — recency-default sort is LIVE not parked.** `e77135b` shipped recency as the default sort (JP's explicit
+  call); git confirms no later commit touched `stories.sort`, so the watch-card-#1 read is clean and active NOW. A
+  reviewer note that called it "parked for a solo ship" was wrong — don't re-litigate.
 
 ---
 
