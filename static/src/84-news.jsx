@@ -297,7 +297,7 @@ function NewsView({ isMobile }) {
       </div>
     ) : (
       <>
-        <div className="news-count">{stories.length} stories</div>
+        <div className="news-count">{stories.length} {stories.length === 1 ? "story" : "stories"}</div>
         <div className="news-list">
           {stories.map((s, i) => (
             <NewsStory key={s.ids[0] + "-" + i} story={s} view={view} onMark={mark}

@@ -306,6 +306,22 @@ def _staleness_penalty(published):
     return min(_FEED_CAP, max(0.0, (age - _FEED_GRACE_DAYS) * _FEED_RATE))
 
 
+def _count_view_clusters(conn, rid, status_value, has_event):
+    """How many CARDS (clusters) this reviewer has in a status — counted the SAME way the
+    list renders: existing + scored items only, scoped to rid, grouped into cards. So the
+    tab badge can't disagree with the feed (an orphaned review row whose item churned away
+    has no scored item to join, so it drops out), and the number is CARDS not articles
+    (5 kept articles that group into 3 cards count as 3). No min/since/thread floor — the
+    Kept/Dismissed views don't apply one either."""
+    sql = (f"SELECT i.id, i.title, i.ai_thread{', i.event' if has_event else ''} "
+           f"FROM items i LEFT JOIN reviews r "
+           f"  ON r.item_id = i.id AND r.reviewer = ? "
+           f"WHERE i.score IS NOT NULL AND COALESCE(r.status, 'new') = ? "
+           f"ORDER BY i.score DESC, i.published DESC")
+    rows = conn.execute(sql, [rid, status_value]).fetchall()
+    return len(_group(rows, has_event)) if rows else 0
+
+
 @bp.route("/api/news/meta", methods=["GET"])
 def meta():
     """Drives the tab: is the viewer admin, is news.db loaded, the thread names, and
@@ -323,11 +339,13 @@ def meta():
         def n(sql, args=()):
             r = conn.execute(sql, args).fetchone()
             return (r[0] or 0) if r else 0
+        has_event = "event" in [c[1] for c in conn.execute("PRAGMA table_info(items)")]
         counts = {
             "scored": n("SELECT count(*) FROM items WHERE score IS NOT NULL"),
             "total": n("SELECT count(*) FROM items"),
-            "kept": n("SELECT count(*) FROM reviews WHERE reviewer=? AND status='keep'", (rid,)),
-            "dismissed": n("SELECT count(*) FROM reviews WHERE reviewer=? AND status='dismiss'", (rid,)),
+            # CARDS (clusters), counted the same way the list renders — see _count_view_clusters.
+            "kept": _count_view_clusters(conn, rid, "keep", has_event),
+            "dismissed": _count_view_clusters(conn, rid, "dismiss", has_event),
         }
     except sqlite3.Error:
         counts = {}
