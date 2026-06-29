@@ -509,6 +509,45 @@ surface as junk the way "favor"→λαμβάνω did. Pick up only if it bugs yo
 
 ---
 
+## Ask the corpus — lexical-texture enrichment (method PROVEN 2026-06-29, BUILD pending)
+
+Fixes the Ask-corpus output that "reads badly" (a grouped summary, not a synthesis; the dominant
+signal — distribution — invisible; Hebrew+Greek lemmas averaged). The move: a DETERMINISTIC panel
+bolted ABOVE the existing note. **Decision = a MAP with a COMPUTED headline, NOT an argued reading**
+(a reading collides with the load-bearing no-verdict / REPORT-DON'T-CHARACTERIZE rule; a count is
+computed fact, the one finding-no-verse-contains that's allowed). **`_CURATION_SYSTEM` stays FROZEN** —
+prove the substrate reads richer before any prompt change. Full record + the discipline: memory
+`project_corpus_enrichment`.
+
+PROVEN on two read-only PA scripts (clean words only — fire, sabbath, love):
+- `scripts/proto_corpus_panel.py` (`--query fire|sabbath`) — per-lemma distribution (full occurrence
+  count, NEVER `_spread_sample`) + each word's own range + the LXX seam. fire = real structure (only
+  "purification" has a carrier word, pyroō/pyrōsis); sabbath = stays FLAT (won't invent texture);
+  esh→pyr seam 92–95%, the ~8% divergence the differentiator (proves the WORD maps, not the SENSE).
+- `scripts/proto_family_assembly.py` (`--query`/`--head`) — auto-assembles the lemma family,
+  ROOT-ANCHORED with a VISIBLE BOUNDARY: STEM proposes (Greek translit prefix; Hebrew affix-stripped
+  root by CONTAINMENT), GLOSS confirms (literal word-overlap, never semantic, never discovers). Tiers
+  CORE / INCLUDE / BORDERLINE (surfaced, never silent). False friends ('isheh, mishbath, pyretos)
+  caught by signal DISAGREEMENT; phil- under agape absent entirely. Hebrew TWO-TIER root: ≥3-consonant
+  matches by containment, ≤2-consonant (esh) falls back to gloss-anchored (a 2-consonant prefix
+  matched "which"/Assyria to "fire"). fire/fiery left unbridged on purpose (curated pairs = slippery
+  slope; borderline holds it, eye includes).
+
+OPEN, in JP's order:
+1. **Wire the panel into live Ask-corpus** (the payoff — the original step-one). REAL WORK = how it
+   DEGRADES when the input isn't a clean head: messy/ambiguous/empty queries, a head with no clean
+   root, a query that resolves to NO head — plus full-count latency in the request path. Scope it as
+   THAT, not "call the script from the route." The protos only proved clean words.
+2. **LXX seam range-preservation** — does the Greek keep esh's range at the ~8% divergence (the 11
+   fire verses)? Doubles as the **short-root Hebrew family fallback** (one piece of work now).
+3. **Rebuild bdb `lemma_plain`** (small, separate) — re-run `scripts/add_lemma_plain.py` on bdb so the
+   Hebrew word-study EXACT-match short-circuit goes live again (dropped by a later bdb reload; guarded
+   off, so no crash — just the Hebrew fast-path silently inactive). See memory
+   `project_lexicon_search_overmatch` (CORRECTION 2026-06-29).
+`code: scripts/proto_corpus_panel.py, scripts/proto_family_assembly.py (proving); future ai.py panel above _CURATION_SYSTEM; scripts/add_lemma_plain.py`
+
+---
+
 ## Word study + Ask the corpus — REDESIGNED (2026-06-19, under development)
 
 (Word-card lemma gloss itself — KJV/BSB/Hebrew + Word study + the Hebrew byform fix — is DONE + LIVE
