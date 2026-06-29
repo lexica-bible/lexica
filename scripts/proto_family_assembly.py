@@ -92,17 +92,23 @@ def _heb_root(s):
     return "".join(out)
 
 
-def _stem3(tok):
-    return tok[:3]
+def _norm_word(w):
+    """Lowercase + a light plural fold so 'trials' matches 'trial'. NOT a stemmer: it does NOT
+    bridge spelling variants like fire/fiery (the letters swap, fir-e vs fie-ry) — those are a
+    semantic call the eye makes in the borderline tier, never auto-merged here."""
+    w = w.lower()
+    if len(w) > 3 and w.endswith("s"):
+        w = w[:-1]
+    return w
 
 
 def _gloss_terms(gloss):
-    """The head gloss's meaning-words, 3-char stemmed: 'fire, trials' -> {'fir','tri'}."""
+    """The head gloss's meaning-words, whole-word + plural-folded: 'fire, trials' -> {'fire','trial'}.
+    Whole-word, NOT a 3-char stem — the old stem matched 'tri'->tribe/trio and split fire/fiery by luck."""
     out = set()
     for w in re.findall(r"[A-Za-z]+", gloss or ""):
-        w = w.lower()
-        if len(w) >= 3 and w not in _STOP:
-            out.add(_stem3(w))
+        if len(w) >= 3 and w.lower() not in _STOP:
+            out.add(_norm_word(w))
     return out
 
 
@@ -110,7 +116,7 @@ def _gloss_hits(gloss, terms):
     """The actual gloss words that match a head term (for showing the evidence)."""
     hits = []
     for w in re.findall(r"[A-Za-z]+", gloss or ""):
-        if len(w) >= 3 and _stem3(w.lower()) in terms:
+        if len(w) >= 3 and _norm_word(w) in terms:
             hits.append(w.lower())
     return sorted(set(hits))
 
@@ -188,9 +194,10 @@ def assemble_greek(conn, num, stem, terms):
 
 
 def assemble_hebrew(conn, hconn, num, root, terms):
-    """Candidates near a Hebrew head: lemma_plain prefix/substring (STEM) ∪ gloss-term (GLOSS).
-    Substring only for roots of ≥3 letters (a 2-letter root matches half the lexicon)."""
-    cand = {}   # STEM-proposed ONLY (lemma_plain consonants). Gloss confirms below, never discovers.
+    """Candidates near a Hebrew head: consonant-skeleton (from bdb.lemma) prefix/substring is the
+    STEM signal; gloss confirms below. Substring only for roots ≥3 letters (a 2-letter root matches
+    half the lexicon, so those stay prefix-only)."""
+    cand = {}   # STEM-proposed ONLY (consonant skeleton). Gloss confirms below, never discovers.
     use_sub = len(root) >= 3
     for r in conn.execute("SELECT strongs_id, xlit, lemma FROM bdb"):
         lp = _heb_root(r["lemma"])
@@ -249,7 +256,7 @@ def run_head(conn, hconn, head):
         rows = assemble_greek(conn, num, stem, terms)
     else:
         lemma, xlit, plain, gloss = _heb_head(conn, num)
-        # Hebrew "root" = the head's consonant lemma (lemma_plain); 2-letter heads stay prefix-only.
+        # Hebrew "root" = the head's consonant skeleton (from bdb.lemma); 2-letter heads stay prefix-only.
         root = (plain or "").strip()
         terms = _gloss_terms(gloss)
         print_head("H", num, xlit, gloss, root, terms)
