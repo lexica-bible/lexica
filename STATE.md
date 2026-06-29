@@ -49,7 +49,7 @@ Last refreshed: 2026-06-28 (repo tip at write time: `e10c1c6`).
 - **How many / which** — **~18–20 live** per project notes; **authoritative list = `lexica_def` on PA** `[PA: SELECT strongs FROM lexica_def]`. Code names the **6 PILOT** (`PILOT`, build_lexica_def.py:38 — psyche G5590, dikaioō G1344, charis G5484, aionios G166, sarx G4561, ekklesia G1577) + batch-1 nouns (logos G3056, Christos G5547, pneuma G4151, …) + theos G2316 / kyrios G2962.
 - **Pipeline (as it runs):** evidence gather → **sampler** `select_spread` (BUDGET = **40** occurrences) → **engine** Sonnet `claude-sonnet-4-6` on `VERSE_PROMPT` (MAX_TOKENS **3000**) → **splitter** `split_definition` (SPLIT_VER "split2") → **citation gate** (every cited verse must contain the lemma by Strong's tag; audit-time) → **fork append** from `CONTESTED` (membership-triggered, **model-free**) → **`pin_core`** lifts the neutral core to `pinned_core` (lead) for frame-leakers → **`sense_provenance`** LXX flag (≥80% OT AND ≥4 OT refs; no model).
 - **VERSE_PROMPT — FROZEN** (v3, promoted 2026-06-25; build_lexica_def.py:64). Synced with `lexica_agreement.V3_PROMPT`. **Not re-proven since promotion**; the agreement reviewer is a prompt-stability gate and is **optional per run** now the prompt is diff-locked — the `--apply` citation gate guards a written entry.
-- **Fairness-gate fork-words LIVE (9 in `CONTESTED`):**
+- **Fairness-gate fork-words LIVE (8 in `CONTESTED`):**
 
 | Strong's | lemma | pin_core | frames | graph_ref |
 |---|---|---|---|---|
