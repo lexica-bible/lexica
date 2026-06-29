@@ -523,7 +523,7 @@ removed). Full record + the build lessons: memory `project_corpus_enrichment` + 
 
 ---
 
-## Ask the corpus — synthesis STREAMING + readability (DONE 2026-06-29; live re-prove + cleanup pending)
+## Ask the corpus — synthesis STREAMING + readability (DONE + LIVE 2026-06-29)
 
 The curate-latency session. Pass-2 (Sonnet) was the dominant ~11-12s slice AND the last thing produced, so the
 reader stared at nothing ~30s then got the whole answer at once. Four forks scoped; #1 + #2 built + pushed, #3
@@ -546,13 +546,8 @@ skipped, #4 a follow-up. Scope was curate-only (panel/engine/gates/VERSE_PROMPT 
   family, no gain). Needs an identical-output before/after diff (same verses/chips/order, only timing). Do NOT
   touch the model-written single SQL ("sqlrun" slice). `code: ai.py cognate loop + Hebrew supplement loop`
 
-**PENDING (the user's step):**
-1. **Live re-prove streaming** — deploy, ask a FRESH word (a cached word one-lumps correctly), watch the
-   synthesis trickle in (panel first → prose live → passages at tail); composer locked mid-stream. Then
-   `!badtail fire` to watch the fail-closed floor fire under streaming (still-correct picks, brief extra wait).
-2. **Remove the TWO temporary hooks once green** — `/api/_streamtest` (the probe, app.py, commit 0c2fbf8) + the
-   `!badtail ` query prefix (ai.py, commit 58d17b3). One cleanup commit.
-   `code: app.py /api/_streamtest; ai.py _force_bad / !badtail`
+✅ **Re-proved live green + both temporary hooks removed (commit 208d0a8, 2026-06-29).** The lone open
+follow-up is **#4 (parallelize the cognate + Hebrew DB loops)** above — multi-head queries only, not started.
 
 ---
 

@@ -860,8 +860,8 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   picks, keep the streamed prose; never a wrong-verse split). Helpers in ai.py: `_curation_prompt` (shared
   prompt), `_curate_primary_verses` (non-streamed floor), `_stream_curation` (generator), `_assemble_payload`
   (post-curation), `_streamable_prose`, `_sse`. Frontend `api.aiSearchStream` (00-core.jsx) + `AcProse`
-  sense-paragraphs. **TEMPORARY, remove once live-green:** the SSE probe `/api/_streamtest` + the `!badtail `
-  query prefix (forces the floor under streaming). Full record: memory `project_ai_search_architecture`.
+  sense-paragraphs. **LIVE + re-proven 2026-06-29;** the SSE probe + the `!badtail` floor-test hook were
+  removed after (commit 208d0a8). Full record: memory `project_ai_search_architecture`.
 - **Citation guard + grounding (2026-06-21).** Occurrence lists are pulled by Strong's = unfakeable;
   the leak is in the PROSE. A verse the model names/adds is checked against the target Strong's set —
   one containing NONE of the target words is `is_thematic` → frontend "Additional references" (kept,
