@@ -6,6 +6,27 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Small doc/UI cleanup pass — DONE 2026-06-28
+A batch of small finishes, all committed + pushed to master:
+- **Cockpit Play/Pause icons → thin outlines** (`static/src/10-icons.jsx`, commit 3cc3c45). Were filled
+  media glyphs (solid triangle + bars); re-stroked to thin outlines to match the design mockup + the
+  outline `Icon.Modes`. Closes the last open item under "Mobile reading cockpit redesign". Memory
+  `project_reader_appearance`.
+- **Dead ABP "bracket column" CSS — confirmed ALREADY gone.** Grepped `static/styles.css`: only
+  `.lib-bracket-group` (the keeper, `display:contents`) remains; `.lib-bracket`/`-unit`/`-glyph`/`-trail`
+  were removed in an earlier pass. The code-health TODO item was stale → retired (no code change).
+- **Stray "MM" scrubbed from `structural.py`** (commit 3c062ed). A bare "MM" in a comment listing
+  provenance kinds (LEXICA/LSJ/MM) made the Claude-chat reviewer think Moulton-Milligan was loaded — it
+  never was, no MM table/data anywhere. Comment-only change.
+- **`snapshot_endpoints.py` default base → `https://www.lexica.bible`** (commit e10c1c6). The old
+  `appssanding720.pythonanywhere.com` base 404s now the site's on the custom domain; `--base` still
+  overrides. The stale John 3:16 golden was re-baselined (user ran `--update`, commit b686073) — closes
+  the lone snapshot-harness leftover.
+- **STATE.md added** (repo root, commit 577695e). A flat ground-truth LIVE/PARKED/NOT BUILT snapshot
+  (stack, reference works, definition engine, structural cards, graphs, entity resolution, open work)
+  for the external Claude-chat reviewer. POINT-IN-TIME, not a living doc — refresh when state changes,
+  don't trust as live. Memory `feedback_claude_chat_collab`.
+
 ## Navigation-state audit — DONE + LIVE 2026-06-29
 The reader's side panels and the gold "you are here" marker drifted out of sync with the text.
 One root cause behind several "different" bugs: the reader's real position lives in the reader

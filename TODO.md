@@ -16,6 +16,13 @@ Issues surfaced 2026-06-28. #1 ("LORD the" word flip), #2 (proper-noun / entity 
   cleanup only. code: the g1473_gloss_retag fold in build_words_from_abp.py / lxx_align.
   (The bound-entity card occurrence follow-up is DONE + LIVE — the card now shows the real
   ABP/Hebrew OT/KJV/BSB occurrence controls; see TODO_ARCHIVE.md.)
+- **Reviewer-flagged corpus tags — UNVERIFIED, no fix yet (2026-06-28).** Two tags the Claude-chat
+  reviewer flagged, NOT yet checked against the live `words` table and NOT corrected: **Jer 49:13**
+  (tagged αἰώνιος G166 where αἰών G165 is likely the right lemma) and **Psa 24:7** (a verse-numbering
+  question — ABP uses Greek/LXX numbering). Neither is handled in the repo (the G166/G165 hits in
+  build_word_gloss.py are gloss definitions, not corrections). First step = read the live row on PA to
+  confirm whether it's actually wrong; if so, a scoped dry-run-first fix like the other corpus repairs.
+  code: bible.db words table (PA-only) — no script exists yet.
 
 ---
 
@@ -892,8 +899,7 @@ Full record: memory `project_notes_highlights`. STILL OPEN:
 ### Mobile reading cockpit redesign — DONE 2026-06-20 (design ZIP handoff)
 Five equal-width icon slots `[Search][Play][Abbr Ch][Info][Options]`; book slot shows the 3-letter
 abbreviation, right slot is the sliders Icon.Modes. Full record: memory `project_reader_appearance`.
-Cockpit Play/Pause switched from the filled media icons to thin outlines (DONE 2026-06-28) — matches
-the mockup. Nothing open here.
+Nothing open (the Play/Pause filled→outline icon finish is in TODO_ARCHIVE, 2026-06-28).
 
 ### Broader AI search — meaning-based passage search
 Logos feels "broader" for two reasons: it reads their whole paid library (commentaries, dictionaries),
