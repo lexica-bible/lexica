@@ -551,15 +551,19 @@ follow-up is **#4 (parallelize the cognate + Hebrew DB loops)** above — multi-
 
 ---
 
-## News feed (Tudor) — recency / time-decay (open; pipeline change, own session)
+## News feed (Tudor) — recency (FACE done; SORT deferred)
 
-- **Add recency weighting — feed SORT + cluster FACE.** Today the feed ranks by score with no time-decay (an
-  old high-scorer sits atop fresher stories) and the card face is always the top scorer, so an old/loud headline
-  represents a cluster even when fresh siblings exist. Fix BOTH: decay the sort + pick the face from RECENT
-  high-scorers. Pipeline change, not tuning. Sub-note: the source-junk-headline filter is WATCH-ONLY (one
-  instance so far) and rides this SAME change if a 2nd junk face ever appears — no separate line. Full spec
-  (root cause, both fixes, constraints, method): memory `project_news_watch` (Diagnostic pass #2).
-  `code: views_news.py _serialize/_group (face pick) + list_news ORDER BY / stories.sort (decay)`
+- **✅ FACE-FIX SHIPPED 2026-06-29 (24cd7bd).** Card headline = the strongest article within 14 days of the
+  cluster's newest sibling (`_pick_face`/`_serialize` in views_news.py, `FACE_WINDOW=14`), not the all-time top
+  scorer. Killed "fresh date, stale title." W=14 picked from real PA before/after (21 faces flip, 7 real
+  de-staling wins, drift 1-2 mild). FACE ONLY — sort is untouched by design (the code comments say so).
+- **DEFERRED — feed SORT recency (own session, don't act mid-build).** The feed still ranks by score with no
+  time-decay, so old-but-high clusters (~29) float into the top band, and the ~61 old clusters with no fresh
+  sibling can't be helped by the face-fix. Decide at that time: face-fix-only (current) vs a gentle recency
+  tie-break on "Top score" vs a new blended "Surfacing" default sort (JP leaned face-fix-first — see how it
+  reads live before touching sort). Watch-only sub-note: the source-junk-headline filter (one instance so far)
+  rides any future sort change if a 2nd junk face appears. Full spec: memory `project_news_watch`.
+  `code: views_news.py list_news ORDER BY / stories.sort`
 
 ---
 
