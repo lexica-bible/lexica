@@ -307,6 +307,22 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     return () => { cancelled = true; };
   }, [entry && entry.strongs]);
 
+  // ABP (Greek/LXX) occurrences of a backfilled proper noun, counted on its strongs_base
+  // (the bare strongs is '*'). Shown only on the bound-entity card: the name DOES appear in
+  // the ABP text, individuated from παράδεισος — this surfaces those Greek occurrences from
+  // the Hebrew number we already carry (no Greek re-key; TIPNR's Greek form is an unusable
+  // STEP-extended number our lexicon doesn't have and ABP never uses).
+  const [abpBaseCount, setAbpBaseCount] = useState(null);
+  useEffect(() => {
+    setAbpBaseCount(null);
+    if (!isHebrewWord || !entry.strongs_base || entry.strongs_base === "*") return;
+    let cancelled = false;
+    api.strongsCountBase(entry.strongs_base)
+      .then(d => { if (!cancelled) setAbpBaseCount(d.count ?? null); })
+      .catch(() => { if (!cancelled) setAbpBaseCount(null); });
+    return () => { cancelled = true; };
+  }, [entry && entry.strongs_base]);
+
   // metaV person/place lookup — runs on any word click where gloss may be a name
   const [metavPersonData, setMetavPersonData] = useState(null);
   const [metavPlaceData, setMetavPlaceData] = useState(null);
@@ -675,6 +691,9 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   if (!entry.isKjv && !entry.isBsb && isPN && pnCount !== null && pnCount > 0 && onNameSearch) sections.push("pnOcc");
   // A Hebrew word shows its occurrences across all Strong's-tagged Bibles: the Hebrew
   // OT source first, then the KJV + BSB translations — each opens that source in Word study.
+  // A bound entity ALSO shows its ABP (Greek) occurrences first — the name appears in the
+  // ABP text the reader is in, surfaced from the entity's own (Hebrew) number.
+  if (boundOcc && isHebrewWord && abpBaseCount !== null && abpBaseCount > 0) sections.push("hebrewAbpOcc");
   if (hebShowOcc && hebCount !== null && hebCount > 0) sections.push("hebrewOtOcc");
   if (hebShowOcc && kjvCount !== null && kjvCount > 0) sections.push("hebrewKjvOcc");
   if (hebShowOcc && bsbCount !== null && bsbCount > 0) sections.push("hebrewBsbOcc");
@@ -981,6 +1000,14 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
         <h4 className="sec-head"><span className="sec-t">ABP Occurrences</span></h4>
         <button className="occ-link" onClick={() => onNameSearch(extractProperName(entry.gloss))}>
           <b>{pnCount}</b>× in ABP <Icon.ArrowRight/>
+        </button>
+      </section>
+    );
+    case "hebrewAbpOcc": return (
+      <section key="hebrewAbpOcc" className="sec">
+        <h4 className="sec-head"><span className="sec-t">ABP Occurrences</span></h4>
+        <button className="occ-link" onClick={() => onNavigateToLexicon && onNavigateToLexicon(entry.strongs, "abp")}>
+          <b>{abpBaseCount}</b>× in ABP <Icon.ArrowRight/>
         </button>
       </section>
     );

@@ -347,10 +347,15 @@ def metav_entity_refs(uniq):
 def strongs_count_route(strongs_base):
     if strongs_base == "*":
         return jsonify({"count": None})
+    # `?by=base` counts on strongs_base instead of the bare `strongs` column. A backfilled
+    # proper noun (TIPNR mapped its words onto an H/G number) carries strongs='*' but a real
+    # strongs_base (e.g. Eden -> H5731), so its ABP occurrences are only countable by base.
+    # Column is a fixed two-way choice, never user text.
+    col = "strongs_base" if request.args.get("by") == "base" else "strongs"
     conn = db()
     try:
         row = conn.execute(
-            "SELECT COUNT(*) AS cnt FROM words WHERE strongs = ?"
+            f"SELECT COUNT(*) AS cnt FROM words WHERE {col} = ?"
             " AND english IS NOT NULL AND english != ''",
             (strongs_base,),
         ).fetchone()

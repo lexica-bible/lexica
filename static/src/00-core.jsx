@@ -257,6 +257,10 @@ const api = {
     fetch(`/api/bsb/strongs-count/${encodeURIComponent(strongs_id)}`).then(r => r.json()),
   pnCount: (name) =>
     fetch(`/api/pn-count/${encodeURIComponent(name)}`).then(r => r.json()),
+  // byBase=true counts ABP words on strongs_base (for a backfilled proper noun whose bare
+  // strongs is '*' but whose base is a real H/G number — e.g. Eden -> H5731).
+  strongsCountBase: (base) =>
+    fetch(`/api/strongs-count/${encodeURIComponent(base)}?by=base`).then(r => r.json()),
   metavPerson: (name) =>
     fetch(`/api/metav/person/${encodeURIComponent(name)}`).then(r => r.json()),
   metavAiDescription: (name, book, chapter, verse) => {
