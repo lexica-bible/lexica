@@ -560,9 +560,14 @@ follow-up is **#4 (parallelize the cognate + Hebrew DB loops)** above — multi-
 - **✅ PER-REVIEWER Keep/Dismiss SHIPPED 2026-06-29 (5864730).** Was a single global `items.status` column
   (everyone shared one field; share-key reader couldn't write at all). Now a per-reviewer `reviews` table in
   news.db (stable `u<id>`/`k<keytag>` identity, writes scoped to the caller's own rows, admin wins over
-  share-key). Share key can now triage; a "Reviewing as X" line shows whose calls are recorded. `items.status`
+  share-key). A "Reviewing as X" line shows whose calls are recorded. `items.status`
   kept for back-compat. OP: set `NEWS_SHARE_NAME` in the WSGI to name Tudor. Full record: memory
   `project_news_watch` ("Per-reviewer Keep/Dismiss").
+- **✅ SHARE-KEY TRIAGE ACTUALLY WORKS — FIXED 2026-06-29 (ec9ffd5).** 5864730's backend accepted a
+  share-key write, but two FRONTEND gaps blocked it: the Keep/Dismiss buttons gated on `owner` (role) not
+  capability, and `api.newsStatus` never sent the share key on the write POST. Fix: `/api/news/meta` returns
+  `can_write`, buttons gate on it, and `newsStatus` sends `X-News-Key`. Acceptance re-confirmed (share-key →
+  `k<tag>`, admin → `u<id>`, no pooling). Full record: memory `project_news_watch`.
 - **DEFERRED — feed SORT recency (own session, don't act mid-build).** The feed still ranks by score with no
   time-decay, so old-but-high clusters (~29) float into the top band, and the ~61 old clusters with no fresh
   sibling can't be helped by the face-fix. Decide at that time: face-fix-only (current) vs a gentle recency
