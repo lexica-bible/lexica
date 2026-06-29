@@ -12,6 +12,7 @@ tab, admin-gated (404 to everyone else, exactly like visitor stats):
 Read-mostly: the only write is flipping an article's review status. It never
 gathers or scores (that's the offline scripts' job) and never touches bible.db.
 """
+import datetime
 import hmac
 import json
 import math
@@ -155,9 +156,42 @@ def _group(rows, has_event):
     return clusters
 
 
+# How fresh a sibling must be (days before the cluster's newest article) to be eligible
+# for the card HEADLINE. Picked from real before/after on PA (W=14: 7 real de-staling wins,
+# drift acceptable). Loosen/tighten only against fresh before/after data, never blind.
+FACE_WINDOW = 14
+
+
+def _pick_face(arts, newest):
+    """Choose the article whose HEADLINE fronts the card: the strongest article among
+    those published within FACE_WINDOW days of the cluster's newest. So an old high-scorer
+    stops holding the headline once fresher coverage exists, while a cluster with NO fresh
+    sibling keeps its (correctly old) face — there is nothing newer to promote.
+
+    SCOPE BOUNDARY — face only, never sort. This swaps the visible headline; it does NOT
+    change the cluster's score or its feed position. The cluster still ranks on its PEAK
+    score (see _serialize). The old-but-high clusters that peak-sort floats up are a
+    separate, deferred SORT question — do NOT reach for a sort change here."""
+    pool = arts
+    nd = (newest or "")[:10]
+    if nd:
+        try:
+            cutoff = (datetime.date.fromisoformat(nd)
+                      - datetime.timedelta(days=FACE_WINDOW)).isoformat()
+            recent = [a for a in arts if (a["published"] or "")[:10] >= cutoff]
+            if recent:
+                pool = recent
+        except ValueError:
+            pass
+    # strongest in the pool; ties broken toward the newer article
+    return max(pool, key=lambda a: ((a["score"] or 0), (a["published"] or "")))
+
+
 def _serialize(cluster):
-    rep = cluster["rep"]
     arts = sorted(cluster["arts"], key=lambda a: a["published"] or "", reverse=True)
+    newest = arts[0]["published"] if arts else ""
+    peak = max((a["score"] or 0 for a in arts), default=0)   # cluster strength = SORT key (unchanged)
+    face = _pick_face(arts, newest)                          # fresh-coverage HEADLINE only
     sources, seen = [], set()
     for a in arts:
         s = a["source"] or "?"
@@ -167,15 +201,16 @@ def _serialize(cluster):
         sources.append({"source": s, "url": a["url"], "published": (a["published"] or "")[:10]})
     return {
         "ids": [a["id"] for a in cluster["arts"]],
-        "title": rep["title"],
-        "score": rep["score"],
-        "thread": rep["ai_thread"],
-        "thread_label": THREAD_LABELS.get(rep["ai_thread"], rep["ai_thread"] or "?"),
-        "why": rep["ai_why"] or "",
-        "published": max((a["published"] or "" for a in arts), default="")[:10],
+        "title": face["title"],
+        "url": face["url"],
+        "score": peak,
+        "thread": face["ai_thread"],
+        "thread_label": THREAD_LABELS.get(face["ai_thread"], face["ai_thread"] or "?"),
+        "why": face["ai_why"] or "",
+        "published": (newest or "")[:10],
         "count": len(arts),
         "sources": sources[:12],
-        "status": rep["status"] or "new",
+        "status": face["status"] or "new",
     }
 
 

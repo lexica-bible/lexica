@@ -15,7 +15,7 @@ function NewsStory({ story, view, onMark, readOnly }) {
       <div className={"news-score news-score-" + tier}>{story.score}</div>
       <div className="news-body">
         <div className="news-thread">{story.thread_label}</div>
-        <a className="news-title" href={top.url || "#"} target="_blank" rel="noopener noreferrer">
+        <a className="news-title" href={story.url || top.url || "#"} target="_blank" rel="noopener noreferrer">
           {story.title}
         </a>
         {story.why && <div className="news-why">{story.why}</div>}
