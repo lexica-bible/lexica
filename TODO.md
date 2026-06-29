@@ -557,6 +557,12 @@ follow-up is **#4 (parallelize the cognate + Hebrew DB loops)** above — multi-
   cluster's newest sibling (`_pick_face`/`_serialize` in views_news.py, `FACE_WINDOW=14`), not the all-time top
   scorer. Killed "fresh date, stale title." W=14 picked from real PA before/after (21 faces flip, 7 real
   de-staling wins, drift 1-2 mild). FACE ONLY — sort is untouched by design (the code comments say so).
+- **✅ PER-REVIEWER Keep/Dismiss SHIPPED 2026-06-29 (5864730).** Was a single global `items.status` column
+  (everyone shared one field; share-key reader couldn't write at all). Now a per-reviewer `reviews` table in
+  news.db (stable `u<id>`/`k<keytag>` identity, writes scoped to the caller's own rows, admin wins over
+  share-key). Share key can now triage; a "Reviewing as X" line shows whose calls are recorded. `items.status`
+  kept for back-compat. OP: set `NEWS_SHARE_NAME` in the WSGI to name Tudor. Full record: memory
+  `project_news_watch` ("Per-reviewer Keep/Dismiss").
 - **DEFERRED — feed SORT recency (own session, don't act mid-build).** The feed still ranks by score with no
   time-decay, so old-but-high clusters (~29) float into the top band, and the ~61 old clusters with no fresh
   sibling can't be helped by the face-fix. Decide at that time: face-fix-only (current) vs a gentle recency
