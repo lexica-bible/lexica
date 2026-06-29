@@ -73,6 +73,25 @@ def _ascii(s):
     return re.sub(r"[^a-z]", "", s.lower())
 
 
+_HEB_FINALS = {"ך": "כ", "ם": "מ", "ן": "נ",
+               "ף": "פ", "ץ": "צ"}  # final kaf/mem/nun/pe/tsadi -> medial
+
+
+def _heb_root(s):
+    """Consonant skeleton of a Hebrew lemma: drop niqqud/cantillation, keep only Hebrew
+    letters, fold final forms to medial. 'אֵשׁ'->'אש', 'מִשְׁבָּת'->'משבת'. Robust without the
+    lemma_plain column (which this bdb build lacks — the consonants are what root-match needs)."""
+    if not s:
+        return ""
+    out = []
+    for ch in unicodedata.normalize("NFKD", s):
+        if unicodedata.combining(ch):
+            continue
+        if "א" <= ch <= "ת":
+            out.append(_HEB_FINALS.get(ch, ch))
+    return "".join(out)
+
+
 def _stem3(tok):
     return tok[:3]
 
@@ -121,11 +140,11 @@ def _greek_head(conn, num):
 
 def _heb_head(conn, num):
     r = conn.execute(
-        "SELECT lemma, xlit, description, lemma_plain FROM bdb WHERE strongs_id=?",
+        "SELECT lemma, xlit, description FROM bdb WHERE strongs_id=?",
         (f"H{num}",)).fetchone()
     lemma = (r["lemma"] if r else "") or ""
     xlit = (r["xlit"] if r else "") or ""
-    plain = (r["lemma_plain"] if r else "") or (lemma)
+    plain = _heb_root(lemma)
     gloss = _wg(conn, f"H{num}") or (r["description"] if r else "") or ""
     return lemma, xlit, plain, gloss
 
@@ -173,8 +192,8 @@ def assemble_hebrew(conn, hconn, num, root, terms):
     Substring only for roots of ≥3 letters (a 2-letter root matches half the lexicon)."""
     cand = {}   # STEM-proposed ONLY (lemma_plain consonants). Gloss confirms below, never discovers.
     use_sub = len(root) >= 3
-    for r in conn.execute("SELECT strongs_id, xlit, lemma_plain FROM bdb"):
-        lp = (r["lemma_plain"] or "")
+    for r in conn.execute("SELECT strongs_id, xlit, lemma FROM bdb"):
+        lp = _heb_root(r["lemma"])
         if not lp or not root:
             continue
         if lp.startswith(root) or (use_sub and root in lp):
