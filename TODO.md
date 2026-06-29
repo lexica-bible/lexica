@@ -326,6 +326,9 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
     `Book ch:vs`. A malformed ref with no chapter:verse (the charis `1Ti—` the model wrote for 1Ti 1:2) is
     INVISIBLE to it — neither pass nor miss, so it slips through silently. Add a lint that flags a book-abbrev
     token in the prose NOT followed by `chapter:verse`. (`cited_refs` / `_REF_RE` in build_lexica_def.py.)
+    (Sibling parser gap CLOSED 2026-06-28, commit 632e54a: a SPACED/spelled-out numbered book —
+    "2 Chr 26:11" — used to orphan the numeral and log no-verse; `_norm_book` now re-attaches it. This
+    no-chapter:verse lint is the remaining hole in the same parser.)
   - ✅ **Dotted-cognate collision — FIXED 2026-06-25 (commit 87d1555), with a rule for the full build.** The word
     card fetched the Lexica entry by `strongs_base` (drops ABP's ".N"), so a dotted cognate inherited its BASE
     word's def — G1577.1 ἐκκλησιάζω (verb) and G1577.2 ἐκκλησιαστής (agent noun) showed ekklēsia's noun senses.
