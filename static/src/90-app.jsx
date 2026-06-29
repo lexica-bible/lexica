@@ -101,6 +101,27 @@ function App() {
     setLibNav(prev => ({ ...(prev || {}), book, chapter, highlight: verse }));
   };
 
+  // The reader's true position lives in LibraryView; the rail cards + the gold jump
+  // marker (libNav) live here. When the reader MOVES (book click, chapter pick, page
+  // turn, chrono step) LibraryView reports the new spot so we can drop anything left
+  // over from the old one — a cross-ref / word / note card, or a stale highlight from
+  // a previous verse. An EXTERNAL jump (read-in-context, lexicon, verse-number click)
+  // sets these to the SAME spot it lands on, so they MATCH and are kept. This single
+  // reconcile is what keeps the rail + marker in step with the text (desktop + mobile).
+  const handleReaderPos = (book, chapter) => {
+    // Re-sync the marker to the reader and clear a stale highlight; an external jump
+    // already matches (book+chapter), so its highlight survives. A restored spot has
+    // no book yet (null) but the right chapter — treat that as a match too.
+    setLibNav(prev => (prev && (prev.book == null || prev.book === book) && (prev.chapter || 1) === chapter) ? prev : { book, chapter, highlight: null });
+    setLibCrossRef(cur => (cur && (cur.book !== book || cur.chapter !== chapter)) ? null : cur);
+    setActiveEntry(cur => (cur && entryView === "library" && (cur.book !== book || cur.chapter !== chapter)) ? null : cur);
+    setActiveNote(cur => {
+      if (!cur) return cur;
+      const n = NotesStore.get(cur);
+      return (n && (n.book !== book || n.chapter !== chapter)) ? null : cur;
+    });
+  };
+
   // Returning to the Library tab re-scrolls to the placeholder verse (the last verse
   // you clicked / jumped to), so it survives a tab switch like a version switch does.
   useEffect(() => {
@@ -330,7 +351,7 @@ function App() {
       <main className="main">
         {libEverVisited && (
           <div style={{ display: mainView === "library" ? undefined : "none" }}>
-            <LibraryView nav={libNav} onNavChange={setLibNav} onWordClick={(e) => { if (isMobile) setLibCrossRef(null); setActiveNote(null); setActiveEntry(e); setEntryView("library"); }} onVerseNumberClick={handleVerseNumberClick} onOpenNote={openNote} onTranslationChange={setLibTranslation} isMobile={isMobile} showSummary={showLibSummary} focusMode={focusMode} onToggleFocus={() => setFocusMode(f => !f)} onDetailBaseChange={setLibDetailBase} />
+            <LibraryView nav={libNav} onNavChange={setLibNav} onReaderPos={handleReaderPos} onWordClick={(e) => { if (isMobile) setLibCrossRef(null); setActiveNote(null); setActiveEntry(e); setEntryView("library"); }} onVerseNumberClick={handleVerseNumberClick} onOpenNote={openNote} onTranslationChange={setLibTranslation} isMobile={isMobile} showSummary={showLibSummary} focusMode={focusMode} onToggleFocus={() => setFocusMode(f => !f)} onDetailBaseChange={setLibDetailBase} />
           </div>
         )}
         {mainView === "about" && <AboutView owner={owner} />}

@@ -2,7 +2,7 @@
 // LIBRARY VIEW — the reader (the big component). Its helpers and nav/picker
 // sub-components live in 59a-library-helpers.jsx + 59b-library-nav.jsx.
 // ============================================================
-function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpenNote, onTranslationChange, isMobile, showSummary, focusMode, onToggleFocus, onDetailBaseChange }) {
+function LibraryView({ nav, onNavChange, onReaderPos, onWordClick, onVerseNumberClick, onOpenNote, onTranslationChange, isMobile, showSummary, focusMode, onToggleFocus, onDetailBaseChange }) {
   const [books, setBooks] = useState(() => readCachedBooks());
   const [selBook, setSelBook] = useState(() => {
     const c = readCachedBooks(), s = readLibSaved();
@@ -294,9 +294,6 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
     }).catch(() => {});
   }, []);
 
-  // Where you were reading in canonical order, so flipping back restores it
-  // (instead of stranding you on the chronological passage's book/chapter).
-  const canonReturnRef = useRef(null);
   // Jump the reader to a chronological passage: select its book and land on its
   // START chapter. (Stage 2 trims to the exact verse window and spans chapters.)
   // No manual verse-clearing here — the chapter loader clears + reloads itself when
@@ -375,7 +372,6 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
   const setOrder = (mode) => {
     if (mode === orderMode) return;
     if (mode === "chronological") {
-      canonReturnRef.current = selBook ? { book: selBook, chapter: selChapter } : null;
       setOrderMode("chronological");
       if (chrono) {
         if (corpus !== "bible") setCorpus("bible");
@@ -386,13 +382,12 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
         pickPassage(match);
       }
     } else {
+      // Leaving chronological KEEPS the book you're reading (the passage's book),
+      // landing on the chapter scrolled into view — instead of snapping back to
+      // wherever you last were in canonical. (Was: restore a stashed canonical spot,
+      // which dropped the chrono book — the "book not kept" bug.)
       setOrderMode("canonical");
-      const r = canonReturnRef.current;
-      if (r && r.book) {
-        if (corpus !== "bible") setCorpus("bible");
-        setSelBook(r.book);
-        setSelChapter(r.chapter);
-      }
+      if (selBook) setSelChapter(viewCh || (curPassage ? curPassage.start_ch : selChapter));
     }
   };
 
@@ -441,6 +436,19 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
     setSelBook(b);
     setSelChapter(nav.chapter || 1);
   }, [nav, books]);
+
+  // ---- Keep the App-level rail + jump-marker in step with the reader -------
+  // The reader's TRUE position lives here (selBook/selChapter); the cross-ref /
+  // word / note cards and the gold jump-highlight live up in App. Browsing INSIDE
+  // the reader (book list, chapter chip, page turn, chrono step) moves us here but
+  // never told App — so an old chapter's card or highlight stayed on screen (the
+  // "panel still shows Isaiah" + highlight-bleed bugs). Report every move; App keeps
+  // whatever matches the new spot (an external jump sets its card to the SAME verse
+  // it lands on) and drops the rest. This is the single place that re-couples them.
+  useEffect(() => {
+    const bid = corpus !== "bible" ? corpus : (selBook ? selBook.abbrev : null);
+    if (bid != null) onReaderPos?.(bid, selChapter);
+  }, [selBook && selBook.abbrev, selChapter, corpus]);
 
   useEffect(() => {
     if (!selBook || nonCanon || chronoOn) return;   // non-canon + chronological load via their own effects below
@@ -992,7 +1000,10 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
     if (c < 1 || c > maxChap) return;
     if (audioPlaying) resumeAudioRef.current = true;     // carry the read-along onto the next chapter
     setSelChapter(c);
-    if (!nonCanon) onNavChange?.({ ...nav, book: selBook?.abbrev, chapter: c, highlight: null });
+    // Emit a CLEAN nav (don't spread ...nav): a stale `translation`/`extern`/`scroll`
+    // left in the old nav would otherwise ride along and the nav effect would re-apply
+    // it — that's why turning the page used to snap you back to a previously-jumped text.
+    if (!nonCanon) onNavChange?.({ book: selBook?.abbrev, chapter: c, highlight: null });
   };
 
   const swipeRef = React.useRef(null);
@@ -1936,19 +1947,19 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
           (with a link to the per-chapter overview, and back); otherwise the overview. */}
       {showSummary && chronoOn && currentDay ? (
         chronoPanel === "overview" ? (
-          <SummaryPanel book={sumBook} chapter={sumChapter} bookLabel={sumLabel}
+          <SummaryPanel key={sumBook + "/" + sumChapter} book={sumBook} chapter={sumChapter} bookLabel={sumLabel}
             onBack={() => setChronoPanel("intro")} />
         ) : (
           <DayIntroPanel day={currentDay} chrono={chrono} onPickPassage={pickPassage}
             onOverview={() => setChronoPanel("overview")} />
         )
       ) : showSummary && (selBook || nonCanon) ? (
-        <SummaryPanel book={sumBook} chapter={sumChapter} bookLabel={sumLabel} />
+        <SummaryPanel key={sumBook + "/" + sumChapter} book={sumBook} chapter={sumChapter} bookLabel={sumLabel} />
       ) : null}
       {/* Mobile overview sheet (ⓘ): chrono shows the Reading intro (toggle to the chapter overview). */}
       {isMobile && summaryOpen && chronoOn && currentDay ? (
         chronoPanel === "overview" ? (
-          <SummaryPanel isMobile book={sumBook} chapter={sumChapter} bookLabel={sumLabel}
+          <SummaryPanel key={sumBook + "/" + sumChapter} isMobile book={sumBook} chapter={sumChapter} bookLabel={sumLabel}
             onClose={() => setSummaryOpen(false)} onBack={() => setChronoPanel("intro")} />
         ) : (
           <DayIntroPanel isMobile day={currentDay} chrono={chrono}
@@ -1957,7 +1968,7 @@ function LibraryView({ nav, onNavChange, onWordClick, onVerseNumberClick, onOpen
             onOverview={() => setChronoPanel("overview")} />
         )
       ) : isMobile && summaryOpen && (selBook || nonCanon) ? (
-        <SummaryPanel isMobile onClose={() => setSummaryOpen(false)}
+        <SummaryPanel key={sumBook + "/" + sumChapter} isMobile onClose={() => setSummaryOpen(false)}
           book={sumBook} chapter={sumChapter} bookLabel={sumLabel} />
       ) : null}
     </div>

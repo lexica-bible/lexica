@@ -178,9 +178,13 @@ function NewsView() {
         </div>
       )}
 
-      {loading ? (
+      {loading || stories === null ? (
+        // `stories === null` = no fetch has finished yet. The stories load runs in an
+        // effect AFTER meta arrives, so the first render with meta has loading=false +
+        // stories=null — without this guard it flashed "No stories match" before the
+        // list arrived (paint-before-ready). Treat not-yet-loaded as still loading.
         <div className="news-empty">Loading…</div>
-      ) : !stories || !stories.length ? (
+      ) : !stories.length ? (
         <div className="news-empty">
           {view === "kept" ? "Nothing kept yet." : "No stories match — try an earlier date or a lower score."}
         </div>
