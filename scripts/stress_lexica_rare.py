@@ -98,9 +98,30 @@ def gather_evidence(conn, sid, budget, has_surface):
             "occ": len(occs), "fed": len(ctx), "ot": ot, "renderings": len(gset)}
 
 
-def analyze(sid, ev, entries):
+def sense_grounding(senses_block, present):
+    """Per numbered sense: its headline, how many refs it cites, and how many of those refs actually
+    contain the lemma (membership in `present`, the loose keyset — the word IS there in some form, so
+    a tagging quirk is not mistaken for invention). A sense with 0 grounded refs rests on no real
+    occurrence — that is the manufactured sense, named. Reuses the live splitter's headline regex so
+    the senses match the card exactly."""
+    block = senses_block or ""
+    marks = list(B._HEADLINE_RE.finditer(block))
+    out = []
+    for i, m in enumerate(marks):
+        start = m.start()
+        end = marks[i + 1].start() if i + 1 < len(marks) else len(block)
+        chunk = block[start:end]
+        headline = re.sub(r'^\d+\.\s*', '', m.group(1)).strip()
+        refs = B.cited_refs(chunk)
+        grounded = sum(1 for r in refs if r in present)
+        out.append({"headline": headline, "refs": len(refs), "grounded": grounded})
+    return out
+
+
+def analyze(conn, sid, ev, entries):
     """Compute the detectors across the draws. Returns a dict the report + summary both read."""
     occ = ev["occ"]
+    present = B.loose_keyset(conn, sid)           # verses where the word genuinely appears, any form
     counts = [len(e["sense_headlines"]) for e in entries]
     spread = dict(sorted(Counter(counts).items()))
     real = [e["audit"]["real"] for e in entries]
@@ -108,7 +129,17 @@ def analyze(sid, ev, entries):
     noverse = [e["audit"]["noverse"] for e in entries]
     cov_flag = [bool((e["coverage"] or "").strip()) for e in entries]
     thin_gloss = [bool(THIN_RE.search(e["gloss_notes"] or "")) for e in entries]
+    # padding flags, two tiers:
+    #   HARD = senses > occ — mathematically impossible to ground each sense on its own occurrence.
+    #   SOFT = occ/2 < senses <= occ (and >=2 senses) — possible but at least one sense rests on a
+    #          single verse; a read-trigger, NOT a fail. bathmos (2 occ / 2 senses) lands here and is
+    #          the honest case — the point is to see whether a TEMPTER lands here too.
     senses_gt_occ = [c > occ for c in counts]
+    soft_pad = [(c >= 2 and c <= occ and 2 * c > occ) for c in counts]
+    # the sharp identifier: which sense(s) in each draw rest on NO real occurrence (named headlines),
+    # so we can see if the same invented job repeats across draws (prompt-induced) or flickers (noise).
+    grounding = [sense_grounding(e["senses_block"], present) for e in entries]
+    ungrounded = [[s["headline"] for s in g if s["grounded"] == 0] for g in grounding]
     return {
         "occ": occ, "fed": ev["fed"],
         "counts": counts, "spread": spread, "max_senses": max(counts), "min_senses": min(counts),
@@ -118,6 +149,9 @@ def analyze(sid, ev, entries):
         "cov_flag": cov_flag, "cov_flag_n": sum(cov_flag),
         "thin_gloss": thin_gloss, "thin_gloss_n": sum(thin_gloss),
         "senses_gt_occ": senses_gt_occ, "senses_gt_occ_n": sum(senses_gt_occ),
+        "soft_pad": soft_pad, "soft_pad_n": sum(soft_pad),
+        "grounding": grounding,
+        "ungrounded": ungrounded, "ungrounded_n": sum(1 for u in ungrounded if u),
     }
 
 
@@ -141,8 +175,18 @@ def render_word(sid, ev, entries, det):
       + "{" + ", ".join(f"{k}:{v}" for k, v in det["spread"].items()) + "}"
       + f"   [occ={det['occ']}]  — the padding tell (read as a spread, not an average)")
     if det["senses_gt_occ_n"]:
-        w(f"  !! SENSES > OCCURRENCES in {det['senses_gt_occ_n']}/{len(entries)} draw(s) — a sense "
-          f"with no occurrence behind it (hard padding flag)")
+        w(f"  !! HARD padding flag: senses > occurrences in {det['senses_gt_occ_n']}/{len(entries)} "
+          f"draw(s) — a sense with no occurrence to stand on")
+    if det["soft_pad_n"]:
+        w(f"  ~  soft padding flag (READ the card, not a fail): occ/2 < senses ≤ occ in "
+          f"{det['soft_pad_n']}/{len(entries)} draw(s) — at least one sense rests on a single verse "
+          f"(bathmos lands here honestly)")
+    if det["ungrounded_n"]:
+        w(f"  !! UNGROUNDED sense(s) — rest on NO real occurrence (same job across draws = "
+          f"prompt-induced invention; different each draw = noise):")
+        for j, u in enumerate(det["ungrounded"], 1):
+            if u:
+                w(f"       draw{j}: " + "  ;  ".join(u))
     w(f"  citation gate (pass/total): " + " | ".join(
         f"draw{i+1} {pt} (real {r})" + (f" tag {t}" if t else "") + (f" noverse {nv}" if nv else "")
         for i, (pt, r, t, nv) in enumerate(zip(det["passtotal"], det["real"], det["tagging"], det["noverse"]))))
@@ -165,6 +209,13 @@ def render_word(sid, ev, entries, det):
                     w(f"    {ln.rstrip()}")
         else:
             w("    (no senses_block — parse break)")
+        g = det["grounding"][i - 1]
+        if g:
+            w(f"    sense grounding (real-occ refs / cited refs): "
+              + ", ".join(f"{s['grounded']}/{s['refs']}" for s in g))
+            ung = [s["headline"] for s in g if s["grounded"] == 0]
+            if ung:
+                w(f"    !! UNGROUNDED: " + "  ;  ".join(ung))
         if (e["range"] or "").strip():
             w(f"    Range: {trunc(e['range'], 300)}")
         if (e["gloss_notes"] or "").strip():
@@ -191,21 +242,27 @@ def render_summary(rows):
     w("SUMMARY — detectors vs occurrence count (the cutoff read)")
     w("  Read CONTROLS first: G898 bathmos (genuine 2 senses) + G2299 thea (homograph).")
     w("=" * 92)
-    w(f"  {'word':<22} {'occ':>3}  {'sense-spread':<16} {'max>occ':>7}  {'real-miss':>9}  "
-      f"{'cov-flag':>8}  role")
-    w("  " + "-" * 88)
+    w(f"  {'word':<20} {'occ':>3}  {'sense-spread':<14} {'hard':>5} {'soft':>5} {'ungr':>5}  "
+      f"{'real':>4}  {'cov':>5}  role")
+    w("  " + "-" * 90)
     for r in rows:
         d = r["det"]
+        n = len(d["counts"])
         spread = "{" + ",".join(f"{k}:{v}" for k, v in d["spread"].items()) + "}"
-        gt = f"{d['senses_gt_occ_n']}/{len(d['counts'])}" if d["senses_gt_occ_n"] else "-"
-        rm = f"{d['real_total']} (mx{d['real_max']})" if d["real_total"] else "0"
-        cf = f"{d['cov_flag_n']}/{len(d['counts'])}" if d["cov_flag_n"] else "-"
+        hard = f"{d['senses_gt_occ_n']}/{n}" if d["senses_gt_occ_n"] else "-"
+        soft = f"{d['soft_pad_n']}/{n}" if d["soft_pad_n"] else "-"
+        ungr = f"{d['ungrounded_n']}/{n}" if d["ungrounded_n"] else "-"
+        rm = f"{d['real_total']}" if d["real_total"] else "-"
+        cf = f"{d['cov_flag_n']}/{n}" if d["cov_flag_n"] else "-"
         name = f"{r['lemma']} {r['sid']}"
-        w(f"  {name:<22} {d['occ']:>3}  {spread:<16} {gt:>7}  {rm:>9}  {cf:>8}  {ROLE.get(r['sid'],'')}")
+        w(f"  {name:<20} {d['occ']:>3}  {spread:<14} {hard:>5} {soft:>5} {ungr:>5}  "
+          f"{rm:>4}  {cf:>5}  {ROLE.get(r['sid'],'')}")
     w("")
-    w("  max>occ  = draws where sense-count exceeded occurrence-count (hard padding flag)")
-    w("  real-miss= total citation REAL misses across draws (hallucinated verse); mx = worst single draw")
-    w("  cov-flag = draws where the engine self-flagged thin/clustered coverage")
+    w("  hard = draws where senses > occurrences (a sense with no occurrence to ground it)")
+    w("  soft = draws where occ/2 < senses ≤ occ (a sense on a single verse — read-trigger, not a fail)")
+    w("  ungr = draws with a sense resting on NO real occurrence (the named manufactured sense)")
+    w("  real = total citation REAL misses across draws (cited verse lacks the word)")
+    w("  cov  = draws where the engine self-flagged thin/clustered coverage")
     return L
 
 
@@ -279,7 +336,7 @@ def main():
             print(f"   draw {k+1}/{args.runs}: {len(entry['sense_headlines'])} senses, "
                   f"audit {entry['audit']['pass']}/{entry['audit']['total']} "
                   f"(real {entry['audit']['real']})", flush=True)
-        det = analyze(sid, ev, entries)
+        det = analyze(conn, sid, ev, entries)
         report = render_word(sid, ev, entries, det)
         print("\n".join(report))
         base = save(save_dir, sid, ev["lemma"], ev["translit"], ev, entries, det, report)
