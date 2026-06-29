@@ -273,7 +273,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   const [kjvCount, setKjvCount] = useState(null);
   useEffect(() => {
     setKjvCount(null);
-    if (!entry.strongs || (!isHebrew && !entry.isKjv)) return;   // KJV cross-link: KJV words + ANY Hebrew word
+    if (!entry.strongs || (!isHebrewWord && !entry.isKjv)) return;   // KJV cross-link: KJV words + ANY Hebrew word (incl. proper nouns)
     let cancelled = false;
     api.kjvStrongsCount(entry.strongs)
       .then(d => { if (!cancelled) setKjvCount(d.count ?? null); })
@@ -286,7 +286,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   const [bsbCount, setBsbCount] = useState(null);
   useEffect(() => {
     setBsbCount(null);
-    if (!entry || !entry.strongs || (!entry.isBsb && !isHebrew)) return;   // BSB words + ANY Hebrew word
+    if (!entry || !entry.strongs || (!entry.isBsb && !isHebrewWord)) return;   // BSB words + ANY Hebrew word (incl. proper nouns)
     let cancelled = false;
     api.bsbStrongsCount(entry.strongs)
       .then(d => { if (!cancelled) setBsbCount(d.count ?? null); })
@@ -299,7 +299,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   const [hebCount, setHebCount] = useState(null);
   useEffect(() => {
     setHebCount(null);
-    if (!isHebrew || !entry.strongs) return;
+    if (!isHebrewWord || !entry.strongs) return;   // ANY Hebrew word, incl. proper nouns (bound-entity cards)
     let cancelled = false;
     api.hebStrongsCount(entry.strongs)
       .then(d => { if (!cancelled) setHebCount(d.count ?? null); })
@@ -659,7 +659,13 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
            && (metavType !== "person" || entry.strongs_raw === "2316")
            && !aiDescription && !aiDescLoading
            && (entry.greek || entry.strongs_raw || metavData?.strongs_g?.length > 0)) sections.push("lsj");
-  if (!isHebrew && !isPN && !entry.isKjv && !entry.isBsb && !entry.isExtra && abpCount !== null && abpCount > 0) sections.push("abpOcc");
+  // A verse-bound entity carries a real Strong's number (TIPNR mapped these people/places
+  // onto H/G numbers), so it gets the SAME occurrence controls every other word has — the
+  // real word-occurrence list, where each verse shows the surface form. The TIPNR ref-list
+  // stays too, as its own labeled control inside the bound card above.
+  const boundOcc = !!boundEntity;
+  const hebShowOcc = isHebrew || (isHebrewWord && boundOcc);
+  if (!isHebrewWord && (!isPN || boundOcc) && !entry.isKjv && !entry.isBsb && !entry.isExtra && abpCount !== null && abpCount > 0) sections.push("abpOcc");
   // Non-canon "other" books (Apostolic Fathers chip mode): suppress the occurrence
   // links/counts (the LXX cross-link above + this in-book count) until Lexicon search is
   // wired. Re-enable: drop `!entry.isExtra` above + uncomment extraOcc.
@@ -669,9 +675,9 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   if (!entry.isKjv && !entry.isBsb && isPN && pnCount !== null && pnCount > 0 && onNameSearch) sections.push("pnOcc");
   // A Hebrew word shows its occurrences across all Strong's-tagged Bibles: the Hebrew
   // OT source first, then the KJV + BSB translations — each opens that source in Word study.
-  if (isHebrew && hebCount !== null && hebCount > 0) sections.push("hebrewOtOcc");
-  if (isHebrew && kjvCount !== null && kjvCount > 0) sections.push("hebrewKjvOcc");
-  if (isHebrew && bsbCount !== null && bsbCount > 0) sections.push("hebrewBsbOcc");
+  if (hebShowOcc && hebCount !== null && hebCount > 0) sections.push("hebrewOtOcc");
+  if (hebShowOcc && kjvCount !== null && kjvCount > 0) sections.push("hebrewKjvOcc");
+  if (hebShowOcc && bsbCount !== null && bsbCount > 0) sections.push("hebrewBsbOcc");
   // Nave's topical sits BELOW the lexicon/place cards (metaV, AI, BDB/LSJ) — it's a
   // study cross-link, not a definition, so it reads last among the reference blocks.
   if (naveData && naveData.sections.length) sections.push("naveTopical");
@@ -687,6 +693,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       if (!boundEntity) return null;
       const be = boundEntity;
       const label = be.section === "place" ? "Place" : be.section === "person" ? "Person" : "Identity";
+      const noun = be.section === "place" ? "place" : be.section === "person" ? "person" : "name";
       const clean = s => (s || "").replace(/\s*\(\?\)/g, "").trim();   // drop TIPNR's "(?)" uncertainty marker
       // a clean one-liner: the person 'desc' is short; for a place fall to the
       // summary's first clause (before "first/only mentioned").
@@ -697,10 +704,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       const area = clean(be.area);
       // don't repeat the region when the description already names it (Eden: "…in Mesopotamia")
       const showArea = area && !(line && line.toLowerCase().includes(area.toLowerCase()));
-      // "Appears N×" expands THIS entity's own verses (tipnr_entity_refs) — the actual N,
-      // not the word's full Strong's set. Each reference jumps to that verse in the reader.
-      // (The old link went to the lemma-wide Word-study list, which over-counts a name
-      // shared by more than one referent — Eden the garden vs. the Assyrian place.)
+      // "Where this {place/person} appears" expands THIS entity's own verses
+      // (tipnr_entity_refs) — the actual N for this referent. Each reference jumps to that
+      // verse in the reader. This is the ENTITY-scoped list; the word's full occurrence list
+      // (every referent that shares the Strong's number — Eden the garden vs. the Assyrian
+      // place) is the standard "× in Hebrew OT / ABP" control shown as its own section below.
       const canRefs = !!(onReadInContext && be.uniq && be.ref_count > 0);
       return (
         <section key="boundEntity" className="sec pnbound">
@@ -717,10 +725,10 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             {be.ref_count > 0 && (canRefs
               ? <button className="pnbound-appears pnbound-appears--link" aria-expanded={refsOpen}
                         onClick={() => setRefsOpen(o => !o)}>
-                  Appears {be.ref_count}× in scripture
+                  Where this {noun} appears ({be.ref_count})
                   <Icon.ArrowRight className={"pnbound-caret" + (refsOpen ? " is-open" : "")}/>
                 </button>
-              : <div className="pnbound-appears">Appears {be.ref_count}× in scripture</div>)}
+              : <div className="pnbound-appears">Named in {be.ref_count} verses</div>)}
           </div>
           {refsOpen && (
             <div className="pnbound-refs">
