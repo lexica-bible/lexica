@@ -4940,12 +4940,15 @@ button.study-verse-ref { border: none; }
   gap: 14px;
 }
 .news-rail .news-views { flex-wrap: wrap; }
-.news-rail-filters { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; }
-.news-rail-filters .news-f,
-.news-rail-filters .news-presets,
-.news-rail-filters .news-seg { flex-wrap: wrap; }
-.news-rail-threadlabel { font-size: 11px; font-weight: 600; text-transform: uppercase;
-  letter-spacing: 0.05em; color: var(--ink-4); margin-top: 2px; }
+/* grouped, small-caps-labelled sections (View / Since / Score / Sort / Threads) so
+   the rail has the same rhythm as the Threads group, not a loose stack. */
+.news-rail-sec { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
+.news-rail-sec .news-f,
+.news-rail-sec .news-presets,
+.news-rail-sec .news-seg,
+.news-rail-sec .news-views { flex-wrap: wrap; }
+.news-rail-label { font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.05em; color: var(--ink-4); }
 .news-rail-threads { display: flex; flex-direction: column; gap: 2px; }
 .news-thread-item { font: inherit; font-size: 13px; text-align: left; padding: 6px 9px;
   border-radius: 7px; background: none; color: var(--ink-2); cursor: pointer; line-height: 1.3; }
@@ -4965,6 +4968,12 @@ button.study-verse-ref { border: none; }
   .news-inspect-body::before { content: ""; position: absolute; top: var(--hdr-h);
     left: 0; right: 0; height: 1px; background: var(--rule); }
 }
+/* selected story's headline fills the inspect header slot (like Library's "Genesis 1").
+   Carries a sentence, so smaller + tighter than a one-word header; wraps up to 3 lines
+   then clamps on a line break (never mid-word). Outlet suffix stripped in JS. */
+.news-inspect-title { font-family: var(--f-serif); font-size: 16px; font-weight: 600;
+  line-height: 1.3; color: var(--ink); margin-bottom: 14px;
+  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
 .news-inspect-h { font-size: 12px; font-weight: 600; text-transform: uppercase;
   letter-spacing: 0.05em; color: var(--ink-4); margin-bottom: 14px; }
 .news-inspect-sub { font-size: 11.5px; font-weight: 600; text-transform: uppercase;

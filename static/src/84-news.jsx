@@ -26,6 +26,13 @@ function _scoreTier(score) {
   return score >= 8 ? "hi" : score >= 6 ? "mid" : "lo";
 }
 
+// Drop a trailing " - Outlet" / " — Outlet" suffix (the source already shows in the
+// peak/headline rows below, so the panel header needn't repeat it). Mirrors the
+// grouping's _sig_tokens strip. Only peels a single trailing segment.
+function _stripOutlet(title) {
+  return (title || "").replace(/\s+[-–—]\s+[^-–—]+$/, "").trim() || (title || "");
+}
+
 function NewsStory({ story, view, onMark, readOnly, selected, onSelect }) {
   const [open, setOpen] = useState(false);
   const top = story.sources[0] || {};
@@ -123,6 +130,7 @@ function NewsRationale({ story }) {
   const rest = members.filter(m => !pinnedIds.has(m.id)).slice(0, Math.max(0, 5 - pinnedCount));
   return (
     <div className="news-inspect-body">
+      <div className="news-inspect-title">{_stripOutlet(story.title)}</div>
       <div className="news-inspect-h">Why it scored</div>
       {peak && <NewsRatRow m={peak} label={same ? "Peak · headline" : "Peak score"} />}
       {!same && face && <NewsRatRow m={face} label="Headline shown" />}
@@ -229,27 +237,36 @@ function NewsView({ isMobile }) {
     </div>
   );
 
-  const inboxFilters = (
+  // Inbox filter controls, split so the desktop rail can group + label them while
+  // the mobile strip keeps them in one flat row.
+  const dateInput = <input type="date" value={since} onChange={e => setSince(e.target.value)} />;
+  const presets = (
+    <div className="news-presets">
+      <button onClick={() => setSince(_newsDaysAgo(7))}>7d</button>
+      <button onClick={() => setSince(_newsDaysAgo(14))}>14d</button>
+      <button onClick={() => setSince(_newsDaysAgo(30))}>30d</button>
+    </div>
+  );
+  const scoreSeg = (
+    <div className="news-seg news-score-seg">
+      {scoreOpts.map(([v, lbl]) => (
+        <button key={v} className={"seg-b" + (String(minScore || "") === v ? " on" : "")}
+                onClick={() => setMinScore(Number(v || 0))}>{lbl}</button>
+      ))}
+    </div>
+  );
+  const sortSel = (
+    <select className="news-thread-sel" value={order} onChange={e => setOrder(e.target.value)}>
+      <option value="score">Top score</option>
+      <option value="date">Newest</option>
+    </select>
+  );
+  const inboxFilters = (   // mobile: one flat strip (keeps the inline "Since" word)
     <>
-      <label className="news-f">
-        <span>Since</span>
-        <input type="date" value={since} onChange={e => setSince(e.target.value)} />
-      </label>
-      <div className="news-presets">
-        <button onClick={() => setSince(_newsDaysAgo(7))}>7d</button>
-        <button onClick={() => setSince(_newsDaysAgo(14))}>14d</button>
-        <button onClick={() => setSince(_newsDaysAgo(30))}>30d</button>
-      </div>
-      <div className="news-seg news-score-seg">
-        {scoreOpts.map(([v, lbl]) => (
-          <button key={v} className={"seg-b" + (String(minScore || "") === v ? " on" : "")}
-                  onClick={() => setMinScore(Number(v || 0))}>{lbl}</button>
-        ))}
-      </div>
-      <select className="news-thread-sel" value={order} onChange={e => setOrder(e.target.value)}>
-        <option value="score">Top score</option>
-        <option value="date">Newest</option>
-      </select>
+      <label className="news-f"><span>Since</span>{dateInput}</label>
+      {presets}
+      {scoreSeg}
+      {sortSel}
     </>
   );
 
@@ -317,17 +334,37 @@ function NewsView({ isMobile }) {
   // ---------------- DESKTOP: the shared three-zone frame ------------------------
   const rail = (
     <div className="news-rail">
-      {viewsToggle}
-      {view === "inbox" && <div className="news-rail-filters">{inboxFilters}</div>}
-      {view === "kept" && (
-        <div className="news-rail-filters">
+      <div className="news-rail-sec">
+        <div className="news-rail-label">View</div>
+        {viewsToggle}
+      </div>
+      {view === "inbox" ? (
+        <>
+          <div className="news-rail-sec">
+            <div className="news-rail-label">Since</div>
+            <label className="news-f">{dateInput}</label>
+            {presets}
+          </div>
+          <div className="news-rail-sec">
+            <div className="news-rail-label">Score</div>
+            {scoreSeg}
+          </div>
+          <div className="news-rail-sec">
+            <div className="news-rail-label">Sort</div>
+            {sortSel}
+          </div>
+        </>
+      ) : (
+        <div className="news-rail-sec">
           <button className="news-btn news-keep" onClick={copyShortlist}
                   disabled={!stories || !stories.length}>Copy shortlist</button>
           {flash && <span className="news-flash">{flash}</span>}
         </div>
       )}
-      <div className="news-rail-threadlabel">Threads</div>
-      {threadList}
+      <div className="news-rail-sec">
+        <div className="news-rail-label">Threads</div>
+        {threadList}
+      </div>
       {meta.reviewer_name ? (
         <div className="news-rail-asline" title="Keep/Dismiss are recorded under this reviewer">
           Reviewing as <strong>{meta.reviewer_name}</strong>
