@@ -99,6 +99,62 @@ function AcProse({ text, onVerse, onStrongs, verified }) {
   return <p className="ac-prose">{out}</p>;
 }
 
+// COMPUTED lexical-texture panel — sits ABOVE the AI note (not under the "Synthesis"
+// tag: it is fact, not generated prose). Per word-family: the head word + its
+// gloss-confirmed relatives, each with its full corpus occurrence count and a bar.
+// Bars scale WITHIN a group's own language (the OT dwarfs the NT). Borderline words
+// (spelling matches, meaning unconfirmed) are never listed to the reader — only
+// counted, and that line shows only when there are any. The backend (corpus_panel.py)
+// already decided membership + never manufactures structure; this only draws it.
+function CorpusPanel({ panel }) {
+  const [open, setOpen] = useState({});
+  if (!panel || !panel.groups || !panel.groups.length) return null;
+  const fmt = (n) => (n != null ? n.toLocaleString() : "");
+  return (
+    <div className="cpanel" role="note" aria-label="How often these words occur">
+      <div className="cpanel-tag">How often these words occur</div>
+      {panel.groups.map((g, gi) => {
+        const fam = g.family || [];
+        if (!fam.length) return null;
+        const core = fam[0], rest = fam.slice(1);
+        const expanded = !!open[gi];
+        const heb = g.lang === "H";
+        const aside = g.set_aside || 0;
+        const hasMore = rest.length > 0 || aside > 0;
+        const barW = (n) => Math.max(4, Math.round((100 * n) / (g.max || n || 1)));
+        const row = (r, isCore) => (
+          <div className={"cpanel-row" + (isCore ? " core" : "")} key={r.strongs}>
+            <span className="cpanel-word">
+              <span className={"cpanel-lemma" + (heb ? " heb" : "")} dir={heb ? "rtl" : undefined}>{r.lemma}</span>
+              {r.translit && <span className="cpanel-tr">{r.translit}</span>}
+            </span>
+            <span className="cpanel-gloss">{r.gloss || "—"}</span>
+            <span className="cpanel-bar"><span style={{ width: barW(r.count) + "%" }}/></span>
+            <span className="cpanel-n">{fmt(r.count)}</span>
+          </div>
+        );
+        return (
+          <div className="cpanel-grp" key={gi}>
+            <div className="cpanel-grp-h">{g.label}</div>
+            {row(core, true)}
+            {expanded && rest.map((r) => row(r, false))}
+            {expanded && aside > 0 && (
+              <div className="cpanel-aside">
+                {aside} related form{aside > 1 ? "s" : ""} set aside — spelling matches, meaning unconfirmed
+              </div>
+            )}
+            {hasMore && (
+              <button className="cpanel-more" onClick={() => setOpen((o) => ({ ...o, [gi]: !expanded }))}>
+                {expanded ? "Show less ▴" : (rest.length > 0 ? `+${rest.length} more ▾` : "Show note ▾")}
+              </button>
+            )}
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 // One answered (or in-flight) question.
 function AcTurn({ turn, onReadInContext, onLemma, onStrongs }) {
   const cited = useMemo(() => _acCited(turn.keyStrongs), [turn.keyStrongs]);
@@ -159,6 +215,7 @@ function AcTurn({ turn, onReadInContext, onLemma, onStrongs }) {
         <div className="ac-answer"><p className="ac-error">{turn.error}</p></div>
       ) : (
         <div className="ac-answer">
+          <CorpusPanel panel={turn.panel}/>
           <div className="ac-syn-tag"><Icon.Sparkle/> Synthesis</div>
           {turn.grounded === false && (
             <div className="ac-ungrounded" role="note">
@@ -336,6 +393,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
         verified: (data.results || []).map(v => `${v.book}-${v.chapter}-${v.verse}`),
         total: data.total || 0,
         grounded: data.grounded !== false,   // false only when the backend says so
+        panel: data.panel || null,           // computed lexical-texture panel (may be absent)
       };
       setThread(t => t.map((x, i) => i === idx ? turn : x));
     } catch (e) {

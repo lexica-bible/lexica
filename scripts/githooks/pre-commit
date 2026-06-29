@@ -28,4 +28,5 @@ python tests/test_build_invariants.py >/dev/null
 python tests/test_folded_fixes.py >/dev/null
 python tests/test_argmap.py >/dev/null
 python tests/test_versification.py >/dev/null
+python tests/test_corpus_panel.py >/dev/null
 echo "pre-commit: all checks passed."

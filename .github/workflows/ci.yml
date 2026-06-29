@@ -23,6 +23,7 @@ jobs:
           python tests/test_folded_fixes.py
           python tests/test_argmap.py
           python tests/test_versification.py
+          python tests/test_corpus_panel.py
 
   frontend:
     runs-on: ubuntu-latest

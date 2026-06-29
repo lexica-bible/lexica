@@ -29,6 +29,7 @@ from core import (
 )
 from views_lsj import _lsj_concept_lookup, _format_lsj_context
 from views_lexicon import _greek_cognates
+import corpus_panel   # deterministic lexical-texture panel (no model call) — see corpus_panel.py
 from views_notes import (ai_caller, ai_quota_blocked, ai_quota_count,
                          ai_quota_status)   # AI search is login-gated + daily-capped (costs API money)
 
@@ -980,7 +981,7 @@ _ai_cache_ver: str | None = None  # computed once from prompt template + book li
 
 # Bump this integer whenever server-side search logic changes in a way that
 # affects results but doesn't change _AI_SYSTEM_TMPL (e.g. new fallback steps).
-_CACHE_CODE_VER = 38   # 38: phrase supplement also scans BSB (modern English wording can match where ABP/KJV don't)
+_CACHE_CODE_VER = 39   # 39: computed lexical-texture panel added to the payload (corpus_panel.py)
 
 
 def _get_ai_cache_ver() -> str:
@@ -1267,6 +1268,12 @@ def ai_search():
                     })
             finally:
                 ks_conn.close()
+
+        # The lexical-texture panel assembles each family from the model's OWN heads —
+        # snapshot them HERE, before the cognate/Hebrew/divine-council supplements below
+        # expand key_strongs_data (the panel does its own family assembly; feeding it the
+        # already-expanded list would double-count). Prefixed forms: ['G4442','H784'].
+        _panel_heads = [e["strongs"] for e in key_strongs_data]
 
         # ── Citation guard ───────────────────────────────────────────────────
         # The bare base numbers of the target words (dots stripped), e.g.
@@ -1850,10 +1857,24 @@ def ai_search():
         else:
             grounded = any(not _is_thematic(v.get("words", [])) for v in results)
 
+        # ── Lexical-texture panel (deterministic, no model call) ──────────────
+        # Computed STRUCTURE above the note: each query word's family distribution by
+        # count (fact), with a visible boundary. Built HERE — after the answer is
+        # assembled — behind a tight deadline and dropped on any miss, so it can only
+        # add a little tail to an already model-bound search, never front-load or break
+        # it. None when there's no clean head (it NEVER manufactures). See corpus_panel.py.
+        try:
+            _panel = corpus_panel.build_panel(_panel_heads)
+        except Exception as _pe:                 # belt-and-suspenders — build_panel self-guards
+            log.warning("corpus panel failed: %s", _pe)
+            _panel = None
+        _mark("panel")
+
         # The explanation is grounded in pass 2 above (which has the retrieved
         # verses in hand); no separate grounding pass runs here anymore.
         payload = {"results": results, "total": len(results), "grounded": grounded,
-                   "explanation": explanation, "key_strongs": key_strongs_data}
+                   "explanation": explanation, "key_strongs": key_strongs_data,
+                   "panel": _panel}
         if not context:               # follow-ups are thread-specific — don't cache
             _ai_cache[qk] = payload
             _persist_ai_cache(qk, payload)
