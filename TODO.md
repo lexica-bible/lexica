@@ -509,31 +509,17 @@ surface as junk the way "favor"→λαμβάνω did. Pick up only if it bugs yo
 
 ---
 
-## Ask the corpus — lexical-texture enrichment (method PROVEN 2026-06-29, BUILD pending)
+## Ask the corpus — lexical-texture enrichment (panel SHIPPED + LIVE 2026-06-29; 2 follow-ups left)
 
-Fixes the Ask-corpus output that "reads badly" (a grouped summary, not a synthesis). **Decision: a MAP
-with a COMPUTED headline, NOT an argued reading** — a deterministic distribution/lemma panel bolted
-ABOVE the note; counts are fact, the model isn't asked to argue (a reading would collide with the
-no-verdict / REPORT-DON'T-CHARACTERIZE rule). **`_CURATION_SYSTEM` stays FROZEN.** Full record +
-discipline: memory `project_corpus_enrichment`.
-
-PROVEN on two read-only PA protos (`scripts/proto_corpus_panel.py`, `scripts/proto_family_assembly.py`),
-three queries — fire, sabbath, love:
-- **Panel** — buckets by LEMMA only (counts on the FULL occurrence set, never `_spread_sample`), shows
-  each word's own range. fire = real structure (only "purification" has a carrier word); sabbath = stays
-  FLAT (won't invent texture). LXX seam esh→pyr 92–95% (proves the WORD maps, not the sense).
-- **Assembly** — ROOT-ANCHORED, visible boundary: STEM proposes / GLOSS confirms; INCLUDE vs BORDERLINE
-  (surfaced). False friends caught by signal disagreement; phil- under agape absent. Hebrew two-tier root
-  (≤2-consonant falls back to gloss-anchored). fire/fiery left unbridged on purpose.
-
-OPEN, in order:
-1. **Wire the panel into live Ask-corpus** (the payoff). REAL WORK = how it DEGRADES on messy/ambiguous/
-   empty/no-head queries + full-count latency in the request path — NOT "call the script from the route."
-   (Footnote: bdb `lemma_plain` is gone on live, so the Hebrew word-study fast-path is silently off —
-   guarded, no crash; re-run `scripts/add_lemma_plain.py` to restore. Memory `project_lexicon_search_overmatch`.)
-2. **LXX seam range-preservation** — does the Greek keep esh's range at the ~8% divergence? Doubles as
-   the short-root Hebrew family fallback.
-`code: scripts/proto_corpus_panel.py, scripts/proto_family_assembly.py; future ai.py panel above _CURATION_SYSTEM`
+The computed distribution/lemma panel is **built, live, and verified** (engine `corpus_panel.py` →
+`panel` payload field → `CorpusPanel` above the note; rows clickable into Word study, lemma chips
+removed). Full record + the build lessons: memory `project_corpus_enrichment` + TODO_ARCHIVE. Remaining:
+1. **LXX seam range-preservation** — does the Greek keep esh's range at the ~8% divergence (the 11 fire
+   verses)? Doubles as the short-root Hebrew family fallback (one piece of work). NOT in the live panel
+   yet — the panel is distribution + family only; the seam is the next layer.
+2. **Rebuild bdb `lemma_plain`** (small, separate) — re-run `scripts/add_lemma_plain.py` so the Hebrew
+   word-study exact-match fast-path goes live again (guarded today, no crash, just slower).
+   Memory `project_lexicon_search_overmatch`.
 
 ---
 

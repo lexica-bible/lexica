@@ -876,7 +876,19 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   family is pulled in deterministically (`_greek_cognates` + the `_cognate_is_tight` stem filter in
   ai.py) — the relative's verses + a chip, but ONLY if it actually occurs (e.g. σαββατισμός G4520 /
   Heb 4:9 under σάββατον). Greek only (BDB has no etymology). A code/context change like this isn't in
-  the search fingerprint → bump `_CACHE_CODE_VER` (now 38). Memory `project_ai_search_architecture`.
+  the search fingerprint → bump `_CACHE_CODE_VER` (was 38 for this; now 39 after the panel below).
+  Memory `project_ai_search_architecture`.
+- **Computed lexical-texture panel (2026-06-29).** A deterministic distribution panel rides ABOVE the
+  synthesis note (it's FACT, not generated): per query word, its gloss-confirmed family with full corpus
+  occurrence counts + per-language bars. NO model call — built from the model's `key_strongs` in
+  `ai_search` AFTER the answer, behind a tight wall-clock deadline + dropped on any miss (own connections
+  + a SQLite watchdog + 250ms lock-wait — can't slow or break the paid answer). None when there's no
+  clean head; NEVER manufactures. Engine = **`corpus_panel.py`** (repo root, like entity_resolution.py);
+  `panel` field on the `/api/ai-search` payload; `CorpusPanel` above the Synthesis tag in
+  52-ask-corpus.jsx — its rows ARE the per-word doorway into Word study (the old lemma chips were
+  removed). Family = STEM proposes (translit prefix, prefix-compound aware) / GLOSS disposes; borderline
+  (spelling-match, meaning-unconfirmed) words are COUNTED, not listed. `_CACHE_CODE_VER`→39; behavior
+  locked by `tests/test_corpus_panel.py`. Full record: memory `project_corpus_enrichment`.
 - **Synthesis standing rules — Berean (2026-06-22).** The displayed note (`_CURATION_SYSTEM`, mirrored
   in `_AI_SYSTEM_TMPL`): NO doctrinal verdicts (never rule a practice binding/abolished/etc. or assign a
   stance to an author — report the verse, let the reader conclude); contested "is X binding" questions

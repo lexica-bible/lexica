@@ -6,6 +6,28 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Ask-corpus lexical-texture panel — WIRED LIVE + verified — DONE 2026-06-29
+The computed distribution/family panel (proven on read-only protos earlier the same day) is now in the
+live Ask-corpus path. Engine = **`corpus_panel.py`** (repo root, pure logic, the two protos merged);
+`panel` field on the `/api/ai-search` payload; `CorpusPanel` drawn ABOVE the Synthesis tag in
+52-ask-corpus.jsx. Counts are fact (no model call) — it's structure over the note, not generated prose.
+- **The forks (decided WITH JP via his Claude-chat reviewer):** INLINE in the search (not a separate
+  async endpoint — the DB work is indexed + fast; built after the answer behind a deadline + dropped on
+  any miss, so it can't slow/break the paid answer); reader sees the **confident family + a one-line "N
+  set aside"** count (hidden at 0); **compact strip + expand**, bars scaled WITHIN each language.
+- **Degradation was the real work, not plumbing:** no clean head / empty / a head that doesn't occur /
+  heb.db missing all resolve to "show less" (no panel/no group), never a crash or a fabricated row. Short
+  Hebrew roots (≤2 consonants) gloss-anchor instead of flooding. `_CACHE_CODE_VER` 38→39.
+- **Follow-on same day (commit 027e595):** widened the Greek stem proposer to see leading-prefix
+  compounds (`prosabbaton` = pro+sabbaton — a real Sabbath time-word the strict prefix match missed);
+  **only the proposer widened, the gloss gate untouched**, so false friends still drop. Then made panel
+  rows clickable (→ Word study) and **removed the lemma chips** below the note (panel covers them);
+  de-duped the repeated language header on multi-head queries.
+- **LIVE-VERIFIED** (JP): fire rich, sabbath flat, sheol's Hebrew + short-root held, headless query → no
+  panel. Behavior locked by `tests/test_corpus_panel.py` (in CI + the pre-commit hook). Commits 9504583 +
+  027e595. Two follow-ups still open (LXX seam, bdb lemma_plain rebuild) — see TODO.md. Full record +
+  discipline: memory `project_corpus_enrichment`.
+
 ## Rare-word stress test + dictionary cutoff + split3 splitter — DONE 2026-06-29
 The deploy gate before building the verse-grounded dictionary (`lexica_def`) out by frequency:
 does the engine stay HONEST when starved, or manufacture senses to fill the template?
