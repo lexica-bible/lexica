@@ -595,6 +595,21 @@ follow-up is **#4 (parallelize the cognate + Hebrew DB loops)** above — multi-
   the reviewer's row — absence = unreviewed, no sentinel in counts); clear/flip ride the same scoped `_reviewer()`
   id, gate on `can_write`. Full record: memory `project_news_watch`.
   `code: views_news.py set_status + stories.sort · static/src/84-news.jsx`
+- **✅ FEED-SHAPE INSPECT PANEL SHIPPED 2026-06-29 (d5977bc).** The right zone now shows a feed-level "Today's
+  watch" readout (BURIED count as the hero, surfaced/scored/new-angle subline, hot-thread bars, biggest event
+  clusters) instead of the redundant per-card rationale. Computed from already-scored rows, NO model call — new
+  `/api/news/shape` (honors Since window, ignores score floor + thread). Shows by default, killed the "No story
+  selected" empty state; dropped the rationale panel + card-selection wiring; trimmed members/peak_id/face_id off
+  the list payload. `code: views_news.py shape() · static/src/84-news.jsx FeedShape · 00-core.jsx newsShape`
+- **✅ TRIAGE UI CLEANUP + COUNT REWORK SHIPPED 2026-06-29 (487a392, ca6d43f).** Six fixes: card title de-doubled
+  (`_stripOutlet`), `.news-title` inline so the link hit area hugs the text (click-overshoot), panel source/date
+  separator, View group forced to one line (nowrap + tighter pills), Dismissed count badge dropped, Copy-shortlist
+  on Kept only. + the COUNT rework: tab counts come from the list's own join (existing+scored, scoped to reviewer,
+  grouped) so they count CARDS not articles and orphaned review rows can't inflate them — `_count_view_clusters`.
+  + "1 stories"→"1 story" plural. LESSON: the "empty Dismissed list" was a STALE DEPLOYED BUNDLE, not a code bug —
+  the render path read `d.stories` correctly all along; don't invent a "shape mismatch" fix for code that reads
+  right, get the live response body / confirm the deploy first. `code: views_news.py meta() + _count_view_clusters
+  · static/src/84-news.jsx`
 
 ---
 
