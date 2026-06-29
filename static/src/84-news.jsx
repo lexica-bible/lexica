@@ -45,7 +45,7 @@ function NewsStory({ story, view, onMark, readOnly, selected, onSelect }) {
       <div className="news-body">
         <div className="news-thread">{story.thread_label}</div>
         <a className="news-title" href={story.url || top.url || "#"} target="_blank" rel="noopener noreferrer">
-          {story.title}
+          {_stripOutlet(story.title)}
         </a>
         {story.why && <div className="news-why">{story.why}</div>}
         <div className="news-meta-line">
@@ -123,6 +123,7 @@ function NewsRatRow({ m, label }) {
       {m.why && <div className="news-rat-why">{m.why}</div>}
       <div className="news-rat-src">
         <a href={m.url || "#"} target="_blank" rel="noopener noreferrer">{m.source}</a>
+        <span className="news-rat-sep">·</span>
         <span className="news-rat-date">{m.published || "—"}</span>
       </div>
     </div>
@@ -253,7 +254,7 @@ function NewsView({ isMobile }) {
         Kept{counts.kept ? ` (${counts.kept})` : ""}
       </button>
       <button className={"seg-b" + (view === "dismissed" ? " on" : "")} onClick={() => setView("dismissed")}>
-        Dismissed{counts.dismissed ? ` (${counts.dismissed})` : ""}
+        Dismissed
       </button>
     </div>
   );
@@ -340,8 +341,10 @@ function NewsView({ isMobile }) {
           </div>
         ) : (
           <div className="news-filters">
-            <button className="news-btn news-keep" onClick={copyShortlist}
-                    disabled={!stories || !stories.length}>Copy shortlist</button>
+            {view === "kept" && (   // shortlist-copy belongs with Kept, not Dismissed
+              <button className="news-btn news-keep" onClick={copyShortlist}
+                      disabled={!stories || !stories.length}>Copy shortlist</button>
+            )}
             <select className="news-thread-sel" value={thread} onChange={e => setThread(e.target.value)}>
               <option value="">All threads</option>
               {Object.keys(labels).map(k => <option key={k} value={k}>{labels[k]}</option>)}
@@ -377,13 +380,13 @@ function NewsView({ isMobile }) {
             {sortSel}
           </div>
         </>
-      ) : (
+      ) : view === "kept" ? (   // shortlist-copy belongs with Kept, not Dismissed
         <div className="news-rail-sec">
           <button className="news-btn news-keep" onClick={copyShortlist}
                   disabled={!stories || !stories.length}>Copy shortlist</button>
           {flash && <span className="news-flash">{flash}</span>}
         </div>
-      )}
+      ) : null}
       <div className="news-rail-sec">
         <div className="news-rail-label">Threads</div>
         {threadList}
