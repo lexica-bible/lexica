@@ -611,14 +611,17 @@ const _BOOK_LOOKUP=(()=>{const m={};const add=(s,key)=>{if(s)m[String(s).toLower
 Object.entries({matt:"Mat",mk:"Mar",lk:"Luk",jn:"Joh",ps:"Psa",psalm:"Psa",song:"Son",phil:"Php",rev:"Rev"}).forEach(([k,v])=>add(k,v));return m;})();// Make the citations the AI already wrote in its prose clickable: verse refs
 // ("Exo 24:8", "Hebrews 9:12-22") jump to the reader; Strong's ("G129", "H1818")
 // open Word study. No prompt/caching change — purely a render of existing text.
-const _CITE_RE=/\b((?:[1-3]\s?)?[A-Za-z][A-Za-z]+)\.?\s+(\d+):(\d+)(?:[-–]\d+)?\b|\b([GH])(\d+(?:\.\d+)?)\b/g;function AcProse({text,onVerse,onStrongs,verified}){if(!text)return null;const out=[];let last=0,m,k=0;_CITE_RE.lastIndex=0;while((m=_CITE_RE.exec(text))!==null){if(m[1]){// verse ref
+const _CITE_RE=/\b((?:[1-3]\s?)?[A-Za-z][A-Za-z]+)\.?\s+(\d+):(\d+)(?:[-–]\d+)?\b|\b([GH])(\d+(?:\.\d+)?)\b/g;function AcProse({text,onVerse,onStrongs,verified}){if(!text)return null;// Linkify one paragraph: turn the refs / Strong's the AI wrote into clickable chips.
+// A verse the search actually surfaced gets the solid evidence chip; a verse the AI
+// named that we never retrieved still jumps, but in a quieter style (the seatbelt) so
+// it doesn't imply it's part of the evidence.
+const linkify=(block,pi)=>{const out=[];let last=0,m,k=0;_CITE_RE.lastIndex=0;while((m=_CITE_RE.exec(block))!==null){if(m[1]){// verse ref
 const key=_BOOK_LOOKUP[m[1].toLowerCase().replace(/\s+/g,"")];if(!key)continue;// unknown book → leave as plain text
-// Every recognized reference is a chip that jumps into the reader. A verse the
-// search actually surfaced gets the solid evidence chip; a verse the AI named that
-// we never retrieved still jumps, but in a quieter style (the seatbelt) so it
-// doesn't imply it's part of the evidence.
-const ok=!verified||verified.has(`${key}-${+m[2]}-${+m[3]}`);if(m.index>last)out.push(text.slice(last,m.index));out.push(/*#__PURE__*/React.createElement("button",{key:k++,className:"ac-ref"+(ok?"":" ac-ref-soft"),onClick:()=>onVerse(key,+m[2],+m[3])},m[0]));last=_CITE_RE.lastIndex;}else if(m[4]){// Strong's number
-if(m.index>last)out.push(text.slice(last,m.index));const tag=m[4].toUpperCase()+m[5];out.push(/*#__PURE__*/React.createElement("button",{key:k++,className:"ac-instrongs",onClick:()=>onStrongs(tag)},m[0]));last=_CITE_RE.lastIndex;}}if(last<text.length)out.push(text.slice(last));return/*#__PURE__*/React.createElement("p",{className:"ac-prose"},out);}// COMPUTED lexical-texture panel — sits ABOVE the AI note (not under the "Synthesis"
+const ok=!verified||verified.has(`${key}-${+m[2]}-${+m[3]}`);if(m.index>last)out.push(block.slice(last,m.index));out.push(/*#__PURE__*/React.createElement("button",{key:"r"+pi+"-"+k++,className:"ac-ref"+(ok?"":" ac-ref-soft"),onClick:()=>onVerse(key,+m[2],+m[3])},m[0]));last=_CITE_RE.lastIndex;}else if(m[4]){// Strong's number
+if(m.index>last)out.push(block.slice(last,m.index));const tag=m[4].toUpperCase()+m[5];out.push(/*#__PURE__*/React.createElement("button",{key:"s"+pi+"-"+k++,className:"ac-instrongs",onClick:()=>onStrongs(tag)},m[0]));last=_CITE_RE.lastIndex;}}if(last<block.length)out.push(block.slice(last));return out;};// Pass-2 breaks the synthesis into paragraphs at sense shifts (blank lines); render
+// one <p> per paragraph so the prose breathes. A single-sense note is one paragraph —
+// visually identical to before.
+const paras=String(text).split(/\n\s*\n/).map(s=>s.trim()).filter(Boolean);return/*#__PURE__*/React.createElement("div",{className:"ac-prose"},paras.map((p,pi)=>/*#__PURE__*/React.createElement("p",{key:pi},linkify(p,pi))));}// COMPUTED lexical-texture panel — sits ABOVE the AI note (not under the "Synthesis"
 // tag: it is fact, not generated prose). Per word-family: the head word + its
 // gloss-confirmed relatives, each with its full corpus occurrence count and a bar.
 // Bars scale WITHIN a group's own language (the OT dwarfs the NT). Borderline words

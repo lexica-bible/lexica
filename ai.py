@@ -523,12 +523,16 @@ def _fetch_verse_words(conn, verse_id: int) -> list[dict]:
 
 _CURATION_SYSTEM = """\
 You are selecting primary evidence verses for a word study of the Greek Bible (OT + NT).
-Return ONLY valid JSON — no prose, no markdown:
-{
-  "primary_verses": ["Book Ch:V", ...],
-  "additional_verses": ["Book Ch:V", ...],
-  "explanation": "2-3 sentence grounded note — see the explanation section below"
-}
+Return your answer in TWO parts, IN THIS ORDER:
+
+PART 1 — the explanation (see the explanation section below). Plain prose only: no
+markdown, no headers, no labels, no JSON.
+
+PART 2 — then, on its OWN line, the marker
+===VERSES===
+followed by ONE line of JSON holding the verse selections — no markdown fences, and
+nothing after it:
+{"primary_verses": ["Book Ch:V", ...], "additional_verses": ["Book Ch:V", ...]}
 
 ─── STEP 1: IDENTIFY THE REFERENT ──────────────────────────────────────────
 Before selecting any verses, determine exactly which referent the query targets.
@@ -615,9 +619,15 @@ If the verse list already covers the topic well, return additional_verses as [].
 Prefer empty over speculative.
 
 ─── explanation ──────────────────────────────────────────────────────────────
-Write a short lexicon-style note, 2-3 sentences of plain prose — no markdown, no
-headers. Open with the Greek or Hebrew term under study and what it means, name its
-concrete sense range, and point to what the verses you selected actually say.
+Write a plain-prose lexicon note — no markdown, no headers, no bold, no labels. Open
+with the Greek or Hebrew term under study and what it means, name its concrete sense
+range, and point to what the verses you selected actually say.
+PARAGRAPHS: when the word's meaning turns to a clearly DIFFERENT sense, start a new
+paragraph (a blank line between). Break ONLY on a real sense shift — a word with one
+sense stays a single paragraph; never break for variety or after a set number of
+sentences, and never split one point across two paragraphs. Most words need 1-2 short
+paragraphs; a richly polysemous word (several distinct senses) may run to about one
+short paragraph per sense.
 SCRIPT: in the prose use the TRANSLITERATION + Strong's number only (e.g. "sabbaton,
 G4521" — never σάββατον), NOT raw Greek or Hebrew letters. The script lives in the word
 chips beside the note; keep the write-up itself readable for a non-Greek reader.
@@ -750,6 +760,42 @@ def _spread_sample(results: list[dict], cap: int, scores: dict | None = None) ->
     return picked
 
 
+# Pass-2 returns the synthesis prose FIRST (plain text, streamable), then this marker,
+# then a one-line JSON object with the verse picks. Anchoring the picks in a tail after
+# a fixed marker lets the prose stream to the reader live while the machine-readable
+# selections are parsed at the end — and lets us fail CLOSED if that tail is malformed.
+_CURATION_MARK = "===VERSES==="
+
+
+def _parse_curation(raw: str):
+    """Split a pass-2 response into (primary, additional, explanation).
+
+    FAIL-CLOSED: returns None on any malformed/missing tail, so the caller falls back
+    rather than mark wrong verses from a garbled parse. The prose half is whatever
+    precedes the marker; the picks come ONLY from a clean JSON object in the tail after
+    it (prose braces can't leak in — the marker anchors the split).
+    """
+    if not raw or _CURATION_MARK not in raw:
+        return None
+    prose, _, tail = raw.partition(_CURATION_MARK)
+    explanation = prose.strip()
+    if not explanation:
+        return None
+    s, e = tail.find("{"), tail.rfind("}")
+    if s == -1 or e <= s:
+        return None
+    try:
+        picks = json.loads(tail[s:e + 1])          # JSONDecodeError is a ValueError
+    except (ValueError, TypeError):
+        return None
+    if not isinstance(picks, dict) or not isinstance(picks.get("primary_verses"), list):
+        return None
+    primary = [str(r) for r in picks["primary_verses"]]
+    addl = picks.get("additional_verses")
+    additional = [str(r) for r in addl] if isinstance(addl, list) else []
+    return primary, additional, explanation
+
+
 def _curate_primary_verses(
     query: str, results: list[dict], key_strongs_data: list[dict] | None = None
 ) -> tuple[list[str], list[str], str]:
@@ -824,8 +870,8 @@ def _curate_primary_verses(
     user_msg = (
         f"Query: {query}\n"
         f"Key word(s) under study: {terms}\n"
-        f"Select up to {primary_cap} primary verses, then write the "
-        f"explanation grounded ONLY in the verses below.\n\n"
+        f"Write the explanation first (grounded ONLY in the verses below), then the "
+        f"===VERSES=== marker and up to {primary_cap} primary verses as JSON.\n\n"
         f"Verses:\n{verse_list}"
     )
 
@@ -855,16 +901,13 @@ def _curate_primary_verses(
             if msg.stop_reason == "max_tokens":
                 log.warning("Pass-2 curation hit the word cap (attempt %d/2) — may be cut off", attempt + 1)
             raw = msg.content[0].text.strip()
-            s, e = raw.find("{"), raw.rfind("}")
-            parsed = json.loads(raw[s:e + 1]) if s != -1 and e > s else {}
-            explanation = str(parsed.get("explanation", "")).strip()
-            if not explanation:
-                raise ValueError("pass-2 returned no explanation")
-            primary    = [str(r) for r in parsed.get("primary_verses", [])][:primary_cap]
-            additional = [str(r) for r in parsed.get("additional_verses", [])][:12]
-            return primary, additional, explanation
+            parsed = _parse_curation(raw)
+            if parsed is None:
+                raise ValueError("pass-2 tail did not parse (fail-closed)")
+            primary, additional, explanation = parsed
+            return primary[:primary_cap], additional[:12], explanation
         except Exception as exc:
-            log.warning("Pass-2 curation failed (attempt %d/2): %s", attempt + 1, exc)
+            log.warning("Pass-2 curation failed/unparseable (attempt %d/2): %s", attempt + 1, exc)
     return [], [], ""
 
 
