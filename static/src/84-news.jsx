@@ -2,25 +2,14 @@
 // NEWS WATCH — admin-only end-times news review (from news.db)
 // Gathered + AI-scored offline by scripts/news/; this tab reviews the result.
 //
-// Three-zone shell (desktop ≥1100px): LEFT navigate (inbox/kept + threads +
-// filters) · CENTER read (the feed cards, Keep/Dismiss ON the card) · RIGHT
-// inspect (why the selected story scored — the scorer's per-article reasoning).
-// Mobile (<1100px) collapses to the original single stacked column with the why
-// shown inline on each card.
+// Three-zone shell (desktop ≥1100px): LEFT navigate (inbox/kept/dismissed + threads +
+// filters) · CENTER read (the feed cards, Keep/Dismiss ON the card) · RIGHT inspect
+// (the feed-shape readout — "why the watch is pointed here today", FeedShape). Mobile
+// (<1100px) collapses to the original single stacked column with the why shown inline.
 // ============================================================
 function _newsDaysAgo(n) {
   return new Date(Date.now() - n * 86400000).toISOString().slice(0, 10);
 }
-
-// Empty-state mark for the inspect zone (newspaper), sized to match Word study's.
-const NEWS_INSPECT_ICON = (
-  <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-       strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M4 5h13a1 1 0 0 1 1 1v12a2 2 0 0 0 2 2H6a2 2 0 0 1-2-2V5Z"/>
-    <path d="M18 8h2a1 1 0 0 1 1 1v9a2 2 0 0 1-2 2"/>
-    <path d="M8 8h6M8 12h6M8 16h4"/>
-  </svg>
-);
 
 function _scoreTier(score) {
   return score >= 8 ? "hi" : score >= 6 ? "mid" : "lo";
@@ -33,14 +22,13 @@ function _stripOutlet(title) {
   return (title || "").replace(/\s+[-–—]\s+[^-–—]+$/, "").trim() || (title || "");
 }
 
-function NewsStory({ story, view, onMark, readOnly, selected, onSelect }) {
+function NewsStory({ story, view, onMark, readOnly }) {
   const [open, setOpen] = useState(false);
   const top = story.sources[0] || {};
   const tier = _scoreTier(story.score);
   const mark = (status, e) => { if (e) e.stopPropagation(); if (!readOnly) onMark(story, status); };
   return (
-    <div className={"news-story" + (selected ? " news-story-sel" : "")}
-         onClick={() => onSelect && onSelect(story)}>
+    <div className="news-story">
       <div className={"news-score news-score-" + tier}>{story.score}</div>
       <div className="news-body">
         <div className="news-thread">{story.thread_label}</div>
@@ -107,59 +95,56 @@ function NewsStory({ story, view, onMark, readOnly, selected, onSelect }) {
   );
 }
 
-// One article's reasoning row in the right inspect panel: its OWN score next to its
-// OWN why sentence, so the number always matches the words.
-function NewsRatRow({ m, label }) {
-  const tier = _scoreTier(m.score);
+// RIGHT zone: "why the watch is pointed here today" — a feed-level readout computed
+// from the already-scored rows (no model call, served by /api/news/shape). Replaces the
+// old per-card rationale (which just echoed the card). Shows by default, no selection.
+// The BURIED count is the hero: the stories the scorer looked at and held back — the one
+// thing here you can't get by scrolling the feed.
+function FeedShape({ shape }) {
+  if (!shape) return <div className="news-shape news-shape-loading">Reading the feed…</div>;
+  const threads = (shape.threads || []).filter(t => t.surfaced > 0).slice(0, 6);
+  const maxSurf = Math.max(1, ...threads.map(t => t.surfaced));
+  const clusters = shape.clusters || [];
   return (
-    <div className="news-rat-row">
-      <div className="news-rat-head">
-        <span className={"news-rat-score news-score-" + tier}>{m.score}</span>
-        <div className="news-rat-headtext">
-          {label && <span className="news-rat-label">{label}</span>}
-          <span className="news-rat-thread">{m.thread_label}</span>
+    <div className="news-shape">
+      <div className="news-shape-head">Today's watch</div>
+      <div className="news-shape-body">
+        <div className="news-shape-tally">
+          <div className="news-shape-buried">
+            <span className="news-shape-bignum">{shape.buried}</span>
+            <span className="news-shape-biglbl">buried by the scorer</span>
+          </div>
+          <div className="news-shape-sub">
+            {shape.surfaced} surfaced · {shape.total} scored
+            {shape.new_angles ? <> · {shape.new_angles} new {shape.new_angles === 1 ? "angle" : "angles"}</> : null}
+          </div>
         </div>
-      </div>
-      {m.why && <div className="news-rat-why">{m.why}</div>}
-      <div className="news-rat-src">
-        <a href={m.url || "#"} target="_blank" rel="noopener noreferrer">{m.source}</a>
-        <span className="news-rat-sep">·</span>
-        <span className="news-rat-date">{m.published || "—"}</span>
-      </div>
-    </div>
-  );
-}
 
-// RIGHT zone: why the selected story scored. The card shows the cluster's PEAK
-// score but the FACE article's headline — and those can be two different articles,
-// so we surface both rows explicitly, plus the other sources by score.
-function NewsRationale({ story }) {
-  if (!story) return null;   // the unselected state is the shared <ZoneEmpty> in the inspect slot
-  const members = story.members || [];
-  const byId = (id) => members.find(m => m.id === id);
-  const peak = byId(story.peak_id);
-  const face = byId(story.face_id);
-  const same = story.peak_id === story.face_id;
-  const pinnedIds = new Set([story.peak_id, story.face_id]);
-  const pinnedCount = same ? 1 : 2;
-  const rest = members.filter(m => !pinnedIds.has(m.id)).slice(0, Math.max(0, 5 - pinnedCount));
-  return (
-    <div className="news-inspect-panel">
-      <div className="news-inspect-head">
-        <div className="news-inspect-title">{_stripOutlet(story.title)}</div>
-      </div>
-      <div className="news-inspect-body">
-        <div className="news-inspect-h">Why it scored</div>
-        {peak && <NewsRatRow m={peak} label={same ? "Peak · headline" : "Peak score"} />}
-        {!same && face && <NewsRatRow m={face} label="Headline shown" />}
-        {rest.length > 0 && (
-          <>
-            <div className="news-inspect-sub">Other sources</div>
-            {rest.map((m, i) => <NewsRatRow key={m.id || i} m={m} />)}
-          </>
+        {threads.length > 0 && (
+          <div className="news-shape-sec">
+            <div className="news-shape-h">Hot threads</div>
+            {threads.map(t => (
+              <div key={t.thread || "?"} className="news-shape-row">
+                <span className="news-shape-tlabel" title={t.label}>{t.label}</span>
+                <span className="news-shape-bar">
+                  <span className="news-shape-fill" style={{ width: (100 * t.surfaced / maxSurf) + "%" }} />
+                </span>
+                <span className="news-shape-n">{t.surfaced}</span>
+              </div>
+            ))}
+          </div>
         )}
-        {story.count > rest.length + pinnedCount && (
-          <div className="news-inspect-more">+{story.count - rest.length - pinnedCount} more in this story</div>
+
+        {clusters.length > 0 && (
+          <div className="news-shape-sec">
+            <div className="news-shape-h">Biggest stories</div>
+            {clusters.map((c, i) => (
+              <div key={i} className="news-shape-crow">
+                <span className="news-shape-cev">{c.event}</span>
+                <span className="news-shape-cn">{c.n}</span>
+              </div>
+            ))}
+          </div>
         )}
       </div>
     </div>
@@ -176,11 +161,21 @@ function NewsView({ isMobile }) {
   const [thread, setThread] = useState("");
   const [order, setOrder] = useState("score");        // score | date
   const [flash, setFlash] = useState("");
-  const [selId, setSelId] = useState(null);           // ids[0] of the selected story (desktop inspect)
+  const [shape, setShape] = useState(null);           // feed-shape readout for the right zone
 
   useEffect(() => { api.newsMeta().then(setMeta); }, []);
   useEffect(() => { localStorage.setItem("lexica.news.since.v1", since); }, [since]);
   useEffect(() => { localStorage.setItem("lexica.news.min.v1", String(minScore)); }, [minScore]);
+
+  // Feed-shape (right zone). Honors the Since window only — ignores score floor + thread,
+  // so it's the whole-feed "why it's pointed here" readout, not the filtered view.
+  useEffect(() => {
+    if (!meta || !meta.available) { setShape(null); return; }
+    let cancelled = false;
+    const p = {}; if (since) p.since = since;
+    api.newsShape(p).then(d => { if (!cancelled) setShape(d && d.available ? d : null); });
+    return () => { cancelled = true; };
+  }, [meta, since]);
 
   // Reload whenever a filter changes (kept queries ignore the date/score floor so the
   // shortlist always shows everything you've kept).
@@ -204,7 +199,6 @@ function NewsView({ isMobile }) {
 
   const mark = (story, status) => {
     api.newsStatus(story.ids, status);
-    if (selId === story.ids[0]) setSelId(null);
     setStories(ss => (ss || []).filter(s => s !== story));   // drop it from the current list
   };
 
@@ -233,7 +227,6 @@ function NewsView({ isMobile }) {
   const labels = meta.labels || {};
   const counts = meta.counts || {};
   const scoreOpts = [["", "All"], ["6", "6+"], ["7", "7+"], ["8", "8+"], ["9", "9+"]];
-  const selected = (stories || []).find(s => s.ids[0] === selId) || null;
 
   // ---- shared bits used by both layouts ----
   const threadList = (
@@ -308,15 +301,12 @@ function NewsView({ isMobile }) {
         <div className="news-list">
           {stories.map((s, i) => (
             <NewsStory key={s.ids[0] + "-" + i} story={s} view={view} onMark={mark}
-                       readOnly={!canReview} selected={!isMobile && selected === s}
-                       onSelect={isMobile ? null : setSel} />
+                       readOnly={!canReview} />
           ))}
         </div>
       </>
     )
   );
-
-  function setSel(story) { setSelId(story.ids[0]); }
 
   // ---------------- MOBILE: single stacked column (unchanged shape) -------------
   if (isMobile) {
@@ -404,10 +394,7 @@ function NewsView({ isMobile }) {
       className="news-frame"
       rail={rail}
       center={<div className="news-feed">{feedInner}</div>}
-      inspect={selected
-        ? <NewsRationale story={selected} />
-        : <ZoneEmpty icon={NEWS_INSPECT_ICON} title="No story selected"
-            sub="Select a story to see why it scored against the two-beast framework." />}
+      inspect={<FeedShape shape={shape} />}
     />
   );
 }

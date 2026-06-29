@@ -4930,8 +4930,6 @@ button.study-verse-ref { border: none; }
 .news-keep:hover { filter: brightness(1.08); color: var(--paper); }
 .news-dismiss:hover { border-color: var(--ink-4); color: var(--ink-3); }
 
-.news-story-sel { border-color: var(--accent); box-shadow: 0 0 0 1px var(--accent); }
-.news-feed .news-story { cursor: pointer; }
 
 /* ---- News mounted on the shared three-zone frame ----------------------------
    The frame (widths 224/fill/460, the over-header inspect panel, height, theme,
@@ -4968,43 +4966,40 @@ button.study-verse-ref { border: none; }
 
 .news-feed { flex: 1; min-height: 0; overflow-y: auto; padding: 20px 24px 80px; }
 
-/* RIGHT inspect — content inside the shared .zinspect (fixed, over the navy bar).
-   Mirrors Library's .detail-side: the headline sits in a header BAND at the very
-   top (its bottom border = the cross-line continuing the navy header's edge), then
-   the rationale scrolls below. The band is min hdr-h so a 1-line headline lands
-   exactly where Library's "Genesis 1" does; it grows for a 2–3 line headline. */
-.news-inspect-panel { flex: 1; min-height: 0; display: flex; flex-direction: column; }
-.news-inspect-head { flex: 0 0 auto; box-sizing: border-box; min-height: var(--hdr-h);
-  display: flex; align-items: center; padding: 12px 18px; border-bottom: 1px solid var(--rule); }
-.news-inspect-body { flex: 1; min-height: 0; overflow-y: auto; padding: 18px 18px 80px; }
-/* selected story's headline fills the inspect header slot (like Library's "Genesis 1").
-   Carries a sentence, so smaller + tighter than a one-word header; wraps up to 3 lines
-   then clamps on a line break (never mid-word). Outlet suffix stripped in JS. */
-.news-inspect-title { font-family: var(--f-serif); font-size: 16px; font-weight: 600;
-  line-height: 1.3; color: var(--ink);
-  display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 3; overflow: hidden; }
-.news-inspect-h { font-size: 12px; font-weight: 600; text-transform: uppercase;
-  letter-spacing: 0.05em; color: var(--ink-4); margin-bottom: 14px; }
-.news-inspect-sub { font-size: 11.5px; font-weight: 600; text-transform: uppercase;
-  letter-spacing: 0.04em; color: var(--ink-4); margin: 18px 0 8px; padding-top: 14px;
-  border-top: 1px solid var(--rule); }
-.news-inspect-more { font-size: 12px; color: var(--ink-4); margin-top: 12px; }
+/* RIGHT inspect — the feed-SHAPE readout inside the shared .zinspect (fixed, over the
+   navy bar). Header BAND at the very top (its bottom border = the cross-line continuing
+   the navy header's edge, like Library's "Genesis 1" / Word study), then the shape
+   scrolls below. Always shown — no per-card selection, no empty state. */
+.news-shape { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+.news-shape-loading { padding: 40px 18px; color: var(--ink-4); font-size: 13px; }
+.news-shape-head { flex: 0 0 auto; box-sizing: border-box; min-height: var(--hdr-h);
+  display: flex; align-items: center; padding: 12px 18px; border-bottom: 1px solid var(--rule);
+  font-family: var(--f-serif); font-size: 16px; font-weight: 600; color: var(--ink); }
+.news-shape-body { flex: 1; min-height: 0; overflow-y: auto; padding: 18px 18px 80px; }
 
-.news-rat-row { padding: 11px 0; border-bottom: 1px solid var(--rule); }
-.news-rat-row:last-child { border-bottom: none; }
-.news-rat-head { display: flex; align-items: flex-start; gap: 10px; }
-.news-rat-score { flex: 0 0 auto; width: 30px; height: 30px; border-radius: 8px; display: grid;
-  place-items: center; font-weight: 700; font-size: 14px; }
-.news-rat-headtext { display: flex; flex-direction: column; gap: 1px; min-width: 0; }
-.news-rat-label { font-size: 10.5px; font-weight: 700; text-transform: uppercase;
-  letter-spacing: 0.05em; color: var(--accent); }
-.news-rat-thread { font-size: 12.5px; font-weight: 600; color: var(--ink-2); line-height: 1.3; }
-.news-rat-why { font-size: 13px; color: var(--ink); line-height: 1.5; margin-top: 7px; }
-.news-rat-src { display: flex; align-items: center; gap: 6px; margin-top: 6px; font-size: 12px; }
-.news-rat-src a { color: var(--ink-3); text-decoration: none; }
-.news-rat-src a:hover { color: var(--accent); text-decoration: underline; }
-.news-rat-sep { color: var(--ink-4); }
-.news-rat-date { color: var(--ink-4); }
+/* the BURIED count is the hero — the one thing you can't get by scrolling the feed. */
+.news-shape-tally { padding-bottom: 16px; border-bottom: 1px solid var(--rule); }
+.news-shape-buried { display: flex; align-items: baseline; gap: 8px; }
+.news-shape-bignum { font-size: 34px; font-weight: 700; color: var(--ink); line-height: 1; }
+.news-shape-biglbl { font-size: 13px; font-weight: 600; color: var(--ink-2); }
+.news-shape-sub { font-size: 12.5px; color: var(--ink-4); margin-top: 6px; }
+
+.news-shape-sec { margin-top: 18px; }
+.news-shape-h { font-size: 11.5px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.05em; color: var(--ink-4); margin-bottom: 10px; }
+.news-shape-row { display: flex; align-items: center; gap: 8px; margin-bottom: 7px; }
+.news-shape-tlabel { flex: 0 0 40%; font-size: 12.5px; color: var(--ink-2);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.news-shape-bar { flex: 1; height: 8px; border-radius: 5px; background: var(--bg-sunk); overflow: hidden; }
+.news-shape-fill { display: block; height: 100%; border-radius: 5px;
+  background: color-mix(in oklab, var(--accent) 70%, var(--bg)); }
+.news-shape-n { flex: 0 0 auto; font-size: 12.5px; font-weight: 600; color: var(--ink-2);
+  min-width: 18px; text-align: right; }
+.news-shape-crow { display: flex; align-items: baseline; gap: 8px; padding: 5px 0;
+  border-bottom: 1px solid var(--rule); }
+.news-shape-crow:last-child { border-bottom: none; }
+.news-shape-cev { flex: 1; font-size: 13px; color: var(--ink); line-height: 1.35; }
+.news-shape-cn { flex: 0 0 auto; font-size: 12.5px; font-weight: 600; color: var(--ink-3); }
 
 @media (max-width: 1099px) {
   .news-view { padding: 16px 12px 90px; }

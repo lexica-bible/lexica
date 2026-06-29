@@ -253,34 +253,11 @@ def _pick_face(arts, newest):
     return max(pool, key=lambda a: ((a["score"] or 0), (a["published"] or "")))
 
 
-def _peak_art(arts):
-    """The single article that owns the cluster's displayed SCORE (highest score,
-    ties broken toward the newer). Its score is what the card shows, so the rationale
-    panel must surface ITS why — which can be a DIFFERENT article than the face."""
-    return max(arts, key=lambda a: ((a["score"] or 0), (a["published"] or "")))
-
-
-def _member(a):
-    """One article's row for the inspect panel: its own score + its own reason, so a
-    displayed number always sits next to the sentence that earned it."""
-    return {
-        "id": a["id"],
-        "score": a["score"] or 0,
-        "why": a["ai_why"] or "",
-        "thread": a["ai_thread"],
-        "thread_label": THREAD_LABELS.get(a["ai_thread"], a["ai_thread"] or "?"),
-        "source": a["source"] or "?",
-        "url": a["url"],
-        "published": (a["published"] or "")[:10],
-    }
-
-
 def _serialize(cluster):
     arts = sorted(cluster["arts"], key=lambda a: a["published"] or "", reverse=True)
     newest = arts[0]["published"] if arts else ""
     peak = max((a["score"] or 0 for a in arts), default=0)   # cluster strength = SORT key (unchanged)
     face = _pick_face(arts, newest)                          # fresh-coverage HEADLINE only
-    peak_art = _peak_art(arts)                               # owner of the displayed score
     sources, seen = [], set()
     for a in arts:
         s = a["source"] or "?"
@@ -288,10 +265,6 @@ def _serialize(cluster):
             continue
         seen.add(s)
         sources.append({"source": s, "url": a["url"], "published": (a["published"] or "")[:10]})
-    # Per-article rationale rows for the inspect panel, strongest first. peak + face
-    # are tagged so the frontend can pin/label them even after the cap.
-    members = sorted((_member(a) for a in arts),
-                     key=lambda m: (m["score"], m["published"]), reverse=True)
     return {
         "ids": [a["id"] for a in cluster["arts"]],
         "title": face["title"],
@@ -304,9 +277,6 @@ def _serialize(cluster):
         "count": len(arts),
         "sources": sources[:12],
         "status": face["status"] or "new",
-        "members": members,
-        "peak_id": peak_art["id"],
-        "face_id": face["id"],
     }
 
 
@@ -431,6 +401,67 @@ def list_news():
         stories.sort(key=lambda s: (s["score"] - _staleness_penalty(s["published"]),
                                     s["published"]), reverse=True)
     return jsonify({"stories": stories[:300], "available": True})
+
+
+@bp.route("/api/news/shape", methods=["GET"])
+@limiter.limit("240 per hour")
+def shape():
+    """Feed-level "why the watch is pointed here today" — computed straight from the
+    already-scored rows, NO model call. Honors the Since window (so it's "today's watch");
+    deliberately IGNORES the score floor (the whole point is the BURIED count you can't see
+    by scrolling) and the thread filter (it's a whole-feed readout). Drives the right
+    inspect zone, which now shows this by default instead of a per-card rationale."""
+    if not _can_read():
+        return jsonify({"error": "not found"}), 404
+    if not _available():
+        return jsonify({"available": False})
+    since = (request.args.get("since") or "").strip()
+    where = ["score IS NOT NULL"]
+    args = []
+    if since:
+        where.append("published >= ? AND published != ''")
+        args.append(since)
+    w = " AND ".join(where)
+
+    conn = news_db()
+    try:
+        cols = [c[1] for c in conn.execute("PRAGMA table_info(items)")]
+        has_event = "event" in cols
+        has_newflag = "ai_new_flag" in cols
+        # surfaced (score>=6) vs buried (<6) + new-angle flags — booleans sum to counts.
+        tot = conn.execute(
+            f"SELECT SUM(score >= 6) AS surfaced, SUM(score < 6) AS buried, COUNT(*) AS total"
+            f"{', SUM(ai_new_flag = 1) AS new_angles' if has_newflag else ''} "
+            f"FROM items WHERE {w}", args).fetchone()
+        threads = [
+            {"thread": r["ai_thread"],
+             "label": THREAD_LABELS.get(r["ai_thread"], r["ai_thread"] or "?"),
+             "surfaced": r["surfaced"] or 0, "scored": r["scored"] or 0}
+            for r in conn.execute(
+                f"SELECT ai_thread, SUM(score >= 6) AS surfaced, COUNT(*) AS scored "
+                f"FROM items WHERE {w} GROUP BY ai_thread "
+                f"ORDER BY surfaced DESC, scored DESC", args)]
+        clusters = []
+        if has_event:
+            clusters = [
+                {"event": r["event"], "n": r["n"], "hi": r["hi"] or 0}
+                for r in conn.execute(
+                    f"SELECT event, COUNT(*) AS n, MAX(score) AS hi "
+                    f"FROM items WHERE {w} AND event IS NOT NULL AND event != '' "
+                    f"GROUP BY event ORDER BY n DESC LIMIT 5", args)]
+    except sqlite3.Error:
+        return jsonify({"available": True, "surfaced": 0, "buried": 0, "total": 0,
+                        "new_angles": 0, "threads": [], "clusters": []})
+    finally:
+        conn.close()
+    return jsonify({
+        "available": True,
+        "surfaced": (tot["surfaced"] or 0) if tot else 0,
+        "buried": (tot["buried"] or 0) if tot else 0,
+        "total": (tot["total"] or 0) if tot else 0,
+        "new_angles": (tot["new_angles"] or 0) if (tot and has_newflag) else 0,
+        "threads": threads, "clusters": clusters,
+    })
 
 
 @bp.route("/api/news/status", methods=["POST"])
