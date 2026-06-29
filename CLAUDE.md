@@ -848,8 +848,20 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   (`< _PROPER_NOUN_NEED`) — a common capitalized word like "Sabbath" was burning ~7s on a redundant
   scan. Timing `log.info("ai_search timing …")` kept on, plus per-call `cache[haiku-sqlgen]`/
   `cache[sonnet-pass2]` token-split lines + a `SLOW SQL` (>10s DB step) warning — a cost/stall meter
-  (grep the PA `*.log`; ~3¢/search, Haiku SQL prompt caches, Sonnet pass-2 can't). "Stream verses
-  first" = a not-yet-done frontend idea. Full record: memory `project_ai_search_architecture`.
+  (grep the PA `*.log`; ~3¢/search, Haiku SQL prompt caches, Sonnet pass-2 can't). Full record: memory
+  `project_ai_search_architecture`.
+- **Synthesis STREAMS (SSE, 2026-06-29).** Pass-2 (Sonnet) is the dominant slice AND the last thing made, so
+  `/api/ai-search` returns an event-stream for a FRESH search: the `panel` event first, the synthesis PROSE
+  streams live (`delta` events), the verse evidence lands in a `done` event at the tail. Cache hits / quota /
+  login / errors stay one-lump JSON (frontend branches on content-type). The response carries
+  `X-Accel-Buffering: no` — that header is the whole fix for PA buffering the stream into one lump. Pass-2's
+  output was reshaped: prose FIRST, then a `===VERSES===` marker, then a one-line JSON of the picks — parsed by
+  the FAIL-CLOSED `_parse_curation` (a bad tail → re-run the non-streamed `_curate_primary_verses` for clean
+  picks, keep the streamed prose; never a wrong-verse split). Helpers in ai.py: `_curation_prompt` (shared
+  prompt), `_curate_primary_verses` (non-streamed floor), `_stream_curation` (generator), `_assemble_payload`
+  (post-curation), `_streamable_prose`, `_sse`. Frontend `api.aiSearchStream` (00-core.jsx) + `AcProse`
+  sense-paragraphs. **TEMPORARY, remove once live-green:** the SSE probe `/api/_streamtest` + the `!badtail `
+  query prefix (forces the floor under streaming). Full record: memory `project_ai_search_architecture`.
 - **Citation guard + grounding (2026-06-21).** Occurrence lists are pulled by Strong's = unfakeable;
   the leak is in the PROSE. A verse the model names/adds is checked against the target Strong's set —
   one containing NONE of the target words is `is_thematic` → frontend "Additional references" (kept,

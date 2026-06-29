@@ -523,6 +523,39 @@ removed). Full record + the build lessons: memory `project_corpus_enrichment` + 
 
 ---
 
+## Ask the corpus — synthesis STREAMING + readability (DONE 2026-06-29; live re-prove + cleanup pending)
+
+The curate-latency session. Pass-2 (Sonnet) was the dominant ~11-12s slice AND the last thing produced, so the
+reader stared at nothing ~30s then got the whole answer at once. Four forks scoped; #1 + #2 built + pushed, #3
+skipped, #4 a follow-up. Scope was curate-only (panel/engine/gates/VERSE_PROMPT frozen). Full record: memory
+`project_ai_search_architecture` (+ `project_ai_synthesis_quality` for the prose rules).
+
+- ✅ **#1 STREAMING (commits 30877ab, 1c31586).** `/api/ai-search` returns an SSE stream for a fresh search:
+  panel first → synthesis prose streams live → evidence at the tail. Header `X-Accel-Buffering: no` is the whole
+  fix for PA buffering (proved by the probe). Cache hits stay one-lump. Pass-2 reshaped prose-first +
+  `===VERSES===` tail; FAIL-CLOSED `_parse_curation` floor (bad tail → re-run non-streamed curate, keep streamed
+  prose, never wrong). Frontend `api.aiSearchStream` + streaming turn state.
+- ✅ **#2 SENSE-PARAGRAPHS + synthesize-don't-recite (commits 30877ab, ea1e305).** The note breaks into a
+  paragraph per sense, organized by MEANING not a verse roll-call (the panel owns the occurrence list).
+  Re-proven on fire/sabbath. Split the three surfaces into three jobs: panel=distribution, synth=senses,
+  key-passages=occurrences.
+- ❌ **#3 smaller model / less input — SKIPPED.** Sonnet→Haiku = the 2026-06-21 regression; input already capped
+  at 60 verses, time is in writing not reading. Don't.
+- ⏳ **#4 parallelize the cognate + Hebrew DB loops — NOT done; a follow-up.** Read-only, independent loops run
+  one-at-a-time; running them concurrently claws back seconds on MULTI-head queries only (single-word = one
+  family, no gain). Needs an identical-output before/after diff (same verses/chips/order, only timing). Do NOT
+  touch the model-written single SQL ("sqlrun" slice). `code: ai.py cognate loop + Hebrew supplement loop`
+
+**PENDING (the user's step):**
+1. **Live re-prove streaming** — deploy, ask a FRESH word (a cached word one-lumps correctly), watch the
+   synthesis trickle in (panel first → prose live → passages at tail); composer locked mid-stream. Then
+   `!badtail fire` to watch the fail-closed floor fire under streaming (still-correct picks, brief extra wait).
+2. **Remove the TWO temporary hooks once green** — `/api/_streamtest` (the probe, app.py, commit 0c2fbf8) + the
+   `!badtail ` query prefix (ai.py, commit 58d17b3). One cleanup commit.
+   `code: app.py /api/_streamtest; ai.py _force_bad / !badtail`
+
+---
+
 ## Word study + Ask the corpus — REDESIGNED (2026-06-19, under development)
 
 (Word-card lemma gloss itself — KJV/BSB/Hebrew + Word study + the Hebrew byform fix — is DONE + LIVE
