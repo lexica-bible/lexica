@@ -129,20 +129,24 @@ function NewsRationale({ story }) {
   const pinnedCount = same ? 1 : 2;
   const rest = members.filter(m => !pinnedIds.has(m.id)).slice(0, Math.max(0, 5 - pinnedCount));
   return (
-    <div className="news-inspect-body">
-      <div className="news-inspect-title">{_stripOutlet(story.title)}</div>
-      <div className="news-inspect-h">Why it scored</div>
-      {peak && <NewsRatRow m={peak} label={same ? "Peak · headline" : "Peak score"} />}
-      {!same && face && <NewsRatRow m={face} label="Headline shown" />}
-      {rest.length > 0 && (
-        <>
-          <div className="news-inspect-sub">Other sources</div>
-          {rest.map((m, i) => <NewsRatRow key={m.id || i} m={m} />)}
-        </>
-      )}
-      {story.count > rest.length + pinnedCount && (
-        <div className="news-inspect-more">+{story.count - rest.length - pinnedCount} more in this story</div>
-      )}
+    <div className="news-inspect-panel">
+      <div className="news-inspect-head">
+        <div className="news-inspect-title">{_stripOutlet(story.title)}</div>
+      </div>
+      <div className="news-inspect-body">
+        <div className="news-inspect-h">Why it scored</div>
+        {peak && <NewsRatRow m={peak} label={same ? "Peak · headline" : "Peak score"} />}
+        {!same && face && <NewsRatRow m={face} label="Headline shown" />}
+        {rest.length > 0 && (
+          <>
+            <div className="news-inspect-sub">Other sources</div>
+            {rest.map((m, i) => <NewsRatRow key={m.id || i} m={m} />)}
+          </>
+        )}
+        {story.count > rest.length + pinnedCount && (
+          <div className="news-inspect-more">+{story.count - rest.length - pinnedCount} more in this story</div>
+        )}
+      </div>
     </div>
   );
 }
