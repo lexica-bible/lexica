@@ -44,7 +44,9 @@ MAX_TOKENS   = 3000                  # output ceiling. Was 1500 — too low: it 
                                      # Deliberately NOT in synth_ver(), so raising it does NOT
                                      # force-regenerate entries that came back complete — re-run a
                                      # truncated word on its own with --force.
-SPLIT_VER    = "split2"              # which split_definition() wrote a row (stored for traceability; NOT in the skip-stamp)
+SPLIT_VER    = "split3"              # which split_definition() wrote a row (stored for traceability; NOT in the skip-stamp).
+                                     # split3: sense headers parsed bold OR plain-numbered (was bold-only;
+                                     # a plain-numbered draw produced an empty glance -> validate refused).
 
 # ── Option B — LXX provenance flag. A Greek card's OT citations are all Septuagint (ABP's OT IS
 # the LXX), so a sense grounded heavily in OT verses is resting on translation-Greek, not native
@@ -535,6 +537,46 @@ _SECTION_RE = re.compile(r'^\s*\*{0,2}\s*(senses|range|gloss notes|coverage)\b[\
 # A sense headline: a bold span starting with "N." — **1. ...**. The elaboration after it (whether
 # on the same line behind a dash, dikaioo-style, or on the next line, psyche-style) is NOT captured.
 _HEADLINE_RE = re.compile(r'\*\*\s*(\d+\.[^*]+?)\s*\*\*')
+# A PLAIN (un-bolded) numbered sense header — a line that starts with "N." / "N)". Some draws number
+# their senses plainly instead of bold (more often on rare words); the bold-only _HEADLINE_RE missed
+# them, the glance came back empty, and validate_entry REFUSED the word. We accept plain headers as a
+# FALLBACK — only when NO bold header is present in the block, so a bold entry parses EXACTLY as before
+# (zero drift on every existing card). For a plain sense the whole description sits on the line, so the
+# glance is the lead clause: cut at the first em-dash, sentence end, or citation; refs stripped.
+_PLAIN_HDR = re.compile(r'(?m)^[ \t]*(\d+)[.)]\s+(.+)$')
+
+
+def _plain_glance(text):
+    """The short glance headline for a plain (un-bolded) sense line."""
+    t = re.sub(r'\*+', '', text or '').strip()
+    cut = len(t)
+    for pat in (r'\s+—\s+', r'\.\s', r'\s+\('):       # em-dash, sentence end, or a (citation)
+        m = re.search(pat, t)
+        if m:
+            cut = min(cut, m.start())
+    return t[:cut].strip().rstrip('.,;')
+
+
+def _sense_spans(block):
+    """Per sense: (glance_headline, body_chunk). Uses BOLD headers when any are present — parsed
+    EXACTLY as the old code did, so existing bold cards don't drift — otherwise falls back to PLAIN
+    numbered headers. body_chunk is the sense's own text, used for per-sense ref counting."""
+    block = block or ""
+    bold = list(_HEADLINE_RE.finditer(block))
+    if bold:
+        out = []
+        for i, m in enumerate(bold):
+            lead = re.sub(r'^\d+\.\s*', '', m.group(1)).strip()
+            start, end = m.end(), (bold[i + 1].start() if i + 1 < len(bold) else len(block))
+            out.append((lead, block[start:end]))
+        return out
+    out = []
+    plain = list(_PLAIN_HDR.finditer(block))
+    for i, m in enumerate(plain):
+        lead = _plain_glance(m.group(2))
+        start, end = m.start(), (plain[i + 1].start() if i + 1 < len(plain) else len(block))
+        out.append((lead, block[start:end]))
+    return out
 
 
 def split_definition(prose):
@@ -567,8 +609,7 @@ def split_definition(prose):
         return out.strip()
 
     senses_block = body("senses")
-    headlines = [re.sub(r'^\d+\.\s*', '', h).strip()
-                 for h in _HEADLINE_RE.findall(senses_block)]
+    headlines = [lead for lead, _ in _sense_spans(senses_block)]
     return {
         "sense_headlines": headlines,
         "senses_block":    senses_block,
@@ -584,14 +625,10 @@ def sense_provenance(senses_block):
     testament (OT = Septuagint / NT = Koine), and decides whether the subordinate LXX note fires
     (high + well-attested OT share). Derived from the stored citations only — no model. Returns
     [{ot, nt, lxx}], one per sense, in headline order, so the card can hang the note per sense."""
-    block = senses_block or ""
-    ms = list(_HEADLINE_RE.finditer(block))
     out = []
-    for i, m in enumerate(ms):
-        start = m.end()
-        end = ms[i + 1].start() if i + 1 < len(ms) else len(block)
+    for lead, bodytext in _sense_spans(senses_block or ""):
         seen, ot, nt = set(), 0, 0
-        for bk, ch, vs in _REF_RE.findall(block[start:end]):
+        for bk, ch, vs in _REF_RE.findall(bodytext):
             key = (bk, ch, vs)
             if key in seen:
                 continue
