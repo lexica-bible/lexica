@@ -96,10 +96,12 @@ All entries **LIVE**, provenance `GRAMMAR`, verse lines verbatim ABP. **Inventor
 
 **Definition-engine deploy run** (prompt fix → rare-word gate → cutoff → batch-build → public):
 - Prompt fix (v3 promote) — **DONE.**
-- Agreement gate (`lexica_agreement.py`) — **BUILT + PROVEN**; reviewer run now optional.
+- Agreement gate (`lexica_agreement.py`) — **BUILT + PROVEN**; reviewer run now optional. ⚠️ still parses sense headers **bold-only** (`per_sense` → `_HEADLINE_RE`); point it at the new `_sense_spans` before batch build or a plain-numbered draw reads as a phantom sense-count wobble — **OPEN.**
 - LXX-provenance cutoff (80% / min-4) — **LIVE** but **tuned on ~18 words; re-check at scale = OPEN** (`audit_lxx_provenance.py`).
 - Batch-1 build (12 nouns) — **DONE.** Public flip — **DONE.**
-- **Batch-2 pre-sort / pipeline driver — NOT BUILT** (scoped only: sort a G-list into 3 tiers by freq + fork-membership + polysemy + loaded-referent). Verbs + Hebrew first-batches — **NOT BUILT.**
+- **Rare-word stress test (the gate) — DONE 2026-06-29, GREEN.** Engine stays honest when starved (18 rare words × 3 draws; no manufactured senses). **Frequency cutoff = occ ≥ 2 (~3,954 words to build; 855 occ=1 hapaxes stay on LSJ) — DECIDED, PARKED (not batch-built).** Rigs: `stress_rare_survey.py` / `stress_lexica_rare.py` / `verify_resplit_glances.py` / `dump_lexica_entry.py` (PA-only, read-only).
+- **Splitter `split3` — LIVE.** `split_definition`/`sense_provenance` accept **bold OR plain** sense headers (was bold-only → a plain-numbered draw was refused by `validate_entry`); 18 live cards re-split + verified zero drift.
+- **Batch-2 pre-sort / pipeline driver — NOT BUILT** (scoped only: sort a G-list into 3 tiers by freq + fork-membership + polysemy + loaded-referent; build to occ ≥ 2). Verbs + Hebrew first-batches — **NOT BUILT.**
 - **Step-4 "significance judge"** — **NOT BUILT.**
 - **No-verse lint** (malformed ref with no chapter:verse slips the citation gate) — **NOT BUILT.**
 

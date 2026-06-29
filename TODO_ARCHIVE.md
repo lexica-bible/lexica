@@ -6,6 +6,34 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Rare-word stress test + dictionary cutoff + split3 splitter — DONE 2026-06-29
+The deploy gate before building the verse-grounded dictionary (`lexica_def`) out by frequency:
+does the engine stay HONEST when starved, or manufacture senses to fill the template?
+- **Result: GREEN.** 18 rare words (occ 1/2/3/5, proper nouns + already-built excluded) × 3 draws.
+  Zero manufacturing — no senses-over-occurrences, no ungrounded senses, no citation real-misses;
+  the engine self-flags thin coverage honestly; the two controls split right (βαθμός 2 senses on
+  2 occurrences, θεά homograph); the doctrinal-freight tempter προγινώσκω stayed neutral (didn't
+  pick election). Trust settled. Full record + the detector set: memory `project_lexica_dictionary`.
+- **Cutoff = occ ≥ 2** — a VALUE line, not a safety line: the engine is honest even at occ=1, but a
+  1-occurrence word comes back single-sense + thin (≈ the LSJ gloss already), so grounding only earns
+  its keep at 2+. Survey: 4,809 content words; 855 at occ=1 → **occ ≥ 2 = ~3,954 to build**, 855
+  hapaxes stay on LSJ. PARKED — not batch-built till JP calls it.
+- **Splitter fixed: split2 → split3 (bold-OR-plain sense headers).** The build splitter recognized a
+  sense header only when BOLD (`**N.**`); a plain-numbered draw (`1.`/`2.`, common on rare words) gave
+  an empty glance and `validate_entry` REFUSED the word. `split_definition` + `sense_provenance` now
+  route through `_sense_spans` — bold parsed exactly as before (early-return on any bold match, so
+  existing cards are byte-identical), plain accepted as a fallback. Prompt frozen, so the 18 live cards
+  re-split FREE (`--resplit --apply --all`); verified zero drift first (`verify_resplit_glances.py`).
+- **False-alarm "bleed" — NOT real (don't re-chase).** A dikaioō line reported in Χριστός's gloss_notes
+  after the re-split was a STALE BROWSER CARD: db + live API both verified clean, scan found 0
+  numbered-lines-outside-senses across all 18, "vindicate" lives only in dikaioō. The split3 matcher
+  only reads the senses section and is inert on bold words, so it structurally can't write gloss_notes —
+  proven before changing anything. Lesson: verify the data before "fixing" a splitter that isn't the cause.
+- New PA-only read-only rigs (reuse the frozen engine, lexica_agreement pattern): `stress_rare_survey.py`,
+  `stress_lexica_rare.py` (+`--resummarize`), `verify_resplit_glances.py`, `dump_lexica_entry.py`.
+- Open follow-up (logged in TODO): point `lexica_agreement.per_sense` at `_sense_spans` before the batch
+  build (it still keys bold-only — a plain draw would read as a phantom sense-count wobble).
+
 ## Small doc/UI cleanup pass — DONE 2026-06-28
 A batch of small finishes, all committed + pushed to master:
 - **Cockpit Play/Pause icons → thin outlines** (`static/src/10-icons.jsx`, commit 3cc3c45). Were filled
