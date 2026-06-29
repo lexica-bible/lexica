@@ -453,15 +453,52 @@ def verse_user_msg(sid, translit, gset, ctx):
     return "\n".join(lines)
 
 
-# A verse ref as the engine emits it. Numbered book = digit+Cap+lower (1Jn); unnumbered = Cap+2-lower.
-_REF_RE = re.compile(r"\b(\d[A-Z][a-z]|[A-Z][a-z]{2})\s+(\d+):(\d+)")
+# A verse ref as the engine emits it. Plain book = Cap+2-lower (Gen). Numbered book = a digit, an
+# OPTIONAL separator, then the book — glued (2Ch) OR spaced/spelled-out (2 Chr, 1 Chronicles). The
+# numbered branch is FIRST so it wins the digit; its letter run is UNCAPPED so a full name can't
+# truncate into a non-key. (Before 2026-06-28 the numbered branch demanded the digit glued to a
+# 2-letter book, so a spaced "2 Chr 26:11" orphaned the "2", the plain branch grabbed a bare "Chr"
+# that matches no verses.book code, the cited verse logged no-verse and its sense read ungrounded —
+# even though the verse is real. _norm_book turns the label back into the stored code.)
+_REF_RE = re.compile(r"\b(\d\s*[A-Z][a-z]+|[A-Z][a-z]{2})\s+(\d+):(\d+)")
+
+# Numbered-book label (however the model spelled it) -> the stored verses.book stem. Built against
+# the real `SELECT DISTINCT book` codes (confirmed 2026-06-28): the 8 numbered families only. Both
+# the abbreviation AND the spelled-out name map to one stem, so the uncapped letter run above is safe.
+_NUM_STEM = {
+    "sa": "Sa", "sam": "Sa", "samuel": "Sa",
+    "ki": "Ki", "kg": "Ki", "kgs": "Ki", "kin": "Ki", "king": "Ki", "kings": "Ki",
+    "ch": "Ch", "chr": "Ch", "chron": "Ch", "chronicles": "Ch",
+    "co": "Co", "cor": "Co", "corinthians": "Co",
+    "th": "Th", "thes": "Th", "thess": "Th", "thessalonians": "Th",
+    "ti": "Ti", "tim": "Ti", "timothy": "Ti",
+    "pe": "Pe", "pet": "Pe", "peter": "Pe",
+    "jn": "Jn", "jhn": "Jn", "joh": "Jn", "john": "Jn",
+}
+
+
+def _norm_book(label):
+    """Parsed book label -> stored verses.book code. A numbered ref the model wrote spaced or
+    spelled-out ('2 Chr', '1 Chronicles') becomes the stored glued code ('2Ch', '1Ch'); a glued
+    '2Ch' and a plain 'Gen'/'Joh' pass straight through. If a digit ended up in front of a
+    NON-numbered book (a stray '2 Gen'), the digit is dropped and the plain book is kept — so a ref
+    that resolves today can never move. We only re-attach the numeral already in the source; the
+    1-vs-2 choice is never inferred."""
+    m = re.match(r"^(\d)\s*([A-Za-z]+)$", label.strip())
+    if not m:
+        return label.strip()                      # plain book — already a real code
+    num, book = m.group(1), m.group(2)
+    stem = _NUM_STEM.get(book.lower())
+    if stem:
+        return num + stem                         # 2 Chr / 1 Chronicles -> 2Ch / 1Ch
+    return book                                   # false grab -> drop the digit, keep the plain book
 
 
 def cited_refs(text):
     """Pull verse refs (book, ch, vs) out of generated prose — de-duped, in order."""
     seen, out = set(), []
     for bk, ch, vs in _REF_RE.findall(text or ""):
-        key = (bk, int(ch), int(vs))
+        key = (_norm_book(bk), int(ch), int(vs))
         if key not in seen:
             seen.add(key)
             out.append(key)
@@ -629,6 +666,7 @@ def sense_provenance(senses_block):
     for lead, bodytext in _sense_spans(senses_block or ""):
         seen, ot, nt = set(), 0, 0
         for bk, ch, vs in _REF_RE.findall(bodytext):
+            bk = _norm_book(bk)
             key = (bk, ch, vs)
             if key in seen:
                 continue

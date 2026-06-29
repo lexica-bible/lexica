@@ -535,17 +535,43 @@ def route(client, entry, long_threshold, verse_msg):
 
 # A verse ref as the engine emits it — an ABP book abbrev + ch:vs. Two abbrev shapes: a NUMBERED
 # book is digit+Cap+lower ("1Jn", "2Co", "1Sa"); an unnumbered one is Cap+2-lower ("Deu", "Mat").
-# (An earlier \d?[A-Z][a-z]{2} silently dropped the numbered books — they have only ONE trailing
-# lowercase.) The model echoes back the abbrevs we feed it, so this matches its own output. A range
-# like "10:22-24" grabs the first verse.
-_REF_RE = re.compile(r"\b(\d[A-Z][a-z]|[A-Z][a-z]{2})\s+(\d+):(\d+)")
+# A verse ref the engine emits. Plain book = Cap+2-lower (Gen); numbered book = a digit, an OPTIONAL
+# separator, then the book — glued (2Ch) OR spaced/spelled-out (2 Chr, 1 Chronicles). Numbered branch
+# FIRST so it wins the digit; uncapped letters so a full name can't truncate into a non-key. _norm_book
+# maps the label back to the stored verses.book code. PARITY with build_lexica_def.py — keep the two in
+# step. (Before 2026-06-28 a spaced "2 Chr 26:11" orphaned the "2" and the plain branch grabbed a bare
+# "Chr" that matches no book.) A range like "10:22-24" grabs the first verse.
+_REF_RE = re.compile(r"\b(\d\s*[A-Z][a-z]+|[A-Z][a-z]{2})\s+(\d+):(\d+)")
+
+_NUM_STEM = {                       # model's spelling -> the stored verses.book stem (8 families)
+    "sa": "Sa", "sam": "Sa", "samuel": "Sa",
+    "ki": "Ki", "kg": "Ki", "kgs": "Ki", "kin": "Ki", "king": "Ki", "kings": "Ki",
+    "ch": "Ch", "chr": "Ch", "chron": "Ch", "chronicles": "Ch",
+    "co": "Co", "cor": "Co", "corinthians": "Co",
+    "th": "Th", "thes": "Th", "thess": "Th", "thessalonians": "Th",
+    "ti": "Ti", "tim": "Ti", "timothy": "Ti",
+    "pe": "Pe", "pet": "Pe", "peter": "Pe",
+    "jn": "Jn", "jhn": "Jn", "joh": "Jn", "john": "Jn",
+}
+
+
+def _norm_book(label):
+    """Parsed book label -> stored verses.book code (parity with build_lexica_def._norm_book)."""
+    m = re.match(r"^(\d)\s*([A-Za-z]+)$", label.strip())
+    if not m:
+        return label.strip()
+    num, book = m.group(1), m.group(2)
+    stem = _NUM_STEM.get(book.lower())
+    if stem:
+        return num + stem
+    return book
 
 
 def cited_refs(text):
     """Pull the verse refs (book, ch, vs) out of a generated definition — de-duped, in order."""
     seen, out = set(), []
     for bk, ch, vs in _REF_RE.findall(text or ""):
-        key = (bk, int(ch), int(vs))
+        key = (_norm_book(bk), int(ch), int(vs))
         if key not in seen:
             seen.add(key)
             out.append(key)
