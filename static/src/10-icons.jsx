@@ -114,14 +114,14 @@ const Icon = {
   ),
   // Audio play (filled triangle, reads as a media control)
   Play: (p) => (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" {...p}>
-      <path d="M7 4.5v15l12-7.5z"/>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.85" strokeLinecap="round" strokeLinejoin="round" {...p}>
+      <path d="M7 5l11 7-11 7z"/>
     </svg>
   ),
-  // Audio pause (two filled bars)
+  // Audio pause (two outline bars)
   Pause: (p) => (
-    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" {...p}>
-      <rect x="6.5" y="5" width="4" height="14" rx="1"/><rect x="13.5" y="5" width="4" height="14" rx="1"/>
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.85" strokeLinecap="round" strokeLinejoin="round" {...p}>
+      <rect x="6.25" y="5" width="4.5" height="14" rx="1.2"/><rect x="13.25" y="5" width="4.5" height="14" rx="1.2"/>
     </svg>
   ),
   // Reading options (mixer / sliders)

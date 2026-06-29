@@ -74,14 +74,7 @@ Still open:
    new fingerprint scheme watches, so each edit will lazily refresh that category's cache (expected).
    `code: shared snippet in core.py; views_crossref.py system prompts; views_metav.py _PN_SYSTEM;
    views_summary.py _SUMMARY_SYSTEM/_*_TMPL; ai.py LSJ prompt in views_lsj.py`
-3. **Remove the now-dead ABP "bracket column" CSS.** After the reader's brackets went INLINE (2026-06-16,
-   `.lib-iw-brk` inside the chip's english cell) and the Search/Lexicon result lists went prose, nothing
-   renders the old bracket-COLUMN classes anymore: `.lib-bracket`, `.lib-bracket-unit`, `.lib-bracket-glyph`,
-   `.lib-bracket-trail` (+ the `:first-child` / `:last-child` / `:has(+ .lib-bracket-trail)` rules). Only
-   `.lib-bracket-group` (`display:contents`) is still emitted. Safe to delete the rest — grep `static/src/`
-   first to confirm no `.jsx` still emits them. Pure tidy-up, low priority. `code: static/styles.css bracket
-   section (~line 1956)`
-4. **Word study tab folded dotted-different-words into the BASE number — DONE + LIVE 2026-06-21 (commit
+3. **Word study tab folded dotted-different-words into the BASE number — DONE + LIVE 2026-06-21 (commit
    550faa1, user-confirmed working).** The dotted-headword fix already covered the reader card, SEO `/read`, AI
    verse-word context, and Search (per-word via `core.dotted_lexicon_cols`, 2026-06-17). The **Word study /
    Lexicon** tab was the last surface — it grouped AND clicked through by the BASE number. Fixed in
@@ -899,8 +892,8 @@ Full record: memory `project_notes_highlights`. STILL OPEN:
 ### Mobile reading cockpit redesign — DONE 2026-06-20 (design ZIP handoff)
 Five equal-width icon slots `[Search][Play][Abbr Ch][Info][Options]`; book slot shows the 3-letter
 abbreviation, right slot is the sliders Icon.Modes. Full record: memory `project_reader_appearance`.
-STILL OPEN (small, user's call): switch the cockpit Play/Pause from the filled media icons to thin
-outlines to match the mockup exactly — left filled for now.
+Cockpit Play/Pause switched from the filled media icons to thin outlines (DONE 2026-06-28) — matches
+the mockup. Nothing open here.
 
 ### Broader AI search — meaning-based passage search
 Logos feels "broader" for two reasons: it reads their whole paid library (commentaries, dictionaries),
