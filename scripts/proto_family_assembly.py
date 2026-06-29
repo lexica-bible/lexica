@@ -286,6 +286,9 @@ def run_head(conn, hconn, head):
         if len(root) < 3:
             print(f"        SHORT ROOT '{root}' (≤2 consonants) → GLOSS-ANCHORED: root-only matches are")
             print("        suppressed (a 2-consonant root nets junk like asher 'which', Asshur 'Assyria').")
+            print("        LIMIT: this can MISS a real root-word glossed without a head term (e.g. 'kindle')")
+            print("        — an empty borderline here is gloss-anchored, NOT proof of completeness. The")
+            print("        robust fallback is the LXX seam (bridge to the Greek family), a later refinement.")
         rows = assemble_hebrew(conn, hconn, num, root, terms)
 
     # Stem proposes every candidate (stem_ok always True); gloss confirms. Drop dead (0 occ).
@@ -320,10 +323,12 @@ def main():
     except Exception:
         hconn = None
 
+    qlabel = args.query if args.query else "custom"
     print("=" * 78)
-    print("  FAMILY ASSEMBLY (read-only) — inclusion rule:")
-    print("    CORE = the query head;  INCLUDE = stem AND gloss agree;")
-    print("    BORDERLINE = one signal only → surfaced for review (never silently in/out).")
+    print(f"  FAMILY ASSEMBLY (read-only) — QUERY: {qlabel}   heads: {', '.join(heads)}")
+    print("    INCLUDE = stem proposes + gloss confirms;  BORDERLINE = stem-proposed, gloss did not")
+    print("    confirm → surfaced for review (never silently in/out).")
+    print("    (each query is its OWN run/process — any lines above belong to a separate run.)")
     print("=" * 78)
     try:
         for h in heads:
