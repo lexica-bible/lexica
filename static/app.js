@@ -438,19 +438,18 @@ if(boundEntity)sections.push("boundEntity");if(metavLoading||metavPersonData||me
 else if((!isPN||metavType==="place"&&metavData?.strongs_g?.length>0)&&(metavType!=="person"||entry.strongs_raw==="2316")&&!aiDescription&&!aiDescLoading&&(entry.greek||entry.strongs_raw||metavData?.strongs_g?.length>0))sections.push("lsj");// A verse-bound entity carries a real Strong's number (TIPNR mapped these people/places
 // onto H/G numbers), so it gets the SAME occurrence controls every other word has — the
 // real word-occurrence list, where each verse shows the surface form.
-const boundOcc=!!boundEntity;// A NON-bound Hebrew word shows its occurrences across ALL Strong's-tagged Bibles. A BOUND
-// entity shows ONLY the line for the text being read — the reader is in one Bible, so a bound
-// Eden in ABP shows just "× in ABP", in the Hebrew reader just "× in Hebrew OT", etc.
-const hebAllOcc=isHebrew&&!boundOcc;// non-bound Hebrew word → all lines
-const boundHeb=boundOcc&&isHebrewWord;// bound Hebrew entity → one line
+const boundOcc=!!boundEntity;// Every word shows occurrences for the ONE text being read, not all Bibles at once — the
+// cross-Bible breakdown lives in Word study. activeText is read off the entry (a Hebrew word,
+// incl. a backfilled proper noun whose ABP form keys on its Hebrew base, shows the matching
+// line below).
 const activeText=entry.isKjv?"kjv":entry.isBsb?"bsb":entry.isHeb?"heb":"abp";if(!isHebrewWord&&(!isPN||boundOcc)&&!entry.isKjv&&!entry.isBsb&&!entry.isExtra&&abpCount!==null&&abpCount>0)sections.push("abpOcc");// Non-canon "other" books (Apostolic Fathers chip mode): suppress the occurrence
 // links/counts (the LXX cross-link above + this in-book count) until Lexicon search is
 // wired. Re-enable: drop `!entry.isExtra` above + uncomment extraOcc.
 // if (entry.isExtra && extraCount !== null && extraCount > 0) sections.push("extraOcc");
-if(entry.isKjv&&!isHebrew&&!isPN&&kjvCount!==null&&kjvCount>0)sections.push("kjvOcc");if(entry.isBsb&&!isPN&&!isHebrew&&bsbCount!==null&&bsbCount>0)sections.push("bsbOcc");if(!entry.isKjv&&!entry.isBsb&&isPN&&pnCount!==null&&pnCount>0&&onNameSearch)sections.push("pnOcc");// Non-bound Hebrew word → all cross-Bible lines (Hebrew OT, then KJV + BSB). Bound entity →
-// only the line matching the active reading text (abp via the entity's Hebrew base; or heb/
-// kjv/bsb). Each opens that source in Word study.
-if(boundHeb&&activeText==="abp"&&abpBaseCount!==null&&abpBaseCount>0)sections.push("hebrewAbpOcc");if((hebAllOcc||boundHeb&&activeText==="heb")&&hebCount!==null&&hebCount>0)sections.push("hebrewOtOcc");if((hebAllOcc||boundHeb&&activeText==="kjv")&&kjvCount!==null&&kjvCount>0)sections.push("hebrewKjvOcc");if((hebAllOcc||boundHeb&&activeText==="bsb")&&bsbCount!==null&&bsbCount>0)sections.push("hebrewBsbOcc");// Nave's topical sits BELOW the lexicon/place cards (metaV, AI, BDB/LSJ) — it's a
+if(entry.isKjv&&!isHebrew&&!isPN&&kjvCount!==null&&kjvCount>0)sections.push("kjvOcc");if(entry.isBsb&&!isPN&&!isHebrew&&bsbCount!==null&&bsbCount>0)sections.push("bsbOcc");if(!entry.isKjv&&!entry.isBsb&&isPN&&pnCount!==null&&pnCount>0&&onNameSearch)sections.push("pnOcc");// A Hebrew word shows occurrences only for the text being read (Hebrew OT / KJV / BSB, or ABP
+// via its Hebrew base for a backfilled proper noun); each opens that source in Word study,
+// where the full cross-Bible breakdown lives.
+if(isHebrewWord&&activeText==="abp"&&abpBaseCount!==null&&abpBaseCount>0)sections.push("hebrewAbpOcc");if(isHebrewWord&&activeText==="heb"&&hebCount!==null&&hebCount>0)sections.push("hebrewOtOcc");if(isHebrewWord&&activeText==="kjv"&&kjvCount!==null&&kjvCount>0)sections.push("hebrewKjvOcc");if(isHebrewWord&&activeText==="bsb"&&bsbCount!==null&&bsbCount>0)sections.push("hebrewBsbOcc");// Nave's topical sits BELOW the lexicon/place cards (metaV, AI, BDB/LSJ) — it's a
 // study cross-link, not a definition, so it reads last among the reference blocks.
 if(naveData&&naveData.sections.length)sections.push("naveTopical");if(entry.derivation)sections.push("derivation");if(entry.book&&!entry.isExtra)sections.push("verse");if(occurrences>0||totalResults>0)sections.push("frequency");const renderSection=id=>{switch(id){case"boundEntity":{if(boundLoading&&!boundEntity)return/*#__PURE__*/React.createElement("section",{key:"boundEntity",className:"sec pnbound"},/*#__PURE__*/React.createElement("div",{className:"lsj-def lsj-def--loading"},"Looking up\u2026"));if(!boundEntity)return null;const be=boundEntity;const label=be.section==="place"?"Place":be.section==="person"?"Person":"Identity";const clean=s=>(s||"").replace(/\s*\(\?\)/g,"").trim();// drop TIPNR's "(?)" uncertainty marker
 // a clean one-liner: the person 'desc' is short; for a place fall to the

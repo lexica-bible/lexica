@@ -955,8 +955,9 @@ memory `project_ai_synthesis_quality`.
   (from `pn_binding`); when bound it LEADS the rail with a sourced `.pnbound` card (canonical name + TIPNR
   description + kin + region + "Matched to this verse" + a TIPNR badge), FOLLOWED by ONE standard
   word-occurrence control keyed to the entity's OWN number — only the line for the text being READ (ABP, or
-  Hebrew OT / KJV / BSB), showing the real word in every verse. (A non-bound Hebrew word still shows all its
-  cross-Bible lines; a bound entity collapses to the active text.) A bind GATES the whole name-based metaV fetch (kills the name-guess person/place
+  Hebrew OT / KJV / BSB), showing the real word in every verse. (EVERY word card shows just the active
+  text's occurrence line now — 2026-06-28; the full cross-Bible breakdown lives in Word study. Hebrew words
+  used to show all three.) A bind GATES the whole name-based metaV fetch (kills the name-guess person/place
   card + its Groups + Nave's + place-LSJ at once). 404 → the old name-path + Fix A, byte-same (deploy-safe).
   14,817 binds, zero confident-wrong; TIPNR is the identity spine, metaV is enrichment only. Engine =
   **`entity_resolution.py`** (repo root, pure logic); tables built by `scripts/build_entity_binding.py --apply`.
