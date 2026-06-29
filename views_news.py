@@ -250,11 +250,34 @@ def _pick_face(arts, newest):
     return max(pool, key=lambda a: ((a["score"] or 0), (a["published"] or "")))
 
 
+def _peak_art(arts):
+    """The single article that owns the cluster's displayed SCORE (highest score,
+    ties broken toward the newer). Its score is what the card shows, so the rationale
+    panel must surface ITS why — which can be a DIFFERENT article than the face."""
+    return max(arts, key=lambda a: ((a["score"] or 0), (a["published"] or "")))
+
+
+def _member(a):
+    """One article's row for the inspect panel: its own score + its own reason, so a
+    displayed number always sits next to the sentence that earned it."""
+    return {
+        "id": a["id"],
+        "score": a["score"] or 0,
+        "why": a["ai_why"] or "",
+        "thread": a["ai_thread"],
+        "thread_label": THREAD_LABELS.get(a["ai_thread"], a["ai_thread"] or "?"),
+        "source": a["source"] or "?",
+        "url": a["url"],
+        "published": (a["published"] or "")[:10],
+    }
+
+
 def _serialize(cluster):
     arts = sorted(cluster["arts"], key=lambda a: a["published"] or "", reverse=True)
     newest = arts[0]["published"] if arts else ""
     peak = max((a["score"] or 0 for a in arts), default=0)   # cluster strength = SORT key (unchanged)
     face = _pick_face(arts, newest)                          # fresh-coverage HEADLINE only
+    peak_art = _peak_art(arts)                               # owner of the displayed score
     sources, seen = [], set()
     for a in arts:
         s = a["source"] or "?"
@@ -262,6 +285,10 @@ def _serialize(cluster):
             continue
         seen.add(s)
         sources.append({"source": s, "url": a["url"], "published": (a["published"] or "")[:10]})
+    # Per-article rationale rows for the inspect panel, strongest first. peak + face
+    # are tagged so the frontend can pin/label them even after the cap.
+    members = sorted((_member(a) for a in arts),
+                     key=lambda m: (m["score"], m["published"]), reverse=True)
     return {
         "ids": [a["id"] for a in cluster["arts"]],
         "title": face["title"],
@@ -274,6 +301,9 @@ def _serialize(cluster):
         "count": len(arts),
         "sources": sources[:12],
         "status": face["status"] or "new",
+        "members": members,
+        "peak_id": peak_art["id"],
+        "face_id": face["id"],
     }
 
 

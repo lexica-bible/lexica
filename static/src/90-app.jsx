@@ -355,7 +355,7 @@ function App() {
           </div>
         )}
         {mainView === "about" && <AboutView owner={owner} />}
-        {mainView === "news" && (owner || newsReader) && <NewsView />}
+        {mainView === "news" && (owner || newsReader) && <NewsView isMobile={isMobile} />}
         {mainView === "notes" && <NotesView onOpen={openNoteFromList} />}
         <div style={{ display: mainView === "study" ? undefined : "none" }}>
           <StudyView admin={owner} pending={studyPending} onConsumed={() => setStudyPending(null)} onNavigateToLibrary={handleReadInContext} />
