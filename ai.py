@@ -927,7 +927,8 @@ def _streamable_prose(full: str, hold: int) -> str:
 
 
 def _stream_curation(
-    query: str, results: list[dict], key_strongs_data: list[dict] | None = None
+    query: str, results: list[dict], key_strongs_data: list[dict] | None = None,
+    force_bad: bool = False,
 ):
     """Pass 2, STREAMED. A generator that YIELDS prose-delta strings as Sonnet writes the
     synthesis (the JSON picks tail is withheld), then RETURNS the parsed outcome:
@@ -966,10 +967,12 @@ def _stream_curation(
                  _u.input_tokens, getattr(_u, "cache_read_input_tokens", 0))
     except Exception:
         pass
-    parsed = _parse_curation(raw)
+    parsed = None if force_bad else _parse_curation(raw)   # TEMP: force_bad exercises the floor
     if parsed is not None:
         primary, additional, explanation = parsed
         return primary[:primary_cap], additional[:12], explanation
+    if force_bad:
+        log.info("!badtail: forcing the streamed pick-parse to fail (floor test)")
     return None, None, _streamable_prose(raw, 0).strip()
 
 
@@ -1310,6 +1313,12 @@ def ai_search():
         if role == "nologin":
             return jsonify({"error": "Sign in to use AI search.", "login": True}), 401
         q = request.args.get("q", "").strip()
+        # TEMPORARY (remove with the probe): a "!badtail " prefix forces the streamed
+        # curation tail to be treated as unparseable, so the fail-closed floor fires under
+        # the streamed path — lets us watch it re-run the non-streamed curate for clean picks.
+        _force_bad = q.startswith("!badtail ")
+        if _force_bad:
+            q = q[len("!badtail "):].strip()
         # Optional conversation context (recent thread turns) for follow-up questions,
         # so references like "it" / "the same word" resolve. Capped; a follow-up is
         # thread-specific so it's never cached — it always runs fresh.
@@ -1325,7 +1334,7 @@ def ai_search():
         # share one answer ("Is hell the same as Sheol?" == "is hell the same as sheol").
         qk = _cache_key(q)
 
-        if not context:
+        if not context and not _force_bad:   # _force_bad (floor test) always runs fresh
             cached = _ai_cache.get(qk)
             if cached is None:
                 # The in-memory cache is a per-process snapshot taken at startup, and
@@ -1968,7 +1977,7 @@ def ai_search():
                 # picks; a bad tail re-runs the non-streamed curate for clean picks and
                 # keeps the streamed prose — never a wrong-verse split.
                 if not small_pool or cites_verse:
-                    cur = _stream_curation(q, results, key_strongs_data)
+                    cur = _stream_curation(q, results, key_strongs_data, force_bad=_force_bad)
                     res = None
                     try:
                         while True:
@@ -1998,7 +2007,7 @@ def ai_search():
                     q, results, verse_index, key_strongs_data,
                     primary_raw, additional_raw, expl, rows, phrase_hits, _target_bases, _panel,
                 )
-                if not context:               # follow-ups are thread-specific — don't cache
+                if not context and not _force_bad:   # follow-ups + the floor test are never cached
                     _ai_cache[qk] = payload
                     _persist_ai_cache(qk, payload)
                 ai_quota_count(role, uid)     # record the paid call (admin exempt; cache hits never reach here)
