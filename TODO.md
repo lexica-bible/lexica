@@ -551,6 +551,18 @@ follow-up is **#4 (parallelize the cognate + Hebrew DB loops)** above — multi-
 
 ---
 
+## News feed (Tudor) — recency / time-decay (open; pipeline change, own session)
+
+- **Add recency weighting — feed SORT + cluster FACE.** Today the feed ranks by score with no time-decay (an
+  old high-scorer sits atop fresher stories) and the card face is always the top scorer, so an old/loud headline
+  represents a cluster even when fresh siblings exist. Fix BOTH: decay the sort + pick the face from RECENT
+  high-scorers. Pipeline change, not tuning. Sub-note: the source-junk-headline filter is WATCH-ONLY (one
+  instance so far) and rides this SAME change if a 2nd junk face ever appears — no separate line. Full spec
+  (root cause, both fixes, constraints, method): memory `project_news_watch` (Diagnostic pass #2).
+  `code: views_news.py _serialize/_group (face pick) + list_news ORDER BY / stories.sort (decay)`
+
+---
+
 ## Word study + Ask the corpus — REDESIGNED (2026-06-19, under development)
 
 (Word-card lemma gloss itself — KJV/BSB/Hebrew + Word study + the Hebrew byform fix — is DONE + LIVE
