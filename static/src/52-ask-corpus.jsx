@@ -106,7 +106,7 @@ function AcProse({ text, onVerse, onStrongs, verified }) {
 // (spelling matches, meaning unconfirmed) are never listed to the reader — only
 // counted, and that line shows only when there are any. The backend (corpus_panel.py)
 // already decided membership + never manufactures structure; this only draws it.
-function CorpusPanel({ panel }) {
+function CorpusPanel({ panel, onStrongs }) {
   const [open, setOpen] = useState({});
   if (!panel || !panel.groups || !panel.groups.length) return null;
   const fmt = (n) => (n != null ? n.toLocaleString() : "");
@@ -122,8 +122,11 @@ function CorpusPanel({ panel }) {
         const aside = g.set_aside || 0;
         const hasMore = rest.length > 0 || aside > 0;
         const barW = (n) => Math.max(4, Math.round((100 * n) / (g.max || n || 1)));
+        // Each row jumps to Word study (replaces the old lemma chips below the note).
         const row = (r, isCore) => (
-          <div className={"cpanel-row" + (isCore ? " core" : "")} key={r.strongs}>
+          <button className={"cpanel-row" + (isCore ? " core" : "")} key={r.strongs}
+            onClick={() => onStrongs && onStrongs(r.strongs)}
+            title={"Study " + (r.translit || r.lemma) + " in Word study"}>
             <span className="cpanel-word">
               <span className={"cpanel-lemma" + (heb ? " heb" : "")} dir={heb ? "rtl" : undefined}>{r.lemma}</span>
               {r.translit && <span className="cpanel-tr">{r.translit}</span>}
@@ -131,11 +134,14 @@ function CorpusPanel({ panel }) {
             <span className="cpanel-gloss">{r.gloss || "—"}</span>
             <span className="cpanel-bar"><span style={{ width: barW(r.count) + "%" }}/></span>
             <span className="cpanel-n">{fmt(r.count)}</span>
-          </div>
+          </button>
         );
+        // Don't repeat the language header on a second same-language group (e.g. two
+        // Greek heads on "kingdom of God") — the dashed divider already separates them.
+        const showLabel = gi === 0 || panel.groups[gi - 1].lang !== g.lang;
         return (
           <div className="cpanel-grp" key={gi}>
-            <div className="cpanel-grp-h">{g.label}</div>
+            {showLabel && <div className="cpanel-grp-h">{g.label}</div>}
             {row(core, true)}
             {expanded && rest.map((r) => row(r, false))}
             {expanded && aside > 0 && (
@@ -215,7 +221,7 @@ function AcTurn({ turn, onReadInContext, onLemma, onStrongs }) {
         <div className="ac-answer"><p className="ac-error">{turn.error}</p></div>
       ) : (
         <div className="ac-answer">
-          <CorpusPanel panel={turn.panel}/>
+          <CorpusPanel panel={turn.panel} onStrongs={onStrongs}/>
           <div className="ac-syn-tag"><Icon.Sparkle/> Synthesis</div>
           {turn.grounded === false && (
             <div className="ac-ungrounded" role="note">
@@ -225,23 +231,6 @@ function AcTurn({ turn, onReadInContext, onLemma, onStrongs }) {
             </div>
           )}
           <AcProse text={turn.explanation} onVerse={onReadInContext} onStrongs={onStrongs} verified={verifiedRefs}/>
-
-          {turn.keyStrongs && turn.keyStrongs.length > 0 && (
-            <div className="ac-lemmas">
-              {turn.keyStrongs.map((l) => {
-                const tag = l.strongs || l.strongs_base;   // H/G-prefixed
-                const heb = /^H/i.test(tag);
-                return (
-                  <button key={tag} className="ac-lem" onClick={() => onLemma(l)}
-                    title={"Study " + (l.translit || l.lemma) + " in Word study"}>
-                    <span className={"ac-lem-gk" + (heb ? " heb" : "")} dir={heb ? "rtl" : undefined}>{l.lemma}</span>
-                    {l.translit && <span className="ac-lem-tr">{l.translit}</span>}
-                    <span className="ac-lem-s">{tag}</span>
-                  </button>
-                );
-              })}
-            </div>
-          )}
 
           {turn.results && turn.results.length > 0 && (
             <div className="ac-evidence">

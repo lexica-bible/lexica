@@ -193,15 +193,38 @@ def _heb_head(conn, base):
     return (r["lemma"] or "", r["xlit"] or "", root, wg, _gloss_terms(terms_src))
 
 
+# Common Greek prepositional prefixes (romanized, as they read after _ascii). A compound
+# like prosabbaton = pro + sabbaton hides the root stem behind a prefix, so a strict
+# "translit starts with the stem" proposer misses it (prosabbaton is a real Sabbath-family
+# time-word, not a false friend). We let the stem also match right after a known prefix.
+# This WIDENS only what the PROPOSER sees — the gloss gate is untouched, so a prefixed
+# false friend (propyretos "fever") still lands in the counted-but-not-shown boundary.
+_GK_PREFIXES = (
+    "amphi", "anti", "apo", "ana", "dia", "eis", "epi", "ek", "ex", "en",
+    "kata", "kat", "meta", "met", "para", "peri", "pros", "pro",
+    "syn", "sym", "hyper", "hypo",
+)
+
+
+def _stem_proposes(t, stem):
+    """True if a candidate translit `t` carries the head stem at its start, or directly
+    after a known Greek prefix (so prosabbaton = pro + sabbaton is proposed)."""
+    if not (t and stem):
+        return False
+    if t.startswith(stem):
+        return True
+    return any(t.startswith(p) and t[len(p):].startswith(stem) for p in _GK_PREFIXES)
+
+
 # ── family assembly (STEM proposes, GLOSS disposes; the boundary is COUNTED) ───────────
 def _greek_family(conn, head_base, stem, terms):
-    """Greek family near a head: lexicon rows whose translit starts with the head's stem
-    (STEM), each kept as INCLUDE when its gloss confirms, else counted toward set_aside.
-    Returns (include_rows, set_aside_count). include_rows carry script + range for display."""
+    """Greek family near a head: lexicon rows whose translit carries the head's stem at the
+    start OR after a known prefix (STEM), each kept as INCLUDE when its gloss confirms, else
+    counted toward set_aside. Returns (include_rows, set_aside_count) with script + range."""
     include, set_aside, seen = [], 0, {head_base}
     for r in conn.execute("SELECT strongs_g, strongs, translit, lemma FROM lexicon"):
         t = _ascii(r["translit"])
-        if not (t and stem and t.startswith(stem)):
+        if not _stem_proposes(t, stem):
             continue
         base = (r["strongs_g"] or ("G" + (r["strongs"] or ""))).lstrip("G")
         if not base or base in seen:

@@ -40,13 +40,16 @@ def _fixture() -> sqlite3.Connection:
         CREATE TABLE heb_words (id INTEGER PRIMARY KEY, strongs TEXT);
         CREATE TABLE word_gloss (strongs TEXT, gloss TEXT);
 
-        -- Greek 'fire' family (translit prefix 'pyr' proposes; gloss disposes).
+        -- Greek 'fire' family (stem 'pyr' proposes; gloss disposes). propyroo/propyretos
+        -- are PREFIX COMPOUNDS (pro+pyr...) — the proposer must see past the prefix.
         INSERT INTO lexicon (strongs, translit, lemma) VALUES
             ('4442','pyr','πῦρ'),
             ('4448','pyroo','πυρόω'),
             ('4451','pyrosis','πύρωσις'),
-            ('4445','pyretos','πυρετός'),   -- 'fever' — false friend (stem matches, sense doesn't)
-            ('5555','phantom','φάντασμα');  -- in the lexicon but never occurs (drop test)
+            ('4445','pyretos','πυρετός'),     -- 'fever' — false friend (stem matches, sense doesn't)
+            ('4499','propyroo','προπυρόω'),   -- prefix compound, gloss CONFIRMS -> include
+            ('4496','propyretos','προπύρετος'),-- prefix compound, 'fever' -> still set aside
+            ('5555','phantom','φάντασμα');    -- in the lexicon but never occurs (drop test)
         UPDATE lexicon SET strongs_g = 'G' || strongs;
 
         -- Hebrew families. 'sabbath' root שבת (3 consonants → proposes by containment);
@@ -66,6 +69,8 @@ def _fixture() -> sqlite3.Connection:
             ('G4448','to burn; refine by fire'),
             ('G4451','a burning by fire'),
             ('G4445','fever'),
+            ('G4499','to set on fire beforehand'),
+            ('G4496','a slight fever'),
             ('G5555','an apparition'),
             ('H7676','sabbath; rest'),
             ('H7677','sabbath rest'),
@@ -82,7 +87,8 @@ def _fixture() -> sqlite3.Connection:
     # Occurrence counts: pyr 70, pyroo 12, pyrosis 3, pyretos 6 (Greek);
     # shabbat 100, shabbathon 11, shabath 70, mishbath 3, esh 300, others large (Hebrew).
     c.execute("DELETE FROM words")
-    for base, n in [("G4442", 70), ("G4448", 12), ("G4451", 3), ("G4445", 6)]:
+    for base, n in [("G4442", 70), ("G4448", 12), ("G4451", 3), ("G4445", 6),
+                    ("G4499", 4), ("G4496", 2)]:
         c.executemany("INSERT INTO words (strongs_base) VALUES (?)", [(base,)] * n)
     for sid, n in [("H7676", 100), ("H7677", 11), ("H7673", 70), ("H4868", 3),
                    ("H784", 300), ("H801", 60), ("H802", 700), ("H834", 5000)]:
@@ -108,18 +114,22 @@ def main() -> int:
         else:
             print(f"  ok: {desc}")
 
-    # ── fire (Greek): multi-word family, false friend set aside ──────────────
+    # ── fire (Greek): multi-word family, false friends set aside ─────────────
     g = corpus_panel.build_groups(c, c, ["G4442"])
     check("fire: one group", len(g), 1)
     if g:
         fam = g[0]
         check("fire: lang G", fam["lang"], "G")
-        check("fire: family = pyr,pyroo,pyrosis (core first, then occ-desc)",
-              _strongs(fam), ["G4442", "G4448", "G4451"])
+        check("fire: family = pyr,pyroo,propyroo,pyrosis (core first, then occ-desc)",
+              _strongs(fam), ["G4442", "G4448", "G4499", "G4451"])
         check("fire: core flagged", fam["family"][0]["core"], True)
         check("fire: head range from word_gloss", fam["family"][0]["gloss"], "fire")
+        check("fire: prefix-compound propyroo IS included (widened proposer sees pro+pyr)",
+              "G4499" in _strongs(fam), True)
         check("fire: pyretos 'fever' NOT in the family", "G4445" in _strongs(fam), False)
-        check("fire: 1 form set aside (pyretos)", fam["set_aside"], 1)
+        check("fire: prefix-compound propyretos 'fever' NOT in the family (gloss gate holds)",
+              "G4496" in _strongs(fam), False)
+        check("fire: 2 forms set aside (pyretos + propyretos)", fam["set_aside"], 2)
         check("fire: bar scale (max) = 70, the in-group max", fam["max"], 70)
 
     # ── sabbath (Hebrew): flat family, 'cessation' set aside ─────────────────
