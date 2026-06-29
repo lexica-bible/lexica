@@ -28,7 +28,7 @@ import sys
 import urllib.parse
 import urllib.request
 
-BASE_URL_DEFAULT = "https://appssanding720.pythonanywhere.com"
+BASE_URL_DEFAULT = "https://www.lexica.bible"
 SNAP_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "tests", "snapshots")
 
 # Deterministic, DB-driven endpoints spanning the subsystems Phases 1-3 touch.
