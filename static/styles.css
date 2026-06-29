@@ -4866,6 +4866,8 @@ button.study-verse-ref { border: none; }
    ============================================================ */
 .news-view { max-width: 860px; margin: 0 auto; padding: 24px 20px 80px; }
 .news-h1 { font-size: 24px; font-weight: 700; color: var(--ink); margin: 0; }
+.news-asline { font-size: 12px; color: var(--muted); margin-left: 4px; }
+.news-asline strong { color: var(--ink); font-weight: 600; }
 .news-head { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin-bottom: 16px; }
 .news-views { display: flex; gap: 6px; }
 .news-empty { color: var(--ink-3); padding: 40px 0; text-align: center; }

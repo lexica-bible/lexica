@@ -132,6 +132,11 @@ function NewsView() {
     <div className="news-view">
       <div className="news-head">
         <h1 className="news-h1">News watch</h1>
+        {meta.reviewer_name ? (
+          <span className="news-asline" title="Keep/Dismiss are recorded under this reviewer">
+            Reviewing as <strong>{meta.reviewer_name}</strong>
+          </span>
+        ) : null}
         <div className="news-views">
           <button className={"seg-b" + (view === "inbox" ? " on" : "")} onClick={() => setView("inbox")}>Inbox</button>
           <button className={"seg-b" + (view === "kept" ? " on" : "")} onClick={() => setView("kept")}>

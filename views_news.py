@@ -13,6 +13,7 @@ Read-mostly: the only write is flipping an article's review status. It never
 gathers or scores (that's the offline scripts' job) and never touches bible.db.
 """
 import datetime
+import hashlib
 import hmac
 import json
 import math
@@ -23,8 +24,8 @@ from collections import Counter
 
 from flask import Blueprint, jsonify, request
 
-from core import news_db, NEWS_DB, limiter
-from views_notes import is_admin
+from core import news_db, NEWS_DB, limiter, notes_db
+from views_notes import is_admin, ai_caller
 
 bp = Blueprint("news", __name__)
 
@@ -63,6 +64,68 @@ def _shared_key_ok():
 def _can_read():
     """Admins always; a valid share-key holder gets read-only access too."""
     return is_admin() or _shared_key_ok()
+
+
+# Per-reviewer review state. One row per (article, reviewer); the reviewer id is a
+# STABLE identity — 'u<user_id>' for an admin, 'k<keytag>' for a share-key holder —
+# never a human name, so a future second reviewer can't collide on a literal tag. The
+# display name is resolved separately (_reviewer_label), purely for rendering. Kept
+# beside items in news.db; items.status stays for back-compat (not migrated).
+_REVIEWS_SCHEMA = """
+CREATE TABLE IF NOT EXISTS reviews (
+  item_id  INTEGER NOT NULL,
+  reviewer TEXT NOT NULL,
+  status   TEXT NOT NULL,
+  updated  TEXT NOT NULL,
+  PRIMARY KEY (item_id, reviewer)
+);
+"""
+
+
+def _ensure_reviews(conn):
+    conn.executescript(_REVIEWS_SCHEMA)
+
+
+def _key_tag(key):
+    """Short stable fingerprint of a share key, so the reviewer id doesn't store the
+    secret and a second key gets a different id."""
+    return hashlib.sha1(key.encode("utf-8")).hexdigest()[:12]
+
+
+def _reviewer():
+    """Who is reviewing, and may they write.
+      admin     -> ('u<user_id>', True)
+      share-key -> ('k<keytag>',  True)
+      otherwise -> (None, False)
+    Admin wins over share-key (branch order) so an admin holding the key still records
+    under their own id. Writes are scoped to the returned id, so an admin can never
+    write a share-key holder's rows and vice versa — the separation is structural."""
+    role, uid = ai_caller()
+    if role == "admin" and uid:
+        return f"u{uid}", True
+    if _shared_key_ok():
+        return f"k{_key_tag(NEWS_SHARE_KEY)}", True
+    return None, False
+
+
+def _reviewer_label(rid):
+    """Display alias for a reviewer id (rendering only; identity stays the id)."""
+    if not rid:
+        return ""
+    if rid.startswith("u"):
+        try:
+            conn = notes_db()
+            row = conn.execute("SELECT name, email FROM users WHERE id = ?",
+                               (int(rid[1:]),)).fetchone()
+            conn.close()
+            if row:
+                return row["name"] or row["email"] or rid
+        except (sqlite3.Error, ValueError):
+            pass
+        return rid
+    if rid.startswith("k"):
+        return os.environ.get("NEWS_SHARE_NAME", "Reviewer").strip() or "Reviewer"
+    return rid
 
 # Words too common to help tell two headlines apart when grouping near-duplicates.
 _STOP = set((
@@ -224,22 +287,26 @@ def meta():
         return jsonify({"owner": False, "reader": False, "available": False})
     if not _available():
         return jsonify({"owner": admin, "reader": reader, "available": False, "labels": THREAD_LABELS})
+    rid, _ = _reviewer()
     conn = news_db()
     try:
+        _ensure_reviews(conn)
         def n(sql, args=()):
             r = conn.execute(sql, args).fetchone()
             return (r[0] or 0) if r else 0
         counts = {
             "scored": n("SELECT count(*) FROM items WHERE score IS NOT NULL"),
             "total": n("SELECT count(*) FROM items"),
-            "kept": n("SELECT count(*) FROM items WHERE status='keep'"),
-            "dismissed": n("SELECT count(*) FROM items WHERE status='dismiss'"),
+            "kept": n("SELECT count(*) FROM reviews WHERE reviewer=? AND status='keep'", (rid,)),
+            "dismissed": n("SELECT count(*) FROM reviews WHERE reviewer=? AND status='dismiss'", (rid,)),
         }
     except sqlite3.Error:
         counts = {}
     finally:
         conn.close()
-    return jsonify({"owner": admin, "reader": reader, "available": True, "labels": THREAD_LABELS, "counts": counts})
+    return jsonify({"owner": admin, "reader": reader, "available": True,
+                    "labels": THREAD_LABELS, "counts": counts,
+                    "reviewer": rid, "reviewer_name": _reviewer_label(rid)})
 
 
 @bp.route("/api/news/list", methods=["GET"])
@@ -259,32 +326,39 @@ def list_news():
     view = (request.args.get("view") or "inbox").strip()     # inbox | kept | dismissed | all
     order = (request.args.get("order") or "score").strip()   # score | date
 
-    where = ["score IS NOT NULL", "score >= ?"]
+    rid, _ = _reviewer()
+    status_expr = "COALESCE(r.status, 'new')"   # this viewer's call, default unreviewed
+
+    where = ["i.score IS NOT NULL", "i.score >= ?"]
     args = [min_score]
     if since:
         # published is full ISO; comparing against a 'YYYY-MM-DD' floor works as text.
         # Empty published (unknown date) is excluded once a since-floor is set.
-        where.append("published >= ? AND published != ''")
+        where.append("i.published >= ? AND i.published != ''")
         args.append(since)
     if thread:
-        where.append("ai_thread = ?")
+        where.append("i.ai_thread = ?")
         args.append(thread)
     if view == "inbox":
-        where.append("(status IS NULL OR status = 'new')")
+        where.append(f"{status_expr} = 'new'")
     elif view == "kept":
-        where.append("status = 'keep'")
+        where.append(f"{status_expr} = 'keep'")
     elif view == "dismissed":
-        where.append("status = 'dismiss'")
+        where.append(f"{status_expr} = 'dismiss'")
 
     conn = news_db()
     try:
+        _ensure_reviews(conn)
         cols = [c[1] for c in conn.execute("PRAGMA table_info(items)")]
         has_event = "event" in cols                      # set once group_news.py runs
-        sql = (f"SELECT id, url, title, source, published, score, ai_thread, ai_why, status"
-               f"{', event' if has_event else ''} "
-               f"FROM items WHERE {' AND '.join(where)} "
-               f"ORDER BY score DESC, published DESC")
-        rows = conn.execute(sql, args).fetchall()
+        sql = (f"SELECT i.id, i.url, i.title, i.source, i.published, i.score, "
+               f"i.ai_thread, i.ai_why, {status_expr} AS status"
+               f"{', i.event' if has_event else ''} "
+               f"FROM items i LEFT JOIN reviews r "
+               f"  ON r.item_id = i.id AND r.reviewer = ? "
+               f"WHERE {' AND '.join(where)} "
+               f"ORDER BY i.score DESC, i.published DESC")
+        rows = conn.execute(sql, [rid, *args]).fetchall()
     finally:
         conn.close()
 
@@ -300,7 +374,8 @@ def list_news():
 @bp.route("/api/news/status", methods=["POST"])
 @limiter.limit("600 per hour")
 def set_status():
-    if not is_admin():
+    rid, can_write = _reviewer()
+    if not can_write:
         return jsonify({"error": "not found"}), 404
     try:
         body = json.loads(request.get_data(cache=False) or b"{}")
@@ -313,10 +388,17 @@ def set_status():
     ids = [int(i) for i in ids if str(i).isdigit()][:500]
     if not ids:
         return jsonify({"ok": False}), 400
+    now = datetime.datetime.now(datetime.timezone.utc).isoformat()
     conn = news_db()
     try:
-        marks = ",".join("?" * len(ids))
-        conn.execute(f"UPDATE items SET status = ? WHERE id IN ({marks})", [status, *ids])
+        _ensure_reviews(conn)
+        # Every row is stamped with THIS caller's id, so a write can only ever land on
+        # the caller's own rows — admin and share-key never touch each other's.
+        conn.executemany(
+            "INSERT INTO reviews (item_id, reviewer, status, updated) VALUES (?,?,?,?) "
+            "ON CONFLICT(item_id, reviewer) DO UPDATE SET status=excluded.status, "
+            "updated=excluded.updated",
+            [(i, rid, status, now) for i in ids])
         conn.commit()
     except sqlite3.Error:
         return jsonify({"ok": False}), 500
