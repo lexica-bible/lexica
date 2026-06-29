@@ -46,7 +46,10 @@ THREAD_LABELS = {
     "new": "New angle",
 }
 
-_VALID_STATUS = {"new", "keep", "dismiss"}
+# keep/dismiss write a row; "clear" DELETES the reviewer's row so the card is simply
+# unreviewed again (absence = inbox — no sentinel to special-case in the counts). "new"
+# kept for back-compat (an old client still un-keeps with it; COALESCE treats it as inbox).
+_VALID_STATUS = {"new", "keep", "dismiss", "clear"}
 
 # Optional "share link" for a no-login READER (e.g. Tudor). Set NEWS_SHARE_KEY in the
 # WSGI env; then /?news=<key> lets someone browse the tab read-only without an account.
@@ -451,13 +454,20 @@ def set_status():
     conn = news_db()
     try:
         _ensure_reviews(conn)
-        # Every row is stamped with THIS caller's id, so a write can only ever land on
-        # the caller's own rows — admin and share-key never touch each other's.
-        conn.executemany(
-            "INSERT INTO reviews (item_id, reviewer, status, updated) VALUES (?,?,?,?) "
-            "ON CONFLICT(item_id, reviewer) DO UPDATE SET status=excluded.status, "
-            "updated=excluded.updated",
-            [(i, rid, status, now) for i in ids])
+        # Every write is scoped to THIS caller's id (rid), so a reviewer can only ever
+        # touch their OWN rows — admin and share-key never reach each other's. The clear
+        # path removes the row entirely (back to inbox); keep/dismiss/new write one.
+        if status == "clear":
+            qmarks = ",".join("?" for _ in ids)
+            conn.execute(
+                f"DELETE FROM reviews WHERE reviewer = ? AND item_id IN ({qmarks})",
+                [rid, *ids])
+        else:
+            conn.executemany(
+                "INSERT INTO reviews (item_id, reviewer, status, updated) VALUES (?,?,?,?) "
+                "ON CONFLICT(item_id, reviewer) DO UPDATE SET status=excluded.status, "
+                "updated=excluded.updated",
+                [(i, rid, status, now) for i in ids])
         conn.commit()
     except sqlite3.Error:
         return jsonify({"ok": False}), 500

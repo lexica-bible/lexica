@@ -84,9 +84,23 @@ function NewsStory({ story, view, onMark, readOnly, selected, onSelect }) {
                     onClick={(e) => mark("dismiss", e)}>Dismiss</button>
           </>
         ) : (
-          <button className="news-btn" disabled={readOnly}
-                  title={readOnly ? "Read-only" : "Back to the inbox"}
-                  onClick={(e) => mark("new", e)}>Un-keep</button>
+          // Kept/Dismissed: clear back to inbox (recover a misclick) + flip to the other
+          // state. "clear" deletes the row so the card re-surfaces in inbox at its normal
+          // score/recency spot — it's just unreviewed again.
+          <>
+            <button className="news-btn" disabled={readOnly}
+                    title={readOnly ? "Read-only" : "Back to the inbox"}
+                    onClick={(e) => mark("clear", e)}>Back to Inbox</button>
+            {view === "kept" ? (
+              <button className="news-btn news-dismiss" disabled={readOnly}
+                      title={readOnly ? "Read-only" : "Move to dismissed"}
+                      onClick={(e) => mark("dismiss", e)}>Dismiss</button>
+            ) : (
+              <button className="news-btn news-keep" disabled={readOnly}
+                      title={readOnly ? "Read-only" : "Move to kept"}
+                      onClick={(e) => mark("keep", e)}>Keep</button>
+            )}
+          </>
         )}
       </div>
     </div>
@@ -238,6 +252,9 @@ function NewsView({ isMobile }) {
       <button className={"seg-b" + (view === "kept" ? " on" : "")} onClick={() => setView("kept")}>
         Kept{counts.kept ? ` (${counts.kept})` : ""}
       </button>
+      <button className={"seg-b" + (view === "dismissed" ? " on" : "")} onClick={() => setView("dismissed")}>
+        Dismissed{counts.dismissed ? ` (${counts.dismissed})` : ""}
+      </button>
     </div>
   );
 
@@ -280,7 +297,9 @@ function NewsView({ isMobile }) {
       <div className="news-empty">Loading…</div>
     ) : !stories.length ? (
       <div className="news-empty">
-        {view === "kept" ? "Nothing kept yet." : "No stories match — try an earlier date or a lower score."}
+        {view === "kept" ? "Nothing kept yet."
+          : view === "dismissed" ? "Nothing dismissed yet."
+          : "No stories match — try an earlier date or a lower score."}
       </div>
     ) : (
       <>
