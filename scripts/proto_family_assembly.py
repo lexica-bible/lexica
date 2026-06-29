@@ -12,17 +12,21 @@ THE PROBLEM IT SOLVES
      mishbath (H4868, "cessation")     rode in on shabbat (H7676)
   Only the human eye caught them. Auto-assembly will hit this constantly.
 
-THE RULE (a single signal can't catch a false friend — the DISAGREEMENT between signals does)
-  Two independent signals per candidate:
+THE RULE (STEM proposes, GLOSS disposes — the DISAGREEMENT between them surfaces a false friend)
+  Membership is ROOT-ANCHORED. Candidates are proposed by ONE signal only:
      STEM   — shares the head's stem (Greek translit prefix) or root (Hebrew lemma consonants)
-     GLOSS  — its dictionary gloss shares a meaning-word with the head's gloss
+  then the second signal CONFIRMS or DENIES each one — it never discovers on its own:
+     GLOSS  — its dictionary gloss shares a meaning-word with the head's gloss (literal word
+              overlap, NOT semantic — "cessation" never equals "cease", so no thesaurus leak)
   Tiers:
      CORE       — the query's own head word(s).
-     INCLUDE    — BOTH signals fire (stem AND gloss agree).
-     BORDERLINE — exactly ONE fires → SURFACED for review, never silently dropped or included.
-  'isheh / mishbath fire STEM but not GLOSS → BORDERLINE. That is the visible boundary, computed.
-  pyretos "fever" (from pyr) does the same on the Greek side. The engine does NOT decide the
-  borderline cases — it surfaces them with their evidence and a human adjudicates.
+     INCLUDE    — stem-proposed AND gloss confirms.
+     BORDERLINE — stem-proposed but gloss does NOT confirm → SURFACED for review (never silent).
+  'isheh / mishbath / pyretos("fever") share the stem but not the meaning → BORDERLINE: the
+  visible boundary, computed. A real member glossed differently from its root lands here too —
+  visible, not lost. A pure synonym of a DIFFERENT root (phil- "love" under agape-) is absent
+  ENTIRELY — not even borderline — because nothing root-anchors it; gloss alone never adds it.
+  The engine does NOT auto-decide the borderline pile; it surfaces it with evidence for a human.
 
 WHY THIS IS HONEST, NOT CLEAN
   The deliverable is deliberately NOT a tidy auto-list. It is a family WITH its inclusion rule
@@ -144,32 +148,22 @@ def _heb_occ(hconn, num):
 # ── discovery ───────────────────────────────────────────────────────────────
 def assemble_greek(conn, num, stem, terms):
     """Candidates near a Greek head: translit-prefix (STEM) ∪ gloss-term (GLOSS). Each scored on both."""
-    cand = {}   # base -> {translit, gloss, stem_ok, gloss_ok}
-    # STEM pass: lexicon rows whose ascii translit starts with the head stem.
+    cand = {}   # base -> {translit}.  STEM-proposed ONLY — gloss confirms below, never discovers.
     for r in conn.execute("SELECT strongs_g, strongs, translit FROM lexicon"):
         t = _ascii(r["translit"])
         if t and stem and t.startswith(stem):
             base = (r["strongs_g"] or ("G" + (r["strongs"] or ""))).lstrip("G")
             cand.setdefault(base, {})["translit"] = r["translit"] or ""
-            cand[base]["stem_ok"] = True
-    # GLOSS pass: word_gloss Greek rows whose gloss shares a head term.
-    if _has_table(conn, "word_gloss") and terms:
-        for r in conn.execute("SELECT strongs, gloss FROM word_gloss WHERE strongs GLOB 'G*'"):
-            if _gloss_hits(r["gloss"], terms):
-                base = r["strongs"].lstrip("G").split(".")[0]
-                cand.setdefault(base, {})["gloss_ok"] = True
-    # fill gloss + flags + occ for every candidate
     rows = []
     for base, d in cand.items():
         if base == num:
             continue
         gloss = _wg(conn, f"G{base}")
+        ghit = _gloss_hits(gloss, terms)
         rows.append({
             "lang": "G", "num": base, "translit": d.get("translit") or "",
             "gloss": gloss, "occ": _greek_occ(conn, base),
-            "stem_ok": bool(d.get("stem_ok")),
-            "gloss_ok": bool(d.get("gloss_ok") or _gloss_hits(gloss, terms)),
-            "ghit": _gloss_hits(gloss, terms),
+            "stem_ok": True, "gloss_ok": bool(ghit), "ghit": ghit,
         })
     return rows
 
@@ -177,7 +171,7 @@ def assemble_greek(conn, num, stem, terms):
 def assemble_hebrew(conn, hconn, num, root, terms):
     """Candidates near a Hebrew head: lemma_plain prefix/substring (STEM) ∪ gloss-term (GLOSS).
     Substring only for roots of ≥3 letters (a 2-letter root matches half the lexicon)."""
-    cand = {}
+    cand = {}   # STEM-proposed ONLY (lemma_plain consonants). Gloss confirms below, never discovers.
     use_sub = len(root) >= 3
     for r in conn.execute("SELECT strongs_id, xlit, lemma_plain FROM bdb"):
         lp = (r["lemma_plain"] or "")
@@ -187,23 +181,16 @@ def assemble_hebrew(conn, hconn, num, root, terms):
             base = (r["strongs_id"] or "").lstrip("H")
             if base:
                 cand.setdefault(base, {})["xlit"] = r["xlit"] or ""
-                cand[base]["stem_ok"] = True
-    if _has_table(conn, "word_gloss") and terms:
-        for r in conn.execute("SELECT strongs, gloss FROM word_gloss WHERE strongs GLOB 'H*'"):
-            if _gloss_hits(r["gloss"], terms):
-                base = r["strongs"].lstrip("H").rstrip("abcdefgh")
-                cand.setdefault(base, {})["gloss_ok"] = True
     rows = []
     for base, d in cand.items():
         if base == num:
             continue
         gloss = _wg(conn, f"H{base}")
+        ghit = _gloss_hits(gloss, terms)
         rows.append({
             "lang": "H", "num": base, "translit": d.get("xlit") or "",
             "gloss": gloss, "occ": _heb_occ(hconn, base),
-            "stem_ok": bool(d.get("stem_ok")),
-            "gloss_ok": bool(d.get("gloss_ok") or _gloss_hits(gloss, terms)),
-            "ghit": _gloss_hits(gloss, terms),
+            "stem_ok": True, "gloss_ok": bool(ghit), "ghit": ghit,
         })
     return rows
 
@@ -247,16 +234,19 @@ def run_head(conn, hconn, head):
         root = (plain or "").strip()
         terms = _gloss_terms(gloss)
         print_head("H", num, xlit, gloss, root, terms)
+        print("        NOTE: Hebrew has no etymology/root field — only consonant overlap + gloss. Its")
+        print("        BORDERLINE pile runs FATTER than Greek by nature (data-honesty, not a malfunction).")
         rows = assemble_hebrew(conn, hconn, num, root, terms)
 
-    # tier by signal agreement; drop dead (0 occ) candidates (no dead chips, same as the live engine).
+    # Stem proposes every candidate (stem_ok always True); gloss confirms. Drop dead (0 occ).
     live = [r for r in rows if r["occ"] > 0]
     dead = len(rows) - len(live)
-    include = [r for r in live if r["stem_ok"] and r["gloss_ok"]]
-    border = [r for r in live if r["stem_ok"] != r["gloss_ok"]]
-    print_tier("INCLUDE   (stem AND gloss agree)", include)
-    print_tier("BORDERLINE (one signal only — REVIEW, this is the boundary)", border,
-               note="[S·]=root-match only (false-friend risk: 'isheh/mishbath live here); [·G]=meaning-only")
+    include = [r for r in live if r["gloss_ok"]]
+    border = [r for r in live if not r["gloss_ok"]]
+    print_tier("INCLUDE    (stem-proposed, gloss confirms)", include)
+    print_tier("BORDERLINE (stem-proposed, gloss did NOT confirm — REVIEW, the boundary)", border,
+               note="[S·] = root/stem match, meaning didn't line up. False friends ('isheh/mishbath/"
+                    "fever) AND legit-but-differently-glossed members both live here — by design")
     if dead:
         print(f"\n   (dropped {dead} candidate(s) with zero occurrences — never chipped)")
 
