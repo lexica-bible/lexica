@@ -370,6 +370,27 @@ function NewsView({ isMobile }) {
     return o;
   }, [cards, windowed, thread]);
 
+  // Article -> card collapse for the header label, in ONE pass over the SAME set the feed
+  // shows: the active view's in-window floored cards, and the in-window articles AT THE FLOOR
+  // that cluster into them. Both halves are window- and floor-scoped together, so the header
+  // never pairs a no-floor article dump with a floored card count (the misread this fixes).
+  // No floor (minScore 0) => every in-window article counts. Display only — reuses windowed.
+  const collapse = useMemo(() => {
+    const want = { inbox: "new", kept: "keep", dismissed: "dismiss" }[view];
+    let articles = 0, cards = 0;
+    for (const c of windowed) {
+      const isInbox = c.status !== "keep" && c.status !== "dismiss";
+      if (!(want === "new" ? isInbox : c.status === want)) continue;
+      cards++;
+      for (const m of (c.members || [])) {
+        if (!_inWindow(m.d, since, until)) continue;
+        if (minScore && m.s < minScore) continue;
+        articles++;
+      }
+    }
+    return { articles, cards };
+  }, [windowed, view, since, until, minScore]);
+
   // The visible feed — filter the windowed view to the active tab, then sort. All client-side.
   const stories = useMemo(() => {
     const want = { inbox: "new", kept: "keep", dismissed: "dismiss" }[view];
@@ -582,10 +603,13 @@ function NewsView({ isMobile }) {
       </div>
     ) : (
       <>
+        {/* Name the article->card collapse so the article total can't read as the numerator
+            of the card count. Both halves are window+floor scoped (see the `collapse` memo). */}
         <div className="news-count">
-          {view === "inbox"
-            ? `${stories.length} to review`
-            : `${stories.length} ${stories.length === 1 ? "story" : "stories"}`}
+          {collapse.articles} {collapse.articles === 1 ? "article" : "articles"}
+          {" → "}
+          {collapse.cards} {collapse.cards === 1 ? "card" : "cards"}
+          {view === "inbox" ? " to review" : ""}
         </div>
         <div className="news-list">
           {stories.map((s, i) => (
