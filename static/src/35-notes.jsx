@@ -166,7 +166,7 @@ function NotesPanel({ noteId, isMobile, onClose }) {
     );
   }
   return (
-    <aside className="detail detail-side note-side" role="complementary" aria-label="Note">
+    <aside className="detail zinspect detail-side note-side" role="complementary" aria-label="Note">
       {head}
       {content}
     </aside>

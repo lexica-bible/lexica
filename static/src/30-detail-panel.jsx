@@ -87,7 +87,7 @@ function SummaryPanel({ book, chapter, bookLabel, isMobile, onClose, onBack }) {
   // Desktop: resting content of the right sidebar. The "‹ Intro" toggle sits in the
   // .detail-back slot (right), matching the word-study / xref / day-intro headers.
   return (
-    <aside className="detail detail-side summary-side" role="complementary" aria-label="Reading overview">
+    <aside className="detail zinspect detail-side summary-side" role="complementary" aria-label="Reading overview">
       <div className="detail-head">
         <div className="detail-head-l">
           <span className="detail-pos summary-pos">{title}</span>
@@ -1084,7 +1084,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   };
 
   return (
-    <aside ref={isMobile ? sheetRef : null} className={"detail " + (isMobile ? "detail-sheet" : "detail-side")} role="dialog" aria-label="Lexicon detail">
+    <aside ref={isMobile ? sheetRef : null} className={"detail " + (isMobile ? "detail-sheet" : "zinspect detail-side")} role="dialog" aria-label="Lexicon detail">
       {isMobile && <div className="sheet-drag-zone" aria-hidden="true"><div className="sheet-handle"></div></div>}
       <div className="detail-head">
         <div className="detail-head-l">

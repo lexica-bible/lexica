@@ -118,7 +118,7 @@ function CrossRefPanel({ source, onClose, onNavigate, isMobile, translation, onA
   );
 
   return (
-    <aside ref={isMobile ? sheetRef : null} className={"xref-panel " + (isMobile ? "detail-sheet" : "detail-side")} role="dialog" aria-label="Related Passages">
+    <aside ref={isMobile ? sheetRef : null} className={"xref-panel " + (isMobile ? "detail-sheet" : "zinspect detail-side")} role="dialog" aria-label="Related Passages">
       {isMobile && <div className="sheet-drag-zone" aria-hidden="true"><div className="sheet-handle"></div></div>}
       <div className="detail-head">
         <div className="detail-head-l">

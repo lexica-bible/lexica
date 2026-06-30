@@ -201,7 +201,7 @@ function DayIntroPanel({ day, chrono, isMobile, onClose, onPickPassage, onOvervi
   }
 
   return (
-    <aside className="detail detail-side summary-side dintro-side" role="complementary" aria-label="Reading intro">
+    <aside className="detail zinspect detail-side summary-side dintro-side" role="complementary" aria-label="Reading intro">
       <div className="detail-head">
         <div className="detail-head-l">{headTitle}</div>
         {onOverview && <button className="detail-back" onClick={onOverview} aria-label="Chapter overview">‹ Overview</button>}

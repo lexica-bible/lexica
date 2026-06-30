@@ -835,14 +835,11 @@ input { font-family: inherit; }
 /* ============================================================
    DETAIL PANEL — DESKTOP SIDEBAR
 ============================================================ */
+/* Library's inspect panels carry `zinspect detail-side` — the fixed top:0 strip geometry
+   (position/size/border/background/flex) now comes from the SHARED .zinspect (single source
+   of truth for the inspect strip). .detail-side keeps only its Library-specific extras: the
+   scroll + the slide-in. Verified zero-shift by the computed-style parity gate. */
 .detail-side {
-  position: fixed;
-  top: 0; right: 0; bottom: 0;
-  width: var(--sidebar-w);
-  background: var(--paper);
-  border-left: 1px solid var(--rule);
-  z-index: 40;
-  display: flex; flex-direction: column;
   overflow-y: auto;
   overscroll-behavior: contain;   /* don't scroll the library text at the panel's edges */
   animation: slide-in 0.2s ease;
