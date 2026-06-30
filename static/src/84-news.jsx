@@ -78,9 +78,10 @@ function NewsStory({ story, view, onMark, readOnly }) {
           {_stripOutlet(story.title)}
         </a>
         {story.why && <div className="news-why">{story.why}</div>}
+        {/* Dates FIRST so they start at the same left edge on every card (skimmable down
+            the column); a lone single date leads here too, aligned with "peaked" on range
+            cards. Outlet moves to the end as secondary reference. */}
         <div className="news-meta-line">
-          <span>{top.source || "?"}</span>
-          <span>·</span>
           <span>{_dateRange(story)}</span>
           {story.count > 1 && (
             <>
@@ -91,6 +92,8 @@ function NewsStory({ story, view, onMark, readOnly }) {
               </button>
             </>
           )}
+          <span>·</span>
+          <span>{top.source || "?"}</span>
         </div>
         {open && story.count > 1 && (
           <div className="news-sources">
@@ -213,6 +216,7 @@ function NewsView({ isMobile }) {
   const [order, setOrder] = useState("score");        // score | date | oldest
   const [flash, setFlash] = useState("");
   const [dateOpen, setDateOpen] = useState(false);    // desktop top-bar date popover
+  const [helpOpen, setHelpOpen] = useState(false);    // top-bar "how the feed works" popover
 
   useEffect(() => { api.newsMeta().then(setMeta); }, []);
   useEffect(() => { localStorage.setItem("lexica.news.since.v1", since); }, [since]);
@@ -532,17 +536,19 @@ function NewsView({ isMobile }) {
   // ---------------- DESKTOP: the shared three-zone frame ------------------------
   // LEFT rail is now JUST the thread list (the navigate zone) — every other control
   // moved up into the center's horizontal top bar (below). Threads get the full height.
+  // The THREADS header rides Word study's .brail-top band (59px + bottom border), so its
+  // border meets the top bar's at the same height and reads as one unbroken line across.
   const rail = (
     <div className="news-rail news-rail-threads-only">
-      <div className="news-rail-sec">
-        <div className="news-rail-label">Threads</div>
+      <div className="brail-top"><div className="brail-eyebrow">Threads</div></div>
+      <div className="news-rail-body">
         {threadList}
+        {meta.reviewer_name ? (
+          <div className="news-rail-asline" title="Keep/Dismiss are recorded under this reviewer">
+            Reviewing as <strong>{meta.reviewer_name}</strong>
+          </div>
+        ) : null}
       </div>
-      {meta.reviewer_name ? (
-        <div className="news-rail-asline" title="Keep/Dismiss are recorded under this reviewer">
-          Reviewing as <strong>{meta.reviewer_name}</strong>
-        </div>
-      ) : null}
     </div>
   );
 
@@ -579,6 +585,46 @@ function NewsView({ isMobile }) {
                 onClick={() => setRefreshN(n => n + 1)}>
           <Icon.Refresh className={loading ? "spin" : undefined} />
         </button>
+        {/* First-timer key to what the score / dates / views mean. Reuses the date
+            popover's scrim+menu styling; opens right-aligned so it can't run off the bar. */}
+        <div className="news-bar-pop">
+          <button className={"news-bar-icon" + (helpOpen ? " on" : "")} title="How the feed works"
+                  aria-label="How the feed works" aria-expanded={helpOpen}
+                  onClick={() => setHelpOpen(o => !o)}>
+            <Icon.Info />
+          </button>
+          {helpOpen && (
+            <>
+              <div className="news-bar-scrim" onClick={() => setHelpOpen(false)} />
+              <div className="news-bar-menu news-help-menu">
+                <div className="news-help-head">
+                  <span>How the feed works</span>
+                  <button className="news-help-x" aria-label="Close" onClick={() => setHelpOpen(false)}>
+                    <Icon.Close />
+                  </button>
+                </div>
+                <div className="news-help-sec">
+                  <div className="news-help-t">Score</div>
+                  <p>It's not a quality rating — it's how closely a story sits to the themes being
+                     watched. A high score means right on theme; a low one is further out, not junk.
+                     Set the score filter to “Any score” to see everything.</p>
+                </div>
+                <div className="news-help-sec">
+                  <div className="news-help-t">Dates</div>
+                  <p>A story can run for several days. <strong>Peaked</strong> is the day it drew the
+                     most coverage — the day the story is filed under; <strong>latest</strong> is its
+                     most recent article. The date window filters on the peaked day.</p>
+                </div>
+                <div className="news-help-sec">
+                  <div className="news-help-t">Views</div>
+                  <p><strong>Inbox</strong> is everything you haven't sorted yet. <strong>Keep</strong> and
+                     <strong> Dismiss</strong> move a story out of the inbox — that's your own label, it
+                     doesn't change the scoring.</p>
+                </div>
+              </div>
+            </>
+          )}
+        </div>
         {view === "kept" && (   // shortlist-copy belongs with Kept, not Dismissed
           <button className="news-btn news-keep" onClick={copyShortlist}
                   disabled={!stories || !stories.length}>Copy shortlist</button>

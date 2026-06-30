@@ -4959,17 +4959,14 @@ button.study-verse-ref { border: none; }
    These rules style only what lives INSIDE News's three zones. */
 .news-rail {                 /* fills the shared .zrail; its sand bg + border come from .zrail */
   flex: 1; min-height: 0;
-  padding: 18px 16px;
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 14px;
 }
 /* The rail is now JUST the thread list (View/Date/Score/Sort/Refresh moved to the center
-   top bar), so only the Threads section + the reviewer line remain. */
-.news-rail-sec { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
-.news-rail-label { font-size: 11px; font-weight: 600; text-transform: uppercase;
-  letter-spacing: 0.05em; color: var(--ink-4); }
+   top bar): a .brail-top header band (flush, so its bottom border lines up with the top
+   bar's) over a scrolling body holding the threads + the reviewer line. */
+.news-rail-body { flex: 1; min-height: 0; overflow-y: auto; padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 14px; }
 .news-rail-threads { display: flex; flex-direction: column; gap: 2px; }
 .news-thread-item { font: inherit; font-size: 13px; text-align: left; padding: 6px 9px;
   border-radius: 7px; background: none; color: var(--ink-2); cursor: pointer; line-height: 1.3; }
@@ -4987,9 +4984,9 @@ button.study-verse-ref { border: none; }
 
 /* CENTER top control bar — one horizontal no-wrap row, Library's .lib-bar pattern. Sits
    above .news-feed inside the shared .zcenter; the rail below it is threads-only. */
-.news-bar { flex: 0 0 auto; box-sizing: border-box; min-height: var(--hdr-h);
+.news-bar { flex: 0 0 auto; box-sizing: border-box; height: 59px;
   display: flex; align-items: center; padding: 0 20px; border-bottom: 1px solid var(--rule);
-  background: color-mix(in oklab, var(--bg) 82%, var(--paper)); }
+  background: color-mix(in oklab, var(--bg) 82%, var(--paper)); }  /* 59px = Word study's .ws .searchbar (same shell), so the bars line up across tabs */
 .news-bar-l { display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; white-space: nowrap; }
 .news-bar-sep { width: 1px; height: 22px; background: var(--rule); flex: 0 0 auto; }
 .news-bar .news-views { flex-wrap: nowrap; gap: 4px; }
@@ -5007,6 +5004,18 @@ button.study-verse-ref { border: none; }
   box-shadow: var(--shadow-lg, 0 8px 28px rgba(0,0,0,0.18)); padding: 12px;
   display: flex; flex-direction: column; gap: 10px; }
 .news-bar-menu .news-presets { flex-wrap: wrap; max-width: 240px; }
+/* "How the feed works" popover — same scrim+menu chrome, opened right-aligned (it sits
+   near the end of the bar) and wider to hold the explanatory copy. */
+.news-help-menu { left: auto; right: 0; width: 320px; gap: 14px; }
+.news-help-head { display: flex; align-items: center; justify-content: space-between;
+  font-size: 13px; font-weight: 700; color: var(--ink); }
+.news-help-x { display: inline-flex; padding: 2px; border: none; background: none;
+  color: var(--ink-4); cursor: pointer; }
+.news-help-x:hover { color: var(--ink); }
+.news-help-sec { display: flex; flex-direction: column; gap: 3px; }
+.news-help-t { font-size: 11px; font-weight: 600; text-transform: uppercase;
+  letter-spacing: 0.05em; color: var(--accent); }
+.news-help-sec p { margin: 0; font-size: 13px; line-height: 1.5; color: var(--ink-2); }
 /* Refresh — icon button, tooltip only. Spins while a pull is in flight. */
 .news-bar-icon { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
   width: 32px; height: 32px; border: 1px solid var(--rule-2); border-radius: 7px;
