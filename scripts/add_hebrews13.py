@@ -25,7 +25,9 @@ SAFE BY DESIGN
       * captures the current live Heb 12 word rows as a reference,
       * deletes + regenerates Heb 12 through THIS script's build path,
       * inserts the 25 Heb 13 verse rows and builds Heb 13 the same way,
-      * runs the folded post-fixers the real build runs (local; no network),
+      * runs the folded post-fixers AND the local pinned tail-patches the real
+        flow runs (fix_idios_own — Heb 13:12 'his own' — fix_bracket_punct,
+        dedup_words); all against the COPY, no network,
       * DIFFS the regenerated Heb 12 against the captured live Heb 12 across
         every column the WORD BUILD owns — expect IDENTICAL. (The two columns
         filled later by name resolution — is_pn and the name-slot Strong's — are
@@ -44,9 +46,11 @@ SAFE BY DESIGN
     Heb 13 word rows (then the same folded post-fixers, which only touch the new
     rows). It NEVER deletes or rewrites an existing row, and refuses if Heb 13 is
     already present. Reversible: delete the 25 Heb 13 verse rows + their words.
-    After --apply, run the standard post-words builders (printed at the end):
-    import_tipnr, build_abp_surface, build_abp_translit, build_dotted_lexicon,
-    build_entity_binding, build_two_ending.
+    After --apply, run the canonical tail + post-words builders (printed at the
+    end): finish_rebuild.sh (import_tipnr + the pinned patches incl. fix_idios_own
+    for Heb 13:12), then build_abp_surface / build_abp_translit /
+    build_dotted_lexicon / build_entity_binding / build_two_ending, then the
+    invariant + audit_split_flip + health_check gates.
 
 Run on PythonAnywhere:
   python3 scripts/add_hebrews13.py ~/bible-db/bible.db ~/bible-db/bh_scrape.db --dry-run
@@ -54,6 +58,7 @@ Run on PythonAnywhere:
 """
 
 import argparse
+import subprocess
 import sqlite3
 import sys
 from pathlib import Path
@@ -240,6 +245,21 @@ def dry_run(bible_db, scrape_db):
 
     # 3) the folded post-fixers the real build runs (local, copy-only, no network)
     run_post_fixers(copy)
+    copy.commit()
+    copy.close()
+
+    # 4) the LOCAL pinned tail-patches (finish_rebuild.sh) that can touch these
+    #    chapters — Heb 13:12 has the "his own" (G3588+G2398) shape that fix_idios_own
+    #    relocates; the others are idempotent. ALL run against the COPY path, NO
+    #    network (import_tipnr — the only downloading step — is deliberately left to
+    #    the post-apply dependent runs; its two columns are excused in PROOF 1).
+    for patch in ("fix_idios_own.py", "fix_bracket_punct.py", "dedup_words.py"):
+        r = subprocess.run([sys.executable, str(Path(__file__).parent / patch), target],
+                           capture_output=True, text=True)
+        if r.returncode != 0:
+            print(f"  ⚠️ tail patch {patch} returned {r.returncode}:\n"
+                  + (r.stdout[-800:] + r.stderr[-800:]))
+    copy = sqlite3.connect(target)
 
     # ── Proof 1: Heb 12 build-column diff (expect IDENTICAL) ────────────────────
     # Row layout from read_chapter_words: (verse, position, english, english_head,
@@ -353,15 +373,25 @@ def apply(bible_db, scrape_db):
     run_post_fixers(con)
     con.close(); scrape.close()
     print(f"Inserted {nv} verse rows + {nw} word rows for Heb {NEW_CH} (additive; no existing row touched).")
-    print("\nNEXT — dependent re-runs (resolve names, surface forms, etc.):")
-    print(f"  python3 scripts/import_tipnr.py {bible_db}")
+    print("\nNEXT — dependent re-runs, in order (each is targeted + re-runnable, no DELETE/swap):")
+    print(f"  # 1. Canonical TAIL — restores proper-noun numbers (Jesus/Timothy/Italy) AND")
+    print(f"  #    applies the pinned patches, incl. fix_idios_own for Heb 13:12 'his own' (G2398):")
+    print(f"  bash scripts/finish_rebuild.sh {bible_db}")
+    print(f"  # 2. Position-keyed side tables (Heb 13 shifted nothing, but they must learn it exists):")
     print(f"  python3 scripts/build_abp_surface.py {bible_db} --bh {scrape_db}")
     print(f"  python3 scripts/build_abp_translit.py {bible_db}")
     print(f"  python3 scripts/build_dotted_lexicon.py {bible_db}        # Heb 13 has dotted G3766.2 / G1510.6")
     print(f"  python3 scripts/build_entity_binding.py {bible_db} --apply")
-    print(f"  python3 scripts/build_two_ending.py {bible_db}")
+    print(f"  python3 scripts/build_two_ending.py {bible_db}            # then rebuild app.js locally if it changed")
+    print(f"  # 3. VERIFY (all must pass before reload):")
+    print(f"  sqlite3 {bible_db} \"SELECT count(*) FROM words WHERE strongs_base GLOB '[0-9]*'\"   # MUST be 0")
+    print(f"  python3 scripts/audit_split_flip.py {bible_db}                                   # MUST be 0")
+    print(f"  python3 scripts/health_check.py {bible_db}                                        # 0 new warnings")
+    print(f"  sqlite3 {bible_db} \"SELECT chapter,count(*) FROM verses WHERE book='Heb' GROUP BY chapter\"  # Heb -> 13 chapters")
+    print(f"  # 4. Reload:")
     print(f"  touch /var/www/www_lexica_bible_wsgi.py")
-    print("\nUndo (reversible): delete the 25 Heb 13 verse rows + their words.")
+    print("\nUndo (reversible): delete the 25 Heb 13 verse rows + their words; the side")
+    print("tables rebuild clean on their next run.")
 
 
 def main():
