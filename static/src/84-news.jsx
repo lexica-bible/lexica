@@ -118,21 +118,38 @@ function _dateRange(story) {
   return latest || peak || "—";
 }
 
-function NewsStory({ story, view, onMark, readOnly }) {
-  const [open, setOpen] = useState(false);
-  const top = story.sources[0] || {};
-  const tier = _scoreTier(story.score);
-  // Expanded citation list = every member ARTICLE (not the per-outlet deduped sources),
-  // newest-first by its OWN date — undated sorts LAST, stable within a date. A card pulled
-  // into the window on a fresh article shows that article at the top with its date; the old
-  // burst sits below. Display only — card-level date/score/face/count are untouched (the
-  // windowed-recompute fix owns those, so a windowed card's count can read fewer than the
-  // full history shown here, by design).
-  const cites = (story.members || []).slice().sort((a, b) => {
+// Collapse member articles to ONE row per outlet, keeping each outlet's NEWEST article (its
+// date + link) so a fresh follow-up beats the old burst instance, then sort the survivors
+// newest-first. Undated articles lose to any dated one for their outlet and sort last (no
+// date shown, never faked). The ≤~12-row deduped view, not the full per-article wall.
+function _dedupByOutlet(members) {
+  const best = new Map();
+  for (const m of members || []) {
+    const k = m.src || "?";
+    const cur = best.get(k);
+    if (!cur || (m.d || "") > (cur.d || "")) best.set(k, m);
+  }
+  return [...best.values()].sort((a, b) => {
     const da = a.d || "", db = b.d || "";
     if (da && db) return db < da ? -1 : db > da ? 1 : 0;   // descending = newest first
     return da ? -1 : db ? 1 : 0;                            // dated before undated
   });
+}
+
+function NewsStory({ story, view, onMark, readOnly, since, until }) {
+  const [open, setOpen] = useState(false);
+  const [showOld, setShowOld] = useState(false);
+  const top = story.sources[0] || {};
+  const tier = _scoreTier(story.score);
+  // Expanded citation list = the per-OUTLET deduped representatives (each outlet's newest
+  // article), newest-first, dated. With a date window active it splits to match the card's
+  // in-window "+N more" promise: in-window outlets show by default, the older out-of-window
+  // coverage tucks behind a fold. No window = the full deduped list, no fold. Display only —
+  // card-level membership/face/score/date/count are the shipped windowed-recompute fix's.
+  const reps = _dedupByOutlet(story.members);
+  const windowOn = !!(since || until);
+  const recent = windowOn ? reps.filter(m => _inWindow(m.d, since, until)) : reps;
+  const older = windowOn ? reps.filter(m => !_inWindow(m.d, since, until)) : [];
   const mark = (status, e) => { if (e) e.stopPropagation(); if (!readOnly) onMark(story, status); };
   return (
     <div className="news-story">
@@ -162,8 +179,20 @@ function NewsStory({ story, view, onMark, readOnly }) {
         </div>
         {open && story.count > 1 && (
           <div className="news-sources">
-            {cites.map((m, i) => (
+            {recent.map((m, i) => (
               <a key={i} className="news-src" href={m.url || "#"} target="_blank" rel="noopener noreferrer"
+                 onClick={(e) => e.stopPropagation()}>
+                {m.src || "?"} {m.d && <span className="news-src-date">{m.d}</span>}
+              </a>
+            ))}
+            {older.length > 0 && !showOld && (
+              <button className="news-srcmore"
+                      onClick={(e) => { e.stopPropagation(); setShowOld(true); }}>
+                show earlier coverage (+{older.length}) ▾
+              </button>
+            )}
+            {showOld && older.map((m, i) => (
+              <a key={"o" + i} className="news-src" href={m.url || "#"} target="_blank" rel="noopener noreferrer"
                  onClick={(e) => e.stopPropagation()}>
                 {m.src || "?"} {m.d && <span className="news-src-date">{m.d}</span>}
               </a>
@@ -561,7 +590,7 @@ function NewsView({ isMobile }) {
         <div className="news-list">
           {stories.map((s, i) => (
             <NewsStory key={s.ids[0] + "-" + i} story={s} view={view} onMark={mark}
-                       readOnly={!canReview} />
+                       readOnly={!canReview} since={since} until={until} />
           ))}
         </div>
         {outsideN > 0 && (
