@@ -4930,6 +4930,10 @@ button.study-verse-ref { border: none; }
 .news-keep { background: var(--accent); color: var(--paper); border-color: var(--accent); }
 .news-keep:hover { filter: brightness(1.08); color: var(--paper); }
 .news-dismiss:hover { border-color: var(--ink-4); color: var(--ink-3); }
+/* Filled primary action in the Kept view (the Dismiss move), so it reads distinct from
+   the plain "Back to Inbox" recovery button — same fill as Keep elsewhere. */
+.news-fill { background: var(--accent); color: var(--paper); border-color: var(--accent); }
+.news-fill:hover { filter: brightness(1.08); color: var(--paper); border-color: var(--accent); }
 
 
 /* ---- News mounted on the shared three-zone frame ----------------------------

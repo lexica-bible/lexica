@@ -89,7 +89,7 @@ function NewsStory({ story, view, onMark, readOnly }) {
                     title={readOnly ? "Read-only" : "Back to the inbox"}
                     onClick={(e) => mark("clear", e)}>Back to Inbox</button>
             {view === "kept" ? (
-              <button className="news-btn news-dismiss" disabled={readOnly}
+              <button className="news-btn news-fill" disabled={readOnly}
                       title={readOnly ? "Read-only" : "Move to dismissed"}
                       onClick={(e) => mark("dismiss", e)}>Dismiss</button>
             ) : (
