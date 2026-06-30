@@ -182,7 +182,9 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
   The old purpose-vs-result seam is RESOLVED by the STRUCTURAL-WORD CONTEST RULE: a structural word with settled
   grammar but a doctrinally-contested APPLICATION stays grammatically honest and points the loaded verses OUT to
   an argument graph — it does NOT fork the lexeme (fairness forks are for content words like dikaioō). ἵνα's
-  verse-pointer is pending its hardening graph (own follow-up below).
+  verse-pointer is now WIRED (2026-06-29): the `hina_hardening` graph is built + published and the ἵνα card
+  carries a `contest_graph` breadcrumb to Study › Graphs (see the archived item for the build + the
+  edge-seating lesson).
   OPEN: (1) live-case
   HIGHLIGHT for prepositions (light the row matching the object's case from morph; the whole table already
   shows, so polish — wire with the verse live-pull); (2) the demonstrative/pronoun "referent" card (step b:
@@ -194,14 +196,16 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
   Full record + the locked build rules: memory `project_structural_deictic_cards`.
   `code: structural.py, views_lexica.py, static/src/20-shared-components.jsx, static/src/30-detail-panel.jsx`
 
-- **ἵνα's hardening argument-graph (Isaiah 6) — the next real Lexica piece; ἵνα's deferred verse-pointer lands here.**
-  ἵνα G2443 shipped as a pure structural card (above); per the contest rule the doctrinal contest at the hardening
-  verses (Mark 4:12, Matt 13:13ff, John 12:40) does NOT live on the word — it goes in an argument graph, and those
-  verses point AT it. The graph isn't built yet. Evidence structure = the translation chain: Hebrew imperative
-  (Isa 6:9-10) → LXX passive + μήποτε → the Synoptic ἵνα/ὅτι split. Build through the standard graph framework
-  (`scripts/add_study_graph.py` + `argmap.py`) + the five-check review, THEN wire the three verses' pointers.
-  Full record: memory `project_structural_deictic_cards` (+ `feedback_claude_chat_collab` for the review).
-  `code: study.db (add_study_graph.py), argmap.py, structural.py (verse-pointer wiring, later)`
+- **Pointer click-through (follow-up, not blocking).** Both the ἵνα `contest_graph` breadcrumb and the
+  dikaioō/Lexica-fork `graph_ref` are PLAIN TEXT ("Study › Graphs"), not click-to-open. Upgrade BOTH together:
+  thread an onOpenGraph callback 90-app → detail-panel → StructuralBody/LexicaFork that switches to the Study
+  tab and opens the graph by id (the `studyPending`/`openEntry` plumbing already exists for the metaV sidebar).
+  Deferred on purpose so the plumbing didn't couple to landing ἵνα's content.
+  `code: static/src/90-app.jsx, 30-detail-panel.jsx, 20-shared-components.jsx`
+- **Confirm the ἵνα reverse chip live (small).** Load Mark 4:12 (or Matt 13:13 / John 12:40), tap the verse
+  number, confirm the xref panel shows the "In studies: ἵνα and the hardening of Isaiah 6" graph chip. The
+  forward breadcrumb + the graph itself are verified; the reverse chip rides existing public for-verse plumbing
+  but wasn't run.
 
 - **LSJ "Lexica" overrides — DONE + LIVE 2026-06-23; a few words still open.** The LSJ word-study
   blurb is now a Haiku "definition" prompt for the bulk + per-word hand-written **"Lexica" overrides**

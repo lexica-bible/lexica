@@ -6,6 +6,28 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## ἵνα / Isaiah-6 hardening argument graph — BUILT + PUBLISHED + card wired — DONE 2026-06-29
+The graph the ἵνα structural card points out to: does Mark's ἵνα at the hardening verses mark PURPOSE or
+RESULT? `scripts/add_study_graph_hina_hardening.py` → study.db `hina_hardening` (published; graphs are public
+now). Shared claim pool + three readings (purpose / result / "the fork predates ἵνα"). Forward pointer wired:
+the G2443 entry in `structural.py` carries a `contest_graph` field (graph id + Mark 4:12 / Matt 13:13 / John
+12:40), rendered by `StructuralBody` (Full entry) as a breadcrumb to Study › Graphs — shows on every ἵνα card
+but NAMES the loaded verses so a mundane purpose-ἵνα is never painted as contested. Reverse direction (verse →
+graph chip) rides the existing public for-verse index, no wiring.
+- **THE FINDING (computed, not seated):** all three readings come out **DEPENDS-on-contested** — the graph
+  MAPS the contest, it does not resolve it. Nobody wins; the seam is mapped.
+- **The lesson worth keeping — EDGE-SEATING (caught by JP's Claude-chat reviewer, held three rounds).** First
+  build rated the "predates ἵνα" thesis STANDS on two SOLID edges (the Hebrew→LXX form shift; three evangelists
+  framing one citation three ways). Both underlying FACTS are both-camps-grant — but the INFERENCE from those
+  facts to "ἵνα transmits, doesn't create" is exactly what the purpose camp denies. Rating the edges solid
+  relocated the contest from a labeled node into two edge-strength labels and forced a false STANDS — the
+  sophisticated form of seating. Fix B: drop both edges to contested → thesis computes DEPENDS like the others.
+  RULE: "the fact is shared" is NOT "the inference from the fact is shared." Check 5 (verdict computed, not
+  authored) can fail in the EDGE, not just the node.
+- **Deliberate omission:** the Aramaic Targum substratum (Jeremias) layer — out of corpus, contested, wouldn't
+  change any verdict. Slots in later as one more contested supporting edge if wanted.
+- Full record: memory `project_study_modules` + `project_structural_deictic_cards`.
+
 ## Ask-corpus lexical-texture panel — WIRED LIVE + verified — DONE 2026-06-29
 The computed distribution/family panel (proven on read-only protos earlier the same day) is now in the
 live Ask-corpus path. Engine = **`corpus_panel.py`** (repo root, pure logic, the two protos merged);

@@ -349,8 +349,11 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   specific verses does NOT get a fairness-gate fork — the card stays grammatically honest, and the loaded verses
   point OUT to an argument graph where the contest is mapped (the lexeme is innocent; the passage is contested).
   UNLIKE a content-word fork, where the lexeme's OWN senses fork (dikaioō → salvation_how). ἵνα's pointer is
-  DEFERRED — its Isaiah-6 hardening graph isn't built yet (the next Lexica piece; evidence = the Hebrew-imperative
-  → LXX passive+μήποτε → Synoptic ἵνα/ὅτι chain, run through the standard argmap + five-check review). Frontend
+  WIRED (2026-06-29): the Isaiah-6 hardening graph `hina_hardening` is BUILT + PUBLISHED
+  (scripts/add_study_graph_hina_hardening.py; all 3 readings — purpose / result / predates-ἵνα — compute
+  DEPENDS, the contest is mapped not closed), and the ἵνα card carries a `contest_graph` breadcrumb (graph id
+  + the 3 loaded verses Mark 4:12 / Matt 13:13 / John 12:40) to Study › Graphs, rendered by StructuralBody in
+  Full entry. The reverse direction (verse→graph chip) rides the public for-verse index, no wiring. Frontend
   tweaks: the underspecified-block label is now authored per card (eimi default
   unchanged); a lone cross-ref no longer triggers the glance/full split (so flat οὐ keeps its Mat 5:17 line
   without a Full tab). **card verse lines are verbatim ABP**
@@ -412,7 +415,8 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   "Preview as reader" admin toggle skins the tab as a visitor sees it.
   Verse text = ABP prose (KJV fallback).
   **GATING (go-live 2026-06-16): READING is split — published TOPICS + the metaV NAME-topics are PUBLIC
-  (no login); argument graphs, all DRAFTS, and every WRITE/editor route stay admin-only; private
+  (no login); published argument GRAPHS are PUBLIC too (graphs went public; for-verse serves them to
+  everyone); all DRAFTS + every WRITE/editor route stay admin-only; private
   `notes` are stripped from anything served to a reader.** Two-way study↔reader links: a study's verse
   references are clickable (jump into the reader — the resolver returns book/chapter/verse), and tapping a
   verse number shows an "In studies:" line in the xref panel (`/api/study/for-verse/<book>/<ch>/<v>`, a
