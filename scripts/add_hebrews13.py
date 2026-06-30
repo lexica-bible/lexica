@@ -19,21 +19,26 @@ WHY THIS EXISTS
   rest of the corpus exactly.
 
 SAFE BY DESIGN
-  --dry-run (DEFAULT): writes NOTHING to the live db. It snapshots the live db
-    to a throwaway copy (read-only open of live → .backup; the live file is
-    never opened for writing), then IN THE COPY:
+  --dry-run (DEFAULT): writes NOTHING to the live db, and makes NO network call.
+    It snapshots the live db to a throwaway copy (read-only open of live →
+    .backup; the live file is never opened for writing), then IN THE COPY:
       * captures the current live Heb 12 word rows as a reference,
       * deletes + regenerates Heb 12 through THIS script's build path,
       * inserts the 25 Heb 13 verse rows and builds Heb 13 the same way,
-      * runs the same dependent steps the real flow uses (the folded post-fixers
-        + import_tipnr name resolution),
-      * DIFFS the regenerated Heb 12 against the captured live Heb 12 — expect
-        EMPTY. An empty diff proves this path reproduces the canonical machine,
-        so the Heb 13 rows from the SAME run are trustworthy by the same proof.
+      * runs the folded post-fixers the real build runs (local; no network),
+      * DIFFS the regenerated Heb 12 against the captured live Heb 12 across
+        every column the WORD BUILD owns — expect IDENTICAL. (The two columns
+        filled later by name resolution — is_pn and the name-slot Strong's — are
+        reported separately, not faulted; that step runs the same way for Heb 12
+        and Heb 13 after --apply.) An identical build-column diff proves this
+        path reproduces the canonical machine, so the Heb 13 rows from the SAME
+        run are trustworthy by the same proof.
       * prints every Heb 13 verse row + word row,
       * spot-checks that the TAGNT pronoun correction actually FIRED (a Heb 13
         pronoun carries its real number, not the raw G1473).
-    The copy is deleted at the end. The live db is untouched.
+    The copy is deleted at the end. The live db is untouched, and nothing is
+    downloaded — name resolution (import_tipnr, which DOES fetch the TIPNR file)
+    is left to the dependent re-runs after --apply, exactly like option B.
 
   --apply: performs ONLY additive inserts on the LIVE db — 25 verse rows + the
     Heb 13 word rows (then the same folded post-fixers, which only touch the new
@@ -49,7 +54,6 @@ Run on PythonAnywhere:
 """
 
 import argparse
-import subprocess
 import sqlite3
 import sys
 from pathlib import Path
@@ -234,37 +238,55 @@ def dry_run(bible_db, scrape_db):
     nbuilt = build_words_for(copy, scrape, (PROOF_CH, NEW_CH), tagnt)
     print(f"Rebuilt Heb {PROOF_CH} + Heb {NEW_CH}: {nbuilt} word rows.")
 
-    # 3) same dependent steps the real flow uses, so the compare is apples-to-apples
+    # 3) the folded post-fixers the real build runs (local, copy-only, no network)
     run_post_fixers(copy)
-    copy.close()
-    print("Running import_tipnr on the copy (restores proper-noun numbers + is_pn) …")
-    r = subprocess.run([sys.executable, str(Path(__file__).parent / "import_tipnr.py"), target],
-                       capture_output=True, text=True)
-    if r.returncode != 0:
-        print("  import_tipnr FAILED:\n" + r.stdout[-2000:] + r.stderr[-2000:])
-    copy = sqlite3.connect(target)
 
-    # ── Proof 1: Heb 12 diff (expect EMPTY) ─────────────────────────────────────
+    # ── Proof 1: Heb 12 build-column diff (expect IDENTICAL) ────────────────────
+    # Row layout from read_chapter_words: (verse, position, english, english_head,
+    # strongs, strongs_base, greek_pos, bracket_id, italic, italic_words,
+    # smcap_words, morph, lemma, is_pn) — indices 0..13.
+    # The word build owns every column EXCEPT the two that name resolution
+    # (import_tipnr) fills LATER: is_pn (idx 13) and strongs_base ON A NAME SLOT
+    # (idx 5, where the build leaves '*'). Those run identically for Heb 12 and 13
+    # after --apply, so we compare the build-owned columns and report name slots.
     new_heb12 = read_chapter_words(copy, PROOF_CH)
-    print("\n================ PROOF 1 — Heb 12 byte-diff (expect EMPTY) ================")
-    if live_heb12 == new_heb12:
-        print(f"  ✅ IDENTICAL — {len(new_heb12)} rows match byte-for-byte.")
+    SBASE, IS_PN = 5, 13
+    def build_cols(r):                       # everything except is_pn + strongs_base
+        return r[:SBASE] + r[SBASE + 1:IS_PN]
+    ref = {(r[0], r[1]): r for r in live_heb12}
+    new = {(r[0], r[1]): r for r in new_heb12}
+    keys = sorted(set(ref) | set(new))
+
+    struct_diffs, sbase_diffs, name_slots, name_resolved = [], [], 0, 0
+    for k in keys:
+        a, b = ref.get(k), new.get(k)
+        if a is None or b is None:
+            struct_diffs.append((k, a, b)); continue
+        if build_cols(a) != build_cols(b):
+            struct_diffs.append((k, a, b))
+        if b[SBASE] == "*":                  # build leaves every proper-noun slot '*'
+            name_slots += 1                  #   → resolved later by import_tipnr;
+            if a[SBASE] != "*":              #   live having a real number here is EXPECTED,
+                name_resolved += 1           #   live still '*' (tipnr couldn't match) is fine too.
+        elif a[SBASE] != b[SBASE]:           # a NON-name slot whose number disagrees = real divergence
+            sbase_diffs.append((k, a[SBASE], b[SBASE], "non-name strongs_base mismatch"))
+
+    print("\n========= PROOF 1 — Heb 12, build-owned columns (expect IDENTICAL) =========")
+    print(f"  rows: live={len(live_heb12)}  rebuilt={len(new_heb12)}")
+    if not struct_diffs and not sbase_diffs:
+        print(f"  ✅ IDENTICAL on every build-owned column ({len(new_heb12)} rows).")
+        print(f"     {name_slots} proper-noun slot(s) left as '*' by the build; {name_resolved} of them")
+        print(f"     carry a resolved number in live — that's import_tipnr's job, run the SAME")
+        print(f"     way for Heb 13 in the dependent step. Nothing else differs.")
         print("     This path reproduces the canonical build; Heb 13 below is trustworthy.")
     else:
-        print(f"  ❌ DIFFERENCES: live={len(live_heb12)} rows, rebuilt={len(new_heb12)} rows")
-        ref = {(r[0], r[1]): r for r in live_heb12}   # (verse, position) -> row
-        new = {(r[0], r[1]): r for r in new_heb12}
-        keys = sorted(set(ref) | set(new))
-        shown = 0
-        for k in keys:
-            a, b = ref.get(k), new.get(k)
-            if a != b:
-                print(f"    {ABBREV} 12:{k[0]} pos{k[1]}")
-                print(f"      live :{a}")
-                print(f"      built:{b}")
-                shown += 1
-                if shown >= 40:
-                    print("    … (more) …"); break
+        print(f"  ❌ DIVERGENCE — DO NOT --apply; fall back to option B.")
+        for (k, a, b) in struct_diffs[:40]:
+            print(f"    [build col] {ABBREV} 12:{k[0]} pos{k[1]}")
+            print(f"      live :{a}")
+            print(f"      built:{b}")
+        for (k, la, lb, why) in sbase_diffs[:40]:
+            print(f"    [strongs_base] {ABBREV} 12:{k[0]} pos{k[1]}  live={la} built={lb}  ({why})")
 
     # ── Heb 13 rows ─────────────────────────────────────────────────────────────
     print("\n================ Heb 13 — verse rows ================")
