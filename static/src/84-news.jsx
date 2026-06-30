@@ -122,6 +122,17 @@ function NewsStory({ story, view, onMark, readOnly }) {
   const [open, setOpen] = useState(false);
   const top = story.sources[0] || {};
   const tier = _scoreTier(story.score);
+  // Expanded citation list = every member ARTICLE (not the per-outlet deduped sources),
+  // newest-first by its OWN date — undated sorts LAST, stable within a date. A card pulled
+  // into the window on a fresh article shows that article at the top with its date; the old
+  // burst sits below. Display only — card-level date/score/face/count are untouched (the
+  // windowed-recompute fix owns those, so a windowed card's count can read fewer than the
+  // full history shown here, by design).
+  const cites = (story.members || []).slice().sort((a, b) => {
+    const da = a.d || "", db = b.d || "";
+    if (da && db) return db < da ? -1 : db > da ? 1 : 0;   // descending = newest first
+    return da ? -1 : db ? 1 : 0;                            // dated before undated
+  });
   const mark = (status, e) => { if (e) e.stopPropagation(); if (!readOnly) onMark(story, status); };
   return (
     <div className="news-story">
@@ -151,10 +162,10 @@ function NewsStory({ story, view, onMark, readOnly }) {
         </div>
         {open && story.count > 1 && (
           <div className="news-sources">
-            {story.sources.map((s, i) => (
-              <a key={i} className="news-src" href={s.url} target="_blank" rel="noopener noreferrer"
+            {cites.map((m, i) => (
+              <a key={i} className="news-src" href={m.url || "#"} target="_blank" rel="noopener noreferrer"
                  onClick={(e) => e.stopPropagation()}>
-                {s.source} <span className="news-src-date">{s.published}</span>
+                {m.src || "?"} {m.d && <span className="news-src-date">{m.d}</span>}
               </a>
             ))}
           </div>
