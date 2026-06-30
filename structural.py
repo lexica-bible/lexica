@@ -552,10 +552,15 @@ _STRUCTURAL = {
     #   applies becomes the doctrinal fight, so per the structural-exemplar rule they CANNOT be the
     #   teaching verse. The exemplar is therefore a PLAIN purpose ἵνα (Mark 3:14 — mundane, no
     #   predestination weight), verbatim ABP, tag-verified G2443, bracket-clean.
-    #   DEFERRED: the hardening graph + the verse-pointer do NOT exist yet (nothing to point to), so
-    #   NO fork, NO fairness-gate entry, NO pointer is wired here — just the structural card; the
-    #   pointer gets added later, when the graph is built. Telic twin of ὅπως (G3704, below). No
-    #   dotted children in the corpus (scanned).
+    #   WIRED 2026-06-29: the hardening graph (study.db `hina_hardening`, built via
+    #   scripts/add_study_graph_hina_hardening.py — all 3 readings compute DEPENDS, the contest is
+    #   MAPPED not closed) now exists, so the card carries a `contest_graph` pointer (graph id + the 3
+    #   loaded verses), rendered as a breadcrumb to Study › Graphs by StructuralBody. It shows on every
+    #   ἵνα card but NAMES the three verses, so it never implies a mundane purpose-ἵνα is contested.
+    #   Still NO fork + NO fairness-gate entry — this is the structural-contest rule, not a content
+    #   fork. Reverse direction (verse → graph chip in the xref panel) rides the existing PUBLIC
+    #   for-verse index, no wiring needed. Telic twin of ὅπως (G3704, below). No dotted children in the
+    #   corpus (scanned).
     "G2443": {
         "kind": "structural",
         "strongs": "G2443",
@@ -571,6 +576,14 @@ _STRUCTURAL = {
                            "a goal; others hold that ἵνα always keeps its purpose force. It is a "
                            "grammatical question about the particle’s range — flagged here, not "
                            "settled, and not a doctrinal one.",
+        "contest_graph": {
+            "graph": "hina_hardening",
+            "verses": ["Mark 4:12", "Matthew 13:13", "John 12:40"],
+            "lead": "Where the grammar turns doctrinal: at the hardening citations of Isaiah 6, the "
+                    "purpose-vs-result reading carries the weight of how divine hardening is "
+                    "understood. The argument map lays out each reading — including whether the "
+                    "question predates ἵνα at all.",
+        },
         "relation_label": "What ἵνα marks",
         "relations": [
             {"type": "purpose (aim, goal)",

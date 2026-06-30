@@ -330,6 +330,19 @@ function StructuralBody({ data, lsjEntry }) {
               </div>
             )}
             {data.scope_contested && <div className="gram-xref">{data.scope_contested}</div>}
+            {/* contest_graph: the doctrinal-application pointer to the Study argument graph. Shows on
+               every ἵνα card but NAMES its loaded verses, so it never paints a mundane purpose-ἵνα as
+               contested. Breadcrumb to Study › Graphs (not click-through yet — matches the dikaioō fork
+               pointer; a shared click-through is a later upgrade for both). See structural.py G2443. */}
+            {data.contest_graph && (
+              <div className="gram-contest">
+                <div className="gram-contest-lead">{data.contest_graph.lead}</div>
+                <div className="gram-contest-at">
+                  <span className="gram-contest-lbl">At:</span> {(data.contest_graph.verses || []).join(" · ")}
+                </div>
+                <div className="gram-contest-map">Argument map · Study › Graphs</div>
+              </div>
+            )}
             {data.underspecified && (
               <div className="lex-block">
                 {/* Label is authored per card (data.underspecified_label) — eimi's copula finding
