@@ -224,6 +224,13 @@ const api = {
     return fetch(`/api/news/list${qs ? "?" + qs : ""}`, { headers: _authHeaders() })
       .then(r => r.ok ? r.json() : { stories: [] }).catch(() => ({ stories: [] }));
   },
+  newsCounts: (params) => {
+    const p = { ...(params || {}) };
+    const k = _newsKey(); if (k) p.key = k;
+    const qs = new URLSearchParams(p).toString();
+    return fetch(`/api/news/counts${qs ? "?" + qs : ""}`, { headers: _authHeaders() })
+      .then(r => r.ok ? r.json() : null).catch(() => null);
+  },
   newsShape: (params) => {
     const p = { ...(params || {}) };
     const k = _newsKey(); if (k) p.key = k;

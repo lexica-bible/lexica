@@ -11,13 +11,21 @@ function _newsDaysAgo(n) {
   return new Date(Date.now() - n * 86400000).toISOString().slice(0, 10);
 }
 
-// How a triage action moves the (only displayed) Kept badge. Moving a card INTO Kept
-// is +1; clearing/dismissing a card that was IN the Kept view is -1. The two never
-// overlap (the Kept view has no Keep button), so a single number covers every case.
-function _keptDelta(view, status) {
-  if (status === "keep" && view !== "kept") return 1;
-  if (view === "kept") return -1;   // "clear" or "dismiss" out of Kept
-  return 0;
+// How a triage action moves the three tab counts. The card LEAVES the current view and
+// ENTERS the bucket its new status maps to ("clear" sends it back to inbox). Every card
+// shown is in-window (the lists are window-scoped), so these in-window deltas are exact —
+// and since the out-of-window set never moves, the all-time tallies shift by the SAME
+// kept/dismissed deltas, leaving the "+N outside this window" footer steady.
+function _countDeltas(view, status) {
+  const dest = status === "keep" ? "kept"
+             : status === "dismiss" ? "dismissed"
+             : "inbox";   // "clear" / "new" => back to inbox
+  const d = { inbox: 0, kept: 0, dismissed: 0 };
+  if (view !== dest) {
+    if (view in d) d[view] -= 1;
+    if (dest in d) d[dest] += 1;
+  }
+  return d;
 }
 
 function _scoreTier(score) {
@@ -174,9 +182,18 @@ function NewsView({ isMobile }) {
   const [counts, setCounts] = useState({});           // Kept badge — server-seeded, then owned locally
 
   useEffect(() => { api.newsMeta().then(setMeta); }, []);
-  // Reseed the badge from the server on every REAL meta load; between loads, triage
-  // owns it locally (no meta refetch, so the feed never tears down — see `mark`).
-  useEffect(() => { if (meta && meta.counts) setCounts(meta.counts); }, [meta]);
+  // Reseed the three tab counts from the server for the CURRENT window (date + score +
+  // thread) whenever any of those change; between reseeds, triage owns them locally (no
+  // refetch, so the feed never tears down — see `mark`). Keyed on thread too so the badges
+  // stay equal to the feed when a thread is picked. Deliberately NOT keyed on `order` — a
+  // sort change must never recount (it only reorders the already-loaded list).
+  useEffect(() => {
+    if (!meta || !meta.available) return;
+    let cancelled = false;
+    const p = { min: minScore }; if (since) p.since = since; if (thread) p.thread = thread;
+    api.newsCounts(p).then(d => { if (!cancelled && d && d.available) setCounts(d); });
+    return () => { cancelled = true; };
+  }, [meta, since, minScore, thread]);
   useEffect(() => { localStorage.setItem("lexica.news.since.v1", since); }, [since]);
   useEffect(() => { localStorage.setItem("lexica.news.min.v1", String(minScore)); }, [minScore]);
 
@@ -196,11 +213,11 @@ function NewsView({ isMobile }) {
     if (!meta || !meta.available) return;
     let cancelled = false;
     setLoading(true);
-    const params = { view, order };
-    if (view === "inbox") {
-      params.min = minScore;
-      if (since) params.since = since;
-    }
+    // Option 1: every view honors the date+score window, so a list always matches its tab
+    // badge. (Kept/Dismissed used to ignore the window; the "+N outside this window" footer
+    // keeps the rest discoverable.)
+    const params = { view, order, min: minScore };
+    if (since) params.since = since;
     if (thread) params.thread = thread;
     api.newsList(params).then(d => {
       if (cancelled) return;
@@ -210,16 +227,28 @@ function NewsView({ isMobile }) {
     return () => { cancelled = true; };
   }, [meta, view, minScore, thread, order, since]);
 
+  // Apply (sign +1) or undo (sign -1) a triage move's deltas to all the tab counts. The
+  // all-time kept/dismissed tallies move by the SAME kept/dismissed deltas (the card is
+  // in-window), so the "+N outside" footer stays put.
+  const applyCounts = (dd, sign) => setCounts(c => ({
+    ...c,
+    inbox: Math.max(0, (c.inbox || 0) + sign * dd.inbox),
+    kept: Math.max(0, (c.kept || 0) + sign * dd.kept),
+    dismissed: Math.max(0, (c.dismissed || 0) + sign * dd.dismissed),
+    kept_all: Math.max(0, (c.kept_all || 0) + sign * dd.kept),
+    dismissed_all: Math.max(0, (c.dismissed_all || 0) + sign * dd.dismissed),
+  }));
+
   const mark = (story, status) => {
-    // Optimistic: the card is leaving this view regardless, so drop it NOW and adjust
-    // the Kept badge locally — no meta refetch, so the feed never reloads/flashes.
+    // Optimistic: the card is leaving this view regardless, so drop it NOW and adjust the
+    // tab counts locally — no refetch, so the feed never reloads/flashes.
     const idx = (stories || []).indexOf(story);
-    const dk = _keptDelta(view, status);
+    const dd = _countDeltas(view, status);
     setStories(ss => (ss || []).filter(s => s !== story));
-    if (dk) setCounts(c => ({ ...c, kept: Math.max(0, (c.kept || 0) + dk) }));
+    applyCounts(dd, 1);
     // Fire the write in the background. newsStatus never rejects — it resolves
     // {ok:false} on failure. On failure, roll the card back to its spot + undo the
-    // count + flash; on success do nothing (the UI already matches).
+    // counts + flash; on success do nothing (the UI already matches).
     api.newsStatus(story.ids, status).then(d => {
       if (d && d.ok !== false) return;
       setStories(ss => {
@@ -227,7 +256,7 @@ function NewsView({ isMobile }) {
         a.splice(Math.min(idx < 0 ? a.length : idx, a.length), 0, story);
         return a;
       });
-      if (dk) setCounts(c => ({ ...c, kept: Math.max(0, (c.kept || 0) - dk) }));
+      applyCounts(dd, -1);
       setFlash("Couldn't save — put it back. Try again.");
       setTimeout(() => setFlash(""), 3000);
     });
@@ -270,14 +299,19 @@ function NewsView({ isMobile }) {
     </div>
   );
 
+  // Live count for a tab — shown once the counts have loaded (so even "(0)" reads, which
+  // is the point: Inbox is one slice of a triaged whole). All three are window-scoped.
+  const cnt = (k) => Number.isFinite(counts[k]) ? ` (${counts[k]})` : "";
   const viewsToggle = (
     <div className="news-views">
-      <button className={"seg-b" + (view === "inbox" ? " on" : "")} onClick={() => setView("inbox")}>Inbox</button>
+      <button className={"seg-b" + (view === "inbox" ? " on" : "")} onClick={() => setView("inbox")}>
+        Inbox{cnt("inbox")}
+      </button>
       <button className={"seg-b" + (view === "kept" ? " on" : "")} onClick={() => setView("kept")}>
-        Kept{counts.kept ? ` (${counts.kept})` : ""}
+        Kept{cnt("kept")}
       </button>
       <button className={"seg-b" + (view === "dismissed" ? " on" : "")} onClick={() => setView("dismissed")}>
-        Dismissed
+        Dismissed{cnt("dismissed")}
       </button>
     </div>
   );
@@ -323,25 +357,47 @@ function NewsView({ isMobile }) {
     </>
   );
 
+  // "+N outside this window" — all-time kept/dismissed minus what's in the current window.
+  // Both halves come from /api/news/counts, so it's cheap; only the active view's number
+  // is shown (the lists are window-scoped now, so this keeps the all-time set discoverable).
+  const keptOutside = Math.max(0, (counts.kept_all || 0) - (counts.kept || 0));
+  const dismissedOutside = Math.max(0, (counts.dismissed_all || 0) - (counts.dismissed || 0));
+  const outsideN = view === "kept" ? keptOutside : view === "dismissed" ? dismissedOutside : 0;
+
   const feedInner = (
     loading || stories === null ? (
       // `stories === null` = no fetch has finished yet (load runs after meta arrives).
       <div className="news-empty">Loading…</div>
     ) : !stories.length ? (
       <div className="news-empty">
-        {view === "kept" ? "Nothing kept yet."
-          : view === "dismissed" ? "Nothing dismissed yet."
+        {view === "kept"
+          ? (keptOutside > 0
+              ? `Nothing kept in this window — +${keptOutside} outside. Widen the date to see them.`
+              : "Nothing kept yet.")
+          : view === "dismissed"
+          ? (dismissedOutside > 0
+              ? `Nothing dismissed in this window — +${dismissedOutside} outside. Widen the date to see them.`
+              : "Nothing dismissed yet.")
           : "No stories match — try an earlier date or a lower score."}
       </div>
     ) : (
       <>
-        <div className="news-count">{stories.length} {stories.length === 1 ? "story" : "stories"}</div>
+        <div className="news-count">
+          {view === "inbox"
+            ? `${stories.length} to review`
+            : `${stories.length} ${stories.length === 1 ? "story" : "stories"}`}
+        </div>
         <div className="news-list">
           {stories.map((s, i) => (
             <NewsStory key={s.ids[0] + "-" + i} story={s} view={view} onMark={mark}
                        readOnly={!canReview} />
           ))}
         </div>
+        {outsideN > 0 && (
+          <div className="news-outside">
+            +{outsideN} {view === "kept" ? "kept" : "dismissed"} outside this window — widen the date to see all.
+          </div>
+        )}
       </>
     )
   );

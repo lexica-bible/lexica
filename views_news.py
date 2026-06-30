@@ -5,7 +5,8 @@ The data is gathered + AI-scored OFFLINE by scripts/news/ (gather_news.py +
 score_news.py) into news.db. This blueprint just SERVES that file to the in-app
 tab, admin-gated (404 to everyone else, exactly like visitor stats):
 
-  GET  /api/news/meta             → {owner, available, labels, counts}
+  GET  /api/news/meta             → {owner, available, labels, reviewer}
+  GET  /api/news/counts?...       → window-scoped inbox/kept/dismissed card tallies
   GET  /api/news/list?...         → stories (near-duplicates grouped into one card)
   POST /api/news/status           → mark a story keep / dismiss / new
 
@@ -331,26 +332,44 @@ def _staleness_penalty(published):
     return min(_FEED_CAP, max(0.0, (age - _FEED_GRACE_DAYS) * _FEED_RATE))
 
 
-def _count_view_clusters(conn, rid, status_value, has_event):
+def _count_view_clusters(conn, rid, status_value, has_event, since=None, min_score=0,
+                         thread=None):
     """How many CARDS (clusters) this reviewer has in a status — counted the SAME way the
     list renders: existing + scored items only, scoped to rid, grouped into cards. So the
     tab badge can't disagree with the feed (an orphaned review row whose item churned away
     has no scored item to join, so it drops out), and the number is CARDS not articles
-    (5 kept articles that group into 3 cards count as 3). No min/since/thread floor — the
-    Kept/Dismissed views don't apply one either."""
+    (5 kept articles that group into 3 cards count as 3).
+
+    When since/min_score are given they apply the SAME date+score window the feed uses, so
+    the three tab badges describe the in-window population (Inbox+Kept+Dismissed add up to
+    the in-window total, and Inbox reads as a remainder). When a thread is given it narrows
+    too, so the badges still match the feed once a thread is picked. Called with NO date
+    window (but the same thread) for the all-time totals behind the '+N outside' footer."""
+    where = ["i.score IS NOT NULL", "COALESCE(r.status, 'new') = ?"]
+    args = [rid, status_value]
+    if min_score:
+        where.append("i.score >= ?")
+        args.append(min_score)
+    if since:
+        where.append("i.published >= ? AND i.published != ''")
+        args.append(since)
+    if thread:
+        where.append("i.ai_thread = ?")
+        args.append(thread)
     sql = (f"SELECT i.id, i.title, i.ai_thread{', i.event' if has_event else ''} "
            f"FROM items i LEFT JOIN reviews r "
            f"  ON r.item_id = i.id AND r.reviewer = ? "
-           f"WHERE i.score IS NOT NULL AND COALESCE(r.status, 'new') = ? "
+           f"WHERE {' AND '.join(where)} "
            f"ORDER BY i.score DESC, i.published DESC")
-    rows = conn.execute(sql, [rid, status_value]).fetchall()
+    rows = conn.execute(sql, args).fetchall()
     return len(_group(rows, has_event)) if rows else 0
 
 
 @bp.route("/api/news/meta", methods=["GET"])
 def meta():
-    """Drives the tab: is the viewer admin, is news.db loaded, the thread names, and
-    how many stories sit in each review bucket. Yes/no to everyone; data only to admin."""
+    """Drives the tab: is the viewer admin, is news.db loaded, the thread names, who's
+    reviewing. Yes/no to everyone; data only to admin. The per-tab tallies live in
+    /api/news/counts (they're window-scoped and reseed when the date/score changes)."""
     admin = is_admin()
     reader = (not admin) and _shared_key_ok()
     if not (admin or reader):
@@ -358,27 +377,58 @@ def meta():
     if not _available():
         return jsonify({"owner": admin, "reader": reader, "available": False, "labels": THREAD_LABELS})
     rid, can_write = _reviewer()
+    return jsonify({"owner": admin, "reader": reader, "available": True,
+                    "labels": THREAD_LABELS, "can_write": can_write,
+                    "reviewer": rid, "reviewer_name": _reviewer_label(rid)})
+
+
+@bp.route("/api/news/counts", methods=["GET"])
+@limiter.limit("600 per hour")
+def counts():
+    """Window-scoped triage tallies for the three tabs: how many CARDS sit in
+    inbox / kept / dismissed for the active date+score window — so the three add up to the
+    in-window total and Inbox reads as a remainder, not the whole feed. Also returns the
+    all-time kept/dismissed totals so the UI can show a quiet '+N outside this window' hint.
+    Counted by CARD the same way the feed groups them (see _count_view_clusters). Honors the
+    active thread when one is set, so the badges keep matching the feed once a thread is
+    picked; the all-time totals stay thread-scoped too (so '+N outside' means outside the
+    DATE window, within the same thread)."""
+    if not _can_read():
+        return jsonify({"error": "not found"}), 404
+    if not _available():
+        return jsonify({"available": False})
+    since = (request.args.get("since") or "").strip()
+    try:
+        min_score = max(0, min(10, int(request.args.get("min", 0))))
+    except (TypeError, ValueError):
+        min_score = 0
+    thread = (request.args.get("thread") or "").strip()
+    rid, _ = _reviewer()
     conn = news_db()
     try:
         _ensure_reviews(conn)
-        def n(sql, args=()):
-            r = conn.execute(sql, args).fetchone()
-            return (r[0] or 0) if r else 0
         has_event = "event" in [c[1] for c in conn.execute("PRAGMA table_info(items)")]
-        counts = {
-            "scored": n("SELECT count(*) FROM items WHERE score IS NOT NULL"),
-            "total": n("SELECT count(*) FROM items"),
-            # CARDS (clusters), counted the same way the list renders — see _count_view_clusters.
-            "kept": _count_view_clusters(conn, rid, "keep", has_event),
-            "dismissed": _count_view_clusters(conn, rid, "dismiss", has_event),
+        # in-window (sc=True) vs all-time (sc=False) card counts for a status bucket; the
+        # thread narrows both (only the DATE window is dropped for the all-time totals).
+        def c(status, sc=False):
+            return _count_view_clusters(conn, rid, status, has_event,
+                                        since=since if sc else None,
+                                        min_score=min_score if sc else 0,
+                                        thread=thread or None)
+        out = {
+            "available": True,
+            "inbox": c("new", True),
+            "kept": c("keep", True),
+            "dismissed": c("dismiss", True),
+            "kept_all": c("keep"),
+            "dismissed_all": c("dismiss"),
         }
     except sqlite3.Error:
-        counts = {}
+        out = {"available": True, "inbox": 0, "kept": 0, "dismissed": 0,
+               "kept_all": 0, "dismissed_all": 0}
     finally:
         conn.close()
-    return jsonify({"owner": admin, "reader": reader, "available": True,
-                    "labels": THREAD_LABELS, "counts": counts, "can_write": can_write,
-                    "reviewer": rid, "reviewer_name": _reviewer_label(rid)})
+    return jsonify(out)
 
 
 @bp.route("/api/news/list", methods=["GET"])

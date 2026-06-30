@@ -1,0 +1,182 @@
+/* ============================================================
+   WORD STUDY — MOBILE
+   Reuses tokens (styles.css) + content styling (word-study.css).
+   This file owns the mobile chrome (top bar, context, tool bar, sheets)
+   and overrides the desktop three-pane containers for phone width.
+============================================================ */
+html, body { height: 100%; margin: 0; overflow: hidden; }
+body {
+  background: radial-gradient(120% 80% at 50% 0%, #efe9dc 0%, #e4ddcd 60%, #ddd5c2 100%);
+  display: grid; place-items: center;
+  font-family: var(--f-sans);
+}
+#root { width: 100%; height: 100%; display: grid; place-items: center; }
+
+.stage { display: grid; place-items: start center; width: 100vw; height: 100vh; padding-top: 8px; box-sizing: border-box; }
+.stage-scale { transform-origin: top center; }
+
+/* ---- app shell inside the phone ---- */
+.wm {
+  position: relative; height: 100%;
+  display: flex; flex-direction: column;
+  background: var(--bg); overflow: hidden;
+  font-family: var(--f-sans);
+}
+
+/* ---- navy module bar: global nav, same tabs as desktop ---- */
+.wm-nav {
+  flex: 0 0 auto; display: flex; align-items: center; gap: 2px;
+  height: 54px; padding: 0 8px;
+  background: var(--navy);
+  position: relative; z-index: 6;
+}
+.wm-nav-brand { width: 30px; height: 30px; display: grid; place-items: center; color: #e7ecf5; flex: 0 0 auto; margin-right: 4px; }
+.wm-navtab {
+  flex: 1; height: 44px; border-radius: 10px;
+  display: grid; place-items: center;
+  color: rgba(231,236,245,0.58); position: relative;
+  transition: color 0.14s;
+}
+.wm-navtab:active { color: #fff; background: rgba(255,255,255,0.06); }
+.wm-navtab.on { color: var(--gold); }
+.wm-navtab.on::after {
+  content: ""; position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%);
+  width: 18px; height: 2.5px; border-radius: 2px; background: var(--gold);
+}
+.wm-search {
+  flex: 1; display: flex; align-items: center; gap: 9px;
+  height: 44px; padding: 0 8px 0 13px;
+  background: var(--paper); border: 1px solid var(--rule-2);
+  border-radius: 12px; box-shadow: var(--shadow-sm);
+}
+.wm-search:focus-within { border-color: var(--accent); box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 12%, transparent); }
+.wm-search-i { color: var(--ink-3); flex: 0 0 20px; }
+.wm-search:focus-within .wm-search-i { color: var(--accent); }
+.wm-search-input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font-size: 16px; color: var(--ink); }
+.wm-search-input::placeholder { color: var(--ink-4); }
+.wm-search-clear { width: 30px; height: 30px; border-radius: 8px; display: grid; place-items: center; color: var(--ink-4); flex: 0 0 auto; }
+.wm-search-clear:active { background: var(--bg-sunk); }
+
+/* ---- context bar: which word is open ---- */
+.wm-ctx {
+  flex: 0 0 auto; display: flex; align-items: center; gap: 10px;
+  width: 100%; text-align: left;
+  padding: 9px 16px; border-bottom: 1px solid var(--rule);
+  background: var(--paper);
+}
+.wm-ctx:active { background: var(--bg-sunk); }
+.wm-ctx-gk { font-family: var(--f-greek); font-size: 26px; line-height: 1; color: var(--ink); flex: 0 0 auto; }
+.wm-ctx-gk.heb { direction: rtl; }
+.wm-ctx-meta { flex: 1; min-width: 0; display: flex; align-items: baseline; gap: 6px; overflow: hidden; }
+.wm-ctx-tr { font-family: var(--f-serif); font-style: italic; font-size: 14px; color: var(--ink-2); flex: 0 0 auto; }
+.wm-ctx-dot { color: var(--ink-4); }
+.wm-ctx-gloss { font-family: var(--f-serif); font-size: 14px; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.wm-ctx-go { color: var(--ink-4); flex: 0 0 auto; display: grid; place-items: center; width: 26px; height: 26px; }
+
+/* ---- main reading area ---- */
+.wm-main { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 14px 16px 28px; }
+.wm-main::-webkit-scrollbar { width: 0; }
+
+.wm-occhead { display: flex; align-items: baseline; gap: 8px; margin: 2px 2px 12px; }
+.wm-occ-count { font-family: var(--f-serif); font-size: 28px; font-weight: 600; color: var(--ink); letter-spacing: -0.02em; }
+.wm-occ-lbl { font-size: 13px; color: var(--ink-3); }
+.wm-occ-meta { margin-left: auto; font-family: var(--f-mono); font-size: 10.5px; letter-spacing: 0.04em; color: var(--ink-4); text-transform: uppercase; }
+
+.wm-filterchip {
+  display: flex; align-items: center; justify-content: space-between; gap: 10px;
+  margin: 0 2px 12px; padding: 8px 12px;
+  background: var(--paper); border: 1px solid var(--rule); border-radius: 9px;
+  font-size: 12.5px; color: var(--ink-3);
+}
+.wm-filterchip b { color: var(--ink); font-weight: 600; }
+.wm-filterchip button { color: var(--accent); font-size: 12.5px; }
+
+/* mobile verse rhythm */
+.wm .vrow { gap: 12px; padding: 10px 4px; align-items: baseline; }
+.wm .vrow-ref { min-width: 52px; }
+.wm .vrow-text { font-size: 16px; line-height: 1.56; }
+.wm .occ-empty { padding: 24px 6px; font-size: 14px; }
+.wm .occ-welcome { margin-top: 44px; }
+
+/* senses pivot — inherits glsenses/glrow from word-study.css; tighten margins */
+.wm .glsenses { margin: 0 0 16px; }
+
+/* ============================================================
+   BOTTOM TOOL BAR
+============================================================ */
+.wm-tabs {
+  flex: 0 0 auto; display: flex;
+  border-top: 1px solid var(--rule); background: var(--paper);
+  padding: 7px 0 9px; position: relative; z-index: 6;
+}
+.wm-tab {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 4px;
+  color: var(--ink-3); padding: 4px 0;
+}
+.wm-tab:active { color: var(--ink-2); }
+.wm-tab.on { color: var(--accent); }
+.wm-tab-l { font-size: 11px; letter-spacing: 0.01em; }
+
+/* ============================================================
+   BOTTOM SHEETS  (rise from bottom, drag-to-dismiss)
+============================================================ */
+.wm-scrim { position: absolute; inset: 0; z-index: 45; background: rgba(15,23,42,0.42); animation: wm-fade 0.18s ease; }
+@keyframes wm-fade { from { opacity: 0; } to { opacity: 1; } }
+.wm-sheet {
+  position: absolute; left: 0; right: 0; bottom: 0; z-index: 46;
+  display: flex; flex-direction: column;
+  background: var(--paper);
+  border-radius: 18px 18px 0 0;
+  box-shadow: 0 -10px 40px rgba(15,23,42,0.22);
+  max-height: 62%;
+  animation: wm-up 0.26s cubic-bezier(0.2,0.8,0.2,1);
+}
+.wm-sheet.tall { max-height: 90%; height: 90%; }
+@keyframes wm-up { from { transform: translateY(100%); } to { transform: translateY(0); } }
+
+.wm-grab { flex: 0 0 auto; cursor: grab; touch-action: none; }
+.wm-grab:active { cursor: grabbing; }
+.wm-handle { width: 40px; height: 4px; border-radius: 2px; background: var(--rule-2); margin: 10px auto 2px; }
+.wm-sheet-head { display: flex; align-items: center; justify-content: space-between; padding: 6px 16px 10px; border-bottom: 1px solid var(--rule); }
+.wm-sheet-title { font-size: 16px; font-weight: 600; color: var(--ink); letter-spacing: -0.01em; }
+.wm-sheet-x { width: 34px; height: 34px; border-radius: 9px; display: grid; place-items: center; color: var(--ink-3); }
+.wm-sheet-x:active { background: var(--bg-sunk); }
+.wm-sheet-body { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+.wm-sheet-body::-webkit-scrollbar { width: 0; }
+
+/* --- word card inside sheet (override desktop .wd-body padding) --- */
+.wm-card { padding: 22px 18px 40px; }
+.wm-card .wd-greek { font-size: 50px; }
+.wm-card .wd-greek.heb { font-size: 44px; }
+.wm-card-s { font-family: var(--f-mono); color: var(--ink-3); }
+
+/* --- distribution rail inside sheet --- */
+.wm-rail { padding: 10px 12px 28px; display: flex; flex-direction: column; gap: 1px; }
+.wm-rail .brow { padding: 9px 10px; }
+.wm-rail .brow-name { font-size: 14px; }
+.wm-rail .brow-all { margin-bottom: 8px; padding: 11px 12px; }
+.brail-empty { padding: 28px 18px; font-size: 13.5px; color: var(--ink-4); line-height: 1.5; }
+
+/* --- views sheet --- */
+.mode-sec { padding: 16px 18px; border-top: 1px solid var(--rule); }
+.mode-sec:first-child { border-top: none; }
+.mode-lbl { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; color: var(--ink-3); margin-bottom: 10px; }
+.mseg { display: flex; background: var(--bg-sunk); border: 1px solid var(--rule); border-radius: 11px; padding: 3px; gap: 2px; }
+.mseg-b { flex: 1; text-align: center; font-size: 14.5px; color: var(--ink-3); padding: 10px 0; border-radius: 8px; transition: background 0.12s; }
+.mseg-b.on { background: #fff; color: var(--ink); font-weight: 600; box-shadow: var(--shadow-sm); }
+.mseg-b:active:not(.on) { color: var(--ink); }
+.wm-jump {
+  display: flex; align-items: center; gap: 7px;
+  font-size: 13.5px; font-weight: 500; color: var(--accent);
+  padding: 12px 14px; border-radius: 10px;
+  border: 1px solid color-mix(in oklab, var(--accent) 24%, transparent);
+  background: var(--accent-soft);
+}
+.wm-jump-w { font-family: var(--f-greek); font-size: 15px; }
+.wm-jump-w.heb { direction: rtl; }
+
+/* --- search sheet --- */
+.wm-searchsheet { padding: 16px 16px 28px; display: flex; flex-direction: column; gap: 14px; }
+.wm-searchsheet .wm-search { height: 48px; }
+.wm-search-hint { font-size: 12.5px; color: var(--ink-4); line-height: 1.5; padding: 0 2px; text-wrap: pretty; }
+.wm-search-chips { display: flex; flex-wrap: wrap; gap: 8px; }
