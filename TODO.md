@@ -572,6 +572,19 @@ follow-up is **#4 (parallelize the cognate + Hebrew DB loops)** above — multi-
 
 ## News feed (Tudor) — recency (FACE + SORT done)
 
+- **✅ WINDOW-GATE COLLAPSE FIXED + EXPANDED-LIST REWORK — SHIPPED 2026-06-30 (b578a35, 13a636d, 32163d5,
+  93ff37a, 55b7480).** Bug: 30-day window, floor 5+ → Inbox 8 while 'Any score' → 256 (impossible). Cause: a
+  card's score (peak member) and peak_date (busiest day) came from DIFFERENT members, so a strong recent
+  article in a cluster with an old busy day got dated old and the window threw it out (241 strong articles
+  in-window surfaced only 8 cards). Fix: when a date window is active, recompute each card over its IN-WINDOW
+  members — in only if an in-window member clears the floor itself (reverse-staleness guard), face/score/date/
+  sources from those members (`_windowCard`/`_peakDay` in 84-news.jsx; server members fattened with date+face
+  fields). Plus: expanded "+N more" list = per-outlet deduped, newest rep, depth-capped at 15 with a "show
+  more sources" fold + an out-of-window "show earlier coverage" fold; click target tightened to the outlet
+  name; header reads "{N} articles → {M} cards" (both window+floor scoped). Display-only except the member
+  payload; card count/face untouched. **REVERSES the "window keys on cluster PEAK, never article-level"
+  invariant from 816f235** — full record + the two corrected stale notes in memory `project_news_watch`.
+  `code: views_news.py _all_cards · static/src/84-news.jsx · styles.css`
 - **✅ FACE-FIX SHIPPED 2026-06-29 (24cd7bd).** Card headline = the strongest article within 14 days of the
   cluster's newest sibling (`_pick_face`/`_serialize` in views_news.py, `FACE_WINDOW=14`), not the all-time top
   scorer. Killed "fresh date, stale title." W=14 picked from real PA before/after (21 faces flip, 7 real
