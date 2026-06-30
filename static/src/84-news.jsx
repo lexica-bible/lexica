@@ -16,16 +16,70 @@ function _newsDaysAgo(n) {
 // It is NOT the score floor (minScore, default 5) and must NEVER be coupled to it.
 const _SURFACE_SCORE = 6;
 
-// Peak-in-window test, ported from the server's _peak_in_window. The cluster-then-filter
-// contract: the window keys on the cluster's PEAK day, never on individual articles.
-// Empty since/until = open on that side (since="" is the Max preset).
-function _inWindow(peak, since, until) {
-  const d = (peak || "").slice(0, 10);
+// Is a single date inside the window? Used per-MEMBER now (not per-card): an active window
+// is judged against each article's own publish day, so a card is pulled in by the coverage
+// that actually overlaps the window — never by the cluster's old busy day. Empty since/until
+// = open on that side (since="" is the Max preset).
+function _inWindow(d0, since, until) {
+  const d = (d0 || "").slice(0, 10);
   if (!since && !until) return true;
   if (!d) return false;
   if (since && d < since) return false;
   if (until && d > until) return false;
   return true;
+}
+
+// Busiest day among the given members (most coverage; same-count tie broken by summed score,
+// then toward the EARLIER day) — the client port of the server's _peak_date, but run over an
+// arbitrary subset so a windowed card ages from its IN-WINDOW burst, not a global one.
+function _peakDay(members) {
+  const byDay = {};
+  for (const m of members) {
+    const d = (m.d || "").slice(0, 10);
+    if (!d) continue;
+    const cur = byDay[d] || [0, 0];
+    byDay[d] = [cur[0] + 1, cur[1] + (m.s || 0)];
+  }
+  let best = null;
+  for (const d of Object.keys(byDay).sort()) {     // ascending -> earliest wins a tie
+    const [cnt, ssum] = byDay[d];
+    if (!best || cnt > best[1] || (cnt === best[1] && ssum > best[2])) best = [d, cnt, ssum];
+  }
+  return best ? best[0] : "";
+}
+
+// Recompute a card for the active date window over ONLY its in-window members. Returns the
+// windowed card, or null if it doesn't belong in this window. One date stops doing two jobs:
+//   - the GATE is per-member and floor-aware — the card is in only if some in-window article
+//     CLEARS THE FLOOR itself (so an old-loud card with one fresh WEAK straggler can't leak
+//     back in and sit there with its loud old face — the reverse-staleness bug);
+//   - everything DISPLAYED (face, score, date, sources) is taken from the in-window members,
+//     so a card included on fresh strength also SHOWS its fresh face, never the stale one.
+// No active window (Max preset) -> the global card, floored on its all-time peak (unchanged).
+function _windowCard(c, since, until, minScore, thread, labels) {
+  if (thread && c.thread !== thread) return null;
+  if (!since && !until) return c.score >= minScore ? c : null;
+  const mem = (c.members || []).filter(m => _inWindow(m.d, since, until));
+  if (!mem.some(m => m.s >= minScore)) return null;          // floor judged in-window
+  const face = mem.reduce((b, m) =>
+    (m.s > b.s || (m.s === b.s && (m.d || "") > (b.d || ""))) ? m : b, mem[0]);
+  const score = mem.reduce((mx, m) => Math.max(mx, m.s), 0);
+  const dates = mem.map(m => (m.d || "").slice(0, 10)).filter(Boolean).sort();
+  const seen = new Set(), sources = [];
+  for (const m of mem.slice().sort((a, b) => (b.d || "").localeCompare(a.d || ""))) {
+    const s = m.src || "?";
+    if (seen.has(s)) continue;
+    seen.add(s);
+    sources.push({ source: s, url: m.url, published: (m.d || "").slice(0, 10) });
+  }
+  return {
+    ...c,
+    title: face.title, url: face.url, why: face.why,
+    thread: face.t, thread_label: labels[face.t] || face.t || "?",
+    score, peak_date: _peakDay(mem),
+    published: dates.length ? dates[dates.length - 1] : (c.published || ""),
+    count: mem.length, sources: sources.slice(0, 12),
+  };
 }
 
 // Recency dock, ported from the server's _staleness_penalty (GRACE=2, RATE=0.1, CAP=2.0),
@@ -248,34 +302,40 @@ function NewsView({ isMobile }) {
     return st === c.status ? c : { ...c, status: st };
   }), [allCards, overrides]);
 
-  // One in-window+score+thread test, shared by the counts and the feed below.
-  const inWin = (c) => _inWindow(c.peak_date, since, until)
-    && c.score >= minScore && (!thread || c.thread === thread);
+  const labels = (meta && meta.labels) || {};
+
+  // Every card recomputed for the active window — membership (gate + floor), face, score,
+  // date and sources all over the in-window members (see _windowCard). The counts AND the
+  // feed both read THIS one windowed view, so "why a card is in" and "what it shows" agree.
+  const windowed = useMemo(() => cards
+    .map(c => _windowCard(c, since, until, minScore, thread, labels))
+    .filter(Boolean),
+    [cards, since, until, minScore, thread, meta]);
 
   // Tab tallies — all derived, no server round-trip. Inbox = anything not kept/dismissed.
   // The all-time kept/dismissed totals stay thread-scoped but ignore the date window (so
   // "+N outside this window" means outside the DATE window, within the same thread).
   const counts = useMemo(() => {
     const o = { inbox: 0, kept: 0, dismissed: 0, kept_all: 0, dismissed_all: 0 };
-    for (const c of cards) {
+    for (const c of cards) {            // all-time totals: thread-scoped, ignore window + floor
       const tOk = !thread || c.thread === thread;
       if (tOk && c.status === "keep") o.kept_all++;
       if (tOk && c.status === "dismiss") o.dismissed_all++;
-      if (!inWin(c)) continue;
+    }
+    for (const c of windowed) {         // in-window + floored + thread-scoped
       if (c.status === "keep") o.kept++;
       else if (c.status === "dismiss") o.dismissed++;
       else o.inbox++;
     }
     return o;
-  }, [cards, since, until, minScore, thread]);
+  }, [cards, windowed, thread]);
 
-  // The visible feed — filter to the active view + window, then sort. All client-side.
+  // The visible feed — filter the windowed view to the active tab, then sort. All client-side.
   const stories = useMemo(() => {
     const want = { inbox: "new", kept: "keep", dismissed: "dismiss" }[view];
-    const list = cards.filter(c => {
+    const list = windowed.filter(c => {
       const isInbox = c.status !== "keep" && c.status !== "dismiss";
-      const ok = want === "new" ? isInbox : c.status === want;
-      return ok && inWin(c);
+      return want === "new" ? isInbox : c.status === want;
     });
     if (order === "date")
       // Newest by the event's PEAK day (not its latest straggler); stronger card wins a tie.
@@ -288,31 +348,37 @@ function NewsView({ isMobile }) {
       list.sort((a, b) => (b.score - _stale(b.peak_date)) - (a.score - _stale(a.peak_date))
                        || (b.published + "").localeCompare(a.published + ""));
     return list.slice(0, 300);
-  }, [cards, view, since, until, minScore, thread, order]);
+  }, [windowed, view, order]);
 
   // Feed-shape readout (right zone) — also derived. Honors the date window only (ignores
   // the score floor + thread, by design: the BURIED count is the whole point). Counts
-  // ARTICLES via each card's `members`; the surfaced line uses the FIXED _SURFACE_SCORE.
+  // ARTICLES by each member's OWN date in the window (not the card's peak day) — so the
+  // recent strong articles parked under old-dated cards now show up in the surfaced count
+  // instead of being swallowed. The surfaced line uses the FIXED _SURFACE_SCORE.
   const shape = useMemo(() => {
     if (!allCards || !cards.length) return null;
-    const win = cards.filter(c => _inWindow(c.peak_date, since, until));
     let surfaced = 0, buried = 0, total = 0, newAngles = 0;
     const byT = {};
-    for (const c of win) for (const m of (c.members || [])) {
-      total++;
-      const hi = m.s >= _SURFACE_SCORE;
-      hi ? surfaced++ : buried++;
-      if (m.nf === 1) newAngles++;
-      const k = m.t || "";
-      const cur = byT[k] || { s: 0, sc: 0 };
-      cur.s += hi ? 1 : 0; cur.sc++; byT[k] = cur;
+    const events = [];
+    for (const c of cards) {
+      const mem = (c.members || []).filter(m => _inWindow(m.d, since, until));
+      if (!mem.length) continue;
+      for (const m of mem) {
+        total++;
+        const hi = m.s >= _SURFACE_SCORE;
+        hi ? surfaced++ : buried++;
+        if (m.nf === 1) newAngles++;
+        const k = m.t || "";
+        const cur = byT[k] || { s: 0, sc: 0 };
+        cur.s += hi ? 1 : 0; cur.sc++; byT[k] = cur;
+      }
+      events.push({ event: c.event || c.title, n: mem.length,
+                    hi: mem.reduce((mx, m) => Math.max(mx, m.s), 0) });
     }
-    const labels = (meta && meta.labels) || {};
     const threads = Object.keys(byT).map(t => ({
       thread: t, label: labels[t] || t || "?", surfaced: byT[t].s, scored: byT[t].sc
     })).sort((a, b) => b.surfaced - a.surfaced || b.scored - a.scored);
-    const clusters = win.slice().sort((a, b) => b.count - a.count).slice(0, 5)
-      .map(c => ({ event: c.event || c.title, n: c.count, hi: c.score }));
+    const clusters = events.sort((a, b) => b.n - a.n).slice(0, 5);
     return { available: true, surfaced, buried, total, new_angles: newAngles, threads, clusters };
   }, [cards, since, until, meta]);
 
@@ -354,7 +420,6 @@ function NewsView({ isMobile }) {
     </div>
   );
 
-  const labels = meta.labels || {};
   const scoreOpts = [["", "All"], ["5", "5+"], ["6", "6+"], ["7", "7+"], ["8", "8+"], ["9", "9+"]];
 
   // ---- shared bits used by both layouts ----

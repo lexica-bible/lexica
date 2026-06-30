@@ -419,8 +419,11 @@ def _corpus_sig(conn):
 
 def _all_cards(conn, has_event, has_newflag):
     """Every story card, clustered once, status-independent (cached per corpus sig). Each
-    card carries a light `members` list (per-article score/thread/new-flag) so the browser
-    can rebuild the feed-shape readout without another call."""
+    card carries a `members` list (per-article score/thread/new-flag + DATE and the article's
+    own face fields) so the browser can recompute the whole card over its IN-WINDOW members
+    when a date window is active — face, score, date and sources all from the in-window subset,
+    so an old burst day can't bury a card that has fresh strong coverage. (See _windowCard in
+    84-news.jsx.) Also feeds the feed-shape readout. No extra server call."""
     sig = _corpus_sig(conn)
     if _ALL_CACHE["sig"] == sig and _ALL_CACHE["cards"] is not None:
         return _ALL_CACHE["cards"]
@@ -438,7 +441,10 @@ def _all_cards(conn, has_event, has_newflag):
         rep = c["rep"]
         card["event"] = (rep["event"] if has_event and rep["event"] else "")
         card["members"] = [{"s": a["score"] or 0, "t": a["ai_thread"],
-                            "nf": (a["ai_new_flag"] if has_newflag else 0)}
+                            "nf": (a["ai_new_flag"] if has_newflag else 0),
+                            "d": (a["published"] or "")[:10],
+                            "title": a["title"], "url": a["url"],
+                            "why": a["ai_why"] or "", "src": a["source"] or "?"}
                            for a in c["arts"]]
         cards.append(card)
     _ALL_CACHE["sig"] = sig
