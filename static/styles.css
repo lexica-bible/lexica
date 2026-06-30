@@ -4888,6 +4888,7 @@ button.study-verse-ref { border: none; }
 .news-presets button { font: inherit; font-size: 12.5px; padding: 4px 9px; border: 1px solid var(--rule-2);
   border-radius: 7px; background: var(--ctl-bg); color: var(--ink-2); cursor: pointer; }
 .news-presets button:hover { border-color: var(--accent); color: var(--accent); }
+.news-presets button.on { background: var(--accent); border-color: var(--accent); color: var(--paper); }
 .news-seg { display: flex; gap: 4px; }
 .news-thread-sel { font: inherit; font-size: 13px; padding: 5px 8px; border: 1px solid var(--rule-2);
   border-radius: 7px; background: var(--ctl-bg); color: var(--ink); cursor: pointer; }

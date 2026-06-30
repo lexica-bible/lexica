@@ -257,11 +257,19 @@ function NewsView({ isMobile }) {
   // Inbox filter controls, split so the desktop rail can group + label them while
   // the mobile strip keeps them in one flat row.
   const dateInput = <input type="date" value={since} onChange={e => setSince(e.target.value)} />;
+  // Each preset is just another view of `since` — tapping one sets the field, and the
+  // one whose date equals the current field renders active. A custom date matches none
+  // (then nothing shows active — correct, the user is on their own window).
+  const datePresets = [[7, "7d"], [14, "14d"], [30, "30d"], [90, "90d"], [365, "1y"]];
   const presets = (
     <div className="news-presets">
-      <button onClick={() => setSince(_newsDaysAgo(7))}>7d</button>
-      <button onClick={() => setSince(_newsDaysAgo(14))}>14d</button>
-      <button onClick={() => setSince(_newsDaysAgo(30))}>30d</button>
+      {datePresets.map(([n, lbl]) => {
+        const d = _newsDaysAgo(n);
+        return (
+          <button key={n} className={since === d ? "on" : ""}
+                  onClick={() => setSince(d)}>{lbl}</button>
+        );
+      })}
     </div>
   );
   const scoreSeg = (
@@ -274,7 +282,7 @@ function NewsView({ isMobile }) {
   );
   const sortSel = (
     <select className="news-thread-sel" value={order} onChange={e => setOrder(e.target.value)}>
-      <option value="score">Top score</option>
+      <option value="score">Top stories</option>
       <option value="date">Newest</option>
     </select>
   );
