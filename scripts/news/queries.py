@@ -167,6 +167,30 @@ THREADS = {
 }
 
 
+# --- Keyword pre-gate for the RSS firehose (Phase 4) -------------------------
+# Outlet feeds (see sources.py) are mostly off-topic. Before we pay the AI to
+# score an outlet item, a HARD-gated source must mention one of these watch
+# terms in its headline or blurb; a LIGHT-gated (already-aligned) source skips
+# the gate and lets the score>=5 floor trim it later. Kept HERE, beside THREADS,
+# so the watch vocabulary lives in one authoritative file. Matching is plain
+# case-insensitive substring (so multi-word terms like "sunday law" work).
+GATE_TERMS = (
+    "vatican", "pope", "papal", "papacy", "holy see", "encyclical", "leo xiv",
+    "ecumenism", "interfaith", "full communion", "schism", "orthodox",
+    "bartholomew", "nicaea", "sabbath", "sunday law", "sunday rest",
+    "sunday trading", "day of rest", "sunday alliance", "blasphemy",
+    "digital id", "cbdc", "digital currency", "ufo", "uap", "extraterrestrial",
+    "disclosure", "eucharistic", "marian apparition", "weeping statue",
+    "weeping icon", "incorrupt", "apparition", "fatima", "lourdes", "adventist",
+    "seventh-day", "christian zionism", "dispensationalism",
+)
+
+
+def gate_vocabulary():
+    """Lowercase watch terms for the RSS hard-gate (see sources.py / pull_rss.py)."""
+    return tuple(t.lower() for t in GATE_TERMS)
+
+
 def all_searches():
     """Flat list of (thread_key, search_string) for the gatherer to loop over."""
     out = []

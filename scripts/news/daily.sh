@@ -22,6 +22,9 @@ fi
 echo "==> [$(date -u '+%F %T') UTC] gathering new stories..."
 "$PY" scripts/news/gather_news.py
 
+echo "==> pulling outlet RSS feeds..."
+"$PY" scripts/news/pull_rss.py
+
 echo "==> scoring new stories (incremental — no --rescore)..."
 "$PY" scripts/news/score_news.py
 
