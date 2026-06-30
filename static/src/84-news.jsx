@@ -11,6 +11,15 @@ function _newsDaysAgo(n) {
   return new Date(Date.now() - n * 86400000).toISOString().slice(0, 10);
 }
 
+// How a triage action moves the (only displayed) Kept badge. Moving a card INTO Kept
+// is +1; clearing/dismissing a card that was IN the Kept view is -1. The two never
+// overlap (the Kept view has no Keep button), so a single number covers every case.
+function _keptDelta(view, status) {
+  if (status === "keep" && view !== "kept") return 1;
+  if (view === "kept") return -1;   // "clear" or "dismiss" out of Kept
+  return 0;
+}
+
 function _scoreTier(score) {
   return score >= 8 ? "hi" : score >= 6 ? "mid" : "lo";
 }
@@ -162,8 +171,12 @@ function NewsView({ isMobile }) {
   const [order, setOrder] = useState("score");        // score | date
   const [flash, setFlash] = useState("");
   const [shape, setShape] = useState(null);           // feed-shape readout for the right zone
+  const [counts, setCounts] = useState({});           // Kept badge — server-seeded, then owned locally
 
   useEffect(() => { api.newsMeta().then(setMeta); }, []);
+  // Reseed the badge from the server on every REAL meta load; between loads, triage
+  // owns it locally (no meta refetch, so the feed never tears down — see `mark`).
+  useEffect(() => { if (meta && meta.counts) setCounts(meta.counts); }, [meta]);
   useEffect(() => { localStorage.setItem("lexica.news.since.v1", since); }, [since]);
   useEffect(() => { localStorage.setItem("lexica.news.min.v1", String(minScore)); }, [minScore]);
 
@@ -198,10 +211,26 @@ function NewsView({ isMobile }) {
   }, [meta, view, minScore, thread, order, since]);
 
   const mark = (story, status) => {
-    // Refresh the tab counts after the write lands (meta is otherwise only fetched on
-    // mount, so the Kept/Dismissed badge would stay stale until a reload).
-    api.newsStatus(story.ids, status).then(() => api.newsMeta().then(setMeta));
-    setStories(ss => (ss || []).filter(s => s !== story));   // drop it from the current list
+    // Optimistic: the card is leaving this view regardless, so drop it NOW and adjust
+    // the Kept badge locally — no meta refetch, so the feed never reloads/flashes.
+    const idx = (stories || []).indexOf(story);
+    const dk = _keptDelta(view, status);
+    setStories(ss => (ss || []).filter(s => s !== story));
+    if (dk) setCounts(c => ({ ...c, kept: Math.max(0, (c.kept || 0) + dk) }));
+    // Fire the write in the background. newsStatus never rejects — it resolves
+    // {ok:false} on failure. On failure, roll the card back to its spot + undo the
+    // count + flash; on success do nothing (the UI already matches).
+    api.newsStatus(story.ids, status).then(d => {
+      if (d && d.ok !== false) return;
+      setStories(ss => {
+        const a = (ss || []).slice();
+        a.splice(Math.min(idx < 0 ? a.length : idx, a.length), 0, story);
+        return a;
+      });
+      if (dk) setCounts(c => ({ ...c, kept: Math.max(0, (c.kept || 0) - dk) }));
+      setFlash("Couldn't save — put it back. Try again.");
+      setTimeout(() => setFlash(""), 3000);
+    });
   };
 
   const copyShortlist = () => {
@@ -227,7 +256,6 @@ function NewsView({ isMobile }) {
   );
 
   const labels = meta.labels || {};
-  const counts = meta.counts || {};
   const scoreOpts = [["", "All"], ["5", "5+"], ["6", "6+"], ["7", "7+"], ["8", "8+"], ["9", "9+"]];
 
   // ---- shared bits used by both layouts ----
