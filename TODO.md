@@ -743,7 +743,7 @@ follow-up is **#4 (parallelize the cognate + Hebrew DB loops)** above — multi-
   (`~/bible-db/news.db`) or `cd ~/bible-db` first. The real file (`NEWS_DB`, core.py) is `~/bible-db/news.db`; backups
   are covered by `backup_db.py` (auto-discovers every `*.db`). `rm ~/news.db` to clear the decoy.
 
-### RSS ingestion + thread expansion — STARTED 2026-06-30 (restructure done, RSS scoped)
+### RSS ingestion + thread expansion — 2026-06-30 (restructure + RSS-by-outlet both LIVE)
 - **✅ THREAD SET 10→13 SHIPPED 2026-06-30 (5c45181).** Three new keys: `signs_wonders` (promoted out of
   culture_shaping), `protestant_collapse` (split out of ecumenism), `ecumenism_orthodox` (net-new Catholic-Orthodox
   reunion); `ecumenism` rescoped to Protestant-Catholic (label only). Vocab adds: political_realignment +=
@@ -752,18 +752,20 @@ follow-up is **#4 (parallelize the cognate + Hebrew DB loops)** above — multi-
   UPDATEs on `ai_thread`: miracles culture_shaping→signs_wonders (128+21), collapse ecumenism→protestant_collapse
   (42 + 3 strays), Orthodox ecumenism→ecumenism_orthodox (56). All previewed before running. Full record: memory
   `project_news_watch`.
-- **⏳ Phase 4 — RSS-by-outlet ingestion (SCOPED, not built).** Second ingest path by OUTLET not topic.
-  feedparser==6.0.12 installed in bible-env + pinned in requirements.txt (line uncommitted, rides with the RSS
-  code). Build: a `sources` config (url/name/gate_level/thread_hint) parallel to queries.py; `pull_rss.py`
-  fetch→parse→keyword-pre-gate→dedupe on `items.url UNIQUE`→write same-schema rows; fold into daily.sh as
-  gather+pull_rss→score→group. Gate-tier by signal density (niche-light / broad-hard). First decision = the v1
-  source batch (which feeds now vs second wave) + whether to build gate-tiering from the start. Source list +
-  endpoints in the handoff doc. Full record: memory `project_news_watch`.
+- **✅ Phase 4 — RSS-by-outlet ingestion LIVE 2026-06-30 (cf7b8fa + a8a4f0a).** Second ingest path by OUTLET not
+  topic: `sources.py` (SOURCES list) + `queries.py` GATE_TERMS/gate_vocabulary() + `pull_rss.py` (feedparser →
+  per-source gate → INSERT OR IGNORE) + daily.sh (gather→pull_rss→score→group) + feedparser in requirements.txt.
+  **11 live feeds** (10 niche/aligned light + ZeroHedge hard canary); gate-tiered light/hard from the start. First
+  real run: 250 RSS rows in, 0 dupes, 0 errors, 42 surfaced into sensible threads. Two feeds didn't make v1 —
+  European Sunday Alliance (broken TLS cert, held for wave 2) and Adventist News Network (Vercel JS bot-wall,
+  dropped). Wave 2 = the four broad firehoses (CBN, JPost, Off-Guardian, Israel365). LESSON: send a browser UA not
+  a bot tag. OPS: the nightly scoring needs ANTHROPIC_API_KEY in ~/bible-db/.env (was missing → backlog; fixed).
+  Full record: memory `project_news_watch`.
 - **⏳ DEFERRED — `catholic_decline` as a 4th decline lane.** ~6 Catholic-decline rows parked in
   protestant_collapse (a missing category, not homeless — Catholic decline is its own on-thesis signal). TRIGGER
-  to split it out: once the RSS sources (LifeSite/CNA/NCR) surface real Catholic-decline volume. Also carry: keep
-  a running note of thread-volume SKEW after RSS lands — drive the next thread-set revision off real post-RSS
-  counts, not guesses.
+  to split it out: once Catholic-decline volume is real. **Post-RSS 2026-06-30: still deferred** — the RSS seed
+  didn't move it (protestant_collapse stayed thin at 28 surfaced). Post-RSS thread skew is now recorded in memory
+  `project_news_watch` as the baseline for the next thread revision.
 - **⏳ FOLLOW-UP (low priority, after Phase 4) — per-thread "+N outside this window" footer.** The default date
   window hid 19 of 22 protestant_collapse cards and read as a dead lane (a quiet trend-shaped topic). Make the
   "+N outside this window" footer fire PER-THREAD so a quiet lane shows "3 cards · 19 outside this window" instead
