@@ -60,6 +60,9 @@
   --r-lg: 14px;
 
   --sidebar-w: 460px;
+  /* News runs its right feed-shape panel narrower than Library/Word study so its
+     center has room for the top control bar (the panel is always open). */
+  --news-sidebar-w: 380px;
 
   --lib-vnum-w: 24px;    /* lib-vnum min-width */
   --lib-row-pl: 5px;     /* lib-verse-row padding-left */
@@ -240,6 +243,9 @@ input { font-family: inherit; }
    so no media query needed. */
 .app.view-lexicon .hdr-right,
 .app.view-library .hdr-right { margin-right: calc(var(--sidebar-w) + 12px); }
+/* News floats the same fixed right panel, so it needs the same shift — its panel is
+   the narrower --news-sidebar-w. Without this the panel sits over the login control. */
+.app.view-news .hdr-right { margin-right: calc(var(--news-sidebar-w) + 12px); }
 /* Account control in the navy header (desktop only — the header is hidden < 1100px). */
 .hdr-login {
   font-size: 13px; font-weight: 600; color: #0f1b2d;
@@ -3834,6 +3840,7 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
    dropdown follows it (mirrors the .hdr-right shift). */
 .app.view-lexicon .acct-pop,
 .app.view-library .acct-pop { right: calc(var(--sidebar-w) + 36px); }
+.app.view-news .acct-pop { right: calc(var(--news-sidebar-w) + 36px); }
 .auth-modal-head { display: flex; align-items: center; justify-content: space-between; }
 .auth-modal-title { font-size: 19px; font-weight: 700; color: var(--ink); margin: 0; }
 .auth-modal-sub { font-size: 13px; color: var(--ink-3); margin: 2px 0 16px; }
@@ -4958,17 +4965,9 @@ button.study-verse-ref { border: none; }
   flex-direction: column;
   gap: 14px;
 }
-/* View group = Inbox / Kept / Dismissed: tighten the pills so the three labels + their
-   counts fit the 224px rail. Allowed to WRAP (not nowrap) so a too-wide third button
-   drops to a second line instead of clipping past the panel edge. */
-.news-rail .news-views { flex-wrap: wrap; gap: 4px; }
-.news-rail .news-views .seg-b { padding: 5px 7px; font-size: 12px; white-space: nowrap; }
-/* grouped, small-caps-labelled sections (View / Since / Score / Sort / Threads) so
-   the rail has the same rhythm as the Threads group, not a loose stack. */
+/* The rail is now JUST the thread list (View/Date/Score/Sort/Refresh moved to the center
+   top bar), so only the Threads section + the reviewer line remain. */
 .news-rail-sec { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
-.news-rail-sec .news-f,
-.news-rail-sec .news-presets,
-.news-rail-sec .news-seg { flex-wrap: wrap; }
 .news-rail-label { font-size: 11px; font-weight: 600; text-transform: uppercase;
   letter-spacing: 0.05em; color: var(--ink-4); }
 .news-rail-threads { display: flex; flex-direction: column; gap: 2px; }
@@ -4979,6 +4978,43 @@ button.study-verse-ref { border: none; }
 .news-rail-asline { margin-top: auto; padding-top: 12px; border-top: 1px solid var(--rule);
   font-size: 12px; color: var(--muted); }
 .news-rail-asline strong { color: var(--ink); font-weight: 600; }
+
+/* News runs its right panel narrower than Library/Word study (--news-sidebar-w) so the
+   always-open feed-shape panel leaves room for the center top bar. Both the reserved
+   strip (.zshell padding) and the fixed panel width are re-pointed at the narrower var. */
+.zshell.news-frame { padding-right: var(--news-sidebar-w); }
+.news-frame .zinspect { width: var(--news-sidebar-w); }
+
+/* CENTER top control bar — one horizontal no-wrap row, Library's .lib-bar pattern. Sits
+   above .news-feed inside the shared .zcenter; the rail below it is threads-only. */
+.news-bar { flex: 0 0 auto; box-sizing: border-box; min-height: var(--hdr-h);
+  display: flex; align-items: center; padding: 0 20px; border-bottom: 1px solid var(--rule);
+  background: color-mix(in oklab, var(--bg) 82%, var(--paper)); }
+.news-bar-l { display: flex; align-items: center; gap: 10px; flex-wrap: nowrap; white-space: nowrap; }
+.news-bar-sep { width: 1px; height: 22px; background: var(--rule); flex: 0 0 auto; }
+.news-bar .news-views { flex-wrap: nowrap; gap: 4px; }
+.news-bar .news-views .seg-b { padding: 5px 9px; font-size: 12.5px; white-space: nowrap; }
+.news-bar-f { display: flex; align-items: center; gap: 6px; font-size: 12.5px; color: var(--ink-4); }
+.news-bar-f > span { font-weight: 600; }
+/* Date window dropdown — a button + a popover holding Since/Until + the presets. */
+.news-bar-pop { position: relative; flex: 0 0 auto; }
+.news-bar-btn { font: inherit; font-size: 13px; padding: 5px 10px; border: 1px solid var(--rule-2);
+  border-radius: 7px; background: var(--ctl-bg); color: var(--ink); cursor: pointer; white-space: nowrap; }
+.news-bar-btn:hover, .news-bar-btn.on { border-color: var(--accent); color: var(--accent); }
+.news-bar-scrim { position: fixed; inset: 0; z-index: 50; }
+.news-bar-menu { position: absolute; top: calc(100% + 6px); left: 0; z-index: 51;
+  background: var(--paper); border: 1px solid var(--rule-2); border-radius: 10px;
+  box-shadow: var(--shadow-lg, 0 8px 28px rgba(0,0,0,0.18)); padding: 12px;
+  display: flex; flex-direction: column; gap: 10px; }
+.news-bar-menu .news-presets { flex-wrap: wrap; max-width: 240px; }
+/* Refresh — icon button, tooltip only. Spins while a pull is in flight. */
+.news-bar-icon { flex: 0 0 auto; display: inline-flex; align-items: center; justify-content: center;
+  width: 32px; height: 32px; border: 1px solid var(--rule-2); border-radius: 7px;
+  background: var(--ctl-bg); color: var(--ink-2); cursor: pointer; }
+.news-bar-icon:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.news-bar-icon:disabled { opacity: 0.5; cursor: default; }
+.news-bar-icon .spin { animation: news-spin 0.8s linear infinite; }
+@keyframes news-spin { to { transform: rotate(360deg); } }
 
 .news-feed { flex: 1; min-height: 0; overflow-y: auto; padding: 20px 24px 80px; }
 

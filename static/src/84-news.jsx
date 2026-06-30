@@ -212,6 +212,7 @@ function NewsView({ isMobile }) {
   const [thread, setThread] = useState("");
   const [order, setOrder] = useState("score");        // score | date | oldest
   const [flash, setFlash] = useState("");
+  const [dateOpen, setDateOpen] = useState(false);    // desktop top-bar date popover
 
   useEffect(() => { api.newsMeta().then(setMeta); }, []);
   useEffect(() => { localStorage.setItem("lexica.news.since.v1", since); }, [since]);
@@ -420,6 +421,23 @@ function NewsView({ isMobile }) {
       <option value="oldest">Oldest</option>
     </select>
   );
+  // Desktop top-bar compact controls: score as a plain dropdown (the 6-button segment is
+  // mobile-only now), and a short label summarising the active date window for its popover
+  // button ("Last 21d" / "All dates" / "Custom range").
+  const scoreSel = (
+    <select className="news-thread-sel" value={String(minScore || "")}
+            onChange={e => setMinScore(Number(e.target.value || 0))}>
+      {scoreOpts.map(([v, lbl]) => (
+        <option key={v} value={v}>{v ? lbl + " score" : "Any score"}</option>
+      ))}
+    </select>
+  );
+  const dateLabel = (() => {
+    if (!since && !until) return "All dates";
+    if (until) return "Custom range";
+    const days = Math.round((Date.now() - Date.parse(since + "T00:00:00Z")) / 86400000);
+    return "Last " + days + "d";
+  })();
   const inboxFilters = (   // mobile: one flat strip (keeps the inline "Since" word)
     <>
       <label className="news-f"><span>Since</span>{dateInput}</label>
@@ -512,44 +530,10 @@ function NewsView({ isMobile }) {
   }
 
   // ---------------- DESKTOP: the shared three-zone frame ------------------------
+  // LEFT rail is now JUST the thread list (the navigate zone) — every other control
+  // moved up into the center's horizontal top bar (below). Threads get the full height.
   const rail = (
-    <div className="news-rail">
-      <div className="news-rail-sec">
-        <div className="news-rail-label">View</div>
-        {viewsToggle}
-      </div>
-      {/* Since/Score/Sort drive the date+score window, which applies to ALL three views
-          (the counts scale with it), so they show everywhere — not just Inbox. */}
-      <div className="news-rail-sec">
-        <div className="news-rail-label">Since</div>
-        <label className="news-f">{dateInput}</label>
-        <label className="news-f"><span>Until</span>{untilInput}</label>
-        {presets}
-      </div>
-      <div className="news-rail-sec">
-        <div className="news-rail-label">Score</div>
-        {scoreSeg}
-      </div>
-      <div className="news-rail-sec">
-        <div className="news-rail-label">Sort</div>
-        {sortSel}
-      </div>
-      {/* Pull the latest scored set without a full reload. Also the force-refresh for a hand
-          re-score (the held set's cache busts on a new pull, not on an in-place re-score). */}
-      <div className="news-rail-sec">
-        <button className="news-btn" disabled={loading}
-                title="Re-pull the scored feed"
-                onClick={() => setRefreshN(n => n + 1)}>
-          {loading ? "Refreshing…" : "Refresh"}
-        </button>
-      </div>
-      {view === "kept" ? (   // shortlist-copy belongs with Kept, not Dismissed
-        <div className="news-rail-sec">
-          <button className="news-btn news-keep" onClick={copyShortlist}
-                  disabled={!stories || !stories.length}>Copy shortlist</button>
-          {flash && <span className="news-flash">{flash}</span>}
-        </div>
-      ) : null}
+    <div className="news-rail news-rail-threads-only">
       <div className="news-rail-sec">
         <div className="news-rail-label">Threads</div>
         {threadList}
@@ -562,11 +546,53 @@ function NewsView({ isMobile }) {
     </div>
   );
 
+  // CENTER top bar — one horizontal row (Library's .lib-bar pattern): view pills · date
+  // window (popover) · score · sort · refresh. Date is a dropdown so its two fields +
+  // presets don't eat the row; score/sort are plain dropdowns. All apply to every view.
+  const topBar = (
+    <div className="news-bar">
+      <div className="news-bar-l">
+        {viewsToggle}
+        <span className="news-bar-sep" aria-hidden="true" />
+        <div className="news-bar-pop">
+          <button className={"news-bar-btn" + (dateOpen ? " on" : "")}
+                  title="Date window" aria-expanded={dateOpen}
+                  onClick={() => setDateOpen(o => !o)}>{dateLabel} ▾</button>
+          {dateOpen && (
+            <>
+              <div className="news-bar-scrim" onClick={() => setDateOpen(false)} />
+              <div className="news-bar-menu">
+                <label className="news-f"><span>Since</span>{dateInput}</label>
+                <label className="news-f"><span>Until</span>{untilInput}</label>
+                {presets}
+              </div>
+            </>
+          )}
+        </div>
+        <label className="news-bar-f"><span>Score</span>{scoreSel}</label>
+        <label className="news-bar-f"><span>Sort</span>{sortSel}</label>
+        <span className="news-bar-sep" aria-hidden="true" />
+        {/* Re-pull the scored set without a full reload (also the force-refresh for a hand
+            re-score — the held set's cache busts on a new pull, not an in-place re-score). */}
+        <button className="news-bar-icon" disabled={loading} title="Refresh the scored feed"
+                aria-label="Refresh the scored feed"
+                onClick={() => setRefreshN(n => n + 1)}>
+          <Icon.Refresh className={loading ? "spin" : undefined} />
+        </button>
+        {view === "kept" && (   // shortlist-copy belongs with Kept, not Dismissed
+          <button className="news-btn news-keep" onClick={copyShortlist}
+                  disabled={!stories || !stories.length}>Copy shortlist</button>
+        )}
+        {flash && <span className="news-flash">{flash}</span>}
+      </div>
+    </div>
+  );
+
   return (
     <ThreeZone
       className="news-frame"
       rail={rail}
-      center={<div className="news-feed">{feedInner}</div>}
+      center={<>{topBar}<div className="news-feed">{feedInner}</div></>}
       inspect={<FeedShape shape={shape} />}
     />
   );
