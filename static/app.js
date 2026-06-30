@@ -1657,12 +1657,12 @@ const face=mem.reduce((b,m)=>m.s>b.s||m.s===b.s&&(m.d||"")>(b.d||"")?m:b,mem[0])
 function _stale(peak){const d=(peak||"").slice(0,10);if(!d)return 0;const pd=Date.parse(d+"T00:00:00Z");if(isNaN(pd))return 0;const t=new Date();const today=Date.UTC(t.getUTCFullYear(),t.getUTCMonth(),t.getUTCDate());const age=Math.round((today-pd)/86400000);return Math.min(2.0,Math.max(0,(age-2)*0.1));}function _scoreTier(score){return score>=8?"hi":score>=6?"mid":"lo";}// Drop a trailing " - Outlet" / " — Outlet" suffix (the source already shows in the
 // peak/headline rows below, so the panel header needn't repeat it). Mirrors the
 // grouping's _sig_tokens strip. Only peels a single trailing segment.
-function _stripOutlet(title){return(title||"").replace(/\s+[-–—]\s+[^-–—]+$/,"").trim()||title||"";}// The card's date is a RANGE now that rank + window both key on the PEAK day: show
-// "peaked X · latest Y" so a long-tail event (peaks late May, one straggler in June)
-// reads honestly instead of stamping the lone straggler's date and contradicting its
-// rank. Collapses to a single date when the event is one day (peak == latest) or we
-// only have one of the two. Same date-provenance idea as showing the scoring rationale.
-function _dateRange(story){const peak=(story.peak_date||"").slice(0,10);const latest=(story.published||"").slice(0,10);if(peak&&latest&&peak!==latest)return"peaked "+peak+" · latest "+latest;return latest||peak||"—";}// Collapse member articles to ONE row per outlet, keeping each outlet's NEWEST article (its
+function _stripOutlet(title){return(title||"").replace(/\s+[-–—]\s+[^-–—]+$/,"").trim()||title||"";}// The card's date is a RANGE now that rank + window both key on the PEAK day. The DATE
+// leads every card (single or range) so the dates left-align down the column when skimming;
+// the "peaked"/"latest" labels follow their own date: "{d1} peaked · {d2} latest". Keep both
+// labels — they carry the peak-vs-latest meaning. Collapses to a lone date when the event is
+// one day (peak == latest) or we only have one of the two.
+function _dateRange(story){const peak=(story.peak_date||"").slice(0,10);const latest=(story.published||"").slice(0,10);if(peak&&latest&&peak!==latest)return peak+" peaked · "+latest+" latest";return latest||peak||"—";}// Collapse member articles to ONE row per outlet, keeping each outlet's NEWEST article (its
 // date + link) so a fresh follow-up beats the old burst instance, then sort the survivors
 // newest-first. Undated articles lose to any dated one for their outlet and sort last (no
 // date shown, never faked). The ≤~12-row deduped view, not the full per-article wall.

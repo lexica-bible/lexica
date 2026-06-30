@@ -106,15 +106,15 @@ function _stripOutlet(title) {
   return (title || "").replace(/\s+[-–—]\s+[^-–—]+$/, "").trim() || (title || "");
 }
 
-// The card's date is a RANGE now that rank + window both key on the PEAK day: show
-// "peaked X · latest Y" so a long-tail event (peaks late May, one straggler in June)
-// reads honestly instead of stamping the lone straggler's date and contradicting its
-// rank. Collapses to a single date when the event is one day (peak == latest) or we
-// only have one of the two. Same date-provenance idea as showing the scoring rationale.
+// The card's date is a RANGE now that rank + window both key on the PEAK day. The DATE
+// leads every card (single or range) so the dates left-align down the column when skimming;
+// the "peaked"/"latest" labels follow their own date: "{d1} peaked · {d2} latest". Keep both
+// labels — they carry the peak-vs-latest meaning. Collapses to a lone date when the event is
+// one day (peak == latest) or we only have one of the two.
 function _dateRange(story) {
   const peak = (story.peak_date || "").slice(0, 10);
   const latest = (story.published || "").slice(0, 10);
-  if (peak && latest && peak !== latest) return "peaked " + peak + " · latest " + latest;
+  if (peak && latest && peak !== latest) return peak + " peaked · " + latest + " latest";
   return latest || peak || "—";
 }
 
