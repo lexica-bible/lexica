@@ -253,6 +253,27 @@ def _pick_face(arts, newest):
     return max(pool, key=lambda a: ((a["score"] or 0), (a["published"] or "")))
 
 
+def _peak_date(arts):
+    """The day the cluster peaked — the publish day carrying the most coverage. We age the
+    cluster from its BURST, not from its newest straggler, so trickle tail-coverage of an old
+    event can't keep it permanently fresh. A lone new article adds 1 to a late day; it can't
+    out-count the original burst, so the peak (and the age) barely move. Ties break toward the
+    EARLIER day (a late tie is tail coverage, not a genuine re-peak)."""
+    by_day = {}
+    for a in arts:
+        d = (a["published"] or "")[:10]
+        if not d:
+            continue
+        c, ssum = by_day.get(d, (0, 0))
+        by_day[d] = (c + 1, ssum + (a["score"] or 0))
+    best = None
+    for d in sorted(by_day):                 # ascending date -> earliest of any tie wins
+        c, ssum = by_day[d]
+        if best is None or (c, ssum) > (best[1], best[2]):
+            best = (d, c, ssum)
+    return best[0] if best else ""
+
+
 def _serialize(cluster):
     arts = sorted(cluster["arts"], key=lambda a: a["published"] or "", reverse=True)
     newest = arts[0]["published"] if arts else ""
@@ -274,6 +295,7 @@ def _serialize(cluster):
         "thread_label": THREAD_LABELS.get(face["ai_thread"], face["ai_thread"] or "?"),
         "why": face["ai_why"] or "",
         "published": (newest or "")[:10],
+        "peak_date": _peak_date(arts),
         "count": len(arts),
         "sources": sources[:12],
         "status": face["status"] or "new",
@@ -282,19 +304,22 @@ def _serialize(cluster):
 
 # Recency-weighted DEFAULT sort. The feed ranks story cards by PEAK score, which floats
 # an old-but-high cluster above fresher coverage. We dock a small staleness penalty keyed
-# off the cluster's NEWEST sibling: GRACE days free, then RATE/day, capped at CAP. So a
-# story breaking today still tops a 3-week-old 9 (a 20-day-old 9 -> ~7.2 vs a fresh 8 ->
-# 8.0), but the cap means recency can NEVER overturn more than a CAP-point real gap — it's
-# a weight, not a score override. A long-running real story keeps a fresh face because the
-# penalty reads its NEWEST article, so continued coverage = age 0 = no dock. Steepen RATE
-# to 0.15 only if an old-but-high card keeps holding the top slot (watch card #1 a few days).
+# off the cluster's PEAK DAY (the day most outlets covered it): GRACE days free, then
+# RATE/day, capped at CAP. So a story breaking today still tops a 3-week-old 9 (a 20-day-old
+# 9 -> ~7.2 vs a fresh 8 -> 8.0), but the cap means recency can NEVER overturn more than a
+# CAP-point real gap — it's a weight, not a score override. Keying off the PEAK (not the
+# newest article) is deliberate: a month-old event that keeps picking up trickle coverage
+# would read as permanently fresh if we aged it from its newest straggler. A genuinely
+# ongoing story re-peaks and stays fresh on its own. Steepen RATE to 0.15 only if an
+# old-but-high card keeps holding the top slot (watch card #1 a few days).
 _FEED_GRACE_DAYS = 2
 _FEED_RATE = 0.1
 _FEED_CAP = 2.0
 
 
 def _staleness_penalty(published):
-    """Days-old dock for a cluster, from its newest article's date ('YYYY-MM-DD')."""
+    """Days-old dock for a cluster, from the given date ('YYYY-MM-DD') — the caller passes
+    the cluster's PEAK day (see the sort below), not its newest article."""
     d = (published or "")[:10]
     if not d:
         return 0.0
@@ -414,9 +439,10 @@ def list_news():
     if order == "date":
         stories.sort(key=lambda s: (s["published"], s["score"]), reverse=True)
     else:
-        # Default: recency-weighted score (see _staleness_penalty). Published stays the
-        # tie-break so equal effective scores still favor the fresher card.
-        stories.sort(key=lambda s: (s["score"] - _staleness_penalty(s["published"]),
+        # Default: recency-weighted score (see _staleness_penalty). The dock keys off the
+        # cluster's PEAK day, so a stale event with a fresh straggler can't dodge it. Newest
+        # published stays the tie-break so equal effective scores still favor the fresher card.
+        stories.sort(key=lambda s: (s["score"] - _staleness_penalty(s["peak_date"]),
                                     s["published"]), reverse=True)
     return jsonify({"stories": stories[:300], "available": True})
 
