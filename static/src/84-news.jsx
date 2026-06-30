@@ -299,9 +299,10 @@ function NewsView({ isMobile }) {
     </div>
   );
 
-  // Live count for a tab — shown once the counts have loaded (so even "(0)" reads, which
-  // is the point: Inbox is one slice of a triaged whole). All three are window-scoped.
-  const cnt = (k) => Number.isFinite(counts[k]) ? ` (${counts[k]})` : "";
+  // Live count for a tab — shown once the counts have loaded (so even "0" reads, which is
+  // the point: Inbox is one slice of a triaged whole). No parens (thinner, fits the rail);
+  // all three are window-scoped.
+  const cnt = (k) => Number.isFinite(counts[k]) ? ` ${counts[k]}` : "";
   const viewsToggle = (
     <div className="news-views">
       <button className={"seg-b" + (view === "inbox" ? " on" : "")} onClick={() => setView("inbox")}>

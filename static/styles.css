@@ -4950,10 +4950,11 @@ button.study-verse-ref { border: none; }
   flex-direction: column;
   gap: 14px;
 }
-/* View group = Inbox / Kept / Dismissed on ONE line: tighten the pills + no wrap so
-   the third button can't drop to its own row inside the 224px rail. */
-.news-rail .news-views { flex-wrap: nowrap; gap: 4px; }
-.news-rail .news-views .seg-b { padding: 5px 8px; font-size: 12px; white-space: nowrap; }
+/* View group = Inbox / Kept / Dismissed: tighten the pills so the three labels + their
+   counts fit the 224px rail. Allowed to WRAP (not nowrap) so a too-wide third button
+   drops to a second line instead of clipping past the panel edge. */
+.news-rail .news-views { flex-wrap: wrap; gap: 4px; }
+.news-rail .news-views .seg-b { padding: 5px 7px; font-size: 12px; white-space: nowrap; }
 /* grouped, small-caps-labelled sections (View / Since / Score / Sort / Threads) so
    the rail has the same rhythm as the Threads group, not a loose stack. */
 .news-rail-sec { display: flex; flex-direction: column; gap: 8px; align-items: flex-start; }
