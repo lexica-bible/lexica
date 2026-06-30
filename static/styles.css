@@ -5002,7 +5002,8 @@ button.study-verse-ref { border: none; }
 .news-bar-menu { position: absolute; top: calc(100% + 6px); left: 0; z-index: 51;
   background: var(--paper); border: 1px solid var(--rule-2); border-radius: 10px;
   box-shadow: var(--shadow-lg, 0 8px 28px rgba(0,0,0,0.18)); padding: 12px;
-  display: flex; flex-direction: column; gap: 10px; }
+  display: flex; flex-direction: column; gap: 10px;
+  white-space: normal; }  /* the bar sets nowrap; let the popover's text wrap inside the box */
 .news-bar-menu .news-presets { flex-wrap: wrap; max-width: 240px; }
 /* "How the feed works" popover — same scrim+menu chrome, opened right-aligned (it sits
    near the end of the bar) and wider to hold the explanatory copy. */
