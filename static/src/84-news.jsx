@@ -577,7 +577,12 @@ function NewsView({ isMobile }) {
   const dateLabel = (() => {
     if (!since && !until) return "All dates";
     if (until) return "Custom range";
-    const days = Math.round((Date.now() - Date.parse(since + "T00:00:00Z")) / 86400000);
+    // Count WHOLE days from today's midnight (not `Date.now()`) so the 7d preset reads
+    // "Last 7d" — `Date.now()` carries the current hours, which inflated the round to 8
+    // and crept up as the day wore on (the box and the preset drifted apart).
+    const t = new Date();
+    const today = Date.UTC(t.getUTCFullYear(), t.getUTCMonth(), t.getUTCDate());
+    const days = Math.round((today - Date.parse(since + "T00:00:00Z")) / 86400000);
     return "Last " + days + "d";
   })();
   const inboxFilters = (   // mobile: one flat strip (keeps the inline "Since" word)
