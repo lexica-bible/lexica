@@ -572,6 +572,18 @@ follow-up is **#4 (parallelize the cognate + Hebrew DB loops)** above — multi-
 
 ## News feed (Tudor) — recency (FACE + SORT done)
 
+- **✅ HOT-THREADS LABEL STACK + BACK-REF REASON LEAK — SHIPPED 2026-06-30 (4ec1911/f9b8e6b, a36b807→d8fd451).**
+  Two unrelated fixes. (1) Feed-shape "Hot threads" row truncated long thread names (label ellipsis-capped at 40%
+  on a one-line `[label][bar][count]`); fixed CSS-only by wrapping the row so the label takes its own full-width
+  line (matching the left rail), bar+count below (`.news-shape-row`/`.news-shape-tlabel` in styles.css; no app.js).
+  (2) "Same event as <id>" pointers leaked into the card reason (`ai_why`) — Haiku sometimes prefixes its "why" with
+  a back-reference at another batch article. Source guard `_clean_why` in `scripts/news/score_news.py` strips the
+  pointer token CLASS (Same event/story/as · Duplicate of · See + optional `id=` + a LIST of ids) and keeps the real
+  tail; blanks only a bare pointer; sentence-cases the tail only when the first word is all-lowercase (protects names
+  like mBridge). Existing 44 rows scrubbed on PA by `scripts/news/fix_backref_why.py` (reuses the same cleaner;
+  dry-run/`--apply`/`--restore`; backup table `backref_why_backup`). PARKED cure (not built): feed positional tags
+  not real ids into the batch prompt so the model can't emit a real-id back-reference. Full record: memory
+  `project_news_watch`. `code: scripts/news/score_news.py _clean_why · scripts/news/fix_backref_why.py · static/styles.css`
 - **✅ WINDOW-GATE COLLAPSE FIXED + EXPANDED-LIST REWORK — SHIPPED 2026-06-30 (b578a35, 13a636d, 32163d5,
   93ff37a, 55b7480).** Bug: 30-day window, floor 5+ → Inbox 8 while 'Any score' → 256 (impossible). Cause: a
   card's score (peak member) and peak_date (busiest day) came from DIFFERENT members, so a strong recent
