@@ -5052,7 +5052,7 @@ button.study-verse-ref { border: none; }
 .news-shape-sec { margin-top: 18px; }
 .news-shape-h { font-size: 11.5px; font-weight: 600; text-transform: uppercase;
   letter-spacing: 0.05em; color: var(--ink-4); margin-bottom: 10px; }
-.news-shape-row { display: flex; flex-wrap: wrap; align-items: center; gap: 4px 8px; margin-bottom: 9px; }
+.news-shape-row { display: flex; flex-wrap: wrap; align-items: center; gap: 2px 8px; margin-bottom: 6px; }
 .news-shape-tlabel { flex: 1 1 100%; font-size: 12.5px; color: var(--ink-2); }
 .news-shape-bar { flex: 1; height: 8px; border-radius: 5px; background: var(--bg-sunk); overflow: hidden; }
 .news-shape-fill { display: block; height: 100%; border-radius: 5px;
