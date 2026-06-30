@@ -505,6 +505,35 @@ def cited_refs(text):
     return out
 
 
+_VALID_BOOKS = None
+def _valid_books(conn):
+    global _VALID_BOOKS
+    if _VALID_BOOKS is None:
+        _VALID_BOOKS = {r[0] for r in conn.execute("SELECT DISTINCT book FROM verses")}
+    return _VALID_BOOKS
+
+
+# A numbered-book label written with NO following ch:vs = a DANGLING reference the gate can't bind
+# (e.g. "1Ti—" with nothing after it). _REF_RE only matches a complete Book ch:vs, so these slip
+# past silently — never even logged as a miss. We surface them as an advisory lint (never a fail).
+# NUMBERED-ONLY on purpose: "1Ti"/"1 Timothy" almost never appear in prose except as a citation, so
+# the false-positive rate is near zero. A bare "Gen" is deliberately NOT flagged — a 3-letter
+# capital also matches ordinary words ("For"/"God"), and prose legitimately says "throughout
+# Genesis". Distinct from a RECOVERABLE drop (the numeral was in the prose): a dangling ref has no
+# ch:vs at all, so it can only be flagged, never bound.
+_DANGLING_BOOK_RE = re.compile(r"\b(\d\s*[A-Za-z]{2,})\b")
+
+def dangling_book_refs(conn, text):
+    """Numbered book names the model wrote but never anchored to a ch:vs — invisible to _REF_RE."""
+    stripped = _REF_RE.sub(" ", text or "")        # drop the COMPLETE refs first
+    valid, hits = _valid_books(conn), []
+    for m in _DANGLING_BOOK_RE.finditer(stripped):
+        label = _norm_book(m.group(1))
+        if label in valid and label not in hits:
+            hits.append(label)
+    return hits
+
+
 def strict_keyset(conn, sid):
     """Verses containing the lemma by the engine's own rule (target Strong's tag, dotted excluded)."""
     pred, params = abp_filter(conn, sid)
@@ -743,7 +772,8 @@ def assemble(conn, sid, lemma, translit, raw):
         "verses":     build_verses(conn, refs),
         "provenance": "verse-grounded · LEXICA",
         "split_ver":  SPLIT_VER,
-        "audit":      run_citation_gate(conn, sid, refs),
+        "audit":      {**run_citation_gate(conn, sid, refs),
+                       "dangling": dangling_book_refs(conn, raw)},
         "raw":        raw,                # kept so an improved splitter can re-split, no model call
     }
     return entry
@@ -814,6 +844,8 @@ def show_entry(entry):
     print(f"  verses:      {len(entry['verses'])} cited, with text")
     print(f"  citation gate: {a['pass']}/{a['total']} pass" +
           (f"  (misses — tagging {a['tagging']} / real {a['real']} / no-verse {a['noverse']})" if a['total']-a['pass'] else ""))
+    if a.get("dangling"):
+        print(f"  ⚠ dangling book refs (no ch:vs — flag only): {', '.join(a['dangling'])}")
     if entry["fork"]:
         f = entry["fork"]
         # core is suppressed in the fork for a pinned word (it leads above as PINNED CORE), so read
