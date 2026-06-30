@@ -675,6 +675,20 @@ follow-up is **#4 (parallelize the cognate + Hebrew DB loops)** above — multi-
   Top stories · Newest · Oldest. Newest/Oldest sort on `peak_date` (NOT the latest straggler) — an event peaking in
   May with a June trickle reads as a May story, matching rank + the window + the displayed range. `code:
   views_news.py list_news stories.sort · static/src/84-news.jsx sortSel`
+- **✅ CLIENT-SIDE FILTERING — every interaction instant, no server round-trip — SHIPPED 2026-06-30 (816f235).**
+  Sort/filter/score-floor/thread/date/view were each hitting the server, and the cluster-then-filter refactor put
+  a full ~5k-row cluster in that path (counts re-clustered the corpus 5× in ONE request → a single score tick was
+  ~6 re-clusters = the seconds). Fix: new `GET /api/news/all` serves the whole clustered feed ONCE (all statuses,
+  no filter); the browser holds it and does every sort/filter/score/date/thread/count/feed-shape locally. The heavy
+  clustering is cached server-side per corpus fingerprint (row count + newest id) → recomputes only on a new pull;
+  status read fresh each load, never cached. A **Refresh** button (rail + mobile) re-pulls (also the force-clear
+  for a hand re-score, which the fingerprint doesn't catch). Triage now flips a local status override (no list
+  splice, no count deltas). Date windowing still keys on cluster PEAK (`_inWindow` port); feed-shape "surfaced"
+  stays the FIXED `_SURFACE_SCORE=6`, never the score floor. Global clustering: a same-event pair triaged into two
+  buckets now merges to one card tagged inbox (rare, arguably more correct). Old list/counts/shape endpoints left
+  in place, unused by the UI (prunable). SUPERSEDES the WINDOW-SCOPED counts work below (the `/api/news/counts`
+  fetch + `_countDeltas`/`applyCounts` are gone). `code: views_news.py all_news + _all_cards + _ALL_CACHE ·
+  static/src/84-news.jsx · 00-core.jsx newsAll` Full record: memory `project_news_watch`.
 
 ### Clustering / taxonomy / re-tuning — investigated 2026-06-29 (2 shipped, 1 parked-with-plan, 1 waiting)
 - **✅ ai_moralized RENAME + labeler phase-sibling NUDGE SHIPPED 2026-06-29 (fa46786).** (1) Thread label was "RCC
