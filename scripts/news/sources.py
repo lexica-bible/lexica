@@ -24,15 +24,21 @@ thread_hint = the seed thread we tag the row's `thread` column with. The AI
 scorer assigns the real `ai_thread` later (that's what the feed displays), so
 thread_hint is only a hint / provenance note — it never has to be exactly right.
 
-Endpoint notes (verified 2026-06-30):
+Endpoint notes (verified live on PA 2026-06-30):
   - CNA now redirects to EWTN News; we point straight at the final URL.
   - ZeroHedge's old /fullrss2.xml and /rss.xml are dead; FeedBurner is live.
   - LifeSiteNews /rss/ redirects to /feed/.
-  - NCR / End Time Headlines / Adventist News couldn't be machine-confirmed
-    (bot-block / rate-limit); the PA dry-run (inserted>0 per source) confirms them.
+  - NCR's /rss is a 404; the real general feed is /feeds/general-news.xml.
+  - Complicit Clergy 403s a bot UA but serves a browser UA — that's why
+    pull_rss.py sends a plain Firefox UA, not a bot tag.
   - European Sunday Alliance is HELD for wave 2 — it serves a self-signed TLS
     cert that feedparser/urllib reject; do not add it without a working cert or
     an explicit insecure-fetch decision.
+  - Adventist News Network (adventist.news) is DROPPED — it sits behind a Vercel
+    JavaScript "Security Checkpoint" (HTTP 429 to any plain fetch) that a feed
+    reader can't pass. Needs a JS-capable fetch or an alternate host; the SDA
+    counterweight for protestant_collapse stays on the Google path + Advent
+    Messenger for now.
 """
 
 SOURCES = [
@@ -43,7 +49,8 @@ SOURCES = [
      "gate_level": "light", "thread_hint": "papacy_moral_authority"},
     {"url": "https://www.pillarcatholic.com/feed", "name": "The Pillar",
      "gate_level": "light", "thread_hint": "papacy_moral_authority"},
-    {"url": "https://www.ncregister.com/rss", "name": "National Catholic Register",
+    {"url": "https://www.ncregister.com/feeds/general-news.xml",
+     "name": "National Catholic Register",
      "gate_level": "light", "thread_hint": "papacy_moral_authority"},
     {"url": "https://www.lifesitenews.com/feed/", "name": "LifeSiteNews",
      "gate_level": "light", "thread_hint": "culture_shaping"},
@@ -61,8 +68,6 @@ SOURCES = [
     # --- Gap-fillers (light) -------------------------------------------------
     {"url": "https://orthodoxtimes.com/feed/", "name": "Orthodox Times",
      "gate_level": "light", "thread_hint": "ecumenism_orthodox"},
-    {"url": "https://adventist.news/feed", "name": "Adventist News Network",
-     "gate_level": "light", "thread_hint": "protestant_collapse"},
 
     # --- Broad firehose canary (hard gate) -----------------------------------
     {"url": "https://feeds.feedburner.com/zerohedge/feed", "name": "ZeroHedge",

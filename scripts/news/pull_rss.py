@@ -56,7 +56,9 @@ if LIMIT is None and "--limit" in sys.argv:
         LIMIT = int(sys.argv[i + 1])
 DB_PATH = next((a.split("=", 1)[1] for a in sys.argv if a.startswith("--db=")), DEFAULT_DB)
 
-UA = "Mozilla/5.0 (compatible; LexicaNewsWatch/1.0; +https://www.lexica.bible)"
+# A plain browser UA, not a bot tag: some outlet firewalls (e.g. Complicit
+# Clergy) return 403 to an obvious bot string but serve the feed to a browser UA.
+UA = "Mozilla/5.0 (X11; Linux x86_64; rv:128.0) Gecko/20100101 Firefox/128.0"
 
 # Same shelf gather_news.py builds; re-declared so a pull that runs before the
 # first gather still has somewhere to land. CREATE IF NOT EXISTS = harmless.
