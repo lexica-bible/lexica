@@ -743,6 +743,32 @@ follow-up is **#4 (parallelize the cognate + Hebrew DB loops)** above — multi-
   (`~/bible-db/news.db`) or `cd ~/bible-db` first. The real file (`NEWS_DB`, core.py) is `~/bible-db/news.db`; backups
   are covered by `backup_db.py` (auto-discovers every `*.db`). `rm ~/news.db` to clear the decoy.
 
+### RSS ingestion + thread expansion — STARTED 2026-06-30 (restructure done, RSS scoped)
+- **✅ THREAD SET 10→13 SHIPPED 2026-06-30 (5c45181).** Three new keys: `signs_wonders` (promoted out of
+  culture_shaping), `protestant_collapse` (split out of ecumenism), `ecumenism_orthodox` (net-new Catholic-Orthodox
+  reunion); `ecumenism` rescoped to Protestant-Catholic (label only). Vocab adds: political_realignment +=
+  Right-from-Zionism, sabbath_sunday += anti-Sabbath. Both files (queries.py + views_news.py THREAD_LABELS — the
+  sync trap). NO rescore (score is decoupled from thread choice). Archive re-shelved on PA with deterministic
+  UPDATEs on `ai_thread`: miracles culture_shaping→signs_wonders (128+21), collapse ecumenism→protestant_collapse
+  (42 + 3 strays), Orthodox ecumenism→ecumenism_orthodox (56). All previewed before running. Full record: memory
+  `project_news_watch`.
+- **⏳ Phase 4 — RSS-by-outlet ingestion (SCOPED, not built).** Second ingest path by OUTLET not topic.
+  feedparser==6.0.12 installed in bible-env + pinned in requirements.txt (line uncommitted, rides with the RSS
+  code). Build: a `sources` config (url/name/gate_level/thread_hint) parallel to queries.py; `pull_rss.py`
+  fetch→parse→keyword-pre-gate→dedupe on `items.url UNIQUE`→write same-schema rows; fold into daily.sh as
+  gather+pull_rss→score→group. Gate-tier by signal density (niche-light / broad-hard). First decision = the v1
+  source batch (which feeds now vs second wave) + whether to build gate-tiering from the start. Source list +
+  endpoints in the handoff doc. Full record: memory `project_news_watch`.
+- **⏳ DEFERRED — `catholic_decline` as a 4th decline lane.** ~6 Catholic-decline rows parked in
+  protestant_collapse (a missing category, not homeless — Catholic decline is its own on-thesis signal). TRIGGER
+  to split it out: once the RSS sources (LifeSite/CNA/NCR) surface real Catholic-decline volume. Also carry: keep
+  a running note of thread-volume SKEW after RSS lands — drive the next thread-set revision off real post-RSS
+  counts, not guesses.
+- **⏳ FOLLOW-UP (low priority, after Phase 4) — per-thread "+N outside this window" footer.** The default date
+  window hid 19 of 22 protestant_collapse cards and read as a dead lane (a quiet trend-shaped topic). Make the
+  "+N outside this window" footer fire PER-THREAD so a quiet lane shows "3 cards · 19 outside this window" instead
+  of looking empty. Cheaper + more honest than a wider default. `code: static/src/84-news.jsx`.
+
 ---
 
 ## Word study + Ask the corpus — REDESIGNED (2026-06-19, under development)
