@@ -780,12 +780,20 @@ function NewsView({ isMobile }) {
     </div>
   );
 
+  // Phase 2: migrated from the old <ThreeZone> onto the shared <Shell>. PARITY ONLY — the
+  // emitted DOM is byte-identical (ThreeZone wrapped `inspect` in <aside className="zinspect">;
+  // Shell renders `inspect` raw, so News supplies that same aside). Crucially the inspect stays a
+  // PLAIN .zinspect (NOT .rstack), so it keeps News's float-behind-the-nav (top:0) — a migrated
+  // shipped surface reproduces the old float; only NEW surfaces start below the nav. isMobile is
+  // hard-false here because News's own `if (isMobile)` branch above owns the mobile layout
+  // (untouched = mobile parity for free) and never reaches this desktop return.
   return (
-    <ThreeZone
+    <Shell
       className="news-frame"
+      isMobile={false}
       rail={rail}
       center={<>{topBar}<div className="news-feed">{feedInner}</div></>}
-      inspect={<FeedShape shape={shape} />}
+      inspect={<aside className="zinspect"><FeedShape shape={shape} /></aside>}
     />
   );
 }
