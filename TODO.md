@@ -18,6 +18,11 @@ Issues surfaced 2026-06-28. #1 ("LORD the" word flip), #2 (proper-noun / entity 
   ABP/Hebrew OT/KJV/BSB occurrence controls; see TODO_ARCHIVE.md.)
   (Reviewer-flagged corpus tags Jer 49:13 + Psa 24:7 — DONE 2026-06-29, see TODO_ARCHIVE.md.
   Jer was two source typos fixed at root; Psa was the LXX-numbering bucket working as designed.)
+- **τοῦτο-paradigm mistags** (PARKED 2026-06-29) — a handful of demonstrative forms (τοῦτο, ταῦτα,
+  οὗτοι, τούτου, τούτων) carry the wrong Strong's number: single-digit counts stranded under G1473,
+  G3779, G846, G1438. The demonstrative's real number is G3778 (2,400+ rows). These are surface-form
+  collisions, low-impact. Same fix class as the αἰών/αἰώνιος retag just closed — a small bidirectional
+  retag when we get to it. Not gating anything. code: the retag folds in build_words_from_abp.py / lxx_align.
 
 ---
 

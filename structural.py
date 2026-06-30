@@ -992,10 +992,113 @@ _STRUCTURAL = {
                      "job, and the one English can least do one-to-one",
              "ref": "John 11:25", "text": "The one believing in me"},
         ],
-        "straddle": "Standing alone, without a noun, ὁ can work as a pronoun — “ὁ δέ” (“and he, but "
-                    "he”), or “ὁ μέν … ὁ δέ” (“the one … the other”). There it points at someone "
-                    "already in view rather than marking a noun, so its meaning resolves at the "
-                    "referent, not here — that use is handled separately.",
+        # Exemplar Matthew 14:18 — VERIFIED in the app 2026-06-29: ABP reads a standalone ὁ (G3588) +
+        # δέ as the pronoun "he" before the verb. (Matthew 4:4 was tried first but ABP folds "he" into
+        # the verb there — no standalone ὁ.) Step b, 2026-06-29: the deferral is now a full treatment.
+        # Routing confirmed: the article's inflected forms are plain G3588, so a pronominal "ὁ δέ" click
+        # lands on THIS card — no dotted sub-entry needed.
+        "straddle": "Standing alone, without a noun, ὁ works as a pronoun: “ὁ δέ” shifts the subject "
+                    "to someone already in the scene (“and he, but he”), and “ὁ μέν … ὁ δέ” sets “the "
+                    "one … the other.” Here ὁ marks no noun — it stands in for one, pointing back to a "
+                    "referent already in view and recovering which one from the context, exactly as "
+                    "the demonstratives (οὗτος) and the personal pronoun (αὐτός) do. So at Matthew "
+                    "14:18, the bare ὁ (“he”) carries the action to the one just named — “And he said, "
+                    "Bring them to me here!”",
+        "provenance": "GRAMMAR",
+    },
+
+    # ---- REFERENT-RESOLUTION: DEMONSTRATIVES & PRONOUNS (step b, 2026-06-29) ----
+    # A second class of structural word, distinct from εἰμί's COMPLEMENT-resolution (which points
+    # ACROSS to a predicate). These point BACK: each carries no content of its own — it is a pointer,
+    # and the reader recovers WHAT it points to (the antecedent) from the context. That is the frame
+    # gate; each entry's `function` states how it satisfies it.
+    #   IN:  οὗτος (G3778), αὐτός (G846), οὐδείς (G3762, the empty-set pointer), μηδείς (G3367, its
+    #        non-factual twin). ὁ δέ rides the article card above (G3588 straddle) — same number, no
+    #        own entry. οὐδείς/μηδείς cover ONLY the pointer side; the οὐ-vs-μή cut is the negatives
+    #        card's (G3756 / G3361), named here, not re-explained.
+    #   OUT: ἰδού (G2400) — situational deixis ("behold!"), points FORWARD to introduce something into
+    #        the scene; it announces a referent rather than recovering one already in view, so it
+    #        fails the back-pointing gate. A presentative-particle card is a separate job, not here.
+    # Exemplars VERIFIED against the live ABP reading pages 2026-06-29 — wording is verbatim ABP, the
+    # word at each ref carries the target number, and each verse is uncontested. (No model, no DB build.)
+    # Two placeholder picks were swapped after the app pass: ὁ δέ moved Matt 4:4 -> Matt 14:18 (ABP folds
+    # "he" into the verb at 4:4 — no standalone ὁ), and αὐτός "the same" moved Heb 13:8 -> 1 Cor 12:4
+    # (ABP's Hebrews stops at ch 12). John 1:18/οὐδείς -> Matt 6:24 and Rom 13:8/μηδείς -> Matt 8:4 for
+    # quieter, uncontested verses.
+    "G3778": {
+        "kind": "structural", "strongs": "G3778", "lemma": "οὗτος",
+        "function": "οὗτος is the near demonstrative — “this, these.” It carries no content of its "
+                    "own: it is a pointer, marking a particular one already in view (or just named) "
+                    "as “the one I mean” and leaving WHICH one to be recovered from the context. It "
+                    "picks out the nearer or just-mentioned referent, against ἐκεῖνος (“that”), the "
+                    "farther one. The whole paradigm — τοῦτο, ταῦτα, οὗτοι, τούτου — keys here.",
+        "relation_label": "What it points to — context supplies the referent",
+        "relation_lead": "One pointer, a few jobs — the referent is read off the context, never the word:",
+        "relations": [
+            {"type": "the one just mentioned (anaphoric “this”)",
+             "note": "points back to a referent already named",
+             "ref": "John 1:2", "text": "This one was in the beginning with God"},
+            {"type": "the one present, or about to be named",
+             "note": "points to someone in the scene — “this is …”",
+             "ref": "Matthew 3:17", "text": "This is my son the beloved"},
+            {"type": "a whole statement (neuter τοῦτο, “this thing”)",
+             "note": "points at a clause, not a person — the referent is the surrounding statement",
+             "ref": "John 6:29", "text": "This is the work of God"},
+        ],
+        "provenance": "GRAMMAR",
+    },
+    "G846": {
+        "kind": "structural", "strongs": "G846", "lemma": "αὐτός",
+        "function": "αὐτός is the third-person pronoun — “he, she, it, they” — and the commonest "
+                    "pointer in the New Testament. Standing in for a noun already named, it has no "
+                    "content of its own; the referent is whoever was last in view, recovered from the "
+                    "context. The same form also does two related jobs, told apart by position and "
+                    "the article.",
+        "relation_label": "What it points to — position and the article pick which",
+        "relation_lead": "One form, three jobs, each tied to a referent:",
+        "relations": [
+            {"type": "he, she, it (anaphoric)",
+             "note": "stands in for a noun already named — the plain pointer",
+             "ref": "John 1:3", "text": "All through him existed"},
+            {"type": "-self (intensive)",
+             "note": "added to a noun or pronoun to stress the referent — “the man himself”",
+             "ref": "John 4:2", "text": "Jesus himself did not immerse"},
+            {"type": "the same (ὁ αὐτός)",
+             "note": "with the article, marks two referents as identical",
+             "ref": "1 Corinthians 12:4",
+             "text": "But there are divisions of favors, but the same spirit"},
+        ],
+        "provenance": "GRAMMAR",
+    },
+    "G3762": {
+        "kind": "structural", "strongs": "G3762", "lemma": "οὐδείς",
+        "function": "οὐδείς is the negative pronoun — “no one, nobody, nothing, none.” Like the other "
+                    "pointers it fills the who/what slot, but it points to the EMPTY set: it answers "
+                    "“who?” or “what?” with “nobody, nothing.” Built from οὐδέ + εἷς (“not even one”), "
+                    "it is the factual-side pronoun; its non-factual twin is μηδείς. The οὐ-vs-μή cut "
+                    "behind that pairing is the negatives card’s (οὐ / μή) — here, only the pointer "
+                    "side.",
+        "relation_label": "What it points to",
+        "relations": [
+            {"type": "no one, nothing (the empty set)",
+             "note": "fills the referent slot and denies that anything is there",
+             "ref": "Matthew 6:24", "text": "No one is able to serve two masters"},
+        ],
+        "provenance": "GRAMMAR",
+    },
+    "G3367": {
+        "kind": "structural", "strongs": "G3367", "lemma": "μηδείς",
+        "function": "μηδείς is the non-factual twin of οὐδείς — the same negative pointer, “no one, "
+                    "nothing,” but in the realm of commands, purposes, and suppositions (with the "
+                    "non-indicative moods): “let no one …,” “so that no one …” It points to the empty "
+                    "set just as οὐδείς does; the factual-vs-non-factual cut that separates the two is "
+                    "the negatives card’s (οὐ / μή), not re-explained here.",
+        "relation_label": "What it points to",
+        "relations": [
+            {"type": "no one, nothing (in commands, purposes, suppositions)",
+             "note": "the empty-set pointer, where μή’s non-factual negation applies",
+             "ref": "Matthew 8:4", "text": "See that no one you tell!"},
+        ],
         "provenance": "GRAMMAR",
     },
 }
