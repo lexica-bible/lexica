@@ -39,6 +39,18 @@ function _stripOutlet(title) {
   return (title || "").replace(/\s+[-–—]\s+[^-–—]+$/, "").trim() || (title || "");
 }
 
+// The card's date is a RANGE now that rank + window both key on the PEAK day: show
+// "peaked X · latest Y" so a long-tail event (peaks late May, one straggler in June)
+// reads honestly instead of stamping the lone straggler's date and contradicting its
+// rank. Collapses to a single date when the event is one day (peak == latest) or we
+// only have one of the two. Same date-provenance idea as showing the scoring rationale.
+function _dateRange(story) {
+  const peak = (story.peak_date || "").slice(0, 10);
+  const latest = (story.published || "").slice(0, 10);
+  if (peak && latest && peak !== latest) return "peaked " + peak + " · latest " + latest;
+  return latest || peak || "—";
+}
+
 function NewsStory({ story, view, onMark, readOnly }) {
   const [open, setOpen] = useState(false);
   const top = story.sources[0] || {};
@@ -56,7 +68,7 @@ function NewsStory({ story, view, onMark, readOnly }) {
         <div className="news-meta-line">
           <span>{top.source || "?"}</span>
           <span>·</span>
-          <span>{story.published || "—"}</span>
+          <span>{_dateRange(story)}</span>
           {story.count > 1 && (
             <>
               <span>·</span>

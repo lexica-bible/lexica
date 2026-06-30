@@ -303,6 +303,70 @@ def _serialize(cluster):
     }
 
 
+def _peak_in_window(peak_date, since, until):
+    """The ONE date test shared by list / counts / shape: is a cluster's PEAK day inside
+    [since, until]? Empty since/until = open on that side (since='' is the Max preset). A
+    cluster with no datable article (empty peak) is dropped the moment a window edge is set —
+    mirrors the old SQL, which excluded undated articles as soon as a date floor was applied.
+    Filtering on the PEAK (not on each article) is the whole fix: a roving date window can no
+    longer split one event into a bulk card here and an orphan straggler card there."""
+    d = (peak_date or "")[:10]
+    if not since and not until:
+        return True
+    if not d:
+        return False
+    if since and d < since:
+        return False
+    if until and d > until:
+        return False
+    return True
+
+
+def _window_clusters(conn, rid, has_event, *, status=None, thread=None,
+                     min_score=0, since=None, until=None, has_newflag=False):
+    """Pull the FULL scored set (NO date floor in SQL — that's the structural fix), cluster it,
+    then keep whole clusters whose PEAK day is in [since, until] AND whose PEAK score >= min_score.
+    One event in or out as a unit, dated + counted by peak.
+
+    status/thread narrow the ROWS that cluster (a view legitimately clusters a different
+    population): status=None = every status (shape's whole-feed readout); 'new'/'keep'/'dismiss'
+    = that bucket (list + counts). The date AND score window are applied to the ASSEMBLED cluster,
+    never to the raw articles, so the cluster's identity (peak, count, sources) is the same no
+    matter which date window is looking at it. The score floor moves here too: peak = the highest
+    member score, so 'peak >= floor' selects the exact same CARDS as the old per-article floor —
+    only the count changes, from 'members above the floor' to the whole event."""
+    status_expr = "COALESCE(r.status, 'new')"
+    where = ["i.score IS NOT NULL"]
+    args = []
+    if status:
+        where.append(f"{status_expr} = ?")
+        args.append(status)
+    if thread:
+        where.append("i.ai_thread = ?")
+        args.append(thread)
+    sql = (f"SELECT i.id, i.url, i.title, i.source, i.published, i.score, "
+           f"i.ai_thread, i.ai_why, {status_expr} AS status"
+           f"{', i.event' if has_event else ''}"
+           f"{', i.ai_new_flag' if has_newflag else ''} "
+           f"FROM items i LEFT JOIN reviews r "
+           f"  ON r.item_id = i.id AND r.reviewer = ? "
+           f"WHERE {' AND '.join(where)} "
+           f"ORDER BY i.score DESC, i.published DESC")
+    rows = conn.execute(sql, [rid, *args]).fetchall()
+    if not rows:
+        return []
+    out = []
+    for c in _group(rows, has_event):
+        arts = c["arts"]
+        peak_score = max((a["score"] or 0 for a in arts), default=0)
+        if min_score and peak_score < min_score:
+            continue
+        if not _peak_in_window(_peak_date(arts), since, until):
+            continue
+        out.append(c)
+    return out
+
+
 # Recency-weighted DEFAULT sort. The feed ranks story cards by PEAK score, which floats
 # an old-but-high cluster above fresher coverage. We dock a small staleness penalty keyed
 # off the cluster's PEAK DAY (the day most outlets covered it): GRACE days free, then
@@ -332,43 +396,6 @@ def _staleness_penalty(published):
     return min(_FEED_CAP, max(0.0, (age - _FEED_GRACE_DAYS) * _FEED_RATE))
 
 
-def _count_view_clusters(conn, rid, status_value, has_event, since=None, min_score=0,
-                         thread=None, until=None):
-    """How many CARDS (clusters) this reviewer has in a status — counted the SAME way the
-    list renders: existing + scored items only, scoped to rid, grouped into cards. So the
-    tab badge can't disagree with the feed (an orphaned review row whose item churned away
-    has no scored item to join, so it drops out), and the number is CARDS not articles
-    (5 kept articles that group into 3 cards count as 3).
-
-    When since/min_score are given they apply the SAME date+score window the feed uses, so
-    the three tab badges describe the in-window population (Inbox+Kept+Dismissed add up to
-    the in-window total, and Inbox reads as a remainder). When a thread is given it narrows
-    too, so the badges still match the feed once a thread is picked. Called with NO date
-    window (but the same thread) for the all-time totals behind the '+N outside' footer."""
-    where = ["i.score IS NOT NULL", "COALESCE(r.status, 'new') = ?"]
-    args = [rid, status_value]
-    if min_score:
-        where.append("i.score >= ?")
-        args.append(min_score)
-    if since:
-        where.append("i.published >= ? AND i.published != ''")
-        args.append(since)
-    if until:
-        # published is a full timestamp; compare the DATE part so the whole end-day counts.
-        where.append("substr(i.published, 1, 10) <= ? AND i.published != ''")
-        args.append(until)
-    if thread:
-        where.append("i.ai_thread = ?")
-        args.append(thread)
-    sql = (f"SELECT i.id, i.title, i.ai_thread{', i.event' if has_event else ''} "
-           f"FROM items i LEFT JOIN reviews r "
-           f"  ON r.item_id = i.id AND r.reviewer = ? "
-           f"WHERE {' AND '.join(where)} "
-           f"ORDER BY i.score DESC, i.published DESC")
-    rows = conn.execute(sql, args).fetchall()
-    return len(_group(rows, has_event)) if rows else 0
-
-
 @bp.route("/api/news/meta", methods=["GET"])
 def meta():
     """Drives the tab: is the viewer admin, is news.db loaded, the thread names, who's
@@ -393,10 +420,10 @@ def counts():
     inbox / kept / dismissed for the active date+score window — so the three add up to the
     in-window total and Inbox reads as a remainder, not the whole feed. Also returns the
     all-time kept/dismissed totals so the UI can show a quiet '+N outside this window' hint.
-    Counted by CARD the same way the feed groups them (see _count_view_clusters). Honors the
-    active thread when one is set, so the badges keep matching the feed once a thread is
-    picked; the all-time totals stay thread-scoped too (so '+N outside' means outside the
-    DATE window, within the same thread)."""
+    Counted by CARD the same way the feed groups them (through _window_clusters, so the badges
+    can't disagree with the list). Honors the active thread when one is set, so the badges keep
+    matching the feed once a thread is picked; the all-time totals stay thread-scoped too (so
+    '+N outside' means outside the DATE window, within the same thread)."""
     if not _can_read():
         return jsonify({"error": "not found"}), 404
     if not _available():
@@ -415,13 +442,14 @@ def counts():
         has_event = "event" in [c[1] for c in conn.execute("PRAGMA table_info(items)")]
         # in-window (sc=True) vs all-time (sc=False) card counts for a status bucket; the
         # thread narrows both (only the DATE window is dropped for the all-time totals, so
-        # '+N outside' = before since OR after until).
+        # '+N outside' = before since OR after until). Same _window_clusters the feed uses,
+        # so a badge is exactly the card count of its view.
         def c(status, sc=False):
-            return _count_view_clusters(conn, rid, status, has_event,
+            return len(_window_clusters(conn, rid, has_event, status=status,
+                                        thread=thread or None,
                                         since=since if sc else None,
-                                        min_score=min_score if sc else 0,
                                         until=until if sc else None,
-                                        thread=thread or None)
+                                        min_score=min_score if sc else 0))
         out = {
             "available": True,
             "inbox": c("new", True),
@@ -457,46 +485,20 @@ def list_news():
     order = (request.args.get("order") or "score").strip()   # score | date
 
     rid, _ = _reviewer()
-    status_expr = "COALESCE(r.status, 'new')"   # this viewer's call, default unreviewed
-
-    where = ["i.score IS NOT NULL", "i.score >= ?"]
-    args = [min_score]
-    if since:
-        # published is full ISO; comparing against a 'YYYY-MM-DD' floor works as text.
-        # Empty published (unknown date) is excluded once a since-floor is set.
-        where.append("i.published >= ? AND i.published != ''")
-        args.append(since)
-    if until:
-        # upper bound: compare the DATE part so the whole end-day is included.
-        where.append("substr(i.published, 1, 10) <= ? AND i.published != ''")
-        args.append(until)
-    if thread:
-        where.append("i.ai_thread = ?")
-        args.append(thread)
-    if view == "inbox":
-        where.append(f"{status_expr} = 'new'")
-    elif view == "kept":
-        where.append(f"{status_expr} = 'keep'")
-    elif view == "dismissed":
-        where.append(f"{status_expr} = 'dismiss'")
+    # inbox/kept/dismissed narrow to one status bucket; "all" leaves status open. The date +
+    # score window is applied to the assembled clusters (peak-in-window), NOT the raw articles.
+    view_status = {"inbox": "new", "kept": "keep", "dismissed": "dismiss"}.get(view)
 
     conn = news_db()
     try:
         _ensure_reviews(conn)
-        cols = [c[1] for c in conn.execute("PRAGMA table_info(items)")]
-        has_event = "event" in cols                      # set once group_news.py runs
-        sql = (f"SELECT i.id, i.url, i.title, i.source, i.published, i.score, "
-               f"i.ai_thread, i.ai_why, {status_expr} AS status"
-               f"{', i.event' if has_event else ''} "
-               f"FROM items i LEFT JOIN reviews r "
-               f"  ON r.item_id = i.id AND r.reviewer = ? "
-               f"WHERE {' AND '.join(where)} "
-               f"ORDER BY i.score DESC, i.published DESC")
-        rows = conn.execute(sql, [rid, *args]).fetchall()
+        has_event = "event" in [c[1] for c in conn.execute("PRAGMA table_info(items)")]
+        clusters = _window_clusters(conn, rid, has_event, status=view_status,
+                                    thread=thread or None, min_score=min_score,
+                                    since=since or None, until=until or None)
     finally:
         conn.close()
 
-    clusters = _group(rows, has_event)
     stories = [_serialize(c) for c in clusters]
     if order == "date":
         stories.sort(key=lambda s: (s["published"], s["score"]), reverse=True)
@@ -523,42 +525,44 @@ def shape():
         return jsonify({"available": False})
     since = (request.args.get("since") or "").strip()
     until = (request.args.get("until") or "").strip()
-    where = ["score IS NOT NULL"]
-    args = []
-    if since:
-        where.append("published >= ? AND published != ''")
-        args.append(since)
-    if until:
-        where.append("substr(published, 1, 10) <= ? AND published != ''")
-        args.append(until)
-    w = " AND ".join(where)
-
+    rid, _ = _reviewer()
     conn = news_db()
     try:
+        _ensure_reviews(conn)
         cols = [c[1] for c in conn.execute("PRAGMA table_info(items)")]
         has_event = "event" in cols
         has_newflag = "ai_new_flag" in cols
-        # surfaced (score>=6) vs buried (<6) + new-angle flags — booleans sum to counts.
-        tot = conn.execute(
-            f"SELECT SUM(score >= 6) AS surfaced, SUM(score < 6) AS buried, COUNT(*) AS total"
-            f"{', SUM(ai_new_flag = 1) AS new_angles' if has_newflag else ''} "
-            f"FROM items WHERE {w}", args).fetchone()
-        threads = [
-            {"thread": r["ai_thread"],
-             "label": THREAD_LABELS.get(r["ai_thread"], r["ai_thread"] or "?"),
-             "surfaced": r["surfaced"] or 0, "scored": r["scored"] or 0}
-            for r in conn.execute(
-                f"SELECT ai_thread, SUM(score >= 6) AS surfaced, COUNT(*) AS scored "
-                f"FROM items WHERE {w} GROUP BY ai_thread "
-                f"ORDER BY surfaced DESC, scored DESC", args)]
-        clusters = []
-        if has_event:
-            clusters = [
-                {"event": r["event"], "n": r["n"], "hi": r["hi"] or 0}
-                for r in conn.execute(
-                    f"SELECT event, COUNT(*) AS n, MAX(score) AS hi "
-                    f"FROM items WHERE {w} AND event IS NOT NULL AND event != '' "
-                    f"GROUP BY event ORDER BY n DESC LIMIT 5", args)]
+        # Cluster the WHOLE in-window feed once (every status, every thread, NO score floor —
+        # the buried count is the point), the SAME way the cards are built, then read every
+        # figure off those clusters' member articles. So each shape number matches the cards
+        # actually shown for this date window — an event in or out as a unit, by its peak.
+        clusters = _window_clusters(conn, rid, has_event, status=None, thread=None,
+                                    min_score=0, since=since or None, until=until or None,
+                                    has_newflag=has_newflag)
+        arts = [a for cl in clusters for a in cl["arts"]]
+        surfaced = sum(1 for a in arts if (a["score"] or 0) >= 6)
+        buried = sum(1 for a in arts if (a["score"] or 0) < 6)
+        total = len(arts)
+        new_angles = sum(1 for a in arts if a["ai_new_flag"] == 1) if has_newflag else 0
+        # per-thread surfaced (>=6) / scored (all), biggest first
+        by_thread = {}
+        for a in arts:
+            s, sc = by_thread.get(a["ai_thread"], (0, 0))
+            by_thread[a["ai_thread"]] = (s + (1 if (a["score"] or 0) >= 6 else 0), sc + 1)
+        threads = sorted(
+            ({"thread": t, "label": THREAD_LABELS.get(t, t or "?"),
+              "surfaced": s, "scored": sc}
+             for t, (s, sc) in by_thread.items()),
+            key=lambda r: (r["surfaced"], r["scored"]), reverse=True)
+        # top events = the biggest in-window cards (each cluster IS one event); label by the
+        # cluster's AI event tag when it has one, else its representative headline.
+        top = sorted(clusters, key=lambda cl: len(cl["arts"]), reverse=True)[:5]
+        topclusters = [
+            {"event": ((cl["rep"]["event"] if has_event and cl["rep"]["event"] else None)
+                       or cl["rep"]["title"]),
+             "n": len(cl["arts"]),
+             "hi": max((a["score"] or 0 for a in cl["arts"]), default=0)}
+            for cl in top]
     except sqlite3.Error:
         return jsonify({"available": True, "surfaced": 0, "buried": 0, "total": 0,
                         "new_angles": 0, "threads": [], "clusters": []})
@@ -566,11 +570,9 @@ def shape():
         conn.close()
     return jsonify({
         "available": True,
-        "surfaced": (tot["surfaced"] or 0) if tot else 0,
-        "buried": (tot["buried"] or 0) if tot else 0,
-        "total": (tot["total"] or 0) if tot else 0,
-        "new_angles": (tot["new_angles"] or 0) if (tot and has_newflag) else 0,
-        "threads": threads, "clusters": clusters,
+        "surfaced": surfaced, "buried": buried, "total": total,
+        "new_angles": new_angles,
+        "threads": threads, "clusters": topclusters,
     })
 
 
