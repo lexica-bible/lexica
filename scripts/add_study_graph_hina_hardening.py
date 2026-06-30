@@ -73,7 +73,7 @@ INTRO = ("When Jesus quotes Isaiah 6 to explain the parables, Mark writes ἵν�
          "lays out the strongest case for each reading — and then asks an older question: did "
          "Mark's ἵνα create this fork, or only inherit it? Follow where each chain actually "
          "load-bears. The graph maps the reasoning; it does not settle the doctrine.")
-PUBLISHED = False   # land as a draft; flip to True AFTER JP's review (graphs are admin-only anyway)
+PUBLISHED = True   # reviewed + applied as draft, then published (graphs stay admin-only either way)
 
 # Claims: the shared pool. Verse claims carry a `ref` (resolves to text, clickable in the
 # reader); claims about the Hebrew / about a lexical range carry no ref. provenance: text/lexicon
