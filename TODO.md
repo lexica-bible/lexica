@@ -16,13 +16,8 @@ Issues surfaced 2026-06-28. #1 ("LORD the" word flip), #2 (proper-noun / entity 
   cleanup only. code: the g1473_gloss_retag fold in build_words_from_abp.py / lxx_align.
   (The bound-entity card occurrence follow-up is DONE + LIVE — the card now shows the real
   ABP/Hebrew OT/KJV/BSB occurrence controls; see TODO_ARCHIVE.md.)
-- **Reviewer-flagged corpus tags — UNVERIFIED, no fix yet (2026-06-28).** Two tags the Claude-chat
-  reviewer flagged, NOT yet checked against the live `words` table and NOT corrected: **Jer 49:13**
-  (tagged αἰώνιος G166 where αἰών G165 is likely the right lemma) and **Psa 24:7** (a verse-numbering
-  question — ABP uses Greek/LXX numbering). Neither is handled in the repo (the G166/G165 hits in
-  build_word_gloss.py are gloss definitions, not corrections). First step = read the live row on PA to
-  confirm whether it's actually wrong; if so, a scoped dry-run-first fix like the other corpus repairs.
-  code: bible.db words table (PA-only) — no script exists yet.
+  (Reviewer-flagged corpus tags Jer 49:13 + Psa 24:7 — DONE 2026-06-29, see TODO_ARCHIVE.md.
+  Jer was two source typos fixed at root; Psa was the LXX-numbering bucket working as designed.)
 
 ---
 
@@ -335,13 +330,14 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
     TRIM (glance vs full — the fork block + grounding verses compress LAST). Pick up after the reviewer above.
   - Follow-up (small, not blocking): the fork gate names a covenant-membership/NPP reading for dikaioō that
     `salvation_how` has no node for — add one to that graph (via add_study_graph_salvation.py) so the link lands.
-  - Follow-up (hardening, not blocking — 2026-06-24 card review): the citation gate only sees refs shaped
-    `Book ch:vs`. A malformed ref with no chapter:verse (the charis `1Ti—` the model wrote for 1Ti 1:2) is
-    INVISIBLE to it — neither pass nor miss, so it slips through silently. Add a lint that flags a book-abbrev
-    token in the prose NOT followed by `chapter:verse`. (`cited_refs` / `_REF_RE` in build_lexica_def.py.)
-    (Sibling parser gap CLOSED 2026-06-28, commit 632e54a: a SPACED/spelled-out numbered book —
-    "2 Chr 26:11" — used to orphan the numeral and log no-verse; `_norm_book` now re-attaches it. This
-    no-chapter:verse lint is the remaining hole in the same parser.)
+  - ✅ **No-verse lint — DONE 2026-06-29 (commit c41bcd8).** The citation gate only saw `Book ch:vs`, so a
+    dangling book token with no chapter:verse (the charis `1Ti—`) was invisible — neither pass nor miss.
+    `dangling_book_refs()` in build_lexica_def.py now strips the complete refs, then flags any leftover
+    NUMBERED-book name that's a real `verses.book` code; folded onto the gate's `audit` as an advisory
+    `dangling` line (never a fail) + printed in `show_entry`. Numbered-only (a bare "Gen" matches ordinary
+    words / legit "throughout Genesis"); lexica-build only (ai.py's `_VERSE_REF_RE` not touched — port later
+    if wanted). Fires on future builds/`--resplit`; a free `--resplit --apply --all` would sweep the 18 live.
+    (Sibling parser gap CLOSED 2026-06-28, commit 632e54a: spaced/spelled-out "2 Chr 26:11" — a RECOVER fix.)
   - ✅ **Dotted-cognate collision — FIXED 2026-06-25 (commit 87d1555), with a rule for the full build.** The word
     card fetched the Lexica entry by `strongs_base` (drops ABP's ".N"), so a dotted cognate inherited its BASE
     word's def — G1577.1 ἐκκλησιάζω (verb) and G1577.2 ἐκκλησιαστής (agent noun) showed ekklēsia's noun senses.

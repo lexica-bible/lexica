@@ -6,6 +6,41 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## αἰών/αἰώνιος mistag (Jer 49:13 + Hab 3:6) + Psa 24:7 numbering — DONE 2026-06-29
+Two reviewer-flagged corpus tags, query-first then fixed.
+- **Jer 49:13 + Hab 3:6 — TWO source typos, fixed at root.** The query sweep proved it was NOT a class
+  confusion — only two noun forms wrongly tagged the adjective G166: Jer 49:13 pos 28 `αιώνα` (accusative of
+  the noun αἰών) and Hab 3:6 pos 19 `αιώνος` (genitive). Both are plain noun forms BibleHub's ABP mis-tagged
+  as αἰώνιος (G165 and G166 are next-door, noun vs adjective). Confirmed in `bh_scrape.db` (`3588-166 τον
+  αιώνα` / `166 αιώνος`) — our build copies the source number faithfully, so it's a source slip, not our code.
+  Fixed in BOTH places: live `words` (set strongs=165/strongs_base=G165 on the two slots) AND `bh_scrape.db`
+  (so a future rebuild reproduces the right number). The αἰώνιος card was rebuilt to drop the bad evidence —
+  `build_lexica_def.py --word G166 --apply --force` (39/39 pass): Jer 49:13 dropped entirely (it had only the
+  mistagged noun); Hab 3:6 correctly STAYED, because pos 22 `αιώνιαι` "his eternal" is a genuine G166 adjective
+  in the same verse. Surgical proof the root fix landed. **No αἰών G165 Lexica card exists**, so no G165
+  rebuild was run (would have built an unwanted new card + a paid model call).
+- **GOTCHA worth keeping:** `build_lexica_def.py --word G## --apply` SKIPS as "up to date" after a data-only
+  change — the skip-stamp is the PROMPT fingerprint, not the data. Must pass `--force` to re-pull evidence
+  after a retag. And the flag is `--word`, not `--strongs`.
+- **Psa 24:7 — NOT a tag bug, no fix.** ABP numbers Psalms the LXX way (our Psa 24 = LXX Psa 23), so the ref
+  has no row in `verses`; the citation gate's `noverse` bucket logs it as "verse not in our text," never as a
+  tag fault. The bucket worked as designed — closed without a change.
+
+---
+
+## No-verse lint (dangling "1Ti—" refs in the citation gate) — DONE 2026-06-29 (commit c41bcd8)
+`_REF_RE` only matched a complete `Book ch:vs`, so a book token with no chapter:verse after it ("1Ti—") was
+invisible — not even logged as a miss. `dangling_book_refs()` in build_lexica_def.py strips the complete refs
+first, then flags any leftover NUMBERED-book name that's a real `verses.book` code; folded onto the gate's
+`audit` as an advisory `dangling` line (never a fail) + a `show_entry` print. Three deliberate scope calls:
+numbered-only (a bare "Gen" matches "For"/"God" and legit "throughout Genesis"), advisory not blocking, and
+lexica-build only (ai.py's own `_VERSE_REF_RE` left alone — port later if wanted). Distinct from the
+RECOVERABLE sibling gap (spaced "2 Chr 26:11", commit 632e54a) — a dangling ref has no verse to bind, so it
+can only be flagged. Fires on future builds/`--resplit`; a free `--resplit --apply --all` would sweep the 18
+live cards.
+
+---
+
 ## ἵνα / Isaiah-6 hardening argument graph — BUILT + PUBLISHED + card wired — DONE 2026-06-29
 The graph the ἵνα structural card points out to: does Mark's ἵνα at the hardening verses mark PURPOSE or
 RESULT? `scripts/add_study_graph_hina_hardening.py` → study.db `hina_hardening` (published; graphs are public
