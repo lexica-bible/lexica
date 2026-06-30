@@ -136,11 +136,26 @@ function _dedupByOutlet(members) {
   });
 }
 
+// Default depth of the in-window citation list before the "show more sources" fold — even
+// after dedup-by-outlet a mega-cluster has 100+ distinct outlets (genuine breadth, not dupes),
+// so cap the visible rows and tuck the rest behind a fold like the out-of-window coverage.
+const _SRC_DEPTH = 15;
+
 function NewsStory({ story, view, onMark, readOnly, since, until }) {
   const [open, setOpen] = useState(false);
   const [showOld, setShowOld] = useState(false);
+  const [showMore, setShowMore] = useState(false);
   const top = story.sources[0] || {};
   const tier = _scoreTier(story.score);
+  // One citation row: the anchor wraps ONLY the outlet name (inline, so the click/pointer
+  // hugs the text), with the date as a sibling span OUTSIDE the link — not clickable.
+  const srcRow = (m, key) => (
+    <div key={key} className="news-src-row">
+      <a className="news-src" href={m.url || "#"} target="_blank" rel="noopener noreferrer"
+         onClick={(e) => e.stopPropagation()}>{m.src || "?"}</a>
+      {m.d && <span className="news-src-date">{m.d}</span>}
+    </div>
+  );
   // Expanded citation list = the per-OUTLET deduped representatives (each outlet's newest
   // article), newest-first, dated. With a date window active it splits to match the card's
   // in-window "+N more" promise: in-window outlets show by default, the older out-of-window
@@ -179,24 +194,21 @@ function NewsStory({ story, view, onMark, readOnly, since, until }) {
         </div>
         {open && story.count > 1 && (
           <div className="news-sources">
-            {recent.map((m, i) => (
-              <a key={i} className="news-src" href={m.url || "#"} target="_blank" rel="noopener noreferrer"
-                 onClick={(e) => e.stopPropagation()}>
-                {m.src || "?"} {m.d && <span className="news-src-date">{m.d}</span>}
-              </a>
-            ))}
+            {recent.slice(0, _SRC_DEPTH).map((m, i) => srcRow(m, i))}
+            {recent.length > _SRC_DEPTH && !showMore && (
+              <button className="news-srcmore"
+                      onClick={(e) => { e.stopPropagation(); setShowMore(true); }}>
+                show more sources (+{recent.length - _SRC_DEPTH}) ▾
+              </button>
+            )}
+            {showMore && recent.slice(_SRC_DEPTH).map((m, i) => srcRow(m, "r" + i))}
             {older.length > 0 && !showOld && (
               <button className="news-srcmore"
                       onClick={(e) => { e.stopPropagation(); setShowOld(true); }}>
                 show earlier coverage (+{older.length}) ▾
               </button>
             )}
-            {showOld && older.map((m, i) => (
-              <a key={"o" + i} className="news-src" href={m.url || "#"} target="_blank" rel="noopener noreferrer"
-                 onClick={(e) => e.stopPropagation()}>
-                {m.src || "?"} {m.d && <span className="news-src-date">{m.d}</span>}
-              </a>
-            ))}
+            {showOld && older.map((m, i) => srcRow(m, "o" + i))}
           </div>
         )}
       </div>
