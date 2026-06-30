@@ -202,10 +202,6 @@ tools have that we don't yet. Saved here, NOT being worked — revisit on your o
   tab and opens the graph by id (the `studyPending`/`openEntry` plumbing already exists for the metaV sidebar).
   Deferred on purpose so the plumbing didn't couple to landing ἵνα's content.
   `code: static/src/90-app.jsx, 30-detail-panel.jsx, 20-shared-components.jsx`
-- **Confirm the ἵνα reverse chip live (small).** Load Mark 4:12 (or Matt 13:13 / John 12:40), tap the verse
-  number, confirm the xref panel shows the "In studies: ἵνα and the hardening of Isaiah 6" graph chip. The
-  forward breadcrumb + the graph itself are verified; the reverse chip rides existing public for-verse plumbing
-  but wasn't run.
 
 - **LSJ "Lexica" overrides — DONE + LIVE 2026-06-23; a few words still open.** The LSJ word-study
   blurb is now a Haiku "definition" prompt for the bulk + per-word hand-written **"Lexica" overrides**
