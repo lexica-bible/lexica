@@ -195,7 +195,7 @@ function NewsView({ isMobile }) {
   const [until, setUntil] = useState(() => localStorage.getItem("lexica.news.until.v1") || "");
   const [minScore, setMinScore] = useState(() => Number(localStorage.getItem("lexica.news.min.v1") || 5));
   const [thread, setThread] = useState("");
-  const [order, setOrder] = useState("score");        // score | date
+  const [order, setOrder] = useState("score");        // score | date | oldest
   const [flash, setFlash] = useState("");
   const [shape, setShape] = useState(null);           // feed-shape readout for the right zone
   const [counts, setCounts] = useState({});           // Kept badge — server-seeded, then owned locally
@@ -374,6 +374,7 @@ function NewsView({ isMobile }) {
     <select className="news-thread-sel" value={order} onChange={e => setOrder(e.target.value)}>
       <option value="score">Top stories</option>
       <option value="date">Newest</option>
+      <option value="oldest">Oldest</option>
     </select>
   );
   const inboxFilters = (   // mobile: one flat strip (keeps the inline "Since" word)
