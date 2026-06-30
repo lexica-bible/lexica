@@ -60,9 +60,9 @@
   --r-lg: 14px;
 
   --sidebar-w: 460px;
-  /* News runs its right feed-shape panel narrower than Library/Word study so its
-     center has room for the top control bar (the panel is always open). */
-  --news-sidebar-w: 380px;
+  /* News's right feed-shape panel matches Library/Word study width (pinned to the
+     shared --sidebar-w so they stay locked together). */
+  --news-sidebar-w: var(--sidebar-w);
 
   --lib-vnum-w: 24px;    /* lib-vnum min-width */
   --lib-row-pl: 5px;     /* lib-verse-row padding-left */
@@ -4976,9 +4976,9 @@ button.study-verse-ref { border: none; }
   font-size: 12px; color: var(--muted); }
 .news-rail-asline strong { color: var(--ink); font-weight: 600; }
 
-/* News runs its right panel narrower than Library/Word study (--news-sidebar-w) so the
-   always-open feed-shape panel leaves room for the center top bar. Both the reserved
-   strip (.zshell padding) and the fixed panel width are re-pointed at the narrower var. */
+/* News's right panel matches Library/Word study width via --news-sidebar-w (pinned to
+   --sidebar-w). Both the reserved strip (.zshell padding) and the fixed panel width
+   point at the var, so they move together if the shared width ever changes. */
 .zshell.news-frame { padding-right: var(--news-sidebar-w); }
 .news-frame .zinspect { width: var(--news-sidebar-w); }
 
