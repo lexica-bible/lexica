@@ -123,17 +123,19 @@ USER_HEAD = ("Score these articles. Return ONLY a JSON array — one object per 
 
 _FENCE = re.compile(r"^```(?:json)?|```$", re.MULTILINE)
 
-# Haiku sees each article in a batch as "id=NNN | ...", so it sometimes writes a
-# back-reference reason ("Same event as id=12345") instead of a real one. That id
-# means nothing to a reader and leaks into the card body, so drop the whole reason
-# when it's just a pointer at another article.
+# Haiku sees each article in a batch as "id=NNN | ...", so it sometimes prefixes the
+# reason with a back-reference at another article ("Same event as 986—police shelving
+# ..."). That id means nothing to a reader and leaks into the card body. Strip the
+# pointer prefix but KEEP the real reason that follows it.
 _BACKREF_WHY = re.compile(
-    r"^\s*(?:same(?:\s+event)?\s+as|same\s+story\s+as|duplicate\s+of|see)\s+(?:id\s*=?\s*)?\d+",
+    r"^\s*(?:same(?:\s+event|\s+story)?\s+as|duplicate\s+of|see)\s+"
+    r"(?:id\s*=?\s*)?\d+\s*[—–\-;:,.]*\s*",
     re.IGNORECASE)
 
 
 def _clean_why(why):
-    return "" if _BACKREF_WHY.match(why or "") else (why or "")
+    out = _BACKREF_WHY.sub("", why or "").strip()
+    return (out[:1].upper() + out[1:]) if out else ""
 
 
 def build_client():
