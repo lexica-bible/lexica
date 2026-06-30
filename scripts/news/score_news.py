@@ -127,15 +127,26 @@ _FENCE = re.compile(r"^```(?:json)?|```$", re.MULTILINE)
 # reason with a back-reference at another article ("Same event as 986—police shelving
 # ..."). That id means nothing to a reader and leaks into the card body. Strip the
 # pointer prefix but KEEP the real reason that follows it.
+#   - The pointer can name SEVERAL ids ("Duplicate of 308, 309 and 311—..." or
+#     "986/987—..."), so eat the whole id LIST (joined by , / & and) before the
+#     final separator — else the leftover ids ride into the tail.
 _BACKREF_WHY = re.compile(
     r"^\s*(?:same(?:\s+event|\s+story)?\s+as|duplicate\s+of|see)\s+"
-    r"(?:id\s*=?\s*)?\d+\s*[—–\-;:,.]*\s*",
+    r"(?:id\s*=?\s*)?\d+"                                  # first id
+    r"(?:\s*(?:,|/|&|and)\s*(?:id\s*=?\s*)?\d+)*"          # any more ids in the list
+    r"\s*[—–\-;:,.]*\s*",                                  # final separator before the tail
     re.IGNORECASE)
 
 
 def _clean_why(why):
     out = _BACKREF_WHY.sub("", why or "").strip()
-    return (out[:1].upper() + out[1:]) if out else ""
+    if not out:
+        return ""
+    # Sentence-case a recovered tail ("police ..." -> "Police ..."), but ONLY when the
+    # first word is entirely lowercase — never touch a mixed-case proper name (mBridge).
+    if out.split(None, 1)[0].islower():
+        out = out[0].upper() + out[1:]
+    return out
 
 
 def build_client():
