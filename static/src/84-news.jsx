@@ -173,7 +173,12 @@ function NewsView({ isMobile }) {
   const [stories, setStories] = useState(null);
   const [loading, setLoading] = useState(false);
   const [view, setView] = useState("inbox");          // inbox | kept
-  const [since, setSince] = useState(() => localStorage.getItem("lexica.news.since.v1") || _newsDaysAgo(21));
+  // "" = no date bound ("Max" preset). Restore by null-check, NOT `|| default`, so a saved
+  // empty value (Max) survives reload instead of snapping back to the 21-day default.
+  const [since, setSince] = useState(() => {
+    const saved = localStorage.getItem("lexica.news.since.v1");
+    return saved === null ? _newsDaysAgo(21) : saved;
+  });
   const [minScore, setMinScore] = useState(() => Number(localStorage.getItem("lexica.news.min.v1") || 5));
   const [thread, setThread] = useState("");
   const [order, setOrder] = useState("score");        // score | date
@@ -333,6 +338,10 @@ function NewsView({ isMobile }) {
                   onClick={() => setSince(d)}>{lbl}</button>
         );
       })}
+      {/* Max = drop the date bound entirely (since=""). Composes with the score floor and
+          flows through the same empty-since path as the others; active when no bound is set. */}
+      <button key="max" className={since === "" ? "on" : ""}
+              onClick={() => setSince("")}>Max</button>
     </div>
   );
   const scoreSeg = (
@@ -416,27 +425,20 @@ function NewsView({ isMobile }) {
           ) : null}
           {viewsToggle}
         </div>
-        {view === "inbox" ? (
-          <div className="news-filters">
-            {inboxFilters}
-            <select className="news-thread-sel" value={thread} onChange={e => setThread(e.target.value)}>
-              <option value="">All threads</option>
-              {Object.keys(labels).map(k => <option key={k} value={k}>{labels[k]}</option>)}
-            </select>
-          </div>
-        ) : (
-          <div className="news-filters">
-            {view === "kept" && (   // shortlist-copy belongs with Kept, not Dismissed
-              <button className="news-btn news-keep" onClick={copyShortlist}
-                      disabled={!stories || !stories.length}>Copy shortlist</button>
-            )}
-            <select className="news-thread-sel" value={thread} onChange={e => setThread(e.target.value)}>
-              <option value="">All threads</option>
-              {Object.keys(labels).map(k => <option key={k} value={k}>{labels[k]}</option>)}
-            </select>
-            {flash && <span className="news-flash">{flash}</span>}
-          </div>
-        )}
+        {/* Since/Score/Sort apply to all three views, so they always show. Copy-shortlist
+            stays Kept-only. */}
+        <div className="news-filters">
+          {inboxFilters}
+          <select className="news-thread-sel" value={thread} onChange={e => setThread(e.target.value)}>
+            <option value="">All threads</option>
+            {Object.keys(labels).map(k => <option key={k} value={k}>{labels[k]}</option>)}
+          </select>
+          {view === "kept" && (   // shortlist-copy belongs with Kept, not Dismissed
+            <button className="news-btn news-keep" onClick={copyShortlist}
+                    disabled={!stories || !stories.length}>Copy shortlist</button>
+          )}
+          {flash && <span className="news-flash">{flash}</span>}
+        </div>
         {feedInner}
       </div>
     );
@@ -449,23 +451,22 @@ function NewsView({ isMobile }) {
         <div className="news-rail-label">View</div>
         {viewsToggle}
       </div>
-      {view === "inbox" ? (
-        <>
-          <div className="news-rail-sec">
-            <div className="news-rail-label">Since</div>
-            <label className="news-f">{dateInput}</label>
-            {presets}
-          </div>
-          <div className="news-rail-sec">
-            <div className="news-rail-label">Score</div>
-            {scoreSeg}
-          </div>
-          <div className="news-rail-sec">
-            <div className="news-rail-label">Sort</div>
-            {sortSel}
-          </div>
-        </>
-      ) : view === "kept" ? (   // shortlist-copy belongs with Kept, not Dismissed
+      {/* Since/Score/Sort drive the date+score window, which applies to ALL three views
+          (the counts scale with it), so they show everywhere — not just Inbox. */}
+      <div className="news-rail-sec">
+        <div className="news-rail-label">Since</div>
+        <label className="news-f">{dateInput}</label>
+        {presets}
+      </div>
+      <div className="news-rail-sec">
+        <div className="news-rail-label">Score</div>
+        {scoreSeg}
+      </div>
+      <div className="news-rail-sec">
+        <div className="news-rail-label">Sort</div>
+        {sortSel}
+      </div>
+      {view === "kept" ? (   // shortlist-copy belongs with Kept, not Dismissed
         <div className="news-rail-sec">
           <button className="news-btn news-keep" onClick={copyShortlist}
                   disabled={!stories || !stories.length}>Copy shortlist</button>
