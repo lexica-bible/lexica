@@ -501,11 +501,12 @@ def list_news():
 
     stories = [_serialize(c) for c in clusters]
     if order == "date":
-        stories.sort(key=lambda s: (s["published"], s["score"]), reverse=True)
+        # Newest: by the event's PEAK day, not its latest straggler — an event peaking in May
+        # with a June trickle is a May story (matches rank + the window + the displayed range).
+        stories.sort(key=lambda s: (s["peak_date"], s["score"]), reverse=True)
     elif order == "oldest":
-        # Mirror of "Newest": same date (the cluster's latest coverage), oldest first. The
-        # -score keeps the stronger card ahead on a same-date tie even while sorting ascending.
-        stories.sort(key=lambda s: (s["published"], -s["score"]))
+        # Mirror of Newest: oldest peak first; -score keeps the stronger card ahead on a tie.
+        stories.sort(key=lambda s: (s["peak_date"], -s["score"]))
     else:
         # Default: recency-weighted score (see _staleness_penalty). The dock keys off the
         # cluster's PEAK day, so a stale event with a fresh straggler can't dodge it. Newest
