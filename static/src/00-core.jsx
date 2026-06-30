@@ -238,6 +238,16 @@ const api = {
     return fetch(`/api/news/shape${qs ? "?" + qs : ""}`, { headers: _authHeaders() })
       .then(r => r.ok ? r.json() : { available: false }).catch(() => ({ available: false }));
   },
+  // The whole clustered feed in ONE fetch — the browser holds it and does every
+  // sort/filter/score/date/thread/count locally (no server round-trip per interaction).
+  newsAll: (params) => {
+    const p = { ...(params || {}) };
+    const k = _newsKey(); if (k) p.key = k;
+    const qs = new URLSearchParams(p).toString();
+    return fetch(`/api/news/all${qs ? "?" + qs : ""}`, { headers: _authHeaders() })
+      .then(r => r.ok ? r.json() : { available: false, cards: [] })
+      .catch(() => ({ available: false, cards: [] }));
+  },
   newsStatus: (ids, status) => {
     const k = _newsKey();
     return fetch(`/api/news/status`, {

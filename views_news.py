@@ -396,6 +396,88 @@ def _staleness_penalty(published):
     return min(_FEED_CAP, max(0.0, (age - _FEED_GRACE_DAYS) * _FEED_RATE))
 
 
+# ---- one-fetch held set: cluster the whole corpus ONCE, the browser does the rest ----
+# The slowness was that every sort/filter/score/date tick re-clustered all ~5k rows
+# server-side (counts did it 5x in ONE call). Instead serve the full clustered set once;
+# the browser filters/sorts/counts/feed-shapes it with NO further calls. The heavy
+# clustering is cached per corpus fingerprint, so it only recomputes when a pull adds
+# articles. Status is NOT cached — read fresh per request and attached, so triage stays right.
+#
+# CACHE BOUNDARY: the fingerprint is (row count, newest id). That busts on a NEW PULL (new
+# rows) but NOT on a re-score-in-place (same rows, changed scores). That's fine while the
+# scorer is frozen; if you ever re-score existing rows by hand, the cards won't refresh on
+# their own — hit the tab's Refresh button (it re-pulls) to clear it. Not a surprise: a
+# documented limit, with a one-click force-refresh.
+_ALL_CACHE = {"sig": None, "cards": None}
+
+
+def _corpus_sig(conn):
+    r = conn.execute("SELECT COUNT(*) n, COALESCE(MAX(id), 0) mx "
+                     "FROM items WHERE score IS NOT NULL").fetchone()
+    return (r["n"], r["mx"])
+
+
+def _all_cards(conn, has_event, has_newflag):
+    """Every story card, clustered once, status-independent (cached per corpus sig). Each
+    card carries a light `members` list (per-article score/thread/new-flag) so the browser
+    can rebuild the feed-shape readout without another call."""
+    sig = _corpus_sig(conn)
+    if _ALL_CACHE["sig"] == sig and _ALL_CACHE["cards"] is not None:
+        return _ALL_CACHE["cards"]
+    sel = ("SELECT i.id, i.url, i.title, i.source, i.published, i.score, "
+           "i.ai_thread, i.ai_why, 'new' AS status"
+           + (", i.event" if has_event else "")
+           + (", i.ai_new_flag" if has_newflag else "") +
+           " FROM items i WHERE i.score IS NOT NULL "
+           "ORDER BY i.score DESC, i.published DESC")
+    rows = conn.execute(sel).fetchall()
+    cards = []
+    for c in _group(rows, has_event):
+        card = _serialize(c)                 # 'status' here is the 'new' placeholder
+        card.pop("status", None)             # attached fresh, per request, below
+        rep = c["rep"]
+        card["event"] = (rep["event"] if has_event and rep["event"] else "")
+        card["members"] = [{"s": a["score"] or 0, "t": a["ai_thread"],
+                            "nf": (a["ai_new_flag"] if has_newflag else 0)}
+                           for a in c["arts"]]
+        cards.append(card)
+    _ALL_CACHE["sig"] = sig
+    _ALL_CACHE["cards"] = cards
+    return cards
+
+
+@bp.route("/api/news/all", methods=["GET"])
+@limiter.limit("240 per hour")
+def all_news():
+    """The whole clustered feed in one shot — all statuses, no date/score/thread filter.
+    The browser holds this and does every sort/filter/score/date/thread/count locally, so
+    interactions never hit the server again (refetch only on a fresh pull / reload / the
+    tab's Refresh button). See the CACHE BOUNDARY note above _ALL_CACHE for re-score."""
+    if not _can_read():
+        return jsonify({"error": "not found"}), 404
+    if not _available():
+        return jsonify({"available": False})
+    rid, _ = _reviewer()
+    conn = news_db()
+    try:
+        _ensure_reviews(conn)
+        cols = [c[1] for c in conn.execute("PRAGMA table_info(items)")]
+        cards = _all_cards(conn, "event" in cols, "ai_new_flag" in cols)
+        smap = {r["item_id"]: r["status"] for r in
+                conn.execute("SELECT item_id, status FROM reviews WHERE reviewer = ?", (rid,))}
+        out = []
+        for card in cards:
+            sts = {smap.get(i, "new") for i in card["ids"]}
+            c2 = dict(card)
+            c2["status"] = sts.pop() if len(sts) == 1 else "new"
+            out.append(c2)
+    except sqlite3.Error:
+        return jsonify({"available": True, "cards": [], "labels": THREAD_LABELS})
+    finally:
+        conn.close()
+    return jsonify({"available": True, "cards": out, "labels": THREAD_LABELS})
+
+
 @bp.route("/api/news/meta", methods=["GET"])
 def meta():
     """Drives the tab: is the viewer admin, is news.db loaded, the thread names, who's

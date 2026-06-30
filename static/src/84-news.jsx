@@ -11,21 +11,34 @@ function _newsDaysAgo(n) {
   return new Date(Date.now() - n * 86400000).toISOString().slice(0, 10);
 }
 
-// How a triage action moves the three tab counts. The card LEAVES the current view and
-// ENTERS the bucket its new status maps to ("clear" sends it back to inbox). Every card
-// shown is in-window (the lists are window-scoped), so these in-window deltas are exact —
-// and since the out-of-window set never moves, the all-time tallies shift by the SAME
-// kept/dismissed deltas, leaving the "+N outside this window" footer steady.
-function _countDeltas(view, status) {
-  const dest = status === "keep" ? "kept"
-             : status === "dismiss" ? "dismissed"
-             : "inbox";   // "clear" / "new" => back to inbox
-  const d = { inbox: 0, kept: 0, dismissed: 0 };
-  if (view !== dest) {
-    if (view in d) d[view] -= 1;
-    if (dest in d) d[dest] += 1;
-  }
-  return d;
+// The feed-shape "surfaced vs buried" line. FIXED analytic threshold — the scorer's
+// over-catch boundary (noise sits below 6), ported verbatim from the server's shape().
+// It is NOT the score floor (minScore, default 5) and must NEVER be coupled to it.
+const _SURFACE_SCORE = 6;
+
+// Peak-in-window test, ported from the server's _peak_in_window. The cluster-then-filter
+// contract: the window keys on the cluster's PEAK day, never on individual articles.
+// Empty since/until = open on that side (since="" is the Max preset).
+function _inWindow(peak, since, until) {
+  const d = (peak || "").slice(0, 10);
+  if (!since && !until) return true;
+  if (!d) return false;
+  if (since && d < since) return false;
+  if (until && d > until) return false;
+  return true;
+}
+
+// Recency dock, ported from the server's _staleness_penalty (GRACE=2, RATE=0.1, CAP=2.0),
+// keyed off the cluster's PEAK day so a stale event with a fresh straggler can't dodge it.
+function _stale(peak) {
+  const d = (peak || "").slice(0, 10);
+  if (!d) return 0;
+  const pd = Date.parse(d + "T00:00:00Z");
+  if (isNaN(pd)) return 0;
+  const t = new Date();
+  const today = Date.UTC(t.getUTCFullYear(), t.getUTCMonth(), t.getUTCDate());
+  const age = Math.round((today - pd) / 86400000);
+  return Math.min(2.0, Math.max(0, (age - 2) * 0.1));
 }
 
 function _scoreTier(score) {
@@ -182,9 +195,11 @@ function FeedShape({ shape }) {
 
 function NewsView({ isMobile }) {
   const [meta, setMeta] = useState(null);
-  const [stories, setStories] = useState(null);
+  const [allCards, setAllCards] = useState(null);     // the full held set (one fetch)
+  const [overrides, setOverrides] = useState({});     // local triage: cardKey -> status
+  const [refreshN, setRefreshN] = useState(0);        // bump = re-pull (Refresh / new pull)
   const [loading, setLoading] = useState(false);
-  const [view, setView] = useState("inbox");          // inbox | kept
+  const [view, setView] = useState("inbox");          // inbox | kept | dismissed
   // "" = no date bound ("Max" preset). Restore by null-check, NOT `|| default`, so a saved
   // empty value (Max) survives reload instead of snapping back to the 21-day default.
   const [since, setSince] = useState(() => {
@@ -197,88 +212,116 @@ function NewsView({ isMobile }) {
   const [thread, setThread] = useState("");
   const [order, setOrder] = useState("score");        // score | date | oldest
   const [flash, setFlash] = useState("");
-  const [shape, setShape] = useState(null);           // feed-shape readout for the right zone
-  const [counts, setCounts] = useState({});           // Kept badge — server-seeded, then owned locally
 
   useEffect(() => { api.newsMeta().then(setMeta); }, []);
-  // Reseed the three tab counts from the server for the CURRENT window (date + score +
-  // thread) whenever any of those change; between reseeds, triage owns them locally (no
-  // refetch, so the feed never tears down — see `mark`). Keyed on thread too so the badges
-  // stay equal to the feed when a thread is picked. Deliberately NOT keyed on `order` — a
-  // sort change must never recount (it only reorders the already-loaded list).
-  useEffect(() => {
-    if (!meta || !meta.available) return;
-    let cancelled = false;
-    const p = { min: minScore };
-    if (since) p.since = since; if (until) p.until = until; if (thread) p.thread = thread;
-    api.newsCounts(p).then(d => { if (!cancelled && d && d.available) setCounts(d); });
-    return () => { cancelled = true; };
-  }, [meta, since, until, minScore, thread]);
   useEffect(() => { localStorage.setItem("lexica.news.since.v1", since); }, [since]);
   useEffect(() => { localStorage.setItem("lexica.news.until.v1", until); }, [until]);
   useEffect(() => { localStorage.setItem("lexica.news.min.v1", String(minScore)); }, [minScore]);
 
-  // Feed-shape (right zone). Honors the Since window only — ignores score floor + thread,
-  // so it's the whole-feed "why it's pointed here" readout, not the filtered view.
-  useEffect(() => {
-    if (!meta || !meta.available) { setShape(null); return; }
-    let cancelled = false;
-    const p = {}; if (since) p.since = since; if (until) p.until = until;
-    api.newsShape(p).then(d => { if (!cancelled) setShape(d && d.available ? d : null); });
-    return () => { cancelled = true; };
-  }, [meta, since, until]);
-
-  // Reload whenever a filter changes (kept queries ignore the date/score floor so the
-  // shortlist always shows everything you've kept).
+  // The ONLY data fetch: pull the whole clustered feed once (and on an explicit Refresh or
+  // reload). Every sort/filter/score/date/thread/count below is derived from it locally,
+  // with no further server calls. `refreshN` is the manual force-refresh (also the way to
+  // pick up a hand re-score — see the cache-boundary note in views_news.py).
   useEffect(() => {
     if (!meta || !meta.available) return;
     let cancelled = false;
     setLoading(true);
-    // Option 1: every view honors the date+score window, so a list always matches its tab
-    // badge. (Kept/Dismissed used to ignore the window; the "+N outside this window" footer
-    // keeps the rest discoverable.)
-    const params = { view, order, min: minScore };
-    if (since) params.since = since;
-    if (until) params.until = until;
-    if (thread) params.thread = thread;
-    api.newsList(params).then(d => {
+    api.newsAll().then(d => {
       if (cancelled) return;
-      setStories(d.stories || []);
+      setAllCards(d && d.available ? (d.cards || []) : []);
+      setOverrides({});           // a fresh pull = the server's status is the truth
       setLoading(false);
     });
     return () => { cancelled = true; };
-  }, [meta, view, minScore, thread, order, since, until]);
+  }, [meta, refreshN]);
 
-  // Apply (sign +1) or undo (sign -1) a triage move's deltas to all the tab counts. The
-  // all-time kept/dismissed tallies move by the SAME kept/dismissed deltas (the card is
-  // in-window), so the "+N outside" footer stays put.
-  const applyCounts = (dd, sign) => setCounts(c => ({
-    ...c,
-    inbox: Math.max(0, (c.inbox || 0) + sign * dd.inbox),
-    kept: Math.max(0, (c.kept || 0) + sign * dd.kept),
-    dismissed: Math.max(0, (c.dismissed || 0) + sign * dd.dismissed),
-    kept_all: Math.max(0, (c.kept_all || 0) + sign * dd.kept),
-    dismissed_all: Math.max(0, (c.dismissed_all || 0) + sign * dd.dismissed),
-  }));
+  // Apply local triage overrides over the held set, so a Keep/Dismiss shows instantly
+  // without a refetch (the card simply changes status and the filters below re-bucket it).
+  const cards = useMemo(() => (allCards || []).map(c => {
+    const k = c.ids[0];
+    const st = (k in overrides) ? overrides[k] : c.status;
+    return st === c.status ? c : { ...c, status: st };
+  }), [allCards, overrides]);
+
+  // One in-window+score+thread test, shared by the counts and the feed below.
+  const inWin = (c) => _inWindow(c.peak_date, since, until)
+    && c.score >= minScore && (!thread || c.thread === thread);
+
+  // Tab tallies — all derived, no server round-trip. Inbox = anything not kept/dismissed.
+  // The all-time kept/dismissed totals stay thread-scoped but ignore the date window (so
+  // "+N outside this window" means outside the DATE window, within the same thread).
+  const counts = useMemo(() => {
+    const o = { inbox: 0, kept: 0, dismissed: 0, kept_all: 0, dismissed_all: 0 };
+    for (const c of cards) {
+      const tOk = !thread || c.thread === thread;
+      if (tOk && c.status === "keep") o.kept_all++;
+      if (tOk && c.status === "dismiss") o.dismissed_all++;
+      if (!inWin(c)) continue;
+      if (c.status === "keep") o.kept++;
+      else if (c.status === "dismiss") o.dismissed++;
+      else o.inbox++;
+    }
+    return o;
+  }, [cards, since, until, minScore, thread]);
+
+  // The visible feed — filter to the active view + window, then sort. All client-side.
+  const stories = useMemo(() => {
+    const want = { inbox: "new", kept: "keep", dismissed: "dismiss" }[view];
+    const list = cards.filter(c => {
+      const isInbox = c.status !== "keep" && c.status !== "dismiss";
+      const ok = want === "new" ? isInbox : c.status === want;
+      return ok && inWin(c);
+    });
+    if (order === "date")
+      // Newest by the event's PEAK day (not its latest straggler); stronger card wins a tie.
+      list.sort((a, b) => (b.peak_date + "").localeCompare(a.peak_date + "") || b.score - a.score);
+    else if (order === "oldest")
+      list.sort((a, b) => (a.peak_date + "").localeCompare(b.peak_date + "") || b.score - a.score);
+    else
+      // Default: recency-weighted score (the dock keys off the peak day). Newest published
+      // is the tie-break so equal effective scores still favor the fresher card.
+      list.sort((a, b) => (b.score - _stale(b.peak_date)) - (a.score - _stale(a.peak_date))
+                       || (b.published + "").localeCompare(a.published + ""));
+    return list.slice(0, 300);
+  }, [cards, view, since, until, minScore, thread, order]);
+
+  // Feed-shape readout (right zone) — also derived. Honors the date window only (ignores
+  // the score floor + thread, by design: the BURIED count is the whole point). Counts
+  // ARTICLES via each card's `members`; the surfaced line uses the FIXED _SURFACE_SCORE.
+  const shape = useMemo(() => {
+    if (!allCards || !cards.length) return null;
+    const win = cards.filter(c => _inWindow(c.peak_date, since, until));
+    let surfaced = 0, buried = 0, total = 0, newAngles = 0;
+    const byT = {};
+    for (const c of win) for (const m of (c.members || [])) {
+      total++;
+      const hi = m.s >= _SURFACE_SCORE;
+      hi ? surfaced++ : buried++;
+      if (m.nf === 1) newAngles++;
+      const k = m.t || "";
+      const cur = byT[k] || { s: 0, sc: 0 };
+      cur.s += hi ? 1 : 0; cur.sc++; byT[k] = cur;
+    }
+    const labels = (meta && meta.labels) || {};
+    const threads = Object.keys(byT).map(t => ({
+      thread: t, label: labels[t] || t || "?", surfaced: byT[t].s, scored: byT[t].sc
+    })).sort((a, b) => b.surfaced - a.surfaced || b.scored - a.scored);
+    const clusters = win.slice().sort((a, b) => b.count - a.count).slice(0, 5)
+      .map(c => ({ event: c.event || c.title, n: c.count, hi: c.score }));
+    return { available: true, surfaced, buried, total, new_angles: newAngles, threads, clusters };
+  }, [cards, since, until, meta]);
 
   const mark = (story, status) => {
-    // Optimistic: the card is leaving this view regardless, so drop it NOW and adjust the
-    // tab counts locally — no refetch, so the feed never reloads/flashes.
-    const idx = (stories || []).indexOf(story);
-    const dd = _countDeltas(view, status);
-    setStories(ss => (ss || []).filter(s => s !== story));
-    applyCounts(dd, 1);
-    // Fire the write in the background. newsStatus never rejects — it resolves
-    // {ok:false} on failure. On failure, roll the card back to its spot + undo the
-    // counts + flash; on success do nothing (the UI already matches).
+    // Optimistic + local: flip the card's status, which drops it out of the current view via
+    // the filter above — no refetch, so the feed never reloads/flashes. Fire the write in
+    // the background; newsStatus resolves {ok:false} on failure → roll the override back.
+    const k = story.ids[0];
+    const prev = (k in overrides) ? overrides[k] : story.status;
+    const next = status === "keep" ? "keep" : status === "dismiss" ? "dismiss" : "new";
+    setOverrides(o => ({ ...o, [k]: next }));
     api.newsStatus(story.ids, status).then(d => {
       if (d && d.ok !== false) return;
-      setStories(ss => {
-        const a = (ss || []).slice();
-        a.splice(Math.min(idx < 0 ? a.length : idx, a.length), 0, story);
-        return a;
-      });
-      applyCounts(dd, -1);
+      setOverrides(o => ({ ...o, [k]: prev }));
       setFlash("Couldn't save — put it back. Try again.");
       setTimeout(() => setFlash(""), 3000);
     });
@@ -395,8 +438,8 @@ function NewsView({ isMobile }) {
   const outsideN = view === "kept" ? keptOutside : view === "dismissed" ? dismissedOutside : 0;
 
   const feedInner = (
-    loading || stories === null ? (
-      // `stories === null` = no fetch has finished yet (load runs after meta arrives).
+    loading || allCards === null ? (
+      // `allCards === null` = the one fetch hasn't finished yet (it runs after meta arrives).
       <div className="news-empty">Loading…</div>
     ) : !stories.length ? (
       <div className="news-empty">
@@ -453,6 +496,10 @@ function NewsView({ isMobile }) {
             <option value="">All threads</option>
             {Object.keys(labels).map(k => <option key={k} value={k}>{labels[k]}</option>)}
           </select>
+          <button className="news-btn" disabled={loading} title="Re-pull the scored feed"
+                  onClick={() => setRefreshN(n => n + 1)}>
+            {loading ? "Refreshing…" : "Refresh"}
+          </button>
           {view === "kept" && (   // shortlist-copy belongs with Kept, not Dismissed
             <button className="news-btn news-keep" onClick={copyShortlist}
                     disabled={!stories || !stories.length}>Copy shortlist</button>
@@ -486,6 +533,15 @@ function NewsView({ isMobile }) {
       <div className="news-rail-sec">
         <div className="news-rail-label">Sort</div>
         {sortSel}
+      </div>
+      {/* Pull the latest scored set without a full reload. Also the force-refresh for a hand
+          re-score (the held set's cache busts on a new pull, not on an in-place re-score). */}
+      <div className="news-rail-sec">
+        <button className="news-btn" disabled={loading}
+                title="Re-pull the scored feed"
+                onClick={() => setRefreshN(n => n + 1)}>
+          {loading ? "Refreshing…" : "Refresh"}
+        </button>
       </div>
       {view === "kept" ? (   // shortlist-copy belongs with Kept, not Dismissed
         <div className="news-rail-sec">
