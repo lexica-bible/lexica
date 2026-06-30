@@ -157,7 +157,7 @@ function NewsView({ isMobile }) {
   const [loading, setLoading] = useState(false);
   const [view, setView] = useState("inbox");          // inbox | kept
   const [since, setSince] = useState(() => localStorage.getItem("lexica.news.since.v1") || _newsDaysAgo(21));
-  const [minScore, setMinScore] = useState(() => Number(localStorage.getItem("lexica.news.min.v1") || 6));
+  const [minScore, setMinScore] = useState(() => Number(localStorage.getItem("lexica.news.min.v1") || 5));
   const [thread, setThread] = useState("");
   const [order, setOrder] = useState("score");        // score | date
   const [flash, setFlash] = useState("");
@@ -228,7 +228,7 @@ function NewsView({ isMobile }) {
 
   const labels = meta.labels || {};
   const counts = meta.counts || {};
-  const scoreOpts = [["", "All"], ["6", "6+"], ["7", "7+"], ["8", "8+"], ["9", "9+"]];
+  const scoreOpts = [["", "All"], ["5", "5+"], ["6", "6+"], ["7", "7+"], ["8", "8+"], ["9", "9+"]];
 
   // ---- shared bits used by both layouts ----
   const threadList = (
