@@ -803,13 +803,20 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
     );
   }
 
+  // Desktop frame migrated onto the shared <Shell> (Phase 2). PARITY ONLY — same emitted DOM:
+  // Shell renders <div class="zshell ws"><aside class="zrail brail">…</aside><main class="zcenter
+  // center">…</main>{inspect}</div>, and the inspect is a plain .zinspect wd (top:0 float — a
+  // shipped surface keeps its float, NOT the new-surface below-nav). Mobile is the separate
+  // `if (isMobile)` branch above, untouched. isMobile is hard-false here (the mobile branch
+  // already returned), so the old mobile-only scrims/hidden classes were dead and are dropped.
   return (
-    <div className={"zshell ws" + (isMobile ? " is-mobile" : "")}>
-
-      {/* LEFT — distribution rail (empty state before a word is studied) */}
-      {isMobile && railOpen && <div className="rail-scrim" onClick={() => setRailOpen(false)}/>}
-      <aside className={"zrail brail" + (isMobile && !railOpen ? " hidden" : "")}>
-        {profile ? (
+    <Shell
+      className="ws"
+      isMobile={false}
+      railClass="brail"
+      centerClass="center"
+      rail={
+        profile ? (
           <>
             <div className="brail-top">
               <div className="brail-eyebrow">Distribution by book</div>
@@ -822,11 +829,9 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
             <div className="brail-top"><div className="brail-eyebrow">Distribution by book</div></div>
             <div className="brail-empty">The books a word appears in show here once you study it.</div>
           </>
-        )}
-      </aside>
-
-      {/* CENTER — search + occurrences / results */}
-      <main className="zcenter center">
+        )
+      }
+      center={<>
         <div className="searchbar">
           <div className="searchbar-in">
             <form className="search-field" onSubmit={handleSubmit}>
@@ -984,11 +989,9 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
             )}
           </div>
         </div>
-      </main>
-
-      {/* RIGHT — word detail card (empty state before a word is studied) */}
-      {isMobile && detailOpen && <div className="wd-scrim" onClick={() => setDetailOpen(false)}/>}
-      <aside className={"zinspect wd" + (isMobile && !detailOpen ? " hidden" : "")}>
+      </>}
+      inspect={
+        <aside className="zinspect wd">
         {profile ? (
           <>
           <div className="detail-head">
@@ -1004,7 +1007,8 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
             title="No word selected"
             sub="Search a Greek or Hebrew word, a transliteration, or a Strong's number to study it here."/>
         )}
-      </aside>
-    </div>
+        </aside>
+      }
+    />
   );
 }

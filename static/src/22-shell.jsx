@@ -108,16 +108,18 @@ function MobileBar({ tools }) {
 // sheets. `mobile` = { tools, sheet, sheetTitle, onCloseSheet }. The top nav is NOT part of
 // this — it lives above, full width, and the inspect panel is reserved with padding, never
 // drawn over the nav (handoff: new surfaces start structurally below the nav).
-function Shell({ rail, center, inspect, mobile, isMobile, className, centerOnly }) {
+function Shell({ rail, center, inspect, mobile, isMobile, className, centerOnly, railClass, centerClass }) {
   if (!isMobile) {
     // `inspect` is expected to BE its own .zinspect aside (RightStack renders one; a static
     // panel is wrapped by the surface) — so render it directly, no second wrapper. The
     // .zshell padding-right still reserves its fixed strip. New-surface inspect starts BELOW
     // the nav (the .zinspect.rstack override), not the shipped surfaces' top:0 float.
+    // railClass/centerClass let a migrated surface keep an extra per-slot class on the .zrail/
+    // .zcenter element (Word study's "brail"/"center") so its DOM stays byte-identical.
     return (
       <div className={"zshell" + (centerOnly ? " center-only" : "") + (className ? " " + className : "")}>
-        <aside className="zrail">{rail}</aside>
-        <main className="zcenter">{center}</main>
+        <aside className={"zrail" + (railClass ? " " + railClass : "")}>{rail}</aside>
+        <main className={"zcenter" + (centerClass ? " " + centerClass : "")}>{center}</main>
         {!centerOnly && inspect}
       </div>
     );
