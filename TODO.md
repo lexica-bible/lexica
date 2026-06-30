@@ -616,6 +616,19 @@ follow-up is **#4 (parallelize the cognate + Hebrew DB loops)** above — multi-
 - **NOTE — recency-default sort is LIVE not parked.** `e77135b` shipped recency as the default sort (JP's explicit
   call); git confirms no later commit touched `stories.sort`, so the watch-card-#1 read is clean and active NOW. A
   reviewer note that called it "parked for a solo ship" was wrong — don't re-litigate.
+- **✅ DEFAULT SCORE FLOOR 6→5 + visible `5+` button SHIPPED 2026-06-29 (8549d9b).** The contested-sabbath class
+  (the feed's theological center) was invisible under a 6-floor. Read-only distribution on PA settled it:
+  feed mean = 3.3 (so 5 is upper-third, not low), and the class sits in the 5-6 band — NJ-mall 5.7, Chick-fil-A 5.8,
+  student-rights 5.3, Maine 5.0. 5+ surfaces 143 clusters vs 128 at 6+ (15 more, all center-shelf, not junk). The
+  4-floor was REJECTED (adds opinion/stray noise; "Heritage Foundation Sunday Laws" 4.0 should stay buried).
+  Cold-start default only — `84-news.jsx:160` `|| 6`→`|| 5`; a returning visitor's saved floor in browser storage is
+  untouched (browser-local, no account/server default). Added `["5","5+"]` to `scoreOpts` (`84-news.jsx:231`) in
+  ascending position (`All / 5+ / 6+ / 7+ / 8+ / 9+`) so the new landing value shows selected + is one-tap
+  re-selectable — a default with no matching button is a hidden state. PREMISE CORRECTION: the parked note that
+  called NJ-mall "mostly sub-5 = a scorer-calibration question" was WRONG — the class scores 5.0-5.8, above 5. The
+  scorer was honest; the DISPLAY floor was the lever. This closes the NJ-mall surfacing question with no scorer edit.
+  Floor and SINCE-window defaults are adjacent (`84-news.jsx:159-160`), fully independent — tightening SINCE to 7d
+  later is a separate one-line knob, untouched. `code: static/src/84-news.jsx (minScore default + scoreOpts)`
 
 ### Clustering / taxonomy / re-tuning — investigated 2026-06-29 (2 shipped, 1 parked-with-plan, 1 waiting)
 - **✅ ai_moralized RENAME + labeler phase-sibling NUDGE SHIPPED 2026-06-29 (fa46786).** (1) Thread label was "RCC
