@@ -98,6 +98,24 @@ Rules:
 - REUSE an existing label (you'll be given the ones already in use) whenever a headline
   is about that SAME happening — including a NEW PHASE of it — not merely the same
   theme. Only invent a new label when the headline is a genuinely different happening.
+- NEVER label with a THEME or CATEGORY. A label that ends in an abstract noun — e.g.
+  "...Phenomena", "...Movement", "...Growth", "...Decline", "...Legacy", "...Concerns",
+  "...Analysis", "...Dialogue", "...Work", "...Trend", "...Crisis", "...Outreach" — names a
+  topic, not a happening, and is FORBIDDEN. Banning the suffix is not enough: every label
+  MUST positively pin the ONE happening by its distinctive WHERE (place/object/institution)
+  and WHO/WHAT, and — whenever this kind of event recurs across time — its WHEN (year). If two
+  headlines describe the same THEME at a different place, object, or year, they are DIFFERENT
+  events and MUST get different labels. A label generic enough to fit a story from another city
+  or another year has failed — make it more specific.
+    * weeping-icon reports → "Weeping Icon Chicago 2019", "Weeping Icon Homer Glen 2016",
+      "Weeping Icon France 2010" as SEPARATE labels — never one "Weeping Icons Phenomena"
+      (each city/icon/year is its own event)
+    * a parish/diocese conversion story → "St Mary Ohio Parish Converts 2025", NOT "Catholic
+      Conversion Growth"
+    * a specific theology meeting → "Vatican-Orthodox Nicaea Talks 2025", NOT "Catholic-
+      Orthodox Theological Dialogue"
+    * a particular AI-ethics statement → name its document/speaker/venue + year, NOT "Vatican
+      AI Ethics Concerns".
 - A label is SHORT (3-6 words), Title Case, and names the event concretely, e.g.
   "Pope Leo AI Encyclical", "Pentagon-Vatican Meeting Clash", "Trump-Pope Leo Tension".
 
