@@ -1071,6 +1071,12 @@ memory `project_ai_synthesis_quality`.
   2Sa 18, H3570→H3569, never global). Both PA-only, reversible; **re-run BOTH after any words rebuild**
   (build_entity_binding re-tiers from live metaV; the Cushi fix is re-introduced by a rebuild). Binder logic
   lives in `entity_resolution.py`. Memory `project_entity_resolution_rebuild`.
+- `add_hebrews13.py` (dry-run default / `--apply`) — ONE-OFF additive repair (DONE+LIVE 2026-06-30):
+  restored the missing Hebrews 13 (the ABP source file had no ch 13 → no verse rows → its words were
+  skipped, since the build only emits words for verses already in the `verses` table). Adds ONLY Heb 13,
+  reusing `build_words_from_abp`'s per-verse machinery; the dry-run proves the path by regenerating Heb 12
+  and diffing it byte-for-byte vs live. NOTE the general invariant: a missing verse row silently drops its
+  words. Memory `project_hebrews13_restore`.
 
 ## Rate limiting / security (2026-06-07 security pass)
 - `core.limiter` (flask-limiter, memory storage): site-wide default `300/min` per endpoint per IP

@@ -6,6 +6,40 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Hebrews 13 missing from the corpus — restored — DONE 2026-06-30
+Heb 13 (25 verses) was absent: the `verses` table held Heb 1–12 only. A per-chapter count audit
+across all 66 books found it was Hebrews-ONLY — one dropped chapter, not an import-wide failure.
+- **Root cause (cascade):** the ABP source file `abp_hebrews.txt` was missing ch 13 (a copy-paste
+  gap — it ended at 12:29). The words table hangs the BibleHub scrape onto verse rows that already
+  exist, so with no Heb 13 verse row, the Heb 13 scrape words were SKIPPED. One missing thing (the
+  verse rows) dropped the whole chapter. bh_scrape.db HAD Heb 13 all along.
+- **Lesson:** the words build only emits rows for verses already in the `verses` table; a missing
+  verse row silently drops its words (the build counts the skip, never corrupts). Short source =
+  silently-dropped chapter, not a loud error. The per-verse parser can't lose verses mid-chapter,
+  so a per-chapter count is the right detector.
+- **Fix (additive, NOT a rebuild):** user pasted the 25 verses in ABP format; appended to
+  `abp_hebrews.txt` (LF — that file's blob is LF, repo is mixed, match a file's endings). New
+  `scripts/add_hebrews13.py` adds ONLY Heb 13, reusing the canonical `build_words_from_abp`
+  per-verse machinery so the rows match the corpus. `--apply` is additive-only + refuses a re-run.
+- **The proof (reusable):** the dry-run snapshots live to a throwaway copy, REGENERATES Heb 12
+  through the same path and diffs it byte-for-byte (✅ IDENTICAL on 483 build-owned columns) —
+  proving the path reproduces the canonical build, so the Heb 13 rows are trustworthy. Pure read +
+  local build, no network. PROOF 2 confirmed the TAGNT pronoun fix fired on Heb 13 (3rd-person
+  G1473→G846, 1st/2nd person left alone).
+- **Documentation-push catch:** reading the full `/rebuild-words` checklist found a blind spot the
+  chapter-12 proof can't see — Heb 13:12 has the `ὁ+ἴδιος` "his own" (G2398) shape that
+  `fix_idios_own` (a `finish_rebuild.sh` tail patch, not the build) relocates. The dry-run now also
+  runs the local idempotent tail patches against the copy; `--apply`'s follow-up is the canonical
+  `finish_rebuild.sh` + the side-table builders + the verify gates.
+- **Verified live:** Hebrews → 13 chapters (13=25 verses); names resolved (Jesus G2424 ×4,
+  Timothy G5095, Italy G2482); 13:12 "his own" on the G2398 slot; `/read/hebrews/13` → 200.
+- One cosmetic leftover, NOT fixed (deliberately — don't edit proven code for a nit): the dry-run's
+  own logging splices a stray verse-text line into one word-row block; cause not reproducible
+  locally (no scrape/TAGNT on the dev box). Diagnostic-only, no data impact.
+Full record: memory `project_hebrews13_restore`.
+
+---
+
 ## αἰών/αἰώνιος mistag (Jer 49:13 + Hab 3:6) + Psa 24:7 numbering — DONE 2026-06-29
 Two reviewer-flagged corpus tags, query-first then fixed.
 - **Jer 49:13 + Hab 3:6 — TWO source typos, fixed at root.** The query sweep proved it was NOT a class
