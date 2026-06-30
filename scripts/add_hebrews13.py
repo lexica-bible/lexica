@@ -399,6 +399,8 @@ def main():
     ap.add_argument("bible_db", nargs="?", default="bible.db")
     ap.add_argument("scrape_db", nargs="?", default="bh_scrape.db")
     ap.add_argument("--apply", action="store_true", help="write to the live db (default is a dry-run)")
+    ap.add_argument("--dry-run", action="store_true",
+                    help="explicit no-op; dry-run is the default when --apply is absent")
     args = ap.parse_args()
     for p in (args.bible_db, args.scrape_db):
         if not Path(p).exists():
