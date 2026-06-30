@@ -653,12 +653,22 @@ follow-up is **#4 (parallelize the cognate + Hebrew DB loops)** above — multi-
   silently truncate the window — the trap); a preset highlights only when there's no upper bound.
 - **✅ design/_mobile_preview untracked (65514e4 swept in, then untracked).** `git add -A` kept grabbing the
   throwaway handoff mockups; now in `.gitignore`, kept on disk.
-- **⏳ DATE FILTER vs SORT use different date definitions — CONFIRMED, alignment declined for now.** The since/until
-  filter is applied at the ARTICLE level in SQL BEFORE clustering (any-article-in-range; the cluster is rebuilt from
-  only in-window articles, peak/face recomputed), while the default SORT keys off the cluster PEAK day. So a
-  peak-vs-filter mismatch can split one real event across windows (May bulk in May, June straggler as a separate
-  tiny card in June). Aligning the filter to peak = structural (cluster first on a looser set, then keep clusters
-  whose PEAK is in range) — JP declined for now. Park. `code: views_news.py list_news WHERE (filter) vs stories.sort/_staleness_penalty (sort)`
+- **✅ DATE WINDOW now keys on cluster PEAK, not per-article — SHIPPED 2026-06-29 (96a5064).** The parked
+  "filter ≠ sort date" item; JP approved the structural fix. The since/until window no longer runs in SQL before
+  clustering — the full scored set is clustered FIRST, then whole clusters whose PEAK day is in [since,until] are
+  kept (one event in or out as a unit, dated + counted by peak; the May-bulk / lone-June-straggler split is gone).
+  All three surfaces go through ONE shared helper so they can't drift: `_window_clusters` + `_peak_in_window` in
+  views_news.py; `list_news`/`counts`/`shape` all call it; old `_count_view_clusters` DELETED. Score floor moved
+  post-cluster (peak = highest member score → same CARDS as the old per-article floor, only the count changes to the
+  whole event). `shape` counts surfaced/buried/total + per-thread + top-events off the in-window clusters' members
+  (every number matches the cards shown; top-events = biggest CARDS, AI tag or headline). Frontend: card date is a
+  RANGE "peaked X · latest Y" (`_dateRange` in 84-news.jsx). Footer "+N outside" math unchanged + now honest (a kept
+  straggler event counts once — verified against the May-peak/June-straggler case). No SQL prefilter needed at ~5k
+  rows. Full record: memory `project_news_watch`.
+- **✅ "Oldest" sort option added (e0f0ecc) + both date sorts key on PEAK day (2b50b44).** Sort dropdown is now
+  Top stories · Newest · Oldest. Newest/Oldest sort on `peak_date` (NOT the latest straggler) — an event peaking in
+  May with a June trickle reads as a May story, matching rank + the window + the displayed range. `code:
+  views_news.py list_news stories.sort · static/src/84-news.jsx sortSel`
 
 ### Clustering / taxonomy / re-tuning — investigated 2026-06-29 (2 shipped, 1 parked-with-plan, 1 waiting)
 - **✅ ai_moralized RENAME + labeler phase-sibling NUDGE SHIPPED 2026-06-29 (fa46786).** (1) Thread label was "RCC
