@@ -77,15 +77,29 @@ Rules:
 - Headlines about the SAME event get the SAME label — even when worded completely
   differently (e.g. "Pope Leo urges AI disarmament", "Magnifica Humanitas discussion",
   and "Pope's 42,000-word letter on AI" are all the same encyclical → one label).
-- Genuinely different events get different labels.
-- A label is SHORT (3-6 words), Title Case, and names the event concretely, e.g.
-  "Pope Leo AI Encyclical", "Pentagon-Vatican Meeting Clash", "Trump-Pope Leo Tension",
-  "Vatican AI Ethics Commission".
+- An EVENT is ONE specific happening — a particular bill, lawsuit, report, ruling,
+  meeting, document, or announcement, with its own who / what / where. A broad THEME
+  ("Sunday laws", "ecumenism", "AI ethics") is NOT an event.
+- SPLIT by happening: same-theme headlines about DIFFERENT happenings get DIFFERENT
+  labels. Poland's Sunday trading ban, a New Jersey mall Sunday lawsuit, and a New
+  York Chick-fil-A Sunday bill are THREE events, never one "Sunday Laws" label; a WCC
+  visit, King Charles praying with the Pope, and the 1054 anathema being lifted are
+  THREE events, never one "Ecumenical Outreach" label.
+- MERGE by phase: a single happening keeps ONE label across every phase of its own
+  life — its announcement, launch, release, the reporting on its contents, reactions,
+  hearings, votes, rulings, delays, and follow-ups. A launch or release is NOT a
+  separate event from the thing being launched. So the encyclical's CONTENTS coverage
+  and its LAUNCH coverage are ONE label, not two; and every phase of the New Jersey
+  American Dream / Paramus Sunday-trading lawsuit (filing, opening, hearing, ruling
+  delay, deadline) is ONE label, not one per court date.
+- MERGE by outlet: same-happening coverage is ONE label no matter how many outlets
+  carry it — a 130- or 400-outlet event is still one label. Many outlets is NOT a
+  reason to split.
 - REUSE an existing label (you'll be given the ones already in use) whenever a headline
-  fits it. Only invent a new label when none fits.
-- Do NOT create a separate label for a LATER PHASE of an event you have already
-  labeled (its launch, release, reaction, vote, ruling, or follow-up) — reuse the base
-  label so all coverage of one event stays in one card.
+  is about that SAME happening — including a NEW PHASE of it — not merely the same
+  theme. Only invent a new label when the headline is a genuinely different happening.
+- A label is SHORT (3-6 words), Title Case, and names the event concretely, e.g.
+  "Pope Leo AI Encyclical", "Pentagon-Vatican Meeting Clash", "Trump-Pope Leo Tension".
 
 Return ONLY a JSON array, one object per headline, keys exactly: id, event."""
 
