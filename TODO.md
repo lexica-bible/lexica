@@ -703,7 +703,7 @@ follow-up is **#4 (parallelize the cognate + Hebrew DB loops)** above — multi-
   fetch + `_countDeltas`/`applyCounts` are gone). `code: views_news.py all_news + _all_cards + _ALL_CACHE ·
   static/src/84-news.jsx · 00-core.jsx newsAll` Full record: memory `project_news_watch`.
 
-### Clustering / taxonomy / re-tuning — investigated 2026-06-29 (2 shipped, 1 parked-with-plan, 1 waiting)
+### Clustering / taxonomy / re-tuning — investigated 2026-06-29 (3 shipped incl. the over-merge fix 2026-06-30, 1 waiting)
 - **✅ ai_moralized RENAME + labeler phase-sibling NUDGE SHIPPED 2026-06-29 (fa46786).** (1) Thread label was "RCC
   courting tech" but the confirmed catch is the actor-LESS buy/sell economic-control rail (UN digital ID, UK
   mandatory-to-work, Worldcoin, CBDC). Renamed actor-neutral: queries.py label → "Economic & tech control
@@ -716,20 +716,19 @@ follow-up is **#4 (parallelize the cognate + Hebrew DB loops)** above — multi-
   were one encyclical split across two event labels (cards collapse by EXACT label, so two cards). One-time
   reversible merge: `UPDATE items SET event='Pope Leo AI Encyclical' WHERE event='Pope Leo AI Encyclical Launch'`
   → one ~566 card. Confirmed a ONE-OFF, not a phase-split class (the prefix-sibling query found only this pair).
-- **⏳ CLUSTERING topic-bucketing (over-merge) — PARKED, diagnosed, plan ready. The real granularity problem.**
-  The Sunday-Laws→NJ-mall "smell" turned out to be the OPPOSITE of the encyclical: the NJ mall story isn't a
-  sibling label, it's BURIED inside a broad topic label "Sunday Rest Laws Debate" that fuses ~10 unrelated events
-  (Poland trade ban, NJ mall lawsuit, NY Chick-fil-A bill, USPS ruling…). Confirmed a CLASS on a 2nd independent
-  bucket: "Vatican Ecumenical Outreach" (83) = ~15 different ecumenical events (King Charles prayer, 1054 anathema,
-  WCC visit, Mennonite healing…) under one theme label. Mechanism: the labeler tags by THEME when there's no single
-  dominant event → one card lies "83 sources" and inflates the shape panel's "biggest clusters". FIX (not a
-  one-liner): sharpen the `group_news.py` rules so an event = one specific bill/lawsuit/report/ruling, and
-  different countries/bills on the same theme are DIFFERENT events (draft wording lives in the 2026-06-29 session
-  thread + the memory block). DELICATE — push too hard and it re-fragments the GOOD one-event clusters (the
-  encyclical 566 MUST stay merged). LAND IT SAFELY: commit the prompt → `cp news.db news.db.pre-regroup` (instant
-  rollback) → `group_news.py --regroup` (Haiku, pennies) → re-run the label-landscape query; keep only if
-  ecumenism/Sunday split sensibly AND the encyclical stays one ~566 cluster, else `mv` back and tighten. Cost isn't
-  the worry, quality is. `code: scripts/news/group_news.py SYSTEM; views_news.py _group (collapse by exact label)`
+- **✅ CLUSTERING over-merge FIXED — two layers, SHIPPED + LIVE 2026-06-30 (d3b3950 window + 362b78b prompt).**
+  The parked granularity problem: `_group()` collapsed purely on the exact `event` label with NO time bound, so a
+  label could span years (Mode A = a real saga with dense separate moments, needs date-splitting; Mode B = a
+  theme/phenomenon label Haiku stamped on unrelated happenings, e.g. "Weeping Icons Religious Phenomena" 1986→2025).
+  **Layer 1** = `_split_by_window(arts, days=14)` in views_news.py: within one label, start a new card on a >14-day
+  gap between consecutive `published` dates (validated/keyed on `substr(published,1,10)`, undated → own card); both
+  the feed list and all-cards view inherit it via `_group()`. **Layer 2** = tightened `group_news.py` SYSTEM (forbid
+  abstract-noun suffixes + REQUIRE place/object + who/what + year-for-recurring) then re-tagged ONLY the 8 flagged
+  phenomenon labels (183 articles → 77 events; `event_backup_d3b3950` = undo). Verified on PA: Pope Leo AI 438 STAYS
+  merged (~7 cards), Weeping Icons 21 SHATTERS (~15), real sagas split right (Anglican 55→24). Residual think-piece
+  themes (Mainline Decline / Catholic-Orthodox Dialogue) keep a theme label but are year-spread so Layer 1's window
+  splits them anyway. Full record + the SQLite-GLOB `_`-is-not-a-wildcard gotcha + the members-vs-cards preview SQL:
+  memory `project_news_watch`. `code: views_news.py _group/_split_by_window; scripts/news/group_news.py SYSTEM`
 - **⏳ RE-TUNING the scorer from Tudor's Dismiss — WAITING on volume (do NOT auto-loop).** Plan: pull Tudor's
   dismissed-at-6+ grouped by thread (high score + dismissed = a false-positive thread), hand-sharpen that thread's
   label with reviewed diffs. HARD TRAP (do not cross): human-label-tuning ONLY — never wire Dismiss into an
