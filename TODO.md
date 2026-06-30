@@ -630,6 +630,36 @@ follow-up is **#4 (parallelize the cognate + Hebrew DB loops)** above — multi-
   Floor and SINCE-window defaults are adjacent (`84-news.jsx:159-160`), fully independent — tightening SINCE to 7d
   later is a separate one-line knob, untouched. `code: static/src/84-news.jsx (minScore default + scoreOpts)`
 
+### Triage counts + date window — SHIPPED 2026-06-29 (Inbox legibility)
+- **✅ WINDOW-SCOPED Inbox/Kept/Dismissed counts on all three tabs (8d6a4fa).** Inbox count read as a total,
+  not a remainder, so a reviewer who'd cleared most of a window saw a shrunk Inbox as "feed empty". Now all three
+  tabs show live counts scoped to the active date+score+thread window (they add up to the in-window total) and the
+  Inbox header reads "N to review". New `GET /api/news/counts` (counts moved OUT of `meta()`, which no longer
+  returns them) → inbox/kept/dismissed (window) + kept_all/dismissed_all (all-time, thread-scoped). Counts reseed
+  on date/score/thread change, NEVER on sort. Kept/Dismissed LISTS now honor the window too (Option 1: badge =
+  list = header) with a quiet "+N outside this window — widen the date" footer (= all-time − in-window). Triage
+  updates counts LOCALLY (no refetch, no flash) via `_countDeltas`/`applyCounts`, full rollback on save failure.
+  `code: views_news.py counts() + _count_view_clusters · static/src/84-news.jsx · 00-core.jsx newsCounts`
+- **✅ Dismissed count clipping FIXED (b08cd02).** Three labeled tabs + counts overflowed the 224px rail. Dropped
+  the parens ("Inbox 6 / Kept 3 / Dismissed 4") and let `.news-rail .news-views` WRAP instead of nowrap.
+- **✅ Since/Score/Sort in ALL views + "Max" date preset (8bd29a8).** The date+score window drives all three
+  views, so the controls show in Kept/Dismissed too (were Inbox-only); Copy-shortlist stays Kept-only. Added a
+  "Max" preset (since="" = no date bound, all-time) — composes with the score floor, highlights when no bound is
+  set; since-restore now distinguishes saved-empty from never-set so Max survives reload.
+- **✅ Optional "until" end-date / two-sided window (db43dc9).** SINCE was a floor only; added an "until" field so
+  the window is bounded both ends (May 1→May 31 for a monthly cycle). Empty until = now. Upper bound =
+  `substr(published,1,10) <= until` in all three server spots (list/counts/shape), date-part so the whole end-day
+  counts. Footer now means outside EITHER end. Quick presets set since AND CLEAR until (a stale end-date would
+  silently truncate the window — the trap); a preset highlights only when there's no upper bound.
+- **✅ design/_mobile_preview untracked (65514e4 swept in, then untracked).** `git add -A` kept grabbing the
+  throwaway handoff mockups; now in `.gitignore`, kept on disk.
+- **⏳ DATE FILTER vs SORT use different date definitions — CONFIRMED, alignment declined for now.** The since/until
+  filter is applied at the ARTICLE level in SQL BEFORE clustering (any-article-in-range; the cluster is rebuilt from
+  only in-window articles, peak/face recomputed), while the default SORT keys off the cluster PEAK day. So a
+  peak-vs-filter mismatch can split one real event across windows (May bulk in May, June straggler as a separate
+  tiny card in June). Aligning the filter to peak = structural (cluster first on a looser set, then keep clusters
+  whose PEAK is in range) — JP declined for now. Park. `code: views_news.py list_news WHERE (filter) vs stories.sort/_staleness_penalty (sort)`
+
 ### Clustering / taxonomy / re-tuning — investigated 2026-06-29 (2 shipped, 1 parked-with-plan, 1 waiting)
 - **✅ ai_moralized RENAME + labeler phase-sibling NUDGE SHIPPED 2026-06-29 (fa46786).** (1) Thread label was "RCC
   courting tech" but the confirmed catch is the actor-LESS buy/sell economic-control rail (UN digital ID, UK
