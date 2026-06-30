@@ -123,6 +123,18 @@ USER_HEAD = ("Score these articles. Return ONLY a JSON array — one object per 
 
 _FENCE = re.compile(r"^```(?:json)?|```$", re.MULTILINE)
 
+# Haiku sees each article in a batch as "id=NNN | ...", so it sometimes writes a
+# back-reference reason ("Same event as id=12345") instead of a real one. That id
+# means nothing to a reader and leaks into the card body, so drop the whole reason
+# when it's just a pointer at another article.
+_BACKREF_WHY = re.compile(
+    r"^\s*(?:same(?:\s+event)?\s+as|same\s+story\s+as|duplicate\s+of|see)\s+(?:id\s*=?\s*)?\d+",
+    re.IGNORECASE)
+
+
+def _clean_why(why):
+    return "" if _BACKREF_WHY.match(why or "") else (why or "")
+
 
 def build_client():
     key = os.environ.get("ANTHROPIC_API_KEY")
@@ -169,7 +181,7 @@ def score_batch(client, rows):
             "score": score,
             "thread": thread,
             "new_flag": 1 if (d.get("new_flag") or thread == "new") else 0,
-            "why": (d.get("why") or "").strip()[:240],
+            "why": _clean_why((d.get("why") or "").strip())[:240],
         }
     return out
 
