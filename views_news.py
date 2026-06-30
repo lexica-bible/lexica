@@ -30,7 +30,7 @@ from views_notes import is_admin, ai_caller
 
 bp = Blueprint("news", __name__)
 
-# Display names for the gatherer's 10 threads. KEEP IN SYNC with the THREADS keys
+# Display names for the gatherer's 13 threads. KEEP IN SYNC with the THREADS keys
 # in scripts/news/queries.py (small + static, so duplicated here rather than
 # importing across the scripts/ boundary). "new" = the AI flagged a fresh angle.
 THREAD_LABELS = {
@@ -39,9 +39,12 @@ THREAD_LABELS = {
     "encyclical_political": "Encyclicals / doctrine going political",
     "ai_moralized": "Economic/tech control",
     "legislating_morality": "Legislating worship/morality",
-    "ecumenism": "Ecumenism under Rome",
+    "ecumenism": "Ecumenism (Protestant–Catholic)",
+    "ecumenism_orthodox": "Catholic–Orthodox reunion",
+    "protestant_collapse": "Protestant / Evangelical collapse",
     "alien_agenda": "Alien / UFO disclosure",
     "culture_shaping": "Culture shaping",
+    "signs_wonders": "Signs & wonders / miracles",
     "political_realignment": "Political realignment",
     "sabbath_sunday": "Sabbath / Sunday law",
     "new": "New angle",
