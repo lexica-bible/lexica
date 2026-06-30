@@ -206,12 +206,46 @@ def _cluster(rows):
     return clusters
 
 
+# Within ONE event label, how big a gap (days) between consecutive article dates starts a
+# new card. An event's own coverage arc is dense (days apart); a too-broad phenomenon label
+# ("Weeping Icons") spans months/years, so its distinct happenings sit far apart and split.
+# 14 holds one event's arc together while breaking multi-month spans. Picked from real PA
+# before/after (Pope-Leo-AI stays ~merged, weeping-icons shatters); change only against fresh
+# preview counts, never blind. Keys on PUBLISHED (real article date), never first_seen.
+WINDOW_DAYS = 14
+
+
+def _split_by_window(arts, days=WINDOW_DAYS):
+    """Split one event-label bucket into per-moment cards: walk its articles in date order and
+    start a fresh card whenever the gap to the previous article exceeds `days`. A real saga's
+    dense coverage stays one card; a phenomenon label spanning months/years breaks into its
+    separate happenings. Undated articles can't be placed in time, so each becomes its OWN card
+    rather than fusing into or skewing a dated cluster (mirrors _peak_in_window, which drops an
+    undated cluster the moment a date edge is set). Keys on published, never first_seen."""
+    dated, undated = [], []
+    for a in arts:
+        try:
+            dated.append((datetime.date.fromisoformat((a["published"] or "")[:10]), a))
+        except ValueError:
+            undated.append(a)
+    dated.sort(key=lambda x: x[0])
+    groups, run, prev = [], [], None
+    for dt, a in dated:
+        if prev is not None and (dt - prev).days > days:
+            groups.append([x[1] for x in run]); run = []
+        run.append((dt, a)); prev = dt
+    if run:
+        groups.append([x[1] for x in run])
+    groups += [[a] for a in undated]      # each undated article = its own card
+    return groups
+
+
 def _group(rows, has_event):
     """Group into story cards. Prefer the AI's event label (scripts/news/group_news.py
     tags each article with the real-world event it covers, so wildly different headlines
-    about one encyclical share a label) — collapse by exact label. Anything not yet
-    labeled falls back to the lexical word-overlap clustering above. Rows arrive
-    strongest-first, so each group's first article is its representative."""
+    about one encyclical share a label) — collapse by exact label, THEN date-split each
+    label into per-moment cards (a label can span years; _split_by_window breaks a >14-day
+    gap). Anything not yet labeled falls back to the lexical word-overlap clustering above."""
     if not has_event:
         return _cluster(rows)
     by_event, ungrouped = {}, []
@@ -221,7 +255,13 @@ def _group(rows, has_event):
             by_event.setdefault(ev, []).append(r)
         else:
             ungrouped.append(r)
-    clusters = [{"rep": arts[0], "arts": arts} for arts in by_event.values()]
+    clusters = []
+    for arts in by_event.values():
+        for sub in _split_by_window(arts):
+            # strongest in the sub-card represents it (rows arrived score-desc, but the
+            # date sort above reorders, so re-pick rather than trust position)
+            rep = max(sub, key=lambda a: ((a["score"] or 0), (a["published"] or "")))
+            clusters.append({"rep": rep, "arts": sub})
     clusters += _cluster(ungrouped)
     return clusters
 
