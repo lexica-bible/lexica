@@ -342,9 +342,16 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   CUT** — two lexemes split by fact (οὐ, indicative) vs non-fact (μή — typology, glance flags "lest"), both
   carrying a Matthew 5:17 minimal-pair cross-ref + the compounds οὐδέ/μηδέ/οὔτε/μήτε/οὐχί inheriting + naming
   the base split; the ARTICLE ὁ (definite-marker + substantivizer + the "not English 'the'" underspecification
-  finding, glance/full; pronominal ὁ δέ flagged → step b) + **ἵνα** (G2443, 2026-06-26 — purpose; the result/ekbatic debate flagged as a GRAMMATICAL
+  finding, glance/full; pronominal ὁ δέ handled on the card — step b, see the REFERENT batch below) + **ἵνα** (G2443, 2026-06-26 — purpose; the result/ekbatic debate flagged as a GRAMMATICAL
   (not doctrinal) question, glance/full via the contested-flag; exemplar Mark 3:14, a plain uncontested purpose,
-  NOT the hardening verses). **The structural inventory is now COMPLETE.** **STRUCTURAL-WORD CONTEST RULE** (ἵνα
+  NOT the hardening verses) + the **REFERENT-RESOLUTION batch (step b, 2026-06-30)** — a SECOND structural
+  class beside εἰμί's complement-resolution: a pointer with no content of its own, the antecedent recovered
+  from context. Entries: οὗτος G3778 (whole paradigm — τοῦτο is G3778, no G5124 split), αὐτός G846
+  (he/-self/the-same), οὐδείς G3762 + μηδείς G3367 (the empty-set pointer; the οὐ/μή cut stays on the
+  negatives card). ὁ δέ has no number of its own — it rides the article card's straddle (the old step-b
+  deferral is now a full treatment, exemplar Matt 14:18). ἰδού G2400 SCOPED OUT (situational deixis — points
+  FORWARD to introduce, fails the back-pointing gate). Exemplars verbatim-ABP, verified live before commit.
+  **The structural inventory is now COMPLETE.** **STRUCTURAL-WORD CONTEST RULE** (ἵνα
   = the worked example): a structural word with SETTLED grammar but a doctrinally-CONTESTED application at
   specific verses does NOT get a fairness-gate fork — the card stays grammatically honest, and the loaded verses
   point OUT to an argument graph where the contest is mapped (the lexeme is innocent; the passage is contested).

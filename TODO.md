@@ -23,6 +23,11 @@ Issues surfaced 2026-06-28. #1 ("LORD the" word flip), #2 (proper-noun / entity 
   G3779, G846, G1438. The demonstrative's real number is G3778 (2,400+ rows). These are surface-form
   collisions, low-impact. Same fix class as the αἰών/αἰώνιος retag just closed — a small bidirectional
   retag when we get to it. Not gating anything. code: the retag folds in build_words_from_abp.py / lxx_align.
+- **ABP Hebrews appears to stop at chapter 12** (surfaced 2026-06-30, UNDER INVESTIGATION in a parallel
+  session) — `/read/hebrews/13` 404s and ch 12 has no next-chapter link, while ch 1 loads fine. Hebrews
+  has 13 chapters everywhere else, so this looks like a real corpus hole (missing verse rows → its words
+  silently dropped, same general invariant as the Hebrews-13 restore class). Checked via the public pages
+  only, not yet traced. JP took it to its own session.
 
 ---
 
