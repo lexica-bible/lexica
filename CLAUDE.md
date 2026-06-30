@@ -503,17 +503,24 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
 - CSS: `@media (max-width: 1099px)` / `@media (min-width: 1100px)` — no other breakpoints except 520px for very small phones
 
 ## Three-zone shell (shared workspace frame)
-The unified navigate / read / inspect layout — ONE source of truth for the frame: `.zshell` (grid
-224px rail + fill center, reserves the right strip), `.zrail` (left, sand), `.zcenter` (center,
-fills), `.zinspect` (right — `position:fixed` `--sidebar-w` panel floating over the navy header),
-plus `.zempty*` (icon + bold title + subtitle, with the cross-line) — all in styles.css. Components
-`ThreeZone` + `ZoneEmpty` in `static/src/20-shared-components.jsx`. **Share the FRAME, not the
-CONTENTS** — each tab's inner styling stays tab-local; never pull a tab's card/feed styling into the
-`.z*` classes. LIVE on **Word study** (re-pointed its `.ws/.brail/.center/.wd` markup onto the shared
-classes) and **News**. Still to migrate: Notes, Ask the corpus, then Library LAST (heaviest, own
-classes `.library/.lib-reading/.detail-side`, optional right panel — its own scoped job). Re-pointing
-a LOCKED tab onto the shell is a zero-drift gate: keep shared values identical, prove it by diffing
-computed styles in a headless browser (chrome-devtools MCP) before committing. Full record: memory
+The navigate / read / inspect layout. **Frame components are in `static/src/22-shell.jsx`:** `Shell`
+(the four-slot frame — desktop `.zshell` grid + a real desktop→mobile collapse to a bottom toolbar
+`.zbar` + `.zsheet` sheets) and `RightStack` (the inspect-panel STACK — depth 1 = one card; a child
+drills via `useRightStackCtl().push()`, back pops; the PARENT owns the array via `useRightStack()` so a
+center peer-select can `reset()`; lower layers stay mounted, hidden with **`visibility` NOT
+`display:none`** — display:none wipes an overflow box's scrollTop in Chrome; keys are push-unique minted
+ids, never by card type). `ZoneEmpty` stays in `20-shared-components.jsx`. CSS in styles.css:
+`.zshell/.zrail/.zcenter/.zinspect` + `.rstack*` + mobile `.zbar/.zsheet`. **Share the FRAME, not the
+CONTENTS** — never pull a tab's card/feed styling into the `.z*` classes. **top:0 split (load-bearing):**
+a SHIPPED surface keeps its float-behind-the-nav (`.zinspect` base, `top:0`); a NEW surface starts BELOW
+the nav (`.zinspect.rstack`, `top:var(--hdr-h)`). **All three shipped surfaces migrated, parity-only:**
+News + Word study render `<Shell>` on desktop (each keeps its own `if (isMobile)` mobile branch; `Shell`
+has `railClass`/`centerClass` for Word study's extra slot classes); Library's five inspect panels
+(word/xref/note/summary/day-intro) carry the shared `.zinspect` with `.detail-side` slimmed to its
+extras — its App-level gating machine (one-at-a-time word>xref>note>summary, back-as-uncover, reconcile)
+is UNTOUCHED and it is NOT forced into RightStack. ThreeZone retired. Migrations proved by parity gates
+(frame DOM + computed-style diff; Library also a Node state-machine gate driving transition sequences).
+Next = the first real consumers (seam index / Ask-corpus right rail / Notes). Full record: memory
 `project_three_zone_shell`.
 
 ## Library Tab

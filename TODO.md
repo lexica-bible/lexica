@@ -31,16 +31,18 @@ Issues surfaced 2026-06-28. #1 ("LORD the" word flip), #2 (proper-noun / entity 
 
 ---
 
-## Three-zone shell — migrate the remaining tabs (2026-06-29)
-The shared navigate/read/inspect frame is LIVE on Word study + News (memory
-`project_three_zone_shell`). Bring the rest onto it so there's one frame, not hand-rolled look-alikes:
-- **Notes** — center flips to an editor; the frame is content-agnostic so it's safe (verified).
-- **Ask the corpus** — same frame.
-- **Library** — LAST. Heaviest, most-locked tab; own classes (`.library`/`.lib-reading`/`.detail-side`),
-  toolbar/nav-drawer/audio/compare/focus-mode, and its right panel is OPTIONAL. Its own scoped commit +
-  the zero-drift computed-style diff, not a drop-in.
-  code: static/src/20-shared-components.jsx (.zshell*), 80-lexicon.jsx, 84-news.jsx, styles.css
-  (News feed SORT recency is now DONE — shipped 2026-06-29, see the News feed section below.)
+## Three-zone shell — first real consumers (2026-06-30)
+The shared frame is DONE: `Shell` + `RightStack` built in `static/src/22-shell.jsx`, and News + Word
+study + Library all migrated parity-only (ThreeZone retired). History + the gate methods: TODO_ARCHIVE +
+memory `project_three_zone_shell`. Remaining = build the FIRST surfaces that actually USE the shell for
+NEW content:
+- **Seam index** (Study) — the greenfield consumer of `RightStack` (Build A, separate handoff).
+- **Ask the corpus** — add the missing right rail (occurrence detail + fork flag, drilling via RightStack).
+  Prereq: the diacritic exact-lemma-first fix so the center list is trustworthy.
+- **Notes** — left index / editor center / anchored-scripture right, on `Shell`.
+  code: static/src/22-shell.jsx, 52-ask-corpus.jsx, 35-notes.jsx, 55-study.jsx, styles.css
+- **Owed (this session):** post-deploy human click-through of News / Word study / Library on desktop +
+  phone — the mobile sheets are the one thing the parity gates can't run locally.
 
 ---
 

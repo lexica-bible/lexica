@@ -6,6 +6,28 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Three-zone shell — primitives built + 3 shipped surfaces migrated — DONE 2026-06-30
+The shared navigate/read/inspect frame went from shared CSS to real components, and all THREE shipped
+surfaces (News, Word study, Library) were migrated parity-only. Full record + gate methods: memory
+`project_three_zone_shell`.
+- **Built `Shell` + `RightStack`** in `static/src/22-shell.jsx` (greenfield, unwired first): Shell = the
+  four-slot frame + a real desktop→mobile collapse (bottom toolbar + sheets); RightStack = the
+  inspect-panel stack (parent owns the array, child pushes, center-select resets).
+- **Migrated** News (`648f757`) + Word study (`0366ad2`) onto `<Shell>` (desktop; each keeps its own
+  mobile branch), and Library (`b4c4827`) — its 5 inspect panels carry the shared `.zinspect`,
+  `.detail-side` slimmed to extras, App-level gating machine untouched (NARROW, not RightStack).
+  `ThreeZone` retired (`14e9149`).
+- **Lessons:** (1) hidden stack layers must use `visibility`, NOT `display:none` — display:none wipes an
+  overflow box's scrollTop in Chrome. (2) top:0 split — a SHIPPED surface keeps its float (`.zinspect`
+  top:0), a NEW surface starts below the nav (`.zinspect.rstack`). (3) prove parity with throwaway gates:
+  frame DOM + computed-style diff, and for Library a Node state-machine gate that drives TRANSITION
+  sequences (word-over-xref → close → uncover-and-state-survives), not just a snapshot. (4)
+  `59-dayintro.jsx` is CRLF — the Edit tool flipped it to LF; restore with `git checkout` + `sed -i`.
+- **Owed:** post-deploy human click-through of the 3 tabs on desktop + phone (mobile sheets can't run
+  locally — bible.db/news.db are PA-only).
+
+---
+
 ## Hebrews 13 missing from the corpus — restored — DONE 2026-06-30
 Heb 13 (25 verses) was absent: the `verses` table held Heb 1–12 only. A per-chapter count audit
 across all 66 books found it was Hebrews-ONLY — one dropped chapter, not an import-wide failure.
