@@ -179,6 +179,8 @@ function NewsView({ isMobile }) {
     const saved = localStorage.getItem("lexica.news.since.v1");
     return saved === null ? _newsDaysAgo(21) : saved;
   });
+  // "" = no upper bound (= now). The window is two-sided: since..until. Presets clear it.
+  const [until, setUntil] = useState(() => localStorage.getItem("lexica.news.until.v1") || "");
   const [minScore, setMinScore] = useState(() => Number(localStorage.getItem("lexica.news.min.v1") || 5));
   const [thread, setThread] = useState("");
   const [order, setOrder] = useState("score");        // score | date
@@ -195,11 +197,13 @@ function NewsView({ isMobile }) {
   useEffect(() => {
     if (!meta || !meta.available) return;
     let cancelled = false;
-    const p = { min: minScore }; if (since) p.since = since; if (thread) p.thread = thread;
+    const p = { min: minScore };
+    if (since) p.since = since; if (until) p.until = until; if (thread) p.thread = thread;
     api.newsCounts(p).then(d => { if (!cancelled && d && d.available) setCounts(d); });
     return () => { cancelled = true; };
-  }, [meta, since, minScore, thread]);
+  }, [meta, since, until, minScore, thread]);
   useEffect(() => { localStorage.setItem("lexica.news.since.v1", since); }, [since]);
+  useEffect(() => { localStorage.setItem("lexica.news.until.v1", until); }, [until]);
   useEffect(() => { localStorage.setItem("lexica.news.min.v1", String(minScore)); }, [minScore]);
 
   // Feed-shape (right zone). Honors the Since window only — ignores score floor + thread,
@@ -207,10 +211,10 @@ function NewsView({ isMobile }) {
   useEffect(() => {
     if (!meta || !meta.available) { setShape(null); return; }
     let cancelled = false;
-    const p = {}; if (since) p.since = since;
+    const p = {}; if (since) p.since = since; if (until) p.until = until;
     api.newsShape(p).then(d => { if (!cancelled) setShape(d && d.available ? d : null); });
     return () => { cancelled = true; };
-  }, [meta, since]);
+  }, [meta, since, until]);
 
   // Reload whenever a filter changes (kept queries ignore the date/score floor so the
   // shortlist always shows everything you've kept).
@@ -223,6 +227,7 @@ function NewsView({ isMobile }) {
     // keeps the rest discoverable.)
     const params = { view, order, min: minScore };
     if (since) params.since = since;
+    if (until) params.until = until;
     if (thread) params.thread = thread;
     api.newsList(params).then(d => {
       if (cancelled) return;
@@ -230,7 +235,7 @@ function NewsView({ isMobile }) {
       setLoading(false);
     });
     return () => { cancelled = true; };
-  }, [meta, view, minScore, thread, order, since]);
+  }, [meta, view, minScore, thread, order, since, until]);
 
   // Apply (sign +1) or undo (sign -1) a triage move's deltas to all the tab counts. The
   // all-time kept/dismissed tallies move by the SAME kept/dismissed deltas (the card is
@@ -325,23 +330,24 @@ function NewsView({ isMobile }) {
   // Inbox filter controls, split so the desktop rail can group + label them while
   // the mobile strip keeps them in one flat row.
   const dateInput = <input type="date" value={since} onChange={e => setSince(e.target.value)} />;
-  // Each preset is just another view of `since` — tapping one sets the field, and the
-  // one whose date equals the current field renders active. A custom date matches none
-  // (then nothing shows active — correct, the user is on their own window).
+  const untilInput = <input type="date" value={until} onChange={e => setUntil(e.target.value)} />;
+  // Each preset is "last N days through NOW", so it sets `since` AND clears `until` — a stale
+  // end-date left over from a custom window would silently truncate it. A preset highlights
+  // only when its `since` matches AND there's no upper bound (otherwise it's a custom window).
   const datePresets = [[7, "7d"], [14, "14d"], [30, "30d"], [90, "90d"], [365, "1y"]];
   const presets = (
     <div className="news-presets">
       {datePresets.map(([n, lbl]) => {
         const d = _newsDaysAgo(n);
         return (
-          <button key={n} className={since === d ? "on" : ""}
-                  onClick={() => setSince(d)}>{lbl}</button>
+          <button key={n} className={(since === d && !until) ? "on" : ""}
+                  onClick={() => { setSince(d); setUntil(""); }}>{lbl}</button>
         );
       })}
-      {/* Max = drop the date bound entirely (since=""). Composes with the score floor and
-          flows through the same empty-since path as the others; active when no bound is set. */}
-      <button key="max" className={since === "" ? "on" : ""}
-              onClick={() => setSince("")}>Max</button>
+      {/* Max = drop the date bounds entirely (since="" + until=""). Composes with the score
+          floor; flows through the same empty-date path as the others; active when neither bound is set. */}
+      <button key="max" className={(since === "" && !until) ? "on" : ""}
+              onClick={() => { setSince(""); setUntil(""); }}>Max</button>
     </div>
   );
   const scoreSeg = (
@@ -361,6 +367,7 @@ function NewsView({ isMobile }) {
   const inboxFilters = (   // mobile: one flat strip (keeps the inline "Since" word)
     <>
       <label className="news-f"><span>Since</span>{dateInput}</label>
+      <label className="news-f"><span>Until</span>{untilInput}</label>
       {presets}
       {scoreSeg}
       {sortSel}
@@ -456,6 +463,7 @@ function NewsView({ isMobile }) {
       <div className="news-rail-sec">
         <div className="news-rail-label">Since</div>
         <label className="news-f">{dateInput}</label>
+        <label className="news-f"><span>Until</span>{untilInput}</label>
         {presets}
       </div>
       <div className="news-rail-sec">

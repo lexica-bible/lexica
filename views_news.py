@@ -333,7 +333,7 @@ def _staleness_penalty(published):
 
 
 def _count_view_clusters(conn, rid, status_value, has_event, since=None, min_score=0,
-                         thread=None):
+                         thread=None, until=None):
     """How many CARDS (clusters) this reviewer has in a status — counted the SAME way the
     list renders: existing + scored items only, scoped to rid, grouped into cards. So the
     tab badge can't disagree with the feed (an orphaned review row whose item churned away
@@ -353,6 +353,10 @@ def _count_view_clusters(conn, rid, status_value, has_event, since=None, min_sco
     if since:
         where.append("i.published >= ? AND i.published != ''")
         args.append(since)
+    if until:
+        # published is a full timestamp; compare the DATE part so the whole end-day counts.
+        where.append("substr(i.published, 1, 10) <= ? AND i.published != ''")
+        args.append(until)
     if thread:
         where.append("i.ai_thread = ?")
         args.append(thread)
@@ -402,6 +406,7 @@ def counts():
         min_score = max(0, min(10, int(request.args.get("min", 0))))
     except (TypeError, ValueError):
         min_score = 0
+    until = (request.args.get("until") or "").strip()
     thread = (request.args.get("thread") or "").strip()
     rid, _ = _reviewer()
     conn = news_db()
@@ -409,11 +414,13 @@ def counts():
         _ensure_reviews(conn)
         has_event = "event" in [c[1] for c in conn.execute("PRAGMA table_info(items)")]
         # in-window (sc=True) vs all-time (sc=False) card counts for a status bucket; the
-        # thread narrows both (only the DATE window is dropped for the all-time totals).
+        # thread narrows both (only the DATE window is dropped for the all-time totals, so
+        # '+N outside' = before since OR after until).
         def c(status, sc=False):
             return _count_view_clusters(conn, rid, status, has_event,
                                         since=since if sc else None,
                                         min_score=min_score if sc else 0,
+                                        until=until if sc else None,
                                         thread=thread or None)
         out = {
             "available": True,
@@ -440,6 +447,7 @@ def list_news():
         return jsonify({"stories": [], "available": False})
 
     since = (request.args.get("since") or "").strip()        # 'YYYY-MM-DD' or empty
+    until = (request.args.get("until") or "").strip()        # 'YYYY-MM-DD' or empty (= now)
     try:
         min_score = max(0, min(10, int(request.args.get("min", 0))))
     except (TypeError, ValueError):
@@ -458,6 +466,10 @@ def list_news():
         # Empty published (unknown date) is excluded once a since-floor is set.
         where.append("i.published >= ? AND i.published != ''")
         args.append(since)
+    if until:
+        # upper bound: compare the DATE part so the whole end-day is included.
+        where.append("substr(i.published, 1, 10) <= ? AND i.published != ''")
+        args.append(until)
     if thread:
         where.append("i.ai_thread = ?")
         args.append(thread)
@@ -510,11 +522,15 @@ def shape():
     if not _available():
         return jsonify({"available": False})
     since = (request.args.get("since") or "").strip()
+    until = (request.args.get("until") or "").strip()
     where = ["score IS NOT NULL"]
     args = []
     if since:
         where.append("published >= ? AND published != ''")
         args.append(since)
+    if until:
+        where.append("substr(published, 1, 10) <= ? AND published != ''")
+        args.append(until)
     w = " AND ".join(where)
 
     conn = news_db()
