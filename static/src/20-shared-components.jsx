@@ -1,10 +1,10 @@
 // ============================================================
-// THREE-ZONE SHELL — the shared navigate / read / inspect frame.
-// The structural covenant every workspace tab makes: a thin LEFT rail, a CENTER
-// that fills, and a RIGHT inspect panel pinned over the navy header. STRUCTURE
-// ONLY — each zone's contents are passed in and stay tab-local. Word study
-// re-points its existing markup onto these classes; News mounts via <ThreeZone>.
-// Widths / spacing / over-header behavior live once in the .zshell* CSS.
+// ZONE EMPTY — the shared inspect/rail empty-state (icon + bold title + helper line).
+// The three-zone FRAME component (Shell) + the RightStack inspect stack now live in
+// 22-shell.jsx; News, Word study and Library all render through it (the old ThreeZone
+// was retired once all three migrated). This file keeps ZoneEmpty, which those frames
+// drop into an empty slot. Widths / spacing / over-header behavior live once in the
+// .zshell* / .zinspect CSS.
 // ============================================================
 function ZoneEmpty({ icon, title, sub }) {
   return (
@@ -12,16 +12,6 @@ function ZoneEmpty({ icon, title, sub }) {
       {icon ? <div className="zempty-mark">{icon}</div> : null}
       {title ? <div className="zempty-t">{title}</div> : null}
       {sub ? <div className="zempty-s">{sub}</div> : null}
-    </div>
-  );
-}
-
-function ThreeZone({ rail, center, inspect, centerOnly, className }) {
-  return (
-    <div className={"zshell" + (centerOnly ? " center-only" : "") + (className ? " " + className : "")}>
-      <aside className="zrail">{rail}</aside>
-      <main className="zcenter">{center}</main>
-      {!centerOnly && <aside className="zinspect">{inspect}</aside>}
     </div>
   );
 }

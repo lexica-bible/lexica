@@ -186,14 +186,14 @@ removeConvo(id){const a=corpusLoadRaw();const c=a.find(x=>x.id===id);if(!c)retur
 clearConvos(){const a=corpusLoadRaw();const now=new Date().toISOString();for(const c of a)Object.assign(c,{deleted:true,title:"",turns:[],updated:now});corpusSaveRaw(a);notify();scheduleCorpusSync();},syncCorpusNow,scheduleCorpusSync};}();// On load, if signed in, pull once so this device catches up.
 if(NotesStore.auth()){setTimeout(()=>NotesStore.syncNow(),400);NotesStore.refreshAccount();}// Re-render a component whenever the note store changes.
 function useNotesVersion(){const[,force]=useState(0);useEffect(()=>NotesStore.subscribe(()=>force(v=>v+1)),[]);}// ============================================================
-// THREE-ZONE SHELL — the shared navigate / read / inspect frame.
-// The structural covenant every workspace tab makes: a thin LEFT rail, a CENTER
-// that fills, and a RIGHT inspect panel pinned over the navy header. STRUCTURE
-// ONLY — each zone's contents are passed in and stay tab-local. Word study
-// re-points its existing markup onto these classes; News mounts via <ThreeZone>.
-// Widths / spacing / over-header behavior live once in the .zshell* CSS.
+// ZONE EMPTY — the shared inspect/rail empty-state (icon + bold title + helper line).
+// The three-zone FRAME component (Shell) + the RightStack inspect stack now live in
+// 22-shell.jsx; News, Word study and Library all render through it (the old ThreeZone
+// was retired once all three migrated). This file keeps ZoneEmpty, which those frames
+// drop into an empty slot. Widths / spacing / over-header behavior live once in the
+// .zshell* / .zinspect CSS.
 // ============================================================
-function ZoneEmpty({icon,title,sub}){return/*#__PURE__*/React.createElement("div",{className:"zempty"},icon?/*#__PURE__*/React.createElement("div",{className:"zempty-mark"},icon):null,title?/*#__PURE__*/React.createElement("div",{className:"zempty-t"},title):null,sub?/*#__PURE__*/React.createElement("div",{className:"zempty-s"},sub):null);}function ThreeZone({rail,center,inspect,centerOnly,className}){return/*#__PURE__*/React.createElement("div",{className:"zshell"+(centerOnly?" center-only":"")+(className?" "+className:"")},/*#__PURE__*/React.createElement("aside",{className:"zrail"},rail),/*#__PURE__*/React.createElement("main",{className:"zcenter"},center),!centerOnly&&/*#__PURE__*/React.createElement("aside",{className:"zinspect"},inspect));}// ============================================================
+function ZoneEmpty({icon,title,sub}){return/*#__PURE__*/React.createElement("div",{className:"zempty"},icon?/*#__PURE__*/React.createElement("div",{className:"zempty-mark"},icon):null,title?/*#__PURE__*/React.createElement("div",{className:"zempty-t"},title):null,sub?/*#__PURE__*/React.createElement("div",{className:"zempty-s"},sub):null);}// ============================================================
 // useFitText — shrink a single-line element's font-size until it fits its slot.
 // Used by the mobile reading-intro / overview card titles so a long title never
 // wraps or runs off (and never collides with the corner toggle link) — it just
