@@ -14,6 +14,7 @@
 const STUDY_MODULES = [
   { id: "topic", label: "Topics" },
   { id: "graph", label: "Graphs" },
+  { id: "seam", label: "Seams" },
 ];
 // "name" = a person/place name-topic (MetaV), shown on the metaV sidebar, opened
 // here read-only. Same shape as a topic, so it renders through TopicPage.
@@ -762,11 +763,147 @@ function GraphPage({ entry, onClose, previewReader, onNavigate }) {
 }
 
 // ---- The Study tab --------------------------------------------------------
-function StudyView({ admin, pending, onConsumed, onNavigateToLibrary }) {
+// ── SEAM INDEX ────────────────────────────────────────────────────────────────
+// The contested-word browse: words whose plain meaning is settled but whose READING
+// forks. Pure read over lexica_def fork data (/api/lexica/seams) — no engine touch.
+// Two authored axes ride each seam: divergence_type (why they diverge, the badge) and
+// lead_flip (does the LEAD sense flip when the priors are swapped — the "Different-lead"
+// filter). The both-priors card reuses LexicaFork (the same one the word card draws).
+const _SEAM_TYPE_LABELS = { referent: "Referent", content: "Content", loaded: "Loaded" };
+
+function SeamPriors({ seam, onOpenGraph }) {
+  const heb = /^H/i.test(seam.strongs || "");
+  return (
+    <div className="seam-priors">
+      <div className="seam-priors-hero">
+        <span className={"seam-priors-lemma" + (heb ? " heb" : "")} dir={heb ? "rtl" : undefined}>{seam.lemma}</span>
+        {seam.translit && <span className="seam-priors-tr">{seam.translit}</span>}
+        <span className="seam-priors-s">{seam.strongs}</span>
+      </div>
+      <LexicaFork fork={seam.fork} />
+      {seam.graph_ref && (
+        <button className="seam-graph-link" onClick={() => onOpenGraph(seam.graph_ref)}>
+          Open the argument map · Study › Graphs ›
+        </button>
+      )}
+    </div>
+  );
+}
+
+function SeamIndex({ modules, module, onPickModule, onOpenGraph, isMobile }) {
+  const [seams, setSeams] = useState(null);   // null = loading
+  const [sel, setSel] = useState(null);        // selected strongs
+  const [flipOnly, setFlipOnly] = useState(false);
+  useEffect(() => {
+    let live = true;
+    api.lexicaSeams().then(d => { if (live) setSeams((d && d.seams) || []); })
+      .catch(() => { if (live) setSeams([]); });
+    return () => { live = false; };
+  }, []);
+
+  const shown = (seams || []).filter(s => !flipOnly || s.lead_flip);
+  const selSeam = (seams || []).find(s => s.strongs === sel) || null;
+
+  const row = (s) => {
+    const heb = /^H/i.test(s.strongs || "");
+    return (
+      <button key={s.strongs} className={"seam-row" + (s.strongs === sel ? " on" : "")}
+        onClick={() => setSel(cur => (cur === s.strongs ? null : s.strongs))}>
+        <span className="seam-word">
+          <span className={"seam-lemma" + (heb ? " heb" : "")} dir={heb ? "rtl" : undefined}>{s.lemma}</span>
+          {s.translit && <span className="seam-tr">{s.translit}</span>}
+        </span>
+        <span className="seam-gloss">{s.gloss}</span>
+        <span className="seam-tags">
+          {s.lead_flip && <span className="seam-flip">different lead</span>}
+          {s.divergence_type && <span className={"seam-type seam-type-" + s.divergence_type}>{_SEAM_TYPE_LABELS[s.divergence_type] || s.divergence_type}</span>}
+        </span>
+      </button>
+    );
+  };
+
+  const filterStrip = (
+    <div className="seam-filter seg">
+      <button className={"seg-b" + (!flipOnly ? " on" : "")} onClick={() => setFlipOnly(false)}>All</button>
+      <button className={"seg-b" + (flipOnly ? " on" : "")} onClick={() => setFlipOnly(true)}>Different-lead</button>
+    </div>
+  );
+
+  const emptyMsg = flipOnly ? "No seams with a different lead." : "No contested-word seams found.";
+  const listBody = seams === null
+    ? <div className="stats-empty">Loading…</div>
+    : shown.length === 0
+      ? <div className="stats-empty">{emptyMsg}</div>
+      : <div className="seam-list">{shown.map(row)}</div>;
+
+  // ── MOBILE: single column; a tapped seam expands its both-priors inline ──
+  if (isMobile) {
+    return (
+      <div className="study-view seam-mobile">
+        <div className="study-sub">
+          {modules.map(m => (
+            <button key={m.id} className={"study-sub-b" + (module === m.id ? " on" : "")} onClick={() => onPickModule(m.id)}>{m.label}</button>
+          ))}
+        </div>
+        <div className="study-list-head"><h1 className="stats-title">Seams</h1></div>
+        <div className="stats-sub">Words whose plain meaning is settled but whose reading forks — the shared core, then the competing readings.</div>
+        <div className="seam-mobile-strip">{filterStrip}</div>
+        {seams === null ? <div className="stats-empty">Loading…</div>
+          : shown.length === 0 ? <div className="stats-empty">{emptyMsg}</div>
+          : <div className="seam-list">
+              {shown.map(s => (
+                <div key={s.strongs} className="seam-mrow">
+                  {row(s)}
+                  {s.strongs === sel && <div className="seam-mexpand"><SeamPriors seam={s} onOpenGraph={onOpenGraph} /></div>}
+                </div>
+              ))}
+            </div>}
+      </div>
+    );
+  }
+
+  // ── DESKTOP: the shared three-zone Shell ──
+  return (
+    <Shell
+      isMobile={false}
+      className="seam-frame"
+      rail={
+        <div className="seam-rail">
+          <div className="seam-rail-h">Study</div>
+          {modules.map(m => (
+            <button key={m.id} className={"seam-rail-b" + (module === m.id ? " on" : "")} onClick={() => onPickModule(m.id)}>{m.label}</button>
+          ))}
+        </div>
+      }
+      center={
+        <>
+          <div className="seam-strip">
+            {filterStrip}
+            <span className="seam-count">{shown.length} seam{shown.length === 1 ? "" : "s"}</span>
+          </div>
+          <div className="seam-center-body">{listBody}</div>
+        </>
+      }
+      inspect={
+        <aside className="zinspect seam-inspect">
+          <div className="seam-insp-band">Both priors</div>
+          <div className="seam-insp-scroll">
+            {selSeam
+              ? <SeamPriors seam={selSeam} onOpenGraph={onOpenGraph} />
+              : <ZoneEmpty icon={<Icon.Book/>} title="Pick a seam"
+                  sub="Choose a word to see the shared core and the competing readings side by side." />}
+          </div>
+        </aside>
+      }
+    />
+  );
+}
+
+function StudyView({ admin, pending, onConsumed, onNavigateToLibrary, isMobile }) {
   const adminUser = !!admin;
   const [module, setModule] = useState(() => {
-    // Restore the saved sub-tab. Both Topics and Graphs are public now, so no admin gate here.
-    try { return localStorage.getItem("lexica.study.module.v1") === "graph" ? "graph" : "topic"; } catch (e) { return "topic"; }
+    // Restore the saved sub-tab. Topics / Graphs / Seams are all public, so no admin gate here.
+    try { const m = localStorage.getItem("lexica.study.module.v1"); return (m === "graph" || m === "seam") ? m : "topic"; } catch (e) { return "topic"; }
   });
   const [entries, setEntries] = useState(null);
   const [err, setErr] = useState(false);
@@ -785,6 +922,10 @@ function StudyView({ admin, pending, onConsumed, onNavigateToLibrary }) {
   const readerView = !adminUser || previewReader;
 
   const load = mod => {
+    // Seams aren't study.db entries — SeamIndex fetches its own /api/lexica/seams data.
+    // Skip the entries fetch so its empty/err result can't hijack the render before the
+    // seam early-return (the `if (err)` guard runs first).
+    if (mod === "seam") { setEntries([]); setErr(false); return; }
     setEntries(null);
     api.studyEntries(mod).then(d => {
       if (d && d.entries) { setEntries(d.entries); setErr(false); }
@@ -856,6 +997,19 @@ function StudyView({ admin, pending, onConsumed, onNavigateToLibrary }) {
     if (isTopicLike(editing.type))
       return <div className="study-view"><TopicPage entry={editing} editing={!ro} onChange={setEditing} onSave={save} onDelete={del} onClose={close} onToggleEdit={() => setEditMode(m => !m)} previewReader={readerView} saving={saving} savedAt={savedAt} onNavigate={onNavigateToLibrary} /></div>;
     return <div className="study-view"><GraphPage entry={editing} onClose={close} previewReader={readerView} onNavigate={onNavigateToLibrary} /></div>;
+  }
+
+  // SEAMS — its own shell surface (rail = the Study-section switcher; center = the seam
+  // list; right = the both-priors card). A pure read over lexica_def fork data. The top
+  // sub-switch is replaced by the rail switcher here, so only one nav shows at a time.
+  if (module === "seam") {
+    const openGraph = (graphRef) => {
+      const gid = String(graphRef || "").split(":")[0];
+      pickModule("graph");
+      if (gid) openEntry(gid);
+    };
+    return <SeamIndex modules={STUDY_MODULES} module={module} onPickModule={pickModule}
+      onOpenGraph={openGraph} isMobile={isMobile} />;
   }
 
   const isTopic = module === "topic";

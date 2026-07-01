@@ -137,6 +137,9 @@ NT_BOOKS = {"Mat","Mar","Luk","Joh","Act","Rom","1Co","2Co","Gal","Eph","Php","C
 CONTESTED = OrderedDict([
     ("G1344", {
         "lemma": "dikaioō", "gloss": "justify",
+        # Seam index (chat design): why they diverge + whether the LEAD sense flips when the two
+        # priors are swapped (the "different-lead" filter — computed values from the 2026-06-25 run).
+        "divergence_type": "content", "lead_flip": True,
         # FRAME-LEAK (agreement run 2026-06-25): the model's senses pre-pick a fork frame draw to
         # draw, so the neutral hand-authored core below is PINNED as the definition's lead
         # (entry.pinned_core) and the model's framed senses are demoted to attested uses beneath it.
@@ -158,6 +161,7 @@ CONTESTED = OrderedDict([
     }),
     ("G166", {
         "lemma": "aionios", "gloss": "eternal / age-long",
+        "divergence_type": "loaded", "lead_flip": True,
         "pin_core": True,   # frame-leak — neutral core pinned as the lead (see G1344)
         "core": "pertaining to an age; long-lasting, ancient",
         "frames": [
@@ -169,6 +173,7 @@ CONTESTED = OrderedDict([
     }),
     ("G5484", {
         "lemma": "charis", "gloss": "favor / grace",
+        "divergence_type": "loaded", "lead_flip": True,
         "aliases": ["G5485"],
         "pin_core": True,   # frame-leak — neutral core pinned as the lead (see G1344)
         "core": "favor, goodwill, gift",
@@ -181,6 +186,7 @@ CONTESTED = OrderedDict([
     }),
     ("G4561", {
         "lemma": "sarx", "gloss": "flesh",
+        "divergence_type": "loaded", "lead_flip": False,
         "core": "body, human being, mortal nature",
         "frames": [
             ("embodied humanity", "—", "the physical/human, morally neutral"),
@@ -191,6 +197,7 @@ CONTESTED = OrderedDict([
     }),
     ("G1577", {
         "lemma": "ekklesia", "gloss": "assembly / church",
+        "divergence_type": "loaded", "lead_flip": True,
         "core": "an assembly; a convened gathering or congregation",
         "etymology_note": "ek-kaleō, 'called out' — etymologizing gloss, not a sense felt in "
                           "usage; flag, don't seat in core",
@@ -205,6 +212,7 @@ CONTESTED = OrderedDict([
     }),
     ("G4151", {
         "lemma": "pneuma", "gloss": "spirit / breath / wind",
+        "divergence_type": "referent", "lead_flip": False,
         # FRAME-LEAK: the model leads with "the Holy Spirit, third person of the Trinity"; pin the
         # neutral range so the divine-Spirit reading (person / mode / power) lives in the fork, not
         # the lead. Tightened to a one-line gloss (not a six-way sense list) after JP's chat check —
@@ -228,6 +236,7 @@ CONTESTED = OrderedDict([
     }),
     ("G2316", {
         "lemma": "theos", "gloss": "God / god",
+        "divergence_type": "referent", "lead_flip": False,
         # The model's Sense 1 closes by reading John 1:1c as settled identity ("the word ... identifies
         # the Logos both as with this being and as being this being"). That one sentence is pulled from
         # the raw (fix_lexica_raw.py) and the contest moves here. The fork is NARROW: it touches the
@@ -258,6 +267,7 @@ CONTESTED = OrderedDict([
     }),
     ("G2962", {
         "lemma": "kyrios", "gloss": "lord / master",
+        "divergence_type": "referent", "lead_flip": False,
         # Scope like pneuma: the SENSE isn't contested — "lord, master," applied both to the God of
         # Israel and to Jesus, is plainly attested and stays in the core. What's contested is the
         # IMPLICATION when a NT writer takes a text that named YHWH (or the exclusive "one Lord"
@@ -730,6 +740,11 @@ def fork_field(sid):
         "core":   e["core"],
         "frames": [{"label": l, "tradition": t, "gloss": g} for (l, t, g) in e["frames"]],
         "graph_ref": e.get("graph_ref"),
+        # Seam index: the short label + the two authored axes (why they diverge; whether the lead
+        # sense flips when the priors are swapped — the "different-lead" filter). Hand-set, no model.
+        "gloss": e.get("gloss"),
+        "divergence_type": e.get("divergence_type"),
+        "lead_flip": bool(e.get("lead_flip")),
     }
     if e.get("pin_core"):
         # frame-leaker: the core is promoted to the entry's lead (pinned_core) so the definition

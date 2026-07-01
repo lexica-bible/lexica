@@ -136,6 +136,9 @@ const api = {
     if (!strongs) return Promise.resolve({ error: 'not found' });
     return fetch(`/api/lexica/${encodeURIComponent(strongs)}`, { headers: _authHeaders() }).then(r => r.json());
   },
+  // The seam index — every Lexica entry that carries a contested-word fork. Read-only.
+  lexicaSeams: () =>
+    fetch("/api/lexica/seams", { headers: _authHeaders() }).then(r => r.json()),
   books: () =>
     fetch("/api/books").then(r => r.json()),
   chronological: () =>

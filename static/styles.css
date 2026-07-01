@@ -4687,6 +4687,63 @@ button.study-verse-ref { border: none; }
 .note-insp-scroll { flex: 1; min-height: 0; overflow-y: auto; padding: 16px 16px 60px; }
 
 /* ============================================================
+   SEAM INDEX — the contested-word browse (Study tab), on the shared three-zone Shell.
+   Rail = the Study-section switcher · center = the seam list · right = the both-priors
+   card. A NEW inspect surface, so it starts BELOW the nav (the safe default; flip to
+   top:0 for parity with News / Notes once it's seen to clear the header + account pill).
+   ============================================================ */
+.seam-frame .zrail { padding: 0; }
+.seam-rail { display: flex; flex-direction: column; padding: 12px 10px; }
+.seam-rail-h { font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600;
+  color: var(--ink-3); padding: 6px 10px 8px; }
+.seam-rail-b { text-align: left; padding: 9px 12px; border-radius: 8px; color: var(--ink-2);
+  font-size: 14px; font-weight: 600; background: none; border: 0; cursor: pointer; }
+.seam-rail-b:hover { background: color-mix(in oklab, var(--ink) 6%, transparent); }
+.seam-rail-b.on { background: color-mix(in oklab, var(--accent) 10%, transparent); color: var(--accent); }
+
+.seam-strip { flex: 0 0 auto; box-sizing: border-box; display: flex; align-items: center; gap: 14px;
+  padding: 10px 20px; border-bottom: 1px solid var(--rule);
+  background: color-mix(in oklab, var(--bg) 82%, var(--paper)); }
+.seam-count { font-size: 12.5px; color: var(--ink-4); }
+.seam-center-body { flex: 1; min-height: 0; overflow-y: auto; padding: 16px 20px 60px; }
+
+.seam-list { display: flex; flex-direction: column; gap: 8px; max-width: 720px; }
+.seam-row { display: grid; grid-template-columns: minmax(120px, 1fr) minmax(0, 1.2fr) auto; align-items: center;
+  gap: 12px; text-align: left; padding: 12px 14px; border: 1px solid var(--rule); border-radius: 10px;
+  background: var(--paper); cursor: pointer; }
+.seam-row:hover { border-color: var(--accent); background: var(--bg-sunk); }
+.seam-row.on { border-color: var(--accent); background: color-mix(in oklab, var(--accent) 8%, var(--paper)); }
+.seam-word { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
+.seam-lemma { font-family: var(--f-greek); font-size: 17px; color: var(--ink); }
+.seam-lemma.heb { direction: rtl; }
+.seam-tr { font-size: 12.5px; color: var(--ink-4); font-style: italic; }
+.seam-gloss { font-size: 13.5px; color: var(--ink-2); }
+.seam-tags { display: flex; align-items: center; gap: 6px; justify-self: end; }
+.seam-flip { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
+  color: var(--ink); background: var(--hl-match); padding: 2px 7px; border-radius: 999px; white-space: nowrap; }
+.seam-type { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px;
+  background: var(--bg-sunk); color: var(--ink-3); border: 1px solid var(--rule); white-space: nowrap; }
+
+/* right inspect — below the nav (new surface). Header band + scroll, matching the others. */
+.zinspect.seam-inspect { top: var(--hdr-h); }
+.seam-insp-band { flex: 0 0 auto; box-sizing: border-box; padding: 12px 18px; border-bottom: 1px solid var(--rule);
+  font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; color: var(--ink-3);
+  background: var(--paper); }
+.seam-insp-scroll { flex: 1; min-height: 0; overflow-y: auto; padding: 16px 16px 60px; }
+.seam-priors-hero { display: flex; align-items: baseline; gap: 8px; margin-bottom: 12px; }
+.seam-priors-lemma { font-family: var(--f-greek); font-size: 24px; color: var(--ink); }
+.seam-priors-lemma.heb { direction: rtl; }
+.seam-priors-tr { font-size: 14px; color: var(--ink-3); font-style: italic; }
+.seam-priors-s { font-size: 13px; color: var(--ink-4); margin-left: auto; }
+.seam-graph-link { margin-top: 14px; font-size: 13px; font-weight: 600; color: var(--accent);
+  background: none; border: 0; cursor: pointer; padding: 0; text-align: left; }
+.seam-graph-link:hover { text-decoration: underline; }
+
+/* mobile: single column; a tapped row expands its both-priors inline */
+.seam-mobile-strip { padding: 6px 14px 10px; }
+.seam-mexpand { padding: 4px 14px 16px; }
+
+/* ============================================================
    WORD STUDY — three panes (mirrors the Library: nav · text · detail).
    Left = distribution rail · center = search + occurrences · right = word card.
    (Phase 2 of the study/AI redesign — see design/README.md.)

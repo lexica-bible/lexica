@@ -36,6 +36,51 @@ def _has_lexica(conn):
     ).fetchone() is not None
 
 
+@bp.route("/api/lexica/seams")
+def lexica_seams():
+    """The SEAM INDEX — every Lexica entry that carries a contested-word `fork`, the words
+    where the plain meaning is settled but the READING diverges. Pure read over the stored
+    fork data (built by scripts/build_lexica_def.py's CONTESTED register); no engine touch.
+    Returns one row per seam: lemma + short gloss + the two authored axes (divergence_type,
+    lead_flip) + the full fork (core + priors) for the both-priors card. Deploy-safe: table
+    not built → empty list; a word with no fork (e.g. the psyche control) is dropped."""
+    if LEXICA_ADMIN_ONLY and not is_admin():
+        return jsonify({"seams": []})
+    conn = db_ro()
+    seams = []
+    try:
+        if _has_lexica(conn):
+            rows = conn.execute("SELECT strongs, def_json FROM lexica_def").fetchall()
+            for r in rows:
+                if not r["def_json"]:
+                    continue
+                try:
+                    entry = json.loads(r["def_json"])
+                except Exception:
+                    continue
+                fork = entry.get("fork")
+                if not fork:
+                    continue      # not a contested word (psyche control, ordinary entries) — drop
+                seams.append({
+                    "strongs": entry.get("strongs") or r["strongs"],
+                    "lemma": entry.get("lemma"),
+                    "translit": entry.get("translit"),
+                    "gloss": fork.get("gloss"),
+                    "divergence_type": fork.get("divergence_type"),
+                    "lead_flip": bool(fork.get("lead_flip")),
+                    "graph_ref": fork.get("graph_ref"),
+                    "fork": fork,
+                })
+    except Exception as e:
+        log.warning("seam index lookup failed: %s", e)
+        return jsonify({"seams": []})
+    finally:
+        conn.close()
+    # Different-lead seams first, then alphabetically by lemma — a stable, meaningful order.
+    seams.sort(key=lambda s: (not s["lead_flip"], (s["lemma"] or "").lower()))
+    return jsonify({"seams": seams})
+
+
 @bp.route("/api/lexica/<strongs>")
 def lexica_def(strongs):
     """The Lexica entry for a Strong's number — first a hand-authored STRUCTURAL/function card

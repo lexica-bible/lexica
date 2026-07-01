@@ -358,7 +358,7 @@ function App() {
         {mainView === "news" && (owner || newsReader) && <NewsView isMobile={isMobile} />}
         {mainView === "notes" && <NotesView onOpen={openNoteFromList} isMobile={isMobile} onReadInContext={handleReadInContext} />}
         <div style={{ display: mainView === "study" ? undefined : "none" }}>
-          <StudyView admin={owner} pending={studyPending} onConsumed={() => setStudyPending(null)} onNavigateToLibrary={handleReadInContext} />
+          <StudyView admin={owner} pending={studyPending} onConsumed={() => setStudyPending(null)} onNavigateToLibrary={handleReadInContext} isMobile={isMobile} />
         </div>
         <div style={{ display: mainView === "corpus" ? undefined : "none" }}>
           <AskCorpusView
