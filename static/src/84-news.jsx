@@ -494,12 +494,11 @@ function NewsView({ isMobile }) {
   };
 
   const copyShortlist = () => {
-    const lines = (stories || []).map(s => {
-      const src = s.sources[0] || {};
-      return `${s.title}\n  ${src.source || ""} · ${s.published} · score ${s.score} · ${s.thread_label}\n  ${s.why}\n  ${src.url || ""}`;
-    });
-    navigator.clipboard.writeText(lines.join("\n\n")).then(
-      () => { setFlash("Copied " + (stories || []).length + " stories"); setTimeout(() => setFlash(""), 2000); },
+    const lines = (stories || [])
+      .map(s => (s.sources[0] || {}).url || "")
+      .filter(Boolean);
+    navigator.clipboard.writeText(lines.join("\n")).then(
+      () => { setFlash("Copied " + lines.length + " stories"); setTimeout(() => setFlash(""), 2000); },
       () => { setFlash("Copy failed"); setTimeout(() => setFlash(""), 2000); }
     );
   };
