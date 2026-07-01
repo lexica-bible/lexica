@@ -288,12 +288,17 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   Bible's own usage, not LSJ's classical glosses). Side table in bible.db (built on PA, not in git). One row =
   the frozen fields `sense_headlines`/`senses_block`/`range`/`gloss_notes`/`coverage` + `sense_prov` (per-sense
   LXX-provenance flag, Option B) + `fork` (contested-word
-  readings + a Study-graph link) + `verses` + `audit` (citation-gate badge) + `raw` (so a better splitter
-  re-splits with NO model call). Built by `scripts/build_lexica_def.py` (frozen `VERSE_PROMPT` → Sonnet → split
+  readings + a Study-graph link; also carries `gloss` + two hand-authored SEAM axes `divergence_type`
+  (referent|content|loaded) + `lead_flip` (does the lead sense flip when the priors are swapped) — set in
+  the `CONTESTED` register, no model, written on any `--resplit`) + `verses` + `audit` (citation-gate badge)
+  + `raw` (so a better splitter re-splits with NO model call). Built by `scripts/build_lexica_def.py` (frozen `VERSE_PROMPT` → Sonnet → split
   → citation gate → fork → write; `--apply` build / `--resplit --apply` re-split stored raw, free; surgical raw
   typo-fixes via `scripts/fix_lexica_raw.py`, no model call). Served by
   `views_lexica.py` `/api/lexica/<strongs>` → the `LexicaBody` card (20-shared-components, BESIDE `LsjBody`;
-  `30-detail-panel.jsx` branches `case "lsj"`). **PUBLIC since 2026-06-25** (`LEXICA_ADMIN_ONLY=False`; serves everyone incl. logged-out — a word with
+  `30-detail-panel.jsx` branches `case "lsj"`). **Also `/api/lexica/seams`** (read-only, same file) — every
+  row that carries a `fork`, feeding the **Seam index** Study module (`SeamIndex` in 55-study.jsx; the
+  contested-word browse). After adding/moving a `divergence_type`/`lead_flip` in `CONTESTED`, run
+  `build_lexica_def.py --resplit --all --apply` on PA to write it into the stored forks (free, no model). **PUBLIC since 2026-06-25** (`LEXICA_ADMIN_ONLY=False`; serves everyone incl. logged-out — a word with
   no entry 404s → the normal LSJ card, deploy-safe; flip the flag back to re-gate). LIVE on ~18 words: the 6
   pilot (psychē + the 5 contested forks dikaioō/charis-G5484/aionios/sarx/ekklesia) + 12 from full-build BATCH 1. **PILOT SHIPPED 2026-06-25:** the v3
   sub-use-test prompt is promoted into `VERSE_PROMPT` (diff-locked vs the reviewer's frozen V3); the 3
@@ -412,9 +417,12 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   Full record (the text itself): memory `project_hebrew_ot_interlinear`.
   `study.db` — authored "study modules" (built 2026-06-12/13; **topics opened to the PUBLIC 2026-06-16**):
   one `entries` table (row per topic / graph / name; `json` body + `type` + `status`).
-  Served by `views_study.py` (`core.study_db()`); the **Study** tab (`static/src/55-study.jsx`). TOPICS = a
-  sectioned browse (collapsible subtopics + a BOOK sub-collapse, alphabetical, comma-flipped display
-  titles); GRAPHS = an argument map (admin-only): a shared pool of CLAIMS joined by per-tradition LINKS, each
+  Served by `views_study.py` (`core.study_db()`); the **Study** tab (`static/src/55-study.jsx`). Sub-switch =
+  Topics · Graphs · **Seams** (`STUDY_MODULES`). SEAMS (added 2026-07-01) is a NON-study.db surface — the
+  contested-word browse, read-only over `lexica_def` fork data (`/api/lexica/seams`), rendered on `<Shell>`
+  (`SeamIndex`); `load()` short-circuits `mod === "seam"` so the study-entries fetch can't hijack its render.
+  TOPICS = a sectioned browse (collapsible subtopics + a BOOK sub-collapse, alphabetical, comma-flipped
+  display titles); GRAPHS = an argument map (admin-only): a shared pool of CLAIMS joined by per-tradition LINKS, each
   claim tagged with provenance (text/lexicon = grounded; tradition/conjecture/inference = not) + each link with
   a strength (solid/contested/weak), stress-tested by `argmap.py` (is the conclusion reachable from grounded
   claims on solid links? else name the load-bearing joint, or flag a gap; a grounded+SOLID objection knocks
@@ -535,7 +543,16 @@ is UNTOUCHED and it is NOT forced into RightStack. ThreeZone retired. Migrations
 top strip, occurrence-count panel moved to the rail's IDLE state, unframed); a synthesis verse-ref CHIP
 PEEKS into the rail (occurrence → fork → word push drill), while the KEY PASSAGES rows keep their
 jump-to-Library (chip = peek, row = leave). Mobile still the old layout. Build spec: `HANDOFF_corpus_shell.md`
-+ memory `project_three_zone_shell`. Next remaining consumers = seam index (Study) + Notes. Full record: memory
++ memory `project_three_zone_shell`. **Notes + Seam index + News-rail all SHIPPED 2026-07-01** (desktop):
+Notes on `<Shell>` (rail = note index, strip = search/filter, center = the editor edited IN-TAB, right =
+the note's anchored verse via `VerseRow`; editor guts shared via `useNoteEditor`/`NoteEditFields` so the
+Library rail editor + the tab editor can't drift; inspect floats top:0 with a header band). Seam index =
+a new `Seams` Study module on `<Shell>` (rail = the Topics·Graphs·Seams section switcher, center = the
+contested-word list, right = the both-priors card reusing `LexicaFork`); read-only over `lexica_def` fork
+data via `/api/lexica/seams`. News gained a SELECTED-state inspect (was always the dashboard): click a card
+→ the rail flips to why-it-scored (`ai_why` + score + thread + the verbatim `queries.py` lens) + sources
+(deduped, with `via` = Google/RSS) + the cluster list; `‹ Watch` resets. Mobile for all three stays the old
+layout. Only remaining consumer = **News-on-mobile** (net-new, not a migration). Full record: memory
 `project_three_zone_shell`.
 
 ## Library Tab

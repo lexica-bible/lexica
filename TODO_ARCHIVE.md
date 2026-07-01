@@ -6,6 +6,56 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Shell unification — Notes + Seam index + News right-rail — DONE + LIVE 2026-07-01
+Three more surfaces onto the shared `Shell`, plus News-rail follow-ups. Full record: memory
+`project_three_zone_shell`, `project_lexica_dictionary`, `project_study_modules`, `project_news_watch`.
+- **NOTES (desktop) on `<Shell>`** — rail = the note index, strip = search/filter, center = the editor
+  (edited IN-TAB now, no more bounce to the Library), right = the note's anchored verse (`VerseRow`, a
+  `‹ Read in context` link jumps to the reader). Editor guts factored into `useNoteEditor` + `NoteEditFields`
+  (35-notes.jsx) so the Library rail editor and the tab editor CAN'T drift; `JournalView` split so its page
+  list can sit in the rail. Right inspect floats top:0 with a header band (flipped from the safe below-nav
+  default once seen). Mobile unchanged (tap → jump to the Library editor).
+  - Deliberately NO "new blank note" button: a verse note IS its anchor; a note without one is a journal
+    page (own creation path). A strip-level "new note" would need a verse-picker = the reader in a costume.
+- **SEAM INDEX** — a new `Seams` Study module (`SeamIndex`, 55-study.jsx) on `<Shell>`: rail = the
+  Topics·Graphs·Seams section switcher, center = the contested-word list (badge = `divergence_type`, tag =
+  `lead_flip`), right = the both-priors card reusing `LexicaFork` + a live graph link. Pure READ over
+  `lexica_def` fork data via a new `/api/lexica/seams` (views_lexica.py) — no engine touch. Two hand-authored
+  axes added to each `CONTESTED` entry (build_lexica_def.py): `divergence_type` (referent|content|loaded, the
+  badge) + `lead_flip` (does the lead sense flip when the priors swap — the "Different-lead" filter; values
+  from the 2026-06-25 run: ekklesia/dikaioō/aionios/charis=true). psyche (fork-absent control) drops out
+  naturally. LESSON (JP): keep the two axes SEPARATE — `divergence_type` is descriptive (why), `lead_flip` is
+  the computed swap-test (whether); collapsing them would have put theos in "Different-lead" wrongly.
+  **PA step owed:** `build_lexica_def.py --resplit --all --apply` to write the fields into the stored forks.
+- **NEWS right-rail (selected state)** — the inspect was ALWAYS the feed-shape dashboard; now it flips: click
+  a card → why-it-scored (`ai_why` + score + thread + the verbatim `queries.py` two-beasts lens) + sources
+  (deduped per outlet, each with `via` = Google News/RSS) + the cluster's article list; `‹ Watch` resets.
+  Card BODY click = select; headline + Keep/Dismiss keep their own action. Backend: one read-only add — `via`
+  per member from the stored `query` column (no re-score; the in-memory feed cache rebuilds on the deploy
+  reload). **Gate check (JP):** the "why-it-scored" data was a RENDER, not an engine touch — confirmed on PA
+  that every scored row already stores `ai_why` (7136/7136). Then card cleanup: date = PEAK day only (dropped
+  "· latest"); moved the ai_why + the "+N more" source expander OFF the card into the rail (card = headline +
+  thread + date + a plain "N sources" count). "‹ Watch" moved to the RIGHT to match the Library overlay's
+  `.detail-back`. Beast-arm badge DEFERRED (thread→arm isn't 1:1 — authored follow-up, still open).
+- **News tab re-fetch on tab-return — FIXED.** News was the ONE main tab conditionally rendered
+  (`mainView === "news" && <NewsView/>`), so leaving it UNMOUNTED the component → state lost → the initial
+  fetch re-ran on every return. Diagnosed before patching (not a focus refire; a plain unmount). Fix = the
+  sibling pattern: mount on first visit, keep mounted under `display:none` (`newsEverVisited`, twin of
+  `libEverVisited`). State + scroll survive; new articles only via the Refresh button.
+- **display:none scroll rule — corrected (was over-general).** The old note ("display:none wipes an overflow
+  box's scrollTop in Chrome") is TRUE ONLY when the box is `position:absolute` (the RightStack layers). In
+  NORMAL document flow scroll SURVIVES display:none — verified live in Chrome 149 with a minimal repro (both
+  cases tested), so the keep-mounted News feed keeps its scroll. Corrected in CLAUDE.md + the 22-shell.jsx
+  comment + memory `project_three_zone_shell`. So display:none is NOT universally unsafe.
+- **News nav item flashed ~500ms on refresh in Firefox — FIXED.** News is the only GATED nav item
+  (`showNews = owner || newsReader`); `newsReader` seeds synchronously from localStorage but `owner` started
+  false and only flipped true after the async `/api/stats/owner` fetch (after first paint) — so the owner's
+  first frame had no News. Firefox paints that frame; Chrome's timing hid it. Fix = seed `owner`
+  synchronously from a cached `lexica.owner.v1`, mirroring `newsReader`; the fetch still runs + rewrites the
+  cache. SECURITY check (JP): safe because every News endpoint enforces `_can_read()` server-side (404 to a
+  non-admin/non-key) — a forged cache only flashes an empty tab, never real data. Optimistic nav UI, not a
+  bypass.
+
 ## Ask the corpus — first real RightStack consumer + exact-lemma pin — DONE + LIVE 2026-07-01
 The first surface to USE the shell for NEW content (not a parity migration). Full record: memory
 `project_three_zone_shell` + `project_ai_search_architecture` + build spec `HANDOFF_corpus_shell.md`.

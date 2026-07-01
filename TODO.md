@@ -36,9 +36,18 @@ The shared frame is DONE: `Shell` + `RightStack` built in `static/src/22-shell.j
 study + Library all migrated parity-only (ThreeZone retired). History + the gate methods: TODO_ARCHIVE +
 memory `project_three_zone_shell`. **Ask the corpus is DONE + LIVE 2026-07-01** (the first real RightStack
 consumer — chip-peek drill + panel-in-rail + top:0 unified; record in TODO_ARCHIVE + memory
-`project_three_zone_shell` + `HANDOFF_corpus_shell.md`). Remaining:
-- **Seam index** (Study) — the greenfield consumer of `RightStack` (Build A, separate handoff).
-- **Notes** — left index / editor center / anchored-scripture right, on `Shell`.
+`project_three_zone_shell` + `HANDOFF_corpus_shell.md`). **Notes + Seam index + News right-rail all DONE +
+LIVE 2026-07-01** (details + lessons in TODO_ARCHIVE). Remaining:
+- **News-on-mobile** (net-new, NOT a migration) — the News tab isn't reachable on a phone. FIRST step is to
+  confirm the cause: missing from the mobile bottom nav vs a stubbed mobile branch. Then make it render.
+  This is the LAST shell surface. code: static/src/84-news.jsx, 90-app.jsx, 20-shared-components.jsx
+- **PA data step for the Seam index** — run `python scripts/build_lexica_def.py --resplit --all --apply` on
+  PA to write the new `divergence_type` + `lead_flip` (+ short `gloss`) into the stored forks (free, no model).
+  Until then the Seams list shows but the type badges + Different-lead filter are blank.
+- **News beast-arm badge (DEFERRED, authored follow-up)** — a per-thread "which beast/arm" tag in the
+  why-rail. Not built on purpose: the thread→arm map isn't 1:1 (several threads serve BOTH arms), so it's
+  hand-authored content JP will sit with, then it drops into the why-section (same pattern as the Seam
+  `divergence_type`). code: views_news.py (or a small map), static/src/84-news.jsx
 - **Ask-corpus POLISH pass** (JP will batch these — flagged 2026-07-01, not done): a stray divider line in
   the inspect card; general spacing; the occurrence card's target word = the answer's PRIMARY key word,
   wrong-ish for a broad multi-word answer (not the exact word in that one verse); the MOBILE-shell step
