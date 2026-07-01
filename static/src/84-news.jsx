@@ -141,7 +141,7 @@ function _dedupByOutlet(members) {
 // so cap the visible rows and tuck the rest behind a fold like the out-of-window coverage.
 const _SRC_DEPTH = 15;
 
-function NewsStory({ story, view, onMark, readOnly, since, until }) {
+function NewsStory({ story, view, onMark, readOnly, since, until, onSelect, selected }) {
   const [open, setOpen] = useState(false);
   const [showOld, setShowOld] = useState(false);
   const [showMore, setShowMore] = useState(false);
@@ -166,12 +166,17 @@ function NewsStory({ story, view, onMark, readOnly, since, until }) {
   const recent = windowOn ? reps.filter(m => _inWindow(m.d, since, until)) : reps;
   const older = windowOn ? reps.filter(m => !_inWindow(m.d, since, until)) : [];
   const mark = (status, e) => { if (e) e.stopPropagation(); if (!readOnly) onMark(story, status); };
+  // Click the card BODY to inspect why it scored (the rail); the headline link and the
+  // Keep/Dismiss + "+N more" buttons stop the bubble, so they keep their own action.
+  const pick = onSelect ? () => onSelect(story) : undefined;
   return (
-    <div className="news-story">
+    <div className={"news-story" + (onSelect ? " news-story--click" : "") + (selected ? " on" : "")}
+         onClick={pick}>
       <div className={"news-score news-score-" + tier}>{story.score}</div>
       <div className="news-body">
         <div className="news-thread">{story.thread_label}</div>
-        <a className="news-title" href={story.url || top.url || "#"} target="_blank" rel="noopener noreferrer">
+        <a className="news-title" href={story.url || top.url || "#"} target="_blank" rel="noopener noreferrer"
+           onClick={(e) => e.stopPropagation()}>
           {_stripOutlet(story.title)}
         </a>
         {story.why && <div className="news-why">{story.why}</div>}
@@ -302,6 +307,85 @@ function FeedShape({ shape }) {
   );
 }
 
+// The watch's lens, verbatim from scripts/news/queries.py — the one storyline every
+// article is scored against. Shown in the why-rail so a card's score reads in context.
+const _NEWS_LENS = "Manufactured crisis → a public cry for moral order → all authority (states, denominations, even tech and AI) consolidating under Rome, with America as the enforcer — the two-beasts endgame.";
+
+// RIGHT zone, SELECTED state: click a story card → this replaces the feed-shape dashboard.
+// Everything here is stored or authored, nothing generated at view time: the score + thread,
+// the scorer's own one-line reason (ai_why), the lens above (verbatim), the sources + how each
+// was pulled (Google News / RSS), and the cluster's article list. "‹ Watch" is the depth-1
+// reset back to the dashboard. (A per-thread beast-arm badge is a separate, authored follow-up.)
+function NewsWhy({ story, onBack }) {
+  const tier = _scoreTier(story.score);
+  const members = story.members || [];
+  // Distinct outlets + how each came in (Google News search vs an RSS-by-outlet feed).
+  const outlets = [], seen = new Set();
+  for (const m of members) {
+    const k = (m.src || "?") + "|" + (m.via || "");
+    if (seen.has(k)) continue;
+    seen.add(k);
+    outlets.push({ src: m.src || "?", via: m.via || "", url: m.url });
+  }
+  const arts = [...members].sort((a, b) => ((b.d || "") + "").localeCompare((a.d || "") + ""));
+  return (
+    <div className="news-shape news-why">
+      <div className="news-shape-head news-why-head">
+        <button className="detail-back" onClick={onBack}>‹ Watch</button>
+        <span className="news-why-headt">Why it surfaced</span>
+      </div>
+      <div className="news-shape-body">
+        <div className="news-why-top">
+          <div className={"news-score news-score-" + tier}>{story.score}</div>
+          <div className="news-why-thread">{story.thread_label}</div>
+        </div>
+        <a className="news-why-title" href={story.url || "#"} target="_blank" rel="noopener noreferrer">
+          {_stripOutlet(story.title)}
+        </a>
+
+        {story.why && (
+          <div className="news-shape-sec">
+            <div className="news-shape-h">Why it scored</div>
+            <p className="news-why-reason">{story.why}</p>
+          </div>
+        )}
+
+        <div className="news-shape-sec">
+          <div className="news-shape-h">The lens it's read against</div>
+          <p className="news-why-lens">{_NEWS_LENS}</p>
+        </div>
+
+        {outlets.length > 0 && (
+          <div className="news-shape-sec">
+            <div className="news-shape-h">Sources</div>
+            {outlets.map((o, i) => (
+              <div key={i} className="news-why-src">
+                <a className="news-src" href={o.url || "#"} target="_blank" rel="noopener noreferrer"
+                   onClick={(e) => e.stopPropagation()}>{o.src}</a>
+                {o.via && <span className="news-why-via">via {o.via}</span>}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {arts.length > 1 && (
+          <div className="news-shape-sec">
+            <div className="news-shape-h">{arts.length} stories in this cluster</div>
+            {arts.map((m, i) => (
+              <div key={i} className="news-why-art">
+                <a className="news-why-artt" href={m.url || "#"} target="_blank" rel="noopener noreferrer">
+                  {_stripOutlet(m.title)}
+                </a>
+                <div className="news-why-artmeta">{m.src}{m.d ? " · " + m.d : ""}{m.via ? " · " + m.via : ""}</div>
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function NewsView({ isMobile }) {
   const [meta, setMeta] = useState(null);
   const [allCards, setAllCards] = useState(null);     // the full held set (one fetch)
@@ -323,6 +407,7 @@ function NewsView({ isMobile }) {
   const [flash, setFlash] = useState("");
   const [dateOpen, setDateOpen] = useState(false);    // desktop top-bar date popover
   const [helpOpen, setHelpOpen] = useState(false);    // top-bar "how the feed works" popover
+  const [selStory, setSelStory] = useState(null);     // desktop: card selected into the why-rail
 
   useEffect(() => { api.newsMeta().then(setMeta); }, []);
   useEffect(() => { localStorage.setItem("lexica.news.since.v1", since); }, [since]);
@@ -631,7 +716,9 @@ function NewsView({ isMobile }) {
         <div className="news-list">
           {stories.map((s, i) => (
             <NewsStory key={s.ids[0] + "-" + i} story={s} view={view} onMark={mark}
-                       readOnly={!canReview} since={since} until={until} />
+                       readOnly={!canReview} since={since} until={until}
+                       onSelect={isMobile ? null : setSelStory}
+                       selected={!isMobile && selStory && selStory.ids && s.ids && selStory.ids[0] === s.ids[0]} />
           ))}
         </div>
         {outsideN > 0 && (
@@ -793,7 +880,9 @@ function NewsView({ isMobile }) {
       isMobile={false}
       rail={rail}
       center={<>{topBar}<div className="news-feed">{feedInner}</div></>}
-      inspect={<aside className="zinspect"><FeedShape shape={shape} /></aside>}
+      inspect={<aside className="zinspect">
+        {selStory ? <NewsWhy story={selStory} onBack={() => setSelStory(null)} /> : <FeedShape shape={shape} />}
+      </aside>}
     />
   );
 }

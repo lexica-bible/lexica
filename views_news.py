@@ -471,7 +471,7 @@ def _all_cards(conn, has_event, has_newflag):
     if _ALL_CACHE["sig"] == sig and _ALL_CACHE["cards"] is not None:
         return _ALL_CACHE["cards"]
     sel = ("SELECT i.id, i.url, i.title, i.source, i.published, i.score, "
-           "i.ai_thread, i.ai_why, 'new' AS status"
+           "i.ai_thread, i.ai_why, i.query, 'new' AS status"
            + (", i.event" if has_event else "")
            + (", i.ai_new_flag" if has_newflag else "") +
            " FROM items i WHERE i.score IS NOT NULL "
@@ -483,11 +483,15 @@ def _all_cards(conn, has_event, has_newflag):
         card.pop("status", None)             # attached fresh, per request, below
         rep = c["rep"]
         card["event"] = (rep["event"] if has_event and rep["event"] else "")
+        # `via` = how WE pulled this article: an RSS-by-outlet feed (query "rss:<name>")
+        # or a Google News search. Stored at ingest (the query column) — pure provenance,
+        # shown in the why-rail; no scoring involved.
         card["members"] = [{"s": a["score"] or 0, "t": a["ai_thread"],
                             "nf": (a["ai_new_flag"] if has_newflag else 0),
                             "d": (a["published"] or "")[:10],
                             "title": a["title"], "url": a["url"],
-                            "why": a["ai_why"] or "", "src": a["source"] or "?"}
+                            "why": a["ai_why"] or "", "src": a["source"] or "?",
+                            "via": ("RSS" if (a["query"] or "").startswith("rss:") else "Google News")}
                            for a in c["arts"]]
         cards.append(card)
     _ALL_CACHE["sig"] = sig

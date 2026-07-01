@@ -5222,6 +5222,31 @@ button.study-verse-ref { border: none; }
 .news-shape-cev { flex: 1; font-size: 13px; color: var(--ink); line-height: 1.35; }
 .news-shape-cn { flex: 0 0 auto; font-size: 12.5px; font-weight: 600; color: var(--ink-3); }
 
+/* SELECTED state: a feed card is clickable to inspect its "why it scored" in the rail. */
+.news-story--click { cursor: pointer; }
+.news-story--click:hover { border-color: var(--accent); }
+.news-story.on { border-color: var(--accent); background: color-mix(in oklab, var(--accent) 6%, var(--paper)); }
+
+/* the why-rail (SELECTED) reuses .news-shape's frame; these are its own bits. The band
+   carries the back link (‹ Watch) + title, matching the dashboard's header-height band. */
+.news-why-head { justify-content: flex-start; gap: 12px; }
+.news-why-head .detail-back { flex: 0 0 auto; }
+.news-why-headt { font-family: var(--f-serif); font-size: 16px; font-weight: 600; color: var(--ink); }
+.news-why-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.news-why-thread { font-size: 11.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.04em; color: var(--accent); }
+.news-why-title { display: block; font-family: var(--f-serif); font-size: 17px; font-weight: 600;
+  color: var(--ink); line-height: 1.35; text-decoration: none; }
+.news-why-title:hover { text-decoration: underline; }
+.news-why-reason { font-size: 13.5px; color: var(--ink); line-height: 1.5; margin: 0; }
+.news-why-lens { font-size: 12.5px; color: var(--ink-2); line-height: 1.55; margin: 0; font-style: italic; }
+.news-why-src { display: flex; align-items: baseline; gap: 8px; padding: 4px 0; }
+.news-why-via { font-size: 11.5px; color: var(--ink-4); }
+.news-why-art { padding: 7px 0; border-bottom: 1px solid var(--rule); }
+.news-why-art:last-child { border-bottom: none; }
+.news-why-artt { display: block; font-size: 13px; color: var(--ink); line-height: 1.35; text-decoration: none; }
+.news-why-artt:hover { text-decoration: underline; }
+.news-why-artmeta { font-size: 11.5px; color: var(--ink-4); margin-top: 2px; }
+
 @media (max-width: 1099px) {
   .news-view { padding: 16px 12px 90px; }
   .news-story { gap: 10px; padding: 12px; }
