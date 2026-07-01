@@ -106,16 +106,13 @@ function _stripOutlet(title) {
   return (title || "").replace(/\s+[-–—]\s+[^-–—]+$/, "").trim() || (title || "");
 }
 
-// The card's date is a RANGE now that rank + window both key on the PEAK day. The DATE
-// leads every card (single or range) so the dates left-align down the column when skimming;
-// the "peaked"/"latest" labels follow their own date: "{d1} peaked · {d2} latest". Keep both
-// labels — they carry the peak-vs-latest meaning. Collapses to a lone date when the event is
-// one day (peak == latest) or we only have one of the two.
+// The card date shows the PEAK day only (rank + window both key on it). A single-date
+// event already collapses to that one date, so this is just "{peak}" — the old
+// "· latest Y" half is dropped (it added a second date that rarely earned the room).
 function _dateRange(story) {
   const peak = (story.peak_date || "").slice(0, 10);
   const latest = (story.published || "").slice(0, 10);
-  if (peak && latest && peak !== latest) return peak + " peaked · " + latest + " latest";
-  return latest || peak || "—";
+  return peak || latest || "—";
 }
 
 // Collapse member articles to ONE row per outlet, keeping each outlet's NEWEST article (its
@@ -319,15 +316,9 @@ const _NEWS_LENS = "Manufactured crisis → a public cry for moral order → all
 function NewsWhy({ story, onBack }) {
   const tier = _scoreTier(story.score);
   const members = story.members || [];
-  // Distinct outlets + how each came in (Google News search vs an RSS-by-outlet feed).
-  const outlets = [], seen = new Set();
-  for (const m of members) {
-    const k = (m.src || "?") + "|" + (m.via || "");
-    if (seen.has(k)) continue;
-    seen.add(k);
-    outlets.push({ src: m.src || "?", via: m.via || "", url: m.url });
-  }
-  const arts = [...members].sort((a, b) => ((b.d || "") + "").localeCompare((a.d || "") + ""));
+  // ONE deduped list: each outlet's newest article (title · outlet · date · via), newest-first.
+  const arts = _dedupByOutlet(members);
+  const peak = (story.peak_date || "").slice(0, 10);
   return (
     <div className="news-shape news-why">
       <div className="news-shape-head news-why-head">
@@ -355,25 +346,15 @@ function NewsWhy({ story, onBack }) {
           <p className="news-why-lens">{_NEWS_LENS}</p>
         </div>
 
-        {outlets.length > 0 && (
+        {arts.length > 0 && (
           <div className="news-shape-sec">
-            <div className="news-shape-h">Sources</div>
-            {outlets.map((o, i) => (
-              <div key={i} className="news-why-src">
-                <a className="news-src" href={o.url || "#"} target="_blank" rel="noopener noreferrer"
-                   onClick={(e) => e.stopPropagation()}>{o.src}</a>
-                {o.via && <span className="news-why-via">via {o.via}</span>}
-              </div>
-            ))}
-          </div>
-        )}
-
-        {arts.length > 1 && (
-          <div className="news-shape-sec">
-            <div className="news-shape-h">{arts.length} stories in this cluster</div>
+            <div className="news-shape-h">
+              {arts.length} {arts.length === 1 ? "source" : "sources"}{peak ? " · peaked " + peak : ""}
+            </div>
             {arts.map((m, i) => (
               <div key={i} className="news-why-art">
-                <a className="news-why-artt" href={m.url || "#"} target="_blank" rel="noopener noreferrer">
+                <a className="news-why-artt" href={m.url || "#"} target="_blank" rel="noopener noreferrer"
+                   onClick={(e) => e.stopPropagation()}>
                   {_stripOutlet(m.title)}
                 </a>
                 <div className="news-why-artmeta">{m.src}{m.d ? " · " + m.d : ""}{m.via ? " · " + m.via : ""}</div>
