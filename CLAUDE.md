@@ -511,8 +511,11 @@ The navigate / read / inspect layout. **Frame components are in `static/src/22-s
 `.zbar` + `.zsheet` sheets) and `RightStack` (the inspect-panel STACK — depth 1 = one card; a child
 drills via `useRightStackCtl().push()`, back pops; the PARENT owns the array via `useRightStack()` so a
 center peer-select can `reset()`; lower layers stay mounted, hidden with **`visibility` NOT
-`display:none`** — display:none wipes an overflow box's scrollTop in Chrome; keys are push-unique minted
-ids, never by card type). `ZoneEmpty` stays in `20-shared-components.jsx`. CSS in styles.css:
+`display:none`** — because these panels are `position:absolute; inset:0`, and display:none wipes an
+overflow box's scrollTop **only when the box is absolutely positioned**; in NORMAL document flow scroll
+SURVIVES display:none (verified in Chrome 149, 2026-07 — the News tab keeps its feed scroll under a plain
+display:none tab-wrapper). So the visibility fix was needed for the absolute layers here, NOT because
+display:none is universally unsafe. Keys are push-unique minted ids, never by card type). `ZoneEmpty` stays in `20-shared-components.jsx`. CSS in styles.css:
 `.zshell/.zrail/.zcenter/.zinspect` + `.rstack*` + mobile `.zbar/.zsheet`. **Share the FRAME, not the
 CONTENTS** — never pull a tab's card/feed styling into the `.z*` classes. **top:0 split (was
 load-bearing; now user-preference):** a SHIPPED surface keeps its float-behind-the-nav (`.zinspect` base,

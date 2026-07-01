@@ -35,10 +35,12 @@ function useRightStack() {
 
 // A layer = { backLabel, render }. `root` is the depth-1 card (or null → empty state).
 // Every layer stays MOUNTED and LAID OUT (absolute, stacked); only the top is visible. We
-// hide the rest with visibility:hidden, NOT display:none — display:none destroys an overflow
-// box's scrollTop in Chrome (verified in the harness), which would lose the reader's place on
-// pop. visibility keeps the box laid out, so each layer's own scroll survives a push/pop and
-// restore-on-pop is free. The back link pops; the body (not the bar) is the scroll container.
+// hide the rest with visibility:hidden, NOT display:none — BECAUSE these layers are
+// position:absolute, and Chrome wipes an overflow box's scrollTop across display:none ONLY when
+// the box is absolutely positioned (a normal-flow box keeps its scroll — verified Chrome 149,
+// so a plain display:none tab-wrapper like the News tab is safe). visibility keeps the absolute
+// box laid out, so each layer's own scroll survives a push/pop and restore-on-pop is free. The
+// back link pops; the body (not the bar) is the scroll container.
 // `inline` = render WITHOUT the fixed .zinspect panel — a plain relative box that fills its
 // parent. Desktop uses the fixed aside (the right column); the MOBILE sheet uses inline, so the
 // stack lives INSIDE the sheet instead of position:fixed escaping it to the viewport edge.
