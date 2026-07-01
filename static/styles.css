@@ -5127,6 +5127,10 @@ button.study-verse-ref { border: none; }
   border-radius: 7px; background: var(--ctl-bg); color: var(--ink-2); cursor: pointer; white-space: nowrap; }
 .news-btn:hover { border-color: var(--accent); color: var(--accent); }
 .news-btn:disabled { opacity: 0.5; cursor: default; }
+/* Inline spinner for the Copy shortlist button while it resolves wrapper URLs. */
+.news-spin { display: inline-block; width: 11px; height: 11px; vertical-align: -1px;
+  border: 2px solid currentColor; border-top-color: transparent; border-radius: 50%;
+  animation: spin 0.6s linear infinite; }
 .news-keep { background: var(--accent); color: var(--paper); border-color: var(--accent); }
 .news-keep:hover { filter: brightness(1.08); color: var(--paper); }
 .news-dismiss:hover { border-color: var(--ink-4); color: var(--ink-3); }

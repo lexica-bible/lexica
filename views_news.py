@@ -757,3 +757,72 @@ def set_status():
     finally:
         conn.close()
     return jsonify({"ok": True, "n": len(ids)})
+
+
+@bp.route("/api/news/resolve", methods=["POST"])
+@limiter.limit("600 per hour")
+def resolve_urls():
+    """Resolve-on-copy: turn the shortlist's face wrapper URLs into real article
+    URLs, caching each in items.resolved_url so the next copy is instant. Keyed on
+    the URL the copy emits (s.url = the face row's url), so we hit exactly the row
+    the copy would emit — no way to resolve one row and copy another. The same
+    article can sit in several clusters (same url in N rows); UPDATE ... WHERE url
+    caches all of them, which is what we want.
+
+    Never raises — an unresolvable wrapper comes back AS the wrapper, so copy
+    always succeeds. Body: {urls:[...], dry:bool}. dry=true resolves + returns but
+    writes NOTHING (the confirm-the-write-shape variant). Deploy-safe: if the
+    resolved_url column isn't there yet, it resolves + returns without caching."""
+    if not _can_read():
+        return jsonify({"error": "not found"}), 404
+    try:
+        body = json.loads(request.get_data(cache=False) or b"{}")
+    except (ValueError, TypeError):
+        body = {}
+    urls = body.get("urls") or []
+    dry = bool(body.get("dry"))
+    if not isinstance(urls, list):
+        return jsonify({"ok": False}), 400
+    seen, uniq = set(), []
+    for u in urls:
+        if isinstance(u, str) and u and u not in seen:
+            seen.add(u)
+            uniq.append(u)
+        if len(uniq) >= 300:
+            break
+    try:
+        from scripts.news.gnews_resolve import resolve as _resolve, is_wrapper
+    except Exception:
+        # resolver unavailable — hand every url back unchanged, copy still works
+        return jsonify({"ok": True, "urls": {u: u for u in uniq}, "dry": dry})
+    out = {}
+    conn = news_db()
+    try:
+        has_resolved = any(c[1] == "resolved_url"
+                           for c in conn.execute("PRAGMA table_info(items)"))
+        for u in uniq:
+            if not is_wrapper(u):
+                out[u] = u
+                continue
+            if has_resolved:
+                row = conn.execute(
+                    "SELECT resolved_url FROM items "
+                    "WHERE url = ? AND resolved_url IS NOT NULL LIMIT 1", (u,)).fetchone()
+                if row and row["resolved_url"]:
+                    out[u] = row["resolved_url"]
+                    continue
+            clean = _resolve(u)              # never raises; None on any failure
+            if clean:
+                out[u] = clean
+                if has_resolved and not dry:
+                    conn.execute("UPDATE items SET resolved_url = ? WHERE url = ?",
+                                 (clean, u))
+                    conn.commit()
+            else:
+                out[u] = u                   # fail soft: hand back the wrapper
+    except sqlite3.Error:
+        for u in uniq:
+            out.setdefault(u, u)
+    finally:
+        conn.close()
+    return jsonify({"ok": True, "urls": out, "dry": dry})

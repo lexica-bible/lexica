@@ -342,6 +342,7 @@ function NewsView({ isMobile }) {
   const [thread, setThread] = useState("");
   const [order, setOrder] = useState("score");        // score | date | oldest
   const [flash, setFlash] = useState("");
+  const [copying, setCopying] = useState(false);     // Copy shortlist: resolving wrapper URLs
   const [dateOpen, setDateOpen] = useState(false);    // desktop top-bar date popover
   const [helpOpen, setHelpOpen] = useState(false);    // top-bar "how the feed works" popover
   const [selStory, setSelStory] = useState(null);     // desktop: card selected into the why-rail
@@ -494,18 +495,28 @@ function NewsView({ isMobile }) {
   };
 
   const copyShortlist = () => {
-    const blocks = (stories || [])
-      .map(s => {
-        // the face article — the headline shown on the card, so title and
-        // link agree (sources[0] was the newest-dated row, a different article)
-        const url = s.url || "";
-        return url ? `${s.title}\n${url}` : "";
-      })
-      .filter(Boolean);
-    navigator.clipboard.writeText(blocks.join("\n\n")).then(
-      () => { setFlash("Copied " + blocks.length + " stories"); setTimeout(() => setFlash(""), 2000); },
-      () => { setFlash("Copy failed"); setTimeout(() => setFlash(""), 2000); }
-    );
+    if (copying) return;
+    // the face article (s.url) — the headline shown on the card, so title and
+    // link agree (sources[0] was the newest-dated row, a different article)
+    const items = (stories || [])
+      .map(s => ({ title: s.title, url: s.url || "" }))
+      .filter(it => it.url);
+    const write = (map) => {
+      // prefer a resolved clean URL; fall back to the wrapper on any miss
+      const lines = items.map(it => `${it.title}\n${(map && map[it.url]) || it.url}`);
+      navigator.clipboard.writeText(lines.join("\n\n")).then(
+        () => { setFlash("Copied " + lines.length + " stories"); setTimeout(() => setFlash(""), 2000); },
+        () => { setFlash("Copy failed"); setTimeout(() => setFlash(""), 2000); }
+      );
+    };
+    // only the Google News wrappers need a network round-trip; direct URLs don't
+    const wrappers = [...new Set(
+      items.map(it => it.url).filter(u => u.includes("news.google.com/rss/articles/")))];
+    if (!wrappers.length) { write(null); return; }
+    setCopying(true);
+    api.newsResolve(wrappers)
+      .then(res => { setCopying(false); write(res && res.ok ? res.urls : null); })
+      .catch(() => { setCopying(false); write(null); });   // fail-soft: raw wrappers
   };
 
   const canReview = !!(meta && meta.can_write);
@@ -698,7 +709,9 @@ function NewsView({ isMobile }) {
           </button>
           {view === "kept" && (   // shortlist-copy belongs with Kept, not Dismissed
             <button className="news-btn news-keep" onClick={copyShortlist}
-                    disabled={!stories || !stories.length}>Copy shortlist</button>
+                    disabled={copying || !stories || !stories.length}>
+              {copying ? <><span className="news-spin" /> Resolving…</> : "Copy shortlist"}
+            </button>
           )}
           {flash && <span className="news-flash">{flash}</span>}
         </div>

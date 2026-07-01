@@ -259,6 +259,16 @@ const api = {
       body: JSON.stringify({ ids, status }),
     }).then(r => r.ok ? r.json() : { ok: false }).catch(() => ({ ok: false }));
   },
+  // Resolve-on-copy: turn shortlist face wrapper URLs into real article URLs
+  // (cached server-side). dry=true resolves + returns but writes nothing.
+  newsResolve: (urls, dry) => {
+    const k = _newsKey();
+    return fetch(`/api/news/resolve`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", ..._authHeaders(), ...(k ? { "X-News-Key": k } : {}) },
+      body: JSON.stringify({ urls, ...(dry ? { dry: true } : {}) }),
+    }).then(r => r.ok ? r.json() : { ok: false }).catch(() => ({ ok: false }));
+  },
   // Study modules (admin-only) — authored study content in study.db.
   studyEntries: (type) =>
     fetch(`/api/study/entries${type && type !== "all" ? `?type=${encodeURIComponent(type)}` : ""}`, { headers: _authHeaders() })
