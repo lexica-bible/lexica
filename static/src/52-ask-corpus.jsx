@@ -169,7 +169,7 @@ function CorpusPanel({ panel, onStrongs }) {
 }
 
 // One answered (or in-flight) question.
-function AcTurn({ turn, onReadInContext, onLemma, onStrongs }) {
+function AcTurn({ turn, onReadInContext, onLemma, onStrongs, onOccInspect }) {
   const cited = useMemo(() => _acCited(turn.keyStrongs), [turn.keyStrongs]);
   // Display-text toggle (ABP · BSB · KJV · HEB) for THIS answer's verse evidence. The
   // evidence is found by Strong's number, but the text shown can be the ABP (Greek
@@ -205,6 +205,15 @@ function AcTurn({ turn, onReadInContext, onLemma, onStrongs }) {
     return seen.size || new Set(displayResults.map(e => e.ref)).size;
   }, [displayResults]);
 
+  // A verse-ref CHIP in the synthesis PEEKS into the inspect rail (stays in corpus), carrying
+  // this turn's word context. The KEY PASSAGES list below keeps its own jump-to-Library. On
+  // mobile there's no rail yet, so a chip falls back to the jump-to-reader.
+  const peekVerse = (book, chapter, verse) => onOccInspect
+    ? onOccInspect({ book, chapter, verse,
+        label: `${BOOK_LABELS[book] || book} ${chapter}:${verse}`,
+        textMode, cited, keyStrongs: turn.keyStrongs || [] })
+    : onReadInContext(book, chapter, verse);
+
   return (
     <div className="ac-turn">
       <div className="ac-ask"><span className="ac-ask-q">{turn.question}</span></div>
@@ -228,7 +237,6 @@ function AcTurn({ turn, onReadInContext, onLemma, onStrongs }) {
         <div className="ac-answer"><p className="ac-error">{turn.error}</p></div>
       ) : (
         <div className="ac-answer">
-          <CorpusPanel panel={turn.panel} onStrongs={onStrongs}/>
           <div className="ac-syn-tag"><Icon.Sparkle/> Synthesis</div>
           {turn.grounded === false && (
             <div className="ac-ungrounded" role="note">
@@ -237,7 +245,7 @@ function AcTurn({ turn, onReadInContext, onLemma, onStrongs }) {
               Treat it with caution and verify against the text.
             </div>
           )}
-          <AcProse text={turn.explanation} onVerse={onReadInContext} onStrongs={onStrongs} verified={verifiedRefs}/>
+          <AcProse text={turn.explanation} onVerse={peekVerse} onStrongs={onStrongs} verified={verifiedRefs}/>
 
           {turn.results && turn.results.length > 0 && (
             <div className="ac-evidence">
@@ -299,6 +307,101 @@ function AcComposer({ pinned, value, setValue, onSubmit, placeholder, busy, quot
   );
 }
 
+// ── Right-rail inspect (RightStack layers): occurrence → fork → word ─────────────
+// The verse-ref chip in the synthesis PEEKS here. Depth 1 = the occurrence (this verse +
+// the word the search turns on). From it: Read in context (LEAVE → reader), Contested
+// reading (PUSH the fork, only when the word is contested), Full word study (PUSH the card).
+
+// Depth 2/3 — the full word card in-rail: the Lexica dictionary entry when the word has one
+// (LexicaBody, reused), else a lean card with the gloss + a jump to the Word study tab.
+function AcWordLayer({ target, onOpenStudy }) {
+  const strongs = target.strongs;
+  const heb = /^H/i.test(strongs);
+  const [lexica, setLexica] = useState(undefined);   // undefined = loading, null = none
+  useEffect(() => {
+    let live = true;
+    api.lexica(strongs).then(d => live && setLexica(d && !d.error && d.strongs ? d : null))
+      .catch(() => live && setLexica(null));
+    return () => { live = false; };
+  }, [strongs]);
+  return (
+    <div className="ac-insp-card">
+      <div className="ac-insp-hero">
+        <span className={"ac-insp-lemma" + (heb ? " heb" : "")} dir={heb ? "rtl" : undefined}>{target.lemma}</span>
+        {target.translit && <span className="ac-insp-tr">{target.translit}</span>}
+        <span className="ac-insp-s">{strongs}</span>
+      </div>
+      {lexica === undefined ? (
+        <div className="ac-insp-loading">Loading…</div>
+      ) : lexica ? (
+        <LexicaBody lexica={lexica} lsjEntry={null} />
+      ) : (
+        <>
+          {target.definition && <p className="ac-insp-gloss">{target.definition}</p>}
+          <p className="ac-insp-hint">The full distribution, senses, and every occurrence live in Word study.</p>
+        </>
+      )}
+      <button className="ac-insp-open" onClick={onOpenStudy}>Open in Word study ↗</button>
+    </div>
+  );
+}
+
+// Drill ROOT — the clicked occurrence.
+function AcOccurrenceCard({ occ, onClose, onReadInContext, onOpenStudy, ctl }) {
+  const target = (occ.keyStrongs && occ.keyStrongs[0]) || null;
+  const strongs = target && target.strongs;
+  const heb = strongs && /^H/i.test(strongs);
+  const [lexica, setLexica] = useState(undefined);
+  useEffect(() => {
+    if (!strongs) { setLexica(null); return; }
+    let live = true;
+    api.lexica(strongs).then(d => live && setLexica(d && !d.error && d.strongs ? d : null))
+      .catch(() => live && setLexica(null));
+    return () => { live = false; };
+  }, [strongs]);
+  const fork = lexica && lexica.fork;
+  return (
+    <div className="ac-insp-card">
+      <div className="ac-insp-bar">
+        <button className="detail-back" onClick={onClose}>‹ Overview</button>
+        <span className="ac-insp-ref">{occ.label}</span>
+      </div>
+      <div className="ac-insp-verse">
+        <VerseRow book={occ.book} chapter={occ.chapter} verse={occ.verse} label={occ.label}
+          textMode={occ.textMode} citedStrongs={occ.cited} onReadInContext={onReadInContext} />
+      </div>
+      {target && (
+        <div className="ac-insp-word-line">
+          <span className={"ac-insp-lemma" + (heb ? " heb" : "")} dir={heb ? "rtl" : undefined}>{target.lemma}</span>
+          {target.translit && <span className="ac-insp-tr">{target.translit}</span>}
+          <span className="ac-insp-s">{strongs}</span>
+          {target.definition && <div className="ac-insp-gloss">{target.definition}</div>}
+        </div>
+      )}
+      <div className="ac-insp-acts">
+        <button className="ac-insp-act" onClick={() => onReadInContext(occ.book, occ.chapter, occ.verse)}>Read in context ›</button>
+        {fork && (
+          <button className="ac-insp-act" onClick={() => ctl.push({
+            backLabel: "Occurrence",
+            render: () => (
+              <div className="ac-insp-card">
+                <div className="ac-insp-hero-sm">Contested — <span className={heb ? "heb" : undefined} dir={heb ? "rtl" : undefined}>{target.lemma}</span></div>
+                <LexicaFork fork={fork} />
+              </div>
+            ),
+          })}>Contested reading ›</button>
+        )}
+        {strongs && (
+          <button className="ac-insp-act" onClick={() => ctl.push({
+            backLabel: "Occurrence",
+            render: () => <AcWordLayer target={target} onOpenStudy={() => onOpenStudy(strongs)} />,
+          })}>Full word study ›</button>
+        )}
+      </div>
+    </div>
+  );
+}
+
 function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexicon, isMobile }) {
   const [thread, setThread] = useState([]);
   const [draft, setDraft] = useState("");
@@ -307,7 +410,8 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   const [currentId, setCurrentId] = useState(null);   // the conversation being viewed/built (null = landing)
   const [quota, setQuota] = useState(null);   // {used, limit, remaining} | {unlimited} — daily AI cap, from the server
   const threadRef = useRef(null);
-  const rightCtl = useRightStack();   // inspect-panel push stack (occurrence → fork → word; filled in step 3)
+  const rightCtl = useRightStack();   // inspect-panel push stack (occurrence → fork → word)
+  const [selectedOcc, setSelectedOcc] = useState(null);   // the peeked occurrence (null = idle)
   useNotesVersion();   // re-render when the store changes (e.g. a cross-device sync pulls convos in)
   const convos = NotesStore.corpusConvos();
   const busy = thread.some(t => t && (t.loading || t.streaming));   // a search is in flight (or streaming) — lock the composer
@@ -446,6 +550,15 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
 
   const onLemma = (l) => { const tag = l.strongs || l.strongs_base; onNavigateToLexicon?.(tag, /^H/i.test(tag) ? "heb" : "abp"); };
   const onStrongs = (tag) => onNavigateToLexicon?.(tag, /^H/i.test(tag) ? "heb" : "abp");
+  // Right-rail inspect: a prose ref chip peeks here (occurrence → fork → word). Peer-select
+  // (another chip) resets the drill to the new occurrence; closing returns to the idle card.
+  const onOccInspect = (occ) => { setSelectedOcc(occ); rightCtl.reset(); };
+  const closeOcc = () => { setSelectedOcc(null); rightCtl.reset(); };
+  // Idle rail = the latest answer's frequency panel (the result-shape summary). Never blank.
+  const latestPanel = useMemo(() => {
+    for (let i = thread.length - 1; i >= 0; i--) if (thread[i] && thread[i].panel) return thread[i].panel;
+    return null;
+  }, [thread]);
   const started = thread.length > 0;
   const followCapped = thread.filter(t => t && t.question && !t.local).length > AC_MAX_FOLLOWUPS;
   const suggestions = acScopeSuggestions(scope);
@@ -511,7 +624,8 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
     <div className="ac-thread" ref={threadRef}>
       <div className="ac-thread-col">
         {thread.map((turn, i) => (
-          <AcTurn key={i} turn={turn} onReadInContext={onReadInContext} onLemma={onLemma} onStrongs={onStrongs}/>
+          <AcTurn key={i} turn={turn} onReadInContext={onReadInContext} onLemma={onLemma}
+            onStrongs={onStrongs} onOccInspect={isMobile ? null : onOccInspect}/>
         ))}
       </div>
     </div>
@@ -525,10 +639,22 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
         : (scope ? `Ask about ${scope.translit || scope.lemma}…` : "Ask anything across the Bible…")}/>
   );
 
-  const inspectEmpty = (
-    <ZoneEmpty icon={<Icon.Sparkle/>} title="Occurrence detail"
-      sub="Click a passage in an answer to inspect it here — its verse, the word it turns on, and a way into the full word study."/>
+  // Inspect rail: idle = the latest answer's frequency panel (the result-shape summary); a
+  // peeked ref chip replaces it with the occurrence → fork → word drill. Never blank.
+  const inspectIdle = latestPanel ? (
+    <div className="ac-insp-idle">
+      <div className="ac-insp-idle-head">Word frequency</div>
+      <div className="ac-insp-idle-body"><CorpusPanel panel={latestPanel} onStrongs={onStrongs}/></div>
+    </div>
+  ) : (
+    <ZoneEmpty icon={<Icon.Sparkle/>} title="Nothing selected yet"
+      sub="Ask a question — the words it turns on and how often they occur show here. Then tap a passage in the answer to inspect it."/>
   );
+  const inspectRoot = selectedOcc ? {
+    key: `${selectedOcc.book}-${selectedOcc.chapter}-${selectedOcc.verse}`,
+    render: () => <AcOccurrenceCard occ={selectedOcc} onClose={closeOcc} onReadInContext={onReadInContext}
+      onOpenStudy={(s) => onNavigateToLexicon?.(s, /^H/i.test(s) ? "heb" : "abp")} ctl={rightCtl}/>,
+  } : null;
 
   // ── MOBILE: unchanged layout (own hero/pinned composer) until the mobile shell step ──
   if (isMobile) {
@@ -581,7 +707,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
           </div>
         </>
       }
-      inspect={<RightStack ctl={rightCtl} root={null} empty={inspectEmpty} />}
+      inspect={<RightStack ctl={rightCtl} root={inspectRoot} empty={inspectIdle} />}
     />
   );
 }
