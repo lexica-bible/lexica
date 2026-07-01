@@ -44,6 +44,18 @@ from views_notes import is_admin
 bp = Blueprint("study", __name__)
 log = logging.getLogger("study")
 
+
+@bp.before_request
+def _study_admin_only():
+    """The whole Study surface is admin-only (2026-07-01). The tab is hidden for non-admins
+    AND every endpoint in this blueprint refuses (403) — so a reader hitting the URL or the
+    API directly gets nothing, not an empty-200. One gate, all routes, no drift. This also
+    retires the reader's Nave's-topical block (for-name) and 'In studies:' line (for-verse),
+    which fed off this blueprint — intended: they lead into the now-gated tab."""
+    if not is_admin():
+        return jsonify({"error": "forbidden"}), 403
+
+
 _TYPES = ("topic", "graph", "name")   # "name" = a metaV person/place name-topic (sectioned like a topic; not shown in the browser list)
 _MAX_ENTRY_BYTES = 200_000     # one whole entry's JSON (long notes + many refs)
 _MAX_VERSES = 300              # verse refs per topic section

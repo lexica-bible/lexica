@@ -44,8 +44,8 @@ def lexica_seams():
     Returns one row per seam: lemma + short gloss + the two authored axes (divergence_type,
     lead_flip) + the full fork (core + priors) for the both-priors card. Deploy-safe: table
     not built → empty list; a word with no fork (e.g. the psyche control) is dropped."""
-    if LEXICA_ADMIN_ONLY and not is_admin():
-        return jsonify({"seams": []})
+    if not is_admin():          # Seam index is a Study-tab surface — admin-only, refuse everyone else
+        return jsonify({"error": "forbidden"}), 403
     conn = db_ro()
     seams = []
     try:
