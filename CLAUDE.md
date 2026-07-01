@@ -514,16 +514,25 @@ center peer-select can `reset()`; lower layers stay mounted, hidden with **`visi
 `display:none`** — display:none wipes an overflow box's scrollTop in Chrome; keys are push-unique minted
 ids, never by card type). `ZoneEmpty` stays in `20-shared-components.jsx`. CSS in styles.css:
 `.zshell/.zrail/.zcenter/.zinspect` + `.rstack*` + mobile `.zbar/.zsheet`. **Share the FRAME, not the
-CONTENTS** — never pull a tab's card/feed styling into the `.z*` classes. **top:0 split (load-bearing):**
-a SHIPPED surface keeps its float-behind-the-nav (`.zinspect` base, `top:0`); a NEW surface starts BELOW
-the nav (`.zinspect.rstack`, `top:var(--hdr-h)`). **All three shipped surfaces migrated, parity-only:**
+CONTENTS** — never pull a tab's card/feed styling into the `.z*` classes. **top:0 split (was
+load-bearing; now user-preference):** a SHIPPED surface keeps its float-behind-the-nav (`.zinspect` base,
+`top:0`); a NEW surface's DEFAULT is BELOW the nav (`.zinspect.rstack`, `top:var(--hdr-h)`) — BUT Ask-corpus
+(the first real consumer) overrides that back to `top:0` (class `.ac-rstack`) so its inspect floats OVER
+the navy header, unified with News/Word study (the user's call — the below-nav gap read as "cut off by the
+top banner"). So the split is now the user's per-surface choice, not a hard rule; a top:0 consumer must give
+each RightStack state a header BAND (`var(--hdr-h)`) so content clears the navy header (+ a `.app.view-<x>
+.hdr-right` account-pill offset). **All three shipped surfaces migrated, parity-only:**
 News + Word study render `<Shell>` on desktop (each keeps its own `if (isMobile)` mobile branch; `Shell`
 has `railClass`/`centerClass` for Word study's extra slot classes); Library's five inspect panels
 (word/xref/note/summary/day-intro) carry the shared `.zinspect` with `.detail-side` slimmed to its
 extras — its App-level gating machine (one-at-a-time word>xref>note>summary, back-as-uncover, reconcile)
 is UNTOUCHED and it is NOT forced into RightStack. ThreeZone retired. Migrations proved by parity gates
 (frame DOM + computed-style diff; Library also a Node state-machine gate driving transition sequences).
-Next = the first real consumers (seam index / Ask-corpus right rail / Notes). Full record: memory
+**Ask-corpus is the FIRST real RightStack consumer (LIVE 2026-07-01):** desktop on `<Shell>` (composer in a
+top strip, occurrence-count panel moved to the rail's IDLE state, unframed); a synthesis verse-ref CHIP
+PEEKS into the rail (occurrence → fork → word push drill), while the KEY PASSAGES rows keep their
+jump-to-Library (chip = peek, row = leave). Mobile still the old layout. Build spec: `HANDOFF_corpus_shell.md`
++ memory `project_three_zone_shell`. Next remaining consumers = seam index (Study) + Notes. Full record: memory
 `project_three_zone_shell`.
 
 ## Library Tab
@@ -847,6 +856,12 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   study (`/api/lexicon/*`) + Ask the corpus (`/api/ai-search`). Don't wire new work to `/api/search`.
 
 ## AI Search
+- **Exact-lemma pin (2026-07-01).** A bare typed single Greek/Hebrew word is pinned to its EXACT Strong's
+  BEFORE the model (`_resolve_exact_lemma` in ai.py, indexed `lemma_plain`), and OVERRIDES the model's sql +
+  key word so the occurrence list is that ONE number, not the English-concept guess (γῆ was laundered into
+  -γη look-alikes). Greek → a direct `strongs_base` query; Hebrew → empty SQL, filled by the heb.db
+  supplement. Homograph/dotted collisions (Greek 27, Hebrew 1,460) fall through to the model. `_CACHE_CODE_VER`
+  →40. Full record: memory `project_ai_search_architecture`.
 - SQL gen + term-extraction on **Haiku**; the displayed **synthesis + verse curation (pass 2) on
   Sonnet** (`claude-sonnet-4-6`, 2026-06-21 — Haiku parroted the question's framing on nuanced
   "same vs different" questions and over-asserts; same lesson as xref/summary)

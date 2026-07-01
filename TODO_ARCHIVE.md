@@ -6,6 +6,31 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Ask the corpus — first real RightStack consumer + exact-lemma pin — DONE + LIVE 2026-07-01
+The first surface to USE the shell for NEW content (not a parity migration). Full record: memory
+`project_three_zone_shell` + `project_ai_search_architecture` + build spec `HANDOFF_corpus_shell.md`.
+- **Prereq — exact-lemma pin.** Corpus had NO deterministic word resolution: a typed lemma (γῆ) went
+  straight to Haiku's English-concept step, so the occurrence list was the model's guess (pulled -γη
+  look-alikes). `_resolve_exact_lemma` (ai.py) now pins a bare single Greek/Hebrew word to its EXACT
+  Strong's via the indexed `lemma_plain` and overrides the model's sql + key word. `_CACHE_CODE_VER`→40.
+  - **SNAG found + fixed:** `lemma_plain` was documented LIVE since 2026-06-26 but was actually MISSING on
+    the live db (a reload had dropped it) — so Word-study's exact-match-first was ALSO asleep. Re-ran
+    `scripts/add_lemma_plain.py --apply` (lexicon 5,523 + bdb 8,674). LESSON: verify the column after any
+    reload. See memory `project_lexicon_search_overmatch`.
+  - **Latent streaming bug surfaced + fixed:** the Hebrew pin (empty base SQL) exposed a pre-existing
+    `NameError` — `_assemble_payload` (the SSE tail, lifted out of `ai_search`) reached for the nested
+    `_is_thematic` it can't see. Fresh streamed searches with a model-named extra verse OR zero base rows
+    hit it; cache hits + normal Greek searches skipped it. Fixed by binding a local `_is_thematic` to the
+    `target_bases` param (commit 04cf9a1). NOT caused by the pin.
+- **Shell frame (step 2):** desktop `AskCorpusView` → `<Shell>`, composer in a top strip, mobile kept its
+  old `.ac` layout.
+- **Inspect drill (step 3):** a synthesis verse-ref CHIP peeks into the RightStack rail
+  (occurrence → fork → word), KEY PASSAGES rows keep the jump-to-Library (chip = peek, row = leave —
+  corrected after I first mis-wired the row body as the peek). The frequency panel moved to the rail's idle
+  state, unframed. Floats top:0 (unified, `.ac-rstack`) after the user rejected the below-nav "cut off" look.
+- **Still owed:** a visual-polish pass (JP batching) — see the open item in TODO.md. UTF-8 console lesson
+  saved (memory `feedback_utf8_console_output`).
+
 ## Three-zone shell — primitives built + 3 shipped surfaces migrated — DONE 2026-06-30
 The shared navigate/read/inspect frame went from shared CSS to real components, and all THREE shipped
 surfaces (News, Word study, Library) were migrated parity-only. Full record + gate methods: memory

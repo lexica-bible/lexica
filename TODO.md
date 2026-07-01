@@ -34,13 +34,18 @@ Issues surfaced 2026-06-28. #1 ("LORD the" word flip), #2 (proper-noun / entity 
 ## Three-zone shell — first real consumers (2026-06-30)
 The shared frame is DONE: `Shell` + `RightStack` built in `static/src/22-shell.jsx`, and News + Word
 study + Library all migrated parity-only (ThreeZone retired). History + the gate methods: TODO_ARCHIVE +
-memory `project_three_zone_shell`. Remaining = build the FIRST surfaces that actually USE the shell for
-NEW content:
+memory `project_three_zone_shell`. **Ask the corpus is DONE + LIVE 2026-07-01** (the first real RightStack
+consumer — chip-peek drill + panel-in-rail + top:0 unified; record in TODO_ARCHIVE + memory
+`project_three_zone_shell` + `HANDOFF_corpus_shell.md`). Remaining:
 - **Seam index** (Study) — the greenfield consumer of `RightStack` (Build A, separate handoff).
-- **Ask the corpus** — add the missing right rail (occurrence detail + fork flag, drilling via RightStack).
-  Prereq: the diacritic exact-lemma-first fix so the center list is trustworthy.
 - **Notes** — left index / editor center / anchored-scripture right, on `Shell`.
-  code: static/src/22-shell.jsx, 52-ask-corpus.jsx, 35-notes.jsx, 55-study.jsx, styles.css
+- **Ask-corpus POLISH pass** (JP will batch these — flagged 2026-07-01, not done): a stray divider line in
+  the inspect card; general spacing; the occurrence card's target word = the answer's PRIMARY key word,
+  wrong-ish for a broad multi-word answer (not the exact word in that one verse); the MOBILE-shell step
+  (mobile still runs the old `.ac` layout, so a chip there jumps to Library instead of peeking); recreate the
+  CSS parity gate with a WIDENED prop set (add width, max-width, flex-basis, overflow-x/y — the old gate
+  missed the News-width + scrollbar bugs).
+  code: static/src/22-shell.jsx, 52-ask-corpus.jsx, 50-corpus-results.jsx, 35-notes.jsx, 55-study.jsx, styles.css
 - **Owed (post-deploy human check):** click-through of News / Word study / Library on desktop + phone —
   the mobile sheets are the one thing the parity gates can't run locally. Plus the two follow-on fixes
   (2026-06-30): confirm the **News tab shows in the mobile bottom nav** (admin), and that **News's now-460
