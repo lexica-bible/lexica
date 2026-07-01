@@ -642,10 +642,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   // Inspect rail: idle = the latest answer's frequency panel (the result-shape summary); a
   // peeked ref chip replaces it with the occurrence → fork → word drill. Never blank.
   const inspectIdle = latestPanel ? (
-    <div className="ac-insp-idle">
-      <div className="ac-insp-idle-head">Word frequency</div>
-      <div className="ac-insp-idle-body"><CorpusPanel panel={latestPanel} onStrongs={onStrongs}/></div>
-    </div>
+    <div className="ac-insp-idle"><CorpusPanel panel={latestPanel} onStrongs={onStrongs}/></div>
   ) : (
     <ZoneEmpty icon={<Icon.Sparkle/>} title="Nothing selected yet"
       sub="Ask a question — the words it turns on and how often they occur show here. Then tap a passage in the answer to inspect it."/>
