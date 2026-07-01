@@ -114,7 +114,6 @@ function AcProse({ text, onVerse, onStrongs, verified }) {
 // counted, and that line shows only when there are any. The backend (corpus_panel.py)
 // already decided membership + never manufactures structure; this only draws it.
 function CorpusPanel({ panel, onStrongs }) {
-  const [open, setOpen] = useState({});
   if (!panel || !panel.groups || !panel.groups.length) return null;
   const fmt = (n) => (n != null ? n.toLocaleString() : "");
   return (
@@ -124,10 +123,8 @@ function CorpusPanel({ panel, onStrongs }) {
         const fam = g.family || [];
         if (!fam.length) return null;
         const core = fam[0], rest = fam.slice(1);
-        const expanded = !!open[gi];
         const heb = g.lang === "H";
         const aside = g.set_aside || 0;
-        const hasMore = rest.length > 0 || aside > 0;
         const barW = (n) => Math.max(4, Math.round((100 * n) / (g.max || n || 1)));
         // Each row jumps to Word study (replaces the old lemma chips below the note).
         const row = (r, isCore) => (
@@ -150,16 +147,11 @@ function CorpusPanel({ panel, onStrongs }) {
           <div className="cpanel-grp" key={gi}>
             {showLabel && <div className="cpanel-grp-h">{g.label}</div>}
             {row(core, true)}
-            {expanded && rest.map((r) => row(r, false))}
-            {expanded && aside > 0 && (
+            {rest.map((r) => row(r, false))}
+            {aside > 0 && (
               <div className="cpanel-aside">
                 {aside} related form{aside > 1 ? "s" : ""} set aside — spelling matches, meaning unconfirmed
               </div>
-            )}
-            {hasMore && (
-              <button className="cpanel-more" onClick={() => setOpen((o) => ({ ...o, [gi]: !expanded }))}>
-                {expanded ? "Show less ▴" : (rest.length > 0 ? `+${rest.length} more ▾` : "Show note ▾")}
-              </button>
             )}
           </div>
         );
