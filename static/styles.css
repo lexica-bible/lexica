@@ -5229,7 +5229,7 @@ button.study-verse-ref { border: none; }
 
 /* the why-rail (SELECTED) reuses .news-shape's frame; these are its own bits. The band
    carries the back link (‹ Watch) + title, matching the dashboard's header-height band. */
-.news-why-head { justify-content: flex-start; gap: 12px; }
+.news-why-head { justify-content: space-between; gap: 12px; }
 .news-why-head .detail-back { flex: 0 0 auto; }
 .news-why-headt { font-family: var(--f-serif); font-size: 16px; font-weight: 600; color: var(--ink); }
 .news-why-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }

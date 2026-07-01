@@ -278,8 +278,8 @@ function NewsWhy({ story, onBack }) {
   return (
     <div className="news-shape news-why">
       <div className="news-shape-head news-why-head">
-        <button className="detail-back" onClick={onBack}>‹ Watch</button>
         <span className="news-why-headt">Why it surfaced</span>
+        <button className="detail-back" onClick={onBack}>‹ Watch</button>
       </div>
       <div className="news-shape-body">
         <div className="news-why-top">

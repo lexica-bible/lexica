@@ -188,6 +188,11 @@ function App() {
   };
 
   const [libEverVisited, setLibEverVisited] = useState(true);
+  // News mounts on first visit, then STAYS mounted (display:none when away) — like the
+  // Library above. Without this the tab was conditionally rendered, so leaving it unmounted
+  // NewsView and returning re-ran its initial fetch (and lost filters/scroll/selection).
+  const [newsEverVisited, setNewsEverVisited] = useState(false);
+  useEffect(() => { if (mainView === "news") setNewsEverVisited(true); }, [mainView]);
   const searchScrollRef = useRef(0);
 
   // Deep link from the crawlable /read/ pages ("Open in interactive reader" →
@@ -355,7 +360,11 @@ function App() {
           </div>
         )}
         {mainView === "about" && <AboutView owner={owner} />}
-        {mainView === "news" && (owner || newsReader) && <NewsView isMobile={isMobile} />}
+        {(owner || newsReader) && newsEverVisited && (
+          <div style={{ display: mainView === "news" ? undefined : "none" }}>
+            <NewsView isMobile={isMobile} />
+          </div>
+        )}
         {mainView === "notes" && <NotesView onOpen={openNoteFromList} isMobile={isMobile} onReadInContext={handleReadInContext} />}
         <div style={{ display: mainView === "study" ? undefined : "none" }}>
           <StudyView admin={owner} pending={studyPending} onConsumed={() => setStudyPending(null)} onNavigateToLibrary={handleReadInContext} isMobile={isMobile} />
