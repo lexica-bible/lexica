@@ -353,11 +353,12 @@ function AcOccurrenceCard({ occ, onClose, onReadInContext, onOpenStudy, ctl }) {
   }, [strongs]);
   const fork = lexica && lexica.fork;
   return (
-    <div className="ac-insp-card">
-      <div className="ac-insp-bar">
+    <div className="ac-insp-root">
+      <div className="ac-insp-band ac-insp-band--split">
         <button className="detail-back" onClick={onClose}>‹ Overview</button>
         <span className="ac-insp-ref">{occ.label}</span>
       </div>
+      <div className="ac-insp-rbody">
       <div className="ac-insp-verse">
         <VerseRow book={occ.book} chapter={occ.chapter} verse={occ.verse} label={occ.label}
           textMode={occ.textMode} citedStrongs={occ.cited} onReadInContext={onReadInContext} />
@@ -389,6 +390,7 @@ function AcOccurrenceCard({ occ, onClose, onReadInContext, onOpenStudy, ctl }) {
             render: () => <AcWordLayer target={target} onOpenStudy={() => onOpenStudy(strongs)} />,
           })}>Full word study ›</button>
         )}
+      </div>
       </div>
     </div>
   );
@@ -633,11 +635,16 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
 
   // Inspect rail: idle = the latest answer's frequency panel (the result-shape summary); a
   // peeked ref chip replaces it with the occurrence → fork → word drill. Never blank.
-  const inspectIdle = latestPanel ? (
-    <div className="ac-insp-idle"><CorpusPanel panel={latestPanel} onStrongs={onStrongs}/></div>
-  ) : (
-    <ZoneEmpty icon={<Icon.Sparkle/>} title="Nothing selected yet"
-      sub="Ask a question — the words it turns on and how often they occur show here. Then tap a passage in the answer to inspect it."/>
+  const inspectIdle = (
+    <div className="ac-insp-idle">
+      <div className="ac-insp-band">{latestPanel ? "How often these words occur" : "Inspect"}</div>
+      <div className="ac-insp-scroll">
+        {latestPanel
+          ? <CorpusPanel panel={latestPanel} onStrongs={onStrongs}/>
+          : <ZoneEmpty icon={<Icon.Sparkle/>} title="Nothing selected yet"
+              sub="Ask a question — the words it turns on and how often they occur show here. Then click a passage in the answer to inspect it."/>}
+      </div>
+    </div>
   );
   const inspectRoot = selectedOcc ? {
     key: `${selectedOcc.book}-${selectedOcc.chapter}-${selectedOcc.verse}`,
@@ -696,7 +703,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
           </div>
         </>
       }
-      inspect={<RightStack ctl={rightCtl} root={inspectRoot} empty={inspectIdle} />}
+      inspect={<RightStack ctl={rightCtl} root={inspectRoot} empty={inspectIdle} className="ac-rstack" />}
     />
   );
 }
