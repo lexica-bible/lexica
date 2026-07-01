@@ -25,6 +25,13 @@ Full record: memory `project_lexicon_number_fold`.
   dependent-builder tail + `/rebuild-words` step 11, and `recompute_norms(only="bsb_words")` at the tail of
   `load_bsb_words.py`. kjv_words is static → one-time backfill.
 - **KNOWN GAP (see TODO open items):** the Hebrew-OT discovery branch is NOT folded.
+- **Follow-on — surface + bold the matched rendering (commits 8600646 + 15bd3ef):** the results summary
+  shows the top-8 renderings per source, so a word matched via a rare rendering below the cap (G746
+  "magistrates" ×1, H3423 "magistrate" ×1) never showed. `lexicon_english`'s `_top_glosses_*` now keep the
+  full list (dropped a Python slice, no extra DB cost); `_fold` bolds the matched rendering (`normalize`
+  compare, reusing the search fold) and surfaces it in its sorted spot if buried; a `{trunc:true}` sentinel
+  → trailing " …" whenever a source has more forms than shown (independent of the match). Frontend shared
+  `renderRend()` bolds via `.glrow-match` (weight only). Lookup/translit path unchanged.
 
 ## Study tab restructure + admin-only gate + concept-topic deprecation — DONE + LIVE 2026-07-01
 Full record: memory `project_study_modules` + `project_three_zone_shell`.

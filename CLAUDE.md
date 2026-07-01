@@ -871,7 +871,12 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   Built by `scripts/build_rendering_norm.py` (PA data step; RE-RUN after a words rebuild — in the checklist — and
   auto-run at the tail of `load_bsb_words.py`). **KNOWN GAP:** the Hebrew-OT discovery branch (`corpus=heb`) is
   NOT folded — it matches a token inside a multi-word gloss phrase, which needs a normalized-token side-index in
-  heb.db + a looser (number-blind) `gloss LIKE` prefilter. Full record: memory `project_lexicon_number_fold`.
+  heb.db + a looser (number-blind) `gloss LIKE` prefilter. **The results summary SURFACES + BOLDS the
+  searched rendering (2026-07-01):** each result's per-source "renders as" line shows the top 8 by count,
+  bolds the matched rendering (`.glrow-match`, weight only), and — if the match sorts below the cap —
+  appends it in its sorted position; a trailing ` …` marks a source with more forms than shown (independent
+  of the match). All in `lexicon_english`'s `_fold`/`_top_glosses_*` (NOT `lexicon_profile`); the
+  lookup/translit path is untouched. Full record: memory `project_lexicon_number_fold`.
 - Endpoints: `/api/lexicon/lookup`, `/api/lexicon/profile/<strongs>`, `/api/lexicon/verses/<strongs>/<book>`
 - `lexicon_verses` response: `{verses: [{chapter, verse, words: [{w, h, i?}]}], glosses: [{gloss, count}]}`
   - `h=true` marks the target word in each verse (rendered highlighted in gold)
