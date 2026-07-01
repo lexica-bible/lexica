@@ -4869,8 +4869,11 @@ button.study-verse-ref { border: none; }
 /* Both controls in this bar seat off ONE height (--ws-field-h), so the bar stays a
    single 59px (12 + 34 + 12 + 1) whether or not the Ask-AI button is showing. */
 .ws .searchbar { flex: 0 0 auto; --ws-field-h: 34px; padding: 12px 28px; border-bottom: 1px solid var(--rule); background: color-mix(in oklab, var(--bg) 82%, var(--paper)); }
-.ws .searchbar-in { display: flex; align-items: center; gap: 16px; }
-.ws .searchbar-in .search-field { flex: 0 1 540px; min-width: 0; }
+.ws .searchbar-in { display: flex; align-items: center; flex-wrap: wrap; gap: 16px; row-gap: 10px; }
+/* flex:1 1 320px + min-width floor: the field fills the row but stops shrinking at
+   260px, so instead of crushing (which spilled the submit arrow onto Ask AI) the
+   Ask AI sibling wraps to its own line under the search bar. No negative margins. */
+.ws .searchbar-in .search-field { flex: 1 1 320px; min-width: 260px; }
 /* "Ask AI about X" — appears to the RIGHT of the search bar once a word is loaded
    (replaces the old word-card footer button). Its own class, never the shared .occ-link. */
 .searchbar-ask {
@@ -4888,7 +4891,7 @@ button.study-verse-ref { border: none; }
 .ws .search-field:focus-within { border-color: var(--accent); box-shadow: 0 0 0 4px color-mix(in oklab, var(--accent) 12%, transparent); }
 .search-i { color: var(--ink-3); flex: 0 0 17px; transition: color 0.15s; }
 .ws .search-field:focus-within .search-i { color: var(--accent); }
-.ws .search-input { flex: 1; border: 0; outline: 0; background: transparent; font-size: 16px; color: var(--ink); letter-spacing: -0.005em; }
+.ws .search-input { flex: 1; min-width: 0; border: 0; outline: 0; background: transparent; font-size: 16px; color: var(--ink); letter-spacing: -0.005em; }
 .ws .search-input::placeholder { color: var(--ink-4); }
 .ws .search-go { width: 28px; height: 28px; border-radius: 7px; background: var(--navy); color: #fff; display: grid; place-items: center; flex: 0 0 auto; }
 .ws .search-go:hover { background: var(--navy-2); }
