@@ -296,14 +296,38 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
     if (selectedBook) await fetchVerses(selectedBook, next);
   };
 
+  // A "renders as" chip click: set the top translation filter to that chip's Bible
+  // AND apply its gloss together, in one click. On the tab that's already active
+  // this is just the gloss toggle (selectGloss). On a different tab it reloads the
+  // word in that corpus (like switchProfileCorpus) but KEEPS the picked gloss rather
+  // than clearing it — using lineCorpus explicitly since profileCorpus updates async.
+  const pickRender = async (lineCorpus, gloss) => {
+    if (loading || !profile) return;
+    if (lineCorpus === profileCorpus) { selectGloss(gloss); return; }
+    setProfileCorpus(lineCorpus);
+    setLoading(true);
+    setSelectedBook(null);
+    setVerseList(null);
+    setTestament("all");
+    setSelectedGloss(gloss);
+    setBookGlosses(null);
+    try {
+      const data = await api.lexiconProfile(profile.strongs, lineCorpus);
+      if (!data.error) setProfile(data);
+      const bk = await api.lexiconBooks(profile.strongs, lineCorpus, gloss);
+      setFilteredBooks(bk.books && bk.books.length ? bk.books : null);
+    } catch { setFilteredBooks(null); }
+    finally { setLoading(false); }
+  };
+
   const _isGreekHebrew = (s) => /[Ͱ-Ͽἀ-῿֐-׿]/.test(s);
 
-  // One "<Bible> renders this as" line. The active toggle's line is the
-  // interactive one (click a rendering to filter the books/verses below); the
-  // other Bible's line is shown read-only, just so you can see both at once.
+  // One "<Bible> renders this as" line. EVERY chip is clickable: it jumps the top
+  // translation filter to that chip's Bible AND applies its gloss in one click (see
+  // pickRender), so you skip the move-tab-then-filter two-step. The chip on the tab
+  // that's already active still toggles its gloss the same way.
   const renderGlossLine = (lineCorpus, label, list) => {
     if (!list || !list.length) return null;
-    const interactive = profileCorpus === lineCorpus;
     return (
       <div className="lexicon-glosses">
         {label && <div className="lexicon-gloss-label">{label}</div>}
@@ -311,18 +335,12 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
           {list.map((g, i) => (
             <React.Fragment key={g.gloss}>
               {i > 0 && <span className="lexicon-dist-sep"> · </span>}
-              {interactive ? (
-                <button
-                  className={"lexicon-dist-item" + (selectedGloss === g.gloss ? " selected" : "")}
-                  onClick={() => selectGloss(g.gloss)}
-                >
-                  {g.gloss}<span className="lexicon-dist-count">{g.count}</span>
-                </button>
-              ) : (
-                <span className="lexicon-dist-item lexicon-dist-item--ref">
-                  {g.gloss}<span className="lexicon-dist-count">{g.count}</span>
-                </span>
-              )}
+              <button
+                className={"lexicon-dist-item" + (profileCorpus === lineCorpus && selectedGloss === g.gloss ? " selected" : "")}
+                onClick={() => pickRender(lineCorpus, g.gloss)}
+              >
+                {g.gloss}<span className="lexicon-dist-count">{g.count}</span>
+              </button>
             </React.Fragment>
           ))}
         </div>
