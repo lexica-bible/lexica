@@ -126,10 +126,12 @@ function useNoteEditor(noteId, isMobile, onClose) {
 
 // The editor fields (quoted snippet + color row + textarea + Save/Delete). scrollRef
 // = the mobile swipe-to-dismiss scroll container (desktop leaves it undefined).
-function NoteEditFields({ ed, scrollRef }) {
+// hideSnippet drops the quoted-selection block — the Notes-tab center passes it so the
+// anchored verse lives ONLY in the right rail (inspect covenant); the Library rail keeps it.
+function NoteEditFields({ ed, scrollRef, hideSnippet }) {
   return (
     <div className="detail-body note-edit-body" ref={scrollRef}>
-      {ed.note.snippet && <blockquote className="note-snippet">“{ed.note.snippet}”</blockquote>}
+      {!hideSnippet && ed.note.snippet && <blockquote className="note-snippet">“{ed.note.snippet}”</blockquote>}
       <NoteColorRow value={ed.color} onPick={ed.setColor} />
       <textarea
         ref={ed.taRef}
@@ -213,28 +215,59 @@ function NoteCenterEditor({ noteId, onClose, onReadInContext }) {
           <button className="detail-close" onClick={ed.close} aria-label="Close"><Icon.Close/></button>
         </div>
       </div>
-      <NoteEditFields ed={ed} />
+      <NoteEditFields ed={ed} hideSnippet />
     </div>
   );
 }
 
-// DESKTOP Notes tab — the right inspect rail: the note's anchored verse, kept in
-// view while you write. Depth-1, no drill. Journal / non-Bible notes have no
-// anchor, so it shows an empty state.
+// DESKTOP Notes tab — the right inspect rail: the note's anchored verse + one verse of
+// context each side, kept in view while you write. The anchor is emphasized, the two
+// neighbors dimmed. Reuses the reader's shared VerseRow. Depth-1, no drill. Journal /
+// non-Bible notes have no anchor, so it shows an empty state.
 function NoteVerseInspect({ note, onReadInContext }) {
   const anchored = note && note.corpus === "bible" && note.start;
+  const v = anchored ? note.start.verse : 0;
   // A full header-height band clears the navy header (the inspect floats top:0, unified
   // with News / Word study). Band title = the verse ref when anchored, else a caption.
-  const label = anchored ? (note.refLabel || `${note.book} ${note.chapter}:${note.start.verse}`) : "Anchored verse";
+  const label = anchored ? (note.refLabel || `${note.book} ${note.chapter}:${v}`) : "Anchored verse";
   // heb/bsb/kjv notes show in their own text; everything else is ABP.
   const tm = anchored && ["kjv", "bsb", "heb"].includes(note.translation) ? note.translation : "abp";
+
+  // Learn the chapter's last verse so we never render an empty out-of-range "next" row.
+  // On any miss we fall back to the anchor verse → the next neighbor simply stays hidden.
+  const [maxVerse, setMaxVerse] = useState(null);
+  useEffect(() => {
+    if (!anchored) { setMaxVerse(null); return; }
+    let cancelled = false;
+    setMaxVerse(null);
+    api.chapter(note.book, note.chapter)
+      .then(d => {
+        if (cancelled) return;
+        const vs = (d && d.verses) || [];
+        setMaxVerse(vs.length ? Math.max(...vs.map(x => x.verse)) : v);
+      })
+      .catch(() => { if (!cancelled) setMaxVerse(v); });
+    return () => { cancelled = true; };
+  }, [anchored, note && note.book, note && note.chapter, v]);
+
+  const row = (vs, kind) => (
+    <div className={"note-insp-v note-insp-" + kind} key={vs}>
+      <VerseRow book={note.book} chapter={note.chapter} verse={vs}
+        label={kind === "anchor" ? label : `${note.book} ${note.chapter}:${vs}`}
+        textMode={tm} onReadInContext={kind === "anchor" ? onReadInContext : undefined} />
+    </div>
+  );
+
   return (
     <div className="note-insp">
       <div className="note-insp-band">{label}</div>
       <div className="note-insp-scroll">
         {anchored
-          ? <VerseRow book={note.book} chapter={note.chapter} verse={note.start.verse}
-              label={label} textMode={tm} onReadInContext={onReadInContext} />
+          ? <div className="note-insp-ctx">
+              {v > 1 && row(v - 1, "near")}
+              {row(v, "anchor")}
+              {maxVerse != null && v < maxVerse && row(v + 1, "near")}
+            </div>
           : <ZoneEmpty icon={<Icon.Note/>} title="No verse anchored"
               sub="Journal pages and imported notes aren’t tied to a verse, so nothing shows here." />}
       </div>

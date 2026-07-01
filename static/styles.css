@@ -4691,15 +4691,19 @@ button.study-verse-ref { border: none; }
 .notes-strip .notes-controls { margin: 0; }
 .notes-center-body { flex: 1; min-height: 0; overflow-y: auto; }
 
-/* the open note in the center column */
-.note-center { max-width: 760px; margin: 0 auto; padding: 22px 24px 60px; }
-.note-center-head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+/* the open note in the center column — fills the column height so the editor grows to
+   the Save/Delete bar (no fixed-height box floating over dead cream). */
+.note-center { max-width: 760px; margin: 0 auto; padding: 22px 24px 24px; height: 100%; box-sizing: border-box;
+  display: flex; flex-direction: column; }
+.note-center-head { flex: 0 0 auto; display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
 .note-center-ref { font-family: var(--f-serif); font-size: 20px; font-weight: 700; color: var(--ink); flex: 1; min-width: 0; }
 .note-center-tools { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
 .note-read-link { font-size: 13px; font-weight: 600; color: var(--accent); background: none; border: 0; cursor: pointer; padding: 4px 6px; }
 .note-read-link:hover { text-decoration: underline; }
-.note-center .note-edit-body { gap: 14px; }
-.note-center .note-textarea { min-height: 260px; }
+/* editor body flexes: color row + Save/Delete pin to their size, textarea grows to fill. */
+.note-center .note-edit-body { gap: 14px; flex: 1 1 auto; min-height: 0; }
+.note-center .note-color-row, .note-center .note-actions { flex: 0 0 auto; }
+.note-center .note-textarea { flex: 1 1 auto; min-height: 120px; resize: none; }
 
 /* right inspect — the anchored verse. Floats top:0 OVER the navy header, unified with
    News / Word study; a full header-height band clears it + the account pill is shifted. */
@@ -4710,6 +4714,11 @@ button.study-verse-ref { border: none; }
   display: flex; align-items: center; padding: 0 18px; border-bottom: 1px solid var(--rule);
   font-family: var(--f-serif); font-size: 16px; font-weight: 600; color: var(--ink); background: var(--paper); }
 .note-insp-scroll { flex: 1; min-height: 0; overflow-y: auto; padding: 16px 16px 60px; }
+/* anchored verse + one verse of context each side: anchor emphasized, neighbors dimmed. */
+.note-insp-ctx { display: flex; flex-direction: column; gap: 6px; }
+.note-insp-anchor .corpus-verse { background: color-mix(in oklab, var(--accent) 8%, var(--paper)); border-radius: 8px; }
+.note-insp-anchor .corpus-text { font-weight: 600; color: var(--ink); }
+.note-insp-near .corpus-text { color: var(--ink-4); }
 
 /* ============================================================
    SEAM INDEX — the contested-word browse (Study tab), on the shared three-zone Shell.
