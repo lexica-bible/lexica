@@ -659,8 +659,9 @@ def lexicon_english():
                 continue
             if sn not in out:
                 out[sn] = []
-            if len(out[sn]) < 8:
-                out[sn].append({"gloss": g, "count": r["cnt"]})
+            # Keep the FULL folded list (fetch is already un-LIMITed); the display
+            # cap to 8 + the buried-match pin happen in `_fold` below.
+            out[sn].append({"gloss": g, "count": r["cnt"]})
         return out
 
     def _top_glosses_heb(snums):
@@ -682,8 +683,7 @@ def lexicon_english():
             sn = r["strongs_id"]
             if sn not in out:
                 out[sn] = []
-            if len(out[sn]) < 8:
-                out[sn].append({"gloss": r["word"], "count": r["cnt"]})
+            out[sn].append({"gloss": r["word"], "count": r["cnt"]})
         return out
 
     def _top_glosses_hebdb(snums):
@@ -703,8 +703,7 @@ def lexicon_english():
             return {}
         for r in rows:
             out.setdefault(r["strongs"], [])
-            if len(out[r["strongs"]]) < 8:
-                out[r["strongs"]].append({"gloss": r["gloss"], "count": r["cnt"]})
+            out[r["strongs"]].append({"gloss": r["gloss"], "count": r["cnt"]})
         return out
 
     def _top_glosses_bsb(snums):
@@ -726,8 +725,7 @@ def lexicon_english():
             sn = r["strongs_id"]
             if sn not in out:
                 out[sn] = []
-            if len(out[sn]) < 8:
-                out[sn].append({"gloss": r["word"], "count": r["cnt"]})
+            out[sn].append({"gloss": r["word"], "count": r["cnt"]})
         return out
 
     # TOTAL occurrences of each found number, PER source — the count shown on each
@@ -959,8 +957,22 @@ def lexicon_english():
         hebdb_tot = _totals_hebdb(all_snums)
         bsb_tot = _totals_bsb(all_snums)
 
+        # The search fold (reuse — same normalize the match SQL used, see _fold_col
+        # at ~811 / the import at line 17). Marks the matched rendering for bolding and,
+        # when it sorts below the 8-item display cap, pins it so the summary still shows
+        # the word the user typed. Only a source that actually attests the fold gets a pin.
+        mq = _fold_norm(q)
         def _fold(gmap, sbase):
-            return _fold_glosses(((g["gloss"], g["count"]) for g in gmap.get(sbase, [])), limit=8)
+            full = _fold_glosses(((g["gloss"], g["count"]) for g in gmap.get(sbase, [])))
+            disp = full[:8]
+            for e in disp:
+                if _fold_norm(e["gloss"]) == mq:
+                    e["m"] = True                      # already visible → just bold it
+            if not any(e.get("m") for e in disp):
+                hit = next((e for e in full[8:] if _fold_norm(e["gloss"]) == mq), None)
+                if hit:
+                    disp = disp + [dict(hit, m=True, pin=True)]   # buried → pin w/ markers
+            return disp
 
         results = []
         def _emit(rows):

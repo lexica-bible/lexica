@@ -432,6 +432,17 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
     </>
   );
 
+  // One source's rendering line. The backend caps it to 8 and (for an English
+  // search) flags the matched rendering `m` for bolding — pinning it with … …
+  // markers if it sorted below the cap, so the summary always shows the typed word.
+  const renderRend = (list) => list.map((x, i) => (
+    <React.Fragment key={x.gloss + i}>
+      {i > 0 && (x.pin ? " … " : ", ")}
+      <span className={x.m ? "glrow-match" : undefined}>{x.gloss}</span>
+      {x.pin && <> {x.count} …</>}
+    </React.Fragment>
+  ));
+
   // The collapsible "words rendered" card (English-gloss search → several lemmas).
   const renderSenses = () => (
     <div className={"glsenses" + (glOpen ? " open" : "")}>
@@ -471,16 +482,16 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
                         the count on the word's own study page. ABP spans OT+NT (LXX), KJV/BSB are
                         NT-only for a Greek word; for a Hebrew number HEB is the real Hebrew OT. */}
                     {g.abp_glosses && g.abp_glosses.length > 0 && (
-                      <span className="glrow-rend"><span className="glrow-k">ABP</span><span>{g.abp_glosses.slice(0, 8).map(x => x.gloss).join(", ")}</span>{g.abp_total != null && <span className="glrow-n">{g.abp_total}</span>}</span>
+                      <span className="glrow-rend"><span className="glrow-k">ABP</span><span>{renderRend(g.abp_glosses)}</span>{g.abp_total != null && <span className="glrow-n">{g.abp_total}</span>}</span>
                     )}
                     {g.heb_glosses && g.heb_glosses.length > 0 && (
-                      <span className="glrow-rend"><span className="glrow-k">HEB</span><span>{g.heb_glosses.slice(0, 8).map(x => x.gloss).join(", ")}</span>{g.heb_total != null && <span className="glrow-n">{g.heb_total}</span>}</span>
+                      <span className="glrow-rend"><span className="glrow-k">HEB</span><span>{renderRend(g.heb_glosses)}</span>{g.heb_total != null && <span className="glrow-n">{g.heb_total}</span>}</span>
                     )}
                     {g.kjv_glosses && g.kjv_glosses.length > 0 && (
-                      <span className="glrow-rend"><span className="glrow-k">KJV</span><span>{g.kjv_glosses.slice(0, 8).map(x => x.gloss).join(", ")}</span>{g.kjv_total != null && <span className="glrow-n">{g.kjv_total}</span>}</span>
+                      <span className="glrow-rend"><span className="glrow-k">KJV</span><span>{renderRend(g.kjv_glosses)}</span>{g.kjv_total != null && <span className="glrow-n">{g.kjv_total}</span>}</span>
                     )}
                     {g.bsb_glosses && g.bsb_glosses.length > 0 && (
-                      <span className="glrow-rend"><span className="glrow-k">BSB</span><span>{g.bsb_glosses.slice(0, 8).map(x => x.gloss).join(", ")}</span>{g.bsb_total != null && <span className="glrow-n">{g.bsb_total}</span>}</span>
+                      <span className="glrow-rend"><span className="glrow-k">BSB</span><span>{renderRend(g.bsb_glosses)}</span>{g.bsb_total != null && <span className="glrow-n">{g.bsb_total}</span>}</span>
                     )}
                   </span>
                   <span className="glrow-occ" title="Open word study">
@@ -532,16 +543,16 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
                   {/* "used as" renderings per source — same lines as the English finder.
                       Falls back to the plain gloss for a row with no renderings. */}
                   {m.abp_glosses && m.abp_glosses.length > 0 && (
-                    <span className="glrow-rend"><span className="glrow-k">ABP</span><span>{m.abp_glosses.slice(0, 8).map(x => x.gloss).join(", ")}</span>{m.abp_total != null && <span className="glrow-n">{m.abp_total}</span>}</span>
+                    <span className="glrow-rend"><span className="glrow-k">ABP</span><span>{renderRend(m.abp_glosses)}</span>{m.abp_total != null && <span className="glrow-n">{m.abp_total}</span>}</span>
                   )}
                   {m.heb_glosses && m.heb_glosses.length > 0 && (
-                    <span className="glrow-rend"><span className="glrow-k">HEB</span><span>{m.heb_glosses.slice(0, 8).map(x => x.gloss).join(", ")}</span>{m.heb_total != null && <span className="glrow-n">{m.heb_total}</span>}</span>
+                    <span className="glrow-rend"><span className="glrow-k">HEB</span><span>{renderRend(m.heb_glosses)}</span>{m.heb_total != null && <span className="glrow-n">{m.heb_total}</span>}</span>
                   )}
                   {m.kjv_glosses && m.kjv_glosses.length > 0 && (
-                    <span className="glrow-rend"><span className="glrow-k">KJV</span><span>{m.kjv_glosses.slice(0, 8).map(x => x.gloss).join(", ")}</span>{m.kjv_total != null && <span className="glrow-n">{m.kjv_total}</span>}</span>
+                    <span className="glrow-rend"><span className="glrow-k">KJV</span><span>{renderRend(m.kjv_glosses)}</span>{m.kjv_total != null && <span className="glrow-n">{m.kjv_total}</span>}</span>
                   )}
                   {m.bsb_glosses && m.bsb_glosses.length > 0 && (
-                    <span className="glrow-rend"><span className="glrow-k">BSB</span><span>{m.bsb_glosses.slice(0, 8).map(x => x.gloss).join(", ")}</span>{m.bsb_total != null && <span className="glrow-n">{m.bsb_total}</span>}</span>
+                    <span className="glrow-rend"><span className="glrow-k">BSB</span><span>{renderRend(m.bsb_glosses)}</span>{m.bsb_total != null && <span className="glrow-n">{m.bsb_total}</span>}</span>
                   )}
                   {!(m.abp_glosses && m.abp_glosses.length) && !(m.heb_glosses && m.heb_glosses.length)
                     && !(m.kjv_glosses && m.kjv_glosses.length) && !(m.bsb_glosses && m.bsb_glosses.length)
