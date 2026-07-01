@@ -139,32 +139,14 @@ function _dedupByOutlet(members) {
 const _SRC_DEPTH = 15;
 
 function NewsStory({ story, view, onMark, readOnly, since, until, onSelect, selected }) {
-  const [open, setOpen] = useState(false);
-  const [showOld, setShowOld] = useState(false);
-  const [showMore, setShowMore] = useState(false);
   const top = story.sources[0] || {};
   const tier = _scoreTier(story.score);
-  // One citation row: the anchor wraps ONLY the outlet name (inline, so the click/pointer
-  // hugs the text), with the date as a sibling span OUTSIDE the link — not clickable.
-  const srcRow = (m, key) => (
-    <div key={key} className="news-src-row">
-      <a className="news-src" href={m.url || "#"} target="_blank" rel="noopener noreferrer"
-         onClick={(e) => e.stopPropagation()}>{m.src || "?"}</a>
-      {m.d && <span className="news-src-date">{m.d}</span>}
-    </div>
-  );
-  // Expanded citation list = the per-OUTLET deduped representatives (each outlet's newest
-  // article), newest-first, dated. With a date window active it splits to match the card's
-  // in-window "+N more" promise: in-window outlets show by default, the older out-of-window
-  // coverage tucks behind a fold. No window = the full deduped list, no fold. Display only —
-  // card-level membership/face/score/date/count are the shipped windowed-recompute fix's.
-  const reps = _dedupByOutlet(story.members);
-  const windowOn = !!(since || until);
-  const recent = windowOn ? reps.filter(m => _inWindow(m.d, since, until)) : reps;
-  const older = windowOn ? reps.filter(m => !_inWindow(m.d, since, until)) : [];
+  // A plain, non-interactive cluster-size signal (distinct outlets). The why + the full
+  // per-outlet article list now live in the right rail on selection, not a card expander.
+  const srcCount = new Set((story.members || []).map(m => m.src || "?")).size;
   const mark = (status, e) => { if (e) e.stopPropagation(); if (!readOnly) onMark(story, status); };
   // Click the card BODY to inspect why it scored (the rail); the headline link and the
-  // Keep/Dismiss + "+N more" buttons stop the bubble, so they keep their own action.
+  // Keep/Dismiss buttons stop the bubble, so they keep their own action.
   const pick = onSelect ? () => onSelect(story) : undefined;
   return (
     <div className={"news-story" + (onSelect ? " news-story--click" : "") + (selected ? " on" : "")}
@@ -176,43 +158,17 @@ function NewsStory({ story, view, onMark, readOnly, since, until, onSelect, sele
            onClick={(e) => e.stopPropagation()}>
           {_stripOutlet(story.title)}
         </a>
-        {story.why && <div className="news-why">{story.why}</div>}
-        {/* Dates FIRST so they start at the same left edge on every card (skimmable down
-            the column); a lone single date leads here too, aligned with "peaked" on range
-            cards. Outlet moves to the end as secondary reference. */}
+        {/* Body = headline + thread + date + a plain source count. The why and the full
+            per-outlet article list now render in the right rail on selection. */}
         <div className="news-meta-line">
           <span>{_dateRange(story)}</span>
-          {story.count > 1 && (
+          {srcCount > 0 && (
             <>
               <span>·</span>
-              <button className="news-srcmore"
-                      onClick={(e) => { e.stopPropagation(); setOpen(o => !o); }}>
-                +{story.count - 1} more {open ? "▲" : "▼"}
-              </button>
+              <span>{srcCount} {srcCount === 1 ? "source" : "sources"}</span>
             </>
           )}
-          <span>·</span>
-          <span>{top.source || "?"}</span>
         </div>
-        {open && story.count > 1 && (
-          <div className="news-sources">
-            {recent.slice(0, _SRC_DEPTH).map((m, i) => srcRow(m, i))}
-            {recent.length > _SRC_DEPTH && !showMore && (
-              <button className="news-srcmore"
-                      onClick={(e) => { e.stopPropagation(); setShowMore(true); }}>
-                show more sources (+{recent.length - _SRC_DEPTH}) ▾
-              </button>
-            )}
-            {showMore && recent.slice(_SRC_DEPTH).map((m, i) => srcRow(m, "r" + i))}
-            {older.length > 0 && !showOld && (
-              <button className="news-srcmore"
-                      onClick={(e) => { e.stopPropagation(); setShowOld(true); }}>
-                show earlier coverage (+{older.length}) ▾
-              </button>
-            )}
-            {showOld && older.map((m, i) => srcRow(m, "o" + i))}
-          </div>
-        )}
       </div>
       <div className="news-actions">
         {view === "inbox" ? (
