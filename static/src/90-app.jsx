@@ -240,7 +240,12 @@ function App() {
   // Visitor stats: count this page load once (the server skips the owner's own
   // visits), and figure out whether the logged-in user is the owner so we can show
   // the private Stats tab. Re-check only when the signed-in email actually changes.
-  const [owner, setOwner] = useState(false);
+  // Seed owner SYNCHRONOUSLY from the last-known value (like newsReader above) so the first
+  // painted frame already has the right News nav visibility. Without this, owner starts false
+  // and only flips true after the async /api/stats/owner fetch below — Firefox paints that
+  // first newsless frame, so the News nav flashed in ~500ms late on refresh. The fetch still
+  // runs and corrects the cache (e.g. after a logout).
+  const [owner, setOwner] = useState(() => { try { return localStorage.getItem("lexica.owner.v1") === "1"; } catch (e) { return false; } });
   const [authEmail, setAuthEmail] = useState(() => { try { return (NotesStore.authInfo() || {}).email || null; } catch (e) { return null; } });
   const [authName, setAuthName] = useState(() => { try { return (NotesStore.authInfo() || {}).name || null; } catch (e) { return null; } });
   const [authOpen, setAuthOpen] = useState(null);   // header "Log in" → sign-in popup
@@ -258,7 +263,11 @@ function App() {
       setAuthEmail(email);
       if (email === last) return;
       last = email;
-      api.statsOwner().then(d => setOwner(!!(d && d.owner)));
+      api.statsOwner().then(d => {
+        const o = !!(d && d.owner);
+        setOwner(o);
+        try { localStorage.setItem("lexica.owner.v1", o ? "1" : "0"); } catch (e) {}
+      });
     };
     check();
     return NotesStore.subscribe(check);   // setAuth notifies on login/logout
