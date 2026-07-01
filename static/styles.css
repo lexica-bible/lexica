@@ -4676,12 +4676,14 @@ button.study-verse-ref { border: none; }
 .note-center .note-edit-body { gap: 14px; }
 .note-center .note-textarea { min-height: 260px; }
 
-/* right inspect — the anchored verse. A NEW surface → below the nav. */
-.zinspect.notes-inspect { top: var(--hdr-h); }
+/* right inspect — the anchored verse. Floats top:0 OVER the navy header, unified with
+   News / Word study; a full header-height band clears it + the account pill is shifted. */
+.zinspect.notes-inspect { top: 0; }
+.app.view-notes .hdr-right { margin-right: calc(var(--sidebar-w) + 12px); }
 .note-insp { flex: 1; min-height: 0; display: flex; flex-direction: column; }
-.note-insp-band { flex: 0 0 auto; box-sizing: border-box; padding: 12px 18px; border-bottom: 1px solid var(--rule);
-  font-size: 11px; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; color: var(--ink-3);
-  background: var(--paper); }
+.note-insp-band { flex: 0 0 auto; box-sizing: border-box; min-height: var(--hdr-h);
+  display: flex; align-items: center; padding: 0 18px; border-bottom: 1px solid var(--rule);
+  font-family: var(--f-serif); font-size: 16px; font-weight: 600; color: var(--ink); background: var(--paper); }
 .note-insp-scroll { flex: 1; min-height: 0; overflow-y: auto; padding: 16px 16px 60px; }
 
 /* ============================================================

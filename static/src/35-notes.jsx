@@ -222,19 +222,21 @@ function NoteCenterEditor({ noteId, onClose, onReadInContext }) {
 // view while you write. Depth-1, no drill. Journal / non-Bible notes have no
 // anchor, so it shows an empty state.
 function NoteVerseInspect({ note, onReadInContext }) {
-  if (!note || note.corpus !== "bible" || !note.start) {
-    return <ZoneEmpty icon={<Icon.Note/>} title="No verse anchored"
-      sub="Journal pages and imported notes aren’t tied to a verse, so nothing shows here." />;
-  }
+  const anchored = note && note.corpus === "bible" && note.start;
+  // A full header-height band clears the navy header (the inspect floats top:0, unified
+  // with News / Word study). Band title = the verse ref when anchored, else a caption.
+  const label = anchored ? (note.refLabel || `${note.book} ${note.chapter}:${note.start.verse}`) : "Anchored verse";
   // heb/bsb/kjv notes show in their own text; everything else is ABP.
-  const tm = ["kjv", "bsb", "heb"].includes(note.translation) ? note.translation : "abp";
-  const label = note.refLabel || `${note.book} ${note.chapter}:${note.start.verse}`;
+  const tm = anchored && ["kjv", "bsb", "heb"].includes(note.translation) ? note.translation : "abp";
   return (
     <div className="note-insp">
-      <div className="note-insp-band">Anchored verse</div>
+      <div className="note-insp-band">{label}</div>
       <div className="note-insp-scroll">
-        <VerseRow book={note.book} chapter={note.chapter} verse={note.start.verse}
-          label={label} textMode={tm} onReadInContext={onReadInContext} />
+        {anchored
+          ? <VerseRow book={note.book} chapter={note.chapter} verse={note.start.verse}
+              label={label} textMode={tm} onReadInContext={onReadInContext} />
+          : <ZoneEmpty icon={<Icon.Note/>} title="No verse anchored"
+              sub="Journal pages and imported notes aren’t tied to a verse, so nothing shows here." />}
       </div>
     </div>
   );
@@ -506,7 +508,14 @@ function NotesView({ onOpen, isMobile, onReadInContext }) {
         : <ZoneEmpty icon={<Icon.Note/>} title="No note open" sub="Pick a note from the list to read and edit it here." />);
 
   const inspectContent = mode === "journal"
-    ? <ZoneEmpty icon={<Icon.Book/>} title="Journal" sub="Journal pages aren’t tied to a verse, so nothing shows here." />
+    ? (
+        <div className="note-insp">
+          <div className="note-insp-band">Journal</div>
+          <div className="note-insp-scroll">
+            <ZoneEmpty icon={<Icon.Book/>} title="Journal" sub="Journal pages aren’t tied to a verse, so nothing shows here." />
+          </div>
+        </div>
+      )
     : <NoteVerseInspect note={selNote} onReadInContext={onReadInContext} />;
 
   return (
