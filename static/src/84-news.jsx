@@ -496,7 +496,9 @@ function NewsView({ isMobile }) {
   const copyShortlist = () => {
     const blocks = (stories || [])
       .map(s => {
-        const url = (s.sources[0] || {}).url || "";
+        // the face article — the headline shown on the card, so title and
+        // link agree (sources[0] was the newest-dated row, a different article)
+        const url = s.url || "";
         return url ? `${s.title}\n${url}` : "";
       })
       .filter(Boolean);
