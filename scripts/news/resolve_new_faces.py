@@ -16,7 +16,13 @@ Pick rule (all three must hold):
   1. face url is a Google News wrapper
   2. resolved_url IS NULL (never redoes cached rows; DOES retry last night's
      failures — they're still NULL and still in the window)
-  3. face row's first_seen is within the recency window (default 50h)
+  3. face row's PUBLISHED date is within the recency window (default 50h)
+
+The window is on the article's OWN publish date, NOT first_seen (our pull time).
+That matters: adding a new source freshly pulls thousands of YEARS-old articles,
+all stamped with today's first_seen — gating on first_seen would forward-fill the
+whole backlog. Gating on published only sweeps genuinely recent stories; an old
+article we just discovered gets resolve-on-copy if it's ever copied.
 
 The NULL guard does the real work; the window is only a floor on how far back to
 look. 50h (not 26h) so a single missed/late cron night still gets swept next run.
@@ -64,7 +70,7 @@ def _has_col(conn, table, col):
 
 def _faces(conn, has_event):
     """Every cluster's face row (same pick the live serializer uses)."""
-    cols = "i.id, i.url, i.title, i.first_seen, i.source, i.published, i.score, i.ai_thread"
+    cols = "i.id, i.url, i.title, i.source, i.published, i.score, i.ai_thread"
     if has_event:
         cols += ", i.event"
     rows = conn.execute(
@@ -101,10 +107,10 @@ def run():
     faces = _faces(conn, has_event)
     todo = []
     for f in faces:
-        fs = f["first_seen"] or ""
+        pub = f["published"] or ""
         if not is_wrapper(f["url"]):
             continue
-        if fs < cutoff:                     # outside the recency window (or undated)
+        if pub < cutoff:                    # article published outside the window (or undated)
             continue
         cur = conn.execute("SELECT resolved_url FROM items WHERE id = ?",
                            (f["id"],)).fetchone()
