@@ -34,6 +34,18 @@ IRREGULAR = {
     "cherub": "cherub",   "cherubim": "cherub",  "cherubims": "cherub",
 }
 
+# Attested -s-ending words that are NOT plurals — checked BEFORE the singularizer so its
+# bare -s strip can't mangle them (the read caught news->new, does->doe, Heres->here;
+# this/thus harmless today but fragile, closed now). Self-map = leave whole.
+# Case-insensitive (normalize lowercases first), so "Heres" the place name is covered.
+# NOTE: -ous words (precious, gracious…) are handled by the singularizer's -ous guard,
+# not here — no need to list them.
+INVARIANT = frozenset({"news", "does", "this", "thus", "heres"})
+
+# Leading/trailing quotes + the possessive tail get stripped before matching, so a
+# rendering like  "why / man's / “surely  reaches its bare word.
+_QUOTES = "\"'“”‘’"   # straight " ' + curly “ ” ‘ ’
+
 _VOWELS = frozenset("aeiou")
 # -es strips only after a sibilant cluster that makes -es its own syllable, so
 # "boxes"->"box" and "matches"->"match" but "houses"->"house" (falls to plain -s).
@@ -47,6 +59,8 @@ def singularize(w):
         return w
     if w.endswith("ss"):                       # witness, grass — never strip
         return w
+    if w.endswith("ous"):                      # gracious, righteous, precious — never a plural
+        return w
     if w.endswith("ies") and w[-4] not in _VOWELS:   # cities->city (consonant + ies)
         return w[:-3] + "y"
     for suf in _ES_SUFFIXES:                    # boxes->box, matches->match, kisses->kiss
@@ -57,15 +71,28 @@ def singularize(w):
     return w
 
 
+def _depunct(w):
+    """Strip leading/trailing quotes + a possessive tail (leading/trailing only — never
+    touch a real internal hyphen/apostrophe beyond the possessive 's)."""
+    w = w.strip(_QUOTES).strip()
+    if len(w) > 2 and w[-1] == "s" and w[-2] in "'’":   # man's -> man, children's -> children
+        w = w[:-2]
+    return w
+
+
 def normalize(word):
     """Collapse a word to its number-neutral key. Used identically on both sides of the
     finder's match, so normalize(query)==normalize(rendering) is the whole contract."""
     if not word:
         return word
-    w = word.strip().lower()
-    if w.endswith("ss"):        # invariant first: keep witness/grass inert
+    w = _depunct(word.strip().lower())
+    if not w:
         return w
-    key = IRREGULAR.get(w)
+    if w.endswith("ss"):        # -ss guard: keep witness/grass/pass inert
+        return w
+    if w in INVARIANT:          # attested non-plural -s words: leave whole
+        return w
+    key = IRREGULAR.get(w)      # irregular / self-mapped variants -> canonical key
     if key is not None:
         return key
     return singularize(w)

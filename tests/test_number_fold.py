@@ -62,3 +62,30 @@ def test_no_overfold_short_words():
     # Short words that merely end in s are not plurals.
     assert normalize("its") == "its"
     assert normalize("was") == "was"
+
+
+def test_punctuation_pre_step():
+    # Leading/trailing quotes + possessive tail strip to the bare word.
+    assert normalize('"why') == "why"
+    assert normalize('“surely') == "surely"
+    assert normalize("man's") == "man"          # possessive + irregular -> "man"
+    assert normalize("children's") == "child"   # possessive on an irregular plural
+    assert normalize("sons'") == "son"           # trailing apostrophe, then regular fold
+
+
+def test_invariant_s_words():
+    # The real collisions the read caught — non-plural -s words, left whole so the
+    # bare -s strip can't merge them into a different word.
+    for w in ("news", "does", "this", "thus", "heres"):
+        assert normalize(w) == w
+    assert normalize("Heres") == "heres"          # place name (H2776), case-insensitive
+    # and they must NOT collide with the words they were bleeding into:
+    assert normalize("news") != normalize("new")
+    assert normalize("does") != normalize("doe")
+
+
+def test_ous_words_never_strip():
+    # "-ous" is never a plural ending — covers a whole visual category in one rule.
+    for w in ("gracious", "righteous", "precious", "various", "glorious", "pious"):
+        assert singularize(w) == w
+        assert normalize(w) == w
