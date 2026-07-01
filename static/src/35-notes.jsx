@@ -92,8 +92,10 @@ function NoteColorRow({ value, onPick }) {
   );
 }
 
-// Write / edit / delete a single note. Reuses the .detail shell.
-function NotesPanel({ noteId, isMobile, onClose }) {
+// Shared editor state for a single note — used by BOTH the Library rail panel
+// (NotesPanel) AND the Notes-tab center editor (NoteCenterEditor), so the two
+// can never drift. onClose is the caller's "done" (close the panel / deselect).
+function useNoteEditor(noteId, isMobile, onClose) {
   const note = NotesStore.get(noteId);
   const [body, setBody] = useState(note ? (note.body || "") : "");
   const [color, setColor] = useState(note ? (note.color || null) : null);
@@ -118,49 +120,62 @@ function NotesPanel({ noteId, isMobile, onClose }) {
     else NotesStore.update(noteId, { body, color, bookmark });
     onClose();
   };
-  // Swipe-down-to-close on mobile (same hook the word / xref / summary sheets use).
-  const { sheetRef, scrollRef } = useSwipeToDismiss(close);
 
-  if (!note) return null;
+  return { note, body, setBody, color, setColor, bookmark, setBookmark, taRef, save, del, close };
+}
+
+// The editor fields (quoted snippet + color row + textarea + Save/Delete). scrollRef
+// = the mobile swipe-to-dismiss scroll container (desktop leaves it undefined).
+function NoteEditFields({ ed, scrollRef }) {
+  return (
+    <div className="detail-body note-edit-body" ref={scrollRef}>
+      {ed.note.snippet && <blockquote className="note-snippet">“{ed.note.snippet}”</blockquote>}
+      <NoteColorRow value={ed.color} onPick={ed.setColor} />
+      <textarea
+        ref={ed.taRef}
+        className="note-textarea"
+        value={ed.body}
+        onChange={(e) => ed.setBody(e.target.value)}
+        placeholder="Write your note…"
+      />
+      <div className="note-actions">
+        <button className="note-save" onClick={ed.save}>Save</button>
+        <button className="note-del" onClick={ed.del}>Delete</button>
+      </div>
+    </div>
+  );
+}
+
+// Write / edit / delete a single note in the Library rail (desktop aside / mobile sheet).
+function NotesPanel({ noteId, isMobile, onClose }) {
+  const ed = useNoteEditor(noteId, isMobile, onClose);
+  // Swipe-down-to-close on mobile (same hook the word / xref / summary sheets use).
+  const { sheetRef, scrollRef } = useSwipeToDismiss(ed.close);
+
+  if (!ed.note) return null;
+  const note = ed.note;
 
   const head = (
     <div className="detail-head">
       <div className="detail-head-l">
         <span className="detail-pos summary-pos">{note.refLabel || (note.book + " " + note.chapter)}</span>
       </div>
-      <button className={"note-bm-toggle" + (bookmark ? " on" : "")} onClick={() => setBookmark(b => !b)}
-        title={bookmark ? "Bookmarked" : "Bookmark this"} aria-label="Toggle bookmark" aria-pressed={bookmark}>
+      <button className={"note-bm-toggle" + (ed.bookmark ? " on" : "")} onClick={() => ed.setBookmark(b => !b)}
+        title={ed.bookmark ? "Bookmarked" : "Bookmark this"} aria-label="Toggle bookmark" aria-pressed={ed.bookmark}>
         <Icon.Bookmark/>
       </button>
-      {!isMobile && <button className="detail-close" onClick={close} aria-label="Close"><Icon.Close/></button>}
-    </div>
-  );
-  const content = (
-    <div className="detail-body note-edit-body" ref={isMobile ? scrollRef : undefined}>
-      {note.snippet && <blockquote className="note-snippet">“{note.snippet}”</blockquote>}
-      <NoteColorRow value={color} onPick={setColor} />
-      <textarea
-        ref={taRef}
-        className="note-textarea"
-        value={body}
-        onChange={(e) => setBody(e.target.value)}
-        placeholder="Write your note…"
-      />
-      <div className="note-actions">
-        <button className="note-save" onClick={save}>Save</button>
-        <button className="note-del" onClick={del}>Delete</button>
-      </div>
+      {!isMobile && <button className="detail-close" onClick={ed.close} aria-label="Close"><Icon.Close/></button>}
     </div>
   );
 
   if (isMobile) {
     return (
       <>
-        <div className="sheet-scrim" onClick={close}/>
+        <div className="sheet-scrim" onClick={ed.close}/>
         <aside ref={sheetRef} className="detail detail-sheet note-sheet" role="dialog" aria-label="Note">
           <div className="sheet-drag-zone" aria-hidden="true"><div className="sheet-handle"></div></div>
           {head}
-          {content}
+          <NoteEditFields ed={ed} scrollRef={scrollRef} />
         </aside>
       </>
     );
@@ -168,8 +183,60 @@ function NotesPanel({ noteId, isMobile, onClose }) {
   return (
     <aside className="detail zinspect detail-side note-side" role="complementary" aria-label="Note">
       {head}
-      {content}
+      <NoteEditFields ed={ed} />
     </aside>
+  );
+}
+
+// DESKTOP Notes tab — the selected note open in the center column (edit in place;
+// the anchored verse rides along in the right rail). Reuses the same editor fields
+// as the Library rail, so they can't drift.
+function NoteCenterEditor({ noteId, onClose, onReadInContext }) {
+  const ed = useNoteEditor(noteId, false, onClose);
+  if (!ed.note) return null;
+  const note = ed.note;
+  const canRead = note.corpus === "bible" && note.start;
+  return (
+    <div className="note-center">
+      <div className="note-center-head">
+        <span className="note-center-ref">{note.refLabel || (note.book + " " + note.chapter)}</span>
+        <div className="note-center-tools">
+          {canRead && (
+            <button className="note-read-link" onClick={() => onReadInContext(note.book, note.chapter, note.start.verse)}>
+              Read in context ›
+            </button>
+          )}
+          <button className={"note-bm-toggle" + (ed.bookmark ? " on" : "")} onClick={() => ed.setBookmark(b => !b)}
+            title={ed.bookmark ? "Bookmarked" : "Bookmark this"} aria-label="Toggle bookmark" aria-pressed={ed.bookmark}>
+            <Icon.Bookmark/>
+          </button>
+          <button className="detail-close" onClick={ed.close} aria-label="Close"><Icon.Close/></button>
+        </div>
+      </div>
+      <NoteEditFields ed={ed} />
+    </div>
+  );
+}
+
+// DESKTOP Notes tab — the right inspect rail: the note's anchored verse, kept in
+// view while you write. Depth-1, no drill. Journal / non-Bible notes have no
+// anchor, so it shows an empty state.
+function NoteVerseInspect({ note, onReadInContext }) {
+  if (!note || note.corpus !== "bible" || !note.start) {
+    return <ZoneEmpty icon={<Icon.Note/>} title="No verse anchored"
+      sub="Journal pages and imported notes aren’t tied to a verse, so nothing shows here." />;
+  }
+  // heb/bsb/kjv notes show in their own text; everything else is ABP.
+  const tm = ["kjv", "bsb", "heb"].includes(note.translation) ? note.translation : "abp";
+  const label = note.refLabel || `${note.book} ${note.chapter}:${note.start.verse}`;
+  return (
+    <div className="note-insp">
+      <div className="note-insp-band">Anchored verse</div>
+      <div className="note-insp-scroll">
+        <VerseRow book={note.book} chapter={note.chapter} verse={note.start.verse}
+          label={label} textMode={tm} onReadInContext={onReadInContext} />
+      </div>
+    </div>
   );
 }
 
@@ -235,28 +302,23 @@ function JournalEditor({ pageId, onBack }) {
   );
 }
 
-// The Journal side of the Notes tab — a list of free-form pages + an editor.
-function JournalView() {
+// The list of free-form journal pages + a "New page" button. Shared by the
+// self-contained mobile JournalView and the desktop shell's rail.
+function JournalList({ editingId, onOpen, onNew }) {
   useNotesVersion();
-  const [editing, setEditing] = useState(null);
   const pages = NotesStore.journals();
-
-  if (editing) return <JournalEditor pageId={editing} onBack={() => setEditing(null)} />;
-
   const fmtDate = (iso) => { try { return new Date(iso).toLocaleDateString(); } catch (e) { return ""; } };
-  const newPage = () => { const p = NotesStore.createJournal(); setEditing(p.id); };
-
   return (
     <div className="journal-view">
       <div className="journal-toolbar">
-        <button className="notes-tool-btn on" onClick={newPage}>+ New page</button>
+        <button className="notes-tool-btn on" onClick={onNew}>+ New page</button>
       </div>
       {pages.length === 0 ? (
         <div className="notes-empty">No journal pages yet. Tap “New page” to start writing — free-form, not tied to any verse.</div>
       ) : (
         <ul className="journal-list">
           {pages.map(p => (
-            <li key={p.id} className="journal-item" onClick={() => setEditing(p.id)}>
+            <li key={p.id} className={"journal-item" + (p.id === editingId ? " on" : "")} onClick={() => onOpen(p.id)}>
               <div className="journal-item-title">{(p.title || "").trim() || "Untitled page"}</div>
               {(p.body || "").trim() && <div className="journal-item-preview">{p.body.trim().slice(0, 160)}</div>}
               <div className="journal-item-date">{fmtDate(p.updated)}</div>
@@ -268,8 +330,19 @@ function JournalView() {
   );
 }
 
-// The Notes tab — list + search of every saved note.
-function NotesView({ onOpen }) {
+// The Journal side of the Notes tab (MOBILE / self-contained) — the list swaps to a
+// full-page editor in place. Desktop composes JournalList + JournalEditor into the shell.
+function JournalView() {
+  const [editing, setEditing] = useState(null);
+  if (editing) return <JournalEditor pageId={editing} onBack={() => setEditing(null)} />;
+  const newPage = () => { const p = NotesStore.createJournal(); setEditing(p.id); };
+  return <JournalList editingId={null} onOpen={setEditing} onNew={newPage} />;
+}
+
+// The Notes tab. Desktop = the shared three-zone Shell (rail = note index · strip =
+// search/filter · center = editor · right = the anchored verse). Mobile = the old
+// single column (tapping a note jumps to the Library editor, unchanged).
+function NotesView({ onOpen, isMobile, onReadInContext }) {
   useNotesVersion();
   const [q, setQ] = useState("");
   const [filter, setFilter] = useState("all");   // all | bookmark | highlight | note
@@ -280,6 +353,8 @@ function NotesView({ onOpen }) {
   const [authOpen, setAuthOpen] = useState(null);   // null | "login" | "signup"
   const [acctOpen, setAcctOpen] = useState(false);  // account / options panel
   const [mode, setMode] = useState("notes");        // notes | journal
+  const [selectedId, setSelectedId] = useState(null);   // desktop: note open in the center editor
+  const [journalEditing, setJournalEditing] = useState(null);   // desktop: journal page in the center
   const acct = NotesStore.authInfo();
   let notes = NotesStore.search(q);               // already newest-first
   if (filter === "bookmark") notes = notes.filter(n => n.bookmark);
@@ -310,8 +385,11 @@ function NotesView({ onOpen }) {
     sections.forEach(s => s.items.sort(byRef));
   }
 
+  // Desktop opens the note in the center editor; mobile jumps to the Library editor.
+  const openItem = isMobile ? onOpen : (n) => setSelectedId(n.id);
+
   const renderItem = (n) => (
-    <li key={n.id} className="notes-item" onClick={() => onOpen(n)}>
+    <li key={n.id} className={"notes-item" + (!isMobile && n.id === selectedId ? " on" : "")} onClick={() => openItem(n)}>
       <div className="notes-item-ref">
         {(n.body || n.bookmark) && (
           <span className="notes-item-type" aria-hidden="true">{n.body ? <Icon.Note/> : <Icon.Bookmark/>}</span>
@@ -324,77 +402,135 @@ function NotesView({ onOpen }) {
     </li>
   );
 
-  return (
-    <div className="notes-view">
-      <div className="notes-view-head">
-        <div className="notes-view-titlerow">
-          <h2 className="notes-view-title">My Notes</h2>
-          <div className="notes-acct">
-            {acct.email ? (
-              <button className="notes-acct-email" title="Account & options" onClick={() => setAcctOpen(true)}>
-                <span className="notes-acct-addr">{acct.name || acct.email}</span>
-                <span className="notes-acct-caret" aria-hidden="true">▾</span>
-              </button>
-            ) : (
-              <>
-                <button className="notes-tool-btn" onClick={() => setAuthOpen("login")}>Log in</button>
-                <button className="notes-tool-btn" onClick={() => setAuthOpen("signup")}>Sign up</button>
-              </>
-            )}
-          </div>
+  // ── Shared fragments ──────────────────────────────────────────────────────
+  const modeSeg = (
+    <div className="notes-mode seg">
+      <button className={"seg-b" + (mode === "notes" ? " on" : "")} onClick={() => setMode("notes")}>Verse notes</button>
+      <button className={"seg-b" + (mode === "journal" ? " on" : "")} onClick={() => setMode("journal")}>Journal</button>
+    </div>
+  );
+
+  const notesControls = (
+    <>
+      <input className="notes-search" type="text" placeholder="Search your notes…" value={q} onChange={(e) => setQ(e.target.value)} />
+      <div className="notes-controls">
+        <div className="notes-filter seg">
+          {[["all", "All"], ["bookmark", "★ Bookmarks"], ["highlight", "🎨 Highlights"], ["note", "✎ Notes"]].map(([k, lbl]) => (
+            <button key={k} className={"seg-b" + (filter === k ? " on" : "")} onClick={() => setFilter(k)}>{lbl}</button>
+          ))}
         </div>
-        <div className="notes-mode seg">
-          <button className={"seg-b" + (mode === "notes" ? " on" : "")} onClick={() => setMode("notes")}>Verse notes</button>
-          <button className={"seg-b" + (mode === "journal" ? " on" : "")} onClick={() => setMode("journal")}>Journal</button>
+        <div className="seg">
+          <button className={"seg-b" + (sort === "recent" ? " on" : "")} onClick={() => setSort("recent")}>Recent</button>
+          <button className={"seg-b" + (sort === "ref" ? " on" : "")} onClick={() => setSort("ref")}>Reference</button>
         </div>
-        {mode === "notes" && <>
-        <input
-          className="notes-search"
-          type="text"
-          placeholder="Search your notes…"
-          value={q}
-          onChange={(e) => setQ(e.target.value)}
-        />
-        <div className="notes-controls">
-          <div className="notes-filter seg">
-            {[["all", "All"], ["bookmark", "★ Bookmarks"], ["highlight", "🎨 Highlights"], ["note", "✎ Notes"]].map(([k, lbl]) => (
-              <button key={k} className={"seg-b" + (filter === k ? " on" : "")} onClick={() => setFilter(k)}>{lbl}</button>
-            ))}
-          </div>
-          <div className="seg">
-            <button className={"seg-b" + (sort === "recent" ? " on" : "")} onClick={() => setSort("recent")}>Recent</button>
-            <button className={"seg-b" + (sort === "ref" ? " on" : "")} onClick={() => setSort("ref")}>Reference</button>
-          </div>
-          <button className={"notes-tool-btn" + (group ? " on" : "")} onClick={() => setGroup(g => !g)}>Group by book</button>
-        </div>
-        </>}
+        <button className={"notes-tool-btn" + (group ? " on" : "")} onClick={() => setGroup(g => !g)}>Group by book</button>
       </div>
-      {mode === "journal" ? <JournalView/> : notes.length === 0 ? (
-        <div className="notes-empty">
-          {q || filter !== "all"
-            ? "Nothing matches that."
-            : "No notes yet. In the Library, select some text in a verse and choose “Add note.”"}
+    </>
+  );
+
+  const notesListContent = notes.length === 0 ? (
+    <div className="notes-empty">
+      {q || filter !== "all"
+        ? "Nothing matches that."
+        : "No notes yet. In the Library, select some text in a verse and choose “Add note.”"}
+    </div>
+  ) : group ? (
+    sections.map(s => {
+      const open = !collapsed.has(s.key);
+      return (
+        <div key={s.key} className="notes-group">
+          <button className={"notes-group-head" + (open ? " open" : "")} onClick={() => toggleSection(s.key)} aria-expanded={open}>
+            <span className="notes-group-caret">▸</span>
+            <span className="notes-group-label">{s.label}</span>
+            <span className="notes-group-count">{s.items.length}</span>
+          </button>
+          {open && <ul className="notes-list">{s.items.map(renderItem)}</ul>}
         </div>
-      ) : group ? (
-        sections.map(s => {
-          const open = !collapsed.has(s.key);
-          return (
-            <div key={s.key} className="notes-group">
-              <button className={"notes-group-head" + (open ? " open" : "")} onClick={() => toggleSection(s.key)} aria-expanded={open}>
-                <span className="notes-group-caret">▸</span>
-                <span className="notes-group-label">{s.label}</span>
-                <span className="notes-group-count">{s.items.length}</span>
-              </button>
-              {open && <ul className="notes-list">{s.items.map(renderItem)}</ul>}
-            </div>
-          );
-        })
-      ) : (
-        <ul className="notes-list">{notes.map(renderItem)}</ul>
-      )}
+      );
+    })
+  ) : (
+    <ul className="notes-list">{notes.map(renderItem)}</ul>
+  );
+
+  const modals = (
+    <>
       {authOpen && <AuthModal mode={authOpen} onClose={() => setAuthOpen(null)} />}
       {acctOpen && <AccountModal onClose={() => setAcctOpen(false)} />}
-    </div>
+    </>
+  );
+
+  // ── MOBILE: the old single column (unchanged behaviour) ───────────────────
+  if (isMobile) {
+    return (
+      <div className="notes-view">
+        <div className="notes-view-head">
+          <div className="notes-view-titlerow">
+            <h2 className="notes-view-title">My Notes</h2>
+            <div className="notes-acct">
+              {acct.email ? (
+                <button className="notes-acct-email" title="Account & options" onClick={() => setAcctOpen(true)}>
+                  <span className="notes-acct-addr">{acct.name || acct.email}</span>
+                  <span className="notes-acct-caret" aria-hidden="true">▾</span>
+                </button>
+              ) : (
+                <>
+                  <button className="notes-tool-btn" onClick={() => setAuthOpen("login")}>Log in</button>
+                  <button className="notes-tool-btn" onClick={() => setAuthOpen("signup")}>Sign up</button>
+                </>
+              )}
+            </div>
+          </div>
+          {modeSeg}
+          {mode === "notes" && notesControls}
+        </div>
+        {mode === "journal" ? <JournalView/> : notesListContent}
+        {modals}
+      </div>
+    );
+  }
+
+  // ── DESKTOP: the shared three-zone Shell ──────────────────────────────────
+  const selNote = selectedId ? NotesStore.get(selectedId) : null;
+  const newJournalPage = () => { const p = NotesStore.createJournal(); setJournalEditing(p.id); };
+
+  const railBody = mode === "journal"
+    ? <JournalList editingId={journalEditing} onOpen={setJournalEditing} onNew={newJournalPage} />
+    : notesListContent;
+
+  const centerContent = mode === "journal"
+    ? (journalEditing
+        ? <JournalEditor key={journalEditing} pageId={journalEditing} onBack={() => setJournalEditing(null)} />
+        : <ZoneEmpty icon={<Icon.Book/>} title="No page open" sub="Pick a page from the list, or start a new one." />)
+    : (selectedId
+        ? <NoteCenterEditor key={selectedId} noteId={selectedId} onClose={() => setSelectedId(null)} onReadInContext={onReadInContext} />
+        : <ZoneEmpty icon={<Icon.Note/>} title="No note open" sub="Pick a note from the list to read and edit it here." />);
+
+  const inspectContent = mode === "journal"
+    ? <ZoneEmpty icon={<Icon.Book/>} title="Journal" sub="Journal pages aren’t tied to a verse, so nothing shows here." />
+    : <NoteVerseInspect note={selNote} onReadInContext={onReadInContext} />;
+
+  return (
+    <>
+      <Shell
+        isMobile={false}
+        className="notes-frame"
+        centerClass="notes-center"
+        rail={
+          <>
+            <div className="notes-rail-top">{modeSeg}</div>
+            <div className="notes-rail-scroll">{railBody}</div>
+          </>
+        }
+        center={
+          <>
+            {mode === "notes" && <div className="notes-strip">{notesControls}</div>}
+            <div className="notes-center-body">{centerContent}</div>
+          </>
+        }
+        inspect={<aside className="zinspect notes-inspect">{inspectContent}</aside>}
+      />
+      {modals}
+    </>
   );
 }
 
