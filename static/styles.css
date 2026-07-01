@@ -270,7 +270,8 @@ input { font-family: inherit; }
 /* Nav-overflow (hamburger) — hidden until the header row runs out of room. The
    inline .hdr-nav needs ~1471px for the admin's 7 links + account before it collides
    with the floating word card's reservation (--sidebar-w + 12). Below 1500 we hide
-   the subtitle + inline nav and move the links into this menu — never a reflow. */
+   the inline nav and move the links into this menu — never a reflow. (The subtitle
+   stays; dropping the ~555px nav frees more than enough room to keep it.) */
 .hdr-burger-wrap { display: none; position: relative; }
 .hdr-burger {
   width: 34px; height: 34px; border-radius: 6px;
@@ -293,7 +294,6 @@ input { font-family: inherit; }
 .hdr-menu-link.active { color: #f6f7fa; background: rgba(255,255,255,0.08); }
 @media (max-width: 1499px) {
   .hdr-nav { display: none; }
-  .brand-sub { display: none; }
   .hdr-burger-wrap { display: block; }
 }
 
