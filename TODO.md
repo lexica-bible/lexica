@@ -80,6 +80,16 @@ LIVE 2026-07-01** (details + lessons in TODO_ARCHIVE). Remaining:
   inspect** looks balanced without cramping/wrapping the no-wrap `.news-bar` top control row (center lost
   ~80px).
 
+- **Copy-shortlist wrapper resolution — SHIPPED 2026-07-01, two loose ends to finish** (full record:
+  memory `project_news_watch` "Copy-shortlist wrapper-URL resolution chain"):
+  1. **Deploy the web app** (reload) so the copy-to-face button + `POST /api/news/resolve` (resolve-on-copy)
+     go live — the offline scripts are done but the served bundle is still old until a deploy.
+  2. **Archive backfill is draining** — `resolve_backfill_all.py` is chunked into `daily.sh` (~1000/night
+     under Google's ~1,300-call clamp), ~5,700 wrappers left, self-terminates once done (~a week). No action
+     unless a stable failing remainder persists → then the PARKED `resolve_attempts`/`resolve_failed` marker.
+  3. Post-deploy check: News → Kept → Copy shortlist shows the "Resolving…" spinner then pastes clean
+     article links, not `news.google.com/rss/...` wrappers.
+
 ---
 
 ## Code health / cleanup
