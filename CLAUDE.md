@@ -415,12 +415,21 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   "in Hebrew OT" link). **heb.db is now ALSO the Hebrew-word EVIDENCE source for Word study + Ask-corpus +
   SEO (not just a reading text) — see "Hebrew word sourcing" below + memory `project_hebrew_source_swap`.**
   Full record (the text itself): memory `project_hebrew_ot_interlinear`.
-  `study.db` — authored "study modules" (built 2026-06-12/13; **topics opened to the PUBLIC 2026-06-16**):
-  one `entries` table (row per topic / graph / name; `json` body + `type` + `status`).
+  `study.db` — authored "study modules" (built 2026-06-12/13; **the whole Study tab is ADMIN-ONLY as of
+  2026-07-01 — see GATING below**): one `entries` table (row per topic / graph / name; `json` body + `type` + `status`).
   Served by `views_study.py` (`core.study_db()`); the **Study** tab (`static/src/55-study.jsx`). Sub-switch =
   Topics · Graphs · **Seams** (`STUDY_MODULES`). SEAMS (added 2026-07-01) is a NON-study.db surface — the
   contested-word browse, read-only over `lexica_def` fork data (`/api/lexica/seams`), rendered on `<Shell>`
   (`SeamIndex`); `load()` short-circuits `mod === "seam"` so the study-entries fetch can't hijack its render.
+  **UNIFORM MASTER-DETAIL SHELL (2026-07-01):** all three surfaces wear the SAME frame — LEFT rail = the list
+  (topic/graph/seam rows, shared `study-row` form), CENTER = the content (TopicPage / GraphPage / the seam's
+  both-priors `SeamPriors` card — a full read, mounts once), RIGHT = the inspect "covenant" (why/provenance;
+  ZoneEmpty this phase — per-item detail wiring, i.e. topic verse-context / graph node-detail / seam fork-
+  grounding, is DEFERRED). ONE canonical top-strip switcher (`study-sub`, switcher left; Seams' All/Different-
+  lead filter or the admin preview toggle right). `seam-rail` is RETIRED (switcher moved up top). Inspect floats
+  `top:0` (RightStack `.study-rstack`) with a `view-study`-scoped account-pill offset, matching Word study. The
+  old centered-column (`.study-view max-width:820`) survives for the MOBILE single-column branch only. `.study-*`
+  CSS only — never touch the shared `.detail-*`. Full record: memory `project_study_modules`.
   TOPICS = a sectioned browse (collapsible subtopics + a BOOK sub-collapse, alphabetical, comma-flipped
   display titles); GRAPHS = an argument map (admin-only): a shared pool of CLAIMS joined by per-tradition LINKS, each
   claim tagged with provenance (text/lexicon = grounded; tradition/conjecture/inference = not) + each link with
@@ -432,14 +441,22 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   + the graph json shape in memory `project_study_modules`.) Topics open READ-first (Edit button, admin); a
   "Preview as reader" admin toggle skins the tab as a visitor sees it.
   Verse text = ABP prose (KJV fallback).
-  **GATING (go-live 2026-06-16): READING is split — published TOPICS + the metaV NAME-topics are PUBLIC
-  (no login); published argument GRAPHS are PUBLIC too (graphs went public; for-verse serves them to
-  everyone); all DRAFTS + every WRITE/editor route stay admin-only; private
-  `notes` are stripped from anything served to a reader.** Two-way study↔reader links: a study's verse
-  references are clickable (jump into the reader — the resolver returns book/chapter/verse), and tapping a
-  verse number shows an "In studies:" line in the xref panel (`/api/study/for-verse/<book>/<ch>/<v>`, a
-  cached verse→topics index that includes HAND-AUTHORED studies only — `source != 'metav'`, so the giant
-  Nave's imports don't blanket the text). PERF: a whole entry resolves in one batched pass (`_resolve_map`)
+  **GATING — the WHOLE Study surface is ADMIN-ONLY (2026-07-01; reversed the 2026-06-16 public go-live).**
+  BOTH sides: the Study nav link (desktop header + mobile tab) shows only for the owner/admin
+  (`{owner && …}`), AND a single `@bp.before_request` on the study blueprint (`_study_admin_only`) refuses
+  EVERY `/api/study/*` route with **403** for non-admins — one gate, all 8 routes, no drift. The Seam-index
+  data route `/api/lexica/seams` (in `views_lexica.py`) is hard-gated the same way (`if not is_admin(): 403` —
+  it flipped from an empty-200; the public per-word card `/api/lexica/<strongs>` is UNTOUCHED). A hidden link
+  over a live endpoint isn't gated — a non-admin hitting the URL/API directly gets `{"error":"forbidden"}`
+  (403), not an empty-200 or a rendered page. `is_admin()` (views_notes) reads the Bearer token; the client
+  `owner` flag (`/api/stats/owner` → `is_owner()` = `is_admin()`) is the SAME identity. **Consequence, intended:**
+  gating `for-name` + `for-verse` RETIRES the reader's Nave's-topical block AND the "In studies:" line for
+  non-admins (they vanish gracefully — the client no-ops on the 403). Curation: the Topics list shows PUBLISHED
+  topics only for a reader/admin-previewing (hides the ~1817 Nave's drafts, leaves Divine Council); admin
+  not-previewing still sees drafts with the badge (status-keyed, NEVER the `source` string). Two-way study↔reader
+  links (admin only now): a study's verse references jump into the reader (resolver returns book/chapter/verse);
+  the xref "In studies:" line (`/api/study/for-verse/<book>/<ch>/<v>`, HAND-AUTHORED studies only —
+  `source != 'metav'`). PERF: a whole entry resolves in one batched pass (`_resolve_map`)
   + an in-memory `_RESOLVED_CACHE` (a 1000-verse topic opened ~13s→~1s). The editor's verse lookup is
   **`POST /api/study/verse`** (a query param was silently dropped before the app) and normalizes a typed
   ref to its full book name (`_canonical_ref`: gen 1:1 → Genesis 1:1). Topic INTROS are AI-written,

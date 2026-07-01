@@ -44,6 +44,17 @@ LIVE 2026-07-01** (details + lessons in TODO_ARCHIVE). Remaining:
 - **PA data step for the Seam index** — run `python scripts/build_lexica_def.py --resplit --all --apply` on
   PA to write the new `divergence_type` + `lead_flip` (+ short `gloss`) into the stored forks (free, no model).
   Until then the Seams list shows but the type badges + Different-lead filter are blank.
+- **Study per-item inspect DETAIL (deferred by design, 2026-07-01)** — the whole Study tab (Topics/Graphs/Seams)
+  is now uniform master-detail on `<Shell>`, but the RIGHT inspect "covenant" is ZoneEmpty everywhere. Wire the
+  actual detail: Topics = the clicked verse in context; Graphs = the clicked claim/node's grounding; Seams = the
+  clicked fork's grounding. Each is net-new feature work. code: static/src/55-study.jsx (RightStack `push`),
+  memory `project_study_modules` + `project_three_zone_shell`.
+- **Study-on-mobile shell** — mobile Topics/Graphs/Seams still run the OLD single-column branch (`.study-view
+  .study-mobile`), not the shell. Give them the shell mobile treatment (rail/inspect as sheets), same as the
+  News-on-mobile job. code: static/src/55-study.jsx.
+- **Dead seam CSS sweep** — after the uniform-shell rewrite, `.seam-row`/`.seam-inspect`/`.seam-insp-*`/`.seam-list`
+  (desktop) are unused (rows now reuse `study-row`, list in the shared rail). Harmless, sweep when convenient.
+  code: static/styles.css.
 - **News beast-arm badge (DEFERRED, authored follow-up)** — a per-thread "which beast/arm" tag in the
   why-rail. Not built on purpose: the thread→arm map isn't 1:1 (several threads serve BOTH arms), so it's
   hand-authored content JP will sit with, then it drops into the why-section (same pattern as the Seam
