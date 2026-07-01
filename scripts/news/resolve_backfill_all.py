@@ -19,8 +19,13 @@ Shape:
     left; a second run catches 429 stragglers.
   - Fail soft per URL: a failure leaves NULL, never raises, never stalls the pool.
   - Progress every 100: resolved / failed / remaining.
+  - Chunked for the nightly cron: --limit caps how many URLs one run resolves, so
+    the archive drains in nightly passes UNDER Google's ~1,300-call clamp point.
+  - Stop-on-clamp: after --fail-abort failures in a row, assume we're rate-limited,
+    stop dispatching, flush, and exit clean. One success resets the counter.
 
-  python3 scripts/news/resolve_backfill_all.py [--db PATH] [--workers 8] [--sleep 0.3]
+  python3 scripts/news/resolve_backfill_all.py \
+      [--db PATH] [--limit 1000] [--workers 3] [--sleep 1.0] [--fail-abort 50]
 
 PARKED (as before): a permanently-unresolvable wrapper stays NULL and gets
 re-tried every run. Add a resolve_attempts marker only if that ever bites.
@@ -57,8 +62,10 @@ def _has_col(conn, table, col):
 
 def main():
     db = _arg("--db", DEFAULT_DB)
-    workers = int(_arg("--workers", 8))
-    sleep = float(_arg("--sleep", 0.3))
+    workers = int(_arg("--workers", 3))
+    sleep = float(_arg("--sleep", 1.0))
+    limit = int(_arg("--limit", 1000))
+    fail_abort = int(_arg("--fail-abort", 50))
 
     conn = sqlite3.connect(db, timeout=30)
     conn.row_factory = sqlite3.Row
@@ -74,13 +81,20 @@ def main():
         conn.close()
         sys.exit("items.resolved_url missing — run the ALTER first, then re-run.")
 
+    # how many are left overall, then take just this run's chunk
+    remaining_all = conn.execute(
+        "SELECT COUNT(*) FROM (SELECT DISTINCT url FROM items "
+        "WHERE url LIKE '%news.google.com/rss/articles/%' AND resolved_url IS NULL)"
+    ).fetchone()[0]
     urls = [r["url"] for r in conn.execute(
         "SELECT DISTINCT url FROM items "
-        "WHERE url LIKE '%news.google.com/rss/articles/%' AND resolved_url IS NULL")]
+        "WHERE url LIKE '%news.google.com/rss/articles/%' AND resolved_url IS NULL "
+        "LIMIT ?", (limit,))]
     total = len(urls)
-    print(f"unique unresolved wrappers: {total}  workers: {workers}  sleep: {sleep}s")
+    print(f"unresolved wrappers: {remaining_all} total, taking {total} this run  "
+          f"workers: {workers}  sleep: {sleep}s  fail-abort: {fail_abort}")
     if not total:
-        print("nothing to do.")
+        print("nothing to do — archive fully resolved.")
         conn.close()
         return
 
@@ -95,7 +109,18 @@ def main():
             return u, None
 
     ok = fail = 0
+    consec = 0            # failures in a row -> clamp detector
+    aborted = False
     batch = []
+
+    def flush():
+        if batch:
+            conn.executemany(
+                "UPDATE items SET resolved_url = ? WHERE url = ? "
+                "AND resolved_url IS NULL", batch)
+            conn.commit()
+            batch.clear()
+
     with ThreadPoolExecutor(max_workers=workers) as ex:
         futs = [ex.submit(work, u) for u in urls]
         for i, fut in enumerate(as_completed(futs), 1):
@@ -103,25 +128,32 @@ def main():
             if clean:
                 batch.append((clean, u))
                 ok += 1
+                consec = 0
             else:
                 fail += 1
+                consec += 1
             if len(batch) >= COMMIT_EVERY:
-                conn.executemany(
-                    "UPDATE items SET resolved_url = ? WHERE url = ? "
-                    "AND resolved_url IS NULL", batch)
-                conn.commit()
-                batch = []
+                flush()
             if i % PROGRESS_EVERY == 0:
                 print(f"  {i}/{total}  resolved {ok}  failed {fail}  "
                       f"remaining {total - i}", flush=True)
-    if batch:
-        conn.executemany(
-            "UPDATE items SET resolved_url = ? WHERE url = ? "
-            "AND resolved_url IS NULL", batch)
-        conn.commit()
+            if consec >= fail_abort:
+                # sustained failures — almost certainly Google's rate clamp. Stop
+                # dispatching (cancel the not-yet-started ones), flush, bail clean.
+                aborted = True
+                for f in futs:
+                    f.cancel()
+                break
+    flush()
 
-    print(f"done. resolved {ok}  failed {fail} (left NULL — re-run to sweep, "
-          f"or resolve-on-copy catches them)")
+    left = remaining_all - ok
+    if aborted:
+        print(f"aborted: sustained failures, likely rate-limited — "
+              f"{ok} resolved, {left} remaining. Resumes next run.")
+    else:
+        print(f"done this chunk. resolved {ok}  failed {fail}  "
+              f"{left} remaining across the archive (left NULL — next run sweeps, "
+              f"or resolve-on-copy catches them)")
     conn.close()
 
 
