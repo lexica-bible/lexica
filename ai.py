@@ -987,6 +987,21 @@ def _assemble_payload(q, results, verse_index, key_strongs_data,
     generator can run it once the prose has streamed): fold the curated picks into the
     pool, fetch any named verses the SQL missed, tag is_primary / is_additional, inject the
     hardcoded divine-council corpus, decide grounding, sort canonically, build the payload."""
+    # A verse is THEMATIC when there IS a target-word set AND the verse contains none of it
+    # (background, not lexical evidence). Bound to the target_bases PARAMETER — this function
+    # was lifted out of ai_search for the streaming tail, so it can't see ai_search's nested
+    # _is_thematic. Without this local, a fresh (uncached) streamed search NameError'd whenever
+    # it reached the two call sites below: a model-named additional verse, OR a zero-base-row
+    # result (the exact-lemma Hebrew pin always hits that — the crash that surfaced this).
+    def _is_thematic(words):
+        if not target_bases:
+            return False
+        for wd in words:
+            sb = (wd.get("strongs_base") or "").lstrip("GH").split(".")[0]
+            if sb in target_bases:
+                return False
+        return True
+
     # ── Build primary_set and fetch any missing primary verses ────────────
     dc_query = bool(_DIVINE_COUNCIL_RE.search(q))
     primary_set: set = set()
