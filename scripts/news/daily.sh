@@ -31,4 +31,7 @@ echo "==> scoring new stories (incremental — no --rescore)..."
 echo "==> grouping new stories into events..."
 "$PY" scripts/news/group_news.py
 
+echo "==> resolving new-story faces (forward-fill)..."
+"$PY" scripts/news/resolve_new_faces.py || true
+
 echo "==> news refresh done."
