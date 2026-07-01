@@ -4363,6 +4363,17 @@ button.study-verse-ref { border: none; }
 /* CENTER */
 .ac-main { min-height: 0; display: flex; flex-direction: column; background: var(--bg); }
 
+/* DESKTOP shell frame (.ac-frame = the shared .zshell). The center is a top STRIP holding the
+   composer over a scrolling BODY (landing or thread). The composer's own hero/pinned chrome is
+   neutralised inside the strip so it reads as one top bar, matching News / Word study's ~59px. */
+.ac-center { background: var(--bg); }
+.ac-strip { flex: 0 0 auto; box-sizing: border-box; padding: 9px 20px;
+  border-bottom: 1px solid var(--rule); background: color-mix(in oklab, var(--bg) 82%, var(--paper)); }
+.ac-strip .ac-composer.hero, .ac-strip .ac-composer.pinned { flex: none; padding: 0; margin: 0; max-width: none; border-top: 0; background: none; }
+.ac-strip .ac-field { max-width: 860px; margin: 0 auto; height: 42px; box-shadow: var(--shadow-sm); }
+.ac-strip .ac-quota { margin-top: 6px; }
+.ac-body { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+
 /* "Under construction" warning strip — pinned at the top of the tab (desktop + mobile).
    Pale amber (gold-soft is theme-aware: pale in light/sepia, deep in dark). */
 .ac-construction {

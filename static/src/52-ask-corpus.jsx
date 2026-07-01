@@ -307,6 +307,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   const [currentId, setCurrentId] = useState(null);   // the conversation being viewed/built (null = landing)
   const [quota, setQuota] = useState(null);   // {used, limit, remaining} | {unlimited} — daily AI cap, from the server
   const threadRef = useRef(null);
+  const rightCtl = useRightStack();   // inspect-panel push stack (occurrence → fork → word; filled in step 3)
   useNotesVersion();   // re-render when the store changes (e.g. a cross-device sync pulls convos in)
   const convos = NotesStore.corpusConvos();
   const busy = thread.some(t => t && (t.loading || t.streaming));   // a search is in flight (or streaming) — lock the composer
@@ -449,89 +450,138 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   const followCapped = thread.filter(t => t && t.question && !t.local).length > AC_MAX_FOLLOWUPS;
   const suggestions = acScopeSuggestions(scope);
 
-  return (
-    <div className={"ac" + (railOpen ? " rail-open" : "")}>
-      {isMobile && railOpen && <div className="ac-rail-scrim" onClick={() => setRailOpen(false)}/>}
-      <aside className={"ac-rail" + (isMobile && !railOpen ? " hidden" : "")}>
-        <button className="ac-rail-new" onClick={newThread} disabled={!started}
-          title="Start a new conversation">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-            strokeWidth="2" strokeLinecap="round"><path d="M12 5v14M5 12h14"/></svg>
-          New thread
-        </button>
-        <div className="ac-rail-top"><span className="ac-rail-eyebrow"><Icon.Clock/> Recent conversations</span></div>
-        {convos.length === 0
-          ? <div className="ac-rail-empty">Your conversations are saved here — reopen one anytime.</div>
-          : <div className="ac-rail-list">{convos.map((c) => (
-              <button key={c.id} className={"ac-rail-item" + (c.id === currentId ? " on" : "")}
-                onClick={() => openConvo(c)} title="Reopen this conversation">{c.title}</button>
-            ))}</div>}
-        {convos.length > 0 && <button className="ac-rail-clear" onClick={() => NotesStore.clearConvos()}>Clear all</button>}
-      </aside>
+  // Shared zone contents, composed differently per layout. Desktop puts the composer in a
+  // top STRIP (the shared Shell); mobile keeps its own hero/pinned placement until the mobile
+  // shell migration (step 5). The inspect zone is the RightStack — an empty state for now;
+  // step 3 fills it with the occurrence → fork → word drill.
+  const railInner = (
+    <>
+      <button className="ac-rail-new" onClick={newThread} disabled={!started}
+        title="Start a new conversation">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+          strokeWidth="2" strokeLinecap="round"><path d="M12 5v14M5 12h14"/></svg>
+        New thread
+      </button>
+      <div className="ac-rail-top"><span className="ac-rail-eyebrow"><Icon.Clock/> Recent conversations</span></div>
+      {convos.length === 0
+        ? <div className="ac-rail-empty">Your conversations are saved here — reopen one anytime.</div>
+        : <div className="ac-rail-list">{convos.map((c) => (
+            <button key={c.id} className={"ac-rail-item" + (c.id === currentId ? " on" : "")}
+              onClick={() => openConvo(c)} title="Reopen this conversation">{c.title}</button>
+          ))}</div>}
+      {convos.length > 0 && <button className="ac-rail-clear" onClick={() => NotesStore.clearConvos()}>Clear all</button>}
+    </>
+  );
 
-      <main className="ac-main">
-        <div className="ac-construction" role="note">
-          <svg className="ac-construction-i" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
-            <path d="M10.3 3.2 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.2a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/>
-          </svg>
-          <span><b>Under construction</b> — answers can be rough or incomplete while this tab is being tuned.</span>
-        </div>
-        {isMobile && (
+  const construction = (
+    <div className="ac-construction" role="note">
+      <svg className="ac-construction-i" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M10.3 3.2 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.2a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/>
+      </svg>
+      <span><b>Under construction</b> — answers can be rough or incomplete while this tab is being tuned.</span>
+    </div>
+  );
+
+  const landingHead = (
+    <>
+      <div className="ac-mark"><Icon.Sparkle/></div>
+      <h1 className="ac-title">Ask the corpus</h1>
+      {scope && (
+        <p className="ac-scope">Asking about{" "}
+          <span className={"ac-scope-gk" + (/^H/i.test(scope.strongs) ? " heb" : "")}
+            dir={/^H/i.test(scope.strongs) ? "rtl" : undefined}>{scope.lemma}</span>
+          <span className="ac-scope-s">{scope.strongs}</span>
+        </p>
+      )}
+      <p className="ac-lede">{scope
+        ? <>Ask anything about <b>{scope.translit || scope.lemma}</b> across the whole of Scripture — its synonyms, its spread, the passages that carry it. Or ask a broader question.</>
+        : "A question in plain language, answered across the whole of Scripture — with the Greek and Hebrew it turns on, and the passages that carry it."}</p>
+    </>
+  );
+
+  const examplesRow = (
+    <div className="ac-examples">
+      {suggestions.map((ex, i) => (
+        <button key={i} className="ac-example" onClick={() => ask(ex)}><span>{ex}</span><Icon.ArrowRight/></button>
+      ))}
+    </div>
+  );
+
+  const threadBody = (
+    <div className="ac-thread" ref={threadRef}>
+      <div className="ac-thread-col">
+        {thread.map((turn, i) => (
+          <AcTurn key={i} turn={turn} onReadInContext={onReadInContext} onLemma={onLemma} onStrongs={onStrongs}/>
+        ))}
+      </div>
+    </div>
+  );
+
+  const composerFor = (pinned) => (
+    <AcComposer pinned={pinned} value={draft} setValue={setDraft} onSubmit={() => ask(draft)}
+      busy={busy} quota={quota}
+      placeholder={started
+        ? (followCapped ? "Follow-up limit reached — start a new thread" : "Ask a follow-up…")
+        : (scope ? `Ask about ${scope.translit || scope.lemma}…` : "Ask anything across the Bible…")}/>
+  );
+
+  const inspectEmpty = (
+    <ZoneEmpty icon={<Icon.Sparkle/>} title="Occurrence detail"
+      sub="Click a passage in an answer to inspect it here — its verse, the word it turns on, and a way into the full word study."/>
+  );
+
+  // ── MOBILE: unchanged layout (own hero/pinned composer) until the mobile shell step ──
+  if (isMobile) {
+    return (
+      <div className={"ac" + (railOpen ? " rail-open" : "")}>
+        {railOpen && <div className="ac-rail-scrim" onClick={() => setRailOpen(false)}/>}
+        <aside className={"ac-rail" + (!railOpen ? " hidden" : "")}>{railInner}</aside>
+        <main className="ac-main">
+          {construction}
           <div className="ac-mobi-actions">
             {started && (
-              <button className="ac-mobi-new" onClick={newThread}
-                title="Start a new conversation">
+              <button className="ac-mobi-new" onClick={newThread} title="Start a new conversation">
                 <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
                   strokeWidth="2" strokeLinecap="round"><path d="M12 5v14M5 12h14"/></svg>
                 New search
               </button>
             )}
-            <button className="ac-mobi-hist" onClick={() => setRailOpen(true)}
-              title="Recent conversations">
+            <button className="ac-mobi-hist" onClick={() => setRailOpen(true)} title="Recent conversations">
               <Icon.Clock/> Recent
             </button>
           </div>
-        )}
-        {!started ? (
-          <div className="ac-landing">
-            <div className="ac-landing-in">
-              <div className="ac-mark"><Icon.Sparkle/></div>
-              <h1 className="ac-title">Ask the corpus</h1>
-              {scope && (
-                <p className="ac-scope">Asking about{" "}
-                  <span className={"ac-scope-gk" + (/^H/i.test(scope.strongs) ? " heb" : "")}
-                    dir={/^H/i.test(scope.strongs) ? "rtl" : undefined}>{scope.lemma}</span>
-                  <span className="ac-scope-s">{scope.strongs}</span>
-                </p>
-              )}
-              <p className="ac-lede">{scope
-                ? <>Ask anything about <b>{scope.translit || scope.lemma}</b> across the whole of Scripture — its synonyms, its spread, the passages that carry it. Or ask a broader question.</>
-                : "A question in plain language, answered across the whole of Scripture — with the Greek and Hebrew it turns on, and the passages that carry it."}</p>
-              <AcComposer pinned={false} value={draft} setValue={setDraft} onSubmit={() => ask(draft)}
-                busy={busy} quota={quota}
-                placeholder={scope ? `Ask about ${scope.translit || scope.lemma}…` : "Ask anything across the Bible…"}/>
-              <div className="ac-examples">
-                {suggestions.map((ex, i) => (
-                  <button key={i} className="ac-example" onClick={() => ask(ex)}><span>{ex}</span><Icon.ArrowRight/></button>
-                ))}
-              </div>
-            </div>
+          {!started ? (
+            <div className="ac-landing"><div className="ac-landing-in">
+              {landingHead}
+              {composerFor(false)}
+              {examplesRow}
+            </div></div>
+          ) : (<>{threadBody}{composerFor(true)}</>)}
+        </main>
+      </div>
+    );
+  }
+
+  // ── DESKTOP: the shared three-zone Shell. Composer lives in the center TOP STRIP; the
+  // inspect strip is reserved now with an empty state (step 3 fills it via RightStack). ──
+  return (
+    <Shell
+      isMobile={false}
+      className="ac-frame"
+      centerClass="ac-center"
+      rail={railInner}
+      center={
+        <>
+          <div className="ac-strip">{composerFor(started)}</div>
+          <div className="ac-body">
+            {construction}
+            {!started
+              ? <div className="ac-landing"><div className="ac-landing-in">{landingHead}{examplesRow}</div></div>
+              : threadBody}
           </div>
-        ) : (
-          <>
-            <div className="ac-thread" ref={threadRef}>
-              <div className="ac-thread-col">
-                {thread.map((turn, i) => (
-                  <AcTurn key={i} turn={turn} onReadInContext={onReadInContext} onLemma={onLemma} onStrongs={onStrongs}/>
-                ))}
-              </div>
-            </div>
-            <AcComposer pinned={true} value={draft} setValue={setDraft} onSubmit={() => ask(draft)}
-              busy={busy} quota={quota}
-              placeholder={followCapped ? "Follow-up limit reached — start a new thread" : "Ask a follow-up…"}/>
-          </>
-        )}
-      </main>
-    </div>
+        </>
+      }
+      inspect={<RightStack ctl={rightCtl} root={null} empty={inspectEmpty} />}
+    />
   );
 }
