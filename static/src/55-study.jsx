@@ -794,6 +794,7 @@ function SeamIndex({ modules, module, onPickModule, onOpenGraph, isMobile }) {
   const [seams, setSeams] = useState(null);   // null = loading
   const [sel, setSel] = useState(null);        // selected strongs
   const [flipOnly, setFlipOnly] = useState(false);
+  const seamRs = useRightStack();              // right inspect stack (empty this phase)
   useEffect(() => {
     let live = true;
     api.lexicaSeams().then(d => { if (live) setSeams((d && d.seams) || []); })
@@ -804,20 +805,15 @@ function SeamIndex({ modules, module, onPickModule, onOpenGraph, isMobile }) {
   const shown = (seams || []).filter(s => !flipOnly || s.lead_flip);
   const selSeam = (seams || []).find(s => s.strongs === sel) || null;
 
+  // Seam rows use the SHARED study-row form (same as topic/graph rows) — lemma is the
+  // label, transliteration the muted sub. No bespoke seam-row layout (a Figma-pass concern).
   const row = (s) => {
     const heb = /^H/i.test(s.strongs || "");
     return (
-      <button key={s.strongs} className={"seam-row" + (s.strongs === sel ? " on" : "")}
+      <button key={s.strongs} className={"study-row" + (s.strongs === sel ? " on" : "")}
         onClick={() => setSel(cur => (cur === s.strongs ? null : s.strongs))}>
-        <span className="seam-word">
-          <span className={"seam-lemma" + (heb ? " heb" : "")} dir={heb ? "rtl" : undefined}>{s.lemma}</span>
-          {s.translit && <span className="seam-tr">{s.translit}</span>}
-        </span>
-        <span className="seam-gloss">{s.gloss}</span>
-        <span className="seam-tags">
-          {s.lead_flip && <span className="seam-flip">different lead</span>}
-          {s.divergence_type && <span className={"seam-type seam-type-" + s.divergence_type}>{_SEAM_TYPE_LABELS[s.divergence_type] || s.divergence_type}</span>}
-        </span>
+        <span className="study-row-title" dir={heb ? "rtl" : undefined}>{s.lemma}</span>
+        {s.translit && <span className="study-row-n">{s.translit}</span>}
       </button>
     );
   };
@@ -829,25 +825,28 @@ function SeamIndex({ modules, module, onPickModule, onOpenGraph, isMobile }) {
     </div>
   );
 
+  // The ONE canonical switcher (shared with Topics/Graphs) — lives in the top strip now.
+  const switcher = (
+    <div className="study-sub">
+      {modules.map(m => (
+        <button key={m.id} className={"study-sub-b" + (module === m.id ? " on" : "")} onClick={() => onPickModule(m.id)}>{m.label}</button>
+      ))}
+    </div>
+  );
+
   const emptyMsg = flipOnly ? "No seams with a different lead." : "No contested-word seams found.";
   const listBody = seams === null
     ? <div className="stats-empty">Loading…</div>
     : shown.length === 0
       ? <div className="stats-empty">{emptyMsg}</div>
-      : <div className="seam-list">{shown.map(row)}</div>;
+      : <div className="study-rows">{shown.map(row)}</div>;
 
   // ── MOBILE: single column; a tapped seam expands its both-priors inline ──
   if (isMobile) {
     return (
       <div className="study-view seam-mobile">
-        <div className="study-sub">
-          {modules.map(m => (
-            <button key={m.id} className={"study-sub-b" + (module === m.id ? " on" : "")} onClick={() => onPickModule(m.id)}>{m.label}</button>
-          ))}
-        </div>
-        <div className="study-list-head"><h1 className="stats-title">Seams</h1></div>
+        <div className="study-topstrip">{switcher}<div className="study-topstrip-right">{filterStrip}</div></div>
         <div className="stats-sub">Words whose plain meaning is settled but whose reading forks — the shared core, then the competing readings.</div>
-        <div className="seam-mobile-strip">{filterStrip}</div>
         {seams === null ? <div className="stats-empty">Loading…</div>
           : shown.length === 0 ? <div className="stats-empty">{emptyMsg}</div>
           : <div className="seam-list">
@@ -862,39 +861,41 @@ function SeamIndex({ modules, module, onPickModule, onOpenGraph, isMobile }) {
     );
   }
 
-  // ── DESKTOP: the shared three-zone Shell ──
+  // ── DESKTOP: the uniform master-detail — LEFT rail = the seam list; CENTER = the
+  //    selected seam's both-priors card (the content); RIGHT = the inspect covenant
+  //    (ZoneEmpty this phase). ONE top strip: switcher left, filter + count right. ──
   return (
     <Shell
       isMobile={false}
-      className="seam-frame"
+      className="study-shell seam-frame"
+      railClass="study-rail-slot"
+      centerClass="study-center"
       rail={
-        <div className="seam-rail">
-          <div className="seam-rail-h">Study</div>
-          {modules.map(m => (
-            <button key={m.id} className={"seam-rail-b" + (module === m.id ? " on" : "")} onClick={() => onPickModule(m.id)}>{m.label}</button>
-          ))}
+        <div className="study-rail">
+          <div className="study-rail-head"><span className="study-rail-h">Seams</span></div>
+          {listBody}
         </div>
       }
       center={
         <>
-          <div className="seam-strip">
-            {filterStrip}
-            <span className="seam-count">{shown.length} seam{shown.length === 1 ? "" : "s"}</span>
+          <div className="study-topstrip">
+            {switcher}
+            <div className="study-topstrip-right">
+              {filterStrip}
+              <span className="seam-count">{shown.length} seam{shown.length === 1 ? "" : "s"}</span>
+            </div>
           </div>
-          <div className="seam-center-body">{listBody}</div>
-        </>
-      }
-      inspect={
-        <aside className="zinspect seam-inspect">
-          <div className="seam-insp-band">Both priors</div>
-          <div className="seam-insp-scroll">
+          <div className="study-center-body">
             {selSeam
               ? <SeamPriors seam={selSeam} onOpenGraph={onOpenGraph} />
-              : <ZoneEmpty icon={<Icon.Book/>} title="Pick a seam"
-                  sub="Choose a word to see the shared core and the competing readings side by side." />}
+              : <ZoneEmpty icon={<Icon.Book width="30" height="30"/>} title="Pick a reading"
+                  sub="Choose a word from the list to read its forks here." />}
           </div>
-        </aside>
+        </>
       }
+      inspect={<RightStack ctl={seamRs} root={null} className="study-rstack" empty={
+        <ZoneEmpty icon={<Icon.Book width="30" height="30"/>} title="Pick a reading"
+          sub="Select a fork to see its grounding." />} />}
     />
   );
 }
@@ -920,6 +921,9 @@ function StudyView({ admin, pending, onConsumed, onNavigateToLibrary, isMobile }
   // A non-admin visitor IS the reader: published-only, no editing, no module switch
   // (only Topics are public). An admin can also opt into this view via "Preview as reader".
   const readerView = !adminUser || previewReader;
+  // The desktop Topics/Graphs inspect is a RightStack (empty this phase — ZoneEmpty; verse
+  // context + node detail come later). The parent owns the stack so a future center-select can reset it.
+  const studyRs = useRightStack();
 
   const load = mod => {
     // Seams aren't study.db entries — SeamIndex fetches its own /api/lexica/seams data.
@@ -991,18 +995,11 @@ function StudyView({ admin, pending, onConsumed, onNavigateToLibrary, isMobile }
 
   if (err) return <div className="stats-view"><div className="stats-empty">Couldn't load study content.{adminUser ? " (Admin sign-in required.)" : ""}</div></div>;
 
-  if (editing) {
-    const ro = readerView || !editMode;   // read-only: a reader/preview, or not actively editing
-    const close = () => { setEditing(null); setSavedAt(null); };
-    if (isTopicLike(editing.type))
-      return <div className="study-view"><TopicPage entry={editing} editing={!ro} onChange={setEditing} onSave={save} onDelete={del} onClose={close} onToggleEdit={() => setEditMode(m => !m)} previewReader={readerView} saving={saving} savedAt={savedAt} onNavigate={onNavigateToLibrary} /></div>;
-    return <div className="study-view"><GraphPage entry={editing} onClose={close} previewReader={readerView} onNavigate={onNavigateToLibrary} /></div>;
-  }
-
   // SEAMS — its own shell surface (rail = the Study-section switcher; center = the seam
   // list; right = the both-priors card). A pure read over lexica_def fork data. The top
   // sub-switch is replaced by the rail switcher here, so only one nav shows at a time.
-  if (module === "seam") {
+  // `!editing` so a name-topic opened from the metaV sidebar while on this tab still shows.
+  if (module === "seam" && !editing) {
     const openGraph = (graphRef) => {
       const gid = String(graphRef || "").split(":")[0];
       pickModule("graph");
@@ -1012,62 +1009,72 @@ function StudyView({ admin, pending, onConsumed, onNavigateToLibrary, isMobile }
       onOpenGraph={openGraph} isMobile={isMobile} />;
   }
 
+  // ---- Topics / Graphs: the uniform master-detail (same frame as Seams) ----
+  // LEFT rail = the list. CENTER = a top strip (switcher left; admin preview toggle right)
+  // over the roomy content — the open TopicPage / GraphPage, else a pick-one prompt. RIGHT =
+  // the inspect covenant (why/provenance), ZoneEmpty this phase.
   const isTopic = module === "topic";
   const moduleName = isTopic ? "Topics" : "Graphs";
   const qs = q.trim().toLowerCase();
-  const pool = (entries || []).filter(e => !readerView || e.status === "published");   // a reader only sees published
+  // Curation (status-keyed, never the source string): a reader — or an admin PREVIEWING —
+  // sees published TOPICS only (hides the ~1817 Nave's drafts, leaves the curated ones like
+  // Divine Council). An admin NOT previewing still sees every topic incl. drafts (the draft
+  // badge rides each row) so the curate-from-UI path survives. Graphs keep the reader/admin split.
+  const pool = (entries || []).filter(e =>
+    isTopic
+      ? ((adminUser && !readerView) ? true : e.status === "published")
+      : (!readerView || e.status === "published"));
   const sortKey = e => displayTitle(e.title || "").toLowerCase().replace(/^(?:the|a|an)\s+/, "");
   const shown = pool
     .filter(e => !qs || (e.title || "").toLowerCase().includes(qs) || displayTitle(e.title).toLowerCase().includes(qs) || (e.heldBy || "").toLowerCase().includes(qs))
     .sort((a, b) => sortKey(a).localeCompare(sortKey(b)));
-  return (
-    <div className="study-view">
-      <div className="study-sub">
-        {STUDY_MODULES.map(m => (
-          <button key={m.id} className={"study-sub-b" + (module === m.id ? " on" : "")} onClick={() => pickModule(m.id)}>{m.label}</button>
-        ))}
-        {adminUser && (
-          <button className={"study-preview-toggle" + (previewReader ? " on" : "")} onClick={() => setPreviewReader(p => !p)}
-            title="See exactly what a reader sees — editing off, drafts hidden">
-            {previewReader ? "✓ Previewing as reader" : "Preview as reader"}
-          </button>
-        )}
-      </div>
-      {previewReader && (
-        <div className="study-preview-note">
-          You're seeing what a reader sees — editing is off and drafts are hidden.
-          <button className="study-preview-exit" onClick={() => setPreviewReader(false)}>Exit preview</button>
-        </div>
-      )}
-      <div className="study-list-head">
-        <h1 className="stats-title">{moduleName}</h1>
+
+  const emptyListMsg = qs
+    ? "No matches for “" + q + "”."
+    : !adminUser
+    ? (isTopic ? "No study topics yet — check back soon." : "No graphs yet — check back soon.")
+    : previewReader
+    ? "Nothing published yet — mark an entry Published to show it here."
+    : isTopic
+    ? "Nothing here yet — start with “+ New topic”. (Or import from MetaV.)"
+    : "No graphs yet — add one with scripts/add_study_graph.py.";
+
+  const switcher = (
+    <div className="study-sub">
+      {STUDY_MODULES.map(m => (
+        <button key={m.id} className={"study-sub-b" + (module === m.id ? " on" : "")} onClick={() => pickModule(m.id)}>{m.label}</button>
+      ))}
+    </div>
+  );
+
+  // TOP-STRIP right slot: admin-only preview toggle (the filter slot is Seams-only).
+  const topRight = adminUser ? (
+    <div className="study-topstrip-right">
+      <button className={"study-preview-toggle" + (previewReader ? " on" : "")} onClick={() => setPreviewReader(p => !p)}
+        title="See exactly what a reader sees — drafts hidden">
+        {previewReader ? "✓ Previewing as reader" : "Preview as reader"}
+      </button>
+    </div>
+  ) : null;
+
+  const railList = (        // LEFT rail — the list
+    <div className="study-rail">
+      <div className="study-rail-head">
+        <span className="study-rail-h">{moduleName}</span>
         {!readerView && isTopic && <button className="study-new" onClick={newEntry}>+ New topic</button>}
       </div>
-      <div className="stats-sub">{isTopic
-        ? "Browse a subject and its verses, grouped by subtopic. Mostly filled from MetaV — light edits only."
-        : "Arguments as claims and links — each side's chain stress-tested to show where it actually load-bears."}</div>
-
       {pool.length > 0 && (
         <input className="study-search-input" type="text" value={q}
           placeholder={"Search " + moduleName.toLowerCase() + "…"} onChange={e => setQ(e.target.value)} />
       )}
-
       {entries === null ? (
         <div className="stats-empty">Loading…</div>
       ) : shown.length === 0 ? (
-        <div className="stats-empty">{qs
-          ? "No matches for “" + q + "”."
-          : !adminUser
-          ? (isTopic ? "No study topics yet — check back soon." : "No graphs yet — check back soon.")
-          : previewReader
-          ? "Nothing published yet — mark an entry Published to show it here."
-          : isTopic
-          ? "Nothing here yet — start with “+ New topic”. (Or import from MetaV.)"
-          : "No graphs yet — add one with scripts/add_study_graph.py."}</div>
+        <div className="stats-empty">{emptyListMsg}</div>
       ) : (
         <div className="study-rows">
           {shown.map(e => (
-            <button className="study-row" key={e.id} onClick={() => openEntry(e.id)}>
+            <button className={"study-row" + (editing && editing.id === e.id ? " on" : "")} key={e.id} onClick={() => openEntry(e.id)}>
               {!isTopic && <span className="study-badge study-badge--graph">Graph</span>}
               <span className="study-row-title">{isTopic ? displayTitle(e.title) : e.title}</span>
               <span className="study-row-n">{e.n || 0} {isTopic ? "verses" : "claims"}</span>
@@ -1077,5 +1084,46 @@ function StudyView({ admin, pending, onConsumed, onNavigateToLibrary, isMobile }
         </div>
       )}
     </div>
+  );
+
+  const close = () => { setEditing(null); setSavedAt(null); };
+  let content;              // CENTER — the open topic / graph (a full read), else a pick-one prompt
+  if (editing) {
+    const ro = readerView || !editMode;   // read-only: a reader/preview, or not actively editing
+    content = isTopicLike(editing.type)
+      ? <TopicPage entry={editing} editing={!ro} onChange={setEditing} onSave={save} onDelete={del}
+          onClose={close} onToggleEdit={() => setEditMode(m => !m)} previewReader={readerView}
+          saving={saving} savedAt={savedAt} onNavigate={onNavigateToLibrary} />
+      : <GraphPage entry={editing} onClose={close} previewReader={readerView} onNavigate={onNavigateToLibrary} />;
+  } else {
+    content = <ZoneEmpty icon={<Icon.Book width="30" height="30"/>}
+      title={isTopic ? "Pick a topic" : "Pick a graph"}
+      sub={isTopic ? "Choose a study from the list to read it here."
+                   : "Choose an argument map from the list to read it here."} />;
+  }
+
+  // RIGHT inspect — the why/provenance covenant, ZoneEmpty until the per-item detail is wired.
+  const inspectEmpty = <ZoneEmpty icon={<Icon.Book width="30" height="30"/>}
+    title={isTopic ? "Pick a verse" : "Pick a claim"}
+    sub={isTopic ? "Select a verse to see it in context." : "Select a node to see what grounds it."} />;
+
+  // MOBILE: single column — switcher strip, then the list or the open item.
+  if (isMobile) return (
+    <div className="study-view study-mobile">
+      <div className="study-topstrip">{switcher}{topRight}</div>
+      {editing ? <div className="study-center-body">{content}</div> : railList}
+    </div>
+  );
+
+  // DESKTOP: the uniform master-detail Shell — LEFT list · CENTER content · RIGHT inspect.
+  return (
+    <Shell isMobile={false} className="study-shell" railClass="study-rail-slot" centerClass="study-center"
+      rail={railList}
+      center={<>
+        <div className="study-topstrip">{switcher}{topRight}</div>
+        <div className="study-center-body">{content}</div>
+      </>}
+      inspect={<RightStack ctl={studyRs} root={null} className="study-rstack" empty={inspectEmpty} />}
+    />
   );
 }
