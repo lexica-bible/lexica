@@ -6,6 +6,29 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Study tab restructure + admin-only gate + concept-topic deprecation — DONE + LIVE 2026-07-01
+Full record: memory `project_study_modules` + `project_three_zone_shell`.
+- **Uniform master-detail shell** — Topics, Graphs AND Seams now share ONE `<Shell>` frame: LEFT rail = the
+  list, CENTER = the content (TopicPage / GraphPage / the seam's both-priors `SeamPriors`, mounts once),
+  RIGHT = a ZoneEmpty "covenant" (per-item detail wiring DEFERRED — see the open follow-ups). ONE top-strip
+  switcher (`study-sub`, left) + tools (Seams filter / admin preview toggle, right); `seam-rail` RETIRED.
+  Inspect top:0 + `.app.view-study` pill offset (matches Word study). Took several wrong turns (left-list ↔
+  Seams-shape pivots) before landing on the left-list master-detail — that IS the settled shape, don't
+  re-derive. Commit a94e5a5.
+- **Whole Study tab is ADMIN-ONLY** (reversed the 2026-06-16 public go-live). Link hidden (`{owner && …}` in
+  the desktop Header + mobile tab) AND a single `@bp.before_request` on the study blueprint 403s EVERY
+  `/api/study/*` route for non-admins; `/api/lexica/seams` hard-gated the same way (the public per-word card
+  `/api/lexica/<strongs>` untouched). Intended: retires the reader's Nave's-topical block (`for-name`) + the
+  xref "In studies:" line (`for-verse`) — they vanish gracefully. Verified on the box (403s + word-card 404 =
+  not-gated). Commit 0ab7bad.
+- **Imported Nave's/MetaV CONCEPT topics DEPRECATED (removed)** — supersedes the old "unpublish the imported
+  concepts" plan (which only hid them; as admin you still saw the drafts). `scripts/deprecate_concept_topics.py`
+  (dry-run default; backs up study.db; `--apply` soft-deletes `type='topic' AND json source='metav'`; `--undo`
+  reverses). Soft-delete works because every study query — admin list included (views_study.py:813) — filters
+  `deleted=0` (verified before applying). **Ran on PA 2026-07-01: 1817 concept topics removed, Divine Council
+  (blank source) + the 696 name-topics (`type='name'`) + the Library Nave's sidebar block all kept.** Don't
+  re-run `load_study_topics.py` (it refills the list). Undo = `--undo --apply`. Commit 371e45d.
+
 ## Shell unification — Notes + Seam index + News right-rail — DONE + LIVE 2026-07-01
 Three more surfaces onto the shared `Shell`, plus News-rail follow-ups. Full record: memory
 `project_three_zone_shell`, `project_lexica_dictionary`, `project_study_modules`, `project_news_watch`.

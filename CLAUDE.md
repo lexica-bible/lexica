@@ -462,9 +462,13 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   ref to its full book name (`_canonical_ref`: gen 1:1 → Genesis 1:1). Topic INTROS are AI-written,
   text-first Berean (`✦ Draft with AI` button uses the WSGI key; `_draft_intro`/`_INTRO_SYSTEM`).
   Scripts: `add_study_topic.py` (hand-authored topic) + `add_study_graph.py` (hand-authored argument graph; both dry-run default / `--apply`),
-  `load_study_topics.py` (MetaV import), `generate_topic_intros.py`, `publish_topics.py` (draft↔published;
-  **`--names`** for the metaV name-topics), `find_topics.py`, `find_topic_dupes.py`, `merge_the_dupes.py`.
-  Full record: memory `project_study_modules`.
+  `load_study_topics.py` (MetaV import — **DEPRECATED, do NOT re-run: it refills the deprecated concept list**),
+  `generate_topic_intros.py`, `publish_topics.py` (draft↔published;
+  **`--names`** for the metaV name-topics), `find_topics.py`, `find_topic_dupes.py`, `merge_the_dupes.py`,
+  `deprecate_concept_topics.py` (soft-deletes the imported concept topics; `--undo` reverses).
+  **The ~1817 imported Nave's/MetaV CONCEPT topics are DEPRECATED + REMOVED (soft-deleted) on PA 2026-07-01** —
+  the Topics list is now hand-authored only (Divine Council). KEPT: the 696 `type='name'` name-topics (feed the
+  Library Nave's sidebar block) + Divine Council. Full record: memory `project_study_modules`.
 - `<book>_words` / `<book>_verses` — non-canonical texts, each in its OWN two tables, walled off
   from the Bible's tables and from search/word counts. Built by `scripts/load_extra.py`; served by
   `/api/extra/<book>/chapter/<n>`. English-only texts (no Greek) load with an empty words table.

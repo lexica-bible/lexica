@@ -1239,14 +1239,6 @@ depends) so it no longer reads as the lone winner; collapsed the duplicate infer
 fixes came out of it (both live on a code deploy, no `--apply`): the chart now packs disconnected branches
 (no dead gap), and the "where they part" diff lists each side's conclusion nodes.
 OPEN:
-- **Unpublish the imported Nave's/Torrey's CONCEPT topics (2026-06-24, user's call) — PENDING his PA run.**
-  He wants the MetaV-imported concept topics OUT of the public Topics list (recycled topical-index content,
-  not his text-first voice; argument graphs + Lexica dictionary + hand-authored studies are the real value).
-  KEEP: person/place name-topics (`metavn_`) + hand-authored topics (Divine Council). Tooling shipped:
-  `publish_topics.py --imported` (+ `--dry-run`), commit 91e13be — hides ONLY `metav_` concepts (drops them to
-  admin-only DRAFT, NOT deleted; undo = `--imported`). HE runs on PA: `git pull` →
-  `publish_topics.py --unpublish --imported --dry-run` (eyeball the list) → `--unpublish --imported` → touch
-  the wsgi. Full record: memory project_study_modules.
 - **Mobile graph = narrate a traversal, not a shrunk 2D chart (design note, 2026-06-20; LOW urgency —
   graphs are admin-only).** The shared-claim-pool + per-tradition-overlay structure means the graph is
   just one rendering of the data. On a phone, walk the same nodes vertically as argument STEPS (grounded
