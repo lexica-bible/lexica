@@ -80,12 +80,8 @@ def _depunct(w):
     return w
 
 
-def normalize(word):
-    """Collapse a word to its number-neutral key. Used identically on both sides of the
-    finder's match, so normalize(query)==normalize(rendering) is the whole contract."""
-    if not word:
-        return word
-    w = _depunct(word.strip().lower())
+def _norm_token(w):
+    """Number-neutral key for a SINGLE already-lowercased/depunctuated token."""
     if not w:
         return w
     if w.endswith("ss"):        # -ss guard: keep witness/grass/pass inert
@@ -96,3 +92,17 @@ def normalize(word):
     if key is not None:
         return key
     return singularize(w)
+
+
+def normalize(word):
+    """Collapse a word to its number-neutral key. Used identically on both sides of the
+    finder's match, so normalize(query)==normalize(rendering) is the whole contract.
+    Multi-word renderings (ABP phrase heads like "the news") are normalized TOKEN BY
+    TOKEN, so the invariant set protects a phrase's trailing word too ("the news" keeps
+    "news" — never collapses to "the new")."""
+    if not word:
+        return word
+    w = _depunct(word.strip().lower())
+    if not w:
+        return w
+    return " ".join(_norm_token(t) for t in w.split())

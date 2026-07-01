@@ -84,6 +84,15 @@ def test_invariant_s_words():
     assert normalize("does") != normalize("doe")
 
 
+def test_per_token_invariant_phrase():
+    # Multi-word rendering: the invariant protects the trailing token, so a phrase
+    # doesn't collapse its last word ("the news" must not become "the new").
+    assert normalize("the news") == "the news"
+    assert normalize("the news") != normalize("the new")
+    # and a phrase's plural token still folds correctly the other way:
+    assert normalize("the magistrates") == normalize("the magistrate")
+
+
 def test_ous_words_never_strip():
     # "-ous" is never a plural ending — covers a whole visual category in one rule.
     for w in ("gracious", "righteous", "precious", "various", "glorious", "pious"):
