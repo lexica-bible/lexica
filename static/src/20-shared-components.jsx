@@ -50,6 +50,29 @@ function useFitText(ref, text, opts) {
 // HEADER
 // ============================================================
 function Header({ activeView, onNavChange, owner, showNews, email, name, onLogin, onAccount }) {
+  // Below the Shell's nav-overflow breakpoint (styles.css, 1500px) the inline nav is
+  // hidden and these same links move into this hamburger menu — the row never reflows.
+  const [menuOpen, setMenuOpen] = React.useState(false);
+  const wrapRef = React.useRef(null);
+  React.useEffect(() => {
+    if (!menuOpen) return;
+    const onDoc = (e) => { if (wrapRef.current && !wrapRef.current.contains(e.target)) setMenuOpen(false); };
+    const onKey = (e) => { if (e.key === "Escape") setMenuOpen(false); };
+    document.addEventListener("mousedown", onDoc);
+    document.addEventListener("keydown", onKey);
+    return () => { document.removeEventListener("mousedown", onDoc); document.removeEventListener("keydown", onKey); };
+  }, [menuOpen]);
+
+  const links = [
+    ["library", "Library"],
+    ["lexicon", "Word study"],
+    ["corpus", "Ask the corpus"],
+    ["notes", "Notes"],
+    ...(owner ? [["study", "Study"]] : []),
+    ...(showNews ? [["news", "News"]] : []),
+    ["about", "About"],
+  ];
+
   return (
     <header className="hdr">
       <div className="hdr-inner">
@@ -66,15 +89,25 @@ function Header({ activeView, onNavChange, owner, showNews, email, name, onLogin
           </div>
         </div>
         <nav className="hdr-nav">
-          <button className={"hdr-link " + (activeView === "library" ? "active" : "")} onClick={() => onNavChange("library")}>Library</button>
-          <button className={"hdr-link " + (activeView === "lexicon" ? "active" : "")} onClick={() => onNavChange("lexicon")}>Word study</button>
-          <button className={"hdr-link " + (activeView === "corpus" ? "active" : "")} onClick={() => onNavChange("corpus")}>Ask the corpus</button>
-          <button className={"hdr-link " + (activeView === "notes" ? "active" : "")} onClick={() => onNavChange("notes")}>Notes</button>
-          {owner && <button className={"hdr-link " + (activeView === "study" ? "active" : "")} onClick={() => onNavChange("study")}>Study</button>}
-          {showNews && <button className={"hdr-link " + (activeView === "news" ? "active" : "")} onClick={() => onNavChange("news")}>News</button>}
-          <button className={"hdr-link " + (activeView === "about" ? "active" : "")} onClick={() => onNavChange("about")}>About</button>
+          {links.map(([v, label]) => (
+            <button key={v} className={"hdr-link " + (activeView === v ? "active" : "")} onClick={() => onNavChange(v)}>{label}</button>
+          ))}
         </nav>
         <div className="hdr-right">
+          <div className="hdr-burger-wrap" ref={wrapRef}>
+            <button className="hdr-burger" aria-label="Menu" aria-expanded={menuOpen} onClick={() => setMenuOpen(o => !o)}>
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                <path d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round"/>
+              </svg>
+            </button>
+            {menuOpen && (
+              <div className="hdr-menu">
+                {links.map(([v, label]) => (
+                  <button key={v} className={"hdr-menu-link " + (activeView === v ? "active" : "")} onClick={() => { onNavChange(v); setMenuOpen(false); }}>{label}</button>
+                ))}
+              </div>
+            )}
+          </div>
           {email
             ? <button className="hdr-acct" onClick={onAccount} title="Your account">{name || email}</button>
             : <button className="hdr-login" onClick={onLogin}>Log in</button>}
