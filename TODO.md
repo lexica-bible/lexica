@@ -41,8 +41,11 @@ NEW content:
   Prereq: the diacritic exact-lemma-first fix so the center list is trustworthy.
 - **Notes** — left index / editor center / anchored-scripture right, on `Shell`.
   code: static/src/22-shell.jsx, 52-ask-corpus.jsx, 35-notes.jsx, 55-study.jsx, styles.css
-- **Owed (this session):** post-deploy human click-through of News / Word study / Library on desktop +
-  phone — the mobile sheets are the one thing the parity gates can't run locally.
+- **Owed (post-deploy human check):** click-through of News / Word study / Library on desktop + phone —
+  the mobile sheets are the one thing the parity gates can't run locally. Plus the two follow-on fixes
+  (2026-06-30): confirm the **News tab shows in the mobile bottom nav** (admin), and that **News's now-460
+  inspect** looks balanced without cramping/wrapping the no-wrap `.news-bar` top control row (center lost
+  ~80px).
 
 ---
 
