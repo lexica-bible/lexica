@@ -862,6 +862,16 @@ Full detail: memory `project_notes_highlights`. The headline facts:
 - Dedicated word study tab — separate from AI Search
 - Flow: search box → word profile → gloss chips → book distribution → verse list
 - Smart search: detects Strong's (G4151, H7307), Greek, Hebrew, English
+- **English-word finder = NUMBER-FOLDED (2026-07-01).** `/api/lexicon/english` matches a query against
+  attested renderings via a precomputed `*_norm` column (`words.english_head_norm` / `kjv_words`+`bsb_words`
+  `word_norm`) instead of the raw word, so singular↔plural reach each other (a "magistrate" search now finds
+  theos G2316, rendered "magistrates" in Exo 22:28). Both query and rendering pass through the SAME
+  `number_fold.normalize` (curated irregular map + careful singularizer + -ous/-ss guards + per-token for phrase
+  heads) — no inverse. Deploy-safe: `_has_norm` falls back to the old exact match if the backfill hasn't run.
+  Built by `scripts/build_rendering_norm.py` (PA data step; RE-RUN after a words rebuild — in the checklist — and
+  auto-run at the tail of `load_bsb_words.py`). **KNOWN GAP:** the Hebrew-OT discovery branch (`corpus=heb`) is
+  NOT folded — it matches a token inside a multi-word gloss phrase, which needs a normalized-token side-index in
+  heb.db + a looser (number-blind) `gloss LIKE` prefilter. Full record: memory `project_lexicon_number_fold`.
 - Endpoints: `/api/lexicon/lookup`, `/api/lexicon/profile/<strongs>`, `/api/lexicon/verses/<strongs>/<book>`
 - `lexicon_verses` response: `{verses: [{chapter, verse, words: [{w, h, i?}]}], glosses: [{gloss, count}]}`
   - `h=true` marks the target word in each verse (rendered highlighted in gold)

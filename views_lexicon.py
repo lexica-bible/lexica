@@ -14,6 +14,7 @@ import sqlite3
 from flask import Blueprint, jsonify, request
 
 from core import db_ro, heb_db, _KJV_BOOK_ID, _FUNCTION_STRONGS, _strip_accents
+from number_fold import normalize as _fold_norm
 
 bp = Blueprint("lexicon", __name__)
 
@@ -68,6 +69,24 @@ def _norm_lemma(s):
 # over-match fix). False until scripts/add_lemma_plain.py runs on PA → the lookup falls
 # back to the old substring behavior, so a code deploy BEFORE the data step is safe.
 _LEMMA_PLAIN_OK = {}
+
+
+# Per-process cache of which rendering tables carry the precomputed number-fold column
+# (english_head_norm / word_norm, built by scripts/build_rendering_norm.py). False until
+# that data step runs on PA → the English finder falls back to the old exact-word match,
+# so a code deploy BEFORE the backfill is safe (it just won't fold singular/plural yet).
+_NORM_OK = {}
+
+
+def _has_norm(conn, table, col):
+    key = (table, col)
+    if key not in _NORM_OK:
+        try:
+            cols = {r[1] for r in conn.execute(f"PRAGMA table_info({table})").fetchall()}
+            _NORM_OK[key] = col in cols
+        except sqlite3.OperationalError:
+            _NORM_OK[key] = False
+    return _NORM_OK[key]
 
 
 def _has_lemma_plain(conn, table):
@@ -782,6 +801,19 @@ def lexicon_english():
     try:
         abp_rows, heb_rows = [], []
 
+        # Number-fold: match the precomputed norm column against normalize(q) so a
+        # singular query reaches a plural rendering and vice-versa (theos "magistrates"
+        # <- "magistrate"). Both sides pass through the identical number_fold.normalize.
+        # Falls back to the raw exact-word match on any DB where the *_norm backfill
+        # (scripts/build_rendering_norm.py) hasn't run yet — deploy-safe.
+        def _fold_col(table, alias, normcol, rawcol):
+            if _has_norm(conn, table, normcol):
+                return f"{alias}.{normcol}", _fold_norm(q)
+            return f"{alias}.{rawcol}", q
+        abp_col, abp_q = _fold_col("words", "w", "english_head_norm", "english_head")
+        kjv_col, kjv_q = _fold_col("kjv_words", "kw", "word_norm", "word")
+        bsb_col, bsb_q = _fold_col("bsb_words", "bw", "word_norm", "word")
+
         if corpus in ("abp", "all"):
             # ABP Greek: match by english_head. A dotted different-word (e.g. σαβέκ G4521.2,
             # parked under σάββατον G4521) groups under its OWN full number via
@@ -799,7 +831,7 @@ def lexicon_english():
                 LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base
                 {dl_join}
                 {_abp_join}
-                WHERE w.english_head = ? COLLATE NOCASE
+                WHERE {abp_col} = ? COLLATE NOCASE
                   AND w.strongs_base IS NOT NULL
                   AND w.strongs_base != '*'
                   AND w.strongs_base LIKE 'G%'
@@ -807,7 +839,7 @@ def lexicon_english():
                 GROUP BY {gkey}
                 ORDER BY cnt DESC
                 LIMIT 20
-            """, (q, *_abp_params)).fetchall()
+            """, (abp_q, *_abp_params)).fetchall()
             # Drop function-word Strong's (ἐν, the article, conjunctions…). They
             # only reach an English-text lookup via a stray phrase-gloss whose
             # english_head borrowed a content noun ("in blessing" → head
@@ -827,13 +859,13 @@ def lexicon_english():
                 JOIN kjv_strongs ks ON ks.word_id = kw.word_id
                 LEFT JOIN lexicon l ON l.strongs_g = ks.strongs_id
                 LEFT JOIN bdb b ON b.strongs_id = ks.strongs_id AND ks.strongs_id LIKE 'H%'
-                WHERE kw.word = ? COLLATE NOCASE
+                WHERE {kjv_col} = ? COLLATE NOCASE
                   AND (kw.italic IS NULL OR kw.italic = 0)
                   {_kjv_where}
                 GROUP BY ks.strongs_id
                 ORDER BY cnt DESC
                 LIMIT 10
-            """, (q,)).fetchall()
+            """, (kjv_q,)).fetchall()
             # Drop Greek function words (δέ, the article, conjunctions…) the same
             # way the ABP branch does — whether KJV is viewed alone or via 'all'. A
             # lone stray-tagged KJV token (e.g. one "spirit" mistagged G1161 δέ)
@@ -855,6 +887,15 @@ def lexicon_english():
             # Hebrew OT discovery (heb.db): H-numbers whose real contextual gloss uses q
             # as a whole word — the actual Hebrew source, not the KJV's tagging, so the
             # found set + counts are a true reflection. ('All' stays ABP+KJV above.)
+            # KNOWN GAP — NOT number-folded (the other three sources are). This branch
+            # doesn't match a single stored rendering; it matches a TOKEN inside a
+            # multi-word gloss phrase, so the precomputed *_norm column doesn't fit.
+            # A real fold needs BOTH: (1) a normalized-token side-index in heb.db (each
+            # gloss's tokens run through number_fold.normalize at load time, stored as a
+            # searchable set — a different shape than the single-word norm columns), AND
+            # (2) loosening the `gloss LIKE '%q%'` prefilter below, which is itself
+            # number-blind one way (searching "magistrates" won't LIKE-match a gloss
+            # holding "magistrate"). Until both land, Hebrew-OT search stays number-exact.
             rx = re.compile(r"\b" + re.escape(q) + r"\b", re.I)
             grows = _hdisc.execute(
                 "SELECT strongs, gloss, COUNT(*) AS cnt FROM heb_words "
@@ -887,13 +928,13 @@ def lexicon_english():
                 JOIN bsb_strongs bs ON bs.word_id = bw.word_id
                 LEFT JOIN lexicon l ON l.strongs_g = bs.strongs_id
                 LEFT JOIN bdb b ON b.strongs_id = bs.strongs_id AND bs.strongs_id LIKE 'H%'
-                WHERE bw.word = ? COLLATE NOCASE
+                WHERE {bsb_col} = ? COLLATE NOCASE
                   AND (bw.italic IS NULL OR bw.italic = 0)
                   {_bsb_where}
                 GROUP BY bs.strongs_id
                 ORDER BY cnt DESC
                 LIMIT 10
-            """, (q,)).fetchall()
+            """, (bsb_q,)).fetchall()
             heb_rows = heb_rows + [r for r in brows
                                    if not (r["sbase"].startswith("G") and r["sbase"][1:] in _FUNCTION_STRONGS)]
 

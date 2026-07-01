@@ -1541,6 +1541,7 @@ def run(bible_db: str, scrape_db: str) -> None:
     print(f"      python3 scripts/import_tipnr.py {target}")
     print(f"      python3 scripts/build_abp_surface.py {target} --bh {scrape_db}")
     print(f"      python3 scripts/build_abp_translit.py {target}")
+    print(f"      python3 scripts/build_rendering_norm.py {target}   # english_head_norm for the Word-study number-fold")
     print(f"      # + the rest of the /rebuild-words checklist (dotted, two-ending, word_gloss)")
     print(f"      python3 scripts/audit_split_flip.py {target}     # must read 0")
     print(f"\n  Then swap it in — REVERSIBLE, one mv undoes it:")

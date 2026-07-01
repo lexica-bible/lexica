@@ -113,6 +113,10 @@ one rebuilt (DELETE only ever hits the copy). The build also makes its own `bibl
    output into `static/src/00b-two-ending.jsx`, then rebuild `app.js` LOCALLY (genders/tallies can shift on a
    rebuild). Read-only on words/verses; drives the "Masculine/Feminine" word-study display. Memory
    `project_two_ending_gender`.
+11. RE-RUN `scripts/build_rendering_norm.py bible.db`: refills `words.english_head_norm` (the number-fold
+   column the Word-study English finder matches on). A rebuild can change english_head, so a stale norm would
+   miss singular/plural hits. Additive + reversible; also refreshes kjv/bsb `word_norm`. Memory
+   `project_lexicon_number_fold`.
 LOCAL HARNESS (no PA / no live DB): `tests/test_folded_fixes.py` exercises the six folds on synthetic
 rows; `test_build_invariants.py` + `test_strongs_join.py` lock the Strong's invariants (all in CI +
 the pre-commit hook). The full rebuild + both-way compare ran locally on a copy 2026-06-09.

@@ -45,6 +45,7 @@ import sys
 import urllib.request
 
 from load_bsb import _BOOK_ID, _NAME_TO_ABBR      # reuse the same book maps
+from build_rendering_norm import recompute_norms  # refresh word_norm so the fold can't drift
 
 TSV_URL = "https://bereanbible.com/bsb_tables.tsv"
 csv.field_size_limit(10_000_000)
@@ -257,6 +258,15 @@ def build(db_path, src, dry):
         CREATE INDEX idx_bsb_strongs_id ON bsb_strongs (strongs_id);
     """)
     conn.commit()
+
+    # Recompute the number-fold column (bsb_words.word_norm) so the Word-study English
+    # finder's singular/plural fold can't go stale after a BSB reload. Deploy-safe: a
+    # DB without number_fold available just skips it. See scripts/build_rendering_norm.py.
+    try:
+        recompute_norms(conn, only="bsb_words")
+        conn.commit()
+    except Exception as e:
+        print(f"  (word_norm recompute skipped: {e})")
 
     # 4) report + the same prefix invariant kjv_strongs has
     books = conn.execute("SELECT COUNT(DISTINCT book_id) FROM bsb_words").fetchone()[0]
