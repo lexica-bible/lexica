@@ -28,6 +28,14 @@ Issues surfaced 2026-06-28. #1 ("LORD the" word flip), #2 (proper-noun / entity 
   has 13 chapters everywhere else, so this looks like a real corpus hole (missing verse rows → its words
   silently dropped, same general invariant as the Hebrews-13 restore class). Checked via the public pages
   only, not yet traced. JP took it to its own session.
+- **Hebrew-OT word finder is NOT number-folded** (KNOWN GAP, 2026-07-01) — the singular/plural fold now LIVE
+  on ABP/KJV/BSB (see TODO_ARCHIVE, "number-fold") does NOT cover the `corpus=heb` discovery branch in
+  views_lexicon.py. That branch matches a token INSIDE a multi-word gloss phrase, not a single stored
+  rendering, so the precomputed `*_norm` column doesn't fit. A real fold needs BOTH: (1) a normalized-token
+  side-index in heb.db (each gloss's tokens run through `number_fold.normalize` at load), and (2) loosening
+  the `gloss LIKE '%q%'` prefilter, which is itself number-blind one way. Don't ship a half-fix (regex→norm
+  compare only) — it folds one direction and reintroduces the asymmetry. Not gating anything; Hebrew search
+  stays number-exact until both land. Full record: memory `project_lexicon_number_fold`.
 
 ---
 

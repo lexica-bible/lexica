@@ -6,6 +6,26 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Word-study English finder — singular/plural number-fold — DONE + LIVE 2026-07-01
+Full record: memory `project_lexicon_number_fold`.
+- **The bug:** `/api/lexicon/english` matched a typed word letter-for-letter against attested renderings, so
+  a singular query missed a plural-only rendering — searching "magistrate" never found theos G2316 (rendered
+  "magistrates" at Exo 22:28, elohim-as-rulers). Reverse too.
+- **The fix:** a precomputed `*_norm` column on each rendering table (`words.english_head_norm`, kjv/bsb
+  `word_norm`) holds `number_fold.normalize(rendering)`; the finder matches `<col>_norm = normalize(query)`.
+  Same function both sides, no inverse. `number_fold.py` = curated irregular map (attested forms only) +
+  careful singularizer (-ss/-ous/-es/-ies traps) + per-token for phrase heads. Deploy-safe fallback via
+  `_has_norm`.
+- **How it was gated:** backfill the columns, then an UNLIMITED disjoint-Strong's collision read across
+  ABP/KJV/BSB (a legit fold shares a Strong's across its forms; a cross-word collision shares none). Caught
+  exactly 3 real over-folds (news→new, does→doe, Heres→here) + a phrase leak ("the news"→"the new"), all
+  fixed, final read clean. LESSON: an early LIMIT-200 collision read sorted the dangerous low-count pairs off
+  the bottom — run collision reads with NO limit.
+- **Drift guard:** `scripts/build_rendering_norm.py` (idempotent, also the DDL). Wired into the words-rebuild
+  dependent-builder tail + `/rebuild-words` step 11, and `recompute_norms(only="bsb_words")` at the tail of
+  `load_bsb_words.py`. kjv_words is static → one-time backfill.
+- **KNOWN GAP (see TODO open items):** the Hebrew-OT discovery branch is NOT folded.
+
 ## Study tab restructure + admin-only gate + concept-topic deprecation — DONE + LIVE 2026-07-01
 Full record: memory `project_study_modules` + `project_three_zone_shell`.
 - **Uniform master-detail shell** — Topics, Graphs AND Seams now share ONE `<Shell>` frame: LEFT rail = the
