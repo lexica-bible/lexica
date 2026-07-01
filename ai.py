@@ -28,7 +28,7 @@ from core import (
     ai_fingerprint, ai_cache_get, ai_cache_put, ai_cache_prune, _strip_accents,
 )
 from views_lsj import _lsj_concept_lookup, _format_lsj_context
-from views_lexicon import _greek_cognates
+from views_lexicon import _greek_cognates, _norm_lemma
 import corpus_panel   # deterministic lexical-texture panel (no model call) — see corpus_panel.py
 from views_notes import (ai_caller, ai_quota_blocked, ai_quota_count,
                          ai_quota_status)   # AI search is login-gated + daily-capped (costs API money)
@@ -1302,6 +1302,43 @@ def _persist_ai_cache(query: str, payload: dict) -> None:
     ai_cache_put(query, payload, _get_ai_cache_ver())
 
 
+# A bare typed Greek/Hebrew word is its own dictionary headword in the common case.
+# Pin it to its EXACT Strong's here (indexed lemma_plain) so the occurrence list is that
+# ONE number — not the model's English-concept guess, which pulls in look-alikes (γῆ →
+# words ending -γη / starting γε-). Returns a prefixed number ('G1093'/'H776'), or None
+# for a phrase/question or when the normalized word maps to MORE THAN ONE number
+# (homographs / dotted variants sharing the plain form) — that set falls through to the
+# model path unchanged (not wrong, just not pinned). Guards on lemma_plain existing, so a
+# deploy before scripts/add_lemma_plain.py runs is safe.
+_GREEK_RE  = re.compile(r"^[Ͱ-Ͽἀ-῿]+$")
+_HEBREW_RE = re.compile(r"^[֐-׿]+$")
+
+
+def _resolve_exact_lemma(q: str) -> str | None:
+    w = (q or "").strip()
+    if " " in w or len(w) < 2:
+        return None
+    is_grk, is_heb = bool(_GREEK_RE.match(w)), bool(_HEBREW_RE.match(w))
+    if not (is_grk or is_heb):
+        return None
+    key = _norm_lemma(w)
+    if not key:
+        return None
+    conn = db_ro()
+    try:
+        tbl = "lexicon" if is_grk else "bdb"
+        cols = {r[1] for r in conn.execute(f"PRAGMA table_info({tbl})").fetchall()}
+        if "lemma_plain" not in cols:              # data step not run → model path (safe)
+            return None
+        col = "strongs_g" if is_grk else "strongs_id"
+        hits = {r[0] for r in conn.execute(
+            f"SELECT DISTINCT {col} FROM {tbl} WHERE lemma_plain=? AND {col} IS NOT NULL",
+            (key,)).fetchall() if r[0]}
+    finally:
+        conn.close()
+    return hits.pop() if len(hits) == 1 else None  # one clean headword only
+
+
 @bp.route("/api/ai-search")
 @limiter.limit("200 per hour")
 def ai_search():
@@ -1320,6 +1357,10 @@ def ai_search():
 
         if len(q) > 500:
             return jsonify({"error": "query too long (max 500 chars)"}), 400
+
+        # A bare typed Greek/Hebrew word → pin its EXACT Strong's so the occurrence list
+        # can't be laundered into look-alikes (see _resolve_exact_lemma). None otherwise.
+        _pinned = _resolve_exact_lemma(q)
 
         # Cache key — caps / punctuation / extra-space variants of the same question
         # share one answer ("Is hell the same as Sheol?" == "is hell the same as sheol").
@@ -1480,6 +1521,26 @@ def ai_search():
         greek_pairs = [p for p in _ks_pairs_all if not _is_heb(p)][:6]
         hebrew_pairs = [p for p in _ks_pairs_all if _is_heb(p)][:4]
         _ks_pairs = greek_pairs + hebrew_pairs
+
+        # ── Exact-lemma pin: force the SQL + key word onto the resolved number so a
+        # bare typed word's occurrence list IS that word (not the model's guess). The
+        # model still wrote the prose/explanation; the DISPLAYED answer is the pass-2
+        # grounded one, which reads these pinned verses. Greek gets a direct occurrence
+        # query; Hebrew rides the heb.db supplement below (it injects real OT occurrences
+        # off the H-number). `_pinned` is a DB value (not user text) → safe to inline.
+        if _pinned:
+            _pb = _pinned.lstrip("GH").split(".")[0]
+            _ks_pairs = [(_pb, _pinned[0])]
+            if _pinned.startswith("G"):
+                sql = ("SELECT v.book, v.chapter, v.verse, w.english, w.strongs_base, w.strongs, "
+                       "l.lemma, l.translit, l.strongs_def, l.kjv_def, l.derivation "
+                       "FROM words w JOIN verses v ON w.verse_id=v.id "
+                       "LEFT JOIN lexicon l ON l.strongs_g=w.strongs_base "
+                       f"WHERE w.strongs_base='{_pinned}' ORDER BY v.id")
+            else:
+                sql = "SELECT NULL AS book LIMIT 0"   # Hebrew list comes from the heb.db supplement
+            log.info("exact-lemma pin: %s → %s", q, _pinned)
+
         if not _ks_pairs:
             _ks_pairs = [(e["strongs"], None) for e in lsj_entries[:6]]
         key_strongs_data: list[dict] = []
