@@ -532,7 +532,12 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
 - **Desktop ≥1100px**: navy header, left nav panel (224px), lib-bar toolbar, detail panel as right sidebar
 - **Mobile <1100px**: no header, sticky mobile toolbar (lib-toolbar), bottom tab nav, panels as bottom sheets
 - JS thresholds: `navVisible >= 1100`, `isMobile < 1100`, `desktopBar` removed (two states only)
-- CSS: `@media (max-width: 1099px)` / `@media (min-width: 1100px)` — no other breakpoints except 520px for very small phones
+- CSS: `@media (max-width: 1099px)` / `@media (min-width: 1100px)` — plus 520px for very small phones
+  and a **1500px header nav-overflow** breakpoint (below it the desktop header hides the inline nav and
+  moves the links into a hamburger; subtitle stays). The header actually runs out of room ~1471px, NOT
+  at some obvious point: Word study / Library / News reserve 472px (`--sidebar-w + 12`) on the right for
+  the floating word card, so the nav collides with it far above 1100. Hamburger = `Header` in
+  `20-shared-components.jsx`; CSS `.hdr-burger`/`.hdr-menu` + the `@media (max-width:1499px)` rule.
 
 ## Three-zone shell (shared workspace frame)
 The navigate / read / inspect layout. **Frame components are in `static/src/22-shell.jsx`:** `Shell`
