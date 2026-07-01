@@ -433,15 +433,24 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
   );
 
   // One source's rendering line. The backend caps it to 8 and (for an English
-  // search) flags the matched rendering `m` for bolding — pinning it with … …
-  // markers if it sorted below the cap, so the summary always shows the typed word.
-  const renderRend = (list) => list.map((x, i) => (
-    <React.Fragment key={x.gloss + i}>
-      {i > 0 && (x.pin ? " … " : ", ")}
-      <span className={x.m ? "glrow-match" : undefined}>{x.gloss}</span>
-      {x.pin && <> {x.count} …</>}
-    </React.Fragment>
-  ));
+  // search) flags the matched rendering `m` for bolding — surfacing it in place if
+  // it sorted below the cap, so the summary always shows the typed word. A trailing
+  // {trunc:true} marker means the source has more rows than shown → render a "…".
+  const renderRend = (list) => {
+    const items = list.filter(x => !x.trunc);
+    const trunc = list.some(x => x.trunc);
+    return (
+      <>
+        {items.map((x, i) => (
+          <React.Fragment key={x.gloss + i}>
+            {i > 0 && ", "}
+            <span className={x.m ? "glrow-match" : undefined}>{x.gloss}</span>
+          </React.Fragment>
+        ))}
+        {trunc && " …"}
+      </>
+    );
+  };
 
   // The collapsible "words rendered" card (English-gloss search → several lemmas).
   const renderSenses = () => (

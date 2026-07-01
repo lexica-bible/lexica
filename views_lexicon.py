@@ -971,7 +971,11 @@ def lexicon_english():
             if not any(e.get("m") for e in disp):
                 hit = next((e for e in full[8:] if _fold_norm(e["gloss"]) == mq), None)
                 if hit:
-                    disp = disp + [dict(hit, m=True, pin=True)]   # buried → pin w/ markers
+                    disp = disp + [dict(hit, m=True)]  # buried match → surface it in place
+            # Trailing "…" marker iff this source has more rendering rows than shown
+            # (the 8 + the surfaced match, if any). Independent of the match/bold.
+            if len(disp) < len(full):
+                disp = disp + [{"trunc": True}]
             return disp
 
         results = []
