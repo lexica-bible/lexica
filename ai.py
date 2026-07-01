@@ -1251,7 +1251,8 @@ _ai_cache_ver: str | None = None  # computed once from prompt template + book li
 
 # Bump this integer whenever server-side search logic changes in a way that
 # affects results but doesn't change _AI_SYSTEM_TMPL (e.g. new fallback steps).
-_CACHE_CODE_VER = 39   # 39: computed lexical-texture panel added to the payload (corpus_panel.py)
+_CACHE_CODE_VER = 40   # 40: exact-lemma pin for a bare typed word (_resolve_exact_lemma)
+                       # 39: computed lexical-texture panel added to the payload (corpus_panel.py)
 
 
 def _get_ai_cache_ver() -> str:

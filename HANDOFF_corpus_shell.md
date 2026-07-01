@@ -43,8 +43,23 @@ for that word. Fall through to the model path for a phrase/question or no exact 
 - REUSE `_norm_lemma` + `lemma_plain` exactly as views_lexicon.py:513-532 already does. Do NOT
   invent a second matcher. Guard on the column existing (mirror `_has_lemma_plain`) so a deploy
   before the data step is still safe.
+- KNOWN GAP (measured 2026-06-30): a word whose accent-/point-stripped form maps to MORE THAN
+  ONE number falls through to the model path (not wrong, just not pinned). Greek = 27 words
+  (~0.5%, negligible — accents barely distinguish Greek). Hebrew = 1,460 (~17% — stripping vowel
+  points collapses distinct words to one consonant skeleton, so the Hebrew pin is inherently
+  weaker). Same fold Word study uses, so no NEW gap — just consistent behavior.
 - Greek → `lexicon`; Hebrew → `bdb`/heb.db. Exact FIRST; the model path is the fallback only.
 - Bump `_CACHE_CODE_VER` in ai.py (behavior change not in the prompt fingerprint).
+
+### FIXED (2026-07-01) — was a pre-existing NameError, not the Hebrew branch
+The Hebrew "Internal server error" traced to `_assemble_payload` (the SSE streaming tail) reaching
+for `_is_thematic`, a helper NESTED in `ai_search` it can't see after being lifted out — even
+though it already receives `target_bases`. A fresh streamed search NameError'd whenever it reached
+that helper: a model-named additional verse, OR a zero-base-row result. The exact-lemma Hebrew pin
+always returns zero base rows (its `SELECT … LIMIT 0` placeholder), so it reliably surfaced a
+LATENT bug that cache hits + normal Greek searches had hidden. Fixed by binding a local
+`_is_thematic` to the `target_bases` param (commit 04cf9a1). Not caused by the pin — the pin just
+exposed it. Redeploy + re-ask אֶרֶץ to confirm the Hebrew pin now completes.
 
 ### Acceptance (must pass before shell work starts)
 - On PA after --apply: `lemma_plain='γη'` returns G1093 alone (the `LIKE '%γη%'` list is the leak).

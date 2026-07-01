@@ -255,8 +255,11 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
 - `lexicon` — Greek Strong's definitions. Has an indexed `lemma_plain` (accent-stripped/lowercased/
   final-sigma-folded lemma) — the fast EXACT key the Word-study search matches first (`bdb` has it too).
   Built by `scripts/add_lemma_plain.py` (folded into `load_lexicon.py` for the Greek side; re-run the
-  script after a bdb reload). Word-study lookup short-circuits on an exact `lemma_plain` hit, only
-  falling to the slow substring scan when the typed word isn't a headword. Memory `project_lexicon_search_overmatch`.
+  script after a lexicon OR bdb reload). Word-study lookup short-circuits on an exact `lemma_plain` hit,
+  only falling to the slow substring scan when the typed word isn't a headword. **It can silently VANISH:
+  found MISSING on the live db 2026-06-30 (a reload had dropped it), which had left the exact-match fix
+  asleep — re-applied 2026-07-01. VERIFY the column exists after any reload** (`PRAGMA table_info(lexicon)`).
+  Ask-corpus's exact-lemma pin now uses it too (`_resolve_exact_lemma` in ai.py). Memory `project_lexicon_search_overmatch`.
 - `lsj` — Liddell-Scott-Jones Greek lexicon
 - `abp_ext` — extended ABP data
 - `dotted_lexicon` — corrected headword for ABP dotted Strong's. A side table in bible.db (built on PA,
