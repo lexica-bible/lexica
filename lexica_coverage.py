@@ -414,10 +414,15 @@ def coverage_audit(conn, sid, occs, entry_refs, sense_specs, contest_verses=None
     for i, spec in enumerate(sense_specs or [], 1):
         refs = spec.get("refs") or []
         sup = len(refs)
-        self_only = bool(is_contested and has_locus and sup > 0 and
-                         all(((b, c, v) in vset) or ((b, c) in cset) for (b, c, v) in refs))
+        inside = [(b, c, v) for (b, c, v) in refs if ((b, c, v) in vset) or ((b, c) in cset)]
+        outside = [(b, c, v) for (b, c, v) in refs if (b, c, v) not in inside]
+        self_only = bool(is_contested and has_locus and sup > 0 and not outside)
         rec = {"sense": i, "headline": spec.get("headline", ""),
-               "support_refs": sup, "self_only": self_only}
+               "support_refs": sup, "self_only": self_only,
+               # the actual citations + which fall OUTSIDE the disputed passage — the outside ones
+               # are exactly what keeps a sense from being circular (self-diagnosing).
+               "refs": [f"{b} {c}:{v}" for (b, c, v) in refs],
+               "outside": [f"{b} {c}:{v}" for (b, c, v) in outside]}
         senses.append(rec)
         if sup <= thin_max or self_only:
             thin.append(rec)

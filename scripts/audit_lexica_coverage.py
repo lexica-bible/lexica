@@ -98,6 +98,10 @@ def coverage_word(conn, sid):
     thin_only = [t for t in cov["thin_senses"] if not t["self_only"]]
     note = "" if cov["contested"] else "  (circular check inert — not a contested word)"
     print(f"  senses: {len(senses)} checked, {len(thin_only)} thin, {len(circ)} circular{note}")
+    if cov["contested"]:                       # show each sense's refs + what falls OUTSIDE the locus
+        for s in senses:
+            out = f"  OUTSIDE: {', '.join(s['outside'])}" if s["outside"] else "  (all inside disputed passage)"
+            print(f"    sense {s['sense']} [{s['support_refs']} ref(s)]: {', '.join(s['refs']) or '(none)'}{out}")
     for t in cov["thin_senses"]:
         kind = "CIRCULAR (self-only)" if t["self_only"] else "thin"
         print(f"    · sense {t['sense']} {kind} — {t['support_refs']} support ref(s): {t['headline'][:60]}")
