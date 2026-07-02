@@ -136,7 +136,28 @@ YouVersion, which aren't the target). Honest gaps:
   - Verbs + Hebrew first-batches = separate tracks.
   - Small: the fork gate names a covenant-membership/NPP reading for dikaioō that `salvation_how` has no
     node for — add one via add_study_graph_salvation.py so the link lands.
-  code: scripts/build_lexica_def.py (CONTESTED), fix_lexica_raw.py, lexica_agreement.py, views_lexica.py
+  - **occ≥2 cutoff is NOT enforced in code (audit A1, DEFERRED to next batch).** build_lexica_def only skips
+    a ZERO-occurrence word — `--word <hapax> --apply` would still build one. The cutoff lives only as policy;
+    the batch-2 pre-sort driver is the natural place to enforce it (reject occ<2 before building).
+  - **build_lexica_def opens the LIVE db with a writable handle even on `--dry-run` (audit C3, DEFERRED).**
+    It never writes outside --apply, but it's the one lexica script still holding a write-capable handle on the
+    live file, against the 2026-06-28 copy-first rule. Low risk, tidy when convenient.
+  code: scripts/build_lexica_def.py (imports contested_register), fix_lexica_raw.py, lexica_agreement.py, views_lexica.py
+
+- **Definition-engine audit — items PARKED by JP's scope call (2026-07-01).** Batch 1 (register extraction,
+  blocking citation gate, G5485 alias, serve-time fork backstop, +7 gloss overrides) shipped — see memory
+  `project_lexica_dictionary`. Not fixed, deliberately queued:
+  - **Ask-corpus LSJ / strongs_def leakage (audit A3/A4)** — the ONE path where LSJ text + Strong's interpretive
+    paraphrase reach output: `_lsj_concept_lookup` feeds LSJ semantic snippets into the Haiku SQL-gen prompt
+    (steers key_strongs), and the Ask-corpus rail renders `target.definition` = `strongs_def` unlabeled
+    (the field the word card was moved OFF of, per views_lsj.py:297). Fold into the Corpus right-rail work.
+  - **Spelled-out-book-name gate blind spot (audit B1)** — `_REF_RE` only catches numbered books + `Cap+2low`;
+    a citation written "Genesis 1:1"/"Matthew 5:17" escapes the gate, verses[], and LXX-provenance counts.
+    Needs a manual eyeball of G4561/G5547 stored raw first.
+  - **pinned_core presentation labeling (audit B4)** — the hand-authored pinned core leads the Meaning view
+    under the "✓ verified" badge with no marker distinguishing it from engine output; provenance is
+    "verse-grounded · LEXICA" unconditionally. Presentation call, fold into the card review.
+  code: ai.py (_lsj_concept_lookup consumer), build_lexica_def.py (_REF_RE), static/src/20-shared-components.jsx
 
 - **LSJ "Lexica" overrides** — the blurb is a Haiku "definition" prompt + per-word hand-written overrides
   for loaded lemmas (6 seeded). Memory `project_lsj_overrides`. OPEN: the contested words (αἰώνιος,

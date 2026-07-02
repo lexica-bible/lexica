@@ -290,15 +290,25 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   LXX-provenance flag, Option B) + `fork` (contested-word
   readings + a Study-graph link; also carries `gloss` + two hand-authored SEAM axes `divergence_type`
   (referent|content|loaded) + `lead_flip` (does the lead sense flip when the priors are swapped) — set in
-  the `CONTESTED` register, no model, written on any `--resplit`) + `verses` + `audit` (citation-gate badge)
+  the `CONTESTED` register, no model, written on any `--resplit`) + `verses` + `audit` (citation-gate result)
   + `raw` (so a better splitter re-splits with NO model call). Built by `scripts/build_lexica_def.py` (frozen `VERSE_PROMPT` → Sonnet → split
   → citation gate → fork → write; `--apply` build / `--resplit --apply` re-split stored raw, free; surgical raw
-  typo-fixes via `scripts/fix_lexica_raw.py`, no model call). Served by
+  typo-fixes via `scripts/fix_lexica_raw.py`, no model call). **The `CONTESTED` fork register is `contested_register.py`
+  (repo root, 2026-07-01) — the ONE copy, imported by build_lexica_def + trial_lexica_def + views_lexica; edit it there,
+  never re-copy (a stale duplicate in the trial rig was the reason it moved).** **The citation gate BLOCKS the write
+  (2026-07-01, was report-only):** `validate_entry` rejects a row with a real/no-verse miss (tagging misses stay
+  non-blocking, logged); `--force-gate-bypass "reason"` stores the reason in `audit.bypass_reason`, stamped only on a
+  word whose gate failed. Served by
   `views_lexica.py` `/api/lexica/<strongs>` → the `LexicaBody` card (20-shared-components, BESIDE `LsjBody`;
   `30-detail-panel.jsx` branches `case "lsj"`). **Also `/api/lexica/seams`** (read-only, same file) — every
   row that carries a `fork`, feeding the **Seam index** Study module (`SeamIndex` in 55-study.jsx; the
   contested-word browse). After adding/moving a `divergence_type`/`lead_flip` in `CONTESTED`, run
-  `build_lexica_def.py --resplit --all --apply` on PA to write it into the stored forks (free, no model). **PUBLIC since 2026-06-25** (`LEXICA_ADMIN_ONLY=False`; serves everyone incl. logged-out — a word with
+  `build_lexica_def.py --resplit --all --apply` on PA to write it into the stored forks (free, no model). **Two serve-time
+  guards in `/api/lexica/<strongs>` (2026-07-01):** (a) a `LEXICA_ALIASES` map (derived from the register's `aliases`
+  fields) serves the ONE real row for a word ABP tags differently — KJV/BSB clicking charis ask for G5485, get the
+  G5484 row; (b) a fork BACKSTOP — a `CONTESTED` word whose stored row has no `fork` (built before it entered the
+  register, the θεός/κύριος batch-1 gap) 404s + logs loudly instead of serving a one-sided entry (card falls to LSJ).
+  **PUBLIC since 2026-06-25** (`LEXICA_ADMIN_ONLY=False`; serves everyone incl. logged-out — a word with
   no entry 404s → the normal LSJ card, deploy-safe; flip the flag back to re-gate). LIVE on ~18 words: the 6
   pilot (psychē + the 5 contested forks dikaioō/charis-G5484/aionios/sarx/ekklesia) + 12 from full-build BATCH 1. **PILOT SHIPPED 2026-06-25:** the v3
   sub-use-test prompt is promoted into `VERSE_PROMPT` (diff-locked vs the reviewer's frozen V3); the 3
