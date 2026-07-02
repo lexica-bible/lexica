@@ -11,8 +11,11 @@ NOTE: the three `SUBSTR(w.strongs_base, 2)` examples inside _AI_SYSTEM_TMPL are
 LEFT AS-IS — they're illustrative SQL for Haiku, and changing them alters AI
 output + busts the prompt cache (the Phase-1 SUBSTR removal's separate follow-up).
 
-Imports _lsj_concept_lookup/_format_lsj_context from views_lsj
-(their primary-consumer home).
+Imports _lsj_concept_lookup from views_lsj (its primary-consumer home). The
+retrieval context fed to SQL generation is (re)built HERE, keys-only, by
+_retrieval_context — LSJ / Strong's definition PROSE is structurally kept out of
+every prompt that yields displayed synthesis (A3/A4 leak fix); see that function
+and _assert_no_lexicon_prose below.
 """
 import json
 import re
@@ -27,7 +30,7 @@ from core import (
     _serialize_word_core, _clean_gloss, _ai_cache, dotted_lexicon_cols,
     ai_fingerprint, ai_cache_get, ai_cache_put, ai_cache_prune, _strip_accents,
 )
-from views_lsj import _lsj_concept_lookup, _format_lsj_context
+from views_lsj import _lsj_concept_lookup
 from views_lexicon import _greek_cognates, _norm_lemma
 import corpus_panel   # deterministic lexical-texture panel (no model call) — see corpus_panel.py
 from views_notes import (ai_caller, ai_quota_blocked, ai_quota_count,
@@ -802,6 +805,80 @@ def _parse_curation(raw: str):
     return primary, additional, explanation
 
 
+# ── A3/A4: no lexicon definition prose in the synthesis payload ───────────────
+# Ask-corpus answers are built ONLY from actual verse evidence (the Berean rule) —
+# NOT from imported lexicon prose. Strong's numbers, lemmas and transliterations
+# are retrieval KEYS and stay; LSJ / Strong's DEFINITION text does not enter any
+# prompt that produces displayed synthesis. This is enforced structurally (the
+# builders below read only whitelisted keys) with a fail-closed guard as backstop,
+# the same philosophy as the pick-parse floor: when unsure, emit nothing rather
+# than something contaminated. LSJ stays available to the UI for display — it is
+# just unreachable by the synthesis assembler here.
+_LEXICON_PROSE_FIELDS = ("semantic", "def_html", "summary", "definition",
+                         "strongs_def", "kjv_def", "derivation", "gloss")
+
+
+def _prose_snippets(entries: list[dict] | None) -> list[str]:
+    """Normalized definition-prose fragments carried by these entries (and their
+    cognates), for the leak guard to look for. Short values (< 12 chars) are
+    skipped — a one-word lemma-ish label is a key, not the prose we're gating."""
+    out: list[str] = []
+    for e in entries or []:
+        if not isinstance(e, dict):
+            continue
+        for src in [e, *(c for c in (e.get("cognates") or []) if isinstance(c, dict))]:
+            for f in _LEXICON_PROSE_FIELDS:
+                v = src.get(f)
+                if isinstance(v, str):
+                    frag = " ".join(v.split())
+                    if len(frag) >= 12:
+                        out.append(frag[:40].lower())
+    return out
+
+
+def _assert_no_lexicon_prose(text: str, entries: list[dict] | None) -> str:
+    """Fail-closed boundary check: no LSJ/Strong's definition prose from `entries`
+    may reach `text` (a prompt fragment that yields displayed synthesis). Returns
+    `text` when clean; on a detected leak, logs loudly and returns "" so a future
+    code path can't quietly reintroduce lexicon prose into the answer."""
+    low = text.lower()
+    for frag in _prose_snippets(entries):
+        if frag and frag in low:
+            log.error("A3/A4 leak guard tripped: lexicon definition prose in synthesis payload — dropping")
+            return ""
+    return text
+
+
+def _retrieval_context(entries: list[dict] | None) -> str:
+    """The LSJ retrieval context prepended to SQL generation, built from KEYS ONLY:
+    Strong's number + lemma + transliteration + dotted variants + same-root numbers.
+    Definition/gloss PROSE (LSJ `semantic`, and the Strong's/KJV `def` a cognate
+    gloss can carry) is never read here — SQL generation needs the numbers, not the
+    definitions. Replaces the old _format_lsj_context, which emitted both and let
+    them ride into the pass-1 explanation the reader can see (A3/A4)."""
+    if not entries:
+        return ""
+    lines = ["LSJ LEXICAL CONTEXT — use these Strong's numbers in SQL WHERE clauses:"]
+    for e in entries:
+        line = f"  G{e['strongs']} {e.get('lemma', '')} ({e.get('translit', '')})".rstrip()
+        variants = e.get("dotted_variants") or []
+        if variants:
+            vlist = ", ".join(f"G{v}" for v in sorted(variants))
+            line += f" [corpus dotted variants: {vlist} — use w.strongs='...' to target specifically]"
+        lines.append(line)
+        cognates = e.get("cognates") or []
+        if cognates:
+            clist = "; ".join(
+                f"{c['strongs']} {c.get('lemma', '')} ({c.get('translit', '')})".rstrip()
+                for c in cognates
+            )
+            lines.append(
+                f"      related same-root forms (include in SQL + key_strongs when they "
+                f"fit the concept): {clist}"
+            )
+    return _assert_no_lexicon_prose("\n".join(lines), entries)
+
+
 def _curation_prompt(
     query: str, results: list[dict], key_strongs_data: list[dict] | None = None
 ) -> tuple[str, int]:
@@ -858,9 +935,17 @@ def _curation_prompt(
     else:
         verse_list = ""
 
-    terms = ", ".join(
-        f"{e.get('strongs', '')} {e.get('lemma', '')}".strip()
-        for e in (key_strongs_data or [])[:10]
+    # Pass 2 is the primary DISPLAYED synthesis, so its payload is verse text +
+    # keys only. The terms line is built from Strong's number + lemma alone; the
+    # A3/A4 guard is the backstop — if a definition field ever leaked in here it is
+    # dropped rather than shown (key_strongs_data also carries definition/derivation
+    # that must never reach this prompt).
+    terms = _assert_no_lexicon_prose(
+        ", ".join(
+            f"{e.get('strongs', '')} {e.get('lemma', '')}".strip()
+            for e in (key_strongs_data or [])[:10]
+        ),
+        key_strongs_data,
     )
     user_msg = (
         f"Query: {query}\n"
@@ -1453,7 +1538,7 @@ def ai_search():
 
         # ── Step 2: LSJ concept lookup ────────────────────────────────────
         lsj_entries = _lsj_concept_lookup(terms)
-        lsj_context = _format_lsj_context(lsj_entries)
+        lsj_context = _retrieval_context(lsj_entries)
         _mark("lsj")
         log.debug("LSJ context (%d entries): %.200s", len(lsj_entries), lsj_context)
 

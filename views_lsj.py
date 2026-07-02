@@ -4,9 +4,11 @@
 Liddell-Scott-Jones Greek entries (with abp_ext + Strong's fallbacks), the
 Haiku-backed LSJ sense summary, and Brown-Driver-Briggs Hebrew entries.
 
-_lsj_concept_lookup and _format_lsj_context are used by the AI blueprint (its
-LSJ-context step), so they live here with the other LSJ helpers and the AI module
-imports them.
+_lsj_concept_lookup is used by the AI blueprint (its LSJ-context step) to find
+candidate Strong's numbers, so it lives here with the other LSJ helpers and the
+AI module imports it. It returns definition prose (`semantic`) for other callers,
+but the AI blueprint builds its own KEYS-ONLY retrieval context (ai._retrieval_context)
+so LSJ/Strong's definition prose never rides into a displayed answer (A3/A4).
 """
 import json
 import re
@@ -200,29 +202,10 @@ def _resolve_lsj_xref(conn, def_html: str, columns: str = "key, translit, def_ht
     return row
 
 
-def _format_lsj_context(entries: list[dict]) -> str:
-    if not entries:
-        return ""
-    lines = ["LSJ LEXICAL CONTEXT — use these Strong's numbers in SQL WHERE clauses:"]
-    for e in entries:
-        line = f"  G{e['strongs']} {e['lemma']} ({e['translit']}): {e['semantic']}"
-        variants = e.get("dotted_variants", [])
-        if variants:
-            vlist = ", ".join(f"G{v}" for v in sorted(variants))
-            line += f" [corpus dotted variants: {vlist} — use w.strongs='...' to target specifically]"
-        lines.append(line)
-        cognates = e.get("cognates", [])
-        if cognates:
-            clist = "; ".join(
-                f"{c['strongs']} {c['lemma']} ({c['translit']})"
-                + (f" — {c['gloss']}" if c.get("gloss") else "")
-                for c in cognates
-            )
-            lines.append(
-                f"      related same-root forms (include in SQL + key_strongs when they "
-                f"fit the concept): {clist}"
-            )
-    return "\n".join(lines)
+# NOTE: the former _format_lsj_context (which emitted LSJ `semantic` prose and a
+# cognate `gloss` that could carry Strong's/KJV definition text) was REMOVED — it
+# let lexicon definition prose ride into the pass-1 explanation the reader can see.
+# The AI blueprint now builds a keys-only retrieval context itself (ai._retrieval_context).
 
 
 @bp.route("/api/lsj/<path:lemma>")
