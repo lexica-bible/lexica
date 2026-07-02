@@ -72,6 +72,14 @@ index, and News right-rail all shipped on it 2026-07-01. Full record: memory `pr
 3. Post-deploy check: News → Kept → Copy shortlist shows "Resolving…" then pastes clean article links,
    not `news.google.com/rss/...` wrappers.
 
+**Paywall-aware face selection + 🔒 badge** (SHIPPED 2026-07-02; memory `project_news_watch`):
+1. Needs a normal CODE deploy (backend `_pick_face` penalty + `pw` per member; frontend badge).
+2. Post-deploy spot-check (still OWED — no mixed cluster in the window at ship time): find a cluster
+   with a paywalled outlet (WaPo/NYT/…) + a free/wire source, confirm the FREE one is the card face and
+   the paywalled one shows 🔒 down in the inspect sources. Then switch presets windowed ↔ Max on that
+   cluster and confirm the face stays non-paywalled in both. Unit tests cover the logic; this is the
+   only human check left.
+
 **Copy/Export shortlist + card-link formats** (SHIPPED 2026-07-02; memory `project_news_watch`):
 1. Needs a normal CODE deploy — the feed read now carries `i.summary` (fills the copy "description" +
    CSV description) AND `i.resolved_url` per face/member (makes the card/article CLICK open the real
