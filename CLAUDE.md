@@ -50,7 +50,7 @@ vouching it's right.)
 record: memory `feedback_verify_before_claiming`.
 
 ## Instructions for Claude Code
-(Account: user is on the Max 20x plan — ample headroom. Bias to being THOROUGH and
+(Account: user is on the Max 5x plan — decent headroom, not unlimited. Still bias to being THOROUGH and
 CORRECT over conserving tool calls. The notes below are about staying focused and
 keeping context sharp, NOT about rationing usage.)
 - Target the specific function/section relevant to the task — for focus, not frugality
@@ -63,8 +63,8 @@ keeping context sharp, NOT about rationing usage.)
 - Ask for clarification before making large changes
 - Go straight to the relevant function; don't scan the whole codebase out of habit
 
-## Effort mode (Opus 4.8) — on the Max 20x plan, headroom is ample
-Pick effort by task TYPE. When in doubt, lean higher — the plan affords it.
+## Effort mode — Max 5x plan, headroom is decent but finite
+Pick effort by task TYPE. Lean higher when data correctness is on the line; don't burn top effort on routine work.
 - **Routine work** (known edits, data scripts, config tweaks, one-line fixes):
   medium effort is plenty; stay efficient but don't cut corners on correctness.
 - **Diagnosis / root-cause / data-integrity work** (a symptom several hops from
@@ -74,7 +74,7 @@ Pick effort by task TYPE. When in doubt, lean higher — the plan affords it.
   wrong word hid a 592k-row break).
 - When unsure which mode you're in, ask the user, or state your assumption.
 
-## Working style (not hard caps — 20x plan, optimize for correctness)
+## Working style (not hard caps — optimize for correctness)
 - Show code before changing it (ALWAYS — every mode, no exceptions)
 - WORD-ORDER / Strong's-order / proper-noun-slot swaps: confirm the layout against
   the SOURCE (eSword/ABP) ONLY — NEVER guess "what eSword probably shows." If the
