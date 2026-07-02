@@ -198,94 +198,14 @@ OVERRIDES = {
 }
 
 # ══════════════════════════════════════════════════════════════════════════════
-# THE CONTESTED-WORD FAIRNESS GATE — the hand-authored fork register (chat design 2026-06-24).
-# A word in here is, by MEMBERSHIP ALONE, flagged "read more than one way": after its verse def
-# is written, render_fork() appends the block below verbatim. NO model, NO detector — we distrust
-# the model's fork CONTENT enough to hand-author it, so we distrust its fork DETECTION too.
-#
-# Each entry: core = the attested sense both/all sides grant; frames = the live readings, each
-# (label, tradition, gloss); graph_ref = "<study_id>:<claimid>|<claimid>" pointing at the
-# argument graph that maps the split, or None until one is authored (4 of 5 are None today).
-#
-# DATA NOTES (deliberately diverge from the chat spec — source/corpus beats the chat on data):
-#   - charis: ABP tags it G5484 (the form χάριν), NOT the textbook G5485 (whose lexicon/LSJ entry
-#     is an empty stub). The corpus words carry G5484, so the gate MUST fire on G5484 or it never
-#     triggers on charis. Keyed under G5484 (+ G5485 as an alias).
-#   - the baptism graph's study id is "baptism_who" (not "baptism"); claim ids
-#     def_grace_infused / obj_grace_charis are verbatim from scripts/add_study_graph.py.
+# THE CONTESTED-WORD FAIRNESS GATE — the register now lives in contested_register.py (repo
+# root), the ONE copy shared with build_lexica_def.py and the serving route. This rig's own
+# stale copy (5 words; live register has 8 + the G5485 alias) was removed 2026-07-01 — edit
+# the shared module, not here. render_fork() below reads the same fields it always did.
 # ══════════════════════════════════════════════════════════════════════════════
-CONTESTED = OrderedDict([
-    ("G1344", {
-        "lemma": "dikaioō", "gloss": "justify",
-        "core": "to deem, treat, or pronounce just; to set right, hold to be in the right",
-        "frames": [
-            ("forensic / imputed", "Reformation",
-             "a legal verdict — righteous status declared, not moral change"),
-            ("transformative / infused", "Catholic / Trent",
-             "actually made righteous; the -oō verb as factitive (James 2)"),
-            ("covenant-membership", "New Perspective",
-             "declarative, but about who belongs to God's people — not imputed moral righteousness"),
-        ],
-        "note": "forensic and covenant-membership share the declarative mechanism; "
-                "they split on content, not declare-vs-make",
-        # salvation_how maps the dikaioō-sense JOINT: forensic + infused match two frames above; it
-        # ALSO carries a demonstrate/vindicate node (James) the frames don't name, and has NO
-        # covenant-membership/NPP node — "see the full map" doesn't promise frame-by-frame parity.
-        "graph_ref": "salvation_how:def_dikaioo_forensic|def_dikaioo_infused|def_dikaioo_demonstrate",
-    }),
-    ("G166", {
-        "lemma": "aionios", "gloss": "eternal / age-long",
-        "core": "pertaining to an age; long-lasting, ancient",
-        "frames": [
-            ("unending duration", "—", "everlasting, without end"),
-            ("of-the-coming-age / qualitative", "inaugurated-eschatology",
-             "belonging to the age to come; a quality of life, not only its length"),
-        ],
-        "graph_ref": None,
-    }),
-    ("G5484", {
-        "lemma": "charis", "gloss": "favor / grace",
-        "aliases": ["G5485"],   # textbook number; G5484 is the one ABP actually tags
-        "core": "favor, goodwill, gift",
-        "frames": [
-            ("unmerited favor by faith", "Reformed",
-             "God's gracious disposition, received by faith"),
-            ("infused grace", "sacramental", "a quality imparted by a rite"),
-        ],
-        "graph_ref": "baptism_who:def_grace_infused|obj_grace_charis",
-    }),
-    ("G4561", {
-        "lemma": "sarx", "gloss": "flesh",
-        "core": "body, human being, mortal nature",
-        "frames": [
-            ("embodied humanity", "—", "the physical/human, morally neutral"),
-            ("sin-principle", "—",
-             "the disposition opposed to the Spirit; NIV 'sinful nature' — itself a contested gloss"),
-        ],
-        "graph_ref": None,
-    }),
-    ("G1577", {
-        "lemma": "ekklesia", "gloss": "assembly / church",
-        "core": "an assembly; a convened gathering or congregation",
-        "etymology_note": "ek-kaleō, 'called out' — etymologizing gloss, not a sense felt in "
-                          "usage; flag, don't seat in core",
-        "frames": [
-            ("local congregation", "—", "a particular gathered body in a place"),
-            ("universal body of believers", "invisible-church",
-             "all believers across time; visible institution not implied"),
-            ("institutional Church", "hierarchical / sacramental",
-             "the visible, structured Church as an entity"),
-        ],
-        "graph_ref": None,
-    }),
-])
-
-# membership index: every Strong's number (primary + aliases) -> its entry
-_CONTESTED_BY_SID = {}
-for _sid, _e in CONTESTED.items():
-    _CONTESTED_BY_SID[_sid] = _e
-    for _a in _e.get("aliases", []):
-        _CONTESTED_BY_SID[_a] = _e
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+from contested_register import CONTESTED, CONTESTED_BY_SID
+_CONTESTED_BY_SID = CONTESTED_BY_SID
 
 NT_BOOKS = {"Mat","Mar","Luk","Joh","Act","Rom","1Co","2Co","Gal","Eph","Php","Col",
             "1Th","2Th","1Ti","2Ti","Tit","Phm","Heb","Jas","1Pe","2Pe","1Jn","2Jn","3Jn","Jud","Rev"}

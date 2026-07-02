@@ -10,6 +10,7 @@ import json
 
 from flask import Blueprint, jsonify
 
+from contested_register import CONTESTED_BY_SID, LEXICA_ALIASES
 from core import db_ro, log
 from structural import structural_entry
 from views_notes import is_admin
@@ -100,6 +101,11 @@ def lexica_def(strongs):
         return jsonify(se)
     if LEXICA_ADMIN_ONLY and not is_admin():
         return jsonify({"error": "not found"}), 404      # admin-only rollout — non-admins fall through to LSJ
+    # A translation's standard number for a word ABP tags differently serves the ONE real row —
+    # never a duplicate. Today: KJV/BSB tag charis G5485, the entry lives under G5484 (the number
+    # ABP actually uses). Resolved AFTER structural_entry so an alias can never hijack a
+    # structural card. Map derived from the CONTESTED register's own "aliases" fields.
+    sid = LEXICA_ALIASES.get(sid, sid)
     conn = db_ro()
     try:
         if not _has_lexica(conn):
@@ -118,5 +124,13 @@ def lexica_def(strongs):
         entry = json.loads(row["def_json"])
     except Exception:
         return jsonify({"error": "bad data"}), 500
+    # Fairness-gate backstop (2026-07-01): a CONTESTED word whose stored row has no fork was
+    # built BEFORE the word entered the register (the theos/kyrios batch-1 gap). It must never
+    # render as a one-sided Lexica entry — refuse it (the card falls back to LSJ) and log loudly
+    # so the fix (a resplit) gets run. Membership read from the same shared register as the build.
+    if sid in CONTESTED_BY_SID and not entry.get("fork"):
+        log.error("CONTESTED word %s stored WITHOUT a fork — refusing to serve; run "
+                  "scripts/build_lexica_def.py --resplit --word %s --apply on PA", sid, sid)
+        return jsonify({"error": "not found"}), 404
     entry.pop("raw", None)        # the browser uses the split fields, not the full prose blob
     return jsonify(entry)

@@ -227,7 +227,10 @@ function LexicaBody({ lexica, lsjEntry }) {
   return (
     <>
       {audit.total ? (
-        <div className="lex-verified">{"✓"} {audit.pass}/{audit.total} cited verses verified</div>
+        // Checkmark ONLY when every citation verified; a partial pass shows a warning glyph.
+        // The build gate now blocks failed citations, so live entries should always be N == N —
+        // this is the defensive belt if one ever slips through (or was gate-bypassed).
+        <div className="lex-verified">{audit.pass === audit.total ? "✓" : "⚠"} {audit.pass}/{audit.total} cited verses verified</div>
       ) : null}
       <div className="lsj-tg-row">
         <button className={"lsj-tg" + (view === "meaning" ? " on" : "")} onClick={() => setView("meaning")}>Meaning</button>

@@ -79,6 +79,16 @@ OVERRIDES = {
     # "declare/acquit" gloss (forensic fork). The override's job here isn't "the correct sense"
     # (there isn't one) — it's "a header that matches the body's neutral core, refusing the fork".
     "G1344": "deem or treat as just",
+    # Audit batch 2026-07-01 — freight-carrying compressed headers (same class as the above;
+    # glosses approved verbatim). The card trims to the first two terms, so the plain sense
+    # must LEAD and the church term ride behind it.
+    "G3340": "change my mind, repent",         # metanoeō — now matches its noun G3341 above
+    "G5486": "gift, favor freely given",       # charisma — drop Dodson's "undeserved" (a doctrinal qualifier)
+    "G32":   "messenger, angel",               # angelos — plain sense leads
+    "G652":  "envoy, delegate, apostle",       # apostolos — the range, church term last
+    "G4352": "bow down, do homage, worship",   # proskyneō — range, not the bare church term
+    "G86":   "the unseen realm, Hades",        # hadēs — not a bare transliteration
+    "G1067": "Valley of Hinnom, Gehenna",      # geenna — the place, not "hell"
 }
 
 # HEBREW base = TBESH's clean dictionary form; these 3 are the loaded ones it still gets
