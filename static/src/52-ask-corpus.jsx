@@ -610,6 +610,8 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   const [selectedOcc, setSelectedOcc] = useState(null);   // the peeked occurrence (null = idle)
   const [selIdx, setSelIdx] = useState(null);   // which answer the rail is pinned to (null = follow the newest)
   const [contestedSet, setContestedSet] = useState(null);   // fork Strong's set from the server (one source of truth)
+  const [showOlderConvos, setShowOlderConvos] = useState(false);   // rail: reveal past the 10-item cap
+  const [confirmClear, setConfirmClear] = useState(false);   // rail: two-step guard on Clear all
   useNotesVersion();   // re-render when the store changes (e.g. a cross-device sync pulls convos in)
   const convos = NotesStore.corpusConvos();
   const busy = thread.some(t => t && (t.loading || t.streaming));   // a search is in flight (or streaming) — lock the composer
@@ -798,16 +800,63 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   // step 3 fills it with the occurrence → fork → word drill.
   // The left rail is threads-only: the recent-conversation list. New Thread moved to the
   // center STRIP (it's a control) on desktop; mobile keeps its own new-search button.
+  // Rail list is DISPLAY-ONLY shaping of corpusConvos() (already newest-first) — the stored
+  // threads are never merged or dropped. Dedupe collapses exact-title repeats (keep the newest,
+  // which comes first), then we group by date and cap at 10 with a "Show older" reveal.
+  const railConvos = (() => {
+    const seen = new Set(), out = [];
+    for (const c of convos) {
+      const key = (c.title || "").trim().toLowerCase();
+      if (key && seen.has(key)) continue;
+      if (key) seen.add(key);
+      out.push(c);
+    }
+    return out;
+  })();
+  const AC_RAIL_CAP = 10;
+  const railVisible = showOlderConvos ? railConvos : railConvos.slice(0, AC_RAIL_CAP);
+  const railBucket = (updated) => {
+    const day = (v) => { const x = new Date(v || 0); x.setHours(0, 0, 0, 0); return x.getTime(); };
+    const t0 = day(new Date()), DAY = 86400000, t = day(updated);
+    if (t >= t0) return "Today";
+    if (t >= t0 - DAY) return "Yesterday";
+    if (t >= t0 - 7 * DAY) return "Previous 7 days";
+    return "Older";
+  };
+
   const railInner = (
     <>
       <div className="ac-rail-top"><span className="ac-rail-eyebrow"><Icon.Clock/> Recent conversations</span></div>
-      {convos.length === 0
+      {railConvos.length === 0
         ? <div className="ac-rail-empty">Your conversations are saved here — reopen one anytime.</div>
-        : <div className="ac-rail-list">{convos.map((c) => (
-            <button key={c.id} className={"ac-rail-item" + (c.id === currentId ? " on" : "")}
-              onClick={() => openConvo(c)} title="Reopen this conversation">{c.title}</button>
-          ))}</div>}
-      {convos.length > 0 && <button className="ac-rail-clear" onClick={() => NotesStore.clearConvos()}>Clear all</button>}
+        : <div className="ac-rail-list">
+            {(() => {
+              let last = null;
+              const rows = [];
+              for (const c of railVisible) {
+                const b = railBucket(c.updated);
+                if (b !== last) { rows.push(<div key={"g:" + b} className="ac-rail-group">{b}</div>); last = b; }
+                rows.push(
+                  <button key={c.id} className={"ac-rail-item" + (c.id === currentId ? " on" : "")}
+                    onClick={() => openConvo(c)} title="Reopen this conversation">{c.title}</button>
+                );
+              }
+              return rows;
+            })()}
+            {!showOlderConvos && railConvos.length > AC_RAIL_CAP &&
+              <button className="ac-rail-more" onClick={() => setShowOlderConvos(true)}>
+                Show older ({railConvos.length - AC_RAIL_CAP})
+              </button>}
+          </div>}
+      {railConvos.length > 0 && (confirmClear
+        ? <div className="ac-rail-confirm">
+            <span>Clear all conversations?</span>
+            <div className="ac-rail-confirm-row">
+              <button className="ac-rail-confirm-yes" onClick={() => { NotesStore.clearConvos(); setConfirmClear(false); setShowOlderConvos(false); }}>Clear</button>
+              <button className="ac-rail-confirm-no" onClick={() => setConfirmClear(false)}>Cancel</button>
+            </div>
+          </div>
+        : <button className="ac-rail-clear" onClick={() => setConfirmClear(true)}>Clear all</button>)}
     </>
   );
 
@@ -880,18 +929,21 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   // frequency panel folded beneath; a peeked ref chip replaces it with the occurrence →
   // fork → word drill. While a search streams there's no finished answer yet, so it shows
   // the bare frequency panel; before the first question, an empty prompt. Never blank.
-  const inspectIdle = (
+  // Truly-empty (no answer, no panel) drops the header band entirely — the bare ZoneEmpty fills
+  // the panel and the shared `.zinspect .zempty::before` cross-line carries the single divider
+  // (no static "Inspect" label, no phantom second rule). A band shows only once there's content.
+  const inspectIdle = (selectedAnswer || latestPanel) ? (
     <div className="ac-insp-idle">
-      <div className="ac-insp-band">{selectedAnswer ? "What this answer rests on" : (latestPanel ? "How often these words occur" : "Inspect")}</div>
+      <div className="ac-insp-band">{selectedAnswer ? "What this answer rests on" : "How often these words occur"}</div>
       <div className="ac-insp-scroll">
         {selectedAnswer
           ? <ProvenancePanel key={selectedIdx} answer={selectedAnswer} panel={selectedAnswer.panel} onOccInspect={onOccInspect} onStrongs={onStrongs} contestedSet={contestedSet}/>
-          : latestPanel
-            ? <CorpusPanel panel={latestPanel} onStrongs={onStrongs}/>
-            : <ZoneEmpty icon={<Icon.Book/>} title="Nothing selected yet"
-                sub="Ask a question — the passages it rests on and the words it turns on show here. Then click a passage to inspect it."/>}
+          : <CorpusPanel panel={latestPanel} onStrongs={onStrongs}/>}
       </div>
     </div>
+  ) : (
+    <ZoneEmpty icon={<Icon.Book/>} title="Nothing selected yet"
+      sub="Ask a question — the passages it rests on and the words it turns on show here. Then click a passage to inspect it."/>
   );
   const inspectRoot = selectedOcc ? {
     key: `${selectedOcc.book}-${selectedOcc.chapter}-${selectedOcc.verse}`,

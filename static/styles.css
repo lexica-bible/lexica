@@ -4435,6 +4435,21 @@ button.study-verse-ref { border: none; }
 .ac-rail-item.on { background: var(--paper); border-color: var(--rule); color: var(--ink); box-shadow: inset 2px 0 0 var(--accent); font-weight: 600; }
 .ac-rail-clear { flex: 0 0 auto; margin: 4px 16px 16px; align-self: flex-start; font-size: 12px; color: var(--ink-4); }
 .ac-rail-clear:hover { color: var(--ai); text-decoration: underline; }
+/* date group header — muted small-caps, matches the RECENT CONVERSATIONS eyebrow */
+.ac-rail-group { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;
+  color: var(--ink-4); padding: 12px 11px 5px; }
+.ac-rail-group:first-child { padding-top: 4px; }
+.ac-rail-more { align-self: flex-start; margin: 8px 4px 2px; padding: 4px 7px; font-size: 12px; font-weight: 600; color: var(--ai); }
+.ac-rail-more:hover { text-decoration: underline; }
+/* Clear-all confirm — inline two-step so a stray click can't wipe the list */
+.ac-rail-confirm { flex: 0 0 auto; margin: 4px 16px 16px; display: flex; flex-direction: column; gap: 8px;
+  font-size: 12.5px; color: var(--ink-2); }
+.ac-rail-confirm-row { display: flex; gap: 8px; }
+.ac-rail-confirm-yes { padding: 4px 12px; border-radius: 7px; border: 1px solid color-mix(in oklab, #b4453b 45%, transparent);
+  color: #b4453b; font-size: 12px; font-weight: 600; }
+.ac-rail-confirm-yes:hover { background: color-mix(in oklab, #b4453b 12%, transparent); border-color: #b4453b; }
+.ac-rail-confirm-no { padding: 4px 12px; border-radius: 7px; border: 1px solid var(--rule); color: var(--ink-3); font-size: 12px; font-weight: 600; }
+.ac-rail-confirm-no:hover { border-color: var(--ink-4); color: var(--ink); }
 
 /* CENTER */
 .ac-main { min-height: 0; display: flex; flex-direction: column; background: var(--bg); }
@@ -4581,7 +4596,7 @@ button.study-verse-ref { border: none; }
 
 /* landing (empty) */
 .ac-landing { flex: 1; overflow-y: auto; display: grid; place-items: start center; padding: 40px 28px; }
-.ac-landing-in { width: 100%; max-width: 660px; text-align: center; margin-top: 12vh; }
+.ac-landing-in { width: 100%; max-width: 660px; text-align: center; margin-top: 10vh; }
 .ac-title { font-family: var(--f-serif); font-size: 44px; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); margin: 0 0 14px; }
 .ac-scope {
   display: inline-flex; align-items: baseline; gap: 9px; margin: 0 0 14px;
