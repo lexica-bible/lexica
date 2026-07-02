@@ -60,10 +60,12 @@
   --shadow-md: 0 2px 4px rgba(20, 20, 30, 0.05), 0 8px 24px -8px rgba(20, 20, 30, 0.10);
   --shadow-lg: 0 8px 16px -4px rgba(20, 20, 30, 0.08), 0 24px 48px -12px rgba(20, 20, 30, 0.18);
 
-  /* ONE radius (doctrine rule 6): near-flat 2px on every rounded rectangle app-wide.
-     The old size tokens now all resolve to it so existing var(--r-*) users flatten too;
+  /* ONE radius (doctrine rule 6): SOFT square — 4px on every rounded rectangle app-wide.
+     2px read as a hard square and cost the toolbar controls their character; the old
+     controls were 6/8px, so 4px restores the soft-square feel without the grab-bag or any
+     lozenge. The old size tokens resolve to it so existing var(--r-*) users match too;
      functional exceptions kept in the CSS are 50% (circles) and 0 (flush edges). */
-  --radius: 2px;
+  --radius: 4px;
   --r-sm: var(--radius);
   --r-md: var(--radius);
   --r-lg: var(--radius);
@@ -1237,7 +1239,7 @@ input { font-family: inherit; }
   padding: 18px 20px 18px 22px;
   background: var(--bg);
   border-left: 2px solid var(--accent);
-  border-radius: 0 2px 2px 0;
+  border-radius: 0 4px 4px 0;
   font-family: var(--f-serif);
   font-size: 17px;
   line-height: 1.55;
@@ -1374,7 +1376,7 @@ input { font-family: inherit; }
 .fact-v { color: var(--ink); text-align: right; }
 .fact-v.mono { font-family: var(--f-mono); font-size: 12px; }
 
-.dverse { margin: 0 0 12px; padding: 16px 18px; background: var(--bg); border-left: 2px solid var(--accent); border-radius: 0 2px 2px 0; font-family: var(--f-serif); font-size: 16px; line-height: 1.55; color: var(--ink); text-wrap: pretty; }
+.dverse { margin: 0 0 12px; padding: 16px 18px; background: var(--bg); border-left: 2px solid var(--accent); border-radius: 0 4px 4px 0; font-family: var(--f-serif); font-size: 16px; line-height: 1.55; color: var(--ink); text-wrap: pretty; }
 .dverse-n { font-family: var(--f-mono); font-size: 10px; color: var(--accent); vertical-align: super; margin-right: 8px; }
 .dverse-tools { display: flex; align-items: center; gap: 8px; font-size: 12.5px; }
 
@@ -2115,7 +2117,7 @@ input { font-family: inherit; }
 
 .lib-highlight {
   background: var(--gold-soft);
-  border-radius: 0 2px 2px 0;
+  border-radius: 0 4px 4px 0;
   box-shadow: inset 3px 0 0 var(--gold);
 }
 .lib-word {
@@ -2326,7 +2328,7 @@ input { font-family: inherit; }
   padding: 14px 20px;
   background: var(--bg);
   border-left: 2px solid var(--accent);
-  border-radius: 0 2px 2px 0;
+  border-radius: 0 4px 4px 0;
   margin-bottom: 12px;
 }
 .iword {
@@ -3052,7 +3054,7 @@ input { font-family: inherit; }
   max-height: calc(100vh - var(--hdr-h) - 90px);
   overflow-y: auto; overscroll-behavior: contain;
   background: var(--paper); border: 1px solid var(--rule-2);
-  border-radius: 0 0 2px 2px; box-shadow: var(--shadow-lg);
+  border-radius: 0 0 4px 4px; box-shadow: var(--shadow-lg);
   padding: 6px;
 }
 .nav-top {
@@ -3499,7 +3501,7 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
 .stats-section-title { font-size: 12px; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); margin: 26px 0 10px; }
 .stats-bars { display: flex; align-items: flex-end; gap: 3px; height: 120px; padding-top: 4px; border-bottom: 1px solid var(--rule); }
 .stats-bar-col { flex: 1; height: 100%; display: flex; align-items: flex-end; }
-.stats-bar { width: 100%; background: var(--gold, #b8893b); border-radius: 2px 2px 0 0; min-height: 2px; }
+.stats-bar { width: 100%; background: var(--gold, #b8893b); border-radius: 4px 4px 0 0; min-height: 2px; }
 .stats-refs { display: flex; flex-direction: column; }
 .stats-ref-row { display: flex; justify-content: space-between; padding: 8px 2px; border-bottom: 1px solid var(--rule); font-size: 14px; color: var(--ink); }
 .stats-ref-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
@@ -3624,7 +3626,7 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
     max-height: calc(100vh - var(--bar-h) - env(safe-area-inset-top, 0px));
     max-height: calc(100dvh - var(--bar-h) - env(safe-area-inset-top, 0px));
     border-width: 0 0 1px 0;
-    border-radius: 0 0 2px 2px;
+    border-radius: 0 0 4px 4px;
     box-shadow: 0 14px 28px rgba(34, 30, 24, 0.18);
     animation: lib-search-drop-m 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
@@ -3804,7 +3806,7 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
 .note-snippet {
   margin: 0; padding: 8px 12px; border-left: 3px solid var(--gold);
   background: var(--bg-sunk); color: var(--ink-2);
-  font-style: italic; font-size: 14px; border-radius: 0 2px 2px 0;
+  font-style: italic; font-size: 14px; border-radius: 0 4px 4px 0;
 }
 .note-textarea {
   width: 100%; min-height: 180px; resize: vertical; box-sizing: border-box;
@@ -5220,7 +5222,7 @@ button.study-verse-ref { border: none; }
   .wm-sheet {
     position: fixed; left: 0; right: 0; bottom: 0; z-index: 121;
     display: flex; flex-direction: column;
-    background: var(--paper); border-radius: 2px 2px 0 0;
+    background: var(--paper); border-radius: 4px 4px 0 0;
     box-shadow: 0 -20px 60px rgba(15, 23, 42, 0.25);
     max-height: 62%; animation: slide-up 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
     /* Clear the home indicator / bottom browser bar — the proper way, so the
@@ -5530,7 +5532,7 @@ button.study-verse-ref { border: none; }
 .zsheet-scrim { position: fixed; inset: 0; background: rgba(0,0,0,0.4); z-index: 50; }
 .zsheet {
   position: fixed; left: 0; right: 0; bottom: 0; max-height: 82dvh;
-  background: var(--paper); border-radius: 2px 2px 0 0; z-index: 51;
+  background: var(--paper); border-radius: 4px 4px 0 0; z-index: 51;
   display: flex; flex-direction: column; box-shadow: 0 -8px 30px rgba(0,0,0,0.18);
 }
 /* A bare sheet (an inline RightStack inside) has no intrinsic content height, so the flex-fill

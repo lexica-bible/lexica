@@ -65,11 +65,13 @@ the container, not the item-ness. A row of four sample words should read as four
 tappable things before you hover, not as a sentence.
 
 ### 6. One radius
-Geometry uses one shared radius token (`--radius`, 2px — near-flat, per Library's
-crisp controls). Every rounded rectangle references it: buttons, inputs, notices,
-cards, the CONTESTED badge. No lozenges (999px pills), no grab-bag of 6/8/10/14px.
-Exceptions are functional only: `50%` for circles/dots, `0` for a deliberately
-flush edge.
+Squared means **soft-squared**, not sharp. Geometry uses one shared radius token
+(`--radius`, currently **4px**) on every rounded rectangle: buttons, inputs,
+notices, cards, the CONTESTED badge. 4px keeps the soft-square character the
+Library toolbar controls had (they were 6/8px) without the old grab-bag. The rule
+is "one token, soft square" — never 0-sharp (a hard square lost the toolbar its
+character), never a full-round lozenge (999px). Exceptions are functional only:
+`50%` for circles/dots, `0` for a deliberately flush edge.
 
 ### Toggles
 Two toggle shapes, never mixed on one control:
