@@ -334,6 +334,7 @@ def _serialize(cluster):
         "ids": [a["id"] for a in cluster["arts"]],
         "title": face["title"],
         "url": face["url"],
+        "summary": face["summary"] or "",
         "score": peak,
         "thread": face["ai_thread"],
         "thread_label": THREAD_LABELS.get(face["ai_thread"], face["ai_thread"] or "?"),
@@ -388,7 +389,7 @@ def _window_clusters(conn, rid, has_event, *, status=None, thread=None,
         where.append("i.ai_thread = ?")
         args.append(thread)
     sql = (f"SELECT i.id, i.url, i.title, i.source, i.published, i.score, "
-           f"i.ai_thread, i.ai_why, {status_expr} AS status"
+           f"i.summary, i.ai_thread, i.ai_why, {status_expr} AS status"
            f"{', i.event' if has_event else ''}"
            f"{', i.ai_new_flag' if has_newflag else ''} "
            f"FROM items i LEFT JOIN reviews r "
@@ -471,7 +472,7 @@ def _all_cards(conn, has_event, has_newflag):
     if _ALL_CACHE["sig"] == sig and _ALL_CACHE["cards"] is not None:
         return _ALL_CACHE["cards"]
     sel = ("SELECT i.id, i.url, i.title, i.source, i.published, i.score, "
-           "i.ai_thread, i.ai_why, i.query, 'new' AS status"
+           "i.summary, i.ai_thread, i.ai_why, i.query, 'new' AS status"
            + (", i.event" if has_event else "")
            + (", i.ai_new_flag" if has_newflag else "") +
            " FROM items i WHERE i.score IS NOT NULL "
@@ -490,6 +491,7 @@ def _all_cards(conn, has_event, has_newflag):
                             "nf": (a["ai_new_flag"] if has_newflag else 0),
                             "d": (a["published"] or "")[:10],
                             "title": a["title"], "url": a["url"],
+                            "summary": a["summary"] or "",
                             "why": a["ai_why"] or "", "src": a["source"] or "?",
                             "via": ("RSS" if (a["query"] or "").startswith("rss:") else "Google News")}
                            for a in c["arts"]]

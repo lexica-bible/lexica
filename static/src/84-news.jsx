@@ -74,7 +74,7 @@ function _windowCard(c, since, until, minScore, thread, labels) {
   }
   return {
     ...c,
-    title: face.title, url: face.url, why: face.why,
+    title: face.title, url: face.url, why: face.why, summary: face.summary || "",
     thread: face.t, thread_label: labels[face.t] || face.t || "?",
     score, peak_date: _peakDay(mem),
     published: dates.length ? dates[dates.length - 1] : (c.published || ""),
@@ -330,27 +330,43 @@ function NewsView({ isMobile }) {
   const [refreshN, setRefreshN] = useState(0);        // bump = re-pull (Refresh / new pull)
   const [loading, setLoading] = useState(false);
   const [view, setView] = useState("inbox");          // inbox | kept | dismissed
-  // "" = no date bound ("Max" preset). Restore by null-check, NOT `|| default`, so a saved
-  // empty value (Max) survives reload instead of snapping back to the 21-day default.
-  const [since, setSince] = useState(() => {
-    const saved = localStorage.getItem("lexica.news.since.v1");
-    return saved === null ? _newsDaysAgo(21) : saved;
-  });
-  // "" = no upper bound (= now). The window is two-sided: since..until. Presets clear it.
-  const [until, setUntil] = useState(() => localStorage.getItem("lexica.news.until.v1") || "");
+  // The date window's IDENTITY is a day COUNT (or a named key), NEVER a stored anchor date — an
+  // anchor goes stale as the clock rolls (the "Last 7d → Last 8d" drift). windowKey is one of the
+  // preset day-counts ("7".."365"), "max" (no bounds), or "custom" (the Since/Until fields). The
+  // actual from/to bounds are computed FRESH every render from windowKey + today (see `since`/
+  // `until` below), so the label AND the window stay correct across a refresh + the nightly tick.
+  const [windowKey, setWindowKey] = useState(() => localStorage.getItem("lexica.news.wkey.v1") || "21");
+  const [customSince, setCustomSince] = useState(() => localStorage.getItem("lexica.news.csince.v1") || "");
+  const [customUntil, setCustomUntil] = useState(() => localStorage.getItem("lexica.news.cuntil.v1") || "");
+  // Bounds derived at query time — never persisted. A preset = "last N days through now"; custom =
+  // the two fields; max = no bounds. `_newsDaysAgo` reads the current date, so this can't go stale.
+  const since = windowKey === "max" ? "" : windowKey === "custom" ? customSince : _newsDaysAgo(Number(windowKey));
+  const until = windowKey === "custom" ? customUntil : "";   // presets + max have no upper bound
   const [minScore, setMinScore] = useState(() => Number(localStorage.getItem("lexica.news.min.v1") || 5));
   const [thread, setThread] = useState("");
   const [order, setOrder] = useState("score");        // score | date | oldest
   const [flash, setFlash] = useState("");
-  const [copying, setCopying] = useState(false);     // Copy shortlist: resolving wrapper URLs
+  const [copying, setCopying] = useState(false);      // Copy shortlist: resolving wrapper URLs
+  const [copyOpen, setCopyOpen] = useState(false);    // Copy-shortlist format dropdown
+  const [copiedN, setCopiedN] = useState(0);          // >0 = show "Copied n ✓" for ~1.5s
+  const copyTimer = useRef(null);
   const [dateOpen, setDateOpen] = useState(false);    // desktop top-bar date popover
   const [helpOpen, setHelpOpen] = useState(false);    // top-bar "how the feed works" popover
   const [selStory, setSelStory] = useState(null);     // desktop: card selected into the why-rail
 
   useEffect(() => { api.newsMeta().then(setMeta); }, []);
-  useEffect(() => { localStorage.setItem("lexica.news.since.v1", since); }, [since]);
-  useEffect(() => { localStorage.setItem("lexica.news.until.v1", until); }, [until]);
+  useEffect(() => { localStorage.setItem("lexica.news.wkey.v1", windowKey); }, [windowKey]);
+  useEffect(() => { localStorage.setItem("lexica.news.csince.v1", customSince); }, [customSince]);
+  useEffect(() => { localStorage.setItem("lexica.news.cuntil.v1", customUntil); }, [customUntil]);
   useEffect(() => { localStorage.setItem("lexica.news.min.v1", String(minScore)); }, [minScore]);
+  // Esc closes the copy-format menu (outside-click is the scrim). Clear the copied-flash timer on unmount.
+  useEffect(() => {
+    if (!copyOpen) return;
+    const onKey = (e) => { if (e.key === "Escape") setCopyOpen(false); };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [copyOpen]);
+  useEffect(() => () => { if (copyTimer.current) clearTimeout(copyTimer.current); }, []);
 
   // The ONLY data fetch: pull the whole clustered feed once (and on an explicit Refresh or
   // reload). Every sort/filter/score/date/thread/count below is derived from it locally,
@@ -494,18 +510,33 @@ function NewsView({ isMobile }) {
     });
   };
 
-  const copyShortlist = () => {
+  // Swap the button label to "Copied n ✓" for ~1.5s; reset the timer on a repeat click.
+  const flashCopied = (n) => {
+    setCopiedN(n);
+    if (copyTimer.current) clearTimeout(copyTimer.current);
+    copyTimer.current = setTimeout(() => { setCopiedN(0); copyTimer.current = null; }, 1500);
+  };
+
+  // Copy the current shortlist in one of three formats. All use the FACE article's fields
+  // (s.title / s.summary / s.url — the headline shown on the card, so title + link agree;
+  // sources[0] was the newest-dated row, a different article). A blank description drops its
+  // line, no orphan blank. Google News wrapper URLs are resolved to real links first.
+  const doCopy = (fmt) => {
+    setCopyOpen(false);
     if (copying) return;
-    // the face article (s.url) — the headline shown on the card, so title and
-    // link agree (sources[0] was the newest-dated row, a different article)
     const items = (stories || [])
-      .map(s => ({ title: s.title, url: s.url || "" }))
+      .map(s => ({ title: s.title || "", summary: s.summary || "", url: s.url || "" }))
       .filter(it => it.url);
+    if (!items.length) return;
+    const line = (it, url) =>
+      fmt === "link" ? url
+      : fmt === "titlelink" ? [it.title, url].filter(Boolean).join("\n")
+      : [it.title, it.summary, url].filter(Boolean).join("\n");   // title + description + link
     const write = (map) => {
       // prefer a resolved clean URL; fall back to the wrapper on any miss
-      const lines = items.map(it => `${it.title}\n${(map && map[it.url]) || it.url}`);
+      const lines = items.map(it => line(it, (map && map[it.url]) || it.url));
       navigator.clipboard.writeText(lines.join("\n\n")).then(
-        () => { setFlash("Copied " + lines.length + " stories"); setTimeout(() => setFlash(""), 2000); },
+        () => flashCopied(lines.length),
         () => { setFlash("Copy failed"); setTimeout(() => setFlash(""), 2000); }
       );
     };
@@ -564,25 +595,24 @@ function NewsView({ isMobile }) {
 
   // Inbox filter controls, split so the desktop rail can group + label them while
   // the mobile strip keeps them in one flat row.
-  const dateInput = <input type="date" value={since} onChange={e => setSince(e.target.value)} />;
-  const untilInput = <input type="date" value={until} onChange={e => setUntil(e.target.value)} />;
-  // Each preset is "last N days through NOW", so it sets `since` AND clears `until` — a stale
-  // end-date left over from a custom window would silently truncate it. A preset highlights
-  // only when its `since` matches AND there's no upper bound (otherwise it's a custom window).
+  // Editing either field switches the window to "custom" and seeds BOTH bounds from the current
+  // derived values, so tweaking one edge doesn't drop the other (e.g. narrowing a 7d preset).
+  const enterCustom = (ns, nu) => { setCustomSince(ns); setCustomUntil(nu); setWindowKey("custom"); };
+  const dateInput = <input type="date" value={since} onChange={e => enterCustom(e.target.value, until)} />;
+  const untilInput = <input type="date" value={until} onChange={e => enterCustom(since, e.target.value)} />;
+  // Each preset is a day-COUNT ("last N days through now"); windowKey stores the count as identity,
+  // so the label never drifts and the bounds recompute from today. A preset highlights when its
+  // count is the active windowKey (custom / max are their own keys).
   const datePresets = [[7, "7d"], [14, "14d"], [30, "30d"], [90, "90d"], [365, "1y"]];
   const presets = (
     <div className="news-presets">
-      {datePresets.map(([n, lbl]) => {
-        const d = _newsDaysAgo(n);
-        return (
-          <button key={n} className={(since === d && !until) ? "on" : ""}
-                  onClick={() => { setSince(d); setUntil(""); }}>{lbl}</button>
-        );
-      })}
-      {/* Max = drop the date bounds entirely (since="" + until=""). Composes with the score
-          floor; flows through the same empty-date path as the others; active when neither bound is set. */}
-      <button key="max" className={(since === "" && !until) ? "on" : ""}
-              onClick={() => { setSince(""); setUntil(""); }}>Max</button>
+      {datePresets.map(([n, lbl]) => (
+        <button key={n} className={(windowKey === String(n)) ? "on" : ""}
+                onClick={() => setWindowKey(String(n))}>{lbl}</button>
+      ))}
+      {/* Max = drop the date bounds entirely (windowKey "max" → since="" + until=""). */}
+      <button key="max" className={(windowKey === "max") ? "on" : ""}
+              onClick={() => setWindowKey("max")}>Max</button>
     </div>
   );
   const scoreSeg = (
@@ -611,17 +641,34 @@ function NewsView({ isMobile }) {
       ))}
     </select>
   );
-  const dateLabel = (() => {
-    if (!since && !until) return "All dates";
-    if (until) return "Custom range";
-    // Count WHOLE days from today's midnight (not `Date.now()`) so the 7d preset reads
-    // "Last 7d" — `Date.now()` carries the current hours, which inflated the round to 8
-    // and crept up as the day wore on (the box and the preset drifted apart).
-    const t = new Date();
-    const today = Date.UTC(t.getUTCFullYear(), t.getUTCMonth(), t.getUTCDate());
-    const days = Math.round((today - Date.parse(since + "T00:00:00Z")) / 86400000);
-    return "Last " + days + "d";
-  })();
+  // Rendered straight from the count (the source of truth), so it CAN'T drift as the clock rolls.
+  const dateLabel = windowKey === "max" ? "All dates"
+    : windowKey === "custom" ? "Custom range"
+    : "Last " + windowKey + "d";
+
+  // Copy-shortlist: a dropdown (Link only / Title + link / Title + description + link). One
+  // definition, dropped into both the desktop top bar and the mobile filter strip. Closes on
+  // outside-click (the scrim) or Esc (effect above). Label flips to "Copied n ✓" after a copy.
+  const copyLabel = copiedN ? "Copied " + copiedN + " ✓"
+    : copying ? <><span className="news-spin" /> Resolving…</>
+    : "Copy shortlist ▾";
+  const copyMenu = (
+    <div className="news-bar-pop news-copy-pop">
+      <button className={"news-btn news-keep" + (copyOpen ? " on" : "")}
+              disabled={copying || !stories.length} aria-expanded={copyOpen}
+              onClick={() => setCopyOpen(o => !o)}>{copyLabel}</button>
+      {copyOpen && (
+        <>
+          <div className="news-bar-scrim" onClick={() => setCopyOpen(false)} />
+          <div className="news-bar-menu news-copy-menu">
+            <button className="news-copy-item" onClick={() => doCopy("link")}>Link only</button>
+            <button className="news-copy-item" onClick={() => doCopy("titlelink")}>Title + link</button>
+            <button className="news-copy-item" onClick={() => doCopy("titledesc")}>Title + description + link</button>
+          </div>
+        </>
+      )}
+    </div>
+  );
   const inboxFilters = (   // mobile: one flat strip (keeps the inline "Since" word)
     <>
       <label className="news-f"><span>Since</span>{dateInput}</label>
@@ -707,12 +754,7 @@ function NewsView({ isMobile }) {
                   onClick={() => setRefreshN(n => n + 1)}>
             {loading ? "Refreshing…" : "Refresh"}
           </button>
-          {view === "kept" && (   // shortlist-copy belongs with Kept, not Dismissed
-            <button className="news-btn news-keep" onClick={copyShortlist}
-                    disabled={copying || !stories || !stories.length}>
-              {copying ? <><span className="news-spin" /> Resolving…</> : "Copy shortlist"}
-            </button>
-          )}
+          {view === "kept" && copyMenu /* shortlist-copy belongs with Kept, not Dismissed */}
           {flash && <span className="news-flash">{flash}</span>}
         </div>
         {feedInner}
@@ -812,10 +854,7 @@ function NewsView({ isMobile }) {
             </>
           )}
         </div>
-        {view === "kept" && (   // shortlist-copy belongs with Kept, not Dismissed
-          <button className="news-btn news-keep" onClick={copyShortlist}
-                  disabled={!stories || !stories.length}>Copy shortlist</button>
-        )}
+        {view === "kept" && copyMenu /* shortlist-copy belongs with Kept, not Dismissed */}
         {flash && <span className="news-flash">{flash}</span>}
       </div>
     </div>
