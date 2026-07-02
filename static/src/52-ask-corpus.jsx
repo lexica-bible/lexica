@@ -484,7 +484,7 @@ function AcComposer({ pinned, value, setValue, onSubmit, placeholder, busy, quot
   return (
     <div className={"ac-composer " + (pinned ? "pinned" : "hero")}>
       <div className="ac-field">
-        <Icon.Sparkle className="ac-field-i"/>
+        <Icon.Search className="ac-field-i"/>
         <input className="ac-input" value={value} onChange={e => setValue(e.target.value)}
           onKeyDown={e => e.key === "Enter" && go()} placeholder={placeholder} />
         <button className="ac-send" onClick={go} aria-label="Ask" disabled={busy}>
@@ -833,7 +833,6 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
 
   const landingHead = (
     <>
-      <div className="ac-mark"><Icon.Sparkle/></div>
       <h1 className="ac-title">Ask the corpus</h1>
       {scope && (
         <p className="ac-scope">Asking about{" "}
@@ -889,7 +888,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
           ? <ProvenancePanel key={selectedIdx} answer={selectedAnswer} panel={selectedAnswer.panel} onOccInspect={onOccInspect} onStrongs={onStrongs} contestedSet={contestedSet}/>
           : latestPanel
             ? <CorpusPanel panel={latestPanel} onStrongs={onStrongs}/>
-            : <ZoneEmpty icon={<Icon.Sparkle/>} title="Nothing selected yet"
+            : <ZoneEmpty icon={<Icon.Book/>} title="Nothing selected yet"
                 sub="Ask a question — the passages it rests on and the words it turns on show here. Then click a passage to inspect it."/>}
       </div>
     </div>

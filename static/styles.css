@@ -4580,15 +4580,8 @@ button.study-verse-ref { border: none; }
 .ac-construction b { font-weight: 700; }
 
 /* landing (empty) */
-.ac-landing { flex: 1; overflow-y: auto; display: grid; place-items: center; padding: 40px 28px; }
-.ac-landing-in { width: 100%; max-width: 660px; text-align: center; margin-top: -4vh; }
-.ac-mark {
-  width: 54px; height: 54px; margin: 0 auto 22px;
-  display: grid; place-items: center; border-radius: 14px;
-  color: var(--ai); background: var(--ai-soft);
-  border: 1px solid color-mix(in oklab, var(--ai) 22%, transparent);
-}
-.ac-mark svg { width: 24px; height: 24px; }
+.ac-landing { flex: 1; overflow-y: auto; display: grid; place-items: start center; padding: 40px 28px; }
+.ac-landing-in { width: 100%; max-width: 660px; text-align: center; margin-top: 12vh; }
 .ac-title { font-family: var(--f-serif); font-size: 44px; font-weight: 600; letter-spacing: -0.02em; color: var(--ink); margin: 0 0 14px; }
 .ac-scope {
   display: inline-flex; align-items: baseline; gap: 9px; margin: 0 0 14px;
