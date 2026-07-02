@@ -187,6 +187,34 @@ Full record: memory `project_hebrews13_restore`.
 
 ---
 
+## News feed (Tudor) — recency / triage / clustering / RSS batch — DONE + LIVE 2026-06-29→30
+A large batch of News-tool work shipped over two days; all of it is LIVE. Full record + every lesson +
+the rollback tables: memory `project_news_watch`. The pieces, so nothing's lost from TODO:
+- **Recency + face:** card headline = strongest article within 14 days of the cluster's newest sibling
+  (`_pick_face`, FACE_WINDOW=14, killed "fresh date / stale title"); default feed sort docks a staleness
+  penalty off each cluster's newest sibling (2 grace days, 0.1/day, cap 2.0) — recency is the LIVE
+  default, not parked; "Oldest" sort added; both date sorts key on cluster PEAK day.
+- **Triage:** per-reviewer Keep/Dismiss (`reviews` table, `u<id>`/`k<keytag>` identity; share-key writes
+  work — buttons gate on `can_write`, `newsStatus` sends `X-News-Key`); reversible triage + Dismissed
+  view; live tab-count badges; window-scoped Inbox/Kept/Dismissed counts; feed-shape "Today's watch"
+  inspect panel (computed, no model call).
+- **Date window:** two-sided since/until, "Max" preset, keys on cluster PEAK not per-article; the
+  window-gate collapse fixed (recompute each card over its in-window members); expanded-list rework
+  (per-outlet dedup, depth cap + folds). Card date is a "peaked X · latest Y" range.
+- **Client-side filtering (816f235):** `GET /api/news/all` serves the whole clustered feed once; the
+  browser does every sort/filter/score/date/thread/count locally (killed the multi-second re-cluster per
+  tick); heavy clustering cached server-side per corpus fingerprint; a Refresh button re-pulls.
+- **Clustering / taxonomy:** over-merge fixed two layers (`_split_by_window(days=14)` + tightened
+  `group_news.py` SYSTEM, re-tagged the 8 phenomenon labels); ai_moralized thread renamed actor-neutral;
+  encyclical event-split merged; default score floor 6→5 with a visible `5+` button.
+- **RSS + threads:** thread set 10→13 (signs_wonders, protestant_collapse, ecumenism_orthodox);
+  Phase-4 RSS-by-outlet ingestion LIVE (sources.py + pull_rss.py + gate tiers, 11 feeds, feedparser).
+- **Back-ref reason leak + hot-threads label stack:** `_clean_why` strips "Same event as <id>" pointers;
+  feed-shape row wraps so long thread names aren't ellipsis-capped.
+- STILL OPEN (carried to TODO.md): scorer re-tuning from Tudor's Dismiss (WAITING on volume, human-tune
+  only — never auto-adjust the score); `catholic_decline` 4th lane (deferred, volume trigger); per-thread
+  "+N outside this window" footer; the news.db bare-path CLI footgun (always full-path `~/bible-db/news.db`).
+
 ## αἰών/αἰώνιος mistag (Jer 49:13 + Hab 3:6) + Psa 24:7 numbering — DONE 2026-06-29
 Two reviewer-flagged corpus tags, query-first then fixed.
 - **Jer 49:13 + Hab 3:6 — TWO source typos, fixed at root.** The query sweep proved it was NOT a class
