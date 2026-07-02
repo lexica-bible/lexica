@@ -166,33 +166,54 @@ function CorpusPanel({ panel, onStrongs }) {
 // folds beneath it, collapsed and subordinate. Populates on the stream's `done` event
 // (results + grounding land at the tail); the bare frequency panel fills the rail while
 // the synthesis is still writing.
+const _PROV_PASSAGE_CAP = 6;   // show this many key passages before the "show all" expander
 function ProvenancePanel({ answer, panel, onOccInspect, onStrongs }) {
   const results = answer.results || [];
   const cited = _acCited(answer.keyStrongs);
-  // Evidence = the primary passages the synthesis leaned on; if none were flagged primary
-  // (a small pool shows them all), fall back to every retrieved verse. Deduped by ref.
-  const hasPrimary = results.some(e => e.is_primary);
-  const evidence = [];
-  const seen = new Set();
-  for (const e of results) {
-    if (hasPrimary && !e.is_primary) continue;
-    if (seen.has(e.ref)) continue;
-    seen.add(e.ref);
-    evidence.push(e);
-  }
   const grounded = answer.grounded !== false;
   const words = answer.keyStrongs || [];
-  // Clicking a passage PEEKS it into the drill (occurrence → fork → word), same as a prose chip.
+  // Key passages = the primary passages the synthesis leaned on, then any thematic
+  // ("additional") refs, each tagged so a theme-only link isn't misread as direct evidence.
+  // If nothing was flagged primary (a small pool), every retrieved verse shows. Deduped by ref.
+  const hasPrimary = results.some(e => e.is_primary);
+  const passages = [];
+  const seen = new Set();
+  const push = (e, theme) => { if (!seen.has(e.ref)) { seen.add(e.ref); passages.push({ ...e, theme }); } };
+  if (hasPrimary) {
+    for (const e of results) if (e.is_primary) push(e, false);
+    for (const e of results) if (e.is_additional) push(e, true);
+  } else {
+    for (const e of results) push(e, false);
+  }
+  const evidenceCount = passages.filter(p => !p.theme).length;
+
+  // Snippet translation toggle — same four texts as the old inline section. The snippet
+  // text is fetched per verse by VerseRow (the payload carries only the ref), so flipping
+  // the toggle just re-renders in that text. Defaults to ABP (the corpus anchor). HEB is
+  // heb.db (OT-only), so it's offered only when the answer cites OT verses, and in HEB mode
+  // the list is trimmed to those OT verses (no blank rows for NT/Greek verses).
+  const hasOtVerse = passages.some(p => !NT_BOOKS.has(p.book));
+  const [textMode, setTextMode] = useState("abp");
+  const [showAll, setShowAll] = useState(false);
+  const shownPassages = textMode === "heb" ? passages.filter(p => !NT_BOOKS.has(p.book)) : passages;
+  const visible = showAll ? shownPassages : shownPassages.slice(0, _PROV_PASSAGE_CAP);
+
+  // Clicking a passage PEEKS it into the drill (occurrence → fork → word), same as a prose
+  // chip. The drill's "Read in context" then leaves for the Library — the old inline jump.
   const peek = (e) => onOccInspect && onOccInspect({
     book: e.book, chapter: e.chapter, verse: e.verse,
     label: `${BOOK_LABELS[e.book] || e.book} ${e.chapter}:${e.verse}`,
-    textMode: "abp", cited, keyStrongs: words,
+    textMode, cited, keyStrongs: words,
   });
+  const peekGuarded = (e) => {
+    if (window.getSelection && String(window.getSelection())) return;   // don't hijack text selection
+    peek(e);
+  };
   return (
     <div className="ac-prov">
       {grounded ? (
         <div className="ac-prov-grounded" role="note">
-          Backed by {evidence.length} {evidence.length === 1 ? "passage" : "passages"} in the corpus.
+          Backed by {evidenceCount} {evidenceCount === 1 ? "passage" : "passages"} in the corpus.
         </div>
       ) : (
         <div className="ac-prov-caution" role="note">
@@ -201,17 +222,42 @@ function ProvenancePanel({ answer, panel, onOccInspect, onStrongs }) {
         </div>
       )}
 
-      {evidence.length > 0 && (
+      {shownPassages.length > 0 && (
         <div className="ac-prov-sec">
-          <div className="ac-prov-h">Rests on</div>
+          <div className="ac-prov-h ac-prov-h--split">
+            <span>Key passages</span>
+            <div className="ac-tm ac-tm--rail" role="group" aria-label="Snippet text">
+              {[["abp", "ABP", "Show the ABP (Greek)"],
+                ["bsb", "BSB", "Show the BSB (modern English)"],
+                ["kjv", "KJV", "Show the KJV"]].map(([m, lbl, t]) => (
+                <button key={m} className={"ac-tm-b" + (textMode === m ? " on" : "")}
+                  onClick={() => setTextMode(m)} title={t}>{lbl}</button>
+              ))}
+              <button className={"ac-tm-b" + (textMode === "heb" ? " on" : "")}
+                onClick={() => setTextMode("heb")} disabled={!hasOtVerse}
+                title={hasOtVerse ? "Show the Hebrew OT (Old Testament verses only)" : "No Old Testament verses in this answer"}>HEB</button>
+            </div>
+          </div>
           <div className="ac-prov-verses">
-            {evidence.map((e) => (
-              <button key={e.ref} className="ac-prov-verse" onClick={() => peek(e)} title="Inspect this passage">
-                <span className="ac-prov-ref">{BOOK_LABELS[e.book] || e.book} {e.chapter}:{e.verse}</span>
-                <span className="ac-prov-chev">›</span>
-              </button>
+            {visible.map((e) => (
+              <div key={e.ref} className="ac-prov-verse" onClick={() => peekGuarded(e)} title="Inspect this passage">
+                <div className="ac-prov-vhead">
+                  <span className="ac-prov-ref">{BOOK_LABELS[e.book] || e.book} {e.chapter}:{e.verse}</span>
+                  {e.theme && <span className="ac-prov-theme" title="Related by theme — may not contain the word">theme</span>}
+                  <span className="ac-prov-chev">›</span>
+                </div>
+                <div className="ac-prov-snippet">
+                  <VerseRow book={e.book} chapter={e.chapter} verse={e.verse} textMode={textMode}
+                    citedStrongs={cited} hideRef={true} />
+                </div>
+              </div>
             ))}
           </div>
+          {shownPassages.length > _PROV_PASSAGE_CAP && (
+            <button className="ac-prov-more" onClick={() => setShowAll(s => !s)}>
+              {showAll ? "Show fewer" : `Show all ${shownPassages.length}`}
+            </button>
+          )}
         </div>
       )}
 
@@ -246,35 +292,25 @@ function ProvenancePanel({ answer, panel, onOccInspect, onStrongs }) {
 }
 
 // One answered (or in-flight) question.
-function AcTurn({ turn, onReadInContext, onLemma, onStrongs, onOccInspect, selected, onSelect }) {
+function AcTurn({ turn, onReadInContext, onLemma, onStrongs, onOccInspect, selected, onSelect, isMobile }) {
   const cited = useMemo(() => _acCited(turn.keyStrongs), [turn.keyStrongs]);
-  // Display-text toggle (ABP · BSB · KJV · HEB) for THIS answer's verse evidence. The
-  // evidence is found by Strong's number, but the text shown can be the ABP (Greek
-  // LXX), the BSB or KJV in English, or the real Hebrew OT (heb.db). It always
-  // defaults to ABP (the corpus anchor); the reader flips it manually. heb.db is
-  // OT-only, so HEB is offered only when the answer actually cites OT verses, and in
-  // HEB mode the verse list is trimmed to those OT verses (a mixed Greek+Hebrew
-  // answer would otherwise show blank rows for its NT/Greek verses).
-  const hasOtVerse = useMemo(() =>
-    (turn.results || []).some(e => !NT_BOOKS.has(e.book)),
-    [turn.results]);
-  const [manualMode, setManualMode] = useState(null);   // null = default (ABP)
-  const textMode = manualMode || "abp";
-  // HEB shows only OT verses (heb.db is OT-only) so the list never has blank rows.
-  const displayResults = useMemo(() => {
-    if (textMode !== "heb") return turn.results || [];
-    return (turn.results || []).filter(e => !NT_BOOKS.has(e.book));
-  }, [textMode, turn.results]);
   // Verses the search actually surfaced — the only ones the synthesis prose may
   // link. Anything the AI names outside this set renders un-linked (seatbelt).
-  // `turn.verified` (full retrieved ref list) is kept separate from the displayed
-  // results so trimming the verse cards never un-links a verse the answer cited.
   const verifiedRefs = useMemo(() => {
     if (turn.verified) return new Set(turn.verified);
     const s = new Set();
     for (const e of (turn.results || [])) s.add(`${e.book}-${e.chapter}-${e.verse}`);
     return s;
   }, [turn.verified, turn.results]);
+  // MOBILE ONLY: the inline Key Passages block (with its own text toggle) — desktop moved
+  // this into the provenance rail (ProvenancePanel), but mobile has no rail yet.
+  const [manualMode, setManualMode] = useState(null);
+  const textMode = manualMode || "abp";
+  const displayResults = useMemo(() => {
+    if (textMode !== "heb") return turn.results || [];
+    return (turn.results || []).filter(e => !NT_BOOKS.has(e.book));
+  }, [textMode, turn.results]);
+  const hasOtVerse = useMemo(() => (turn.results || []).some(e => !NT_BOOKS.has(e.book)), [turn.results]);
   const primaryCount = useMemo(() => {
     if (!displayResults.length) return 0;
     const seen = new Set();
@@ -336,7 +372,7 @@ function AcTurn({ turn, onReadInContext, onLemma, onStrongs, onOccInspect, selec
           )}
           <AcProse text={turn.explanation} onVerse={peekVerse} onStrongs={onStrongs} verified={verifiedRefs}/>
 
-          {turn.results && turn.results.length > 0 && (
+          {isMobile && turn.results && turn.results.length > 0 && (
             <div className="ac-evidence">
               <div className="ac-evidence-head">
                 <span className="ac-evidence-n">{primaryCount}</span>
@@ -741,7 +777,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
       <div className="ac-thread-col">
         {thread.map((turn, i) => (
           <AcTurn key={i} turn={turn} onReadInContext={onReadInContext} onLemma={onLemma}
-            onStrongs={onStrongs} onOccInspect={isMobile ? null : onOccInspect}
+            onStrongs={onStrongs} onOccInspect={isMobile ? null : onOccInspect} isMobile={isMobile}
             selected={!isMobile && i === selectedIdx}
             onSelect={isMobile ? null : () => selectTurn(i)}/>
         ))}
@@ -766,7 +802,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
       <div className="ac-insp-band">{selectedAnswer ? "What this answer rests on" : (latestPanel ? "How often these words occur" : "Inspect")}</div>
       <div className="ac-insp-scroll">
         {selectedAnswer
-          ? <ProvenancePanel answer={selectedAnswer} panel={selectedAnswer.panel} onOccInspect={onOccInspect} onStrongs={onStrongs}/>
+          ? <ProvenancePanel key={selectedIdx} answer={selectedAnswer} panel={selectedAnswer.panel} onOccInspect={onOccInspect} onStrongs={onStrongs}/>
           : latestPanel
             ? <CorpusPanel panel={latestPanel} onStrongs={onStrongs}/>
             : <ZoneEmpty icon={<Icon.Sparkle/>} title="Nothing selected yet"

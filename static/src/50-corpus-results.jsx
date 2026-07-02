@@ -2,7 +2,7 @@
 // SHARED VERSE ROW — used by both Search (CorpusGroup) and the Lexicon tab.
 // Lazy-loads its own words; highlights any word whose Strong's is in citedStrongs.
 // ============================================================
-function VerseRow({ book, chapter, verse, label, allResults, onWordClick, onReadInContext, textMode, primaryStrongs, citedStrongs, kjvCache }) {
+function VerseRow({ book, chapter, verse, label, allResults, onWordClick, onReadInContext, textMode, primaryStrongs, citedStrongs, kjvCache, hideRef }) {
   const [words, setWords] = useState(null);
   const [kjvText, setKjvText] = useState(null);
   const [hebWords, setHebWords] = useState(null);
@@ -90,7 +90,7 @@ function VerseRow({ book, chapter, verse, label, allResults, onWordClick, onRead
   return (
     <div className={"corpus-verse" + (clickable ? " corpus-verse--click" : "")} ref={rowRef}
       onMouseDown={clickable ? onRowDown : undefined} onClick={clickable ? onRowClick : undefined}>
-      <button className="corpus-ref" onClick={(e) => { e.stopPropagation(); jump(); }}>{label}</button>
+      {!hideRef && <button className="corpus-ref" onClick={(e) => { e.stopPropagation(); jump(); }}>{label}</button>}
       <span className="corpus-text">
         {textMode === "kjv" ? (
           kjvText === null

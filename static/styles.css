@@ -4477,13 +4477,28 @@ button.study-verse-ref { border: none; }
 .ac-prov-caution b { font-weight: 700; }
 .ac-prov-sec { display: flex; flex-direction: column; gap: 7px; }
 .ac-prov-h { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; color: var(--ink-3); }
-.ac-prov-verses, .ac-prov-words { display: flex; flex-direction: column; gap: 3px; }
-.ac-prov-verse { display: flex; align-items: center; justify-content: space-between; gap: 8px;
+.ac-prov-verses, .ac-prov-words { display: flex; flex-direction: column; gap: 4px; }
+.ac-prov-h--split { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+/* the toggle, re-fitted for the narrow rail (no auto-margin, tighter) */
+.ac-tm--rail { margin-left: 0; gap: 8px; }
+.ac-tm--rail .ac-tm-b { font-size: 10.5px; padding: 1px 1px 3px; }
+/* a key passage: ref line + a one-line snippet with the match highlighted; the whole row peeks */
+.ac-prov-verse { display: flex; flex-direction: column; gap: 3px; cursor: pointer;
   padding: 7px 10px; border: 1px solid var(--rule); border-radius: 7px; background: var(--ctl-bg); text-align: left; }
 .ac-prov-verse:hover { border-color: var(--ai); }
+.ac-prov-vhead { display: flex; align-items: center; gap: 7px; }
 .ac-prov-ref { font-family: var(--f-mono); font-size: 12.5px; color: var(--ink); }
-.ac-prov-chev { color: var(--ink-4); font-size: 15px; }
+.ac-prov-theme { font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;
+  color: var(--ink-4); background: color-mix(in oklab, var(--ink) 7%, transparent); padding: 1px 5px; border-radius: 4px; }
+.ac-prov-chev { color: var(--ink-4); font-size: 15px; margin-left: auto; }
 .ac-prov-verse:hover .ac-prov-chev { color: var(--ai); }
+/* snippet is display-only — the row's own click peeks; keep it to one clamped line */
+.ac-prov-snippet { pointer-events: none; }
+.ac-prov-snippet .corpus-verse { display: block; padding: 0; }
+.ac-prov-snippet .corpus-text { display: -webkit-box; -webkit-box-orient: vertical; -webkit-line-clamp: 1;
+  overflow: hidden; font-family: var(--f-serif); font-size: 12.5px; line-height: 1.5; color: var(--ink-3); }
+.ac-prov-more { align-self: flex-start; font-size: 11.5px; font-weight: 600; color: var(--ai); padding: 3px 2px; }
+.ac-prov-more:hover { text-decoration: underline; }
 .ac-prov-word { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
   padding: 7px 10px; border: 1px solid var(--rule); border-radius: 7px; background: var(--ctl-bg); text-align: left; }
 .ac-prov-word:hover { border-color: var(--ai); }
