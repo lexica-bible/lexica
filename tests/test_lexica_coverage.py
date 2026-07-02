@@ -18,7 +18,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import lexica_coverage as C
 
 
-HUIOS, ANTHROPOS, ARTICLE, THEOS = "G5207", "G444", "G3588", "G2316"
+HUIOS, ANTHROPOS, ARTICLE, THEOS, LEGO = "G5207", "G444", "G3588", "G2316", "G3004"
 
 
 def _conn():
@@ -34,6 +34,7 @@ def _conn():
         (ANTHROPOS, "ἄνθρωπος", "anthrōpos"),
         (ARTICLE, "ὁ", "ho"),
         (THEOS, "θεός", "theos"),
+        (LEGO, "λέγω", "legō"),
     ])
     return conn
 
@@ -55,53 +56,89 @@ def _occs(conn, sid):
     return [dict(r) for r in rows]
 
 
+FILLER = "G9999"   # a background word, present in neither lexicon nor near the target
+
+
 def _son_of_man_fixture(article=True):
-    """12 'son of man' verses + 3 'son of God' verses. huios is the target; anthrōpos/theos the
-    content neighbors; the article sits between (function word, must be stop-listed)."""
+    """A corpus where 'son of man' is a TIGHT phrase and 'son said' is a LOOSE-but-frequent pair:
+      - 12 'son of man' verses: huios + [article] + anthrōpos   (anthrōpos appears ONLY here → tight)
+      - 12 'son said'   verses: huios + [article] + legō        (legō is everywhere → loose)
+      - 300 background verses with legō alone                    (makes legō common)
+      - 200 filler verses                                        (inflate the corpus size Nv)
+    So anthrōpos scores high (rarely seen except beside huios) and legō scores ~0 (common)."""
     conn = _conn()
     vid = 1
-    for ch in range(1, 13):                      # 12 son-of-man verses (vids 1..12)
-        toks = [(HUIOS, "son")]
-        if article:
-            toks.append((ARTICLE, "the"))
-        toks.append((ANTHROPOS, "man"))
-        _add_verse(conn, vid, "Mat", ch, 1, toks)
+
+    def mid():
+        return [(ARTICLE, "the")] if article else []
+
+    for _ in range(12):                                    # son-of-man (vids 1..12) — tight
+        _add_verse(conn, vid, "Mat", vid, 1, [(HUIOS, "son")] + mid() + [(ANTHROPOS, "man")])
         vid += 1
-    for ch in range(1, 4):                        # 3 son-of-God verses (vids 13..15)
-        _add_verse(conn, vid, "Joh", ch, 1, [(HUIOS, "son"), (ARTICLE, "the"), (THEOS, "God")])
+    for _ in range(12):                                    # son-said (vids 13..24) — loose/frequent
+        _add_verse(conn, vid, "Mar", vid, 1, [(HUIOS, "son")] + mid() + [(LEGO, "said")])
+        vid += 1
+    for _ in range(300):                                   # legō everywhere else
+        _add_verse(conn, vid, "Luk", vid, 1, [(LEGO, "said"), (FILLER, "x")])
+        vid += 1
+    for _ in range(200):                                   # pure filler, inflate Nv
+        _add_verse(conn, vid, "Joh", vid, 1, [(FILLER, "x"), (FILLER, "y")])
         vid += 1
     return conn
 
 
-def test_finds_collocation_across_article_and_flags_missed():
+# vid ranges for the fixture above
+SOM_VIDS = set(range(1, 13))       # son-of-man verses
+SAID_VIDS = set(range(13, 25))     # son-said verses
+
+
+def test_flags_tight_pair_missed_but_not_loose_one():
     conn = _son_of_man_fixture(article=True)
     occs = _occs(conn, HUIOS)
-    # draw picked only the son-of-God verses — son-of-man is entirely absent
-    sample_vids = {13, 14, 15}
+    sample_vids = set()                           # empty draw — BOTH pairs are "0 in draw"
     stop = C.function_bare_strongs(conn)          # no lsj table → override set (has the article)
-    findings = C.scan_collocations(conn, HUIOS, occs, sample_vids, stop=stop, floor=10, window=2)
+    findings = C.scan_collocations(conn, HUIOS, occs, sample_vids, stop=stop,
+                                   floor=10, window=2, pmi_min=4.0)
 
     by = {f["neighbor"]: f for f in findings}
     assert ANTHROPOS in by, "huios+anthrōpos must be detected across the intervening article"
     assert by[ANTHROPOS]["verses"] == 12
-    assert by[ANTHROPOS]["in_draw"] == 0
     assert by[ANTHROPOS]["missed"] is True
+    assert by[ANTHROPOS]["flagged"] is True, "a TIGHT pair the draw missed must be flagged"
     assert by[ANTHROPOS]["lemma"] == "ἄνθρωπος"
-    # article is a function word → never a collocation; theos is under floor (3 < 10)
+    # legō is frequent-but-loose: also 0 in draw, but below the tightness bar → NOT flagged
+    assert by[LEGO]["missed"] is True
+    assert by[LEGO]["flagged"] is False, "a LOOSE frequent pair must not be flagged, even if missed"
+    # article stop-listed; filler never sits by the target
     assert ARTICLE not in by
-    assert THEOS not in by
+    assert FILLER not in by
     assert [f["neighbor"] for f in C.missed_collocations(findings)] == [ANTHROPOS]
 
 
-def test_not_missed_when_draw_represents_it():
+def test_not_flagged_when_draw_represents_it():
     conn = _son_of_man_fixture(article=True)
     occs = _occs(conn, HUIOS)
-    sample_vids = {1, 2, 13}                       # draw DID include two son-of-man verses
-    findings = C.scan_collocations(conn, HUIOS, occs, sample_vids, floor=10, window=2)
+    sample_vids = {1, 2}                           # draw DID include two son-of-man verses
+    findings = C.scan_collocations(conn, HUIOS, occs, sample_vids, floor=10, window=2, pmi_min=4.0)
     by = {f["neighbor"]: f for f in findings}
     assert by[ANTHROPOS]["in_draw"] == 2
     assert by[ANTHROPOS]["missed"] is False
+    assert by[ANTHROPOS]["flagged"] is False
     assert C.missed_collocations(findings) == []
+
+
+def test_tightness_ranks_fixed_above_frequent():
+    conn = _son_of_man_fixture(article=True)
+    occs = _occs(conn, HUIOS)
+    findings = C.scan_collocations(conn, HUIOS, occs, set(), floor=10, window=2)
+    by = {f["neighbor"]: f for f in findings}
+    # same co-occurrence count (12 each), but the fixed phrase must score far higher
+    assert by[ANTHROPOS]["verses"] == by[LEGO]["verses"] == 12
+    assert by[ANTHROPOS]["score"] > by[LEGO]["score"]
+    assert by[ANTHROPOS]["score"] >= 4.0
+    assert by[LEGO]["score"] < 1.0
+    # findings come back sorted by score → the tight pair leads
+    assert findings[0]["neighbor"] == ANTHROPOS
 
 
 def test_floor_gates_low_count():

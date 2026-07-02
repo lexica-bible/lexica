@@ -29,11 +29,31 @@ import unicodedata
 
 # ── Tunables ────────────────────────────────────────────────────────────────────────────────
 COLLOC_FLOOR  = 10   # a collocation must appear in at least this many distinct verses to matter.
-                     # Below it, an adjacency is noise, not a fixed pattern worth a sense.
+                     # Below it, an adjacency is noise, not a fixed pattern worth a sense. This is a
+                     # FLOOR kept ALONGSIDE the tightness score (below), not replaced by it: pure
+                     # association overweights rare pairs (a neighbor seen twice can out-score "son
+                     # of man"), so we score only among pairs that also clear this count floor.
 COLLOC_WINDOW = 2    # ordinal half-window: a neighbor within this many tokens of the target counts
-                     # as adjacent. 2 spans the article-genitive ("son [of] man" = huios tou anthrōpou),
+                     # as adjacent. 2 spans the article-genitive ("son [of] man" = huios tou anthrōpou,
+                     # proven live: huios+anthrōpos adjacent in 257 ABP verses at window 2),
                      # tight enough not to sweep the whole verse.
 MAX_EXAMPLES  = 6    # example refs shown per flagged collocation.
+
+# ── Tightness (association) threshold. WHY: a raw count can't tell a FIXED phrase ("son of man")
+# from a merely FREQUENT one ("God said") — both clear a count floor. And with a 40-verse draw over
+# a ~5,000-occurrence word, "absent from the draw" is the expected state for almost every pair, so
+# 0-in-draw alone carries no signal (it flagged 65–89 pairs per word). The fix is to measure how
+# much MORE two words sit adjacent than chance would predict (pointwise mutual information, in bits):
+#   PMI = log2( co * Nv / (vt * vw) )
+#     co = verses where target+neighbor are adjacent;  vt = verses with the target;
+#     vw = verses with the neighbor anywhere;          Nv = total verses.
+# PMI = 0 means "no more than chance"; each +1 bit means twice as tight. A fixed phrase scores high
+# (the neighbor rarely appears except beside the target); a common verb scores near 0 (it's
+# everywhere, so sitting beside the target isn't special).
+# CALIBRATION: 4.0 is a provisional start — re-tune from the --show-all score column when new words
+# are built. Raise it if the flagged list runs past single digits; lower it if a real fixed phrase
+# falls below the noise. The TRIP condition is: above the count floor AND PMI >= this AND 0 in draw.
+PMI_MIN = 4.0
 
 
 # ── Function-word stop-list — mirror of app.py's classifier, self-contained ──────────────────
@@ -58,6 +78,14 @@ _OVERRIDE_BARE = frozenset({
     # prepositions
     "1722", "1519", "1537", "575", "4314", "2596", "3326", "1223", "1909", "4012",
     "5228", "5259", "4253", "473", "303",
+    # OBLIQUE personal-pronoun FORMS — beyond app.py's set. σοῦ/μοῦ/σοί/μέ/σέ carry their OWN
+    # Strong's numbers, separate from the base pronoun (σύ 4771, ἐγώ 1473) already listed. They
+    # were the top of the flood on G5207/G2316 ("your son", "my God") — pure grammar, not a sense.
+    "3450", "3427", "3165", "1700", "1698", "1691",   # ἐμοῦ/μου, ἐμοί/μοι, ἐμέ/με (1st sing.)
+    "4675", "4671", "4571", "4572",                    # σοῦ/σου, σοί/σοι, σέ/σε, σεαυτοῦ (2nd sing.)
+    "2257", "2254", "2248",                            # ἡμῶν, ἡμῖν, ἡμᾶς (1st plur.)
+    "5216", "5213", "5209",                            # ὑμῶν, ὑμῖν, ὑμᾶς (2nd plur.)
+    "1683", "848",                                     # ἐμαυτοῦ, αὑτοῦ (reflexives)
 })
 
 # LSJ POS detectors — verbatim from app.py so a standalone run classifies the same way the live
@@ -172,25 +200,66 @@ def collocation_map(conn, sid, occs, stop=None, floor=COLLOC_FLOOR, window=COLLO
     return {b: vids for b, vids in colloc.items() if len(vids) >= floor}
 
 
+import weakref
+_CORPUS_COUNTS = weakref.WeakKeyDictionary()   # conn -> (Nv, {base: distinct-verse-count})
+def _corpus_verse_counts(conn):
+    """(Nv, {strongs_base: verses-containing-it}) for the whole word table — the marginals the
+    tightness score needs. One GROUP BY over `words`; cached per LIVE connection (weak-keyed, so a
+    freed connection's id can't hand back stale counts)."""
+    try:
+        cached = _CORPUS_COUNTS.get(conn)
+    except TypeError:
+        cached = None                          # connection not weak-referenceable → just recompute
+    if cached is not None:
+        return cached
+    nv = conn.execute("SELECT COUNT(DISTINCT verse_id) FROM words").fetchone()[0] or 0
+    counts = {}
+    for r in conn.execute(
+            "SELECT strongs_base AS b, COUNT(DISTINCT verse_id) AS c FROM words "
+            "WHERE strongs_base IS NOT NULL AND strongs_base != '' GROUP BY strongs_base"):
+        counts[r["b"]] = r["c"]
+    result = (nv, counts)
+    try:
+        _CORPUS_COUNTS[conn] = result
+    except TypeError:
+        pass
+    return result
+
+
+def _pmi(co, vt, vw, nv):
+    """Pointwise mutual information in bits: how much more the pair sits adjacent than chance.
+    log2(co * Nv / (vt * vw)); 0 = chance, +1 bit = twice as tight. None if any marginal is 0."""
+    if co <= 0 or vt <= 0 or vw <= 0 or nv <= 0:
+        return None
+    import math
+    return math.log2((co * nv) / (vt * vw))
+
+
 def scan_collocations(conn, sid, occs, sample_vids, stop=None,
-                      floor=COLLOC_FLOOR, window=COLLOC_WINDOW):
-    """PIECE A — report which at/above-floor collocations the fed draw (`sample_vids`) failed to
-    represent. Returns findings sorted by verse-count desc, each:
-      {neighbor, lemma, translit, verses, in_draw, missed, examples[]}
-    `missed` (in_draw == 0) is the trip: a real collocation the draw never saw."""
+                      floor=COLLOC_FLOOR, window=COLLOC_WINDOW, pmi_min=PMI_MIN):
+    """PIECE A — report the at/above-floor collocations, scored by tightness, and flag the ones the
+    fed draw (`sample_vids`) missed. Returns findings sorted by score desc, each:
+      {neighbor, lemma, translit, verses, score, in_draw, missed, flagged, examples[]}
+    `flagged` is the TRIP: verses >= floor (already) AND score >= pmi_min AND in_draw == 0 — a
+    TIGHT collocation the draw never saw. `missed` (0 in draw, any tightness) is kept for context."""
     sample_vids = set(sample_vids or ())
     colloc = collocation_map(conn, sid, occs, stop=stop, floor=floor, window=window)
     ref = _ref_map(occs)
+    nv, counts = _corpus_verse_counts(conn)
+    vt = len({o["vid"] for o in occs})
     findings = []
     for base, vids in colloc.items():
+        co = len(vids)
         in_draw = len(vids & sample_vids)
+        score = _pmi(co, vt, counts.get(base, 0), nv)
         lemma, translit = _neighbor_head(conn, base)
         findings.append({
             "neighbor": base, "lemma": lemma, "translit": translit,
-            "verses": len(vids), "in_draw": in_draw, "missed": in_draw == 0,
+            "verses": co, "score": score, "in_draw": in_draw, "missed": in_draw == 0,
+            "flagged": (score is not None and score >= pmi_min and in_draw == 0),
             "examples": [ref[v] for v in sorted(vids) if v in ref][:MAX_EXAMPLES],
         })
-    findings.sort(key=lambda f: (-f["verses"], f["neighbor"]))
+    findings.sort(key=lambda f: (-(f["score"] if f["score"] is not None else -99), -f["verses"]))
     return findings
 
 
@@ -233,5 +302,5 @@ def _neighbor_head(conn, base):
 
 
 def missed_collocations(findings):
-    """Just the trips — collocations at/above floor with zero draw representation."""
-    return [f for f in findings if f["missed"]]
+    """Just the trips — TIGHT collocations (above the score threshold) the draw missed."""
+    return [f for f in findings if f["flagged"]]

@@ -27,7 +27,7 @@ import build_lexica_def as B
 import lexica_coverage as C
 
 
-def audit_word(conn, sid, budget, floor, window, stop, show_all):
+def audit_word(conn, sid, budget, floor, window, stop, show_all, pmi_min):
     pred, params = B.abp_filter(conn, sid)
     occs = B.occurrences(conn, pred, params)
     if not occs:
@@ -35,24 +35,31 @@ def audit_word(conn, sid, budget, floor, window, stop, show_all):
         return None
     sample = B.select_spread(occs, budget)
     sample_vids = {o["vid"] for o in sample}
-    findings = C.scan_collocations(conn, sid, occs, sample_vids, stop=stop, floor=floor, window=window)
-    missed = C.missed_collocations(findings)
+    findings = C.scan_collocations(conn, sid, occs, sample_vids, stop=stop,
+                                   floor=floor, window=window, pmi_min=pmi_min)
+    flagged = C.missed_collocations(findings)
 
     lemma, translit = B.lex_head(conn, sid)
     print(f"\n{'='*70}\n{sid}  {lemma} ({translit})")
     print(f"  occurrences {len(occs)} | fed draw {len(sample_vids)} verses | "
-          f"floor {floor} | window {window}")
-    print(f"  collocations at/above floor: {len(findings)}   (missed by draw: {len(missed)})")
+          f"floor {floor} | window {window} | tightness threshold {pmi_min}")
+    print(f"  collocations at/above floor: {len(findings)}   (FLAGGED — tight & draw-missed: {len(flagged)})")
 
-    rows = findings if show_all else missed
+    rows = findings if show_all else flagged
     if not rows:
-        print("  ✓ no collocation missed by the draw." if not show_all
+        print("  ✓ no tight collocation missed by the draw." if not show_all
               else "  (no collocations at/above floor)")
     for f in rows:
-        tag = "✗ MISSED" if f["missed"] else f"  in-draw {f['in_draw']}"
-        print(f"    {tag}  {f['neighbor']} {f['lemma']} ({f['translit']})  "
+        sc = f"{f['score']:5.1f}" if f["score"] is not None else "  -  "
+        if f["flagged"]:
+            tag = "✗ FLAG "
+        elif f["missed"]:
+            tag = "· miss "     # draw-missed but below the tightness bar (not flagged)
+        else:
+            tag = f"in-draw{f['in_draw']:2d}"
+        print(f"    {tag} PMI {sc}  {f['neighbor']} {f['lemma']} ({f['translit']})  "
               f"— {f['verses']} verses; e.g. {', '.join(f['examples'][:4])}")
-    return {"sid": sid, "findings": findings, "missed": missed}
+    return {"sid": sid, "findings": findings, "flagged": flagged}
 
 
 def main():
@@ -63,8 +70,10 @@ def main():
     ap.add_argument("--budget", type=int, default=B.BUDGET)
     ap.add_argument("--floor", type=int, default=C.COLLOC_FLOOR)
     ap.add_argument("--window", type=int, default=C.COLLOC_WINDOW)
+    ap.add_argument("--pmi-min", type=float, default=C.PMI_MIN,
+                    help="tightness threshold to flag a missed collocation (calibrate from --show-all)")
     ap.add_argument("--show-all", action="store_true",
-                    help="list every collocation at/above floor, not just the ones the draw missed")
+                    help="list every collocation at/above floor (with its PMI score), not just flags")
     args = ap.parse_args()
 
     if not args.word and not args.all:
@@ -85,13 +94,14 @@ def main():
     stop = C.function_bare_strongs(conn)
     print(f"function-word stop-list: {len(stop)} numbers")
 
-    total_missed = 0
+    total_flagged = 0
     for sid in targets:
-        r = audit_word(conn, sid, args.budget, args.floor, args.window, stop, args.show_all)
+        r = audit_word(conn, sid, args.budget, args.floor, args.window, stop,
+                       args.show_all, args.pmi_min)
         if r:
-            total_missed += len(r["missed"])
+            total_flagged += len(r["flagged"])
     conn.close()
-    print(f"\n{'='*70}\nDONE. {len(targets)} word(s); {total_missed} missed collocation(s) total.")
+    print(f"\n{'='*70}\nDONE. {len(targets)} word(s); {total_flagged} flagged collocation(s) total.")
 
 
 if __name__ == "__main__":
