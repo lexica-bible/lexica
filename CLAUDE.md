@@ -3,6 +3,36 @@
 ## Overview
 Lexica is a Flask-based Greek and Hebrew Bible word study app. ABP (Apostolic Bible Polyglot) interlinear is the primary text; KJV is a fully searchable parallel corpus. The design is scholarly but accessible — no prior Greek training required.
 
+## Design doctrine
+
+Lexica's visual language is quiet. Text, hierarchy, whitespace, and hairline
+structure do the work. **Library is the canonical surface** — when any rule is
+ambiguous, the tiebreaker is "what does the Library reader do?" New surfaces
+should look like they were built by whoever built Library. (Full record: `docs/design.md`.)
+
+1. **No decorative containers.** Panels are containers; content is rows. No
+   borders, backgrounds, or radii on repeating elements (rows, list items,
+   section wrappers). Rows separate by whitespace or hairline divider; hover
+   wash + accent left-bar for interaction/selection. Shared system: `.listrow`
+   + tokens (`--row-accent` etc.). Reference the system, never local copies.
+2. **References are text.** Strong's numbers, verse refs, translation tags:
+   bare mono or small caps, muted, no chrome. Face + color = reference;
+   fixed-width alignment = column structure. Shared class: `.refmark`.
+3. **Backgrounds and highlights are semantic, never stylistic.** A background
+   means something is *marked*: a matched word in evidence, a selection, a
+   warning. If a highlight isn't carrying meaning a reader needs, it doesn't
+   exist.
+4. **One pill: CONTESTED.** It's rare, it's a warning, it's allowed to
+   interrupt. Nothing else gets a pill without the same justification.
+5. **Emphasis budget.** Before adding visual weight, name the meaning it
+   carries. If the answer is "grouping" or "looks clickable," use structure or
+   hover instead. Default to the quietest version that works; ornament must
+   argue its way in.
+
+Exceptions (bounded on purpose): input surfaces (composers, editors, search),
+semantic notices/callouts (contested notice, grounding caution, banners),
+selected states (as accent/wash, never a border box).
+
 ## HOW TO TALK TO THE USER — read every session, no exceptions
 Plain, concise English — like a colleague, not a textbook. The user is a data-center engineer
 (CCNA, Linux, lots of hands-on) — NOT a programmer. Assume infra/CLI/networking fluency (don't
