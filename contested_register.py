@@ -123,8 +123,8 @@ CONTESTED = OrderedDict([
         # fabricated gods, human magistrates) is uncontested and stays in the senses. No pin_core: once
         # the verdict sentence is cut, Sense 1 leads neutral on its own (the sarx/ekklesia pattern).
         "core": "the one sovereign creator — named, invoked, prayed to, spoken of as acting in "
-                "history; in the plural or of foreign cult, lesser or fabricated 'gods'; of human "
-                "officeholders, magistrates set in authority",
+                "history; in the plural or of foreign cult, lesser or fabricated 'gods'; of "
+                "figures set in authority (Exo 22:28), the referent there contested",
         "frames": [
             ("shared divine nature", "Nicene / Trinitarian",
              "the anarthrous predicate ascribes God's own nature to the Word — 'what God was, the "
