@@ -1006,6 +1006,16 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   verse, even a short one (pass-2 is told to cite ONLY from the real retrieved list). Ranking is
   skipped only for a small pool whose prose cites nothing. Separate pass-3 dropped (folded into
   pass-2). Full record: memory `project_ai_search_architecture`.
+- **No lexicon definition prose in the synthesis payload — A3/A4 INVARIANT (2026-07-01).** Ask-corpus
+  answers are built ONLY from verse evidence + retrieval KEYS (Strong's number/lemma/translit), never LSJ
+  or Strong's DEFINITION text. The LSJ context fed to pass-1 SQL-gen is keys-only (`ai._retrieval_context`,
+  which REPLACED `views_lsj._format_lsj_context` — the old one leaked LSJ `semantic` + a cognate gloss that
+  can be `kjv_def`/`strongs_def` into the pass-1 explanation the reader sees). Fail-closed guard
+  `_assert_no_lexicon_prose` drops any block that carries def prose (pick-parse-floor philosophy). Keep the
+  exclusion STRUCTURAL (don't "tell the model to ignore LSJ" — the text must not be in the payload). Locked
+  by `tests/test_synthesis_no_leak.py` (CI + pre-commit). The answer PROVENANCE rail rides the SAME payload
+  (`results`/`is_primary`/`key_strongs`/`grounded` + the `contested` flag), never a second lookup. Full
+  record: memory `project_ai_search_architecture`.
 - **Synthesis inputs + seatbelt (2026-06-21).** The verses handed to pass-2 are a SPREAD across books
   (`_spread_sample`: round-robin a few per book, not `results[:N]` — which, ordered by verse id, was
   early-OT-only, so a both-testament word came back OT-only and mislabeled "the LXX"); within each book
