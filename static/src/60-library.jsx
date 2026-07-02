@@ -1526,7 +1526,7 @@ function LibraryView({ nav, onNavChange, onReaderPos, onWordClick, onVerseNumber
             {chrono && !nonCanon && (
               <>
                 <span className="lib-bar-sep" aria-hidden="true"/>
-                <div className="seg seg--line lib-order-seg">
+                <div className="seg lib-order-seg">
                   <button className={"seg-b" + (orderMode !== "chronological" ? " on" : "")} title="Canonical order (books in order)" aria-label="Canonical order" onClick={() => setOrder("canonical")}><Icon.Book/></button>
                   <button className={"seg-b" + (orderMode === "chronological" ? " on" : "")} disabled={translation === "heb"} title={translation === "heb" ? "Chronological isn't available for the Hebrew OT" : "Chronological order (events in sequence)"} aria-label="Chronological order" style={translation === "heb" ? { opacity: 0.35, cursor: "default" } : undefined} onClick={() => translation !== "heb" && setOrder("chronological")}><Icon.Clock/></button>
                 </div>
@@ -1554,7 +1554,7 @@ function LibraryView({ nav, onNavChange, onReaderPos, onWordClick, onVerseNumber
               </div>
             )}
             <span className="lib-bar-sep" aria-hidden="true"/>
-            <div className="seg seg--line lib-view-seg">
+            <div className="seg lib-view-seg">
               <button
                 className={"seg-b" + (viewChipOn ? " on" : "")}
                 disabled={layoutLocked}

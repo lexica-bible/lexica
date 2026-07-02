@@ -59,6 +59,28 @@ to anything, name the meaning it carries. "Grouping" → use a small-caps header
 and a hairline. "Looks clickable" → use hover. The default is the quietest
 version that works; ornament must argue its way in.
 
+**Quiet is not formless** — lists of choices must still read as discrete items
+at rest (spacing, markers, link color), not merge into prose. De-boxing removes
+the container, not the item-ness. A row of four sample words should read as four
+tappable things before you hover, not as a sentence.
+
+### 6. One radius
+Geometry uses one shared radius token (`--radius`, 2px — near-flat, per Library's
+crisp controls). Every rounded rectangle references it: buttons, inputs, notices,
+cards, the CONTESTED badge. No lozenges (999px pills), no grab-bag of 6/8/10/14px.
+Exceptions are functional only: `50%` for circles/dots, `0` for a deliberately
+flush edge.
+
+### Toggles
+Two toggle shapes, never mixed on one control:
+- **Text segments** (All/OT/NT, ABP/KJV, Notes filters) → underline-under-active,
+  no box (`.seg--line`). The reader's source row is canonical.
+- **Icon toggles** (Chip/Prose, Canonical/Chronological) → boxed active state; an
+  underline under a lone icon doesn't read.
+
+A control showing both a box and an underline is a half-migrated artifact and is
+always a bug.
+
 ## Deliberate exceptions
 
 - **Input surfaces** — composers, note editors, search fields. Inputs are

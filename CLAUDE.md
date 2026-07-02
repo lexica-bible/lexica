@@ -27,7 +27,12 @@ should look like they were built by whoever built Library. (Full record: `docs/d
 5. **Emphasis budget.** Before adding visual weight, name the meaning it
    carries. If the answer is "grouping" or "looks clickable," use structure or
    hover instead. Default to the quietest version that works; ornament must
-   argue its way in.
+   argue its way in. **Quiet is not formless** — a list of choices must still read
+   as discrete items at rest (spacing, markers, link color), not merge into prose.
+6. **One radius.** All rounded rectangles use the shared `--radius` token (2px, near-flat);
+   no lozenges (999px), no grab-bag of 6/8/10px. Functional exceptions only: `50%` circles, `0`.
+7. **Toggles — never box + underline together.** Text segments (All/OT/NT, ABP/KJV) →
+   underline-under-active, no box (`.seg--line`). Icon toggles (Chip/Prose) → boxed active.
 
 Exceptions (bounded on purpose): input surfaces (composers, editors, search),
 semantic notices/callouts (contested notice, grounding caution, banners),
