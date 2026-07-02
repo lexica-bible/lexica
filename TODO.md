@@ -147,6 +147,13 @@ YouVersion, which aren't the target). Honest gaps:
   - Verbs + Hebrew first-batches = separate tracks.
   - Small: the fork gate names a covenant-membership/NPP reading for dikaioō that `salvation_how` has no
     node for — add one via add_study_graph_salvation.py so the link lands.
+  - **Coverage engine (piece A/B) SHIPPED 2026-07-02** (`lexica_coverage.py`; memory `project_lexica_dictionary`).
+    Piece A collocation pre-check (token-level PMI, `PMI_MIN=4.0`, warn-only build hook) + piece B
+    `coverage_audit` field populated on all 18 entries. Follow-ups: wire `coverage_audit` to the card UI (stored
+    data only now); eyeball G166/aionios sense 4 (flagged thin); optional "phrases-not-senses" filter for the
+    advisory uncited-collocation lists (theos/kyrios run long); piece A could FORCE a missed collocation into
+    the draw at build (warn-only today). Piece C (stratified sampling) DEFERRED — first evidence logged:
+    huios+anthrōpos OT-generic vs NT-title conflation.
   (Manual CONTENT edits — batch-2 G2316 sense 4 + G5207 sense 5/believers, and batch-3 G5207 sense 6
    "Son of Man" idiom + G2316 Psa 82 into senses 3/4 — all SHIPPED + LIVE; audit A1/C3 + the θεός metaV fix
    too. Archived. See TODO_ARCHIVE + memory `project_lexica_dictionary`.)
