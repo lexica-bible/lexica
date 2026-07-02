@@ -122,11 +122,13 @@ CONTESTED = OrderedDict([
         "lemma": "theos", "gloss": "God / god",
         # contest_verses (piece B, self_only check): the three disputed loci — John 1:1c (the deity
         # fork below), Exo 22:28 (the magistrates referent, flagged in core), and Psa 82 (the
-        # superhuman-'gods' reading, sense 3). Psa 82 is the FOUNDING case for the circular check:
-        # sense 3 rested only on Psa 82 until Deu 32:8 was spliced in as INDEPENDENT support. Deu
-        # 32:8 is deliberately NOT here — it is corroboration from outside the disputed passage, so
-        # listing it would wrongly re-flag the now-fixed sense 3 as circular.
-        "contest_verses": ["Joh 1:1", "Exo 22:28", "Psa 82:1", "Psa 82:6", "Psa 82:7"],
+        # superhuman-'gods' reading, senses 3/4). Psa 82 is CHAPTER-level: the disputed passage is
+        # the whole psalm — sense 3 cites 82:8, sense 4 cites 82:1/6 — so a per-verse list would
+        # miss part of it (like dikaioō's "Jas 2"). It is the FOUNDING case for the circular check:
+        # sense 3 rested on Psa 82 alone until Deu 32:8 (and 1Sa 28:13) were added as INDEPENDENT
+        # support from OTHER passages. Those are deliberately NOT here — corroboration from outside
+        # the disputed psalm is exactly what keeps the fixed sense 3 from reading circular.
+        "contest_verses": ["Joh 1:1", "Exo 22:28", "Psa 82"],
         "divergence_type": "referent", "lead_flip": False,
         # The model's Sense 1 closes by reading John 1:1c as settled identity ("the word ... identifies
         # the Logos both as with this being and as being this being"). That one sentence is pulled from
