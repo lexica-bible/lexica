@@ -575,11 +575,14 @@ has `railClass`/`centerClass` for Word study's extra slot classes); Library's fi
 extras — its App-level gating machine (one-at-a-time word>xref>note>summary, back-as-uncover, reconcile)
 is UNTOUCHED and it is NOT forced into RightStack. ThreeZone retired. Migrations proved by parity gates
 (frame DOM + computed-style diff; Library also a Node state-machine gate driving transition sequences).
-**Ask-corpus is the FIRST real RightStack consumer (LIVE 2026-07-01):** desktop on `<Shell>` (composer in a
-top strip, occurrence-count panel moved to the rail's IDLE state, unframed); a synthesis verse-ref CHIP
-PEEKS into the rail (occurrence → fork → word push drill), while the KEY PASSAGES rows keep their
-jump-to-Library (chip = peek, row = leave). Mobile still the old layout. Build spec: `HANDOFF_corpus_shell.md`
-+ memory `project_three_zone_shell`. **Notes + Seam index + News-rail all SHIPPED 2026-07-01** (desktop):
+**Ask-corpus is the FIRST real RightStack consumer (LIVE 2026-07-01):** desktop on `<Shell>` — chat layout
+(ask bar centered on the empty landing, then PINNED to the center-column bottom; top strip = a minimal note +
+New Thread; left rail is threads-only). The inspect rail leads with the SELECTED answer's provenance (click an
+answer to point the rail at it; new answer steals focus) = Key passages (ref + one-line snippet + ABP/BSB/KJV/HEB
+toggle + expander) over ONE merged "Words in scope" list (answer words + lexical family, family-only muted,
+contested badge from the served `/api/lexica/contested` set). A synthesis chip + passage rows PEEK the
+occurrence → fork → word drill. Mobile still the old layout. Build spec: `HANDOFF_corpus_shell.md` + memory
+`project_three_zone_shell`. **Notes + Seam index + News-rail all SHIPPED 2026-07-01** (desktop):
 Notes on `<Shell>` (rail = note index, strip = search/filter, center = the editor edited IN-TAB, right =
 the note's anchored verse via `VerseRow`; editor guts shared via `useNoteEditor`/`NoteEditFields` so the
 Library rail editor + the tab editor can't drift; inspect floats top:0 with a header band). Seam index =

@@ -6,6 +6,26 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Ask-corpus provenance rail — build-out — DONE + LIVE 2026-07-01/02
+Full record + lessons: memory `project_three_zone_shell`. Closes the old "Ask-corpus RIGHT panel /
+3-panel parity" item — Ask-corpus now has a real right inspect panel (provenance + drill), not just
+rail + center. What shipped:
+- **Per-answer selection** — the rail follows the SELECTED answer, not just the latest. Click any answer
+  to point the rail at its provenance; a new answer steals focus. Each turn already kept its own payload,
+  so this was client-side re-plumbing.
+- **Key passages IN the rail** — ref + one-line snippet (reused `VerseRow` + a new `hideRef` prop) +
+  ABP/BSB/KJV/HEB toggle + "show all" expander. The old inline block is now MOBILE-ONLY.
+- **Merged word list** — "Words in scope" + "Lexical shape" became ONE list (answer words UNION the
+  lexical family; family-only rows muted so they don't read as evidence).
+- **Chat layout** — composer centered on the empty landing, then pinned to the center-column bottom;
+  strip minimised to a note + New Thread (moved off the rail); `--strip-h` extracted so the top band
+  lines up across News / Word study / Ask-corpus.
+- **Recent list** — only reorders on a follow-up, not on open (`justOpenedRef`).
+- **Contested badge fix (the lesson):** looked like a server flag bug; actually REOPENED saved threads
+  render client-side from localStorage and never hit the server, so the cache-read stamp couldn't reach
+  them. Fixed with one source of truth — `GET /api/lexica/contested` (register keys incl. aliases), client
+  fetches once and badges by plain membership. A frontend mirror was rejected (the register isn't stable).
+
 ## Lexica definition engine — batch-2 content edits + 2 audit fixes + θεός metaV cleanup — DONE + LIVE 2026-07-01
 Full record + lessons: memory `project_lexica_dictionary`. All serve-verified live.
 - **Content (via `fix_lexica_raw.py`, model-free, citation gate re-checked on each write):**

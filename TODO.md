@@ -43,11 +43,14 @@ index, and News right-rail all shipped on it 2026-07-01. Full record: memory `pr
 - **PA data step for the Seam index** — run `python scripts/build_lexica_def.py --resplit --all --apply`
   on PA to write the new `divergence_type` + `lead_flip` (+ short `gloss`) into the stored forks (free, no
   model). Until then the Seams list shows but the type badges + Different-lead filter are blank.
-- **Ask-corpus POLISH pass** (JP will batch these): a stray divider line in the inspect card; general
-  spacing; the occurrence card's target word = the answer's PRIMARY key word (wrong-ish for a broad
-  multi-word answer); recreate the CSS parity gate with a WIDENED prop set (add width, max-width,
-  flex-basis, overflow-x/y — the old gate missed the News-width + scrollbar bugs).
-  code: static/src/22-shell.jsx, 52-ask-corpus.jsx, 50-corpus-results.jsx, styles.css
+- **Ask-corpus POLISH pass** (rail got a big build-out 2026-07-01/02 — per-answer selection, Key passages
+  moved into the rail, ONE merged Words-in-scope list, bottom-pinned composer, contested badge via the
+  served set; memory `project_three_zone_shell`). STILL OPEN: the occurrence card's target word = the
+  answer's PRIMARY key word (wrong-ish for a broad multi-word answer — should be the exact word in THAT
+  verse); recreate the CSS parity gate with a WIDENED prop set (width, max-width, flex-basis, overflow-x/y
+  — the old gate missed the News-width + scrollbar bugs); re-check spacing / any stray divider after the
+  reshape. POSSIBLE polish: snippet clamp can hide the match (takes the first line, not a window centered
+  on the highlighted word) — only if it proves common. code: static/src/52-ask-corpus.jsx, 50-corpus-results.jsx, styles.css
 - **Dead seam CSS sweep** — after the uniform-shell rewrite, `.seam-row`/`.seam-inspect`/`.seam-insp-*`/
   `.seam-list` are unused (rows reuse `study-row`, list in the shared rail). Harmless, sweep when
   convenient. code: static/styles.css
@@ -219,9 +222,6 @@ heavily guarded. Full record: memory `project_ai_search_architecture` + `project
   occurrence — DON'T drop them (Gen 1:26 for divine council relies on the same path); broad/thematic-topic
   answers are thin (retrieval is word-based — the bigger answer-shape work). code: ai.py
   _curate_primary_verses + _CURATION_SYSTEM; static/src/52-ask-corpus.jsx, 50-corpus-results.jsx.
-- **Ask-corpus RIGHT panel (3-panel parity)** — Word study has 3 panels; Ask-corpus has rail + center.
-  RECOMMENDED = a key-word CARD rail (the answer's lemma chips as full dictionary cards; a chip focuses in
-  Word study instead of leaving the tab). Memory `project_ai_search_redesign`. code: static/src/52-ask-corpus.jsx.
 - **Small residuals (only if they bug the user):** cross-ref weighting picks the general hub verse not the
   query-specific one (Sonnet still names the specific anchor, so low priority); residual framing lean; LSJ
   blurb was never given the citation after-check (low risk — add only if a bad cite shows up).
