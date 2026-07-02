@@ -419,7 +419,7 @@ function NewsWhy({ story, onBack }) {
         {arts.length > 0 && (
           <div className="news-shape-sec">
             <div className="news-shape-h">
-              {arts.length} {arts.length === 1 ? "source" : "sources"}{peak ? " · peaked " + peak : ""}
+              {arts.length} {arts.length === 1 ? "source" : "sources"}{arts.length > 1 && peak ? " · peaked " + peak : ""}
             </div>
             {arts.map((m, i) => (
               <div key={i} className="news-why-art">
