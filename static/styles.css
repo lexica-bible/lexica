@@ -5499,7 +5499,6 @@ button.study-verse-ref { border: none; }
   color: var(--ink); line-height: 1.35; text-decoration: none; }
 .news-why-title:hover { text-decoration: underline; }
 .news-why-reason { font-size: 13.5px; color: var(--ink); line-height: 1.5; margin: 0; }
-.news-why-lens { font-size: 12.5px; color: var(--ink-2); line-height: 1.55; margin: 0; font-style: italic; }
 .news-why-art { padding: 7px 0; border-bottom: 1px solid var(--rule); }
 .news-why-art:last-child { border-bottom: none; }
 .news-why-artt { display: block; font-size: 13px; color: var(--ink); line-height: 1.35; text-decoration: none; }

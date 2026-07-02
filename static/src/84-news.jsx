@@ -375,14 +375,15 @@ function FeedShape({ shape }) {
 }
 
 // The watch's lens, verbatim from scripts/news/queries.py — the one storyline every
-// article is scored against. Shown in the why-rail so a card's score reads in context.
+// article is scored against. It's GLOBAL (identical for every card), so it's stated ONCE in the
+// ⓘ "How the feed works" popover, NOT repeated per card. Single source of truth for the string.
 const _NEWS_LENS = "Manufactured crisis → a public cry for moral order → all authority (states, denominations, even tech and AI) consolidating under Rome, with America as the enforcer — the two-beasts endgame.";
 
 // RIGHT zone, SELECTED state: click a story card → this replaces the feed-shape dashboard.
 // Everything here is stored or authored, nothing generated at view time: the score + thread,
-// the scorer's own one-line reason (ai_why), the lens above (verbatim), the sources + how each
-// was pulled (Google News / RSS), and the cluster's article list. "‹ Watch" is the depth-1
-// reset back to the dashboard. (A per-thread beast-arm badge is a separate, authored follow-up.)
+// the scorer's own one-line reason (ai_why, genuinely per-article), the sources + how each was
+// pulled (Google News / RSS), and the cluster's article list. "‹ Watch" is the depth-1 reset
+// back to the dashboard. (A per-thread beast-arm badge is a separate, authored follow-up.)
 function NewsWhy({ story, onBack }) {
   const tier = _scoreTier(story.score);
   const members = story.members || [];
@@ -410,11 +411,6 @@ function NewsWhy({ story, onBack }) {
             <p className="news-why-reason">{story.why}</p>
           </div>
         )}
-
-        <div className="news-shape-sec">
-          <div className="news-shape-h">The lens it's read against</div>
-          <p className="news-why-lens">{_NEWS_LENS}</p>
-        </div>
 
         {arts.length > 0 && (
           <div className="news-shape-sec">
@@ -991,6 +987,10 @@ function NewsView({ isMobile }) {
                   <button className="news-help-x" aria-label="Close" onClick={() => setHelpOpen(false)}>
                     <Icon.Close />
                   </button>
+                </div>
+                <div className="news-help-sec">
+                  <div className="news-help-t">The lens every story is scored against</div>
+                  <p>{_NEWS_LENS}</p>
                 </div>
                 <div className="news-help-sec">
                   <div className="news-help-t">Score</div>
