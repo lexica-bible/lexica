@@ -72,6 +72,13 @@ index, and News right-rail all shipped on it 2026-07-01. Full record: memory `pr
 3. Post-deploy check: News → Kept → Copy shortlist shows "Resolving…" then pastes clean article links,
    not `news.google.com/rss/...` wrappers.
 
+**Copy/Export shortlist formats** (SHIPPED 2026-07-02; memory `project_news_watch`):
+1. Needs a normal CODE deploy — the feed read now carries `i.summary` (views_news.py), which fills the
+   "description" line + the CSV description column. Without the deploy those degrade to blank (safe).
+2. Post-deploy check: News → Kept → Copy shortlist (3 formats) + Export (Markdown / CSV) download; date
+   window label stays put across refresh ("Last 7d" doesn't creep to 8d); right inspect divider lines up
+   with the navy header edge when a card is selected.
+
 ---
 
 ## Code health / cleanup
