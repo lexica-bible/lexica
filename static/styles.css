@@ -5504,6 +5504,9 @@ button.study-verse-ref { border: none; }
 .news-why-artt { display: block; font-size: 13px; color: var(--ink); line-height: 1.35; text-decoration: none; }
 .news-why-artt:hover { text-decoration: underline; }
 .news-why-artmeta { font-size: 11.5px; color: var(--ink-4); margin-top: 2px; }
+/* 🔒 paywalled-link marker (see _lock in 84-news.jsx). Muted + slightly smaller so it
+   reads as a quiet warning on the headline/source, not a decorative pill. */
+.news-lock { font-size: 0.82em; margin-right: 4px; opacity: 0.75; vertical-align: baseline; }
 
 @media (max-width: 1099px) {
   .news-view { padding: 16px 12px 90px; }

@@ -62,7 +62,14 @@ function _peakDay(members) {
 // No active window (Max preset) -> the global card, floored on its all-time peak (unchanged).
 function _windowCard(c, since, until, minScore, thread, labels) {
   if (thread && c.thread !== thread) return null;
-  if (!since && !until) return c.score >= minScore ? c : null;
+  if (!since && !until) {
+    if (c.score < minScore) return null;
+    // Max preset: the server _pick_face already applied the free-first penalty, so the
+    // face is paywalled ONLY when every member is (the wholly-paywalled fallback). Derive
+    // face_pw from the member flags — no domain check, no url join.
+    const all = c.members || [];
+    return { ...c, face_pw: all.length > 0 && all.every(m => !!m.pw) };
+  }
   const mem = (c.members || []).filter(m => _inWindow(m.d, since, until));
   if (!mem.some(m => m.s >= minScore)) return null;          // floor judged in-window
   // free-first (m.pw = server paywall flag), then score, then recency — mirrors the
@@ -87,6 +94,7 @@ function _windowCard(c, since, until, minScore, thread, labels) {
     ...c,
     title: face.title, url: face.url, resolved_url: face.resolved || "", why: face.why, summary: face.summary || "",
     thread: face.t, thread_label: labels[face.t] || face.t || "?",
+    face_pw: !!face.pw,                                 // the CURRENTLY selected face's paywall flag
     score, peak_date: _peakDay(mem),
     published: dates.length ? dates[dates.length - 1] : (c.published || ""),
     count: mem.length, sources: sources.slice(0, 12),
@@ -108,6 +116,16 @@ function _stale(peak) {
 
 function _scoreTier(score) {
   return score >= 8 ? "hi" : score >= 6 ? "mid" : "lo";
+}
+
+// The ONE 🔒 marker for a hard-paywalled article (a dead-end link for a reader). Driven
+// PURELY by the server `pw` flag — the frontend never checks a domain. A missing/false flag
+// renders nothing (unknown is never treated as paywalled). Shared by the card headline, the
+// rail headline, and the rail sibling rows so their markup can't drift.
+function _lock(pw) {
+  if (!pw) return null;
+  return <span className="news-lock" title="Paywalled — this link may not open the full article"
+               aria-label="Paywalled">🔒</span>;
 }
 
 // Drop a trailing " - Outlet" / " — Outlet" suffix (the source already shows in the
@@ -278,7 +296,7 @@ function NewsStory({ story, view, onMark, readOnly, since, until, onSelect, sele
         <div className="news-thread">{story.thread_label}</div>
         <a className="news-title" href={_faceLink(story) || top.url || "#"} target="_blank" rel="noopener noreferrer"
            onClick={(e) => e.stopPropagation()}>
-          {_stripOutlet(story.title)}
+          {_lock(story.face_pw)}{_stripOutlet(story.title)}
         </a>
         {/* Body = headline + thread + a date · outlet · source-count meta line. The why and the
             full per-outlet article list now render in the right rail on selection. */}
@@ -409,7 +427,7 @@ function NewsWhy({ story, onBack }) {
           <div className="news-why-thread">{story.thread_label}</div>
         </div>
         <a className="news-why-title" href={_faceLink(story) || "#"} target="_blank" rel="noopener noreferrer">
-          {_stripOutlet(story.title)}
+          {_lock(story.face_pw)}{_stripOutlet(story.title)}
         </a>
 
         {story.why && (
@@ -428,7 +446,7 @@ function NewsWhy({ story, onBack }) {
               <div key={i} className="news-why-art">
                 <a className="news-why-artt" href={m.resolved || m.url || "#"} target="_blank" rel="noopener noreferrer"
                    onClick={(e) => e.stopPropagation()}>
-                  {_stripOutlet(m.title)}
+                  {_lock(m.pw)}{_stripOutlet(m.title)}
                 </a>
                 <div className="news-why-artmeta">{m.src}{m.d ? " · " + m.d : ""}{m.via ? " · " + m.via : ""}</div>
               </div>
