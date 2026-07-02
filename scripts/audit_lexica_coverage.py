@@ -62,6 +62,43 @@ def audit_word(conn, sid, budget, floor, window, stop, show_all, pmi_min):
     return {"sid": sid, "findings": findings, "flagged": flagged}
 
 
+def coverage_word(conn, sid):
+    """PIECE B — read the STORED entry (read-only), recompute its coverage_audit, print it. Works on
+    any db (current, a backup, or a scratch copy with senses stripped) since it re-derives from the
+    stored raw prose + the live occurrences. No model, no write."""
+    import json
+    row = conn.execute("SELECT def_json FROM lexica_def WHERE strongs=?", (sid,)).fetchone()
+    if not row or not row["def_json"]:
+        print(f"\n{sid}: no stored entry — skip.")
+        return None
+    entry = json.loads(row["def_json"])
+    raw = entry.get("raw", "")
+    senses_block = entry.get("senses_block", "")
+    pred, params = B.abp_filter(conn, sid)
+    occs = B.occurrences(conn, pred, params)
+    cov = C.coverage_audit(
+        conn, sid, occs,
+        entry_refs=B.cited_refs(raw),
+        sense_specs=B.sense_specs(senses_block),
+        contest_verses=B.contest_verses(sid),
+        is_contested=(sid in B._CONTESTED_BY_SID))
+
+    lemma, translit = B.lex_head(conn, sid)
+    colls, rends = cov["collocations"], cov["renderings"]
+    cu = [c for c in colls if not c["cited"]]
+    print(f"\n{'='*70}\n{sid}  {lemma} ({translit})   [coverage]  contested={cov['contested']}")
+    print(f"  tight collocations: {len(colls)} ({len(cu)} UNCITED) | "
+          f"top renderings: {len(rends)} ({sum(1 for r in rends if not r['cited'])} uncited)")
+    for c in cu:
+        print(f"    · collocation UNCITED  {c['neighbor']} {c['lemma']} ({c['translit']})  "
+              f"{c['verses']}v  PMI {c['score']}")
+    for t in cov["thin_senses"]:
+        kind = "CIRCULAR (self-only)" if t["self_only"] else "thin"
+        print(f"    · sense {t['sense']} {kind} — {t['support_refs']} support ref(s): {t['headline'][:60]}")
+    print(f"  flags: {'; '.join(cov['flags']) if cov['flags'] else '(none — clean)'}")
+    return {"sid": sid, "coverage": cov}
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--db", default=os.path.expanduser("~/bible-db/bible.db"))
@@ -74,6 +111,9 @@ def main():
                     help="tightness threshold to flag a missed collocation (calibrate from --show-all)")
     ap.add_argument("--show-all", action="store_true",
                     help="list every collocation at/above floor (with its PMI score), not just flags")
+    ap.add_argument("--coverage", action="store_true",
+                    help="PIECE B: recompute the STORED entry's coverage_audit (cited-or-not + "
+                         "thin/circular senses) read-only — works on a scratch/backup db too")
     args = ap.parse_args()
 
     if not args.word and not args.all:
@@ -90,6 +130,13 @@ def main():
     else:
         w = args.word.upper()
         targets = ["G" + w if w[:1] not in ("G", "H") else w]
+
+    if args.coverage:
+        for sid in targets:
+            coverage_word(conn, sid)
+        conn.close()
+        print(f"\n{'='*70}\nDONE (coverage). {len(targets)} word(s).")
+        return
 
     stop = C.function_bare_strongs(conn)
     print(f"function-word stop-list: {len(stop)} numbers")

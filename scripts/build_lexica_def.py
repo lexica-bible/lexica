@@ -142,6 +142,7 @@ NT_BOOKS = {"Mat","Mar","Luk","Joh","Act","Rom","1Co","2Co","Gal","Eph","Php","C
 # and the shared register lives one level up at the repo root.
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from contested_register import CONTESTED, CONTESTED_BY_SID
+import lexica_coverage
 _CONTESTED_BY_SID = CONTESTED_BY_SID
 
 
@@ -587,6 +588,29 @@ def sense_provenance(senses_block):
     return out
 
 
+def sense_specs(senses_block):
+    """PIECE B input: [{headline, refs:[(book,ch,vs)]}] per sense, in order. Reuses the SAME sense
+    splitter (_sense_spans) + ref regex (_REF_RE) + book normalizer (_norm_book) the rest of the
+    build uses, so the coverage check sees exactly the citations the card does. Kept here (not in
+    lexica_coverage) because the splitter lives here — coverage_audit takes the parsed result."""
+    out = []
+    for lead, body in _sense_spans(senses_block or ""):
+        seen, refs = set(), []
+        for bk, ch, vs in _REF_RE.findall(body):
+            key = (_norm_book(bk), int(ch), int(vs))
+            if key not in seen:
+                seen.add(key)
+                refs.append(key)
+        out.append({"headline": lead, "refs": refs})
+    return out
+
+
+def contest_verses(sid):
+    """The word's disputed-passage locus from the register (piece B self_only), or []."""
+    e = _CONTESTED_BY_SID.get(sid)
+    return (e.get("contest_verses") or []) if e else []
+
+
 def _colloc_warn(conn, sid, occs, sample):
     """PIECE A — collocation blind-spot check (ADVISORY). Scans ALL of the word's occurrences for a
     repeated adjacent content-lemma collocation (e.g. huios+anthrōpos "son of man") that the fed
@@ -650,6 +674,27 @@ def synth_ver():
     return "lexica:" + hashlib.sha1(VERSE_PROMPT.encode("utf-8")).hexdigest()[:12]
 
 
+def _coverage_audit(conn, sid, raw, senses_block):
+    """PIECE B — the coverage_audit block (no model call, recomputed every build/--resplit like
+    sense_prov). Checks the FINISHED entry: do the senses cite the tight collocations + top
+    renderings, and is any contested sense circular (self_only)? Reads the word's real occurrences
+    read-only. Degrades to an empty-but-shaped block if anything is missing, so it never blocks a
+    write. NOTE — the citation gate + validate_entry do NOT read this (it's a report, not a gate)."""
+    try:
+        pred, params = abp_filter(conn, sid)
+        occs = occurrences(conn, pred, params)
+        return lexica_coverage.coverage_audit(
+            conn, sid, occs,
+            entry_refs=cited_refs(raw),
+            sense_specs=sense_specs(senses_block),
+            contest_verses=contest_verses(sid),
+            is_contested=(sid in _CONTESTED_BY_SID))
+    except Exception as e:                      # report-only: never let it stop a write
+        print(f"  (coverage_audit skipped: {e})", file=sys.stderr)
+        return {"collocations": [], "renderings": [], "senses": [],
+                "thin_senses": [], "contested": (sid in _CONTESTED_BY_SID), "flags": []}
+
+
 def assemble(conn, sid, lemma, translit, raw):
     """raw model prose -> the full stored entry (the frozen field shape)."""
     fields = split_definition(raw)
@@ -664,6 +709,9 @@ def assemble(conn, sid, lemma, translit, raw):
         # citations, recomputed on every build/--resplit — no model. Drives the subordinate
         # "rests on Septuagint usage" note on senses that lean heavily Greek-OT.
         "sense_prov": sense_provenance(fields["senses_block"]),
+        # PIECE B coverage_audit — the finished-entry coverage report (collocations/renderings
+        # cited-or-not + per-sense thin/circular). No model; recomputed every build/--resplit.
+        "coverage_audit": _coverage_audit(conn, sid, raw, fields["senses_block"]),
         # HAND-PINNED CORE (frame-leakers only): the neutral, hand-authored core leads the card and
         # the model's framed senses sit below it as attested uses. None for every other word — the
         # model's own senses lead as usual. Lifted from CONTESTED so a --resplit (no model call)
@@ -773,6 +821,27 @@ def show_entry(entry):
     print(f"  range:       {entry['range'] or '(empty)'}")
     print(f"  gloss_notes: {(entry['gloss_notes'][:400] + ' …') if len(entry['gloss_notes'])>400 else (entry['gloss_notes'] or '(empty)')}")
     print(f"  coverage:    {entry['coverage'] or '(empty/adequate)'}")
+    cov = entry.get("coverage_audit") or {}
+    if cov:
+        colls, rends = cov.get("collocations", []), cov.get("renderings", [])
+        cu = [c for c in colls if not c["cited"]]
+        ru = [r for r in rends if not r["cited"] and r["count"] >= 10]
+        print(f"  coverage_audit: {len(colls)} tight collocations "
+              f"({len(cu)} uncited), {len(rends)} top renderings ({len(ru)} uncited)")
+        for c in cu:
+            print(f"      · collocation UNCITED: {c['neighbor']} {c['lemma']} "
+                  f"({c['translit']})  {c['verses']}v  PMI {c['score']}")
+        for r in ru:
+            print(f"      · rendering UNCITED: '{r['gloss']}'  {r['count']}x")
+        thin = cov.get("thin_senses", [])
+        if thin:
+            for t in thin:
+                kind = "CIRCULAR (self-only)" if t["self_only"] else "thin"
+                badge = "" if cov.get("contested") else " [non-contested — count only]"
+                print(f"      · sense {t['sense']} {kind} — {t['support_refs']} support ref(s){badge}: "
+                      f"{t['headline'][:60]}")
+        if cov.get("flags"):
+            print(f"      flags: {'; '.join(cov['flags'])}")
     print(f"  verses:      {len(entry['verses'])} cited, with text")
     print(f"  citation gate: {a['pass']}/{a['total']} pass" +
           (f"  (misses — tagging {a['tagging']} / real {a['real']} / no-verse {a['noverse']})" if a['total']-a['pass'] else ""))

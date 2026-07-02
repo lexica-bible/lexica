@@ -336,3 +336,103 @@ def _neighbor_head(conn, base):
 def missed_collocations(findings):
     """Just the trips — TIGHT collocations (above the score threshold) the draw missed."""
     return [f for f in findings if f["flagged"]]
+
+
+# ══════════════════════════════════════════════════════════════════════════════════════════════
+# PIECE B — coverage-with-teeth. Post-build, check the FINISHED ENTRY (not the draw): do the senses
+# actually cite the tight collocations + the top renderings, and is any contested sense circular?
+# Pure derivation from the stored entry — no model. This is the guarantee that catches the
+# son-of-man-class miss (the draw held a son-of-man verse, but the pre-sense-6 ENTRY cited none).
+# ══════════════════════════════════════════════════════════════════════════════════════════════
+_CV_RE = re.compile(r'^\s*(\d?\s*[A-Za-z]+)\s+(\d+)(?::(\d+)(?:-(\d+))?)?\s*$')
+
+def _parse_contest(entries):
+    """contest_verses strings -> (verse_set{(book,ch,vs)}, chapter_set{(book,ch)}). Accepts a
+    verse 'Rom 10:13', a range 'Php 2:9-11' (expanded), or a chapter 'Jas 2' (whole-chapter match).
+    Books are canonical verses.book codes already (the register authors them that way)."""
+    vset, cset = set(), set()
+    for e in entries or []:
+        m = _CV_RE.match(e or "")
+        if not m:
+            continue
+        book = m.group(1).replace(" ", "")
+        ch = int(m.group(2))
+        if m.group(3) is None:
+            cset.add((book, ch))                       # chapter-level
+        else:
+            lo, hi = int(m.group(3)), int(m.group(4) or m.group(3))
+            for v in range(lo, hi + 1):
+                vset.add((book, ch, v))
+    return vset, cset
+
+
+def coverage_audit(conn, sid, occs, entry_refs, sense_specs, contest_verses=None,
+                   is_contested=False, floor=COLLOC_FLOOR, window=COLLOC_WINDOW,
+                   pmi_min=PMI_MIN, top_renderings=10, max_colloc=20, thin_max=1):
+    """Build the coverage_audit block for one entry (no model call).
+
+      entry_refs   the (book,ch,vs) refs the entry actually cites  (build: cited_refs(raw))
+      sense_specs  [{headline, refs:[(book,ch,vs)]}] per sense, in order (build parses these — it
+                   owns the sense splitter; keeping it there avoids duplicating that logic here)
+
+    Returns {collocations, renderings, senses, thin_senses, contested, flags}:
+      collocations  the TIGHT corpus phrases (PMI >= pmi_min), each cited-or-not by the entry
+      renderings    the top renderings by frequency, each cited-or-not
+      senses        EVERY sense with its support-ref count + self_only  (kept as piece-C evidence)
+      thin_senses   the subset flagged: support_refs <= thin_max OR self_only (circular)
+      self_only     a sense whose every cited support ref sits inside the word's contest_verses —
+                    circular: it never corroborates from outside the disputed passage. Fires only on
+                    a contested word with a contest_verses locus; inert (False) otherwise.
+    """
+    entry_vids = refs_to_vids(conn, entry_refs)
+
+    # collocations — the tight phrases, cited-or-not
+    colloc = collocation_map(conn, sid, occs, floor=floor, window=window)
+    n_tok, counts = _corpus_token_counts(conn)
+    t_occ = len(occs)
+    colls = []
+    for base, vids in colloc.items():
+        score = _pmi(len(vids), t_occ, counts.get(base, 0), n_tok)
+        if score is None or score < pmi_min:
+            continue
+        lemma, translit = _neighbor_head(conn, base)
+        colls.append({"neighbor": base, "lemma": lemma, "translit": translit,
+                      "verses": len(vids), "score": round(score, 2),
+                      "cited": bool(vids & entry_vids)})
+    colls.sort(key=lambda c: -c["score"])
+    colls = colls[:max_colloc]
+
+    # renderings — top-N by frequency, cited-or-not
+    rsets = rendering_sets(occs)
+    top = sorted(rsets.items(), key=lambda kv: -len(kv[1]))[:top_renderings]
+    rendings = [{"gloss": g, "count": len(v), "cited": bool(v & entry_vids)} for g, v in top]
+
+    # senses — support count + circular flag
+    vset, cset = _parse_contest(contest_verses)
+    has_locus = bool(vset or cset)
+    senses, thin = [], []
+    for i, spec in enumerate(sense_specs or [], 1):
+        refs = spec.get("refs") or []
+        sup = len(refs)
+        self_only = bool(is_contested and has_locus and sup > 0 and
+                         all(((b, c, v) in vset) or ((b, c) in cset) for (b, c, v) in refs))
+        rec = {"sense": i, "headline": spec.get("headline", ""),
+               "support_refs": sup, "self_only": self_only}
+        senses.append(rec)
+        if sup <= thin_max or self_only:
+            thin.append(rec)
+
+    # short rollup for the card / audit print
+    flags = []
+    for c in colls:
+        if not c["cited"]:
+            flags.append(f"collocation {c['translit'] or c['neighbor']} uncited ({c['verses']}v)")
+    for r in rendings:
+        if not r["cited"] and r["count"] >= floor:
+            flags.append(f"rendering '{r['gloss']}' uncited ({r['count']}x)")
+    if is_contested:
+        for t in thin:
+            flags.append(f"sense {t['sense']} " + ("circular" if t["self_only"] else "thin"))
+
+    return {"collocations": colls, "renderings": rendings, "senses": senses,
+            "thin_senses": thin, "contested": bool(is_contested), "flags": flags}

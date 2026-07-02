@@ -16,6 +16,11 @@ from collections import OrderedDict
 CONTESTED = OrderedDict([
     ("G1344", {
         "lemma": "dikaioō", "gloss": "justify",
+        # contest_verses (piece B, self_only check): the disputed locus the fork's readings fight
+        # over. dikaioō's contest is chapter-granular — the register names "James 2", so a
+        # faith-works sense that never reaches outside that chapter (Romans 4, Gen 15:6, Habakkuk)
+        # is circular in exactly the sense we mean. Chapter form "Jas 2" matches any verse in it.
+        "contest_verses": ["Jas 2"],
         # Seam index (chat design): why they diverge + whether the LEAD sense flips when the two
         # priors are swapped (the "different-lead" filter — computed values from the 2026-06-25 run).
         "divergence_type": "content", "lead_flip": True,
@@ -115,6 +120,13 @@ CONTESTED = OrderedDict([
     }),
     ("G2316", {
         "lemma": "theos", "gloss": "God / god",
+        # contest_verses (piece B, self_only check): the three disputed loci — John 1:1c (the deity
+        # fork below), Exo 22:28 (the magistrates referent, flagged in core), and Psa 82 (the
+        # superhuman-'gods' reading, sense 3). Psa 82 is the FOUNDING case for the circular check:
+        # sense 3 rested only on Psa 82 until Deu 32:8 was spliced in as INDEPENDENT support. Deu
+        # 32:8 is deliberately NOT here — it is corroboration from outside the disputed passage, so
+        # listing it would wrongly re-flag the now-fixed sense 3 as circular.
+        "contest_verses": ["Joh 1:1", "Exo 22:28", "Psa 82:1", "Psa 82:6", "Psa 82:7"],
         "divergence_type": "referent", "lead_flip": False,
         # The model's Sense 1 closes by reading John 1:1c as settled identity ("the word ... identifies
         # the Logos both as with this being and as being this being"). That one sentence is pulled from
@@ -146,6 +158,10 @@ CONTESTED = OrderedDict([
     }),
     ("G2962", {
         "lemma": "kyrios", "gloss": "lord / master",
+        # contest_verses (piece B, self_only check): the title-transfer set the note already names —
+        # a YHWH text or the "one Lord" confession applied to Jesus. A sense resting only on these
+        # is circular; ordinary kyrios use reaches far past them.
+        "contest_verses": ["Rom 10:13", "Heb 1:10", "Php 2:9-11", "Jud 1:4"],
         "divergence_type": "referent", "lead_flip": False,
         # Scope like pneuma: the SENSE isn't contested — "lord, master," applied both to the God of
         # Israel and to Jesus, is plainly attested and stays in the core. What's contested is the
