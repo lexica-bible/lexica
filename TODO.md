@@ -147,11 +147,9 @@ YouVersion, which aren't the target). Honest gaps:
   - Verbs + Hebrew first-batches = separate tracks.
   - Small: the fork gate names a covenant-membership/NPP reading for dikaioō that `salvation_how` has no
     node for — add one via add_study_graph_salvation.py so the link lands.
-  - **BATCH-3 candidate (queued 2026-07-01): G2316 θεός sense 3/4 follow-up.** Check Psa 82:1 + 82:6 for θεός
-    (G2316) attestation in ABP — the classic contested-referent locus (human judges vs heavenly beings), and
-    what John 10:34 quotes. If attested, it strengthens the sense-3/4 split. Not the pipeline batch.
-  (Manual batch-2 CONTENT edits — G2316 sense 4 + G5207 sense 5/believers — and audit A1/C3 + the θεός metaV
-   fix all SHIPPED + LIVE 2026-07-01; archived. See TODO_ARCHIVE + memory `project_lexica_dictionary`.)
+  (Manual CONTENT edits — batch-2 G2316 sense 4 + G5207 sense 5/believers, and batch-3 G5207 sense 6
+   "Son of Man" idiom + G2316 Psa 82 into senses 3/4 — all SHIPPED + LIVE; audit A1/C3 + the θεός metaV fix
+   too. Archived. See TODO_ARCHIVE + memory `project_lexica_dictionary`.)
   code: scripts/build_lexica_def.py (imports contested_register), fix_lexica_raw.py, lexica_agreement.py, views_lexica.py
 
 - **Definition-engine audit — items PARKED by JP's scope call (2026-07-01).** Batch 1 (register extraction,
@@ -161,9 +159,11 @@ YouVersion, which aren't the target). Honest gaps:
     paraphrase reach output: `_lsj_concept_lookup` feeds LSJ semantic snippets into the Haiku SQL-gen prompt
     (steers key_strongs), and the Ask-corpus rail renders `target.definition` = `strongs_def` unlabeled
     (the field the word card was moved OFF of, per views_lsj.py:297). Fold into the Corpus right-rail work.
-  - **Spelled-out-book-name gate blind spot (audit B1)** — `_REF_RE` only catches numbered books + `Cap+2low`;
-    a citation written "Genesis 1:1"/"Matthew 5:17" escapes the gate, verses[], and LXX-provenance counts.
-    Needs a manual eyeball of G4561/G5547 stored raw first.
+  - **Spelled-out / non-canonical book-name gate (audit B1) — MOSTLY CLOSED 2026-07-02.** A citation with a
+    2-letter abbrev ("Ps"/"Jn"/"Mt") or a spelled-out name ("Matthew 5:17") escaped `_REF_RE` (only catches
+    numbered books + `Cap+2low`), so it never reached the gate — silent unverified ship (found as a real "Ps 2:7"
+    in G5207). `noncanon_book_refs()` now HARD-REJECTS these at write time (canonical codes only). Remaining gap
+    (minor): a spelled-out name is rejected, not auto-recovered into its valid code — must be hand-fixed. commit fb1c461.
   - **pinned_core presentation labeling (audit B4)** — the hand-authored pinned core leads the Meaning view
     under the "✓ verified" badge with no marker distinguishing it from engine output; provenance is
     "verse-grounded · LEXICA" unconditionally. Presentation call, fold into the card review.

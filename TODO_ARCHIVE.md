@@ -6,6 +6,35 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Lexica definition engine — batch-3 content edits + citation-gate abbrev guard — DONE + LIVE 2026-07-02
+Full record + lessons: memory `project_lexica_dictionary`. All via `fix_lexica_raw.py` / a read-the-block
+Python snippet (model-free, citation gate re-checked on each write); serve-verified live.
+- **G5207 υἱός — new sense 6, the "Son of Man" idiom** (huios + anthrōpos G444). Decision REVISED from the
+  earlier "note/sub-use" to a CLEAN numbered sense ("usage separates cleanly by construction"), NOT the
+  CONTESTED register. Structural spine = the article shift stated as text-visible fact: Dan 7:13 anarthrous
+  ("one like a son of man") → Gospels articular ("the Son of Man", Mat 26:64/Joh 1:51); Mat 26:64 imports
+  Daniel's "clouds of heaven" wording. Cross-references sense 4 (the generic Job 16:21 "son of man" = a human)
+  so the overlap is addressed. Range gained a tail: sense 6 sits outside the outward-loosening movement, the
+  lemma keeps its plain force, definiteness carried by the construction. Gate 49/49.
+- **G2316 θεός — Psa 82:1/82:6 added as a PAIRED CONTEST across senses 3 & 4** (no new sense — same
+  superhuman-vs-human-judge seam as Exo 22:28). Sense 3 was En-dor-specific ("ascending from the earth");
+  BROADENED its headline to host the divine-council reading (flagged to JP as a scope change first). Sense 4
+  keeps the human-judges/LXX-only reading + cites Joh 10:34 (Jesus quoting Psa 82:6) neutrally. John-1:1c fork
+  untouched; LXX note correctly silent on sense 4 (3 OT + 1 NT). ABP Psalms = Hebrew numbering, no LXX offset.
+- **Code (commit fb1c461): canonical-abbreviation citation guard.** `noncanon_book_refs()` in build_lexica_def
+  hard-rejects a citation whose book label isn't a real code — closes the "Ps"/"Jn"/"Mt"/spelled-out escape
+  that `_REF_RE` never matched (largely resolves audit B1). Numbered books spaced/spelled-out normalize + pass.
+- **LESSONS:**
+  - *Re-running the same `fix_lexica_raw --apply` DUPLICATES the sense.* Looked like the tool should be safe to
+    repeat; actually the `--old` anchor is still present after the first write, so the second run inserts a
+    second copy (fix_lexica_raw has no already-applied guard). Tipped off by JP seeing "duplicate #6". Rule:
+    after an --apply, the anchor is consumed/changed — re-`--show-raw` and rebuild it; never re-run the same
+    --old/--new. Fix pattern = a Python snippet that READS the block from the stored text (never retypes the
+    em-dash/quote-heavy prose) and asserts an exact count, so a re-run self-aborts instead of duplicating.
+  - *A proposal's assumed sense structure can be stale.* The Psa 82 plan assumed sense 3 was the general
+    "superhuman beings" bucket; the live sense 3 was narrowly the En-dor apparition. Always `--show-raw` and
+    read the real senses before splicing — don't trust the proposal's picture of the entry.
+
 ## Ask-corpus provenance rail — build-out — DONE + LIVE 2026-07-01/02
 Full record + lessons: memory `project_three_zone_shell`. Closes the old "Ask-corpus RIGHT panel /
 3-panel parity" item — Ask-corpus now has a real right inspect panel (provenance + drill), not just
