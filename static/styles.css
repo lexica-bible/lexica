@@ -460,10 +460,12 @@ input { font-family: inherit; }
 /* Collapsible "words rendered" results card (English search) — design 2026-06-19.
    Stays pinned above the occurrences once a word is picked; the chosen row gets
    the navy left-spine (.glrow.on). */
-.glsenses { margin: 0 2px 18px; border: 1px solid var(--rule); border-radius: 12px; background: var(--paper); overflow: hidden; }
-.glsenses-head { display: flex; align-items: center; gap: 11px; width: 100%; text-align: left; padding: 11px 14px; background: var(--bg-sunk); border: none; cursor: pointer; transition: background .12s; }
-.glsenses.open .glsenses-head { border-bottom: 1px solid var(--rule); }
-.glsenses-head:hover { background: color-mix(in oklab, var(--bg-sunk) 55%, var(--bg)); }
+/* De-boxed section: the container is not a card — just a header row + divider rows. The
+   header keeps the small-caps label + collapse control (like the Ask-corpus rail section
+   headers), separated by a hairline; no border/radius/fill around the block. */
+.glsenses { margin: 0 2px 18px; }
+.glsenses-head { display: flex; align-items: center; gap: 11px; width: 100%; text-align: left; padding: 10px 14px; background: none; border: none; border-bottom: 1px solid var(--rule); cursor: pointer; transition: background .12s; }
+.glsenses-head:hover { background: color-mix(in oklab, var(--accent) 5%, transparent); }
 .glsenses-l { font-size: 11.5px; text-transform: uppercase; letter-spacing: .06em; color: var(--ink-3); flex: 0 0 auto; }
 .glsenses-l b { color: var(--ink); font-weight: 700; }
 .glsenses-cur { display: inline-flex; align-items: baseline; gap: 7px; min-width: 0; overflow: hidden; }
@@ -475,6 +477,7 @@ input { font-family: inherit; }
 .glsenses.open .glsenses-tog svg { transform: rotate(180deg); }
 .glsenses-empty { padding: 14px; font-size: 13px; color: var(--ink-3); }
 .glsenses-rows { display: flex; flex-direction: column; }
+.glsenses-rows .glrow:last-child { border-bottom: 0; }
 .glrow { display: flex; align-items: flex-start; gap: 13px; width: 100%; text-align: left; padding: 12px 14px; border: none; border-bottom: 1px solid var(--rule); background: transparent; cursor: pointer; transition: background .12s; }
 .glrow:last-child { border-bottom: none; }
 .glrow:hover { background: var(--bg); }
