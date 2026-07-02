@@ -549,14 +549,18 @@ function NewsView({ isMobile }) {
     setCopyOpen(false);
     if (copying) return;
     const items = (stories || [])
-      .map(s => ({ title: s.title || "", summary: s.summary || "", url: s.url || "" }))
+      // date = the same value the card shows (_dateRange: peak day, else latest), ISO YYYY-MM-DD;
+      // empty drops its line, like the description.
+      .map(s => ({ title: s.title || "", summary: s.summary || "", url: s.url || "",
+                   date: (s.peak_date || s.published || "").slice(0, 10) }))
       .filter(it => it.url);
     if (!items.length) return;
+    // date sits on its own line right before the url, in every format; a blank date/description
+    // drops its line (filter(Boolean)), no orphan blank. The two lines are independent.
     const line = (it, url) =>
-      fmt === "link" ? url
-      : fmt === "titlelink" ? [it.title, url].filter(Boolean).join("\n")
-      // title + description + link — clean a local copy of the summary; a blank one drops the line
-      : [it.title, cleanDescription(it.title, it.summary), url].filter(Boolean).join("\n");
+      fmt === "link" ? [it.date, url].filter(Boolean).join("\n")
+      : fmt === "titlelink" ? [it.title, it.date, url].filter(Boolean).join("\n")
+      : [it.title, cleanDescription(it.title, it.summary), it.date, url].filter(Boolean).join("\n");
     const write = (map) => {
       // prefer a resolved clean URL; fall back to the wrapper on any miss
       const lines = items.map(it => line(it, (map && map[it.url]) || it.url));
