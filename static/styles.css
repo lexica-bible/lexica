@@ -4467,6 +4467,42 @@ button.study-verse-ref { border: none; }
 .ac-insp-scroll .cpanel { margin: 0; padding: 0; background: none; border: 0; border-radius: 0; }
 .ac-insp-scroll .cpanel-tag { display: none; }
 
+/* Provenance panel — what the answer rests on. LEADS the idle rail (answer-state truth);
+   the frequency panel folds beneath it, collapsed + subordinate (idle-state texture). */
+.ac-prov { display: flex; flex-direction: column; gap: 16px; }
+.ac-prov-grounded { font-size: 12.5px; color: var(--ink-3); line-height: 1.4; }
+.ac-prov-caution { font-size: 12.5px; line-height: 1.5; color: var(--ink); padding: 9px 11px;
+  background: var(--gold-soft); border-radius: 8px;
+  border: 1px solid color-mix(in oklab, var(--gold) 35%, transparent); }
+.ac-prov-caution b { font-weight: 700; }
+.ac-prov-sec { display: flex; flex-direction: column; gap: 7px; }
+.ac-prov-h { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; color: var(--ink-3); }
+.ac-prov-verses, .ac-prov-words { display: flex; flex-direction: column; gap: 3px; }
+.ac-prov-verse { display: flex; align-items: center; justify-content: space-between; gap: 8px;
+  padding: 7px 10px; border: 1px solid var(--rule); border-radius: 7px; background: var(--ctl-bg); text-align: left; }
+.ac-prov-verse:hover { border-color: var(--ai); }
+.ac-prov-ref { font-family: var(--f-mono); font-size: 12.5px; color: var(--ink); }
+.ac-prov-chev { color: var(--ink-4); font-size: 15px; }
+.ac-prov-verse:hover .ac-prov-chev { color: var(--ai); }
+.ac-prov-word { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
+  padding: 7px 10px; border: 1px solid var(--rule); border-radius: 7px; background: var(--ctl-bg); text-align: left; }
+.ac-prov-word:hover { border-color: var(--ai); }
+.ac-prov-lemma { font-family: var(--f-greek); font-size: 17px; color: var(--ink); }
+.ac-prov-lemma.heb { font-family: var(--f-serif); }
+.ac-prov-tr { font-family: var(--f-serif); font-style: italic; font-size: 12.5px; color: var(--ink-3); }
+.ac-prov-s { font-family: var(--f-mono); font-size: 10.5px; color: var(--ink-4); }
+.ac-prov-contested { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;
+  color: var(--ai); background: var(--ai-soft); padding: 2px 6px; border-radius: 4px;
+  border: 1px solid color-mix(in oklab, var(--ai) 22%, transparent); }
+/* Frequency panel: collapsed + subordinate under the provenance (never equal weight). */
+.ac-prov-freq { border-top: 1px dashed var(--rule); padding-top: 12px; }
+.ac-prov-freq > summary { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;
+  color: var(--ink-4); cursor: pointer; list-style: none; padding: 2px 0; }
+.ac-prov-freq > summary::-webkit-details-marker { display: none; }
+.ac-prov-freq > summary::before { content: "\25B8  "; color: var(--ink-4); }
+.ac-prov-freq[open] > summary::before { content: "\25BE  "; }
+.ac-prov-freq[open] > summary { margin-bottom: 10px; }
+
 /* Occurrence root: sticky band + padded body (pushed fork/word layers keep .ac-insp-card). */
 .ac-insp-root { min-height: 100%; }
 .ac-insp-rbody { padding: 16px 18px 44px; }

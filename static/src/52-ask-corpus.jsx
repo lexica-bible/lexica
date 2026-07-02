@@ -160,6 +160,91 @@ function CorpusPanel({ panel, onStrongs }) {
   );
 }
 
+// The answer's PROVENANCE — what the synthesis actually rests on. Driven by the SAME
+// payload as the answer (results / keyStrongs / grounded), never a second lookup, so the
+// rail and the note can't disagree. Provenance LEADS; the lexical-shape frequency panel
+// folds beneath it, collapsed and subordinate. Populates on the stream's `done` event
+// (results + grounding land at the tail); the bare frequency panel fills the rail while
+// the synthesis is still writing.
+function ProvenancePanel({ answer, panel, onOccInspect, onStrongs }) {
+  const results = answer.results || [];
+  const cited = _acCited(answer.keyStrongs);
+  // Evidence = the primary passages the synthesis leaned on; if none were flagged primary
+  // (a small pool shows them all), fall back to every retrieved verse. Deduped by ref.
+  const hasPrimary = results.some(e => e.is_primary);
+  const evidence = [];
+  const seen = new Set();
+  for (const e of results) {
+    if (hasPrimary && !e.is_primary) continue;
+    if (seen.has(e.ref)) continue;
+    seen.add(e.ref);
+    evidence.push(e);
+  }
+  const grounded = answer.grounded !== false;
+  const words = answer.keyStrongs || [];
+  // Clicking a passage PEEKS it into the drill (occurrence → fork → word), same as a prose chip.
+  const peek = (e) => onOccInspect && onOccInspect({
+    book: e.book, chapter: e.chapter, verse: e.verse,
+    label: `${BOOK_LABELS[e.book] || e.book} ${e.chapter}:${e.verse}`,
+    textMode: "abp", cited, keyStrongs: words,
+  });
+  return (
+    <div className="ac-prov">
+      {grounded ? (
+        <div className="ac-prov-grounded" role="note">
+          Backed by {evidence.length} {evidence.length === 1 ? "passage" : "passages"} in the corpus.
+        </div>
+      ) : (
+        <div className="ac-prov-caution" role="note">
+          <b>No direct occurrences.</b> The corpus turned up no verse that actually uses this
+          word, so the note is general background — not verse evidence. Verify against the text.
+        </div>
+      )}
+
+      {evidence.length > 0 && (
+        <div className="ac-prov-sec">
+          <div className="ac-prov-h">Rests on</div>
+          <div className="ac-prov-verses">
+            {evidence.map((e) => (
+              <button key={e.ref} className="ac-prov-verse" onClick={() => peek(e)} title="Inspect this passage">
+                <span className="ac-prov-ref">{BOOK_LABELS[e.book] || e.book} {e.chapter}:{e.verse}</span>
+                <span className="ac-prov-chev">›</span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
+
+      {words.length > 0 && (
+        <div className="ac-prov-sec">
+          <div className="ac-prov-h">Words in scope</div>
+          <div className="ac-prov-words">
+            {words.map((w) => {
+              const heb = /^H/i.test(w.strongs || w.strongs_base || "");
+              return (
+                <button key={w.strongs} className="ac-prov-word" onClick={() => onStrongs && onStrongs(w.strongs)}
+                  title={"Study " + (w.translit || w.lemma) + " in Word study"}>
+                  <span className={"ac-prov-lemma" + (heb ? " heb" : "")} dir={heb ? "rtl" : undefined}>{w.lemma}</span>
+                  {w.translit && <span className="ac-prov-tr">{w.translit}</span>}
+                  <span className="ac-prov-s">{w.strongs}</span>
+                  {w.contested && <span className="ac-prov-contested" title="This word's reading is contested — open it to see the fork">contested</span>}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {panel && panel.groups && panel.groups.length > 0 && (
+        <details className="ac-prov-freq">
+          <summary>Lexical shape — how often these words occur</summary>
+          <CorpusPanel panel={panel} onStrongs={onStrongs}/>
+        </details>
+      )}
+    </div>
+  );
+}
+
 // One answered (or in-flight) question.
 function AcTurn({ turn, onReadInContext, onLemma, onStrongs, onOccInspect }) {
   const cited = useMemo(() => _acCited(turn.keyStrongs), [turn.keyStrongs]);
@@ -553,6 +638,15 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
     for (let i = thread.length - 1; i >= 0; i--) if (thread[i] && thread[i].panel) return thread[i].panel;
     return null;
   }, [thread]);
+  // The latest FINISHED answer — its provenance leads the idle rail. A loading/streaming
+  // turn has no results yet, so during the stream the rail falls back to the frequency panel.
+  const latestAnswer = useMemo(() => {
+    for (let i = thread.length - 1; i >= 0; i--) {
+      const t = thread[i];
+      if (t && t.results && !t.loading && !t.streaming && !t.error && !t.notice) return t;
+    }
+    return null;
+  }, [thread]);
   const started = thread.length > 0;
   const followCapped = thread.filter(t => t && t.question && !t.local).length > AC_MAX_FOLLOWUPS;
   const suggestions = acScopeSuggestions(scope);
@@ -633,16 +727,20 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
         : (scope ? `Ask about ${scope.translit || scope.lemma}…` : "Ask anything across the Bible…")}/>
   );
 
-  // Inspect rail: idle = the latest answer's frequency panel (the result-shape summary); a
-  // peeked ref chip replaces it with the occurrence → fork → word drill. Never blank.
+  // Inspect rail: idle = the latest answer's PROVENANCE (what it rests on) — with the
+  // frequency panel folded beneath; a peeked ref chip replaces it with the occurrence →
+  // fork → word drill. While a search streams there's no finished answer yet, so it shows
+  // the bare frequency panel; before the first question, an empty prompt. Never blank.
   const inspectIdle = (
     <div className="ac-insp-idle">
-      <div className="ac-insp-band">{latestPanel ? "How often these words occur" : "Inspect"}</div>
+      <div className="ac-insp-band">{latestAnswer ? "What this answer rests on" : (latestPanel ? "How often these words occur" : "Inspect")}</div>
       <div className="ac-insp-scroll">
-        {latestPanel
-          ? <CorpusPanel panel={latestPanel} onStrongs={onStrongs}/>
-          : <ZoneEmpty icon={<Icon.Sparkle/>} title="Nothing selected yet"
-              sub="Ask a question — the words it turns on and how often they occur show here. Then click a passage in the answer to inspect it."/>}
+        {latestAnswer
+          ? <ProvenancePanel answer={latestAnswer} panel={latestAnswer.panel} onOccInspect={onOccInspect} onStrongs={onStrongs}/>
+          : latestPanel
+            ? <CorpusPanel panel={latestPanel} onStrongs={onStrongs}/>
+            : <ZoneEmpty icon={<Icon.Sparkle/>} title="Nothing selected yet"
+                sub="Ask a question — the passages it rests on and the words it turns on show here. Then click a passage to inspect it."/>}
       </div>
     </div>
   );

@@ -33,6 +33,7 @@ from core import (
 from views_lsj import _lsj_concept_lookup
 from views_lexicon import _greek_cognates, _norm_lemma
 import corpus_panel   # deterministic lexical-texture panel (no model call) — see corpus_panel.py
+import contested_register   # CONTESTED_BY_SID — flag fork words in the answer's provenance rail
 from views_notes import (ai_caller, ai_quota_blocked, ai_quota_count,
                          ai_quota_status)   # AI search is login-gated + daily-capped (costs API money)
 
@@ -1218,6 +1219,13 @@ def _assemble_payload(q, results, verse_index, key_strongs_data,
         grounded = True
     else:
         grounded = any(not _is_thematic(v.get("words", [])) for v in results)
+
+    # Flag each in-scope word that sits in the CONTESTED register (a fork word), so the
+    # provenance rail can mark it. Plain yes/no only — the fork detail is fetched on click
+    # in the drill; the marker just says "this reading is contested". Same register the
+    # Lexica cards use, computed here so the rail rides the SAME payload as the answer.
+    for e in key_strongs_data:
+        e["contested"] = e.get("strongs", "") in contested_register.CONTESTED_BY_SID
 
     return {"results": results, "total": len(results), "grounded": grounded,
             "explanation": explanation, "key_strongs": key_strongs_data, "panel": panel}
