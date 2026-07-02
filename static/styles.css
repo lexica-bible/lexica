@@ -485,7 +485,7 @@ input { font-family: inherit; }
 .lex-prev-tag {
   flex-shrink: 0;
   font-family: var(--f-mono); font-size: 10px; color: var(--ink-2);
-  background: var(--bg-sunk); border-radius: 3px; padding: 0 4px; margin-right: 6px;
+  margin-right: 6px;
 }
 
 /* Collapsible "words rendered" results card (English search) — design 2026-06-19.
@@ -592,7 +592,7 @@ input { font-family: inherit; }
 .lexicon-def-section { margin-bottom: 20px; }
 .lexicon-def-toggle { background: none; border: none; cursor: pointer; font-size: 12px; color: var(--ink-3); padding: 0; letter-spacing: .03em; }
 .lexicon-def-toggle:hover { color: var(--ink-2); }
-.lexicon-def-src { display: inline-block; margin-left: 6px; font-family: var(--f-mono); font-size: 9.5px; font-weight: 500; letter-spacing: 0.04em; color: var(--ink-3); background: var(--bg-sunk); padding: 1px 6px; border-radius: 4px; vertical-align: middle; }
+.lexicon-def-src { display: inline-block; margin-left: 6px; font-family: var(--f-mono); font-size: 9.5px; font-weight: 500; letter-spacing: 0.04em; color: var(--ink-3); vertical-align: middle; }
 .lexicon-definition { font-size: 14px; color: var(--ink-2); line-height: 1.6; margin: 8px 0 0; }
 
 /* Distribution */
@@ -1354,7 +1354,7 @@ input { font-family: inherit; }
 .lemma-gk { font-family: var(--f-greek); font-size: 18px; color: var(--ink-2); margin-bottom: 22px; }
 .lemma-gk em { font-style: italic; color: var(--ink-3); }
 
-.morph { font-family: var(--f-mono); font-size: 11px; font-weight: 500; color: var(--accent); background: var(--accent-soft); padding: 3px 8px; border-radius: 5px; letter-spacing: 0.02em; }
+.morph { font-family: var(--f-mono); font-size: 11px; font-weight: 500; color: var(--accent); letter-spacing: 0.02em; }
 
 .sec { padding: 18px 0; border-top: 1px solid var(--rule); }
 .sec:first-of-type { border-top: 0; }
@@ -1369,7 +1369,7 @@ input { font-family: inherit; }
 .fact-v.mono { font-family: var(--f-mono); font-size: 12px; }
 
 .dverse { margin: 0 0 12px; padding: 16px 18px; background: var(--bg); border-left: 2px solid var(--accent); border-radius: 0 8px 8px 0; font-family: var(--f-serif); font-size: 16px; line-height: 1.55; color: var(--ink); text-wrap: pretty; }
-.dverse-n { font-family: var(--f-mono); font-size: 10px; color: var(--accent); background: var(--accent-soft); padding: 2px 6px; border-radius: 4px; vertical-align: super; margin-right: 8px; }
+.dverse-n { font-family: var(--f-mono); font-size: 10px; color: var(--accent); vertical-align: super; margin-right: 8px; }
 .dverse-tools { display: flex; align-items: center; gap: 8px; font-size: 12.5px; }
 
 .occ-link { display: inline-flex; align-items: center; gap: 6px; font-family: var(--f-serif); font-size: 17px; color: var(--ai); font-weight: 500; }
@@ -2089,10 +2089,9 @@ input { font-family: inherit; }
 .xref-studies { display: flex; flex-wrap: wrap; gap: 6px; }
 .xref-study-link {
   font: inherit; font-size: 12.5px; font-weight: 500; color: var(--accent);
-  background: var(--accent-soft); border: none; border-radius: 6px;
-  padding: 4px 10px; cursor: pointer; transition: opacity 0.12s;
+  background: none; border: none; padding: 4px 2px; cursor: pointer;
 }
-.xref-study-link:hover { opacity: 0.8; }
+.xref-study-link:hover { text-decoration: underline; }
 
 /* Verse content — prose: inline text; chips: flex wrap */
 .lib-verse-content {
@@ -3170,8 +3169,7 @@ input { font-family: inherit; }
 }
 .nav-div-t {
   font-size: 9.5px; font-weight: 700; letter-spacing: 0.1em;
-  color: var(--gold); text-transform: uppercase;
-  background: var(--gold-soft); padding: 1px 5px; border-radius: 3px;
+  color: var(--ink-4); text-transform: uppercase;
 }
 .nav-div-n {
   font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.08em;
@@ -3231,7 +3229,7 @@ input { font-family: inherit; }
 .nav-era-name { flex: 1; }
 .nav-era-count {
   font-family: var(--f-mono); font-size: 9.5px; font-weight: 600;
-  color: var(--ink-4); background: var(--bg-sunk); padding: 1px 6px; border-radius: 8px;
+  color: var(--ink-4);
 }
 /* Chronological nesting is read from indentation alone — no navy backbone, no gold rib
    (gold is reserved for highlighted target words). The OPEN era's passages just indent;
@@ -4163,19 +4161,15 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
 .nave-sec { display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; text-align: left; background: none; border: none; border-radius: 6px; padding: 7px 8px; cursor: pointer; transition: background .12s; }
 .nave-sec:hover { background: var(--accent-soft); }
 .nave-sec-h { font-size: 13.5px; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
-.nave-sec-n { flex: none; font-family: var(--f-mono); font-size: 10px; color: var(--accent); background: var(--accent-soft); padding: 2px 7px; border-radius: 20px; }
+.nave-sec-n { flex: none; font-family: var(--f-mono); font-size: 10px; color: var(--accent); }
 .nave-sec--more { justify-content: center; }
 .nave-sec--more .nave-sec-h { font-size: 12.5px; color: var(--ink-3); }
 
 .study-rows { display: flex; flex-direction: column; }
 /* .study-row = a .listrow (shared box/divider/hover/selected) + its own horizontal layout */
 .study-row { display: flex; align-items: center; gap: 10px; }
-.study-badge {
-  flex: none; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px;
-  text-transform: uppercase; letter-spacing: 0.02em; background: var(--bg-sunk); color: var(--ink-3);
-}
-.study-badge--topic { background: var(--accent-soft); color: var(--accent); }
-.study-badge--graph { background: var(--accent-soft); color: var(--accent); }
+/* .study-badge* removed — the GRAPH type-pill was redundant (the list is headed "Graphs")
+   and the Topic variant was never rendered. */
 .study-row-title { flex: 1; min-width: 0; font-size: 14.5px; color: var(--ink); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .study-row-held { color: var(--ink-4); }
 .study-row-draft { flex: none; font-size: 11px; color: var(--ink-4); border: 1px solid var(--rule); border-radius: 6px; padding: 1px 6px; }
@@ -4265,7 +4259,7 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
 .study-read-verse { display: block; line-height: 1.5; }
 .study-read-verse .study-verse-ref {
   display: inline-block; font-family: var(--f-mono); font-size: 10.5px; font-weight: 500;
-  color: var(--accent); background: var(--accent-soft); padding: 1px 6px; border-radius: 4px;
+  color: var(--accent);
   white-space: nowrap; letter-spacing: 0.04em; margin-right: 6px; vertical-align: baseline;
 }
 .study-read-text { font-family: var(--f-serif); font-size: 15px; line-height: 1.5; color: var(--ink); }
@@ -4359,7 +4353,7 @@ button.study-verse-ref { border: none; }
 .study-link--weak { border-left-style: dashed; border-left-color: #b3382f; }
 .study-link--joint { background: var(--gold-soft); }
 
-.study-link-rel { align-self: flex-start; font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; color: var(--ink-4); padding: 1px 8px; border-radius: 999px; background: var(--bg-sunk); }
+.study-link-rel { align-self: flex-start; font-size: 10.5px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.03em; color: var(--ink-4); }
 .study-link-rel--solid { color: var(--accent); }
 .study-link-rel--contested { color: var(--ink-3); }
 .study-link-rel--weak { color: #b3382f; }
@@ -4381,7 +4375,7 @@ button.study-verse-ref { border: none; }
 .study-part-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-3); margin-bottom: 10px; }
 .study-part-row { font-size: 13px; color: var(--ink-2); margin-bottom: 10px; }
 .study-part-key { font-weight: 600; color: var(--ink); }
-.study-part-chip { display: inline-block; font-family: var(--f-mono); font-size: 11px; color: var(--accent); background: var(--accent-soft); padding: 1px 7px; border-radius: 4px; margin: 0 4px 4px 0; }
+.study-part-chip { display: inline-block; font-family: var(--f-mono); font-size: 11px; color: var(--accent); margin: 0 10px 4px 0; }
 .study-part-privs { margin-top: 6px; display: flex; flex-direction: column; gap: 6px; }
 .study-part-priv { font-size: 13px; line-height: 1.45; color: var(--ink-2); }
 .study-seam-who { color: var(--ink-4); font-size: 12px; }
@@ -4456,7 +4450,7 @@ button.study-verse-ref { border: none; }
 .study-key--defeated { background: var(--chart-concl); opacity: 0.5; }
 .study-objection--decisive { color: var(--ink); }
 .study-objection-tag { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; color: #b3382f; margin-right: 6px; }
-.xref-study-tag { font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--accent); background: var(--accent-soft); padding: 0 5px; border-radius: 3px; margin-right: 6px; vertical-align: 1px; }
+.xref-study-tag { font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-4); margin-right: 6px; vertical-align: 1px; }
 .study-chart-why { margin: 4px 0 14px; }
 .study-chart-why .study-link-why { margin-bottom: 5px; }
 
@@ -4738,10 +4732,9 @@ button.study-verse-ref { border: none; }
   border-radius: 3px; background: color-mix(in oklab, var(--ai) 5%, transparent); }
 /* discoverable affordance — points the rail at this answer's sources */
 .ac-select-src { display: inline-block; margin-top: 14px; font-size: 12px; font-weight: 600;
-  letter-spacing: 0.02em; color: var(--ai); border: 1px solid color-mix(in oklab, var(--ai) 26%, transparent);
-  background: var(--ai-soft); padding: 4px 10px; border-radius: 7px; }
-.ac-select-src:hover { border-color: var(--ai); }
-.ac-select-src.on { color: var(--ink-2); background: none; border-color: var(--rule); cursor: default; }
+  letter-spacing: 0.02em; color: var(--ai); border: 0; background: none; padding: 4px 2px; }
+.ac-select-src:hover { text-decoration: underline; }
+.ac-select-src.on { color: var(--ink-2); text-decoration: none; cursor: default; }
 .ac-ask { margin-bottom: 18px; }
 .ac-ask-q { font-family: var(--f-serif); font-size: 25px; font-weight: 600; line-height: 1.3; letter-spacing: -0.015em; color: var(--ink); text-wrap: pretty; }
 .ac-syn-tag {

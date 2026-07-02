@@ -42,9 +42,9 @@ function groupByBook(verses) {
 // Library reader — same idea as a Search/Lexicon result reference. Otherwise a plain pill.
 function StudyRef({ v, label, onNavigate }) {
   const go = onNavigate && v && v.book && v.chapter && v.verse;
-  if (!go) return <span className="study-verse-ref">{label}</span>;
+  if (!go) return <span className="study-verse-ref refmark">{label}</span>;
   return (
-    <button className="study-verse-ref study-verse-ref--link" title="Open in the reader"
+    <button className="study-verse-ref refmark refmark--link" title="Open in the reader"
       onClick={() => onNavigate(v.book, v.chapter, v.verse)}>{label}</button>
   );
 }
@@ -118,7 +118,7 @@ function VerseRows({ items, onRemove }) {
     <div className="study-verse-list">
       {items.map((it, i) => (
         <div className="study-verse-row" key={i}>
-          <span className="study-verse-ref">{it.ref}</span>
+          <span className="study-verse-ref refmark">{it.ref}</span>
           <span className="study-verse-text">{it.text || <em className="study-verse-missing">not found — saved as a reference</em>}</span>
           <button className="study-x" onClick={() => onRemove(i)} aria-label="Remove verse" title="Remove">×</button>
         </div>
@@ -1075,7 +1075,6 @@ function StudyView({ admin, pending, onConsumed, onNavigateToLibrary, isMobile }
         <div className="study-rows">
           {shown.map(e => (
             <button className={"study-row listrow" + (editing && editing.id === e.id ? " on" : "")} key={e.id} onClick={() => openEntry(e.id)}>
-              {!isTopic && <span className="study-badge study-badge--graph">Graph</span>}
               <span className="study-row-title">{isTopic ? displayTitle(e.title) : e.title}</span>
               <span className="study-row-n">{e.n || 0} {isTopic ? "verses" : "claims"}</span>
               {!readerView && e.status === "draft" && <span className="study-row-draft">draft</span>}
