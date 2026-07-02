@@ -169,6 +169,18 @@
   background: var(--row-accent);
 }
 
+/* ============================================================
+   SHARED REFERENCE TOKEN — Strong's numbers (G2316/H7307) AND verse refs (Gen 6:8).
+   The principle: a reference is monospace + color; a background chip is dead. This class
+   owns the invariants (mono face, NO fill, NO border, no padding). COLOR and SIZE come
+   from context (a muted marker inside an already-clickable row vs a link-colored citation
+   inside running prose). A token that is itself the click target in prose adds
+   .refmark--link for the hover underline. One class so ref styling can't drift back to chips.
+   ============================================================ */
+.refmark { font-family: var(--f-mono); background: none; border: 0; padding: 0; }
+.refmark--link { cursor: pointer; }
+.refmark--link:hover { text-decoration: underline; }
+
 * { box-sizing: border-box; }
 html, body {
   margin: 0;
@@ -387,20 +399,14 @@ input { font-family: inherit; }
 .lexicon-error { margin-top: 16px; font-size: 14px; color: var(--red, #b91c1c); }
 
 /* Disambiguation list */
-.lexicon-matches { margin-top: 20px; display: flex; flex-direction: column; gap: 2px; }
+.lexicon-matches { margin-top: 20px; display: flex; flex-direction: column; }
+/* .lexicon-match-row = a .listrow (shared divider/hover, no box) + its own column grid */
 .lexicon-match-row {
   display: grid;
   grid-template-columns: 64px 140px 140px 1fr;
   gap: 12px;
   align-items: baseline;
-  padding: 8px 12px;
-  border: 1px solid var(--rule);
-  border-radius: var(--r-sm);
-  background: var(--paper);
-  cursor: pointer;
-  text-align: left;
 }
-.lexicon-match-row:hover { background: var(--bg-sunk); border-color: var(--rule-2); }
 /* Exact / Also-contains band divider — the label is what keeps the covenant: rows
    under "Also contains" are visibly a STRING match, not a semantic relative. */
 .glmatch-div {
@@ -418,14 +424,14 @@ input { font-family: inherit; }
   text-transform: none; letter-spacing: 0.01em;
   font-weight: 500; font-style: italic;
 }
+/* Strong's tag = a .refmark (mono, no fill). Muted reference color; the row is the click target. */
 .lexicon-match-strongs {
-  font-family: var(--f-mono);
   font-size: 11px; font-weight: 500;
-  color: var(--accent); background: var(--accent-soft);
-  padding: 2px 7px; border-radius: 4px; letter-spacing: 0.02em;
-  justify-self: start;
+  color: var(--ink-3); letter-spacing: 0.02em;
+  justify-self: start; padding-top: 1px;
 }
 .lexicon-match-lemma { font-size: 15px; color: var(--ink); font-family: var(--f-greek); }
+.lexicon-match-lemma.heb { direction: rtl; }   /* Hebrew-script lemma reads right-to-left (mirrors the mobile .glrow-gk.heb path) */
 .lexicon-match-translit { font-size: 13px; color: var(--ink-2); font-style: italic; font-family: var(--f-serif); }
 .lexicon-match-gloss { font-size: 13px; color: var(--ink-2); }
 
@@ -482,8 +488,9 @@ input { font-family: inherit; }
 .glrow:last-child { border-bottom: none; }
 .glrow:hover { background: var(--bg); }
 .glrow.on { background: var(--accent-soft); box-shadow: inset 3px 0 0 var(--accent); }
-.glrow-s { font-family: var(--f-mono); font-size: 10.5px; color: var(--ink-3); background: var(--bg-sunk); border: 1px solid var(--rule); padding: 3px 7px; border-radius: 5px; flex: 0 0 auto; margin-top: 2px; }
-.glrow.on .glrow-s { background: var(--paper); border-color: color-mix(in oklab, var(--accent) 30%, var(--rule)); color: var(--accent); }
+/* Strong's tag = a .refmark (mono, no fill). Muted; the row is the click target. */
+.glrow-s { font-size: 11px; color: var(--ink-3); flex: 0 0 auto; margin-top: 3px; letter-spacing: 0.02em; }
+.glrow.on .glrow-s { color: var(--accent); }
 .glrow-main { flex: 1 1 0; min-width: 0; display: flex; flex-direction: column; gap: 5px; }
 .glrow-top { display: flex; align-items: baseline; gap: 9px; }
 .glrow-gk { font-family: var(--f-greek); font-size: 21px; color: var(--ink); line-height: 1.05; }
@@ -4335,7 +4342,8 @@ button.study-verse-ref { border: none; }
 .study-claim-head { display: flex; align-items: center; gap: 8px; margin-bottom: 3px; }
 .study-claim-text { font-size: 13.5px; line-height: 1.45; color: var(--ink); }
 .study-claim-verse { font-family: var(--f-serif); font-size: 13px; line-height: 1.5; color: var(--ink-3); margin-top: 4px; }
-.study-claim .study-verse-ref { font-family: var(--f-mono); font-size: 10.5px; font-weight: 500; color: var(--accent); background: var(--accent-soft); padding: 1px 6px; border-radius: 4px; letter-spacing: 0.04em; }
+/* verse ref in a claim node = plain mono reference (no fill), matching the app-wide .refmark look */
+.study-claim .study-verse-ref { font-family: var(--f-mono); font-size: 10.5px; font-weight: 500; color: var(--accent); letter-spacing: 0.04em; }
 
 .study-objections { margin-top: 12px; padding-top: 12px; border-top: 1px dashed var(--rule); }
 .study-objections-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.04em; color: var(--ink-4); margin-bottom: 6px; }
@@ -4720,14 +4728,15 @@ button.study-verse-ref { border: none; }
 .ac-prose p { margin: 0 0 0.85em; }
 .ac-prose p:last-child { margin-bottom: 0; }
 /* inline citations the AI already wrote, made clickable */
-.ac-ref { font-family: var(--f-mono); font-size: 12.5px; color: var(--gold); background: var(--gold-soft); padding: 1px 6px; border-radius: 5px; white-space: nowrap; letter-spacing: 0.01em; }
-.ac-ref:hover { background: color-mix(in oklab, var(--gold) 28%, var(--gold-soft)); }
-/* a reference the AI named that the search didn't surface — still jumps to the reader,
-   but quiet (no gold evidence fill) so it doesn't imply it's part of the evidence. */
-.ac-ref.ac-ref-soft { color: var(--ink-3); background: none; padding: 1px 2px; border-radius: 0; border-bottom: 1px dotted var(--ink-4); }
-.ac-ref.ac-ref-soft:hover { color: var(--ink); background: none; border-bottom-color: var(--ink-2); }
-.ac-instrongs { font-family: var(--f-mono); font-size: 0.9em; color: var(--ai); border-bottom: 1px solid color-mix(in oklab, var(--ai) 32%, transparent); white-space: nowrap; }
-.ac-instrongs:hover { border-bottom-color: var(--ai); }
+/* verse ref in the synthesis prose = a .refmark (mono, no fill) in the AI violet so it
+   reads as a clickable citation inside running prose. The peach chip is gone — gold is
+   reserved for matched-word evidence in the Key Passage snippets, not reference styling. */
+.ac-ref { font-size: 12.5px; color: var(--ai); white-space: nowrap; letter-spacing: 0.01em; }
+/* a reference the AI named that the search didn't surface — still jumps, but quiet (muted +
+   dotted) so it doesn't imply it's part of the evidence. The seatbelt distinction stays. */
+.ac-ref.ac-ref-soft { color: var(--ink-3); border-bottom: 1px dotted var(--ink-4); }
+.ac-ref.ac-ref-soft:hover { color: var(--ink); border-bottom-color: var(--ink-2); text-decoration: none; }
+.ac-instrongs { font-size: 0.9em; color: var(--ai); white-space: nowrap; }
 .ac-notice { font-size: 14.5px; line-height: 1.6; color: var(--ink-2); margin: 0; padding: 14px 16px; background: var(--ai-soft); border: 1px solid color-mix(in oklab, var(--ai) 20%, transparent); border-radius: 10px; }
 .ac-error { font-size: 14px; color: #b91c1c; margin: 0; padding: 12px 16px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 10px; }
 .ac-ungrounded { margin: 0 0 14px; padding: 11px 14px; background: var(--gold-soft); border: 1px solid color-mix(in oklab, var(--gold) 35%, transparent); border-radius: 10px; font-size: 13.5px; line-height: 1.55; color: var(--ink-2); text-wrap: pretty; }

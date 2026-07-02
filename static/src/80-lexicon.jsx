@@ -503,7 +503,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
                 <button key={g.strongs}
                   className={"glrow" + (profile && profile.strongs === g.strongs ? " on" : "")}
                   onClick={() => { loadProfile(g.strongs, corpus === "all" ? undefined : corpus); setGlOpen(false); }}>
-                  <span className="glrow-s">{g.strongs}</span>
+                  <span className="glrow-s refmark">{g.strongs}</span>
                   <span className="glrow-main">
                     <span className="glrow-top">
                       {g.lemma && <span className={"glrow-gk" + (gh ? " heb" : "")} dir={gh ? "rtl" : undefined}>{g.lemma}</span>}
@@ -555,7 +555,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
       <button key={m.strongs}
         className={"glrow" + (profile && profile.strongs === m.strongs ? " on" : "")}
         onClick={() => { loadProfile(m.strongs); setGlOpen(false); }}>
-        <span className="glrow-s">{m.strongs}</span>
+        <span className="glrow-s refmark">{m.strongs}</span>
         <span className="glrow-main">
           <span className="glrow-top">
             {m.lemma && <span className={"glrow-gk" + (mh ? " heb" : "")} dir={mh ? "rtl" : undefined}>{m.lemma}</span>}
@@ -697,7 +697,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
               <button key={r.strongs} className="rel" onClick={() => loadProfile(r.strongs, "abp")}>
                 <span className="rel-gk">{r.lemma}</span>
                 <span className="rel-tr">{r.translit}</span>
-                <span className="rel-gloss">{r.gloss}<span className="rel-s">{r.strongs}</span></span>
+                <span className="rel-gloss">{r.gloss}<span className="rel-s refmark">{r.strongs}</span></span>
                 <span className="rel-go" aria-hidden="true">›</span>
               </button>
             ))}
@@ -960,9 +960,10 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
               const { exact, contains } = matchBands(matches);
               const q = query.trim();
               const row = (m) => (
-                <button key={m.strongs} className="lexicon-match-row" onClick={() => loadProfile(m.strongs)}>
-                  <span className="lexicon-match-strongs">{m.strongs}</span>
-                  <span className="lexicon-match-lemma">{m.lemma}</span>
+                <button key={m.strongs} className="lexicon-match-row listrow" onClick={() => loadProfile(m.strongs)}>
+                  <span className="lexicon-match-strongs refmark">{m.strongs}</span>
+                  <span className={"lexicon-match-lemma" + (m.strongs[0] === "H" ? " heb" : "")}
+                        dir={m.strongs[0] === "H" ? "rtl" : undefined}>{m.lemma}</span>
                   <span className="lexicon-match-translit">{m.translit}</span>
                   <span className="lexicon-match-gloss">{m.gloss}</span>
                 </button>

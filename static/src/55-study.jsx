@@ -778,7 +778,7 @@ function SeamPriors({ seam, onOpenGraph }) {
       <div className="seam-priors-hero">
         <span className={"seam-priors-lemma" + (heb ? " heb" : "")} dir={heb ? "rtl" : undefined}>{seam.lemma}</span>
         {seam.translit && <span className="seam-priors-tr">{seam.translit}</span>}
-        <span className="seam-priors-s">{seam.strongs}</span>
+        <span className="seam-priors-s refmark">{seam.strongs}</span>
       </div>
       <LexicaFork fork={seam.fork} />
       {seam.graph_ref && (

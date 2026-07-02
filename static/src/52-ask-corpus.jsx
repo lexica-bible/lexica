@@ -86,13 +86,13 @@ function AcProse({ text, onVerse, onStrongs, verified }) {
         if (!key) continue;   // unknown book → leave as plain text
         const ok = !verified || verified.has(`${key}-${+m[2]}-${+m[3]}`);
         if (m.index > last) out.push(block.slice(last, m.index));
-        out.push(<button key={"r" + pi + "-" + k++} className={"ac-ref" + (ok ? "" : " ac-ref-soft")}
+        out.push(<button key={"r" + pi + "-" + k++} className={"ac-ref refmark refmark--link" + (ok ? "" : " ac-ref-soft")}
           onClick={() => onVerse(key, +m[2], +m[3])}>{m[0]}</button>);
         last = _CITE_RE.lastIndex;
       } else if (m[4]) {   // Strong's number
         if (m.index > last) out.push(block.slice(last, m.index));
         const tag = m[4].toUpperCase() + m[5];
-        out.push(<button key={"s" + pi + "-" + k++} className="ac-instrongs" onClick={() => onStrongs(tag)}>{m[0]}</button>);
+        out.push(<button key={"s" + pi + "-" + k++} className="ac-instrongs refmark refmark--link" onClick={() => onStrongs(tag)}>{m[0]}</button>);
         last = _CITE_RE.lastIndex;
       }
     }
@@ -331,7 +331,7 @@ function ProvenancePanel({ answer, panel, onOccInspect, onStrongs, contestedSet 
                         <span className={"cpanel-lemma" + (heb ? " heb" : "")} dir={heb ? "rtl" : undefined}>{r.lemma}</span>
                         {r.contested && <span className="ac-prov-contested" title="This word's reading is contested — open it to see the fork">contested</span>}
                         {r.translit && <span className="cpanel-tr">{r.translit}</span>}
-                        <span className="cpanel-s">{r.strongs}</span>
+                        <span className="cpanel-s refmark">{r.strongs}</span>
                       </span>
                       <span className="cpanel-gloss">{r.gloss || (r.inScope ? "" : "—")}</span>
                       <span className="cpanel-bar">{r.hasCount && <span style={{ width: barW(r.count, g.max) + "%" }}/>}</span>
@@ -522,7 +522,7 @@ function AcWordLayer({ target, onOpenStudy }) {
       <div className="ac-insp-hero">
         <span className={"ac-insp-lemma" + (heb ? " heb" : "")} dir={heb ? "rtl" : undefined}>{target.lemma}</span>
         {target.translit && <span className="ac-insp-tr">{target.translit}</span>}
-        <span className="ac-insp-s">{strongs}</span>
+        <span className="ac-insp-s refmark">{strongs}</span>
       </div>
       {lexica === undefined ? (
         <div className="ac-insp-loading">Loading…</div>
@@ -568,7 +568,7 @@ function AcOccurrenceCard({ occ, onClose, onReadInContext, onOpenStudy, ctl }) {
         <div className="ac-insp-word-line">
           <span className={"ac-insp-lemma" + (heb ? " heb" : "")} dir={heb ? "rtl" : undefined}>{target.lemma}</span>
           {target.translit && <span className="ac-insp-tr">{target.translit}</span>}
-          <span className="ac-insp-s">{strongs}</span>
+          <span className="ac-insp-s refmark">{strongs}</span>
           {target.definition && <div className="ac-insp-gloss">{target.definition}</div>}
         </div>
       )}
@@ -887,7 +887,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
         <p className="ac-scope">Asking about{" "}
           <span className={"ac-scope-gk" + (/^H/i.test(scope.strongs) ? " heb" : "")}
             dir={/^H/i.test(scope.strongs) ? "rtl" : undefined}>{scope.lemma}</span>
-          <span className="ac-scope-s">{scope.strongs}</span>
+          <span className="ac-scope-s refmark">{scope.strongs}</span>
         </p>
       )}
       <p className="ac-lede">{scope
