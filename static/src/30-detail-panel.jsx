@@ -412,7 +412,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       entry.hebName !== undefined ? entry.hebName
                                   : extractProperName(entry.pnName || entry.gloss || "") !== ""
     );
-    if (!isPN && !kjvIsPN && entry.greek && entry.translit && entry.strongs_raw !== "2316") return;
+    if (!isPN && !kjvIsPN && entry.greek && entry.translit) return;
     const name = extractProperName(entry.pnName || entry.gloss || "");
     if (!name || name.length < 2) return;
     const _DIVINE_SKIP = new Set(["LORD","Lord","YHWH","Yahweh","Jehovah","Holy"]);
@@ -652,11 +652,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   if (metavLoading || metavPersonData || metavPlaceData) sections.push("metav");
   if (aiDescription || aiDescLoading) sections.push("aidesc");
   if (isHebrewWord) sections.push("bdb");
-  // metavType "person" normally suppresses the definition (a real proper-noun person has no
-  // useful lexical entry). EXCEPT θεός (G2316): a common noun that name-matches the "God" metaV
-  // person — it keeps that card AND still shows its definition below it.
+  // metavType "person" suppresses the definition (a real proper-noun person has no useful
+  // lexical entry). θεός (G2316) is no longer special-cased here: it now skips metaV entirely
+  // (see the lookup gate above), so its Lexica entry leads as the definition like any word.
   else if ((!isPN || (metavType === "place" && metavData?.strongs_g?.length > 0))
-           && (metavType !== "person" || entry.strongs_raw === "2316")
+           && metavType !== "person"
            && !aiDescription && !aiDescLoading
            && (entry.greek || entry.strongs_raw || metavData?.strongs_g?.length > 0)) sections.push("lsj");
   // A verse-bound entity carries a real Strong's number (TIPNR mapped these people/places

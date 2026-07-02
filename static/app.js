@@ -425,7 +425,7 @@ if(bindPendingRef.current||boundEntity)return;// Skip metaV for words with a rea
 // so a common word capitalized mid-verse ("Wilderness of Sinai") never pops a place card,
 // while real names AND gentilic clans (Philistines) still do. Greek/NT words, or a missing
 // heb.db, carry no hebName and fall back to the capital-letter heuristic.
-const kjvIsPN=(entry.isKjv||entry.isBsb)&&(entry.hebName!==undefined?entry.hebName:extractProperName(entry.pnName||entry.gloss||"")!=="");if(!isPN&&!kjvIsPN&&entry.greek&&entry.translit&&entry.strongs_raw!=="2316")return;const name=extractProperName(entry.pnName||entry.gloss||"");if(!name||name.length<2)return;const _DIVINE_SKIP=new Set(["LORD","Lord","YHWH","Yahweh","Jehovah","Holy"]);if(_DIVINE_SKIP.has(name))return;let cancelled=false;setMetavLoading(true);Promise.all([api.metavPerson(name).catch(()=>({error:true})),api.metavPlace(name).catch(()=>({error:true}))]).then(([pd,ld])=>{if(cancelled)return;const personOk=!pd.error&&(pd.birth_year||pd.death_year||pd.relationships?.length>=2);if(personOk)setMetavPersonData(pd);if(!ld.error)setMetavPlaceData(ld);// Default tab (only matters when BOTH person+place exist). Prefer the
+const kjvIsPN=(entry.isKjv||entry.isBsb)&&(entry.hebName!==undefined?entry.hebName:extractProperName(entry.pnName||entry.gloss||"")!=="");if(!isPN&&!kjvIsPN&&entry.greek&&entry.translit)return;const name=extractProperName(entry.pnName||entry.gloss||"");if(!name||name.length<2)return;const _DIVINE_SKIP=new Set(["LORD","Lord","YHWH","Yahweh","Jehovah","Holy"]);if(_DIVINE_SKIP.has(name))return;let cancelled=false;setMetavLoading(true);Promise.all([api.metavPerson(name).catch(()=>({error:true})),api.metavPlace(name).catch(()=>({error:true}))]).then(([pd,ld])=>{if(cancelled)return;const personOk=!pd.error&&(pd.birth_year||pd.death_year||pd.relationships?.length>=2);if(personOk)setMetavPersonData(pd);if(!ld.error)setMetavPlaceData(ld);// Default tab (only matters when BOTH person+place exist). Prefer the
 // word's OWN proper-noun type from tipnr — pn_types is a SET ('person',
 // 'place', or 'person,place'; backlog #5 fix). A clean SINGLE type is
 // authoritative. When tipnr is ambiguous (a strongs shared by a person AND
@@ -504,10 +504,10 @@ const useKjvText=entry.isKjv||entry.isBsb||isHebrew||metavType==="place"&&!isPN;
 const sections=[];// A verified verse-bind (Issue 2) leads the card. metaV/aidesc data is only fetched
 // when there is NO bind (the fetches above wait on the bind), so their own push
 // conditions already evaluate false under a bind — nothing name-based leaks through.
-if(boundEntity)sections.push("boundEntity");if(metavLoading||metavPersonData||metavPlaceData)sections.push("metav");if(aiDescription||aiDescLoading)sections.push("aidesc");if(isHebrewWord)sections.push("bdb");// metavType "person" normally suppresses the definition (a real proper-noun person has no
-// useful lexical entry). EXCEPT θεός (G2316): a common noun that name-matches the "God" metaV
-// person — it keeps that card AND still shows its definition below it.
-else if((!isPN||metavType==="place"&&metavData?.strongs_g?.length>0)&&(metavType!=="person"||entry.strongs_raw==="2316")&&!aiDescription&&!aiDescLoading&&(entry.greek||entry.strongs_raw||metavData?.strongs_g?.length>0))sections.push("lsj");// A verse-bound entity carries a real Strong's number (TIPNR mapped these people/places
+if(boundEntity)sections.push("boundEntity");if(metavLoading||metavPersonData||metavPlaceData)sections.push("metav");if(aiDescription||aiDescLoading)sections.push("aidesc");if(isHebrewWord)sections.push("bdb");// metavType "person" suppresses the definition (a real proper-noun person has no useful
+// lexical entry). θεός (G2316) is no longer special-cased here: it now skips metaV entirely
+// (see the lookup gate above), so its Lexica entry leads as the definition like any word.
+else if((!isPN||metavType==="place"&&metavData?.strongs_g?.length>0)&&metavType!=="person"&&!aiDescription&&!aiDescLoading&&(entry.greek||entry.strongs_raw||metavData?.strongs_g?.length>0))sections.push("lsj");// A verse-bound entity carries a real Strong's number (TIPNR mapped these people/places
 // onto H/G numbers), so it gets the SAME occurrence controls every other word has — the
 // real word-occurrence list, where each verse shows the surface form.
 const boundOcc=!!boundEntity;// Every word shows occurrences for the ONE text being read, not all Bibles at once — the
