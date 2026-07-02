@@ -92,6 +92,12 @@ def coverage_word(conn, sid):
     for c in cu:
         print(f"    · collocation UNCITED  {c['neighbor']} {c['lemma']} ({c['translit']})  "
               f"{c['verses']}v  PMI {c['score']}")
+    # always print the senses tally so a CLEAN pass is distinguishable from a check that never ran
+    senses = cov["senses"]
+    circ = [t for t in cov["thin_senses"] if t["self_only"]]
+    thin_only = [t for t in cov["thin_senses"] if not t["self_only"]]
+    note = "" if cov["contested"] else "  (circular check inert — not a contested word)"
+    print(f"  senses: {len(senses)} checked, {len(thin_only)} thin, {len(circ)} circular{note}")
     for t in cov["thin_senses"]:
         kind = "CIRCULAR (self-only)" if t["self_only"] else "thin"
         print(f"    · sense {t['sense']} {kind} — {t['support_refs']} support ref(s): {t['headline'][:60]}")

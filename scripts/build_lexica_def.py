@@ -834,12 +834,15 @@ def show_entry(entry):
         for r in ru:
             print(f"      · rendering UNCITED: '{r['gloss']}'  {r['count']}x")
         thin = cov.get("thin_senses", [])
-        if thin:
-            for t in thin:
-                kind = "CIRCULAR (self-only)" if t["self_only"] else "thin"
-                badge = "" if cov.get("contested") else " [non-contested — count only]"
-                print(f"      · sense {t['sense']} {kind} — {t['support_refs']} support ref(s){badge}: "
-                      f"{t['headline'][:60]}")
+        circ = [t for t in thin if t["self_only"]]
+        thin_only = [t for t in thin if not t["self_only"]]
+        print(f"      senses: {len(cov.get('senses', []))} checked, {len(thin_only)} thin, "
+              f"{len(circ)} circular" + ("" if cov.get("contested") else "  (circular check inert)"))
+        for t in thin:
+            kind = "CIRCULAR (self-only)" if t["self_only"] else "thin"
+            badge = "" if cov.get("contested") else " [non-contested — count only]"
+            print(f"      · sense {t['sense']} {kind} — {t['support_refs']} support ref(s){badge}: "
+                  f"{t['headline'][:60]}")
         if cov.get("flags"):
             print(f"      flags: {'; '.join(cov['flags'])}")
     print(f"  verses:      {len(entry['verses'])} cited, with text")
