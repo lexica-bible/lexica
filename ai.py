@@ -880,6 +880,87 @@ def _retrieval_context(entries: list[dict] | None) -> str:
     return _assert_no_lexicon_prose("\n".join(lines), entries)
 
 
+# ── Language / testament scope detection ───────────────────────────────────────
+# These term lists are the HARD never-collapse boundary: a query that names a language
+# or testament must never fold into its unscoped form. They live as named constants so
+# the parked Tier-2 semantic cache normalizer can import the SAME lists (deliberate
+# downstream dependency — do not inline them). LXX/Septuagint map to Greek (the
+# Septuagint IS Greek). OT is deliberately NOT mapped to Hebrew: ABP's OT is Greek text,
+# so OT scope means the Hebrew family AND the LXX Greek family, restricted to OT verses.
+_LANG_SCOPE_TERMS = {          # phrase → language axis value
+    "hebrew": "hebrew",
+    "greek": "greek",
+    "aramaic": "aramaic",
+    "septuagint": "greek",
+    "lxx": "greek",
+}
+_TESTAMENT_SCOPE_TERMS = {     # phrase → testament axis value
+    "old testament": "ot",
+    "new testament": "nt",
+    "ot": "ot",
+    "nt": "nt",
+}
+
+
+def _detect_scope(query: str) -> dict:
+    """Two INDEPENDENT scope axes off an explicit mention in the query — language
+    (hebrew/greek/aramaic; LXX/Septuagint → greek) and testament (ot/nt). Word-boundary,
+    case-insensitive. Returns {'lang': ..., 'testament': ...}, None where unset. A query
+    can carry both ('fire in the greek OT'). Neither set → the caller keeps the default
+    Greek-first behavior unchanged."""
+    q = (query or "").lower()
+
+    def _first(terms):
+        for phrase, val in terms.items():          # longer phrases listed first
+            if re.search(rf"\b{re.escape(phrase)}\b", q):
+                return val
+        return None
+
+    return {"lang": _first(_LANG_SCOPE_TERMS), "testament": _first(_TESTAMENT_SCOPE_TERMS)}
+
+
+def _scope_directive(scope: dict) -> str:
+    """The synthesis directive to inject when a scope is set — the override for the
+    default Greek-first spine in _CURATION_SYSTEM. Empty string when no scope is set
+    (default behavior, untouched). Divergence rule: stay scoped by default; cross to the
+    other language ONLY when its senses diverge (that bridge is the finding); parallel
+    senses = omit the other language, no cross-language tail."""
+    lang, tt = scope.get("lang"), scope.get("testament")
+    if not lang and not tt:
+        return ""
+    tt_name = {"ot": "Old Testament", "nt": "New Testament"}.get(tt)
+    if lang:
+        L = lang.capitalize()
+        other = {"hebrew": "Greek", "greek": "Hebrew"}.get(lang, "the other language")
+        line = (
+            f"The user scoped this query to {L}. Keep the synthesis in the {L} word "
+            f"family. Mention {other} ONLY if its senses DIVERGE from {L}'s — divergent "
+            f"senses are a finding worth ONE short cross-language note; parallel senses "
+            f"means omit {other} entirely, add no cross-language tail."
+        )
+        # Both axes → intersect: the language chooses the family, the testament restricts
+        # the occurrences (so 'hebrew in the OT' = Hebrew family, OT verses only).
+        if tt:
+            line += (
+                f" Restrict cited evidence and sense development to {tt_name} "
+                f"occurrences only; cite no verses outside the {tt_name}."
+            )
+        body = line
+    elif tt == "ot":
+        body = (
+            "The user scoped this query to the Old Testament. Cover the Hebrew family "
+            "together with the LXX (Greek OT) family, but restrict cited evidence and "
+            "sense development to Old Testament occurrences — include no NT-only senses "
+            "and cite no NT verses."
+        )
+    else:  # tt == "nt"
+        body = (
+            "The user scoped this query to the New Testament. Use Greek New Testament "
+            "occurrences only — cite no OT verses and no OT-only senses."
+        )
+    return "SCOPE DIRECTIVE (overrides the default Greek-first framing):\n" + body
+
+
 def _curation_prompt(
     query: str, results: list[dict], key_strongs_data: list[dict] | None = None
 ) -> tuple[str, int]:
@@ -948,11 +1029,17 @@ def _curation_prompt(
         ),
         key_strongs_data,
     )
+    # Explicit language/testament scope → an additive directive that overrides the
+    # default Greek-first spine for THIS answer (empty when unscoped, so default is
+    # untouched). Placed with the instructions, above the verse list.
+    scope_note = _scope_directive(_detect_scope(query))
+    scope_block = f"{scope_note}\n\n" if scope_note else ""
     user_msg = (
         f"Query: {query}\n"
         f"Key word(s) under study: {terms}\n"
         f"Write the explanation first (grounded ONLY in the verses below), then the "
         f"===VERSES=== marker and up to {primary_cap} primary verses as JSON.\n\n"
+        f"{scope_block}"
         f"Verses:\n{verse_list}"
     )
     return user_msg, primary_cap
@@ -1344,7 +1431,8 @@ _ai_cache_ver: str | None = None  # computed once from prompt template + book li
 
 # Bump this integer whenever server-side search logic changes in a way that
 # affects results but doesn't change _AI_SYSTEM_TMPL (e.g. new fallback steps).
-_CACHE_CODE_VER = 40   # 40: exact-lemma pin for a bare typed word (_resolve_exact_lemma)
+_CACHE_CODE_VER = 41   # 41: language/testament scope directive in the curate prompt (_detect_scope)
+                       # 40: exact-lemma pin for a bare typed word (_resolve_exact_lemma)
                        # 39: computed lexical-texture panel added to the payload (corpus_panel.py)
 
 
