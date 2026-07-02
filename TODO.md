@@ -58,11 +58,7 @@ index, and News right-rail all shipped on it 2026-07-01. Full record: memory `pr
 - **Owed post-deploy human check** — click-through of News / Word study / Library on desktop + phone
   (the mobile sheets are the one thing the parity gates can't run locally); confirm the News tab shows in
   the mobile bottom nav (admin) + the News inspect looks balanced without cramping the `.news-bar` row.
-  ALSO the new **Ask-corpus provenance rail** (2026-07-01, desktop): ask a grounded question + one with no
-  real occurrences — the rail should lead with "Rests on" verses (click one peeks the drill) + "Words in
-  scope" (a contested word like dikaioō/charis shows the `contested` tag), the grounded/caution line reads
-  right, and the frequency panel is collapsed beneath. bible.db is PA-only, so this can't run locally.
-  code: static/src/52-ask-corpus.jsx `ProvenancePanel`
+  (The Ask-corpus provenance rail was checked in Chrome 2026-07-01 — fine.)
 
 **Copy-shortlist wrapper resolution** (SHIPPED 2026-07-01, two loose ends; memory `project_news_watch`):
 1. Deploy the web app (reload) so the copy-to-face button + `POST /api/news/resolve` go live.
