@@ -140,11 +140,16 @@ function cleanDescription(title, summary) {
 // draws from _shortlistFace, so changing the format logic changes it in one place.
 // ============================================================
 
-// The values every format reads, resolved from ONE article per card (the FACE — the headline
-// the card shows). source = the face article's OWN outlet (matched in members), NOT sources[0]
-// (that's the newest-dated outlet, a different article). `date` matches the card (peak, else latest).
-function _shortlistFace(s) {
+// The FACE article's own outlet, matched in members by url — NOT sources[0] (the newest-dated
+// outlet, a different article). Shared by the card meta line + copy/export so they can't drift.
+function _faceSource(s) {
   const face = (s.members || []).find(m => m.url === s.url) || {};
+  return face.src || ((s.sources || [])[0] || {}).source || "";
+}
+
+// The values every format reads, resolved from ONE article per card (the FACE — the headline
+// the card shows). `date` matches the card (peak, else latest).
+function _shortlistFace(s) {
   return {
     title: s.title || "",
     url: s.url || "",
@@ -152,7 +157,7 @@ function _shortlistFace(s) {
     date: (s.peak_date || s.published || "").slice(0, 10),
     score: Number.isFinite(s.score) ? s.score : "",
     thread: s.thread_label || "",
-    source: face.src || ((s.sources || [])[0] || {}).source || "",
+    source: _faceSource(s),
   };
 }
 
@@ -239,6 +244,13 @@ function NewsStory({ story, view, onMark, readOnly, since, until, onSelect, sele
   // A plain, non-interactive cluster-size signal (distinct outlets). The why + the full
   // per-outlet article list now live in the right rail on selection, not a card expander.
   const srcCount = new Set((story.members || []).map(m => m.src || "?")).size;
+  // Meta line = date · face outlet · (N sources only when >1). Same face source as the inspect
+  // panel / copy / export. If the face source is missing, fall back to date · N sources (no bare
+  // dangling separator). Built as segments so the "·" gaps stay identical to the card-spacing pass.
+  const faceSource = _faceSource(story);
+  const metaSegs = [_dateRange(story)];
+  if (faceSource) metaSegs.push(faceSource);
+  if (srcCount > 1) metaSegs.push(srcCount + " sources");
   const mark = (status, e) => { if (e) e.stopPropagation(); if (!readOnly) onMark(story, status); };
   // Click the card BODY to inspect why it scored (the rail); the headline link and the
   // Keep/Dismiss buttons stop the bubble, so they keep their own action.
@@ -253,16 +265,15 @@ function NewsStory({ story, view, onMark, readOnly, since, until, onSelect, sele
            onClick={(e) => e.stopPropagation()}>
           {_stripOutlet(story.title)}
         </a>
-        {/* Body = headline + thread + date + a plain source count. The why and the full
-            per-outlet article list now render in the right rail on selection. */}
+        {/* Body = headline + thread + a date · outlet · source-count meta line. The why and the
+            full per-outlet article list now render in the right rail on selection. */}
         <div className="news-meta-line">
-          <span>{_dateRange(story)}</span>
-          {srcCount > 0 && (
-            <>
-              <span>·</span>
-              <span>{srcCount} {srcCount === 1 ? "source" : "sources"}</span>
-            </>
-          )}
+          {metaSegs.map((seg, i) => (
+            <React.Fragment key={i}>
+              {i > 0 && <span>·</span>}
+              <span>{seg}</span>
+            </React.Fragment>
+          ))}
         </div>
       </div>
       <div className="news-actions">
