@@ -389,6 +389,28 @@ def dangling_book_refs(conn, text):
     return hits
 
 
+# A CITATION-SHAPED ref — a (maybe-numbered) capitalized book label directly before "ch:vs". This
+# is BROADER than _REF_RE on purpose: _REF_RE's plain branch is EXACTLY Cap+2-lower ("Gen"/"Mat"),
+# so a 2-letter abbreviation ("Ps", "Jn", "Mt") or a spelled-out name ("Matthew 5:17") slips past it
+# ENTIRELY — the ref is never verse-checked, never lands in verses[], and the sense reads grounded
+# while it isn't (the "Ps 2:7" hole, 2026-07-02). This scans the whole citation shape and, via
+# _norm_book + _valid_books, flags any label that isn't a real verses.book code — a HARD reject at
+# write time (canonical codes only: Psa not Ps, Joh not Jn, Mat not Mt). Numbered books written
+# spaced/spelled-out ("2 Chr 26:11", "1 John 1:5") normalize to their glued code and are NOT flagged.
+_CITE_SHAPE_RE = re.compile(r'(?<![A-Za-z0-9])(\d?\s*[A-Z][A-Za-z]+)\s+\d+:\d+')
+
+def noncanon_book_refs(conn, text):
+    """Citation-shaped refs whose book label doesn't resolve to a canonical verses.book code — the
+    invisible-to-_REF_RE class (2-letter abbrevs, spelled-out names). Returns the offending labels,
+    in order. Every valid ref (a real code, or a numbered book _norm_book can re-glue) is skipped."""
+    valid, bad = _valid_books(conn), []
+    for m in _CITE_SHAPE_RE.finditer(text or ""):
+        label = m.group(1).strip()
+        if _norm_book(label) not in valid and label not in bad:
+            bad.append(label)
+    return bad
+
+
 def strict_keyset(conn, sid):
     """Verses containing the lemma by the engine's own rule (target Strong's tag, dotted excluded)."""
     pred, params = abp_filter(conn, sid)
@@ -633,7 +655,8 @@ def assemble(conn, sid, lemma, translit, raw):
         "provenance": "verse-grounded · LEXICA",
         "split_ver":  SPLIT_VER,
         "audit":      {**run_citation_gate(conn, sid, refs),
-                       "dangling": dangling_book_refs(conn, raw)},
+                       "dangling": dangling_book_refs(conn, raw),
+                       "noncanon": noncanon_book_refs(conn, raw)},
         "raw":        raw,                # kept so an improved splitter can re-split, no model call
     }
     return entry
@@ -667,6 +690,16 @@ def validate_entry(entry):
     # exists to stop. A deliberate exception needs --force-gate-bypass "reason"; the reason is
     # stamped into audit.bypass_reason BEFORE this runs (main), so a bypassed row self-documents.
     a = entry.get("audit") or {}
+    # CANONICAL-ABBREVIATION assertion (2026-07-02). A citation with a non-canonical book label
+    # ("Ps"/"Jn"/"Mt", or a spelled-out name) is INVISIBLE to _REF_RE, so it never even reaches the
+    # citation gate above — it would ship unverified. Hard reject; there is no data-bug bucket for
+    # it (unlike a tagging miss), so no bypass. Fix the raw to the canonical code and re-run.
+    noncanon = a.get("noncanon") or []
+    if noncanon:
+        problems.append(
+            f"non-canonical book label(s) in a citation: {', '.join(noncanon)} — _REF_RE can't "
+            f"verse-check these, so the ref would ship UNVERIFIED. Use the canonical verses.book "
+            f"code (Psa not Ps, Joh not Jn, Mat not Mt).")
     for m in a.get("misses", []):
         if m["bucket"] == "tagging":
             print(f"  ⚠ tagging miss (non-blocking) {entry['strongs']}: {m['ref']}", file=sys.stderr)
@@ -726,6 +759,8 @@ def show_entry(entry):
           (f"  (misses — tagging {a['tagging']} / real {a['real']} / no-verse {a['noverse']})" if a['total']-a['pass'] else ""))
     if a.get("dangling"):
         print(f"  ⚠ dangling book refs (no ch:vs — flag only): {', '.join(a['dangling'])}")
+    if a.get("noncanon"):
+        print(f"  ✗ non-canonical book label(s) — HARD REJECT: {', '.join(a['noncanon'])}")
     if entry["fork"]:
         f = entry["fork"]
         # core is suppressed in the fork for a pinned word (it leads above as PINNED CORE), so read
