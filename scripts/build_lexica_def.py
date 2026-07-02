@@ -587,6 +587,25 @@ def sense_provenance(senses_block):
     return out
 
 
+def _colloc_warn(conn, sid, occs, sample):
+    """PIECE A — collocation blind-spot check (ADVISORY). Scans ALL of the word's occurrences for a
+    repeated adjacent content-lemma collocation (e.g. huios+anthrōpos "son of man") that the fed
+    draw failed to represent, and prints a warning. WARN-ONLY: it never changes `sample`, so it
+    cannot shift what the model sees or drift a built entry. Logic lives in lexica_coverage.py
+    (repo root, already on sys.path)."""
+    try:
+        import lexica_coverage as _cov
+        sample_vids = {o["vid"] for o in sample}
+        missed = _cov.missed_collocations(_cov.scan_collocations(conn, sid, occs, sample_vids))
+    except Exception as e:
+        print(f"  (collocation check skipped: {e})", file=sys.stderr)
+        return
+    for f in missed:
+        print(f"  ⚠ collocation MISSED by draw: {f['neighbor']} {f['lemma']} ({f['translit']}) — "
+              f"{f['verses']} verses, 0 in the fed sample (e.g. {', '.join(f['examples'][:3])}). "
+              f"A sense may be absent; eyeball before shipping.", file=sys.stderr)
+
+
 def build_verses(conn, refs):
     """Cited refs -> [{ref, text}] in order, ABP prose text. Skips refs ABP doesn't carry."""
     out = []
@@ -858,6 +877,7 @@ def main():
                       f"left to the LSJ card. (No bypass flag — edit OCC_MIN to build one deliberately.)")
                 continue
             sample = select_spread(occs, args.budget)
+            _colloc_warn(conn, sid, occs, sample)   # PIECE A: advisory only — never alters the draw
             ctx = fetch_context(conn, sample, has_surface)
             lemma, translit = lex_head(conn, sid)
             ot = sum(1 for c in ctx if c[0] not in NT_BOOKS)
