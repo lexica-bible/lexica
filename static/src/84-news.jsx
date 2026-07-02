@@ -65,8 +65,15 @@ function _windowCard(c, since, until, minScore, thread, labels) {
   if (!since && !until) return c.score >= minScore ? c : null;
   const mem = (c.members || []).filter(m => _inWindow(m.d, since, until));
   if (!mem.some(m => m.s >= minScore)) return null;          // floor judged in-window
-  const face = mem.reduce((b, m) =>
-    (m.s > b.s || (m.s === b.s && (m.d || "") > (b.d || ""))) ? m : b, mem[0]);
+  // free-first (m.pw = server paywall flag), then score, then recency — mirrors the
+  // server _pick_face penalty so a windowed card never fronts a dead-end paywalled link
+  // when a free sibling covers the same story. The check itself stays server-side.
+  const _faceBetter = (m, b) => {
+    if (!!m.pw !== !!b.pw) return !m.pw;                 // free beats paywalled
+    if (m.s !== b.s) return m.s > b.s;                   // then strongest
+    return (m.d || "") > (b.d || "");                    // then newer
+  };
+  const face = mem.reduce((b, m) => _faceBetter(m, b) ? m : b, mem[0]);
   const score = mem.reduce((mx, m) => Math.max(mx, m.s), 0);
   const dates = mem.map(m => (m.d || "").slice(0, 10)).filter(Boolean).sort();
   const seen = new Set(), sources = [];

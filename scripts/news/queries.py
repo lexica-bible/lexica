@@ -22,6 +22,8 @@ SHARP (quoted phrases for exact wording, a couple of OR variants) — a vague
 search drowns the feed in noise the AI then has to throw away.
 """
 
+from urllib.parse import urlparse
+
 THREADS = {
     "papacy_moral_authority": {
         "label": "Papacy stepping in as the world's moral authority",
@@ -189,6 +191,39 @@ GATE_TERMS = (
 def gate_vocabulary():
     """Lowercase watch terms for the RSS hard-gate (see sources.py / pull_rss.py)."""
     return tuple(t.lower() for t in GATE_TERMS)
+
+
+# --- Paywalled domains ------------------------------------------------------
+# Hard-paywalled outlets whose article links dead-end for a reader. We do NOT
+# bypass paywalls; we only DEPRIORITIZE these domains when picking a cluster's
+# face article (see views_news._pick_face), so a free sibling covering the same
+# story fronts the card instead. A cluster with only paywalled coverage still
+# keeps a face — this is a sort penalty, never a filter.
+PAYWALL_DOMAINS = {
+    "washingtonpost.com",
+    "nytimes.com",
+    "wsj.com",
+    "ft.com",
+    "bloomberg.com",
+    "economist.com",
+    "theathletic.com",
+    "barrons.com",
+    "telegraph.co.uk",
+    "thetimes.co.uk",
+}
+
+
+def is_paywalled(url):
+    """True if `url`'s registered domain is a known hard-paywall. Matches the
+    exact domain or any subdomain (www. stripped). Never raises — a malformed
+    or empty URL returns False."""
+    try:
+        netloc = urlparse(url or "").netloc.lower()
+    except (ValueError, AttributeError):
+        return False
+    if netloc.startswith("www."):
+        netloc = netloc[4:]
+    return any(netloc == d or netloc.endswith("." + d) for d in PAYWALL_DOMAINS)
 
 
 def all_searches():

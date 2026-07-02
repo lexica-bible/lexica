@@ -281,7 +281,12 @@ def _pick_face(arts, newest):
     SCOPE BOUNDARY — face only, never sort. This swaps the visible headline; it does NOT
     change the cluster's score or its feed position. The cluster still ranks on its PEAK
     score (see _serialize). The old-but-high clusters that peak-sort floats up are a
-    separate, deferred SORT question — do NOT reach for a sort change here."""
+    separate, deferred SORT question — do NOT reach for a sort change here.
+
+    PAYWALL: a hard-paywalled article (WaPo/NYT/... — see queries.PAYWALL_DOMAINS) is a
+    dead-end link for a reader, so it sorts BEHIND any free sibling. This is the LEADING
+    sort key; score/recency still break ties within the free and the paywalled groups. A
+    cluster that is entirely paywalled still gets its strongest article as face."""
     pool = arts
     nd = (newest or "")[:10]
     if nd:
@@ -293,8 +298,20 @@ def _pick_face(arts, newest):
                 pool = recent
         except ValueError:
             pass
-    # strongest in the pool; ties broken toward the newer article
-    return max(pool, key=lambda a: ((a["score"] or 0), (a["published"] or "")))
+    # free-first, then strongest in the pool, then ties toward the newer article
+    return max(pool, key=lambda a: (not _art_paywalled(a),
+                                    (a["score"] or 0), (a["published"] or "")))
+
+
+def _art_paywalled(a):
+    """Paywall status of an article row for face selection. Checks the RESOLVED
+    domain when known (the real outlet), falling back to the raw url — a Google
+    News wrapper (news.google.com) or a not-yet-resolved article is unknown, so
+    it never scores as paywalled. No inline resolution here (no network in feed
+    assembly)."""
+    from scripts.news.queries import is_paywalled
+    ru = a["resolved_url"] if "resolved_url" in a.keys() else None
+    return is_paywalled(ru or a["url"])
 
 
 def _peak_date(arts):
@@ -496,6 +513,10 @@ def _all_cards(conn, has_event, has_newflag, has_resolved=False):
                             "d": (a["published"] or "")[:10],
                             "title": a["title"], "url": a["url"],
                             "resolved": (a["resolved_url"] if has_resolved else "") or "",
+                            # paywall flag so the browser's in-window face recompute
+                            # (_windowCard) honors the same free-first penalty as the
+                            # server _pick_face — WITHOUT duplicating the domain list.
+                            "pw": _art_paywalled(a),
                             "summary": a["summary"] or "",
                             "why": a["ai_why"] or "", "src": a["source"] or "?",
                             "via": ("RSS" if (a["query"] or "").startswith("rss:") else "Google News")}
