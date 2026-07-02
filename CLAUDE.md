@@ -135,8 +135,10 @@ Pick effort by task TYPE. Lean higher when data correctness is on the line; don'
 
 ## CI / automation (added 2026-06-07)
 - **GitHub Actions** (`.github/workflows/ci.yml`) — runs on every push/PR: (1) the invariant tests
-  (the `tests/test_*.py` set — strongs-join, build-invariants, folded-fixes, argmap, versification; they build their own in-memory data, no
-  bible.db needed), (2) rebuilds `app.js` and FAILS if the committed copy is stale. Repo is public; check
+  (the whole `tests/test_*.py` set; they build their own in-memory data, no bible.db needed — but the
+  `tests` job now `pip install`s flask + anthropic + python-dotenv + flask-limiter, because
+  `test_synthesis_no_leak.py` imports `ai.py`/`core.py`, which need them at load time; keep that list
+  lean, add only when a new test imports something new), (2) rebuilds `app.js` and FAILS if the committed copy is stale. Repo is public; check
   the Actions tab or query `api.github.com/repos/lexica-bible/lexica/actions/runs`. `gh` CLI is installed on the dev box now (2026-06-22; Claude calls it by full path) — NOT on PA. See memory `project_dependabot_workflow`.
   - **LINE-ENDINGS for the app.js check (cost a CI fail 2026-06-14; the "all CRLF" claim CORRECTED
     same day):** Keep `git config core.autocrlf false` — with `autocrlf=true` (Git-for-Windows default)
