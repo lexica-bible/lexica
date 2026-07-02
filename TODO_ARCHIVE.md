@@ -6,6 +6,33 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Lexica definition engine — batch-2 content edits + 2 audit fixes + θεός metaV cleanup — DONE + LIVE 2026-07-01
+Full record + lessons: memory `project_lexica_dictionary`. All serve-verified live.
+- **Content (via `fix_lexica_raw.py`, model-free, citation gate re-checked on each write):**
+  - **G2316 θεός** — sense 4 (magistrates) rewritten to a referent-contested, LXX-only note (Exo 22:28; "not
+    native Greek range"), cross-referencing sense 3 for the heavenly-beings reading. Fork core tail then
+    neutralized in `contested_register.py` ("…of figures set in authority (Exo 22:28), the referent there
+    contested") — it had still asserted the human-judges reading as agreed, contradicting the new sense 4 on
+    a live public page (commit 8f7b49c + `--resplit --word G2316 --apply` on PA).
+  - **G5207 υἱός** — new sense 5 "Heavenly beings, 'sons of God'" (LXX bene elohim: Job 1:6/2:1, Psa 29:1/89:6
+    anchors, Gen 6:2/6:4 as the contested-referent note pair); believers Rom 8:14/Gal 3:26 folded into sense-3
+    sub-use ("NT usage, distinct freight"); Range clause files the celestial class "by kind". A precision aside
+    about Psa 29:1's second use ("offspring of rams") was added then cut as renderer clutter.
+- **Code (commit 366f5d3):** audit A1 — `OCC_MIN=2` in build_lexica_def refuses a hapax build (loud, no bypass
+  flag, edit the constant to override). Audit C3 — build_lexica_def + fix_lexica_raw open the live db read-only
+  (mode=ro) unless `--apply`.
+- **θεός metaV person-card removed (commit 228008a, `30-detail-panel.jsx`):** a deliberate G2316 exception had
+  let θεός through the metaV person lookup, name-matching the "God" node (Luke 3:38 genealogy terminal, person
+  id 1324) → a "Male / Children: Adam, Eve" card stapled over the entry. Dropped both G2316 exceptions; θεός now
+  skips metaV and leads with its Lexica entry. Client-side suppression only — metaV data + genealogy views intact.
+- **LESSONS:**
+  - *Job "sons of God" ≠ huios everywhere.* Assumed the divine-council verses all tag υἱός; ABP tags Job 38:7
+    as angelos (G32), so it's a real citation-gate miss. The gate caught it (blocked the write) — that's the
+    verify-before-claim guardrail working. Job 1:6/2:1 DO tag huios; check per-verse, never per-set.
+  - *Citation gate needs the book name on EVERY ref.* Shorthand "2:1"/"6:4" leaning on the prior ref's book
+    slips past `_REF_RE` and drops silently from verses[]/counts. Spell every ref out ("Job 1:6; Job 2:1").
+    This is the parked audit-B1 blind spot biting in practice.
+
 ## Word-study English finder — singular/plural number-fold — DONE + LIVE 2026-07-01
 Full record: memory `project_lexicon_number_fold`.
 - **The bug:** `/api/lexicon/english` matched a typed word letter-for-letter against attested renderings, so

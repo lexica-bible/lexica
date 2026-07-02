@@ -143,12 +143,11 @@ YouVersion, which aren't the target). Honest gaps:
   - Verbs + Hebrew first-batches = separate tracks.
   - Small: the fork gate names a covenant-membership/NPP reading for dikaioō that `salvation_how` has no
     node for — add one via add_study_graph_salvation.py so the link lands.
-  - **occ≥2 cutoff is NOT enforced in code (audit A1, DEFERRED to next batch).** build_lexica_def only skips
-    a ZERO-occurrence word — `--word <hapax> --apply` would still build one. The cutoff lives only as policy;
-    the batch-2 pre-sort driver is the natural place to enforce it (reject occ<2 before building).
-  - **build_lexica_def opens the LIVE db with a writable handle even on `--dry-run` (audit C3, DEFERRED).**
-    It never writes outside --apply, but it's the one lexica script still holding a write-capable handle on the
-    live file, against the 2026-06-28 copy-first rule. Low risk, tidy when convenient.
+  - **BATCH-3 candidate (queued 2026-07-01): G2316 θεός sense 3/4 follow-up.** Check Psa 82:1 + 82:6 for θεός
+    (G2316) attestation in ABP — the classic contested-referent locus (human judges vs heavenly beings), and
+    what John 10:34 quotes. If attested, it strengthens the sense-3/4 split. Not the pipeline batch.
+  (Manual batch-2 CONTENT edits — G2316 sense 4 + G5207 sense 5/believers — and audit A1/C3 + the θεός metaV
+   fix all SHIPPED + LIVE 2026-07-01; archived. See TODO_ARCHIVE + memory `project_lexica_dictionary`.)
   code: scripts/build_lexica_def.py (imports contested_register), fix_lexica_raw.py, lexica_agreement.py, views_lexica.py
 
 - **Definition-engine audit — items PARKED by JP's scope call (2026-07-01).** Batch 1 (register extraction,
