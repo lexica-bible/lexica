@@ -149,7 +149,7 @@ function NewsStory({ story, view, onMark, readOnly, since, until, onSelect, sele
   // Keep/Dismiss buttons stop the bubble, so they keep their own action.
   const pick = onSelect ? () => onSelect(story) : undefined;
   return (
-    <div className={"news-story" + (onSelect ? " news-story--click" : "") + (selected ? " on" : "")}
+    <div className={"news-story listrow" + (onSelect ? " news-story--click" : "") + (selected ? " on" : "")}
          onClick={pick}>
       <div className={"news-score news-score-" + tier}>{story.score}</div>
       <div className="news-body">

@@ -424,7 +424,7 @@ function NotesView({ onOpen, isMobile, onReadInContext }) {
   const openItem = isMobile ? onOpen : (n) => setSelectedId(n.id);
 
   const renderItem = (n) => (
-    <li key={n.id} className={"notes-item" + (!isMobile && n.id === selectedId ? " on" : "")} onClick={() => openItem(n)}>
+    <li key={n.id} className={"notes-item listrow" + (!isMobile && n.id === selectedId ? " on" : "")} onClick={() => openItem(n)}>
       <div className="notes-item-ref">
         {(n.body || n.bookmark) && (
           <span className="notes-item-type" aria-hidden="true">{n.body ? <Icon.Note/> : <Icon.Bookmark/>}</span>

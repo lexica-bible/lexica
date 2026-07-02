@@ -293,7 +293,7 @@ function ProvenancePanel({ answer, panel, onOccInspect, onStrongs, contestedSet 
           </div>
           <div className="ac-prov-verses">
             {visible.map((e) => (
-              <div key={e.ref} className="ac-prov-verse" onClick={() => peekGuarded(e)} title="Inspect this passage">
+              <div key={e.ref} className="ac-prov-verse listrow" onClick={() => peekGuarded(e)} title="Inspect this passage">
                 <div className="ac-prov-vhead">
                   <span className="ac-prov-ref">{BOOK_LABELS[e.book] || e.book} {e.chapter}:{e.verse}</span>
                   {e.theme && <span className="ac-prov-theme" title="Related by theme — may not contain the word">theme</span>}
@@ -329,9 +329,9 @@ function ProvenancePanel({ answer, panel, onOccInspect, onStrongs, contestedSet 
                       title={(r.inScope ? "Study " : "Family — study ") + (r.translit || r.lemma) + " in Word study"}>
                       <span className="cpanel-word">
                         <span className={"cpanel-lemma" + (heb ? " heb" : "")} dir={heb ? "rtl" : undefined}>{r.lemma}</span>
+                        {r.contested && <span className="ac-prov-contested" title="This word's reading is contested — open it to see the fork">contested</span>}
                         {r.translit && <span className="cpanel-tr">{r.translit}</span>}
                         <span className="cpanel-s">{r.strongs}</span>
-                        {r.contested && <span className="ac-prov-contested" title="This word's reading is contested — open it to see the fork">contested</span>}
                       </span>
                       <span className="cpanel-gloss">{r.gloss || (r.inScope ? "" : "—")}</span>
                       <span className="cpanel-bar">{r.hasCount && <span style={{ width: barW(r.count, g.max) + "%" }}/>}</span>

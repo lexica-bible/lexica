@@ -810,7 +810,7 @@ function SeamIndex({ modules, module, onPickModule, onOpenGraph, isMobile }) {
   const row = (s) => {
     const heb = /^H/i.test(s.strongs || "");
     return (
-      <button key={s.strongs} className={"study-row" + (s.strongs === sel ? " on" : "")}
+      <button key={s.strongs} className={"study-row listrow" + (s.strongs === sel ? " on" : "")}
         onClick={() => setSel(cur => (cur === s.strongs ? null : s.strongs))}>
         <span className="study-row-title" dir={heb ? "rtl" : undefined}>{s.lemma}</span>
         {s.translit && <span className="study-row-n">{s.translit}</span>}
@@ -1074,7 +1074,7 @@ function StudyView({ admin, pending, onConsumed, onNavigateToLibrary, isMobile }
       ) : (
         <div className="study-rows">
           {shown.map(e => (
-            <button className={"study-row" + (editing && editing.id === e.id ? " on" : "")} key={e.id} onClick={() => openEntry(e.id)}>
+            <button className={"study-row listrow" + (editing && editing.id === e.id ? " on" : "")} key={e.id} onClick={() => openEntry(e.id)}>
               {!isTopic && <span className="study-badge study-badge--graph">Graph</span>}
               <span className="study-row-title">{isTopic ? displayTitle(e.title) : e.title}</span>
               <span className="study-row-n">{e.n || 0} {isTopic ? "verses" : "claims"}</span>

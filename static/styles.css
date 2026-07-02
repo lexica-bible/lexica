@@ -69,6 +69,17 @@
      shared --sidebar-w so they stay locked together). */
   --news-sidebar-w: var(--sidebar-w);
 
+  /* Shared LIST-ROW system (see the ".listrow" section below). ONE definition of how a
+     row inside any rail/feed/list looks: the panel is the container, rows are content —
+     no per-item border, radius, or card background. Rows separate by a hairline divider;
+     interactivity = a subtle hover wash; selected = an accent left-bar + wash. A surface
+     recolors everything by overriding just --row-accent (Ask-corpus sets it to --ai). Same
+     one-knob philosophy as --strip-h — surfaces reference the system, no local copies. */
+  --row-accent: var(--accent);
+  --row-pad-y: 11px;
+  --row-pad-x: 14px;
+  --row-gap: 10px;
+
   --lib-vnum-w: 24px;    /* lib-vnum min-width */
   --lib-row-pl: 5px;     /* lib-verse-row padding-left */
   --lib-row-gap: 8px;    /* lib-verse-row gap */
@@ -129,6 +140,34 @@
 /* Dark: the Strong's word-order number is a dark red (#c0392b) that sinks into the
    dark bg — brighten it to a legible coral. */
 :root[data-theme="dark"] .lib-iw-pos { color: #f0726a; }
+
+/* ============================================================
+   SHARED LIST-ROW SYSTEM — the ONE row treatment for every rail / feed / list pane.
+   The panel is the container; rows are content. No per-item border, no card background,
+   no rounded row box. Rows separate by a hairline divider (the last row drops it), hover
+   gives a subtle wash, selected gets an accent left-bar + wash. Recolor a whole surface
+   by setting --row-accent on its container (Ask-corpus → --ai). Surfaces ADD `.listrow`
+   to their existing class and keep only their own internal layout/typography — never a
+   local copy of the box rules. This is the anti-drift mechanism.
+   ============================================================ */
+/* Layout-neutral on purpose: a row's INTERNAL arrangement (horizontal flex vs stacked
+   lines vs grid) is surface-specific, so the base only removes the box + owns the
+   divider/hover/selected. Surfaces set their own display/flex/grid. */
+.listrow {
+  width: 100%; text-align: left; background: none; border: 0; border-radius: 0;
+  padding: var(--row-pad-y) var(--row-pad-x);
+  border-bottom: 1px solid var(--rule);
+  cursor: pointer; position: relative; font: inherit; color: inherit;
+  transition: background .12s;
+}
+.listrow:last-child { border-bottom: 0; }
+.listrow:hover { background: color-mix(in oklab, var(--row-accent) 7%, transparent); }
+.listrow:focus-visible { outline: none; background: color-mix(in oklab, var(--row-accent) 7%, transparent); }
+.listrow.on { background: color-mix(in oklab, var(--row-accent) 11%, transparent); }
+.listrow.on::before {
+  content: ""; position: absolute; left: 0; top: 0; bottom: 0; width: 3px;
+  background: var(--row-accent);
+}
 
 * { box-sizing: border-box; }
 html, body {
@@ -3928,11 +3967,7 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
 .notes-search:focus { outline: none; border-color: var(--gold); }
 .notes-empty { color: var(--ink-3); font-size: 15px; padding: 32px 4px; text-align: center; }
 .notes-list { list-style: none; margin: 0; padding: 0; }
-.notes-item {
-  border: 1px solid var(--rule); border-radius: 10px; padding: 12px 14px;
-  margin-bottom: 10px; cursor: pointer; background: var(--paper);
-}
-.notes-item:hover { border-color: var(--gold); background: var(--bg-sunk); }
+/* .notes-item = a .listrow (shared box/divider/hover/selected); stacked content within */
 .notes-item-ref { font-weight: 700; color: var(--ink); font-size: 14px; margin-bottom: 3px; }
 .notes-item-snippet { color: var(--ink-2); font-style: italic; font-size: 13px; margin-bottom: 4px; }
 .notes-item-body { color: var(--ink-2); font-size: 14px; line-height: 1.45; white-space: pre-wrap; }
@@ -4072,7 +4107,6 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
 .study-topstrip .study-sub { margin: 0; border-bottom: none; }
 .study-topstrip-right { display: flex; align-items: center; gap: 12px; }
 .study-center-body { flex: 1; min-height: 0; overflow-y: auto; padding: 22px 28px 60px; }
-.study-row.on { border-color: var(--accent); background: color-mix(in oklab, var(--accent) 12%, transparent); }
 /* inspect floats over the navy header (match Word study top:0), so shift the account pill clear */
 .zinspect.rstack.study-rstack { top: 0; }
 .app.view-study .hdr-right { margin-right: calc(var(--sidebar-w) + 12px); }
@@ -4095,12 +4129,9 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
 .nave-sec--more { justify-content: center; }
 .nave-sec--more .nave-sec-h { font-size: 12.5px; color: var(--ink-3); }
 
-.study-rows { display: flex; flex-direction: column; gap: 6px; }
-.study-row {
-  display: flex; align-items: center; gap: 10px; width: 100%; text-align: left;
-  background: var(--paper); border: 1px solid var(--rule); border-radius: 10px; padding: 11px 14px; cursor: pointer;
-}
-.study-row:hover { border-color: var(--rule-2); background: var(--bg); }
+.study-rows { display: flex; flex-direction: column; }
+/* .study-row = a .listrow (shared box/divider/hover/selected) + its own horizontal layout */
+.study-row { display: flex; align-items: center; gap: 10px; }
 .study-badge {
   flex: none; font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px;
   text-transform: uppercase; letter-spacing: 0.02em; background: var(--bg-sunk); color: var(--ink-3);
@@ -4424,15 +4455,17 @@ button.study-verse-ref { border: none; }
 .ac-rail-eyebrow svg { color: var(--ink-4); }
 .ac-rail-empty { padding: 22px 20px; font-size: 13px; color: var(--ink-4); line-height: 1.5; text-wrap: pretty; }
 .ac-rail-list { flex: 1; min-height: 0; overflow-y: auto; padding: 10px 10px 18px; display: flex; flex-direction: column; gap: 2px; }
+/* thread rows: no box — hover wash + a selected accent left-bar, keyed to the AI violet */
 .ac-rail-item {
   flex: 0 0 auto;            /* keep natural height — never squish the 2-line row, scroll instead */
-  text-align: left; width: 100%;
+  text-align: left; width: 100%; background: none; border: 0;
   font-family: var(--f-serif); font-size: 13.5px; line-height: 1.4; color: var(--ink-2);
-  padding: 9px 11px; border-radius: 8px; border: 1px solid transparent;
+  padding: 9px 11px; border-radius: 6px; position: relative;
   display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
 }
-.ac-rail-item:hover { background: var(--paper); border-color: var(--rule); color: var(--ink); }
-.ac-rail-item.on { background: var(--paper); border-color: var(--rule); color: var(--ink); box-shadow: inset 2px 0 0 var(--accent); font-weight: 600; }
+.ac-rail-item:hover { background: color-mix(in oklab, var(--ai) 7%, transparent); color: var(--ink); }
+.ac-rail-item.on { background: color-mix(in oklab, var(--ai) 11%, transparent); color: var(--ink);
+  box-shadow: inset 3px 0 0 var(--ai); font-weight: 600; }
 .ac-rail-clear { flex: 0 0 auto; margin: 4px 16px 16px; align-self: flex-start; font-size: 12px; color: var(--ink-4); }
 .ac-rail-clear:hover { color: var(--ai); text-decoration: underline; }
 /* date group header — muted small-caps, matches the RECENT CONVERSATIONS eyebrow */
@@ -4495,7 +4528,8 @@ button.study-verse-ref { border: none; }
 
 /* Provenance panel — what the answer rests on. LEADS the idle rail (answer-state truth);
    the frequency panel folds beneath it, collapsed + subordinate (idle-state texture). */
-.ac-prov { display: flex; flex-direction: column; gap: 16px; }
+/* Ask-corpus rail recolors the whole shared row system to the AI violet in ONE place. */
+.ac-prov { display: flex; flex-direction: column; gap: 16px; --row-accent: var(--ai); }
 .ac-prov-grounded { font-size: 12.5px; color: var(--ink-3); line-height: 1.4; }
 .ac-prov-caution { font-size: 12.5px; line-height: 1.5; color: var(--ink); padding: 9px 11px;
   background: var(--gold-soft); border-radius: 8px;
@@ -4503,15 +4537,15 @@ button.study-verse-ref { border: none; }
 .ac-prov-caution b { font-weight: 700; }
 .ac-prov-sec { display: flex; flex-direction: column; gap: 7px; }
 .ac-prov-h { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600; color: var(--ink-3); }
-.ac-prov-verses, .ac-prov-words { display: flex; flex-direction: column; gap: 4px; }
+.ac-prov-verses, .ac-prov-words { display: flex; flex-direction: column; }
 .ac-prov-h--split { display: flex; align-items: center; justify-content: space-between; gap: 8px; }
 /* the toggle, re-fitted for the narrow rail (no auto-margin, tighter) */
 .ac-tm--rail { margin-left: 0; gap: 8px; }
 .ac-tm--rail .ac-tm-b { font-size: 10.5px; padding: 1px 1px 3px; }
-/* a key passage: ref line + a one-line snippet with the match highlighted; the whole row peeks */
-.ac-prov-verse { display: flex; flex-direction: column; gap: 3px; cursor: pointer;
-  padding: 7px 10px; border: 1px solid var(--rule); border-radius: 7px; background: var(--ctl-bg); text-align: left; }
-.ac-prov-verse:hover { border-color: var(--ai); }
+/* a key passage: ref line + a one-line snippet with the match highlighted; the whole row
+   peeks. A .listrow (shared divider/hover/selected) + its own stacked internals + a tighter
+   rail padding than the base. */
+.ac-prov-verse { display: flex; flex-direction: column; gap: 3px; padding: 9px 10px; }
 .ac-prov-vhead { display: flex; align-items: center; gap: 7px; }
 .ac-prov-ref { font-family: var(--f-mono); font-size: 12.5px; color: var(--ink); }
 .ac-prov-theme { font-size: 9.5px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;
@@ -4525,25 +4559,31 @@ button.study-verse-ref { border: none; }
   overflow: hidden; font-family: var(--f-serif); font-size: 12.5px; line-height: 1.5; color: var(--ink-3); }
 .ac-prov-more { align-self: flex-start; font-size: 11.5px; font-weight: 600; color: var(--ai); padding: 3px 2px; }
 .ac-prov-more:hover { text-decoration: underline; }
-.ac-prov-word { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap;
-  padding: 7px 10px; border: 1px solid var(--rule); border-radius: 7px; background: var(--ctl-bg); text-align: left; }
-.ac-prov-word:hover { border-color: var(--ai); }
-.ac-prov-lemma { font-family: var(--f-greek); font-size: 17px; color: var(--ink); }
-.ac-prov-lemma.heb { font-family: var(--f-serif); }
-.ac-prov-tr { font-family: var(--f-serif); font-style: italic; font-size: 12.5px; color: var(--ink-3); }
-.ac-prov-s { font-family: var(--f-mono); font-size: 10.5px; color: var(--ink-4); }
 .ac-prov-contested { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;
-  color: var(--ai); background: var(--ai-soft); padding: 2px 6px; border-radius: 4px;
-  border: 1px solid color-mix(in oklab, var(--ai) 22%, transparent); }
-/* Merged word list (answer scope + lexical family) — reuses the cpanel row grid, with room
-   for the Strong's number + contested badge (word cell wraps), and family-only rows muted so
-   they don't read as words the answer used. */
+  color: var(--ai); background: var(--ai-soft); padding: 2px 6px; border-radius: 4px; flex: none;
+  border: 1px solid color-mix(in oklab, var(--ai) 22%, transparent); align-self: center; }
+/* Merged word list (answer scope + lexical family). De-boxed — the container is not a card,
+   just rows. Each row is a 2×2 grid with DEFINED zones so it can't wrap arbitrarily at rail
+   width (~460px): lemma + badge + translit + Strong's on the identity line (translit is the
+   ONLY shrink item → it ellipsizes first, the lemma/number never wrap), gloss below-left,
+   the count NUMBER top-right (always visible) over its bar bottom-right. */
 .ac-prov-h-sub { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--ink-4); }
-.ac-prov-wordlist .cpanel-row { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) 48px 40px; gap: 8px; align-items: start; }
-.ac-prov-wordlist .cpanel-word { flex-wrap: wrap; gap: 4px 7px; padding-top: 1px; }
+.ac-prov-wordlist .cpanel { margin: 0; padding: 0; background: none; border: 0; border-radius: 0; }
+.ac-prov-wordlist .cpanel-row {
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas: "word num" "meta bar";
+  column-gap: 10px; row-gap: 2px; align-items: center;
+  padding: 8px 8px; border-bottom: 1px solid var(--rule); border-radius: 0;
+}
+.ac-prov-wordlist .cpanel-grp:last-child .cpanel-row:last-child { border-bottom: 0; }
+.ac-prov-wordlist .cpanel-word { grid-area: word; display: inline-flex; align-items: baseline;
+  flex-wrap: nowrap; gap: 6px; min-width: 0; }
+.ac-prov-wordlist .cpanel-lemma, .ac-prov-wordlist .cpanel-s { flex: none; }
+.ac-prov-wordlist .cpanel-tr { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ac-prov-wordlist .cpanel-s { font-family: var(--f-mono); font-size: 10px; color: var(--ink-4); }
-.ac-prov-wordlist .cpanel-gloss { padding-top: 2px; }
-.ac-prov-wordlist .cpanel-bar, .ac-prov-wordlist .cpanel-n { margin-top: 5px; }
+.ac-prov-wordlist .cpanel-gloss { grid-area: meta; font-size: 12px; }
+.ac-prov-wordlist .cpanel-n { grid-area: num; justify-self: end; }
+.ac-prov-wordlist .cpanel-bar { grid-area: bar; justify-self: end; width: 60px; align-self: center; }
 /* family-only row: the answer didn't use this word — mute the headword so it can't read as evidence */
 .ac-prov-wordlist .cpanel-row.fam .cpanel-word { opacity: 0.5; }
 /* Frequency panel: collapsed + subordinate under the provenance (never equal weight). */
@@ -4699,7 +4739,7 @@ button.study-verse-ref { border: none; }
 .cpanel-grp-h { font-size: 11.5px; font-weight: 600; color: var(--ink-2); margin-bottom: 4px; padding-left: 8px; }
 /* each row is a button → tap opens the word in Word study (replaced the lemma chips) */
 .cpanel-row { display: grid; grid-template-columns: minmax(86px, max-content) minmax(0, 1fr) 72px 46px; align-items: center; gap: 10px; width: 100%; padding: 5px 8px; background: none; border: 0; border-radius: 7px; cursor: pointer; font: inherit; color: inherit; text-align: left; }
-.cpanel-row:hover, .cpanel-row:focus-visible { background: color-mix(in oklab, var(--accent) 8%, transparent); outline: none; }
+.cpanel-row:hover, .cpanel-row:focus-visible { background: color-mix(in oklab, var(--row-accent) 8%, transparent); outline: none; }
 .cpanel-word { display: inline-flex; align-items: baseline; gap: 7px; min-width: 0; }
 .cpanel-lemma { font-family: var(--f-greek); font-size: 16px; color: var(--ink); white-space: nowrap; }
 .cpanel-lemma.heb { direction: rtl; }
@@ -4867,22 +4907,9 @@ button.study-verse-ref { border: none; }
    list moved into the shared left rail (study-rail). seam-strip retired for study-topstrip. */
 .seam-count { font-size: 12.5px; color: var(--ink-4); }
 
-.seam-list { display: flex; flex-direction: column; gap: 8px; max-width: 720px; }
-.seam-row { display: grid; grid-template-columns: minmax(120px, 1fr) minmax(0, 1.2fr) auto; align-items: center;
-  gap: 12px; text-align: left; padding: 12px 14px; border: 1px solid var(--rule); border-radius: 10px;
-  background: var(--paper); cursor: pointer; }
-.seam-row:hover { border-color: var(--accent); background: var(--bg-sunk); }
-.seam-row.on { border-color: var(--accent); background: color-mix(in oklab, var(--accent) 8%, var(--paper)); }
-.seam-word { display: flex; align-items: baseline; gap: 8px; min-width: 0; }
-.seam-lemma { font-family: var(--f-greek); font-size: 17px; color: var(--ink); }
-.seam-lemma.heb { direction: rtl; }
-.seam-tr { font-size: 12.5px; color: var(--ink-4); font-style: italic; }
-.seam-gloss { font-size: 13.5px; color: var(--ink-2); }
-.seam-tags { display: flex; align-items: center; gap: 6px; justify-self: end; }
-.seam-flip { font-size: 10.5px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.04em;
-  color: var(--ink); background: var(--hl-match); padding: 2px 7px; border-radius: 999px; white-space: nowrap; }
-.seam-type { font-size: 11px; font-weight: 600; padding: 2px 8px; border-radius: 999px;
-  background: var(--bg-sunk); color: var(--ink-3); border: 1px solid var(--rule); white-space: nowrap; }
+/* Mobile seam list: rows are the SHARED .study-row/.listrow (see the JSX comment). No
+   bespoke seam-row layout — the old .seam-* box classes were removed as dead. */
+.seam-list { display: flex; flex-direction: column; max-width: 720px; }
 
 /* right inspect — below the nav (new surface). Header band + scroll, matching the others. */
 .zinspect.seam-inspect { top: var(--hdr-h); }
@@ -5232,9 +5259,10 @@ button.study-verse-ref { border: none; }
 .news-outside { font-size: 12px; color: var(--ink-4); text-align: center;
   margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--rule); }
 
-.news-list { display: flex; flex-direction: column; gap: 10px; }
-.news-story { display: flex; gap: 14px; padding: 14px 16px; background: var(--paper);
-  border: 1px solid var(--rule); border-radius: 12px; }
+.news-list { display: flex; flex-direction: column; }
+/* .news-story = a .listrow. News is the densest triage surface (400+ items), so it keeps
+   its own GENEROUS row spacing + a STRONGER hover wash than the base for scannability. */
+.news-story { display: flex; gap: 14px; padding: 15px 16px; }
 .news-score { flex: 0 0 auto; width: 34px; height: 34px; border-radius: 9px; display: grid;
   place-items: center; font-weight: 700; font-size: 15px; }
 .news-score-hi { background: var(--accent); color: var(--paper); }
@@ -5390,9 +5418,8 @@ button.study-verse-ref { border: none; }
 .news-shape-cn { flex: 0 0 auto; font-size: 12.5px; font-weight: 600; color: var(--ink-3); }
 
 /* SELECTED state: a feed card is clickable to inspect its "why it scored" in the rail. */
-.news-story--click { cursor: pointer; }
-.news-story--click:hover { border-color: var(--accent); }
-.news-story.on { border-color: var(--accent); background: color-mix(in oklab, var(--accent) 6%, var(--paper)); }
+.news-story--click:hover { background: color-mix(in oklab, var(--accent) 9%, transparent); }
+.news-story.on { background: color-mix(in oklab, var(--accent) 12%, transparent); }
 
 /* the why-rail (SELECTED) reuses .news-shape's frame; these are its own bits. The band
    carries the back link (‹ Watch) + title, matching the dashboard's header-height band. */
