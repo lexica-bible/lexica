@@ -10,6 +10,10 @@
 function _newsDaysAgo(n) {
   return new Date(Date.now() - n * 86400000).toISOString().slice(0, 10);
 }
+// Today, ISO YYYY-MM-DD — the export filename + Markdown header date.
+function _newsToday() {
+  return new Date().toISOString().slice(0, 10);
+}
 
 // The feed-shape "surfaced vs buried" line. FIXED analytic threshold — the scorer's
 // over-catch boundary (noise sits below 6), ported verbatim from the server's shape().
@@ -128,6 +132,73 @@ function cleanDescription(title, summary) {
     if (tail.length <= 60) return "";
   }
   return s;
+}
+
+// ============================================================
+// Shortlist assembly — the ONE layer both clipboard copy AND file export route through.
+// Face-field resolution + cleanDescription live HERE and nowhere else; every format below
+// draws from _shortlistFace, so changing the format logic changes it in one place.
+// ============================================================
+
+// The values every format reads, resolved from ONE article per card (the FACE — the headline
+// the card shows). source = the face article's OWN outlet (matched in members), NOT sources[0]
+// (that's the newest-dated outlet, a different article). `date` matches the card (peak, else latest).
+function _shortlistFace(s) {
+  const face = (s.members || []).find(m => m.url === s.url) || {};
+  return {
+    title: s.title || "",
+    url: s.url || "",
+    summary: s.summary || "",                              // RAW (CSV keeps it; text formats clean it)
+    date: (s.peak_date || s.published || "").slice(0, 10),
+    score: Number.isFinite(s.score) ? s.score : "",
+    thread: s.thread_label || "",
+    source: face.src || ((s.sources || [])[0] || {}).source || "",
+  };
+}
+
+// The three clipboard TEXT formats (behavior unchanged — copy still routes through these).
+// `url` is already the resolved link. A blank date/description drops its own line.
+function _plainFormat(fmt, f, url) {
+  if (fmt === "link") return [f.date, url].filter(Boolean).join("\n");
+  if (fmt === "titlelink") return [f.title, f.date, url].filter(Boolean).join("\n");
+  const desc = cleanDescription(f.title, f.summary);       // titledesc
+  return [f.title, ...(desc ? ["— " + desc] : []), f.date, url].filter(Boolean).join("\n");
+}
+
+// Markdown — the richest, human-readable "keep it" form. H1 + count header, then one H2 entry
+// per item: title (plain, not linked), a "·"-joined meta line, the cleaned description, the url.
+function _markdownFormat(faces, rurl, today) {
+  const entries = faces.map(f => {
+    const meta = [f.date, f.thread, f.score !== "" ? "score " + f.score : "", f.source]
+      .filter(Boolean).join("  ·  ");
+    const desc = cleanDescription(f.title, f.summary);
+    return ["## " + f.title, meta, ...(desc ? ["— " + desc] : []), rurl(f.url)]
+      .filter(Boolean).join("\n");
+  });
+  const n = faces.length;
+  return `# Lexica news shortlist — ${today}\n${n} ${n === 1 ? "article" : "articles"}\n\n`
+    + entries.join("\n\n") + "\n";
+}
+
+// CSV — archival/data view. RFC-4180 (quote every field, double embedded quotes), \r\n lines,
+// UTF-8 BOM so Excel renders Cyrillic/Greek. description = RAW summary (NOT cleaned — data truth).
+function _csvFormat(faces, rurl) {
+  const q = (v) => '"' + String(v == null ? "" : v).replace(/"/g, '""') + '"';
+  const rows = [["date", "thread", "score", "title", "source", "url", "description"]];
+  for (const f of faces)
+    rows.push([f.date, f.thread, f.score, f.title, f.source, rurl(f.url), f.summary]);
+  const BOM = String.fromCharCode(0xFEFF);
+  return BOM + rows.map(r => r.map(q).join(",")).join("\r\n") + "\r\n";
+}
+
+// Trigger a browser download of `text` as `filename`.
+function _downloadFile(filename, text, mime) {
+  const blob = new Blob([text], { type: mime });
+  const href = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = href; a.download = filename;
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(href), 1000);
 }
 
 // The card date shows the PEAK day only (rank + window both key on it). A single-date
@@ -374,6 +445,9 @@ function NewsView({ isMobile }) {
   const [copyOpen, setCopyOpen] = useState(false);    // Copy-shortlist format dropdown
   const [copiedN, setCopiedN] = useState(0);          // >0 = show "Copied n ✓" for ~1.5s
   const copyTimer = useRef(null);
+  const [exportOpen, setExportOpen] = useState(false); // Export (file) format dropdown
+  const [exported, setExported] = useState(false);     // show "Exported ✓" for ~1.5s
+  const exportTimer = useRef(null);
   const [dateOpen, setDateOpen] = useState(false);    // desktop top-bar date popover
   const [helpOpen, setHelpOpen] = useState(false);    // top-bar "how the feed works" popover
   const [selStory, setSelStory] = useState(null);     // desktop: card selected into the why-rail
@@ -383,14 +457,18 @@ function NewsView({ isMobile }) {
   useEffect(() => { localStorage.setItem("lexica.news.csince.v1", customSince); }, [customSince]);
   useEffect(() => { localStorage.setItem("lexica.news.cuntil.v1", customUntil); }, [customUntil]);
   useEffect(() => { localStorage.setItem("lexica.news.min.v1", String(minScore)); }, [minScore]);
-  // Esc closes the copy-format menu (outside-click is the scrim). Clear the copied-flash timer on unmount.
+  // Esc closes whichever export/copy menu is open (outside-click is the scrim). Clear the
+  // done-flash timers on unmount.
   useEffect(() => {
-    if (!copyOpen) return;
-    const onKey = (e) => { if (e.key === "Escape") setCopyOpen(false); };
+    if (!copyOpen && !exportOpen) return;
+    const onKey = (e) => { if (e.key === "Escape") { setCopyOpen(false); setExportOpen(false); } };
     document.addEventListener("keydown", onKey);
     return () => document.removeEventListener("keydown", onKey);
-  }, [copyOpen]);
-  useEffect(() => () => { if (copyTimer.current) clearTimeout(copyTimer.current); }, []);
+  }, [copyOpen, exportOpen]);
+  useEffect(() => () => {
+    if (copyTimer.current) clearTimeout(copyTimer.current);
+    if (exportTimer.current) clearTimeout(exportTimer.current);
+  }, []);
 
   // The ONLY data fetch: pull the whole clustered feed once (and on an explicit Refresh or
   // reload). Every sort/filter/score/date/thread/count below is derived from it locally,
@@ -534,53 +612,62 @@ function NewsView({ isMobile }) {
     });
   };
 
-  // Swap the button label to "Copied n ✓" for ~1.5s; reset the timer on a repeat click.
+  // Swap a button label to its "done" state for ~1.5s; reset the timer on a repeat click.
   const flashCopied = (n) => {
     setCopiedN(n);
     if (copyTimer.current) clearTimeout(copyTimer.current);
     copyTimer.current = setTimeout(() => { setCopiedN(0); copyTimer.current = null; }, 1500);
   };
+  const flashExported = () => {
+    setExported(true);
+    if (exportTimer.current) clearTimeout(exportTimer.current);
+    exportTimer.current = setTimeout(() => { setExported(false); exportTimer.current = null; }, 1500);
+  };
 
-  // Copy the current shortlist in one of three formats. All use the FACE article's fields
-  // (s.title / s.summary / s.url — the headline shown on the card, so title + link agree;
-  // sources[0] was the newest-dated row, a different article). A blank description drops its
-  // line, no orphan blank. Google News wrapper URLs are resolved to real links first.
-  const doCopy = (fmt) => {
-    setCopyOpen(false);
-    if (copying) return;
-    const items = (stories || [])
-      // date = the same value the card shows (_dateRange: peak day, else latest), ISO YYYY-MM-DD;
-      // empty drops its line, like the description.
-      .map(s => ({ title: s.title || "", summary: s.summary || "", url: s.url || "",
-                   date: (s.peak_date || s.published || "").slice(0, 10) }))
-      .filter(it => it.url);
-    if (!items.length) return;
-    // date sits on its own line right before the url, in every format; a blank date/description
-    // drops its line (filter(Boolean)), no orphan blank. The two lines are independent.
-    const line = (it, url) => {
-      if (fmt === "link") return [it.date, url].filter(Boolean).join("\n");
-      if (fmt === "titlelink") return [it.title, it.date, url].filter(Boolean).join("\n");
-      // title + description + link — prefix the (non-empty) description with "— " to mark it
-      // as descriptive text; a dropped description emits nothing (no orphan prefix/blank line).
-      const desc = cleanDescription(it.title, it.summary);
-      return [it.title, ...(desc ? ["— " + desc] : []), it.date, url].filter(Boolean).join("\n");
-    };
-    const write = (map) => {
-      // prefer a resolved clean URL; fall back to the wrapper on any miss
-      const lines = items.map(it => line(it, (map && map[it.url]) || it.url));
-      navigator.clipboard.writeText(lines.join("\n\n")).then(
-        () => flashCopied(lines.length),
-        () => { setFlash("Copy failed"); setTimeout(() => setFlash(""), 2000); }
-      );
-    };
-    // only the Google News wrappers need a network round-trip; direct URLs don't
-    const wrappers = [...new Set(
-      items.map(it => it.url).filter(u => u.includes("news.google.com/rss/articles/")))];
-    if (!wrappers.length) { write(null); return; }
+  // Resolve any Google News wrapper URLs (direct links need no round-trip), then hand the
+  // {wrapper -> real} map to `done`. Shared by BOTH copy and export so neither emits a wrapper.
+  const withResolvedUrls = (done) => {
+    const wrappers = [...new Set((stories || []).map(s => s.url)
+      .filter(u => u && u.includes("news.google.com/rss/articles/")))];
+    if (!wrappers.length) { done(null); return; }
     setCopying(true);
     api.newsResolve(wrappers)
-      .then(res => { setCopying(false); write(res && res.ok ? res.urls : null); })
-      .catch(() => { setCopying(false); write(null); });   // fail-soft: raw wrappers
+      .then(res => { setCopying(false); done(res && res.ok ? res.urls : null); })
+      .catch(() => { setCopying(false); done(null); });   // fail-soft: raw wrappers
+  };
+
+  // The ONE assembler. Given a format key + the resolved-url map, builds the whole output from
+  // the current shortlist. Every format (3 clipboard + md + csv) routes through here.
+  const buildShortlist = (fmt, urlMap) => {
+    const rurl = (u) => (urlMap && urlMap[u]) || u;
+    const faces = (stories || []).filter(s => s.url).map(_shortlistFace);
+    if (fmt === "md") return _markdownFormat(faces, rurl, _newsToday());
+    if (fmt === "csv") return _csvFormat(faces, rurl);
+    return faces.map(f => _plainFormat(fmt, f, rurl(f.url))).join("\n\n");   // link|titlelink|titledesc
+  };
+
+  // Copy the current shortlist in one of the three text formats (assembly shared with export).
+  const doCopy = (fmt) => {
+    setCopyOpen(false);
+    if (copying || !(stories || []).some(s => s.url)) return;
+    const n = (stories || []).filter(s => s.url).length;
+    withResolvedUrls((map) => {
+      navigator.clipboard.writeText(buildShortlist(fmt, map)).then(
+        () => flashCopied(n),
+        () => { setFlash("Copy failed"); setTimeout(() => setFlash(""), 2000); }
+      );
+    });
+  };
+
+  // Export the current shortlist to a downloaded file (same assembly layer as copy).
+  const doExport = (kind) => {   // "md" | "csv"
+    setExportOpen(false);
+    if (copying || !(stories || []).some(s => s.url)) return;
+    withResolvedUrls((map) => {
+      const mime = kind === "md" ? "text/markdown;charset=utf-8" : "text/csv;charset=utf-8";
+      _downloadFile(`lexica-shortlist-${_newsToday()}.${kind}`, buildShortlist(kind, map), mime);
+      flashExported();
+    });
   };
 
   const canReview = !!(meta && meta.can_write);
@@ -702,6 +789,27 @@ function NewsView({ isMobile }) {
       )}
     </div>
   );
+  // Export: same dropdown chrome as Copy, but writes a downloaded file (Markdown / CSV) through
+  // the SAME assembly layer. Label flips to "Exported ✓" after a download.
+  const exportLabel = exported ? "Exported ✓"
+    : copying ? <><span className="news-spin" /> Resolving…</>
+    : "Export ▾";
+  const exportMenu = (
+    <div className="news-bar-pop news-copy-pop">
+      <button className={"news-btn" + (exportOpen ? " on" : "")}
+              disabled={copying || !stories.length} aria-expanded={exportOpen}
+              onClick={() => setExportOpen(o => !o)}>{exportLabel}</button>
+      {exportOpen && (
+        <>
+          <div className="news-bar-scrim" onClick={() => setExportOpen(false)} />
+          <div className="news-bar-menu news-copy-menu">
+            <button className="news-copy-item" onClick={() => doExport("md")}>Markdown (.md)</button>
+            <button className="news-copy-item" onClick={() => doExport("csv")}>CSV (.csv)</button>
+          </div>
+        </>
+      )}
+    </div>
+  );
   const inboxFilters = (   // mobile: one flat strip (keeps the inline "Since" word)
     <>
       <label className="news-f"><span>Since</span>{dateInput}</label>
@@ -787,7 +895,7 @@ function NewsView({ isMobile }) {
                   onClick={() => setRefreshN(n => n + 1)}>
             {loading ? "Refreshing…" : "Refresh"}
           </button>
-          {view === "kept" && copyMenu /* shortlist-copy belongs with Kept, not Dismissed */}
+          {view === "kept" && <>{copyMenu}{exportMenu}</> /* shortlist copy + export: Kept only */}
           {flash && <span className="news-flash">{flash}</span>}
         </div>
         {feedInner}
@@ -887,7 +995,7 @@ function NewsView({ isMobile }) {
             </>
           )}
         </div>
-        {view === "kept" && copyMenu /* shortlist-copy belongs with Kept, not Dismissed */}
+        {view === "kept" && <>{copyMenu}{exportMenu}</> /* shortlist copy + export: Kept only */}
         {flash && <span className="news-flash">{flash}</span>}
       </div>
     </div>
