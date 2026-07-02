@@ -72,12 +72,16 @@ index, and News right-rail all shipped on it 2026-07-01. Full record: memory `pr
 3. Post-deploy check: News → Kept → Copy shortlist shows "Resolving…" then pastes clean article links,
    not `news.google.com/rss/...` wrappers.
 
-**Copy/Export shortlist formats** (SHIPPED 2026-07-02; memory `project_news_watch`):
-1. Needs a normal CODE deploy — the feed read now carries `i.summary` (views_news.py), which fills the
-   "description" line + the CSV description column. Without the deploy those degrade to blank (safe).
-2. Post-deploy check: News → Kept → Copy shortlist (3 formats) + Export (Markdown / CSV) download; date
-   window label stays put across refresh ("Last 7d" doesn't creep to 8d); right inspect divider lines up
-   with the navy header edge when a card is selected.
+**Copy/Export shortlist + card-link formats** (SHIPPED 2026-07-02; memory `project_news_watch`):
+1. Needs a normal CODE deploy — the feed read now carries `i.summary` (fills the copy "description" +
+   CSV description) AND `i.resolved_url` per face/member (makes the card/article CLICK open the real
+   article instead of the Google wrapper). Both degrade safely without the deploy (blank desc / wrapper
+   click that still redirects).
+2. Post-deploy check: News → Kept → Copy shortlist (3 formats) + Export (Markdown / CSV) download; a card
+   title click lands on the real outlet, not `news.google.com/rss/...`; date window label stays put
+   across refresh ("Last 7d" doesn't creep to 8d); right inspect divider lines up with the navy header
+   edge when a card is selected; single-source card reads "1 source" (no "· peaked"); the scoring lens
+   now lives in the ⓘ popover, not on each card.
 
 ---
 
