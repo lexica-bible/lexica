@@ -4730,10 +4730,12 @@ button.study-verse-ref { border: none; }
   display: inline-flex; align-items: baseline; gap: 7px;
   font-family: var(--f-serif); font-size: 12.5px; line-height: 1.35; color: var(--ai);
 }
+/* Arrow sits on the FIRST line's baseline, not centered in the item box — else it floats to
+   the middle of a two-line prompt. align-self:baseline (not center) pins it to line 1; the
+   flex row already keeps wrapped lines hanging-indented under the text, not the arrow. */
 .ac-example svg { color: var(--ai); flex: 0 0 auto; width: 12px; height: 12px; opacity: 0.7;
-  align-self: center; transition: opacity 0.15s, transform 0.15s; order: -1; }
+  align-self: baseline; position: relative; top: 1px; transition: opacity 0.15s, transform 0.15s; order: -1; }
 .ac-example:hover svg { opacity: 1; }
-.ac-example:hover svg { opacity: 1; transform: translateX(2px); }
 
 /* THREAD (answered) */
 .ac-thread { flex: 1; overflow-y: auto; }
