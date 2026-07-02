@@ -529,30 +529,44 @@ def lexicon_lookup():
             return {"strongs": r["strongs_id"], "lemma": r["lemma"] or "",
                     "translit": r["xlit"] or "", "gloss": r["description"] or "", "match": match}
 
-        # ── 1) EXACT lemma match FIRST — indexed (lemma_plain), instant, and the right
-        # answer. A typed word IS its dictionary headword in the common case, so this is
-        # what the user wants; it also dodges the over-match (ἵνα returns ἵνα, not every
-        # lemma CONTAINING "ινα"). lemma_plain is built by scripts/add_lemma_plain.py;
-        # _has_lemma_plain is False until that runs, so the code is safe to deploy first.
+        def _sort_key(row):
+            # Deterministic order within a band: by Strong's number (letter then value).
+            # NO frequency/relatedness sort — substring can't tell family from a letter
+            # accident (that's why root/family search is parked), so we never imply it.
+            s = row["strongs"] or ""
+            pre = s[0] if s[:1] in ("G", "H") else ""
+            try:
+                return (pre, float((s[1:] if pre else s) or 0))
+            except ValueError:
+                return (pre, 0.0)
+
+        # ── 1) EXACT band — the dictionary headword (indexed lemma_plain) OR an EXACT
+        # transliteration ("theos" → θεός G2316, and nothing else). The translit tier is
+        # the fix: lemma_plain is the Greek lemma (θεος), so a Latin transliteration never
+        # hit it and fell to the substring scan below — which pulls euthéōs/βαθέως on a
+        # shared letter-ending. Both sides run strip_accents+lower so the compare is
+        # symmetric ("Theos" → "theos"); a plain scan, the table is small, no new column.
+        # lemma_plain is built by add_lemma_plain.py; _has_lemma_plain gates only that leg,
+        # so the translit-exact tier works even before the column exists (deploy-safe).
         qexact = _norm_lemma(q)
         exact = []
-        if qexact:
-            if _has_lemma_plain(conn, "lexicon"):
-                exact += [_grk_row(r, "exact") for r in conn.execute(
-                    """SELECT strongs, lemma, translit, kjv_def, derivation, strongs_def
-                       FROM lexicon WHERE lemma_plain = ? LIMIT 15""", (qexact,)).fetchall()]
-            if _has_lemma_plain(conn, "bdb"):
-                exact += [_heb_row(r, "exact") for r in conn.execute(
-                    """SELECT strongs_id, lemma, xlit, description
-                       FROM bdb WHERE lemma_plain = ? LIMIT 10""", (qexact,)).fetchall()]
-        # An exact lemma hit IS the answer — return it WITHOUT the slow substring scan
-        # below (that full-table LIKE is the cost; only pay it when there's no exact word).
-        if exact:
-            return _finish(exact)
+        _lemma_leg = " OR (? != '' AND lemma_plain = ?)"  # only when the column exists
+        lp = _has_lemma_plain(conn, "lexicon")
+        exact += [_grk_row(r, "exact") for r in conn.execute(
+            "SELECT strongs, lemma, translit, kjv_def, derivation, strongs_def FROM lexicon"
+            " WHERE strip_accents(lower(translit)) = ?" + (_lemma_leg if lp else ""),
+            ((qn, qexact, qexact) if lp else (qn,))).fetchall()]
+        lpb = _has_lemma_plain(conn, "bdb")
+        exact += [_heb_row(r, "exact") for r in conn.execute(
+            "SELECT strongs_id, lemma, xlit, description FROM bdb"
+            " WHERE strip_accents(lower(xlit)) = ?" + (_lemma_leg if lpb else ""),
+            ((qn, qexact, qexact) if lpb else (qn,))).fetchall()]
+        exact.sort(key=_sort_key)
+        exact_nums = {r["strongs"] for r in exact}
 
-        # ── 2) No exact lemma — fall back to the substring "contains" search (translit,
-        # definitions, and the accent-stripped lemma). This is the only path that pays the
-        # full-table scan, and only when the typed word isn't a headword.
+        # ── 2) CONTAINS band — the substring scan (translit, definitions, accent-stripped
+        # lemma). Everything here is a STRING match, labeled as such in the UI; a row
+        # already in the exact band is dropped so it isn't listed twice.
         grk = conn.execute(
             """SELECT strongs, lemma, translit, kjv_def, derivation, strongs_def FROM lexicon
                WHERE strongs_def LIKE ? OR kjv_def LIKE ?
@@ -589,11 +603,16 @@ def lexicon_lookup():
                 ).fetchall()
             except Exception:
                 dot = []
-        results = [_grk_row(r, "contains") for r in grk]
-        results += [_heb_row(r, "contains") for r in heb]
-        results += [{"strongs": r["strongs"], "lemma": r["lemma"] or "", "translit": r["translit"] or "",
-                     "gloss": r["gloss"] or "", "match": "contains"} for r in dot]
-        return _finish(results)
+        contains = [_grk_row(r, "contains") for r in grk]
+        contains += [_heb_row(r, "contains") for r in heb]
+        contains += [{"strongs": r["strongs"], "lemma": r["lemma"] or "", "translit": r["translit"] or "",
+                      "gloss": r["gloss"] or "", "match": "contains"} for r in dot]
+        # Drop anything already promoted to the exact band; order deterministically.
+        contains = [r for r in contains if r["strongs"] not in exact_nums]
+        contains.sort(key=_sort_key)
+        # One merged list: exact pinned first, contains below. The frontend reads the
+        # `match` tag to draw the "Exact match" / "Also contains …" divider.
+        return _finish(exact + contains)
     finally:
         conn.close()
 

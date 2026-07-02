@@ -357,6 +357,23 @@ input { font-family: inherit; }
   text-align: left;
 }
 .lexicon-match-row:hover { background: var(--bg-sunk); border-color: var(--rule-2); }
+/* Exact / Also-contains band divider — the label is what keeps the covenant: rows
+   under "Also contains" are visibly a STRING match, not a semantic relative. */
+.glmatch-div {
+  font-family: var(--f-sans, inherit);
+  font-size: 10.5px; font-weight: 600;
+  letter-spacing: 0.06em; text-transform: uppercase;
+  color: var(--ink-soft, #6b7280);
+  padding: 10px 2px 4px;
+}
+.glmatch-div:first-child { padding-top: 2px; }
+.glmatch-div--contains {
+  color: var(--ink-faint, #9099a6);
+  border-top: 1px solid var(--rule);
+  margin-top: 6px; padding-top: 10px;
+  text-transform: none; letter-spacing: 0.01em;
+  font-weight: 500; font-style: italic;
+}
 .lexicon-match-strongs {
   font-family: var(--f-mono);
   font-size: 11px; font-weight: 500;

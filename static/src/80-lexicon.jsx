@@ -368,6 +368,16 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
     return new Set([tag, strongsBare(tag)]);  // match the FULL number — a dotted word lights up itself, not its base
   }, [profile?.strongs]);
 
+  // Handle a /lexicon/lookup result (Greek/Hebrew/transliteration). Auto-open ONLY a
+  // lone true hit (one exact, nothing else); if ANY "contains" rows exist, always show
+  // the ranked list so the Exact / Also-contains divider does its discovery job.
+  const showLookup = (data, q) => {
+    if (!data.length) { setError("No matches found for \"" + q + "\"."); return; }
+    const exact = data.filter(d => d.match === "exact");
+    if (exact.length === 1 && exact.length === data.length) loadProfile(exact[0].strongs);
+    else { setMatches(data); setGlOpen(true); }
+  };
+
   const handleSubmit = async (e, override) => {
     e?.preventDefault?.();
     const q = (override !== undefined ? override : query).trim();
@@ -390,10 +400,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
     setLoading(true);
     try {
       if (_isGreekHebrew(q)) {
-        const data = await api.lexiconLookup(q);
-        if (!data.length) setError("No matches found.");
-        else if (data.length === 1) loadProfile(data[0].strongs);
-        else { setMatches(data); setGlOpen(true); }
+        showLookup(await api.lexiconLookup(q), q);
       } else {
         const data = await api.lexiconEnglish(q, corpus, testament);
         if (data.length) { setGroupings(data); setGlOpen(true); }
@@ -401,10 +408,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
           // No English meaning matched — the input may be a Greek/Hebrew word
           // typed in Latin letters (e.g. "pneuma"). Fall back to the lookup,
           // which matches transliterations accent-insensitively.
-          const alt = await api.lexiconLookup(q);
-          if (!alt.length) setError("No matches found for \"" + q + "\".");
-          else if (alt.length === 1) loadProfile(alt[0].strongs);
-          else { setMatches(alt); setGlOpen(true); }
+          showLookup(await api.lexiconLookup(q), q);
         }
       }
     } catch { setError("Search failed."); }
@@ -533,6 +537,55 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
     </div>
   );
 
+  // Split a lookup list into its two bands. Exact = a real dictionary/transliteration
+  // hit; contains = a plain substring match, labeled as such so a letter-accident
+  // (euthéōs under "theos") can't masquerade as a relative.
+  const matchBands = (arr) => ({
+    exact: arr.filter(m => m.match === "exact"),
+    contains: arr.filter(m => m.match !== "exact"),
+  });
+  const containsLabel = (exactCount, q) => exactCount
+    ? "Also contains “" + q + "”"
+    : "No exact match — showing words containing “" + q + "”";
+
+  // One rich match row (mobile glsenses list). Shared by both bands.
+  const renderMatchRow = (m) => {
+    const mh = m.strongs[0] === "H";
+    return (
+      <button key={m.strongs}
+        className={"glrow" + (profile && profile.strongs === m.strongs ? " on" : "")}
+        onClick={() => { loadProfile(m.strongs); setGlOpen(false); }}>
+        <span className="glrow-s">{m.strongs}</span>
+        <span className="glrow-main">
+          <span className="glrow-top">
+            {m.lemma && <span className={"glrow-gk" + (mh ? " heb" : "")} dir={mh ? "rtl" : undefined}>{m.lemma}</span>}
+            {m.translit && <span className="glrow-tr">{m.translit}</span>}
+          </span>
+          {/* "used as" renderings per source — same lines as the English finder.
+              Falls back to the plain gloss for a row with no renderings. */}
+          {m.abp_glosses && m.abp_glosses.length > 0 && (
+            <span className="glrow-rend"><span className="glrow-k">ABP</span><span>{renderRend(m.abp_glosses)}</span>{m.abp_total != null && <span className="glrow-n">{m.abp_total}</span>}</span>
+          )}
+          {m.heb_glosses && m.heb_glosses.length > 0 && (
+            <span className="glrow-rend"><span className="glrow-k">HEB</span><span>{renderRend(m.heb_glosses)}</span>{m.heb_total != null && <span className="glrow-n">{m.heb_total}</span>}</span>
+          )}
+          {m.kjv_glosses && m.kjv_glosses.length > 0 && (
+            <span className="glrow-rend"><span className="glrow-k">KJV</span><span>{renderRend(m.kjv_glosses)}</span>{m.kjv_total != null && <span className="glrow-n">{m.kjv_total}</span>}</span>
+          )}
+          {m.bsb_glosses && m.bsb_glosses.length > 0 && (
+            <span className="glrow-rend"><span className="glrow-k">BSB</span><span>{renderRend(m.bsb_glosses)}</span>{m.bsb_total != null && <span className="glrow-n">{m.bsb_total}</span>}</span>
+          )}
+          {!(m.abp_glosses && m.abp_glosses.length) && !(m.heb_glosses && m.heb_glosses.length)
+            && !(m.kjv_glosses && m.kjv_glosses.length) && !(m.bsb_glosses && m.bsb_glosses.length)
+            && m.gloss && <span className="glrow-rend"><span>{m.gloss}</span></span>}
+        </span>
+        <span className="glrow-occ" title="Open word study">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.85" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </span>
+      </button>
+    );
+  };
+
   // Greek/Hebrew word-match list (from /api/lexicon/lookup). Same collapsible card
   // shell as the English renderSenses() so picking a result COLLAPSES the list (shows
   // the chosen word in the header) instead of making it vanish — they share .glsenses.
@@ -553,46 +606,18 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="m6 9 6 6 6-6"/></svg>
         </span>
       </button>
-      {glOpen && (
-        <div className="glsenses-rows">
-          {matches.map(m => {
-            const mh = m.strongs[0] === "H";
-            return (
-              <button key={m.strongs}
-                className={"glrow" + (profile && profile.strongs === m.strongs ? " on" : "")}
-                onClick={() => { loadProfile(m.strongs); setGlOpen(false); }}>
-                <span className="glrow-s">{m.strongs}</span>
-                <span className="glrow-main">
-                  <span className="glrow-top">
-                    {m.lemma && <span className={"glrow-gk" + (mh ? " heb" : "")} dir={mh ? "rtl" : undefined}>{m.lemma}</span>}
-                    {m.translit && <span className="glrow-tr">{m.translit}</span>}
-                  </span>
-                  {/* "used as" renderings per source — same lines as the English finder.
-                      Falls back to the plain gloss for a row with no renderings. */}
-                  {m.abp_glosses && m.abp_glosses.length > 0 && (
-                    <span className="glrow-rend"><span className="glrow-k">ABP</span><span>{renderRend(m.abp_glosses)}</span>{m.abp_total != null && <span className="glrow-n">{m.abp_total}</span>}</span>
-                  )}
-                  {m.heb_glosses && m.heb_glosses.length > 0 && (
-                    <span className="glrow-rend"><span className="glrow-k">HEB</span><span>{renderRend(m.heb_glosses)}</span>{m.heb_total != null && <span className="glrow-n">{m.heb_total}</span>}</span>
-                  )}
-                  {m.kjv_glosses && m.kjv_glosses.length > 0 && (
-                    <span className="glrow-rend"><span className="glrow-k">KJV</span><span>{renderRend(m.kjv_glosses)}</span>{m.kjv_total != null && <span className="glrow-n">{m.kjv_total}</span>}</span>
-                  )}
-                  {m.bsb_glosses && m.bsb_glosses.length > 0 && (
-                    <span className="glrow-rend"><span className="glrow-k">BSB</span><span>{renderRend(m.bsb_glosses)}</span>{m.bsb_total != null && <span className="glrow-n">{m.bsb_total}</span>}</span>
-                  )}
-                  {!(m.abp_glosses && m.abp_glosses.length) && !(m.heb_glosses && m.heb_glosses.length)
-                    && !(m.kjv_glosses && m.kjv_glosses.length) && !(m.bsb_glosses && m.bsb_glosses.length)
-                    && m.gloss && <span className="glrow-rend"><span>{m.gloss}</span></span>}
-                </span>
-                <span className="glrow-occ" title="Open word study">
-                  <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.85" strokeLinecap="round" strokeLinejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                </span>
-              </button>
-            );
-          })}
-        </div>
-      )}
+      {glOpen && (() => {
+        const { exact, contains } = matchBands(matches);
+        const q = query.trim();
+        return (
+          <div className="glsenses-rows">
+            {exact.length > 0 && <div className="glmatch-div">Exact match</div>}
+            {exact.map(renderMatchRow)}
+            {contains.length > 0 && <div className="glmatch-div glmatch-div--contains">{containsLabel(exact.length, q)}</div>}
+            {contains.map(renderMatchRow)}
+          </div>
+        );
+      })()}
     </div>
   );
 
@@ -900,8 +925,12 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
 
             {error && <p className="lexicon-error">{error}</p>}
 
-            {/* search-results toolbar (no word in focus) */}
-            {!profile && (groupings || matches) && (
+            {/* search-results toolbar (no word in focus). ONLY for the English-rendering
+                search — source/testament/language actually re-query there. Over a
+                transliteration/lemma `matches` set they can't filter anything (a word
+                exists independent of which text renders it), so the bar is hidden rather
+                than shown-but-inert. */}
+            {!profile && groupings && (
               <div className="filters">
                 <div className="tgroup">
                   <button className={"tg" + (corpus === "all" ? " on" : "")} onClick={() => switchCorpus("all")}>All</button>
@@ -927,18 +956,26 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
               </div>
             )}
 
-            {matches && !profile && (
-              <div className="lexicon-matches">
-                {matches.map(m => (
-                  <button key={m.strongs} className="lexicon-match-row" onClick={() => loadProfile(m.strongs)}>
-                    <span className="lexicon-match-strongs">{m.strongs}</span>
-                    <span className="lexicon-match-lemma">{m.lemma}</span>
-                    <span className="lexicon-match-translit">{m.translit}</span>
-                    <span className="lexicon-match-gloss">{m.gloss}</span>
-                  </button>
-                ))}
-              </div>
-            )}
+            {matches && !profile && (() => {
+              const { exact, contains } = matchBands(matches);
+              const q = query.trim();
+              const row = (m) => (
+                <button key={m.strongs} className="lexicon-match-row" onClick={() => loadProfile(m.strongs)}>
+                  <span className="lexicon-match-strongs">{m.strongs}</span>
+                  <span className="lexicon-match-lemma">{m.lemma}</span>
+                  <span className="lexicon-match-translit">{m.translit}</span>
+                  <span className="lexicon-match-gloss">{m.gloss}</span>
+                </button>
+              );
+              return (
+                <div className="lexicon-matches">
+                  {exact.length > 0 && <div className="glmatch-div">Exact match</div>}
+                  {exact.map(row)}
+                  {contains.length > 0 && <div className="glmatch-div glmatch-div--contains">{containsLabel(exact.length, q)}</div>}
+                  {contains.map(row)}
+                </div>
+              );
+            })()}
 
             {/* English "words rendered" results — a collapsible card that stays
                 pinned above the occurrences once a word is picked. */}

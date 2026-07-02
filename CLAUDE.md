@@ -867,6 +867,20 @@ Full detail: memory `project_notes_highlights`. The headline facts:
 - Dedicated word study tab — separate from AI Search
 - Flow: search box → word profile → gloss chips → book distribution → verse list
 - Smart search: detects Strong's (G4151, H7307), Greek, Hebrew, English
+- **Transliteration/lemma lookup = RANKED Exact / Contains bands (2026-07-01).** `/api/lexicon/lookup`
+  (Greek/Hebrew/transliteration path — NOT `/english`) returns ONE list split by a `match` tag: an
+  **Exact** band (dictionary headword `lemma_plain` OR `strip_accents(lower(translit)) = q` — the translit
+  tier is what pins "theos"→θεός G2316 and keeps euthéōs/βαθέως OUT, since lemma_plain is the Greek lemma
+  a Latin transliteration never hits) above a labeled **"Also contains …"** divider holding the substring
+  hits (deduped vs exact, ordered by Strong's number — deterministic, NOT frequency; substring can't tell
+  family from a letter-accident). Empty-exact still shows the divider ("No exact match — showing words
+  containing …"). Frontend auto-opens ONLY a lone true hit (exact=1, nothing else); any contains rows keep
+  the list up so the divider does its job. The source/language filter bar is HIDDEN over a lookup set (it
+  only re-queries the English-rendering search) — it was showing but inert (a "Hebrew" tab left Greek
+  results on screen). `80-lexicon.jsx` `matchBands`/`renderMatchRow`/`showLookup`; `.glmatch-div` CSS.
+  **PARKED — do NOT build: root/family search** (surface θεός, ἄθεος, φιλόθεος together by the theo- root).
+  Blocker: `lexicon` has NO structured stem/root column — only `derivation` (free-text prose). Substring
+  fakes it and leaks (euthéōs is the proof). Needs a real root field first.
 - **English-word finder = NUMBER-FOLDED (2026-07-01).** `/api/lexicon/english` matches a query against
   attested renderings via a precomputed `*_norm` column (`words.english_head_norm` / `kjv_words`+`bsb_words`
   `word_norm`) instead of the raw word, so singular↔plural reach each other (a "magistrate" search now finds
