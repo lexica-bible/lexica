@@ -45,12 +45,13 @@ index, and News right-rail all shipped on it 2026-07-01. Full record: memory `pr
   model). Until then the Seams list shows but the type badges + Different-lead filter are blank.
 - **Ask-corpus POLISH pass** (rail got a big build-out 2026-07-01/02 — per-answer selection, Key passages
   moved into the rail, ONE merged Words-in-scope list, bottom-pinned composer, contested badge via the
-  served set; memory `project_three_zone_shell`). STILL OPEN: the occurrence card's target word = the
-  answer's PRIMARY key word (wrong-ish for a broad multi-word answer — should be the exact word in THAT
-  verse); recreate the CSS parity gate with a WIDENED prop set (width, max-width, flex-basis, overflow-x/y
-  — the old gate missed the News-width + scrollbar bugs); re-check spacing / any stray divider after the
-  reshape. POSSIBLE polish: snippet clamp can hide the match (takes the first line, not a window centered
-  on the highlighted word) — only if it proves common. code: static/src/52-ask-corpus.jsx, 50-corpus-results.jsx, styles.css
+  served set; memory `project_three_zone_shell`). DONE 2026-07-02: empty-state hero raised + de-spinnered,
+  single Inspect divider, rail dedupe/date-group/cap-10/confirm-Clear-all (display-only). STILL OPEN: the
+  occurrence card's target word = the answer's PRIMARY key word (wrong-ish for a broad multi-word answer —
+  should be the exact word in THAT verse); recreate the CSS parity gate with a WIDENED prop set (width,
+  max-width, flex-basis, overflow-x/y — the old gate missed the News-width + scrollbar bugs). POSSIBLE
+  polish: snippet clamp can hide the match (takes the first line, not a window centered on the highlighted
+  word) — only if it proves common. code: static/src/52-ask-corpus.jsx, 50-corpus-results.jsx, styles.css
 - **Dead seam CSS sweep** — after the uniform-shell rewrite, `.seam-row`/`.seam-inspect`/`.seam-insp-*`/
   `.seam-list` are unused (rows reuse `study-row`, list in the shared rail). Harmless, sweep when
   convenient. code: static/styles.css
