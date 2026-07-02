@@ -29,8 +29,8 @@ should look like they were built by whoever built Library. (Full record: `docs/d
    hover instead. Default to the quietest version that works; ornament must
    argue its way in. **Quiet is not formless** — a list of choices must still read
    as discrete items at rest (spacing, markers, link color), not merge into prose.
-6. **One radius.** All rounded rectangles use the shared `--radius` token (4px, soft-square —
-   keeps the toolbar's character; never 0-sharp, never lozenge). Functional exceptions only: `50%` circles, `0`.
+6. **One radius.** All rounded rectangles use the shared `--radius` token (6px, soft-square —
+   exactly the old Library toolbar control rounding; never 0-sharp, never lozenge). Functional exceptions only: `50%` circles, `0`.
 7. **Toggles — never box + underline together.** Text segments (All/OT/NT, ABP/KJV) →
    underline-under-active, no box (`.seg--line`). Icon toggles (Chip/Prose) → boxed active.
 
