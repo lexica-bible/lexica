@@ -78,7 +78,7 @@ function _windowCard(c, since, until, minScore, thread, labels) {
   }
   return {
     ...c,
-    title: face.title, url: face.url, why: face.why, summary: face.summary || "",
+    title: face.title, url: face.url, resolved_url: face.resolved || "", why: face.why, summary: face.summary || "",
     thread: face.t, thread_label: labels[face.t] || face.t || "?",
     score, peak_date: _peakDay(mem),
     published: dates.length ? dates[dates.length - 1] : (c.published || ""),
@@ -145,6 +145,14 @@ function cleanDescription(title, summary) {
 function _faceSource(s) {
   const face = (s.members || []).find(m => m.url === s.url) || {};
   return face.src || ((s.sources || [])[0] || {}).source || "";
+}
+
+// The link a card/article opens on click: the REAL decoded article when known (resolved_url,
+// same field copy reads), else the stored `url` — which is a Google News wrapper for the
+// not-yet-resolved faces and still lands the reader on the article via Google's redirect.
+// So the click is always direct-when-known, never dead. Matches copy's face-URL resolution.
+function _faceLink(s) {
+  return s.resolved_url || s.url || "";
 }
 
 // The values every format reads, resolved from ONE article per card (the FACE — the headline
@@ -261,7 +269,7 @@ function NewsStory({ story, view, onMark, readOnly, since, until, onSelect, sele
       <div className={"news-score news-score-" + tier}>{story.score}</div>
       <div className="news-body">
         <div className="news-thread">{story.thread_label}</div>
-        <a className="news-title" href={story.url || top.url || "#"} target="_blank" rel="noopener noreferrer"
+        <a className="news-title" href={_faceLink(story) || top.url || "#"} target="_blank" rel="noopener noreferrer"
            onClick={(e) => e.stopPropagation()}>
           {_stripOutlet(story.title)}
         </a>
@@ -392,7 +400,7 @@ function NewsWhy({ story, onBack }) {
           <div className={"news-score news-score-" + tier}>{story.score}</div>
           <div className="news-why-thread">{story.thread_label}</div>
         </div>
-        <a className="news-why-title" href={story.url || "#"} target="_blank" rel="noopener noreferrer">
+        <a className="news-why-title" href={_faceLink(story) || "#"} target="_blank" rel="noopener noreferrer">
           {_stripOutlet(story.title)}
         </a>
 
@@ -415,7 +423,7 @@ function NewsWhy({ story, onBack }) {
             </div>
             {arts.map((m, i) => (
               <div key={i} className="news-why-art">
-                <a className="news-why-artt" href={m.url || "#"} target="_blank" rel="noopener noreferrer"
+                <a className="news-why-artt" href={m.resolved || m.url || "#"} target="_blank" rel="noopener noreferrer"
                    onClick={(e) => e.stopPropagation()}>
                   {_stripOutlet(m.title)}
                 </a>

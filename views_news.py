@@ -334,6 +334,9 @@ def _serialize(cluster):
         "ids": [a["id"] for a in cluster["arts"]],
         "title": face["title"],
         "url": face["url"],
+        # real article link when known (decoded/cached), else "" — the click prefers it over the
+        # wrapper `url`, matching copy. Guarded so it's deploy-safe before the column exists.
+        "resolved_url": (face["resolved_url"] if "resolved_url" in face.keys() else None) or "",
         "summary": face["summary"] or "",
         "score": peak,
         "thread": face["ai_thread"],
@@ -461,7 +464,7 @@ def _corpus_sig(conn):
     return (r["n"], r["mx"])
 
 
-def _all_cards(conn, has_event, has_newflag):
+def _all_cards(conn, has_event, has_newflag, has_resolved=False):
     """Every story card, clustered once, status-independent (cached per corpus sig). Each
     card carries a `members` list (per-article score/thread/new-flag + DATE and the article's
     own face fields) so the browser can recompute the whole card over its IN-WINDOW members
@@ -473,6 +476,7 @@ def _all_cards(conn, has_event, has_newflag):
         return _ALL_CACHE["cards"]
     sel = ("SELECT i.id, i.url, i.title, i.source, i.published, i.score, "
            "i.summary, i.ai_thread, i.ai_why, i.query, 'new' AS status"
+           + (", i.resolved_url" if has_resolved else "")
            + (", i.event" if has_event else "")
            + (", i.ai_new_flag" if has_newflag else "") +
            " FROM items i WHERE i.score IS NOT NULL "
@@ -491,6 +495,7 @@ def _all_cards(conn, has_event, has_newflag):
                             "nf": (a["ai_new_flag"] if has_newflag else 0),
                             "d": (a["published"] or "")[:10],
                             "title": a["title"], "url": a["url"],
+                            "resolved": (a["resolved_url"] if has_resolved else "") or "",
                             "summary": a["summary"] or "",
                             "why": a["ai_why"] or "", "src": a["source"] or "?",
                             "via": ("RSS" if (a["query"] or "").startswith("rss:") else "Google News")}
@@ -517,7 +522,7 @@ def all_news():
     try:
         _ensure_reviews(conn)
         cols = [c[1] for c in conn.execute("PRAGMA table_info(items)")]
-        cards = _all_cards(conn, "event" in cols, "ai_new_flag" in cols)
+        cards = _all_cards(conn, "event" in cols, "ai_new_flag" in cols, "resolved_url" in cols)
         smap = {r["item_id"]: r["status"] for r in
                 conn.execute("SELECT item_id, status FROM reviews WHERE reviewer = ?", (rid,))}
         out = []
