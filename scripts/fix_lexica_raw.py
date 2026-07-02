@@ -44,7 +44,12 @@ def main():
     if sid[:1] not in ("G", "H"):
         sid = "G" + sid
 
-    conn = sqlite3.connect(args.db)
+    # Read-only unless we're actually writing the row (--apply); a dry-run / --show-raw must never
+    # be able to touch the live file (audit C3, 2026-07-01 — same invariant as build_lexica_def.py).
+    if args.apply:
+        conn = sqlite3.connect(args.db)
+    else:
+        conn = sqlite3.connect(f"file:{args.db}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
     conn.create_function("strip_accents", 1, B.strip_accents)
 

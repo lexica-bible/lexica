@@ -48,6 +48,10 @@ SPLIT_VER    = "split3"              # which split_definition() wrote a row (sto
                                      # split3: sense headers parsed bold OR plain-numbered (was bold-only;
                                      # a plain-numbered draw produced an empty glance -> validate refused).
 
+OCC_MIN = 2   # verse-grounded entries need a real distribution to characterize a range; a hapax
+              # (1×) has none, so it's left to the LSJ card. No CLI bypass — building one means
+              # editing this constant on purpose (audit A1, 2026-07-01).
+
 # ── Option B — LXX provenance flag. A Greek card's OT citations are all Septuagint (ABP's OT IS
 # the LXX), so a sense grounded heavily in OT verses is resting on translation-Greek, not native
 # Koine. We flag that with a subordinate "rests on Septuagint usage" note so a reader doesn't read
@@ -762,8 +766,13 @@ def main():
     targets = [args.word.upper()] if args.word else list(PILOT)
     targets = [("G" + t if t[:1] not in ("G", "H") else t) for t in targets]
 
-    # read-write (we create + write ONLY lexica_def); the evidence reads are on the same handle
-    conn = sqlite3.connect(args.db)
+    # Live db handle. On --apply we create + write ONLY lexica_def, so it's read-write; otherwise
+    # (--dry-run, or --resplit without --apply) we open READ-ONLY so a dry run can never touch the
+    # live file (audit C3, 2026-07-01). The evidence reads run on the same handle either way.
+    if args.apply:
+        conn = sqlite3.connect(args.db)
+    else:
+        conn = sqlite3.connect(f"file:{args.db}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
     conn.create_function("strip_accents", 1, strip_accents)
     if args.all:
@@ -807,6 +816,11 @@ def main():
             occs = occurrences(conn, pred, params)
             if not occs:
                 print(f"  no occurrences for {sid} — skip.")
+                continue
+            if len(occs) < OCC_MIN:
+                print(f"  ✗ {sid} occurs {len(occs)}× — below the occ≥{OCC_MIN} cutoff for a "
+                      f"verse-grounded entry. A single occurrence can't show a range; the word is "
+                      f"left to the LSJ card. (No bypass flag — edit OCC_MIN to build one deliberately.)")
                 continue
             sample = select_spread(occs, args.budget)
             ctx = fetch_context(conn, sample, has_surface)
