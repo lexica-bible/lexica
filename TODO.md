@@ -109,6 +109,13 @@ YouVersion, which aren't the target). Honest gaps:
 
 ## Word cards / lexicon — open items
 
+- **Root / family word search — PARKED (needs a real stem field first).** Word study should be able to
+  surface a whole family (θεός, ἄθεος, φιλόθεος, θεοσέβεια) by the theo- ROOT. Blocker: `lexicon` has no
+  structured stem/root column — only `derivation` (free-text prose). Substring on translit fakes it and
+  leaks (euthéōs/βαθέως match "theos" on a letter-accident — the exact reason the 2026-07-01 translit
+  lookup was split into labeled Exact/Contains bands). Don't build on substring; build a real root field
+  first. Record: memory `project_lexicon_search_overmatch`.
+
 - **Structural / function-word cards — build inventory COMPLETE + LIVE** (εἰμί + prepositions + article +
   conjunctions + particles/negatives + the referent-resolution batch + the ἀνὰ μέσον idiom). Full record +
   the locked build rules: memory `project_structural_deictic_cards`. OPEN: live-case HIGHLIGHT for
