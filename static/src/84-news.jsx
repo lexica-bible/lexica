@@ -106,6 +106,30 @@ function _stripOutlet(title) {
   return (title || "").replace(/\s+[-–—]\s+[^-–—]+$/, "").trim() || (title || "");
 }
 
+// Clean a LOCAL copy of an article's RSS summary for the "Title + description + link" copy
+// format ONLY — never mutates the stored summary. RSS summaries are unreliable: many feeds
+// echo the headline (sometimes + the source name), and some append boilerplate ("The post
+// <title> first appeared on <source>."). Strip those tails, then drop the line entirely when
+// what's left is just the title again.
+function cleanDescription(title, summary) {
+  if (!summary) return "";
+  let s = summary
+    .replace(/\s*The post .*? first appeared on .*?\.?\s*$/i, "")
+    .replace(/\s*This (post|article|entry) (first )?appeared on .*?\.?\s*$/i, "")
+    .trim();
+  if (!s) return "";
+  const norm = (x) => x.toLowerCase().normalize("NFKC")
+    .replace(/[^\p{L}\p{N}\s]/gu, "")   // drop punctuation, keep Unicode letters (Cyrillic/Greek)
+    .replace(/\s+/g, " ").trim();
+  const nt = norm(title), nd = norm(s);
+  if (nd === nt) return "";                              // exact echo
+  if (nt && nd.startsWith(nt)) {                         // title + a short source-name echo
+    const tail = nd.slice(nt.length).trim();
+    if (tail.length <= 60) return "";
+  }
+  return s;
+}
+
 // The card date shows the PEAK day only (rank + window both key on it). A single-date
 // event already collapses to that one date, so this is just "{peak}" — the old
 // "· latest Y" half is dropped (it added a second date that rarely earned the room).
@@ -531,7 +555,8 @@ function NewsView({ isMobile }) {
     const line = (it, url) =>
       fmt === "link" ? url
       : fmt === "titlelink" ? [it.title, url].filter(Boolean).join("\n")
-      : [it.title, it.summary, url].filter(Boolean).join("\n");   // title + description + link
+      // title + description + link — clean a local copy of the summary; a blank one drops the line
+      : [it.title, cleanDescription(it.title, it.summary), url].filter(Boolean).join("\n");
     const write = (map) => {
       // prefer a resolved clean URL; fall back to the wrapper on any miss
       const lines = items.map(it => line(it, (map && map[it.url]) || it.url));

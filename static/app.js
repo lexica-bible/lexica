@@ -1890,7 +1890,15 @@ const face=mem.reduce((b,m)=>m.s>b.s||m.s===b.s&&(m.d||"")>(b.d||"")?m:b,mem[0])
 function _stale(peak){const d=(peak||"").slice(0,10);if(!d)return 0;const pd=Date.parse(d+"T00:00:00Z");if(isNaN(pd))return 0;const t=new Date();const today=Date.UTC(t.getUTCFullYear(),t.getUTCMonth(),t.getUTCDate());const age=Math.round((today-pd)/86400000);return Math.min(2.0,Math.max(0,(age-2)*0.1));}function _scoreTier(score){return score>=8?"hi":score>=6?"mid":"lo";}// Drop a trailing " - Outlet" / " — Outlet" suffix (the source already shows in the
 // peak/headline rows below, so the panel header needn't repeat it). Mirrors the
 // grouping's _sig_tokens strip. Only peels a single trailing segment.
-function _stripOutlet(title){return(title||"").replace(/\s+[-–—]\s+[^-–—]+$/,"").trim()||title||"";}// The card date shows the PEAK day only (rank + window both key on it). A single-date
+function _stripOutlet(title){return(title||"").replace(/\s+[-–—]\s+[^-–—]+$/,"").trim()||title||"";}// Clean a LOCAL copy of an article's RSS summary for the "Title + description + link" copy
+// format ONLY — never mutates the stored summary. RSS summaries are unreliable: many feeds
+// echo the headline (sometimes + the source name), and some append boilerplate ("The post
+// <title> first appeared on <source>."). Strip those tails, then drop the line entirely when
+// what's left is just the title again.
+function cleanDescription(title,summary){if(!summary)return"";let s=summary.replace(/\s*The post .*? first appeared on .*?\.?\s*$/i,"").replace(/\s*This (post|article|entry) (first )?appeared on .*?\.?\s*$/i,"").trim();if(!s)return"";const norm=x=>x.toLowerCase().normalize("NFKC").replace(/[^\p{L}\p{N}\s]/gu,"")// drop punctuation, keep Unicode letters (Cyrillic/Greek)
+.replace(/\s+/g," ").trim();const nt=norm(title),nd=norm(s);if(nd===nt)return"";// exact echo
+if(nt&&nd.startsWith(nt)){// title + a short source-name echo
+const tail=nd.slice(nt.length).trim();if(tail.length<=60)return"";}return s;}// The card date shows the PEAK day only (rank + window both key on it). A single-date
 // event already collapses to that one date, so this is just "{peak}" — the old
 // "· latest Y" half is dropped (it added a second date that rarely earned the room).
 function _dateRange(story){const peak=(story.peak_date||"").slice(0,10);const latest=(story.published||"").slice(0,10);return peak||latest||"—";}// Collapse member articles to ONE row per outlet, keeping each outlet's NEWEST article (its
@@ -1979,8 +1987,8 @@ const flashCopied=n=>{setCopiedN(n);if(copyTimer.current)clearTimeout(copyTimer.
 // (s.title / s.summary / s.url — the headline shown on the card, so title + link agree;
 // sources[0] was the newest-dated row, a different article). A blank description drops its
 // line, no orphan blank. Google News wrapper URLs are resolved to real links first.
-const doCopy=fmt=>{setCopyOpen(false);if(copying)return;const items=(stories||[]).map(s=>({title:s.title||"",summary:s.summary||"",url:s.url||""})).filter(it=>it.url);if(!items.length)return;const line=(it,url)=>fmt==="link"?url:fmt==="titlelink"?[it.title,url].filter(Boolean).join("\n"):[it.title,it.summary,url].filter(Boolean).join("\n");// title + description + link
-const write=map=>{// prefer a resolved clean URL; fall back to the wrapper on any miss
+const doCopy=fmt=>{setCopyOpen(false);if(copying)return;const items=(stories||[]).map(s=>({title:s.title||"",summary:s.summary||"",url:s.url||""})).filter(it=>it.url);if(!items.length)return;const line=(it,url)=>fmt==="link"?url:fmt==="titlelink"?[it.title,url].filter(Boolean).join("\n")// title + description + link — clean a local copy of the summary; a blank one drops the line
+:[it.title,cleanDescription(it.title,it.summary),url].filter(Boolean).join("\n");const write=map=>{// prefer a resolved clean URL; fall back to the wrapper on any miss
 const lines=items.map(it=>line(it,map&&map[it.url]||it.url));navigator.clipboard.writeText(lines.join("\n\n")).then(()=>flashCopied(lines.length),()=>{setFlash("Copy failed");setTimeout(()=>setFlash(""),2000);});};// only the Google News wrappers need a network round-trip; direct URLs don't
 const wrappers=[...new Set(items.map(it=>it.url).filter(u=>u.includes("news.google.com/rss/articles/")))];if(!wrappers.length){write(null);return;}setCopying(true);api.newsResolve(wrappers).then(res=>{setCopying(false);write(res&&res.ok?res.urls:null);}).catch(()=>{setCopying(false);write(null);});// fail-soft: raw wrappers
 };const canReview=!!(meta&&meta.can_write);const canRead=!!(meta&&(meta.owner||meta.reader));if(!meta)return/*#__PURE__*/React.createElement("div",{className:"news-view"},/*#__PURE__*/React.createElement("div",{className:"news-empty"},"Loading\u2026"));if(!canRead)return/*#__PURE__*/React.createElement("div",{className:"news-view"},/*#__PURE__*/React.createElement("div",{className:"news-empty"},"Not available."));if(!meta.available)return/*#__PURE__*/React.createElement("div",{className:"news-view"},/*#__PURE__*/React.createElement("h1",{className:"news-h1"},"News watch"),/*#__PURE__*/React.createElement("div",{className:"news-empty"},"No ",/*#__PURE__*/React.createElement("code",null,"news.db")," yet. Run the gatherer + scorer on the server first."));const scoreOpts=[["","All"],["5","5+"],["6","6+"],["7","7+"],["8","8+"],["9","9+"]];// ---- shared bits used by both layouts ----

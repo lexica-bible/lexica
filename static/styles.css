@@ -5311,7 +5311,10 @@ button.study-verse-ref { border: none; }
 .news-list { display: flex; flex-direction: column; }
 /* .news-story = a .listrow. News is the densest triage surface (400+ items), so it keeps
    its own GENEROUS row spacing + a STRONGER hover wash than the base for scannability. */
-.news-story { display: flex; gap: 14px; padding: 15px 16px; }
+/* Center both columns so, when the Keep/Dismiss button column is taller than the 3-line text
+   column, the slack splits top+bottom instead of pooling under the meta line. Padding is
+   symmetric (15px) and there's no min-height, so row height is content-driven. */
+.news-story { display: flex; align-items: center; gap: 14px; padding: 15px 16px; }
 .news-score { flex: 0 0 auto; width: 34px; height: 34px; border-radius: var(--radius); display: grid;
   place-items: center; font-weight: 700; font-size: 15px; }
 .news-score-hi { background: var(--accent); color: var(--paper); }
@@ -5341,7 +5344,10 @@ button.study-verse-ref { border: none; }
 .news-src { display: inline; color: var(--ink-2); text-decoration: none; cursor: pointer; }
 .news-src:hover { color: var(--accent); text-decoration: underline; }
 .news-src-date { color: var(--ink-4); margin-left: 4px; cursor: default; }
-.news-actions { flex: 0 0 auto; display: flex; flex-direction: column; gap: 6px; align-self: flex-start; }
+.news-actions { flex: 0 0 auto; display: flex; flex-direction: column; gap: 5px; }
+/* Trimmer vertical padding on the card's Keep/Dismiss (scoped — the bar buttons keep theirs)
+   so the button column height stays close to the text column. Still comfortably tappable. */
+.news-actions .news-btn { padding: 4px 12px; }
 .news-btn { font: inherit; font-size: 12.5px; padding: 5px 12px; border: 1px solid var(--rule-2);
   border-radius: var(--radius); background: var(--ctl-bg); color: var(--ink-2); cursor: pointer; white-space: nowrap; }
 .news-btn:hover { border-color: var(--accent); color: var(--accent); }
