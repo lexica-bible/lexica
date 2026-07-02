@@ -4520,6 +4520,17 @@ button.study-verse-ref { border: none; }
 .ac-prov-contested { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;
   color: var(--ai); background: var(--ai-soft); padding: 2px 6px; border-radius: 4px;
   border: 1px solid color-mix(in oklab, var(--ai) 22%, transparent); }
+/* Merged word list (answer scope + lexical family) — reuses the cpanel row grid, with room
+   for the Strong's number + contested badge (word cell wraps), and family-only rows muted so
+   they don't read as words the answer used. */
+.ac-prov-h-sub { font-weight: 400; text-transform: none; letter-spacing: 0; color: var(--ink-4); }
+.ac-prov-wordlist .cpanel-row { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) 48px 40px; gap: 8px; align-items: start; }
+.ac-prov-wordlist .cpanel-word { flex-wrap: wrap; gap: 4px 7px; padding-top: 1px; }
+.ac-prov-wordlist .cpanel-s { font-family: var(--f-mono); font-size: 10px; color: var(--ink-4); }
+.ac-prov-wordlist .cpanel-gloss { padding-top: 2px; }
+.ac-prov-wordlist .cpanel-bar, .ac-prov-wordlist .cpanel-n { margin-top: 5px; }
+/* family-only row: the answer didn't use this word — mute the headword so it can't read as evidence */
+.ac-prov-wordlist .cpanel-row.fam .cpanel-word { opacity: 0.5; }
 /* Frequency panel: collapsed + subordinate under the provenance (never equal weight). */
 .ac-prov-freq { border-top: 1px dashed var(--rule); padding-top: 12px; }
 .ac-prov-freq > summary { font-size: 11px; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 600;

@@ -167,6 +167,54 @@ function CorpusPanel({ panel, onStrongs }) {
 // (results + grounding land at the tail); the bare frequency panel fills the rail while
 // the synthesis is still writing.
 const _PROV_PASSAGE_CAP = 6;   // show this many key passages before the "show all" expander
+
+// Merge the answer-scope words (key_strongs — carry the contested flag + are what the answer
+// USED) with the lexical FAMILY (the panel — each head + its gloss-confirmed cognates, with
+// corpus counts/bars). One list, grouped by language. A row is `inScope` when the answer used
+// that exact word; family-only rows (a cognate the answer didn't pick, e.g. πύρωσις under πῦρ)
+// are kept but marked so they don't read as evidence. Answer-scope words the panel didn't
+// include (e.g. Hebrew supplements on a Greek answer) are appended so none are dropped.
+function _acWordGroups(words, panel, contestedSet) {
+  const ks = {};
+  (words || []).forEach(w => { if (w && w.strongs) ks[w.strongs] = w; });
+  const inScope = new Set(Object.keys(ks));
+  const isContested = (s) => (contestedSet && contestedSet.has(s)) || !!(ks[s] && ks[s].contested);
+  const order = [], byLang = {};
+  const ensure = (lang) => {
+    if (!byLang[lang]) {
+      byLang[lang] = { lang, label: lang === "H" ? "Hebrew (OT)" : "Greek (NT / Greek OT)",
+                       max: 0, set_aside: 0, rows: [], seen: new Set() };
+      order.push(byLang[lang]);
+    }
+    return byLang[lang];
+  };
+  // 1) family rows from the panel — counts, glosses, bars, the set-aside boundary.
+  ((panel && panel.groups) || []).forEach(pg => {
+    const g = ensure(pg.lang);
+    g.label = pg.label || g.label;
+    g.set_aside += pg.set_aside || 0;
+    g.max = Math.max(g.max, pg.max || 0);
+    (pg.family || []).forEach(r => {
+      if (g.seen.has(r.strongs)) return;
+      g.seen.add(r.strongs);
+      g.rows.push({ strongs: r.strongs, lemma: r.lemma, translit: r.translit, gloss: r.gloss || "",
+                    count: r.count, core: !!r.core, hasCount: true,
+                    inScope: inScope.has(r.strongs), contested: isContested(r.strongs) });
+    });
+  });
+  // 2) answer-scope words the panel didn't include — keep them (never drop scope words).
+  (words || []).forEach(w => {
+    if (!w || !w.strongs) return;
+    const lang = /^H/i.test(w.strongs) ? "H" : "G";
+    const g = ensure(lang);
+    if (g.seen.has(w.strongs)) return;
+    g.seen.add(w.strongs);
+    g.rows.push({ strongs: w.strongs, lemma: w.lemma, translit: w.translit, gloss: "",
+                  count: null, core: false, hasCount: false, inScope: true, contested: isContested(w.strongs) });
+  });
+  return order;
+}
+
 function ProvenancePanel({ answer, panel, onOccInspect, onStrongs, contestedSet }) {
   const results = answer.results || [];
   const cited = _acCited(answer.keyStrongs);
@@ -209,6 +257,11 @@ function ProvenancePanel({ answer, panel, onOccInspect, onStrongs, contestedSet 
     if (window.getSelection && String(window.getSelection())) return;   // don't hijack text selection
     peek(e);
   };
+
+  // One merged word list: answer-scope words + the lexical family, grouped by language.
+  const wordGroups = _acWordGroups(words, panel, contestedSet);
+  const barW = (n, mx) => Math.max(4, Math.round((100 * n) / (mx || n || 1)));
+  const fmtN = (n) => (n != null ? n.toLocaleString() : "");
   return (
     <div className="ac-prov">
       {grounded ? (
@@ -261,34 +314,40 @@ function ProvenancePanel({ answer, panel, onOccInspect, onStrongs, contestedSet 
         </div>
       )}
 
-      {words.length > 0 && (
-        <div className="ac-prov-sec">
-          <div className="ac-prov-h">Words in scope</div>
-          <div className="ac-prov-words">
-            {words.map((w) => {
-              const heb = /^H/i.test(w.strongs || w.strongs_base || "");
-              // Badge a fork word from the payload flag OR the served contested set — the set
-              // covers reopened saved threads whose stored copy predates the server flag.
-              const isContested = w.contested || (contestedSet && contestedSet.has(w.strongs));
+      {wordGroups.length > 0 && (
+        <div className="ac-prov-sec ac-prov-wordlist">
+          <div className="ac-prov-h">Words in scope <span className="ac-prov-h-sub">· how often each occurs</span></div>
+          <div className="cpanel">
+            {wordGroups.map((g, gi) => {
+              const heb = g.lang === "H";
               return (
-                <button key={w.strongs} className="ac-prov-word" onClick={() => onStrongs && onStrongs(w.strongs)}
-                  title={"Study " + (w.translit || w.lemma) + " in Word study"}>
-                  <span className={"ac-prov-lemma" + (heb ? " heb" : "")} dir={heb ? "rtl" : undefined}>{w.lemma}</span>
-                  {w.translit && <span className="ac-prov-tr">{w.translit}</span>}
-                  <span className="ac-prov-s">{w.strongs}</span>
-                  {isContested && <span className="ac-prov-contested" title="This word's reading is contested — open it to see the fork">contested</span>}
-                </button>
+                <div className="cpanel-grp" key={gi}>
+                  {(gi === 0 || wordGroups[gi - 1].lang !== g.lang) && <div className="cpanel-grp-h">{g.label}</div>}
+                  {g.rows.map((r) => (
+                    <button key={r.strongs} className={"cpanel-row" + (r.core ? " core" : "") + (r.inScope ? "" : " fam")}
+                      onClick={() => onStrongs && onStrongs(r.strongs)}
+                      title={(r.inScope ? "Study " : "Family — study ") + (r.translit || r.lemma) + " in Word study"}>
+                      <span className="cpanel-word">
+                        <span className={"cpanel-lemma" + (heb ? " heb" : "")} dir={heb ? "rtl" : undefined}>{r.lemma}</span>
+                        {r.translit && <span className="cpanel-tr">{r.translit}</span>}
+                        <span className="cpanel-s">{r.strongs}</span>
+                        {r.contested && <span className="ac-prov-contested" title="This word's reading is contested — open it to see the fork">contested</span>}
+                      </span>
+                      <span className="cpanel-gloss">{r.gloss || (r.inScope ? "" : "—")}</span>
+                      <span className="cpanel-bar">{r.hasCount && <span style={{ width: barW(r.count, g.max) + "%" }}/>}</span>
+                      <span className="cpanel-n">{fmtN(r.count)}</span>
+                    </button>
+                  ))}
+                  {g.set_aside > 0 && (
+                    <div className="cpanel-aside">
+                      {g.set_aside} related form{g.set_aside > 1 ? "s" : ""} set aside — spelling matches, meaning unconfirmed
+                    </div>
+                  )}
+                </div>
               );
             })}
           </div>
         </div>
-      )}
-
-      {panel && panel.groups && panel.groups.length > 0 && (
-        <details className="ac-prov-freq">
-          <summary>Lexical shape — how often these words occur</summary>
-          <CorpusPanel panel={panel} onStrongs={onStrongs}/>
-        </details>
       )}
     </div>
   );
