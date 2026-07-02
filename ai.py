@@ -1488,6 +1488,16 @@ def ai_search():
             if cached is not None:
                 log.debug("ai_search cache hit: q=%r", q)
                 out = dict(cached)        # don't mutate the shared cached copy
+                # Rows cached before the `contested` flag was added to key_strongs (commit
+                # 042580f, cache ver NOT bumped) would serve fork words unmarked in the
+                # provenance rail. It's a pure lookup against the CONTESTED register — no
+                # model — so re-stamp it on read (fresh copies of the dicts, never mutating
+                # the shared cache) instead of paying to regenerate the whole answer.
+                if out.get("key_strongs"):
+                    out["key_strongs"] = [
+                        {**e, "contested": e.get("strongs", "") in contested_register.CONTESTED_BY_SID}
+                        for e in out["key_strongs"]
+                    ]
                 out["quota"] = ai_quota_status(role, uid)
                 return jsonify(out)
 
