@@ -336,8 +336,14 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   on senses grounded ≥80% OT (≥4 OT refs) — `sense_provenance()` derives it from the stored citations (book =
   OT/NT), NO model, recomputed on every build/`--resplit` (`--all` rolls it across the whole batch). Fires only
   on the real calques (ekklesia/aionios/charis/dikaioō/Christos), silent on both-testament words
-  (pneuma/theos/kyrios). Threshold set against a real census — `scripts/audit_lxx_provenance.py --preview`. Full
-  record: memory `project_lexica_dictionary`.
+  (pneuma/theos/kyrios). Threshold set against a real census — `scripts/audit_lxx_provenance.py --preview`.
+  **COVERAGE ENGINE (2026-07-02, `lexica_coverage.py` at repo root):** piece A = collocation pre-check
+  (token-level PMI, floor+threshold+0-in-draw, `PMI_MIN=4.0`; warn-only build hook) + piece B = a
+  `coverage_audit` field on every entry (tight collocations/renderings cited-or-not + per-sense thin/circular
+  via `contest_verses` in the register). Populated by `scripts/populate_coverage_audit.py` (narrow — splices
+  ONLY that key, never `--resplit`). Read-only audit `scripts/audit_lexica_coverage.py --coverage`. Piece C
+  (stratified sampling) DEFERRED. NOT wired to the card UI — stored data only. Full record: memory
+  `project_lexica_dictionary`.
 - **Structural / function-word card** — a NEW word-card entry TYPE (beside the Lexica dictionary + LSJ) for
   words whose meaning resolves OUTSIDE the lexeme (the copula, prepositions, …): instead of a sense list it
   states the word's grammatical FUNCTION + the construction relations it appears in (provenance tag GRAMMAR).
