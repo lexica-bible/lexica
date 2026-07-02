@@ -16,6 +16,8 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
+      - name: Install test dependencies
+        run: pip install flask
       - name: Run invariant tests
         run: |
           python tests/test_strongs_join.py
