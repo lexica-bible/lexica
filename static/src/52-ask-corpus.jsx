@@ -719,14 +719,10 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   // top STRIP (the shared Shell); mobile keeps its own hero/pinned placement until the mobile
   // shell migration (step 5). The inspect zone is the RightStack — an empty state for now;
   // step 3 fills it with the occurrence → fork → word drill.
+  // The left rail is threads-only: the recent-conversation list. New Thread moved to the
+  // center STRIP (it's a control) on desktop; mobile keeps its own new-search button.
   const railInner = (
     <>
-      <button className="ac-rail-new" onClick={newThread} disabled={!started}
-        title="Start a new conversation">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
-          strokeWidth="2" strokeLinecap="round"><path d="M12 5v14M5 12h14"/></svg>
-        New thread
-      </button>
       <div className="ac-rail-top"><span className="ac-rail-eyebrow"><Icon.Clock/> Recent conversations</span></div>
       {convos.length === 0
         ? <div className="ac-rail-empty">Your conversations are saved here — reopen one anytime.</div>
@@ -745,6 +741,17 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
       </svg>
       <span><b>Under construction</b> — answers can be rough or incomplete while this tab is being tuned.</span>
     </div>
+  );
+
+  // DESKTOP strip: a one-line construction note (left) + the New Thread control (right). The
+  // ask bar is NOT here anymore — it's centered on the landing, then pinned to the center bottom.
+  const stripNote = (
+    <span className="ac-strip-note">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+        <path d="M10.3 3.2 1.8 18a2 2 0 0 0 1.7 3h17a2 2 0 0 0 1.7-3L13.7 3.2a2 2 0 0 0-3.4 0Z"/><path d="M12 9v4M12 17h.01"/>
+      </svg>
+      <span><b>Under construction</b> — answers can be rough while this tab is tuned.</span>
+    </span>
   );
 
   const landingHead = (
@@ -848,8 +855,9 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
     );
   }
 
-  // ── DESKTOP: the shared three-zone Shell. Composer lives in the center TOP STRIP; the
-  // inspect strip is reserved now with an empty state (step 3 fills it via RightStack). ──
+  // ── DESKTOP: the shared three-zone Shell. Chat pattern — the ask bar is centered on the
+  // empty landing, then drops to a PINNED bar at the bottom of the center column once a thread
+  // exists (the thread scrolls above it). The top strip carries the note + New Thread only. ──
   return (
     <Shell
       isMobile={false}
@@ -858,12 +866,19 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
       rail={railInner}
       center={
         <>
-          <div className="ac-strip">{composerFor(started)}</div>
+          <div className="ac-strip">
+            {stripNote}
+            <button className="ac-strip-new" onClick={newThread} disabled={!started}
+              title="Start a new conversation">
+              <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                strokeWidth="2" strokeLinecap="round"><path d="M12 5v14M5 12h14"/></svg>
+              New thread
+            </button>
+          </div>
           <div className="ac-body">
-            {construction}
             {!started
-              ? <div className="ac-landing"><div className="ac-landing-in">{landingHead}{examplesRow}</div></div>
-              : threadBody}
+              ? <div className="ac-landing"><div className="ac-landing-in">{landingHead}{composerFor(false)}{examplesRow}</div></div>
+              : <>{threadBody}{composerFor(true)}</>}
           </div>
         </>
       }

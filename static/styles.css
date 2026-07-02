@@ -4428,22 +4428,26 @@ button.study-verse-ref { border: none; }
 .ac-rail-item.on { background: var(--paper); border-color: var(--rule); color: var(--ink); box-shadow: inset 2px 0 0 var(--accent); font-weight: 600; }
 .ac-rail-clear { flex: 0 0 auto; margin: 4px 16px 16px; align-self: flex-start; font-size: 12px; color: var(--ink-4); }
 .ac-rail-clear:hover { color: var(--ai); text-decoration: underline; }
-.ac-rail-new { flex: 0 0 auto; margin: 14px 14px 0; display: inline-flex; align-items: center; justify-content: center; gap: 7px; padding: 9px 12px; border: 1px solid var(--rule); border-radius: 8px; background: var(--ctl-bg); color: var(--ink-2); font-size: 13px; font-weight: 600; }
-.ac-rail-new:hover:not(:disabled) { border-color: var(--ai); color: var(--ai); }
-.ac-rail-new:disabled { opacity: 0.45; cursor: default; }
 
 /* CENTER */
 .ac-main { min-height: 0; display: flex; flex-direction: column; background: var(--bg); }
 
-/* DESKTOP shell frame (.ac-frame = the shared .zshell). The center is a top STRIP holding the
-   composer over a scrolling BODY (landing or thread). The composer's own hero/pinned chrome is
-   neutralised inside the strip so it reads as one top bar, matching News / Word study's ~59px. */
+/* DESKTOP shell frame (.ac-frame = the shared .zshell). Chat pattern: the ask bar is NOT in
+   the strip — it's centered on the landing, then pinned to the BODY bottom once a thread exists.
+   The strip is a minimal controls row: a one-line construction note + the New Thread button. */
 .ac-center { background: var(--bg); }
-.ac-strip { flex: 0 0 auto; box-sizing: border-box; padding: 9px 20px;
+.ac-strip { flex: 0 0 auto; box-sizing: border-box; min-height: 40px;
+  display: flex; align-items: center; gap: 12px; padding: 6px 20px;
   border-bottom: 1px solid var(--rule); background: color-mix(in oklab, var(--bg) 82%, var(--paper)); }
-.ac-strip .ac-composer.hero, .ac-strip .ac-composer.pinned { flex: none; padding: 0; margin: 0; max-width: none; border-top: 0; background: none; }
-.ac-strip .ac-field { max-width: 860px; margin: 0 auto; height: 42px; box-shadow: var(--shadow-sm); }
-.ac-strip .ac-quota { margin-top: 6px; }
+.ac-strip-note { flex: 1 1 auto; min-width: 0; display: flex; align-items: center; gap: 7px;
+  font-size: 12px; line-height: 1.3; color: var(--ink-3); overflow: hidden; text-wrap: nowrap; }
+.ac-strip-note svg { flex: 0 0 auto; color: var(--gold); }
+.ac-strip-note b { font-weight: 700; color: var(--ink-2); }
+.ac-strip-new { flex: 0 0 auto; display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px;
+  border: 1px solid var(--rule); border-radius: 8px; background: var(--ctl-bg); color: var(--ink-2);
+  font-size: 12.5px; font-weight: 600; }
+.ac-strip-new:hover:not(:disabled) { border-color: var(--ai); color: var(--ai); }
+.ac-strip-new:disabled { opacity: 0.45; cursor: default; }
 .ac-body { flex: 1; min-height: 0; display: flex; flex-direction: column; }
 
 /* Inspect rail (RightStack): idle = the frequency panel; a peeked chip replaces it with the
