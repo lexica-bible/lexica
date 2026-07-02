@@ -246,7 +246,7 @@ function ProvenancePanel({ answer, panel, onOccInspect, onStrongs }) {
 }
 
 // One answered (or in-flight) question.
-function AcTurn({ turn, onReadInContext, onLemma, onStrongs, onOccInspect }) {
+function AcTurn({ turn, onReadInContext, onLemma, onStrongs, onOccInspect, selected, onSelect }) {
   const cited = useMemo(() => _acCited(turn.keyStrongs), [turn.keyStrongs]);
   // Display-text toggle (ABP · BSB · KJV · HEB) for THIS answer's verse evidence. The
   // evidence is found by Strong's number, but the text shown can be the ABP (Greek
@@ -285,14 +285,26 @@ function AcTurn({ turn, onReadInContext, onLemma, onStrongs, onOccInspect }) {
   // A verse-ref CHIP in the synthesis PEEKS into the inspect rail (stays in corpus), carrying
   // this turn's word context. The KEY PASSAGES list below keeps its own jump-to-Library. On
   // mobile there's no rail yet, so a chip falls back to the jump-to-reader.
-  const peekVerse = (book, chapter, verse) => onOccInspect
-    ? onOccInspect({ book, chapter, verse,
+  const peekVerse = (book, chapter, verse) => {
+    if (onOccInspect) {
+      onSelect && onSelect();   // engaging this answer pins the rail to it too
+      onOccInspect({ book, chapter, verse,
         label: `${BOOK_LABELS[book] || book} ${chapter}:${verse}`,
-        textMode, cited, keyStrongs: turn.keyStrongs || [] })
-    : onReadInContext(book, chapter, verse);
+        textMode, cited, keyStrongs: turn.keyStrongs || [] });
+    } else onReadInContext(book, chapter, verse);
+  };
+
+  // Click anywhere on the answer to point the rail at THIS answer's provenance — but
+  // don't hijack a control (verse chip, toggle) or an in-progress text selection.
+  const blockSelect = (e) => {
+    if (!onSelect) return;
+    if (e.target.closest("button, a")) return;
+    if (window.getSelection && String(window.getSelection())) return;
+    onSelect();
+  };
 
   return (
-    <div className="ac-turn">
+    <div className={"ac-turn" + (selected ? " selected" : "")} onClick={blockSelect}>
       <div className="ac-ask"><span className="ac-ask-q">{turn.question}</span></div>
 
       {turn.loading ? (
@@ -352,6 +364,12 @@ function AcTurn({ turn, onReadInContext, onLemma, onStrongs, onOccInspect }) {
                 textMode={textMode}
               />
             </div>
+          )}
+          {onSelect && (
+            <button className={"ac-select-src" + (selected ? " on" : "")} onClick={onSelect}
+              title="Show what this answer rests on in the inspect panel">
+              {selected ? "✓ Sources shown in panel" : "Show this answer's sources ›"}
+            </button>
           )}
         </div>
       )}
@@ -491,6 +509,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   const threadRef = useRef(null);
   const rightCtl = useRightStack();   // inspect-panel push stack (occurrence → fork → word)
   const [selectedOcc, setSelectedOcc] = useState(null);   // the peeked occurrence (null = idle)
+  const [selIdx, setSelIdx] = useState(null);   // which answer the rail is pinned to (null = follow the newest)
   useNotesVersion();   // re-render when the store changes (e.g. a cross-device sync pulls convos in)
   const convos = NotesStore.corpusConvos();
   const busy = thread.some(t => t && (t.loading || t.streaming));   // a search is in flight (or streaming) — lock the composer
@@ -538,6 +557,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
       return;
     }
     setDraft("");
+    setSelIdx(null);   // a fresh question takes focus — rail follows the newest answer again
     if (isMobile) setRailOpen(false);
     // A question from the landing (empty thread) starts a NEW conversation; a
     // follow-up keeps the current one. The auto-save effect persists it by id.
@@ -588,6 +608,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
         onDone: (data) => {
           if (data.quota) setQuota(data.quota);     // refresh the "left today" counter
           setThread(t => t.map((x, i) => i === idx ? buildTurn(data) : x));
+          setSelIdx(null);   // the completed answer steals focus (new answer = new focus)
         },
         onError: (data) => setThread(t => t.map((x, i) => i === idx
           ? { question: q, error: data.error || "Something went wrong on that one." } : x)),
@@ -600,7 +621,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   // Start a clean conversation — clears the thread (back to the landing) but keeps
   // any Word-study scope and the saved-conversations rail. The current thread is
   // already saved by the effect above, so there's nothing to flush here.
-  const newThread = () => { setThread([]); setDraft(""); setCurrentId(null); if (isMobile) setRailOpen(false); };
+  const newThread = () => { setThread([]); setDraft(""); setCurrentId(null); setSelIdx(null); if (isMobile) setRailOpen(false); };
 
   // Reopen a saved conversation — restores its turns verbatim. NO model calls (the
   // whole point): the answers are already in hand, so nothing re-runs.
@@ -608,6 +629,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
     setThread(c.turns || []);
     setCurrentId(c.id);
     setDraft("");
+    setSelIdx(null);
     if (isMobile) setRailOpen(false);
   };
 
@@ -633,20 +655,26 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   // (another chip) resets the drill to the new occurrence; closing returns to the idle card.
   const onOccInspect = (occ) => { setSelectedOcc(occ); rightCtl.reset(); };
   const closeOcc = () => { setSelectedOcc(null); rightCtl.reset(); };
+  // Point the rail at a specific answer (click-to-select). Also drops any open drill so the
+  // rail returns to the idle provenance view for the chosen answer.
+  const selectTurn = (i) => { setSelIdx(i); setSelectedOcc(null); rightCtl.reset(); };
   // Idle rail = the latest answer's frequency panel (the result-shape summary). Never blank.
   const latestPanel = useMemo(() => {
     for (let i = thread.length - 1; i >= 0; i--) if (thread[i] && thread[i].panel) return thread[i].panel;
     return null;
   }, [thread]);
-  // The latest FINISHED answer — its provenance leads the idle rail. A loading/streaming
-  // turn has no results yet, so during the stream the rail falls back to the frequency panel.
-  const latestAnswer = useMemo(() => {
-    for (let i = thread.length - 1; i >= 0; i--) {
-      const t = thread[i];
-      if (t && t.results && !t.loading && !t.streaming && !t.error && !t.notice) return t;
-    }
-    return null;
+  const isFinishedAnswer = (t) => t && t.results && !t.loading && !t.streaming && !t.error && !t.notice;
+  // The latest FINISHED answer's index. A loading/streaming turn has no results yet, so during
+  // a stream this is the previous answer (or -1 for the very first search → frequency panel).
+  const latestAnswerIdx = useMemo(() => {
+    for (let i = thread.length - 1; i >= 0; i--) if (isFinishedAnswer(thread[i])) return i;
+    return -1;
   }, [thread]);
+  // Which answer the rail shows: a user-selected turn if it's a finished answer, else the
+  // latest (the default "follow the newest" behavior — every completed answer retains its own
+  // provenance in the thread, so selecting an older one just re-points, no re-fetch).
+  const selectedIdx = (selIdx != null && isFinishedAnswer(thread[selIdx])) ? selIdx : latestAnswerIdx;
+  const selectedAnswer = selectedIdx >= 0 ? thread[selectedIdx] : null;
   const started = thread.length > 0;
   const followCapped = thread.filter(t => t && t.question && !t.local).length > AC_MAX_FOLLOWUPS;
   const suggestions = acScopeSuggestions(scope);
@@ -713,7 +741,9 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
       <div className="ac-thread-col">
         {thread.map((turn, i) => (
           <AcTurn key={i} turn={turn} onReadInContext={onReadInContext} onLemma={onLemma}
-            onStrongs={onStrongs} onOccInspect={isMobile ? null : onOccInspect}/>
+            onStrongs={onStrongs} onOccInspect={isMobile ? null : onOccInspect}
+            selected={!isMobile && i === selectedIdx}
+            onSelect={isMobile ? null : () => selectTurn(i)}/>
         ))}
       </div>
     </div>
@@ -733,10 +763,10 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   // the bare frequency panel; before the first question, an empty prompt. Never blank.
   const inspectIdle = (
     <div className="ac-insp-idle">
-      <div className="ac-insp-band">{latestAnswer ? "What this answer rests on" : (latestPanel ? "How often these words occur" : "Inspect")}</div>
+      <div className="ac-insp-band">{selectedAnswer ? "What this answer rests on" : (latestPanel ? "How often these words occur" : "Inspect")}</div>
       <div className="ac-insp-scroll">
-        {latestAnswer
-          ? <ProvenancePanel answer={latestAnswer} panel={latestAnswer.panel} onOccInspect={onOccInspect} onStrongs={onStrongs}/>
+        {selectedAnswer
+          ? <ProvenancePanel answer={selectedAnswer} panel={selectedAnswer.panel} onOccInspect={onOccInspect} onStrongs={onStrongs}/>
           : latestPanel
             ? <CorpusPanel panel={latestPanel} onStrongs={onStrongs}/>
             : <ZoneEmpty icon={<Icon.Sparkle/>} title="Nothing selected yet"

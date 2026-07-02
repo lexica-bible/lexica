@@ -4610,6 +4610,15 @@ button.study-verse-ref { border: none; }
 .ac-thread-col { max-width: 720px; margin: 0 auto; padding: 30px 28px 40px; }
 .ac-turn { padding-bottom: 8px; margin-bottom: 28px; border-bottom: 1px solid var(--rule); }
 .ac-turn:last-child { border-bottom: 0; margin-bottom: 0; }
+/* click-to-select: the chosen answer's provenance shows in the inspect rail */
+.ac-turn.selected { border-left: 3px solid var(--ai); margin-left: -15px; padding-left: 12px;
+  border-radius: 3px; background: color-mix(in oklab, var(--ai) 5%, transparent); }
+/* discoverable affordance — points the rail at this answer's sources */
+.ac-select-src { display: inline-block; margin-top: 14px; font-size: 12px; font-weight: 600;
+  letter-spacing: 0.02em; color: var(--ai); border: 1px solid color-mix(in oklab, var(--ai) 26%, transparent);
+  background: var(--ai-soft); padding: 4px 10px; border-radius: 7px; }
+.ac-select-src:hover { border-color: var(--ai); }
+.ac-select-src.on { color: var(--ink-2); background: none; border-color: var(--rule); cursor: default; }
 .ac-ask { margin-bottom: 18px; }
 .ac-ask-q { font-family: var(--f-serif); font-size: 25px; font-weight: 600; line-height: 1.3; letter-spacing: -0.015em; color: var(--ink); text-wrap: pretty; }
 .ac-syn-tag {
