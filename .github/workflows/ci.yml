@@ -17,7 +17,7 @@ jobs:
         with:
           python-version: "3.12"
       - name: Install test dependencies
-        run: pip install flask
+        run: pip install flask anthropic python-dotenv flask-limiter
       - name: Run invariant tests
         run: |
           python tests/test_strongs_join.py
