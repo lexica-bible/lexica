@@ -546,6 +546,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   const [currentId, setCurrentId] = useState(null);   // the conversation being viewed/built (null = landing)
   const [quota, setQuota] = useState(null);   // {used, limit, remaining} | {unlimited} — daily AI cap, from the server
   const threadRef = useRef(null);
+  const justOpenedRef = useRef(false);   // suppress the save right after reopening a saved thread
   const rightCtl = useRightStack();   // inspect-panel push stack (occurrence → fork → word)
   const [selectedOcc, setSelectedOcc] = useState(null);   // the peeked occurrence (null = idle)
   const [selIdx, setSelIdx] = useState(null);   // which answer the rail is pinned to (null = follow the newest)
@@ -577,6 +578,10 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   // devices. One entry per thread keyed by currentId; loading turns are never stored.
   useEffect(() => {
     if (currentId == null) return;
+    // Just REOPENING a saved thread mustn't re-stamp it (that would jump it to the top of the
+    // list for no reason) — skip the one save that fires right after openConvo. Asking a
+    // follow-up changes the thread again, so that save runs normally and bumps it to the top.
+    if (justOpenedRef.current) { justOpenedRef.current = false; return; }
     // A streaming turn is incomplete — don't save it until the `done` payload lands.
     const answered = thread.filter(t => t && t.question && !t.loading && !t.streaming);
     if (!answered.length) return;
@@ -674,6 +679,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   // Reopen a saved conversation — restores its turns verbatim. NO model calls (the
   // whole point): the answers are already in hand, so nothing re-runs.
   const openConvo = (c) => {
+    justOpenedRef.current = true;   // don't let the auto-save bump this to the top on open
     setThread(c.turns || []);
     setCurrentId(c.id);
     setDraft("");
