@@ -82,6 +82,20 @@ def lexica_seams():
     return jsonify({"seams": seams})
 
 
+@bp.route("/api/lexica/contested")
+def lexica_contested():
+    """The set of contested (fork) Strong's numbers — the ONE source of truth, straight from
+    contested_register.py, so the client can badge a fork word WITHOUT keeping its own copy.
+    Includes aliases (charis is G5484 with G5485 aliased), so the client just checks plain
+    membership on the number as it appears in the payload — alias handling stays server-side.
+    Fetched once on load; long cache (the register changes only when a fork is added, which is
+    a code deploy that changes the bundle URL anyway). Public — a public per-word card already
+    exposes the same fact."""
+    resp = jsonify({"strongs": sorted(CONTESTED_BY_SID.keys())})
+    resp.headers["Cache-Control"] = "public, max-age=86400"
+    return resp
+
+
 @bp.route("/api/lexica/<strongs>")
 def lexica_def(strongs):
     """The Lexica entry for a Strong's number — first a hand-authored STRUCTURAL/function card

@@ -167,7 +167,7 @@ function CorpusPanel({ panel, onStrongs }) {
 // (results + grounding land at the tail); the bare frequency panel fills the rail while
 // the synthesis is still writing.
 const _PROV_PASSAGE_CAP = 6;   // show this many key passages before the "show all" expander
-function ProvenancePanel({ answer, panel, onOccInspect, onStrongs }) {
+function ProvenancePanel({ answer, panel, onOccInspect, onStrongs, contestedSet }) {
   const results = answer.results || [];
   const cited = _acCited(answer.keyStrongs);
   const grounded = answer.grounded !== false;
@@ -267,13 +267,16 @@ function ProvenancePanel({ answer, panel, onOccInspect, onStrongs }) {
           <div className="ac-prov-words">
             {words.map((w) => {
               const heb = /^H/i.test(w.strongs || w.strongs_base || "");
+              // Badge a fork word from the payload flag OR the served contested set — the set
+              // covers reopened saved threads whose stored copy predates the server flag.
+              const isContested = w.contested || (contestedSet && contestedSet.has(w.strongs));
               return (
                 <button key={w.strongs} className="ac-prov-word" onClick={() => onStrongs && onStrongs(w.strongs)}
                   title={"Study " + (w.translit || w.lemma) + " in Word study"}>
                   <span className={"ac-prov-lemma" + (heb ? " heb" : "")} dir={heb ? "rtl" : undefined}>{w.lemma}</span>
                   {w.translit && <span className="ac-prov-tr">{w.translit}</span>}
                   <span className="ac-prov-s">{w.strongs}</span>
-                  {w.contested && <span className="ac-prov-contested" title="This word's reading is contested — open it to see the fork">contested</span>}
+                  {isContested && <span className="ac-prov-contested" title="This word's reading is contested — open it to see the fork">contested</span>}
                 </button>
               );
             })}
@@ -546,6 +549,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   const rightCtl = useRightStack();   // inspect-panel push stack (occurrence → fork → word)
   const [selectedOcc, setSelectedOcc] = useState(null);   // the peeked occurrence (null = idle)
   const [selIdx, setSelIdx] = useState(null);   // which answer the rail is pinned to (null = follow the newest)
+  const [contestedSet, setContestedSet] = useState(null);   // fork Strong's set from the server (one source of truth)
   useNotesVersion();   // re-render when the store changes (e.g. a cross-device sync pulls convos in)
   const convos = NotesStore.corpusConvos();
   const busy = thread.some(t => t && (t.loading || t.streaming));   // a search is in flight (or streaming) — lock the composer
@@ -557,6 +561,14 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
       .then(r => (r.ok ? r.json() : null))
       .then(d => { if (live && d && d.ai_quota) setQuota(d.ai_quota); })
       .catch(() => {});
+    return () => { live = false; };
+  }, []);
+
+  // Load the contested (fork) Strong's set once — badges fork words even in reopened saved
+  // threads whose stored copy predates the server-side flag (the register is the one source).
+  useEffect(() => {
+    let live = true;
+    api.contestedStrongs().then(s => { if (live) setContestedSet(s); });
     return () => { live = false; };
   }, []);
 
@@ -809,7 +821,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
       <div className="ac-insp-band">{selectedAnswer ? "What this answer rests on" : (latestPanel ? "How often these words occur" : "Inspect")}</div>
       <div className="ac-insp-scroll">
         {selectedAnswer
-          ? <ProvenancePanel key={selectedIdx} answer={selectedAnswer} panel={selectedAnswer.panel} onOccInspect={onOccInspect} onStrongs={onStrongs}/>
+          ? <ProvenancePanel key={selectedIdx} answer={selectedAnswer} panel={selectedAnswer.panel} onOccInspect={onOccInspect} onStrongs={onStrongs} contestedSet={contestedSet}/>
           : latestPanel
             ? <CorpusPanel panel={latestPanel} onStrongs={onStrongs}/>
             : <ZoneEmpty icon={<Icon.Sparkle/>} title="Nothing selected yet"

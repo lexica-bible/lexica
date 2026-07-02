@@ -139,6 +139,19 @@ const api = {
   // The seam index — every Lexica entry that carries a contested-word fork. Read-only.
   lexicaSeams: () =>
     fetch("/api/lexica/seams", { headers: _authHeaders() }).then(r => r.json()),
+  // The contested (fork) Strong's set — the ONE source of truth (contested_register.py),
+  // so the client can badge a fork word (incl. reopened saved threads whose stored copy
+  // predates the server flag) by plain membership. Fetched once; the promise is memoised so
+  // repeated calls / remounts don't re-hit the network. Returns a Set of "G####"/"H####".
+  contestedStrongs: () => {
+    if (!api._contestedP) {
+      api._contestedP = fetch("/api/lexica/contested")
+        .then(r => r.json())
+        .then(d => new Set((d && d.strongs) || []))
+        .catch(() => new Set());   // network miss → empty set (fresh answers still carry the flag)
+    }
+    return api._contestedP;
+  },
   books: () =>
     fetch("/api/books").then(r => r.json()),
   chronological: () =>
