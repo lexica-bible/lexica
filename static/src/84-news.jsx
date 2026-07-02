@@ -557,10 +557,14 @@ function NewsView({ isMobile }) {
     if (!items.length) return;
     // date sits on its own line right before the url, in every format; a blank date/description
     // drops its line (filter(Boolean)), no orphan blank. The two lines are independent.
-    const line = (it, url) =>
-      fmt === "link" ? [it.date, url].filter(Boolean).join("\n")
-      : fmt === "titlelink" ? [it.title, it.date, url].filter(Boolean).join("\n")
-      : [it.title, cleanDescription(it.title, it.summary), it.date, url].filter(Boolean).join("\n");
+    const line = (it, url) => {
+      if (fmt === "link") return [it.date, url].filter(Boolean).join("\n");
+      if (fmt === "titlelink") return [it.title, it.date, url].filter(Boolean).join("\n");
+      // title + description + link — prefix the (non-empty) description with "— " to mark it
+      // as descriptive text; a dropped description emits nothing (no orphan prefix/blank line).
+      const desc = cleanDescription(it.title, it.summary);
+      return [it.title, ...(desc ? ["— " + desc] : []), it.date, url].filter(Boolean).join("\n");
+    };
     const write = (map) => {
       // prefer a resolved clean URL; fall back to the wrapper on any miss
       const lines = items.map(it => line(it, (map && map[it.url]) || it.url));
