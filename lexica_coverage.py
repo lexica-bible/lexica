@@ -7,16 +7,34 @@ them structurally instead of by eyeball:
 
   PIECE A — collocation pre-check (this file, LIVE).  Before (or after) the model draw, scan
   ALL of a word's real occurrences — not just the fed sample — for a repeated adjacent-lemma
-  pattern (a fixed collocation, e.g. huios+anthrōpos "son of man" under G5207). If a collocation
-  above a floor has ZERO representatives in the fed draw, that draw has a blind spot: the model
-  never saw the pattern, so a whole sense can go missing (G5207 sense 6 was absent until hand-added).
-  Pure SQL, no model cost. `scan_collocations` is the detector; the driver computes the draw with
-  the SAME `select_spread` the build uses, so "in the draw" means exactly what the model saw.
+  pattern (a fixed collocation). A pair is RANKED by tightness (token-level PMI) and FLAGGED only
+  when it clears the count floor AND the tightness threshold AND has ZERO representatives in the
+  fed draw. Pure SQL, no model cost. `scan_collocations` is the detector; the driver computes the
+  draw with the SAME `select_spread` the build uses, so "in the draw" means exactly what the model
+  saw. A catches only SMALL tight collocations the draw missed ENTIRELY — a big collocation (~5% of
+  a word's uses) is essentially never 0-in-draw, so those are B's job, not A's.
 
-  PIECE B — coverage field with teeth (schema pending JP review; NOT built here yet).
+  PIECE B — coverage-with-teeth: post-build, check the finished ENTRY (not the draw) — do the
+  senses actually cite the top collocations/renderings, and is any contested sense circular?
+  This is the real guarantee that catches the son-of-man-class miss. (schema approved; building next.)
 
 The stop-list mirrors the app's own function-word classifier (app.py `_build_function_strongs_cache`
 = LSJ POS classify + the hardcoded override set) so the scan never floods on article/kai/prepositions.
+
+ACCEPTANCE (updated after the live calibration run):
+  - Piece A: (1) the offline fixture tests (a tight pair flags, a loose one of the same count does
+    not); (2) no flood on a real high-frequency word (single-digit flags, not 65–89); (3) it flags
+    a TRULY-ABSENT tight collocation (0 in draw). A does NOT own the G5207 known miss — see below.
+  - The G5207 "son of man" known-miss validation belongs to PIECE B, not A: the draw already
+    contains a son-of-man verse (in-draw 1), so A's "0 in draw" rule correctly does not fire; the
+    pre-sense-6 ENTRY cited zero son-of-man verses, which B flags (thin/uncited), and the current
+    entry passes. B is the finished-entry check; A is the draw-composition check.
+
+PIECE C — stratified sampling: DEFERRED, not built. First evidence entry for why it may eventually be
+  needed: G5207 huios+anthrōpos conflates OT generic "sons of men" with the NT title "the Son of Man"
+  — indistinguishable by adjacency, so no collocation/coverage check separates the missed titular
+  sense from the generic one; only a draw stratified by corpus layer (LXX vs Gospels) would surface
+  it. Recording the case, not building the fix.
 
 PURE / READ-ONLY: every function takes an open sqlite connection and only SELECTs. No writes, no
 model calls. Imported by scripts/audit_lexica_coverage.py (standalone) and, warn-only, by
@@ -43,16 +61,22 @@ MAX_EXAMPLES  = 6    # example refs shown per flagged collocation.
 # from a merely FREQUENT one ("God said") — both clear a count floor. And with a 40-verse draw over
 # a ~5,000-occurrence word, "absent from the draw" is the expected state for almost every pair, so
 # 0-in-draw alone carries no signal (it flagged 65–89 pairs per word). The fix is to measure how
-# much MORE two words sit adjacent than chance would predict (pointwise mutual information, in bits):
-#   PMI = log2( co * Nv / (vt * vw) )
-#     co = verses where target+neighbor are adjacent;  vt = verses with the target;
-#     vw = verses with the neighbor anywhere;          Nv = total verses.
-# PMI = 0 means "no more than chance"; each +1 bit means twice as tight. A fixed phrase scores high
-# (the neighbor rarely appears except beside the target); a common verb scores near 0 (it's
-# everywhere, so sitting beside the target isn't special).
+# much MORE the neighbor sits ADJACENT to the target than its overall commonness predicts (pointwise
+# mutual information, in bits) — TOKEN-level, not verse-level:
+#   PMI = log2( co * N_tok / (t_occ * w_tok) )
+#     co    = verses where target+neighbor are adjacent   t_occ = target occurrences (tokens)
+#     w_tok = neighbor's total tokens in the corpus       N_tok = total word tokens
+# TOKEN not verse is the whole fix: two common words ("son", "man") land in the same VERSE by chance
+# far more often than they land ADJACENT, so verse-level marginals scored "son of man" at ~0.5 (noise).
+# Against the neighbor's token share, huios+anthrōpos is many times more adjacent than chance → high.
+# PMI = 0 means chance; each +1 bit means twice as tight. A fixed phrase scores high (the neighbor
+# rarely appears except beside the target); a common verb scores near 0 (it's everywhere).
 # CALIBRATION: 4.0 is a provisional start — re-tune from the --show-all score column when new words
 # are built. Raise it if the flagged list runs past single digits; lower it if a real fixed phrase
 # falls below the noise. The TRIP condition is: above the count floor AND PMI >= this AND 0 in draw.
+# NOTE: a BIG collocation (huios+anthrōpos, 257 verses ≈ 5% of huios) is basically never 0-in-draw,
+# so A catches only SMALL tight collocations the draw missed entirely; the son-of-man-class miss is a
+# piece-B (finished-entry coverage) catch, not an A catch. See ACCEPTANCE below.
 PMI_MIN = 4.0
 
 
@@ -201,10 +225,14 @@ def collocation_map(conn, sid, occs, stop=None, floor=COLLOC_FLOOR, window=COLLO
 
 
 import weakref
-_CORPUS_COUNTS = weakref.WeakKeyDictionary()   # conn -> (Nv, {base: distinct-verse-count})
-def _corpus_verse_counts(conn):
-    """(Nv, {strongs_base: verses-containing-it}) for the whole word table — the marginals the
-    tightness score needs. One GROUP BY over `words`; cached per LIVE connection (weak-keyed, so a
+_CORPUS_COUNTS = weakref.WeakKeyDictionary()   # conn -> (N_tok, {base: token-count})
+def _corpus_token_counts(conn):
+    """(N_tok, {strongs_base: how-many-TOKENS carry it}) for the whole word table — the TOKEN-level
+    marginals the tightness score needs. TOKEN, not verse: the score measures how often a neighbor
+    sits NEXT TO the target vs. how common the neighbor is overall, so the baseline must be the
+    neighbor's share of all word tokens — verse-level counts wash out adjacency (two common words
+    land in the same verse by chance far more often than they land adjacent, so verse marginals made
+    'son of man' score ~0.5). One GROUP BY over `words`; cached per LIVE connection (weak-keyed, so a
     freed connection's id can't hand back stale counts)."""
     try:
         cached = _CORPUS_COUNTS.get(conn)
@@ -212,13 +240,13 @@ def _corpus_verse_counts(conn):
         cached = None                          # connection not weak-referenceable → just recompute
     if cached is not None:
         return cached
-    nv = conn.execute("SELECT COUNT(DISTINCT verse_id) FROM words").fetchone()[0] or 0
+    n_tok = conn.execute("SELECT COUNT(*) FROM words").fetchone()[0] or 0
     counts = {}
     for r in conn.execute(
-            "SELECT strongs_base AS b, COUNT(DISTINCT verse_id) AS c FROM words "
+            "SELECT strongs_base AS b, COUNT(*) AS c FROM words "
             "WHERE strongs_base IS NOT NULL AND strongs_base != '' GROUP BY strongs_base"):
         counts[r["b"]] = r["c"]
-    result = (nv, counts)
+    result = (n_tok, counts)
     try:
         _CORPUS_COUNTS[conn] = result
     except TypeError:
@@ -226,13 +254,17 @@ def _corpus_verse_counts(conn):
     return result
 
 
-def _pmi(co, vt, vw, nv):
-    """Pointwise mutual information in bits: how much more the pair sits adjacent than chance.
-    log2(co * Nv / (vt * vw)); 0 = chance, +1 bit = twice as tight. None if any marginal is 0."""
-    if co <= 0 or vt <= 0 or vw <= 0 or nv <= 0:
+def _pmi(co, t_occ, w_tok, n_tok):
+    """Pointwise mutual information in bits, TOKEN-level: how much more the neighbor sits adjacent to
+    the target than its overall commonness predicts.
+        observed rate = co / t_occ            (share of target occurrences with the neighbor adjacent)
+        baseline rate = w_tok / n_tok         (the neighbor's share of ALL word tokens)
+        PMI = log2(observed / baseline) = log2(co * n_tok / (t_occ * w_tok))
+    0 = no more than chance; +1 bit = twice as tight. None if any marginal is 0."""
+    if co <= 0 or t_occ <= 0 or w_tok <= 0 or n_tok <= 0:
         return None
     import math
-    return math.log2((co * nv) / (vt * vw))
+    return math.log2((co * n_tok) / (t_occ * w_tok))
 
 
 def scan_collocations(conn, sid, occs, sample_vids, stop=None,
@@ -245,13 +277,13 @@ def scan_collocations(conn, sid, occs, sample_vids, stop=None,
     sample_vids = set(sample_vids or ())
     colloc = collocation_map(conn, sid, occs, stop=stop, floor=floor, window=window)
     ref = _ref_map(occs)
-    nv, counts = _corpus_verse_counts(conn)
-    vt = len({o["vid"] for o in occs})
+    n_tok, counts = _corpus_token_counts(conn)
+    t_occ = len(occs)                          # target occurrence tokens (baseline denominator)
     findings = []
     for base, vids in colloc.items():
         co = len(vids)
         in_draw = len(vids & sample_vids)
-        score = _pmi(co, vt, counts.get(base, 0), nv)
+        score = _pmi(co, t_occ, counts.get(base, 0), n_tok)
         lemma, translit = _neighbor_head(conn, base)
         findings.append({
             "neighbor": base, "lemma": lemma, "translit": translit,
