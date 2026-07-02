@@ -782,7 +782,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
               <div className="occ-welcome-s">Search a word, transliteration, or Strong's number — or tap a sample.</div>
               <div className="occ-welcome-chips">
                 {["πνεῦμα", "pistis", "G26", "spirit"].map(q => (
-                  <button key={q} className="welcome-chip" onClick={() => handleSubmit(null, q)}>{q}</button>
+                  <button key={q} className="welcome-chip suggest-link" onClick={() => handleSubmit(null, q)}>{q}</button>
                 ))}
               </div>
             </div>
@@ -856,7 +856,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
               <div className="wm-search-hint">Greek, Hebrew, a transliteration, an English gloss, or a Strong's number.</div>
               <div className="wm-search-chips">
                 {["πνεῦμα", "pistis", "G26", "spirit", "ἀγάπη", "H7307"].map(q => (
-                  <button key={q} className="welcome-chip" onClick={() => { setSheet(null); handleSubmit(null, q); }}>{q}</button>
+                  <button key={q} className="welcome-chip suggest-link" onClick={() => { setSheet(null); handleSubmit(null, q); }}>{q}</button>
                 ))}
               </div>
             </div>
@@ -1058,7 +1058,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
                 <div className="occ-welcome-s">Search a word, transliteration, or Strong's number to study its senses, derivation, and every place it occurs.</div>
                 <div className="occ-welcome-chips">
                   {["πνεῦμα", "pistis", "G26", "spirit"].map(q => (
-                    <button key={q} className="welcome-chip" onClick={() => handleSubmit(null, q)}>{q}</button>
+                    <button key={q} className="welcome-chip suggest-link" onClick={() => handleSubmit(null, q)}>{q}</button>
                   ))}
                 </div>
               </div>

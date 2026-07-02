@@ -899,7 +899,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   const examplesRow = (
     <div className="ac-examples">
       {suggestions.map((ex, i) => (
-        <button key={i} className="ac-example" onClick={() => ask(ex)}><span>{ex}</span><Icon.ArrowRight/></button>
+        <button key={i} className="ac-example suggest-link" onClick={() => ask(ex)}><span>{ex}</span><Icon.ArrowRight/></button>
       ))}
     </div>
   );
