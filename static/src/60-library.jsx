@@ -1526,7 +1526,7 @@ function LibraryView({ nav, onNavChange, onReaderPos, onWordClick, onVerseNumber
             {chrono && !nonCanon && (
               <>
                 <span className="lib-bar-sep" aria-hidden="true"/>
-                <div className="seg lib-order-seg">
+                <div className="seg seg--line lib-order-seg">
                   <button className={"seg-b" + (orderMode !== "chronological" ? " on" : "")} title="Canonical order (books in order)" aria-label="Canonical order" onClick={() => setOrder("canonical")}><Icon.Book/></button>
                   <button className={"seg-b" + (orderMode === "chronological" ? " on" : "")} disabled={translation === "heb"} title={translation === "heb" ? "Chronological isn't available for the Hebrew OT" : "Chronological order (events in sequence)"} aria-label="Chronological order" style={translation === "heb" ? { opacity: 0.35, cursor: "default" } : undefined} onClick={() => translation !== "heb" && setOrder("chronological")}><Icon.Clock/></button>
                 </div>
@@ -1554,7 +1554,7 @@ function LibraryView({ nav, onNavChange, onReaderPos, onWordClick, onVerseNumber
               </div>
             )}
             <span className="lib-bar-sep" aria-hidden="true"/>
-            <div className="seg lib-view-seg">
+            <div className="seg seg--line lib-view-seg">
               <button
                 className={"seg-b" + (viewChipOn ? " on" : "")}
                 disabled={layoutLocked}
@@ -1588,7 +1588,7 @@ function LibraryView({ nav, onNavChange, onReaderPos, onWordClick, onVerseNumber
                       <span className="font-size-lbl">{libFontSize}</span>
                       <button className="seg-b" onClick={() => changeFontSize(+1)}>A+</button>
                     </div>
-                    <div className="seg lib-theme-seg">
+                    <div className="seg seg--line lib-theme-seg">
                       <button className={"seg-b"+(theme==="light"?" on":"")} onClick={() => setTheme("light")}>Light</button>
                       <button className={"seg-b"+(theme==="sepia"?" on":"")} onClick={() => setTheme("sepia")}>Sepia</button>
                       <button className={"seg-b"+(theme==="dark"?" on":"")} onClick={() => setTheme("dark")}>Dark</button>

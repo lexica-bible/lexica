@@ -191,6 +191,21 @@
 }
 .suggest-link:hover { color: var(--ink); text-decoration: underline; }
 
+/* Shared UNDERLINE TOGGLE — the reader-filter treatment (the ABP/KJV source row, the
+   All/OT/NT tabs): a segmented choice group with NO box. The active option is marked by an
+   accent underline, not a filled pill. The one toggle style app-wide — add .seg--line to any
+   .seg group. (The reader's own nav-source-seg / lib-search-mode-seg already carry this look
+   via their own rules; new toggle groups reference this instead of copying it.) */
+.seg--line { background: none; border: 0; border-radius: 0; padding: 0; gap: 4px; }
+.seg--line .seg-b {
+  border-radius: 0; background: none; box-shadow: none; font-weight: 500;
+  border-bottom: 2px solid transparent; padding: 6px 8px; color: var(--ink-3);
+}
+.seg--line .seg-b:hover:not(.on) { background: none; color: var(--ink); }
+.seg--line .seg-b:active:not(.on) { background: none; }
+.seg--line .seg-b.on { background: none; box-shadow: none; color: var(--ink); font-weight: 600; border-bottom-color: var(--accent); }
+.seg--line .seg-b:disabled { background: none; }
+
 * { box-sizing: border-box; }
 html, body {
   margin: 0;
@@ -507,7 +522,9 @@ input { font-family: inherit; }
 .glrow-gk.heb { direction: rtl; }
 .glrow-tr { font-family: var(--f-serif); font-style: italic; font-size: 14px; color: var(--ink-2); }
 .glrow-rend { display: grid; grid-template-columns: 31px 1fr 46px; gap: 9px; font-size: 12.5px; color: var(--ink-2); line-height: 1.45; }
-.glrow-k { font-family: var(--f-mono); font-size: 9px; color: var(--ink-4); background: var(--bg-sunk); padding: 2px 0; border-radius: 3px; height: fit-content; letter-spacing: .04em; text-align: center; margin-top: 1px; }
+/* translation tag = bare mono, muted, no fill; the .glrow-rend grid's 31px column keeps the
+   left edge aligned down the rows (the alignment is the anchor, not a pill). */
+.glrow-k { font-family: var(--f-mono); font-size: 9.5px; color: var(--ink-4); height: fit-content; letter-spacing: .08em; text-align: left; margin-top: 3px; }
 .glrow-match { font-weight: 600; }   /* the searched rendering — weight only, same color, no highlight */
 .glrow-n { font-family: var(--f-mono); font-size: 12px; color: var(--ink-3); text-align: right; white-space: nowrap; }
 .glrow-occ { display: inline-flex; align-items: center; gap: 4px; font-family: var(--f-mono); font-size: 13px; color: var(--ink-3); flex: 0 0 auto; margin-top: 3px; }
@@ -3553,7 +3570,8 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
   .seg-sm .seg-b { font-size: 11.5px; padding: 4px 9px; }
   /* Canonical/Chronological order toggle — icon buttons, centered */
   .lib-order-seg .seg-b { display: inline-flex; align-items: center; justify-content: center; padding: 5px 9px; }
-  .lib-order-seg .seg-b.on { color: var(--gold); }
+  /* active order = the shared accent underline (.seg--line); the old gold on-state is dropped
+     (doctrine: gold is reserved for target words only). */
   /* Chip/Prose view toggle — icon buttons, centered */
   .lib-view-seg .seg-b { display: inline-flex; align-items: center; justify-content: center; padding: 5px 9px; }
 

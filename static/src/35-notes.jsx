@@ -439,7 +439,7 @@ function NotesView({ onOpen, isMobile, onReadInContext }) {
 
   // ── Shared fragments ──────────────────────────────────────────────────────
   const modeSeg = (
-    <div className="notes-mode seg">
+    <div className="notes-mode seg seg--line">
       <button className={"seg-b" + (mode === "notes" ? " on" : "")} onClick={() => setMode("notes")}>Verse notes</button>
       <button className={"seg-b" + (mode === "journal" ? " on" : "")} onClick={() => setMode("journal")}>Journal</button>
     </div>
@@ -449,12 +449,12 @@ function NotesView({ onOpen, isMobile, onReadInContext }) {
     <>
       <input className="notes-search" type="text" placeholder="Search your notes…" value={q} onChange={(e) => setQ(e.target.value)} />
       <div className="notes-controls">
-        <div className="notes-filter seg">
+        <div className="notes-filter seg seg--line">
           {[["all", "All"], ["bookmark", "★ Bookmarks"], ["highlight", "🎨 Highlights"], ["note", "✎ Notes"]].map(([k, lbl]) => (
             <button key={k} className={"seg-b" + (filter === k ? " on" : "")} onClick={() => setFilter(k)}>{lbl}</button>
           ))}
         </div>
-        <div className="seg">
+        <div className="seg seg--line">
           <button className={"seg-b" + (sort === "recent" ? " on" : "")} onClick={() => setSort("recent")}>Recent</button>
           <button className={"seg-b" + (sort === "ref" ? " on" : "")} onClick={() => setSort("ref")}>Reference</button>
         </div>
