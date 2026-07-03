@@ -27,6 +27,7 @@ jobs:
           python tests/test_versification.py
           python tests/test_corpus_panel.py
           python tests/test_synthesis_no_leak.py
+          python tests/test_typed_strongs.py
 
   frontend:
     runs-on: ubuntu-latest

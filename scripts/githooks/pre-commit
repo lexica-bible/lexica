@@ -30,4 +30,5 @@ python tests/test_argmap.py >/dev/null
 python tests/test_versification.py >/dev/null
 python tests/test_corpus_panel.py >/dev/null
 python tests/test_synthesis_no_leak.py >/dev/null
+python tests/test_typed_strongs.py >/dev/null
 echo "pre-commit: all checks passed."

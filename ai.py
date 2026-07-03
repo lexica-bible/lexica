@@ -7,9 +7,11 @@ system prompt, the proper-noun / divine-council / verse-ref helpers, the curatio
 prompt, and the persistent AI result cache (core._ai_cache + ai_search_cache rows
 keyed by a version hash).
 
-NOTE: the three `SUBSTR(w.strongs_base, 2)` examples inside _AI_SYSTEM_TMPL are
-LEFT AS-IS — they're illustrative SQL for Haiku, and changing them alters AI
-output + busts the prompt cache (the Phase-1 SUBSTR removal's separate follow-up).
+NOTE: the _AI_SYSTEM_TMPL examples now match the LIVE data invariant — strongs_base
+is ALWAYS G/H-prefixed ('G4151') and the lexicon join is the indexed key
+`l.strongs_g = w.strongs_base` (the old `SUBSTR(w.strongs_base, 2)` deferral is
+rescinded; Batch B, 2026-07-02). Editing the template auto-busts the prompt cache
+via the fingerprint in _get_ai_cache_ver.
 
 Imports _lsj_concept_lookup from views_lsj (its primary-consumer home). The
 retrieval context fed to SQL generation is (re)built HERE, keys-only, by
@@ -70,32 +72,36 @@ Attribute every statement to the verse and say what it actually states.
   words(id, verse_id, position INTEGER,
         english TEXT,       -- full ABP gloss, e.g. "my spirit", "of God"
         english_head TEXT,  -- core word, e.g. "spirit", "God"
-        strongs TEXT,       -- exact ABP number: "4151", "1510.7.3", or "*"
-        strongs_base TEXT)  -- base without dots: "1510"
-  lexicon(strongs TEXT PK,  -- matches words.strongs_base
+        strongs TEXT,       -- exact ABP number, BARE: "4151", "1510.7.3", or "*"
+        strongs_base TEXT)  -- base (dots stripped), ALWAYS G/H-prefixed: "G4151", "H7307"
+  lexicon(strongs TEXT PK,  -- BARE number, e.g. "4151"
+          strongs_g TEXT,   -- prefixed key "G4151" — the JOIN target for words.strongs_base
           lemma, translit, strongs_def, kjv_def, derivation)
 
 ─── DOTTED STRONG'S VARIANTS ────────────────────────────────────────────────
 The ABP assigns dotted sub-numbers to lexically distinct words that share a base:
   G1095   γίγας  giant (base form)
   G1095.1 γίγας  a specific giant variant (distinct lexical entry)
-strongs_base always strips the decimal — both map to strongs_base='1095'.
-To target a specific dotted variant, filter on w.strongs (the exact field):
-  WHERE w.strongs = '1095.1'     -- only the dotted variant
-  WHERE w.strongs_base = '1095'  -- all variants sharing the base
+strongs_base always strips the decimal — both map to strongs_base='G1095'.
+To target a specific dotted variant, filter on w.strongs (the exact field, BARE):
+  WHERE w.strongs = '1095.1'      -- only the dotted variant (w.strongs stays bare)
+  WHERE w.strongs_base = 'G1095'  -- all variants sharing the base (prefixed)
 The LSJ LEXICAL CONTEXT block lists dotted variants present in the corpus.
 Prefer the specific dotted variant when the query targets a distinct concept.
 Never invent dotted numbers — only use ones listed in the LSJ context block.
-IMPORTANT: strongs_base is stored inconsistently — some rows use the bare number
-('4151'), others use the prefixed form ('G4151'). Always match both:
-  WHERE (w.strongs_base = '4151' OR w.strongs_base = 'G4151')
+IMPORTANT: strongs_base is ALWAYS G/H-prefixed ('G4151', 'H7307'). Match it with a
+single prefixed value — never a bare number, never "match both":
+  WHERE w.strongs_base = 'G4151'
+Only w.strongs (the exact/dotted field) stays BARE ('4151', '1510.7.3').
 
 ─── LSJ LEXICAL CONTEXT ─────────────────────────────────────────────────────
 Each query is prepended with an "LSJ LEXICAL CONTEXT" block listing relevant Greek
 lemmas and Strong's numbers drawn live from the Liddell-Scott-Jones lexicon.
-Use those G-numbers in SQL WHERE clauses against strongs_base (or w.strongs
-for dotted variants). Never invent or guess Strong's numbers not provided in
-the LSJ context block.
+Use those G-numbers in SQL WHERE clauses against strongs_base — PREFIXED, e.g.
+w.strongs_base = 'G4151' (or w.strongs for dotted variants, bare). Never invent or
+guess Strong's numbers not provided in the LSJ context block. EXCEPTION: a Strong's
+number the USER typed in their query (e.g. "G4442", "H784") is always permitted — a
+user citing a key is not an invented number; use it even if the LSJ block omits it.
 
 ─── NEW TESTAMENT COVERAGE ──────────────────────────────────────────────────
 NT books (Matthew through Revelation) are fully indexed with the same Strong's
@@ -216,7 +222,7 @@ Match them with english LIKE or english_head LIKE. Examples:
   WHERE w.english LIKE '%Paul%'
   WHERE w.english LIKE '%Corinth%' OR w.english LIKE '%Ephesus%'
   WHERE w.english LIKE '%Paul%' AND v.id IN (
-      SELECT verse_id FROM words WHERE strongs_base = '4198')  -- travel + Paul
+      SELECT verse_id FROM words WHERE strongs_base = 'G4198')  -- travel + Paul
 For purely proper-noun queries (e.g. "where did Paul travel"), the WHERE clause
 MUST use english LIKE — a strongs_base filter alone will return nothing.
 For geographical queries (e.g. "places in Acts", "cities Paul visited"), query
@@ -230,7 +236,7 @@ part-of-speech data — include them freely in SQL without concern. Return exact
   v.book, v.chapter, v.verse,
   l.lemma, l.translit, l.strongs_def, l.kjv_def, l.derivation
 JOIN: words w JOIN verses v ON w.verse_id = v.id
-      LEFT JOIN lexicon l ON l.strongs = SUBSTR(w.strongs_base, 2)
+      LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base
 End:  ORDER BY v.id, w.position   LIMIT 500
 
 GENITIVE PHRASES ("sons of God", "son of man", "word of God") — the ABP stores
@@ -248,14 +254,14 @@ word is a separate DB row, so english LIKE on the full phrase will match nothing
 Use Strong's numbers instead:
   G4151 (pneuma/spirit) + G39 or G40 (hagios) for holy spirit — the ABP tags
   "holy" in "holy spirit" as G39 in NT and G40 in OT; always check both:
-    AND v.id IN (SELECT verse_id FROM words WHERE strongs_base IN ('39','40'))
+    AND v.id IN (SELECT verse_id FROM words WHERE strongs_base IN ('G39','G40'))
   G2222 (zōē/life) + G166 (aiōnios/eternal) for eternal life
 Never apply the LIKE approach to adjective+noun combinations.
 
 When two NON-PHRASE concepts must appear TOGETHER in the same verse, enforce
 co-occurrence with a subquery — do not rely on post-filtering:
-  WHERE w.strongs_base = '5207'
-    AND v.id IN (SELECT verse_id FROM words WHERE strongs_base = '2316')
+  WHERE w.strongs_base = 'G5207'
+    AND v.id IN (SELECT verse_id FROM words WHERE strongs_base = 'G2316')
 
 When a concept has multiple lexical realizations, write a UNION ALL covering all
 patterns. Each branch should enforce its own co-occurrence via subquery where
@@ -297,7 +303,7 @@ or meaning), find its H-number via bdb then bridge to ABP verses using the books
          l.lemma, l.translit, l.strongs_def, l.kjv_def, l.derivation
   FROM words w
   JOIN verses v ON w.verse_id = v.id
-  LEFT JOIN lexicon l ON l.strongs = SUBSTR(w.strongs_base, 2)
+  LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base
   JOIN books bk ON bk.abbrev = v.book
   WHERE (bk.id, v.chapter, v.verse) IN (
       SELECT kw.book_id, kw.chapter, kw.verse_num
@@ -346,15 +352,15 @@ TRANSLATION COMPARISON queries:
          l.lemma, l.translit, l.strongs_def, l.kjv_def, l.derivation
   FROM words w
   JOIN verses v ON w.verse_id = v.id
-  LEFT JOIN lexicon l ON l.strongs = SUBSTR(w.strongs_base, 2)
-  JOIN kjv_strongs ks ON ks.strongs_id = 'G' || w.strongs_base
+  LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base
+  JOIN kjv_strongs ks ON ks.strongs_id = w.strongs_base
   JOIN kjv_words kw
     ON kw.word_id = ks.word_id
    AND kw.book_id = (SELECT id FROM books WHERE abbrev = v.book)
    AND kw.chapter = v.chapter
    AND kw.verse_num = v.verse
   WHERE v.book = 'Act'
-    AND (w.strongs_base = '4151' OR w.strongs_base = 'G4151')
+    AND w.strongs_base = 'G4151'
     AND LOWER(w.english_head) != LOWER(kw.word)
   ORDER BY v.id, w.position LIMIT 500
 
@@ -1554,6 +1560,49 @@ def _resolve_exact_lemma(q: str) -> str | None:
     return hits.pop() if len(hits) == 1 else None  # one clean headword only
 
 
+# A user who types a Strong's number IS citing a retrieval key — not the model
+# inventing one — so it's always permitted (F12). When the whole query is that one
+# number we PIN it (same machinery as _resolve_exact_lemma: guaranteed occurrence
+# list, no dependence on the model choosing to use it). An embedded number ("fire
+# G4442 in judgment") is handled at the prompt level (the LSJ-CONTEXT exception).
+# Requires an explicit G/H prefix — a bare "4442" is ambiguous (Greek vs Hebrew),
+# so it falls through to the model. Dotted numbers ("G166.1") are not pinned:
+# strongs_base drops the dot, so the pin's strongs_base= filter can't target them
+# (the model can, via w.strongs) — they fall through too.
+_TYPED_STRONGS_RE = re.compile(r"^([GgHh])\s*0*([1-9]\d*)$")
+
+
+def _parse_typed_strongs(q: str) -> str | None:
+    """Pure parse: a query that IS a single prefixed Strong's number → 'G4442'/'H784'
+    (uppercased, zero-stripped). None otherwise. No DB — this is the unit-tested core."""
+    m = _TYPED_STRONGS_RE.match((q or "").strip())
+    if not m:
+        return None
+    return m.group(1).upper() + m.group(2)
+
+
+def _resolve_typed_strongs(q: str) -> str | None:
+    """_parse_typed_strongs + an existence check, so a nonexistent number ('G99999')
+    falls through to the model rather than pinning to an empty list. Returns the
+    prefixed number (consumed exactly like _resolve_exact_lemma's) or None."""
+    tok = _parse_typed_strongs(q)
+    if not tok:
+        return None
+    conn = db_ro()
+    try:
+        if tok.startswith("G"):
+            row = conn.execute(
+                "SELECT 1 FROM lexicon WHERE strongs_g = ? LIMIT 1", (tok,)
+            ).fetchone()
+        else:
+            row = conn.execute(
+                "SELECT 1 FROM bdb WHERE strongs_id = ? LIMIT 1", (tok,)
+            ).fetchone()
+    finally:
+        conn.close()
+    return tok if row else None
+
+
 @bp.route("/api/ai-search")
 @limiter.limit("200 per hour")
 def ai_search():
@@ -1574,8 +1623,9 @@ def ai_search():
             return jsonify({"error": "query too long (max 500 chars)"}), 400
 
         # A bare typed Greek/Hebrew word → pin its EXACT Strong's so the occurrence list
-        # can't be laundered into look-alikes (see _resolve_exact_lemma). None otherwise.
-        _pinned = _resolve_exact_lemma(q)
+        # can't be laundered into look-alikes (see _resolve_exact_lemma). A query that IS
+        # a typed Strong's number pins the same way (F12). None otherwise.
+        _pinned = _resolve_exact_lemma(q) or _resolve_typed_strongs(q)
 
         # Cache key — caps / punctuation / extra-space variants of the same question
         # share one answer ("Is hell the same as Sheol?" == "is hell the same as sheol").
@@ -1668,7 +1718,7 @@ def ai_search():
 
         # ── Step 3: SQL generation with LSJ context ───────────────────────
         if context:
-            _ctx = ("CONVERSATION CONTEXT — the previous turn in this thread. Use it ONLY to "
+            _ctx = ("CONVERSATION CONTEXT — recent turns in this thread. Use it ONLY to "
                     "resolve references in the new question (\"it\", \"this word\", \"the same "
                     f"word\"); answer the NEW question:\n{context}")
             user_content = (f"{lsj_context}\n\n{_ctx}\n\nQuery: {q}" if lsj_context
