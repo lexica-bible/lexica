@@ -52,9 +52,6 @@ index, and News right-rail all shipped on it 2026-07-01. Full record: memory `pr
   max-width, flex-basis, overflow-x/y — the old gate missed the News-width + scrollbar bugs). POSSIBLE
   polish: snippet clamp can hide the match (takes the first line, not a window centered on the highlighted
   word) — only if it proves common. code: static/src/52-ask-corpus.jsx, 50-corpus-results.jsx, styles.css
-- **Dead seam CSS sweep** — after the uniform-shell rewrite, `.seam-row`/`.seam-inspect`/`.seam-insp-*`/
-  `.seam-list` are unused (rows reuse `study-row`, list in the shared rail). Harmless, sweep when
-  convenient. code: static/styles.css
 - **News beast-arm badge** (authored follow-up) — a per-thread "which beast/arm" tag in the why-rail.
   Not built on purpose: the thread→arm map isn't 1:1 (several threads serve BOTH arms), so it's
   hand-authored content JP will sit with, then it drops into the why-section. code: views_news.py map,
@@ -289,8 +286,11 @@ heavily guarded. Full record: memory `project_ai_search_architecture` + `project
   preservation / H↔G alignment work under the lexical-texture panel follow-ups). ONE card, two payoffs: when
   the seam table exists, this SQL-gen fix becomes a lookup instead of a guess. Don't build a throwaway H→G
   map here — wait for the seam. code: ai.py `_AI_SYSTEM_TMPL` Hebrew-bridge section.
-- **Unpark Tier 1 semantic cache** — AUDIT VERDICT 2026-07-02: **Tier 2 = NO-GO** at current volume
-  (see AUDIT_ask_corpus.md); **Tier 1 (filler-strip normalizer) = audit batch E.** MUST reuse
+- **Tier 1 semantic cache — scope fold SHIPPED 2026-07-03 (`_CACHE_CODE_VER`→47).** The exact-repeat
+  cache already existed + was free; the one hole (punctuation-strip vs O.T./N.T. scope detection collided
+  "fire O.T." with "fire o t") is closed — detected scope is folded into the cache key (`_scope_tag`),
+  `tests/test_cache_key_scope.py`. **Tier 2 = NO-GO** at current volume (see AUDIT_ask_corpus.md). STILL
+  OPEN: the OPTIONAL filler-strip normalizer (fold "what does X mean" → "X") — MUST reuse
   `_LANG_SCOPE_TERMS`/`_TESTAMENT_SCOPE_TERMS` as the never-collapse boundary AND inherit Batch A's
   mixed-signal rule (one value per axis = scope, two = unset — never strip a scope word). code: ai.py.
 - **G2455 (Jew / Judas) tagging-side split — decide if it's worth fixing** (surfaced by the Batch E task 3
@@ -299,36 +299,12 @@ heavily guarded. Full record: memory `project_ai_search_architecture` + `project
   data-surgery class: the "Jew" occurrences would need re-tagging to their own number (G2453, currently 0
   in ABP) before anything downstream is clean. Low urgency; only matters if a Jew/Judas Ask-corpus search
   reads muddy. read-only audit path: the query set in this session's transcript.
-- **BUG (report-only 2026-07-02): Word study — the ABP occurrence list loads visibly LATE, after the rest
-  of the card.** TRACE: clicking a word runs `loadProfile` → `api.lexiconProfile` (fills header, gloss,
-  distribution rail) and clears `loading`; THEN a separate effect (80-lexicon.jsx ~line 180), gated on
-  `!loading`, fires `api.lexiconVerses(..., "all", ...)` for the occurrence list. It's a SECOND round-trip
-  that can't even start until the first finishes — so the occurrences pop in a beat later. Options (pick when
-  fixing): (a) COMBINED payload — have `/api/lexicon/profile` return the first ~50 default occurrences too, so
-  one fetch fills the whole card (filter changes still re-fetch, but the initial click — the case JP hits — is
-  instant); (b) PARALLEL + shared loading — fire lexiconVerses alongside the profile instead of after (the
-  Strong's is known at click), hold the occurrence area under one spinner so it doesn't pop; (c) cosmetic
-  skeleton placeholder (doesn't speed it, just softens the pop). Lean (a) for the click case or (b) to keep
-  endpoints split. NOT fixed here.
-- **BUG (separate scope, report-only 2026-07-02): Word study defaults to the ABP filter even when a number has
-  0 ABP rows.** Searching a standard number ABP doesn't tag (e.g. G2411 temple) lands on the empty ABP
-  occurrence tab — looks like the word has no data. Fix: either the search route shouldn't default to ABP when
-  its ABP count is 0, or the default filter should fall back to a source that HAS rows (KJV/BSB/HEB). Code:
-  80-lexicon.jsx source-toggle default + views_lexicon.py profile. NOT part of the alias-note change.
-- **FOLLOW-UP: annotate the Ask-corpus provenance RAIL with the standard number** (separate scope, 2026-07-02).
-  The Lexica card is done (above), but Ask-corpus does NOT share that path — the A3/A4 invariant keeps definition
-  text out of synthesis, and it must stay that way. The gap is the CITATION display: the rail (52-ask-corpus.jsx)
-  shows the ABP number (e.g. G2413) where a concordance reader expects G2411. Small: surface the standard-number
-  mapping beside the rail's key_strongs (reverse `LEXICA_ALIASES`), payload + rail only, no definition text. Bump
-  `_CACHE_CODE_VER` when this lands (it changes the search payload).
 - **G4119 (πλείων "more") tagging-side merge — writeup** (surfaced by the homeless-lemma sweep, 2026-07-02).
   G4119 = 0 rows in ABP; the comparative πλείων is collapsed into its base word **G4183 πολύς "many/much"**.
   NOT an alias-fold candidate — folding "more" into G4183 drags the whole πολύς pool along (same class as
   G2455). Data-surgery: the πλείων occurrences would need re-tagging to G4119 before a "more/greater" search
   or a Lexica entry for the comparative is clean. Low urgency. Anchors that pinned it: Mat 21:36 / Heb 3:3 /
   Joh 21:15.
-- **STATE.md is stale** (last refreshed 2026-06-28 — still lists the referent cards + the ἵνα graph as
-  NOT BUILT). Refresh next time it's handed to a reviewer.
 - **#4 parallelize the cognate + Hebrew DB loops** (follow-up, not started) — read-only independent loops
   run one-at-a-time; running them concurrently claws back seconds on MULTI-head queries only. Needs an
   identical-output before/after diff. Don't touch the model-written single SQL. code: ai.py cognate loop +
