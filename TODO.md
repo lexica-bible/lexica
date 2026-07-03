@@ -185,6 +185,9 @@ YouVersion, which aren't the target). Honest gaps:
     numbered books + `Cap+2low`), so it never reached the gate — silent unverified ship (found as a real "Ps 2:7"
     in G5207). `noncanon_book_refs()` now HARD-REJECTS these at write time (canonical codes only). Remaining gap
     (minor): a spelled-out name is rejected, not auto-recovered into its valid code — must be hand-fixed. commit fb1c461.
+    The NUMBERED-dangling twin (a numbered book with no ch:vs) is caught by `dangling_book_refs()` (2026-06-29) —
+    confirmed + fixed live in chárin G5484 on 2026-07-03 (built before the lint, so it shipped dirty; swept all 18,
+    only hit, now 38/38 clean). Plain-book extension PARKED (false-positives on prose like "Ruth, Esther"). No code change.
   - **pinned_core presentation labeling (audit B4)** — the hand-authored pinned core leads the Meaning view
     under the "✓ verified" badge with no marker distinguishing it from engine output; provenance is
     "verse-grounded · LEXICA" unconditionally. Presentation call, fold into the card review.
