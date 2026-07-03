@@ -31,3 +31,7 @@ gloss_*.tsv
 
 # throwaway mobile design preview (handoff mockups, not the app)
 design/_mobile_preview/
+
+# Lexica draw cache — build_lexica_def.py's reviewed model draws (PA-only working artifacts,
+# one file per word; the dry-run pass writes them, --apply ships them verbatim)
+draws/

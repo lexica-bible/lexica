@@ -25,6 +25,14 @@ splitter can re-split from the stored text with NO new model call (--resplit).
 The engine (VERSE_PROMPT, select_spread, the citation gate, the CONTESTED fork register) is a
 verbatim lift of the trial rig — the proven parts. The NEW code here is split_definition()
 (prose -> fields), the verses[]/fork assembly, and the table write.
+
+DRAW CACHE (review-what-ships): --dry-run saves the model's prose to ~/bible-db/draws/G####.json;
+--apply reads that file (no model call) so the reviewed prose is the shipped prose, byte-for-byte.
+Keyed on a hash of the exact model input (prompt + fed sample + model), recomputed live at apply —
+a stale draw (input moved) is ignored, an edited draw (prose changed since review) is hard-refused.
+--require-cache refuses a word with no reviewed draw (default ON under --all; opt out with
+--allow-unreviewed). --force always draws fresh and refreshes the cache. The split/gate/validate
+chain runs identically on cached prose — the cache changes WHAT is gated, never WHETHER.
 """
 
 import argparse, datetime, hashlib, html, json, os, re, sqlite3, sys, unicodedata
@@ -713,6 +721,88 @@ def synth_ver():
     return "lexica:" + hashlib.sha1(VERSE_PROMPT.encode("utf-8")).hexdigest()[:12]
 
 
+# ══════════════════════════════════════════════════════════════════════════════════════════════
+# DRAW CACHE — review-what-ships. The dry-run pass (ro) saves the model's prose to a per-word file;
+# --apply reads that file instead of calling the model, so the prose a human reviewed is the prose
+# that ships byte-for-byte. Same split/gate/validate chain as --resplit; only the SOURCE of `raw`
+# changes (a pre-write file, not the written row). Draws are throwaway working artifacts — a file
+# per word, no table, no schema change. Files live beside bible.db and are gitignored.
+# ══════════════════════════════════════════════════════════════════════════════════════════════
+DRAWS_DIR = os.path.expanduser("~/bible-db/draws")
+
+
+def _sha1(s):
+    return hashlib.sha1((s or "").encode("utf-8")).hexdigest()
+
+
+def draw_signature(sid, translit, gset, ctx):
+    """Hash of the EXACT model input — system prompt + the full user message + the model id. Any
+    change to the prompt, the fed verse sample (a words rebuild moving select_spread, a --budget
+    change), the verse prose, the gloss set, or the model produces a DIFFERENT signature. A stored
+    draw can only count as a hit when it was drawn from byte-identical input, so a stale draw can
+    never silently apply. (OCC_MIN/MAX_TOKENS are deliberately out — OCC_MIN only gates whether a
+    word builds; MAX_TOKENS is out for the same reason it's out of synth_ver.)"""
+    user = verse_user_msg(sid, translit, gset, ctx)
+    return _sha1(VERSE_PROMPT + "\x00" + user + "\x00" + MODEL_SONNET)
+
+
+def draw_path(sid):
+    return os.path.join(DRAWS_DIR, f"{sid}.json")
+
+
+def load_draw(sid):
+    """Read a cached draw file, or None (missing/unreadable). Never raises — a bad file degrades to
+    a cache miss."""
+    p = draw_path(sid)
+    if not os.path.exists(p):
+        return None
+    try:
+        with open(p, encoding="utf-8") as f:
+            return json.load(f)
+    except Exception as e:
+        print(f"  (cached draw unreadable, treating as miss: {e})", file=sys.stderr)
+        return None
+
+
+def draw_status(rec, sig):
+    """Classify a found draw against the CURRENT input signature:
+      'stale'  — the input moved since the draw (different signature); discard, draw fresh.
+      'edited' — same input, but the prose bytes no longer match their stored hash: the file was
+                 changed between review and apply. HARD REFUSE — reviewed bytes != shipped bytes.
+      'hit'    — same input, prose intact: use it verbatim, no model call."""
+    if rec.get("sig") != sig:
+        return "stale"
+    if rec.get("prose_sha") != _sha1(rec.get("raw", "")):
+        return "edited"
+    return "hit"
+
+
+def save_draw(sid, lemma, translit, gset, ctx, raw):
+    """Write (or refresh) the reviewed draw. Called ONLY by the ro pass and --force — an unreviewed
+    fresh apply must never leave a draw file that would later look reviewed. Atomic replace so a
+    crash mid-write can't leave a torn file."""
+    os.makedirs(DRAWS_DIR, exist_ok=True)
+    sig = draw_signature(sid, translit, gset, ctx)
+    rec = {
+        "strongs":   sid,
+        "lemma":     lemma,
+        "translit":  translit,
+        "model":     MODEL_SONNET,
+        "synth_ver": synth_ver(),
+        "fed":       len(ctx),
+        "sig":       sig,           # input signature — the live-recompute guard at apply
+        "prose_sha": _sha1(raw),    # prose bytes — the edited-since-review guard at apply
+        "raw":       raw,
+        "created":   datetime.datetime.now(datetime.timezone.utc).replace(
+                         tzinfo=None).isoformat(timespec="seconds"),
+    }
+    tmp = draw_path(sid) + ".tmp"
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(rec, f, ensure_ascii=False, indent=1)
+    os.replace(tmp, draw_path(sid))
+    return sig
+
+
 def _coverage_audit(conn, sid, raw, senses_block):
     """PIECE B — the coverage_audit block (no model call, recomputed every build/--resplit like
     sense_prov). Checks the FINISHED entry: do the senses cite the tight collocations + top
@@ -836,6 +926,13 @@ def ensure_table(conn):
     conn.commit()
 
 
+def make_client():
+    """Create the Anthropic client (lazily, on the first real model call). Isolated so a run that
+    only applies cached draws never imports anthropic or needs the API key."""
+    import anthropic
+    return anthropic.Anthropic(api_key=get_key())
+
+
 def model_prose(client, sid, translit, gset, ctx):
     msg = client.messages.create(
         model=MODEL_SONNET, max_tokens=MAX_TOKENS, system=VERSE_PROMPT,
@@ -913,7 +1010,15 @@ def main():
     ap.add_argument("--apply", action="store_true", help="write the rows into lexica_def")
     ap.add_argument("--resplit", action="store_true",
                     help="re-split the STORED raw prose into fields — no model call (after a splitter change)")
-    ap.add_argument("--force", action="store_true", help="rebuild even if the stamp matches")
+    ap.add_argument("--force", action="store_true",
+                    help="rebuild even if the stamp matches; ALSO ignores any cached draw and "
+                         "refreshes it with a fresh model draw (a forced draw is now the reviewed one)")
+    ap.add_argument("--require-cache", action="store_true",
+                    help="on --apply, REFUSE any word with no valid reviewed draw instead of drawing "
+                         "fresh (default ON under --all; the loud path, not the safe one, takes a flag)")
+    ap.add_argument("--allow-unreviewed", action="store_true",
+                    help="opt OUT of --require-cache under --all: draw fresh + write with a loud "
+                         "UNREVIEWED note for a word that has no cached draw")
     ap.add_argument("--force-gate-bypass", metavar="REASON",
                     help="write DESPITE citation-gate failures (real/no-verse misses); the reason "
                          "is stored in the entry (audit.bypass_reason) so a bypassed row is "
@@ -951,12 +1056,19 @@ def main():
     has_surface = table_exists(conn, "abp_surface")
     stamp = synth_ver()
 
+    # Draw-cache safety: the SAFE path is the default under --all (batch runs), so shipping an
+    # unreviewed word takes an explicit --allow-unreviewed. Single-word --apply stays permissive
+    # (fresh draw + warning banner) unless --require-cache is asked for. --force always overrides
+    # (it deliberately draws fresh and refreshes the cache).
+    require_cache = (args.all or args.require_cache) and not args.allow_unreviewed
+
+    # The API client is created LAZILY (make_client, on the first real model call) — a run that only
+    # applies cached draws never touches the model, so it needs NO ANTHROPIC_API_KEY. resplit never
+    # calls the model either.
     client = None
-    if not args.resplit:
-        import anthropic
-        client = anthropic.Anthropic(api_key=get_key())
 
     failures = []
+    unreviewed = []          # words written via --apply with NO reviewed draw (loud, tracked)
     for sid in targets:
         print("\n" + "=" * 78)
         print(f"{sid}")
@@ -993,8 +1105,52 @@ def main():
             lemma, translit = lex_head(conn, sid)
             ot = sum(1 for c in ctx if c[0] not in NT_BOOKS)
             print(f"  occurrences {len(occs)} | {len(gset)} renderings | fed {len(ctx)} ({ot} OT / {len(ctx)-ot} NT)")
-            print("  calling the verse engine (Sonnet)…")
-            raw = model_prose(client, sid, translit, gset, ctx)
+
+            # ── DRAW CACHE. Recompute the current input signature live; consult the cached draw.
+            sig = draw_signature(sid, translit, gset, ctx)
+            rec = None if args.force else load_draw(sid)
+            status = draw_status(rec, sig) if rec else None
+
+            if status == "edited":
+                # Same input, but the file's prose was changed since review — the one way
+                # reviewed-bytes could differ from shipped-bytes. Hard refuse; do NOT redraw.
+                print(f"  ✗ cached draw {draw_path(sid)} was EDITED since review "
+                      f"(prose no longer matches its stored hash). Re-run --dry-run to redraw + "
+                      f"re-review. NOT written.", file=sys.stderr)
+                failures.append(sid)
+                continue
+
+            if status == "hit":
+                raw = rec["raw"]
+                print(f"  using reviewed draw {draw_path(sid)} (key {sig[:8]}) — no model call.")
+            else:
+                # miss: no file, stale (input moved), or --force.
+                stale = (status == "stale")
+                if args.apply and require_cache and not args.force:
+                    if stale:
+                        print(f"  cached draw {draw_path(sid)} is STALE (input moved since it was drawn).")
+                    why = "--all default" if (args.all and not args.require_cache) else "requested"
+                    print(f"  ✗ no reviewed draw for {sid} and --require-cache is in effect ({why}); "
+                          f"pass --allow-unreviewed to draw fresh — NOT written.", file=sys.stderr)
+                    failures.append(sid)
+                    continue
+                if stale:
+                    print(f"  cached draw {draw_path(sid)} is STALE (input moved) — redrawing.")
+                print("  calling the verse engine (Sonnet)…")
+                if client is None:
+                    client = make_client()
+                raw = model_prose(client, sid, translit, gset, ctx)
+                if args.dry_run or args.force:
+                    # ro (review pass) and --force write/refresh the draw so apply ships THIS prose.
+                    save_draw(sid, lemma, translit, gset, ctx, raw)
+                    tag = " (forced — cache refreshed)" if args.force else ""
+                    print(f"  cached draw → {draw_path(sid)} (key {sig[:8]}){tag}")
+                elif args.apply:
+                    # permissive single-word apply on a miss: fresh + loud, NO draw file written
+                    # (an unreviewed draw must not later masquerade as reviewed).
+                    print(f"  ⚠ UNREVIEWED — no cached draw for {sid}; this write was NOT reviewed.",
+                          file=sys.stderr)
+                    unreviewed.append(sid)
 
         entry = assemble(conn, sid, lemma, translit, raw)
         entry["synth_ver"] = stamp
@@ -1026,9 +1182,14 @@ def main():
             print("  [dry run — not written]")
 
     conn.close()
+    if unreviewed:
+        print(f"\n⚠ {len(unreviewed)} word(s) written with NO reviewed draw (unreviewed): "
+              f"{', '.join(unreviewed)}  (run --dry-run first to review, or use --require-cache)",
+              file=sys.stderr)
     if failures:
-        sys.exit(f"\n{len(failures)} word(s) FAILED to parse and were NOT written: "
-                 f"{', '.join(failures)}  (fix the splitter, then re-run --resplit --apply)")
+        sys.exit(f"\n{len(failures)} word(s) FAILED and were NOT written: "
+                 f"{', '.join(failures)}  (parse failure, gate failure, edited draw, or "
+                 f"--require-cache with no draw — see each word above)")
 
 
 if __name__ == "__main__":
