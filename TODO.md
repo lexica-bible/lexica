@@ -28,6 +28,12 @@ holds genuinely-open work and parked ideas only.
   a bare `tout*`/`τουτ*` GLOB on translit/form MISSES the accent (the γῆ #18A bug class; a translit control
   returned 13 not 3401 until switched to `τούτ*`/`ταύτ*` on the form column). When run: dry-run → ~15-row
   write to G3778, same careful pattern as the αἰών fix. code: the retag folds in build_words_from_abp.py / lxx_align.
+  - Other finds parked alongside (need the ABP source, not auto-strays): G1438 has αυτού / υμάς-form rows
+    (a reflexive-fold class, separate from τοῦτο). Dead lead checked + dropped: blank-english is NOT a mistag
+    signature under G1473 — only 8 of ~3,322 blanks are demonstrative; the rest are ordinary ἐγώ folded into
+    the verb rendering. Form-match is the only reliable finder.
+  - LESSON (banked): the translit accent bug here is the #18A (γῆ) diacritic class biting an AUDIT query —
+    one more argument for the normalize-both-sides fix when the Ask-corpus right-rail work starts.
 - **Hebrew-OT word finder is NOT number-folded** (KNOWN GAP) — the singular/plural fold is live on
   ABP/KJV/BSB but NOT the `corpus=heb` discovery branch (it matches a token inside a multi-word gloss
   phrase, so the precomputed `*_norm` column doesn't fit). A real fold needs BOTH a normalized-token
