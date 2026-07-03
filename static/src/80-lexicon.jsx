@@ -1077,8 +1077,8 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
               {profile.alias_note && (
                 <span className="detail-strong-alias">
                   {profile.alias_note.direction === "to_abp"
-                    ? `· ABP: ${profile.alias_note.abp}`
-                    : `· standard: ${profile.alias_note.standard.join(", ")}`}
+                    ? `· ABP ${profile.alias_note.abp}`
+                    : `· standard ${profile.alias_note.standard.join(", ")}`}
                 </span>
               )}
             </span>

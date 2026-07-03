@@ -1107,8 +1107,8 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             {aliasNote && (
               <span className="detail-strong-alias">
                 {aliasNote.direction === "to_abp"
-                  ? `· ABP: ${aliasNote.abp}`
-                  : `· standard: ${aliasNote.standard.join(", ")}`}
+                  ? `· ABP ${aliasNote.abp}`
+                  : `· standard ${aliasNote.standard.join(", ")}`}
               </span>
             )}
           </span>
