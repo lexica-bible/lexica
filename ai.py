@@ -422,32 +422,10 @@ def _extract_proper_nouns(q: str) -> list[str]:
     return result
 
 
-# Divine council corpus — injected as primary when query matches.
-# Bypasses Haiku curation so results are deterministic regardless of SQL.
-_DIVINE_COUNCIL_VERSES: frozenset = frozenset({
-    ("Gen",  1, 26), ("Gen",  3, 22), ("Gen",  6,  2), ("Gen",  6,  4), ("Gen", 11,  7),
-    ("Deu", 32,  8), ("Deu", 32, 43),
-    ("1Ki", 22, 19), ("1Ki", 22, 20),
-    ("Job",  1,  6), ("Job",  2,  1),
-    ("Psa", 29,  1), ("Psa", 82,  1), ("Psa", 82,  6), ("Psa", 89,  5), ("Psa", 89,  7),
-    ("Isa",  6,  1), ("Isa",  6,  8),
-    ("Zec",  3,  1), ("Zec",  3,  2),
-})
-
-
-# Triggers the hardcoded divine council corpus injection.
-# Deliberately narrow — only phrases that unambiguously signal a divine council
-# query. Broad terms like "sons of God", "holy ones", "divine being" are excluded
-# because they appear in NT adoption theology, Pauline letters, etc. and should
-# be answered by the normal SQL path, not overridden by the OT corpus.
-_DIVINE_COUNCIL_RE = re.compile(
-    r'\b(?:divine\s+council|heavenly\s+(?:assembly|court)|divine\s+assembly|'
-    r'bene\s+[ae]lohim|elohim\s+council|council\s+of\s+(?:god|the\s+holy)|'
-    r'gods?\s+of\s+the\s+nations?|host\s+of\s+heaven|huioi?\s+tou\s+theou)\b',
-    re.IGNORECASE,
-)
 
 # Normalise raw book strings (from AI output or regex captures) to DB abbreviations.
+# Checked FIRST in _norm_book — carries the disambiguation calls the pattern set can't
+# make on its own (bare "Jud" → Judges here, not Jude).
 _BOOK_NORM: dict[str, str] = {
     "gen": "Gen", "genesis": "Gen",
     "exo": "Exo", "exod": "Exo", "exodus": "Exo",
@@ -459,10 +437,60 @@ _BOOK_NORM: dict[str, str] = {
     "rut": "Rth", "ruth": "Rth",
 }
 
-_VERSE_REF_RE: re.Pattern | None = None
+# Canonical (abbrev, name-pattern) for every book, in canonical order. Mirrors the
+# books table's re_alt (scripts/seed_books.py) but lives here as a plain constant so
+# the pick-parse resolves numbered / multi-word full names ("1 John", "Song of
+# Solomon") correctly WITHOUT the DB — it runs in CI and off the paid path. Each
+# pattern is self-contained (the leading number is baked in) so canonical order is
+# safe; whichever pattern a matched string fully matches names its book. The numbered
+# Johannine patterns are widened past re_alt to also accept the "1 Jn" abbreviation
+# _CURATION_SYSTEM itself models (re_alt's `1\s*Joh?n?` requires the "o").
+_BOOK_REF_PATTERNS: list[tuple[str, str]] = [
+    ("Gen", r"Gen(?:esis)?"),                 ("Exo", r"Exo(?:dus)?"),
+    ("Lev", r"Lev(?:iticus)?"),               ("Num", r"Num(?:bers)?"),
+    ("Deu", r"Deu(?:t(?:eronomy)?)?"),        ("Jos", r"Jos(?:hua)?"),
+    ("Jdg", r"Jdg|Judg(?:es)?"),              ("Rth", r"Rth|Rut(?:h)?"),
+    ("1Sa", r"1\s*Sam?(?:uel)?"),             ("2Sa", r"2\s*Sam?(?:uel)?"),
+    ("1Ki", r"1\s*Ki(?:ngs?)?"),              ("2Ki", r"2\s*Ki(?:ngs?)?"),
+    ("1Ch", r"1\s*Chr?(?:on(?:icles)?)?"),    ("2Ch", r"2\s*Chr?(?:on(?:icles)?)?"),
+    ("Ezr", r"Ezr(?:a)?"),                    ("Neh", r"Neh(?:emiah)?"),
+    ("Est", r"Est(?:h(?:er)?)?"),             ("Job", r"Job"),
+    ("Psa", r"Psa(?:lms?)?"),                 ("Pro", r"Pro(?:verbs?)?"),
+    ("Ecc", r"Ecc(?:l(?:es(?:iastes)?)?)?"),
+    ("Son", r"Son(?:g(?:\s+of\s+Sol(?:omon)?)?)?|Cant(?:icles?)?"),
+    ("Isa", r"Isa(?:iah)?"),                  ("Jer", r"Jer(?:emiah)?"),
+    ("Lam", r"Lam(?:entations?)?"),           ("Eze", r"Eze(?:kiel)?"),
+    ("Dan", r"Dan(?:iel)?"),                  ("Hos", r"Hos(?:ea)?"),
+    ("Joe", r"Joe(?:l)?"),                    ("Amo", r"Amo(?:s)?"),
+    ("Oba", r"Oba(?:d(?:iah)?)?"),            ("Jon", r"Jon(?:ah)?"),
+    ("Mic", r"Mic(?:ah)?"),                   ("Nah", r"Nah(?:um)?"),
+    ("Hab", r"Hab(?:akkuk)?"),                ("Zep", r"Zep(?:h(?:aniah)?)?"),
+    ("Hag", r"Hag(?:gai)?"),                  ("Zec", r"Zec(?:h(?:ariah)?)?"),
+    ("Mal", r"Mal(?:achi)?"),                 ("Mat", r"Mat(?:t(?:hew)?)?"),
+    ("Mar", r"Mar(?:k)?"),                    ("Luk", r"Luk(?:e)?"),
+    ("Joh", r"Joh(?:n)?"),                    ("Act", r"Act(?:s)?"),
+    ("Rom", r"Rom(?:ans?)?"),                 ("1Co", r"1\s*Cor?(?:inthians?)?"),
+    ("2Co", r"2\s*Cor?(?:inthians?)?"),       ("Gal", r"Gal(?:atians?)?"),
+    ("Eph", r"Eph(?:esians?)?"),              ("Php", r"Php|Phi|Phil(?:ippians?)?"),
+    ("Col", r"Col(?:ossians?)?"),             ("1Th", r"1\s*Th(?:ess(?:alonians?)?)?"),
+    ("2Th", r"2\s*Th(?:ess(?:alonians?)?)?"), ("1Ti", r"1\s*Ti(?:m(?:othy)?)?"),
+    ("2Ti", r"2\s*Ti(?:m(?:othy)?)?"),        ("Tit", r"Tit(?:us)?"),
+    ("Phm", r"Phm|Philem(?:on)?"),            ("Heb", r"Heb(?:rews?)?"),
+    ("Jas", r"Jas(?:ames?)?|Jam(?:es)?"),     ("1Pe", r"1\s*Pe(?:t(?:er)?)?"),
+    ("2Pe", r"2\s*Pe(?:t(?:er)?)?"),          ("1Jn", r"1\s*Jo?h?n"),
+    ("2Jn", r"2\s*Jo?h?n"),                   ("3Jn", r"3\s*Jo?h?n"),
+    ("Jud", r"Jud(?:e)?"),                    ("Rev", r"Rev(?:elation)?"),
+]
 
-# Parses "Book Ch:V" refs from AI-generated text (explanation, primary_verses, etc.)
-_VERSE_REF_PARSE_RE = re.compile(r'(\w+)\s+(\d+):(\d+)')
+# Combined scanner for the pick-parse: find "Book Ch:V" anywhere in a model-written
+# ref string. Book-aware (each pattern wrapped so its inner `|` can't leak), so a
+# numbered book stays whole — "1 John 3:1" captures "1 John", never "John".
+_BOOK_PARSE_RE = re.compile(
+    r'\b(' + '|'.join(f'(?:{pat})' for _, pat in _BOOK_REF_PATTERNS) + r')\s+(\d+):(\d+)\b',
+    re.IGNORECASE,
+)
+
+_VERSE_REF_RE: re.Pattern | None = None
 
 # Inner text of an `... LIKE '%phrase%'` clause in the AI's generated SQL. The
 # phrase supplement re-runs the AI's own multi-word phrases against the FULL verse
@@ -473,8 +501,14 @@ _LIKE_PHRASE_RE = re.compile(r"LIKE\s+'%([^%']+)%'", re.IGNORECASE)
 
 
 def _norm_book(raw: str) -> str:
-    key = raw.lower().rstrip(".")
-    return _BOOK_NORM.get(key) or _BOOK_NORM.get(key[:3]) or raw.title()[:3]
+    s = re.sub(r"\s+", " ", (raw or "").strip()).rstrip(".")
+    key = s.lower()
+    if key in _BOOK_NORM:                      # explicit overrides (bare "Jud" → Judges)
+        return _BOOK_NORM[key]
+    for abbrev, pat in _BOOK_REF_PATTERNS:     # book-aware: numbered / full names
+        if re.fullmatch(pat, s, re.IGNORECASE):
+            return abbrev
+    return _BOOK_NORM.get(key[:3]) or s.title()[:3]
 
 
 def _get_verse_ref_re() -> re.Pattern:
@@ -906,17 +940,25 @@ def _detect_scope(query: str) -> dict:
     """Two INDEPENDENT scope axes off an explicit mention in the query — language
     (hebrew/greek/aramaic; LXX/Septuagint → greek) and testament (ot/nt). Word-boundary,
     case-insensitive. Returns {'lang': ..., 'testament': ...}, None where unset. A query
-    can carry both ('fire in the greek OT'). Neither set → the caller keeps the default
-    Greek-first behavior unchanged."""
+    can carry both AXES ('fire in the greek OT'). Neither set → the caller keeps the
+    default Greek-first behavior unchanged.
+
+    MIXED SIGNALS on one axis collapse to None, never to first-match: a query that names
+    two competing values on the SAME axis ('compare the OT and NT', 'charis in greek and
+    hebrew') is a comparison, not a scope — pinning it to whichever term is listed first
+    would tell the model to drop half the answer. One value per axis = scope; two = unset."""
     q = (query or "").lower()
+    q = re.sub(r"\bo\.\s*t\.", "ot", q)            # O.T. / N.T. (with periods) → ot / nt
+    q = re.sub(r"\bn\.\s*t\.", "nt", q)
 
-    def _first(terms):
-        for phrase, val in terms.items():          # longer phrases listed first
-            if re.search(rf"\b{re.escape(phrase)}\b", q):
-                return val
-        return None
+    def _only(terms):
+        vals = {
+            val for phrase, val in terms.items()
+            if re.search(rf"\b{re.escape(phrase)}\b", q)
+        }
+        return next(iter(vals)) if len(vals) == 1 else None
 
-    return {"lang": _first(_LANG_SCOPE_TERMS), "testament": _first(_TESTAMENT_SCOPE_TERMS)}
+    return {"lang": _only(_LANG_SCOPE_TERMS), "testament": _only(_TESTAMENT_SCOPE_TERMS)}
 
 
 def _scope_directive(scope: dict) -> str:
@@ -1158,8 +1200,8 @@ def _assemble_payload(q, results, verse_index, key_strongs_data,
                       rows, phrase_hits, target_bases, panel):
     """Post-curation assembly (shared end-stage, lifted out of the route so the streaming
     generator can run it once the prose has streamed): fold the curated picks into the
-    pool, fetch any named verses the SQL missed, tag is_primary / is_additional, inject the
-    hardcoded divine-council corpus, decide grounding, sort canonically, build the payload."""
+    pool, fetch any named verses the SQL missed, tag is_primary / is_additional, decide
+    grounding, sort canonically, build the payload."""
     # A verse is THEMATIC when there IS a target-word set AND the verse contains none of it
     # (background, not lexical evidence). Bound to the target_bases PARAMETER — this function
     # was lifted out of ai_search for the streaming tail, so it can't see ai_search's nested
@@ -1176,17 +1218,11 @@ def _assemble_payload(q, results, verse_index, key_strongs_data,
         return True
 
     # ── Build primary_set and fetch any missing primary verses ────────────
-    dc_query = bool(_DIVINE_COUNCIL_RE.search(q))
     primary_set: set = set()
     for ref_str in primary_verses_raw:
-        m = _VERSE_REF_PARSE_RE.search(str(ref_str).strip())
+        m = _BOOK_PARSE_RE.search(str(ref_str).strip())
         if m:
             primary_set.add((_norm_book(m.group(1)), int(m.group(2)), int(m.group(3))))
-
-    # ── Hardcoded corpora — injected regardless of model output ──────────
-    if dc_query:
-        primary_set.update(_DIVINE_COUNCIL_VERSES)
-        log.debug("Divine council corpus injected: %d verses", len(_DIVINE_COUNCIL_VERSES))
 
     missing_primary = [k for k in primary_set if k not in verse_index]
     if missing_primary:
@@ -1218,7 +1254,7 @@ def _assemble_payload(q, results, verse_index, key_strongs_data,
     # ── Validate and fetch additional verses from the model's knowledge ───
     additional_set: set = set()
     for ref_str in additional_verses_raw:
-        m = _VERSE_REF_PARSE_RE.search(str(ref_str).strip())
+        m = _BOOK_PARSE_RE.search(str(ref_str).strip())
         if m:
             additional_set.add(
                 (_norm_book(m.group(1)), int(m.group(2)), int(m.group(3)))
@@ -1263,10 +1299,7 @@ def _assemble_payload(q, results, verse_index, key_strongs_data,
     for v in results:
         key = (v["book"], v["chapter"], v["verse"])
         thematic = v.get("is_thematic", False)
-        if dc_query:
-            v["is_primary"] = key in _DIVINE_COUNCIL_VERSES
-        else:
-            v["is_primary"] = (key in primary_set) and not thematic
+        v["is_primary"] = (key in primary_set) and not thematic
         v["is_additional"] = thematic or ((key in additional_set) and not v["is_primary"])
 
     # ── Sort in canonical book order (books.id) then chapter/verse ────────
@@ -1283,21 +1316,6 @@ def _assemble_payload(q, results, verse_index, key_strongs_data,
     results.sort(
         key=lambda v: (book_order.get(v["book"], 9999), v["chapter"], v["verse"])
     )
-
-    # ── Hardcoded divine council key_strongs ─────────────────────────────
-    if dc_query:
-        dc_strongs = [
-            {"strongs_base": "5207", "strongs": "G5207", "lemma": "υἱός",    "translit": "huiós",   "definition": "", "derivation": ""},
-            {"strongs_base": "2316", "strongs": "G2316", "lemma": "θεός",    "translit": "theós",   "definition": "", "derivation": ""},
-            {"strongs_base": "5475", "strongs": "H5475", "lemma": "סוֹד",    "translit": "sôd",     "definition": "", "derivation": ""},
-            {"strongs_base": "5712", "strongs": "H5712", "lemma": "עֵדָה",   "translit": "ʿēdâh",  "definition": "", "derivation": ""},
-            {"strongs_base": "1121", "strongs": "H1121", "lemma": "בֵּן",    "translit": "bēn",     "definition": "", "derivation": ""},
-            {"strongs_base": "430",  "strongs": "H430",  "lemma": "אֱלֹהִים","translit": "ʾĕlōhîm","definition": "", "derivation": ""},
-        ]
-        existing_bases = {k["strongs_base"] for k in key_strongs_data}
-        for ks in dc_strongs:
-            if ks["strongs_base"] not in existing_bases:
-                key_strongs_data.append(ks)
 
     # ── Grounding: is the answer backed by a REAL occurrence, or just model knowledge? ──
     if not results:
@@ -1431,7 +1449,7 @@ _ai_cache_ver: str | None = None  # computed once from prompt template + book li
 
 # Bump this integer whenever server-side search logic changes in a way that
 # affects results but doesn't change _AI_SYSTEM_TMPL (e.g. new fallback steps).
-_CACHE_CODE_VER = 41   # 41: language/testament scope directive in the curate prompt (_detect_scope)
+_CACHE_CODE_VER = 42   # 42: mixed-signal scope fix + book-aware pick-parse + divine-council hardcode removed
                        # 40: exact-lemma pin for a bare typed word (_resolve_exact_lemma)
                        # 39: computed lexical-texture panel added to the payload (corpus_panel.py)
 
@@ -2217,6 +2235,10 @@ def ai_search():
         # picks. Cache hits returned above this point stay one-lump (no streaming).
         small_pool  = len(results) <= _CURATE_SKIP_MAX
         cites_verse = bool(_get_verse_ref_re().findall(explanation))
+        # A scoped query MUST reach pass-2 even on a tiny pool: only the pass-2 curate
+        # prompt carries the scope directive, so a scoped rare-word query that skipped it
+        # would show unscoped pass-1 prose. Any detected axis forces curation.
+        scoped      = any(_detect_scope(q).values())
         pass1_expl  = explanation        # the from-memory floor of last resort
 
         def _gen():
@@ -2235,7 +2257,7 @@ def ai_search():
                 # The synthesis streams live. The floor (_parse_curation) decides the
                 # picks; a bad tail re-runs the non-streamed curate for clean picks and
                 # keeps the streamed prose — never a wrong-verse split.
-                if not small_pool or cites_verse:
+                if not small_pool or cites_verse or scoped:
                     cur = _stream_curation(q, results, key_strongs_data)
                     res = None
                     try:

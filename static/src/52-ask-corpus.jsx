@@ -680,7 +680,9 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
     // Follow-up context: hand the recent thread (capped) to the backend so references
     // like "it" / "this word" / "the same word" resolve across the conversation —
     // each ask is otherwise standalone. Last 6 real turns, total trimmed to ~1500 chars.
-    const ctxTurns = thread.filter(t => t && t.question && !t.loading && !t.error).slice(-6);
+    // Notice-turns ("you already asked that", limit-reached, capped, out-of-scope) carry a
+    // question but no real answer — never feed them as context or they look like real asks.
+    const ctxTurns = thread.filter(t => t && t.question && !t.loading && !t.error && !t.local && !t.notice).slice(-6);
     let context = "";
     if (ctxTurns.length) {
       context = ctxTurns.map(t => {
