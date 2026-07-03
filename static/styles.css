@@ -4619,9 +4619,11 @@ button.study-verse-ref { border: none; }
   overflow: hidden; font-family: var(--f-serif); font-size: 12.5px; line-height: 1.5; color: var(--ink-3); }
 .ac-prov-more { align-self: flex-start; font-size: 11.5px; font-weight: 600; color: var(--ai); padding: 3px 2px; }
 .ac-prov-more:hover { text-decoration: underline; }
+/* De-boxed: small-caps text in the AI accent, riding the end of the identity run after the
+   Strong's number (· middot separator) — a quiet semantic cue, not a loud pill that breaks the
+   lemma→translit→Strong's scan line. */
 .ac-prov-contested { font-size: 10px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600;
-  color: var(--ai); background: var(--ai-soft); padding: 2px 6px; border-radius: var(--radius); flex: none;
-  border: 1px solid color-mix(in oklab, var(--ai) 22%, transparent); align-self: center; }
+  color: var(--ai); flex: none; align-self: baseline; white-space: nowrap; }
 /* Merged word list (answer scope + lexical family). De-boxed — the container is not a card,
    just rows. Each row is a 2×2 grid with DEFINED zones so it can't wrap arbitrarily at rail
    width (~460px): lemma + badge + translit + Strong's on the identity line (translit is the

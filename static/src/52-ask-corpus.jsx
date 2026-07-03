@@ -362,9 +362,9 @@ function ProvenancePanel({ answer, panel, onOccInspect, onStrongs, contestedSet 
                       title={(r.inScope ? "Study " : "Family — study ") + (r.translit || r.lemma) + " in Word study"}>
                       <span className="cpanel-word">
                         <span className={"cpanel-lemma" + (heb ? " heb" : "")} dir={heb ? "rtl" : undefined}>{r.lemma}</span>
-                        {r.contested && <span className="ac-prov-contested" title="This word's reading is contested — open it to see the fork">contested</span>}
                         {r.translit && <span className="cpanel-tr">{r.translit}</span>}
                         <span className="cpanel-s refmark">{r.strongs}</span>
+                        {r.contested && <span className="ac-prov-contested" title="This word's reading is contested — open it to see the fork">· contested</span>}
                       </span>
                       <span className="cpanel-gloss">{r.gloss || (r.inScope ? "" : "—")}</span>
                       <span className="cpanel-bar">{r.hasCount && <span style={{ width: barW(r.count, g.max) + "%" }}/>}</span>
