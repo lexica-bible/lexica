@@ -18,9 +18,25 @@ These lock that boundary. Pure — `import ai` needs no bible.db, no model. Run:
 """
 import os
 import sys
+import logging
+from contextlib import contextmanager
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import ai
+
+
+@contextmanager
+def _muted():
+    """Silence the 'bible' logger for a test that trips the guard ON PURPOSE, so a healthy
+    commit doesn't print ERROR lines (which would train us to ignore a REAL leak). The guard
+    keeps its voice in production — only the two deliberate-trip tests below absorb the noise."""
+    lg = logging.getLogger("bible")
+    prev = lg.level
+    lg.setLevel(logging.CRITICAL + 1)
+    try:
+        yield
+    finally:
+        lg.setLevel(prev)
 
 
 # A rich LSJ entry shaped like _lsj_concept_lookup returns: `semantic` is LSJ
@@ -88,14 +104,16 @@ def test_guard_drops_contaminated_block():
     e = _rich_theos_entry()
     clean = ai._retrieval_context([e])
     contaminated = clean + "\nextra: " + e["semantic"]
-    assert ai._assert_no_lexicon_prose(contaminated, [e]) == ""
+    with _muted():
+        assert ai._assert_no_lexicon_prose(contaminated, [e]) == ""
 
 
 def test_guard_drops_cognate_definition_leak():
     e = _rich_theos_entry()
     clean = ai._retrieval_context([e])
     contaminated = clean + "\n  " + e["cognates"][0]["gloss"]
-    assert ai._assert_no_lexicon_prose(contaminated, [e]) == ""
+    with _muted():
+        assert ai._assert_no_lexicon_prose(contaminated, [e]) == ""
 
 
 def test_guard_passes_clean_keys():
