@@ -18,12 +18,16 @@ import build_lexica_def as B
 
 
 def contexts(conn, raw):
-    """[(code, surface, sentence)] for each bare book surface the dangling lint would flag."""
-    stripped = B._REF_RE.sub("  ", raw or "")        # drop COMPLETE refs (they're not dangling)
+    """[(code, surface, sentence)] for each surface the dangling lint would flag. MIRRORS
+    build_lexica_def.dangling_book_refs step-for-step (chapter-strip + soft-skip) so the reporter
+    can't drift from the real lint."""
+    stripped = B._CHAP_ONLY_RE.sub("  ", B._REF_RE.sub("  ", raw or ""))   # ch:vs AND chapter refs
     valid = B._valid_books(conn)
     out = []
     for m in B._DANGLING_BOOK_RE.finditer(stripped):
         surface = m.group(1)
+        if re.sub(r"\s+", "", surface).lower() in B._DANGLING_SOFT:        # bare English/name surface
+            continue
         code = B._norm_book(surface)
         if code not in valid:
             continue
