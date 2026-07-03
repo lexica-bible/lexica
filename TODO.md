@@ -175,9 +175,11 @@ YouVersion, which aren't the target). Honest gaps:
   2026-07-03** (26 calibration words: top-20 content + 6 extension; ran as a checkpointed apply loop, not
   the pipeline driver). Cutoff = occ ≥ 2 (~3,954 words). Full record + the 3-tier ship-gate + frame-leak
   pre-sort rule: memory `project_lexica_dictionary`; **Batch One lessons + calibration numbers + the full
-  batch-two prep list = `AUDIT_lexica_rollout.md`.** Batch-two headline items: **draw cache** (ro saves the
-  reviewed draw, apply writes IT — #1, kills the reviewed≠shipped class: πρόσωπον/δίδωμι/πατήρ all cost a
-  redraw this batch); the **PRE-SORT / PIPELINE driver** (scoped, not built — one driver sorts a G-number
+  batch-two prep list = `AUDIT_lexica_rollout.md`.** **DRAW CACHE (#1) DONE + LIVE 2026-07-03 (commit 484e226):**
+  `--dry-run` saves the reviewed draw to `~/bible-db/draws/G####.json`, `--apply` ships it byte-for-byte with no
+  model call (validity = hash of the full model input; stale→redraw, edited→hard refuse; `--require-cache` default
+  under `--all`); kills the reviewed≠shipped class (πρόσωπον/δίδωμι/πατήρ). Tests + E2E-proven on G25. Remaining
+  batch-two headline items: the **PRE-SORT / PIPELINE driver** (scoped, not built — one driver sorts a G-number
   list into the 3 tiers, runs 1-2 gate-before-build, hands 3 to JP; signals = freq + fork-membership +
   polysemy proxy + loaded-referent); **sampling rate** (100% eyeball register/loaded + SENSE STRUCTURE,
   ~1-in-5 rest); **structural backfill** (οὕτω G3779, ἕως G2193, ἰδού G2400, εἷς G1520 + the 8 oblique
@@ -211,7 +213,7 @@ YouVersion, which aren't the target). Honest gaps:
    too. Archived. See TODO_ARCHIVE + memory `project_lexica_dictionary`.)
   code: scripts/build_lexica_def.py (imports contested_register), fix_lexica_raw.py, lexica_agreement.py, views_lexica.py
 
-- **Verse-aware gloss-note flag on word cards (design-scoping first, NO build — parked; sequence AFTER draw cache, not batch-two-blocking).**
+- **Verse-aware gloss-note flag on word cards (design-scoping first, NO build — parked; draw cache is now done, so unblocked whenever JP wants it; not batch-two-blocking).**
   JP's idea: when a reader opens a word card FROM a specific verse in the interlinear, and that entry's
   gloss_note cites that verse, surface the note at the TOP of the card. Example: tap δίδωμι at 1Sa 22:15 →
   card leads with the impute-freight note because that verse is one of its cited occurrences. Static Library
