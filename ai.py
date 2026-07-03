@@ -678,6 +678,15 @@ the passage panel beside the note already carries the full occurrence list. With
 sense, name ONE example verse or two that show it (every claim still ties to a verse),
 but never march through citations or pile up references — a new paragraph turns on a
 shift in MEANING, never on the next verse in the list.
+CORPUS VOCABULARY: describe meaning from the corpus's own renderings and role-language. Do
+not use post-biblical theological category terms — examples: person/personhood (of God or the
+spirit), Trinity/triune, unmerited (as a qualifier on favor/gift), sacrament, ordinance, means
+of grace, moral authority, hypostasis, deity-as-category, incarnation-as-category. When the
+text shows an action, report the action ("the spirit is sent, speaks, is poured out") rather
+than assigning the actor a category ("a divine person"). Prefer the ABP rendering's own noun or
+verb where one exists: delivered rather than salvation, favor rather than grace, immerse rather
+than baptize, assembly rather than church. Where a word carries the CONTESTED flag, describe
+attested usage without resolving the contested question in either direction.
 SCRIPT: in the prose use the TRANSLITERATION + Strong's number only (e.g. "sabbaton,
 G4521" — never σάββατον), NOT raw Greek or Hebrew letters. The script lives in the word
 chips beside the note; keep the write-up itself readable for a non-Greek reader.
