@@ -309,45 +309,63 @@ def verse_user_msg(sid, translit, gset, ctx):
     return "\n".join(lines)
 
 
-# A verse ref as the engine emits it. Plain book = Cap+2-lower (Gen). Numbered book = a digit, an
-# OPTIONAL separator, then the book — glued (2Ch) OR spaced/spelled-out (2 Chr, 1 Chronicles). The
-# numbered branch is FIRST so it wins the digit; its letter run is UNCAPPED so a full name can't
-# truncate into a non-key. (Before 2026-06-28 the numbered branch demanded the digit glued to a
-# 2-letter book, so a spaced "2 Chr 26:11" orphaned the "2", the plain branch grabbed a bare "Chr"
-# that matches no verses.book code, the cited verse logged no-verse and its sense read ungrounded —
-# even though the verse is real. _norm_book turns the label back into the stored code.)
-_REF_RE = re.compile(r"\b(\d\s*[A-Z][a-z]+|[A-Z][a-z]{2})\s+(\d+):(\d+)")
+# ── Book-label → canonical verses.book code. EXACT-STRING LOOKUP ONLY — NO FALLBACK OF ANY KIND.
+# "Jud" is the canonical code for Jude, but it is also the natural three-letter prefix of "Judges"
+# (code Jdg); any prefix, first-N-letters, or fuzzy fallback would silently file a Judges citation
+# under Jude. So every accepted spelling is an explicit key mapping to exactly one code, an
+# unrecognized label resolves to nothing and is rejected, and a code is never guessed from a partial
+# match. Keys are looked up after lowercasing + removing internal spaces (so "1 Chronicles",
+# "1Chronicles", "1chr" all reach one key) — that is key canonicalization, not fallback; no partial
+# or approximate match ever succeeds. Covers ALL 66 verses.book codes explicitly (replaced the old
+# 3-letter-only _REF_RE + numbered-only _NUM_STEM, which missed every spelled-out book name — the
+# "Ruth"→Rth reject, 2026-07-03).
+_BOOK_CODE, _BOOK_SURFACES = {}, []
+def _reg(code, *labels):
+    for s in (code,) + labels:
+        _BOOK_CODE[re.sub(r"\s+", "", s).lower()] = code
+        _BOOK_SURFACES.append(s)
 
-# Numbered-book label (however the model spelled it) -> the stored verses.book stem. Built against
-# the real `SELECT DISTINCT book` codes (confirmed 2026-06-28): the 8 numbered families only. Both
-# the abbreviation AND the spelled-out name map to one stem, so the uncapped letter run above is safe.
-_NUM_STEM = {
-    "sa": "Sa", "sam": "Sa", "samuel": "Sa",
-    "ki": "Ki", "kg": "Ki", "kgs": "Ki", "kin": "Ki", "king": "Ki", "kings": "Ki",
-    "ch": "Ch", "chr": "Ch", "chron": "Ch", "chronicles": "Ch",
-    "co": "Co", "cor": "Co", "corinthians": "Co",
-    "th": "Th", "thes": "Th", "thess": "Th", "thessalonians": "Th",
-    "ti": "Ti", "tim": "Ti", "timothy": "Ti",
-    "pe": "Pe", "pet": "Pe", "peter": "Pe",
-    "jn": "Jn", "jhn": "Jn", "joh": "Jn", "john": "Jn",
-}
+_reg("Gen","Genesis");            _reg("Exo","Exodus","Exod");        _reg("Lev","Leviticus")
+_reg("Num","Numbers");            _reg("Deu","Deuteronomy","Deut");   _reg("Jos","Joshua","Josh")
+_reg("Jdg","Judges","Judg");      _reg("Rth","Ruth");                 _reg("1Sa","1 Samuel","1 Sam")
+_reg("2Sa","2 Samuel","2 Sam");   _reg("1Ki","1 Kings","1 Kgs");      _reg("2Ki","2 Kings","2 Kgs")
+_reg("1Ch","1 Chronicles","1 Chron","1 Chr"); _reg("2Ch","2 Chronicles","2 Chron","2 Chr")
+_reg("Ezr","Ezra");               _reg("Neh","Nehemiah");             _reg("Est","Esther")
+_reg("Job");                      _reg("Psa","Psalms","Psalm","Ps","Pss"); _reg("Pro","Proverbs","Prov")
+_reg("Ecc","Ecclesiastes","Eccl"); _reg("Son","Song","Song of Songs","Song of Solomon","SoS","Canticles")
+_reg("Isa","Isaiah");             _reg("Jer","Jeremiah");             _reg("Lam","Lamentations")
+_reg("Eze","Ezekiel","Ezek");     _reg("Dan","Daniel");               _reg("Hos","Hosea")
+_reg("Joe","Joel");               _reg("Amo","Amos");                 _reg("Oba","Obadiah","Obad")
+_reg("Jon","Jonah");              _reg("Mic","Micah");                _reg("Nah","Nahum")
+_reg("Hab","Habakkuk");           _reg("Zep","Zephaniah","Zeph");     _reg("Hag","Haggai")
+_reg("Zec","Zechariah","Zech");   _reg("Mal","Malachi")
+_reg("Mat","Matthew","Matt","Mt"); _reg("Mar","Mark","Mk");           _reg("Luk","Luke","Lk")
+_reg("Joh","John","Jn","Jhn");    _reg("Act","Acts");                 _reg("Rom","Romans")
+_reg("1Co","1 Corinthians","1 Cor"); _reg("2Co","2 Corinthians","2 Cor"); _reg("Gal","Galatians")
+_reg("Eph","Ephesians");          _reg("Php","Philippians");          _reg("Col","Colossians")
+_reg("1Th","1 Thessalonians","1 Thess"); _reg("2Th","2 Thessalonians","2 Thess")
+_reg("1Ti","1 Timothy","1 Tim");  _reg("2Ti","2 Timothy","2 Tim");    _reg("Tit","Titus")
+_reg("Phm","Philemon","Phlm");    _reg("Heb","Hebrews");              _reg("Jas","James")
+_reg("1Pe","1 Peter","1 Pet");    _reg("2Pe","2 Peter","2 Pet");      _reg("1Jn","1 John","1 Jn")
+_reg("2Jn","2 John","2 Jn");      _reg("3Jn","3 John","3 Jn");        _reg("Jud","Jude")
+_reg("Rev","Revelation","Apoc","Apocalypse")
+# Deliberate omissions (ambiguous — require the fuller spelling): bare "Jud" stays Jude (Judges must
+# be "Judges"/"Jdg"); bare "Phil" is left unmapped (Philippians vs Philemon); "Jam" is not a key.
+
+# The citation catcher: one of the KNOWN labels (a closed set) followed by ch:vs. Longest-first so
+# "Genesis" wins over "Gen" and "1 Corinthians" over "1Co". CASE-SENSITIVE on purpose — a citation
+# is always capitalized, so lowercase prose ("act 3:4") can never match, and the closed alternation
+# can't grab an arbitrary capitalized word either.
+_BOOK_ALT = "|".join(re.escape(s) for s in sorted(set(_BOOK_SURFACES), key=len, reverse=True))
+_REF_RE = re.compile(rf"(?<![A-Za-z0-9])({_BOOK_ALT})\s+(\d+):(\d+)")
 
 
 def _norm_book(label):
-    """Parsed book label -> stored verses.book code. A numbered ref the model wrote spaced or
-    spelled-out ('2 Chr', '1 Chronicles') becomes the stored glued code ('2Ch', '1Ch'); a glued
-    '2Ch' and a plain 'Gen'/'Joh' pass straight through. If a digit ended up in front of a
-    NON-numbered book (a stray '2 Gen'), the digit is dropped and the plain book is kept — so a ref
-    that resolves today can never move. We only re-attach the numeral already in the source; the
-    1-vs-2 choice is never inferred."""
-    m = re.match(r"^(\d)\s*([A-Za-z]+)$", label.strip())
-    if not m:
-        return label.strip()                      # plain book — already a real code
-    num, book = m.group(1), m.group(2)
-    stem = _NUM_STEM.get(book.lower())
-    if stem:
-        return num + stem                         # 2 Chr / 1 Chronicles -> 2Ch / 1Ch
-    return book                                   # false grab -> drop the digit, keep the plain book
+    """Parsed book label -> stored verses.book code, by EXACT lookup in _BOOK_CODE (no fallback).
+    A known spelling ('Ruth', '1 Chronicles', 'Ps', 'Gen') maps to its code ('Rth', '1Ch', 'Psa',
+    'Gen'); an unknown label returns unchanged so the valid-code check downstream rejects it. See
+    the _BOOK_CODE header for why there is no prefix/fuzzy fallback (the Judges/Jude collision)."""
+    return _BOOK_CODE.get(re.sub(r"\s+", "", label).lower(), label.strip())
 
 
 def cited_refs(text):
@@ -369,24 +387,24 @@ def _valid_books(conn):
     return _VALID_BOOKS
 
 
-# A numbered-book label written with NO following ch:vs = a DANGLING reference the gate can't bind
-# (e.g. "1Ti—" with nothing after it). _REF_RE only matches a complete Book ch:vs, so these slip
-# past silently — never even logged as a miss. We surface them as an advisory lint (never a fail).
-# NUMBERED-ONLY on purpose: "1Ti"/"1 Timothy" almost never appear in prose except as a citation, so
-# the false-positive rate is near zero. A bare "Gen" is deliberately NOT flagged — a 3-letter
-# capital also matches ordinary words ("For"/"God"), and prose legitimately says "throughout
-# Genesis". Distinct from a RECOVERABLE drop (the numeral was in the prose): a dangling ref has no
-# ch:vs at all, so it can only be flagged, never bound.
-_DANGLING_BOOK_RE = re.compile(r"\b(\d\s*[A-Za-z]{2,})\b")
+# A book name written with NO following ch:vs = a DANGLING reference the gate can't bind (e.g.
+# "Ruth—" or "1Ti—" with nothing after it). _REF_RE only matches a complete Book ch:vs, so these
+# slip past silently. SAME closed book-label table as the catcher (2026-07-03) — a dangling "Ruth"
+# is now flagged, not just numbered books. TRADE-OFF, accepted deliberately (fail-closed): a bare
+# book name the model uses in prose without a ref ("throughout Genesis") now also flags and forces a
+# cheap redraw — better than a dangling Ruth shipping silently, and these compact entries essentially
+# never name a book without citing it. Complete refs are stripped first, so only a truly ch:vs-less
+# name remains to flag.
+_DANGLING_BOOK_RE = re.compile(rf"(?<![A-Za-z0-9])({_BOOK_ALT})(?![A-Za-z])")
 
 def dangling_book_refs(conn, text):
-    """Numbered book names the model wrote but never anchored to a ch:vs — invisible to _REF_RE."""
+    """Book names the model wrote but never anchored to a ch:vs — invisible to _REF_RE."""
     stripped = _REF_RE.sub(" ", text or "")        # drop the COMPLETE refs first
     valid, hits = _valid_books(conn), []
     for m in _DANGLING_BOOK_RE.finditer(stripped):
-        label = _norm_book(m.group(1))
-        if label in valid and label not in hits:
-            hits.append(label)
+        code = _norm_book(m.group(1))
+        if code in valid and code not in hits:
+            hits.append(code)
     return hits
 
 
