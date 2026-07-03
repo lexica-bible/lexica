@@ -106,6 +106,33 @@ function AcProse({ text, onVerse, onStrongs, verified }) {
   return <div className="ac-prose">{paras.map((p, pi) => <p key={pi}>{linkify(p, pi)}</p>)}</div>;
 }
 
+// Steady-rate reveal for the streamed answer. The SSE prose arrives in bursts, which paints
+// choppy; this buffers it and shows a few characters per animation frame, speeding up as the
+// backlog grows so the whole answer still finishes at the same time. It never ends the visible
+// text inside a forming verse-ref / Strong's token — the trailing citation run is held back
+// until it completes (or the stream ends), so AcProse can't paint a half-formed or
+// wrong-numbered chip (e.g. flash "Heb 9:1" before "Heb 9:12" arrives). `stop()` cancels the
+// loop; the `done` payload replaces the turn with the full text, an immediate flush.
+const _CITE_TAIL_RE = /[GH]\d*$|\d+[:\d–-]*$/;   // trailing Strong's, or a verse-number run
+function _makeReveal(onShow) {
+  let raw = "", shown = 0, raf = 0;
+  const frame = () => {
+    raf = 0;
+    const backlog = raw.length - shown;
+    if (backlog > 0) {
+      shown = Math.min(raw.length, shown + 2 + Math.floor(backlog / 30));   // 2/frame, faster when behind
+      const vis = raw.slice(0, shown);
+      const m = _CITE_TAIL_RE.exec(vis);
+      onShow(m ? vis.slice(0, m.index) : vis);   // hold a forming citation at the tail
+    }
+    if (shown < raw.length) raf = requestAnimationFrame(frame);
+  };
+  return {
+    push(t) { if (t) { raw += t; if (!raf) raf = requestAnimationFrame(frame); } },
+    stop()  { if (raf) cancelAnimationFrame(raf); raf = 0; },
+  };
+}
+
 // COMPUTED lexical-texture panel — sits ABOVE the AI note (not under the "Synthesis"
 // tag: it is fact, not generated prose). Per word-family: the head word + its
 // gloss-confirmed relatives, each with its full corpus occurrence count and a bar.
@@ -606,6 +633,8 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
   const [quota, setQuota] = useState(null);   // {used, limit, remaining} | {unlimited} — daily AI cap, from the server
   const threadRef = useRef(null);
   const justOpenedRef = useRef(false);   // suppress the save right after reopening a saved thread
+  const smoothRef = useRef(null);        // steady-rate reveal loop for the streaming answer
+  useEffect(() => () => smoothRef.current?.stop(), []);   // cancel any live reveal on unmount
   const rightCtl = useRightStack();   // inspect-panel push stack (occurrence → fork → word)
   const [selectedOcc, setSelectedOcc] = useState(null);   // the peeked occurrence (null = idle)
   const [selIdx, setSelIdx] = useState(null);   // which answer the rail is pinned to (null = follow the newest)
@@ -711,25 +740,33 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
         panel: data.panel || null,           // computed lexical-texture panel (may be absent)
       };
     };
+    // Smooth the streamed prose: deltas feed a buffer that reveals at a steady rate (see
+    // _makeReveal), rather than repainting in bursts. The guard on `streaming` stops a stray
+    // late frame from clobbering a turn the `done` payload has already finalized.
+    smoothRef.current?.stop();
+    const reveal = _makeReveal((show) => setThread(t => t.map((x, i) => (i === idx && x && x.streaming)
+      ? { ...x, explanation: show } : x)));
+    smoothRef.current = reveal;
     try {
       await api.aiSearchStream(q, context, {
         // Panel first: switch out of the "thinking" state and show it while the synthesis writes.
         onPanel: (d) => setThread(t => t.map((x, i) => i === idx
           ? { question: q, streaming: true, panel: d.panel || null, explanation: "" } : x)),
-        // Prose streams in word-by-word; append to the live turn (guard on `streaming` so a
-        // late delta can't clobber a turn the `done` payload has already finalized).
-        onDelta: (text) => setThread(t => t.map((x, i) => (i === idx && x && x.streaming)
-          ? { ...x, explanation: (x.explanation || "") + text } : x)),
-        // Done (or a one-lump cache hit): the authoritative payload replaces the turn.
+        // Prose streams in bursts; buffer it and let the reveal loop paint it smoothly.
+        onDelta: (text) => reveal.push(text),
+        // Done (or a one-lump cache hit): stop the reveal, then the authoritative payload
+        // replaces the turn with the full text (an immediate flush of any buffered tail).
         onDone: (data) => {
+          reveal.stop();
           if (data.quota) setQuota(data.quota);     // refresh the "left today" counter
           setThread(t => t.map((x, i) => i === idx ? buildTurn(data) : x));
           setSelIdx(null);   // the completed answer steals focus (new answer = new focus)
         },
-        onError: (data) => setThread(t => t.map((x, i) => i === idx
-          ? { question: q, error: data.error || "Something went wrong on that one." } : x)),
+        onError: (data) => { reveal.stop(); setThread(t => t.map((x, i) => i === idx
+          ? { question: q, error: data.error || "Something went wrong on that one." } : x)); },
       });
     } catch (e) {
+      reveal.stop();
       setThread(t => t.map((x, i) => i === idx ? { question: q, error: "Network error: " + e.message } : x));
     }
   };
