@@ -299,13 +299,15 @@ heavily guarded. Full record: memory `project_ai_search_architecture` + `project
   data-surgery class: the "Jew" occurrences would need re-tagging to their own number (G2453, currently 0
   in ABP) before anything downstream is clean. Low urgency; only matters if a Jew/Judas Ask-corpus search
   reads muddy. read-only audit path: the query set in this session's transcript.
-- **DONE 2026-07-02: `SPLIT_LEMMA_ALIAS_NOTES` wired into the Word study / Lexica card as a numbering
-  crosswalk.** The card shows a "Strong's numbering" block on BOTH doors of each alias pair, worded by the
-  number the reader arrived on (server captures requested vs the folded served number): standard-side (asked
-  G2411) → "ABP tags this word under G2413"; served-side (asked G2413) → "Standard Strong's G2411" + any pool
-  caveat. `alias_note` field on `/api/lexica` (direction to_abp/from_abp), rendered in LexicaBody Full-entry
-  view, independent of the selected translation tab. Live on χάρις (G5484↔G5485), ἱερόν (G2413↔G2411),
-  δωρεάν (G1431↔G1432).
+- **DONE 2026-07-02: `SPLIT_LEMMA_ALIAS_NOTES` wired as a numbering crosswalk in the card HEADER.** The
+  pointer sits beside the Strong's badge (`.detail-strong-alias`) — the one element present in EVERY card
+  state (Lexica / LSJ / bare), so it shows even on words with no Lexica entry yet (ἱερόν/δωρεάν fall to LSJ).
+  Worded by the door the reader came in: standard-side (asked G2411) → "· ABP: G2413"; served-side (asked
+  G2413) → "· standard: G2411". Server computes `alias_note` (direction to_abp/from_abp) from the alias map
+  and rides it on BOTH the real entry AND the not-found 404, so the LSJ-fallback card still gets it; the
+  panel holds it in its own `aliasNote` state (separate from `lexica`). The pool caveat stays in the
+  LexicaBody Full-entry provenance block ("Pool note", served side) — so it only shows once the served number
+  has a built Lexica entry. Live both directions on χάρις, ἱερόν, δωρεάν.
 - **BUG (separate scope, report-only 2026-07-02): Word study defaults to the ABP filter even when a number has
   0 ABP rows.** Searching a standard number ABP doesn't tag (e.g. G2411 temple) lands on the empty ABP
   occurrence tab — looks like the word has no data. Fix: either the search route shouldn't default to ABP when

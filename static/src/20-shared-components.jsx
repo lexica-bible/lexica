@@ -255,15 +255,12 @@ function LexicaBody({ lexica, lsjEntry }) {
           )}
           {fork && <LexicaFork fork={fork} />}
           {lexica.range && <div className="lex-block"><span className="lex-lbl">Range</span> {lexica.range}</div>}
-          {lexica.alias_note && (
+          {lexica.alias_note && lexica.alias_note.caveat && (
+            // The numbering crosswalk itself renders in the card header (detail-strong-alias);
+            // only the pool caveat lives here, in the served-side Full-entry provenance block.
             <div className="lex-block">
-              <span className="lex-lbl">Strong's numbering</span>
-              <div className="lex-notes">
-                {lexica.alias_note.direction === "to_abp"
-                  ? `ABP tags this word under ${lexica.alias_note.abp}.`
-                  : `Standard Strong's ${lexica.alias_note.standard.join(", ")}.`}
-                {lexica.alias_note.caveat ? " " + lexica.alias_note.caveat : ""}
-              </div>
+              <span className="lex-lbl">Pool note</span>
+              <div className="lex-notes">{lexica.alias_note.caveat}</div>
             </div>
           )}
           {lexica.gloss_notes && <div className="lex-block"><span className="lex-lbl">Gloss notes</span><div className="lex-prose lex-notes">{renderInlineMd(lexica.gloss_notes)}</div></div>}

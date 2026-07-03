@@ -1068,6 +1068,16 @@ input { font-family: inherit; }
   color: var(--ink);
   letter-spacing: 0.01em;
 }
+/* Numbering crosswalk beside the Strong's badge — a quiet reference, not a second badge:
+   same mono face, smaller + muted, so it reads as a footnote to the number it follows. */
+.detail-strong-alias {
+  font-family: var(--f-mono);
+  font-size: 12px;
+  color: var(--muted);
+  margin-left: 6px;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
 .detail-close {
   width: 32px; height: 32px;
   border-radius: var(--radius);

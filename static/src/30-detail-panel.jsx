@@ -512,6 +512,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   const [lsjSummary, setLsjSummary] = useState(null);
   const [lsjSummaryLoading, setLsjSummaryLoading] = useState(false);
   const [lexica, setLexica] = useState(null);
+  // The numbering crosswalk (alias_note) rides the /api/lexica response — on a REAL entry AND on
+  // its not-found 404 — so it survives whichever card body renders (Lexica, LSJ, bare). Held in
+  // its OWN state, separate from `lexica`, so it can show even when the word has no Lexica entry
+  // and falls to LSJ. Rendered ONCE at the shared Definition-section layer, never per-body.
+  const [aliasNote, setAliasNote] = useState(null);
   // The Lexica fork lookup needs its OWN loading flag (init true when a lookup runs at mount)
   // so the Definition block can wait for it before drawing the LSJ fallback — without it a
   // fork word (θεός) paints the LSJ card first, then swaps to the Lexica card when this lands.
@@ -560,6 +565,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
   // card is exactly as before.
   useEffect(() => {
     setLexica(null);
+    setAliasNote(null);
     // Look the entry up by the FULL number (strongs_raw keeps the dotted ".N"), NOT strongs_base
     // (which drops it). A dotted cognate — ekklesiazo G1577.1 / ekklesiastes G1577.2 sitting under
     // ekklesia G1577 — must fetch its OWN number so it 404s and falls through to its own LSJ card,
@@ -570,8 +576,12 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     let cancelled = false;
     setLexicaLoading(true);
     api.lexica(sn)
-      .then(d => { if (!cancelled) setLexica(d && !d.error ? d : null); })
-      .catch(() => { if (!cancelled) setLexica(null); })
+      .then(d => {
+        if (cancelled) return;
+        setLexica(d && !d.error ? d : null);
+        setAliasNote(d ? (d.alias_note || null) : null);   // rides both the real entry and the 404
+      })
+      .catch(() => { if (!cancelled) { setLexica(null); setAliasNote(null); } })
       .finally(() => { if (!cancelled) setLexicaLoading(false); });
     return () => { cancelled = true; };
   }, [entry && entry.id]);
@@ -1089,6 +1099,16 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       <div className="detail-head">
         <div className="detail-head-l">
           <span className="detail-strong-head">{entry.strongs}</span>
+          {/* Numbering crosswalk — the one element present in every card state (Lexica/LSJ/bare),
+              beside the badge where the reader's eye already is. Worded by the door they came in;
+              the pool caveat (if any) stays in the LexicaBody provenance block, served side. */}
+          {aliasNote && (
+            <span className="detail-strong-alias">
+              {aliasNote.direction === "to_abp"
+                ? `· ABP: ${aliasNote.abp}`
+                : `· standard: ${aliasNote.standard.join(", ")}`}
+            </span>
+          )}
         </div>
         {overviewBack && !isMobile ? (
           <button className="detail-back" onClick={onClose} aria-label={"Back to " + backLabel.toLowerCase()}>‹ {backLabel}</button>

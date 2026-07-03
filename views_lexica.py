@@ -121,10 +121,29 @@ def lexica_def(strongs):
     # structural card. Map derived from the CONTESTED register's own "aliases" fields.
     requested = sid                       # the number the reader arrived on, before the fold
     sid = LEXICA_ALIASES.get(sid, sid)
+    # Numbering crosswalk between a word's standard Strong's number and the number ABP tags it
+    # under — worded by which number the reader arrived on (requested vs the folded/served sid).
+    # It's pure code (the alias map, no DB), so it rides EVEN the not-found responses: a word with
+    # no Lexica entry falls back to LSJ, and the pointer still travels on the 404 body for the card
+    # to render at its shared layer. Independent of the selected translation tab.
+    #   standard-side (asked for G2411, folded to G2413): "ABP tags this word under G2413"
+    #   served-side  (asked for the ABP G2413 directly):  "Standard Strong's G2411" + pool caveat
+    # Computed from the alias map (no duplicate bookkeeping); gloss_notes stays authored-only.
+    alias_note = None
+    if requested != sid:
+        alias_note = {"direction": "to_abp", "abp": sid, "standard": [requested], "caveat": ""}
+    else:
+        _std = sorted(k for k, v in LEXICA_ALIASES.items() if v == sid)
+        _caveat = SPLIT_LEMMA_ALIAS_NOTES.get(sid, "")
+        if _std or _caveat:
+            alias_note = {"direction": "from_abp", "abp": sid, "standard": _std, "caveat": _caveat}
+    _notfound = {"error": "not found"}
+    if alias_note:
+        _notfound["alias_note"] = alias_note      # ride the 404 so an LSJ-fallback card still shows it
     conn = db_ro()
     try:
         if not _has_lexica(conn):
-            return jsonify({"error": "not found"}), 404      # table not built yet — fall back to LSJ
+            return jsonify(_notfound), 404                   # table not built yet — fall back to LSJ
         row = conn.execute(
             "SELECT def_json FROM lexica_def WHERE strongs = ?", (sid,)
         ).fetchone()
@@ -134,7 +153,7 @@ def lexica_def(strongs):
     finally:
         conn.close()
     if not row or not row["def_json"]:
-        return jsonify({"error": "not found"}), 404
+        return jsonify(_notfound), 404
     try:
         entry = json.loads(row["def_json"])
     except Exception:
@@ -146,21 +165,8 @@ def lexica_def(strongs):
     if sid in CONTESTED_BY_SID and not entry.get("fork"):
         log.error("CONTESTED word %s stored WITHOUT a fork — refusing to serve; run "
                   "scripts/build_lexica_def.py --resplit --word %s --apply on PA", sid, sid)
-        return jsonify({"error": "not found"}), 404
+        return jsonify(_notfound), 404
     entry.pop("raw", None)        # the browser uses the split fields, not the full prose blob
-    # Numbering crosswalk between a word's standard Strong's number and the number ABP tags it
-    # under — shown on BOTH doors into the shared entry, worded by which number the reader arrived
-    # on (requested vs the folded/served sid). Independent of the selected translation tab.
-    #   standard-side (asked for G2411, folded to G2413): "ABP tags this word under G2413"
-    #   served-side  (asked for the ABP G2413 directly):  "Standard Strong's G2411" + pool caveat
-    # Computed from the alias map (no duplicate bookkeeping); gloss_notes stays authored-only.
-    if requested != sid:
-        entry["alias_note"] = {"direction": "to_abp", "abp": sid,
-                               "standard": [requested], "caveat": ""}
-    else:
-        _std = sorted(k for k, v in LEXICA_ALIASES.items() if v == sid)
-        _caveat = SPLIT_LEMMA_ALIAS_NOTES.get(sid, "")
-        if _std or _caveat:
-            entry["alias_note"] = {"direction": "from_abp", "abp": sid,
-                                   "standard": _std, "caveat": _caveat}
+    if alias_note:
+        entry["alias_note"] = alias_note
     return jsonify(entry)
