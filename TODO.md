@@ -308,10 +308,15 @@ heavily guarded. Full record: memory `project_ai_search_architecture` + `project
   G2455). Data-surgery: the πλείων occurrences would need re-tagging to G4119 before a "more/greater" search
   or a Lexica entry for the comparative is clean. Low urgency. Anchors that pinned it: Mat 21:36 / Heb 3:3 /
   Joh 21:15.
-- **G1246 suspect — check the 5 "without cause" rows** (surfaced same sweep, 2026-07-02). G1246 turned up in
-  the δωρεάν sweep; check whether those ~5 "without cause" rows are actually δωρεάν mis-keyed — if so they
-  belong on **G1431** (the dorea "gift" number the new G1432→G1431 alias points at) and are a data-surgery
-  re-tag, not an alias. Read-only first: profile G1246's rows + renderings, confirm identity before anything.
+- **G1246 suspect — RESOLVED 2026-07-02: query artifact, not disease.** The 5 "without cause" rows are a
+  GENUINELY DISTINCT word — διὰ κενῆς ("through emptiness" = in vain/without cause), an LXX idiom Strong's NT
+  numbering never assigned, so ABP parked it as a dotted extension near G1246 (διάκενος "empty, hollow" is the
+  alphabetically adjacent lemma). NOT δωρεάν mis-keyed; nothing missing from G1431's pool — the δωρεάν alias
+  shipped complete. The false alarm was the audit itself: `strongs_base` strips the dot, so the dotted διὰ κενῆς
+  rows collapsed onto the hapax διακατελέγχομαι G1246 and looked like contamination. **AUDIT LESSON: base-grouped
+  sweeps are blind to dotted variants — future alias/homeless-lemma sweeps must group on the full dotted number
+  (or surface it alongside strongs_base).** Confirm in Word study: G1246's dotted entries show διὰ κενῆς carrying
+  those 5 rows.
 - **STATE.md is stale** (last refreshed 2026-06-28 — still lists the referent cards + the ἵνα graph as
   NOT BUILT). Refresh next time it's handed to a reviewer.
 - **#4 parallelize the cognate + Hebrew DB loops** (follow-up, not started) — read-only independent loops
