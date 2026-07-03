@@ -6,6 +6,24 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-07-03 — Lexica definition engine: frequency rollout Batch One + book-name gate closed
+- **Batch One (26 calibration words) BUILT + LIVE.** First real frequency-ranked batch of the ~3,954-word
+  rollout. 19 fresh + 7 prior. Full record — candidate build, checkpoints, lessons, calibration numbers,
+  batch-two prep — lives in `AUDIT_lexica_rollout.md` (repo) + memory `project_lexica_dictionary`.
+- **Spelled-out book-name gate (audit B1) — CLOSED.** The old ref-catcher only took 3-letter codes, so a
+  model-written "Ruth 1:16" (code `Rth`) hit the non-canonical hard-reject (cost 2 clean words). Replaced with
+  ONE closed exact-match book table in `build_lexica_def.py` (`_BOOK_CODE`/`_reg`/`_BOOK_ALT`/`_norm_book` —
+  all 66 codes + full names + safe abbrevs, NO fallback). Judges/Jude collision is the correctness argument
+  ("Jud" = Jude's code AND Judges' prefix). This ALSO closed the two parked sub-items: spelled-out names now
+  auto-resolve (not just reject), and the dangling lint was safely extended to plain book names (soft-skip set
+  + chapter-strip handle the "Noah, Ruth, Esther" prose false-positives). Locked by `tests/test_lexica_book_norm.py`.
+- **LESSON (what looked true → true → tip-off):** (1) the reviewed draft is NOT the shipped draft — `--apply`
+  regenerates a fresh draw, so a word can pass the read-only pass then ship differently (πρόσωπον cleared ro,
+  then drew "Ruth" at apply; πατήρ redrew 4→3 senses). Tip-off: three redraws in one batch, same root. Fix =
+  the draw-cache feature (batch-two #1). (2) A confirmation tool that keeps its OWN copy of the scan silently
+  goes stale — `audit_dangling_context.py` printed byte-identical output after the lint changed. Tip-off: the
+  identical output. Rule now in memory `feedback_audit_tools_must_fail`.
+
 ## 2026-07-03 — Ask-corpus Tier 1 cache + Word study fetches + small sweeps
 - **Tier 1 scope-fold cache** (`_scope_tag`, ver 47). The exact-repeat cache already existed + was free; the
   one hole was that punctuation-strip in the key vs O.T./N.T. scope detection collided "fire O.T." with

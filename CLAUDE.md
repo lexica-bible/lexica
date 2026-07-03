@@ -362,8 +362,10 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   once the prompt is diff-locked. **Full-build BATCH 1 DONE 2026-06-25** (12 words, the calibration batch; tiers proved out — 3-tier ship-gate:
   concrete/low-polysemy build-one-draw · mid-polysemy `lexica_agreement --runs 3` · high-polysemy/contested/
   loaded-referent `--runs 10`-or-eyes). **Rare-word stress test GREEN 2026-06-29 (engine stays honest when
-  starved — no manufactured senses); cutoff = occ ≥ 2 (~3,954 words), PARKED. Splitter is now split3 =
-  bold-OR-plain sense headers. Next = the batch-2 PRE-SORT/PIPELINE script (scoped, not built).**
+  starved — no manufactured senses); cutoff = occ ≥ 2 (~3,954 words); splitter is split3 (bold-OR-plain
+  headers). **FREQUENCY ROLLOUT STARTED — its own Batch One (26 words) DONE + LIVE 2026-07-03; the
+  exact-match book-label table + widened dangling lint shipped with it. Lessons + calibration numbers +
+  batch-two prep (draw cache #1): `AUDIT_lexica_rollout.md`.**
   **θεός G2316 + κύριος G2962 FORKED 2026-06-27** (batch-1 had shipped them pure-engine — the loaded-referent
   blind spot the batch-1 finding flagged): hand-added to `CONTESTED` as membership-only forks (no `pin_core`,
   the sarx/ekklesia pattern). θεός = a NARROW John 1:1c anarthrous-predicate fork (the baked "identifies the

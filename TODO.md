@@ -165,11 +165,19 @@ YouVersion, which aren't the target). Honest gaps:
 
 - **Lexica dictionary — verse-grounded word defs (Sonnet engine; LSJ display-only).** Pilot + full-build
   BATCH 1 are PUBLIC (~18 cards, `LEXICA_ADMIN_ONLY=False`); contested words hand-pinned; θεός/κύριος
-  forked; the rare-word stress test is GREEN. Cutoff = occ ≥ 2 (~3,954 words), PARKED until JP calls the
-  full build. Full record + the 3-tier ship-gate + the frame-leak pre-sort rule: memory
-  `project_lexica_dictionary`. **NEXT = the batch-2 PRE-SORT / PIPELINE script** (scoped, not built): one
-  driver sorts a G-number list into the 3 tiers, runs tiers 1-2 itself (gate-before-build), hands tier 3
-  to JP; signals = freq + fork-membership + polysemy proxy + loaded-referent flag. Open sub-items:
+  forked; the rare-word stress test is GREEN. **FREQUENCY ROLLOUT STARTED — its own BATCH ONE DONE + LIVE
+  2026-07-03** (26 calibration words: top-20 content + 6 extension; ran as a checkpointed apply loop, not
+  the pipeline driver). Cutoff = occ ≥ 2 (~3,954 words). Full record + the 3-tier ship-gate + frame-leak
+  pre-sort rule: memory `project_lexica_dictionary`; **Batch One lessons + calibration numbers + the full
+  batch-two prep list = `AUDIT_lexica_rollout.md`.** Batch-two headline items: **draw cache** (ro saves the
+  reviewed draw, apply writes IT — #1, kills the reviewed≠shipped class: πρόσωπον/δίδωμι/πατήρ all cost a
+  redraw this batch); the **PRE-SORT / PIPELINE driver** (scoped, not built — one driver sorts a G-number
+  list into the 3 tiers, runs 1-2 gate-before-build, hands 3 to JP; signals = freq + fork-membership +
+  polysemy proxy + loaded-referent); **sampling rate** (100% eyeball register/loaded + SENSE STRUCTURE,
+  ~1-in-5 rest); **structural backfill** (οὕτω G3779, ἕως G2193, ἰδού G2400, εἷς G1520 + the 8 oblique
+  pronouns); **ἅγιον G39 gloss check** before build; ranker checks stamps upfront; ai.py↔build `_norm_book`
+  cross-comments (bare "Jud" disagrees by design); **πατήρ adjudication** (JP picks the 4-sense vs 3-sense
+  draw). Open sub-items:
   - Point `lexica_agreement.per_sense` at the new `_sense_spans` (still bold-only → a plain draw reads as
     a phantom sense-count wobble at batch scale).
   - Re-check the 80% / min-4 LXX-provenance cutoff at scale (tuned on 18 words).
@@ -197,14 +205,6 @@ YouVersion, which aren't the target). Honest gaps:
     paraphrase reach output: `_lsj_concept_lookup` feeds LSJ semantic snippets into the Haiku SQL-gen prompt
     (steers key_strongs), and the Ask-corpus rail renders `target.definition` = `strongs_def` unlabeled
     (the field the word card was moved OFF of, per views_lsj.py:297). Fold into the Corpus right-rail work.
-  - **Spelled-out / non-canonical book-name gate (audit B1) — MOSTLY CLOSED 2026-07-02.** A citation with a
-    2-letter abbrev ("Ps"/"Jn"/"Mt") or a spelled-out name ("Matthew 5:17") escaped `_REF_RE` (only catches
-    numbered books + `Cap+2low`), so it never reached the gate — silent unverified ship (found as a real "Ps 2:7"
-    in G5207). `noncanon_book_refs()` now HARD-REJECTS these at write time (canonical codes only). Remaining gap
-    (minor): a spelled-out name is rejected, not auto-recovered into its valid code — must be hand-fixed. commit fb1c461.
-    The NUMBERED-dangling twin (a numbered book with no ch:vs) is caught by `dangling_book_refs()` (2026-06-29) —
-    confirmed + fixed live in chárin G5484 on 2026-07-03 (built before the lint, so it shipped dirty; swept all 18,
-    only hit, now 38/38 clean). Plain-book extension PARKED (false-positives on prose like "Ruth, Esther"). No code change.
   - **pinned_core presentation labeling (audit B4)** — the hand-authored pinned core leads the Meaning view
     under the "✓ verified" badge with no marker distinguishing it from engine output; provenance is
     "verse-grounded · LEXICA" unconditionally. Presentation call, fold into the card review.
@@ -399,6 +399,26 @@ admin flips the role). Memory `project_payments_donations`. Open:
   welcome message (the cap CTA points people there).
 - OPTIONAL: a Ko-fi webhook → auto-set the berean role (no email-claim step). Berean daily cap stays 10.
   code: views_notes.py (role grant / AI_DAILY_LIMITS); a new Ko-fi webhook endpoint if automated.
+
+---
+
+## Licensing / attributions (no credits page exists yet — 2026-07-03)
+The app currently has NO attributions/credits page. Some sources legally REQUIRE credit; add a page.
+- **Build an attributions/credits page.** Plain text on a single route (no decorative containers —
+  design doctrine). CC BY / BY-SA both REQUIRE naming the license AND linking it, not just the source —
+  so each entry needs its license name + link (CC BY 4.0 → creativecommons.org/licenses/by/4.0/,
+  CC BY-SA 4.0 → creativecommons.org/licenses/by-sa/4.0/). Must name the attribution-required sources:
+  - TAHOT (Hebrew OT) — STEP Bible / Tyndale House, CC BY — attribute.
+  - TIPNR (names/entities) — STEP Bible / Tyndale House, CC BY — attribute.
+  - TBESG / TBESH (word glosses in `word_gloss`) — STEP Bible / Tyndale House, CC BY — attribute.
+  - Apostolic Fathers + Didache Greek — Tauber/Lake/Brannan, CC **BY-SA** — attribute AND share-alike
+    (share-alike may obligate licensing our derivative the same way — worth a closer look).
+  - Public-domain sources (no legal requirement, but good form to credit): KJV, BSB (CC0), Brenton LXX,
+    LSJ, BDB, Strong's, Dodson, TSK (Torrey), Lightfoot, Charles/Wesley pseudepigrapha, Source Serif (OFL).
+- **ABP licensing** — SEPARATE issue, a permission/paid-license question not an attribution one. ABP
+  (Charles Van der Pool) is copyrighted and it's our primary shipped text (+ everything derived: the
+  BibleHub scrape, words/verses, abp_surface, Lexica defs). The one real licensing exposure in the live
+  product. JP to raise with chat.
 
 ---
 
