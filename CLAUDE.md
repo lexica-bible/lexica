@@ -572,6 +572,15 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   that's a DIFFERENT word than its base resolves the base's lemma through the join. The `dotted_lexicon`
   side table + a COALESCE in the word card correct this (see that table + memory `project_dotted_strongs_lemma`);
   form-variants like 1510.x (forms of εἰμί) correctly keep the base lemma.
+- **AUDIT RULE — dotted-number blindness (hard, standing; cost two false positives 2026-07-02).** ANY
+  Strong's-number audit query operates on the FULL dotted number by DEFAULT (the raw `strongs` column, e.g.
+  `G1246.2`). Grouping/counting on `strongs_base` — which strips the `.N` — is allowed ONLY with an explicit
+  reason. And any **"count = 0"** or **"orphan / contaminated rows"** finding MUST check dotted variants
+  BEFORE it counts as a finding: a base number showing 0 says NOTHING about its dotted neighbors, and a
+  base-group can lump a real dotted word (διὰ κενῆς G1246.x) onto an unrelated hapax and look like
+  contamination. Dotted numbers carry real content in this data (G303.1 ἀνὰ μέσον, διὰ κενῆς). This matters
+  most at SCALE — the Lexica-def rollout arc (~3,954 words) run with a dot-blind pattern would manufacture
+  false positives wholesale.
 - `kjv_strongs.strongs_id` is also fully prefixed (was always so)
 - Always use single-match in SQL: WHERE w.strongs_base = 'G4151'
 - After ANY words-table rebuild, verify: `SELECT count(*) FROM words WHERE strongs_base GLOB '[0-9]*'` must be 0

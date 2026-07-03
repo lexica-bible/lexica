@@ -13,6 +13,12 @@ finds nothing. LEXICA_ALIASES fixes each such pair by hand — this script finds
   Greek  primary corpus = ABP `words` (bible.db)          parallel = KJV + BSB
   Hebrew primary corpus = `heb_words` (heb.db, TAHOT OT)   parallel = KJV + BSB
 
+DOTTED-NUMBER RULE (hard; cost two false positives 2026-07-02, see CLAUDE.md strongs_base section):
+  A "count = 0" on a base number is dot-blind — the occurrences may live on a dotted variant, and a
+  base-group can lump a real dotted word (dia kenes G1246.x) onto an unrelated hapax and read as
+  contamination. Any 0-count / orphan finding here MUST be re-checked on the FULL dotted number (raw
+  `strongs`, e.g. G1246.2) before it counts as a candidate.
+
 THE SIGNATURE (a suspect):
   1. head exists in lexicon (Greek) / bdb (Hebrew), AND
   2. primary-corpus occurrence count <= NEAR_ZERO, AND
