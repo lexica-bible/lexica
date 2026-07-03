@@ -134,8 +134,31 @@ preserved in the logs.
   phrase-boundary fix gets scheduled BEFORE or DURING the rollout.
 
 ## Batch-two prep list (consolidated closing section)
-1. **Draw cache** — ro saves the reviewed draw, apply writes THAT draw. Highest priority (kills the
-   three lesson-2 risk classes).
+1. **Draw cache — DONE + LIVE 2026-07-03** (commit 484e226). ro (`--dry-run`) saves the model's prose
+   to `~/bible-db/draws/G####.json`; `--apply` reads it, no model call, ships it byte-for-byte. Same
+   split/gate/validate chain runs on the cached prose — the cache changes WHAT is gated, never WHETHER.
+   Validity = a live-recomputed hash of the exact model input (prompt + fed sample + model); STALE
+   (input moved) is ignored, EDITED (prose bytes changed since review) is a hard refuse. `--require-cache`
+   refuses a word with no reviewed draw (ON by default under `--all`; `--allow-unreviewed` opts out).
+   Single-word `--apply` stays permissive with a loud UNREVIEWED banner and writes no draw file. `--force`
+   draws fresh + refreshes the cache. Client is now lazy (applying cached draws needs no API key). Kills
+   the three lesson-2 risk classes. Tests: `tests/test_lexica_draw_cache.py` (no anthropic dep).
+   - **E2E proof (G25 ἀγαπάω):** ro saved draw key `d226a19d`; apply printed `using reviewed draw … —
+     no model call`; shipped `raw` == reviewed `raw` BYTE-IDENTICAL. G25 is now LIVE.
+   - **G25 content JUDGED, flag resolved clean — SHIPPED, no redraw (JP, 2026-07-03).** ONE sense with
+     directional/object range is the defensible structure for ἀγαπάω (and the anti-"agape = special
+     divine love" position — the right side of that gloss fight). The `ἀλλήλων` "one another" collocation
+     flag (0-in-the-fed-40) resolves on substance: the reciprocal use is NOT absent — it's covered as
+     "reciprocal community obligation (Lev 19:18; Luk 6:32)"; the draw reached the same seam through
+     other fed verses. What's unfed is the specific Johannine command-form instances (Joh 13:34 / 1Jn 3–4),
+     not the sense. No sampler nudge.
+   - **GENERALIZABLE RULE — flag + eyeball is the designed control, it just worked.** When a collocation
+     flag fires and the eyeball confirms the sense IS covered via other verses: that's a PASS — record
+     "flag resolved: sense present, instances unfed" and ship. Only nudge the sample when the eyeball
+     finds the sense GENUINELY ABSENT. Do NOT build a force-feed mechanism preemptively — the flag +
+     eyeball IS the control (flag fired → looked → covered). If batch two turns up a flagged collocation
+     whose sense is really missing, THAT's when the force-feed question gets real, with a concrete case
+     to design against.
 2. **Sampling rate proposal (from this batch).** The write-time gate is a reliable AUTO floor (2 Ruth
    saves, zero false blocks); the freight/dangling lints self-fire. So no full eyeball needed for hard
    errors. Eyes still required on: register/loaded-referent words + SENSE STRUCTURE (lesson 4).
