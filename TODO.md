@@ -299,6 +299,9 @@ heavily guarded. Full record: memory `project_ai_search_architecture` + `project
   data-surgery class: the "Jew" occurrences would need re-tagging to their own number (G2453, currently 0
   in ABP) before anything downstream is clean. Low urgency; only matters if a Jew/Judas Ask-corpus search
   reads muddy. read-only audit path: the query set in this session's transcript.
+- **Wire `SPLIT_LEMMA_ALIAS_NOTES` into the definition engine** (2026-07-02). The provenance note on G2413
+  (temple pool holds ~5 real "sacred" adjective rows) is stored-only in contested_register.py, read by nothing
+  yet. QUEUE behind the G2316 sense-4 call so both G-word caveat mechanisms land under one review.
 - **G4119 (πλείων "more") tagging-side merge — writeup** (surfaced by the homeless-lemma sweep, 2026-07-02).
   G4119 = 0 rows in ABP; the comparative πλείων is collapsed into its base word **G4183 πολύς "many/much"**.
   NOT an alias-fold candidate — folding "more" into G4183 drags the whole πολύς pool along (same class as
