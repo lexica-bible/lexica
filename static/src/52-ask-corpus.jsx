@@ -721,6 +721,22 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
         return `Asked: "${(t.question || "").slice(0, 160)}".` + (lem ? ` Key words: ${lem}.` : "");
       }).join("\n").slice(0, 1500);
     }
+    // Thread skeleton: a digest of what earlier ANSWERS covered (head word(s) + a one-line
+    // sense summary), so the reader-facing synthesis (pass 2) builds on the thread instead
+    // of re-walking senses already given. Reuses the SAME ctxTurns (so the F13 notice filter
+    // applies once); only turns that produced a real answer contribute. Backend injects the
+    // "don't restate" directive only when this is non-empty — first turn sends nothing.
+    let skeleton = "";
+    const answered = ctxTurns.filter(t => t.explanation);
+    if (answered.length) {
+      skeleton = answered.map((t, i) => {
+        const heads = (t.keyStrongs || []).slice(0, 3)
+          .map(k => [k.translit || k.lemma, k.strongs].filter(Boolean).join(" "))
+          .filter(Boolean).join(", ");
+        const sense = (t.explanation || "").replace(/\s+/g, " ").trim().slice(0, 160);
+        return `Turn ${i + 1}: ${heads ? heads + " — " : ""}${sense}`;
+      }).join("\n").slice(0, 1000);
+    }
     setThread(t => [...t, { question: q, loading: true }]);
     // buildTurn maps a finished payload (streamed OR a one-lump cache hit) to a turn.
     const buildTurn = (data) => {
@@ -748,7 +764,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
       ? { ...x, explanation: show } : x)));
     smoothRef.current = reveal;
     try {
-      await api.aiSearchStream(q, context, {
+      await api.aiSearchStream(q, context, skeleton, {
         // Panel first: switch out of the "thinking" state and show it while the synthesis writes.
         onPanel: (d) => setThread(t => t.map((x, i) => i === idx
           ? { question: q, streaming: true, panel: d.panel || null, explanation: "" } : x)),

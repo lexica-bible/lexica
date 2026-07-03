@@ -1018,12 +1018,48 @@ def _scope_directive(scope: dict) -> str:
     return "SCOPE DIRECTIVE (overrides the default Greek-first framing):\n" + body
 
 
+# A thread skeleton is a digest of what EARLIER answers in the conversation already
+# covered (head word(s) + a one-line sense summary per prior turn). It is assembled
+# CLIENT-SIDE from the stored thread turns (the browser holds the prior answers; the
+# server never stores a thread) and sent only on FOLLOW-UPS, reusing the same recent-turn
+# / notice filter that builds the pass-1 context weave. Caps mirror the frontend's:
+# ≤6 turns, a hard char budget so a long thread can't blow up the curate prompt.
+_SKELETON_MAX_TURNS = 6
+_SKELETON_MAX_CHARS = 1000
+
+
+def _skeleton_directive(skeleton: str) -> str:
+    """The pass-2 'already covered' directive, injected on FOLLOW-UPS only. Empty/blank
+    skeleton → "" so a FIRST turn's curate prompt is byte-identical to today (same pattern
+    as _scope_directive). Defensive caps applied here too so the directive can't grow
+    unbounded even if the client sends more than it should."""
+    lines = [ln.strip() for ln in (skeleton or "").splitlines() if ln.strip()]
+    if not lines:
+        return ""
+    body = "\n".join(lines[:_SKELETON_MAX_TURNS])[:_SKELETON_MAX_CHARS].strip()
+    if not body:
+        return ""
+    return (
+        "THREAD CONTEXT — earlier answers in this conversation already covered:\n"
+        f"{body}\n"
+        "Do NOT restate senses or evidence already given above. Build on them: reference an "
+        "already-covered sense in a clause, not a paragraph, and spend this answer on what the "
+        "NEW question adds. If the new question turns on a DIFFERENT word than those above, treat "
+        "it as a fresh word study — this rule limits repeating content, it never forces continuity."
+    )
+
+
 def _curation_prompt(
-    query: str, results: list[dict], key_strongs_data: list[dict] | None = None
+    query: str, results: list[dict], key_strongs_data: list[dict] | None = None,
+    skeleton: str = "",
 ) -> tuple[str, int]:
     """Build the pass-2 user message + the primary-verse cap. Shared by the streamed and
     non-streamed curation paths so both feed Sonnet the IDENTICAL prompt — streaming
-    changes only how the answer reaches the reader, never what the model is asked."""
+    changes only how the answer reaches the reader, never what the model is asked.
+
+    `skeleton` (follow-ups only) injects a 'this thread already covered …' directive so the
+    synthesis builds on prior answers instead of re-walking them; "" on a first turn leaves
+    the prompt byte-identical to before this feature."""
     # Scale input window and primary target with result pool size.
     n = len(results)
     if n >= 200:
@@ -1091,19 +1127,25 @@ def _curation_prompt(
     # untouched). Placed with the instructions, above the verse list.
     scope_note = _scope_directive(_detect_scope(query))
     scope_block = f"{scope_note}\n\n" if scope_note else ""
+    # Follow-up thread context → a 'don't restate what's already covered' directive.
+    # Stacks after the scope directive, above the verse list. "" on a first turn.
+    skeleton_note = _skeleton_directive(skeleton)
+    skeleton_block = f"{skeleton_note}\n\n" if skeleton_note else ""
     user_msg = (
         f"Query: {query}\n"
         f"Key word(s) under study: {terms}\n"
         f"Write the explanation first (grounded ONLY in the verses below), then the "
         f"===VERSES=== marker and up to {primary_cap} primary verses as JSON.\n\n"
         f"{scope_block}"
+        f"{skeleton_block}"
         f"Verses:\n{verse_list}"
     )
     return user_msg, primary_cap
 
 
 def _curate_primary_verses(
-    query: str, results: list[dict], key_strongs_data: list[dict] | None = None
+    query: str, results: list[dict], key_strongs_data: list[dict] | None = None,
+    skeleton: str = "",
 ) -> tuple[list[str], list[str], str]:
     """Pass 2, NON-STREAMED — the fallback path AND the floor under the streamed path.
     Sends the real verse texts to Sonnet, which picks the evidence verses AND writes the
@@ -1113,7 +1155,7 @@ def _curate_primary_verses(
     """
     if not results or not _anthropic:
         return [], [], ""
-    user_msg, primary_cap = _curation_prompt(query, results, key_strongs_data)
+    user_msg, primary_cap = _curation_prompt(query, results, key_strongs_data, skeleton)
     # Pass 2 occasionally comes back unreadable or cut off on a long answer. Guard it: a
     # roomier word budget, an explicit cut-off warning, and one retry (a transient API
     # hiccup) before the downgrade. The tail-parse is fail-closed (_parse_curation).
@@ -1157,7 +1199,8 @@ def _streamable_prose(full: str, hold: int) -> str:
 
 
 def _stream_curation(
-    query: str, results: list[dict], key_strongs_data: list[dict] | None = None
+    query: str, results: list[dict], key_strongs_data: list[dict] | None = None,
+    skeleton: str = "",
 ):
     """Pass 2, STREAMED. A generator that YIELDS prose-delta strings as Sonnet writes the
     synthesis (the JSON picks tail is withheld), then RETURNS the parsed outcome:
@@ -1168,7 +1211,7 @@ def _stream_curation(
     """
     if not results or not _anthropic:
         return None
-    user_msg, primary_cap = _curation_prompt(query, results, key_strongs_data)
+    user_msg, primary_cap = _curation_prompt(query, results, key_strongs_data, skeleton)
     hold = len(_CURATION_MARK)
     full, emitted = "", 0
     with _anthropic.messages.stream(
@@ -1624,6 +1667,11 @@ def ai_search():
         # so references like "it" / "the same word" resolve. Capped; a follow-up is
         # thread-specific so it's never cached — it always runs fresh.
         context = request.args.get("context", "").strip()[:2000]
+        # Follow-up thread skeleton (client-assembled digest of what EARLIER answers
+        # covered) → feeds the pass-2 'don't restate' directive. Empty on a first turn,
+        # so first-turn behaviour is unchanged. Sent alongside context; same never-cached
+        # lifecycle (follow-ups aren't cached).
+        skeleton = request.args.get("skeleton", "").strip()[:1500]
         log.debug("ai_search called: q=%r context=%r", q, context[:120])
         if not q:
             return jsonify({"error": "no query"}), 400
@@ -2323,7 +2371,7 @@ def ai_search():
                 # picks; a bad tail re-runs the non-streamed curate for clean picks and
                 # keeps the streamed prose — never a wrong-verse split.
                 if not small_pool or cites_verse or scoped:
-                    cur = _stream_curation(q, results, key_strongs_data)
+                    cur = _stream_curation(q, results, key_strongs_data, skeleton)
                     res = None
                     try:
                         while True:
@@ -2334,7 +2382,7 @@ def ai_search():
                         pass                  # nothing to curate — keep the pass-1 prose
                     elif res[0] is None:
                         # streamed tail unparseable → FLOOR: clean picks from the non-streamed curate
-                        primary_raw, additional_raw, _fe = _curate_primary_verses(q, results, key_strongs_data)
+                        primary_raw, additional_raw, _fe = _curate_primary_verses(q, results, key_strongs_data, skeleton)
                         expl = res[2] or _fe or expl
                     else:
                         primary_raw, additional_raw, curated = res

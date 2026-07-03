@@ -69,8 +69,10 @@ const api = {
   // word-by-word, the verse evidence lands at the tail. A cache hit (or a quota / login /
   // error reply) comes back as one-lump JSON instead — detected by content type — and is
   // handed straight to onDone, exactly like the old aiSearch.
-  aiSearchStream: async (q, context, { onPanel, onDelta, onDone, onError }) => {
-    const url = `/api/ai-search?q=${encodeURIComponent(q)}${context ? `&context=${encodeURIComponent(context)}` : ""}`;
+  aiSearchStream: async (q, context, skeleton, { onPanel, onDelta, onDone, onError }) => {
+    const url = `/api/ai-search?q=${encodeURIComponent(q)}`
+      + (context ? `&context=${encodeURIComponent(context)}` : "")
+      + (skeleton ? `&skeleton=${encodeURIComponent(skeleton)}` : "");
     const resp = await fetch(url, { headers: _authHeaders() });
     if (!(resp.headers.get("content-type") || "").includes("text/event-stream")) {
       let data; try { data = await resp.json(); } catch (e) { data = { error: "Couldn't read the answer." }; }
