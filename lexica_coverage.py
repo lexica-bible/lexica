@@ -79,6 +79,22 @@ MAX_EXAMPLES  = 6    # example refs shown per flagged collocation.
 # piece-B (finished-entry coverage) catch, not an A catch. See ACCEPTANCE below.
 PMI_MIN = 4.0
 
+# ── Collocation FLAG gate (adopted 2026-07-03 from the round-2 flag audit; full rationale in
+# AUDIT_lexica_rollout.md, batch-two-prep item 7). The stored `collocations` list stays COMPLETE at
+# tightness >= PMI_MIN (4.0) for reference; a collocation only becomes an advisory FLAG (the
+# reader-facing rollup) at a HIGHER bar: tightness >= FLAG_PMI_MIN AND the neighbor is not a
+# flag-stoplisted function word. 5.0 held after reading the batch's near-miss band — dropping to 4.5
+# readmits hotan / pōs / numerals / proper names the floor exists to kill, and the flag is advisory
+# (worst-miss catcher, not every-miss). The SHARE cap proposed alongside this was DROPPED: it dropped
+# 0 flags on the frequent calibration words and INVERTS on the rare-word tail (a neighbor in 40% of a
+# rare word's verses is the DOMINANT sense, not noise). It may return frequency-conditioned; not here.
+FLAG_PMI_MIN = 5.0
+# Neighbor numbers never worth a collocation flag: function-class adverbs/correlatives that pass the
+# upstream LSJ classifier, so they survive collocation_map's stop-list and would otherwise flag.
+# Extend as more surface above the floor. Deliberately SEPARATE from _OVERRIDE_BARE (that set MIRRORS
+# app.py's classifier; this is flag-only, and app.py must NOT gain these).
+FLAG_STOP = frozenset({"G3779", "G3745"})   # οὕτω/οὕτως (thus), ὅσος (as-much-as)
+
 
 # ── Function-word stop-list — mirror of app.py's classifier, self-contained ──────────────────
 # The BARE (un-prefixed) Strong's numbers the app hardcodes because the LSJ POS detector misses
@@ -368,7 +384,8 @@ def _parse_contest(entries):
 
 def coverage_audit(conn, sid, occs, entry_refs, sense_specs, contest_verses=None,
                    is_contested=False, floor=COLLOC_FLOOR, window=COLLOC_WINDOW,
-                   pmi_min=PMI_MIN, top_renderings=10, max_colloc=20, thin_max=1):
+                   pmi_min=PMI_MIN, top_renderings=10, max_colloc=20, thin_max=1,
+                   flag_pmi_min=FLAG_PMI_MIN, flag_stop=FLAG_STOP):
     """Build the coverage_audit block for one entry (no model call).
 
       entry_refs   the (book,ch,vs) refs the entry actually cites  (build: cited_refs(raw))
@@ -430,8 +447,12 @@ def coverage_audit(conn, sid, occs, entry_refs, sense_specs, contest_verses=None
     # short rollup for the card / audit print
     flags = []
     for c in colls:
-        if not c["cited"]:
-            flags.append(f"collocation {c['translit'] or c['neighbor']} uncited ({c['verses']}v)")
+        # FLAG (advisory rollup) only the TIGHT uncited collocations: at/above the higher flag floor
+        # and not a flag-stoplisted function word. The `collocations` list above stays complete at
+        # PMI_MIN — this narrows what becomes a reader-facing flag, not what's detected/stored.
+        if c["cited"] or c["score"] < flag_pmi_min or c["neighbor"] in flag_stop:
+            continue
+        flags.append(f"collocation {c['translit'] or c['neighbor']} uncited ({c['verses']}v)")
     for r in rendings:
         if not r["cited"] and r["count"] >= floor:
             flags.append(f"rendering '{r['gloss']}' uncited ({r['count']}x)")
@@ -441,3 +462,29 @@ def coverage_audit(conn, sid, occs, entry_refs, sense_specs, contest_verses=None
 
     return {"collocations": colls, "renderings": rendings, "senses": senses,
             "thin_senses": thin, "contested": bool(is_contested), "flags": flags}
+
+
+def dedup_mutual(flags):
+    """REPORT-TIME dedup of a CROSS-ENTRY collocation-flag list. Kept OUT of coverage_audit on
+    purpose: coverage_audit runs one word at a time during the frequency-ordered rollout, when the
+    PAIRED word's entry may not exist yet — a cross-entry lookup there would reintroduce the exact
+    build-order dependency the one-word-at-a-time build avoids. So each entry's stored flags stay
+    directional and complete, and whatever aggregates them for a reader dedups here.
+
+    Each flag is a dict carrying at least {"target","neighbor","pmi"} (both G-numbers). When target A
+    flags neighbor B AND target B flags neighbor A (a mutual pair, both words present in the list),
+    keep the higher-PMI direction; on a tie keep the smaller Strong's number. Order is preserved."""
+    def _num(s):
+        try:
+            return int(str(s)[1:])
+        except (TypeError, ValueError):
+            return 0
+    idx = {(f["target"], f["neighbor"]): f for f in flags}
+    drop = set()
+    for (a, b), f in idx.items():
+        mirror = idx.get((b, a))
+        if mirror is None:
+            continue
+        if f["pmi"] < mirror["pmi"] or (f["pmi"] == mirror["pmi"] and _num(a) > _num(b)):
+            drop.add((a, b))
+    return [f for f in flags if (f["target"], f["neighbor"]) not in drop]

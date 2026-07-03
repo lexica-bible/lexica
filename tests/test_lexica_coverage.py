@@ -241,3 +241,74 @@ def test_collocation_cited_or_not():
     anth2 = [c for c in cov_bare["collocations"] if c["neighbor"] == ANTHROPOS]
     assert anth2 and anth2[0]["cited"] is False
     assert any("uncited" in f for f in cov_bare["flags"])
+
+
+# ── FLAG gate: PMI-5.0 floor + neighbor stoplist (round-2 audit, 2026-07-03) ──────────────────────
+# Pins the two sanity cases the flag policy was decided on (AUDIT_lexica_rollout.md): σάββατον under
+# ἡμέρα SURVIVES (tight, above the floor, not stoplisted), οὕτω under ποιέω DIES (stoplisted), and a
+# 4<PMI<5 neighbor DIES on the floor (proving the flag cutoff moved from 4.0 to 5.0). The gate can't
+# change again without these passing.
+HEMERA, SABBATON, HOUTO, POIEO, LOWMID = "G2250", "G4521", "G3779", "G4160", "G7777"
+
+
+def _flag_gate_fixture():
+    conn = _conn()
+    conn.executemany("INSERT INTO lexicon VALUES (?,?,?)", [
+        (HEMERA, "ἡμέρα", "hēmera"), (SABBATON, "σάββατον", "sabbaton"),
+        (HOUTO, "οὕτω", "houtō"), (POIEO, "ποιέω", "poieō"), (LOWMID, "μέσος", "lowmid"),
+    ])
+    vid = 1
+    for _ in range(12):                                    # ἡμέρα + σάββατον — tight, PMI>>5
+        _add_verse(conn, vid, "Mat", vid, 1, [(HEMERA, "day"), (SABBATON, "sabbath")]); vid += 1
+    for _ in range(12):                                    # ποιέω + οὕτω — tight, but flag-stoplisted
+        _add_verse(conn, vid, "Mar", vid, 1, [(POIEO, "do"), (HOUTO, "thus")]); vid += 1
+    for _ in range(12):                                    # ἡμέρα + μέσος — co=12 but μέσος also roams
+        _add_verse(conn, vid, "Luk", vid, 1, [(HEMERA, "day"), (LOWMID, "mid")]); vid += 1
+    for _ in range(11):                                    # μέσος standalone → raises its baseline → PMI ~4.5
+        _add_verse(conn, vid, "Joh", vid, 1, [(LOWMID, "mid"), (FILLER, "x")]); vid += 1
+    for _ in range(465):                                   # filler to size the corpus (SABBATON PMI ~5.4)
+        _add_verse(conn, vid, "Act", vid, 1, [(FILLER, "x"), (FILLER, "y")]); vid += 1
+    return conn
+
+
+def test_flag_floor_survives_sabbaton_kills_low_pmi():
+    conn = _flag_gate_fixture()
+    occs = _occs(conn, HEMERA)
+    cov = C.coverage_audit(conn, HEMERA, occs, entry_refs=[], sense_specs=[],
+                           contest_verses=[], is_contested=False)
+    colls = {c["neighbor"]: c for c in cov["collocations"]}
+    # both are DETECTED (stored) — the collocations list is unchanged at PMI_MIN 4.0
+    assert SABBATON in colls and colls[SABBATON]["score"] >= 5.0
+    assert LOWMID in colls and 4.0 <= colls[LOWMID]["score"] < 5.0
+    colloc_flags = [f for f in cov["flags"] if f.startswith("collocation")]
+    # σάββατον SURVIVES the flag gate; the sub-5.0 neighbor does NOT
+    assert any("sabbaton" in f for f in colloc_flags), "σάββατον (PMI>5) must flag"
+    assert not any("lowmid" in f for f in colloc_flags), "PMI<5.0 neighbor must NOT flag"
+
+
+def test_flag_stoplist_kills_houto():
+    conn = _flag_gate_fixture()
+    occs = _occs(conn, POIEO)
+    cov = C.coverage_audit(conn, POIEO, occs, entry_refs=[], sense_specs=[],
+                           contest_verses=[], is_contested=False)
+    # οὕτω is DETECTED (tight, would flag on PMI alone) but flag-stoplisted → no collocation flag
+    assert HOUTO in {c["neighbor"] for c in cov["collocations"]}
+    assert cov["collocations"] and cov["collocations"][0]["neighbor"] == HOUTO
+    assert cov["collocations"][0]["score"] >= 5.0
+    assert not any(f.startswith("collocation") for f in cov["flags"]), "οὕτω is stoplisted → no flag"
+
+
+def test_dedup_mutual_keeps_one_direction():
+    # tie on PMI → smaller Strong's number kept; non-mutual flag survives untouched
+    flags = [
+        {"target": "G3056", "neighbor": "G1096", "pmi": 5.2},   # λόγος → γίνομαι
+        {"target": "G1096", "neighbor": "G3056", "pmi": 5.2},   # γίνομαι → λόγος (mirror, tie)
+        {"target": "G2250", "neighbor": "G4521", "pmi": 6.0},   # ἡμέρα → σάββατον (no mirror)
+    ]
+    kept = {(f["target"], f["neighbor"]) for f in C.dedup_mutual(flags)}
+    assert ("G1096", "G3056") in kept and ("G3056", "G1096") not in kept  # G1096 < G3056
+    assert ("G2250", "G4521") in kept                                     # non-mutual survives
+    assert len(kept) == 2
+    # higher PMI wins the pair, regardless of number order
+    hi = [{"target": "G1", "neighbor": "G2", "pmi": 6.0}, {"target": "G2", "neighbor": "G1", "pmi": 5.0}]
+    assert {(f["target"], f["neighbor"]) for f in C.dedup_mutual(hi)} == {("G1", "G2")}

@@ -64,6 +64,10 @@ from the reviewed one, the same draw-drift the draw-cache item addresses.)
   4. **θεός** "LORD" ×3 — renders kýrios, not theos (prior-built θεός; logged for the same list).
   5. **χείρ** "lips" (Pro 31:31) — the gloss follows a different underlying text (Hebrew "fruit"),
      diverges entirely from cheír.
+  6. **πόλις** Gen 46:28 + Jer 26:6 — both marked "None" for rendering (the lemma may be absent as
+     inflected, or carried by a different form); the G4172 build flagged them unusable as evidence.
+     Same phrase-boundary / lemma-alignment family as the κύριος row above; surfaced 2026-07-03 by
+     the round-2 headline pass, check with the rest in the corpus-hygiene sweep.
   All data-side, non-blocking; parked here as a real case list for the corpus-hygiene pass.
 
 ### Calibration wins
@@ -187,8 +191,26 @@ preserved in the logs.
    ro/apply passes don't re-draw prior entries.
 6. **ai.py ↔ build cross-comments** — the two `_norm_book` copies disagree on bare "Jud" (ai=Judges,
    build=Jude) by design; add a cross-note in each so the divergence reads as intentional.
-7. **Uncited-collocation triage rule** — batch data says most are noise (numerals, time-words); at
-   ~3,900 words the eyeball cost needs a rule for which collocations actually warrant a look.
+7. **Uncited-collocation triage rule — RESOLVED 2026-07-03 (gate DESIGNED, not yet in the engine —
+   checkpoint before it lands).** `scripts/audit_lexica_flags.py` (read-only) scored the 163 round-2
+   uncited-collocation flags against a proposed gate. **ADOPTED: PMI ≥ 5.0 + neighbor stoplist
+   (οὕτω G3779, ὅσος G3745 — extend as function words surface above the floor) + mutual dedup.**
+   163 → 73 survivors (~2.8/word), read as overwhelmingly real (milk-and-honey / inherit-the-land /
+   ends-of-the-earth under γῆ; "thus says the Lord Almighty" ἀμήν+παντοκράτωρ under λέγω; third-day /
+   forty-days numerals under ἡμέρα; καὶ ἐγένετο narrative ὅτε/ἡνίκα under γίνομαι).
+   - **PMI 5.0 HELD** after reading the near-miss band: it loses a few real formulas (υἱός+πρωτότοκος
+     4.56, πόλις+πύλη 4.65, οἶκος+Ἰακώβ 4.50, λέγω+σαβαώθ 4.98) but dropping to 4.5 readmits
+     ὅταν/πῶς/ἄλλος/numerals/Πέτρος — and the flag is ADVISORY (worst-miss catcher, not every-miss).
+   - **Share cap DROPPED (proposed ≤20%, did 0 drops).** Every neighbor here sits under 6% of its
+     target's verses — the 26 are the most frequent words in the corpus, so even οὕτω's 164 co-verses
+     is 5.6% of ποιέω. Worse, it INVERTS on the rollout: on an occ≥2 rare word a neighbor covering 40%
+     of its verses is the DOMINANT usage the definition must show, not noise. A ≤20% cap would suppress
+     exactly the flags that matter most on precisely the words the rollout is for. Left out; may return
+     FREQUENCY-CONDITIONED if a rare-word batch turns up real broad-pairing noise.
+   - **Mutual dedup KEPT** in the gate though this batch never exercised it (λόγος↔γίνομαι both died on
+     the PMI floor first).
+   - Batch-two-prep origin was "batch data says most are noise (numerals, time-words); at ~3,900 words
+     the eyeball cost needs a rule for which collocations warrant a look." That rule is the gate above.
 
 ### Open finding — spelled-out book names ≠ stored code (systematic)
 The model writes the natural name **"Ruth"**; the stored `verses.book` code is **`Rth`**.
