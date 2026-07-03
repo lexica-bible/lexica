@@ -105,10 +105,9 @@ All entries **LIVE**, provenance `GRAMMAR`, verse lines verbatim ABP. **Inventor
 - **Coverage engine (`lexica_coverage.py`) — SHIPPED** (2026-07-02, pieces A+B): collocation pre-check (token PMI, warn-only build hook) + a `coverage_audit` field on every entry. Not wired to the card UI (stored data only). Piece C (stratified sampling) DEFERRED.
 - **Vocabulary watchlist lint** (flag post-biblical category terms — "moral authority" sailed through every structural guard) — **NOT BUILT** (scoped; advisory, not a write-blocker).
 
-**Corpus-tag fixes flagged by the reviewer** ⚠️ **NOT BUILT** (no fix script exists; the G166/G165 hits in `build_word_gloss.py` are gloss definitions, not corrections):
-- **Jer 49:13 G166→G165** (aionios vs aion mis-tag) — **NOT BUILT.** `[PA: verify the live words tag]`
-- **Psa 24:7 numbering** — **NOT BUILT.** `[PA: verify]`
-- Both need a scoped, dry-run-first fix script + re-verify.
+**Corpus-tag fixes flagged by the reviewer** — **VERIFIED CORRECT 2026-07-03, no fix needed** (both were false alarms; live tags match the LXX Greek):
+- **Jer 49:13** — no stray G166; the word is **G165** (aiōn, "into eon" = εἰς αἰῶνα, forever). Correct.
+- **Psa 24:7** — "the eternal!" is **G166** (aiōnios, πύλαι αἰώνιοι = everlasting gates). Correct; numbering matches Psa 24:7.
 
 **PN enrichment** — bound cards lacking maps/info ride Fix A; broader people/places **browse hub + timelines** = **NOT BUILT.**
 
@@ -116,6 +115,6 @@ All entries **LIVE**, provenance `GRAMMAR`, verse lines verbatim ABP. **Inventor
 - **Grammar search** (search the morph tags) — **NOT BUILT.**
 - Wire non-canon texts into Word study / Lexicon occurrence lookups — **PARKED.**
 - Ask-corpus Hebrew **display** toggle + right-panel parity + thematic-verse labeling — **PARKED.**
-- Snapshot golden **re-baseline** — ran `--update` 2026-06-28; commit `tests/snapshots` to close.
+- Snapshot golden **re-baseline** — **DONE** (committed `b686073`).
 - KJV word-level highlights (BSB/ABP done) — **PARKED.**
 - Unpublished Nave's/Torrey's concept topics — already drafted/hidden; physical delete from `study.db` = optional, **NOT done.**
