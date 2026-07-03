@@ -293,6 +293,12 @@ heavily guarded. Full record: memory `project_ai_search_architecture` + `project
   (see AUDIT_ask_corpus.md); **Tier 1 (filler-strip normalizer) = audit batch E.** MUST reuse
   `_LANG_SCOPE_TERMS`/`_TESTAMENT_SCOPE_TERMS` as the never-collapse boundary AND inherit Batch A's
   mixed-signal rule (one value per axis = scope, two = unset — never strip a scope word). code: ai.py.
+- **Greek-SCRIPT typed charis pins to a 0-row number** (minor, from Batch D) — a romanized "charis" now
+  keys correctly on G5484 (the `_fold_alias` fold), but typing χάρις in Greek script pins via
+  `_resolve_exact_lemma` to the textbook G5485, whose direct SQL is 0 rows in ABP. The supplements/panel
+  still carry it, but the main occurrence list is empty. Fix = fold the PIN through LEXICA_ALIASES too (or
+  key the pinned SQL on the aliased number). Left out of Batch D on purpose (don't touch retrieval/SQL-gen).
+  code: ai.py `_resolve_exact_lemma` / the `_pinned` SQL branch.
 - **STATE.md is stale** (last refreshed 2026-06-28 — still lists the referent cards + the ἵνα graph as
   NOT BUILT). Refresh next time it's handed to a reviewer.
 - **#4 parallelize the cognate + Hebrew DB loops** (follow-up, not started) — read-only independent loops

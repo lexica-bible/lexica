@@ -6,6 +6,28 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Ask-corpus Batch D — panel alias fold + synthesis sparkle + sidebar thread badges — DONE 2026-07-03
+(commits 9487dde, e358267, eab2e5d, 839f1bf, 86508d6). Three unrelated items surfaced during Batch C
+verification. Full record: memories `project_ai_search_architecture` (alias fold) + `project_three_zone_shell`
+(sidebar). NOT the audit's "Batch D/E" — a separate ad-hoc batch.
+1. **Corpus-panel charis gap + wrong "primary term."** Root cause was the G5485/G5484 alias, upstream of the
+   panel: the model returns textbook G5485, ABP tags charis on G5484 (245 rows; G5485 absent entirely), so
+   the panel counted G5485 (~0), dropped the whole family → four charis words rendered as bare bars; the
+   synthesis was fed G5485 first → crowned it "primary" while the verses it read were G5484. Fix = fold the
+   model's key words through `contested_register.LEXICA_ALIASES` (`ai._fold_alias`) BEFORE dedup — only the
+   number rewrites, display lemma stays χάρις; generic over the map (no charis special-case); the 2nd
+   consumer of the ONE alias copy. `_CACHE_CODE_VER`→43 (needed — a data-feed change that skips a prompt
+   still leaves cached answers stale; charis "still happening" until a fresh query ran live). Test
+   `tests/test_key_strongs_alias.py` (3). LEFT OPEN (minor, in TODO): Greek-SCRIPT typed χάρις still pins to
+   G5485 (0-row SQL) — out of scope, romanized path was the bug.
+2. **Static synthesis sparkle removed** — the ✦ beside "Synthesis" read as a perpetual spinner on finished
+   answers; dropped from both loading + answer states (animated dots still signal loading).
+3. **Sidebar follow-up count + active-thread expand** — multi-turn threads show a muted count (no pill);
+   active thread expands to its follow-up questions; click scrolls (cheap `threadRef` anchor) AND pins the
+   inspect panel via the EXISTING `selectTurn`/`selIdx` (no new state — first cut only scrolled, panel kept
+   the old turn). Count/expand exclude notice-turns via a shared `acRealTurn` predicate (same F13 filter the
+   skeleton path uses, now one copy). Titles wrap 2 lines. 122 tests green.
+
 ## Ask-corpus Batch C — thread skeleton for follow-ups — DONE + LIVE 2026-07-02 (commit df60d22)
 Full record: memory `project_ai_search_architecture`. The gap: follow-up answers restated senses earlier
 turns already covered, because the reader-facing synthesis (pass-2) was written blind to the thread — only
