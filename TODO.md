@@ -157,6 +157,12 @@ YouVersion, which aren't the target). Honest gaps:
   prepositions — light the case-row matching the object's case from morph (the table already shows; wire
   it with the verse live-pull). code: structural.py, views_lexica.py, static/src/20-shared-components.jsx
 
+- **Word-study card: numbering-crosswalk (`alias_note`) header badge** (follow-up, not blocking) — the
+  Word-study card now renders the shared Lexica body (2026-07-03, fb36ac8) but does NOT show the standard↔ABP
+  Strong's-number crosswalk badge the Library card shows in its header. The data is free on the same
+  `/api/lexica` fetch (`d.alias_note`); only the header badge markup/placement is missing (scoped out to
+  avoid creep). Match Library's `detail-strong-alias` markup. code: static/src/80-lexicon.jsx.
+
 - **Pointer click-through** (follow-up, not blocking) — the ἵνα `contest_graph` breadcrumb and the
   dikaioō/Lexica-fork `graph_ref` are PLAIN TEXT, not click-to-open. Upgrade both together: thread an
   onOpenGraph callback 90-app → detail-panel → StructuralBody/LexicaFork that switches to the Study tab

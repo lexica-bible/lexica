@@ -336,8 +336,12 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   (2026-07-01, was report-only):** `validate_entry` rejects a row with a real/no-verse miss (tagging misses stay
   non-blocking, logged); `--force-gate-bypass "reason"` stores the reason in `audit.bypass_reason`, stamped only on a
   word whose gate failed. Served by
-  `views_lexica.py` `/api/lexica/<strongs>` → the `LexicaBody` card (20-shared-components, BESIDE `LsjBody`;
-  `30-detail-panel.jsx` branches `case "lsj"`). **Also `/api/lexica/seams`** (read-only, same file) — every
+  `views_lexica.py` `/api/lexica/<strongs>` → the `LexicaBody` card (20-shared-components, BESIDE `LsjBody`).
+  BOTH the Library word card (`30-detail-panel.jsx` `case "lsj"`) AND the Word-study card (`80-lexicon.jsx`,
+  2026-07-03) fetch `/api/lexica` and render the SAME `LexicaBody`/`StructuralBody`/idiom body — parity is
+  structural, not hand-kept. **Word-study gates the Lexica body to GREEK numbers**: Library never shows
+  `LexicaBody` for a Hebrew word (it pushes the `bdb` section, not `lsj`), so a Hebrew number keeps its BDB
+  definition on both surfaces. **Also `/api/lexica/seams`** (read-only, same file) — every
   row that carries a `fork`, feeding the **Seam index** Study module (`SeamIndex` in 55-study.jsx; the
   contested-word browse). After adding/moving a `divergence_type`/`lead_flip` in `CONTESTED`, run
   `build_lexica_def.py --resplit --all --apply` on PA to write it into the stored forks (free, no model). **Two serve-time
