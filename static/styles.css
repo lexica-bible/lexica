@@ -1068,13 +1068,22 @@ input { font-family: inherit; }
   color: var(--ink);
   letter-spacing: 0.01em;
 }
+/* Badge + crosswalk glued as ONE inline unit, so a space-between header can't strand the
+   separator or push the note to the far edge. This wrapper is the single left-aligned item;
+   the close/back button still goes to the right. */
+.detail-strong-wrap {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 6px;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
 /* Numbering crosswalk beside the Strong's badge — a quiet reference, not a second badge:
    same mono face, smaller + muted, so it reads as a footnote to the number it follows. */
 .detail-strong-alias {
   font-family: var(--f-mono);
   font-size: 12px;
   color: var(--muted);
-  margin-left: 6px;
   letter-spacing: 0.01em;
   white-space: nowrap;
 }

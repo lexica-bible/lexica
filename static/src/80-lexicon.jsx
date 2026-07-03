@@ -1071,15 +1071,17 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
         {profile ? (
           <>
           <div className="detail-head">
-            <span className="detail-strong-head">{profile.strongs}</span>
-            {/* Numbering crosswalk — same treatment as the Library word card header. */}
-            {profile.alias_note && (
-              <span className="detail-strong-alias">
-                {profile.alias_note.direction === "to_abp"
-                  ? `· ABP: ${profile.alias_note.abp}`
-                  : `· standard: ${profile.alias_note.standard.join(", ")}`}
-              </span>
-            )}
+            {/* Badge + numbering crosswalk glued as one unit — same treatment as the Library card. */}
+            <span className="detail-strong-wrap">
+              <span className="detail-strong-head">{profile.strongs}</span>
+              {profile.alias_note && (
+                <span className="detail-strong-alias">
+                  {profile.alias_note.direction === "to_abp"
+                    ? `· ABP: ${profile.alias_note.abp}`
+                    : `· standard: ${profile.alias_note.standard.join(", ")}`}
+                </span>
+              )}
+            </span>
             {(groupings || matches) && (
               <button className="detail-back" onClick={backToResults}>‹ Results</button>
             )}

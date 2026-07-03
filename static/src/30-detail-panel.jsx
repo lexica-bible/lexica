@@ -1098,17 +1098,20 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       {isMobile && <div className="sheet-drag-zone" aria-hidden="true"><div className="sheet-handle"></div></div>}
       <div className="detail-head">
         <div className="detail-head-l">
-          <span className="detail-strong-head">{entry.strongs}</span>
-          {/* Numbering crosswalk — the one element present in every card state (Lexica/LSJ/bare),
-              beside the badge where the reader's eye already is. Worded by the door they came in;
-              the pool caveat (if any) stays in the LexicaBody provenance block, served side. */}
-          {aliasNote && (
-            <span className="detail-strong-alias">
-              {aliasNote.direction === "to_abp"
-                ? `· ABP: ${aliasNote.abp}`
-                : `· standard: ${aliasNote.standard.join(", ")}`}
-            </span>
-          )}
+          {/* Numbering crosswalk glued to the badge as one unit (.detail-strong-wrap) — the one
+              element present in every card state (Lexica/LSJ/bare), beside the badge where the
+              reader's eye already is. Worded by the door they came in; the pool caveat (if any)
+              stays in the LexicaBody provenance block, served side. */}
+          <span className="detail-strong-wrap">
+            <span className="detail-strong-head">{entry.strongs}</span>
+            {aliasNote && (
+              <span className="detail-strong-alias">
+                {aliasNote.direction === "to_abp"
+                  ? `· ABP: ${aliasNote.abp}`
+                  : `· standard: ${aliasNote.standard.join(", ")}`}
+              </span>
+            )}
+          </span>
         </div>
         {overviewBack && !isMobile ? (
           <button className="detail-back" onClick={onClose} aria-label={"Back to " + backLabel.toLowerCase()}>‹ {backLabel}</button>
