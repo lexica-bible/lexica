@@ -922,7 +922,8 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
                     {active && count > 1 && (
                       <div className="ac-rail-follows">
                         {real.slice(1).map(({ t, ti }) => (
-                          <button key={ti} className="ac-rail-follow" onClick={() => scrollToTurn(ti)}
+                          <button key={ti} className="ac-rail-follow"
+                            onClick={() => { selectTurn(ti); scrollToTurn(ti); }}
                             title="Jump to this question">{t.question}</button>
                         ))}
                       </div>
