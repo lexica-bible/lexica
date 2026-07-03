@@ -144,6 +144,13 @@ YouVersion, which aren't the target). Honest gaps:
 
 ## Word cards / lexicon — open items
 
+- **BDB as Hebrew LSJ-analog (IDEA — the app has no real BDB today; see the Licensing section).** Load
+  OpenScriptures BDB (PD, 1906), display-only + Summary/Full-entry tabs matching the LSJ pattern. Synth
+  pass = compression of BDB per entry (~8.6k entries): compress/drop cognate front-matter, slice per
+  H-number NOT per root article (BDB nests derivatives under roots — whole-article input bleeds siblings).
+  Summaries carry a BDB provenance tag, NEVER LEXICA. Independent of the Greek rollout queue. Would slot
+  in as the Hebrew counterpart to LSJ (the current `bdb` table is Strong's Hebrew, not real BDB).
+
 - **Root / family word search — PARKED (needs a real stem field first).** Word study should be able to
   surface a whole family (θεός, ἄθεος, φιλόθεος, θεοσέβεια) by the theo- ROOT. Blocker: `lexicon` has no
   structured stem/root column — only `derivation` (free-text prose). Substring on translit fakes it and
