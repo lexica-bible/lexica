@@ -585,7 +585,7 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
     contains: arr.filter(m => m.match !== "exact"),
   });
   const containsLabel = (exactCount, q) => exactCount
-    ? "Also contains “" + q + "”"
+    ? "Other words containing “" + q + "”"
     : "No exact match — showing words containing “" + q + "”";
 
   // One rich match row (mobile glsenses list). Shared by both bands.

@@ -568,49 +568,58 @@ def lexicon_lookup():
         # ── 2) CONTAINS band — the substring scan (translit, definitions, accent-stripped
         # lemma). Everything here is a STRING match, labeled as such in the UI; a row
         # already in the exact band is dropped so it isn't listed twice.
-        grk = conn.execute(
-            """SELECT strongs, lemma, translit, kjv_def, derivation, strongs_def FROM lexicon
-               WHERE strongs_def LIKE ? OR kjv_def LIKE ?
-                  OR strip_accents(lower(translit)) LIKE ?
-                  OR strip_accents(lower(lemma)) LIKE ?
-               LIMIT 15""",
-            (f"%{q}%", f"%{q}%", f"%{qn}%", f"%{qn}%")
-        ).fetchall()
-        heb = conn.execute(
-            """SELECT strongs_id, lemma, xlit, description FROM bdb
-               WHERE description LIKE ?
-                  OR strip_accents(lower(lemma)) LIKE ?
-                  OR strip_accents(lower(xlit)) LIKE ?
-               LIMIT 10""",
-            (f"%{q}%", f"%{qn}%", f"%{qn}%")
-        ).fetchall()
-        # ABP dotted different-words (σαβέκ, εφούδ…) live only in dotted_lexicon, not the
-        # Greek lexicon, so search them by their own lemma/romanization too. Gloss = their
-        # most-common ABP rendering.
-        dot = []
-        if _dotted_ready(conn):
-            try:
-                dot = conn.execute(
-                    """SELECT dl.strongs, dl.lemma, dl.translit,
-                              (SELECT w.english_head FROM words w
-                                WHERE 'G' || w.strongs = dl.strongs
-                                  AND w.english_head IS NOT NULL AND w.english_head != ''
-                                GROUP BY w.english_head ORDER BY COUNT(*) DESC LIMIT 1) AS gloss
-                       FROM dotted_lexicon dl
-                       WHERE strip_accents(lower(dl.lemma)) LIKE ?
-                          OR strip_accents(lower(dl.translit)) LIKE ?
-                       LIMIT 10""",
-                    (f"%{qn}%", f"%{qn}%")
-                ).fetchall()
-            except Exception:
-                dot = []
-        contains = [_grk_row(r, "contains") for r in grk]
-        contains += [_heb_row(r, "contains") for r in heb]
-        contains += [{"strongs": r["strongs"], "lemma": r["lemma"] or "", "translit": r["translit"] or "",
-                      "gloss": r["gloss"] or "", "match": "contains"} for r in dot]
-        # Drop anything already promoted to the exact band; order deterministically.
-        contains = [r for r in contains if r["strongs"] not in exact_nums]
-        contains.sort(key=_sort_key)
+        # MIN-LENGTH GATE: skip the whole band for a query under 3 FOLDED letters (qn is
+        # accent-stripped, so γῆ counts 2 even when the raw input carries a combining mark).
+        # A 2-letter fragment (γη) sits inside dozens of unrelated words (Πέργη, ἀγωγή) and
+        # every hit is a letter-accident, never a relative; a 3+-letter string (λογος) is
+        # specific enough that the substring hits ARE the family (ἄλογος, φιλόλογος — the
+        # root at the tail, which a prefix match would wrongly drop). Empty is fine: the
+        # exact band still answers γῆ, and γηγενής is found by its own search.
+        contains = []
+        if len(qn) >= 3:
+            grk = conn.execute(
+                """SELECT strongs, lemma, translit, kjv_def, derivation, strongs_def FROM lexicon
+                   WHERE strongs_def LIKE ? OR kjv_def LIKE ?
+                      OR strip_accents(lower(translit)) LIKE ?
+                      OR strip_accents(lower(lemma)) LIKE ?
+                   LIMIT 15""",
+                (f"%{q}%", f"%{q}%", f"%{qn}%", f"%{qn}%")
+            ).fetchall()
+            heb = conn.execute(
+                """SELECT strongs_id, lemma, xlit, description FROM bdb
+                   WHERE description LIKE ?
+                      OR strip_accents(lower(lemma)) LIKE ?
+                      OR strip_accents(lower(xlit)) LIKE ?
+                   LIMIT 10""",
+                (f"%{q}%", f"%{qn}%", f"%{qn}%")
+            ).fetchall()
+            # ABP dotted different-words (σαβέκ, εφούδ…) live only in dotted_lexicon, not the
+            # Greek lexicon, so search them by their own lemma/romanization too. Gloss = their
+            # most-common ABP rendering.
+            dot = []
+            if _dotted_ready(conn):
+                try:
+                    dot = conn.execute(
+                        """SELECT dl.strongs, dl.lemma, dl.translit,
+                                  (SELECT w.english_head FROM words w
+                                    WHERE 'G' || w.strongs = dl.strongs
+                                      AND w.english_head IS NOT NULL AND w.english_head != ''
+                                    GROUP BY w.english_head ORDER BY COUNT(*) DESC LIMIT 1) AS gloss
+                           FROM dotted_lexicon dl
+                           WHERE strip_accents(lower(dl.lemma)) LIKE ?
+                              OR strip_accents(lower(dl.translit)) LIKE ?
+                           LIMIT 10""",
+                        (f"%{qn}%", f"%{qn}%")
+                    ).fetchall()
+                except Exception:
+                    dot = []
+            contains = [_grk_row(r, "contains") for r in grk]
+            contains += [_heb_row(r, "contains") for r in heb]
+            contains += [{"strongs": r["strongs"], "lemma": r["lemma"] or "", "translit": r["translit"] or "",
+                          "gloss": r["gloss"] or "", "match": "contains"} for r in dot]
+            # Drop anything already promoted to the exact band; order deterministically.
+            contains = [r for r in contains if r["strongs"] not in exact_nums]
+            contains.sort(key=_sort_key)
         # One merged list: exact pinned first, contains below. The frontend reads the
         # `match` tag to draw the "Exact match" / "Also contains …" divider.
         return _finish(exact + contains)
