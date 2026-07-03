@@ -93,8 +93,8 @@ The big rework is finished (six phases + a security/code-health pass; memory `pr
 1. **Web-route test coverage.** CI auto-runs only the data-invariant tests; the endpoint snapshot harness
    (`snapshot_endpoints.py`) + browser click-through are MANUAL (run against a DB copy during dev), so web
    routes / click behavior aren't checked on every push. That's the main test gap if you ever want to
-   close it. One stale golden to re-baseline on PA: `api__cross-references__Joh__3__16.json` with
-   `--update` (field `kjv_text`→`text`, now BSB). code: scripts/snapshot_endpoints.py, tests/, .github/
+   close it. (The Joh 3:16 xref golden `kjv_text`→`text` re-baseline is DONE — committed b686073.)
+   code: scripts/snapshot_endpoints.py, tests/, .github/
 2. **Shared AI "house style" voice snippet** — the last leftover of the prompt-unify item. xref, chapter
    summary, LSJ, etc. each carry their own wording. Build ONE core.py snippet with the VOICE only (plain
    language, short one-idea sentences, no jargon/moralizing); keep LENGTH split by MODEL — HARD
