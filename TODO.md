@@ -460,6 +460,10 @@ admin flips the role). Memory `project_payments_donations`. Open:
   share-alike attaches to them the same as the AF Greek. Clean move in any future licensing tightening:
   keep MetaV-derived + AF-derived data OUT of a definitions export (they're entity/AF data, not our
   corpus definitions, so the export is likely free of the SA obligation).
+  **Strong's NUMBERING carries nothing** — G5485/G3778 and the whole identifier system threaded through
+  the schema + any export are not copyrightable. What's BY-SA in OpenScriptures is only the EDITED TEXT
+  (definitions, glosses, corrections). So share-alike touches Strong's definition text only if you
+  DISPLAY or EXPORT it; the AB-Strong's-keyed data structure itself stays clean.
 - **OPEN — verify BDB's digital source.** The credits page still calls Brown-Driver-Briggs "public
   domain" (the 1906 work is). But there's NO bdb loader script in the repo (loaded on PA directly), so
   the DIGITAL edition's actual source + license is unconfirmed — if it's the OpenScriptures HebrewLexicon
