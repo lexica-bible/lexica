@@ -40,9 +40,6 @@ index, and News right-rail all shipped on it 2026-07-01. Full record: memory `pr
   the RIGHT inspect is ZoneEmpty everywhere. Wire it: Topics = clicked verse in context; Graphs = clicked
   claim/node's grounding; Seams = clicked fork's grounding. Each is net-new feature work.
   code: static/src/55-study.jsx (RightStack `push`)
-- **PA data step for the Seam index** — run `python scripts/build_lexica_def.py --resplit --all --apply`
-  on PA to write the new `divergence_type` + `lead_flip` (+ short `gloss`) into the stored forks (free, no
-  model). Until then the Seams list shows but the type badges + Different-lead filter are blank.
 - **Ask-corpus POLISH pass** (rail got a big build-out 2026-07-01/02 — per-answer selection, Key passages
   moved into the rail, ONE merged Words-in-scope list, bottom-pinned composer, contested badge via the
   served set; memory `project_three_zone_shell`). DONE 2026-07-02: empty-state hero raised + de-spinnered,

@@ -6,6 +6,22 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-07-03 — Ask-corpus Tier 1 cache + Word study fetches + small sweeps
+- **Tier 1 scope-fold cache** (`_scope_tag`, ver 47). The exact-repeat cache already existed + was free; the
+  one hole was that punctuation-strip in the key vs O.T./N.T. scope detection collided "fire O.T." with
+  "fire o t". Closed by folding detected scope into the key. Tier 2 (near-match) declined — same drift bug in a
+  new place. Memory `project_ai_search_architecture`; `tests/test_cache_key_scope.py`.
+- **Ask-corpus rail shows the standard concordance number** (ver 48) — rail carried ABP's number (G2413) where
+  a reader expects G2411; now uses the shared `alias_note_for` (3rd consumer). No definition text (A3/A4 safe).
+- **Word study occurrence list no longer lags** — was a second fetch gated on `!loading`; now baked into
+  `/api/lexicon/profile` (`default_verses`), filling the card in one round-trip. Memory `project_lexicon_tab`.
+- **Word study empty-ABP-tab fix** — a Greek number ABP doesn't tag (G2411 temple) landed on a blank ABP list;
+  profile now falls back off ABP → KJV → BSB when ABP is empty.
+- **Seam-index badge data written** — ran `build_lexica_def.py --resplit --all --apply` on PA (free, no model);
+  the 8 fork words' `divergence_type` + `lead_flip` now populate the Seams type badges + Different-lead filter.
+- **Housekeeping** — swept 4 dead `seam-*` CSS rules; refreshed STATE.md (referent cards + ἵνα graph were
+  wrongly listed NOT BUILT; whole Study tab now admin-only).
+
 ## 2026-07-02 — Homeless-lemma sweep + alias numbering crosswalk
 - **2 split-lemma aliases added** (report → JP-confirmed → shipped): ἱερόν G2411→G2413, δωρεάν G1432→G1431.
   ABP tags zero rows under the dict numbers; confirmed by rendering profile + verse anchors that ABP tags
