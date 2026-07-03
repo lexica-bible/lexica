@@ -73,3 +73,11 @@ def test_lowercase_prose_not_caught():
     # case-sensitive catcher: a lowercase word is never a citation.
     assert _pick("the act 3:4 of") is None
     assert _pick("no book here 3:1") is None
+
+
+# ── the dangling-lint soft set: words not codes, with exactly two named exceptions ──
+
+def test_dangling_soft_is_words_not_codes():
+    code_keys = {c.lower() for c in set(B._BOOK_CODE.values())}
+    # only Job and Song(=Son) may appear on both sides — the two codes that are also English words.
+    assert B._DANGLING_SOFT & code_keys == {"job", "son"}

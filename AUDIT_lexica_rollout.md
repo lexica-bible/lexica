@@ -60,6 +60,34 @@ map, option-1 shape) — checkpoint before landing. λαός + πρόσωπον 
   apply draw wrote "Ruth" and was blocked. A word can pass review and fail apply — the
   write-time gate is the real floor, not the reviewed draft.
 
+### Dangling-lint widening + triage (2026-07-03)
+Wiring the book table into the dangling recognizer lit up **18 flags across the built entries** the
+old numbered-only lint was blind to. Triaged against the actual sentence (`audit_dangling_context.py`):
+- **16 prose collisions** — book labels that are also everyday words / person names: Joshua, John,
+  Nehemiah, Job ×3, Mark, Daniel ×3, Ruth, Esther, Son ×3, Exodus. Fixed by a `_DANGLING_SOFT`
+  skip-set (bare-word scan only; the ch:vs catcher is untouched).
+- **1 chapter-ref** — θεός "Psa 82's gods": a code + chapter, no verse. Now treated as a legitimate
+  whole-chapter reference (`_CHAP_ONLY_RE` strips chapter refs before the dangling scan).
+- **1 genuine dangling** — see fix list.
+- **Finding: "better is reportable."** The old "χάριν dangling-empty across all 18" claim was only
+  true of what the numbered-only lint could see — bare Ruth/Esther refs sat in shipped entries all
+  along. The widened lint surfaced pre-existing debt, it didn't create it.
+- **Two book codes are also English words:** `Job` and `Son` (= Song of Songs). They straddle the
+  code/word line, so they can't obey "codes never excluded" cleanly. Because the chapter-strip runs
+  first, every real Job/Song citation carries a number and is consumed before the bare-word scan, so
+  a bare leftover is always the word — safe to soft-skip. `test_lexica_book_norm` names exactly those
+  two as the only permitted code∩soft overlap.
+
+### Fix list — advisory debt (entries stay live, no batch-close block)
+- **G3962 πατήρ — dangling `Col`** ("Col — implicit" in a ref list, no number). A genuine botched
+  citation, shipped this batch. Riding with the λαός/πρόσωπον redraws (a fresh πατήρ draw should not
+  repeat it); falls back to debt if a redraw keeps reproducing it. Count: 1.
+
+### Known soft spot (accepted, written down not discovered later)
+- The chapter-strip means a chapter-only ref dropped **inside a citation list** now passes the
+  dangling lint silently — we can't cheaply tell it from discursive whole-chapter prose. Accepted per
+  the 2026-07-03 ruling (whole-chapter arguments like Psa 82 are legitimate).
+
 ### Engine notes
 - **The fed sample is deterministic per word.** Both δίδωμι draws fed the identical 40-verse
   spread and the identical missed-collocation list. So a **redraw fixes drafting, never

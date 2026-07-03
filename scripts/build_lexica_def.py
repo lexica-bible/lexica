@@ -397,11 +397,32 @@ def _valid_books(conn):
 # name remains to flag.
 _DANGLING_BOOK_RE = re.compile(rf"(?<![A-Za-z0-9])({_BOOK_ALT})(?![A-Za-z])")
 
+# CHAPTER-level refs (book + chapter, no verse — "Psa 82", "Rom 8") are a legitimate way to cite a
+# whole chapter's argument, not a botched citation. Stripped WITH the ch:vs refs before the dangling
+# scan, so "Psa 82's gods" doesn't read as a dangling "Psa". Only a book with NO number at all
+# ("Col — implicit") is a true dangling. KNOWN SOFT SPOT (accepted 2026-07-03): a chapter-ref dropped
+# inside a citation list now also passes silently — we can't cheaply tell it from discursive prose.
+_CHAP_ONLY_RE = re.compile(rf"(?<![A-Za-z0-9])(?:{_BOOK_ALT})\s+\d+")
+
+# Ambiguous BARE surfaces — labels that are also everyday English or common person names, so a bare
+# prose mention ("the Son", "endurance of Job", "Nehemiah's confrontation") is almost never a
+# citation. Skipped in the BARE-word dangling scan ONLY (the ch:vs catcher is untouched). Ruled per
+# word from the 2026-07-03 triage. CODES ARE NEVER LISTED — prose never writes "Rth"/"Jos"/"Col", so
+# a bare code always flags (the πατήρ "Col — implicit" case). The two exceptions "job"/"son" are the
+# ONLY book codes that are also English words (Job; Son = Song of Songs); because the chapter-strip
+# above runs FIRST, every real Job/Song citation carries a number and is already consumed, so a bare
+# leftover "Job"/"Son" is always the word. test_lexica_book_norm names those two as the only overlap.
+_DANGLING_SOFT = {"joshua", "john", "nehemiah", "exodus", "mark", "daniel", "ruth", "esther",
+                  "job", "son"}
+
 def dangling_book_refs(conn, text):
-    """Book names the model wrote but never anchored to a ch:vs — invisible to _REF_RE."""
-    stripped = _REF_RE.sub(" ", text or "")        # drop the COMPLETE refs first
+    """Book names the model wrote but anchored to no number at all — not a complete ch:vs, not a
+    chapter-level ref. Bare English/name surfaces (_DANGLING_SOFT) are skipped; a bare CODE flags."""
+    stripped = _CHAP_ONLY_RE.sub("  ", _REF_RE.sub("  ", text or ""))   # drop ch:vs AND chapter refs
     valid, hits = _valid_books(conn), []
     for m in _DANGLING_BOOK_RE.finditer(stripped):
+        if re.sub(r"\s+", "", m.group(1)).lower() in _DANGLING_SOFT:
+            continue
         code = _norm_book(m.group(1))
         if code in valid and code not in hits:
             hits.append(code)
