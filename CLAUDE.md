@@ -341,8 +341,9 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   row that carries a `fork`, feeding the **Seam index** Study module (`SeamIndex` in 55-study.jsx; the
   contested-word browse). After adding/moving a `divergence_type`/`lead_flip` in `CONTESTED`, run
   `build_lexica_def.py --resplit --all --apply` on PA to write it into the stored forks (free, no model). **Two serve-time
-  guards in `/api/lexica/<strongs>` (2026-07-01):** (a) a `LEXICA_ALIASES` map (derived from the register's `aliases`
-  fields) serves the ONE real row for a word ABP tags differently — KJV/BSB clicking charis ask for G5485, get the
+  guards in `/api/lexica/<strongs>` (2026-07-01):** (a) a `LEXICA_ALIASES` map (the register's `aliases`
+  fields PLUS the standalone `SPLIT_LEMMA_ALIASES` dict — plain corpus-tagging splits that aren't contested words,
+  added 2026-07-02) serves the ONE real row for a word ABP tags differently — KJV/BSB clicking charis ask for G5485, get the
   G5484 row; (b) a fork BACKSTOP — a `CONTESTED` word whose stored row has no `fork` (built before it entered the
   register, the θεός/κύριος batch-1 gap) 404s + logs loudly instead of serving a one-sided entry (card falls to LSJ).
   **PUBLIC since 2026-06-25** (`LEXICA_ADMIN_ONLY=False`; serves everyone incl. logged-out — a word with

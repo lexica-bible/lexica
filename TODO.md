@@ -293,14 +293,12 @@ heavily guarded. Full record: memory `project_ai_search_architecture` + `project
   (see AUDIT_ask_corpus.md); **Tier 1 (filler-strip normalizer) = audit batch E.** MUST reuse
   `_LANG_SCOPE_TERMS`/`_TESTAMENT_SCOPE_TERMS` as the never-collapse boundary AND inherit Batch A's
   mixed-signal rule (one value per axis = scope, two = unset — never strip a scope word). code: ai.py.
-- **Review the alias-gap audit output → decide which rows enter LEXICA_ALIASES** (from Batch E task 2).
-  `scripts/audit_alias_gap.py` (read-only, run on PA) lists charis/charin-class candidates — a dictionary
-  head with ~0 occurrences in the study corpus (ABP for Greek, heb.db for Hebrew) but common in KJV+BSB,
-  with a best-effort neighbour destination. JP reviews every row before ANY enters the map. **Checkpoint
-  from the audit:** any row that's a *tagging-side split* (a number with meaningful-but-split counts inside
-  ABP itself, not a clean zero) is a DATA-SURGERY class deliberately kept out of the alias fold — it gets
-  its own scoping, don't fold it. code: contested_register.py `LEXICA_ALIASES` (the destination for approved
-  rows).
+- **G2455 (Jew / Judas) tagging-side split — decide if it's worth fixing** (surfaced by the Batch E task 3
+  alias review, 2026-07-02). ABP crams TWO different words on G2455: Ἰουδαῖος "Jews" (~177) AND Ἰούδας
+  "Judas/Judah" (~41). NOT an alias-fold candidate (folding "Jew" there would drag Judas in) — it's a
+  data-surgery class: the "Jew" occurrences would need re-tagging to their own number (G2453, currently 0
+  in ABP) before anything downstream is clean. Low urgency; only matters if a Jew/Judas Ask-corpus search
+  reads muddy. read-only audit path: the query set in this session's transcript.
 - **STATE.md is stale** (last refreshed 2026-06-28 — still lists the referent cards + the ἵνα graph as
   NOT BUILT). Refresh next time it's handed to a reviewer.
 - **#4 parallelize the cognate + Hebrew DB loops** (follow-up, not started) — read-only independent loops

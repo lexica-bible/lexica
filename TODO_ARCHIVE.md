@@ -6,6 +6,31 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Ask-corpus Batch E task 3 — 7 split-lemma aliases added + provenance copy fix — DONE 2026-07-02
+(commits 8db5a93, f5aeca2). Followed the alias-gap audit review.
+- **Alias review + add.** Vetted the 10 JP-approved candidates read-only vs ABP (counts + destination
+  rendering profiles + `w.lemma` samples + spread refs). **7 verified, added** to a new standalone
+  `SPLIT_LEMMA_ALIASES` dict in contested_register.py (merged into `LEXICA_ALIASES`; these are plain
+  corpus-tagging splits, NOT contested words, so no CONTESTED entry): G40→G39 holy, G1672→G1673 Greek,
+  G3398→G3397 small, G3570→G3568 now, G3063→G3062 the-rest, G3480/G3479→G3478 Nazarene (many-to-one).
+  `_CACHE_CODE_VER` 44→45; fold tests extended on G40→G39 at both points (127 pass). Live checks green
+  (ἅγιος: 881 in words-in-scope, real verses, synthesis over G39's pool).
+- **3 rejected as CONFLICT** (destination heads a different live word, suspect's word absent): G2411→G2409
+  (priest not temple), G1432→G1435 (gift not "freely"), G4119→G4121 (abound not "more").
+- **G2455 (Jew/Judas) left flagged** — two words share the number inside ABP: tagging-side split, own
+  scoping, NOT aliased (still open in TODO.md).
+- **Provenance copy fix** (f5aeca2). "Backed by N passages" reported the CURATED key-passage count (~15),
+  which read as "the model only had 15 verses." Traced the path: synthesis reads up to 60 pinned verses
+  (`input_cap`) drawn from all ~881 occurrences, then flags ~15 primary (`primary_cap`); "Backed by N"
+  counted the 15. LESSON — a verse the synthesis cites but the panel omits (e.g. Pro 9:10 for ἅγιος, quoted
+  with ABP's LXX "holy ones" wording) is a seen-but-not-flagged-primary verse, NOT a hallucination: the
+  ABP-specific rendering proves the model read the text, and the prose seatbelt already renders any
+  unretrieved ref as plain (unlinked) text. Copy-only fix: now "881 occurrences · 15 key passages shown"
+  (occurrence count = sum of in-scope target-word counts from the panel; falls back to the old sentence
+  when there's no panel). No salt bump (display-only).
+
+---
+
 ## Ask-corpus Batch E — retrieval alias fold + alias-gap audit + ThreeZone check — DONE 2026-07-03
 (commits dfcf812, a688c48). Five queued tasks; 3 already shipped in Batch D, 2 net-new here.
 1. **Retrieval alias fold** (task 1, dfcf812) — closes the Batch D open item: a Greek-SCRIPT χάρις pins to
