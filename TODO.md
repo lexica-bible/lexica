@@ -234,6 +234,15 @@ YouVersion, which aren't the target). Honest gaps:
 ## Ask the corpus — open items
 Retrieval is Strong's-keyed SQL (occurrence lists can't be wrong); the leak was only in the prose, now
 heavily guarded. Full record: memory `project_ai_search_architecture` + `project_ai_synthesis_quality`.
+- **FULL AUDIT DONE 2026-07-02 — decision doc = `AUDIT_ask_corpus.md` (repo root), batches A–E awaiting
+  JP's approval.** Headlines: (F1) mixed-signal scope queries collapse to one side — "OT and NT" → an
+  OT-only directive, and TWO of the app's own suggested questions trigger it; (F2) a model pick like
+  "1 John 3:1" is mis-read as John 3:1 and shown as evidence; (F3) the SQL-gen prompt still describes
+  strongs_base as bare/inconsistent + its own examples use bare numbers (masked by retry/supplements);
+  (F5) the "thread skeleton" believed shipped DOES NOT EXIST — follow-up context reaches pass-1 only,
+  the displayed synthesis never sees the thread. **Banner comes down after batches A+B verified live.**
+  Tier 2 semantic cache = NO-GO at current volume (~$6–18/mo actual vs $66/mo ceiling); Tier 1 = batch E.
+  Implementation = later scoped sessions (Opus medium), NOT the audit session.
 - **#20B language/testament scope drift — FIXED in code, live acceptance tests PENDING (2026-07-02).**
   `_detect_scope`/`_scope_directive` in ai.py override Greek-first for scoped queries; committed +
   pushed (`_CACHE_CODE_VER`→41). AFTER the next deploy, run acceptance tests 1–5 (see the session/commit
@@ -241,9 +250,12 @@ heavily guarded. Full record: memory `project_ai_search_architecture` + `project
   NT verses, and a divergent word (sheol/hades) gives ONE short bridge note. If any drift survives it's
   directive wording strength — bounce the transcript. KNOWN false-trigger (noted, not fixed): a query
   ABOUT the word "Greek"/"Hebrew" itself trips language scope; rare, harmless-ish.
-- **Unpark Tier 1/2 semantic cache** — the next item on the agreed order, gated on the #20B tests going
-  green. MUST reuse `_LANG_SCOPE_TERMS`/`_TESTAMENT_SCOPE_TERMS` as the never-collapse boundary (a scoped
-  query can't fold into its unscoped form). code: ai.py.
+- **Unpark Tier 1/2 semantic cache** — AUDIT VERDICT 2026-07-02: **Tier 2 = NO-GO** at current volume
+  (see AUDIT_ask_corpus.md); **Tier 1 (filler-strip normalizer) = audit batch E.** MUST reuse
+  `_LANG_SCOPE_TERMS`/`_TESTAMENT_SCOPE_TERMS` as the never-collapse boundary (a scoped query can't fold
+  into its unscoped form) — and inherit whatever the F1 mixed-signal fix makes of them. code: ai.py.
+- **STATE.md is stale** (last refreshed 2026-06-28 — still lists the referent cards + the ἵνα graph as
+  NOT BUILT). Refresh next time it's handed to a reviewer.
 - **#4 parallelize the cognate + Hebrew DB loops** (follow-up, not started) — read-only independent loops
   run one-at-a-time; running them concurrently claws back seconds on MULTI-head queries only. Needs an
   identical-output before/after diff. Don't touch the model-written single SQL. code: ai.py cognate loop +
