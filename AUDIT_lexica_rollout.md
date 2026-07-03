@@ -159,6 +159,15 @@ preserved in the logs.
      eyeball IS the control (flag fired → looked → covered). If batch two turns up a flagged collocation
      whose sense is really missing, THAT's when the force-feed question gets real, with a concrete case
      to design against.
+   - **PREP #1 CLOSED (2026-07-03) — mechanism proven end-to-end.**
+     - Draw cache shipped `484e226` — ro saves `draws/G####.json`, apply ships it verbatim, no model
+       call. Six tests green (`tests/test_lexica_draw_cache.py`).
+     - Validity = live-recomputed hash of the full model input; stale → redraw, edited prose → hard refuse.
+     - `--require-cache` default under `--all`, opt-out `--allow-unreviewed`; `--force` refreshes cache.
+     - E2E G25: ro key `d226a19d` → reviewed → apply `using reviewed draw … — no model call`, same key,
+       gates 36/36 on the cached prose → BYTE-IDENTICAL. G25 live as batch-two entry #1.
+     - Batch One's three failure cases (πρόσωπον fresh-draw reject, δίδωμι vanishing/appearing dangling,
+       πατήρ 4→3 sense swap) are now structurally impossible on the cached path.
 2. **Sampling rate proposal (from this batch).** The write-time gate is a reliable AUTO floor (2 Ruth
    saves, zero false blocks); the freight/dangling lints self-fire. So no full eyeball needed for hard
    errors. Eyes still required on: register/loaded-referent words + SENSE STRUCTURE (lesson 4).
