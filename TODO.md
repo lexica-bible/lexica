@@ -299,20 +299,6 @@ heavily guarded. Full record: memory `project_ai_search_architecture` + `project
   data-surgery class: the "Jew" occurrences would need re-tagging to their own number (G2453, currently 0
   in ABP) before anything downstream is clean. Low urgency; only matters if a Jew/Judas Ask-corpus search
   reads muddy. read-only audit path: the query set in this session's transcript.
-- **DONE 2026-07-02: `SPLIT_LEMMA_ALIAS_NOTES` wired as a numbering crosswalk in the card HEADER.** The
-  pointer sits beside the Strong's badge (`.detail-strong-alias`) — the one element present in EVERY card
-  state (Lexica / LSJ / bare), so it shows even on words with no Lexica entry yet (ἱερόν/δωρεάν fall to LSJ).
-  Worded by the door the reader came in: standard-side (asked G2411) → "· ABP: G2413"; served-side (asked
-  G2413) → "· standard: G2411". Server computes `alias_note` (direction to_abp/from_abp) from the alias map
-  and rides it on BOTH the real entry AND the not-found 404, so the LSJ-fallback card still gets it; the
-  panel holds it in its own `aliasNote` state (separate from `lexica`). The pool caveat stays in the
-  LexicaBody Full-entry provenance block ("Pool note", served side) — so it only shows once the served number
-  has a built Lexica entry. Live both directions on χάρις, ἱερόν, δωρεάν.
-  - **2026-07-02 follow-on: crosswalk now ALSO in the Word study card header.** Word study uses its own
-    card (80-lexicon.jsx) fed by `/api/lexicon/profile`, NOT `/api/lexica`, so it never saw `alias_note`.
-    Added `alias_note` to the profile payload via a shared helper `contested_register.alias_note_for()`
-    (the ONE place the crosswalk is computed — the word card + profile endpoint both call it, can't drift).
-    Same `.detail-strong-alias` header treatment.
 - **BUG (report-only 2026-07-02): Word study — the ABP occurrence list loads visibly LATE, after the rest
   of the card.** TRACE: clicking a word runs `loadProfile` → `api.lexiconProfile` (fills header, gloss,
   distribution rail) and clears `loading`; THEN a separate effect (80-lexicon.jsx ~line 180), gated on
@@ -341,15 +327,6 @@ heavily guarded. Full record: memory `project_ai_search_architecture` + `project
   G2455). Data-surgery: the πλείων occurrences would need re-tagging to G4119 before a "more/greater" search
   or a Lexica entry for the comparative is clean. Low urgency. Anchors that pinned it: Mat 21:36 / Heb 3:3 /
   Joh 21:15.
-- **G1246 suspect — RESOLVED 2026-07-02: query artifact, not disease.** The 5 "without cause" rows are a
-  GENUINELY DISTINCT word — διὰ κενῆς ("through emptiness" = in vain/without cause), an LXX idiom Strong's NT
-  numbering never assigned, so ABP parked it as a dotted extension near G1246 (διάκενος "empty, hollow" is the
-  alphabetically adjacent lemma). NOT δωρεάν mis-keyed; nothing missing from G1431's pool — the δωρεάν alias
-  shipped complete. The false alarm was the audit itself: `strongs_base` strips the dot, so the dotted διὰ κενῆς
-  rows collapsed onto the hapax διακατελέγχομαι G1246 and looked like contamination. **AUDIT LESSON: base-grouped
-  sweeps are blind to dotted variants — future alias/homeless-lemma sweeps must group on the full dotted number
-  (or surface it alongside strongs_base).** Confirm in Word study: G1246's dotted entries show διὰ κενῆς carrying
-  those 5 rows.
 - **STATE.md is stale** (last refreshed 2026-06-28 — still lists the referent cards + the ἵνα graph as
   NOT BUILT). Refresh next time it's handed to a reviewer.
 - **#4 parallelize the cognate + Hebrew DB loops** (follow-up, not started) — read-only independent loops

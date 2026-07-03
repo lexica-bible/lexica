@@ -344,7 +344,10 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   guards in `/api/lexica/<strongs>` (2026-07-01):** (a) a `LEXICA_ALIASES` map (the register's `aliases`
   fields PLUS the standalone `SPLIT_LEMMA_ALIASES` dict — plain corpus-tagging splits that aren't contested words,
   added 2026-07-02) serves the ONE real row for a word ABP tags differently — KJV/BSB clicking charis ask for G5485, get the
-  G5484 row; (b) a fork BACKSTOP — a `CONTESTED` word whose stored row has no `fork` (built before it entered the
+  G5484 row. A NUMBERING CROSSWALK (`alias_note`) shows the standard↔ABP number pairing in the card header,
+  computed by the ONE shared helper `contested_register.alias_note_for()` — INVARIANT: any new card/route that
+  needs it calls that helper (both `/api/lexica` + `/api/lexicon/profile` do), never a private copy. Full record
+  + the LSJ-404-ride + `SPLIT_LEMMA_ALIAS_NOTES` pool caveat: memory `project_ai_search_architecture`. (b) a fork BACKSTOP — a `CONTESTED` word whose stored row has no `fork` (built before it entered the
   register, the θεός/κύριος batch-1 gap) 404s + logs loudly instead of serving a one-sided entry (card falls to LSJ).
   **PUBLIC since 2026-06-25** (`LEXICA_ADMIN_ONLY=False`; serves everyone incl. logged-out — a word with
   no entry 404s → the normal LSJ card, deploy-safe; flip the flag back to re-gate). LIVE on ~18 words: the 6

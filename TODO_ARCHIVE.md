@@ -6,6 +6,24 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-07-02 — Homeless-lemma sweep + alias numbering crosswalk
+- **2 split-lemma aliases added** (report → JP-confirmed → shipped): ἱερόν G2411→G2413, δωρεάν G1432→G1431.
+  ABP tags zero rows under the dict numbers; confirmed by rendering profile + verse anchors that ABP tags
+  the same lexeme on a neighbouring number. In `SPLIT_LEMMA_ALIASES`. πλείων G4119→G4183 flagged a
+  tagging-side MERGE (comparative folded into base πολύς), not an alias — writeup still open in TODO.
+- **Numbering crosswalk DONE + LIVE** — `alias_note` shows the standard↔ABP pairing in the card header
+  (`G2411 · ABP G2413` / `G2413 · standard G2411`), both surfaces (Library word card + Word study), computed
+  by the shared `contested_register.alias_note_for()`. Rides the not-found 404 so LSJ-fallback cards show it.
+  `SPLIT_LEMMA_ALIAS_NOTES` holds a served-side pool caveat (G2413 = temple + a few real "sacred" rows).
+  Full record + build lessons: memory `project_ai_search_architecture`.
+- **G1246 "suspect" RESOLVED — query artifact, not disease.** The 5 "without cause" rows are διὰ κενῆς (an
+  LXX idiom Strong's never numbered, parked as a dotted extension near G1246), a genuinely distinct word — NOT
+  δωρεάν mis-keyed. G1431's pool is complete. **Lesson (now a standing rule in CLAUDE.md + audit_alias_gap.py):
+  base-grouped audit queries strip the dot and are blind to dotted variants — group on the full dotted number,
+  and re-check any "0 rows"/"contaminated" finding on the dotted number before it counts.**
+
+---
+
 ## Ask-corpus Batch E task 3 — 7 split-lemma aliases added + provenance copy fix — DONE 2026-07-02
 (commits 8db5a93, f5aeca2). Followed the alias-gap audit review.
 - **Alias review + add.** Vetted the 10 JP-approved candidates read-only vs ABP (counts + destination
