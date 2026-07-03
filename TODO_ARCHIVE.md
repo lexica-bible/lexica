@@ -6,6 +6,28 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Ask-corpus Batch E — retrieval alias fold + alias-gap audit + ThreeZone check — DONE 2026-07-03
+(commits dfcf812, a688c48). Five queued tasks; 3 already shipped in Batch D, 2 net-new here.
+1. **Retrieval alias fold** (task 1, dfcf812) — closes the Batch D open item: a Greek-SCRIPT χάρις pins to
+   the textbook head G5485 (`_resolve_exact_lemma` matches the dictionary headword — correct), but the pinned
+   retrieval `WHERE w.strongs_base='G5485'` pulled 0 rows (ABP tags charis on G5484) → synthesis read an empty
+   pool. Fold happens at the ONE query-assembly point (Greek branch of `if _pinned:`) via the same
+   `_fold_alias`; ONLY the retrieval number folds — `_ks_pairs` keeps G5485 so the loop still shows χάρις and
+   folds it to G5484 for the key word (same display/canonical split as Batch D). No SQL-gen template / pin
+   logic touched. `_CACHE_CODE_VER`→44. Test `tests/test_pin_retrieval_alias.py` (3).
+2. **Alias-gap audit** (task 2, a688c48) — `scripts/audit_alias_gap.py`, read-only, report-only. Finds more
+   charis-class candidates for review (see the open TODO). Built-in sanity check: charis G5485 must surface
+   flagged already-aliased. Both testaments; Hebrew capped top-30 by gap. No map/register writes.
+3. **Task 3 (CONTESTED restyle) + Task 4 (rail follow-up panel sync)** — already shipped in Batch D
+   (48f2a36, 86508d6). Verified done, no action.
+4. **Task 5 (delete dead ThreeZone) — nothing to delete.** ThreeZone was already removed in the shell
+   migration; the only remaining mentions are 3 history *comments* (20-shared-components.jsx, 84-news.jsx,
+   + compiled app.js). No definition/import/usage. Left the comments (useful migration history, not dead code).
+LESSON: the "delete the dead X" task turned out MORE dead than expected — X was gone, only comments remained.
+Confirm what actually exists before assuming a deletion is pending.
+
+---
+
 ## Ask-corpus Batch D — panel alias fold + synthesis sparkle + sidebar thread badges — DONE 2026-07-03
 (commits 9487dde, e358267, eab2e5d, 839f1bf, 86508d6). Three unrelated items surfaced during Batch C
 verification. Full record: memories `project_ai_search_architecture` (alias fold) + `project_three_zone_shell`
