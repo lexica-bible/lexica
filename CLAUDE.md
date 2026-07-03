@@ -1105,7 +1105,13 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   that states it — killed the soft-framing slop ("instituted at creation"/"reinterpreted") via the FRAME
   + a worked example, NOT a blacklist. + a SABBATH-vs-WEEK lexical note (σάββατον = the seven-day WEEK in
   the "first/one of the sabbaths" idiom — 1Co 16:2 etc., overrides ABP's wooden gloss) + no "what the
-  verse doesn't do" riders. Memory `project_ai_synthesis_quality`.
+  verse doesn't do" riders. + CORPUS VOCABULARY (2026-07-02, commit ffdd966): describe meaning from the
+  corpus's own renderings/role-words, NOT post-biblical theological category terms (person/personhood-of-God,
+  Trinity, unmerited, sacrament, moral authority, hypostasis, …); report an action as an action ("the spirit
+  is sent") not a category ("a divine person"); prefer the ABP word (delivered not salvation, favor not grace,
+  immerse not baptize, assembly not church); on a CONTESTED word, describe attested use without resolving the
+  contest. Surfaced by live use (pneuma hagion → "a divine person", charis → "unmerited divine gift"); same
+  failure class as the G2316 "moral authority" definition fix. Memory `project_ai_synthesis_quality`.
 - **Follow-ups (Ask the corpus) carry the recent thread** — last 6 turns + their key lemmas, sent as a
   `context` query param, woven into the term + SQL prompts only to resolve references ("it"/"the same
   word"). A "New thread" button (rail) resets. Follow-ups are never cached (thread-specific).
