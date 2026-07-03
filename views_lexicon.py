@@ -1104,6 +1104,18 @@ def lexicon_profile(strongs):
             corpus = "kjv"
         if is_diff:          # ABP-only added word — no KJV side to toggle to
             corpus = "abp"
+        # A Greek number ABP doesn't tag (e.g. G2411 temple — ABP tags it on G2413) would
+        # land the reader on an EMPTY ABP occurrence tab that looks like "no data". Fall back
+        # to a text that actually carries the number, mirroring the Hebrew heb→kjv fallback.
+        # Only fires when ABP is genuinely empty (the ABP toggle is grayed then anyway), so an
+        # explicit ABP pick on a word that HAS ABP rows is untouched.
+        if corpus == "abp" and not is_diff:
+            _ap, _apar = _abp_strongs_filter(conn, num, sid)
+            if conn.execute(f"SELECT 1 FROM words w WHERE {_ap} LIMIT 1", _apar).fetchone() is None:
+                if conn.execute("SELECT 1 FROM kjv_strongs WHERE strongs_id = ? LIMIT 1", (sid,)).fetchone():
+                    corpus = "kjv"
+                elif _bsb_ready(conn) and conn.execute("SELECT 1 FROM bsb_strongs WHERE strongs_id = ? LIMIT 1", (sid,)).fetchone():
+                    corpus = "bsb"
         _NT = {"Mat","Mar","Luk","Joh","Act","Rom","1Co","2Co","Gal","Eph","Php","Col",
                "1Th","2Th","1Ti","2Ti","Tit","Phm","Heb","Jas","1Pe","2Pe","1Jn","2Jn","3Jn","Jud","Rev"}
         book_meta = {r["abbrev"]: {"name": r["name"], "testament": "NT" if r["abbrev"] in _NT else "OT"}
