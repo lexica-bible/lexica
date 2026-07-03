@@ -1587,6 +1587,15 @@ _GREEK_RE  = re.compile(r"^[Ͱ-Ͽἀ-῿]+$")
 _HEBREW_RE = re.compile(r"^[֐-׿]+$")
 
 
+def _fold_alias(prefixed: str) -> str:
+    """Rewrite an alias Strong's number to its canonical number, using the ONE alias map
+    (contested_register). ABP tags charis on G5484, not the textbook G5485, so the model's
+    G5485 key word is folded to G5484 → counting / highlighting / the lexical-texture panel
+    all key on the number ABP actually uses. Generic over the map: any future fork-word alias
+    is covered with no special-casing. A non-alias number passes through unchanged."""
+    return contested_register.LEXICA_ALIASES.get(prefixed, prefixed)
+
+
 def _resolve_exact_lemma(q: str) -> str | None:
     w = (q or "").strip()
     if " " in w or len(w) < 2:
@@ -1878,6 +1887,7 @@ def ai_search():
         key_strongs_data: list[dict] = []
         if _ks_pairs:
             ks_conn = db_ro()
+            _ks_seen: set = set()   # canonical numbers already added — dedup AFTER the alias fold
             try:
                 for sn, orig_prefix in _ks_pairs:
                     # Use AI-provided prefix when present; fall back to range heuristic
@@ -1906,9 +1916,22 @@ def ai_search():
                     if not row:
                         log.debug("key_strongs %s%s not found in DB — dropping", prefix, sn)
                         continue
+                    # Alias fold: a number the corpus tags elsewhere (ABP tags charis on
+                    # G5484, not the textbook G5485) is rewritten to its canonical number so
+                    # counting / highlighting / the lexical-texture panel key on the number ABP
+                    # actually uses. Generic over the ONE alias map (contested_register) — any
+                    # future fork-word alias gets this for free, no special-casing. The DISPLAY
+                    # lemma/translit stay as looked up above (reader still sees χάρις); only the
+                    # number rewrites. Fold FIRST, then dedup, so a list with both G5485 and
+                    # G5484 collapses to a single canonical entry (first one wins the display).
+                    prefixed = f"{prefix}{sn}"
+                    canon = _fold_alias(prefixed)
+                    if canon in _ks_seen:
+                        continue
+                    _ks_seen.add(canon)
                     key_strongs_data.append({
-                        "strongs_base": sn,
-                        "strongs": f"{prefix}{sn}",
+                        "strongs_base": canon.lstrip("GH"),
+                        "strongs": canon,
                         "lemma":      row["lemma"] or "",
                         "translit":   row["translit"] or "",
                         "definition": (row["strongs_def"] if prefix == "G" else "") or "",
