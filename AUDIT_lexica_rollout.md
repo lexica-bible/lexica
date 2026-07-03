@@ -141,6 +141,11 @@ preserved in the logs.
    errors. Eyes still required on: register/loaded-referent words + SENSE STRUCTURE (lesson 4).
    PROPOSAL: 100% eyeball on register/loaded words; sample the rest ~1-in-5 with the gate as floor.
    JP sets the number.
+   - **Rendering-sweep design (parked, design question only — relates to sampling but doesn't replace it).**
+     A cheap second pass that walks each entry's UNCITED renderings (e.g. δίδωμι "gave" 513×) and verifies
+     each against a small sample of its own verses — closing the uncited-rendering hole incrementally,
+     as an alternative to raising the 40-verse dial. Scope the design before deciding; not a substitute for
+     the sampling-rate call above.
 3. **Structural backfill checkpoint** (belongs on structural cards, NOT the engine): οὕτω G3779,
    ἕως G2193, ἰδού G2400, εἷς G1520, + the 8 oblique pronoun forms (σοῦ/μοῦ/μέ/σέ/ὑμῶν/ἡμῶν/σοί/ὑμῖν,
    μοί G3427).

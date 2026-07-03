@@ -190,6 +190,13 @@ YouVersion, which aren't the target). Honest gaps:
   - Step 4 significance judge — voting sees that something VARIED, not whether it MATTERS (same blind spot
     as the citation gate, one layer up). Human eyes now; a model pass is unproven.
   - Verbs + Hebrew first-batches = separate tracks.
+  - **Seam next-stage ("Build A") — feed design undecided.** Today's pipeline is hand-authored register →
+    engine attaches forks → seams auto-display (so the shipped browse IS harvested, but its upstream is
+    hand-curated — both, not either). Open question: does anything BESIDES a hand-forked word ever propose a
+    seam? i.e. does engine output (freight flags, thin contested senses) generate seam CANDIDATES into a
+    triage queue (harvest + Keep/Dismiss curation), or does the register stay the only gate for full forks?
+    JP rules before any build. Batch One produced the first test cases either way (freight flags on plain
+    words — impute, hearken/heed; λόγος sense 5 thin; the υἱός "looks like a fork, isn't one" ruling).
   - Small: the fork gate names a covenant-membership/NPP reading for dikaioō that `salvation_how` has no
     node for — add one via add_study_graph_salvation.py so the link lands.
   - **Coverage engine (piece A/B) SHIPPED 2026-07-02** (`lexica_coverage.py`; memory `project_lexica_dictionary`).
@@ -203,6 +210,30 @@ YouVersion, which aren't the target). Honest gaps:
    "Son of Man" idiom + G2316 Psa 82 into senses 3/4 — all SHIPPED + LIVE; audit A1/C3 + the θεός metaV fix
    too. Archived. See TODO_ARCHIVE + memory `project_lexica_dictionary`.)
   code: scripts/build_lexica_def.py (imports contested_register), fix_lexica_raw.py, lexica_agreement.py, views_lexica.py
+
+- **Verse-aware gloss-note flag on word cards (design-scoping first, NO build — parked; sequence AFTER draw cache, not batch-two-blocking).**
+  JP's idea: when a reader opens a word card FROM a specific verse in the interlinear, and that entry's
+  gloss_note cites that verse, surface the note at the TOP of the card. Example: tap δίδωμι at 1Sa 22:15 →
+  card leads with the impute-freight note because that verse is one of its cited occurrences. Static Library
+  card view UNCHANGED — this is interlinear-entry context only. Scope in order:
+  1. **Structured-refs prerequisite.** gloss_notes is stored as one prose blob; the citation catcher
+     (`cited_refs`/`_REF_RE` in build_lexica_def.py) already pulls `(book,ch,vs)` from any prose (sense_provenance
+     does it per-sense). Determine: is per-NOTE catch reliable off the stored blob, or does the build need a
+     structured `verses:[]` field per gloss_note? If the latter → new field → JP checkpoint BEFORE anything lands.
+     Also determine whether the 26 live entries can be back-parsed or need a resplit-style pass.
+  2. **Precision rule.** Flag fires ONLY on exact verse match to a note's citations — never on every occurrence
+     of the word. A wrong-verse flag is worse than no flag.
+  3. **Design-doctrine ruling for JP (one-pill rule / emphasis budget).** Candidate: a subordinate text line at
+     the card top, no new pill, no container, linking down to the note. JP rules on the visual form before build.
+  4. **UI-copy principle (stated).** Flag PRESENT = a known note exists; flag ABSENT = no claim. Gloss notes are
+     EXCEPTION reports over a ~40-verse sample, so absence must NEVER read as "verified clean."
+  5. **Adjacency.** Relationship to the parked word-study-card provenance feature (both surface an entry's
+     self-knowledge at point of reading). Scope shared card-header mechanism vs independent; don't merge without
+     JP's call.
+  Boundaries: scoping doc only — no schema, no UI, no build until JP reviews. Prereq facts already checked:
+  gloss_notes only fires where a gloss narrows/loads/diverges, so most verses of a word carry no note (flag is
+  silent by design — reinforces principle 4). code: build_lexica_def.py (`split_definition`/`cited_refs`),
+  views_lexica.py (`/api/lexica`), 20-shared-components.jsx (`LexicaBody`), 30-detail-panel.jsx (fetch path).
 
 - **Definition-engine audit — items PARKED by JP's scope call (2026-07-01).** Batch 1 (register extraction,
   blocking citation gate, G5485 alias, serve-time fork backstop, +7 gloss overrides) shipped — see memory
