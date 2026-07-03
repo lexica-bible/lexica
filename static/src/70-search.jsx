@@ -183,6 +183,7 @@ function AboutView({ owner }) {
         <>
         <h1 className="about-title">About Lexica</h1>
         <p className="about-lead">A Greek and Hebrew word study tool for the diligent Berean. No seminary required.</p>
+        <p className="about-p">Lexica is built on the Apostolic Bible Polyglot, the LSJ and Strong's lexicons, Tyndale/STEP Bible data, and other open scholarly sources — <a href="/credits">full credits and licenses</a>.</p>
 
         <h2 className="about-h2">The Berean approach</h2>
         <p className="about-p">The Bereans "received the word with all readiness of mind, and searched the scriptures daily" (Acts 17:11). Lexica is built on that posture: let the Greek and Hebrew speak before any theological system does. No commentary, no denominational lens, no conclusions pre-loaded — and where the tradition disagrees with itself, both readings on the table.</p>
