@@ -100,30 +100,58 @@ sense dropped from a thin standalone sense (old draw's sense 3) to a **gloss_not
 draw. Both are defensible; which ships is JP's call. If the old structure was right, the fix is one
 `--force` redraw (gamble on the draw) or the draw-cache feature below. Flagged, not resolved.
 
-## Batch-two prep list (closing section)
-1. **Draw-cache feature (ro caches the reviewed draw, apply writes THAT draw).** Batch One produced
-   **three concrete costs of apply-regenerating instead of writing the reviewed draft:**
-   - πρόσωπον — passed the ro pass 39/39, then the apply draw wrote "Ruth" and was hard-rejected.
-   - δίδωμι — the ro draw carried a `1Sa` dangling; needed a redraw.
-   - πατήρ — the redraw silently restructured the senses (elder-address → gloss_note).
-   Same root each time: the draft we review is not the draft we ship. A draw-cache removes the class.
-2. **Sampling rate — set from this batch's findings (the calibration batch's actual job).** What
-   Batch One showed: the write-time gate is a reliable AUTO floor — it hard-rejected every bad-
-   citation draw (2 Ruth saves) with zero false blocks, and the freight-flag + dangling lints fire
-   on their own. So a full human eyeball of every word is NOT required to catch hard errors. What
-   still needs eyes: register/fork candidates, loaded-referent words, and sense-structure drift
-   (πατήρ). PROPOSAL for JP: 100% eyeball on register/loaded-referent words; sample the rest at a
-   fixed rate (suggest ~1-in-5) with the gate as the floor under the unsampled remainder. JP sets
-   the number.
-3. **Structural backfill (belongs on structural cards, NOT the definition engine):**
-   - **οὕτω G3779** ("thus, so" — rank 49): an adverb/connector whose meaning is set by context —
-     structural-card shape, like the particles.
-   - **the oblique pronoun forms** (σοῦ G4675, μοῦ G3450, μέ G3165, σέ G4571, ὑμῶν G5216,
-     ἡμῶν G2257, σοί G4671, ὑμῖν G5213, μοί G3427): ABP tags these as their own high-frequency
-     numbers; they're pointer forms, not lexemes with a sense range. Add to the structural inventory.
-4. **ἅγιον G39 gloss check** (rank 50): the word_gloss reads "Holy Place," but G39 is the ABP-tagged
-   holy family (the SPLIT_LEMMA_ALIASES target for hagios G40 → G39). "Holy Place" looks too narrow
-   for the whole family — verify the gloss before G39 is ever built or surfaced.
+## Process lessons (Batch One)
+1. **Confirmation tools must be able to fail.** Two instances in one day — the τοῦτο sweep's void
+   zero (accent-normalization killed the pattern, so it "passed" by matching nothing) and the stale
+   `audit_dangling_context.py` copy printing byte-identical output after the lint changed. Same lesson:
+   control-test a detector against a KNOWN positive, and never keep two copies of scan logic. **RULE:
+   any new audit helper reuses the production detector, never reimplements it** (the reporter now
+   imports `dangling_book_refs`' own regexes).
+2. **Apply regenerates — reviewed ≠ shipped.** Three costs: πρόσωπον passed ro then hard-rejected at
+   apply (saved by the gate); δίδωμι's ro `1Sa` dangling vanished at apply while a NEW Jos-surface one
+   appeared; the πατήρ redraw shipped a structurally different entry (4→3 senses) than the reviewed
+   one. Draw cache is the highest-priority batch-two item — it turns three risk classes into zero.
+3. **The deterministic/model boundary held everywhere it was tested.** Every fix that worked is
+   deterministic (book table, chapter-strip, soft set, exact lookup); everything model-side stayed
+   advisory. The Judges/Jude proof is the template: turn a style rule into a correctness argument and
+   lock it with a test.
+4. **Sense-structure variance is the gate-invisible failure mode.** πατήρ drew 4 senses then 3 from
+   identical input; both pass every gate. So batch-two sampling can't just count gate failures — it
+   needs a human read of SENSE STRUCTURE on the sample, the only place draw variance shows.
+
+## Calibration numbers
+- **Draws:** ~22 model draws total (19 first-apply + δίδωμι redraw + λαός/πρόσωπον redraws; πατήρ
+  force-redraw on top). SHIPPED: 19 fresh entries + 7 prior = 26. **2 hard rejects** (both "Ruth",
+  both systematic, both fixed), **1 genuine dangling** shipped-then-redrawn (πατήρ Col), **0 unverified
+  citations shipped.** (The precise total-draw count would need every raw log; the shipped-entry figures
+  are exact.)
+- **Freight-flag hit rate on PLAIN words was high** — impute (δίδωμι), wife (γυνή), hearken/heed
+  (ἀκούω), commit (ποιέω), execute (δίδωμι). This answers the open question: the flags work OUTSIDE
+  the CONTESTED register.
+- **Tagging-error yield ≈ 6 corpus rows per 26 words** (5 tag errors + the κύριος row). Projected
+  across ~3,954 words ≈ **~900 misalignment rows** expected. That number should decide whether the
+  phrase-boundary fix gets scheduled BEFORE or DURING the rollout.
+
+## Batch-two prep list (consolidated closing section)
+1. **Draw cache** — ro saves the reviewed draw, apply writes THAT draw. Highest priority (kills the
+   three lesson-2 risk classes).
+2. **Sampling rate proposal (from this batch).** The write-time gate is a reliable AUTO floor (2 Ruth
+   saves, zero false blocks); the freight/dangling lints self-fire. So no full eyeball needed for hard
+   errors. Eyes still required on: register/loaded-referent words + SENSE STRUCTURE (lesson 4).
+   PROPOSAL: 100% eyeball on register/loaded words; sample the rest ~1-in-5 with the gate as floor.
+   JP sets the number.
+3. **Structural backfill checkpoint** (belongs on structural cards, NOT the engine): οὕτω G3779,
+   ἕως G2193, ἰδού G2400, εἷς G1520, + the 8 oblique pronoun forms (σοῦ/μοῦ/μέ/σέ/ὑμῶν/ἡμῶν/σοί/ὑμῖν,
+   μοί G3427).
+4. **ἅγιον G39 gloss check** before it builds — word_gloss reads "Holy Place," too narrow for the
+   ABP-tagged holy family (the hagios G40→G39 alias target). Verify first.
+5. **Ranker learns to check stamps upfront** — skip already-built words in the candidate list so the
+   ro/apply passes don't re-draw prior entries.
+6. **ai.py ↔ build cross-comments** — the two `_norm_book` copies disagree on bare "Jud" (ai=Judges,
+   build=Jude) by design; add a cross-note in each so the divergence reads as intentional.
+7. **πατήρ adjudication** — JP reads both draws (4-sense vs 3-sense), picks which ships.
+8. **Uncited-collocation triage rule** — batch data says most are noise (numerals, time-words); at
+   ~3,900 words the eyeball cost needs a rule for which collocations actually warrant a look.
 
 ### Open finding — spelled-out book names ≠ stored code (systematic)
 The model writes the natural name **"Ruth"**; the stored `verses.book` code is **`Rth`**.
