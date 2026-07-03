@@ -285,6 +285,29 @@ dragY=0;};el.addEventListener('touchstart',onStart,{passive:true});el.addEventLi
 // path for every page load. Loaded once, cached on window.L for later opens.
 let _leafletPromise=null;function loadLeaflet(){if(window.L)return Promise.resolve(window.L);if(_leafletPromise)return _leafletPromise;_leafletPromise=new Promise((resolve,reject)=>{const css=document.createElement("link");css.rel="stylesheet";css.href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css";css.crossOrigin="";document.head.appendChild(css);const js=document.createElement("script");js.src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js";js.crossOrigin="";js.onload=()=>resolve(window.L);js.onerror=reject;document.head.appendChild(js);});return _leafletPromise;}function LeafletMap({lat,lon,name}){const mapRef=React.useRef(null);const instanceRef=React.useRef(null);const[ready,setReady]=React.useState(!!window.L);// Kick off the lazy load on first mount (no-op if Leaflet is already present).
 React.useEffect(()=>{if(window.L)return;let cancelled=false;loadLeaflet().then(()=>{if(!cancelled)setReady(true);}).catch(()=>{});return()=>{cancelled=true;};},[]);React.useEffect(()=>{if(!ready||!mapRef.current||!window.L)return;if(instanceRef.current){instanceRef.current.remove();instanceRef.current=null;}const map=window.L.map(mapRef.current,{center:[lat,lon],zoom:7,zoomControl:true,scrollWheelZoom:false,attributionControl:false});window.L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png',{maxZoom:19}).addTo(map);window.L.marker([lat,lon]).addTo(map).bindPopup(name).openPopup();instanceRef.current=map;return()=>{if(instanceRef.current){instanceRef.current.remove();instanceRef.current=null;}};},[ready,lat,lon,name]);return/*#__PURE__*/React.createElement("div",{ref:mapRef,className:"metav-leaflet-map"});}// ============================================================
+// SHELL PURE LOGIC — the RightStack state transforms, factored OUT of the React hook
+// so ONE copy is used by both the app (22-shell.jsx: useRightStack + RightStack) and the
+// Node unit test (tests/test_rstack_logic.js). No React in here — plain array math only.
+//
+// Why a separate file: the transforms ARE the RightStack contract (PUSH-UNIQUE keys,
+// pop-uncovers, center-select resets to depth-1), and that contract deserves a lock. It
+// can't sit inside the hook (the hook needs React), and re-typing it in a test would be a
+// second copy that could silently drift. So the hook CALLS these, the test IMPORTS these.
+//
+// This file is plain JS (no JSX): the browser bundle picks it up in filename order (21 <
+// 22, so the helpers exist before the shell uses them); the export guard at the tail is a
+// no-op in the browser (`module` is undefined there) and hands the functions to Node.
+// ============================================================
+// Mint a push-unique layer id. seq is a monotonically rising counter owned by the hook —
+// each push gets its own id so two cards of the SAME type can sit on the stack without a
+// React key collision (the gotcha the shell was built to avoid).
+function rsNextId(seq){return"L"+seq;}// Push: append the layer with its minted id. Returns a NEW array (the old one is untouched).
+function rsPush(stack,layer,id){return[...stack,{...layer,_id:id}];}// Pop: drop the top layer, uncovering the one beneath (which stayed mounted).
+function rsPop(stack){return stack.slice(0,-1);}// Reset: back to depth 1. A center peer-select (choosing another item) calls this so the
+// drill doesn't carry over onto the newly-selected item.
+function rsReset(){return[];}// The full layer list the panel renders: the depth-1 root first (keyed by its own stable
+// key, or the literal "root"), then every pushed layer on top. depth = layers.length.
+function rsLayers(rootRender,rootKey,stack){return[{root:true,backLabel:null,render:rootRender,_id:rootKey||"root"},...(stack||[])];}if(typeof module!=="undefined"&&module.exports){module.exports={rsNextId,rsPush,rsPop,rsReset,rsLayers};}// ============================================================
 // SHELL PRIMITIVES (Phase 1, greenfield) — NOT yet consumed by any shipped surface.
 // Two net-new pieces the Three-Zone migration is built on:
 //   • RightStack — the inspect-panel STACK. depth 1 = a single card; an in-panel drill
@@ -303,7 +326,8 @@ React.useEffect(()=>{if(window.L)return;let cancelled=false;loadLeaflet().then((
 const RightStackCtx=React.createContext(null);const useRightStackCtl=()=>React.useContext(RightStackCtx);// The PARENT (a surface like the seam index) calls this to OWN the pushed-layer array. It
 // keeps reset() in the surface's hand for the center-select rule. `_seq` mints a push-unique
 // key so the same card type can appear twice on the stack without a key collision (gotcha 3).
-function useRightStack(){const[stack,setStack]=React.useState([]);const seq=React.useRef(0);return React.useMemo(()=>({stack,push:layer=>setStack(s=>[...s,{...layer,_id:"L"+ ++seq.current}]),pop:()=>setStack(s=>s.slice(0,-1)),reset:()=>setStack([]),// center peer-select → back to depth 1 on the new item
+function useRightStack(){const[stack,setStack]=React.useState([]);const seq=React.useRef(0);// The transforms live in 21-shell-logic.jsx so the Node test exercises the SAME code.
+return React.useMemo(()=>({stack,push:layer=>setStack(s=>rsPush(s,layer,rsNextId(++seq.current))),pop:()=>setStack(rsPop),reset:()=>setStack(rsReset()),// center peer-select → back to depth 1 on the new item
 depth:stack.length+1}),[stack]);}// A layer = { backLabel, render }. `root` is the depth-1 card (or null → empty state).
 // Every layer stays MOUNTED and LAID OUT (absolute, stacked); only the top is visible. We
 // hide the rest with visibility:hidden, NOT display:none — BECAUSE these layers are
@@ -315,7 +339,8 @@ depth:stack.length+1}),[stack]);}// A layer = { backLabel, render }. `root` is t
 // `inline` = render WITHOUT the fixed .zinspect panel — a plain relative box that fills its
 // parent. Desktop uses the fixed aside (the right column); the MOBILE sheet uses inline, so the
 // stack lives INSIDE the sheet instead of position:fixed escaping it to the viewport edge.
-function RightStack({ctl,root,empty,className,inline}){const Wrap=inline?kids=>/*#__PURE__*/React.createElement("div",{className:"rstack rstack-inline "+(className||"")},kids):kids=>/*#__PURE__*/React.createElement("aside",{className:"zinspect rstack "+(className||"")},kids);if(!root)return Wrap(empty);const layers=[{root:true,backLabel:null,render:root.render,_id:root.key||"root"},...ctl.stack];const topIdx=layers.length-1;return/*#__PURE__*/React.createElement(RightStackCtx.Provider,{value:ctl},Wrap(layers.map((L,i)=>/*#__PURE__*/React.createElement("div",{key:L._id,className:"rstack-layer"+(i===topIdx?" on":""),"aria-hidden":i!==topIdx},!L.root&&/*#__PURE__*/React.createElement("div",{className:"rstack-bar"},/*#__PURE__*/React.createElement("button",{className:"detail-back",onClick:ctl.pop,"aria-label":"Back to "+(L.backLabel||"previous").toLowerCase()},"\u2039 ",L.backLabel||"Back")),/*#__PURE__*/React.createElement("div",{className:"rstack-body"},L.render())))));}// A swipe-dismiss bottom sheet for the mobile shell (reuses the shared hook from
+function RightStack({ctl,root,empty,className,inline}){const Wrap=inline?kids=>/*#__PURE__*/React.createElement("div",{className:"rstack rstack-inline "+(className||"")},kids):kids=>/*#__PURE__*/React.createElement("aside",{className:"zinspect rstack "+(className||"")},kids);if(!root)return Wrap(empty);const layers=rsLayers(root.render,root.key,ctl.stack);// same builder the test locks
+const topIdx=layers.length-1;return/*#__PURE__*/React.createElement(RightStackCtx.Provider,{value:ctl},Wrap(layers.map((L,i)=>/*#__PURE__*/React.createElement("div",{key:L._id,className:"rstack-layer"+(i===topIdx?" on":""),"aria-hidden":i!==topIdx},!L.root&&/*#__PURE__*/React.createElement("div",{className:"rstack-bar"},/*#__PURE__*/React.createElement("button",{className:"detail-back",onClick:ctl.pop,"aria-label":"Back to "+(L.backLabel||"previous").toLowerCase()},"\u2039 ",L.backLabel||"Back")),/*#__PURE__*/React.createElement("div",{className:"rstack-body"},L.render())))));}// A swipe-dismiss bottom sheet for the mobile shell (reuses the shared hook from
 // 20-shared-components so it matches every other sheet's feel). Plain scrim + rounded
 // sheet; drag down or tap the scrim to close.
 // `bare` = the child manages its own fill + scroll (an inline RightStack), so skip the padded
@@ -699,6 +724,26 @@ React.useEffect(()=>{if(textMode!=="kjv"||!allResults.length)return;const seen=n
 // drop the per-chapter headings + boxes). Primary evidence first; the themed
 // "additional" refs (may not contain the word) in their own labeled section.
 const orderedVerses=groups.flatMap(g=>g.verses);const primaryVerses=hasPrimary?orderedVerses.filter(v=>v.is_primary):orderedVerses;const additionalVerses=hasAdditional?orderedVerses.filter(v=>v.is_additional):[];const otherVerses=hasPrimary||hasAdditional?orderedVerses.filter(v=>!v.is_primary&&!v.is_additional):[];const rowProps={allResults,onWordClick,onReadInContext,textMode,primaryStrongs,citedStrongs,kjvCache};return/*#__PURE__*/React.createElement("div",{className:"corpus-groups"},/*#__PURE__*/React.createElement(CorpusVerseList,_extends({verses:primaryVerses},rowProps)),additionalVerses.length>0&&/*#__PURE__*/React.createElement("div",{className:"additional-refs-section"},/*#__PURE__*/React.createElement("div",{className:"additional-refs-label"},"Additional references",/*#__PURE__*/React.createElement("span",{style:{fontWeight:400,color:"var(--ink-4)"}}," \xB7 related by theme \u2014 may not contain the word")),/*#__PURE__*/React.createElement(CorpusVerseList,_extends({verses:additionalVerses},rowProps))),showAll&&otherVerses.length>0&&/*#__PURE__*/React.createElement(CorpusVerseList,_extends({verses:otherVerses},rowProps)));}// ============================================================
+// ASK-CORPUS PURE LOGIC — the provenance-rail word grouping, factored OUT of
+// 52-ask-corpus.jsx so ONE copy is shared by the app (ProvenancePanel) and the Node unit
+// test (tests/test_ac_word_groups.js). No React here — plain data shaping only.
+//
+// _acWordGroups is the rail's "Words in scope" builder: it merges the answer-scope words
+// (key_strongs — carry the contested flag + are what the answer USED) with the lexical
+// FAMILY (the computed panel — each head + its gloss-confirmed cognates, with corpus
+// counts/bars), into ONE list grouped by language. The flags it stamps on each row
+// (inScope / contested / aliasNote) drive the badges the reader sees, which is exactly why
+// it deserves a lock. Filename order 51 < 52, so the app has it before the panel calls it;
+// the export tail is a no-op in the browser and hands it to Node.
+// ============================================================
+// Merge the answer-scope words with the lexical family. A row is `inScope` when the answer
+// used that exact word; family-only rows (a cognate the answer didn't pick, e.g. πύρωσις
+// under πῦρ) are kept but marked so they don't read as evidence. Answer-scope words the
+// panel didn't include (e.g. Hebrew supplements on a Greek answer) are appended so none are
+// dropped.
+function _acWordGroups(words,panel,contestedSet){const ks={};(words||[]).forEach(w=>{if(w&&w.strongs)ks[w.strongs]=w;});const inScope=new Set(Object.keys(ks));const isContested=s=>contestedSet&&contestedSet.has(s)||!!(ks[s]&&ks[s].contested);const order=[],byLang={};const ensure=lang=>{if(!byLang[lang]){byLang[lang]={lang,label:lang==="H"?"Hebrew (OT)":"Greek (NT / Greek OT)",max:0,set_aside:0,rows:[],seen:new Set()};order.push(byLang[lang]);}return byLang[lang];};// 1) family rows from the panel — counts, glosses, bars, the set-aside boundary.
+(panel&&panel.groups||[]).forEach(pg=>{const g=ensure(pg.lang);g.label=pg.label||g.label;g.set_aside+=pg.set_aside||0;g.max=Math.max(g.max,pg.max||0);(pg.family||[]).forEach(r=>{if(g.seen.has(r.strongs))return;g.seen.add(r.strongs);g.rows.push({strongs:r.strongs,lemma:r.lemma,translit:r.translit,gloss:r.gloss||"",count:r.count,core:!!r.core,hasCount:true,inScope:inScope.has(r.strongs),contested:isContested(r.strongs),aliasNote:ks[r.strongs]&&ks[r.strongs].alias_note||null});});});// 2) answer-scope words the panel didn't include — keep them (never drop scope words).
+(words||[]).forEach(w=>{if(!w||!w.strongs)return;const lang=/^H/i.test(w.strongs)?"H":"G";const g=ensure(lang);if(g.seen.has(w.strongs))return;g.seen.add(w.strongs);g.rows.push({strongs:w.strongs,lemma:w.lemma,translit:w.translit,gloss:"",count:null,core:false,hasCount:false,inScope:true,contested:isContested(w.strongs),aliasNote:w.alias_note||null});});return order;}if(typeof module!=="undefined"&&module.exports){module.exports={_acWordGroups};}// ============================================================
 // ASK THE CORPUS — the single home for AI search.
 // A question in plain language → a synthesis answer with cited Greek/Hebrew
 // lemmas and the passages that carry it. Reuses /api/ai-search (login-gated)
@@ -766,15 +811,10 @@ const _PROV_PASSAGE_CAP=6;// show this many key passages before the "show all" e
 // turns carry a question but NO answer (t.local + t.notice); errors and in-flight turns aren't
 // real either. ONE predicate — reused by the follow-up context digest AND the rail's follow-up
 // count/expansion so they can't drift (the F13 notice filter, in one place).
-const acRealTurn=t=>!!(t&&t.question&&!t.loading&&!t.error&&!t.local&&!t.notice);// Merge the answer-scope words (key_strongs — carry the contested flag + are what the answer
-// USED) with the lexical FAMILY (the panel — each head + its gloss-confirmed cognates, with
-// corpus counts/bars). One list, grouped by language. A row is `inScope` when the answer used
-// that exact word; family-only rows (a cognate the answer didn't pick, e.g. πύρωσις under πῦρ)
-// are kept but marked so they don't read as evidence. Answer-scope words the panel didn't
-// include (e.g. Hebrew supplements on a Greek answer) are appended so none are dropped.
-function _acWordGroups(words,panel,contestedSet){const ks={};(words||[]).forEach(w=>{if(w&&w.strongs)ks[w.strongs]=w;});const inScope=new Set(Object.keys(ks));const isContested=s=>contestedSet&&contestedSet.has(s)||!!(ks[s]&&ks[s].contested);const order=[],byLang={};const ensure=lang=>{if(!byLang[lang]){byLang[lang]={lang,label:lang==="H"?"Hebrew (OT)":"Greek (NT / Greek OT)",max:0,set_aside:0,rows:[],seen:new Set()};order.push(byLang[lang]);}return byLang[lang];};// 1) family rows from the panel — counts, glosses, bars, the set-aside boundary.
-(panel&&panel.groups||[]).forEach(pg=>{const g=ensure(pg.lang);g.label=pg.label||g.label;g.set_aside+=pg.set_aside||0;g.max=Math.max(g.max,pg.max||0);(pg.family||[]).forEach(r=>{if(g.seen.has(r.strongs))return;g.seen.add(r.strongs);g.rows.push({strongs:r.strongs,lemma:r.lemma,translit:r.translit,gloss:r.gloss||"",count:r.count,core:!!r.core,hasCount:true,inScope:inScope.has(r.strongs),contested:isContested(r.strongs),aliasNote:ks[r.strongs]&&ks[r.strongs].alias_note||null});});});// 2) answer-scope words the panel didn't include — keep them (never drop scope words).
-(words||[]).forEach(w=>{if(!w||!w.strongs)return;const lang=/^H/i.test(w.strongs)?"H":"G";const g=ensure(lang);if(g.seen.has(w.strongs))return;g.seen.add(w.strongs);g.rows.push({strongs:w.strongs,lemma:w.lemma,translit:w.translit,gloss:"",count:null,core:false,hasCount:false,inScope:true,contested:isContested(w.strongs),aliasNote:w.alias_note||null});});return order;}function ProvenancePanel({answer,panel,onOccInspect,onStrongs,contestedSet}){const results=answer.results||[];const cited=_acCited(answer.keyStrongs);const grounded=answer.grounded!==false;const words=answer.keyStrongs||[];// Key passages = the primary passages the synthesis leaned on, then any thematic
+const acRealTurn=t=>!!(t&&t.question&&!t.loading&&!t.error&&!t.local&&!t.notice);// _acWordGroups — the rail's "Words in scope" builder — now lives in 51-corpus-logic.jsx
+// (plain JS, so tests/test_ac_word_groups.js locks the SAME code). It's a global in the
+// concatenated bundle, defined before this file in filename order.
+function ProvenancePanel({answer,panel,onOccInspect,onStrongs,contestedSet}){const results=answer.results||[];const cited=_acCited(answer.keyStrongs);const grounded=answer.grounded!==false;const words=answer.keyStrongs||[];// Key passages = the primary passages the synthesis leaned on, then any thematic
 // ("additional") refs, each tagged so a theme-only link isn't misread as direct evidence.
 // If nothing was flagged primary (a small pool), every retrieved verse shows. Deduped by ref.
 const hasPrimary=results.some(e=>e.is_primary);const passages=[];const seen=new Set();const push=(e,theme)=>{if(!seen.has(e.ref)){seen.add(e.ref);passages.push({...e,theme});}};if(hasPrimary){for(const e of results)if(e.is_primary)push(e,false);for(const e of results)if(e.is_additional)push(e,true);}else{for(const e of results)push(e,false);}const evidenceCount=passages.filter(p=>!p.theme).length;// Snippet translation toggle — same four texts as the old inline section. The snippet

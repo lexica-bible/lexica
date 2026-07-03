@@ -24,11 +24,12 @@ const useRightStackCtl = () => React.useContext(RightStackCtx);
 function useRightStack() {
   const [stack, setStack] = React.useState([]);
   const seq = React.useRef(0);
+  // The transforms live in 21-shell-logic.jsx so the Node test exercises the SAME code.
   return React.useMemo(() => ({
     stack,
-    push: (layer) => setStack(s => [...s, { ...layer, _id: "L" + (++seq.current) }]),
-    pop:  () => setStack(s => s.slice(0, -1)),
-    reset: () => setStack([]),        // center peer-select → back to depth 1 on the new item
+    push: (layer) => setStack(s => rsPush(s, layer, rsNextId(++seq.current))),
+    pop:  () => setStack(rsPop),
+    reset: () => setStack(rsReset()),  // center peer-select → back to depth 1 on the new item
     depth: stack.length + 1,
   }), [stack]);
 }
@@ -49,7 +50,7 @@ function RightStack({ ctl, root, empty, className, inline }) {
     ? (kids) => <div className={"rstack rstack-inline " + (className || "")}>{kids}</div>
     : (kids) => <aside className={"zinspect rstack " + (className || "")}>{kids}</aside>;
   if (!root) return Wrap(empty);
-  const layers = [{ root: true, backLabel: null, render: root.render, _id: root.key || "root" }, ...ctl.stack];
+  const layers = rsLayers(root.render, root.key, ctl.stack);   // same builder the test locks
   const topIdx = layers.length - 1;
   return (
     <RightStackCtx.Provider value={ctl}>

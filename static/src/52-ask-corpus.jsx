@@ -201,54 +201,9 @@ const _PROV_PASSAGE_CAP = 6;   // show this many key passages before the "show a
 // count/expansion so they can't drift (the F13 notice filter, in one place).
 const acRealTurn = (t) => !!(t && t.question && !t.loading && !t.error && !t.local && !t.notice);
 
-// Merge the answer-scope words (key_strongs — carry the contested flag + are what the answer
-// USED) with the lexical FAMILY (the panel — each head + its gloss-confirmed cognates, with
-// corpus counts/bars). One list, grouped by language. A row is `inScope` when the answer used
-// that exact word; family-only rows (a cognate the answer didn't pick, e.g. πύρωσις under πῦρ)
-// are kept but marked so they don't read as evidence. Answer-scope words the panel didn't
-// include (e.g. Hebrew supplements on a Greek answer) are appended so none are dropped.
-function _acWordGroups(words, panel, contestedSet) {
-  const ks = {};
-  (words || []).forEach(w => { if (w && w.strongs) ks[w.strongs] = w; });
-  const inScope = new Set(Object.keys(ks));
-  const isContested = (s) => (contestedSet && contestedSet.has(s)) || !!(ks[s] && ks[s].contested);
-  const order = [], byLang = {};
-  const ensure = (lang) => {
-    if (!byLang[lang]) {
-      byLang[lang] = { lang, label: lang === "H" ? "Hebrew (OT)" : "Greek (NT / Greek OT)",
-                       max: 0, set_aside: 0, rows: [], seen: new Set() };
-      order.push(byLang[lang]);
-    }
-    return byLang[lang];
-  };
-  // 1) family rows from the panel — counts, glosses, bars, the set-aside boundary.
-  ((panel && panel.groups) || []).forEach(pg => {
-    const g = ensure(pg.lang);
-    g.label = pg.label || g.label;
-    g.set_aside += pg.set_aside || 0;
-    g.max = Math.max(g.max, pg.max || 0);
-    (pg.family || []).forEach(r => {
-      if (g.seen.has(r.strongs)) return;
-      g.seen.add(r.strongs);
-      g.rows.push({ strongs: r.strongs, lemma: r.lemma, translit: r.translit, gloss: r.gloss || "",
-                    count: r.count, core: !!r.core, hasCount: true,
-                    inScope: inScope.has(r.strongs), contested: isContested(r.strongs),
-                    aliasNote: (ks[r.strongs] && ks[r.strongs].alias_note) || null });
-    });
-  });
-  // 2) answer-scope words the panel didn't include — keep them (never drop scope words).
-  (words || []).forEach(w => {
-    if (!w || !w.strongs) return;
-    const lang = /^H/i.test(w.strongs) ? "H" : "G";
-    const g = ensure(lang);
-    if (g.seen.has(w.strongs)) return;
-    g.seen.add(w.strongs);
-    g.rows.push({ strongs: w.strongs, lemma: w.lemma, translit: w.translit, gloss: "",
-                  count: null, core: false, hasCount: false, inScope: true, contested: isContested(w.strongs),
-                  aliasNote: w.alias_note || null });
-  });
-  return order;
-}
+// _acWordGroups — the rail's "Words in scope" builder — now lives in 51-corpus-logic.jsx
+// (plain JS, so tests/test_ac_word_groups.js locks the SAME code). It's a global in the
+// concatenated bundle, defined before this file in filename order.
 
 function ProvenancePanel({ answer, panel, onOccInspect, onStrongs, contestedSet }) {
   const results = answer.results || [];

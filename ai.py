@@ -1259,6 +1259,33 @@ def _sse(event: str, obj) -> str:
     return f"event: {event}\ndata: {json.dumps(obj, ensure_ascii=False)}\n\n"
 
 
+# ── Provenance-rail payload contract (the fields the Ask-corpus rail consumes) ──
+# Factored out of _assemble_payload so tests/test_rail_payload_contract.py can pin the
+# field NAMES + values from the PRODUCING side (nobody else tests that seam). The rail is
+# a pure render of these; if a refactor renames or drops one, the test — not a reader — catches it.
+
+def _compute_grounded(results, has_rows, has_phrase_hits, target_bases, is_thematic):
+    """Is the answer backed by a REAL occurrence, or just model knowledge? No results → not
+    grounded. A live SQL/phrase hit (or a broad question with no target word) → grounded.
+    Otherwise grounded only if some shown verse actually contains a target word (not thematic)."""
+    if not results:
+        return False
+    if has_rows or has_phrase_hits or not target_bases:
+        return True
+    return any(not is_thematic(v.get("words", [])) for v in results)
+
+
+def _stamp_rail_fields(key_strongs_data):
+    """Stamp each in-scope word with the two flags the rail badges on: `contested` (sits in
+    the CONTESTED fork register) and `alias_note` (the standard↔ABP numbering crosswalk, or
+    None). Both from the ONE register the Lexica cards use — no definition text, so the
+    no-lexicon-prose invariant is untouched. Mutates + returns the list."""
+    for e in key_strongs_data:
+        e["contested"] = e.get("strongs", "") in contested_register.CONTESTED_BY_SID
+        e["alias_note"] = contested_register.alias_note_for(e.get("strongs", ""))
+    return key_strongs_data
+
+
 def _assemble_payload(q, results, verse_index, key_strongs_data,
                       primary_verses_raw, additional_verses_raw, explanation,
                       rows, phrase_hits, target_bases, panel):
@@ -1382,25 +1409,12 @@ def _assemble_payload(q, results, verse_index, key_strongs_data,
     )
 
     # ── Grounding: is the answer backed by a REAL occurrence, or just model knowledge? ──
-    if not results:
-        grounded = False
-    elif rows or phrase_hits or not target_bases:
-        grounded = True
-    else:
-        grounded = any(not _is_thematic(v.get("words", [])) for v in results)
+    grounded = _compute_grounded(results, bool(rows), bool(phrase_hits), target_bases, _is_thematic)
 
-    # Flag each in-scope word that sits in the CONTESTED register (a fork word), so the
-    # provenance rail can mark it. Plain yes/no only — the fork detail is fetched on click
-    # in the drill; the marker just says "this reading is contested". Same register the
-    # Lexica cards use, computed here so the rail rides the SAME payload as the answer.
-    for e in key_strongs_data:
-        e["contested"] = e.get("strongs", "") in contested_register.CONTESTED_BY_SID
-        # Numbering crosswalk for the provenance rail: key_strongs holds ABP's number
-        # (folded by _fold_alias — e.g. G2413 temple), but a concordance reader expects the
-        # standard one (G2411). Attach the SAME descriptor the word card uses (alias_note_for)
-        # so the rail can show "· standard: G2411". No definition text — pure number mapping,
-        # so the A3/A4 no-lexicon-prose invariant is untouched. None for a non-aliased number.
-        e["alias_note"] = contested_register.alias_note_for(e.get("strongs", ""))
+    # Flag each in-scope word for the provenance rail: `contested` (a fork word) + `alias_note`
+    # (the standard↔ABP numbering crosswalk). Rides the SAME payload as the answer. Both live
+    # in _stamp_rail_fields so the payload contract is locked from the producing side.
+    _stamp_rail_fields(key_strongs_data)
 
     return {"results": results, "total": len(results), "grounded": grounded,
             "explanation": explanation, "key_strongs": key_strongs_data, "panel": panel}
