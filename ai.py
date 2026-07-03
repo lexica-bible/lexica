@@ -1507,7 +1507,8 @@ _ai_cache_ver: str | None = None  # computed once from prompt template + book li
 
 # Bump this integer whenever server-side search logic changes in a way that
 # affects results but doesn't change _AI_SYSTEM_TMPL (e.g. new fallback steps).
-_CACHE_CODE_VER = 42   # 42: mixed-signal scope fix + book-aware pick-parse + divine-council hardcode removed
+_CACHE_CODE_VER = 43   # 43: alias fold in key words (_fold_alias) — charis keys on G5484, not textbook G5485
+                       # 42: mixed-signal scope fix + book-aware pick-parse + divine-council hardcode removed
                        # 40: exact-lemma pin for a bare typed word (_resolve_exact_lemma)
                        # 39: computed lexical-texture panel added to the payload (corpus_panel.py)
 
