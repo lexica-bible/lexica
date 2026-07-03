@@ -195,6 +195,12 @@ function CorpusPanel({ panel, onStrongs }) {
 // the synthesis is still writing.
 const _PROV_PASSAGE_CAP = 6;   // show this many key passages before the "show all" expander
 
+// A "real" thread turn: a question the model actually answered. Notice / limit / out-of-scope
+// turns carry a question but NO answer (t.local + t.notice); errors and in-flight turns aren't
+// real either. ONE predicate — reused by the follow-up context digest AND the rail's follow-up
+// count/expansion so they can't drift (the F13 notice filter, in one place).
+const acRealTurn = (t) => !!(t && t.question && !t.loading && !t.error && !t.local && !t.notice);
+
 // Merge the answer-scope words (key_strongs — carry the contested flag + are what the answer
 // USED) with the lexical FAMILY (the panel — each head + its gloss-confirmed cognates, with
 // corpus counts/bars). One list, grouped by language. A row is `inScope` when the answer used
@@ -434,7 +440,7 @@ function AcTurn({ turn, onReadInContext, onLemma, onStrongs, onOccInspect, selec
 
       {turn.loading ? (
         <div className="ac-answer thinking">
-          <div className="ac-syn-tag"><Icon.Sparkle/> Synthesis</div>
+          <div className="ac-syn-tag">Synthesis</div>
           <div className="ac-dots"><span></span><span></span><span></span></div>
           <div className="ac-thinking-l">Reading across the canon…</div>
         </div>
@@ -451,7 +457,7 @@ function AcTurn({ turn, onReadInContext, onLemma, onStrongs, onOccInspect, selec
         <div className="ac-answer"><p className="ac-error">{turn.error}</p></div>
       ) : (
         <div className="ac-answer">
-          <div className="ac-syn-tag"><Icon.Sparkle/> Synthesis</div>
+          <div className="ac-syn-tag">Synthesis</div>
           {turn.grounded === false && (
             <div className="ac-ungrounded" role="note">
               <b>No direct occurrences found.</b> The corpus search turned up no verse that actually
@@ -711,7 +717,7 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
     // each ask is otherwise standalone. Last 6 real turns, total trimmed to ~1500 chars.
     // Notice-turns ("you already asked that", limit-reached, capped, out-of-scope) carry a
     // question but no real answer — never feed them as context or they look like real asks.
-    const ctxTurns = thread.filter(t => t && t.question && !t.loading && !t.error && !t.local && !t.notice).slice(-6);
+    const ctxTurns = thread.filter(acRealTurn).slice(-6);
     let context = "";
     if (ctxTurns.length) {
       context = ctxTurns.map(t => {
@@ -879,6 +885,13 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
     return "Older";
   };
 
+  // Cheap turn anchor: the active thread's turns already render as ordered `.ac-turn` nodes
+  // inside threadRef, so a follow-up click scrolls to its turn by index — no new plumbing.
+  const scrollToTurn = (ti) => {
+    const nodes = threadRef.current && threadRef.current.querySelectorAll(".ac-turn");
+    if (nodes && nodes[ti]) nodes[ti].scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
   const railInner = (
     <>
       <div className="ac-rail-top"><span className="ac-rail-eyebrow"><Icon.Clock/> Recent conversations</span></div>
@@ -891,9 +904,30 @@ function AskCorpusView({ pending, onConsumed, onReadInContext, onNavigateToLexic
               for (const c of railVisible) {
                 const b = railBucket(c.updated);
                 if (b !== last) { rows.push(<div key={"g:" + b} className="ac-rail-group">{b}</div>); last = b; }
+                const active = c.id === currentId;
+                // Answered turns only (notice/limit/error/loading excluded — acRealTurn). The
+                // live `thread` is fresher than the saved copy for the open conversation.
+                const turns = active ? thread : (c.turns || []);
+                const real = turns
+                  .map((t, ti) => ({ t, ti }))
+                  .filter((x) => acRealTurn(x.t));
+                const count = real.length;
                 rows.push(
-                  <button key={c.id} className={"ac-rail-item" + (c.id === currentId ? " on" : "")}
-                    onClick={() => openConvo(c)} title="Reopen this conversation">{c.title}</button>
+                  <div key={c.id} className={"ac-rail-thread" + (active ? " on" : "")}>
+                    <button className={"ac-rail-item" + (active ? " on" : "")}
+                      onClick={() => openConvo(c)} title="Reopen this conversation">
+                      <span className="ac-rail-item-t">{c.title}</span>
+                      {count > 1 && <span className="ac-rail-count" title={count + " answers in this conversation"}>{count}</span>}
+                    </button>
+                    {active && count > 1 && (
+                      <div className="ac-rail-follows">
+                        {real.slice(1).map(({ t, ti }) => (
+                          <button key={ti} className="ac-rail-follow" onClick={() => scrollToTurn(ti)}
+                            title="Jump to this question">{t.question}</button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
                 );
               }
               return rows;
