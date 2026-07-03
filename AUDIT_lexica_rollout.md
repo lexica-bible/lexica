@@ -46,9 +46,25 @@ G3686 ὄνομα · G1135 γυνή (woman/wife — pairs with ἀνήρ above).
   the *impute* gloss-note → failed the dangling-empty bar. Redraw came back 40/40, dangling
   gone. Cause was draw-level drafting looseness, not data.
 
-### Batch One — apply result (2026-07-03)
-17 written clean · 7 prior stamp-skipped (υἱός, γῆ, βασιλεύς, ἡμέρα, οἶκος, χείρ, λόγος)
-· **2 rejected, not written:** λαός G2992 + πρόσωπον G4383, both on a `Ruth` citation.
+### Batch One — CLOSED, 26 applied (2026-07-03)
+First apply: 17 written clean · 7 prior stamp-skipped (υἱός, γῆ, βασιλεύς, ἡμέρα, οἶκος, χείρ,
+λόγος) · 2 rejected on a `Ruth` citation (λαός G2992 + πρόσωπον G4383). After the book-normalizer
+fix: λαός + πρόσωπον re-applied clean, πατήρ redrawn to clear its `Col` dangling. **All 26 built.**
+
+### Open adjudication — πατήρ G3962 sense structure (JP's call)
+The πατήρ redraw (to clear the Col dangling) also **restructured the senses**: the elder-address
+sense dropped from a thin standalone sense (old draw's sense 3) to a **gloss_note** in the fresh
+draw. Both are defensible; which ships is JP's call. If the old structure was right, the fix is one
+`--force` redraw (gamble on the draw) or the draw-cache feature below. Flagged, not resolved.
+
+### Batch-two prep list
+- **Draw-cache feature (ro caches the reviewed draw, apply writes THAT draw).** Batch One produced
+  **three concrete costs of apply-regenerating instead of writing the reviewed draft:**
+  1. πρόσωπον — passed the ro pass 39/39, then the apply draw wrote "Ruth" and was hard-rejected.
+  2. δίδωμι — the ro draw carried a `1Sa` dangling; needed a redraw.
+  3. πατήρ — the redraw silently restructured the senses (elder-address → gloss_note).
+  Each is the same root: the draft we review is not the draft we ship. A draw-cache (write the
+  exact reviewed draft) removes the whole class. Formally on the batch-two list.
 
 ### Open finding — spelled-out book names ≠ stored code (systematic)
 The model writes the natural name **"Ruth"**; the stored `verses.book` code is **`Rth`**.
