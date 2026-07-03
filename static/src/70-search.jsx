@@ -226,6 +226,7 @@ function AboutView({ owner }) {
           <a className="donate-btn contact" href="mailto:hello@lexica.bible">✉ hello@lexica.bible</a>
           <a className="donate-btn kofi" href="https://ko-fi.com/lexica" target="_blank" rel="noopener noreferrer">☕ Support on Ko-fi</a>
         </div>
+        <p className="about-credit"><a href="/credits">Credits &amp; attributions</a></p>
         </>
         )}
       </div>

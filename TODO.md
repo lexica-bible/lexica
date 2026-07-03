@@ -445,12 +445,16 @@ admin flips the role). Memory `project_payments_donations`. Open:
 
 ---
 
-## Licensing / attributions (no credits page exists yet — 2026-07-03)
-The app currently has NO attributions/credits page. Some sources legally REQUIRE credit; add a page.
-- **Build an attributions/credits page.** Plain text on a single route (no decorative containers —
-  design doctrine). CC BY / BY-SA both REQUIRE naming the license AND linking it, not just the source —
-  so each entry needs its license name + link (CC BY 4.0 → creativecommons.org/licenses/by/4.0/,
-  CC BY-SA 4.0 → creativecommons.org/licenses/by-sa/4.0/). Must name the attribution-required sources:
+## Licensing / attributions (page BUILT 2026-07-03 — deploy + ABP wording pending)
+- **BUILT:** `/credits` route (`views_seo.credits` + `templates/seo/credits.html`), plain text, license
+  names + links (CC BY, BY-SA, CC0, OFL). Linked from the App About page (`.about-credit` in 70-search.jsx)
+  AND the crawlable SEO footer (`_base.html`). Same edit fixed the SEO footer's false "public-domain texts
+  (ABP...)" claim. **Needs a normal code deploy to go live.**
+- **STILL OPEN — ABP wording:** the credits page credits ABP to © Charles Van der Pool but says nothing
+  about permission (there's an HTML-comment placeholder in credits.html). Fill in the real permission/license
+  line after the ABP conversation with chat. ABP permission itself = separate paid/permission question, the
+  one real licensing exposure in the shipped app.
+- Reference (sources named on the page, for when the ABP line gets finalized):
   - TAHOT (Hebrew OT) — STEP Bible / Tyndale House, CC BY — attribute.
   - TIPNR (names/entities) — STEP Bible / Tyndale House, CC BY — attribute.
   - TBESG / TBESH (word glosses in `word_gloss`) — STEP Bible / Tyndale House, CC BY — attribute.

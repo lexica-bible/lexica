@@ -2839,6 +2839,9 @@ input { font-family: inherit; }
   color: #fff;
 }
 .acct-kofi { margin-top: 8px; }
+.about-credit { margin-top: 22px; font-size: 13px; }
+.about-credit a { color: var(--muted); }
+.about-credit a:hover { color: var(--accent); }
 
 /* ── metaV sidebar ───────────────────────────────────────────── */
 .lib-word-pn { color: var(--ink); }

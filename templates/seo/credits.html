@@ -1,0 +1,70 @@
+{% extends "seo/_base.html" %}
+{% block title %}Credits &amp; Attributions | Lexica{% endblock %}
+{% block description %}The texts, lexicons, and data sources behind Lexica, with their licenses.{% endblock %}
+{% block head_extra %}
+<style>
+  .credits p{ margin:.3em 0 1.1em; }
+  .credits ul{ list-style:none; padding:0; margin:.2em 0 1.4em; }
+  .credits li{ margin:.5em 0; padding-left:1.1em; text-indent:-1.1em; }
+  .credits .lic{ font-family:var(--sans); font-size:.82rem; color:var(--muted); }
+</style>
+{% endblock %}
+{% block main %}
+<div class="credits">
+  <h1>Credits &amp; Attributions</h1>
+  <p class="sub">Lexica is built on the work of many scholars and volunteers. Sources are
+     listed below with their licenses.</p>
+
+  <div class="heading">Scripture texts</div>
+  <ul>
+    <li><strong>Apostolic Bible Polyglot (ABP)</strong> — the interlinear Greek Old and New
+        Testament. © Charles Van der Pool.
+        <!-- ABP permission wording: finalize after the licensing conversation. -->
+    </li>
+    <li><strong>King James Version (KJV)</strong> — public domain.</li>
+    <li><strong>Berean Standard Bible (BSB)</strong> — © Berean Bible (bereanbible.com),
+        released into the public domain under
+        <a href="https://creativecommons.org/publicdomain/zero/1.0/">CC0 1.0</a>.</li>
+    <li><strong>Hebrew Old Testament</strong> — Translators Amalgamated Hebrew Old Testament
+        (TAHOT), STEP Bible / Tyndale House, Cambridge, licensed
+        <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</li>
+  </ul>
+
+  <div class="heading">Lexicons &amp; word data</div>
+  <ul>
+    <li><strong>Liddell–Scott–Jones (LSJ)</strong> Greek lexicon — public domain.</li>
+    <li><strong>Brown–Driver–Briggs (BDB)</strong> Hebrew lexicon — public domain.</li>
+    <li><strong>Strong's Greek &amp; Hebrew dictionaries</strong> — public domain.</li>
+    <li><strong>Dodson Greek lexicon</strong> — public domain (biblicalhumanities.org).</li>
+    <li><strong>Tyndale Brief lexicons (TBESG / TBESH)</strong> — extended Strong's glosses,
+        STEP Bible / Tyndale House, Cambridge, licensed
+        <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</li>
+    <li><strong>TIPNR</strong> — Translators Individuated Proper Names with References
+        (people &amp; places), STEP Bible / Tyndale House, Cambridge, licensed
+        <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>.</li>
+    <li><strong>Treasury of Scripture Knowledge (TSK)</strong> — R.A. Torrey, cross-references,
+        public domain.</li>
+  </ul>
+
+  <div class="heading">Non-canonical texts</div>
+  <ul>
+    <li><strong>Apostolic Fathers &amp; the Didache</strong> — Greek text from the
+        <a href="https://github.com/RickBrannan/apostolic-fathers">Brannan / Tauber–Lake</a>
+        edition, licensed
+        <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>.
+        English translations by J.B. Lightfoot, public domain.</li>
+    <li><strong>Septuagint Apocrypha</strong> — Brenton's translation, public domain.</li>
+    <li><strong>Pseudepigrapha</strong> — R.H. Charles and Wesley Center translations,
+        public domain.</li>
+  </ul>
+
+  <div class="heading">Fonts</div>
+  <ul>
+    <li><strong>Source Serif 4</strong> and <strong>DM Sans</strong> — licensed under the
+        <a href="https://openfontlicense.org/">SIL Open Font License 1.1</a>.</li>
+  </ul>
+
+  <p class="lic">Public-domain sources are credited as a courtesy. The CC BY, CC BY-SA, CC0,
+     and OFL licenses are named and linked above as those licenses require.</p>
+</div>
+{% endblock %}

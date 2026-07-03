@@ -383,6 +383,11 @@ def read_index():
     return render_template("seo/index.html", ot=ot, nt=nt, canonical=f"{CANON}/read/")
 
 
+@bp.route("/credits")
+def credits():
+    return render_template("seo/credits.html", canonical=f"{CANON}/credits")
+
+
 @bp.route("/read/<slug>")
 def read_book(slug):
     abbrev = _SLUG.get(slug)
