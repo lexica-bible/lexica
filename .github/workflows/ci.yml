@@ -48,3 +48,7 @@ jobs:
             exit 1
           fi
           echo "app.js matches the source. Good."
+      - name: Run node unit tests (frontend pure logic)
+        run: |
+          node tests/test_ac_word_groups.js
+          node tests/test_rstack_logic.js
