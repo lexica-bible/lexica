@@ -1507,7 +1507,7 @@ _ai_cache_ver: str | None = None  # computed once from prompt template + book li
 
 # Bump this integer whenever server-side search logic changes in a way that
 # affects results but doesn't change _AI_SYSTEM_TMPL (e.g. new fallback steps).
-_CACHE_CODE_VER = 45   # 45: +7 plain split-lemma aliases (holy/Greek/small/now/rest/Nazarene) via LEXICA_ALIASES
+_CACHE_CODE_VER = 46   # 46: +2 split-lemma aliases G2411->G2413 (temple) + G1432->G1431 (freely) via LEXICA_ALIASES
                        # 44: alias fold the exact-lemma PIN's retrieval SQL too (Greek-script charis pulled 0 rows)
                        # 43: alias fold in key words (_fold_alias) — charis keys on G5484, not textbook G5485
                        # 42: mixed-signal scope fix + book-aware pick-parse + divine-council hardcode removed

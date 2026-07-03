@@ -213,6 +213,17 @@ SPLIT_LEMMA_ALIASES = {
     "G3063": "G3062",  # loipon "the rest/finally" -> the loipos family G3062
     "G3480": "G3478",  # Nazoraios "Nazarene" -> ABP merges person + place on G3478
     "G3479": "G3478",  # Nazarenos "Nazarene" -> same
+    "G2411": "G2413",  # hieron "temple" -> ABP tags the temple noun on hieros G2413
+    "G1432": "G1431",  # dorean "freely" (adv. acc.) -> the dorea "gift" number G1431
+}
+
+# Alias-pool provenance notes — where the destination number's ABP rows are NOT a pure pool of the
+# aliased lexeme, so the definition engine stays honest about what it's drawing from. The alias is
+# still correct (the bulk is the same word); this just flags the minority the engine should not
+# silently fold into the headword sense.
+SPLIT_LEMMA_ALIAS_NOTES = {
+    "G2413": "Pool mixes the temple noun (hieron) with ~5 genuine 'sacred/consecrated' adjective "
+             "(hieros) rows — the alias is right for temple, but a few rows are the true adjective.",
 }
 
 # Serve-time alias map, derived from the same "aliases" fields (never write a pair twice), plus

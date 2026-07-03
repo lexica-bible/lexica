@@ -299,6 +299,16 @@ heavily guarded. Full record: memory `project_ai_search_architecture` + `project
   data-surgery class: the "Jew" occurrences would need re-tagging to their own number (G2453, currently 0
   in ABP) before anything downstream is clean. Low urgency; only matters if a Jew/Judas Ask-corpus search
   reads muddy. read-only audit path: the query set in this session's transcript.
+- **G4119 (πλείων "more") tagging-side merge — writeup** (surfaced by the homeless-lemma sweep, 2026-07-02).
+  G4119 = 0 rows in ABP; the comparative πλείων is collapsed into its base word **G4183 πολύς "many/much"**.
+  NOT an alias-fold candidate — folding "more" into G4183 drags the whole πολύς pool along (same class as
+  G2455). Data-surgery: the πλείων occurrences would need re-tagging to G4119 before a "more/greater" search
+  or a Lexica entry for the comparative is clean. Low urgency. Anchors that pinned it: Mat 21:36 / Heb 3:3 /
+  Joh 21:15.
+- **G1246 suspect — check the 5 "without cause" rows** (surfaced same sweep, 2026-07-02). G1246 turned up in
+  the δωρεάν sweep; check whether those ~5 "without cause" rows are actually δωρεάν mis-keyed — if so they
+  belong on **G1431** (the dorea "gift" number the new G1432→G1431 alias points at) and are a data-surgery
+  re-tag, not an alias. Read-only first: profile G1246's rows + renderings, confirm identity before anything.
 - **STATE.md is stale** (last refreshed 2026-06-28 — still lists the referent cards + the ἵνα graph as
   NOT BUILT). Refresh next time it's handed to a reviewer.
 - **#4 parallelize the cognate + Hebrew DB loops** (follow-up, not started) — read-only independent loops
