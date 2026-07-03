@@ -4662,6 +4662,10 @@ button.study-verse-ref { border: none; }
 .ac-prov-wordlist .cpanel-lemma, .ac-prov-wordlist .cpanel-s { flex: none; }
 .ac-prov-wordlist .cpanel-tr { flex: 0 1 auto; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ac-prov-wordlist .cpanel-s { font-family: var(--f-mono); font-size: 10px; color: var(--ink-4); }
+/* Numbering crosswalk: the standard concordance number when ABP tags the word elsewhere.
+   Same muted mono face as the Strong's number; never wraps. */
+.ac-prov-wordlist .cpanel-alias { flex: none; font-family: var(--f-mono); font-size: 10px;
+  color: var(--ink-4); white-space: nowrap; align-self: baseline; }
 .ac-prov-wordlist .cpanel-gloss { grid-area: meta; font-size: 12px; }
 .ac-prov-wordlist .cpanel-n { grid-area: num; justify-self: end; }
 .ac-prov-wordlist .cpanel-bar { grid-area: bar; justify-self: end; width: 60px; align-self: center; }

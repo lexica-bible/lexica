@@ -232,7 +232,8 @@ function _acWordGroups(words, panel, contestedSet) {
       g.seen.add(r.strongs);
       g.rows.push({ strongs: r.strongs, lemma: r.lemma, translit: r.translit, gloss: r.gloss || "",
                     count: r.count, core: !!r.core, hasCount: true,
-                    inScope: inScope.has(r.strongs), contested: isContested(r.strongs) });
+                    inScope: inScope.has(r.strongs), contested: isContested(r.strongs),
+                    aliasNote: (ks[r.strongs] && ks[r.strongs].alias_note) || null });
     });
   });
   // 2) answer-scope words the panel didn't include — keep them (never drop scope words).
@@ -243,7 +244,8 @@ function _acWordGroups(words, panel, contestedSet) {
     if (g.seen.has(w.strongs)) return;
     g.seen.add(w.strongs);
     g.rows.push({ strongs: w.strongs, lemma: w.lemma, translit: w.translit, gloss: "",
-                  count: null, core: false, hasCount: false, inScope: true, contested: isContested(w.strongs) });
+                  count: null, core: false, hasCount: false, inScope: true, contested: isContested(w.strongs),
+                  aliasNote: w.alias_note || null });
   });
   return order;
 }
@@ -373,6 +375,8 @@ function ProvenancePanel({ answer, panel, onOccInspect, onStrongs, contestedSet 
                         <span className={"cpanel-lemma" + (heb ? " heb" : "")} dir={heb ? "rtl" : undefined}>{r.lemma}</span>
                         {r.translit && <span className="cpanel-tr">{r.translit}</span>}
                         <span className="cpanel-s refmark">{r.strongs}</span>
+                        {r.aliasNote && r.aliasNote.standard && r.aliasNote.standard.length > 0 &&
+                          <span className="cpanel-alias refmark" title="Standard concordance number (ABP tags this word on a different number)">· standard {r.aliasNote.standard.join(", ")}</span>}
                         {r.contested && <span className="ac-prov-contested" title="This word's reading is contested — open it to see the fork">· contested</span>}
                       </span>
                       <span className="cpanel-gloss">{r.gloss || (r.inScope ? "" : "—")}</span>

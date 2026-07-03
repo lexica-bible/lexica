@@ -1395,6 +1395,12 @@ def _assemble_payload(q, results, verse_index, key_strongs_data,
     # Lexica cards use, computed here so the rail rides the SAME payload as the answer.
     for e in key_strongs_data:
         e["contested"] = e.get("strongs", "") in contested_register.CONTESTED_BY_SID
+        # Numbering crosswalk for the provenance rail: key_strongs holds ABP's number
+        # (folded by _fold_alias — e.g. G2413 temple), but a concordance reader expects the
+        # standard one (G2411). Attach the SAME descriptor the word card uses (alias_note_for)
+        # so the rail can show "· standard: G2411". No definition text — pure number mapping,
+        # so the A3/A4 no-lexicon-prose invariant is untouched. None for a non-aliased number.
+        e["alias_note"] = contested_register.alias_note_for(e.get("strongs", ""))
 
     return {"results": results, "total": len(results), "grounded": grounded,
             "explanation": explanation, "key_strongs": key_strongs_data, "panel": panel}
@@ -1513,7 +1519,8 @@ _ai_cache_ver: str | None = None  # computed once from prompt template + book li
 
 # Bump this integer whenever server-side search logic changes in a way that
 # affects results but doesn't change _AI_SYSTEM_TMPL (e.g. new fallback steps).
-_CACHE_CODE_VER = 47   # 47: scope folded into the cache key (_scope_tag) — "fire O.T." vs "fire o t" no longer collide
+_CACHE_CODE_VER = 48   # 48: provenance rail carries the numbering crosswalk (alias_note per key word)
+                       # 47: scope folded into the cache key (_scope_tag) — "fire O.T." vs "fire o t" no longer collide
                        # 46: +2 split-lemma aliases G2411->G2413 (temple) + G1432->G1431 (freely) via LEXICA_ALIASES
                        # 44: alias fold the exact-lemma PIN's retrieval SQL too (Greek-script charis pulled 0 rows)
                        # 43: alias fold in key words (_fold_alias) — charis keys on G5484, not textbook G5485
