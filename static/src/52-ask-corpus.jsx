@@ -295,11 +295,20 @@ function ProvenancePanel({ answer, panel, onOccInspect, onStrongs, contestedSet 
   const wordGroups = _acWordGroups(words, panel, contestedSet);
   const barW = (n, mx) => Math.max(4, Math.round((100 * n) / (mx || n || 1)));
   const fmtN = (n) => (n != null ? n.toLocaleString() : "");
+  // Total corpus occurrences of the answer's in-scope target words (from the panel counts).
+  // "Backed by N passages" used to report the CURATED key-passage count (15), which read as
+  // "the model only had 15 verses" — but the synthesis reads a far larger pinned pool drawn
+  // from all these occurrences. Show the true evidence base + the key-passages shown. Falls
+  // back to the passage sentence when there's no panel (no clean head → no occurrence count).
+  const occCount = wordGroups.reduce(
+    (t, g) => t + g.rows.reduce((s, r) => s + (r.inScope && r.hasCount && r.count ? r.count : 0), 0), 0);
   return (
     <div className="ac-prov">
       {grounded ? (
         <div className="ac-prov-grounded" role="note">
-          Backed by {evidenceCount} {evidenceCount === 1 ? "passage" : "passages"} in the corpus.
+          {occCount > 0
+            ? `${fmtN(occCount)} occurrences · ${evidenceCount} key ${evidenceCount === 1 ? "passage" : "passages"} shown`
+            : `Backed by ${evidenceCount} ${evidenceCount === 1 ? "passage" : "passages"} in the corpus.`}
         </div>
       ) : (
         <div className="ac-prov-caution" role="note">
