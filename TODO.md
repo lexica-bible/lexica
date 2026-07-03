@@ -13,10 +13,21 @@ holds genuinely-open work and parked ideas only.
   lemma — by-design skips of the cautious G1473→G846 retag (it refuses to guess reflexives + no-morph
   cells). Consistent with the build. Future cleanup only. code: the g1473_gloss_retag fold in
   build_words_from_abp.py / lxx_align.
-- **τοῦτο-paradigm mistags** — a handful of demonstrative forms (τοῦτο, ταῦτα, οὗτοι, τούτου, τούτων)
-  carry the wrong Strong's (single-digit counts stranded under G1473/G3779/G846/G1438; the real number
-  is G3778, 2,400+ rows). Surface-form collisions, low-impact — a small bidirectional retag when we get
-  to it. code: the retag folds in build_words_from_abp.py / lxx_align.
+- **τοῦτο-paradigm mistags** — demonstrative forms wrongly tagged; the real number is G3778 (~3,401 rows).
+  **ENUMERATED + CONFIRMED 2026-07-03 (read-only), retag still PARKED** — nothing in a definition batch
+  depends on it (G846/G3778 are structural cards, not `lexica_def`). The **15 confirmed strays** (all
+  τ-initial forms, unambiguous — certified by control `SELECT count(*) … G3778 AND form GLOB 'τούτ*'/'ταύτ*'`
+  = 3401):
+  - G1473 (11): Deu 6:25, Ezr 9:14, Hag 2:18, Eze 45:16, Jer 7:1, Jer 8:12, Jer 11:3, Jer 33:4, Jer 44:23, Mat 24:2, Luk 22:51
+  - G3779 (2): Jos 11:16, Jer 5:23 · G846 (1): Jos 19:8 · G1438 (1): Rev 19:20
+  Plus **9 null-form "this/these" candidates** under G1473/G3779/G846 (Dan 4:33, Eze 36:32, Mat 3:15, 1Ch 27:6,
+  1Co 1:24, 2Ki 18:9/18:10/25:8, Ezr 7:6) — no stored surface form, need the ABP source eyeballed (αὐτός
+  legitimately renders "this/same"), NOT auto-strays. The ου-/αυ-initial forms (οὗτος/αὕτη) are excluded on
+  purpose — `ουτ*` collides with οὕτως G3779, `αυτ*` with αὐτός G846.
+  **MATCH THE STORED REALITY:** surface `form` is accent-only, no breathing, circumflex→tonos (τοῦτο→τούτο) —
+  a bare `tout*`/`τουτ*` GLOB on translit/form MISSES the accent (the γῆ #18A bug class; a translit control
+  returned 13 not 3401 until switched to `τούτ*`/`ταύτ*` on the form column). When run: dry-run → ~15-row
+  write to G3778, same careful pattern as the αἰών fix. code: the retag folds in build_words_from_abp.py / lxx_align.
 - **Hebrew-OT word finder is NOT number-folded** (KNOWN GAP) — the singular/plural fold is live on
   ABP/KJV/BSB but NOT the `corpus=heb` discovery branch (it matches a token inside a multi-word gloss
   phrase, so the precomputed `*_norm` column doesn't fit). A real fold needs BOTH a normalized-token

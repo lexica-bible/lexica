@@ -105,9 +105,7 @@ All entries **LIVE**, provenance `GRAMMAR`, verse lines verbatim ABP. **Inventor
 - **Coverage engine (`lexica_coverage.py`) — SHIPPED** (2026-07-02, pieces A+B): collocation pre-check (token PMI, warn-only build hook) + a `coverage_audit` field on every entry. Not wired to the card UI (stored data only). Piece C (stratified sampling) DEFERRED.
 - **Vocabulary watchlist lint** (flag post-biblical category terms — "moral authority" sailed through every structural guard) — **NOT BUILT** (scoped; advisory, not a write-blocker).
 
-**Corpus-tag fixes flagged by the reviewer** — **VERIFIED CORRECT 2026-07-03, no fix needed** (both were false alarms; live tags match the LXX Greek):
-- **Jer 49:13** — no stray G166; the word is **G165** (aiōn, "into eon" = εἰς αἰῶνα, forever). Correct.
-- **Psa 24:7** — "the eternal!" is **G166** (aiōnios, πύλαι αἰώνιοι = everlasting gates). Correct; numbering matches Psa 24:7.
+**αἴων/αἰώνιος class (G165/G166) — SWEPT CLEAN 2026-07-03** (read-only, both directions, no sampling). Full rendering profile of both tags: G166 all adjectival (eternal/everlasting), G165 all noun (eon/age). The 3 G165 rows that render "eternal" loosely (Ecc 12:5, Hab 3:6, Jer 49:13) all carry noun forms αἰῶνος/αἰῶνα — tag correct. No mistags either way. Earlier reviewer flags (Jer 49:13, Psa 24:7) were false alarms — live tags match the LXX Greek.
 
 **PN enrichment** — bound cards lacking maps/info ride Fix A; broader people/places **browse hub + timelines** = **NOT BUILT.**
 
