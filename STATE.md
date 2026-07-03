@@ -6,7 +6,7 @@ present facts. Pulled from the repo, not memory. Database row counts are flagged
 marked **LIVE / PARKED / NOT BUILT**; items where the truth differs from what an older
 session would assume are flagged ⚠️.
 
-Last refreshed: 2026-06-28 (repo tip at write time: `e10c1c6`).
+Last refreshed: 2026-07-03 (repo tip at write time: `d9ff2f9`).
 
 ---
 
@@ -36,7 +36,7 @@ Last refreshed: 2026-06-28 (repo tip at write time: `e10c1c6`).
 **Cross-ref / people-places**
 - **TSK** (`cross_references`, 386,518 rows) — **LIVE** (verse-number cross-ref panel: Haiku pick → Sonnet synthesis).
 - **MetaV + TIPNR** — **LIVE** (see §6).
-- **Study tab** (`study.db`) — **LIVE** (topics public, graphs admin-only).
+- **Study tab** (`study.db`) — **LIVE, WHOLE TAB ADMIN-ONLY** ⚠️ (reversed 2026-07-01: nav link hidden for non-admins + a `before_request` 403s every `/api/study/*` route; the Seam-index data route `/api/lexica/seams` is gated the same way). Topics list is hand-authored only now (the ~1817 imported concept topics soft-deleted; Divine Council + the 696 name-topics kept).
 
 **Reading texts** — all **LIVE**: ABP (primary), KJV, BSB (all word-level Strong's/chips), **Hebrew OT** (public, OT-only), **ESV** + **NIV** (berean-gated).
 
@@ -65,22 +65,20 @@ Last refreshed: 2026-06-28 (repo tip at write time: `e10c1c6`).
 ⚠️ **theos + kyrios forked 2026-06-27** (membership-only, no pin_core) — newer than most session memory.
 
 ## 4. STRUCTURAL / GRAMMAR CARDS (`structural.py`, `STRUCTURAL_ADMIN_ONLY = False` = PUBLIC)
-All entries **LIVE**, provenance `GRAMMAR`, verse lines verbatim ABP. **Inventory COMPLETE — 46 lemmas:**
+All entries **LIVE**, provenance `GRAMMAR`, verse lines verbatim ABP. **Inventory COMPLETE (~50 lemmas + the referent batch below):**
 - **Copula** εἰμί (G1510) + ~7,800 dotted conjugates (decoded to a parse, not separate entries).
 - **17 prepositions** διά, κατά, μετά, περί, ὑπέρ, ὑπό, ἐπί, παρά, ἐν, εἰς, ἐκ, ἀπό, πρό, σύν, ἀντί, ἀνά, πρός.
 - **Conjunctions** typology ὅτι/ὡς/εἰ + ἐάν + 12 connectives (καί, δέ, γάρ, οὖν, ἀλλά, μέν, ὥστε, ὅτε, ὅπως, διό, ἤ, τε).
-- **ἵνα** (G2443) — purpose; result/ekbatic debate flagged as a **grammatical** contest (`scope_contested`), glance/full; exemplar Mark 3:14.
+- **ἵνα** (G2443) — purpose; result/ekbatic debate flagged as a **grammatical** contest (`scope_contested`), glance/full; exemplar Mark 3:14. **Contest pointer WIRED** ⚠️ (2026-06-29): the card carries a `contest_graph` breadcrumb to the **`hina_hardening`** Isaiah-6 graph (see §5) + the 3 loaded verses (Mark 4:12 / Matt 13:13 / John 12:40).
 - **Particles** ἄν (G302, underspecification finding), δή (G1211), γε (G1065).
 - **Negatives** οὐ (G3756) / μή (G3361) mechanism cut, both with the Matt 5:17 minimal-pair cross-ref; compounds οὐδέ, μηδέ, οὔτε, μήτε, οὐχί (each names base + twin).
 - **Article** ὁ (G3588) — definite-marker + substantivizer + "not English 'the'" finding.
 - **Idiom** ἀνὰ μέσον (G303.1) in `_IDIOMS`, one-line content note (`kind:"idiom"`).
-- **PARKED / NOT BUILT:**
-  - **Demonstrative/pronoun "referent" card** ("step b": touto, autos, ὁ δέ, ἰδού, οὐδείς, μηδείς) — **NOT BUILT** (ὁ's pronominal straddle points to it).
-  - **ἵνα's hardening argument-graph (Isaiah 6)** + the 3 verse-pointers (Mark 4:12 / Matt 13:13ff / John 12:40) — **NOT BUILT.**
+- **Referent-resolution batch ("step b") — LIVE** ⚠️ (2026-06-30): οὗτος G3778 (whole paradigm — τοῦτο is G3778, no G5124 split), αὐτός G846, οὐδείς G3762 + μηδείς G3367 (empty-set pointer); **ὁ δέ** rides the article card's straddle (full treatment, exemplar Matt 14:18). **ἰδού G2400 SCOPED OUT** (forward-pointing deixis fails the back-pointer gate). The structural inventory is now **COMPLETE.**
 
 ## 5. ARGUMENT GRAPHS (`study.db`, admin-only in-app)
-- **Referenced live in code:** `salvation_how` (dikaioō fork link), `baptism_who` (charis fork link).
-- **Authoring scripts:** `add_study_graph.py` (Baptism graph), `add_study_graph_salvation.py` (`GRAPH_ID = "salvation_how"`, `--apply` writes published).
+- **Referenced live in code:** `salvation_how` (dikaioō fork link), `baptism_who` (charis fork link), **`hina_hardening`** ⚠️ (2026-06-29 — the ἵνα Isaiah-6 hardening graph; all 3 readings purpose/result/predates-ἵνα compute DEPENDS, contest mapped not closed; the ἵνα structural card breadcrumbs to it).
+- **Authoring scripts:** `add_study_graph.py` (Baptism graph), `add_study_graph_salvation.py` (`GRAPH_ID = "salvation_how"`, `--apply` writes published), `add_study_graph_hina_hardening.py`.
 - **Actual published set = `study.db` on PA** `[PA: SELECT title FROM entries WHERE type='graph']`. Baptism graph had an honesty/fairness pass (2026-06-18). Stress-tested by `argmap.py` (grounded-claim reachability + load-bearing-joint + overturn).
 - **Status:** salvation_how + baptism_who = **LIVE** (referenced + scripts present).
 
@@ -103,7 +101,9 @@ All entries **LIVE**, provenance `GRAMMAR`, verse lines verbatim ABP. **Inventor
 - **Splitter `split3` — LIVE.** `split_definition`/`sense_provenance` accept **bold OR plain** sense headers (was bold-only → a plain-numbered draw was refused by `validate_entry`); 18 live cards re-split + verified zero drift.
 - **Batch-2 pre-sort / pipeline driver — NOT BUILT** (scoped only: sort a G-list into 3 tiers by freq + fork-membership + polysemy + loaded-referent; build to occ ≥ 2). Verbs + Hebrew first-batches — **NOT BUILT.**
 - **Step-4 "significance judge"** — **NOT BUILT.**
-- **No-verse lint** (malformed ref with no chapter:verse slips the citation gate) — **NOT BUILT.**
+- **Book-ref gate (audit B1) — MOSTLY CLOSED** ⚠️ (2026-07-02, commit `fb1c461`): a 2-letter abbrev / spelled-out book name (Ps, Jn, "Matthew 5:17") that escaped `_REF_RE` is now HARD-REJECTED at write time (`noncanon_book_refs()`). Remaining gap: a rejected spelled-out name is hand-fixed, not auto-recovered into its code.
+- **Coverage engine (`lexica_coverage.py`) — SHIPPED** (2026-07-02, pieces A+B): collocation pre-check (token PMI, warn-only build hook) + a `coverage_audit` field on every entry. Not wired to the card UI (stored data only). Piece C (stratified sampling) DEFERRED.
+- **Vocabulary watchlist lint** (flag post-biblical category terms — "moral authority" sailed through every structural guard) — **NOT BUILT** (scoped; advisory, not a write-blocker).
 
 **Corpus-tag fixes flagged by the reviewer** ⚠️ **NOT BUILT** (no fix script exists; the G166/G165 hits in `build_word_gloss.py` are gloss definitions, not corrections):
 - **Jer 49:13 G166→G165** (aionios vs aion mis-tag) — **NOT BUILT.** `[PA: verify the live words tag]`
