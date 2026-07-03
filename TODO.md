@@ -308,6 +308,22 @@ heavily guarded. Full record: memory `project_ai_search_architecture` + `project
   panel holds it in its own `aliasNote` state (separate from `lexica`). The pool caveat stays in the
   LexicaBody Full-entry provenance block ("Pool note", served side) — so it only shows once the served number
   has a built Lexica entry. Live both directions on χάρις, ἱερόν, δωρεάν.
+  - **2026-07-02 follow-on: crosswalk now ALSO in the Word study card header.** Word study uses its own
+    card (80-lexicon.jsx) fed by `/api/lexicon/profile`, NOT `/api/lexica`, so it never saw `alias_note`.
+    Added `alias_note` to the profile payload via a shared helper `contested_register.alias_note_for()`
+    (the ONE place the crosswalk is computed — the word card + profile endpoint both call it, can't drift).
+    Same `.detail-strong-alias` header treatment.
+- **BUG (report-only 2026-07-02): Word study — the ABP occurrence list loads visibly LATE, after the rest
+  of the card.** TRACE: clicking a word runs `loadProfile` → `api.lexiconProfile` (fills header, gloss,
+  distribution rail) and clears `loading`; THEN a separate effect (80-lexicon.jsx ~line 180), gated on
+  `!loading`, fires `api.lexiconVerses(..., "all", ...)` for the occurrence list. It's a SECOND round-trip
+  that can't even start until the first finishes — so the occurrences pop in a beat later. Options (pick when
+  fixing): (a) COMBINED payload — have `/api/lexicon/profile` return the first ~50 default occurrences too, so
+  one fetch fills the whole card (filter changes still re-fetch, but the initial click — the case JP hits — is
+  instant); (b) PARALLEL + shared loading — fire lexiconVerses alongside the profile instead of after (the
+  Strong's is known at click), hold the occurrence area under one spinner so it doesn't pop; (c) cosmetic
+  skeleton placeholder (doesn't speed it, just softens the pop). Lean (a) for the click case or (b) to keep
+  endpoints split. NOT fixed here.
 - **BUG (separate scope, report-only 2026-07-02): Word study defaults to the ABP filter even when a number has
   0 ABP rows.** Searching a standard number ABP doesn't tag (e.g. G2411 temple) lands on the empty ABP
   occurrence tab — looks like the word has no data. Fix: either the search route shouldn't default to ABP when

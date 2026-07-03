@@ -15,6 +15,7 @@ from flask import Blueprint, jsonify, request
 
 from core import db_ro, heb_db, _KJV_BOOK_ID, _FUNCTION_STRONGS, _strip_accents
 from number_fold import normalize as _fold_norm
+from contested_register import alias_note_for
 
 bp = Blueprint("lexicon", __name__)
 
@@ -1214,7 +1215,9 @@ def lexicon_profile(strongs):
         has_kjv = False if is_diff else (conn.execute("SELECT 1 FROM kjv_strongs WHERE strongs_id = ? LIMIT 1", (sid,)).fetchone() is not None)
         has_bsb = False if is_diff else (_bsb_ready(conn) and conn.execute("SELECT 1 FROM bsb_strongs WHERE strongs_id = ? LIMIT 1", (sid,)).fetchone() is not None)
         related = [] if is_diff else (_greek_cognates(conn, snum, _deriv_raw) if not is_heb else [])
-        return jsonify({"strongs": strongs_id, "lemma": lemma, "translit": translit, "definition": definition, "derivation": derivation, "related": related, "total": total, "books": books, "corpus": corpus, "glosses": glosses, "abp_glosses": abp_glosses, "kjv_glosses": kjv_glosses, "heb_glosses": heb_glosses, "bsb_glosses": bsb_glosses, "has_abp": has_abp, "has_kjv": has_kjv, "has_heb": has_heb, "has_bsb": has_bsb})
+        # Numbering crosswalk (word-study card header) — same shared helper the word card uses,
+        # keyed on the number the reader searched (strongs_id). None for a non-aliased word.
+        return jsonify({"strongs": strongs_id, "lemma": lemma, "translit": translit, "definition": definition, "derivation": derivation, "related": related, "total": total, "books": books, "corpus": corpus, "glosses": glosses, "abp_glosses": abp_glosses, "kjv_glosses": kjv_glosses, "heb_glosses": heb_glosses, "bsb_glosses": bsb_glosses, "has_abp": has_abp, "has_kjv": has_kjv, "has_heb": has_heb, "has_bsb": has_bsb, "alias_note": alias_note_for(strongs_id)})
     except Exception:
         return jsonify({"error": "Server error"}), 500
     finally:

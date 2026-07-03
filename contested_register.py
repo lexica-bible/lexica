@@ -235,3 +235,24 @@ SPLIT_LEMMA_ALIAS_NOTES = {
 # its own structural.py card — the serving route resolves structural FIRST to keep that safe.
 LEXICA_ALIASES = {alias: sid for sid, e in CONTESTED.items() for alias in e.get("aliases", [])}
 LEXICA_ALIASES.update(SPLIT_LEMMA_ALIASES)   # + the plain split-lemma pairs
+
+
+def alias_note_for(requested):
+    """The numbering-crosswalk descriptor for an aliased Strong's number, or None.
+
+    `requested` is the number the reader arrived on (G-prefixed). Worded by direction:
+      to_abp   — a standard number that folds onto the ABP number (asked G2411 → served G2413):
+                 the card shows "· ABP: G2413".
+      from_abp — the ABP/served number itself (asked G2413 directly): the card shows
+                 "· standard: G2411" plus any pool caveat.
+    Pure lookup over LEXICA_ALIASES + SPLIT_LEMMA_ALIAS_NOTES — the ONE place the crosswalk is
+    computed, so every serving route (word card, word-study profile) words it identically.
+    """
+    served = LEXICA_ALIASES.get(requested, requested)
+    if requested != served:
+        return {"direction": "to_abp", "abp": served, "standard": [requested], "caveat": ""}
+    std = sorted(k for k, v in LEXICA_ALIASES.items() if v == served)
+    caveat = SPLIT_LEMMA_ALIAS_NOTES.get(served, "")
+    if std or caveat:
+        return {"direction": "from_abp", "abp": served, "standard": std, "caveat": caveat}
+    return None

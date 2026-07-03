@@ -10,7 +10,7 @@ import json
 
 from flask import Blueprint, jsonify
 
-from contested_register import CONTESTED_BY_SID, LEXICA_ALIASES, SPLIT_LEMMA_ALIAS_NOTES
+from contested_register import CONTESTED_BY_SID, LEXICA_ALIASES, alias_note_for
 from core import db_ro, log
 from structural import structural_entry
 from views_notes import is_admin
@@ -121,22 +121,10 @@ def lexica_def(strongs):
     # structural card. Map derived from the CONTESTED register's own "aliases" fields.
     requested = sid                       # the number the reader arrived on, before the fold
     sid = LEXICA_ALIASES.get(sid, sid)
-    # Numbering crosswalk between a word's standard Strong's number and the number ABP tags it
-    # under — worded by which number the reader arrived on (requested vs the folded/served sid).
-    # It's pure code (the alias map, no DB), so it rides EVEN the not-found responses: a word with
-    # no Lexica entry falls back to LSJ, and the pointer still travels on the 404 body for the card
-    # to render at its shared layer. Independent of the selected translation tab.
-    #   standard-side (asked for G2411, folded to G2413): "ABP tags this word under G2413"
-    #   served-side  (asked for the ABP G2413 directly):  "Standard Strong's G2411" + pool caveat
-    # Computed from the alias map (no duplicate bookkeeping); gloss_notes stays authored-only.
-    alias_note = None
-    if requested != sid:
-        alias_note = {"direction": "to_abp", "abp": sid, "standard": [requested], "caveat": ""}
-    else:
-        _std = sorted(k for k, v in LEXICA_ALIASES.items() if v == sid)
-        _caveat = SPLIT_LEMMA_ALIAS_NOTES.get(sid, "")
-        if _std or _caveat:
-            alias_note = {"direction": "from_abp", "abp": sid, "standard": _std, "caveat": _caveat}
+    # Numbering crosswalk (shared helper — see contested_register.alias_note_for). It's pure code
+    # (the alias map, no DB), so it rides EVEN the not-found responses: a word with no Lexica entry
+    # falls back to LSJ, and the pointer still travels on the 404 body for the card to render.
+    alias_note = alias_note_for(requested)
     _notfound = {"error": "not found"}
     if alias_note:
         _notfound["alias_note"] = alias_note      # ride the 404 so an LSJ-fallback card still shows it
