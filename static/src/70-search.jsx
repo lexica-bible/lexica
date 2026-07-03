@@ -184,29 +184,44 @@ function AboutView({ owner }) {
         <h1 className="about-title">About Lexica</h1>
         <p className="about-lead">A Greek and Hebrew word study tool for the diligent Berean. No seminary required.</p>
 
+        <h2 className="about-h2">The Berean approach</h2>
+        <p className="about-p">The Bereans "received the word with all readiness of mind, and searched the scriptures daily" (Acts 17:11). Lexica is built on that posture: let the Greek and Hebrew speak before any theological system does. No commentary, no denominational lens, no conclusions pre-loaded — and where the tradition disagrees with itself, both readings on the table.</p>
+        <p className="about-p">The text speaks. You decide what it means.</p>
+
         <h2 className="about-h2">What Lexica does</h2>
-        <p className="about-p">Lexica lets you trace any English word in the Bible back to its Greek or Hebrew source and explore its full meaning — not just the translation choice made by one committee. Every word links to the Liddell-Scott-Jones Greek lexicon (LSJ) or Brown-Driver-Briggs Hebrew lexicon (BDB), the two most comprehensive scholarly references available.</p>
-        <p className="about-p">The primary text is the <b>Apostolic Bible Polyglot (ABP)</b> — a word-for-word Greek interlinear covering both the Septuagint (OT) and New Testament. The <b>King James Version</b> and the <b>Berean Standard Bible</b> read alongside it — on their own, in parallel, or compared side by side — with read-along audio and an optional chronological reading order. Cross-references come from Torrey's Treasury of Scripture Knowledge.</p>
-        <p className="about-p">Beyond the canon, Lexica includes a library of related texts: the Septuagint Apocrypha, the Pseudepigrapha (1 Enoch, Jubilees, and more), and the Apostolic Fathers with full Greek interlinear.</p>
+        <p className="about-p">Lexica lets you trace any English word in the Bible back to its Greek or Hebrew source and see what that word actually means — not just the rendering one translation committee chose. Search in English, Greek, Hebrew, or transliteration; land on the word; see every place it occurs.</p>
+        <p className="about-p">The primary text is the <b>Apostolic Bible Polyglot (ABP)</b> — a word-for-word Greek interlinear covering both the Septuagint and the New Testament. The Hebrew Old Testament stands alongside it, so every Old Testament word can be traced in both its Hebrew original and its Greek rendering. The <b>King James Version</b> and the <b>Berean Standard Bible</b> read alongside as well — on their own, in parallel, or side by side — with read-along audio and an optional chronological reading order. Cross-references come from Torrey's Treasury of Scripture Knowledge.</p>
+        <p className="about-p">Beyond the canon, the library includes the Septuagint Apocrypha, the Pseudepigrapha (1 Enoch, Jubilees, and more), and the Apostolic Fathers with full Greek interlinear.</p>
+
+        <h2 className="about-h2">Where definitions come from</h2>
+        <p className="about-p">This is what makes Lexica different, so it's worth being precise.</p>
+        <p className="about-p">Most study tools hand you a lexicon entry and call it a definition. The problem is that lexicons carry history: centuries of classical usage, church tradition, and theological assumption baked into the glosses. Read one uncritically and you're importing someone else's conclusions without knowing it.</p>
+        <p className="about-p">Lexica is building its definitions from the text itself: every sense of a word derived from its actual occurrences in the corpus, cited to the verses that support it. If a definition claims a word means something, you can click through to the passages where it means that — and judge for yourself. No sense ships without evidence.</p>
+        <p className="about-p">This is a work in progress, and honesty about that is part of the method. Corpus-grounded definitions are live today for the most contested words in the New Testament, and are rolling out across the full vocabulary — highest-frequency words first. Where a word's entry hasn't been built yet, you'll see the raw materials instead: every occurrence in context, the interlinear rendering, and the scholarly lexicons (Liddell-Scott-Jones for Greek, Brown-Driver-Briggs for Hebrew) as reference. The lexicons inform; they don't dictate. The text speaks first — and where the tool can't yet meet its own standard, it shows you the evidence rather than a shortcut.</p>
+
+        <h2 className="about-h2">When meaning is contested</h2>
+        <p className="about-p">Some words carry two thousand years of argument — dikaioō, charis, sarx, ekklesia, and others. Most tools quietly pick a side and present it as the definition.</p>
+        <p className="about-p">Lexica doesn't. Where a word's meaning is genuinely contested, it says so, and shows you the competing readings side by side — each grounded in the same verses, so you can see exactly where the interpretations divide. The tool's job is to surface the fork in the road, not to walk you down one branch.</p>
+
+        <h2 className="about-h2">Ask the corpus</h2>
+        <p className="about-p">Ask a question in plain English — "is baptizō immersion?", "what does Sheol mean in the O.T.?" — and Lexica answers from the corpus: senses synthesized from actual occurrences, every claim cited to verses you can open and check. The system is explicitly forbidden from importing theology from outside the text. Answers that can't be grounded in the vocabulary don't ship.</p>
+        <p className="about-p">Corpus search requires a free account, and supporters get a higher usage tier — these searches cost real money to run, and this keeps the tool free of ads.</p>
 
         <h2 className="about-h2">Your study, saved</h2>
-        <p className="about-p">Highlight verses, write notes on any word or verse, set bookmarks, and keep a free-form journal. Everything saves in your browser automatically — no account needed. Create a free account (email or Google) and your notes sync across every device. The app stays fully usable with no sign-in at all.</p>
-
-        <h2 className="about-h2">The Berean approach</h2>
-        <p className="about-p">The Bereans "received the word with all readiness of mind, and searched the scriptures daily" (Acts 17:11). Lexica is built on that same posture: let the Greek and Hebrew speak first, before any theological system is imported. No commentary, no denominational lens, no conclusions pre-loaded. The text speaks — you decide what it means.</p>
-        <p className="about-p">Every AI-generated summary is anchored in the source vocabulary of the ABP. The system prompt explicitly forbids importing theology from outside the text.</p>
+        <p className="about-p">Highlight verses, write notes on any word or verse, set bookmarks, keep a free-form journal. Everything saves in your browser automatically — no account needed. Create a free account (email or Google) and it syncs across your devices, and unlocks corpus search. Reading, word study, and all your notes work with no sign-in at all.</p>
 
         <h2 className="about-h2">Methodology</h2>
         <ul className="about-ul">
           <li>Strong's numbers are the bridge between English, Greek, and Hebrew</li>
-          <li>Greek definitions draw from LSJ — the standard classical Greek reference</li>
-          <li>Hebrew definitions draw from BDB — the standard OT Hebrew reference</li>
-          <li>AI search generates SQL against the full lexicon corpus — not a summary or paraphrase</li>
-          <li>Translation comparisons surface where ABP, KJV, and the BSB make different rendering choices for the same source word</li>
+          <li>Definitions are built from the corpus — every sense derived from and cited to actual occurrences (rolling out across the full vocabulary, contested words first)</li>
+          <li>LSJ (Greek) and BDB (Hebrew) are provided as scholarly reference — display, not source</li>
+          <li>Contested words show competing readings rather than a resolved answer</li>
+          <li>Translation comparisons surface where ABP, KJV, and BSB render the same source word differently</li>
+          <li>AI answers are corpus-grounded and citation-gated; unsupported claims are blocked, not softened</li>
         </ul>
 
         <h2 className="about-h2">Get in touch</h2>
-        <p className="about-p">Lexica is free, independent, and has no ads. It's maintained by one person who thinks serious Bible study tools shouldn't cost hundreds of dollars or require a seminary login. Questions, corrections, or feedback? I'd love to hear from you.</p>
+        <p className="about-p">Lexica is free, independent, and has no ads. It's maintained by one person who thinks serious Bible study shouldn't cost hundreds of dollars or require a seminary login. Questions, corrections, feedback? I'd love to hear from you.</p>
         <div className="about-donate">
           <a className="donate-btn contact" href="mailto:hello@lexica.bible">✉ hello@lexica.bible</a>
           <a className="donate-btn kofi" href="https://ko-fi.com/lexica" target="_blank" rel="noopener noreferrer">☕ Support on Ko-fi</a>
