@@ -24,22 +24,45 @@ G2980 λαλέω · G2983 λαμβάνω
 G3686 ὄνομα · G1135 γυνή (woman/wife — pairs with ἀνήρ above).
 
 ### Register / fork candidates (flag only — JP's separate call, do NOT resolve)
-- **G3056 λόγος** — known register candidate. Built anyway as calibration data; audit
-  will flag what it flags.
-- Watch on build: ἔπω/λέγω/λαλέω are three "say/speak" numbers (ἔπω = the aorist half of
-  λέγω, suppletive); ἄνθρωπος vs ἀνήρ is the human-vs-male pair. Not forks — checking the
-  engine keeps them distinct.
+The whole point of the calibration batch: the top of the frequency list is where fork-candidates
+live. Split by where they surfaced —
+- **Batch-found:**
+  - **G5207 υἱός** — the "son of man" title (huios + anthrōpos): the move from Daniel's simile
+    ("one like a son of man") to the fixed articular Gospel title carries loaded referent weight.
+    Register review candidate.
+  - **G3962 πατήρ** — pending. The redraw restructured the elder-address sense (see adjudication
+    below), and the father-as-divine-referent territory is register-adjacent. Hold for JP's call.
+- **Prior (already built, re-flagged):**
+  - **G3056 λόγος** — known register candidate; the "Word" / divine-utterance loaded sense. Built
+    as calibration data.
+- Watch on build (not forks): ἔπω/λέγω/λαλέω are three "say/speak" numbers (ἔπω = the aorist half
+  of λέγω, suppletive); ἄνθρωπος vs ἀνήρ is the human-vs-male pair. The engine kept them distinct.
+
+### Thin senses (advisory — a sense grounded on too few refs)
+- **G4383 πρόσωπον** — 1 thin sense (confirmed in the ro pass, 5 senses / 1 thin).
+- **[PASTE THE DUMP]** — the other 3 of the four thin senses live only in the dump output; I will
+  NOT name them from memory. Paste `dump_lexica_packet.py` output and I'll fill these exactly.
 
 ### Open items — logged, NO fix now
 - **G3962 πατήρ — κύριος-under-πατήρ row (phrase misalignment).** A πατήρ occurrence row
   carries κύριος misaligned under it. Data-side phrase misalignment, not an engine bug;
   parked here for a later pass.
+- **Five tagging errors (ABP tag gaps) — this batch.** The citation gate logged five "tagging
+  miss" cases: a cited verse where the word IS present but ABP's tag missed it (non-blocking, the
+  known tagging-gap class, same family as the misalignment above). Appended here as data debt, not
+  an engine bug. **[PASTE THE DUMP]** — the five specific refs are in the dump output; I will not
+  reconstruct them from memory. Paste it and I'll list each ref + word here.
 
 ### Calibration wins
-- **G1325 δίδωμι — freight-flagging works on a non-contested word.** The engine flagged
-  the gloss *impute* (1Sa 22:15; Jon 1:14; Heb 8:10) as importing forensic/theological
-  freight beyond what the context requires — exactly the freight-flag behaviour, on a plain
-  verb, no fork needed.
+- **Freight-flagging fires on non-contested words** (the plain-meaning bar, without a fork):
+  - **G1325 δίδωμι** — flagged the gloss *impute* (1Sa 22:15; Jon 1:14; Heb 8:10) as importing
+    forensic/theological freight the context doesn't require.
+  - **G1135 γυνή** — flagged *wife* as narrower than many contexts need (1Co 7:1: the generic
+    female, not a marital frame).
+- **Two hard-reject saves** — λαός + πρόσωπον apply draws cited "Ruth" (unresolvable label); the
+  write-time citation gate blocked both rather than ship an unverified ref. The gate is the floor.
+- **"Better is reportable"** — the widened dangling lint surfaced pre-existing bare-Ruth/Esther refs
+  sitting in already-shipped entries (χάριν). Found debt, didn't create it.
 
 ### Redraws
 - **G1325 δίδωμι — RESOLVED.** First draw carried a `1Sa` dangling ref (no ch:vs) inside
@@ -57,14 +80,30 @@ sense dropped from a thin standalone sense (old draw's sense 3) to a **gloss_not
 draw. Both are defensible; which ships is JP's call. If the old structure was right, the fix is one
 `--force` redraw (gamble on the draw) or the draw-cache feature below. Flagged, not resolved.
 
-### Batch-two prep list
-- **Draw-cache feature (ro caches the reviewed draw, apply writes THAT draw).** Batch One produced
-  **three concrete costs of apply-regenerating instead of writing the reviewed draft:**
-  1. πρόσωπον — passed the ro pass 39/39, then the apply draw wrote "Ruth" and was hard-rejected.
-  2. δίδωμι — the ro draw carried a `1Sa` dangling; needed a redraw.
-  3. πατήρ — the redraw silently restructured the senses (elder-address → gloss_note).
-  Each is the same root: the draft we review is not the draft we ship. A draw-cache (write the
-  exact reviewed draft) removes the whole class. Formally on the batch-two list.
+## Batch-two prep list (closing section)
+1. **Draw-cache feature (ro caches the reviewed draw, apply writes THAT draw).** Batch One produced
+   **three concrete costs of apply-regenerating instead of writing the reviewed draft:**
+   - πρόσωπον — passed the ro pass 39/39, then the apply draw wrote "Ruth" and was hard-rejected.
+   - δίδωμι — the ro draw carried a `1Sa` dangling; needed a redraw.
+   - πατήρ — the redraw silently restructured the senses (elder-address → gloss_note).
+   Same root each time: the draft we review is not the draft we ship. A draw-cache removes the class.
+2. **Sampling rate — set from this batch's findings (the calibration batch's actual job).** What
+   Batch One showed: the write-time gate is a reliable AUTO floor — it hard-rejected every bad-
+   citation draw (2 Ruth saves) with zero false blocks, and the freight-flag + dangling lints fire
+   on their own. So a full human eyeball of every word is NOT required to catch hard errors. What
+   still needs eyes: register/fork candidates, loaded-referent words, and sense-structure drift
+   (πατήρ). PROPOSAL for JP: 100% eyeball on register/loaded-referent words; sample the rest at a
+   fixed rate (suggest ~1-in-5) with the gate as the floor under the unsampled remainder. JP sets
+   the number.
+3. **Structural backfill (belongs on structural cards, NOT the definition engine):**
+   - **οὕτω G3779** ("thus, so" — rank 49): an adverb/connector whose meaning is set by context —
+     structural-card shape, like the particles.
+   - **the oblique pronoun forms** (σοῦ G4675, μοῦ G3450, μέ G3165, σέ G4571, ὑμῶν G5216,
+     ἡμῶν G2257, σοί G4671, ὑμῖν G5213, μοί G3427): ABP tags these as their own high-frequency
+     numbers; they're pointer forms, not lexemes with a sense range. Add to the structural inventory.
+4. **ἅγιον G39 gloss check** (rank 50): the word_gloss reads "Holy Place," but G39 is the ABP-tagged
+   holy family (the SPLIT_LEMMA_ALIASES target for hagios G40 → G39). "Holy Place" looks too narrow
+   for the whole family — verify the gloss before G39 is ever built or surfaced.
 
 ### Open finding — spelled-out book names ≠ stored code (systematic)
 The model writes the natural name **"Ruth"**; the stored `verses.book` code is **`Rth`**.
