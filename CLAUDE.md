@@ -1110,8 +1110,10 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   hebrew") or testament was drifting back to Greek mid-answer; `_detect_scope`/`_scope_directive` (ai.py)
   add an override to the shared `_curation_prompt` only — retrieval + panel untouched. Divergence rule:
   stay scoped, cross to the other language only on a sense divergence (one short bridge note), never on
-  parallel senses. INVARIANT: the term lists `_LANG_SCOPE_TERMS`/`_TESTAMENT_SCOPE_TERMS` are the
-  never-collapse boundary the parked Tier-2 semantic cache MUST reuse — don't build a second list. Memory
+  parallel senses. MIXED-SIGNAL rule (Batch A, 2026-07-02): a query naming TWO competing values on one
+  axis ("compare the OT and NT", "greek and hebrew") is a comparison, NOT a scope — that axis goes unset,
+  never first-match. INVARIANT: the term lists `_LANG_SCOPE_TERMS`/`_TESTAMENT_SCOPE_TERMS` are the
+  never-collapse boundary the parked Tier-1/2 cache normalizer MUST reuse — don't build a second list. Memory
   `project_ai_search_architecture`.
 - Cached in ai_search_cache, ver_key=`search:<hash>` (fingerprint of system prompt +
   `_CURATION_SYSTEM` + book list + `_CACHE_CODE_VER` salt). See "AI result cache" below.
