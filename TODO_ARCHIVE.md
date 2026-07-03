@@ -6,6 +6,20 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-07-03 — Credits/attributions page LIVE + source-license audit (bdb=Strong's-Hebrew found)
+- **`/credits` page + `CREDITS.md` BUILT + DEPLOYED.** Server-rendered attributions (`views_seo.credits`),
+  plain text, every source with its license NAMED + LINKED (CC BY/BY-SA/CC0/OFL require the link). Linked
+  from the App About page (a top "built on…" prose line + a bottom link) + the crawlable SEO footer. Same
+  pass fixed the SEO footer's false "public-domain texts (ABP…)" claim.
+- **Audit findings (all fixed):** (1) the `bdb` table is NOT Brown-Driver-Briggs — it's the STRONG'S HEBREW
+  dictionary (8,674 rows = H1–H8674; the count tipped it). App has no real BDB. Relabeled all user-facing
+  "BDB"→"Strong's" (display-side only; table name + `bdb-badge` CSS stay). (2) Greek Strong's is the
+  OpenScriptures edition = CC BY-SA, not the "public domain" first written. (3) Added MetaV (viz.bible, CC
+  BY-SA 3.0) + OpenBible.info geo (CC BY 4.0).
+- **Lessons + full map:** memory `project_licensing_attributions`. Grep BOTH acronym AND spelled-out name
+  when relabeling (a "BDB" grep missed "Brown-Driver-Briggs" in About prose, shipped one round wrong).
+- **Still open:** the ABP permission line (waits on Van der Pool) — in TODO.md.
+
 ## 2026-07-03 — Lexica definition engine: frequency rollout Batch One + book-name gate closed
 - **Batch One (26 calibration words) BUILT + LIVE.** First real frequency-ranked batch of the ~3,954-word
   rollout. 19 fresh + 7 prior. Full record — candidate build, checkpoints, lessons, calibration numbers,

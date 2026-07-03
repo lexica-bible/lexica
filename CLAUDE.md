@@ -256,7 +256,9 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
 (templates `templates/seo/`) the crawler can read, all reusing the JSON endpoints' read-only SQL:
 - `/read/` (book index) · `/read/<slug>` (book) · `/read/<slug>/<ch>` (ABP) · `/read/<slug>/<ch>/<text>`
   (kjv|bsb|heb) — interlinear chips with ABP brackets/numbers; `/word/<strongs>` (G/H word study);
-  `/sitemap.xml` generated (chapters + every Strong's used). **PUBLIC-DOMAIN TEXTS ONLY — never ESV/NIV.**
+  `/sitemap.xml` generated (chapters + every Strong's used); `/credits` (attributions page, `views_seo.credits`
+  → `templates/seo/credits.html` — every text/lexicon/data/font source + its license name+link; CC BY/BY-SA/CC0
+  REQUIRE the license be named AND linked). **PUBLIC-DOMAIN TEXTS ONLY — never ESV/NIV.**
 - The app deep-links INTO these: `/?b=&c=&t=` jumps to a chapter, `/?lex=G####` opens the Lexicon —
   read once on mount in `static/src/90-app.jsx`, then the query is stripped.
 - `app.py` serves the root files crawlers fetch (`/favicon.ico`, `/apple-touch-icon.png`, `/robots.txt`);

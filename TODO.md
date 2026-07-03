@@ -452,46 +452,16 @@ admin flips the role). Memory `project_payments_donations`. Open:
 
 ---
 
-## Licensing / attributions (page BUILT 2026-07-03 — deploy + ABP wording pending)
-- **BUILT:** `/credits` route (`views_seo.credits` + `templates/seo/credits.html`), plain text, license
-  names + links (CC BY, BY-SA, CC0, OFL). Linked from the App About page (`.about-credit` in 70-search.jsx)
-  AND the crawlable SEO footer (`_base.html`). Same edit fixed the SEO footer's false "public-domain texts
-  (ABP...)" claim. **Needs a normal code deploy to go live.**
-- **STILL OPEN — ABP wording:** the credits page credits ABP to © Charles Van der Pool but says nothing
-  about permission (there's an HTML-comment placeholder in credits.html). Fill in the real permission/license
-  line after the ABP conversation with chat. ABP permission itself = separate paid/permission question, the
-  one real licensing exposure in the shipped app.
-- **SHARE-ALIKE bucket (BY-SA sources — matters only if the dictionary ever gets exported/licensed):**
-  three CC BY-SA inputs now — Apostolic Fathers Greek (BY-SA 4.0), MetaV people/places (BY-SA 3.0),
-  OpenScriptures Greek Strong's (BY-SA 4.0). Our people/places cards are DERIVATIVES of MetaV, so
-  share-alike attaches to them the same as the AF Greek. Clean move in any future licensing tightening:
-  keep MetaV-derived + AF-derived data OUT of a definitions export (they're entity/AF data, not our
-  corpus definitions, so the export is likely free of the SA obligation).
-  **Strong's NUMBERING carries nothing** — G5485/G3778 and the whole identifier system threaded through
-  the schema + any export are not copyrightable. What's BY-SA in OpenScriptures is only the EDITED TEXT
-  (definitions, glosses, corrections). So share-alike touches Strong's definition text only if you
-  DISPLAY or EXPORT it; the AB-Strong's-keyed data structure itself stays clean.
-- **RESOLVED 2026-07-03 — the app has NO real BDB.** The `bdb` table actually holds the STRONG'S HEBREW
-  dictionary (8,674 rows = H1–H8674, one-line glosses; genuine BDB is ~10k+ root-organized, wouldn't hit
-  that count). Inherited misnomer. Fixed: credits page + CREDITS.md now list "Strong's Hebrew" (public
-  domain 1890 text, no CC credit); user-facing UI labels relabeled BDB→Strong's (detail panel header +
-  badge + "not found" text, word-study badge, two About-page mentions); CLAUDE.md table def corrected. The
-  `bdb` table NAME + code identifiers (`bdb-badge` CSS, vars) stay — display-side relabel only, low-risk.
-  If real BDB is ever wanted: PD + digitized (OpenScriptures), a new-source decision not a fix.
-- **COURTESY (optional, not required):** if the OpenBible.info geo data feeds the place cards directly,
-  a thank-you note to them is nice (CC BY doesn't require it).
-- Reference (sources named on the page, for when the ABP line gets finalized):
-  - TAHOT (Hebrew OT) — STEP Bible / Tyndale House, CC BY — attribute.
-  - TIPNR (names/entities) — STEP Bible / Tyndale House, CC BY — attribute.
-  - TBESG / TBESH (word glosses in `word_gloss`) — STEP Bible / Tyndale House, CC BY — attribute.
-  - Apostolic Fathers + Didache Greek — Tauber/Lake/Brannan, CC **BY-SA** — attribute AND share-alike
-    (share-alike may obligate licensing our derivative the same way — worth a closer look).
-  - Public-domain sources (no legal requirement, but good form to credit): KJV, BSB (CC0), Brenton LXX,
-    LSJ, BDB, Strong's, Dodson, TSK (Torrey), Lightfoot, Charles/Wesley pseudepigrapha, Source Serif (OFL).
-- **ABP licensing** — SEPARATE issue, a permission/paid-license question not an attribution one. ABP
-  (Charles Van der Pool) is copyrighted and it's our primary shipped text (+ everything derived: the
-  BibleHub scrape, words/verses, abp_surface, Lexica defs). The one real licensing exposure in the live
-  product. JP to raise with chat.
+## Licensing / attributions (page LIVE 2026-07-03; ABP wording the only open item)
+Full record — source→license map, the BY-SA share-alike bucket, the bdb-is-Strong's-Hebrew lesson:
+memory `project_licensing_attributions`. `/credits` + CREDITS.md are LIVE, linked from the App About
+page + the crawlable SEO footer.
+- **OPEN — ABP wording:** credits.html credits ABP to © Charles Van der Pool with NO permission claim
+  (an HTML-comment placeholder marks the spot). Fill in the real permission/attribution line after the
+  Van der Pool conversation — and keep the About "built on…" sentence un-polished until then, since his
+  required wording may need to fold into/near it. ABP permission = the one real licensing exposure in the
+  shipped app, a separate paid/permission question (not an attribution one).
+- **OPTIONAL courtesy:** a thank-you note to OpenBible.info (geo place-coords) — CC BY doesn't require it.
 
 ---
 
