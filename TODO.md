@@ -299,9 +299,16 @@ heavily guarded. Full record: memory `project_ai_search_architecture` + `project
   data-surgery class: the "Jew" occurrences would need re-tagging to their own number (G2453, currently 0
   in ABP) before anything downstream is clean. Low urgency; only matters if a Jew/Judas Ask-corpus search
   reads muddy. read-only audit path: the query set in this session's transcript.
-- **Wire `SPLIT_LEMMA_ALIAS_NOTES` into the definition engine** (2026-07-02). The provenance note on G2413
-  (temple pool holds ~5 real "sacred" adjective rows) is stored-only in contested_register.py, read by nothing
-  yet. QUEUE behind the G2316 sense-4 call so both G-word caveat mechanisms land under one review.
+- **DONE 2026-07-02: `SPLIT_LEMMA_ALIAS_NOTES` wired into the Word study / Lexica card.** The card now shows a
+  "Strong's numbering" block on aliased entries (standard dict number + ABP number + any pool caveat), computed
+  server-side from the alias map (`alias_note` field on `/api/lexica`), rendered in LexicaBody Full-entry view.
+  Live on χάρις (G5484), ἱερόν (G2413), δωρεάν (G1431).
+- **FOLLOW-UP: annotate the Ask-corpus provenance RAIL with the standard number** (separate scope, 2026-07-02).
+  The Lexica card is done (above), but Ask-corpus does NOT share that path — the A3/A4 invariant keeps definition
+  text out of synthesis, and it must stay that way. The gap is the CITATION display: the rail (52-ask-corpus.jsx)
+  shows the ABP number (e.g. G2413) where a concordance reader expects G2411. Small: surface the standard-number
+  mapping beside the rail's key_strongs (reverse `LEXICA_ALIASES`), payload + rail only, no definition text. Bump
+  `_CACHE_CODE_VER` when this lands (it changes the search payload).
 - **G4119 (πλείων "more") tagging-side merge — writeup** (surfaced by the homeless-lemma sweep, 2026-07-02).
   G4119 = 0 rows in ABP; the comparative πλείων is collapsed into its base word **G4183 πολύς "many/much"**.
   NOT an alias-fold candidate — folding "more" into G4183 drags the whole πολύς pool along (same class as

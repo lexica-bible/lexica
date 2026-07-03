@@ -10,7 +10,7 @@ import json
 
 from flask import Blueprint, jsonify
 
-from contested_register import CONTESTED_BY_SID, LEXICA_ALIASES
+from contested_register import CONTESTED_BY_SID, LEXICA_ALIASES, SPLIT_LEMMA_ALIAS_NOTES
 from core import db_ro, log
 from structural import structural_entry
 from views_notes import is_admin
@@ -147,4 +147,13 @@ def lexica_def(strongs):
                   "scripts/build_lexica_def.py --resplit --word %s --apply on PA", sid, sid)
         return jsonify({"error": "not found"}), 404
     entry.pop("raw", None)        # the browser uses the split fields, not the full prose blob
+    # Numbering provenance for an aliased entry: the standard dict number(s) that fold onto this
+    # served number, plus any pool caveat. Keyed on the SERVED number (sid, after the fold above),
+    # so it shows however the reader arrived — an ABP click landing on G2413 still learns it's the
+    # concordance's G2411. Computed from the alias map (no duplicate bookkeeping); gloss_notes stays
+    # authored-only.
+    _std = [k for k, v in LEXICA_ALIASES.items() if v == sid]
+    _caveat = SPLIT_LEMMA_ALIAS_NOTES.get(sid)
+    if _std or _caveat:
+        entry["alias_note"] = {"abp": sid, "standard": sorted(_std), "caveat": _caveat or ""}
     return jsonify(entry)

@@ -222,8 +222,9 @@ SPLIT_LEMMA_ALIASES = {
 # still correct (the bulk is the same word); this just flags the minority the engine should not
 # silently fold into the headword sense.
 SPLIT_LEMMA_ALIAS_NOTES = {
-    "G2413": "Pool mixes the temple noun (hieron) with ~5 genuine 'sacred/consecrated' adjective "
-             "(hieros) rows — the alias is right for temple, but a few rows are the true adjective.",
+    # Keep counts SOFT in user-facing copy — a hard number goes stale silently when the pool shifts.
+    "G2413": "Pool mixes the temple noun (hieron) with a handful of genuine 'sacred/consecrated' "
+             "adjective (hieros) rows — the alias is right for temple, but a few rows are the true adjective.",
 }
 
 # Serve-time alias map, derived from the same "aliases" fields (never write a pair twice), plus
