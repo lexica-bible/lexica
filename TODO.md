@@ -194,7 +194,22 @@ YouVersion, which aren't the target). Honest gaps:
   - **pinned_core presentation labeling (audit B4)** — the hand-authored pinned core leads the Meaning view
     under the "✓ verified" badge with no marker distinguishing it from engine output; provenance is
     "verse-grounded · LEXICA" unconditionally. Presentation call, fold into the card review.
-  code: ai.py (_lsj_concept_lookup consumer), build_lexica_def.py (_REF_RE), static/src/20-shared-components.jsx
+  - **Vocabulary watchlist lint (advisory, definition engine)** — a read-only lint that flags post-biblical
+    philosophical/theological vocabulary in `lexica_def` prose. Watchlist SEED: moral, ethical, transcendent,
+    ontological, person/personhood (of God/spirit), Trinity, unmerited, sacrament, ordinance, hypostasis.
+    ADVISORY report, NOT a write-blocker — same spirit as the two-bucket citation miss log. Scoped 2026-07-02
+    alongside the G2316 "moral authority" fix. (The corpus-search side got a prompt-rule guard in
+    `_CURATION_SYSTEM`; this is the parallel lint for the frozen definitions.)
+  - **One-time watchlist sweep of frozen definitions** — run the vocabulary watchlist read-only across ALL
+    existing `lexica_def` prose and report hits for JP review. "Moral authority" sailed through every
+    structural guard, so there may be more already frozen in. DEPENDS on the watchlist above existing — can
+    be that same script's first run.
+  - **VERSE_PROMPT vocabulary rule (definition engine)** — add the same corpus-vocabulary rule into
+    `VERSE_PROMPT` (the build-time prompt) so freshly-generated definitions avoid the post-biblical category
+    terms at the source, not just on edit. QUEUED behind the next controlled re-prove cycle (psychē-drift
+    precedent — a prompt change re-proves against a frozen baseline before shipping); explicitly NOT a
+    one-off edit.
+  code: ai.py (_lsj_concept_lookup consumer), build_lexica_def.py (_REF_RE, VERSE_PROMPT), static/src/20-shared-components.jsx
 
 - **LSJ "Lexica" overrides** — the blurb is a Haiku "definition" prompt + per-word hand-written overrides
   for loaded lemmas (6 seeded). Memory `project_lsj_overrides`. OPEN: the contested words (αἰώνιος,
