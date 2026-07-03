@@ -454,6 +454,19 @@ admin flips the role). Memory `project_payments_donations`. Open:
   about permission (there's an HTML-comment placeholder in credits.html). Fill in the real permission/license
   line after the ABP conversation with chat. ABP permission itself = separate paid/permission question, the
   one real licensing exposure in the shipped app.
+- **SHARE-ALIKE bucket (BY-SA sources — matters only if the dictionary ever gets exported/licensed):**
+  three CC BY-SA inputs now — Apostolic Fathers Greek (BY-SA 4.0), MetaV people/places (BY-SA 3.0),
+  OpenScriptures Greek Strong's (BY-SA 4.0). Our people/places cards are DERIVATIVES of MetaV, so
+  share-alike attaches to them the same as the AF Greek. Clean move in any future licensing tightening:
+  keep MetaV-derived + AF-derived data OUT of a definitions export (they're entity/AF data, not our
+  corpus definitions, so the export is likely free of the SA obligation).
+- **OPEN — verify BDB's digital source.** The credits page still calls Brown-Driver-Briggs "public
+  domain" (the 1906 work is). But there's NO bdb loader script in the repo (loaded on PA directly), so
+  the DIGITAL edition's actual source + license is unconfirmed — if it's the OpenScriptures HebrewLexicon
+  it may add a CC credit. Confirm the source, then credit it if needed (same fix pattern as the Greek
+  Strong's correction). code: templates/seo/credits.html + CREDITS.md, BDB line.
+- **COURTESY (optional, not required):** if the OpenBible.info geo data feeds the place cards directly,
+  a thank-you note to them is nice (CC BY doesn't require it).
 - Reference (sources named on the page, for when the ABP line gets finalized):
   - TAHOT (Hebrew OT) — STEP Bible / Tyndale House, CC BY — attribute.
   - TIPNR (names/entities) — STEP Bible / Tyndale House, CC BY — attribute.
