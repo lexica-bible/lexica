@@ -1507,7 +1507,8 @@ _ai_cache_ver: str | None = None  # computed once from prompt template + book li
 
 # Bump this integer whenever server-side search logic changes in a way that
 # affects results but doesn't change _AI_SYSTEM_TMPL (e.g. new fallback steps).
-_CACHE_CODE_VER = 43   # 43: alias fold in key words (_fold_alias) — charis keys on G5484, not textbook G5485
+_CACHE_CODE_VER = 44   # 44: alias fold the exact-lemma PIN's retrieval SQL too (Greek-script charis pulled 0 rows)
+                       # 43: alias fold in key words (_fold_alias) — charis keys on G5484, not textbook G5485
                        # 42: mixed-signal scope fix + book-aware pick-parse + divine-council hardcode removed
                        # 40: exact-lemma pin for a bare typed word (_resolve_exact_lemma)
                        # 39: computed lexical-texture panel added to the payload (corpus_panel.py)
@@ -1874,11 +1875,18 @@ def ai_search():
             _pb = _pinned.lstrip("GH").split(".")[0]
             _ks_pairs = [(_pb, _pinned[0])]
             if _pinned.startswith("G"):
+                # Alias fold at the ONE query-assembly point: a Greek-script "χάρις" pins to
+                # the textbook head G5485, but ABP tags the occurrences on G5484 — an unfolded
+                # WHERE pulled ZERO verses and the synthesis read an empty pool. Fold ONLY the
+                # retrieval number (generic over the alias map); _ks_pairs keeps the pre-fold
+                # number so the loop below still shows χάρις and folds it to G5484 for the key
+                # word — same display/canonical split as the key-words fold (Batch D).
+                _retr = _fold_alias(_pinned)
                 sql = ("SELECT v.book, v.chapter, v.verse, w.english, w.strongs_base, w.strongs, "
                        "l.lemma, l.translit, l.strongs_def, l.kjv_def, l.derivation "
                        "FROM words w JOIN verses v ON w.verse_id=v.id "
                        "LEFT JOIN lexicon l ON l.strongs_g=w.strongs_base "
-                       f"WHERE w.strongs_base='{_pinned}' ORDER BY v.id")
+                       f"WHERE w.strongs_base='{_retr}' ORDER BY v.id")
             else:
                 sql = "SELECT NULL AS book LIMIT 0"   # Hebrew list comes from the heb.db supplement
             log.info("exact-lemma pin: %s → %s", q, _pinned)
