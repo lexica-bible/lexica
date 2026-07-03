@@ -955,10 +955,19 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   (Greek/Hebrew/transliteration path — NOT `/english`) returns ONE list split by a `match` tag: an
   **Exact** band (dictionary headword `lemma_plain` OR `strip_accents(lower(translit)) = q` — the translit
   tier is what pins "theos"→θεός G2316 and keeps euthéōs/βαθέως OUT, since lemma_plain is the Greek lemma
-  a Latin transliteration never hits) above a labeled **"Also contains …"** divider holding the substring
-  hits (deduped vs exact, ordered by Strong's number — deterministic, NOT frequency; substring can't tell
-  family from a letter-accident). Empty-exact still shows the divider ("No exact match — showing words
-  containing …"). Frontend auto-opens ONLY a lone true hit (exact=1, nothing else); any contains rows keep
+  a Latin transliteration never hits) above a labeled **"Other words containing …"** divider holding the
+  substring hits (deduped vs exact, ordered by Strong's number — deterministic, NOT frequency; substring
+  can't tell family from a letter-accident, so the label states a STRING match, not a relationship). Empty-
+  exact still shows the divider ("No exact match — showing words containing …"). **MIN-LENGTH GATE
+  (2026-07-03):** the whole contains scan is SKIPPED for a query under 3 FOLDED letters — γῆ folds to "γη"
+  (2), and a 2-letter fragment sits inside dozens of unrelated words (Πέργη, ἀγωγή) where every hit is a
+  letter-accident. Gate on the FOLDED length (`len(qn)`), never raw codepoints (accented input can count
+  3+ raw). At 3+ letters the string is specific enough that the substring hits ARE the family — KEEP
+  substring, do NOT switch to prefix: Greek compounds put the root at the TAIL as often as the head
+  (ἄλογος/φιλόλογος under λόγος), and a prefix match drops exactly those. Exact band is untouched, so γῆ
+  still answers G1093 and the fix never regresses a good lookup. Locked by `tests/test_lexicon_lookup_bands.py`
+  (drives the real endpoint). The corpus-scoping path is unaffected — it keys off `lemma_plain` equality,
+  never this substring scan. Frontend auto-opens ONLY a lone true hit (exact=1, nothing else); any contains rows keep
   the list up so the divider does its job. The source/language filter bar is HIDDEN over a lookup set (it
   only re-queries the English-rendering search) — it was showing but inert (a "Hebrew" tab left Greek
   results on screen). `80-lexicon.jsx` `matchBands`/`renderMatchRow`/`showLookup`; `.glmatch-div` CSS.
