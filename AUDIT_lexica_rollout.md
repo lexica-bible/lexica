@@ -26,15 +26,16 @@ G3686 ὄνομα · G1135 γυνή (woman/wife — pairs with ἀνήρ above).
 ### Register / fork candidates (flag only — JP's separate call, do NOT resolve)
 The whole point of the calibration batch: the top of the frequency list is where fork-candidates
 live. Split by where they surfaced —
-- **Batch-found:**
-  - **G5207 υἱός** — the strong one. Sense 3 (a filial relationship to a divine referent — divine
-    sonship) and sense 6 (the fixed "son of man" phrase) both sit on live christological ground, and
-    the entry's own RANGE note already does register-adjacent work: it flags that the Gospel title's
-    definiteness is carried by the article (the construction), not by any shift in what huios means.
-    Register review candidate — JP's call.
-  - **G3962 πατήρ** — sense 3 (God designated "father"). Rides the sense-structure adjudication item
-    below; one decision covers both.
-- **Prior (already built, re-flagged):**
+- **Batch-found — both RULED 2026-07-03, NO fork:**
+  - **G5207 υἱός — no action.** The first "looks like a fork-candidate, isn't one" ruling, and the
+    template for it: the disputes (Son of Man, Daniel 7 reception) are about the PHRASE and the
+    REFERENT, not the lemma. Everyone agrees υἱός means "son," and the entry already locates the
+    title-force in the article, not in the word. If it ever needs treatment, that's an ARGUMENT GRAPH
+    on Daniel 7, not a word fork. (Same shape as the huios "sons of God" no-fork call and the
+    structural-word contest rule: settled meaning + contested application ≠ a lexeme fork.)
+  - **G3962 πατήρ — no action.** God-as-Father is an attested use grounded in the greeting formulae;
+    the usage isn't contested — unlike θεός, where the grammar itself (John 1:1c) is the battlefield.
+- **Prior (already built):**
   - **G3056 λόγος** — known register candidate; sense 5 (the "Word" as a personal/hypostatic
     referent), thin at 1 ref. Real, but the PRIOR column — not batch calibration data.
 - Watch on build (not forks): ἔπω/λέγω/λαλέω are three "say/speak" numbers (ἔπω = the aorist half
@@ -94,11 +95,11 @@ First apply: 17 written clean · 7 prior stamp-skipped (υἱός, γῆ, βασ
 λόγος) · 2 rejected on a `Ruth` citation (λαός G2992 + πρόσωπον G4383). After the book-normalizer
 fix: λαός + πρόσωπον re-applied clean, πατήρ redrawn to clear its `Col` dangling. **All 26 built.**
 
-### Open adjudication — πατήρ G3962 sense structure (JP's call)
-The πατήρ redraw (to clear the Col dangling) also **restructured the senses**: the elder-address
-sense dropped from a thin standalone sense (old draw's sense 3) to a **gloss_note** in the fresh
-draw. Both are defensible; which ships is JP's call. If the old structure was right, the fix is one
-`--force` redraw (gamble on the draw) or the draw-cache feature below. Flagged, not resolved.
+### CLOSED — πατήρ G3962 sense structure (ruled 2026-07-03)
+**The new 3-sense draw STANDS.** The 1Jn 2:13 elder-address is a contextual sub-use, not a sense —
+the gloss_note treatment is better lexicography than the old draw's thin standalone sense 3. The
+redraw judged equal-or-better on read; the old draw's epistolary-clustering coverage note is
+preserved in the logs.
 
 ## Process lessons (Batch One)
 1. **Confirmation tools must be able to fail.** Two instances in one day — the τοῦτο sweep's void
@@ -149,8 +150,7 @@ draw. Both are defensible; which ships is JP's call. If the old structure was ri
    ro/apply passes don't re-draw prior entries.
 6. **ai.py ↔ build cross-comments** — the two `_norm_book` copies disagree on bare "Jud" (ai=Judges,
    build=Jude) by design; add a cross-note in each so the divergence reads as intentional.
-7. **πατήρ adjudication** — JP reads both draws (4-sense vs 3-sense), picks which ships.
-8. **Uncited-collocation triage rule** — batch data says most are noise (numerals, time-words); at
+7. **Uncited-collocation triage rule** — batch data says most are noise (numerals, time-words); at
    ~3,900 words the eyeball cost needs a rule for which collocations actually warrant a look.
 
 ### Open finding — spelled-out book names ≠ stored code (systematic)

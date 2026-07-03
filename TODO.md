@@ -176,8 +176,8 @@ YouVersion, which aren't the target). Honest gaps:
   polysemy proxy + loaded-referent); **sampling rate** (100% eyeball register/loaded + SENSE STRUCTURE,
   ~1-in-5 rest); **structural backfill** (οὕτω G3779, ἕως G2193, ἰδού G2400, εἷς G1520 + the 8 oblique
   pronouns); **ἅγιον G39 gloss check** before build; ranker checks stamps upfront; ai.py↔build `_norm_book`
-  cross-comments (bare "Jud" disagrees by design); **πατήρ adjudication** (JP picks the 4-sense vs 3-sense
-  draw). Open sub-items:
+  cross-comments (bare "Jud" disagrees by design). (Batch One register/adjudication calls all ruled
+  2026-07-03: πατήρ ships the 3-sense draw; υἱός + πατήρ no fork — see `AUDIT_lexica_rollout.md`.) Open sub-items:
   - Point `lexica_agreement.per_sense` at the new `_sense_spans` (still bold-only → a plain draw reads as
     a phantom sense-count wobble at batch scale).
   - Re-check the 80% / min-4 LXX-provenance cutoff at scale (tuned on 18 words).
