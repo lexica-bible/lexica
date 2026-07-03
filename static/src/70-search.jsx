@@ -197,7 +197,7 @@ function AboutView({ owner }) {
         <h2 className="about-h2">Where definitions come from</h2>
         <p className="about-p">This is what makes Lexica different, so it's worth being precise.</p>
         <p className="about-p">Most study tools hand you a lexicon entry and call it a definition. The problem is that lexicons carry history: centuries of classical usage, church tradition, and theological assumption baked into the glosses. Read one uncritically and you're importing someone else's conclusions without knowing it.</p>
-        <p className="about-p">Lexica is building its definitions from the text itself: every sense of a word derived from its actual occurrences in the corpus, cited to the verses that support it. If a definition claims a word means something, you can click through to the passages where it means that — and judge for yourself. No sense ships without evidence.</p>
+        <p className="about-p">Lexica builds its definitions from the text itself: every sense of a word derived from its actual occurrences in the corpus, cited to the verses that support it. If a definition claims a word means something, you can click through to the passages where it means that — and judge for yourself. No sense ships without evidence.</p>
         <p className="about-p">This is a work in progress, and honesty about that is part of the method. Corpus-grounded definitions are live today for the most contested words in the New Testament, and are rolling out across the full vocabulary — highest-frequency words first. Where a word's entry hasn't been built yet, you'll see the raw materials instead: every occurrence in context, the interlinear rendering, and the scholarly lexicons (Liddell-Scott-Jones for Greek, Strong's for Hebrew) as reference. The lexicons inform; they don't dictate. The text speaks first — and where the tool can't yet meet its own standard, it shows you the evidence rather than a shortcut.</p>
 
         <h2 className="about-h2">When meaning is contested</h2>
@@ -206,7 +206,7 @@ function AboutView({ owner }) {
 
         <h2 className="about-h2">Ask the corpus</h2>
         <p className="about-p">Ask a question in plain English — "is baptizō immersion?", "what does Sheol mean in the O.T.?" — and Lexica answers from the corpus: senses synthesized from actual occurrences, every claim cited to verses you can open and check. The system is explicitly forbidden from importing theology from outside the text. Answers that can't be grounded in the vocabulary don't ship.</p>
-        <p className="about-p">Corpus search requires a free account, and supporters get a higher usage tier — these searches cost real money to run, and this keeps the tool free of ads.</p>
+        <p className="about-p">Corpus search requires a free account, and supporters get a higher usage tier — supporters cover what these searches cost to run, and that's what keeps the tool ad-free.</p>
 
         <h2 className="about-h2">Your study, saved</h2>
         <p className="about-p">Highlight verses, write notes on any word or verse, set bookmarks, keep a free-form journal. Everything saves in your browser automatically — no account needed. Create a free account (email or Google) and it syncs across your devices, and unlocks corpus search. Reading, word study, and all your notes work with no sign-in at all.</p>
