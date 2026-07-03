@@ -1105,6 +1105,14 @@ Full detail: memory `project_notes_highlights`. The headline facts:
 - **Follow-ups (Ask the corpus) carry the recent thread** — last 6 turns + their key lemmas, sent as a
   `context` query param, woven into the term + SQL prompts only to resolve references ("it"/"the same
   word"). A "New thread" button (rail) resets. Follow-ups are never cached (thread-specific).
+- **LANGUAGE/TESTAMENT SCOPE directive (2026-07-02, #20B).** Greek-first stays the DEFAULT (ABP is a Greek
+  primary text incl. the LXX; Hebrew is a cross-ref layer). A query that names a language ("fire in
+  hebrew") or testament was drifting back to Greek mid-answer; `_detect_scope`/`_scope_directive` (ai.py)
+  add an override to the shared `_curation_prompt` only — retrieval + panel untouched. Divergence rule:
+  stay scoped, cross to the other language only on a sense divergence (one short bridge note), never on
+  parallel senses. INVARIANT: the term lists `_LANG_SCOPE_TERMS`/`_TESTAMENT_SCOPE_TERMS` are the
+  never-collapse boundary the parked Tier-2 semantic cache MUST reuse — don't build a second list. Memory
+  `project_ai_search_architecture`.
 - Cached in ai_search_cache, ver_key=`search:<hash>` (fingerprint of system prompt +
   `_CURATION_SYSTEM` + book list + `_CACHE_CODE_VER` salt). See "AI result cache" below.
 - The cache ROW KEY (the query text) is NORMALIZED (`_cache_key` in ai.py: lowercase,

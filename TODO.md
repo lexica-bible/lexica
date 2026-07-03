@@ -234,6 +234,16 @@ YouVersion, which aren't the target). Honest gaps:
 ## Ask the corpus — open items
 Retrieval is Strong's-keyed SQL (occurrence lists can't be wrong); the leak was only in the prose, now
 heavily guarded. Full record: memory `project_ai_search_architecture` + `project_ai_synthesis_quality`.
+- **#20B language/testament scope drift — FIXED in code, live acceptance tests PENDING (2026-07-02).**
+  `_detect_scope`/`_scope_directive` in ai.py override Greek-first for scoped queries; committed +
+  pushed (`_CACHE_CODE_VER`→41). AFTER the next deploy, run acceptance tests 1–5 (see the session/commit
+  message): "fire in hebrew" stays on esh, "fire" unchanged, "fire in the OT" pulls esh + LXX pyr with no
+  NT verses, and a divergent word (sheol/hades) gives ONE short bridge note. If any drift survives it's
+  directive wording strength — bounce the transcript. KNOWN false-trigger (noted, not fixed): a query
+  ABOUT the word "Greek"/"Hebrew" itself trips language scope; rare, harmless-ish.
+- **Unpark Tier 1/2 semantic cache** — the next item on the agreed order, gated on the #20B tests going
+  green. MUST reuse `_LANG_SCOPE_TERMS`/`_TESTAMENT_SCOPE_TERMS` as the never-collapse boundary (a scoped
+  query can't fold into its unscoped form). code: ai.py.
 - **#4 parallelize the cognate + Hebrew DB loops** (follow-up, not started) — read-only independent loops
   run one-at-a-time; running them concurrently claws back seconds on MULTI-head queries only. Needs an
   identical-output before/after diff. Don't touch the model-written single SQL. code: ai.py cognate loop +
