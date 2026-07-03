@@ -1114,7 +1114,12 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   failure class as the G2316 "moral authority" definition fix. Memory `project_ai_synthesis_quality`.
 - **Follow-ups (Ask the corpus) carry the recent thread** — last 6 turns + their key lemmas, sent as a
   `context` query param, woven into the term + SQL prompts only to resolve references ("it"/"the same
-  word"). A "New thread" button (rail) resets. Follow-ups are never cached (thread-specific).
+  word"). **Pass-2 ALSO gets a `skeleton` param (Batch C, 2026-07-02)** — a client-built digest of what
+  earlier ANSWERS covered (head word(s) + a one-line sense summary/turn) → an injected "don't restate,
+  build on it" directive in `_curation_prompt` (`_skeleton_directive`; stacks after the scope block).
+  Caps 6 turns / 1000 chars, injected per-request so a first turn's prompt is byte-identical (no
+  fingerprint change). A "New thread" button (rail) resets. Follow-ups are never cached (thread-specific),
+  so the skeleton has zero cache implications. Memory `project_ai_search_architecture`.
 - **LANGUAGE/TESTAMENT SCOPE directive (2026-07-02, #20B).** Greek-first stays the DEFAULT (ABP is a Greek
   primary text incl. the LXX; Hebrew is a cross-ref layer). A query that names a language ("fire in
   hebrew") or testament was drifting back to Greek mid-answer; `_detect_scope`/`_scope_directive` (ai.py)

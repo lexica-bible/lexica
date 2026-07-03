@@ -266,10 +266,7 @@ heavily guarded. Full record: memory `project_ai_search_architecture` + `project
     spot-checks: 4/5 passed** (co-occurrence, Hebrew, typed G4442, + others). **KJV-comparison FAILED live —
     see the whole-book-comparison card below; Batch B didn't break it, it never worked.** Shipped a friendly
     empty-SQL message as the immediate patch.
-  - **BATCH C (thread skeleton + F5) — NOT BUILT.** The "thread skeleton" believed shipped DOES NOT EXIST.
-    Follow-up context reaches pass-1 (terms/SQL) only — `_curation_prompt` takes no context, so the DISPLAYED
-    synthesis never sees the thread. When built, plumb capped context into `_curation_prompt` (pass-2) + a
-    short don't-restate line. Follow-ups are never cached (no cache interaction).
+  - **BATCH C (thread skeleton) — SHIPPED 2026-07-02 (commit df60d22), moved to TODO_ARCHIVE.**
   - **BATCH D/E** — rail+failure UX (F6/F7/F8/F11) and cost+cache (Tier 1 normalizer, F14 pinned
     short-circuit, #4 parallelize loops). Quality, not roughness.
 - **Whole-book KJV/ABP comparison — real feature (queued, from the Batch B live-check).** "acts kjv vs abp"

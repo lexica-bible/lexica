@@ -6,6 +6,23 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Ask-corpus Batch C — thread skeleton for follow-ups — DONE + LIVE 2026-07-02 (commit df60d22)
+Full record: memory `project_ai_search_architecture`. The gap: follow-up answers restated senses earlier
+turns already covered, because the reader-facing synthesis (pass-2) was written blind to the thread — only
+pass-1 (retrieval/SQL) got the conversation context. Fix: the browser assembles a digest of what earlier
+ANSWERS covered (head word(s) + a 160-char slice of each turn's answer, reusing the SAME recent-6/notice
+filter that builds the pass-1 weave), sends it as a `skeleton` param; the backend wraps it in a "don't
+restate — build on it, a DIFFERENT word is a fresh study" directive injected into `_curation_prompt` after
+the scope block. Caps: 6 turns / 1000 chars (both browser + server). Injected per-request like the scope
+directive → first-turn prompt byte-identical, no fingerprint change; follow-ups aren't cached so zero cache
+impact. **Design = derive-at-request (client holds the answers), NOT a stored summary field** — the server
+stores no thread, and emitting a machine-readable summary from pass-2 would change its output format
+(touching the pick-parser + streaming, out of scope). Locked by `tests/test_thread_skeleton.py` (8); 119
+pass. Files: `ai.py` (`_skeleton_directive` + threaded through `_curation_prompt`/`_stream_curation`/
+`_curate_primary_verses`/`ai_search`), `static/src/00-core.jsx` (`aiSearchStream` gains the param),
+`static/src/52-ask-corpus.jsx` (assembles the digest). NOTE — a small-pool-no-cite follow-up skips pass-2
+entirely (existing gate), so the directive is inert there; acceptable (that path shows pass-1 prose).
+
 ## Lexica definition engine — batch-3 content edits + citation-gate abbrev guard — DONE + LIVE 2026-07-02
 Full record + lessons: memory `project_lexica_dictionary`. All via `fix_lexica_raw.py` / a read-the-block
 Python snippet (model-free, citation gate re-checked on each write); serve-verified live.
