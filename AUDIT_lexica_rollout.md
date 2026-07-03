@@ -27,31 +27,43 @@ G3686 ὄνομα · G1135 γυνή (woman/wife — pairs with ἀνήρ above).
 The whole point of the calibration batch: the top of the frequency list is where fork-candidates
 live. Split by where they surfaced —
 - **Batch-found:**
-  - **G5207 υἱός** — the "son of man" title (huios + anthrōpos): the move from Daniel's simile
-    ("one like a son of man") to the fixed articular Gospel title carries loaded referent weight.
-    Register review candidate.
-  - **G3962 πατήρ** — pending. The redraw restructured the elder-address sense (see adjudication
-    below), and the father-as-divine-referent territory is register-adjacent. Hold for JP's call.
+  - **G5207 υἱός** — the strong one. Sense 3 (a filial relationship to a divine referent — divine
+    sonship) and sense 6 (the fixed "son of man" phrase) both sit on live christological ground, and
+    the entry's own RANGE note already does register-adjacent work: it flags that the Gospel title's
+    definiteness is carried by the article (the construction), not by any shift in what huios means.
+    Register review candidate — JP's call.
+  - **G3962 πατήρ** — sense 3 (God designated "father"). Rides the sense-structure adjudication item
+    below; one decision covers both.
 - **Prior (already built, re-flagged):**
-  - **G3056 λόγος** — known register candidate; the "Word" / divine-utterance loaded sense. Built
-    as calibration data.
+  - **G3056 λόγος** — known register candidate; sense 5 (the "Word" as a personal/hypostatic
+    referent), thin at 1 ref. Real, but the PRIOR column — not batch calibration data.
 - Watch on build (not forks): ἔπω/λέγω/λαλέω are three "say/speak" numbers (ἔπω = the aorist half
   of λέγω, suppletive); ἄνθρωπος vs ἀνήρ is the human-vs-male pair. The engine kept them distinct.
 
 ### Thin senses (advisory — a sense grounded on too few refs)
-- **G4383 πρόσωπον** — 1 thin sense (confirmed in the ro pass, 5 senses / 1 thin).
-- **[PASTE THE DUMP]** — the other 3 of the four thin senses live only in the dump output; I will
-  NOT name them from memory. Paste `dump_lexica_packet.py` output and I'll fill these exactly.
+Four across the 26, all single-ref figurative extensions, none load-bearing:
+- **G5495 χείρ** — #4 (structural projections functioning like hands).
+- **G4172 πόλις** — #3 (the figurative "city" for a desired location of a condition).
+- **G2983 λαμβάνω** — #5 (take-as-a-model / adopt as an example).
+- **G3056 λόγος** — #5 (the "Word" personal/hypostatic referent, 1Jn 1:1). **PRIOR** column — this is
+  a prior-built entry, not batch calibration data.
+(Note: πρόσωπον's ro draw showed 1 thin sense; its SHIPPED draw has none — the applied draw differs
+from the reviewed one, the same draw-drift the draw-cache item addresses.)
 
 ### Open items — logged, NO fix now
 - **G3962 πατήρ — κύριος-under-πατήρ row (phrase misalignment).** A πατήρ occurrence row
   carries κύριος misaligned under it. Data-side phrase misalignment, not an engine bug;
   parked here for a later pass.
-- **Five tagging errors (ABP tag gaps) — this batch.** The citation gate logged five "tagging
-  miss" cases: a cited verse where the word IS present but ABP's tag missed it (non-blocking, the
-  known tagging-gap class, same family as the misalignment above). Appended here as data debt, not
-  an engine bug. **[PASTE THE DUMP]** — the five specific refs are in the dump output; I will not
-  reconstruct them from memory. Paste it and I'll list each ref + word here.
+- **Five tagging errors (ABP tag gaps) — surfaced by this batch.** Cases where the gloss set carries
+  a word that isn't this lemma at that verse (a mis-tag / mis-alignment, same family as the κύριος
+  row above). The definition engine is doubling as a corpus auditor — these fell out for free:
+  1. **γῆ** "hand" (Deu 33:13) — no context supports gē = a body part; lemma-assignment anomaly.
+  2. **ἀνήρ** "king" (1Sa 17:25) — the Greek there is basileús, not anḗr.
+  3. **βασιλεύς** "saying" (Psa 105:14) — attaches to a following speech-introducer, not the lemma.
+  4. **θεός** "LORD" ×3 — renders kýrios, not theos (prior-built θεός; logged for the same list).
+  5. **χείρ** "lips" (Pro 31:31) — the gloss follows a different underlying text (Hebrew "fruit"),
+     diverges entirely from cheír.
+  All data-side, non-blocking; parked here as a real case list for the corpus-hygiene pass.
 
 ### Calibration wins
 - **Freight-flagging fires on non-contested words** (the plain-meaning bar, without a fork):
@@ -63,6 +75,14 @@ live. Split by where they surfaced —
   write-time citation gate blocked both rather than ship an unverified ref. The gate is the floor.
 - **"Better is reportable"** — the widened dangling lint surfaced pre-existing bare-Ruth/Esther refs
   sitting in already-shipped entries (χάριν). Found debt, didn't create it.
+- **The engine made the Berean / plain-meaning call unprompted** (senses kept honest without a fork):
+  - **G191 ἀκούω** — the hear/heed split: the entry keeps the obedience-weight CONTEXTUAL, explicitly
+    noting the lemma doesn't change form between "heard" and "hearkened" — it refused to lexicalize
+    compliance into the word. The one that could most easily have gone wrong, gotten right.
+  - **G1135 γυνή** — flagged that English imposes the wife/woman split; the Greek lemma is one word
+    doing two contextual jobs.
+  - **G2992 λαός** — resisted a theologized "people of God" as a separate sense; kept it as the same
+    word with a possessive/covenant relationship added by context.
 
 ### Redraws
 - **G1325 δίδωμι — RESOLVED.** First draw carried a `1Sa` dangling ref (no ch:vs) inside
