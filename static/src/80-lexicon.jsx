@@ -131,6 +131,25 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
     return () => { cancelled = true; };
   }, [profile?.strongs]);
 
+  // Verse-grounded Lexica entry, keyed by the FULL Strong's number (profile.strongs keeps the
+  // dotted ".N"). Same fetch the Library word card makes (30-detail-panel); when present it
+  // REPLACES the LSJ/BDB body with the shared LexicaBody / StructuralBody / idiom note so the two
+  // surfaces can't drift. Quiet by design (JP's call): NO loading gate — the LSJ/gloss body shows
+  // immediately and the Lexica body swaps in when this lands, no spinner container. A word with no
+  // entry 404s → null → the card is exactly as before. The numbering crosswalk (alias_note) rides
+  // this same response but its header badge is a separate queue item, not wired here.
+  const [lexica, setLexica] = useState(null);
+  useEffect(() => {
+    setLexica(null);
+    const sn = profile && profile.strongs;
+    if (!sn || sn === "*") return;
+    let cancelled = false;
+    api.lexica(sn)
+      .then(d => { if (!cancelled) setLexica(d && !d.error ? d : null); })
+      .catch(() => { if (!cancelled) setLexica(null); });
+    return () => { cancelled = true; };
+  }, [profile?.strongs]);
+
   useEffect(() => {
     if (!pendingStrongs) return;
     onPendingStrongsConsumed?.();
@@ -659,17 +678,41 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
         </div>
       </div>
 
-      {(profile.definition || /^G/i.test(profile.strongs)) && (
+      {(profile.definition || /^G/i.test(profile.strongs)) && (() => {
+        // When a Lexica entry exists it leads, exactly like the Library word card: an idiom note,
+        // the structural/function card, or the verse-grounded sense list — each via the SAME shared
+        // component (LexicaBody / StructuralBody), so the two surfaces stay in step by construction.
+        // No lexica → the original LSJ/BDB path, untouched. The card keeps its own top plain-gloss
+        // line (in the hero) regardless — orientation above the detail.
+        // GREEK ONLY: Library never renders LexicaBody for a Hebrew word (it gets the BDB section
+        // instead — 30-detail-panel pushes "bdb", never "lsj", for Hebrew). Gate the same way so a
+        // Hebrew number with an entry keeps its BDB definition and the two surfaces don't diverge.
+        const lex = /^G/i.test(profile.strongs) ? lexica : null;
+        const idiom = !!(lex && lex.kind === "idiom");
+        const structural = !!(lex && lex.kind === "structural");
+        return (
         <section className="sec">
           <h4 className="sec-head">
-            <span className="sec-t">Definition</span>
-            {!/^G/i.test(profile.strongs)
+            <span className="sec-t">{structural ? "Function" : idiom ? "Phrase" : "Definition"}</span>
+            {idiom
+              ? <span className="lsj-badge" title="A fixed phrase (idiom) — its plain meaning, not a grammatical relation">Idiom</span>
+              : structural
+              ? <span className="lsj-badge" title="Structural word — its grammatical function, not a sense list">Grammar</span>
+              : lex
+              ? <span className="lsj-badge" title="Lexica dictionary — defined from the Bible's own usage">Lexica</span>
+              : !/^G/i.test(profile.strongs)
               ? <span className="bdb-badge">BDB</span>
               : (!lsjLoading && lsjEntry)
                 ? <span className="lsj-badge" title={lsjSummary && lsjSummary.override ? "Lexica editorial gloss — plain biblical sense foregrounded" : undefined}>{(lsjSummary && lsjSummary.override) ? "Lexica" : lsjEntry.source === "strongs" ? "Strong's" : lsjEntry.source === "abp_ext" ? "ABP" : "LSJ"}</span>
                 : null}
           </h4>
-          {!/^G/i.test(profile.strongs)
+          {idiom
+            ? <div className="gram"><p className="gram-fn"><b>{lex.phrase}</b> — {lex.note}</p></div>
+            : structural
+            ? <StructuralBody data={lex} lsjEntry={lsjEntry} />
+            : lex
+            ? <LexicaBody lexica={lex} lsjEntry={lsjEntry} />
+            : !/^G/i.test(profile.strongs)
             ? <p className="lsj">{profile.definition}</p>
             : lsjLoading
               ? <div className="lsj-def lsj-def--loading">Loading…</div>
@@ -677,7 +720,8 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
                 ? <p className="lsj">{profile.definition}</p>
                 : <LsjBody lsjEntry={lsjEntry} lsjSummary={lsjSummary} summaryLoading={lsjSummaryLoading} />}
         </section>
-      )}
+        );
+      })()}
 
       {profile.heb_glosses && profile.heb_glosses.length > 0 && (
         <section className="sec">
