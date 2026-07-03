@@ -952,7 +952,13 @@ _TESTAMENT_SCOPE_TERMS = {     # phrase → testament axis value
 
 
 def _detect_scope(query: str) -> dict:
-    """Two INDEPENDENT scope axes off an explicit mention in the query — language
+    """SALT NOTE: _detect_scope AND _scope_directive both feed the answer — scope is
+    folded into the cache key (_scope_tag) and _scope_directive is built dynamically at
+    request time, so neither is inside the ver_key fingerprint (that covers the STATIC
+    prompt text + book list only). A wording/logic change to EITHER must bump
+    _CACHE_CODE_VER, same standing rule as a data-feed change.
+
+    Two INDEPENDENT scope axes off an explicit mention in the query — language
     (hebrew/greek/aramaic; LXX/Septuagint → greek) and testament (ot/nt). Word-boundary,
     case-insensitive. Returns {'lang': ..., 'testament': ...}, None where unset. A query
     can carry both AXES ('fire in the greek OT'). Neither set → the caller keeps the
@@ -1507,7 +1513,8 @@ _ai_cache_ver: str | None = None  # computed once from prompt template + book li
 
 # Bump this integer whenever server-side search logic changes in a way that
 # affects results but doesn't change _AI_SYSTEM_TMPL (e.g. new fallback steps).
-_CACHE_CODE_VER = 46   # 46: +2 split-lemma aliases G2411->G2413 (temple) + G1432->G1431 (freely) via LEXICA_ALIASES
+_CACHE_CODE_VER = 47   # 47: scope folded into the cache key (_scope_tag) — "fire O.T." vs "fire o t" no longer collide
+                       # 46: +2 split-lemma aliases G2411->G2413 (temple) + G1432->G1431 (freely) via LEXICA_ALIASES
                        # 44: alias fold the exact-lemma PIN's retrieval SQL too (Greek-script charis pulled 0 rows)
                        # 43: alias fold in key words (_fold_alias) — charis keys on G5484, not textbook G5485
                        # 42: mixed-signal scope fix + book-aware pick-parse + divine-council hardcode removed
@@ -1547,6 +1554,24 @@ def _cache_key(q: str) -> str:
     return re.sub(r"\s+", " ", s).strip()             # collapse runs of whitespace
 
 
+def _scope_tag(q: str) -> str:
+    """A word-safe suffix encoding the DETECTED scope, appended to the cache key so two
+    questions that clean down to the same text but carry different scope don't share an
+    answer. The trap: _cache_key turns punctuation into spaces, but _detect_scope reads
+    dotted forms specially — "fire O.T." (testament=ot) and a literal "fire o t" (no scope)
+    both clean to "fire o t", so without this they'd serve each other the wrong-scope
+    answer. Tokens are prefixed word-fragments ('lhebrew'/'tot') with no word boundary a
+    scope term could re-trigger on, so the tag is stable under re-normalization. Empty
+    string when no scope is set → a plain query's key is byte-identical to before."""
+    sc = _detect_scope(q)
+    parts = []
+    if sc.get("lang"):
+        parts.append("l" + sc["lang"])
+    if sc.get("testament"):
+        parts.append("t" + sc["testament"])
+    return (" scope " + " ".join(parts)) if parts else ""
+
+
 def _load_ai_cache_from_db() -> None:
     """Populate in-memory cache from DB; delete entries from a different version."""
     ver = _get_ai_cache_ver()
@@ -1557,7 +1582,10 @@ def _load_ai_cache_from_db() -> None:
         ).fetchall()
         for r in rows:
             try:
-                _ai_cache[_cache_key(r["query"])] = json.loads(r["result_json"])
+                # The stored `query` column is already the FINAL key (_cache_key + _scope_tag,
+                # written at persist time), so use it verbatim — re-normalizing here would
+                # strip the scope tag and the warm-load key wouldn't match the lookup key.
+                _ai_cache[r["query"]] = json.loads(r["result_json"])
             except Exception:
                 pass
         conn.close()
@@ -1698,7 +1726,8 @@ def ai_search():
 
         # Cache key — caps / punctuation / extra-space variants of the same question
         # share one answer ("Is hell the same as Sheol?" == "is hell the same as sheol").
-        qk = _cache_key(q)
+        # The scope tag keeps two same-text-different-scope questions apart (see _scope_tag).
+        qk = _cache_key(q) + _scope_tag(q)
 
         if not context:
             cached = _ai_cache.get(qk)
