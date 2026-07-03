@@ -1891,6 +1891,12 @@ def ai_search():
 
         if not re.match(r"^\s*SELECT\b", sql, re.IGNORECASE):
             log.error("AI returned non-SELECT query: %r", sql)
+            # Empty SQL = the model declined to build a query. The common cause is an
+            # open-ended whole-book comparison ("acts kjv vs abp"): no specific word, so
+            # nothing to search. Nudge toward the word-level comparison, which works.
+            if not sql:
+                return jsonify({"error": "Comparisons work best with a specific word — "
+                                         "try 'grace in KJV vs ABP'."}), 400
             # Don't echo the generated SQL back to the client (info disclosure).
             return jsonify({"error": "The generated query was invalid — please rephrase and try again."}), 400
 

@@ -242,17 +242,41 @@ heavily guarded. Full record: memory `project_ai_search_architecture` + `project
     context drops notice-turns, F9 O.T./N.T. periods, Fix 6 divine-council hardcode removed. **JP's
     post-deploy step:** run the #20B acceptance checks 1–5 PLUS the two mixed-signal cases now baked into
     `tests/test_scope_detect.py` ("compare the OT and NT view of the Sabbath", "charis in greek and hebrew").
-  - **BATCH B — SQL-gen prompt truth-up (F3/F12/F15), NEXT after A deploys clean.** M, Opus medium + JP live
-    spot-checks. `_AI_SYSTEM_TMPL` still describes strongs_base as bare/inconsistent + its examples use bare
-    numbers (masked by retry/supplements); the KJV-comparison example joins `'G'||w.strongs_base` = "GG4151",
-    never matches. Rewrite schema section + every example to prefixed single-match; fingerprint auto-busts
-    the cache. Boundaries: don't touch it in any other batch.
+  - **BATCH B SHIPPED 2026-07-03 (commit 7b55783 + empty-SQL nudge).** F3 schema/examples truthed up
+    (strongs_base stated as always G/H-prefixed; every example → prefixed single-match; all 3 example JOINs →
+    `l.strongs_g = w.strongs_base`; KJV-comparison join `'G'||w.strongs_base`="GG4151" → `= w.strongs_base`).
+    F12 user-typed Strong's numbers always permitted — a bare typed number pins like a typed word
+    (`_resolve_typed_strongs` + `tests/test_typed_strongs.py`, wired into CI + pre-commit). F15 pass-1 context
+    "previous turn" → "recent turns". Fingerprint auto-busted (template sha1 5446f2→45aa8c9). **Live
+    spot-checks: 4/5 passed** (co-occurrence, Hebrew, typed G4442, + others). **KJV-comparison FAILED live —
+    see the whole-book-comparison card below; Batch B didn't break it, it never worked.** Shipped a friendly
+    empty-SQL message as the immediate patch.
   - **BATCH C (thread skeleton + F5) — NOT BUILT.** The "thread skeleton" believed shipped DOES NOT EXIST.
     Follow-up context reaches pass-1 (terms/SQL) only — `_curation_prompt` takes no context, so the DISPLAYED
     synthesis never sees the thread. When built, plumb capped context into `_curation_prompt` (pass-2) + a
     short don't-restate line. Follow-ups are never cached (no cache interaction).
   - **BATCH D/E** — rail+failure UX (F6/F7/F8/F11) and cost+cache (Tier 1 normalizer, F14 pinned
     short-circuit, #4 parallelize loops). Quality, not roughness.
+- **Whole-book KJV/ABP comparison — real feature (queued, from the Batch B live-check).** "acts kjv vs abp"
+  fails: no specific word, so the SQL-gen model returns empty SQL → the friendly nudge now (word-level
+  works: "grace in KJV vs ABP" fires the specific-word example). Making whole-book work is NOT a prompt
+  line. **CC's noise analysis (start here, don't re-derive):** the naive join `LOWER(w.english_head) !=
+  LOWER(kw.word)` across a whole book matches ALMOST EVERY word — ABP and KJV are different translations, so
+  their words rarely match exactly, so "differs" is true nearly everywhere → the pool floods and pass-2
+  Sonnet drowns in noise. The real question the feature must answer FIRST: **which differences are worth
+  surfacing?** (a meaningful rendering split, not any lexical variance). Options to weigh: cluster by
+  Strong's + only surface where the SAME number gets clearly different English families; cap to N most
+  frequent/most divergent; or restrict to a curated "loaded word" set per book. Design before code.
+  code: ai.py comparison path + `_AI_SYSTEM_TMPL` comparison section; static/src/52-ask-corpus.jsx.
+- **Hebrew-word SQL-gen misses the ABP words table — fold into the LXX-seam card (same work).** A Hebrew
+  query builds `WHERE w.strongs_base = 'H7307'` against `words`, which is Greek ABP text → GUARANTEED 0
+  rows; the heb.db (+90) + cognate (+21) supplements carry the whole answer (correct + full, but the "thin,
+  patched downstream" shape Batch B exists to kill). Fix = teach SQL-gen to also query the Greek LXX
+  counterpart (ruach H7307 ↔ pneuma G4151) so the main query searches the real ABP OT text. The H→G mapping
+  "isn't always clean" — which is EXACTLY what the **LXX seam** project builds (see the LXX-seam range-
+  preservation / H↔G alignment work under the lexical-texture panel follow-ups). ONE card, two payoffs: when
+  the seam table exists, this SQL-gen fix becomes a lookup instead of a guess. Don't build a throwaway H→G
+  map here — wait for the seam. code: ai.py `_AI_SYSTEM_TMPL` Hebrew-bridge section.
 - **Unpark Tier 1 semantic cache** — AUDIT VERDICT 2026-07-02: **Tier 2 = NO-GO** at current volume
   (see AUDIT_ask_corpus.md); **Tier 1 (filler-strip normalizer) = audit batch E.** MUST reuse
   `_LANG_SCOPE_TERMS`/`_TESTAMENT_SCOPE_TERMS` as the never-collapse boundary AND inherit Batch A's
