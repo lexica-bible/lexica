@@ -299,10 +299,18 @@ heavily guarded. Full record: memory `project_ai_search_architecture` + `project
   data-surgery class: the "Jew" occurrences would need re-tagging to their own number (G2453, currently 0
   in ABP) before anything downstream is clean. Low urgency; only matters if a Jew/Judas Ask-corpus search
   reads muddy. read-only audit path: the query set in this session's transcript.
-- **DONE 2026-07-02: `SPLIT_LEMMA_ALIAS_NOTES` wired into the Word study / Lexica card.** The card now shows a
-  "Strong's numbering" block on aliased entries (standard dict number + ABP number + any pool caveat), computed
-  server-side from the alias map (`alias_note` field on `/api/lexica`), rendered in LexicaBody Full-entry view.
-  Live on χάρις (G5484), ἱερόν (G2413), δωρεάν (G1431).
+- **DONE 2026-07-02: `SPLIT_LEMMA_ALIAS_NOTES` wired into the Word study / Lexica card as a numbering
+  crosswalk.** The card shows a "Strong's numbering" block on BOTH doors of each alias pair, worded by the
+  number the reader arrived on (server captures requested vs the folded served number): standard-side (asked
+  G2411) → "ABP tags this word under G2413"; served-side (asked G2413) → "Standard Strong's G2411" + any pool
+  caveat. `alias_note` field on `/api/lexica` (direction to_abp/from_abp), rendered in LexicaBody Full-entry
+  view, independent of the selected translation tab. Live on χάρις (G5484↔G5485), ἱερόν (G2413↔G2411),
+  δωρεάν (G1431↔G1432).
+- **BUG (separate scope, report-only 2026-07-02): Word study defaults to the ABP filter even when a number has
+  0 ABP rows.** Searching a standard number ABP doesn't tag (e.g. G2411 temple) lands on the empty ABP
+  occurrence tab — looks like the word has no data. Fix: either the search route shouldn't default to ABP when
+  its ABP count is 0, or the default filter should fall back to a source that HAS rows (KJV/BSB/HEB). Code:
+  80-lexicon.jsx source-toggle default + views_lexicon.py profile. NOT part of the alias-note change.
 - **FOLLOW-UP: annotate the Ask-corpus provenance RAIL with the standard number** (separate scope, 2026-07-02).
   The Lexica card is done (above), but Ask-corpus does NOT share that path — the A3/A4 invariant keeps definition
   text out of synthesis, and it must stay that way. The gap is the CITATION display: the rail (52-ask-corpus.jsx)

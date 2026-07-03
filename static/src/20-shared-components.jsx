@@ -255,13 +255,14 @@ function LexicaBody({ lexica, lsjEntry }) {
           )}
           {fork && <LexicaFork fork={fork} />}
           {lexica.range && <div className="lex-block"><span className="lex-lbl">Range</span> {lexica.range}</div>}
-          {lexica.alias_note && (lexica.alias_note.standard.length > 0 || lexica.alias_note.caveat) && (
+          {lexica.alias_note && (
             <div className="lex-block">
               <span className="lex-lbl">Strong's numbering</span>
               <div className="lex-notes">
-                {lexica.alias_note.standard.length > 0 &&
-                  `Standard ${lexica.alias_note.standard.join(", ")}; ABP tags this word under ${lexica.alias_note.abp}.`}
-                {lexica.alias_note.caveat ? (lexica.alias_note.standard.length > 0 ? " " : "") + lexica.alias_note.caveat : ""}
+                {lexica.alias_note.direction === "to_abp"
+                  ? `ABP tags this word under ${lexica.alias_note.abp}.`
+                  : `Standard Strong's ${lexica.alias_note.standard.join(", ")}.`}
+                {lexica.alias_note.caveat ? " " + lexica.alias_note.caveat : ""}
               </div>
             </div>
           )}
