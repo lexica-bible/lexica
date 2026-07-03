@@ -1215,9 +1215,21 @@ def lexicon_profile(strongs):
         has_kjv = False if is_diff else (conn.execute("SELECT 1 FROM kjv_strongs WHERE strongs_id = ? LIMIT 1", (sid,)).fetchone() is not None)
         has_bsb = False if is_diff else (_bsb_ready(conn) and conn.execute("SELECT 1 FROM bsb_strongs WHERE strongs_id = ? LIMIT 1", (sid,)).fetchone() is not None)
         related = [] if is_diff else (_greek_cognates(conn, snum, _deriv_raw) if not is_heb else [])
+        # Bake the DEFAULT 'All books' occurrence list right into the profile so a fresh word
+        # click fills the whole card in ONE round-trip. Without this the occurrence list was a
+        # SECOND fetch that couldn't even start until the profile finished, so it popped in a
+        # beat late. Uses the SAME helper + resolved corpus the verses endpoint uses, at the
+        # no-book / no-gloss / current-testament default the click lands on — so it matches the
+        # frontend's seed exactly. A picked book / rendering / testament change still re-fetches.
+        _tt = request.args.get("testament", "all").strip().lower()
+        if _tt not in ("all", "ot", "nt"):
+            _tt = "all"
+        _vcorpus = "kjv" if (corpus == "all" and is_heb) else "abp" if corpus == "all" else corpus
+        default_verses, default_truncated = _all_books_verses(
+            conn, _vcorpus, num, snum, sid, is_heb, is_func, "", _tt, _ALL_VERSES_CAP)
         # Numbering crosswalk (word-study card header) — same shared helper the word card uses,
         # keyed on the number the reader searched (strongs_id). None for a non-aliased word.
-        return jsonify({"strongs": strongs_id, "lemma": lemma, "translit": translit, "definition": definition, "derivation": derivation, "related": related, "total": total, "books": books, "corpus": corpus, "glosses": glosses, "abp_glosses": abp_glosses, "kjv_glosses": kjv_glosses, "heb_glosses": heb_glosses, "bsb_glosses": bsb_glosses, "has_abp": has_abp, "has_kjv": has_kjv, "has_heb": has_heb, "has_bsb": has_bsb, "alias_note": alias_note_for(strongs_id)})
+        return jsonify({"strongs": strongs_id, "lemma": lemma, "translit": translit, "definition": definition, "derivation": derivation, "related": related, "total": total, "books": books, "corpus": corpus, "glosses": glosses, "abp_glosses": abp_glosses, "kjv_glosses": kjv_glosses, "heb_glosses": heb_glosses, "bsb_glosses": bsb_glosses, "has_abp": has_abp, "has_kjv": has_kjv, "has_heb": has_heb, "has_bsb": has_bsb, "alias_note": alias_note_for(strongs_id), "default_verses": default_verses, "default_truncated": default_truncated})
     except Exception:
         return jsonify({"error": "Server error"}), 500
     finally:

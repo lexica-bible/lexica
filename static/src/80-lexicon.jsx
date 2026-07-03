@@ -94,6 +94,10 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
   const [filteredBooks, setFilteredBooks] = useState(null);
   const [groupings, setGroupings] = useState(null);
   const [pendingGloss, setPendingGloss] = useState(null);
+  // Signature of the occurrence-list state the profile already SEEDED (default all-books view),
+  // so the all-books effect below skips the redundant re-fetch for exactly that one state and
+  // still fires for any real filter change. Cleared once consumed.
+  const seededVersesSig = useRef(null);
   const [lsjEntry, setLsjEntry] = useState(null);
   const [lsjSummary, setLsjSummary] = useState(null);
   const [lsjLoading, setLsjLoading] = useState(false);
@@ -156,11 +160,23 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
     const c = corpusOverride ?? (isHeb ? "heb" : "abp");  // Hebrew lands on the real Hebrew OT (heb.db)
     setProfileCorpus(c);
     try {
-      const data = await api.lexiconProfile(strongs, c);
+      const data = await api.lexiconProfile(strongs, c, testament);
       if (data.error) setError(data.error);
       // Honor the source the backend actually used — a Hebrew number heb.db lacks
       // (a byform/Aramaic/name) falls back to KJV, so reflect that in the toggle.
-      else { setProfile(data); if (data.corpus && data.corpus !== c) setProfileCorpus(data.corpus); }
+      else {
+        setProfile(data);
+        const rc = (data.corpus && data.corpus !== c) ? data.corpus : c;
+        if (rc !== c) setProfileCorpus(rc);
+        // Seed the occurrence list from the profile's baked default page so it renders
+        // WITH the rest of the card — no second round-trip. The all-books effect skips
+        // exactly this seeded state (matched by signature) and re-fetches on any filter change.
+        if (data.default_verses) {
+          setVerseList(data.default_verses);
+          setAllTruncated(!!data.default_truncated);
+          seededVersesSig.current = JSON.stringify([data.strongs, rc, null, null, testament || "all"]);
+        }
+      }
     } catch (e) { setError("Failed to load word profile: " + e); }
     finally { setLoading(false); }
   };
@@ -179,6 +195,11 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
   // Gated on !loading so a profile/corpus reload in flight fires this exactly once.
   useEffect(() => {
     if (!profile || selectedBook || loading) return;
+    // The profile already baked this exact default view (all books, no gloss, current
+    // testament) — use the seeded list instead of re-fetching it. Consume the signature so a
+    // later real filter change (different sig) fetches normally.
+    const sig = JSON.stringify([profile.strongs, profileCorpus, selectedBook, selectedGloss, testament || "all"]);
+    if (seededVersesSig.current === sig) { seededVersesSig.current = null; return; }
     let cancelled = false;
     setVerseLoading(true);
     setVerseList(null);

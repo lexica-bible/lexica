@@ -371,8 +371,13 @@ const api = {
     fetch(`/api/cross-references/curated/${encodeURIComponent(book)}/${chapter}/${verse}`).then(r => r.json()),
   lexiconLookup: (q) =>
     fetch(`/api/lexicon/lookup?q=${encodeURIComponent(q)}`).then(r => r.json()),
-  lexiconProfile: (strongs, corpus) =>
-    fetch(`/api/lexicon/profile/${encodeURIComponent(strongs)}${corpus ? `?corpus=${corpus}` : ""}`).then(r => r.json()),
+  lexiconProfile: (strongs, corpus, testament) => {
+    const p = new URLSearchParams();
+    if (corpus) p.set("corpus", corpus);
+    if (testament && testament !== "all") p.set("testament", testament);
+    const qs = p.toString();
+    return fetch(`/api/lexicon/profile/${encodeURIComponent(strongs)}${qs ? "?" + qs : ""}`).then(r => r.json());
+  },
   lexiconVerses: (strongs, book, corpus, gloss, testament) =>
     fetch(`/api/lexicon/verses/${encodeURIComponent(strongs)}/${encodeURIComponent(book)}?corpus=${corpus}${gloss ? `&gloss=${encodeURIComponent(gloss)}` : ""}${testament && testament !== "all" ? `&testament=${encodeURIComponent(testament)}` : ""}`).then(r => r.json()),
   lexiconBooks: (strongs, corpus, gloss) =>
