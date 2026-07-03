@@ -464,11 +464,13 @@ admin flips the role). Memory `project_payments_donations`. Open:
   the schema + any export are not copyrightable. What's BY-SA in OpenScriptures is only the EDITED TEXT
   (definitions, glosses, corrections). So share-alike touches Strong's definition text only if you
   DISPLAY or EXPORT it; the AB-Strong's-keyed data structure itself stays clean.
-- **OPEN — verify BDB's digital source.** The credits page still calls Brown-Driver-Briggs "public
-  domain" (the 1906 work is). But there's NO bdb loader script in the repo (loaded on PA directly), so
-  the DIGITAL edition's actual source + license is unconfirmed — if it's the OpenScriptures HebrewLexicon
-  it may add a CC credit. Confirm the source, then credit it if needed (same fix pattern as the Greek
-  Strong's correction). code: templates/seo/credits.html + CREDITS.md, BDB line.
+- **RESOLVED 2026-07-03 — the app has NO real BDB.** The `bdb` table actually holds the STRONG'S HEBREW
+  dictionary (8,674 rows = H1–H8674, one-line glosses; genuine BDB is ~10k+ root-organized, wouldn't hit
+  that count). Inherited misnomer. Fixed: credits page + CREDITS.md now list "Strong's Hebrew" (public
+  domain 1890 text, no CC credit); user-facing UI labels relabeled BDB→Strong's (detail panel header +
+  badge + "not found" text, word-study badge, two About-page mentions); CLAUDE.md table def corrected. The
+  `bdb` table NAME + code identifiers (`bdb-badge` CSS, vars) stay — display-side relabel only, low-risk.
+  If real BDB is ever wanted: PD + digitized (OpenScriptures), a new-source decision not a fix.
 - **COURTESY (optional, not required):** if the OpenBible.info geo data feeds the place cards directly,
   a thank-you note to them is nice (CC BY doesn't require it).
 - Reference (sources named on the page, for when the ABP line gets finalized):

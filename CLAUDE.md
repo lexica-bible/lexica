@@ -443,7 +443,12 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
 - `kjv_verses` — KJV full verse text (31,102 verses)
 - `kjv_words` — KJV word-level tokens with position and italic flag
 - `kjv_strongs` — KJV word → Strong's number mapping
-- `bdb` — Brown-Driver-Briggs Hebrew lexicon (H-numbers)
+- `bdb` — **MISNAMED: this table actually holds the STRONG'S HEBREW dictionary, NOT Brown-Driver-Briggs**
+  (8,674 rows = H1–H8674, one-line Strong's glosses; genuine BDB is ~10k+ root-organized entries and
+  wouldn't land on that count). The app has NO real BDB. The `bdb` table NAME stays (it's threaded through
+  queries/code/CSS `bdb-*`); only the USER-FACING labels were corrected to "Strong's Hebrew" (2026-07-03).
+  Source = a public-domain Strong's-Hebrew dump (1890 text, PD, no CC credit). H-number Hebrew definitions.
+  If real BDB is ever wanted it's PD + digitized (OpenScriptures) — a new-source decision, not a fix.
 - `pericopes` — section headings (book, chapter, verse, heading); populated from bh_scrape.db.bh_headings; DISPLAYED in the reader (all render modes) via `/api/chapter`'s LEFT JOIN + `.pericope-heading` in 59c-library-render.jsx
 - `bsb_verses` — Berean Standard Bible verse text (public domain), mirrors kjv_verses on 1-66 book ids
 - `bsb_words` / `bsb_strongs` — BSB per-word interlinear (LIVE 2026-06-15; loaded on PA = 386,063 words /

@@ -113,7 +113,7 @@ function AiResults({
 // ============================================================
 const TOUR_STEPS = [
   { icon: "Book",    label: "Welcome to Lexica", body: "Lexica is a Greek and Hebrew word study tool built for the diligent Berean. No prior training required. Every word traces back to its Greek or Hebrew source so you can read what the text actually says — before any theological framework is applied. You won't be a scholar overnight, but you'll immediately be a Berean." },
-  { icon: "Search",  label: "Word study",        body: "Search by English, Greek, Hebrew, transliteration, or Strong's number — or just ask a question in plain language like 'Where does pneuma appear in Genesis?' One word looks it up; a question searches the whole corpus and cites the passages. Results span both Greek (LSJ) and Hebrew (BDB) — click any word for its full lexicon entry and a context-aware AI summary anchored in the source text." },
+  { icon: "Search",  label: "Word study",        body: "Search by English, Greek, Hebrew, transliteration, or Strong's number — or just ask a question in plain language like 'Where does pneuma appear in Genesis?' One word looks it up; a question searches the whole corpus and cites the passages. Results span both Greek (LSJ) and Hebrew (Strong's) — click any word for its full lexicon entry and a context-aware AI summary anchored in the source text." },
   { icon: "Book",    label: "The Library",       body: "Read in ABP Greek, KJV, or the Berean Standard Bible — on their own, in parallel, or compare them side by side. Switch between plain reading and a full interlinear (Hebrew over OT words, Greek over NT), follow the text in chronological order, or listen with read-along audio. Click any word for its lexicon entry; click any verse number for cross-references. Beyond the canon you'll also find the Apocrypha, 1 Enoch, and the Apostolic Fathers." },
   { icon: "Panel",   label: "Cross-References",  body: "Every verse connects to Torrey's Treasury of Scripture Knowledge — AI-curated to the strongest matches and synthesized into a thematic overview anchored in ABP vocabulary." },
   { icon: "Note",    label: "Notes & Highlights", body: "Highlight verses in five colors, write notes on any word or verse, drop bookmarks, and keep a free-form journal. It all saves in your browser automatically — no account required. Sign in with email or Google to sync everything across your devices." },
@@ -214,7 +214,7 @@ function AboutView({ owner }) {
         <ul className="about-ul">
           <li>Strong's numbers are the bridge between English, Greek, and Hebrew</li>
           <li>Definitions are built from the corpus — every sense derived from and cited to actual occurrences (rolling out across the full vocabulary, contested words first)</li>
-          <li>LSJ (Greek) and BDB (Hebrew) are provided as scholarly reference — display, not source</li>
+          <li>LSJ (Greek) and Strong's (Hebrew) are provided as scholarly reference — display, not source</li>
           <li>Contested words show competing readings rather than a resolved answer</li>
           <li>Translation comparisons surface where ABP, KJV, and BSB render the same source word differently</li>
           <li>AI answers are corpus-grounded and citation-gated; unsupported claims are blocked, not softened</li>

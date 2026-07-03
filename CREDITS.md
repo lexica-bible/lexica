@@ -20,11 +20,11 @@ licenses require.
 ## Lexicons & word data
 
 - **Liddell–Scott–Jones (LSJ)** Greek lexicon — public domain.
-- **Brown–Driver–Briggs (BDB)** Hebrew lexicon — public domain.
 - **Strong's Greek dictionary** — the machine-readable edition from
   [OpenScriptures](https://github.com/openscriptures/strongs), licensed
   [CC BY-SA 4.0](https://creativecommons.org/licenses/by-sa/4.0/). (The original 1890
   dictionary text is public domain.)
+- **Strong's Hebrew dictionary** — public domain (the 1890 dictionary text).
 - **Dodson Greek lexicon** — public domain (biblicalhumanities.org).
 - **Tyndale Brief lexicons (TBESG / TBESH)** — extended Strong's glosses, STEP Bible /
   Tyndale House, Cambridge, licensed [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).

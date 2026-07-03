@@ -858,7 +858,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     );
     case "bdb": return (
       <section key="bdb" className="sec">
-        <h4 className="sec-head"><span className="sec-t">Brown-Driver-Briggs</span><span className="bdb-badge">BDB</span></h4>
+        <h4 className="sec-head"><span className="sec-t">Strong's Hebrew</span><span className="bdb-badge">Strong's</span></h4>
         {bdbLoading ? (
           <div className="lsj-def lsj-def--loading">Loading…</div>
         ) : bdbEntry ? (
@@ -875,7 +875,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             )}
           </div>
         ) : (
-          <div className="lsj-def lsj-def--loading">Not found in BDB.</div>
+          <div className="lsj-def lsj-def--loading">Not found in Strong's Hebrew.</div>
         )}
       </section>
     );
