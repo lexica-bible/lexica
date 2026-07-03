@@ -198,9 +198,28 @@ for _sid, _e in CONTESTED.items():
     for _a in _e.get("aliases", []):
         CONTESTED_BY_SID[_a] = _e
 
-# Serve-time alias map, derived from the same "aliases" fields (never write a pair twice).
-# Today: {"G5485": "G5484"} — ABP tags charis on G5484 (the form charin), so that's the number
+# Plain split-lemma aliases — a Strong's number the dictionary + KJV/BSB treat as a headword
+# but ABP tags ~zero occurrences under, because they live on a neighbouring number that is the
+# SAME lexeme. Verified read-only vs ABP 2026-07-02 (audit_alias_gap.py review). The fold makes
+# Ask-corpus retrieval / counting / highlighting key on the number ABP actually uses. These are
+# NOT contested words (no fork, no register entry) — just a corpus-tagging split, so they seed the
+# same serve-time map without going through CONTESTED.
+#   suspect -> canonical (the number ABP tags)
+SPLIT_LEMMA_ALIASES = {
+    "G40":   "G39",    # hagios "holy" -> ABP tags the whole holy family (adj + saints + holies) on G39
+    "G1672": "G1673",  # Hellen "a Greek" -> ABP's Greek(s) ethnonym number
+    "G3398": "G3397",  # mikros "small" -> the small family (the neuter form's number)
+    "G3570": "G3568",  # nyni "now" (emphatic) -> nyn G3568
+    "G3063": "G3062",  # loipon "the rest/finally" -> the loipos family G3062
+    "G3480": "G3478",  # Nazoraios "Nazarene" -> ABP merges person + place on G3478
+    "G3479": "G3478",  # Nazarenos "Nazarene" -> same
+}
+
+# Serve-time alias map, derived from the same "aliases" fields (never write a pair twice), plus
+# the plain split-lemma pairs above.
+# Charis: {"G5485": "G5484"} — ABP tags charis on G5484 (the form charin), so that's the number
 # the Lexica entry was built under; KJV/BSB tag the textbook G5485. A word card asking for
 # G5485 gets the G5484 row served (views_lexica.py). An alias must never name a word that has
 # its own structural.py card — the serving route resolves structural FIRST to keep that safe.
 LEXICA_ALIASES = {alias: sid for sid, e in CONTESTED.items() for alias in e.get("aliases", [])}
+LEXICA_ALIASES.update(SPLIT_LEMMA_ALIASES)   # + the plain split-lemma pairs

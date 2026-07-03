@@ -29,6 +29,13 @@ def test_alias_folds_to_canonical():
         assert ai._fold_alias(alias) == canon
 
 
+def test_split_lemma_alias_folds():
+    # A plain split-lemma pair (not a contested word): hagios "holy" G40 is dead in ABP;
+    # the occurrences live on G39. The fold rewrites the textbook key word to the number
+    # ABP tags, at the key-words assembly point — same machinery as charis, no special case.
+    assert ai._fold_alias("G40") == "G39"
+
+
 def test_non_alias_passes_through():
     # A normal key word is untouched (Greek fire, Hebrew ruach, a dotted number).
     for n in ("G4442", "H7307", "G1510.1", "H784"):

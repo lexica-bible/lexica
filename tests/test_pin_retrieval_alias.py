@@ -37,6 +37,13 @@ def test_generic_over_the_map():
         assert ai._fold_alias(alias) == canon
 
 
+def test_split_lemma_pin_folds_for_retrieval():
+    # The exact-lemma pin for a Greek-script "ἅγιος" resolves the textbook head G40; the
+    # number that reaches the retrieval WHERE is the canonical G39 that ABP actually tags —
+    # so the same plain split-lemma alias folds at the pin-retrieval point too.
+    assert ai._fold_alias("G40") == "G39"
+
+
 def test_non_alias_pin_passes_through():
     # A normal pinned Greek number (fire G4442) reaches retrieval unchanged.
     for n in ("G4442", "G2316", "G4151"):
