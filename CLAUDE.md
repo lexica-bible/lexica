@@ -574,7 +574,9 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
 - `kjv_strongs.strongs_id` is also fully prefixed (was always so)
 - Always use single-match in SQL: WHERE w.strongs_base = 'G4151'
 - After ANY words-table rebuild, verify: `SELECT count(*) FROM words WHERE strongs_base GLOB '[0-9]*'` must be 0
-- AI system prompt may still reference old triple-match — update if issues arise
+- The AI SQL-gen prompt (`_AI_SYSTEM_TMPL` in ai.py) now matches this invariant — prefixed
+  single-match everywhere, `l.strongs_g = w.strongs_base` join (Batch B, 2026-07-03; the old
+  bare/SUBSTR examples were the last holdout).
 
 ## Book Abbreviations
 - ABP verses table uses: Mar (Mark), Joh (John), Php (Philippians), Jas (James), Heb (Hebrews)
@@ -992,7 +994,9 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   key word so the occurrence list is that ONE number, not the English-concept guess (γῆ was laundered into
   -γη look-alikes). Greek → a direct `strongs_base` query; Hebrew → empty SQL, filled by the heb.db
   supplement. Homograph/dotted collisions (Greek 27, Hebrew 1,460) fall through to the model. `_CACHE_CODE_VER`
-  →40. Full record: memory `project_ai_search_architecture`.
+  →40. A query that IS a typed Strong's number ("G4442"/"H784") pins the SAME way (`_resolve_typed_strongs`,
+  Batch B 2026-07-03) — a user citing a key is always permitted, never the model inventing one. Full record:
+  memory `project_ai_search_architecture`.
 - SQL gen + term-extraction on **Haiku**; the displayed **synthesis + verse curation (pass 2) on
   Sonnet** (`claude-sonnet-4-6`, 2026-06-21 — Haiku parroted the question's framing on nuanced
   "same vs different" questions and over-asserts; same lesson as xref/summary)
