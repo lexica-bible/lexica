@@ -571,15 +571,22 @@ those stay source-app reads).
 
 **CORPUS-WIDE count (same query, no book filter) — UPPER BOUND, contamination flagged:**
 → αὐτός 1779 · σύ 1212 · ὑμεῖς 297 · ἡμεῖς 289 = 3,577 pronoun-shaped rows · ἐγώ 1313.
-**This number is VOID as a mistag count — do NOT carry it into any Session-9 scope statement.** The
-`9_other` bucket returned PROPER NAMES on G1473 slots — `Δαυίδ`×5, `Μωυσής`×5, `Ααρών`×2, `Σαούλ`,
-`Φίλιππος` — plus conjunctions/content words (`γαρ`/`δε`/`εαν`/`γινώσκετε`/`όστρακα`). A 1473 slot cannot
-really be "David" or "potsherd": OUTSIDE Daniel the `abp_surface` position-join MISALIGNS (~91% match),
-and the same misalignment contaminates the 1779 αὐτ / 1212 σ counts by an UNKNOWN fraction — possibly
-most of it. So a corpus-wide signal EXISTS but is INSEPARABLE from misalignment here; **whether Path C
-has gaps beyond the divergence zones is UNRESOLVED**, deferred to the Session-9 fix pass (per-slot
-verification). The proper-name rows are the built-in control that fix pass must survive (never "correct"
-a name slot). (Paste was truncated mid-row at `όστρακα|1` — even the tail is incomplete.)
+**Do NOT carry this number into any Session-9 scope statement as a mistag count.** ROOT CAUSE INSPECTED
+(5 cells: Num 20:9 + Num 31:42 `Μωυσής`, 1Sa 18:6 `Δαυίδ`, Gen 1:25 `αὐτῶν` — verb-subject Greek order
+confirms each form sits on its OWN word): **the surface join is NOT misaligned — placement is reliable;
+the defect is WORDS-SIDE numbering.** My earlier "abp_surface misaligns ~91%" read is RETRACTED. The
+`9_other` names (`Δαυίδ`/`Μωυσής`/…) are SUBJECT-NAME slots whose english was folded onto the adjacent
+VERB ("Moses took"/"David returned" ride the verb slot), leaving the name slot blank-english + numbered
+1473 — a subject/possessive-fold artifact. So the 3,577 mixes ≥2 words-side classes: **(a) genuine
+pronoun mistags** (a pronoun form on a 1473 slot → number should be 846/4675/…) and **(b) fold slots**
+(blank english, pronoun/name form as a companion to a neighbor content word). Both overlap Door 3's
+subject passes heavily. **PROPORTIONS UNKNOWN** — one non-random (lowest-id) sample per bucket can't
+split them; the Session-9 per-slot pass produces the real split. Visible-defect discriminator =
+HAS-ENGLISH (reader clicks "yours"/"him", gets 1473 — the misleading kind, Daniel-style) vs BLANK-ENGLISH
+(fold companion, low-visibility); both are mis-numbered, only the first misleads a reader. **~91%
+re-interpreted:** placement reliable ⇒ the missing ~9% is BLANK-FORM slots (Dan 4:33's kind), not
+misplacement — which STRENGTHENS the fallback rule "form present → trust the form's number." (Corpus
+paste was truncated mid-row at `όστρακα|1`.)
 
 **DISPOSITION — Door 1 CLOSED as "cluster, measured."** No fix this session. The fix is a REBUILD, not
 an `abp_corrections` batch (wrong tool at this volume — 170 in Daniel; corpus size UNKNOWN until the
@@ -591,7 +598,9 @@ below). Then rebuild. **= Session-9 doored item, HIGH seat, own checkpoint + thr
 registered diff. Batchable with Door 2 (import_tipnr) + Door 3 (7 reorder passes) — one PHYSICAL rebuild,
 but THREE separately pre-registered diffs (Path-C fallback / import_tipnr / reorder-pass), each delta
 attributable to exactly one fix; any delta that can't be cleanly attributed → fall back to sequential
-rebuilds.**
+rebuilds. ATTRIBUTION IS PER-COLUMN, NOT PER-ROW: a fold slot is changed by BOTH the Path-C number fix
+(its `strongs`/`strongs_base`) AND a subject pass (its `english`), so the same row legitimately shows two
+deltas from two fixes — pre-register by (row, column), or the overlap reads as unattributable.**
 
 **OPEN (cheap, read-only) — the `abp_surface` misalignment root.** Why the ~9% misaligns is UNINSPECTED.
 Suspects: the split/redistribute/reorder passes renumber `words` positions but `abp_surface` is keyed to
