@@ -249,9 +249,11 @@ def test_parse_tipnr_mixed_block_unknown_type_stops_the_build():
         "$========== PERSON+PLACE",
         "Weird@Gen.1.1=H0001\tx\t\t\t\t\t\t#x\tGroup",   # junk type under a mixed header
     ])
-    import pytest
-    with pytest.raises(ValueError):
+    try:
         er.parse_tipnr(bad.split("\n"))
+    except ValueError:
+        return                      # expected — the guard fired
+    raise AssertionError("parse_tipnr did not raise on an unknown type under a mixed header")
 
 
 if __name__ == "__main__":
