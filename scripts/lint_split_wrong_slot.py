@@ -61,12 +61,20 @@ MIN_FREQ     = 8   # ...and only numbers used at least this often are judged (el
 
 
 def _fold(w):
-    """lowercase, strip punctuation, singularize — one rendering key per english_head."""
+    """One rendering key per english_head: lowercase, strip punctuation, and collapse regular
+    inflections (plural + verb tense) so a Greek word's varied renderings share a key —
+    smell/smelled/smelling -> "smell". Without this a frequent verb's renderings fragment
+    across tenses and NONE reaches the frequency floor, so a correct rare spelling ('smelled',
+    2x) gets flagged. Short words are guarded (bed/led/was keep their -ed/-s). A wrong word
+    still stems to a form the number never renders (kissed->kiss on αὐτός = 0)."""
     w = _PUNCT.sub("", (w or "").lower())
+    if not w:
+        return w
     if len(w) > 4 and w.endswith("ies"):
         return w[:-3] + "y"
-    if len(w) > 3 and w.endswith("s") and not w.endswith("ss"):
-        return w[:-1]
+    for suf in ("ing", "ed", "es", "s"):
+        if w.endswith(suf) and len(w) - len(suf) >= 3 and not w.endswith("ss"):
+            return w[:-len(suf)]
     return w
 
 
@@ -147,8 +155,11 @@ def run_control(counts, totals, affected):
 
     good_flags = _flag_slots(rows, counts, totals, ref)
     print(f"  known-good {ref}: {len(good_flags)} flag(s)  (expect 0)")
-    for f in good_flags:
-        print(f"      unexpected flag: pos {f[1]} {f[2]!r} on {f[3]}")
+    for f in good_flags:                                 # show WHY: usage + top renderings
+        b = f[3]
+        top = ", ".join(f"{k}:{v}" for k, v in counts[b].most_common(5))
+        print(f"      unexpected flag: pos {f[1]} {f[2]!r} on {b}  "
+              f"(number used {totals[b]}x; renderings {top})")
 
     # hand-break the ACTUAL failure class: put a content word onto a FREQUENT number that
     # never renders it (a content word landing on the wrong Greek word). NOT a same-word
@@ -217,12 +228,19 @@ def main():
         sys.exit(0 if run_control(counts, totals, affected) else 1)
 
     flags = []
+    unadj_slots, unadj_nums = 0, set()          # content slots on numbers below the >= MIN_FREQ gate
     for ref, rows in affected:
         flags.extend(_flag_slots(rows, counts, totals, ref))
+        for _pos, _hf, base in _content_slots(rows):
+            if totals.get(base, 0) < MIN_FREQ:
+                unadj_slots += 1
+                unadj_nums.add(base)
 
     print("\n── wrong-slot certification (split-affected verses) ──")
-    print(f"  verses checked:   {len(affected):,}")
-    print(f"  WRONG-SLOT FLAGS: {len(flags):,}  (rendering used < {VALIDATE_MIN}x on a >= {MIN_FREQ}-use number)")
+    print(f"  verses checked:      {len(affected):,}")
+    print(f"  UNADJUDICATED:       {unadj_slots:,} content slots on {len(unadj_nums):,} rare "
+          f"(< {MIN_FREQ}-use) numbers — not judged here; covered by the 60-sample + BibleHub leg")
+    print(f"  WRONG-SLOT FLAGS:    {len(flags):,}  (rendering used < {VALIDATE_MIN}x on a >= {MIN_FREQ}-use number)")
 
     Path(args.out).write_text(
         "ref\tposition\trendering\tstrongs_base\n" +
