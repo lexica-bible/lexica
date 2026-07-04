@@ -196,9 +196,11 @@ Session-5 undercount (that probe checked only Greek). The real impact:
    question → parked as a Tier B adjudication candidate** for the ABP-app/source
    pass. It gates nothing; one row, verse text is the witness.
 
-Pre-apply proof = the seam-copy enumerated diff above. Live apply
-(`build_entity_binding.py --apply` on live bible.db) + `cert_invariants.py`
-recheck pending JP's second go.
+Pre-apply proof = the seam-copy enumerated diff above. **APPLIED to live
+2026-07-04** (`build_entity_binding.py --apply`): live numbers match the vetted
+copy exactly — parsed 4,247, `tipnr_entities` 2,186, `pn_binding` render 14,803
++ HOT 72. `cert_invariants.py` **7/7 green** (check 7 person/place binding still
+passes). Site reloaded. The 97-card section-label defect is CLOSED.
 
 ## Standing consequences
 
