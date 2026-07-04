@@ -314,11 +314,19 @@ positive = THIS scratch (196 pairs); after the fold it must read 0 on every buil
 - Jer 49:13 CONFIRMED: source prints "intoG1519 eon.G3588 G166" — English "eon" is the NOUN
   (αἰών G165); ABP printed the adjective's number. Live G165 = the certified reading.
   Correction entry: source_value G166 → corrected_value G165. Write it.
-- Hab 3:6 SUSPECT — HELD OUT of L11: both source G166 tokens sit under English "eternal", an
-  ADJECTIVE, for which G166 is the natural tag ("the eternal hills" / "his eternal ways").
-  Live's 165 there may be the old retag over-reaching — live could be the WRONG side. Needs
-  JP's eyes on the slot (read-only query handed over) before ANY entry; if confirmed wrong,
-  the fix is reverting live to 166, not a correction row.
+- Hab 3:6 RULED 2026-07-04 (live row inspected): pos19 = "eternal —" on the HILLS clause
+  (βουνοὶ αἰώνιοι, adjective) — G166 is the honest tag; the June retag over-reached and live's
+  165 is WRONG. Clincher: pos22, the same word "eternal" in the same verse, correctly kept 166.
+  NOT a correction entry — live gets reverted to 166 (a one-cell live fix, or it self-heals at
+  the next rebuild+swap; until then live serves a wrong dictionary link on that one word).
+  The correction table nearly enshrined a defect as a correction — the entries-only-after-
+  adjudication gate exists for exactly this.
+
+**PRE-REGISTERED EXPECTATION for the final Session 2 harness run (exact, nothing else):**
+residue = the 11 Class-1b live-stale verses + Hab 3:6 pos19 (if not hand-reverted first) —
+i.e. 12 verses, every one pre-explained as live-side drift. Cushi + Jer 49:13 vanish behind
+the correction table; the 175 flip verses vanish behind the tail fold. ANY other delta is a
+finding.
 
 **Session 2 remaining fix list (in order):**
 1. ~~Code-trace Class 1b~~ DONE — confirmed live-stale (above).
