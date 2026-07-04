@@ -87,10 +87,49 @@ elsewhere (the exact symmetric of check 7's Cushi tell):*
 > group", a people-GROUP entity TIPNR files in its person section (correct
 > referent); `gibeonites` binds to `Gibeon@Jos.9.3` — see below.
 
+### Follow-on finding (Session 5): the section-label defect — 3 parser faults
+
+The Gibeon drill-down answered its own question and opened a bigger one:
+`Gibeon@Jos.9.3` is typed **Place** in TIPNR's own row (the Gibeonite group's
+verses are filed inside it by TIPNR's design — the bind is correct), but our
+stored section says **person**. Traced to `parse_tipnr` in
+`entity_resolution.py`, verified by running the production parser on the
+pinned TIPNR file:
+
+- **F1 — mixed-block sections.** Sections come from the file's
+  `$==========` block headers, and the rule checks the word "person" first —
+  so all 10 entities under `$========== PERSON+PLACE` headers get stamped
+  person. All 10 are typed Place in their own rows: Gibeon, Shechem, Tekoa,
+  Keilah, Eshtemoa, Gedor, Etam, Zanoah, Beth-gader, Ir-nahash.
+  **Live impact: 97 render binds wear the wrong label** (Shechem 42,
+  Gibeon 38, Eshtemoa 5, Gedor 4, Zanoah 4, Etam 2, Beth-gader 1,
+  Ir-nahash 1; Keilah + Tekoa never bound). The card also stored
+  person-kin fields for these places (`person = section=="person"` in the
+  build's write step).
+- **F2 — EXCLUDED blocks ingested.** TIPNR fences off languages, titles,
+  groups, and supernatural terms under `$========== EXCLUDED OTHER`
+  (Sheol, Abaddon, Gentiles, Rabbi, Greek/Hebrew/Latin…); the parser takes
+  them in as bindable "other"-section entities. Live impact: 4 renders
+  (`Greek@Isa.66.19`); the rest never bound.
+- **F3 — documentation prose parsed as entities.** 37 footnote/legend lines
+  from the file become pseudo-entities whose names are sentences. Live
+  impact: **zero** — none ever bound (confirmed against `tipnr_entities`).
+
+No wrong-identity bind was found in any of this: the verse-corroboration
+rule kept the *referent* right even where the *label* is wrong.
+
 ### Verdict
 
-> PENDING the Gibeon drill-down (is `Gibeon@Jos.9.3` TIPNR's people-group /
-> city-population entity, or a mis-sectioned place?).
+1. **No new bind-level shape-guard is warranted on today's evidence** — the
+   census found zero mirror-shape instances and zero wrong-referent binds.
+2. **But the mirror-shape question stays OPEN**, because the P1 census keys
+   on stored section labels now known wrong for 10 entities. Deciding it on
+   known-bad labels would be a void zero (the audit-tools-must-fail rule).
+3. **Session 6 opener (checkpointed proposal, not implemented here):** fix
+   `parse_tipnr` — take each entity's own row type over the block header for
+   mixed blocks, skip EXCLUDED blocks, skip prose lines — then re-run the
+   binder, re-run the P1 census on trustworthy labels, and consider whether
+   check 7 should assert on row-types rather than block-sections.
 
 ## Standing consequences
 
