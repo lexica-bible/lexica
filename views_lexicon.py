@@ -1155,10 +1155,13 @@ def lexicon_profile(strongs):
 
         def _abp_gloss_rows():
             pred, params = _abp_strongs_filter(conn, num, sid)
+            # Render list = the token's OWN head (english_head), NOT raw english. Raw parks
+            # ABP's whole phrase gloss on one slot, which the normalizer then mis-heads into
+            # phantom renders ("Jesus to them," -> "jesus"). See parse_abp.HEAD_WORD_TAIL_CAVEAT.
             return conn.execute(f"""
-                SELECT w.english AS gloss, COUNT(*) AS cnt FROM words w
+                SELECT COALESCE(NULLIF(w.english_head,''), w.english) AS gloss, COUNT(*) AS cnt FROM words w
                 WHERE {pred} AND w.english IS NOT NULL AND w.english != '' AND w.english != '*'
-                GROUP BY w.english
+                GROUP BY COALESCE(NULLIF(w.english_head,''), w.english)
             """, params).fetchall()
 
         def _kjv_gloss_rows():
@@ -1286,12 +1289,12 @@ def lexicon_books(strongs):
         if corpus in ("abp", "all"):
             _bp, _bpar = _abp_strongs_filter(conn, num, sid)
             for r in conn.execute(f"""
-                SELECT v.book, w.english, COUNT(*) AS cnt
+                SELECT v.book, COALESCE(NULLIF(w.english_head,''), w.english) AS eng, COUNT(*) AS cnt
                 FROM words w JOIN verses v ON w.verse_id = v.id
                 WHERE {_bp}
-                GROUP BY v.book, w.english
+                GROUP BY v.book, COALESCE(NULLIF(w.english_head,''), w.english)
             """, _bpar).fetchall():
-                if gloss and _normalize_gloss(r["english"] or "", is_func=is_func) != gloss:
+                if gloss and _normalize_gloss(r["eng"] or "", is_func=is_func) != gloss:
                     continue
                 book_counts[r["book"]] = book_counts.get(r["book"], 0) + r["cnt"]
         if corpus == "heb" and _heb_ready():
@@ -1580,7 +1583,8 @@ def lexicon_verses(strongs, book):
         else:
             pred, pparams = _abp_strongs_filter(conn, num, sid)
             word_rows = conn.execute(f"""
-                SELECT v.chapter, v.verse, v.text AS prose, w.english AS word, w.italic,
+                SELECT v.chapter, v.verse, v.text AS prose, w.english AS word,
+                       COALESCE(NULLIF(w.english_head,''), w.english) AS head, w.italic,
                        CASE WHEN {pred} THEN 1 ELSE 0 END AS hl
                 FROM verses v
                 JOIN words w ON w.verse_id = v.id
@@ -1614,6 +1618,7 @@ def lexicon_verses(strongs, book):
             result_verses = [{"chapter": k[0], "verse": k[1], "words": verses[k]} for k in verse_order]
         else:
             verses = {}
+            head_norms = {}   # verse key -> set of normalized target HEADS (for the ?gloss filter)
             for r in word_rows:
                 key = (r["chapter"], r["verse"])
                 word = r["word"] or ""
@@ -1622,14 +1627,17 @@ def lexicon_verses(strongs, book):
                     verses[key] = []
                     verse_prose[key] = r["prose"]
                     verse_order.append(key)
-                verses[key].append({"w": word, "h": hl, "i": r["italic"] or 0})
-                if hl and word:
-                    norm = _normalize_gloss(word, is_func=is_func)
+                    head_norms[key] = set()
+                verses[key].append({"w": word, "h": hl, "i": r["italic"] or 0})   # chip shows full ABP english
+                if hl:
+                    # Count + filter on the token's OWN head, never the phrase parked on the
+                    # slot (parse_abp.HEAD_WORD_TAIL_CAVEAT).
+                    norm = _normalize_gloss(r["head"] or "", is_func=is_func)
                     if norm:
                         gloss_counts[norm] = gloss_counts.get(norm, 0) + 1
+                        head_norms[key].add(norm)
             if gloss:
-                verse_order = [k for k in verse_order
-                               if any(e["h"] and _normalize_gloss(e["w"], is_func=is_func) == gloss for e in verses[k])]
+                verse_order = [k for k in verse_order if gloss in head_norms.get(k, ())]
             result_verses = [{"chapter": k[0], "verse": k[1], "words": verses[k], "text": verse_prose.get(k)} for k in verse_order]
         result_glosses = sorted([{"gloss": g, "count": c} for g, c in gloss_counts.items()], key=lambda x: -x["count"])
         conn.close()

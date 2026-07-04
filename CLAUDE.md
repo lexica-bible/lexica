@@ -286,6 +286,13 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   reader needs no change. Find the full set with `scripts/audit_split_flip.py` (read-only). Distinct
   from genuinely bracket-reordered verses, where the rule above still holds.
 - `words` — ABP word-level interlinear, Strong's tagged. Columns: english, english_head, strongs, strongs_base, greek_pos, bracket_id, italic, italic_words, smcap_words, is_pn, morph, lemma. The displayed Greek lemma is joined live from `lexicon` via `LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base` (the indexed G-prefixed key added in Phase 1; replaced the old `SUBSTR(strongs_base,2)` join — this is why strongs_base MUST stay G/H-prefixed). `is_pn=1` marks proper nouns (set by import_tipnr.py). `morph`/`lemma` columns added rebuild #6 (~78% populated).
+  **`english` vs `english_head`:** `english` is ABP's rendering as printed — a multi-word PHRASE gloss is parked
+  whole on ONE token slot ("Jesus to them," on the αὐτός token). `english_head` (built by `parse_abp._head_word` =
+  last non-function word) is the token's OWN render, the RIGHT column for any "renders as" count — raw `english`
+  fed through the normalizer mis-heads a parked phrase into a phantom render ("jesus" under a pronoun). All render
+  counters (word-study panel, def-engine draw, coverage `rendering_sets`) read `english_head`; the chip still
+  DISPLAYS `english`. Documented limit (pronoun/function slots can carry a trailing parked word): the citable
+  `parse_abp.HEAD_WORD_TAIL_CAVEAT`; locked by `tests/test_render_head_no_phantom.py`.
 - `abp_surface` — `(verse_id, position, form, translit)` side table of the PRINTED (inflected) Greek per ABP word,
   feeding the word-study side-card "in this verse" line (ABP's source has no Greek surface words). Built read-only
   by `scripts/build_abp_surface.py --bh ~/bible-db/bh_scrape.db` (PA-only data step; DROP+rebuilds only its own

@@ -124,6 +124,18 @@ def _head_word(text: str, italic_words=None) -> str | None:
     return _pick(False)  # gloss is all function/stop (or all added) words
 
 
+# CAVEAT — english_head tail-pick limit. Cited by every consumer that reads english_head.
+# _head_word picks the LAST non-function word of ABP's phrase-gloss. For CONTENT words that is
+# the token's own rendering. For PRONOUN/function slots the true render (him/them) is often not
+# last — a parked noun or conjunction trails it ("was their weight."->"weight", "while he
+# was"->"while"), so english_head can carry a non-pronoun tail on those slots. Consumers show a
+# "renders as" list from english_head (never raw english, which parks the whole phrase on one
+# slot); the residual pronoun-tail renders are drop_singletons-thin and are the DOCUMENTED,
+# accepted limit — not a bug to patch per-Strong's.
+HEAD_WORD_TAIL_CAVEAT = ("english_head = last non-function word of ABP's phrase gloss; "
+                         "pronoun/function slots may carry a trailing parked word. See _head_word.")
+
+
 def parse_words(verse_text: str) -> list:
     """
     Return list of (position, english, strongs, greek_pos, bracket_id) for one verse.

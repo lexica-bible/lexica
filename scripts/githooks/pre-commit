@@ -31,6 +31,7 @@ python tests/test_versification.py >/dev/null
 python tests/test_corpus_panel.py >/dev/null
 python tests/test_synthesis_no_leak.py >/dev/null
 python tests/test_typed_strongs.py >/dev/null
+python tests/test_render_head_no_phantom.py >/dev/null
 node tests/test_ac_word_groups.js >/dev/null
 node tests/test_rstack_logic.js >/dev/null
 echo "pre-commit: all checks passed."
