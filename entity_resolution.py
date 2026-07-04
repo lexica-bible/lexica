@@ -261,6 +261,8 @@ def name_variants(name):
 def parse_tipnr(lines):
     ents = []
     section = "other"
+    mixed_hdr = False   # current block header names BOTH person AND place (PERSON+PLACE)
+    excluded = False    # current block is an EXCLUDED region (languages/titles/monsters)
     cur = None
 
     def close(c):
@@ -271,7 +273,10 @@ def parse_tipnr(lines):
         if line.startswith("$=========="):
             close(cur); cur = None
             low = line.lower()
-            section = "person" if "person" in low else "place" if "place" in low else "other"
+            excluded = "excluded" in low                          # F2: not real entities
+            has_p, has_pl = "person" in low, "place" in low
+            mixed_hdr = has_p and has_pl                          # F1: type must come from the row
+            section = "person" if has_p else "place" if has_pl else "other"
             continue
         if not line.strip():
             continue
@@ -284,11 +289,13 @@ def parse_tipnr(lines):
 
         if not is_sub:
             close(cur); cur = None
+            if excluded:                          # F2: EXCLUDED blocks are not bindable entities
+                continue
             f0 = parts[0].strip()
             if "@" not in f0:
                 continue
             head = norm_name(f0.split("@")[0])
-            if not head:
+            if not head or " " in head:           # F3: a name with a space is documentation prose
                 continue
             # Main-record columns (legend lines 76 / 226):
             #   PERSON: 0 Name=uStrong | 1 Description | 2 Parents | 3 Siblings |
@@ -299,14 +306,32 @@ def parse_tipnr(lines):
             # card-display ENRICHMENT (the entity's own identity content).
             def _col(i):
                 return parts[i].strip() if len(parts) > i else ""
+            col8 = _col(8)                        # Type/gender field
+            # F1: an entity's OWN row type beats the block header. A PERSON+PLACE header
+            # names both, so header-first ("person") mislabeled every entity under it;
+            # every such row carries "Place" in col 8. Fall back to the header only when
+            # the row type is unrecognized — and if THAT happens inside a mixed block, we
+            # cannot tell person from place, so STOP the build (the bug this closes).
+            if col8 == "Place":
+                row_section = "place"
+            elif col8 in ("Male", "Female"):
+                row_section = "person"
+            else:
+                if mixed_hdr:
+                    raise ValueError(
+                        "parse_tipnr: entity %r under a PERSON+PLACE header has "
+                        "unrecognized type %r -- cannot resolve person/place from the "
+                        "row. Fix the TIPNR source or extend the type map before building."
+                        % (f0.split("=")[0].strip(), col8))
+                row_section = section
             cur = {
-                "head": head, "uniq": f0.split("=")[0].strip(), "section": section,
+                "head": head, "uniq": f0.split("=")[0].strip(), "section": row_section,
                 "spellings": {head}, "bases": set(), "refs": set(),
                 "parents": _col(2), "offspring": _col(5),
                 "desc": _col(1),                 # person: human label; place: geo-near
                 "area": _col(6),                 # Tribe/Nation (person) | Geo-area (place)
                 "summary": clean_summary(_col(7)),
-                "gender": _col(8) if _col(8) in ("Male", "Female") else "",
+                "gender": col8 if col8 in ("Male", "Female") else "",
             }
             b = norm_base(f0.split("=", 1)[1]) if "=" in f0 else ""
             if b:

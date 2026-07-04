@@ -212,6 +212,48 @@ def test_people_gentilic_still_renders_its_place():
     assert b.render and b.kind == "fuzzy" and b.entity == 8
 
 
+# ── parse_tipnr section attribution (Session 6 label fix) ────────────────────
+# A minimal synthetic TIPNR block set that seeds all three fault classes the fix
+# closes. Kept as a permanent fixture so the loud-fail control below FIRES here
+# every run, not just "could fire" (audit-tools-must-fail).
+_TIPNR_FIX_SAMPLE = "\n".join([
+    "$========== PERSON(s)",
+    "Aaron@Exo.4.14=H0175\tHigh Priest\t \t\t\t\t\t#A priest\tMale",
+    "$========== PLACE",
+    "Gibeon2@Jos.9.3=H1391\tnear x\t\t\t\t\t\t#A city\tPlace",
+    "$========== PERSON+PLACE",                                    # F1: mixed header
+    "Gibeon@Jos.9.3=H1391\tnear x\t\t\t\t\t\t#A city\tPlace",
+    "$========== EXCLUDED OTHER",                                  # F2: excluded region
+    "Greek@Isa.66.19=G1673\tA language\t\t\t\t\t\t#A language\tLanguage",
+    "(f) indicates a founder of that place, eg  Tekoa@2Sa.14.2\tprose",  # F3: prose
+])
+
+
+def test_parse_tipnr_mixed_block_types_from_row_not_header():
+    ents = {e["uniq"]: e for e in er.parse_tipnr(_TIPNR_FIX_SAMPLE.split("\n"))}
+    # F1: the PERSON+PLACE entity is typed from its own row (Place), not the header.
+    assert ents["Gibeon@Jos.9.3"]["section"] == "place"
+    # normal blocks unchanged
+    assert ents["Aaron@Exo.4.14"]["section"] == "person"
+    assert ents["Gibeon2@Jos.9.3"]["section"] == "place"
+    # F2: the EXCLUDED-block language never becomes an entity
+    assert not any(u.startswith("Greek@") for u in ents)
+    # F3: the documentation prose line (name has a space) is skipped
+    assert not any(" " in e["head"] for e in ents.values())
+
+
+def test_parse_tipnr_mixed_block_unknown_type_stops_the_build():
+    # PROOF-OF-FIRE control: an entity under a PERSON+PLACE header whose type isn't
+    # Place/Male/Female is exactly the ambiguous case the fix must not silently pass.
+    bad = "\n".join([
+        "$========== PERSON+PLACE",
+        "Weird@Gen.1.1=H0001\tx\t\t\t\t\t\t#x\tGroup",   # junk type under a mixed header
+    ])
+    import pytest
+    with pytest.raises(ValueError):
+        er.parse_tipnr(bad.split("\n"))
+
+
 if __name__ == "__main__":
     import traceback
     fns = [v for k, v in sorted(globals().items()) if k.startswith("test_") and callable(v)]
