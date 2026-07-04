@@ -290,13 +290,46 @@ line **L11**.
 Em-dash class: ABSENT from the deltas — the tail fold worked (fix_emdash swapped 2,591 cells
 inside the scratch build; zero survived to the diff).
 
+**Class 1b VERDICT — CONFIRMED live-side drift (2026-07-04, source-line evidence, no code-run
+needed).** Five of the 11 checked against the ABP source: every one is the parked-phrase shape
+("For indeed IG1473 G3303 G1063" — English phrase in source order, then a run of numbers in
+Greek order). The 2026-06-28 fronting fix makes the build order the spread words by the SOURCE
+PHRASE ("For" then "indeed") — the scratch matches the printed ABP English exactly; live holds
+the pre-fix Greek-slot order. Live's TAGS are correct (each word owns its number) — only display
+order is stale, cosmetic severity, serving since June. Resolution: the next rebuild+swap fixes
+live automatically; NO correction entry; the final harness run before a swap expects exactly
+these 11 verses as residue (they vanish the moment live is replaced).
+
+**Flip-fold ordering rules (item locked before the fold lands, like the em-dash constraint):**
+`fix_split_flip` swaps POSITION values only — never english — so it cannot break the 237
+patches' text preconditions; but `fix_split_merges` targets ABSOLUTE positions, so the flip fold
+must run AFTER every pinned patch. It also compares words to verses.text, so it runs AFTER
+fix_emdash (dash tokens agree). New tail order: … → fix_bracket_punct → fix_emdash (last
+english-TEXT edit) → **fix_split_flip (last step, position-only)**. And `abp_corrections`
+(Session 2) is keyed by position, so corrections apply AFTER split_flip — the true final step.
+Standing invariant already exists: checklist step 6's `audit_split_flip = 0 MUST` gate — known
+positive = THIS scratch (196 pairs); after the fold it must read 0 on every built copy.
+
+**aiōn (L11) sanity check — the two verses SPLIT (JP's check caught it):**
+- Jer 49:13 CONFIRMED: source prints "intoG1519 eon.G3588 G166" — English "eon" is the NOUN
+  (αἰών G165); ABP printed the adjective's number. Live G165 = the certified reading.
+  Correction entry: source_value G166 → corrected_value G165. Write it.
+- Hab 3:6 SUSPECT — HELD OUT of L11: both source G166 tokens sit under English "eternal", an
+  ADJECTIVE, for which G166 is the natural tag ("the eternal hills" / "his eternal ways").
+  Live's 165 there may be the old retag over-reaching — live could be the WRONG side. Needs
+  JP's eyes on the slot (read-only query handed over) before ANY entry; if confirmed wrong,
+  the fix is reverting live to 166, not a correction row.
+
 **Session 2 remaining fix list (in order):**
-1. Code-trace Class 1b to confirm the fronting-fix story (single-verse test build on Rom 3:2).
-2. Fold `fix_split_flip.py` into finish_rebuild.sh (before the em-dash step); re-run harness →
-   expected residue = exactly 1b (if confirmed stale-live) + Cushi 6 + aiōn 2.
-3. Create `abp_corrections` (approved design) + entries for Cushi/L2/L5/L10/L11; wire the
-   harness apply-before-diff (Flag 2) + `--no-corrections`; re-run → expected ZERO unexplained.
-4. Runnable invariant suite; delete dead `_sort_brackets`.
+1. ~~Code-trace Class 1b~~ DONE — confirmed live-stale (above).
+2. Fold `fix_split_flip.py` into finish_rebuild.sh AFTER fix_emdash (ordering rules above);
+   re-run harness → expected residue = exactly 1b's 11 verses + Cushi 6 + aiōn (1 or 2 rows
+   pending the Hab 3:6 ruling).
+3. JP rules Hab 3:6 (query above); Jer 49:13 correction confirmed for the table.
+4. Create `abp_corrections` (approved design) + entries for Cushi/L2/L5/L10/L11-as-ruled; wire
+   the harness apply-before-diff (Flag 2) + `--no-corrections`; re-run → expected residue =
+   ONLY the 11 live-stale verses, each pre-explained; zero unexplained.
+5. Runnable invariant suite; delete dead `_sort_brackets`.
 Scratch bible.db.new stays on PA until adjudication closes (it's the evidence base).
 
 ## Recommended Session 2 scope
