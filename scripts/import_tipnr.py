@@ -57,7 +57,7 @@ def extract_strongs_from_field(field):
     estrong = after.split("=")[0].strip()
     return norm_strongs(estrong)
 
-def parse_tipnr(lines):
+def parse_tipnr(lines, _audit=None):
     """
     Returns:
       lookup    : {lower_name -> {"h": str|None, "g": str|None, "type": str}}
@@ -70,8 +70,9 @@ def parse_tipnr(lines):
     lookup = {}   # lower(name) -> entry dict
     agg    = {}   # strongs -> {"name": str, "types": set()}  (one entry per strongs)
 
-    section = "other"   # current $=== section
-    cur     = None      # current main record
+    section   = "other"   # current $=== section
+    mixed_hdr = False     # F1: current block header names BOTH person AND place
+    cur       = None      # current main record
 
     def save(cur):
         if not cur:
@@ -94,7 +95,9 @@ def parse_tipnr(lines):
         if line.startswith("$=========="):
             save(cur); cur = None
             low = line.lower()
-            section = "person" if "person" in low else "place" if "place" in low else "other"
+            has_p, has_pl = "person" in low, "place" in low
+            mixed_hdr = has_p and has_pl          # PERSON+PLACE header: type MUST come from the row
+            section = "person" if has_p else "place" if has_pl else "other"
             continue
 
         if not line.strip():
@@ -121,10 +124,30 @@ def parse_tipnr(lines):
             # uStrong comes after the last "=" in field 0
             primary = norm_strongs(f0.rsplit("=", 1)[-1]) if "=" in f0 else None
 
+            # F1 (mirrors entity_resolution.parse_tipnr lines 315-326): the entity's OWN
+            # row type (col 8) beats the block header. A PERSON+PLACE header names both, so
+            # header-first typed every place under it as 'person' (the twin bug). Recognized
+            # set is IDENTICAL to entity_resolution's: {Place, Male, Female}. Fall back to the
+            # header ONLY for a single-type block; an unrecognized type inside a mixed block is
+            # unresolvable -> STOP the build (same loud fail entity_resolution raises).
+            col8 = parts[8].strip() if len(parts) > 8 else ""
+            if col8 == "Place":
+                row_section = "place"
+            elif col8 in ("Male", "Female"):
+                row_section = "person"
+            elif mixed_hdr:
+                raise ValueError(
+                    "import_tipnr.parse_tipnr: entity %r under a PERSON+PLACE header has "
+                    "unrecognized type %r -- cannot resolve person/place. Fix the TIPNR "
+                    "source or extend the type map before building." % (name, col8))
+            else:
+                row_section = section
+            if _audit is not None and row_section != section:   # audit hook (dry-run only)
+                _audit.append((name, section, row_section, mixed_hdr, col8))
             cur = {
                 "name":  name,
                 "names": {name},
-                "type":  section,
+                "type":  row_section,
                 "h":     primary if primary and primary[0] == "H" else None,
                 "g":     primary if primary and primary[0] == "G" else None,
             }
