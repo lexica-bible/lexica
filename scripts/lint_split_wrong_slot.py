@@ -78,6 +78,62 @@ def _fold(w):
     return w
 
 
+# ── Triage: the raw flag list is a CANDIDATE GENERATOR, not a verdict ──────────────
+# At corpus scale the heuristic's precision collapses — OT free vocabulary means legit
+# singleton renderings of a frequent number are common (3,442 flags vs the 0/60 externally
+# verified sample can't both be true). These three filters each use a reference where it is
+# STRONG (a lexicon that failed as a certification yardstick is fine as a noise filter), to
+# strip the known false-positive classes so a small residue can be BibleHub-sampled.
+
+_NUM_STEMS = {_fold(w) for w in (
+    "one two three four five six seven eight nine ten eleven twelve thirteen fourteen fifteen "
+    "sixteen seventeen eighteen nineteen twenty thirty forty fifty sixty seventy eighty ninety "
+    "hundred thousand ten-thousand myriad first second third fourth fifth sixth seventh eighth "
+    "ninth tenth eleventh twelfth").split()}
+
+
+def _load_dodson(conn):
+    """{bare_base: set(gloss words)} from word_gloss (Dodson/Strong's-Hebrew plain glosses)."""
+    d = {}
+    try:
+        cur = conn.execute("SELECT strongs, gloss FROM word_gloss")
+    except Exception:
+        return d
+    for strongs, gloss in cur:
+        base = (strongs or "").lstrip("GH").split(".")[0]
+        if base:
+            d.setdefault(base, set()).update(_PUNCT.sub(" ", (gloss or "").lower()).split())
+    return d
+
+
+def _triage(flags, counts, lex, dodson):
+    """Sort raw flags into buckets. residue = what survives all three filters — the real
+    wrong-slot candidates to sample. lex = split's Strong's/KJV set; dodson = word_gloss."""
+    gcache = {}
+
+    def gstems(base):
+        if base not in gcache:
+            s = {_fold(w) for w in lex.get(base, ())} | {_fold(w) for w in dodson.get(base, ())}
+            gcache[base] = {x for x in s if x}
+        return gcache[base]
+
+    buckets = {"numeral": [], "in_lexicon": [], "stump": [], "residue": []}
+    for fl in flags:
+        _ref, _pos, F, base = fl
+        g = gstems(base)
+        if g & _NUM_STEMS:                                  # the NUMBER itself is a numeral
+            buckets["numeral"].append(fl); continue
+        if F in g:                                          # word IS in this number's gloss (odd wording)
+            buckets["in_lexicon"].append(fl); continue
+        stump = False                                       # F is a truncated form of a word the number carries
+        for R, c in counts[base].items():
+            if (c >= VALIDATE_MIN and R != F and len(F) >= 4 and len(R) >= 4
+                    and abs(len(F) - len(R)) <= 3 and (R.startswith(F) or F.startswith(R))):
+                stump = True; break
+        buckets["stump" if stump else "residue"].append(fl)
+    return buckets
+
+
 def _content_slots(rows):
     """Yield (position, english_head, strongs_base) for every content slot — a slot with a
     real content english_head on a numbered Greek word. Function-only slots (head None),
@@ -203,7 +259,8 @@ def main():
 
     import sqlite3
     ro = sqlite3.connect(f"file:{args.bible_db}?mode=ro", uri=True)
-    lex = B.load_lexicon(ro)                        # used by the split's own passes, not as reference
+    lex = B.load_lexicon(ro)                        # used by the split's own passes + the triage noise filter
+    dodson = _load_dodson(ro)                       # word_gloss (Dodson/Strong's-Hebrew) for the noise filter
     ro.close()
 
     scrape = sqlite3.connect(args.scrape_db)
@@ -240,20 +297,42 @@ def main():
     print(f"  verses checked:      {len(affected):,}")
     print(f"  UNADJUDICATED:       {unadj_slots:,} content slots on {len(unadj_nums):,} rare "
           f"(< {MIN_FREQ}-use) numbers — not judged here; covered by the 60-sample + BibleHub leg")
-    print(f"  WRONG-SLOT FLAGS:    {len(flags):,}  (rendering used < {VALIDATE_MIN}x on a >= {MIN_FREQ}-use number)")
+    print(f"  RAW FLAGS:           {len(flags):,}  (candidate generator — NOT a verdict; triaged below)")
 
     Path(args.out).write_text(
         "ref\tposition\trendering\tstrongs_base\n" +
         "\n".join(f"{r}\t{p}\t{h}\t{b}" for r, p, h, b in flags), encoding="utf-8")
-    print(f"  full flag list -> {args.out}")
 
-    if flags:
-        print("\n  first 40 (rendering that this number almost never otherwise carries):")
-        for r, p, h, b in flags[:40]:
-            print(f"    {r}  pos {p}  {h!r} on {b}")
-    else:
+    # ── triage: strip the known false-positive classes, leave a residue to sample ──
+    b = _triage(flags, counts, lex, dodson)
+    residue = b["residue"]
+    print("\n── triage (each filter uses a reference where it's strong) ──")
+    print(f"  dropped — numeral numbers:   {len(b['numeral']):,}")
+    print(f"  dropped — word in gloss:     {len(b['in_lexicon']):,}  (odd wording, but the word means this number)")
+    print(f"  dropped — stemmer stumps:    {len(b['stump']):,}  (truncated form of a word the number carries)")
+    print(f"  RESIDUE (real candidates):   {len(residue):,}")
+
+    Path("split_wrong_slot_residue.tsv").write_text(
+        "ref\tposition\trendering\tstrongs_base\ttop_renderings\n" +
+        "\n".join(f"{r}\t{p}\t{h}\t{bs}\t" +
+                  ", ".join(f"{k}:{v}" for k, v in counts[bs].most_common(5))
+                  for r, p, h, bs in residue), encoding="utf-8")
+    print(f"  full flag list -> {args.out}   residue -> split_wrong_slot_residue.tsv")
+
+    if not flags:
         print("\n  CLEAN — no content word is a rare (< 3x) rendering of a well-attested number.")
         print("  Freeze-as-overlay CERTIFIED corpus-wide (within the frequency-floor limit above).")
+    elif residue:
+        # even spread across the residue for an unbiased BibleHub true-positive sample
+        N = 40
+        step = max(1, len(residue) // N)
+        print(f"\n  {min(N, len(residue))} residue samples for BibleHub check "
+              f"(is the word really on the wrong Greek word? top renderings show what the number normally carries):")
+        for r, p, h, bs in residue[::step][:N]:
+            top = ", ".join(f"{k}:{v}" for k, v in counts[bs].most_common(4))
+            print(f"    {r}  pos {p}  {h!r} on {bs}   [{bs} normally: {top}]")
+        print("\n  NEXT: verify these against BibleHub, count true wrong-slots, "
+              "that rate x residue = the real estimate that goes against the bar.")
 
 
 if __name__ == "__main__":
