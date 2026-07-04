@@ -1315,10 +1315,12 @@ memory `project_ai_synthesis_quality`.
   `bible.db.new`, row-diff vs live, reports cert_report_summary.txt/cert_deltas.tsv). Read-only on live.
   Full record: `AUDIT_abp_certification.md` + `AUDIT_abp_invariants.md`.
 - `cert_invariants.py [db]` / `--controls` — the runnable ABP invariant suite (Tier A is CERTIFIED
-  end-to-end as of the 2026-07-04 live rebuild+swap). READ-ONLY; 6 checks: row pins (words 626,305 /
+  end-to-end as of the 2026-07-04 live rebuild+swap). READ-ONLY; 7 checks: row pins (words 626,305 /
   verses 31,237), split-flip=0 (imports the production `find_flips`, never a copy), em-dash '--'=0,
-  correction-overlay reconciliation (failures NAME the row), feed manifest, backup freshness. `--controls`
-  seeds bad input into a throwaway db and proves checks 1-4 fire (5-6 fired on live incidents). RE-PIN RULE:
+  correction-overlay reconciliation (failures NAME the row), feed manifest, backup freshness, and (Session 4)
+  person/place binding — no proper-noun name renders BOTH a fuzzy-place AND an exact-person (the Cushi
+  shape; reads pn_binding+tipnr_entities, deploy-safe = passes if the tables are absent). `--controls`
+  seeds bad input into a throwaway db and proves checks 1-4 + 7 fire (5-6 fired on live incidents). RE-PIN RULE:
   the pins move ONLY in a deliberate-rebuild commit after compare_words passed — never hand-edited to force
   green. Full record: memory `project_abp_certification`.
 - `fix_italic_heads.py` (`--dry-run` / `--apply`, `--strongs G####`, `--all`) — makes a slot's SEARCH LABEL

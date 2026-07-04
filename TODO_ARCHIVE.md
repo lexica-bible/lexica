@@ -6,6 +6,26 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-07-04 — ABP cert Session 4: Cushi person-as-place binding fixed + check 7
+- **Symptom:** 2Sa 18:21 Cushi (David's runner, a man) rendered the entity card "Cush — PLACE — Region."
+  Corpus row and Strong's def were both correct — only the entity binding was wrong.
+- **Fix:** one guard in `entity_resolution.py` step 2 — skip a PLACE fuzzy-candidate when an exact-spelling
+  PERSON entity carries the SAME number (Cushi@Zep.1.1 = person, H3569). Floors to Fix A (the AI blurb, which
+  correctly describes the runner). Census proved `cushi` is the ONLY name with both a fuzzy-place AND an
+  exact-person render, so blast radius = the 5 2Sa-18 rows; dry-run confirmed exactly −5 (14,821→14,816).
+  Requires `build_entity_binding.py --apply` on PA (done, card verified). Locked by cert check 7.
+- **Lesson 1 (the big one):** looked like a swap/correction REGRESSION; was actually a PRE-EXISTING flaw that
+  a prior test had *locked as correct* (`test_cushi_runner_needs_the_by_verse_number_fix` asserted the place
+  render). What tipped it: the retained pre-swap copy's binding was byte-identical to live — same bad bind
+  both sides — so nothing this session's cert work touched had caused it. Always diff the retained copy before
+  calling something a regression.
+- **Lesson 2:** an on-record count (14,817 render binds) read "wrong" but was just STALE — pre-dated the
+  2026-06-30 Heb 13 restore, which bound four "Jesus" occurrences (+4). Same rot as the stale 625,921
+  build-output word count. What tipped it: walking the daily backups pinned the jump to exactly June 30.
+  Don't "fix" a stale figure by guessing — find the event.
+- **Surfaced (now in TODO):** a rotating backup (`bible.db.20260702`) was found CORRUPT — the backup email
+  needs a `quick_check`, not just a freshness check. And TIPNR is downloaded live at build time (unpinned).
+
 ## 2026-07-04 — ABP cert Session 2 CLOSED (Tier A certified, correction table live, final run PASS)
 - **Result: Tier A ingest-faithfulness CERTIFIED against the 74-file pin.** Final harness run:
   626,305=626,305, corrections reconciliation 8/8/0 ok, 110 deltas ALL inside the 11 pre-registered

@@ -11,16 +11,25 @@ holds genuinely-open work and parked ideas only.
 ## ABP corpus certification audit — TIER A CERTIFIED END TO END (full record `AUDIT_abp_certification.md` + memory `project_abp_certification`)
 Sessions 1-3 DONE 2026-07-03/04. Live bible.db IS pinned source (74-file hash manifest) + faithful parser
 (re-parse+diff certified) + versioned correction table (`abp_corrections`, 8 rows) + invariant suite green
-(`cert_invariants.py`, 6/6, each with a proof-of-fire control). Session 3 rebuilt+swapped live (old file
+(`cert_invariants.py`, 7/7, each with a proof-of-fire control). Session 3 rebuilt+swapped live (old file
 retained `bible_pre_certswap_20260704.db`), erasing the 11-verse residue; dead `_sort_brackets` deleted.
+Session 4 DONE: Cushi person-as-place binding floored (see archive), check 7 added, render count reconciled.
 Only carry-forwards remain — none gating, none urgent:
 - **L2/L5/L10 → correction rows.** L2 (1Sa 6:11 blank-Strong's), L5 (9 null-form "this/these" rows), L10
   (Mal 3:6 bare "G") each become an `abp_corrections` entry via `scripts/build_abp_corrections.py` once JP
   recovers the intended ABP source readings. Checkpoint + dry-run before each write.
-- **Backup-freshness alarm — email side still open.** Stamp-and-warn half DONE (backup_db.py writes
-  `~/db_backups/last_success.txt`; `cert_manifest.py verify` + `cert_invariants.py` check it). STILL OPEN:
-  mirror it into `health_check.py`'s nightly email (newest `~/db_backups/bible.db.*` >48h ⇒ WARN; quota %
-  ≥ 90 ⇒ WARN) so JP sees it without running a cert command. code: scripts/health_check.py.
+- **Backup-freshness alarm — email side still open, NOW WITH a corruption check.** Stamp-and-warn half DONE
+  (backup_db.py writes `~/db_backups/last_success.txt`; `cert_manifest.py verify` + `cert_invariants.py`
+  check it). STILL OPEN: mirror it into `health_check.py`'s nightly email (newest `~/db_backups/bible.db.*`
+  >48h ⇒ WARN; quota % ≥ 90 ⇒ WARN) so JP sees it without running a cert command. ADD a `quick_check` on the
+  newest backup — Session 4 found `bible.db.20260702` corrupt (truncated gz / "disk image malformed"); a
+  freshness-only check misses that. code: scripts/health_check.py.
+- **Pin TIPNR (entity-binding source).** `build_entity_binding.py` DOWNLOADS TIPNR live at build time, so an
+  upstream change shifts bindings silently — unlike the 74 hash-pinned feed files. Vendor the file into the
+  repo, add it to `cert_manifest.json`, and default the builder to the pinned copy (keep `--tipnr` override).
+- **Two-source entity seam — document + assess.** Write up each source's known failure shape (MetaV: factual
+  accuracy, why TIPNR backfills; TIPNR: person verses filed under PLACE entities, why the Session-4 Cushi
+  guard exists) and decide whether other shape-guards are needed. NO precedence rule — neither is gold.
 - **Certify the OTHER 7 redistribution passes.** L9 certified `_split_compounds` ONLY. Still uncertified:
   `_split_numbered`, `_redistribute_pronoun_compounds`, `_fix_backwards_pairing`, `_split_pn_article_lump`,
   `_funcword_noun_relocate`, `_lord_subject_split`, `_lord_oath_fix`. Same census+control approach
