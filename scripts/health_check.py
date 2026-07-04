@@ -24,7 +24,10 @@ DB = next((a for a in sys.argv[1:] if not a.startswith("--")), "bible.db")
 EMAIL = "--email" in sys.argv
 ONLY_WARN = "--only-warn" in sys.argv
 EMAIL_TO = next((a.split("=", 1)[1] for a in sys.argv if a.startswith("--email-to=")), None)
-conn = sqlite3.connect(DB)
+# --backup-controls: prove the backup damage detections fire, then exit — never
+# opens the real db (":memory:" placeholder so no stray bible.db gets created).
+CONTROLS = "--backup-controls" in sys.argv
+conn = sqlite3.connect(":memory:" if CONTROLS else DB)
 conn.row_factory = sqlite3.Row
 
 results = []
@@ -167,6 +170,48 @@ def backup_checks(bdir):
     results.append(("OK  ", "backups swept (raw quick_check + gz stream-test)",
                     swept, f"{damaged} damaged" if damaged else "all intact"))
 
+
+# ── --backup-controls: the durable proof-of-fire (Session 5) ─────────────────
+# The live known positive (the 07-02 corrupt gz) rotates out eventually; this
+# mode is the permanent control, same pattern as cert_invariants --controls:
+# seed a throwaway dir with an intact + a truncated raw db and an intact + a
+# truncated gz, run the sweep on it, require EXACTLY the two damage warns.
+def backup_controls():
+    import gzip
+    import shutil
+    import tempfile
+    from pathlib import Path
+    tmp = Path(tempfile.mkdtemp(prefix="bkctl_"))
+    try:
+        good = tmp / "good.db"
+        c = sqlite3.connect(str(good))
+        c.execute("CREATE TABLE t(x)")
+        c.execute("INSERT INTO t VALUES(1)")
+        c.commit()
+        c.close()
+        data = good.read_bytes()
+        (tmp / "bad.db").write_bytes(data[: len(data) // 2])   # truncated mid-file
+        with gzip.open(tmp / "goodz.db.gz", "wb") as fo:
+            fo.write(data)
+        gz = (tmp / "goodz.db.gz").read_bytes()
+        (tmp / "badz.db.gz").write_bytes(gz[:-8])              # gz missing its tail
+        before = len(results)
+        backup_checks(tmp)
+        fired = [r[1] for r in results[before:] if r[0] == "WARN" and "DAMAGED" in r[1]]
+        del results[before:]
+        ok = (len(fired) == 2
+              and any("bad.db" in f for f in fired)
+              and any("badz.db.gz" in f for f in fired))
+        print("backup-controls:",
+              "PASS — truncated raw AND truncated gz both detected, intact copies clean"
+              if ok else f"FAIL — fired on: {fired or 'nothing'}")
+        return 0 if ok else 1
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
+if CONTROLS:
+    sys.exit(backup_controls())
 
 if "--no-backup-check" not in sys.argv:
     backup_checks(next((a.split("=", 1)[1] for a in sys.argv
