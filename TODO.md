@@ -30,10 +30,13 @@ rows added via the L2/L10 door (table 16→18), applied live, **pin bumped 16→
 carry-forward closed (language reference = binder artifact, no row). Full record in `AUDIT_abp_certification.md`
 L5 batch-two entry.
 Carry-forwards:
-- **Broader Path-C G1473 gap census** (Session 8): Dan 4:33 escaped as a form-null/blank-lemma slot Path C
-  never anchored — can't be censused from our own data (no lemma to key on). The known G1473-skip classes are
-  already enumerated below in "Open word-study / data issues" (the ~48 reflexives + the τοῦτο-paradigm strays);
-  sizing any further gap needs Path C's `pronoun_review.tsv` / an alignment re-run, not an our-data query.
+- **Path-C G1473 residue — CENSUSED + CLOSED (Session 8, ledger L12).** Dan 4:33 is NOT a lone stray:
+  Daniel holds **170** source-attested pronoun mistags (αὐτός/σύ/ὑμεῖς/ἡμεῖς still numbered 1473) and
+  the corpus-wide upper bound is **~3,577** (contaminated by `abp_surface` position-misalignment — proper
+  names on 1473 slots; true count is lower). Detected from OUR data via `abp_surface` (ABP's own Greek),
+  which refines the old "no our-data detector" claim — that held only for blank-form slots like Dan 4:33.
+  → FIX QUEUED (Session 9, HIGH seat, rebuild): give Path C an `abp_surface` fallback (form→Strong's table
+  for the closed pronoun set) with a misalignment gate; batchable with the two rebuild items below.
 - **import_tipnr.py twin bug** (Session 6): its own separate parser has the same header-first defect
   (line 97), so the `tipnr` table also mistypes the 10 mixed places. MASKED for all 97 bound cards (a bind
   gates the metaV path off), no urgency. Fix = same 3 classes there; needs a words rebuild / import_tipnr

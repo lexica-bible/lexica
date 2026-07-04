@@ -529,3 +529,62 @@ Scratch bible.db.new stays on PA until adjudication closes (it's the evidence ba
    the first decommissioned scripts.
 4. Small cleanups: delete `_sort_brackets`; fold `fix_emdash` (kills its delta class before the
    Session 2 harness run if done first).
+
+# Session 8 — Door 1: Path C divergence-zone pronoun residue, CENSUSED (2026-07-04)
+
+### L12 — Path C pronoun residue (σύ/αὐτός/ὑμεῖς/ἡμεῖς still numbered G1473) — CLUSTER, MEASURED
+**Scope question answered.** Dan 4:33 is NOT a lone stray. It is one of a large, source-attested
+cluster: pronoun slots ABP's BibleHub source mis-numbered G1473 (ἐγώ) that Path C could not correct
+because its Rahlfs aligner (a foreign text) can't reach the OG-vs-Theodotion divergence zones. The
+known "accepted, safe, flagged" Path-C residual — now SIZED, and shown fixable from a source Path C
+never used.
+
+**Census surface (control-verified).** Path C's own flag file `pronoun_review.tsv` (written pre-
+correction on the raw ABP base 1473, so every rebuild re-flags it — durable). Mandatory known-positive
+control fired: `grep -P '^Dan 4:33\t' pronoun_review.tsv` → `Dan 4:33  In this  gap`. Detector sees the
+defect on the reconstructed defective row, not by asking `abp_corrections` whether the fix landed.
+
+**Better detector than the flag file — `abp_surface` (ABP's OWN printed Greek).** The Rahlfs alignment
+reasons (`non-pron:3778` = "Rahlfs says οὗτος") are divergence-zone NOISE — an early 12-row οὗτος proof
+batch collapsed: 8 of 12 verses had no live G1473 slot at all (the flagged english was a pre-split
+gloss fragment), and the 4 that did were σου/μοι/αυτου, not οὗτος. `abp_surface` (same text as `words`,
+so it aligns where Rahlfs doesn't) gives the correct number directly: σου→G4675, αυτου→G846, etc.
+**This REFINES the Session-7 handoff claim "escaped rows carry no lemma → no our-data detector exists":
+TRUE only for the blank-form slots (Dan 4:33 itself has a blank `abp_surface` form). Form-bearing slots
+ARE detectable from our own data via `abp_surface`.**
+
+**DANIEL count (solid — divergence zone, clean forms, σου/αυτου spot-verified):**
+```
+sqlite3 bible.db "SELECT CASE
+    WHEN s.form GLOB 'αυτ*' THEN '1_autos->846'  WHEN s.form GLOB 'σ*' THEN '2_su->4675fam'
+    WHEN s.form GLOB 'υμ*' THEN '3_humeis->5216' WHEN s.form GLOB 'ημ*' THEN '4_hemeis->2257'
+    WHEN s.form GLOB 'εμ*' OR s.form GLOB 'μ*' THEN '5_ego 1st-sing CORRECT'
+    WHEN s.form GLOB 'τ*' OR s.form GLOB 'εκειν*' THEN '6_article/ekeinos'
+    ELSE '9_other:'||s.form END AS bucket, COUNT(*)
+  FROM words w JOIN verses v ON v.id=w.verse_id
+  JOIN abp_surface s ON s.verse_id=w.verse_id AND s.position=w.position
+  WHERE v.book='Dan' AND w.strongs_base='G1473' AND s.form<>'' GROUP BY bucket ORDER BY bucket;"
+```
+→ αὐτός 97 · σύ 61 · ὑμεῖς 6 · ἡμεῖς 6 = **170 form-attested mistags** · ἐγώ(correct) 60 · article/ἐκεῖνος 7.
+PLUS the blank-form residue (Dan 4:33's own kind — no `abp_surface` form, so `abp_surface` can't see it;
+those stay source-app reads).
+
+**CORPUS-WIDE count (same query, no book filter) — UPPER BOUND, contamination flagged:**
+→ αὐτός 1779 · σύ 1212 · ὑμεῖς 297 · ἡμεῖς 289 = **3,577 pronoun-shaped candidates** · ἐγώ(correct) 1313.
+So the residue is NOT confined to divergence zones — Path C has confident-zone gaps too.
+**NOT a confirmed count.** The `9_other` bucket returned PROPER NAMES on G1473 slots — `Δαυίδ`×5,
+`Μωυσής`×5, `Ααρών`×2, `Σαούλ`, `Φίλιππος` — plus conjunctions `γαρ`/`δε`/`εαν`. A 1473 slot cannot
+really be "David": that is `abp_surface` (a ~91% position match) landing a form on the WRONG position.
+Since a name-form can misalign onto a 1473 slot, a fraction of the 3,577 pronoun-shaped forms are
+misaligned artifacts too. True corpus count is BELOW 3,577; only the Session-9 fix pass (per-slot
+verification) can pin it. **The proper-name rows ARE the built-in control that fix pass must survive
+(it must never "correct" a name slot).**
+
+**DISPOSITION — Door 1 CLOSED as "cluster, measured."** No fix this session. The fix is a REBUILD, not
+an `abp_corrections` batch (wrong tool at 170-Daniel / thousands-corpus volume): give Path C an
+`abp_surface` fallback — where Rahlfs can't align, read the number off the ABP form via a fixed
+form→Strong's table for the closed pronoun set (σου→4675, αυτου→846, υμων→5216, ημων→2257, …), WITH a
+position-misalignment gate (skip any slot whose form isn't pronoun-shaped; the name contamination is the
+control). Then rebuild. **= Session-9 doored item, HIGH seat, own checkpoint + throwaway-copy + pre-
+registered diff. Batchable with Door 2 (import_tipnr) + Door 3 (7 reorder passes) — all three are one
+rebuild's worth of work, not three sessions.**
