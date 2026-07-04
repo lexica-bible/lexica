@@ -1266,7 +1266,9 @@ memory `project_ai_synthesis_quality`.
   text's occurrence line now — 2026-06-28; the full cross-Bible breakdown lives in Word study. Hebrew words
   used to show all three.) A bind GATES the whole name-based metaV fetch (kills the name-guess person/place
   card + its Groups + Nave's + place-LSJ at once). 404 → the old name-path + Fix A, byte-same (deploy-safe).
-  14,817 binds, zero confident-wrong; TIPNR is the identity spine, metaV is enrichment only. Engine =
+  14,816 render binds (was 14,817 at the 2026-06-28 build; +4 when Heb 13's four "Jesus" occurrences got
+  bound on the 2026-06-30 restore, −5 when the 2Sa-18 Cushi person-as-place mis-bind was floored 2026-07-04),
+  zero confident-wrong; TIPNR is the identity spine, metaV is enrichment only. Engine =
   **`entity_resolution.py`** (repo root, pure logic); tables built by `scripts/build_entity_binding.py --apply`.
   **The map staying hidden on an ambiguous bound place (Eden) is Fix A's guard working, NOT a bug.**
   **Bound-card occurrences (2026-06-28 follow-on):** these PNs carry a real Strong's on `strongs_base` but a
