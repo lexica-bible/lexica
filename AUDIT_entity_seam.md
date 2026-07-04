@@ -163,6 +163,43 @@ Live apply waits for a clean, enumerated diff. Binding-neutrality of the 10
 flips was proven locally: zero true-fuzzy collisions, so the section change
 cannot trip the Session-4 fuzzy guard.
 
+### Session 6: rebuild OUTCOME vs the pre-registration (graded, not moved)
+
+The throwaway rebuild (`bible.db.seam`, pinned TIPNR, parsed 4,247 — proof the
+fix ran) produced MORE than the pre-registered "4 Greek rows." Enumerated,
+every removed row is excluded-class — the pre-registration's "×4 Greek" was a
+Session-5 undercount (that probe checked only Greek). The real impact:
+
+- **3 EXCLUDED entities removed, 14 render rows** (not 1 / 4):
+  `Greek@Isa.66.19` (language) ×4 · `Aramaic@2Ki.18.26` (language) ×9 (the word
+  KJV renders "Hebrew" in Jhn/Act/Rev) · `Asiarch@Act.19.31` (title) ×1.
+- **8 flips** person→place (the render-binding mixed places). Keilah + Tekoa
+  are absent because they never bound (matches the never-bound note above) —
+  a free consistency check.
+- **Net render −13, hot −1** because ONE cell improved: at **Luke 23:38** the
+  word "Hebrew" was a HOT floor (Hebrew/Aramaic language entity + the Hebrews
+  people both claimed it). Removing the excluded language entities left the
+  **Hebrews people** as the sole lister, so it now renders that card.
+- **Zero normal person/place lost; zero wrong-referent bind.** Candace + Rabbi
+  never bound, so no surprise NT card loss beyond the obscure Asiarch card.
+
+**User-visible consequences (accepted, Tier A = faithful to TIPNR's design):**
+1. Cards that CEASED rendering because TIPNR fences these entries off:
+   the Greek-language card (4 verses), the Aramaic-as-"Hebrew" card (9), the
+   Asiarch card (Act 19:31). Wanting any of these back is a Lexica feature
+   (its own entity layer), not a corpus fix.
+2. **Luke 23:38 "Hebrew" now shows the Hebrews-PEOPLE card** (was floored).
+   Accepted as-is: Tier A renders what TIPNR files, and no product opinion
+   ("floors are safer") belongs in the binder — the old floor was an artifact
+   of a claim from an entity TIPNR itself excludes. **Whether TIPNR is right to
+   file a language-reference verse under the people entity is a source-reading
+   question → parked as a Tier B adjudication candidate** for the ABP-app/source
+   pass. It gates nothing; one row, verse text is the witness.
+
+Pre-apply proof = the seam-copy enumerated diff above. Live apply
+(`build_entity_binding.py --apply` on live bible.db) + `cert_invariants.py`
+recheck pending JP's second go.
+
 ## Standing consequences
 
 - The Session 4 guard and check 7 stay as-is (certified, closed).
