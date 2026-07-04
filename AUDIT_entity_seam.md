@@ -210,6 +210,28 @@ copy exactly — parsed 4,247, `tipnr_entities` 2,186, `pn_binding` render 14,80
 + HOT 72. `cert_invariants.py` **7/7 green** (check 7 person/place binding still
 passes). Site reloaded. The 97-card section-label defect is CLOSED.
 
+### Session 6: mirror census RE-RUN on corrected labels (item 2)
+
+The P1/P2/P3 probes re-run against the live post-fix tables (all read
+`tipnr_entities.section` via `JOIN … ON e.uniq = b.entity_uniq` — the field the
+fix rewrote, not a cached column). Pre-registered expectation: unknown (the
+Session-5 zero was void). Results:
+
+- **P1 mirror tell = 0 (VALID).** No name renders fuzzy→person AND exact→place.
+  This is the first trustworthy mirror result; it supersedes the void Session-5
+  zero. The mirror-shape question (verdict #2 above) is now CLOSED: no instances.
+- **P2 pools reconcile with the fix** — person exact 9880→9791 (−89),
+  place exact 3580→3670 (+90), other exact 105→92 (−13), place fuzzy 438→445
+  (+7); versification unchanged. Exactly the 8 flips + 3 excluded removals.
+- **P3 fuzzy→person names** are now only the benign classes (gentilic design
+  levites/jews/hittites/… + alt spellings melchisedek/nabuzaradan/…).
+  `gibeonites` LEFT this list (now fuzzy→place) — the fix, visible at name level.
+
+**No new bind-guard warranted** (P1=0). Open OPTION (checkpointed, not done):
+extend cert check 7 to also assert the mirror (no name renders fuzzy-place +
+exact-person AND no name renders fuzzy-person + exact-place) — cheap symmetric
+hardening now that P1=0, with a mirrored Cushi control. JP's call.
+
 ## Standing consequences
 
 - The Session 4 guard and check 7 stay as-is (certified, closed).
