@@ -30,23 +30,28 @@ rows added via the L2/L10 door (table 16→18), applied live, **pin bumped 16→
 carry-forward closed (language reference = binder artifact, no row). Full record in `AUDIT_abp_certification.md`
 L5 batch-two entry.
 Carry-forwards:
+**Session 8 DONE 2026-07-04: Door 1 (Path-C census) CLOSED + Door 2 (import_tipnr twin) FIXED+proven.
+Both queued for one Session-9 rebuild. Full handoff = `HANDOFF_cert_session9.md`.**
+Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-attributed diffs):
 - **Path-C G1473 residue — CENSUSED + CLOSED (Session 8, ledger L12).** Dan 4:33 is NOT a lone stray:
-  Daniel holds **170** source-attested pronoun mistags (αὐτός/σύ/ὑμεῖς/ἡμεῖς still numbered 1473) and
-  the corpus-wide raw signal (~3,577 rows) is **VOID as a count** — `abp_surface` misaligns outside Daniel
-  (proper names like Δαυίδ/Μωυσής land on 1473 slots), so real corpus size is UNKNOWN until the fix pass
-  verifies per-slot. Detected from OUR data via `abp_surface` (ABP's own Greek), which refines the old
-  "no our-data detector" claim — that held only for blank-form slots like Dan 4:33.
-  → FIX QUEUED (Session 9, HIGH seat, rebuild): give Path C an `abp_surface` fallback (form→Strong's table
-  for the closed pronoun set) with a misalignment gate; batchable with the two rebuild items below.
+  Daniel holds **170** source-attested pronoun mistags (αὐτός/σύ/ὑμεῖς/ἡμεῖς still numbered 1473), read off
+  `abp_surface` (ABP's own Greek — refines the old "no our-data detector" claim to BLANK-form slots only).
+  Corpus-wide raw ~3,577 is **VOID as a count** — a MIX of real pronoun mistags + subject/possessive FOLD
+  slots (blank-english, correctly-placed but mis-numbered; NOT `abp_surface` misalignment — placement is
+  RELIABLE), proportions unknown until the per-slot fix pass.
+  → FIX QUEUED (Session 9): Path C `abp_surface` fallback (form→Strong's table for the closed pronoun set)
+  WITH a per-slot form/english sanity gate (skip+log where they don't match; blank-form slots stay app reads).
 - **import_tipnr.py twin bug — FIXED + dry-run-proven (Session 8, commit 96bb662), NOT yet applied.**
   Ported entity_resolution's col-8-own-type fix into `import_tipnr.parse_tipnr`; the **10** mixed-block
   places (Beth-gader/Eshtemoa/Etam/Gedor/Gibeon/Ir-nahash/Keilah/Shechem/Tekoa/Zanoah) flip person→place,
   independently pinned + mirror-clean + raise both ways (`scripts/dryrun_tipnr_typefix.py`). The `tipnr`
   re-import is the Session-9 rebuild step; pre-registered Door-2 delta = exactly those 10 type changes.
-- **Certify the OTHER 7 redistribution passes.** L9 certified `_split_compounds` ONLY. Still uncertified:
-  `_split_numbered`, `_redistribute_pronoun_compounds`, `_fix_backwards_pairing`, `_split_pn_article_lump`,
-  `_funcword_noun_relocate`, `_lord_subject_split`, `_lord_oath_fix`. Same census+control approach
-  (the P-invariants are the skeleton; the census legs are the work).
+- **Certify the OTHER 7 redistribution passes (Door 3 — diagnosis OPEN, opens Session 9 with a seam).**
+  L9 certified `_split_compounds` ONLY. Still uncertified: `_split_numbered`, `_redistribute_pronoun_compounds`,
+  `_fix_backwards_pairing`, `_split_pn_article_lump`, `_funcword_noun_relocate`, `_lord_subject_split`,
+  `_lord_oath_fix`. **Seam banked:** the fold slots ARE subject-pass output — 2 known-positives Num 20:9 pos 2
+  + 1Sa 18:6 pos 8; any Door-3 census detector must fire on those before its zero is trusted. Same
+  census+control approach as L9.
 - **Stump filter leak** (noted, low priority): `lint_split_wrong_slot.py`'s stemmer stump filter misses
   sibling forms whose count is <3 (sid/com/rott). Didn't matter once recipient-scoping shrank the haystack;
   fix if the filter is reused at scale.
