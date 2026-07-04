@@ -79,10 +79,20 @@ def main():
         if d > 0:
             state["moved"] += d
             state["verses"] += 1
-            after_glosses = [r[1] for r in sorted(rows, key=lambda r: r[0])
-                             if (r[1] or "").strip()]
+            # tag each after-slot with the Greek word it attached to (strongs_base +
+            # lemma) so wrong-slot is VISIBLE — english alone can't show it. rows here
+            # are pre-return (13 wide): r[4]=strongs_base (bare), r[12]=lemma.
+            after_tagged = []
+            for r in sorted(rows, key=lambda r: r[0]):
+                eng = (r[1] or "").strip()
+                if not eng:
+                    continue
+                tag = r[4] or "-"
+                if r[12]:
+                    tag += "/" + r[12]
+                after_tagged.append(f"{eng}<{tag}>")
             samples.append((state["ref"], " | ".join(before_glosses),
-                            " | ".join(after_glosses)))
+                            " | ".join(after_tagged)))
     B._split_compounds = wrapped
 
     flag_log = []
