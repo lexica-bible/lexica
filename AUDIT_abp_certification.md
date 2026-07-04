@@ -181,6 +181,9 @@ per-feed count line. **The 2026-07-04 pin is INVALID — JP must re-pin** (`buil
 expect 73–74 files with a Rahlfs count showing). Cheap now, poisonous after Session 2
 adjudicated deltas against the wrong baseline.
 
+**RE-PIN DONE (JP, PA, 2026-07-04): 74 files — ABP 66 · bh_scrape 1 · Rahlfs 5 (incl. the
+optional surface file) · TAGNT 2; verify = intact. THIS is the cert baseline for Session 2.**
+
 **Em-dash sequencing (JP: take it) — DONE 2026-07-03:** `fix_emdash.py` now takes a db argument
 and runs as the very LAST step of `finish_rebuild.sh` (order is load-bearing:
 split_merge_fixes.json carries a "--" precondition, "you think not --", that must match BEFORE

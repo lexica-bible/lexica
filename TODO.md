@@ -19,8 +19,9 @@ holds genuinely-open work and parked ideas only.
   scratch BEFORE the diff — table + harness wiring land TOGETHER in Session 2, never table-first.
   **Rahlfs pin gap (JP caught it, first PA run):** v1 manifest pinned 0 Rahlfs files (subfolder
   sweep, no floor) — FIXED (explicit `RAHLFS_FILES_REQUIRED` list shared with lxx_align + ≥73-file
-  floor + per-feed counts). **JP must RE-PIN on PA:** pull, then `cert_manifest.py build` +
-  `verify` (expect 73–74 files, Rahlfs count visible).
+  floor + per-feed counts). **RE-PIN DONE 2026-07-04: 74 files
+  (ABP 66 · bh 1 · Rahlfs 5 · TAGNT 2), verify intact — baseline is LIVE.** Session 1 fully closed;
+  next action is the Session 2 harness run.
 - **Session 2 — run + adjudicate.** The harness on PA (expect a normal rebuild's runtime; live db
   read-only throughout); adjudicate every delta (pre-registered expected: cushi 6 rows; emdash
   class now eliminated); wire the QUERY/SWEEP invariants into a runnable suite w/ controls
