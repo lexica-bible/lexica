@@ -683,35 +683,6 @@ def _split_pn_article_lump(rows: list) -> None:
                        l[7], l[8], l[9], l[10], art[11], art[12])
 
 
-# ── Bracket sorting ───────────────────────────────────────────────────────────
-
-def _sort_brackets(rows: list) -> None:
-    """
-    Within each bracket group (same non-None bracket_id), sort words by
-    abp_pos (element 10) so they display in ABP English reading order.
-    Words with no abp_pos (ghost slots) sort last within their group.
-    Reassigns sequential position numbers after sorting.
-    """
-    i = 0
-    while i < len(rows):
-        bid = rows[i][6]
-        if bid is None:
-            i += 1
-            continue
-        # Find extent of this bracket group
-        j = i
-        while j + 1 < len(rows) and rows[j + 1][6] == bid:
-            j += 1
-        # Sort by (abp_pos or ∞, original_pos)
-        group = rows[i:j + 1]
-        group.sort(key=lambda r: (r[10] if r[10] is not None else 9999, r[0]))
-        # Reassign positions sequentially from base
-        base = rows[i][0]
-        for k, r in enumerate(group):
-            rows[i + k] = (base + k,) + r[1:]
-        i = j + 1
-
-
 # ── Verse builder ─────────────────────────────────────────────────────────────
 
 def apply_pronoun_corrections(abp_words: list, corrections: list,
