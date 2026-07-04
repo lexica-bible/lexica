@@ -14,22 +14,24 @@ Sessions 1-3 DONE 2026-07-03/04. Live bible.db IS pinned source (74-file hash ma
 (`cert_invariants.py`, 7/7, each with a proof-of-fire control). Session 3 rebuilt+swapped live (old file
 retained `bible_pre_certswap_20260704.db`), erasing the 11-verse residue; dead `_sort_brackets` deleted.
 Session 4 DONE: Cushi person-as-place binding floored (see archive), check 7 added, render count reconciled.
-Only carry-forwards remain — none gating, none urgent:
-- **L2/L5/L10 → correction rows.** L2 (1Sa 6:11 blank-Strong's), L5 (9 null-form "this/these" rows), L10
-  (Mal 3:6 bare "G") each become an `abp_corrections` entry via `scripts/build_abp_corrections.py` once JP
-  recovers the intended ABP source readings. Checkpoint + dry-run before each write.
-- **Backup-freshness alarm — email side still open, NOW WITH a corruption check.** Stamp-and-warn half DONE
-  (backup_db.py writes `~/db_backups/last_success.txt`; `cert_manifest.py verify` + `cert_invariants.py`
-  check it). STILL OPEN: mirror it into `health_check.py`'s nightly email (newest `~/db_backups/bible.db.*`
-  >48h ⇒ WARN; quota % ≥ 90 ⇒ WARN) so JP sees it without running a cert command. ADD a `quick_check` on the
-  newest backup — Session 4 found `bible.db.20260702` corrupt (truncated gz / "disk image malformed"); a
-  freshness-only check misses that. code: scripts/health_check.py.
-- **Pin TIPNR (entity-binding source).** `build_entity_binding.py` DOWNLOADS TIPNR live at build time, so an
-  upstream change shifts bindings silently — unlike the 74 hash-pinned feed files. Vendor the file into the
-  repo, add it to `cert_manifest.json`, and default the builder to the pinned copy (keep `--tipnr` override).
-- **Two-source entity seam — document + assess.** Write up each source's known failure shape (MetaV: factual
-  accuracy, why TIPNR backfills; TIPNR: person verses filed under PLACE entities, why the Session-4 Cushi
-  guard exists) and decide whether other shape-guards are needed. NO precedence rule — neither is gold.
+Session 5 DONE: TIPNR pinned (manifest 75, binder proven byte-identical); nightly backup damage-check +
+durable self-test; L2/L10 correction rows landed (source-attested via the official ABP app, table 8->16,
+suite green at pin 16); two-source seam doc written (`AUDIT_entity_seam.md`). Carry-forwards:
+- **[SESSION 6 OPENER] 97-card section-label defect.** `parse_tipnr` (entity_resolution.py) stamps section
+  from the file's block HEADER, not each entity's own row type: 10 real PLACES under `$== PERSON+PLACE`
+  headers render as person cards (97 live binds — Shechem 42, Gibeon 38, ...); EXCLUDED blocks (Sheol/
+  languages/titles) get ingested (4 live binds); 37 doc-prose lines parse as junk entities (0 binds).
+  Identity is correct everywhere — labels only. Fix = read row-type over header, skip EXCLUDED + prose,
+  re-run binder, re-run P1 mirror census on trustworthy labels, consider check 7 asserting on row-type.
+  Full evidence in `AUDIT_entity_seam.md`. Checkpointed proposal — not implemented.
+- **L5 → correction rows (re-derive first).** The recorded "9 null-form this/these rows" list was never
+  written to the repo and did NOT reproduce (my regen found 0). Session 6: explain the discrepancy (why the
+  original 9 didn't reproduce), re-derive the real list, read each against the official ABP app
+  (apostolicbibleapp.com — the standing adjudication witness), then correction rows via the L2/L10 path.
+- **Certify the OTHER 7 redistribution passes.** L9 certified `_split_compounds` ONLY. Still uncertified:
+  `_split_numbered`, `_redistribute_pronoun_compounds`, `_fix_backwards_pairing`, `_split_pn_article_lump`,
+  `_funcword_noun_relocate`, `_lord_subject_split`, `_lord_oath_fix`. Same census+control approach
+  (the P-invariants are the skeleton; the census legs are the work).
 - **Certify the OTHER 7 redistribution passes.** L9 certified `_split_compounds` ONLY. Still uncertified:
   `_split_numbered`, `_redistribute_pronoun_compounds`, `_fix_backwards_pairing`, `_split_pn_article_lump`,
   `_funcword_noun_relocate`, `_lord_subject_split`, `_lord_oath_fix`. Same census+control approach
