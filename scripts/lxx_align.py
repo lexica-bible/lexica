@@ -142,6 +142,20 @@ _VERSIFICATION = {                                 # ABP booknum → (ch,vs) -> 
 
 
 # ── Rahlfs data (line-aligned parallel arrays, 623,693 words) ───────────────
+# The exact files this loader reads, relative to the Rahlfs dir. ONE copy — the
+# certification manifest (scripts/cert_manifest.py) imports this list to pin the
+# feed, so the pin can never drift from what the build actually reads.
+# 'surface' is genuinely optional for the WORDS build (only surface_verse uses it);
+# the other four change the built corpus if absent, so the manifest requires them.
+RAHLFS_FILES_REQUIRED = (
+    "07_StrongNumber/final_Strongs.csv",
+    "03a_morphology_with_JTauber_patches/patched_623693.csv",
+    "02_lexemes/OSSP_lexemes.csv",
+    "12-Marvel.Bible/00-versification_original.csv",
+)
+RAHLFS_FILE_SURFACE = "01_wordlist_unicode/text_accented.csv"
+
+
 class RahlfsLXX:
     """Loads Rahlfs-1935 once; serves per-verse (strong_base, morph, is_pron)."""
 
@@ -168,10 +182,10 @@ class RahlfsLXX:
 
     def __init__(self, rahlfs_dir):
         self.dir = Path(rahlfs_dir)
-        self._strong = self._load_col("07_StrongNumber/final_Strongs.csv", 1)
-        self._morph  = self._load_col("03a_morphology_with_JTauber_patches/patched_623693.csv", 1)
+        self._strong = self._load_col(RAHLFS_FILES_REQUIRED[0], 1)
+        self._morph  = self._load_col(RAHLFS_FILES_REQUIRED[1], 1)
         try:                                        # lemma (dictionary form); optional 5th file
-            self._lemma = self._load_col("02_lexemes/OSSP_lexemes.csv", 1)
+            self._lemma = self._load_col(RAHLFS_FILES_REQUIRED[2], 1)
         except OSError:
             self._lemma = {}                        # absent → lemma column stays NULL, morph still loads
         try:                                        # surface = the PRINTED (accented, inflected) Greek word.
@@ -179,7 +193,7 @@ class RahlfsLXX:
             # in col 2), line-aligned 1:1 with the morph/strong files (623,693 rows).
             # OPTIONAL: absent → surface_verse() returns "" and the pronoun-fix build
             # is unaffected (it never calls surface_verse). Used by build_abp_surface.py.
-            self._surface = self._load_col("01_wordlist_unicode/text_accented.csv", 2)
+            self._surface = self._load_col(RAHLFS_FILE_SURFACE, 2)
         except OSError:
             self._surface = {}
         self._ranges = self._load_verse_ranges()   # (booknum,ch,vs) -> (start,end) inclusive
@@ -199,7 +213,7 @@ class RahlfsLXX:
 
     def _load_verse_ranges(self):
         ents = []  # (wordidx, booknum, ch, vs) in file order
-        with self._open("12-Marvel.Bible/00-versification_original.csv") as f:
+        with self._open(RAHLFS_FILES_REQUIRED[3]) as f:
             for line in f:
                 p = line.rstrip("\n").rstrip("\r").split("\t")
                 if len(p) < 2:

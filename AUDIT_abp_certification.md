@@ -161,9 +161,25 @@ Design calls (the mechanics, not the entries):
 2. **Manifest shape: YES.** `cert_manifest.json` at repo root, committed after the first PA run.
 3. **Correction table: YES — rebuild-time (ingest-final), not read-time.** JP's reasoning matches
    the design note (read-time touches every serving consumer; audits would see uncorrected values).
-   Conditional on the guarded-apply mechanism (Q4).
+   **Conditional on Flag 2 (JP clarified 2026-07-04, CC had misread it):** the re-parse harness
+   MUST apply the correction table to the scratch BEFORE diffing against live — otherwise every
+   corrected cell becomes a permanent false delta in every certification run once corrections
+   exist. HARD Session 2 requirement: the `abp_corrections` build step and the harness's
+   apply-corrections-then-diff wiring land TOGETHER (plus `--no-corrections` for attribution
+   runs), never table-first.
 4. **Keying + source_value precondition with loud skip: YES** — "the fix_split_merges lesson
    turned into mechanism."
+
+**Rahlfs pin gap — CAUGHT BY JP on the first PA run (2026-07-04), FIXED same day.** The v1
+manifest tool swept the Rahlfs folder's top level, which holds only SUBFOLDERS — it pinned 69
+files (66 ABP + bh_scrape + 2 TAGNT) and ZERO Rahlfs files, with no floor to notice. Detector
+that couldn't fail, again. Fix: the exact file list the build reads now lives as ONE constant in
+`lxx_align.py` (`RAHLFS_FILES_REQUIRED` — strongs/morph/lexemes/versification, all four change
+the built corpus if absent; + the optional surface file, pinned when present), the manifest
+imports it, hard-errors if any required file is missing, enforces a ≥73-file floor, and prints a
+per-feed count line. **The 2026-07-04 pin is INVALID — JP must re-pin** (`build` then `verify`;
+expect 73–74 files with a Rahlfs count showing). Cheap now, poisonous after Session 2
+adjudicated deltas against the wrong baseline.
 
 **Em-dash sequencing (JP: take it) — DONE 2026-07-03:** `fix_emdash.py` now takes a db argument
 and runs as the very LAST step of `finish_rebuild.sh` (order is load-bearing:

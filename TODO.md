@@ -15,7 +15,12 @@ holds genuinely-open work and parked ideas only.
   reclassification/decommission list. **NEW find L10:** Mal 3:6 trailing bare "G" (same class as L2).
   **All 4 checkpoint answers APPROVED 2026-07-03** (L1 lines deleted + pushed same day; em-dash
   swap folded as finish_rebuild.sh's LAST step — order load-bearing, split_merge_fixes.json "--"
-  precondition). Setup UNBLOCKED: JP runs `cert_manifest.py build` + `verify` on PA after a pull.
+  precondition). **Flag 2 clarified 2026-07-04:** corrections must be applied to the harness's
+  scratch BEFORE the diff — table + harness wiring land TOGETHER in Session 2, never table-first.
+  **Rahlfs pin gap (JP caught it, first PA run):** v1 manifest pinned 0 Rahlfs files (subfolder
+  sweep, no floor) — FIXED (explicit `RAHLFS_FILES_REQUIRED` list shared with lxx_align + ≥73-file
+  floor + per-feed counts). **JP must RE-PIN on PA:** pull, then `cert_manifest.py build` +
+  `verify` (expect 73–74 files, Rahlfs count visible).
 - **Session 2 — run + adjudicate.** The harness on PA (expect a normal rebuild's runtime; live db
   read-only throughout); adjudicate every delta (pre-registered expected: cushi 6 rows; emdash
   class now eliminated); wire the QUERY/SWEEP invariants into a runnable suite w/ controls

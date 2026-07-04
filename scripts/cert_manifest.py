@@ -32,6 +32,12 @@ sys.path.insert(0, str(Path(__file__).parent))
 from build_words_from_abp import (
     _VERSE_RE, ABP_OT_DIR, ABP_NT_DIR, RAHLFS_DIR, TAGNT_FILES, BASE_DIR,
 )
+# The exact Rahlfs files the build reads — the ONE list, owned by the loader
+# itself (lxx_align.py), so the pin can't drift from what the build consumes.
+# (v1 of this tool swept RAHLFS_DIR's top level, which holds only SUBFOLDERS, and
+# silently pinned zero Rahlfs files — the pin-gap JP caught 2026-07-04. The
+# explicit list + the count floor below make that failure impossible to miss.)
+from lxx_align import RAHLFS_FILES_REQUIRED, RAHLFS_FILE_SURFACE
 
 MANIFEST = BASE_DIR / "cert_manifest.json"
 
@@ -63,12 +69,26 @@ def feed_files():
 
     if not RAHLFS_DIR.is_dir():
         sys.exit(f"ERROR: Rahlfs dir missing: {RAHLFS_DIR} — feed required for the cert.")
-    files += [(f"rahlfs/{p.name}", p) for p in sorted(RAHLFS_DIR.iterdir()) if p.is_file()]
+    for rel in RAHLFS_FILES_REQUIRED:
+        p = RAHLFS_DIR / rel
+        if not p.is_file():
+            sys.exit(f"ERROR: Rahlfs feed file missing: {p} — required for the cert "
+                     "(its absence changes the built corpus).")
+        files.append((f"rahlfs/{rel}", p))
+    p = RAHLFS_DIR / RAHLFS_FILE_SURFACE
+    if p.is_file():                       # optional for the WORDS build; pinned when present
+        files.append((f"rahlfs/{RAHLFS_FILE_SURFACE}", p))
 
     for p in TAGNT_FILES:
         if not p.is_file():
             sys.exit(f"ERROR: TAGNT file missing: {p} — feed required for the cert.")
         files.append((f"tagnt/{p.name}", p))
+
+    # Count floor — a manifest that pins fewer files than the build reads certifies
+    # nothing. 66 ABP + bh_scrape + 4 required Rahlfs + 2 TAGNT = 73 minimum.
+    if len(files) < 73:
+        sys.exit(f"ERROR: only {len(files)} feed files found (< 73 floor) — a feed "
+                 "is missing; refusing to pin/verify a partial baseline.")
     return files
 
 
@@ -105,7 +125,13 @@ def cmd_build():
         "files": entries,
     }
     MANIFEST.write_text(json.dumps(doc, indent=2) + "\n", encoding="utf-8")
+    # Per-feed reconciliation line — the reader should see all three feeds counted,
+    # not just a total (a missing feed must be visible at a glance).
+    n_abp = sum(1 for k in entries if k.startswith("abp_texts"))
+    n_rah = sum(1 for k in entries if k.startswith("rahlfs/"))
+    n_tag = sum(1 for k in entries if k.startswith("tagnt/"))
     print(f"\nPinned {len(entries)} files -> {MANIFEST}")
+    print(f"  feeds: ABP {n_abp} · bh_scrape 1 · Rahlfs {n_rah} · TAGNT {n_tag}")
 
 
 def cmd_verify():
