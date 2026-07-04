@@ -183,6 +183,14 @@ Session-5 undercount (that probe checked only Greek). The real impact:
 - **Zero normal person/place lost; zero wrong-referent bind.** Candace + Rabbi
   never bound, so no surprise NT card loss beyond the obscure Asiarch card.
 
+Why the "×4 Greek" was wrong (reconstruction, not just correction): the
+Session-5 probe that produced it checked only the Greek entity, never Aramaic
+or Asiarch. That is the THIRD recorded-claim-that-didn't-reproduce this arc
+(37→39 prose count; ×4→14 rows; and L5's 9 null-form rows still open) — all so
+far trace to an ad-hoc, unsaved probe. Useful PRIOR for L5: closure (a),
+recorded-in-error, is the most likely outcome — but it is a prior, not a
+verdict; the drift branch stays armed until the reconstruction is in hand.
+
 **User-visible consequences (accepted, Tier A = faithful to TIPNR's design):**
 1. Cards that CEASED rendering because TIPNR fences these entries off:
    the Greek-language card (4 verses), the Aramaic-as-"Hebrew" card (9), the
