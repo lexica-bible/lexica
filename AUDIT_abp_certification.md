@@ -602,10 +602,25 @@ rebuilds. ATTRIBUTION IS PER-COLUMN, NOT PER-ROW: a fold slot is changed by BOTH
 (its `strongs`/`strongs_base`) AND a subject pass (its `english`), so the same row legitimately shows two
 deltas from two fixes — pre-register by (row, column), or the overlap reads as unattributable.**
 
-**OPEN (cheap, read-only) — the `abp_surface` misalignment root.** Why the ~9% misaligns is UNINSPECTED.
-Suspects: the split/redistribute/reorder passes renumber `words` positions but `abp_surface` is keyed to
-a pre-reorder scheme (or its own build re-derives positions differently). If the misaligned verses
-correlate with the verses the seven uncertified reorder passes touch, this tail is the FIRST observable
-seam for Door 3 — obtained for the price of inspecting ~5 rows. Probe = pull the full verse for a `Δαυίδ`
-/`Μωυσής` name-hit + two non-Daniel αὐτ hits, compare word-position vs surface-form, check for reorder-
-pass signatures (brackets, redistributed multi-word english).
+**INSPECTED (Session 8, 5 cells) — NOT misalignment, a fold class.** The name-on-1473 rows are
+correctly-placed subject/possessive-fold slots (Num 20:9 + Num 31:42 `Μωυσής`, 1Sa 18:6 `Δαυίδ`,
+Gen 1:25 `αὐτῶν`): the english folded onto the adjacent verb/noun, the slot left blank + numbered 1473.
+`abp_surface` placement is RELIABLE. This IS Door-3 territory (the subject passes `_lord_subject_split`/
+`_funcword_noun_relocate`), so the fold slots are a live seam to probe when Door 3 opens — the pronoun-
+number fix and the subject passes touch the SAME slots (hence the per-column diff attribution above).
+
+### Door 2 — `import_tipnr` twin bug FIXED, dry-run-proven (2026-07-04, commit 96bb662)
+The header-first typing twin of the `entity_resolution` bug (`import_tipnr.parse_tipnr`) is fixed: an
+entity's OWN col-8 type ({Place,Male,Female} — set IDENTICAL to `entity_resolution`, checked) beats the
+block header; an unrecognized type inside a PERSON+PLACE block raises (same loud fail). Proven by
+`scripts/dryrun_tipnr_typefix.py` (parse-only, NO DB) against a pinned INDEPENDENT expectation (a
+line-scan, not the parser under test):
+- **FLIP SET: expected 10 == actual 10, MATCH.** The 10 mixed-block places flip person→place —
+  Beth-gader, Eshtemoa, Etam, Gedor, Gibeon, Ir-nahash, Keilah, Shechem, Tekoa, Zanoah (Judah-genealogy
+  founder-towns TIPNR lists as both person and place).
+- **MIRROR:** 0 flips outside a mixed block; 0 overrides that aren't person→place.
+- **RAISE control both directions:** raises in a mixed block, does not in a single-PERSON block.
+Doc count RESOLVED: the twin's mistyped set is **10** (TODO/handoff figure confirmed). `entity_resolution`'s
+Session-6 "8" is a DIFFERENT parser with stricter skips — two legitimate counts, not a conflict.
+**NOT APPLIED** — the `tipnr` re-import is the Session-9 rebuild's Door-2 step; its pre-registered delta =
+exactly these 10 entities' type change (per-column, per the batching condition above).

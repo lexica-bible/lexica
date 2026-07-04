@@ -38,10 +38,11 @@ Carry-forwards:
   "no our-data detector" claim — that held only for blank-form slots like Dan 4:33.
   → FIX QUEUED (Session 9, HIGH seat, rebuild): give Path C an `abp_surface` fallback (form→Strong's table
   for the closed pronoun set) with a misalignment gate; batchable with the two rebuild items below.
-- **import_tipnr.py twin bug** (Session 6): its own separate parser has the same header-first defect
-  (line 97), so the `tipnr` table also mistypes the 10 mixed places. MASKED for all 97 bound cards (a bind
-  gates the metaV path off), no urgency. Fix = same 3 classes there; needs a words rebuild / import_tipnr
-  re-run = its own checkpoint.
+- **import_tipnr.py twin bug — FIXED + dry-run-proven (Session 8, commit 96bb662), NOT yet applied.**
+  Ported entity_resolution's col-8-own-type fix into `import_tipnr.parse_tipnr`; the **10** mixed-block
+  places (Beth-gader/Eshtemoa/Etam/Gedor/Gibeon/Ir-nahash/Keilah/Shechem/Tekoa/Zanoah) flip person→place,
+  independently pinned + mirror-clean + raise both ways (`scripts/dryrun_tipnr_typefix.py`). The `tipnr`
+  re-import is the Session-9 rebuild step; pre-registered Door-2 delta = exactly those 10 type changes.
 - **Certify the OTHER 7 redistribution passes.** L9 certified `_split_compounds` ONLY. Still uncertified:
   `_split_numbered`, `_redistribute_pronoun_compounds`, `_fix_backwards_pairing`, `_split_pn_article_lump`,
   `_funcword_noun_relocate`, `_lord_subject_split`, `_lord_oath_fix`. Same census+control approach
