@@ -328,6 +328,34 @@ live 2026-07-04, verified — both "eternal" slots now read 166, so it produces 
 Cushi + Jer 49:13 vanish behind the correction table; the 175 flip verses vanish behind the
 tail fold. ANY other delta is a finding.
 
+## Session 2b — flip fold + correction machinery LANDED (2026-07-04, code only, no db writes)
+
+All local code, committed; every live-db step below waits on JP's runs + checkpoint go:
+- **Flip fold DONE:** `fix_split_flip.py --apply` is now finish_rebuild.sh **step 6**, per the
+  locked ordering (after all pinned patches + fix_emdash; before corrections). Convergence loop
+  untouched. Ordering constraint documented in the script, the tail, AND fix_emdash.py (whose
+  "must stay last" claim was corrected to "last english-TEXT edit").
+- **Correction machinery DONE (Flag 2 honored — lands as one unit):**
+  `scripts/build_abp_corrections.py` (creates the approved table + 7 seed entries: Cushi ×6 +
+  Jer 49:13 L11; dry-run doubles as live validation — every entry should read "cell=corrected"
+  on live) and `scripts/apply_abp_corrections.py` (guarded apply, finish_rebuild.sh **step 7**,
+  the true final step: fires only on exact source_value match, LOUD skip otherwise, stdout +
+  `<db>.corrections.log`, no-table = clean no-op so pre-table copies stay deploy-safe).
+  **Control-tested both directions** on a throwaway mini-db (6 passes: no-op / dry-run classify /
+  apply-fires / mismatch-untouched-loud / idempotent re-run / log written).
+- **Harness wiring DONE:** `--no-corrections` attribution flag (env NO_CORRECTIONS=1 through the
+  tail; --no-tail implies source-value expectations), the visible **"corrections reconciliation:
+  N active, N verified, 0 mismatched — ok"** line (stdout + summary report), and a
+  `correction-unapplied` hint tag on any delta at a correction cell.
+- **Backup loudness guard DONE:** backup_db.py stamps `~/db_backups/last_success.txt` on a fully
+  clean run; `cert_manifest.py verify` complains (warn-only) when the stamp is missing/older than
+  25h. First nightly run after deploy writes the stamp — until then the missing-stamp warning is
+  expected noise.
+- **Node fixture tests:** verified ALREADY wired in both ci.yml and the pre-commit hook — the
+  handoff item was stale; nothing to do.
+- Deferred on purpose: `_sort_brackets` deletion (edits the build file between run 1 and the
+  final run — do it after the final run passes, with the decommission).
+
 **Session 2 remaining fix list (in order):**
 1. ~~Code-trace Class 1b~~ DONE — confirmed live-stale (above).
 2. Fold `fix_split_flip.py` into finish_rebuild.sh AFTER fix_emdash (ordering rules above);

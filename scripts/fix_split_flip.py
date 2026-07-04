@@ -23,6 +23,20 @@ rebuild lands the identical order. The shared gate is the audit: it must read 0 
 EITHER path. (Prove byte-identical on PA: copy the DB twice, run this fixer on one and a
 corrected full rebuild on the other, then compare with scripts/compare_words.py.)
 
+FOLDED INTO THE TAIL (cert Session 2, 2026-07-04): runs as step 6 of
+finish_rebuild.sh, so every rebuild reproduces the fix. Cert run 1 proved a SECOND
+flip producer (proper-noun '*' slots, which the _split_compounds source-order fix
+skips) regenerates 175 flip verses / 196 pairs on a fresh build. Ordering is
+LOAD-BEARING and locked in the audit log:
+  * AFTER every pinned patch — fix_split_merges targets ABSOLUTE positions, and this
+    script moves positions;
+  * AFTER fix_emdash — the detector compares words.english to verses.text, so the
+    dash tokens must already agree;
+  * BEFORE apply_abp_corrections — the correction table is keyed by position, so
+    nothing may move positions after it applies.
+This script swaps POSITION values only, never english text, so it cannot break the
+pinned patches' text preconditions.
+
 Re-runnable: detection re-checks each verse, so an already-fixed pair is skipped.
 
 AFTER --apply, on PA, re-run (positions moved):

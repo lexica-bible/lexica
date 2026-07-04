@@ -10,10 +10,12 @@ are left alone. Touches ONLY words.english + verses.text; fully reversible (— 
   python scripts/fix_emdash.py [db]            # DRY RUN: counts + samples, writes nothing
   python scripts/fix_emdash.py [db] --apply    # do the swap
 
-PA-only (bible.db lives there). Now runs as the LAST step of finish_rebuild.sh, so a
-rebuild reproduces it — no manual re-run needed. It must stay LAST in the tail:
+PA-only (bible.db lives there). Runs as step 5 of finish_rebuild.sh, so a rebuild
+reproduces it — no manual re-run needed. It is the LAST english-TEXT edit in the tail:
 split_merge_fixes.json carries a "--" precondition ("you think not --") that would
-stop matching if the swap ran before fix_split_merges.
+stop matching if the swap ran before fix_split_merges. The two steps after it
+(fix_split_flip, apply_abp_corrections) are position/field-scoped and depend on the
+dashes already being swapped (the flip detector compares words to verses.text).
 """
 import os
 import sqlite3

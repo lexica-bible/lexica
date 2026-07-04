@@ -196,6 +196,11 @@ def backup_all(src: Path, out: Path, keep: int, raw: int) -> int:
     if bad:
         print(f"!!  {bad} db(s) failed to back up cleanly - see above. Exit 1.")
         return 1
+    # Success stamp — the loudness guard. The nightly task can die silently (disk-full,
+    # Jul 2-4 2026); this file only updates on a FULLY clean run, and cert_manifest.py
+    # verify complains when it goes stale (>25h), somewhere JP actually looks.
+    (out / "last_success.txt").write_text(
+        datetime.now().isoformat(timespec="seconds") + "\n", encoding="utf-8")
     print("All backups verified ok.")
     return 0
 

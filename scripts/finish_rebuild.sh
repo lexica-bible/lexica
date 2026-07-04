@@ -46,12 +46,33 @@ run python3 scripts/dedup_words.py           "${DB}"
 #    re-run settles to 0.
 run python3 scripts/fix_bracket_punct.py     "${DB}"
 
-# 5) Em-dash swap ('--' -> '—' in words.english + verses.text) — MUST stay the very
-#    LAST step: split_merge_fixes.json carries a '--' precondition ("you think not --")
-#    that would stop matching if this ran before fix_split_merges. Folded here
-#    2026-07-03 (cert Session 1): kills the manual re-run step and its whole
-#    expected-delta class in the certification harness.
+# 5) Em-dash swap ('--' -> '—' in words.english + verses.text) — the LAST step that
+#    edits english TEXT: split_merge_fixes.json carries a '--' precondition ("you
+#    think not --") that would stop matching if this ran before fix_split_merges.
+#    Folded 2026-07-03 (cert Session 1). Only position/field-scoped steps may follow.
 run python3 scripts/fix_emdash.py            "${DB}" --apply
+
+# 6) Split-flip repair — the "Kenites the" stranded-determiner class from the
+#    proper-noun slot producer (_split_compounds' source-order fix doesn't cover it;
+#    cert run 1: 175 verses / 196 pairs regenerate on every rebuild). Swaps POSITION
+#    values only, never text, looping to convergence. ORDER IS LOAD-BEARING: after
+#    ALL pinned patches (fix_split_merges targets absolute positions) and after
+#    fix_emdash (the detector compares words to verses.text — dash tokens must
+#    agree). Folded 2026-07-04 (cert Session 2). Gate: audit_split_flip.py must
+#    read 0 on the finished copy.
+run python3 scripts/fix_split_flip.py        "${DB}" --apply
+
+# 7) abp_corrections guarded apply — the TRUE final step (corrections are keyed by
+#    position, so nothing may move positions after this). Each row fires only if the
+#    cell still equals its recorded source_value; any mismatch is a LOUD skip.
+#    Skippable for cert attribution runs (harness --no-corrections sets this).
+if [ "${NO_CORRECTIONS:-0}" = "1" ]; then
+  echo; echo "── abp_corrections SKIPPED (NO_CORRECTIONS=1 attribution run) ──"
+else
+  run python3 scripts/apply_abp_corrections.py "${DB}" --apply
+fi
 
 echo
 echo "== finish_rebuild done. Next: audits + compare_words.py vs live, THEN swap. =="
+echo "   (positions moved in step 6 — after a real swap, re-run build_abp_surface.py"
+echo "    + build_abp_translit.py per the rebuild checklist)"
