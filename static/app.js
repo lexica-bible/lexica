@@ -1099,6 +1099,36 @@ content=isTopicLike(editing.type)?/*#__PURE__*/React.createElement(TopicPage,{en
 const inspectEmpty=/*#__PURE__*/React.createElement(ZoneEmpty,{icon:/*#__PURE__*/React.createElement(Icon.Book,{width:"30",height:"30"}),title:isTopic?"Pick a verse":"Pick a claim",sub:isTopic?"Select a verse to see it in context.":"Select a node to see what grounds it."});// MOBILE: single column — switcher strip, then the list or the open item.
 if(isMobile)return/*#__PURE__*/React.createElement("div",{className:"study-view study-mobile"},/*#__PURE__*/React.createElement("div",{className:"study-topstrip"},switcher,topRight),editing?/*#__PURE__*/React.createElement("div",{className:"study-center-body"},content):railList);// DESKTOP: the uniform master-detail Shell — LEFT list · CENTER content · RIGHT inspect.
 return/*#__PURE__*/React.createElement(Shell,{isMobile:false,className:"study-shell",railClass:"study-rail-slot",centerClass:"study-center",rail:railList,center:/*#__PURE__*/React.createElement(React.Fragment,null,/*#__PURE__*/React.createElement("div",{className:"study-topstrip"},switcher,topRight),/*#__PURE__*/React.createElement("div",{className:"study-center-body"},content)),inspect:/*#__PURE__*/React.createElement(RightStack,{ctl:studyRs,root:null,className:"study-rstack",empty:inspectEmpty})});}// ============================================================
+// CHRONOLOGICAL RECONCILE — pure passage-lookup logic, factored OUT of LibraryView so ONE
+// copy is used by both the app (60-library.jsx: passageForRef + the reader-position
+// reconcile) and the Node unit test (tests/test_chrono_reconcile.js). No React here —
+// plain array math over chrono.passages.
+//
+// The bug this file exists to lock: opening a reading-plan day whose FIRST passage starts
+// mid-chapter, in a chapter the PREVIOUS day's last passage also touches (e.g. Zephaniah 2
+// split 2:1-7 in one passage / 2:8-3:20 in the next — day 219's tail vs day 220's head).
+// The reader lands on the right chapter, then reports its position back as a bare
+// (book, chapter) with NO verse. Resolving that to "the first passage covering the chapter"
+// snaps you back to the PREVIOUS day's passage, so the clicked day never opens. 141 of the
+// 365 days had this shape. The fix: if the passage you're ALREADY on still covers the
+// reported chapter, the reader just moved within it — keep it.
+//
+// Plain JS (no JSX): the browser bundle picks it up in filename order (57 < 60, so the
+// helpers exist before LibraryView uses them); the export guard at the tail is a no-op in
+// the browser (`module` is undefined there) and hands the functions to Node.
+// ============================================================
+// Does passage p span this book + chapter?
+function chronoCovers(p,book,ch){return p.book===book&&ch>=p.start_ch&&ch<=p.end_ch;}// Which passage holds (book, ch[, v])? With a verse, narrow a split chapter to the passage
+// whose window actually contains that verse; without a verse, fall back to the FIRST
+// passage covering the chapter. Returns the passage object or null. (This is the original
+// LibraryView.passageForRef, unchanged — now shared.)
+function chronoPassageForRef(passages,book,ch,v){if(!passages||!book)return null;if(v!=null){const exact=passages.find(p=>chronoCovers(p,book,ch)&&!(ch===p.start_ch&&v<p.start_v)&&!(ch===p.end_ch&&v>p.end_v));if(exact)return exact;}return passages.find(p=>chronoCovers(p,book,ch))||null;}// Reconcile the chronological position when the reader reports its spot. The report carries
+// only (book, chapter) with no verse (highlight === null). If the passage we're already on
+// (curPos) still covers that chapter, the reader moved WITHIN it — keep curPos so a
+// mid-chapter day head isn't dragged back to the previous day's passage. Otherwise resolve
+// normally (verse-narrowed when a highlight verse IS present). Returns the passage object
+// to land on, or null.
+function chronoReconcile(passages,curPos,book,ch,v){const cur=passages&&passages[curPos-1];if(v==null&&cur&&chronoCovers(cur,book,ch))return cur;return chronoPassageForRef(passages,book,ch,v);}if(typeof module!=="undefined"&&module.exports){module.exports={chronoCovers,chronoPassageForRef,chronoReconcile};}// ============================================================
 // READING PLAN — the "Days" view of the chronological picker.
 //
 // A 365-day plan is baked into chronological.json (chrono.days: each entry is a day
@@ -1542,7 +1572,8 @@ const stepPassage=delta=>{if(!chrono)return;const next=chronoPos+delta;if(next<1
 // you were just reading. A chapter can sit in several passages (e.g. 1 Chronicles 1
 // is split across days), so prefer the one whose verse window actually covers the
 // verse; otherwise fall back to the first passage that covers the chapter.
-const passageForRef=(book,ch,v)=>{if(!chrono||!book)return null;const coversCh=p=>p.book===book&&ch>=p.start_ch&&ch<=p.end_ch;if(v!=null){const exact=chrono.passages.find(p=>coversCh(p)&&!(ch===p.start_ch&&v<p.start_v)&&!(ch===p.end_ch&&v>p.end_v));if(exact)return exact;}return chrono.passages.find(coversCh)||null;};// Reading-plan ("Days") wiring. Progress is per reading text; the chips switch text.
+// (Pure logic lives in 57-chrono-logic.jsx so the reconcile test can lock it.)
+const passageForRef=(book,ch,v)=>chronoPassageForRef(chrono?chrono.passages:null,book,ch,v);// Reading-plan ("Days") wiring. Progress is per reading text; the chips switch text.
 const planTexts=[{id:"abp",label:"ABP"},{id:"kjv",label:"KJV"},{id:"bsb",label:"BSB"},...(esvOwner?[{id:"esv",label:"ESV"}]:[]),...(nivOwner?[{id:"niv",label:"NIV"}]:[])];// The little check on each day IS the control. Each day is INDEPENDENT — checking a
 // day marks just that one done, unchecking clears just that one, so you can skip around
 // and still keep an accurate count. Marking bumps the daily streak (once per calendar
@@ -1566,7 +1597,12 @@ if(nav.translation){setTranslation(nav.translation);onTranslationChange?.(nav.tr
 // current passage (e.g. just opening the xref on a verse you're reading) this is a no-op — and
 // the `p.pos !== chronoPos` guard also stops the scroll:false self-update from re-firing it.
 if(nav.extern){setOrderMode("canonical");// fall through to the canonical reset below
-}else{const p=passageForRef(b.abbrev,nav.chapter||1,nav.highlight);if(p&&p.pos!==chronoPos){if(corpus!=="bible")setCorpus("bible");setOtherOpen(false);setChronoPos(p.pos);setSelBook(b);setSelChapter(p.start_ch);}return;}}// Only react to a REAL destination change. The scroll-to-highlight step writes a `scroll: false`
+}else{// Reconcile via the shared helper: if the passage we're already on still covers
+// the reported chapter (the report has no verse), keep it — don't let a chapter
+// split across a day boundary snap the reader back to the previous day's passage
+// (the "day fails to open" bug; e.g. day 220 = Zephaniah 2:8, chapter 2 shared
+// with day 219's tail). A real verse jump still narrows precisely (highlight set).
+const p=chronoReconcile(chrono.passages,chronoPos,b.abbrev,nav.chapter||1,nav.highlight);if(p&&p.pos!==chronoPos){if(corpus!=="bible")setCorpus("bible");setOtherOpen(false);setChronoPos(p.pos);setSelBook(b);setSelChapter(p.start_ch);}return;}}// Only react to a REAL destination change. The scroll-to-highlight step writes a `scroll: false`
 // self-update back to nav (same book + chapter); without this guard that re-fires the reset
 // below, wiping the just-loaded verses → blank chapter. Skip the guard when we just left chrono:
 // order flipped, so we must load even if the chapter number happens to match.

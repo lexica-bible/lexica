@@ -320,17 +320,8 @@ function LibraryView({ nav, onNavChange, onReaderPos, onWordClick, onVerseNumber
   // you were just reading. A chapter can sit in several passages (e.g. 1 Chronicles 1
   // is split across days), so prefer the one whose verse window actually covers the
   // verse; otherwise fall back to the first passage that covers the chapter.
-  const passageForRef = (book, ch, v) => {
-    if (!chrono || !book) return null;
-    const coversCh = (p) => p.book === book && ch >= p.start_ch && ch <= p.end_ch;
-    if (v != null) {
-      const exact = chrono.passages.find(p => coversCh(p)
-        && !(ch === p.start_ch && v < p.start_v)
-        && !(ch === p.end_ch && v > p.end_v));
-      if (exact) return exact;
-    }
-    return chrono.passages.find(coversCh) || null;
-  };
+  // (Pure logic lives in 57-chrono-logic.jsx so the reconcile test can lock it.)
+  const passageForRef = (book, ch, v) => chronoPassageForRef(chrono ? chrono.passages : null, book, ch, v);
   // Reading-plan ("Days") wiring. Progress is per reading text; the chips switch text.
   const planTexts = [
     { id: "abp", label: "ABP" }, { id: "kjv", label: "KJV" }, { id: "bsb", label: "BSB" },
@@ -409,7 +400,12 @@ function LibraryView({ nav, onNavChange, onReaderPos, onWordClick, onVerseNumber
       if (nav.extern) {
         setOrderMode("canonical");   // fall through to the canonical reset below
       } else {
-        const p = passageForRef(b.abbrev, nav.chapter || 1, nav.highlight);
+        // Reconcile via the shared helper: if the passage we're already on still covers
+        // the reported chapter (the report has no verse), keep it — don't let a chapter
+        // split across a day boundary snap the reader back to the previous day's passage
+        // (the "day fails to open" bug; e.g. day 220 = Zephaniah 2:8, chapter 2 shared
+        // with day 219's tail). A real verse jump still narrows precisely (highlight set).
+        const p = chronoReconcile(chrono.passages, chronoPos, b.abbrev, nav.chapter || 1, nav.highlight);
         if (p && p.pos !== chronoPos) {
           if (corpus !== "bible") setCorpus("bible");
           setOtherOpen(false);
