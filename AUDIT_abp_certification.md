@@ -130,6 +130,38 @@ two-step: `build_abp_corrections.py --apply` (adds the rows) THEN `apply_abp_cor
   blank, head `g` -> blank (verb elloiomai; ouk G3756 stays correct on pos 6). App: `241.2` — a
   decimal extension no standard-Strong's source could have supplied.
 
+### L5 — DISCREPANCY RESOLVED Session 6 (closure a, recorded-in-error; NOT drift)
+The "9 null-form this/these rows" reproduced EXACTLY — re-derived corpus-wide, 9 rows, one per
+recorded verse. TWO recorded errors, both corrected:
+1. The Session-5 "regen found 0" used a FORM-based detector (the τοῦτο `form GLOB`); a form-GLOB
+   structurally cannot match a form-NULL row → 0 by construction.
+2. The ledger meta-claim "recorded list was never committed" was ALSO wrong — the list sat in
+   TODO.md line 55 (the S16 exception list) the whole time, 28 lines from the note that said no
+   evidence existed. This is the MORE dangerous error: a ledger that says "no evidence exists"
+   trains re-derivation instead of reconstruction. Caught only because we went looking anyway.
+
+AUTHORITATIVE DEFINITION (saved verbatim — form-null demonstrative under the three mistag-candidate
+numbers; form-null ALONE is common + benign, so the english + number scoping is load-bearing):
+```
+SELECT v.book, v.chapter, v.verse, w.position, w.strongs_base, w.english
+FROM words w
+JOIN verses v ON v.id = w.verse_id
+LEFT JOIN abp_surface s ON s.verse_id = w.verse_id AND s.position = w.position
+WHERE w.strongs_base IN ('G1473','G3779','G846')
+  AND s.verse_id IS NULL
+  AND (lower(w.english) LIKE '%this%' OR lower(w.english) LIKE '%these%')
+ORDER BY v.id, w.position;
+```
+The 9 (each a CANDIDATE, not a confirmed mistag — αὐτός/ἐγώ can legitimately render "this/same";
+needs ABP-app source eyes before any correction row): 2Ki 18:9 p9 · 2Ki 18:10 p12 · 2Ki 25:8 p9
+(G846 "this is") · 1Ch 27:6 p0 · Ezr 7:6 p0 (G846 "This") · Dan 4:33 p1 · Eze 36:32 p4
+(G1473 "this"/"I do this") · 1Co 1:24 p1 (G846 "to these") · Mat 3:15 p9 (G3779 "for to this").
+NEXT: JP reads each vs apostolicbibleapp.com; real mistags → correction rows via the L2/L10 door.
+
+STANDING-RULE CANDIDATE (propose in Session 7 handoff): **any count that lands in a ledger or audit
+doc carries its defining query verbatim.** Four unsaved ad-hoc probes this arc → four wrong claims
+(37/39 prose · ×4/14 Greek · L5-regen · L5-provenance). Same earned promotion as verify-before-sizing.
+
 ### L10 — Mal 3:6 trailing bare "G" — SUPERSEDED (see "L2 + L10 — RESOLVED Session 5" above)
 _Original find note, kept for the trail:_
 The numberless-G census (invariant S2) fired 7× and reconciled: 5 = the known blank-"G." set the
