@@ -77,6 +77,15 @@ _L10_REASON = ("ABP source dropped the Strong's number on the verb 'change' (ell
                "G3756 stays on pos 6) per the official ABP app (apostolicbibleapp.com) Mal "
                "3:6. L10.")
 
+_DAN433_REASON = ("ABP tags the feminine-dative 'αὐτῇ' (αὐτός, G846) with ἐγώ's number G1473 at "
+                  "Dan 4:33 pos 1 ('αὐτῇ τῇ ὥρᾳ' = 'in that very hour', Theodotion). Decided by "
+                  "MORPHOLOGY, not a breathing eyeball: a dative slot agreeing with τῇ ὥρᾳ spelled "
+                  "αυτ- can only be αὐτῇ (αὐτός) — οὗτος's fem. dative is ταύτῃ (ταυτ-) and αὕτη is "
+                  "nominative, so neither fits. Official ABP app (apostolicbibleapp.com) shows the "
+                  "slot numbered 1473, rendering 'In this hour'. Escaped Path C because Daniel 4 "
+                  "(OG-vs-Theodotion divergence) left the row unanchored — blank lemma/morph, so the "
+                  "corpus-wide αὐτός→G846 correction never reached it. L5.")
+
 # (book, chapter, verse, position, field, source_value, corrected_value, reason, ledger_ref)
 ENTRIES = [
     ("2Sa", 18, 21,  4, "strongs_base", "H3570", "H3569", _CUSHI_REASON, "Class2-cushi"),
@@ -97,6 +106,9 @@ ENTRIES = [
     ("Mal",  3,  6,  7, "strongs_base", "",   "G241",  _L10_REASON, "L10"),
     ("Mal",  3,  6,  7, "english",      "G",  "",      _L10_REASON, "L10"),
     ("Mal",  3,  6,  7, "english_head", "g",  "",      _L10_REASON, "L10"),
+    # L5 — Dan 4:33 pos 1, αὐτῇ (αὐτός) mis-numbered as ἐγώ (Session 7; defect live, apply after build --apply)
+    ("Dan",  4, 33,  1, "strongs",      "1473",  "846",  _DAN433_REASON, "L5"),
+    ("Dan",  4, 33,  1, "strongs_base", "G1473", "G846", _DAN433_REASON, "L5"),
 ]
 
 

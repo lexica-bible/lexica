@@ -158,6 +158,53 @@ needs ABP-app source eyes before any correction row): 2Ki 18:9 p9 · 2Ki 18:10 p
 (G1473 "this"/"I do this") · 1Co 1:24 p1 (G846 "to these") · Mat 3:15 p9 (G3779 "for to this").
 NEXT: JP reads each vs apostolicbibleapp.com; real mistags → correction rows via the L2/L10 door.
 
+**CLOSED CLEAN — the 3 G846 "this" candidates (Session 7, JP read vs apostolicbibleapp.com):**
+2Ki 25:8 p9 · Ezr 7:6 p0 · 1Co 1:24 p1. The app shows the LEMMA **αὐτός** at every slot
+(αυτός / αυτός / αυτοίς-δε) — NOT a demonstrative (οὗτος/ἐκεῖνος). αὐτός legitimately renders
+"this / this is / to these" in intensive/anaphoric use, so G846 is the RIGHT number and the
+rendering is clean. **Not mistags → no correction rows.** The app displays these under ABP's
+own number **G1473** (ἐγώ's number); that is the SAME pronoun mis-numbering the certified Path C
+fix corrected corpus-wide (αὐτός → G846, the dictionary-join-correct value per the strongs_base
+invariant, CLAUDE.md). Our data holds the corrected G846; the app still shows ABP's pre-Path-C
+1473. **Path C record (not asserted from memory):** memory `project_pronoun_fix_path_c` —
+rebuilds #2–#7 (2026-06-03/05), source = Rahlfs LXX (OT) + STEPBible TAGNT (NT), live count
+αὐτός/G846 24,781→25,304, app-confirmed each rebuild (e.g. Jer 50 "her" → αὐτός/G846). Expected +
+explained, no action — the app naming the lemma αὐτός is itself the confirmation. **L5 candidates 9 → 6 remaining:**
+2Ki 18:9 p9 · 2Ki 18:10 p12 · 1Ch 27:6 p0 · Dan 4:33 p1 · Eze 36:32 p4 (G1473) · Mat 3:15 p9 (G3779).
+Defining read query (verbatim): the AUTHORITATIVE DEFINITION query above; per-verse context pulled
+with `SELECT v.book||' '||v.chapter||':'||v.verse, w.position, w.strongs_base, w.english FROM words w
+JOIN verses v ON v.id=w.verse_id WHERE (book,ch,verse) IN {2Ki 25:8, Ezr 7:6, 1Co 1:24} ORDER BY v.id, w.position`.
+
+**BATCH TWO — the remaining 6 read (Session 7, JP verse-pasted the whole verse from apostolicbibleapp.com;
+our-data pulled with the per-verse read above extended to the 5 books). 5 clean + 1 real mistag:**
+- **2Ki 18:9 p9** — our G846; app lemma **αὐτός** "this is." Clean (αὐτός family, as batch one).
+- **2Ki 18:10 p12** — our G846; app **αὐτός** "this is." Clean.
+- **1Ch 27:6 p0** — our G846; app **αὐτός** "This." Clean.
+- **Eze 36:32 p4** — our G1473; app **ἐγώ** (app "εγώ ποιώ" = "I do") → genuine first person, G1473 CORRECT. Clean.
+- **Mat 3:15 p9** — our G3779; app **οὕτω(ς)** ("ούτω γαρ" = "for thus/so," rendered "for to this") → the adverb, not a demonstrative pronoun. G3779 correct. Clean.
+- **Dan 4:33 p1 — REAL MISTAG (first Tier B candidate of Session 7).** Our data **G1473 (ἐγώ)**; app word
+  is **αυτ-** ("αυτἡ," rendered "In this hour"), a feminine dative agreeing with ὥρᾳ. ἐγώ is IMPOSSIBLE
+  ("I" has no feminine form), so G1473 is wrong. Correct number hinges on the breathing mark: smooth
+  **αὐτῇ** = αὐτός → **G846**; rough **αὕτη** = οὗτος → **G3778**. The spelling starts αυτ- (not ταυτ-),
+  and the construction "ἐν αὐτῇ τῇ ὥρᾳ / αὐτῇ τῇ ὥρᾳ" (= "in that very hour") is a stock LXX/Theodotion
+  idiom → points to **αὐτῇ / G846**. PENDING: (a) JP confirms the breathing on the app (if unresolvable,
+  the grammar argument above stands as the cited reading; a genuinely ambiguous glyph = "can't cite source"
+  → row waits); (b) census — is this a lone stray or a Path C coverage gap? **First census query FAILED
+  its own control** (returned EMPTY; `WHERE strongs_base='G1473' AND lemma='αὐτός'` MUST return Dan 4:33 p1
+  or the detector is broken — it did not, so the stored lemma is null/inflected/accent-variant, likely the
+  very reason Path C missed the slot). CONFIRMED by the full-row inspect (`SELECT w.* FROM words w JOIN
+  verses v … WHERE Dan 4:33 position=1`): lemma **BLANK** (also morph/greek_pos/english_head blank);
+  row = `english='this', strongs='1473', strongs_base='G1473'`, nothing else. So the row was NEVER
+  anchored by Path C's alignment — Daniel 4 is an OG-vs-Theodotion divergence zone, so the ABP word
+  likely had no matching Rahlfs word → no lemma → escaped as raw G1473. CENSUS VERDICT: the escaped
+  class carries no Greek form AND no lemma in our data, so no our-data detector exists (lemma census is
+  dead; an english-render census is too noisy — "her"↔"there" etc.). Within the L5 class (form-blank,
+  "this/these") all 9 are read and Dan 4:33 is the LONE αὐτός mistag → a stray, not a visible cluster.
+  Sizing the broader "did Path C leave a Daniel-4 gap" needs Path C's own flag file `pronoun_review.tsv`
+  or an alignment re-run = **a Session-8 census, parked** (method noted, not forced). Dan 4:33 itself is
+  isolated + confirmed → a Tier-B `abp_corrections` overlay (source mis-numbers αὐτῇ as ἐγώ's 1473;
+  flip strongs/strongs_base to the αὐτός number), PENDING the breathing confirm to fix G846 vs G3778.
+
 STANDING-RULE CANDIDATE (propose in Session 7 handoff): **any count that lands in a ledger or audit
 doc carries its defining query verbatim.** Four unsaved ad-hoc probes this arc → four wrong claims
 (37/39 prose · ×4/14 Greek · L5-regen · L5-provenance). Same earned promotion as verify-before-sizing.
