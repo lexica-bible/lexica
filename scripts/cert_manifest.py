@@ -134,27 +134,35 @@ def cmd_build():
     print(f"  feeds: ABP {n_abp} · bh_scrape 1 · Rahlfs {n_rah} · TAGNT {n_tag}")
 
 
-def _backup_staleness_check():
-    """Loudness guard for the nightly db backup (it failed SILENTLY Jul 2-4 2026,
-    disk-full). backup_db.py stamps ~/db_backups/last_success.txt on a fully clean
-    run; this check runs every cert session and complains when the stamp is missing
-    or older than 25h. WARN-ONLY — never changes verify's exit code (that stays
-    about feed drift)."""
-    stamp = Path.home() / "db_backups" / "last_success.txt"
+def backup_guard_message(stamp: Path | None = None) -> str | None:
+    """The ONE copy of the backup-staleness detection (nightly backup failed
+    SILENTLY Jul 2-4 2026, disk-full). backup_db.py stamps last_success.txt on a
+    fully clean run. Returns a warning string, or None when fresh. Shared by
+    verify below (WARN-only) and cert_invariants.py (a hard FAIL there)."""
+    if stamp is None:
+        stamp = Path.home() / "db_backups" / "last_success.txt"
     try:
         if not stamp.is_file():
-            print("!! BACKUP GUARD: no success stamp at ~/db_backups/last_success.txt — "
-                  "the nightly backup has not completed cleanly since the guard landed. "
-                  "Check ~/db_backups/backup.log.")
-            return
+            return ("no success stamp at ~/db_backups/last_success.txt — the nightly "
+                    "backup has not completed cleanly since the guard landed. "
+                    "Check ~/db_backups/backup.log.")
         from datetime import datetime
         age = datetime.now() - datetime.fromisoformat(stamp.read_text().strip())
         hours = age.total_seconds() / 3600
         if hours > 25:
-            print(f"!! BACKUP GUARD: last clean backup was {hours:.0f}h ago (>25h) — "
-                  "the nightly task is failing. Check ~/db_backups/backup.log + disk space.")
+            return (f"last clean backup was {hours:.0f}h ago (>25h) — the nightly "
+                    "task is failing. Check ~/db_backups/backup.log + disk space.")
     except (OSError, ValueError) as e:
-        print(f"!! BACKUP GUARD: could not read the success stamp ({e}).")
+        return f"could not read the success stamp ({e})."
+    return None
+
+
+def _backup_staleness_check():
+    """WARN-ONLY wrapper for verify — never changes verify's exit code (that stays
+    about feed drift). The invariant suite makes the same message a hard failure."""
+    msg = backup_guard_message()
+    if msg:
+        print("!! BACKUP GUARD: " + msg)
 
 
 def cmd_verify():
