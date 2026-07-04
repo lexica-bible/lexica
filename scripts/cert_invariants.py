@@ -42,7 +42,7 @@ from cert_manifest import backup_guard_message    # the ONE backup guard
 PINS = {
     "words": 626305,
     "verses": 31237,  # read from live at suite landing 2026-07-04
-    "abp_corrections_active": 16,  # Cushi x6 + Jer 49:13 x2 + L2 (1Sa 6:11) x4 + L10 (Mal 3:6) x4
+    "abp_corrections_active": 18,  # Cushi x6 + Jer 49:13 x2 + L2 (1Sa 6:11) x4 + L10 (Mal 3:6) x4 + L5 (Dan 4:33) x2
 }
 
 
