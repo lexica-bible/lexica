@@ -135,6 +135,19 @@ def _head_word(text: str, italic_words=None) -> str | None:
 HEAD_WORD_TAIL_CAVEAT = ("english_head = last non-function word of ABP's phrase gloss; "
                          "pronoun/function slots may carry a trailing parked word. See _head_word.")
 
+# CAVEAT — _split_compounds function-word slot softness. Accepted limit, not a defect.
+# When _split_compounds (build_words_from_abp.py) redistributes a compound gloss, a bare
+# FUNCTION word (a genitive "of", a subject "she/he", a conjunction) can land on a pronoun
+# or article slot whose own Greek word is a different function word ("of" onto σοῦ, "she"
+# onto the article ὁ). This is order/attachment softness among function words only. It can
+# NEVER reach the "renders as" data: _head_word returns None for an all-function gloss, so a
+# function word never becomes english_head, and every renders-as counter reads english_head.
+# CONTENT words land on the correct Greek slot (certified: 0 wrong-slot in a 60-verse spread
+# cross-checked against BibleHub, + the full-corpus lint scripts/lint_split_wrong_slot.py).
+SPLIT_FUNCWORD_SLOT_CAVEAT = ("_split_compounds may park a bare function word (of/she/and) on "
+                              "a pronoun/article slot; function words never become english_head, "
+                              "so it cannot reach renders-as. See _split_compounds + lint_split_wrong_slot.py.")
+
 
 def parse_words(verse_text: str) -> list:
     """
