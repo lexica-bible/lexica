@@ -33,22 +33,22 @@ NUMS = ("846", "3778", "1473", "1438")  # the pronoun/function numbers most expo
 # Not a serving-path list — a drift baseline for this on-demand audit. Re-freeze with --refreeze
 # after a words rebuild.
 FROZEN = {
-    "846": {"him", "them", "their", "her", "of", "it", "he", "his", "they", "himself", "same",
-            "she", "your", "my", "themselves", "in", "with", "yourselves", "theirs", "its",
-            "myself", "itself", "herself", "things", "these", "away", "this", "thing", "than",
-            "ourselves", "by", "saying", "hers", "that", "place", "on", "own", "to", "time",
-            "the", "down", "at", "while", "concerning", "yourself", "what", "way", "let",
-            "during", "did", "any", "and"},
-    "3778": {"this", "these", "things", "one", "she", "he", "thing", "do", "than", "man", "side",
-             "woman", "will", "which", "thus", "did", "they", "others", "let", "it", "does",
-             "women", "with", "who", "way", "time", "those", "themselves", "that", "speaking",
-             "some", "people", "doing"},
-    "1473": {"i", "me", "you", "us", "himself", "your", "my", "do", "we", "same", "themselves",
-             "this", "myself", "shall", "these", "yourselves", "yourself", "will", "our", "mine",
-             "itself", "him", "did", "yours", "indeed", "away", "things", "the", "house", "have",
-             "go", "but", "both", "berate", "and"},
-    "1438": {"himself", "themselves", "own", "yourselves", "ourselves", "herself", "itself",
-             "his", "their", "yourself", "her", "him", "them", "of", "other"},
+    "846": {"am", "and", "any", "are", "at", "away", "by", "concerning", "did", "down", "during",
+            "for", "he", "her", "hers", "herself", "him", "himself", "his", "in", "is", "it", "its",
+            "itself", "let", "may", "my", "myself", "no", "of", "on", "ourselves", "out", "over",
+            "own", "place", "same", "saying", "she", "than", "that", "the", "their", "theirs",
+            "them", "themselves", "these", "they", "thing", "things", "this", "time", "to", "was",
+            "way", "were", "what", "while", "with", "your", "yourself", "yourselves"},
+    "3778": {"are", "did", "do", "does", "doing", "he", "is", "it", "let", "man", "one", "others",
+             "people", "she", "side", "some", "speaking", "than", "that", "the", "themselves",
+             "these", "they", "thing", "things", "this", "those", "thus", "time", "was", "way",
+             "were", "which", "who", "will", "with", "woman", "women"},
+    "1473": {"am", "and", "are", "away", "berate", "both", "but", "did", "do", "even", "go", "have",
+             "him", "himself", "house", "i", "indeed", "is", "itself", "me", "mine", "my", "myself",
+             "our", "out", "same", "shall", "the", "themselves", "these", "things", "this", "us",
+             "was", "we", "were", "will", "you", "your", "yours", "yourself", "yourselves"},
+    "1438": {"her", "herself", "him", "himself", "his", "itself", "of", "other", "ourselves", "own",
+             "their", "them", "themselves", "you", "yourself", "yourselves"},
 }
 
 
