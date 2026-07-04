@@ -81,3 +81,158 @@ Four control failures during L9, each a real bug caught before a trusted zero:
 
 Also surfaced (Session 0 deliverables, separate from L9): source-issues report, ingest pipeline
 inventory, consumer blast-radius map, seeded known-defect ledger. See the Session 0 handoff report.
+
+---
+
+# Session 1 — invariant enumeration + re-parse harness + correction-table proposal (2026-07-03)
+
+**Deliverables landed this session:**
+- **Invariant catalog** → `AUDIT_abp_invariants.md` (S1–S17 structural + P1–P21 per-pass, each with
+  check sketch, known-positive control, tier, and status; existing gates folded in, accepted limits
+  fenced off). Runnable suite = Session 2.
+- **Feed-pin manifest tool** → `scripts/cert_manifest.py` (`build` refuses while L1-class lines exist;
+  `verify` re-hashes all feeds vs `cert_manifest.json` and exits 1 on drift). Read-only except the
+  manifest file. NOT YET RUN — waits on the L1 cleanup go (checkpoint Q1) and the manifest-schema OK (Q2).
+- **Tier A re-parse harness** → `scripts/cert_reparse_harness.py`. Full production path (manifest
+  verify → feed prechecks that ABORT on any silent skip → `build_words_from_abp.py` into `bible.db.new`
+  → `finish_rebuild.sh` tail → row diff vs live via the production comparator `compare_words.load`,
+  is_pn excluded, bracket-id rank-normalised). Reconciles every count against an independent
+  measurement before trusting the diff (comparator size vs COUNT(*), partition arithmetic). Writes
+  ONLY the scratch + `cert_report_summary.txt` + `cert_deltas.tsv`; never deletes anything; refuses to
+  run over an existing `bible.db.new`. Running it to completion + adjudicating deltas = Session 2.
+- **Pre-registered expected deltas** (the decommission-blocking list starts here, don't be surprised):
+  (a) `fix_emdash.py` footprint — live has `—`, a fresh build has `--`; the harness hint-tags these
+  `emdash`. (b) `fix_cushi_strongs.py` — 6 slots in 2Sa 18, live H3569 vs rebuilt H3570. Both scripts
+  live OUTSIDE the build+tail path, which is exactly why they show up.
+
+## Ledger additions
+
+### L10 — Mal 3:6 trailing bare "G" — NEW (Tier B candidate, needs JP's source eyes)
+The numberless-G census (invariant S2) fired 7× and reconciled: 5 = the known blank-"G." set the
+build already fills; 1 = L2 (1Sa 6:11); **1 new = Mal 3:6**: source line ends
+`I change not.G3756 G` — a bare "G" with no number, which the parser emits as a stray trailing
+word. Same class as L2. Queued for the correction table alongside L2/L5 once JP recovers the
+intended reading (BibleHub check, like L2). Control status: detector fired at both known positives
+before the new find was trusted.
+
+## Correction-table schema — PROPOSAL ONLY (checkpoint, no writes)
+
+One row = one field-level correction to what a faithful parse produces:
+
+```
+CREATE TABLE abp_corrections (
+    id              INTEGER PRIMARY KEY,
+    book            TEXT NOT NULL,      -- ABP abbrev ('1Sa') — survives rebuilds
+    chapter         INTEGER NOT NULL,
+    verse           INTEGER NOT NULL,
+    position        INTEGER NOT NULL,   -- words.position at authoring time
+    field           TEXT NOT NULL,      -- words column ('strongs_base', 'english', …)
+    source_value    TEXT,               -- what the faithful parse yields — PRECONDITION
+    corrected_value TEXT,
+    reason          TEXT NOT NULL,
+    ledger_ref      TEXT,               -- 'L2', 'L5', 'L10'
+    applied_at      TEXT NOT NULL CHECK (applied_at IN ('ingest','read')),
+    status          TEXT NOT NULL DEFAULT 'active',   -- active | retired | superseded
+    created         TEXT NOT NULL
+);
+```
+
+Design calls (the mechanics, not the entries):
+- **Keyed by (book, chapter, verse, position, field)** — book/ch/vs, not verse_id, so a correction
+  reads meaningfully in a report and survives any verses-table surgery. Positions DO shift when the
+  build changes (the fix_split_merges lesson), so **source_value is a hard precondition**: apply only
+  when the target cell currently equals source_value; a non-match is a LOUD skip report, never a
+  silent write. That converts position drift from silent corruption into a visible regraft task.
+- **applied_at = 'ingest' recommended as the default.** Corrections run as the FINAL build step
+  (after all passes, inside the scratch copy), so: the serving tier is untouched (no read-time
+  overlay in every consumer per the Session 0 blast-radius map), the corrected value is visible to
+  every audit/harness run, and the live DB equals source + parser + table. 'read' stays in the
+  schema for a future case that genuinely can't wait for a rebuild.
+- **Harness interaction:** corrections apply to the scratch AFTER parse, BEFORE diff — so a certified
+  DB diffs zero and an unexplained delta can never hide behind the table. The harness gains a
+  `--no-corrections` flag (Session 2) for attribution runs, mirroring `--no-tail`.
+- **First queued entries (NOT written):** L2 (1Sa 6:11 blank-Strong's — number being recovered from
+  BibleHub), L5 (9 null-form rows — needs JP's source eyes), L10 (Mal 3:6, above). The Cushi fix
+  (6 rows) and the Cyrus/kyrios mistags (3) are prime migrations from script form.
+
+**Checkpoint questions for JP (need explicit answers before anything lands):**
+1. **L1 cleanup:** OK to delete the 4 artifact lines from the source files? They are (verified
+   this session): deu 960 "save this as abp_deuteronomy.txt", exo 1214 "the correct text w/
+   strong's", lev 860 "save this as abp_leviticus.txt", num 1289 "python parse_abp.py …". Pure
+   deletions, no verse text touched.
+2. **Manifest shape:** `cert_manifest.json` at repo root = {created, note, files: {path: {sha256,
+   bytes}}}, committed to git after the first PA run — OK?
+3. **Correction table:** name `abp_corrections`, lives in bible.db, **ingest-final** application
+   (not read-time) — agree?
+4. **Keying:** book/ch/vs + position + field with the source_value precondition (loud-skip on
+   drift) — agree?
+
+## Rebuild-script reclassification (deliverable 5 — the decommission plan)
+
+Home key: **A-folded** = already inside the build (standalone twin stays as audit/re-applier;
+dies when the harness proves 0 unexplained deltas) · **A-foldable** = deterministic rule that
+belongs in the build but still runs by hand · **B→table** = per-verse correction; migrates to
+`abp_corrections` · **post-build overlay** = separate ingest from its own source; out of words-cert
+scope but feed-pinned.
+
+| Script | Home | Note |
+|---|---|---|
+| fix_bracket_punct | A-folded (+tail re-run) | twin re-run settles to 0 |
+| fix_g1473_gloss | A-folded | |
+| fix_lord_subject | A-folded | |
+| fix_funcword_subject | A-folded | |
+| fix_lord_oath | A-folded | |
+| fix_greek_pos_gaps | A-folded | |
+| fix_abp_numerals | A-folded | |
+| fill_blank_strongs | A-folded (declared overlay over 5 Tier-B source slots) | |
+| fix_pn_subject_merge | A-folded (post-insert) | |
+| fix_italic_heads | A-folded (post-insert) | |
+| fix_split_flip | A-folded (root fix) + one-time live cleanup done | |
+| fix_hab314_dupes / dedup_words | A-folded (source fixed; dedup = 0-expect safety net) | |
+| fix_emdash | **A-foldable** — deterministic `--`→`—`; folding it kills a manual re-run step AND its harness delta class | |
+| fix_idios_own | **A-foldable** — corpus-wide shape rule (adjective orphan the noun fold skips); candidate to join the folds | |
+| fix_subject_reorder (20) | **B→table** | hand-listed per-verse rewrites |
+| fix_mat25_37 (1) | **B→table** | |
+| fix_supplied_attach (5) | **B→table** | |
+| fix_theos_filler_tags (2) | **B→table** | |
+| fix_kyrios_mistags (3) | **B→table** | source mistags (Cyrus) |
+| fix_merge_misses (1) | **B→table** | |
+| fix_split_merges (237) | **B→table** — THE priority migration: absolute-position patch whose silent-skip drift class the table's precondition mechanism is built for | |
+| fix_cushi_strongs (6) | **B→table** | today it lapses on every rebuild until re-run by hand |
+| import_tipnr | post-build overlay (TIPNR feed) — pin the TIPNR source file in a manifest v2 | |
+| build_abp_surface / build_abp_translit / build_rendering_norm / build_two_ending / build_dotted_lexicon / build_word_gloss / build_entity_binding | post-build overlay — own tables, words-cert out of scope | |
+| fix_bracket_gaps / fix_bracket_gaps_absorb / fix_bracket_merge / fix_bracket_misplacements / fix_multipos_gaps / fix_orphan_greek_pos / fix_subject_reorder predecessors | **status unknown — not in the live build/tail path.** Fits neither home until proven either superseded (delete) or a hidden manual edit whose live effect the harness will surface as a delta. Flagged per the frame; adjudicate in Session 2 with the delta report in hand | |
+| fix_article_noun_swaps | retired/deleted (replaced by _fix_backwards_pairing) — no action | |
+
+Also flagged: `_sort_brackets` in build_words_from_abp.py is dead code (defined, never called
+since ee84aa0) — delete or mark it (invariant P21).
+
+## Run doc — what JP runs on PA (in order, after the checkpoint answers)
+
+```bash
+# 0) after the L1 go: I remove the 4 lines + push; you pull on PA (normal deploy or git pull)
+# 1) pin the feeds (refuses if any artifact line remains):
+cd ~/bible-db && python3 scripts/cert_manifest.py build
+# 2) confirm the pin verifies:
+python3 scripts/cert_manifest.py verify
+# 3) (Session 2, ~a normal rebuild's runtime; safe: live db is read-only throughout)
+python3 scripts/cert_reparse_harness.py
+#    reports land in ~/bible-db/cert_report_summary.txt + cert_deltas.tsv
+#    scratch stays at ~/bible-db/bible.db.new — delete after reading: rm ~/bible-db/bible.db.new
+```
+
+One read-only check worth running now (confirms L10's footprint in the live db):
+```bash
+sqlite3 ~/bible-db/bible.db "SELECT v.book, v.chapter, v.verse, w.position, w.english, w.strongs FROM words w JOIN verses v ON v.id=w.verse_id WHERE v.book='Mal' AND v.chapter=3 AND v.verse=6 ORDER BY w.position;"
+```
+
+## Recommended Session 2 scope
+1. Run the harness to completion on PA; adjudicate every delta into: build-reproducible (0 action),
+   pre-registered script footprint (emdash/cushi), correction-table candidate, or genuine Tier A bug.
+2. Wire the QUERY/SWEEP invariants from the catalog into one runnable suite
+   (`scripts/cert_invariants.py`), each with its control test, both directions.
+3. On JP's checkpoint answers: create `abp_corrections`, migrate the B→table scripts (starting with
+   fix_split_merges + fix_cushi_strongs), add `--no-corrections` to the harness, re-run, and retire
+   the first decommissioned scripts.
+4. Small cleanups: delete `_sort_brackets`; fold `fix_emdash` (kills its delta class before the
+   Session 2 harness run if done first).

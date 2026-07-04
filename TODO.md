@@ -9,16 +9,24 @@ holds genuinely-open work and parked ideas only.
 ---
 
 ## ABP corpus certification audit (multi-session; full record `AUDIT_abp_certification.md`)
-- **Session 1 — invariant enumeration (high effort).** Enumerate machine-checkable invariants over the
-  ~18 build_words_from_abp.py judgment passes, run them all, each ships with a control test (fire at a
-  known positive first). Setup: full-row Tier A cert with a pinned-hash snapshot of bh_scrape +
-  Rahlfs/TAGNT on PA (clean the 4 L1 artifact lines in the source .txt files BEFORE hashing).
+- **Session 1 DONE 2026-07-03** — invariant catalog (`AUDIT_abp_invariants.md`, S1–S17 + P1–P21,
+  each with a control), feed-pin tool (`scripts/cert_manifest.py`), Tier A re-parse harness
+  (`scripts/cert_reparse_harness.py`), correction-table schema PROPOSAL, rebuild-script
+  reclassification/decommission list. **NEW find L10:** Mal 3:6 trailing bare "G" (same class as L2).
+  **BLOCKED ON JP — 4 checkpoint answers** (L1 line deletions · manifest shape · `abp_corrections`
+  at ingest-final · keying w/ source_value precondition) — see the Session 1 section of the audit file.
+- **Session 2 — run + adjudicate.** JP: `cert_manifest.py build`+`verify` then the harness on PA;
+  adjudicate every delta (pre-registered expected: emdash + cushi footprints); wire the QUERY/SWEEP
+  invariants into a runnable suite w/ controls; create `abp_corrections` + migrate fix_split_merges /
+  fix_cushi_strongs first; delete dead `_sort_brackets`; consider folding fix_emdash BEFORE the
+  harness run (kills its whole delta class).
 - **Certify the OTHER 7 redistribution passes.** L9 certified `_split_compounds` ONLY. Still uncertified:
   `_split_numbered`, `_redistribute_pronoun_compounds`, `_fix_backwards_pairing`, `_split_pn_article_lump`,
-  `_funcword_noun_relocate`, `_lord_subject_split`, `_lord_oath_fix`. Same census+control approach.
-- **Tier B correction table** (schema needs JP's go): verse_id/position/field/source_value/corrected_value/
-  reason/date, applied as a read-time overlay. First candidates: L2 (1Sa 6:11 uncovered blank-Strong's
-  "buttocks.G"), L5 (9 null-form "this/these" rows needing ABP source eyes).
+  `_funcword_noun_relocate`, `_lord_subject_split`, `_lord_oath_fix`. Same census+control approach
+  (the P-invariants are the skeleton; the census legs are Session 2+).
+- **Tier B correction table** — schema proposed Session 1 (ingest-final recommended, NOT read-time;
+  needs JP's go). First candidates: L2 (1Sa 6:11 "buttocks.G"), L5 (9 null-form "this/these" rows
+  needing ABP source eyes), L10 (Mal 3:6).
 - **Stump filter leak** (noted, low priority): `lint_split_wrong_slot.py`'s stemmer stump filter misses
   sibling forms whose count is <3 (sid/com/rott). Didn't matter once recipient-scoping shrank the haystack;
   fix if the filter is reused at scale.
