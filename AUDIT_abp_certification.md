@@ -372,6 +372,38 @@ All local code, committed; every live-db step below waits on JP's runs + checkpo
   columns too — verify pos 19 + 22 read strongs='166' AND strongs_base='G166' before the final
   run, else Hab shows up as a residue delta.
 
+## Session 2 FINAL RUN — PASS (2026-07-04) + decommission executed
+
+**The final harness run matched the pre-registered expectation EXACTLY.** Report:
+626,305 = 626,305 rows, 0 dropped/added. **corrections reconciliation (applied): 8 active,
+8 verified, 0 mismatched — ok.** 110 cell deltas, ALL inside exactly the 11 pre-registered
+Class-1b live-stale verses (11 verses × 2 swapped slots × their english/english_head/
+strongs/strongs_base/morph/lemma columns; direction everywhere = scratch matches source
+order, live stale — the run-1 verdict re-confirmed). Per-class: **flips 0** (the fold proved
+itself; control test on the same scratch went 196 → tail → 0), **Cushi 0 + Jer 0** (the
+table proved itself), **em-dash 0**, **Hab 3:6 0** (the two-column revert held). Zero
+unexplained. Tier A ingest-faithfulness stands certified against the 74-file pin, with the
+8-row Tier-B overlay applied and reconciled. The 11-verse residue self-heals at the
+Session 3 rebuild+swap.
+
+**Decommission EXECUTED (per the Session 1 reclassification):** 14 scripts moved to
+`scripts/graveyard/` (kept, not deleted; per-script notes in `graveyard/README.md`):
+- Build-folded twins, now proven redundant by the 0-unexplained run: fix_g1473_gloss ·
+  fix_lord_subject · fix_funcword_subject · fix_lord_oath · fix_greek_pos_gaps ·
+  fix_abp_numerals · fix_hab314_dupes (dedup_words STAYS in the tail as the safety net).
+- Table-captured: fix_cushi_strongs (→ abp_corrections rows 'Class2-cushi').
+- The six unclassified bracket/gap scripts ADJUDICATED DEAD: fix_bracket_gaps ·
+  fix_bracket_gaps_absorb · fix_bracket_merge · fix_bracket_misplacements ·
+  fix_multipos_gaps · fix_orphan_greek_pos — the final run had ZERO unexplained deltas,
+  so nothing in live depends on a hidden manual edit from any of them; no new ledger lines.
+- fix_article_noun_swaps was already deleted (pre-session).
+STILL IN SERVICE (not graveyard): everything in the live build/tail path — the 7 pinned
+patch scripts awaiting B→table migration (fix_subject_reorder, fix_mat25_37,
+fix_supplied_attach, fix_theos_filler_tags, fix_split_merges, fix_kyrios_mistags,
+fix_merge_misses), fix_idios_own, fix_bracket_punct, fix_emdash, fix_split_flip,
+dedup_words, and the build modules (fill_blank_strongs, fix_pn_subject_merge,
+fix_italic_heads). CLAUDE.md's script sections updated to match.
+
 **Session 2 remaining fix list (in order):**
 1. ~~Code-trace Class 1b~~ DONE — confirmed live-stale (above).
 2. Fold `fix_split_flip.py` into finish_rebuild.sh AFTER fix_emdash (ordering rules above);

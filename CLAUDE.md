@@ -1287,17 +1287,23 @@ memory `project_ai_synthesis_quality`.
   invariant, dups, misalignment, fragmented brackets, missing/orphan greek_pos, strongs range, lexicon/bdb
   coverage) + person/place overlap report. Should be 0 warnings. `--email [--only-warn] [--email-to=addr]`
   mails the report via `mailer.py` (the nightly PA task; SMTP creds from `~/bible-db/.env`).
-- `fix_greek_pos_gaps.py` / `fix_bracket_gaps_absorb.py` / `fix_orphan_greek_pos.py` / `dedup_words.py` —
-  targeted data repairs, all with `--dry-run`. Touch only the named column; never blanket DELETE
+- `dedup_words.py` — drops byte-identical duplicate rows (tail safety net, 0-expect). The other old
+  targeted repairs (fix_greek_pos_gaps, fix_bracket_gaps_absorb, fix_orphan_greek_pos, …) are RETIRED
+  to `scripts/graveyard/` (cert Session 2 — build-folded or adjudicated dead; see graveyard/README.md)
 - `audit_split_flip.py <db>` (READ-ONLY) + `fix_split_flip.py <db> [--apply]` — the "LORD the" flip
   (a determiner stranded AFTER its noun, vs the clean `verses.text`). Audit shares its detector with the
   fixer (`find_flips`) so they can't drift; the fixer swaps each pair toward `verses.text` order and LOOPS
   to convergence (a list "the A the B" needs several monotonic passes). The build's root fix
   (`_split_compounds` source-phrase fronting) covers ONLY that pass — a SECOND flip producer (proper-noun
   slots) regenerates ~175 flip verses on any rebuild (proven by the 2026-07-04 cert harness), so the fixer
-  is being FOLDED into finish_rebuild.sh as its LAST step (position-only swap → must run after ALL pinned
-  patches + fix_emdash; cert Session 2). Re-run surface+translit after any `--apply`. Memory
-  `project_abp_certification` + `project_split_compounds_flip`.
+  is FOLDED into finish_rebuild.sh as step 6 (position-only swap, after ALL pinned patches + fix_emdash,
+  before the abp_corrections apply; cert Session 2, final run proved 0). Re-run surface+translit after any
+  `--apply`. Memory `project_abp_certification` + `project_split_compounds_flip`.
+- `build_abp_corrections.py` + `apply_abp_corrections.py` — the Tier-B **abp_corrections** table (in
+  bible.db; 8 rows: Cushi ×6 + Jer 49:13 ×2) and its guarded apply (finish_rebuild.sh step 7, the TRUE
+  final tail step — fires only when the cell still holds the recorded fresh-parse value, LOUD skip
+  otherwise, log beside the db). New source-defect corrections = new rows via build_abp_corrections.py
+  (checkpoint first), never a new fix script. Full record: `AUDIT_abp_certification.md`.
 - `fix_emdash.py [db]` (`--apply`) — swaps ABP's literal `--` clause dash for an em-dash `—` in
   `words.english` + `verses.text` (double hyphen only; single hyphens like Beer-sheba are safe). FOLDED
   2026-07-03: runs as a tail step of `finish_rebuild.sh` (after fix_split_merges — a "--" precondition
@@ -1320,11 +1326,11 @@ memory `project_ai_synthesis_quality`.
   (`apply_pn_subject_split`, runs after insert, BEFORE import_tipnr resolves the new name slots). After
   `--apply`: re-run import_tipnr → build_abp_surface → build_abp_translit. Audit for the εἰμί class:
   `scripts/audit_eimi_subject_merge.py`. Memory `project_pn_subject_verb_fold`.
-- `build_entity_binding.py` (dry-run default / `--apply`) + `fix_cushi_strongs.py` (dry-run default /
-  `--apply`) — the Issue-2 entity-binding build + the Cushi by-verse Strong's correction (6 "Cushi*" slots in
-  2Sa 18, H3570→H3569, never global). Both PA-only, reversible; **re-run BOTH after any words rebuild**
-  (build_entity_binding re-tiers from live metaV; the Cushi fix is re-introduced by a rebuild). Binder logic
-  lives in `entity_resolution.py`. Memory `project_entity_resolution_rebuild`.
+- `build_entity_binding.py` (dry-run default / `--apply`) — the Issue-2 entity-binding build. PA-only,
+  reversible; **re-run after any words rebuild** (re-tiers from live metaV). Binder logic lives in
+  `entity_resolution.py`. The old companion `fix_cushi_strongs.py` is RETIRED — the 6 Cushi slots now
+  live in the `abp_corrections` table, applied automatically by the rebuild tail (cert Session 2).
+  Memory `project_entity_resolution_rebuild`.
 - `add_hebrews13.py` (dry-run default / `--apply`) — ONE-OFF additive repair (DONE+LIVE 2026-06-30):
   restored the missing Hebrews 13 (the ABP source file had no ch 13 → no verse rows → its words were
   skipped, since the build only emits words for verses already in the `verses` table). Adds ONLY Heb 13,
