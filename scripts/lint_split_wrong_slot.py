@@ -172,16 +172,23 @@ def _iter_built(bh_index, lex, rahlfs, tagnt, want_affected):
     MOVED a word into — captured by diffing english_head per base around the real split. This
     scopes the audit to the split's own output, not every word ABP parked in the verse."""
     real_split = B._split_compounds
-    holder = {"recips": []}
+    holder = {"recips": [], "nrecip": 0}
 
     def wrapped(rows, lexicon, carry=False):
+        before_ne = sum(1 for r in rows if (r[1] or "").strip())
         # heads present per base BEFORE the split (the source slots' own words)
         before = defaultdict(Counter)
         for r in rows:
             if r[2]:
                 before[r[4]][r[2]] += 1
         real_split(rows, lexicon, carry)
-        # any head now present on a base BEYOND its before-count is a slot the split filled
+        after_ne = sum(1 for r in rows if (r[1] or "").strip())
+        # TOTAL recipient slots the split filled (incl function words) — reconciles with the
+        # sizing script's net-non-empty-increase count (~18,339).
+        holder["nrecip"] = max(0, after_ne - before_ne)
+        # CONTENT recipients: a head now present on a base BEYOND its before-count. A function
+        # word ("of"/"and") lands with head None, so it is excluded here by construction — the
+        # accepted caveat, out of the wrong-slot audit but still counted in nrecip above.
         seen = defaultdict(Counter)
         recips = []
         for r in rows:
@@ -207,8 +214,9 @@ def _iter_built(bh_index, lex, rahlfs, tagnt, want_affected):
                                     src.verse(bnum, ch, vs), [w[0] for w in abp_words])
             abp_words = B.apply_pronoun_corrections(abp_words, corrs, [], f"{abbrev} {ch}:{vs}")
         holder["recips"] = []
+        holder["nrecip"] = 0
         rows = B.build_verse_words(abp_words, bh_rows, lex)
-        yield f"{abbrev} {ch}:{vs}", rows, holder["recips"]
+        yield f"{abbrev} {ch}:{vs}", rows, holder["recips"], holder["nrecip"]
 
 
 def _build_counts_and_stash(bh_index, lex, rahlfs, tagnt):
@@ -217,22 +225,29 @@ def _build_counts_and_stash(bh_index, lex, rahlfs, tagnt):
     counts = defaultdict(Counter)
     totals = Counter()
     affected = []
-    for ref, rows, recips in _iter_built(bh_index, lex, rahlfs, tagnt, want_affected=True):
+    recon = {"total_recip": 0, "verses_any": 0}      # reconciliation vs the sizing script
+    for ref, rows, recips, nrecip in _iter_built(bh_index, lex, rahlfs, tagnt, want_affected=True):
         for _pos, hf, base in _content_slots(rows):
             counts[base][hf] += 1
             totals[base] += 1
+        recon["total_recip"] += nrecip
+        if nrecip:
+            recon["verses_any"] += 1
         if recips:
             affected.append((ref, recips))
-    return counts, totals, affected
+    return counts, totals, affected, recon
 
 
 def run_control(counts, totals, affected):
     """Control-test rule: fire at a known-GOOD verse (must pass) + a hand-BROKEN one (must
     flag). The zero isn't trusted until the pattern draws blood."""
-    good = next((r for r in affected if r[0] == "Gen 27:27"), None)
+    # a verse with a known CONTENT recipient: Gen 1:1 "God made" -> "God" onto θεός/2316.
+    good = next((r for r in affected if r[0] == "Gen 1:1"), None) or (affected[0] if affected else None)
     if not good:
-        print("CONTROL ERROR: Gen 27:27 not in the affected set"); return False
+        print("CONTROL ERROR: no content-recipient verse in the affected set"); return False
     ref, recips = good
+    print(f"  control verse: {ref}  recipients: " +
+          ", ".join(f"{h!r}<{b}>" for _p, h, b in recips))
 
     good_flags = _flag_recips(recips, counts, totals, ref)
     print(f"  known-good {ref}: {len(good_flags)} flag(s)  (expect 0)  "
@@ -290,8 +305,13 @@ def main():
         print("TAGNT: NOT found — NT input will differ from production")
 
     print("building corpus rendering reference + stashing affected verses …")
-    counts, totals, affected = _build_counts_and_stash(bh_index, lex, rahlfs, tagnt)
-    print(f"  numbers with renderings: {len(totals):,}   affected verses: {len(affected):,}")
+    counts, totals, affected, recon = _build_counts_and_stash(bh_index, lex, rahlfs, tagnt)
+    print(f"  numbers with renderings: {len(totals):,}")
+    print(f"  RECONCILE vs sizing script: {recon['total_recip']:,} total recipient slots across "
+          f"{recon['verses_any']:,} verses (sizing: 18,339 / 12,692)")
+    content_recips = sum(len(r) for _ref, r in affected)
+    print(f"  content-word recipients: {content_recips:,} across {len(affected):,} verses "
+          f"(the audited subset; the rest moved function words = accepted caveat)")
 
     if args.control:
         sys.exit(0 if run_control(counts, totals, affected) else 1)
