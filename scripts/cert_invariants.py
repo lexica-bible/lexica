@@ -117,8 +117,11 @@ def check_corrections(conn, expected_active=None) -> list:
 
 
 def check_person_place_binding(conn) -> list:
-    """No proper-noun name may render BOTH a fuzzy PLACE and an exact PERSON — the
-    Cushi shape (a man's gentilic name stemmed to his region). Cert Session 4.
+    """No proper-noun name may render a fuzzy match to one section AND an exact match
+    to the other. BOTH directions (the fuzzy path is symmetric):
+      - fuzzy-PLACE + exact-PERSON = person-as-place (the Cushi shape, cert Session 4)
+      - fuzzy-PERSON + exact-PLACE = place-as-person (the mirror, cert Session 6 — the
+        8 mixed-block places lived in this shape's blind spot before the parser fix).
     Binding tables are PA-only + deploy-safe: absent -> nothing can mis-render -> pass."""
     has = conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' "
                        "AND name='pn_binding'").fetchone()
@@ -130,11 +133,21 @@ def check_person_place_binding(conn) -> list:
                    WHERE b.render = 1)
         SELECT name,
                SUM(kind='fuzzy' AND section='place')  AS fp,
-               SUM(kind='exact' AND section='person') AS ep
-        FROM r GROUP BY name HAVING fp > 0 AND ep > 0
+               SUM(kind='exact' AND section='person') AS ep,
+               SUM(kind='fuzzy' AND section='person') AS fpe,
+               SUM(kind='exact' AND section='place')  AS epl
+        FROM r GROUP BY name
+        HAVING (fp > 0 AND ep > 0) OR (fpe > 0 AND epl > 0)
     """).fetchall()
-    return [f"{r['name']}: {r['fp']} fuzzy-place AND {r['ep']} exact-person render(s) "
-            f"(person-as-place mis-bind, the Cushi shape)" for r in rows]
+    out = []
+    for r in rows:
+        if r["fp"] and r["ep"]:
+            out.append(f"{r['name']}: {r['fp']} fuzzy-place AND {r['ep']} exact-person "
+                       f"render(s) (person-as-place mis-bind, the Cushi shape)")
+        if r["fpe"] and r["epl"]:
+            out.append(f"{r['name']}: {r['fpe']} fuzzy-person AND {r['epl']} exact-place "
+                       f"render(s) (place-as-person mis-bind, the mirror shape)")
+    return out
 
 
 def check_manifest() -> list:
@@ -244,17 +257,22 @@ def run_controls() -> int:
         named = any("2Sa 18:21 pos 4 strongs_base" in p for p in bad)
         results.append(("4 corrections (must NAME the row)", bool(bad) and named, bad))
 
-        # control 7: a name that renders BOTH a fuzzy place and an exact person
+        # control 7: BOTH directions must fire — the Cushi shape (fuzzy-place +
+        # exact-person) AND the mirror (fuzzy-person + exact-place, cert Session 6).
         conn.executescript("""
           CREATE TABLE pn_binding(name TEXT, entity_uniq TEXT, kind TEXT, render INT);
           CREATE TABLE tipnr_entities(uniq TEXT, section TEXT);
-          INSERT INTO tipnr_entities VALUES ('Cush@x','place'),('Cushi@y','person');
+          INSERT INTO tipnr_entities VALUES ('Cush@x','place'),('Cushi@y','person'),
+                                            ('Zorah@p','person'),('Zorah@q','place');
           INSERT INTO pn_binding VALUES ('cushi','Cush@x','fuzzy',1),
-                                        ('cushi','Cushi@y','exact',1);
+                                        ('cushi','Cushi@y','exact',1),
+                                        ('zorahite','Zorah@p','fuzzy',1),
+                                        ('zorahite','Zorah@q','exact',1);
         """)
         conn.commit()
         bad = check_person_place_binding(conn)
-        results.append(("7 person/place binding", bool(bad), bad))
+        both = any("Cushi shape" in b for b in bad) and any("mirror shape" in b for b in bad)
+        results.append(("7 person/place binding (both directions)", both, bad))
         conn.close()
 
     print("== cert_invariants CONTROLS (each check must FIRE on seeded bad input) ==")
