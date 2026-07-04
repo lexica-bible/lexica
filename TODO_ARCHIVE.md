@@ -6,6 +6,42 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-07-04 — ABP cert Session 5: TIPNR pinned, backup damage-check, L2/L10 landed, seam doc
+- **TIPNR pinned.** Both `build_entity_binding.py` AND `import_tipnr.py` downloaded TIPNR live at build time
+  (the last unpinned input near the certified layer). Vendored to `tipnr/TIPNR.txt`, hash-added to
+  `cert_manifest.json` (75 files, code floor 73→74), both loaders default to the pinned copy
+  (`--download-tipnr` for drift checks). Two gates: download byte-stable (two pulls + PA = same sha), binder
+  rebuild byte-identical vs live pn_binding (14,816 render, 0 diff, 0 dupes). Gate 1a caveat: no Session-4
+  copy existed to hash against, so "no drift since Session 4" rode on the binder-identical result, not a hash.
+- **Backup damage-check into the nightly health email** (`health_check.py`): quick_check every raw backup +
+  gzip stream-test every compressed one (no unpack) + shared freshness guard. First live sweep fired on
+  exactly the 07-02 corrupt gz, nothing else. Permanent self-test `--backup-controls` (seeds throwaway
+  good+truncated copies) so the control outlives that file. Backup-alarm TODO item now DONE.
+- **L2 + L10 correction rows landed** (`abp_corrections` 8→16). Both were source defects in BOTH feeds
+  (abp_texts + bh_scrape): a dropped Strong's number left a bare "G" the build turned into junk. Restored
+  from the OFFICIAL ABP app (apostolicbibleapp.com) — now the standing adjudication witness. L2 1Sa 6:11 =
+  G1475.3 (buttocks; also 3× same-chapter); L10 Mal 3:6 = G241.2 (verb). Two-step apply (build --apply adds
+  rows, apply_abp_corrections --apply cleans live cells, since the defect was never hand-fixed). Suite 7/7
+  green at pin 16.
+- **Two-source seam documented** → `AUDIT_entity_seam.md`.
+- **Finding (Session 6 opener): 97-card section-label defect.** `parse_tipnr` reads section from the file's
+  block HEADER, not each entity's row type — 10 real places under `$== PERSON+PLACE` headers render as
+  person cards (97 live binds), EXCLUDED blocks ingested (4), 37 doc-prose junk entities (0). Identity
+  correct, labels wrong. NOT fixed (checkpointed for Session 6).
+- **Lesson 1:** the ledger described L2/L10's SHAPE wrong — logged as "blank Strong's," but the real damage
+  was misattributed compound-split junk (dropped number → next tag folds onto the slot, "G" glued into the
+  gloss AND the english_head search key). Fix was 4 cells each, not 1. Tipped off by reading the actual cells
+  (english/strongs/strongs_base/english_head) before sizing the fix — a one-line ledger entry is a pointer,
+  not a spec.
+- **Lesson 2:** when both stored feeds share the same upstream defect, neither checks the other — reach for
+  the authoritative living source (the ABP app). It carried G241.2, a decimal extension standard Strong's
+  could never supply.
+- **Lesson 3:** the P1 mirror-census (0 person-fuzzy + place-exact) is a VOID ZERO — it keyed on section
+  labels now known wrong for 10 entities. A control-test lesson landing on our own probe: re-run it after the
+  label fix, not before.
+- **Lesson 4:** a freshness-only backup check is blind to a corrupt-but-recent copy (the 07-02 file existed
+  and was recent). Damage detection needs quick_check / stream-test, and its own seeded control.
+
 ## 2026-07-04 — ABP cert Session 4: Cushi person-as-place binding fixed + check 7
 - **Symptom:** 2Sa 18:21 Cushi (David's runner, a man) rendered the entity card "Cush — PLACE — Region."
   Corpus row and Strong's def were both correct — only the entity binding was wrong.
