@@ -24,10 +24,15 @@ suite green at pin 16); two-source seam doc written (`AUDIT_entity_seam.md`). Ca
   Identity is correct everywhere — labels only. Fix = read row-type over header, skip EXCLUDED + prose,
   re-run binder, re-run P1 mirror census on trustworthy labels, consider check 7 asserting on row-type.
   Full evidence in `AUDIT_entity_seam.md`. Checkpointed proposal — not implemented.
-- **L5 → correction rows (re-derive first).** The recorded "9 null-form this/these rows" list was never
-  written to the repo and did NOT reproduce (my regen found 0). Session 6: explain the discrepancy (why the
-  original 9 didn't reproduce), re-derive the real list, read each against the official ABP app
-  (apostolicbibleapp.com — the standing adjudication witness), then correction rows via the L2/L10 path.
+- **L5 → correction rows.** DISCREPANCY EXPLAINED Session 6 (closure a, recorded-in-error — no drift).
+  The recorded 9 (TODO below / S16 exception list) DID reproduce: each of the 9 verses shows its
+  demonstrative row under G1473/G3779/G846 with a BLANK surface_form (1Ch 27:6 "This", 1Co 1:24
+  "to these", 2Ki 18:9/18:10/25:8 "this is", Dan 4:33 "this", Eze 36:32 "I do this", Ezr 7:6 "This",
+  Mat 3:15 "for to this"). The Session-5 "regen found 0" used a FORM-based detector (the τοῦτο
+  `form GLOB`); a form-GLOB can't match a form-NULL row → 0 by construction. Not data movement.
+  NEXT (Session 6/7): re-derive the authoritative null-form list corpus-wide (the recorded 9 may not be
+  the whole set), read each against the official ABP app (apostolicbibleapp.com), then correction rows
+  via the L2/L10 path (dry-run → JP's go → guarded apply → check 4 green).
 - **Certify the OTHER 7 redistribution passes.** L9 certified `_split_compounds` ONLY. Still uncertified:
   `_split_numbered`, `_redistribute_pronoun_compounds`, `_fix_backwards_pairing`, `_split_pn_article_lump`,
   `_funcword_noun_relocate`, `_lord_subject_split`, `_lord_oath_fix`. Same census+control approach
