@@ -172,15 +172,18 @@ def _iter_built(bh_index, lex, rahlfs, tagnt, want_affected):
     MOVED a word into — captured by diffing english_head per base around the real split. This
     scopes the audit to the split's own output, not every word ABP parked in the verse."""
     real_split = B._split_compounds
-    holder = {"recips": [], "nrecip": 0}
+    holder = {"recips": [], "nrecip": 0, "fnwords": []}
 
     def wrapped(rows, lexicon, carry=False):
         before_ne = sum(1 for r in rows if (r[1] or "").strip())
         # heads present per base BEFORE the split (the source slots' own words)
         before = defaultdict(Counter)
+        before_fn = defaultdict(Counter)          # head-None (function) slots that already had text
         for r in rows:
             if r[2]:
                 before[r[4]][r[2]] += 1
+            elif (r[1] or "").strip():
+                before_fn[r[4]][(r[1] or "").strip().lower()] += 1
         real_split(rows, lexicon, carry)
         after_ne = sum(1 for r in rows if (r[1] or "").strip())
         # TOTAL recipient slots the split filled (incl function words) — reconciles with the
@@ -190,15 +193,24 @@ def _iter_built(bh_index, lex, rahlfs, tagnt, want_affected):
         # word ("of"/"and") lands with head None, so it is excluded here by construction — the
         # accepted caveat, out of the wrong-slot audit but still counted in nrecip above.
         seen = defaultdict(Counter)
-        recips = []
+        seen_fn = defaultdict(Counter)
+        recips, fnwords = [], []
         for r in rows:
-            if not r[2]:
-                continue
-            base, head = r[4], r[2]
-            seen[base][head] += 1
-            if seen[base][head] > before[base].get(head, 0):
-                recips.append((r[0], head, base))
+            if r[2]:
+                base, head = r[4], r[2]
+                seen[base][head] += 1
+                if seen[base][head] > before[base].get(head, 0):
+                    recips.append((r[0], head, base))
+            elif (r[1] or "").strip():
+                # a newly-filled head-None slot: the function-word text the split moved. Collected
+                # so we can EYEBALL the ~17k function-recipient vocabulary for a content word that
+                # a hand-curated function-word list mis-swallowed (which would exit the audit silently).
+                base, w = r[4], (r[1] or "").strip().lower()
+                seen_fn[base][w] += 1
+                if seen_fn[base][w] > before_fn[base].get(w, 0):
+                    fnwords.append(w)
         holder["recips"] = recips
+        holder["fnwords"] = fnwords
     B._split_compounds = wrapped
 
     for abbrev, ch, vs, abp_words in B.iter_verses(*B._abp_sources()):
@@ -215,8 +227,9 @@ def _iter_built(bh_index, lex, rahlfs, tagnt, want_affected):
             abp_words = B.apply_pronoun_corrections(abp_words, corrs, [], f"{abbrev} {ch}:{vs}")
         holder["recips"] = []
         holder["nrecip"] = 0
+        holder["fnwords"] = []
         rows = B.build_verse_words(abp_words, bh_rows, lex)
-        yield f"{abbrev} {ch}:{vs}", rows, holder["recips"], holder["nrecip"]
+        yield f"{abbrev} {ch}:{vs}", rows, holder["recips"], holder["nrecip"], holder["fnwords"]
 
 
 def _build_counts_and_stash(bh_index, lex, rahlfs, tagnt):
@@ -225,11 +238,12 @@ def _build_counts_and_stash(bh_index, lex, rahlfs, tagnt):
     counts = defaultdict(Counter)
     totals = Counter()
     affected = []
-    recon = {"total_recip": 0, "verses_any": 0}      # reconciliation vs the sizing script
-    for ref, rows, recips, nrecip in _iter_built(bh_index, lex, rahlfs, tagnt, want_affected=True):
+    recon = {"total_recip": 0, "verses_any": 0, "fnvocab": Counter()}   # reconciliation vs sizing
+    for ref, rows, recips, nrecip, fnwords in _iter_built(bh_index, lex, rahlfs, tagnt, want_affected=True):
         for _pos, hf, base in _content_slots(rows):
             counts[base][hf] += 1
             totals[base] += 1
+        recon["fnvocab"].update(fnwords)
         recon["total_recip"] += nrecip
         if nrecip:
             recon["verses_any"] += 1
@@ -315,6 +329,24 @@ def main():
 
     if args.control:
         sys.exit(0 if run_control(counts, totals, affected) else 1)
+
+    # ── scope check: the function-recipient vocabulary (what the audit EXCLUDES) ──
+    # If a content word hides in the hand-curated function-word lists it lands here silently,
+    # exiting the audit. Dump the vocabulary sorted by frequency so it can be eyeballed once —
+    # a clean list (of/and/the/his/she…) makes the 918 = whole-exposure claim airtight.
+    fnvocab = recon["fnvocab"]
+    Path("split_function_recipient_vocab.tsv").write_text(
+        "word\tcount\n" + "\n".join(f"{w}\t{c}" for w, c in fnvocab.most_common()), encoding="utf-8")
+    print(f"\n  function-recipient vocabulary: {len(fnvocab):,} distinct words "
+          f"(full list -> split_function_recipient_vocab.tsv). Top 50 — eyeball for anything content-shaped:")
+    line = "    "
+    for w, c in fnvocab.most_common(50):
+        chunk = f"{w}({c})  "
+        if len(line) + len(chunk) > 100:
+            print(line); line = "    "
+        line += chunk
+    if line.strip():
+        print(line)
 
     flags = []
     recip_total = 0
