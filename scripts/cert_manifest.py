@@ -57,7 +57,7 @@ def feed_files():
     for d in (ABP_OT_DIR, ABP_NT_DIR):
         if not d.is_dir():
             sys.exit(f"ERROR: ABP source dir missing: {d}")
-        files += [(str(p.relative_to(BASE_DIR)), p) for p in sorted(d.glob("*.txt"))]
+        files += [(p.relative_to(BASE_DIR).as_posix(), p) for p in sorted(d.glob("*.txt"))]
     n_abp = len(files)
     if n_abp != 66:
         sys.exit(f"ERROR: expected 66 ABP files, found {n_abp} — wrong tree?")
