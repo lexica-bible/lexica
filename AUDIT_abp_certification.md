@@ -323,10 +323,10 @@ positive = THIS scratch (196 pairs); after the fold it must read 0 on every buil
   adjudication gate exists for exactly this.
 
 **PRE-REGISTERED EXPECTATION for the final Session 2 harness run (exact, nothing else):**
-residue = the 11 Class-1b live-stale verses + Hab 3:6 pos19 (if not hand-reverted first) —
-i.e. 12 verses, every one pre-explained as live-side drift. Cushi + Jer 49:13 vanish behind
-the correction table; the 175 flip verses vanish behind the tail fold. ANY other delta is a
-finding.
+residue = the 11 Class-1b live-stale verses ONLY (Hab 3:6 pos19 was hand-reverted to 166 on
+live 2026-07-04, verified — both "eternal" slots now read 166, so it produces no delta).
+Cushi + Jer 49:13 vanish behind the correction table; the 175 flip verses vanish behind the
+tail fold. ANY other delta is a finding.
 
 **Session 2 remaining fix list (in order):**
 1. ~~Code-trace Class 1b~~ DONE — confirmed live-stale (above).
