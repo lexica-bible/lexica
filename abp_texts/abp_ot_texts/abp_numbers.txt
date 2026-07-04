@@ -1286,4 +1286,3 @@
 (Num 36:11)  AndG2532 it came to passG1096 Mahlah,G* Tizrah,G* andG2532 Hoglah,G* andG2532 Milchah,G* andG2532 Noah,G* daughtersG2364 of ZelophehadG* to G3588 their cousinsG431 G1473
 (Num 36:12)  ofG1537 theG3588 peopleG1218 G3588 of ManassehG* of the sonsG5207 of JosephG* they becameG1096 wives.G1135 AndG2532 [2cameG1096 G3588 1their inheritance]G2817 G1473 toG1909 theG3588 tribeG5443 of the peopleG1218 G3588 of their father.G3962 G1473
 (Num 36:13)  These are G3778 theG3588 commandments,G1785 andG2532 theG3588 ordinances,G1345 andG2532 theG3588 judgments,G2917 whichG3739 the LORD gave chargeG1781 G2962 byG1722 the handG5495 of MosesG* to theG3588 sonsG5207 of IsraelG* atG1909 the descentG1424 of MoabG* nearG1909 theG3588 JordanG* byG2596 Jericho.G*
- python parse_abp.py abp_numbers.txt bible.db

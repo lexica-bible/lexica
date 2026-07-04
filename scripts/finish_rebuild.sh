@@ -40,10 +40,18 @@ run python3 scripts/fix_idios_own.py         "${DB}"
 #    Hab 3:14 source dup is fixed).
 run python3 scripts/dedup_words.py           "${DB}"
 
-# 4) Final punctuation float — runs LAST so it also tidies the LORD-subject (and any
-#    other) brackets created/modified above: a trailing comma left on the verb floats
-#    to the last chip shown ('said · the LORD,'). ~202 cells; re-run settles to 0.
+# 4) Final punctuation float — runs after the patches so it also tidies the
+#    LORD-subject (and any other) brackets created/modified above: a trailing comma
+#    left on the verb floats to the last chip shown ('said · the LORD,'). ~202 cells;
+#    re-run settles to 0.
 run python3 scripts/fix_bracket_punct.py     "${DB}"
+
+# 5) Em-dash swap ('--' -> '—' in words.english + verses.text) — MUST stay the very
+#    LAST step: split_merge_fixes.json carries a '--' precondition ("you think not --")
+#    that would stop matching if this ran before fix_split_merges. Folded here
+#    2026-07-03 (cert Session 1): kills the manual re-run step and its whole
+#    expected-delta class in the certification harness.
+run python3 scripts/fix_emdash.py            "${DB}" --apply
 
 echo
 echo "== finish_rebuild done. Next: audits + compare_words.py vs live, THEN swap. =="

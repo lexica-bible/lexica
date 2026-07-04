@@ -13,13 +13,15 @@ holds genuinely-open work and parked ideas only.
   each with a control), feed-pin tool (`scripts/cert_manifest.py`), Tier A re-parse harness
   (`scripts/cert_reparse_harness.py`), correction-table schema PROPOSAL, rebuild-script
   reclassification/decommission list. **NEW find L10:** Mal 3:6 trailing bare "G" (same class as L2).
-  **BLOCKED ON JP — 4 checkpoint answers** (L1 line deletions · manifest shape · `abp_corrections`
-  at ingest-final · keying w/ source_value precondition) — see the Session 1 section of the audit file.
-- **Session 2 — run + adjudicate.** JP: `cert_manifest.py build`+`verify` then the harness on PA;
-  adjudicate every delta (pre-registered expected: emdash + cushi footprints); wire the QUERY/SWEEP
-  invariants into a runnable suite w/ controls; create `abp_corrections` + migrate fix_split_merges /
-  fix_cushi_strongs first; delete dead `_sort_brackets`; consider folding fix_emdash BEFORE the
-  harness run (kills its whole delta class).
+  **All 4 checkpoint answers APPROVED 2026-07-03** (L1 lines deleted + pushed same day; em-dash
+  swap folded as finish_rebuild.sh's LAST step — order load-bearing, split_merge_fixes.json "--"
+  precondition). Setup UNBLOCKED: JP runs `cert_manifest.py build` + `verify` on PA after a pull.
+- **Session 2 — run + adjudicate.** The harness on PA (expect a normal rebuild's runtime; live db
+  read-only throughout); adjudicate every delta (pre-registered expected: cushi 6 rows; emdash
+  class now eliminated); wire the QUERY/SWEEP invariants into a runnable suite w/ controls
+  (`scripts/cert_invariants.py`); create `abp_corrections` (approved: ingest-final, source_value
+  precondition, loud skip) + migrate fix_split_merges / fix_cushi_strongs first; delete dead
+  `_sort_brackets`.
 - **Certify the OTHER 7 redistribution passes.** L9 certified `_split_compounds` ONLY. Still uncertified:
   `_split_numbered`, `_redistribute_pronoun_compounds`, `_fix_backwards_pairing`, `_split_pn_article_lump`,
   `_funcword_noun_relocate`, `_lord_subject_split`, `_lord_oath_fix`. Same census+control approach

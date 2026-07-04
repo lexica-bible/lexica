@@ -7,10 +7,13 @@ every "--" with "—", keeping the surrounding spaces ("wonder -- above" -> "won
 Only the DOUBLE hyphen is touched — single hyphens inside words (Beer-sheba, self-control)
 are left alone. Touches ONLY words.english + verses.text; fully reversible (— back to --).
 
-  python scripts/fix_emdash.py            # DRY RUN: counts + samples, writes nothing
-  python scripts/fix_emdash.py --apply    # do the swap
+  python scripts/fix_emdash.py [db]            # DRY RUN: counts + samples, writes nothing
+  python scripts/fix_emdash.py [db] --apply    # do the swap
 
-PA-only (bible.db lives there). Re-run after a words/verses rebuild if "--" comes back.
+PA-only (bible.db lives there). Now runs as the LAST step of finish_rebuild.sh, so a
+rebuild reproduces it — no manual re-run needed. It must stay LAST in the tail:
+split_merge_fixes.json carries a "--" precondition ("you think not --") that would
+stop matching if the swap ran before fix_split_merges.
 """
 import os
 import sqlite3
@@ -21,7 +24,8 @@ DB = os.path.expanduser("~/bible-db/bible.db")
 
 def main():
     do_apply = "--apply" in sys.argv
-    conn = sqlite3.connect(DB)
+    db = next((a for a in sys.argv[1:] if not a.startswith("--")), DB)
+    conn = sqlite3.connect(db)
     conn.row_factory = sqlite3.Row
 
     w = conn.execute("SELECT COUNT(*) FROM words  WHERE english LIKE '%--%'").fetchone()[0]

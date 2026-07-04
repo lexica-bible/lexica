@@ -155,17 +155,23 @@ Design calls (the mechanics, not the entries):
   BibleHub), L5 (9 null-form rows — needs JP's source eyes), L10 (Mal 3:6, above). The Cushi fix
   (6 rows) and the Cyrus/kyrios mistags (3) are prime migrations from script form.
 
-**Checkpoint questions for JP (need explicit answers before anything lands):**
-1. **L1 cleanup:** OK to delete the 4 artifact lines from the source files? They are (verified
-   this session): deu 960 "save this as abp_deuteronomy.txt", exo 1214 "the correct text w/
-   strong's", lev 860 "save this as abp_leviticus.txt", num 1289 "python parse_abp.py …". Pure
-   deletions, no verse text touched.
-2. **Manifest shape:** `cert_manifest.json` at repo root = {created, note, files: {path: {sha256,
-   bytes}}}, committed to git after the first PA run — OK?
-3. **Correction table:** name `abp_corrections`, lives in bible.db, **ingest-final** application
-   (not read-time) — agree?
-4. **Keying:** book/ch/vs + position + field with the source_value precondition (loud-skip on
-   drift) — agree?
+**Checkpoint — ANSWERED by JP 2026-07-03, all four approved:**
+1. **L1 cleanup: YES — DONE same day.** The 4 artifact lines deleted (diff verified = exactly
+   those 4, census re-run = 0 non-verse lines across all 66 files).
+2. **Manifest shape: YES.** `cert_manifest.json` at repo root, committed after the first PA run.
+3. **Correction table: YES — rebuild-time (ingest-final), not read-time.** JP's reasoning matches
+   the design note (read-time touches every serving consumer; audits would see uncorrected values).
+   Conditional on the guarded-apply mechanism (Q4).
+4. **Keying + source_value precondition with loud skip: YES** — "the fix_split_merges lesson
+   turned into mechanism."
+
+**Em-dash sequencing (JP: take it) — DONE 2026-07-03:** `fix_emdash.py` now takes a db argument
+and runs as the very LAST step of `finish_rebuild.sh` (order is load-bearing:
+split_merge_fixes.json carries a "--" precondition, "you think not --", that must match BEFORE
+the swap). A rebuild now reproduces the em-dashes; the manual re-run step and the harness's
+`emdash` expected-delta class are both gone. The harness's hint-tagger stays (a hit now means
+the tail step regressed). Cushi stays a delta on purpose — it migrates to `abp_corrections`
+in Session 2, where a manual data fix belongs.
 
 ## Rebuild-script reclassification (deliverable 5 — the decommission plan)
 
@@ -189,7 +195,7 @@ scope but feed-pinned.
 | fix_italic_heads | A-folded (post-insert) | |
 | fix_split_flip | A-folded (root fix) + one-time live cleanup done | |
 | fix_hab314_dupes / dedup_words | A-folded (source fixed; dedup = 0-expect safety net) | |
-| fix_emdash | **A-foldable** — deterministic `--`→`—`; folding it kills a manual re-run step AND its harness delta class | |
+| fix_emdash | **A-folded 2026-07-03** — now the LAST step of finish_rebuild.sh (must stay last: split_merge_fixes.json "--" precondition); manual re-run step + harness delta class both gone | |
 | fix_idios_own | **A-foldable** — corpus-wide shape rule (adjective orphan the noun fold skips); candidate to join the folds | |
 | fix_subject_reorder (20) | **B→table** | hand-listed per-verse rewrites |
 | fix_mat25_37 (1) | **B→table** | |
@@ -210,7 +216,7 @@ since ee84aa0) — delete or mark it (invariant P21).
 ## Run doc — what JP runs on PA (in order, after the checkpoint answers)
 
 ```bash
-# 0) after the L1 go: I remove the 4 lines + push; you pull on PA (normal deploy or git pull)
+# 0) DONE 2026-07-03 (L1 lines removed + pushed) — just pull on PA first (normal deploy or git pull)
 # 1) pin the feeds (refuses if any artifact line remains):
 cd ~/bible-db && python3 scripts/cert_manifest.py build
 # 2) confirm the pin verifies:

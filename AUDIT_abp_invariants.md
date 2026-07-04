@@ -26,6 +26,7 @@ Check: `_VERSE_RE` census over all 66 files — now built into
 `scripts/cert_manifest.py build` (refuses to pin dirty sources).
 Control: fired on exactly the 4 known L1 lines this session (deu:960, exo:1214,
 lev:860, num:1289). Tier H. Status: GATE (new, manifest-embedded).
+**L1 CLEANUP DONE 2026-07-03** (JP's go; diff = exactly the 4 lines, census re-run = 0).
 
 **S2. Every `G` token in the source carries digits or `*`.**
 A numberless `G` never matches `_STRONGS_RE` (build:120), so its text leaks into a
@@ -126,11 +127,12 @@ exception list until the parked retag lands. Control: 3401 hits on G3778 (certif
 2026-07-03); the GLOB must be on the FORM column with real accents (the γῆ-class
 lesson). Tier B (source mistag). Status: QUERY + exception list.
 
-**S17. No `--` clause-dash residue** (`fix_emdash.py` not folded into the build).
-Check: `english LIKE '%--%'` on words + verses.text → 0 on the LIVE db; a fresh
-scratch WILL fire (expected harness delta, hint-tagged `emdash`). Control: any
-pre-fix source line with `--` (1Ch 1:5 above). Tier A (foldable transform).
-Status: QUERY; decommission by folding (see reclassification list).
+**S17. No `--` clause-dash residue.** **FOLDED 2026-07-03** — `fix_emdash.py` now
+runs as the LAST step of `finish_rebuild.sh` (order load-bearing: a "--"
+precondition in split_merge_fixes.json must match first). Check: `english LIKE
+'%--%'` on words + verses.text → 0 on live AND on a full-path scratch; the
+harness's `emdash` hint-tag now firing means the tail step regressed. Control:
+any pre-fix source line with `--` (1Ch 1:5 above). Tier A. Status: QUERY.
 
 ---
 
