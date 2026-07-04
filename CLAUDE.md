@@ -169,11 +169,17 @@ Pick effort by task TYPE. Lean higher when data correctness is on the line; don'
   no setup. NIV = no audio source (dead end).
 
 ## CI / automation (added 2026-06-07)
-- **GitHub Actions** (`.github/workflows/ci.yml`) — runs on every push/PR: (1) the invariant tests
-  (the whole `tests/test_*.py` set; they build their own in-memory data, no bible.db needed — but the
-  `tests` job now `pip install`s flask + anthropic + python-dotenv + flask-limiter, because
-  `test_synthesis_no_leak.py` imports `ai.py`/`core.py`, which need them at load time; keep that list
-  lean, add only when a new test imports something new), (2) rebuilds `app.js` and FAILS if the committed copy is stale. Repo is public; check
+- **GitHub Actions** (`.github/workflows/ci.yml`) — runs on every push/PR: (1) the invariant tests —
+  an **EXPLICIT curated list of filenames in ci.yml AND the pre-commit hook, NOT a `tests/*.py` glob**, so
+  a new test file gates ONLY if you add it to BOTH lists by hand (many test files, incl. the alias +
+  rail-payload-contract tests, are deliberately not in the CI list). They build their own in-memory data,
+  no bible.db needed — but the `tests` job `pip install`s flask + anthropic + python-dotenv + flask-limiter,
+  because `test_synthesis_no_leak.py` imports `ai.py`/`core.py`, which need them at load time; keep that list
+  lean, add only when a new test imports something new. (2) rebuilds `app.js` and FAILS if the committed copy
+  is stale, and (3) runs the **node** unit tests `tests/test_ac_word_groups.js` + `tests/test_rstack_logic.js`
+  (the Ask-corpus rail's pure logic; in the `frontend` job, which already has node — the pre-commit hook runs
+  them too). How-to-test-frontend-JS-here + the shared-logic-file pattern: memory `project_three_zone_shell`.
+  Repo is public; check
   the Actions tab or query `api.github.com/repos/lexica-bible/lexica/actions/runs`. `gh` CLI is installed on the dev box now (2026-06-22; Claude calls it by full path) — NOT on PA. See memory `project_dependabot_workflow`.
   - **LINE-ENDINGS for the app.js check (cost a CI fail 2026-06-14; the "all CRLF" claim CORRECTED
     same day):** Keep `git config core.autocrlf false` — with `autocrlf=true` (Git-for-Windows default)

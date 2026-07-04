@@ -47,6 +47,11 @@ holds genuinely-open work and parked ideas only.
 The shared frame (`Shell` + `RightStack` in `static/src/22-shell.jsx`) is done; Ask-corpus, Notes, Seam
 index, and News right-rail all shipped on it 2026-07-01. Full record: memory `project_three_zone_shell`
 + `HANDOFF_corpus_shell.md`. Left to do:
+- **Ask-corpus MOBILE rail** (PARKED 2026-07-03, JP's call — next fresh checkpoint) — desktop rail is DONE,
+  fixture-locked (`test_ac_word_groups.js` + `test_rstack_logic.js` + `test_rail_payload_contract.py`) + CI-gated,
+  and confirmed by a live Chrome pass. Mobile still runs the OLD `.ac` layout (an `if (isMobile)` early return
+  in AskCorpusView) — no Shell/RightStack, no provenance rail. Net-new (mobile never had it), so no parity gate.
+  code: static/src/52-ask-corpus.jsx (the isMobile branch), 22-shell.jsx (mobile sheet mode).
 - **News-on-mobile** (net-new, the LAST shell surface) — the News tab isn't reachable on a phone. First
   confirm the cause (missing from the mobile bottom nav vs a stubbed mobile branch), then make it render.
   code: static/src/84-news.jsx, 90-app.jsx, 20-shared-components.jsx
@@ -111,6 +116,11 @@ The big rework is finished (six phases + a security/code-health pass; memory `pr
    (`snapshot_endpoints.py`) + browser click-through are MANUAL (run against a DB copy during dev), so web
    routes / click behavior aren't checked on every push. That's the main test gap if you ever want to
    close it. (The Joh 3:16 xref golden `kjv_text`→`text` re-baseline is DONE — committed b686073.)
+   - **CI test list is an EXPLICIT set of filenames (ci.yml + pre-commit hook), NOT a `tests/*.py` glob.**
+     So a bunch of real tests DON'T gate: the alias tests, `test_scope_detect`, `test_thread_skeleton`,
+     `test_lexicon_lookup_bands`, `test_rail_payload_contract`, etc. Low urgency (they run locally + are
+     stable), but if you want them enforced, add the filenames to both lists — or switch CI to a glob run
+     (`for f in tests/test_*.py; do python "$f"; done`) once every file is import-clean from repo root.
    code: scripts/snapshot_endpoints.py, tests/, .github/
 2. **Shared AI "house style" voice snippet** — the last leftover of the prompt-unify item. xref, chapter
    summary, LSJ, etc. each carry their own wording. Build ONE core.py snippet with the VOICE only (plain
