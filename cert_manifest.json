@@ -1,0 +1,302 @@
+{
+  "created": "2026-07-04",
+  "note": "ABP certification feed pin (Tier A). Verify with: python3 scripts/cert_manifest.py verify",
+  "files": {
+    "abp_texts/abp_ot_texts/abp_1chronicles.txt": {
+      "sha256": "fd537f2e361e438a3e7efdb8fc69c02f0ba94e2d241a434533685e2089c77656",
+      "bytes": 205160
+    },
+    "abp_texts/abp_ot_texts/abp_1kings.txt": {
+      "sha256": "489d0d90ea957f7c056bab689edb696caba0a161cba76e99afcaa9ca39d6d264",
+      "bytes": 246340
+    },
+    "abp_texts/abp_ot_texts/abp_1samuel.txt": {
+      "sha256": "8299751460139742934418f80a53a2b8ccc2df3b6f875c70fc41c9a2090d273a",
+      "bytes": 256590
+    },
+    "abp_texts/abp_ot_texts/abp_2chronicles.txt": {
+      "sha256": "dc1ff1839c76dd90288c90be9d71ab1e49cc575b6474202341cf74cf4737cdf6",
+      "bytes": 263855
+    },
+    "abp_texts/abp_ot_texts/abp_2kings.txt": {
+      "sha256": "9115f8c4c9f127a91fbcc71aaa8ac7651a295876f45bdbe5769cbf415c390b98",
+      "bytes": 230039
+    },
+    "abp_texts/abp_ot_texts/abp_2samuel.txt": {
+      "sha256": "09c759f920558483ce435b2f1afe1f7e3c418bb1d5a382bf8306a281a9482f27",
+      "bytes": 209055
+    },
+    "abp_texts/abp_ot_texts/abp_amos.txt": {
+      "sha256": "93c9abe34368effa149c33c6713a36c6e8f421819334614c738a109665eeca26",
+      "bytes": 41464
+    },
+    "abp_texts/abp_ot_texts/abp_daniel.txt": {
+      "sha256": "795b1a036b7fb33f1e400742b2931061e73ecb8979b78ccee3ce90c99d8f22d1",
+      "bytes": 116938
+    },
+    "abp_texts/abp_ot_texts/abp_deuteronomy.txt": {
+      "sha256": "9b38b347519aaa5f8d51550d87c9dcbd129fabfa370bcae3768b6f6ca22bd41d",
+      "bytes": 292643
+    },
+    "abp_texts/abp_ot_texts/abp_ecclesiastes.txt": {
+      "sha256": "c2fbe0008d0a7e65fa2654f4e4ae6102feb227b25f61a0cb91a5ee1c3d5ebd42",
+      "bytes": 57687
+    },
+    "abp_texts/abp_ot_texts/abp_esther.txt": {
+      "sha256": "538f45058b016fd0bed88d3babc376fb5b4669910818822dfdbdbbfc32268c60",
+      "bytes": 47224
+    },
+    "abp_texts/abp_ot_texts/abp_exodus.txt": {
+      "sha256": "beb22572b64b6eb2d00054b73eb5eb8fde44112c11a45be8d0de0a3037300b2d",
+      "bytes": 330600
+    },
+    "abp_texts/abp_ot_texts/abp_ezekiel.txt": {
+      "sha256": "79f8bcd595d6ff1abd02620481890597c3a6ddbc9900cf9e31bee22f2a38b8ce",
+      "bytes": 394676
+    },
+    "abp_texts/abp_ot_texts/abp_ezra.txt": {
+      "sha256": "9a0bca15bb7af91b8c884c5a30b672aec44f97529ed318ad113145da3c776c28",
+      "bytes": 72210
+    },
+    "abp_texts/abp_ot_texts/abp_genesis.txt": {
+      "sha256": "a8b2e87d6da6ce6220ff024f0d220d1114b67c621d96809153b5559156cc9009",
+      "bytes": 394168
+    },
+    "abp_texts/abp_ot_texts/abp_habakkuk.txt": {
+      "sha256": "6aad17d0f174850d165f667b237106823fe90137bd82a6d3f054e9b8fd2ddcb7",
+      "bytes": 15018
+    },
+    "abp_texts/abp_ot_texts/abp_haggai.txt": {
+      "sha256": "25346b50deb204d994e607cccdf0c0e62ece84f3615c619b32f6089c1bc1d5d9",
+      "bytes": 11867
+    },
+    "abp_texts/abp_ot_texts/abp_hosea.txt": {
+      "sha256": "eff5b5d316f6c704e2e07ac3768edc96875d40c69d49cbc828640d270c0e5f44",
+      "bytes": 50931
+    },
+    "abp_texts/abp_ot_texts/abp_isaiah.txt": {
+      "sha256": "19d5010ed277d27fee3f1eae8081a6ee40f15324af2be51bb527a4954d4ff0cb",
+      "bytes": 363816
+    },
+    "abp_texts/abp_ot_texts/abp_jeremiah.txt": {
+      "sha256": "476a88218473b551fe91286b5f8d33a74d4eea649a213531a95d5180346191df",
+      "bytes": 404777
+    },
+    "abp_texts/abp_ot_texts/abp_job.txt": {
+      "sha256": "7ac5cdeb1eab40a16bd5837ebaff7d85c38b8729f438ec5ad6bd1fee9f289897",
+      "bytes": 187971
+    },
+    "abp_texts/abp_ot_texts/abp_joel.txt": {
+      "sha256": "c62ac968faef3c702263ed9149f6a84bdc9deae73bd0728fee4ec7895e24a1ad",
+      "bytes": 20346
+    },
+    "abp_texts/abp_ot_texts/abp_jonah.txt": {
+      "sha256": "3307c8a97be66f21112edb8167d08bd12e9c4d943756d6770193fdd10872f928",
+      "bytes": 13133
+    },
+    "abp_texts/abp_ot_texts/abp_joshua.txt": {
+      "sha256": "05f3165b9b6acddfc45b57e168be0cbee5cd4a9c31626b4c49ab93e75342ccc5",
+      "bytes": 194396
+    },
+    "abp_texts/abp_ot_texts/abp_judges.txt": {
+      "sha256": "166a22668d1d132e9bf8612ee862e9753a2540423cfc7eb5c148b8646f7a4605",
+      "bytes": 190850
+    },
+    "abp_texts/abp_ot_texts/abp_lamentations.txt": {
+      "sha256": "5b8e93f2018f509e96c454baf9fa2d42df66b851c26d674eaf14a588e2cc7c0e",
+      "bytes": 33245
+    },
+    "abp_texts/abp_ot_texts/abp_leviticus.txt": {
+      "sha256": "9d649dcd72b1ab38c4f4b0a86d1c7395133461ebb3b8e37ae1ce619ce986a5a2",
+      "bytes": 250944
+    },
+    "abp_texts/abp_ot_texts/abp_malachi.txt": {
+      "sha256": "48ab23f1cac4340197d3e4a44acbb3dabc6f69c7c54af98d38655b04beb1aa85",
+      "bytes": 17905
+    },
+    "abp_texts/abp_ot_texts/abp_micah.txt": {
+      "sha256": "849d3e2205debda0c4361b8d8416247d1f43dc38347a31a273c2dc02e872148e",
+      "bytes": 30703
+    },
+    "abp_texts/abp_ot_texts/abp_nahum.txt": {
+      "sha256": "1a8b9f4ca86e717c7f6a50943cfc01fd62984b4e5bbc6ee4443dc5069de3c119",
+      "bytes": 12649
+    },
+    "abp_texts/abp_ot_texts/abp_nehemiah.txt": {
+      "sha256": "77e8c0c37cb03933d14922d7ace018e8b822ae28ae06134c1641f9859405f856",
+      "bytes": 103701
+    },
+    "abp_texts/abp_ot_texts/abp_numbers.txt": {
+      "sha256": "d0e81d1a61e1359f2e03baf170be362dd26a55225880f12a6ca314f432458b88",
+      "bytes": 323840
+    },
+    "abp_texts/abp_ot_texts/abp_obadiah.txt": {
+      "sha256": "2cec5b0fa62812f9573b8b5e559d6c6f032a8607afc41ed518587e0d77cfc011",
+      "bytes": 6244
+    },
+    "abp_texts/abp_ot_texts/abp_proverbs.txt": {
+      "sha256": "d228c8f1a9d0a6d62cbac2d1af981d5f72cce00e7ce293420e2191c1234fd958",
+      "bytes": 164209
+    },
+    "abp_texts/abp_ot_texts/abp_psalms.txt": {
+      "sha256": "5ea93fb6ca56ae8692bb650f90f06a839a25abed91cb354f70dafe8ec73ce23a",
+      "bytes": 458678
+    },
+    "abp_texts/abp_ot_texts/abp_ruth.txt": {
+      "sha256": "856c4b2c8a0b1a0efe08cddb5efd21a94529a4f8d0e4ade65f8a89817e04bf4d",
+      "bytes": 26089
+    },
+    "abp_texts/abp_ot_texts/abp_songofsolomon.txt": {
+      "sha256": "701d82fbb7b7a4ebfb834cea18e02c2eca8be2564968adc155ca196db7b8fe9c",
+      "bytes": 26826
+    },
+    "abp_texts/abp_ot_texts/abp_zechariah.txt": {
+      "sha256": "d8732f53b866a1c001ea53692d8330ac847c0b3286086bda118798b670c7bcba",
+      "bytes": 63429
+    },
+    "abp_texts/abp_ot_texts/abp_zephaniah.txt": {
+      "sha256": "b1a0b9f9dfb5c829dadecd7bb973baabb9601928d8de3b628ada6116e039f386",
+      "bytes": 16270
+    },
+    "abp_texts/abp_nt_texts/abp_1corinthians.txt": {
+      "sha256": "63dc44aba01cfd9b118a0cb1711bfe65099877d934faecc2eb85112569b356e8",
+      "bytes": 91745
+    },
+    "abp_texts/abp_nt_texts/abp_1john.txt": {
+      "sha256": "ce584e91cbf1049b007297a5fd8f402c843786f01dc665809a7de321b7a5ae33",
+      "bytes": 26173
+    },
+    "abp_texts/abp_nt_texts/abp_1peter.txt": {
+      "sha256": "de32af453703949908562da080069ea6c0abb7a6211732a82df4187dae84213b",
+      "bytes": 23442
+    },
+    "abp_texts/abp_nt_texts/abp_1thessalonians.txt": {
+      "sha256": "f774ecf8bbe24d8a6e93ae0f02d56382bf6351faac405656814aa2a2b34e79c9",
+      "bytes": 18985
+    },
+    "abp_texts/abp_nt_texts/abp_1timothy.txt": {
+      "sha256": "279f871a04b93ef726fd538624f0ec82e9e9cef9783ffcddea34d99cdfdfee1d",
+      "bytes": 22763
+    },
+    "abp_texts/abp_nt_texts/abp_2corinthians.txt": {
+      "sha256": "a63eb3c679b555434df68146488b9002f76df0bda09cb75b0c146e95f6d11af8",
+      "bytes": 59060
+    },
+    "abp_texts/abp_nt_texts/abp_2john.txt": {
+      "sha256": "ed69a8cc87ea3453e4826f10633b1c296c9982a969092a4e9f50309775ea9277",
+      "bytes": 3025
+    },
+    "abp_texts/abp_nt_texts/abp_2peter.txt": {
+      "sha256": "c909fa24e2220ecc1c37ab8943b5e36a96a6321c152722828908da5cfcf49f75",
+      "bytes": 15278
+    },
+    "abp_texts/abp_nt_texts/abp_2thessalonians.txt": {
+      "sha256": "37a08be634b3aef5147d53f243d15c08b4c84635bb8baf988e41758e35da521b",
+      "bytes": 10520
+    },
+    "abp_texts/abp_nt_texts/abp_2timothy.txt": {
+      "sha256": "bf4878d3f4732f2a5f13925d07e8133f527b8521c168a28c24ac32d5b24a9f84",
+      "bytes": 16740
+    },
+    "abp_texts/abp_nt_texts/abp_3john.txt": {
+      "sha256": "7c5148c8018b089410fe6d18d9c00a8601a06d137683fd81a41a38388c50101c",
+      "bytes": 2864
+    },
+    "abp_texts/abp_nt_texts/abp_acts.txt": {
+      "sha256": "160c46704ca8821b156f4458ee3998b07d1680bc8dad1a5e31a231a074a27a48",
+      "bytes": 241765
+    },
+    "abp_texts/abp_nt_texts/abp_colossians.txt": {
+      "sha256": "fe8754d74c1420457f7b319e0ad5dc1e2a6ca254305da9c2014fa661b91338b5",
+      "bytes": 20818
+    },
+    "abp_texts/abp_nt_texts/abp_ephesians.txt": {
+      "sha256": "dae380a56ed6af3da47395163de531b8d970de5fd0dae31fea765a5e50b40f3b",
+      "bytes": 31331
+    },
+    "abp_texts/abp_nt_texts/abp_galatians.txt": {
+      "sha256": "dd54165f116b3fc7a35ad7febc5cde4aef8ad9dcabb14f7f11d4a0b5646785a1",
+      "bytes": 30082
+    },
+    "abp_texts/abp_nt_texts/abp_hebrews.txt": {
+      "sha256": "c65719027cb9d2e52848951f854c91e8e4abf57df3a7b62944c6a1a8998206a6",
+      "bytes": 68949
+    },
+    "abp_texts/abp_nt_texts/abp_james.txt": {
+      "sha256": "8716aad352db32245d061f5e425aefc9100e5cf3da8ceed4df15fbd7c34b5494",
+      "bytes": 23335
+    },
+    "abp_texts/abp_nt_texts/abp_john.txt": {
+      "sha256": "c0910028e5649a80d7ba167f89d6ed117929c72c8fa30f6656ff49c78ac01d4f",
+      "bytes": 197857
+    },
+    "abp_texts/abp_nt_texts/abp_jude.txt": {
+      "sha256": "bcd367a23585fcb7484dc2d12c9f246d9c0024ed181b210c3500b553b6de13cd",
+      "bytes": 6255
+    },
+    "abp_texts/abp_nt_texts/abp_luke.txt": {
+      "sha256": "578764bf8fd7cb77ad216d0c5f68512daab2b4882c7460b077bb71c19329cea7",
+      "bytes": 256366
+    },
+    "abp_texts/abp_nt_texts/abp_mark.txt": {
+      "sha256": "26afdc73e3a0327818c9d2468a85e7574427cd9a8aba757421ee57f04884bb2a",
+      "bytes": 150487
+    },
+    "abp_texts/abp_nt_texts/abp_matthew.txt": {
+      "sha256": "d987cafc7b8dc3e7befeeb4733ba9ef48166a6c8eab75784e3b7341729119ef9",
+      "bytes": 239790
+    },
+    "abp_texts/abp_nt_texts/abp_philemon.txt": {
+      "sha256": "d0d730a02b41b71bafc298af75cd04f95bda41fd899d425de3e8b9beba95736d",
+      "bytes": 4414
+    },
+    "abp_texts/abp_nt_texts/abp_philippians.txt": {
+      "sha256": "6ce00fdcc9b74cfb8249a32811c7a8a638742488140102aa7ff32b59d84e3fbb",
+      "bytes": 21500
+    },
+    "abp_texts/abp_nt_texts/abp_revelation.txt": {
+      "sha256": "73002c8824f3d9b7bdf76fdf8083da7a5b1a12efe0046991271d4b268db419d6",
+      "bytes": 121516
+    },
+    "abp_texts/abp_nt_texts/abp_romans.txt": {
+      "sha256": "5389e281724888dfb8f5df702e57444fa8e187ff1598ff8d321369a2d9530adf",
+      "bytes": 94381
+    },
+    "abp_texts/abp_nt_texts/abp_titus.txt": {
+      "sha256": "e594429b38811cb5383294cf6c2c3d2eab2a94995d60e2450f11813ce760b14d",
+      "bytes": 9402
+    },
+    "bh_scrape.db": {
+      "sha256": "5e9d4bb6f54cca08e62c631ae31594a23ae6f272220381741a0ba53486fb30bb",
+      "bytes": 55865344
+    },
+    "rahlfs/07_StrongNumber/final_Strongs.csv": {
+      "sha256": "7669a04267b94c7ed9ff4c77d69d30de4ba5b2adf70002f4dee79ee610377cf5",
+      "bytes": 7705730
+    },
+    "rahlfs/03a_morphology_with_JTauber_patches/patched_623693.csv": {
+      "sha256": "5342d64d55096056f0e4980e235aaaab408227f5218eaa767dd67256adc4fe29",
+      "bytes": 7675167
+    },
+    "rahlfs/02_lexemes/OSSP_lexemes.csv": {
+      "sha256": "dc3e668743f0c010dce9ea2bb595b118171b010aac1e6474a198af2d5b6a60ea",
+      "bytes": 11093408
+    },
+    "rahlfs/12-Marvel.Bible/00-versification_original.csv": {
+      "sha256": "84bf2326bc6ac70fddde37c743f218ad54ec5484c007b7af03ec56e2064f8143",
+      "bytes": 578205
+    },
+    "rahlfs/01_wordlist_unicode/text_accented.csv": {
+      "sha256": "6c6c50ff37cc8f0b5266be6de240bfbdb9706346aa9113dfb5fb755adf4ac09a",
+      "bytes": 15857404
+    },
+    "tagnt/TAGNT_Mat-Jhn.txt": {
+      "sha256": "ab8eaaeb68e17a1dcfa34e1e9350358f22f03bc2a97244d848750ad81044bc8e",
+      "bytes": 14189032
+    },
+    "tagnt/TAGNT_Act-Rev.txt": {
+      "sha256": "524e32375361e6d3fa2f7ef00b87605fdc4317a762f395651a05fdc31ad031b7",
+      "bytes": 15939932
+    }
+  }
+}
