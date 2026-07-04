@@ -1303,7 +1303,7 @@ memory `project_ai_synthesis_quality`.
   before the abp_corrections apply; cert Session 2, final run proved 0). Re-run surface+translit after any
   `--apply`. Memory `project_abp_certification` + `project_split_compounds_flip`.
 - `build_abp_corrections.py` + `apply_abp_corrections.py` — the Tier-B **abp_corrections** table (in
-  bible.db; 16 rows: Cushi ×6 + Jer 49:13 ×2 + L2 1Sa 6:11 ×4 + L10 Mal 3:6 ×4) and its guarded apply (finish_rebuild.sh step 7, the TRUE
+  bible.db; 18 rows: Cushi ×6 + Jer 49:13 ×2 + L2 1Sa 6:11 ×4 + L10 Mal 3:6 ×4 + L5 Dan 4:33 ×2) and its guarded apply (finish_rebuild.sh step 7, the TRUE
   final tail step — fires only when the cell still holds the recorded fresh-parse value, LOUD skip
   otherwise, log beside the db). New source-defect corrections = new rows via build_abp_corrections.py
   (checkpoint first), never a new fix script. Full record: `AUDIT_abp_certification.md`.

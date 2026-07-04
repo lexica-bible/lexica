@@ -10,7 +10,7 @@ holds genuinely-open work and parked ideas only.
 
 ## ABP corpus certification audit — TIER A CERTIFIED END TO END (full record `AUDIT_abp_certification.md` + memory `project_abp_certification`)
 Sessions 1-3 DONE 2026-07-03/04. Live bible.db IS pinned source (74-file hash manifest) + faithful parser
-(re-parse+diff certified) + versioned correction table (`abp_corrections`, 8 rows) + invariant suite green
+(re-parse+diff certified) + versioned correction table (`abp_corrections`, 18 rows) + invariant suite green
 (`cert_invariants.py`, 7/7, each with a proof-of-fire control). Session 3 rebuilt+swapped live (old file
 retained `bible_pre_certswap_20260704.db`), erasing the 11-verse residue; dead `_sort_brackets` deleted.
 Session 4 DONE: Cushi person-as-place binding floored (see archive), check 7 added, render count reconciled.
@@ -22,14 +22,18 @@ its OWN row, not the block header — 8 places flipped person→place, 3 EXCLUDE
 net −13 render, loud-fail raise on unknown type under a mixed header); mirror census re-run on clean labels
 (P1=0, valid); check 7 hardened to BOTH directions (mirror leg + control); L5 discrepancy explained
 (closure a, no drift). Cert 7/7 green, pin 16. Full record `AUDIT_entity_seam.md` + `HANDOFF_session7.md`.
+Session 7 DONE 2026-07-04: **L5 CLOSED** — all 9 candidates read vs the ABP app (JP verse-pasted): 8 clean
+(αὐτός/ἐγώ/οὕτως legitimately render "this/these"), 1 real mistag fixed — Dan 4:33 pos 1 αὐτῇ (αὐτός)
+mis-numbered as ἐγώ, corrected G1473→G846 (decided by dative agreement with ὥρᾳ + αυτ- spelling, not a
+breathing eyeball; escaped Path C = blank-lemma unanchored, Daniel-4 OG/Theod. divergence). Two `abp_corrections`
+rows added via the L2/L10 door (table 16→18), applied live, **pin bumped 16→18, cert 7/7 green**. Luke 23:38
+carry-forward closed (language reference = binder artifact, no row). Full record in `AUDIT_abp_certification.md`
+L5 batch-two entry.
 Carry-forwards:
-- **L5 → correction rows (9 candidates await JP's ABP-app reading).** Re-derived list = the same 9 (query
-  saved verbatim in `AUDIT_abp_certification.md` L5 entry): 2Ki 18:9/18:10/25:8, 1Ch 27:6, Ezr 7:6 (G846) ·
-  Dan 4:33, Eze 36:32 (G1473) · 1Co 1:24 (G846) · Mat 3:15 (G3779) — demonstrative render, form-null, each a
-  CANDIDATE (αὐτός/ἐγώ can legitimately render "this/same"). JP reads each vs the ABP app; real mistags →
-  correction rows via the L2/L10 door (dry-run → JP's go → guarded apply → check 4 green).
-- **Luke 23:38 Tier B candidate** (Session 6): "Hebrew" now renders the Hebrews-PEOPLE card (was a floor) —
-  a source-reading question, rides the ABP-app pass, gates nothing. Note in `AUDIT_entity_seam.md`.
+- **Broader Path-C G1473 gap census** (Session 8): Dan 4:33 escaped as a form-null/blank-lemma slot Path C
+  never anchored — can't be censused from our own data (no lemma to key on). The known G1473-skip classes are
+  already enumerated below in "Open word-study / data issues" (the ~48 reflexives + the τοῦτο-paradigm strays);
+  sizing any further gap needs Path C's `pronoun_review.tsv` / an alignment re-run, not an our-data query.
 - **import_tipnr.py twin bug** (Session 6): its own separate parser has the same header-first defect
   (line 97), so the `tipnr` table also mistypes the 10 mixed places. MASKED for all 97 bound cards (a bind
   gates the metaV path off), no urgency. Fix = same 3 classes there; needs a words rebuild / import_tipnr
@@ -54,9 +58,9 @@ Carry-forwards:
   = 3401):
   - G1473 (11): Deu 6:25, Ezr 9:14, Hag 2:18, Eze 45:16, Jer 7:1, Jer 8:12, Jer 11:3, Jer 33:4, Jer 44:23, Mat 24:2, Luk 22:51
   - G3779 (2): Jos 11:16, Jer 5:23 · G846 (1): Jos 19:8 · G1438 (1): Rev 19:20
-  Plus **9 null-form "this/these" candidates** under G1473/G3779/G846 (Dan 4:33, Eze 36:32, Mat 3:15, 1Ch 27:6,
-  1Co 1:24, 2Ki 18:9/18:10/25:8, Ezr 7:6) — no stored surface form, need the ABP source eyeballed (αὐτός
-  legitimately renders "this/same"), NOT auto-strays. The ου-/αυ-initial forms (οὗτος/αὕτη) are excluded on
+  The **9 null-form "this/these" candidates** under G1473/G3779/G846 (Dan 4:33, Eze 36:32, Mat 3:15, 1Ch 27:6,
+  1Co 1:24, 2Ki 18:9/18:10/25:8, Ezr 7:6) are **RESOLVED — L5 closed Session 7** (read vs ABP app: 8 clean,
+  Dan 4:33 fixed G1473→G846; see the cert section above). The ου-/αυ-initial forms (οὗτος/αὕτη) are excluded on
   purpose — `ουτ*` collides with οὕτως G3779, `αυτ*` with αὐτός G846.
   **MATCH THE STORED REALITY:** surface `form` is accent-only, no breathing, circumflex→tonos (τοῦτο→τούτο) —
   a bare `tout*`/`τουτ*` GLOB on translit/form MISSES the accent (the γῆ #18A bug class; a translit control
