@@ -251,6 +251,54 @@ One read-only check worth running now (confirms L10's footprint in the live db):
 sqlite3 ~/bible-db/bible.db "SELECT v.book, v.chapter, v.verse, w.position, w.english, w.strongs FROM words w JOIN verses v ON v.id=w.verse_id WHERE v.book='Mal' AND v.chapter=3 AND v.verse=6 ORDER BY w.position;"
 ```
 
+# Session 2 — harness run + delta adjudication, first pass (2026-07-04)
+
+**Harness ran to completion on PA.** live 626,305 = scratch 626,305, **zero rows added or
+dropped** — the ingest path is row-faithful. 2,261 cell deltas = **413 distinct rows in 193
+verses**, and the whole worklist collapses into three causes (reconciliation: 364 swap rows +
+49 others = 413 ✓; 186 flip verses + 5 Cushi + 2 aiōn = 193 ✓):
+
+**Class 1a — article/name order flips, 175 verses (196 pairs), the bulk.** Adjacent mirror-swaps
+where LIVE reads correctly ("the Kenites") and the FRESH BUILD reads flipped ("Kenites the") —
+158/158 directional on the 'the'-leading pairs, zero exceptions. CROSS-CONFIRMED by the
+independent detector: `audit_split_flip.py` on the scratch flagged exactly these 175 verses,
+a strict subset of the harness set (0 audit-only). Cause: the 2026-06-28 live cleanup fixed 283
+flip verses in place, but the build-side root fix (source-order fronting in `_split_compounds`)
+only covers THAT pass's flips — these 175 come from a second producer (mostly proper-noun/'*'
+slots, which `_split_compounds` skips). Tier A build gap. **Fix: fold `fix_split_flip.py` into
+the finish_rebuild.sh tail** (evidence-driven toward verses.text, loops to convergence, already
+proven on live) — closes 1a exactly, since its detector shape IS this class.
+
+**Class 1b — function-word pair swaps, 11 verses.** Same mirror-swap shape on μέν/γάρ
+("indeed/For"), τε/γάρ, οὗτος/ὁ ("this/to"), ἐκεῖνος/ὁ, ὁ/μηδείς — OUTSIDE audit_split_flip's
+determiner+noun scope by design (that's the whole 175-vs-186 gap, fully enumerated). Direction
+is REVERSED vs 1a: scratch has the natural source-English order, live has the stale one.
+Working hypothesis (NOT yet verified — needs a code-trace): the `_split_compounds`
+source-order-fronting fix changed these pairs' output after live's last full rebuild; the live
+in-place cleanup skipped them (wrong shape for its detector). If confirmed: scratch is RIGHT,
+live is stale — no build change needed, the class dissolves at the next swap. Verse list:
+1Co 5:3, 1Co 12:8, 1Ki 12:9, Ezr 6:8, Heb 2:11, Heb 7:21, Jdg 8:5, Job 21:6, Psa 81:14,
+Rom 3:2, Rom 5:16.
+
+**Class 2 — Cushi, 6 rows (2Sa 18).** Pre-registered, located exactly (strongs_base only,
+H3569 live vs H3570 rebuilt). → correction-table entry #1.
+
+**Class 3 — the aiōn retag, 2 rows (Hab 3:6 pos19, Jer 49:13 pos28).** Live G165, rebuilt
+G166 — the old hand-applied retag, never folded. → correction-table entry #2 + new ledger
+line **L11**.
+
+Em-dash class: ABSENT from the deltas — the tail fold worked (fix_emdash swapped 2,591 cells
+inside the scratch build; zero survived to the diff).
+
+**Session 2 remaining fix list (in order):**
+1. Code-trace Class 1b to confirm the fronting-fix story (single-verse test build on Rom 3:2).
+2. Fold `fix_split_flip.py` into finish_rebuild.sh (before the em-dash step); re-run harness →
+   expected residue = exactly 1b (if confirmed stale-live) + Cushi 6 + aiōn 2.
+3. Create `abp_corrections` (approved design) + entries for Cushi/L2/L5/L10/L11; wire the
+   harness apply-before-diff (Flag 2) + `--no-corrections`; re-run → expected ZERO unexplained.
+4. Runnable invariant suite; delete dead `_sort_brackets`.
+Scratch bible.db.new stays on PA until adjudication closes (it's the evidence base).
+
 ## Recommended Session 2 scope
 1. Run the harness to completion on PA; adjudicate every delta into: build-reproducible (0 action),
    pre-registered script footprint (emdash/cushi), correction-table candidate, or genuine Tier A bug.
