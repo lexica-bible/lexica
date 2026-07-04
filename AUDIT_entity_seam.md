@@ -111,9 +111,14 @@ pinned TIPNR file:
   (Sheol, Abaddon, Gentiles, Rabbi, Greek/Hebrew/Latin…); the parser takes
   them in as bindable "other"-section entities. Live impact: 4 renders
   (`Greek@Isa.66.19`); the rest never bound.
-- **F3 — documentation prose parsed as entities.** 37 footnote/legend lines
-  from the file become pseudo-entities whose names are sentences. Live
-  impact: **zero** — none ever bound (confirmed against `tipnr_entities`).
+- **F3 — documentation prose parsed as entities.** **39** footnote/legend
+  lines from the file become pseudo-entities whose names are sentences
+  (corrected from the Session-5 ad-hoc count of 37: the exhaustive audited
+  count of "name contains a space, empty type" is 39, all enumerated in the
+  Session-6 probe, none bind. The clearest of the two the looser count missed
+  is the `^\$=+ (person|place|other)…` regex-legend line — the only prose line
+  that lands in a *person* section, which an "other-section junk" filter drops.
+  Counting-method gap, not new data). Live impact: **zero** — none ever bound.
 
 No wrong-identity bind was found in any of this: the verse-corroboration
 rule kept the *referent* right even where the *label* is wrong.
@@ -130,6 +135,33 @@ rule kept the *referent* right even where the *label* is wrong.
    mixed blocks, skip EXCLUDED blocks, skip prose lines — then re-run the
    binder, re-run the P1 census on trustworthy labels, and consider whether
    check 7 should assert on row-types rather than block-sections.
+
+### Session 6: parser fix applied — pre-registered rebuild expectation
+
+The fix landed in `entity_resolution.parse_tipnr` (commit — F1 row-type over
+header, F2 skip EXCLUDED, F3 skip prose; an unrecognized type UNDER a mixed
+header STOPS the build, permanent control in `tests/test_versification.py`).
+`import_tipnr.py` has its own separate parser, so `words`/`is_pn`/the `tipnr`
+table are untouched — this is labels/rendering only.
+
+**Pre-registered BEFORE the throwaway rebuild** (so the diff is graded against a
+committed target, not one that shifted). The handoff's "pn_binding unchanged" is
+amended — dropping the EXCLUDED entities necessarily drops their binds:
+
+- **`pn_binding` allowed deltas: EXACTLY the 4 rows `Greek@Isa.66.19`, removed.**
+  The 10 mixed places keep **byte-identical** rows (same entity_uniq, kind,
+  render). ANY other delta — any change touching the 10, any removed row that
+  isn't one of those 4 — is a **stop-and-look** finding, not an apply.
+- **`tipnr_entities`:** the 10 flip `person→place` and shed their person-kin
+  fields; the `Greek@Isa.66.19` row disappears. Parsed entity total 4298→4247
+  (−12 EXCLUDED, −39 prose); the drop in *written* rows = however many of those
+  were actually rendering (expected: Greek only).
+- Verify with **row-level enumeration, never counts** — the diff dumps every
+  differing row so "4 changed" can't hide the wrong 4.
+
+Live apply waits for a clean, enumerated diff. Binding-neutrality of the 10
+flips was proven locally: zero true-fuzzy collisions, so the section change
+cannot trip the Session-4 fuzzy guard.
 
 ## Standing consequences
 
