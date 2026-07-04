@@ -32,9 +32,10 @@ L5 batch-two entry.
 Carry-forwards:
 - **Path-C G1473 residue — CENSUSED + CLOSED (Session 8, ledger L12).** Dan 4:33 is NOT a lone stray:
   Daniel holds **170** source-attested pronoun mistags (αὐτός/σύ/ὑμεῖς/ἡμεῖς still numbered 1473) and
-  the corpus-wide upper bound is **~3,577** (contaminated by `abp_surface` position-misalignment — proper
-  names on 1473 slots; true count is lower). Detected from OUR data via `abp_surface` (ABP's own Greek),
-  which refines the old "no our-data detector" claim — that held only for blank-form slots like Dan 4:33.
+  the corpus-wide raw signal (~3,577 rows) is **VOID as a count** — `abp_surface` misaligns outside Daniel
+  (proper names like Δαυίδ/Μωυσής land on 1473 slots), so real corpus size is UNKNOWN until the fix pass
+  verifies per-slot. Detected from OUR data via `abp_surface` (ABP's own Greek), which refines the old
+  "no our-data detector" claim — that held only for blank-form slots like Dan 4:33.
   → FIX QUEUED (Session 9, HIGH seat, rebuild): give Path C an `abp_surface` fallback (form→Strong's table
   for the closed pronoun set) with a misalignment gate; batchable with the two rebuild items below.
 - **import_tipnr.py twin bug** (Session 6): its own separate parser has the same header-first defect

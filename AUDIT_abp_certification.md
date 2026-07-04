@@ -570,21 +570,33 @@ PLUS the blank-form residue (Dan 4:33's own kind — no `abp_surface` form, so `
 those stay source-app reads).
 
 **CORPUS-WIDE count (same query, no book filter) — UPPER BOUND, contamination flagged:**
-→ αὐτός 1779 · σύ 1212 · ὑμεῖς 297 · ἡμεῖς 289 = **3,577 pronoun-shaped candidates** · ἐγώ(correct) 1313.
-So the residue is NOT confined to divergence zones — Path C has confident-zone gaps too.
-**NOT a confirmed count.** The `9_other` bucket returned PROPER NAMES on G1473 slots — `Δαυίδ`×5,
-`Μωυσής`×5, `Ααρών`×2, `Σαούλ`, `Φίλιππος` — plus conjunctions `γαρ`/`δε`/`εαν`. A 1473 slot cannot
-really be "David": that is `abp_surface` (a ~91% position match) landing a form on the WRONG position.
-Since a name-form can misalign onto a 1473 slot, a fraction of the 3,577 pronoun-shaped forms are
-misaligned artifacts too. True corpus count is BELOW 3,577; only the Session-9 fix pass (per-slot
-verification) can pin it. **The proper-name rows ARE the built-in control that fix pass must survive
-(it must never "correct" a name slot).**
+→ αὐτός 1779 · σύ 1212 · ὑμεῖς 297 · ἡμεῖς 289 = 3,577 pronoun-shaped rows · ἐγώ 1313.
+**This number is VOID as a mistag count — do NOT carry it into any Session-9 scope statement.** The
+`9_other` bucket returned PROPER NAMES on G1473 slots — `Δαυίδ`×5, `Μωυσής`×5, `Ααρών`×2, `Σαούλ`,
+`Φίλιππος` — plus conjunctions/content words (`γαρ`/`δε`/`εαν`/`γινώσκετε`/`όστρακα`). A 1473 slot cannot
+really be "David" or "potsherd": OUTSIDE Daniel the `abp_surface` position-join MISALIGNS (~91% match),
+and the same misalignment contaminates the 1779 αὐτ / 1212 σ counts by an UNKNOWN fraction — possibly
+most of it. So a corpus-wide signal EXISTS but is INSEPARABLE from misalignment here; **whether Path C
+has gaps beyond the divergence zones is UNRESOLVED**, deferred to the Session-9 fix pass (per-slot
+verification). The proper-name rows are the built-in control that fix pass must survive (never "correct"
+a name slot). (Paste was truncated mid-row at `όστρακα|1` — even the tail is incomplete.)
 
 **DISPOSITION — Door 1 CLOSED as "cluster, measured."** No fix this session. The fix is a REBUILD, not
-an `abp_corrections` batch (wrong tool at 170-Daniel / thousands-corpus volume): give Path C an
-`abp_surface` fallback — where Rahlfs can't align, read the number off the ABP form via a fixed
-form→Strong's table for the closed pronoun set (σου→4675, αυτου→846, υμων→5216, ημων→2257, …), WITH a
-position-misalignment gate (skip any slot whose form isn't pronoun-shaped; the name contamination is the
-control). Then rebuild. **= Session-9 doored item, HIGH seat, own checkpoint + throwaway-copy + pre-
-registered diff. Batchable with Door 2 (import_tipnr) + Door 3 (7 reorder passes) — all three are one
-rebuild's worth of work, not three sessions.**
+an `abp_corrections` batch (wrong tool at this volume — 170 in Daniel; corpus size UNKNOWN until the
+detector is de-contaminated): give Path C an `abp_surface` fallback — where Rahlfs can't align, read the
+number off the ABP form via a fixed form→Strong's table for the closed pronoun set (σου→4675, αυτου→846,
+υμων→5216, ημων→2257, …), WITH a position-misalignment gate (skip any slot whose form isn't pronoun-
+shaped; the name contamination is the control — and the misalignment ROOT must be understood first, see
+below). Then rebuild. **= Session-9 doored item, HIGH seat, own checkpoint + throwaway-copy + pre-
+registered diff. Batchable with Door 2 (import_tipnr) + Door 3 (7 reorder passes) — one PHYSICAL rebuild,
+but THREE separately pre-registered diffs (Path-C fallback / import_tipnr / reorder-pass), each delta
+attributable to exactly one fix; any delta that can't be cleanly attributed → fall back to sequential
+rebuilds.**
+
+**OPEN (cheap, read-only) — the `abp_surface` misalignment root.** Why the ~9% misaligns is UNINSPECTED.
+Suspects: the split/redistribute/reorder passes renumber `words` positions but `abp_surface` is keyed to
+a pre-reorder scheme (or its own build re-derives positions differently). If the misaligned verses
+correlate with the verses the seven uncertified reorder passes touch, this tail is the FIRST observable
+seam for Door 3 — obtained for the price of inspecting ~5 rows. Probe = pull the full verse for a `Δαυίδ`
+/`Μωυσής` name-hit + two non-Daniel αὐτ hits, compare word-position vs surface-form, check for reorder-
+pass signatures (brackets, redistributed multi-word english).
