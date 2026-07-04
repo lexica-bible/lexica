@@ -105,9 +105,33 @@ inventory, consumer blast-radius map, seeded known-defect ledger. See the Sessio
   `emdash`. (b) `fix_cushi_strongs.py` — 6 slots in 2Sa 18, live H3569 vs rebuilt H3570. Both scripts
   live OUTSIDE the build+tail path, which is exactly why they show up.
 
+## Standing adjudication instrument (Session 5)
+
+The **official ABP app** (apostolicbibleapp.com) — the living, authoritative Van der Pool text — is
+the reference witness for ALL source-reading adjudications going forward. Neither of our stored feeds
+(abp_texts, bh_scrape) is a check on the other when BOTH inherit the same upstream defect; the app is
+the tie-breaker that carries ABP's own decimal-extended numbers (e.g. G241.2) that standard BibleHub
+Strong's cannot. First use: L2 + L10 below closed from reconstruction to **source-attested
+restoration**. L5 will go through the same door once its list is re-derived (Session 6).
+
 ## Ledger additions
 
-### L10 — Mal 3:6 trailing bare "G" — NEW (Tier B candidate, needs JP's source eyes)
+### L2 + L10 — RESOLVED Session 5 (source-attested, restoration not reconstruction)
+Both are the same class: the ABP source dropped a Strong's number, leaving a bare "G" the build turned
+into reader-visible junk. Confirmed against the official ABP app and written to `abp_corrections`
+(4 cells each — strongs / strongs_base / english / english_head; table 8 -> 16, invariant pin bumped
+in the same commit). UNLIKE the Cushi/Jer seeds these were never hand-fixed on live, so the fix is a
+two-step: `build_abp_corrections.py --apply` (adds the rows) THEN `apply_abp_corrections.py --apply`
+(cleans the live cells).
+- **L2 — 1Sa 6:11 pos 21:** `1473` -> `1475.3`, `G1473` -> `G1475`, `of their buttocks.G` -> `of their
+  buttocks.`, head `buttocksg` -> `buttocks`. App: `1475.3-1473` (edron auton); corroborated 3x
+  same-chapter (5:9 / 5:12 / 6:5).
+- **L10 — Mal 3:6 pos 7:** the stray verb slot `(blank)`/`G` -> `241.2` / `G241`, english `G` ->
+  blank, head `g` -> blank (verb elloiomai; ouk G3756 stays correct on pos 6). App: `241.2` — a
+  decimal extension no standard-Strong's source could have supplied.
+
+### L10 — Mal 3:6 trailing bare "G" — SUPERSEDED (see "L2 + L10 — RESOLVED Session 5" above)
+_Original find note, kept for the trail:_
 The numberless-G census (invariant S2) fired 7× and reconciled: 5 = the known blank-"G." set the
 build already fills; 1 = L2 (1Sa 6:11); **1 new = Mal 3:6**: source line ends
 `I change not.G3756 G` — a bare "G" with no number, which the parser emits as a stray trailing

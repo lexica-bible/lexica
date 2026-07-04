@@ -14,7 +14,16 @@ SEED ENTRIES (adjudicated from cert harness run 1, 2026-07-04):
     adjective's number on the noun "eon"; the June retag corrected both columns on
     live). Jer 49:13 ONLY — Hab 3:6 was ruled the other way and is deliberately NOT
     here.
-L2 / L5 / L10 land later as their own entries once JP recovers the intended readings.
+  * L2 (1Sa 6:11) + L10 (Mal 3:6) — 4 cells each (Session 5). Both source files
+    (abp_texts AND bh_scrape) dropped a Strong's number, leaving a bare "G" the build
+    turned into junk (a glued gloss / a stray word / a polluted english_head search
+    key). Restored from the OFFICIAL ABP app (apostolicbibleapp.com) — the living
+    authoritative Van der Pool text, the standing witness for source-reading
+    adjudications. UNLIKE Cushi/Jer these were NOT hand-fixed on live first, so the
+    dry-run reads "cell=source" and apply_abp_corrections.py --apply must run against
+    live after build --apply to clean the reader-visible defect.
+L5 (the null-form "this/these" rows) lands later — its list was under-specified and
+must be re-derived first (Session 6), then read against the same ABP app.
 
 The dry run doubles as validation: it reads each target cell in the given db and
 classifies it. Against LIVE (already hand-fixed) every entry should read
@@ -56,6 +65,17 @@ _JER_REASON = ("ABP prints the adjective's number G166 on the noun 'eon' (aion, 
                "source 'intoG1519 eon.G3588 G166'. Jer 49:13 ONLY: Hab 3:6 was ruled the "
                "opposite way (adjective slot, G166 honest) and is NOT corrected. "
                "Adjudicated cert run 1 Class 3 / L11.")
+_L2_REASON = ("ABP source (abp_texts AND bh_scrape) dropped the Strong's number on the "
+              "'buttocks' word (edron) — printed a bare 'G'; the build folded the next tag "
+              "G1473 (auton, 'their') onto the slot and glued 'G' into the gloss + the "
+              "english_head search key. Restored to G1475.3 (attested 3x same-chapter: 1Sa "
+              "5:9 / 5:12 / 6:5) and confirmed by the official ABP app (apostolicbibleapp.com) "
+              "1Sa 6:11 = 1475.3-1473. L2.")
+_L10_REASON = ("ABP source dropped the Strong's number on the verb 'change' (elloiomai) — a "
+               "bare trailing 'G' (bh_scrape shows a dangling '3756-'), which the build "
+               "emitted as a stray word with a 'g' english_head. Restored to G241.2 (ouk "
+               "G3756 stays on pos 6) per the official ABP app (apostolicbibleapp.com) Mal "
+               "3:6. L10.")
 
 # (book, chapter, verse, position, field, source_value, corrected_value, reason, ledger_ref)
 ENTRIES = [
@@ -67,6 +87,16 @@ ENTRIES = [
     ("2Sa", 18, 32,  6, "strongs_base", "H3570", "H3569", _CUSHI_REASON, "Class2-cushi"),
     ("Jer", 49, 13, 28, "strongs_base", "G166",  "G165",  _JER_REASON,   "L11"),
     ("Jer", 49, 13, 28, "strongs",      "166",   "165",   _JER_REASON,   "L11"),
+    # L2 — 1Sa 6:11 pos 21 (Session 5; defect still live, apply after build --apply)
+    ("1Sa",  6, 11, 21, "strongs",      "1473",                "1475.3",             _L2_REASON,  "L2"),
+    ("1Sa",  6, 11, 21, "strongs_base", "G1473",               "G1475",              _L2_REASON,  "L2"),
+    ("1Sa",  6, 11, 21, "english",      "of their buttocks.G", "of their buttocks.", _L2_REASON,  "L2"),
+    ("1Sa",  6, 11, 21, "english_head", "buttocksg",           "buttocks",           _L2_REASON,  "L2"),
+    # L10 — Mal 3:6 pos 7, the stray verb slot (Session 5; defect still live)
+    ("Mal",  3,  6,  7, "strongs",      "",   "241.2", _L10_REASON, "L10"),
+    ("Mal",  3,  6,  7, "strongs_base", "",   "G241",  _L10_REASON, "L10"),
+    ("Mal",  3,  6,  7, "english",      "G",  "",      _L10_REASON, "L10"),
+    ("Mal",  3,  6,  7, "english_head", "g",  "",      _L10_REASON, "L10"),
 ]
 
 
