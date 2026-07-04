@@ -9,27 +9,24 @@ holds genuinely-open work and parked ideas only.
 ---
 
 ## ABP corpus certification audit (multi-session; full record `AUDIT_abp_certification.md`)
-- **Sessions 1 + 2-first-pass DONE 2026-07-03/04** (full detail moved to TODO_ARCHIVE + memory
-  `project_abp_certification`): invariant catalog live, 74-file baseline pinned + committed
-  (`cert_manifest.json`), harness ran — **ingest ROW-FAITHFUL (626,305 = 626,305, zero rows
-  added/dropped)**, all 2,261 cell deltas adjudicated to 3 causes, Hab 3:6 bad aiōn retag
-  reverted live. Scratch `bible.db.new` stays on PA as evidence until Session 2 closes.
-- **Session 2 remaining (the exact list, order matters — full rules in the audit file):**
-  1. Fold `fix_split_flip.py` into finish_rebuild.sh as the LAST step (position-only; after ALL
-     pinned patches + fix_emdash; corrections apply after it).
-  2. Create `abp_corrections` (approved: ingest-final, source_value precondition, loud skip) +
-     entries Cushi ×6 + Jer 49:13 (L11) + L2/L5/L10 once JP recovers those readings; wire the
-     harness apply-corrections-before-diff (Flag 2, HARD: table + wiring land together) +
-     `--no-corrections`.
-  3. Final harness run — **pre-registered expectation: residue = EXACTLY the 11 Class-1b
-     live-stale verses** (cosmetic, self-heal at the next swap); anything else is a finding.
-  4. Wire the QUERY/SWEEP invariants into a runnable suite w/ controls (`scripts/cert_invariants.py`);
-     delete dead `_sort_brackets`.
-- **Backup-freshness alarm (NEW 2026-07-04, from the disk-full incident).** The nightly bible.db
-  backup failed SILENTLY Jul 2→4 (account at 93%, gzip died mid-run, raw 380M leftovers piled up;
-  small dbs kept succeeding, masking it) — nothing alerted. Add a check to `health_check.py`'s
-  nightly email: newest `~/db_backups/bible.db.*` older than 48h ⇒ WARN (and maybe quota % ≥ 90 ⇒
-  WARN). Cheap, closes a real gap. code: scripts/health_check.py + backup_db.py.
+- **Sessions 1 + 2 DONE 2026-07-03/04 — Tier A CERTIFIED** (full detail in memory
+  `project_abp_certification` + the audit file): invariant catalog live, 74-file baseline pinned
+  (`cert_manifest.json`), ingest ROW-FAITHFUL (626,305=626,305), `abp_corrections` table LIVE (8 rows),
+  fix_split_flip folded into the tail, final harness run PASSED (residue = exactly the 11 pre-registered
+  live-stale verses), 14 dead scripts retired to `scripts/graveyard/`.
+- **Session 3 — the live rebuild + swap (gated on Session 2's pass, which it has):**
+  1. Fresh build + tail on PA → checklist audit gates (audit_split_flip=0, strongs_base invariant,
+     health_check clean) → swap → re-run dependent builders (import_tipnr → surface → translit →
+     entity binding → rendering-norm → two-ending). Erases the 11-verse residue; live becomes pinned
+     source + faithful parser + correction table end to end.
+  2. Runnable invariant suite `scripts/cert_invariants.py` — the QUERY/SWEEP invariants, each with its
+     proof-of-fire control. Delete dead `_sort_brackets` in build_words_from_abp.py.
+  3. Fold L2 (1Sa 6:11), L5 (9 null-form rows), L10 (Mal 3:6) into `abp_corrections` once JP recovers
+     the intended readings (each an entry via `scripts/build_abp_corrections.py`, checkpoint first).
+- **Backup-freshness alarm (PARTIAL 2026-07-04).** The stamp-and-warn half is DONE — backup_db.py writes
+  `~/db_backups/last_success.txt` on a clean run, `cert_manifest.py verify` warns if it's missing/>25h.
+  STILL OPEN: mirror the check into `health_check.py`'s nightly email (newest `~/db_backups/bible.db.*`
+  >48h ⇒ WARN; quota % ≥ 90 ⇒ WARN) so JP sees it without running a cert command. code: scripts/health_check.py.
 - **Certify the OTHER 7 redistribution passes.** L9 certified `_split_compounds` ONLY. Still uncertified:
   `_split_numbered`, `_redistribute_pronoun_compounds`, `_fix_backwards_pairing`, `_split_pn_article_lump`,
   `_funcword_noun_relocate`, `_lord_subject_split`, `_lord_oath_fix`. Same census+control approach

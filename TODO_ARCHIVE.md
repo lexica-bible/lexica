@@ -6,6 +6,24 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-07-04 — ABP cert Session 2 CLOSED (Tier A certified, correction table live, final run PASS)
+- **Result: Tier A ingest-faithfulness CERTIFIED against the 74-file pin.** Final harness run:
+  626,305=626,305, corrections reconciliation 8/8/0 ok, 110 deltas ALL inside the 11 pre-registered
+  live-stale verses, everything else 0 (flips/Cushi/Jer/emdash/Hab). Matched the pre-registration exactly.
+- **Shipped:** `fix_split_flip` folded into finish_rebuild.sh (step 6, after all patches + emdash);
+  `abp_corrections` table created in bible.db (`build_abp_corrections.py`) with 8 rows — Cushi ×6
+  (H3570→H3569) + Jer 49:13 ×2 columns (strongs 166→165 AND strongs_base G166→G165); guarded apply
+  (`apply_abp_corrections.py`, step 7, fires only on exact source_value match, loud skip + log else);
+  harness `--no-corrections` flag + visible reconciliation line. All control-tested both directions.
+- **Decommission executed:** 14 scripts → `scripts/graveyard/` (kept w/ per-script README): 7 build-folded
+  twins, fix_cushi_strongs (table-captured), 6 bracket/gap scripts adjudicated dead (0-unexplained run
+  proved nothing live needs them). Backup loudness guard partial (stamp + cert-verify warn done; health_check
+  email side still open in TODO).
+- **Lessons:** a live Strong's retag usually touches BOTH `strongs` and `strongs_base` — the Jer entry
+  needed two rows, caught by reading the delta TSV not the handoff. Schema "drift" was a phantom — the
+  handoff paraphrased the approved schema; check the approved artifact before flagging a deviation.
+- **Next = Session 3:** live rebuild + swap (erases the 11 residue) + runnable invariant suite + L2/L5/L10 rows.
+
 ## 2026-07-04 — ABP cert Sessions 1 + 2-first-pass (invariants, feed pin, harness, adjudication)
 - **Session 1:** invariant catalog `AUDIT_abp_invariants.md` (S1-S17 + P1-P21, each with a known-positive
   control); `cert_manifest.py` (74-file SHA-256 feed pin, committed as `cert_manifest.json` — the baseline
