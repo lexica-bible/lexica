@@ -787,7 +787,12 @@ rules + gotchas; open the named memory for the backstory.
   add a browse handler that moves `selBook`/`selChapter` without it, and never spread the old `nav`
   bag into a new one (a stale `translation`/`extern` rides along — the page-turn text-snap bug). Also
   here: `setOrder` canonical keeps the passage's book; `turnPage` emits a clean nav object. Memory
-  `project_nav_reconcile`.
+  `project_nav_reconcile`. **`onReaderPos`/`handleReaderPos` carry only (book, chapter) — NO verse.**
+  So in chrono the reconcile MUST keep the passage you're already on when it still covers that
+  chapter; else a chapter split across a day boundary snaps you to the FIRST passage covering it
+  (the previous day's tail) and the clicked plan day never opens — hit 141/365 days (fix cf5c6ec,
+  shared logic `static/src/57-chrono-logic.jsx` `chronoReconcile`, locked by
+  `tests/test_chrono_reconcile.js`).
 - Clicking a verse number opens the TSK Cross-Reference panel. Desktop link-over from Search/Lexicon
   auto-opens that verse's xref card over the chapter summary (tucked under any open word/note card).
 
