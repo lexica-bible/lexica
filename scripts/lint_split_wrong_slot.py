@@ -7,6 +7,12 @@ other ~12,632 split-affected verses the sample didn't touch: a content word land
 on the wrong Strong's number is the phrase-boundary poison class — it corrupts the
 "renders as" data every consumer reads. This flags exactly that, corpus-wide.
 
+SCOPE = the split's RECIPIENTS only. The lint checks the slots _split_compounds actually
+moved a word INTO (captured by diffing english_head per number around the real split),
+NOT every content slot in an affected verse. Auditing whole verses drowned the signal in
+ABP's OWN parking — a verb parked on οὐ/σοῦ/νύξ that the split never touched. Those are
+the accepted head-word caveat, not a split error, so they are out of scope by construction.
+
 READ-ONLY: opens bible.db read-only (unused beyond a handle check), reads the ABP
 source + bh_scrape.db, writes nothing to any table. Reuses build_words_from_abp's
 real split (no re-implementation, can't drift).
@@ -147,27 +153,46 @@ def _content_slots(rows):
             yield r[0], hf, base
 
 
-def _flag_slots(rows, counts, totals, ref):
-    """Flag a content slot whose (number, rendering) is a one-off for a well-attested number."""
+def _flag_recips(recips, counts, totals, ref):
+    """Flag a split RECIPIENT (position, head, base) whose rendering is rare on a well-attested
+    number. recips carry the raw english_head; fold it here to key against the reference."""
     out = []
-    for pos, hf, base in _content_slots(rows):
+    for pos, head, base in recips:
+        hf = _fold(head)
+        if not hf or not base or not base[0].isdigit():
+            continue
         if totals.get(base, 0) >= MIN_FREQ and counts[base].get(hf, 0) < VALIDATE_MIN:
             out.append((ref, pos, hf, base))
     return out
 
 
 def _iter_built(bh_index, lex, rahlfs, tagnt, want_affected):
-    """Run the real per-verse pipeline over the whole corpus. Yields (ref, rows, affected)
-    for every verse; `affected` True when _split_compounds actually filled a slot there."""
+    """Run the real per-verse pipeline over the whole corpus. Yields (ref, rows, recips) for
+    every verse; `recips` = the (position, english_head, base) slots _split_compounds actually
+    MOVED a word into — captured by diffing english_head per base around the real split. This
+    scopes the audit to the split's own output, not every word ABP parked in the verse."""
     real_split = B._split_compounds
-    flag = {"hit": False}
+    holder = {"recips": []}
 
     def wrapped(rows, lexicon, carry=False):
-        before = sum(1 for r in rows if (r[1] or "").strip())
+        # heads present per base BEFORE the split (the source slots' own words)
+        before = defaultdict(Counter)
+        for r in rows:
+            if r[2]:
+                before[r[4]][r[2]] += 1
         real_split(rows, lexicon, carry)
-        flag["hit"] = flag["hit"] or (sum(1 for r in rows if (r[1] or "").strip()) > before)
-    if want_affected:
-        B._split_compounds = wrapped
+        # any head now present on a base BEYOND its before-count is a slot the split filled
+        seen = defaultdict(Counter)
+        recips = []
+        for r in rows:
+            if not r[2]:
+                continue
+            base, head = r[4], r[2]
+            seen[base][head] += 1
+            if seen[base][head] > before[base].get(head, 0):
+                recips.append((r[0], head, base))
+        holder["recips"] = recips
+    B._split_compounds = wrapped
 
     for abbrev, ch, vs, abp_words in B.iter_verses(*B._abp_sources()):
         slug = B.ABBREV_TO_SLUG.get(abbrev)
@@ -181,23 +206,23 @@ def _iter_built(bh_index, lex, rahlfs, tagnt, want_affected):
             corrs = B.correct_verse([w[1] for w in abp_words],
                                     src.verse(bnum, ch, vs), [w[0] for w in abp_words])
             abp_words = B.apply_pronoun_corrections(abp_words, corrs, [], f"{abbrev} {ch}:{vs}")
-        flag["hit"] = False
+        holder["recips"] = []
         rows = B.build_verse_words(abp_words, bh_rows, lex)
-        yield f"{abbrev} {ch}:{vs}", rows, flag["hit"]
+        yield f"{abbrev} {ch}:{vs}", rows, holder["recips"]
 
 
 def _build_counts_and_stash(bh_index, lex, rahlfs, tagnt):
-    """One pass: tally every number's renderings across the WHOLE corpus (the reference),
-    and stash the rows of split-AFFECTED verses (the ones we then certify)."""
+    """One pass: tally every number's renderings across the WHOLE corpus (the reference —
+    all slots), and stash the split RECIPIENTS of affected verses (what we certify)."""
     counts = defaultdict(Counter)
     totals = Counter()
     affected = []
-    for ref, rows, is_aff in _iter_built(bh_index, lex, rahlfs, tagnt, want_affected=True):
+    for ref, rows, recips in _iter_built(bh_index, lex, rahlfs, tagnt, want_affected=True):
         for _pos, hf, base in _content_slots(rows):
             counts[base][hf] += 1
             totals[base] += 1
-        if is_aff:
-            affected.append((ref, rows))
+        if recips:
+            affected.append((ref, recips))
     return counts, totals, affected
 
 
@@ -207,41 +232,28 @@ def run_control(counts, totals, affected):
     good = next((r for r in affected if r[0] == "Gen 27:27"), None)
     if not good:
         print("CONTROL ERROR: Gen 27:27 not in the affected set"); return False
-    ref, rows = good
+    ref, recips = good
 
-    good_flags = _flag_slots(rows, counts, totals, ref)
-    print(f"  known-good {ref}: {len(good_flags)} flag(s)  (expect 0)")
+    good_flags = _flag_recips(recips, counts, totals, ref)
+    print(f"  known-good {ref}: {len(good_flags)} flag(s)  (expect 0)  "
+          f"[{len(recips)} split recipients checked]")
     for f in good_flags:                                 # show WHY: usage + top renderings
         b = f[3]
         top = ", ".join(f"{k}:{v}" for k, v in counts[b].most_common(5))
         print(f"      unexpected flag: pos {f[1]} {f[2]!r} on {b}  "
               f"(number used {totals[b]}x; renderings {top})")
 
-    # hand-break the ACTUAL failure class: put a content word onto a FREQUENT number that
-    # never renders it (a content word landing on the wrong Greek word). NOT a same-word
-    # swap — that can be a no-op (two 'him'/846 slots) and proves nothing.
+    # hand-break the ACTUAL failure class: inject a recipient that puts a content word onto a
+    # FREQUENT number that never renders it (a word landing on the wrong Greek word). Injecting
+    # a fabricated recipient — not swapping rows — is the right shape now that we check recips.
     freq_targets = [b for b, t in totals.most_common() if t >= MIN_FREQ]
-    victim = None
-    for i, r in enumerate(rows):
-        if not (r[2] and r[4] and r[4][0].isdigit()):
-            continue
-        h = _fold(r[2])
-        if not h:
-            continue
-        for T in freq_targets:
-            if T != r[4] and counts[T].get(h, 0) == 0:      # a number that never renders h
-                victim = (i, r, T, h)
-                break
-        if victim:
-            break
-    if not victim:
-        print("CONTROL ERROR: no content slot to mis-place"); return False
-    vi, vr, T, h = victim
-    broken = list(rows)
-    lr = list(vr); lr[4] = T                                 # move the word onto the wrong number
-    broken[vi] = tuple(lr)
-    bad_flags = _flag_slots(broken, counts, totals, ref + " [BROKEN]")
-    print(f"  hand-broken {ref}: put {vr[2]!r} onto {T} (renders it 0x, used {totals[T]}x)  "
+    word = next((h for _p, h, _b in recips if _fold(h)), "approaching")
+    T = next((t for t in freq_targets if counts[t].get(_fold(word), 0) == 0), None)
+    if T is None:
+        print("CONTROL ERROR: no frequent number that never renders the test word"); return False
+    broken = list(recips) + [(-1, word, T)]                 # a wrong recipient
+    bad_flags = _flag_recips(broken, counts, totals, ref + " [BROKEN]")
+    print(f"  hand-broken {ref}: injected recipient {word!r} onto {T} (renders it 0x, used {totals[T]}x)  "
           f"-> {len(bad_flags)} flag(s)  (expect >=1)")
 
     ok = (len(good_flags) == 0 and len(bad_flags) >= 1)
@@ -285,17 +297,20 @@ def main():
         sys.exit(0 if run_control(counts, totals, affected) else 1)
 
     flags = []
-    unadj_slots, unadj_nums = 0, set()          # content slots on numbers below the >= MIN_FREQ gate
-    for ref, rows in affected:
-        flags.extend(_flag_slots(rows, counts, totals, ref))
-        for _pos, _hf, base in _content_slots(rows):
-            if totals.get(base, 0) < MIN_FREQ:
+    recip_total = 0
+    unadj_slots, unadj_nums = 0, set()          # recipients on numbers below the >= MIN_FREQ gate
+    for ref, recips in affected:
+        recip_total += len(recips)
+        flags.extend(_flag_recips(recips, counts, totals, ref))
+        for _pos, _head, base in recips:
+            if base and base[0].isdigit() and totals.get(base, 0) < MIN_FREQ:
                 unadj_slots += 1
                 unadj_nums.add(base)
 
-    print("\n── wrong-slot certification (split-affected verses) ──")
+    print("\n── wrong-slot certification (split RECIPIENT slots only) ──")
     print(f"  verses checked:      {len(affected):,}")
-    print(f"  UNADJUDICATED:       {unadj_slots:,} content slots on {len(unadj_nums):,} rare "
+    print(f"  split recipients:    {recip_total:,}  (slots the split moved a word INTO — the audit scope)")
+    print(f"  UNADJUDICATED:       {unadj_slots:,} recipients on {len(unadj_nums):,} rare "
           f"(< {MIN_FREQ}-use) numbers — not judged here; covered by the 60-sample + BibleHub leg")
     print(f"  RAW FLAGS:           {len(flags):,}  (candidate generator — NOT a verdict; triaged below)")
 
