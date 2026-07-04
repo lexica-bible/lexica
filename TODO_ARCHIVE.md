@@ -6,6 +6,29 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## 2026-07-04 — ABP cert Sessions 1 + 2-first-pass (invariants, feed pin, harness, adjudication)
+- **Session 1:** invariant catalog `AUDIT_abp_invariants.md` (S1-S17 + P1-P21, each with a known-positive
+  control); `cert_manifest.py` (74-file SHA-256 feed pin, committed as `cert_manifest.json` — the baseline
+  is tied to a commit hash); `cert_reparse_harness.py` (full production build into bible.db.new, row-diff
+  vs live via compare_words, counts reconciled before trusted). L1's 4 artifact lines deleted from the
+  source files (census 0 after). NEW ledger find **L10** (Mal 3:6 trailing bare "G"). All 4 JP checkpoint
+  answers approved: `abp_corrections` at ingest-final, source_value-precondition keying, loud skip.
+- **Folds landed:** fix_emdash is now a finish_rebuild.sh tail step (after fix_split_merges — its "--"
+  precondition must match first); its manual re-run step + harness delta class are gone.
+- **Session 2 first pass:** harness proved the ingest ROW-FAITHFUL (626,305 = 626,305, zero rows
+  added/dropped). All 2,261 cell deltas = 413 rows / 193 verses = 3 causes: 175 flip verses (second flip
+  producer on PN slots → fold fix_split_flip into the tail, Session 2), 11 live-STALE verses (build is
+  right, live pre-dates the June fronting fix; cosmetic, tags correct), Cushi 6 + Jer 49:13 aion → first
+  correction-table entries. **Hab 3:6 ruled the OTHER way** (adjective slot — the June retag was wrong;
+  live reverted to G166 + verified). Final-run expectation pre-registered: exactly the 11 stale verses.
+- **Side finds fixed same day:** nightly bible.db backup had failed silently since Jul 2 (disk 93% full);
+  ~1.4G freed (stale rollback copies, half-finished backup leftovers, an old transfer bundle), backup
+  re-run + verified. Rahlfs pin gap in manifest v1 (0 files pinned, no floor) caught by JP — fixed with
+  the shared `RAHLFS_FILES_REQUIRED` list + >=73-file floor, re-pinned.
+- **Lessons:** a verifier without a count floor can't fail; correction entries only after per-verse
+  adjudication (Hab 3:6 nearly enshrined a defect); read the pinned source before code-tracing.
+  Full record: `AUDIT_abp_certification.md` + memory `project_abp_certification`.
+
 ## 2026-07-03 — Credits/attributions page LIVE + source-license audit (bdb=Strong's-Hebrew found)
 - **`/credits` page + `CREDITS.md` BUILT + DEPLOYED.** Server-rendered attributions (`views_seo.credits`),
   plain text, every source with its license NAMED + LINKED (CC BY/BY-SA/CC0/OFL require the link). Linked

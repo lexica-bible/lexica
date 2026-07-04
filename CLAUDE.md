@@ -1292,12 +1292,20 @@ memory `project_ai_synthesis_quality`.
 - `audit_split_flip.py <db>` (READ-ONLY) + `fix_split_flip.py <db> [--apply]` — the "LORD the" flip
   (a determiner stranded AFTER its noun, vs the clean `verses.text`). Audit shares its detector with the
   fixer (`find_flips`) so they can't drift; the fixer swaps each pair toward `verses.text` order and LOOPS
-  to convergence (a list "the A the B" needs several monotonic passes). Root-fixed in the build
-  (`_split_compounds` fronts spread words in source-phrase order), so this is a one-time live cleanup;
-  re-run surface+translit after `--apply`. 283 verses fixed + verified 2026-06-28. Memory `project_split_compounds_flip`.
-- `fix_emdash.py` (`--dry-run` / `--apply`) — swaps ABP's literal `--` clause dash for an em-dash `—` in
-  `words.english` + `verses.text` (double hyphen only; single hyphens like Beer-sheba are safe). Reversible;
-  PA-only data step; RE-RUN after any words/verses rebuild (not folded into the build). Memory `project_library_bracket`.
+  to convergence (a list "the A the B" needs several monotonic passes). The build's root fix
+  (`_split_compounds` source-phrase fronting) covers ONLY that pass — a SECOND flip producer (proper-noun
+  slots) regenerates ~175 flip verses on any rebuild (proven by the 2026-07-04 cert harness), so the fixer
+  is being FOLDED into finish_rebuild.sh as its LAST step (position-only swap → must run after ALL pinned
+  patches + fix_emdash; cert Session 2). Re-run surface+translit after any `--apply`. Memory
+  `project_abp_certification` + `project_split_compounds_flip`.
+- `fix_emdash.py [db]` (`--apply`) — swaps ABP's literal `--` clause dash for an em-dash `—` in
+  `words.english` + `verses.text` (double hyphen only; single hyphens like Beer-sheba are safe). FOLDED
+  2026-07-03: runs as a tail step of `finish_rebuild.sh` (after fix_split_merges — a "--" precondition
+  there must match first), so a rebuild reproduces it; no manual re-run. Memory `project_library_bracket`.
+- `cert_manifest.py build|verify` + `cert_reparse_harness.py` — the ABP-certification feed pin (74 files,
+  SHA-256, committed as `cert_manifest.json`) and the Tier A re-parse harness (full production build into
+  `bible.db.new`, row-diff vs live, reports cert_report_summary.txt/cert_deltas.tsv). Read-only on live.
+  Full record: `AUDIT_abp_certification.md` + `AUDIT_abp_invariants.md`.
 - `fix_italic_heads.py` (`--dry-run` / `--apply`, `--strongs G####`, `--all`) — makes a slot's SEARCH LABEL
   (`words.english_head`, what the Word-study finder matches) its OWN rendering, never a translator-added
   (italic) word ("take favor" had labeled λαμβάνω/G2983 "favor"). english_head ONLY; re-runnable. UNLIKE the

@@ -9,25 +9,27 @@ holds genuinely-open work and parked ideas only.
 ---
 
 ## ABP corpus certification audit (multi-session; full record `AUDIT_abp_certification.md`)
-- **Session 1 DONE 2026-07-03** — invariant catalog (`AUDIT_abp_invariants.md`, S1–S17 + P1–P21,
-  each with a control), feed-pin tool (`scripts/cert_manifest.py`), Tier A re-parse harness
-  (`scripts/cert_reparse_harness.py`), correction-table schema PROPOSAL, rebuild-script
-  reclassification/decommission list. **NEW find L10:** Mal 3:6 trailing bare "G" (same class as L2).
-  **All 4 checkpoint answers APPROVED 2026-07-03** (L1 lines deleted + pushed same day; em-dash
-  swap folded as finish_rebuild.sh's LAST step — order load-bearing, split_merge_fixes.json "--"
-  precondition). **Flag 2 clarified 2026-07-04:** corrections must be applied to the harness's
-  scratch BEFORE the diff — table + harness wiring land TOGETHER in Session 2, never table-first.
-  **Rahlfs pin gap (JP caught it, first PA run):** v1 manifest pinned 0 Rahlfs files (subfolder
-  sweep, no floor) — FIXED (explicit `RAHLFS_FILES_REQUIRED` list shared with lxx_align + ≥73-file
-  floor + per-feed counts). **RE-PIN DONE 2026-07-04: 74 files
-  (ABP 66 · bh 1 · Rahlfs 5 · TAGNT 2), verify intact — baseline is LIVE.** Session 1 fully closed;
-  next action is the Session 2 harness run.
-- **Session 2 — run + adjudicate.** The harness on PA (expect a normal rebuild's runtime; live db
-  read-only throughout); adjudicate every delta (pre-registered expected: cushi 6 rows; emdash
-  class now eliminated); wire the QUERY/SWEEP invariants into a runnable suite w/ controls
-  (`scripts/cert_invariants.py`); create `abp_corrections` (approved: ingest-final, source_value
-  precondition, loud skip) + migrate fix_split_merges / fix_cushi_strongs first; delete dead
-  `_sort_brackets`.
+- **Sessions 1 + 2-first-pass DONE 2026-07-03/04** (full detail moved to TODO_ARCHIVE + memory
+  `project_abp_certification`): invariant catalog live, 74-file baseline pinned + committed
+  (`cert_manifest.json`), harness ran — **ingest ROW-FAITHFUL (626,305 = 626,305, zero rows
+  added/dropped)**, all 2,261 cell deltas adjudicated to 3 causes, Hab 3:6 bad aiōn retag
+  reverted live. Scratch `bible.db.new` stays on PA as evidence until Session 2 closes.
+- **Session 2 remaining (the exact list, order matters — full rules in the audit file):**
+  1. Fold `fix_split_flip.py` into finish_rebuild.sh as the LAST step (position-only; after ALL
+     pinned patches + fix_emdash; corrections apply after it).
+  2. Create `abp_corrections` (approved: ingest-final, source_value precondition, loud skip) +
+     entries Cushi ×6 + Jer 49:13 (L11) + L2/L5/L10 once JP recovers those readings; wire the
+     harness apply-corrections-before-diff (Flag 2, HARD: table + wiring land together) +
+     `--no-corrections`.
+  3. Final harness run — **pre-registered expectation: residue = EXACTLY the 11 Class-1b
+     live-stale verses** (cosmetic, self-heal at the next swap); anything else is a finding.
+  4. Wire the QUERY/SWEEP invariants into a runnable suite w/ controls (`scripts/cert_invariants.py`);
+     delete dead `_sort_brackets`.
+- **Backup-freshness alarm (NEW 2026-07-04, from the disk-full incident).** The nightly bible.db
+  backup failed SILENTLY Jul 2→4 (account at 93%, gzip died mid-run, raw 380M leftovers piled up;
+  small dbs kept succeeding, masking it) — nothing alerted. Add a check to `health_check.py`'s
+  nightly email: newest `~/db_backups/bible.db.*` older than 48h ⇒ WARN (and maybe quota % ≥ 90 ⇒
+  WARN). Cheap, closes a real gap. code: scripts/health_check.py + backup_db.py.
 - **Certify the OTHER 7 redistribution passes.** L9 certified `_split_compounds` ONLY. Still uncertified:
   `_split_numbered`, `_redistribute_pronoun_compounds`, `_fix_backwards_pairing`, `_split_pn_article_lump`,
   `_funcword_noun_relocate`, `_lord_subject_split`, `_lord_oath_fix`. Same census+control approach
