@@ -6,12 +6,12 @@ zero split-flips, zero leftover '--' dashes, the Tier B correction overlay
 intact, feed baseline unchanged, nightly backup alive. ALL READ-ONLY.
 
 Usage (on PA, from ~/bible-db):
-  python3 scripts/cert_invariants.py [bible.db]   # run the 6 checks; exit 1 on any FAIL
-  python3 scripts/cert_invariants.py --controls   # prove checks 1-4 FIRE on seeded bad
+  python3 scripts/cert_invariants.py [bible.db]   # run the 7 checks; exit 1 on any FAIL
+  python3 scripts/cert_invariants.py --controls   # prove checks 1-4 + 7 FIRE on seeded bad
                                                   # input (temp scratch db; live untouched)
 
 CONTROL RULE (standing): a green from a check that has never fired is void.
-Checks 1-4 prove themselves via --controls on every run of that mode; checks 5-6
+Checks 1-4 + 7 prove themselves via --controls on every run of that mode; checks 5-6
 reuse cert_manifest.py, whose detections both fired on live incidents (the Rahlfs
 pin-gap 2026-07-04; the missing backup stamp 2026-07-04).
 
@@ -116,6 +116,27 @@ def check_corrections(conn, expected_active=None) -> list:
     return problems
 
 
+def check_person_place_binding(conn) -> list:
+    """No proper-noun name may render BOTH a fuzzy PLACE and an exact PERSON — the
+    Cushi shape (a man's gentilic name stemmed to his region). Cert Session 4.
+    Binding tables are PA-only + deploy-safe: absent -> nothing can mis-render -> pass."""
+    has = conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' "
+                       "AND name='pn_binding'").fetchone()
+    if not has:
+        return []
+    rows = conn.execute("""
+        WITH r AS (SELECT b.name, b.kind, e.section
+                   FROM pn_binding b JOIN tipnr_entities e ON e.uniq = b.entity_uniq
+                   WHERE b.render = 1)
+        SELECT name,
+               SUM(kind='fuzzy' AND section='place')  AS fp,
+               SUM(kind='exact' AND section='person') AS ep
+        FROM r GROUP BY name HAVING fp > 0 AND ep > 0
+    """).fetchall()
+    return [f"{r['name']}: {r['fp']} fuzzy-place AND {r['ep']} exact-person render(s) "
+            f"(person-as-place mis-bind, the Cushi shape)" for r in rows]
+
+
 def check_manifest() -> list:
     r = subprocess.run([sys.executable, str(Path(__file__).parent / "cert_manifest.py"),
                         "verify"], capture_output=True, text=True)
@@ -137,6 +158,7 @@ CHECKS = [
     ("4 corrections intact",      lambda conn: check_corrections(conn)),
     ("5 feed manifest",           lambda conn: check_manifest()),
     ("6 backup freshness",        lambda conn: check_backup()),
+    ("7 person/place binding",    check_person_place_binding),
 ]
 
 
@@ -221,6 +243,18 @@ def run_controls() -> int:
         bad = check_corrections(conn, expected_active=1)
         named = any("2Sa 18:21 pos 4 strongs_base" in p for p in bad)
         results.append(("4 corrections (must NAME the row)", bool(bad) and named, bad))
+
+        # control 7: a name that renders BOTH a fuzzy place and an exact person
+        conn.executescript("""
+          CREATE TABLE pn_binding(name TEXT, entity_uniq TEXT, kind TEXT, render INT);
+          CREATE TABLE tipnr_entities(uniq TEXT, section TEXT);
+          INSERT INTO tipnr_entities VALUES ('Cush@x','place'),('Cushi@y','person');
+          INSERT INTO pn_binding VALUES ('cushi','Cush@x','fuzzy',1),
+                                        ('cushi','Cushi@y','exact',1);
+        """)
+        conn.commit()
+        bad = check_person_place_binding(conn)
+        results.append(("7 person/place binding", bool(bad), bad))
         conn.close()
 
     print("== cert_invariants CONTROLS (each check must FIRE on seeded bad input) ==")
