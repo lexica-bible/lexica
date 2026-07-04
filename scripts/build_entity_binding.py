@@ -27,6 +27,12 @@ Usage (on PythonAnywhere):
   python3 scripts/build_entity_binding.py                       # dry-run, report only
   python3 scripts/build_entity_binding.py --tipnr /path/tipnr.txt   # reuse a local copy
   python3 scripts/build_entity_binding.py --apply              # write the tables
+  python3 scripts/build_entity_binding.py --download-tipnr     # LIVE upstream (unpinned;
+                                                               # drift checks only)
+
+TIPNR source (Session 5 pin): defaults to the vendored tipnr/TIPNR.txt, which is
+hash-pinned in cert_manifest.json. The live download exists only behind
+--download-tipnr, for checking whether upstream has moved.
 """
 
 import os
@@ -43,6 +49,9 @@ DB = next((a for a in sys.argv[1:] if not a.startswith("--")),
 APPLY = "--apply" in sys.argv
 TIPNR_LOCAL = next((sys.argv[i + 1] for i, a in enumerate(sys.argv) if a == "--tipnr"
                     and i + 1 < len(sys.argv)), None)
+TIPNR_PINNED = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                            "tipnr", "TIPNR.txt")
+DOWNLOAD_TIPNR = "--download-tipnr" in sys.argv
 
 TIPNR_URL = (
     "https://raw.githubusercontent.com/STEPBible/STEPBible-Data/master/"
@@ -55,7 +64,10 @@ def load_tipnr():
     if TIPNR_LOCAL:
         print(f"TIPNR: {TIPNR_LOCAL}")
         return open(TIPNR_LOCAL, encoding="utf-8-sig").read().splitlines()
-    print("Downloading TIPNR...")
+    if not DOWNLOAD_TIPNR and os.path.isfile(TIPNR_PINNED):
+        print(f"TIPNR: pinned copy {TIPNR_PINNED}")
+        return open(TIPNR_PINNED, encoding="utf-8-sig").read().splitlines()
+    print("Downloading TIPNR (LIVE upstream — unpinned; drift checks only)...")
     with urllib.request.urlopen(TIPNR_URL) as r:
         return r.read().decode("utf-8-sig").splitlines()
 

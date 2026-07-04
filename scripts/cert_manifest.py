@@ -1,13 +1,15 @@
 #!/usr/bin/env python3
-"""cert_manifest.py — pin the three ABP-certification feeds by SHA-256.
+"""cert_manifest.py — pin the ABP-certification feeds by SHA-256.
 
 The Tier A certification claim is "this DB is certified against THESE sources on
 PA" — this manifest is what "these" means. It hashes every input file the words
-build reads:
+build reads, plus the entity-binding feed:
   * the 66 ABP source .txt files (abp_texts/, in git)
   * bh_scrape.db (PA-only)
   * the Rahlfs-1935 data files (~/LXX-Rahlfs-1935, PA-only)
   * the two TAGNT files (~, PA-only)
+  * the vendored TIPNR file (tipnr/TIPNR.txt, in git — Session 5; feeds BOTH
+    import_tipnr.py's proper-noun numbers in words AND build_entity_binding.py)
 
 Usage (on PA, from ~/bible-db):
     python3 scripts/cert_manifest.py build     # write cert_manifest.json
@@ -84,10 +86,16 @@ def feed_files():
             sys.exit(f"ERROR: TAGNT file missing: {p} — feed required for the cert.")
         files.append((f"tagnt/{p.name}", p))
 
+    tip = BASE_DIR / "tipnr" / "TIPNR.txt"
+    if not tip.is_file():
+        sys.exit(f"ERROR: pinned TIPNR missing: {tip} — entity-binding + PN-number "
+                 "feed required for the cert (Session 5 pin).")
+    files.append(("tipnr/TIPNR.txt", tip))
+
     # Count floor — a manifest that pins fewer files than the build reads certifies
-    # nothing. 66 ABP + bh_scrape + 4 required Rahlfs + 2 TAGNT = 73 minimum.
-    if len(files) < 73:
-        sys.exit(f"ERROR: only {len(files)} feed files found (< 73 floor) — a feed "
+    # nothing. 66 ABP + bh_scrape + 4 required Rahlfs + 2 TAGNT + TIPNR = 74 minimum.
+    if len(files) < 74:
+        sys.exit(f"ERROR: only {len(files)} feed files found (< 74 floor) — a feed "
                  "is missing; refusing to pin/verify a partial baseline.")
     return files
 
@@ -130,8 +138,9 @@ def cmd_build():
     n_abp = sum(1 for k in entries if k.startswith("abp_texts"))
     n_rah = sum(1 for k in entries if k.startswith("rahlfs/"))
     n_tag = sum(1 for k in entries if k.startswith("tagnt/"))
+    n_tip = sum(1 for k in entries if k.startswith("tipnr/"))
     print(f"\nPinned {len(entries)} files -> {MANIFEST}")
-    print(f"  feeds: ABP {n_abp} · bh_scrape 1 · Rahlfs {n_rah} · TAGNT {n_tag}")
+    print(f"  feeds: ABP {n_abp} · bh_scrape 1 · Rahlfs {n_rah} · TAGNT {n_tag} · TIPNR {n_tip}")
 
 
 def backup_guard_message(stamp: Path | None = None) -> str | None:

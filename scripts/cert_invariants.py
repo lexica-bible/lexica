@@ -19,7 +19,7 @@ RE-PIN RULE for PINS below: these numbers change ONLY in the same commit as a
 deliberate rebuild + swap, after the compare_words gate passed — never edited to
 "make the suite green". A red here after an intentional rebuild means "update the
 pin in that rebuild's commit", not "the suite is broken".
-FEED-level pinning (the 74 source files) is cert_manifest.json — hash-exact,
+FEED-level pinning (the 75 source files, incl. TIPNR since Session 5) is cert_manifest.json — hash-exact,
 strictly stronger than any row-count floor, so feeds are not re-counted here.
 
 NO second copies of detection logic: the flip check imports the production

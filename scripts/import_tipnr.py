@@ -12,6 +12,7 @@ Usage:
   python3 scripts/import_tipnr.py bible.db              # apply changes
 """
 
+import os
 import re
 import sys
 import sqlite3
@@ -20,6 +21,12 @@ from collections import defaultdict
 
 DB       = sys.argv[1] if len(sys.argv) > 1 and not sys.argv[1].startswith("--") else "bible.db"
 DRY_RUN  = "--dry-run" in sys.argv
+
+# Session 5 pin: default to the vendored, hash-pinned copy (cert_manifest.json).
+# The live download stays only behind --download-tipnr, for drift checks.
+TIPNR_PINNED = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))),
+                            "tipnr", "TIPNR.txt")
+DOWNLOAD_TIPNR = "--download-tipnr" in sys.argv
 
 TIPNR_URL = (
     "https://raw.githubusercontent.com/STEPBible/STEPBible-Data/master/"
@@ -175,10 +182,14 @@ def parse_tipnr(lines):
 def main():
     print(f"{'[DRY RUN] ' if DRY_RUN else ''}import_tipnr.py → {DB}\n")
 
-    # ── Download ──────────────────────────────────────────────────────
-    print("Downloading TIPNR...")
-    with urllib.request.urlopen(TIPNR_URL) as r:
-        lines = r.read().decode("utf-8-sig").splitlines()
+    # ── Load TIPNR (pinned copy by default) ──────────────────────────
+    if not DOWNLOAD_TIPNR and os.path.isfile(TIPNR_PINNED):
+        print(f"TIPNR: pinned copy {TIPNR_PINNED}")
+        lines = open(TIPNR_PINNED, encoding="utf-8-sig").read().splitlines()
+    else:
+        print("Downloading TIPNR (LIVE upstream — unpinned; drift checks only)...")
+        with urllib.request.urlopen(TIPNR_URL) as r:
+            lines = r.read().decode("utf-8-sig").splitlines()
     print(f"  {len(lines)} lines\n")
 
     # ── Parse ─────────────────────────────────────────────────────────
