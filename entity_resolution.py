@@ -436,7 +436,18 @@ def bind_occurrence(ents, name_idx, base_idx, compact_idx, name, bk, ch, vs, bas
     fuzzy = set()
     cands = {i for cand in name_variants(n) for i in name_idx.get(cand, ())}
     cands |= compact_idx.get(_compact(n), set())
+    # Skip a PLACE fuzzy-candidate when an exact-spelling PERSON entity carries the
+    # SAME stored number. 'Cushi' (2Sa 18, a man) stems to the region 'Cush', which
+    # lists the verse AND carries the gentilic number H3569 -> both guards pass and it
+    # wrongly renders a PLACE card for a person. A same-name+same-number person exists
+    # (Cushi@Zep.1.1, H3569), so this is a person-as-place mis-bind: floor it (Fix A).
+    # Number-matched + exact-name-scoped -> can only floor, never mis-bind.
+    person_same_num = bool(B) and any(
+        ents[j]["section"] == "person" and B in ents[j]["bases"]
+        for j in name_idx.get(n, ()))
     for i in cands:
+        if person_same_num and ents[i]["section"] == "place":
+            continue
         ok, _ = _verse_in_entity(ents[i], bk, ch, vs)
         if ok and B and B in ents[i]["bases"]:
             fuzzy.add(i)

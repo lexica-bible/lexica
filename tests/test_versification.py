@@ -130,6 +130,11 @@ def _fixture():
          "spellings": {"beth-shemesh"}, "bases": {"H1053"}, "refs": {(6, 15, 10)}},
         {"head": "perez", "section": "person",            # KJV "Pharez" -> alias
          "spellings": {"perez"}, "bases": {"H6557"}, "refs": {(1, 38, 29)}},
+        {"head": "cushi", "section": "person",             # Zep 1:1, the H3569 person
+         "spellings": {"cushi"}, "bases": {"H3569"}, "refs": {(36, 1, 1)}},
+        {"head": "moab", "section": "place",               # 'Moabites' reaches it only
+         "spellings": {"moab"}, "bases": {"H4124"},        # by stem/alias (fuzzy path)
+         "refs": {(1, 19, 37)}},
     ]
     name_idx, base_idx, compact_idx = er.build_indexes(ents)
     return ents, name_idx, base_idx, compact_idx
@@ -188,16 +193,23 @@ def test_alias_match_renders_with_number():
     assert not _bind("Pharez", 1, 38, 29, "H1").render   # wrong number -> floor
 
 
-def test_cushi_runner_needs_the_by_verse_number_fix():
-    # The WS2 canary: 'Cushi' at 2Sa 18:21 stems to Cush, which lists the verse.
-    # BEFORE step 4 the stored number is H3570 (not in Cush's cluster) -> fuzzy's
-    # second key fails -> floor (honest, no wrong card).
-    pre = _bind("Cushi", 10, 18, 21, "H3570")
-    assert not pre.render
-    # AFTER the by-verse fix (H3569, the Cushite form, IS in Cush's cluster) -> the
-    # number agrees, so it binds & renders by name+verse.
-    post = _bind("Cushi", 10, 18, 21, "H3569")
-    assert post.render and post.kind == "fuzzy" and post.entity == 0
+def test_cushi_runner_floors_no_place_for_a_person():
+    # 'Cushi' at 2Sa 18:21 (a man, David's runner) stems to the region Cush, which
+    # lists the verse AND carries the gentilic number H3569 -> both fuzzy guards pass.
+    # But a same-name + same-number PERSON exists (Cushi@Zep.1.1, H3569), so rendering
+    # the PLACE card would be a person-as-place mis-bind. It must FLOOR (Fix A gives the
+    # verse-scoped blurb). TIPNR has no person entity for the runner himself.
+    assert not _bind("Cushi", 10, 18, 21, "H3569").render
+    # the old H3570 spelling floored too (number not in Cush's cluster) -> unchanged.
+    assert not _bind("Cushi", 10, 18, 21, "H3570").render
+
+
+def test_people_gentilic_still_renders_its_place():
+    # Negative control (the fix must not over-floor): 'Moabites' stems/aliases to the
+    # place Moab and there is NO 'moabites' person entity, so the number-matched fuzzy
+    # place render is left intact.
+    b = _bind("Moabites", 1, 19, 37, "H4124")
+    assert b.render and b.kind == "fuzzy" and b.entity == 8
 
 
 if __name__ == "__main__":
