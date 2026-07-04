@@ -9,9 +9,11 @@ at the Session 1/2 checkpoints (see AUDIT_abp_certification.md).
 SEED ENTRIES (adjudicated from cert harness run 1, 2026-07-04):
   * Cushi x6 — 2Sa 18, strongs_base H3570 -> H3569 (Class 2; migrates
     fix_cushi_strongs.py into table form — that script then lapses to the graveyard).
-  * Jer 49:13 pos 28 — strongs_base G166 -> G165 (L11; ABP printed the adjective's
-    number on the noun "eon"; Jer 49:13 ONLY — Hab 3:6 was ruled the other way and is
-    deliberately NOT here).
+  * Jer 49:13 pos 28 — TWO cells, per the run-1 delta TSV (JP's 2026-07-04 paste):
+    strongs_base G166 -> G165 AND the bare strongs 166 -> 165 (L11; ABP printed the
+    adjective's number on the noun "eon"; the June retag corrected both columns on
+    live). Jer 49:13 ONLY — Hab 3:6 was ruled the other way and is deliberately NOT
+    here.
 L2 / L5 / L10 land later as their own entries once JP recovers the intended readings.
 
 The dry run doubles as validation: it reads each target cell in the given db and
@@ -64,6 +66,7 @@ ENTRIES = [
     ("2Sa", 18, 31,  3, "strongs_base", "H3570", "H3569", _CUSHI_REASON, "Class2-cushi"),
     ("2Sa", 18, 32,  6, "strongs_base", "H3570", "H3569", _CUSHI_REASON, "Class2-cushi"),
     ("Jer", 49, 13, 28, "strongs_base", "G166",  "G165",  _JER_REASON,   "L11"),
+    ("Jer", 49, 13, 28, "strongs",      "166",   "165",   _JER_REASON,   "L11"),
 ]
 
 

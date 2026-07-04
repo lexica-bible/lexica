@@ -356,6 +356,22 @@ All local code, committed; every live-db step below waits on JP's runs + checkpo
 - Deferred on purpose: `_sort_brackets` deletion (edits the build file between run 1 and the
   final run — do it after the final run passes, with the decommission).
 
+**Checkpoint confirmations (JP's TSV paste, 2026-07-04):**
+- **Cushi direction confirmed from evidence** (not CC's inference): all 6 rows read live=H3569 /
+  scratch=H3570 → the correction is H3570→H3569, as shipped. The Session-2 handoff's
+  "H3569→H3570" was live-vs-rebuilt phrasing, now settled from the delta TSV itself.
+- **Jer 49:13 pos 28 is TWO cells, not one:** the June retag corrected BOTH `strongs_base`
+  (G166→G165) AND the bare `strongs` (166→165). An 8th seed entry (field `strongs`) added —
+  without it the final run would have carried one leftover Jer delta. Seed total: **8 entries**
+  (Cushi ×6 + Jer ×2).
+- **Schema "drift" ruled a non-event:** the shipped CREATE TABLE matches the Session-1 approved
+  proposal above byte-for-byte (book/chapter/verse/position keying, `created`, the applied_at
+  CHECK). The `verse_id`/`date` wording lived only in the Session-2 handoff's paraphrase.
+  Recorded here so the handoff text doesn't read as an unapproved change later.
+- **New pre-final-run check (cheap insurance):** JP's Hab 3:6 revert must have covered BOTH
+  columns too — verify pos 19 + 22 read strongs='166' AND strongs_base='G166' before the final
+  run, else Hab shows up as a residue delta.
+
 **Session 2 remaining fix list (in order):**
 1. ~~Code-trace Class 1b~~ DONE — confirmed live-stale (above).
 2. Fold `fix_split_flip.py` into finish_rebuild.sh AFTER fix_emdash (ordering rules above);
