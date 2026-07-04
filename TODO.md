@@ -16,27 +16,24 @@ retained `bible_pre_certswap_20260704.db`), erasing the 11-verse residue; dead `
 Session 4 DONE: Cushi person-as-place binding floored (see archive), check 7 added, render count reconciled.
 Session 5 DONE: TIPNR pinned (manifest 75, binder proven byte-identical); nightly backup damage-check +
 durable self-test; L2/L10 correction rows landed (source-attested via the official ABP app, table 8->16,
-suite green at pin 16); two-source seam doc written (`AUDIT_entity_seam.md`). Carry-forwards:
-- **[SESSION 6 OPENER] 97-card section-label defect.** `parse_tipnr` (entity_resolution.py) stamps section
-  from the file's block HEADER, not each entity's own row type: 10 real PLACES under `$== PERSON+PLACE`
-  headers render as person cards (97 live binds — Shechem 42, Gibeon 38, ...); EXCLUDED blocks (Sheol/
-  languages/titles) get ingested (4 live binds); 37 doc-prose lines parse as junk entities (0 binds).
-  Identity is correct everywhere — labels only. Fix = read row-type over header, skip EXCLUDED + prose,
-  re-run binder, re-run P1 mirror census on trustworthy labels, consider check 7 asserting on row-type.
-  Full evidence in `AUDIT_entity_seam.md`. Checkpointed proposal — not implemented.
-- **L5 → correction rows.** DISCREPANCY EXPLAINED Session 6 (closure a, recorded-in-error — no drift).
-  The recorded 9 (TODO below / S16 exception list) DID reproduce: each of the 9 verses shows its
-  demonstrative row under G1473/G3779/G846 with a BLANK surface_form (1Ch 27:6 "This", 1Co 1:24
-  "to these", 2Ki 18:9/18:10/25:8 "this is", Dan 4:33 "this", Eze 36:32 "I do this", Ezr 7:6 "This",
-  Mat 3:15 "for to this"). The Session-5 "regen found 0" used a FORM-based detector (the τοῦτο
-  `form GLOB`); a form-GLOB can't match a form-NULL row → 0 by construction. Not data movement.
-  NEXT (Session 6/7): re-derive the authoritative null-form list corpus-wide (the recorded 9 may not be
-  the whole set), read each against the official ABP app (apostolicbibleapp.com), then correction rows
-  via the L2/L10 path (dry-run → JP's go → guarded apply → check 4 green).
-- **Certify the OTHER 7 redistribution passes.** L9 certified `_split_compounds` ONLY. Still uncertified:
-  `_split_numbered`, `_redistribute_pronoun_compounds`, `_fix_backwards_pairing`, `_split_pn_article_lump`,
-  `_funcword_noun_relocate`, `_lord_subject_split`, `_lord_oath_fix`. Same census+control approach
-  (the P-invariants are the skeleton; the census legs are the work).
+suite green at pin 16); two-source seam doc written (`AUDIT_entity_seam.md`).
+Session 6 DONE 2026-07-04: 97-card section-label defect FIXED + live (`parse_tipnr` types each entity from
+its OWN row, not the block header — 8 places flipped person→place, 3 EXCLUDED entities stopped binding,
+net −13 render, loud-fail raise on unknown type under a mixed header); mirror census re-run on clean labels
+(P1=0, valid); check 7 hardened to BOTH directions (mirror leg + control); L5 discrepancy explained
+(closure a, no drift). Cert 7/7 green, pin 16. Full record `AUDIT_entity_seam.md` + `HANDOFF_session7.md`.
+Carry-forwards:
+- **L5 → correction rows (9 candidates await JP's ABP-app reading).** Re-derived list = the same 9 (query
+  saved verbatim in `AUDIT_abp_certification.md` L5 entry): 2Ki 18:9/18:10/25:8, 1Ch 27:6, Ezr 7:6 (G846) ·
+  Dan 4:33, Eze 36:32 (G1473) · 1Co 1:24 (G846) · Mat 3:15 (G3779) — demonstrative render, form-null, each a
+  CANDIDATE (αὐτός/ἐγώ can legitimately render "this/same"). JP reads each vs the ABP app; real mistags →
+  correction rows via the L2/L10 door (dry-run → JP's go → guarded apply → check 4 green).
+- **Luke 23:38 Tier B candidate** (Session 6): "Hebrew" now renders the Hebrews-PEOPLE card (was a floor) —
+  a source-reading question, rides the ABP-app pass, gates nothing. Note in `AUDIT_entity_seam.md`.
+- **import_tipnr.py twin bug** (Session 6): its own separate parser has the same header-first defect
+  (line 97), so the `tipnr` table also mistypes the 10 mixed places. MASKED for all 97 bound cards (a bind
+  gates the metaV path off), no urgency. Fix = same 3 classes there; needs a words rebuild / import_tipnr
+  re-run = its own checkpoint.
 - **Certify the OTHER 7 redistribution passes.** L9 certified `_split_compounds` ONLY. Still uncertified:
   `_split_numbered`, `_redistribute_pronoun_compounds`, `_fix_backwards_pairing`, `_split_pn_article_lump`,
   `_funcword_noun_relocate`, `_lord_subject_split`, `_lord_oath_fix`. Same census+control approach
