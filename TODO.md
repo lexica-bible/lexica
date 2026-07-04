@@ -8,32 +8,23 @@ holds genuinely-open work and parked ideas only.
 
 ---
 
-## ABP corpus certification audit (multi-session; full record `AUDIT_abp_certification.md`)
-- **Sessions 1 + 2 DONE 2026-07-03/04 — Tier A CERTIFIED** (full detail in memory
-  `project_abp_certification` + the audit file): invariant catalog live, 74-file baseline pinned
-  (`cert_manifest.json`), ingest ROW-FAITHFUL (626,305=626,305), `abp_corrections` table LIVE (8 rows),
-  fix_split_flip folded into the tail, final harness run PASSED (residue = exactly the 11 pre-registered
-  live-stale verses), 14 dead scripts retired to `scripts/graveyard/`.
-- **Session 3 — the live rebuild + swap (gated on Session 2's pass, which it has):**
-  1. Fresh build + tail on PA → checklist audit gates (audit_split_flip=0, strongs_base invariant,
-     health_check clean) → swap → re-run dependent builders (import_tipnr → surface → translit →
-     entity binding → rendering-norm → two-ending). Erases the 11-verse residue; live becomes pinned
-     source + faithful parser + correction table end to end.
-  2. Runnable invariant suite `scripts/cert_invariants.py` — the QUERY/SWEEP invariants, each with its
-     proof-of-fire control. Delete dead `_sort_brackets` in build_words_from_abp.py.
-  3. Fold L2 (1Sa 6:11), L5 (9 null-form rows), L10 (Mal 3:6) into `abp_corrections` once JP recovers
-     the intended readings (each an entry via `scripts/build_abp_corrections.py`, checkpoint first).
-- **Backup-freshness alarm (PARTIAL 2026-07-04).** The stamp-and-warn half is DONE — backup_db.py writes
-  `~/db_backups/last_success.txt` on a clean run, `cert_manifest.py verify` warns if it's missing/>25h.
-  STILL OPEN: mirror the check into `health_check.py`'s nightly email (newest `~/db_backups/bible.db.*`
-  >48h ⇒ WARN; quota % ≥ 90 ⇒ WARN) so JP sees it without running a cert command. code: scripts/health_check.py.
+## ABP corpus certification audit — TIER A CERTIFIED END TO END (full record `AUDIT_abp_certification.md` + memory `project_abp_certification`)
+Sessions 1-3 DONE 2026-07-03/04. Live bible.db IS pinned source (74-file hash manifest) + faithful parser
+(re-parse+diff certified) + versioned correction table (`abp_corrections`, 8 rows) + invariant suite green
+(`cert_invariants.py`, 6/6, each with a proof-of-fire control). Session 3 rebuilt+swapped live (old file
+retained `bible_pre_certswap_20260704.db`), erasing the 11-verse residue; dead `_sort_brackets` deleted.
+Only carry-forwards remain — none gating, none urgent:
+- **L2/L5/L10 → correction rows.** L2 (1Sa 6:11 blank-Strong's), L5 (9 null-form "this/these" rows), L10
+  (Mal 3:6 bare "G") each become an `abp_corrections` entry via `scripts/build_abp_corrections.py` once JP
+  recovers the intended ABP source readings. Checkpoint + dry-run before each write.
+- **Backup-freshness alarm — email side still open.** Stamp-and-warn half DONE (backup_db.py writes
+  `~/db_backups/last_success.txt`; `cert_manifest.py verify` + `cert_invariants.py` check it). STILL OPEN:
+  mirror it into `health_check.py`'s nightly email (newest `~/db_backups/bible.db.*` >48h ⇒ WARN; quota %
+  ≥ 90 ⇒ WARN) so JP sees it without running a cert command. code: scripts/health_check.py.
 - **Certify the OTHER 7 redistribution passes.** L9 certified `_split_compounds` ONLY. Still uncertified:
   `_split_numbered`, `_redistribute_pronoun_compounds`, `_fix_backwards_pairing`, `_split_pn_article_lump`,
   `_funcword_noun_relocate`, `_lord_subject_split`, `_lord_oath_fix`. Same census+control approach
-  (the P-invariants are the skeleton; the census legs are Session 2+).
-- **Tier B correction table** — schema proposed Session 1 (ingest-final recommended, NOT read-time;
-  needs JP's go). First candidates: L2 (1Sa 6:11 "buttocks.G"), L5 (9 null-form "this/these" rows
-  needing ABP source eyes), L10 (Mal 3:6).
+  (the P-invariants are the skeleton; the census legs are the work).
 - **Stump filter leak** (noted, low priority): `lint_split_wrong_slot.py`'s stemmer stump filter misses
   sibling forms whose count is <3 (sid/com/rott). Didn't matter once recipient-scoping shrank the haystack;
   fix if the filter is reused at scale.
