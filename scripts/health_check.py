@@ -122,6 +122,56 @@ check("verses with zero words  [parse failure]",
          WHERE NOT EXISTS (SELECT 1 FROM words w WHERE w.verse_id=v.id)""",
       expect_zero=False)
 
+
+# ── backup integrity + freshness (Session 5) ─────────────────────────────────
+# The 2026-07-02 corrupt backup proved a freshness-only guard is blind: a copy
+# can exist, be recent, and still be damaged. Nightly sweep of EVERY kept backup:
+# raw .db copies get PRAGMA quick_check; gzipped ones get a full stream-read
+# (gzip's built-in end-to-end checksum fires on any truncation/rot — no temp
+# file, no unpack to disk). Freshness reuses the ONE guard in cert_manifest.py.
+# Skipped silently when the backup dir doesn't exist (local dev box).
+def backup_checks(bdir):
+    import gzip
+    from pathlib import Path
+    bdir = Path(bdir).expanduser()
+    if not bdir.is_dir():
+        return
+    try:
+        from cert_manifest import backup_guard_message   # the ONE freshness guard
+        msg = backup_guard_message()
+        results.append(("WARN" if msg else "OK  ", "backup freshness",
+                        1 if msg else 0, msg or "success stamp fresh"))
+    except Exception as e:
+        results.append(("ERR ", "backup freshness", "-", str(e)[:60]))
+    swept = damaged = 0
+    for p in sorted(bdir.glob("*.db")):
+        try:
+            bc = sqlite3.connect(f"file:{p.as_posix()}?mode=ro", uri=True)
+            qc = bc.execute("PRAGMA quick_check").fetchone()[0]
+            bc.close()
+        except Exception as e:
+            qc = f"unreadable: {e}"
+        swept += 1
+        if qc != "ok":
+            damaged += 1
+            results.append(("WARN", f"backup DAMAGED: {p.name}", 1, str(qc)[:60]))
+    for p in sorted(bdir.glob("*.db.gz")):
+        swept += 1
+        try:
+            with gzip.open(p, "rb") as f:
+                while f.read(1 << 20):
+                    pass
+        except Exception as e:
+            damaged += 1
+            results.append(("WARN", f"backup DAMAGED (gz): {p.name}", 1, str(e)[:60]))
+    results.append(("OK  ", "backups swept (raw quick_check + gz stream-test)",
+                    swept, f"{damaged} damaged" if damaged else "all intact"))
+
+
+if "--no-backup-check" not in sys.argv:
+    backup_checks(next((a.split("=", 1)[1] for a in sys.argv
+                        if a.startswith("--backup-dir=")), "~/db_backups"))
+
 # ── print report ─────────────────────────────────────────────────────────────
 report_lines = [f"=== bible.db health check: {DB} ===", ""]
 for status, label, count, note in results:
