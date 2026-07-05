@@ -356,9 +356,10 @@ const api = {
     fetch(`/api/strongs-count/${encodeURIComponent(base)}?by=base`).then(r => r.json()),
   metavPerson: (name) =>
     fetch(`/api/metav/person/${encodeURIComponent(name)}`).then(r => r.json()),
-  metavAiDescription: (name, book, chapter, verse) => {
+  metavAiDescription: (name, book, chapter, verse, translation) => {
     const q = (book && chapter && verse)
-      ? `?book=${encodeURIComponent(book)}&chapter=${chapter}&verse=${verse}` : "";
+      ? `?book=${encodeURIComponent(book)}&chapter=${chapter}&verse=${verse}`
+        + (translation ? `&translation=${encodeURIComponent(translation)}` : "") : "";
     return fetch(`/api/metav/ai-description/${encodeURIComponent(name)}${q}`).then(r => r.json());
   },
   metavPlace: (name) =>

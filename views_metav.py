@@ -45,16 +45,60 @@ _BOOK_FULL = {
 # at THAT reference instead of wandering across testaments. It is still constrained
 # model prose, NOT a verse-checked / citation-gated fact — labelled as such in the UI.
 _PN_SYSTEM = (
-    "You are a concise biblical reference note. You are given a name and the exact "
-    "verse where it occurs. Describe ONLY the specific person, place, or group meant "
-    "at THAT verse, fixed by its own context — the book, the era, the surrounding "
-    "names. Many biblical names are shared by several unrelated figures; do not "
-    "describe a different one and do not blend them. If you are unsure which one the "
-    "verse means, say so briefly rather than guess. 1-2 sentences. No theology, no "
+    "You are a concise biblical reference note. You are given a name, the verse where it "
+    "occurs, and the exact text of that verse in the translation the reader is viewing. "
+    "Explain ONLY the specific person, place, or group this name refers to AS IT APPEARS "
+    "IN THAT VERSE, fixed by its own context — the book, the era, the surrounding names. "
+    "The name IS present in the verse as shown; describe what it denotes there. Do NOT say "
+    "the term is absent or wrong, and do NOT fact-check the shown text against Hebrew, "
+    "English, or other translations — this translation may render or transliterate a name "
+    "differently (for example a Greek/Septuagint form such as 'Antilebanon' for the "
+    "Anti-Lebanon range), and that rendering is correct for this reader. Many names are "
+    "shared by several unrelated figures; describe only the one meant here and do not blend "
+    "them. If genuinely unsure which one, say so briefly. 1-2 sentences. No theology, no "
     "speculation, no markdown."
 )
-_PN_USER_TMPL = 'Who or what is "{name}" at {ref}? Describe only the one meant there.'
-_PN_VER = ai_fingerprint("pn", _PN_SYSTEM, _PN_USER_TMPL)
+# With the displayed verse (the normal path):
+_PN_USER_TMPL = (
+    'In {translation}, {ref} reads:\n"{verse}"\n\n'
+    'Who or what is "{name}" as it appears in this verse? Describe only the one meant there.'
+)
+# Fallback when the verse text can't be fetched (keeps a single system prompt):
+_PN_USER_TMPL_NOVERSE = 'Who or what is "{name}" at {ref}? Describe only the one meant there.'
+_PN_VER = ai_fingerprint("pn", _PN_SYSTEM, _PN_USER_TMPL, _PN_USER_TMPL_NOVERSE)
+
+# translation code -> (full name for the prompt, verse-table + columns keyed by book-NUMBER;
+# ABP is keyed by book ABBREV in `verses`). heb/unknown fall back to ABP (the anchor text).
+_TXT_META = {
+    "kjv": ("the King James Version", "kjv_verses", "verse_text"),
+    "bsb": ("the Berean Standard Bible", "bsb_verses", "verse_text"),
+}
+
+
+def _displayed_verse(conn, translation, book, ch, vs):
+    """The verse text the reader is looking at + that translation's full name, so the AI
+    note explains a name AS RENDERED (e.g. ABP's Greek 'Antilebanon') instead of fact-
+    checking it against Hebrew/English. Falls back to the ABP text; ('', '') if not found."""
+    t = (translation or "abp").lower()
+    try:
+        if t in _TXT_META:
+            full, tbl, col = _TXT_META[t]
+            bk = book_num(book)
+            if bk:
+                r = conn.execute(
+                    f"SELECT {col} AS txt FROM {tbl} WHERE book_id=? AND chapter=? AND verse_num=?",
+                    (bk, int(ch), int(vs))).fetchone()
+                if r and r["txt"]:
+                    return r["txt"], full
+        # ABP (default / heb / anything else): the anchor Greek text, keyed by abbrev
+        r = conn.execute(
+            "SELECT text AS txt FROM verses WHERE book=? AND chapter=? AND verse=?",
+            (book, int(ch), int(vs))).fetchone()
+        if r and r["txt"]:
+            return r["txt"], "the Apostolic Bible Polyglot (a Greek text following the Septuagint)"
+    except Exception:
+        pass
+    return "", ""
 
 
 def prune_cache() -> int:
@@ -180,9 +224,18 @@ def metav_ai_description(name):
     book = (request.args.get("book") or "").strip()
     ch   = (request.args.get("chapter") or "").strip()
     vs   = (request.args.get("verse") or "").strip()
+    translation = (request.args.get("translation") or "abp").strip().lower()
+    verse_text, txt_full = "", ""
     if book and ch and vs:
         ref = f"{_BOOK_FULL.get(book, book)} {ch}:{vs}"
-        cache_key = f"pn:{name.lower()}:{book}{ch}:{vs}"
+        # feed the verse the reader is actually looking at, so the note explains the name
+        # AS RENDERED there (ABP's Greek 'Antilebanon') instead of fact-checking it
+        conn = db_ro()
+        try:
+            verse_text, txt_full = _displayed_verse(conn, translation, book, ch, vs)
+        finally:
+            conn.close()
+        cache_key = f"pn:{name.lower()}:{book}{ch}:{vs}:{translation}"
     else:
         ref = "the Bible"
         cache_key = f"pn:{name.lower()}"
@@ -191,13 +244,17 @@ def metav_ai_description(name):
     if cached is not None:
         return jsonify(cached)
 
+    if verse_text:
+        user = _PN_USER_TMPL.format(name=name, ref=ref, translation=txt_full, verse=verse_text)
+    else:
+        user = _PN_USER_TMPL_NOVERSE.format(name=name, ref=ref)
     try:
         msg = _anthropic.messages.create(
             model="claude-haiku-4-5-20251001",
             max_tokens=160,
             temperature=0,
             system=_PN_SYSTEM,
-            messages=[{"role": "user", "content": _PN_USER_TMPL.format(name=name, ref=ref)}],
+            messages=[{"role": "user", "content": user}],
         )
         description = msg.content[0].text.strip() if msg.content else ""
     except Exception as e:

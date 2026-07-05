@@ -467,7 +467,8 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
     if (!name || name.length < 2) return;
     let cancelled = false;
     setAiDescLoading(true);
-    api.metavAiDescription(name, entry.book, entry.chapter, entry.verse)
+    const curText = entry.isKjv ? "kjv" : entry.isBsb ? "bsb" : entry.isHeb ? "heb" : "abp";
+    api.metavAiDescription(name, entry.book, entry.chapter, entry.verse, curText)
       .then(d => { if (!cancelled && !d.error) setAiDescription(d.description || null); })
       .catch(() => {})
       .finally(() => { if (!cancelled) setAiDescLoading(false); });
