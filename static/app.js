@@ -1487,23 +1487,23 @@ let content;{const sortedWords=[...v.words].filter(w=>w.english||w.kjv_def||w.st
 // prose uses — so "[²God ³was ¹the ⁴word]" reads "the word was God" with
 // the digits running 1·2·3·4. Chip keeps its OWN number-suppression + trail
 // lift below (reorder core only, no prose punctuation floating).
-const ordered=orderBracketGroupWords(g.words);// Suppress a duplicate position number on continuation words: when a word
+// Lift the bracket's trailing clause punctuation OUTSIDE the "]", the SAME
+// way prose (getEnglishOrderWords) floats it: strip a trailing mark off
+// EVERY word in SOURCE order FIRST, accumulate it, THEN reorder. The mark
+// is parked (by fix_bracket_punct) on the bracket's SOURCE-last word, which
+// the English reorder usually moves OUT of last place — reading the mark off
+// the REORDERED-last word (the old code) stranded it one token early, e.g.
+// John 1:1 "the word. was God" instead of "the word was God." Ordinary marks
+// (",.;:") hug the "]"; a dash ("--") gets a leading space -> "] --".
+// (2 Sam 1:26 class.)
+const TRAIL=/\s*(?:--|—|–|[.,;:!?·])+$/;let bracketTrail="";const cleaned=[];for(const w of g.words){const eng=(w.english||"").trim();if(eng&&eng.replace(TRAIL,"")===""){// pure-punctuation token
+bracketTrail+=eng;continue;}const m=eng.match(TRAIL);if(m&&m.index>0){// keep at least one real word before the mark
+bracketTrail+=m[0].trim();cleaned.push({...w,english:eng.slice(0,m.index).trimEnd()});}else{cleaned.push(w);}}if(bracketTrail){bracketTrail=/^(?:--|—|–)+$/.test(bracketTrail)?" "+bracketTrail:bracketTrail;}const ordered=orderBracketGroupWords(cleaned);// Suppress a duplicate position number on continuation words: when a word
 // shares the greek_pos of the previous numbered member (e.g. the source
 // token "2God did" split into God + did, both pos 2), hide the second
 // number so it renders "²God did", not "²God ²did". After the reorder,
 // equal digits are adjacent (stable sort), so this still targets the pair.
-let lastGp=null;const gw=ordered.map(w=>{if(w.greek_pos!=null&&w.greek_pos===lastGp)return{...w,greek_pos:null};if(w.greek_pos!=null)lastGp=w.greek_pos;return w;});// Lift the bracket's trailing clause punctuation OUTSIDE the "]". ABP
-// writes "...many]," (mark after the bracket), but clean_english glued it
-// onto the word ("many,") so it renders inside. fix_bracket_punct already
-// parks the mark on the bracket's LAST word, so we snip it off here and
-// re-emit it just after the "]" — "[...dominate]." not "[...dominate.]".
-// Also lift a trailing clause DASH (ABP's "--") outside the "]". ABP writes
-// "...to me] -- above", but clean_english glued it onto the last word's gloss
-// ("to me --") so it renders inside the bracket. Ordinary marks (",.;:") keep
-// hugging the "]"; a dash gets a leading space so it reads "] --", not "]--".
-// (2 Sam 1:26 class.) Kept as "--" to match the un-bracketed dashes elsewhere.
-const TRAIL=/\s*(?:--|—|–|[.,;:!?·])+$/;let bracketTrail="";let gwR=gw;{const li=gw.length-1;const lastEng=gw[li]&&gw[li].english||"";const m=lastEng.match(TRAIL);if(m&&m.index>0){// keep at least one real word before the mark
-const lifted=m[0].trim();bracketTrail=/^(?:--|—|–)+$/.test(lifted)?" "+lifted:lifted;gwR=gw.map((w,i)=>i===li?{...w,english:lastEng.slice(0,m.index).trimEnd()}:w);}}// The "[" / "]" ride the first / last word's english cell (see bracketChip), so
+let lastGp=null;const gwR=ordered.map(w=>{if(w.greek_pos!=null&&w.greek_pos===lastGp)return{...w,greek_pos:null};if(w.greek_pos!=null)lastGp=w.greek_pos;return w;});// The "[" / "]" ride the first / last word's english cell (see bracketChip), so
 // the chips just flow in greek order and a verse highlight paints straight
 // through — no separate bracket columns sitting between the chips to break it.
 return/*#__PURE__*/React.createElement("span",{key:`bg${gi}`,className:"lib-bracket-group"},gwR.map((w,wi)=>bracketChip(w,`bg${gi}w${wi}`,{open:wi===0,close:wi===gwR.length-1,trail:wi===gwR.length-1?bracketTrail:""})));});}return/*#__PURE__*/React.createElement(React.Fragment,{key:`${ch}-${v.verse}`},!skipHeading&&v.heading&&/*#__PURE__*/React.createElement("div",{className:"lib-verse-row pericope-row"},/*#__PURE__*/React.createElement("span",{className:"lib-vnum","aria-hidden":"true"}),/*#__PURE__*/React.createElement("div",{className:"pericope-heading"},v.heading)),/*#__PURE__*/React.createElement("div",{ref:isHighlight?highlightRef:null,"data-note-verse":v.verse,"data-note-chapter":ch,className:"lib-verse-row"+(isHighlight?" lib-highlight":"")},vnumEl(v.verse,ch),/*#__PURE__*/React.createElement("span",{className:"lib-verse-content lib-verse-chips"},noteMarker(v.verse,ch),content)));};const renderKjvVerse=(ctx,v,showVerseNum=true,skipHeading=false)=>{const{selChapter,nav,selBook,highlightRef,vnumEl,noteMarker,onWordClick,showInterlinear,showStrongs,hiClass}=ctx;const ch=v._ch??selChapter;const isHighlight=nav&&nav.highlight===v.verse&&(nav.chapter==null||nav.chapter===ch);const makeKjvEntry=(w,sid)=>({id:`kjv-${selBook.abbrev}-${ch}-${v.verse}-${w.word_id}`,strongs:sid||"",strongs_base:sid?sid.slice(1):"",strongs_raw:sid?sid.slice(1):"",greek:w.lemma||"",translit:w.xlit||"",gloss:w.word,lemmaGloss:w.lemma_gloss||"",// plain-meaning dictionary sense (word_gloss) beside the lemma

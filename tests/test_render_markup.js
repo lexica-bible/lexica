@@ -105,4 +105,20 @@ test("PN click payload is independent of toggle state", () => {
   assert.deepStrictEqual(a, { isPN: true, pnName: "Pharaoh", gloss: "Pharaoh" });
 });
 
+// CLAUSE-MARK LANDING — a bracket group's trailing clause mark must lift to the
+// LAST VISIBLE word of the REORDERED group, not stay parked on the source-last word
+// (which the English reorder usually moves out of last place). John 1:1's bracket
+// group reorders to "the word was God"; the pre-fix chip lift read the mark off the
+// reordered-last word and stranded it one token early -> "the word. was God".
+test("chip lifts a bracket's clause mark to the last visible word, not one token early", () => {
+  const joh = JSON.parse(fs.readFileSync(path.join(__dirname, "snapshots", "api__chapter__Joh__1.json"), "utf8"));
+  const v1 = joh.find((x) => x.verse === 1);
+  // plain chip: study layers OFF, else Strong's/gloss spans land between words + the mark
+  const chipCtx = { ...ctx, showInterlinear: false, showStrongs: false };
+  const html = renderToStaticMarkup(LibRender.renderVerse(chipCtx, { verse: 1, words: v1.words }));
+  const text = html.replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  assert.ok(/God\s*\.\s*$/.test(text), "clause mark must land after the last word (…God.)");
+  assert.ok(!/word\s*\.\s+was/.test(text), "mark must NOT strand one token early on 'word' (…word. was…)");
+});
+
 console.log(`\n${n} tests passed.`);
