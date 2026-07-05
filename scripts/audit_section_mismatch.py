@@ -65,6 +65,8 @@ def main():
     people_person = []   # CLASS A: people-group gloss bound to a PERSON entity
     num_cross_ot = []    # CLASS B(OT): word number not in entity bases (OT — should be clean)
     num_cross_nt = []    # CLASS B(NT): same, NT (noisy — extended Greek bases)
+    im_review = {}       # REVIEW: person-bound '-im' names the classifier does NOT flag
+                         #   (candidate peoples to add vs person names to leave out) -> counts
 
     for b in conn.execute(
         "SELECT book,chapter,verse,name,entity_uniq,kind,tier FROM pn_binding WHERE render=1"):
@@ -78,6 +80,11 @@ def main():
 
         if e["section"] == "person" and any(is_people_group(l) for l in labels):
             people_person.append((b, e, labels))
+        elif e["section"] == "person":
+            for l in labels:
+                ll = er.norm_name(l)
+                if ll.endswith("im") and not is_people_group(l):
+                    im_review[ll] = im_review.get(ll, 0) + 1
 
         # number cross: the word carries a real number that the entity doesn't list
         cross = wbases and not (wbases & bases)
@@ -100,6 +107,12 @@ def main():
               f"section={e['section'] if e else '?'} kind={r['kind']} render={r['render']} "
               f"bases={e['bases'] if e else '?'}")
         print(f"   clicked words: {occ.get((40,2,2,r['name']), '(none matched)')}")
+
+    print("\n" + "=" * 70)
+    print(f"REVIEW — person-bound '-im' names NOT flagged (add real peoples, leave persons): "
+          f"{len(im_review)} distinct")
+    for nm, c in sorted(im_review.items(), key=lambda kv: -kv[1]):
+        print(f"   {nm:24} x{c}")
 
     def dump(title, rows, n=25):
         print("\n" + "=" * 70)
