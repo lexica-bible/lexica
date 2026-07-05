@@ -734,6 +734,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             {showArea && (
               <div><span className="pnbound-lbl">{be.section === "place" ? "Region" : "Tribe"}</span> {area}</div>)}
           </div>
+          {be.section === "place" && (be.lat && be.lon
+            ? <LeafletMap lat={be.lat} lon={be.lon} name={be.name} />
+            : be.ambiguous
+              ? <p className="detail-p detail-p--meta" style={{color:"var(--ink-4)", fontStyle:"italic"}}>Several places share this name — map hidden to avoid a wrong location.</p>
+              : null)}
           <div className="pnbound-badge">Matched to this verse</div>
         </section>
       );

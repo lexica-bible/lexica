@@ -209,6 +209,27 @@ def metav_ai_description(name):
     return jsonify(payload)
 
 
+def _pin_from_rows(rows):
+    """The map-pin guard, shared by the name-place card AND the verse-bound entity card:
+    plant a pin ONLY when the name is unambiguous (one distinct place_id) AND the matched
+    row carries its own coordinates — the Eden -> Beth-eden wrong-pin guard. rows must
+    expose place_id/lat/lon; rows[0] is the matched row. Returns (lat, lon, ambiguous)."""
+    ambiguous = len({r["place_id"] for r in rows}) > 1
+    row = rows[0]
+    show = row["lat"] is not None and row["lon"] is not None and not ambiguous
+    return (row["lat"] if show else None, row["lon"] if show else None, ambiguous)
+
+
+def _place_coord_rows(conn, name):
+    """metav_places rows (place_id, lat, lon) for a place NAME or alias, NOCASE."""
+    return conn.execute("""
+        SELECT p.place_id, p.lat, p.lon FROM metav_places p WHERE p.name = ? COLLATE NOCASE
+        UNION
+        SELECT p.place_id, p.lat, p.lon FROM metav_places p
+        JOIN metav_place_aliases a ON a.place_id = p.place_id WHERE a.alias = ? COLLATE NOCASE
+    """, (name, name)).fetchall()
+
+
 @bp.route("/api/metav/place/<path:name>")
 def metav_place(name):
     conn = db_ro()
@@ -229,22 +250,18 @@ def metav_place(name):
     if not rows:
         return jsonify({"error": "not found"}), 404
 
-    # How many DISTINCT places carry this name/alias? More than one means a bare-name
-    # lookup can't tell which is meant — so we must NOT plant a map pin on a silent
-    # first-row pick (the Eden -> Beth-eden-in-Syria bug). We still show the card
-    # (name/comment), just withhold the coordinates. A pin is only ever dropped when
-    # the name is unambiguous AND the matched row has its OWN coordinates.
-    ambiguous = len({r["place_id"] for r in rows}) > 1
+    # A pin is dropped only when the name is unambiguous AND the matched row has its OWN
+    # coordinates (the Eden -> Beth-eden-in-Syria wrong-pin guard, shared via _pin_from_rows).
+    # We still show the card (name/comment) when coords are withheld.
     row = rows[0]
-    has_coords = row["lat"] is not None and row["lon"] is not None
-    show_pin = has_coords and not ambiguous
+    lat, lon, ambiguous = _pin_from_rows(rows)
 
     return jsonify({
         "place_id":  row["place_id"],
         "name":      row["name"],
         "comment":   row["comment"] or "",
-        "lat":       row["lat"] if show_pin else None,
-        "lon":       row["lon"] if show_pin else None,
+        "lat":       lat,
+        "lon":       lon,
         "ambiguous": ambiguous,
         "strongs_g": row["strongs_g"] or "",
     })
@@ -297,11 +314,20 @@ def metav_entity(name):
         ref_count = conn.execute(
             "SELECT COUNT(*) FROM tipnr_entity_refs WHERE uniq = ?", (e["uniq"],)
         ).fetchone()[0] if "tipnr_entity_refs" in have else 0
+        # display name keeps TIPNR's original casing (uniq = 'Name@FirstRef')
+        disp = e["uniq"].split("@")[0].replace("_", " ")
+        # Coordinates for a bound PLACE: the map used to ride the name-based metaV place
+        # card, which a verse-bind now suppresses (single gate). Read them straight from
+        # metav_places under the SAME wrong-pin guard so the bound card can show the map.
+        lat = lon = None
+        ambiguous = False
+        if (e["section"] or "") == "place":
+            prows = _place_coord_rows(conn, disp)
+            if prows:
+                lat, lon, ambiguous = _pin_from_rows(prows)
     finally:
         conn.close()
 
-    # display name keeps TIPNR's original casing (uniq = 'Name@FirstRef')
-    disp = e["uniq"].split("@")[0].replace("_", " ")
     return jsonify({
         "bound":     True,
         "uniq":      e["uniq"],
@@ -314,6 +340,9 @@ def metav_entity(name):
         "parents":   _kin_names(e["parents"]),
         "offspring": _kin_names(e["offspring"]),
         "ref_count": ref_count,
+        "lat":       lat,
+        "lon":       lon,
+        "ambiguous": ambiguous,
         "kind":      b["kind"] or "",
         "tier":      b["tier"],
     })
