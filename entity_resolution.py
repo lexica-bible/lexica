@@ -120,7 +120,7 @@ PEOPLE_GROUP_WORDS = {
     # -im peoples: bare '-im' is NOT a suffix rule (it collides with person names —
     # Ephraim, Miriam), so the Table-of-Nations + giant '-im' peoples are listed by hand.
     "kittim", "ludim", "anamim", "lehabim", "naphtuhim", "pathrusim", "casluhim",
-    "caphtorim", "dodanim", "rodanim",
+    "caphtorim", "dodanim", "rodanim", "sukkiim", "sukkiims",
     "emim", "rephaim", "anakim", "nephilim", "zamzummim", "zuzim",
 }
 # 's?' makes the plural optional, so each rule matches BOTH singular and plural
