@@ -36,4 +36,5 @@ node tests/test_ac_word_groups.js >/dev/null
 node tests/test_rstack_logic.js >/dev/null
 node tests/test_chrono_reconcile.js >/dev/null
 node tests/test_library_order.js >/dev/null
+node tests/smoke_app.js >/dev/null
 echo "pre-commit: all checks passed."

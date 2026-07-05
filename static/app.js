@@ -1751,12 +1751,13 @@ onNavChange?.({book:r.book,chapter:r.chapter,highlight:r.verse,scroll:true});}el
 const bsbMode=translation==="bsb";const esvMode=translation==="esv";const nivMode=translation==="niv";const kjvMode=translation==="kjv";// KJV has public-domain audio (no key)
 const hebMode=translation==="heb";// Hebrew interlinear chips; "prose" flips them left-to-right
 const hebProse=hebMode&&viewMode==="prose";// L→R word order (each word stays RTL); see .lib-heb-ltr
-const proseLocked=!!(nonCanon&&nonCanon.englishOnly)||esvMode||nivMode;// Mode three (faithful ABP interlinear): Greek-dominant, own render branch.
-// ABP text only (not Hebrew / English-only non-canon). Wins over chip when set.
-const abpMode=!proseLocked&&!hebMode&&!extraEnglish&&viewMode==="interlinear";const chipMode=!proseLocked&&!abpMode&&(viewMode==="chip"||showStrongs||showInterlinear);const wordMode=chipMode;const kjvWordMode=chipMode;// English-only "other books" have no Greek interlinear, so the Strong's / Interlinear
+const proseLocked=!!(nonCanon&&nonCanon.englishOnly)||esvMode||nivMode;// English-only "other books" have no Greek interlinear, so the Strong's / Interlinear
 // toggles stay locked — but they CAN switch between a verse-per-line layout (the
 // "chip" slot) and flowing prose. layoutLocked = can't even pick line vs flow.
-const extraEnglish=!!(nonCanon&&nonCanon.englishOnly);const extraLineMode=extraEnglish&&viewMode==="chip";const layoutLocked=proseLocked&&!extraEnglish;const viewChipOn=hebMode?!hebProse:extraEnglish?viewMode==="chip":chipMode;const POETRY_BOOKS=new Set(["Psa","Pro","Job","Son","Lam","Ecc"]);const isPoetry=POETRY_BOOKS.has(selBook?.abbrev);// HEB toggle: public (shows whenever the Hebrew data is loaded), OT books only (no
+// (Declared here — before abpMode/chipMode read it — to avoid a use-before-init.)
+const extraEnglish=!!(nonCanon&&nonCanon.englishOnly);// Mode three (faithful ABP interlinear): Greek-dominant, own render branch.
+// ABP text only (not Hebrew / English-only non-canon). Wins over chip when set.
+const abpMode=!proseLocked&&!hebMode&&!extraEnglish&&viewMode==="interlinear";const chipMode=!proseLocked&&!abpMode&&(viewMode==="chip"||showStrongs||showInterlinear);const wordMode=chipMode;const kjvWordMode=chipMode;const extraLineMode=extraEnglish&&viewMode==="chip";const layoutLocked=proseLocked&&!extraEnglish;const viewChipOn=hebMode?!hebProse:extraEnglish?viewMode==="chip":chipMode;const POETRY_BOOKS=new Set(["Psa","Pro","Job","Son","Lam","Ecc"]);const isPoetry=POETRY_BOOKS.has(selBook?.abbrev);// HEB toggle: public (shows whenever the Hebrew data is loaded), OT books only (no
 // Hebrew NT), and not while a non-canon text is open.
 // hebShown = the OT-only Hebrew text exists as an option (heb.db loaded, reading the Bible).
 // hebPickable = and it's usable on the CURRENT book (an OT book). On NT books we keep the

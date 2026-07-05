@@ -55,3 +55,4 @@ jobs:
           node tests/test_rstack_logic.js
           node tests/test_chrono_reconcile.js
           node tests/test_library_order.js
+          node tests/smoke_app.js

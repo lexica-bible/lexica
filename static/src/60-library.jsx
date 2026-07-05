@@ -770,16 +770,17 @@ function LibraryView({ nav, onNavChange, onReaderPos, onWordClick, onVerseNumber
   const hebMode     = translation === "heb";   // Hebrew interlinear chips; "prose" flips them left-to-right
   const hebProse    = hebMode && viewMode === "prose";   // L→R word order (each word stays RTL); see .lib-heb-ltr
   const proseLocked = !!(nonCanon && nonCanon.englishOnly) || esvMode || nivMode;
+  // English-only "other books" have no Greek interlinear, so the Strong's / Interlinear
+  // toggles stay locked — but they CAN switch between a verse-per-line layout (the
+  // "chip" slot) and flowing prose. layoutLocked = can't even pick line vs flow.
+  // (Declared here — before abpMode/chipMode read it — to avoid a use-before-init.)
+  const extraEnglish  = !!(nonCanon && nonCanon.englishOnly);
   // Mode three (faithful ABP interlinear): Greek-dominant, own render branch.
   // ABP text only (not Hebrew / English-only non-canon). Wins over chip when set.
   const abpMode     = !proseLocked && !hebMode && !extraEnglish && viewMode === "interlinear";
   const chipMode    = !proseLocked && !abpMode && (viewMode === "chip" || showStrongs || showInterlinear);
   const wordMode    = chipMode;
   const kjvWordMode = chipMode;
-  // English-only "other books" have no Greek interlinear, so the Strong's / Interlinear
-  // toggles stay locked — but they CAN switch between a verse-per-line layout (the
-  // "chip" slot) and flowing prose. layoutLocked = can't even pick line vs flow.
-  const extraEnglish  = !!(nonCanon && nonCanon.englishOnly);
   const extraLineMode = extraEnglish && viewMode === "chip";
   const layoutLocked  = proseLocked && !extraEnglish;
   const viewChipOn    = hebMode ? !hebProse : (extraEnglish ? viewMode === "chip" : chipMode);
