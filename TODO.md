@@ -67,6 +67,22 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   entity → the matching metav_places row, or OpenBibleInfo coordinates (per-referent IDs native). Folds
   into the queued MetaV↔TIPNR cross-link work (same join problem as the person panels, places edition).
   memory `project_metav_expansion` / `project_entity_resolution_rebuild`.
+- **OpenBibleInfo place ingest — the real fix for bound-place maps** (logged 2026-07-05, not started).
+  The entity→coordinate join (E) was PARKED because `metav_places` has no per-referent key: name+root
+  can auto-link only the single-referent places. The place-link dry-run (`scripts/build_tipnr_metav_link.py`,
+  read-only) proved it — of 361 place entities: 241 confident (187 unique-name / 42 by-area / 12
+  coord-agree), **86 HAND-RESOLVE** (genuinely different places at different coords — Bethel, Aphek, Ramah;
+  these are what users notice) + 1592-row person residual (persons scoped OUT: `metav_people` is a small
+  curated set, no verse key). Hand-curating 86 ancient sites risks a wrong pin (breaks the accuracy bar),
+  so the fix is a DATA source, not a rule: ingest **OpenBibleInfo** (openbible.info/geo) — it carries
+  per-referent place IDs + the verse references + confidence ratings + coordinates natively, so the join is
+  clean and solves all 86 at once. It may also REPLACE `metav_places` as the coordinate spine (better
+  coverage + provenance). Design it to share the mechanism with the queued person-panel MetaV↔TIPNR
+  cross-link (one `tipnr_metav_link`-style table). **Licensing: run it through the `/credits` process
+  BEFORE ingest** — confirm the OpenBible license + attribution terms and add the named+linked credit
+  (memory `project_licensing_attributions`). The parked draft script + its coord-aware residual buckets are
+  the starting point. Nothing is wrong today — the interim Eden guard (own-name rows, no alias bleed) keeps
+  the 86 SAFE; they just decline the map. memory `project_metav_expansion` / `project_entity_resolution_rebuild`.
 - **Phase-6: PN Greek surface-form backfill for interlinear mode** (deferred, not a bug). In the new
   interlinear reading mode (2026-07-04) proper nouns show their capitalized English name on the Greek line
   because ABP prints Φαραώ/Νεχαώ etc. but those forms were never ingested (no lexicon join for `*` PNs → no
