@@ -2230,11 +2230,14 @@ input { font-family: inherit; }
   line-height: 1.2;
 }
 .lib-abpil-trail { font-family: var(--f-greek); color: var(--ink); }
-/* Chip mode with the Greek line on: the bracketed words lost the order-digit that
-   used to pad their column (Phase 3 stripped it), so adjacent Greek lemmas nearly
-   touch. Restore a little breathing room — scoped to CHIP only (NOT .lib-verse-abpil,
-   which is interlinear mode) so mode-three spacing is untouched. */
-.lib-interlinear-on .lib-verse-chips:not(.lib-verse-abpil) .lib-word-bracketed { margin-inline: 2px; }
+/* Chip mode with the Greek line on: a word's column sizes to its widest line, so a
+   word whose Greek lemma is wider than its English gloss (πᾶς over "all", ὁ over
+   "the") butts against its neighbor — the chip container has no column gap. Add a
+   per-word horizontal margin so the Greek line reads with space. Scoped to ABP CHIP
+   words with the Greek line on: excludes interlinear mode (.lib-verse-abpil), and
+   KJV/BSB/Hebrew words (their own classes), and plain chip (no .lib-interlinear-on). */
+.lib-interlinear-on .lib-verse-chips:not(.lib-verse-abpil)
+  .lib-word:not(.lib-kjv-word):not(.lib-bsb-word):not(.lib-heb-word) { margin-inline: 3px; }
 /* ABP's printed superscript order digit on a bracketed word (greek_pos), on the
    Greek line before the word — faithful to the printed text. */
 .lib-abpil-greek .lib-iw-pos { vertical-align: super; margin-right: 1px; }

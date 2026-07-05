@@ -88,6 +88,12 @@ test("verse containers are scoped per mode (chip has no interlinear class, and v
   assert.ok(chipHtml.includes("lib-verse-chips"), "chip uses the shared chips container");
   assert.ok(!chipHtml.includes("lib-verse-abpil"), "chip must NOT carry the interlinear scope class");
   assert.ok(ilHtml.includes("lib-verse-abpil"), "interlinear carries its own scope class");
+  // The chip Greek-line spacing rule excludes KJV/BSB via their marker classes — so
+  // those classes MUST be present, else the ABP-only margin would leak into them.
+  const kjvV = { verse: 1, words: [{ word_id: 1, word: "the", strongs_ids: ["G3588"], lemma: "ὁ", xlit: "ho", italic: 0, punc: "" }] };
+  const bsbV = { verse: 1, words: [{ word_id: 1, verse_pos: 0, word: "all", strongs_ids: ["G3956"], lemma: "πᾶς", xlit: "pas", italic: 0, punc: "" }] };
+  assert.ok(renderToStaticMarkup(LibRender.renderKjvVerse(ctx, kjvV)).includes("lib-kjv-word"), "KJV words carry lib-kjv-word (exclusion anchor)");
+  assert.ok(renderToStaticMarkup(LibRender.renderBsbVerse(ctx, bsbV)).includes("lib-bsb-word"), "BSB words carry lib-bsb-word (exclusion anchor)");
 });
 
 // PN click PAYLOAD is computed from the word alone (pnClickPayload), never from the
