@@ -1,7 +1,12 @@
-# ABP Corpus Certification — Session 9 handoff
+# ABP Corpus Certification — Session 9 handoff (CANONICAL S9 charter)
 
 **Seat: HIGH from the start.** Session 9 *is* the rebuild session — the whole point is a full
-words rebuild carrying three fixes at once. Don't open it on the low/medium census seat.
+words rebuild carrying SEVEN fixes at once. Don't open it on the low/medium census seat.
+
+**This is the single canonical S9 charter.** It merges the cert doors (a)-(c) with the
+reassembly-diff arc (d)-(g). The reassembly diagnosis + tools + decisions live in
+`AUDIT_reassembly_rebuild.md` (memory `project_reassembly_diff`) — that doc is the technical
+backing for (d)-(g); THIS file is the rebuild charter that governs the physical rebuild.
 
 ## Frame (unchanged, governs all audit sessions)
 Two-tier standard. **Tier A** = ingest-faithfulness. **Tier B** = source defects as a versioned overlay
@@ -9,18 +14,23 @@ Two-tier standard. **Tier A** = ingest-faithfulness. **Tier B** = source defects
 never re-opens it. Full record: `AUDIT_abp_certification.md`. Standing witness for source readings = the
 official ABP app (apostolicbibleapp.com).
 
-## The Session-9 job: ONE rebuild, THREE fixes
-All three remaining doors are rebuild work, so they share **one physical rebuild** — but the discipline
-is what keeps it safe:
+## The Session-9 job: ONE rebuild, SEVEN fixes
+All remaining doors + the reassembly-diff fixes are rebuild work, so they share **one physical rebuild** —
+the discipline is what keeps it safe:
 
-**Batching contract (verbatim, non-negotiable):** one physical rebuild, **three separately pre-registered
-diffs** — (a) Path-C `abp_surface` fallback, (b) `import_tipnr` apply, (c) Door-3 reorder passes. Each
-delta must be attributable to exactly one fix. **Attribution is PER-COLUMN, not per-row** — a fold slot
-takes edits from two fixes (Path-C changes its `strongs`/`strongs_base`, a subject pass changes its
-`english`), so the same row legitimately shows two deltas from two fixes; pre-register by (row, column).
-**If any delta can't be pinned to exactly one fix → fall back to sequential rebuilds.** A combined diff
-that comes back as one undifferentiated blob with something unexplained is stop-condition 2 with no way to
-localize.
+**Batching contract (verbatim, non-negotiable):** one physical rebuild, **seven separately pre-registered
+diffs** — (a) Path-C `abp_surface` fallback, (b) `import_tipnr` apply, (c) Door-3 reorder passes,
+(d) `build_words` token-slotting fix, (e) reorder float adds `)`, (f) the 13 digit leaks (Tier B +
+tolerant `load_abp_prose`), (g) phrase-gloss under-distribution fix (ONLY if the trace confirms it's the
+same step — else drop to a follow-up session). Each delta must be attributable to exactly one fix.
+**Attribution is PER-COLUMN, not per-row** — a fold slot takes edits from two fixes (Path-C changes its
+`strongs`/`strongs_base`, a subject pass changes its `english`), so the same row legitimately shows two
+deltas from two fixes; pre-register by (row, column). **This now ALSO binds (a)↔(d):** the slotting fix
+(d) and the pronoun fix (a) touch the SAME fold slots — (a) rewrites the number, (d) rewrites the english/
+order — so a fold row can show a `strongs_base` delta from (a) AND an `english`/position delta from (d);
+both must be pre-registered by column, or that row is unlocalizable → stop. **If any delta can't be pinned
+to exactly one fix → fall back to sequential rebuilds.** A combined diff that comes back as one
+undifferentiated blob with something unexplained is stop-condition 2 with no way to localize.
 
 ## The three fixes
 
@@ -64,6 +74,37 @@ import_tipnr on the rebuilt copy.
 - **CONTROL RULE (unchanged):** any Door-3 census detector must FIRE on those two rows before its zero is
   trusted (same shape as the Session-7 Dan 4:33 dead-detector catch and the Session-8 census control).
 
+### (d) `build_words` token-slotting fix — the 364 word-order defects (DIAGNOSIS OPEN, trace first)
+Reassembly-diff (v2, order-aware) found **364** verses where the word rows are in the wrong order vs
+`verses.text` — proven WORDS-side by the source-arbiter dump (`scripts/dump_family_source.py`; all 7
+families self-adjudicated, PROSE right / WORDS wrong; 5 of 6 have NO bracket, so it's the ROWS, not the
+reorder). Suspect = `_split_compounds` article-fronting (`build_words_from_abp.py` ~386-470; its own
+comment flags a reverted "the LORD/their X" over-reach). **Trace first** — build Jer 48:1 in isolation and
+watch the split step before touching code. Pre-registered (d) delta = the `english`/position corrections on
+those rows; drive v2 to zero.
+
+### (e) reorder float adds `)` — paren-edge
+The English-order float (`getEnglishOrderWords` + its Python port `reorder_english.py`, and the chip lift)
+moves a trailing clause mark past a reordered group, but only for `. , ; : ! ? ·` — NOT `)`. Heb 10:8
+class ("…the law)" renders "…offered) …law"). Add `)` to the float set (shared prose + reader). Small.
+
+### (f) the 13 digit leaks → Tier B + tolerant parser
+`load_abp_prose` choked on a MALFORMED source bracket (a `]` with no `[`, Mat 21:19 shape) and leaked the
+order digits into `verses.text` ("1let", "4dried"). Run `dump_family_source.py --scan-brackets` FIRST to
+get the full set. Van der Pool source defect → log each as a **Tier B `abp_corrections` entry** AND make
+`load_abp_prose` TOLERATE an unmatched bracket (don't leak). This is verses.text-side (13 rows), not words.
+
+### (g) phrase-gloss under-distribution — CONDITIONAL on the (d) trace
+Psa 39:1 "to not sin" parked entirely on G3361 (μή), neighbor G264 blank — should distribute (same class as
+the G846 "jesus 2" finding). `_split_compounds` is the distributor, so HYPOTHESIS: the SAME leaky lexicon-
+evidence gate over-reaches (d) AND under-reaches here. **This class is v2- AND v1-INVISIBLE** (order- and
+bag-neutral). Ship (g) in THIS rebuild only if the (d) trace confirms one mechanism; else it's a follow-up.
+Either way the gate block gains its own detector (below).
+
+### Already LIVE (NOT a rebuild diff)
+The chip clause-mark lift fix (the "the word. was God" bug) shipped this session in the frontend — reader
+render only, no corpus change. Do not carry it as a diff.
+
 ## The 8-vs-10 explanation (so it doesn't resurface as a phantom conflict)
 `import_tipnr`'s twin flips **10** mixed-block places; `entity_resolution` (Session 6) flipped **8**. These
 are TWO parsers with different line-skipping strictness legitimately counting different sets — **NOT a stale
@@ -74,9 +115,28 @@ couldn't have if either number were hardcoded — which is exactly why the line-
 - `cert_invariants.py` 7/7 green; `abp_corrections` 18 rows (pin 18); manifest 75 files. CERTIFIED STATE
   HOLDS — the three fixes are ADDITIVE, gated behind the rebuild's pre-registered diffs.
 - Door 1 CLOSED (census); Door 2 code DONE + proven (not applied); Door 3 diagnosis OPEN.
+- (d) diagnosis OPEN (trace `_split_compounds`); (e)/(f) scoped, ready; (g) conditional on the (d) trace.
+- Reassembly-diff tools committed (READ-ONLY): `audit_reassembly_diff.py` (v1 bag + v2 order-aware,
+  `--controls`/`--list`), `reorder_english.py` (+ `tests/test_reorder_port.py`, proven byte-equal to the JS),
+  `check_draw_citations.py`, `dump_family_source.py` (+ `--scan-brackets`).
 - After the rebuild+swap: re-run the dependent builders in order (import_tipnr → build_abp_surface →
   build_abp_translit → entity binding → dotted_lexicon → rendering-norm → two-ending), re-pin the invariant
   row counts ONLY in the deliberate-rebuild commit after compare_words passed, and re-run `cert_invariants.py`.
+
+## Gate block (must all pass before the swap)
+- `compare_words.py` reviewed (pre-registered per-column diffs only, per the batching contract)
+- `cert_invariants.py` 7/7 + `--controls` all fire; row pins re-pinned in the rebuild commit
+- L9 split lint = 0
+- `tests/test_reorder_port.py` green (the port is the v2 arbiter — prove it FIRST)
+- **v1 AND v2 reassembly at CRITERION** (`--controls` + `--controls --v2` fire first):
+  **zero word-order + zero content-other + NO NEW punct-position.** punct-position stays but is pinned as a
+  FROZEN ALLOWLIST — RE-COUNT after the rebuild (the slot fix may cure some free), then enumerate the
+  survivors; any new punct hit fails the gate.
+- **phrase-gloss under-distribution detector** (multi-word gloss on a function-word tag + adjacent blank
+  content slot) — build read-only, control-test it FIRES on Psa 39:1, drive to an agreed floor. Required in
+  the gate whether or not (g) ships this rebuild.
+- THEN wire v2 into `cert_invariants.py` as a standing invariant (the words rows and `verses.text` can
+  never silently drift again).
 
 ## Standing rules (all inherited, none weakened this session)
 Checkpoint rule; CC can't query bible.db (JP runs every query on PA); control-test rule (fire on a known
