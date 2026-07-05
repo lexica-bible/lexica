@@ -80,8 +80,36 @@ def words_reassembly(conn, book, ch, vs):
     return re.sub(r"\s+", " ", seq).strip()
 
 
+def scan_brackets():
+    """READ-ONLY. Every abp_texts source line whose brackets don't balance — an
+    unmatched ']' is the malformed shape that leaks order digits into verses.text
+    (Mat 21:19 class). Reports ref + the raw line so the leak class is fully known."""
+    print("== unmatched-bracket scan of abp_texts (READ-ONLY) ==\n")
+    n = 0
+    for d in ABP_DIRS:
+        if not d.exists():
+            print(f"  ({d} not found)")
+            continue
+        for f in sorted(d.glob("*.txt")):
+            with open(f, encoding="utf-8") as fh:
+                for line in fh:
+                    m = VERSE_RE.match(line.strip())
+                    if not m:
+                        continue
+                    raw = m.group(4)
+                    if raw.count("[") != raw.count("]"):
+                        n += 1
+                        print(f"  {m.group(1)} {m.group(2)}:{m.group(3)}  "
+                              f"([={raw.count('[')} ]={raw.count(']')})")
+                        print(f"    {raw}")
+    print(f"\n  {n} verses with unmatched brackets.")
+
+
 def main():
     args = sys.argv[1:]
+    if "--scan-brackets" in args:
+        scan_brackets()
+        return
     db = next((a for a in args if not a.startswith("--")), "bible.db")
     custom = [a for a in args[1:] if not a.startswith("--")]
     refs = [(r, "custom") for r in custom] if custom else DEFAULT

@@ -3,6 +3,34 @@
 READ-ONLY audit complete. No data writes yet. This memo is the decision doc; nothing
 changes until it's approved.
 
+## SESSION HANDOFF — next session is THE BUILD (decisions locked 2026-07-04)
+Diagnosis done + committed (5 read-only tools, chip-lift fix live). Decisions locked:
+- **Architecture A** — `verses.text` stays independently derived (the witness that caught
+  this; B destroys the oracle). Do NOT derive it from the rows.
+- **Fix target: `build_words` token slotting** — the word rows are mis-slotted (prose is
+  the correct side on all 6 families). Prime suspect: `_split_compounds` article-fronting
+  (build_words_from_abp.py ~386–470; see its own reverted "the LORD/their X" over-reach
+  comment). CONFIRM by building Jer 48:1 in isolation and watching the split step before
+  changing anything.
+- **paren-edge:** extend the reorder float to include `)` (today `. , ; : ! ? ·`).
+- **13 leaks:** run `python3 scripts/dump_family_source.py bible.db --scan-brackets` first.
+  Malformed source (a `]` with no `[`) = **Van der Pool's source defect** → log as **Tier B
+  `abp_corrections` entries** AND make `load_abp_prose` tolerate an unmatched bracket
+  (don't leak digits).
+- **punct-position (261): LEAVE**, but **re-count after the rebuild** (the slot fix may cure
+  some free), THEN pin the survivors as a **frozen allowlist** in the v2 gate — any NEW
+  punct hit still fires.
+- **Both-store rebuild** from the pinned feed (`abp_texts/`); neither synced from the other.
+- **Redraw only G1096 (Mat 21:19)** after the corpus is clean.
+- **PASS CRITERION for the gate:** zero word-order + zero content-other + no NEW
+  punct-position (allowlist only). Then wire v2 into `cert_invariants.py`.
+- **Full gate block:** the 7 cert invariants + L9 lint + v1 AND v2 at criterion +
+  `tests/test_reorder_port.py` green + row pins re-pinned in the rebuild commit.
+
+Tools (all committed, READ-ONLY): `scripts/audit_reassembly_diff.py` (v1/v2 + `--controls`),
+`scripts/reorder_english.py` (+ `tests/test_reorder_port.py`), `scripts/check_draw_citations.py`,
+`scripts/dump_family_source.py` (+ `--scan-brackets`). Rebuild procedure: the `/rebuild-words` skill.
+
 ## What the tool does
 `scripts/audit_reassembly_diff.py` rebuilds each verse from its word rows and diffs
 against `verses.text`. v1 = bag-of-words (reorder-immune). v2 = order-aware, using a
