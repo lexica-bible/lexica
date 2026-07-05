@@ -210,14 +210,29 @@ def metav_ai_description(name):
 
 
 def _pin_from_rows(rows):
-    """The map-pin guard, shared by the name-place card AND the verse-bound entity card:
-    plant a pin ONLY when the name is unambiguous (one distinct place_id) AND the matched
-    row carries its own coordinates — the Eden -> Beth-eden wrong-pin guard. rows must
-    expose place_id/lat/lon; rows[0] is the matched row. Returns (lat, lon, ambiguous)."""
-    ambiguous = len({r["place_id"] for r in rows}) > 1
-    row = rows[0]
-    show = row["lat"] is not None and row["lon"] is not None and not ambiguous
-    return (row["lat"] if show else None, row["lon"] if show else None, ambiguous)
+    """Pick ONE map pin from possibly-many same-name place rows, or decline. A name like
+    'Lebanon' carries several metav_places rows for different referents (the region, Mount
+    Hermon, a structure in Jerusalem). Rule: pin the coordinate the MOST rows agree on; a
+    defensible pin needs a strict winner (more rows than any other point). A tie between
+    referents -> no pin (the Eden -> Beth-eden wrong-pin guard). Failure mode is no-pin,
+    never a misplaced pin. Returns (lat, lon, ambiguous).
+
+    INTERIM HEURISTIC: the Lebanon win leans on two rows sharing EXACT coordinates, which is
+    coincidental duplication, not meaning. A name whose referents are all distinct points
+    gets no pin forever, even though the bound TIPNR entity ('Lebanon@Deu.1.7') already says
+    which referent the verse means. The real fix is an entity-level join (TIPNR entity ->
+    the matching metav_places row, or OpenBibleInfo's per-referent coordinates) — folds into
+    the queued MetaV<->TIPNR cross-link work (places edition). See TODO.md."""
+    from collections import Counter
+    coords = [(r["lat"], r["lon"]) for r in rows if r["lat"] is not None and r["lon"] is not None]
+    multi = len({r["place_id"] for r in rows}) > 1
+    if not coords:
+        return (None, None, multi)
+    ranked = Counter(coords).most_common()
+    if len(ranked) > 1 and ranked[0][1] == ranked[1][1]:
+        return (None, None, True)          # no agreed winner -> withhold the pin
+    (lat, lon), _ = ranked[0]
+    return (lat, lon, False)               # pinned
 
 
 def _place_coord_rows(conn, name):

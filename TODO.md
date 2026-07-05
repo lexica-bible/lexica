@@ -57,6 +57,16 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   fix if the filter is reused at scale.
 
 ## Open word-study / data issues (low priority, none gating)
+- **Place-map pin = interim plurality heuristic** (2026-07-05). The map on a place word card
+  (`_pin_from_rows` in views_metav.py) picks the coordinate the MOST metav_places rows agree on when a
+  name carries several referents (Lebanon = region + Mount Hermon + a Jerusalem structure). Safe direction:
+  a wrong pin needs multiple rows agreeing on the wrong point; failure mode is no-pin, never a misplaced
+  pin (Eden still declines). BUT it leans on coincidental exact-coordinate duplication — a name whose
+  referents are all distinct points gets no pin forever, even though the bound TIPNR entity
+  (`Lebanon@Deu.1.7`) already says which referent the verse means. Real fix = an entity-level join: TIPNR
+  entity → the matching metav_places row, or OpenBibleInfo coordinates (per-referent IDs native). Folds
+  into the queued MetaV↔TIPNR cross-link work (same join problem as the person panels, places edition).
+  memory `project_metav_expansion` / `project_entity_resolution_rebuild`.
 - **Phase-6: PN Greek surface-form backfill for interlinear mode** (deferred, not a bug). In the new
   interlinear reading mode (2026-07-04) proper nouns show their capitalized English name on the Greek line
   because ABP prints Φαραώ/Νεχαώ etc. but those forms were never ingested (no lexicon join for `*` PNs → no
