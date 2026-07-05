@@ -201,7 +201,13 @@ def diff_verse_v2(words, verse_text):
     content_missing = bare_t - bare_w
 
     if not content_extra and not content_missing:
-        klass = "displaced"                # same words, wrong slot and/or punct moved
+        # Same bag of words -> a pure re-ordering. Split it: if the BARE-word
+        # sequences (punctuation + pure-mark tokens dropped) are identical, only
+        # punctuation moved to a neighbor (cosmetic, the em-dash/comma family);
+        # if they differ, a real WORD sits in the wrong slot (the Jer 48:1 class).
+        bw = [b for b in (bare(t) for t in w_seq) if b]
+        bt = [b for b in (bare(t) for t in t_seq) if b]
+        klass = "punct-position" if bw == bt else "word-order"
     elif not content_missing and content_extra and \
             all(bare_t[w] > 0 for w in content_extra):
         klass = "dup-gloss"
@@ -256,8 +262,8 @@ def run_report_v2(db, list_all=False):
     print(f"   verses scanned : {total:,}")
     print(f"   total hits     : {len(hits):,}\n")
     print("   by class:")
-    for k in ("dup-gloss", "content-other", "displaced"):
-        print(f"     {k:<14} {by_class.get(k, 0):>6,}")
+    for k in ("dup-gloss", "content-other", "word-order", "punct-position"):
+        print(f"     {k:<15} {by_class.get(k, 0):>6,}")
     print("\n   by book (all, canonical-ish by count):")
     for book, n in by_book.most_common():
         print(f"     {book:<6} {n:>6,}")
@@ -438,31 +444,37 @@ def run_controls_v2():
           f"-> {'immune (reorder applied)' if d is None else d}")
     ok = ok and d is None
 
-    # A bag-neutral displacement (a 'the' pulled a slot early, the Jer 48:1 class):
-    # rows read '... of the the forces ... God' while text has '... the forces the God'.
-    disp_rows = [
-        {"english": "of", "bracket_id": None, "greek_pos": None, "position": 0},
-        {"english": "the", "bracket_id": None, "greek_pos": None, "position": 1},
-        {"english": "the", "bracket_id": None, "greek_pos": None, "position": 2},
-        {"english": "forces,", "bracket_id": None, "greek_pos": None, "position": 3},
-        {"english": "God", "bracket_id": None, "greek_pos": None, "position": 4},
+    # PROOF-OF-FIRE on the REAL Jer 48:1 rows (dump 2026-07-04, verse_id 20217).
+    # The displaced 'the' (pos 6 belongs before 'God', sits before 'forces,') gives
+    # '...of the the forces, God...' vs text '...of the forces, the God...'. NOTE the
+    # bracket group (17-19) floats its ';' correctly, so that is NOT the residual hit.
+    JER48_TEXT = ("To Moab, thus said the LORD of the forces, the God of Israel; "
+                  "Woe unto Nebo, for it was destroyed; Kiriathaim was taken; "
+                  "the fortification was shamed; it was vanquished.")
+
+    def _r(eng, pos, bid=None, gp=None):
+        return {"english": eng, "position": pos, "bracket_id": bid, "greek_pos": gp}
+
+    jer48_rows = [
+        _r("To", 0), _r("Moab,", 1), _r("thus", 2), _r("said", 3), _r("the LORD", 4),
+        _r("of the", 5), _r("the", 6), _r("forces,", 7), _r("God", 8), _r("of Israel;", 9),
+        _r("Woe", 10), _r("unto", 11), _r("Nebo,", 12), _r("for", 13),
+        _r("it was destroyed;", 14), _r("Kiriathaim", 15), _r("was taken;", 16),
+        _r("was shamed", 17, 1, 3), _r("the", 18, 1, 1), _r("fortification;", 19, 1, 2),
+        _r("it was vanquished.", 20),
     ]
-    dd = diff_verse_v2(disp_rows, "of the forces, the God")
-    fired = dd is not None and dd["klass"] == "displaced"
-    print(f"  [{'FIRED' if fired else 'VOID '}] bag-neutral displacement (Jer 48:1 class) "
+    dd = diff_verse_v2(jer48_rows, JER48_TEXT)
+    fired = dd is not None and dd["klass"] == "word-order"
+    print(f"  [{'FIRED' if fired else 'VOID '}] REAL Jer 48:1 displaced 'the' "
           f"-> {dd['klass'] if dd else '(clean)'}  {(' ; '.join(dd['ops']) if dd else '')}")
     ok = ok and fired
 
-    # hand-corrected copy goes quiet
-    good_rows = [
-        {"english": "of", "bracket_id": None, "greek_pos": None, "position": 0},
-        {"english": "the", "bracket_id": None, "greek_pos": None, "position": 1},
-        {"english": "forces,", "bracket_id": None, "greek_pos": None, "position": 2},
-        {"english": "the", "bracket_id": None, "greek_pos": None, "position": 3},
-        {"english": "God", "bracket_id": None, "greek_pos": None, "position": 4},
-    ]
-    dg = diff_verse_v2(good_rows, "of the forces, the God")
-    print(f"  [{'QUIET' if dg is None else 'STILL FIRING'}] corrected rows -> "
+    # hand-corrected: move the stray 'the' (pos 6) to after 'forces,' -> matches text
+    good_rows = [dict(r) for r in jer48_rows]
+    good_rows[6]["english"] = "forces,"
+    good_rows[7]["english"] = "the"
+    dg = diff_verse_v2(good_rows, JER48_TEXT)
+    print(f"  [{'QUIET' if dg is None else 'STILL FIRING'}] corrected Jer 48:1 rows -> "
           f"{'clean' if dg is None else dg}")
     ok = ok and dg is None
 
