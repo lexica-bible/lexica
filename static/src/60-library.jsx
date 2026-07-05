@@ -2,7 +2,7 @@
 // LIBRARY VIEW — the reader (the big component). Its helpers and nav/picker
 // sub-components live in 59a-library-helpers.jsx + 59b-library-nav.jsx.
 // ============================================================
-function LibraryView({ nav, onNavChange, onReaderPos, onWordClick, onVerseNumberClick, onOpenNote, onTranslationChange, isMobile, showSummary, focusMode, onToggleFocus, onDetailBaseChange }) {
+function LibraryView({ nav, onNavChange, onReaderPos, onWordClick, onVerseNumberClick, onOpenNote, onTranslationChange, isMobile, showSummary, focusMode, onToggleFocus, onDetailBaseChange, libFontSize, changeFontSize, theme, setTheme }) {
   const [books, setBooks] = useState(() => readCachedBooks());
   const [selBook, setSelBook] = useState(() => {
     const c = readCachedBooks(), s = readLibSaved();
@@ -54,19 +54,8 @@ function LibraryView({ nav, onNavChange, onReaderPos, onWordClick, onVerseNumber
     } catch (e) {}
     return { viewMode: "chip", showStrongs: false, showInterlinear: false, proseSnap: null };
   });
-  const [libFontSize, setLibFontSize] = useState(() => {
-    const stored = localStorage.getItem("libFontSize");
-    if (stored) return parseInt(stored, 10);
-    return isMobile ? 15 : 18;
-  });
-  // Reading theme: "light" (default) | "sepia" | "dark". Applied to <html data-theme>
-  // so it re-skins the whole app, and remembered across reloads.
-  const [theme, setTheme] = useState(() => localStorage.getItem("lexica.theme.v1") || "light");
-  useEffect(() => {
-    if (theme === "light") document.documentElement.removeAttribute("data-theme");
-    else document.documentElement.setAttribute("data-theme", theme);
-    localStorage.setItem("lexica.theme.v1", theme);
-  }, [theme]);
+  // libFontSize + theme (+ changeFontSize / setTheme) are lifted to App now, passed in as
+  // props so the mobile "You" sheet shares the same source of truth. Same keys/default/clamp.
   const [translation, setTranslation] = useState(() => {       // "abp"|"kjv"|"bsb"|"esv"|"niv"|"parallel"
     const s = readLibSaved(), t = s && s.translation;
     return ["abp", "kjv", "bsb", "esv", "niv", "heb", "parallel"].includes(t) ? t : "abp";
@@ -1366,13 +1355,6 @@ function LibraryView({ nav, onNavChange, onReaderPos, onWordClick, onVerseNumber
     onTouchEnd: () => clearTimeout(vnumPressRef.current.timer),
   });
 
-  const changeFontSize = (delta) => {
-    setLibFontSize(prev => {
-      const next = Math.min(24, Math.max(13, prev + delta));
-      localStorage.setItem("libFontSize", String(next));
-      return next;
-    });
-  };
 
   const handleVerseNum = onVerseNumberClick && selBook
     ? (verse, ch = selChapter) => onVerseNumberClick(selBook.abbrev, ch, verse, translation)

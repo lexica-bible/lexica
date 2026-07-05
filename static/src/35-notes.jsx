@@ -385,12 +385,9 @@ function NotesView({ onOpen, isMobile, onReadInContext }) {
   const [group, setGroup] = useState(false);      // group by book
   const [collapsed, setCollapsed] = useState(() => new Set());   // collapsed book keys
   const toggleSection = (key) => setCollapsed(s => { const n = new Set(s); n.has(key) ? n.delete(key) : n.add(key); return n; });
-  const [authOpen, setAuthOpen] = useState(null);   // null | "login" | "signup"
-  const [acctOpen, setAcctOpen] = useState(false);  // account / options panel
   const [mode, setMode] = useState("notes");        // notes | journal
   const [selectedId, setSelectedId] = useState(null);   // desktop: note open in the center editor
   const [journalEditing, setJournalEditing] = useState(null);   // desktop: journal page in the center
-  const acct = NotesStore.authInfo();
   let notes = NotesStore.search(q);               // already newest-first
   if (filter === "bookmark") notes = notes.filter(n => n.bookmark);
   else if (filter === "highlight") notes = notes.filter(n => n.color);
@@ -487,13 +484,6 @@ function NotesView({ onOpen, isMobile, onReadInContext }) {
     <ul className="notes-list">{notes.map(renderItem)}</ul>
   );
 
-  const modals = (
-    <>
-      {authOpen && <AuthModal mode={authOpen} onClose={() => setAuthOpen(null)} />}
-      {acctOpen && <AccountModal onClose={() => setAcctOpen(false)} />}
-    </>
-  );
-
   // ── MOBILE: the old single column (unchanged behaviour) ───────────────────
   if (isMobile) {
     return (
@@ -501,25 +491,11 @@ function NotesView({ onOpen, isMobile, onReadInContext }) {
         <div className="notes-view-head">
           <div className="notes-view-titlerow">
             <h2 className="notes-view-title">My Notes</h2>
-            <div className="notes-acct">
-              {acct.email ? (
-                <button className="notes-acct-email" title="Account & options" onClick={() => setAcctOpen(true)}>
-                  <span className="notes-acct-addr">{acct.name || acct.email}</span>
-                  <span className="notes-acct-caret" aria-hidden="true">▾</span>
-                </button>
-              ) : (
-                <>
-                  <button className="notes-tool-btn" onClick={() => setAuthOpen("login")}>Log in</button>
-                  <button className="notes-tool-btn" onClick={() => setAuthOpen("signup")}>Sign up</button>
-                </>
-              )}
-            </div>
           </div>
           {modeSeg}
           {mode === "notes" && notesControls}
         </div>
         {mode === "journal" ? <JournalView/> : notesListContent}
-        {modals}
       </div>
     );
   }
@@ -571,7 +547,6 @@ function NotesView({ onOpen, isMobile, onReadInContext }) {
         }
         inspect={<aside className="zinspect notes-inspect">{inspectContent}</aside>}
       />
-      {modals}
     </>
   );
 }

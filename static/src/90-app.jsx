@@ -1,4 +1,62 @@
 // ============================================================
+// YOU SHEET — mobile profile sheet (login + appearance + about) opened from the
+// rightmost toolbar slot. Reuses the reading-sheet frame (useSwipeToDismiss + the
+// .msheet / .mode-sec / .mseg classes) so it can't drift from the ModesSheet.
+// ============================================================
+function YouSheet({ email, name, libFontSize, changeFontSize, theme, setTheme, onLogin, onSignup, onAccount, onLogout, onAbout, onClose }) {
+  const { sheetRef, scrollRef } = useSwipeToDismiss(onClose);
+  return (
+    <>
+      <div className="sheet-scrim" onClick={onClose} />
+      <div className="msheet" ref={sheetRef}>
+        <div className="sheet-drag-zone" aria-hidden="true"><div className="sheet-handle"></div></div>
+        <div className="msheet-head">
+          <span className="msheet-title">You</span>
+        </div>
+        <div className="msheet-body" ref={scrollRef}>
+          <div className="mode-sec">
+            <div className="mode-lbl">Account</div>
+            {email ? (
+              <div className="you-acct">
+                <div className="you-acct-name">{name || email}</div>
+                <div className="you-acct-actions">
+                  <button className="notes-tool-btn" onClick={onAccount}>Account settings</button>
+                  <button className="notes-tool-btn" onClick={onLogout}>Log out</button>
+                </div>
+              </div>
+            ) : (
+              <div className="mseg">
+                <button className="mseg-b" onClick={onLogin}>Log in</button>
+                <button className="mseg-b" onClick={onSignup}>Sign up</button>
+              </div>
+            )}
+          </div>
+          <div className="mode-sec">
+            <div className="mode-lbl">Text size</div>
+            <div className="mseg font-picker">
+              <button className="mseg-b" onClick={() => changeFontSize(-1)}>A−</button>
+              <span className="font-size-lbl">{libFontSize}</span>
+              <button className="mseg-b" onClick={() => changeFontSize(+1)}>A+</button>
+            </div>
+          </div>
+          <div className="mode-sec">
+            <div className="mode-lbl">Theme</div>
+            <div className="mseg">
+              <button className={"mseg-b"+(theme==="light"?" on":"")} aria-pressed={theme==="light"} onClick={()=>setTheme("light")}>Light</button>
+              <button className={"mseg-b"+(theme==="sepia"?" on":"")} aria-pressed={theme==="sepia"} onClick={()=>setTheme("sepia")}>Sepia</button>
+              <button className={"mseg-b"+(theme==="dark"?" on":"")} aria-pressed={theme==="dark"} onClick={()=>setTheme("dark")}>Dark</button>
+            </div>
+          </div>
+          <div className="mode-sec">
+            <button className="you-row listrow" onClick={onAbout}>About Lexica</button>
+          </div>
+        </div>
+      </div>
+    </>
+  );
+}
+
+// ============================================================
 // APP
 // ============================================================
 function App() {
@@ -17,6 +75,30 @@ function App() {
   const [corpusSort, setCorpusSort] = useState("curated"); // "curated" | "canonical"
   const [corpusTextMode, setCorpusTextMode] = useState("abp"); // "abp" | "kjv"
   const [isMobile, setIsMobile] = useState(() => window.innerWidth < 1100);
+  // Reader appearance — lifted here so BOTH the Library (its Aa menu / ModesSheet) and
+  // the mobile "You" sheet drive ONE source of truth. Same localStorage keys, same
+  // default, same clamp as before the lift (no behaviour change in the reader).
+  const [libFontSize, setLibFontSize] = useState(() => {
+    const stored = localStorage.getItem("libFontSize");
+    if (stored) return parseInt(stored, 10);
+    return isMobile ? 15 : 18;
+  });
+  const changeFontSize = (delta) => {
+    setLibFontSize(prev => {
+      const next = Math.min(24, Math.max(13, prev + delta));
+      localStorage.setItem("libFontSize", String(next));
+      return next;
+    });
+  };
+  // Reading theme: "light" (default) | "sepia" | "dark". Applied to <html data-theme>
+  // so it re-skins the whole app, and remembered across reloads.
+  const [theme, setTheme] = useState(() => localStorage.getItem("lexica.theme.v1") || "light");
+  useEffect(() => {
+    if (theme === "light") document.documentElement.removeAttribute("data-theme");
+    else document.documentElement.setAttribute("data-theme", theme);
+    localStorage.setItem("lexica.theme.v1", theme);
+  }, [theme]);
+  const [youOpen, setYouOpen] = useState(false);   // mobile "You" profile sheet
   // Remember the active tab across refreshes (guard against a stale/removed value).
   const _VIEWS = ["library", "lexicon", "corpus", "notes", "study", "news", "about"];
   const [mainView, setMainView] = useState(() => {
@@ -365,7 +447,7 @@ function App() {
       <main className="main">
         {libEverVisited && (
           <div style={{ display: mainView === "library" ? undefined : "none" }}>
-            <LibraryView nav={libNav} onNavChange={setLibNav} onReaderPos={handleReaderPos} onWordClick={(e) => { if (isMobile) setLibCrossRef(null); setActiveNote(null); setActiveEntry(e); setEntryView("library"); }} onVerseNumberClick={handleVerseNumberClick} onOpenNote={openNote} onTranslationChange={setLibTranslation} isMobile={isMobile} showSummary={showLibSummary} focusMode={focusMode} onToggleFocus={() => setFocusMode(f => !f)} onDetailBaseChange={setLibDetailBase} />
+            <LibraryView nav={libNav} onNavChange={setLibNav} onReaderPos={handleReaderPos} onWordClick={(e) => { if (isMobile) setLibCrossRef(null); setActiveNote(null); setActiveEntry(e); setEntryView("library"); }} onVerseNumberClick={handleVerseNumberClick} onOpenNote={openNote} onTranslationChange={setLibTranslation} isMobile={isMobile} showSummary={showLibSummary} focusMode={focusMode} onToggleFocus={() => setFocusMode(f => !f)} onDetailBaseChange={setLibDetailBase} libFontSize={libFontSize} changeFontSize={changeFontSize} theme={theme} setTheme={setTheme} />
           </div>
         )}
         {mainView === "about" && <AboutView owner={owner} />}
@@ -512,10 +594,30 @@ function App() {
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><path d="M4 5h13a1 1 0 0 1 1 1v13a1 1 0 0 1-1 1H5a2 2 0 0 1-2-2V7"/><path d="M18 8h2a1 1 0 0 1 1 1v9a2 2 0 0 1-2 2"/><path d="M7 8h7M7 12h7M7 16h4"/></svg>
             </button>
           )}
-          <button className={"mobile-tab" + (mainView === "about" ? " active" : "")} onClick={() => handleNavChange("about")} title="About" aria-label="About">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="8.5"/><line x1="12" y1="12" x2="12" y2="16"/></svg>
+          <button className={"mobile-tab" + (youOpen ? " active" : "")} onClick={() => setYouOpen(true)} title="You" aria-label="You">
+            {authEmail ? (
+              <span className="you-badge" aria-hidden="true">{((authName || authEmail).trim()[0] || "?").toUpperCase()}</span>
+            ) : (
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="3.5"/><path d="M5.5 20a6.5 6.5 0 0 1 13 0"/></svg>
+            )}
           </button>
         </nav>
+      )}
+      {isMobile && youOpen && (
+        <YouSheet
+          email={authEmail}
+          name={authName}
+          libFontSize={libFontSize}
+          changeFontSize={changeFontSize}
+          theme={theme}
+          setTheme={setTheme}
+          onLogin={() => { setYouOpen(false); setAuthOpen("login"); }}
+          onSignup={() => { setYouOpen(false); setAuthOpen("signup"); }}
+          onAccount={() => { setYouOpen(false); setAccountOpen(true); }}
+          onLogout={() => { NotesStore.logout(); }}
+          onAbout={() => { setYouOpen(false); handleNavChange("about"); }}
+          onClose={() => setYouOpen(false)}
+        />
       )}
       {resetToken && <AuthModal mode="reset" resetToken={resetToken} onClose={() => setResetToken(null)} />}
       {authOpen && <AuthModal mode={authOpen} onClose={() => setAuthOpen(null)} />}
