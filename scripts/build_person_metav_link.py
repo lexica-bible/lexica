@@ -49,6 +49,11 @@ for i, a in enumerate(sys.argv):
 APPLY = "--apply" in sys.argv
 HERE = os.path.dirname(os.path.abspath(__file__))
 
+# TITLES borne by many different men — never one rich bio; the serializer gives them a
+# People/Clan-style title card, so they are unlinkable BY DESIGN (tagged so the top-N
+# hand-resolve pass skips them instead of curating a wrong single link).
+TITLES = {"pharaoh", "caesar", "tetrarch", "augustus", "candace"}
+
 CONTAIN_FLOOR = 0.5     # tier-2 winner must contain at least half the entity's refs
 MARGIN_SAFE   = 0.30    # ...AND beat the runner-up by this much, else the refs are
                         # split across two same-name records (ambiguous) -> residual
@@ -110,6 +115,10 @@ def main():
         cands = people_by_name.get(key(disp), [])
         if not cands:
             buckets["no_metav"].append(uniq)
+            continue
+        if key(disp) in TITLES:
+            # a title, not a name — never a single rich bio; hand-off to the title card
+            buckets["residual"].append((uniq, cands, 0.0, "title(unlinkable)"))
             continue
 
         bases = {er.norm_base(b) for b in (e["bases"] or "").split(",") if b.strip()}
