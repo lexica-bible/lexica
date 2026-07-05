@@ -304,9 +304,10 @@ couldn't have if either number were hardcoded — which is exactly why the line-
 
 ## Gate block (must all pass before the swap)
 - `compare_words.py` reviewed (pre-registered per-column diffs only, per the batching contract). For (P)
-  the expected diff = **204 (P1) verses' column deltas** (`english`/`english_head`/`greek_pos`/`bracket_id`
-  on the redistribute rows) **PLUS 4 (P2) verses' splits** (+4 new rows, `english`/`greek_pos`, no strongs),
-  each attributed. NOT "+4 only". Anything outside those two sets = stop.
+  the expected diff = **204 (P1) verses' column deltas + Mat 12:14** (`english`/`english_head`/`greek_pos`/
+  `bracket_id` on the redistribute rows; Mat 12:14 = the registered content-other overlap, above) **PLUS 4
+  (P2) verses' splits** (+4 new rows, `english`/`greek_pos`, no strongs), each attributed. NOT "+4 only".
+  Anything outside those sets = stop.
 - `cert_invariants.py` 7/7 + `--controls` all fire; row pins re-pinned in the rebuild commit
 - L9 split lint = 0
 - `tests/test_reorder_port.py` green (the port is the v2 arbiter — prove it FIRST)
@@ -316,9 +317,17 @@ couldn't have if either number were hardcoded — which is exactly why the line-
   MIX of removed + changed, not modified-in-place.** Pre-registered as a SET invariant (stronger than
   count-matching, which passes even if the wrong verses moved):
   - **added == ∅** — no ref in post-fix that wasn't in baseline.
-  - **{removed} ∪ {changed-reading} == exactly the 204 (P1) survivor refs** (survivors = the 208 minus the
-    4 (P2) = `AUDIT_reassembly_survivors.txt` minus Dan 4:1/Isa 10:23/Luk 8:28/Pro 3:15). Nothing OUTSIDE
-    the 204 may move; every one of the 204 must be either removed (straddle) or changed (keep-before).
+  - **{removed} ∪ {changed-reading} == the 204 (P1) survivor refs PLUS `Mat 12:14`** (survivors = the 208
+    minus the 4 (P2) = `AUDIT_reassembly_survivors.txt` minus Dan 4:1/Isa 10:23/Luk 8:28/Pro 3:15). Every
+    one of the 204 must move; nothing else EXCEPT Mat 12:14.
+    **Mat 12:14 registered exception (VERIFIED 2026-07-05, run: 185 removed + 20 changed = 205 = 204+1):**
+    it's a **content-other** verse (prose leak `theG.`, one of the 11 → fixed by (f)) that ALSO carries a
+    pronoun straddle (`they should destroy him`), so v2 bucketed it under content-other, NOT word-order —
+    (P1) legitimately fixes its order (removed = straddle-skip). NOT a regression, NOT a v2 word-order gap:
+    (P1) fixes the order, (f) fixes the leak, and v2's word-order stays clean for it even in a P-only build
+    (order now matches; only the `theG.` differs). The general rule: (P1) touches ALL straddle/keep-before
+    firings = the 204 word-order survivors + any verse v2 filed elsewhere that also had the shape; the
+    exhaustive set-check proved Mat 12:14 is the ONE such case.
   - partition RULE (not itself the gate): straddle → removed, keep-before → reading changed, keep-after →
     untouched. N (changed) + M (removed) = 204, derived by the check, not pre-guessed.
   PA check: `comm`/`diff` baseline vs post-fix firing refs for removed/added; a keyed reading-compare for
