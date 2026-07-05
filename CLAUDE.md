@@ -871,8 +871,14 @@ Full detail: memory `project_notes_highlights`. The headline facts:
   in. Clicking it opens the **account panel as a dropdown anchored under the button on the current page**
   (`AccountModal anchored`, `accountOpen` in 90-app.jsx) — it no longer jumps to the Notes tab (2026-06-20).
   The signed-in label is PLAIN TEXT now (the old pill/chip was dropped). `Header` props
-  `email`/`name`/`onLogin`/`onAccount`. **Mobile has NO header**, so account there stays in the Notes tab;
-  the in-tab account row is HIDDEN on desktop (redundant with the header).
+  `email`/`name`/`onLogin`/`onAccount`. **Mobile has NO header** — account + login now live in the **"You"
+  sheet** (rightmost mobile bottom-toolbar slot, replaced the old About slot; `YouSheet` in 90-app.jsx,
+  2026-07-05): person/initial icon → a bottom sheet with the account row (login form, or account+logout),
+  an appearance section (font size + theme, sharing the lifted App state), and an About row. **The Notes tab
+  no longer renders ANY login row** (mobile OR desktop). `AccountModal` is passed **`anchored={!isMobile}`**
+  — the desktop header dropdown, but a CENTERED modal on mobile (the anchored `.acct-pop` is positioned by
+  the desktop header's fixed coords and lands OFF-SCREEN on a narrow viewport). Full record: memory
+  `project_notes_highlights`.
 - **Browser-local first; accounts are OPT-IN.** Notes live in the browser (`localStorage`
   `lexica.notes.v1`) and the app is fully usable with NO account. Signing in (below) syncs them
   across devices. One record = a word-position anchor + optional text + optional color + optional
