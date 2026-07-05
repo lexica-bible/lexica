@@ -13,10 +13,12 @@ pass to record which verses it changes — so it can't drift from the build. Rea
 bh_scrape.db read-only; writes only the output list. Run on PA (needs the Rahlfs/TAGNT dirs so the
 post-Path-C pronoun numbers exist — the pass never fires on the raw 1473).
 
-CONTROL RULE (obeys the same rule it enforces): --controls (default on) proves the enumerator
-FIRES before its list is trusted — Gen 3:15 (a known CORRECT fire) and Gen 7:1 (a known WRONG fire
-that only appears if Path-C ran) must BOTH be in the firing set. If either is missing the tool is
-broken, not the corpus: it prints FAIL and exits 1 without trusting the output.
+CONTROL RULE (obeys the same rule it enforces): before its list is trusted the tool proves TWO things —
+(1) the detector is alive: Gen 3:15 fires (it's keep-after, so it fires the SAME pre- and post-(P1)-fix,
+unlike Gen 7:1 which the S9 fix correctly stops firing — that's why Gen 7:1 is NOT a post-fix control);
+(2) Path-C actually loaded (Rahlfs + TAGNT), a direct aligner check independent of any verse's fire state,
+so a missing-dirs run can't quietly drop the OT/NT pronoun firings. If either fails it prints FAIL and
+exits 1 without writing.
 
   python3 scripts/enumerate_redistributions.py bible.db.new bh_scrape.db [--out FILE]
 """
@@ -27,8 +29,6 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import build_words_from_abp as B
 from reorder_english import get_english_order_words
-
-_CONTROL_MUST_FIRE = ["Gen 3:15", "Gen 7:1"]   # correct-fire + Path-C-only wrong-fire
 
 
 def _reading(word_rows):
@@ -58,7 +58,7 @@ def main():
         rahlfs = B.RahlfsLXX(B.RAHLFS_DIR)
     else:
         print("⚠️  Rahlfs dir not found — OT pronoun correction SKIPPED "
-              "(Gen 7:1 control will fail, as designed).", file=sys.stderr)
+              "(the Path-C control will FAIL, as designed).", file=sys.stderr)
     if B.TAGNTSource and all(p.is_file() for p in B.TAGNT_FILES):
         tagnt = B.TAGNTSource([str(p) for p in B.TAGNT_FILES])
     else:
@@ -101,16 +101,19 @@ def main():
         if ref in fired:
             reading[ref] = _reading(word_rows)
 
-    # --- controls: the enumerator must fire on both knowns before its zero is trusted ---
+    # --- controls: prove the detector is alive AND Path-C ran, before any zero is trusted ---
+    # NOTE: the old "Gen 7:1 must fire" control was valid ONLY pre-(P1) — the S9 fix makes Gen 7:1
+    # a straddle that correctly STOPS firing, so requiring it would false-fail every post-fix run.
+    # Replaced by: Gen 3:15 is keep-after (fires pre- AND post-fix = detector alive), and a DIRECT
+    # aligner-loaded check (Path-C data present) — independent of any verse's post-fix fire state.
     print(f"verses replayed : {seq:,}")
     print(f"firings         : {len(fired):,}")
-    ok = True
-    for ctl in _CONTROL_MUST_FIRE:
-        hit = ctl in fired
-        ok = ok and hit
-        print(f"  [{'FIRED' if hit else 'MISS '}] control {ctl}")
-    if not ok:
-        print("CONTROLS FAILED — enumerator did not fire on a known case; output NOT trusted "
+    alive = "Gen 3:15" in fired
+    pathc = rahlfs is not None and tagnt is not None
+    print(f"  [{'FIRED' if alive else 'MISS '}] Gen 3:15 (keep-after; detector alive, fix-agnostic)")
+    print(f"  [{'OK   ' if pathc else 'FAIL '}] Path-C aligners loaded (Rahlfs + TAGNT)")
+    if not (alive and pathc):
+        print("CONTROLS FAILED — detector dead or Path-C not loaded; output NOT trusted "
               "(check Path-C dirs). Exiting without writing.")
         sys.exit(1)
     print("CONTROLS PASSED.")
