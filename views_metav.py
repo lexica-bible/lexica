@@ -236,13 +236,21 @@ def _pin_from_rows(rows):
 
 
 def _place_coord_rows(conn, name):
-    """metav_places rows (place_id, lat, lon) for a place NAME or alias, NOCASE."""
+    """metav_places rows (place_id, lat, lon) for a bound place's own NAME. Prefer rows
+    whose OWN name matches; fall to alias matches ONLY when there is no name match — so a
+    bound entity never borrows coordinates from a DIFFERENT place merely aliased to the
+    same word. (Beth-eden near Damascus is aliased 'Eden'; the Genesis Eden has no
+    coordinates of its own, so the card must decline, not pin Damascus. The real
+    entity->row join is the pending tipnr_metav_link table; this is the interim guard.)"""
+    rows = conn.execute(
+        "SELECT place_id, lat, lon FROM metav_places WHERE name = ? COLLATE NOCASE",
+        (name,)).fetchall()
+    if rows:
+        return rows
     return conn.execute("""
-        SELECT p.place_id, p.lat, p.lon FROM metav_places p WHERE p.name = ? COLLATE NOCASE
-        UNION
         SELECT p.place_id, p.lat, p.lon FROM metav_places p
         JOIN metav_place_aliases a ON a.place_id = p.place_id WHERE a.alias = ? COLLATE NOCASE
-    """, (name, name)).fetchall()
+    """, (name,)).fetchall()
 
 
 @bp.route("/api/metav/place/<path:name>")
