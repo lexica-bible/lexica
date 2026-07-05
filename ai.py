@@ -1750,8 +1750,11 @@ def ai_search():
         # The scope tag keeps two same-text-different-scope questions apart (see _scope_tag).
         qk = _cache_key(q) + _scope_tag(q)
 
+        _cache_src = "none"   # TEMP diagnostic (AC-CACHE) — remove after the two-device test
         if not context:
             cached = _ai_cache.get(qk)
+            if cached is not None:
+                _cache_src = "mem"
             if cached is None:
                 # The in-memory cache is a per-process snapshot taken at startup, and
                 # PA runs several worker processes — so an answer ANOTHER worker just
@@ -1760,6 +1763,12 @@ def ai_search():
                 cached = ai_cache_get(qk, _get_ai_cache_ver())
                 if cached is not None:
                     _ai_cache[qk] = cached
+                    _cache_src = "db"
+        # One line per ask: the raw question, the normalized key, whether a follow-up
+        # (ctx>0 never caches), and where the answer came from (mem/db/none). Diff the
+        # PC vs phone lines to classify a "why didn't it cache" report.
+        log.info("AC-CACHE q=%r key=%r ctx=%d src=%s", q, qk, len(context), _cache_src)
+        if not context:
             if cached is not None:
                 log.debug("ai_search cache hit: q=%r", q)
                 out = dict(cached)        # don't mutate the shared cached copy
