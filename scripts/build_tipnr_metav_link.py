@@ -140,7 +140,7 @@ def main():
         for kind, uniq, hint, cands in sorted(place_res):
             fh.write(f"{uniq}\t[{hint}]\t{cands}\n")
     print(f"  residual written -> scripts/tipnr_metav_link_residual.txt "
-          f"({len(residual)} rows to hand-resolve)")
+          f"({len(place_res)} place rows to hand-resolve)")
 
     conn.close()
     if not APPLY:
