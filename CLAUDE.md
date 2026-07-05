@@ -338,6 +338,13 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   for PERSONS only); `tipnr_entity_refs` = its reference list. Served by `/api/metav/entity` → the `.pnbound`
   card. Re-run `--apply` after a words rebuild (it re-tiers from live metaV each run). Memory
   `project_entity_resolution_rebuild`.
+- `tipnr_metav_link` — cross-links a bound TIPNR entity → its rich MetaV record (PA-only, NOT in git).
+  `(uniq, kind, metav_id, rule, score, margin)`; kind='person' LIVE (1,625 rows, 2026-07-05) mapping a
+  person entity → `metav_people.person_id` so the panel CAN render the rich David-style card (place edition
+  reserves kind='place'). **Data only — NOT served yet** (serializer/frontend + People/Clan precedence is
+  the next task). Built by `scripts/build_metav_person_index.py` (MetaV CSVs → staging `metav_index.db`,
+  PA-only) + `scripts/build_person_metav_link.py --apply`; re-run BOTH after a words rebuild. Memory
+  `project_metav_person_link`; spec `HANDOFF_metav_person_link.md`.
 - `word_gloss` — plain-meaning lemma gloss for the word card (`strongs` → `gloss` + `source`). Side table in
   bible.db (built on PA, not in git; ~17.5k rows). Greek = Dodson base + TBESG fill + overrides + dotted-by-
   lemma; Hebrew = TBESH + overrides. Joined via `core.word_gloss_cols()` (ABP) and `core.word_gloss_join()`

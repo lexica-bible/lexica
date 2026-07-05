@@ -72,17 +72,25 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   can auto-link only the single-referent places. The place-link dry-run (`scripts/build_tipnr_metav_link.py`,
   read-only) proved it — of 361 place entities: 241 confident (187 unique-name / 42 by-area / 12
   coord-agree), **86 HAND-RESOLVE** (genuinely different places at different coords — Bethel, Aphek, Ramah;
-  these are what users notice) + 1592-row person residual (persons scoped OUT: `metav_people` is a small
-  curated set, no verse key). Hand-curating 86 ancient sites risks a wrong pin (breaks the accuracy bar),
-  so the fix is a DATA source, not a rule: ingest **OpenBibleInfo** (openbible.info/geo) — it carries
-  per-referent place IDs + the verse references + confidence ratings + coordinates natively, so the join is
-  clean and solves all 86 at once. It may also REPLACE `metav_places` as the coordinate spine (better
-  coverage + provenance). Design it to share the mechanism with the queued person-panel MetaV↔TIPNR
-  cross-link (one `tipnr_metav_link`-style table). **Licensing: run it through the `/credits` process
-  BEFORE ingest** — confirm the OpenBible license + attribution terms and add the named+linked credit
-  (memory `project_licensing_attributions`). The parked draft script + its coord-aware residual buckets are
-  the starting point. Nothing is wrong today — the interim Eden guard (own-name rows, no alias bleed) keeps
-  the 86 SAFE; they just decline the map. memory `project_metav_expansion` / `project_entity_resolution_rebuild`.
+  these are what users notice). Hand-curating 86 ancient sites risks a wrong pin (breaks the accuracy bar).
+  **2026-07-05 — a cheaper fix than OpenBibleInfo surfaced.** The old blocker ("metav has no per-referent
+  verse key") was WRONG: MetaV's `MainIndex.csv` (unloaded) tags every word with PlaceID + verse, so the
+  same distill that built the PERSON link (see below) gives place→verse + place→Strong's — a MetaV-native
+  per-referent key that likely solves the 86 with NO new external source and NO new licensing. **Try the
+  MainIndex place distill FIRST;** fall back to ingesting **OpenBibleInfo** (openbible.info/geo, per-referent
+  IDs + refs + confidence + coords; `/credits` licensing check BEFORE ingest) only if the MetaV key comes up
+  short. Either shares the `tipnr_metav_link` table (kind='place'). Nothing is wrong today — the interim Eden
+  guard keeps the 86 SAFE, they just decline the map. memory `project_metav_person_link` /
+  `project_metav_expansion` / `project_entity_resolution_rebuild`.
+- **MetaV person rich-card serving — the next task (link data DONE 2026-07-05, not served).** The
+  MetaV↔TIPNR person cross-link is BUILT + LIVE in bible.db: `tipnr_metav_link` kind='person', 1,625 links
+  (85.4% of person-card traffic), via `scripts/build_metav_person_index.py` + `build_person_metav_link.py`
+  (re-run both after a words rebuild). Remaining = serializer + frontend: bound person → link → render the
+  rich MetaV card (reuse David's component, no new styles). **People/Clan precedence is the HARD gate** — a
+  group-gloss click (Hittites→Heth) must keep the People/Clan card, NEVER the ancestor's rich bio (sit the
+  rich branch behind `is_people_group`). Title entities (residual `title(unlinkable)`: Pharaoh/Caesar/…) →
+  title card, not a bio. Licensing: MetaV share-alike, in-app display only. Full spec:
+  `HANDOFF_metav_person_link.md`; memory `project_metav_person_link`.
 - **Phase-6: PN Greek surface-form backfill for interlinear mode** (deferred, not a bug). In the new
   interlinear reading mode (2026-07-04) proper nouns show their capitalized English name on the Greek line
   because ABP prints Φαραώ/Νεχαώ etc. but those forms were never ingested (no lexicon join for `*` PNs → no
