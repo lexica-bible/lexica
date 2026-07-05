@@ -34,7 +34,10 @@ echo "==> grouping new stories into events..."
 echo "==> resolving new-story faces (forward-fill)..."
 "$PY" scripts/news/resolve_new_faces.py || true
 
-echo "==> backfill archive wrapper-faces (capped)..."
-"$PY" scripts/news/resolve_backfill_all.py --limit 1000 --workers 3 --sleep 1.0 || true
+# DISABLED 2026-07-05 — resolve_backfill_all.py crashed mid-flush and corrupted news.db
+# (see diagnosis). Re-enable only after the flush/connection issue is fixed. The RSS pull,
+# scoring, grouping, and forward-fill (resolve_new_faces) above are unaffected.
+# echo "==> backfill archive wrapper-faces (capped)..."
+# "$PY" scripts/news/resolve_backfill_all.py --limit 1000 --workers 3 --sleep 1.0 || true
 
 echo "==> news refresh done."
