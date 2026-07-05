@@ -769,7 +769,9 @@ const LibRender = (function () {
           onClick={clickable ? () => onWordClick(pnPayload ? { ...makeEntry(w), ...pnPayload } : makeEntry(w)) : undefined}>
           <span className="lib-abpil-gloss">{gloss || " "}</span>
           <span className="lib-abpil-greek" dir={g.kind === "name" ? undefined : "ltr"}>
-            {openBrk}{g.text || " "}{closeBrk}
+            {openBrk}
+            {brk.pos != null && <span className="lib-iw-pos">{brk.pos}</span>}
+            {g.text || " "}{closeBrk}
           </span>
           {strongsShown
             ? <span className="lib-abpil-strongs">{w.strongs_base}</span>
@@ -783,9 +785,18 @@ const LibRender = (function () {
     const content = groups.map((g, gi) => {
       if (!g.isBracket) return abpWord(g.word, `g${gi}`);
       const gw = g.words;
+      // Restore ABP's printed superscript order digits (greek_pos) on each bracketed
+      // word, in SOURCE order (no reorder — that's chip mode's job). Suppress a digit
+      // that repeats the previous shown one (a split token sharing a greek_pos, the
+      // "²God did" case) so it reads "²God did", not "²God ²did" — same as chip.
+      let lastGp = null;
       return (
         <span key={`bg${gi}`} className="lib-bracket-group">
-          {gw.map((w, wi) => abpWord(w, `bg${gi}w${wi}`, { open: wi === 0, close: wi === gw.length - 1 }))}
+          {gw.map((w, wi) => {
+            let pos = null;
+            if (w.greek_pos != null && w.greek_pos !== lastGp) { pos = w.greek_pos; lastGp = w.greek_pos; }
+            return abpWord(w, `bg${gi}w${wi}`, { open: wi === 0, close: wi === gw.length - 1, pos });
+          })}
         </span>
       );
     });

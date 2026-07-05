@@ -224,4 +224,19 @@ test("2Ki 23:29 PN click payload carries isPN + capitalized pnName", () => {
   assert.strictEqual(pnClickPayload(ki.words.find(w => w.english === "river")), null);
 });
 
+// 11. ANCHOR — mode three restores ABP's superscript digits (greek_pos) on
+//     bracketed words, in SOURCE order (no reorder). The renderer shows each word's
+//     greek_pos as printed; this pins the digit sequence the reader sees.
+test("2Ki 23:29 mode three shows bracket digits in source order", () => {
+  const ki = readJson(path.join(FIX, "2ki_23_29.json"));
+  const sorted = [...ki.words].sort((a, b) => a.position - b.position);
+  const groups = groupForGreekMode(sorted).filter(g => g.isBracket);
+  const digits = (bid) => groups.find(g => g.bid === bid).words.map(w => w.greek_pos);
+  // source (printed) order — NOT the English reorder (which would be 1,2,3,4):
+  assert.deepStrictEqual(digits(1), [4, 1, 2, 3], "bracket 1 went(4) Josiah(1) the(2) king(3)");
+  assert.deepStrictEqual(digits(2), [2, 3, 1], "bracket 2 killed(2) him(3) Necho(1)");
+  // every bracketed word carries a real digit (nothing blank in this anchor)
+  for (const g of groups) for (const w of g.words) assert.ok(w.greek_pos != null);
+});
+
 console.log(`\n${n} tests passed.`);

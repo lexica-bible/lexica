@@ -2220,6 +2220,9 @@ input { font-family: inherit; }
   line-height: 1.2;
 }
 .lib-abpil-trail { font-family: var(--f-greek); color: var(--ink); }
+/* ABP's printed superscript order digit on a bracketed word (greek_pos), on the
+   Greek line before the word — faithful to the printed text. */
+.lib-abpil-greek .lib-iw-pos { vertical-align: super; margin-right: 1px; }
 
 /* ----- Hebrew OT interlinear: right-to-left reading (Westminster Leningrad Codex) ----- */
 /* The verse row flips so the number sits on the right and the chips flow right-to-left;
