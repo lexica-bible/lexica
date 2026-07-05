@@ -711,6 +711,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       // (a PERSON entity) — TIPNR models peoples that way. Render "People / Clan" and drop
       // the ancestor's individual kin, so "the Jews" never shows Judah's own parents.
       const peopleClan = be.section === "person" && be.people_group;
+      // When the group treatment fires, title the card with the PEOPLE term (the clicked
+      // gloss, e.g. "Jews") and leave the ancestor to the Lineage line — the card is about
+      // the people, not the individual.
+      const clickName = extractProperName(entry.pnName || entry.gloss || "");
+      const heroName = (peopleClan && clickName) ? clickName : be.name;
       const label = peopleClan ? "People / Clan"
                   : be.section === "place" ? "Place" : be.section === "person" ? "Person" : "Identity";
       const clean = s => (s || "").replace(/\s*\(\?\)/g, "").trim();   // drop TIPNR's "(?)" uncertainty marker
@@ -743,7 +748,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       return (
         <section key="boundEntity" className="sec pnbound">
           <h4 className="sec-head"><span className="sec-t">{label}</span><span className="bdb-badge">TIPNR</span></h4>
-          <div className="pnbound-name">{be.name}</div>
+          <div className="pnbound-name">{heroName}</div>
           {line && <p className="pnbound-desc">{line}</p>}
           <div className="pnbound-facts">
             {peopleClan && !be.head_is_people && (
@@ -752,7 +757,9 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
               <div><span className="pnbound-lbl">Parents</span> {be.parents.join(", ")}</div>)}
             {be.section === "person" && !peopleClan && be.offspring && be.offspring.length > 0 && (
               <div><span className="pnbound-lbl">Children</span> {be.offspring.join(", ")}</div>)}
-            {showArea && (
+            {/* hide the ancestor's "Tribe of …" on a group card — it asserts a tribe link the
+                collective may not carry; the Lineage line already gives the honest ancestry */}
+            {showArea && !peopleClan && (
               <div><span className="pnbound-lbl">{be.section === "place" ? "Region" : "Tribe"}</span> {area}</div>)}
           </div>
           {be.section === "place" && (be.lat && be.lon

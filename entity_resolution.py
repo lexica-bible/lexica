@@ -113,10 +113,18 @@ def clean_summary(s):
 #   are EXCLUDED — they collide with person names (Ephraim, Miriam, Levi). The irregular
 #   peoples an ending can't reach live in the curated set (incl. the real -im peoples).
 PEOPLE_GROUP_WORDS = {
+    # peoples whose ending a suffix rule can't reach
     "jews", "jew", "greeks", "greek", "gentiles", "gentile", "hebrews", "philistines",
-    "romans", "egyptians", "chaldeans", "canaanites",
+    "romans", "medes", "mede", "arabs", "arab", "cretans", "cretan", "cretes",
+    "samaritans", "samaritan", "egyptians", "chaldeans", "canaanites",
+    # -im peoples: bare '-im' is NOT a suffix rule (it collides with person names —
+    # Ephraim, Miriam), so the Table-of-Nations + giant '-im' peoples are listed by hand.
+    "kittim", "ludim", "anamim", "lehabim", "naphtuhim", "pathrusim", "casluhim",
+    "caphtorim", "dodanim", "rodanim",
     "emim", "rephaim", "anakim", "nephilim", "zamzummim", "zuzim",
 }
+# 's?' makes the plural optional, so each rule matches BOTH singular and plural
+# (hittite/hittites, egyptian/egyptians, chaldean/chaldeans).
 _PEOPLE_SUFFIX = re.compile(r"(ites?|ians?|eans?)$", re.I)
 
 
