@@ -727,7 +727,7 @@ const LibRender = (function () {
   // the three lines stay column-aligned; the ~477 truly-empty '*' tokens (no Greek,
   // no English) drop out and stay invisible.
   const renderAbpInterlinear = (ctx, v, skipHeading = false) => {
-    const { selChapter, nav, selBook, onWordClick, hiClass, vnumEl, noteMarker, highlightRef } = ctx;
+    const { selChapter, nav, selBook, onWordClick, hiClass, vnumEl, noteMarker, highlightRef, showInterlinear, showStrongs } = ctx;
     const ch = v._ch ?? selChapter;
     const isHighlight = nav && nav.highlight === v.verse && (nav.chapter == null || nav.chapter === ch);
 
@@ -768,15 +768,15 @@ const LibRender = (function () {
         <span key={key} data-note-pos={w.position}
           className={"lib-word lib-abpil-word" + (w.italic ? " lib-abp-italic" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "") + hiClass(v.verse, w.position, ch)}
           onClick={clickable ? () => onWordClick(pnPayload ? { ...makeEntry(w), ...pnPayload } : makeEntry(w)) : undefined}>
-          <span className="lib-abpil-gloss">{gloss || " "}</span>
+          {showInterlinear && <span className="lib-abpil-gloss">{gloss || " "}</span>}
           <span className="lib-abpil-greek" dir={g.kind === "name" ? undefined : "ltr"}>
             {openBrk}
             {brk.pos != null && <span className="lib-iw-pos">{brk.pos}</span>}
             {g.text || " "}{closeBrk}
           </span>
-          {strongsShown
+          {showStrongs && (strongsShown
             ? <span className="lib-abpil-strongs">{w.strongs_base}</span>
-            : <span className="lib-abpil-strongs" style={{ visibility: "hidden" }}>G0</span>}
+            : <span className="lib-abpil-strongs" style={{ visibility: "hidden" }}>G0</span>)}
         </span>
       );
     };

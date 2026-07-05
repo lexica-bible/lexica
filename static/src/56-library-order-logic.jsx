@@ -164,6 +164,7 @@ function libViewTransition(state, action) {
   if (action.type === "viewMode") {
     const mode = action.mode;
     const wasProse = state.viewMode === "prose";
+    const wasInterlinear = state.viewMode === "interlinear";
     if (mode === "prose" && !wasProse) {
       // snapshot ONLY if something is on to suppress; else clear (nothing to restore)
       if (state.showStrongs || state.showInterlinear) {
@@ -173,6 +174,13 @@ function libViewTransition(state, action) {
       } else {
         s.proseSnap = null;
       }
+    } else if (mode === "interlinear" && !wasInterlinear) {
+      // Entering mode three: the full faithful stack is the front door — both
+      // companion lines ON. Clear any prose snapshot (we're setting fresh state,
+      // not returning to the pre-prose chip toggles).
+      s.showStrongs = true;
+      s.showInterlinear = true;
+      s.proseSnap = null;
     } else if (mode !== "prose" && wasProse && state.proseSnap) {
       s.showStrongs = !!state.proseSnap.showStrongs;
       s.showInterlinear = !!state.proseSnap.showInterlinear;

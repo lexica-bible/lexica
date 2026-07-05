@@ -259,7 +259,7 @@ test("prose entry with toggles off takes no snapshot", () => {
   const chip = { viewMode: "chip", showStrongs: false, showInterlinear: false, proseSnap: null };
   const inProse = libViewTransition(chip, { type: "viewMode", mode: "prose" });
   assert.strictEqual(inProse.proseSnap, null);
-  const back = libViewTransition(inProse, { type: "viewMode", mode: "interlinear" });
+  const back = libViewTransition(inProse, { type: "viewMode", mode: "chip" });   // chip, not interlinear (which force-ons)
   assert.strictEqual(back.showStrongs, false);
   assert.strictEqual(back.showInterlinear, false);
 });
@@ -278,6 +278,27 @@ test("manual toggle in prose discards the snapshot (no later override)", () => {
   const back = libViewTransition(touched, { type: "viewMode", mode: "chip" });
   assert.strictEqual(back.showStrongs, true);
   assert.strictEqual(back.showInterlinear, false, "manual choice preserved, not overridden");
+});
+
+// 15. INTERLINEAR front door: entering mode three forces both companion lines ON,
+//     regardless of the prior chip toggle state, and clears any prose snapshot.
+test("entering interlinear forces both study toggles on (front door)", () => {
+  const chip = { viewMode: "chip", showStrongs: false, showInterlinear: false, proseSnap: null };
+  const il = libViewTransition(chip, { type: "viewMode", mode: "interlinear" });
+  assert.strictEqual(il.viewMode, "interlinear");
+  assert.strictEqual(il.showStrongs, true);
+  assert.strictEqual(il.showInterlinear, true);
+  // a toggle within interlinear just flips its line (stays in interlinear)
+  const glossOff = libViewTransition(il, { type: "toggle", key: "showInterlinear" });
+  assert.strictEqual(glossOff.viewMode, "interlinear", "toggling a line does NOT leave interlinear");
+  assert.strictEqual(glossOff.showInterlinear, false);
+  assert.strictEqual(glossOff.showStrongs, true);
+  // prose->interlinear also forces both on and drops the prose snapshot
+  const inProse = { viewMode: "prose", showStrongs: false, showInterlinear: false, proseSnap: { showStrongs: true, showInterlinear: false } };
+  const fromProse = libViewTransition(inProse, { type: "viewMode", mode: "interlinear" });
+  assert.strictEqual(fromProse.showStrongs, true);
+  assert.strictEqual(fromProse.showInterlinear, true);
+  assert.strictEqual(fromProse.proseSnap, null);
 });
 
 console.log(`\n${n} tests passed.`);

@@ -525,7 +525,6 @@ function ModesSheet({
   const ilActive     = abpMode;
   const chipActive   = !abpMode && viewChipOn;
   const proseActive  = !abpMode && !viewChipOn;
-  const grayIl       = (proseLocked || abpMode) ? { opacity: 0.35, cursor: "default" } : undefined;
   // Text picker gestures: a TAP swaps to that single Bible; a LONG-PRESS (or right-click)
   // ticks it into / out of the side-by-side compare set. One shared timer is fine (touches
   // happen one at a time); the `fired` flag stops a long-press from also firing the tap.
@@ -610,8 +609,8 @@ function ModesSheet({
           <div className="mode-sec">
             <div className="mode-lbl">Study layer</div>
             <div className="mseg">
-              <button className={"mseg-b"+(showStrongs?" on":"")} disabled={proseLocked||abpMode} style={grayIl} aria-pressed={showStrongs} onClick={()=>!(proseLocked||abpMode)&&toggleStudy("showStrongs")}>Strong's</button>
-              <button className={"mseg-b"+(showInterlinear?" on":"")} disabled={proseLocked||abpMode} style={grayIl} aria-pressed={showInterlinear} onClick={()=>!(proseLocked||abpMode)&&toggleStudy("showInterlinear")}>Interlinear</button>
+              <button className={"mseg-b"+(showStrongs?" on":"")} disabled={proseLocked} style={gray} aria-pressed={showStrongs} onClick={()=>!proseLocked&&toggleStudy("showStrongs")}>Strong's</button>
+              <button className={"mseg-b"+(showInterlinear?" on":"")} disabled={proseLocked} style={gray} aria-pressed={showInterlinear} onClick={()=>!proseLocked&&toggleStudy("showInterlinear")}>Interlinear</button>
             </div>
           </div>
           <div className="mode-sec">

@@ -60,11 +60,32 @@ test("chip mode output has NO bracket marks and NO order digits", () => {
   assert.ok(html.includes("Josiah") && html.includes("king"), "chip rendered the bracket words");
 });
 
-test("interlinear mode output DOES carry bracket marks + order digits", () => {
-  const html = renderToStaticMarkup(LibRender.renderAbpInterlinear(ctx, v));
-  assert.ok(html.includes("lib-iw-brk"), "interlinear must render bracket marks");
-  assert.ok(html.includes("lib-iw-pos"), "interlinear must render order-digit spans");
-  assert.ok(html.includes("["), "interlinear shows the literal '['");
+test("interlinear: Greek base + brackets + digits survive ALL four toggle combos; companion lines follow the toggles", () => {
+  for (const showInterlinear of [true, false]) {
+    for (const showStrongs of [true, false]) {
+      const html = renderToStaticMarkup(LibRender.renderAbpInterlinear({ ...ctx, showInterlinear, showStrongs }, v));
+      const tag = `(interlinear=${showInterlinear}, strongs=${showStrongs})`;
+      // base is ALWAYS present: Greek line + bracket marks + order digits
+      assert.ok(html.includes("lib-abpil-greek"), "Greek line present " + tag);
+      assert.ok(html.includes("lib-iw-brk") && html.includes("["), "bracket marks present " + tag);
+      assert.ok(html.includes("lib-iw-pos"), "order digits present " + tag);
+      // companion lines appear ONLY when their toggle is on (space collapses otherwise)
+      assert.strictEqual(html.includes("lib-abpil-gloss"), showInterlinear, "gloss line matches toggle " + tag);
+      assert.strictEqual(html.includes("lib-abpil-strongs"), showStrongs, "Strong's line matches toggle " + tag);
+      // PN click target unaffected by toggle state: Pharaoh stays clickable + named
+      assert.ok(html.includes("Pharaoh"), "PN name in Greek line " + tag);
+      assert.ok(html.includes("lib-word-clickable"), "PN stays clickable " + tag);
+    }
+  }
+});
+
+// PN click PAYLOAD is computed from the word alone (pnClickPayload), never from the
+// toggle state — assert directly against the shared helper.
+test("PN click payload is independent of toggle state", () => {
+  const { pnClickPayload } = require(path.join(__dirname, "..", "static", "src", "56-library-order-logic.jsx"));
+  const pharaoh = ki.words.find(w => w.english === "Pharaoh");
+  const a = pnClickPayload(pharaoh, "Pharaoh");
+  assert.deepStrictEqual(a, { isPN: true, pnName: "Pharaoh", gloss: "Pharaoh" });
 });
 
 console.log(`\n${n} tests passed.`);
