@@ -48,6 +48,17 @@ def tokens(s):
     return {t for t in re.split(r"[^a-z0-9]+", (s or "").lower()) if len(t) > 2}
 
 
+def clustered(rows, km=25):
+    """True if every coord-bearing row sits within `km` of the first — i.e. they are the
+    SAME place stored as duplicate rows (Chinnereth ×3 all at the Sea of Galilee), not
+    genuinely different referents."""
+    pts = [(r["lat"], r["lon"]) for r in rows if r["lat"] is not None and r["lon"] is not None]
+    if len(pts) < 2:
+        return False
+    a = pts[0]
+    return all((abs(p[0]-a[0])*111)**2 + (abs(p[1]-a[1])*93)**2 <= km*km for p in pts[1:])
+
+
 def main():
     conn = sqlite3.connect(f"file:{DB}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
@@ -61,14 +72,14 @@ def main():
 
     # metaV indexes by compacted name
     places = {}
-    for r in conn.execute("SELECT place_id, name, root FROM metav_places"):
+    for r in conn.execute("SELECT place_id, name, root, lat, lon FROM metav_places"):
         places.setdefault(key(r["name"]), []).append(r)
     people = {}
     for r in conn.execute("SELECT person_id, name FROM metav_people"):
         people.setdefault(key(r["name"]), []).append(r)
 
     links, residual = [], []          # links: (uniq, kind, metav_id, how)
-    n_place = n_person = 0
+    n_place = n_person = no_coord = 0
 
     for e in conn.execute("SELECT uniq, section, area, descr FROM tipnr_entities"):
         disp = e["uniq"].split("@")[0]
@@ -79,14 +90,25 @@ def main():
             if len(cand) == 1:
                 links.append((e["uniq"], "place", cand[0]["place_id"], "name"))
             elif len(cand) > 1:
-                # disambiguate by TIPNR area/descr overlapping the metav 'root'
+                # 1) disambiguate by TIPNR area/descr overlapping the metav 'root'
                 want = tokens(e["area"]) | tokens(e["descr"])
                 hit = [c for c in cand if want & tokens(c["root"])]
+                withxy = [c for c in cand if c["lat"] is not None and c["lon"] is not None]
                 if len(hit) == 1:
                     links.append((e["uniq"], "place", hit[0]["place_id"], "by-area"))
+                # 2) several rows that all sit at ONE spot = duplicates, not different
+                #    referents -> safe to link (coords agree)
+                elif clustered(withxy):
+                    links.append((e["uniq"], "place", withxy[0]["place_id"], "coord-agree"))
+                # 3) NO candidate carries coordinates -> no map is possible either way, so
+                #    this never needs a link OR hand-resolution
+                elif not withxy:
+                    no_coord += 1
+                # 4) genuinely different places (or a lone coord we can't attribute) -> the
+                #    hand-resolve / OpenBible list
                 else:
                     residual.append(("place", e["uniq"], e["area"] or e["descr"] or "",
-                                     [(c["place_id"], c["root"]) for c in cand]))
+                                     [(c["place_id"], c["root"], c["lat"], c["lon"]) for c in cand]))
             # 0 candidates: no metav row -> no link, card declines the map (fine, not residual)
         elif e["section"] == "person":
             n_person += 1
@@ -99,22 +121,24 @@ def main():
 
     place_links = [l for l in links if l[1] == "place"]
     person_links = [l for l in links if l[1] == "person"]
-    by_area = sum(1 for l in place_links if l[3] == "by-area")
+    def how(tag): return sum(1 for l in place_links if l[3] == tag)
     place_res = [r for r in residual if r[0] == "place"]
     person_res = [r for r in residual if r[0] == "person"]
 
     print("=" * 68)
     print("tipnr_metav_link — DRAFT match report")
-    print(f"  PLACES : {len(place_links):>5} confident ({by_area} by-area) "
-          f"| {len(place_res)} ambiguous (residual) | of {n_place} place entities")
+    print(f"  PLACES : {len(place_links):>5} confident "
+          f"(name {how('name')} / by-area {how('by-area')} / coord-agree {how('coord-agree')})")
+    print(f"           {len(place_res):>5} HAND-RESOLVE (real different places, coords differ)")
+    print(f"           {no_coord:>5} multi-name but NO coordinates (map declines anyway — skip)")
+    print(f"           of {n_place} place entities")
     print(f"  PERSONS: {len(person_links):>5} confident (unique name) "
           f"| {len(person_res)} ambiguous (residual) | of {n_person} person entities")
-    amb = len(place_res) / (len(place_links) + len(place_res)) if (place_links or place_res) else 0
-    print(f"  place ambiguity rate (of name-matched): {amb:.1%}")
-
+    # persons are scoped OUT of E (metav_people is a small curated set; no verse key to
+    # split same-named people) — write ONLY the place hand-resolve list for review.
     with open(os.path.join(HERE, "tipnr_metav_link_residual.txt"), "w", encoding="utf-8") as fh:
-        for kind, uniq, hint, cands in sorted(residual):
-            fh.write(f"{kind}\t{uniq}\t[{hint}]\t{cands}\n")
+        for kind, uniq, hint, cands in sorted(place_res):
+            fh.write(f"{uniq}\t[{hint}]\t{cands}\n")
     print(f"  residual written -> scripts/tipnr_metav_link_residual.txt "
           f"({len(residual)} rows to hand-resolve)")
 
