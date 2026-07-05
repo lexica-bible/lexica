@@ -3,8 +3,21 @@
 READ-ONLY audit complete. No data writes yet. This memo is the decision doc; nothing
 changes until it's approved.
 
-## SESSION HANDOFF — next session is THE BUILD (decisions locked 2026-07-04)
-Diagnosis done + committed (5 read-only tools, chip-lift fix live). Decisions locked:
+## SESSION 9 CHARTER — one combined rebuild (this arc MERGES into cert Session 9)
+Do NOT rebuild for this alone. It joins the standing S9 items into ONE rebuild+swap.
+Cross-ref: `HANDOFF_cert_session9.md`, memory `project_abp_certification` (S8 close).
+
+**S9 combined rebuild — each component its own PRE-REGISTERED diff (the S8 pattern):**
+- (standing) Path-C pronoun-cluster + fold-companions — abp_surface fallback
+- (standing) `import_tipnr` twin-bug — Door 2, dry-run-proven (commit 96bb662, 10 places flip)
+- (standing) the seven uncertified reorder passes — Door 3
+- (tonight) `build_words` token slotting fix — the 364 word-order defects
+- (tonight) reorder float adds `)` — paren-edge
+- (tonight) 13 leaks → Tier B `abp_corrections` + tolerant `load_abp_prose`
+- (already LIVE, no rebuild) chip clause-mark lift fix
+Each lands as its own per-column diff, reconciled before the swap — never one blended diff.
+
+**Decisions locked 2026-07-04 (diagnosis done + committed: 5 read-only tools, chip fix live):**
 - **Architecture A** — `verses.text` stays independently derived (the witness that caught
   this; B destroys the oracle). Do NOT derive it from the rows.
 - **Fix target: `build_words` token slotting** — the word rows are mis-slotted (prose is
