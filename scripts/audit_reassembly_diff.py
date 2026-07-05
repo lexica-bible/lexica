@@ -167,13 +167,122 @@ def reassembly_hits(conn, stats=None):
     return hits
 
 
+# ── v2: ORDER-AWARE reassembly (reader English order vs verses.text) ───────────
+# v1 (above) compares BAGS, so it is blind to a bag-neutral misplacement (Jer 48:1's
+# "the" pulled a slot forward) and to bracket-internal punct shifts. v2 reassembles
+# the verse in the reader's OWN English reading order (the proven-equivalent port of
+# getEnglishOrderWords) and diffs the token SEQUENCE against verses.text. It is a
+# SUPERSET of v1: every bag defect still shows, plus displacements. Trustworthy only
+# because reorder_english is proven byte-equal to the JS (tests/test_reorder_port.py)
+# AND 135/136 clean fixture verses reassemble exactly to prose.
+import difflib
+from reorder_english import get_english_order_words
+
+
+def reassemble_ordered(words):
+    """Token sequence of the verse in the reader's English reading order."""
+    seq = " ".join((w.get("english") or "") for w in get_english_order_words(words))
+    return tokens(seq)
+
+
+def diff_verse_v2(words, verse_text):
+    """Ordered token diff of reader-order reassembly vs verses.text.
+    Returns None if identical, else {klass, ops, content_extra, content_missing}.
+    klass: 'dup-gloss' / 'content-other' (bag differs) or 'displaced' (bag equal,
+    order/punct differs — the Jer 48:1 class)."""
+    w_seq = reassemble_ordered(words)
+    t_seq = tokens(verse_text or "")
+    if w_seq == t_seq:
+        return None
+
+    bare_w = Counter(b for b in (bare(t) for t in w_seq) if b)
+    bare_t = Counter(b for b in (bare(t) for t in t_seq) if b)
+    content_extra = bare_w - bare_t
+    content_missing = bare_t - bare_w
+
+    if not content_extra and not content_missing:
+        klass = "displaced"                # same words, wrong slot and/or punct moved
+    elif not content_missing and content_extra and \
+            all(bare_t[w] > 0 for w in content_extra):
+        klass = "dup-gloss"
+    else:
+        klass = "content-other"
+
+    # a compact human-readable diff of what moved (rows -> text)
+    ops = []
+    for tag, i1, i2, j1, j2 in difflib.SequenceMatcher(None, w_seq, t_seq).get_opcodes():
+        if tag == "equal":
+            continue
+        ops.append(f"{tag}: rows[{' '.join(w_seq[i1:i2])}] -> "
+                   f"text[{' '.join(t_seq[j1:j2])}]")
+    return {"klass": klass, "ops": ops,
+            "content_extra": dict(content_extra), "content_missing": dict(content_missing)}
+
+
+def reassembly_hits_v2(conn):
+    """READ-ONLY. One dict per verse whose reader-order reassembly != verses.text."""
+    conn.row_factory = sqlite3.Row
+    rows = conn.execute(
+        """SELECT v.id AS vid, v.book, v.chapter, v.verse, v.text AS vtext,
+                  w.position, w.english, w.bracket_id, w.greek_pos
+           FROM verses v JOIN words w ON w.verse_id = v.id
+           ORDER BY v.id, w.position"""
+    ).fetchall()
+    by_verse = defaultdict(list)
+    meta = {}
+    for r in rows:
+        by_verse[r["vid"]].append({"english": r["english"], "bracket_id": r["bracket_id"],
+                                    "greek_pos": r["greek_pos"], "position": r["position"]})
+        meta.setdefault(r["vid"], (r["book"], r["chapter"], r["verse"], r["vtext"]))
+    hits = []
+    for vid, ws in by_verse.items():
+        book, ch, vs, vtext = meta[vid]
+        d = diff_verse_v2(ws, vtext)
+        if d:
+            d["ref"] = f"{book} {ch}:{vs}"
+            d["book"] = book
+            hits.append(d)
+    return hits
+
+
+def run_report_v2(db, list_all=False):
+    conn = sqlite3.connect(f"file:{db}?mode=ro", uri=True)
+    hits = reassembly_hits_v2(conn)
+    total = conn.execute("SELECT count(*) FROM verses").fetchone()[0]
+    conn.close()
+    by_class = Counter(h["klass"] for h in hits)
+    by_book = Counter(h["book"] for h in hits)
+    print(f"== reassembly-diff V2 (order-aware) on {db} (READ-ONLY) ==")
+    print(f"   verses scanned : {total:,}")
+    print(f"   total hits     : {len(hits):,}\n")
+    print("   by class:")
+    for k in ("dup-gloss", "content-other", "displaced"):
+        print(f"     {k:<14} {by_class.get(k, 0):>6,}")
+    print("\n   by book (all, canonical-ish by count):")
+    for book, n in by_book.most_common():
+        print(f"     {book:<6} {n:>6,}")
+    if list_all:
+        print("\n   every hit:")
+        for h in hits:
+            print(f"     [{h['klass']:<13}] {h['ref']:<12} {' ; '.join(h['ops'])}")
+    else:
+        print("\n   sample (first 4 of each class; --list for all):")
+        shown = Counter()
+        for h in hits:
+            if shown[h["klass"]] >= 4:
+                continue
+            shown[h["klass"]] += 1
+            print(f"     [{h['klass']:<13}] {h['ref']:<12} {' ; '.join(h['ops'])}")
+    return len(hits)
+
+
 # ── report ─────────────────────────────────────────────────────────────────────
 
 def _fmt_counter(c):
     return ", ".join(f"{k!r}×{v}" if v > 1 else f"{k!r}" for k, v in c.items())
 
 
-def print_verse(conn, ref):
+def print_verse(conn, ref, v2=False):
     conn.row_factory = sqlite3.Row
     parts = ref.split()
     book = " ".join(parts[:-1])
@@ -183,10 +292,22 @@ def print_verse(conn, ref):
     if not row:
         print(f"  {ref}: verse not found")
         return
-    engs = [r["english"] for r in conn.execute(
-        "SELECT english FROM words WHERE verse_id=? ORDER BY position", (row["id"],))]
-    print(f"  === {ref} ===")
+    wrows = conn.execute("SELECT english, bracket_id, greek_pos, position FROM words "
+                         "WHERE verse_id=? ORDER BY position", (row["id"],)).fetchall()
+    words = [dict(r) for r in wrows]
+    engs = [w["english"] for w in words]
+    print(f"  === {ref}{' (V2 order-aware)' if v2 else ''} ===")
     print(f"  verses.text : {row['text']!r}")
+    if v2:
+        print(f"  reassembled : {' '.join(reassemble_ordered(words))!r}")
+        d = diff_verse_v2(words, row["text"])
+        if not d:
+            print("  RESULT: clean reassembly (no hit)")
+            return
+        print(f"  RESULT: HIT [{d['klass']}]")
+        for op in d["ops"]:
+            print(f"    {op}")
+        return
     print(f"  row tokens  : {tokens(' '.join(e or '' for e in engs))}")
     d = diff_verse(engs, row["text"])
     if not d:
@@ -300,15 +421,70 @@ def run_controls():
     return 0 if ok else 1
 
 
+def run_controls_v2():
+    """v2 proof-of-fire. Unlike v1, v2 APPLIES the reorder, so a clean bracket verse
+    goes quiet with NO exclusion, and a bag-neutral displacement FIRES."""
+    print("== reassembly-diff V2 CONTROLS (order-aware) ==")
+    ok = True
+    # A clean John 1:1 bracket group in Greek order -> reorders to English -> quiet.
+    clean_rows = [
+        {"english": "God", "bracket_id": 1, "greek_pos": 4, "position": 0},
+        {"english": "was", "bracket_id": 1, "greek_pos": 3, "position": 1},
+        {"english": "the", "bracket_id": 1, "greek_pos": 1, "position": 2},
+        {"english": "word.", "bracket_id": 1, "greek_pos": 2, "position": 3},
+    ]
+    d = diff_verse_v2(clean_rows, "the word was God.")
+    print(f"  [{'QUIET' if d is None else 'FALSE-POSITIVE'}] clean bracket reorder "
+          f"-> {'immune (reorder applied)' if d is None else d}")
+    ok = ok and d is None
+
+    # A bag-neutral displacement (a 'the' pulled a slot early, the Jer 48:1 class):
+    # rows read '... of the the forces ... God' while text has '... the forces the God'.
+    disp_rows = [
+        {"english": "of", "bracket_id": None, "greek_pos": None, "position": 0},
+        {"english": "the", "bracket_id": None, "greek_pos": None, "position": 1},
+        {"english": "the", "bracket_id": None, "greek_pos": None, "position": 2},
+        {"english": "forces,", "bracket_id": None, "greek_pos": None, "position": 3},
+        {"english": "God", "bracket_id": None, "greek_pos": None, "position": 4},
+    ]
+    dd = diff_verse_v2(disp_rows, "of the forces, the God")
+    fired = dd is not None and dd["klass"] == "displaced"
+    print(f"  [{'FIRED' if fired else 'VOID '}] bag-neutral displacement (Jer 48:1 class) "
+          f"-> {dd['klass'] if dd else '(clean)'}  {(' ; '.join(dd['ops']) if dd else '')}")
+    ok = ok and fired
+
+    # hand-corrected copy goes quiet
+    good_rows = [
+        {"english": "of", "bracket_id": None, "greek_pos": None, "position": 0},
+        {"english": "the", "bracket_id": None, "greek_pos": None, "position": 1},
+        {"english": "forces,", "bracket_id": None, "greek_pos": None, "position": 2},
+        {"english": "the", "bracket_id": None, "greek_pos": None, "position": 3},
+        {"english": "God", "bracket_id": None, "greek_pos": None, "position": 4},
+    ]
+    dg = diff_verse_v2(good_rows, "of the forces, the God")
+    print(f"  [{'QUIET' if dg is None else 'STILL FIRING'}] corrected rows -> "
+          f"{'clean' if dg is None else dg}")
+    ok = ok and dg is None
+
+    print(f"\n{'V2 CONTROLS PASSED.' if ok else 'V2 CONTROL FAILURE.'}")
+    print("  NOTE: the port itself is proven byte-equal to the JS in "
+          "tests/test_reorder_port.py; run that FIRST.")
+    return 0 if ok else 1
+
+
 if __name__ == "__main__":
     args = sys.argv[1:]
+    v2 = "--v2" in args
     if "--controls" in args:
-        sys.exit(run_controls())
+        sys.exit(run_controls_v2() if v2 else run_controls())
     db = next((a for a in args if not a.startswith("--")), "bible.db")
     if "--verse" in args:
         ref = args[args.index("--verse") + 1]
         conn = sqlite3.connect(f"file:{db}?mode=ro", uri=True)
-        print_verse(conn, ref)
+        print_verse(conn, ref, v2=v2)
         conn.close()
         sys.exit(0)
-    run_report(db)
+    if v2:
+        run_report_v2(db, list_all="--list" in args)
+    else:
+        run_report(db)
