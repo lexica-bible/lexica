@@ -121,38 +121,52 @@ def main():
         # candidate pool for verse-overlap: Strong's-matched if any, else all name-mates
         pool = strong_hits if strong_hits else cands
 
+        refs = ent_refs.get(uniq, set())
+
         if len(pool) == 1:
-            # a lone name-mate that Strong's couldn't confirm (missing/mismatched number)
-            buckets["name_only"].append((uniq, pool[0], "name"))
+            # a lone name-mate Strong's couldn't confirm. RETIRED rule -> demote to
+            # residual (unconfirmed; coverage is not quality). Carry a diagnostic so we
+            # can eyeball whether any deserve rescuing.
+            c = pool[0]
+            cont = (len(refs & mp_verses.get(c, set())) / len(refs)) if refs else 0.0
+            buckets["name_only"].append(
+                (uniq, c, name_of.get(c, "?"), len(refs), len(mp_verses.get(c, set())),
+                 bool(mp_strongs.get(c)), cont))
             continue
 
         # ── Tier 2: verse-overlap containment ──────────────────────────────────
-        refs = ent_refs.get(uniq, set())
         scored = []
         if refs:
             for c in pool:
                 inter = len(refs & mp_verses.get(c, set()))
                 scored.append((inter / len(refs), c))
             scored.sort(reverse=True)
-        if scored and scored[0][0] >= CONTAIN_FLOOR and (
-                len(scored) == 1 or scored[0][0] > scored[1][0]):
+        top = scored[0][0] if scored else 0.0
+        runner = scored[1][0] if len(scored) > 1 else 0.0
+        r_pid = scored[1][1] if len(scored) > 1 else None
+        if scored and top >= CONTAIN_FLOOR and (len(scored) == 1 or top > runner):
             win_pid = scored[0][1]
-            margin = scored[0][0] - (scored[1][0] if len(scored) > 1 else 0.0)
             buckets["overlap"].append((uniq, win_pid, "overlap"))
             tier2_audit.append((uniq, key(disp), win_pid, name_of.get(win_pid, "?"),
-                                scored[0][0], margin, len(pool)))
+                                top, top - runner, len(pool), r_pid,
+                                name_of.get(r_pid, "-"), runner))
         else:
-            buckets["residual"].append((uniq, pool))
+            reason = ("no_refs" if not refs else
+                      "tie" if top == runner and top > 0 else "below_floor")
+            buckets["residual"].append((uniq, pool, top, reason))
 
-    # ── traffic-coverage ───────────────────────────────────────────────────────
-    linked = buckets["strongs"] + buckets["overlap"] + buckets["name_only"]
-    linked_uniq = {u for (u, *_ ) in linked}
-    # denominator: person entities that HAVE a metaV candidate (a link is even possible)
+    # ── the links we'll actually write, each with its rule + confidence ──────────
+    #     name_only is DEMOTED (retired rule, unconfirmed) — not linked.
+    link_meta = [(u, pid, "strongs", 1.0, 1.0) for (u, pid, _r) in buckets["strongs"]]
+    for (u, _k, pid, _n, score, margin, *_rest) in tier2_audit:
+        link_meta.append((u, pid, "overlap", score, margin))
+    linked_uniq = {m[0] for m in link_meta}
+
     with_cand = set()
     for b in ("strongs", "overlap", "name_only", "residual"):
         for row in buckets[b]:
             with_cand.add(row[0])
-    all_person_traffic = sum(traffic[u] for u in traffic)  # every rendered person entity
+    all_person_traffic = sum(traffic[u] for u in traffic)
     cand_traffic = sum(traffic[u] for u in with_cand)
     linked_traffic = sum(traffic[u] for u in linked_uniq)
 
@@ -161,13 +175,13 @@ def main():
 
     print("=" * 70)
     print("build_person_metav_link — DRY-RUN three-tier report")
-    print(f"  Tier 1 Strong's-direct : {len(buckets['strongs']):>5}")
-    print(f"  Tier 2 verse-overlap   : {len(buckets['overlap']):>5}")
-    print(f"  name-only (unique, no # confirm): {len(buckets['name_only']):>5}")
+    print(f"  Tier 1 Strong's-direct : {len(buckets['strongs']):>5}  (linked)")
+    print(f"  Tier 2 verse-overlap   : {len(buckets['overlap']):>5}  (linked)")
+    print(f"  name-only DEMOTED->resid: {len(buckets['name_only']):>5}  (not linked)")
     print(f"  RESIDUAL (hand-list)   : {len(buckets['residual']):>5}")
     print(f"  no metaV record        : {len(buckets['no_metav']):>5}")
     total = sum(len(v) for v in buckets.values())
-    print(f"  ------ {total} TIPNR person entities")
+    print(f"  ------ {total} TIPNR person entities;  {len(link_meta)} LINKED")
     print()
     print("  traffic coverage (render-count proxy for card views):")
     print(f"    linked / all rendered person entities   : "
@@ -175,24 +189,12 @@ def main():
     print(f"    linked / entities with a metaV candidate : "
           f"{linked_traffic:,} / {cand_traffic:,}  ({pct(linked_traffic, cand_traffic)})")
 
-    # residual hand-list, ranked by traffic (top of this list is where eyeballs pay off)
-    res = sorted(buckets["residual"], key=lambda x: -traffic[x[0]])
-    path = os.path.join(HERE, "person_metav_link_residual.txt")
-    with open(path, "w", encoding="utf-8") as fh:
-        fh.write("# uniq\ttraffic\tcandidate metaV person_ids (name)\n")
-        for uniq, cands in res:
-            names = [f"{c}:{name_of.get(c,'?')}" for c in cands]
-            fh.write(f"{uniq}\t{traffic[uniq]}\t{names}\n")
-    print(f"\n  residual -> scripts/person_metav_link_residual.txt "
-          f"({len(res)} to hand-resolve, top-traffic first)")
-    print("  top 15 residual by traffic:")
-    for uniq, cands in res[:15]:
-        print(f"    {traffic[uniq]:>4}  {uniq}  ({len(cands)} same-name metaV people)")
-
-    # ── tier-2 confidence audit (it carries most links, so prove it before apply) ──
+    # ── tier-2 confidence audit ──────────────────────────────────────────────────
     band = {"1.0 (all refs found)": 0, "0.8-0.99": 0, "0.65-0.8": 0, "0.5-0.65": 0}
-    thin = 0
-    for (_u, _k, _p, _n, score, margin, _np) in tier2_audit:
+    thin = []
+    lowband = []
+    for row in tier2_audit:
+        score, margin = row[4], row[5]
         if score >= 0.999:
             band["1.0 (all refs found)"] += 1
         elif score >= 0.8:
@@ -201,47 +203,88 @@ def main():
             band["0.65-0.8"] += 1
         else:
             band["0.5-0.65"] += 1
-        if margin < 0.15:           # winner barely beat the runner-up
-            thin += 1
+            lowband.append(row)
+        if margin < 0.15:
+            thin.append(row)
     print("\n  tier-2 containment score distribution:")
     for k, v in band.items():
         print(f"    {k:<22}: {v:>5}")
-    print(f"    thin margin (<0.15 over runner-up): {thin}  <- the shaky ones")
 
-    # eyeball the notorious multi-person names against known facts
-    watch = ("zechariah", "simon", "james", "john", "mary", "herod",
-             "joseph", "judas", "azariah", "hananiah")
+    def show(row):
+        u, _k, pid, wname, score, margin, npool, r_pid, r_name, r_score = row
+        print(f"    {u:<26} -> {pid}:{wname:<12} score {score:.2f} margin {margin:.2f} "
+              f"(of {npool})  runner {r_pid}:{r_name} {r_score:.2f}")
+
+    print(f"\n  ** LOW-CONFIDENCE picks you asked to eyeball (move any wrong one to residual) **")
+    print(f"  thin margin (<0.15 over runner-up): {len(thin)}")
+    for row in sorted(thin):
+        show(row)
+    print(f"  score band 0.5-0.65: {len(lowband)}")
+    for row in sorted(lowband):
+        show(row)
+
+    # hard-name eyeball (unchanged watchlist)
+    watch = ("simon", "james", "mary", "herod", "joseph")
     a_by_key = defaultdict(list)
     for row in tier2_audit:
         a_by_key[row[1]].append(row)
-    print("\n  tier-2 picks for hard names (verify by eye):")
+    print("\n  tier-2 picks for a few hard names:")
     for nm in watch:
-        for (uniq, _k, pid, wname, score, margin, npool) in sorted(a_by_key.get(nm, [])):
-            print(f"    {uniq:<26} -> {pid}:{wname:<18} "
-                  f"score {score:.2f} margin {margin:.2f} (of {npool})")
-    # full dump for the record
+        for row in sorted(a_by_key.get(nm, [])):
+            show(row)
+
     t2path = os.path.join(HERE, "person_metav_link_tier2.txt")
     with open(t2path, "w", encoding="utf-8") as fh:
-        fh.write("# uniq\twin_pid\twin_name\tscore\tmargin\tpool_size\n")
-        for (uniq, _k, pid, wname, score, margin, npool) in sorted(tier2_audit):
-            fh.write(f"{uniq}\t{pid}\t{wname}\t{score:.3f}\t{margin:.3f}\t{npool}\n")
+        fh.write("# uniq\twin_pid\twin_name\tscore\tmargin\tpool\trunner_pid\trunner_score\n")
+        for row in sorted(tier2_audit):
+            u, _k, pid, wname, score, margin, npool, r_pid, _rn, r_score = row
+            fh.write(f"{u}\t{pid}\t{wname}\t{score:.3f}\t{margin:.3f}\t{npool}\t{r_pid}\t{r_score:.3f}\n")
     print(f"  full tier-2 dump -> scripts/person_metav_link_tier2.txt")
+
+    # ── name-only (demoted) detail — justify or leave demoted ────────────────────
+    print(f"\n  name-only demoted picks (7 expected) — refs / metaV-verses / has# / containment:")
+    for (u, pid, pname, nrefs, nvers, has_s, cont) in sorted(buckets["name_only"]):
+        print(f"    {u:<26} -> {pid}:{pname:<14} refs {nrefs:>3} mvers {nvers:>4} "
+              f"has# {has_s}  contain {cont:.2f}")
+
+    # ── residual, ranked by traffic, WITH the reason it failed ───────────────────
+    res = sorted(buckets["residual"], key=lambda x: -traffic[x[0]])
+    path = os.path.join(HERE, "person_metav_link_residual.txt")
+    with open(path, "w", encoding="utf-8") as fh:
+        fh.write("# uniq\ttraffic\treason\tbest_score\tcandidates\n")
+        for uniq, cands, best, reason in res:
+            names = [f"{c}:{name_of.get(c,'?')}" for c in cands]
+            fh.write(f"{uniq}\t{traffic[uniq]}\t{reason}\t{best:.2f}\t{names}\n")
+    print(f"\n  residual -> scripts/person_metav_link_residual.txt ({len(res)} to hand-resolve)")
+    print("  top 15 residual by traffic (reason = why overlap didn't settle it):")
+    for uniq, cands, best, reason in res[:15]:
+        print(f"    {traffic[uniq]:>4}  {uniq:<24} {len(cands):>2} cands  "
+              f"best {best:.2f}  [{reason}]")
 
     if not APPLY:
         conn.close()
-        print("\n[DRY-RUN] No table written. Review buckets + residual, then --apply.")
+        print("\n[DRY-RUN] No table written. Review the eyeball lists, then --apply.")
         return
 
     conn.close()
     w = sqlite3.connect(BIBLE)
     try:
-        w.execute("CREATE TABLE IF NOT EXISTS tipnr_metav_link(uniq TEXT, kind TEXT, metav_id INTEGER)")
+        cols = {r[1] for r in w.execute("PRAGMA table_info(tipnr_metav_link)")}
+        if not cols:
+            w.execute("CREATE TABLE tipnr_metav_link("
+                      "uniq TEXT, kind TEXT, metav_id INTEGER, rule TEXT, score REAL, margin REAL)")
+        else:  # place edition may have made a 3-col table first — widen it
+            for c, t in (("rule", "TEXT"), ("score", "REAL"), ("margin", "REAL")):
+                if c not in cols:
+                    w.execute(f"ALTER TABLE tipnr_metav_link ADD COLUMN {c} {t}")
         w.execute("DELETE FROM tipnr_metav_link WHERE kind='person'")   # leave place rows intact
-        w.executemany("INSERT INTO tipnr_metav_link VALUES(?,'person',?)",
-                      [(u, pid) for (u, pid, _rule) in linked])
+        w.executemany("INSERT INTO tipnr_metav_link(uniq,kind,metav_id,rule,score,margin) "
+                      "VALUES(?,'person',?,?,?,?)",
+                      [(u, pid, rule, score, margin) for (u, pid, rule, score, margin) in link_meta])
         w.execute("CREATE INDEX IF NOT EXISTS ix_tipnr_metav_link ON tipnr_metav_link(uniq)")
         w.commit()
-        print(f"\nWrote {len(linked)} kind='person' rows into tipnr_metav_link.")
+        print(f"\nWrote {len(link_meta)} kind='person' rows into tipnr_metav_link "
+              f"(rule/score/margin recorded).")
     finally:
         w.close()
 
