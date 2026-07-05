@@ -624,7 +624,7 @@ function App() {
       )}
       {resetToken && <AuthModal mode="reset" resetToken={resetToken} onClose={() => setResetToken(null)} />}
       {authOpen && <AuthModal mode={authOpen} onClose={() => setAuthOpen(null)} />}
-      {accountOpen && <AccountModal anchored onClose={() => setAccountOpen(false)} />}
+      {accountOpen && <AccountModal anchored={!isMobile} onClose={() => setAccountOpen(false)} />}
     </div>
   );
 }
