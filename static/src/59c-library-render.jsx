@@ -240,9 +240,13 @@ const LibRender = (function () {
     const bracketChip = (w, key, brk = {}) => {
       const isPN = !!(w.is_pn || w.strongs_base === "*");
       const clickable = !!(onWordClick && w.strongs_base && (w.strongs_base !== "*" || w.english));
-      const brkOpen = (pi) => (brk.open && pi === 0) ? <span className="lib-iw-brk">[</span> : null;
-      const brkClose = (pi, lastPi) => (brk.close && pi === lastPi)
-        ? <React.Fragment><span className="lib-iw-brk">]</span>{brk.trail ? <span className="lib-iw-english">{brk.trail}</span> : null}</React.Fragment>
+      // Chip mode reads in ENGLISH order now (Phase 3), so ABP's bracket marks + the
+      // superscript order digits are inert apparatus — stripped here. They live only
+      // in interlinear mode (the faithful as-printed view). The trailing clause
+      // punctuation is still re-emitted after the group's last word.
+      const brkOpen = () => null;
+      const brkClose = (pi, lastPi) => (brk.close && pi === lastPi && brk.trail)
+        ? <span className="lib-iw-english">{brk.trail}</span>
         : null;
 
       // Multi-word gloss within a bracket word → ONE chip (same merge as the plain
@@ -256,7 +260,6 @@ const LibRender = (function () {
             {showInterlinear && (w.lemma ? <span className="lib-iw-greek">{w.lemma}</span> : <span className="lib-iw-greek" style={{visibility:"hidden"}}>x</span>)}
             <span className="lib-iw-pos-english">
               {brkOpen(0)}
-              {w.greek_pos !== null && w.greek_pos !== undefined && <span className="lib-iw-pos">{w.greek_pos}</span>}
               <span className="lib-iw-english">{englishParts(w)}</span>
               {brkClose(0, 0)}
             </span>
@@ -280,8 +283,6 @@ const LibRender = (function () {
             : <span className="lib-iw-greek" style={{visibility:"hidden"}}>x</span>)}
           <span className="lib-iw-pos-english">
             {brkOpen(0)}
-            {w.greek_pos !== null && w.greek_pos !== undefined &&
-              <span className="lib-iw-pos">{w.greek_pos}</span>}
             <span className="lib-iw-english">{label}</span>
             {brkClose(0, 0)}
           </span>
