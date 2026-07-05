@@ -1289,10 +1289,14 @@ memory `project_ai_synthesis_quality`.
 - Gentilics (`/ites?$/`: Hivite, Sinite…): card labeled "People / Clan", place header "Homeland", AI summary
   fires on the clan tab. Kept as persons (Table-of-Nations genealogy is the value; only Jebusite has map coords)
 - AI curation: `/api/metav/ai-description/<name>` — Haiku, 1-2 sentences, SCOPED to the clicked
-  book/ch/verse ("describe the one AT this reference"; cached per-reference `pn:<name>:<bk><ch>:<v>`;
-  badged "not verse-checked"). Fills entries with no metaV/BDB data. The place endpoint also withholds
-  the map pin when the name maps to >1 place or the matched row lacks its own coords. Both = **Fix A**,
-  the permanent floor under whatever the binder below can't bind.
+  book/ch/verse ("describe the one AT this reference"). **Now VERSE-GROUNDED (2026-07-05, "G"): fed the
+  displayed verse text + the reader's translation identity (`_displayed_verse`), and told to explain the
+  name AS RENDERED there — NOT fact-check the shown text against Hebrew/English/other traditions** (it was
+  denying ABP's Greek/LXX forms, e.g. "Antilebanon isn't in the verse" at Deu 1:7 / Jos 1:4). Cache key +
+  prompt fingerprint now include the verse+translation (`pn:<name>:<bk><ch>:<v>:<translation>`). Fills
+  entries with no metaV/BDB data. The place endpoint also withholds the map pin when the name maps to >1
+  place or the matched row lacks its own coords. Both = **Fix A**, the permanent floor under whatever the
+  binder below can't bind. Full record: memory `project_metav_expansion`.
 - **VERSE-BOUND ENTITY CARD — the Issue-2 rebuild, LIVE 2026-06-28.** A PN click now first asks
   `GET /api/metav/entity/<name>?book=&chapter=&verse=` (views_metav.py) for the verse-CORRECT TIPNR entity
   (from `pn_binding`); when bound it LEADS the rail with a sourced `.pnbound` card (canonical name + TIPNR
@@ -1307,7 +1311,19 @@ memory `project_ai_synthesis_quality`.
   Asiarch) stopped binding, net −13 vs the prior 14,816; an unknown type under a `PERSON+PLACE` header now
   RAISES to stop the build), zero confident-wrong; TIPNR is the identity spine, metaV is enrichment only. Engine =
   **`entity_resolution.py`** (repo root, pure logic); tables built by `scripts/build_entity_binding.py --apply`.
-  **The map staying hidden on an ambiguous bound place (Eden) is Fix A's guard working, NOT a bug.**
+  **Bound places SHOW a map again (2026-07-05):** the Issue-2 bind had suppressed the name-based metaV
+  fetch — where the map lived — so bound places lost it. Coords now come THROUGH the entity endpoint
+  (`_place_coord_rows` + `_pin_from_rows`, which pins the coordinate the MOST rows agree on). The bound path
+  prefers rows whose OWN name matches the entity over rows merely ALIASED to it — so Eden (its own row has
+  no coords; "Eden" is also an alias of Beth-eden near Damascus) DECLINES instead of pinning Damascus.
+  Interim guard; the real per-referent fix is the parked OpenBibleInfo ingest (TODO). **People/Clan render
+  (2026-07-05, "C"):** a gentilic word bound to its eponymous-ancestor PERSON entity (Hittites→Heth,
+  Jews→Judah — TIPNR models peoples that way, ~819 binds) renders "People / Clan", drops the ancestor's
+  Parents/Children, titles with the people term + a "Descended from X" line — the binds are correct, only
+  the individual-person framing was wrong. Classifier `is_people_group` in `entity_resolution.py` (ONE list,
+  shared with the audit; bare `-im` excluded — collides with Ephraim/Miriam). A hyphenated click ("Beth-el")
+  now RETRIES hyphen-blind against `pn_binding` (the bind is keyed on english_head "bethel"; was a 404 →
+  name-fallback). Full record: memory `project_metav_expansion`.
   **Bound-card occurrences (2026-06-28 follow-on):** these PNs carry a real Strong's on `strongs_base` but a
   bare `strongs='*'` (TIPNR backfilled the number), so the bound card un-gates the standard occurrence sections
   for a PN and the ABP count comes from `/api/strongs-count/<n>?by=base` (counts on strongs_base, not the '*'
