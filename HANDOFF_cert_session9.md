@@ -63,12 +63,18 @@ A fresh full build on PA into `bible.db.new` (Path-C ran — Rahlfs + TAGNT both
 | content-other | 13 | **11** | prose-side leaks; 2 cured incidentally, 11 remain = fix (f), untouched by the words rebuild. |
 | punct-position | 261 | 261 | unchanged → freeze as allowlist. |
 
-**The charter's old prime suspect was BACKWARDS.** "`_split_compounds` article-fronting" was the *stale*
-part (already fixed, cured free by rebuild). The 208 SURVIVORS are one different family: a **personal
-pronoun / short word packed onto a neighbour's slot** (of 208: I 46, you 29, he 28, it 25, they 21, we 11,
-+ him/she/us/them/your/their; "same" ×7; verb-particle "up" ×4; a few clause swaps). This is the
-`_split_compounds` **carry path** — the branch the code deliberately keeps OFF (`carry=False`) because
-turning it on regresses ~85 other verses (its own comment).
+**The 208 SURVIVORS are one family: a personal pronoun / short word packed onto a neighbour's slot** (of
+208: I 46, you 29, he 28, it 25, they 21, we 11, + him/she/us/them/your/their; "same" ×7; verb-particle
+"up" ×4; a few clause swaps).
+
+**TWO killed suspects — do NOT re-diagnose either (both cost a trace, both wrong):**
+- **article-fronting** (`_split_compounds`, the original charter suspect) → it was the *STALE* half of the
+  364: the current build already fixes it, a clean rebuild cures the 156 free. Not a code target.
+- **the `_split_compounds` carry path** (the second charter suspect) → **RED HERRING: it never fires on the
+  208.** Traced 2026-07-05: at `carry=False` the leading-run rule leaves the phrase whole (no split), and
+  `carry=True` changes nothing on these shapes. The real splitter is `_redistribute_pronoun_compounds` (see
+  (P)). The ~85/`carry=False`/`split_merge_fixes.json` regression is REAL HISTORY (commit 1887f5d) but is
+  **NOT the guard for (P)** — it belongs to a pass (P) doesn't touch.
 
 **Source-adjudicated, not prose-diffed (2026-07-05).** v2 only proves the two stores DISAGREE, not which
 is right. All 208 survivors were adjudicated against the pinned source feed directly (local, no DB) with an
@@ -116,34 +122,43 @@ unexplained is stop-condition 2 with no way to localize.
 ## The five fixes
 
 ### (P) pronoun / short-word slotting — MERGES old (a)+(c)+(d) (one mechanism)
-**The core S9 code fix.** A personal pronoun or short word (I/you/he/it/they/we/…, "same", possessives,
-verb-particle "up") is packed onto a neighbour's slot; the prose splits + orders it right, `build_words`
-does not. **208 verses survive a clean build** (source-adjudicated words-wrong, every one — see the S9
-DIAGNOSIS RESULT block), on top of the Path-C pronoun mistags (Daniel ≥170) and the Door-3 subject folds.
-All the same slots, same `_split_compounds` carry path.
+**The core S9 code fix.** **Culprit = `_redistribute_pronoun_compounds`** (traced + reproduced locally
+2026-07-05), NOT the `_split_compounds` carry path (that never fires on the 208 — see killed suspects).
+That pass handles "ABP bundled a verb's English onto a pronoun slot" (Gen 3:15 "will give heed to your").
+It moves the verb's words to the empty neighbour and **hard-codes the order: moved verb reads FIRST
+(greek_pos 1), kept pronoun reads SECOND (greek_pos 2).** Right when the pronoun follows the verb in
+source; WRONG when it precedes — it flips them. **208 verses** survive a clean build this way (source-
+adjudicated words-wrong, every one).
 
-- **Root:** `_split_compounds` keeps its carry branch OFF (`carry=False`) because turning it on regresses
-  ~85 OTHER verses (article/copula garbles the leaky lexicon gate can't avoid — its own comment). The 208
-  are what `carry=False` leaves unfixed. The fix is to make the carry path SAFE (target the pronoun/
-  short-word case without the article/copula over-reach), not to flip the flag.
-- **⚠ REGRESSION GUARD (your condition, 2026-07-05):** the fix must PROVE it doesn't break the ~85 that
-  `carry=False` currently protects. Build a control set of those ~85 verses FIRST (their correct order,
-  pinned), and the fix is not trusted until it leaves all ~85 clean AND drives the 208 to zero. This is a
-  named gate item below.
-- **Path-C sub-part (old (a)):** where Rahlfs can't align, read the number off `abp_surface`'s form (closed
-  pronoun set σου→4675, αυτου→846, υμων→5216, ημων→2257,…). Per-slot sanity gate: only write where the
-  form-class fits the slot's english (or english is blank/fold), else skip + log. Blank-form slots (Dan
-  4:33 kind) carry no form → stay source-app reads. Do NOT trust the corpus 3,577 as a target — it's VOID
-  (real mistags + fold companions, proportions unknown); the per-slot pass produces the real split.
-- **Door-3 sub-part (old (c)):** the 7 uncertified reorder passes (`_split_numbered`,
-  `_redistribute_pronoun_compounds`, `_fix_backwards_pairing`, `_split_pn_article_lump`,
-  `_funcword_noun_relocate`, `_lord_subject_split`, `_lord_oath_fix`) are the fold-slot producers. Two
-  durable known-positives for the census control (must FIRE before any zero is trusted): `Num 20:9 pos 2`
-  (Μωυσής, blank english, 1473) and `1Sa 18:6 pos 8` (Δαυίδ, blank english, 1473). Full-verse dump query:
-  `SELECT …, w.position, w.english, w.strongs, w.bracket_id, s.form FROM words w JOIN verses v … LEFT JOIN
-  abp_surface s ON s.verse_id=w.verse_id AND s.position=w.position WHERE (book,ch,vs)=… ORDER BY w.position;`
-- **Per-column attribution inside (P):** form→number write = `strongs`/`strongs_base`; carry/subject write
-  = `english`/position. Pre-register each fold row's two columns to their sub-mechanism.
+Two shapes, one pass (reproduced through the pass + reader port):
+- **adjacent-swap** ("his hand" → "hand his", ~38): kept pronoun is contiguous, entirely BEFORE the moved
+  word. Fix: order the two bracket slots by SOURCE position (keep-before → keep=gpos1/move=gpos2), instead
+  of hard-coding move-first. Preserves Gen 3:15 (keep-after → move=gpos1/keep=gpos2, unchanged).
+- **straddle** ("I **beheld** you", "he … deliver **him** up", "this **same** thing", ~170): the pronoun's
+  words sit on BOTH sides of the moved verb; one slot can't hold both positions. Fix: **don't split — leave
+  the phrase whole on the pronoun slot** (verb slot stays blank). Reads exactly as source/prose. Safe by
+  construction (a whole phrase always matches source).
+
+**Design (skip-straddle + source-order):** in `_redistribute_pronoun_compounds`, compute each gloss word's
+source index; if kept words straddle the moved run → SKIP; if contiguous → set the two greek_pos by side.
+- **Per-column attribution:** the pass "touches english / english_head / greek_pos / bracket_id ONLY —
+  never strongs" (its own docstring). So (P) is cleanly the **(d)-type** side (english/greek_pos/bracket_id).
+  The **(a)-type** side (`strongs`/`strongs_base`) is Path-C, UNTOUCHED — and this pass only fires on
+  post-Path-C numbers (`_PRONOUN_BASES` = 846/4571/… never raw 1473), which IS the (a)↔(d) binding,
+  confirmed at the mechanism level. Pre-register any row carrying both a Path-C number delta and a (P)
+  english/gpos delta by (row, column).
+- **⚠ REGRESSION GUARD (your condition, re-scoped 2026-07-05):** the ~85/`carry=False` set is NOT the guard
+  for this fix (wrong pass — see killed suspects). The real control = **every verse
+  `_redistribute_pronoun_compounds` currently fires on and gets RIGHT** (the Gen 3:15 class) — must stay
+  byte-identical. Enumerated by `scripts/enumerate_redistributions.py` (read-only, PA; obeys the control
+  rule — it must FIRE on Gen 3:15 AND Gen 7:1 or it's declared broken). Fix is not trusted until:
+  (firings − 208) readings are byte-identical pre/post-fix (plain `diff`) AND the 208 go to zero
+  (`dump_family_source.py --survivors` + v2). Both gate items below.
+- **Blank-verb-slot pre-registration:** the straddle-skip leaves ~170 verb slots blank-english (their
+  natural source state — bare Greek tokens, `parse_abp.py:271`, a shape the corpus already carries in the
+  thousands). NOT a new shape, moves NO pinned count (row totals unchanged; coverage reads `english_head`,
+  already blank-agnostic) and does NOT collide with the (a) fold census (which keys on the 1473 number; the
+  straddle verb keeps its OWN number). Recorded here so the shift is expected, not a surprise finding.
 
 ### (b) `import_tipnr` apply — Door 2's fix (code DONE, just re-import)
 Fix is committed + dry-run-proven (commit 96bb662): `import_tipnr.parse_tipnr` now types each entity from
@@ -241,13 +256,18 @@ couldn't have if either number were hardcoded — which is exactly why the line-
   words-wrong); (a)/(c)/(d) merged into (P). The (P) CODE fix (safe carry path, no ~85 regression) is the
   one piece still to WRITE — everything else is scoped.
 - Door 1 CLOSED (census); Door 2 code DONE + proven (not applied); (P) code = the open work.
+- **(P) TRACED 2026-07-05:** culprit = `_redistribute_pronoun_compounds` (hard-coded verb-first order),
+  not the carry path (killed). Fix design = skip-straddle + source-order (design approved, code not written).
+  Control set = `enumerate_redistributions.py` (committed, read-only, PA — awaiting a JP run on bible.db.new).
 - (e)/(f) scoped, ready; (g) conditional on (P) covering it as one mechanism.
 - Reassembly-diff tools committed (READ-ONLY): `audit_reassembly_diff.py` (v1 bag + v2 order-aware,
   `--controls`/`--list`), `reorder_english.py` (+ `tests/test_reorder_port.py`, proven byte-equal to the JS
   on 137 fixtures), `check_draw_citations.py`, `dump_family_source.py` (+ `--scan-brackets` + **`--survivors`**:
   the independent from-scratch source-order deriver that produced the 208/0/0 split; `--survivors --controls`
   proves the detector fires BOTH verdicts — the 5 words-wrong known cases AND the Mat 21:19 prose-wrong case —
-  before any zero is trusted; survivor ref list = `AUDIT_reassembly_survivors.txt`).
+  before any zero is trusted; survivor ref list = `AUDIT_reassembly_survivors.txt`),
+  `enumerate_redistributions.py` ((P) control set: every `_redistribute_pronoun_compounds` firing + reading,
+  Path-C replayed, self-controls on Gen 3:15 + Gen 7:1; PA, read-only).
 - After the rebuild+swap: re-run the dependent builders in order (import_tipnr → build_abp_surface →
   build_abp_translit → entity binding → dotted_lexicon → rendering-norm → two-ending), re-pin the invariant
   row counts ONLY in the deliberate-rebuild commit after compare_words passed, and re-run `cert_invariants.py`.
@@ -257,9 +277,11 @@ couldn't have if either number were hardcoded — which is exactly why the line-
 - `cert_invariants.py` 7/7 + `--controls` all fire; row pins re-pinned in the rebuild commit
 - L9 split lint = 0
 - `tests/test_reorder_port.py` green (the port is the v2 arbiter — prove it FIRST)
-- **(P) ~85-regression control set** (your condition, 2026-07-05): pin the correct order of the ~85 verses
-  `carry=False` currently protects; the (P) fix must leave ALL ~85 clean AND drive the 208 to zero. Not
-  trusted until both hold — build this control set BEFORE writing the carry fix.
+- **(P) firing control set** (re-scoped 2026-07-05): `scripts/enumerate_redistributions.py bible.db.new
+  bh_scrape.db` (controls FIRE on Gen 3:15 + Gen 7:1 first) → the readings of every verse
+  `_redistribute_pronoun_compounds` fires on. The (P) fix must leave **(firings − 208) byte-identical**
+  (plain `diff` of pre-fix vs post-fix output) AND drive the 208 to zero. Both must hold; build/run this
+  control set BEFORE writing the fix. (The old ~85/`carry=False` set is NOT this guard — wrong pass.)
 - **v1 AND v2 reassembly at CRITERION** (`--controls` + `--controls --v2` fire first):
   **zero word-order + zero content-other + NO NEW punct-position.** punct-position stays but is pinned as a
   FROZEN ALLOWLIST — the fresh build cured NONE (still 261), so freeze all 261 as the allowlist; any new
