@@ -709,9 +709,15 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       const be = boundEntity;
       const label = be.section === "place" ? "Place" : be.section === "person" ? "Person" : "Identity";
       const clean = s => (s || "").replace(/\s*\(\?\)/g, "").trim();   // drop TIPNR's "(?)" uncertainty marker
+      // TIPNR's descr is a genuine description for PERSONS ("Man living at the time of …")
+      // but for PLACES it's often just the name, a bare id ("Bethel_1"), or a cross-ref
+      // string ("Mount Paran= in Paran (…)"). Cut the cross-ref tail at '=', drop a trailing
+      // "_N" id; the "same as the name" test then hides whatever is left when it's just the
+      // name, so only a real description survives as the subtitle.
+      const descText = clean((be.desc || "").split("=")[0]).replace(/_\d+$/, "").trim();
       // a clean one-liner: the person 'desc' is short; for a place fall to the
       // summary's first clause (before "first/only mentioned").
-      let line = (be.desc && be.desc.toLowerCase() !== be.name.toLowerCase() && be.desc.length > 4) ? be.desc : "";
+      let line = (descText && descText.toLowerCase() !== be.name.toLowerCase() && descText.length > 4) ? descText : "";
       if (!line && be.summary)
         line = be.summary.split(/,?\s*(?:first mentioned|only mentioned|referred to)/i)[0].replace(/\(+$/, "");
       line = clean(line);

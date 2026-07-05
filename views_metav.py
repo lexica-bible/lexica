@@ -315,10 +315,24 @@ def metav_entity(name):
             "('pn_binding','tipnr_entities','tipnr_entity_refs')")}
         if {"pn_binding", "tipnr_entities"} - have:
             return jsonify({"error": "not found"}), 404
+        nm = norm_name(name)
         b = conn.execute(
             "SELECT entity_uniq, kind, tier FROM pn_binding "
             "WHERE book=? AND chapter=? AND verse=? AND name=? AND render=1 LIMIT 1",
-            (bk, int(ch), int(vs), norm_name(name))).fetchone()
+            (bk, int(ch), int(vs), nm)).fetchone()
+        if not b:
+            # The reader click can carry the hyphenated surface ("Beth-el") while the
+            # binding was keyed on english_head ("bethel") — a surface-form mismatch, not
+            # a missing bind. Retry ignoring hyphens/spaces, but only when it resolves to
+            # a SINGLE render bind at this verse (never guess between two).
+            compact = lambda s: (s or "").replace("-", "").replace(" ", "")
+            cn = compact(nm)
+            cand = [r for r in conn.execute(
+                "SELECT entity_uniq, kind, tier, name FROM pn_binding "
+                "WHERE book=? AND chapter=? AND verse=? AND render=1",
+                (bk, int(ch), int(vs))) if compact(r["name"]) == cn]
+            if len(cand) == 1:
+                b = cand[0]
         if not b:
             return jsonify({"error": "not found"}), 404
         e = conn.execute(

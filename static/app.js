@@ -564,9 +564,14 @@ if(entry.isKjv&&!isHebrew&&!isPN&&kjvCount!==null&&kjvCount>0)sections.push("kjv
 if(isHebrewWord&&activeText==="abp"&&abpBaseCount!==null&&abpBaseCount>0)sections.push("hebrewAbpOcc");if(isHebrewWord&&activeText==="heb"&&hebCount!==null&&hebCount>0)sections.push("hebrewOtOcc");if(isHebrewWord&&activeText==="kjv"&&kjvCount!==null&&kjvCount>0)sections.push("hebrewKjvOcc");if(isHebrewWord&&activeText==="bsb"&&bsbCount!==null&&bsbCount>0)sections.push("hebrewBsbOcc");// Nave's topical sits BELOW the lexicon/place cards (metaV, AI, BDB/LSJ) — it's a
 // study cross-link, not a definition, so it reads last among the reference blocks.
 if(naveData&&naveData.sections.length)sections.push("naveTopical");if(entry.derivation)sections.push("derivation");if(entry.book&&!entry.isExtra)sections.push("verse");if(occurrences>0||totalResults>0)sections.push("frequency");const renderSection=id=>{switch(id){case"boundEntity":{if(boundLoading&&!boundEntity)return/*#__PURE__*/React.createElement("section",{key:"boundEntity",className:"sec pnbound"},/*#__PURE__*/React.createElement("div",{className:"lsj-def lsj-def--loading"},"Looking up\u2026"));if(!boundEntity)return null;const be=boundEntity;const label=be.section==="place"?"Place":be.section==="person"?"Person":"Identity";const clean=s=>(s||"").replace(/\s*\(\?\)/g,"").trim();// drop TIPNR's "(?)" uncertainty marker
-// a clean one-liner: the person 'desc' is short; for a place fall to the
+// TIPNR's descr is a genuine description for PERSONS ("Man living at the time of …")
+// but for PLACES it's often just the name, a bare id ("Bethel_1"), or a cross-ref
+// string ("Mount Paran= in Paran (…)"). Cut the cross-ref tail at '=', drop a trailing
+// "_N" id; the "same as the name" test then hides whatever is left when it's just the
+// name, so only a real description survives as the subtitle.
+const descText=clean((be.desc||"").split("=")[0]).replace(/_\d+$/,"").trim();// a clean one-liner: the person 'desc' is short; for a place fall to the
 // summary's first clause (before "first/only mentioned").
-let line=be.desc&&be.desc.toLowerCase()!==be.name.toLowerCase()&&be.desc.length>4?be.desc:"";if(!line&&be.summary)line=be.summary.split(/,?\s*(?:first mentioned|only mentioned|referred to)/i)[0].replace(/\(+$/,"");line=clean(line);// TIPNR's summary opens "A location …" for nearly every place — a generic placeholder,
+let line=descText&&descText.toLowerCase()!==be.name.toLowerCase()&&descText.length>4?descText:"";if(!line&&be.summary)line=be.summary.split(/,?\s*(?:first mentioned|only mentioned|referred to)/i)[0].replace(/\(+$/,"");line=clean(line);// TIPNR's summary opens "A location …" for nearly every place — a generic placeholder,
 // not a real description. Drop it; real descriptions still show.
 if(/^(a location|a place|location|place)\.?$/i.test(line))line="";// area (Geo-area) is often just TIPNR's empty-breadcrumb ">" — strip stray > and blanks
 // so an empty geo-area shows NO row; real values (e.g. "Tribe of Simeon") stay as a label.
