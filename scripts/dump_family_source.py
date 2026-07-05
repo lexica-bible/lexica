@@ -87,6 +87,7 @@ def main():
     refs = [(r, "custom") for r in custom] if custom else DEFAULT
 
     conn = sqlite3.connect(f"file:{db}?mode=ro", uri=True)
+    conn.row_factory = sqlite3.Row
     print("== family source dump (READ-ONLY) — SOURCE line is the arbiter ==\n")
     for ref, label in refs:
         parts = ref.split()
