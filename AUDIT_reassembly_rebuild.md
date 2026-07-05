@@ -62,30 +62,58 @@ The main **reader** (chip/prose) DOES render the 364 word-order defects — it r
 from the word rows via `getEnglishOrderWords`. That surface is fixed by the words
 rebuild, not a redraw.
 
-## The fix: ONE canonical reorder (consolidation, not a patch)
+## Family adjudication (source-arbiter dump, 2026-07-04) — all self-adjudicated
+Every word-order family: the ABP **source order is unambiguous, the PROSE side
+(`load_abp_prose`) reproduces it, and the WORDS side (`build_words`) deviates.** For 5
+of 6 there is NO bracket, so the reorder function is not even acting — the word ROWS
+are mis-slotted at build time.
+
+| family (exemplar) | source order | wrong side |
+|---|---|---|
+| forces (Jer 48:1, 19:15) | of the / forces, / the / God | words (2nd `the` pulled forward) |
+| the-Christ (Mat 16:16) | the Christ, the son | words (same `the` pull) |
+| same (Rom 9:17) | this same thing | words (→ `thing same`) |
+| pronoun-fronting (Gen 7:1) | I beheld you | words (→ `beheld I you`) |
+| verb-particle (Mat 26:16) | deliver him up | words (→ `up he him`) |
+| paren-edge (Heb 10:8) | …the law) | words (`)` did not float past the reorder) |
+| Mat 21:19 (leak) | `[…]` MISSING its opening `[` | prose (parser choked on a malformed source) |
+
+**This INVERTS the canonical direction below.** The reliable order authority is
+`load_abp_prose` (reads source order directly, correct on all six), NOT the reader
+port. The port's reorder is fine; its *input rows* are the bad side.
+
+## The fix: consolidate on the correct order authority (not a patch)
 The divergence exists because two independent parsers reorder the same ABP source. The
 fix is not to patch each — it is to make BOTH stores flow through a **single canonical
 reorder implementation**, so they cannot diverge again by construction.
-1. **Canonical reorder = the proven Python port** (`scripts/reorder_english.py`, already
-   byte-equal to the reader's JS `getEnglishOrderWords`). It becomes the one arbiter of
-   English order for the corpus build.
-2. **Both stores built through it.** `build_words_from_abp` and the `verses.text` build
-   both call the canonical reorder; the old `load_abp_prose.reorder_bracket` is **retired
-   or delegates** to it. No second reorder survives.
-3. **Adjudicate fix-side per family against the ABP source FIRST** (`dump_family_source.py`
-   — the source line is the arbiter). Jer 48:1 confirmed: words side wrong. The other
-   families self-adjudicate from the source unless flagged AMBIGUOUS (duplicate digit /
-   nesting → printed-ABP tiebreak).
-4. **The 13 apparatus leaks** are `load_abp_prose` strip bugs (order digit / stray `G`);
-   they fall out once `verses.text` is built through the canonical path with proper
-   G-number + digit stripping.
-5. **Both stores rebuild from the pinned feed** (`abp_texts/`); neither is synced from
-   the other (standing rule).
-6. **punct-position (261):** decide separately — likely leave (cosmetic) or fold into the
-   canonical float. Not blocking.
+The order authority is `load_abp_prose`'s source reading (proven correct on every
+family). The reader port's REORDER stays; the fix is upstream, in how `build_words`
+slots tokens.
+1. **Fix `build_words` token slotting** so the word rows sit in source order (the 6
+   word-order families all trace here — non-bracket tokens placed out of order). Target
+   the split / article-attach step, not the reorder.
+2. **Verify by construction:** after the slot fix, `reassemble(word_rows)` via the port
+   must equal `verses.text`. That is exactly what v2 measures → drive v2 to zero.
+3. **paren-edge:** extend the canonical reorder float to include `)` (today only
+   `. , ; : ! ? ·`). Small, shared by prose + reader.
+4. **The 13 apparatus leaks:** `load_abp_prose` choked on malformed source brackets (a
+   `]` with no `[`, Mat 21:19). FIRST scan all 13 to confirm the shape, then either fix
+   the source lines or make the prose parser tolerate an unmatched bracket.
+5. **Both stores rebuild from the pinned feed** (`abp_texts/`); neither synced from the
+   other (standing rule).
+6. **punct-position (261):** decide separately — likely leave (cosmetic). Not blocking.
 7. **Redraw** only `G1096` (Mat 21:19), after the corpus is clean.
-8. **v2 guards ingest permanently** — wired into `cert_invariants.py` at zero, so the two
-   paths can never silently drift again.
+8. **v2 guards ingest permanently** — wired into `cert_invariants.py` at zero, so the
+   words rows and `verses.text` can never silently drift again.
+
+### Architecture choice for you
+Two ways to make them un-divergeable:
+- **(A) keep both builds, share the order decision + gate with v2** — `build_words` is
+  fixed to match `load_abp_prose`'s source order; v2 stays as the independent cross-check.
+  Keeps the independent oracle. Recommended.
+- **(B) derive `verses.text` FROM the fixed word rows** (retire `load_abp_prose`) — they
+  can't diverge, but v2 becomes trivial (same source) and you lose the independent oracle,
+  so it's only safe AFTER the slot fix. Not recommended while the rows are the buggy side.
 
 ## Gate block (must all pass before the rebuild swaps in)
 - `compare_words.py` diff reviewed (pinned live-stale cells only)
