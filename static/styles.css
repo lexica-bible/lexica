@@ -2671,8 +2671,13 @@ input { font-family: inherit; }
 .you-acct-name { font-size: 15px; font-weight: 600; color: var(--ink); margin-bottom: 10px; word-break: break-word; }
 .you-acct-actions { display: flex; gap: 8px; }
 .you-acct-actions .notes-tool-btn { flex: 1; }
-.you-row { width: 100%; text-align: left; font-size: 15px; color: var(--ink); padding: 12px 4px; }
-.you-row:active { background: var(--bg-sunk); }
+/* Drills to the About page — flex row, muted trailing chevron (same cue as
+   .rel-go / .dintro-passage-go), no container. Horizontal padding 0 so the label
+   lines up with the section labels above (the .mode-sec 18px does the inset). */
+.you-row { width: 100%; display: flex; align-items: center; text-align: left; min-height: 44px; font-size: 15px; color: var(--ink); padding: 12px 0; }
+.you-go { margin-left: auto; color: var(--ink-4); font-size: 16px; line-height: 1; transition: color 0.12s; }
+.you-row:active { color: var(--accent); }
+.you-row:active .you-go { color: var(--accent); }
 /* Checkable Text picker (mobile): tick 1 to read, 2-4 to compare side by side. */
 /* Text picker wraps when there are enough texts. Sized so a NORMAL user's four
    (ABP/KJV/BSB + HEB) sit on ONE line; the owner's six (+ESV/NIV) wrap to 4 + 2.

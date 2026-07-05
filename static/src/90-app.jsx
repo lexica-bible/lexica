@@ -48,7 +48,10 @@ function YouSheet({ email, name, libFontSize, changeFontSize, theme, setTheme, o
             </div>
           </div>
           <div className="mode-sec">
-            <button className="you-row listrow" onClick={onAbout}>About Lexica</button>
+            <button className="you-row listrow" onClick={onAbout}>
+              <span>About Lexica</span>
+              <span className="you-go" aria-hidden="true">›</span>
+            </button>
           </div>
         </div>
       </div>
