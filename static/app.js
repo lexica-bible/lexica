@@ -1099,6 +1099,37 @@ content=isTopicLike(editing.type)?/*#__PURE__*/React.createElement(TopicPage,{en
 const inspectEmpty=/*#__PURE__*/React.createElement(ZoneEmpty,{icon:/*#__PURE__*/React.createElement(Icon.Book,{width:"30",height:"30"}),title:isTopic?"Pick a verse":"Pick a claim",sub:isTopic?"Select a verse to see it in context.":"Select a node to see what grounds it."});// MOBILE: single column — switcher strip, then the list or the open item.
 if(isMobile)return/*#__PURE__*/React.createElement("div",{className:"study-view study-mobile"},/*#__PURE__*/React.createElement("div",{className:"study-topstrip"},switcher,topRight),editing?/*#__PURE__*/React.createElement("div",{className:"study-center-body"},content):railList);// DESKTOP: the uniform master-detail Shell — LEFT list · CENTER content · RIGHT inspect.
 return/*#__PURE__*/React.createElement(Shell,{isMobile:false,className:"study-shell",railClass:"study-rail-slot",centerClass:"study-center",rail:railList,center:/*#__PURE__*/React.createElement(React.Fragment,null,/*#__PURE__*/React.createElement("div",{className:"study-topstrip"},switcher,topRight),/*#__PURE__*/React.createElement("div",{className:"study-center-body"},content)),inspect:/*#__PURE__*/React.createElement(RightStack,{ctl:studyRs,root:null,className:"study-rstack",empty:inspectEmpty})});}// ============================================================
+// LIBRARY WORD-ORDER LOGIC — the two pure functions that decide reading order,
+// factored OUT of 59a-library-helpers.jsx so ONE copy serves both the app
+// (prose reorder + chip grouping in 59c-library-render.jsx) and the Node unit
+// test (tests/test_library_order.js). No React / no JSX / no external globals —
+// plain array math over a verse's `words` list.
+//
+//   getEnglishOrderWords — prose + (from Phase 3) chip English order. Within each
+//     bracket group sort by greek_pos ascending (ABP's superscript order digit:
+//     "[2fruit 1good]" -> "good fruit"); non-bracket words keep source position.
+//     Operates on FULL word objects, so every token keeps its Strong's tag and
+//     click identity through the reorder.
+//   groupForGreekMode — chip grouping: runs of same bracket_id, source order kept
+//     (the faithful ABP / mode-three order).
+//
+// Loads at prefix 56 (before 57-chrono, 59a-helpers, 59c-render, 60-library) so
+// the functions exist before any caller. The export guard at the tail is a no-op
+// in the browser (`module` is undefined there) and hands the functions to Node.
+// ============================================================
+// Reorder words for natural English reading:
+// within each bracket group sort by greek_pos ascending; non-bracket words keep position order.
+function getEnglishOrderWords(words){const bracketMap={};for(const w of words){const bid=w.bracket_id;if(bid!==null&&bid!==undefined){if(!bracketMap[bid])bracketMap[bid]=[];bracketMap[bid].push(w);}}// Trailing punctuation marks a clause boundary in the SOURCE order. After a
+// bracket group is reordered into English order, that punctuation must float
+// to the last word of the reordered group (Greek "were-completed ... earth,"
+// -> English "... earth were-completed,") instead of stranding on "earth".
+const TRAIL=/[.,;:!?·]+$/;for(const bid in bracketMap){let trailing="";const cleaned=[];for(const w of bracketMap[bid]){const eng=(w.english||"").trim();if(eng&&eng.replace(TRAIL,"")===""){// pure-punctuation token
+trailing+=eng;continue;}const m=eng.match(TRAIL);if(m){trailing+=m[0];cleaned.push({...w,english:eng.slice(0,eng.length-m[0].length).trimEnd()});}else{cleaned.push(w);}}cleaned.sort((a,b)=>(a.greek_pos??999)-(b.greek_pos??999));if(trailing&&cleaned.length){// Attach the floated punctuation to the last word that actually has English
+// text. Empty-gloss words (e.g. the σου/αὐτός pronouns folded into a
+// neighboring noun) would otherwise become a standalone "," token, which
+// renders with a stray leading space ("reprove , me") in prose mode.
+let li=cleaned.length-1;while(li>0&&!(cleaned[li].english||"").trim())li--;cleaned[li]={...cleaned[li],english:(cleaned[li].english||"")+trailing};}bracketMap[bid]=cleaned;}const result=[];const seen=new Set();for(const w of words){const bid=w.bracket_id;if(bid===null||bid===undefined){result.push(w);}else if(!seen.has(bid)){seen.add(bid);result.push(...bracketMap[bid]);}}return result;}// Group a position-sorted word list into runs by bracket_id for bracket notation rendering.
+function groupForGreekMode(words){const groups=[];let cur=null;for(const w of words){const bid=w.bracket_id!==null&&w.bracket_id!==undefined?w.bracket_id:null;if(bid===null){groups.push({isBracket:false,word:w});cur=null;}else{if(!cur||cur.bid!==bid){cur={isBracket:true,bid,words:[]};groups.push(cur);}cur.words.push(w);}}return groups;}if(typeof module!=="undefined"&&module.exports){module.exports={getEnglishOrderWords,groupForGreekMode};}// ============================================================
 // CHRONOLOGICAL RECONCILE — pure passage-lookup logic, factored OUT of LibraryView so ONE
 // copy is used by both the app (60-library.jsx: passageForRef + the reader-position
 // reconcile) and the Node unit test (tests/test_chrono_reconcile.js). No React here —
@@ -1230,19 +1261,10 @@ function highlightTerms(text,terms,partial,caseSensitive){if(!text||!terms||!ter
 }if(last<text.length)parts.push(text.slice(last));return parts;}// Search-range presets for the in-text search (mirrors eSword's range groups).
 // Each is [fromAbbrev, toAbbrev] over the canonical 66 books.
 const SEARCH_RANGES=[{id:"all",label:"Whole Bible",from:"Gen",to:"Rev"},{id:"ot",label:"Old Testament",from:"Gen",to:"Mal"},{id:"nt",label:"New Testament",from:"Mat",to:"Rev"},{id:"pent",label:"Pentateuch (Gen–Deu)",from:"Gen",to:"Deu"},{id:"hist",label:"History (Jos–Est)",from:"Jos",to:"Est"},{id:"wis",label:"Wisdom (Job–Son)",from:"Job",to:"Son"},{id:"maj",label:"Major Prophets (Isa–Dan)",from:"Isa",to:"Dan"},{id:"min",label:"Minor Prophets (Hos–Mal)",from:"Hos",to:"Mal"},{id:"gos",label:"Gospels & Acts (Mat–Act)",from:"Mat",to:"Act"},{id:"paul",label:"Paul's Letters (Rom–Heb)",from:"Rom",to:"Heb"},{id:"gen",label:"General Letters (Jas–Jud)",from:"Jas",to:"Jud"},{id:"apoc",label:"Apocalypse (Rev)",from:"Rev",to:"Rev"}];// Canonical book list (abbrev order) for the from/to pickers.
-const SEARCH_BOOK_LIST=Object.keys(BOOK_ORDER);// Reorder words for natural English reading:
-// within each bracket group sort by greek_pos ascending; non-bracket words keep position order.
-function getEnglishOrderWords(words){const bracketMap={};for(const w of words){const bid=w.bracket_id;if(bid!==null&&bid!==undefined){if(!bracketMap[bid])bracketMap[bid]=[];bracketMap[bid].push(w);}}// Trailing punctuation marks a clause boundary in the SOURCE order. After a
-// bracket group is reordered into English order, that punctuation must float
-// to the last word of the reordered group (Greek "were-completed ... earth,"
-// -> English "... earth were-completed,") instead of stranding on "earth".
-const TRAIL=/[.,;:!?·]+$/;for(const bid in bracketMap){let trailing="";const cleaned=[];for(const w of bracketMap[bid]){const eng=(w.english||"").trim();if(eng&&eng.replace(TRAIL,"")===""){// pure-punctuation token
-trailing+=eng;continue;}const m=eng.match(TRAIL);if(m){trailing+=m[0];cleaned.push({...w,english:eng.slice(0,eng.length-m[0].length).trimEnd()});}else{cleaned.push(w);}}cleaned.sort((a,b)=>(a.greek_pos??999)-(b.greek_pos??999));if(trailing&&cleaned.length){// Attach the floated punctuation to the last word that actually has English
-// text. Empty-gloss words (e.g. the σου/αὐτός pronouns folded into a
-// neighboring noun) would otherwise become a standalone "," token, which
-// renders with a stray leading space ("reprove , me") in prose mode.
-let li=cleaned.length-1;while(li>0&&!(cleaned[li].english||"").trim())li--;cleaned[li]={...cleaned[li],english:(cleaned[li].english||"")+trailing};}bracketMap[bid]=cleaned;}const result=[];const seen=new Set();for(const w of words){const bid=w.bracket_id;if(bid===null||bid===undefined){result.push(w);}else if(!seen.has(bid)){seen.add(bid);result.push(...bracketMap[bid]);}}return result;}// Group a position-sorted word list into runs by bracket_id for bracket notation rendering.
-function groupForGreekMode(words){const groups=[];let cur=null;for(const w of words){const bid=w.bracket_id!==null&&w.bracket_id!==undefined?w.bracket_id:null;if(bid===null){groups.push({isBracket:false,word:w});cur=null;}else{if(!cur||cur.bid!==bid){cur={isBracket:true,bid,words:[]};groups.push(cur);}cur.words.push(w);}}return groups;}// 59b — Library nav/picker sub-components + the non-canon text list + the
+const SEARCH_BOOK_LIST=Object.keys(BOOK_ORDER);// getEnglishOrderWords + groupForGreekMode moved to 56-library-order-logic.jsx
+// (loads earlier in the bundle) so the SAME copy serves the app and the Node
+// unit test tests/test_library_order.js. They remain plain globals here.
+// 59b — Library nav/picker sub-components + the non-canon text list + the
 //       restore-from-localStorage helpers, split out of 60-library.jsx.
 //       Loads between 59a-library-helpers and 60-library.
 //       Holds: LibNavPanel · MobileBookPicker · ModesSheet · _BOOK_DIV ·

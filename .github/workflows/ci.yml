@@ -54,3 +54,4 @@ jobs:
           node tests/test_ac_word_groups.js
           node tests/test_rstack_logic.js
           node tests/test_chrono_reconcile.js
+          node tests/test_library_order.js

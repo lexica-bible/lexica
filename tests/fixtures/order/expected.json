@@ -1,0 +1,9506 @@
+{
+ "api__chapter__Joh__1.json#1": {
+  "prose": [
+   "In",
+   "the beginning",
+   "was",
+   "the",
+   "word,",
+   "and",
+   "the",
+   "word",
+   "was",
+   "with",
+   "God,",
+   "and",
+   "the",
+   "word",
+   "was",
+   "God."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "b": 1,
+    "pos": [
+     13,
+     14,
+     15,
+     16
+    ]
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#2": {
+  "prose": [
+   "This one",
+   "was",
+   "in",
+   "the beginning",
+   "with",
+   "God."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#3": {
+  "prose": [
+   "All",
+   "through",
+   "him",
+   "existed,",
+   "and",
+   "apart from",
+   "him",
+   "existed",
+   "not even",
+   "one thing",
+   "which",
+   "exists."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#4": {
+  "prose": [
+   "In",
+   "him",
+   "was life,",
+   "and",
+   "the",
+   "life",
+   "was",
+   "the",
+   "light",
+   "of men."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#5": {
+  "prose": [
+   "And",
+   "the",
+   "light",
+   "in",
+   "the",
+   "darkness",
+   "appears,",
+   "and",
+   "the",
+   "darkness",
+   "overtook",
+   "it",
+   "not."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "b": 1,
+    "pos": [
+     10,
+     11,
+     12
+    ]
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#6": {
+  "prose": [
+   "There existed",
+   "a man",
+   "being sent",
+   "by",
+   "God,",
+   "the name",
+   "to him —",
+   "John."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#7": {
+  "prose": [
+   "This one",
+   "came",
+   "for",
+   "a witness",
+   "that",
+   "he should witness",
+   "concerning",
+   "the",
+   "light,",
+   "that",
+   "all",
+   "should believe",
+   "through",
+   "him."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#8": {
+  "prose": [
+   "That one",
+   "was not",
+   "the",
+   "light,",
+   "but",
+   "that",
+   "he should witness",
+   "concerning",
+   "the",
+   "light."
+  ],
+  "chip": [
+   {
+    "b": 1,
+    "pos": [
+     0,
+     1,
+     2
+    ]
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#9": {
+  "prose": [
+   "The",
+   "true",
+   "light",
+   "was",
+   "which",
+   "lightens",
+   "every",
+   "man",
+   "coming",
+   "into",
+   "the",
+   "world."
+  ],
+  "chip": [
+   {
+    "b": 1,
+    "pos": [
+     0,
+     1,
+     2,
+     3,
+     4
+    ]
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#10": {
+  "prose": [
+   "He was",
+   "in",
+   "the",
+   "world,",
+   "and",
+   "the",
+   "world",
+   "by",
+   "him",
+   "existed,",
+   "and",
+   "the",
+   "world",
+   "knew",
+   "him",
+   "not."
+  ],
+  "chip": [
+   {
+    "b": 1,
+    "pos": [
+     0,
+     1,
+     2,
+     3
+    ]
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "b": 2,
+    "pos": [
+     13,
+     14,
+     15
+    ]
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#11": {
+  "prose": [
+   "Unto",
+   "his",
+   "own",
+   "he came,",
+   "and",
+   "his",
+   "own",
+   "received",
+   "him",
+   "not."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "b": 1,
+    "pos": [
+     7,
+     8,
+     9
+    ]
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#12": {
+  "prose": [
+   "But",
+   "as many as",
+   "received",
+   "him,",
+   "he gave",
+   "to them",
+   "authority",
+   "to become",
+   "children",
+   "of God,",
+   "to the ones",
+   "believing",
+   "in",
+   "his name;"
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "b": 1,
+    "pos": [
+     7,
+     8,
+     9
+    ]
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#13": {
+  "prose": [
+   "the ones who",
+   "not",
+   "from",
+   "blood,",
+   "nor",
+   "from",
+   "will",
+   "of flesh,",
+   "nor",
+   "from",
+   "will",
+   "of man,",
+   "but",
+   "from",
+   "God",
+   "were born."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#14": {
+  "prose": [
+   "And",
+   "the",
+   "word",
+   "became",
+   "flesh,",
+   "and",
+   "tented",
+   "among",
+   "us,",
+   "and",
+   "we saw",
+   "his glory,",
+   "glory",
+   "as",
+   "an only child",
+   "of",
+   "the father,",
+   "full",
+   "of favor",
+   "and",
+   "truth."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "b": 1,
+    "pos": [
+     3,
+     4
+    ]
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "pos": 19
+   },
+   {
+    "pos": 20
+   },
+   {
+    "pos": 21
+   },
+   {
+    "pos": 22
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#15": {
+  "prose": [
+   "John",
+   "witnessed",
+   "concerning",
+   "him,",
+   "and",
+   "cried out,",
+   "saying,",
+   "This",
+   "was",
+   "whom",
+   "I said,",
+   "The one",
+   "coming",
+   "after",
+   "me",
+   "was",
+   "before",
+   "me,",
+   "for",
+   "he was",
+   "foremost over",
+   "me."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "b": 1,
+    "pos": [
+     12,
+     13,
+     14
+    ]
+   },
+   {
+    "b": 2,
+    "pos": [
+     15,
+     16,
+     17
+    ]
+   },
+   {
+    "pos": 18
+   },
+   {
+    "b": 3,
+    "pos": [
+     19,
+     20,
+     21
+    ]
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#16": {
+  "prose": [
+   "And",
+   "from out of",
+   "his fullness",
+   "we",
+   "all",
+   "received,",
+   "even",
+   "favor",
+   "upon",
+   "favor."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#17": {
+  "prose": [
+   "For",
+   "the",
+   "law",
+   "was given",
+   "through",
+   "Moses;",
+   "the",
+   "favor",
+   "and",
+   "the",
+   "truth",
+   "came",
+   "through",
+   "Jesus",
+   "Christ."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "b": 1,
+    "pos": [
+     3,
+     4,
+     5
+    ]
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "b": 2,
+    "pos": [
+     11,
+     12,
+     13,
+     14
+    ]
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#18": {
+  "prose": [
+   "No one",
+   "has seen",
+   "God",
+   "at any time;",
+   "the",
+   "only born",
+   "son,",
+   "the one",
+   "being",
+   "in",
+   "the",
+   "bosom",
+   "of the",
+   "father,",
+   "that one",
+   "described him."
+  ],
+  "chip": [
+   {
+    "b": 1,
+    "pos": [
+     0,
+     1,
+     2
+    ]
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#19": {
+  "prose": [
+   "And",
+   "this",
+   "is",
+   "the",
+   "witness",
+   "of John,",
+   "when",
+   "the",
+   "Jews",
+   "sent",
+   "from",
+   "Jerusalem",
+   "priests",
+   "and",
+   "Levites,",
+   "that",
+   "they should ask",
+   "him,",
+   "Who",
+   "are",
+   "you?"
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "b": 1,
+    "pos": [
+     8,
+     9,
+     10
+    ]
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "b": 2,
+    "pos": [
+     19,
+     20,
+     21
+    ]
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#20": {
+  "prose": [
+   "And",
+   "he acknowledged,",
+   "and",
+   "did not",
+   "deny;",
+   "and",
+   "acknowledged",
+   "that,",
+   "I am",
+   "not",
+   "the",
+   "Christ."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "b": 1,
+    "pos": [
+     8,
+     9
+    ]
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#21": {
+  "prose": [
+   "And",
+   "they asked",
+   "him,",
+   "What",
+   "then?",
+   "Are",
+   "you",
+   "Elijah?",
+   "And",
+   "he says,",
+   "I am not.",
+   "Are",
+   "you",
+   "the",
+   "prophet?",
+   "And",
+   "he answered,",
+   "No."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "b": 1,
+    "pos": [
+     5,
+     6,
+     7
+    ]
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "b": 2,
+    "pos": [
+     12,
+     13,
+     14,
+     15
+    ]
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#22": {
+  "prose": [
+   "They said",
+   "then",
+   "to him,",
+   "Who",
+   "are you?",
+   "that",
+   "an answer",
+   "we should give",
+   "to the ones",
+   "having sent",
+   "us;",
+   "what",
+   "say you",
+   "concerning",
+   "yourself?"
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#23": {
+  "prose": [
+   "He said,",
+   "I am",
+   "a voice",
+   "yelling",
+   "in",
+   "the",
+   "wilderness,",
+   "Straighten",
+   "the",
+   "way",
+   "of the LORD!",
+   "as",
+   "said",
+   "Isaiah",
+   "the",
+   "prophet."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#24": {
+  "prose": [
+   "And",
+   "the ones",
+   "being sent",
+   "were",
+   "of",
+   "the",
+   "Pharisees."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#25": {
+  "prose": [
+   "And",
+   "they asked",
+   "him,",
+   "and",
+   "said",
+   "to him,",
+   "Why",
+   "then",
+   "do you immerse,",
+   "if",
+   "you",
+   "are not",
+   "the",
+   "Christ,",
+   "nor",
+   "Elijah,",
+   "nor",
+   "the",
+   "prophet?"
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "pos": 19
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#26": {
+  "prose": [
+   "John",
+   "answered",
+   "to them,",
+   "saying,",
+   "I",
+   "immerse",
+   "in",
+   "water;",
+   "but",
+   "in the midst",
+   "of you",
+   "stands",
+   "whom",
+   "you",
+   "know",
+   "not."
+  ],
+  "chip": [
+   {
+    "b": 1,
+    "pos": [
+     0,
+     1,
+     2,
+     3
+    ]
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#27": {
+  "prose": [
+   "He",
+   "is",
+   "the one",
+   "coming",
+   "after",
+   "me,",
+   "who",
+   "exists",
+   "before",
+   "me,",
+   "of whom",
+   "I",
+   "am not",
+   "worthy",
+   "that",
+   "I should untie",
+   "his",
+   "strap",
+   "of the",
+   "sandal."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "b": 1,
+    "pos": [
+     3,
+     4,
+     5
+    ]
+   },
+   {
+    "pos": 6
+   },
+   {
+    "b": 2,
+    "pos": [
+     7,
+     8,
+     9
+    ]
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "pos": 19
+   },
+   {
+    "pos": 20
+   },
+   {
+    "pos": 21
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#28": {
+  "prose": [
+   "These things",
+   "in",
+   "Bethany",
+   "took place",
+   "on the other side",
+   "of the",
+   "Jordan,",
+   "where",
+   "John",
+   "was",
+   "immersing."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#29": {
+  "prose": [
+   "The",
+   "next day",
+   "John sees",
+   "Jesus",
+   "coming",
+   "to",
+   "him,",
+   "and",
+   "he says,",
+   "See",
+   "the",
+   "lamb",
+   "of God!",
+   "the one",
+   "carrying",
+   "the",
+   "sin",
+   "of the",
+   "world."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "pos": 19
+   },
+   {
+    "pos": 20
+   },
+   {
+    "pos": 21
+   },
+   {
+    "pos": 22
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#30": {
+  "prose": [
+   "This",
+   "is",
+   "concerning",
+   "of whom",
+   "I",
+   "said,",
+   "After",
+   "me",
+   "comes",
+   "a man,",
+   "who",
+   "was",
+   "before",
+   "me,",
+   "for",
+   "he was",
+   "foremost over",
+   "me."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "b": 1,
+    "pos": [
+     11,
+     12,
+     13
+    ]
+   },
+   {
+    "pos": 14
+   },
+   {
+    "b": 2,
+    "pos": [
+     15,
+     16,
+     17
+    ]
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#31": {
+  "prose": [
+   "And I",
+   "did not",
+   "know",
+   "him;",
+   "but",
+   "that",
+   "he should be made manifest",
+   "to",
+   "Israel —",
+   "on account of",
+   "this",
+   "I",
+   "came",
+   "in",
+   "the",
+   "water",
+   "immersing."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#32": {
+  "prose": [
+   "And",
+   "John",
+   "witnessed,",
+   "saying",
+   "that,",
+   "I saw",
+   "the",
+   "spirit",
+   "descending",
+   "as",
+   "a dove",
+   "from out of",
+   "heaven,",
+   "and",
+   "it remained",
+   "upon",
+   "him."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#33": {
+  "prose": [
+   "And I",
+   "did not",
+   "know",
+   "him;",
+   "but",
+   "the one",
+   "having sent me forth",
+   "to immerse",
+   "in",
+   "water,",
+   "that one",
+   "said to me,",
+   "Upon",
+   "whom",
+   "ever",
+   "you should behold",
+   "the",
+   "spirit",
+   "descending",
+   "and",
+   "remaining",
+   "upon",
+   "him,",
+   "he",
+   "is",
+   "the one",
+   "immersing",
+   "by",
+   "holy",
+   "spirit."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "pos": 19
+   },
+   {
+    "pos": 20
+   },
+   {
+    "pos": 21
+   },
+   {
+    "pos": 22
+   },
+   {
+    "pos": 23
+   },
+   {
+    "pos": 24
+   },
+   {
+    "pos": 25
+   },
+   {
+    "pos": 26
+   },
+   {
+    "pos": 27
+   },
+   {
+    "pos": 28
+   },
+   {
+    "pos": 29
+   },
+   {
+    "b": 1,
+    "pos": [
+     30,
+     31
+    ]
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#34": {
+  "prose": [
+   "And I",
+   "have seen,",
+   "and",
+   "I have witnessed",
+   "that",
+   "this",
+   "is",
+   "the",
+   "son",
+   "of God."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#35": {
+  "prose": [
+   "The",
+   "next day",
+   "again",
+   "John stood,",
+   "and",
+   "two",
+   "of",
+   "his disciples."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "b": 1,
+    "pos": [
+     7,
+     8,
+     9,
+     10,
+     11
+    ]
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#36": {
+  "prose": [
+   "And",
+   "looking at",
+   "Jesus",
+   "walking,",
+   "he says,",
+   "Behold",
+   "the",
+   "lamb",
+   "of God!"
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#37": {
+  "prose": [
+   "And",
+   "the",
+   "two",
+   "disciples",
+   "heard",
+   "him",
+   "speaking,",
+   "and",
+   "they followed",
+   "Jesus."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "b": 1,
+    "pos": [
+     1,
+     2,
+     3,
+     4,
+     5
+    ]
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#38": {
+  "prose": [
+   "And",
+   "Jesus",
+   "having turned,",
+   "and",
+   "seeing",
+   "them",
+   "following,",
+   "says",
+   "to them",
+   "What",
+   "do you seek?",
+   "And",
+   "they",
+   "said",
+   "to him,",
+   "Rabbi,",
+   "which",
+   "is to say,",
+   "being translated,",
+   "Teacher,",
+   "where",
+   "do you stay?"
+  ],
+  "chip": [
+   {
+    "b": 1,
+    "pos": [
+     0,
+     1,
+     2,
+     3
+    ]
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "pos": 19
+   },
+   {
+    "pos": 20
+   },
+   {
+    "pos": 21
+   },
+   {
+    "pos": 22
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#39": {
+  "prose": [
+   "He says",
+   "to them,",
+   "Come",
+   "and",
+   "see!",
+   "They came",
+   "and",
+   "saw",
+   "where",
+   "he stayed,",
+   "and",
+   "they stayed",
+   "with",
+   "him",
+   "that",
+   "day.",
+   "And",
+   "the hour",
+   "was",
+   "about",
+   "the tenth."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "b": 1,
+    "pos": [
+     11,
+     12,
+     13
+    ]
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "pos": 19
+   },
+   {
+    "pos": 20
+   },
+   {
+    "pos": 21
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#40": {
+  "prose": [
+   "Andrew",
+   "the",
+   "brother",
+   "of Simon",
+   "Peter",
+   "was",
+   "one",
+   "of",
+   "the",
+   "two",
+   "of the ones",
+   "having heard",
+   "from",
+   "John,",
+   "and",
+   "having followed",
+   "him."
+  ],
+  "chip": [
+   {
+    "b": 1,
+    "pos": [
+     0,
+     1,
+     2,
+     3,
+     4,
+     5
+    ]
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#41": {
+  "prose": [
+   "He",
+   "first",
+   "finds",
+   "his own",
+   "brother",
+   "Simon,",
+   "and",
+   "says",
+   "to him,",
+   "We have found",
+   "the",
+   "Messiah,",
+   "which",
+   "is",
+   "being translated,",
+   "Christ."
+  ],
+  "chip": [
+   {
+    "b": 1,
+    "pos": [
+     0,
+     1,
+     2
+    ]
+   },
+   {
+    "pos": 3
+   },
+   {
+    "b": 2,
+    "pos": [
+     4,
+     5
+    ]
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#42": {
+  "prose": [
+   "And",
+   "he led",
+   "him",
+   "to",
+   "Jesus.",
+   "And",
+   "looking at",
+   "him,",
+   "Jesus",
+   "said,",
+   "You",
+   "are",
+   "Simon",
+   "the",
+   "son",
+   "of Jonah,",
+   "you",
+   "shall be called",
+   "Cephas;",
+   "which",
+   "is translated,",
+   "A piece of rock."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "pos": 19
+   },
+   {
+    "pos": 20
+   },
+   {
+    "pos": 21
+   },
+   {
+    "pos": 22
+   },
+   {
+    "pos": 23
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#43": {
+  "prose": [
+   "The",
+   "next day",
+   "he wanted",
+   "to go forth",
+   "into",
+   "Galilee,",
+   "and",
+   "he finds",
+   "Philip,",
+   "and",
+   "Jesus",
+   "says",
+   "to him,",
+   "Follow",
+   "me!"
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "b": 1,
+    "pos": [
+     11,
+     12,
+     13,
+     14
+    ]
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#44": {
+  "prose": [
+   "And",
+   "Philip",
+   "was",
+   "from",
+   "Bethsaida,",
+   "from out of",
+   "the",
+   "city",
+   "of Andrew",
+   "and",
+   "Peter."
+  ],
+  "chip": [
+   {
+    "b": 1,
+    "pos": [
+     0,
+     1,
+     2,
+     3
+    ]
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#45": {
+  "prose": [
+   "Philip",
+   "finds",
+   "Nathanael,",
+   "and",
+   "says",
+   "to him,",
+   "The one whom",
+   "Moses",
+   "wrote",
+   "in",
+   "the",
+   "law,",
+   "and",
+   "the",
+   "prophets,",
+   "we have found —",
+   "Jesus",
+   "the",
+   "son",
+   "of Joseph,",
+   "the one",
+   "from",
+   "Nazareth."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "pos": 19
+   },
+   {
+    "pos": 20
+   },
+   {
+    "pos": 21
+   },
+   {
+    "pos": 22
+   },
+   {
+    "pos": 23
+   },
+   {
+    "pos": 24
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#46": {
+  "prose": [
+   "And",
+   "Nathanael",
+   "said",
+   "to him,",
+   "Is anything",
+   "good",
+   "able",
+   "to be",
+   "from out of",
+   "Nazareth?",
+   "Philip",
+   "says",
+   "to him,",
+   "Come",
+   "and",
+   "see!"
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "b": 1,
+    "pos": [
+     1,
+     2,
+     3
+    ]
+   },
+   {
+    "b": 2,
+    "pos": [
+     4,
+     5,
+     6,
+     7,
+     8,
+     9
+    ]
+   },
+   {
+    "b": 3,
+    "pos": [
+     10,
+     11,
+     12
+    ]
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#47": {
+  "prose": [
+   "Jesus beheld",
+   "Nathanael",
+   "coming",
+   "to",
+   "him,",
+   "and",
+   "says",
+   "concerning",
+   "him,",
+   "See!",
+   "truly",
+   "an Israelite",
+   "in",
+   "whom",
+   "there is no",
+   "deceit."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "b": 1,
+    "pos": [
+     17,
+     18
+    ]
+   },
+   {
+    "pos": 19
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#48": {
+  "prose": [
+   "Nathanael",
+   "says",
+   "to him,",
+   "From what place",
+   "do you know",
+   "me?",
+   "Jesus answered",
+   "and",
+   "said",
+   "to him,",
+   "Before",
+   "Philip",
+   "calling",
+   "you,",
+   "being",
+   "under",
+   "the",
+   "fig-tree,",
+   "I beheld",
+   "you."
+  ],
+  "chip": [
+   {
+    "b": 1,
+    "pos": [
+     0,
+     1,
+     2
+    ]
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "b": 2,
+    "pos": [
+     14,
+     15,
+     16
+    ]
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "pos": 19
+   },
+   {
+    "pos": 20
+   },
+   {
+    "pos": 21
+   },
+   {
+    "pos": 22
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#49": {
+  "prose": [
+   "Nathanael",
+   "responded",
+   "and",
+   "says",
+   "to him,",
+   "Rabbi,",
+   "you",
+   "are",
+   "the",
+   "son",
+   "of God,",
+   "you",
+   "are",
+   "the",
+   "king",
+   "of Israel."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#50": {
+  "prose": [
+   "Jesus",
+   "responded",
+   "and",
+   "said",
+   "to him,",
+   "Because",
+   "I said",
+   "to you,",
+   "I beheld",
+   "you",
+   "underneath",
+   "the",
+   "fig-tree,",
+   "you believe?",
+   "Greater things",
+   "than these",
+   "you shall see."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   }
+  ]
+ },
+ "api__chapter__Joh__1.json#51": {
+  "prose": [
+   "And",
+   "he says",
+   "to him,",
+   "Amen,",
+   "amen,",
+   "I say",
+   "to you,",
+   "From",
+   "now on",
+   "you shall see",
+   "the",
+   "heaven",
+   "opening,",
+   "and",
+   "the",
+   "angels",
+   "of God",
+   "ascending",
+   "and",
+   "descending",
+   "upon",
+   "the",
+   "son",
+   "of man."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "pos": 19
+   },
+   {
+    "pos": 20
+   },
+   {
+    "pos": 21
+   },
+   {
+    "pos": 22
+   },
+   {
+    "pos": 23
+   },
+   {
+    "pos": 24
+   },
+   {
+    "pos": 25
+   }
+  ]
+ },
+ "api__chapter__Gen__1.json#1": {
+  "prose": [
+   "In",
+   "the beginning",
+   "God",
+   "made",
+   "the",
+   "heaven",
+   "and",
+   "the",
+   "earth."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   }
+  ]
+ },
+ "api__chapter__Gen__1.json#2": {
+  "prose": [
+   "But",
+   "the",
+   "earth",
+   "was",
+   "unseen",
+   "and",
+   "unready,",
+   "and",
+   "darkness",
+   "was upon",
+   "the",
+   "abyss,",
+   "and",
+   "spirit",
+   "of God",
+   "bore",
+   "upon",
+   "the",
+   "water."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   }
+  ]
+ },
+ "api__chapter__Gen__1.json#3": {
+  "prose": [
+   "And",
+   "God",
+   "said,",
+   "Let there be",
+   "light!",
+   "And",
+   "there was",
+   "light."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   }
+  ]
+ },
+ "api__chapter__Gen__1.json#4": {
+  "prose": [
+   "And",
+   "God",
+   "beheld",
+   "the",
+   "light",
+   "that",
+   "it was good.",
+   "And",
+   "God",
+   "parted",
+   "between",
+   "the",
+   "light",
+   "and",
+   "between",
+   "the",
+   "darkness."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   }
+  ]
+ },
+ "api__chapter__Gen__1.json#5": {
+  "prose": [
+   "And",
+   "God",
+   "called",
+   "the",
+   "light,",
+   "Day,",
+   "and",
+   "the",
+   "darkness",
+   "he called,",
+   "Night;",
+   "and",
+   "there was",
+   "evening",
+   "and",
+   "there was",
+   "morning,",
+   "day",
+   "one."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "pos": 19
+   }
+  ]
+ },
+ "api__chapter__Gen__1.json#6": {
+  "prose": [
+   "And",
+   "God",
+   "said,",
+   "Let there be",
+   "a firmament",
+   "in",
+   "the midst",
+   "of the",
+   "water,",
+   "and",
+   "let it be",
+   "for parting",
+   "between",
+   "water",
+   "and",
+   "water!"
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   }
+  ]
+ },
+ "api__chapter__Gen__1.json#7": {
+  "prose": [
+   "And",
+   "God",
+   "made",
+   "the",
+   "firmament,",
+   "and",
+   "God",
+   "parted",
+   "between",
+   "the",
+   "water",
+   "which",
+   "was",
+   "underneath",
+   "the",
+   "firmament,",
+   "and",
+   "between",
+   "the",
+   "water",
+   "above",
+   "the",
+   "firmament."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "pos": 19
+   },
+   {
+    "pos": 20
+   },
+   {
+    "pos": 21
+   },
+   {
+    "pos": 22
+   },
+   {
+    "pos": 23
+   },
+   {
+    "pos": 24
+   },
+   {
+    "pos": 25
+   }
+  ]
+ },
+ "api__chapter__Gen__1.json#8": {
+  "prose": [
+   "And",
+   "God",
+   "called",
+   "the",
+   "firmament,",
+   "Heaven.",
+   "And",
+   "God",
+   "beheld",
+   "that",
+   "it was good;",
+   "and",
+   "there was",
+   "evening",
+   "and",
+   "there was",
+   "morning,",
+   "the second",
+   "day."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "b": 1,
+    "pos": [
+     19,
+     20
+    ]
+   }
+  ]
+ },
+ "api__chapter__Gen__1.json#9": {
+  "prose": [
+   "And",
+   "God",
+   "said,",
+   "Let",
+   "the",
+   "water",
+   "underneath",
+   "the",
+   "heaven",
+   "come together",
+   "into",
+   "one",
+   "gathering,",
+   "and",
+   "let",
+   "the",
+   "dry land",
+   "appear!",
+   "And",
+   "it was",
+   "so.",
+   "And",
+   "the",
+   "water",
+   "underneath",
+   "the",
+   "heaven",
+   "gathered together",
+   "into",
+   "their",
+   "gatherings,",
+   "and",
+   "the",
+   "dry land",
+   "appeared."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "b": 1,
+    "pos": [
+     5,
+     6,
+     7,
+     8,
+     9,
+     10,
+     11
+    ]
+   },
+   {
+    "pos": 12
+   },
+   {
+    "b": 2,
+    "pos": [
+     13,
+     14
+    ]
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "b": 3,
+    "pos": [
+     17,
+     18,
+     19
+    ]
+   },
+   {
+    "pos": 20
+   },
+   {
+    "pos": 21
+   },
+   {
+    "pos": 22
+   },
+   {
+    "pos": 23
+   },
+   {
+    "b": 4,
+    "pos": [
+     24,
+     25,
+     26,
+     27,
+     28,
+     29,
+     30
+    ]
+   },
+   {
+    "pos": 31
+   },
+   {
+    "pos": 32
+   },
+   {
+    "pos": 33
+   },
+   {
+    "pos": 34
+   },
+   {
+    "pos": 35
+   },
+   {
+    "b": 5,
+    "pos": [
+     36,
+     37,
+     38
+    ]
+   }
+  ]
+ },
+ "api__chapter__Gen__1.json#10": {
+  "prose": [
+   "And",
+   "God",
+   "called",
+   "the",
+   "dry land,",
+   "Earth;",
+   "and",
+   "the",
+   "collections",
+   "of the",
+   "waters",
+   "he called,",
+   "Seas.",
+   "And",
+   "God",
+   "beheld",
+   "that",
+   "it was good."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "pos": 19
+   }
+  ]
+ },
+ "api__chapter__Gen__1.json#11": {
+  "prose": [
+   "And",
+   "God",
+   "said,",
+   "Let",
+   "the",
+   "earth",
+   "grow",
+   "pasturage",
+   "of grass",
+   "sowing",
+   "seed",
+   "according to",
+   "type,",
+   "and",
+   "according to",
+   "likeness,",
+   "and",
+   "the fruitful",
+   "tree",
+   "producing",
+   "fruit",
+   "which",
+   "the",
+   "seed",
+   "of it",
+   "is in",
+   "it,",
+   "according to",
+   "type",
+   "upon",
+   "the",
+   "earth!",
+   "And",
+   "it was",
+   "so."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "b": 1,
+    "pos": [
+     5,
+     6,
+     7
+    ]
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "b": 2,
+    "pos": [
+     18,
+     19
+    ]
+   },
+   {
+    "pos": 20
+   },
+   {
+    "pos": 21
+   },
+   {
+    "pos": 22
+   },
+   {
+    "pos": 23
+   },
+   {
+    "pos": 24
+   },
+   {
+    "pos": 25
+   },
+   {
+    "pos": 26
+   },
+   {
+    "pos": 27
+   },
+   {
+    "pos": 28
+   },
+   {
+    "pos": 29
+   },
+   {
+    "pos": 30
+   },
+   {
+    "pos": 31
+   },
+   {
+    "pos": 32
+   },
+   {
+    "pos": 33
+   },
+   {
+    "pos": 34
+   },
+   {
+    "pos": 35
+   }
+  ]
+ },
+ "api__chapter__Gen__1.json#12": {
+  "prose": [
+   "And",
+   "the",
+   "earth",
+   "brought forth",
+   "pasturage",
+   "of grass",
+   "sowing",
+   "seed,",
+   "according to",
+   "type,",
+   "and",
+   "according to",
+   "likeness;",
+   "and",
+   "the fruitful",
+   "tree",
+   "producing",
+   "fruit",
+   "which",
+   "the",
+   "seed",
+   "of it",
+   "is in",
+   "it,",
+   "according to",
+   "type",
+   "upon",
+   "the",
+   "earth."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "b": 1,
+    "pos": [
+     1,
+     2,
+     3
+    ]
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "b": 2,
+    "pos": [
+     14,
+     15
+    ]
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "pos": 19
+   },
+   {
+    "pos": 20
+   },
+   {
+    "pos": 21
+   },
+   {
+    "pos": 22
+   },
+   {
+    "pos": 23
+   },
+   {
+    "pos": 24
+   },
+   {
+    "pos": 25
+   },
+   {
+    "pos": 26
+   },
+   {
+    "pos": 27
+   },
+   {
+    "pos": 28
+   }
+  ]
+ },
+ "api__chapter__Gen__1.json#13": {
+  "prose": [
+   "And",
+   "God",
+   "beheld",
+   "that",
+   "it was good.",
+   "And",
+   "there was",
+   "evening",
+   "and",
+   "there was",
+   "morning,",
+   "the third",
+   "day."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "b": 1,
+    "pos": [
+     12,
+     13
+    ]
+   }
+  ]
+ },
+ "api__chapter__Gen__1.json#14": {
+  "prose": [
+   "And",
+   "God",
+   "said,",
+   "Let there be",
+   "luminaries",
+   "in",
+   "the",
+   "firmament",
+   "of the",
+   "heaven",
+   "for",
+   "giving light",
+   "upon",
+   "the",
+   "earth,",
+   "to part",
+   "between",
+   "the",
+   "day",
+   "and",
+   "between",
+   "the",
+   "night!",
+   "And",
+   "let them be",
+   "for",
+   "signs,",
+   "and",
+   "for",
+   "times,",
+   "and",
+   "for",
+   "days,",
+   "and",
+   "for",
+   "years!"
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "pos": 19
+   },
+   {
+    "pos": 20
+   },
+   {
+    "pos": 21
+   },
+   {
+    "pos": 22
+   },
+   {
+    "pos": 23
+   },
+   {
+    "pos": 24
+   },
+   {
+    "pos": 25
+   },
+   {
+    "pos": 26
+   },
+   {
+    "pos": 27
+   },
+   {
+    "pos": 28
+   },
+   {
+    "pos": 29
+   },
+   {
+    "pos": 30
+   },
+   {
+    "pos": 31
+   },
+   {
+    "pos": 32
+   },
+   {
+    "pos": 33
+   },
+   {
+    "pos": 34
+   },
+   {
+    "pos": 35
+   },
+   {
+    "pos": 36
+   },
+   {
+    "pos": 37
+   }
+  ]
+ },
+ "api__chapter__Gen__1.json#15": {
+  "prose": [
+   "And",
+   "let them be",
+   "for",
+   "giving light",
+   "in",
+   "the",
+   "firmament",
+   "of the",
+   "heaven,",
+   "so as",
+   "to shine",
+   "upon",
+   "the",
+   "earth!",
+   "And",
+   "it was",
+   "so."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   }
+  ]
+ },
+ "api__chapter__Gen__1.json#16": {
+  "prose": [
+   "And",
+   "God",
+   "made",
+   "the",
+   "two",
+   "great",
+   "luminaries;",
+   "the",
+   "greater",
+   "luminary",
+   "for",
+   "beginnings",
+   "of the",
+   "day,",
+   "and",
+   "the",
+   "lesser",
+   "luminary",
+   "for",
+   "beginnings",
+   "of the",
+   "night,",
+   "and",
+   "the",
+   "stars."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "b": 1,
+    "pos": [
+     6,
+     7,
+     8
+    ]
+   },
+   {
+    "pos": 9
+   },
+   {
+    "b": 2,
+    "pos": [
+     10,
+     11,
+     12
+    ]
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "b": 3,
+    "pos": [
+     19,
+     20,
+     21
+    ]
+   },
+   {
+    "pos": 22
+   },
+   {
+    "pos": 23
+   },
+   {
+    "pos": 24
+   },
+   {
+    "pos": 25
+   },
+   {
+    "pos": 26
+   },
+   {
+    "pos": 27
+   },
+   {
+    "pos": 28
+   }
+  ]
+ },
+ "api__chapter__Gen__1.json#17": {
+  "prose": [
+   "And",
+   "God",
+   "put",
+   "them",
+   "in",
+   "the",
+   "firmament",
+   "of the",
+   "heaven,",
+   "so as",
+   "to shine",
+   "upon",
+   "the",
+   "earth,"
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "b": 1,
+    "pos": [
+     1,
+     2,
+     3,
+     4
+    ]
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   }
+  ]
+ },
+ "api__chapter__Gen__1.json#18": {
+  "prose": [
+   "and",
+   "to begin",
+   "the",
+   "day",
+   "and",
+   "the",
+   "night,",
+   "and",
+   "to part",
+   "between",
+   "the",
+   "light",
+   "and",
+   "between",
+   "the",
+   "darkness.",
+   "And",
+   "God",
+   "beheld",
+   "that",
+   "it was good."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "pos": 19
+   },
+   {
+    "pos": 20
+   },
+   {
+    "pos": 21
+   }
+  ]
+ },
+ "api__chapter__Gen__1.json#19": {
+  "prose": [
+   "And",
+   "there was",
+   "evening",
+   "and",
+   "there was",
+   "morning,",
+   "the fourth",
+   "day."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "b": 1,
+    "pos": [
+     6,
+     7
+    ]
+   }
+  ]
+ },
+ "api__chapter__Gen__1.json#20": {
+  "prose": [
+   "And",
+   "God",
+   "said,",
+   "Let",
+   "the",
+   "waters",
+   "bring forth",
+   "reptiles",
+   "of living",
+   "lives,",
+   "and",
+   "flying",
+   "winged creatures",
+   "upon",
+   "the",
+   "earth",
+   "below",
+   "the",
+   "firmament",
+   "of the",
+   "heaven!",
+   "And",
+   "it was",
+   "so."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "b": 1,
+    "pos": [
+     5,
+     6,
+     7
+    ]
+   },
+   {
+    "pos": 8
+   },
+   {
+    "b": 2,
+    "pos": [
+     9,
+     10
+    ]
+   },
+   {
+    "pos": 11
+   },
+   {
+    "b": 3,
+    "pos": [
+     12,
+     13
+    ]
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "pos": 19
+   },
+   {
+    "pos": 20
+   },
+   {
+    "pos": 21
+   },
+   {
+    "pos": 22
+   },
+   {
+    "pos": 23
+   },
+   {
+    "pos": 24
+   }
+  ]
+ },
+ "api__chapter__Gen__1.json#21": {
+  "prose": [
+   "And",
+   "God",
+   "made",
+   "the",
+   "great",
+   "whales,",
+   "and",
+   "every",
+   "life",
+   "of living creatures",
+   "of reptiles",
+   "which",
+   "the",
+   "waters",
+   "brought forth",
+   "according to",
+   "their",
+   "types;",
+   "and",
+   "every",
+   "feathered",
+   "winged creature",
+   "according to",
+   "type.",
+   "And",
+   "God",
+   "beheld",
+   "that",
+   "it was good."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "b": 1,
+    "pos": [
+     5,
+     6,
+     7
+    ]
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "b": 2,
+    "pos": [
+     14,
+     15,
+     16
+    ]
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "pos": 19
+   },
+   {
+    "pos": 20
+   },
+   {
+    "pos": 21
+   },
+   {
+    "b": 3,
+    "pos": [
+     22,
+     23
+    ]
+   },
+   {
+    "pos": 24
+   },
+   {
+    "pos": 25
+   },
+   {
+    "pos": 26
+   },
+   {
+    "pos": 27
+   },
+   {
+    "pos": 28
+   },
+   {
+    "pos": 29
+   },
+   {
+    "pos": 30
+   },
+   {
+    "pos": 31
+   }
+  ]
+ },
+ "api__chapter__Gen__1.json#22": {
+  "prose": [
+   "And",
+   "God",
+   "blessed",
+   "them,",
+   "saying,",
+   "Grow",
+   "and",
+   "multiply,",
+   "and",
+   "fill",
+   "the",
+   "waters",
+   "in",
+   "the",
+   "seas!",
+   "And",
+   "let",
+   "the",
+   "winged creatures",
+   "be multiplied",
+   "upon",
+   "the",
+   "earth!"
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "b": 1,
+    "pos": [
+     1,
+     2,
+     3,
+     4
+    ]
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "b": 2,
+    "pos": [
+     17,
+     18,
+     19
+    ]
+   },
+   {
+    "pos": 20
+   },
+   {
+    "pos": 21
+   },
+   {
+    "pos": 22
+   },
+   {
+    "pos": 23
+   }
+  ]
+ },
+ "api__chapter__Gen__1.json#23": {
+  "prose": [
+   "And",
+   "there was",
+   "evening",
+   "and",
+   "there was",
+   "morning,",
+   "the fifth",
+   "day."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "b": 1,
+    "pos": [
+     6,
+     7
+    ]
+   }
+  ]
+ },
+ "api__chapter__Gen__1.json#24": {
+  "prose": [
+   "And",
+   "God",
+   "said,",
+   "Let",
+   "the",
+   "earth",
+   "bring forth",
+   "living",
+   "life",
+   "according to its",
+   "type —",
+   "four-footed,",
+   "and",
+   "reptiles,",
+   "and",
+   "wild beasts",
+   "of the",
+   "earth",
+   "according to",
+   "type!",
+   "And",
+   "it was",
+   "so."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "b": 1,
+    "pos": [
+     5,
+     6,
+     7,
+     8,
+     9
+    ]
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "pos": 19
+   },
+   {
+    "pos": 20
+   },
+   {
+    "pos": 21
+   },
+   {
+    "pos": 22
+   },
+   {
+    "pos": 23
+   }
+  ]
+ },
+ "api__chapter__Gen__1.json#25": {
+  "prose": [
+   "And",
+   "God",
+   "made",
+   "the",
+   "wild beasts",
+   "of the",
+   "earth",
+   "according to",
+   "type,",
+   "and",
+   "the",
+   "cattle",
+   "according to",
+   "their type,",
+   "and",
+   "all",
+   "the",
+   "reptiles",
+   "of the",
+   "earth",
+   "according to",
+   "type.",
+   "And",
+   "God",
+   "beheld",
+   "that",
+   "it was good."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "pos": 19
+   },
+   {
+    "pos": 20
+   },
+   {
+    "pos": 21
+   },
+   {
+    "pos": 22
+   },
+   {
+    "pos": 23
+   },
+   {
+    "pos": 24
+   },
+   {
+    "pos": 25
+   },
+   {
+    "pos": 26
+   },
+   {
+    "pos": 27
+   },
+   {
+    "pos": 28
+   },
+   {
+    "pos": 29
+   }
+  ]
+ },
+ "api__chapter__Gen__1.json#26": {
+  "prose": [
+   "And",
+   "God",
+   "said,",
+   "Let us make",
+   "man",
+   "according to",
+   "our",
+   "image,",
+   "and",
+   "according to",
+   "likeness!",
+   "And",
+   "let them control",
+   "the",
+   "fishes",
+   "of the",
+   "sea,",
+   "and",
+   "the",
+   "winged creatures",
+   "of the",
+   "heaven,",
+   "and",
+   "the",
+   "cattle,",
+   "and",
+   "all",
+   "the",
+   "earth,",
+   "and",
+   "all",
+   "the",
+   "reptiles",
+   "of the ones",
+   "crawling",
+   "upon",
+   "the",
+   "earth!"
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "b": 1,
+    "pos": [
+     7,
+     8
+    ]
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "pos": 19
+   },
+   {
+    "pos": 20
+   },
+   {
+    "pos": 21
+   },
+   {
+    "pos": 22
+   },
+   {
+    "pos": 23
+   },
+   {
+    "pos": 24
+   },
+   {
+    "pos": 25
+   },
+   {
+    "pos": 26
+   },
+   {
+    "pos": 27
+   },
+   {
+    "pos": 28
+   },
+   {
+    "pos": 29
+   },
+   {
+    "pos": 30
+   },
+   {
+    "pos": 31
+   },
+   {
+    "pos": 32
+   },
+   {
+    "pos": 33
+   },
+   {
+    "pos": 34
+   },
+   {
+    "pos": 35
+   },
+   {
+    "pos": 36
+   },
+   {
+    "pos": 37
+   },
+   {
+    "pos": 38
+   }
+  ]
+ },
+ "api__chapter__Gen__1.json#27": {
+  "prose": [
+   "And",
+   "God",
+   "made",
+   "man.",
+   "According to",
+   "the image",
+   "of God",
+   "he made",
+   "him.",
+   "Male",
+   "and",
+   "female",
+   "he made",
+   "them."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   }
+  ]
+ },
+ "api__chapter__Gen__1.json#28": {
+  "prose": [
+   "And",
+   "God",
+   "blessed",
+   "them,",
+   "saying,",
+   "Grow",
+   "and",
+   "multiply,",
+   "and",
+   "fill",
+   "the",
+   "earth,",
+   "and",
+   "dominate",
+   "it!",
+   "And",
+   "control",
+   "the",
+   "fishes",
+   "of the",
+   "sea,",
+   "and",
+   "the",
+   "winged creatures",
+   "of the",
+   "heaven,",
+   "and",
+   "all",
+   "the",
+   "cattle,",
+   "and",
+   "all",
+   "of the",
+   "earth,",
+   "and",
+   "all",
+   "of the",
+   "reptiles",
+   "of the ones",
+   "crawling",
+   "upon",
+   "the",
+   "earth!"
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "b": 1,
+    "pos": [
+     1,
+     2,
+     3,
+     4
+    ]
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "pos": 19
+   },
+   {
+    "pos": 20
+   },
+   {
+    "pos": 21
+   },
+   {
+    "pos": 22
+   },
+   {
+    "pos": 23
+   },
+   {
+    "pos": 24
+   },
+   {
+    "pos": 25
+   },
+   {
+    "pos": 26
+   },
+   {
+    "pos": 27
+   },
+   {
+    "pos": 28
+   },
+   {
+    "pos": 29
+   },
+   {
+    "pos": 30
+   },
+   {
+    "pos": 31
+   },
+   {
+    "pos": 32
+   },
+   {
+    "pos": 33
+   },
+   {
+    "pos": 34
+   },
+   {
+    "pos": 35
+   },
+   {
+    "pos": 36
+   },
+   {
+    "pos": 37
+   },
+   {
+    "pos": 38
+   },
+   {
+    "pos": 39
+   },
+   {
+    "pos": 40
+   },
+   {
+    "pos": 41
+   },
+   {
+    "pos": 42
+   },
+   {
+    "pos": 43
+   }
+  ]
+ },
+ "api__chapter__Gen__1.json#29": {
+  "prose": [
+   "And",
+   "God",
+   "said,",
+   "Behold,",
+   "I have given",
+   "to you",
+   "every",
+   "grass",
+   "fit for sowing",
+   "a sowing",
+   "of seed",
+   "which",
+   "is",
+   "upon",
+   "the",
+   "earth,",
+   "and",
+   "every",
+   "tree",
+   "which",
+   "has",
+   "in",
+   "itself",
+   "a fruit",
+   "seed",
+   "fit for sowing;",
+   "to you",
+   "it will be",
+   "for",
+   "food,"
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "pos": 19
+   },
+   {
+    "pos": 20
+   },
+   {
+    "pos": 21
+   },
+   {
+    "pos": 22
+   },
+   {
+    "pos": 23
+   },
+   {
+    "pos": 24
+   },
+   {
+    "pos": 25
+   },
+   {
+    "pos": 26
+   },
+   {
+    "pos": 27
+   },
+   {
+    "pos": 28
+   },
+   {
+    "pos": 29
+   },
+   {
+    "pos": 30
+   }
+  ]
+ },
+ "api__chapter__Gen__1.json#30": {
+  "prose": [
+   "and",
+   "to all",
+   "the",
+   "wild beasts",
+   "of the",
+   "earth,",
+   "and",
+   "to all",
+   "the",
+   "winged creatures",
+   "of the",
+   "heaven,",
+   "and",
+   "to every",
+   "reptile",
+   "crawling",
+   "upon",
+   "the",
+   "earth,",
+   "which",
+   "has",
+   "in",
+   "itself",
+   "breath",
+   "of life,",
+   "even",
+   "every",
+   "green",
+   "grass",
+   "for",
+   "food.",
+   "And",
+   "it was",
+   "so."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "pos": 19
+   },
+   {
+    "pos": 20
+   },
+   {
+    "pos": 21
+   },
+   {
+    "pos": 22
+   },
+   {
+    "pos": 23
+   },
+   {
+    "pos": 24
+   },
+   {
+    "pos": 25
+   },
+   {
+    "pos": 26
+   },
+   {
+    "b": 1,
+    "pos": [
+     27,
+     28
+    ]
+   },
+   {
+    "pos": 29
+   },
+   {
+    "pos": 30
+   },
+   {
+    "pos": 31
+   },
+   {
+    "pos": 32
+   },
+   {
+    "pos": 33
+   }
+  ]
+ },
+ "api__chapter__Gen__1.json#31": {
+  "prose": [
+   "And",
+   "God",
+   "beheld",
+   "all",
+   "as much as",
+   "he made.",
+   "And",
+   "behold, it was",
+   "exceedingly",
+   "good.",
+   "And",
+   "there was",
+   "evening",
+   "and",
+   "there was",
+   "morning,",
+   "the sixth",
+   "day."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "b": 1,
+    "pos": [
+     10,
+     11
+    ]
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "b": 2,
+    "pos": [
+     18,
+     19
+    ]
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#1": {
+  "prose": [
+   "Adam,",
+   "Seth,",
+   "Enosh,"
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#2": {
+  "prose": [
+   "Kenan,",
+   "Mahalalel,",
+   "Jered,"
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#3": {
+  "prose": [
+   "Enoch,",
+   "Methuselah,",
+   "Lamech,"
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#4": {
+  "prose": [
+   "Noah,",
+   "Shem,",
+   "Ham,",
+   "Japheth."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#5": {
+  "prose": [
+   "The sons",
+   "of Japheth —",
+   "Gomer,",
+   "and",
+   "Magog,",
+   "and",
+   "Madai,",
+   "and",
+   "Javan,",
+   "and",
+   "Tubal,",
+   "and",
+   "Meshech,",
+   "and",
+   "Tiras."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#6": {
+  "prose": [
+   "And",
+   "the",
+   "sons",
+   "of Gomer —",
+   "Ashchenaz",
+   "and",
+   "Riphath,",
+   "and",
+   "Togarmah."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#7": {
+  "prose": [
+   "And",
+   "the",
+   "sons",
+   "of Javan —",
+   "Elishah,",
+   "and",
+   "Tarshish,",
+   "Kittim",
+   "and",
+   "Dodanim."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#8": {
+  "prose": [
+   "And",
+   "the",
+   "sons",
+   "of Ham —",
+   "Cush,",
+   "and",
+   "Mizraim,",
+   "Put,",
+   "and",
+   "Canaan."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#9": {
+  "prose": [
+   "And",
+   "the sons",
+   "of Cush —",
+   "Seba,",
+   "and",
+   "Havilah,",
+   "and",
+   "Sabta,",
+   "and",
+   "Raamah,",
+   "and",
+   "Sabtecha.",
+   "And",
+   "the sons",
+   "of Raama —",
+   "Sheba",
+   "and",
+   "Dedan."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#10": {
+  "prose": [
+   "And",
+   "Cush",
+   "procreated",
+   "Nimrod —",
+   "this one",
+   "began",
+   "to be",
+   "a giant",
+   "on",
+   "the",
+   "earth."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#11": {
+  "prose": [
+   "Mizraim",
+   "procreated",
+   "the",
+   "Ludim,",
+   "the",
+   "Anamim,",
+   "and",
+   "the",
+   "Lehabim,",
+   "the",
+   "Naphuhim"
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#12": {
+  "prose": [
+   "And",
+   "the",
+   "Pathrusim,",
+   "and",
+   "the",
+   "Casluhim",
+   "from where",
+   "the Philistines",
+   "came forth",
+   "from there,",
+   "and",
+   "the",
+   "Caphthorim."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "b": 1,
+    "pos": [
+     7,
+     8,
+     9
+    ]
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#13": {
+  "prose": [
+   "And",
+   "Canaan",
+   "procreated",
+   "Sidon",
+   "his firstborn,",
+   "and",
+   "Heth."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#14": {
+  "prose": [
+   "And",
+   "the",
+   "Jebusite,",
+   "and",
+   "the",
+   "Amorite,",
+   "and",
+   "the",
+   "Girgashite,"
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#15": {
+  "prose": [
+   "and",
+   "the",
+   "Hivite,",
+   "and",
+   "the",
+   "Archite,",
+   "and",
+   "the",
+   "Sinite,"
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#16": {
+  "prose": [
+   "and",
+   "the",
+   "Arvadite,",
+   "and",
+   "the",
+   "Zemarite,",
+   "and",
+   "the",
+   "Hamathite."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#17": {
+  "prose": [
+   "The sons",
+   "of Shem —",
+   "Elam,",
+   "and",
+   "Asshur,",
+   "and",
+   "Arphaxad,",
+   "and",
+   "Lud,",
+   "and",
+   "Aram,",
+   "and",
+   "Uz,",
+   "and",
+   "Hul,",
+   "and",
+   "Gether,",
+   "and",
+   "Meshech."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#18": {
+  "prose": [
+   "And",
+   "Arphaxad",
+   "procreated",
+   "Cainan,",
+   "and",
+   "Cainan",
+   "procreated",
+   "Shelah,",
+   "and",
+   "Shelah",
+   "procreated",
+   "Eber."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#19": {
+  "prose": [
+   "And",
+   "to",
+   "Eber",
+   "two",
+   "sons",
+   "were procreated.",
+   "The name",
+   "to the",
+   "one",
+   "was Peleg;",
+   "for",
+   "in",
+   "his days",
+   "the",
+   "earth",
+   "was portioned.",
+   "And",
+   "the name",
+   "to",
+   "his brother",
+   "was Joktan."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "b": 1,
+    "pos": [
+     3,
+     4,
+     5
+    ]
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "b": 2,
+    "pos": [
+     15,
+     16,
+     17
+    ]
+   },
+   {
+    "pos": 18
+   },
+   {
+    "pos": 19
+   },
+   {
+    "pos": 20
+   },
+   {
+    "pos": 21
+   },
+   {
+    "pos": 22
+   },
+   {
+    "pos": 23
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#20": {
+  "prose": [
+   "And",
+   "Joktan",
+   "procreated",
+   "Almodad,",
+   "and",
+   "Sheleph,",
+   "and",
+   "Hazarmaveth,",
+   "and",
+   "Jerah,"
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#21": {
+  "prose": [
+   "and",
+   "Hadoram,",
+   "and",
+   "Uzal,",
+   "and",
+   "Diklah,"
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#22": {
+  "prose": [
+   "and",
+   "Ebal,",
+   "and",
+   "Abimael,",
+   "and",
+   "Sheba,"
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#23": {
+  "prose": [
+   "and",
+   "Ophir,",
+   "and",
+   "Havilah,",
+   "and",
+   "Jobab.",
+   "All",
+   "these",
+   "are sons",
+   "of Joktan."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#24": {
+  "prose": [
+   "Shem,",
+   "Arphaxad,",
+   "Shelah,"
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#25": {
+  "prose": [
+   "Eber,",
+   "Peleg,",
+   "Reu,"
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#26": {
+  "prose": [
+   "Serug,",
+   "Nahor,",
+   "Terah,"
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#27": {
+  "prose": [
+   "Abram —",
+   "he was",
+   "Abraham."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#28": {
+  "prose": [
+   "Sons",
+   "of Abraham —",
+   "Isaac",
+   "and",
+   "Ishmael."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#29": {
+  "prose": [
+   "These are",
+   "their genealogies.",
+   "First-born",
+   "of Ishmael —",
+   "Nebaioth,",
+   "and",
+   "Kedar,",
+   "and",
+   "Adbeel",
+   "and",
+   "Mibsam,"
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#30": {
+  "prose": [
+   "Mishma",
+   "and",
+   "Dumah,",
+   "Massa,",
+   "Hadad",
+   "and",
+   "Tema,"
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#31": {
+  "prose": [
+   "Jetur,",
+   "Naphish,",
+   "and",
+   "Kedemah.",
+   "These",
+   "are",
+   "the sons",
+   "of Ishmael."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#32": {
+  "prose": [
+   "And",
+   "sons",
+   "of Keturah,",
+   "concubine",
+   "of Abraham —",
+   "and",
+   "she",
+   "bore",
+   "Zimran,",
+   "and",
+   "Jokshan,",
+   "and",
+   "Medan",
+   "and",
+   "Midian,",
+   "and",
+   "Ishbak,",
+   "and",
+   "Shuah.",
+   "And",
+   "the sons",
+   "of Jokshan —",
+   "Sheba",
+   "and",
+   "Dedan."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "pos": 19
+   },
+   {
+    "pos": 20
+   },
+   {
+    "pos": 21
+   },
+   {
+    "pos": 22
+   },
+   {
+    "pos": 23
+   },
+   {
+    "pos": 24
+   },
+   {
+    "pos": 25
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#33": {
+  "prose": [
+   "And",
+   "the sons",
+   "of Midian —",
+   "Ephah,",
+   "and",
+   "Epher,",
+   "and",
+   "Henoch,",
+   "and",
+   "Abida,",
+   "and",
+   "Eldaah.",
+   "All",
+   "these",
+   "were sons",
+   "of Keturah."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#34": {
+  "prose": [
+   "And",
+   "Abraham",
+   "procreated",
+   "Isaac.",
+   "The sons",
+   "of Isaac —",
+   "Esau",
+   "and",
+   "Israel."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#35": {
+  "prose": [
+   "The sons",
+   "of Esau —",
+   "Eliphaz,",
+   "and",
+   "Reuel,",
+   "and",
+   "Jeush,",
+   "and",
+   "Jaalam,",
+   "and",
+   "Korah."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#36": {
+  "prose": [
+   "The sons",
+   "of Eliphaz —",
+   "Teman,",
+   "and",
+   "Omar,",
+   "Zephi,",
+   "and",
+   "Gatam,",
+   "Kenaz;",
+   "and",
+   "by Timna,",
+   "and",
+   "Amalek."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#37": {
+  "prose": [
+   "And",
+   "the sons",
+   "of Reuel —",
+   "Nahath,",
+   "Zerah,",
+   "Shammah,",
+   "and",
+   "Mizzah."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#38": {
+  "prose": [
+   "And",
+   "the sons",
+   "of Seir —",
+   "Lotan,",
+   "and",
+   "Shobal,",
+   "and",
+   "Zibeon,",
+   "and",
+   "Anah,",
+   "and",
+   "Dishon,",
+   "and",
+   "Ezer,",
+   "and",
+   "Dishan."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#39": {
+  "prose": [
+   "And",
+   "the sons",
+   "of Lotan —",
+   "Hori,",
+   "and",
+   "Honam;",
+   "and",
+   "the sister",
+   "of Lotan —",
+   "Timna."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#40": {
+  "prose": [
+   "The sons",
+   "of Shobal —",
+   "Alian,",
+   "and",
+   "Manahath,",
+   "and",
+   "Ebal,",
+   "Shephi,",
+   "and",
+   "Onam.",
+   "And",
+   "the sons",
+   "of Zibeon —",
+   "Ajah",
+   "and",
+   "Anah."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#41": {
+  "prose": [
+   "The sons",
+   "of Anah —",
+   "Dishon.",
+   "And",
+   "the sons",
+   "of Dishon.",
+   "And",
+   "the sons",
+   "of Dishon —",
+   "Amram,",
+   "and",
+   "Eshban,",
+   "and",
+   "Ithran,",
+   "and",
+   "Cheran."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#42": {
+  "prose": [
+   "And",
+   "the sons",
+   "of Ezer —",
+   "Bilhan",
+   "and",
+   "Zavan",
+   "and",
+   "Jakan.",
+   "The sons",
+   "of Dishan —",
+   "Uz",
+   "and",
+   "Aran."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#43": {
+  "prose": [
+   "And",
+   "these are",
+   "the",
+   "kings,",
+   "the ones",
+   "reigning",
+   "in",
+   "the land",
+   "of Edom",
+   "before",
+   "a king",
+   "reigned",
+   "among",
+   "the",
+   "sons",
+   "of Israel.",
+   "Bela",
+   "son",
+   "of Beor,",
+   "and",
+   "the",
+   "name",
+   "of his city",
+   "was Dinhabah."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "b": 1,
+    "pos": [
+     11,
+     12
+    ]
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "pos": 19
+   },
+   {
+    "pos": 20
+   },
+   {
+    "pos": 21
+   },
+   {
+    "pos": 22
+   },
+   {
+    "pos": 23
+   },
+   {
+    "pos": 24
+   },
+   {
+    "pos": 25
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#44": {
+  "prose": [
+   "And",
+   "Bela",
+   "died,",
+   "and",
+   "reigned",
+   "instead of",
+   "him,",
+   "Jobab",
+   "son",
+   "of Zerah",
+   "of",
+   "Bozrah."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#45": {
+  "prose": [
+   "And",
+   "Jobab",
+   "died,",
+   "and",
+   "reigned",
+   "instead of",
+   "him",
+   "Husham",
+   "of",
+   "the",
+   "land",
+   "of the Temanites."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#46": {
+  "prose": [
+   "And",
+   "Husham",
+   "died,",
+   "and",
+   "reigned",
+   "instead of",
+   "him,",
+   "Hadad",
+   "son",
+   "of Bedad,",
+   "the one",
+   "striking",
+   "Midian",
+   "in",
+   "the",
+   "field",
+   "of Moab.",
+   "And",
+   "the",
+   "name",
+   "of his city",
+   "was Avith."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "pos": 19
+   },
+   {
+    "pos": 20
+   },
+   {
+    "pos": 21
+   },
+   {
+    "pos": 22
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#47": {
+  "prose": [
+   "And",
+   "Hadad",
+   "died,",
+   "and",
+   "reigned",
+   "instead of",
+   "him,",
+   "Samlah",
+   "of",
+   "Masrekah."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#48": {
+  "prose": [
+   "And",
+   "Samlah",
+   "died,",
+   "and",
+   "reigned",
+   "instead of",
+   "him,",
+   "Shaul",
+   "of",
+   "Rehoboth",
+   "of the",
+   "river."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#49": {
+  "prose": [
+   "And",
+   "Shaul died,",
+   "and",
+   "reigned",
+   "instead of",
+   "him,",
+   "Baal-hanan",
+   "son",
+   "of Achbor."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#50": {
+  "prose": [
+   "And",
+   "Baal-hanan",
+   "died,",
+   "and",
+   "reigned",
+   "instead of",
+   "him,",
+   "Hadad.",
+   "And",
+   "the",
+   "name",
+   "of his city",
+   "was Pai.",
+   "And",
+   "the",
+   "name",
+   "of his wife",
+   "was Mehetabel,",
+   "daughter",
+   "of Matred,",
+   "daughter of",
+   "Mezahab."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "pos": 18
+   },
+   {
+    "pos": 19
+   },
+   {
+    "pos": 20
+   },
+   {
+    "pos": 21
+   },
+   {
+    "pos": 22
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#51": {
+  "prose": [
+   "And",
+   "Hadad",
+   "died.",
+   "And",
+   "The governors",
+   "of Edom —",
+   "were",
+   "governor",
+   "Timnah,",
+   "governor",
+   "Aliah,",
+   "governor",
+   "Jetheth,"
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "b": 1,
+    "pos": [
+     4,
+     5,
+     6
+    ]
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#52": {
+  "prose": [
+   "governor",
+   "Aholibamah,",
+   "governor",
+   "Elah,",
+   "governor",
+   "Pinon,"
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#53": {
+  "prose": [
+   "governor",
+   "Kenaz,",
+   "governor",
+   "Teman,",
+   "governor",
+   "Mibzar,"
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   }
+  ]
+ },
+ "api__chapter__1Ch__1.json#54": {
+  "prose": [
+   "governor",
+   "Magdiel,",
+   "governor",
+   "Iram.",
+   "These were",
+   "the governors",
+   "of Edom."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   }
+  ]
+ },
+ "2ki_23_29.json#29": {
+  "prose": [
+   "In",
+   "his days",
+   "ascended",
+   "Pharaoh",
+   "Necho",
+   "king",
+   "of Egypt",
+   "against",
+   "the king",
+   "of the",
+   "Assyrians",
+   "at",
+   "the",
+   "river",
+   "Euphrates.",
+   "And",
+   "Josiah",
+   "the",
+   "king",
+   "went",
+   "for",
+   "a meeting",
+   "against him.",
+   "And",
+   "Necho",
+   "killed",
+   "him",
+   "in",
+   "Megiddo,",
+   "in",
+   "his seeing",
+   "him."
+  ],
+  "chip": [
+   {
+    "pos": 0
+   },
+   {
+    "pos": 1
+   },
+   {
+    "pos": 2
+   },
+   {
+    "pos": 3
+   },
+   {
+    "pos": 4
+   },
+   {
+    "pos": 5
+   },
+   {
+    "pos": 6
+   },
+   {
+    "pos": 7
+   },
+   {
+    "pos": 8
+   },
+   {
+    "pos": 9
+   },
+   {
+    "pos": 10
+   },
+   {
+    "pos": 11
+   },
+   {
+    "pos": 12
+   },
+   {
+    "pos": 13
+   },
+   {
+    "pos": 14
+   },
+   {
+    "pos": 15
+   },
+   {
+    "pos": 16
+   },
+   {
+    "pos": 17
+   },
+   {
+    "b": 1,
+    "pos": [
+     18,
+     19,
+     20,
+     21
+    ]
+   },
+   {
+    "pos": 22
+   },
+   {
+    "pos": 23
+   },
+   {
+    "pos": 24
+   },
+   {
+    "pos": 25
+   },
+   {
+    "b": 2,
+    "pos": [
+     26,
+     27,
+     28
+    ]
+   },
+   {
+    "pos": 29
+   },
+   {
+    "pos": 30
+   },
+   {
+    "pos": 31
+   },
+   {
+    "pos": 32
+   },
+   {
+    "pos": 33
+   },
+   {
+    "pos": 34
+   },
+   {
+    "pos": 35
+   }
+  ]
+ }
+}
