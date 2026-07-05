@@ -18,6 +18,16 @@
 // in the browser (`module` is undefined there) and hands the functions to Node.
 // ============================================================
 
+// THE REORDER CORE: order one bracket group's words by ABP's superscript digit
+// (greek_pos) ascending. A missing digit sorts to the end (999). Array.sort is
+// stable, so equal or missing digits keep their source order. This ONE function is
+// the shared reorder both prose (getEnglishOrderWords, below) and chip mode
+// (59c-library-render.jsx) run — chip keeps its OWN trailing-punctuation lift and
+// duplicate-number suppression around it; only the ordering is shared.
+function orderBracketGroupWords(words) {
+  return [...words].sort((a, b) => (a.greek_pos ?? 999) - (b.greek_pos ?? 999));
+}
+
 // Reorder words for natural English reading:
 // within each bracket group sort by greek_pos ascending; non-bracket words keep position order.
 function getEnglishOrderWords(words) {
@@ -36,7 +46,7 @@ function getEnglishOrderWords(words) {
   const TRAIL = /[.,;:!?·]+$/;
   for (const bid in bracketMap) {
     let trailing = "";
-    const cleaned = [];
+    let cleaned = [];
     for (const w of bracketMap[bid]) {
       const eng = (w.english || "").trim();
       if (eng && eng.replace(TRAIL, "") === "") {        // pure-punctuation token
@@ -51,7 +61,7 @@ function getEnglishOrderWords(words) {
         cleaned.push(w);
       }
     }
-    cleaned.sort((a, b) => (a.greek_pos ?? 999) - (b.greek_pos ?? 999));
+    cleaned = orderBracketGroupWords(cleaned);   // shared reorder core (was an inline .sort)
     if (trailing && cleaned.length) {
       // Attach the floated punctuation to the last word that actually has English
       // text. Empty-gloss words (e.g. the σου/αὐτός pronouns folded into a
@@ -98,5 +108,5 @@ function groupForGreekMode(words) {
 }
 
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { getEnglishOrderWords, groupForGreekMode };
+  module.exports = { getEnglishOrderWords, groupForGreekMode, orderBracketGroupWords };
 }

@@ -319,12 +319,19 @@ const LibRender = (function () {
         if (!g.isBracket) {
           return chip(g.word, `g${gi}`);
         }
+        // English order (Phase 3): reorder the group by ABP's superscript digit
+        // (greek_pos) ascending via the SHARED reorder core — the same ordering
+        // prose uses — so "[²God ³was ¹the ⁴word]" reads "the word was God" with
+        // the digits running 1·2·3·4. Chip keeps its OWN number-suppression + trail
+        // lift below (reorder core only, no prose punctuation floating).
+        const ordered = orderBracketGroupWords(g.words);
         // Suppress a duplicate position number on continuation words: when a word
         // shares the greek_pos of the previous numbered member (e.g. the source
         // token "2God did" split into God + did, both pos 2), hide the second
-        // number so it renders "²God did", not "²God ²did".
+        // number so it renders "²God did", not "²God ²did". After the reorder,
+        // equal digits are adjacent (stable sort), so this still targets the pair.
         let lastGp = null;
-        const gw = g.words.map((w) => {
+        const gw = ordered.map((w) => {
           if (w.greek_pos != null && w.greek_pos === lastGp) return { ...w, greek_pos: null };
           if (w.greek_pos != null) lastGp = w.greek_pos;
           return w;

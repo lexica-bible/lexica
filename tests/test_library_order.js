@@ -27,7 +27,7 @@ const fs = require("fs");
 const path = require("path");
 
 require.extensions[".jsx"] = require.extensions[".js"];
-const { getEnglishOrderWords, groupForGreekMode } =
+const { getEnglishOrderWords, groupForGreekMode, orderBracketGroupWords } =
   require(path.join(__dirname, "..", "static", "src", "56-library-order-logic.jsx"));
 
 const SNAP = path.join(__dirname, "snapshots");
@@ -49,13 +49,17 @@ function fixtureVerses() {
 
 // Compact, stable signature of the order output for one verse. Prose = the english
 // reading sequence (drop empty-gloss tokens, as the renderer does). Chip = each
-// group's positions in the order the grouper yields (source order at Phase 2).
+// group's positions in RENDER order: Phase 3 reorders each bracket group by the
+// shared reorder core (orderBracketGroupWords), exactly as 59c-library-render.jsx
+// now does; non-bracket words keep source position.
 function signature(words) {
   const prose = getEnglishOrderWords(words)
     .map(w => (w.english || "").trim())
     .filter(Boolean);
   const chip = groupForGreekMode(words).map(g =>
-    g.isBracket ? { b: g.bid, pos: g.words.map(w => w.position) } : { pos: g.word.position });
+    g.isBracket
+      ? { b: g.bid, pos: orderBracketGroupWords(g.words).map(w => w.position) }
+      : { pos: g.word.position });
   return { prose, chip };
 }
 
