@@ -770,7 +770,10 @@ function LibraryView({ nav, onNavChange, onReaderPos, onWordClick, onVerseNumber
   const hebMode     = translation === "heb";   // Hebrew interlinear chips; "prose" flips them left-to-right
   const hebProse    = hebMode && viewMode === "prose";   // L→R word order (each word stays RTL); see .lib-heb-ltr
   const proseLocked = !!(nonCanon && nonCanon.englishOnly) || esvMode || nivMode;
-  const chipMode    = !proseLocked && (viewMode === "chip" || showStrongs || showInterlinear);
+  // Mode three (faithful ABP interlinear): Greek-dominant, own render branch.
+  // ABP text only (not Hebrew / English-only non-canon). Wins over chip when set.
+  const abpMode     = !proseLocked && !hebMode && !extraEnglish && viewMode === "interlinear";
+  const chipMode    = !proseLocked && !abpMode && (viewMode === "chip" || showStrongs || showInterlinear);
   const wordMode    = chipMode;
   const kjvWordMode = chipMode;
   // English-only "other books" have no Greek interlinear, so the Strong's / Interlinear
@@ -1404,6 +1407,7 @@ function LibraryView({ nav, onNavChange, onReaderPos, onWordClick, onVerseNumber
   const renderProseWords = (v) => LibRender.renderProseWords(_renderCtx, v);
   const renderHebVerse = (v) => LibRender.renderHebVerse(_renderCtx, v);
   const renderVerse = (v, sh) => LibRender.renderVerse(_renderCtx, v, sh);
+  const renderAbpInterlinear = (v, sh) => LibRender.renderAbpInterlinear(_renderCtx, v, sh);
   const renderKjvVerse = (v, svn, sh) => LibRender.renderKjvVerse(_renderCtx, v, svn, sh);
   const renderKjvProse = (v, svn, sh) => LibRender.renderKjvProse(_renderCtx, v, svn, sh);
   const renderBsbVerse = (v, svn, sh) => LibRender.renderBsbVerse(_renderCtx, v, svn, sh);
@@ -1888,6 +1892,10 @@ function LibraryView({ nav, onNavChange, onReaderPos, onWordClick, onVerseNumber
           )
         ) : abpShowLoading ? (
           <div className="lib-loading">Loading…</div>
+        ) : abpMode ? (
+          <div className="lib-text-words lib-abpil-text">
+            {withMarks(abpView, v => renderAbpInterlinear(v))}
+          </div>
         ) : wordMode ? (
           <div className="lib-text-words">
             {withMarks(abpView, v => renderVerse(v))}

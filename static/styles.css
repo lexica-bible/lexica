@@ -2193,6 +2193,34 @@ input { font-family: inherit; }
   letter-spacing: 0.02em;
 }
 
+/* ----- Mode three: faithful ABP interlinear (Greek is the main reading line) ----- */
+/* Each word is a three-line stack: muted English gloss ABOVE, Greek MAIN, Strong's
+   BELOW. Reuses .lib-word's column layout; only the emphasis + spacing differ. */
+.lib-verse-abpil { gap: 7px 11px; }
+.lib-abpil-gloss {
+  font-family: var(--f-serif);
+  font-size: calc(var(--lib-font-size, 18px) * 0.55);   /* muted helper line */
+  color: var(--ink-2);
+  line-height: 1.2;
+  min-height: 1em;            /* keep the slot when the gloss is empty (folded article) */
+}
+.lib-abpil-greek {
+  font-family: var(--f-greek);
+  font-size: 1.05em;          /* the dominant line */
+  color: var(--ink);
+  line-height: 1.25;
+}
+.lib-abpil-word.lib-abp-italic .lib-abpil-gloss { font-style: italic; }
+.lib-abpil-word.lib-word-pn .lib-abpil-greek { color: var(--ink); }
+.lib-abpil-strongs {
+  font-family: var(--f-mono);
+  font-size: calc(var(--lib-font-size, 18px) * 0.5);
+  color: var(--ink-3);
+  letter-spacing: 0.02em;
+  line-height: 1.2;
+}
+.lib-abpil-trail { font-family: var(--f-greek); color: var(--ink); }
+
 /* ----- Hebrew OT interlinear: right-to-left reading (Westminster Leningrad Codex) ----- */
 /* The verse row flips so the number sits on the right and the chips flow right-to-left;
    each chip keeps its vertical stack (Hebrew word over English gloss over H-number). */

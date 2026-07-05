@@ -716,8 +716,90 @@ const LibRender = (function () {
     );
   };
 
+  // MODE THREE — faithful ABP interlinear. Greek is the MAIN reading line (source
+  // order, NO English reorder), English gloss muted ABOVE, Strong's BELOW. Its own
+  // renderer so chip/prose are untouched (parity). Greek line = greekLineForWord
+  // (inflected -> lemma -> capitalized English name). Strong's line prints
+  // strongs_base VERBATIM (H6547 stays H6547) — never synthesizes 'G'+strongs;
+  // a bare '*' (numberless PN) shows no number, like chip. Empty-English article
+  // tokens are KEPT (they carry a Greek line), rendered with a blank gloss slot so
+  // the three lines stay column-aligned; the ~477 truly-empty '*' tokens (no Greek,
+  // no English) drop out and stay invisible.
+  const renderAbpInterlinear = (ctx, v, skipHeading = false) => {
+    const { selChapter, nav, selBook, onWordClick, hiClass, vnumEl, noteMarker, highlightRef } = ctx;
+    const ch = v._ch ?? selChapter;
+    const isHighlight = nav && nav.highlight === v.verse && (nav.chapter == null || nav.chapter === ch);
+
+    const makeEntry = (w) => ({
+      id: `libil-${selBook.abbrev}-${ch}-${v.verse}-${w.position}`,
+      ...wordEntryCore(w, { ref: `${selBook.abbrev} ${ch}:${v.verse}`, book: selBook.abbrev, chapter: ch, verse: v.verse, gloss: w.english }),
+      english_head: w.english_head || "",
+      lemmaGloss: w.kjv_def || "",
+      morph: w.morph || "",
+      inflected: w.inflected || "",
+      inflectedTranslit: w.inflected_translit || "",
+      pn_type: w.pn_type || null,
+      pn_types: w.pn_types || null,
+    });
+
+    // One three-line word. brk carries the bracket "[" / "]" marks for this slot.
+    const abpWord = (w, key, brk = {}) => {
+      const isPN = !!(w.is_pn || w.strongs_base === "*");
+      const g = greekLineForWord(w);
+      // keep a token only if it can show SOMETHING (a Greek line or an English gloss);
+      // the empty '*' tokens (neither) return null and stay invisible.
+      if (!g.text && !(w.english || w.english_head)) return null;
+      const clickable = !!(onWordClick && w.strongs_base
+        && (w.strongs_base !== "*" || w.english || w.english_head)
+        && (w.english || w.english_head || g.text));
+      const gloss = w.english || "";
+      // Strong's VERBATIM: strongs_base as stored (H#### or G####); '*' -> hidden.
+      const strongsShown = w.strongs_base && w.strongs_base !== "*";
+      const openBrk = brk.open ? <span className="lib-iw-brk">[</span> : null;
+      const closeBrk = brk.close
+        ? <React.Fragment><span className="lib-iw-brk">]</span>{brk.trail ? <span className="lib-abpil-trail">{brk.trail}</span> : null}</React.Fragment>
+        : null;
+      return (
+        <span key={key} data-note-pos={w.position}
+          className={"lib-word lib-abpil-word" + (w.italic ? " lib-abp-italic" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "") + hiClass(v.verse, w.position, ch)}
+          onClick={clickable ? () => onWordClick(isPN ? { ...makeEntry(w), isPN: true, pnName: (w.english_head || w.english || g.text), gloss: (w.english || g.text) } : makeEntry(w)) : undefined}>
+          <span className="lib-abpil-gloss">{gloss || " "}</span>
+          <span className="lib-abpil-greek" dir={g.kind === "name" ? undefined : "ltr"}>
+            {openBrk}{g.text || " "}{closeBrk}
+          </span>
+          {strongsShown
+            ? <span className="lib-abpil-strongs">{w.strongs_base}</span>
+            : <span className="lib-abpil-strongs" style={{ visibility: "hidden" }}>G0</span>}
+        </span>
+      );
+    };
+
+    const sortedWords = [...v.words].sort((a, b) => a.position - b.position);
+    const groups = groupForGreekMode(sortedWords);   // source order, NO reorder
+    const content = groups.map((g, gi) => {
+      if (!g.isBracket) return abpWord(g.word, `g${gi}`);
+      const gw = g.words;
+      return (
+        <span key={`bg${gi}`} className="lib-bracket-group">
+          {gw.map((w, wi) => abpWord(w, `bg${gi}w${wi}`, { open: wi === 0, close: wi === gw.length - 1 }))}
+        </span>
+      );
+    });
+
+    return (
+      <React.Fragment key={`${ch}-${v.verse}`}>
+        {!skipHeading && v.heading && <div className="lib-verse-row pericope-row"><span className="lib-vnum" aria-hidden="true"/><div className="pericope-heading">{v.heading}</div></div>}
+        <div ref={isHighlight ? highlightRef : null} data-note-verse={v.verse} data-note-chapter={ch}
+          className={"lib-verse-row" + (isHighlight ? " lib-highlight" : "")}>
+          {vnumEl(v.verse, ch)}
+          <span className="lib-verse-content lib-verse-chips lib-verse-abpil">{noteMarker(v.verse, ch)}{content}</span>
+        </div>
+      </React.Fragment>
+    );
+  };
+
   return {
-    joinProse, renderProseWords, renderHebVerse, renderVerse,
+    joinProse, renderProseWords, renderHebVerse, renderVerse, renderAbpInterlinear,
     renderKjvVerse, renderKjvProse, renderBsbVerse, renderPlainVerse, renderFlowVerse,
     plainFlowInner, kjvFlowInner, didChips, renderDidacheVerse,
     renderDidacheProse, renderExtraLines, renderDidacheParallelVerse,

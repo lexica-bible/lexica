@@ -107,6 +107,27 @@ function groupForGreekMode(words) {
   return groups;
 }
 
+// THE GREEK-LINE FALLBACK CHAIN (mode three / faithful ABP interlinear): what to
+// print as a word's main Greek line. Order is FIXED and load-bearing —
+//   1. inflected  — the printed ABP surface form (abp_surface), when stored
+//   2. lemma      — the dictionary form (lexicon join)
+//   3. name       — the English proper-noun name, capitalized (PNs carry NO Greek:
+//                   no inflected, no lemma; the ABP source DOES print Φαραώ etc.,
+//                   but those were never ingested — a Phase-6 backfill will fill
+//                   `inflected` for PNs and slot in at step 1 with ZERO change here)
+//   4. none       — nothing to show (the ~477 empty '*' tokens stay invisible)
+// Returns { text, kind }. The chain-order test pins this precedence so the future
+// PN backfill can't drift it.
+function greekLineForWord(w) {
+  const inf = (w.inflected || "").trim();
+  if (inf) return { text: inf, kind: "inflected" };
+  const lem = (w.lemma || "").trim();
+  if (lem) return { text: lem, kind: "lemma" };
+  const name = (w.english_head || w.english || "").trim();
+  if (name) return { text: name.charAt(0).toUpperCase() + name.slice(1), kind: "name" };
+  return { text: "", kind: "none" };
+}
+
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { getEnglishOrderWords, groupForGreekMode, orderBracketGroupWords };
+  module.exports = { getEnglishOrderWords, groupForGreekMode, orderBracketGroupWords, greekLineForWord };
 }
