@@ -44,30 +44,48 @@ So "trust `verses.text`" is NOT universal — the 13 prove it can be the wrong s
 source rule) to pin which side is authoritative. Jer 48:1 is confirmed (words wrong);
 the Christ / same / pronoun families are NOT yet confirmed and must be, per family.
 
-## User-facing blast radius (draw-citation collision check)
-`scripts/check_draw_citations.py` — 36 shipped citations quote a flagged verse:
-- **1 content-other** — Mat 21:19, cited by the `G1096` (γίνομαι) entry. Highest concern:
-  could show baked apparatus.
-- 21 word-order, 14 punct-position — all `lexica_def` rows; the draw cache has only 1 file.
+## User-facing blast radius (draw-citation collision check + render trace)
+`scripts/check_draw_citations.py` — 36 shipped citations quote a flagged verse
+(1 content-other, 21 word-order, 14 punct-position; all `lexica_def`, the draw cache
+has only 1 file).
 
-Most cards render verse text **live** from `verses.text`, so once the corpus is fixed
-they self-heal on the next load — a redraw is needed ONLY for entries that froze the
-verse text into stored fields. The redraw subset is ≤36, likely far fewer. To be
-determined once the fix side is settled.
+**Render trace (verified, corrects the earlier "self-heal" guess):** the Lexica card
+renders the verse text **frozen** from `def_json` (`LexicaBody` → `v.text`,
+20-shared-components.jsx:195), NOT a live fetch. That frozen text was copied from
+`verses.text` at build time (`build_lexica_def.py:295/684). So:
+- word-order collisions (35) draw from `verses.text`, which is the **correct** side for
+  that class — the card shows good prose. NOT user-facing.
+- only the content-other case makes `verses.text` itself dirty, and exactly one is
+  cited: **Mat 21:19 in the `G1096` entry.** That is the ONLY redraw.
 
-## Proposed plan (for approval — no writes yet)
-1. **Reconcile the two reorders to ONE.** The divergence exists because there are two
-   parsers. Fix = make `load_abp_prose` and the word build share a single reorder
-   decision, adjudicated against the ABP source per phrase-family.
-   - word-order families → fix the `build_words` split-step slotting (words side).
-   - the 13 apparatus leaks → fix `load_abp_prose` stripping (prose side).
-2. **Both stores rebuild from the pinned source.** Words table AND `verses.text`
-   regenerate from `abp_texts/` (the cert-pinned feed). **Neither store is synced from
-   the other** — a broken store is never copied over a good one (standing rule).
-3. **punct-position (261):** decide separately — likely leave (cosmetic) or a light
-   float-alignment pass. Not blocking.
-4. **Redraw** only the citation entries whose text is frozen (from the collision list),
-   after the corpus is clean.
+The main **reader** (chip/prose) DOES render the 364 word-order defects — it reassembles
+from the word rows via `getEnglishOrderWords`. That surface is fixed by the words
+rebuild, not a redraw.
+
+## The fix: ONE canonical reorder (consolidation, not a patch)
+The divergence exists because two independent parsers reorder the same ABP source. The
+fix is not to patch each — it is to make BOTH stores flow through a **single canonical
+reorder implementation**, so they cannot diverge again by construction.
+1. **Canonical reorder = the proven Python port** (`scripts/reorder_english.py`, already
+   byte-equal to the reader's JS `getEnglishOrderWords`). It becomes the one arbiter of
+   English order for the corpus build.
+2. **Both stores built through it.** `build_words_from_abp` and the `verses.text` build
+   both call the canonical reorder; the old `load_abp_prose.reorder_bracket` is **retired
+   or delegates** to it. No second reorder survives.
+3. **Adjudicate fix-side per family against the ABP source FIRST** (`dump_family_source.py`
+   — the source line is the arbiter). Jer 48:1 confirmed: words side wrong. The other
+   families self-adjudicate from the source unless flagged AMBIGUOUS (duplicate digit /
+   nesting → printed-ABP tiebreak).
+4. **The 13 apparatus leaks** are `load_abp_prose` strip bugs (order digit / stray `G`);
+   they fall out once `verses.text` is built through the canonical path with proper
+   G-number + digit stripping.
+5. **Both stores rebuild from the pinned feed** (`abp_texts/`); neither is synced from
+   the other (standing rule).
+6. **punct-position (261):** decide separately — likely leave (cosmetic) or fold into the
+   canonical float. Not blocking.
+7. **Redraw** only `G1096` (Mat 21:19), after the corpus is clean.
+8. **v2 guards ingest permanently** — wired into `cert_invariants.py` at zero, so the two
+   paths can never silently drift again.
 
 ## Gate block (must all pass before the rebuild swaps in)
 - `compare_words.py` diff reviewed (pinned live-stale cells only)
