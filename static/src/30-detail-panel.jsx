@@ -8,6 +8,52 @@
 // ⓘ button (isMobile + onClose), riding the same .detail-sheet rails as the
 // word-study sheet.
 // ============================================================
+// Rich MetaV person body — the tags / born-died / relationships block, WITHOUT the
+// section header. Shared by the name-path card (case "metav") and the verse-bound
+// linked card (the .pnbound rich branch), so the two renders can't drift. The header
+// + badge stay the caller's: metaV badge on the name path, the TIPNR spine on the
+// bound card (TIPNR binds it, MetaV enriches it).
+function MetavPersonBody({ data }) {
+  if (!data) return null;
+  return (
+    <>
+      <div className="metav-meta">
+        {data.gender && <span className="metav-tag">{data.gender === "M" ? "Male" : "Female"}</span>}
+        {data.groups.filter(g => g.startsWith("Tribe")).map(g => (
+          <span key={g} className="metav-tag">{g}</span>
+        ))}
+        {data.groups.includes("Genealogy of Jesus") && <span className="metav-tag metav-tag-gold">Genealogy of Jesus</span>}
+      </div>
+      {(data.birth_year || data.death_year) && (
+        <p className="detail-p detail-p--meta" style={{fontSize:"13px"}}>
+          {data.birth_year && <span>Born: {data.birth_year}{data.birth_place ? `, ${data.birth_place}` : ""}</span>}
+          {data.birth_year && data.death_year && " · "}
+          {data.death_year && <span>Died: {data.death_year}{data.death_place ? `, ${data.death_place}` : ""}</span>}
+        </p>
+      )}
+      {data.relationships.length > 0 && (
+        <div className="metav-rels">
+          {[
+            { types: ["child"],                    label: "Parent"   },
+            { types: ["father","mother"],          label: "Children" },
+            { types: ["spouseOrConcubine"],        label: "Spouse"   },
+            { types: ["sibling","halfSiblingSameFather","halfSiblingSameMother"], label: "Siblings" },
+          ].map(({ types, label }) => {
+            const matching = data.relationships.filter(r => types.includes(r.type));
+            if (!matching.length) return null;
+            return (
+              <div key={label} className="metav-rel-row">
+                <span className="metav-rel-label">{label}</span>
+                <span className="metav-rel-names">{matching.slice(0,5).map(r => r.name).join(", ")}{matching.length > 5 ? ` +${matching.length - 5}` : ""}</span>
+              </div>
+            );
+          })}
+        </div>
+      )}
+    </>
+  );
+}
+
 function SummaryPanel({ book, chapter, bookLabel, isMobile, onClose, onBack }) {
   // Remembers fetched summaries across remounts (the panel unmounts whenever a
   // word/verse takes over the slot) so re-opening the same chapter is instant
@@ -712,6 +758,13 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       // (a PERSON entity) — TIPNR models peoples that way. Render "People / Clan" and drop
       // the ancestor's individual kin, so "the Jews" never shows Judah's own parents.
       const peopleClan = be.section === "person" && be.people_group;
+      // A bound person cross-linked to its rich MetaV record (David-style badges /
+      // born-died / kin) — served on be.metav only when it clears the bio bar AND the
+      // People/Clan gate (the server nulls it for a gentilic; !peopleClan double-guards
+      // here). When present it fills the card body IN PLACE OF the thin TIPNR facts;
+      // TIPNR stays the spine (header + "Matched to this verse"). No link / below-bio /
+      // gentilic -> falls back to the thin facts below.
+      const richPerson = !!be.metav && !peopleClan;
       // When the group treatment fires, title the card with the PEOPLE term (the clicked
       // gloss, e.g. "Jews") and leave the ancestor to the Lineage line — the card is about
       // the people, not the individual.
@@ -751,6 +804,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
           <h4 className="sec-head"><span className="sec-t">{label}</span><span className="bdb-badge">TIPNR</span></h4>
           <div className="pnbound-name">{heroName}</div>
           {line && <p className="pnbound-desc">{line}</p>}
+          {richPerson ? <MetavPersonBody data={be.metav} /> : (
           <div className="pnbound-facts">
             {peopleClan && !be.head_is_people && (
               <div><span className="pnbound-lbl">Lineage</span> Descended from {be.name}</div>)}
@@ -763,6 +817,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
             {showArea && !peopleClan && (
               <div><span className="pnbound-lbl">{be.section === "place" ? "Region" : "Tribe"}</span> {area}</div>)}
           </div>
+          )}
           {be.section === "place" && (be.lat && be.lon
             ? <LeafletMap lat={be.lat} lon={be.lon} name={be.name} />
             : be.ambiguous
@@ -790,39 +845,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
               ) : <span className="sec-t">{isGentilic ? "People / Clan" : "Biblical Person"}</span>}
               <span className="lsj-badge">metaV</span>
             </h4>
-            <div className="metav-meta">
-              {metavData.gender && <span className="metav-tag">{metavData.gender === "M" ? "Male" : "Female"}</span>}
-              {metavData.groups.filter(g => g.startsWith("Tribe")).map(g => (
-                <span key={g} className="metav-tag">{g}</span>
-              ))}
-              {metavData.groups.includes("Genealogy of Jesus") && <span className="metav-tag metav-tag-gold">Genealogy of Jesus</span>}
-            </div>
-            {(metavData.birth_year || metavData.death_year) && (
-              <p className="detail-p detail-p--meta" style={{fontSize:"13px"}}>
-                {metavData.birth_year && <span>Born: {metavData.birth_year}{metavData.birth_place ? `, ${metavData.birth_place}` : ""}</span>}
-                {metavData.birth_year && metavData.death_year && " · "}
-                {metavData.death_year && <span>Died: {metavData.death_year}{metavData.death_place ? `, ${metavData.death_place}` : ""}</span>}
-              </p>
-            )}
-            {metavData.relationships.length > 0 && (
-              <div className="metav-rels">
-                {[
-                  { types: ["child"],                    label: "Parent"   },
-                  { types: ["father","mother"],          label: "Children" },
-                  { types: ["spouseOrConcubine"],        label: "Spouse"   },
-                  { types: ["sibling","halfSiblingSameFather","halfSiblingSameMother"], label: "Siblings" },
-                ].map(({ types, label }) => {
-                  const matching = metavData.relationships.filter(r => types.includes(r.type));
-                  if (!matching.length) return null;
-                  return (
-                    <div key={label} className="metav-rel-row">
-                      <span className="metav-rel-label">{label}</span>
-                      <span className="metav-rel-names">{matching.slice(0,5).map(r => r.name).join(", ")}{matching.length > 5 ? ` +${matching.length - 5}` : ""}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
+            <MetavPersonBody data={metavData} />
           </div>
         ) : metavType === "place" && metavData ? (
           <div className="metav-place">

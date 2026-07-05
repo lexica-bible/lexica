@@ -355,6 +355,14 @@ couldn't have if either number were hardcoded — which is exactly why the line-
   a real before/after, not a claim. (The frozen Lexica cards were already correct; this confirms the READER
   surface healed.)
 - Re-run `cert_invariants.py` 7/7 + `--controls`; v2 wired in reads zero.
+- **Secondary render paths need their OWN post-rebuild smoke check (2026-07-05 observation).** The reader
+  chip/prose surface is the one we prove healed above — but the Study **topic-page** verse render showed
+  DENSE displaced-word artifacts ("said And the LORD", "answered And all the people") on a tonight
+  screenshot, far heavier than the ~2% corpus rate. That surface likely reads raw word rows WITHOUT the
+  reader's punct-float / bracket-heal pass. After the rebuild, pull a topic page (and any other secondary
+  verse-render path — SEO `/read`, xref panel, Study graph verses) and eyeball it the same way, since the
+  words rebuild only guarantees the rows, not each surface's reassembly. NOT this session's task to
+  investigate — logged for S9 so the smoke net covers more than the main reader.
 - **Re-run `dump_family_source.py --survivors --controls`** (control fires first): with v2 at zero
   (rows == prose) AND this confirming prose == source on the survivor set, the 208 went to zero AGAINST
   SOURCE, not merely against prose. This is the control-test half of the source-adjudication — same

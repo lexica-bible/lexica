@@ -50,7 +50,37 @@ rather than loading 790K rows into bible.db.
    `title(unlinkable)` so the top-N hand pass skips them. Their real end-state is a **title card**
    (People/Clan-style), not a hand-curated single link — the serializer's job below.
 
-## Next task (its own reviewed pass) — serializer + frontend
+## SERIALIZER PASS DONE (2026-07-05) — shipped + a title-rule CORRECTION
+The rich-card serializer + frontend are built (`views_metav._person_card` shared by the name path
+and the bound path; `metav_entity` adds a `metav` field via one join to `tipnr_metav_link`; frontend
+`MetavPersonBody` in 30-detail-panel fills the bound card body under the TIPNR-spine frame). Ship
+decision on titles = **A, ship as-is** — which CORRECTS flag #2 above. Read this before "fixing" the
+title check in any rebuild:
+
+- **The `TITLES` exclusion in build_person_metav_link.py did NOT fire on the pharaohs, and that was
+  RIGHT, not a bug to fix.** (It missed because entity heads are longer than the bare word "Pharaoh",
+  so `key(disp) != "pharaoh"`.) TIPNR has SEVEN per-referent pharaoh entities — Abraham's / Joseph's /
+  Exodus / Solomon's / Hezekiah's / Jer / 1Ch — each verse-overlap-linked to its OWN metaV Pharaoh
+  record (2328–2335). Those seven links are CORRECT: the verse-bind already fixes WHICH pharaoh, so
+  each link is a specific-man claim — exactly what the join guarantees. Had the title check fired it
+  would have DELETED seven good links.
+- **The title rule's real target is a title COLLAPSE** — an unbound/composite title matched to one bio
+  for many men. That case IS handled: the broad-span `Pharaoh@Exo.1.11-Heb` entity failed overlap
+  (best 0.55 / split) and is correctly UNLINKED (residual `title(unlinkable)`). Verified end-to-end
+  2026-07-05: the seven specific pharaohs `linked->`, the composite one UNLINKED.
+- **So the rebuild fix (if any) is NARROWER, not wider:** the title check should catch unbound/composite
+  title entities, never per-referent title entities that verse-overlap resolved cleanly. Do NOT widen it
+  to catch `Pharaoh@Exo.3.10` — that deletes correct links.
+- **This is the pattern the PLACES edition will hit too** (Zion, Rabbah, the several Antiochs): specific
+  referents link, the composite/ambiguous one quarantines. The system got title-vs-referent right here;
+  the place builder should aim for the same shape, not a blanket name-based title block.
+- Serializer safety that made A clean: `_person_has_bio` gate (born/died OR ≥2 kin) sends the bio-empty
+  pharaoh records to the thin TIPNR card anyway — the fallback chain (rich → TIPNR → Strong's) doing its
+  designed job, no title special-case in the view. **People/Clan precedence** ships as required, keyed on
+  the SAME `is_people_group` predicate (no copied set). David is NOT bound (absent from pn_binding), so it
+  keeps the name-path card unchanged — the `_person_card` refactor is what keeps those two in step.
+
+## Next task (its own reviewed pass) — serializer + frontend  [DONE — see the correction block above]
 - Resolver: bound person → `tipnr_metav_link` (kind='person') → render the rich MetaV card
   (reuse David's existing component, no new styles per design.md); fall back TIPNR card →
   Strong's-only. No new lookups — one join.

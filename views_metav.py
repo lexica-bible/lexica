@@ -119,6 +119,63 @@ def pn_count(name):
     return jsonify({"count": row["cnt"] if row else 0})
 
 
+def _person_card(conn, pid):
+    """The rich person payload (bio + groups + relationships) for a metav_people
+    person_id. Shared by the name path (/api/metav/person) and the verse-bound link
+    path (/api/metav/entity), so the two renders can never drift. Returns None if the
+    person_id has no row."""
+    row = conn.execute(
+        "SELECT person_id, name, surname, gender, birth_year, death_year, "
+        "birth_place, death_place FROM metav_people WHERE person_id = ?", (pid,)
+    ).fetchone()
+    if not row:
+        return None
+
+    groups = [r["group_name"] for r in conn.execute(
+        "SELECT group_name FROM metav_people_groups WHERE person_id = ?", (pid,)
+    ).fetchall()]
+
+    rels = conn.execute("""
+        SELECT r.rel_type, p.name, p.surname, p.person_id
+        FROM metav_people_relationships r
+        JOIN metav_people p ON p.person_id = r.related_to
+        WHERE r.person_id = ?
+        ORDER BY CASE r.rel_type
+            WHEN 'father' THEN 1
+            WHEN 'mother' THEN 2
+            WHEN 'spouseOrConcubine' THEN 3
+            WHEN 'child' THEN 4
+            WHEN 'sibling' THEN 5
+            ELSE 6
+        END
+    """, (pid,)).fetchall()
+    relationships = [{"type": r["rel_type"],
+                      "name": r["name"] + (" " + r["surname"] if r["surname"] else ""),
+                      "id": r["person_id"]} for r in rels]
+
+    full_name = row["name"] + (" " + row["surname"] if row["surname"] else "")
+    return {
+        "person_id":   pid,
+        "name":        full_name,
+        "gender":      row["gender"] or "",
+        "birth_year":  row["birth_year"] or "",
+        "death_year":  row["death_year"] or "",
+        "birth_place": row["birth_place"] or "",
+        "death_place": row["death_place"] or "",
+        "groups":      groups,
+        "relationships": relationships,
+    }
+
+
+def _person_has_bio(card):
+    """A linked person card only EARNS the rich frame when it adds real biography over
+    the thin TIPNR facts (born/died, or 2+ relationships). Below that bar the caller
+    falls back to the thin card — the rich → TIPNR → Strong's chain — never an empty
+    rich frame. Mirrors the name-path's own personOk quality gate."""
+    return bool(card and (card["birth_year"] or card["death_year"]
+                          or len(card["relationships"]) >= 2))
+
+
 @bp.route("/api/metav/person/<path:name>")
 def metav_person(name):
     conn = db_ro()
@@ -168,46 +225,13 @@ def metav_person(name):
         if not row:
             return jsonify({"error": "not found"}), 404
 
-        pid = row["person_id"]
-
-        # Groups (tribe, genealogy)
-        groups = [r["group_name"] for r in conn.execute(
-            "SELECT group_name FROM metav_people_groups WHERE person_id = ?", (pid,)
-        ).fetchall()]
-
-        # Key relationships
-        rels = conn.execute("""
-            SELECT r.rel_type, p.name, p.surname, p.person_id
-            FROM metav_people_relationships r
-            JOIN metav_people p ON p.person_id = r.related_to
-            WHERE r.person_id = ?
-            ORDER BY CASE r.rel_type
-                WHEN 'father' THEN 1
-                WHEN 'mother' THEN 2
-                WHEN 'spouseOrConcubine' THEN 3
-                WHEN 'child' THEN 4
-                WHEN 'sibling' THEN 5
-                ELSE 6
-            END
-        """, (pid,)).fetchall()
-
-        relationships = [{"type": r["rel_type"], "name": r["name"] + (" " + r["surname"] if r["surname"] else ""), "id": r["person_id"]} for r in rels]
-
+        card = _person_card(conn, row["person_id"])
     finally:
         conn.close()
 
-    full_name = row["name"] + (" " + row["surname"] if row["surname"] else "")
-    return jsonify({
-        "person_id":   pid,
-        "name":        full_name,
-        "gender":      row["gender"] or "",
-        "birth_year":  row["birth_year"] or "",
-        "death_year":  row["death_year"] or "",
-        "birth_place": row["birth_place"] or "",
-        "death_place": row["death_place"] or "",
-        "groups":      groups,
-        "relationships": relationships,
-    })
+    if not card:
+        return jsonify({"error": "not found"}), 404
+    return jsonify(card)
 
 
 @bp.route("/api/metav/ai-description/<path:name>")
@@ -377,7 +401,7 @@ def metav_entity(name):
     try:
         have = {r[0] for r in conn.execute(
             "SELECT name FROM sqlite_master WHERE type='table' AND name IN "
-            "('pn_binding','tipnr_entities','tipnr_entity_refs')")}
+            "('pn_binding','tipnr_entities','tipnr_entity_refs','tipnr_metav_link')")}
         if {"pn_binding", "tipnr_entities"} - have:
             return jsonify({"error": "not found"}), 404
         nm = norm_name(name)
@@ -419,6 +443,26 @@ def metav_entity(name):
             prows = _place_coord_rows(conn, disp)
             if prows:
                 lat, lon, ambiguous = _pin_from_rows(prows)
+
+        # Rich MetaV enrichment for a bound PERSON: one join to tipnr_metav_link
+        # (the pre-vetted metaV person_id), then the SAME rich card the name path
+        # serves — so the panel shows David-style badges/born-died/kin while TIPNR
+        # stays the identity spine. HARD People/Clan gate: a gentilic click (Jews ->
+        # Judah) or a plural-people entity NEVER borrows the ancestor's individual
+        # bio — it must keep the People/Clan card. is_people_group is the SAME shared
+        # predicate the card path uses (never a second copy). Below-bio links fall
+        # back to the thin TIPNR facts (_person_has_bio); table-absence -> no metav.
+        metav = None
+        if ((e["section"] or "") == "person"
+                and not is_people_group(name) and not is_people_group(disp)
+                and "tipnr_metav_link" in have):
+            lk = conn.execute(
+                "SELECT metav_id FROM tipnr_metav_link "
+                "WHERE uniq = ? AND kind = 'person' LIMIT 1", (e["uniq"],)).fetchone()
+            if lk and lk["metav_id"] is not None:
+                card = _person_card(conn, lk["metav_id"])
+                if _person_has_bio(card):
+                    metav = card
     finally:
         conn.close()
 
@@ -445,6 +489,10 @@ def metav_entity(name):
         "head_is_people": is_people_group(disp),
         "kind":      b["kind"] or "",
         "tier":      b["tier"],
+        # Rich MetaV person card when the bound person is cross-linked and adds real
+        # bio (else null -> the frontend keeps the thin TIPNR facts). Gated above by
+        # the same People/Clan predicate as the card path.
+        "metav":     metav,
     })
 
 
