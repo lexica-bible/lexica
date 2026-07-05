@@ -178,7 +178,12 @@ Pick effort by task TYPE. Lean higher when data correctness is on the line; don'
   lean, add only when a new test imports something new. (2) rebuilds `app.js` and FAILS if the committed copy
   is stale, and (3) runs the **node** unit tests `tests/test_ac_word_groups.js` + `tests/test_rstack_logic.js`
   (the Ask-corpus rail's pure logic; in the `frontend` job, which already has node — the pre-commit hook runs
-  them too). How-to-test-frontend-JS-here + the shared-logic-file pattern: memory `project_three_zone_shell`.
+  them too) PLUS the Library reading-mode gates `test_library_order.js` + `test_render_markup.js` + the
+  whole-bundle **render smoke gate `smoke_app.js`** (renders `<App/>` with real React via `react-dom/server` to
+  catch blank-site reference/TDZ errors the pure-logic tests can't see — a component-body error passed green
+  before it existed). **`react`/`react-dom` are TEST-ONLY devDependencies** for those render gates; the app
+  itself loads React from the CDN UMD, NOT from npm. How-to-test-frontend-JS-here + the shared-logic-file
+  pattern: memory `project_three_zone_shell`; reading-modes lessons: memory `project_reading_modes`.
   Repo is public; check
   the Actions tab or query `api.github.com/repos/lexica-bible/lexica/actions/runs`. `gh` CLI is installed on the dev box now (2026-06-22; Claude calls it by full path) — NOT on PA. See memory `project_dependabot_workflow`.
   - **LINE-ENDINGS for the app.js check (cost a CI fail 2026-06-14; the "all CRLF" claim CORRECTED
@@ -729,10 +734,26 @@ rules + gotchas; open the named memory for the backstory.
   swapping ABP↔KJV never shifts layout. Fonts load **`display=optional`, NOT `swap`**
   (templates/index.html) — kills the mobile toolbar reload flash. Don't switch back.
 
-**Render modes**
-- Chip = every word clickable, interlinear stack (Greek → English → Strong's). Prose = plain inline,
-  only verse numbers tappable. KJV locks Prose to English. English-only non-canon books: the Chip
-  toggle gives a verse-per-line layout (`renderExtraLines`); Strong's/Interlinear stay locked.
+**Render modes** — THREE ABP reading modes, `viewMode` = chip|prose|interlinear (2026-07-04; a 3-way
+Chip·Interlinear·Prose control, Interlinear ABP-only). Full record + all lessons: memory `project_reading_modes`.
+- **Chip** = words clickable, **English reading order** (bracket groups reordered by `greek_pos` ascending);
+  the ABP `[ ]` marks + superscript order digits are **STRIPPED from chip** — interlinear-only now.
+- **Prose** = plain inline, only verse numbers tappable. Clicking Prose always works: it SNAPSHOTS the
+  Strong's/Interlinear toggles, unticks both, switches; the next switch away restores them (a manual toggle
+  touch discards the snapshot). Snapshot lives in `libOptions` (`lexica.opts.v1`).
+- **Interlinear (mode three)** = faithful as-printed ABP: Greek main line in **source order (NO reorder)**
+  with the `[ ]` marks + superscript digits, English gloss ABOVE + Strong's BELOW driven by the
+  Interlinear/Strong's toggles (both default ON on entry; a line toggled off is NOT rendered so its space
+  collapses → bare Greek reads tight). PN Greek line falls back inflected→lemma→capitalized English name;
+  Strong's prints `strongs_base` verbatim (H#### stays H####). ABP-only (`translation==="abp"`); other texts
+  read a stored `interlinear` value as chip.
+- Toggle semantics are UNIFORM: Interlinear = gloss layer, Strong's = number layer, over whatever base a
+  mode shows. KJV locks Prose to English. English-only non-canon: Chip = verse-per-line (`renderExtraLines`),
+  Strong's/Interlinear locked.
+- Order helpers (`getEnglishOrderWords`/`groupForGreekMode`/`orderBracketGroupWords`), the Greek-line
+  fallback (`greekLineForWord`), the PN click payload (`pnClickPayload`), and the prose/toggle reducer
+  (`libViewTransition`) all live in the shared **`static/src/56-library-order-logic.jsx`** (browser globals +
+  Node `module.exports`), Node-tested by `tests/test_library_order.js` + `tests/test_render_markup.js`.
 - **Hebrew "Prose" = the same interlinear chips flipped LEFT-TO-RIGHT** (2026-06-22): the Prose button
   (was grayed in Hebrew) toggles `viewMode` and a `.lib-heb-ltr` class that sets the row/content
   `direction:ltr` — only the WORD order flips; each `.lib-iw-heb` keeps its own `direction:rtl` so the

@@ -57,6 +57,12 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   fix if the filter is reused at scale.
 
 ## Open word-study / data issues (low priority, none gating)
+- **Phase-6: PN Greek surface-form backfill for interlinear mode** (deferred, not a bug). In the new
+  interlinear reading mode (2026-07-04) proper nouns show their capitalized English name on the Greek line
+  because ABP prints Φαραώ/Νεχαώ etc. but those forms were never ingested (no lexicon join for `*` PNs → no
+  `abp_surface` row). Backfill `abp_surface.form` for PN tokens so the Greek line shows the real Greek; it
+  slots into the `greekLineForWord` chain at step 1 (inflected) with ZERO UI change. Needs cert-style
+  position-alignment verification when it runs. Full record: memory `project_reading_modes`.
 - **~48 G1473 (ἐγώ) cells reading 3rd-person reflexives** ("himself/themselves/itself") with a blank
   lemma — by-design skips of the cautious G1473→G846 retag (it refuses to guess reflexives + no-morph
   cells). Consistent with the build. Future cleanup only. code: the g1473_gloss_retag fold in
