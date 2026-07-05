@@ -25,7 +25,18 @@ Diagnosis done + committed (5 read-only tools, chip-lift fix live). Decisions lo
 - **PASS CRITERION for the gate:** zero word-order + zero content-other + no NEW
   punct-position (allowlist only). Then wire v2 into `cert_invariants.py`.
 - **Full gate block:** the 7 cert invariants + L9 lint + v1 AND v2 at criterion +
-  `tests/test_reorder_port.py` green + row pins re-pinned in the rebuild commit.
+  `tests/test_reorder_port.py` green + row pins re-pinned in the rebuild commit + the
+  under-distribution detector (below).
+- **UNDER-DISTRIBUTION class (v2-INVISIBLE — new sighting 2026-07-04):** Psa 39:1
+  "to not sin" parked entirely on G3361 (μή), neighbor G264 (ἁμαρτάνειν) blank — should
+  have distributed. Same class as the G846 "jesus 2" finding. `_split_compounds` is the
+  code that DOES distribute, so this is almost certainly the SAME step — HYPOTHESIS: one
+  leaky lexicon-evidence gate misfiring both ways (OVER-reach = the article word-order
+  defect; UNDER-reach = this). Confirm in the trace. This class is order- AND bag-neutral,
+  so v2/v1 can't see it → the rebuild needs its OWN detector in the gate block:
+  **a multi-word gloss (english has a space) on a FUNCTION-WORD Strong's tag with an
+  adjacent blank-english CONTENT-word slot ⇒ flag.** Build it read-only, control-test it
+  fires on Psa 39:1, drive to an agreed floor before the swap.
 
 Tools (all committed, READ-ONLY): `scripts/audit_reassembly_diff.py` (v1/v2 + `--controls`),
 `scripts/reorder_english.py` (+ `tests/test_reorder_port.py`), `scripts/check_draw_citations.py`,
