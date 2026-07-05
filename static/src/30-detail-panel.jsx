@@ -707,7 +707,12 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
         return <section key="boundEntity" className="sec pnbound"><div className="lsj-def lsj-def--loading">Looking up…</div></section>;
       if (!boundEntity) return null;
       const be = boundEntity;
-      const label = be.section === "place" ? "Place" : be.section === "person" ? "Person" : "Identity";
+      // C: the clicked word is a people-group (gentilic) bound to its eponymous ancestor
+      // (a PERSON entity) — TIPNR models peoples that way. Render "People / Clan" and drop
+      // the ancestor's individual kin, so "the Jews" never shows Judah's own parents.
+      const peopleClan = be.section === "person" && be.people_group;
+      const label = peopleClan ? "People / Clan"
+                  : be.section === "place" ? "Place" : be.section === "person" ? "Person" : "Identity";
       const clean = s => (s || "").replace(/\s*\(\?\)/g, "").trim();   // drop TIPNR's "(?)" uncertainty marker
       // TIPNR's descr is a genuine description for PERSONS ("Man living at the time of …")
       // but for PLACES it's often just the name, a bare id ("Bethel_1"), or a cross-ref
@@ -724,6 +729,9 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       // TIPNR's summary opens "A location …" for nearly every place — a generic placeholder,
       // not a real description. Drop it; real descriptions still show.
       if (/^(a location|a place|location|place)\.?$/i.test(line)) line = "";
+      // For a People/Clan, the ancestor's own bio ("Man living at the time of …") misframes
+      // the collective — drop it; the lineage line below carries the honest link instead.
+      if (peopleClan) line = "";
       // area (Geo-area) is often just TIPNR's empty-breadcrumb ">" — strip stray > and blanks
       // so an empty geo-area shows NO row; real values (e.g. "Tribe of Simeon") stay as a label.
       const area = clean(be.area).replace(/^[>\s]+|[>\s]+$/g, "");
@@ -738,9 +746,11 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
           <div className="pnbound-name">{be.name}</div>
           {line && <p className="pnbound-desc">{line}</p>}
           <div className="pnbound-facts">
-            {be.section === "person" && be.parents && be.parents.length > 0 && (
+            {peopleClan && !be.head_is_people && (
+              <div><span className="pnbound-lbl">Lineage</span> Descended from {be.name}</div>)}
+            {be.section === "person" && !peopleClan && be.parents && be.parents.length > 0 && (
               <div><span className="pnbound-lbl">Parents</span> {be.parents.join(", ")}</div>)}
-            {be.section === "person" && be.offspring && be.offspring.length > 0 && (
+            {be.section === "person" && !peopleClan && be.offspring && be.offspring.length > 0 && (
               <div><span className="pnbound-lbl">Children</span> {be.offspring.join(", ")}</div>)}
             {showArea && (
               <div><span className="pnbound-lbl">{be.section === "place" ? "Region" : "Tribe"}</span> {area}</div>)}

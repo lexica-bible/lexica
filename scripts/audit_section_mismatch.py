@@ -23,17 +23,9 @@ import entity_resolution as er
 DB = next((a for a in sys.argv[1:] if not a.startswith("--")),
           "/home/appssanding720/bible-db/bible.db")
 
-# People-group / gentilic signal on the clicked gloss. Suffix rules cover the long tail
-# (-ites/-ians/-im); the curated set catches the irregulars a suffix can't (Jews, Greeks).
-_PEOPLE_SUFFIX = re.compile(r"(ites?|ians?|im|eans?)$", re.I)
-_PEOPLE_WORDS = {
-    "jews", "jew", "greeks", "greek", "gentiles", "gentile", "egyptians", "philistines",
-    "chaldeans", "romans", "hebrews", "canaanites", "moabites", "edomites", "midianites",
-    "amalekites", "hittites", "amorites", "jebusites", "perizzites", "hivites",
-}
-def is_people_group(label):
-    n = er.norm_name(label)
-    return bool(n) and (n in _PEOPLE_WORDS or bool(_PEOPLE_SUFFIX.search(n)))
+# People-group / gentilic signal — the ONE shared classifier (entity_resolution), so the
+# audit's count and the live "People / Clan" card render off the exact same list.
+is_people_group = er.is_people_group
 
 NT_MIN = 40   # book number: >=40 is NT
 

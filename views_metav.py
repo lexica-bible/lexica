@@ -11,7 +11,7 @@ from core import (
     db, db_ro, _anthropic, log,
     ai_fingerprint, ai_cache_get, ai_cache_put, ai_cache_prune,
 )
-from entity_resolution import book_num, norm_name
+from entity_resolution import book_num, norm_name, is_people_group
 
 bp = Blueprint("metav", __name__)
 
@@ -380,6 +380,12 @@ def metav_entity(name):
         "lat":       lat,
         "lon":       lon,
         "ambiguous": ambiguous,
+        # C: the CLICKED word is a people-group (gentilic) -> the card renders "People /
+        # Clan" and drops the ancestor's individual kin. head_is_people = the bound
+        # entity's OWN name is itself a plural people (Jebusites), so a "descended from"
+        # line would read circular and is suppressed.
+        "people_group":   is_people_group(name),
+        "head_is_people": is_people_group(disp),
         "kind":      b["kind"] or "",
         "tier":      b["tier"],
     })

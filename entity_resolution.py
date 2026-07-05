@@ -102,6 +102,31 @@ def clean_summary(s):
     return re.sub(r"\s+", " ", s)
 
 
+# ── People-group / gentilic classifier (DISPLAY-TIME only) ───────────────────
+# TIPNR models a people through its eponymous ancestor, a PERSON entity (Hittites->Heth,
+# Jews->Judah). So a gentilic word binds to a person and would render individual-person
+# framing (Parents/Children) for a collective. This flags such a word so the card can show
+# a "People / Clan" view instead. NOT a binding input — bind_occurrence never calls it, the
+# binds are unchanged. ONE list, shared by the bound card (via /api/metav/entity) AND the
+# section-mismatch audit, so they can't drift.
+#   Suffixes are the HIGH-PRECISION gentilic endings only (-ites/-ians/-eans). Bare -im/-i
+#   are EXCLUDED — they collide with person names (Ephraim, Miriam, Levi). The irregular
+#   peoples an ending can't reach live in the curated set (incl. the real -im peoples).
+PEOPLE_GROUP_WORDS = {
+    "jews", "jew", "greeks", "greek", "gentiles", "gentile", "hebrews", "philistines",
+    "romans", "egyptians", "chaldeans", "canaanites",
+    "emim", "rephaim", "anakim", "nephilim", "zamzummim", "zuzim",
+}
+_PEOPLE_SUFFIX = re.compile(r"(ites?|ians?|eans?)$", re.I)
+
+
+def is_people_group(name):
+    """True when the surface label reads as a people/clan (a gentilic), so a bind to a
+    person entity should render as 'People / Clan', not an individual bio."""
+    n = re.sub(r"[^a-z]", "", (name or "").lower())
+    return bool(n) and (n in PEOPLE_GROUP_WORDS or bool(_PEOPLE_SUFFIX.search(n)))
+
+
 # ── WS1 — documented versification map ──────────────────────────────────────
 # DERIVE the offset from DOCUMENTED Hebrew/Greek-vs-English numbering differences
 # ONLY. The deltas seen in the data merely VALIDATE — a candidate remap counts only
