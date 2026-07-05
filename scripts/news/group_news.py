@@ -164,6 +164,8 @@ def label_batch(client, rows, known):
 def main():
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA journal_mode=DELETE")   # NFS-safe, not WAL (2026-07-05 corruption)
+    conn.execute("PRAGMA busy_timeout=5000")
     cols = [r[1] for r in conn.execute("PRAGMA table_info(items)")]
     if "event" not in cols:
         conn.execute("ALTER TABLE items ADD COLUMN event TEXT")

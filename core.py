@@ -224,6 +224,12 @@ NEWS_DB = os.path.join(os.path.dirname(os.path.abspath(__file__)), "news.db")
 def news_db():
     conn = sqlite3.connect(NEWS_DB)
     conn.row_factory = sqlite3.Row
+    # NFS-safe journaling: news.db lives on PA's NFS home. WAL needs a shared-memory
+    # sidecar + mmap that NFS can't do reliably (it corrupted news.db 2026-07-05 —
+    # lost page-1 write during a WAL fold-back). DELETE = plain rollback journal, and
+    # busy_timeout waits-and-retries instead of erroring when the nightly scripts write.
+    conn.execute("PRAGMA journal_mode=DELETE")
+    conn.execute("PRAGMA busy_timeout=5000")
     return conn
 
 

@@ -202,6 +202,8 @@ def score_batch(client, rows):
 def main():
     conn = sqlite3.connect(DB_PATH)
     conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA journal_mode=DELETE")   # NFS-safe, not WAL (2026-07-05 corruption)
+    conn.execute("PRAGMA busy_timeout=5000")
     where = "" if RESCORE else "WHERE score IS NULL"
     sql = f"SELECT id, title, source, summary FROM items {where} ORDER BY id"
     if LIMIT:

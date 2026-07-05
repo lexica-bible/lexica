@@ -90,6 +90,8 @@ def main():
     # read-only for the dry run; writable only when applying
     if apply:
         conn = sqlite3.connect(db)
+        conn.execute("PRAGMA journal_mode=DELETE")   # NFS-safe, not WAL (2026-07-05 corruption)
+        conn.execute("PRAGMA busy_timeout=5000")
     else:
         conn = sqlite3.connect(f"file:{db}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row

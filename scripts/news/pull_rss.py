@@ -130,6 +130,8 @@ def main():
     if not DRY_RUN:
         if conn is None:
             conn = sqlite3.connect(DB_PATH)
+        conn.execute("PRAGMA journal_mode=DELETE")   # NFS-safe, not WAL (2026-07-05 corruption)
+        conn.execute("PRAGMA busy_timeout=5000")
         conn.executescript(SCHEMA)
         have_table = True
 

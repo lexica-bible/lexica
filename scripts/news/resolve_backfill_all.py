@@ -69,10 +69,11 @@ def main():
 
     conn = sqlite3.connect(db, timeout=30)
     conn.row_factory = sqlite3.Row
-    # WAL + a busy wait are belt-and-suspenders; only the main thread writes, but
-    # this keeps reads smooth and tolerates the live site touching the file.
+    # DELETE (plain rollback journal), NOT WAL: news.db is on PA's NFS home, where
+    # WAL's shared-memory sidecar + mmap aren't reliable and corrupted the file mid
+    # fold-back (2026-07-05). busy_timeout waits-and-retries when the live site reads.
     try:
-        conn.execute("PRAGMA journal_mode=WAL")
+        conn.execute("PRAGMA journal_mode=DELETE")
         conn.execute("PRAGMA busy_timeout=5000")
     except sqlite3.Error:
         pass

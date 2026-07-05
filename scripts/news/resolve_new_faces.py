@@ -98,6 +98,8 @@ def run():
 
     conn = sqlite3.connect(db)
     conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA journal_mode=DELETE")   # NFS-safe, not WAL (2026-07-05 corruption)
+    conn.execute("PRAGMA busy_timeout=5000")
     if not _has_col(conn, "items", "resolved_url"):
         conn.close()
         print("resolve_new_faces: items.resolved_url missing — run the ALTER first. Skipping.")
