@@ -15,6 +15,12 @@ those need a printed-ABP tiebreak.
 Usage (on PA, from ~/bible-db — needs abp_texts/ + bible.db):
   python3 scripts/dump_family_source.py bible.db
   python3 scripts/dump_family_source.py bible.db "Jer 48:1" "Mat 21:19"   # custom refs
+  python3 scripts/dump_family_source.py --scan-brackets                   # unmatched-bracket scan
+
+Survivor-set source adjudication (LOCAL, feed-only, no DB) — the certified 208/0/0 split:
+  python3 scripts/dump_family_source.py --survivors --controls   # prove the detector fires BOTH verdicts
+  python3 scripts/dump_family_source.py --survivors              # adjudicate AUDIT_reassembly_survivors.txt
+  python3 scripts/dump_family_source.py --survivors <list.txt>   # custom "Book ch:v"-per-line list
 """
 import re
 import sqlite3
@@ -22,7 +28,7 @@ import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from load_abp_prose import VERSE_RE, clean_verse, ABP_DIRS
+from load_abp_prose import VERSE_RE, clean_verse, ABP_DIRS, G_NUM_RE
 from reorder_english import get_english_order_words
 
 # one exemplar per family (from the v2 --list), + the two named verses
@@ -105,10 +111,150 @@ def scan_brackets():
     print(f"\n  {n} verses with unmatched brackets.")
 
 
+# ── Survivor-set source adjudication (the 208 word-order survivors) ────────────
+# An INDEPENDENT source-order deriver: a second, from-scratch tokenizer that reads
+# the source's OWN notation (non-bracket text verbatim; bracket items ordered by
+# their leading digit), NOT a reuse of load_abp_prose.reorder_bracket. Same RULE,
+# different code — so agreement CROSS-CHECKS the prose parser instead of assuming it.
+# This is the tool that produced the certified 208/0/0 split (charter S9 DIAGNOSIS
+# RESULT). Post-rebuild the gate re-runs it: with v2 at zero (rows==prose) AND this
+# confirming prose==source, the 208 went to zero AGAINST SOURCE, not just prose.
+
+_WS = re.compile(r"\s+")
+# a stray order digit or lone Strong's 'G' left in prose = apparatus leak (prose-wrong)
+_LEAK = re.compile(r"(?<!\w)\d|G(?=[\s.]|$)")
+# repo-root default survivor list (one "Book ch:v" per line)
+_SURVIVORS_DEFAULT = Path(__file__).resolve().parent.parent / "AUDIT_reassembly_survivors.txt"
+
+
+def _strip_g(s):
+    return G_NUM_RE.sub("", s)
+
+
+def source_order(raw):
+    """Independent derivation of source English reading order (no reorder_bracket)."""
+    out, i, n = [], 0, len(raw)
+    while i < n:
+        if raw[i] == "[":
+            j = raw.find("]", i)
+            if j == -1:                       # malformed: no closing bracket
+                out.append(_strip_g(raw[i + 1:]))
+                break
+            items = re.split(r"\s+(?=\d)", raw[i + 1:j].strip())
+            parsed = []
+            for it in items:
+                m = re.match(r"(\d+)(.*)", it.strip())
+                if m:
+                    w = _strip_g(m.group(2)).strip()
+                    if w:
+                        parsed.append((int(m.group(1)), w))
+            parsed.sort(key=lambda x: x[0])
+            out.append(" ".join(w for _, w in parsed))
+            i = j + 1
+        else:
+            k = raw.find("[", i)
+            if k == -1:
+                k = n
+            out.append(_strip_g(raw[i:k]))
+            i = k
+    return _WS.sub(" ", " ".join(out)).strip()
+
+
+def _words_only(s):                           # word ORDER only — ignore punctuation + spacing
+    return re.findall(r"[a-z]+", s.lower())
+
+
+def adjudicate(raw):
+    """WORDS-WRONG | PROSE-WRONG | AMBIGUOUS for one source line. Returns (verdict, src, prose, why)."""
+    balanced = raw.count("[") == raw.count("]")
+    amb = ambiguity(raw)
+    prose = clean_verse(raw)
+    src = source_order(raw)
+    if amb:
+        return "AMBIGUOUS", src, prose, "; ".join(amb)
+    if not balanced:
+        return "PROSE-WRONG", src, prose, "unbalanced source brackets"
+    if _LEAK.search(prose):
+        return "PROSE-WRONG", src, prose, "apparatus left in prose"
+    if _words_only(src) != _words_only(prose):
+        return "PROSE-WRONG", src, prose, "independent source word-order != prose"
+    return "WORDS-WRONG", src, prose, ""
+
+
+# control set — the detector must FIRE on BOTH verdicts (a detector that only ever
+# says WORDS-WRONG is the void-zero trap: reuse the production adjudicate(), no copy).
+_SURV_CONTROLS = [
+    ("Jer 48:1",  "WORDS-WRONG", "the LORD of the forces, the God of Israel"),
+    ("Mat 16:16", "WORDS-WRONG", "the Christ, the son of the living God"),
+    ("Gen 7:1",   "WORDS-WRONG", "I beheld you"),
+    ("Rom 9:17",  "WORDS-WRONG", "this same thing"),
+    ("Mat 26:16", "WORDS-WRONG", "he should deliver him up"),
+    ("Mat 21:19", "PROSE-WRONG", None),   # malformed source bracket → the leak class MUST fire
+]
+
+
+def _ref_parts(ref):
+    parts = ref.split()
+    return " ".join(parts[:-1]), *(int(x) for x in parts[-1].split(":"))
+
+
+def run_survivor_controls():
+    print("== --survivors CONTROLS (adjudicator must fire BOTH verdicts) ==")
+    ok = True
+    for ref, want, frag in _SURV_CONTROLS:
+        book, ch, vs = _ref_parts(ref)
+        raw = source_line(book, ch, vs)
+        if raw is None:
+            print(f"  [MISS] {ref}: source line not found"); ok = False; continue
+        verdict, src, prose, why = adjudicate(raw)
+        good = verdict == want and (frag is None or frag in src)
+        ok = ok and good
+        print(f"  [{'FIRED' if good else 'FAIL '}] {ref}: got {verdict}, want {want}"
+              + (f"  (expect ~'{frag}')" if frag else f"  ({why})"))
+    print("  CONTROLS PASSED." if ok else "  CONTROLS FAILED — do not trust any survivor zero.")
+    return 0 if ok else 1
+
+
+def run_survivors(refs_file):
+    path = Path(refs_file)
+    if not path.exists():
+        sys.exit(f"survivor list not found: {path}")
+    refs = [ln.strip() for ln in path.read_text(encoding="utf-8").splitlines() if ln.strip()]
+    buckets = {"WORDS-WRONG": [], "PROSE-WRONG": [], "AMBIGUOUS": []}
+    notfound = []
+    for ref in refs:
+        book, ch, vs = _ref_parts(ref)
+        raw = source_line(book, ch, vs)
+        if raw is None:
+            notfound.append(ref); continue
+        verdict, src, prose, why = adjudicate(raw)
+        buckets[verdict].append((ref, why, src, prose))
+    print(f"== survivor source-adjudication ({len(refs)} refs, from {path.name}) -- READ-ONLY ==")
+    print(f"  WORDS-WRONG : {len(buckets['WORDS-WRONG'])}")
+    print(f"  PROSE-WRONG : {len(buckets['PROSE-WRONG'])}")
+    print(f"  AMBIGUOUS   : {len(buckets['AMBIGUOUS'])}")
+    print(f"  not found   : {len(notfound)}")
+    for tag in ("PROSE-WRONG", "AMBIGUOUS"):
+        if buckets[tag]:
+            print(f"\n-- {tag} (inspect each) --")
+            for ref, why, src, prose in buckets[tag]:
+                print(f"  {ref}  [{why}]\n     SRC  : {src}\n     PROSE: {prose}")
+    if notfound:
+        print("\nNOT FOUND:", ", ".join(notfound))
+
+
 def main():
     args = sys.argv[1:]
     if "--scan-brackets" in args:
         scan_brackets()
+        return
+    if "--survivors" in args:
+        if "--controls" in args:
+            sys.exit(run_survivor_controls())
+        # optional custom list path after --survivors
+        idx = args.index("--survivors")
+        nxt = args[idx + 1] if idx + 1 < len(args) and not args[idx + 1].startswith("--") else None
+        run_survivors(nxt or _SURVIVORS_DEFAULT)
         return
     db = next((a for a in args if not a.startswith("--")), "bible.db")
     custom = [a for a in args[1:] if not a.startswith("--")]

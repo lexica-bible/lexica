@@ -1,5 +1,10 @@
 # Reassembly-diff — findings + rebuild plan (2026-07-04)
 
+> **SUPERSEDED 2026-07-04 → see `HANDOFF_cert_session9.md` (the single canonical S9 charter).**
+> Its adjudicated findings, count table, family table, render-trace, and rebuild plan are now folded
+> into the charter as diffs (d)-(g). This file is kept ONLY as the raw diagnosis history — do NOT
+> govern the rebuild from here.
+
 READ-ONLY audit complete. No data writes yet. This memo is the decision doc; nothing
 changes until it's approved.
 
