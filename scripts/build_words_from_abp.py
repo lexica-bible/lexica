@@ -122,7 +122,11 @@ _VERSE_RE    = re.compile(r"^\((\w+)\s+(\d+):(\d+)\)\s+(.*)")
 _STRIP_PUNCT = re.compile(r"[^\w\s]")
 _WORD_NUM    = re.compile(r"(?<!\w)\d+")
 _LEAD_NUM    = re.compile(r"^\d+")
-_NUM_PIECE   = re.compile(r"(?<![\w.])\d+(?=[A-Za-z])")  # an ABP position number leading a word
+_NUM_PIECE   = re.compile(r"(?<![\w.])\d+(?=\s*[A-Za-z])")  # an ABP position number leading a word; the
+# lookahead allows an OPTIONAL space so a spaced slot-digit ("3 be multiplied", not just glued "3say") is
+# still a cut point — else _split_numbered misses the 2nd position and the shared gloss collapses onto the
+# first slot, mis-ordering the interleaved word (Dan 4:1/Isa 10:23/Luk 8:28/Pro 3:15, S9 (P2); corpus-proven
+# to split exactly those 4 chunks and no others).
 
 
 # ── Parsing ───────────────────────────────────────────────────────────────────
@@ -734,8 +738,18 @@ def _redistribute_pronoun_compounds(rows: list) -> None:
     verb's own slot glossless — e.g. Gen 3:15 "will give heed to your" sits on
     σου/G4675 while τηρέω/G5083 is empty. Keep the pronoun's own word ("your") on
     the pronoun; move the rest ("will give heed to") to the adjacent empty slot;
-    put the two into a NEW 2-word bracket so PROSE reads verb-then-pronoun
-    (greek_pos order) while CHIP keeps Greek/source order (position order).
+    put the two into a NEW 2-word bracket.
+
+    ORDER BY SOURCE, not a hard-coded verb-first (S9 (P1), 2026-07-05). The two
+    greek_pos values follow where the kept pronoun sits in the SOURCE gloss:
+      * kept word(s) entirely AFTER the moved run  -> verb=1, pronoun=2
+        ("will give heed to your" — unchanged, the original case).
+      * kept word(s) entirely BEFORE the moved run -> pronoun=1, verb=2
+        ("his hand", not the old "hand his").
+      * kept words STRADDLE the moved run          -> SKIP, leave the phrase whole
+        ("I beheld you": "I" before, "you" after "beheld" — two slots can't hold
+        both positions, so leaving it whole reads as the source). The old fixed
+        verb-first flipped both non-after cases; that was the 204-verse (P1) defect.
 
     SURGICAL: fires only for a known-pronoun slot with a multi-word gloss whose
     very next slot is empty, real-Strong's, non-article, and (like the pronoun)
@@ -763,24 +777,34 @@ def _redistribute_pronoun_compounds(rows: list) -> None:
         if not sbj or sbj in ("*", "") or sbj == _ARTICLE_BASE or rows[j][6] is not None:
             continue
 
-        keep, move = [], []
-        for word in eng.split():
+        words = eng.split()
+        keep_idx, move_idx = [], []
+        for gi, word in enumerate(words):
             norm = _NORM.sub("", word).lower()
-            (keep if norm in _ENGLISH_PRONOUN_WORDS else move).append(word)
-        if not keep or not move:
+            (keep_idx if norm in _ENGLISH_PRONOUN_WORDS else move_idx).append(gi)
+        if not keep_idx or not move_idx:
             continue
 
-        keep_eng, move_eng = " ".join(keep), " ".join(move)
+        # order the two slots by SOURCE position (see docstring); straddle -> leave whole
+        if max(keep_idx) < min(move_idx):
+            keep_gpos, move_gpos = 1, 2          # kept pronoun leads ("his hand")
+        elif min(keep_idx) > max(move_idx):
+            keep_gpos, move_gpos = 2, 1          # verb leads ("will give heed to your")
+        else:
+            continue                             # straddle ("I beheld you") -> leave whole
+
+        keep_eng = " ".join(words[k] for k in keep_idx)
+        move_eng = " ".join(words[k] for k in move_idx)
         bid = next_bid
         next_bid += 1
 
         ri, rj = rows[i], rows[j]
-        # pronoun keeps its word, English-SECOND (greek_pos 2); joins the bracket
+        # pronoun keeps its own word(s); greek_pos by source order
         rows[i] = (ri[0], keep_eng, _head_word(keep_eng), ri[3], ri[4],
-                   2, bid, ri[7], ri[8], ri[9], ri[10], ri[11], ri[12])
-        # verb gets the moved phrase, English-FIRST (greek_pos 1); joins the bracket
+                   keep_gpos, bid, ri[7], ri[8], ri[9], ri[10], ri[11], ri[12])
+        # verb gets the moved phrase; greek_pos by source order
         rows[j] = (rj[0], move_eng, _head_word(move_eng), rj[3], rj[4],
-                   1, bid, rj[7], rj[8], rj[9], rj[10], rj[11], rj[12])
+                   move_gpos, bid, rj[7], rj[8], rj[9], rj[10], rj[11], rj[12])
 
 
 # ── Folded post-build repairs (the former fix_*.py chain) ──────────────────────

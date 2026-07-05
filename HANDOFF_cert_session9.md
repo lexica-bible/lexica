@@ -121,14 +121,18 @@ unexplained is stop-condition 2 with no way to localize.
 
 ## The five fixes
 
-### (P) pronoun / short-word slotting — MERGES old (a)+(c)+(d) (one mechanism)
-**The core S9 code fix.** **Culprit = `_redistribute_pronoun_compounds`** (traced + reproduced locally
-2026-07-05), NOT the `_split_compounds` carry path (that never fires on the 208 — see killed suspects).
-That pass handles "ABP bundled a verb's English onto a pronoun slot" (Gen 3:15 "will give heed to your").
-It moves the verb's words to the empty neighbour and **hard-codes the order: moved verb reads FIRST
-(greek_pos 1), kept pronoun reads SECOND (greek_pos 2).** Right when the pronoun follows the verb in
-source; WRONG when it precedes — it flips them. **208 verses** survive a clean build this way (source-
-adjudicated words-wrong, every one).
+### (P) pronoun / short-word slotting — MERGES old (a)+(c)+(d); TWO sub-fixes (P1)+(P2)
+**The core S9 code fix. Written 2026-07-05, verified against the isolation harness; awaiting the full-build
+gate.** The 208 survivors split by mechanism (proven via `enumerate_redistributions.py` overlap: 204 fire on
+the pronoun pass, 4 do not):
+- **(P1) = 204 verses** — `_redistribute_pronoun_compounds` (traced + reproduced; NOT the `_split_compounds`
+  carry path, which never fires — see killed suspects).
+- **(P2) = 4 verses** — a spaced-slot-digit bug in `_split_numbered` (Dan 4:1 / Isa 10:23 / Luk 8:28 /
+  Pro 3:15). Different pass, registered separately below.
+
+**(P1):** the pass moves a verb bundled onto a pronoun slot to the empty neighbour and **hard-coded the
+order: moved verb FIRST (greek_pos 1), kept pronoun SECOND (greek_pos 2).** Right when the pronoun follows
+the verb in source; WRONG when it precedes — it flipped them.
 
 Two shapes, one pass (reproduced through the pass + reader port):
 - **adjacent-swap** ("his hand" → "hand his", ~38): kept pronoun is contiguous, entirely BEFORE the moved
@@ -152,13 +156,37 @@ source index; if kept words straddle the moved run → SKIP; if contiguous → s
   `_redistribute_pronoun_compounds` currently fires on and gets RIGHT** (the Gen 3:15 class) — must stay
   byte-identical. Enumerated by `scripts/enumerate_redistributions.py` (read-only, PA; obeys the control
   rule — it must FIRE on Gen 3:15 AND Gen 7:1 or it's declared broken). Fix is not trusted until:
-  (firings − 208) readings are byte-identical pre/post-fix (plain `diff`) AND the 208 go to zero
-  (`dump_family_source.py --survivors` + v2). Both gate items below.
+  (firings − 208) readings are byte-identical pre/post-fix (plain `diff`) AND the (P1) 204 go to zero. The
+  4 (P2) verses are NOT firings, so they're covered by v2 + `--survivors`, not the enumerator diff.
 - **Blank-verb-slot pre-registration:** the straddle-skip leaves ~170 verb slots blank-english (their
   natural source state — bare Greek tokens, `parse_abp.py:271`, a shape the corpus already carries in the
   thousands). NOT a new shape, moves NO pinned count (row totals unchanged; coverage reads `english_head`,
   already blank-agnostic) and does NOT collide with the (a) fold census (which keys on the 1473 number; the
   straddle verb keeps its OWN number). Recorded here so the shift is expected, not a surprise finding.
+
+**(P2) — `_split_numbered` spaced-slot-digit fix (4 verses, PRE-REGISTERED to the row).** `_NUM_PIECE`
+required the ABP position digit to touch its word (`\d+(?=[A-Za-z])`); the 4 have a SPACE ("3 be
+multiplied"), so `_split_numbered` missed the 2nd position and collapsed a shared gloss onto one slot,
+mis-ordering the interleaved word. Fix = allow an optional space (`\d+(?=\s*[A-Za-z])`). **A corpus scan
+proves the regex splits EXACTLY these 4 chunks and no other in 31,237 verses — but that's a claim about the
+SCAN; the BUILD proof is the gate.** Expected full-build delta, per (row, column) — an unexpected 5th change
+ANYWHERE is an automatic STOP, not a shrug:
+
+| verse | the one row that splits (strongs, gloss) | → two rows (english / greek_pos) |
+|---|---|---|
+| Dan 4:1 | G4129 "may  be multiplied" | "may"@1 + "be multiplied"@3 |
+| Isa 10:23 | G4932 "is the one rendering concise" | "is the one rendering"@2 + "concise"@4 |
+| Luk 8:28 | G928 "that you should torment" | "that you should"@1 + "torment"@3 |
+| Pro 3:15 | G514 "equal worth" | "equal"@3 + "worth"@5 |
+
+- **Per-column:** each split rewrites the source row's `english` + `greek_pos` and ADDS one new row (SAME
+  `strongs`/`strongs_base`, new `position`/`greek_pos`). **No strongs change** — strongs_base invariant
+  untouched. Columns touched: `english`/`english_head`/`greek_pos` + a row insert. Bracket_id unchanged
+  (both pieces stay in the existing bracket).
+- **Row-count pin moves +4** (626,30N → +4; each split gloss becomes two rows). Re-pinned in the rebuild
+  commit after `compare_words`. This is the ONLY (P2) count change; anything else = stop.
+- Verified against the live module 2026-07-05: `_split_numbered` now returns the two pieces for all 4;
+  the isolation harness reads each verse in source order.
 
 ### (b) `import_tipnr` apply — Door 2's fix (code DONE, just re-import)
 Fix is committed + dry-run-proven (commit 96bb662): `import_tipnr.parse_tipnr` now types each entity from
@@ -256,9 +284,11 @@ couldn't have if either number were hardcoded — which is exactly why the line-
   words-wrong); (a)/(c)/(d) merged into (P). The (P) CODE fix (safe carry path, no ~85 regression) is the
   one piece still to WRITE — everything else is scoped.
 - Door 1 CLOSED (census); Door 2 code DONE + proven (not applied); (P) code = the open work.
-- **(P) TRACED 2026-07-05:** culprit = `_redistribute_pronoun_compounds` (hard-coded verb-first order),
-  not the carry path (killed). Fix design = skip-straddle + source-order (design approved, code not written).
-  Control set = `enumerate_redistributions.py` (committed, read-only, PA — awaiting a JP run on bible.db.new).
+- **(P) TRACED + WRITTEN 2026-07-05, awaiting the full-build gate:** two sub-fixes in
+  `build_words_from_abp.py` — **(P1)** `_redistribute_pronoun_compounds` skip-straddle + source-order (204
+  verses) and **(P2)** `_NUM_PIECE` spaced-slot-digit (`\s*`, 4 verses, +4 rows). Both verified against the
+  isolation harness; carry path stays killed. Control sets: `enumerate_redistributions.py` firing baseline
+  (791, on PA) for (P1); the pre-registered 4-row split table for (P2).
 - (e)/(f) scoped, ready; (g) conditional on (P) covering it as one mechanism.
 - Reassembly-diff tools committed (READ-ONLY): `audit_reassembly_diff.py` (v1 bag + v2 order-aware,
   `--controls`/`--list`), `reorder_english.py` (+ `tests/test_reorder_port.py`, proven byte-equal to the JS
@@ -273,15 +303,31 @@ couldn't have if either number were hardcoded — which is exactly why the line-
   row counts ONLY in the deliberate-rebuild commit after compare_words passed, and re-run `cert_invariants.py`.
 
 ## Gate block (must all pass before the swap)
-- `compare_words.py` reviewed (pre-registered per-column diffs only, per the batching contract)
+- `compare_words.py` reviewed (pre-registered per-column diffs only, per the batching contract). For (P)
+  the expected diff = **204 (P1) verses' column deltas** (`english`/`english_head`/`greek_pos`/`bracket_id`
+  on the redistribute rows) **PLUS 4 (P2) verses' splits** (+4 new rows, `english`/`greek_pos`, no strongs),
+  each attributed. NOT "+4 only". Anything outside those two sets = stop.
 - `cert_invariants.py` 7/7 + `--controls` all fire; row pins re-pinned in the rebuild commit
 - L9 split lint = 0
 - `tests/test_reorder_port.py` green (the port is the v2 arbiter — prove it FIRST)
-- **(P) firing control set** (re-scoped 2026-07-05): `scripts/enumerate_redistributions.py bible.db.new
-  bh_scrape.db` (controls FIRE on Gen 3:15 + Gen 7:1 first) → the readings of every verse
-  `_redistribute_pronoun_compounds` fires on. The (P) fix must leave **(firings − 208) byte-identical**
-  (plain `diff` of pre-fix vs post-fix output) AND drive the 208 to zero. Both must hold; build/run this
-  control set BEFORE writing the fix. (The old ~85/`carry=False` set is NOT this guard — wrong pass.)
+- **(P1) firing control set** (re-scoped 2026-07-05): `scripts/enumerate_redistributions.py bible.db.new
+  bh_scrape.db` (controls FIRE on Gen 3:15 + Gen 7:1 first) → the readings of every firing (baseline = 791).
+  **The straddle branch now `continue`s, so those verses DISAPPEAR from the firing set — the delta is a
+  MIX of removed + changed, not modified-in-place.** Pre-registered as a SET invariant (stronger than
+  count-matching, which passes even if the wrong verses moved):
+  - **added == ∅** — no ref in post-fix that wasn't in baseline.
+  - **{removed} ∪ {changed-reading} == exactly the 204 (P1) survivor refs** (survivors = the 208 minus the
+    4 (P2) = `AUDIT_reassembly_survivors.txt` minus Dan 4:1/Isa 10:23/Luk 8:28/Pro 3:15). Nothing OUTSIDE
+    the 204 may move; every one of the 204 must be either removed (straddle) or changed (keep-before).
+  - partition RULE (not itself the gate): straddle → removed, keep-before → reading changed, keep-after →
+    untouched. N (changed) + M (removed) = 204, derived by the check, not pre-guessed.
+  PA check: `comm`/`diff` baseline vs post-fix firing refs for removed/added; a keyed reading-compare for
+  changed; assert the union equals the 204 set. (The old ~85/`carry=False` set is NOT this guard.)
+- **(P2) row-diff** (pre-registered to the row, 2026-07-05): the full-build word-row diff (`compare_words.py`
+  bible.db.new-pre vs -post) must show **EXACTLY the 4 splits** in the (P2) table (+4 rows, `english`/
+  `greek_pos` on those rows, no strongs) and **nothing else**. An unexpected 5th changed row ANYWHERE = an
+  automatic STOP. The corpus scan (regex splits exactly 4 chunks) is the design proof; this diff is the
+  BUILD proof.
 - **v1 AND v2 reassembly at CRITERION** (`--controls` + `--controls --v2` fire first):
   **zero word-order + zero content-other + NO NEW punct-position.** punct-position stays but is pinned as a
   FROZEN ALLOWLIST — the fresh build cured NONE (still 261), so freeze all 261 as the allowlist; any new
