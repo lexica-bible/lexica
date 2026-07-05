@@ -50,6 +50,8 @@ APPLY = "--apply" in sys.argv
 HERE = os.path.dirname(os.path.abspath(__file__))
 
 CONTAIN_FLOOR = 0.5     # tier-2 winner must contain at least half the entity's refs
+MARGIN_SAFE   = 0.30    # ...AND beat the runner-up by this much, else the refs are
+                        # split across two same-name records (ambiguous) -> residual
 
 
 def key(s):
@@ -144,7 +146,7 @@ def main():
         top = scored[0][0] if scored else 0.0
         runner = scored[1][0] if len(scored) > 1 else 0.0
         r_pid = scored[1][1] if len(scored) > 1 else None
-        if scored and top >= CONTAIN_FLOOR and (len(scored) == 1 or top > runner):
+        if scored and top >= CONTAIN_FLOOR and (top - runner) >= MARGIN_SAFE:
             win_pid = scored[0][1]
             buckets["overlap"].append((uniq, win_pid, "overlap"))
             tier2_audit.append((uniq, key(disp), win_pid, name_of.get(win_pid, "?"),
@@ -152,7 +154,8 @@ def main():
                                 name_of.get(r_pid, "-"), runner))
         else:
             reason = ("no_refs" if not refs else
-                      "tie" if top == runner and top > 0 else "below_floor")
+                      "below_floor" if top < CONTAIN_FLOOR else
+                      "split")   # cleared floor but runner-up too close = refs split
             buckets["residual"].append((uniq, pool, top, reason))
 
     # ── the links we'll actually write, each with its rule + confidence ──────────
