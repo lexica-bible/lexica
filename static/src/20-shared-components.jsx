@@ -536,10 +536,13 @@ function LeafletMap({ lat, lon, name }) {
       zoom: 7,
       zoomControl: true,
       scrollWheelZoom: false,
-      attributionControl: false,
+      attributionControl: true,   // Esri's license requires the on-map credit line
     });
-    window.L.tileLayer('https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png', {
-      maxZoom: 19,
+    // Esri World Physical: terrain/relief basemap, no labels, no API key. Serves to zoom 8
+    // (map caps there), plenty for a locator that opens at zoom 7.
+    window.L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}', {
+      maxZoom: 8,
+      attribution: 'Tiles &copy; Esri &mdash; Source: US National Park Service',
     }).addTo(map);
     window.L.marker([lat, lon]).addTo(map).bindPopup(name).openPopup();
     instanceRef.current = map;

@@ -715,7 +715,12 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       if (!line && be.summary)
         line = be.summary.split(/,?\s*(?:first mentioned|only mentioned|referred to)/i)[0].replace(/\(+$/, "");
       line = clean(line);
-      const area = clean(be.area);
+      // TIPNR's summary opens "A location …" for nearly every place — a generic placeholder,
+      // not a real description. Drop it; real descriptions still show.
+      if (/^(a location|a place|location|place)\.?$/i.test(line)) line = "";
+      // area (Geo-area) is often just TIPNR's empty-breadcrumb ">" — strip stray > and blanks
+      // so an empty geo-area shows NO row; real values (e.g. "Tribe of Simeon") stay as a label.
+      const area = clean(be.area).replace(/^[>\s]+|[>\s]+$/g, "");
       // don't repeat the region when the description already names it (Eden: "…in Mesopotamia")
       const showArea = area && !(line && line.toLowerCase().includes(area.toLowerCase()));
       // The entity's verses are no longer listed here — the standard occurrence controls
