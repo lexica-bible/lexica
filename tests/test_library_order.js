@@ -27,7 +27,7 @@ const fs = require("fs");
 const path = require("path");
 
 require.extensions[".jsx"] = require.extensions[".js"];
-const { getEnglishOrderWords, groupForGreekMode, orderBracketGroupWords, greekLineForWord, pnClickPayload } =
+const { getEnglishOrderWords, groupForGreekMode, orderBracketGroupWords, greekLineForWord, pnClickPayload, libViewTransition } =
   require(path.join(__dirname, "..", "static", "src", "56-library-order-logic.jsx"));
 
 const SNAP = path.join(__dirname, "snapshots");
@@ -237,6 +237,47 @@ test("2Ki 23:29 mode three shows bracket digits in source order", () => {
   assert.deepStrictEqual(digits(2), [2, 3, 1], "bracket 2 killed(2) him(3) Necho(1)");
   // every bracketed word carries a real digit (nothing blank in this anchor)
   for (const g of groups) for (const w of g.words) assert.ok(w.greek_pos != null);
+});
+
+// 12. PROSE snapshot/restore round-trip: entering prose unticks + snapshots the
+//     study toggles; the next switch away restores them.
+test("prose entry snapshots + unticks study toggles, exit restores them", () => {
+  const chip = { viewMode: "chip", showStrongs: true, showInterlinear: false, proseSnap: null };
+  const inProse = libViewTransition(chip, { type: "viewMode", mode: "prose" });
+  assert.strictEqual(inProse.viewMode, "prose");
+  assert.strictEqual(inProse.showStrongs, false, "Strong's unticked in prose");
+  assert.strictEqual(inProse.showInterlinear, false);
+  assert.deepStrictEqual(inProse.proseSnap, { showStrongs: true, showInterlinear: false });
+  const back = libViewTransition(inProse, { type: "viewMode", mode: "chip" });
+  assert.strictEqual(back.showStrongs, true, "Strong's restored on exit");
+  assert.strictEqual(back.showInterlinear, false);
+  assert.strictEqual(back.proseSnap, null, "snapshot cleared after restore");
+});
+
+// 13. No snapshot when nothing was on (nothing to restore, no phantom re-tick).
+test("prose entry with toggles off takes no snapshot", () => {
+  const chip = { viewMode: "chip", showStrongs: false, showInterlinear: false, proseSnap: null };
+  const inProse = libViewTransition(chip, { type: "viewMode", mode: "prose" });
+  assert.strictEqual(inProse.proseSnap, null);
+  const back = libViewTransition(inProse, { type: "viewMode", mode: "interlinear" });
+  assert.strictEqual(back.showStrongs, false);
+  assert.strictEqual(back.showInterlinear, false);
+});
+
+// 14. MANUAL-TOUCH invalidation: touching a toggle in prose discards the snapshot,
+//     so leaving prose does NOT override the manual choice.
+test("manual toggle in prose discards the snapshot (no later override)", () => {
+  const chip = { viewMode: "chip", showStrongs: true, showInterlinear: true, proseSnap: null };
+  const inProse = libViewTransition(chip, { type: "viewMode", mode: "prose" });
+  assert.deepStrictEqual(inProse.proseSnap, { showStrongs: true, showInterlinear: true });
+  const touched = libViewTransition(inProse, { type: "toggle", key: "showStrongs" });
+  assert.strictEqual(touched.showStrongs, true, "manual tick took effect");
+  assert.strictEqual(touched.proseSnap, null, "snapshot discarded by manual touch");
+  assert.strictEqual(touched.viewMode, "chip", "toggle forces chip so Prose stays usable");
+  // leaving prose now must NOT resurrect the old both-on snapshot
+  const back = libViewTransition(touched, { type: "viewMode", mode: "chip" });
+  assert.strictEqual(back.showStrongs, true);
+  assert.strictEqual(back.showInterlinear, false, "manual choice preserved, not overridden");
 });
 
 console.log(`\n${n} tests passed.`);

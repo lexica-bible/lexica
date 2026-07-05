@@ -506,7 +506,7 @@ function MobileBookPicker({ books, selBook, selChapter, nonCanon, nonCanonList, 
 function ModesSheet({
   corpus, translation, pickBible, esvOwner, nivOwner, hebShown, hebPickable, toggleParallel, nonCanonList,
   compareAvail, compareActive, toggleCompare,
-  showStrongs, showInterlinear, setOpt, chipMode, viewMode, libFontSize, changeFontSize, onClose,
+  showStrongs, showInterlinear, setOpt, pickView, toggleStudy, chipMode, viewMode, libFontSize, changeFontSize, onClose,
   chrono, orderMode, setOrder, theme, setTheme,
 }) {
   const { sheetRef, scrollRef } = useSwipeToDismiss(onClose);
@@ -610,19 +610,19 @@ function ModesSheet({
           <div className="mode-sec">
             <div className="mode-lbl">Study layer</div>
             <div className="mseg">
-              <button className={"mseg-b"+(showStrongs?" on":"")} disabled={proseLocked||abpMode} style={grayIl} aria-pressed={showStrongs} onClick={()=>!(proseLocked||abpMode)&&setOpt("showStrongs",!showStrongs)}>Strong's</button>
-              <button className={"mseg-b"+(showInterlinear?" on":"")} disabled={proseLocked||abpMode} style={grayIl} aria-pressed={showInterlinear} onClick={()=>!(proseLocked||abpMode)&&setOpt("showInterlinear",!showInterlinear)}>Interlinear</button>
+              <button className={"mseg-b"+(showStrongs?" on":"")} disabled={proseLocked||abpMode} style={grayIl} aria-pressed={showStrongs} onClick={()=>!(proseLocked||abpMode)&&toggleStudy("showStrongs")}>Strong's</button>
+              <button className={"mseg-b"+(showInterlinear?" on":"")} disabled={proseLocked||abpMode} style={grayIl} aria-pressed={showInterlinear} onClick={()=>!(proseLocked||abpMode)&&toggleStudy("showInterlinear")}>Interlinear</button>
             </div>
           </div>
           <div className="mode-sec">
             <div className="mode-lbl">Display</div>
             <div className="display-row">
               <div className="mseg mseg-view">
-                <button className={"mseg-b"+(chipActive?" on":"")} disabled={layoutLocked} style={layoutLocked?{opacity:0.35,cursor:"default"}:undefined} title={extraEnglish?"Line-by-line view":"Chip view"} aria-label={extraEnglish?"Line-by-line view":"Chip view"} aria-pressed={chipActive} onClick={()=>!layoutLocked&&setOpt("viewMode","chip")}><Icon.Grid/></button>
+                <button className={"mseg-b"+(chipActive?" on":"")} disabled={layoutLocked} style={layoutLocked?{opacity:0.35,cursor:"default"}:undefined} title={extraEnglish?"Line-by-line view":"Chip view"} aria-label={extraEnglish?"Line-by-line view":"Chip view"} aria-pressed={chipActive} onClick={()=>!layoutLocked&&pickView("chip")}><Icon.Grid/></button>
                 {ilApplicable && (
-                  <button className={"mseg-b"+(ilActive?" on":"")} title="Interlinear — Greek reading line (faithful ABP)" aria-label="Faithful ABP interlinear" aria-pressed={ilActive} onClick={()=>setOpt("viewMode","interlinear")}><Icon.Interlinear/></button>
+                  <button className={"mseg-b"+(ilActive?" on":"")} title="Interlinear — Greek reading line (faithful ABP)" aria-label="Faithful ABP interlinear" aria-pressed={ilActive} onClick={()=>pickView("interlinear")}><Icon.Interlinear/></button>
                 )}
-                <button className={"mseg-b"+(proseActive?" on":"")} disabled={!hebMode&&!extraEnglish&&!proseLocked&&(showStrongs||showInterlinear)} style={!hebMode&&!extraEnglish&&!proseLocked&&(showStrongs||showInterlinear)?{opacity:0.35}:undefined} title={hebMode?"Left-to-right view":"Prose view"} aria-label={hebMode?"Left-to-right view":"Prose view"} aria-pressed={proseActive} onClick={()=>{ if(hebMode||extraEnglish){setOpt("viewMode","prose");return;} if(!showStrongs&&!showInterlinear)setOpt("viewMode","prose"); }}><Icon.Lines/></button>
+                <button className={"mseg-b"+(proseActive?" on":"")} title={hebMode?"Left-to-right view":"Prose view"} aria-label={hebMode?"Left-to-right view":"Prose view"} aria-pressed={proseActive} onClick={()=>pickView("prose")}><Icon.Lines/></button>
               </div>
               <div className="mseg font-picker">
                 <button className="mseg-b" onClick={() => changeFontSize(-1)}>A−</button>

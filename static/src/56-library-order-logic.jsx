@@ -141,6 +141,49 @@ function pnClickPayload(w, greekText) {
   return { isPN: true, pnName, gloss: pnName };
 }
 
+// PROSE ↔ STUDY-TOGGLE snapshot/restore. Prose is INCOMPATIBLE with the Strong's /
+// Interlinear toggles (either one forces chip). So clicking Prose always works: it
+// SNAPSHOTS whatever toggles are on, unticks both, and switches to prose; the next
+// switch AWAY from prose restores the snapshot. A MANUAL toggle touch discards the
+// snapshot — we only ever restore what the mode-switch itself suppressed, never
+// override a deliberate choice. (Distinct from interlinear mode, which just grays
+// the toggles because it renders its own lines — nothing is suppressed there.)
+//
+// Pure reducer over the libOptions object {viewMode, showStrongs, showInterlinear,
+// proseSnap}. `action` is {type:"viewMode", mode} or {type:"toggle", key}.
+function libViewTransition(state, action) {
+  const s = { ...state };
+  if (action.type === "toggle") {
+    s[action.key] = !s[action.key];
+    s.proseSnap = null;                 // a manual choice invalidates the snapshot
+    // Either toggle forces chip; if we were in prose, make the state honest so the
+    // Prose button stays usable (a later Prose click re-enters + re-snapshots).
+    if (state.viewMode === "prose" && (s.showStrongs || s.showInterlinear)) s.viewMode = "chip";
+    return s;
+  }
+  if (action.type === "viewMode") {
+    const mode = action.mode;
+    const wasProse = state.viewMode === "prose";
+    if (mode === "prose" && !wasProse) {
+      // snapshot ONLY if something is on to suppress; else clear (nothing to restore)
+      if (state.showStrongs || state.showInterlinear) {
+        s.proseSnap = { showStrongs: !!state.showStrongs, showInterlinear: !!state.showInterlinear };
+        s.showStrongs = false;
+        s.showInterlinear = false;
+      } else {
+        s.proseSnap = null;
+      }
+    } else if (mode !== "prose" && wasProse && state.proseSnap) {
+      s.showStrongs = !!state.proseSnap.showStrongs;
+      s.showInterlinear = !!state.proseSnap.showInterlinear;
+      s.proseSnap = null;
+    }
+    s.viewMode = mode;
+    return s;
+  }
+  return s;
+}
+
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { getEnglishOrderWords, groupForGreekMode, orderBracketGroupWords, greekLineForWord, pnClickPayload };
+  module.exports = { getEnglishOrderWords, groupForGreekMode, orderBracketGroupWords, greekLineForWord, pnClickPayload, libViewTransition };
 }
