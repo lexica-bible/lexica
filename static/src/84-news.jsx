@@ -197,7 +197,6 @@ function _shortlistFace(s) {
 // The three clipboard TEXT formats (behavior unchanged — copy still routes through these).
 // `url` is already the resolved link. A blank date/description drops its own line.
 function _plainFormat(fmt, f, url) {
-  if (fmt === "link") return [f.date, url].filter(Boolean).join("\n");
   if (fmt === "titlelink") return [f.title, f.date, url].filter(Boolean).join("\n");
   const desc = cleanDescription(f.title, f.summary);       // titledesc
   return [f.title, ...(desc ? ["— " + desc] : []), f.date, url].filter(Boolean).join("\n");
@@ -681,9 +680,11 @@ function NewsView({ isMobile }) {
   const buildShortlist = (fmt, urlMap) => {
     const rurl = (u) => (urlMap && urlMap[u]) || u;
     const faces = (stories || []).filter(s => s.url).map(_shortlistFace);
+    // Link only = bare URLs, one per line, single \n, no dates/titles, no trailing newline.
+    if (fmt === "link") return faces.map(f => rurl(f.url)).join("\n");
     if (fmt === "md") return _markdownFormat(faces, rurl, _newsToday());
     if (fmt === "csv") return _csvFormat(faces, rurl);
-    return faces.map(f => _plainFormat(fmt, f, rurl(f.url))).join("\n\n");   // link|titlelink|titledesc
+    return faces.map(f => _plainFormat(fmt, f, rurl(f.url))).join("\n\n");   // titlelink|titledesc
   };
 
   // Copy the current shortlist in one of the three text formats (assembly shared with export).
@@ -699,21 +700,12 @@ function NewsView({ isMobile }) {
     });
   };
 
-  // Export the current shortlist to a downloaded file (same assembly layer as copy).
-  // "link" writes the SAME string the "Link only" copy puts on the clipboard —
-  // buildShortlist("link", …), byte-for-byte — into a plain .txt.
-  const doExport = (kind) => {   // "link" | "md" | "csv"
-    setExportOpen(false);
+  // Export the current shortlist to a downloaded .txt — the SAME string the "Link only"
+  // copy puts on the clipboard (buildShortlist("link", …), byte-for-byte).
+  const doExport = () => {
     if (copying || !(stories || []).some(s => s.url)) return;
     withResolvedUrls((map) => {
-      let mime, filename, fmt;
-      if (kind === "link") {
-        mime = "text/plain;charset=utf-8"; filename = `lexica-news-${_newsToday()}.txt`; fmt = "link";
-      } else {
-        mime = kind === "md" ? "text/markdown;charset=utf-8" : "text/csv;charset=utf-8";
-        filename = `lexica-shortlist-${_newsToday()}.${kind}`; fmt = kind;
-      }
-      _downloadFile(filename, buildShortlist(fmt, map), mime);
+      _downloadFile(`lexica-news-${_newsToday()}.txt`, buildShortlist("link", map), "text/plain;charset=utf-8");
       flashExported();
     });
   };
@@ -844,19 +836,9 @@ function NewsView({ isMobile }) {
     : "Export ▾";
   const exportMenu = (
     <div className="news-bar-pop news-copy-pop">
-      <button className={"news-btn" + (exportOpen ? " on" : "")}
-              disabled={copying || !stories.length} aria-expanded={exportOpen}
-              onClick={() => setExportOpen(o => !o)}>{exportLabel}</button>
-      {exportOpen && (
-        <>
-          <div className="news-bar-scrim" onClick={() => setExportOpen(false)} />
-          <div className="news-bar-menu news-copy-menu">
-            <button className="news-copy-item" onClick={() => doExport("link")}>Link only (.txt)</button>
-            <button className="news-copy-item" onClick={() => doExport("md")}>Markdown (.md)</button>
-            <button className="news-copy-item" onClick={() => doExport("csv")}>CSV (.csv)</button>
-          </div>
-        </>
-      )}
+      <button className="news-btn"
+              disabled={copying || !stories.length}
+              onClick={doExport}>{exported ? "Exported ✓" : "Export .txt"}</button>
     </div>
   );
   const inboxFilters = (   // mobile: one flat strip (keeps the inline "Since" word)
