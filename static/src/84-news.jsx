@@ -700,12 +700,20 @@ function NewsView({ isMobile }) {
   };
 
   // Export the current shortlist to a downloaded file (same assembly layer as copy).
-  const doExport = (kind) => {   // "md" | "csv"
+  // "link" writes the SAME string the "Link only" copy puts on the clipboard —
+  // buildShortlist("link", …), byte-for-byte — into a plain .txt.
+  const doExport = (kind) => {   // "link" | "md" | "csv"
     setExportOpen(false);
     if (copying || !(stories || []).some(s => s.url)) return;
     withResolvedUrls((map) => {
-      const mime = kind === "md" ? "text/markdown;charset=utf-8" : "text/csv;charset=utf-8";
-      _downloadFile(`lexica-shortlist-${_newsToday()}.${kind}`, buildShortlist(kind, map), mime);
+      let mime, filename, fmt;
+      if (kind === "link") {
+        mime = "text/plain;charset=utf-8"; filename = `lexica-news-${_newsToday()}.txt`; fmt = "link";
+      } else {
+        mime = kind === "md" ? "text/markdown;charset=utf-8" : "text/csv;charset=utf-8";
+        filename = `lexica-shortlist-${_newsToday()}.${kind}`; fmt = kind;
+      }
+      _downloadFile(filename, buildShortlist(fmt, map), mime);
       flashExported();
     });
   };
@@ -843,6 +851,7 @@ function NewsView({ isMobile }) {
         <>
           <div className="news-bar-scrim" onClick={() => setExportOpen(false)} />
           <div className="news-bar-menu news-copy-menu">
+            <button className="news-copy-item" onClick={() => doExport("link")}>Link only (.txt)</button>
             <button className="news-copy-item" onClick={() => doExport("md")}>Markdown (.md)</button>
             <button className="news-copy-item" onClick={() => doExport("csv")}>CSV (.csv)</button>
           </div>
