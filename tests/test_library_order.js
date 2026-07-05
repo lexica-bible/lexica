@@ -27,7 +27,7 @@ const fs = require("fs");
 const path = require("path");
 
 require.extensions[".jsx"] = require.extensions[".js"];
-const { getEnglishOrderWords, groupForGreekMode, orderBracketGroupWords, greekLineForWord } =
+const { getEnglishOrderWords, groupForGreekMode, orderBracketGroupWords, greekLineForWord, pnClickPayload } =
   require(path.join(__dirname, "..", "static", "src", "56-library-order-logic.jsx"));
 
 const SNAP = path.join(__dirname, "snapshots");
@@ -201,6 +201,27 @@ test("2Ki 23:29 mode three keeps bracket source order (no reorder)", () => {
   // and the chip-mode reorder of the SAME group WOULD differ (proves the two modes diverge)
   assert.deepStrictEqual(orderBracketGroupWords(b1.words).map(w => w.english),
     ["Josiah", "the", "king", "went"]);
+});
+
+// 10. ANCHOR — PN CLICK PATH: a proper-noun tap must carry isPN + a CAPITALIZED
+//     pnName so the detail panel routes to the verse-bound TIPNR/metaV entity card
+//     (not the lexeme card). This is the path that regressed in mode three: the
+//     render tests covered how a PN LOOKS, not what a click SENDS.
+test("2Ki 23:29 PN click payload carries isPN + capitalized pnName", () => {
+  const ki = readJson(path.join(FIX, "2ki_23_29.json"));
+  const pharaoh = ki.words.find(w => w.english === "Pharaoh");
+  const p = pnClickPayload(pharaoh, greekLineForWord(pharaoh).text);
+  assert.ok(p, "Pharaoh must produce a PN payload");
+  assert.strictEqual(p.isPN, true);
+  assert.strictEqual(p.pnName, "Pharaoh", "pnName must be capitalized for the entity bind");
+  assert.strictEqual(p.gloss, "Pharaoh");
+  // english_head is stored lowercased — the payload must NOT pass that through
+  assert.notStrictEqual(p.pnName, pharaoh.english_head);
+  // a lowercase-only PN (english blank) still capitalizes from english_head
+  const necho = ki.words.find(w => w.english === "Necho");
+  assert.strictEqual(pnClickPayload({ ...necho, english: "" }).pnName, "Necho");
+  // a non-PN word returns null (routes to the normal lexeme card)
+  assert.strictEqual(pnClickPayload(ki.words.find(w => w.english === "river")), null);
 });
 
 console.log(`\n${n} tests passed.`);

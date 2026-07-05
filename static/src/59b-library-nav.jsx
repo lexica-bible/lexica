@@ -519,6 +519,13 @@ function ModesSheet({
   const extraEnglish = !!(activeNonCanon && activeNonCanon.englishOnly);
   const layoutLocked = proseLocked && !extraEnglish;
   const viewChipOn   = hebMode ? !hebProse : (extraEnglish ? viewMode === "chip" : chipMode);
+  // Mode three (faithful ABP interlinear) — ABP Bible only; mirrors LibraryView.
+  const abpMode      = translation === "abp" && !activeNonCanon && viewMode === "interlinear";
+  const ilApplicable = translation === "abp" && !activeNonCanon;
+  const ilActive     = abpMode;
+  const chipActive   = !abpMode && viewChipOn;
+  const proseActive  = !abpMode && !viewChipOn;
+  const grayIl       = (proseLocked || abpMode) ? { opacity: 0.35, cursor: "default" } : undefined;
   // Text picker gestures: a TAP swaps to that single Bible; a LONG-PRESS (or right-click)
   // ticks it into / out of the side-by-side compare set. One shared timer is fine (touches
   // happen one at a time); the `fired` flag stops a long-press from also firing the tap.
@@ -603,16 +610,19 @@ function ModesSheet({
           <div className="mode-sec">
             <div className="mode-lbl">Study layer</div>
             <div className="mseg">
-              <button className={"mseg-b"+(showStrongs?" on":"")} disabled={proseLocked} style={gray} aria-pressed={showStrongs} onClick={()=>!proseLocked&&setOpt("showStrongs",!showStrongs)}>Strong's</button>
-              <button className={"mseg-b"+(showInterlinear?" on":"")} disabled={proseLocked} style={gray} aria-pressed={showInterlinear} onClick={()=>!proseLocked&&setOpt("showInterlinear",!showInterlinear)}>Interlinear</button>
+              <button className={"mseg-b"+(showStrongs?" on":"")} disabled={proseLocked||abpMode} style={grayIl} aria-pressed={showStrongs} onClick={()=>!(proseLocked||abpMode)&&setOpt("showStrongs",!showStrongs)}>Strong's</button>
+              <button className={"mseg-b"+(showInterlinear?" on":"")} disabled={proseLocked||abpMode} style={grayIl} aria-pressed={showInterlinear} onClick={()=>!(proseLocked||abpMode)&&setOpt("showInterlinear",!showInterlinear)}>Interlinear</button>
             </div>
           </div>
           <div className="mode-sec">
             <div className="mode-lbl">Display</div>
             <div className="display-row">
               <div className="mseg mseg-view">
-                <button className={"mseg-b"+(viewChipOn?" on":"")} disabled={layoutLocked} style={layoutLocked?{opacity:0.35,cursor:"default"}:undefined} title={extraEnglish?"Line-by-line view":"Chip view"} aria-label={extraEnglish?"Line-by-line view":"Chip view"} aria-pressed={viewChipOn} onClick={()=>!layoutLocked&&setOpt("viewMode","chip")}><Icon.Grid/></button>
-                <button className={"mseg-b"+(!viewChipOn?" on":"")} disabled={!hebMode&&!extraEnglish&&!proseLocked&&(showStrongs||showInterlinear)} style={!hebMode&&!extraEnglish&&!proseLocked&&(showStrongs||showInterlinear)?{opacity:0.35}:undefined} title={hebMode?"Left-to-right view":"Prose view"} aria-label={hebMode?"Left-to-right view":"Prose view"} aria-pressed={!viewChipOn} onClick={()=>{ if(hebMode||extraEnglish){setOpt("viewMode","prose");return;} if(!showStrongs&&!showInterlinear)setOpt("viewMode","prose"); }}><Icon.Lines/></button>
+                <button className={"mseg-b"+(chipActive?" on":"")} disabled={layoutLocked} style={layoutLocked?{opacity:0.35,cursor:"default"}:undefined} title={extraEnglish?"Line-by-line view":"Chip view"} aria-label={extraEnglish?"Line-by-line view":"Chip view"} aria-pressed={chipActive} onClick={()=>!layoutLocked&&setOpt("viewMode","chip")}><Icon.Grid/></button>
+                {ilApplicable && (
+                  <button className={"mseg-b"+(ilActive?" on":"")} title="Interlinear — Greek reading line (faithful ABP)" aria-label="Faithful ABP interlinear" aria-pressed={ilActive} onClick={()=>setOpt("viewMode","interlinear")}><Icon.Interlinear/></button>
+                )}
+                <button className={"mseg-b"+(proseActive?" on":"")} disabled={!hebMode&&!extraEnglish&&!proseLocked&&(showStrongs||showInterlinear)} style={!hebMode&&!extraEnglish&&!proseLocked&&(showStrongs||showInterlinear)?{opacity:0.35}:undefined} title={hebMode?"Left-to-right view":"Prose view"} aria-label={hebMode?"Left-to-right view":"Prose view"} aria-pressed={proseActive} onClick={()=>{ if(hebMode||extraEnglish){setOpt("viewMode","prose");return;} if(!showStrongs&&!showInterlinear)setOpt("viewMode","prose"); }}><Icon.Lines/></button>
               </div>
               <div className="mseg font-picker">
                 <button className="mseg-b" onClick={() => changeFontSize(-1)}>A−</button>

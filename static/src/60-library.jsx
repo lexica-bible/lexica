@@ -775,15 +775,23 @@ function LibraryView({ nav, onNavChange, onReaderPos, onWordClick, onVerseNumber
   // "chip" slot) and flowing prose. layoutLocked = can't even pick line vs flow.
   // (Declared here — before abpMode/chipMode read it — to avoid a use-before-init.)
   const extraEnglish  = !!(nonCanon && nonCanon.englishOnly);
-  // Mode three (faithful ABP interlinear): Greek-dominant, own render branch.
-  // ABP text only (not Hebrew / English-only non-canon). Wins over chip when set.
-  const abpMode     = !proseLocked && !hebMode && !extraEnglish && viewMode === "interlinear";
-  const chipMode    = !proseLocked && !abpMode && (viewMode === "chip" || showStrongs || showInterlinear);
+  // Mode three (faithful ABP interlinear): Greek-dominant, own render branch. ABP
+  // Bible ONLY — guarded on translation==="abp" so KJV/BSB/Hebrew/non-canon never
+  // enter it (a shared viewMode="interlinear" must not misroute another text).
+  const abpMode     = translation === "abp" && !nonCanon && viewMode === "interlinear";
+  // Non-ABP texts have no mode three, so they read "interlinear" as plain chip.
+  const chipMode    = !proseLocked && !abpMode && (viewMode === "chip" || viewMode === "interlinear" || showStrongs || showInterlinear);
   const wordMode    = chipMode;
   const kjvWordMode = chipMode;
   const extraLineMode = extraEnglish && viewMode === "chip";
   const layoutLocked  = proseLocked && !extraEnglish;
   const viewChipOn    = hebMode ? !hebProse : (extraEnglish ? viewMode === "chip" : chipMode);
+  // 3-way reading control (Chip · Interlinear · Prose). Interlinear (mode three) is
+  // ABP-only; on other texts the button is hidden and the control stays 2-way.
+  const ilApplicable  = translation === "abp" && !nonCanon;
+  const ilActive      = abpMode;
+  const chipActive    = !abpMode && viewChipOn;
+  const proseActive   = !abpMode && !viewChipOn;
 
   const POETRY_BOOKS = new Set(["Psa", "Pro", "Job", "Son", "Lam", "Ecc"]);
   const isPoetry = POETRY_BOOKS.has(selBook?.abbrev);
@@ -1534,8 +1542,8 @@ function LibraryView({ nav, onNavChange, onReaderPos, onWordClick, onVerseNumber
               </>
             )}
             <span className="lib-bar-sep" aria-hidden="true"/>
-            <button className={"lib-toggle lib-toggle-icon" + (showStrongs ? " on" : "")} disabled={proseLocked} title="Strong's numbers" aria-label="Strong's numbers" aria-pressed={showStrongs} style={proseLocked ? { opacity: 0.35, cursor: "default" } : undefined} onClick={() => !proseLocked && setOpt("showStrongs", !showStrongs)}><Icon.Hash/></button>
-            <button className={"lib-toggle lib-toggle-icon" + (showInterlinear ? " on" : "")} disabled={proseLocked} title="Interlinear" aria-label="Interlinear" aria-pressed={showInterlinear} style={proseLocked ? { opacity: 0.35, cursor: "default" } : undefined} onClick={() => !proseLocked && setOpt("showInterlinear", !showInterlinear)}><Icon.Interlinear/></button>
+            <button className={"lib-toggle lib-toggle-icon" + (showStrongs ? " on" : "")} disabled={proseLocked || abpMode} title={abpMode ? "Interlinear view already shows Strong's" : "Strong's numbers"} aria-label="Strong's numbers" aria-pressed={showStrongs} style={(proseLocked || abpMode) ? { opacity: 0.35, cursor: "default" } : undefined} onClick={() => !(proseLocked || abpMode) && setOpt("showStrongs", !showStrongs)}><Icon.Hash/></button>
+            <button className={"lib-toggle lib-toggle-icon" + (showInterlinear ? " on" : "")} disabled={proseLocked || abpMode} title={abpMode ? "Interlinear view already shows the Greek line" : "Interlinear"} aria-label="Interlinear" aria-pressed={showInterlinear} style={(proseLocked || abpMode) ? { opacity: 0.35, cursor: "default" } : undefined} onClick={() => !(proseLocked || abpMode) && setOpt("showInterlinear", !showInterlinear)}><Icon.Interlinear/></button>
             {!nonCanon && (
               <div className="lib-other-wrap" ref={compareWrapRef}>
                 <button className={"lib-toggle lib-toggle-icon" + (translation === "parallel" ? " on" : "")} title="Compare translations" aria-label="Compare translations" aria-pressed={translation === "parallel"} aria-expanded={compareOpen} onClick={() => setCompareOpen(o => !o)}><Icon.Columns/></button>
@@ -1557,20 +1565,29 @@ function LibraryView({ nav, onNavChange, onReaderPos, onWordClick, onVerseNumber
             <span className="lib-bar-sep" aria-hidden="true"/>
             <div className="seg lib-view-seg">
               <button
-                className={"seg-b" + (viewChipOn ? " on" : "")}
+                className={"seg-b" + (chipActive ? " on" : "")}
                 disabled={layoutLocked}
                 title={extraEnglish ? "Line-by-line view" : "Chip view"}
                 aria-label={extraEnglish ? "Line-by-line view" : "Chip view"}
-                aria-pressed={viewChipOn}
+                aria-pressed={chipActive}
                 style={layoutLocked ? { opacity: 0.35, cursor: "default" } : undefined}
                 onClick={() => !layoutLocked && setOpt("viewMode", "chip")}
               ><Icon.Grid/></button>
+              {ilApplicable && (
+                <button
+                  className={"seg-b" + (ilActive ? " on" : "")}
+                  title="Interlinear — Greek reading line (faithful ABP)"
+                  aria-label="Faithful ABP interlinear"
+                  aria-pressed={ilActive}
+                  onClick={() => setOpt("viewMode", "interlinear")}
+                ><Icon.Interlinear/></button>
+              )}
               <button
-                className={"seg-b" + (!viewChipOn ? " on" : "")}
+                className={"seg-b" + (proseActive ? " on" : "")}
                 disabled={!hebMode && !extraEnglish && !proseLocked && (showStrongs || showInterlinear)}
                 title={hebMode ? "Left-to-right view" : "Prose view"}
                 aria-label={hebMode ? "Left-to-right view" : "Prose view"}
-                aria-pressed={!viewChipOn}
+                aria-pressed={proseActive}
                 style={!hebMode && !extraEnglish && !proseLocked && (showStrongs || showInterlinear) ? { opacity: 0.35, cursor: "default" } : undefined}
                 onClick={() => { if (hebMode || extraEnglish) { setOpt("viewMode", "prose"); return; } if (!showStrongs && !showInterlinear) setOpt("viewMode", "prose"); }}
               ><Icon.Lines/></button>

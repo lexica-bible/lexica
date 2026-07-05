@@ -753,6 +753,10 @@ const LibRender = (function () {
         && (w.strongs_base !== "*" || w.english || w.english_head)
         && (w.english || w.english_head || g.text));
       const gloss = w.english || "";
+      // PN click payload built the SAME way chip mode does (shared pnClickPayload):
+      // capitalized name in pnName/gloss so the detail panel's verse-bound TIPNR/metaV
+      // lookup matches (a lowercase english_head misses the bind -> lexeme card).
+      const pnPayload = pnClickPayload(w, g.text);
       // Strong's VERBATIM: strongs_base as stored (H#### or G####); '*' -> hidden.
       const strongsShown = w.strongs_base && w.strongs_base !== "*";
       const openBrk = brk.open ? <span className="lib-iw-brk">[</span> : null;
@@ -762,7 +766,7 @@ const LibRender = (function () {
       return (
         <span key={key} data-note-pos={w.position}
           className={"lib-word lib-abpil-word" + (w.italic ? " lib-abp-italic" : "") + (clickable ? " lib-word-clickable" : "") + (isPN ? " lib-word-pn" : "") + hiClass(v.verse, w.position, ch)}
-          onClick={clickable ? () => onWordClick(isPN ? { ...makeEntry(w), isPN: true, pnName: (w.english_head || w.english || g.text), gloss: (w.english || g.text) } : makeEntry(w)) : undefined}>
+          onClick={clickable ? () => onWordClick(pnPayload ? { ...makeEntry(w), ...pnPayload } : makeEntry(w)) : undefined}>
           <span className="lib-abpil-gloss">{gloss || " "}</span>
           <span className="lib-abpil-greek" dir={g.kind === "name" ? undefined : "ltr"}>
             {openBrk}{g.text || " "}{closeBrk}

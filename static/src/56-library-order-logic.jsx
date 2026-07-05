@@ -128,6 +128,19 @@ function greekLineForWord(w) {
   return { text: "", kind: "none" };
 }
 
+// PN CLICK PAYLOAD — the isPN/pnName/gloss extras a proper-noun chip sends to the
+// detail panel, which keys its verse-bound TIPNR/metaV lookup on pnName. Returns
+// null for a non-PN. The name is CAPITALIZED (a single word) — english_head is
+// stored lowercased, and a lowercase name misses the entity bind and drops the
+// click to the lexeme card. Shared so chip mode + mode three route identically.
+function pnClickPayload(w, greekText) {
+  const isPN = !!(w.is_pn || w.strongs_base === "*");
+  if (!isPN) return null;
+  const raw = w.english || w.english_head || greekText || "";
+  const pnName = (raw && !raw.includes(" ")) ? raw.charAt(0).toUpperCase() + raw.slice(1) : raw;
+  return { isPN: true, pnName, gloss: pnName };
+}
+
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { getEnglishOrderWords, groupForGreekMode, orderBracketGroupWords, greekLineForWord };
+  module.exports = { getEnglishOrderWords, groupForGreekMode, orderBracketGroupWords, greekLineForWord, pnClickPayload };
 }
