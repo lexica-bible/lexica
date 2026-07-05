@@ -3962,14 +3962,21 @@ button.plan-day-mark:hover .plan-day-hollow { opacity: .8; }
   flex: 0 0 auto; font-size: 12.5px; color: var(--ink-2); cursor: pointer;
   background: var(--ctl-bg, var(--paper)); border: 1px solid var(--rule); border-radius: var(--radius); padding: 4px 10px;
 }
-.acct-plan-clear:hover { color: var(--accent); border-color: var(--accent); }
+.acct-plan-clear:hover:not(:disabled) { color: var(--accent); border-color: var(--accent); }
+.acct-plan-clear:disabled { opacity: 0.45; cursor: default; }
 .acct-plan-clearall {
   margin-top: 10px; font-size: 12.5px; color: var(--ink-3); cursor: pointer;
   background: none; border: none; padding: 4px 2px; text-decoration: underline;
 }
 .acct-plan-clearall:hover { color: var(--accent); }
-.acct-logout { background: var(--ctl-bg, var(--bg-sunk)); color: var(--ink); }
-.acct-logout:hover:not(:disabled) { background: var(--rule); color: var(--ink); }
+/* Log out — outlined (matches the You-sheet "Account settings"), full-width standalone. */
+.acct-logout-btn { display: block; width: 100%; margin: 4px 0 18px; text-align: center; }
+/* Delete account — collapsed to a muted text link (mirrors .acct-plan-clearall), red on hover. */
+.acct-danger-link {
+  font-size: 12.5px; color: var(--ink-3); cursor: pointer;
+  background: none; border: none; padding: 4px 2px; text-decoration: underline;
+}
+.acct-danger-link:hover { color: #b4453b; }
 .acct-delete {
   margin-top: 8px; font-size: 12.5px; color: #b4453b; cursor: pointer;
   background: none; border: 1px solid color-mix(in oklab, #b4453b 45%, transparent);
