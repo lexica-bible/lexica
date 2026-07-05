@@ -76,8 +76,11 @@ function DayPlanView({ chrono, curText, texts, progAll, chronoPos, onPickText, o
   // Completed days are an independent set now — mark/un-mark any day, skip around freely.
   const doneSet = new Set(prog.done || []);
   const doneCount = doneSet.size;
-  // "Next to read" = the first day NOT yet done (used for focus + Jump-to-today + header).
-  let curDay = 1; while (curDay <= total && doneSet.has(curDay)) curDay++;
+  // "Next to read" = one past the FURTHEST day you've marked done (used for focus +
+  // Jump-to-today + header). Anchored on the MAX done day, not the first gap — a reader
+  // who starts mid-book leaves days 1..N unchecked on purpose, and those gaps must be
+  // ignored. No days done → day 1. Clamp to the plan's end.
+  let curDay = doneCount ? Math.max(...prog.done) + 1 : 1;
   if (curDay > total) curDay = total;
   // The day that holds the passage you're currently reading. The list FOLLOWS this —
   // opening, highlighting, and scrolling to it as you switch into chronological or turn
