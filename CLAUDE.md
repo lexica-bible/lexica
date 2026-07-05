@@ -125,6 +125,10 @@ Pick effort by task TYPE. Lean higher when data correctness is on the line; don'
 - bible.db lives on PythonAnywhere only, not locally
 - Never query or test against a local database
 - All db changes must be made on PythonAnywhere
+- **NEVER use WAL journal mode for any db on PA.** PA's home dir is NFS; WAL needs a shared-memory
+  sidecar + memory-mapping NFS can't do reliably, so an in-flight page write is lost on a crash and the
+  file is corrupted (news.db, 2026-07-05 — page-1 lost mid fold-back). Use `journal_mode=DELETE` +
+  `busy_timeout` on every read-write opener. Applies to bible.db, notes.db, news.db — all of them.
 
 ## Deployment
 - Preferred deploy: `bash ~/bible-db/scripts/deploy.sh` — pulls, runs the invariant tests, loads any
