@@ -79,6 +79,17 @@ test("interlinear: Greek base + brackets + digits survive ALL four toggle combos
   }
 });
 
+// SCOPED CONTAINER CLASSES — each mode's verse container carries its own scope class
+// so mode-specific CSS (e.g. the interlinear gap/align) can't leak into chip. A leak
+// here is how the spacing regression happened.
+test("verse containers are scoped per mode (chip has no interlinear class, and vice versa)", () => {
+  const chipHtml = renderToStaticMarkup(LibRender.renderVerse(ctx, v));
+  const ilHtml = renderToStaticMarkup(LibRender.renderAbpInterlinear(ctx, v));
+  assert.ok(chipHtml.includes("lib-verse-chips"), "chip uses the shared chips container");
+  assert.ok(!chipHtml.includes("lib-verse-abpil"), "chip must NOT carry the interlinear scope class");
+  assert.ok(ilHtml.includes("lib-verse-abpil"), "interlinear carries its own scope class");
+});
+
 // PN click PAYLOAD is computed from the word alone (pnClickPayload), never from the
 // toggle state — assert directly against the shared helper.
 test("PN click payload is independent of toggle state", () => {

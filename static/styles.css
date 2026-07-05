@@ -2196,7 +2196,11 @@ input { font-family: inherit; }
 /* ----- Mode three: faithful ABP interlinear (Greek is the main reading line) ----- */
 /* Each word is a three-line stack: muted English gloss ABOVE, Greek MAIN, Strong's
    BELOW. Reuses .lib-word's column layout; only the emphasis + spacing differ. */
-.lib-verse-abpil { gap: 6px 6px; }
+/* Bottom-align the word stacks: a gloss that wraps to a 2nd line grows UPWARD, so
+   the Greek main line (+ Strong's below it) stays one steady baseline across the
+   row instead of dropping under the taller stack. Overrides .lib-verse-chips'
+   align-items:baseline. */
+.lib-verse-abpil { gap: 6px 6px; align-items: flex-end; }
 .lib-abpil-gloss {
   font-family: var(--f-serif);
   font-size: calc(var(--lib-font-size, 18px) * 0.55);   /* muted helper line */
@@ -2226,6 +2230,11 @@ input { font-family: inherit; }
   line-height: 1.2;
 }
 .lib-abpil-trail { font-family: var(--f-greek); color: var(--ink); }
+/* Chip mode with the Greek line on: the bracketed words lost the order-digit that
+   used to pad their column (Phase 3 stripped it), so adjacent Greek lemmas nearly
+   touch. Restore a little breathing room — scoped to CHIP only (NOT .lib-verse-abpil,
+   which is interlinear mode) so mode-three spacing is untouched. */
+.lib-interlinear-on .lib-verse-chips:not(.lib-verse-abpil) .lib-word-bracketed { margin-inline: 2px; }
 /* ABP's printed superscript order digit on a bracketed word (greek_pos), on the
    Greek line before the word — faithful to the printed text. */
 .lib-abpil-greek .lib-iw-pos { vertical-align: super; margin-right: 1px; }
