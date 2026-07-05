@@ -100,6 +100,7 @@ def main():
 
     buckets = {"strongs": [], "overlap": [], "name_only": [], "residual": [], "no_metav": []}
     # each linked entry: (uniq, person_id, rule); residual: (uniq, [cands])
+    tier2_audit = []   # (uniq, name_key, win_pid, win_name, score, margin, n_pool)
 
     for e in conn.execute("SELECT uniq, head, bases FROM tipnr_entities WHERE section='person'"):
         uniq = e["uniq"]
@@ -135,7 +136,11 @@ def main():
             scored.sort(reverse=True)
         if scored and scored[0][0] >= CONTAIN_FLOOR and (
                 len(scored) == 1 or scored[0][0] > scored[1][0]):
-            buckets["overlap"].append((uniq, scored[0][1], "overlap"))
+            win_pid = scored[0][1]
+            margin = scored[0][0] - (scored[1][0] if len(scored) > 1 else 0.0)
+            buckets["overlap"].append((uniq, win_pid, "overlap"))
+            tier2_audit.append((uniq, key(disp), win_pid, name_of.get(win_pid, "?"),
+                                scored[0][0], margin, len(pool)))
         else:
             buckets["residual"].append((uniq, pool))
 
@@ -183,6 +188,44 @@ def main():
     print("  top 15 residual by traffic:")
     for uniq, cands in res[:15]:
         print(f"    {traffic[uniq]:>4}  {uniq}  ({len(cands)} same-name metaV people)")
+
+    # ── tier-2 confidence audit (it carries most links, so prove it before apply) ──
+    band = {"1.0 (all refs found)": 0, "0.8-0.99": 0, "0.65-0.8": 0, "0.5-0.65": 0}
+    thin = 0
+    for (_u, _k, _p, _n, score, margin, _np) in tier2_audit:
+        if score >= 0.999:
+            band["1.0 (all refs found)"] += 1
+        elif score >= 0.8:
+            band["0.8-0.99"] += 1
+        elif score >= 0.65:
+            band["0.65-0.8"] += 1
+        else:
+            band["0.5-0.65"] += 1
+        if margin < 0.15:           # winner barely beat the runner-up
+            thin += 1
+    print("\n  tier-2 containment score distribution:")
+    for k, v in band.items():
+        print(f"    {k:<22}: {v:>5}")
+    print(f"    thin margin (<0.15 over runner-up): {thin}  <- the shaky ones")
+
+    # eyeball the notorious multi-person names against known facts
+    watch = ("zechariah", "simon", "james", "john", "mary", "herod",
+             "joseph", "judas", "azariah", "hananiah")
+    a_by_key = defaultdict(list)
+    for row in tier2_audit:
+        a_by_key[row[1]].append(row)
+    print("\n  tier-2 picks for hard names (verify by eye):")
+    for nm in watch:
+        for (uniq, _k, pid, wname, score, margin, npool) in sorted(a_by_key.get(nm, [])):
+            print(f"    {uniq:<26} -> {pid}:{wname:<18} "
+                  f"score {score:.2f} margin {margin:.2f} (of {npool})")
+    # full dump for the record
+    t2path = os.path.join(HERE, "person_metav_link_tier2.txt")
+    with open(t2path, "w", encoding="utf-8") as fh:
+        fh.write("# uniq\twin_pid\twin_name\tscore\tmargin\tpool_size\n")
+        for (uniq, _k, pid, wname, score, margin, npool) in sorted(tier2_audit):
+            fh.write(f"{uniq}\t{pid}\t{wname}\t{score:.3f}\t{margin:.3f}\t{npool}\n")
+    print(f"  full tier-2 dump -> scripts/person_metav_link_tier2.txt")
 
     if not APPLY:
         conn.close()
