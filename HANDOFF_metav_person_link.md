@@ -96,14 +96,31 @@ alias) OR several TIPNR person entities under the surface name. If multi-referen
 note), the honest card. Single-referent names (David) unaffected — still rich. The verse-BOUND path is
 untouched: a bind already fixes which man, so King Saul at 1Sa 9 and the seven pharaohs still serve.
 
-## Binding coverage (David absent from pn_binding) — PRIORITY RAISED, now user-visible cost
-Before this fix, an unbound click still fabricated a specific bio, so the coverage gap was invisible.
-AFTER it, unbound = a thin card. So every major figure missing from `pn_binding` — David (absent
-entirely), and any occurrence outside a bound range — now visibly LOSES its rich card until it binds.
-Binding is what EARNS the rich card back. So the entity-resolution binding-coverage task is no longer
-housekeeping — raise it. Same class for every multi-man name clicked outside bound ranges (Zechariah,
-Shallum, Azariah, Joseph). Note David may be TIPNR-absent too (earlier `head='David'` / `uniq LIKE
-'David%'` both returned nothing) — worth confirming as part of that task.
+## DAVID IS ABSENT FROM tipnr_entities — an IMPORT anomaly, one level up from binding (VERIFIED 2026-07-05)
+The David chase resolved to a real, prominent finding. David returns ZERO rows in `tipnr_entities` by
+BOTH signals — name (`uniq/head LIKE '%avid%'`) AND Strong's (`bases LIKE '%H1732%'`, and `bases` IS
+H-prefixed — Adam=`G76,H120,H121`, Noah=`G3575,H5146` — so the Strong's search was valid). The table is
+well-formed and full (1,791 person entities; Noah correctly splits into the patriarch H5146 + Zelophehad's
+daughter H5270). So it is NOT a key-format mismatch and NOT a binder gap — **the entity IMPORT never had
+David.** That single absence explains the whole chain: no TIPNR entity → nothing in `pn_binding` → nothing
+in `tipnr_metav_link` → David rides the name-path metaV card (which works, single-referent).
+- **Entity-resolution task, RAISED + RESHAPED:** the marquee gap is `import_tipnr` dropping/renaming David
+  (grep the raw TIPNR source for H1732, not the name). The "no metaV record" bucket may hide more marquee
+  names the same way. This is the ROOT the binding-coverage worry pointed at.
+- **User-visible cost of the Saul fix:** before it, an unbound click still fabricated a specific bio, so
+  the gap was invisible. AFTER it, unbound = a thin card — so any figure the import missed (David) or any
+  click outside a bound range now visibly loses its rich card until it binds. Binding earns the rich card
+  back. Same class for every multi-man name clicked outside bound ranges (Zechariah, Shallum, Azariah, Joseph).
+
+## Guard note — the multi-referent check is metaV-leg-PRIMARY (2026-07-05)
+`_name_is_multi_referent` has two legs, either sufficient. The metaV+alias leg is the workhorse — it caught
+Saul (3 candidates: King Saul + the two "Shaul" alias records; the TIPNR leg found only 1). The TIPNR leg
+matches on `head`/`uniq` SURFACE form, so it only counts entities keyed under the name's Latin surface;
+it's a secondary confirmer, not the primary catch, and it silently under-counts a name TIPNR keys unlike
+its ABP surface (none found so far — Saul's King-Saul entity matched fine). NOT rewritten to match on
+Strong's: no mis-keyed-but-present case exists to justify it, and the metaV leg already carries the load.
+If a future multi-man name slips through with only 1 metaV record, revisit by matching the TIPNR leg on
+`bases` (H-prefixed) instead of the surface name.
 
 ## Next task (its own reviewed pass) — serializer + frontend  [DONE — see the correction block above]
 - Resolver: bound person → `tipnr_metav_link` (kind='person') → render the rich MetaV card

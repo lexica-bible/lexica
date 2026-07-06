@@ -186,9 +186,12 @@ def _name_is_multi_referent(conn, name):
       1. several metav_people candidates for the name — INCLUDING aliases, since ABP
          renders a name one way and MetaV another (ABP 'Saul' == MetaV 'Shaul').
       2. several TIPNR person entities under the surface name.
-    The verse-BOUND path is UNAFFECTED: a bind already fixes which man, so its rich card
-    (and the seven per-referent pharaohs) still serve. Deploy-safe: the TIPNR check is
-    skipped if the table is absent."""
+    Signal 1 (metaV + aliases) is the PRIMARY catch — it carried Saul (3 candidates:
+    King Saul + the two 'Shaul' alias records). Signal 2 matches TIPNR's SURFACE key, so
+    it only counts entities keyed under the name's Latin form and is a secondary confirmer
+    (under-counts a name TIPNR keys unlike its ABP surface). The verse-BOUND path is
+    UNAFFECTED: a bind already fixes which man, so its rich card (and the seven
+    per-referent pharaohs) still serve. Deploy-safe: TIPNR check skipped if table absent."""
     n_metav = conn.execute("""
         SELECT COUNT(*) FROM (
             SELECT person_id FROM metav_people         WHERE name  = ? COLLATE NOCASE
