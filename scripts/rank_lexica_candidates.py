@@ -55,6 +55,9 @@ def main():
     ap.add_argument("--db", default=os.path.expanduser("~/bible-db/bible.db"))
     ap.add_argument("--top", type=int, default=40)
     ap.add_argument("--occ-min", type=int, default=2)
+    ap.add_argument("--skip-built", action="store_true",
+                    help="also exclude Strong's numbers already written to lexica_def "
+                         "(the rollout wants the NEXT unbuilt words, not a re-list of live ones)")
     args = ap.parse_args()
 
     conn = sqlite3.connect(f"file:{args.db}?mode=ro", uri=True)
@@ -83,6 +86,11 @@ def main():
     structural_nums = set(structural._STRUCTURAL.keys())
     excluded = set(CONTESTED_BY_SID.keys()) | structural_nums
 
+    built = set()
+    if args.skip_built and table_exists(conn, "lexica_def"):
+        built = {r["strongs"] for r in conn.execute("SELECT strongs FROM lexica_def")}
+        excluded |= built
+
     have_wg = table_exists(conn, "word_gloss")
 
     def head(base):
@@ -99,8 +107,9 @@ def main():
                     key=lambda bc: -bc[1])
 
     print(f"# Lexica definition-engine — frequency-ranked candidates (occ >= {args.occ_min})")
+    built_note = f" + {len(built)} already-built" if built else ""
     print(f"# aliases folded ({len(LEXICA_ALIASES)} pairs); excluded {len(set(CONTESTED_BY_SID))} "
-          f"contested + {len(structural_nums)} structural = {len(excluded)} numbers")
+          f"contested + {len(structural_nums)} structural{built_note} = {len(excluded)} numbers")
     print(f"# flags: [NAME]=is_pn majority  [FUNC]=pronoun/quantifier not in structural.py\n")
     print(f"{'rank':>4}  {'strongs':<8} {'occ':>6}  {'lemma':<16} {'translit':<16} flag  gloss")
 
