@@ -168,11 +168,23 @@ BSB** (a plain gentilic, not a construct). Decision fork:
 Same wrong-identity risk class as the Saul guard (a construct click could surface the wrong card) — own
 task, own review.
 
-### 3. Dan 1:6 trio — TRANSCRIBE the diagnosis into the residual notes (NOT just the reason code)
-The Daniel/Hananiah/Mishael/Azariah residual entries need their full alias-record DIAGNOSIS + hand-resolve
-steps written into `scripts/person_metav_link_residual.txt` (PA-only), not left as a bare reason code.
-**⚠ NOT captured anywhere committed yet** — the detailed diagnosis lives only in the PA residual file / the
-session that found it. Pull the four residual lines (`grep -E 'Daniel|Hananiah|Mishael|Azariah'
-scripts/person_metav_link_residual.txt` on PA) and record, per name: the alias-record cause (why overlap
-split it) + the specific hand-resolve (which metav_id to pin). This item is DONE only when a reader can act
-on it from the notes without re-deriving.
+### 3. Dan 1:6 trio — alias-record residual (DIAGNOSIS ON RECORD, hand-resolve pending)
+From the link-build session, confirmed against the dry-run output:
+
+**Azariah / Hananiah / Mishael @Dan.1.6** — all three residual with best **0.00**, reason `below_floor`.
+Cause: the TIPNR entities' ref sets include their Daniel occurrences, but MetaV tags those verses to the
+BABYLONIAN-name alias records (Shadrach / Meshach / Abednego), not the Hebrew-name person records — so
+containment against the Hebrew-name candidates scores zero. **Known-SAFE residual class: the zero isn't
+ambiguity, it's the refs living under the alias.**
+
+Hand-resolve steps: (1) confirm MetaV has distinct records or aliases for Shadrach/Meshach/Abednego and
+identify which person_id carries the Daniel verses; (2) if MetaV models Hebrew-name + Babylonian-name as
+ONE person with aliases → link the TIPNR entity to that person_id, `rule='hand'`, note the alias mechanics;
+if MetaV SPLIT them into two person records → decide whether to link to the record carrying the Daniel refs
+or leave unlinked pending a MetaV-side merge decision; (3) same check for Daniel himself (Belteshazzar) —
+if his TIPNR entity linked cleanly, the alias problem is trio-specific; if he's also residual/thin, it's the
+whole Dan 1 rename class. Each pick is eyeball-checkable — unambiguous historical referents.
+
+Cross-check when done: verify the hand link renders the rich card at Dan 1:6 AND at a Babylonian-name
+occurrence (Dan 3) — both should resolve to the same person. Once resolved, also write the pick into
+`scripts/person_metav_link_residual.txt` so the residual notes carry it, not just this handoff.

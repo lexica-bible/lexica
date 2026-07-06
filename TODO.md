@@ -95,9 +95,10 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   Levites Neh 11:3 on BSB — fires People/Clan = binding is cross-translation, gap is the construct-phrase
   class (maybe kin to Psa 39:1 phrase-gloss, S9 charter); doesn't fire = entity cards ABP-only today,
   document + scope from there. memory `project_metav_person_link` / `project_entity_resolution_rebuild`.
-- **Dan 1:6 trio — transcribe the residual diagnosis.** Daniel/Hananiah/Mishael/Azariah residual entries
-  need their alias-record diagnosis + hand-resolve steps written into
-  `scripts/person_metav_link_residual.txt` (PA-only), not a bare reason code — not committed anywhere yet.
+- **Dan 1:6 trio — hand-resolve the alias-record residual.** Azariah/Hananiah/Mishael @Dan.1.6 all score
+  0.00 (below_floor) because MetaV tags their Daniel verses to the Babylonian-name alias records (Shadrach/
+  Meshach/Abednego), not the Hebrew-name records — a known-SAFE residual, not ambiguity. Diagnosis + hand-
+  resolve steps are in `HANDOFF_metav_person_link.md`; pick the person_id + write it into the residual notes.
 - **Badge / verification-token unification (design backlog).** Two families — provenance badges (metaV/
   TIPNR/"Matched to this verse") vs verification marks ("✓ N/N verified"); rule now in `docs/design.md`.
   Converge instances opportunistically, no sweep.
