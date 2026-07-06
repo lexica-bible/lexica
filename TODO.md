@@ -362,7 +362,17 @@ YouVersion, which aren't the target). Honest gaps:
   2026-07-03** (26 calibration words: top-20 content + 6 extension; ran as a checkpointed apply loop, not
   the pipeline driver). Cutoff = occ ≥ 2 (~3,954 words). Full record + the 3-tier ship-gate + frame-leak
   pre-sort rule: memory `project_lexica_dictionary`; **Batch One lessons + calibration numbers + the full
-  batch-two prep list = `AUDIT_lexica_rollout.md`.** **DRAW CACHE (#1) DONE + LIVE 2026-07-03 (commit 484e226):**
+  batch-two prep list = `AUDIT_lexica_rollout.md`.**
+  **BATCH-2 CALIBRATION IN PROGRESS (2026-07-06) — handoff `HANDOFF_lexica_rollout.md`, authority
+  `AUDIT_lexica_rollout.md` Batch Two section.** 4 shipped (G1096 γίνομαι / G80 ἀδελφός / G2588 καρδία /
+  G39 ἅγιον + word_gloss widened "holy, set apart"); πολύς PARKED (range-completeness wall, un-stuck by the
+  new bar); ἔθνος G1484 = next session's first ship draw (reviewer verdict STABLE-at-2 done). **SHIP BAR
+  RE-RULED to FOUR GATES** (holes/merges/completeness/granularity — NOT sense-count-match); reviewer floor
+  `--runs 3`→10 on wobble; redraw cap 3; escalation trigger ARMED (3rd content-wall → mechanism decision to
+  JP). Prep done this session: ranker-skips-built, ἅγιον gloss check. Two queued next-session tasks (in the
+  handoff): build a flag-only double-shelf detector (control = G39/1Jn 2:20); **word-study card header
+  doesn't pick up word_gloss overrides — Library does — a frontend gap affecting all 59 overrides, trace it.**
+  **DRAW CACHE (#1) DONE + LIVE 2026-07-03 (commit 484e226):**
   `--dry-run` saves the reviewed draw to `~/bible-db/draws/G####.json`, `--apply` ships it byte-for-byte with no
   model call (validity = hash of the full model input; stale→redraw, edited→hard refuse; `--require-cache` default
   under `--all`); kills the reviewed≠shipped class (πρόσωπον/δίδωμι/πατήρ). Tests + E2E-proven on G25. Remaining
