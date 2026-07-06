@@ -163,3 +163,20 @@ Full record: memory `project_ai_cache_unify`.
   loaded lemmas LSJ leads classical on (`_LSJ_OVERRIDES`/`_ovkey` in views_lsj.py — badged
   "Lexica" not LSJ; the Summary|Full-entry toggle still shows raw LSJ). Memory
   `project_lsj_card`.
+
+## Lexica definition engine — Tier B prose-fix discipline (2026-07-06)
+The draw cache (`draws/G####.json`, the reviewed-verbatim store the Lexica cards render from) carries a
+validity signature that covers ONLY a word's SAMPLED verses. A Tier B corpus prose fix to a verse a card
+merely CITES but that wasn't in its fed sample (e.g. Mat 21:19 under the common γίνομαι G1096) does NOT
+move that signature — the card keeps quoting the pre-fix reading and nothing auto-refreshes.
+- **STANDING RULE: a prose correction is NOT done until the sweep runs and comes back reviewed.** Every
+  Tier B prose fix ends with `python3 scripts/check_draw_citations.py bible.db --draws ~/bible-db/draws`
+  (READ-ONLY; flags any shipped card whose cited verse is a reassembly-diff hit). **This runs against
+  bible.db, so JP runs it on PA and pastes the output — CC never runs it directly.** `word-order` /
+  `content-other` / `dup-gloss` collisions are actionable (mis-ordered reading or baked apparatus);
+  `punct-position` is the cosmetic comma-placement residual (240 corpus-wide post-S11 — cards render clean
+  `verses.text`, no redraw).
+- **Affected cards get a targeted redraw + reviewed ship:** `--dry-run --force --word G####` regenerates and
+  re-writes the draw for review, then `--apply --word G#### --from-draw KEY8` ships the reviewed bytes with
+  NO model call (KEY8 = the draw signature's first 8 chars). `--from-draw` refuses on a missing/stale/edited
+  draw or a key mismatch — a refuse is the enforcement working: regenerate-and-re-review, never loosen it.
