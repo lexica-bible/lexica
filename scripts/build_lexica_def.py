@@ -1027,11 +1027,19 @@ def main():
                     help="target EVERY built word in lexica_def (use with --resplit to roll a "
                          "derivation change — e.g. the LXX provenance note — across the whole batch, "
                          "no model call)")
+    ap.add_argument("--from-draw", metavar="KEY8",
+                    help="ship the reviewed draw for --word whose key (sig[:8]) == KEY8 by bypassing the "
+                         "synth_ver up-to-date skip; requires a cache HIT, NEVER re-rolls. Use after a prose "
+                         "fix the draw signature can't detect: find affected cards with check_draw_citations.py, "
+                         "regenerate with --dry-run --force + review, then ship the reviewed bytes with this.")
     ap.add_argument("--budget", type=int, default=BUDGET)
     args = ap.parse_args()
 
     if not args.dry_run and not args.apply:
         sys.exit("Pass --dry-run (show, no write) or --apply (write).")
+    if args.from_draw and (not args.word or not args.apply or args.force or args.all or args.dry_run):
+        sys.exit("--from-draw ships one reviewed draw: use as --apply --word G#### --from-draw KEY8 "
+                 "(no --force / --all / --dry-run — it ships specific reviewed bytes, it never rolls).")
 
     targets = [args.word.upper()] if args.word else list(PILOT)
     targets = [("G" + t if t[:1] not in ("G", "H") else t) for t in targets]
@@ -1085,7 +1093,7 @@ def main():
                 continue
             lemma, translit = lex_head(conn, sid)
         else:
-            if existing and existing["synth_ver"] == stamp and not args.force:
+            if existing and existing["synth_ver"] == stamp and not args.force and not args.from_draw:
                 print(f"  up to date (stamp {stamp}); skip. (--force to rebuild)")
                 continue
             pred, params = abp_filter(conn, sid)
@@ -1110,6 +1118,25 @@ def main():
             sig = draw_signature(sid, translit, gset, ctx)
             rec = None if args.force else load_draw(sid)
             status = draw_status(rec, sig) if rec else None
+
+            if args.from_draw:
+                # Ship ONE named reviewed draw past the synth_ver skip — never re-roll. The signature is
+                # sample-based, so a prose fix to a non-sampled cited verse leaves sig unchanged (status
+                # stays 'hit'); this is the ONLY way to ship the reviewed bytes for that case.
+                key = sig[:8]
+                if rec is None:
+                    print(f"  ✗ --from-draw: no cached draw for {sid} — run --dry-run --force to draw + "
+                          f"review first. NOT written.", file=sys.stderr)
+                    failures.append(sid); continue
+                if status != "hit":
+                    print(f"  ✗ --from-draw: cached draw is '{status}' (input moved since it was drawn) — "
+                          f"re-run --dry-run --force + re-review. NOT written.", file=sys.stderr)
+                    failures.append(sid); continue
+                if key != args.from_draw:
+                    print(f"  ✗ --from-draw key mismatch: {sid}'s reviewed draw is '{key}', not "
+                          f"'{args.from_draw}'. NOT written.", file=sys.stderr)
+                    failures.append(sid); continue
+                # status == 'hit' + key matches → falls through to the 'hit' branch: ships rec['raw'], no model call.
 
             if status == "edited":
                 # Same input, but the file's prose was changed since review — the one way
