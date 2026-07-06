@@ -319,3 +319,50 @@ Psa 35:14); LXX note on sense 2.
   pulls before stopping to JP. `--from-draw` refuses EDITED drafts by design, so "hand-tune the split"
   can never mean editing the JSON — a real constraint is sampler/prompt-side (frozen VERSE_PROMPT →
   re-prove cycle) or a new mechanism, both JP design decisions.
+
+### Reviewer tiering — RULED 2026-07-06 (batch-wide procedure)
+Every word gets a **minimum 3 reviewer runs** (`lexica_agreement.py --runs 3`) before ship; escalate to
+**10** on any appear/vanish, merge, or job-boundary wobble in the 3. **No word ships on a single draft's
+structure** — G80 and πολύς both proved a clean-looking single draw is one shape of several (πολύς caught
+its off-distribution over-split draft the word after the ruling was made). Cost ~$0.09/word floor, ~$2 for
+the batch — cheap insurance that also feeds the retro with data from all 20, not only the words that wobbled
+in front of us. Prediction under test (see G4183): one-dimension concrete nouns agree tightly at 3;
+multi-shallow-axis words escalate.
+
+### G4183 πολύς — PARKED-HARD (stable 2, but the range won't hold the folds). The batch's first pipeline-resistant word.
+Reviewer `--runs 10`: count {2:3, 3:4, 4:2, 5:1}, mean 3.1. **Stable core = 2 jobs at 10/10** — (1) large in
+number/count, (2) large in degree/intensity/magnitude. Every 3rd+ cut is unstable and differently carved:
+comparative (4/10), adverbial (2/10), temporal "long time" (3/10), collective-mass (1/10), populous-nation
+(1/10). No job holes; the extras all fold into the core 2.
+- **Ship target set** = 2 senses + range carrying comparative/adverbial/temporal as folded facets. Three
+  redraws for it: attempts **3 / 5 / 3** senses — cap hit, none was 2. PARKED.
+- **THE FINDING (bigger than short odds): range-completeness is the binding constraint, not sense-count.**
+  Across the pulls the temporal "long" use (13× rendering) was made its own thin sense (attempt 2), dropped
+  entirely (attempt 3, flagged 'long' 13× uncited), or would bury under "degree" (the 2-sense draws). **No
+  single draw holds the stable 2 core AND keeps all folded facets visible in the range.** The
+  2-sense-with-full-range draft may barely exist in the draw space.
+- **PARK rationale = batch integrity, not indecision.** Option C (steer VERSE_PROMPT) mid-batch would draw
+  later words from a different engine than earlier ones — contaminating the comparability the batch exists to
+  build; a prompt steer is a BETWEEN-batch change with a re-prove cycle, informed by all 20 words. Option B
+  (higher-cap blind fishing) runs straight into the range-completeness finding — the target draft may not
+  exist to fish for. So πολύς ships at end-of-batch or after, once the mechanism is decided on full-batch
+  evidence.
+- **FALSIFIED-PREDICTION REFINEMENT (banked).** Predicted grammar-driven boundaries → high agreement; FALSE
+  for πολύς. The number-vs-degree split IS rock-stable; the finer cuts (comparative/adverbial/temporal) are
+  not. So the wobble axis is NOT semantic-seam-vs-grammar — it's **how many shallow analytical cuts a word's
+  usage offers.** Testable prediction for the rest: one-dimension concrete nouns (θυγάτηρ, ὕδωρ, ὄρος) agree
+  tightly; multi-shallow-axis words wobble on cut-count regardless of whether the cuts are grammar-keyed.
+- **2-vs-3 UNDER STRAIN (retro).** Holding the pre-registered fold-to-range, but logging honestly that it
+  assumed folding was FREE — the pulls showed fold-AND-stay-visible is the hard part. If the retro rules that
+  comparative-class MULTI-VERSE flickers ship better as standing senses, that revisits G80's Psa 35:14 verdict
+  too (asymmetry: G80 = 1 verse, πολύς comparative = a trio Heb 11:4 / Luk 11:31 / 2Ti 2:16 — a real difference).
+- **Flag rate** (per the ≥5.0 record): πολύς = **2 flags** (chrónos 6.13, hýdōr 5.05); the sub-5.0
+  collocations (éthnos / pisteúō / dóxa) are stored-informational, not counted.
+
+### ESCALATION TRIGGER (standing, batch-wide)
+If a SECOND batch word caps out with **range-completeness** as the binding constraint, the mechanism decision
+(B vs C) moves from the retro to RIGHT THEN — two occurrences is a pattern, one is a hard word.
+
+### Parked-hard list
+- **G4183 πολύς** — stable 2, range won't hold the comparative/adverbial/temporal folds; awaits the mechanism
+  decision on full-batch evidence. (Details above.)
