@@ -59,8 +59,9 @@ These two are the load-bearing ones. Everything else below supports them.
 ## BATCH STATE
 - **SHIPPED + LIVE (4):** G1096 γίνομαι (session start, from-draw first exercise) · G80 ἀδελφός
   (4 senses) · G2588 καρδία (4 senses, one-draw ship) · G39 ἅγιον (4 senses, near-wall).
-- **word_gloss:** G39 "Holy Place" → "holy, set apart" override committed (`a06a90b`); rebuild
-  applied on PA. [FINALIZE: confirm applied + live card header before break.]
+- **word_gloss:** G39 "Holy Place" → "holy, set apart" override LIVE (`a06a90b` + `--apply` rebuild
+  on PA). Verified: word_gloss row = `holy, set apart|override`; count 17508 stable; `override`
+  58→59, `tbesg` 73→72 (only G39 moved). Owed: JP's post-reload eyeball that the card header renders it.
 - **PARKED:** G4183 πολύς — reviewer says stable-2 (number/degree), but the comparative/adverbial/
   temporal facets won't stay folded-and-visible in one draft (range-completeness wall). UN-STUCK by
   the four-gate bar (attempts 1/2/3 all failed gate-3 completeness only — corrected record, NOT a
