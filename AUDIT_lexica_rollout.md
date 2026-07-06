@@ -454,10 +454,12 @@ pre-flagged), attempt 3 kept persons / place / things / spirit all distinct.
   The high rate is a FED-40 finding: the 20-OT/20-NT balanced spread under-samples dense Numbers/Leviticus
   cultic vocabulary (temple, garments, vessels, offerings). Senses grounded by OTHER fed verses → no sampler
   nudge. Data point for the fed-40 retro question.
-- **Seam to eyeball on the live card (record, not a gate fail):** sense 4's sub-use folds 1Jn 2:20 ("holy
-  one" as a title) under the SPIRIT sense — a slightly odd shelf (title-of-a-being under spirit). Verse-
-  supported + visible so it passes; if it reads wrong on the rendered card, it's a note for ἅγιον's record,
-  not a redraw.
+- **1Jn 2:20 DOUBLE-SHELVED (logged seam, no reopen).** The verse is cited under BOTH sense 1 (said of
+  God/the divine) AND sense 4's "holy one" title sub-use — the exact migratory behavior the reviewer showed
+  for it, baked into one card. Not false (the title genuinely bridges both; citation gate passed), but a
+  reader tracing 1Jn 2:20 gets two answers. **Cosmetic unless a pattern emerges across the batch.** G39
+  ships AS-IS. → this is the **known positive for the queued double-shelf detector** (a post-draw
+  set-intersection over the per-sense verse lists; must fire on 1Jn 2:20). See the handoff's queued tasks.
 - **word_gloss follow-up:** "Holy Place" confirmed too narrow (ABP folds the adjective ἅγιος G40 into G39, so
   the header must lead with "holy, set apart", not the narrow substantive). Override via the `OVERRIDES` dict
   in build_word_gloss.py (same path as G166/G5484) + `--apply` rebuild; through DB checkpoint.

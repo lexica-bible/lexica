@@ -61,7 +61,9 @@ These two are the load-bearing ones. Everything else below supports them.
   (4 senses) · G2588 καρδία (4 senses, one-draw ship) · G39 ἅγιον (4 senses, near-wall).
 - **word_gloss:** G39 "Holy Place" → "holy, set apart" override LIVE (`a06a90b` + `--apply` rebuild
   on PA). Verified: word_gloss row = `holy, set apart|override`; count 17508 stable; `override`
-  58→59, `tbesg` 73→72 (only G39 moved). Owed: JP's post-reload eyeball that the card header renders it.
+  58→59, `tbesg` 73→72 (only G39 moved). **Library card confirmed rendering "hágion · holy, set apart"**
+  (JP screenshot) — override live end to end. (The word-study card shows only "holy" — a separate
+  display-layer gap, see queued tasks.)
 - **PARKED:** G4183 πολύς — reviewer says stable-2 (number/degree), but the comparative/adverbial/
   temporal facets won't stay folded-and-visible in one draft (range-completeness wall). UN-STUCK by
   the four-gate bar (attempts 1/2/3 all failed gate-3 completeness only — corrected record, NOT a
@@ -79,6 +81,23 @@ These two are the load-bearing ones. Everything else below supports them.
   - **Tight-agreement test (refined hypothesis):** θυγάτηρ / ὕδωρ / ὄρος — genuine one-dimension
     nouns, predicted to agree tightly at 3. ἔθνος already showed clean-binary → tight; πολύς/καρδία
     showed multi-shallow-axis → wobble. Confirm on these three.
+
+## QUEUED FOR NEXT SESSION (surfaced at this session's close — do before/at ἔθνος)
+1. **Double-shelf detector (BUILD, flag-only first).** A post-draw check that flags any verse cited under
+   MORE THAN ONE sense in the same draft — a set-intersection over the draft's per-sense verse lists, a few
+   lines in the audit output beside the dangling check. **Control-test against G39's shipped draw: it MUST
+   fire on 1Jn 2:20** (the known positive — per the standing "detector fires on a known positive before its
+   zero is trusted" rule). Start **advisory** (double-shelving is sometimes legitimate — a genuinely
+   bridging verse like 1Jn 2:20); if the batch shows it's common + mostly sloppy, harden to a gate; if rare
+   + mostly legitimate, it stays advisory. Runs in the standard per-word audit from ἔθνος onward, so
+   double-shelving becomes a conscious per-word adjudication instead of a live-card eyeball catch. G39 stays
+   as-is (logged seam, no reopen).
+2. **Word-study card header doesn't pick up word_gloss overrides (Library does).** The Library card renders
+   "hágion · holy, set apart" correctly, but the WORD-STUDY card header shows only "holy" — it's sourcing
+   its English header from somewhere other than word_gloss (a known-class gap from the definition-integration
+   work; display-layer only, NO data problem). Trace where the word-study header sources its gloss and point
+   it at word_gloss. **Affects all 59 overrides on that surface, not just G39** — which is why it's worth the
+   trace, not a shrug. Frontend, probably small.
 
 ## RETRO LIST (decide with full-batch evidence, not per-word)
 - Reviewer tiering: is per-word min-3 the right floor, or tier by boundary type (clean-separable →
