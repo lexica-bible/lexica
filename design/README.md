@@ -44,7 +44,7 @@ code.**
    reference the rest by link" rule is a SYSTEM-PROMPT + serialization rule on the real endpoint
    (user's hard ask: don't spam verse results). Matters most on mobile.
 3. **Breakpoint = 1100, not the mockup's 1040/760/980.** The app has exactly two states (desktop ≥1100,
-   mobile <1100 — see CLAUDE.md "Responsive Breakpoints"). Reconcile the mockup's panel-collapse logic
+   mobile <1100 — see `docs/claude/frontend.md` "Responsive breakpoints"). Reconcile the mockup's panel-collapse logic
    to that. Reuse the Library's `has-detail` compacting + bottom-sheet pattern for the word card on
    mobile rather than the mockup's standalone scrims.
 
