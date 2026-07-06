@@ -58,6 +58,7 @@ OBLIQUE_NUMS = {
     "G4671": "oblique of σύ G4771 (pronoun family)",       # soi — to you
     "G5216": "oblique of ὑμεῖς G5210 (pronoun family)",   # hymōn — of you (pl)
     "G5213": "oblique of ὑμεῖς G5210 (pronoun family)",   # hymin — to you (pl)
+    "G5209": "oblique of ὑμεῖς G5210 (pronoun family)",   # hymas — you (pl, acc)
 }
 
 # Structural-backfill lemmas (prep / conj / particle / numeral / adverb) named in the audit doc's
@@ -68,6 +69,8 @@ STRUCT_BACKFILL = {
     "G2400": "structural backfill — particle, not a def",    # idou — behold
     "G1520": "structural backfill — numeral, not a def",     # heis — one
     "G3779": "structural backfill — adverb, not a def",      # houtō — thus
+    "G1417": "structural backfill — numeral (w/ εἷς), not a def",   # dyo — two
+    "G1563": "structural backfill — deictic adverb, not a def",     # ekei — there
 }
 
 
