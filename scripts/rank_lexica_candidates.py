@@ -44,6 +44,32 @@ PRONOUN_NUMS = {
     "G5127": "toutou (of this — houtos oblique)",
 }
 
+# Oblique (of-me / to-you / …) forms ABP tags as their own Strong's number. They are NOT new
+# lexemes — they belong to the SAME pronoun lemma as their nominative (ἐγώ / σύ / ἡμεῖς / ὑμεῖς)
+# and ride into that lemma's structural coverage. Flagged [OBL] with the parent named so the
+# structural backfill doesn't later double-count them as independent entries. Not an exclusion.
+OBLIQUE_NUMS = {
+    "G3450": "oblique of ἐγώ G1473 (pronoun family)",     # mou — of me
+    "G3165": "oblique of ἐγώ G1473 (pronoun family)",     # me
+    "G3427": "oblique of ἐγώ G1473 (pronoun family)",     # moi — to me
+    "G2257": "oblique of ἡμεῖς G2249 (pronoun family)",   # hēmōn — of us
+    "G4675": "oblique of σύ G4771 (pronoun family)",       # sou — of you
+    "G4571": "oblique of σύ G4771 (pronoun family)",       # se — you
+    "G4671": "oblique of σύ G4771 (pronoun family)",       # soi — to you
+    "G5216": "oblique of ὑμεῖς G5210 (pronoun family)",   # hymōn — of you (pl)
+    "G5213": "oblique of ὑμεῖς G5210 (pronoun family)",   # hymin — to you (pl)
+}
+
+# Structural-backfill lemmas (prep / conj / particle / numeral / adverb) named in the audit doc's
+# batch-two backfill list. They want a STRUCTURAL card, not a verse-grounded definition. Flagged
+# [STRC], not excluded (JP's call — the backfill is a separate pipeline).
+STRUCT_BACKFILL = {
+    "G2193": "structural backfill — prep/conj, not a def",   # heōs — until
+    "G2400": "structural backfill — particle, not a def",    # idou — behold
+    "G1520": "structural backfill — numeral, not a def",     # heis — one
+    "G3779": "structural backfill — adverb, not a def",      # houtō — thus
+}
+
 
 def table_exists(conn, name):
     return conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name=?",
@@ -110,7 +136,8 @@ def main():
     built_note = f" + {len(built)} already-built" if built else ""
     print(f"# aliases folded ({len(LEXICA_ALIASES)} pairs); excluded {len(set(CONTESTED_BY_SID))} "
           f"contested + {len(structural_nums)} structural{built_note} = {len(excluded)} numbers")
-    print(f"# flags: [NAME]=is_pn majority  [FUNC]=pronoun/quantifier not in structural.py\n")
+    print(f"# flags: [NAME]=is_pn majority  [FUNC]=pronoun/quantifier  "
+          f"[OBL]=oblique form of a pronoun lemma  [STRC]=structural-backfill lemma\n")
     print(f"{'rank':>4}  {'strongs':<8} {'occ':>6}  {'lemma':<16} {'translit':<16} flag  gloss")
 
     shown = 0
@@ -124,6 +151,12 @@ def main():
         flag = ""
         if pn.get(base, 0) * 2 >= c:
             flag = "NAME"
+        elif base in OBLIQUE_NUMS:
+            flag = "OBL"
+            gloss = OBLIQUE_NUMS[base]
+        elif base in STRUCT_BACKFILL:
+            flag = "STRC"
+            gloss = STRUCT_BACKFILL[base]
         elif base in PRONOUN_NUMS:
             flag = "FUNC"
         print(f"{shown:>4}  {base:<8} {c:>6}  {lemma:<16} {translit:<16} {flag:<5} {gloss[:48]}")
