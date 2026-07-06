@@ -89,6 +89,10 @@ OVERRIDES = {
     "G4352": "bow down, do homage, worship",   # proskyneō — range, not the bare church term
     "G86":   "the unseen realm, Hades",        # hadēs — not a bare transliteration
     "G1067": "Valley of Hinnom, Gehenna",      # geenna — the place, not "hell"
+    # Scope fix (not church-term loading): ABP folds the adjective ἅγιος G40 into G39, so G39 carries
+    # the whole holy family (persons/places/spirit), but tbesg glosses it "Holy Place" — Strong's narrow
+    # neuter substantive. Lead with the adjective; the sanctuary is sense 2 of the live lexica_def entry.
+    "G39":   "holy, set apart",                # hágion — NOT the narrow substantive "Holy Place"
 }
 
 # HEBREW base = TBESH's clean dictionary form; these 3 are the loaded ones it still gets
