@@ -356,6 +356,23 @@ couldn't have if either number were hardcoded — which is exactly why the line-
 - **phrase-gloss under-distribution detector** (multi-word gloss on a function-word tag + adjacent blank
   content slot) — build read-only, control-test it FIRES on Psa 39:1, drive to an agreed floor. Required in
   the gate whether or not (g) ships this rebuild.
+- **Five-pass single-control set (added 2026-07-05, JP's middle-path call).** (P) certifies only its two
+  passes (P1 `_redistribute_pronoun_compounds`, P2 `_split_numbered`). The other FIVE build-reorder passes
+  get NO full per-pass certification, but each gets ONE banked known-positive control — a verse where the
+  pass demonstrably fires and the output is correct (same pattern as Gen 3:15 / Gen 7:1). Each must still
+  produce correct output on its banked verse after the rebuild:
+  | pass | banked control verse | source of the pin |
+  |---|---|---|
+  | `_lord_subject_split` | **1Ch 13:10** | named in its own fold docstring ("THE SHAPE (1Ch 13:10)") |
+  | `_split_pn_article_lump` | **Act 19:4** | docstring: "the only corpus case" |
+  | `_fix_backwards_pairing` | **1Sa 5:2** (alt Rom 8:34) | named in the code comment above the pass |
+  | `_lord_oath_fix` | **PICK-ON-PA — FINDING** | no single verse pinned in code; 29-verse "As the LORD lives" set — enumerate with `scripts/graveyard/fix_lord_oath.py bible.db` (dry-run), freeze the first |
+  | `_funcword_noun_relocate` | **PICK-ON-PA — FINDING** | no single verse pinned; ~26-verse set — enumerate with `scripts/audit_funcword_wrongslot.py`, freeze one REPAIRABLE-NOUN case |
+  **FINDING (flagged, not manufactured):** the last two passes have a real, enumerable set but no
+  canonical single verse in the code — each needs ONE read-only PA enumerate run to pick and freeze its
+  control. Do that BEFORE the combined build. All five controls are output-gated the same way (v1/v2 at
+  zero already catches any word-order defect any pass emits — the banked verse adds a per-pass fires-and-
+  is-correct check on top).
 - THEN wire v2 into `cert_invariants.py` as a standing invariant (the word rows and `verses.text` can never
   silently drift again).
 
@@ -409,16 +426,23 @@ Read-only unless noted. All present in git:
   `scripts/`, not repo root** — earlier drafts wrote it bare as `cert_invariants.py`)
 - `scripts/compare_words.py` — the per-column word-row diff the gate block reviews
 
-### Bridge: the "seven uncertified build-reorder passes" (original S9 scope) → now inside (P)
-The original Session-8 scope listed Door-3 as "seven uncertified build-reorder passes, two banked
-known-positive controls." The 2026-07-05 diagnosis folded that work into **(P)**: the passes that
-touch pronoun/short-word slotting resolve through `_redistribute_pronoun_compounds`, and their two
-banked positives are **Gen 3:15 + Gen 7:1** — the exact self-controls `enumerate_redistributions.py`
-must fire on before any zero downstream is trusted. So "certify the seven passes" is executed as
-"(P)'s firing-set gate + the enumerator controls," not as a separate door. **⚠ AMBIGUITY for JP to
-confirm:** MEMORY.md still lists "Door 3 (7 uncertified passes)" as OPEN and distinct; the handoff
-folds it into (P). If any pass-certification work is NOT covered by (P)'s control set, name it before
-S9 opens — otherwise this charter treats Door 3 as subsumed by (P).
+### Bridge: the seven build-reorder passes — ACTUAL coverage (corrected 2026-07-05)
+The original Session-8 scope listed Door-3 as "seven uncertified build-reorder passes." The passes are:
+`_split_numbered`, `_redistribute_pronoun_compounds`, `_fix_backwards_pairing`, `_split_pn_article_lump`,
+`_funcword_noun_relocate`, `_lord_subject_split`, `_lord_oath_fix` (enumerated in
+`AUDIT_abp_certification.md` ~line 46). **An earlier draft of this bridge claimed (P) covers all seven —
+that is WRONG and is corrected here (verified against the pass list 2026-07-05):**
+- **(P) certifies P1+P2 ONLY** — `_redistribute_pronoun_compounds` (P1, gated by
+  `enumerate_redistributions.py`, self-controls Gen 3:15 + Gen 7:1) and `_split_numbered` (P2, gated by the
+  4-row split-diff). Those are two of the seven.
+- **The other five** — `_fix_backwards_pairing`, `_split_pn_article_lump`, `_funcword_noun_relocate`,
+  `_lord_subject_split`, `_lord_oath_fix` — are NOT per-pass certified. They are **output-gated** (v1/v2
+  reassembly at zero catches any word-order defect any of them emits) **plus one banked single-control
+  each** (the five-pass control table in the Gate block above; JP's middle-path call). Two of those five
+  (`_lord_oath_fix`, `_funcword_noun_relocate`) still need one PA enumerate to pick their control verse —
+  a FINDING logged in the gate block. This resolves the old "Door 3 open vs folded into (P)" ambiguity:
+  Door 3 is NOT subsumed by (P); it is output-gated + single-control, and the pin-the-two-controls step
+  is pre-rebuild work.
 
 ### Fold-in diagnostic — David / H1732 in the raw TIPNR source (read-only, does NOT gate the rebuild)
 Ran while `import_tipnr.py` is on the bench for the (b) twin-bug patch. **RESULT: David is PRESENT in
