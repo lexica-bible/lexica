@@ -1,18 +1,23 @@
 # Reassembly-diff — findings + rebuild plan (2026-07-04)
 
-> **SUPERSEDED 2026-07-04 → see `HANDOFF_cert_session9.md` (the single canonical S9 charter).**
-> Its adjudicated findings, count table, family table, render-trace, and rebuild plan are now folded
-> into the charter as diffs (d)-(g). This file is kept ONLY as the raw diagnosis history — do NOT
-> govern the rebuild from here.
+> **SUPERSEDED 2026-07-05 → see `CHARTER_cert_session9.md` (the single canonical S9 charter).**
+> Its adjudicated findings, count table, family table, render-trace, and rebuild plan are folded
+> into the charter as diffs (P)/(e)/(f)/(g), and its tool explainer is preserved there. This file is
+> kept ONLY as the raw diagnosis history — do NOT govern the rebuild from here.
+> NOTE: this memo's older framing is stale on purpose — the newer charter wins where they differ.
+> In particular its "prime suspect = `_split_compounds` article-fronting" was later DISPROVEN (that
+> was the stale half of the 364); the real splitter is `_redistribute_pronoun_compounds`. Also
+> "seven passes"/"13 leaks"/"6 families" → the charter's "five fixes"/"11 leaks"/"156 stale + 208
+> survivors."
 
 READ-ONLY audit complete. No data writes yet. This memo is the decision doc; nothing
 changes until it's approved.
 
-## CANONICAL CHARTER = `HANDOFF_cert_session9.md` (this arc is S9 diffs (d)-(g))
+## CANONICAL CHARTER = `CHARTER_cert_session9.md` (this arc is S9 diffs (P)/(e)/(f)/(g))
 Do NOT rebuild for this alone, and do NOT open S9 from this file. **The single canonical
-Session-9 charter is `HANDOFF_cert_session9.md`** — it governs the physical rebuild
+Session-9 charter is `CHARTER_cert_session9.md`** — it governs the physical rebuild
 (batching contract, per-column attribution, gate block). This doc is the TECHNICAL
-BACKING for its diffs (d) build_words slotting, (e) paren float, (f) the 13 leaks,
+BACKING for its diffs (P) build_words slotting, (e) paren float, (f) the leaks,
 (g) phrase-gloss under-distribution. Read the charter first; come here for the detail.
 
 **Decisions locked 2026-07-04 (diagnosis done + committed: read-only tools, chip fix live):**

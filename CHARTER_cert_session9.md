@@ -1,20 +1,25 @@
-# ABP Corpus Certification — Session 9 handoff
-
-> **SUPERSEDED 2026-07-05 → see `CHARTER_cert_session9.md` (the single canonical S9 charter).**
-> This document's content was carried forward VERBATIM into that charter (which adds a consolidation
-> layer: the reassembly-tool explainer, the tooling-inventory paths, the seven-passes→(P) bridge, and
-> the David/H1732 diagnostic result). Kept for history; do NOT govern the rebuild from here.
-
----
+# ABP Corpus Certification — Session 9 CHARTER (canonical)
 
 **Seat: HIGH from the start.** Session 9 *is* the rebuild session — the whole point is a full
 words rebuild carrying FIVE fixes at once (was seven; the old a/c/d merged into (P) 2026-07-05 after the
 diagnosis landed). Don't open it on the low/medium census seat.
 
-**This is the SINGLE canonical S9 charter — the one source of truth.** It now fully absorbs the
-reassembly-diff arc (findings, adjudication, rebuild plan) that used to live in
-`AUDIT_reassembly_rebuild.md`. That file is **SUPERSEDED** (kept for its raw diagnosis history only;
-its header points here). Everything you need to run the rebuild is in THIS file.
+**This is the SINGLE canonical S9 charter — the one source of truth.** It consolidates the TWO prior
+docs into one file:
+- `HANDOFF_cert_session9.md` — the prior canonical S9 handoff (Session 8 scope + the 2026-07-05
+  merged diagnosis). This charter is that document, carried forward verbatim, plus the consolidation
+  layer below. **SUPERSEDED → pointer only.**
+- `AUDIT_reassembly_rebuild.md` — the reassembly-diff raw diagnosis + rebuild plan (2026-07-04); its
+  findings/counts/family-table/render-trace/rebuild plan are folded in here as diffs (P)/(e)/(f)/(g).
+  **SUPERSEDED → pointer only** (kept for raw diagnosis history).
+
+**Which side wins where the two disagree (READ THIS):** the newer diagnosis wins, NOT the older
+reassembly memo. The reassembly memo's "prime suspect = `_split_compounds` article-fronting" was
+DISPROVEN by the 2026-07-05 full-build diagnosis (it was the *stale* half of the 364; the real
+splitter is `_redistribute_pronoun_compounds`). See **killed suspects** below — do not resurrect it.
+The reassembly memo's older framing ("seven passes", "13 leaks", "6 word-order families", "364
+defects") is superseded by the merged numbers ("five fixes", "11 leaks", "156 stale + 208 survivors").
+Everything you need to run the rebuild is in THIS file.
 
 ## Frame (unchanged, governs all audit sessions)
 Two-tier standard. **Tier A** = ingest-faithfulness. **Tier B** = source defects as a versioned overlay
@@ -374,6 +379,63 @@ couldn't have if either number were hardcoded — which is exactly why the line-
   (rows == prose) AND this confirming prose == source on the survivor set, the 208 went to zero AGAINST
   SOURCE, not merely against prose. This is the control-test half of the source-adjudication — same
   production detector, never a second copy.
+
+## Consolidation layer (added 2026-07-05 when the two docs merged into this charter)
+Everything above is the prior canonical handoff verbatim. The items below were folded in from
+`AUDIT_reassembly_rebuild.md` (the tool explainer) or resolved fresh during consolidation.
+
+### What the audit tools measure (from the reassembly memo — keep for a fresh reader)
+- `scripts/audit_reassembly_diff.py` rebuilds each verse from its word rows and diffs against
+  `verses.text`. **v1** = bag-of-words (reorder-immune). **v2** = order-aware, using a Python port of the
+  reader's own `getEnglishOrderWords` (`scripts/reorder_english.py`, proven byte-equal to the JS on 137
+  fixtures — `tests/test_reorder_port.py`). v2 supersedes v1 and is the count of record. v2 only proves
+  the two stores DISAGREE, not which side is right — that's why every family is source-adjudicated.
+- Architecture (A) vs (B), for the record: **(A)** keep both builds, fix `build_words` to match
+  `load_abp_prose`'s source order, keep v2 as the independent cross-check — **CHOSEN/PINNED**. **(B)**
+  derive `verses.text` from the fixed word rows — REJECTED (destroys the independent oracle). See
+  "Architecture A — PINNED" above and Out of scope.
+
+### Tooling inventory — all committed (verified 2026-07-05), referenced by path
+Read-only unless noted. All present in git:
+- `scripts/audit_reassembly_diff.py` — v1 bag + v2 order-aware (`--controls` / `--controls --v2` / `--list`)
+- `scripts/reorder_english.py` (+ `tests/test_reorder_port.py`) — the v2 arbiter; prove it green FIRST
+- `scripts/check_draw_citations.py` — draw-cache collision checker (the 36-citation blast radius)
+- `scripts/dump_family_source.py` — source dump; `--scan-brackets` (the 11 leaks) + `--survivors` (the
+  independent from-scratch source-order deriver that produced the 208/0/0 split; `--survivors --controls`
+  fires BOTH verdicts before any zero is trusted). Survivor ref list = `AUDIT_reassembly_survivors.txt`.
+- `scripts/enumerate_redistributions.py` — (P1) firing control set (self-controls on Gen 3:15 + Gen 7:1)
+- `scripts/dryrun_tipnr_typefix.py` — Door-2 parse-only dry-run (the 10-place flip)
+- `scripts/cert_invariants.py` — the 7-invariant suite + `--controls` (**note the path: it lives under
+  `scripts/`, not repo root** — earlier drafts wrote it bare as `cert_invariants.py`)
+- `scripts/compare_words.py` — the per-column word-row diff the gate block reviews
+
+### Bridge: the "seven uncertified build-reorder passes" (original S9 scope) → now inside (P)
+The original Session-8 scope listed Door-3 as "seven uncertified build-reorder passes, two banked
+known-positive controls." The 2026-07-05 diagnosis folded that work into **(P)**: the passes that
+touch pronoun/short-word slotting resolve through `_redistribute_pronoun_compounds`, and their two
+banked positives are **Gen 3:15 + Gen 7:1** — the exact self-controls `enumerate_redistributions.py`
+must fire on before any zero downstream is trusted. So "certify the seven passes" is executed as
+"(P)'s firing-set gate + the enumerator controls," not as a separate door. **⚠ AMBIGUITY for JP to
+confirm:** MEMORY.md still lists "Door 3 (7 uncertified passes)" as OPEN and distinct; the handoff
+folds it into (P). If any pass-certification work is NOT covered by (P)'s control set, name it before
+S9 opens — otherwise this charter treats Door 3 as subsumed by (P).
+
+### Fold-in diagnostic — David / H1732 in the raw TIPNR source (read-only, does NOT gate the rebuild)
+Ran while `import_tipnr.py` is on the bench for the (b) twin-bug patch. **RESULT: David is PRESENT in
+the source, so he is IMPORTER-DROPPED, not source-absent.**
+- His own entity row exists: `tipnr/TIPNR.txt` **line 5451** — `David@Rut.4.17-Rev=H1732`, a normal
+  well-formed row (type col = `Male`; parents Jesse + Nahash; full children list; `Tribe of Judah`).
+  H1732 appears 45× in the file, mostly as a relative in OTHER rows; line 5451 is David's OWN row.
+- This confirms (by name AND by H1732, bases H-prefixed) what memory already recorded: David is absent
+  from the built `tipnr_entities` table. Source has him → the importer drops him.
+- **Candidate drop signature (UNPROVEN — needs a PA run of the importer):** his ref span
+  `Rut.4.17-Rev` crosses into the NT (`-Rev`); worth checking whether the importer's ref/book parse
+  chokes on an OT-name row whose span reaches a NT book, and whether that shape matches the 103
+  no-metaV bucket. **Cannot be pinned here** (the importer builds against bible.db on PA; CC can't run it).
+- **SCOPE FLAG:** diagnosis only. Any fix beyond a trivial importer bug belongs to the
+  entity-resolution pass AFTER S9 — it is NOT one of the five S9 fixes and must not be folded into the
+  rebuild. Logged here so the post-S9 entity work starts from "in source, importer-dropped, span-into-NT
+  candidate," not from zero.
 
 ## Standing rules (all inherited, none weakened this session)
 Checkpoint rule; CC can't query bible.db (JP runs every query on PA); control-test rule (fire on a known

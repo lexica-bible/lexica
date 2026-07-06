@@ -31,7 +31,8 @@ carry-forward closed (language reference = binder artifact, no row). Full record
 L5 batch-two entry.
 Carry-forwards:
 **Session 8 DONE 2026-07-04: Door 1 (Path-C census) CLOSED + Door 2 (import_tipnr twin) FIXED+proven.
-Both queued for one Session-9 rebuild. Full handoff = `HANDOFF_cert_session9.md`.**
+Both queued for one Session-9 rebuild. Full charter = `CHARTER_cert_session9.md`
+(consolidates the old `HANDOFF_cert_session9.md` + `AUDIT_reassembly_rebuild.md`, both now superseded).**
 Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-attributed diffs):
 - **Path-C G1473 residue — CENSUSED + CLOSED (Session 8, ledger L12).** Dan 4:33 is NOT a lone stray:
   Daniel holds **170** source-attested pronoun mistags (αὐτός/σύ/ὑμεῖς/ἡμεῖς still numbered 1473), read off
