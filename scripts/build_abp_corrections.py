@@ -81,6 +81,14 @@ _L10_REASON = ("ABP source dropped the Strong's number on the verb 'change' (ell
                "G3756 stays on pos 6) per the official ABP app (apostolicbibleapp.com) Mal "
                "3:6. L10.")
 
+_MAT2029_REASON = ("S10 word-side. Mat 20:29 bracket '[multitudeG3793 1a great]': 'multitude' has "
+                   "NO source position digit, so it took BH's greek_pos 1 — tying with 'a great' "
+                   "(source digit 1). A tie leaves the reader unable to order them, so the words "
+                   "show as 'multitude a great'; source/prose read 'a great multitude'. Set "
+                   "'multitude' greek_pos 1->2 so it reads after 'a great' (the trailing '.' then "
+                   "floats to it). Its own bracket; the only mixed numbered/un-numbered case in "
+                   "the feed. Mirrors the Mat 20:29 prose Tier B row (S9 f).")
+
 _DAN433_REASON = ("ABP tags the feminine-dative 'αὐτῇ' (αὐτός, G846) with ἐγώ's number G1473 at "
                   "Dan 4:33 pos 1 ('αὐτῇ τῇ ὥρᾳ' = 'in that very hour', Theodotion). Decided by "
                   "MORPHOLOGY, not a breathing eyeball: a dative slot agreeing with τῇ ὥρᾳ spelled "
@@ -113,6 +121,8 @@ ENTRIES = [
     # L5 — Dan 4:33 pos 1, αὐτῇ (αὐτός) mis-numbered as ἐγώ (Session 7; defect live, apply after build --apply)
     ("Dan",  4, 33,  1, "strongs",      "1473",  "846",  _DAN433_REASON, "L5"),
     ("Dan",  4, 33,  1, "strongs_base", "G1473", "G846", _DAN433_REASON, "L5"),
+    # S10 — Mat 20:29 pos 7, the un-numbered bracket word "multitude" (word side)
+    ("Mat", 20, 29,  7, "greek_pos",    "1",     "2",    _MAT2029_REASON, "S10-mat2029"),
 ]
 
 
