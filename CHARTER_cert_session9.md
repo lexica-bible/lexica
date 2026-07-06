@@ -1,5 +1,18 @@
 # ABP Corpus Certification — Session 9 CHARTER (canonical)
 
+**█████ S11 CLOSED — 2026-07-06. REBUILT + GATED + SWAPPED + CERTIFIED LIVE. READ THIS, THEN STOP. █████**
+The combined rebuild ran, passed every gate line below by its own instrument (v2 word-order/content-other
+0/0; split-flip 0 + control; malformed-bracket 3; abp_corrections 18→28, 0 skips; invariants 7/7; L9 lint
+residue 0; prose-leak 15/15; five-pass 5/5; audit chain 8/8; compare_words fully explained — the ~466
+strongs "swaps" were article-fronting CURES, not re-tags), SWAPPED to live, re-certified 7/7, dependent
+builders re-run, wsgi reloaded. **This whole charter is now HISTORY — do NOT re-run the gate against live.**
+Outcome + the S11 lessons (accommodation move, tier2 wrong-DB, draw-cache prose-blindness, compare_words
+reorder-not-retag) + the 6 parked follow-ups (G1096 redraw, the `--from-draw` ship path, verify_prose_leak
+Tier-B mode, the 18,339→18,384 label, the citation-sweep rule, worktree prune) → memory
+`project_abp_certification` + `TODO.md`. Everything below is the pre-swap plan, kept for the record only.
+---
+
+
 **Seat: HIGH from the start.** Session 9 *is* the rebuild session — the whole point is a full
 words rebuild carrying FIVE fixes at once (was seven; the old a/c/d merged into (P) 2026-07-05 after the
 diagnosis landed). Don't open it on the low/medium census seat.

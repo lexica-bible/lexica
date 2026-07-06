@@ -38,7 +38,7 @@ Both queued for one Session-9 rebuild. Full charter = `CHARTER_cert_session9.md`
 (`AUDIT_tierB_f_proposed.json`); (g) DEFERRED, detector floor 671 in gate (a76df6a). SESSION 9 PROPER
 opens as its OWN fresh session: first step = assemble the combined-rebuild plan → JP approves → build.**
 
-**★ SESSION 9 REBUILD RAN 2026-07-06 — 5 FIXES GREEN, BLOCKED AT THE GATE, NOT SWAPPED. ★**
+**★ SESSION 9 (2026-07-06) — rebuild ran, BLOCKED at the gate by split-flip over-fire. SUPERSEDED — S10 fixed it in code, S11 ran + swapped (see "SESSION 11 DONE" below). Kept only for the diagnosis history. ★**
 The plan was approved and the combined rebuild built + finalized on a throwaway `bible.db.new` (live
 never touched). **P1/P2/(e)/(f)/(b) all verified GREEN:** P1 drove the 208 pronoun survivors to ZERO,
 content-other = 0, funcword detector trusted-zero (fired 0→93 on a pass-off build, then 0 on the real
@@ -56,8 +56,8 @@ is NOT residual, its words reassemble clean). `audit_split_flip` reads 0 because
 v2 oracle caught it. The charter's "a clean rebuild cures the article-fronting for free" was WRONG —
 that diagnosis ran on a no-tail build. punct = 240 with AND without split-flip (split-flip is
 punct-neutral; 240-vs-260 is a separate open item).
-**★★ SESSION 10 DONE 2026-07-06 — the S9 blocker + the 5 residual are RESOLVED IN CODE (5 commits). The
-rebuild itself is now the only open step.** Canonical = the S10 banner atop `CHARTER_cert_session9.md`.
+**★★ SESSION 10 DONE 2026-07-06 — the S9 blocker + the 5 residual RESOLVED IN CODE (5 commits); SHIPPED via
+the S11 rebuild below.** Canonical = `CHARTER_cert_session9.md`.
 - `49f09c6` split-flip SCOPED (two clean-text guards) + `audit_split_flip --control`; pre-registered to fire
   on **0** in the rebuild (all 175 were false positives) — if it fires on any, STOP + adjudicate.
 - `7fe9271` Option A malformed-bracket build fix (Mat 21:19 / 1Ch 22:15 / Job 24:19); `scan_malformed_
@@ -65,18 +65,32 @@ rebuild itself is now the only open step.** Canonical = the S10 banner atop `CHA
 - `a011695` Fix A number-safe correction comparator (`cellmatch`) — needed by greek_pos rows; 18 live rows
   re-verify identically (dry-run 0 skips).
 - `0ce6f06` Mat 20:29 word row (greek_pos 1→2); `9eff6da` Act 7:3 word rows (option B, reorder metadata).
-**OPEN = the full rebuild + gate (JP's PA step), then swap:**
-- Run it per `/rebuild-words` + `finish_rebuild.sh`; `build_abp_corrections.py --apply` on the scratch adds
-  the **10 new rows (5 prose + Mat 20:29 + 4 Act 7:3)** → `abp_corrections` **18 → 28** (EXPECTED pin move in
-  the rebuild commit, NOT an anomaly). The 5 prose rows are code-only today — they've never been on live.
-- Gate: split-flip 0 + `--control` fires; scan = 3; v2 word-order **0** + content-other **0**; apply 0 skips;
-  invariants 7/7 (re-pin count 18→28) + controls; L9; phrase-gloss BEYOND `AUDIT_phrase_gloss_allowlist.txt` ≤671
-  (S11: 31 P1 consolidations frozen by name, raw total 702); five-pass controls; dotted policy.
-- **punct 240-vs-260 = OPEN TENSION, reconcile don't absorb:** 260 = charter pre-registration (after Zec 10:3
-  cleanup), 240 = OBSERVED S9 value; delta suspected prose/em-dash handling. Explain it; do NOT flag 240 as a fail.
-- Then swap + post-swap builders (surface/translit/entity/dotted/rendering-norm/two-ending) + self-heal proofs
-  + secondary render smoke (Study topic page). Full gate block in the charter.
-- **Repo sync owed (from S9):** local `cert_prose_leak_diff.json` = 13, PA copy = 15 — reconcile during the gate.
+**★★ SESSION 11 DONE 2026-07-06 — REBUILT + GATED + SWAPPED + CERTIFIED LIVE. ★★** The combined rebuild
+ran, passed every charter gate line by its own instrument, swapped to live, re-certified 7/7, dependent
+builders re-run, site reloaded. `abp_corrections` 28, words 626309, phrase-gloss allowlist 31 frozen
+(`AUDIT_phrase_gloss_allowlist.txt`), punct settled at 240 (no new). Carry-forwards (Path-C residue,
+import_tipnr twin, Door-3 five-pass controls) all shipped in this rebuild. Rollback = `bible_pre_cert_
+s11_20260706.db`; old live = `bible_old_live_20260706.db`. Full record → memory `project_abp_certification`
+(S11 banner + lessons). **The certification arc is CLOSED.**
+
+**S11 FOLLOW-UPS (tooling gaps surfaced this session — none block anything live):**
+- **G1096 redraw-and-ship** = FIRST ACT of next session. Card quotes the OLD Mat 21:19 prose; `--dry-run
+  --force` regenerates it clean (reviewed OK — plain-meaning γίνομαι), but there's no way to ship the
+  reviewed draw (see next item). Do the ship-flag fix, then `check_draw_citations.py` sweep → ship G1096.
+- **`build_lexica_def.py` needs a `--apply --from-draw <hash>` path** — ship a reviewed draw file by its
+  hash, bypassing the `synth_ver` prompt-version skip, WITHOUT re-rolling. Today `--apply` skips (stamp
+  blind to prose) and `--apply --force` re-rolls unreviewed → no clean ship-what-you-reviewed path. Keep
+  prose-awareness in `check_draw_citations.py` (a per-prose-fix citation sweep), NOT in the draw signature
+  (citations vary per roll → churn).
+- **Standing rule (banked):** the draw cache does NOT self-heal on a Tier B prose fix to a non-sampled
+  cited verse. Every prose fix → run `check_draw_citations.py` to find cards quoting the changed verse →
+  targeted redraw. The signature only covers a word's SAMPLED verses.
+- **`verify_prose_leak.py` needs a "Tier B applied" mode/warning** — it's a parser-only check; run against a
+  finished scratch (Tier B layered on the 5 prose verses) it FAILs-that-isn't on exactly those 5. Next
+  rebuild shouldn't re-derive this.
+- **`lint_split_wrong_slot.py` stale label** — its `RECONCILE … (sizing: 18,339/12,692)` is a hardcoded
+  literal; bump to **18,384/12,718** (the real post-S11 scope; both harnesses agree on it).
+- **Prune the stray git worktree** `.claude/worktrees/keen-goodall-f3e661/` (parallel-session leftover).
 Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-attributed diffs):
 - **Path-C G1473 residue — CENSUSED + CLOSED (Session 8, ledger L12).** Dan 4:33 is NOT a lone stray:
   Daniel holds **170** source-attested pronoun mistags (αὐτός/σύ/ὑμεῖς/ἡμεῖς still numbered 1473), read off
