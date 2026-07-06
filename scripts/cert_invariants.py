@@ -40,7 +40,7 @@ from cert_manifest import backup_guard_message    # the ONE backup guard
 # Certified 2026-07-04 (Session 3 swap; compare_words gate: 110 cells / 11
 # pre-registered live-stale verses, 626,305 = 626,305 rows).
 PINS = {
-    "words": 626305,
+    "words": 626309,  # S11: +4 vs Session-3 pin = the (P2) _split_numbered splits (Dan 4:1, Isa 10:23, Luk 8:28, Pro 3:15), verified by per-verse word-count diff vs live
     "verses": 31237,  # read from live at suite landing 2026-07-04
     "abp_corrections_active": 28,  # Cushi x6 + Jer 49:13 x2 + L2 (1Sa 6:11) x4 + L10 (Mal 3:6) x4 + L5 (Dan 4:33) x2 + S9-f prose x5 + Mat 20:29 greek_pos x1 + Act 7:3 x4  (S11 rebuild)
 }
@@ -103,11 +103,16 @@ def check_corrections(conn, expected_active=None) -> list:
                         "(an emptied/edited table would otherwise pass this check silently)")
     for c in rows:
         key = f"{c['book']} {c['chapter']}:{c['verse']} pos {c['position']} {c['field']}"
-        hits = conn.execute(
-            f"""SELECT w."{c['field']}" AS val FROM words w
-                JOIN verses v ON v.id = w.verse_id
-                WHERE v.book=? AND v.chapter=? AND v.verse=? AND w.position=?""",
-            (c["book"], c["chapter"], c["verse"], c["position"])).fetchall()
+        if c["field"] == "verses.text":              # S9 (f) prose row: check verses.text, not a words column
+            hits = conn.execute(
+                "SELECT text AS val FROM verses WHERE book=? AND chapter=? AND verse=?",
+                (c["book"], c["chapter"], c["verse"])).fetchall()
+        else:
+            hits = conn.execute(
+                f"""SELECT w."{c['field']}" AS val FROM words w
+                    JOIN verses v ON v.id = w.verse_id
+                    WHERE v.book=? AND v.chapter=? AND v.verse=? AND w.position=?""",
+                (c["book"], c["chapter"], c["verse"], c["position"])).fetchall()
         if len(hits) != 1:
             problems.append(f"{key}: {len(hits)} matching slot(s), expected exactly 1")
         elif hits[0]["val"] != c["corrected_value"]:
