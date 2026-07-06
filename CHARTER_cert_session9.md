@@ -4,6 +4,32 @@
 words rebuild carrying FIVE fixes at once (was seven; the old a/c/d merged into (P) 2026-07-05 after the
 diagnosis landed). Don't open it on the low/medium census seat.
 
+---
+**★ REBUILD RAN 2026-07-06 — 5 FIXES GREEN, GATE BLOCKED, NOT SWAPPED. READ THIS FIRST. ★**
+The plan was approved and the combined rebuild was built + finalized on a throwaway `bible.db.new`
+(live never touched). **All five fixes verified GREEN:** P1 drove the 208 pronoun survivors to ZERO;
+P2/(e)/(f)/(b) clean; content-other = 0; funcword detector trusted-zero (fired 0→93 on a pass-off
+build, 0 on the real one); invariants + audits + health pass; five pass-controls frozen (1Ch 13:10,
+Act 19:4, 1Sa 5:2, Jdg 8:19, Lev 10:18). (f) shipped a NEW `abp_corrections` prose path (b196b9a).
+**BLOCKER: v2 word-order = 180, not 0.** Proven root cause: **`fix_split_flip` over-fires** — swaps
+"noun, the" → "the noun" even when the "the" belongs to the FOLLOWING noun (Jer 48:1: "…of the forces,
+the God…" → wrong "…the forces, God"). Isolation build (split-flip OFF) → word-order **180 → 5**, so
+split-flip causes 175. **This INVALIDATES the charter's premise below that "a clean rebuild cures the
+156 article-fronting for free"** — that Jul-5 diagnosis was measured on a build WITHOUT the tail; the
+real rebuild runs the tail, and split-flip in the tail re-breaks them. `audit_split_flip`=0 is a
+FALSE all-clear (it reuses the fixer's own assumption).
+**Gate statement amended:** word-order = 0 STANDS as the criterion; it is split-flip's SCOPED FIX that
+must earn it (banked target = the 5 non-split-flip residual = malformed-bracket/Tier-B verses whose
+WORDS still need a fix), not this swap. punct = 240 with AND without split-flip (split-flip is
+punct-neutral; 240-vs-260 is a separate open item). **Next session:** scope `fix_split_flip` + its
+audit to genuine strands only, re-verify, re-run the gate, THEN swap. Do NOT improvise the fix. Fix-
+session control verse = Jer 48:1. Live-state repo sync owed: local `cert_prose_leak_diff.json`=13,
+PA=15. Full narrative: memory `project_reassembly_diff`.
+
+**Everything below is the pre-rebuild plan, kept for the fix-session's re-run — but treat the
+"rebuild cures article-fronting" claims as SUPERSEDED by the banner above.**
+---
+
 **This is the SINGLE canonical S9 charter — the one source of truth.** It consolidates the TWO prior
 docs into one file:
 - `HANDOFF_cert_session9.md` — the prior canonical S9 handoff (Session 8 scope + the 2026-07-05

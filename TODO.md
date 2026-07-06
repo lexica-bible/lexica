@@ -37,6 +37,30 @@ Both queued for one Session-9 rebuild. Full charter = `CHARTER_cert_session9.md`
 (e) paren float shipped (6e1deed); (f) content-other parser (b62ab8f) + 5 Tier B rows staged
 (`AUDIT_tierB_f_proposed.json`); (g) DEFERRED, detector floor 671 in gate (a76df6a). SESSION 9 PROPER
 opens as its OWN fresh session: first step = assemble the combined-rebuild plan → JP approves → build.**
+
+**★ SESSION 9 REBUILD RAN 2026-07-06 — 5 FIXES GREEN, BLOCKED AT THE GATE, NOT SWAPPED. ★**
+The plan was approved and the combined rebuild built + finalized on a throwaway `bible.db.new` (live
+never touched). **P1/P2/(e)/(f)/(b) all verified GREEN:** P1 drove the 208 pronoun survivors to ZERO,
+content-other = 0, funcword detector trusted-zero (fired 0→93 on a pass-off build, then 0 on the real
+one), invariants + audits + health all pass, five pass-controls frozen (1Ch 13:10 / Act 19:4 / 1Sa 5:2
+/ Jdg 8:19 oath / Lev 10:18 funcword). **(f) shipped a NEW prose path on `abp_corrections`** (committed
+b196b9a): `field='verses.text'`, `position=-1` sentinel, two apply points in finish_rebuild (prose at
+step 4b before split-flip, words at step 7); `verify_prose_leak.py` is the gate check;
+`cert_prose_leak_diff.json` grew 13→15 (2 live-stale caps heals, Tier A).
+**BLOCKER — v2 word-order = 180, not 0.** Root cause proven: **`fix_split_flip` over-fires** — it
+swaps "noun, the" → "the noun" even when the "the" belongs to the FOLLOWING noun (Jer 48:1: "…of the
+forces, the God…" → wrongly "…the forces, God"). Rebuild with split-flip OFF → word-order **180→5**
+(175 caused by split-flip; the 5 residual = malformed-bracket/Tier-B verses whose WORDS still need a
+fix). `audit_split_flip` reads 0 because it shares the fixer's own flawed assumption; the independent
+v2 oracle caught it. The charter's "a clean rebuild cures the article-fronting for free" was WRONG —
+that diagnosis ran on a no-tail build. punct = 240 with AND without split-flip (split-flip is
+punct-neutral; 240-vs-260 is a separate open item).
+**FIX-SESSION JOB (next):** (1) scope `fix_split_flip` + its audit to fire only on genuine strands —
+code fix to a certified pass, re-verify no regression of genuine strands, then re-run the gate; banked
+target = word-order **5**. (2) address the 5 malformed-bracket residual (words-side). (3) reconcile
+punct 240 vs 260. (4) THEN the swap + post-swap dependent builders (surface/translit/two-ending/
+rendering-norm) + self-heal proofs. Full detail: memory `project_reassembly_diff`. Do NOT improvise the
+split-flip fix. **Repo sync owed:** local `cert_prose_leak_diff.json` = 13, PA copy = 15 — reconcile.
 Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-attributed diffs):
 - **Path-C G1473 residue — CENSUSED + CLOSED (Session 8, ledger L12).** Dan 4:33 is NOT a lone stray:
   Daniel holds **170** source-attested pronoun mistags (αὐτός/σύ/ὑμεῖς/ἡμεῖς still numbered 1473), read off

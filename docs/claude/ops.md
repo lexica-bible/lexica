@@ -101,14 +101,24 @@ graphs, no rebuild script). LIVE as a daily PA task (13:30 UTC, `--keep 7`). Mem
   source-phrase fronting) covers ONLY that pass — a SECOND flip producer (proper-noun slots)
   regenerates ~175 flip verses on any rebuild (proven by the 2026-07-04 cert harness), so the
   fixer is FOLDED into finish_rebuild.sh as step 6 (position-only swap, after ALL pinned patches
-  + fix_emdash, before the abp_corrections apply; final run proved 0). Re-run surface+translit
-  after any `--apply`. Memories `project_abp_certification` + `project_split_compounds_flip`.
+  + fix_emdash, before the abp_corrections apply). Re-run surface+translit after any `--apply`.
+  **⚠ 2026-07-06: this pass OVER-FIRES — it swaps "noun, the" even when the "the" belongs to the
+  FOLLOWING noun (Jer 48:1 "…forces, the God" → wrong "…the forces, God"), causing 175 of 180 v2
+  word-order defects. Its own `audit_split_flip` reads 0 because it reuses the fixer's flawed
+  "noun,the = stranded determiner" assumption; only the independent v2 oracle catches it. Blocks
+  the S9 swap; needs scoping to genuine strands. Detail: memory `project_reassembly_diff`.**
+  Memories `project_abp_certification` + `project_split_compounds_flip`.
 - `build_abp_corrections.py` + `apply_abp_corrections.py` — the Tier-B **abp_corrections** table
   (in bible.db; 18 rows: Cushi ×6 + Jer 49:13 ×2 + L2 1Sa 6:11 ×4 + L10 Mal 3:6 ×4 + L5
-  Dan 4:33 ×2) and its guarded apply (finish_rebuild.sh step 7, the TRUE final tail step — fires
-  only when the cell still holds the recorded fresh-parse value, LOUD skip otherwise, log beside
-  the db). New source-defect corrections = new rows via build_abp_corrections.py (checkpoint
-  first), never a new fix script. Full record: `AUDIT_abp_certification.md`.
+  Dan 4:33 ×2) and its guarded apply (fires only when the cell still holds the recorded
+  fresh-parse value, LOUD skip otherwise, log beside the db). New source-defect corrections = new
+  rows via build_abp_corrections.py (checkpoint first), never a new fix script.
+  **2026-07-06 (b196b9a): the overlay now also carries PROSE (verses.text) corrections — no schema
+  change, `field='verses.text'` + `position=-1` sentinel (inert to the words path), before/after in
+  the source/corrected cols. `apply_abp_corrections.py --only {words,verses}` gives TWO apply points
+  in finish_rebuild: prose at step 4b (BEFORE split-flip, its oracle), words at step 7 (`--only
+  words`). The 5 (f) prose rows seed from `AUDIT_tierB_f_proposed.json` at the S9 rebuild — live's
+  table is still 18 until that swap.** Full record: `AUDIT_abp_certification.md`.
 - `fix_emdash.py [db]` (`--apply`) — swaps ABP's literal `--` clause dash for `—` in
   `words.english` + `verses.text` (double hyphen only; Beer-sheba safe). FOLDED 2026-07-03: runs
   as a tail step of finish_rebuild.sh (after fix_split_merges — a "--" precondition there must

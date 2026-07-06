@@ -63,5 +63,17 @@
   "ref": "Zec 10:3",
   "before": "My rage was provoked over the shepherds, and over the lambs I visit]. And the LORD God almighty will visit his flock, the house of Judah. And he shall order them as his good-looking horse in battle.",
   "after": "My rage was provoked over the shepherds, and over the lambs I visit. And the LORD God almighty will visit his flock, the house of Judah. And he shall order them as his good-looking horse in battle."
+ },
+ {
+  "ref": "Joh 19:21",
+  "before": "then the chief priests of the Jews said to Pilate, Write not, The King of the Jews! but that, That one said, I am king of the Jews.",
+  "after": "Then the chief priests of the Jews said to Pilate, Write not, The King of the Jews! but that, That one said, I am king of the Jews.",
+  "note": "live-stale first-word caps; source digit-1 word capitalized; rebuild heals to source (Tier A, S9 verify 14-15)"
+ },
+ {
+  "ref": "Jos 14:3",
+  "before": "for Moses gave a lot to the two tribes and to the half tribe of the other side of the Jordan. And to the Levites a lot was not given among them.",
+  "after": "For Moses gave a lot to the two tribes and to the half tribe of the other side of the Jordan. And to the Levites a lot was not given among them.",
+  "note": "live-stale first-word caps; source digit-1 word capitalized; rebuild heals to source (Tier A, S9 verify 14-15)"
  }
 ]
