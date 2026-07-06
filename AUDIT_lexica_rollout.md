@@ -255,3 +255,67 @@ old numbered-only lint was blind to. Triaged against the actual sentence (`audit
   spread and the identical missed-collocation list. So a **redraw fixes drafting, never
   sample coverage** — a coverage gap (a real sense the spread never fed) survives a redraw
   and needs a sampler change or a manual eyeball, not a re-run.
+
+## Batch Two — 20-word calibration (rollout session 1, 2026-07-06)
+The session prompt's "calibration batch 1" (doc numbering: Batch Two, the batch after the 26). Cutoff
+occ≥2; verbs + Hebrew held as separate tracks, so this batch is **20 nouns/adjectives**. Candidate
+list from `rank_lexica_candidates.py --top 70 --skip-built` (the `--skip-built` flag added this
+session — excludes the 38 live entries, count shown in the header). Verbs held out to keep the batch
+homogeneous so the ~2.8-flags/word bar means one thing.
+
+**Built against the S11 corpus state** (post-S11 prose, 28-row correction table). So a future Tier B
+prose fix must run the `check_draw_citations.py` sweep against these 20 like any shipped card (the
+standing rule in docs/claude/ai.md).
+
+**The 20 (frequency order):** ἀδελφός G80 · πολύς G4183 · καρδία G2588 · ἅγιον G39 · ἔθνος G1484 ·
+μέγας G3173 · ἱερεύς G2409 · οὐρανός G3772 · ὕδωρ G5204 · φωνή G5456 · ὀφθαλμός G3788 · ὄρος G3735 ·
+ἔτος G2094 · ἄρχων G758 · ἔργον G2041 · ἁμαρτία G266 · ῥῆμα G4487 · δύναμις G1411 · θυγάτηρ G2364 ·
+τόπος G5117. Routed OUT: **αἰών G165 → contested/fork track** (loaded "eternity" frame, noun sibling
+of the forked aionios G166). Watch hardest for a disguised loaded frame at ἁμαρτία / ῥῆμα / δύναμις.
+
+### Register-completeness findings (ranker flag gaps closed this session)
+The top frequency band is function words the register didn't exclude, so they surfaced as "content."
+Flagged (not built) in `rank_lexica_candidates.py`, flag-only per JP (structural cards are a separate
+pipeline): 10 oblique personal-pronoun forms → `OBL` (belong to ἐγώ/σύ/ἡμεῖς/ὑμεῖς, so the structural
+backfill can't double-count them); ὑμεῖς/ἡμεῖς → `FUNC`; ἕως/ἰδού/εἷς/οὕτω/δύο → `STRC`; ἐνώπιον →
+`STRC` (preposition); ἐκεῖ/νῦν/ἔτι → `STRC` (deictic adverbs). These are the queued structural-backfill
+set, now visible in the ranker.
+
+### G80 ἀδελφός — LIVE (4 senses, sense 4 advisory-thin). The calibration lesson of the batch.
+Shipped the attempt-3 draw (key d4eb6ed8), no model call on apply, gate 40/40, stamp current. Senses:
+sibling / ethnic-institutional group / messianic-apostolic community / "equivalent to a sibling" (thin,
+Psa 35:14); LXX note on sense 2.
+- **The saga.** First draw = 3 senses + a dangling "Jas"; the redraw to clear the dangling flipped it
+  to 4 (added the Psa 35:14 figurative). **All 13 draws (reviewer + redraws) and the ship share key
+  d4eb6ed8** — the key pins the INPUT, not the output; same fed sample → same key every draw. So
+  `--from-draw d4eb6ed8` did NOT pick attempt 3 by key; the on-disk bytes attempt 3's `--dry-run
+  --force` last wrote are what shipped. **Disk state is the selector, the key is the gate.**
+- **The reviewer read.** `lexica_agreement.py --runs 10`: count {3:6, 4:4}, but the **3 core jobs
+  present + distinct in ALL 10** — the only wobble is Psa 35:14 (10/10 verse support, no stable home:
+  folds into 2 or 3, or splits as a 4th). A fold, not a hole.
+- **The reversal (logged honestly).** First ruling was "STABLE at 3, ship 3, Psa 35:14 in range." That
+  over-read the 10-run: "6/10 fold it" is a plurality of PRESENTATION styles, not a verdict the 4th job
+  is false. The manufacture bar guards HOLLOW senses; Psa 35:14 has 10/10 support + a real comparative
+  use, so sense 4 is THIN not manufactured — same class as batch-one χείρ #4 / πόλις #3 (shipped
+  advisory-thin).
+- **RERULED BAR (banked, generalizes to the other 19): the reviewer gates CORE STRUCTURE, not surface
+  count.** A draw ships if the stable jobs are present + distinct (sibling/ethnic/faith, LXX on 2) and
+  any flicker-sense carries the thin flag. Attempt 3 passes; attempt 2's **merge-3** (ethnic+faith
+  collapsed, Psa 35:14+Heb 8:11 split into a "moral context" sense) FAILS it — a 3-count that holed a
+  stable distinction. "Match the majority count" was the wrong bar.
+- **OFF-DISTRIBUTION finding (about the reviewer, not just G80).** Attempt 2's merge-3 shape did NOT
+  appear in any of the reviewer's 10 draws (ethnic + faith never share a sense in the ground truth). A
+  live draw produced a shape outside the observed 10 → the 10-run may UNDER-SAMPLE the draw space.
+- **FED-40 sample question (banked for the retro).** The 40-verse (20 OT / 20 NT) spread is pragmatic,
+  not derived — for a 1000-occ word it's a ~4% sample. The batch test: do collocation flags resolve as
+  UNFED instances (fine) or GENUINELY-ABSENT senses (sample too thin)? Log the per-word distinction as
+  it accumulates; answer at the retro alongside the reviewer-sample question. **G80: both flags
+  (δώδεκα, παρακαλέω) resolved as unfed — the sense is present via other fed verses.**
+- **RETRO question.** G80's mid-range boundary wanders across three shapes at 4/3/3 (clean-3 / merge-3 /
+  4-sense); it took the reviewer + 3 redraws to settle one word. If the other 19 behave like this,
+  **per-word reviewer runs go from exceptional to standard** — decide at the batch retro.
+- **Redraw-loop discipline.** Drawing until the structure matches a pre-established consensus is
+  audit-against-known-structure, not shopping (every draw got the full audit); capped at 3 off-target
+  pulls before stopping to JP. `--from-draw` refuses EDITED drafts by design, so "hand-tune the split"
+  can never mean editing the JSON — a real constraint is sampler/prompt-side (frozen VERSE_PROMPT →
+  re-prove cycle) or a new mechanism, both JP design decisions.
