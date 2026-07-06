@@ -24,9 +24,14 @@ EITHER path. (Prove byte-identical on PA: copy the DB twice, run this fixer on o
 corrected full rebuild on the other, then compare with scripts/compare_words.py.)
 
 FOLDED INTO THE TAIL (cert Session 2, 2026-07-04): runs as step 6 of
-finish_rebuild.sh, so every rebuild reproduces the fix. Cert run 1 proved a SECOND
-flip producer (proper-noun '*' slots, which the _split_compounds source-order fix
-skips) regenerates 175 flip verses / 196 pairs on a fresh build. Ordering is
+finish_rebuild.sh, so every rebuild reproduces the fix. Cert run 1 saw this pass
+"repair" 175 verses / 196 pairs on a fresh build that came from proper-noun '*'
+runs the _split_compounds source-order fix skips — but cert Session 9's independent
+oracle (v2 rows-vs-verses.text) proved those 175 were FALSE POSITIVES: correct
+source order ("…forces, the God…") the un-scoped detector wrongly flipped. The
+detector was SCOPED in S10 (2026-07-06, two clean-text guards in find_flips) so it
+no longer fires on them; on the scoped build this pass is expected to fire on ZERO
+verses (it stays as a guarded safety net + control). Ordering is still
 LOAD-BEARING and locked in the audit log:
   * AFTER every pinned patch — fix_split_merges targets ABSOLUTE positions, and this
     script moves positions;
