@@ -73,15 +73,19 @@ import_tipnr twin, Door-3 five-pass controls) all shipped in this rebuild. Rollb
 s11_20260706.db`; old live = `bible_old_live_20260706.db`. Full record → memory `project_abp_certification`
 (S11 banner + lessons). **The certification arc is CLOSED.**
 
+**⚠ CROSS-SESSION NOTE (for the restarted corpus-cert session):** a parallel session had UNCOMMITTED edits
+to `scripts/build_lexica_def.py` starting the `--from-draw` path. Those were discarded (JP's call) and the
+feature was implemented + committed here (`c4617d0`). The tree is CLEAN — `--from-draw` is DONE, do NOT redo
+it. If your last-session notes say "ship-reviewed-draw path is open," that's stale.
+
 **S11 FOLLOW-UPS (tooling gaps surfaced this session — none block anything live):**
-- **G1096 redraw-and-ship** = FIRST ACT of next session. Card quotes the OLD Mat 21:19 prose; `--dry-run
-  --force` regenerates it clean (reviewed OK — plain-meaning γίνομαι), but there's no way to ship the
-  reviewed draw (see next item). Do the ship-flag fix, then `check_draw_citations.py` sweep → ship G1096.
-- **`build_lexica_def.py` needs a `--apply --from-draw <hash>` path** — ship a reviewed draw file by its
-  hash, bypassing the `synth_ver` prompt-version skip, WITHOUT re-rolling. Today `--apply` skips (stamp
-  blind to prose) and `--apply --force` re-rolls unreviewed → no clean ship-what-you-reviewed path. Keep
-  prose-awareness in `check_draw_citations.py` (a per-prose-fix citation sweep), NOT in the draw signature
-  (citations vary per roll → churn).
+- **`--from-draw` ship path — SHIPPED (commit `c4617d0`).** `build_lexica_def.py --apply --word G#### --from-draw
+  KEY8` ships a reviewed draw by its key, bypassing the `synth_ver` skip, no re-roll; refuses on missing/stale
+  draw or key mismatch. Prose-awareness stays in `check_draw_citations.py` (NOT the signature — citations churn).
+- **G1096 redraw-and-ship = FIRST ACT of next session.** Its reviewed draw (key `d10243ab`, plain-meaning
+  γίνομαι, generated last session by `--dry-run --force`) just needs: `python3 scripts/build_lexica_def.py
+  --apply --word G1096 --from-draw d10243ab`. **If it refuses (key or hit-check fails — inputs moved since
+  review), the fix is regenerate-and-re-review (`--dry-run --force` → re-read → ship), NOT loosen the check.**
 - **Standing rule (banked):** the draw cache does NOT self-heal on a Tier B prose fix to a non-sampled
   cited verse. Every prose fix → run `check_draw_citations.py` to find cards quoting the changed verse →
   targeted redraw. The signature only covers a word's SAMPLED verses.
