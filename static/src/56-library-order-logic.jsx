@@ -43,7 +43,7 @@ function getEnglishOrderWords(words) {
   // bracket group is reordered into English order, that punctuation must float
   // to the last word of the reordered group (Greek "were-completed ... earth,"
   // -> English "... earth were-completed,") instead of stranding on "earth".
-  const TRAIL = /[.,;:!?·]+$/;
+  const TRAIL = /[.,;:!?·)]+$/;
   for (const bid in bracketMap) {
     let trailing = "";
     let cleaned = [];

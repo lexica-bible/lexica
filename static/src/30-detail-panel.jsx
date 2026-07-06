@@ -1135,7 +1135,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
                 // trailing dash "to me --]" -> "to me] --").
                 let eng = w.english || "—", trail = "";
                 if (close) {
-                  const m = (w.english || "").match(/\s*(?:--|—|–|[.,;:!?·])+$/);
+                  const m = (w.english || "").match(/\s*(?:--|—|–|[.,;:!?·)])+$/);
                   if (m && m.index > 0) {
                     const lifted = m[0].trim();
                     trail = /^(?:--|—|–)+$/.test(lifted) ? " " + lifted : lifted;

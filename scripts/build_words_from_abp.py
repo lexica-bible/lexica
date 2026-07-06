@@ -819,7 +819,7 @@ def _redistribute_pronoun_compounds(rows: list) -> None:
 # Row tuple (13 elements here): 0:pos 1:english 2:english_head 3:strongs 4:strongs_base
 #   5:greek_pos 6:bracket_id 7:italic 8:italic_words 9:smcap_words 10:abp_pos 11:morph 12:lemma
 
-_TRAIL_PUNCT = re.compile(r"[.,;:!?·]+$")
+_TRAIL_PUNCT = re.compile(r"[.,;:!?·)]+$")   # ) added 2026-07-05 (paren-edge, S9 fix e-#1; 0-row diff — all `)` already position-last)
 
 
 def _italic_flag(head, iw_str):

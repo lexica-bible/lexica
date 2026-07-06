@@ -17,8 +17,8 @@ english, ...}. Only those three keys are read.
 """
 import re
 
-# JS: const TRAIL = /[.,;:!?·]+$/;  (prose float — NO whitespace, NO dash class)
-_TRAIL = re.compile(r"[.,;:!?·]+$")
+# JS: const TRAIL = /[.,;:!?·)]+$/;  (prose float — NO whitespace, NO dash class; ) added 2026-07-05 for paren-edge)
+_TRAIL = re.compile(r"[.,;:!?·)]+$")
 
 
 def order_bracket_group_words(words):

@@ -99,7 +99,7 @@ def _word(parts, lemma="", translit="", strongs=""):
             "num": None, "brk_open": False, "brk_close": False, "brk_trail": ""}
 
 
-_TRAIL = re.compile(r"[.,;:!?·]+$")
+_TRAIL = re.compile(r"[.,;:!?·)]+$")   # ) added 2026-07-05 (paren-edge, S9 fix e)
 
 
 def _mark_brackets(words):

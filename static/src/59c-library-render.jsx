@@ -334,7 +334,7 @@ const LibRender = (function () {
         // John 1:1 "the word. was God" instead of "the word was God." Ordinary marks
         // (",.;:") hug the "]"; a dash ("--") gets a leading space -> "] --".
         // (2 Sam 1:26 class.)
-        const TRAIL = /\s*(?:--|—|–|[.,;:!?·])+$/;
+        const TRAIL = /\s*(?:--|—|–|[.,;:!?·)])+$/;
         let bracketTrail = "";
         const cleaned = [];
         for (const w of g.words) {
