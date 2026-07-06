@@ -33,6 +33,10 @@ Carry-forwards:
 **Session 8 DONE 2026-07-04: Door 1 (Path-C census) CLOSED + Door 2 (import_tipnr twin) FIXED+proven.
 Both queued for one Session-9 rebuild. Full charter = `CHARTER_cert_session9.md`
 (consolidates the old `HANDOFF_cert_session9.md` + `AUDIT_reassembly_rebuild.md`, both now superseded).**
+**PRE-REBUILD FIXES COMMITTED 2026-07-05: (P) gated green (ddffb0f); (b) dry-run-proven (96bb662);
+(e) paren float shipped (6e1deed); (f) content-other parser (b62ab8f) + 5 Tier B rows staged
+(`AUDIT_tierB_f_proposed.json`); (g) DEFERRED, detector floor 671 in gate (a76df6a). SESSION 9 PROPER
+opens as its OWN fresh session: first step = assemble the combined-rebuild plan → JP approves → build.**
 Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-attributed diffs):
 - **Path-C G1473 residue — CENSUSED + CLOSED (Session 8, ledger L12).** Dan 4:33 is NOT a lone stray:
   Daniel holds **170** source-attested pronoun mistags (αὐτός/σύ/ὑμεῖς/ἡμεῖς still numbered 1473), read off
@@ -47,12 +51,20 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   places (Beth-gader/Eshtemoa/Etam/Gedor/Gibeon/Ir-nahash/Keilah/Shechem/Tekoa/Zanoah) flip person→place,
   independently pinned + mirror-clean + raise both ways (`scripts/dryrun_tipnr_typefix.py`). The `tipnr`
   re-import is the Session-9 rebuild step; pre-registered Door-2 delta = exactly those 10 type changes.
-- **Certify the OTHER 7 redistribution passes (Door 3 — diagnosis OPEN, opens Session 9 with a seam).**
-  L9 certified `_split_compounds` ONLY. Still uncertified: `_split_numbered`, `_redistribute_pronoun_compounds`,
-  `_fix_backwards_pairing`, `_split_pn_article_lump`, `_funcword_noun_relocate`, `_lord_subject_split`,
-  `_lord_oath_fix`. **Seam banked:** the fold slots ARE subject-pass output — 2 known-positives Num 20:9 pos 2
-  + 1Sa 18:6 pos 8; any Door-3 census detector must fire on those before its zero is trusted. Same
-  census+control approach as L9.
+- **Door 3 — the 7 redistribution passes — RESOLVED 2026-07-05 (middle path).** L9 certified
+  `_split_compounds`; (P) now certifies P1 `_redistribute_pronoun_compounds` + P2 `_split_numbered` via their
+  gates. The OTHER 5 (`_fix_backwards_pairing`, `_split_pn_article_lump`, `_funcword_noun_relocate`,
+  `_lord_subject_split`, `_lord_oath_fix`) get NO full per-pass cert but ONE banked known-positive control each
+  + the output-level v1/v2-zero gate. Banked: 1Ch 13:10 (lord_subject), Act 19:4 (pn_article_lump), 1Sa 5:2
+  (backwards_pairing). **STILL TO PICK ON PA before the build:** one control verse each for `_lord_oath_fix`
+  (from `graveyard/fix_lord_oath.py` dry-run) + `_funcword_noun_relocate` (from `audit_funcword_wrongslot.py`).
+  See CHARTER gate block "Five-pass single-control set".
+- **POST-S9 follow-ups (surfaced this session, NOT part of the rebuild):**
+  - Phrase-gloss under-distribution (671, fix (g) deferred): adjudicate a sample of the "not+verb" class vs
+    the ABP app (defect vs ABP negation convention), then distribute the true-defect ones dual-ordering-style.
+    Detector = `scripts/audit_phrase_gloss_underdist.py`.
+  - Consolidate the trailing-clause float set — it's copy-pasted in 6 live places (build + 4 render + port);
+    unify to one shared definition so they can't drift. Repo hygiene.
 - **Stump filter leak** (noted, low priority): `lint_split_wrong_slot.py`'s stemmer stump filter misses
   sibling forms whose count is <3 (sid/com/rott). Didn't matter once recipient-scoping shrank the haystack;
   fix if the filter is reused at scale.
