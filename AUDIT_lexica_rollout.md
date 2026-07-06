@@ -431,6 +431,46 @@ Shipped the first fresh draft (key dad558e7), no model call on apply, gate 40/40
   gate (match-the-count) FISHES. The four-gate reruling moved καρδία from a likely multi-draw slog to a
   one-draw ship by dropping the count-match requirement — the bar change IS the calibration win.
 
+### G39 ἅγιον — LIVE (4 senses; near-wall, cleared on attempt 3). The first loaded-watch-zone word.
+Shipped the attempt-3 draw (key 944bcb81), no model call, gate 40/40, stamp current, 40 verses. 4 senses:
+persons-quality / location-sanctuary / things-offerings / holy-spirit. **Near-wall — 2 rejects
+(structure-binding), cleared on the last attempt:** attempt 1 collapsed to 1 sense (all merged), attempt 2
+merged the substantive sanctuary into the adjectival quality (the exact substantive-vs-adjective axis
+pre-flagged), attempt 3 kept persons / place / things / spirit all distinct.
+- **SPIRIT-FRAME BOTH-WAYS BAR (banked precedent).** πνεῦμα G4151 is a contested fork-word; ἅγιον is its
+  standard companion, so the holy-spirit sense's FRAME can fail even when the JOB is 6/10-stable. Amended
+  bar: reject BOTH creedal-procession/person language ("proceeds from", "a divine person") AND
+  impersonal-ontology language ("power / force / agent / medium" asserted as what the spirit IS). Accept
+  DOING/RELATION-level description only. **Neutral ceiling = attempt 2's "qualifying πνεῦμα as a compound
+  expression"** (grammatical, asserts no ontology). The shipped sense 4 ("of divine origin or quality,
+  distinct from human spirit") = relation/attested-contrast level → passes. The reviewer's own "agent /
+  medium / divine power" framings (draws 1/5) would FAIL this bar — the subtle failure mode, not safe harbor.
+- **SYMMETRIC-AUDIT banked (the standing method at its best).** The shipped draft's "place/places"
+  gloss-note flags that even the CONVENTIONAL rendering supplies a noun the Greek lacks (τὸ ἅγιον = "the
+  set-apart [space]"; "place" is a translator's addition). Auditing an uncontested gloss is what keeps
+  favor-not-grace a method, not a filter.
+- **Flag rate 7 — adjudicated, not waved.** All map to unfed cultic vocabulary whose senses ARE present +
+  fed-grounded (naós/tópos → sense 2; stolḗ/skeûos/offerings → sense 3; bebēlόō → holy-vs-profane under 1).
+  The high rate is a FED-40 finding: the 20-OT/20-NT balanced spread under-samples dense Numbers/Leviticus
+  cultic vocabulary (temple, garments, vessels, offerings). Senses grounded by OTHER fed verses → no sampler
+  nudge. Data point for the fed-40 retro question.
+- **Seam to eyeball on the live card (record, not a gate fail):** sense 4's sub-use folds 1Jn 2:20 ("holy
+  one" as a title) under the SPIRIT sense — a slightly odd shelf (title-of-a-being under spirit). Verse-
+  supported + visible so it passes; if it reads wrong on the rendered card, it's a note for ἅγιον's record,
+  not a redraw.
+- **word_gloss follow-up:** "Holy Place" confirmed too narrow (ABP folds the adjective ἅγιος G40 into G39, so
+  the header must lead with "holy, set apart", not the narrow substantive). Override via the `OVERRIDES` dict
+  in build_word_gloss.py (same path as G166/G5484) + `--apply` rebuild; through DB checkpoint.
+
+### TRIGGER STATUS (standing — survives session end)
+Content-wall tally: **πολύς = 1 full cap-out (range-completeness)**; **ἅγιον = near-wall (2 rejects,
+structure-binding, cleared attempt 3)**. Trigger **armed at one-more-wall**. PRE-RULED: **a third cap-out on
+ANY binding constraint (range, structure, OR frame) trips the mechanism decision to JP immediately** — not
+deferred to the retro. Mechanism option space (named, not decided): higher-cap draw-until-match ·
+prompt-steer with a re-prove cycle · a per-word structure-hint channel that passes the reviewer's
+stable-jobs list as draw CONTEXT without touching the frozen VERSE_PROMPT (C-lite vs a new mechanism is part
+of the decision).
+
 ### Parked-hard list
 - **G4183 πολύς** — un-stuck by the four-gate reruling; parked for sequencing only. Re-attempt: first draft
   clearing all four gates ships. (Re-score + detail above.)
