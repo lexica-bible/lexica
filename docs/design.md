@@ -100,6 +100,16 @@ always a bug.
 - Standalone `.cpanel` (computed distribution panel, streams above the
   synthesis) kept boxed on purpose — it sits alone in the prose answer flow,
   not a list pane, so its bounds separate computed fact from generated prose.
+- **Badge / verification-token unification (rule stated, instances not yet
+  converged).** There are TWO token families and they must not blur:
+  (a) *provenance badges* — what a card's content is sourced from (metaV,
+  TIPNR, "Matched to this verse", CONTESTED); (b) *verification marks* — a
+  computed check result ("✓ 40/40 cited verses verified"). Each family is
+  internally consistent in face + color, and placement is defined PER FAMILY
+  (inline-on-the-line vs. its own row) — a provenance badge never borrows a
+  verification mark's treatment or vice-versa. Converge existing instances
+  opportunistically when a surface is already being touched; don't sweep all
+  at once.
 
 ## History
 

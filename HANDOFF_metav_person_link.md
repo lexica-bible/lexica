@@ -140,3 +140,39 @@ time) yields four derived tables — `metav_person_{strongs,verses}` (built) plu
 `metav_place_{strongs,verses}`. That gives place→verse and place→Strong's the identical way,
 which is the per-referent key `metav_places` lacked — so E's "park it for OpenBibleInfo" decision
 should be revisited with this in hand (person panels + a time-scoped map fall out of the same distill).
+
+## PARKED QUEUE (own task + own review each; sequenced after S9's rebuild)
+
+### 1. Nave's retirement — DECIDED, scoped
+Remove Nave's from the app: (a) the study.db name-topic DATA (the 696 `type='name'` topics), (b) the
+name-path sidebar SECTION (`naveTopical` in 30-detail-panel.jsx + `/api/study/for-name` wiring), (c) the
+`/credits` attribution line IF Nave's is listed there. **Rationale (for the doc, not just "we removed it"):**
+Nave's is TRADITION-provenance topical curation — its section headings are interpretive verdicts ("Prophecies
+of", typology framing), the exact provenance class the app keeps OUT of glosses/definitions. Its finding-aid
+function (find every verse about a name) is now SUPERSEDED by the corpus occurrence links (Word study +
+the bound card's per-text occurrence lists). Interpretive claims belong in ARGUMENT GRAPHS, where they're
+labeled by provenance and stress-tested — not asserted as a flat topical list. **Topic-page ROUTE survival is
+a SEPARATE decision** — the Study topic-page machinery may keep serving Divine Council etc.; do NOT delete the
+route reflexively when pulling the name-topic data.
+
+### 2. BSB entity-resolution coverage — one-verse test FIRST, then scope
+Symptom: **Ephraimites at Num 2:18 (BSB, a `bene-X` / "sons of X" construct)** reached only the H1121
+(`ben`, "son") DICTIONARY card — no People/Clan entity card. **First step = test Levites at Neh 11:3 on
+BSB** (a plain gentilic, not a construct). Decision fork:
+- **People/Clan FIRES** → binding is cross-translation (works on BSB), and the gap is specifically the
+  `bene-X` CONSTRUCT-PHRASE class (the name sits on the second word of a two-word "sons of Ephraim"
+  phrase; the click lands on `ben`). Possibly KIN to the Psa 39:1 phrase-gloss under-distribution class in
+  the S9 charter — check that link.
+- **People/Clan does NOT fire** → entity cards are ABP-ONLY today (the bind indexes ABP positions);
+  document that as a known property and scope a BSB/KJV entity-index pass from there.
+Same wrong-identity risk class as the Saul guard (a construct click could surface the wrong card) — own
+task, own review.
+
+### 3. Dan 1:6 trio — TRANSCRIBE the diagnosis into the residual notes (NOT just the reason code)
+The Daniel/Hananiah/Mishael/Azariah residual entries need their full alias-record DIAGNOSIS + hand-resolve
+steps written into `scripts/person_metav_link_residual.txt` (PA-only), not left as a bare reason code.
+**⚠ NOT captured anywhere committed yet** — the detailed diagnosis lives only in the PA residual file / the
+session that found it. Pull the four residual lines (`grep -E 'Daniel|Hananiah|Mishael|Azariah'
+scripts/person_metav_link_residual.txt` on PA) and record, per name: the alias-record cause (why overlap
+split it) + the specific hand-resolve (which metav_id to pin). This item is DONE only when a reader can act
+on it from the notes without re-deriving.
