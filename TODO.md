@@ -205,7 +205,7 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   phrase, so the precomputed `*_norm` column doesn't fit). A real fold needs BOTH a normalized-token
   side-index in heb.db AND a looser `gloss LIKE` prefilter. Don't ship a half-fix (folds one direction,
   reintroduces the asymmetry). Hebrew search stays number-exact until both land. Memory
-  `project_lexicon_number_fold`.
+  `project_lexicon_finders`.
 
 ---
 
@@ -332,7 +332,7 @@ YouVersion, which aren't the target). Honest gaps:
   structured stem/root column — only `derivation` (free-text prose). Substring on translit fakes it and
   leaks (euthéōs/βαθέως match "theos" on a letter-accident — the exact reason the 2026-07-01 translit
   lookup was split into labeled Exact/Contains bands). Don't build on substring; build a real root field
-  first. Record: memory `project_lexicon_search_overmatch`.
+  first. Record: memory `project_lexicon_finders`.
 
 - **Structural / function-word cards — build inventory COMPLETE + LIVE** (εἰμί + prepositions + article +
   conjunctions + particles/negatives + the referent-resolution batch + the ἀνὰ μέσον idiom). Full record +
@@ -452,7 +452,7 @@ YouVersion, which aren't the target). Honest gaps:
   code: ai.py (_lsj_concept_lookup consumer), build_lexica_def.py (_REF_RE, VERSE_PROMPT), static/src/20-shared-components.jsx
 
 - **LSJ "Lexica" overrides** — the blurb is a Haiku "definition" prompt + per-word hand-written overrides
-  for loaded lemmas (6 seeded). Memory `project_lsj_overrides`. OPEN: the contested words (αἰώνιος,
+  for loaded lemmas (6 seeded). Memory `project_lsj_card`. OPEN: the contested words (αἰώνιος,
   δικαιόω) are now handled by the Lexica dictionary's fairness fork, NOT a hand-written asserting override
   — HOLD δικαιόω, don't hand-write. For Strong's-fallback loaded words (no LSJ entry → raw Strong's def):
   keep Strong's for now, curate later; deferred preference = show nothing rather than a duplicate of the
@@ -556,7 +556,7 @@ heavily guarded. Full record: memory `project_ai_search_architecture` + `project
   (1) LXX seam range-preservation — does the Greek keep esh's range at the ~8% divergence? Doubles as the
   short-root Hebrew family fallback. (2) Rebuild bdb `lemma_plain` — re-run `scripts/add_lemma_plain.py` so
   the Hebrew word-study exact-match fast-path goes live again (guarded today, just slower). Memory
-  `project_lexicon_search_overmatch`.
+  `project_lexicon_finders`.
 - **AI curation hard-tune / answer-shape redesign** — current primary/see-all + inline links is adequate,
   not the end state. Sub-items: the thread's evidence-verse list reads spammy (collapse/summarize/cap);
   label thematic verses so a wordless cross-ref (Rom 14:5 on a Sabbath query) doesn't read like an

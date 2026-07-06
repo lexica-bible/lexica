@@ -162,4 +162,4 @@ Full record: memory `project_ai_cache_unify`.
   favor-not-grace example) + per-word **"Lexica" overrides** shown DIRECTLY, no model call, for
   loaded lemmas LSJ leads classical on (`_LSJ_OVERRIDES`/`_ovkey` in views_lsj.py — badged
   "Lexica" not LSJ; the Summary|Full-entry toggle still shows raw LSJ). Memory
-  `project_lsj_overrides`.
+  `project_lsj_card`.

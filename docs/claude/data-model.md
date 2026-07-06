@@ -90,7 +90,7 @@ hit, only falling to the slow substring scan when the typed word isn't a headwor
 silently VANISH: found MISSING on the live db 2026-06-30 (a reload had dropped it), which left
 the exact-match fix asleep — re-applied 2026-07-01. VERIFY the column exists after any reload**
 (`PRAGMA table_info(lexicon)`). Ask-corpus's exact-lemma pin uses it too (`_resolve_exact_lemma`
-in ai.py). Memory `project_lexicon_search_overmatch`.
+in ai.py). Memory `project_lexicon_finders`.
 
 ### lsj / abp_ext
 `lsj` — Liddell-Scott-Jones Greek lexicon (display-only cross-reference, never generative).

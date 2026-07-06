@@ -347,7 +347,7 @@ Full record + lessons: memory `project_lexica_dictionary`. All serve-verified li
     This is the parked audit-B1 blind spot biting in practice.
 
 ## Word-study English finder — singular/plural number-fold — DONE + LIVE 2026-07-01
-Full record: memory `project_lexicon_number_fold`.
+Full record: memory `project_lexicon_finders`.
 - **The bug:** `/api/lexicon/english` matched a typed word letter-for-letter against attested renderings, so
   a singular query missed a plural-only rendering — searching "magistrate" never found theos G2316 (rendered
   "magistrates" at Exo 22:28, elohim-as-rulers). Reverse too.
@@ -456,7 +456,7 @@ The first surface to USE the shell for NEW content (not a parity migration). Ful
   - **SNAG found + fixed:** `lemma_plain` was documented LIVE since 2026-06-26 but was actually MISSING on
     the live db (a reload had dropped it) — so Word-study's exact-match-first was ALSO asleep. Re-ran
     `scripts/add_lemma_plain.py --apply` (lexicon 5,523 + bdb 8,674). LESSON: verify the column after any
-    reload. See memory `project_lexicon_search_overmatch`.
+    reload. See memory `project_lexicon_finders`.
   - **Latent streaming bug surfaced + fixed:** the Hebrew pin (empty base SQL) exposed a pre-existing
     `NameError` — `_assemble_payload` (the SSE tail, lifted out of `ai_search`) reached for the nested
     `_is_thematic` it can't see. Fresh streamed searches with a model-named extra verse OR zero base rows
@@ -811,7 +811,7 @@ match list now COLLAPSES into a header when you pick a word (was vanishing — i
 match row shows the per-source "used as" renderings (ABP/HEB/KJV/BSB + totals) instead of one
 dictionary gloss — new `_render_glosses_all()` in views_lexicon.py, a standalone twin of
 `lexicon_english`'s builders (kept separate so that path can't regress; enriches multi-result lists
-only). Full record: memory `project_lexicon_search_overmatch`.
+only). Full record: memory `project_lexicon_finders`.
 
 ## Proper-noun SUBJECT folded onto its verb — DONE + LIVE 2026-06-26
 Corpus-wide: where ABP put a subject NAME right after its verb, the build crammed the name onto the
@@ -1317,7 +1317,7 @@ Three small fixes, all live (pushed; deployed and confirmed by the user):
 - **LSJ Strong's-fallback def leads with the KJV rendering** (commit 769d269). A word with no LSJ entry
   (2 Peter 2:4 ταρταρόω G5020) showed ONLY `lexicon.strongs_def` — Strong's paraphrase "to incarcerate in
   eternal torment", imported doctrine the text-first rule rejects. Now: `kjv_def` ("cast down to hell") →
-  `derivation` → `strongs_def` (last resort). Affects every LSJ-gap word. Memory `project_lsj_lookup`.
+  `derivation` → `strongs_def` (last resort). Affects every LSJ-gap word. Memory `project_lsj_card`.
   Follow-up (TODO #5) — DONE 2026-06-17 (commit f2c270f): the Lexicon match dropdown + word profile now
   use the same `kjv_def → derivation → strongs_def` order. The Search RESULT rows render no def text (word
   clicks re-fetch LSJ, already text-first), so nothing to change there. Same commit deleted the dead

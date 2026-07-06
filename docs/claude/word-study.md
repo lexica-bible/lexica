@@ -64,7 +64,7 @@ Routed from CLAUDE.md. The Lexicon/Word-study surface + its endpoints.
   (`.glrow-match`, weight only), appends it in sorted position if below the cap; trailing ` …`
   marks a source with more forms. All in `lexicon_english`'s `_fold`/`_top_glosses_*` (NOT
   `lexicon_profile`); the lookup/translit path untouched. Memory
-  `project_lexicon_number_fold`.
+  `project_lexicon_finders`.
 - The English finder shows all 4 "renders as" lines per word + a HEB/BSB filter, each line
   carrying that SOURCE'S TOTAL count (counted the way `lexicon_profile` does; HEB total folds
   homographs via `_heb_match`). The Hebrew object-marker אֵת H853 is dropped from the finder
