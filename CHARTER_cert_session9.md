@@ -19,8 +19,9 @@ split-flip causes 175. **This INVALIDATES the charter's premise below that "a cl
 real rebuild runs the tail, and split-flip in the tail re-breaks them. `audit_split_flip`=0 is a
 FALSE all-clear (it reuses the fixer's own assumption).
 **Gate statement amended:** word-order = 0 STANDS as the criterion; it is split-flip's SCOPED FIX that
-must earn it (banked target = the 5 non-split-flip residual = malformed-bracket/Tier-B verses whose
-WORDS still need a fix), not this swap. punct = 240 with AND without split-flip (split-flip is
+must earn it (banked target word-order = 5: Mat 21:19 / Mat 20:29 / Job 24:19 / 1Ch 22:15 — 4 Tier B
+verses whose WORDS still need a fix — plus Act 7:3, a separate non-Tier-B case; Job 24:18 reassembles
+clean, NOT residual), not this swap. punct = 240 with AND without split-flip (split-flip is
 punct-neutral; 240-vs-260 is a separate open item). **Next session:** scope `fix_split_flip` + its
 audit to genuine strands only, re-verify, re-run the gate, THEN swap. Do NOT improvise the fix. Fix-
 session control verse = Jer 48:1. Live-state repo sync owed: local `cert_prose_leak_diff.json`=13,

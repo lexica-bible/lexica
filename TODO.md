@@ -50,8 +50,9 @@ step 4b before split-flip, words at step 7); `verify_prose_leak.py` is the gate 
 **BLOCKER — v2 word-order = 180, not 0.** Root cause proven: **`fix_split_flip` over-fires** — it
 swaps "noun, the" → "the noun" even when the "the" belongs to the FOLLOWING noun (Jer 48:1: "…of the
 forces, the God…" → wrongly "…the forces, God"). Rebuild with split-flip OFF → word-order **180→5**
-(175 caused by split-flip; the 5 residual = malformed-bracket/Tier-B verses whose WORDS still need a
-fix). `audit_split_flip` reads 0 because it shares the fixer's own flawed assumption; the independent
+(175 caused by split-flip; the 5 residual = Mat 21:19 / Mat 20:29 / Job 24:19 / 1Ch 22:15 — 4 of the
+5 Tier B verses whose WORDS still need a fix — PLUS Act 7:3, a separate case never in Tier B; Job 24:18
+is NOT residual, its words reassemble clean). `audit_split_flip` reads 0 because it shares the fixer's own flawed assumption; the independent
 v2 oracle caught it. The charter's "a clean rebuild cures the article-fronting for free" was WRONG —
 that diagnosis ran on a no-tail build. punct = 240 with AND without split-flip (split-flip is
 punct-neutral; 240-vs-260 is a separate open item).
