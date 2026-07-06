@@ -36,6 +36,7 @@ from pathlib import Path
 sys.path.insert(0, str(Path(__file__).parent))
 from audit_split_flip import find_flips           # the ONE flip detector
 from cert_manifest import backup_guard_message    # the ONE backup guard
+from apply_abp_corrections import cellmatch as _cellmatch  # number-safe compare (Fix A) — numeric greek_pos/bracket_id cells vs text corrected_value
 
 # Certified 2026-07-04 (Session 3 swap; compare_words gate: 110 cells / 11
 # pre-registered live-stale verses, 626,305 = 626,305 rows).
@@ -115,7 +116,7 @@ def check_corrections(conn, expected_active=None) -> list:
                 (c["book"], c["chapter"], c["verse"], c["position"])).fetchall()
         if len(hits) != 1:
             problems.append(f"{key}: {len(hits)} matching slot(s), expected exactly 1")
-        elif hits[0]["val"] != c["corrected_value"]:
+        elif not _cellmatch(hits[0]["val"], c["corrected_value"]):
             problems.append(f"{key}: reads {hits[0]['val']!r}, certified value is "
                             f"{c['corrected_value']!r} (source was {c['source_value']!r})")
     return problems
