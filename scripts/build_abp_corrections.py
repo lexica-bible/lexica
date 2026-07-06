@@ -38,9 +38,13 @@ Re-runnable: CREATE TABLE IF NOT EXISTS; an entry whose key (book,ch,vs,pos,fiel
 already has an active row is skipped, never duplicated.
 """
 import argparse
+import os
 import sqlite3
 import sys
 from datetime import date
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from apply_abp_corrections import cellmatch as _cellmatch   # shared number-safe compare
 
 SCHEMA = """CREATE TABLE IF NOT EXISTS abp_corrections (
     id              INTEGER PRIMARY KEY,
@@ -174,9 +178,9 @@ def main():
         if len(cell) != 1:
             tag = f"!! {len(cell)} matching slot(s) — ADJUDICATE before apply"
             warn += 1
-        elif cell[0]["val"] == cor:
+        elif _cellmatch(cell[0]["val"], cor):
             tag = "cell=corrected (already hand-fixed — expected on live)"
-        elif cell[0]["val"] == src:
+        elif _cellmatch(cell[0]["val"], src):
             tag = "cell=source (uncorrected — expected on a fresh scratch)"
         else:
             tag = f"!! cell={cell[0]['val']!r} matches NEITHER — ADJUDICATE before apply"

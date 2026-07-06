@@ -35,6 +35,18 @@ from datetime import datetime
 from pathlib import Path
 
 
+def cellmatch(cell, target):
+    """Compare a stored words/verses cell to a correction's TEXT source/corrected
+    value. Number columns (greek_pos, position, ...) come back as a number while the
+    correction stores text ('1'), so a plain '==' silently never matches — compare as
+    text. A blank (NULL) cell equals ONLY a None target, never '' — an empty-string
+    cell is a real, distinct value. Text columns behave exactly as a bare '==' did:
+    str(str)==target, and None stays distinct from ''."""
+    if cell is None:
+        return target is None
+    return str(cell) == target
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("db")
@@ -102,10 +114,10 @@ def main():
             skipped += 1
             continue
         val = hits[0]["val"]
-        if val == c["corrected_value"]:
+        if cellmatch(val, c["corrected_value"]):
             already += 1
             lines.append(f"  == {key}: already applied (ok)")
-        elif val == c["source_value"]:
+        elif cellmatch(val, c["source_value"]):
             if args.apply:
                 cur.execute(f'UPDATE {tbl} SET "{col}"=? WHERE rowid=?',
                             (c["corrected_value"], hits[0]["rid"]))
