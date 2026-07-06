@@ -44,11 +44,25 @@ def reorder_bracket(m):
     return G_NUM_RE.sub('', content).strip()
 
 
-def clean_verse(raw):
+def clean_verse(raw, ref=None):
     # Handle bracketed groups with reordering (with or without closing G-number)
     text = re.sub(r'\[([^\]]+)\](?:G[\d.]+\*?)?', reorder_bracket, raw)
     # Strip remaining G-numbers
     text = G_NUM_RE.sub('', text)
+    # S9 fix (f) NEW 1 — strip a stray apparatus 'G' (a dropped Strong's number) plus its
+    # spurious trailing dot. A 'G' is apparatus ONLY when no letter/digit/* follows it, so
+    # real words ("God", "Galilee") and G-numbers are untouched. (AndG.->And, buttocks.G->buttocks.)
+    text = re.sub(r'G(?![A-Za-z\d*])\.?', '', text)
+    # S9 fix (f) NEW 2 — strip a leaked ABP position digit stuck to a word ("4dried"->"dried"),
+    # left when a MALFORMED bracket (missing [ or ]) escaped the reorder above. Only a digit
+    # glued to a letter — never a standalone numeral (Rev 13:18 "600 60 6" is safe).
+    text = re.sub(r'(?<!\w)\d+(?=[A-Za-z])', '', text)
+    # S9 fix (f) NEW 3 — strip a leftover unmatched bracket char (matched pairs were consumed
+    # above). LOUD, never silent: a surviving bracket is a source defect, so WARN (ref + raw)
+    # every time this fires, so a new downstream malformation stays a visible event.
+    if '[' in text or ']' in text:
+        print(f"WARN load_abp_prose: stray bracket in {ref or '?'}: {raw!r}", file=sys.stderr)
+        text = re.sub(r'[\[\]]', '', text)
     # Clean whitespace
     text = re.sub(r'\s+', ' ', text).strip()
     return text
@@ -65,7 +79,7 @@ def parse_file(path):
             if not m:
                 continue
             book, chapter, verse, raw = m.group(1), int(m.group(2)), int(m.group(3)), m.group(4)
-            yield book, chapter, verse, clean_verse(raw)
+            yield book, chapter, verse, clean_verse(raw, ref=f"{book} {chapter}:{verse}")
 
 
 def main():
