@@ -65,7 +65,8 @@ apply — the prose fix is not yet in any live table.
 **Next = the full rebuild + the gate block below (JP's PA step) → word-order 0 / content-other 0 → swap.** The
 S9 banner's diagnosis stands; S10 turned it into shipped fixes. Lessons in memory `project_reassembly_diff`.
 ---
-**★ REBUILD RAN 2026-07-06 — 5 FIXES GREEN, GATE BLOCKED, NOT SWAPPED. READ THIS FIRST. ★**
+**★ SUPERSEDED BY THE S10 BANNER ABOVE — this was the blocked first attempt; S10 scoped the fix. Kept for history only; delete once swapped. ★**
+**★ REBUILD RAN 2026-07-06 — 5 FIXES GREEN, GATE BLOCKED, NOT SWAPPED. ★**
 The plan was approved and the combined rebuild was built + finalized on a throwaway `bible.db.new`
 (live never touched). **All five fixes verified GREEN:** P1 drove the 208 pronoun survivors to ZERO;
 P2/(e)/(f)/(b) clean; content-other = 0; funcword detector trusted-zero (fired 0→93 on a pass-off
