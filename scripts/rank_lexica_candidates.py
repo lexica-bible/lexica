@@ -42,6 +42,8 @@ PRONOUN_NUMS = {
     "G3956": "pas (all / every — quantifier)",
     "G3745": "hosos (as much as — relative quantifier)",
     "G5127": "toutou (of this — houtos oblique)",
+    "G5210": "hymeis (you, pl — personal pronoun)",   # nominative parent of the OBL forms
+    "G2249": "hēmeis (we — personal pronoun)",          # nominative parent of the OBL forms
 }
 
 # Oblique (of-me / to-you / …) forms ABP tags as their own Strong's number. They are NOT new
@@ -71,6 +73,9 @@ STRUCT_BACKFILL = {
     "G3779": "structural backfill — adverb, not a def",      # houtō — thus
     "G1417": "structural backfill — numeral (w/ εἷς), not a def",   # dyo — two
     "G1563": "structural backfill — deictic adverb, not a def",     # ekei — there
+    "G1799": "structural backfill — preposition, not a def",        # enōpion — before
+    "G3568": "structural backfill — deictic adverb, not a def",     # nyn — now
+    "G2089": "structural backfill — deictic adverb, not a def",     # eti — still/yet
 }
 
 
