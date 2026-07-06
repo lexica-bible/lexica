@@ -112,6 +112,33 @@ ENTRIES = [
 ]
 
 
+# S9 fix (f): the 5 prose (verses.text) Tier B rows. Read from the adjudication file so the
+# adjudicated text keeps ONE source of truth. Same overlay, NO schema change — reuse existing
+# columns with position=-1 (a non-slot sentinel, inert to the words path) and field='verses.text'.
+# apply_abp_corrections routes these to a guarded verses.text UPDATE (its --only verses point).
+_F_REASON = ("S9 fix (f): malformed-bracket order / Mat 20:29 dropped word — verses.text order "
+             "corrected against the pinned feed; the parser cannot fix these (needs the "
+             "adjudicated bracket order).")
+
+
+def _prose_tierB(path="AUDIT_tierB_f_proposed.json"):
+    import json
+    import os
+    if not os.path.exists(path):
+        return []
+    with open(path, encoding="utf-8") as f:
+        rows = []
+        for r in json.load(f):
+            book, cv = r["ref"].rsplit(" ", 1)
+            ch, vs = cv.split(":")
+            rows.append((book, int(ch), int(vs), -1, "verses.text",
+                         r["before"], r["after"], _F_REASON, "S9-f"))
+        return rows
+
+
+ENTRIES += _prose_tierB()
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("db")
@@ -135,10 +162,15 @@ def main():
     for (book, ch, vs, pos, field, src, cor, reason, ref) in ENTRIES:
         key = f"{book} {ch}:{vs} pos {pos} {field}"
         # validate against the target db: what does the cell hold right now?
-        cell = conn.execute(
-            f"""SELECT w."{field}" AS val FROM words w JOIN verses v ON v.id=w.verse_id
-                WHERE v.book=? AND v.chapter=? AND v.verse=? AND w.position=?""",
-            (book, ch, vs, pos)).fetchall()
+        if field == "verses.text":                          # S9 (f): prose row — check verses.text
+            cell = conn.execute(
+                "SELECT text AS val FROM verses WHERE book=? AND chapter=? AND verse=?",
+                (book, ch, vs)).fetchall()
+        else:
+            cell = conn.execute(
+                f"""SELECT w."{field}" AS val FROM words w JOIN verses v ON v.id=w.verse_id
+                    WHERE v.book=? AND v.chapter=? AND v.verse=? AND w.position=?""",
+                (book, ch, vs, pos)).fetchall()
         if len(cell) != 1:
             tag = f"!! {len(cell)} matching slot(s) — ADJUDICATE before apply"
             warn += 1

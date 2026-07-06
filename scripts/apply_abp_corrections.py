@@ -39,6 +39,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("db")
     ap.add_argument("--apply", action="store_true", help="write (default = dry run)")
+    ap.add_argument("--only", choices=["words", "verses"],
+                    help="apply only one target — the two-point rebuild (prose EARLY before "
+                         "split-flip, word cells LATE at step 7). Unset = both (back-compatible).")
     args = ap.parse_args()
 
     conn = sqlite3.connect(args.db)
@@ -68,16 +71,32 @@ def main():
     cur = conn.cursor()
 
     for c in rows:
-        key = f"{c['book']} {c['chapter']}:{c['verse']} pos {c['position']} {c['field']}"
-        if c["field"] not in word_cols:
-            lines.append(f"  !! SKIP {key}: '{c['field']}' is not a words column")
-            skipped += 1
+        is_prose = (c["field"] == "verses.text")            # S9 (f): a prose (verses.text) row
+        # --only = the two application points. Prose rows are filtered out of the words pass
+        # and vice versa, so a prose row (position=-1) never reaches the words position lookup.
+        if args.only == "words" and is_prose:
             continue
-        hits = conn.execute(
-            f"""SELECT w.rowid AS rid, w."{c['field']}" AS val
-                FROM words w JOIN verses v ON v.id = w.verse_id
-                WHERE v.book=? AND v.chapter=? AND v.verse=? AND w.position=?""",
-            (c["book"], c["chapter"], c["verse"], c["position"])).fetchall()
+        if args.only == "verses" and not is_prose:
+            continue
+        loc = "[verses.text]" if is_prose else f"pos {c['position']} {c['field']}"
+        key = f"{c['book']} {c['chapter']}:{c['verse']} {loc}"
+        if is_prose:
+            hits = conn.execute(
+                """SELECT v.rowid AS rid, v.text AS val FROM verses v
+                   WHERE v.book=? AND v.chapter=? AND v.verse=?""",
+                (c["book"], c["chapter"], c["verse"])).fetchall()
+            tbl, col = "verses", "text"
+        else:
+            if c["field"] not in word_cols:
+                lines.append(f"  !! SKIP {key}: '{c['field']}' is not a words column")
+                skipped += 1
+                continue
+            hits = conn.execute(
+                f"""SELECT w.rowid AS rid, w."{c['field']}" AS val
+                    FROM words w JOIN verses v ON v.id = w.verse_id
+                    WHERE v.book=? AND v.chapter=? AND v.verse=? AND w.position=?""",
+                (c["book"], c["chapter"], c["verse"], c["position"])).fetchall()
+            tbl, col = "words", c["field"]
         if len(hits) != 1:
             lines.append(f"  !! SKIP {key}: {len(hits)} matching slot(s) — expected exactly 1")
             skipped += 1
@@ -85,20 +104,18 @@ def main():
         val = hits[0]["val"]
         if val == c["corrected_value"]:
             already += 1
-            lines.append(f"  == {key}: already {c['corrected_value']!r} (ok)")
+            lines.append(f"  == {key}: already applied (ok)")
         elif val == c["source_value"]:
             if args.apply:
-                cur.execute(f'UPDATE words SET "{c["field"]}"=? WHERE rowid=?',
+                cur.execute(f'UPDATE {tbl} SET "{col}"=? WHERE rowid=?',
                             (c["corrected_value"], hits[0]["rid"]))
             applied += 1
-            lines.append(f"  -> {key}: {c['source_value']!r} -> {c['corrected_value']!r}"
+            lines.append(f"  -> {key}: {'applied' if args.apply else 'would apply'}"
                          f"  [{c['ledger_ref'] or c['reason'][:40]}]")
         else:
             skipped += 1
-            lines.append(f"  !! SKIP {key}: cell reads {val!r} — matches NEITHER "
-                         f"source {c['source_value']!r} NOR corrected "
-                         f"{c['corrected_value']!r}. Position drift or upstream change: "
-                         "regraft this correction, do not force it.")
+            lines.append(f"  !! SKIP {key}: cell {(val or '')[:70]!r}… matches NEITHER source "
+                         "NOR corrected — position drift / upstream change: regraft, do not force.")
 
     if args.apply:
         conn.commit()

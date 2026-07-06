@@ -46,6 +46,17 @@ run python3 scripts/dedup_words.py           "${DB}"
 #    re-run settles to 0.
 run python3 scripts/fix_bracket_punct.py     "${DB}"
 
+# 4b) S9 (f): prose (verses.text) corrections — the FIRST of the two abp_corrections points.
+#     MUST precede fix_split_flip (step 6 compares words to verses.text as its oracle) and stays
+#     verses-only; word-cell corrections apply at step 7. Guarded: a cell that is not its recorded
+#     before-value is a LOUD skip (e.g. prose not regenerated), so it is safe even on a build that
+#     skipped load_abp_prose. Same NO_CORRECTIONS gate as step 7.
+if [ "${NO_CORRECTIONS:-0}" = "1" ]; then
+  echo; echo "── prose abp_corrections SKIPPED (NO_CORRECTIONS=1 attribution run) ──"
+else
+  run python3 scripts/apply_abp_corrections.py "${DB}" --apply --only verses
+fi
+
 # 5) Em-dash swap ('--' -> '—' in words.english + verses.text) — the LAST step that
 #    edits english TEXT: split_merge_fixes.json carries a '--' precondition ("you
 #    think not --") that would stop matching if this ran before fix_split_merges.
@@ -69,7 +80,7 @@ run python3 scripts/fix_split_flip.py        "${DB}" --apply
 if [ "${NO_CORRECTIONS:-0}" = "1" ]; then
   echo; echo "── abp_corrections SKIPPED (NO_CORRECTIONS=1 attribution run) ──"
 else
-  run python3 scripts/apply_abp_corrections.py "${DB}" --apply
+  run python3 scripts/apply_abp_corrections.py "${DB}" --apply --only words
 fi
 
 echo
