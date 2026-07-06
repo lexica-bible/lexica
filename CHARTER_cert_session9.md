@@ -232,9 +232,28 @@ so they now live in **(P)** above. The diagnosis that merged them:
   real — ABP packs it onto the pronoun. Source/prose = "he should deliver him up".)
 
 ### (e) reorder float adds `)` — paren-edge
-The English-order float (`getEnglishOrderWords` + its Python port `reorder_english.py`, and the chip lift)
-moves a trailing clause mark past a reordered group, but only for `. , ; : ! ? ·` — NOT `)`. Heb 10:8
-class ("…the law)" renders "…offered) …law"). Add `)` to the float set (shared prose + reader). Small.
+The trailing-clause float moves a mark past a reordered group but only for `. , ; : ! ? ·` — NOT `)`.
+Heb 10:8 class ("…the law)" renders "…offered) …law"). Fix = add `)` to the float set.
+**SCOPE CORRECTED 2026-07-05 (was "3 spots, render-only"): the float set is COPY-PASTED in 6 LIVE
+places, and one is in the BUILD (writes word rows), so (e) HAS a corpus component:**
+1. `build_words_from_abp.py:822` `_TRAIL_PUNCT` (used by `_bracket_punct_float`, build) — **CORPUS**,
+   `english` column. Pre-registered fix #1 below; rides the rebuild.
+2. `static/src/56-library-order-logic.jsx:46` — reader prose float (render)
+3. `scripts/reorder_english.py:21` — the v2 audit PORT of #2 (must match #2)
+4. `static/src/59c-library-render.jsx:337` — reader chip lift (render)
+5. `static/src/30-detail-panel.jsx:1138` — side-panel interlinear lift (render)
+6. `views_seo.py:102` `_TRAIL` — SEO `/read` server render
+#2–#6 add `)` now (render+port, no corpus change — clears the v2 paren-edge hit, ships on a normal
+deploy). #1 rides the rebuild as a pre-registered corpus fix (JP's call — stored rows must be correct
+on their own; no render-heals-data). Audit-only copies (`audit_bracket_punct.py`,
+`audit_synthetic_reorder.py`, retired `fix_bracket_punct.py`) are a DIFFERENT purpose — left alone.
+**#1 pre-registration:** column `english` ONLY (verified `build_words_from_abp.py:873` rewrites index 1
+only — no `english_head`/`strongs`/position/greek_pos/bracket_id change, +0 rows). A trailing `)` on a
+NON-last bracket member floats onto the group's last real word (paired move). Predicted count = the PA
+sizing dump (bracket words ending in `)`, minus any already on the group's last word). HAZARD checked
+first: any self-contained `(word)` token must NOT split — eyeballed on the dump before the edit.
+**POST-S9 CLEANUP (flagged, do NOT do now):** consolidate these 6 float copies to ONE shared
+definition so they can't drift again. Repo hygiene, not audit work — after S9.
 
 ### (f) the 11 digit leaks → Tier B + tolerant parser
 `load_abp_prose` choked on a MALFORMED source bracket (a `]` with no `[`, Mat 21:19 shape) and leaked the
