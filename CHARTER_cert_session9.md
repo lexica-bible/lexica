@@ -577,6 +577,14 @@ CC never writes bible.db or abp_corrections. Accepted limits, do not re-open: `H
   And "abp_surface misaligns ~91%" was a wrong root-cause guess retracted by a 5-cell inspection before it
   hardened in the ledger.
 
+**Session 9 vindicated the control-test rule AGAIN — it was the night's real workhorse.** `fix_split_flip`
+is now the SECOND "certified" pass caught mis-firing at scale (after Door 3's reorder passes each needed a
+banked known-positive before their output was trusted). The tell: a pass's OWN self-audit is not a control —
+`audit_split_flip` read 0 because it reuses the fixer's assumption, so it can only ever confirm the fixer.
+The independent oracle (v2 rows-vs-`verses.text`) caught the 175-verse corruption the self-audit was blind
+to. STANDING: never accept a fixer's own audit as its correctness proof; fire an INDEPENDENT control, and a
+"certified" label is not a substitute for one.
+
 ## Closed + certified — DO NOT re-open
 L9 · flip class · em-dash class · Cushi · Jer 49:13 · Hab 3:6 · Session-3 swap · Session-4 Cushi binding ·
 Session-5 TIPNR pin · L2 · L10 · 97-card label defect · mirror census · check-7 both-directions · L5 (all 9
