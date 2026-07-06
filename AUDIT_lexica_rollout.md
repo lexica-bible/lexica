@@ -414,6 +414,23 @@ The four-gate bar unblocks πολύς: it stays parked only for sequencing, not 
 - **Under the new bar, the first πολύς draft that keeps number + degree distinct AND makes comparative,
   adverbial, and temporal all visible (sense / thin sense / range) ships — whatever its count.**
 
+### G2588 καρδία — LIVE (4 senses, one-draw ship under the four-gate bar)
+Shipped the first fresh draft (key dad558e7), no model call on apply, gate 40/40, stamp current, 40 verses.
+4 senses: cognitive / affective / moral-character-volitional / will-acted-upon.
+- **GATE-3 PRECEDENT BANKED: inline verse-level naming inside a sense satisfies gate 3.** The
+  relational-presence facet (1Th 2:17 "present in heart though absent in body", Php 1:7) is not its own sense
+  — it's named AT its verses inside senses 1 & 2 ("mental/volitional presence as opposed to physical";
+  "affectionate attachment"). That's "visible somewhere," and arguably better placement than a range line (a
+  reader looking up 1Th 2:17 lands on the explanation). Demanding a redraw would smuggle count-preferences
+  back in — the thing the reruling exists to stop.
+- **Flag rate: 2** (euthýs 6.79, hypsóō 5.59 — "upright heart" / "heart lifted up", both resolve to senses
+  present). "whole heart" (hólos) was cited this draft so it dropped off. Loaded-frame clean (the "soul"
+  gloss-note names an over-import without manufacturing a sense — symmetric-audit standard applied right).
+- **THE THREE-REGIMES FINDING (calibration headline so far).** G80 = 13 draws, πολύς = cap-out (parked),
+  καρδία = 1 draw. Truth-property gates (holes / merges / completeness) CONVERGE fast; the style-property
+  gate (match-the-count) FISHES. The four-gate reruling moved καρδία from a likely multi-draw slog to a
+  one-draw ship by dropping the count-match requirement — the bar change IS the calibration win.
+
 ### Parked-hard list
 - **G4183 πολύς** — un-stuck by the four-gate reruling; parked for sequencing only. Re-attempt: first draft
   clearing all four gates ships. (Re-score + detail above.)
