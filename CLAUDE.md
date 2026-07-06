@@ -1,42 +1,33 @@
 # Lexica — CLAUDE.md
 
+## What this file is (read this first)
+This is the **core rules file** — always loaded, kept lean on purpose. The deep per-area
+reference (schemas, feature histories, gotchas, incident records) lives in `docs/claude/*.md`.
+Those files are NOT optional background: they encode past incidents and load-bearing detail.
+
+**MANDATORY ROUTING RULE:** before editing an area, read its routed doc below — the whole
+relevant section, not a skim. If a task spans areas, read all routed docs. Never rely on a
+summary in this file where a routed doc has the detail.
+
+| Touching… | Read first |
+|---|---|
+| Any table, join, schema, data invariant, MetaV/TIPNR, lexica_def, structural cards | `docs/claude/data-model.md` |
+| Frontend build, Library tab, reading modes, three-zone shell, Notes/accounts, mobile | `docs/claude/frontend.md` |
+| Ask-the-corpus, AI cache, TSK xref, summaries, synthesis prompts | `docs/claude/ai.md` |
+| Word study tab, lexicon endpoints, English finder | `docs/claude/word-study.md` |
+| Deploy, CI, backups, rebuilds, maintenance scripts, SEO pages, rate limits | `docs/claude/ops.md` |
+| Visual design detail | `docs/design.md` (doctrine summary below) |
+
+Active work state lives in `TODO.md` + the `HANDOFF_*.md` / `AUDIT_*.md` docs — never here.
+
 ## Overview
-Lexica is a Flask-based Greek and Hebrew Bible word study app. ABP (Apostolic Bible Polyglot) interlinear is the primary text; KJV is a fully searchable parallel corpus. The design is scholarly but accessible — no prior Greek training required.
+Lexica is a Flask-based Greek and Hebrew Bible word study app. ABP (Apostolic Bible Polyglot)
+interlinear is the primary text; KJV is a fully searchable parallel corpus. The design is
+scholarly but accessible — no prior Greek training required.
 
-## Design doctrine
-
-Lexica's visual language is quiet. Text, hierarchy, whitespace, and hairline
-structure do the work. **Library is the canonical surface** — when any rule is
-ambiguous, the tiebreaker is "what does the Library reader do?" New surfaces
-should look like they were built by whoever built Library. (Full record: `docs/design.md`.)
-
-1. **No decorative containers.** Panels are containers; content is rows. No
-   borders, backgrounds, or radii on repeating elements (rows, list items,
-   section wrappers). Rows separate by whitespace or hairline divider; hover
-   wash + accent left-bar for interaction/selection. Shared system: `.listrow`
-   + tokens (`--row-accent` etc.). Reference the system, never local copies.
-2. **References are text.** Strong's numbers, verse refs, translation tags:
-   bare mono or small caps, muted, no chrome. Face + color = reference;
-   fixed-width alignment = column structure. Shared class: `.refmark`.
-3. **Backgrounds and highlights are semantic, never stylistic.** A background
-   means something is *marked*: a matched word in evidence, a selection, a
-   warning. If a highlight isn't carrying meaning a reader needs, it doesn't
-   exist.
-4. **One pill: CONTESTED.** It's rare, it's a warning, it's allowed to
-   interrupt. Nothing else gets a pill without the same justification.
-5. **Emphasis budget.** Before adding visual weight, name the meaning it
-   carries. If the answer is "grouping" or "looks clickable," use structure or
-   hover instead. Default to the quietest version that works; ornament must
-   argue its way in. **Quiet is not formless** — a list of choices must still read
-   as discrete items at rest (spacing, markers, link color), not merge into prose.
-6. **One radius.** All rounded rectangles use the shared `--radius` token (6px, soft-square —
-   exactly the old Library toolbar control rounding; never 0-sharp, never lozenge). Functional exceptions only: `50%` circles, `0`.
-7. **Toggles — never box + underline together.** Text segments (All/OT/NT, ABP/KJV) →
-   underline-under-active, no box (`.seg--line`). Icon toggles (Chip/Prose) → boxed active.
-
-Exceptions (bounded on purpose): input surfaces (composers, editors, search),
-semantic notices/callouts (contested notice, grounding caution, banners),
-selected states (as accent/wash, never a border box).
+Stack: Flask (Python) + SQLite · React 18 (UMD) with JSX in `static/src/*.jsx` precompiled by
+Babel to `static/app.js` (committed) · deployed on PythonAnywhere ($10 Dev tier) · repo
+`lexica-bible/lexica` on GitHub. `bible.db` lives ONLY on PA, never locally, never in git.
 
 ## HOW TO TALK TO THE USER — read every session, no exceptions
 Plain, concise English — like a colleague, not a textbook. The user is a data-center engineer
@@ -52,1425 +43,171 @@ detail + the exact words I've slipped on before: memory `feedback_communication_
 ## THE BAR — 100% accuracy + completeness — read every session, no exceptions
 This is a project of accuracy and specifics. A wrong gloss/lemma/number misinforms a reader who
 trusts it and can't check the Greek/Hebrew himself. The bar is NOT negotiable:
-- **100% accuracy AND completeness.** Coverage (every word has *a* value) is NOT quality (the value is
-  *right*) — prove BOTH before calling anything done. "Good enough", "basically done", "mostly covered"
-  are rejected. Measure the gap completely (every row, no sampling), drive it to zero, re-verify.
-- **Do NOT ship half-baked work to "get the job done."** If I catch myself writing a hedge — "it can read
-  a bit X", "KJV-flavored", "good enough for now", "we can refine later" — STOP. That hedge means it
-  isn't validated. Validate the SOURCE'S QUALITY on real samples BEFORE building on it; never ship a
-  source I've already doubted and plan to "check after." The check comes before the commit, not after he
-  pushes back. (2026-06-22: I shipped the word-card gloss on `kjv_def` after flagging it risky — exactly
-  the failure this rule exists to stop.)
-- **Never suggest an AI prompt change that REGRESSES the model** (parrots framing, over-asserts, adds
-  jargon, blacklists instead of reframing). See memory `project_ai_synthesis_quality` for the patterns.
-- **Don't create work that we'll have to come back and fix.** Anything less than correct-and-complete is
-  not a shortcut, it's a future bug.
-- **If I'm about to propose or ship something less than this:** stop, run `/wrap`, and write a clean
-  hand-off prompt for a fresh session instead of limping forward. Full record:
-  memory `feedback_accuracy_completeness_bar`.
+- **100% accuracy AND completeness.** Coverage (every word has *a* value) is NOT quality (the
+  value is *right*) — prove BOTH before calling anything done. "Good enough", "basically done",
+  "mostly covered" are rejected. Measure the gap completely (every row, no sampling), drive it
+  to zero, re-verify.
+- **Do NOT ship half-baked work to "get the job done."** If I catch myself writing a hedge —
+  "it can read a bit X", "KJV-flavored", "good enough for now", "we can refine later" — STOP.
+  That hedge means it isn't validated. Validate the SOURCE'S QUALITY on real samples BEFORE
+  building on it; never ship a source I've already doubted and plan to "check after." The check
+  comes before the commit, not after he pushes back. (2026-06-22: I shipped the word-card gloss
+  on `kjv_def` after flagging it risky — exactly the failure this rule exists to stop.)
+- **Never suggest an AI prompt change that REGRESSES the model** (parrots framing, over-asserts,
+  adds jargon, blacklists instead of reframing). See memory `project_ai_synthesis_quality`.
+- **Don't create work that we'll have to come back and fix.** Anything less than
+  correct-and-complete is not a shortcut, it's a future bug.
+- **If I'm about to propose or ship something less than this:** stop, run `/wrap`, and write a
+  clean hand-off prompt for a fresh session instead of limping forward. Full record: memory
+  `feedback_accuracy_completeness_bar`.
 
 ## VERIFY BEFORE YOU CLAIM — read every session, no exceptions
-Every factual claim about the code/data/sources gets CHECKED against the actual source BEFORE I say
-it — read the file+line, run the read-only check, look at the real rows. Inferring from one or two
-lines and stating it as fact is banned. (2026-06-22: I claimed the ABP word card "shows a dictionary
-gloss" — twice — without tracing the display logic; it shows the in-verse English word in the common
-case. `relocateGloss` only swaps in the `kjv_def` gloss when the word also has an inflected form line.)
-**No clean-sweep claims:** never call something a "clean sweep / sure win / validated / stark improvement"
-from a flattering sample — check EVERY item or label it a spot-check with the rest unverified, and probe
-STRESS cases (loaded/edge), not easy ones. (2026-06-22 same session: I called TBESG "validated" off
-love/spirit/God; χάρις→"grace" — a loaded one-word gloss — broke it. Reporting a source's value ≠
-vouching it's right.)
-**Self-trigger:** if I make a claim I didn't verify, OR I catch myself having guessed, I STOP, run
-`/wrap` immediately, and write clean handoff notes for a fresh session — I do NOT keep going. Full
-record: memory `feedback_verify_before_claiming`.
+Every factual claim about the code/data/sources gets CHECKED against the actual source BEFORE I
+say it — read the file+line, run the read-only check, look at the real rows. Inferring from one
+or two lines and stating it as fact is banned. (2026-06-22: I claimed the ABP word card "shows a
+dictionary gloss" — twice — without tracing the display logic; it shows the in-verse English
+word in the common case.)
+**No clean-sweep claims:** never call something a "clean sweep / sure win / validated / stark
+improvement" from a flattering sample — check EVERY item or label it a spot-check with the rest
+unverified, and probe STRESS cases (loaded/edge), not easy ones. (2026-06-22: I called TBESG
+"validated" off love/spirit/God; χάρις→"grace" — a loaded one-word gloss — broke it. Reporting a
+source's value ≠ vouching it's right.)
+**Self-trigger:** if I make a claim I didn't verify, OR I catch myself having guessed, I STOP,
+run `/wrap` immediately, and write clean handoff notes for a fresh session — I do NOT keep
+going. Full record: memory `feedback_verify_before_claiming`.
 
-## Instructions for Claude Code
-(Account: user is on the Max 5x plan — decent headroom, not unlimited. Still bias to being THOROUGH and
-CORRECT over conserving tool calls. The notes below are about staying focused and
-keeping context sharp, NOT about rationing usage.)
-- Target the specific function/section relevant to the task — for focus, not frugality
-- app.py and the frontend are now split into modules (app.py → core.py + ai.py +
-  views_*.py; the old app.jsx → static/src/*.jsx). Read the relevant module/region, not
-  everything — for focus, but read as many as correctness needs
-- Read as much as you need to get it right — do not starve a task of context to save calls
-- Do not attempt to access bible.db directly
-- Make minimal changes — do not refactor unrelated code
-- Ask for clarification before making large changes
-- Go straight to the relevant function; don't scan the whole codebase out of habit
+## Design doctrine
+Lexica's visual language is quiet. Text, hierarchy, whitespace, and hairline structure do the
+work. **Library is the canonical surface** — when any rule is ambiguous, the tiebreaker is
+"what does the Library reader do?" New surfaces should look like they were built by whoever
+built Library. (Full record: `docs/design.md`.)
 
-## Effort mode — Max 5x plan, headroom is decent but finite
-Pick effort by task TYPE. Lean higher when data correctness is on the line; don't burn top effort on routine work.
-- **Routine work** (known edits, data scripts, config tweaks, one-line fixes):
-  medium effort is plenty; stay efficient but don't cut corners on correctness.
-- **Diagnosis / root-cause / data-integrity work** (a symptom several hops from
-  its cause, anything touching the words table or Strong's invariants): HIGH
-  effort — read as many spots as the trace needs and reason it through. A wrong
-  guess on data is expensive (see the 2026-06-03 strongs_base regression — one
-  wrong word hid a 592k-row break).
-- When unsure which mode you're in, ask the user, or state your assumption.
+1. **No decorative containers.** Panels are containers; content is rows. No borders,
+   backgrounds, or radii on repeating elements. Rows separate by whitespace or hairline
+   divider; hover wash + accent left-bar for interaction/selection. Shared system: `.listrow`
+   + tokens (`--row-accent` etc.). Reference the system, never local copies.
+2. **References are text.** Strong's numbers, verse refs, translation tags: bare mono or small
+   caps, muted, no chrome. Shared class: `.refmark`.
+3. **Backgrounds and highlights are semantic, never stylistic.** A background means something
+   is *marked*. If a highlight isn't carrying meaning a reader needs, it doesn't exist.
+4. **One pill: CONTESTED.** It's rare, it's a warning, it's allowed to interrupt. Nothing else
+   gets a pill without the same justification.
+5. **Emphasis budget.** Before adding visual weight, name the meaning it carries. Default to
+   the quietest version that works; ornament must argue its way in. **Quiet is not formless** —
+   a list of choices must still read as discrete items at rest.
+6. **One radius.** All rounded rectangles use the shared `--radius` token (6px, soft-square;
+   never 0-sharp, never lozenge). Functional exceptions only: `50%` circles, `0`.
+7. **Toggles — never box + underline together.** Text segments → underline-under-active, no box
+   (`.seg--line`). Icon toggles → boxed active.
 
-## Working style (not hard caps — optimize for correctness)
-- Show code before changing it (ALWAYS — every mode, no exceptions)
-- WORD-ORDER / Strong's-order / proper-noun-slot swaps: confirm the layout against
-  the SOURCE (eSword/ABP) ONLY — NEVER guess "what eSword probably shows." If the
-  source isn't in front of you, ask the user to check. Read-only dry-run is the
-  source of truth before any --apply. (2026-06-07 Act 19:4 lesson.)
-- Prefer focused reads over broad scans — for context quality, not call-rationing
-- No artificial tool-call or file-count ceiling; use what the task genuinely needs.
-  For diagnosis, that may be many reads — that's expected and fine.
-- Still avoid genuinely wasteful moves (re-reading a file you just edited, scanning
-  the whole repo when you know the target)
+Bounded exceptions: input surfaces, semantic notices/callouts, selected states (as accent/wash,
+never a border box).
 
-## Important
-- bible.db lives on PythonAnywhere only, not locally
-- Never query or test against a local database
-- All db changes must be made on PythonAnywhere
-- **NEVER use WAL journal mode for any db on PA.** PA's home dir is NFS; WAL needs a shared-memory
-  sidecar + memory-mapping NFS can't do reliably, so an in-flight page write is lost on a crash and the
-  file is corrupted (news.db, 2026-07-05 — page-1 lost mid fold-back). Use `journal_mode=DELETE` +
-  `busy_timeout` on every read-write opener. Applies to bible.db, notes.db, news.db — all of them.
+## Key design decisions (project-wide, not per-feature)
+- ABP is the primary text — all word study anchored in ABP interlinear. KJV is a full parallel
+  corpus. Never add KJV as the sole primary study text.
+- No systematic theology imported — text speaks first (Berean approach).
+- **PLAIN MEANING, NOT TRADITION (hard rule):** glosses/word-meanings = the plain, attested
+  sense, NEVER the theologically-loaded or equivocated English (χάρις = "favor/kindness", NOT
+  "grace"; πνεῦμα = "spirit/breath", NOT "Ghost"). Give the RANGE when a word has one; a single
+  church-word gloss is a red flag. Applies to the word card, AI synthesis, lexicon, studies.
+  Memory `feedback_plain_meaning_not_tradition`.
+- Italic words (KJV `italic=1`, ABP `words.italic=1`, ABP `[word]`) are translator additions.
+- Function words (171-word Greek set; Hebrew analog `_HEB_FUNCTION_STRONGS`) filtered from search.
+- Do NOT add conjugated manuscript forms to the reader — the audience are non-Greek readers.
+- **Gray-vs-hide is the user's per-control call:** gray a real feature that doesn't apply here;
+  hide copyright-gated or truly irrelevant controls. Propose gray for inactive-but-applicable,
+  confirm per control. Memory `feedback_gray_dont_hide`.
 
-## Deployment
-- Preferred deploy: `bash ~/bible-db/scripts/deploy.sh` — pulls, runs the invariant tests, loads any
-  non-canonical books WHOSE FILES THE PULL CHANGED (diffs old..new HEAD, runs only the touched
-  loaders — a plain code deploy loads nothing), `pip install`s into the bible-env venv WHEN the pull
-  changed `requirements.txt` (2026-06-22; a failed install stops the deploy, bare-`pip` fallback if the
-  venv path is missing), and reloads the site ONLY if the tests pass. A loader hiccup warns but never
-  blocks the reload, so adding a book just needs a normal deploy.
+## Working with this codebase
+(Account: Max 5x plan — decent headroom, not unlimited. Bias to THOROUGH and CORRECT over
+conserving tool calls; the focus notes below are about context quality, not rationing.)
+- **Show code before changing it — ALWAYS, every mode, no exceptions.**
+- Go straight to the relevant module/function (app.py is split: core.py + ai.py + views_*.py;
+  frontend is `static/src/*.jsx`). Read as much as correctness needs — never starve a task of
+  context — but don't scan the whole codebase out of habit.
+- Make minimal changes; do not refactor unrelated code. Ask before large changes.
+- **Grep before you size a fix.** Before calling a change "small," count every copy of the thing
+  you're editing — a definition or pattern often lives in several places. (A fix scoped off one
+  copy missed a 6-copy set of paren-float handling.)
+- **Effort by task type:** routine known edits → medium. Diagnosis / root-cause /
+  data-integrity work (anything touching the words table or Strong's invariants) → HIGH effort,
+  read every spot the trace needs (see the 2026-06-03 strongs_base regression — one wrong word
+  hid a 592k-row break). Unsure which mode → ask, or state the assumption.
+- **Two independent derivations = the diff is your oracle.** When one fact is produced two ways
+  (the word rows vs the clean `verses.text` prose, two parsers of one source, a build vs its
+  feed), their disagreement is the truth-finder — don't trust either side alone. Resolve each
+  mismatch against the pinned/authoritative source, never by picking the reading you prefer.
+- **WORD-ORDER / Strong's-order / proper-noun-slot swaps:** confirm the layout against the
+  SOURCE (eSword/ABP) ONLY — never guess "what eSword probably shows." If the source isn't in
+  front of you, ask the user to check. Read-only dry-run is the source of truth before any
+  `--apply`. (2026-06-07 Act 19:4 lesson.)
+- **CC/DB boundary:** Claude cannot query bible.db (or news.db) directly, ever. All DB steps
+  run by the user on PA; Claude proposes the exact command, the user confirms before any write.
+  Checkpoint approval required before any correction-table write, schema change, or
+  binding-logic modification.
+- After ANY edit to `static/src/*.jsx`: `npm run build`, commit BOTH source and rebuilt
+  `app.js`. Full build-system detail + line-ending traps: `docs/claude/frontend.md`.
+
+## Hard safety rules — Do Not
+- Do not touch existing ABP tables when adding unrelated features.
+- Do not commit bible.db (or any live db) to git.
+- **NEVER run `DELETE FROM words` or `DELETE FROM verses`.** OT and NT share the words table;
+  clearing destroys hard-to-recover data. Re-imports use INSERT OR IGNORE.
+- Avoid the full rebuild in `build_words_from_abp.py` unless truly necessary; after ANY run,
+  re-run `import_tipnr.py` and verify the strongs_base invariant (below). The rebuild scripts
+  NEVER write the live db — they build into `bible.db.new`, swapped by hand with one reversible
+  move (a parallel session once blanked bible.db; memory `project_db_backups`).
+- **NEVER use WAL journal mode for any db on PA.** PA's home dir is NFS; WAL corrupts on a
+  crash (news.db, 2026-07-05 — page-1 lost mid fold-back). Use `journal_mode=DELETE` +
+  `busy_timeout` on every read-write opener. Applies to every db.
+- Never query or test against a local database; all db changes happen on PA.
+- A rebuild of the words table follows the **`/rebuild-words`** slash command procedure
+  (`.claude/commands/rebuild-words.md`) — rare, high-stakes, do not improvise it.
+- Backups: daily verified rotating copies via `scripts/backup_db.py` into `~/db_backups/`
+  (outside the repo). `study.db` is the one irreplaceable file. Detail: `docs/claude/ops.md`.
+
+## Critical data invariants (summary — full detail in docs/claude/data-model.md)
+- **`words.strongs_base` is fully G/H prefixed** ('G4151', 'H7307'). The lexicon join is
+  `l.strongs_g = w.strongs_base`; a bare base → NULL lemma (and under the old SUBSTR join,
+  a WRONG lemma). After any words rebuild:
+  `SELECT count(*) FROM words WHERE strongs_base GLOB '[0-9]*'` must be 0.
+  `words.strongs` is intentionally left bare. Locked by tests/test_strongs_join.py +
+  test_build_invariants.py.
+- **AUDIT RULE — dotted-number blindness (hard, standing).** Any Strong's-number audit operates
+  on the FULL dotted number (`strongs`, e.g. `G1246.2`) by default; grouping on `strongs_base`
+  only with an explicit reason. Any "count = 0" or "orphan/contaminated" finding MUST check
+  dotted variants before it counts as a finding. Dotted numbers carry real content (G303.1
+  ἀνὰ μέσον, διὰ κενῆς). Cost two false positives 2026-07-02.
+- **`verses.text` is the clean, correctly-ordered English prose.** NEVER rebuild a verse from
+  `words` joined by `position` — that's raw Greek order and scrambles ABP's bracket-reordered
+  English. Narrow exception: a "LORD the"-style determiner flip is a `_split_compounds` BUILD
+  bug, not the expected scramble (`scripts/audit_split_flip.py`).
+- **A missing verse row silently drops its words** at build time (the Hebrews-13 lesson).
+- Every detector must fire on a known positive before trusting a zero (certification rule).
+
+## Deployment quick reference (full detail: docs/claude/ops.md)
+- Preferred: `bash ~/bible-db/scripts/deploy.sh` — pulls, runs invariant tests, loads only
+  touched non-canon books, pip-installs on a requirements change, reloads only if tests pass.
 - Manual fallback: `cd ~/bible-db && git pull && touch /var/www/www_lexica_bible_wsgi.py`
-- PA git is set `pull.rebase false`, `merge.autoedit no` (no prompts). The database is NOT in git
-  (too large) — managed directly on PA.
-- After a `requirements.txt` change: `deploy.sh` now runs the `pip install` itself (see above), so a
-  normal deploy covers it. Installing BY HAND (manual deploy): on PA, `workon bible-env` THEN
-  `pip install -r requirements.txt` — NO `--user` inside the venv (it's
-  `/home/appssanding720/.virtualenvs/bible-env`, Python 3.11; a `--user` install lands in the system
-  3.13 dir and is ignored). Then reload.
-- **Env vars / secrets live in the WSGI, NOT a `.env`.** `/var/www/www_lexica_bible_wsgi.py` sets them
-  with `os.environ['KEY'] = '...'`, and those lines MUST sit ABOVE the app import (module-level reads
-  like `GOOGLE_CLIENT_ID = os.environ.get(...)` run at import). `core.load_dotenv()` doesn't reliably
-  find a `.env` under the PA web app — don't rely on one. Edit the WSGI, then reload (touch it). Keys
-  set there: `ANTHROPIC_API_KEY`, `GOOGLE_CLIENT_ID`, `ESV_API_TOKEN`, `OWNER_EMAIL`, the mail keys
-  `SMTP_HOST`/`SMTP_PORT`/`SMTP_USER`/`SMTP_PASS` + `MAIL_FROM` + `SITE_URL` (+ optional `FCBH_API_KEY`,
-  `MAIL_REPLY_TO`). Outbound mail goes through **Resend** (relay `smtp.resend.com:587`, user `resend`,
-  pass = a Resend API key, From `noreply@lexica.bible`). The nightly `health_check.py` task can't see the
-  WSGI env, so ITS copy of the mail keys + `OWNER_EMAIL` lives in a gitignored `~/bible-db/.env` (the
-  script `load_dotenv`s it). Full record + gotchas: memory `project_email_smtp`.
-- **Accounts / roles / gated texts** (full records: memories `project_user_roles`, `project_esv_audio`,
-  `project_visitor_stats`; setup history in TODO_ARCHIVE):
-  - Roles nologin / user / berean / admin — a `role` column in `notes.db users`; gates in `views_notes`
-    (`is_admin()`, `is_berean()` = berean-or-admin, `is_logged_in()`). `OWNER_EMAIL` is ALWAYS admin
-    (bootstrap, even before the column migrates). user (any sign-in) = AI search (login-gated, costs
-    money); berean = ESV + NIV; admin = visitor Stats + the in-app Admin page (sets others' roles).
-  - Sign-in is email or Google; Google needs `GOOGLE_CLIENT_ID` + the `google-auth` package and the
-    button just hides if either is missing (a code-only deploy never breaks). `notes.db` is gitignored,
-    PA-only.
-  - ESV + NIV (berean-gated) each have their own `esv.db` / `niv.db` (gitignored, PA-only;
-    `scripts/load_esv.py` / `load_niv.py`; `views_esv.py` / `views_niv.py`).
-- **Audio sources:** ESV = Crossway's own API (api.esv.org, `ESV_API_TOKEN` in the WSGI — whole-Bible
-  Max McLean; `views_esv._crossway_audio_url` follows the 302 to the signed mp3), with FCBH
-  (`FCBH_API_KEY`, NT-only) as fallback. KJV = public-domain audiotreasure.com, no key (voice set
-  `KJV_AT`; Job/Song/Philemon/2–3 John/Jude fall back to the music set `KJV_FF`). BSB = public-domain,
-  no setup. NIV = no audio source (dead end).
+- **Env vars/secrets live in the WSGI file, NOT a `.env`** — `os.environ[...]` lines ABOVE the
+  app import in `/var/www/www_lexica_bible_wsgi.py`. The nightly `health_check.py` task can't
+  see the WSGI env; its mail keys live in a gitignored `~/bible-db/.env`.
+- Pre-commit hook + GitHub Actions CI gate every push (curated test list, app.js staleness
+  check, Node frontend gates incl. the whole-bundle render smoke gate). Detail + line-ending
+  traps: `docs/claude/ops.md`.
 
-## CI / automation (added 2026-06-07)
-- **GitHub Actions** (`.github/workflows/ci.yml`) — runs on every push/PR: (1) the invariant tests —
-  an **EXPLICIT curated list of filenames in ci.yml AND the pre-commit hook, NOT a `tests/*.py` glob**, so
-  a new test file gates ONLY if you add it to BOTH lists by hand (many test files, incl. the alias +
-  rail-payload-contract tests, are deliberately not in the CI list). They build their own in-memory data,
-  no bible.db needed — but the `tests` job `pip install`s flask + anthropic + python-dotenv + flask-limiter,
-  because `test_synthesis_no_leak.py` imports `ai.py`/`core.py`, which need them at load time; keep that list
-  lean, add only when a new test imports something new. (2) rebuilds `app.js` and FAILS if the committed copy
-  is stale, and (3) runs the **node** unit tests `tests/test_ac_word_groups.js` + `tests/test_rstack_logic.js`
-  (the Ask-corpus rail's pure logic; in the `frontend` job, which already has node — the pre-commit hook runs
-  them too) PLUS the Library reading-mode gates `test_library_order.js` + `test_render_markup.js` + the
-  whole-bundle **render smoke gate `smoke_app.js`** (renders `<App/>` with real React via `react-dom/server` to
-  catch blank-site reference/TDZ errors the pure-logic tests can't see — a component-body error passed green
-  before it existed). **`react`/`react-dom` are TEST-ONLY devDependencies** for those render gates; the app
-  itself loads React from the CDN UMD, NOT from npm. How-to-test-frontend-JS-here + the shared-logic-file
-  pattern: memory `project_three_zone_shell`; reading-modes lessons: memory `project_reading_modes`.
-  Repo is public; check
-  the Actions tab or query `api.github.com/repos/lexica-bible/lexica/actions/runs`. `gh` CLI is installed on the dev box now (2026-06-22; Claude calls it by full path) — NOT on PA. See memory `project_dependabot_workflow`.
-  - **LINE-ENDINGS for the app.js check (cost a CI fail 2026-06-14; the "all CRLF" claim CORRECTED
-    same day):** Keep `git config core.autocrlf false` — with `autocrlf=true` (Git-for-Windows default)
-    your local `git diff` HIDES CR mismatches, so a wrong `app.js` slips past the hook and CI rejects it
-    as stale. The `static/src/*.jsx` files are MIXED, NOT all CRLF: some LF (60-library.jsx, 90-app.jsx,
-    30-detail-panel), some CRLF (59a/59b, 10-icons, 59-dayintro). Babel keeps a `/* */` block comment's
-    CRLF in `app.js`, so app.js carries 4 CRLF from the CRLF sources — the build reproduces them, so CI
-    matches as long as you commit src + app.js together. RULE: match a file's EXISTING endings; do NOT
-    flip a whole file (noisy diff + changes app.js's CRLF set). Check real endings with `xxd`/a byte
-    count, NOT Git-for-Windows `grep -c $'\r'` or piped `git show` (both falsely reported the LF
-    60-library.jsx as CRLF this session). Verify like CI before pushing:
-    `git checkout HEAD -- static/src/ && npm run build && git diff --quiet -- static/app.js`.
-- **Pre-commit hook** (`scripts/githooks/pre-commit`, wired via `git config core.hooksPath scripts/githooks`)
-  — local twin of CI: rebuilds+stages app.js if a `static/src/*.jsx` is staged, then runs the tests and
-  blocks the commit on failure. LOCAL DEV MACHINE ONLY — on PA it was unset (`git config --unset
-  core.hooksPath`) because PA has no Node. Bypass once with `git commit --no-verify`.
-- **Dependabot** (`.github/dependabot.yml`) — weekly; opens PRs for pip/npm/actions updates, now
-  GROUPED (one PR per ecosystem: pip minor/patch batched + majors solo, all `@babel/*` together,
-  actions batched — 2026-06-22). Not auto-merged. **Claude can't merge/close PRs — the safety
-  classifier blocks it even with your OK, so it hands you the `gh pr merge/close` commands to run.**
-  A normal `deploy.sh` does the `pip install` after a merge. Full record: memory
-  `project_dependabot_workflow`.
-- Nightly `health_check.py --email --only-warn` email — LIVE on PA 2026-06-16 (daily PA scheduled task,
-  23:53 UTC). `--only-warn` = mails ONLY when a check fails (silent on clean nights). The task's mail keys
-  + `OWNER_EMAIL` are in `~/bible-db/.env` (a cron can't read the WSGI env). Memory `project_email_smtp`.
-
-## Frontend build step (added 2026-06-06)
-- The SOURCE is `static/src/*.jsx` — per-view files, concatenated (filename order;
-  numeric prefixes set it) into ONE compilation unit. `static/app.js` is the COMPILED
-  output the browser loads (index.html points at `app.js`). The compiled `app.js` IS
-  committed to git; `node_modules/` is git-ignored. (Phase 4, 2026-06-06: the old
-  3,461-line `static/app.jsx` monolith was split into `static/src/` — see the file
-  headers there for what each holds. Same split spirit as the app.py blueprints.)
-- After ANY edit to a `static/src/*.jsx` file you MUST rebuild before committing:
-  `npm run build` (runs `scripts/build-frontend.js`: concat src -> Babel -> static/app.js).
-  One-time setup: `npm install`. Commit BOTH the .jsx source AND the rebuilt app.js.
-- The build runs LOCALLY (Node is on the dev machine, not needed on PA). PA deploy is
-  unchanged — it just `git pull`s the already-compiled app.js.
-- **app.js is served from a Flask route, NOT `/static/`** (2026-06-29): `/assets/app.js`
-  (`app_bundle` in app.py) sends it with `Cache-Control: public, max-age=31536000, immutable`.
-  PA's `/static/` mapping can't set a cache header, so the 543KB bundle was re-downloaded every
-  load in Firefox. The template loads it via `bundle_url()`, which keeps the `?v=<mtime>`
-  cache-bust, so a deploy changes the URL and the long cache never serves a stale bundle (gzip is
-  preserved). Everything else stays on `/static/`. Don't try to fix static caching in Flask config
-  — PA serves `/static/`, Flask never sees it. Memory `project_static_cache_header`.
-- Why concat-then-compile (not `babel <dir>`): one unit emits Babel's spread helper
-  once and reproduces the old single-file output exactly (the src files joined by "\n"
-  reconstruct the original app.jsx).
-- Why the build step at all: in-browser Babel was recompiling all the JSX on every page
-  load (~2.5s render delay; server TTFB was only 96ms). Precompiling + production React
-  builds removes that tax. Babel-standalone and dev React were dropped from index.html.
-- **`design/` is NOT the app — it's throwaway design-tool mockups (standalone mini React apps).**
-  The live frontend is ONLY `static/src/*.jsx` → `static/app.js`. Never audit/edit `design/*.jsx`
-  as production; use it only as the visual target. (The design tool kept mistaking its own
-  `design/library.jsx` mockup for the real app — see the callout in `design/README.md`.)
-
-## Stack
-- Backend: Flask (Python), SQLite
-- Frontend: React 18 (production UMD), JSX in static/src/*.jsx precompiled via Babel to
-  static/app.js (build step — see "Frontend build step" above), HTML/CSS
-- Deployed: PythonAnywhere ($10 Dev tier)
-- Version control: GitHub (repo: lexica-bible/lexica)
-
-## Project Structure
-
-/home/appssanding720/
-bible-db/
-bible.db          # main SQLite database
-app.py            # Flask app, all routes
-templates/
-index.html      # single page app
-static/
-src/             # frontend SOURCE — per-view *.jsx (00-core … 90-app)
-app.js           # COMPILED bundle the browser loads (built from src/, committed)
-styles.css       # all styles
-scripts/          # build-frontend.js + one-time import/migration scripts
-
-## SEO / crawlable pages + site icons
-The SPA is invisible to search engines, so `views_seo.py` serves plain server-rendered HTML
-(templates `templates/seo/`) the crawler can read, all reusing the JSON endpoints' read-only SQL:
-- `/read/` (book index) · `/read/<slug>` (book) · `/read/<slug>/<ch>` (ABP) · `/read/<slug>/<ch>/<text>`
-  (kjv|bsb|heb) — interlinear chips with ABP brackets/numbers; `/word/<strongs>` (G/H word study);
-  `/sitemap.xml` generated (chapters + every Strong's used); `/credits` (attributions page, `views_seo.credits`
-  → `templates/seo/credits.html` — every text/lexicon/data/font source + its license name+link; CC BY/BY-SA/CC0
-  REQUIRE the license be named AND linked). **PUBLIC-DOMAIN TEXTS ONLY — never ESV/NIV.**
-- The app deep-links INTO these: `/?b=&c=&t=` jumps to a chapter, `/?lex=G####` opens the Lexicon —
-  read once on mount in `static/src/90-app.jsx`, then the query is stripped.
-- `app.py` serves the root files crawlers fetch (`/favicon.ico`, `/apple-touch-icon.png`, `/robots.txt`);
-  `/sitemap.xml` is the seo blueprint's. Icons + `og.png` share card live in `static/`, regenerated by
-  `scripts/gen-icons.js` (transient `sharp` dep). seo.* endpoints are rate-limit-exempt.
-- Full record: memories `project_seo_pages` + `project_seo_branding`. Google Search Console is set up
-  (Domain property, sitemap submitted).
-
-## Database Tables
-- `verses` — ABP verse text. `verses.text` is the clean, correctly-ordered English PROSE (what
-  the reader's prose mode + SEO pages use). NEVER rebuild a single verse from `words` joined by
-  `position` — that's raw Greek order and SCRAMBLES ABP's bracket-reordered English. (2026-06-21
-  TSK-panel garble: `/api/verse` and `views_crossref._abp_text` were stitching words by position;
-  both now read `verses.text`.) NARROW EXCEPTION — don't let this rule excuse a real data bug: a
-  "LORD the"-style flip (a determiner stranded AFTER its noun) is NOT the expected bracket scramble,
-  it's a `_split_compounds` BUILD bug — when it fronts the words it spread onto blank Greek slots it
-  lines them up in Greek order instead of the source English order. Fixed in the build split step
-  (preserve source English order when fronting), so the right order is baked back into `words` and the
-  reader needs no change. Find the full set with `scripts/audit_split_flip.py` (read-only). Distinct
-  from genuinely bracket-reordered verses, where the rule above still holds.
-- `words` — ABP word-level interlinear, Strong's tagged. Columns: english, english_head, strongs, strongs_base, greek_pos, bracket_id, italic, italic_words, smcap_words, is_pn, morph, lemma. The displayed Greek lemma is joined live from `lexicon` via `LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base` (the indexed G-prefixed key added in Phase 1; replaced the old `SUBSTR(strongs_base,2)` join — this is why strongs_base MUST stay G/H-prefixed). `is_pn=1` marks proper nouns (set by import_tipnr.py). `morph`/`lemma` columns added rebuild #6 (~78% populated).
-  **`english` vs `english_head`:** `english` is ABP's rendering as printed — a multi-word PHRASE gloss is parked
-  whole on ONE token slot ("Jesus to them," on the αὐτός token). `english_head` (built by `parse_abp._head_word` =
-  last non-function word) is the token's OWN render, the RIGHT column for any "renders as" count — raw `english`
-  fed through the normalizer mis-heads a parked phrase into a phantom render ("jesus" under a pronoun). All render
-  counters (word-study panel, def-engine draw, coverage `rendering_sets`) read `english_head`; the chip still
-  DISPLAYS `english`. Documented limit (pronoun/function slots can carry a trailing parked word): the citable
-  `parse_abp.HEAD_WORD_TAIL_CAVEAT`; locked by `tests/test_render_head_no_phantom.py`.
-- `abp_surface` — `(verse_id, position, form, translit)` side table of the PRINTED (inflected) Greek per ABP word,
-  feeding the word-study side-card "in this verse" line (ABP's source has no Greek surface words). Built read-only
-  by `scripts/build_abp_surface.py --bh ~/bible-db/bh_scrape.db` (PA-only data step; DROP+rebuilds only its own
-  table, never words/verses). SOURCE = ABP's OWN printed Greek from `bh_scrape.db` `bh_words.greek` (the BibleHub
-  ABP scrape) — same text as `words`, so it matches ~91% (Rahlfs/TAGNT was tried first but capped at 75%: ABP-OT
-  is Vaticanus-Sixtine vs Rahlfs's eclectic text). `/api/chapter` LEFT-JOINs it only if present (deploy-safe).
-  bh's Greek is accent-only (no breathing marks), so `strip_marks` stores a form ONLY when it differs from the
-  lemma by ENDING (no echo lines) → 56% of words show a line. Surface translit now FILLED by
-  `scripts/build_abp_translit.py` (SBL romanization matching the lexicon headword style; the rough-breathing
-  'h' is read from the lemma since bh forms have no breathing; re-run after any position-shifting rebuild).
-  Full record: memory `project_bsb_words`.
-- `lexicon` — Greek Strong's definitions. Has an indexed `lemma_plain` (accent-stripped/lowercased/
-  final-sigma-folded lemma) — the fast EXACT key the Word-study search matches first (`bdb` has it too).
-  Built by `scripts/add_lemma_plain.py` (folded into `load_lexicon.py` for the Greek side; re-run the
-  script after a lexicon OR bdb reload). Word-study lookup short-circuits on an exact `lemma_plain` hit,
-  only falling to the slow substring scan when the typed word isn't a headword. **It can silently VANISH:
-  found MISSING on the live db 2026-06-30 (a reload had dropped it), which had left the exact-match fix
-  asleep — re-applied 2026-07-01. VERIFY the column exists after any reload** (`PRAGMA table_info(lexicon)`).
-  Ask-corpus's exact-lemma pin now uses it too (`_resolve_exact_lemma` in ai.py). Memory `project_lexicon_search_overmatch`.
-- `lsj` — Liddell-Scott-Jones Greek lexicon
-- `abp_ext` — extended ABP data
-- `dotted_lexicon` — corrected headword for ABP dotted Strong's. A side table in bible.db (built on PA,
-  not in git) mapping the full dotted number (`G###.N`) → its OWN lemma + romanization, for the dotted
-  numbers that are a genuinely DIFFERENT word from their base (ABP parks its added words at "nearest
-  Strong's + a dot", so the base lemma is the alphabetical neighbour — G180.2 ἀκατασκεύαστος vs base
-  G180 ἀκατάπαυστος). `chapter_text`/`verse_words` COALESCE it over the base `lexicon` join so the word
-  card shows the right word; joined only if present (deploy-safe). Built by `scripts/build_dotted_lexicon.py`,
-  audited by `scripts/audit_dotted_lemmas.py`. Full record: memory `project_dotted_strongs_lemma`.
-- `pn_binding` / `tipnr_entities` / `tipnr_entity_refs` — the Issue-2 entity-binding tables (PA-only, NOT in
-  git; rebuilt by `scripts/build_entity_binding.py --apply`, which writes ONLY these, never words/verses).
-  `pn_binding(book,chapter,verse,name,entity_uniq,kind,rule,render,hot,tier)` keyed (book,ch,vs,name) maps a
-  PN occurrence → its verse-correct TIPNR entity (render=1 rows only; a floor = no row → Fix A); `tipnr_entities`
-  = the entity's own card content (uniq/head/section/gender/area/descr/summary/bases/parents+offspring, kin
-  for PERSONS only); `tipnr_entity_refs` = its reference list. Served by `/api/metav/entity` → the `.pnbound`
-  card. Re-run `--apply` after a words rebuild (it re-tiers from live metaV each run). Memory
-  `project_entity_resolution_rebuild`.
-- `tipnr_metav_link` — cross-links a bound TIPNR entity → its rich MetaV record (PA-only, NOT in git).
-  `(uniq, kind, metav_id, rule, score, margin)`; kind='person' LIVE (1,625 rows, 2026-07-05) mapping a
-  person entity → `metav_people.person_id` so the panel renders the rich David-style card (place edition
-  reserves kind='place'). **SERVED since 2026-07-05:** `/api/metav/entity` adds a `metav` rich-card field
-  via ONE join (gated: `section='person'` + NOT `is_people_group` + a born/died-or-≥2-kin bio bar), fallback
-  rich → thin TIPNR → Strong's; frontend `MetavPersonBody` (shared with the name card) fills the bound card
-  under the TIPNR spine. **Titles ship per-referent** (the seven pharaohs each link to their own record; the
-  composite `Pharaoh@Exo.1.11` correctly UNLINKED) — do NOT widen the link-build title check, it'd delete
-  good links. Built by `scripts/build_metav_person_index.py` (MetaV CSVs → staging `metav_index.db`, PA-only)
-  + `scripts/build_person_metav_link.py --apply`; re-run BOTH after a words rebuild. Memory
-  `project_metav_person_link`; spec `HANDOFF_metav_person_link.md`.
-- `word_gloss` — plain-meaning lemma gloss for the word card (`strongs` → `gloss` + `source`). Side table in
-  bible.db (built on PA, not in git; ~17.5k rows). Greek = Dodson base + TBESG fill + overrides + dotted-by-
-  lemma; Hebrew = TBESH + overrides. Joined via `core.word_gloss_cols()` (ABP) and `core.word_gloss_join()`
-  (KJV/BSB chapter endpoints — folds a Hebrew byform in SQL); Hebrew reader does a cross-db lookup (heb.db
-  can't join bible.db). All deploy-safe, aliased `AS kjv_def`/returned as `lemma_gloss`. Built by
-  `scripts/build_word_gloss.py` (`--summary`/`--apply`). ABP + KJV/BSB/Hebrew cards + the Word study tab
-  ALL LIVE (2026-06-23). Full record: memory `project_word_card_gloss`.
-- `lexica_def` — the **Lexica dictionary** entry per word: our OWN verse-grounded definition (written from the
-  Bible's own usage, not LSJ's classical glosses). Side table in bible.db (built on PA, not in git). One row =
-  the frozen fields `sense_headlines`/`senses_block`/`range`/`gloss_notes`/`coverage` + `sense_prov` (per-sense
-  LXX-provenance flag, Option B) + `fork` (contested-word
-  readings + a Study-graph link; also carries `gloss` + two hand-authored SEAM axes `divergence_type`
-  (referent|content|loaded) + `lead_flip` (does the lead sense flip when the priors are swapped) — set in
-  the `CONTESTED` register, no model, written on any `--resplit`) + `verses` + `audit` (citation-gate result)
-  + `raw` (so a better splitter re-splits with NO model call). Built by `scripts/build_lexica_def.py` (frozen `VERSE_PROMPT` → Sonnet → split
-  → citation gate → fork → write; `--apply` build / `--resplit --apply` re-split stored raw, free; surgical raw
-  typo-fixes via `scripts/fix_lexica_raw.py`, no model call). **The `CONTESTED` fork register is `contested_register.py`
-  (repo root, 2026-07-01) — the ONE copy, imported by build_lexica_def + trial_lexica_def + views_lexica; edit it there,
-  never re-copy (a stale duplicate in the trial rig was the reason it moved).** **The citation gate BLOCKS the write
-  (2026-07-01, was report-only):** `validate_entry` rejects a row with a real/no-verse miss (tagging misses stay
-  non-blocking, logged); `--force-gate-bypass "reason"` stores the reason in `audit.bypass_reason`, stamped only on a
-  word whose gate failed. Served by
-  `views_lexica.py` `/api/lexica/<strongs>` → the `LexicaBody` card (20-shared-components, BESIDE `LsjBody`).
-  BOTH the Library word card (`30-detail-panel.jsx` `case "lsj"`) AND the Word-study card (`80-lexicon.jsx`,
-  2026-07-03) fetch `/api/lexica` and render the SAME `LexicaBody`/`StructuralBody`/idiom body — parity is
-  structural, not hand-kept. **Word-study gates the Lexica body to GREEK numbers**: Library never shows
-  `LexicaBody` for a Hebrew word (it pushes the `bdb` section, not `lsj`), so a Hebrew number keeps its BDB
-  definition on both surfaces. **Also `/api/lexica/seams`** (read-only, same file) — every
-  row that carries a `fork`, feeding the **Seam index** Study module (`SeamIndex` in 55-study.jsx; the
-  contested-word browse). After adding/moving a `divergence_type`/`lead_flip` in `CONTESTED`, run
-  `build_lexica_def.py --resplit --all --apply` on PA to write it into the stored forks (free, no model). **Two serve-time
-  guards in `/api/lexica/<strongs>` (2026-07-01):** (a) a `LEXICA_ALIASES` map (the register's `aliases`
-  fields PLUS the standalone `SPLIT_LEMMA_ALIASES` dict — plain corpus-tagging splits that aren't contested words,
-  added 2026-07-02) serves the ONE real row for a word ABP tags differently — KJV/BSB clicking charis ask for G5485, get the
-  G5484 row. A NUMBERING CROSSWALK (`alias_note`) shows the standard↔ABP number pairing in the card header,
-  computed by the ONE shared helper `contested_register.alias_note_for()` — INVARIANT: any new card/route that
-  needs it calls that helper (both `/api/lexica` + `/api/lexicon/profile` do), never a private copy. Full record
-  + the LSJ-404-ride + `SPLIT_LEMMA_ALIAS_NOTES` pool caveat: memory `project_ai_search_architecture`. (b) a fork BACKSTOP — a `CONTESTED` word whose stored row has no `fork` (built before it entered the
-  register, the θεός/κύριος batch-1 gap) 404s + logs loudly instead of serving a one-sided entry (card falls to LSJ).
-  **PUBLIC since 2026-06-25** (`LEXICA_ADMIN_ONLY=False`; serves everyone incl. logged-out — a word with
-  no entry 404s → the normal LSJ card, deploy-safe; flip the flag back to re-gate). LIVE on ~18 words: the 6
-  pilot (psychē + the 5 contested forks dikaioō/charis-G5484/aionios/sarx/ekklesia) + 12 from full-build BATCH 1. **PILOT SHIPPED 2026-06-25:** the v3
-  sub-use-test prompt is promoted into `VERSE_PROMPT` (diff-locked vs the reviewer's frozen V3); the 3
-  frame-leakers (dikaioō/charis/aionios) are HAND-PINNED — `pin_core` in `CONTESTED` lifts the neutral fork
-  core to `entry.pinned_core`, which LEADS the card while the model's framed senses drop below as "Attested
-  uses" (display override in `assemble()`, re-applies via `--resplit`, no model call); psychē/sarx/ekklesia
-  gate-ship. **Batch-build safety gate = the agreement reviewer `scripts/lexica_agreement.py`** (read-only,
-  PA-only; draws a word N×, per-verse SUPPORT+COMPANY tells a fold from a hole) — it certifies PROMPT stability,
-  NOT the written draw (the `--apply` citation gate does that), so a reviewer re-run before a write is OPTIONAL
-  once the prompt is diff-locked. **Full-build BATCH 1 DONE 2026-06-25** (12 words, the calibration batch; tiers proved out — 3-tier ship-gate:
-  concrete/low-polysemy build-one-draw · mid-polysemy `lexica_agreement --runs 3` · high-polysemy/contested/
-  loaded-referent `--runs 10`-or-eyes). **Rare-word stress test GREEN 2026-06-29 (engine stays honest when
-  starved — no manufactured senses); cutoff = occ ≥ 2 (~3,954 words); splitter is split3 (bold-OR-plain
-  headers). **FREQUENCY ROLLOUT STARTED — its own Batch One (26 words) DONE + LIVE 2026-07-03; the
-  exact-match book-label table + widened dangling lint shipped with it. Lessons + calibration numbers +
-  batch-two prep (draw cache #1): `AUDIT_lexica_rollout.md`.**
-  **θεός G2316 + κύριος G2962 FORKED 2026-06-27** (batch-1 had shipped them pure-engine — the loaded-referent
-  blind spot the batch-1 finding flagged): hand-added to `CONTESTED` as membership-only forks (no `pin_core`,
-  the sarx/ekklesia pattern). θεός = a NARROW John 1:1c anarthrous-predicate fork (the baked "identifies the
-  Logos as/being God" verdict line cut from the stored raw via `fix_lexica_raw.py`; qualitative reading credited
-  to Harner, NOT Colwell — the Colwell-inversion is what it neutralizes). κύριος = a title-transfer fork bound
-  to the OT-YHWH-applied-to-Jesus set ONLY (Rom 10:13/Heb 1:10/Phil 2:9-11/Jude 1:4), core sense uncontested.
-  `fix_lexica_raw.py` now accepts an empty `--new` (a text CUT, not just a swap).
-  **LXX-provenance note (Option B) LIVE 2026-06-25:** a subordinate "rests on Septuagint (Greek-OT) usage" flag
-  on senses grounded ≥80% OT (≥4 OT refs) — `sense_provenance()` derives it from the stored citations (book =
-  OT/NT), NO model, recomputed on every build/`--resplit` (`--all` rolls it across the whole batch). Fires only
-  on the real calques (ekklesia/aionios/charis/dikaioō/Christos), silent on both-testament words
-  (pneuma/theos/kyrios). Threshold set against a real census — `scripts/audit_lxx_provenance.py --preview`.
-  **COVERAGE ENGINE (2026-07-02, `lexica_coverage.py` at repo root):** piece A = collocation pre-check
-  (token-level PMI, floor+threshold+0-in-draw, `PMI_MIN=4.0`; warn-only build hook) + piece B = a
-  `coverage_audit` field on every entry (tight collocations/renderings cited-or-not + per-sense thin/circular
-  via `contest_verses` in the register). Populated by `scripts/populate_coverage_audit.py` (narrow — splices
-  ONLY that key, never `--resplit`). Read-only audit `scripts/audit_lexica_coverage.py --coverage`. Piece C
-  (stratified sampling) DEFERRED. NOT wired to the card UI — stored data only. Full record: memory
-  `project_lexica_dictionary`.
-- **Structural / function-word card** — a NEW word-card entry TYPE (beside the Lexica dictionary + LSJ) for
-  words whose meaning resolves OUTSIDE the lexeme (the copula, prepositions, …): instead of a sense list it
-  states the word's grammatical FUNCTION + the construction relations it appears in (provenance tag GRAMMAR).
-  Hand-authored in `structural.py` (a code dict keyed by BASE Strong's — NO model, NO PA data build; normal
-  code deploy), served by `views_lexica.py` `/api/lexica/<strongs>` which resolves a structural base FIRST
-  (own gate `STRUCTURAL_ADMIN_ONLY`, currently False = public). **`structural_entry` routes a dotted number
-  three ways through ONE gate (invariant — keeps every card seam-free):** a decodable FORM of the base → the
-  card + its own parse (εἰμί's ~7,800 conjugates, decoded from the dot); a declared frozen IDIOM (ἀνὰ μέσον
-  G303.1, in `_IDIOMS`) → a one-line CONTENT note (`kind:"idiom"`, "Phrase/Idiom" header — its card hero shows
-  the `_IDIOMS` phrase + a hand-authored `translit` VERBATIM, never the dotted_lexicon lemma/romanizer that
-  mangle a two-word phrase, and the abp_surface "in this verse" line is suppressed; the reader chip + word-study
-  search read dotted_lexicon directly so the same phrase is pinned there via `PHRASE_OVERRIDES` in
-  build_dotted_lexicon.py — 2026-06-26); ANY other dotted
-  child (a different word ABP parked at "nearest Strong's + a dot", e.g. G303.2 "stairs") → None → falls
-  through to its own word entry, so a parked number never borrows the card. Card = `StructuralBody`
-  (20-shared-components.jsx) with a **glance/full split** (the "Function" tab = the finding + a use-boundary
-  pointer; "Full entry" = scope/relations/cross-refs — eimi splits, the shorter prepositions collapse to one
-  view); `30-detail-panel.jsx` branches `case "lsj"` on `lexica.kind` ("Grammar"/"Idiom" badge); `.gram-*`
-  CSS. LIVE: εἰμί (copula) + 17 prepositions + the ἀνὰ μέσον idiom note + the CONJUNCTION batch (ὅτι/ὡς/εἰ
-  typology + ἐάν + 12 connectives, 2026-06-25) + the PARTICLE/NEGATIVE/ARTICLE batch (2026-06-26): ἄν (the
-  eimi-analog — one use, the underspecification IS the finding, glance/full); δή/γε; the **οὐ/μή MECHANISM
-  CUT** — two lexemes split by fact (οὐ, indicative) vs non-fact (μή — typology, glance flags "lest"), both
-  carrying a Matthew 5:17 minimal-pair cross-ref + the compounds οὐδέ/μηδέ/οὔτε/μήτε/οὐχί inheriting + naming
-  the base split; the ARTICLE ὁ (definite-marker + substantivizer + the "not English 'the'" underspecification
-  finding, glance/full; pronominal ὁ δέ handled on the card — step b, see the REFERENT batch below) + **ἵνα** (G2443, 2026-06-26 — purpose; the result/ekbatic debate flagged as a GRAMMATICAL
-  (not doctrinal) question, glance/full via the contested-flag; exemplar Mark 3:14, a plain uncontested purpose,
-  NOT the hardening verses) + the **REFERENT-RESOLUTION batch (step b, 2026-06-30)** — a SECOND structural
-  class beside εἰμί's complement-resolution: a pointer with no content of its own, the antecedent recovered
-  from context. Entries: οὗτος G3778 (whole paradigm — τοῦτο is G3778, no G5124 split), αὐτός G846
-  (he/-self/the-same), οὐδείς G3762 + μηδείς G3367 (the empty-set pointer; the οὐ/μή cut stays on the
-  negatives card). ὁ δέ has no number of its own — it rides the article card's straddle (the old step-b
-  deferral is now a full treatment, exemplar Matt 14:18). ἰδού G2400 SCOPED OUT (situational deixis — points
-  FORWARD to introduce, fails the back-pointing gate). Exemplars verbatim-ABP, verified live before commit.
-  **The structural inventory is now COMPLETE.** **STRUCTURAL-WORD CONTEST RULE** (ἵνα
-  = the worked example): a structural word with SETTLED grammar but a doctrinally-CONTESTED application at
-  specific verses does NOT get a fairness-gate fork — the card stays grammatically honest, and the loaded verses
-  point OUT to an argument graph where the contest is mapped (the lexeme is innocent; the passage is contested).
-  UNLIKE a content-word fork, where the lexeme's OWN senses fork (dikaioō → salvation_how). ἵνα's pointer is
-  WIRED (2026-06-29): the Isaiah-6 hardening graph `hina_hardening` is BUILT + PUBLISHED
-  (scripts/add_study_graph_hina_hardening.py; all 3 readings — purpose / result / predates-ἵνα — compute
-  DEPENDS, the contest is mapped not closed), and the ἵνα card carries a `contest_graph` breadcrumb (graph id
-  + the 3 loaded verses Mark 4:12 / Matt 13:13 / John 12:40) to Study › Graphs, rendered by StructuralBody in
-  Full entry. The reverse direction (verse→graph chip) rides the public for-verse index, no wiring. Frontend
-  tweaks: the underspecified-block label is now authored per card (eimi default
-  unchanged); a lone cross-ref no longer triggers the glance/full split (so flat οὐ keeps its Mat 5:17 line
-  without a Full tab). **card verse lines are verbatim ABP**
-  (a Greek-construction card — ABP is the right source even for a KJV reader). Full record + the locked build
-  rules (cut-by-form / list-by-context, verbatim-ABP, contested-fork prepositions, the dotted-routing gate):
-  memory `project_structural_deictic_cards`.
-- `books` — book metadata (name, testament, regex)
-- `ai_search_cache` — cached AI query results and TSK synthesis
-- `kjv_verses` — KJV full verse text (31,102 verses)
-- `kjv_words` — KJV word-level tokens with position and italic flag
-- `kjv_strongs` — KJV word → Strong's number mapping
-- `bdb` — **MISNAMED: this table actually holds the STRONG'S HEBREW dictionary, NOT Brown-Driver-Briggs**
-  (8,674 rows = H1–H8674, one-line Strong's glosses; genuine BDB is ~10k+ root-organized entries and
-  wouldn't land on that count). The app has NO real BDB. The `bdb` table NAME stays (it's threaded through
-  queries/code/CSS `bdb-*`); only the USER-FACING labels were corrected to "Strong's Hebrew" (2026-07-03).
-  Source = a public-domain Strong's-Hebrew dump (1890 text, PD, no CC credit). H-number Hebrew definitions.
-  If real BDB is ever wanted it's PD + digitized (OpenScriptures) — a new-source decision, not a fix.
-- `pericopes` — section headings (book, chapter, verse, heading); populated from bh_scrape.db.bh_headings; DISPLAYED in the reader (all render modes) via `/api/chapter`'s LEFT JOIN + `.pericope-heading` in 59c-library-render.jsx
-- `bsb_verses` — Berean Standard Bible verse text (public domain), mirrors kjv_verses on 1-66 book ids
-- `bsb_words` / `bsb_strongs` — BSB per-word interlinear (LIVE 2026-06-15; loaded on PA = 386,063 words /
-  381,948 Strong's / 66 books), mirroring `kjv_words`/`kjv_strongs`:
-  `bsb_words(word_id, book_id, chapter, verse_num, verse_pos, word, italic, punc, form, form_translit)` +
-  `bsb_strongs(id, word_id, strongs_id)`. strongs_id fully H/G-prefixed (same invariant as kjv_strongs; locked
-  in test_build_invariants.py). `form` = the original word AS PRINTED (inflected Hebrew/Greek) + `form_translit`
-  its transliteration (from the Berean tables' "WLC / Nestle Base TR RP WH NE NA SBL" + "Translit" columns,
-  added 2026-06-15) — they feed the word-detail side-card "in this verse" line; the chip top line + interlinear
-  stay the dictionary lemma. `/api/bsb/chapter` selects them only if present (PRAGMA guard, deploy-safe).
-  Built by `scripts/load_bsb_words.py` from the Berean Bible project's Strong's-tagged tables
-  (`bereanbible.com/bsb_tables.tsv`, public domain, CC0). Gives BSB chip mode + clickable word study (served by
-  the `views_bsb` word routes; lemma/xlit joined from lexicon/bdb exactly like KJV) + per-word highlights.
-  PA-only one-time data load (like bsb_verses) — `load_bsb_words.py` has a `--dry-run` that checks the tokens
-  rebuild the live bsb_verses text before writing. Source-format gotchas + the deploy step: memory `project_bsb_words`.
-- **Separate DB files (NOT bible.db, all gitignored + PA-only):** `notes.db` — user accounts/notes/
-  highlights/journals + a `visits` table (owner-only visitor stats: day + daily IP+UA hash + referrer)
-  + `password_resets` (short-lived single-use reset tokens, added 2026-06-16)
-  + a `corpus` table (saved Ask-the-corpus conversations, synced cross-device via `/api/corpus/sync`
-  the same id/newer-wins/tombstone way as notes — added 2026-06-23)
-  + an `ai_usage` table (Ask-corpus daily spend caps — per-account + whole-site question counts per
-  UTC day; user_id 0 = the site total; added 2026-06-22).
-  `esv.db` — owner-only ESV text (`esv_verses`), loaded by `scripts/load_esv.py`. `niv.db` — owner-only
-  NIV text (`niv_verses`), loaded by `scripts/load_niv.py`. See "Owner-only features".
-  `heb.db` — **PUBLIC** Hebrew OT interlinear: `heb_words` (per word: hebrew, strongs H-number, morph,
-  gloss, translit, grammar) + `heb_verses`, all 39 books from STEP **TAHOT** (Translators Amalgamated
-  Hebrew OT, CC BY). Loaded by `scripts/load_hebrew.py`; served by the PUBLIC `views_heb.py`
-  (`core.heb_db()`, no owner gate on the data). **PUBLIC for everyone, no login (2026-06-11)** —
-  `hebPickable` gates on `hebAvail` (heb.db loaded), not the old `hebOwner`. Routes: `/api/hebrew/status`,
-  `/api/hebrew/chapter/<book>/<ch>`, `/api/hebrew/verse-words/<book>/<ch>/<v>` (one verse, feeds the
-  word-detail side panel's interlinear), and `/api/hebrew/strongs-count/<H#>` (2026-06-22, feeds the rail's
-  "in Hebrew OT" link). **heb.db is now ALSO the Hebrew-word EVIDENCE source for Word study + Ask-corpus +
-  SEO (not just a reading text) — see "Hebrew word sourcing" below + memory `project_hebrew_source_swap`.**
-  Full record (the text itself): memory `project_hebrew_ot_interlinear`.
-  `study.db` — authored "study modules" (built 2026-06-12/13; **the whole Study tab is ADMIN-ONLY as of
-  2026-07-01 — see GATING below**): one `entries` table (row per topic / graph / name; `json` body + `type` + `status`).
-  Served by `views_study.py` (`core.study_db()`); the **Study** tab (`static/src/55-study.jsx`). Sub-switch =
-  Topics · Graphs · **Seams** (`STUDY_MODULES`). SEAMS (added 2026-07-01) is a NON-study.db surface — the
-  contested-word browse, read-only over `lexica_def` fork data (`/api/lexica/seams`), rendered on `<Shell>`
-  (`SeamIndex`); `load()` short-circuits `mod === "seam"` so the study-entries fetch can't hijack its render.
-  **UNIFORM MASTER-DETAIL SHELL (2026-07-01):** all three surfaces wear the SAME frame — LEFT rail = the list
-  (topic/graph/seam rows, shared `study-row` form), CENTER = the content (TopicPage / GraphPage / the seam's
-  both-priors `SeamPriors` card — a full read, mounts once), RIGHT = the inspect "covenant" (why/provenance;
-  ZoneEmpty this phase — per-item detail wiring, i.e. topic verse-context / graph node-detail / seam fork-
-  grounding, is DEFERRED). ONE canonical top-strip switcher (`study-sub`, switcher left; Seams' All/Different-
-  lead filter or the admin preview toggle right). `seam-rail` is RETIRED (switcher moved up top). Inspect floats
-  `top:0` (RightStack `.study-rstack`) with a `view-study`-scoped account-pill offset, matching Word study. The
-  old centered-column (`.study-view max-width:820`) survives for the MOBILE single-column branch only. `.study-*`
-  CSS only — never touch the shared `.detail-*`. Full record: memory `project_study_modules`.
-  TOPICS = a sectioned browse (collapsible subtopics + a BOOK sub-collapse, alphabetical, comma-flipped
-  display titles); GRAPHS = an argument map (admin-only): a shared pool of CLAIMS joined by per-tradition LINKS, each
-  claim tagged with provenance (text/lexicon = grounded; tradition/conjecture/inference = not) + each link with
-  a strength (solid/contested/weak), stress-tested by `argmap.py` (is the conclusion reachable from grounded
-  claims on solid links? else name the load-bearing joint, or flag a gap; a grounded+SOLID objection knocks
-  its target out → "overturned"). Drawn as a left→right SVG chart per tradition (auto-laid-out: barycenter
-  row-ordering + lines routed through the column GAPS so nothing crosses a box). READ-ONLY in-app — authored via
-  `scripts/add_study_graph.py`. (Replaced the old Denominations/Arguments claim editors 2026-06-18; full record
-  + the graph json shape in memory `project_study_modules`.) Topics open READ-first (Edit button, admin); a
-  "Preview as reader" admin toggle skins the tab as a visitor sees it.
-  Verse text = ABP prose (KJV fallback).
-  **GATING — the WHOLE Study surface is ADMIN-ONLY (2026-07-01; reversed the 2026-06-16 public go-live).**
-  BOTH sides: the Study nav link (desktop header + mobile tab) shows only for the owner/admin
-  (`{owner && …}`), AND a single `@bp.before_request` on the study blueprint (`_study_admin_only`) refuses
-  EVERY `/api/study/*` route with **403** for non-admins — one gate, all 8 routes, no drift. The Seam-index
-  data route `/api/lexica/seams` (in `views_lexica.py`) is hard-gated the same way (`if not is_admin(): 403` —
-  it flipped from an empty-200; the public per-word card `/api/lexica/<strongs>` is UNTOUCHED). A hidden link
-  over a live endpoint isn't gated — a non-admin hitting the URL/API directly gets `{"error":"forbidden"}`
-  (403), not an empty-200 or a rendered page. `is_admin()` (views_notes) reads the Bearer token; the client
-  `owner` flag (`/api/stats/owner` → `is_owner()` = `is_admin()`) is the SAME identity. **Consequence, intended:**
-  gating `for-name` + `for-verse` RETIRES the reader's Nave's-topical block AND the "In studies:" line for
-  non-admins (they vanish gracefully — the client no-ops on the 403). Curation: the Topics list shows PUBLISHED
-  topics only for a reader/admin-previewing (hides the ~1817 Nave's drafts, leaves Divine Council); admin
-  not-previewing still sees drafts with the badge (status-keyed, NEVER the `source` string). Two-way study↔reader
-  links (admin only now): a study's verse references jump into the reader (resolver returns book/chapter/verse);
-  the xref "In studies:" line (`/api/study/for-verse/<book>/<ch>/<v>`, HAND-AUTHORED studies only —
-  `source != 'metav'`). PERF: a whole entry resolves in one batched pass (`_resolve_map`)
-  + an in-memory `_RESOLVED_CACHE` (a 1000-verse topic opened ~13s→~1s). The editor's verse lookup is
-  **`POST /api/study/verse`** (a query param was silently dropped before the app) and normalizes a typed
-  ref to its full book name (`_canonical_ref`: gen 1:1 → Genesis 1:1). Topic INTROS are AI-written,
-  text-first Berean (`✦ Draft with AI` button uses the WSGI key; `_draft_intro`/`_INTRO_SYSTEM`).
-  Scripts: `add_study_topic.py` (hand-authored topic) + `add_study_graph.py` (hand-authored argument graph; both dry-run default / `--apply`),
-  `load_study_topics.py` (MetaV import — **DEPRECATED, do NOT re-run: it refills the deprecated concept list**),
-  `generate_topic_intros.py`, `publish_topics.py` (draft↔published;
-  **`--names`** for the metaV name-topics), `find_topics.py`, `find_topic_dupes.py`, `merge_the_dupes.py`,
-  `deprecate_concept_topics.py` (soft-deletes the imported concept topics; `--undo` reverses).
-  **The ~1817 imported Nave's/MetaV CONCEPT topics are DEPRECATED + REMOVED (soft-deleted) on PA 2026-07-01** —
-  the Topics list is now hand-authored only (Divine Council). KEPT: the 696 `type='name'` name-topics (feed the
-  Library Nave's sidebar block) + Divine Council. Full record: memory `project_study_modules`.
-- `<book>_words` / `<book>_verses` — non-canonical texts, each in its OWN two tables, walled off
-  from the Bible's tables and from search/word counts. Built by `scripts/load_extra.py`; served by
-  `/api/extra/<book>/chapter/<n>`. English-only texts (no Greek) load with an empty words table.
-  Now LIVE (built by the per-group loaders under `scripts/`; all wired in the `NONCANON` array in
-  static/src/60-library.jsx and auto-loaded by deploy.sh):
-    * Septuagint Apocrypha — 16 Brenton books, English-only (`scripts/apocrypha/load_apocrypha.py`)
-    * Pseudepigrapha — 1 Enoch, 2 Enoch, Jubilees, 2 Baruch, Apocalypse of Abraham, Assumption of
-      Moses, all English-only (`scripts/apocrypha/load_pseudepigrapha.py` + `scripts/enoch/`)
-    * Testaments of the Twelve Patriarchs — 12 separate English-only books (load_pseudepigrapha.py)
-    * Apostolic Fathers — 14 books with FULL GREEK INTERLINEAR (not englishOnly): Didache,
-      1-2 Clement, 7 Ignatian letters, Polycarp, Martyrdom of Polycarp, Barnabas, Diognetus,
-      Shepherd of Hermas. Built by `scripts/apfathers/build_af.py` (+ `build_hermas.py` for Hermas)
-      and loaded by `scripts/apfathers/load_apfathers.py`. Greek+lemma from Brannan/Lake (CC-BY-SA),
-      Strong's mapped via openscriptures + Dodson glosses, English from Lightfoot. See memory
-      `project_noncanonical_texts` for the pipeline + the build_af raw/ inputs (gitignored).
-  See TODO.md "Non-canonical texts" + memory
-  `project_noncanonical_texts`.
-
-## Key Design Decisions
-- ABP is the primary text — all word study anchored in ABP interlinear
-- KJV is a full parallel corpus — searchable, with its own strongs, word clicks, and sidebar
-- Italic words in KJV (italic=1) are translator additions with no source word
-- Strong's G-numbers → lexicon/lsj tables; H-numbers → bdb table
-- No systematic theology imported — text speaks first (Berean approach)
-- PLAIN MEANING, NOT TRADITION (hard rule): glosses/word-meanings = the plain, attested sense, NEVER the
-  theologically-loaded or equivocated English (χάρις = "favor/kindness", NOT "grace"; πνεῦμα = "spirit/
-  breath", NOT "Ghost"). Give the RANGE when a word has one; a single church-word gloss is a red flag.
-  Applies to the word card, AI synthesis, lexicon, studies. Memory `feedback_plain_meaning_not_tradition`.
-- Function words (171-word set) are filtered from search results
-- Two-ending Greek adjectives (masculine & feminine share one form) show "Masculine/Feminine" on the
-  word-study card when the morph source never resolves them — `decodeMorph` (00-core.jsx) checks the
-  `TWO_END_SOFT_OT/_NT` sets in `static/src/00b-two-ending.jsx`, generated by `scripts/build_two_ending.py`
-  (re-run after a words rebuild). Feminine/Neuter tags + words the source does resolve are left alone.
-  Memory `project_two_ending_gender`.
-
-## strongs_base format — CRITICAL INVARIANT
-- `words.strongs_base` is fully G/H prefixed ('G4151', 'H7307') — normalized 2026-06-01
-- This is NOT cosmetic: the lexicon join matches `l.strongs_g = w.strongs_base` (strongs_g =
-  'G'||strongs). A BARE strongs_base ('4151') won't equal 'G4151' → NULL lemma (missing, not
-  wrong). Under the OLD `SUBSTR(strongs_base,2)` join it was worse — a bare base shaved a DIGIT →
-  WRONG lemma. (2026-06-03, pre-Phase-1: a rebuild left 592k bare → G2206 ζηλόω rendered as
-  ἄκρον/G206. Fixed by `UPDATE words SET strongs_base='G'||strongs_base WHERE strongs_base GLOB
-  '[0-9]*'`.) tests/test_strongs_join.py + test_build_invariants.py lock this invariant.
-- `words.strongs` (the other column) is intentionally LEFT BARE ('2206', dotted '2321.1');
-  the frontend renders it as `G{strongs}`. Only strongs_base carries the prefix.
-- DOTTED-NUMBER CAVEAT: strongs_base drops the `.N` (built as `st.split(".")[0]`), so a dotted ABP number
-  that's a DIFFERENT word than its base resolves the base's lemma through the join. The `dotted_lexicon`
-  side table + a COALESCE in the word card correct this (see that table + memory `project_dotted_strongs_lemma`);
-  form-variants like 1510.x (forms of εἰμί) correctly keep the base lemma.
-- **AUDIT RULE — dotted-number blindness (hard, standing; cost two false positives 2026-07-02).** ANY
-  Strong's-number audit query operates on the FULL dotted number by DEFAULT (the raw `strongs` column, e.g.
-  `G1246.2`). Grouping/counting on `strongs_base` — which strips the `.N` — is allowed ONLY with an explicit
-  reason. And any **"count = 0"** or **"orphan / contaminated rows"** finding MUST check dotted variants
-  BEFORE it counts as a finding: a base number showing 0 says NOTHING about its dotted neighbors, and a
-  base-group can lump a real dotted word (διὰ κενῆς G1246.x) onto an unrelated hapax and look like
-  contamination. Dotted numbers carry real content in this data (G303.1 ἀνὰ μέσον, διὰ κενῆς). This matters
-  most at SCALE — the Lexica-def rollout arc (~3,954 words) run with a dot-blind pattern would manufacture
-  false positives wholesale.
-- `kjv_strongs.strongs_id` is also fully prefixed (was always so)
-- Always use single-match in SQL: WHERE w.strongs_base = 'G4151'
-- After ANY words-table rebuild, verify: `SELECT count(*) FROM words WHERE strongs_base GLOB '[0-9]*'` must be 0
-- The AI SQL-gen prompt (`_AI_SYSTEM_TMPL` in ai.py) now matches this invariant — prefixed
-  single-match everywhere, `l.strongs_g = w.strongs_base` join (Batch B, 2026-07-03; the old
-  bare/SUBSTR examples were the last holdout).
-
-## Book Abbreviations
-- ABP verses table uses: Mar (Mark), Joh (John), Php (Philippians), Jas (James), Heb (Hebrews)
-- NT_BOOKS, BOOK_ORDER, BOOK_LABELS in static/src/00-core.jsx all use these abbreviations
-- _KJV_BOOK_ID in app.py matches the same set
-
-## Responsive Breakpoints
-- **Desktop ≥1100px**: navy header, left nav panel (224px), lib-bar toolbar, detail panel as right sidebar
-- **Mobile <1100px**: no header, sticky mobile toolbar (lib-toolbar), bottom tab nav, panels as bottom sheets
-- JS thresholds: `navVisible >= 1100`, `isMobile < 1100`, `desktopBar` removed (two states only)
-- CSS: `@media (max-width: 1099px)` / `@media (min-width: 1100px)` — plus 520px for very small phones
-  and a **1500px header nav-overflow** breakpoint (below it the desktop header hides the inline nav and
-  moves the links into a hamburger; subtitle stays). The header actually runs out of room ~1471px, NOT
-  at some obvious point: Word study / Library / News reserve 472px (`--sidebar-w + 12`) on the right for
-  the floating word card, so the nav collides with it far above 1100. Hamburger = `Header` in
-  `20-shared-components.jsx`; CSS `.hdr-burger`/`.hdr-menu` + the `@media (max-width:1499px)` rule.
-
-## Three-zone shell (shared workspace frame)
-The navigate / read / inspect layout. **Frame components are in `static/src/22-shell.jsx`:** `Shell`
-(the four-slot frame — desktop `.zshell` grid + a real desktop→mobile collapse to a bottom toolbar
-`.zbar` + `.zsheet` sheets) and `RightStack` (the inspect-panel STACK — depth 1 = one card; a child
-drills via `useRightStackCtl().push()`, back pops; the PARENT owns the array via `useRightStack()` so a
-center peer-select can `reset()`; lower layers stay mounted, hidden with **`visibility` NOT
-`display:none`** — because these panels are `position:absolute; inset:0`, and display:none wipes an
-overflow box's scrollTop **only when the box is absolutely positioned**; in NORMAL document flow scroll
-SURVIVES display:none (verified in Chrome 149, 2026-07 — the News tab keeps its feed scroll under a plain
-display:none tab-wrapper). So the visibility fix was needed for the absolute layers here, NOT because
-display:none is universally unsafe. Keys are push-unique minted ids, never by card type). `ZoneEmpty` stays in `20-shared-components.jsx`. CSS in styles.css:
-`.zshell/.zrail/.zcenter/.zinspect` + `.rstack*` + mobile `.zbar/.zsheet`. **Share the FRAME, not the
-CONTENTS** — never pull a tab's card/feed styling into the `.z*` classes. **top:0 split (was
-load-bearing; now user-preference):** a SHIPPED surface keeps its float-behind-the-nav (`.zinspect` base,
-`top:0`); a NEW surface's DEFAULT is BELOW the nav (`.zinspect.rstack`, `top:var(--hdr-h)`) — BUT Ask-corpus
-(the first real consumer) overrides that back to `top:0` (class `.ac-rstack`) so its inspect floats OVER
-the navy header, unified with News/Word study (the user's call — the below-nav gap read as "cut off by the
-top banner"). So the split is now the user's per-surface choice, not a hard rule; a top:0 consumer must give
-each RightStack state a header BAND (`var(--hdr-h)`) so content clears the navy header (+ a `.app.view-<x>
-.hdr-right` account-pill offset). **All three shipped surfaces migrated, parity-only:**
-News + Word study render `<Shell>` on desktop (each keeps its own `if (isMobile)` mobile branch; `Shell`
-has `railClass`/`centerClass` for Word study's extra slot classes); Library's five inspect panels
-(word/xref/note/summary/day-intro) carry the shared `.zinspect` with `.detail-side` slimmed to its
-extras — its App-level gating machine (one-at-a-time word>xref>note>summary, back-as-uncover, reconcile)
-is UNTOUCHED and it is NOT forced into RightStack. ThreeZone retired. Migrations proved by parity gates
-(frame DOM + computed-style diff; Library also a Node state-machine gate driving transition sequences).
-**Ask-corpus is the FIRST real RightStack consumer (LIVE 2026-07-01):** desktop on `<Shell>` — chat layout
-(ask bar centered on the empty landing, then PINNED to the center-column bottom; top strip = a minimal note +
-New Thread; left rail is threads-only). The inspect rail leads with the SELECTED answer's provenance (click an
-answer to point the rail at it; new answer steals focus) = Key passages (ref + one-line snippet + ABP/BSB/KJV/HEB
-toggle + expander) over ONE merged "Words in scope" list (answer words + lexical family, family-only muted,
-contested badge from the served `/api/lexica/contested` set). A synthesis chip + passage rows PEEK the
-occurrence → fork → word drill. Mobile still the old layout. Build spec: `HANDOFF_corpus_shell.md` + memory
-`project_three_zone_shell`. **Notes + Seam index + News-rail all SHIPPED 2026-07-01** (desktop):
-Notes on `<Shell>` (rail = note index, strip = search/filter, center = the editor edited IN-TAB, right =
-the note's anchored verse via `VerseRow`; editor guts shared via `useNoteEditor`/`NoteEditFields` so the
-Library rail editor + the tab editor can't drift; inspect floats top:0 with a header band). Seam index =
-a new `Seams` Study module on `<Shell>` (rail = the Topics·Graphs·Seams section switcher, center = the
-contested-word list, right = the both-priors card reusing `LexicaFork`); read-only over `lexica_def` fork
-data via `/api/lexica/seams`. News gained a SELECTED-state inspect (was always the dashboard): click a card
-→ the rail flips to why-it-scored (`ai_why` + score + thread + the verbatim `queries.py` lens) + sources
-(deduped, with `via` = Google/RSS) + the cluster list; `‹ Watch` resets. Mobile for all three stays the old
-layout. Only remaining consumer = **News-on-mobile** (net-new, not a migration). Full record: memory
-`project_three_zone_shell`.
-
-## Library Tab
-Full per-feature history lives in memory (each block names its file). This keeps the standing
-rules + gotchas; open the named memory for the backstory.
-
-**Layout**
-- Desktop toolbar (lib-bar): `[‹ Ch ›] | [Compare ▾] | [Strong's] [Interlinear] | [Chip] [Prose]`.
-  Text source lives in the LEFT NAV, not the toolbar. ABP/BSB/HEB are one-click (HEB grays on NT —
-  OT-only; falls back to KJV in the slot if heb.db is absent); KJV/ESV/NIV + non-canon books fold
-  into a **"More ▾"** floating popout. (KJV was demoted into "More" 2026-06-22 — BSB is the default
-  English now; the `kjvInMore = hebShown` flag keeps KJV up top only when heb.db can't fill the slot.
-  Memory `project_hebrew_source_swap`.) The source row + Eras/Days are **underline tabs**, NOT boxed
-  segments — the source row is a 4-equal-column grid (`.nav-source-seg.seg`) so a long "More" label
-  can't shove the others.
-- Mobile cockpit (lib-toolbar, fixed at the BOTTOM/thumb-zone on the Library tab) is an
-  ICON row of five EQUAL-width slots (2026-06-20): `[🔍 Search] [▷ Play] [Abbr Ch] [ⓘ Info] [⚙ Options]`.
-  Center slot keeps TEXT but shows the 3-letter book abbreviation (`selBook.abbrev`, "Amo 1"), not the
-  full name; right slot is the sliders `Icon.Modes` (opens the reading-options sheet), not ABP/KJV text.
-  Audio scrubber docks above the cockpit (`.lib-audio-dock`); desktop chrono keeps the inline one.
-- Compare ▾, the "More" popout, and the Aa size/theme menu all close on outside-click/Esc AND
-  **swallow that dismiss click** (capture-phase one-shot) so it doesn't hit a word chip behind them.
-
-**Text sources / HEB**
-- HEB = public Hebrew OT interlinear (memory `project_hebrew_ot_interlinear`): OT books only (book
-  list + mobile picker drop NT in HEB mode), NO chronological order (Chronological is grayed in
-  Hebrew). On a non-Hebrew text sitting on a NT book the HEB selector is grayed, not hidden.
-- **Gray-vs-hide is the user's per-control call** (memory `feedback_gray_dont_hide`): GRAY a real
-  feature that doesn't apply here (HEB on NT, Search on ESV/NIV, the MOBILE reading toolbar's play
-  button when a text has no audio — kept grayed so the row stays balanced + book/chapter centered,
-  2026-06-16); HIDE Compare + the order toggle on non-canon, and ESV/NIV (copyright). Propose gray for
-  inactive-but-applicable, but confirm per control.
-
-**Reader appearance** (memory `project_reader_appearance`)
-- Reader font = `--f-serif` (Source Serif 4). The `Aa ▾` menu / mobile ModesSheet hold A−/A+ size +
-  the **Light · Sepia · Dark** theme toggle. A font PICKER was tried and reverted — don't re-add one.
-- Verse number + per-word Strong's SCALE with the A−/A+ size (`.lib-vnum` ≈0.5×, `.lib-iw-strongs`
-  ≈0.53× of `--lib-font-size`) — keep relative, don't pin to fixed px.
-- Themes ride `data-theme` on `<html>` (`lexica.theme.v1`); colors are vars at the TOP of styles.css.
-  **Add new buttons with `--ctl-bg`/`--ctl-on`, never hardcoded `#fff`.** Dark traps: an
-  `--ink`/`--accent` background flips LIGHT in dark, so pair its text with `var(--paper)`; borders use
-  `var(--rule)` not `var(--line)`; navy header stays navy in every theme.
-- **Palette tokens (reset 2026-06-19 to the Claude Design spec — implement his calls, don't freelance
-  hues):** `--accent` = STEEL-BLUE (oklch 240, primary links/active), `--ai` = VIOLET (280, AI features),
-  `--hl-match` = `#f0d27a` (the ONE shared gold for a matched/target word — used by `.corpus-hit` +
-  `.lib-search-mark`, fixed across themes). **Gold (`--gold`) is RESERVED for target words ONLY** — active
-  tabs, count pills, etc. use `--accent`. Navy = brand header + the chronological "you are here" active-passage
-  rule (one shared `.nav-passage.on/.plan-passage.on/.mpick-passage.on`, dark falls back to `--spine-nt`; see
-  memory `project_chronological_tab`). Memory `project_ai_search_redesign`.
-- Desktop scrollbars slim app-wide + `html { scrollbar-gutter: stable }` reserves the gutter so
-  swapping ABP↔KJV never shifts layout. Fonts load **`display=optional`, NOT `swap`**
-  (templates/index.html) — kills the mobile toolbar reload flash. Don't switch back.
-
-**Render modes** — THREE ABP reading modes, `viewMode` = chip|prose|interlinear (2026-07-04; a 3-way
-Chip·Interlinear·Prose control, Interlinear ABP-only). Full record + all lessons: memory `project_reading_modes`.
-- **Chip** = words clickable, **English reading order** (bracket groups reordered by `greek_pos` ascending);
-  the ABP `[ ]` marks + superscript order digits are **STRIPPED from chip** — interlinear-only now.
-- **Prose** = plain inline, only verse numbers tappable. Clicking Prose always works: it SNAPSHOTS the
-  Strong's/Interlinear toggles, unticks both, switches; the next switch away restores them (a manual toggle
-  touch discards the snapshot). Snapshot lives in `libOptions` (`lexica.opts.v1`).
-- **Interlinear (mode three)** = faithful as-printed ABP: Greek main line in **source order (NO reorder)**
-  with the `[ ]` marks + superscript digits, English gloss ABOVE + Strong's BELOW driven by the
-  Interlinear/Strong's toggles (both default ON on entry; a line toggled off is NOT rendered so its space
-  collapses → bare Greek reads tight). PN Greek line falls back inflected→lemma→capitalized English name;
-  Strong's prints `strongs_base` verbatim (H#### stays H####). ABP-only (`translation==="abp"`); other texts
-  read a stored `interlinear` value as chip.
-- Toggle semantics are UNIFORM: Interlinear = gloss layer, Strong's = number layer, over whatever base a
-  mode shows. KJV locks Prose to English. English-only non-canon: Chip = verse-per-line (`renderExtraLines`),
-  Strong's/Interlinear locked.
-- Order helpers (`getEnglishOrderWords`/`groupForGreekMode`/`orderBracketGroupWords`), the Greek-line
-  fallback (`greekLineForWord`), the PN click payload (`pnClickPayload`), and the prose/toggle reducer
-  (`libViewTransition`) all live in the shared **`static/src/56-library-order-logic.jsx`** (browser globals +
-  Node `module.exports`), Node-tested by `tests/test_library_order.js` + `tests/test_render_markup.js`.
-- **Hebrew "Prose" = the same interlinear chips flipped LEFT-TO-RIGHT** (2026-06-22): the Prose button
-  (was grayed in Hebrew) toggles `viewMode` and a `.lib-heb-ltr` class that sets the row/content
-  `direction:ltr` — only the WORD order flips; each `.lib-iw-heb` keeps its own `direction:rtl` so the
-  letters stay correct. Strong's/Interlinear still work in it. Flag `hebProse = hebMode && viewMode==="prose"`
-  in BOTH 60-library.jsx (desktop lib-bar + render) and 59b-library-nav.jsx (mobile ModesSheet). Matches the
-  Ask-corpus Hebrew layout. Memory `project_hebrew_ot_interlinear`.
-- **Chip-vs-prose for verses shown OUTSIDE the reader** (memory `project_lexicon_tab`): CHIP (ABP
-  brackets + punctuation outside `]`) = reading pane + side-card interlinear. PROSE (plain, no
-  brackets) = TSK xref, Study verses, side-card quote, in-text find list, AND Search + Lexicon result
-  lists. Don't bracket the prose surfaces.
-- **ABP brackets render INLINE in the reader's chips** (memory `project_library_bracket`): `[`/`]`
-  ride inside the word's english cell (`.lib-iw-brk`), NOT a separate column. Old `.lib-bracket*`
-  column CSS is dead.
-- Italic = translator additions, muted/italic: KJV (italic=1), ABP (words.italic=1), ABP `[word]`.
-
-**Compare** (memory `project_pericopes_parallel`)
-- Pick 2–4 of ABP/KJV/BSB/ESV/NIV side by side (`translation === "parallel"`, `compareSel` = which).
-  Desktop = N columns; mobile = stacked, one labeled line per text. Notes/highlights shared across
-  columns (whole-verse paint).
-- Labels are **navy, not gold**. Mobile per-line label runs INLINE with the verse — the chip box MUST
-  be plain `inline`, NOT `inline-flex` (inline-flex drops a wrapping verse below the label). Chip mode
-  IS allowed in compare (only place ABP Greek shows beside translations).
-- Desktop picker = checkbox dropdown on Compare. Mobile = the Reading sheet's Text picker: TAP = read
-  one, LONG-PRESS = tick into the 2–4 compare set.
-
-**Chronological / reading plan** (memory `project_chronological_tab`)
-- Reading-order toggle Canonical|Chronological, any version. Static `chronological.json` (no DB). An
-  `Eras | Days` toggle sits atop the chrono picker.
-- Days = a 365-day plan with per-text progress (`lexica.plan.v1`), binned into ~12 collapsible Month
-  blocks. Component `static/src/58-dayplan.jsx`.
-- Chrono mode shows an ESV-style daily Reading-intro panel (AI title+summary + era timeline):
-  `views_chrono.py` + `static/src/59-dayintro.jsx`. **NO brown** anywhere — markers/hovers use
-  `--accent`, not `--gold` (memory `feedback_no_brown`).
-
-**Navigation / jumps**
-- Left-nav book list is an ACCORDION (memory `project_book_nav_polish`): click a book to open its
-  chapters, click again to collapse; testament spine + per-book chapter counts. Hover/active pills use
-  `color-mix(... var(--bg) ...)`, NOT `--bg-sunk` (invisible on sepia). Mobile `Book Ch ▾` opens to
-  the BOOK list first.
-- Jumping to a verse (search/lexicon/read-in-context/xref/note) lands it in the UPPER THIRD; the left
-  nav scrolls the active book to the TOP of its own list, never the window. The verse-number click
-  target is an inner `.lib-vnum-num` hugging the digits (the empty gutter is inert).
-- **Chrono jump rule:** an EXTERNAL jump (Search/Lexicon/Notes — flagged `nav.extern`) drops the
-  reader back to canonical; an IN-READER jump (verse-number xref, word panel, chasing an xref) STAYS
-  chronological (moves `chronoPos` to the passage). Either way `chronoPos` survives.
-- **Rail + jump-marker reconcile (2026-06-29):** the reader's real position lives in LibraryView
-  (`selBook`/`selChapter`); the rail cards (`libCrossRef`/`activeEntry`/`activeNote`) + the gold
-  jump-marker (`libNav`) live in App. LibraryView reports every move via `onReaderPos`; App's
-  `handleReaderPos` keeps a card/marker that MATCHES the new book+chapter and drops the rest (an
-  external jump set its card to the same verse it lands on, so it survives; a restored spot has no
-  book yet but the right chapter, also kept). This is the ONE place that keeps them in step — don't
-  add a browse handler that moves `selBook`/`selChapter` without it, and never spread the old `nav`
-  bag into a new one (a stale `translation`/`extern` rides along — the page-turn text-snap bug). Also
-  here: `setOrder` canonical keeps the passage's book; `turnPage` emits a clean nav object. Memory
-  `project_nav_reconcile`. **`onReaderPos`/`handleReaderPos` carry only (book, chapter) — NO verse.**
-  So in chrono the reconcile MUST keep the passage you're already on when it still covers that
-  chapter; else a chapter split across a day boundary snaps you to the FIRST passage covering it
-  (the previous day's tail) and the clicked plan day never opens — hit 141/365 days (fix cf5c6ec,
-  shared logic `static/src/57-chrono-logic.jsx` `chronoReconcile`, locked by
-  `tests/test_chrono_reconcile.js`).
-- Clicking a verse number opens the TSK Cross-Reference panel. Desktop link-over from Search/Lexicon
-  auto-opens that verse's xref card over the chapter summary (tucked under any open word/note card).
-
-**Detail rail** (memories `project_side_panel_rail`, `project_detail_panel_interlinear`,
-`project_bsb_words`)
-- Word clicks → LSJ (G-numbers), BDB (H-numbers), or metaV (proper nouns); KJV/Hebrew route the same.
-- The side panel's Interlinear toggle FOLLOWS the reading text (KJV/BSB/Hebrew/ABP endpoints);
-  Greek/Hebrew leads, English muted. ABP brackets inline.
-- Headword = the dictionary lemma (big) + its dictionary gloss; the word's *in-this-verse* English
-  now sits DOWN on the inflected "in this verse" form line (Hebrew/BSB/ABP; ABP form via `abp_surface`;
-  KJV has none). **Lemma gloss = the `word_gloss` side table** (scripts/build_word_gloss.py; on PA, not in
-  git), which REPLACED the KJV-ized `lexicon.kjv_def` ("charity"/"Ghost"). Greek = Dodson's plain ranges +
-  TBESG fill for LXX-extended + a few plain-meaning overrides (χάρις→"favor, kindness", πνεῦμα→"spirit,
-  breath"); Hebrew = TBESH + overrides (sheol→"grave, realm of the dead", olam→"age, long duration");
-  ABP dotted glossed by their OWN lemma. **All word cards + the Word study tab are LIVE (2026-06-23)** — ABP
-  via `core.word_gloss_cols()`; KJV/BSB chapter
-  endpoints use `core.word_gloss_join()`, Hebrew does a cross-db lookup, and the card shows the plain meaning
-  up top for EVERY word with a gloss that isn't a name/place (`showLemmaGloss` in 30-detail-panel.jsx) — words
-  with an "in this verse" form line drop the contextual english onto it, no-form words (KJV, ABP-no-form) let
-  the meaning replace the in-verse word up top.
-  Plain-meaning rule: "Key Design Decisions" + memory `feedback_plain_meaning_not_tradition`. Full state:
-  memory `project_word_card_gloss`.
-- Rail stacks ≤3 deep: summary/Intro → xref → (word OR note). The "‹ back" link NAMES the card
-  beneath it; the note card keeps just an X (DESKTOP). Word/xref panels trigger `has-detail` → compacts
-  `.lib-reading` on desktop.
-- **Mobile = bottom sheets, unified 2026-06-19:** every rail panel + word-study/notes/reading sheet
-  shares ONE slide-up animation + scrim + radius/shadow and closes by **swipe-down + tap-scrim — NO close
-  X on mobile** (X stays on DESKTOP panels; real centered modals like Account/password keep theirs).
-  Section spacing aligns to the LOCKED word card. `useSwipeToDismiss`, memory `project_mobile_gestures`.
-  Heights still drift (not yet unified — see that memory).
-
-**Other**
-- Focus mode (memory `project_focus_mode`): tap blank to enter, Esc/tap exits. Mobile hides chrome.
-  **Desktop (rebuilt 2026-06-19): a dark + blurred wash makes the chrome RECEDE and go NON-interactive
-  (click the wash to exit); the centered "book page" is READ-ONLY — any tap exits, word/verse clicks are
-  off (those panels sit behind the wash). Light shadow, plain ‹ › chevrons (circles were tried + reverted).**
-  Not remembered.
-- In-text search (magnifying-glass panel, memory `project_esword_reference`): searches the current
-  text; modes Any/All/Phrase; range presets + whole-word/case/exclude; `/api/text-search`. **Gotcha:**
-  ABP's `verses.book` is a TEXT abbreviation, so a plain sort is alphabetical — `_ABP_RANK_SQL` maps
-  each abbrev to Bible order so ABP sorts/filters canonically.
-- Library remembers your spot across reloads (memory `project_refresh_persistence`): the `lexica.*`
-  keys restore book/chapter/translation/order/compare/theme/font. **Lesson: restore instant toggles
-  synchronously in the `useState` initializer, not an async effect — else the default flashes before
-  the saved value.** Wheel over fixed chrome (header/nav/toolbar/rail) doesn't scroll the reading pane.
-
-## Notes, Highlights, Bookmarks + Accounts (study notes — LIVE 2026-06-09)
-Full detail: memory `project_notes_highlights`. The headline facts:
-- **Sign-in lives in the DESKTOP header:** right side of the navy header — a "Log in" pill (opens the
-  `AuthModal`, `authOpen` in 90-app.jsx) when signed out, or your **display name (else email)** when signed
-  in. Clicking it opens the **account panel as a dropdown anchored under the button on the current page**
-  (`AccountModal anchored`, `accountOpen` in 90-app.jsx) — it no longer jumps to the Notes tab (2026-06-20).
-  The signed-in label is PLAIN TEXT now (the old pill/chip was dropped). `Header` props
-  `email`/`name`/`onLogin`/`onAccount`. **Mobile has NO header** — account + login now live in the **"You"
-  sheet** (rightmost mobile bottom-toolbar slot, replaced the old About slot; `YouSheet` in 90-app.jsx,
-  2026-07-05): person/initial icon → a bottom sheet with the account row (login form, or account+logout),
-  an appearance section (font size + theme, sharing the lifted App state), and an About row. **The Notes tab
-  no longer renders ANY login row** (mobile OR desktop). `AccountModal` is passed **`anchored={!isMobile}`**
-  — the desktop header dropdown, but a CENTERED modal on mobile (the anchored `.acct-pop` is positioned by
-  the desktop header's fixed coords and lands OFF-SCREEN on a narrow viewport). Full record: memory
-  `project_notes_highlights`.
-- **Browser-local first; accounts are OPT-IN.** Notes live in the browser (`localStorage`
-  `lexica.notes.v1`) and the app is fully usable with NO account. Signing in (below) syncs them
-  across devices. One record = a word-position anchor + optional text + optional color + optional
-  bookmark flag — a note, highlight, and bookmark are the SAME record:
-  `{id, device, corpus, translation, book, bookName, chapter, start:{verse,pos}, end:{verse,pos},
-  snippet, body, color, bookmark, deleted, created, updated}`. `id` minted AT CREATION. Delete is a
-  SOFT delete (`deleted:true` tombstone) so deletes propagate through sync/import.
-- **Accounts / sync — `notes.db`, the FIRST + ONLY visitor-write path on the site.** Kept OUT of
-  bible.db (corpus is rebuilt; user data must survive). `core.notes_db()`; tables `users`, `tokens`,
-  `notes` (one row per note, keyed by `code = "u<user_id>"`). `users` carries an optional `name`
-  column (display name, auto-added on startup; shown instead of the email when set). `views_notes.py`
-  blueprint: `/api/auth/signup|login|logout|me|config|google|set-name|delete-account` + `/api/notes/sync`
-  (Bearer token). `set-name` saves/clears the display name; `delete-account` permanently removes the
-  user + all their notes/plan/tokens (the in-app confirm makes you type "delete"). Passwords
-  one-way hashed (werkzeug, ships with Flask). Stay-logged-in = random bearer token in `tokens` +
-  browser `localStorage` `lexica.auth.v1`; logout deletes it. Sync = two-way last-write-wins by id.
-  Guards: rate limits, size/count caps, parameterized SQL. Tables auto-create (deploy is a normal pull).
-  Password **reset** + **set-password** (so a Google-only account can add one) are LIVE 2026-06-16 via
-  SMTP/Resend — `request-reset`/`reset`/`set-password` in views_notes + a `password_resets` table; the
-  emailed link opens the SPA at `/?reset=<token>`. `request-reset` always returns ok (never reveals
-  whether an email has an account); `reset` is single-use + 1h + clears every existing session. NO email
-  *verification* on signup yet. Mail setup + the 535/550 gotchas: memory `project_email_smtp`.
-- **Google sign-in (optional).** `/api/auth/google` verifies Google's signed token (`google-auth`)
-  and finds-or-creates the account by email. Shows only when `GOOGLE_CLIENT_ID` is set AND
-  `google-auth` is importable — both checked LAZILY in `_google_ready()` so a deploy before setup
-  can't break the site (button just stays hidden). See Deployment for the PA setup (it's done + live).
-- Gestures (do NOT fight word-click=lexicon / verse-number=TSK): drag-select text → bar with 5 color
-  swatches + "Note"; right-click (desktop) / long-press (mobile) a verse number → menu
-  (Bookmark · Note · 5 colors). Mobile "Add note" bar pins to screen bottom (clear of the OS
-  copy/share toolbar); `selectionchange` backstop. Inline bookmark marker at the start of any verse
-  with a record (indents first line only).
-- Anchoring is PER READING TEXT and covers non-canon texts too. ABP AND BSB (2026-06-15) capture exact
-  word-spots (`data-note-pos` on the chip spans, `data-note-verse` on rows); KJV still anchors at the
-  whole verse. Square corners + flush chips make a multi-word highlight one continuous bar. Same-anchor
-  reuse (no dupes) via `NotesStore.findAnchor`.
-- **Highlights paint across ALL translations (verse-level), 2026-06-09.** A highlight shows in ABP,
-  KJV, and BSB alike — `chapterNotes` (`forChapter`) gathers every translation's records for the
-  book+chapter; `hiForWord` paints EXACT words only in the text it was made in (`n.translation ===
-  translation`) and ROUNDS UP to the whole verse in any other translation (words don't line up
-  cross-text). The old same-`translation`-only wall is gone. ABP and BSB paint per-WORD inside their own
-  text (BSB since 2026-06-15, via bsb_words positions); KJV still paints whole-verse only — KJV word-level
-  is the one remaining open piece (kjv_words has positions, so the BSB `renderBsbVerse` pattern could close it).
-- **Journal — free-form second note mode (LIVE 2026-06-09).** "Verse notes | Journal" toggle in the
-  Notes tab. A journal page is the SAME record shape with `kind:"journal"` + `title` + `body` and NO
-  anchor (no `.start`) — plain text, autosaving full-page editor, rides the same store/sync/Export-
-  Import. Store: `journals()`, `createJournal()`, `getActiveJournal()`/`setActiveJournal()` (the page
-  you last opened, in `localStorage` `lexica.journal.active.v1`), `appendToJournal()`. The merge guard
-  lets `kind:"journal"` through without an anchor; `all()` keeps journals OUT of the verse-note list.
-  Server per-page cap is bigger for journals (`_MAX_JOURNAL_BYTES` 64KB vs notes' 8KB).
-- **Copy + send-verse-to-journal from the reader.** The drag-select bar AND the verse-number menu both
-  carry Copy (verse text to clipboard) + Journal (appends `Genesis 1:8 (ABP) — text` — full book name +
-  the reading text tagged; parallel reads `ABP/KJV`, non-canon gets no tag — via `journalLine()` in
-  60-library.jsx, to the OPEN journal page; if none is open it flashes "Open a journal page first").
-  A small `lib-flash` toast confirms. Both menus share ONE left-to-right order — colors · Note · Journal ·
-  Copy (· Bookmark on the verse menu only) — keep them aligned if you touch either.
-- Files: `static/src/12-notes-store.jsx` (`NotesStore` + sync/auth + journal helpers + `NOTE_COLORS`/
-  `NOTE_COLOR_CSS` + `useNotesVersion`), `static/src/35-notes.jsx` (`NoteAddPopover`, `VerseNoteMenu`,
-  `NoteColorRow`, `NotesPanel` editor, `JournalView`/`JournalEditor`, `NotesView` tab, `AuthModal`).
-  Wiring in `60-library.jsx` (selection, paint, markers, verse menu, copy/journal, `flash`) + `90-app.jsx`
-  (`activeNote` + panel + Notes tab). Notes tab: text search + filters (All/Bookmarks/Highlights/Notes)
-  + sort (Recent/Reference) + collapsible group-by-book + the Journal toggle. **Top decluttered
-  2026-06-11: the account email + Log out (or Log in / Sign up) sit in the title row — no "Signed in:"
-  label, no Sync-now button, and the Export/Import buttons were dropped from the UI** (the
-  store/sync code stays; account sync covers cross-device). **Mobile gotcha (fixed 2026-06-11): the
-  base `.seg`/`.seg-b` pill styling was defined ONLY in the `≥1100px` desktop block, so any `.seg`
-  control outside the Library on a phone (Notes mode/filter/sort, the owner About|Stats toggle)
-  rendered as plain run-on text — a mirror rule now lives in the `≤1099px` block.** The mobile
-  reading-options sheet (ModesSheet) shows Order + Study-layer as text labels (chip/prose + font
-  stay icons).
-
-## TSK Cross-Reference Panel
-- Endpoint: GET /api/cross-references/curated/<book>/<chapter>/<verse>
-- Step 1: Haiku selects 8-10 strongest refs from the full TSK list, reading the candidates + the
-  source verse in BSB (KJV fallback — clearer than "thou/thee" for judging links; 2026-06-22,
-  `cand_texts`). The picker returns indices into `all_refs`, so the cross_references KJV verse-id
-  join is untouched.
-- Step 2: Sonnet (claude-sonnet-4-6) writes the synthesis — adaptive length (~100-word soft
-  ceiling, runs longer for a rich link), anchored in ABP source vocabulary. Prompt carries a
-  worked example. (Moved off Haiku 2026-06-09 — ONLY the synthesis is Sonnet; the Step-1 picker
-  and every other AI feature stay on Haiku.) BOTH the source verse AND the curated cross-refs are
-  fed to it in ABP (2026-06-17, `_abp_text` in views_crossref.py); the fallback when ABP's
-  versification lacks a verse is now **BSB, then KJV** (2026-06-22, `_bsb_text`) — so the write-up
-  never quotes KJV "thou/thee". The displayed verse field is **`text`** (BSB-or-KJV; renamed from
-  `kjv_text` 2026-06-22, frontend 40-crossref-panel.jsx). A `msg:` salt in `_XREF_VER` (now
-  `bsb-fallback-4`) is bumped on any message/payload change so cached rows refresh (the fingerprint
-  covers the prompts, not the message text or payload shape).
-- Cached in ai_search_cache, key prefix `xref_cur:`/`xref_synth:`, ver_key=`xref:<hash>`
-  (fingerprint of the two xref prompts — see "AI result cache" below)
-
-## Lexicon Tab
-- **REDESIGNED 2026-06-19 (under development) — see memory `project_ai_search_redesign`.** "Word study"
-  is now a 3-pane layout (distribution rail · occurrences · word card) in `static/src/80-lexicon.jsx`;
-  AI search was split OUT into its own **"Ask the corpus"** tab (`static/src/52-ask-corpus.jsx`, view
-  key `corpus`) — it no longer renders inside Word study. New `--ai` steel-blue theme token = the AI
-  accent. `/api/lexicon/profile` now also returns `derivation` + `related` (cognates, on-the-fly from the
-  lexicon `derivation` text). The data flow + endpoints below are unchanged; the UI is still in flux
-  (visual-fidelity + AI-curation passes pending). The two sections below describe the data model, not the
-  current layout.
-- **2026-06-19c — mobile word study built + the word card unified:** desktop + mobile share
-  `renderDistRows`/`renderSenses`/`renderWordCardInner`; the English "words rendered" list is a
-  collapsible `.glsenses`/`.glrow` card pinned above the occurrences. **Mobile (<1100px)** branches
-  `if (isMobile)` before the desktop `.ws` return: context strip (`.wm-ctx`) → reading area (`.wm-main`)
-  → icon-only bottom tools bar (`.wm-tabs`). The top section-nav is ICON-ONLY now too. **One shared height
-  `--bar-h` (48px, in :root) sizes EVERY mobile chrome bar** (top nav, Library cockpit `.lib-toolbar`,
-  `.wm-tabs`) + the sheet clearances — bars/sheets use `100dvh` + safe-area, never `100vh`. The **word CARD
-  reuses the Library detail card's shared classes** (`.detail-hero`/`.sec`/`.detail-head`/
-  `.detail-strong-head`/`.detail-body`/`.occ-link`) so the two can't drift — **word-study-only tweaks MUST
-  be scoped to `.wd`; NEVER edit the shared rule (it leaks into the Library word card, which the user has
-  LOCKED).** Mobile sheets (`WsSheet`) use the shared `useSwipeToDismiss` hook (`.wm-sheet` reserves
-  `env(safe-area-inset-bottom)`); `.occ-link` action links are steel-blue `--ai`; results filters are
-  underline `.tg` tabs. Full record: memory `project_ai_search_redesign`.
-- **2026-06-20 — desktop Word study mirrors the Library shell.** The right word card is a fixed full-height
-  panel over the navy header (like the Library's `.detail-side`): card head = header height so the divider
-  runs unbroken across (empty state too, via `.wd .empty-pane::before`), columns match the Library (224px
-  rail / `--sidebar-w` card), Strong's-number size back to the shared 18px, and the account pill is shifted
-  clear with `.app.view-lexicon .hdr-right`. Distribution rail: `.brail-top` height = the search box so the
-  two divider lines align; "All books" lost its box. The per-book bar's scaling is a DEAD END (46px track too
-  narrow to read any curve change — left at the original linear). Memory `project_ai_search_redesign`.
-- Dedicated word study tab — separate from AI Search
-- Flow: search box → word profile → gloss chips → book distribution → verse list
-- Smart search: detects Strong's (G4151, H7307), Greek, Hebrew, English
-- **Transliteration/lemma lookup = RANKED Exact / Contains bands (2026-07-01).** `/api/lexicon/lookup`
-  (Greek/Hebrew/transliteration path — NOT `/english`) returns ONE list split by a `match` tag: an
-  **Exact** band (dictionary headword `lemma_plain` OR `strip_accents(lower(translit)) = q` — the translit
-  tier is what pins "theos"→θεός G2316 and keeps euthéōs/βαθέως OUT, since lemma_plain is the Greek lemma
-  a Latin transliteration never hits) above a labeled **"Other words containing …"** divider holding the
-  substring hits (deduped vs exact, ordered by Strong's number — deterministic, NOT frequency; substring
-  can't tell family from a letter-accident, so the label states a STRING match, not a relationship). Empty-
-  exact still shows the divider ("No exact match — showing words containing …"). **MIN-LENGTH GATE
-  (2026-07-03):** the whole contains scan is SKIPPED for a query under 3 FOLDED letters — γῆ folds to "γη"
-  (2), and a 2-letter fragment sits inside dozens of unrelated words (Πέργη, ἀγωγή) where every hit is a
-  letter-accident. Gate on the FOLDED length (`len(qn)`), never raw codepoints (accented input can count
-  3+ raw). At 3+ letters the string is specific enough that the substring hits ARE the family — KEEP
-  substring, do NOT switch to prefix: Greek compounds put the root at the TAIL as often as the head
-  (ἄλογος/φιλόλογος under λόγος), and a prefix match drops exactly those. Exact band is untouched, so γῆ
-  still answers G1093 and the fix never regresses a good lookup. Locked by `tests/test_lexicon_lookup_bands.py`
-  (drives the real endpoint). The corpus-scoping path is unaffected — it keys off `lemma_plain` equality,
-  never this substring scan. Frontend auto-opens ONLY a lone true hit (exact=1, nothing else); any contains rows keep
-  the list up so the divider does its job. The source/language filter bar is HIDDEN over a lookup set (it
-  only re-queries the English-rendering search) — it was showing but inert (a "Hebrew" tab left Greek
-  results on screen). `80-lexicon.jsx` `matchBands`/`renderMatchRow`/`showLookup`; `.glmatch-div` CSS.
-  **PARKED — do NOT build: root/family search** (surface θεός, ἄθεος, φιλόθεος together by the theo- root).
-  Blocker: `lexicon` has NO structured stem/root column — only `derivation` (free-text prose). Substring
-  fakes it and leaks (euthéōs is the proof). Needs a real root field first.
-- **English-word finder = NUMBER-FOLDED (2026-07-01).** `/api/lexicon/english` matches a query against
-  attested renderings via a precomputed `*_norm` column (`words.english_head_norm` / `kjv_words`+`bsb_words`
-  `word_norm`) instead of the raw word, so singular↔plural reach each other (a "magistrate" search now finds
-  theos G2316, rendered "magistrates" in Exo 22:28). Both query and rendering pass through the SAME
-  `number_fold.normalize` (curated irregular map + careful singularizer + -ous/-ss guards + per-token for phrase
-  heads) — no inverse. Deploy-safe: `_has_norm` falls back to the old exact match if the backfill hasn't run.
-  Built by `scripts/build_rendering_norm.py` (PA data step; RE-RUN after a words rebuild — in the checklist — and
-  auto-run at the tail of `load_bsb_words.py`). **KNOWN GAP:** the Hebrew-OT discovery branch (`corpus=heb`) is
-  NOT folded — it matches a token inside a multi-word gloss phrase, which needs a normalized-token side-index in
-  heb.db + a looser (number-blind) `gloss LIKE` prefilter. **The results summary SURFACES + BOLDS the
-  searched rendering (2026-07-01):** each result's per-source "renders as" line shows the top 8 by count,
-  bolds the matched rendering (`.glrow-match`, weight only), and — if the match sorts below the cap —
-  appends it in its sorted position; a trailing ` …` marks a source with more forms than shown (independent
-  of the match). All in `lexicon_english`'s `_fold`/`_top_glosses_*` (NOT `lexicon_profile`); the
-  lookup/translit path is untouched. Full record: memory `project_lexicon_number_fold`.
-- Endpoints: `/api/lexicon/lookup`, `/api/lexicon/profile/<strongs>`, `/api/lexicon/verses/<strongs>/<book>`
-- `lexicon_verses` response: `{verses: [{chapter, verse, words: [{w, h, i?}]}], glosses: [{gloss, count}]}`
-  - `h=true` marks the target word in each verse (rendered highlighted in gold)
-  - `glosses` = per-book rendering breakdown (chips update when a book is selected)
-  - Optional `?gloss=spirit` param filters verse list to a specific rendering
-  - **`<book>` accepts `all`** (2026-06-24): the default "All books" view lists EVERY occurrence
-    across the Bible in canonical order (was a "pick a book" prompt). `_all_books_verses()` in
-    views_lexicon.py serves it for all four sources, returns lightweight verse keys each tagged with
-    its `book` (the lazy `VerseRow` re-fetches text), honors `?testament=ot|nt`, and caps at
-    `_ALL_VERSES_CAP` (6000) with a `truncated` flag for the ~10 mega-frequency function words. The
-    book rail / OT-NT tabs / rendering chips all narrow it. The occurrence list (all-books OR a single
-    book) renders **50 at a time with a "See more" (+50)** button (80-lexicon.jsx `visibleCount`).
-- **Word-source toggle (focused word): ABP · HEB · KJV · BSB** (2026-06-22) — a number's occurrences,
-  book distribution, and "renders as" in each. **Hebrew DEFAULTS to HEB = heb.db (the REAL Hebrew OT, NOT
-  the old KJV bridge); the ~150 byform/Aramaic/name numbers heb.db lacks fall back to KJV (`has_heb` false).**
-  Greek defaults to ABP. KJV/BSB stay explicit text toggles (KJV-as-text untouched). `lexicon_profile/books/
-  verses` carry per-source branches + `has_abp/has_heb/has_kjv/has_bsb` + `abp/heb/kjv/bsb_glosses`; heb/bsb
-  occurrence lists re-fetch per-verse in `VerseRow` (heb = an ALIGNED interlinear: each Hebrew word
-  stacked over its gloss, laid LTR — letters stay RTL — replacing the old two-opposite-direction
-  Hebrew-line + gloss-line that never lined up; `.corpus-heb-int`/`.chi-*` CSS; bsb mirrors KJV). The
-  English-word finder shows all 4 "renders as" lines per word + a HEB/BSB filter, each line carrying that
-  SOURCE'S TOTAL count (2026-06-22 — matches the word's own study page, counted the way `lexicon_profile`
-  does; the lone ambiguous count on the right was dropped; HEB total folds homographs via `_heb_match`). The
-  Hebrew object-marker אֵת H853 is dropped from the finder (`_HEB_FUNCTION_STRONGS`, the Hebrew analog of the
-  Greek function-word filter — caveat: et's "him/them" suffix forms share H853 so they drop too). Full record:
-  memory `project_hebrew_source_swap`.
-- LexiconView is always-mounted (display:none) so state survives tab switches
-
-## Search Tab — REMOVED (2026-06-23)
-- The old standalone Search tab and its `/api/search` endpoint are GONE (route + its KJV helpers
-  + the unused `api.search` frontend helper deleted, commit 6eaec4e). **views_search.py now hosts
-  ONLY `/api/text-search`.** Live search = the Library in-text search (`/api/text-search`) + Word
-  study (`/api/lexicon/*`) + Ask the corpus (`/api/ai-search`). Don't wire new work to `/api/search`.
-
-## AI Search
-- **Exact-lemma pin (2026-07-01).** A bare typed single Greek/Hebrew word is pinned to its EXACT Strong's
-  BEFORE the model (`_resolve_exact_lemma` in ai.py, indexed `lemma_plain`), and OVERRIDES the model's sql +
-  key word so the occurrence list is that ONE number, not the English-concept guess (γῆ was laundered into
-  -γη look-alikes). Greek → a direct `strongs_base` query; Hebrew → empty SQL, filled by the heb.db
-  supplement. Homograph/dotted collisions (Greek 27, Hebrew 1,460) fall through to the model. `_CACHE_CODE_VER`
-  →40. A query that IS a typed Strong's number ("G4442"/"H784") pins the SAME way (`_resolve_typed_strongs`,
-  Batch B 2026-07-03) — a user citing a key is always permitted, never the model inventing one. Full record:
-  memory `project_ai_search_architecture`.
-- SQL gen + term-extraction on **Haiku**; the displayed **synthesis + verse curation (pass 2) on
-  Sonnet** (`claude-sonnet-4-6`, 2026-06-21 — Haiku parroted the question's framing on nuanced
-  "same vs different" questions and over-asserts; same lesson as xref/summary)
-- **Daily spend caps (2026-06-22; user tier lowered 5→3 on 2026-06-23).** Ask-corpus is capped per
-  account/UTC-day (user 3 / berean 10 /
-  admin unlimited + uncounted) AND by a whole-site daily ceiling (~50 ≈ $2). Enforced server-side in
-  `ai_search` BEFORE any model runs (`ai_caller`/`ai_quota_blocked`/`ai_quota_count` in views_notes.py;
-  counts in notes.db `ai_usage`); cached/reopened answers never count, counted only on success. Knobs =
-  `AI_DAILY_LIMITS` + `AI_SITE_DAILY` atop views_notes.py. Frontend (52-ask-corpus.jsx): 3 follow-ups
-  per thread, a repeated question in a thread doesn't fire, composer locks mid-search, "N left today"
-  counter. The no-login News share link can't use corpus (login-gated; the news key isn't auth), so the
-  site cap covers every non-admin search. Full record: memory `project_ai_spend_caps`.
-- Berean system prompt — no imported theology
-- key_strongs: up to 10 chips (6 Greek + 4 Hebrew max)
-- Empty-result retry (LAST RESORT, 2026-06-21): Haiku broadens the SQL only when the first query
-  AND the cheap fallbacks (explanation-cited verses, proper-noun english LIKE) ALL come up empty —
-  not the instant the SQL is empty. Saved a wasted ~5s call on Hebrew/empty searches.
-- **Hebrew evidence from heb.db (2026-06-22):** a Hebrew target (H-number) pulls a canonical SPREAD of its
-  REAL occurrences from heb_words (code-side supplement, mirrors the cognate/phrase ones), injected + tagged
-  with the H-number so the citation guard counts them and the answer reads grounded. The model's KJV-bridge
-  SQL (BDB → kjv_strongs → ABP) stays as a fallback. heb.db reads guarded; verses ABP's versification lacks
-  are skipped (can't display). `_CACHE_CODE_VER`→37. Verse evidence has an **ABP·BSB·KJV·HEB display toggle**
-  (per-turn in `AcTurn`, 50/52-corpus files; the shared `VerseRow` already renders all four). It ALWAYS
-  defaults to ABP — the old auto-show-HEB-for-Hebrew-answers was dropped 2026-06-22 (user's call). HEB grays
-  unless the answer has OT verses, and shows ONLY those OT verses when picked (heb.db is OT-only, so a mixed
-  Greek+Hebrew answer no longer renders blank rows) — gate is `hasOtVerse` = any non-`NT_BOOKS` result.
-  Memory `project_hebrew_source_swap`.
-- **Speed shape (2026-06-21): model-bound.** terms ~1s + write-SQL ~5s (Haiku) + pass-2 synthesis
-  ~11-12s (Sonnet, scales with how many verses it reads); DB ~0.1s. **Phrase queries no longer scan
-  the 600k word-gloss:** a multi-word `english LIKE '%phrase%'` is re-run against the FULL verse text
-  (`verses.text` + `kjv_verses` + `bsb_verses`, ~31k rows each) in code (the phrase supplement), and a phrase-ONLY query
-  (phrase LIKE, no Strong's-number filter) SKIPS the gloss SQL entirely — it was ~6-7s and fruitless
-  (cut a live "son of perdition" 15→9s). The proper-noun name-scan only fires when results are thin
-  (`< _PROPER_NOUN_NEED`) — a common capitalized word like "Sabbath" was burning ~7s on a redundant
-  scan. Timing `log.info("ai_search timing …")` kept on, plus per-call `cache[haiku-sqlgen]`/
-  `cache[sonnet-pass2]` token-split lines + a `SLOW SQL` (>10s DB step) warning — a cost/stall meter
-  (grep the PA `*.log`; ~3¢/search, Haiku SQL prompt caches, Sonnet pass-2 can't). Full record: memory
-  `project_ai_search_architecture`.
-- **Synthesis STREAMS (SSE, 2026-06-29).** Pass-2 (Sonnet) is the dominant slice AND the last thing made, so
-  `/api/ai-search` returns an event-stream for a FRESH search: the `panel` event first, the synthesis PROSE
-  streams live (`delta` events), the verse evidence lands in a `done` event at the tail. Cache hits / quota /
-  login / errors stay one-lump JSON (frontend branches on content-type). The response carries
-  `X-Accel-Buffering: no` — that header is the whole fix for PA buffering the stream into one lump. Pass-2's
-  output was reshaped: prose FIRST, then a `===VERSES===` marker, then a one-line JSON of the picks — parsed by
-  the FAIL-CLOSED `_parse_curation` (a bad tail → re-run the non-streamed `_curate_primary_verses` for clean
-  picks, keep the streamed prose; never a wrong-verse split). Helpers in ai.py: `_curation_prompt` (shared
-  prompt), `_curate_primary_verses` (non-streamed floor), `_stream_curation` (generator), `_assemble_payload`
-  (post-curation), `_streamable_prose`, `_sse`. Frontend `api.aiSearchStream` (00-core.jsx) + `AcProse`
-  sense-paragraphs. **LIVE + re-proven 2026-06-29;** the SSE probe + the `!badtail` floor-test hook were
-  removed after (commit 208d0a8). Full record: memory `project_ai_search_architecture`.
-- **Citation guard + grounding (2026-06-21).** Occurrence lists are pulled by Strong's = unfakeable;
-  the leak is in the PROSE. A verse the model names/adds is checked against the target Strong's set —
-  one containing NONE of the target words is `is_thematic` → frontend "Additional references" (kept,
-  labeled, never primary). REGIME-AWARE: no target word (broad question) ⇒ no flag. The pass-1 prose
-  is written from MEMORY before retrieval (can get a verse number wrong — it once wrote 2Th 3:3 for
-  2:3), so the DISPLAYED explanation is ALWAYS the pass-2 GROUNDED one whenever the answer names a
-  verse, even a short one (pass-2 is told to cite ONLY from the real retrieved list). Ranking is
-  skipped only for a small pool whose prose cites nothing. Separate pass-3 dropped (folded into
-  pass-2). Full record: memory `project_ai_search_architecture`.
-- **No lexicon definition prose in the synthesis payload — A3/A4 INVARIANT (2026-07-01).** Ask-corpus
-  answers are built ONLY from verse evidence + retrieval KEYS (Strong's number/lemma/translit), never LSJ
-  or Strong's DEFINITION text. The LSJ context fed to pass-1 SQL-gen is keys-only (`ai._retrieval_context`,
-  which REPLACED `views_lsj._format_lsj_context` — the old one leaked LSJ `semantic` + a cognate gloss that
-  can be `kjv_def`/`strongs_def` into the pass-1 explanation the reader sees). Fail-closed guard
-  `_assert_no_lexicon_prose` drops any block that carries def prose (pick-parse-floor philosophy). Keep the
-  exclusion STRUCTURAL (don't "tell the model to ignore LSJ" — the text must not be in the payload). Locked
-  by `tests/test_synthesis_no_leak.py` (CI + pre-commit). The answer PROVENANCE rail rides the SAME payload
-  (`results`/`is_primary`/`key_strongs`/`grounded` + the `contested` flag), never a second lookup. Full
-  record: memory `project_ai_search_architecture`.
-- **Synthesis inputs + seatbelt (2026-06-21).** The verses handed to pass-2 are a SPREAD across books
-  (`_spread_sample`: round-robin a few per book, not `results[:N]` — which, ordered by verse id, was
-  early-OT-only, so a both-testament word came back OT-only and mislabeled "the LXX"); within each book
-  the most cross-referenced verse (TSK count via `_xref_scores`, falls back to position order on any
-  miss) wins the seat. Frontend SEATBELT (`AcProse` in 52-ask-corpus.jsx): the synthesis prose only
-  LINKS a verse ref that's actually in the retrieved results — a verse the model named but we never
-  retrieved renders as plain (unverified) text.
-- **Honest empty-state + neutrality (2026-06-21).** Payload carries `grounded: false` when the search
-  found no real occurrence (SQL 0 rows AND every shown verse is thematic/model-named); the frontend
-  shows a pale-amber "no direct occurrences" caveat instead of a confident write-up. Both explanation
-  prompts (`_AI_SYSTEM_TMPL` + `_CURATION_SYSTEM`) carry a NEUTRALITY rule — answer from the text, not
-  the question's framing ("same?" vs "different?" must give the same answer; if the text doesn't
-  settle it, say so. Killed the parrot-the-framing bug.)
-- **Same-root cognate supplement (2026-06-22).** After the SQL runs, each GREEK target's same-root
-  family is pulled in deterministically (`_greek_cognates` + the `_cognate_is_tight` stem filter in
-  ai.py) — the relative's verses + a chip, but ONLY if it actually occurs (e.g. σαββατισμός G4520 /
-  Heb 4:9 under σάββατον). Greek only (BDB has no etymology). A code/context change like this isn't in
-  the search fingerprint → bump `_CACHE_CODE_VER` (was 38 for this; now 39 after the panel below).
-  Memory `project_ai_search_architecture`.
-- **Computed lexical-texture panel (2026-06-29).** A deterministic distribution panel rides ABOVE the
-  synthesis note (it's FACT, not generated): per query word, its gloss-confirmed family with full corpus
-  occurrence counts + per-language bars. NO model call — built from the model's `key_strongs` in
-  `ai_search` AFTER the answer, behind a tight wall-clock deadline + dropped on any miss (own connections
-  + a SQLite watchdog + 250ms lock-wait — can't slow or break the paid answer). None when there's no
-  clean head; NEVER manufactures. Engine = **`corpus_panel.py`** (repo root, like entity_resolution.py);
-  `panel` field on the `/api/ai-search` payload; `CorpusPanel` above the Synthesis tag in
-  52-ask-corpus.jsx — its rows ARE the per-word doorway into Word study (the old lemma chips were
-  removed). Family = STEM proposes (translit prefix, prefix-compound aware) / GLOSS disposes; borderline
-  (spelling-match, meaning-unconfirmed) words are COUNTED, not listed. `_CACHE_CODE_VER`→39; behavior
-  locked by `tests/test_corpus_panel.py`. Full record: memory `project_corpus_enrichment`.
-- **Synthesis standing rules — Berean (2026-06-22).** The displayed note (`_CURATION_SYSTEM`, mirrored
-  in `_AI_SYSTEM_TMPL`): NO doctrinal verdicts (never rule a practice binding/abolished/etc. or assign a
-  stance to an author — report the verse, let the reader conclude); contested "is X binding" questions
-  are IN SCOPE (answer, withhold only the verdict — never refuse/deflect/rephrase); prose uses
-  transliteration + Strong's number, NEVER raw Greek/Hebrew script (that's for the chips). All
-  LOAD-BEARING. + REPORT, DON'T CHARACTERIZE (8721341, tested live): every clause must pin to a verse
-  that states it — killed the soft-framing slop ("instituted at creation"/"reinterpreted") via the FRAME
-  + a worked example, NOT a blacklist. + a SABBATH-vs-WEEK lexical note (σάββατον = the seven-day WEEK in
-  the "first/one of the sabbaths" idiom — 1Co 16:2 etc., overrides ABP's wooden gloss) + no "what the
-  verse doesn't do" riders. + CORPUS VOCABULARY (2026-07-02, commit ffdd966): describe meaning from the
-  corpus's own renderings/role-words, NOT post-biblical theological category terms (person/personhood-of-God,
-  Trinity, unmerited, sacrament, moral authority, hypostasis, …); report an action as an action ("the spirit
-  is sent") not a category ("a divine person"); prefer the ABP word (delivered not salvation, favor not grace,
-  immerse not baptize, assembly not church); on a CONTESTED word, describe attested use without resolving the
-  contest. Surfaced by live use (pneuma hagion → "a divine person", charis → "unmerited divine gift"); same
-  failure class as the G2316 "moral authority" definition fix. Memory `project_ai_synthesis_quality`.
-- **Follow-ups (Ask the corpus) carry the recent thread** — last 6 turns + their key lemmas, sent as a
-  `context` query param, woven into the term + SQL prompts only to resolve references ("it"/"the same
-  word"). **Pass-2 ALSO gets a `skeleton` param (Batch C, 2026-07-02)** — a client-built digest of what
-  earlier ANSWERS covered (head word(s) + a one-line sense summary/turn) → an injected "don't restate,
-  build on it" directive in `_curation_prompt` (`_skeleton_directive`; stacks after the scope block).
-  Caps 6 turns / 1000 chars, injected per-request so a first turn's prompt is byte-identical (no
-  fingerprint change). A "New thread" button (rail) resets. Follow-ups are never cached (thread-specific),
-  so the skeleton has zero cache implications. Memory `project_ai_search_architecture`.
-- **LANGUAGE/TESTAMENT SCOPE directive (2026-07-02, #20B).** Greek-first stays the DEFAULT (ABP is a Greek
-  primary text incl. the LXX; Hebrew is a cross-ref layer). A query that names a language ("fire in
-  hebrew") or testament was drifting back to Greek mid-answer; `_detect_scope`/`_scope_directive` (ai.py)
-  add an override to the shared `_curation_prompt` only — retrieval + panel untouched. Divergence rule:
-  stay scoped, cross to the other language only on a sense divergence (one short bridge note), never on
-  parallel senses. MIXED-SIGNAL rule (Batch A, 2026-07-02): a query naming TWO competing values on one
-  axis ("compare the OT and NT", "greek and hebrew") is a comparison, NOT a scope — that axis goes unset,
-  never first-match. INVARIANT: the term lists `_LANG_SCOPE_TERMS`/`_TESTAMENT_SCOPE_TERMS` are the
-  never-collapse boundary the parked Tier-1/2 cache normalizer MUST reuse — don't build a second list. Memory
-  `project_ai_search_architecture`.
-- Cached in ai_search_cache, ver_key=`search:<hash>` (fingerprint of system prompt +
-  `_CURATION_SYSTEM` + book list + `_CACHE_CODE_VER` salt). See "AI result cache" below.
-- The cache ROW KEY (the query text) is NORMALIZED (`_cache_key` in ai.py: lowercase,
-  punctuation→space, collapse spaces), so caps / punctuation / extra-space variants of the same
-  question reuse one cached answer instead of paying for a fresh search (2026-06-23). Only the KEY
-  is normalized — the models still get the user's original wording. Search-path only (the other AI
-  caches key off their own raw query). Follow-ups (with `context`) are still never cached.
-
-## AI result cache (ai_search_cache) — prompt-fingerprint scheme
-Full record: memory `project_ai_cache_unify`; the synthesis model map + the author lesson:
-memory `project_ai_synthesis_quality`.
-- Every AI synthesis caches here with `ver_key = "<category>:<sha1-of-its-own-prompt>"` — categories
-  `search:` (ai.py), `summary:` (views_summary.py), `xref:` (views_crossref.py), `pn:` (views_metav.py),
-  `chrono:` (views_chrono.py, key `chrono_intro:<day>`). Editing a prompt changes only its category's
-  hash, so just that cache refreshes — no manual version bump. The row key is stable + unique, so a
-  regen overwrites the stale row in place. (xref, chapter summary, AND the ask-corpus synthesis/curation
-  run on Sonnet; the rest on Haiku.)
-- Helpers in core.py: `ai_fingerprint(category, *parts)`, `ai_cache_get(query, ver_key)` (an old-prompt
-  row misses → regenerates), `ai_cache_put`, `ai_cache_prune(category, keep_prefix)`. Each category
-  prunes ONLY its own stale rows at startup (app.py).
-- **LANDMINE:** a delete must be scoped to its OWN category (search's startup cleanup is `search:%`
-  only). If you add a new cache category, give it its own `<category>:<hash>` tag + its own startup
-  prune — never widen another category's delete.
-- summary rows add a per-book author suffix `summary:<tpl-hash>:<author-hash>`. `_BOOK_AUTHORS`
-  (views_summary.py) feeds the BOOK BLURB only, NOT the chapter summary — well-established authors +
-  named scribes only, the rest left blank on purpose (don't hard-push Haiku on disputed authors;
-  memory `project_ai_synthesis_quality`).
-- LSJ word-study summaries live in `lsj.summary_json` / `abp_ext.summary_json`, NOT this table, but
-  self-heal the same way: a `_synth_ver` stamp (= `ai_fingerprint("lsj", ...)` in views_lsj.py) is
-  checked on read and dropped/regenerated when the prompt changes — so editing the LSJ prompt
-  auto-refreshes too, no clear script needed. The LSJ blurb is a Haiku **"definition"** prompt (open
-  with the meaning; Koine anchor, no book-naming; favor-not-grace example) + per-word **"Lexica"
-  overrides** shown DIRECTLY, no model call, for the loaded lemmas LSJ leads classical on
-  (`_LSJ_OVERRIDES`/`_ovkey` in views_lsj.py — badged "Lexica" not LSJ; the Summary|Full-entry toggle
-  still shows raw LSJ). Full record: memory `project_lsj_overrides`.
-
-## BibleHub ABP Scrape
-- Scraper: `scripts/scrape_biblehub_abp.py` — captures strongs, greek_pos, italic (last-word
-  heuristic), strips `[ ]` brackets. The scrape (`bh_scrape.db`) is complete.
-- The words table is rebuilt from `bh_scrape.db` — see the `/rebuild-words` command + "Database
-  Tables → words". (morph column: filled to ~78% at rebuild #6; further fill scrapped 2026-06-15 —
-  memory `project_abp_morph_gap`.)
-- **Do NOT add conjugated manuscript forms** — the audience are non-Greek readers (standing rule).
-
-## cross_references table
-- Columns: id, verse_id, verse_ref_id
-- Both IDs map to kjv_verses.verse_id
-- 386,518 rows loaded from Torrey's TSK
-- Join pattern: cross_references cr JOIN kjv_verses kv ON cr.verse_ref_id = kv.verse_id
-
-## MetaV (person/place sidebar)
-- Tables: `metav_people` (+_aliases, _groups, _relationships), `metav_places` (+_aliases; has lat/lon, strongs_g)
-- Looked up by NAME (not strongs). Frontend fetches person + place in parallel; toggle shown when both exist
-- **KJV/BSB reader word → metaV name gate (2026-06-23):** the lookup fires only when the word's Strong's is a
-  NAME (proper noun or gentilic) per `core._HEB_NAME_STRONGS` — a startup set built from heb.db morphology by
-  DOMINANT use (`app._build_heb_name_cache`, mirrors `_FUNCTION_STRONGS`; endpoints send `heb_name`,
-  `30-detail-panel.jsx` gates `kjvIsPN` on `entry.hebName`; Greek/NT + no-heb.db fall back to capitals).
-  Killed bogus place cards for common words BSB caps mid-verse (midbar "Wilderness of Sinai") without hiding
-  clans BDB tags "Adjective" (Philistines). Place comments also strip a bare wiki URL. Memory `project_metav_expansion`.
-- Hebrew proper nouns: route to metaV (person/place) with BDB stacked BELOW (KJV-style). `isHebrewWord` (any H#)
-  drives BDB; `isHebrew = isHebrewWord && !isPN` drives the Hebrew hero/LSJ suppression
-- Default tab (Phase 6): trusts the word's OWN tipnr type via `pn_types` (a SET — 'person'/'place'/
-  'person,place'). A clean single type is authoritative; ambiguous ('person,place', a genuinely shared
-  number like Adam H121) or absent pn_types falls back to the strongs_g heuristic (place's G-number
-  matching the word's strongs_base — note metav_places.strongs_g only holds G-numbers, so OT/H words
-  always fall through to Person unless pn_types pins them). The Person/Place toggle is SUPPRESSED when
-  pn_types is a clean single type (the other metaV card is a name-coincidence).
-- tipnr schema (Phase 6, backlog #5): `entity_types` column holds the type SET so a strongs shared by a
-  person AND a place keeps BOTH (was a PK collision: last-imported type won → Adam H121 read 'place').
-  `entity_type` = single primary token (legacy). Migration adds the column at PA startup; re-run
-  import_tipnr.py after any rebuild to populate. Old "do NOT trust entity_type" rule is now obsolete —
-  pn_types (the set) is trustworthy.
-- Gentilics (`/ites?$/`: Hivite, Sinite…): card labeled "People / Clan", place header "Homeland", AI summary
-  fires on the clan tab. Kept as persons (Table-of-Nations genealogy is the value; only Jebusite has map coords)
-- AI curation: `/api/metav/ai-description/<name>` — Haiku, 1-2 sentences, SCOPED to the clicked
-  book/ch/verse ("describe the one AT this reference"). **Now VERSE-GROUNDED (2026-07-05, "G"): fed the
-  displayed verse text + the reader's translation identity (`_displayed_verse`), and told to explain the
-  name AS RENDERED there — NOT fact-check the shown text against Hebrew/English/other traditions** (it was
-  denying ABP's Greek/LXX forms, e.g. "Antilebanon isn't in the verse" at Deu 1:7 / Jos 1:4). Cache key +
-  prompt fingerprint now include the verse+translation (`pn:<name>:<bk><ch>:<v>:<translation>`). Fills
-  entries with no metaV/BDB data. The place endpoint also withholds the map pin when the name maps to >1
-  place or the matched row lacks its own coords. Both = **Fix A**, the permanent floor under whatever the
-  binder below can't bind. Full record: memory `project_metav_expansion`.
-- **Multi-referent guard on the NAME path (2026-07-05).** `/api/metav/person` is the UNBOUND path (the
-  frontend calls it only when no verse-bind owns the card). If the bare name is borne by >1 man it returns
-  `{"ambiguous":true}` and serves NO bio — the reader gets Strong's + occurrences + the verse-scoped AI note,
-  never one man's family asserted as fact (unbound Edomite "Saul" at Gen 36:37 was serving King Saul's kin).
-  Signal = several `metav_people` candidates (name OR alias) OR several TIPNR person entities under the
-  surface name; the metaV+alias leg is PRIMARY (the TIPNR leg matches surface form, secondary). Single-
-  referent names (David) still serve rich. `_name_is_multi_referent` in views_metav.py; memory
-  `project_metav_expansion`.
-- **VERSE-BOUND ENTITY CARD — the Issue-2 rebuild, LIVE 2026-06-28.** A PN click now first asks
-  `GET /api/metav/entity/<name>?book=&chapter=&verse=` (views_metav.py) for the verse-CORRECT TIPNR entity
-  (from `pn_binding`); when bound it LEADS the rail with a sourced `.pnbound` card (canonical name + TIPNR
-  description + kin + region + "Matched to this verse" + a TIPNR badge), FOLLOWED by ONE standard
-  word-occurrence control keyed to the entity's OWN number — only the line for the text being READ (ABP, or
-  Hebrew OT / KJV / BSB), showing the real word in every verse. (EVERY word card shows just the active
-  text's occurrence line now — 2026-06-28; the full cross-Bible breakdown lives in Word study. Hebrew words
-  used to show all three.) A bind GATES the whole name-based metaV fetch (kills the name-guess person/place
-  card + its Groups + Nave's + place-LSJ at once). 404 → the old name-path + Fix A, byte-same (deploy-safe).
-  14,803 render binds (Session 6 2026-07-04: `parse_tipnr` now types each entity from its OWN row, not the
-  block header — 8 mixed-block PLACES flipped person→place labels, 3 EXCLUDED-block entities (Greek/Aramaic/
-  Asiarch) stopped binding, net −13 vs the prior 14,816; an unknown type under a `PERSON+PLACE` header now
-  RAISES to stop the build), zero confident-wrong; TIPNR is the identity spine, metaV is enrichment only. Engine =
-  **`entity_resolution.py`** (repo root, pure logic); tables built by `scripts/build_entity_binding.py --apply`.
-  **Bound places SHOW a map again (2026-07-05):** the Issue-2 bind had suppressed the name-based metaV
-  fetch — where the map lived — so bound places lost it. Coords now come THROUGH the entity endpoint
-  (`_place_coord_rows` + `_pin_from_rows`, which pins the coordinate the MOST rows agree on). The bound path
-  prefers rows whose OWN name matches the entity over rows merely ALIASED to it — so Eden (its own row has
-  no coords; "Eden" is also an alias of Beth-eden near Damascus) DECLINES instead of pinning Damascus.
-  Interim guard; the real per-referent fix is the parked OpenBibleInfo ingest (TODO). **People/Clan render
-  (2026-07-05, "C"):** a gentilic word bound to its eponymous-ancestor PERSON entity (Hittites→Heth,
-  Jews→Judah — TIPNR models peoples that way, ~819 binds) renders "People / Clan", drops the ancestor's
-  Parents/Children, titles with the people term + a "Descended from X" line — the binds are correct, only
-  the individual-person framing was wrong. Classifier `is_people_group` in `entity_resolution.py` (ONE list,
-  shared with the audit; bare `-im` excluded — collides with Ephraim/Miriam). A hyphenated click ("Beth-el")
-  now RETRIES hyphen-blind against `pn_binding` (the bind is keyed on english_head "bethel"; was a 404 →
-  name-fallback). Full record: memory `project_metav_expansion`.
-  **Bound-card occurrences (2026-06-28 follow-on):** these PNs carry a real Strong's on `strongs_base` but a
-  bare `strongs='*'` (TIPNR backfilled the number), so the bound card un-gates the standard occurrence sections
-  for a PN and the ABP count comes from `/api/strongs-count/<n>?by=base` (counts on strongs_base, not the '*'
-  bare column). OT names key to HEBREW on purpose — TIPNR's Greek form is a STEP-extended number (G9827) our
-  lexicon lacks and ABP never uses; the ABP Greek occurrences still surface via the Hebrew base. **Don't
-  re-pitch a "pure Greek" re-key.** (The old "Appears N×" TIPNR ref-list was tried then removed — it listed
-  verse pointers, some without the word; the real occurrence controls supersede it.) Full record + the
-  build-order + lessons: memory `project_entity_resolution_rebuild`.
-- CRITICAL: the lexicon join is `LEFT JOIN lexicon l ON l.strongs_g = w.strongs_base` (Phase 1 indexed key).
-  strongs_g only ever holds 'G…', so a Hebrew H-number can never match — this STRUCTURALLY replaced the old
-  `SUBSTR(strongs_base,2) ... LIKE 'G%'` guard that a Hebrew H121 used to slip past (bogus Greek G121 lemma
-  made the metaV effect early-return and broke Hebrew-PN metaV). Applies to BOTH chapter_text and verse_words
-
-## Maintenance / data-quality scripts
-- `scripts/health_check.py <db>` — READ-ONLY scanner; run after ANY import/rebuild. ~14 checks (strongs_base
-  invariant, dups, misalignment, fragmented brackets, missing/orphan greek_pos, strongs range, lexicon/bdb
-  coverage) + person/place overlap report. Should be 0 warnings. `--email [--only-warn] [--email-to=addr]`
-  mails the report via `mailer.py` (the nightly PA task; SMTP creds from `~/bible-db/.env`).
-- `dedup_words.py` — drops byte-identical duplicate rows (tail safety net, 0-expect). The other old
-  targeted repairs (fix_greek_pos_gaps, fix_bracket_gaps_absorb, fix_orphan_greek_pos, …) are RETIRED
-  to `scripts/graveyard/` (cert Session 2 — build-folded or adjudicated dead; see graveyard/README.md)
-- `audit_split_flip.py <db>` (READ-ONLY) + `fix_split_flip.py <db> [--apply]` — the "LORD the" flip
-  (a determiner stranded AFTER its noun, vs the clean `verses.text`). Audit shares its detector with the
-  fixer (`find_flips`) so they can't drift; the fixer swaps each pair toward `verses.text` order and LOOPS
-  to convergence (a list "the A the B" needs several monotonic passes). The build's root fix
-  (`_split_compounds` source-phrase fronting) covers ONLY that pass — a SECOND flip producer (proper-noun
-  slots) regenerates ~175 flip verses on any rebuild (proven by the 2026-07-04 cert harness), so the fixer
-  is FOLDED into finish_rebuild.sh as step 6 (position-only swap, after ALL pinned patches + fix_emdash,
-  before the abp_corrections apply; cert Session 2, final run proved 0). Re-run surface+translit after any
-  `--apply`. Memory `project_abp_certification` + `project_split_compounds_flip`.
-- `build_abp_corrections.py` + `apply_abp_corrections.py` — the Tier-B **abp_corrections** table (in
-  bible.db; 18 rows: Cushi ×6 + Jer 49:13 ×2 + L2 1Sa 6:11 ×4 + L10 Mal 3:6 ×4 + L5 Dan 4:33 ×2) and its guarded apply (finish_rebuild.sh step 7, the TRUE
-  final tail step — fires only when the cell still holds the recorded fresh-parse value, LOUD skip
-  otherwise, log beside the db). New source-defect corrections = new rows via build_abp_corrections.py
-  (checkpoint first), never a new fix script. Full record: `AUDIT_abp_certification.md`.
-- `fix_emdash.py [db]` (`--apply`) — swaps ABP's literal `--` clause dash for an em-dash `—` in
-  `words.english` + `verses.text` (double hyphen only; single hyphens like Beer-sheba are safe). FOLDED
-  2026-07-03: runs as a tail step of `finish_rebuild.sh` (after fix_split_merges — a "--" precondition
-  there must match first), so a rebuild reproduces it; no manual re-run. Memory `project_library_bracket`.
-- `cert_manifest.py build|verify` + `cert_reparse_harness.py` — the ABP-certification feed pin (74 files,
-  SHA-256, committed as `cert_manifest.json`) and the Tier A re-parse harness (full production build into
-  `bible.db.new`, row-diff vs live, reports cert_report_summary.txt/cert_deltas.tsv). Read-only on live.
-  Full record: `AUDIT_abp_certification.md` + `AUDIT_abp_invariants.md`.
-- `cert_invariants.py [db]` / `--controls` — the runnable ABP invariant suite (Tier A is CERTIFIED
-  end-to-end as of the 2026-07-04 live rebuild+swap). READ-ONLY; 7 checks: row pins (words 626,305 /
-  verses 31,237), split-flip=0 (imports the production `find_flips`, never a copy), em-dash '--'=0,
-  correction-overlay reconciliation (failures NAME the row), feed manifest, backup freshness, and (Session 4)
-  person/place binding — no proper-noun name renders BOTH a fuzzy-place AND an exact-person (the Cushi
-  shape; reads pn_binding+tipnr_entities, deploy-safe = passes if the tables are absent). `--controls`
-  seeds bad input into a throwaway db and proves checks 1-4 + 7 fire (5-6 fired on live incidents). RE-PIN RULE:
-  the pins move ONLY in a deliberate-rebuild commit after compare_words passed — never hand-edited to force
-  green. Full record: memory `project_abp_certification`.
-- `fix_italic_heads.py` (`--dry-run` / `--apply`, `--strongs G####`, `--all`) — makes a slot's SEARCH LABEL
-  (`words.english_head`, what the Word-study finder matches) its OWN rendering, never a translator-added
-  (italic) word ("take favor" had labeled λαμβάνω/G2983 "favor"). english_head ONLY; re-runnable. UNLIKE the
-  others this IS build-folded (`_strip_italic_heads` in build_words_from_abp.py), so a normal rebuild
-  reproduces it — no re-run needed. 4,409 fixed 2026-06-25. Memory `project_english_head_label`.
-- `fix_pn_subject_merge.py` (`--apply` / `--list-skipped`, dry-run default) — splits a subject NAME that
-  ABP crammed onto its verb's cell back onto its own clickable `*` slot (name on the LOWER slot, verb keeps
-  its number; bracketed cases keep both in-bracket sharing the reorder number so reading order is unchanged).
-  2,297 fixed 2026-06-26 (2,278 flat + 19 bracketed) + 2 εἰμί copula merges 2026-06-28 (Sarai Gen 11:30,
-  Crete Zep 2:6 — subjects not in the tipnr roster; `_peel_eimi` fires on a G1510 cell with a capitalized
-  non-roster lead + adjacent empty `*`, minus function-word leads, unbracketed slot-after only). Build-folded
-  (`apply_pn_subject_split`, runs after insert, BEFORE import_tipnr resolves the new name slots). After
-  `--apply`: re-run import_tipnr → build_abp_surface → build_abp_translit. Audit for the εἰμί class:
-  `scripts/audit_eimi_subject_merge.py`. Memory `project_pn_subject_verb_fold`.
-- `build_entity_binding.py` (dry-run default / `--apply`) — the Issue-2 entity-binding build. PA-only,
-  reversible; **re-run after any words rebuild** (re-tiers from live metaV). Binder logic lives in
-  `entity_resolution.py`. The old companion `fix_cushi_strongs.py` is RETIRED — the 6 Cushi slots now
-  live in the `abp_corrections` table, applied automatically by the rebuild tail (cert Session 2).
-  Memory `project_entity_resolution_rebuild`.
-- `add_hebrews13.py` (dry-run default / `--apply`) — ONE-OFF additive repair (DONE+LIVE 2026-06-30):
-  restored the missing Hebrews 13 (the ABP source file had no ch 13 → no verse rows → its words were
-  skipped, since the build only emits words for verses already in the `verses` table). Adds ONLY Heb 13,
-  reusing `build_words_from_abp`'s per-verse machinery; the dry-run proves the path by regenerating Heb 12
-  and diffing it byte-for-byte vs live. NOTE the general invariant: a missing verse row silently drops its
-  words. Memory `project_hebrews13_restore`.
-
-## Rate limiting / security (2026-06-07 security pass)
-- `core.limiter` (flask-limiter, memory storage): site-wide default `300/min` per endpoint per IP
-  (flood backstop on the DB routes); paid AI endpoints set tighter `@limiter.limit("200 per hour")`
-  which overrides the default. Static assets exempted via a `request_filter` in app.py (page loads
-  never trip it). 429s handled by the errorhandler in app.py.
-- AI-generated SQL runs on a READ-ONLY connection (`db_ro`), single-statement, SELECT-only guard;
-  failures log the SQL/error server-side ONLY (never returned to the client — info disclosure).
-- Verdict: read-only, no-auth, no-PII public app; all user input is parameterized; secrets via .env
-  (gitignored); Flask debug off in prod (app.run(debug=True) is local-only). No critical findings.
-
-## Refactor backlog (status 2026-06-07 — redesign Phases 0–6 done)
-- See memory `project_architecture_rework.md` and TODO.md. DONE: #1 centralize Strong's handling (Phase 1 —
-  `lexicon.strongs_g` join key + frontend `strongsBare`/`strongsTag`); #2 patch-fold (2026-06-09 — the six
-  shape-keyed cleanup scripts now run INSIDE build_words_from_abp.py as one self-correcting pass; proven
-  byte-identical to the old build+14-patch chain via compare_words.py; see "Words rebuild checklist"); #3
-  backend DRY serialization (Phase 2, `_serialize_word_core`); #4 detail-panel state (Phase 4,
-  `{hero, sections[]}`); #5 tipnr PK collision (Phase 6, `entity_types` type-set). REMAINING: the
-  destructive-DELETE half of #2 stays (copy-first neutralises it — user's call 2026-06-09) and the frontend
-  half of #3 (makeEntry/flattenAiResults dedup).
-
-## Do Not
-- Do not add KJV as the sole primary study text — ABP remains the anchor
-- Do not touch existing ABP tables when adding unrelated features
-- Do not commit bible.db to git
-- NEVER run `DELETE FROM words` or `DELETE FROM verses` — OT and NT words are both in the words table; clearing destroys hard-to-recover data. If re-importing, use INSERT OR IGNORE (safe to re-run).
-- Avoid the full DELETE+rebuild in `build_words_from_abp.py` unless truly necessary. It
-  (a) clears `is_pn` and proper-noun Strong's, and (b) historically stripped the G prefix
-  off strongs_base. The script is now patched (prefixes at INSERT, prints a reminder), but
-  after ANY run you MUST re-run `import_tipnr.py` and verify the strongs_base invariant above.
-- **The rebuild scripts NEVER write the live db (2026-06-28, after a parallel session blanked
-  bible.db).** `build_words_from_abp.py` + `build_words_from_bh.py` now build into a throwaway
-  `bible.db.new` copy (a consistent online snapshot of the live db); the live file is never opened
-  for writing, and you swap the copy in by hand with one reversible move. The in-place
-  `DELETE FROM words` is gone. Full record: memory `project_db_backups`.
-
-## Backups — `scripts/backup_db.py` (added 2026-06-28)
-- The live dbs are PA-only + not in git, and a careless session has blanked bible.db. `backup_db.py`
-  is the floor: a daily, VERIFIED, rotating backup of EVERY live db (auto-discovers `*.db` —
-  bible/notes/study/esv/niv/heb/news/bh_scrape), kept in `~/db_backups/` OUTSIDE the repo so a
-  folder-nuke can't reach them. Uses SQLite's online `.backup()` (safe on a live WAL db, no torn
-  copy), a `PRAGMA quick_check` gate (a bad copy never rotates out a good one), gzip + chmod 0444 on
-  older copies, and a `.info` manifest per copy so `--list` shows row counts instantly. Restore =
-  pick a stamp from `--list`, `gunzip -c` (or cp) over a `.new`, swap with the reversible `mv`.
-  **`study.db` is the one irreplaceable file (hand-authored argument graphs, no rebuild script).**
-  LIVE as a daily PA scheduled task (13:30 UTC, `--keep 7`). Full record: memory `project_db_backups`.
-
-## Words rebuild checklist (if you ever rebuild the words table)
-The full step-by-step lives in the **`/rebuild-words`** slash command
-(`.claude/commands/rebuild-words.md`): copy-first → single self-correcting build → tail patches →
-the audit gates → swap/deploy → re-run the dotted-lexicon/surface/translit/two-ending builders. It's a rare,
-high-stakes job, so the 90-line procedure is kept out of this always-loaded file. The hard SAFETY
-rules for the words table stay in **Do Not** above; background in memory
-`project_architecture_rework`.
+## Project structure
+```
+/home/appssanding720/bible-db/
+  bible.db          # main SQLite database (PA-only, not in git)
+  app.py            # Flask app entry; split into core.py + ai.py + views_*.py
+  templates/index.html
+  static/src/       # frontend SOURCE — per-view *.jsx (00-core … 90-app)
+  static/app.js     # COMPILED bundle (built from src/, committed)
+  static/styles.css
+  scripts/          # build-frontend.js + import/migration/audit scripts
+  docs/claude/      # the routed reference docs for this file
+```
+`design/` is NOT the app — throwaway design-tool mockups only. The live frontend is ONLY
+`static/src/*.jsx` → `static/app.js`. Never audit/edit `design/*.jsx` as production.
