@@ -2988,6 +2988,19 @@ input { font-family: inherit; }
   border-radius: var(--radius);
   padding: 2px 7px;
 }
+/* Thin bound card: the single body line + badge share one baseline (no name echo,
+   no stranded badge). Arrangement only — reuses the desc type + the badge pill. */
+.pnbound-thinrow {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 6px;
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--ink-2);
+}
+.pnbound-thinrow .pnbound-badge { margin-top: 0; }
 
 /* ── Leaflet mini-map ────────────────────────────────────────── */
 .metav-leaflet-map {

@@ -799,6 +799,50 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       // The entity's verses are no longer listed here — the standard occurrence controls
       // below ("× in ABP / Hebrew OT / KJV / BSB") show the real word in each verse, which
       // supersedes the old TIPNR ref-list (it listed verse pointers, some without the word).
+      const hasMap = be.section === "place" && be.lat && be.lon;
+      const placeNote = be.section === "place" && !hasMap && be.ambiguous;
+      // Body rows under the name: the labeled kin / region facts (the descriptor `line`
+      // is the row above them). Built as DATA so we can count them — a card whose whole
+      // body is <=1 row reads as a floating name echo + orphan row + stranded badge (the
+      // Levites / Pharaoh-at-Exo-3 shape). `plain` = render the value with no label
+      // ("Descended from Levi" needs no "Lineage:" tag; it only ever appears thin).
+      const factItems = [];
+      if (peopleClan && !be.head_is_people)
+        factItems.push({ lbl: "Lineage", val: `Descended from ${be.name}`, plain: true });
+      if (be.section === "person" && !peopleClan && be.parents && be.parents.length > 0)
+        factItems.push({ lbl: "Parents", val: be.parents.join(", ") });
+      if (be.section === "person" && !peopleClan && be.offspring && be.offspring.length > 0)
+        factItems.push({ lbl: "Children", val: be.offspring.join(", ") });
+      // hide the ancestor's "Tribe of …" on a group card — it asserts a tribe link the
+      // collective may not carry; the Lineage line already gives the honest ancestry.
+      if (showArea && !peopleClan)
+        factItems.push({ lbl: be.section === "place" ? "Region" : "Tribe", val: area });
+      const factRow = (f, i) => (
+        <div key={i}>{f.plain ? f.val : <><span className="pnbound-lbl">{f.lbl}</span> {f.val}</>}</div>
+      );
+      // THIN = a sparse non-rich card with no map / note to anchor the badge. One shared
+      // arrangement (not a per-branch fix): drop the name echo (the hero above carries
+      // it), promote the single body line, tuck the badge inline on its baseline. Covers
+      // PERSON-thin, PEOPLE/CLAN, and a coordinate-less place alike.
+      const thin = !richPerson && !hasMap && !placeNote && ((line ? 1 : 0) + factItems.length) <= 1;
+      if (thin) {
+        const first = factItems[0];
+        const opener = line
+          ? <span>{line}</span>
+          : first
+            ? <span>{first.plain ? first.val
+                      : <><span className="pnbound-lbl">{first.lbl}</span> {first.val}</>}</span>
+            : null;
+        return (
+          <section key="boundEntity" className="sec pnbound">
+            <h4 className="sec-head"><span className="sec-t">{label}</span><span className="bdb-badge">TIPNR</span></h4>
+            <div className="pnbound-thinrow">
+              {opener}
+              <span className="pnbound-badge">Matched to this verse</span>
+            </div>
+          </section>
+        );
+      }
       return (
         <section key="boundEntity" className="sec pnbound">
           <h4 className="sec-head"><span className="sec-t">{label}</span><span className="bdb-badge">TIPNR</span></h4>
@@ -806,16 +850,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
           {line && <p className="pnbound-desc">{line}</p>}
           {richPerson ? <MetavPersonBody data={be.metav} /> : (
           <div className="pnbound-facts">
-            {peopleClan && !be.head_is_people && (
-              <div><span className="pnbound-lbl">Lineage</span> Descended from {be.name}</div>)}
-            {be.section === "person" && !peopleClan && be.parents && be.parents.length > 0 && (
-              <div><span className="pnbound-lbl">Parents</span> {be.parents.join(", ")}</div>)}
-            {be.section === "person" && !peopleClan && be.offspring && be.offspring.length > 0 && (
-              <div><span className="pnbound-lbl">Children</span> {be.offspring.join(", ")}</div>)}
-            {/* hide the ancestor's "Tribe of …" on a group card — it asserts a tribe link the
-                collective may not carry; the Lineage line already gives the honest ancestry */}
-            {showArea && !peopleClan && (
-              <div><span className="pnbound-lbl">{be.section === "place" ? "Region" : "Tribe"}</span> {area}</div>)}
+            {factItems.map(factRow)}
           </div>
           )}
           {be.section === "place" && (be.lat && be.lon
