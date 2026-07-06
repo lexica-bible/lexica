@@ -5,6 +5,66 @@ words rebuild carrying FIVE fixes at once (was seven; the old a/c/d merged into 
 diagnosis landed). Don't open it on the low/medium census seat.
 
 ---
+**★★ SESSION 10 (2026-07-06) — THE S9 BLOCKER IS RESOLVED IN CODE. READ THIS FIRST, ABOVE THE S9 BANNER. ★★**
+S10 was the fix session: scope the split-flip over-fire, clear the 5 word-order residual, re-run the gate,
+swap. **All the code shipped + committed; the rebuild itself is the next step (JP's PA run).** Five commits:
+- **`49f09c6` — split-flip SCOPED.** The shared `find_flips` (audit + fixer) now has TWO clean-text guards,
+  either one skips a pair: **forward** — the "the" forms "<the> <next word>" in verses.text (it's the
+  FOLLOWING word's article); **backward** — the noun already has a determiner right in front of it. Kills the
+  proper-noun over-fire (Jer 48:1 "…forces, the God…") while still firing on a genuine "LORD the" strand.
+  Added `audit_split_flip.py --control` (built-in genuine positive must FIRE + Jer 48:1 must stay QUIET) so a
+  0 on the corpus is trustable. **Pre-registered: split-flip fires on ZERO verses in the rebuild** (all 175
+  were false positives; the `_split_compounds` source-order fix already builds the real strands right). If it
+  fires on ANY verse → STOP and adjudicate each as genuine-or-not (the forward guard could in principle
+  suppress a real flip if the next word coincidentally forms "the X").
+- **`7fe9271` — Option A: malformed-bracket build fix** (Mat 21:19 / 1Ch 22:15 / Job 24:19). ABP feed defect:
+  a `]` that closes with no `[`. The build stripped the position digits but never reordered, and `_prefix_base`
+  dropped `greek_pos` on the un-bracketed slots → words froze in raw Greek order. Fix (`build_words_from_abp.py`
+  bracket state machine): when a `]` closes with no open bracket AND the closing word carries a digit, tag the
+  closer + the contiguous preceding digit-run as one bracket so `greek_pos` (already = the source digit)
+  survives; the reader / v2 order by it and float the trailing mark to the reading-last word. **Word POSITIONS
+  never move.** `scripts/scan_malformed_brackets.py` pre-registers EXACTLY 3 (digit-backed stray `]`); Zec 10:3
+  is a BARE stray `]` (no digit → skipped, its prose is cleaned by (f)); Job 24:18 is a stray `[` (not a
+  target). Control `scripts/control_malformed_bracket_fix.py` drives the 3 real cases through `reorder_english`
+  (PASS).
+- **`a011695` — Fix A: number-safe correction comparator.** `apply_abp_corrections` compared a stored cell to
+  the correction's TEXT value with a bare `==`; a NUMBER column (greek_pos) came back as a number, so `'1'`
+  never matched `1` → silent skip. Added shared `cellmatch(cell, target)` (compare as text, NULL cell distinct
+  from `''`); text columns behave byte-identically (the 18 existing rows re-verify unchanged — proven by live
+  dry-run: 18 already-applied, 0 skips). Control `scripts/control_cellmatch.py` (both directions). Needed by
+  the two new greek_pos rows.
+- **`0ce6f06` — Mat 20:29 word-side row.** Well-formed bracket `[multitudeG3793 1a great]`: the un-numbered
+  "multitude" took BH's greek_pos 1, tying with "a great" (source digit 1) → shows "multitude a great". One
+  cell: pos 7 `greek_pos` 1→2 (the "." floats to it). Its own bracket; the only mixed numbered/un-numbered
+  case in the feed. Pairs with the existing Mat 20:29 prose row.
+- **`9eff6da` — Act 7:3 word-side rows (option B).** ABP lumps "I show to you!" onto ἄν (G302); the build left
+  δείξω ("I show", G1166) reading AFTER σοι ("to", G4671) → "which to I show you!". Fix = give pos 19 ("to") +
+  pos 20 ("I show") a shared `bracket_id=1` + `greek_pos` (I show=1, to=2) so the reader orders them; each word
+  keeps its own english/number, "which"(18) + "you!"(21) stay put. Reorder metadata ONLY, no content moved.
+  Both cells blank now → `source_value` is None. Control `scripts/control_act7_3.py` (render = "…which I show
+  to you!", PASS).
+
+**REBUILD PRE-REGISTRATIONS (the S10 gate additions — a fresh session verifies these, don't re-derive):**
+- split-flip fires on **0**; `audit_split_flip --control` fires (its 0 is trustable).
+- `scan_malformed_brackets.py` = **3**; those 3 verses' word-order clears.
+- **`abp_corrections` grows 18 → 28** (5 prose + Mat 20:29 + 4 Act 7:3). **This pin move is EXPECTED in the
+  rebuild commit — NOT an anomaly.** `cert_invariants` count pin moves 18→28 there. The apply run lands the 10
+  new rows with **0 LOUD skips**; the 18 old re-verify.
+- **v2 word-order = 0, content-other = 0** — the gate criterion (unchanged).
+- **punct-position 240-vs-260 = OPEN TENSION, do NOT treat 240 as a failure.** 260 is THIS charter's
+  pre-registration (after Zec 10:3's stray-`]` cleanup drops it off the 261 list). **240 was the value actually
+  OBSERVED on the S9 build.** The delta is suspected prose / em-dash handling, unresolved. A fresh session must
+  RECONCILE + explain the gap, not flag 240 as a gate fail. Split-flip is punct-neutral (240 with and without).
+
+**CORRECTION to the S9 banner below — S9 (f)'s "applied 5 / verify 15" was THROWAWAY-ONLY, never live.** Live
+`abp_corrections` = **18 rows, ZERO prose (verses.text) rows** (confirmed by a live dry-run this session). The 5
+prose Tier B rows are CODE (in `build_abp_corrections.py` via `_prose_tierB()` reading `AUDIT_tierB_f_proposed.json`);
+they land only when `build_abp_corrections.py --apply` runs on the rebuild scratch. So the rebuild must run that
+apply — the prose fix is not yet in any live table.
+
+**Next = the full rebuild + the gate block below (JP's PA step) → word-order 0 / content-other 0 → swap.** The
+S9 banner's diagnosis stands; S10 turned it into shipped fixes. Lessons in memory `project_reassembly_diff`.
+---
 **★ REBUILD RAN 2026-07-06 — 5 FIXES GREEN, GATE BLOCKED, NOT SWAPPED. READ THIS FIRST. ★**
 The plan was approved and the combined rebuild was built + finalized on a throwaway `bible.db.new`
 (live never touched). **All five fixes verified GREEN:** P1 drove the 208 pronoun survivors to ZERO;

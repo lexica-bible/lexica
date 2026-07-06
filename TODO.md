@@ -56,12 +56,26 @@ is NOT residual, its words reassemble clean). `audit_split_flip` reads 0 because
 v2 oracle caught it. The charter's "a clean rebuild cures the article-fronting for free" was WRONG —
 that diagnosis ran on a no-tail build. punct = 240 with AND without split-flip (split-flip is
 punct-neutral; 240-vs-260 is a separate open item).
-**FIX-SESSION JOB (next):** (1) scope `fix_split_flip` + its audit to fire only on genuine strands —
-code fix to a certified pass, re-verify no regression of genuine strands, then re-run the gate; banked
-target = word-order **5**. (2) address the 5 malformed-bracket residual (words-side). (3) reconcile
-punct 240 vs 260. (4) THEN the swap + post-swap dependent builders (surface/translit/two-ending/
-rendering-norm) + self-heal proofs. Full detail: memory `project_reassembly_diff`. Do NOT improvise the
-split-flip fix. **Repo sync owed:** local `cert_prose_leak_diff.json` = 13, PA copy = 15 — reconcile.
+**★★ SESSION 10 DONE 2026-07-06 — the S9 blocker + the 5 residual are RESOLVED IN CODE (5 commits). The
+rebuild itself is now the only open step.** Canonical = the S10 banner atop `CHARTER_cert_session9.md`.
+- `49f09c6` split-flip SCOPED (two clean-text guards) + `audit_split_flip --control`; pre-registered to fire
+  on **0** in the rebuild (all 175 were false positives) — if it fires on any, STOP + adjudicate.
+- `7fe9271` Option A malformed-bracket build fix (Mat 21:19 / 1Ch 22:15 / Job 24:19); `scan_malformed_
+  brackets.py` pre-registers EXACTLY 3; control green.
+- `a011695` Fix A number-safe correction comparator (`cellmatch`) — needed by greek_pos rows; 18 live rows
+  re-verify identically (dry-run 0 skips).
+- `0ce6f06` Mat 20:29 word row (greek_pos 1→2); `9eff6da` Act 7:3 word rows (option B, reorder metadata).
+**OPEN = the full rebuild + gate (JP's PA step), then swap:**
+- Run it per `/rebuild-words` + `finish_rebuild.sh`; `build_abp_corrections.py --apply` on the scratch adds
+  the **10 new rows (5 prose + Mat 20:29 + 4 Act 7:3)** → `abp_corrections` **18 → 28** (EXPECTED pin move in
+  the rebuild commit, NOT an anomaly). The 5 prose rows are code-only today — they've never been on live.
+- Gate: split-flip 0 + `--control` fires; scan = 3; v2 word-order **0** + content-other **0**; apply 0 skips;
+  invariants 7/7 (re-pin count 18→28) + controls; L9; phrase-gloss floor ≤671; five-pass controls; dotted policy.
+- **punct 240-vs-260 = OPEN TENSION, reconcile don't absorb:** 260 = charter pre-registration (after Zec 10:3
+  cleanup), 240 = OBSERVED S9 value; delta suspected prose/em-dash handling. Explain it; do NOT flag 240 as a fail.
+- Then swap + post-swap builders (surface/translit/entity/dotted/rendering-norm/two-ending) + self-heal proofs
+  + secondary render smoke (Study topic page). Full gate block in the charter.
+- **Repo sync owed (from S9):** local `cert_prose_leak_diff.json` = 13, PA copy = 15 — reconcile during the gate.
 Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-attributed diffs):
 - **Path-C G1473 residue — CENSUSED + CLOSED (Session 8, ledger L12).** Dan 4:33 is NOT a lone stray:
   Daniel holds **170** source-attested pronoun mistags (αὐτός/σύ/ὑμεῖς/ἡμεῖς still numbered 1473), read off
