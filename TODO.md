@@ -70,7 +70,8 @@ rebuild itself is now the only open step.** Canonical = the S10 banner atop `CHA
   the **10 new rows (5 prose + Mat 20:29 + 4 Act 7:3)** → `abp_corrections` **18 → 28** (EXPECTED pin move in
   the rebuild commit, NOT an anomaly). The 5 prose rows are code-only today — they've never been on live.
 - Gate: split-flip 0 + `--control` fires; scan = 3; v2 word-order **0** + content-other **0**; apply 0 skips;
-  invariants 7/7 (re-pin count 18→28) + controls; L9; phrase-gloss floor ≤671; five-pass controls; dotted policy.
+  invariants 7/7 (re-pin count 18→28) + controls; L9; phrase-gloss BEYOND `AUDIT_phrase_gloss_allowlist.txt` ≤671
+  (S11: 31 P1 consolidations frozen by name, raw total 702); five-pass controls; dotted policy.
 - **punct 240-vs-260 = OPEN TENSION, reconcile don't absorb:** 260 = charter pre-registration (after Zec 10:3
   cleanup), 240 = OBSERVED S9 value; delta suspected prose/em-dash handling. Explain it; do NOT flag 240 as a fail.
 - Then swap + post-swap builders (surface/translit/entity/dotted/rendering-norm/two-ending) + self-heal proofs

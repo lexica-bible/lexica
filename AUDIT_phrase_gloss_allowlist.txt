@@ -1,0 +1,60 @@
+# AUDIT_phrase_gloss_allowlist.txt — cert artifact (S11 rebuild, 2026-07-06)
+#
+# WHAT: the exact 31 (verse | host) phrase-gloss rows the S11 rebuild ADDED to the
+# fix-(g) under-distribution detector (scripts/audit_phrase_gloss_underdist.py), on top
+# of its frozen baseline of 671 flagged rows on the pre-S11 live db (the deferred
+# "not+verb" negation class — CHARTER_cert_session9.md lines 390-399).
+#
+# WHY THEY ARE NOT REGRESSIONS: the (P1) pronoun fix consolidates a straddled verb-phrase
+# WHOLE onto its pronoun slot and leaves the verb slot blank, so the reading matches the
+# source (splitting would re-break it). The detector counts that blank verb slot as
+# "under-distribution", but every one of these 31 verses reassembles correctly
+# (reassembly-diff v2 word-order = 0 / content-other = 0 on the S11 build). They are the
+# fix working as designed, not new defects. Freezing the exact rows (not just raising a
+# count) keeps the gate sharp: a 32nd new row still trips it.
+#
+# PROVENANCE (all 31 are pronoun hosts — 29x G846 autos, 2x G4771 su):
+#   - 30 are pre-S11 word-order SURVIVORS (AUDIT_reassembly_survivors.txt) that (P1)
+#     drove to reading-correct — verified by a survivor-membership test (comm, 30/31).
+#   - Mat 12:14 is NOT a survivor. It is the blank-Strong's-fill / expected-diff verse
+#     pre-registered independently at CHARTER_cert_session9.md line 466 (columns
+#     english/english_head/greek_pos/bracket_id). Its rows were inspected directly: the
+#     verb "should destroy" consolidated onto the G846 slot, the G622 slot left blank,
+#     reassembly clean. Two independent confirmations, not the survivor story.
+#
+# GATE: flagged rows BEYOND this list must stay <= 671. Every entry below must still fire
+# (a stale entry that no longer flags is a drift signal, not a silent pass).
+#
+# FORMAT: <Book Ch:Vs> | <host strongs_base> | <class>
+#
+1Ki 17:20 | G4771 | survivor
+2Sa 1:3 | G4771 | survivor
+Act 23:15 | G846 | survivor
+Deu 4:7 | G846 | survivor
+Eph 5:26 | G846 | survivor
+Eze 40:3 | G846 | survivor
+Gal 4:17 | G846 | survivor
+Jdg 10:4 | G846 | survivor
+Jdg 11:24 | G846 | survivor
+Job 15:24 | G846 | survivor
+Job 33:16 | G846 | survivor
+Joh 13:2 | G846 | survivor
+Luk 22:4 | G846 | survivor
+Mar 1:45 | G846 | survivor
+Mar 3:6 | G846 | survivor
+Mar 8:22 | G846 | survivor
+Mar 9:18 | G846 | survivor
+Mar 9:50 | G846 | survivor
+Mar 11:18 | G846 | survivor
+Mar 12:13 | G846 | survivor
+Mar 14:25 | G846 | survivor
+Mar 14:40 | G846 | survivor
+Mar 16:7 | G846 | survivor
+Mar 16:18 | G846 | survivor
+Mat 12:14 | G846 | L466-blankfill
+Mat 22:15 | G846 | survivor
+Mat 26:16 | G846 | survivor
+Mat 26:29 | G846 | survivor
+Mat 26:42 | G846 | survivor
+Mat 28:7 | G846 | survivor
+Rom 1:19 | G846 | survivor

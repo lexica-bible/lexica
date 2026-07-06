@@ -397,6 +397,12 @@ head) + 1,785 lower-confidence NO-EVIDENCE. Reasons to defer:
 - **Distinct, large mechanism** — folding 671 unadjudicated changes into the combined diff would bloat it.
 - **GATE (kept):** the detector goes into the S9 gate as a **frozen floor of 671** — the rebuild must not
   GROW the count; any new under-distribution beyond 671 fails the gate. Class is measured, can't creep.
+  **S11 UPDATE (2026-07-06): the (P1) pronoun fix consolidates 31 straddled verb-phrases WHOLE onto their
+  pronoun slots (reading-correct — word-order=0 on every one), which this detector counts as
+  under-distribution. Those 31 rows are frozen BY NAME in `AUDIT_phrase_gloss_allowlist.txt` (30 pre-S11
+  survivors + Mat 12:14 per L466 below), NOT by bumping the count. The gate is now: flagged rows BEYOND that
+  allowlist must stay ≤ 671 — a 32nd new row still trips. The detector reads the file and prints "FLAGGED
+  BEYOND allowlist". That file is the ONE canonical list; do not re-derive the number from prose.**
 - **FOLLOW-UP (post-S9):** a dedicated pass — adjudicate a sample against the ABP app (defect vs convention),
   distribute the true-defect ones the dual-ordering way. Its own investigation + pre-registered diff.
 
@@ -514,7 +520,8 @@ couldn't have if either number were hardcoded — which is exactly why the line-
   control-fires on Psa 39:1 (baked in: prints CONTROL FIRED/MISSED). (g)'s FIX is DEFERRED, so this runs as
   a **frozen FLOOR of 671 FLAGGED** (live-db count 2026-07-05): the rebuild must keep FLAGGED ≤ 671 — any
   NEW under-distribution beyond the floor fails the gate. Re-run post-rebuild; assert control FIRED first,
-  then FLAGGED ≤ 671.
+  then **FLAGGED BEYOND `AUDIT_phrase_gloss_allowlist.txt` ≤ 671** (S11: 31 P1 pronoun consolidations frozen
+  by name in that file — see the (g) GATE S11 UPDATE above; the raw FLAGGED total is 702 = 671 + those 31).
 - **Five-pass single-control set (added 2026-07-05, JP's middle-path call).** (P) certifies only its two
   passes (P1 `_redistribute_pronoun_compounds`, P2 `_split_numbered`). The other FIVE build-reorder passes
   get NO full per-pass certification, but each gets ONE banked known-positive control — a verse where the

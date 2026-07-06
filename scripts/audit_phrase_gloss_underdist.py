@@ -51,6 +51,31 @@ DB = next((a for a in ARGS if not a.startswith("--")), "bible.db")
 DUMP_ALL = "--dump-all" in ARGS
 BOOK_FILTER = ARGS[ARGS.index("--book") + 1] if "--book" in ARGS else None
 
+# ── (g) allowlist — the S11 rebuild's 31 explained new rows (P1 pronoun consolidations
+#    + Mat 12:14 charter L466). Frozen baseline = flagged rows BEYOND this list (<= 671).
+#    Cert artifact: AUDIT_phrase_gloss_allowlist.txt (repo root). Missing -> raw count. ──
+_ALLOWLIST_PATH = os.path.join(os.path.dirname(os.path.abspath(__file__)), os.pardir,
+                               "AUDIT_phrase_gloss_allowlist.txt")
+
+
+def _load_allowlist(path=_ALLOWLIST_PATH):
+    allow = set()
+    try:
+        with open(path, encoding="utf-8") as fh:
+            for line in fh:
+                line = line.strip()
+                if not line or line.startswith("#"):
+                    continue
+                parts = [p.strip() for p in line.split("|")]
+                if len(parts) >= 2:
+                    allow.add((parts[0], parts[1]))
+    except FileNotFoundError:
+        print(f"  (note: allowlist {path} not found — reporting raw count only)", file=sys.stderr)
+    return allow
+
+
+ALLOWLIST = _load_allowlist()
+
 # ── function-word set: LSJ classification ∪ override (mirrors app._build_function_strongs_cache) ──
 _LSJ_FUNC_WORD_RE = re.compile(
     r'\b(?:'
@@ -218,6 +243,12 @@ for c in cands:
 
 conn.close()
 
+# ── partition flagged against the S11 allowlist (frozen baseline = flagged BEYOND it) ──
+_flagged_keys = {(r[0], r[1]) for r in flagged}
+beyond = [r for r in flagged if (r[0], r[1]) not in ALLOWLIST]
+allow_hit = _flagged_keys & ALLOWLIST
+allow_stale = ALLOWLIST - _flagged_keys
+
 # ── control-fire check (before any zero is trusted) ──────────────────────────
 control = next((r for r in flagged if r[0] == "Psa 39:1"), None)
 control_ne = next((r for r in no_evidence if r[0] == "Psa 39:1"), None)
@@ -226,6 +257,11 @@ print(f"READ-ONLY phrase-gloss UNDER-distribution audit -> {DB}")
 print(f"  function-word set: {len(FUNC):,} (LSJ ∪ override)")
 print(f"  FLAGGED (under-distribution class): {buckets['FLAGGED']:6,}")
 print(f"  NO-EVIDENCE (blank neighbour, def-miss): {buckets['NO-EVIDENCE']:6,}")
+print(f"  allowlisted (S11 explained):        {len(allow_hit):6,} / {len(ALLOWLIST)}")
+print(f"  FLAGGED BEYOND allowlist (gate <= 671): {len(beyond):6,}")
+if allow_stale:
+    print("  ⚠ allowlist entr(ies) that no longer fire (drift — investigate): "
+          + ", ".join(f"{r} {h}" for r, h in sorted(allow_stale)))
 print()
 if control:
     print("  CONTROL Psa 39:1: FIRED  ✓  -> the zero/count is trustworthy")
