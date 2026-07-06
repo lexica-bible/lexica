@@ -293,14 +293,24 @@ examples this batch: Num 36:6 `from` (not "from out of"), 1Ch 22:15 keeps `;` (n
 `armfuls` (not "the arm"). A print-vs-feed rendering gap on a lexeme (e.g. G43.1 `armfuls`) is a future
 lexicon question, NOT a Tier B row. Each "before" = the EXACT post-patch parser output (the guard value).
 
-### (g) phrase-gloss under-distribution — CONDITIONAL (trace confirmed the shared gate)
+### (g) phrase-gloss under-distribution — DEFERRED (fix), detector in gate as a FLOOR (2026-07-05)
 Psa 39:1 "to not sin" parked entirely on G3361 (μή), neighbor G264 (ἁμαρτάνειν) blank — should distribute
-(same class as the G846 "jesus 2" finding). `_split_compounds` is the distributor, and the S9 trace
-CONFIRMED the (P) survivors live in that same distributor's carry path — so the "one leaky lexicon-evidence
-gate misfires both ways" hypothesis is now the leading read. **This class is v2- AND v1-INVISIBLE**
-(order- and bag-neutral) → the gate block needs its OWN detector regardless. Ship (g) in THIS rebuild only
-if the (P) fix cleanly covers it as one mechanism; else it's a follow-up. Either way the gate block gains
-the phrase-gloss detector (below).
+(same class as the G846 "jesus 2" finding). `_split_compounds` is the distributor. **This class is v2- AND
+v1-INVISIBLE** (order- and bag-neutral) → the gate block needs its OWN detector regardless.
+**DECISION 2026-07-05: DEFER the FIX; the DETECTOR ships in the gate as a floor.** The read-only detector
+`scripts/audit_phrase_gloss_underdist.py` (control Psa 39:1 FIRED ✓) counted the class on the live db:
+**671 FLAGGED** (function-word host + multi-word gloss + blank content neighbour whose def contains the
+head) + 1,785 lower-confidence NO-EVIDENCE. Reasons to defer:
+- **671, not a handful** — a systematic pattern, dominated by "not + verb" negations ("shall not fail" on
+  οὐ with the verb slot G1587 blank), Psa 39:1 one member of a large uniform class.
+- **Defect-vs-convention is unsettled** — whether ABP parking "not fail" on the negative (verb un-clickable)
+  is a bug or an acceptable rendering needs sample adjudication vs the ABP app; too many to adjudicate inside
+  this rebuild, and fixing before we understand the class = "ship half-baked."
+- **Distinct, large mechanism** — folding 671 unadjudicated changes into the combined diff would bloat it.
+- **GATE (kept):** the detector goes into the S9 gate as a **frozen floor of 671** — the rebuild must not
+  GROW the count; any new under-distribution beyond 671 fails the gate. Class is measured, can't creep.
+- **FOLLOW-UP (post-S9):** a dedicated pass — adjudicate a sample against the ABP app (defect vs convention),
+  distribute the true-defect ones the dual-ordering way. Its own investigation + pre-registered diff.
 
 ### Already LIVE (NOT a rebuild diff)
 The chip clause-mark lift fix (the "the word. was God" bug) shipped Session 8 in the frontend — reader
@@ -412,9 +422,11 @@ couldn't have if either number were hardcoded — which is exactly why the line-
     shrink is expected, not discovered.
   - Content-other → 0 requires BOTH the parser fix (12) AND the 5 Tier B rows applied (the 4 bracket-order
     + Mat 20:29); Num 36:6 clears on the parser alone.
-- **phrase-gloss under-distribution detector** (multi-word gloss on a function-word tag + adjacent blank
-  content slot) — build read-only, control-test it FIRES on Psa 39:1, drive to an agreed floor. Required in
-  the gate whether or not (g) ships this rebuild.
+- **phrase-gloss under-distribution detector** (`scripts/audit_phrase_gloss_underdist.py`, read-only) —
+  control-fires on Psa 39:1 (baked in: prints CONTROL FIRED/MISSED). (g)'s FIX is DEFERRED, so this runs as
+  a **frozen FLOOR of 671 FLAGGED** (live-db count 2026-07-05): the rebuild must keep FLAGGED ≤ 671 — any
+  NEW under-distribution beyond the floor fails the gate. Re-run post-rebuild; assert control FIRED first,
+  then FLAGGED ≤ 671.
 - **Five-pass single-control set (added 2026-07-05, JP's middle-path call).** (P) certifies only its two
   passes (P1 `_redistribute_pronoun_compounds`, P2 `_split_numbered`). The other FIVE build-reorder passes
   get NO full per-pass certification, but each gets ONE banked known-positive control — a verse where the
