@@ -81,6 +81,15 @@ _L10_REASON = ("ABP source dropped the Strong's number on the verb 'change' (ell
                "G3756 stays on pos 6) per the official ABP app (apostolicbibleapp.com) Mal "
                "3:6. L10.")
 
+_ACT73_REASON = ("S10 word-side. Act 7:3 ending: ABP lumps 'I show to you!' onto ἄν (G302) with "
+                 "trailing empty σοι/δείξω slots; the build spread them but left δείξω ('I show', "
+                 "G1166) reading AFTER σοι ('to', G4671), so the words show 'which to I show you!'. "
+                 "Source/prose read 'which I show to you!'. Give pos 19+20 a shared bracket + "
+                 "greek_pos (I show=1, to=2) so the reader orders them — each word keeps its own "
+                 "english/number; 'which' (18) and 'you!' (21) stay put. Reorder metadata ONLY "
+                 "(option B), no english/strongs moved. Verified via scripts/control_act7_3.py "
+                 "(reorder_english render = 'a land which I show to you!').")
+
 _MAT2029_REASON = ("S10 word-side. Mat 20:29 bracket '[multitudeG3793 1a great]': 'multitude' has "
                    "NO source position digit, so it took BH's greek_pos 1 — tying with 'a great' "
                    "(source digit 1). A tie leaves the reader unable to order them, so the words "
@@ -123,6 +132,12 @@ ENTRIES = [
     ("Dan",  4, 33,  1, "strongs_base", "G1473", "G846", _DAN433_REASON, "L5"),
     # S10 — Mat 20:29 pos 7, the un-numbered bracket word "multitude" (word side)
     ("Mat", 20, 29,  7, "greek_pos",    "1",     "2",    _MAT2029_REASON, "S10-mat2029"),
+    # S10 — Act 7:3 pos 19/20, reorder "I show" before "to" via reorder metadata (option B).
+    # Both cells are blank now -> source_value is None (a NULL cell matches only None).
+    ("Act",  7,  3, 19, "bracket_id",   None,    "1",    _ACT73_REASON,   "S10-act7:3"),
+    ("Act",  7,  3, 19, "greek_pos",    None,    "2",    _ACT73_REASON,   "S10-act7:3"),
+    ("Act",  7,  3, 20, "bracket_id",   None,    "1",    _ACT73_REASON,   "S10-act7:3"),
+    ("Act",  7,  3, 20, "greek_pos",    None,    "1",    _ACT73_REASON,   "S10-act7:3"),
 ]
 
 
