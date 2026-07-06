@@ -1302,6 +1302,26 @@ def build_verse_words(abp_words: list, bh_rows: list, lex: dict = None) -> list:
         if closes_bracket:
             in_bracket = False
 
+        # Malformed bracket (ABP feed defect): a ']' that closes with no matching '['.
+        # bracket_id is still None here, yet abp_pos carries the source's reading-order
+        # digit. Left alone, _prefix_base drops greek_pos on the un-bracketed slots and
+        # the digit order is lost — the words freeze in raw Greek order (Mat 21:19
+        # "dried up immediately the fig-tree" for source "1immediately 2the 3fig-tree
+        # 4dried up"). Fix: tag the closer + the contiguous run of preceding digit-
+        # carrying slots as a real bracket, so greek_pos survives _prefix_base and the
+        # reader / v2 order by it (and float the trailing '.' to the reading-last word).
+        # Word POSITIONS never move — only bracket_id/greek_pos. A BARE stray ']' (no
+        # digit — Zec 10:3 "I visit]") has abp_pos None and is skipped. Pre-registered
+        # to EXACTLY 3 verses by scripts/scan_malformed_brackets.py (Mat 21:19,
+        # 1Ch 22:15, Job 24:19); cert S10 word-side follow-up.
+        if closes_bracket and bracket_id is None and abp_pos is not None:
+            bid += 1
+            bracket_id = bid
+            k = len(rows) - 1
+            while k >= 0 and rows[k][10] is not None and rows[k][6] is None:
+                rows[k] = rows[k][:6] + (bid,) + rows[k][7:]
+                k -= 1
+
         english_head = _head_word(english) if english else None
         display      = english_head or (english if english and " " not in english else None)
         italic_set   = set(iw.split(",")) if iw else set()
