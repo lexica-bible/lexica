@@ -6,6 +6,21 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## MetaV person rich-card serving — DONE + LIVE 2026-07-05
+The `tipnr_metav_link` person table (1,625 links) is now SERVED: a bound person renders the rich David-
+style MetaV card under the TIPNR spine. `/api/metav/entity` adds a `metav` field via one join (gated
+`section='person'` + `is_people_group` People/Clan gate + a born/died-or-≥2-kin bio bar; fallback rich →
+thin TIPNR → Strong's); frontend `MetavPersonBody` shared with the name card. Commits c8a340a (serve),
+bf8b298 (thin-card arrangement). Live-smoked green (Saul/Hezekiah/Joseph rich; Levites People/Clan;
+Pharaoh Exo3 thin, 1Ki3:1 rich; David name-path). Two fixes rode along:
+- **f27484c — multi-referent name-path guard.** Unbound "Saul" at Gen 36:37 (Edomite king) was serving
+  King Saul's family. `/api/metav/person` now declines a single bio when the name is borne by >1 man.
+- **Titles ship per-referent, NOT unlinkable.** The handoff's "titles unlinkable by design" was too broad:
+  the seven pharaoh entities each correctly link to their own record (verse-bind fixes which one); the
+  composite `Pharaoh@Exo.1.11` is correctly unlinked. **Rule for the rebuild: don't widen the link-build
+  title check — it'd delete 7 good links.**
+Lessons + the David-absent-from-tipnr_entities finding: memory `project_metav_person_link`.
+
 ## 2026-07-04 — ABP cert Session 5: TIPNR pinned, backup damage-check, L2/L10 landed, seam doc
 - **TIPNR pinned.** Both `build_entity_binding.py` AND `import_tipnr.py` downloaded TIPNR live at build time
   (the last unpinned input near the certified layer). Vendored to `tipnr/TIPNR.txt`, hash-added to

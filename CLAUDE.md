@@ -340,10 +340,14 @@ The SPA is invisible to search engines, so `views_seo.py` serves plain server-re
   `project_entity_resolution_rebuild`.
 - `tipnr_metav_link` — cross-links a bound TIPNR entity → its rich MetaV record (PA-only, NOT in git).
   `(uniq, kind, metav_id, rule, score, margin)`; kind='person' LIVE (1,625 rows, 2026-07-05) mapping a
-  person entity → `metav_people.person_id` so the panel CAN render the rich David-style card (place edition
-  reserves kind='place'). **Data only — NOT served yet** (serializer/frontend + People/Clan precedence is
-  the next task). Built by `scripts/build_metav_person_index.py` (MetaV CSVs → staging `metav_index.db`,
-  PA-only) + `scripts/build_person_metav_link.py --apply`; re-run BOTH after a words rebuild. Memory
+  person entity → `metav_people.person_id` so the panel renders the rich David-style card (place edition
+  reserves kind='place'). **SERVED since 2026-07-05:** `/api/metav/entity` adds a `metav` rich-card field
+  via ONE join (gated: `section='person'` + NOT `is_people_group` + a born/died-or-≥2-kin bio bar), fallback
+  rich → thin TIPNR → Strong's; frontend `MetavPersonBody` (shared with the name card) fills the bound card
+  under the TIPNR spine. **Titles ship per-referent** (the seven pharaohs each link to their own record; the
+  composite `Pharaoh@Exo.1.11` correctly UNLINKED) — do NOT widen the link-build title check, it'd delete
+  good links. Built by `scripts/build_metav_person_index.py` (MetaV CSVs → staging `metav_index.db`, PA-only)
+  + `scripts/build_person_metav_link.py --apply`; re-run BOTH after a words rebuild. Memory
   `project_metav_person_link`; spec `HANDOFF_metav_person_link.md`.
 - `word_gloss` — plain-meaning lemma gloss for the word card (`strongs` → `gloss` + `source`). Side table in
   bible.db (built on PA, not in git; ~17.5k rows). Greek = Dodson base + TBESG fill + overrides + dotted-by-
@@ -1304,6 +1308,14 @@ memory `project_ai_synthesis_quality`.
   entries with no metaV/BDB data. The place endpoint also withholds the map pin when the name maps to >1
   place or the matched row lacks its own coords. Both = **Fix A**, the permanent floor under whatever the
   binder below can't bind. Full record: memory `project_metav_expansion`.
+- **Multi-referent guard on the NAME path (2026-07-05).** `/api/metav/person` is the UNBOUND path (the
+  frontend calls it only when no verse-bind owns the card). If the bare name is borne by >1 man it returns
+  `{"ambiguous":true}` and serves NO bio — the reader gets Strong's + occurrences + the verse-scoped AI note,
+  never one man's family asserted as fact (unbound Edomite "Saul" at Gen 36:37 was serving King Saul's kin).
+  Signal = several `metav_people` candidates (name OR alias) OR several TIPNR person entities under the
+  surface name; the metaV+alias leg is PRIMARY (the TIPNR leg matches surface form, secondary). Single-
+  referent names (David) still serve rich. `_name_is_multi_referent` in views_metav.py; memory
+  `project_metav_expansion`.
 - **VERSE-BOUND ENTITY CARD — the Issue-2 rebuild, LIVE 2026-06-28.** A PN click now first asks
   `GET /api/metav/entity/<name>?book=&chapter=&verse=` (views_metav.py) for the verse-CORRECT TIPNR entity
   (from `pn_binding`); when bound it LEADS the rail with a sourced `.pnbound` card (canonical name + TIPNR
