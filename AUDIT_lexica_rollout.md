@@ -363,6 +363,57 @@ comparative (4/10), adverbial (2/10), temporal "long time" (3/10), collective-ma
 If a SECOND batch word caps out with **range-completeness** as the binding constraint, the mechanism decision
 (B vs C) moves from the retro to RIGHT THEN — two occurrences is a pattern, one is a hard word.
 
+### SHIP BAR — RE-RULED 2026-07-06 (the SECOND reruling): four gates, not count-match
+The first reruling (G80) said "reviewer gates core structure, not surface count." This finishes the job:
+a draft ships if it clears FOUR gates, **whatever its sense count** —
+1. **No holes** — every stable reviewer job is present + distinct.
+2. **No merges** — no collapse of a distinction the reviewer showed majority-distinct.
+3. **Completeness** — every reviewer-attested facet is visible SOMEWHERE (own sense, thin sense, or
+   explicitly in the range). Nothing silently dropped. **Detector = the uncited-rendering flag; its control
+   is the πολύς attempt-3 'long' catch** (a dropped temporal facet the flag caught at 13× uncited).
+4. **Granularity ships as drawn** — splitting finer/coarser WITHIN the reviewer's observed distribution is
+   fine; verse-supported flickers ship as thin senses (the G80 standard, now applied SYMMETRICALLY).
+All prior gates unchanged (citations, dangling, collocation, loaded-frame, senses ≤ occ). Cap stays 3.
+- **DERIVATION.** Granularity is a STYLE dimension, not a TRUTH dimension — sense counts have no ground truth
+  (human lexicons split καρδία/πολύς across every count 2→6 the same way our draws do). Only holes, merges,
+  and dropped facets actually MISLEAD a reader; "match the majority count" was chasing phantom precision.
+- **Corrects a backwards asymmetry.** We shipped G80's ONE-verse Psa 35:14 as a thin sense while forcing
+  πολύς's MULTI-verse comparative trio to fold — the weaker-grounded flicker got a sense, the better-grounded
+  one didn't. The four gates apply G80's thin-sense standard symmetrically: verse-supported ships (as sense
+  or thin sense); the only hard floor is that nothing attested is invisible.
+
+### Framing correction — the wobble axis is USAGE dimensionality, not referent concreteness
+καρδία was mis-labeled "concrete noun, one dimension." The REFERENT is concrete (a body organ); the CORPUS
+USAGE is almost entirely the multi-facet inner-self abstraction (cognitive / affective / volitional /
+relational). It wobbled — which CONFIRMS the refined hypothesis (multi-axis → wobble), not falsifies it.
+**Banked: a body-part word can be maximally abstract in use; predict wobble from the usage's dimensionality,
+not the referent's concreteness.** The genuine tight-agreement test transfers to θυγάτηρ / ὕδωρ / ὄρος.
+
+### G2588 καρδία — VERDICT STABLE (ship under the four gates)
+`--runs 10`. **Stable jobs (gate-1 present + distinct):** (1) cognitive — thought/intention/disposition,
+10/10; (2) affective — emotion, distinct 8/10; (3) will-as-acted-upon — the hardened/turned cluster (Exo
+4:21, Num 32:9, 1Sa 6:6, Ezr 6:22), distinct ~8/10. Minority collapses exist (draws 4/6 merge affect into
+cognition; draw 5 folds the hardening cluster), so **gate 2 requires all three distinct — a 2-sense draft
+that merges any pair FAILS.** Extra senses if drawn: moral-disposition (5/10, the Mat 5:8 cluster) and
+relational-presence (2/10, the 1Th 2:17 / 1Jn 3:19 "in your hearts / absent in body" cluster) — **gate 3
+requires both clusters visible as a sense OR in the range, never silently dropped.** All wobbles back-check
+as FOLDS (incl. Eze 17:16, draw-7-only, partner cluster survives everywhere). No holes. Ship path: fresh
+`--dry-run --force`, audit vs the four gates + standard checks, first passer ships via `--from-draw`. Cap 3.
+
+### πολύς re-scored under the four gates (for the record — now UN-STUCK, re-attempt when sequencing suits)
+The four-gate bar unblocks πολύς: it stays parked only for sequencing, not for a mechanism decision.
+- **attempt 1 (3-sense number/degree/comparative)** — FAIL gate 3 (completeness): adverbial + temporal not
+  visible in the range.
+- **attempt 3 (3-sense, same shape)** — FAIL gate 3: temporal dropped ('long' 13× uncited — the gate-3
+  detector firing on its control case).
+- **attempt 2 (5-sense number/degree/comparative/nation-scale/long-time)** — by its headlines + range I read
+  this as FAIL gate 3 too (adverbial "greatly" not visible), NOT a merge — number and degree stay distinct.
+  **DISCREPANCY FLAGGED:** JP's ruling recalled attempt 2 as a merge failure; I don't see a merge in the
+  headlines. Can pull the saved `agreement_G4183`/draw file to settle it if it matters for the record —
+  either way it fails a gate, so it doesn't change the "re-attempt" plan.
+- **Under the new bar, the first πολύς draft that keeps number + degree distinct AND makes comparative,
+  adverbial, and temporal all visible (sense / thin sense / range) ships — whatever its count.**
+
 ### Parked-hard list
-- **G4183 πολύς** — stable 2, range won't hold the comparative/adverbial/temporal folds; awaits the mechanism
-  decision on full-batch evidence. (Details above.)
+- **G4183 πολύς** — un-stuck by the four-gate reruling; parked for sequencing only. Re-attempt: first draft
+  clearing all four gates ships. (Re-score + detail above.)
