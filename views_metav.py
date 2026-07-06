@@ -176,6 +176,38 @@ def _person_has_bio(card):
                           or len(card["relationships"]) >= 2))
 
 
+def _name_is_multi_referent(conn, name):
+    """A bare surface name borne by MORE THAN ONE biblical man. An UNBOUND click (no
+    verse to say which one) then has no basis to serve a single person's bio — so the
+    name path declines the card and the reader gets Strong's + occurrences (the honest
+    'the app doesn't know which one' card), never one man's family asserted as fact
+    (Gen 36:37's Edomite 'Saul' was being served King Saul's kin). Two signals, EITHER
+    sufficient (mirrors the link-build's own multi-candidate test):
+      1. several metav_people candidates for the name — INCLUDING aliases, since ABP
+         renders a name one way and MetaV another (ABP 'Saul' == MetaV 'Shaul').
+      2. several TIPNR person entities under the surface name.
+    The verse-BOUND path is UNAFFECTED: a bind already fixes which man, so its rich card
+    (and the seven per-referent pharaohs) still serve. Deploy-safe: the TIPNR check is
+    skipped if the table is absent."""
+    n_metav = conn.execute("""
+        SELECT COUNT(*) FROM (
+            SELECT person_id FROM metav_people         WHERE name  = ? COLLATE NOCASE
+            UNION
+            SELECT person_id FROM metav_people_aliases  WHERE alias = ? COLLATE NOCASE
+        )""", (name, name)).fetchone()[0]
+    if n_metav > 1:
+        return True
+    if conn.execute("SELECT 1 FROM sqlite_master WHERE type='table' "
+                    "AND name='tipnr_entities'").fetchone():
+        n_tipnr = conn.execute(
+            "SELECT COUNT(*) FROM tipnr_entities WHERE section='person' "
+            "AND (head = ? COLLATE NOCASE OR uniq LIKE ?)",
+            (name, name + "@%")).fetchone()[0]
+        if n_tipnr > 1:
+            return True
+    return False
+
+
 @bp.route("/api/metav/person/<path:name>")
 def metav_person(name):
     conn = db_ro()
@@ -224,6 +256,14 @@ def metav_person(name):
                   f"{prefix}%", len(name) - 2, len(name) + 2)).fetchone()
         if not row:
             return jsonify({"error": "not found"}), 404
+
+        # Referent-multiplicity guard: this endpoint is the UNBOUND path (the frontend
+        # only calls it when no verse-bind owns the card). If several men share the
+        # name, decline to serve any single bio — the frontend then shows Strong's +
+        # occurrences (+ its verse-scoped AI note), the honest card. A single-referent
+        # name (David) is unaffected and still serves its rich card here.
+        if _name_is_multi_referent(conn, name):
+            return jsonify({"ambiguous": True}), 200
 
         card = _person_card(conn, row["person_id"])
     finally:

@@ -80,6 +80,31 @@ title check in any rebuild:
   the SAME `is_people_group` predicate (no copied set). David is NOT bound (absent from pn_binding), so it
   keeps the name-path card unchanged — the `_person_card` refactor is what keeps those two in step.
 
+## Live-smoke found a PRE-EXISTING name-path bug — FIXED this pass (2026-07-05)
+Gen 36:37 "Saul" (the EDOMITE king) clicked in an unbound spot — Genesis has ZERO Saul binds, so it
+fell through to the bare-name metaV lookup, which matched "Saul" → served metav 2478 = KING Saul
+(Kish/Jonathan/died Mt. Gilboa) on an Edomite king list. Wrong man's family as fact — the
+wrong-referent analog of the loaded-gloss freight problem. Not a serving-pass regression and not a
+link-table error (the link `Saul@1Sa.9.2-Act → 2478, strongs, 1.0` is correct — that entity IS King
+Saul). MetaV even has the right man (2562/2563 "Shaul") but the name path can't reach him: ABP spells
+the Edomite "Saul", MetaV spells him "Shaul".
+
+**Fix (name path only, `views_metav._name_is_multi_referent` + a guard in `metav_person`):** before
+serving a bio from a bare name, test referent multiplicity — several metav_people candidates (name OR
+alias) OR several TIPNR person entities under the surface name. If multi-referent → return
+`{"ambiguous": true}`, no bio; the frontend then shows Strong's + occurrences (+ its verse-scoped AI
+note), the honest card. Single-referent names (David) unaffected — still rich. The verse-BOUND path is
+untouched: a bind already fixes which man, so King Saul at 1Sa 9 and the seven pharaohs still serve.
+
+## Binding coverage (David absent from pn_binding) — PRIORITY RAISED, now user-visible cost
+Before this fix, an unbound click still fabricated a specific bio, so the coverage gap was invisible.
+AFTER it, unbound = a thin card. So every major figure missing from `pn_binding` — David (absent
+entirely), and any occurrence outside a bound range — now visibly LOSES its rich card until it binds.
+Binding is what EARNS the rich card back. So the entity-resolution binding-coverage task is no longer
+housekeeping — raise it. Same class for every multi-man name clicked outside bound ranges (Zechariah,
+Shallum, Azariah, Joseph). Note David may be TIPNR-absent too (earlier `head='David'` / `uniq LIKE
+'David%'` both returned nothing) — worth confirming as part of that task.
+
 ## Next task (its own reviewed pass) — serializer + frontend  [DONE — see the correction block above]
 - Resolver: bound person → `tipnr_metav_link` (kind='person') → render the rich MetaV card
   (reuse David's existing component, no new styles per design.md); fall back TIPNR card →
