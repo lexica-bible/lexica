@@ -1,0 +1,32 @@
+[
+ {
+  "ref": "Mat 21:19",
+  "column": "verses.text",
+  "before": "And beholding one fig-tree upon the way, he came unto it and found nothing on it except leaves only. And he says to it, No longer from you should fruit be produced into the eon. And dried up immediately the fig-tree.",
+  "after": "And beholding one fig-tree upon the way, he came unto it and found nothing on it except leaves only. And he says to it, No longer from you should fruit be produced into the eon. And immediately the fig-tree dried up."
+ },
+ {
+  "ref": "1Ch 22:15",
+  "column": "verses.text",
+  "before": "And with you in multitude doing 2 the works are craftsmen, quarriers of stones, and fabricators of wood, and every wise one for every work;",
+  "after": "And with you doing the works in multitude are craftsmen, quarriers of stones, and fabricators of wood, and every wise one for every work;"
+ },
+ {
+  "ref": "Job 24:18",
+  "column": "verses.text",
+  "before": "He is light upon the face of the water; may their portion be cursed upon the earth; may appear and their plants",
+  "after": "He is light upon the face of the water; may their portion be cursed upon the earth; and may their plants appear"
+ },
+ {
+  "ref": "Job 24:19",
+  "column": "verses.text",
+  "before": "upon 7 the earth dry; for armfuls of orphans they seized by force.",
+  "after": "dry upon the earth; for armfuls of orphans they seized by force."
+ },
+ {
+  "ref": "Mat 20:29",
+  "column": "verses.text",
+  "before": "And of their going forth from Jericho, there followed to him a great.",
+  "after": "And of their going forth from Jericho, there followed to him a great multitude."
+ }
+]

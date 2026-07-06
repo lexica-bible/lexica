@@ -232,6 +232,9 @@ so they now live in **(P)** above. The diagnosis that merged them:
   real — ABP packs it onto the pronoun. Source/prose = "he should deliver him up".)
 
 ### (e) reorder float adds `)` — paren-edge
+**STATUS: #2–#6 DONE + committed 2026-07-05 (6e1deed) — render+port shipped, port test 137/137 green,
+synthetic control proved the `)` floats to the English-order-last word. #1 (build) pre-registered as a
+0-row diff, rides the rebuild.**
 The trailing-clause float moves a mark past a reordered group but only for `. , ; : ! ? ·` — NOT `)`.
 Heb 10:8 class ("…the law)" renders "…offered) …law"). Fix = add `)` to the float set.
 **SCOPE CORRECTED 2026-07-05 (was "3 spots, render-only"): the float set is COPY-PASTED in 6 LIVE
@@ -255,13 +258,40 @@ first: any self-contained `(word)` token must NOT split — eyeballed on the dum
 **POST-S9 CLEANUP (flagged, do NOT do now):** consolidate these 6 float copies to ONE shared
 definition so they can't drift again. Repo hygiene, not audit work — after S9.
 
-### (f) the 11 digit leaks → Tier B + tolerant parser
-`load_abp_prose` choked on a MALFORMED source bracket (a `]` with no `[`, Mat 21:19 shape) and leaked the
-order digits into `verses.text` ("1let", "4dried") or a stray Strong's `G` ("AndG.", Mal 3:6 `G`). The
-fresh build reads **11** (was 13; 2 cured incidentally). Run `dump_family_source.py --scan-brackets` FIRST
-to get the full set + confirm the shape. Van der Pool source defect → log each as a **Tier B
-`abp_corrections` entry** AND make `load_abp_prose` TOLERATE an unmatched bracket (don't leak). This is
-verses.text-side (11 rows), untouched by the words rebuild.
+### (f) the 13 content-other leaks → parser fix (COMMITTED) + 5 Tier B rows
+**STATUS 2026-07-05: parser fix DONE + committed (b62ab8f); 5 Tier B rows drafted + adjudicated
+(`AUDIT_tierB_f_proposed.json`), awaiting JP's write. The 13-verse parser diff is banked as
+`cert_prose_leak_diff.json` for the gate to re-verify.**
+**BASELINE CORRECTED 2026-07-05: 13 content-other, ZERO cured (not "11, 2 cured").** `load_abp_prose.py`
+has ONE commit in its whole history — never edited — so every prose-side leak REGENERATES on any build;
+a fresh build also reads 13. The old "13→11, 2 cured incidentally" was an error. Reconciled against the
+live `audit_reassembly_diff.py --v2 --list` (13) and a local `clean_verse` leak scan. All 13 are
+prose-side (`verses.text`), in THREE mechanisms:
+- **7 stray-`G`** — a lone apparatus `G` (dropped Strong's number): 1Pe 3:13 `AndG.`, Act 24:8
+  `biddingG.`, Heb 7:4 `viewG.`, Mat 12:14 `theG.`, Zec 9:11 `AndG.`, 1Sa 6:11 `buttocks.G`, Mal 3:6
+  trailing `G`. → **PARSER FIX** (strip a `G` not followed by a digit/`*`/lowercase — real words like
+  "God" are safe). No Tier B.
+- **5 malformed-bracket digit-leaks** — a `[`/`]` with no partner, so the reorder never eats the position
+  digits: Mat 21:19 (`4dried…`, the ONE `G1096` redraw), 1Ch 22:15, Job 24:18, Job 24:19, Num 36:6
+  (`1let`). → **PARSER digit-strip (tolerate the unmatched bracket) + one Tier B row for the ORDER** —
+  EXCEPT **Num 36:6 = PARSER-ONLY** (no bracket, just a stray digit; the de-leaked output "…from the
+  people…" is feed-faithful — the trilinear's fuller "from out of" is print wording, not the feed). So
+  **4 bracket Tier B rows**, not 5.
+- **1 dropped word** — Mat 20:29: source bracket `[multitudeG3793 1a great]` mixes a numbered word with an
+  UN-numbered one; `reorder_bracket` keeps only numbered items, so "multitude" is DROPPED (text reads
+  "…a great."). Scanned the whole feed: this is the ONLY case. → **one Tier B row** (`a great multitude`).
+  No parser change (a general "keep un-numbered bracket words" fix would risk the whole corpus for one verse).
+**Rev 13:18** (`600 60 6` = 666 numeral) is NOT a v2 hit — the word rows carry the same "600 60 6", so
+both sides match; nothing to allowlist. Net (f): parser fix (7 stray-`G` + Num 36:6 + malformed-bracket
+digit/bracket tolerance) + **5 Tier B rows** (4 bracket-order: Mat 21:19/1Ch 22:15/Job 24:18/Job 24:19,
++ Mat 20:29 dropped word). verses.text-side only, untouched by the words rebuild.
+
+**TIER B DRAFTING RULE (standing, JP 2026-07-05):** a Tier B row's "after" text takes its BRACKET WORD
+ORDER from JP's pasted adjudication, but the FEED adjudicates every word and punctuation mark OUTSIDE the
+brackets — never import the trilinear/print wording (it renders fuller than the pinned feed). Worked
+examples this batch: Num 36:6 `from` (not "from out of"), 1Ch 22:15 keeps `;` (not `—`), Job 24:19 keeps
+`armfuls` (not "the arm"). A print-vs-feed rendering gap on a lexeme (e.g. G43.1 `armfuls`) is a future
+lexicon question, NOT a Tier B row. Each "before" = the EXACT post-patch parser output (the guard value).
 
 ### (g) phrase-gloss under-distribution — CONDITIONAL (trace confirmed the shared gate)
 Psa 39:1 "to not sin" parked entirely on G3361 (μή), neighbor G264 (ἁμαρτάνειν) blank — should distribute
@@ -371,7 +401,17 @@ couldn't have if either number were hardcoded — which is exactly why the line-
 - **v1 AND v2 reassembly at CRITERION** (`--controls` + `--controls --v2` fire first):
   **zero word-order + zero content-other + NO NEW punct-position.** punct-position stays but is pinned as a
   FROZEN ALLOWLIST — the fresh build cured NONE (still 261), so freeze all 261 as the allowlist; any new
-  punct hit fails the gate.
+  punct hit fails the gate. **PRE-REGISTERED, (f)-driven (2026-07-05):**
+  - **Zec 10:3 = the expected 13th parser change.** The (f) parser's stray-bracket strip (NEW 3) also
+    removes Zec 10:3's leftover `]` — a verse v2 filed as **punct-position**, not content-other. So the
+    `load_abp_prose` diff is 13 verses (12 content-other-fixable + Zec 10:3), banked in
+    `cert_prose_leak_diff.json`; the gate re-runs the whole-feed compare against that file. Zec 10:3 is an
+    EXPLAINED hit, not noise.
+  - **punct-allowlist −1 → 260.** Cleaning Zec 10:3's stray `]` drops it OFF the 261 punct-position list.
+    Re-count the allowlist after the rebuild; the frozen set is **260**, not 261. Pre-registered so the
+    shrink is expected, not discovered.
+  - Content-other → 0 requires BOTH the parser fix (12) AND the 5 Tier B rows applied (the 4 bracket-order
+    + Mat 20:29); Num 36:6 clears on the parser alone.
 - **phrase-gloss under-distribution detector** (multi-word gloss on a function-word tag + adjacent blank
   content slot) — build read-only, control-test it FIRES on Psa 39:1, drive to an agreed floor. Required in
   the gate whether or not (g) ships this rebuild.
