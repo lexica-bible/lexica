@@ -132,6 +132,15 @@ These two are the load-bearing ones. Everything else below supports them.
 - The 2-vs-3 fold-to-range strain (πολύς): if the retro rules multi-verse flickers ship as standing
   senses, it revisits G80's Psa 35:14 verdict (asymmetry: 1 verse vs a trio).
 - The parked mechanism decision (higher-cap vs steer vs structure-hint), if the trigger trips.
+- **Gloss_notes assertion-verification (NEW, οὐρανός 2026-07-07).** New defect class: gloss_notes can make
+  plausible-but-false factual claims about the translation (the citation gate checks refs, not assertions).
+  Standing manual check adopted (spot-verify translation-practice claims before ship); mechanizable
+  position-check probe is a retro candidate. Full record: `AUDIT_lexica_rollout.md` apparatus-findings block.
+- **Substitution-probe (NEW).** Bare headword-substitution with no signature collocate (Luk 15:18 "sinned
+  against heaven") is invisible to reviewer/gates/collocations. "Kingdom of heaven" is NOT blind (βασιλεία
+  collocate catches it). Minor; decide if a probe is worth building across the whole rollout.
+- **Standing rule banked (not a retro question, already in force):** unfed claims are verified against the
+  fed list, never inferred from draw silence (absorption vs absence look identical from draw output).
 
 ## KEY FILES
 - `scripts/build_lexica_def.py` (engine; `--from-draw`, `--dry-run --force`, cap logic)

@@ -561,6 +561,37 @@ hand-edited (review-what-ships holds). Queued for OPTIONAL redraw under V5 after
 - **ἱερεύς G2409** (V4) — term-of-art echo ("corporate" ×2).
 (ἱερεύς occurrence-count "32" note: that was JP's NT filter, not a data issue — no action.)
 
+### APPARATUS FINDINGS — surfaced by οὐρανός G3772 (2026-07-07). The session's biggest yield.
+Three apparatus-level findings, independent of how the οὐρανός card finally ships:
+- **NEW DEFECT CLASS — unverifiable-assertion in gloss_notes.** The citation gate verifies *references*;
+  NOTHING verifies *claims about the corpus* (capitalization practice, translation behavior, form-field
+  assertions). Gloss_notes are where the engine makes factual claims in its OWN voice, and those can be
+  plausible-but-fabricated. Case: οὐρανός attempt-1 gloss_notes claimed the capitalized "Heaven" (3×) was
+  "an editorial decision imported by the translation [implying] a proper name or distinct theological
+  referent." Position check (Gen 1:8 / Job 11:8 / Pro 25:3) showed it was **two sentence-starts + one
+  naming act** — the premise was fabricated. **The note's CONCLUSION was right** (same word, no distinct
+  referent — it even flattered our no-metonym ruling), **built on a false premise.** → REDRAW (attempt 1
+  of 3 burned). Caught by a human read of the raw (JP's sentence-position question) — the judge-on-the-raw
+  rule paying out; the pipeline had it green.
+  - **"AGREEMENT IS NOT EVIDENCE."** The same note that was a triumph an hour earlier (rejecting a
+    manufactured metonym *unprompted*) was right-conclusion-on-fabricated-premise. Gloss_notes that flatter
+    our existing rulings get the SAME verification as ones that don't.
+  - **RETRO CANDIDATE:** the capitalization case is mechanizable (verse text is in the DB, sentence-initial
+    is testable), but the general class (engine asserts something about the translation) lands as a
+    **standing manual check: gloss_notes making factual claims about translation practice get spot-verified
+    before ship.** Cheap rule; fired once already.
+- **BLIND-SPOT, REFINED — bare-substitution only.** Earlier framed as "headword-substitution uses are
+  invisible to the whole apparatus." REFINED: "kingdom of heaven" HAS a signature neighbor (βασιλεία), and
+  the collocation flag CAUGHT it (basileía uncited, 33v, PMI 5.86) — resolved clean as phrase-level
+  periphrasis (divine-realm sense present; Son-of-Man precedent, no lemma sense). So the true blind spot is
+  only *bare* substitution with NO signature collocate (Luk 15:18 "sinned against heaven"). Minor + unfed;
+  filed to the substitution-probe retro, not a per-card patch.
+- **METHOD NOTE / STANDING RULE — "no draw surfaced it" ≠ "unfed."** Absorption and absence look identical
+  from draw output; only a read of the FED LIST distinguishes them. **Unfed claims are verified against the
+  fed list, not inferred from draw silence.** Cheap rule; today it converted a guess (metonym "unfed") into
+  a verified finding (fed-40 dumped + read, no metonym verse present; closest = Jas 5:12 "swear by heaven" =
+  oath-by-the-throne, a divine-realm sub-use, not agent-substitution).
+
 ### ESCALATION TRIGGER (standing, batch-wide)
 If a SECOND batch word caps out with **range-completeness** as the binding constraint, the mechanism decision
 (B vs C) moves from the retro to RIGHT THEN — two occurrences is a pattern, one is a hard word.
