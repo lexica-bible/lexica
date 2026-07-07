@@ -22,7 +22,7 @@ import sqlite3
 import sys
 import unicodedata
 
-from audit_dotted_lemmas import bare, clean_text, first_greek
+from audit_dotted_lemmas import clean_text, first_greek
 from build_abp_translit import romanize
 
 DB = os.path.expanduser("~/bible-db/bible.db")
@@ -54,6 +54,19 @@ def strip_length_marks(s: str) -> str:
     d = unicodedata.normalize("NFD", s or "")
     d = "".join(c for c in d if c not in (chr(0x306), chr(0x304)))
     return unicodedata.normalize("NFC", d)
+
+
+def same_word(a: str, b: str) -> bool:
+    """True when two lemmas are the SAME word: case- and final-sigma-insensitive but
+    breathing- and accent-SENSITIVE. Replaces the old bare() compare, which stripped ALL
+    combining marks and so read near-homographs as identical — mountain ὄρος vs boundary
+    ὅρος (differ only by breathing) and law νόμος vs pasture νομός (differ only by accent) —
+    dropping the second word from dotted_lexicon and leaking it into the base word's evidence
+    draw. Keep NFC (so combining vs precomposed accents still compare equal) but do NOT strip
+    the marks."""
+    na = unicodedata.normalize("NFC", (a or "")).lower().replace("ς", "σ")
+    nb = unicodedata.normalize("NFC", (b or "")).lower().replace("ς", "σ")
+    return na == nb
 
 
 def collect(conn):
@@ -95,7 +108,7 @@ def collect(conn):
         if not correct:
             skipped["unreadable"] += 1
             continue
-        if bare(correct) == bare(shown_lemma):
+        if same_word(correct, shown_lemma):
             skipped["already_ok"] += 1           # LSJ entry that already matches the base
             continue
         correct = strip_length_marks(correct)
@@ -130,6 +143,23 @@ def main():
     conn = sqlite3.connect(DB)
     conn.row_factory = sqlite3.Row
     fixes, skipped, abp_fixes = collect(conn)
+
+    if "--diff" in sys.argv:                     # read-only: what would change vs the live table
+        cur = {r[0] for r in conn.execute("SELECT strongs FROM dotted_lexicon")}
+        proposed = {"G" + f[0]: f for f in fixes}
+        added = sorted(set(proposed) - cur)
+        removed = sorted(cur - set(proposed))
+        print(f"[diff vs live dotted_lexicon]  +{len(added)} added  -{len(removed)} removed")
+        print(f"  skipped buckets: {skipped}\n")
+        print("ADDED (dotted | corrected word | romanization | uses):")
+        for k in added:
+            _num, _shown, correct, tr, uses = proposed[k]
+            print(f"  {k} | {correct} | {tr} | {uses}")
+        print("\nREMOVED (expected: none):")
+        for k in removed:
+            print(f"  {k}")
+        conn.close()
+        return
 
     if not do_apply:
         if "--summary" in sys.argv:
