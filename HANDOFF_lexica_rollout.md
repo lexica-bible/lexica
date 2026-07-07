@@ -26,7 +26,11 @@ Lexica floor if it is missing from `dotted_lexicon`. Two classes found + status:
   **ὄρος G3735 SHIPPED** at one sense on the clean 641-row feed (floor
   `agreement_G3735_v6_20260707-221141` = STABLE-at-1; draw-1's 2-sense "encounter-site" split
   REJECTED on the double-shelf gate — Exo 3:1/Neh 9:13/Num 3:1 in both senses — clean re-draw
-  shipped, cache key `65dfcf90`, citation gate 36/36).
+  shipped, cache key `65dfcf90`, citation gate 36/36). **POST-SHIP PROSE FIX (same day):** the
+  rendered card exposed 4 byte defects the four-gate never read (it audited fields, not the prose
+  body) — a leaked title + `---`, "Giboa"→Gilboa typo, a "Sub-uses include:" stutter, a malformed
+  Zion sub-use. Fixed by `fix_lexica_raw.py` (no model call, senses untouched) + split hardening
+  (`9a1dca9`); gate re-passed 36/36. Root lesson → the PROOFREAD GATE below.
 - **NO-ENTRY class — LOGGED, NOT fixed (~90 dotted numbers, mostly the δ-cluster).** No `abp_ext`
   dictionary entry, so the builder can't recover them; they still leak. Mix of real foreign leaks +
   harmless same-word forms — separating them is the ticket's first job.
@@ -59,6 +63,11 @@ Lexica floor if it is missing from `dotted_lexicon`. Two classes found + status:
 - **REVIEWER FLOOR:** every word gets `lexica_agreement.py --word G#### --runs 3` before ship;
   escalate to `--runs 10` on any appear/vanish, merge, or job-boundary wobble in the 3. No word
   ships on a single draft's structure.
+- **PROOFREAD GATE (NEW, ὄρος 2026-07-07 — the four-gate audited structured fields but NOT the
+  prose body, so a typo/stutter/broken-fragment shipped).** Print and READ the full `senses_block`
+  at gate time (now auto-printed by `show_entry`, commit `9a1dca9`), and verify the RENDERED card
+  via a screenshot before close-out — not the pasted terminal text (paste flattens layout and
+  invents phantom run-togethers). Candidate for the formal V7 gate list.
 - **GRADUATION RULE (audit-intensity relaxation).** Verbatim: *"Manual audit relaxes when 2–3 consecutive
   words ship clean at attempt 1 with no new defect classes, no new watch entries, and floors in the predicted
   bucket. At that point: spot-audit becomes the default; full manual audit only on flagged words."*
