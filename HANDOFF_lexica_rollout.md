@@ -30,6 +30,14 @@ These two are the load-bearing ones. Everything else below supports them.
 - **REVIEWER FLOOR:** every word gets `lexica_agreement.py --word G#### --runs 3` before ship;
   escalate to `--runs 10` on any appear/vanish, merge, or job-boundary wobble in the 3. No word
   ships on a single draft's structure.
+- **GRADUATION RULE (audit-intensity relaxation).** Verbatim: *"Manual audit relaxes when 2–3 consecutive
+  words ship clean at attempt 1 with no new defect classes, no new watch entries, and floors in the predicted
+  bucket. At that point: spot-audit becomes the default; full manual audit only on flagged words."*
+  - **RULING (2026-07-07, pinned so the criterion isn't adjudicated retroactively):** **φωνή does NOT open the
+    streak.** Its senses passed clean, but the audit PROCESS required correction — two standing-rule checks
+    (fed-list verify, gloss-note spot-verify) were skipped in CC's first verdict and had to be prompted. "Clean
+    at attempt 1" means the audit ran clean, not just that the card was right. Streak counter = 0 going into
+    ὀφθαλμός.
 - **REDRAW DISCIPLINE:** cap **3** off-target `--dry-run --force` pulls, then stop to JP. Drawing
   until the draft matches the reviewer-established structure is audit-against-known-structure, NOT
   draw-shopping (every draw gets the full audit). `--from-draw` refuses EDITED drafts by design —
@@ -89,7 +97,8 @@ Batch-2 paused at **9 shipped**; φωνή G5456 carries to next session, floor n
 - **RETRO PILE (decide with full-batch evidence):** substitution probe (bare-headword-substitution blind
   spot, ENGINE_LESSONS #4) · pre-V5 triage + post-batch redraw phase · the existing fed-40 / reviewer-tier
   questions below.
-- **`ENGINE_LESSONS.md`** (repo root) — v2 design backlog, now **16 lessons**, self-guarding (every
+- **`ENGINE_LESSONS.md`** (repo root) — v2 design backlog, now **17 lessons** (#17 = fabrication family),
+  self-guarding (every
   word-citation verified against the audit doc before commit). Distinct from this handoff + the audit doc;
   read it before any v2 design work, not before resuming the rollout.
 

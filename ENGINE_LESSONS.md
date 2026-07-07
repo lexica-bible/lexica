@@ -136,3 +136,18 @@ both drifting from the doc.
     correctly ruled visible; the gate-3 inline precedent). → any v2 completeness detector reads the whole
     prose for facet presence, not just sense headers + the range slot — else it regresses below v1's own
     jurisprudence and false-fails legitimate cards. *(audit: G2588 gate-3 inline precedent)*
+
+## Added by session-3 (2026-07-07)
+
+17. **Fabrication family — one signature across three instances: confident invented rationale for an
+    unobserved fact.** (a) **Capitalization fabrication** (root-caused on οὐρανός) — gloss_notes invented an
+    "editorial capitalization of Heaven" corpus rationale; premise false, fixed by the gloss-set case-fold.
+    (b) **Unfed-claim risk** — a citation/claim inferred from draw silence rather than verified against the
+    fed list; closed by the session-2 fed-list verification rule. (c) **WSGI-key guess** (session 3) — an
+    infrastructure mechanism asserted from plausibility, the key's location invented — AND FUNCTIONAL, which
+    is the dangerous subclass: plausible-and-working fabrications pass silently and accrete into convention;
+    closed by the environment-verification sibling rule. → v2's countermeasure is FAMILY-LEVEL (a single
+    "is this rationale observed or invented?" gate on any asserted rationale — corpus, citation, or
+    infrastructure), not three per-instance patches; target for the batch-2-close optimization pass.
+    *(audit: G3772 attempt-1/2 capitalization fabrication + case-fold root-fix; fed-list standing rule;
+    session-3 handoff standing-rule #4 / preamble `source .env` correction)*
