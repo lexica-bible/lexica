@@ -67,6 +67,9 @@ Lexica floor if it is missing from `dotted_lexicon`. Two classes found + status:
     (fed-list verify, gloss-note spot-verify) were skipped in CC's first verdict and had to be prompted. "Clean
     at attempt 1" means the audit ran clean, not just that the card was right. Streak counter = 0 going into
     ὀφθαλμός.
+  - **RULING (2026-07-07, ὄρος):** **ὄρος does NOT open the streak either.** Attempt-1's floor grew a false
+    "boundary" sense; the cause being a data defect (dotted-lexicon fold gap) doesn't rescue it — the pass
+    did not run clean. **Streak counter = 0 carrying into θυγάτηρ.**
 - **REDRAW DISCIPLINE:** cap **3** off-target `--dry-run --force` pulls, then stop to JP. Drawing
   until the draft matches the reviewer-established structure is audit-against-known-structure, NOT
   draw-shopping (every draw gets the full audit). `--from-draw` refuses EDITED drafts by design —

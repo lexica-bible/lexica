@@ -345,6 +345,11 @@ REST of the dotted-Strong's question, none of it gating the rollout:
 - **Draw-cache archive question** — `--force` overwrites a rejected draw under the same key (ὄρος draw-1
   2-sense reject lives only in chat). Consider archiving rejected draws so the audit trail lives in the
   machine, not the transcript.
+- **Backup-script rewrite (carry-forward, root-caused 2026-07-07):** `scripts/backup_db.py` stamps
+  success BEFORE the compression step, so a compression failure can log a "good" backup. Parked
+  post-rollout. code: scripts/backup_db.py
+- **Invariant #8 (carry-forward):** add a `journal_mode=delete` assertion to `cert_invariants.py`
+  (7/7 → 8/8) so a WAL flip is caught by the suite, not just the session tripwire. code: scripts/cert_invariants.py
 Merges with the parked ὀρ-collision retro sweep (step-0 mostly absorbed it). δίδωμι G1325 SHIPPED carries
 a 1-row leak (1325.1 "mortgaged", Neh 5:3) — verified NOT cited in the live card, stands with a provenance
 note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted_lexicon.py, audit_dotted_lemmas.py
