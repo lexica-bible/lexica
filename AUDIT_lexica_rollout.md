@@ -768,6 +768,53 @@ Act 2:6). LXX-provenance note fires on sense 3.
   then passed — but the catch is the point: adjudication happens on the raw, and CC's readout is not the ground
   truth until the raw backs it. Same discipline that caught three relay errors last session.
 
+### G3788 ὀφθαλμός — V6 REDRAW PENDING (V5 draft rejected). The freight line's birth + the floor-gap lesson.
+The batch's hardest word so far and its biggest process yield. NOT shipped; first V5 draft (key 2fa587bb)
+rejected on three defects; fixed by the V6 bump + a forced-sample redraw (pending).
+- **FLOOR `--runs 3` → `--runs 10` (multi-shallow-axis, the 10 was mandatory).** Spread {3:6,4:3,5:1} mean 3.5.
+  STABLE CORE = 3 jobs: (1) physical organ (10/10); (2) eyes as regard/estimation — the "in the eyes of X"
+  favor/judgment Hebraism (Jdg 6:17/Rth 2:2/1Sa 1:18/2Sa 3:19/2Ki 1:13/1Ch 28:8 mutually 9–10/10); (3) figurative
+  inner/spiritual perception (Eph 1:18 + Gal 3:1, together 8/10). The 4th–5th senses in higher-count draws split
+  MINORITY facets below majority-distinct → FOLD: "eyes of the LORD" (2Ch 6:20/Neh 1:6/1Pe 3:12/Heb 4:13/Psa 5:5,
+  internally 10/10 but split-from-human-regard only 3/10 → named-sub-use candidate); moral-disposition
+  (Pro 6:17/2Pe 2:14, own sense only in the 3-run fluke). No hole. **Prediction scoring:** CC's literal-vs-figurative
+  = too coarse (missed the "in the eyes of" middle job); JP's evaluative-idiom axis right that it's load-bearing
+  (= job 2) but INVERTED on the detail — the perception split (Eph 1:18) is the stable 3rd job, the moral idiom is
+  what folds. Confirms the refined hypothesis: multi-shallow-axis → wobble → needs the 10.
+- **STEP 1.5 EYEBALL (the new floor gate, born here).** The draw printed 5 `⚠ collocation MISSED` warnings.
+  Two carried an unfed JOB, not just unfed instances: **φείδομαι "eye shall not spare/pity"** (Deu 7:16/13:8/19:13)
+  and **πονηρός "evil/envious eye"** (Deu 15:9/Mat 20:15) — both 0-fed, both the *eye as seat of one's disposition
+  toward another* (clemency withheld / generosity begrudged), the same joint as haughty/adulterous. Verses pulled
+  and read on PA: FOLD (inventory sound, no re-floor) — but into a disposition region the current card lacks.
+  Pro 23:6 non-issue (ABP "bewitching man" buries the eye-idiom). → ENGINE_LESSONS #19: a stable floor on a gapped
+  sample certifies the wrong inventory; eyeball MISSED warnings BEFORE adjudicating stability.
+- **THE V5 DRAFT'S THREE DEFECTS (raw read).** (1) **#18 translation-freight** — sense-1 sub-use "the eye as
+  embodying a **moral character**" + range "the **moral** evaluative gaze"; the flagship banned category, and the
+  fix sits in the card's own citations (ABP: Pro 6:17 "insulting eye", 2Pe 2:14 "eyes full of an adulterous one"
+  — attested qualities, not the Latin category). (2) **Silent minority-shelving** — Pro 6:17/2Pe 2:14 shelved under
+  physical (a 3/10 reading) presented clean, no straddle note; violates the φωνή/Act-2:6 visible-boundary precedent
+  (φωνή EARNED gate-2 by arguing its boundary; this card hid it). (3) **gloss_notes false absence claim** —
+  "no gloss imports a sense the contexts do not support" asserted while 5 MISSED warnings sat unexamined
+  (fabrication-family signature: confident absence, lookup not run). Corrected one over-reach in the review itself:
+  the "eyes of your thought" point does NOT flag ὀφθαλμός — "thought" renders the companion noun, not ὀφθαλμός
+  (verify-before-claim applied to our own audit). **Gates otherwise:** gate-2 passes (senses 2/3 distinct, eyes-of-LORD
+  as substance of sense 2 = visible, sense 4 intact), gate-4 the 2/3 split is the draw-8 minority carve within
+  distribution, citations 33/33. Structure fine; vocabulary + epistemics failed.
+- **THE FIX — V6 bump (the freight line born from this word) + forced sample.** #18 was banked 2026-06-25 but never
+  in the durable docs; ὀφθαλμός surfaced it. Authored the freight line (JP-approved, trim-and-convert to imperative:
+  reframes not blacklists — "moral" is one illustration, mechanism is "describe the carving"), added to VERSE_PROMPT
+  + the reviewer's byte-identical copy in one commit, pin V5→V6, stamp `0c58c8a74b4f`→`1ccea0a44740`; the banked
+  Sub-use whitespace line rode along (disjoint failure modes → still one-change-per-gate). Grep-gated: stamp bump
+  INERT (no auto-rebuild reader). **select_spread option (a):** force Deu 13:8 + 15:9 into the redraw sample only,
+  logged on the draw as coverage-completeness (idiom-family representation), NOT steering; option (b) collocation-aware
+  quota → v2. **TWO V6 WATCHES on first draws:** over-trigger (freight-paranoia; "all are loaded" is the guard) and
+  philosophize (discussing the rule vs following it).
+- **PRE-REGISTERED REDRAW BAR:** 4–5 senses in-distribution · disposition-toward-another its own region OR an
+  argued sub-use of regard (capacious for insulting/adulterous/begrudging/pitiless, attested qualities naming it) ·
+  Pro 6:17+2Pe 2:14 straddle-noted · NO Latin categories in headlines/body/range · six-point formatting incl. the
+  whitespace line's first live test. **Streak stays 0** (attempt 1 not clean regardless of remedy path).
+  **Escalation counter STAYS 2** — this was a freight/fed-gap defect fixed at the input, NOT a content-wall cap-out.
+
 ### ESCALATION TRIGGER (standing, batch-wide)
 If a SECOND batch word caps out with **range-completeness** as the binding constraint, the mechanism decision
 (B vs C) moves from the retro to RIGHT THEN — two occurrences is a pattern, one is a hard word.

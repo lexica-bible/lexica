@@ -170,3 +170,16 @@ both drifting from the doc.
     VERSE_PROMPT sense-count instability" session; never promoted to durable docs until now — its own case study
     in why the doc outranks recall. Surfaced batch-2 session-3 when ὀφθαλμός `--runs 3` draw 3 framed a job as
     "moral character"; verified against that floor output in-transcript.)*
+
+19. **The MISSED-collocation warning is a FLOOR-level check, not a ship-time nicety.** A floor run on a fed
+    sample that never showed the reviewer a high-PMI collocation certifies the stability of the WRONG inventory
+    — the reviewer can only be stable about senses it was shown. ὀφθαλμός `--runs 10` was rock-stable on a
+    3-job core, yet the `⚠ collocation MISSED` warnings (φείδομαι pity-family, πονηρός envy-family — both
+    0-fed) pointed at a whole disposition region 13 draws structurally could not see; the draft then drew that
+    region thin under the physical sense and reached for the Latin category ("moral") to name it — #18 and the
+    fed-gap turned out to be one defect from two sides. → the eyeball of MISSED warnings moves BEFORE floor
+    adjudication (FLOW step 1.5): for each, decide unfed-instance-of-existing-sense (fine) vs unfed-idiom/job
+    (inventory gapped → force the verses into the redraw sample, select_spread option (a)). v2 candidate: the
+    collocation-aware feed quota (option (b), #8's slot-reservation) that would close the gap at generation
+    instead of by manual eyeball. *(audit: G3788 ὀφθαλμός floor + rejected V5 draft, 2026-07-07; select_spread
+    forcing logged on the draw record)*

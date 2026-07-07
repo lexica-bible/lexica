@@ -145,7 +145,15 @@ Formatting (senses and range - how to lay them out and word them, not which sens
 - Prefer descriptive vocabulary with no life as a term of art in theological debate;
   where a plain word carries the sense, use it (e.g. "applied to a group" rather than
   "corporate").
+- Name each sense by what the verses show the lemma doing, not by an English or Latin
+  category that carves a domain the Greek does not. The test is not whether a word is
+  loaded (all are) but whether its English meaning tracks the Greek or overrides it:
+  avoid a word whose ordinary sense has drifted from the lemma it translates, or that
+  imports a conceptual domain the text does not carve (e.g. "moral" for a disposition —
+  name the attested quality the verses show instead). Do not hunt for a freight-free
+  word; describe the lemma's own carving.
 - Introduce any sub-use with one consistent lead-in, "Sub-use:", not a mix of lead-ins.
+  Each Sub-use begins on its own line, with a blank line before it.
 - Put each sense's grounding refs in parentheses; where an example phrase clarifies,
   pair it with its own ref inline - "(1Co 13:13: the greatest of these)" - in
   preference to a long semicolon chain of bare refs.

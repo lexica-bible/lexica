@@ -118,13 +118,15 @@ LABELS = {"G5590": "psyche", "G1344": "dikaioo", "G5484": "charis",
           "G166": "aionios", "G4561": "sarx", "G1577": "ekklesia"}
 
 # ── PROMPTS the reviewer can run. "live" = whatever build_lexica_def currently ships (the frozen
-# engine). "v5" = a SELF-CONTAINED frozen copy of that engine prompt, carried here so the reviewer
+# engine). "v6" = a SELF-CONTAINED frozen copy of that engine prompt, carried here so the reviewer
 # survives the throwaway trial_lexica_prompt.py being deleted, and so every saved run records the
 # exact prompt bytes it drew under. It MUST stay byte-identical to B.VERSE_PROMPT (the reviewer
 # measures the LIVE engine); _check_prompt_sync asserts that. v3 was promoted into build_lexica_def
 # 2026-06-25; V4 (2026-07-07) added the Formatting block (no-slash headlines etc.); V5 (2026-07-07)
-# added the term-of-art line. Both bumps are STYLE-ONLY, nothing structural. ───────────────────────
-V5_PROMPT = """\
+# added the term-of-art line; V6 (2026-07-07) added the translation-freight line (the 4th freight
+# axis, ENGINE_LESSONS #18) + the Sub-use whitespace line. All bumps STYLE/FRAMING-ONLY, nothing
+# structural. ─────────────────────────────────────────────────────────────────────────────────────
+V6_PROMPT = """\
 You define a biblical lemma from its own attested use. You are given:
 - the lemma (Strong's number, original-language form, transliteration)
 - the translation gloss set: the English words a translation used to render
@@ -194,7 +196,15 @@ Formatting (senses and range - how to lay them out and word them, not which sens
 - Prefer descriptive vocabulary with no life as a term of art in theological debate;
   where a plain word carries the sense, use it (e.g. "applied to a group" rather than
   "corporate").
+- Name each sense by what the verses show the lemma doing, not by an English or Latin
+  category that carves a domain the Greek does not. The test is not whether a word is
+  loaded (all are) but whether its English meaning tracks the Greek or overrides it:
+  avoid a word whose ordinary sense has drifted from the lemma it translates, or that
+  imports a conceptual domain the text does not carve (e.g. "moral" for a disposition —
+  name the attested quality the verses show instead). Do not hunt for a freight-free
+  word; describe the lemma's own carving.
 - Introduce any sub-use with one consistent lead-in, "Sub-use:", not a mix of lead-ins.
+  Each Sub-use begins on its own line, with a blank line before it.
 - Put each sense's grounding refs in parentheses; where an example phrase clarifies,
   pair it with its own ref inline - "(1Co 13:13: the greatest of these)" - in
   preference to a long semicolon chain of bare refs.
@@ -204,7 +214,7 @@ Formatting (senses and range - how to lay them out and word them, not which sens
 No preamble, no restating the lemma, no closing summary.
 """
 
-PROMPTS = {"live": B.VERSE_PROMPT, "v5": V5_PROMPT}
+PROMPTS = {"live": B.VERSE_PROMPT, "v6": V6_PROMPT}
 
 
 def _check_prompt_sync():
@@ -212,8 +222,8 @@ def _check_prompt_sync():
     matters now: the reviewer must draw under the SAME prompt build_lexica_def ships, or it isn't
     measuring the live engine. (The old check compared v3 to the throwaway trial rig; v3 was promoted
     2026-06-25 and V4/V5 are live style bumps, so that comparison is retired.)"""
-    if V5_PROMPT.strip() != B.VERSE_PROMPT.strip():
-        print("WARNING: V5_PROMPT here has DRIFTED from build_lexica_def.VERSE_PROMPT — they must be "
+    if V6_PROMPT.strip() != B.VERSE_PROMPT.strip():
+        print("WARNING: V6_PROMPT here has DRIFTED from build_lexica_def.VERSE_PROMPT — they must be "
               "byte-identical so the reviewer measures the live engine. Re-sync before trusting a run.",
               file=sys.stderr)
 
@@ -534,8 +544,8 @@ def main():
     ap = argparse.ArgumentParser(description="Agreement reviewer for the Lexica dictionary engine.")
     ap.add_argument("--db", default=os.path.expanduser("~/bible-db/bible.db"))
     ap.add_argument("--word", help="one G-number, e.g. G5590 (default: the six pilot words)")
-    ap.add_argument("--prompt", choices=list(PROMPTS), default="v5",
-                    help="which engine to review: v3 (candidate, default) or live (frozen engine)")
+    ap.add_argument("--prompt", choices=list(PROMPTS), default="v6",
+                    help="which engine to review: v6 (frozen copy, default) or live (build's VERSE_PROMPT)")
     ap.add_argument("--runs", type=int, default=10, help="draws per word (10 reproduces the canary)")
     ap.add_argument("--budget", type=int, default=B.BUDGET)
     ap.add_argument("--save-dir", default="~/bible-db", help="where the per-run JSON/txt land")

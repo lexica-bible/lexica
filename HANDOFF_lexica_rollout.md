@@ -56,18 +56,31 @@ These two are the load-bearing ones. Everything else below supports them.
 
 ## SESSION-2 CLOSE STATE (2026-07-07) — read this to resume
 Batch-2 paused at **9 shipped**; φωνή G5456 carries to next session, floor not yet run.
-- **ENGINE STATE — all LIVE:** V5 prompt (Formatting block + term-of-art line) · gloss-set **case-fold**
-  (merges "Heaven"/"heaven"-class artifacts) · **both parser tolerances** (per_sense reuses _sense_spans;
-  split_definition falls back to header-less bold-numbered senses). Locking tests (CI + pre-commit):
-  `tests/test_lexica_agreement_parse.py`, `tests/test_lexica_glossset_fold.py`.
+- **ENGINE STATE — all LIVE:** **V6 prompt** (Formatting block + term-of-art line + **translation-freight line**
+  [ENGINE_LESSONS #18] + **Sub-use whitespace line**; stamp now `lexica:1ccea0a44740`, was `0c58c8a74b4f`) ·
+  gloss-set **case-fold** (merges "Heaven"/"heaven"-class artifacts) · **both parser tolerances** (per_sense
+  reuses _sense_spans; split_definition falls back to header-less bold-numbered senses). Locking tests (CI +
+  pre-commit): `tests/test_lexica_agreement_parse.py`, `tests/test_lexica_glossset_fold.py`.
+  - **V6 bump mechanics (2026-07-07, S3):** freight + whitespace lines added to `VERSE_PROMPT` AND to the
+    reviewer's byte-identical frozen copy (renamed `V5_PROMPT`→`V6_PROMPT`, `PROMPTS` default → `v6`) in the
+    same commit; `_check_prompt_sync` green. **Stamp bump is INERT** — grep-gated: the only stamp-reader that
+    rebuilds is `build_lexica_def.py`'s own per-word skip check; no cron/deploy runs `--all`, serve layer
+    ignores `synth_ver`. The 10 shipped words now read "stale-stamped" (cosmetic; prose untouched, nothing
+    auto-rebuilds). ⚠ the manual `--resplit --all --apply` Seam step would relabel un-redrawn rows V6 without
+    re-drawing — don't read a bare V6 stamp as "reviewed under V6."
+  - **TWO V6 WATCHES (check on first V6 draws, ὀφθαλμός redraw is the first):** (i) **over-trigger** — reviewer/
+    engine flagging ordinary glosses as "drifted" (freight-paranoia); the "all are loaded" clause is the retained
+    guard. (ii) **philosophize** — output discussing the freight rule instead of following it. If either fires,
+    the line comes back to the table before word 12.
 - **ESCALATION COUNTER = 2** (πολύς full cap-out / range-completeness; ἅγιον near-wall / structure, cleared
   attempt 3). A THIRD wall on any binding constraint trips the mechanism decision to JP immediately.
   Mechanism options UNCHANGED: higher-cap draw-until-match · prompt-steer + re-prove · structure-hint channel
   (ENGINE_LESSONS #3 leans toward structure-hint + a convergence detector, but the call is still JP's).
-- **STYLE WATCHES (3 open):** #1 slashes — addressed in V4, body-prose scope still MONITORING (not extended);
+- **STYLE WATCHES:** #1 slashes — addressed in V4, body-prose scope still MONITORING (not extended);
   #2 term-of-art — addressed in V5, the point-6 audit is live (first catch-and-clear on οὐρανός); #3
-  whitespace — V6 line BANKED, byte-explicit: *"each Sub-use begins on its own line, with a blank line
-  before it."* Rides free on the next version bump; no bump yet earned.
+  whitespace — **SHIPPED in V6** (2026-07-07): *"each Sub-use begins on its own line, with a blank line
+  before it."* rode along with the freight bump; first live test = ὀφθαλμός redraw. **NEW post-V6 watches:
+  see the two V6 watches under ENGINE STATE (over-trigger, philosophize).**
 - **REDRAW QUEUE (3, post-batch, under V5+):** ἅγιον (slash headlines) · μέγας (slash sense-4) · ἱερεύς
   ("corporate" echo). Cosmetic-only, each cleared on neutrality, NOT hand-edited. Full detail: audit doc
   `### REDRAW QUEUE`.
@@ -97,16 +110,25 @@ Batch-2 paused at **9 shipped**; φωνή G5456 carries to next session, floor n
 - **RETRO PILE (decide with full-batch evidence):** substitution probe (bare-headword-substitution blind
   spot, ENGINE_LESSONS #4) · pre-V5 triage + post-batch redraw phase · the existing fed-40 / reviewer-tier
   questions below.
-- **`ENGINE_LESSONS.md`** (repo root) — v2 design backlog, now **18 lessons** (#17 = fabrication family,
-  #18 = translation-freight / the 4th freight axis, banked 2026-06-25), self-guarding (every
+- **`ENGINE_LESSONS.md`** (repo root) — v2 design backlog, now **19 lessons** (#17 = fabrication family,
+  #18 = translation-freight / the 4th freight axis banked 2026-06-25, #19 = MISSED-collocation is a
+  floor-level check), self-guarding (every
   word-citation verified against the audit doc before commit). Distinct from this handoff + the audit doc;
   read it before any v2 design work, not before resuming the rollout.
 
 ## PER-WORD FLOW (the loop)
 1. `lexica_agreement.py --word G#### --runs 3` (→ 10 on wobble). Read the STABLE jobs (present in
    ~all draws) + majority-distinct distinctions; wobbles back-check hole-vs-fold.
+   - **1.5 (NEW, S3 — EYEBALL MISSED-COLLOCATION WARNINGS *BEFORE* CALLING FLOOR STABILITY).** A floor run
+     on a fed sample that never showed the reviewer a high-PMI collocation certifies the stability of the WRONG
+     inventory. Read every `⚠ collocation MISSED by draw` line (the draw prints them); for each, decide whether
+     it's an unfed instance of an existing sense (fine) or an unfed IDIOM/JOB the reviewer couldn't have seen
+     (→ the inventory is gapped; force those verses into the redraw sample, select_spread option (a)). This is
+     a floor-level gate, not a ship-time nicety — it caught ὀφθαλμός's disposition region that 13 reviewer draws
+     structurally couldn't (φείδομαι pity-family / πονηρός envy-family, both 0-fed). ENGINE_LESSONS #19.
 2. `build_lexica_def.py --dry-run --force --word G####` → draft. Audit vs the four gates + standard
-   checks. If it misses the reviewer structure, redraw (cap 3).
+   checks (incl. the **#18 translation-freight** scan: no Latin/English category — "moral", "worship" —
+   in headlines, body, or range; name the attested quality instead). If it misses the reviewer structure, redraw (cap 3).
 3. Ship the first passer: `build_lexica_def.py --apply --word G#### --from-draw KEY8` (KEY8 printed
    by the draw; no model call on apply).
 4. Post-ship: confirm `no model call`, gate pass, stamp current, senses on disk match.
@@ -135,8 +157,20 @@ Batch-2 paused at **9 shipped**; φωνή G5456 carries to next session, floor n
   the four-gate bar (attempts 1/2/3 all failed gate-3 completeness only — corrected record, NOT a
   merge; one flagged discrepancy vs JP's recollection on attempt 2, non-blocking). Re-attempt when
   sequencing suits: first draft clearing all four gates ships, whatever its count.
-- **NEXT UP:** ὀφθαλμός G3788 — reviewer floor `--runs 3` first (no verdict banked). Prediction: literal eye
-  vs figurative "eye" (sight/perception/attention, "eyes of the LORD"); watch usage-dimensionality axis.
+- **NEXT UP — ὀφθαλμός G3788: V6 REDRAW PENDING (immediate next action, not deferred).** Floor DONE
+  (`--runs 3`→`--runs 10`): multi-shallow-axis, stable core of 3 (physical organ / regard-"in-the-eyes-of" /
+  figurative inner-perception), 4th–5th senses minority-fold. First V5 draft (key 2fa587bb) REJECTED — three
+  defects: (1) **#18 freight** — "moral character" sub-use + "moral evaluative gaze" in range; (2) **silent
+  minority-shelving** — Pro 6:17/2Pe 2:14 shelved physical (3/10) with no straddle note (violates the φωνή/Act-2:6
+  visible-boundary precedent); (3) **gloss_notes false absence claim** ("no gloss imports…" asserted while 5
+  MISSED-collocation warnings sat unexamined). Collocation eyeball RAN (step 1.5): φείδομαι pity-family +
+  πονηρός envy-family = the eye-as-seat-of-disposition-toward-another region, unfed → drawn thin under sense 1
+  and mislabeled "moral." FOLD not re-floor (inventory sound). **Fix = V6 (freight+whitespace, DONE) + force
+  Deu 13:8 + 15:9 into the redraw sample (select_spread option (a) — log the forcing + rationale on the draw
+  record).** **Pre-registered redraw bar:** 4–5 senses in-distribution · disposition-toward-another as its own
+  region OR an argued sub-use of regard (capacious for insulting/adulterous/begrudging/pitiless, attested
+  qualities naming it) · Pro 6:17+2Pe 2:14 straddle-noted · NO Latin categories anywhere · six-point formatting
+  incl. the whitespace line's first live test. **Streak stays 0** (attempt 1 not clean). Full saga: audit doc.
 - **REMAINING (~9 after ὀφθαλμός):** ὄρος G3735 · ἔτος G2094 · ἄρχων G758 · ἔργον G2041 ·
   ἁμαρτία G266 · ῥῆμα G4487 · δύναμις G1411 · θυγάτηρ G2364 · τόπος G5117. (Full locked-20 list + selection method in
   the audit doc's Batch Two section.)
@@ -186,6 +220,11 @@ Batch-2 paused at **9 shipped**; φωνή G5456 carries to next session, floor n
    λατρεύω uncited across 32 θεός verses, PMI 5.31.)
 
 ## RETRO LIST (decide with full-batch evidence, not per-word)
+- **MISSED-collocation sweep (NEW, S3 — cheap, do at batch close):** re-run one `--dry-run` per shipped word
+  and read its `⚠ collocation MISSED` warnings; ὀφθαλμός proved a 0-fed high-PMI collocation can hide a whole
+  unfed job (disposition region) that a stable floor never saw. Confirm none of the 10 shipped cards has the
+  same buried-inventory gap. If several do → escalates the case for select_spread option (b) (collocation-aware
+  feed quota, ENGINE_LESSONS #8/#19) over per-word forcing.
 - Reviewer tiering: is per-word min-3 the right floor, or tier by boundary type (clean-separable →
   ship on 3; multi-shallow-axis → 10)?
 - Fed-40 sufficiency: the 40-verse (20/20) spread is pragmatic, not derived (~4% on a 900-occ word).
