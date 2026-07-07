@@ -851,10 +851,11 @@ def draw_status(rec, sig):
     return "hit"
 
 
-def save_draw(sid, lemma, translit, gset, ctx, raw):
+def save_draw(sid, lemma, translit, gset, ctx, raw, forced=None):
     """Write (or refresh) the reviewed draw. Called ONLY by the ro pass and --force — an unreviewed
     fresh apply must never leave a draw file that would later look reviewed. Atomic replace so a
-    crash mid-write can't leave a torn file."""
+    crash mid-write can't leave a torn file. `forced` = any --force-verse refs added to the fed
+    sample (coverage override), recorded so the draw self-documents why it was fed as it was."""
     os.makedirs(DRAWS_DIR, exist_ok=True)
     sig = draw_signature(sid, translit, gset, ctx)
     rec = {
@@ -864,6 +865,9 @@ def save_draw(sid, lemma, translit, gset, ctx, raw):
         "model":     MODEL_SONNET,
         "synth_ver": synth_ver(),
         "fed":       len(ctx),
+        "forced":    forced or [],  # --force-verse refs (coverage override, FLOW step 1.5); [] = pure sampler
+        "forced_why": ("post-floor coverage-completeness: MISSED-collocation idiom/job the deterministic "
+                       "sampler skipped (not steering)") if forced else "",
         "sig":       sig,           # input signature — the live-recompute guard at apply
         "prose_sha": _sha1(raw),    # prose bytes — the edited-since-review guard at apply
         "raw":       raw,
@@ -1111,6 +1115,12 @@ def main():
                          "fix the draw signature can't detect: find affected cards with check_draw_citations.py, "
                          "regenerate with --dry-run --force + review, then ship the reviewed bytes with this.")
     ap.add_argument("--budget", type=int, default=BUDGET)
+    ap.add_argument("--force-verse", action="append", default=[], metavar="REF",
+                    help="force a verse into the fed sample (e.g. 'Deu 13:8'), repeatable. SCOPE: a "
+                         "post-floor coverage-completeness override for a MISSED-collocation idiom/job the "
+                         "deterministic sampler skipped (FLOW step 1.5) — NOT general draw-shopping. Adds "
+                         "beyond budget, never drops an auto-pick; hard-errors if the word does not occur "
+                         "there. The forced refs + intent are logged on the draw record.")
     args = ap.parse_args()
 
     if not args.dry_run and not args.apply:
@@ -1186,6 +1196,21 @@ def main():
                       f"left to the LSJ card. (No bypass flag — edit OCC_MIN to build one deliberately.)")
                 continue
             sample = select_spread(occs, args.budget)
+            if args.force_verse:
+                # Post-floor coverage override (FLOW step 1.5): add MISSED-collocation idiom/job verses the
+                # deterministic sampler skipped. Add-beyond-budget, never drop an auto-pick; refuse a ref the
+                # word does not occur in (can't fabricate evidence). Logged on the draw record.
+                have = {f"{o['book']} {o['ch']}:{o['vs']}" for o in sample}
+                for ref in args.force_verse:
+                    if ref in have:
+                        continue
+                    row = next((o for o in occs if f"{o['book']} {o['ch']}:{o['vs']}" == ref), None)
+                    if row is None:
+                        sys.exit(f"  ✗ --force-verse {ref!r}: {sid} does not occur there. Not forced.")
+                    sample.append(row)
+                sample.sort(key=lambda o: o["vid"])
+                print(f"  forced into sample: {', '.join(args.force_verse)} "
+                      f"(coverage override, FLOW step 1.5)")
             _colloc_warn(conn, sid, occs, sample)   # PIECE A: advisory only — never alters the draw
             ctx = fetch_context(conn, sample, has_surface)
             lemma, translit = lex_head(conn, sid)
@@ -1247,7 +1272,7 @@ def main():
                 raw = model_prose(client, sid, translit, gset, ctx)
                 if args.dry_run or args.force:
                     # ro (review pass) and --force write/refresh the draw so apply ships THIS prose.
-                    save_draw(sid, lemma, translit, gset, ctx, raw)
+                    save_draw(sid, lemma, translit, gset, ctx, raw, forced=args.force_verse)
                     tag = " (forced — cache refreshed)" if args.force else ""
                     print(f"  cached draw → {draw_path(sid)} (key {sig[:8]}){tag}")
                 elif args.apply:
