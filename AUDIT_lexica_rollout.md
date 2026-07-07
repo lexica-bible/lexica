@@ -860,6 +860,24 @@ Range: physical → inner understanding (Eph 1:18) / God's watchfulness (Heb 4:1
 "imports no theological freight" [no "moral" anywhere — freight fixed]. (Full raw in draws/G3788.json history / session transcript.)
 ```
 
+#### HINTED DRAW → PARKED (structure-hint's first output, draw `0abd875d`, 2026-07-07 S3 close)
+**The mechanism WORKED.** First draw to hold **structure + freight together**: certified 3-job structure restored
+(physical / **regard its own sense 2 — NOT buried** / figurative-perception), gates 1–2 pass, **"moral" gone
+everywhere**, whitespace + six-point clean, citations 41/41, both V6 watches clean across all three live V6 draws.
+The oscillation is broken — no longer a structural wall. **PARKED (not shipped)** under the heightened bar + the
+don't-ship-tired rule, on a two-item fix list:
+1. **2Pe 2:14 — mandatory straddle note absent, silently shelved.** It sits in sense-1's MAIN physical list ("eyes
+   full of an adulterous one"), not even grouped with the disposition sub-use — a defined-bar failure (the verse
+   was pre-registered for a note/argued shelving either way; physical 5/10 in the floor).
+2. **Disposition sub-use homed under PHYSICAL, not regard.** Deu 15:9/13:8/Pro 6:17 hang under sense 1; the bar
+   allowed "own region OR argued sub-use of REGARD" — sub-use-of-physical is outside the set (attempt-3's
+   evaluative-under-organ error, milder — regard survived as sense 2).
+Minor riders: dangling-"Gal" flag NOT in the raw prose (likely summary-side extraction — verify); Job 7:7
+"inner prospect"→figurative shelving is a borderline call. **MORNING FORK (session-4 first act): hinted re-roll
+vs. argued-shelving path.** ⚠ Re-roll odds: hint job 2 bundled disposition INTO regard and the draw DECLINED it
+(homed disposition under physical) — a re-roll may need a sharper hint or the forced verses re-scoped to land
+disposition where wanted. Streak stays 0.
+
 ### ESCALATION TRIGGER (standing, batch-wide)
 If a SECOND batch word caps out with **range-completeness** as the binding constraint, the mechanism decision
 (B vs C) moves from the retro to RIGHT THEN — two occurrences is a pattern, one is a hard word.

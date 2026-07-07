@@ -54,8 +54,12 @@ These two are the load-bearing ones. Everything else below supports them.
   per-word structure-hint channel passing the reviewer's stable-jobs list as draw CONTEXT without
   touching the frozen VERSE_PROMPT.
 
-## SESSION-2 CLOSE STATE (2026-07-07) — read this to resume
-Batch-2 paused at **9 shipped**; φωνή G5456 carries to next session, floor not yet run.
+## SESSION-3 CLOSE STATE (2026-07-07) — read this to resume
+**SESSION-4 FIRST ACT: the ὀφθαλμός morning fork** (re-roll vs. argued-shelving on cached draw `0abd875d`) —
+see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired + resolved the first escalation
+(structure-hint mechanism), and parked ὀφθαλμός one fix-list short of shipping.
+- **State carried below is current through S3.** V6 live (freight + whitespace); `--force-verse` + `--structure-hint`
+  live; escalation counter 3/3 fired+resolved; V7 pile banked; lessons #18/#19 + FLOW step 1.5 + graduation rule live.
 - **ENGINE STATE — all LIVE:** **V6 prompt** (Formatting block + term-of-art line + **translation-freight line**
   [ENGINE_LESSONS #18] + **Sub-use whitespace line**; stamp now `lexica:1ccea0a44740`, was `0c58c8a74b4f`) ·
   gloss-set **case-fold** (merges "Heaven"/"heaven"-class artifacts) · **both parser tolerances** (per_sense
@@ -188,17 +192,20 @@ Batch-2 paused at **9 shipped**; φωνή G5456 carries to next session, floor n
   the four-gate bar (attempts 1/2/3 all failed gate-3 completeness only — corrected record, NOT a
   merge; one flagged discrepancy vs JP's recollection on attempt 2, non-blocking). Re-attempt when
   sequencing suits: first draft clearing all four gates ships, whatever its count.
-- **NEXT UP — ὀφθαλμός G3788: HINTED DRAW PENDING (cap-out resolved via structure-hint mechanism).** Floor DONE
-  (`--runs 3`→`--runs 10`): multi-shallow-axis, stable core of 3 (physical organ / regard-"in-the-eyes-of" /
-  figurative inner-perception). **3 pulls capped out** (V5 draft = freight+structure; V6-forced = structure good/
-  "moral" residue; V6 re-roll = "moral" gone/structure regressed — regard merged into physical, divine promoted).
-  Cap-out ruled, counter 2→3, **mechanism = structure-hint (LIVE, commit 95b4a16).** **Hinted draw fired** with
-  the 3 stable jobs + forced Deu 13:8/15:9. **HEIGHTENED ship bar (not relaxed):** full four-gate re-audit ·
-  **2Pe 2:14 straddle note/argued shelving REQUIRED** (physical 5/10 — silent shelving blocked either way) ·
-  disposition visible with attested qualities · NO Latin categories · six-point formatting · both V6 watches.
-  **EXECUTION RULE: ship tonight ONLY if unambiguously clean; ANY judgment call → PARK till morning with the draw
-  cached** (heightened scrutiny not audited tired). **Streak stays 0.** Full saga + attempt-3 raw: audit doc
-  `### G3788 ὀφθαλμός … #### V6 ATTEMPTS → CAP-OUT`.
+- **◀ SESSION-4 FIRST ACT — ὀφθαλμός G3788: PARKED at cached draw `0abd875d` (best draw yet).** The structure-hint
+  mechanism WORKED: first draw to hold **structure + freight together** — certified 3-job structure restored
+  (physical / **regard its own sense 2, not buried** / figurative-perception), **"moral" gone everywhere**, gates
+  1–2 pass, whitespace + six-point clean, citations 41/41, both V6 watches clean across all three live V6 draws.
+  Parked (not shipped) under the heightened bar + don't-ship-tired rule. **Two-item fix list for morning:**
+  (1) **2Pe 2:14** out of the silent sense-1 physical list → into the disposition group with the **mandatory
+  straddle note OR an argued shelving** (it's physical 5/10 in the floor); (2) **disposition sub-use re-homed**
+  under regard (sense 2) or its own region — sub-use-of-PHYSICAL is outside the allowed set (repeats attempt-3's
+  evaluative-under-organ error, milder). **Two minor riders:** locate the dangling-"Gal" flag source (NOT in the
+  raw prose — likely summary-side extraction, verify); the Job 7:7 "inner prospect"→figurative shelving call.
+  **MORNING FORK (decide first): hinted re-roll vs. argued-shelving path.** ⚠ **Re-roll odds note:** hint job 2
+  bundled disposition INTO regard and the draw DECLINED it (homed disposition under physical instead) — so a
+  re-roll may not place disposition where wanted without a sharper hint or the forced verses re-scoped. **Streak
+  stays 0.** Full saga + attempt-3 raw + cap-out record: audit doc `### G3788 ὀφθαλμός … #### V6 ATTEMPTS → CAP-OUT`.
 - **REMAINING (~9 after ὀφθαλμός):** ὄρος G3735 · ἔτος G2094 · ἄρχων G758 · ἔργον G2041 ·
   ἁμαρτία G266 · ῥῆμα G4487 · δύναμις G1411 · θυγάτηρ G2364 · τόπος G5117. (Full locked-20 list + selection method in
   the audit doc's Batch Two section.)
@@ -253,6 +260,10 @@ Batch-2 paused at **9 shipped**; φωνή G5456 carries to next session, floor n
   unfed job (disposition region) that a stable floor never saw. Confirm none of the 10 shipped cards has the
   same buried-inventory gap. If several do → escalates the case for select_spread option (b) (collocation-aware
   feed quota, ENGINE_LESSONS #8/#19) over per-word forcing.
+- **Warning-suppression-by-coverage (NEW, S3 — v2 nicety):** the MISSED-collocation warning keys on the
+  collocation's OWN verses, so once a forced verse (Deu 15:9) covers an idiom family, the warning still fires
+  ("0 in fed") because it can't see the family is now represented. Refinement: suppress/annotate a MISSED
+  warning when a forced verse already covers that collocation's family. Minor; not now.
 - Reviewer tiering: is per-word min-3 the right floor, or tier by boundary type (clean-separable →
   ship on 3; multi-shallow-axis → 10)?
 - Fed-40 sufficiency: the 40-verse (20/20) spread is pragmatic, not derived (~4% on a 900-occ word).
