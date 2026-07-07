@@ -94,6 +94,9 @@ These two are the load-bearing ones. Everything else below supports them.
    `⚠ double-shelved: 1Jn 2:20 in senses [1, 4]` (the known positive) AND surfaced a second G39 seam,
    `2Ti 1:9 in senses [1, 3]` — both logged, NOT reopens (G39 stays as shipped). Sub-use refs ARE captured
    (sense 4's list picks up 1Jn 2:20 from the sub-use sentence), so the extraction has no sub-use blind spot.
+   **NO code fix happened between the no-fire and the green run** (file unchanged since `61740c0`): the
+   suspected sub-use-extraction bug was DISPROVEN by a local test on the real G39 text; the PA no-fire was
+   just stale code (PA hadn't pulled the detector commit), and the `git pull` is what flipped it silent→firing.
    The detector is LIVE in the per-word audit; **ἔθνος is the first word audited with it live.** Parked-draft
    sweep DONE 2026-07-06: G80 clean, G4183 clean, **G2588 καρδία = two logged seams** (`2Co 2:4` senses [1,2];
    `Joh 12:40` senses [1,4]) — retroactive seam-logs on shipped prose, adjudicate at leisure, NOT reopens.
