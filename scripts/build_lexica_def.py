@@ -1067,7 +1067,9 @@ def show_entry(entry):
     for _ln in (entry['senses_block'] or "(empty)").splitlines():
         print(f"    | {_ln}")
     print(f"  range:       {entry['range'] or '(empty)'}")
-    print(f"  gloss_notes: {(entry['gloss_notes'][:400] + ' …') if len(entry['gloss_notes'])>400 else (entry['gloss_notes'] or '(empty)')}")
+    print(f"  gloss_notes ({len(entry['gloss_notes'])} chars) — full, PROOFREAD IT (gate step):")
+    for _ln in (entry['gloss_notes'] or "(empty)").splitlines():
+        print(f"    | {_ln}")
     print(f"  coverage:    {entry['coverage'] or '(empty/adequate)'}")
     cov = entry.get("coverage_audit") or {}
     if cov:
