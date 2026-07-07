@@ -214,14 +214,35 @@ def abp_filter(conn, sid):
 
 
 def gloss_set(conn, pred, params):
-    """The 'renders as' set: single-word english_head renderings with counts."""
+    """The 'renders as' set: single-word english_head renderings with counts.
+    Case-variants of the SAME rendering are MERGED case-insensitively — a capital like "Heaven",
+    "Earth", "Holy" is a sentence-initial / naming / quote-initial artifact of the translation, not a
+    distinct rendering. Feeding the split ("heaven" 636 + "Heaven" 3) as two renderings made the engine
+    fabricate a rationale for the capital in gloss_notes (the οὐρανός defect, 2026-07-07: two prompt
+    generations, two fabrications, one upstream stimulus). We keep the MOST FREQUENT surface form as the
+    label (rows arrive count-DESC, so the first variant seen wins) and sum the counts. Referent-carrying
+    case pairs (God/god, Lord/lord, Spirit/spirit) never reach here — those live on CONTESTED-register
+    lemmas excluded from the rollout (verified by a full-population sweep 2026-07-07: the only rollout
+    case-splits were Earth/Heaven/Holy, all artifact-class; Luk 1:35 "Holy spirit" examined individually
+    under the spirit-frame bar and ruled artifact — the frame attaches to the noun/phrase, not the
+    adjective). This folds the EVIDENCE SUMMARY only — citation verse text stays verbatim."""
     rows = conn.execute(f"""
         SELECT w.english_head AS g, COUNT(*) AS c
         FROM words w
         WHERE {pred} AND w.english_head IS NOT NULL AND w.english_head != ''
         GROUP BY w.english_head ORDER BY c DESC
     """, params).fetchall()
-    return [(r["g"], r["c"]) for r in rows if " " not in r["g"]]
+    merged = OrderedDict()          # lower(head) -> [label, total]; first-seen label is most frequent
+    for r in rows:
+        g = r["g"]
+        if " " in g:                # multi-word renderings stay excluded (unchanged)
+            continue
+        key = g.lower()
+        if key in merged:
+            merged[key][1] += r["c"]
+        else:
+            merged[key] = [g, r["c"]]
+    return sorted(((lbl, tot) for lbl, tot in merged.values()), key=lambda t: t[1], reverse=True)
 
 
 def occurrences(conn, pred, params):

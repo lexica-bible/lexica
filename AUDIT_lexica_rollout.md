@@ -592,6 +592,40 @@ Three apparatus-level findings, independent of how the οὐρανός card fina
   a verified finding (fed-40 dumped + read, no metonym verse present; closest = Jas 5:12 "swear by heaven" =
   oath-by-the-throne, a divine-realm sub-use, not agent-substitution).
 
+### GLOSS-SET CASE-FOLD (2026-07-07) — root fix for the gloss_notes fabrication (option A)
+Two prompt generations produced two "Heaven"-capitalization fabrications → the stimulus is in the INPUT,
+not the model. Root: `gloss_set` grouped on `english_head`, so a sentence-initial/naming capital ("Heaven"
+3×) surfaced as a rendering DISTINCT from "heaven" (636×), and the engine invented a rationale for it.
+- **THE FIX (single-source — `gloss_set` in build_lexica_def, imported by the reviewer, so no dual-copy
+  ritual):** fold case-variants of the same rendering, keep the most-frequent surface form as the label
+  (rows arrive count-DESC → first-seen wins), sum the counts. Folds the EVIDENCE SUMMARY only — citation
+  verse text stays verbatim (the corpus is untouched; we fold the summary, not the Bible). Locked by
+  `tests/test_lexica_glossset_fold.py` (added to CI + pre-commit): real G3772/G39 fixtures, a CONTROL
+  asserting the raw table genuinely holds the split, old→`heaven(6),Heaven(3)` / new→`heaven(9)` shown.
+- **CONFIRM-CHECK GATE (ran BEFORE landing, full rollout population = 47 words).** Only 3 case-splits
+  exist, ALL artifact-class — and the referent-fork class (God/god, Lord/lord, Spirit/spirit) is ABSENT,
+  because those lemmas are CONTESTED/excluded (the safety argument, verified not assumed):
+  - **γῆ 'Earth' (1×)** — Gen 1:10 "God called the dry land, Earth." Naming. Artifact.
+  - **οὐρανός 'Heaven' (3×)** — Gen 1:8 naming + Job 11:8 / Pro 25:3 sentence-initial. Artifact.
+  - **ἅγιον 'Holy' (9×)** — 8 clean (Isa 6:3 / Rev 4:8 trisagion quote-initial; Isa 33:5 / 57:15 / Jer 2:3
+    sentence-initial; Isa 60:14 / 62:12 / Zec 14:20 title-phrase "Holy People" / "Holy to the LORD").
+    **Luk 1:35 "Holy spirit shall come upon you" — EXAMINED INDIVIDUALLY under the spirit-frame bar** (the
+    one sweep verse touching an armed constraint). RULED artifact-class for the fold: the πνεῦμα-fork
+    attaches to the NOUN/phrase (person-Spirit vs power), never to the adjective; ἅγιον's lemma meaning
+    ("set apart, of the divine sphere") is identical either way, and the shipped ἅγιον sense 4 already
+    ships both-ways-neutral on "holy spirit" phrases. Folding gloss-set case deletes no verse, no text,
+    and nothing the fork machinery (CONTESTED register on the spirit lemmas) uses. **The eyeball gate
+    earned its keep here — confidence would have been right 8× and unexamined on the 1 verse where
+    unexamined is unacceptable.**
+- **REVIEWER-VALIDITY RULING (said out loud, not assumed):** the οὐρανός 10-run that banked core-2 ran with
+  the case-split IN the fed evidence. **Verdict survives** — the fabrication showed up in gloss_notes, never
+  in sense structure; all 10 draws carved the same sky + divine-realm core from CONTEXT (the prompt reasons
+  from context, gloss set is secondary). The fold merges one rendering's count; it cannot move
+  context-driven structure. No re-run needed.
+- **SCOPE NOTE:** shipped cards are NOT retro-changed by this — the fold only affects FUTURE draws. A shipped
+  card with a latent case-artifact note (if any) would be caught by the standing gloss_notes assertion-check
+  on its next redraw, not auto-fixed here.
+
 ### ESCALATION TRIGGER (standing, batch-wide)
 If a SECOND batch word caps out with **range-completeness** as the binding constraint, the mechanism decision
 (B vs C) moves from the retro to RIGHT THEN — two occurrences is a pattern, one is a hard word.

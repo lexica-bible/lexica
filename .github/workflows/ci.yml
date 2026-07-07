@@ -30,6 +30,7 @@ jobs:
           python tests/test_typed_strongs.py
           python tests/test_render_head_no_phantom.py
           python tests/test_lexica_agreement_parse.py
+          python tests/test_lexica_glossset_fold.py
 
   frontend:
     runs-on: ubuntu-latest
