@@ -89,14 +89,14 @@ These two are the load-bearing ones. Everything else below supports them.
    `entry["audit"]["double_shelved"]` and printed by `show_entry` beside the dangling/noncanon lines as
    `⚠ double-shelved: 1Jn 2:20 in senses [1, 4]`. **NOT a gate** — double-shelving is sometimes legitimate
    (a bridging verse), so it's a conscious per-word adjudication at the gate, JP rules per instance. Whether
-   it hardens to a gate is a batch-retro question on accumulated rare-vs-common data. Mechanism proven locally
-   on the known-positive shape (fires on 1Jn 2:20 senses [1,4], silent on a clean set).
-   **AUTHORITATIVE CONTROL — still owed on PA before ἔθνος** (draw/DB is PA-only): `python3
-   scripts/build_lexica_def.py --resplit --word G39 --dry-run` — reads the shipped G39 prose, must print
-   `⚠ double-shelved: 1Jn 2:20 in senses [1, 4]`. If it doesn't fire there the detector is wrong, full stop.
-   Then run the same `--resplit --word G# --dry-run` on **G80 · G2588 · G4183** (parked attempts) — any hits
-   are retroactive seam-logs like G39's, NOT reopens. **Sequencing: this control fires BEFORE ἔθνος's ship
-   draw, so ἔθνος is the first word audited with it live.** G39 stays as shipped (logged seam, no reopen).
+   it hardens to a gate is a batch-retro question on accumulated rare-vs-common data.
+   **AUTHORITATIVE CONTROL — DONE + GREEN on PA 2026-07-06.** `--resplit --word G39 --dry-run` fired
+   `⚠ double-shelved: 1Jn 2:20 in senses [1, 4]` (the known positive) AND surfaced a second G39 seam,
+   `2Ti 1:9 in senses [1, 3]` — both logged, NOT reopens (G39 stays as shipped). Sub-use refs ARE captured
+   (sense 4's list picks up 1Jn 2:20 from the sub-use sentence), so the extraction has no sub-use blind spot.
+   The detector is LIVE in the per-word audit; **ἔθνος is the first word audited with it live.** Still to run
+   (optional): the same `--resplit --word G# --dry-run` sweep on **G80 · G2588 · G4183** (parked) for
+   retroactive seams — any hits are seam-logs, not reopens.
 2. **Word-study card header — GREEK HALF DONE (commit `7bee235`, 2026-07-06), HEBREW HALF QUEUED.** The card's
    hero gloss sourced the top in-verse *rendering* (`abp_glosses[0]`), not `word_gloss`, so hand-widened
    overrides silently reverted there (G39 "holy" vs Library "holy, set apart"). Greek fixed frontend-only:
