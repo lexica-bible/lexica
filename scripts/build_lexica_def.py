@@ -666,7 +666,15 @@ def split_definition(prose):
     # ONLY when it actually holds numbered sense headlines — so a stray preamble sentence is never
     # mistaken for senses, and there is zero change when a proper "Senses" header IS present.
     if not sections.get("senses"):
-        pre = re.sub(r'\s*-{3,}\s*$', '', re.sub(r'^-{3,}\s*', '', "\n".join(preamble).strip())).strip()
+        pre = "\n".join(preamble).strip()
+        # Such a draft often opens with a TITLE line and/or a --- rule the prompt asked it NOT to
+        # write. The old leading-`---` strip missed them when the title came FIRST (ὄρος 2026-07-07:
+        # `**G3735 ὄρος (óros)**` then `---` leaked into senses_block). Drop everything before the
+        # first numbered-sense headline so nothing pre-sense survives.
+        m = re.search(r'^\s*\*\*\s*\d+\.', pre, re.M)
+        if m:
+            pre = pre[m.start():]
+        pre = re.sub(r'\s*-{3,}\s*$', '', pre).strip()   # trailing rule (leading cut handles the rest)
         if _sense_spans(pre):
             sections["senses"] = [pre]
 
@@ -1055,7 +1063,9 @@ def show_entry(entry):
     prov = entry.get("sense_prov") or []
     hits = [str(i + 1) for i, p in enumerate(prov) if p.get("lxx")]
     print(f"  LXX provenance note fires on sense(s): {', '.join(hits) if hits else '(none)'}")
-    print(f"  senses_block: {len(entry['senses_block'])} chars (full prose, kept verbatim)")
+    print(f"  senses_block ({len(entry['senses_block'])} chars) — full prose, PROOFREAD IT (gate step):")
+    for _ln in (entry['senses_block'] or "(empty)").splitlines():
+        print(f"    | {_ln}")
     print(f"  range:       {entry['range'] or '(empty)'}")
     print(f"  gloss_notes: {(entry['gloss_notes'][:400] + ' …') if len(entry['gloss_notes'])>400 else (entry['gloss_notes'] or '(empty)')}")
     print(f"  coverage:    {entry['coverage'] or '(empty/adequate)'}")
