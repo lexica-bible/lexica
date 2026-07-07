@@ -129,16 +129,25 @@ Output (compact, dictionary-entry style):
 - Senses: each a short gloss-free characterization with grounding references in
   parentheses, ordered by frequency in the supplied set. Where a sense carries a
   notable sub-use, note it within that sense's line, not as a separate sense.
-  Each characterization commits to one phrasing: no slash-apposition ("set apart /
-  belonging to") and no slash-pairs ("greater / greatest"); join a genuine
-  grammatical pair with "and" or a parenthesis, e.g. "greater (comparative and
-  superlative)".
 - Range: one line on how far the word stretches and what moves it.
 - Gloss notes: only where a gloss narrows, loads, or diverges from what the
   contexts support. Name the gloss and the divergence. Omit the line if nothing
   to flag.
 - Coverage: if the supplied occurrences are too few or too clustered to
   characterize the range, say so in one line. Omit if coverage is adequate.
+
+Formatting (senses and range - how to lay them out, not what to say):
+- Each sense headline is one capitalized head phrase; where it needs an elaboration,
+  set the elaboration off with an em-dash, as in "Senior in age — the older or prior
+  of two." Commit to one phrasing per headline: join a real grammatical pair with
+  "and" or a parenthesis (e.g. "greater (comparative and superlative)"), never a
+  slash or a slash-apposition ("set apart / belonging to").
+- Introduce any sub-use with one consistent lead-in, "Sub-use:", not a mix of lead-ins.
+- Put each sense's grounding refs in parentheses; where an example phrase clarifies,
+  pair it with its own ref inline - "(1Co 13:13: the greatest of these)" - in
+  preference to a long semicolon chain of bare refs.
+- Keep Range as one paragraph in this shape: the most concrete use first, then the
+  most extended, then the contextual feature that moves the word between them.
 
 No preamble, no restating the lemma, no closing summary.
 """

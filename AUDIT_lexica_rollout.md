@@ -399,11 +399,20 @@ significance; (3) senior in age or birth order; (4) greater/greatest (comparativ
 ### PROMPT V3 → V4 (2026-07-07) — style-only bump, no-slash headlines. Style-watch trigger tripped.
 The slash-headline style-watch (opened at ἅγιον, μέγας sense 4 the second sighting) tripped; JP ruled
 the note-and-batch disposition dead and V4 ships BEFORE ἱερεύς's reviewer floor.
-- **THE STEER (Senses bullet only):** "Each characterization commits to one phrasing: no slash-apposition
-  ('set apart / belonging to') and no slash-pairs ('greater / greatest'); join a genuine grammatical pair
-  with 'and' or a parenthesis, e.g. 'greater (comparative and superlative)'." Landed in the **Senses**
-  output bullet of `VERSE_PROMPT` ONLY — deliberately NOT in Range or Gloss-notes, where slash-quoting
-  ("place / places") is legitimate.
+- **THE STEER — a segregated "Formatting (senses and range)" block** placed AFTER the whole Output list
+  (away from the semantic Method/Constraints AND from the Gloss-notes bullet, so slash-quoting like
+  "place / places" in gloss_notes stays legal). Positive phrasing throughout — names what good looks like,
+  not just bans (pure bans invite substitute hedges). Five points in one pass:
+  (1) **headline shape** — one capitalized head phrase, elaboration set off with an em-dash (the μέγας
+  pattern named as the norm); (2) **commit to one phrasing** — join a real grammatical pair with "and" or
+  a parenthesis, never a slash or slash-apposition; (3) **sub-uses** — one consistent lead-in, "Sub-use:";
+  (4) **citation flow** — refs in parens, an example phrase paired with its own ref inline
+  ("(1Co 13:13: the greatest of these)") over long semicolon chains; (5) **Range** — keep the current
+  concrete-end → extended-end → what-moves-it paragraph (a "keep doing this", not a fix).
+  (First shipped as a single Senses-bullet line, then expanded in place to the block before ἱερεύς drew —
+  still V4, nothing produced under the one-liner, zero rework.)
+- **VALIDATION (control-fire for the block):** ἱερεύς G2409's first V4 draw gets a FORMATTING audit against
+  all five points alongside the four gates; both audits reported when the draw lands.
 - **SCOPE: style-only, ZERO rework.** No structure/method change. No unshipped V3 verdicts exist —
   ἔθνος + μέγας shipped, ἱερεύς not yet run — so V4-now costs no redraw and needs no carry-forward
   exception. Full discipline, clean generation boundary.
