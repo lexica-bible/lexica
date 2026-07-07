@@ -94,9 +94,9 @@ These two are the load-bearing ones. Everything else below supports them.
    `⚠ double-shelved: 1Jn 2:20 in senses [1, 4]` (the known positive) AND surfaced a second G39 seam,
    `2Ti 1:9 in senses [1, 3]` — both logged, NOT reopens (G39 stays as shipped). Sub-use refs ARE captured
    (sense 4's list picks up 1Jn 2:20 from the sub-use sentence), so the extraction has no sub-use blind spot.
-   The detector is LIVE in the per-word audit; **ἔθνος is the first word audited with it live.** Still to run
-   (optional): the same `--resplit --word G# --dry-run` sweep on **G80 · G2588 · G4183** (parked) for
-   retroactive seams — any hits are seam-logs, not reopens.
+   The detector is LIVE in the per-word audit; **ἔθνος is the first word audited with it live.** Parked-draft
+   sweep DONE 2026-07-06: G80 clean, G4183 clean, **G2588 καρδία = two logged seams** (`2Co 2:4` senses [1,2];
+   `Joh 12:40` senses [1,4]) — retroactive seam-logs on shipped prose, adjudicate at leisure, NOT reopens.
 2. **Word-study card header — GREEK HALF DONE (commit `7bee235`, 2026-07-06), HEBREW HALF QUEUED.** The card's
    hero gloss sourced the top in-verse *rendering* (`abp_glosses[0]`), not `word_gloss`, so hand-widened
    overrides silently reverted there (G39 "holy" vs Library "holy, set apart"). Greek fixed frontend-only:
