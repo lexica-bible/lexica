@@ -349,7 +349,7 @@ def fetch_context(conn, occs, has_surface):
     return out
 
 
-def verse_user_msg(sid, translit, gset, ctx):
+def verse_user_msg(sid, translit, gset, ctx, hint=None):
     lines = [f"LEMMA: {sid}  ({translit})", ""]
     lines.append("TRANSLATION GLOSS SET (one translation's renderings, with counts):")
     lines.append("  " + "; ".join(f"{g} ({c})" for g, c in gset[:25]))
@@ -359,6 +359,23 @@ def verse_user_msg(sid, translit, gset, ctx):
         tag = f'[here: "{rend}"' + (f"; form: {form}" if form else "") + "]"
         lines.append(f"  {book} {ch}:{vs} {tag}")
         lines.append(f"     {prose}")
+    if hint:
+        # STRUCTURE-HINT CHANNEL (escalation mechanism, ruled 2026-07-07). Rides in the user message as a
+        # CHECK, never in the frozen system prompt. The hint is a prior independent review's stable-jobs list
+        # (its own 10-run output = certified ground truth, not a preferred outcome); it names JOBS only, not
+        # their wording/count/internal sub-uses, so granularity-as-drawn still governs. Placed AFTER the
+        # occurrences so the contexts stay the primary evidence and this reads as a final grouping check.
+        lines.append("")
+        lines.append("STRUCTURE CHECK (from an independent review of this lemma's FULL occurrence set, not just "
+                     "the sample above): repeated review found these STABLE, DISTINCT senses — jobs the lemma "
+                     "does that did not merge across draws:")
+        for i, job in enumerate(hint, 1):
+            lines.append(f"  {i}. {job}")
+        lines.append("Use this ONLY as a check that your grouping has not MERGED or BURIED one of these distinct "
+                     "jobs (e.g. filed a distinct evaluative or figurative job as a sub-use of the physical "
+                     "organ). Still reason from the supplied occurrences and name each job by what the verses "
+                     "show. The review names the JOBS, not their wording, count, or internal sub-uses — "
+                     "granularity and carving remain yours to draw from the evidence.")
     return "\n".join(lines)
 
 
@@ -809,14 +826,14 @@ def _sha1(s):
     return hashlib.sha1((s or "").encode("utf-8")).hexdigest()
 
 
-def draw_signature(sid, translit, gset, ctx):
+def draw_signature(sid, translit, gset, ctx, hint=None):
     """Hash of the EXACT model input — system prompt + the full user message + the model id. Any
     change to the prompt, the fed verse sample (a words rebuild moving select_spread, a --budget
     change), the verse prose, the gloss set, or the model produces a DIFFERENT signature. A stored
     draw can only count as a hit when it was drawn from byte-identical input, so a stale draw can
     never silently apply. (OCC_MIN/MAX_TOKENS are deliberately out — OCC_MIN only gates whether a
     word builds; MAX_TOKENS is out for the same reason it's out of synth_ver.)"""
-    user = verse_user_msg(sid, translit, gset, ctx)
+    user = verse_user_msg(sid, translit, gset, ctx, hint)
     return _sha1(VERSE_PROMPT + "\x00" + user + "\x00" + MODEL_SONNET)
 
 
@@ -851,13 +868,14 @@ def draw_status(rec, sig):
     return "hit"
 
 
-def save_draw(sid, lemma, translit, gset, ctx, raw, forced=None):
+def save_draw(sid, lemma, translit, gset, ctx, raw, forced=None, hint=None):
     """Write (or refresh) the reviewed draw. Called ONLY by the ro pass and --force — an unreviewed
     fresh apply must never leave a draw file that would later look reviewed. Atomic replace so a
     crash mid-write can't leave a torn file. `forced` = any --force-verse refs added to the fed
-    sample (coverage override), recorded so the draw self-documents why it was fed as it was."""
+    sample (coverage override); `hint` = any --structure-hint stable-jobs list injected as draw
+    context (escalation mechanism). Both recorded so the draw self-documents why it was fed/framed."""
     os.makedirs(DRAWS_DIR, exist_ok=True)
-    sig = draw_signature(sid, translit, gset, ctx)
+    sig = draw_signature(sid, translit, gset, ctx, hint)
     rec = {
         "strongs":   sid,
         "lemma":     lemma,
@@ -868,6 +886,10 @@ def save_draw(sid, lemma, translit, gset, ctx, raw, forced=None):
         "forced":    forced or [],  # --force-verse refs (coverage override, FLOW step 1.5); [] = pure sampler
         "forced_why": ("post-floor coverage-completeness: MISSED-collocation idiom/job the deterministic "
                        "sampler skipped (not steering)") if forced else "",
+        "structure_hint": hint or [],  # --structure-hint stable-jobs list (escalation mechanism); [] = no hint
+        "structure_hint_why": ("escalation mechanism (cap-out): a prior review's certified stable-jobs list "
+                               "passed as draw CONTEXT to prevent burying/merging a distinct job; frozen "
+                               "prompt untouched, names jobs not carving") if hint else "",
         "sig":       sig,           # input signature — the live-recompute guard at apply
         "prose_sha": _sha1(raw),    # prose bytes — the edited-since-review guard at apply
         "raw":       raw,
@@ -1013,10 +1035,10 @@ def make_client():
     return anthropic.Anthropic(api_key=get_key())
 
 
-def model_prose(client, sid, translit, gset, ctx):
+def model_prose(client, sid, translit, gset, ctx, hint=None):
     msg = client.messages.create(
         model=MODEL_SONNET, max_tokens=MAX_TOKENS, system=VERSE_PROMPT,
-        messages=[{"role": "user", "content": verse_user_msg(sid, translit, gset, ctx)}])
+        messages=[{"role": "user", "content": verse_user_msg(sid, translit, gset, ctx, hint)}])
     return "".join(b.text for b in msg.content if getattr(b, "type", "") == "text").strip()
 
 
@@ -1121,6 +1143,12 @@ def main():
                          "deterministic sampler skipped (FLOW step 1.5) — NOT general draw-shopping. Adds "
                          "beyond budget, never drops an auto-pick; hard-errors if the word does not occur "
                          "there. The forced refs + intent are logged on the draw record.")
+    ap.add_argument("--structure-hint", action="append", default=[], metavar="JOB",
+                    help="ESCALATION MECHANISM (post cap-out only, per the trigger ruling): pass one stable "
+                         "sense/job (repeatable) from a prior review's certified stable-jobs list. Injected "
+                         "into the draw CONTEXT (user message) as a check against burying/merging a distinct "
+                         "job — the frozen prompt is untouched. Names jobs only, not carving; granularity "
+                         "stays as-drawn. Logged on the draw record. Do NOT use as routine steering.")
     args = ap.parse_args()
 
     if not args.dry_run and not args.apply:
@@ -1217,8 +1245,11 @@ def main():
             ot = sum(1 for c in ctx if c[0] not in NT_BOOKS)
             print(f"  occurrences {len(occs)} | {len(gset)} renderings | fed {len(ctx)} ({ot} OT / {len(ctx)-ot} NT)")
 
+            if args.structure_hint:
+                print(f"  structure-hint (escalation mechanism, {len(args.structure_hint)} jobs) injected "
+                      f"into draw context — frozen prompt untouched, logged on the draw")
             # ── DRAW CACHE. Recompute the current input signature live; consult the cached draw.
-            sig = draw_signature(sid, translit, gset, ctx)
+            sig = draw_signature(sid, translit, gset, ctx, args.structure_hint or None)
             rec = None if args.force else load_draw(sid)
             status = draw_status(rec, sig) if rec else None
 
@@ -1269,10 +1300,11 @@ def main():
                 print("  calling the verse engine (Sonnet)…")
                 if client is None:
                     client = make_client()
-                raw = model_prose(client, sid, translit, gset, ctx)
+                raw = model_prose(client, sid, translit, gset, ctx, args.structure_hint or None)
                 if args.dry_run or args.force:
                     # ro (review pass) and --force write/refresh the draw so apply ships THIS prose.
-                    save_draw(sid, lemma, translit, gset, ctx, raw, forced=args.force_verse)
+                    save_draw(sid, lemma, translit, gset, ctx, raw,
+                              forced=args.force_verse, hint=args.structure_hint or None)
                     tag = " (forced — cache refreshed)" if args.force else ""
                     print(f"  cached draw → {draw_path(sid)} (key {sig[:8]}){tag}")
                 elif args.apply:
