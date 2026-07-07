@@ -359,6 +359,43 @@ comparative (4/10), adverbial (2/10), temporal "long time" (3/10), collective-ma
 - **Flag rate** (per the ≥5.0 record): πολύς = **2 flags** (chrónos 6.13, hýdōr 5.05); the sub-5.0
   collocations (éthnos / pisteúō / dóxa) are stored-informational, not counted.
 
+### G3173 μέγας — LIVE (4 senses, one-draw ship under the four gates). Multi-shallow-axis wobble, no holes.
+Shipped the first fresh draft (key 3dc9ec8a), no model call on apply, gate 40/40, stamp current, 40 verses.
+4 senses: (1) magnitude — large in size/volume/force/degree; (2) rank/status — high in importance/rank/
+significance; (3) senior in age or birth order; (4) greater/greatest (comparative & superlative).
+- **REVIEWER (clean --runs 10 after the parser fix; the FIRST run was 5/10 format-broken — see the parser
+  fix below).** Spread {3:5, 4:3, 5:2}, mean 3.7, ZERO holes (every wobble verse folds). Stable core =
+  magnitude + rank/status, both 10/10 every draw. Third cluster = the greater/greatest/elder material
+  (Jos 19:9, 1Co 13:13, 2Ch 17:12, 1Sa 17:13, Exo 2:11, Heb 8:11) gets its own slot in 8/10 draws —
+  carved as "comparative" (7/10) and/or "senior in age" (4/10 standalone). The shipped draft splits it
+  into age (#3) + comparative (#4); that finer carving is WITHIN the reviewer's distribution (draws
+  2/7/8/9 split them) → gate-4 ships-as-drawn. Adverbial "greatly" (1Sa 10:2) + weighty-significance =
+  shallow facets that fold into magnitude/degree + range. **CONFIRMS the multi-shallow-axis prediction:
+  wobbled 3/4/5 on cut-count, spine stable, all folds.** Answer to "does age hold its own slot?": NOT on
+  its own (4/10) — it's a sub-cut of the greatness cluster; not forced as a standalone.
+- **Four gates PASS.** No holes / no merges (magnitude, status, greatness all distinct). Completeness:
+  age #3, comparative #4, weighty folded in #2 + range, adverbial folds in #1 — coverage audit "10 top
+  renderings, 0 uncited" (gate-3 detector finds nothing dropped). Citations 40/40, dangling empty, 4
+  senses (0 thin, 0 circular), senses ≤ occ, not a loaded word.
+- **DOUBLE-SHELF: 2Ch 17:12 in senses [2, 4] — ruled BRIDGE, both homes kept.** "Jehoshaphat waxed great
+  exceedingly" = status (#2) expressed through a growing-greater/comparative form (#4); mirrors the verse's
+  own migration in the reviewer. **Seam register: 2Ch 17:12 double-shelved [2,4], ruled bridge, precedent
+  Eph 2:11 / 1Jn 2:20.** Detector's second live fire; adjudicated at ship.
+- **Flag rate 3 counted** (mikrón PMI 6.7, krázō 6.02, phóbos 5.49; thálassa 4.61 informational) — ALL
+  resolve as unfed instances of magnitude: great-vs-small pairing (mikrón), great/loud voice (krázō), great
+  fear (phóbos), the great sea (thálassa). Sense present via other fed verses; the high count is the fed-40
+  under-sampling the "great + X" collocations, same shape as G39's 7. No sampler nudge. Data point for the
+  fed-40 retro.
+- **Corpus-hygiene yield (symmetric audit, free):** gloss_notes flag "saying" (Eze 3:12 — μέγας modifies
+  "quake", a translation-parse divergence) and "strong" (Dan 7:7 — modifies "teeth", separate predicate).
+  Translation mistags, not word divergence; same free-audit family as batch one's tagging-error list.
+- **STYLE WATCH — slash-headlines (note-and-batch, opened at ἅγιον).** ἅγιον shipped with a "set apart /
+  expansion" template stamped across all 4 headlines (cosmetic hedge-pattern, style-property). μέγας sense 4
+  "Greater / greatest (comparative and superlative)" — borderline, grammatical-pair notation, defensible.
+  Counter: **2 words, 2 sightings, 1 bad / 1 borderline.** Disposition: NO gate change mid-batch (trajectory
+  data — style gates fish, πολύς capped on a style-class constraint); fold a headline-prose instruction into
+  V4 if/when the prompt revises for other reasons. Revisit sooner if the slash pattern recurs in bad form.
+
 ### REVIEWER PARSER DRIFT FIX (2026-07-07) — μέγας 10-run surfaced audit-tooling debt, engine clean
 The μέγας G3173 `--runs 10` came back `!! 5 draw(s) parsed to 0 senses (format break): [1,4,6,7,8]`.
 - **ROOT CAUSE (logged): the reviewer reimplemented the sense-split with the bold-only `_HEADLINE_RE`
