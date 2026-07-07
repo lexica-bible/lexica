@@ -417,11 +417,11 @@ the note-and-batch disposition dead and V4 ships BEFORE ἱερεύς's reviewer
   the header drift) shows the block steering right: **em-dash headlines ✓, "Sub-use:" lead-ins consistent
   ✓, no slashes ✓, citation flow clean ✓** — plus it caught a "seven"/ἑπτά mistag as free hygiene. The 5th
   point (Range shape) awaits a fully-parsed draft. The block is steering the right things.
-- **OPEN WATCH ITEM — V4 NOT cleared on the header question.** 2/3 header-drops immediately post-V4 is weak
-  evidence (draw 2 emitted the header → stochastic; the parser fix makes it harmless), but TRACK the
-  header-emit rate over the next 2–3 words. If V4 clearly inflated header-omission, that matters even
-  though the parser now absorbs it — it would mean the formatting block is DISPLACING structure, a pattern
-  that could surface somewhere the parser CAN'T absorb. Revisit the block if the rate stays high.
+- **WATCH ITEM — V4 header question: CLOSED 2026-07-07.** ἱερεύς's clean `--runs 10` came back 10/10 parsed,
+  ZERO breaks (spread {1:3,2:3,3:4} sums to 10), after the first floor's 2/3 drop. That reads as small-sample
+  variance, not a systematic V4 effect — the header drop did not recur on the next full run. Combined with
+  the parser fallback making header-omission harmless regardless, one more clean word was the bar and this
+  was it. Closed. (Formal header-emit tracking would need raw inspection; deprioritized — it's moot now.)
 - **CONTENT SIGNAL (through the breakage):** ἱερεύς's 2 readable draws (the parsed draw 2 + the inspected
   draw 1) MATCH on the referent axis — general cultic office (pagan folded as sub-use) / Melchizedek-
   perpetual / collective-Revelation. 2 of 2 on the predicted role-noun axis; trajectory holding, the clean
@@ -480,6 +480,66 @@ The μέγας G3173 `--runs 10` came back `!! 5 draw(s) parsed to 0 senses (for
   the ideal. Fixing header-omission at the prompt is whack-a-mole against a coin-flip (draw 2 emitted the
   header, draws 1/3 didn't — stochastic); fixing it in the parser makes it permanently moot. Same lesson
   as the first fix, one layer up.
+
+### G2409 ἱερεύς — LIVE (3 senses, granularity-as-drawn). First concrete-role word; framework held with no new rule.
+Shipped the fresh draft (key 1dec7a91), no model call on apply, gate 40/40, stamp current, 40 verses. 3
+senses: (1) cultic office / priest (referent sub-uses pagan/Midian + certification folded in); (2)
+perpetual, archetypal office (Melchizedek + Heb 7); (3) collective/corporate priestly standing (Rev).
+- **REVIEWER `--runs 10` (after both parser fixes; first 3-run was 2/3 header-broken → drove the second
+  parser fix).** Spread {1:3, 2:3, 3:4}, mean 2.1. Core "cultic office" = 10/10 (unanimous). Melchizedek =
+  own slot only 4/10; collective = own slot 5/10; institutional-authorities cluster = own slot 1/10.
+  Neither cluster cleared the ~7/10 bar → **THIRD BUCKET (granularity-as-drawn)** per the pre-registered
+  rule: bank "cultic office stable; Melchizedek + collective visible at sense-OR-named-sub-use tier; ship
+  draw's carve stands as long as gates clear, whatever the count." **NO HOLES** — both clusters present in
+  ALL 10 (own sense, folded into office, or merged together in draw 7); the "promotion" wobble is pure
+  TIER-flicker, content never missing. The shipped 3-sense carve is one of the 4/10 clean shapes.
+- **PREDICTION RECORD — role-noun hypothesis fully settled.** Referent-axis wobble ✓, no shallow-cut
+  fishing ✓, tight-ish core ✓. Truth-properties converged (core 10/10); the ONLY instability was tier
+  assignment — a granularity property, exactly what granularity-as-drawn absorbs. **The framework needed
+  NO new rule for a new word class (first concrete role-noun) — the strongest evidence for the framework.**
+  Contrast μέγας (multi-shallow-axis *carving*) vs ἱερεύς (*promotion*): different wobble shapes, same gates.
+- **DETECTOR: Gen 14:18 in senses [1,2] — ruled BRIDGE, both homes kept.** The verse is the hinge of the
+  word's own history: Melchizedek holds the office in Genesis and becomes the archetype the Psalm + Hebrews
+  build on. **FIRST model-self-annotated seam** — the draft wrote "Gen 14:18 [echoed]" in sense 2, marking
+  its own bridge (the prior 3 needed the detector to surface them). **Seam register: Gen 14:18 [1,2], ruled
+  bridge, model-annotated, 4th entry — cleanest yet.**
+- **DANGLING "Heb" — ACCEPTED per-instance (option A), Psa-82 discourse class.** The flag is the phrase "in
+  Hebrews the lemma is used contrastively" (sense 2 sub-use), with Heb 7:21 cited in the SAME clause —
+  legitimate discourse about the book's argument, not a botched citation. Dangling is flag-only (no hard
+  block). **LINT PRINCIPLE BANKED: do NOT soft-skip a book abbreviation that is load-bearing in the same
+  entry** — "Heb" appears in 7 real citations here; soft-skipping it (option C) would blind the lint exactly
+  where a dropped chapter number is most likely. Keep the flag armed globally, accept this instance. Redraw
+  (option B) correctly priced out: gambling a 4/10-likelihood clean carve over a flag-only cosmetic hit is
+  the πολύς lesson inverted.
+- **REGISTER — both-ways bar HELD through reviewer floor (10 draws) AND ship draw**, on the most loaded
+  cluster in the word (Melchizedek/perpetual priesthood). All headlines descriptive — "exemplified by
+  Melchizedek and then predicated of another figure on that same basis," "one *described as*," "*said to*
+  occupy the same order." Never names Christ, never editorializes. **SECOND word where the neutrality bar
+  generalized beyond CONTESTED status without being asked** (after ἔθνος's "gentiles" freight handling).
+- **Flags: 3 counted** (haphḗ 6.53, katharízō 5.79, énanti 5.22; epitíthēmi/aírō/horáō/μέγας < 5.0
+  informational) — ALL Levitical ritual-duty words (leprosy-mark inspection, cleansing, laying-on,
+  offering) folding into sense 1's cultic-office range ("certifying purity" named there). Same fed-40
+  under-sampling of dense Leviticus vocab as G39. **μέγας = "the great [high] priest" is NOT a missing
+  sense** — ἱερεύς means "priest," μέγας supplies "high"; the reviewer's 10 draws never carved a high-priest
+  sense. Resolves clean, no nudge.
+- **FORMATTING CONTROL-FIRE — V4 VALIDATED, 5/5 on the raw text.** (1) headlines head—em-dash—elaboration ✓;
+  (2) no slashes in headlines ✓; (3) "Sub-use:" lead-in consistent 3× ✓; (4) citation flow ✓ — **under
+  maximum load (27-verse grounding) the model differentiated bare-list-for-grounding from inline-example-
+  for-illustration ("the priest of Midian (Exo 2:16)") on its own — judgment, not mere compliance**; (5)
+  range concrete→extended→what-moves-it, textbook ✓. The block is steering the right things.
+  - **Body-prose slash — style-watch scoping note (NOT a violation).** "institutional/hereditary" (range) +
+    "Zeus/Dia" (sub-use) are slashes in BODY prose; the V4 rule is headline-scoped, so neither breaks it.
+    Both are legitimate pair-notation (not the ἅγιον hedge template), so JP is slow to extend the rule to
+    body prose. Logged as a scoping question for a future rev, not a fix.
+
+### STYLE WATCH #2 — term-of-art echo (opened at ἱερεύς, 2026-07-07)
+JP's ruling on ἱερεύς sense 3 "corporate": CLEARED on neutrality (plain of-a-body sense, self-defined in
+place, referent question left open — both-ways satisfied), but LOGGED as a style concern: words with a life
+as terms of art in theological debate ("corporate" → corporate election / corporate personality) carry an
+echo even when used innocently. **Counter: 1 sighting.** Disposition: monitoring, same protocol as the slash
+watch — 2–3 sightings across words triggers a V5 style-block line, drafted positive: "prefer descriptive
+vocabulary with no life as a term of art in theological debate; where a plain word carries the sense, use
+it." NOT a gate, NOT a redraw trigger, no retro-edit to ἱερεύς.
 
 ### ESCALATION TRIGGER (standing, batch-wide)
 If a SECOND batch word caps out with **range-completeness** as the binding constraint, the mechanism decision
