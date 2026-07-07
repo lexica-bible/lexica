@@ -322,6 +322,35 @@ YouVersion, which aren't the target). Honest gaps:
 
 ---
 
+## Dotted-number full audit (post-rollout ticket — sized 2026-07-07, ὄρος session)
+The FOLD class is FIXED + LIVE (`build_dotted_lexicon.py` now uses `same_word()`, breathing/accent-
+sensitive; commit `2ff5f7d`; dotted_lexicon rebuilt +5/−0, ὄρος draw 644→641). This ticket is the
+REST of the dotted-Strong's question, none of it gating the rollout:
+- **No-entry class (~86 dotted numbers, mostly the δ-cluster).** Dotted numbers with no `abp_ext`
+  entry, so the builder can't recover them — they still ride the base lemma + leak into its floor.
+  FIRST JOB: triage same-word forms (1510.x "being", 1391 "glory", 1364 "double", 133 "praiseworthy")
+  from true foreign leaks (1392 skin/doe, 1377 aqueduct/poles, 1303.x, 1393.2 spear-under-Dorcas ×46,
+  137.1 goat-under-Aenon ×74). Remedy design (stub entry? hold-out-without-entry?) = a V7 conversation.
+- **⚠ HOLD-OUT FLAGS (do NOT floor before this lands or a manual hold-out is placed):** δοξάζω G1392,
+  διώκω G1377, δόξα G1391. Mirrored in `HANDOFF_lexica_rollout.md`.
+- **Inverse-direction audit** — nobody has checked the existing dotted_lexicon the OTHER way: dotted
+  rows that ARE on the list but map to the wrong entry, or bare rows that should have been dotted in
+  the source. dotted_lexicon precedent says this direction has had defects.
+- **Homonym heuristic** — same-spelling-different-sense (wrist-under-fruit καρπός G2590.1) is invisible
+  to any comparator; it only surfaces the way ὄρος did (a floor grows a bad sense). A gloss-divergence
+  grep sweep is the candidate detector.
+- **εἰμί anomaly — RESOLVED (banked):** bare G1510 base_occ=1 is real — εἰμί forms are nearly all
+  dotted (1510.2.3 ×2379 etc.), not a base-extraction bug.
+- **2 blank abp_surface `form` cells** (Isa 19:2, Eze 40:12) — surface-alignment gaps, note-only.
+- **Draw-cache archive question** — `--force` overwrites a rejected draw under the same key (ὄρος draw-1
+  2-sense reject lives only in chat). Consider archiving rejected draws so the audit trail lives in the
+  machine, not the transcript.
+Merges with the parked ὀρ-collision retro sweep (step-0 mostly absorbed it). δίδωμι G1325 SHIPPED carries
+a 1-row leak (1325.1 "mortgaged", Neh 5:3) — verified NOT cited in the live card, stands with a provenance
+note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted_lexicon.py, audit_dotted_lemmas.py
+
+---
+
 ## Word cards / lexicon — open items
 
 - **BDB as Hebrew LSJ-analog (IDEA — the app has no real BDB today; see the Licensing section).** Load
