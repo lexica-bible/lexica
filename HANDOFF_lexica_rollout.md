@@ -68,6 +68,13 @@ Lexica floor if it is missing from `dotted_lexicon`. Two classes found + status:
   at gate time (now auto-printed by `show_entry`, commit `9a1dca9`), and verify the RENDERED card
   via a screenshot before close-out — not the pasted terminal text (paste flattens layout and
   invents phantom run-togethers). Candidate for the formal V7 gate list.
+  - HABIT (not a gate): for a `fix_lexica_raw` round, run dry-run → review → apply as TWO
+    exchanges, not apply-in-the-same-pass. The exact-once abort makes it near-zero risk either way,
+    but the split review is cleaner.
+- **SESSION LOG (2026-07-07, ὄρος):** dotted-lexicon fold fix shipped + live (`2ff5f7d`, draw 641);
+  ὄρος card shipped at one sense then corrected in place for 4 prose defects (no re-draw, certified
+  senses untouched; `fix_lexica_raw` + `9a1dca9`), rendered clean + screenshot-verified; δίδωμι leak
+  resolved (not cited); streak 0 into θυγάτηρ; dotted-number audit ticket sized + hold-out flags armed.
 - **GRADUATION RULE (audit-intensity relaxation).** Verbatim: *"Manual audit relaxes when 2–3 consecutive
   words ship clean at attempt 1 with no new defect classes, no new watch entries, and floors in the predicted
   bucket. At that point: spot-audit becomes the default; full manual audit only on flagged words."*
