@@ -97,8 +97,8 @@ Batch-2 paused at **9 shipped**; φωνή G5456 carries to next session, floor n
 - **RETRO PILE (decide with full-batch evidence):** substitution probe (bare-headword-substitution blind
   spot, ENGINE_LESSONS #4) · pre-V5 triage + post-batch redraw phase · the existing fed-40 / reviewer-tier
   questions below.
-- **`ENGINE_LESSONS.md`** (repo root) — v2 design backlog, now **17 lessons** (#17 = fabrication family),
-  self-guarding (every
+- **`ENGINE_LESSONS.md`** (repo root) — v2 design backlog, now **18 lessons** (#17 = fabrication family,
+  #18 = translation-freight / the 4th freight axis, banked 2026-06-25), self-guarding (every
   word-citation verified against the audit doc before commit). Distinct from this handoff + the audit doc;
   read it before any v2 design work, not before resuming the rollout.
 

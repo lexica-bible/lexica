@@ -151,3 +151,22 @@ both drifting from the doc.
     infrastructure), not three per-instance patches; target for the batch-2-close optimization pass.
     *(audit: G3772 attempt-1/2 capitalization fabrication + case-fold root-fix; fed-list standing rule;
     session-3 handoff standing-rule #4 / preamble `source .env` correction)*
+
+18. **Translation-freight — the FOURTH freight axis** (alongside referent-freight, attribute-freight,
+    frame-leak). The English/Latin definitional vocabulary imports its OWN conceptual carving onto the Greek —
+    "the definition asserts something the Greek text doesn't," entering through a different door than the other
+    three. **The test is NOT "is this word loaded" (everything is) — it's "does this word's English meaning
+    track the Greek, or override it."** Boundary reasoning: zero-freight English doesn't exist, so the standard
+    is narrower — *avoid English words whose modern meaning has drifted from the Greek they translate, or that
+    import a whole conceptual domain the Greek doesn't carve.* **The fix is to describe the Greek's own carving,
+    not to hunt for a pure English word — because the pure English word doesn't exist.** Flagship failure:
+    **"moral"** fails it hard — a Latin category (moralis, Cicero's coinage translating ἠθικός imperfectly) with
+    no Greek behind it; Greek carves that space with δίκαιος / ὅσιος / ἀγαθός, none mapping to English "moral."
+    Also failing: **"worship"** (a post-Christian devotional bundle laid over concrete prostration/service acts
+    — the same case already logged concretely at #12's προσκυνέω/λατρεύω decomposition). → v2's freight check is
+    FOUR-axis, and translation-freight is caught by "describe the carving, don't name a pure word." Generalizes
+    #12 (action-verb grounding) and is a sibling of #13 (frame-leak) and #17 (fabrication family — invented
+    carving is invented rationale through the vocabulary door). *(provenance: banked 2026-06-25, "Fixing
+    VERSE_PROMPT sense-count instability" session; never promoted to durable docs until now — its own case study
+    in why the doc outranks recall. Surfaced batch-2 session-3 when ὀφθαλμός `--runs 3` draw 3 framed a job as
+    "moral character"; verified against that floor output in-transcript.)*
