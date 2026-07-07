@@ -4,9 +4,15 @@ Design-level lessons only. This file is NOT:
 - `AUDIT_lexica_rollout.md` (WHAT happened, per word — the authority on saga detail), or
 - the standing rules in `CLAUDE.md` / memory (HOW we operate the current engine).
 
-It is the **v2 design backlog**: one line per lesson, each pointing to its audit-doc entry for the
+It is the **v2 design backlog**: one entry per lesson, each pointing to its audit-doc entry for the
 evidence. It grows by HABIT — add a line the moment a design-level finding is logged, don't batch.
 Nothing here is scheduled work; it's the "if we rebuild the engine, change these" list.
+
+**Verification rule (standing):** every line that NAMES A WORD as evidence gets its citation checked
+against `AUDIT_lexica_rollout.md` before commit — not just dedupe-checked. The doc outranks recall,
+including the author's. This file is written at the abstraction level where conflation happens: on
+2026-07-07 alone that guard caught the double-shelf production record and ἅγιον's regime classification
+both drifting from the doc.
 
 ## Lessons (this batch, 2026-07-06/07)
 
@@ -23,12 +29,15 @@ Nothing here is scheduled work; it's the "if we rebuild the engine, change these
 3. **Ship draws sample off the reviewer's modal carve — and draw-until-match is REGIME-dependent.** ὕδωρ:
    the target shape was ~70% of reviewer draws, yet the ship path missed it twice before hitting on attempt
    3 → ship-path DRAW-UNTIL-MATCH against the banked verdict works when the target is RARE-BUT-PRESENT. It
-   FAILS when the shape is near-absent in the draw space (πολύς: the 2-sense-with-full-range draft barely
-   exists; ἅγιον: the structure won't stay distinct across pulls) — more pulls can't summon an absent shape.
-   → v2 needs BOTH a structure-hint channel (pass the reviewer's stable-jobs list as draw context) AND a
-   convergence detector to tell "keep pulling" from "escalate." (The structure-hint channel is one of the
-   three armed escalation-mechanism options — this partially pre-decides that choice for v2.) *(audit: G5204
-   ὕδωρ + content-wall findings + escalation trigger option space)*
+   FAILS when the shape is near-ABSENT (πολύς: the 2-sense-with-full-range draft barely exists — capped and
+   parked; more pulls can't summon it). The instructive case is the BOUNDARY between the two: ἅγιον's
+   structure wouldn't stay distinct for two pulls (attempts 1 & 2 collapsed / merged — looked near-absent)
+   yet CLEARED on pull 3 — rare-but-present that read as absent in the moment. → v2 needs BOTH a
+   structure-hint channel (pass the reviewer's stable-jobs list as draw context) AND a convergence detector,
+   precisely because ἅγιον is the case where mid-pull you can't tell the πολύς regime (escalate) from the
+   ὕδωρ regime (keep pulling). (The structure-hint channel is one of the three armed escalation-mechanism
+   options — this partially pre-decides that choice for v2.) *(audit: G5204 ὕδωρ + G39 ἅγιον near-wall +
+   G4183 πολύς + escalation trigger option space)*
 
 4. **Substitution blind spot.** A headword standing in for another referent is invisible to reviewer, gates,
    AND collocation flags UNLESS a signature collocate exists (βασιλεία caught "kingdom of heaven"; bare
