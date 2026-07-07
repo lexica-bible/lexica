@@ -592,6 +592,7 @@ def split_definition(prose):
     lines = (prose or "").splitlines()
     sections = OrderedDict()
     cur = None
+    preamble = []                                 # lines BEFORE the first section header
     for ln in lines:
         m = _SECTION_RE.match(ln)
         if m:
@@ -603,14 +604,22 @@ def split_definition(prose):
             if rest:                                  # label AND text shared one line — keep the text
                 sections[cur].append(rest)
             continue
-        if cur is not None:
-            sections[cur].append(ln)
+        (sections[cur] if cur is not None else preamble).append(ln)
 
     def body(title):
         out = "\n".join(sections.get(title, [])).strip()
         out = re.sub(r'^-{3,}\s*', '', out)      # drop a leading --- rule
         out = re.sub(r'\s*-{3,}\s*$', '', out)   # drop a trailing --- rule
         return out.strip()
+
+    # Some drafts OMIT the "Senses:" header and dive straight into bold-numbered senses (sometimes
+    # after a title line the prompt asked them not to write). Fall back to the pre-section text, but
+    # ONLY when it actually holds numbered sense headlines — so a stray preamble sentence is never
+    # mistaken for senses, and there is zero change when a proper "Senses" header IS present.
+    if not sections.get("senses"):
+        pre = re.sub(r'\s*-{3,}\s*$', '', re.sub(r'^-{3,}\s*', '', "\n".join(preamble).strip())).strip()
+        if _sense_spans(pre):
+            sections["senses"] = [pre]
 
     senses_block = body("senses")
     headlines = [lead for lead, _ in _sense_spans(senses_block)]

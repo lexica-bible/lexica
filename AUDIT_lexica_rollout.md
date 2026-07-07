@@ -413,6 +413,19 @@ the note-and-batch disposition dead and V4 ships BEFORE ἱερεύς's reviewer
   still V4, nothing produced under the one-liner, zero rework.)
 - **VALIDATION (control-fire for the block):** ἱερεύς G2409's first V4 draw gets a FORMATTING audit against
   all five points alongside the four gates; both audits reported when the draw lands.
+- **CONTROL-FIRE PARTIAL RESULT — 4 of 5 landing, looking good.** ἱερεύς draw-1 raw (even though it 0'd on
+  the header drift) shows the block steering right: **em-dash headlines ✓, "Sub-use:" lead-ins consistent
+  ✓, no slashes ✓, citation flow clean ✓** — plus it caught a "seven"/ἑπτά mistag as free hygiene. The 5th
+  point (Range shape) awaits a fully-parsed draft. The block is steering the right things.
+- **OPEN WATCH ITEM — V4 NOT cleared on the header question.** 2/3 header-drops immediately post-V4 is weak
+  evidence (draw 2 emitted the header → stochastic; the parser fix makes it harmless), but TRACK the
+  header-emit rate over the next 2–3 words. If V4 clearly inflated header-omission, that matters even
+  though the parser now absorbs it — it would mean the formatting block is DISPLACING structure, a pattern
+  that could surface somewhere the parser CAN'T absorb. Revisit the block if the rate stays high.
+- **CONTENT SIGNAL (through the breakage):** ἱερεύς's 2 readable draws (the parsed draw 2 + the inspected
+  draw 1) MATCH on the referent axis — general cultic office (pagan folded as sub-use) / Melchizedek-
+  perpetual / collective-Revelation. 2 of 2 on the predicted role-noun axis; trajectory holding, the clean
+  floor after the fix confirms.
 - **SCOPE: style-only, ZERO rework.** No structure/method change. No unshipped V3 verdicts exist —
   ἔθνος + μέγας shipped, ἱερεύς not yet run — so V4-now costs no redraw and needs no carry-forward
   exception. Full discipline, clean generation boundary.
@@ -448,6 +461,25 @@ The μέγας G3173 `--runs 10` came back `!! 5 draw(s) parsed to 0 senses (for
   as semantics, and the 8 CLEAN draws (3 first-run + 5 here) already told the truth (stable 2 magnitude +
   rank/status, age semi-stable, shallow-axis tail folds). Diagnosis was one read-only inspect, not a
   blind re-roll.
+
+### SECOND PARSER FIX (2026-07-07) — header-OMISSION drift, surfaced by ἱερεύς's first V4 floor
+ἱερεύς G2409 `--runs 3` under V4 came back 2/3 "0 senses" — a DIFFERENT drift from the first fix.
+- **ROOT CAUSE: `split_definition` keyed the senses off a "Senses:" SECTION HEADER; some drafts omit it**
+  and dive straight into a title line (`**G2409 hiereús**`, which the prompt asked them NOT to write) +
+  bold-numbered senses `**1. … — …**` (number INSIDE the bold this time). No "Senses" header → empty
+  block → 0 senses, upstream of the first fix (which only helps once a block is extracted). The draft's
+  CONTENT was excellent (clean 3-sense read, working "Sub-use:" lead-ins, caught a "seven"/ἑπτά mistag).
+- **SHIP PATH SAFE (confirmed):** `validate_entry` refuses a header-less draft ("sense_headlines empty")
+  rather than mis-shipping — no card was ever at risk. Reviewer-only silent 0, again.
+- **FIX:** `split_definition` now captures the pre-section `preamble` and, when NO "Senses" section
+  exists, falls back to it — GUARDED by `_sense_spans(pre)` so a stray prose preamble is never mistaken
+  for senses, and zero change when a "Senses" header is present. Fixes reviewer AND ship path in one
+  place. Locked by `test_lexica_agreement_parse.py` (real ἱερεύς draw-1 fixture; control asserts NO
+  "Senses" header present so the fallback path is genuinely exercised; old→0 / new→3 demonstrated).
+- **RATIFIED PRINCIPLE (JP):** the PARSER owns tolerance to real model variance; the PROMPT owns steering
+  the ideal. Fixing header-omission at the prompt is whack-a-mole against a coin-flip (draw 2 emitted the
+  header, draws 1/3 didn't — stochastic); fixing it in the parser makes it permanently moot. Same lesson
+  as the first fix, one layer up.
 
 ### ESCALATION TRIGGER (standing, batch-wide)
 If a SECOND batch word caps out with **range-completeness** as the binding constraint, the mechanism decision

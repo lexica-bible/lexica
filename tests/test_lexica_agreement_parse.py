@@ -42,8 +42,58 @@ DRIFT_RAW = (
 )
 
 
+# Real ἱερεύς G2409 draw-1 output (a "0 senses" draw under V4): NO "Senses:" header at all — a title
+# line (which the prompt asked it NOT to write) then bold-numbered senses "**N. ...**", then a real
+# "Gloss notes:" header. split_definition keyed the senses off a "Senses" section header, found none,
+# and returned an empty block → 0 senses. Fix: fall back to the pre-section text when it holds numbered
+# headlines. (Different drift from DRIFT_RAW above: there the header existed and the NUMBER was outside
+# the bold; here the header is absent and the number is inside the bold.)
+HEADERLESS_RAW = (
+    "**G2409 hiereús**\n"
+    "**1. Person who holds and performs a cultic office — one appointed to conduct sacrifice, ritual, "
+    "and sacred duty within an organized religious structure** (Gen 14:18; Exo 2:16; Lev 1:5; Deu 17:12; "
+    "1Ki 4:4; 2Ki 11:4; Ezr 1:5; Neh 2:16; Job 12:19; Jer 6:13; Luk 1:5; Luk 5:14; Mar 1:44; Mat 8:4; "
+    "Mat 12:5; Act 14:13). Sub-use: the referent is non-Israelite — priest of Midian (Exo 2:16), priest "
+    "of Zeus (Act 14:13). Sub-use: paired with a leadership stratum (Jer 6:13; Neh 2:16; Ezr 1:5).\n"
+    "**2. Holder of a perpetual priestly office — designated by oath to an enduring cultic standing** "
+    "(Psa 110:4; Heb 5:6; Heb 7:1; Heb 7:3; Heb 7:11; Heb 7:21).\n"
+    "**3. Status-designation for a collective — a body of persons in a mediatorial relation to God** "
+    "(Rev 1:6; Rev 5:10; Rev 20:6).\n"
+    "**Gloss notes:** The gloss \"seven\" (Jos 6:4) is a mistranslation; it does not render hiereús.\n"
+)
+
+
 def _senses_block():
     return B.split_definition(DRIFT_RAW)["senses_block"]
+
+
+def _has_senses_header(raw):
+    for ln in raw.splitlines():
+        m = B._SECTION_RE.match(ln)
+        if m and m.group(1).lower() == "senses":
+            return True
+    return False
+
+
+def test_control_headerless_fixture_has_no_senses_header():
+    """Known-positive fire for the header-omission fix: this fixture has NO 'Senses:' header, so the
+    OLD section-keyed extraction (sections['senses']) was empty → 0 senses. If a 'Senses' header ever
+    creeps into the fixture, it stops exercising the fallback and the '== 3' below is worthless."""
+    assert not _has_senses_header(HEADERLESS_RAW)
+    # it DOES carry a real later section header, so the parser isn't just seeing a headerless blob
+    assert any(B._SECTION_RE.match(ln) for ln in HEADERLESS_RAW.splitlines())
+
+
+def test_headerless_draft_recovers_three_senses():
+    """The fix: split_definition falls back to the pre-section bold-numbered senses when no 'Senses'
+    header is present, recovering all three the old code 0'd — and the gloss-notes section still splits
+    out separately (the fallback only claims the pre-header senses, not the whole draft)."""
+    fields = B.split_definition(HEADERLESS_RAW)
+    assert len(fields["sense_headlines"]) == 3
+    assert len(A.per_sense(fields["senses_block"])) == 3
+    assert "mistranslation" in fields["gloss_notes"]     # gloss-notes still parsed, not swallowed
+    # a genuine preamble with NO numbered senses must NOT be mistaken for senses (guard holds)
+    assert B.split_definition("Here is the definition.\n\nRange: it stretches wide.")["sense_headlines"] == []
 
 
 def test_control_fixture_is_genuine_drift_bold_only_sees_zero():
@@ -70,4 +120,6 @@ def test_per_sense_parses_all_four_drift_senses():
 if __name__ == "__main__":       # runnable as a plain script for the CI / pre-commit lists (no pytest)
     test_control_fixture_is_genuine_drift_bold_only_sees_zero()
     test_per_sense_parses_all_four_drift_senses()
+    test_control_headerless_fixture_has_no_senses_header()
+    test_headerless_draft_recovers_three_senses()
     print("test_lexica_agreement_parse: ok")
