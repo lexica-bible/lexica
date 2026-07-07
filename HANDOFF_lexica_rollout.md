@@ -81,6 +81,34 @@ Batch-2 paused at **9 shipped**; φωνή G5456 carries to next session, floor n
   whitespace — **SHIPPED in V6** (2026-07-07): *"each Sub-use begins on its own line, with a blank line
   before it."* rode along with the freight bump; first live test = ὀφθαλμός redraw. **NEW post-V6 watches:
   see the two V6 watches under ENGINE STATE (over-trigger, philosophize).**
+- **V7 PILE (prompt-wording candidates, banked 2026-07-07 S3 — next bump, own checkpoint; NONE block V6).**
+  From a post-approval wording audit of the full V6 prompt (register / both-ways neutrality / stop-rules /
+  new-line interaction / scope markers). Priority:
+  1. **"line" → "entry" (×2), PRIORITY.** Method step 2 ("note the variation in the sense's line") and Output
+     ("within that sense's line") mean the sense's *entry*, but the new whitespace line mandates each Sub-use
+     begin on its own *line* — literal self-contradiction in the exact region the whitespace line stabilizes.
+     **WATCH LINK:** if the whitespace watch wobbles on first V6 draws, this ambiguity is suspect #1 BEFORE the
+     new line itself — and it would escalate from V7 pile to active-defect (one-word fix, but touches the
+     whitespace blast radius mid-gate, so it does NOT jump the queue on its own).
+  2. **Gloss-note flag is one-directional.** "Narrower, more loaded, or more doctrinally specific" flags only
+     over-loading; no channel for a gloss BROADER/flatter than context (under-translation) — same asymmetry as
+     the dikaioō lesson. Fix: "narrower or broader, more or less loaded, than the context supports."
+  Lower priority:
+  3. **Doubled vocabulary bar.** Term-of-art line + freight line now govern headline word choice with two
+     tests; agree so far, but two tests on one behavior = an over-trigger path (stricter wins by default). Fix:
+     subordinate term-of-art into the freight line as an example clause — one test. **WATCH LINK:** if V6 watch
+     (i) freight-paranoia fires, the doubled bar is a suspect alongside the new line.
+  4. **Missing scope marker:** "gloss-free characterization" (Output) vs "you may use it" (gloss paragraph) —
+     reconciliation inferable (headline not a bare gloss; matching gloss word may appear in the elaboration) but
+     unstated. Fix: state it.
+  5. **Register trim:** "It records how one translation disambiguated the word - a set of decisions, not the
+     meaning" is quotable rationale (echo-into-gloss-notes risk). Trim-and-convert candidate. Rest passes register.
+  - **RECORD ENTRY (LOG, DO NOT "FIX").** The freight line's placement UNDER Formatting deliberately scopes it
+    to senses + range; **gloss notes are outside its jurisdiction by design** — flagging a loaded gloss requires
+    NAMING it, so "moral" quoted inside a gloss note is the line WORKING, not leaking. Consistent with the June-25
+    "unless the gloss itself is under discussion" and the point-6 audit bar (headlines, body prose, range only).
+    Logged so a future session doesn't "correct" the scoping as an oversight.
+  - **Otherwise green:** neutrality + stop-rules bounded (import-drop rule, doctrinal-career ban, omit-if-nothing).
 - **REDRAW QUEUE (3, post-batch, under V5+):** ἅγιον (slash headlines) · μέγας (slash sense-4) · ἱερεύς
   ("corporate" echo). Cosmetic-only, each cleared on neutrality, NOT hand-edited. Full detail: audit doc
   `### REDRAW QUEUE`.
