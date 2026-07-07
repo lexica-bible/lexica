@@ -905,6 +905,30 @@ disposition where wanted. Streak stays 0.
   dangling-"Gal" source located (raw shown if raw-side) · Job 7:7 explicit call · structure + freight held ·
   six-point + whitespace clean · both V6 watches clean · citations clean.
 
+##### SESSION-4 OUTCOME — PARKED (JP, 2026-07-07): mechanism limit found, disposition wall → V7
+- **VOID RUN — does NOT count against the ruled pull.** One draw fired with the UN-trimmed hint 2 ("…distinct
+  from the physical organ") AND a no-op anchor (1Sa 1:18 already in the base sample). Caught PRE-audit by the
+  22-OT arithmetic (`fed 42` = 20 base + only 2 new; three OT verses forced → one already present) and the
+  identical draw key `0abd875d` (inputs unchanged from the parked draw). Not the ruled configuration → not
+  audited, not shipped, pull not spent. **Process defect:** the ruled pre-pull checklist (trim hint 2, no-op
+  check) ran UN-applied before the draw fired — the checks must GATE the pull, not trail it.
+- **ANCHOR LEVER DEAD.** Read-only probe (reproduced `select_spread`, BUDGET 40) confirmed ALL SIX certified
+  regard exemplars — Jdg 6:17, Rth 2:2, 1Sa 1:18, 2Sa 3:19, 1Ch 28:8, 2Ki 1:13 — are ALREADY in the base
+  sample. Under-feeding of regard was never the cause; no in-criterion anchor exists to add as a new variable.
+- **PARKED-DRAW HINT DISCLOSURE.** Draw `0abd875d` carried the "distinct from the physical organ" steering
+  clause in its stored hint (session-3 origin; job-naming-only scope became law in session 4). Legal when
+  drawn, disclosed for the record — it means the parked draw was already the MAXIMAL push.
+- **WALL — FIRED in substance, DECISION DEFERRED to V7.** Strongest-form evidence: maximal push (steering clause
+  + full regard-exemplar coverage) STILL filed disposition under physical. In-bounds re-roll is EXHAUSTED (no
+  new anchor; trimming the hint only weakens the push). Option-space decision (widen hint channel / prompt-steer
+  / higher-cap) stays RESERVED to JP, to be made WITH the V7 restructure — NOT a batch-2 fight. The one ruled
+  pull remains UNSPENT if ὀφθαλμός reopens.
+- **RIDERS park with the draw** (dangling-"Gal", Job 7:7). **STANDING WATCH:** a second dangling flag on any of
+  the next 9 graduates flag-sourcing from rider to defect.
+- **ROSTER:** ὀφθαλμός PARKED (second park alongside πολύς). Batch-2: **9 shipped, 2 parked, 9 to go. Streak 0.**
+- **→ V7 PILE:** disposition-placement mechanism limit (ὀφθαλμός evidence package) added to the V7 restructure
+  inputs. The wall becomes a prompt-restructure question, not a per-word draw fight.
+
 ### ESCALATION TRIGGER (standing, batch-wide)
 If a SECOND batch word caps out with **range-completeness** as the binding constraint, the mechanism decision
 (B vs C) moves from the retro to RIGHT THEN — two occurrences is a pattern, one is a hard word.

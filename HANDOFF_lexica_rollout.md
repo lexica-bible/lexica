@@ -110,6 +110,12 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
      unstated. Fix: state it.
   5. **Register trim:** "It records how one translation disambiguated the word - a set of decisions, not the
      meaning" is quotable rationale (echo-into-gloss-notes risk). Trim-and-convert candidate. Rest passes register.
+  6. **Disposition-placement mechanism limit (ὀφθαλμός evidence package, S4 2026-07-07).** Structure-hint +
+     regard-anchor could NOT move a folded sub-use (disposition-toward-another) off physical onto its certified
+     parent (regard): all six regard exemplars already fed AND the maximal (steering-clause) hint still filed it
+     under physical. The wall is a PROMPT-RESTRUCTURE question, not a per-word draw fight. Option-space decision
+     (widen hint channel / prompt-steer / higher-cap) reserved to JP, to be made WITH V7. Full record: audit doc
+     `##### SESSION-4 OUTCOME — PARKED`.
   - **RECORD ENTRY (LOG, DO NOT "FIX").** The freight line's placement UNDER Formatting deliberately scopes it
     to senses + range; **gloss notes are outside its jurisdiction by design** — flagging a loaded gloss requires
     NAMING it, so "moral" quoted inside a gloss note is the line WORKING, not leaking. Consistent with the June-25
@@ -192,7 +198,11 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
   the four-gate bar (attempts 1/2/3 all failed gate-3 completeness only — corrected record, NOT a
   merge; one flagged discrepancy vs JP's recollection on attempt 2, non-blocking). Re-attempt when
   sequencing suits: first draft clearing all four gates ships, whatever its count.
-- **◀ SESSION-4 FIRST ACT — ὀφθαλμός G3788: PARKED at cached draw `0abd875d` (best draw yet).** The structure-hint
+- **ὀφθαλμός G3788: PARKED (final, S4 2026-07-07) — mechanism limit, disposition wall → V7.** The morning fork
+  resolved: re-roll EXHAUSTED in-bounds (all six regard exemplars already fed → anchor lever dead; maximal
+  hint still filed disposition under physical). JP ruled PARK + bank the wall as a V7 restructure input; the
+  one ruled pull is UNSPENT. Full record: audit doc `##### SESSION-4 OUTCOME — PARKED`. History below:
+- **◀ (S3 close) ὀφθαλμός G3788: PARKED at cached draw `0abd875d` (best draw yet).** The structure-hint
   mechanism WORKED: first draw to hold **structure + freight together** — certified 3-job structure restored
   (physical / **regard its own sense 2, not buried** / figurative-perception), **"moral" gone everywhere**, gates
   1–2 pass, whitespace + six-point clean, citations 41/41, both V6 watches clean across all three live V6 draws.
