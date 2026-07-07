@@ -468,9 +468,15 @@ function LexiconView({ onNavigateToLibrary, onWordClick, pendingStrongs, onPendi
     .filter(b => testament === "all" || (b.testament || "").toLowerCase() === testament)
     .slice().sort((a, b) => b.count - a.count);
   const maxCount = distBooks.length ? distBooks[0].count : 1;
-  const firstGloss = !profile ? "" : (
+  const _topRender = !profile ? "" : (
     (((profileCorpus === "heb" ? profile.heb_glosses : profileCorpus === "bsb" ? profile.bsb_glosses : profileCorpus === "kjv" ? profile.kjv_glosses : profile.abp_glosses) || [])[0] || {}).gloss
     || ((profile.heb_glosses || profile.abp_glosses || profile.kjv_glosses || profile.bsb_glosses || [])[0] || {}).gloss || "");
+  // Header gloss = the plain dictionary meaning (word_gloss), trimmed exactly like the Library
+  // word card (shortLemmaGloss), so the two surfaces match. GREEK: profile.definition leads with
+  // word_gloss; for Hebrew that field is the long BDB paragraph, so keep the top in-verse rendering
+  // there until the profile carries the Hebrew word_gloss (its own checkpoint).
+  const firstGloss = !profile ? "" : (
+    (/^G/i.test(profile.strongs) ? shortLemmaGloss(profile.definition) : "") || _topRender);
   const selBookName = profile && selectedBook ? (profile.books.find(b => b.book === selectedBook)?.name || selectedBook) : "";
   const selBookCount = profile && selectedBook ? (profile.books.find(b => b.book === selectedBook)?.count ?? null) : null;
   const backToResults = () => { setProfile(null); setSelectedBook(null); setVerseList(null); };
