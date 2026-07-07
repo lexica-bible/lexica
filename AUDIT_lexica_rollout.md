@@ -396,6 +396,27 @@ significance; (3) senior in age or birth order; (4) greater/greatest (comparativ
   data — style gates fish, πολύς capped on a style-class constraint); fold a headline-prose instruction into
   V4 if/when the prompt revises for other reasons. Revisit sooner if the slash pattern recurs in bad form.
 
+### PROMPT V3 → V4 (2026-07-07) — style-only bump, no-slash headlines. Style-watch trigger tripped.
+The slash-headline style-watch (opened at ἅγιον, μέγας sense 4 the second sighting) tripped; JP ruled
+the note-and-batch disposition dead and V4 ships BEFORE ἱερεύς's reviewer floor.
+- **THE STEER (Senses bullet only):** "Each characterization commits to one phrasing: no slash-apposition
+  ('set apart / belonging to') and no slash-pairs ('greater / greatest'); join a genuine grammatical pair
+  with 'and' or a parenthesis, e.g. 'greater (comparative and superlative)'." Landed in the **Senses**
+  output bullet of `VERSE_PROMPT` ONLY — deliberately NOT in Range or Gloss-notes, where slash-quoting
+  ("place / places") is legitimate.
+- **SCOPE: style-only, ZERO rework.** No structure/method change. No unshipped V3 verdicts exist —
+  ἔθνος + μέγας shipped, ἱερεύς not yet run — so V4-now costs no redraw and needs no carry-forward
+  exception. Full discipline, clean generation boundary.
+- **SHIPPED ENTRIES NOT RETRO-EDITED.** ἅγιον + μέγας keep their slash headlines (review-what-ships);
+  they'd only get the V4 phrasing if ever legitimately redrawn.
+- **MECHANICS.** `VERSE_PROMPT` (engine) + the reviewer's frozen copy edited byte-identical; copy renamed
+  `V3_PROMPT`→`V4_PROMPT`, `PROMPTS`/`--prompt` default flipped to `v4` (runs + saved files now stamp
+  "V4"). The vestigial trial-rig drift check (`_check_v3_sync`, comparing to the throwaway
+  `trial_lexica_prompt`) retired for `_check_prompt_sync`, which asserts the live invariant that matters
+  now: `V4_PROMPT == B.VERSE_PROMPT` (reviewer must draw under the engine's exact prompt). Verified
+  byte-identical + sync-silent locally. Prompt-hash `stamp` auto-rolls; old cached draws go stale
+  (harmless — shipped words already written, ἱερεύς draws fresh under V4).
+
 ### REVIEWER PARSER DRIFT FIX (2026-07-07) — μέγας 10-run surfaced audit-tooling debt, engine clean
 The μέγας G3173 `--runs 10` came back `!! 5 draw(s) parsed to 0 senses (format break): [1,4,6,7,8]`.
 - **ROOT CAUSE (logged): the reviewer reimplemented the sense-split with the bold-only `_HEADLINE_RE`

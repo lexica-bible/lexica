@@ -118,12 +118,13 @@ LABELS = {"G5590": "psyche", "G1344": "dikaioo", "G5484": "charis",
           "G166": "aionios", "G4561": "sarx", "G1577": "ekklesia"}
 
 # ── PROMPTS the reviewer can run. "live" = whatever build_lexica_def currently ships (the frozen
-# engine). "v3" = the candidate from the prompt session — same-job/different-job sub-use test,
-# symmetric no-over-split/no-over-merge. It is carried here as a SELF-CONTAINED frozen copy so the
-# reviewer survives the throwaway trial_lexica_prompt.py being deleted; if that rig is still present
-# we soft-assert the two copies have not drifted. v3 was PROMOTED into build_lexica_def 2026-06-25
-# (after the six passed review + the 3 leaker cores were pinned), so "live" == "v3" now. ────────────
-V3_PROMPT = """\
+# engine). "v4" = a SELF-CONTAINED frozen copy of that engine prompt, carried here so the reviewer
+# survives the throwaway trial_lexica_prompt.py being deleted, and so every saved run records the
+# exact prompt bytes it drew under. It MUST stay byte-identical to B.VERSE_PROMPT (the reviewer
+# measures the LIVE engine); _check_prompt_sync asserts that. v3 was promoted into build_lexica_def
+# 2026-06-25; V4 (2026-07-07) is a STYLE-ONLY bump — added the no-slash-headline steer to the Senses
+# bullet, nothing structural. ─────────────────────────────────────────────────────────────────────
+V4_PROMPT = """\
 You define a biblical lemma from its own attested use. You are given:
 - the lemma (Strong's number, original-language form, transliteration)
 - the translation gloss set: the English words a translation used to render
@@ -177,6 +178,10 @@ Output (compact, dictionary-entry style):
 - Senses: each a short gloss-free characterization with grounding references in
   parentheses, ordered by frequency in the supplied set. Where a sense carries a
   notable sub-use, note it within that sense's line, not as a separate sense.
+  Each characterization commits to one phrasing: no slash-apposition ("set apart /
+  belonging to") and no slash-pairs ("greater / greatest"); join a genuine
+  grammatical pair with "and" or a parenthesis, e.g. "greater (comparative and
+  superlative)".
 - Range: one line on how far the word stretches and what moves it.
 - Gloss notes: only where a gloss narrows, loads, or diverges from what the
   contexts support. Name the gloss and the divergence. Omit the line if nothing
@@ -187,18 +192,18 @@ Output (compact, dictionary-entry style):
 No preamble, no restating the lemma, no closing summary.
 """
 
-PROMPTS = {"live": B.VERSE_PROMPT, "v3": V3_PROMPT}
+PROMPTS = {"live": B.VERSE_PROMPT, "v4": V4_PROMPT}
 
 
-def _check_v3_sync():
-    """Loud if our frozen v3 copy has drifted from the trial rig's; silent if that rig is gone."""
-    try:
-        import trial_lexica_prompt as _TP
-        if _TP.NEW_PROMPT.strip() != V3_PROMPT.strip():
-            print("WARNING: V3_PROMPT here has DRIFTED from trial_lexica_prompt.NEW_PROMPT — "
-                  "they should be identical until v3 is promoted.", file=sys.stderr)
-    except Exception:
-        pass
+def _check_prompt_sync():
+    """Loud if our frozen v4 copy has drifted from the live engine prompt. This is the invariant that
+    matters now: the reviewer must draw under the SAME prompt build_lexica_def ships, or it isn't
+    measuring the live engine. (The old check compared v3 to the throwaway trial rig; v3 was promoted
+    2026-06-25 and V4 is a live style bump, so that comparison is retired.)"""
+    if V4_PROMPT.strip() != B.VERSE_PROMPT.strip():
+        print("WARNING: V4_PROMPT here has DRIFTED from build_lexica_def.VERSE_PROMPT — they must be "
+              "byte-identical so the reviewer measures the live engine. Re-sync before trusting a run.",
+              file=sys.stderr)
 
 
 # ══════════════════════════════════════════════════════════════════════════════════════════════
@@ -517,7 +522,7 @@ def main():
     ap = argparse.ArgumentParser(description="Agreement reviewer for the Lexica dictionary engine.")
     ap.add_argument("--db", default=os.path.expanduser("~/bible-db/bible.db"))
     ap.add_argument("--word", help="one G-number, e.g. G5590 (default: the six pilot words)")
-    ap.add_argument("--prompt", choices=list(PROMPTS), default="v3",
+    ap.add_argument("--prompt", choices=list(PROMPTS), default="v4",
                     help="which engine to review: v3 (candidate, default) or live (frozen engine)")
     ap.add_argument("--runs", type=int, default=10, help="draws per word (10 reproduces the canary)")
     ap.add_argument("--budget", type=int, default=B.BUDGET)
@@ -530,7 +535,7 @@ def main():
         from_json(args.from_json)
         return
 
-    _check_v3_sync()
+    _check_prompt_sync()
     system = PROMPTS[args.prompt]
     targets = [args.word.upper()] if args.word else list(PILOT)
     targets = [("G" + t if t[:1] not in ("G", "H") else t) for t in targets]

@@ -74,7 +74,7 @@ LXX_MIN_OT    = 4    # AND carry at least this many OT refs, so the claim isn't 
 # ── PROMPT — VERSE-GROUNDED definition (Sonnet). v3 (promoted 2026-06-25, after the 3 frame-leaker
 # cores were hand-pinned): adds the sub-use test (same-job vs different-job) + a symmetric
 # no-over-split/no-over-merge constraint. Proven 0/10 format stutter across the six in the agreement
-# reviewer. KEEP IN SYNC with lexica_agreement.V3_PROMPT (the reviewer soft-asserts they match). ───
+# reviewer. KEEP IN SYNC with lexica_agreement.V4_PROMPT (the reviewer soft-asserts they match). ───
 VERSE_PROMPT = """\
 You define a biblical lemma from its own attested use. You are given:
 - the lemma (Strong's number, original-language form, transliteration)
@@ -129,6 +129,10 @@ Output (compact, dictionary-entry style):
 - Senses: each a short gloss-free characterization with grounding references in
   parentheses, ordered by frequency in the supplied set. Where a sense carries a
   notable sub-use, note it within that sense's line, not as a separate sense.
+  Each characterization commits to one phrasing: no slash-apposition ("set apart /
+  belonging to") and no slash-pairs ("greater / greatest"); join a genuine
+  grammatical pair with "and" or a parenthesis, e.g. "greater (comparative and
+  superlative)".
 - Range: one line on how far the word stretches and what moves it.
 - Gloss notes: only where a gloss narrows, loads, or diverges from what the
   contexts support. Name the gloss and the divergence. Omit the line if nothing
