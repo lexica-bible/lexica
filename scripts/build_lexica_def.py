@@ -74,7 +74,7 @@ LXX_MIN_OT    = 4    # AND carry at least this many OT refs, so the claim isn't 
 # ── PROMPT — VERSE-GROUNDED definition (Sonnet). v3 (promoted 2026-06-25, after the 3 frame-leaker
 # cores were hand-pinned): adds the sub-use test (same-job vs different-job) + a symmetric
 # no-over-split/no-over-merge constraint. Proven 0/10 format stutter across the six in the agreement
-# reviewer. KEEP IN SYNC with lexica_agreement.V4_PROMPT (the reviewer soft-asserts they match). ───
+# reviewer. KEEP IN SYNC with lexica_agreement.V5_PROMPT (the reviewer soft-asserts they match). ───
 VERSE_PROMPT = """\
 You define a biblical lemma from its own attested use. You are given:
 - the lemma (Strong's number, original-language form, transliteration)
@@ -136,12 +136,15 @@ Output (compact, dictionary-entry style):
 - Coverage: if the supplied occurrences are too few or too clustered to
   characterize the range, say so in one line. Omit if coverage is adequate.
 
-Formatting (senses and range - how to lay them out, not what to say):
+Formatting (senses and range - how to lay them out and word them, not which senses to give):
 - Each sense headline is one capitalized head phrase; where it needs an elaboration,
   set the elaboration off with an em-dash, as in "Senior in age — the older or prior
   of two." Commit to one phrasing per headline: join a real grammatical pair with
   "and" or a parenthesis (e.g. "greater (comparative and superlative)"), never a
   slash or a slash-apposition ("set apart / belonging to").
+- Prefer descriptive vocabulary with no life as a term of art in theological debate;
+  where a plain word carries the sense, use it (e.g. "applied to a group" rather than
+  "corporate").
 - Introduce any sub-use with one consistent lead-in, "Sub-use:", not a mix of lead-ins.
 - Put each sense's grounding refs in parentheses; where an example phrase clarifies,
   pair it with its own ref inline - "(1Co 13:13: the greatest of these)" - in

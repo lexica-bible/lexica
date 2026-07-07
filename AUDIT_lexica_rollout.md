@@ -536,10 +536,30 @@ perpetual, archetypal office (Melchizedek + Heb 7); (3) collective/corporate pri
 JP's ruling on ἱερεύς sense 3 "corporate": CLEARED on neutrality (plain of-a-body sense, self-defined in
 place, referent question left open — both-ways satisfied), but LOGGED as a style concern: words with a life
 as terms of art in theological debate ("corporate" → corporate election / corporate personality) carry an
-echo even when used innocently. **Counter: 1 sighting.** Disposition: monitoring, same protocol as the slash
-watch — 2–3 sightings across words triggers a V5 style-block line, drafted positive: "prefer descriptive
-vocabulary with no life as a term of art in theological debate; where a plain word carries the sense, use
-it." NOT a gate, NOT a redraw trigger, no retro-edit to ἱερεύς.
+echo even when used innocently. **TRIPPED SAME SESSION (2026-07-07):** JP re-counted the shipped ἱερεύς card
+— sense 3 "corporate" + the range clause "corporate identity ascribed to a redeemed people" = 2–3 echo
+sightings on ONE card, threshold met. → V5 style line shipped (below). NOT a gate, NOT a redraw trigger, no
+retro-edit to ἱερεύς.
+
+### PROMPT V4 → V5 (2026-07-07) — style-only, term-of-art line. Style-watch #2 tripped.
+- **THE LINE (Formatting block, same segregated place as the V4 lines):** "Prefer descriptive vocabulary
+  with no life as a term of art in theological debate; where a plain word carries the sense, use it (e.g.
+  'applied to a group' rather than 'corporate')." Positive phrasing, one example, tight.
+- **SCOPE: style-only, ZERO rework.** Word boundary — no unshipped V4 verdicts (ἱερεύς shipped; οὐρανός
+  floor not yet run). Full discipline, no carry-forward exception (same justification as V3→V4).
+- **MECHANICS.** `VERSE_PROMPT` + reviewer copy edited byte-identical; `V4_PROMPT`→`V5_PROMPT`,
+  `PROMPTS`/`--prompt` default → `v5`, sync check repointed to `V5_PROMPT == B.VERSE_PROMPT`. Block title
+  widened to "layout and wording" to admit the vocabulary rule. Verified byte-identical + sync-silent.
+- **CONTROL-FIRE: the formatting audit is now 6 POINTS** — the echo check joins headline-shape, no-slash,
+  sub-use lead-in, citation-flow, range-shape. οὐρανός's first draw gets all six alongside the four gates.
+
+### REDRAW QUEUE (post-batch, optional — under V5)
+Cosmetic-only entries shipped under earlier prompt generations, each cleared on neutrality/content, NOT
+hand-edited (review-what-ships holds). Queued for OPTIONAL redraw under V5 after the batch closes:
+- **ἅγιον G39** (V3) — slash-headlines (the "set apart / …" template across all 4).
+- **μέγας G3173** (V4) — slash-headline (sense 4 "Greater / greatest (comparative and superlative)").
+- **ἱερεύς G2409** (V4) — term-of-art echo ("corporate" ×2).
+(ἱερεύς occurrence-count "32" note: that was JP's NT filter, not a data issue — no action.)
 
 ### ESCALATION TRIGGER (standing, batch-wide)
 If a SECOND batch word caps out with **range-completeness** as the binding constraint, the mechanism decision

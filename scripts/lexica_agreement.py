@@ -118,13 +118,13 @@ LABELS = {"G5590": "psyche", "G1344": "dikaioo", "G5484": "charis",
           "G166": "aionios", "G4561": "sarx", "G1577": "ekklesia"}
 
 # ── PROMPTS the reviewer can run. "live" = whatever build_lexica_def currently ships (the frozen
-# engine). "v4" = a SELF-CONTAINED frozen copy of that engine prompt, carried here so the reviewer
+# engine). "v5" = a SELF-CONTAINED frozen copy of that engine prompt, carried here so the reviewer
 # survives the throwaway trial_lexica_prompt.py being deleted, and so every saved run records the
 # exact prompt bytes it drew under. It MUST stay byte-identical to B.VERSE_PROMPT (the reviewer
 # measures the LIVE engine); _check_prompt_sync asserts that. v3 was promoted into build_lexica_def
-# 2026-06-25; V4 (2026-07-07) is a STYLE-ONLY bump — added the no-slash-headline steer to the Senses
-# bullet, nothing structural. ─────────────────────────────────────────────────────────────────────
-V4_PROMPT = """\
+# 2026-06-25; V4 (2026-07-07) added the Formatting block (no-slash headlines etc.); V5 (2026-07-07)
+# added the term-of-art line. Both bumps are STYLE-ONLY, nothing structural. ───────────────────────
+V5_PROMPT = """\
 You define a biblical lemma from its own attested use. You are given:
 - the lemma (Strong's number, original-language form, transliteration)
 - the translation gloss set: the English words a translation used to render
@@ -185,12 +185,15 @@ Output (compact, dictionary-entry style):
 - Coverage: if the supplied occurrences are too few or too clustered to
   characterize the range, say so in one line. Omit if coverage is adequate.
 
-Formatting (senses and range - how to lay them out, not what to say):
+Formatting (senses and range - how to lay them out and word them, not which senses to give):
 - Each sense headline is one capitalized head phrase; where it needs an elaboration,
   set the elaboration off with an em-dash, as in "Senior in age — the older or prior
   of two." Commit to one phrasing per headline: join a real grammatical pair with
   "and" or a parenthesis (e.g. "greater (comparative and superlative)"), never a
   slash or a slash-apposition ("set apart / belonging to").
+- Prefer descriptive vocabulary with no life as a term of art in theological debate;
+  where a plain word carries the sense, use it (e.g. "applied to a group" rather than
+  "corporate").
 - Introduce any sub-use with one consistent lead-in, "Sub-use:", not a mix of lead-ins.
 - Put each sense's grounding refs in parentheses; where an example phrase clarifies,
   pair it with its own ref inline - "(1Co 13:13: the greatest of these)" - in
@@ -201,16 +204,16 @@ Formatting (senses and range - how to lay them out, not what to say):
 No preamble, no restating the lemma, no closing summary.
 """
 
-PROMPTS = {"live": B.VERSE_PROMPT, "v4": V4_PROMPT}
+PROMPTS = {"live": B.VERSE_PROMPT, "v5": V5_PROMPT}
 
 
 def _check_prompt_sync():
-    """Loud if our frozen v4 copy has drifted from the live engine prompt. This is the invariant that
+    """Loud if our frozen v5 copy has drifted from the live engine prompt. This is the invariant that
     matters now: the reviewer must draw under the SAME prompt build_lexica_def ships, or it isn't
     measuring the live engine. (The old check compared v3 to the throwaway trial rig; v3 was promoted
-    2026-06-25 and V4 is a live style bump, so that comparison is retired.)"""
-    if V4_PROMPT.strip() != B.VERSE_PROMPT.strip():
-        print("WARNING: V4_PROMPT here has DRIFTED from build_lexica_def.VERSE_PROMPT — they must be "
+    2026-06-25 and V4/V5 are live style bumps, so that comparison is retired.)"""
+    if V5_PROMPT.strip() != B.VERSE_PROMPT.strip():
+        print("WARNING: V5_PROMPT here has DRIFTED from build_lexica_def.VERSE_PROMPT — they must be "
               "byte-identical so the reviewer measures the live engine. Re-sync before trusting a run.",
               file=sys.stderr)
 
@@ -531,7 +534,7 @@ def main():
     ap = argparse.ArgumentParser(description="Agreement reviewer for the Lexica dictionary engine.")
     ap.add_argument("--db", default=os.path.expanduser("~/bible-db/bible.db"))
     ap.add_argument("--word", help="one G-number, e.g. G5590 (default: the six pilot words)")
-    ap.add_argument("--prompt", choices=list(PROMPTS), default="v4",
+    ap.add_argument("--prompt", choices=list(PROMPTS), default="v5",
                     help="which engine to review: v3 (candidate, default) or live (frozen engine)")
     ap.add_argument("--runs", type=int, default=10, help="draws per word (10 reproduces the canary)")
     ap.add_argument("--budget", type=int, default=B.BUDGET)
