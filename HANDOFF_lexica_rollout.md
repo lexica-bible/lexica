@@ -104,7 +104,7 @@ Batch-2 paused at **9 shipped**; φωνή G5456 carries to next session, floor n
 5. Log the word in `AUDIT_lexica_rollout.md` (per-word flag rate, any precedent, wall status).
 
 ## BATCH STATE
-- **SHIPPED + LIVE (9):** G1096 γίνομαι (session start, from-draw first exercise) · G80 ἀδελφός
+- **SHIPPED + LIVE (10):** G1096 γίνομαι (session start, from-draw first exercise) · G80 ἀδελφός
   (4 senses) · G2588 καρδία (4 senses, one-draw ship) · G39 ἅγιον (4 senses, near-wall) · G1484
   ἔθνος (2 senses, converged attempt 2; detector's first live fire, Eph 2:11 bridge ruled+logged) ·
   G3173 μέγας (4 senses, one-draw ship; multi-shallow-axis wobble no-holes; 2Ch 17:12 bridge ruled) ·
@@ -112,7 +112,10 @@ Batch-2 paused at **9 shipped**; φωνή G5456 carries to next session, floor n
   dangling "Heb" accepted, V4 formatting 5/5) · G3772 οὐρανός (3 senses, attempt 3; cured a
   gloss_notes fabrication via the gloss-set case-fold — batch's strongest fix-the-input case; V5
   formatting 6/6; core-2 tightest of the batch) · G5204 ὕδωρ (3 senses, attempt 3; physical/ritual/
-  figurative; naive tight-noun prediction FALSIFIED, usage-dimensionality confirmed; no wall, counter 2).
+  figurative; naive tight-noun prediction FALSIFIED, usage-dimensionality confirmed; no wall, counter 2) ·
+  G5456 φωνή (3 senses, one-draw ship; STABLE at 3 no escalation; utterance/non-vocal-sound/circulated-report;
+  clean-multi agreed TIGHTLY at 3; seam #5 utterance↔report LOGGED, card honored not broke it; both
+  standing-rule checks run pre-ship — fed-list + gloss-notes verified; style-watch #3 structural-mislabel banked).
 - **word_gloss:** G39 "Holy Place" → "holy, set apart" override LIVE (`a06a90b` + `--apply` rebuild
   on PA). Verified: word_gloss row = `holy, set apart|override`; count 17508 stable; `override`
   58→59, `tbesg` 73→72 (only G39 moved). **Library card confirmed rendering "hágion · holy, set apart"**
@@ -123,15 +126,18 @@ Batch-2 paused at **9 shipped**; φωνή G5456 carries to next session, floor n
   the four-gate bar (attempts 1/2/3 all failed gate-3 completeness only — corrected record, NOT a
   merge; one flagged discrepancy vs JP's recollection on attempt 2, non-blocking). Re-attempt when
   sequencing suits: first draft clearing all four gates ships, whatever its count.
-- **NEXT UP:** φωνή G5456 — reviewer floor `--runs 3` first (no verdict banked). Prediction: voice/speech vs
-  sound/noise, "loud voice" (μεγάλη φωνή) likely a sub-use not a sense; watch usage-dimensionality.
-- **REMAINING (~10 after φωνή):** ὀφθαλμός G3788 · ὄρος G3735 · ἔτος G2094 · ἄρχων G758 · ἔργον G2041 ·
+- **NEXT UP:** ὀφθαλμός G3788 — reviewer floor `--runs 3` first (no verdict banked). Prediction: literal eye
+  vs figurative "eye" (sight/perception/attention, "eyes of the LORD"); watch usage-dimensionality axis.
+- **REMAINING (~9 after ὀφθαλμός):** ὄρος G3735 · ἔτος G2094 · ἄρχων G758 · ἔργον G2041 ·
   ἁμαρτία G266 · ῥῆμα G4487 · δύναμις G1411 · θυγάτηρ G2364 · τόπος G5117. (Full locked-20 list + selection method in
   the audit doc's Batch Two section.)
   - **Loaded-frame watch:** ἁμαρτία / ῥῆμα / δύναμις (audit hardest for a disguised loaded frame).
-  - **Tight-agreement test (refined hypothesis):** θυγάτηρ / ὕδωρ / ὄρος — genuine one-dimension
-    nouns, predicted to agree tightly at 3. ἔθνος already showed clean-binary → tight; πολύς/καρδία
-    showed multi-shallow-axis → wobble. Confirm on these three.
+  - **Tight-agreement test (refined hypothesis):** θυγάτηρ / ὄρος — genuine one-dimension nouns,
+    predicted to agree tightly at 3. Data so far: ἔθνος clean-binary → tight; **φωνή clean-multi (3
+    distinct jobs) → still tight at 3**; πολύς/καρδία multi-*shallow*-axis → wobble; ὕδωρ stable-3
+    but needed `--runs 10` (structure wobbled). Working rule: separability (not job-COUNT) predicts
+    tightness — clean-separable jobs agree even at 3, shallow overlapping axes wobble. Confirm on the two.
+    Note φωνή also showed the spread axis can surprise (propagation, not the speaker-type axis predicted).
 
 ## QUEUED FOR NEXT SESSION (surfaced at this session's close — do before/at ἔθνος)
 1. **Double-shelf detector — BUILT + control-fired (2026-07-06). LIVE in the audit path, flag-only.**

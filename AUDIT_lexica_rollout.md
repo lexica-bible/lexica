@@ -722,6 +722,52 @@ immersion/purification (1Jn 5:6 folded here descriptively); (3) figurative — w
   "typological" for 1Pe 3:20, but it names the text's own move, 1Pe 3:21); detector silent; collocation flags
   (unclean-water / river / sea) all physical-sense unfed, clean.
 
+### G5456 φωνή — LIVE (3 senses, one-draw ship). Clean-multi that agreed tightly; the seam-honoring card.
+Shipped the first draw (key 2e3b7ede), no model call on apply, gate 37/37, stamp lexica:0c58c8a74b4f,
+37 verses. 3 senses: (1) audible sound by a living being — cry/call/utterance (loud-voice μεγάλη φωνή,
+prophets'-voices-as-proclamations, and greeting-sound Luk 1:44 all as named sub-uses); (2) non-vocal
+acoustic phenomenon (instrument/thunder/wind/water); (3) circulated report/proclamation (Gen 45:16, Ezr 1:1,
+Act 2:6). LXX-provenance note fires on sense 3.
+- **REVIEWER `--runs 3` → STABLE, no escalation.** Count locked `{3:3}` mean 3.0; identical three jobs in all
+  draws; all four wobble verses (Luk 1:44, 1Ki 8:55, 2Ki 7:10, Luk 23:23) FOLD (main partner stays cited).
+  No appear/vanish, no merge, no job-boundary wobble → shipped from one draw, escalation counter stays 2.
+- **PREDICTION SCORING.** CC's 2-sense call (voice vs sound) = MISS, self-reported and NOT rescued into a
+  sub-use (correct under granularity-as-drawn — ticked). JP's theophany thin-sense = MISS (divine speaker
+  folded into job 1 as drawn). The third sense (circulated report) was pre-registered by neither. μεγάλη φωνή
+  as sub-use = HIT. **Dimensionality lesson:** usage-dimensionality predicted THAT there'd be spread and there
+  was — but the axis was **propagation** (utterance → circulated report), not the speaker-type axis both priors
+  watched. Hypothesis right on presence-of-spread, wrong on which axis; bank as a refinement, not a falsify.
+  Clean-multi (3 distinct jobs) still agreed TIGHTLY at 3 — so "clean-separable → tight" holds even at 3 jobs;
+  it's multi-*shallow*-axis that wobbles (πολύς/καρδία), not multi-job-count.
+- **GATE 2 = the strong pass (the seam we pre-registered).** Company column exposed the utterance↔report seam
+  live: 1Ch 15:16 / 2Ch 5:13 at 3/3 support but only 2/3 with the report cluster (draw 3 shelved them under
+  job 1), and Act 13:27 crossed it in reverse (job 1 in draws 1&3, job 3 in draw 2). The card did NOT collapse
+  the seam — it DEFENDS it in prose: sense-3's sub-use note pulls Gen 3:8 / Exo 3:18 to the boundary and argues
+  them back into sense 1 ("addressable utterance, not a rumour"), and it shelved the praise-voice seam verses
+  (1Ch 15:16 / 2Ch 5:13) under sense 1, matching draws 1–2's majority. Not merged, not thinned (0 thin/circular).
+- **SEAM REGISTER #5 — utterance ↔ report (job 1 ↔ job 3).** LIVE seam, logged. Evidence above. The card
+  HONORED it rather than breaking on it — logged anyway, because the register records where seams *live*, not
+  only where they break (JP's ruling). Adjudication per instance if it recurs; not a gate.
+- **STANDING-RULE CHECKS RUN (both, pre-ship — JP caught that CC's first verdict skipped them).**
+  · **Fed-list verify:** the three prose tag-alongs (Heb 3:15, 2Pe 1:18, 1Co 14:8) all confirmed IN the fed 40
+  by re-deriving `select_spread`→`fetch_context` on PA — builder cited what it was fed, nothing from training,
+  37/37 stands. (Verified against the fed list, not inferred from draw silence.)
+  · **Gloss-notes spot-verify** against `verses.text`: Act 2:6 = "…they heard each one of them speaking…" (note's
+  straddle-caveat grounded) AND the verse opens "the report of this" = φωνή as sense-3 report; Luk 1:44 = "the
+  sound of your greeting" = a spoken salutation, so the note's "voice would be equally accurate" is grounded.
+- **COLLOCATIONS (3 uncited flags):** κραυγή (outcry), εἰσακούω (hearken to), κράζω (cry out) — all
+  utterance-domain, all fold into sense 1 (which explicitly covers weeping cries / shouted proclamations /
+  "hearken to his voice"). None signals an absent 4th sense; reviewer never surfaced one. Fold, not hole.
+- **STYLE WATCH #3 (structural-mislabel, retro line).** Sense-3's "Sub-use:" header carries a *seam
+  adjudication* whose verdict shelves both verses under sense 1 — so it isn't a sub-use OF sense 3 at all.
+  Semantically right, structurally mislabeled; doesn't trip a gate as drawn. Retro candidate: a "Sub-use"
+  header carrying boundary-verdict content. (Also confirms the pre-existing V6 whitespace watch — Sub-use runs
+  inline, not on its own line; banked for the next version bump, not blocked.)
+- **PROCESS NOTE (judge-on-the-raw, working as designed).** JP read the raw prose independently and caught two
+  standing-rule checks CC's initial verdict had asserted-past rather than run (fed-list + gloss-notes). Both
+  then passed — but the catch is the point: adjudication happens on the raw, and CC's readout is not the ground
+  truth until the raw backs it. Same discipline that caught three relay errors last session.
+
 ### ESCALATION TRIGGER (standing, batch-wide)
 If a SECOND batch word caps out with **range-completeness** as the binding constraint, the mechanism decision
 (B vs C) moves from the retro to RIGHT THEN — two occurrences is a pattern, one is a hard word.
