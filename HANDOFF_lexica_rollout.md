@@ -46,6 +46,38 @@ These two are the load-bearing ones. Everything else below supports them.
   per-word structure-hint channel passing the reviewer's stable-jobs list as draw CONTEXT without
   touching the frozen VERSE_PROMPT.
 
+## SESSION-2 CLOSE STATE (2026-07-07) — read this to resume
+Batch-2 paused at **9 shipped**; φωνή G5456 carries to next session, floor not yet run.
+- **ENGINE STATE — all LIVE:** V5 prompt (Formatting block + term-of-art line) · gloss-set **case-fold**
+  (merges "Heaven"/"heaven"-class artifacts) · **both parser tolerances** (per_sense reuses _sense_spans;
+  split_definition falls back to header-less bold-numbered senses). Locking tests (CI + pre-commit):
+  `tests/test_lexica_agreement_parse.py`, `tests/test_lexica_glossset_fold.py`.
+- **ESCALATION COUNTER = 2** (πολύς full cap-out / range-completeness; ἅγιον near-wall / structure, cleared
+  attempt 3). A THIRD wall on any binding constraint trips the mechanism decision to JP immediately.
+  Mechanism options UNCHANGED: higher-cap draw-until-match · prompt-steer + re-prove · structure-hint channel
+  (ENGINE_LESSONS #3 leans toward structure-hint + a convergence detector, but the call is still JP's).
+- **STYLE WATCHES (3 open):** #1 slashes — addressed in V4, body-prose scope still MONITORING (not extended);
+  #2 term-of-art — addressed in V5, the point-6 audit is live (first catch-and-clear on οὐρανός); #3
+  whitespace — V6 line BANKED, byte-explicit: *"each Sub-use begins on its own line, with a blank line
+  before it."* Rides free on the next version bump; no bump yet earned.
+- **REDRAW QUEUE (3, post-batch, under V5+):** ἅγιον (slash headlines) · μέγας (slash sense-4) · ἱερεύς
+  ("corporate" echo). Cosmetic-only, each cleared on neutrality, NOT hand-edited. Full detail: audit doc
+  `### REDRAW QUEUE`.
+- **STANDING RULES BORN THIS SESSION (operating discipline — follow next session):**
+  1. **Fed-list verification** — an "unfed" claim is verified by READING the fed list, never inferred from
+     draw silence (absorption and absence look identical from draw output; only the fed list distinguishes).
+  2. **Gloss-notes assertion spot-check** — any gloss_notes claim ABOUT THE TRANSLATION (capitalization
+     practice, etc.) is verified against the actual text, not just its refs (the citation gate checks refs,
+     not assertions). Extends to sense-prose action verbs (ENGINE_LESSONS #12).
+  3. **git-pull-first** — every PA command block that validates NEW code starts with `git pull` (two
+     stale-state incidents drove this; make it invariable).
+- **RETRO PILE (decide with full-batch evidence):** substitution probe (bare-headword-substitution blind
+  spot, ENGINE_LESSONS #4) · pre-V5 triage + post-batch redraw phase · the existing fed-40 / reviewer-tier
+  questions below.
+- **`ENGINE_LESSONS.md`** (repo root) — v2 design backlog, now **16 lessons**, self-guarding (every
+  word-citation verified against the audit doc before commit). Distinct from this handoff + the audit doc;
+  read it before any v2 design work, not before resuming the rollout.
+
 ## PER-WORD FLOW (the loop)
 1. `lexica_agreement.py --word G#### --runs 3` (→ 10 on wobble). Read the STABLE jobs (present in
    ~all draws) + majority-distinct distinctions; wobbles back-check hole-vs-fold.
