@@ -813,7 +813,52 @@ rejected on three defects; fixed by the V6 bump + a forced-sample redraw (pendin
   argued sub-use of regard (capacious for insulting/adulterous/begrudging/pitiless, attested qualities naming it) ·
   Pro 6:17+2Pe 2:14 straddle-noted · NO Latin categories in headlines/body/range · six-point formatting incl. the
   whitespace line's first live test. **Streak stays 0** (attempt 1 not clean regardless of remedy path).
-  **Escalation counter STAYS 2** — this was a freight/fed-gap defect fixed at the input, NOT a content-wall cap-out.
+
+#### V6 ATTEMPTS → CAP-OUT → STRUCTURE-HINT MECHANISM (2026-07-07, the trigger's first fire)
+- **Attempt 2 (V6-forced, key 6d0fbdf0):** structure FIXED — disposition-toward-another drawn as its own sense 2,
+  forced Deu 13:8/15:9 landed there; gloss_notes fixed (real gaps, no false absence claim); whitespace line PASSED
+  its first live test; both V6 watches clean. **BUT "moral" survived** in the sense-2 headline + range (2 sites,
+  both "moral or evaluative") — the freight line DAMPENED (V5 "moral character" as the naming → V6 vestigial
+  modifier) but did not DELETE. Gate fail on freight. NOT shipped.
+- **Attempt 3 (V6-forced re-roll, key 6d0fbdf0, prose refreshed — same input-key, colliding outputs per lesson
+  #15):** freight FIXED ("moral" gone everywhere) **but STRUCTURE REGRESSED** (verified on the RAW, not readout):
+  the stable **regard job** ("favor/in the eyes of," own sense in 10/10 reviewer draws) was **demoted to sub-use
+  (a) of sense 1 (physical organ)**, bundled with the disposition idioms — a merge of a majority-distinct job into
+  physical (**gate 2 fail**) leaving regard non-distinct (**gate 1 fail**); and the minority divine-eyes cluster
+  (own-sense 3/10) was **promoted to standalone sense 2**. Structure inverted from the certified read. NOT shipped.
+- **CAP-OUT RULED (JP, 2026-07-07).** Count straight across per the οὐρανός precedent (attempts counted across a
+  mid-stream fix): V5 draft + V6-forced + V6 re-roll = **3 off-target pulls = cap** (no counter reset for the V6
+  bump). The word **oscillates** — attempt 2 held structure/failed freight, attempt 3 held freight/failed
+  structure — never both in one pull within the cap. **Escalation counter 2→3** (πολύς range-completeness ·
+  ἅγιον structure near-wall · ὀφθαλμός structure↔freight alignment). The armed trigger FIRED and is RESOLVED in
+  this ruling.
+- **MECHANISM = STRUCTURE-HINT (ruled, not draw-until-match, not prompt-steer).** Rationale on record: the hint is
+  the reviewer's OWN 10-run output (certified ground truth, not a preferred outcome) → steers toward the floor,
+  not toward a wanted answer; higher-cap pulls risk continued oscillation; prompt-steer is the wrong tool since
+  attempt 3 proved the freight line WORKS. Implementation: `--structure-hint` (commit 95b4a16) injects the stable
+  3-job list into the draw CONTEXT (user message, after the occurrences), frozen V6 prompt untouched; names JOBS
+  not carving/count/sub-uses (granularity-as-drawn governs); logged on the draw record (structure_hint /
+  structure_hint_why) like --force-verse. Fired with the 3 jobs (physical / regard-estimation-disposition /
+  figurative-perception) + the 2 forced verses.
+- **HEIGHTENED SHIP BAR on the hinted draw (not relaxed):** full four-gate re-audit of the WHOLE structure ·
+  **2Pe 2:14 straddle note or argued shelving REQUIRED** (physical 5/10 in the floor — silent shelving blocked in
+  EITHER direction) · disposition visible with attested qualities naming it (own sense or argued sub-use) · NO
+  Latin categories anywhere · six-point formatting · both V6 watches. **Execution rule: ship tonight ONLY if
+  unambiguously clean; any judgment call (arguable shelving, borderline phrase) → PARK till morning with the draw
+  cached.** Heightened scrutiny doesn't get audited tired.
+
+##### Attempt-3 raw (archived — structure-regression verified on THIS, not a readout)
+```
+1. The physical organ of sight in a living body — ... Sub-use: the organ ... "favor in your/his eyes" (Jdg 6:17;
+   Rth 2:2; 1Sa 1:18; Est 5:2); "pleased in the eyes of" (2Sa 3:19); "your eye should be wicked towards" (Deu 15:9);
+   "spare your eye upon him" (Deu 13:8); "an insulting eye" (Pro 6:17) ... [regard + disposition bundled UNDER
+   physical]. Sub-use: witness/firsthand (Deu 3:21; Ezr 3:12; 1Co 2:9; Mar 8:18). Sub-use: concealment/disclosure
+   (Num 5:13; 1Ch 28:8; Exo 13:9).
+2. Eyes attributed to a non-bodily subject — God/divine (2Ch 6:20; Neh 1:6; Psa 5:5; 1Pe 3:12; Heb 4:13).
+3. Eyes used figuratively for the understanding or inner capacity to perceive (Eph 1:18; 1Jn 2:11; Gal 3:1).
+Range: physical → inner understanding (Eph 1:18) / God's watchfulness (Heb 4:13). Gloss notes: "eyes/eye" formal,
+"imports no theological freight" [no "moral" anywhere — freight fixed]. (Full raw in draws/G3788.json history / session transcript.)
+```
 
 ### ESCALATION TRIGGER (standing, batch-wide)
 If a SECOND batch word caps out with **range-completeness** as the binding constraint, the mechanism decision
@@ -946,14 +991,16 @@ exactly (STABLE at 2, unanimous {2:3}).
   tightly at the reviewer's stable 2, one redraw to land the shape. Contrast πολύς/καρδία (multi-shallow-axis
   → wobble). The refined hypothesis holds; θυγάτηρ/ὕδωρ/ὄρος remain the pending tight-agreement test.
 
-### TRIGGER STATUS (standing — survives session end)
-Content-wall tally: **πολύς = 1 full cap-out (range-completeness)**; **ἅγιον = near-wall (2 rejects,
-structure-binding, cleared attempt 3)**. Trigger **armed at one-more-wall**. PRE-RULED: **a third cap-out on
-ANY binding constraint (range, structure, OR frame) trips the mechanism decision to JP immediately** — not
-deferred to the retro. Mechanism option space (named, not decided): higher-cap draw-until-match ·
-prompt-steer with a re-prove cycle · a per-word structure-hint channel that passes the reviewer's
-stable-jobs list as draw CONTEXT without touching the frozen VERSE_PROMPT (C-lite vs a new mechanism is part
-of the decision).
+### TRIGGER STATUS (standing — survives session end) — FIRED + RESOLVED 2026-07-07
+Content-wall tally (now **3**): **πολύς = full cap-out (range-completeness)**; **ἅγιον = near-wall (structure,
+cleared attempt 3)**; **ὀφθαλμός = cap-out (structure↔freight oscillation — 3 pulls, never both clean at once)**.
+The trigger, armed at one-more-wall, **FIRED on ὀφθαλμός and was RESOLVED by JP's ruling: mechanism = STRUCTURE-HINT.**
+Not draw-until-match (risks continued oscillation), not prompt-steer (attempt 3 proved the freight line works) —
+the structure-hint passes the reviewer's OWN certified stable-jobs list as draw CONTEXT (steers to ground truth,
+not a preferred outcome), frozen VERSE_PROMPT untouched. **Now LIVE:** `--structure-hint` (commit 95b4a16), logged
+on the draw record like --force-verse; scoped to post-cap-out use only, NOT routine steering. **If a FOURTH wall
+lands,** the trigger re-arms — reopen the option space (higher-cap · prompt-steer · widen the hint channel) with
+the structure-hint's first-use evidence in hand.
 
 ### Parked-hard list
 - **G4183 πολύς** — un-stuck by the four-gate reruling; parked for sequencing only. Re-attempt: first draft

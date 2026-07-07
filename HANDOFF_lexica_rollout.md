@@ -72,10 +72,13 @@ Batch-2 paused at **9 shipped**; φωνή G5456 carries to next session, floor n
     engine flagging ordinary glosses as "drifted" (freight-paranoia); the "all are loaded" clause is the retained
     guard. (ii) **philosophize** — output discussing the freight rule instead of following it. If either fires,
     the line comes back to the table before word 12.
-- **ESCALATION COUNTER = 2** (πολύς full cap-out / range-completeness; ἅγιον near-wall / structure, cleared
-  attempt 3). A THIRD wall on any binding constraint trips the mechanism decision to JP immediately.
-  Mechanism options UNCHANGED: higher-cap draw-until-match · prompt-steer + re-prove · structure-hint channel
-  (ENGINE_LESSONS #3 leans toward structure-hint + a convergence detector, but the call is still JP's).
+- **ESCALATION COUNTER = 3 — TRIGGER FIRED + RESOLVED (2026-07-07).** πολύς (range-completeness) · ἅγιον
+  (structure near-wall) · **ὀφθαλμός (structure↔freight oscillation — 3 pulls, never both clean; cap-out ruled
+  straight-across per οὐρανός, no reset for the V6 bump)**. **Mechanism ruled = STRUCTURE-HINT, now LIVE:**
+  `--structure-hint` (commit 95b4a16) passes the reviewer's certified stable-jobs list as draw CONTEXT (steers to
+  ground truth, frozen prompt untouched, logged like --force-verse, post-cap-out use only). NOT draw-until-match,
+  NOT prompt-steer (freight line proven to work). **A FOURTH wall re-arms the trigger** → reopen the option space
+  (higher-cap · prompt-steer · widen the hint) with the structure-hint's first-use evidence in hand.
 - **STYLE WATCHES:** #1 slashes — addressed in V4, body-prose scope still MONITORING (not extended);
   #2 term-of-art — addressed in V5, the point-6 audit is live (first catch-and-clear on οὐρανός); #3
   whitespace — **SHIPPED in V6** (2026-07-07): *"each Sub-use begins on its own line, with a blank line
@@ -185,20 +188,17 @@ Batch-2 paused at **9 shipped**; φωνή G5456 carries to next session, floor n
   the four-gate bar (attempts 1/2/3 all failed gate-3 completeness only — corrected record, NOT a
   merge; one flagged discrepancy vs JP's recollection on attempt 2, non-blocking). Re-attempt when
   sequencing suits: first draft clearing all four gates ships, whatever its count.
-- **NEXT UP — ὀφθαλμός G3788: V6 REDRAW PENDING (immediate next action, not deferred).** Floor DONE
+- **NEXT UP — ὀφθαλμός G3788: HINTED DRAW PENDING (cap-out resolved via structure-hint mechanism).** Floor DONE
   (`--runs 3`→`--runs 10`): multi-shallow-axis, stable core of 3 (physical organ / regard-"in-the-eyes-of" /
-  figurative inner-perception), 4th–5th senses minority-fold. First V5 draft (key 2fa587bb) REJECTED — three
-  defects: (1) **#18 freight** — "moral character" sub-use + "moral evaluative gaze" in range; (2) **silent
-  minority-shelving** — Pro 6:17/2Pe 2:14 shelved physical (3/10) with no straddle note (violates the φωνή/Act-2:6
-  visible-boundary precedent); (3) **gloss_notes false absence claim** ("no gloss imports…" asserted while 5
-  MISSED-collocation warnings sat unexamined). Collocation eyeball RAN (step 1.5): φείδομαι pity-family +
-  πονηρός envy-family = the eye-as-seat-of-disposition-toward-another region, unfed → drawn thin under sense 1
-  and mislabeled "moral." FOLD not re-floor (inventory sound). **Fix = V6 (freight+whitespace, DONE) + force
-  Deu 13:8 + 15:9 into the redraw sample (select_spread option (a) — log the forcing + rationale on the draw
-  record).** **Pre-registered redraw bar:** 4–5 senses in-distribution · disposition-toward-another as its own
-  region OR an argued sub-use of regard (capacious for insulting/adulterous/begrudging/pitiless, attested
-  qualities naming it) · Pro 6:17+2Pe 2:14 straddle-noted · NO Latin categories anywhere · six-point formatting
-  incl. the whitespace line's first live test. **Streak stays 0** (attempt 1 not clean). Full saga: audit doc.
+  figurative inner-perception). **3 pulls capped out** (V5 draft = freight+structure; V6-forced = structure good/
+  "moral" residue; V6 re-roll = "moral" gone/structure regressed — regard merged into physical, divine promoted).
+  Cap-out ruled, counter 2→3, **mechanism = structure-hint (LIVE, commit 95b4a16).** **Hinted draw fired** with
+  the 3 stable jobs + forced Deu 13:8/15:9. **HEIGHTENED ship bar (not relaxed):** full four-gate re-audit ·
+  **2Pe 2:14 straddle note/argued shelving REQUIRED** (physical 5/10 — silent shelving blocked either way) ·
+  disposition visible with attested qualities · NO Latin categories · six-point formatting · both V6 watches.
+  **EXECUTION RULE: ship tonight ONLY if unambiguously clean; ANY judgment call → PARK till morning with the draw
+  cached** (heightened scrutiny not audited tired). **Streak stays 0.** Full saga + attempt-3 raw: audit doc
+  `### G3788 ὀφθαλμός … #### V6 ATTEMPTS → CAP-OUT`.
 - **REMAINING (~9 after ὀφθαλμός):** ὄρος G3735 · ἔτος G2094 · ἄρχων G758 · ἔργον G2041 ·
   ἁμαρτία G266 · ῥῆμα G4487 · δύναμις G1411 · θυγάτηρ G2364 · τόπος G5117. (Full locked-20 list + selection method in
   the audit doc's Batch Two section.)
