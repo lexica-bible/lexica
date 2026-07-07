@@ -20,9 +20,15 @@ Nothing here is scheduled work; it's the "if we rebuild the engine, change these
    → v2: AUDIT THE FED EVIDENCE before tuning prompts; a stimulus you can delete beats a prompt line that
    steers around it. *(audit: GLOSS-SET CASE-FOLD / οὐρανός three-attempt saga)*
 
-3. **Ship draws sample off the reviewer's modal carve.** ὕδωρ: the target shape was ~70% of reviewer draws,
-   yet the ship path missed it twice before hitting on attempt 3. → v2 candidate: ship-path DRAW-UNTIL-MATCH
-   against the banked reviewer verdict, natively (not a manual redraw loop). *(audit: G5204 ὕδωρ)*
+3. **Ship draws sample off the reviewer's modal carve — and draw-until-match is REGIME-dependent.** ὕδωρ:
+   the target shape was ~70% of reviewer draws, yet the ship path missed it twice before hitting on attempt
+   3 → ship-path DRAW-UNTIL-MATCH against the banked verdict works when the target is RARE-BUT-PRESENT. It
+   FAILS when the shape is near-absent in the draw space (πολύς: the 2-sense-with-full-range draft barely
+   exists; ἅγιον: the structure won't stay distinct across pulls) — more pulls can't summon an absent shape.
+   → v2 needs BOTH a structure-hint channel (pass the reviewer's stable-jobs list as draw context) AND a
+   convergence detector to tell "keep pulling" from "escalate." (The structure-hint channel is one of the
+   three armed escalation-mechanism options — this partially pre-decides that choice for v2.) *(audit: G5204
+   ὕδωρ + content-wall findings + escalation trigger option space)*
 
 4. **Substitution blind spot.** A headword standing in for another referent is invisible to reviewer, gates,
    AND collocation flags UNLESS a signature collocate exists (βασιλεία caught "kingdom of heaven"; bare
@@ -65,9 +71,10 @@ Nothing here is scheduled work; it's the "if we rebuild the engine, change these
    ADVISORY. → v2 keeps correctness gates deterministic and the model's output advisory-until-gated. *(audit:
    Batch-One process lesson 3)*
 
-10. **Review-what-ships: reviewed prose must be byte-identical to shipped prose.** The draw cache made this
-    an invariant (apply reads the reviewed bytes, no fresh model call). → v2 keeps the reviewed artifact and
-    the shipped artifact the same object. *(audit: Batch-two prep #1 — draw cache)*
+10. **Review-what-ships: reviewed prose must be byte-identical to shipped prose.** The draw cache moves
+    toward this (apply reads on-disk bytes, no fresh model call) but does NOT fully guarantee it — see 15
+    (the key pins the input, not the prose). → v2 keeps the reviewed artifact and the shipped artifact the
+    same object, content-addressed. *(audit: Batch-two prep #1 — draw cache; tightened by 15)*
 
 ## Added by session-1 mining (2026-07-07)
 
@@ -91,3 +98,32 @@ Nothing here is scheduled work; it's the "if we rebuild the engine, change these
     "worshipped" vs bow/serve needs semantic matching, not position-checking; realistic v2 form is "FLAG
     loaded abstractions for manual grounding-check," not full automation. *(audit: θεός G2316 sense-1
     decompression, 2026-07-06)*
+
+13. **Fork-companion frame leak — neutrality is BOTH-ways.** A sense adjacent to a contested fork-word can
+    leak the fork's framing even though the headword isn't forked (holy-spirit under ἅγιον). Rejecting one
+    frame is itself frame-taking — the anti-personhood descriptor ("power / agent / medium") picks the OTHER
+    side of the same contest. → v2's neutrality check for fork-adjacent senses is BOTH-ways; the neutral
+    ceiling is grammatical characterization ("qualifying πνεῦμα as a compound expression"), NOT an
+    ontology-lite descriptor. Corroboration: the both-ways register held UNPROMPTED across ἱερεύς's
+    Melchizedek cluster (10 reviewer draws + ship draft) and ὕδωρ's baptismal / 1Jn 5:6 cluster — the
+    discipline generalizes to fork-adjacent territory without CONTESTED machinery. *(audit: G39 spirit-frame
+    both-ways bar; ἱερεύς + ὕδωρ register checks 2026-07-07)*
+
+14. **Range-completeness is its own binding wall — folding isn't free.** Granularity-as-drawn legitimizes
+    folds only because folded facets stay VISIBLE, but visibility-after-folding is EMERGENT, not generated.
+    πολύς proved it doesn't emerge reliably — the stable 2-sense structure exists, but folded facets
+    (comparative / adverbial / temporal) drop silently from the range across single drafts. → v2 treats
+    carrying folded facets into the range as an EXPLICIT generation target, not an emergent property.
+    *(audit: G4183 πολύς PARKED — range-completeness finding)*
+
+15. **The reviewed-draft cache keys by INPUT; outputs collide.** The key pins the fed sample, not the prose
+    — all 13 of G80's draws shared one key, so shipped bytes were "whatever was last on disk," not provably
+    the reviewed artifact. It worked, but it's a foot-gun the validity signature only mitigates. → v2
+    CONTENT-ADDRESSES the reviewed draft by its prose, so reviewed and shipped are unambiguously the same
+    object (tightens 10). *(audit: G80 saga — key-pins-input note)*
+
+16. **A completeness detector must scan the WHOLE prose.** Completeness is satisfied by inline verse-level
+    naming (καρδία's relational-presence facet lived as an inline gloss inside sense 1 at 1Th 2:17 —
+    correctly ruled visible; the gate-3 inline precedent). → any v2 completeness detector reads the whole
+    prose for facet presence, not just sense headers + the range slot — else it regresses below v1's own
+    jurisprudence and false-fails legitimate cards. *(audit: G2588 gate-3 inline precedent)*
