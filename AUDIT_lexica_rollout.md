@@ -669,6 +669,21 @@ as a named sub-use); (3) natural sky as a figure (Lev 26:19 "heaven as iron").
   within one un-caught fabrication of tripping it. Attempts were spent on a TRUTH defect, which is the only
   thing attempts are for.
 
+### STYLE WATCH #3 — "Sub-use:" whitespace convention (opened at ὕδωρ side-check, 2026-07-07)
+First WHITESPACE-class sighting (the 6 formatting points cover word-choice + layout-shape, not spacing).
+Byte check of shipped prose (`lexica_def`, repr of every "Sub-use:" context): within each card CONSISTENT,
+across cards DIVERGENT — **ἱερεύς (V4) = `\n\nSub-use:` (own paragraph); οὐρανός (V5) + ἅγιον (V3) =
+`. Sub-use:` (inline after the period).** Sorted DRAW-LEVEL (models pick different conventions per draw,
+shipped verbatim by review-what-ships), NOT render-level (bytes genuinely differ). **Cosmetic — parser
+keys on the bold/number headline, never spacing** (no parse risk, unlike the two drift bugs).
+- **Disposition:** candidate V6 formatting line — recommend **own-line convention** ("Sub-use: begins its
+  own line") as the cleaner read for a dictionary card (sets the sub-use apart from the sense's main prose,
+  which is what ἱερεύς's `\n\n` already does). NOT a gate, NOT a redraw trigger, no retro-edit. Unlike the
+  slash/echo watches (which accumulated toward a threshold), the inconsistency is already demonstrated
+  across 3 cards — so this can fold into the next prompt rev on JP's nod rather than waiting for more sightings.
+- **Shipped cards keep their spacing;** they'd pick up the convention only on optional post-batch redraw
+  (the redraw queue already holds ἅγιον/μέγας/ἱερεύς).
+
 ### ESCALATION TRIGGER (standing, batch-wide)
 If a SECOND batch word caps out with **range-completeness** as the binding constraint, the mechanism decision
 (B vs C) moves from the retro to RIGHT THEN — two occurrences is a pattern, one is a hard word.
