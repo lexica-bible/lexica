@@ -70,11 +70,16 @@ Batch-2 paused at **9 shipped**; φωνή G5456 carries to next session, floor n
      practice, etc.) is verified against the actual text, not just its refs (the citation gate checks refs,
      not assertions). Extends to sense-prose action verbs (ENGINE_LESSONS #12).
   3. **git-pull-first + the real PA preamble** — every PA command block starts with:
-     `cd ~/bible-db && git pull && workon bible-env && source .env`
-     (two stale-state incidents drove the pull; make it invariable). The API key is in
-     `~/bible-db/.env` — `source .env` loads it. NEVER grep `/var/www/…_wsgi.py` for the key
-     (the script's docstring shows that, but it is NOT how we run it — don't read production
-     files for secrets).
+     `cd ~/bible-db && git pull && workon bible-env`
+     (two stale-state incidents drove the pull; make it invariable). **Do NOT append `source .env`**
+     — it currently ABORTS on an unquoted line in `.env` (`MAIL_FROM=Lexica <noreply@…>`; bash reads
+     the `<` as a redirect, 2026-07-07). It's also unnecessary for the lexica scripts: both
+     `build_lexica_def.py` (`get_key()`) and `lexica_agreement.py` (via `B.get_key()`) read the
+     `ANTHROPIC_API_KEY` line out of `~/bible-db/.env` themselves — no `source` needed. NEVER grep
+     `/var/www/…_wsgi.py` for the key (the script's docstring shows that, but it is NOT how we run it
+     — don't read production files for secrets). Standalone `.env` fix, when convenient: quote the
+     value → `MAIL_FROM="Lexica <noreply@lexica.bible>"` (unblocks anything that does `source .env`,
+     e.g. the deploy script).
   4. **Infra/environment claims get VERIFIED, not asserted** — a sibling to "the audit doc
      outranks recall." Fresh sessions guess machine/env details confidently and plausibly (the
      grep-the-WSGI-for-the-key slip, 2026-07-07). Any claim about how the server runs, where a
