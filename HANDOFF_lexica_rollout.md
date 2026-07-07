@@ -69,8 +69,18 @@ Batch-2 paused at **9 shipped**; φωνή G5456 carries to next session, floor n
   2. **Gloss-notes assertion spot-check** — any gloss_notes claim ABOUT THE TRANSLATION (capitalization
      practice, etc.) is verified against the actual text, not just its refs (the citation gate checks refs,
      not assertions). Extends to sense-prose action verbs (ENGINE_LESSONS #12).
-  3. **git-pull-first** — every PA command block that validates NEW code starts with `git pull` (two
-     stale-state incidents drove this; make it invariable).
+  3. **git-pull-first + the real PA preamble** — every PA command block starts with:
+     `cd ~/bible-db && git pull && workon bible-env && source .env`
+     (two stale-state incidents drove the pull; make it invariable). The API key is in
+     `~/bible-db/.env` — `source .env` loads it. NEVER grep `/var/www/…_wsgi.py` for the key
+     (the script's docstring shows that, but it is NOT how we run it — don't read production
+     files for secrets).
+  4. **Infra/environment claims get VERIFIED, not asserted** — a sibling to "the audit doc
+     outranks recall." Fresh sessions guess machine/env details confidently and plausibly (the
+     grep-the-WSGI-for-the-key slip, 2026-07-07). Any claim about how the server runs, where a
+     secret lives, what the venv/preamble is → check against the machine or ask JP, never assert
+     from plausibility. Same defect class as the capitalization fabrication: invented rationale
+     for an unobserved fact, aimed at the server instead of the corpus.
 - **RETRO PILE (decide with full-batch evidence):** substitution probe (bare-headword-substitution blind
   spot, ENGINE_LESSONS #4) · pre-V5 triage + post-batch redraw phase · the existing fed-40 / reviewer-tier
   questions below.
