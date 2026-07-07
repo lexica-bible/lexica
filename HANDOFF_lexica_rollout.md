@@ -14,6 +14,31 @@ trust the doc, not chat memory).
    the mechanism decision to JP immediately — it does not wait for the retro.
 These two are the load-bearing ones. Everything else below supports them.
 
+## DOTTED-LEXICON CONTAMINATION (2026-07-07, ὄρος session) — HOLD-OUT FLAGS ARMED
+A dotted Strong's number that is a DIFFERENT word from its base can leak into the base word's
+Lexica floor if it is missing from `dotted_lexicon`. Two classes found + status:
+- **FOLD class — FIXED.** `build_dotted_lexicon.py` compared a dotted number's own word to the
+  base with `bare()`, which strips breathing AND accent, so near-homographs folded together and
+  the different word was dropped (ὄρος mountain vs ὅρος boundary; νόμος law vs νομός pasture). Fix:
+  `same_word()` — case/final-sigma-insensitive but breathing/accent-SENSITIVE (commit `2ff5f7d`).
+  Rebuild adds exactly 5 numbers (G3735.1 ὅρος, G3551.1 νομός, G4224.1 ποτός, G53.1 ἄγνος,
+  G5606.1 ὠμός), removes 0. Closes the fold class corpus-wide.
+- **NO-ENTRY class — LOGGED, NOT fixed (~90 dotted numbers, mostly the δ-cluster).** No `abp_ext`
+  dictionary entry, so the builder can't recover them; they still leak. Mix of real foreign leaks +
+  harmless same-word forms — separating them is the ticket's first job.
+- **⚠ HOLD-OUT FLAGS — do NOT run a floor on these before the no-entry ticket lands or a manual
+  hold-out is placed:** **δοξάζω G1392** (skin/doe), **διώκω G1377** (aqueduct/poles/stories),
+  **δόξα G1391** (glory/glorious — low-risk same field, still flag). They carry no-entry leaks.
+- **δίδωμι G1325 (SHIPPED):** only leak is 1325.1 "mortgaged" at Neh 5:3 (no-entry, not held out by
+  the fix). STEP 6 = direct check whether Neh 5:3 was fed to / cited by the live card. Uncited →
+  card stands + provenance note. Cited → re-ship rides the ticket. NOT a re-draw (feed identical
+  before/after for δίδωμι).
+- **POST-ROLLOUT TICKET — "dotted-number full audit":** separate same-word rows from true foreign
+  leaks · no-entry remedy design · inverse-direction audit (dotted rows on the list that map wrong;
+  bare rows that should have been dotted) · homonym heuristic (wrist-under-fruit, same spelling —
+  invisible to any comparator) · εἰμί-anomaly resolution (bare G1510 base_occ=1) · the 2 blank
+  abp_surface `form` cells (Isa 19:2, Eze 40:12). Merges with the parked ὀρ-collision sweep.
+
 ## STANDING LAW (the rules this session generated)
 - **FOUR-GATE SHIP BAR** (replaces count-match). A draft ships if it clears all four, whatever its
   sense count: (1) **no holes** — every stable reviewer job present + distinct; (2) **no merges** —
