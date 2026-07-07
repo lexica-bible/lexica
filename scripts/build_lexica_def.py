@@ -652,6 +652,26 @@ def sense_specs(senses_block):
     return out
 
 
+def double_shelved(senses_block):
+    """FLAG-ONLY detector: any verse cited under MORE THAN ONE sense in the same draft. A plain
+    set-intersection over the per-sense verse lists sense_specs() already carries — same splitter
+    (_sense_spans) + ref regex (_REF_RE) + book normalizer (_norm_book) as the rest of the build, so
+    it sees exactly the citations the card does. NOT a gate: double-shelving is sometimes legitimate
+    (a genuinely bridging verse), so it becomes a conscious per-word adjudication in the audit
+    output, never an automatic reject. Returns [{ref, senses:[1-based sense numbers]}] in a stable
+    order (first sense, then ref)."""
+    where = {}   # (book, ch, vs) -> set of 1-based sense numbers it's cited under
+    for i, s in enumerate(sense_specs(senses_block), 1):
+        for key in s["refs"]:
+            where.setdefault(key, set()).add(i)
+    out = []
+    for (bk, ch, vs), senses in where.items():
+        if len(senses) > 1:
+            out.append({"ref": f"{bk} {ch}:{vs}", "senses": sorted(senses)})
+    out.sort(key=lambda d: (d["senses"][0], d["ref"]))
+    return out
+
+
 def contest_verses(sid):
     """The word's disputed-passage locus from the register (piece B self_only), or []."""
     e = _CONTESTED_BY_SID.get(sid)
@@ -852,7 +872,9 @@ def assemble(conn, sid, lemma, translit, raw):
         "split_ver":  SPLIT_VER,
         "audit":      {**run_citation_gate(conn, sid, refs),
                        "dangling": dangling_book_refs(conn, raw),
-                       "noncanon": noncanon_book_refs(conn, raw)},
+                       "noncanon": noncanon_book_refs(conn, raw),
+                       # FLAG-ONLY: verses cited under more than one sense (adjudicate per word).
+                       "double_shelved": double_shelved(fields["senses_block"])},
         "raw":        raw,                # kept so an improved splitter can re-split, no model call
     }
     return entry
@@ -988,6 +1010,8 @@ def show_entry(entry):
         print(f"  ⚠ dangling book refs (no ch:vs — flag only): {', '.join(a['dangling'])}")
     if a.get("noncanon"):
         print(f"  ✗ non-canonical book label(s) — HARD REJECT: {', '.join(a['noncanon'])}")
+    for d in (a.get("double_shelved") or []):
+        print(f"  ⚠ double-shelved: {d['ref']} in senses {d['senses']}")
     if entry["fork"]:
         f = entry["fork"]
         # core is suppressed in the fork for a pinned word (it leads above as PINNED CORE), so read

@@ -369,9 +369,12 @@ YouVersion, which aren't the target). Honest gaps:
   new bar); ἔθνος G1484 = next session's first ship draw (reviewer verdict STABLE-at-2 done). **SHIP BAR
   RE-RULED to FOUR GATES** (holes/merges/completeness/granularity — NOT sense-count-match); reviewer floor
   `--runs 3`→10 on wobble; redraw cap 3; escalation trigger ARMED (3rd content-wall → mechanism decision to
-  JP). Prep done this session: ranker-skips-built, ἅγιον gloss check. Two queued next-session tasks (in the
-  handoff): build a flag-only double-shelf detector (control = G39/1Jn 2:20); **word-study card header
-  doesn't pick up word_gloss overrides — Library does — a frontend gap affecting all 59 overrides, trace it.**
+  JP). Prep done this session: ranker-skips-built, ἅγιον gloss check. **Banked follow-ups (detail in the
+  handoff):** (a) double-shelf detector BUILT + live in the audit path, flag-only — PA control owed
+  (`--resplit --word G39 --dry-run` must fire on 1Jn 2:20 senses [1,4]) before ἔθνος; (b) word-study card
+  header GREEK half DONE (`7bee235`, leads with word_gloss), HEBREW half queued (needs an API field, own
+  checkpoint; the `bdb` table is Strong's Hebrew — label it so); (c) θεός G2316 sense-1 "B" — add προσκυνέω/
+  λατρεύω via a Matt 4:10 citation (completeness, not a fix; CONTESTED → own checkpoint, JP's go).
   **DRAW CACHE (#1) DONE + LIVE 2026-07-03 (commit 484e226):**
   `--dry-run` saves the reviewed draw to `~/bible-db/draws/G####.json`, `--apply` ships it byte-for-byte with no
   model call (validity = hash of the full model input; stale→redraw, edited→hard refuse; `--require-cache` default

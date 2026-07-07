@@ -83,21 +83,38 @@ These two are the load-bearing ones. Everything else below supports them.
     showed multi-shallow-axis → wobble. Confirm on these three.
 
 ## QUEUED FOR NEXT SESSION (surfaced at this session's close — do before/at ἔθνος)
-1. **Double-shelf detector (BUILD, flag-only first).** A post-draw check that flags any verse cited under
-   MORE THAN ONE sense in the same draft — a set-intersection over the draft's per-sense verse lists, a few
-   lines in the audit output beside the dangling check. **Control-test against G39's shipped draw: it MUST
-   fire on 1Jn 2:20** (the known positive — per the standing "detector fires on a known positive before its
-   zero is trusted" rule). Start **advisory** (double-shelving is sometimes legitimate — a genuinely
-   bridging verse like 1Jn 2:20); if the batch shows it's common + mostly sloppy, harden to a gate; if rare
-   + mostly legitimate, it stays advisory. Runs in the standard per-word audit from ἔθνος onward, so
-   double-shelving becomes a conscious per-word adjudication instead of a live-card eyeball catch. G39 stays
-   as-is (logged seam, no reopen).
-2. **Word-study card header doesn't pick up word_gloss overrides (Library does).** The Library card renders
-   "hágion · holy, set apart" correctly, but the WORD-STUDY card header shows only "holy" — it's sourcing
-   its English header from somewhere other than word_gloss (a known-class gap from the definition-integration
-   work; display-layer only, NO data problem). Trace where the word-study header sources its gloss and point
-   it at word_gloss. **Affects all 59 overrides on that surface, not just G39** — which is why it's worth the
-   trace, not a shrug. Frontend, probably small.
+1. **Double-shelf detector — BUILT + control-fired (2026-07-06). LIVE in the audit path, flag-only.**
+   `double_shelved(senses_block)` in `build_lexica_def.py` — a set-intersection over the per-sense verse
+   lists `sense_specs()` already carries (same splitter + ref regex + book normalizer as the card), stored in
+   `entry["audit"]["double_shelved"]` and printed by `show_entry` beside the dangling/noncanon lines as
+   `⚠ double-shelved: 1Jn 2:20 in senses [1, 4]`. **NOT a gate** — double-shelving is sometimes legitimate
+   (a bridging verse), so it's a conscious per-word adjudication at the gate, JP rules per instance. Whether
+   it hardens to a gate is a batch-retro question on accumulated rare-vs-common data. Mechanism proven locally
+   on the known-positive shape (fires on 1Jn 2:20 senses [1,4], silent on a clean set).
+   **AUTHORITATIVE CONTROL — still owed on PA before ἔθνος** (draw/DB is PA-only): `python3
+   scripts/build_lexica_def.py --resplit --word G39 --dry-run` — reads the shipped G39 prose, must print
+   `⚠ double-shelved: 1Jn 2:20 in senses [1, 4]`. If it doesn't fire there the detector is wrong, full stop.
+   Then run the same `--resplit --word G# --dry-run` on **G80 · G2588 · G4183** (parked attempts) — any hits
+   are retroactive seam-logs like G39's, NOT reopens. **Sequencing: this control fires BEFORE ἔθνος's ship
+   draw, so ἔθνος is the first word audited with it live.** G39 stays as shipped (logged seam, no reopen).
+2. **Word-study card header — GREEK HALF DONE (commit `7bee235`, 2026-07-06), HEBREW HALF QUEUED.** The card's
+   hero gloss sourced the top in-verse *rendering* (`abp_glosses[0]`), not `word_gloss`, so hand-widened
+   overrides silently reverted there (G39 "holy" vs Library "holy, set apart"). Greek fixed frontend-only:
+   `firstGloss` now leads with `shortLemmaGloss(profile.definition)` (word_gloss leads that chain for Greek),
+   matching Library for all Greek overrides. **HEBREW still shows the top rendering** — its `profile.definition`
+   is the long definition paragraph, NOT `word_gloss`. Fix = a small **API change** (return the Hebrew
+   `word_gloss` in its own profile field) + one matching frontend line. **Own checkpoint (API change, not
+   frontend-only).** ⚠ The sourcing comment MUST say **Strong's Hebrew** — the table is named `bdb` but holds
+   Strong's Hebrew, not real Brown-Driver-Briggs; this is exactly where a future edit would mislabel it.
+3. **θεός G2316 sense-1 item "B" — completeness improvement, NOT a correction (own checkpoint, JP's go).**
+   Sense 1 shipped grounded (2026-07-06, "worshipped" removed, treatment-verbs all cited). B = add the concrete
+   devotional acts προσκυνέω "bow down" / λατρεύω "serve" back into the treatment-list, which need a citation
+   first: sense 1's current 40 don't attest either (sample leans commission/covenant/prophecy). Candidate
+   **Matt 4:10** (quotes Deut 6:13 — grounds both verbs in one verse); **verify the tag-match gate finds the
+   θεός tag in it** before any write, then extend the list to "served, bowed down to, named, invoked in oaths,
+   prayed to, and spoken of as acting in history." CONTESTED-card evidence change → own checkpoint, JP's go
+   before any write. No urgency; the card is honest as shipped. (Corpus backs it: `coverage_audit` flags
+   λατρεύω uncited across 32 θεός verses, PMI 5.31.)
 
 ## RETRO LIST (decide with full-batch evidence, not per-word)
 - Reviewer tiering: is per-word min-3 the right floor, or tier by boundary type (clean-separable →
