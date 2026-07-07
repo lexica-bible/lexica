@@ -152,4 +152,9 @@ These two are the load-bearing ones. Everything else below supports them.
 - `scripts/check_draw_citations.py` (prose-fix sweep — run after any Tier B corpus prose fix)
 - `contested_register.py` (fork words — excluded from rollout) · `scripts/build_word_gloss.py`
   (header gloss OVERRIDES) · `AUDIT_lexica_rollout.md` (the authority) · `docs/claude/ai.md`
-  (the Tier B prose-fix → draw-sweep standing rule)
+  (the Tier B prose-fix → draw-sweep standing rule) · `ENGINE_LESSONS.md` (design-level v2 backlog —
+  one line per lesson, grows by habit; distinct from the audit doc's per-word saga)
+- **Locking tests (run under pytest or as plain scripts; both in CI + pre-commit):**
+  `tests/test_lexica_agreement_parse.py` (both parser-drift fixes) · `tests/test_lexica_glossset_fold.py`
+  (case-fold). Add new lexica tests to BOTH the CI list (`.github/workflows/ci.yml`) and the hook
+  (`scripts/githooks/pre-commit`).
