@@ -464,6 +464,32 @@ pre-flagged), attempt 3 kept persons / place / things / spirit all distinct.
   the header must lead with "holy, set apart", not the narrow substantive). Override via the `OVERRIDES` dict
   in build_word_gloss.py (same path as G166/G5484) + `--apply` rebuild; through DB checkpoint.
 
+### G1484 ἔθνος — LIVE (2 senses, converged attempt 2). Detector's first live fire; clean binary → tight agreement.
+Shipped the attempt-2 draw (key e2ea2f75), no model call on apply, gate 40/40, stamp current, 40 verses. 2
+senses: (1) a people-group / nation (Israel included); (2) non-Jewish peoples contrasting with the
+covenant/believing community (the nations-as-outsiders category). Matches the banked reviewer verdict
+exactly (STABLE at 2, unanimous {2:3}).
+- **ATTEMPT 1 FAILED — neighbor-bleed (gate 1 hole).** Draw gave sense 1 = nation, sense 2 = "a nation
+  measured by SIZE/quality of population" (Gen 12:2 "great nation") — the μέγας collocation read INTO the
+  headword. The genuine stable job (nations-as-outsiders) was demoted to the range, and an off-distribution
+  size sense took its slot. A truth-property miss (stable job not distinct + a manufactured sense), not a
+  style-count quibble. Redrew (attempt 2), which converged; neighbor-bleed did not recur. Cap not stressed.
+- **DOUBLE-SHELF DETECTOR — FIRST LIVE FIRE (2026-07-06), adjudicated ship.** `⚠ double-shelved: Eph 2:11 in
+  senses [1, 2]`. RULED legitimate bridge, both homes kept — ὑμεῖς τὰ ἔθνη ἐν σαρκί names the referent as a
+  people-group (sense 1) while the clause exists to draw the circumcision/uncircumcision boundary (sense 2);
+  removing either home misrepresents the verse. Structurally identical to G39's 1Jn 2:20. **Seam register:
+  Eph 2:11 double-shelved [1,2], ruled bridge, precedent 1Jn 2:20.** The tool's first live catch landed on
+  exactly the verse class it was built to surface, adjudicated in seconds — flag-only working as designed.
+- **Loaded-frame clean.** gloss_notes rejects capital-G "Gentiles" as a theological category (imports later
+  ecclesiastical weight), keeps it as a plain social boundary marker; no "heathen." The real two-sense split
+  stayed intact — rejecting the freight did NOT flatten the structure (the pre-registered over-correction risk).
+- **Flag rate 1 counted** (exaírō PMI 5.42, "drive out the nations" Deu 7:1 = dispossessed-outsiders,
+  covered by sense 2, instances unfed → resolves clean; μέγας 4.41 < 5.0 informational). Detector zero on
+  attempt 1 trusted (control-green on G39); it fired on attempt 2 → live and honest.
+- **TIGHT-AGREEMENT PREDICTION CONFIRMED.** ἔθνος = clean binary (nation vs outsider-nations) → agreed
+  tightly at the reviewer's stable 2, one redraw to land the shape. Contrast πολύς/καρδία (multi-shallow-axis
+  → wobble). The refined hypothesis holds; θυγάτηρ/ὕδωρ/ὄρος remain the pending tight-agreement test.
+
 ### TRIGGER STATUS (standing — survives session end)
 Content-wall tally: **πολύς = 1 full cap-out (range-completeness)**; **ἅγιον = near-wall (2 rejects,
 structure-binding, cleared attempt 3)**. Trigger **armed at one-more-wall**. PRE-RULED: **a third cap-out on
