@@ -878,6 +878,33 @@ vs. argued-shelving path.** ⚠ Re-roll odds: hint job 2 bundled disposition INT
 (homed disposition under physical) — a re-roll may need a sharper hint or the forced verses re-scoped to land
 disposition where wanted. Streak stays 0.
 
+##### SESSION-4 RULINGS (JP, 2026-07-07) — fork resolved, low-odds probe approved
+- **GATE RULING = GATE-FAILING.** Primary ground: disposition-under-physical is outside the pre-registered
+  allowed set (own region OR argued sub-use of REGARD) — the placement was never legal, so **argued-shelving
+  of item 2 was never on the table.** The fork PARTIALLY COLLAPSED: argued-shelving was only ever live for
+  item 1 (2Pe 2:14) and the riders. Secondary/reinforcing ground: it contradicts the certified fold-direction
+  and blurs the majority-distinct physical↔regard line.
+- **RE-ROLL APPROVED, conditional — logged as a LOW-ODDS PROBE.** One pull. Failure is informative, not a
+  setback: if outcome 2 lands (structure+freight hold, disposition still mis-homed), that is first-use evidence
+  on the structure-hint mechanism's LIMITS, held for the option-space reopening per the trigger block. Hard stop
+  either way; a regression (loses structure or freight) = the FOURTH wall → re-arm. Diagnosis "model homes the
+  forced disposition verses under the organ because they read as literal-eye idioms" = HYPOTHESIS (not in the
+  attempt raw); the add-a-regard-verse lever rests on it, odds modest.
+- **`--force-verse` is ADD-ONLY** (verified in code: appends beyond budget, never drops an auto-pick, hard-errors
+  on non-occurrence). "Re-scope" therefore = KEEP Deu 13:8 + 15:9 (disposition coverage), ADD one regard-anchor
+  verse — no swap/removal exists.
+- **ANCHOR CRITERION (pre-registered):** the added verse must (a) come from the certified floor's regard
+  exemplars (Jdg 6:17 / Rth 2:2 / 1Sa 1:18 / 2Sa 3:19 / 1Ch 28:8), and (b) render the idiom with
+  regard/disposition VISIBLE in the ABP English surface — not buried (Pro 23:6 = the known negative). Eyeball
+  against this, no picking on feel.
+- **CONDITIONS PRECEDENT (one PA session before the pull):** `git pull` → confirm the `forced` field on
+  `draws/G3788.json` matches Deu 13:8 + 15:9 (audit-doc claim, not yet draw-record-verified) → eyeball the five
+  anchors against the criterion → finalize verse. Only then the pull.
+- **SHIP GATE (amended outcome 1, FINAL):** disposition under regard with the three-region carving *argued in
+  the draw prose* · 2Pe 2:14 in disposition with the mandatory straddle note OR argued shelving on the record ·
+  dangling-"Gal" source located (raw shown if raw-side) · Job 7:7 explicit call · structure + freight held ·
+  six-point + whitespace clean · both V6 watches clean · citations clean.
+
 ### ESCALATION TRIGGER (standing, batch-wide)
 If a SECOND batch word caps out with **range-completeness** as the binding constraint, the mechanism decision
 (B vs C) moves from the retro to RIGHT THEN — two occurrences is a pattern, one is a hard word.
