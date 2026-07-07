@@ -676,13 +676,51 @@ across cards DIVERGENT — **ἱερεύς (V4) = `\n\nSub-use:` (own paragraph)
 `. Sub-use:` (inline after the period).** Sorted DRAW-LEVEL (models pick different conventions per draw,
 shipped verbatim by review-what-ships), NOT render-level (bytes genuinely differ). **Cosmetic — parser
 keys on the bold/number headline, never spacing** (no parse risk, unlike the two drift bugs).
-- **Disposition:** candidate V6 formatting line — recommend **own-line convention** ("Sub-use: begins its
-  own line") as the cleaner read for a dictionary card (sets the sub-use apart from the sense's main prose,
-  which is what ἱερεύς's `\n\n` already does). NOT a gate, NOT a redraw trigger, no retro-edit. Unlike the
+- **Disposition (JP nod'd own-line for V6, byte-explicit):** candidate V6 formatting line, phrased so the
+  WHITESPACE ITSELF is unambiguous (vague "separate sub-uses clearly" is what produced two conventions) —
+  **"each Sub-use begins on its own line, with a blank line before it."** Positive-phrased per standing
+  rule. Rides free on the next version bump (whitespace alone doesn't justify a bump); if no V6 trigger
+  lands before batch-2 closes, it ships with the post-batch redraw phase's prompt (where the 3 redrawn
+  cards come back convention-consistent). NOT a gate, NOT a redraw trigger, no retro-edit. Unlike the
   slash/echo watches (which accumulated toward a threshold), the inconsistency is already demonstrated
   across 3 cards — so this can fold into the next prompt rev on JP's nod rather than waiting for more sightings.
 - **Shipped cards keep their spacing;** they'd pick up the convention only on optional post-batch redraw
   (the redraw queue already holds ἅγιον/μέγας/ἱερεύς).
+
+### G5204 ὕδωρ — LIVE (3 senses, attempt 3). The tight-agreement prediction, falsified-then-refined.
+Shipped the attempt-3 draft (key ad02528a), no model call on apply, gate 34/34, stamp current, 34 verses.
+3 senses: (1) physical water (cosmogonic + comparison-figurative as named sub-uses); (2) ritual
+immersion/purification (1Jn 5:6 folded here descriptively); (3) figurative — water as symbol/origin.
+- **REVIEWER `--runs 3` → `--runs 10`.** Count clustered but STRUCTURE wobbled (the tool's exact warning):
+  physical 10/10, **ritual 9/10, figurative ~7/10** (both majority-distinct), cosmogonic/1Jn5:6 minority.
+  Stable core = physical/ritual/figurative. The first-run draw-3 "merge ritual into physical" was a 1/10
+  fluke, did NOT recur.
+- **HYPOTHESIS RESULT — the point of this word.** Naive "tight one-dimension concrete noun" prediction
+  **FALSIFIED** (ὕδωρ is stable at 3, not 1–2). Refined **usage-dimensionality hypothesis CONFIRMED**: the
+  *substance* is one thing, but the *uses* genuinely span literal / ritual / figurative → ~3 stable jobs.
+  **The trio isn't uniform** — θυγάτηρ / ὄρος may still run tighter (fewer usage-facets); "concrete" was
+  never the right axis, usage-dimensionality is.
+- **THREE-ATTEMPT SAGA (a granularity loop, NOT a truth-defect loop like οὐρανός).** attempt 1 UNDER-carved
+  (merged ritual + figurative, promoted 1Jn 5:6) — gate-2 fail ×2. attempt 2 OVER-carved the periphery
+  (fixed ritual, but still merged the 7/10 figurative, promoted cosmogonic 1/10 + thin 1Jn 5:6) — gate-2
+  fail. **Opposite directions on the same axis (figurative folding); neither shape appeared in the 10.**
+  attempt 3 HIT the target (physical/ritual/figurative distinct). Base rate ~70%, hit on the 3rd pull —
+  **NO WALL** (target demonstrably existed in the draw space = draw variance, not target-nonexistence like
+  πολύς). Escalation counter stays at 2; the "wall-with-existing-target → best case for draw-until-match,
+  weakest for prompt-steer" frame was pre-registered but went undischarged.
+- **LEXICOGRAPHY POINT WORTH KEEPING (the draft's genuine insight):** literal-water-in-a-simile vs
+  word-used-figuratively is real lexicography — in Rev 1:15 "voice as many waters" the WORD isn't figurative,
+  the COMPARISON is, so literal water serving a simile belongs under physical (a named sub-use), and only
+  water-standing-for-something-else (wife/speech/baptism-type/name-origin) is sense 3. A sharper cut than the
+  reviewer's broad figurative bucket. **The draft had a good idea, executed inconsistently** — 2Sa 14:14
+  ("as water spilt") loosely shelved under sense-1 "destructive force" (under-fits a transience simile),
+  Ecc 11:1 under the navigation sub-use. Minor placement imperfections (verses visible, no false claim, no
+  hole) — well below the wall/gate-failure bar; shipped under the anti-count-preference rule.
+- **CLEAN CHECKS:** register descriptive on ritual + 1Jn 5:6 (no sacramental editorializing); gloss_notes
+  sense-3 claim VERIFIED true under the standing assertion-check ("the word itself is not metaphorical but
+  the surrounding argument extends its reference" — accurate); formatting ~5.5/6 (one borderline term-of-art,
+  "typological" for 1Pe 3:20, but it names the text's own move, 1Pe 3:21); detector silent; collocation flags
+  (unclean-water / river / sea) all physical-sense unfed, clean.
 
 ### ESCALATION TRIGGER (standing, batch-wide)
 If a SECOND batch word caps out with **range-completeness** as the binding constraint, the mechanism decision

@@ -57,14 +57,15 @@ These two are the load-bearing ones. Everything else below supports them.
 5. Log the word in `AUDIT_lexica_rollout.md` (per-word flag rate, any precedent, wall status).
 
 ## BATCH STATE
-- **SHIPPED + LIVE (7):** G1096 γίνομαι (session start, from-draw first exercise) · G80 ἀδελφός
+- **SHIPPED + LIVE (9):** G1096 γίνομαι (session start, from-draw first exercise) · G80 ἀδελφός
   (4 senses) · G2588 καρδία (4 senses, one-draw ship) · G39 ἅγιον (4 senses, near-wall) · G1484
   ἔθνος (2 senses, converged attempt 2; detector's first live fire, Eph 2:11 bridge ruled+logged) ·
   G3173 μέγας (4 senses, one-draw ship; multi-shallow-axis wobble no-holes; 2Ch 17:12 bridge ruled) ·
   G2409 ἱερεύς (3 senses, granularity-as-drawn; first concrete role-noun; Gen 14:18 bridge ruled,
   dangling "Heb" accepted, V4 formatting 5/5) · G3772 οὐρανός (3 senses, attempt 3; cured a
   gloss_notes fabrication via the gloss-set case-fold — batch's strongest fix-the-input case; V5
-  formatting 6/6; core-2 tightest of the batch).
+  formatting 6/6; core-2 tightest of the batch) · G5204 ὕδωρ (3 senses, attempt 3; physical/ritual/
+  figurative; naive tight-noun prediction FALSIFIED, usage-dimensionality confirmed; no wall, counter 2).
 - **word_gloss:** G39 "Holy Place" → "holy, set apart" override LIVE (`a06a90b` + `--apply` rebuild
   on PA). Verified: word_gloss row = `holy, set apart|override`; count 17508 stable; `override`
   58→59, `tbesg` 73→72 (only G39 moved). **Library card confirmed rendering "hágion · holy, set apart"**
@@ -75,11 +76,10 @@ These two are the load-bearing ones. Everything else below supports them.
   the four-gate bar (attempts 1/2/3 all failed gate-3 completeness only — corrected record, NOT a
   merge; one flagged discrepancy vs JP's recollection on attempt 2, non-blocking). Re-attempt when
   sequencing suits: first draft clearing all four gates ships, whatever its count.
-- **NEXT UP:** ὕδωρ G5204 — reviewer floor `--runs 3` first (no verdict banked). **Tight-agreement test**
-  (one of the θυγάτηρ/ὕδωρ/ὄρος trio predicted to agree tightly at a low count — genuine one-dimension nouns).
-- **REMAINING (~11 after ὕδωρ):** φωνή
-  G5456 · ὀφθαλμός G3788 · ὄρος G3735 · ἔτος G2094 · ἄρχων G758 · ἔργον G2041 · ἁμαρτία G266 · ῥῆμα
-  G4487 · δύναμις G1411 · θυγάτηρ G2364 · τόπος G5117. (Full locked-20 list + selection method in
+- **NEXT UP:** φωνή G5456 — reviewer floor `--runs 3` first (no verdict banked). Prediction: voice/speech vs
+  sound/noise, "loud voice" (μεγάλη φωνή) likely a sub-use not a sense; watch usage-dimensionality.
+- **REMAINING (~10 after φωνή):** ὀφθαλμός G3788 · ὄρος G3735 · ἔτος G2094 · ἄρχων G758 · ἔργον G2041 ·
+  ἁμαρτία G266 · ῥῆμα G4487 · δύναμις G1411 · θυγάτηρ G2364 · τόπος G5117. (Full locked-20 list + selection method in
   the audit doc's Batch Two section.)
   - **Loaded-frame watch:** ἁμαρτία / ῥῆμα / δύναμις (audit hardest for a disguised loaded frame).
   - **Tight-agreement test (refined hypothesis):** θυγάτηρ / ὕδωρ / ὄρος — genuine one-dimension
