@@ -359,6 +359,29 @@ comparative (4/10), adverbial (2/10), temporal "long time" (3/10), collective-ma
 - **Flag rate** (per the ≥5.0 record): πολύς = **2 flags** (chrónos 6.13, hýdōr 5.05); the sub-5.0
   collocations (éthnos / pisteúō / dóxa) are stored-informational, not counted.
 
+### REVIEWER PARSER DRIFT FIX (2026-07-07) — μέγας 10-run surfaced audit-tooling debt, engine clean
+The μέγας G3173 `--runs 10` came back `!! 5 draw(s) parsed to 0 senses (format break): [1,4,6,7,8]`.
+- **ROOT CAUSE (logged): the reviewer reimplemented the sense-split with the bold-only `_HEADLINE_RE`
+  instead of reusing `_sense_spans`** — a batch-one reuse-rule violation. Those 5 draws numbered their
+  senses `1. **headline**` (number OUTSIDE the bold) under a `**Senses:**` header; `_HEADLINE_RE` wants
+  `**1. headline**` (number INSIDE), matched nothing, and `per_sense` threw away 5 rich 4-sense answers.
+  Confirmed by inspecting draw 1's saved raw — a complete magnitude/rank/age/comparative answer, not
+  truncation. **The SHIP path was never at risk:** `split_definition` → `_sense_spans` has a plain /
+  number-outside-bold fallback (`_PLAIN_HDR`) that parses this format fine. This was audit-tooling debt,
+  not an engine bug — the same split3 drift class, one layer up in the reviewer's parser.
+- **FIX:** `lexica_agreement.per_sense` now reuses `B._sense_spans` (no second copy of the split).
+  Locked by `tests/test_lexica_agreement_parse.py` (added to CI + pre-commit lists) — control-tested:
+  the fixture is a real draw-1 snippet, and the test permanently asserts the bold-only regex sees ZERO
+  in it (so `== 4` can't pass for the wrong reason). Demonstrated old→0 / new→4 before landing.
+- **SECOND COPY FLAGGED, NOT TOUCHED:** `audit_lxx_provenance.py:31` `sense_chunks` has the SAME
+  bold-only reimplementation (same latent 0-parse bug). Out of the ship path — queued behind the μέγας
+  pin, to fix with its own control test, deliberately NOT folded in blind this turn.
+- **TOOL-HEALTH FINDING (banked).** Both halves of the posture worked: the loud `!! 0 senses` banner
+  kept the polluted aggregate (mean 1.9, every "drops in [1,4,6,7,8]" = the dead draws) from being read
+  as semantics, and the 8 CLEAN draws (3 first-run + 5 here) already told the truth (stable 2 magnitude +
+  rank/status, age semi-stable, shallow-axis tail folds). Diagnosis was one read-only inspect, not a
+  blind re-roll.
+
 ### ESCALATION TRIGGER (standing, batch-wide)
 If a SECOND batch word caps out with **range-completeness** as the binding constraint, the mechanism decision
 (B vs C) moves from the retro to RIGHT THEN — two occurrences is a pattern, one is a hard word.

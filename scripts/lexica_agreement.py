@@ -215,20 +215,15 @@ def draw_once(client, system, sid, translit, gset, ctx):
 
 
 def per_sense(senses_block):
-    """Split the senses prose into [{headline, refs}] PER numbered sense. Reuses the live splitter's
-    own headline regex so the sense boundaries match the card exactly; each sense's grounding refs
-    are pulled from its own chunk (the parenthetical citations after the headline). The refs are the
-    text-independent fingerprint we align on — never the wording, which changes every run."""
-    block = senses_block or ""
-    marks = list(B._HEADLINE_RE.finditer(block))
-    out = []
-    for i, m in enumerate(marks):
-        start = m.start()
-        end = marks[i + 1].start() if i + 1 < len(marks) else len(block)
-        chunk = block[start:end]
-        headline = re.sub(r'^\d+\.\s*', '', m.group(1)).strip()
-        out.append({"headline": headline, "refs": B.cited_refs(chunk)})
-    return out
+    """Split the senses prose into [{headline, refs}] PER numbered sense. Reuses the production
+    splitter B._sense_spans (bold headers, OR a plain / number-outside-bold fallback) so a draw that
+    formats its senses the drift way parses HERE exactly as it does in the ship engine — refs pulled
+    from each sense's own chunk (the fingerprint we align on, never the wording).
+    NOTE: this used to keep its OWN bold-only copy (B._HEADLINE_RE) of the split — a batch-one
+    reuse-rule violation that silently 0'd 5/10 μέγας draws whose senses were numbered '1. **text**'
+    (number outside the bold). Reusing _sense_spans is the fix; the ship path was never at risk."""
+    return [{"headline": lead, "refs": B.cited_refs(chunk)}
+            for lead, chunk in B._sense_spans(senses_block or "")]
 
 
 DEDUP_JACCARD = 0.6   # within ONE draw, two senses whose grounding-verse sets overlap at least this
