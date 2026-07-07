@@ -626,6 +626,49 @@ not the model. Root: `gloss_set` grouped on `english_head`, so a sentence-initia
   card with a latent case-artifact note (if any) would be caught by the standing gloss_notes assertion-check
   on its next redraw, not auto-fixed here.
 
+### G3772 οὐρανός — LIVE (3 senses, attempt 3). The batch's strongest fix-the-input case study.
+Shipped the attempt-3 draft (key 663a2977), no model call on apply, gate 34/34, stamp current, 34 verses.
+3 senses: (1) sky/aerial expanse; (2) domain of divine presence (C = eschatological inheritance folded in
+as a named sub-use); (3) natural sky as a figure (Lev 26:19 "heaven as iron").
+- **REVIEWER (`--runs 3` → `--runs 10`, tightest core of the batch).** Spread {2:4, 3:4, 4:2}, mean 2.8.
+  Core-2 = physical sky + divine realm, BOTH 10/10. C (eschatological) own-slot 4/10, D (personified
+  heavens) own-slot 3/10 — neither clears ~7/10 → **THIRD BUCKET (granularity-as-drawn)**. No holes;
+  role/realm-noun prediction held (referent-realm axis, cleaner core than ἱερεύς, two flicker facets).
+- **THE THREE-ATTEMPT SAGA (a truth-defect redraw loop, NOT a granularity loop).**
+  - **attempt 1** — clean stable-2 + C-as-sense-3, BUT gloss_notes fabricated an "editorial capitalization"
+    claim about "Heaven" (3×). Position check (Gen 1:8 naming + Job 11:8 / Pro 25:3 sentence-initial) showed
+    the premise false → REJECT. (Caught by JP's judge-on-the-raw position question; pipeline was green.)
+  - **attempt 2** — reproduced the fabrication (testably worse: claimed the capital marks a sky-vs-abode
+    distinction, but all 3 capitals are the SKY sense) + an off-distribution source-vs-dwelling realm-split.
+    The TELL fired → targeted look, not a blind attempt 3.
+  - **ROOT FIX (gloss-set case-fold, option A)** — see the fold entry above. Stimulus deleted.
+  - **attempt 3 — fabrication GONE on the very next pull.** "2 renderings" (was 3), no capitalization note;
+    gloss_notes now makes a VERIFIED singular/plural claim (the 4 plural cites checked against fed text
+    before crediting — the new assertion-verification standing check running one word after it was written).
+    The attempt-2 realm-split did NOT recur → confirms it was noise. Ships.
+- **ROOT-CAUSE CHAIN VALIDATED END TO END** — stimulus identified → sweep-gated → deleted → fabrication
+  gone next pull. **The batch's strongest single case for fix-the-input over prompt-whack-a-mole.** Two
+  prompt generations (V4, V5) could not steer around a stimulus in the evidence; deleting it worked immediately.
+- **D's placement IMPROVED across attempts** — attempt 3 shelves personified-heavens under SKY (named, all
+  4 verses), which is where the reviewer's own majority folded it (~7/10). The load-bearing question didn't
+  just clear, it landed in the best spot.
+- **Sense 3 (figurative) — borderline, SHIPPED under the anti-count-preference rule.** Lev 26:19 is arguably
+  physical-sky-in-a-simile (a sub-use of sense 1) and 2Co 5:2 self-acknowledges drawing on the domain sense,
+  so it's a slightly-forced grouping. But verse-supported (not hollow), on-distribution (draw 5, 1/10), and
+  holes/merges nothing. Rejecting it would be granularity preference in a gate costume — the exact back-door
+  the four-gate reruling closes. **The rule matters most precisely when the entry mildly bugs us.**
+- **FORMATTING 6/6 — V5's control-fire DONE.** Point 6 (term-of-art echo) got its first live catch:
+  "sovereign / transcendence" flagged on attempt 1, confirmed CLEAN on attempt 3 (descriptive "divine
+  presence/authority/agency"). All 6 points green on the raw.
+- **METONYM — (a) verified unfed** (fed-40 dumped + read; no kingdom-of-heaven / sinned-against-heaven; Jas
+  5:12 "swear by heaven" = oath-by-the-throne, divine-realm sub-use). βασιλεία collocation flag (33v) DID
+  catch "kingdom of heaven" → resolved as phrase-level periphrasis (Son-of-Man precedent, divine-realm
+  present). Detector silent (no seam this carve; Joh 1:32 in sense 1 only). Flags all sky/realm folds, clean.
+- **CAP ACCOUNTING (for the record):** 3 attempts used, **but NO WALL** — attempt 3 shipped. The trigger
+  counter stays at 2 (πολύς, ἅγιον); escalation mechanism armed + undischarged. Close call: this word came
+  within one un-caught fabrication of tripping it. Attempts were spent on a TRUTH defect, which is the only
+  thing attempts are for.
+
 ### ESCALATION TRIGGER (standing, batch-wide)
 If a SECOND batch word caps out with **range-completeness** as the binding constraint, the mechanism decision
 (B vs C) moves from the retro to RIGHT THEN — two occurrences is a pattern, one is a hard word.
