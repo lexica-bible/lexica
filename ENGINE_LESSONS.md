@@ -51,7 +51,12 @@ Nothing here is scheduled work; it's the "if we rebuild the engine, change these
    slots for high-PMI neighbor contexts so signature uses can't be unfed by chance. **Evidence: every
    collocation flag this batch was a fed-sampling miss — zero were missing senses.** The current design
    survives its under-sampling only because the eyeball-and-resolve step catches it; v2 turns that manual
-   resolution into sampling policy. *(audit: fed-40 retro thread + μέγας/G39/οὐρανός/ὕδωρ flag entries)*
+   resolution into sampling policy. **Strongest instance is θεός** — the fed 40 failed to attest
+   προσκυνέω / λατρεύω though serving/bowing are among the most attested θεός treatments corpus-wide
+   (λατρεύω uncited across 32 θεός verses, PMI 5.31); the miss reached DESCRIPTIVE PROSE (sense 1 read
+   complete while under-describing the referent), not just collocation flags — which upgrades 8's severity
+   and the case for collocation-aware slot reservation. *(audit: fed-40 retro thread + μέγας/G39/οὐρανός/
+   ὕδωρ flag entries + θεός item B)*
 
 ## Carried from v1 (foundational — proven, keep as v2 invariants)
 
@@ -63,3 +68,26 @@ Nothing here is scheduled work; it's the "if we rebuild the engine, change these
 10. **Review-what-ships: reviewed prose must be byte-identical to shipped prose.** The draw cache made this
     an invariant (apply reads the reviewed bytes, no fresh model call). → v2 keeps the reviewed artifact and
     the shipped artifact the same object. *(audit: Batch-two prep #1 — draw cache)*
+
+## Added by session-1 mining (2026-07-07)
+
+11. **Double-shelf detection belongs in the engine natively.** v1 had no check for a verse cited under more
+    than one sense in the SAME draft — it shipped (G39 1Jn 2:20 + 2Ti 1:9; καρδία 2Co 2:4 + Joh 12:40),
+    caught only by live-card eyeballing. A set-intersection over the per-sense ref lists finds it free;
+    sub-uses are its natural habitat. → v2 runs it EVERY draw, **FLAG-ONLY (not a gate)**: bridging verses
+    are legitimately double-shelved (presence-vs-significance; human rules per instance), and hardening to a
+    gate is a data-collection question, not a design default. **Production record since 2026-07-06: 0 fires
+    ever ruled noise.** Ship-time live fires ruled keep-both bridges on 3 SHIPPED cards (ἔθνος Eph 2:11,
+    μέγας 2Ch 17:12, ἱερεύς Gen 14:18); the ὕδωρ 2Pe 3:5 and οὐρανός Joh 1:32 fires landed on REJECTED
+    drafts (moot — the shipped versions fired clean); G39/καρδία were retroactive logs on pre-detector ships.
+    Flag-only design validated in production. *(audit: detector shipped commit 61740c0; seam register 1–4)*
+
+12. **Sense-prose action verbs are unverified corpus claims — lesson 7, extended past gloss_notes.** θεός
+    sense 1 opened "worshipped as creator" with NO bow/serve verse in the fed 40; the citation gate checks
+    REFERENCES, not whether a sense's descriptive VERBS are attested by its own cited verses. Loaded
+    abstractions ("worshipped") compress concrete attested acts (προσκυνέω bow, λατρεύω serve) the Greek
+    gesture-words don't carry. → v2 applies grounding verification to sense-prose action verbs, not just
+    gloss_notes corpus-practice claims. **Mechanization caveat:** harder than the capitalization case —
+    "worshipped" vs bow/serve needs semantic matching, not position-checking; realistic v2 form is "FLAG
+    loaded abstractions for manual grounding-check," not full automation. *(audit: θεός G2316 sense-1
+    decompression, 2026-07-06)*
