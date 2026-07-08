@@ -31,6 +31,7 @@ jobs:
           python tests/test_render_head_no_phantom.py
           python tests/test_lexica_agreement_parse.py
           python tests/test_lexica_glossset_fold.py
+          python tests/test_lexica_detectors.py
 
   frontend:
     runs-on: ubuntu-latest

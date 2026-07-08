@@ -227,6 +227,32 @@ SPLIT_LEMMA_ALIAS_NOTES = {
              "adjective (hieros) rows — the alias is right for temple, but a few rows are the true adjective.",
 }
 
+# ── CONTESTED-VERSE REGISTRY (V7 window walk, JP-ruled 2026-07-08; ENGINE_LESSONS #24, ῥῆμα
+# refinement). Verification intensity scales with the CONTESTEDNESS OF THE CITED VERSE, not the
+# referent's loadedness — the ῥῆμα/ἁμαρτία controlled comparison: same loadedness class, ῥῆμα's
+# divine-word cluster drew clean at pull 1 while ἁμαρτία parked on 2Co 5:21, because that verse
+# carries a LIVE doctrinal fork the model can confabulate a side of (it argued BOTH sides across
+# two pulls, equally confident). Hand-curated, grows by habit like ENGINE_LESSONS. When a draft
+# cites a verse in here, the gate prints the fork note and EVERY descriptive claim touching the
+# verse gets verse-text verification MANDATORILY before gate time — routing by list, never by
+# whether the auditor smells it. "bar" text is copied VERBATIM from its dossier, with the cite —
+# never paraphrased into standing law (JP seed-entry pin, 2026-07-08).
+# Keys are (_norm_book form, chapter, verse) — the same shape build_lexica_def's ref scan emits.
+CONTESTED_VERSES = {
+    ("2Co", 5, 21): {
+        "fork": "ἁμαρτία rendering fork — \"sin\" vs \"sin offering\" (LXX חַטָּאת precedent); "
+                "reviewer shelf-tally: no majority shelf (act 4 / cultic 3 / condition 2 / "
+                "double-listed 1)",
+        # VERBATIM from AUDIT_lexica_rollout.md, ἁμαρτία G266 PARKED dossier (2026-07-08):
+        "bar": "Branch-A consequence: ABP adjudicated the fork; the card reports the rendering; "
+               "the both-ways bar operationalized = \"ABP renders with the sacrificial sense, "
+               "following the LXX חַטָּאת use\" passes; \"the Greek means sin-offering here\" "
+               "fails; \"simply sin, mistranslated\" also fails.",
+        "source": "AUDIT_lexica_rollout.md · ἁμαρτία G266 PARKED dossier · 2026-07-08",
+    },
+}
+
+
 # Serve-time alias map, derived from the same "aliases" fields (never write a pair twice), plus
 # the plain split-lemma pairs above.
 # Charis: {"G5485": "G5484"} — ABP tags charis on G5484 (the form charin), so that's the number

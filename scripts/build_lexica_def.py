@@ -182,7 +182,7 @@ NT_BOOKS = {"Mat","Mar","Luk","Joh","Act","Rom","1Co","2Co","Gal","Eph","Php","C
 # The path insert: `python scripts/build_lexica_def.py` starts its module search in scripts/,
 # and the shared register lives one level up at the repo root.
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from contested_register import CONTESTED, CONTESTED_BY_SID
+from contested_register import CONTESTED, CONTESTED_BY_SID, CONTESTED_VERSES
 import lexica_coverage
 _CONTESTED_BY_SID = CONTESTED_BY_SID
 
@@ -766,6 +766,151 @@ def double_shelved(senses_block):
     return out
 
 
+# ── V7 flag-only detector suite (window walk, 2026-07-08). Same design family as double_shelved:
+# every one is a FLAG, never a gate — a fire is a conscious per-word adjudication in the audit
+# output. Each was born from an archived defect and control-fires on it (tests/test_lexica_detectors.py).
+
+_GNOTE_BULLET_RE = re.compile(r"(?:^|\n)\s*-\s+")
+_GNOTE_GLOSS_RE = re.compile(r"\*([^*\n]+)\*")
+
+
+def _gnote_claims(gloss_notes):
+    """Parse gloss_notes into checkable rendering claims: each bullet's *italic gloss(es)* + the
+    refs in its head parenthetical (the shipped-corpus bullet shape, '- *gloss* (Ref; Ref): ...').
+    Bullets without that shape are SKIPPED — this parser deliberately under-catches; the standing
+    manual rule (gloss-note assertion spot-check) remains the authority."""
+    claims = []
+    for bullet in _GNOTE_BULLET_RE.split(gloss_notes or ""):
+        if not bullet.strip():
+            continue
+        head = bullet.split("):", 1)[0]          # the claim head: up to the close of the ref paren
+        glosses = _GNOTE_GLOSS_RE.findall(head)
+        refs = [(_norm_book(bk), int(ch), int(vs)) for bk, ch, vs in _REF_RE.findall(head)]
+        if glosses and refs:
+            claims.append({"glosses": [g.strip() for g in glosses], "refs": refs})
+    return claims
+
+
+def check_rendering_claim(glosses, rends, verse_text=""):
+    """PURE core of the rendering-claim lint (ENGINE_LESSONS #24 machine-check; two archived
+    control fires: οὐρανός capitalization, ἁμαρτία 2Co 5:21). Compares a note's claimed gloss(es)
+    against the lemma's ACTUAL per-verse rendering(s) (words-table english_head) — NOT the verse
+    prose, because a claimed 'sin' is a substring of the true 'sin offering' and prose containment
+    would pass exactly the archived defect.
+
+    CASE-AWARENESS IS LOAD-BEARING — do not 'clean up' the case-sensitive compare or the
+    sentence-position probe. The οὐρανός fire is the reason: the fabricated note claimed
+    capitalized 'Heaven' was an editorial/theological marker; the rendering really IS capitalized
+    at the cited refs, and only the POSITION check (sentence-initial capitalization is mechanical
+    English, not editorial intent) exposes the false premise. A case-folded compare reads that
+    card as clean.
+
+    Returns a list of fire dicts ({} entries absent = clean):
+      kind='rendering-mismatch'  claimed gloss is not the rendering at this ref (ἁμαρτία class)
+      kind='case-mismatch'       matches only after case-folding (claimed 'Heaven', rend 'heaven')
+      kind='positional-cap'      claim matches a capitalized rend, but the gloss sits
+                                 sentence-initial in the verse prose (οὐρανός class) — the
+                                 capitalization may be positional, adjudicate the note's rationale
+    """
+    fires = []
+    rends = [r for r in (rends or []) if r]
+    if not rends:
+        return fires                              # ref carries no rendering row — nothing checkable
+    for g in glosses:
+        exact = [r for r in rends if r == g]
+        folded = [r for r in rends if r.lower() == g.lower()]
+        if exact:
+            if g[:1].isupper() and verse_text:
+                for m in re.finditer(re.escape(g), verse_text):
+                    before = verse_text[:m.start()].rstrip()
+                    if not before or before[-1] in ".!?;":
+                        fires.append({"kind": "positional-cap", "gloss": g})
+                        break
+        elif folded:
+            fires.append({"kind": "case-mismatch", "gloss": g, "rend": folded[0]})
+        else:
+            near = [r for r in rends if g.lower() in r.lower() or r.lower() in g.lower()]
+            fires.append({"kind": "rendering-mismatch", "gloss": g,
+                          "rend": (near[0] if near else " / ".join(sorted(set(rends))[:4]))})
+    return fires
+
+
+def gloss_note_claims(conn, sid, gloss_notes):
+    """FLAG-ONLY production wrapper: every parseable gloss-note rendering claim checked against the
+    lemma's real per-verse renderings + verse prose. Degrades to [] on any error (report, not gate)."""
+    out = []
+    claims = _gnote_claims(gloss_notes)
+    if not claims:
+        return out
+    try:
+        pred, params = abp_filter(conn, sid)
+        occs = occurrences(conn, pred, params)
+    except Exception:
+        return out
+    rend_at = {}
+    for o in occs:
+        rend_at.setdefault((_norm_book(o["book"]), o["ch"], o["vs"]), []).append((o["rend"] or "").strip())
+    for c in claims:
+        for key in c["refs"]:
+            if key not in rend_at:
+                continue                          # note ref isn't one of this lemma's verses — not a rendering claim
+            row = conn.execute("SELECT text FROM verses WHERE book=? AND chapter=? AND verse=?",
+                               key).fetchone()
+            vt = (row["text"] if row else "") or ""
+            for f in check_rendering_claim(c["glosses"], rend_at[key], vt):
+                out.append({**f, "ref": f"{key[0]} {key[1]}:{key[2]}"})
+    return out
+
+
+# Membership-hedging phrases (standing rule 7c's machine assist). DELIBERATELY NON-EXHAUSTIVE —
+# a draw can hedge in words this list lacks. A lint PASS is NOT 7c satisfied; only a FIRE is
+# meaningful. The human read of each sense's prose remains the standing authority.
+_HEDGE_PHRASES = ("may overlap", "might overlap", "without reducing to", "could belong",
+                  "may belong", "may straddle", "arguably under", "perhaps under",
+                  "does not quite reduce")
+
+
+def hedged_citations(senses_block):
+    """FLAG-ONLY: a sense's own prose hedging a citation's membership (rule 7c; control fire =
+    the archived δύναμις pull-2 Neh 9:6 hedge). Invisible to the citation gate (ref real) and the
+    freight scan (nothing loaded) — this is the coherence check ENGINE_LESSONS #25a asked for."""
+    out = []
+    for i, (lead, body) in enumerate(_sense_spans(senses_block or ""), 1):
+        low = f"{lead} {body}".lower()
+        for h in _HEDGE_PHRASES:
+            if h in low:
+                out.append({"sense": i, "hedge": h})
+    return out
+
+
+def subuse_overload(senses_block, max_ok=3):
+    """FLAG-ONLY: any sense carrying 4+ Sub-uses gets a merge-review flag (pile item 11, window
+    walk). NO hard ceiling by design — forcing merges is the #14 silent-facet-drop path (πολύς);
+    a fire means a human asks the 7b-style question, never an automatic reject. Control positive:
+    ῥῆμα G4487 sense 1 shipped at exactly 4 Sub-uses (a ruled-legitimate card — the flag marks
+    'look', not 'wrong')."""
+    out = []
+    for i, (lead, body) in enumerate(_sense_spans(senses_block or ""), 1):
+        n = len(re.findall(r"\bSub-use:", body))
+        if n > max_ok:
+            out.append({"sense": i, "subuses": n})
+    return out
+
+
+def registry_verse_hits(refs):
+    """CONTESTED-VERSE REGISTRY routing (ENGINE_LESSONS #24 ῥῆμα refinement; JP-ruled 2026-07-08).
+    Any cited ref that sits in contested_register.CONTESTED_VERSES comes back with its fork note
+    and dossier bar. NOT a flag to adjudicate away: a hit means every descriptive claim touching
+    that verse gets verse-text verification MANDATORILY before gate time, and the word leaves the
+    zero-read tier. Routing is by list membership — never by auditor smell."""
+    out = []
+    for key in refs or []:
+        e = CONTESTED_VERSES.get(tuple(key) if not isinstance(key, tuple) else key)
+        if e:
+            out.append({"ref": f"{key[0]} {key[1]}:{key[2]}", **e})
+    return out
+
+
 def contest_verses(sid):
     """The word's disputed-passage locus from the register (piece B self_only), or []."""
     e = _CONTESTED_BY_SID.get(sid)
@@ -977,7 +1122,13 @@ def assemble(conn, sid, lemma, translit, raw):
                        "dangling": dangling_book_refs(conn, raw),
                        "noncanon": noncanon_book_refs(conn, raw),
                        # FLAG-ONLY: verses cited under more than one sense (adjudicate per word).
-                       "double_shelved": double_shelved(fields["senses_block"])},
+                       "double_shelved": double_shelved(fields["senses_block"]),
+                       # V7 flag-only suite (window walk 2026-07-08) — fires adjudicated per word.
+                       "gloss_claims": gloss_note_claims(conn, sid, fields.get("gloss_notes", "")),
+                       "hedged": hedged_citations(fields["senses_block"]),
+                       "subuse_overload": subuse_overload(fields["senses_block"]),
+                       # ROUTING (not adjudicable): registered contested verses cited by this card.
+                       "registry_verses": registry_verse_hits(refs)},
         "raw":        raw,                # kept so an improved splitter can re-split, no model call
     }
     return entry
@@ -1119,6 +1270,21 @@ def show_entry(entry):
         print(f"  ✗ non-canonical book label(s) — HARD REJECT: {', '.join(a['noncanon'])}")
     for d in (a.get("double_shelved") or []):
         print(f"  ⚠ double-shelved: {d['ref']} in senses {d['senses']}")
+    for g in (a.get("gloss_claims") or []):
+        print(f"  ⚠ gloss-note claim [{g['kind']}] at {g['ref']}: claimed *{g['gloss']}*"
+              + (f" — corpus renders \"{g['rend']}\"" if g.get("rend") else
+                 " — sentence-initial capitalization; adjudicate the note's rationale"))
+    for h in (a.get("hedged") or []):
+        print(f"  ⚠ hedged citation (rule 7c): sense {h['sense']} prose contains \"{h['hedge']}\" — "
+              f"a lint PASS is not 7c satisfied, only a fire is meaningful")
+    for s in (a.get("subuse_overload") or []):
+        print(f"  ⚠ sub-use overload: sense {s['sense']} carries {s['subuses']} Sub-uses — "
+              f"merge-review (flag only, no ceiling; #14 forbids forced folds)")
+    for r in (a.get("registry_verses") or []):
+        print(f"  ‼ CONTESTED-VERSE REGISTRY HIT: {r['ref']} — {r['fork']}\n"
+              f"     BAR ({r['source']}): {r['bar']}\n"
+              f"     Every descriptive claim touching this verse gets verse-text verification "
+              f"BEFORE gate time. This is routing, not a flag to adjudicate away.")
     if entry["fork"]:
         f = entry["fork"]
         # core is suppressed in the fork for a pinned word (it leads above as PINNED CORE), so read
