@@ -562,8 +562,13 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
 4. **Batch-3 = Phase 2 shadow calibration** — **UNBLOCKED 2026-07-08 (Phase 1 complete). CC's N is ON RECORD:
    15 GREEN-tier words, zero escapes; the count carries across batches if batch 3 routes fewer than 15 GREEN.**
    Awaiting JP's go + roster (~20 words, majority GREEN-candidates + seeded RED so all routing exercises; JP
-   audits everything; escapes are the measure). Detail: tiering law + calibration pins in the V7 block;
-   frequency-cutoff logic, audit doc.
+   audits everything; escapes are the measure). **Two terms made explicit 2026-07-08 (JP chat-thread review):**
+   (i) a structure-hint use on a batch-3 word removes it from the calibration count (a GREEN word that caps out
+   has left GREEN by definition — stated so it's not implicit); (ii) HYPOTHESIS carried, not believed: "fed
+   count ~80 is load-bearing" (n=3: χριστός 607→81, ἁμαρτία 582→82, ὀφθαλμός 645→85; confounded with V7 + PMI
+   slots landing together). Note GREEN words feed ALL occurrences, so batch 3 mostly does NOT test the ~80
+   tier — that test resumes on the next high-frequency batch. Detail: tiering law + calibration pins in the
+   V7 block; frequency-cutoff logic, audit doc.
 
 Background tier (no ordering): former TODO/retro pile items — consolidated pre-standards re-audit (NOW ALSO
 CARRIES: ἅγιον+κλητός occasion-job read · οὐρανός+βασιλεία metonymy read — the V7 sweep's two candidates),
