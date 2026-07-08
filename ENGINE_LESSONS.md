@@ -190,6 +190,13 @@ both drifting from the doc.
     collocation-aware feed quota (option (b), #8's slot-reservation) that would close the gap at generation
     instead of by manual eyeball. *(audit: G3788 ὀφθαλμός floor + rejected V5 draft, 2026-07-07; select_spread
     forcing logged on the draw record)*
+    - **UPDATE (θυγάτηρ 2026-07-07): a MISSED collocation can NARROW a shipped sense, not only HIDE a job —
+      a second failure mode.** θυγάτηρ's μήτηρ (18v, 0-fed maternal-naming genealogy) hid no sense (offspring
+      shipped fine), but every fed genealogical verse was paternal, so attempt-1's sense-1 headline came out
+      "in relation to her biological or legal FATHER." The warning was flagging a definitional NARROWING of a
+      PRESENT sense. → step-1.5's eyeball must ask BOTH questions per warning: unfed job? OR unfed contexts
+      that would BROADEN the shipped sense's definition? Same shape as #18 freight leaking where the evidence
+      would have blocked it. *(audit: G2364 θυγάτηρ step-1.5 narrowing)*
 
 20. **A prompt rule DAMPENS a prior, it doesn't DELETE it — and a multi-constraint word can satisfy one
     constraint OR another per draw but not always both at once (oscillation). The fix is a draw-CONTEXT hint of
@@ -209,6 +216,14 @@ both drifting from the doc.
     is the standing tool for it; (c) a convergence/"held both" detector could auto-flag when a hinted draw clears
     all axes at once. *(audit: G3788 ὀφθαλμός V6 attempts 2/3 cap-out + structure-hint first draw, 2026-07-07;
     mechanism commit 95b4a16; TRIGGER STATUS fired+resolved)*
+    - **UPDATE (ὀφθαλμός session 4, 2026-07-07): the mechanism has a demonstrated CEILING — it names JOBS,
+      it cannot dictate a folded SUB-USE's parent.** The hinted draw held structure+freight, but the
+      disposition sub-use kept filing under physical instead of its certified home (regard); and the killer —
+      all six regard exemplars were ALREADY in the fed sample, so the anchor-verse lever was a NO-OP: maximal
+      hint + full exemplar coverage still mis-filed it, and no in-bounds move remained. → oscillation of
+      DISTINCT-JOB structure is the mechanism's job; SUB-USE PLACEMENT is a separate wall it can't reach —
+      banked to the V7 restructure, NOT a per-word draw fight. Tempers this lesson's "mechanism validated":
+      validated for its class, bounded past it. *(audit: G3788 ὀφθαλμός SESSION-4 OUTCOME — anchor lever dead)*
 
 ## Added by the ὄρος session (2026-07-07)
 
@@ -222,6 +237,12 @@ both drifting from the doc.
     verify the RENDERED card by screenshot, never pasted terminal text (paste flattens layout and invents phantom
     run-togethers — 2 phantom "renderer bugs" this session that the bytes disproved). Mechanized now
     (`show_entry` prints the prose, commit `9a1dca9`). *(audit: G3735 ὄρος post-ship prose defect + PROOFREAD GATE)*
+    - **UPDATE (θυγάτηρ 2026-07-07): fixing ONE field did not close the class.** #21 printed `senses_block` in
+      full, but `gloss_notes` was STILL a 400-char preview (`… ` cutoff) — the identical length-not-text gap in
+      a sibling field that ALSO renders to the reader (both bullets screenshot-confirmed on θυγάτηρ's card).
+      Closed for gloss_notes too (`be027c1`, full print + its own proofread label). → the lesson sharpens: audit
+      EVERY verbatim / reader-facing field for the length-preview gap; a fix on one field is not the class closed.
+      *(audit: G2364 θυγάτηρ gloss_notes gate fix be027c1)*
 
 22. **A spurious sense can be a FEED defect, not a DRAW defect — and the poison can enter UPSTREAM of the sampler,
     from a corpus side-table the engine doesn't own.** ὄρος grew a "boundary" sense not because the prompt or draw
