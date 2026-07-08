@@ -310,6 +310,15 @@ both drifting from the doc.
       up; twin: οὐρανός capitalization). → v2: lint gloss-note rendering-claims against the card's own quoted
       verse text — no external lookup needed, two corpus instances. *(audit: G266 ἁμαρτία PARKED dossier,
       2026-07-08)*
+    - **REFINEMENT (ῥῆμα 2026-07-08, the controlled comparison): fabrication tracks CONTESTED referents, not
+      loaded ones.** ῥῆμα's divine-word cluster (Mat 4:4, Eph 6:17, Heb 1:3, 1Pe 1:25) drew quote-only prose
+      at pull 1 and the λόγος-distinction trap went untaken — same engine, same session, same loadedness class
+      as ἁμαρτία, which parked after four pulls. The variable isn't divine subject matter; it's whether a
+      specific verse carries a LIVE scholarly/doctrinal fork the model can confabulate a side of (2Co 5:21:
+      anti-offering at pull 3, pro-offering at the hinted draw — both confident, same corpus). → the routing
+      rule sharpens: verification intensity scales with CONTESTEDNESS of the cited verses, not the referent's
+      loadedness; a fork registry / contested-verse list is the natural v2 carrier. *(audit: G4487 ῥῆμα ship
+      vs G266 dossier, 2026-07-08)*
 
 ## Added by the δύναμις session (2026-07-08)
 

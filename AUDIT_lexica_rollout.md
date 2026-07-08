@@ -1373,6 +1373,43 @@ discipline's cleanest product this session.
   no hidden job. Joh 1:29 singular check held on every pull.
 - **Streak 0. ROSTER: 16 shipped · 3 parked (πολύς, ὀφθαλμός, ἁμαρτία) · 1 to go (ῥῆμα G4487).**
 
+### G4487 ῥῆμα — LIVE (2 senses, attempt 1 + 1 swap). Streak 0. The batch-closer; the loaded-frame set's only first-pull survivor.
+Shipped draw `9d54fae1` (spoken-communication [4 sub-uses: single-statement / body-of-speech / divine-speech /
+instrumental] | happening-state-of-affairs), no model call on apply, gate 38/38, stamp current; ONE post-apply
+swap (Mar 9:32 deleted from the *matter*/*thing* gloss note — false ref in an otherwise verified claim, inside
+the tool's "delete an unverified claim" boundary); **screenshot-verified** (both frames, incl. the corrected
+gloss note).
+- **FLOOR: cleanest since φωνή — STABLE at 2 on 3 runs, no escalation.** Three identical carves, event-core
+  3/3, wall-to-wall 3/3 company, all five wobbles folds (`agreement_G4487_v6_20260708-093222`). **Predictor
+  ledger: tight-agreement class now 1-for-3, and the win is a CLEAN-SEPARABLE pair (speech vs event) —
+  separability, not word familiarity, is the signal.**
+- **THE λόγος TRAP NOT TAKEN:** no ῥῆμα/λόγος contrast anywhere on the card (the modern teaching construct was
+  the word's pre-registered freight trap); the gloss note explicitly declines to theologize "word of the Lord."
+- **STANDING CHECK'S SECOND LIVE FIRE (gloss-note rendering-claims vs printed text):** the note claimed
+  *matter*/*thing* renders Mar 9:32 — ABP prints "the saying" (the card's own quote was right, the note's ref
+  false; the ἁμαρτία self-refuting shape, milder — one wrong ref in a verified thesis [Mat 18:16 "every matter"
+  CONFIRMED], not a fabricated thesis → swap-class, not redraw).
+- **Per-row law in a new field:** 1Pe 1:25 "×2" (the card quoting both occurrences) verified against the tag
+  count — exactly 2 G4487 rows in the verse. First quotation-STRUCTURE claim verified by the corpus-count law.
+- **#24 REFINEMENT (JP, the controlled comparison):** ῥῆμα's divine-word cluster (Mat 4:4, Eph 6:17, Heb 1:3,
+  1Pe 1:25) drew quote-only prose at pull 1 — same engine, same session, same loadedness class as ἁμαρτία,
+  which parked. The variable: ἁμαρτία has LIVE DOCTRINAL FORKS on specific verses (2Co 5:21); ῥῆμα is loaded
+  but not contested. **Fabrication tracks CONTESTED referents — verses with a real scholarly/doctrinal fork
+  for the model to confabulate a side of — not divine referents per se.** Sharper routing rule than raw
+  loadedness; and the ἁμαρτία dossier's both-sides exhibit (anti-offering at pull 3, pro-offering at the hinted
+  draw, same verse, full confidence each way) is the V7 test case.
+- **Step 1.5:** πονηρός ("evil report/thing") + στόμα ("mouth") — unfed instances of both senses, no hidden job.
+- **Provenance non-fire on sense 2 mechanically correct:** 7 OT / 3 NT = 70%, under the ≥80% share bar (JP's
+  dilution prediction exact).
+- **Streak 0** (one swap needed — not clean-at-attempt-1; closest yet).
+- **ROSTER — BATCH-2 ACTIVE WORK CLOSED: 17 shipped · 3 parked (πολύς, ὀφθαλμός, ἁμαρτία) · 0 unstarted.**
+  The batch-close flag OPENS THE V7 WINDOW per the standing plan: the V7 pile (disposition-placement ×2,
+  line/entry collision, one-directional gloss flag, doubled vocabulary bar, gloss-scope marker, register trim,
+  hedged-citation coherence check, gloss-note rendering-claim lint [2 corpus instances],
+  fabrication-driven-carving with ἁμαρτία as primary test case, style tickets [organizing paragraph, `>`
+  blockquote]) + three requeue decisions (χριστός #1, ἁμαρτία #2, the ὀφθαλμός V7 restructure — JP's alone) +
+  the batch retro list. Graduation criterion never fired: 0-for-17 clean-at-attempt-1.
+
 ### Q&A ON RECORD — automation trajectory (JP asked, answered 2026-07-08, δύναμις session close)
 JP's autonomy question and the answer, logged for the retro: **the structural layer is near-automatable** —
 floor runs, the ≥6/10 threshold, the four gates, double-shelf, thin/circular flags are mechanical now, and the

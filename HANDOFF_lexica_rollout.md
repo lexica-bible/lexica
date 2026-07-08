@@ -257,7 +257,10 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
 5. Log the word in `AUDIT_lexica_rollout.md` (per-word flag rate, any precedent, wall status).
 
 ## BATCH STATE
-- **SHIPPED + LIVE (17; batch-2 locked-20 = 16 shipped · 3 parked · 1 to go):** G1096 γίνομαι (session start, from-draw first exercise) · G80 ἀδελφός
+- **BATCH-2 ACTIVE WORK CLOSED 2026-07-08 — 17 shipped · 3 parked (πολύς, ὀφθαλμός, ἁμαρτία) · 0 unstarted.
+  The V7 WINDOW IS OPEN** (V7 pile + requeue decisions [χριστός #1, ἁμαρτία #2, ὀφθαλμός restructure] + batch
+  retro list + display-layer window question — all JP-sequenced from here).
+- **SHIPPED + LIVE (18; batch-2 locked-20 = 17 shipped · 3 parked · 0 to go):** G1096 γίνομαι (session start, from-draw first exercise) · G80 ἀδελφός
   (4 senses) · G2588 καρδία (4 senses, one-draw ship) · G39 ἅγιον (4 senses, near-wall) · G1484
   ἔθνος (2 senses, converged attempt 2; detector's first live fire, Eph 2:11 bridge ruled+logged) ·
   G3173 μέγας (4 senses, one-draw ship; multi-shallow-axis wobble no-holes; 2Ch 17:12 bridge ruled) ·
@@ -332,7 +335,12 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
   bundled disposition INTO regard and the draw DECLINED it (homed disposition under physical instead) — so a
   re-roll may not place disposition where wanted without a sharper hint or the forced verses re-scoped. **Streak
   stays 0.** Full saga + attempt-3 raw + cap-out record: audit doc `### G3788 ὀφθαλμός … #### V6 ATTEMPTS → CAP-OUT`.
-- **REMAINING (1):** ῥῆμα G4487 — the batch's last unstarted word. **δύναμις SHIPPED**; **ἁμαρτία G266 PARKED**
+- **REMAINING: none — batch closed.** **ῥῆμα G4487 SHIPPED** (2 senses [speech | event/matter], attempt 1 + 1
+  swap — the loaded-frame set's only first-pull survivor; cleanest floor since φωνή [STABLE-at-2 on 3 runs, no
+  escalation → predictor: separability is the signal, class 1-for-3]; λόγος-distinction trap untaken;
+  standing-check 2nd fire [Mar 9:32 false ref deleted, Mat 18:16 "matter" confirmed]; 1Pe 1:25 ×2 per-row
+  verified; **#24 refined: fabrication tracks CONTESTED verses, not loaded referents** — ῥῆμα/ἁμαρτία controlled
+  comparison; screenshot-verified both frames). **δύναμις SHIPPED**; **ἁμαρτία G266 PARKED**
   (cap-out + hinted draw tripped pre-registered exit (c) on a 2Co 5:21 gloss-note side-take — full dossier in
   the audit doc; routes to the V7 requeue with χριστός; the hint's anti-annexation direction WORKED
   structurally, the kill was meta-field). Standing check born: **gloss-note rendering-claims verified against
