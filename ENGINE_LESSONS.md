@@ -298,6 +298,20 @@ both drifting from the doc.
     (ἁμαρτία / ῥῆμα / δύναμις — the audit-hardest words are exactly the highest-loadedness ones). *(audit:
     G758 ἄρχων cap-out saga, 2026-07-08)*
 
+## Added by the δύναμις session (2026-07-08)
+
+25. **A sense's prose can DISCLAIM its own citation — and a wall-prior can be DIRECTIONAL, not oscillating.**
+    Two findings from one word. (a) **Hedged citation**: δύναμις pull 2's persons sense kept Neh 9:6 in its list
+    while its own prose said the verse "may overlap with senses 1 and 4 without reducing to either" — a citation
+    the card won't stand behind, invisible to the citation gate (the ref is real and tagged) and to the freight
+    scan (nothing loaded). → v2: a coherence check that flags membership-hedging language inside a sense's own
+    prose; operating rule already standing (handoff 7c). (b) **Directional prior**: all three δύναμις pulls
+    erred toward FINE-CARVING (stacking the floor's rejected minority splits), unlike ἄρχων's oscillation between
+    two constraints — a wall shape the structure-hint would fight by pinning the sense list from above (its
+    untested anti-split direction; not needed, pull 3 landed). → v2's wall taxonomy: target-nonexistence (πολύς) ·
+    oscillation (ὀφθαλμός, #20) · directional carving prior (δύναμις) — each wants a different lever. *(audit:
+    G1411 δύναμις pulls 1–3 + thin-sense amendment, 2026-07-08)*
+
 ## Added by the ἔργον session (2026-07-08)
 
 23. **The freight (#18) scan's scope is EVERY definitional field, not just the block the last failure was in.**

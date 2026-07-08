@@ -1284,6 +1284,52 @@ sense-1 main list title-only; abstract sub-use cut to the tenure trio + 1Ch 2:10
 - **ROSTER:** ἄρχων = the **15th ship**. Batch-2: **15 shipped · 2 parked (πολύς, ὀφθαλμός) · 3 to go** — the
   loaded-frame three: ἁμαρτία G266, ῥῆμα G4487, δύναμις G1411.
 
+### G1411 δύναμις — LIVE (3 senses, attempt 3 + 3 ruled prose swaps). Streak 0. The thin-sense amendment session; provenance note's first fire.
+Shipped draw `00633c56` (army/host | one broad operative-capacity [deed folded-visible as quoted sub-use] |
+persons thin-sense), no model call on apply, gate 40/40, stamp current; then THREE `fix_lexica_raw` swaps
+("or entities" cut from sense-3 headline [Est 2:18 attests persons only]; "or wonder" cut from deed sub-use +
+"wonders"→"powerful works" in the RANGE — the same τέρας borrowed-gloss import in two fields, the range copy
+caught by JP on second pass = **#23 firing in real time, logged against both auditors**); **screenshot-verified**
+(all swaps + thin sense + provenance section rendering).
+- **FLOOR:** 3-run count locked {4:3} but three identity fronts wobbled → `--runs 10`: **{2:1, 3:5, 4:4}** —
+  army 10/10 required · ONE broad capacity 9/10 (capacity/force split only 1/10) · deed distinct **exactly 5/10**
+  (the registered mid-state) · persons 4/10 · celestial-array 1/10 (`agreement_G1411_v6_20260708-073710`).
+  Beings prior dead (Mat 24:29 in host 10/10). All wobble verses folds.
+- **STANDING RULE BORN (JP): 5/5 split = either shape legal as drawn, no per-word ruling needed** — conditions:
+  minority-invisible facet stays visible (named sub-use or inline, not list-buried), all other bars hold; a 6/4
+  is NOT a 5/5. Applied here to the deed sense.
+- **THREE PULLS — consistent OVER-SPLIT prior (a different failure direction from ἄρχων's oscillation):** Pull 1
+  stacked BOTH rejected minority carves at once (standalone celestial sense + capacity/force split → 5 senses).
+  Pull 2 reproduced the capacity/force split (headline arguing "distinct from mere capacity" — the prior
+  defending itself) + persons full-sense absorbing Neh 9:6 + **the HEDGED-CITATION defect (new class):** a
+  sense whose own prose disclaimed its verse's membership ("may overlap with senses 1 and 4 without reducing to
+  either") — a citation the card won't stand behind. **NEW STANDING CHECK: a sense's prose may not hedge its own
+  verse's membership; disclaimed citation fails on coherence.** (Also a `>` blockquote inside senses prose —
+  format ledger, second prose-furniture invention after ἔτος's organizing paragraph.) Pull 3 drew the certified
+  carve clean.
+- **RULE COLLISION → STANDING AMENDMENT (JP, replaces per-word persons bar):** pull 3's persons sense (Est 2:18
+  alone, self-flagged thin, absorbing nothing) collided with "persons-as-full-sense off-target" vs the G80
+  thin-sense standard. **Amendment: an off-target ruling against a minority carve bars it as a STRUCTURAL PEER
+  (absorbing majority verses / reshaping the carve), not as a THIN sense (single-ref, self-flagged, absorbing
+  nothing). Test: if removing the thin sense leaves its verses homeless → legitimate residue; if they fold
+  cleanly → fold them.** Applied: pull 2's persons sense (absorbed Neh 9:6) fails; pull 3's passes. Underspecified
+  ruling caught at the first card in the gap, resolved PRE-ship.
+- **LXX PROVENANCE NOTE — FIRST LIVE FIRE + FIRST RENDER.** Fired on sense 1 (pull 1 and ship draw; citation list
+  ~100% Greek-OT, ≥4 refs — correct trigger). Rendered card shows the "Septuagint Provenance" section —
+  mechanism closed end to end (the ἄρχων non-fire question → code-verified thresholds → live fire → render).
+- **"LORD of the forces" formula SHIPPED** — the δυνάμεων fixed-title sub-use (2Sa 6:2; 2Ki 3:14; Isa 8:13;
+  Jer 6:6; Zep 2:9) survived three independent pulls; upgraded prose-precedent → expected-content mid-word.
+- **#24 first word as standing law — held.** All God's-power verses (Eph 1:19, Heb 1:3, 2Pe 1:3), Act 1:8's
+  holy spirit, 2Th 1:7's angels: quotes only, zero tradition imports. Est 2:18 (pre-registered likeliest
+  fabrication site) shipped as one verbatim quote — verified against pulled text, with Neh 9:6's load-bearing
+  parallel ("militaries of the heavens do obeisance") also verbatim.
+- **Step 1.5 disposal (ledger-precise):** zero tight collocations computed for this word — at 564 occurrences the
+  spread is too wide for any partner to clear the tightness bar; the banked ἄρχων preview was ἄρχων-side
+  information, as banked. Nothing to adjudicate.
+- **Streak 0** (attempt 3 + swaps).
+- **ROSTER:** δύναμις = the **16th ship**. Batch-2: **16 shipped · 2 parked (πολύς, ὀφθαλμός) · 2 to go**
+  (ἁμαρτία G266, ῥῆμα G4487).
+
 ### TRIGGER STATUS (standing — survives session end) — FIRED + RESOLVED 2026-07-07
 Content-wall tally (now **3**): **πολύς = full cap-out (range-completeness)**; **ἅγιον = near-wall (structure,
 cleared attempt 3)**; **ὀφθαλμός = cap-out (structure↔freight oscillation — 3 pulls, never both clean at once)**.

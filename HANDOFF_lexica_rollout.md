@@ -212,6 +212,19 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
      contested register (`contested_register.py`) first — a loaded lemma may be forked, which changes what the
      operation must preserve. Born from checking χριστός's fork status before touching it in the `---` sweep;
      converts the "loaded word + about-to-modify → caution" instinct into procedure.
+  7a. **5/5 SPLIT RULE (JP 2026-07-08, δύναμις).** A 5/5 split on a structure question = either shape legal as
+     drawn, no per-word JP ruling needed. Conditions: the minority-invisible facet stays VISIBLE (named sub-use
+     or inline construction — cited-in-a-list doesn't satisfy gate 3), and all other pre-registered bars hold.
+     A 6/4 is not a 5/5 — 6 makes the majority shape the bar.
+  7b. **THIN-SENSE AMENDMENT (JP 2026-07-08, δύναμις — governs all off-target rulings against minority carves).**
+     An off-target ruling against a below-threshold carve bars it as a STRUCTURAL PEER (a sense absorbing
+     majority-sense verses or reshaping the certified carve), NOT as a THIN sense (single-ref or near, self-
+     flagged by the audit, absorbing nothing). Thin senses stay governed by the G80 standard. Test at the card:
+     removing the thin sense leaves its verses homeless/force-fit → legitimate residue; verses fold cleanly →
+     fold them.
+  7c. **NO HEDGED CITATIONS (born δύναμις pull 2).** A sense's prose may not hedge its own verse's membership
+     ("may overlap with senses X and Y without reducing to either") — a citation the card won't stand behind
+     fails on coherence. If the draw can't shelve a verse confidently, the verse moves or the sense re-carves.
   7. **RENDER/SPLIT-LAYER FIXES ARE NOT ENGINE RESTRUCTURING (mid-batch ruling, JP 2026-07-08).** The mid-batch
      freeze protects the comparison baseline = what the engine DRAWS (prompt + draw behavior). A fix to the
      splitter / assembly / serve layer (`body()`, `--resplit`, render) only re-carves or re-displays already-drawn
@@ -244,7 +257,7 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
 5. Log the word in `AUDIT_lexica_rollout.md` (per-word flag rate, any precedent, wall status).
 
 ## BATCH STATE
-- **SHIPPED + LIVE (16; batch-2 locked-20 = 15 shipped · 2 parked · 3 to go):** G1096 γίνομαι (session start, from-draw first exercise) · G80 ἀδελφός
+- **SHIPPED + LIVE (17; batch-2 locked-20 = 16 shipped · 2 parked · 2 to go):** G1096 γίνομαι (session start, from-draw first exercise) · G80 ἀδελφός
   (4 senses) · G2588 καρδία (4 senses, one-draw ship) · G39 ἅγιον (4 senses, near-wall) · G1484
   ἔθνος (2 senses, converged attempt 2; detector's first live fire, Eph 2:11 bridge ruled+logged) ·
   G3173 μέγας (4 senses, one-draw ship; multi-shallow-axis wobble no-holes; 2Ch 17:12 bridge ruled) ·
@@ -284,6 +297,13 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
   Rev 1:5 ruled stricter-bar into sense 1; all 3 pulls' fabrications sat on Christ/Molech → **ENGINE_LESSONS
   #24 loadedness-scaled verification**; #17 instance (e) harmonizing; exit-condition pre-registration honored;
   streak 0; screenshot-verified).
+  · **G1411 δύναμις** (3 senses [army/host | broad capacity, deed folded-visible | persons THIN], attempt 3 + 3
+  ruled swaps [τέρας "wonder" import cut from sub-use AND range — #23 fired live, range copy caught second-pass];
+  floor {2:1,3:5,4:4}: capacity/force split 1/10, deed exactly 5/10 → **5/5 rule born (7a)**; pulls 1–2 = consistent
+  OVER-SPLIT prior (stacked rejected carves, not oscillation) + **hedged-citation defect class born (7c)**; pull-3
+  persons thin-sense → rule collision → **thin-sense amendment (7b)**, resolved pre-ship; **LXX provenance note
+  first live fire + first render** (mechanism closed); "LORD of the forces" formula shipped; #24 held (Est 2:18 +
+  Neh 9:6 verbatim-verified); streak 0; screenshot-verified).
 - **word_gloss:** G39 "Holy Place" → "holy, set apart" override LIVE (`a06a90b` + `--apply` rebuild
   on PA). Verified: word_gloss row = `holy, set apart|override`; count 17508 stable; `override`
   58→59, `tbesg` 73→72 (only G39 moved). **Library card confirmed rendering "hágion · holy, set apart"**
@@ -312,7 +332,8 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
   bundled disposition INTO regard and the draw DECLINED it (homed disposition under physical instead) — so a
   re-roll may not place disposition where wanted without a sharper hint or the forced verses re-scoped. **Streak
   stays 0.** Full saga + attempt-3 raw + cap-out record: audit doc `### G3788 ὀφθαλμός … #### V6 ATTEMPTS → CAP-OUT`.
-- **REMAINING (3) — the loaded-frame three:** ἁμαρτία G266 · ῥῆμα G4487 · δύναμις G1411.
+- **REMAINING (2) — the loaded-frame pair:** ἁμαρτία G266 · ῥῆμα G4487. **δύναμις SHIPPED** (see LIVE list —
+  over-split prior, thin-sense amendment, provenance first fire).
   (Full locked-20 list + selection method in the audit doc's Batch Two section.) **ὄρος + θυγάτηρ + τόπος + ἔργον
   + ἔτος + ἄρχων SHIPPED** — moved to the LIVE list above. Their tools: the operationalized freight test, #23
   full-field scope, and NEW **#24 loadedness-scaled verification** (every descriptive claim on a loaded referent
