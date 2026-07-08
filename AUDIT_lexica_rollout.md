@@ -1330,6 +1330,18 @@ caught by JP on second pass = **#23 firing in real time, logged against both aud
 - **ROSTER:** δύναμις = the **16th ship**. Batch-2: **16 shipped · 2 parked (πολύς, ὀφθαλμός) · 2 to go**
   (ἁμαρτία G266, ῥῆμα G4487).
 
+### Q&A ON RECORD — automation trajectory (JP asked, answered 2026-07-08, δύναμις session close)
+JP's autonomy question and the answer, logged for the retro: **the structural layer is near-automatable** —
+floor runs, the ≥6/10 threshold, the four gates, double-shelf, thin/circular flags are mechanical now, and the
+hedged-citation + carve-vs-floor comparison checks are buildable (#25). **The fabrication layer is the
+persistent floor:** every session-critical intervention across the 16 shipped words was verse-vs-prose judgment
+(apex sentence, fire/children, twelve-months, timelessness, fourth-year — none machine-catchable today; #24's
+loadedness routing is the closest mechanization). **Trajectory:** spot-audit becomes the default for UNLOADED
+words per the original graduation plan; full manual audit is retained for loaded/contested words INDEFINITELY,
+with #24 as the routing rule between the two tracks. Data cited: streak 0-for-16 — no word has yet shipped
+clean-at-attempt-1 under the full audit, so the graduation criterion has never fired; the constraint is real,
+not procedural caution.
+
 ### TRIGGER STATUS (standing — survives session end) — FIRED + RESOLVED 2026-07-07
 Content-wall tally (now **3**): **πολύς = full cap-out (range-completeness)**; **ἅγιον = near-wall (structure,
 cleared attempt 3)**; **ὀφθαλμός = cap-out (structure↔freight oscillation — 3 pulls, never both clean at once)**.

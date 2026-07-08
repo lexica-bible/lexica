@@ -204,6 +204,16 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
     the verb rendering. Form-match is the only reliable finder.
   - LESSON (banked): the translit accent bug here is the #18A (γῆ) diacritic class biting an AUDIT query —
     one more argument for the normalize-both-sides fix when the Ask-corpus right-rail work starts.
+- **LEXICA DISPLAY-LAYER WINDOW (banked 2026-07-08, δύναμις session; window opening UNRULED — batch-2 close vs.
+  post-Session-9, JP's call when reached).** Members: the #18A diacritic normalize-both-sides fix ·
+  language-scoped query drift · plus two NEW tickets:
+  1. **Gloss-note sense references:** every sense mention in a gloss note gets an anchored marker (→1, →2
+     superscript or equivalent) linking the sense it names, replacing bare inline prose ("sits within sense 2").
+     Display-layer only — no entry data or stamp changes. Companion lint candidate: a gloss note that names NO
+     sense gets flagged (cousin of the hedged-citation check, ENGINE_LESSONS #25).
+  2. **Gloss-note ordering:** current order is draw-order, guaranteed by nothing. Canonical order proposed:
+     by first-cited-verse's sense (notes read in the same sequence as the entry above), fallback alphabetical
+     by glossed word. Renderer change only.
 - **Hebrew-OT word finder is NOT number-folded** (KNOWN GAP) — the singular/plural fold is live on
   ABP/KJV/BSB but NOT the `corpus=heb` discovery branch (it matches a token inside a multi-word gloss
   phrase, so the precomputed `*_norm` column doesn't fit). A real fold needs BOTH a normalized-token
