@@ -89,6 +89,9 @@ def main():
     ap.add_argument("--db", default=os.path.expanduser("~/bible-db/bible.db"))
     ap.add_argument("--top", type=int, default=40)
     ap.add_argument("--occ-min", type=int, default=2)
+    ap.add_argument("--occ-max", type=int, default=None,
+                    help="only list words at or below this occurrence count "
+                         "(GREEN-tier screen: --occ-max 40)")
     ap.add_argument("--skip-built", action="store_true",
                     help="also exclude Strong's numbers already written to lexica_def "
                          "(the rollout wants the NEXT unbuilt words, not a re-list of live ones)")
@@ -137,10 +140,12 @@ def main():
             gloss = (g["gloss"] if g else "") or ""
         return lemma, translit, gloss
 
-    ranked = sorted(((b, c) for b, c in counts.items() if c >= args.occ_min),
+    ranked = sorted(((b, c) for b, c in counts.items()
+                     if c >= args.occ_min and (args.occ_max is None or c <= args.occ_max)),
                     key=lambda bc: -bc[1])
 
-    print(f"# Lexica definition-engine — frequency-ranked candidates (occ >= {args.occ_min})")
+    band = f"occ >= {args.occ_min}" + (f", <= {args.occ_max}" if args.occ_max is not None else "")
+    print(f"# Lexica definition-engine — frequency-ranked candidates ({band})")
     built_note = f" + {len(built)} already-built" if built else ""
     print(f"# aliases folded ({len(LEXICA_ALIASES)} pairs); excluded {len(set(CONTESTED_BY_SID))} "
           f"contested + {len(structural_nums)} structural{built_note} = {len(excluded)} numbers")
