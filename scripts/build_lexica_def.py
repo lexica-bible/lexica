@@ -280,6 +280,58 @@ def lex_head(conn, sid):
     return (r["lemma"] or sid), (r["translit"] or "")
 
 
+def dynamic_budget(occ_count):
+    """V7 fed-sample curve (JP-ruled 2026-07-08, the fed-40 retro item). At 40 occurrences or
+    fewer the WHOLE corpus evidence is fed — the entire fed-gap defect family (ENGINE_LESSONS
+    #8/#19, both failure modes) is impossible by construction. Measured split 2026-07-08:
+    4,017 of 5,254 Greek lemmas (76%) sit at <=40. Above 40 the curve scales MODESTLY — raw
+    size is not the fix (every batch-2 collocation flag was a WHICH-verses miss, never a
+    how-many miss); the load-bearing half is reserve_collocation_slots below. Cost across the
+    corpus: PROJECTION (roughly flat — the tail gets cheaper, the ~24% over-40 words costlier),
+    not a measurement."""
+    if occ_count <= 40:
+        return occ_count
+    if occ_count <= 100:
+        return 40
+    if occ_count <= 500:
+        return 60
+    return 80
+
+
+def reserve_collocation_slots(conn, sid, occs, sample, top_n=10):
+    """Collocation-aware slot reservation (ENGINE_LESSONS #8 option (b) + #19; JP-ruled at the
+    V7 window). Each of the word's top-N PMI neighbors is GUARANTEED at least one verse in the
+    fed sample: an unfed high-PMI family is exactly how a whole job stays invisible to a stable
+    floor (ὀφθαλμός disposition region) or a shipped sense gets silently narrowed (θυγάτηρ
+    paternal headline). Reuses the production scanner (lexica_coverage.scan_collocations — the
+    one copy, reuse rule) and ADDS on top of the spread sample, never displacing a pick. This
+    closes the fed gap at GENERATION; the step-1.5 eyeball of any remaining MISSED warnings
+    stays law."""
+    try:
+        import lexica_coverage as _cov
+        sample_vids = {o["vid"] for o in sample}
+        findings = _cov.scan_collocations(conn, sid, occs, sample_vids)
+    except Exception as e:
+        print(f"  (collocation slot reserve skipped: {e})", file=sys.stderr)
+        return sample
+    by_ref = {}
+    for o in occs:
+        by_ref.setdefault(f'{o["book"]} {o["ch"]}:{o["vs"]}', o)
+    have = {o["vid"] for o in sample}
+    added = []
+    for f in findings[:top_n]:
+        if f["in_draw"]:
+            continue
+        o = next((by_ref[r] for r in f["examples"] if r in by_ref and by_ref[r]["vid"] not in have), None)
+        if o is not None:
+            sample.append(o)
+            have.add(o["vid"])
+            added.append(f'{f["translit"]} → {o["book"]} {o["ch"]}:{o["vs"]}')
+    if added:
+        print(f"  collocation slots reserved (+{len(added)}): {'; '.join(added)}")
+    return sorted(sample, key=lambda o: o["vid"])
+
+
 def select_spread(occs, budget):
     """Sample that surfaces the SENSE range: per-rendering floor + proportional fill, balancing
     testament (OT/NT) then book. VERBATIM from the trial rig."""
@@ -1329,7 +1381,9 @@ def main():
                          "synth_ver up-to-date skip; requires a cache HIT, NEVER re-rolls. Use after a prose "
                          "fix the draw signature can't detect: find affected cards with check_draw_citations.py, "
                          "regenerate with --dry-run --force + review, then ship the reviewed bytes with this.")
-    ap.add_argument("--budget", type=int, default=BUDGET)
+    ap.add_argument("--budget", type=int, default=None,
+                    help="fed-sample size override; default = dynamic_budget curve "
+                         "(<=40 occ feeds all; 40/60/80 tiers above)")
     ap.add_argument("--force-verse", action="append", default=[], metavar="REF",
                     help="force a verse into the fed sample (e.g. 'Deu 13:8'), repeatable. SCOPE: a "
                          "post-floor coverage-completeness override for a MISSED-collocation idiom/job the "
@@ -1416,7 +1470,11 @@ def main():
                       f"verse-grounded entry. A single occurrence can't show a range; the word is "
                       f"left to the LSJ card. (No bypass flag — edit OCC_MIN to build one deliberately.)")
                 continue
-            sample = select_spread(occs, args.budget)
+            # V7 dynamic budget: --budget still overrides explicitly; default = the ruled curve.
+            budget = args.budget if args.budget is not None else dynamic_budget(len(occs))
+            sample = select_spread(occs, budget)
+            # V7 slot reservation: top-PMI neighbors guaranteed fed (adds, never displaces).
+            sample = reserve_collocation_slots(conn, sid, occs, sample)
             if args.force_verse:
                 # Post-floor coverage override (FLOW step 1.5): add MISSED-collocation idiom/job verses the
                 # deterministic sampler skipped. Add-beyond-budget, never drop an auto-pick; refuse a ref the

@@ -123,6 +123,21 @@ def test_three_subuses_stay_silent():
     assert B.subuse_overload(block) == []
 
 
+# ── dynamic fed-sample curve ─────────────────────────────────────────────────────────────────
+
+def test_dynamic_budget_curve():
+    """The ruled curve (fed-40 retro item): <=40 feeds ALL (fed-gap family impossible by
+    construction); 40/60/80 tiers above. Boundary values pinned exactly."""
+    assert B.dynamic_budget(12) == 12          # a 12-occurrence word feeds all 12
+    assert B.dynamic_budget(40) == 40          # boundary: still complete evidence
+    assert B.dynamic_budget(41) == 40          # first sampled tier
+    assert B.dynamic_budget(100) == 40
+    assert B.dynamic_budget(101) == 60
+    assert B.dynamic_budget(500) == 60
+    assert B.dynamic_budget(501) == 80         # a 500+-occurrence word lands ~80
+    assert B.dynamic_budget(9049) == 80        # κύριος-scale stays capped
+
+
 # ── contested-verse registry routing ─────────────────────────────────────────────────────────
 
 def test_registry_hits_2co521():

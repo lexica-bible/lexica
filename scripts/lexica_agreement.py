@@ -492,11 +492,17 @@ def render_report(sid, lemma, translit, prompt_name, ev, draws, valid_books=None
 
 
 def evidence_summary(conn, sid, budget, has_surface):
-    """Gather the SAME deterministic evidence every draw sees (select_spread is fixed)."""
+    """Gather the SAME deterministic evidence every draw sees. MIRROR INVARIANT (V7): budget +
+    slot reservation must match the engine exactly — a floor fed differently from the draw
+    certifies the stability of the WRONG inventory (ENGINE_LESSONS #19, at the tool level).
+    budget=None → the engine's dynamic_budget curve, same as the build."""
     pred, params = B.abp_filter(conn, sid)
     gset = B.gloss_set(conn, pred, params)
     occs = B.occurrences(conn, pred, params)
+    if budget is None:
+        budget = B.dynamic_budget(len(occs))
     sample = B.select_spread(occs, budget)
+    sample = B.reserve_collocation_slots(conn, sid, occs, sample)
     ctx = B.fetch_context(conn, sample, has_surface)
     lemma, translit = B.lex_head(conn, sid)
     ot = sum(1 for c in ctx if c[0] not in B.NT_BOOKS)
@@ -559,7 +565,8 @@ def main():
     ap.add_argument("--prompt", choices=list(PROMPTS), default="v7",
                     help="which engine to review: v7 (frozen copy, default) or live (build's VERSE_PROMPT)")
     ap.add_argument("--runs", type=int, default=10, help="draws per word (10 reproduces the canary)")
-    ap.add_argument("--budget", type=int, default=B.BUDGET)
+    ap.add_argument("--budget", type=int, default=None,
+                    help="override; default mirrors the engine's dynamic_budget curve")
     ap.add_argument("--save-dir", default="~/bible-db", help="where the per-run JSON/txt land")
     ap.add_argument("--no-save", action="store_true", help="print only, do not write the run files")
     ap.add_argument("--from-json", help="re-render a saved run, FREE (no model) — pass its .json")

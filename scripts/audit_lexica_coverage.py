@@ -33,7 +33,12 @@ def audit_word(conn, sid, budget, floor, window, stop, show_all, pmi_min):
     if not occs:
         print(f"  {sid}: no occurrences — skip.")
         return None
+    # MIRROR INVARIANT (V7): recompute the fed draw EXACTLY as the build does — dynamic budget
+    # + collocation slot reservation — or this audit reports a draw the engine never fed.
+    if budget is None:
+        budget = B.dynamic_budget(len(occs))
     sample = B.select_spread(occs, budget)
+    sample = B.reserve_collocation_slots(conn, sid, occs, sample)
     sample_vids = {o["vid"] for o in sample}
     findings = C.scan_collocations(conn, sid, occs, sample_vids, stop=stop,
                                    floor=floor, window=window, pmi_min=pmi_min)
@@ -114,7 +119,8 @@ def main():
     ap.add_argument("--db", default=os.path.expanduser("~/bible-db/bible.db"))
     ap.add_argument("--word", help="one G-number, e.g. G5207")
     ap.add_argument("--all", action="store_true", help="every built word in lexica_def")
-    ap.add_argument("--budget", type=int, default=B.BUDGET)
+    ap.add_argument("--budget", type=int, default=None,
+                    help="override; default mirrors the engine's dynamic_budget curve")
     ap.add_argument("--floor", type=int, default=C.COLLOC_FLOOR)
     ap.add_argument("--window", type=int, default=C.COLLOC_WINDOW)
     ap.add_argument("--pmi-min", type=float, default=C.PMI_MIN,
