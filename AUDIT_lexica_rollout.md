@@ -1150,6 +1150,52 @@ end-to-end** (both senses distinct, both sub-uses on their own lines, both gloss
 - **ROSTER:** τόπος = locked-20 #20, the **12th ship**. Batch-2: **12 shipped · 2 parked (πολύς, ὀφθαλμός) · 6 to go**
   (ἔτος G2094, ἄρχων G758, ἔργον G2041, ἁμαρτία G266, ῥῆμα G4487, δύναμις G1411).
 
+### G2041 ἔργον — LIVE (2 senses, attempt 1 + 3 post-apply freight patches). Streak 0. The freight-scope + `---`-root session.
+Shipped draw `68b347d0` (deed/act | task-labor), no model call on apply, gate 40/40, stamp current; then THREE
+`fix_lexica_raw` de-freight swaps + a model-free `--resplit` (the `---` root fix), **screenshot-verified** (seam
+clean, product in range, all de-freights landed). Product folds into sense 2 ("crafted output of an artisan",
+Son 7:1/Isa 2:8); God's-deeds under sense 1 (Gen 2:2/Deu 3:24).
+- **FLOOR (`--runs 10`, escalated on a job-IDENTITY wobble): TWO firm poles.** Deed/act 9/10 (draw-5 the defective
+  tenth), work-pole 9/10; the internal task↔product split is minority (product-alone 4/10, task-alone 2/10),
+  God's-acts 1/10, thin cuts 2/10 — all fold, no holes. Count {1:1,2:4,3:5} mean 2.4. The two 2-sense draws
+  disagreed on what sense 2 IS (task vs product) — that's what forced the 10-run.
+- **DETECTOR FIRST FIRE: `!! citation real-miss`.** Draw 5 (1-sense outlier) cited a hallucinated **"1Ki 7:1"**
+  (every other draw: 1Ki 7:8). Defective draw, not a hole; not shipped. **Citation gate verified against the code
+  (rule #17):** it buckets pass / tagging (word present, tag missed — non-blocking) / **real (verse exists, word
+  absent = hallucination — BLOCKS)** / noverse (BLOCKS). So a hallucinated-but-real ref can't ship on existence
+  alone — draw-5's 1Ki 7:1 would have blocked at ship. Floor detector + ship gate are separate paths, both catch it.
+- **FREIGHT (#18): THREE failures, ONE caught POST-apply → ENGINE_LESSONS #23.** "moral pattern" (sub-use) +
+  "assessed as a whole" (sense-1 elaboration) caught pre-apply; **"morally … significant" (the RANGE) caught only
+  on the full-entry proofread AFTER apply** — the audit had scoped to `senses_block`. Lesson #23: the freight scan
+  is EVERY definitional field (headlines, senses_block, range). Fixed by 3 swaps (→ sustained pattern / sustained
+  patterns of conduct / expression of character or relationship). **KEPT** "characterized or judged" + "qualifying
+  or disqualifying" — attested context (κατὰ τὰ ἔργα), the de-claw line. **CREDIT:** works-of-law de-freighted
+  UNPROMPTED by V6 ("the lemma itself carries only 'things done'") — the both-ways bar the loaded-frame three need.
+- **STEP 1.5:** λατρεία (13v, PMI 9.16 — "servile work" festival formula → labor/sense 2) + καλός (16v — "good
+  works" → deed/sense 1) both fold, no hidden job. No 4th axis → facet-identity clean.
+- **`---` ROOT FIX (`1be84b7`) + corpus sweep.** The model put a `---` rule BETWEEN sense 1 and 2; the ὄρος
+  edge-strip (`9a1dca9`) only caught leading/trailing, so it rendered. `body()` now strips a standalone hr line
+  anywhere + collapses the blank run. Sweep (json_extract on senses_block/range/gloss_notes — all 3 fields) found
+  **G5547 χριστός** too; both fixed by model-free `--resplit`; **re-sweep empty = class closed corpus-wide.**
+  **MID-BATCH RULING (JP):** split/render-layer fixes are NOT engine restructuring (the frozen baseline is
+  prompt+draw behavior; `body()` only re-carves already-drawn prose) — legal mid-batch.
+- **χριστός G5547 (surfaced by the sweep; JP-RULED).** Findings (pre-current-standards, shipped): **self-collapsing
+  structure** (4 senses, then a note says 1/3/4 are really one — assert-then-retract, SECOND attestation after
+  τόpos → V7 pile with ὀφθαλμός), **Psa 2:2 double-shelved [1,4]**, gloss_notes form-claims (Lev 21:10-12)
+  unverified. **JP RULED: χριστός ENTERS the contested register** (real divided readings, consistent with
+  θεός/κύριος forked); **rerun WAITS for engine finalization** → the **post-finalization requeue list** (χριστός =
+  first entry; also the door for anything redraw-worthy the consolidated re-audit turns up). **Register-write
+  mechanics (CC, read the code): HOLD the write** — the serve backstop (`views_lexica.py:153`) 404s a registered-
+  contested word with no fork → LSJ fallback; registering now drops a high-traffic card to LSJ for the whole wait,
+  so register + fork together at the requeue session (current entry is flawed-but-honest, not a wrong gloss).
+- **BLANK-LEMMA: 99/618 = 16.0%** — second data point (τόpos 12.6%), confirms the OT form-field gap is a CLASS
+  rate, not per-word. Ledger note: G5117-scoped 12.6% + G2041-scoped 16.0%; corpus-wide rate still unmeasured.
+- **CONSOLIDATED RETRO ITEM:** re-audit the pre-current-standards entries against the current gate set (freight +
+  form-claims + structural coherence) — one sweep, not three; feeds the requeue list.
+- **Streak 0** (shipped only after post-apply patches — not clean-at-attempt-1; the locked freight-test line held).
+- **ROSTER:** ἔργον = the **13th ship**. Batch-2: **13 shipped · 2 parked (πολύς, ὀφθαλμός) · 5 to go** (ἔτος
+  G2094, ἄρχων G758, ἁμαρτία G266, ῥῆμα G4487, δύναμις G1411).
+
 ### TRIGGER STATUS (standing — survives session end) — FIRED + RESOLVED 2026-07-07
 Content-wall tally (now **3**): **πολύς = full cap-out (range-completeness)**; **ἅγιον = near-wall (structure,
 cleared attempt 3)**; **ὀφθαλμός = cap-out (structure↔freight oscillation — 3 pulls, never both clean at once)**.

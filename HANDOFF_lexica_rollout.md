@@ -207,6 +207,16 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
      the catch came from CLAUDE.md not the file, a re-derivation cost. Belongs in the open preamble alongside
      git-pull and the roster count-by-NAMES check. Verify the file by READING it, never by the handoff's lesson
      count (the count lagged the file this session — #20 line vs #21/#22 committed).
+  6. **REGISTER-CHECK BEFORE ANY WRITE on a word outside tonight's roster** (ἔργον session, 2026-07-08). Before
+     `--apply` / `--resplit` / `fix_lexica_raw` on a word that isn't the one you're actively shipping, check the
+     contested register (`contested_register.py`) first — a loaded lemma may be forked, which changes what the
+     operation must preserve. Born from checking χριστός's fork status before touching it in the `---` sweep;
+     converts the "loaded word + about-to-modify → caution" instinct into procedure.
+  7. **RENDER/SPLIT-LAYER FIXES ARE NOT ENGINE RESTRUCTURING (mid-batch ruling, JP 2026-07-08).** The mid-batch
+     freeze protects the comparison baseline = what the engine DRAWS (prompt + draw behavior). A fix to the
+     splitter / assembly / serve layer (`body()`, `--resplit`, render) only re-carves or re-displays already-drawn
+     prose — draws before and after stay comparable — so it is LEGAL mid-batch. (Contrast: a VERSE_PROMPT change
+     is engine restructuring and stays frozen till batch close.)
   spot, ENGINE_LESSONS #4) · pre-V5 triage + post-batch redraw phase · the existing fed-40 / reviewer-tier
   questions below.
 - **`ENGINE_LESSONS.md`** (repo root) — v2 design backlog, now **20 lessons** (#17 = fabrication family,
@@ -234,7 +244,7 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
 5. Log the word in `AUDIT_lexica_rollout.md` (per-word flag rate, any precedent, wall status).
 
 ## BATCH STATE
-- **SHIPPED + LIVE (13; batch-2 locked-20 = 12 shipped · 2 parked · 6 to go):** G1096 γίνομαι (session start, from-draw first exercise) · G80 ἀδελφός
+- **SHIPPED + LIVE (14; batch-2 locked-20 = 13 shipped · 2 parked · 5 to go):** G1096 γίνομαι (session start, from-draw first exercise) · G80 ἀδελφός
   (4 senses) · G2588 καρδία (4 senses, one-draw ship) · G39 ἅγιον (4 senses, near-wall) · G1484
   ἔθνος (2 senses, converged attempt 2; detector's first live fire, Eph 2:11 bridge ruled+logged) ·
   G3173 μέγας (4 senses, one-draw ship; multi-shallow-axis wobble no-holes; 2Ch 17:12 bridge ruled) ·
@@ -256,6 +266,11 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
   asserting what its own gloss_note retracted; 2 post-ship `fix_lexica_raw` prose fixes, no model; BANKED LESSON:
   inflected-form claims in notes need PER-ROW morph verify — 2Sa 19:39 blank lemma+morph, 68/538 ~13% blank-lemma
   systematic OT gap; screenshot-verified).
+  · **G2041 ἔργον** (2 senses, attempt 1 + 3 post-apply freight patches; deed/act | task-labor, product in range;
+  THREE #18 freight failures one caught POST-apply → ENGINE_LESSONS #23 "freight scan = every definitional field";
+  works-of-law de-freighted UNPROMPTED (credit); detector FIRST FIRE on a hallucinated cite (draw 5, not shipped);
+  `---` root fix `1be84b7` + corpus sweep → G5547 χριστός also cleaned, class closed; blank-lemma 16.0% = class
+  rate; streak 0; screenshot-verified).
 - **word_gloss:** G39 "Holy Place" → "holy, set apart" override LIVE (`a06a90b` + `--apply` rebuild
   on PA). Verified: word_gloss row = `holy, set apart|override`; count 17508 stable; `override`
   58→59, `tbesg` 73→72 (only G39 moved). **Library card confirmed rendering "hágion · holy, set apart"**
@@ -284,9 +299,20 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
   bundled disposition INTO regard and the draw DECLINED it (homed disposition under physical instead) — so a
   re-roll may not place disposition where wanted without a sharper hint or the forced verses re-scoped. **Streak
   stays 0.** Full saga + attempt-3 raw + cap-out record: audit doc `### G3788 ὀφθαλμός … #### V6 ATTEMPTS → CAP-OUT`.
-- **REMAINING (6):** ἔτος G2094 · ἄρχων G758 · ἔργον G2041 · ἁμαρτία G266 · ῥῆμα G4487 · δύναμις G1411.
-  (Full locked-20 list + selection method in the audit doc's Batch Two section.) **ὄρος + θυγάτηρ + τόπος
-  SHIPPED** — moved to the LIVE list above.
+- **REMAINING (5):** ἔτος G2094 · ἄρχων G758 · ἁμαρτία G266 · ῥῆμα G4487 · δύναμις G1411.
+  (Full locked-20 list + selection method in the audit doc's Batch Two section.) **ὄρος + θυγάτηρ + τόπος + ἔργον
+  SHIPPED** — moved to the LIVE list above. **Loaded-frame three (ἁμαρτία / ῥῆμα / δύναμις) are the audit-hardest —
+  the operationalized freight test (evaluation in a definition = fail; as cited context = pass) + #23 full-field
+  scope are the tools they'll lean on.**
+- **POST-FINALIZATION REQUEUE LIST (JP-ruled, new standing queue):** words to rebuild after the engine is
+  finalized (V7+), under the final prompt, rather than burning a V6 draw. **#1 = χριστός G5547** — JP RULED it
+  ENTERS the contested register (gets fork treatment, not a plain redraw); its register WRITE is HELD until the
+  requeue session so the live card doesn't drop to LSJ meanwhile (serve backstop `views_lexica.py:153` 404s a
+  registered-contested word with no fork). Also the destination for anything the consolidated re-audit flags as
+  redraw-worthy.
+- **CONSOLIDATED RE-AUDIT (retro, one item):** re-audit pre-current-standards entries against the current gate set
+  (freight + form-claims + structural coherence). χριστός already showed all three (self-collapsing 4→2 senses,
+  Psa 2:2 double-shelf, unverified form-claims). Feeds the requeue list.
   - **Loaded-frame watch:** ἁμαρτία / ῥῆμα / δύναμις (audit hardest for a disguised loaded frame).
   - **Tight-agreement test (refined hypothesis):** θυγάτηρ / ὄρος — genuine one-dimension nouns,
     predicted to agree tightly at 3. Data so far: ἔθνος clean-binary → tight; **φωνή clean-multi (3
