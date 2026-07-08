@@ -230,6 +230,9 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
      splitter / assembly / serve layer (`body()`, `--resplit`, render) only re-carves or re-displays already-drawn
      prose — draws before and after stay comparable — so it is LEGAL mid-batch. (Contrast: a VERSE_PROMPT change
      is engine restructuring and stays frozen till batch close.)
+  8. **QUEUE GATE (JP 2026-07-08).** /wrap must either update the `## Queue` section or affirmatively state
+     "Queue unchanged" — silence invalid. Same mechanism as the ENGINE_LESSONS wrap gate. The Queue holds
+     ordering only; any content detail found in the Queue itself is drift and gets moved to its pointer target.
   spot, ENGINE_LESSONS #4) · pre-V5 triage + post-batch redraw phase · the existing fed-40 / reviewer-tier
   questions below.
 - **`ENGINE_LESSONS.md`** (repo root) — v2 design backlog, now **20 lessons** (#17 = fabrication family,
@@ -376,6 +379,20 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
     but needed `--runs 10` (structure wobbled). Working rule: separability (not job-COUNT) predicts
     tightness — clean-separable jobs agree even at 3, shallow overlapping axes wobble. Confirm on the two.
     Note φωνή also showed the spread axis can surprise (propagation, not the speaker-type axis predicted).
+
+## Queue (dependency-ordered — order lives HERE, detail lives at the pointers)
+1. **ABP Session 9 certification** — BLOCKED ON: merging `HANDOFF_cert_session9.md` + `AUDIT_reassembly_rebuild.md`.
+   Detail: those two docs.
+2. **V7 engine window** — OPEN (flagged at batch-2 close, `d46b6dd`). Detail: V7 pile in this handoff +
+   ENGINE_LESSONS #24/#25 + the ἁμαρτία dossier (audit doc). Includes: format decision (V1 inline em-dash vs.
+   labeled bullets — JP's call), display-layer/three-zone window question.
+3. **Requeue rebuilds** — BLOCKED ON: V7. Order: χριστός → ἁμαρτία → ὀφθαλμός (restructure decision is JP's
+   alone). Detail: contested register + park dossiers.
+4. **Batch-3 scoping** — BLOCKED ON: V7 (new batch runs on new engine). Detail: frequency-cutoff logic, audit doc.
+
+Background tier (no ordering): former TODO/retro pile items — consolidated pre-standards re-audit, blank-lemma
+query, backup rewrite, invariant #8, Dan-flag, no-entry triage, inverse-dotted audit, homonym heuristic,
+topic-file merge, MISSED-warning sweep, draw-cache archive.
 
 ## QUEUED FOR NEXT SESSION (surfaced at this session's close — do before/at ἔθνος)
 1. **Double-shelf detector — BUILT + control-fired (2026-07-06). LIVE in the audit path, flag-only.**
