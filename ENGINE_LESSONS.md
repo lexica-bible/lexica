@@ -418,6 +418,24 @@ both drifting from the doc.
     #20 (the hint's ceiling), #17 (both directions were confident fabrications of the same fact). *(audit:
     G266 ἁμαρτία requeue entry, 2026-07-08)*
 
+## Added by the batch-3 calibration session (2026-07-08)
+
+30. **A ship draw can place verses AGAINST the floor's consensus home, and no machine gate sees it — the
+    floor-vs-ship placement diff is mechanically checkable and currently unchecked.** γόνυ G1119, batch-3
+    word 1: the floor was rock-stable (3 draws, {2:3}, every partner-group 3/3; Luk 5:8 + 2Ki 1:13 homed
+    with the kneeling/prayer cluster in every draw), yet the ship draw invented a sub-use the floor never
+    carved ("approach-posture, not necessarily worship") under the PHYSICAL sense and moved those 3/3
+    verses onto it — carrying an interpretive frame claim about the gesture toward Jesus (Luk 5:8) the
+    text doesn't force. Every machine gate passed (35/35 citations, zero lint fires, zero thin) — the
+    defect was visible ONLY by diffing the ship draw's verse placements against the floor's per-verse
+    company data, which both exist as structured artifacts at gate time. JP ruled: redraw (misplacement
+    against consensus, not an alternate carve), and the miss counts against the calibration N — the
+    tiering law's GREEN gate suite has a placement blind spot. → v2/detector ticket (PARKED per session
+    rule, log-don't-build): a flag that compares each cited verse's ship-draw shelf against its floor
+    majority-partners and fires on a high-support verse landing off its consensus home. Sibling of #11
+    (the floor is already the adjudicator for double-shelf fires), #20/#24 (placement + frame arrive
+    together on loaded referents). *(audit: G1119 γόνυ batch-3 redraw ruling, 2026-07-08)*
+
 ## Added by the ἔργον session (2026-07-08)
 
 23. **The freight (#18) scan's scope is EVERY definitional field, not just the block the last failure was in.**
