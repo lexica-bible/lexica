@@ -7,6 +7,18 @@ For one-off artifacts in the model's own output — a doubled reference, a malfo
 that aren't worth a full re-generation, and that we explicitly do NOT want to re-generate
 because regenerating would replace proven, reviewed prose with a fresh (unreviewed) draft.
 
+CERTIFICATION BOUNDARY (what this tool may and may NOT touch — precedent: τόπος + ἔργον, 2026-07-08).
+Certification attaches to the entry's CLAIMS and their grounding (the senses carved, the verses cited,
+the citation gate passing, review-what-ships). This tool preserves the stamp — a surgical edit is not a
+new generation — ONLY while it stays inside that boundary:
+  ALLOWED (stamp preserved): prose-level swaps that leave the SENSES and CITED VERSES unchanged —
+    de-freighting a word, deleting an unverified claim, fixing a typo/jargon. Every swap STILL runs its
+    own dry-run → full proofread → apply gate (that is what keeps review-what-ships intact). The meaning
+    should move toward corpus-faithful, never away.
+  FORBIDDEN (this UN-certifies — REDRAW instead, do not use this tool): adding / merging / re-carving a
+    sense; changing which verses a sense cites; asserting anything about the corpus the machine has not
+    verified; any change that skips the dry-run→proofread→apply gate.
+
 It does an EXACT string replacement on the stored raw (the text must occur exactly once, or it
 aborts), then runs the canonical assemble() from build_lexica_def — which re-splits the display
 fields, rebuilds verses[], and re-runs the citation gate — shows the result, and on --apply

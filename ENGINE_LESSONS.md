@@ -264,3 +264,20 @@ both drifting from the doc.
     re-drawing; the floor's provenance is only as clean as the feed, and feed cleanliness rests on corpus-side
     invariants (here: every dotted number that is a DIFFERENT word must be in the hold-out list). *(audit: G3735 ὄρος
     dotted-lexicon fold gap + fold fix `2ff5f7d`)*
+
+## Added by the ἔργον session (2026-07-08)
+
+23. **The freight (#18) scan's scope is EVERY definitional field, not just the block the last failure was in.**
+    ἔργον had THREE evaluation-freight failures — "assessed as a whole" (sense-1 elaboration), "moral pattern"
+    (sub-use), and "morally … significant" (the RANGE) — but the audit (both CC and the reviewer) scoped only the
+    `senses_block`, so the range failure shipped and was caught POST-apply on the full-entry proofread. The range is
+    a definitional field: it *defines* the shift between senses. → the freight scan must cover EVERY field that
+    defines (headlines, senses_block, range) before apply, not just the field the previous word's failure lived in —
+    scoping by habit to "where it was last time" is the miss. Stated convention so it doesn't drift: **the range
+    inherits its citations from the senses it summarizes** (the range has never carried per-clause refs), so a range
+    context-pattern is judged against the senses' grounding, NOT failed for being citationless. Sibling of #21 (a
+    gate that reads a length isn't reading the text — here a scan that reads one field isn't auditing the entry).
+    Counter-note (the pass-side, held with force): "characterized or judged" STAYS — κατὰ τὰ ἔργα is a
+    distributional fact of the corpus; scrubbing it would be over-correction into the opposite freight, sanitizing
+    the corpus to protect the lemma. De-freight, don't de-claw. *(audit: G2041 ἔργον — three freight failures, one
+    caught post-apply, 2026-07-08)*

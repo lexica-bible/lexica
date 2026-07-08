@@ -659,6 +659,12 @@ def split_definition(prose):
         out = "\n".join(sections.get(title, [])).strip()
         out = re.sub(r'^-{3,}\s*', '', out)      # drop a leading --- rule
         out = re.sub(r'\s*-{3,}\s*$', '', out)   # drop a trailing --- rule
+        # A `---` rule LINE BETWEEN senses is neither leading nor trailing, so the two edge-strips
+        # above miss it (ἔργον 2026-07-08: the model put `---` between sense 1 and sense 2; the
+        # ὄρος fix `9a1dca9` only covered the leading/title case). Drop any standalone hr line
+        # anywhere in the block, then collapse the blank run the cut leaves behind.
+        out = re.sub(r'(?m)^[ \t]*-{3,}[ \t]*$', '', out)
+        out = re.sub(r'\n{3,}', '\n\n', out)
         return out.strip()
 
     # Some drafts OMIT the "Senses:" header and dive straight into bold-numbered senses (sometimes
