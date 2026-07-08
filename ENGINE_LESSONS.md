@@ -175,6 +175,14 @@ both drifting from the doc.
       construction that LOOKS like a known formula recruits the formula's category, then the rationale is invented
       to fit the mis-filing. → the family gate should treat formula-shaped contexts as a trigger for
       verify-the-verse, not as classification evidence. *(audit: G2094 ἔτος pulls 1–2, 2026-07-08)*
+    - **UPDATE (ἄρχων 2026-07-08): instance (e) — HARMONIZING a verse into its sense's frame.** Rev 1:5
+      ("ruler of the kings of the earth" — human kings) filed under the superhuman-powers sense, and the prose
+      invented the bridge: "places him at the apex of all such powers" — an assertion about dominion over the
+      sense's other members (air/demons/eon powers) that the cited verse does not make. Same signature (invented
+      rationale for an unobserved fact), same direction as (d): context-shape overriding verse content — the
+      sense's frame recruited the verse, then the rationale was written to justify the recruitment. Fork-adjacent
+      (χριστός contested), which is where a harmonizing assertion is most dangerous. *(audit: G758 ἄρχων pull 1,
+      2026-07-08)*
 
 18. **Translation-freight — the FOURTH freight axis** (alongside referent-freight, attribute-freight,
     frame-leak). The English/Latin definitional vocabulary imports its OWN conceptual carving onto the Greek —
@@ -272,6 +280,23 @@ both drifting from the doc.
     re-drawing; the floor's provenance is only as clean as the feed, and feed cleanliness rests on corpus-side
     invariants (here: every dotted number that is a DIFFERENT word must be in the hold-out list). *(audit: G3735 ὄρος
     dotted-lexicon fold gap + fold fix `2ff5f7d`)*
+
+## Added by the ἄρχων session (2026-07-08)
+
+24. **Fabrication rate tracks referent LOADEDNESS.** ἄρχων, 3-for-3: every invented assertion across three pulls
+    sat on a theologically loaded referent — Christ (Rev 1:5 "apex of all such powers") or Molech (Lev 20:2–3
+    "receiving children by fire"; "worshipped with child sacrifice") — while the card's bulk (tribal heads,
+    chariot commanders, councils: ~30 verses) drew invented prose ZERO times in the same pulls. The model has
+    rich extra-corpus tradition about loaded referents and none about chariot officers; where tradition exists,
+    it leaks into definitional prose as confident detail the cited verse doesn't carry. Corroborated by ἔτος
+    (the loaded-free word's fabrications were formula-lookalikes, not tradition-imports — different anchor, same
+    family). → v2: scale verification intensity by referent loadedness — any sense/note prose touching a named
+    deity, Christ, the spirit, or a doctrinally contested figure gets automatic verse-text verification of every
+    descriptive claim BEFORE gate time, not just when an auditor smells it. Sibling of #17 (this is WHERE the
+    family fires most), #13 (fork-adjacency predicts frame-leak; loadedness predicts fabrication), #18 (the
+    tradition arrives dressed as vocabulary there, as fact here). Direct input to the loaded-frame three
+    (ἁμαρτία / ῥῆμα / δύναμις — the audit-hardest words are exactly the highest-loadedness ones). *(audit:
+    G758 ἄρχων cap-out saga, 2026-07-08)*
 
 ## Added by the ἔργον session (2026-07-08)
 

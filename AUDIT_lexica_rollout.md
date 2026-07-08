@@ -1234,6 +1234,56 @@ render defects).
 - **ROSTER:** ἔτος = the **14th ship**. Batch-2: **14 shipped · 2 parked (πολύς, ὀφθαλμός) · 4 to go** (ἄρχων G758,
   ἁμαρτία G266, ῥῆμα G4487, δύναμις G1411).
 
+### G758 ἄρχων — LIVE (2 senses, CAP-OUT + structure-hint draw + 4 ruled prose swaps). Streak 0. The loaded-referent session; structure-hint's SECOND use.
+Shipped hinted draw `c23f2b6e` (human ruler | superhuman-domain ruler — the certified carve), no model call on
+apply, gate 27/27, stamp current; then FOUR JP-ruled `fix_lexica_raw` swaps in B-A-C-D order (Rev 1:5 →
+sense-1 main list title-only; abstract sub-use cut to the tenure trio + 1Ch 2:10 intra-sense dup cleaned;
+"false"→"illicit" worship [the text's category]; **the 1Co seam bullet** — see below); **screenshot-verified**
+(all four swaps rendered, 27/27 badge).
+- **FLOOR:** 3-run count locked {2:3} but sense-2 IDENTITY split (superhuman vs rule-as-tenure) → `--runs 10`:
+  **superhuman distinct 8/10 = required; tenure 1/10 = fold; {2:9, 4:1}** (`agreement_G758_v6_20260708-065145`).
+  ≥6/10 threshold + judge-the-two-jobs-separately + the 3-sense branch pre-registered BEFORE the run (branch
+  didn't fire). Rev 1:5 migration counted: 7 human / 3 superhuman → JP ruled the bar STRICTER (sense-2 filing =
+  fail, ontology fails anywhere).
+- **CAP-OUT (3 pulls, all off-target):** Pull 1 — Rev 1:5 in sense 2 + **"places him at the apex of all such
+  powers"** (verse says kings of the earth; apex-over-the-powers is invented → #17 instance (e), HARMONIZING).
+  Pull 2 — Rev 1:5 clean BUT **"a foreign deity receiving children by fire"** at Lev 20:2–3 (verse: "give his
+  semen to a chief god" — no fire, "children" stretches seed; imported Molech tradition) + tenure trio VANISHED
+  from senses (gate-3 fail) + "mythological" neutrality fail. Pull 3 — prose cleaner but STRUCTURE broke: tenure
+  (1/10) promoted to sense 2, superhuman (8/10) demoted to sub-use, double-shelf fired on 2Sa 23:3 [1,2] =
+  over-split reject per the ὄρος discriminator. **JP RULED: cap-out, NOT content-wall** (certified structure drew
+  clean twice; πολύς/ὀφθαλμός couldn't draw theirs at all) — **trigger tally STAYS 3, no re-arm.**
+- **STRUCTURE-HINT SECOND USE — mechanism validated again, in its lane.** One hinted draw authorized (2 jobs =
+  the certified carve, floor-majority wording, function-language register); **exit condition pre-registered and
+  binding: any fabrication on Christ or Molech → park** (routes to requeue with χριστός). The hinted draw held
+  structure AND fabricated nothing — it kept Lev 20:2–3 OUT of the senses entirely (floor-legal at 5/10) and gave
+  Rev 1:5 quote-only prose. Exit condition not tripped.
+- **APPLY MECHANICS LESSON (logged for the next cap-out):** a hinted draw's fingerprint INCLUDES the hint list —
+  `--from-draw` re-computes the input live, so **the apply must carry the same `--structure-hint` flags
+  byte-identical** or it reads "stale" and refuses (correct refusal, wrong moment; cost one retry). Code-verified:
+  `draw_signature(... hint)` + `args.structure_hint or None` at the cache consult.
+- **THE 1Co 2:6/2:8 SEAM (JP-ruled, the φωνή pattern on a scholarly crux).** The draw split "rulers of this eon"
+  across senses (2:6 superhuman, 2:8 human — the century-old fork, each shelf live). JP ruled: accept-as-drawn +
+  **name the seam ON THE CARD for the reader** (not log-only). Routed as a GLOSS-NOTE bullet, not sense-2 prose —
+  citing 2:8 inside sense 2 would have ADDED it to that sense's citation set (forbidden boundary) and double-
+  shelved it by side effect; gloss-note refs don't join sense lists. Bullet is verse-bounded (both quotes verified
+  against pulled text), asserts only the contest, no winner. Precedent: seam-naming on the card = gloss-note
+  channel.
+- **LOADED-REFERENT PATTERN (3-for-3 → ENGINE_LESSONS #24):** every fabrication this word produced sat on Christ
+  or Molech (apex / fire+children / "child sacrifice" residue in pull 3's gloss note); tribal heads and chariot
+  commanders — the bulk of the card — drew invented prose ZERO times across all pulls. Fabrication rate tracks
+  referent loadedness.
+- **Verified-not-asserted ledger:** Lev 20:2–3 full text (no fire — killed pull 2), 1Co 2:6+2:8 texts (seam
+  drafted against them), provenance-note non-fire CODE-verified (share test: ≥80% OT + ≥4 refs; sense 2 was 2 OT/
+  5 NT — correct non-fire, note flags senses BUILT ON the LXX, not senses containing an LXX curiosity).
+- **Format anomaly ledger:** pull 2 put an editorial parenthetical inside a headline ("(the dominant use across
+  all registers and periods)") — first occurrence, watch item, not a gate.
+- **δύναμις G1411 preview (roster word):** surfaced as an uncited collocation on pull 2 (25v, PMI 5.46) —
+  "rulers and powers" company. Free context for its own session.
+- **Streak 0** (cap-out + hinted draw + post-apply swaps).
+- **ROSTER:** ἄρχων = the **15th ship**. Batch-2: **15 shipped · 2 parked (πολύς, ὀφθαλμός) · 3 to go** — the
+  loaded-frame three: ἁμαρτία G266, ῥῆμα G4487, δύναμις G1411.
+
 ### TRIGGER STATUS (standing — survives session end) — FIRED + RESOLVED 2026-07-07
 Content-wall tally (now **3**): **πολύς = full cap-out (range-completeness)**; **ἅγιον = near-wall (structure,
 cleared attempt 3)**; **ὀφθαλμός = cap-out (structure↔freight oscillation — 3 pulls, never both clean at once)**.

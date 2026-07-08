@@ -244,7 +244,7 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
 5. Log the word in `AUDIT_lexica_rollout.md` (per-word flag rate, any precedent, wall status).
 
 ## BATCH STATE
-- **SHIPPED + LIVE (15; batch-2 locked-20 = 14 shipped · 2 parked · 4 to go):** G1096 γίνομαι (session start, from-draw first exercise) · G80 ἀδελφός
+- **SHIPPED + LIVE (16; batch-2 locked-20 = 15 shipped · 2 parked · 3 to go):** G1096 γίνομαι (session start, from-draw first exercise) · G80 ἀδελφός
   (4 senses) · G2588 καρδία (4 senses, one-draw ship) · G39 ἅγιον (4 senses, near-wall) · G1484
   ἔθνος (2 senses, converged attempt 2; detector's first live fire, Eph 2:11 bridge ruled+logged) ·
   G3173 μέγας (4 senses, one-draw ship; multi-shallow-axis wobble no-holes; 2Ch 17:12 bridge ruled) ·
@@ -277,6 +277,13 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
   FORMULA-LOOKALIKE anchor, logged ENGINE_LESSONS #17 instance (d); NOT a content-wall (structure held, trigger
   tally unchanged); per-row morph verified on the gloss-note parse claim (ετών N.GPN ×2); inline quotes
   spot-verified; tight-agreement predictor dented a 3rd time; streak 0; screenshot-verified).
+  · **G758 ἄρχων** (2 senses [human ruler | superhuman-domain ruler], **CAP-OUT at 3 pulls → JP ruled cap-out
+  NOT content-wall (tally stays 3) → one structure-hint draw [2nd use, validated] shipped clean** + 4 ruled
+  prose swaps incl. the **1Co 2:6/2:8 seam NAMED ON THE CARD** via gloss-note bullet (φωνή-pattern; gloss-note
+  routing avoids the sense-citation boundary); floor {2:9,4:1}, superhuman 8/10 required, tenure 1/10 folds;
+  Rev 1:5 ruled stricter-bar into sense 1; all 3 pulls' fabrications sat on Christ/Molech → **ENGINE_LESSONS
+  #24 loadedness-scaled verification**; #17 instance (e) harmonizing; exit-condition pre-registration honored;
+  streak 0; screenshot-verified).
 - **word_gloss:** G39 "Holy Place" → "holy, set apart" override LIVE (`a06a90b` + `--apply` rebuild
   on PA). Verified: word_gloss row = `holy, set apart|override`; count 17508 stable; `override`
   58→59, `tbesg` 73→72 (only G39 moved). **Library card confirmed rendering "hágion · holy, set apart"**
@@ -305,9 +312,15 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
   bundled disposition INTO regard and the draw DECLINED it (homed disposition under physical instead) — so a
   re-roll may not place disposition where wanted without a sharper hint or the forced verses re-scoped. **Streak
   stays 0.** Full saga + attempt-3 raw + cap-out record: audit doc `### G3788 ὀφθαλμός … #### V6 ATTEMPTS → CAP-OUT`.
-- **REMAINING (4):** ἄρχων G758 · ἁμαρτία G266 · ῥῆμα G4487 · δύναμις G1411.
+- **REMAINING (3) — the loaded-frame three:** ἁμαρτία G266 · ῥῆμα G4487 · δύναμις G1411.
   (Full locked-20 list + selection method in the audit doc's Batch Two section.) **ὄρος + θυγάτηρ + τόπος + ἔργον
-  + ἔτος SHIPPED** — moved to the LIVE list above. **Loaded-frame three (ἁμαρτία / ῥῆμα / δύναμις) are the audit-hardest —
+  + ἔτος + ἄρχων SHIPPED** — moved to the LIVE list above. Their tools: the operationalized freight test, #23
+  full-field scope, and NEW **#24 loadedness-scaled verification** (every descriptive claim on a loaded referent
+  verse-text-verified before gate time — the ἄρχων lesson, born on exactly their word class). δύναμις carries a
+  free preview: uncited "rulers and powers" collocation logged on the ἄρχων card (25v, PMI 5.46).
+- **STRUCTURE-HINT APPLY MECHANICS (2nd use, ἄρχων):** a hinted draw's cache fingerprint INCLUDES the hint list —
+  the `--apply --from-draw` command must repeat the SAME `--structure-hint` flags byte-identical, or the tool
+  reads the draw as "stale" and refuses (a correct refusal; nothing writes). Code-verified, cost one retry. **Loaded-frame three (ἁμαρτία / ῥῆμα / δύναμις) are the audit-hardest —
   the operationalized freight test (evaluation in a definition = fail; as cited context = pass) + #23 full-field
   scope are the tools they'll lean on.**
 - **POST-FINALIZATION REQUEUE LIST (JP-ruled, new standing queue):** words to rebuild after the engine is
@@ -365,6 +378,11 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
    λατρεύω uncited across 32 θεός verses, PMI 5.31.)
 
 ## RETRO LIST (decide with full-batch evidence, not per-word)
+- **Style ticket — single-sense multi-construction organizing paragraph (JP-ruled 2026-07-08, N=1 ἔτος):** ἔτος's
+  "It appears in four recurring constructions…" paragraph between headline and bullets. Not a defect, not a gate;
+  ἔτος stands as shipped. Collect instances through batch-2 close (ἄρχων / δύναμις candidates if they fold hard):
+  does the draw produce the paragraph unprompted? Consistent → V7 codifies it as the house shape for
+  one-sense-many-facets cards; sporadic → V7 forces it one way. JP decides at V7 with instances in hand.
 - **MISSED-collocation sweep (NEW, S3 — cheap, do at batch close):** re-run one `--dry-run` per shipped word
   and read its `⚠ collocation MISSED` warnings; ὀφθαλμός proved a 0-fed high-PMI collocation can hide a whole
   unfed job (disposition region) that a stable floor never saw. Confirm none of the 10 shipped cards has the
