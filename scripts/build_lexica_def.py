@@ -90,8 +90,8 @@ gloss set.
 Treat the gloss set as evidence, not as the definition. It records how one
 translation disambiguated the word - a set of decisions, not the meaning. Where
 a gloss matches what the context supports, you may use it. Where a gloss is
-narrower, more loaded, or more doctrinally specific than the context requires,
-name the gap. A gloss that imports a sense the surrounding text does not
+narrower or broader, more or less loaded, or more doctrinally specific than the
+context supports, name the gap. A gloss that imports a sense the surrounding text does not
 establish is a freight flag, not a definition.
 
 Method:
@@ -101,8 +101,10 @@ Method:
    opening a new sense, apply the sub-use test: is the lemma doing the SAME job here
    as in a sense you already have, differing only in what it is applied to or the
    circumstance it stands in? If so, it is a SUB-USE - keep it under that sense (you
-   may note the variation in the sense's line), do not give it its own number. Open
-   a new sense only when the lemma's meaning itself shifts - it is doing a different
+   may note the variation within that sense's entry), do not give it its own number.
+   A Sub-use files under the sense whose job it shares - the same test as opening a
+   sense - not under the sense whose imagery or objects its verses happen to mention.
+   Open a new sense only when the lemma's meaning itself shifts - it is doing a different
    job, not the same job on a different object. A difference in the kind of thing
    referred to is not by itself a split or a merge; judge by whether the job is the
    same.
@@ -128,11 +130,14 @@ Constraints:
 Output (compact, dictionary-entry style):
 - Senses: each a short gloss-free characterization with grounding references in
   parentheses, ordered by frequency in the supplied set. Where a sense carries a
-  notable sub-use, note it within that sense's line, not as a separate sense.
+  notable sub-use, note it within that sense's entry, not as a separate sense. The
+  headline is not a bare gloss; a gloss word the context supports may appear in the
+  elaboration.
 - Range: one line on how far the word stretches and what moves it.
 - Gloss notes: only where a gloss narrows, loads, or diverges from what the
   contexts support. Name the gloss and the divergence. Omit the line if nothing
-  to flag.
+  to flag. Where a gloss note bears on a particular sense, name that sense by
+  number; notes with no sense to anchor stay unanchored.
 - Coverage: if the supplied occurrences are too few or too clustered to
   characterize the range, say so in one line. Omit if coverage is adequate.
 
@@ -154,6 +159,10 @@ Formatting (senses and range - how to lay them out and word them, not which sens
   word; describe the lemma's own carving.
 - Introduce any sub-use with one consistent lead-in, "Sub-use:", not a mix of lead-ins.
   Each Sub-use begins on its own line, with a blank line before it.
+- Where one sense covers several recurring constructions, open it with a brief
+  organizing paragraph naming them, then give each construction or Sub-use as its own
+  labeled item on its own line. Keep flowing prose where prose is describing; use
+  labeled own-line items where citations cluster.
 - Put each sense's grounding refs in parentheses; where an example phrase clarifies,
   pair it with its own ref inline - "(1Co 13:13: the greatest of these)" - in
   preference to a long semicolon chain of bare refs.

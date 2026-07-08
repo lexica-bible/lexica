@@ -118,15 +118,18 @@ LABELS = {"G5590": "psyche", "G1344": "dikaioo", "G5484": "charis",
           "G166": "aionios", "G4561": "sarx", "G1577": "ekklesia"}
 
 # ── PROMPTS the reviewer can run. "live" = whatever build_lexica_def currently ships (the frozen
-# engine). "v6" = a SELF-CONTAINED frozen copy of that engine prompt, carried here so the reviewer
+# engine). "v7" = a SELF-CONTAINED frozen copy of that engine prompt, carried here so the reviewer
 # survives the throwaway trial_lexica_prompt.py being deleted, and so every saved run records the
 # exact prompt bytes it drew under. It MUST stay byte-identical to B.VERSE_PROMPT (the reviewer
 # measures the LIVE engine); _check_prompt_sync asserts that. v3 was promoted into build_lexica_def
 # 2026-06-25; V4 (2026-07-07) added the Formatting block (no-slash headlines etc.); V5 (2026-07-07)
 # added the term-of-art line; V6 (2026-07-07) added the translation-freight line (the 4th freight
-# axis, ENGINE_LESSONS #18) + the Sub-use whitespace line. All bumps STYLE/FRAMING-ONLY, nothing
-# structural. ─────────────────────────────────────────────────────────────────────────────────────
-V6_PROMPT = """\
+# axis, ENGINE_LESSONS #18) + the Sub-use whitespace line. V7 (2026-07-08, the window walk): line→
+# entry, two-directional gloss flag, headline scope marker, Sub-use placement rule (files by JOB —
+# the ὀφθαλμός wall; two-way placement watch pre-registered), house-shape organizing paragraph,
+# gloss-note sense anchors (permissive — no forced anchor). All bumps STYLE/FRAMING-ONLY except the
+# placement rule, which steers sub-use filing (control fire = ὀφθαλμός at requeue). ────────────────
+V7_PROMPT = """\
 You define a biblical lemma from its own attested use. You are given:
 - the lemma (Strong's number, original-language form, transliteration)
 - the translation gloss set: the English words a translation used to render
@@ -141,8 +144,8 @@ gloss set.
 Treat the gloss set as evidence, not as the definition. It records how one
 translation disambiguated the word - a set of decisions, not the meaning. Where
 a gloss matches what the context supports, you may use it. Where a gloss is
-narrower, more loaded, or more doctrinally specific than the context requires,
-name the gap. A gloss that imports a sense the surrounding text does not
+narrower or broader, more or less loaded, or more doctrinally specific than the
+context supports, name the gap. A gloss that imports a sense the surrounding text does not
 establish is a freight flag, not a definition.
 
 Method:
@@ -152,8 +155,10 @@ Method:
    opening a new sense, apply the sub-use test: is the lemma doing the SAME job here
    as in a sense you already have, differing only in what it is applied to or the
    circumstance it stands in? If so, it is a SUB-USE - keep it under that sense (you
-   may note the variation in the sense's line), do not give it its own number. Open
-   a new sense only when the lemma's meaning itself shifts - it is doing a different
+   may note the variation within that sense's entry), do not give it its own number.
+   A Sub-use files under the sense whose job it shares - the same test as opening a
+   sense - not under the sense whose imagery or objects its verses happen to mention.
+   Open a new sense only when the lemma's meaning itself shifts - it is doing a different
    job, not the same job on a different object. A difference in the kind of thing
    referred to is not by itself a split or a merge; judge by whether the job is the
    same.
@@ -179,11 +184,14 @@ Constraints:
 Output (compact, dictionary-entry style):
 - Senses: each a short gloss-free characterization with grounding references in
   parentheses, ordered by frequency in the supplied set. Where a sense carries a
-  notable sub-use, note it within that sense's line, not as a separate sense.
+  notable sub-use, note it within that sense's entry, not as a separate sense. The
+  headline is not a bare gloss; a gloss word the context supports may appear in the
+  elaboration.
 - Range: one line on how far the word stretches and what moves it.
 - Gloss notes: only where a gloss narrows, loads, or diverges from what the
   contexts support. Name the gloss and the divergence. Omit the line if nothing
-  to flag.
+  to flag. Where a gloss note bears on a particular sense, name that sense by
+  number; notes with no sense to anchor stay unanchored.
 - Coverage: if the supplied occurrences are too few or too clustered to
   characterize the range, say so in one line. Omit if coverage is adequate.
 
@@ -205,6 +213,10 @@ Formatting (senses and range - how to lay them out and word them, not which sens
   word; describe the lemma's own carving.
 - Introduce any sub-use with one consistent lead-in, "Sub-use:", not a mix of lead-ins.
   Each Sub-use begins on its own line, with a blank line before it.
+- Where one sense covers several recurring constructions, open it with a brief
+  organizing paragraph naming them, then give each construction or Sub-use as its own
+  labeled item on its own line. Keep flowing prose where prose is describing; use
+  labeled own-line items where citations cluster.
 - Put each sense's grounding refs in parentheses; where an example phrase clarifies,
   pair it with its own ref inline - "(1Co 13:13: the greatest of these)" - in
   preference to a long semicolon chain of bare refs.
@@ -214,7 +226,7 @@ Formatting (senses and range - how to lay them out and word them, not which sens
 No preamble, no restating the lemma, no closing summary.
 """
 
-PROMPTS = {"live": B.VERSE_PROMPT, "v6": V6_PROMPT}
+PROMPTS = {"live": B.VERSE_PROMPT, "v7": V7_PROMPT}
 
 
 def _check_prompt_sync():
@@ -222,8 +234,8 @@ def _check_prompt_sync():
     matters now: the reviewer must draw under the SAME prompt build_lexica_def ships, or it isn't
     measuring the live engine. (The old check compared v3 to the throwaway trial rig; v3 was promoted
     2026-06-25 and V4/V5 are live style bumps, so that comparison is retired.)"""
-    if V6_PROMPT.strip() != B.VERSE_PROMPT.strip():
-        print("WARNING: V6_PROMPT here has DRIFTED from build_lexica_def.VERSE_PROMPT — they must be "
+    if V7_PROMPT.strip() != B.VERSE_PROMPT.strip():
+        print("WARNING: V7_PROMPT here has DRIFTED from build_lexica_def.VERSE_PROMPT — they must be "
               "byte-identical so the reviewer measures the live engine. Re-sync before trusting a run.",
               file=sys.stderr)
 
@@ -544,8 +556,8 @@ def main():
     ap = argparse.ArgumentParser(description="Agreement reviewer for the Lexica dictionary engine.")
     ap.add_argument("--db", default=os.path.expanduser("~/bible-db/bible.db"))
     ap.add_argument("--word", help="one G-number, e.g. G5590 (default: the six pilot words)")
-    ap.add_argument("--prompt", choices=list(PROMPTS), default="v6",
-                    help="which engine to review: v6 (frozen copy, default) or live (build's VERSE_PROMPT)")
+    ap.add_argument("--prompt", choices=list(PROMPTS), default="v7",
+                    help="which engine to review: v7 (frozen copy, default) or live (build's VERSE_PROMPT)")
     ap.add_argument("--runs", type=int, default=10, help="draws per word (10 reproduces the canary)")
     ap.add_argument("--budget", type=int, default=B.BUDGET)
     ap.add_argument("--save-dir", default="~/bible-db", help="where the per-run JSON/txt land")
