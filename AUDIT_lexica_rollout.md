@@ -1060,6 +1060,53 @@ exactly (STABLE at 2, unanimous {2:3}).
   tightly at the reviewer's stable 2, one redraw to land the shape. Contrast πολύς/καρδία (multi-shallow-axis
   → wobble). The refined hypothesis holds; θυγάτηρ/ὕδωρ/ὄρος remain the pending tight-agreement test.
 
+### G2364 θυγάτηρ — LIVE (5 senses, attempt 2). Multi-shallow-axis; tight prediction falsified again; the argued-shelving ship.
+Shipped the attempt-2 draw (key `dda605a1`), no model call on apply, gate 32/32, stamp current, 5 senses,
+**screenshot-verified end-to-end** (both scroll passes clean; gloss_notes both bullets render full — the
+full-print gate fix `be027c1` earned its keep on its first live word). 5 senses = **draw-8's exact carving**
+(offspring / vocative / collective / covenant-membership / towns), within the floor's {2:2,3:4,4:3,5:1}.
+- **FLOOR: multi-shallow-axis, `--runs 10` mandatory.** Count 2–5 (mean 3.3). ONE stable-distinct core
+  (offspring, 10/10). Everything else folds/unfolds: vocative 5/10 (coin-flip → granularity), city-personification
+  6/10 (slim majority-distinct), covenant-membership 2/10 (folds into collective), daughter-towns always cited but
+  own-sense ~5/10, figurative idiom (Ecc/Pro/1Sa) DROPPED ENTIRELY in 2 draws. **Tight prediction FALSIFIED,
+  usage-dimensionality rule re-confirmed** (concrete referent, multi-facet usage — same as καρδία). Feed clean
+  (562 = daughter 304 + daughters 257 + towns 1; no contamination).
+- **ATTEMPT 1 REJECTED — three grounds.** (1) gate-3 completeness: figurative facet SILENTLY DROPPED (Ecc
+  12:4 / Pro 30:15 / 1Sa 1:16 all absent) — the draw-2/8 failure mode. (2) mis-carving (ὀφθαλμός-shaped):
+  "daughter of Zion" buried as a sub-use of "offspring of a biological FATHER" (wrong parent) while covenant-
+  membership (2/10) got promoted to its own sense — backwards from the floor's ordering; Joh 12:15 / Luk 23:28
+  double-listed across two sub-uses. (3) step-1.5 paternal narrowing (below).
+- **STEP 1.5 CAUGHT A DEFINITIONAL NARROWING (not a hidden job).** μήτηρ MISSED (18v, 0 fed) = the maternal-
+  naming genealogical formula (confirmed on PA: 1Ki 15:2 "his mother was Maachah daughter of Abishalom"). It did
+  not hide a sense; it NARROWED the shipped one — attempt-1's sense-1 headline read "in relation to her biological
+  or legal FATHER" because every fed genealogical verse is paternal. An accuracy defect (father-only "daughter"),
+  same shape as ὀφθαλμός's "moral" freight. → redraw bar #3: parent-neutral headline. **Second unprompted step-1.5
+  catch in two words** (ὄρος homograph, θυγάτηρ narrowing) — the law is compounding.
+- **ATTEMPT 2 PASSED (no force — narrowing was draw-luck).** Fresh draw: sense 1 = "biological or ADOPTIVE
+  filial relation" (parent-neutral, +adoptive rearing Act 7:21/Heb 11:24); city-personification its own sense 3;
+  figurative visible via Ecc 12:4 sub-use; no double-listing; gloss_notes complete. All four gates + the 3 added
+  bars clear. Father-narrowing confirmed STOCHASTIC not sample-driven — force budget untouched (1Ki 15:2 reserved,
+  never needed; JP's no-force-on-attempt-2 call paid off with the signal).
+- **ARGUED SHELVING (ruled 2026-07-07, δίδωμι precedent) — converts the figurative co-member drops from silent
+  to ruled.** Facet ships visible via Ecc 12:4 "daughters of song." Two co-members out of the senses, ruled
+  acceptable (uncited, uncontested): **Pro 30:15** "the leech's daughters" — fed + cited 8/10 in the floor yet
+  dropped in BOTH card draws, so a re-roll to fetch it is a coin-flip, not worth the last cap slot; **1Sa 1:16**
+  "daughter of Belial" — renders on the card via gloss_notes only. **Register/coverage:** sense 3's personification
+  is register-neutral; the daughter-of-Babylon judgment-oracle register (Psa 137:8; Isa 47:1; Zec 2:7) is real, OT,
+  and UNFED in the 40 but covered by the shipped construction. Drop **RULED, not silent.**
+- **μήτηρ warning still prints on the apply log** — expected (nothing forced; it keys off the fed sample); threat
+  neutralized by bar 3. NOT waved through (flagged so a future reader doesn't misread a live warning on a shipped card).
+- **DANGLING-FLAG DEFECT — GRADUATED to systematic (armed watch fired).** Dangling "Dan" (from "daughters of
+  Dan," the tribe, 2Ch 2:14) = the SECOND dangling flag on a roster word (after ὀφθαλμός's "Gal") AND reproduced
+  across both θυγάτηρ draws → SYSTEMATIC, not draw-luck. Diagnosis: the ref-extractor reads tribe/place tokens that
+  match book abbreviations ("Dan" the tribe ≠ book Daniel) as dangling book refs. Card text is correct; the FLAG is
+  the false positive. → TODO ticket: detector needs a tribe/place-vs-book disambiguation pass (post-rollout).
+  Retires ὀφθαλμός's "summary-side extraction" hypothesis for the rider.
+- **Streak 0** (attempt-2 ship, by definition not attempt-1-clean).
+- **ROSTER (corrected):** θυγάτηρ = locked-20 #19, the **11th ship**. Batch-2: **11 shipped · 2 parked (πολύς,
+  ὀφθαλμός) · 7 to go** (ἔτος, ἄρχων, ἔργον, ἁμαρτία, ῥῆμα, δύναμις, τόπος). (JP's in-session "10/20, 8 to go" was
+  off by one — the roster docs still listed the already-shipped ὄρος under REMAINING.)
+
 ### TRIGGER STATUS (standing — survives session end) — FIRED + RESOLVED 2026-07-07
 Content-wall tally (now **3**): **πολύς = full cap-out (range-completeness)**; **ἅγιον = near-wall (structure,
 cleared attempt 3)**; **ὀφθαλμός = cap-out (structure↔freight oscillation — 3 pulls, never both clean at once)**.

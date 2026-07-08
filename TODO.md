@@ -350,6 +350,12 @@ REST of the dotted-Strong's question, none of it gating the rollout:
   post-rollout. code: scripts/backup_db.py
 - **Invariant #8 (carry-forward):** add a `journal_mode=delete` assertion to `cert_invariants.py`
   (7/7 → 8/8) so a WAL flip is caught by the suite, not just the session tripwire. code: scripts/cert_invariants.py
+- **Dangling-book-ref detector — tribe/place-vs-book disambiguation (GRADUATED to defect 2026-07-07, θυγάτηρ).**
+  The draw's "dangling book ref" flag false-fires on tribe/place tokens that match a book abbreviation: "daughters
+  of **Dan**" (the tribe, 2Ch 2:14) reads as book Daniel. SECOND occurrence (after ὀφθαλμός's "Gal") AND reproduced
+  across both θυγάτηρ draws → systematic, not draw-luck. The card text is correct; the FLAG is the false positive.
+  Fix: the detector needs a tribe/place-name exclusion (or require the token to be followed by a ch:vs before
+  flagging). Retires the earlier "summary-side extraction" hypothesis. Post-rollout. code: scripts/build_lexica_def.py
 Merges with the parked ὀρ-collision retro sweep (step-0 mostly absorbed it). δίδωμι G1325 SHIPPED carries
 a 1-row leak (1325.1 "mortgaged", Neh 5:3) — verified NOT cited in the live card, stands with a provenance
 note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted_lexicon.py, audit_dotted_lemmas.py
