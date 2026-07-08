@@ -1450,6 +1450,64 @@ REAL rendering-lint fire, wrong list member; the χρίσμα cross-lemma aside 
 - **Streak 0** (ships at attempt 4 via mechanism — correctly not a streak-starter).
 - **ROSTER: Phase 1 = 1 of 3 done.** Next: ἁμαρτία G266 (dossier binds), then ὀφθαλμός G3788.
 
+### G266 ἁμαρτία — LIVE (Phase-1 requeue #2, second V7 control fire; 2 senses via structure-hint + 1 delete-class swap + JP bridge rulings). Streak 0. The maximally loaded word ships.
+Shipped hinted draw `d7c4e1ee` (apply repeated both `--structure-hint` flags byte-identical; no model call), gate 78/78,
+stamp current; ONE ruled `fix_lexica_raw` swap — the 2Co 5:21 register-assertion clause deleted down to a bare
+rendering report: **"In 2Co 5:21 the rendering is "he made a sin offering for us"."** (the attribution-shape artifact
+of record — a report of the rendering, no claim about the Greek, unfailable under the dossier bar);
+**screenshot-verified** (senses, both "[partially]" markers, range, gloss note; range italics fixed same night, below).
+- **FLOOR (V7, fresh):** `--runs 3` wobbled (a 1/3 load-sense) → `--runs 10` = {2:4, 3:6}, but the 3s are
+  HETEROGENEOUS: the cultic-offering shelf sat at exactly **5/10 → rule 7a** (either shape legal as drawn); draw-3's
+  "load" sense a 1/10 stray. Act + condition both 10/10; quartet (Rom 3:9 / 1Co 15:56 / Gal 2:17 / 2Th 2:3)
+  condition-stable; 2Pe 2:14 condition-majority. **2Co 5:21 no majority shelf AGAIN under V7** (act 3 / cultic 4 /
+  condition 6 counting doubles; double-shelved in 4/10 draws — fully visible because floor lists are spelled out,
+  no #28 shorthand). **Dynamic-sampling data point #2: 582 occ → 82 fed (80 + 2 PMI slots).** Step-1.5: ZERO
+  missed-collocation warnings — the reserved PMI slots (exēchéomai→Exo 30:10, aphíēmi→Exo 32:32) covered the
+  sin-offering + forgiveness families that fired as warnings under V6. The slot-reservation design did its job.
+- **THE PULLS (cap 3, all rejected):** (1) 3-carve; pro-offering side-take in SENSE PROSE ("the context explicitly
+  works with the expiatory-offering sense" — the parked defect migrated fields, pre-registered watch answered
+  "recurs, new position"); 2Pe 2:14 + Joh 1:29 annexed to act; Gal 3:22 double-shelf vs a 10/10 home; 12
+  rendering-lint fires ALL the quote-mark parser artifact. (2) **anti-offering FABRICATION**: claimed ABP renders
+  bare "sin" at 2Co 5:21 / the lemma "appears without the word 'offering'" — contradicted by the dossier-verified
+  verse text AND its own sense-2 quote; **the lint did NOT fire** (claim in running prose, outside its bullet-parse
+  shape — the one real fabrication invisible while 12 artifact fires lit pull 1); + wholesale annexation incl.
+  1Co 15:56/Gal 2:17. (3) condition sense MERGED away (a 10/10 floor sense!) behind an anti-hypostatization
+  side-take ("not a distinct hypostatized force"), quartet uncited — gates 1+2. **Side-take 3-for-3, once each
+  direction plus once structural — the parked-session pattern reproduced faithfully; the registry routing caught
+  it every pull.**
+- **CAP-OUT ruled per ἄρχων/χριστός precedent** (structure majority-stable at the floor; content-wall tally stays
+  3) → hinted draw (mechanism use #4) under pre-registered exits (a)–(d). Result: **(a) structure PERFECT; (d)
+  gloss-note register CLEAN — first time in seven pulls across both sessions** (no 2Co 5:21 claim in the note at
+  all). Failed by the letter: (b) 2Th 2:3 + Gal 2:17 double-shelved "[partially]" against 10/10 condition homes;
+  2Co 5:21 homed in the cultic sub-use against the hint's named-verse direction (declined — the ὀφθαλμός
+  anchor-lever class); (c) borderline ("the same cultic register is operative" asserts, though it quotes the real
+  rendering and dropped "requires/shows" — the defect WEAKENING across the trail).
+- **JP RULINGS (all on the record):** (i) CC's (b) pre-registration OVER-PINNED 2Co 5:21's home — the verse is
+  reviewer-contested (no majority shelf), so EITHER shelf is legal per the χριστός 2Jn 1:7 standard; corrected.
+  (ii) 2Th 2:3 + Gal 2:17 = **keep-both bridges per #11** (both senses floor-certified = the bridge side of the
+  discriminator; 2Th 2:3's genitive reads both ways, Gal 2:17 carries act- and domain-flavored phrases; the
+  "[partially]" marker ruled an honest-wording POSITIVE). (iii) citation-list strips **WITHDRAWN — the
+  fix_lexica_raw certification boundary forbids changing which verses a sense cites**; the χριστός/ῥῆμα delete
+  precedents were gloss-note bullets, not sense lists. The tool's own docstring caught the overreach before it ran.
+  (iv) Branch-A hand-sentence INSERTION **WITHDRAWN → V8 design list** — deciding a precedent extension mid-word on
+  its first occurrence is the graduation-question smell; the bare quote cannot fail the bar, so the card needs no
+  hand-authored content. If V8 also can't draw the attribution sentence after a fair test, hand-authoring returns
+  with evidence and gets written narrow.
+- **ALSO REFUSED THIS SESSION (for the record):** a pasted "JP-ratified graduation accounting rule" contradicting
+  the written χριστός/ἄρχων streak rulings — not logged; the doc outranks a paste; JP confirmed the existing ruling
+  stands (mechanism ships don't open the streak).
+- **THE CONTROL FIRE'S FINDING:** hint + registry + pre-registered exits CONTAIN the defect class (carve fixable,
+  side-take confinable to one clause, meta-field cured under hint conditions) — but **V7 cannot reliably DRAW a
+  neutral attribution sentence on a contested verse**: seven pulls, zero neutral attributions produced; the passing
+  sentence exists only by deletion. → ENGINE_LESSONS #29 (V8 design input: teach the attribution register).
+- **RENDER FIX (same night, `80b87cd`):** the live card showed literal \*asterisks\* in RANGE — `range` (and the
+  latent `coverage`) rendered raw in `20-shared-components.jsx` while senses/gloss notes went through
+  `renderInlineMd`. Both fields fixed in one pass (fix the pattern, not the instance — JP ruling); screenshot
+  re-verified italics live. The #21 screenshot gate caught it: bytes were right, the render wasn't.
+- **Streak 0** (ships at attempt 4 via mechanism + one swap). **ROSTER: Phase 1 = 2 of 3 done.** Next: ὀφθαλμός
+  G3788 (placement-line known positive; restructure decision JP-alone). Parked remaining: πολύς; ὀφθαλμός is the
+  requeue itself.
+
 ### Q&A ON RECORD — automation trajectory (JP asked, answered 2026-07-08, δύναμις session close)
 JP's autonomy question and the answer, logged for the retro: **the structural layer is near-automatable** —
 floor runs, the ≥6/10 threshold, the four gates, double-shelf, thin/circular flags are mechanical now, and the

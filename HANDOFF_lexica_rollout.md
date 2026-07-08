@@ -209,6 +209,29 @@ Full per-word record: audit doc `### G5547 χριστός`. The standing facts a
   every gloss with every ref in a bullet. Fix = strip quote chars + keep pairing caveat documented;
   flag-layer only, legal any time, must keep tests/test_lexica_detectors.py control fires green. TODO.md.
 
+## PHASE-1 SESSION LOG — ἁμαρτία G266 SHIPPED + LIVE (2026-07-08, second V7 control fire)
+Full per-word record: audit doc `### G266 ἁμαρτία — LIVE` (the requeue entry; the PARKED dossier above it stays
+as history). Standing facts for the next session:
+- **Ship path:** V7 floor `--runs 3`→10 ({2:4,3:6}, cultic shelf exactly 5/10 → rule 7a; act+condition 10/10;
+  2Co 5:21 contested again, no majority shelf) → 3 plain pulls all rejected (side-take on 2Co 5:21 in all three,
+  once each direction + once structural; pull 2's anti-offering rendering FABRICATION was invisible to the
+  rendering lint — prose-form claim, #24 update) → cap-out per precedent → hinted draw (mechanism 4th use):
+  structure + gloss-note register clean FIRST TIME in 7 pulls → JP rulings: 2Co 5:21 either-shelf-legal
+  (CC's condition pin was an over-pin; contested-verse standard), 2Th 2:3 + Gal 2:17 keep-both bridges per #11
+  ("[partially]" = honest wording), citation-list strips withdrawn (fix_lexica_raw boundary forbids), Branch-A
+  insertion withdrawn → **V8 design list** → ONE delete-class swap (register clause → bare rendering quote) →
+  gate 78/78 → screenshot-verified.
+- **V7 control-fire results:** registry routing caught the side-take every pull (its designed job); dynamic
+  sampling data point #2 (582→82 = 80 + 2 PMI slots; step-1.5 ZERO missed warnings — slot reservation covered
+  the V6 warning families); rendering lint: 12 artifact fires (quote-mark bug) + 1 real fabrication MISSED
+  (prose-form blind spot → detector ticket scope grows); no comma-shorthand tails in any of the 4 draws
+  (χριστός contrast — watch continues); "[partially]" list markers = new draw style, ruled positive.
+- **ENGINE_LESSONS #29** (V8 input: teach the attribution register — V7 contains but cannot draw it) + #21/#24
+  updates. **Render fix shipped `80b87cd`:** range + coverage now through renderInlineMd (live card showed raw
+  asterisks in RANGE; latent coverage copy closed same pass; legal mid-batch per rule #7).
+- **Streak 0. Phase 1 = 2 of 3.** Next: ὀφθαλμός G3788 — placement-line known positive, restructure decision
+  JP-alone, fresh session recommended.
+
 ## SESSION-3 CLOSE STATE (2026-07-07) — read this to resume
 **SESSION-4 FIRST ACT: the ὀφθαλμός morning fork** (re-roll vs. argued-shelving on cached draw `0abd875d`) —
 see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired + resolved the first escalation
@@ -380,7 +403,8 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
 5. Log the word in `AUDIT_lexica_rollout.md` (per-word flag rate, any precedent, wall status).
 
 ## BATCH STATE
-- **BATCH-2 ACTIVE WORK CLOSED 2026-07-08 — 17 shipped · 3 parked (πολύς, ὀφθαλμός, ἁμαρτία) · 0 unstarted.
+- **BATCH-2 ACTIVE WORK CLOSED 2026-07-08 — 17 shipped · 3 parked (πολύς, ὀφθαλμός, ἁμαρτία — ἁμαρτία since
+  SHIPPED at the Phase-1 requeue, see its session log block) · 0 unstarted.
   The V7 WINDOW IS OPEN** (V7 pile + requeue decisions [χριστός #1, ἁμαρτία #2, ὀφθαλμός restructure] + batch
   retro list + display-layer window question — all JP-sequenced from here).
 - **SHIPPED + LIVE (18; batch-2 locked-20 = 17 shipped · 3 parked · 0 to go):** G1096 γίνομαι (session start, from-draw first exercise) · G80 ἀδελφός
@@ -511,10 +535,10 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
    ruled HOLD for the three-zone redesign — with anchors codified in V7, a pure rendering job.
 3. **Requeue rebuilds = Phase 1, the V7 control fires** — IN PROGRESS. **χριστός G5547 SHIPPED + LIVE
    2026-07-08** (fork + register landed together; record: the PHASE-1 SESSION LOG block below + the audit
-   doc's G5547 entry). Remaining order: ἁμαρτία (registry + rendering lint on its exact parking defect;
-   its dossier bar binds) → ὀφθαλμός (placement-line known positive; restructure decision JP-alone).
-   Single runs, full audit; these three ARE the V7 validation. Detail: park dossiers + the Phase-1 terms
-   in the V7 block.
+   doc's G5547 entry). **ἁμαρτία G266 SHIPPED + LIVE 2026-07-08** (second control fire; hinted draw + one
+   delete-class swap; ENGINE_LESSONS #29 = the V8 attribution-register input; record: its PHASE-1 SESSION LOG
+   block + the audit doc's requeue entry). Remaining: ὀφθαλμός (placement-line known positive; restructure
+   decision JP-alone; fresh session recommended). Single runs, full audit; these three ARE the V7 validation.
 4. **Batch-3 = Phase 2 shadow calibration** — BLOCKED ON: Phase 1. ~20 words, majority GREEN-candidates +
    seeded RED so all routing exercises; JP audits everything; escapes are the measure; **CC proposes the
    calibration N BEFORE the batch opens** (pre-registered, never adjudicated after). Detail: tiering law +

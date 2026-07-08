@@ -268,6 +268,13 @@ both drifting from the doc.
       Closed for gloss_notes too (`be027c1`, full print + its own proofread label). → the lesson sharpens: audit
       EVERY verbatim / reader-facing field for the length-preview gap; a fix on one field is not the class closed.
       *(audit: G2364 θυγάτηρ gloss_notes gate fix be027c1)*
+    - **UPDATE (ἁμαρτία 2026-07-08): the class extends to the RENDER layer.** The live G266 card showed literal
+      \*asterisks\* in RANGE — `range` (and the latent, always-empty `coverage`) bypassed `renderInlineMd` while
+      senses/gloss notes went through it. The bytes were right; the render wasn't — the SCREENSHOT half of this
+      lesson caught it, the terminal proofread could not. Both fields fixed in one pass (`80b87cd`; fix the
+      pattern, not the instance — the empty coverage field was a latent copy that the first non-empty card would
+      have surfaced silently). → per-field audits must cover every layer a field passes through: stored bytes,
+      assembled prose, AND rendered output. *(audit: G266 ἁμαρτία render fix, 2026-07-08)*
 
 22. **A spurious sense can be a FEED defect, not a DRAW defect — and the poison can enter UPSTREAM of the sampler,
     from a corpus side-table the engine doesn't own.** ὄρος grew a "boundary" sense not because the prompt or draw
@@ -310,6 +317,14 @@ both drifting from the doc.
       up; twin: οὐρανός capitalization). → v2: lint gloss-note rendering-claims against the card's own quoted
       verse text — no external lookup needed, two corpus instances. *(audit: G266 ἁμαρτία PARKED dossier,
       2026-07-08)*
+      - **UPDATE (ἁμαρτία requeue SHIP, 2026-07-08): the machine-check candidate has a demonstrated parse-shape
+        blind spot — rendering-claims in RUNNING PROSE.** Requeue pull 2 fabricated the exact claim this check
+        exists for (ABP renders bare "sin" at 2Co 5:21 — corpus prints "sin offering") and the lint did NOT fire:
+        the claim lived in flowing sense-prose, outside the quoted-gloss-plus-ref bullet shape the lint parses —
+        while 12 artifact fires (the known quote-mark bug) lit up pull 1's true statements. The one real
+        fabrication was machine-invisible; the noise was machine-loud. → the lint needs a prose-form claim parser,
+        not just the bullet parser; sibling of #28 (a detector that can't read the claim's format isn't checking
+        it). *(audit: G266 requeue entry, pulls 1–2, 2026-07-08)*
     - **REFINEMENT (ῥῆμα 2026-07-08, the controlled comparison): fabrication tracks CONTESTED referents, not
       loaded ones.** ῥῆμα's divine-word cluster (Mat 4:4, Eph 6:17, Heb 1:3, 1Pe 1:25) drew quote-only prose
       at pull 1 and the λόγος-distinction trap went untaken — same engine, same session, same loadedness class
@@ -367,6 +382,26 @@ both drifting from the doc.
     artifact isn't checking it) and of the θυγάτηρ Dan-flag class (the same scanner's false-POSITIVE side:
     prose mentions "Gospel/Acts", "in Leviticus" fire as dangling). *(audit: G5547 χριστός — shorthand blind
     spot + 24-tail hand-verification, 2026-07-08)*
+
+## Added by the ἁμαρτία requeue session (2026-07-08, Phase-1 requeue #2)
+
+29. **V7 cannot reliably DRAW a neutral attribution sentence on a contested verse — the register can be
+    contained, not yet generated.** Seven pulls on ἁμαρτία across two sessions (4 parked-session incl. one
+    hinted, 3 requeue + one hinted): every 2Co 5:21 treatment either asserted the meaning (pro-offering:
+    "explicitly works with / requires / shows / is operative"; anti-offering: "simply sin" + a fabricated
+    bare-"sin" rendering claim) or, at best, weakened the assertion — zero produced the dossier's pass-shape
+    ("ABP renders with the sacrificial sense, following the LXX חַטָּאת use"). The shipped card's passing
+    sentence exists only by DELETION (a ruled swap down to the bare quote, which cannot fail the bar). The
+    structure-hint's #20 ceiling confirmed in a second field: it fixed the carve on the first hinted draw both
+    times, and governed the register neither time (parked session: side-take in the gloss note; requeue: in
+    the sense prose, weakened). Defect-migration trail worth keeping: gloss note → sense prose → weakened →
+    deleted — containment (registry routing + pre-registered exits + the deletion remedy) works; only the
+    prompt can eliminate. → V8: teach the ATTRIBUTION REGISTER at the prompt layer, with the dossier
+    pass-shape as a worked example. Hand-authoring the sentence was proposed and WITHDRAWN (JP): a precedent
+    extension decided mid-word on first occurrence is the wrong way in — if V8 fails a fair test, hand-authoring
+    returns with evidence and gets written narrow. Sibling of #24 (contested verses are where this fires),
+    #20 (the hint's ceiling), #17 (both directions were confident fabrications of the same fact). *(audit:
+    G266 ἁμαρτία requeue entry, 2026-07-08)*
 
 ## Added by the ἔργον session (2026-07-08)
 
