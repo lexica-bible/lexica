@@ -11,10 +11,12 @@
 words rebuild carrying FIVE fixes at once (was seven; the old a/c/d merged into (P) 2026-07-05 after the
 diagnosis landed). Don't open it on the low/medium census seat.
 
-**This is the SINGLE canonical S9 charter — the one source of truth.** It now fully absorbs the
+> **[ANNOTATED 2026-07-08: the paragraph below described THIS file before 2026-07-05; the "single canonical charter" role moved to `CHARTER_cert_session9.md` — see the SUPERSEDED header at top. Kept struck for history.]**
+
+~~**This is the SINGLE canonical S9 charter — the one source of truth.** It now fully absorbs the
 reassembly-diff arc (findings, adjudication, rebuild plan) that used to live in
 `AUDIT_reassembly_rebuild.md`. That file is **SUPERSEDED** (kept for its raw diagnosis history only;
-its header points here). Everything you need to run the rebuild is in THIS file.
+its header points here). Everything you need to run the rebuild is in THIS file.~~
 
 ## Frame (unchanged, governs all audit sessions)
 Two-tier standard. **Tier A** = ingest-faithfulness. **Tier B** = source defects as a versioned overlay

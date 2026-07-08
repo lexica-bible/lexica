@@ -233,6 +233,8 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
   8. **QUEUE GATE (JP 2026-07-08).** /wrap must either update the `## Queue` section or affirmatively state
      "Queue unchanged" — silence invalid. Same mechanism as the ENGINE_LESSONS wrap gate. The Queue holds
      ordering only; any content detail found in the Queue itself is drift and gets moved to its pointer target.
+     A queue entry carrying a BLOCKED-ON claim gets its blocker verified by content-read (not existence-check)
+     at the wrap that writes it.
   spot, ENGINE_LESSONS #4) · pre-V5 triage + post-batch redraw phase · the existing fed-40 / reviewer-tier
   questions below.
 - **`ENGINE_LESSONS.md`** (repo root) — v2 design backlog, now **20 lessons** (#17 = fabrication family,
@@ -381,8 +383,13 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
     Note φωνή also showed the spread axis can surprise (propagation, not the speaker-type axis predicted).
 
 ## Queue (dependency-ordered — order lives HERE, detail lives at the pointers)
-1. **ABP Session 9 certification** — BLOCKED ON: merging `HANDOFF_cert_session9.md` + `AUDIT_reassembly_rebuild.md`.
-   Detail: those two docs.
+1. ~~ABP Session 9 certification~~ **DONE — arc CLOSED at S11 (2026-07-06, `1f2fd62`): rebuilt, gated, swapped,
+   certified live.** The doc merge happened 2026-07-05 (`9bdaa32`). Nothing opens; remaining work (verified
+   2026-07-08 against the S11 close state) = `verify_prose_leak.py` Tier-B-applied mode · `lint_split_wrong_slot.py`
+   stale 18,339/12,692 label → 18,384/12,718 · prune stray worktree `.claude/worktrees/keen-goodall-f3e661/`
+   (all detail: TODO.md S11 follow-ups). The other three S11 follow-ups are ALREADY DONE: G1096 redraw (shipped
+   from-draw at batch-2 open), `--from-draw` ship path (`c4617d0`), citation-sweep rule (codified in
+   `docs/claude/ai.md`). Detail: `CHARTER_cert_session9.md` top banner + memory `project_abp_certification`.
 2. **V7 engine window** — OPEN (flagged at batch-2 close, `d46b6dd`). Detail: V7 pile in this handoff +
    ENGINE_LESSONS #24/#25 + the ἁμαρτία dossier (audit doc). Includes: format decision (V1 inline em-dash vs.
    labeled bullets — JP's call), display-layer/three-zone window question.
