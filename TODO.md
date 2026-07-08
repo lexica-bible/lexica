@@ -73,22 +73,8 @@ import_tipnr twin, Door-3 five-pass controls) all shipped in this rebuild. Rollb
 s11_20260706.db`; old live = `bible_old_live_20260706.db`. Full record → memory `project_abp_certification`
 (S11 banner + lessons). **The certification arc is CLOSED.**
 
-**⚠ CROSS-SESSION NOTE (for the restarted corpus-cert session):** a parallel session had UNCOMMITTED edits
-to `scripts/build_lexica_def.py` starting the `--from-draw` path. Those were discarded (JP's call) and the
-feature was implemented + committed here (`c4617d0`). The tree is CLEAN — `--from-draw` is DONE, do NOT redo
-it. If your last-session notes say "ship-reviewed-draw path is open," that's stale.
-
-**S11 FOLLOW-UPS (tooling gaps surfaced this session — none block anything live):**
-- **`--from-draw` ship path — SHIPPED (commit `c4617d0`).** `build_lexica_def.py --apply --word G#### --from-draw
-  KEY8` ships a reviewed draw by its key, bypassing the `synth_ver` skip, no re-roll; refuses on missing/stale
-  draw or key mismatch. Prose-awareness stays in `check_draw_citations.py` (NOT the signature — citations churn).
-- **G1096 redraw-and-ship = FIRST ACT of next session.** Its reviewed draw (key `d10243ab`, plain-meaning
-  γίνομαι, generated last session by `--dry-run --force`) just needs: `python3 scripts/build_lexica_def.py
-  --apply --word G1096 --from-draw d10243ab`. **If it refuses (key or hit-check fails — inputs moved since
-  review), the fix is regenerate-and-re-review (`--dry-run --force` → re-read → ship), NOT loosen the check.**
-- **Standing rule (banked):** the draw cache does NOT self-heal on a Tier B prose fix to a non-sampled
-  cited verse. Every prose fix → run `check_draw_citations.py` to find cards quoting the changed verse →
-  targeted redraw. The signature only covers a word's SAMPLED verses.
+**S11 FOLLOW-UPS — 3 of 6 CLOSED (verified 2026-07-08, see archive): `--from-draw` shipped (`c4617d0`),
+G1096 redraw shipped at batch-2 open, citation-sweep rule codified in `docs/claude/ai.md`. Still open:**
 - **`verify_prose_leak.py` needs a "Tier B applied" mode/warning** — it's a parser-only check; run against a
   finished scratch (Tier B layered on the 5 prose verses) it FAILs-that-isn't on exactly those 5. Next
   rebuild shouldn't re-derive this.

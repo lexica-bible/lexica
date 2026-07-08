@@ -6,7 +6,23 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
-## MetaV person rich-card serving — DONE + LIVE 2026-07-05
+## S11 follow-ups, 3 of 6 closed + stale S9 queue item — verified & cleaned 2026-07-08
+Queue item 1 (lexica handoff) claimed the S9 doc merge was still pending — it had been done 2026-07-05
+(`9bdaa32`) and the whole certification arc closed at S11 2026-07-06 (`1f2fd62`). Cleaned in `ddb8a05`
+(queue item struck, stale-canonical paragraph in `HANDOFF_cert_session9.md` annotated+struck, rule #8
+gained "verify a BLOCKED-ON claim by content-read at the wrap that writes it").
+Three S11 follow-ups verified DONE and removed from TODO:
+- **`--from-draw` ship path** — shipped `c4617d0`; refuses on missing/stale draw or key mismatch;
+  prose-awareness lives in `check_draw_citations.py`, not the signature.
+- **G1096 γίνομαι redraw** — shipped from-draw at batch-2 open (first exercise of the path); recorded in
+  the lexica handoff SHIPPED list + batch-2 TODO note.
+- **Citation-sweep standing rule** — codified in `docs/claude/ai.md` (Tier B prose-fix discipline): every
+  prose fix ends with `check_draw_citations.py` on PA; the draw signature only covers SAMPLED verses.
+The cross-session `--from-draw` clobber note (parallel session's uncommitted copy discarded, feature
+rebuilt here) is retired with them — the "do NOT redo it" warning is moot now the path shipped and ran.
+Lesson: the queue entry went stale because the wrap that wrote it copied the blocker from an older TODO
+instead of reading the target docs — the tip-off was `git log --follow` on the charter (top commit said
+"close the certification arc"). Rule #8's new clause exists so this doesn't recur.
 The `tipnr_metav_link` person table (1,625 links) is now SERVED: a bound person renders the rich David-
 style MetaV card under the TIPNR spine. `/api/metav/entity` adds a `metav` field via one join (gated
 `section='person'` + `is_people_group` People/Clan gate + a born/died-or-≥2-kin bio bar; fallback rich →
