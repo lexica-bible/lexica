@@ -373,6 +373,9 @@ REST of the dotted-Strong's question, none of it gating the rollout:
   'sin'… at 2Co 5:21") is invisible — ἁμαρτία pull 2's real fabrication went unflagged while 12 artifact
   fires lit pull 1. Needs a prose-form claim parser alongside the bullet parser (ENGINE_LESSONS #24 update).
   code: scripts/build_lexica_def.py `_gnote_claims`/`check_rendering_claim`
+  **+ disclaimer-as-cite artifact (ὀφθαλμός 2026-07-08, ENGINE_LESSONS #11 update):** a cross-reference that
+  points AWAY from its own shelf ("Eze 1:18 handled under Sense 1") counts as a cite → false double-shelf fire.
+  Same family: ref scanners must distinguish citing from mentioning.
 - **Comma-shorthand citation scanner (ENGINE_LESSONS #28, V8 pile — the stronger fix is detector-layer).**
   Extend the ref scanner to expand "Rom 1:1, 4" / "Lev 21:10, 21:12" tails using the preceding book+chapter,
   so the citation gate + double-shelf detector stop being blind to them (4/4 χριστός draws emitted the class;

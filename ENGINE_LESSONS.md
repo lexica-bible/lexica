@@ -113,6 +113,12 @@ both drifting from the doc.
     AGAINST the floor's stability verdict. → v2 pairs a double-shelf fire with the floor result: fire + floor-stable
     = bridge; fire + floor-unstable = over-split reject. *(audit: detector shipped commit 61740c0; seam register
     1–4; G3735 ὄρος draw-1 reject)*
+    - **UPDATE (ὀφθαλμός requeue 2026-07-08): NEW ARTIFACT CLASS — disclaimer-as-cite.** Prose that
+      cross-references a verse while pointing AWAY from its own shelf ("Eze 1:18 handled under Sense 1") counts
+      as a citation to the ref scanner, so the double-shelf detector fires on a shelf the card explicitly
+      declines. Adjudicated noise at the gate (JP). Sibling of the quoted-gloss lint artifact (#24 update) and
+      the prose-mention dangling class — the detector ticket family grows: ref-scanners need to distinguish
+      citing from mentioning. *(audit: G3788 requeue entry, 2026-07-08)*
 
 12. **Sense-prose action verbs are unverified corpus claims — lesson 7, extended past gloss_notes.** θεός
     sense 1 opened "worshipped as creator" with NO bow/serve verse in the fed 40; the citation gate checks
@@ -249,6 +255,15 @@ both drifting from the doc.
       DISTINCT-JOB structure is the mechanism's job; SUB-USE PLACEMENT is a separate wall it can't reach —
       banked to the V7 restructure, NOT a per-word draw fight. Tempers this lesson's "mechanism validated":
       validated for its class, bounded past it. *(audit: G3788 ὀφθαλμός SESSION-4 OUTCOME — anchor lever dead)*
+    - **UPDATE (Phase-1 close, 2026-07-08): mechanism 5-for-5 on structure; the V7 placement rule DAMPENED the
+      sub-use wall (this lesson's own dampen-not-delete shape, one level up).** ὀφθαλμός's V7 floor put the
+      disposition cluster at a dead 5/5 physical-vs-not (V6: mis-filed on every push) — the prompt rule halved
+      the prior, didn't delete it; JP ruled 7a either-home-legal on the fresh floor and the hint SELECTED a home
+      (logged as a stability pick, not a placement rule). All three Phase-1 words shipped via hint at attempt 4,
+      first hinted try each. Operational refinement: PRE-CLEAR adjudicated keep-both bridges in the hint's exit
+      terms, so a ruled bridge recurring can't force a park (the ὀφθαλμός pull-2 lesson); and a single ruled
+      misplacement = redraw, since no legal edit path touches citation lists. *(audit: G3788/G266/G5547 requeue
+      entries, 2026-07-08)*
 
 ## Added by the ὄρος session (2026-07-07)
 

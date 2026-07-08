@@ -232,6 +232,24 @@ as history). Standing facts for the next session:
 - **Streak 0. Phase 1 = 2 of 3.** Next: ὀφθαλμός G3788 — placement-line known positive, restructure decision
   JP-alone, fresh session recommended.
 
+## PHASE-1 SESSION LOG — ὀφθαλμός G3788 SHIPPED + LIVE (2026-07-08, third V7 control fire). PHASE 1 COMPLETE 3/3.
+Full record: audit doc `### G3788 ὀφθαλμός — LIVE` (the requeue entry; V6 saga above it is history). Standing facts:
+- **Ship path:** fresh V7 floor 3→10 ({3:5,4:4,5:1}; physical + regard 10/10, perception own-sense 6/10;
+  **desire/disposition cluster 5/5 physical-vs-not** — the V7 placement rule improved the V6 wall, didn't cure it)
+  → JP ruled the pre-registered restructure question: **(b) fresh floor supersedes the V6 bar, 7a either-home-legal,
+  gate-3 visibility mandatory** → 3 plain pulls rejected (scatter / 2 ruled misplacements among 5 fires / 0-in-10
+  merge) → cap-out per precedent → hinted draw passed all exits first try (**mechanism 5-for-5 structural**),
+  zero post-apply edits, screenshot-verified. Hint logged as SELECTING the regard home from two legal options —
+  not a placement rule; the 5/5 finding stays live for batch-3 splits.
+- **New jurisprudence:** pre-clear adjudicated bridges in the hint's exit terms (pull-2 lesson — a ruled keep-both
+  recurring must not force a park) · a single ruled misplacement = redraw (no legal edit path into citation lists)
+  · **NEW detector-artifact class: disclaimer-as-cite** (Eze 1:18 "handled under Sense 1" counted as a shelf;
+  ticket family with the quoted-gloss artifact).
+- **PHASE 1 COMPLETE.** Streak 0 across all three (mechanism ships, standing ruling). **Batch-3 shadow
+  calibration UNBLOCKED. CC's pre-registered N = 15 GREEN-tier words, zero escapes; count carries across batches
+  if batch 3 routes fewer than 15 GREEN.** Awaiting JP's go + batch-3 roster composition (majority
+  GREEN-candidates + seeded RED, ~20 words).
+
 ## SESSION-3 CLOSE STATE (2026-07-07) — read this to resume
 **SESSION-4 FIRST ACT: the ὀφθαλμός morning fork** (re-roll vs. argued-shelving on cached draw `0abd875d`) —
 see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired + resolved the first escalation
@@ -537,12 +555,15 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
    2026-07-08** (fork + register landed together; record: the PHASE-1 SESSION LOG block below + the audit
    doc's G5547 entry). **ἁμαρτία G266 SHIPPED + LIVE 2026-07-08** (second control fire; hinted draw + one
    delete-class swap; ENGINE_LESSONS #29 = the V8 attribution-register input; record: its PHASE-1 SESSION LOG
-   block + the audit doc's requeue entry). Remaining: ὀφθαλμός (placement-line known positive; restructure
-   decision JP-alone; fresh session recommended). Single runs, full audit; these three ARE the V7 validation.
-4. **Batch-3 = Phase 2 shadow calibration** — BLOCKED ON: Phase 1. ~20 words, majority GREEN-candidates +
-   seeded RED so all routing exercises; JP audits everything; escapes are the measure; **CC proposes the
-   calibration N BEFORE the batch opens** (pre-registered, never adjudicated after). Detail: tiering law +
-   calibration pins in the V7 block; frequency-cutoff logic, audit doc.
+   block + the audit doc's requeue entry). **ὀφθαλμός G3788 SHIPPED + LIVE 2026-07-08 — PHASE 1 COMPLETE 3/3**
+   (hinted draw, zero swaps; the 5/5 placement finding + (b) ruling + disclaimer-as-cite artifact: its session
+   log block + audit entry). The three V7 control fires are done; all three shipped via the structure-hint
+   mechanism (5-for-5 structural), streak 0 per the standing ruling.
+4. **Batch-3 = Phase 2 shadow calibration** — **UNBLOCKED 2026-07-08 (Phase 1 complete). CC's N is ON RECORD:
+   15 GREEN-tier words, zero escapes; the count carries across batches if batch 3 routes fewer than 15 GREEN.**
+   Awaiting JP's go + roster (~20 words, majority GREEN-candidates + seeded RED so all routing exercises; JP
+   audits everything; escapes are the measure). Detail: tiering law + calibration pins in the V7 block;
+   frequency-cutoff logic, audit doc.
 
 Background tier (no ordering): former TODO/retro pile items — consolidated pre-standards re-audit (NOW ALSO
 CARRIES: ἅγιον+κλητός occasion-job read · οὐρανός+βασιλεία metonymy read — the V7 sweep's two candidates),

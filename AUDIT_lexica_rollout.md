@@ -1508,6 +1508,45 @@ of record — a report of the rendering, no claim about the Greek, unfailable un
   G3788 (placement-line known positive; restructure decision JP-alone). Parked remaining: πολύς; ὀφθαλμός is the
   requeue itself.
 
+### G3788 ὀφθαλμός — LIVE (Phase-1 requeue #3, third V7 control fire; 4 senses via structure-hint, 0 swaps). Streak 0. PHASE 1 COMPLETE 3/3. The disposition wall closed.
+Shipped hinted draw `70d6dbe0` (apply repeated all four `--structure-hint` flags byte-identical; no model call),
+gate 71/71, stamp current, ZERO post-apply edits; **screenshot-verified** (all 4 senses + range + gloss notes;
+range italics render confirmed under the `80b87cd` fix).
+- **FLOOR (V7, fresh):** `--runs 3` wobbled → `--runs 10` = {3:5, 4:4, 5:1}. Certified: physical 10/10 · regard
+  cluster 10/10 (never under physical) · figurative-perception own sense 6/10 (the V6 3-job carve reproduced at
+  exactly the majority threshold). **Two-way placement watch, honest result: the desire/disposition cluster split
+  a dead 5/5** (physical home 5/10 vs regard/own 5/10) — the V7 placement rule reduced the V6 mis-file from
+  every-push to half-of-draws; improved, NOT cured. CC's 3-run "never files physical" read was overturned by the
+  10 — the 3-run headline is not the word. **JP RULING (the pre-registered restructure decision): option (b) —
+  the fresh V7 floor supersedes the session-4 V6 bar; 5/5 → rule 7a, either home legal, gate-3 visibility
+  mandatory.** Dynamic-sampling data point #3: 645→85 fed (5 PMI slots — φείδομαι/πονηρός families fed for the
+  first time; the V6-era #19 gap closed by construction).
+- **PULLS (cap 3):** (1) REJECT — sense-4 grab-bag (Gal 4:15 vs 9/10 physical home; 1Ki 1:20/1Ch 28:8 off
+  regard homes; blindness↔capacity cluster split against 7–8/9 co-travel) + φείδομαι flag unresolved. (2) REJECT
+  — best carve (matched floor majority) but 5 double-shelf fires; JP per-instance: 1Jn 1:1 / Jos 5:13 / Mar 8:18
+  = bridges AFFIRMED, Gen 3:5 / 1Ch 28:8 = misplacements; **no legal edit path (fix_lexica_raw cannot touch
+  citation lists) → a single ruled misplacement forces redraw, so stretch-to-save-a-pull is structurally the
+  wrong trade.** (3) REJECT — 2-carve the floor drew 0/10 times; perception sense merged away; divine-eyes under
+  physical (the watch's bad direction, logged); φείδομαι dropped again.
+- **CAP-OUT ruled per precedent** (structure drawable — pull 2 proved it; oscillation, not target-nonexistence;
+  tally stays 3) → hinted draw, pull-2 carve as target + Gen 3:5/1Ch 28:8 pinned + pre-cleared bridges (the
+  pull-2 lesson: pre-clear adjudicated keep-boths so legal recurrence can't force a park). **All four exits
+  passed first try — mechanism now 5-for-5 on structure.** Hint LOG LINE (JP): the hint SELECTS the regard home
+  for the desire cluster from the two 7a-legal options — a stability pick, NOT a new placement rule; the 5/5
+  finding stays live for batch-3 words with similar splits.
+- **SHIP-TIME fires, all ruled:** Act 9:8 [1,4] bridge (Mar 8:18-class threshold: organ open, sight absent) ·
+  Isa 1:15 [2,3] bridge (one clause, two honest depths — removal-from-sight / withdrawal-of-favor) ·
+  **Eze 1:18 [1,4] = NEW DETECTOR-ARTIFACT CLASS: disclaimer-as-cite** — sense-4 prose says "Eze 1:18 handled
+  under Sense 1", a cross-reference pointing AWAY from its own shelf, counted as a cite by the ref scanner.
+  Sibling of the quoted-gloss lint artifact; ticket family. Dangling flags (Jer/Zec/1Co/Gal) all the known
+  prose-mention noise class. Comma tails 5/5 verified via the floor table. Old riders closed: Job 7:7 uncited
+  this feed (moot); dangling-"Gal" was this noise class all along.
+- **Streak 0** (ships via mechanism, standing ruling). **ROSTER: PHASE 1 COMPLETE — χριστός + ἁμαρτία +
+  ὀφθαλμός all SHIPPED + LIVE 2026-07-08. Parked remaining: πολύς only. Batch-3 shadow calibration UNBLOCKED**
+  pending CC's pre-registered N + JP's go. **CC's N, ON RECORD BEFORE BATCH 3 OPENS: N = 15 GREEN-tier words
+  with zero escapes** (JP-caught, nothing-flagged defects); if batch 3 routes fewer than 15 GREEN, the count
+  continues into batch 4 until 15 consecutive GREEN-tier words are audited — the bar is the count, not the batch.
+
 ### Q&A ON RECORD — automation trajectory (JP asked, answered 2026-07-08, δύναμις session close)
 JP's autonomy question and the answer, logged for the retro: **the structural layer is near-automatable** —
 floor runs, the ≥6/10 threshold, the four gates, double-shelf, thin/circular flags are mechanical now, and the
