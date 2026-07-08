@@ -1138,9 +1138,10 @@ end-to-end** (both senses distinct, both sub-uses on their own lines, both gloss
 - **BANKED LESSON — inflected-form claims in notes need PER-ROW morph verification, not per-word.** Verifying the
   2Ch 7:15 form (rule #17) surfaced that the note also spelled τόπον for 1Sa 29:4 / 2Sa 19:39 / Neh 1:9. Per-row
   check: 1Sa 29:4 + Neh 1:9 = N.ASM (τόπον verified), but **2Sa 19:39 has blank lemma AND blank morph** — the
-  corpus attests only the Strong's tag for that row, so τόπον was unbacked there. Count: **68 of 538 τόpos rows
-  (~13%) blank-lemma** — systematic OT form-field gap (matches the documented ~22%-blank-morph pattern), NOT a
-  mistag, NOT the dotted no-entry class. Fix drops to the lemma (backed for all rows via the G5117 → τόπος mapping).
+  corpus attests only the Strong's tag for that row, so τόπον was unbacked there. Count: **68 of 538 = 12.6% of
+  τόpos rows blank-lemma** (G5117-scoped; corpus-wide rate + OT/NT split UNMEASURED — G2041 count is the next data
+  point) — systematic OT form-field gap (consistent with the documented ~22%-blank-morph pattern), NOT a mistag,
+  NOT the dotted no-entry class. Fix drops to the lemma (backed for all rows via the G5117 → τόπος mapping).
   A "the Greek uses [form]" claim can't assume a cited verse's row carries the form. Caught before it shipped twice.
 - **1Co 14:16** shelved under sense 1 ("a position within a gathering / slot in a structure") against its 9/10
   opportunity-floor majority — defensible under granularity-as-drawn (the headline names the slot reading); the one

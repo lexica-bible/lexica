@@ -201,7 +201,12 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
      secret lives, what the venv/preamble is → check against the machine or ask JP, never assert
      from plausibility. Same defect class as the capitalization fabrication: invented rationale
      for an unobserved fact, aimed at the server instead of the corpus.
-- **RETRO PILE (decide with full-batch evidence):** substitution probe (bare-headword-substitution blind
+  5. **SESSION-OPEN: read the relevant `ENGINE_LESSONS.md` entries BEFORE the first word** (consumer side of the
+     /wrap ENGINE_LESSONS gate, commit `f96a9a8`). The write side is gated at close; reading is not — and S5
+     proved the *content* was adequate (τόπος's form-claim was #7 verbatim) while *consumption* was the gap, so
+     the catch came from CLAUDE.md not the file, a re-derivation cost. Belongs in the open preamble alongside
+     git-pull and the roster count-by-NAMES check. Verify the file by READING it, never by the handoff's lesson
+     count (the count lagged the file this session — #20 line vs #21/#22 committed).
   spot, ENGINE_LESSONS #4) · pre-V5 triage + post-batch redraw phase · the existing fed-40 / reviewer-tier
   questions below.
 - **`ENGINE_LESSONS.md`** (repo root) — v2 design backlog, now **20 lessons** (#17 = fabrication family,
