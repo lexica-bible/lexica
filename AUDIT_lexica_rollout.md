@@ -1410,6 +1410,46 @@ gloss note).
   blockquote]) + three requeue decisions (χριστός #1, ἁμαρτία #2, the ὀφθαλμός V7 restructure — JP's alone) +
   the batch retro list. Graduation criterion never fired: 0-for-17 clean-at-attempt-1.
 
+### G5547 χριστός — LIVE (Phase-1 requeue #1, first V7 control fire; 3 senses via structure-hint, 2 ruled swaps). Streak 0. First fork-word ship; register 8→9.
+Shipped draw `a918c5c8` (hinted; apply repeated the 3 `--structure-hint` flags byte-identical), no model call,
+gate 46/46, fork block written; register entry `664add7` (referent fork, `contest_verses=["Psa 2","Dan 9:25"]`
+— Dan 9:26 verified untagged in ABP and excluded; NO pin_core, θεός/κύριος pattern; core kept inert, the
+title→name diachronic clause cut on JP's wording review). **Write sequencing improved on the work order:**
+commit register → PA pull WITHOUT reload → apply (row lands WITH fork) → deploy — the `views_lexica.py`
+backstop 404 gap never opened. Two ruled `fix_lexica_raw` swaps (Mar 9:41 out of the "christs" bullet —
+REAL rendering-lint fire, wrong list member; the χρίσμα cross-lemma aside cut as unverified rationale);
+**screenshot-verified** (3 senses + both edited bullets + fork block with all 3 frames; no LSJ fallback).
+- **FLOOR:** `--runs 3` = {3:3} but title/name boundary verses migrated → escalated per law. `--runs 10`
+  (`agreement_G5547_v7_20260708-200108`): {2:3, 3:7} — 3-carve majority (OT-anointed / awaited-title / name);
+  the three 2-sense draws merged DIFFERENT pairs (d4/d5 title→name, d8 title→OT) = one real 3-structure with
+  a soft seam, no competing 2-carve. Pinned: merging either boundary fails gate 2. Seam-verse majority homes
+  pre-registered: Act 2:36 title (10/10), Heb 11:26 OT (7/9), Mat 1:16 title (4/5), 2Jn 1:7 genuinely split
+  (~3:2) — either shelf legal if the wording holds it.
+- **PULLS:** d1 REJECT (Act 2:36 double-shelved — sense-1 comma-tail + sense-2 quote, the Psa 2:2 defect class
+  resurfacing, INVISIBLE to the detector via shorthand; off-majority placements incl. 1Ch 16:22/Psa 105:15
+  recruited into an essay-style title sense). d2 REJECT gate 2 (title→name merge + "full epistolary inventory"
+  hand-wave). d3 REJECT gate 2 (title→OT merge; + gloss-note claimed "ones" at Gal 1:10/1Th 2:6 where corpus
+  renders "christs" — **first genuine rendering-lint live fire**, a real fabrication caught by machine).
+  **CAP-OUT ruled per ἄρχων precedent (NOT content-wall — structure drew 7/10 at the floor; tally stays 3).**
+  Hinted draw: all four gates + all majority homes, first try — mechanism 3rd use, 3rd success.
+- **V7 CONTROL-FIRE RECORD:** dynamic sampling tier-correct (607→81 fed = 80 + 1 PMI slot, egeírō→1Co 15:13);
+  **mirror invariant PASSED first live fire** (reviewer recomputed the identical feed). Psa 2:2 single-shelved
+  13/13 draws + shipped card; registry/two-way placement watch: no over-trigger either direction at reviewer
+  level; ship-path placement defects were the watch's bad direction, cured by the hint. Hybrid house shape
+  exhibited AS RULED (citation-density-driven: dump for uniform evidence, own-line items where citations
+  cluster) — first live exhibit; "Grounding refs:" label = watch item, not a rule (one instance).
+- **DETECTOR FINDINGS:** (a) rendering-lint PARSER ARTIFACT, code-confirmed — `_gnote_claims` keeps quote
+  marks in the captured gloss (all 8 d1 "mismatches" were false: `"anointed"` ≠ `anointed`) and cross-pairs
+  every gloss × every ref per bullet → TODO ticket (quote-strip; keep control fires green). (b) **shorthand
+  blind spot** — comma-tail citations ("Rom 1:1, 4") are invisible to the ref scanner, so they escape the
+  citation gate AND the double-shelf detector; 4/4 draws emitted them → ENGINE_LESSONS #28, V8 pile. Closed
+  for this card by hand-verifying all 24 tails (row-values IN check, 24/24 tagged). (c) dangling-flag noise:
+  prose mentions "Gospel/Acts" / "in Leviticus" fire as dangling book refs — same family as the Dan tribe flag.
+- **Per-row law honored:** Lev 4:5/21:10/21:12 morph = A.NSM/A.GSM/A.NSN — the gloss note's
+  "adjectival or genitive" claim verified on real tags (Lev 6:22 is a blank-lemma G5547 row, uncited, noted).
+- **Streak 0** (ships at attempt 4 via mechanism — correctly not a streak-starter).
+- **ROSTER: Phase 1 = 1 of 3 done.** Next: ἁμαρτία G266 (dossier binds), then ὀφθαλμός G3788.
+
 ### Q&A ON RECORD — automation trajectory (JP asked, answered 2026-07-08, δύναμις session close)
 JP's autonomy question and the answer, logged for the retro: **the structural layer is near-automatable** —
 floor runs, the ≥6/10 threshold, the four gates, double-shelf, thin/circular flags are mechanical now, and the

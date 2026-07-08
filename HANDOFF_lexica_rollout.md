@@ -176,6 +176,39 @@ Every ruling JP's, one at a time; full ledger on the V7 PILE header below.
   the manifest catch-net; two list-boundary drops caught at bump assembly). Config-test tally: 1 correction
   (watch-#3 misattribution, JP-caught, recovered by quoted record), high-quality recovery.
 
+## PHASE-1 SESSION LOG — χριστός G5547 SHIPPED + LIVE (2026-07-08, first V7 control fire)
+Full per-word record: audit doc `### G5547 χριστός`. The standing facts a next session needs:
+- **Register = 9 forks now.** χριστός entered (`664add7`): referent fork, loci-bounded
+  (`contest_verses = ["Psa 2", "Dan 9:25"]`; Dan 9:26 verified untagged, excluded), NO pin_core
+  (θεός/κύριος pattern), core kept inert (title→name diachronic clause cut on JP review).
+- **Write-sequencing law (better than the work order — use it for any future fork+rebuild pair):**
+  commit register → `git pull` on PA (NO reload — pull alone doesn't reload the app) → floor/draw/apply
+  (row lands WITH fork) → deploy/reload. The serve-backstop 404 gap never opens.
+- **Ship path:** floor `--runs 3`→10 (boundary wobble escalation; verdict STABLE, 3-carve majority 7/10,
+  2-sense merges bidirectional = no competing carve) → 3 plain pulls all failed gate 2 (title job merged
+  into name [d2] and into OT [d3]; d1 = double-shelf + off-majority placements) → **cap-out ruled per
+  ἄρχων precedent (NOT content-wall, tally stays 3)** → structure-hint draw (3rd use, 3rd success,
+  key `a918c5c8`) passed all four gates + all seam-verse majority homes first try → 2 ruled swaps
+  (Mar 9:41 out of the "christs" bullet — real lint fire, wrong list member; χρίσμα cross-lemma aside cut)
+  → screenshot-verified, 5-point checklist green. **Streak 0** (attempt 4 via mechanism).
+- **V7 control-fire results (pre-registered watches, all logged):** dynamic sampling tier-correct
+  (607 occ → 81 fed = 80 + 1 PMI slot; mirror invariant held, reviewer printed the same feed) ·
+  Psa 2:2 single-shelved 13/13 draws + on the card, registry no over-trigger, no under-trigger ·
+  placement watch fired BOTH directions (d1 recruited 1Ch 16:22/Psa 105:15 into an essay-style sense
+  against a ~10/10 floor home; hinted draw filed everything on majority homes) · hedge lint 1 noise fire
+  adjudicated · rendering lint: 1 REAL fire (d3 claimed "ones" where corpus renders "christs" — first
+  genuine live fire) + a confirmed PARSER ARTIFACT (see ticket) · hybrid house shape exhibited as ruled
+  (dump where citations are uniform, own-line items where they cluster — first live exhibit; watch the
+  "Grounding refs:" label wording across Phase 1, one instance ≠ a rule).
+- **NEW V8-PILE ITEM (live-exhibited, #26 bar met): comma-shorthand citations** — "Rom 1:1, 4" /
+  "Lev 21:10, 21:12" tails in 4/4 draws; gate-invisible (the ref scanner needs Book ch:vs), which also
+  BLINDED the double-shelf detector to d1's Act 2:36 double-cite. Per-card closure = hand-verify the
+  tails (24/24 verified via one row-values IN check). ENGINE_LESSONS #28.
+- **TICKET: rendering-lint parser artifact** (code-confirmed): `_gnote_claims` keeps the quote marks in
+  the captured gloss (`"anointed"` ≠ `anointed` → every quoted gloss fires mismatch) AND cross-pairs
+  every gloss with every ref in a bullet. Fix = strip quote chars + keep pairing caveat documented;
+  flag-layer only, legal any time, must keep tests/test_lexica_detectors.py control fires green. TODO.md.
+
 ## SESSION-3 CLOSE STATE (2026-07-07) — read this to resume
 **SESSION-4 FIRST ACT: the ὀφθαλμός morning fork** (re-roll vs. argued-shelving on cached draw `0abd875d`) —
 see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired + resolved the first escalation
@@ -441,14 +474,11 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
   reads the draw as "stale" and refuses (a correct refusal; nothing writes). Code-verified, cost one retry. **Loaded-frame three (ἁμαρτία / ῥῆμα / δύναμις) are the audit-hardest —
   the operationalized freight test (evaluation in a definition = fail; as cited context = pass) + #23 full-field
   scope are the tools they'll lean on.**
-- **POST-FINALIZATION REQUEUE LIST (JP-ruled, new standing queue):** words to rebuild after the engine is
-  finalized (V7+), under the final prompt, rather than burning a V6 draw. **#2 = ἁμαρτία G266** (parked
+- **POST-FINALIZATION REQUEUE LIST (JP-ruled standing queue):** ~~#1 χριστός~~ **SHIPPED 2026-07-08**
+  (fork + register landed together — see PHASE-1 SESSION LOG above). **#1 now = ἁμαρτία G266** (parked
   2026-07-08, exit (c); inherits the branch-A attribution bar, the 2Co 5:21 shelf tally, the sense-2 membership
-  roster, and the theology-drives-the-carve dossier). **#1 = χριστός G5547** — JP RULED it
-  ENTERS the contested register (gets fork treatment, not a plain redraw); its register WRITE is HELD until the
-  requeue session so the live card doesn't drop to LSJ meanwhile (serve backstop `views_lexica.py:153` 404s a
-  registered-contested word with no fork). Also the destination for anything the consolidated re-audit flags as
-  redraw-worthy.
+  roster, and the theology-drives-the-carve dossier). Also the destination for anything the consolidated
+  re-audit flags as redraw-worthy.
 - **CONSOLIDATED RE-AUDIT (retro, one item):** re-audit pre-current-standards entries against the current gate set
   (freight + form-claims + structural coherence). χριστός already showed all three (self-collapsing 4→2 senses,
   Psa 2:2 double-shelf, unverified form-claims). Feeds the requeue list.
@@ -472,10 +502,12 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
    retro list closed, tiering law + calibration pins + rollout sequence on the record. Detail: the
    "V7 WINDOW — CLOSED" block in this handoff. Display tickets (sense-anchoring markers, note ordering)
    ruled HOLD for the three-zone redesign — with anchors codified in V7, a pure rendering job.
-3. **Requeue rebuilds = Phase 1, the V7 control fires** — UNBLOCKED, next session. Order: χριστός (register
-   write HELD until its session) → ἁμαρτία (registry + rendering lint on its exact parking defect) →
-   ὀφθαλμός (placement-line known positive; restructure decision JP-alone). Single runs, full audit; these
-   three ARE the V7 validation. Detail: contested register + park dossiers + the Phase-1 terms in the V7 block.
+3. **Requeue rebuilds = Phase 1, the V7 control fires** — IN PROGRESS. **χριστός G5547 SHIPPED + LIVE
+   2026-07-08** (fork + register landed together; record: the PHASE-1 SESSION LOG block below + the audit
+   doc's G5547 entry). Remaining order: ἁμαρτία (registry + rendering lint on its exact parking defect;
+   its dossier bar binds) → ὀφθαλμός (placement-line known positive; restructure decision JP-alone).
+   Single runs, full audit; these three ARE the V7 validation. Detail: park dossiers + the Phase-1 terms
+   in the V7 block.
 4. **Batch-3 = Phase 2 shadow calibration** — BLOCKED ON: Phase 1. ~20 words, majority GREEN-candidates +
    seeded RED so all routing exercises; JP audits everything; escapes are the measure; **CC proposes the
    calibration N BEFORE the batch opens** (pre-registered, never adjudicated after). Detail: tiering law +

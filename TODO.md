@@ -359,6 +359,21 @@ REST of the dotted-Strong's question, none of it gating the rollout:
   across both θυγάτηρ draws → systematic, not draw-luck. The card text is correct; the FLAG is the false positive.
   Fix: the detector needs a tribe/place-name exclusion (or require the token to be followed by a ch:vs before
   flagging). Retires the earlier "summary-side extraction" hypothesis. Post-rollout. code: scripts/build_lexica_def.py
+  - **+ prose-mention false positives (χριστός 2026-07-08):** ordinary prose phrases fire it too — "Gospel/Acts"
+    flagged "Act", "in Leviticus" flagged "Lev". Same fix family (require adjacency to a ch:vs).
+- **Rendering-claim lint parser fix (χριστός 2026-07-08, code-confirmed).** `_gnote_claims` in
+  build_lexica_def.py captures the *italic gloss* WITH its quote marks, so a quoted gloss (`"anointed"`) never
+  exactly matches the corpus rendering (`anointed`) → every quoted gloss fires "rendering-mismatch" even when
+  correct (all 8 draw-1 fires on χριστός were this artifact). It also cross-pairs every gloss × every ref in
+  a bullet (fires pairs the note never claimed). Fix: strip surrounding quote chars from the captured gloss;
+  document (or fix) the pairing. Flag-layer only — legal any time — but the control fires in
+  tests/test_lexica_detectors.py MUST stay green (case-awareness is load-bearing, don't case-fold).
+  code: scripts/build_lexica_def.py `_gnote_claims`/`check_rendering_claim`
+- **Comma-shorthand citation scanner (ENGINE_LESSONS #28, V8 pile — the stronger fix is detector-layer).**
+  Extend the ref scanner to expand "Rom 1:1, 4" / "Lev 21:10, 21:12" tails using the preceding book+chapter,
+  so the citation gate + double-shelf detector stop being blind to them (4/4 χριστός draws emitted the class;
+  d1's Act 2:36 double-shelf was invisible because of it). A resweep after the fix retro-covers shipped cards.
+  code: scripts/build_lexica_def.py `_REF_RE`/`cited_refs`
 Merges with the parked ὀρ-collision retro sweep (step-0 mostly absorbed it). δίδωμι G1325 SHIPPED carries
 a 1-row leak (1325.1 "mortgaged", Neh 5:3) — verified NOT cited in the live card, stands with a provenance
 note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted_lexicon.py, audit_dotted_lemmas.py
@@ -406,13 +421,15 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   the pipeline driver). Cutoff = occ ≥ 2 (~3,954 words). Full record + the 3-tier ship-gate + frame-leak
   pre-sort rule: memory `project_lexica_dictionary`; **Batch One lessons + calibration numbers + the full
   batch-two prep list = `AUDIT_lexica_rollout.md`.**
-  **BATCH-2 CALIBRATION IN PROGRESS (2026-07-06) — handoff `HANDOFF_lexica_rollout.md`, authority
-  `AUDIT_lexica_rollout.md` Batch Two section.** 4 shipped (G1096 γίνομαι / G80 ἀδελφός / G2588 καρδία /
-  G39 ἅγιον + word_gloss widened "holy, set apart"); πολύς PARKED (range-completeness wall, un-stuck by the
-  new bar); ἔθνος G1484 = next session's first ship draw (reviewer verdict STABLE-at-2 done). **SHIP BAR
+  **STATUS (2026-07-08): BATCH-2 CLOSED (17 shipped · 3 parked) · ENGINE = V7 · PHASE 1 = 1 of 3 done
+  (χριστός SHIPPED+LIVE, first fork-word; next ἁμαρτία → ὀφθαλμός, then batch-3 shadow calibration).
+  Current law + queue = `HANDOFF_lexica_rollout.md` (V7 block + PHASE-1 SESSION LOG + `## Queue`);
+  authority = `AUDIT_lexica_rollout.md`; design backlog = `ENGINE_LESSONS.md` (28). The paragraph below
+  is HISTORY (early batch-2), kept for pointers only.**
+  Batch-2 opened 2026-07-06: 4 shipped first session; **SHIP BAR
   RE-RULED to FOUR GATES** (holes/merges/completeness/granularity — NOT sense-count-match); reviewer floor
   `--runs 3`→10 on wobble; redraw cap 3; escalation trigger ARMED (3rd content-wall → mechanism decision to
-  JP). Prep done this session: ranker-skips-built, ἅγιον gloss check. **Banked follow-ups (detail in the
+  JP). Prep done that session: ranker-skips-built, ἅγιον gloss check. **Banked follow-ups (detail in the
   handoff):** (a) double-shelf detector BUILT + live in the audit path, flag-only — PA control owed
   (`--resplit --word G39 --dry-run` must fire on 1Jn 2:20 senses [1,4]) before ἔθνος; (b) word-study card
   header GREEK half DONE (`7bee235`, leads with word_gloss), HEBREW half queued (needs an API field, own

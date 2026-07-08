@@ -352,6 +352,22 @@ both drifting from the doc.
     manifest review, neither a judgment error. → any mid-session addition (pile item, announced verification,
     rider) gets restated in the close-out manifest before "go". *(walk record 2026-07-08)*
 
+## Added by the χριστός session (2026-07-08, Phase-1 requeue #1)
+
+28. **Comma-shorthand citations are a WHOLE INVISIBLE LAYER, and every ref-reading detector inherits the
+    blindness.** The banked rule ("spell Job 1:6; Job 2:1, never 1:6; 2:1") treated shorthand as an authoring
+    slip; χριστός showed it's standing V7 draw BEHAVIOR — 4/4 draws emitted "Rom 1:1, 4"-class tails — and the
+    blindness COMPOUNDS: the tails escape the citation gate (uncounted, unverified) AND the double-shelf
+    detector (draw-1's Act 2:36 double-cite was invisible because one shelf was a comma-tail). A "46/46 pass"
+    on a shorthand-heavy card certifies only the spelled-out subset. Per-card closure = hand-verify every tail
+    against the corpus (χριστός: 24/24 via one row-values check). → v2/V8: either a prompt line forcing
+    spelled-out citations (alters draw behavior — batch-frozen, needs the window) or a scanner that expands
+    comma/semicolon tails using the preceding book+chapter (detector-layer, legal any time — the stronger fix,
+    since it also retro-covers shipped cards on a resweep). Sibling of #21 (a gate that doesn't read the
+    artifact isn't checking it) and of the θυγάτηρ Dan-flag class (the same scanner's false-POSITIVE side:
+    prose mentions "Gospel/Acts", "in Leviticus" fire as dangling). *(audit: G5547 χριστός — shorthand blind
+    spot + 24-tail hand-verification, 2026-07-08)*
+
 ## Added by the ἔργον session (2026-07-08)
 
 23. **The freight (#18) scan's scope is EVERY definitional field, not just the block the last failure was in.**
