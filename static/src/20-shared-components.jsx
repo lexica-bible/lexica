@@ -254,7 +254,7 @@ function LexicaBody({ lexica, lsjEntry }) {
             </div>
           )}
           {fork && <LexicaFork fork={fork} />}
-          {lexica.range && <div className="lex-block"><span className="lex-lbl">Range</span> {lexica.range}</div>}
+          {lexica.range && <div className="lex-block"><span className="lex-lbl">Range</span> {renderInlineMd(lexica.range)}</div>}
           {lexica.alias_note && lexica.alias_note.caveat && (
             // The numbering crosswalk itself renders in the card header (detail-strong-alias);
             // only the pool caveat lives here, in the served-side Full-entry provenance block.
@@ -264,7 +264,7 @@ function LexicaBody({ lexica, lsjEntry }) {
             </div>
           )}
           {lexica.gloss_notes && <div className="lex-block"><span className="lex-lbl">Gloss notes</span><div className="lex-prose lex-notes">{renderInlineMd(lexica.gloss_notes)}</div></div>}
-          {lexica.coverage && <div className="lex-block"><span className="lex-lbl">Coverage</span> {lexica.coverage}</div>}
+          {lexica.coverage && <div className="lex-block"><span className="lex-lbl">Coverage</span> {renderInlineMd(lexica.coverage)}</div>}
           <LexicaVerses verses={lexica.verses} />
         </div>
       ) : (
