@@ -1163,3 +1163,29 @@ the structure-hint's first-use evidence in hand.
 ### Parked-hard list
 - **G4183 πολύς** — un-stuck by the four-gate reruling; parked for sequencing only. Re-attempt: first draft
   clearing all four gates ships. (Re-score + detail above.)
+
+## G3735 ὄρος — SHIPPED + CORRECTED (2026-07-07). A ship that turned into a corpus + gate finding.
+**The trigger:** a draw grew a spurious "boundary/limit" sense from non-mountain verses. Read-only investigation
+found the cause was NOT the draw — the FED EVIDENCE was contaminated. Three verses (Exo 9:5, Neh 2:6, Eze 40:12)
+carried ὅρος "boundary" (Strong's-dotted G3735.1) but leaked into the G3735 ὄρος "mountain" draw because
+`dotted_lexicon` was MISSING G3735.1. Root cause: `build_dotted_lexicon.py`'s "same word as base?" test used
+`bare()`, which strips breathing AND accent, so near-homographs folded together (ὄρος/ὅρος differ by breathing;
+νόμος/νομός by accent) and the different word was dropped from the hold-out list → it rode the base lemma and
+polluted the base's floor. Fixed with `same_word()` (breathing/accent-sensitive), commit `2ff5f7d`; rebuilt
+dotted_lexicon +5/−0 (recovered ὅρος, νομός, ποτός, ἄγνος, ὠμός), ὄρος draw 644→641. NO-ENTRY class (~86 dotted
+numbers with no dictionary entry, can't auto-recover) → post-rollout ticket; hold-out flags armed on δοξάζω G1392 /
+διώκω G1377 / δόξα G1391 (do not floor before the ticket). δίδωμι G1325 (shipped) carries a 1-row leak (1325.1
+"mortgaged", Neh 5:3) verified NOT cited → stands + provenance note.
+**Floor + ship:** clean 641-row feed floored STABLE-at-1 (`agreement_G3735_v6_20260707-221141`); the two 2-sense
+draws disagreed on the second sense (holy-site vs magnitude) = optional sub-slice, not a stable job. Card draw-1
+over-split on the holy-site axis AND double-shelved Exo 3:1/Neh 9:13/Num 3:1 → **REJECTED at the card gate on the
+double-shelf — the FIRST double-shelf fire ruled an over-split reject, not a keep-both bridge** (updates lesson 11;
+discriminator = the floor certified the split UNstable). Clean re-draw shipped at one sense, cache `65dfcf90`.
+**Post-ship prose defect (the gate gap):** the four-gate audited the STRUCTURED fields (headlines/range/citations/
+coverage) but the `senses_block` prose body was shown only as "1360 chars, kept verbatim" — never printed, never
+read. Four defects shipped inside it: a leaked bold title + `---` (a draft that skipped the "Senses:" header defeated
+the split cleaner), a "Giboa"→Gilboa typo, a "Sub-uses include:" stutter, a malformed citations-first Zion sub-use.
+Fixed post-ship by `fix_lexica_raw.py` (surgical raw edits, NO model call — certified senses untouched) + split-
+fallback hardening + `show_entry` now prints the full prose at gate time (commit `9a1dca9`); gate re-passed 36/36,
+rendered card screenshot-verified. → the PROOFREAD GATE (read the full prose + screenshot the rendered card, not
+pasted terminal text) is now standing law.

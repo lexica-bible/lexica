@@ -96,7 +96,14 @@ both drifting from the doc.
     ever ruled noise.** Ship-time live fires ruled keep-both bridges on 3 SHIPPED cards (ἔθνος Eph 2:11,
     μέγας 2Ch 17:12, ἱερεύς Gen 14:18); the ὕδωρ 2Pe 3:5 and οὐρανός Joh 1:32 fires landed on REJECTED
     drafts (moot — the shipped versions fired clean); G39/καρδία were retroactive logs on pre-detector ships.
-    Flag-only design validated in production. *(audit: detector shipped commit 61740c0; seam register 1–4)*
+    Flag-only design validated in production. **UPDATE (ὄρος 2026-07-07): first fire to drive a REJECT, not a
+    keep-both bridge.** ὄρος card draw-1 double-shelved Exo 3:1/Neh 9:13/Num 3:1 across a 2-sense "encounter-site"
+    split; rejected at the card gate. The discriminator between bridge (keep) and over-split (reject) is the FLOOR:
+    the floor had certified that second sense UNstable (the two 2-sense draws disagreed on what it was), so the
+    double-shelf confirmed the split wasn't real. Flag-only still holds — the flag doesn't auto-reject; it's read
+    AGAINST the floor's stability verdict. → v2 pairs a double-shelf fire with the floor result: fire + floor-stable
+    = bridge; fire + floor-unstable = over-split reject. *(audit: detector shipped commit 61740c0; seam register
+    1–4; G3735 ὄρος draw-1 reject)*
 
 12. **Sense-prose action verbs are unverified corpus claims — lesson 7, extended past gloss_notes.** θεός
     sense 1 opened "worshipped as creator" with NO bow/serve verse in the fed 40; the citation gate checks
@@ -202,3 +209,28 @@ both drifting from the doc.
     is the standing tool for it; (c) a convergence/"held both" detector could auto-flag when a hinted draw clears
     all axes at once. *(audit: G3788 ὀφθαλμός V6 attempts 2/3 cap-out + structure-hint first draw, 2026-07-07;
     mechanism commit 95b4a16; TRIGGER STATUS fired+resolved)*
+
+## Added by the ὄρος session (2026-07-07)
+
+21. **A gate that reads a LENGTH is not reading the TEXT.** The four-gate audited the structured fields
+    (headlines / range / citations / coverage) but the `senses_block` prose BODY was shown only as its char count
+    ("1360 chars, kept verbatim") — never printed, never read. Four defects shipped inside that unread prose: a
+    leaked bold title + `---`, a "Giboa"→Gilboa typo, a "Sub-uses include:" stutter, a malformed citations-first
+    Zion sub-use. "Kept verbatim" names the field MOST in need of reading — verbatim = the model's raw output
+    reaches the reader unmediated. → v2: the gate PRINTS every verbatim-kept field in full and requires an explicit
+    proofread pass; a length / "kept verbatim" note is BANNED as evidence of correctness. Sibling rule for display:
+    verify the RENDERED card by screenshot, never pasted terminal text (paste flattens layout and invents phantom
+    run-togethers — 2 phantom "renderer bugs" this session that the bytes disproved). Mechanized now
+    (`show_entry` prints the prose, commit `9a1dca9`). *(audit: G3735 ὄρος post-ship prose defect + PROOFREAD GATE)*
+
+22. **A spurious sense can be a FEED defect, not a DRAW defect — and the poison can enter UPSTREAM of the sampler,
+    from a corpus side-table the engine doesn't own.** ὄρος grew a "boundary" sense not because the prompt or draw
+    failed but because three ὅρος "boundary" verses (Strong's-dotted G3735.1) leaked into the ὄρος "mountain"
+    evidence — a near-homograph the `dotted_lexicon` hold-out list had DROPPED (its "same word as base?" test folded
+    away breathing + accent, so ὄρος/ὅρος read as identical). Extends lesson 2 (audit the fed evidence before tuning
+    prompts) with a NEW source class: the contamination came from a corpus tagging / side-table gap entirely OUTSIDE
+    the draw path — invisible to prompt, gate, and reviewer, and un-fixable by any amount of re-drawing. → v2: when a
+    bad sense appears, check FEED INTEGRITY first (is every fed verse actually this lemma?) before re-prompting or
+    re-drawing; the floor's provenance is only as clean as the feed, and feed cleanliness rests on corpus-side
+    invariants (here: every dotted number that is a DIFFERENT word must be in the hold-out list). *(audit: G3735 ὄρος
+    dotted-lexicon fold gap + fold fix `2ff5f7d`)*
