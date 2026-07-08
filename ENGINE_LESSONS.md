@@ -334,6 +334,24 @@ both drifting from the doc.
     oscillation (ὀφθαλμός, #20) · directional carving prior (δύναμις) — each wants a different lever. *(audit:
     G1411 δύναμις pulls 1–3 + thin-sense amendment, 2026-07-08)*
 
+## Added by the V7 window walk (2026-07-08)
+
+26. **Wording-audit finds are BEHAVIOR HYPOTHESES, not defects, until draws adjudicate them.** The V7 pile's
+    six wording items split 4 BUILD / 2 DROP at the walk, and both DROPs were the same shape: a plausible
+    audit-time worry (over-trigger path, echo risk) that live draws never once exhibited, where the "fix"
+    would have altered a working line (item 3's merge would have opened a real coverage hole — "corporate"
+    passes the freight test and fails only term-of-art; item 5's trim risked a load-bearing vivid phrase on
+    the batch's strongest output region). The BUILDs that cleared were the ones that CODIFIED observed good
+    behavior or removed a literal contradiction. → ruling bar for any prompt-wording find: defensive fixes
+    clear when they codify, not when they alter; an alter-fix needs a live draw exhibiting the failure first.
+    *(walk record: HANDOFF V7 pile rulings, items 3 + 5 vs 1/2/4/6, 2026-07-08)*
+
+27. **(process) Work items created MID-SESSION don't inherit a tracking slot — the close-out manifest audit
+    is the catch-net.** Two list-boundary drops in one session (pile item 11 added mid-walk but never ruled;
+    the κύριος exhibit verification announced but never reported), both caught only at the bump-assembly
+    manifest review, neither a judgment error. → any mid-session addition (pile item, announced verification,
+    rider) gets restated in the close-out manifest before "go". *(walk record 2026-07-08)*
+
 ## Added by the ἔργον session (2026-07-08)
 
 23. **The freight (#18) scan's scope is EVERY definitional field, not just the block the last failure was in.**

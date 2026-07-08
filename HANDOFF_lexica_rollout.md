@@ -107,6 +107,75 @@ Lexica floor if it is missing from `dotted_lexicon`. Two classes found + status:
   per-word structure-hint channel passing the reviewer's stable-jobs list as draw CONTEXT without
   touching the frozen VERSE_PROMPT.
 
+## V7 WINDOW — CLOSED (2026-07-08). Engine = V7. Read this block to resume; older state below is history.
+**The walk:** format decision → ten-pile items + item 11 → retro list under the 6,000-frame → bump.
+Every ruling JP's, one at a time; full ledger on the V7 PILE header below.
+- **ENGINE V7 LIVE (`b8cbe7c`):** six prompt edits (line→entry ×2 · two-directional gloss flag, "more
+  doctrinally specific" kept one-way DELIBERATELY — flattening covered by broader/less-loaded, not a missed
+  symmetry · headline scope marker · **Sub-use placement rule** (files by JOB, not imagery — the ὀφθαλμός
+  wall; control fire = ὀφθαλμός at requeue, **two-way placement watch pre-registered**: mis-files curing AND
+  previously-correct filings moving both get logged on first V7 draws) · house-shape line (JP format ruling:
+  HYBRID — em-dash headline stays norm; ἔτος organizing paragraph codified for one-job-many-frames; labeled
+  own-line items where citations cluster; rationale rests on citation density ALONE — the watch-#3 "readability"
+  attribution was corrected against the doc: cosmetic convention divergence, no parse risk) · gloss-note sense
+  anchors, permissive, JP wording ("no sense to anchor stays unanchored" = load-bearing, fabrication door) —
+  codifies the observed late-batch anchoring drift (11/12 notes anchored on the last 3 ships; sweep table in
+  session log). Stamp `lexica:6f982c804354` (inert). Reviewer `V7_PROMPT` byte-identical; default `v7`.
+  `trial_lexica_prompt.py` DELETED (throwaway rig; history in git).
+- **FLAG-ONLY DETECTOR SUITE LIVE (`5831175`), all control-fired (tests/test_lexica_detectors.py, CI+hook):**
+  rendering-claim lint (case-awareness LOAD-BEARING, docstring-pinned, οὐρανός fire is the reason; ἁμαρτία
+  "sin"/"sin offering" = the rend-compare control) · hedged-citation lint (7c assist; list pinned
+  NON-EXHAUSTIVE — a pass is NOT 7c satisfied) · sub-use overload counter (4+ → merge-review; NO ceiling,
+  #14; control positive = ῥῆμα sense 1 at exactly 4, a legitimate card) · **CONTESTED-VERSE REGISTRY**
+  (`contested_register.CONTESTED_VERSES`; #24 ῥῆμα refinement — verification scales with VERSE contestedness;
+  seeded 2Co 5:21, dossier bar VERBATIM + cite; a hit is ROUTING not a flag: mandatory verse-text verification,
+  word leaves the zero-read tier).
+- **DYNAMIC FED SAMPLING LIVE (`c7f8620`):** ≤40 occ feeds ALL (fed-gap family impossible by construction;
+  **measured: 4,017/5,254 Greek lemmas = 76% at ≤40**); tiers 40/60/80 above; top-10 PMI neighbors each
+  GUARANTEED a fed verse (#8 option (b)). Cost "roughly flat" = PROJECTION, not measurement. **MIRROR
+  INVARIANT:** reviewer + audit_lexica_coverage recompute the fed draw exactly as the build (else the floor
+  certifies the wrong inventory, #19 at tool level).
+- **REVIEWER TIERING LAW (JP-approved, the 6,000-frame; 0-for-17 was the problem statement, and it
+  over-states the corpus — batch-2 was the hand-picked hard top):**
+  - **GREEN (ships with ZERO JP READ — machine gates stay; CC spot-check rate set at calibration):**
+    pre-draw screens ALL pass (≤40 occ · no contested-register hit · no CONTESTED_VERSES hit · no
+    loaded-referent list hit · not fork-adjacent) AND post-draw ALL pass (floor stable at `--runs 3`
+    MACHINE-SCORED — any tool warning auto-escalates to 10 and the word leaves GREEN, no judgment call ·
+    hard gates green · ZERO fires across the whole flag suite). One fire of anything → AMBER.
+  - **AMBER:** JP reads ONLY the flagged region. Thin senses fold in here (7b test, one glance).
+  - **RED:** register/registry/referent hits, escalated floors, walls, high-occ — full current process.
+    Batch-2-class words live here permanently.
+  - **No pre-classification of floor depth** — the tight-agreement predictor was dented 3× (ὕδωρ, φωνή,
+    ἔτος); auto-escalation on the tool's own warnings is the classifier.
+  - **SHADOW CALIBRATION pins (pre-registered):** activation bar = ZERO escapes (JP-caught,
+    nothing-flagged defects) across a stated N of GREEN-tier words; **N proposed by CC BEFORE batch 3
+    opens, never adjudicated after**; calibration BLOCKED until all four detectors control-fire (done,
+    `5831175`) — GREEN is earned by measurement, never assumed. Any escape → new detector/screen,
+    recalibrate.
+- **POST-V7 ROLLOUT SEQUENCE (JP, on the record):** **Phase 1** — requeue AS the V7 control fires (next
+  session; 3 words, single runs, full audit): χριστός (fork machinery + register write, HELD until its
+  session) → ἁμαρτία (verse registry + rendering lint on the exact defect that parked it) → ὀφθαλμός
+  (placement-line known positive; restructure decision JP-alone). These three ARE the V7 validation.
+  **Phase 2** — batch 3 = shadow calibration (~20 words, composed: majority GREEN-candidates + seeded
+  RED so all routing exercises; JP audits everything; escapes are the measure). **Phase 3** — throttle by
+  measurement: zero escapes → GREEN activates, batch sizes grow (50 → 100+), JP's read shrinks to
+  AMBER/RED + spot rate; any escape → detector, recalibrate. Batch size is governed by escape rate, not
+  schedule. **Metric restart:** graduation streak resets under V7; clean-at-attempt-1 is the leading
+  indicator for 6,000-on-this-engine vs needs-a-V8.
+- **SESSION LOG (V7 walk, 2026-07-08):** MISSED-collocation sweep RAN read-only over all 18 shipped cards —
+  **16/18 fully clean, zero senses lost corpus-wide to date**; two candidate reads folded into the
+  consolidated re-audit, NOT opened (ἅγιον+κλητός occasion-job; οὐρανός+βασιλεία metonymy, the known #4
+  blind spot). Gloss-note anchoring sweep: late-jump drift, real + desirable → codified (table in chat log;
+  0–1 loose refs words 1–15, 11/12 anchored on ἄρχων/δύναμις/ῥῆμα). κύριος exhibit verification CLOSED:
+  V1 flowing style carries citations as TERMINAL per-sense ref-lists (35 refs in one parenthesis) —
+  detaching evidence from claims; strengthens the hybrid ruling; byte-exactness not certifiable through the
+  fetch layer and not needed. Display-layer/three-zone question resolved: = the two tickets (gloss-note
+  sense-anchoring markers · canonical note ordering); JP ruled HOLD for the three-zone redesign — with
+  anchors codified, the superscript ticket is now a PURE RENDERING job over data the cards carry.
+  ENGINE_LESSONS #26 (wording-audit finds are hypotheses — the 3/5 pattern) + #27 (mid-session items need
+  the manifest catch-net; two list-boundary drops caught at bump assembly). Config-test tally: 1 correction
+  (watch-#3 misattribution, JP-caught, recovered by quoted record), high-quality recovery.
+
 ## SESSION-3 CLOSE STATE (2026-07-07) — read this to resume
 **SESSION-4 FIRST ACT: the ὀφθαλμός morning fork** (re-roll vs. argued-shelving on cached draw `0abd875d`) —
 see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired + resolved the first escalation
@@ -141,7 +210,13 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
   whitespace — **SHIPPED in V6** (2026-07-07): *"each Sub-use begins on its own line, with a blank line
   before it."* rode along with the freight bump; first live test = ὀφθαλμός redraw. **NEW post-V6 watches:
   see the two V6 watches under ENGINE STATE (over-trigger, philosophize).**
-- **V7 PILE (prompt-wording candidates, banked 2026-07-07 S3 — next bump, own checkpoint; NONE block V6).**
+- **V7 PILE — ALL RULED at the window walk (JP, 2026-07-08); ledger: 1 BUILD · 2 BUILD · 3 DROP
+  (premise corrected inline below) · 4 BUILD · 5 DROP (revisit = a shipped note quoting the aphorism) ·
+  6 BUILD (prompt-steer, placement rule) · 7 BUILD (rendering-claim lint) · 8 BUILD (hedge lint) ·
+  9 DEFER (revisit = second formula-lookalike, escape-weighted) · 10 BUILD (verse registry) · 11 BUILD
+  (sub-use overload counter, added mid-walk). Builds live: prompt `b8cbe7c`, detectors `5831175`,
+  sampling `c7f8620`. See "V7 WINDOW — CLOSED" above for the standing law. Item text below kept as
+  the historical bank.**
   From a post-approval wording audit of the full V6 prompt (register / both-ways neutrality / stop-rules /
   new-line interaction / scope markers). Priority:
   1. **"line" → "entry" (×2), PRIORITY.** Method step 2 ("note the variation in the sense's line") and Output
@@ -154,10 +229,13 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
      over-loading; no channel for a gloss BROADER/flatter than context (under-translation) — same asymmetry as
      the dikaioō lesson. Fix: "narrower or broader, more or less loaded, than the context supports."
   Lower priority:
-  3. **Doubled vocabulary bar.** Term-of-art line + freight line now govern headline word choice with two
-     tests; agree so far, but two tests on one behavior = an over-trigger path (stricter wins by default). Fix:
-     subordinate term-of-art into the freight line as an example clause — one test. **WATCH LINK:** if V6 watch
-     (i) freight-paranoia fires, the doubled bar is a suspect alongside the new line.
+  3. **Doubled vocabulary bar — RULED DROP at the V7 walk (JP 2026-07-08), premise corrected; do NOT
+     resurrect at V8.** The banked "two tests on one behavior" premise was wrong: the tests differ —
+     "corporate" PASSES the freight test (its plain English tracks "applied to a group") and fails only
+     term-of-art (debate-register). Merging would trade a never-observed over-trigger (watch (i) 0 fires
+     across all live V6 draws) for a real coverage hole on the ἱερεύς-"corporate" class. Both lines stay.
+     **WATCH LINK (still live):** if V6 watch (i) freight-paranoia ever fires, the doubled bar re-opens as
+     suspect #1.
   4. **Missing scope marker:** "gloss-free characterization" (Output) vs "you may use it" (gloss paragraph) —
      reconciliation inferable (headline not a bare gloss; matching gloss word may appear in the elaboration) but
      unstated. Fix: state it.
@@ -390,19 +468,34 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
    (all detail: TODO.md S11 follow-ups). The other three S11 follow-ups are ALREADY DONE: G1096 redraw (shipped
    from-draw at batch-2 open), `--from-draw` ship path (`c4617d0`), citation-sweep rule (codified in
    `docs/claude/ai.md`). Detail: `CHARTER_cert_session9.md` top banner + memory `project_abp_certification`.
-2. **V7 engine window** — OPEN (flagged at batch-2 close, `d46b6dd`). Detail: V7 pile in this handoff +
-   ENGINE_LESSONS #24/#25 + the ἁμαρτία dossier (audit doc). Includes: format decision (V1 inline em-dash vs.
-   labeled bullets — JP's call), display-layer/three-zone window question.
-3. **Requeue rebuilds** — BLOCKED ON: V7. Order: χριστός → ἁμαρτία → ὀφθαλμός (restructure decision is JP's
-   alone). Detail: contested register + park dossiers.
-4. **Batch-3 scoping** — BLOCKED ON: V7 (new batch runs on new engine). Detail: frequency-cutoff logic, audit doc.
+2. ~~V7 engine window~~ **CLOSED 2026-07-08** (`b8cbe7c` / `5831175` / `c7f8620`): all 11 pile items ruled,
+   retro list closed, tiering law + calibration pins + rollout sequence on the record. Detail: the
+   "V7 WINDOW — CLOSED" block in this handoff. Display tickets (sense-anchoring markers, note ordering)
+   ruled HOLD for the three-zone redesign — with anchors codified in V7, a pure rendering job.
+3. **Requeue rebuilds = Phase 1, the V7 control fires** — UNBLOCKED, next session. Order: χριστός (register
+   write HELD until its session) → ἁμαρτία (registry + rendering lint on its exact parking defect) →
+   ὀφθαλμός (placement-line known positive; restructure decision JP-alone). Single runs, full audit; these
+   three ARE the V7 validation. Detail: contested register + park dossiers + the Phase-1 terms in the V7 block.
+4. **Batch-3 = Phase 2 shadow calibration** — BLOCKED ON: Phase 1. ~20 words, majority GREEN-candidates +
+   seeded RED so all routing exercises; JP audits everything; escapes are the measure; **CC proposes the
+   calibration N BEFORE the batch opens** (pre-registered, never adjudicated after). Detail: tiering law +
+   calibration pins in the V7 block; frequency-cutoff logic, audit doc.
 
-Background tier (no ordering): former TODO/retro pile items — consolidated pre-standards re-audit, blank-lemma
-query, backup rewrite, invariant #8, Dan-flag, no-entry triage, inverse-dotted audit, homonym heuristic,
-topic-file merge, MISSED-warning sweep, draw-cache archive, word-study-header Hebrew half (detail: TODO.md),
-θεός sense-1 item B (detail: memory project_lexica_dictionary DEFERRED + audit doc).
+Background tier (no ordering): former TODO/retro pile items — consolidated pre-standards re-audit (NOW ALSO
+CARRIES: ἅγιον+κλητός occasion-job read · οὐρανός+βασιλεία metonymy read — the V7 sweep's two candidates),
+blank-lemma query, backup rewrite, invariant #8, Dan-flag, no-entry triage, inverse-dotted audit, homonym
+heuristic, topic-file merge, ~~MISSED-warning sweep~~ (RAN at the V7 walk: 16/18 clean, zero senses lost),
+draw-cache archive, word-study-header Hebrew half (detail: TODO.md), θεός sense-1 item B (detail: memory
+project_lexica_dictionary DEFERRED + audit doc).
 
-## RETRO LIST (decide with full-batch evidence, not per-word)
+## RETRO LIST — **DECISION ITEMS CLOSED at the V7 walk (JP, 2026-07-08) under the 6,000-definition /
+minimum-JP-audit frame.** Outcomes: style ticket → codified (house shape, V7) · MISSED-collocation sweep →
+RAN, 16/18 clean · warning-suppression-by-coverage → still a v2 nicety, untouched · reviewer tiering →
+GREEN/AMBER/RED law (V7 block above) · fed-40 sufficiency → ANSWERED by dynamic sampling (≤40 feeds all,
+measured 76%) · thin-sense accumulation → an AMBER flag (7b test) · gloss-notes assertion-verification →
+BUILT (rendering-claim lint) · substitution-probe → stays minor/open (the οὐρανός-βασιλεία re-audit read
+feeds it). Item text kept below as the historical bank.
+(original header: decide with full-batch evidence, not per-word)
 - **Style ticket — single-sense multi-construction organizing paragraph (JP-ruled 2026-07-08, N=1 ἔτος):** ἔτος's
   "It appears in four recurring constructions…" paragraph between headline and bullets. Not a defect, not a gate;
   ἔτος stands as shipped. Collect instances through batch-2 close (ἄρχων / δύναμις candidates if they fold hard):
