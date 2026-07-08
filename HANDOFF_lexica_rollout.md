@@ -242,7 +242,14 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
   #2 term-of-art — addressed in V5, the point-6 audit is live (first catch-and-clear on οὐρανός); #3
   whitespace — **SHIPPED in V6** (2026-07-07): *"each Sub-use begins on its own line, with a blank line
   before it."* rode along with the freight bump; first live test = ὀφθαλμός redraw. **NEW post-V6 watches:
-  see the two V6 watches under ENGINE STATE (over-trigger, philosophize).**
+  see the two V6 watches under ENGINE STATE (over-trigger, philosophize).** **#4 "the lemma" meta-register
+  (FILED 2026-07-08, χριστός — was recall-only until now, exactly the #27 tracking-slot class):** sense
+  prose narrates the analysis ("the lemma describes / functions as…") instead of stating the meaning.
+  Long-standing house dialect, PERSISTED THROUGH V7 UNCHANGED → prompt-version-independent; the freight/
+  whitespace lines neither caused nor cured it. Sometimes load-bearing (usage-behavior senses — χριστός
+  2–3, where what the word is DOING is the sense), sometimes filler (openers that survive deletion intact).
+  If ever ruled a defect, the fix is an EXPLICIT prose-register rule at a prompt window, not hoping a
+  revision washes it out. No ruling requested; collect per card.
 - **V7 PILE — ALL RULED at the window walk (JP, 2026-07-08); ledger: 1 BUILD · 2 BUILD · 3 DROP
   (premise corrected inline below) · 4 BUILD · 5 DROP (revisit = a shipped note quoting the aphorism) ·
   6 BUILD (prompt-steer, placement rule) · 7 BUILD (rendering-claim lint) · 8 BUILD (hedge lint) ·
