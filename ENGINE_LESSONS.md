@@ -297,6 +297,19 @@ both drifting from the doc.
     tradition arrives dressed as vocabulary there, as fact here). Direct input to the loaded-frame three
     (ἁμαρτία / ῥῆμα / δύναμις — the audit-hardest words are exactly the highest-loadedness ones). *(audit:
     G758 ἄρχων cap-out saga, 2026-07-08)*
+    - **UPDATE (ἁμαρτία 2026-07-08): on a maximally loaded word, fabrication and mis-shelving MERGE into one
+      defect class — invented theology drives the CARVE.** Three unhinted pulls, three different boundary
+      inventions (cultic-peer promotion, condition-sense annexing four majority-act verses, a 0/10 sense
+      resurrected), each verse arriving with a freshly minted condition-theology micro-reading ("medium or
+      atmosphere of a prior existence") the verse text doesn't carry — prose invention recruiting verses to
+      shelves, not decorating placements. The structure-hint fixed the carve (its anti-annexation direction,
+      first test, worked) but the word STILL parked on a meta-field side-take — vigilance-intensity scaling
+      alone doesn't close this; the carve itself needs the #24 check. Also NEW SUBCLASS + machine-check
+      candidate: **gloss-note fabrication about the translation, self-refuting within the card** (claimed the
+      2Co 5:21 rendering was "sin"; the card's own senses_block quoted ABP's actual "sin offering" two fields
+      up; twin: οὐρανός capitalization). → v2: lint gloss-note rendering-claims against the card's own quoted
+      verse text — no external lookup needed, two corpus instances. *(audit: G266 ἁμαρτία PARKED dossier,
+      2026-07-08)*
 
 ## Added by the δύναμις session (2026-07-08)
 

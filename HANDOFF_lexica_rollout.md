@@ -257,7 +257,7 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
 5. Log the word in `AUDIT_lexica_rollout.md` (per-word flag rate, any precedent, wall status).
 
 ## BATCH STATE
-- **SHIPPED + LIVE (17; batch-2 locked-20 = 16 shipped · 2 parked · 2 to go):** G1096 γίνομαι (session start, from-draw first exercise) · G80 ἀδελφός
+- **SHIPPED + LIVE (17; batch-2 locked-20 = 16 shipped · 3 parked · 1 to go):** G1096 γίνομαι (session start, from-draw first exercise) · G80 ἀδελφός
   (4 senses) · G2588 καρδία (4 senses, one-draw ship) · G39 ἅγιον (4 senses, near-wall) · G1484
   ἔθνος (2 senses, converged attempt 2; detector's first live fire, Eph 2:11 bridge ruled+logged) ·
   G3173 μέγας (4 senses, one-draw ship; multi-shallow-axis wobble no-holes; 2Ch 17:12 bridge ruled) ·
@@ -332,8 +332,14 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
   bundled disposition INTO regard and the draw DECLINED it (homed disposition under physical instead) — so a
   re-roll may not place disposition where wanted without a sharper hint or the forced verses re-scoped. **Streak
   stays 0.** Full saga + attempt-3 raw + cap-out record: audit doc `### G3788 ὀφθαλμός … #### V6 ATTEMPTS → CAP-OUT`.
-- **REMAINING (2) — the loaded-frame pair:** ἁμαρτία G266 · ῥῆμα G4487. **δύναμις SHIPPED** (see LIVE list —
-  over-split prior, thin-sense amendment, provenance first fire).
+- **REMAINING (1):** ῥῆμα G4487 — the batch's last unstarted word. **δύναμις SHIPPED**; **ἁμαρτία G266 PARKED**
+  (cap-out + hinted draw tripped pre-registered exit (c) on a 2Co 5:21 gloss-note side-take — full dossier in
+  the audit doc; routes to the V7 requeue with χριστός; the hint's anti-annexation direction WORKED
+  structurally, the kill was meta-field). Standing check born: **gloss-note rendering-claims verified against
+  the printed verse text before they pass** (two corpus instances of self-refuting meta-field fabrication:
+  οὐρανός, ἁμαρτία). 2Co 5:21 = reviewer-attested contested shelf (4/3/2+1 tally); branch-A attribution shape
+  (ABP's "sin offering" is the corpus's rendering; explanations name the LXX חַטָּאת precedent as the
+  translation's basis, never Paul's meaning) is the hard bar at requeue.
   (Full locked-20 list + selection method in the audit doc's Batch Two section.) **ὄρος + θυγάτηρ + τόπος + ἔργον
   + ἔτος + ἄρχων SHIPPED** — moved to the LIVE list above. Their tools: the operationalized freight test, #23
   full-field scope, and NEW **#24 loadedness-scaled verification** (every descriptive claim on a loaded referent
@@ -345,7 +351,9 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
   the operationalized freight test (evaluation in a definition = fail; as cited context = pass) + #23 full-field
   scope are the tools they'll lean on.**
 - **POST-FINALIZATION REQUEUE LIST (JP-ruled, new standing queue):** words to rebuild after the engine is
-  finalized (V7+), under the final prompt, rather than burning a V6 draw. **#1 = χριστός G5547** — JP RULED it
+  finalized (V7+), under the final prompt, rather than burning a V6 draw. **#2 = ἁμαρτία G266** (parked
+  2026-07-08, exit (c); inherits the branch-A attribution bar, the 2Co 5:21 shelf tally, the sense-2 membership
+  roster, and the theology-drives-the-carve dossier). **#1 = χριστός G5547** — JP RULED it
   ENTERS the contested register (gets fork treatment, not a plain redraw); its register WRITE is HELD until the
   requeue session so the live card doesn't drop to LSJ meanwhile (serve backstop `views_lexica.py:153` 404s a
   registered-contested word with no fork). Also the destination for anything the consolidated re-audit flags as

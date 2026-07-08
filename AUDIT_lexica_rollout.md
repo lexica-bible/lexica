@@ -1330,6 +1330,49 @@ caught by JP on second pass = **#23 firing in real time, logged against both aud
 - **ROSTER:** δύναμις = the **16th ship**. Batch-2: **16 shipped · 2 parked (πολύς, ὀφθαλμός) · 2 to go**
   (ἁμαρτία G266, ῥῆμα G4487).
 
+### G266 ἁμαρτία — PARKED (cap-out + hinted draw tripped exit (c)). Routes to the V7 requeue with χριστός. The theology-drives-the-carve dossier.
+Four pulls, no ship. Floor was CLEAN: `--runs 10` = {2:7, 3:3}, act + condition-with-quartet (Rom 3:9 /
+1Co 15:56 / Gal 2:17 / 2Th 2:3) — condition 10/10 with its core, divine-action-object **0/10** (the 3-run's
+draw-1 shape never recurred; JP's "syntactic frame, not a job" theory confirmed by data), cultic 3/10 → fold
+under amendment 7b (homeless test: folds cleanly 7/10). **2Co 5:21 quantified as genuinely contested BY THE
+REVIEWER: no majority shelf (act 4 / cultic 3 / condition 2 / double-listed 1)** — the pre-registration
+discipline's cleanest product this session.
+- **BRANCH FORK RESOLVED PRE-PULL-2 (load-bearing for the whole word):** pull 1's card contradicted itself —
+  sense 2 quoted 2Co 5:21 as "he made a sin offering for us" while the gloss note claimed the rendering was
+  "sin." Verse pull: **ABP prints "sin offering" — the quote was genuine, the GLOSS NOTE fabricated a claim
+  about a rendering the corpus contradicts two fields up on the same card** (#17 family, meta-field location;
+  self-refuting-within-the-card — the οὐρανός capitalization twin, but the disproof was already in the draw's
+  own senses_block). Branch-A consequence: ABP adjudicated the fork; the card reports the rendering; the
+  both-ways bar operationalized = "ABP renders with the sacrificial sense, following the LXX חַטָּאת use" passes;
+  "the Greek means sin-offering here" fails; "simply sin, mistranslated" also fails.
+- **THE FOUR PULLS:** (1) cultic promoted to structural peer (3/10 carve, absorbed 2Co 5:21 + Lev 16:16 —
+  barred shape under 7b) + the gloss-note meta-fabrication. (2) structure right BUT sense 2 ANNEXED four
+  majority-act verses (Psa 10:15 act-8/8, Jas 1:15 cond-2/10, Eph 2:1 cond-1/10, Eze 33:12 majority-act), each
+  arriving with freshly minted condition-theology ("medium or atmosphere of a prior existence", "a
+  process-stage") — **fabrication driving verse placement, not decorating it**. (3) divine-action sense
+  RESURRECTED from 0/10 + double-shelf fired twice on floor-unstable placements + gloss note leaning
+  anti-offering. Cap-out: three different boundary inventions, all theology-dressed.
+- **HINTED DRAW (4th pull, exit conditions (a)–(d) pre-registered binding):** structure PERFECT — certified
+  2-carve, quartet intact, annexed verses re-homed, cultic sub-use, Joh 1:29 verse-bounded. **PARKED on exit
+  (c):** the gloss note endorsed the offering rendering as "a real sub-use visible in context" (2Co 5:21
+  grouped in, no LXX precedent named, no attribution to the translation) — side-taking by the letter,
+  pro-offering where pull 3 leaned anti. No re-litigation per the pre-registration. Secondary: 2Pe 2:14
+  double-shelved [1,2] (sense-2 home floor-stable 9/10; sense-1 listing the 1/10 stray).
+- **MECHANISM NOTE:** structure-hint's second-tested direction (anti-annexation) WORKED — the carve came back
+  perfect. The kill was in the meta-field, which is the hint's known #20 ceiling (names jobs; can't govern
+  gloss-note register). The requeue rebuild inherits: the branch-A attribution shape as a hard bar, the
+  2Co 5:21 shelf-tally, the sense-2 membership roster, and the #24-structural finding.
+- **Loaded-referent pattern EXTENDED (#24 updated):** on the corpus's most loaded word, fabrication and
+  mis-shelving stopped being separate defect classes — invented theology recruited verses to new shelves in
+  all three unhinted pulls. Also NEW MACHINE-CHECK CANDIDATE (JP): gloss-note rendering-claims cross-checked
+  against the card's OWN quoted verse text — no external lookup needed; two instances corpus-wide (οὐρανός,
+  this). Standing check meanwhile: any gloss-note claim about a rendering is verified against the printed text
+  before it passes.
+- **Step 1.5 (all four pulls, stable):** three numeral-free warnings — G1837 (sin-offering contexts, facet
+  present), ἀφίημι (forgiveness frame, sub-use covered), ἀποθνήσκω (die-for-sin, act sense) — unfed instances,
+  no hidden job. Joh 1:29 singular check held on every pull.
+- **Streak 0. ROSTER: 16 shipped · 3 parked (πολύς, ὀφθαλμός, ἁμαρτία) · 1 to go (ῥῆμα G4487).**
+
 ### Q&A ON RECORD — automation trajectory (JP asked, answered 2026-07-08, δύναμις session close)
 JP's autonomy question and the answer, logged for the retro: **the structural layer is near-automatable** —
 floor runs, the ≥6/10 threshold, the four gates, double-shelf, thin/circular flags are mechanical now, and the
