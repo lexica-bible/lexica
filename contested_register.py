@@ -189,6 +189,38 @@ CONTESTED = OrderedDict([
                 "human master.",
         "graph_ref": None,
     }),
+    ("G5547", {
+        "lemma": "christos", "gloss": "anointed / Christ",
+        # contest_verses (piece B, self_only check): the OT "anointed" loci whose REFERENT
+        # is read more than one way — the enthroned Davidic king vs the coming Messiah vs
+        # both (typological). Psa 2 is CHAPTER-level like Psa 82 (the dispute is the psalm's
+        # subject; the NT applies it at Act 4:25-26). Dan 9:25 is the other live locus (the
+        # identity of the "anointed one" divides traditions); Dan 9:26 carries no G5547 tag
+        # in ABP (verified 2026-07-08) so it is not listed. Isa 45:1 (Cyrus) is deliberately
+        # NOT here — the referent is named in the verse, uncontested.
+        "contest_verses": ["Psa 2", "Dan 9:25"],
+        "divergence_type": "referent", "lead_flip": False,
+        # Scope like kyrios: the SENSE is uncontested — anointed priests, anointed kings,
+        # Cyrus, and Jesus as the Christ are all plainly attested and stay in the senses.
+        # The contest is the REFERENT at the loci above. No pin_core: leading with the
+        # plain sense states no side of that fork (the theos/kyrios pattern).
+        "core": "anointed — one ceremonially anointed with oil: priest, king, or the "
+                "expected anointed one (the Christ, the Messiah); in the NT, Jesus as "
+                "the Christ",
+        "frames": [
+            ("direct messianic prophecy", "traditional Christian",
+             "the OT anointed texts speak of the coming Messiah, fulfilled in Jesus — "
+             "Psa 2 read as Act 4:25-26 reads it"),
+            ("the historical anointed king", "critical / Jewish",
+             "the referent is the enthroned Davidic king (in Dan 9, a Second-Temple "
+             "figure); application to a coming Messiah is a later re-reading"),
+            ("typological / dual", "typological",
+             "the king first, the Messiah in fullness — the text carries both horizons"),
+        ],
+        "note": "the fork touches ONLY the OT anointed loci; that the NT itself presents "
+                "Jesus as the Christ is not a contested reading of the NT text",
+        "graph_ref": None,
+    }),
 ])
 
 # membership index: every Strong's number (primary + aliases) -> its entry
