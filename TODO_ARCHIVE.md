@@ -6,6 +6,15 @@ few "leave it alone" verdicts worth keeping.
 
 ---
 
+## Style ticket (sub-use-dominant card shape) — RESOLVED at the V7 window walk, 2026-07-08
+Ticket ran its full course: 3 instances collected (ἔτος organizing ¶, ἄρχων, ῥῆμα), draw behavior
+consistent → per its own terms, CODIFIED as house shape in the V7 prompt (`b8cbe7c`). The open format
+call was ruled by JP: **HYBRID** — em-dash headline stays the norm, ἔτος-style organizing paragraph for
+one-job-many-frames words, labeled own-line items where citations cluster. NOT pure V1 inline: the
+κύριος exhibit (verified against the live card) showed V1 handled citation density by dumping all refs
+in one terminal parenthesis, detaching evidence from claims. Ruling + law: HANDOFF "V7 WINDOW — CLOSED"
+block. Incidental from the ticket, kept: κύριος fork-render confirmed working (no batch-2 word exercised it).
+
 ## S11 follow-ups, 3 of 6 closed + stale S9 queue item — verified & cleaned 2026-07-08
 Queue item 1 (lexica handoff) claimed the S9 doc merge was still pending — it had been done 2026-07-05
 (`9bdaa32`) and the whole certification arc closed at S11 2026-07-06 (`1f2fd62`). Cleaned in `ddb8a05`
