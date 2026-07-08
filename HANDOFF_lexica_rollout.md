@@ -68,6 +68,11 @@ Lexica floor if it is missing from `dotted_lexicon`. Two classes found + status:
   at gate time (now auto-printed by `show_entry`, commit `9a1dca9`), and verify the RENDERED card
   via a screenshot before close-out — not the pasted terminal text (paste flattens layout and
   invents phantom run-togethers). Candidate for the formal V7 gate list.
+  - **EXTENDED to `gloss_notes` (θυγάτηρ 2026-07-07, commit `be027c1`):** `gloss_notes` was still a
+    400-char PREVIEW (`… ` cutoff) — the same "char count isn't the artifact" gap. Now prints in full
+    with its own PROOFREAD label. Proofread BOTH `senses_block` and `gloss_notes` at the dry-run gate;
+    `gloss_notes` renders to the reader (both bullets, screenshot-confirmed on θυγάτηρ), so a byte
+    defect past char 400 would otherwise reach the card.
   - HABIT (not a gate): for a `fix_lexica_raw` round, run dry-run → review → apply as TWO
     exchanges, not apply-in-the-same-pass. The exact-once abort makes it near-zero risk either way,
     but the split review is cleaner.
