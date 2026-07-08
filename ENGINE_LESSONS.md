@@ -167,6 +167,14 @@ both drifting from the doc.
     infrastructure), not three per-instance patches; target for the batch-2-close optimization pass.
     *(audit: G3772 attempt-1/2 capitalization fabrication + case-fold root-fix; fed-list standing rule;
     session-3 handoff standing-rule #4 / preamble `source .env` correction)*
+    - **UPDATE (ἔτος 2026-07-08): instance (d) — fabrication anchored on a FORMULA-LOOKALIKE.** 1Sa 17:12's
+      "in days of Saul" shares the surface shape of a regnal-dating formula ("fifteenth year of Tiberius"), so
+      the draw filed an age idiom as calendrical across three draws and twice invented a rationale for the shelf
+      ("fourth year of Levi's service range" at Num 4:3 — no fourth year in the verse; "a year of active service"
+      at 1Sa 17:12). Same signature (confident invented rationale for an unobserved fact), new anchor: a
+      construction that LOOKS like a known formula recruits the formula's category, then the rationale is invented
+      to fit the mis-filing. → the family gate should treat formula-shaped contexts as a trigger for
+      verify-the-verse, not as classification evidence. *(audit: G2094 ἔτος pulls 1–2, 2026-07-08)*
 
 18. **Translation-freight — the FOURTH freight axis** (alongside referent-freight, attribute-freight,
     frame-leak). The English/Latin definitional vocabulary imports its OWN conceptual carving onto the Greek —

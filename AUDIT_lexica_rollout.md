@@ -1196,6 +1196,44 @@ Son 7:1/Isa 2:8); God's-deeds under sense 1 (Gen 2:2/Deu 3:24).
 - **ROSTER:** ἔργον = the **13th ship**. Batch-2: **13 shipped · 2 parked (πολύς, ὀφθαλμός) · 5 to go** (ἔτος
   G2094, ἄρχων G758, ἁμαρτία G266, ῥῆμα G4487, δύναμις G1411).
 
+### G2094 ἔτος — LIVE (1 sense, attempt 3 + 2 post-apply prose swaps). Streak 0. The formula-lookalike session.
+Shipped draw `2c83c9d7` (single sense: unit of time / calendar year — age, duration, ordinal-dating, annual-cycle
+facets as bullets), no model call on apply, gate 39/39, stamp current; then TWO ruled `fix_lexica_raw` swaps
+("prophetic or eschatological time" → "prophetic time or the time of the end" [term-of-art de-jargon];
+"personal, experiential register / felt passage of time" → "biographical register — the years of a person's life
+taken as a span" [register misfit for Exo 6:16 + 1Sa 17:12]); **screenshot-verified** (both swaps rendered, no
+render defects).
+- **FLOOR:** `--runs 3` wobbled 3↔1 (draw-1 3-way split incl. an "annual cycle" job) → escalated `--runs 10`:
+  **{1:8, 2:2} = STABLE-at-1** (`agreement_G2094_v6_20260708-060934`). The 2/10 calendrical carve was consistent
+  both times (1Ki 6:1/Ezr 1:1/Luk 3:1 cluster) → 2-sense-matching ruled legal granularity-as-drawn; the annual-cycle
+  job = 0/10, dead (a 3-run artifact). Pre-registered majority threshold ≥6/10 BEFORE the 10-run — first word with
+  the bar numerically pinned in advance. All wobble verses back-checked folds; a 3-run citation real-miss did not
+  recur at 10 (one-off noise, closed).
+- **THREE PULLS (cap reached, none spare):** Pull 1 (2-sense) — **Num 4:3 mis-shelved** under regnal dating with an
+  invented "fourth year of Levi's service range" (verse = an age range, 25→50); **1Sa 17:12 mis-described** as "a
+  year of active service" (verse = the "arriving in the year" age idiom). Pull 2 (2-sense) — 1Sa 17:12 STILL
+  calendrical (3rd filing incl. floor draw 6); NEW defects: headline imported "a span of twelve months" (unattested
+  calendrical spec; intercalation makes it wrong) + range asserted "divine timelessness" (verses attest
+  endlessness, not timelessness). Defects NOT converging across pulls — decorating with unattested specificity.
+  Pull 3 — clean: 1Sa 17:12 re-homed to sense 1 quoting the verse, Num 4:3 in the age bullet, no imported specs.
+  **NOT a content-wall:** every defect was verse-level placement/description, structure held; trigger tally unchanged.
+- **#17 INSTANCE — FABRICATION ANCHORED ON A FORMULA-LOOKALIKE (JP-named mechanism):** "in days of Saul" reads like
+  a regnal-dating formula (same surface shape as "fifteenth year of Tiberius"), so the draw filed an age idiom as
+  calendrical three times and twice INVENTED a rationale for the shelf ("fourth year of service", "year of active
+  service"). Logged to ENGINE_LESSONS #17 (the fabrication family), instance (d).
+- **VERSE-TEXT VERIFICATION did the catching:** Num 4:3 + 1Sa 17:12 pulled before any redraw ruling (pull 1);
+  2Sa 4:4 + 2Ch 26:1 pulled for the gloss-note "son of X years" claim (verified, incl. per-row morph: both rows
+  ετών N.GPN — genitive plural, parse claim true); Jos 5:5 / Isa 14:28 / Luk 2:41 inline quotes spot-verified
+  word-for-word. The citation gate checks refs, not quotes — the quote spot-check is manual and it paid.
+- **STEP 1.5:** five MISSED collocations, ALL numerals (τριακόσιοι 300 / ἑβδομήκοντα 70 / ἕβδομος 7th / ἑπτά 7 /
+  δύο 2) — genealogy + sabbatical-year contexts; all unfed instances of existing facets (sabbatical "seventh year"
+  covered by ordinal/liturgical), no hidden job, no narrowing. Same adjudication held across all three pulls.
+- **Tight-agreement predictor: THIRD dent.** ἔτος agreed on inventory but wobbled structure at 3 (3↔1); after
+  θυγάτηρ. Separability-not-count working rule survives but the "tight single-dimension noun" prediction failed again.
+- **Streak 0** (attempt 3 + post-apply swaps — not clean-at-attempt-1).
+- **ROSTER:** ἔτος = the **14th ship**. Batch-2: **14 shipped · 2 parked (πολύς, ὀφθαλμός) · 4 to go** (ἄρχων G758,
+  ἁμαρτία G266, ῥῆμα G4487, δύναμις G1411).
+
 ### TRIGGER STATUS (standing — survives session end) — FIRED + RESOLVED 2026-07-07
 Content-wall tally (now **3**): **πολύς = full cap-out (range-completeness)**; **ἅγιον = near-wall (structure,
 cleared attempt 3)**; **ὀφθαλμός = cap-out (structure↔freight oscillation — 3 pulls, never both clean at once)**.

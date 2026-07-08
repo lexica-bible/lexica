@@ -244,7 +244,7 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
 5. Log the word in `AUDIT_lexica_rollout.md` (per-word flag rate, any precedent, wall status).
 
 ## BATCH STATE
-- **SHIPPED + LIVE (14; batch-2 locked-20 = 13 shipped · 2 parked · 5 to go):** G1096 γίνομαι (session start, from-draw first exercise) · G80 ἀδελφός
+- **SHIPPED + LIVE (15; batch-2 locked-20 = 14 shipped · 2 parked · 4 to go):** G1096 γίνομαι (session start, from-draw first exercise) · G80 ἀδελφός
   (4 senses) · G2588 καρδία (4 senses, one-draw ship) · G39 ἅγιον (4 senses, near-wall) · G1484
   ἔθνος (2 senses, converged attempt 2; detector's first live fire, Eph 2:11 bridge ruled+logged) ·
   G3173 μέγας (4 senses, one-draw ship; multi-shallow-axis wobble no-holes; 2Ch 17:12 bridge ruled) ·
@@ -271,6 +271,12 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
   works-of-law de-freighted UNPROMPTED (credit); detector FIRST FIRE on a hallucinated cite (draw 5, not shipped);
   `---` root fix `1be84b7` + corpus sweep → G5547 χριστός also cleaned, class closed; blank-lemma 16.0% = class
   rate; streak 0; screenshot-verified).
+  · **G2094 ἔτος** (1 sense, attempt 3 + 2 ruled prose swaps [de-jargon "eschatological", biographical-register
+  refit for Exo 6:16/1Sa 17:12]; floor 3↔1 wobble → `--runs 10` = {1:8,2:2} STABLE-at-1, majority threshold ≥6/10
+  pre-registered BEFORE the run; pulls 1–2 killed by verse-level fabrications — the 1Sa 17:12 "in days of Saul"
+  FORMULA-LOOKALIKE anchor, logged ENGINE_LESSONS #17 instance (d); NOT a content-wall (structure held, trigger
+  tally unchanged); per-row morph verified on the gloss-note parse claim (ετών N.GPN ×2); inline quotes
+  spot-verified; tight-agreement predictor dented a 3rd time; streak 0; screenshot-verified).
 - **word_gloss:** G39 "Holy Place" → "holy, set apart" override LIVE (`a06a90b` + `--apply` rebuild
   on PA). Verified: word_gloss row = `holy, set apart|override`; count 17508 stable; `override`
   58→59, `tbesg` 73→72 (only G39 moved). **Library card confirmed rendering "hágion · holy, set apart"**
@@ -299,9 +305,9 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
   bundled disposition INTO regard and the draw DECLINED it (homed disposition under physical instead) — so a
   re-roll may not place disposition where wanted without a sharper hint or the forced verses re-scoped. **Streak
   stays 0.** Full saga + attempt-3 raw + cap-out record: audit doc `### G3788 ὀφθαλμός … #### V6 ATTEMPTS → CAP-OUT`.
-- **REMAINING (5):** ἔτος G2094 · ἄρχων G758 · ἁμαρτία G266 · ῥῆμα G4487 · δύναμις G1411.
+- **REMAINING (4):** ἄρχων G758 · ἁμαρτία G266 · ῥῆμα G4487 · δύναμις G1411.
   (Full locked-20 list + selection method in the audit doc's Batch Two section.) **ὄρος + θυγάτηρ + τόπος + ἔργον
-  SHIPPED** — moved to the LIVE list above. **Loaded-frame three (ἁμαρτία / ῥῆμα / δύναμις) are the audit-hardest —
+  + ἔτος SHIPPED** — moved to the LIVE list above. **Loaded-frame three (ἁμαρτία / ῥῆμα / δύναμις) are the audit-hardest —
   the operationalized freight test (evaluation in a definition = fail; as cited context = pass) + #23 full-field
   scope are the tools they'll lean on.**
 - **POST-FINALIZATION REQUEUE LIST (JP-ruled, new standing queue):** words to rebuild after the engine is
