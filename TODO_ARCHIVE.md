@@ -11,7 +11,8 @@ Queue item 1 (lexica handoff) claimed the S9 doc merge was still pending — it 
 (`9bdaa32`) and the whole certification arc closed at S11 2026-07-06 (`1f2fd62`). Cleaned in `ddb8a05`
 (queue item struck, stale-canonical paragraph in `HANDOFF_cert_session9.md` annotated+struck, rule #8
 gained "verify a BLOCKED-ON claim by content-read at the wrap that writes it").
-Three S11 follow-ups verified DONE and removed from TODO:
+Four S11 follow-ups verified DONE and removed from TODO (the 4th same day: stray worktree
+`.claude/worktrees/keen-goodall-f3e661/` removed clean — no unsaved work in it):
 - **`--from-draw` ship path** — shipped `c4617d0`; refuses on missing/stale draw or key mismatch;
   prose-awareness lives in `check_draw_citations.py`, not the signature.
 - **G1096 γίνομαι redraw** — shipped from-draw at batch-2 open (first exercise of the path); recorded in

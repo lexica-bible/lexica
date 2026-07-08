@@ -73,14 +73,14 @@ import_tipnr twin, Door-3 five-pass controls) all shipped in this rebuild. Rollb
 s11_20260706.db`; old live = `bible_old_live_20260706.db`. Full record → memory `project_abp_certification`
 (S11 banner + lessons). **The certification arc is CLOSED.**
 
-**S11 FOLLOW-UPS — 3 of 6 CLOSED (verified 2026-07-08, see archive): `--from-draw` shipped (`c4617d0`),
-G1096 redraw shipped at batch-2 open, citation-sweep rule codified in `docs/claude/ai.md`. Still open:**
+**S11 FOLLOW-UPS — 4 of 6 CLOSED (verified 2026-07-08, see archive): `--from-draw` shipped (`c4617d0`),
+G1096 redraw shipped at batch-2 open, citation-sweep rule codified in `docs/claude/ai.md`, stray worktree
+pruned. Still open:**
 - **`verify_prose_leak.py` needs a "Tier B applied" mode/warning** — it's a parser-only check; run against a
   finished scratch (Tier B layered on the 5 prose verses) it FAILs-that-isn't on exactly those 5. Next
   rebuild shouldn't re-derive this.
 - **`lint_split_wrong_slot.py` stale label** — its `RECONCILE … (sizing: 18,339/12,692)` is a hardcoded
   literal; bump to **18,384/12,718** (the real post-S11 scope; both harnesses agree on it).
-- **Prune the stray git worktree** `.claude/worktrees/keen-goodall-f3e661/` (parallel-session leftover).
 Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-attributed diffs):
 - **Path-C G1473 residue — CENSUSED + CLOSED (Session 8, ledger L12).** Dan 4:33 is NOT a lone stray:
   Daniel holds **170** source-attested pronoun mistags (αὐτός/σύ/ὑμεῖς/ἡμεῖς still numbered 1473), read off
