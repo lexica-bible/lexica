@@ -183,3 +183,22 @@ both drifting from the doc.
     collocation-aware feed quota (option (b), #8's slot-reservation) that would close the gap at generation
     instead of by manual eyeball. *(audit: G3788 ὀφθαλμός floor + rejected V5 draft, 2026-07-07; select_spread
     forcing logged on the draw record)*
+
+20. **A prompt rule DAMPENS a prior, it doesn't DELETE it — and a multi-constraint word can satisfy one
+    constraint OR another per draw but not always both at once (oscillation). The fix is a draw-CONTEXT hint of
+    certified structure, not more prompt or more pulls.** ὀφθαλμός under V6: attempt-2 held the structure
+    (disposition its own sense) but kept "moral" (freight prior dampened, not deleted — same "verse-grounding
+    swaps whose freight it doesn't remove" shape as memory `project_lexica_dictionary`); attempt-3 dropped
+    "moral" but regressed the structure (buried the stable regard job under physical). Three pulls, never both
+    clean → cap-out. This is NOT πολύς-type target-nonexistence (both good-structure AND freight-clean were each
+    demonstrably drawable) — it's **oscillation across two binding constraints**, a distinct wall shape. The
+    ruled mechanism (`--structure-hint`, escalation resolution 2026-07-07) beat the alternatives BY SHAPE: the
+    prompt already worked (attempt-3 proved the freight line), so prompt-steer was the wrong tool; higher-cap
+    draw-until-match just re-rolls the same oscillation; passing the reviewer's OWN certified stable-jobs list as
+    draw context steers to ground truth (not a preferred outcome) and pins the axis that keeps slipping, frozen
+    prompt untouched. First hinted draw held structure + freight together on the first try — mechanism validated.
+    → v2: (a) detect oscillation (constraint A-clean ⊕ B-clean alternating across draws) as its own wall class,
+    distinct from range-completeness/target-nonexistence; (b) the structure-hint (certified-structure-as-context)
+    is the standing tool for it; (c) a convergence/"held both" detector could auto-flag when a hinted draw clears
+    all axes at once. *(audit: G3788 ὀφθαλμός V6 attempts 2/3 cap-out + structure-hint first draw, 2026-07-07;
+    mechanism commit 95b4a16; TRIGGER STATUS fired+resolved)*

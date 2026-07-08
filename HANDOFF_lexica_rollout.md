@@ -204,9 +204,9 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
 - **RETRO PILE (decide with full-batch evidence):** substitution probe (bare-headword-substitution blind
   spot, ENGINE_LESSONS #4) · pre-V5 triage + post-batch redraw phase · the existing fed-40 / reviewer-tier
   questions below.
-- **`ENGINE_LESSONS.md`** (repo root) — v2 design backlog, now **19 lessons** (#17 = fabrication family,
+- **`ENGINE_LESSONS.md`** (repo root) — v2 design backlog, now **20 lessons** (#17 = fabrication family,
   #18 = translation-freight / the 4th freight axis banked 2026-06-25, #19 = MISSED-collocation is a
-  floor-level check), self-guarding (every
+  floor-level check, #20 = dampen-not-delete + oscillation wall → structure-hint mechanism), self-guarding (every
   word-citation verified against the audit doc before commit). Distinct from this handoff + the audit doc;
   read it before any v2 design work, not before resuming the rollout.
 
