@@ -214,6 +214,13 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   2. **Gloss-note ordering:** current order is draw-order, guaranteed by nothing. Canonical order proposed:
      by first-cited-verse's sense (notes read in the same sequence as the entry above), fallback alphabetical
      by glossed word. Renderer change only.
+- **STYLE TICKET RIPENED (batch-2 close, 2026-07-08) — sub-use-dominant card shape, 3 instances collected
+  (ἔτος's four constructions ¶, ἄρχων's sub-uses, ῥῆμα's four sub-uses):** the draw produces sub-use-dominant
+  cards CONSISTENTLY for one-job-many-frames words → per the ticket's own terms, V7 CODIFIES it as house shape
+  rather than forcing it out. The open V7 format call (JP's, at the window): whether the codified shape uses
+  **V1's flowing inline em-dash style** (headline — description — citations as one block; JP's logged aesthetic
+  preference, κύριος card as reference) or the current labeled-bullet style. Incidental: κύριος fork-render
+  confirmed working (Contested panel + Core-all-agree + overlay visible) — no batch-2 word exercised it.
 - **Hebrew-OT word finder is NOT number-folded** (KNOWN GAP) — the singular/plural fold is live on
   ABP/KJV/BSB but NOT the `corpus=heb` discovery branch (it matches a token inside a multi-word gloss
   phrase, so the precomputed `*_norm` column doesn't fit). A real fold needs BOTH a normalized-token
