@@ -1107,6 +1107,48 @@ full-print gate fix `be027c1` earned its keep on its first live word). 5 senses 
   ὀφθαλμός) · 7 to go** (ἔτος, ἄρχων, ἔργον, ἁμαρτία, ῥῆμα, δύναμις, τόπος). (JP's in-session "10/20, 8 to go" was
   off by one — the roster docs still listed the already-shipped ὄρος under REMAINING.)
 
+### G5117 τόπος — LIVE (2 senses, attempt 2 / redraw). Argued-shelving into range; the per-row-morph-verification lesson.
+Shipped the redraw (key `9060b55f`, cache refreshed over the rejected attempt-1 at the same key — key is an
+INPUT signature, not content), no model call on apply, gate 34/34, stamp current, 2 senses, **screenshot-verified
+end-to-end** (both senses distinct, both sub-uses on their own lines, both gloss_notes bullets render full).
+2 senses = physical location + scope/opening, within the floor's {2:3, 3:6, 4:1}.
+- **FLOOR: `--runs 10` (escalated on job-boundary wobble at N=3).** Count 2–4 (mean 2.8). TWO firm jobs —
+  physical location 10/10, opportunity/scope 9/10 (folds only in draw 7). Minority facets all FOLD, no holes:
+  "every place" distributional scope 4/10, people-metonymy 3/10, worship-site + commemorative-reference singletons
+  1/10. Feed clean, reconciled 502 place + 30 places + 3 people + 2 blank + 1 which = 538; 4 renderings confirmed.
+- **PREDICTOR: count 7/7, but facet-IDENTITY is the demonstrated weak spot.** The "every place" scope axis was
+  unpredicted by either seat (2nd consecutive facet-identity miss after people-metonymy surfaced only at N=3) —
+  the count clusters right, the *which*-facets read is where the surprise lives. Banked for the loaded-frame three.
+- **ATTEMPT 1 REJECTED — internal incoherence, NOT count.** 3-sense draw promoted people/community to a standalone
+  sense while its own gloss_note said "not a distinct lexical meaning attested independently" — headline asserts a
+  sense the fine print retracts. Caught in the FULL gloss_notes proofread (the session-4 amendment earned it again).
+  Blocks regardless of disposition; corpus-faithful citations don't cure a card that asserts-and-retracts.
+- **ATTEMPT 2 SHIPPED (unsteered redraw, pull 2 of 3).** Hit the target: 2 senses, people-metonymy argue-shelved
+  into sense-1's range with named verses (1Sa 29:4; 2Sa 19:39) + a gloss_note, scope as an explicit sub-use. Four
+  gates clear, coherent (δίδωμι argued-shelving precedent). Recurrence risk (unsteered, structure-hint is post-cap
+  only) did NOT fire — no V7 disposition-wall evidence, pull 3 unspent.
+- **STEP 1.5:** two MISSED collocations — ἅγιον "holy place" (22v, 0 fed) + ὄνομα "name of the place" (21v, 0 fed)
+  — both adjudicated as unfed instances of the physical sense (holiness lives in ἅγιος, naming in the formula; worship
+  contexts WERE fed and the floor folded them 9/10). No hidden job; covered by sense-1 "cultic or sacred site" +
+  "named landmark." Reviewer's "clusters on opportunity idioms" prediction missed — both landed on physical.
+- **POST-SHIP PROSE FIXES (`fix_lexica_raw`, no model, senses untouched — ὄρος precedent, each its own dry-run→apply):**
+  (1) 2Ch 7:15 gloss_note: murky "τόπου likely modifies a different syntactic element" → plain verified fact
+  ("the word is τόπος; ABP rendered it 'people'; the phrase reads 'of this people'"); (2) first-bullet "the Greek in
+  both cases uses τόπον" → "the underlying word in both is τόπος" (see morph lesson).
+- **BANKED LESSON — inflected-form claims in notes need PER-ROW morph verification, not per-word.** Verifying the
+  2Ch 7:15 form (rule #17) surfaced that the note also spelled τόπον for 1Sa 29:4 / 2Sa 19:39 / Neh 1:9. Per-row
+  check: 1Sa 29:4 + Neh 1:9 = N.ASM (τόπον verified), but **2Sa 19:39 has blank lemma AND blank morph** — the
+  corpus attests only the Strong's tag for that row, so τόπον was unbacked there. Count: **68 of 538 τόpos rows
+  (~13%) blank-lemma** — systematic OT form-field gap (matches the documented ~22%-blank-morph pattern), NOT a
+  mistag, NOT the dotted no-entry class. Fix drops to the lemma (backed for all rows via the G5117 → τόπος mapping).
+  A "the Greek uses [form]" claim can't assume a cited verse's row carries the form. Caught before it shipped twice.
+- **1Co 14:16** shelved under sense 1 ("a position within a gathering / slot in a structure") against its 9/10
+  opportunity-floor majority — defensible under granularity-as-drawn (the headline names the slot reading); the one
+  verse to poke if the live card ever gets a spot-audit.
+- **Streak 0** (redraw = not attempt-1-clean, same rule as ὄρος/θυγάτηρ).
+- **ROSTER:** τόπος = locked-20 #20, the **12th ship**. Batch-2: **12 shipped · 2 parked (πολύς, ὀφθαλμός) · 6 to go**
+  (ἔτος G2094, ἄρχων G758, ἔργον G2041, ἁμαρτία G266, ῥῆμα G4487, δύναμις G1411).
+
 ### TRIGGER STATUS (standing — survives session end) — FIRED + RESOLVED 2026-07-07
 Content-wall tally (now **3**): **πολύς = full cap-out (range-completeness)**; **ἅγιον = near-wall (structure,
 cleared attempt 3)**; **ὀφθαλμός = cap-out (structure↔freight oscillation — 3 pulls, never both clean at once)**.

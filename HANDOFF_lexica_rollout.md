@@ -229,7 +229,7 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
 5. Log the word in `AUDIT_lexica_rollout.md` (per-word flag rate, any precedent, wall status).
 
 ## BATCH STATE
-- **SHIPPED + LIVE (12; batch-2 locked-20 = 11 shipped · 2 parked · 7 to go):** G1096 γίνομαι (session start, from-draw first exercise) · G80 ἀδελφός
+- **SHIPPED + LIVE (13; batch-2 locked-20 = 12 shipped · 2 parked · 6 to go):** G1096 γίνομαι (session start, from-draw first exercise) · G80 ἀδελφός
   (4 senses) · G2588 καρδία (4 senses, one-draw ship) · G39 ἅγιον (4 senses, near-wall) · G1484
   ἔθνος (2 senses, converged attempt 2; detector's first live fire, Eph 2:11 bridge ruled+logged) ·
   G3173 μέγας (4 senses, one-draw ship; multi-shallow-axis wobble no-holes; 2Ch 17:12 bridge ruled) ·
@@ -246,6 +246,11 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
   **G2364 θυγάτηρ** (5 senses, attempt 2; multi-shallow-axis, tight prediction falsified; ARGUED-SHELVING ship —
   figurative visible via Ecc 12:4, Pro 30:15/1Sa 1:16 ruled-shelved; step-1.5 caught+fixed a paternal narrowing;
   Dan dangling-flag GRADUATED to systematic defect; screenshot-verified; gloss_notes-full gate fix `be027c1`).
+  · **G5117 τόπος** (2 senses, attempt-2 redraw; physical + scope/opening; people-metonymy argue-shelved into
+  the range, not a standalone sense — attempt-1's people-sense REJECTED for internal incoherence, headline
+  asserting what its own gloss_note retracted; 2 post-ship `fix_lexica_raw` prose fixes, no model; BANKED LESSON:
+  inflected-form claims in notes need PER-ROW morph verify — 2Sa 19:39 blank lemma+morph, 68/538 ~13% blank-lemma
+  systematic OT gap; screenshot-verified).
 - **word_gloss:** G39 "Holy Place" → "holy, set apart" override LIVE (`a06a90b` + `--apply` rebuild
   on PA). Verified: word_gloss row = `holy, set apart|override`; count 17508 stable; `override`
   58→59, `tbesg` 73→72 (only G39 moved). **Library card confirmed rendering "hágion · holy, set apart"**
@@ -274,9 +279,9 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
   bundled disposition INTO regard and the draw DECLINED it (homed disposition under physical instead) — so a
   re-roll may not place disposition where wanted without a sharper hint or the forced verses re-scoped. **Streak
   stays 0.** Full saga + attempt-3 raw + cap-out record: audit doc `### G3788 ὀφθαλμός … #### V6 ATTEMPTS → CAP-OUT`.
-- **REMAINING (7):** ἔτος G2094 · ἄρχων G758 · ἔργον G2041 · ἁμαρτία G266 · ῥῆμα G4487 · δύναμις G1411 ·
-  τόπος G5117. (Full locked-20 list + selection method in the audit doc's Batch Two section.) **ὄρος + θυγάτηρ
-  SHIPPED** — moved to the LIVE list above (roster docs had lagged, still listing already-shipped ὄρος here).
+- **REMAINING (6):** ἔτος G2094 · ἄρχων G758 · ἔργον G2041 · ἁμαρτία G266 · ῥῆμα G4487 · δύναμις G1411.
+  (Full locked-20 list + selection method in the audit doc's Batch Two section.) **ὄρος + θυγάτηρ + τόπος
+  SHIPPED** — moved to the LIVE list above.
   - **Loaded-frame watch:** ἁμαρτία / ῥῆμα / δύναμις (audit hardest for a disguised loaded frame).
   - **Tight-agreement test (refined hypothesis):** θυγάτηρ / ὄρος — genuine one-dimension nouns,
     predicted to agree tightly at 3. Data so far: ἔθνος clean-binary → tight; **φωνή clean-multi (3
