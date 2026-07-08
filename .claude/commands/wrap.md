@@ -12,6 +12,7 @@ You're wrapping up a chunk of work. Bring the project's living docs up to date s
 
 2. **Memory** (`C:\Users\JP\.claude\projects\C--Users-JP-projects-bible-db\memory\`) — first fix any claim this session made stale (don't leave wrong file/line/behavior notes). Then create or update the relevant memory file(s) for anything non-obvious worth carrying forward. Don't save what code/git already records. Add or update the one-line pointer in `MEMORY.md`.
    **Lesson capture (do this explicitly):** for each thing that went wrong this session and got fixed, write one line — *what looked true, what was actually true, what tipped it off.* These are the entries that vanish if not forced; an open-ended "worth carrying forward" skips them.
+   **Area-specific lessons file:** also update any area-specific lessons/backlog file the session touched (e.g. `ENGINE_LESSONS.md` for the lexica rollout — an in-repo file, committed with the docs below). State it affirmatively in the summary — "ENGINE_LESSONS: added #N (topic)" or "no new lessons — checked against the session's catches, redraws, and rule-readings". Silence is not a valid state. The next session verifies by reading the file itself, not the handoff's count.
 
 3. **TODO.md / TODO_ARCHIVE.md** — tick off finished items; MOVE anything completed or scrapped (with the why + any lesson learned) out of `TODO.md` into `TODO_ARCHIVE.md`; add any new follow-ups that surfaced this session. Delete TODOs that quietly became irrelevant — note why in the archive rather than leaving them to rot.
 

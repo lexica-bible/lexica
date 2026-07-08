@@ -58,6 +58,14 @@ both drifting from the doc.
    ASSERTIONS (capitalization practice, translation behavior). → v2 wants a position/text verification step
    for corpus-practice claims — mechanizable for the capitalization case (verse text is in the DB,
    sentence-initial is testable). *(audit: APPARATUS FINDINGS — unverifiable-assertion defect class)*
+   - **UPDATE (τόπος 2026-07-08): verifying a form-claim is PER-ROW, not per-word — the corpus form-fields are
+     SPARSE.** τόπος's gloss_note asserted the Greek inflected form ("uses τόπον") for three verses; a per-row
+     check found 2Sa 19:39 carries BLANK lemma AND morph — that row attests only the Strong's number. ~13% of
+     G5117 rows are blank-lemma (68/538): the systematic OT form-field gap, NOT a mistag, NOT the dotted no-entry
+     class. So a "the Greek uses [form]" claim can't be verified once for the word — each CITED row needs its own
+     tag check, and the safe fallback when a row is blank is the lemma (backed for every row via the Strong's→lemma
+     mapping). Sharpens #7's verification step with the sparsity reason; sibling of #22 (the gap is a corpus-side
+     reality the claim must survive). *(audit: G5117 τόπος per-row-morph fix + 68/538 blank-lemma count, 2026-07-08)*
 
 8. **Fixed fed-40 under-samples SYSTEMATICALLY on high-occurrence / multi-domain words** (μέγας's dense
    Levitical collocations, οὐρανός's metonym verses unfed entirely, ὕδωρ's purity/river/sea neighbors), and
