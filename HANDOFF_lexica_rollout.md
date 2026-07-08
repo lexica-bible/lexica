@@ -392,44 +392,8 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
 
 Background tier (no ordering): former TODO/retro pile items — consolidated pre-standards re-audit, blank-lemma
 query, backup rewrite, invariant #8, Dan-flag, no-entry triage, inverse-dotted audit, homonym heuristic,
-topic-file merge, MISSED-warning sweep, draw-cache archive.
-
-## QUEUED FOR NEXT SESSION (surfaced at this session's close — do before/at ἔθνος)
-1. **Double-shelf detector — BUILT + control-fired (2026-07-06). LIVE in the audit path, flag-only.**
-   `double_shelved(senses_block)` in `build_lexica_def.py` — a set-intersection over the per-sense verse
-   lists `sense_specs()` already carries (same splitter + ref regex + book normalizer as the card), stored in
-   `entry["audit"]["double_shelved"]` and printed by `show_entry` beside the dangling/noncanon lines as
-   `⚠ double-shelved: 1Jn 2:20 in senses [1, 4]`. **NOT a gate** — double-shelving is sometimes legitimate
-   (a bridging verse), so it's a conscious per-word adjudication at the gate, JP rules per instance. Whether
-   it hardens to a gate is a batch-retro question on accumulated rare-vs-common data.
-   **AUTHORITATIVE CONTROL — DONE + GREEN on PA 2026-07-06.** `--resplit --word G39 --dry-run` fired
-   `⚠ double-shelved: 1Jn 2:20 in senses [1, 4]` (the known positive) AND surfaced a second G39 seam,
-   `2Ti 1:9 in senses [1, 3]` — both logged, NOT reopens (G39 stays as shipped). Sub-use refs ARE captured
-   (sense 4's list picks up 1Jn 2:20 from the sub-use sentence), so the extraction has no sub-use blind spot.
-   **NO code fix happened between the no-fire and the green run** (file unchanged since `61740c0`): the
-   suspected sub-use-extraction bug was DISPROVEN by a local test on the real G39 text; the PA no-fire was
-   just stale code (PA hadn't pulled the detector commit), and the `git pull` is what flipped it silent→firing.
-   The detector is LIVE in the per-word audit; **ἔθνος is the first word audited with it live.** Parked-draft
-   sweep DONE 2026-07-06: G80 clean, G4183 clean, **G2588 καρδία = two logged seams** (`2Co 2:4` senses [1,2];
-   `Joh 12:40` senses [1,4]) — retroactive seam-logs on shipped prose, adjudicate at leisure, NOT reopens.
-2. **Word-study card header — GREEK HALF DONE (commit `7bee235`, 2026-07-06), HEBREW HALF QUEUED.** The card's
-   hero gloss sourced the top in-verse *rendering* (`abp_glosses[0]`), not `word_gloss`, so hand-widened
-   overrides silently reverted there (G39 "holy" vs Library "holy, set apart"). Greek fixed frontend-only:
-   `firstGloss` now leads with `shortLemmaGloss(profile.definition)` (word_gloss leads that chain for Greek),
-   matching Library for all Greek overrides. **HEBREW still shows the top rendering** — its `profile.definition`
-   is the long definition paragraph, NOT `word_gloss`. Fix = a small **API change** (return the Hebrew
-   `word_gloss` in its own profile field) + one matching frontend line. **Own checkpoint (API change, not
-   frontend-only).** ⚠ The sourcing comment MUST say **Strong's Hebrew** — the table is named `bdb` but holds
-   Strong's Hebrew, not real Brown-Driver-Briggs; this is exactly where a future edit would mislabel it.
-3. **θεός G2316 sense-1 item "B" — completeness improvement, NOT a correction (own checkpoint, JP's go).**
-   Sense 1 shipped grounded (2026-07-06, "worshipped" removed, treatment-verbs all cited). B = add the concrete
-   devotional acts προσκυνέω "bow down" / λατρεύω "serve" back into the treatment-list, which need a citation
-   first: sense 1's current 40 don't attest either (sample leans commission/covenant/prophecy). Candidate
-   **Matt 4:10** (quotes Deut 6:13 — grounds both verbs in one verse); **verify the tag-match gate finds the
-   θεός tag in it** before any write, then extend the list to "served, bowed down to, named, invoked in oaths,
-   prayed to, and spoken of as acting in history." CONTESTED-card evidence change → own checkpoint, JP's go
-   before any write. No urgency; the card is honest as shipped. (Corpus backs it: `coverage_audit` flags
-   λατρεύω uncited across 32 θεός verses, PMI 5.31.)
+topic-file merge, MISSED-warning sweep, draw-cache archive, word-study-header Hebrew half (detail: TODO.md),
+θεός sense-1 item B (detail: memory project_lexica_dictionary DEFERRED + audit doc).
 
 ## RETRO LIST (decide with full-batch evidence, not per-word)
 - **Style ticket — single-sense multi-construction organizing paragraph (JP-ruled 2026-07-08, N=1 ἔτος):** ἔτος's

@@ -204,6 +204,12 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
     the verb rendering. Form-match is the only reliable finder.
   - LESSON (banked): the translit accent bug here is the #18A (γῆ) diacritic class biting an AUDIT query —
     one more argument for the normalize-both-sides fix when the Ask-corpus right-rail work starts.
+- **Word-study card header — HEBREW HALF (Greek half DONE, commit `7bee235` 2026-07-06).** The Hebrew card's
+  hero gloss still shows the top in-verse rendering — its `profile.definition` is the long definition paragraph,
+  NOT `word_gloss`. Fix = small API change (return the Hebrew `word_gloss` in its own profile field) + one
+  matching frontend line. **Own checkpoint (API change, not frontend-only).** ⚠ The sourcing comment MUST say
+  **Strong's Hebrew** — the table is named `bdb` but holds Strong's Hebrew, not Brown-Driver-Briggs; this is
+  exactly where a future edit would mislabel it.
 - **LEXICA DISPLAY-LAYER WINDOW (banked 2026-07-08, δύναμις session; window opening UNRULED — batch-2 close vs.
   post-Session-9, JP's call when reached).** Members: the #18A diacritic normalize-both-sides fix ·
   language-scoped query drift · plus two NEW tickets:
