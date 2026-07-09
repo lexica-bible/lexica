@@ -309,6 +309,13 @@ bar-fail (floor certified the split unstable — reviewer's γόνυ/νίπτω-
 sub-use/texture inside sense 1 = legal. (ii) Watch absorption drift toward Rom 4:25/Eph 2:5 — none
 formed at floor. (iii) Any within-draw double-shelf = self-disqualifying. Mode 7/10 majority (not
 unanimous) → #32 hint candidate on cap-out only; plain pull first.
+**Pull 1 (key b74b0d48) = BAR-FAIL, redraw.** Adam material placed LEGALLY (sub-use in sense 1 — bar (i)
+passed) but the draw invented a DIFFERENT peer sense the floor drew 0/13: "state of accumulated
+offenses" over Eph 2:1/2:5/Col 2:13 (dead-in construction), breaking Col 2:13 (10/10) + Eph 2:1 (8/10)
+off unanimous floor homes — νίπτω-class misplacement — AND double-shelved Col 2:13 [1,2] (machine fire
++ pre-registered bar (iii), first co-arrival of the two signals). 3 "dead in" rendering-mismatch fires
+= quote-mark noise class (context wording, not a rendering claim). Sub-use overload (5) moot pending
+pull 2. Gloss-note uniformity claim ("transgression(s)") to verify against corpus on the shipping pull.
 
 ## BATCH-3 SESSION 1 LOG (2026-07-08/09) — shadow calibration opened. Read this + the audit doc's
 ## batch-3 entries to resume session 2.
