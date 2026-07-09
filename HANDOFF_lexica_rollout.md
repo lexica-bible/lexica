@@ -370,9 +370,14 @@ ambiguity or enforce the majority" on Deu 23:18, JP's call at a future window).
 ##   sqlite3 ~/bible-db/bible.db "SELECT v.book, v.chapter, v.verse, w.position, w.english FROM
 ##   words w JOIN verses v ON v.id=w.verse_id WHERE w.strongs='4061' AND (v.book,v.chapter,v.verse)
 ##   IN (VALUES ('Col',2,11),('Rom',2,25),('Rom',4,10),('Rom',4,12)) ORDER BY 1,2,3,4;"
-## · floor command, VERIFIED against the script's --help this time (--force = fresh model draw
-##   each run, required for an independent 10-run; --dry-run = show only, no write):
-##   cd ~/bible-db && for i in $(seq 10); do python scripts/build_lexica_def.py --word G4061 --dry-run --force; done
+## · floor command — CORRECTED 2026-07-09 (rule R2: the designated floor instrument is
+##   lexica_agreement.py, not a build_lexica_def loop). Verified against
+##   scripts/lexica_agreement.py ON DISK (--word line 564, --runs line 567, prompt defaults v7):
+##   cd ~/bible-db && python scripts/lexica_agreement.py --word G4061 --runs 10
+##   The earlier loop line stood here labeled "VERIFIED against --help" — flags were real but the
+##   INSTRUMENT was wrong (fail-2 class). It RAN at 23:27 on 2026-07-09 before this fix landed:
+##   10 paid draws on the wrong instrument, NO floor produced. Those 10 outputs are NON-FLOOR,
+##   DO NOT USE for agreement stats or any comparison. Cost logged in the audit post-mortem.
 ## · order: doubles verify → table banks 36/40 → floor. RED watch below stays banked; book
 ##   distribution note (JP term, banked verbatim): Rom+Gal = 22/40 heavy figurative/identity load;
 ##   OT sparse (Gen 1 · Exo 2 · Jer 1); "sample spread should force at least one OT concrete hit so

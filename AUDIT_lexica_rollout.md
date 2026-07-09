@@ -2045,7 +2045,10 @@ batch remainder.
 ### into HANDOFF_lexica_rollout.md SESSION-DISCIPLINE RULES)
 **FAILS (four, splitter-fix session 2026-07-09):**
 1. **Wrong script from recall** — wrote `lexica_def.py --strongs` (wrong name AND wrong flag)
-   for the floor command. Self-caught before execution. → R1.
+   for the floor command. ~~Self-caught before execution~~ **AMENDED 2026-07-09, reconciled
+   against JP's terminal scrollback: the command reached his terminal TWICE (23:10 and 23:17,
+   "no such file" both times). ENGINE_LESSONS #39 is the correct account; the "self-caught"
+   wording here was wrong.** → R1.
 2. **Wrong instrument from recall** — corrected the name but handed a raw bash loop of
    `build_lexica_def.py` instead of the designated floor instrument
    `lexica_agreement.py --runs 10`. Caught by JP, NOT self-caught. Had it run: no agreement
@@ -2063,7 +2066,9 @@ appear nowhere in it. Fails 1–2 are therefore part handoff-gap, part execution
 to reconstruct commands from context. Fails 3–4 are pure execution-discipline fails regardless
 of handoff. → R4 (handoffs carry verbatim invocations, not procedure names).
 
-**CREDITS (equal weight):** fail 1 self-caught before execution · `--force` semantics quoted
+**CREDITS (equal weight):** ~~fail 1 self-caught before execution~~ (withdrawn 2026-07-09 with
+the fail-1 amendment above — the command reached the terminal; no self-catch credit) ·
+`--force` semantics quoted
 from the script's own help text when asked · both holds ultimately cleared with FILE EVIDENCE,
 not assertion · the polarity-B cross-check design was sound.
 
@@ -2071,3 +2076,13 @@ not assertion · the polarity-B cross-check design was sound.
 commands-verified-never-recalled (extends verify-before-claim to command lines) · R2
 named-procedures-use-designated-instruments (comparability) · R3 holds-are-blocking +
 unaccounted-output auto-opens-a-hold · R4 handoffs-carry-commands-verbatim.
+
+**INCIDENT ADDENDUM (2026-07-09, 23:27 — the poisoned resume block fired before the fix
+landed):** the SESSION 4 resume block's loop line (10× `build_lexica_def.py --dry-run --force`
+on G4061, falsely stamped "VERIFIED against --help") was RUN on JP's terminal. Cost: **10 paid
+model draws on the wrong instrument, NO floor produced** — no agreement stats, non-comparable
+with the floor series. **Those 10 outputs are NON-FLOOR / DO NOT USE** for agreement, stats, or
+any comparison; the real περιτομή floor starts from zero with `lexica_agreement.py`. The
+drafting session had flagged the line but committed the flag without the fix — the exact
+copy-a-stamped-command failure R4 exists to prevent, demonstrated live. Resume block corrected
+same day (verified against `scripts/lexica_agreement.py` on disk, not just help text).
