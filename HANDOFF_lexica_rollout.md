@@ -75,6 +75,11 @@ count — unverifiable, three rounds of stuck back-and-forth.)
    before the close commit.
 8. No counts without contents. "Five corrections" is banned; list the five verbatim, or point at
    the commit where they landed, or the item doesn't ship.
+   - **Corollary (roster-gap incident, 2026-07-09): a close-out that references a LIST must commit
+     the list, not its length.** The batch-3 roster lived in chat from approval onward; the close
+     banked the tally (in the arithmetic) but never the names (in no tally) — same class as the #27
+     tracking-slot lesson. Close-out check: every list the log references exists verbatim in a
+     committed doc.
 
 **Receiving-instance rule (both CC and chat, next session):**
 9. A gate that can't be cleared by its attached procedure converts to a logged caveat
@@ -358,7 +363,8 @@ PARKED · σελήνη p1 (count 2, zero-fire) · κῆπος p1 AMBER · κάλ
 GREEN candidates (9): συκῆ G4808 (fig-tree; Mark-11 freight pre-registration armed) · κύων G2965 (dog;
 pre-named most-likely-GREEN-to-fire, Phil 3:2/Rev 22:15 epithet) · βέλος G956 (dart) · ταμεῖον G5009
 (secret chamber) · βιβρώσκω G977 (eat) · διανοίγω G1272 (open fully) · ὑπομονή G5281 (endurance) ·
-ἐπιτιμάω G2008 (rebuke) · κατανοέω G2657 (perceive/consider). Seeded RED (3, ALL UNEXERCISED):
+ἐπιτιμάω G2008 (rebuke) · κατανοέω G2657 (perceive/consider). Seeded RED (3, all unexercised AT
+SESSION-1 CLOSE; G3900 since EXERCISED + SHIPPED in session 2 → live remainder = 9 GREEN + 2 RED = 11):
 παράπτωμα G3900 (sin-family, fork-adjacent) · περιτομή G4061 (Gal/Rom contest) · σκληρύνω G4645
 (Rom 9:18 hardening fork). Processed 8 (all from the GREEN 17): G1119 G1350 G3538 G173 G4582 G2779
 G2563 G1151 — arithmetic: 17 − 8 = 9 GREEN + 3 RED = 12 ✓. Both escapes were
