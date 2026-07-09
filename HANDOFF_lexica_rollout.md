@@ -328,6 +328,71 @@ fabrication checkpoint (#36: verify before claiming fabrication — ABP false-po
 Parked words are not yours to reopen: πολύς, ἄκανθα, κύων (κύων's revisit = "adjudicate the
 ambiguity or enforce the majority" on Deu 23:18, JP's call at a future window).
 
+## BATCH-3 SESSION 3 LOG (2026-07-09) — OPEN; running record, banked as it happens.
+**Opened:** clearing gate PASSED all three checks (4c7bcc9 · session-2 log grep · lesson #37 grep).
+**Opener selection (lesson #35 applied):** six-way book-distribution read on the remaining GREEN run
+BEFORE any prediction; ranking banked (ὑπομονή worst — OT hope/expectation vs NT endurance two-sense
+risk, pre-register the split before its floor; ταμεῖον dotted-cousin policing; κατανοέω soft mind-verb
+borders). **ἐπιτιμάω G2008 approved as opener (JP ruling)** — 27/39 Gospels, one concrete speech-act;
+Psalms divine-rebuke = known-shape risk (βέλος divine-archer precedent). Pre-registered expectation
+banked: dominant rebuke-a-person cluster + possible divine-rebuke cluster (attested = follow it);
+anything else = surprise, audited before drafting.
+**Pre-pulls:** dotted 2008.1 = distinct noun ("reproach" 7/7, incl. the God-rebukes-waters texts —
+so the verb's divine set is smaller than the raw book column implied; banked). CC error caught +
+corrected in-flight: first dotted query used 'G2008.1' but the dotted column stores bare '2008.1' —
+a detector that couldn't fire; corrected pull returned the 7 rows. Doubles: Zec 3:2 (genuine ×2) +
+Jud 1:9 (see ticket below).
+**DOUBLE-TAG TICKET (TODO.md, e208e5d + cf028f5):** Jud 1:9 "May"+"reproach" BOTH tagged 2008 —
+verified vs eSword + ABP app (JP): BUILD ARTIFACT (source tags "reproach" only; splitter split the
+one chunk "May [2reproach" into two tagged rows). Class sized read-only: **731 adjacent same-tag
+helper pairs** (may/shall/will/did/do/does/let). Splitter-family fix, folds into next words rebuild;
+NOT mid-calibration. #36 run both ways (verified before calling defect). G2008 occ table corrected:
+**37 verses / 38 real occ, single true double Zec 3:2.** No floor rerun (Jud 1:9 glued to Zec 3:2
+10/10); watch banked: renderings claims checked vs real occurrences so "may" can't leak.
+**Floor:** 3-run {2:3} but structure rotates (3 different carves, 2 draws double-shelve at floor) →
+mandated 10-run (5th straight escalation, ἐπιτιμάω OFF-COUNT, count stays 2/15). 10-run
+{1:1,2:3,3:5,4:1}, NO exact modal carve, no complete carve repeats 3× → first-draw hint legal
+(δάμαλις extension, 3rd use). Certified clusters: directive core (Gospels stop/silence/demon/storm,
+10/10; silence trio own-shelf 1/13 = folds) · personal reproof (Gen 37:10+1Ki 1:6 10/10, Luk 17:3+
+2Ti 4:2 10/10, pairs share shelf 6/10; own shelf 6-7/10 = majority-distinct PEER) · Psalms nations
+(9:5+119:21 10/10, +68:30 9/10; own shelf 4-5/10 = below peer). **Pre-registration answered with a
+twist: Zec 3:2+Jud 1:9 pair (10/10) rides the demon/force core 7/10, NOT the Psalms set.** All
+wobbles fold; no holes.
+**RULINGS (JP relay, banked):** (1) Psa 106:9 homes with the Psalms group (8/10 with 68:30; two-way
+character named on record — semantically cousin to Mar 4:39, floor attestation governs). (2) Nations
+cluster = labeled sub-use, NOT peer (4-5/10). Rth 2:16 draw-6 wobble closed as FOLD. **Reviewer
+overcompression caught by CC + accepted:** "two labeled satellites" would have folded the 6-7/10
+majority-distinct reproof cluster (gate-2 merge); corrected structure = TWO PEERS (directive+nations-
+sub-use | personal reproof). Logged as a challenge-the-reviewer catch.
+**HINT FLAGS (verbatim reference — apply must repeat exactly):**
+  --structure-hint "A sharp directive or check aimed at stopping, silencing, or redirecting someone
+  or something - persons, crowds, demons, disease, the storm; including the commands to keep silent,
+  the crowd rebukes, the Peter exchanges, the 'The Lord rebuke you' formula as one pair (Zec 3:2;
+  Jud 1:9, together and only here), and AS A LABELED SUB-USE the divine word against nations and the
+  proud (Psa 9:5, 68:30, 106:9, 119:21 - these four cited only here): Mat 8:26, 12:16, 16:22, 17:18,
+  19:13, 20:31; Mar 1:25, 3:12, 4:39, 8:30, 8:32, 8:33, 9:25, 10:13, 10:48; Luk 4:35, 4:39, 4:41,
+  8:24, 9:21, 9:42, 18:15, 18:39, 19:39, 23:40; Zec 3:2; Jud 1:9; Psa 9:5, 68:30, 106:9, 119:21"
+  --structure-hint "A personal reproof or correction addressed to someone for conduct or attitude
+  judged wrong: Gen 37:10; Rth 2:16; 1Ki 1:6; Luk 9:55, 17:3; 2Ti 4:2"
+Pins: Psa 106:9 nations sub-use · Zec/Jud pair whole, sense 1 only · Luk 23:40 sense 1 (core company
+10/10; named most-likely-to-fight) · Psa 119:21 with Psalms four · double-shelf = fail. Flag
+disjointness verified (#37); 37/37 placed.
+**Hinted draw 1 (key 79c2b36f) = BAR-FAIL — the hint mechanism's FIRST STRUCTURAL DEFIANCE (structure
+record 9-for-10).** Drew 2 senses but INVERTED the ruled structure: reproof folded into sense 1's
+human sub-use (gate-2 merge of majority-distinct) + demoted nations cluster promoted to peer. Plus
+Rth 2:16 → punitive sense on "mildest instance" prose (#33) + **Luk 9:55 dropped entirely (36/37 —
+presence gap)**. Machine gates all green (#30 again). Credit noted: gloss note defused the "may" row
+itself (optative rendering, not a sense) — the double-tag leaked into the feed and the engine handled
+it; no-rerun call confirmed.
+**ADJUDICATION PRE-REGISTERED (JP-approved + tightened, banked before output exists):** (a) inversion
+recurring OR a partial (reproof shelved but nations ALSO peer as a 3rd sense = still ruling-2
+defiance) → first STRUCTURE wall (vs membership), ὀφθαλμός-class package to JP stating plainly the
+engine keeps overriding the floor's own 6-7/10 majority at draw time; (b) pass = exactly 2 senses,
+reproof peer, nations labeled sub-use inside sense 1, all 37 present, pins home → ship path (full
+placement check + "reproach throughout" renderings check vs real occurrences); (c) structure obeyed
++ new break elsewhere → ordinary reject, hinted attempt 2. #32 predicted-defiance framing banked:
+floor itself preferred this carve in several draws — a repeat = the wall confirming, not noise.
+
 ## BATCH-3 SESSION 2 LOG (2026-07-09) — CLOSED; see the audit doc's SESSION 2 CLOSE entry for the
 ## tally + case law. This block is the session's running record, banked as it happened.
 **Opened:** clearing gate PASSED with a rule-9 caveat (the handoff's grep string "SESSION 1 CLOSED
