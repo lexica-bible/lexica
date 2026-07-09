@@ -111,7 +111,7 @@ def main():
     ap.add_argument("--db", default=DB)
     ap.add_argument("--strongs", default="2008,977",
                     help="comma-list of bare strongs to dump in full (reconcile to targets)")
-    ap.add_argument("--sample", type=int, default=40)
+    ap.add_argument("--sample", type=int, default=15)
     args = ap.parse_args()
 
     conn = sqlite3.connect(f"file:{args.db}?mode=ro", uri=True)  # read-only, cannot write
@@ -174,24 +174,31 @@ def main():
     print()
 
     # ---- Focused dump for reconciliation to targets (e.g. G2008/G977) ----
+    # Reconcile focus numbers (e.g. G2008/G977) to targets. Print ONLY the
+    # decision-relevant rows: strip targets + any verse carrying 2+ tags (the
+    # "doubles"). The ~30 single-occurrence verses are counted, not listed.
     focus = [s.strip() for s in args.strongs.split(",") if s.strip()]
-    a_refs = {r[0] for r in a_clean}
     for fs in focus:
-        print(f"=== FULL DUMP G{fs} (every tagged row; A=helper to strip) ===")
-        rows_out = []
+        per_verse = defaultdict(list)   # ref -> list of (pos, eng, head, gpos, bid, is_a)
         for vid, rows in verses.items():
             for i, (pos, eng, head, st, sb, gpos, bid) in enumerate(rows):
                 if st == fs:
                     nxt = rows[i + 1] if i + 1 < len(rows) else None
                     is_a = (gpos is None and bid is None and nxt and nxt[3] == st and nxt[6] is not None
                             and norm(head) in HELPER_HEADS)
-                    rows_out.append((ref[vid], pos, eng, head, gpos, bid, "  <-- A strip" if is_a else ""))
-        vset = {r[0] for r in rows_out}
-        strip_n = sum(1 for r in rows_out if r[6])
-        print(f"  rows now: {len(rows_out)}  verses: {len(vset)}   would strip: {strip_n}"
-              f"  -> after: {len(rows_out) - strip_n} rows")
-        for refstr, pos, eng, head, gpos, bid, mark in rows_out:
-            print(f"    {refstr:<12} {pos:>3} '{eng}'[{head}] g{gpos}/b{bid}{mark}")
+                    per_verse[ref[vid]].append((pos, eng, head, gpos, bid, is_a))
+        total_rows = sum(len(v) for v in per_verse.values())
+        strip_n = sum(1 for v in per_verse.values() for r in v if r[5])
+        print(f"=== RECONCILE G{fs} ===")
+        print(f"  tags now: {total_rows}   verses: {len(per_verse)}   would strip: {strip_n}"
+              f"   -> after: {total_rows - strip_n} tags, "
+              f"{sum(1 for v in per_verse.values() if any(not r[5] for r in v))} verses")
+        print(f"  interesting verses (2+ tags, or a strip target):")
+        for refstr, v in sorted(per_verse.items()):
+            if len(v) > 1 or any(r[5] for r in v):
+                for pos, eng, head, gpos, bid, is_a in v:
+                    print(f"    {refstr:<12} {pos:>3} '{eng}'[{head}] g{gpos}/b{bid}"
+                          f"{'  <-- A strip' if is_a else ''}")
         print()
 
 
