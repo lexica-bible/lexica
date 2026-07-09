@@ -1773,6 +1773,33 @@ text) or a V8-window mechanism forcing single-shelf placement; everything else s
 roster: πολύς + ἄκανθα + κύων. κύων pre-registration ruled FIRED (job-boundary wobble → mandatory
 10-run → off GREEN; committed wording governs, ἄκανθα precedent).
 
+### G4808 συκῆ — LIVE (2 senses, FIRST-DRAW structure-hint — second use of the δάμαλις 0-exact-mode
+extension). Off-count (escalated), streak 0. The watch-retirement word.
+Occ table pre-pulled: 38 base verses / 39 occ (Mat 21:19 ×2); dotted 4808.1 (Amo 4:9, Jer 5:17)
+excluded, no leak. 3-run {1:1,2:2} → 10-run {1:3,2:5,3:1,4:1}, **NO exact modal carve** (2-sense draws
+split literal+formula vs literal+parable) → first-draw hint legal. **Floor findings:** (i) NEW
+CERTIFIED JOB the pre-registration never predicted — the vine-and-fig-tree security formula (1Ki 4:25,
+2Ki 18:31, Isa 36:16, Mic 4:4, Zec 3:10): 10/10 support+company, own sense 6/10, exact 5-verse
+membership identical 3× (d2/d6/d9); (ii) illustration carve = uncertifiable discourse-role scatter
+(4+ shapes, zero repeats) — "a carve that can't exist without double-shelving is self-refuting" (JP);
+(iii) NEW DRAW-QUALITY ARTIFACT: degenerate draws (d1 = 6-verse card on the idiom ignoring 33 fed
+verses; d9 = no literal sense at all) → JP's PRESENCE-FLOOR check born here (sense 1 citing <20 of 33
+literal homes = completeness fail regardless of placement). **Pre-run rulings:** Jdg 9:10 tolerance
+(literal-only citation; fable prose or labeled sub-use fine; peer sense/second shelf = fail) · homes
+cleared incl. Joh 1:48 literal 6/9 (its 3× formula-join = real signal, allusion prose welcome).
+**Hinted first draw (key 1c350763) shipped clean:** 38/38 TOTAL citation coverage (third
+total-coverage card) — presence-floor fear inverted to the batch's most complete card; Jdg 9:10
+cleanest tolerance path; zero double-shelves; overload (5 sub-uses) ruled KEEP by both (distinct
+discourse frames); gloss-note "tree" claim verified full-corpus PRE-apply (exactly one row, 2Ki 18:31
+— divergence real AND sole). Apply: hint flags repeated verbatim + --require-cache + pass line
+confirmed. **Render PASS**; LXX-note conformance question answered from code (shared component
+20-shared-components.jsx:246 — placement/boilerplate code-fixed for all LXX-firing cards; δάμαλις =
+the prior specimen, not συκῆ). **PRE-REGISTRATION FINAL: freight stayed out at floor (13/13 draws)
+AND at draft (prose describes the cursing as narrative act, never adjudicates) — WATCH RETIRED
+CLEAN.** "Watches catch what we fear; floors find what's there" = ENGINE_LESSONS candidate (JP+CC).
+Tallies after close: describe-don't-preach 8-for-8 · fold-compression 1 of 5 · "Grounding refs:" 0 ·
+header gloss corpus-true (no παράπτωμα-ticket repeat).
+
 ### BATCH-3 SESSION 1 CLOSE (2026-07-09) — tally + case law; session 2 preconditions
 **Tally: 7 shipped / 2 escapes (γόνυ invented-shelf, νίπτω cluster-break — BOTH caught only by the human
 floor-vs-ship comparison, machine gates green both times: the detector ticket's whole evidentiary basis) /

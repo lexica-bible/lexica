@@ -511,7 +511,14 @@ Pending: gloss-note check (2Ki 18:31 bare "tree" AND sole divergence — a secon
 redraw) → apply (flags verbatim + --require-cache) → pass-line read → render.
 **Gloss check PASSED (exactly one row: 2Ki 18:31 "tree" — divergence real AND sole, full-corpus).
 APPLIED 2026-07-09: hint-injection line + "using reviewed draw … (key 1c350763) — no model call" both
-confirmed verbatim; prose byte-matches reviewed draft; written to lexica_def. Render pass pending.**
+confirmed verbatim; prose byte-matches reviewed draft; written to lexica_def.**
+**Render PASS → συκῆ CLOSED, LIVE 2026-07-09.** LXX-note conformance = answered from code
+(20-shared-components.jsx:246, shared component, placement/boilerplate fixed; δάμαλις = prior
+specimen). Full record: audit doc G4808 entry. **Session-2 running tally: shipped παράπτωμα (RED) +
+συκῆ · parked κύων · both tonight's ships off-count (escalations) → count 2/15, streak 0 ·
+describe-don't-preach 8-for-8 · fold-compression 1 of 5 · "Grounding refs:" 0 · συκῆ watch RETIRED ·
+GREEN remaining 7: βέλος · ταμεῖον · βιβρώσκω · διανοίγω · ὑπομονή · ἐπιτιμάω · κατανοέω; RED
+remaining 2: περιτομή G4061 · σκληρύνω G4645.**
 
 ## BATCH-3 SESSION 1 LOG (2026-07-08/09) — shadow calibration opened. Read this + the audit doc's
 ## batch-3 entries to resume session 2.
