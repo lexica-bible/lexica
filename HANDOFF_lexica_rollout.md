@@ -328,6 +328,14 @@ correlated tripwire for the class, not a substitute detector.
 fires all quote-mark noise; tails 5/5 vs table; freight + describe-don't-preach clean. Blemish notes
 (no action): Eph 2:1/2:5 loose fit under construction (a); Dan 6 "religious" context wording. Pending:
 corpus render-uniformity check + cache fingerprint (0/1 greps) → apply --require-cache --from-draw.
+**Checks PASSED (JP relay + PA output):** renders = transgressions 23 + transgression 17 = 40/40, exactly
+the header's 2, all transgression-family → uniformity claim verified full-corpus (JP tightening on
+record: a 3rd rendering would have failed "uniformly" even if transgression-shaped — note edit, not
+redraw). Greps 0/1 → key b74b0d48 holds pull-2 prose. **Describe-don't-preach 7-for-7** (JP: Rom 5
+scale-not-function prose = hardest test yet, held). **Construction-fit example banked (JP shading):**
+Eph 2:1/2:5 under construction (a) = pull-1 residue homed in the roomiest construction, not the
+best-fitting — the example case if a placement-diff tool ever scores construction-level fit. Not a bar.
+Apply cleared; awaiting "using reviewed draw … no model call" line before render.
 
 ## BATCH-3 SESSION 1 LOG (2026-07-08/09) — shadow calibration opened. Read this + the audit doc's
 ## batch-3 entries to resume session 2.
