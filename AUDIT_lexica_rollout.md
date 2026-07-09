@@ -1599,3 +1599,53 @@ Fixed post-ship by `fix_lexica_raw.py` (surgical raw edits, NO model call — ce
 fallback hardening + `show_entry` now prints the full prose at gate time (commit `9a1dca9`); gate re-passed 36/36,
 rendered card screenshot-verified. → the PROOFREAD GATE (read the full prose + screenshot the rendered card, not
 pasted terminal text) is now standing law.
+
+## BATCH 3 — SHADOW CALIBRATION (opened 2026-07-08). Roster: 17 GREEN candidates + 3 seeded RED (JP-approved).
+Calibration terms on the record (handoff Queue item 4): N = 15 GREEN-tier / zero escapes; hint use removes a
+word from the count; fed-~80 hypothesis NOT tested by this batch. JP audits everything; escapes are the measure.
+Chat-set watches restate in the close-out manifest (#27).
+
+### G1119 γόνυ — LIVE (2 senses, pull 2 after a ruled misplacement). ESCAPE #1, off-count. Streak 0.
+Floor 3/3 STABLE {2:3} (physical | kneeling-act; draw-1 minority carve noted). Pull 1: all machine gates
+green (35/35) BUT invented an "approach-posture, not necessarily worship" sub-use under PHYSICAL and moved
+Luk 5:8 + 2Ki 1:13 off their 3/3 kneeling-cluster floor homes — plus a frame claim on Luk 5:8 (the gesture
+toward Jesus). JP ruled (b) redraw: floor contradicts the shelf; decisive. **ENGINE_LESSONS #30 born here**
+(floor-vs-ship placement diff is mechanically checkable, no gate looks; detector PARKED per session rule).
+Pull 2: floor-correct everywhere; Jdg 7:5–6 homed as kneeling-to-drink without dragging Peter; "Jdg 7:5–6"
+range-form tails hand-verified; gloss-note singular-"knee" practice claim VERIFIED against corpus (5 rows,
+exactly the formula verses — claim understated if anything). Jdg 16:19 sub-use wrapper ruled blemish-no-action.
+Applied 38/38; render check clean.
+
+### G1350 δίκτυον — LIVE (2 senses, pull 1). COUNT 1/15, streak 1 (first clean-at-pull-1 of batch 3).
+Floor 3/3 STABLE {3:3} (fishing | trap | architecture), cleanest floor of the batch; Eze 17:20+Hos 7:12
+pair-drop back-checked = fold. Ship draw folded trap to a SUB-USE under a combined catching sense — JP ruled
+LEGAL FOLD: zero verses changed cluster, #14 visibility met; "most aggressive fold the rule has blessed,"
+watch for habitual floor-sense compression (one instance legal, three a tendency). Pro 1:17 landed its
+floor-defensible fishing home (pre-registered). Comma-tail sweep (#28 class): full-card hand-verification via
+one row-values query — 36/36 verses, all four ×2 claims, 40/40 occurrences = TOTAL citation coverage (batch
+first). Gloss-note "works"/"work" rendering claims verified; "standalone" wording = blemish-no-action.
+
+### G3538 νίπτω — LIVE (2 senses, pull 2 after a ruled misplacement). ESCAPE #2, off-count. Streak reset 0.
+Floor 3/3 STABLE at 2 (washing | Job 20:23); draw-2 splinter self-disqualified (Joh 9:7 on two shelves in
+one draw, ὄρος rule). Pull 1: THREE fire classes — (i) invented top-level "rhetorical hand-washing" sense
+breaking the Psalms trio (26:6/58:10/73:13) off a unanimous 3/3 floor cluster → G1119-class ruled
+misplacement, redraw (#30 second instance: delta vs the legal G1350 fold = CLUSTER MEMBERSHIP, not sense
+count); (ii) rendering lint 3 fires = 2 quote-mark artifacts (claimed==corpus on their face) + 1 REAL
+(Exo 30:18 claimed "washing", corpus "wash" — lint's second genuine live fire); (iii) thin-sense fire on
+Job 20:23, pre-registered. Pull 2: floor-correct (Psalms trio a sub-use INSIDE sense 1 = legal), full tail
+verification 35 verses/5 doubles/40=40, Job 20:23 x2 ("may","wash") corroborates the gloss note from the
+data. AMBER reads: thin sense PASS (one-verse sense backed by unanimous floor = honest carve); sub-use
+overload (5, first live fire of the counter) PASS no merges — five distinct jobs, #14 forbids the fold.
+Job 20:23 missing ×2 marker = blemish-no-action. Render check (incl. first in-prose italics) clean.
+
+### G173 ἄκανθα — PARKED (floor refused to certify; πολύς regime). Routing, not an escape. Off-count.
+Floor at 3: {1:1,2:2} with the two 2-sense draws carving DIFFERENT second senses (crown-only vs detached
+spine) → escalated to 10 per the tiering law (escalation = leaves GREEN). 10-run: {2:7,1:3} but FOUR
+competing second-sense shapes (spine ×3 with varying membership · crown ×2 · thorns-as-setting ×1 ·
+bad-produce ×1, one with an internal double-shelf); hinge verses Psa 32:4+Eze 28:24 pair 10/10 with each
+other, 7/10 with the plant cluster, 1/10 with the crown — neither candidate carve stabilizes. All wobbles
+fold; zero holes; the plant sense is rock-solid in all 13 draws. JP park ruling ON THE RECORD for any
+revisit: the 10-run's real finding is a ONE-STRONG-SENSE word with an uncertifiable fringe — the revisit
+question is "ship as one sense with sub-uses?", NOT "which second sense is right." Park roster now
+πολύς + ἄκανθα (ἁμαρτία/ὀφθαλμός left via requeue); a 39-occ concrete noun parking = instability is not
+purely a frequency phenomenon (frequency-cutoff data point).
