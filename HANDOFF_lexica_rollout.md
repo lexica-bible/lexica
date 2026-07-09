@@ -601,6 +601,16 @@ preference-gradient pattern → straight to the κύων wall file, not a redraw
 same shape twice = wall, park · obey-pins-but-new-break = ordinary reject, attempt 2 of the hinted
 tier · full prose proofread on ANY structurally passing draft, no skimming familiar-looking parts
 (the pull-3 "being setting" garble is the reason).
+**HINTED DRAW (key a41ba4d3) = PASSED full audit. ALL PINS HELD** (Isa 49:2 + 2Ki 13:17 + weak-
+majority Psalms literal incl. Psa 11:2 — the pre-named defiance point did NOT defy; theophany whole
+figurative, Deu pair together; lance sub-use; Eph 6:16 in-sense, freight headline clean). Zero
+double-shelves despite tail-lists (disjoint). Mechanism record → structure 9-for-9, membership
+7-for-9; NO wall on this word. **Proofread caught a fabrication SUSPECT that verse-check CLEARED:**
+Lam 3:12 "stone as aim-point" — ABP's own text reads "he set up a stone target for me as the aim for
+the arrow" (the stone is textual; suspicion checked BEFORE claimed, cleared the engine); Job 16:9
+"arrows of his marauders" verbatim ✓. Residue: "in a contest" = not in verse, blemish-no-action
+(substance textual). LXX note fired 1+2 (skew watch satisfied). → apply --require-cache --from-draw
+a41ba4d3 + both flags verbatim (single-draft key, fingerprint waived).
 
 ## BATCH-3 SESSION 1 LOG (2026-07-08/09) — shadow calibration opened. Read this + the audit doc's
 ## batch-3 entries to resume session 2.
