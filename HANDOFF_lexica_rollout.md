@@ -349,7 +349,27 @@ audit doc's G3900 entry (incl. the header-gloss provenance ticket + the "the lem
 — frozen to the batch-close window per standing rule 7). Watch tallies after G3900: describe-don't-
 preach 7-for-7 · fold-compression 1 of 4 · "Grounding refs:" 0 · overload tally unchanged (no fire) ·
 κύων/συκῆ pre-registrations still unfired. Count 2/15 unchanged (RED off-count), streak 0 (pull-1
-bar-fail). **NEXT: 12 GREEN roster names still needed from JP before any GREEN draw.**
+bar-fail). ~~NEXT: 12 GREEN roster names needed~~ **roster banked by name `460c02e` + un-staled
+`8e6c1c7` (live remainder 9 GREEN + 2 RED).**
+**G2965 κύων (in progress, OFF-COUNT — escalated per ἄκανθα precedent):** occ table 37 verses/38 occ
+(1Ki 21:19 ×2); dotted cousins .1 (Exodus garments) /.2/.3 (Esther) /.4 (1Sa 9:24) all correctly
+excluded, no leak. 3-run {2:1,3:2} job-boundary wobble → rule-mandated 10-run: **{2:4,3:6} — floor
+called STABLE at the 3-sense mode, grouping-variance regime (κάλαμος class), no holes** (all wobbles
+fold; 2Ki 9:36 + 1Ki 21:24 back-checked = subset sampling). Clusters: literal · dyadic insult (six
+Samuel/Kings verses 10/10) · epithet core (Mat 7:6/Php 3:2/Rev 22:15 10/10) — the two figurative
+clusters NEVER exchange members in 3-sense draws (reviewer's discourse-mechanics read confirmed:
+dyadic status-ladder vs categorical boundary); merge direction in all four 2-sense draws = the two
+figurative clusters folding. No complete carve repeats identically (fringe scatter: Isa 56:11, Deu
+23:18, Ecc 9:4, 2Pe 2:22) — exact mode exists → plain pull first, hint on cap-out (#32).
+**PRE-REGISTERED MAJORITY HOMES (ship placement bars):** literal = Psa 59:6 (9/10; double-shelved in
+2 floor draws — strain point), Psa 59:14, Ecc 9:4 (7/9, reviewer watch answered), Job 30:1 (6/10),
+Isa 66:3 (9/10), Exo 11:7, 2Pe 2:22 (9/10) · insult = 6 Samuel/Kings + Psa 22:16 (9/10), Psa 22:20,
+Psa 68:23 · epithet = core + Isa 56:10 (8/10), Isa 56:11 (thin 2/10) · **Deu 23:18 = the contested
+one: 6/10 epithet majority home; literal filing = 4/10 minority, needs adjudication not silence.**
+Any ship-draft double-shelf = automatic fail. **Pre-registration adjudication limit (banked):** the
+committed wording at 5188565 is only "most-likely-GREEN-to-fire" — whether floor-level escalation
+satisfies "fire" is the reviewer chat's call (armed content never banked); fact banked = escalated
+off GREEN at floor, count stays 2/15.
 
 ## BATCH-3 SESSION 1 LOG (2026-07-08/09) — shadow calibration opened. Read this + the audit doc's
 ## batch-3 entries to resume session 2.
