@@ -206,7 +206,13 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   2. **Gloss-note ordering:** current order is draw-order, guaranteed by nothing. Canonical order proposed:
      by first-cited-verse's sense (notes read in the same sequence as the entry above), fallback alphabetical
      by glossed word. Renderer change only.
-  3. **Sub-use paragraph styling (banked 2026-07-08, batch-3 session, JP):** "Sub-use:" paragraphs inside a
+  3. **V6-era card style alignment (banked 2026-07-08, batch-3 session, JP):** batch-2 (V6-era) cards carry
+     dense per-quote-ref styling; the ruled V7 house shape is prose + parenthesized ref clusters (diagnosed
+     NOT drift — the quote line is unchanged; V7 edit 5 added the hybrid shape). Decide: cosmetic
+     style-alignment pass over V6 cards vs. leave as-is until substantively redrawn. CONSTRAINT: shipped
+     prose is audited — any reformat first needs a ruling on which edits are legal without re-audit
+     (sibling of the fix_lexica_raw boundary). No action this batch.
+  4. **Sub-use paragraph styling (banked 2026-07-08, batch-3 session, JP):** "Sub-use:" paragraphs inside a
      senses_block render as plain prose, visually undifferentiated from the main sense body (confirmed on the
      live G1119 card). Wanted: a light visual indicator — indent, smaller type, or left rule, frontend's call,
      within the quiet-design rules (no boxes). Display-only; no engine/prompt/stored-data impact. JP schedules.
