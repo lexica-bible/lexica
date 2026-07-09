@@ -370,6 +370,18 @@ Any ship-draft double-shelf = automatic fail. **Pre-registration adjudication li
 committed wording at 5188565 is only "most-likely-GREEN-to-fire" — whether floor-level escalation
 satisfies "fire" is the reviewer chat's call (armed content never banked); fact banked = escalated
 off GREEN at floor, count stays 2/15.
+**RULING (JP chat, banked verbatim): "κύων pre-registration FIRED, mechanism = job-boundary wobble →
+mandatory 10-run → off GREEN."** Basis: committed wording governs; "fire" for a GREEN word = leaving
+the GREEN tier (ἄκανθα precedent); any narrower private meaning died unrelayed — the standing rule
+working as designed. συκῆ pre-registration stays armed; its CONTENT owed one banked sentence from JP
+(requested — do not draw συκῆ before it lands).
+**Pull 1 (key 76bec69c) = BAR-FAIL, redraw. Zero machine fires; 3 placement breaks vs the
+pre-registered homes:** Isa 56:10–11 → literal sub-use vs 8/10 epithet home (biggest break) · Ecc 9:4
+→ figurative vs 7/9 literal (the predicted escape shape on the neighbor verse — 2Pe 2:22 itself was
+filed literal CORRECTLY) · Psa 68:23 → literal vs 5/6 insult company. Deu 23:18 bar HELD (figurative
+shelf, honest hedge). Also the 4/10 minority 2-sense merge shape with the epithet job NOT visible as
+a labeled sub-use (δίκτυον-fold visibility not met) — but the redraw rides on the membership breaks.
+More #30 evidence: machine all-green, floor comparison caught everything.
 
 ## BATCH-3 SESSION 1 LOG (2026-07-08/09) — shadow calibration opened. Read this + the audit doc's
 ## batch-3 entries to resume session 2.
