@@ -519,6 +519,16 @@ specimen). Full record: audit doc G4808 entry. **Session-2 running tally: shippe
 describe-don't-preach 8-for-8 · fold-compression 1 of 5 · "Grounding refs:" 0 · συκῆ watch RETIRED ·
 GREEN remaining 7: βέλος · ταμεῖον · βιβρώσκω · διανοίγω · ὑπομονή · ἐπιτιμάω · κατανοέω; RED
 remaining 2: περιτομή G4061 · σκληρύνω G4645.**
+**G956 βέλος NEXT (JP-confirmed; count needs a scorable word). WATCHES ARMED PRE-TABLE (JP, banked):**
+(1) **Eph 6:16 freight** — lone NT occurrence, only loaded one; the word means the projectile, the
+spiritual-warfare frame is Paul's discourse; a sense carved around "spiritual attack" = imported
+freight; correct handling = literal weapon + metaphor as prose context or at most a sub-use.
+(2) **LXX-skew gate check** — near-all-OT evidence means the provenance note SHOULD fire on any
+shipping sense; a non-fire = machine-gate question (shared component just code-confirmed tonight).
+(3) **Divine-archer wildcard** — lightning-as-God's-arrows (Psalms, Habakkuk) + pestilence/judgment
+arrows (Deu 32, Job 6): arrows are arrows, who looses them is context — BUT if the floor carves a
+stable God's-arrows cluster (the συκῆ formula-five shape), that's attested, we follow the evidence;
+"pre-registration cuts against imported carves, not attested ones."
 
 ## BATCH-3 SESSION 1 LOG (2026-07-08/09) — shadow calibration opened. Read this + the audit doc's
 ## batch-3 entries to resume session 2.
