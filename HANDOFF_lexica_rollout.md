@@ -316,6 +316,18 @@ off unanimous floor homes — νίπτω-class misplacement — AND double-shelv
 + pre-registered bar (iii), first co-arrival of the two signals). 3 "dead in" rendering-mismatch fires
 = quote-mark noise class (context wording, not a rendering claim). Sub-use overload (5) moot pending
 pull 2. Gloss-note uniformity claim ("transgression(s)") to verify against corpus on the shipping pull.
+**Reviewer observation BANKED (JP relay, pull-1 ruling): the placement class has a SECOND costume.**
+Session-1 escapes = right senses, wrong level; G3900 pull 1 = floor-UNATTESTED peer carve (plausible
+grammar, zero floor attestation) while the pre-registered hotspot passed clean. Passing a pre-registered
+bar does NOT clear the placement check — every peer-level carve must be floor-attested; the comparison
+is full-structure vs the floor, not flagged hotspots. (ENGINE_LESSONS candidate ONLY if the shape
+repeats — pull 2 did NOT repeat it, so banked here, no lesson entry.) Double-shelf flag confirmed as a
+correlated tripwire for the class, not a substitute detector.
+**Pull 2 (SAME key b74b0d48 — multi-draft key, fingerprint check ruled in) = PASSED CC audit:** 1 sense
+= floor mode; Rom 5 as construction (c) + scale-sub-use (legal placement); dead-in trio home; 4 machine
+fires all quote-mark noise; tails 5/5 vs table; freight + describe-don't-preach clean. Blemish notes
+(no action): Eph 2:1/2:5 loose fit under construction (a); Dan 6 "religious" context wording. Pending:
+corpus render-uniformity check + cache fingerprint (0/1 greps) → apply --require-cache --from-draw.
 
 ## BATCH-3 SESSION 1 LOG (2026-07-08/09) — shadow calibration opened. Read this + the audit doc's
 ## batch-3 entries to resume session 2.
