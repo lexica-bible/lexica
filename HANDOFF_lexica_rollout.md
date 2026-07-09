@@ -353,7 +353,15 @@ bar-fail). **NEXT: 12 GREEN roster names still needed from JP before any GREEN d
 goal). Words processed 8: **γόνυ p2 (ESCAPE 1) · δίκτυον p1 (count 1) · νίπτω p2 (ESCAPE 2) · ἄκανθα
 PARKED · σελήνη p1 (count 2, zero-fire) · κῆπος p1 AMBER · κάλαμος attempt-4 hint + APPLY INCIDENT
 (#31) + SPLITTER FIX (af8e296) · δάμαλις first-draw hint (middle-case type specimen).**
-**Tally: 7 shipped / 2 escapes / 1 parked / count 2/15 / streak 0 / 12 remaining.** Both escapes were
+**Tally: 7 shipped / 2 escapes / 1 parked / count 2/15 / streak 0 / 12 remaining.**
+**THE 12 REMAINING, BY NAME (roster gap closed 2026-07-09 — the close had banked counts without contents):**
+GREEN candidates (9): συκῆ G4808 (fig-tree; Mark-11 freight pre-registration armed) · κύων G2965 (dog;
+pre-named most-likely-GREEN-to-fire, Phil 3:2/Rev 22:15 epithet) · βέλος G956 (dart) · ταμεῖον G5009
+(secret chamber) · βιβρώσκω G977 (eat) · διανοίγω G1272 (open fully) · ὑπομονή G5281 (endurance) ·
+ἐπιτιμάω G2008 (rebuke) · κατανοέω G2657 (perceive/consider). Seeded RED (3, ALL UNEXERCISED):
+παράπτωμα G3900 (sin-family, fork-adjacent) · περιτομή G4061 (Gal/Rom contest) · σκληρύνω G4645
+(Rom 9:18 hardening fork). Processed 8 (all from the GREEN 17): G1119 G1350 G3538 G173 G4582 G2779
+G2563 G1151 — arithmetic: 17 − 8 = 9 GREEN + 3 RED = 12 ✓. Both escapes were
 the floor-vs-ship placement class, caught ONLY by human comparison (machine gates green both times) —
 the parked placement-diff detector's evidentiary basis (ENGINE_LESSONS #30).
 - **Ruled procedures (standing, batch-wide):** every apply `--require-cache` (or `--from-draw`); hinted
