@@ -289,6 +289,45 @@ Full record: audit doc `### G3788 ὀφθαλμός — LIVE` (the requeue entry
   if batch 3 routes fewer than 15 GREEN.** Awaiting JP's go + batch-3 roster composition (majority
   GREEN-candidates + seeded RED, ~20 words).
 
+## SESSION-3 HANDOFF BLOCKS (written AFTER close commit 4c7bcc9, per the handoff procedure)
+
+### CC-OPENER BLOCK (paste into the new CC session)
+BATCH-3 SESSION 3 — continue shadow calibration.
+State source of truth: close commit 4c7bcc9 ("batch-3 session-2 close"). Do not trust any number in
+this handoff over the docs at that commit.
+READ FIRST, in order: (1) HANDOFF_lexica_rollout.md — "HANDOFF PROCEDURE" block, then the BATCH-3
+SESSION 2 LOG block (the running record), then Queue item 4; (2) AUDIT_lexica_rollout.md — session-2
+entries (G3900, G2965, G4808, G956 + SESSION 2 CLOSE); (3) ENGINE_LESSONS.md #33–#37 + the #32 update
+(+ #30–#32 if not already known).
+Opening check (clearing procedure): `git log --oneline -3` shows 4c7bcc9; `grep -c "BATCH-3 SESSION 2
+LOG" HANDOFF_lexica_rollout.md` returns ≥1; `grep -c "^37\." ENGINE_LESSONS.md` returns 1. All pass =
+cleared, proceed; a failed check = rule-9 caveat, not a hold.
+State per the session-2 close at 4c7bcc9 (pointers, not restatements): batch 10 shipped / 2 escapes /
+2 parked / count 2/15 / streak 0; remaining 6 GREEN (ταμεῖον G5009 · βιβρώσκω G977 · διανοίγω G1272 ·
+ὑπομονή G5281 · ἐπιτιμάω G2008 · κατανοέω G2657) + 2 RED (περιτομή G4061 · σκληρύνω G4645).
+FIRST ACT: no mandated word — the session-1 RED precondition was met by παράπτωμα. The streak's best
+candidates are the plain verbs; per lesson #35, check the occurrence table's BOOK DISTRIBUTION before
+predicting any word GREEN. Standing ruled procedures (session-1 log, verbatim): --require-cache every
+apply · read the apply output for "using reviewed draw … no model call" before render · hinted applies
+repeat hint flags verbatim · occurrence-table query before the floor · screenshots to the reviewer
+chat, CC gets pass/fail relayed. Handoff procedure (a1ebfa4) in force: CC single-author, bank on
+relay, no counts without contents (+ the roster corollary: commit lists, not lengths).
+
+### REVIEWER-CHAT INHERITANCE BLOCK (paste into the new reviewer chat)
+You are the reviewer chat for Lexica batch-3 shadow calibration, session 3. Your predecessor's
+unbanked working notes are dead by design; everything ruled is in the repo at commit 4c7bcc9 —
+CC (the code session) reads it and relays. Your duties: audit CC's floor reads and draft verdicts
+against the banked bars; make rulings when asked (they get relayed to CC and banked as they happen —
+if it isn't banked with CC, it doesn't exist); receive render screenshots and relay pass/fail; at
+close JP asks you ONE question: "anything armed that isn't banked?" Watches you inherit (contents in
+the audit doc's SESSION 2 CLOSE entry at 4c7bcc9): describe-don't-preach (9-for-9) · "Grounding
+refs:" (0 sightings) · fold-compression (1 of 6) · overload look-trigger (2-for-2 ruled + one
+unadjudicated fire) · floor-vs-ship placement class (detector parked; two named variants) ·
+header-gloss ticket (systemic, 2 sightings) · tail-list disjointness (V8 candidate) · symmetric
+fabrication checkpoint (#36: verify before claiming fabrication — ABP false-positives intuition).
+Parked words are not yours to reopen: πολύς, ἄκανθα, κύων (κύων's revisit = "adjudicate the
+ambiguity or enforce the majority" on Deu 23:18, JP's call at a future window).
+
 ## BATCH-3 SESSION 2 LOG (2026-07-09) — CLOSED; see the audit doc's SESSION 2 CLOSE entry for the
 ## tally + case law. This block is the session's running record, banked as it happened.
 **Opened:** clearing gate PASSED with a rule-9 caveat (the handoff's grep string "SESSION 1 CLOSED
