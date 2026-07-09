@@ -284,6 +284,21 @@ Full record: audit doc `### G3788 ὀφθαλμός — LIVE` (the requeue entry
   if batch 3 routes fewer than 15 GREEN.** Awaiting JP's go + batch-3 roster composition (majority
   GREEN-candidates + seeded RED, ~20 words).
 
+## BATCH-3 SESSION 2 LOG (2026-07-09) — in progress; state per close commit 5188565 + this block.
+**Opened:** clearing gate PASSED with a rule-9 caveat (the handoff's grep string "SESSION 1 CLOSED
+2026-07-09" isn't verbatim in the doc; the same fact appears as the session-1 log header + Queue item 4
+wording — JP ruled gate cleared, not held).
+**GREEN ROSTER GAP (logged, JP-confirmed):** the 17 GREEN roster NAMES are not in any committed doc —
+only counts + the 8 processed words. Blocks GREEN resumption only; JP pastes the remaining 12 names,
+CC banks them here before any GREEN draw. (Rule-8 class: count without contents.)
+**RED seed = G3900 παράπτωμα, JP-confirmed** (strongest routing exercise: Romans-5 freight, highest
+fabrication temptation, NOT in the contested register — RED routing must carry the word alone).
+**Reviewer watch PRE-REGISTERED (banked on relay):** παράπτωμα is the floor-vs-ship placement-class
+profile — one dominant Pauline sense + quieter literal/lesser senses. Watch the draft (i) promoting the
+Romans-5 sense's placement above what the occurrence table supports, (ii) burying a lesser sense the
+floor puts higher. Reviewer compares PLACEMENT, not presence, at render.
+**Words this session:** (none yet — occurrence table + floor pending on PA).
+
 ## BATCH-3 SESSION 1 LOG (2026-07-08/09) — shadow calibration opened. Read this + the audit doc's
 ## batch-3 entries to resume session 2.
 **Roster JP-approved: 17 GREEN candidates + 3 seeded RED** (G3900 παράπτωμα · G4061 περιτομή · G4645
