@@ -593,7 +593,14 @@ the 4-of-5 figurative-draw composition, κάλαμος stability-pick precedent)
   view: Job 6:4, 16:9; Psa 7:13, 38:2, 45:5, 57:4, 64:7; the divine-storm set whole and together
   (2Sa 22:15; Psa 18:14, 77:17, 144:6; Deu 32:23, 32:42); Eph 6:16 inside this sense, never alone"
 Weak-majority Psalms (11:2, 91:5, 120:4, 127:4) pinned literal with their floor companion Isa 49:2.
-Awaiting JP pin verification.
+**PINS VERIFIED + CLEARED (JP, line-by-line vs banked floor). Status note banked: Psa 11:2 = the
+loosest pin (7/10, company leans figurative 6/7 with the affliction core) — pre-named as the most
+likely defiance point; if the hinted draft double-shelves or migrates EXACTLY Psa 11:2, that's the
+preference-gradient pattern → straight to the κύων wall file, not a redraw loop.**
+**ADJUDICATION CARRIED FROM κύων (pre-registered before output):** defiance on a pinned verse in the
+same shape twice = wall, park · obey-pins-but-new-break = ordinary reject, attempt 2 of the hinted
+tier · full prose proofread on ANY structurally passing draft, no skimming familiar-looking parts
+(the pull-3 "being setting" garble is the reason).
 
 ## BATCH-3 SESSION 1 LOG (2026-07-08/09) — shadow calibration opened. Read this + the audit doc's
 ## batch-3 entries to resume session 2.
