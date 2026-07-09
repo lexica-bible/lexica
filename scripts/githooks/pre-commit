@@ -35,6 +35,7 @@ python tests/test_render_head_no_phantom.py >/dev/null
 python tests/test_lexica_agreement_parse.py >/dev/null
 python tests/test_lexica_glossset_fold.py >/dev/null
 python tests/test_lexica_detectors.py >/dev/null
+python tests/test_lexica_section_split.py >/dev/null
 node tests/test_ac_word_groups.js >/dev/null
 node tests/test_rstack_logic.js >/dev/null
 node tests/test_chrono_reconcile.js >/dev/null

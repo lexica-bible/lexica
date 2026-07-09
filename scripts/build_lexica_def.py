@@ -647,7 +647,14 @@ def run_citation_gate(conn, sid, refs):
 #   "Range:"                                  (un-bolded label)
 # This (plus the bold numbered sense headlines below) is the ONLY structure we depend on across
 # words, so a formatting quirk degrades gracefully — never a ref mis-filed under the wrong sense.
-_SECTION_RE = re.compile(r'^\s*\*{0,2}\s*(senses|range|gloss notes|coverage)\b[\s:*]*(.*?)\s*$', re.I)
+# The label's trailing junk is eaten BOUNDED (spaces/colons, at most one closing bold pair, spaces/
+# colons) — the old greedy class `[\s:*]*` also swallowed the OPENING asterisk of a body that starts
+# with an italic term ("**Gloss notes:** *Calamus* ..." → body "Calamus* ...", G2563 2026-07-08:
+# one splitter bite, seven downstream lint artifacts). Known bounded-eater edge, pinned by test:
+# a PLAIN label whose body opens bold ("Gloss notes: **term**") still loses that opening pair —
+# no draft has produced the shape; the bold-label case ("**Gloss notes:** **term**") is safe because
+# the label's own closing pair is consumed first.
+_SECTION_RE = re.compile(r'^\s*\*{0,2}\s*(senses|range|gloss notes|coverage)\b[\s:]*\*{0,2}[\s:]*(.*?)\s*$', re.I)
 # A sense headline: a bold span starting with "N." — **1. ...**. The elaboration after it (whether
 # on the same line behind a dash, dikaioo-style, or on the next line, psyche-style) is NOT captured.
 _HEADLINE_RE = re.compile(r'\*\*\s*(\d+\.[^*]+?)\s*\*\*')

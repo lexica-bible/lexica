@@ -32,6 +32,7 @@ jobs:
           python tests/test_lexica_agreement_parse.py
           python tests/test_lexica_glossset_fold.py
           python tests/test_lexica_detectors.py
+          python tests/test_lexica_section_split.py
 
   frontend:
     runs-on: ubuntu-latest
