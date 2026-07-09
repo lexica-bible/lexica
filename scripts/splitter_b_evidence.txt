@@ -1,0 +1,886 @@
+=== POLARITY B (re-align blank verb) — 878 case(s), ALL hand-review ===
+  (ref | pooled-phrase-pos 'phrase' -> tail-word -> blank verbpos G{st})
+    Gen 11:6     16 'shall not fail' -> 'fail' -> 17 G1587
+    Gen 13:6     15 'they were not able' -> 'able' -> 16 G1410
+    Gen 14:23    12 'you should not have said' -> 'said' -> 13 G2036
+    Gen 18:24    9 'Will you not spare' -> 'spare' -> 10 G447
+    Gen 19:7     6 'should you do wickedly.' -> 'wickedly' -> 7 G4188.2
+    Gen 21:26    4 'I do not know' -> 'know' -> 5 G1097
+    Gen 23:13    13 'with me' -> 'me' -> 14 G1700
+    Gen 24:39    6 'should not go' -> 'go' -> 7 G4198
+    Gen 24:50    12 'we will not be able' -> 'able' -> 13 G1410
+    Gen 26:29    6 'did not abhor' -> 'abhor' -> 7 G948
+    Gen 30:31    11 'You shall not give' -> 'give' -> 12 G1325
+    Gen 31:32    10 'he shall not live' -> 'live' -> 11 G2198
+    Gen 31:35    9 'I shall not be able' -> 'able' -> 10 G1410
+    Gen 32:12    17 'shall not be counted' -> 'counted' -> 18 G705
+    Gen 32:25    3 'he was not able' -> 'able' -> 4 G1410
+    Gen 32:26    13 'will I send you away' -> 'away' -> 14 G649
+    Gen 34:14    9 'We shall not be able' -> 'able' -> 10 G1410
+    Gen 35:10    8 'shall not be called' -> 'called' -> 9 G2564
+    Gen 36:7     10 'was not able' -> 'able' -> 11 G1410
+    Gen 38:17    15 'You should give' -> 'give' -> 16 G1325
+    Gen 40:15    8 'I did not do' -> 'do' -> 9 G4160
+    Gen 41:8     28 'there was no one' -> 'one' -> 29 G1510.7.3
+    Gen 41:16    9 'shall not be answered' -> 'answered' -> 10 G611
+    Gen 41:24    22 'there was no one' -> 'one' -> 23 G1510.7.3
+    Gen 41:25    8 'is one.' -> 'one' -> 9 G1510.2.3
+    Gen 41:26    20 'is one.' -> 'one' -> 21 G1510.2.3
+    Gen 41:36    21 'shall not be obliterated' -> 'obliterated' -> 22 G1625.3
+    Gen 42:37    13 'I do not lead' -> 'lead' -> 14 G71
+    Gen 43:14    20 'I indeed' -> 'indeed' -> 21 G3303
+    Gen 43:22    8 'we do not know' -> 'know' -> 9 G1492
+    Gen 44:22    4 'is not able' -> 'able' -> 5 G1410
+    Gen 44:28    12 'I did not see' -> 'see' -> 13 G1492
+    Gen 47:18    39 'there has not been left behind' -> 'behind' -> 40 G5275
+    Gen 48:11    9 'I was not deprived;' -> 'deprived' -> 10 G4732.1
+    Gen 49:10    0 'shall not fail' -> 'fail' -> 1 G1587
+    Exo 2:3      2 'they were not able' -> 'able' -> 3 G1410
+    Exo 2:12     5 'he did not see' -> 'see' -> 6 G3708
+    Exo 3:5      3 'You should not approach' -> 'approach' -> 4 G1448
+    Exo 3:21     12 'you will not go forth' -> 'forth' -> 13 G565
+    Exo 4:8      2 'they do not believe' -> 'believe' -> 3 G4100
+    Exo 4:9      3 'they do not believe' -> 'believe' -> 4 G4100
+    Exo 4:23     10 'If indeed' -> 'indeed' -> 11 G3303
+    Exo 4:23     13 'you should not be willing' -> 'willing' -> 14 G1014
+    Exo 5:2      15 'I do not know' -> 'know' -> 16 G1492
+    Exo 5:8      13 'You shall not remove' -> 'remove' -> 14 G851
+    Exo 5:18     8 'shall not be given,' -> 'given' -> 9 G1325
+    Exo 5:23     16 'you did not rescue' -> 'rescue' -> 17 G4506
+    Exo 9:7      4 'none came to an end' -> 'end' -> 5 G5053
+    Exo 10:4     2 'should not want' -> 'want' -> 3 G2309
+    Exo 10:15    28 'There was not left' -> 'left' -> 29 G5275
+    Exo 10:19    19 'there was not left behind' -> 'behind' -> 20 G5275
+    Exo 12:10    9 'you shall not break' -> 'break' -> 10 G4937
+    Exo 12:16    19 'shall not be done' -> 'done' -> 20 G4160
+    Exo 12:19    3 'shall not be found' -> 'found' -> 4 G2147
+    Exo 12:46    15 'you shall not break' -> 'break' -> 16 G4937
+    Exo 12:48    31 'shall not eat' -> 'eat' -> 32 G2068
+    Exo 13:7     4 'There shall not be seen' -> 'seen' -> 5 G3708
+    Exo 13:13    8 'you should not barter' -> 'barter' -> 9 G236
+    Exo 14:13    27 'you will not proceed' -> 'proceed' -> 28 G4369
+    Exo 16:18    13 'had not too less,' -> 'less' -> 14 G1641
+    Exo 16:25    12 'you shall not find' -> 'find' -> 13 G2147
+    Exo 19:13    2 'His hand,' -> 'hand' -> 3 G5495
+    Exo 19:24    19 'shall not use force' -> 'force' -> 20 G971
+    Exo 20:20    24 'you should not sin!' -> 'sin' -> 25 G264
+    Exo 20:25    7 'you shall not build' -> 'build' -> 8 G3618
+    Exo 20:26    10 'you should not uncover' -> 'uncover' -> 11 G601
+    Exo 21:7     8 'she shall not go forth' -> 'forth' -> 9 G565
+    Exo 21:8     1 'she should not be well-pleasing' -> 'wellpleasing' -> 2 G2100
+    Exo 21:11    5 'he should not do' -> 'do' -> 6 G4160
+    Exo 21:18    13 'he should not die,' -> 'die' -> 14 G599
+    Exo 23:8     2 'you shall not receive;' -> 'receive' -> 3 G2983
+    Exo 23:29    10 'should not become' -> 'become' -> 11 G1096
+    Exo 28:28    26 'should not slacken' -> 'slacken' -> 27 G5465
+    Exo 28:32    20 'it should not be torn.' -> 'torn' -> 21 G4486
+    Exo 28:35    19 'he might not die.' -> 'die' -> 20 G599
+    Exo 28:43    24 'they shall not bring' -> 'bring' -> 25 G1863
+    Exo 29:34    19 'it shall not be eaten,' -> 'eaten' -> 20 G977
+    Exo 30:9     1 'you shall not offer' -> 'offer' -> 2 G399
+    Exo 30:9     12 'you shall not offer' -> 'offer' -> 13 G4689
+    Exo 30:15    2 'shall not add more,' -> 'more' -> 3 G4369
+    Exo 30:15    7 'shall not add less' -> 'less' -> 8 G1641
+    Exo 30:21    9 'they should not die.' -> 'die' -> 10 G599
+    Exo 30:37    4 'you shall not make' -> 'make' -> 5 G4160
+    Exo 32:1     39 'we do not know' -> 'know' -> 40 G1492
+    Exo 32:23    20 'we do not know' -> 'know' -> 21 G1492
+    Exo 33:3     24 'I should not completely consume' -> 'consume' -> 25 G1814.4
+    Exo 33:20    2 'You will not be able' -> 'able' -> 3 G1410
+    Exo 34:17    3 'you shall not make' -> 'make' -> 4 G4160
+    Exo 34:20    7 'you will not ransom' -> 'ransom' -> 8 G3084
+    Exo 34:25    8 'shall not remain through the night' -> 'night' -> 9 G2837
+    Exo 40:35    1 'was not able' -> 'able' -> 2 G1410
+    Lev 4:22     17 'he shall not do' -> 'do' -> 18 G4160
+    Lev 5:7      2 'is not strong' -> 'strong' -> 3 G2480
+    Lev 5:11     2 'should not find' -> 'find' -> 3 G2147
+    Lev 5:11     28 'He shall not pour' -> 'pour' -> 29 G2022
+    Lev 6:9      29 'shall not be extinguished.' -> 'extinguished' -> 30 G4570
+    Lev 7:19     7 'shall not be eaten;' -> 'eaten' -> 8 G977
+    Lev 7:23     12 'you shall not eat!' -> 'eat' -> 13 G2068
+    Lev 7:24     12 'it shall not be eaten.' -> 'eaten' -> 13 G977
+    Lev 8:33     8 'you shall not come forth' -> 'forth' -> 9 G1831
+    Lev 8:35     20 'you shall not die.' -> 'die' -> 21 G599
+    Lev 10:6     17 'shall not be without a turban,' -> 'turban' -> 18 G607.1
+    Lev 11:4     27 'is not cloven;' -> 'cloven' -> 28 G1369.1
+    Lev 13:28    8 'should not be diffused' -> 'diffused' -> 9 G1315.1
+    Lev 13:32    12 'should not be diffused' -> 'diffused' -> 13 G1315.1
+    Lev 13:33    7 'shall not be shaven;' -> 'shaven' -> 8 G3587
+    Lev 13:53    6 'should not be diffused' -> 'diffused' -> 7 G1315.1
+    Lev 14:48    10 'is not dispersed' -> 'dispersed' -> 11 G1315.1
+    Lev 21:11    14 'he shall not be defiled.' -> 'defiled' -> 15 G3392
+    Lev 21:21    29 'he shall not come forward' -> 'forward' -> 30 G4334
+    Lev 22:24    7 'you shall not bring' -> 'bring' -> 8 G4317
+    Lev 25:11    10 'You shall not sow,' -> 'sow' -> 11 G4687
+    Lev 25:28    2 'should not be well-provided' -> 'wellprovided' -> 3 G2141
+    Lev 25:42    10 'They shall not be sold' -> 'sold' -> 11 G4097
+    Num 9:10     24 'he shall observe' -> 'observe' -> 25 G4160
+    Num 19:2     28 'was not put' -> 'put' -> 29 G1911
+    Num 21:21    5 'we will not turn aside,' -> 'aside' -> 6 G1578
+    Num 23:9     18 'they shall not be reckoned together.' -> 'together' -> 19 G4817
+    Num 23:13    14 'you shall not see' -> 'see' -> 15 G3708
+    Deu 4:2      0 'You shall not add' -> 'add' -> 1 G4369
+    Deu 4:2      10 'you shall not remove' -> 'remove' -> 11 G851
+    Deu 4:9      19 'let them not leave' -> 'leave' -> 20 G868
+    Deu 4:21     21 'I should not enter' -> 'enter' -> 22 G1525
+    Deu 5:5      22 'you did not ascend' -> 'ascend' -> 23 G305
+    Deu 6:14     0 'You shall not go' -> 'go' -> 1 G4198
+    Deu 7:15     15 'he will not place' -> 'place' -> 16 G2007
+    Deu 8:9      11 'you shall not be in want' -> 'want' -> 12 G1735.1
+    Deu 9:9      28 'I did not eat,' -> 'eat' -> 29 G2068
+    Deu 9:9      32 'I did not drink.' -> 'drink' -> 33 G4095
+    Deu 12:4     0 'You shall not do' -> 'do' -> 1 G4160
+    Deu 12:17    34 'you should have vowed,' -> 'vowed' -> 35 G2172
+    Deu 14:27    8 'you shall not abandon' -> 'abandon' -> 9 G1459
+    Deu 15:6     26 'they shall not control.' -> 'control' -> 27 G756
+    Deu 15:10    12 'you shall not fret' -> 'fret' -> 13 G3076
+    Deu 15:13    7 'you shall not send' -> 'send' -> 8 G1821
+    Deu 16:19    3 'they shall not discriminate' -> 'discriminate' -> 4 G1921
+    Deu 17:1     0 'You shall not sacrifice' -> 'sacrifice' -> 1 G2380
+    Deu 17:16    12 'he should not multiply' -> 'multiply' -> 13 G4129
+    Deu 20:19    27 'you shall not cut;' -> 'cut' -> 28 G1581
+    Deu 21:14    3 'you should not want' -> 'want' -> 4 G2309
+    Deu 22:27    12 'was there no one' -> 'one' -> 13 G1510.7.3
+    Deu 22:29    21 'he will not be able' -> 'able' -> 22 G1410
+    Deu 23:1     0 'shall not enter' -> 'enter' -> 1 G1525
+    Deu 23:2     0 'shall not enter' -> 'enter' -> 1 G1525
+    Deu 23:14    27 'there shall not be seen' -> 'seen' -> 28 G3708
+    Deu 23:24    18 'you shall not put them.' -> 'them' -> 19 G1685
+    Deu 24:1     11 'she should not find' -> 'find' -> 12 G2147
+    Deu 24:4     0 'shall not be able' -> 'able' -> 1 G1410
+    Deu 25:3     4 'they shall not add more;' -> 'more' -> 5 G4369
+    Deu 28:44    6 'shall not lend;' -> 'lend' -> 7 G1155
+    Deu 28:68    14 'You shall not proceed' -> 'proceed' -> 15 G4369
+    Deu 29:4     1 'did not give' -> 'give' -> 2 G1325
+    Deu 32:52    7 'you shall not enter,' -> 'enter' -> 8 G1525
+    Deu 33:9     22 'he did not know.' -> 'know' -> 23 G1097
+    Jos 3:4      11 'you should not draw near' -> 'near' -> 12 G4331
+    Jos 5:5      25 'were not circumcised.' -> 'circumcised' -> 26 G4059
+    Jos 5:6      25 'to not behold' -> 'behold' -> 26 G1492
+    Jos 9:14     11 'they did not ask.' -> 'ask' -> 12 G1905
+    Jos 10:8     15 'there shall not stand' -> 'stand' -> 16 G5307.2
+    Jos 11:22    0 'He did not leave' -> 'leave' -> 1 G2641
+    Jos 13:14    4 'there was not given' -> 'given' -> 5 G1325
+    Jos 13:33    4 'did not give' -> 'give' -> 5 G1325
+    Jos 14:3     19 'was not given' -> 'given' -> 20 G1325
+    Jos 15:63    7 'were not able' -> 'able' -> 8 G1410
+    Jos 17:13    15 'they did not utterly destroy' -> 'destroy' -> 16 G1842
+    Jos 18:2     6 'did not inherit' -> 'inherit' -> 7 G2624.1
+    Jos 22:3     1 'you have not abandoned' -> 'abandoned' -> 2 G1459
+    Jos 22:22    24 'may he not rescue' -> 'rescue' -> 25 G4506
+    Jos 22:27    41 'shall not say' -> 'say' -> 42 G2046
+    Jos 23:7     22 'you shall not swear by an oath' -> 'oath' -> 23 G3660
+    Jdg 1:19     10 'he was not able' -> 'able' -> 11 G1410
+    Jdg 1:21     6 'did not remove' -> 'remove' -> 7 G1808
+    Jdg 2:14     27 'they were not able' -> 'able' -> 28 G1410
+    Jdg 2:17     29 'they did not do' -> 'do' -> 30 G4160
+    Jdg 4:8      12 'you should not go,' -> 'go' -> 13 G4198
+    Jdg 4:8      14 'will I not go.' -> 'go' -> 15 G4198
+    Jdg 5:19     16 'they did not have.' -> 'have' -> 17 G2983
+    Jdg 5:30     0 'Shall they not find' -> 'find' -> 1 G2147
+    Jdg 6:4      16 'there was not left behind' -> 'behind' -> 17 G5275
+    Jdg 6:27     31 'so as to not act' -> 'act' -> 32 G4160
+    Jdg 7:4      41 'He shall not go' -> 'go' -> 42 G4198
+    Jdg 7:4      47 'shall not go' -> 'go' -> 48 G4198
+    Jdg 8:23     5 'will not rule' -> 'rule' -> 6 G756
+    Jdg 8:23     10 'will not rule' -> 'rule' -> 11 G756
+    Jdg 11:25    2 'any better' -> 'better' -> 3 G2908
+    Jdg 11:35    34 'I shall not be able' -> 'able' -> 35 G1410
+    Jdg 13:5     11 'shall not ascend' -> 'ascend' -> 12 G305
+    Jdg 14:14    14 'they were not able' -> 'able' -> 15 G1410
+    Jdg 16:17    12 'shall not ascend' -> 'ascend' -> 13 G305
+    Jdg 16:29    6 'in the midst' -> 'midst' -> 7 G3319
+    Jdg 18:14    17 'Did you know' -> 'know' -> 18 G1492
+    Jdg 19:10    1 'did not want' -> 'want' -> 2 G2309
+    Jdg 19:12    14 'there is no one' -> 'one' -> 15 G1510.2.3
+    Jdg 19:24    27 'you should not do' -> 'do' -> 28 G4160
+    Jdg 21:22    20 'did not take' -> 'take' -> 21 G2983
+    Rth 2:16     14 'you shall not reproach' -> 'reproach' -> 15 G2008
+    Rth 4:4      28 'there is no one' -> 'one' -> 29 G1510.2.3
+    1Sa 1:11     19 'should not forget' -> 'forget' -> 20 G1950
+    1Sa 1:18     30 'was not downcast' -> 'downcast' -> 31 G4844.1
+    1Sa 2:33     3 'I should not utterly destroy' -> 'destroy' -> 4 G1842
+    1Sa 3:5      13 'I have not called' -> 'called' -> 14 G2564
+    1Sa 3:6      21 'I have not called' -> 'called' -> 22 G2564
+    1Sa 3:19     9 'there did not fall' -> 'fall' -> 10 G4098
+    1Sa 4:15     14 'he did not see.' -> 'see' -> 15 G991
+    1Sa 5:5      7 'nor do any' -> 'any' -> 8 G3956
+    1Sa 5:7      10 'shall not settle' -> 'settle' -> 11 G2521
+    1Sa 6:12     19 'they turned not aside' -> 'aside' -> 20 G1578
+    1Sa 8:18     15 'will not heed' -> 'heed' -> 16 G1873
+    1Sa 9:11     16 'Is there' -> 'there' -> 17 G1510.2.3
+    1Sa 9:12     9 'in front' -> 'front' -> 10 G4383
+    1Sa 12:23    7 'to stop' -> 'stop' -> 8 G1257
+    1Sa 13:6     7 'to not lead forward' -> 'forward' -> 8 G4317
+    1Sa 13:11    18 'did not come' -> 'come' -> 19 G3854
+    1Sa 14:36    16 'we should not leave behind' -> 'behind' -> 17 G5275
+    1Sa 14:39    18 'there was no one' -> 'one' -> 19 G1510.7.3
+    1Sa 16:7     5 'You should not look' -> 'look' -> 6 G1914
+    1Sa 18:2     9 'he did not allow' -> 'allow' -> 10 G863
+    1Sa 18:26    21 'were not fulfilled' -> 'fulfilled' -> 22 G4137
+    1Sa 20:13    10 'I will not bring' -> 'bring' -> 11 G399
+    1Sa 20:31    12 'you shall not be prepared,' -> 'prepared' -> 13 G2090
+    1Sa 24:21    7 'you should not utterly destroy' -> 'destroy' -> 8 G1842
+    1Sa 24:21    15 'you should not obliterate' -> 'obliterate' -> 16 G853
+    1Sa 25:34    22 'would there have been left behind' -> 'behind' -> 23 G5275
+    1Sa 26:15    17 'do you not guard' -> 'guard' -> 18 G5442
+    1Sa 28:23    3 'he did not want' -> 'want' -> 4 G1014
+    1Sa 30:17    17 'was not preserved' -> 'preserved' -> 18 G1295
+    2Sa 1:3      5 'do you come?' -> 'come' -> 6 G3854
+    2Sa 2:26     23 'for how long' -> 'long' -> 24 G4219
+    2Sa 7:10     12 'by themselves,' -> 'themselves' -> 13 G1438
+    2Sa 9:1      3 'Is there' -> 'there' -> 4 G1510.2.3
+    2Sa 12:13    21 'shall not die.' -> 'die' -> 22 G599
+    2Sa 14:5     12 'By all means' -> 'means' -> 13 G3118.3
+    2Sa 14:6     15 'there was no one' -> 'one' -> 16 G1510.7.3
+    2Sa 14:11    29 'there shall not fall' -> 'fall' -> 30 G4098
+    2Sa 15:11    13 'they did not know' -> 'know' -> 14 G1492
+    2Sa 17:12    24 'we shall not leave behind' -> 'behind' -> 25 G5275
+    2Sa 17:19    19 'they did not know' -> 'know' -> 20 G1097
+    2Sa 18:13    11 'will not be kept unaware' -> 'unaware' -> 12 G2990
+    2Sa 18:20    24 'you shall not announce good news,' -> 'news' -> 25 G2097
+    2Sa 19:21    10 'be put to death' -> 'death' -> 11 G2289
+    2Sa 19:22    23 'I do not know' -> 'know' -> 24 G1492
+    2Sa 19:25    17 'you did not go' -> 'go' -> 18 G4198
+    2Sa 19:30    7 'all the things' -> 'things' -> 8 G3956
+    2Sa 20:6     28 'he should not find' -> 'find' -> 29 G2147
+    2Sa 21:17    19 'You shall not come forth' -> 'forth' -> 20 G1831
+    2Sa 22:38    8 'I shall not return' -> 'return' -> 9 G654
+    2Sa 23:4     9 'it shall not darken;' -> 'darken' -> 10 G4651.1
+    2Sa 23:39    3 'In all' -> 'all' -> 4 G3956
+    2Sa 24:24    7 'but only' -> 'only' -> 8 G237.1
+    2Sa 24:24    16 'I shall not offer' -> 'offer' -> 17 G399
+    1Ki 1:24     6 'have you said,' -> 'said' -> 7 G2046
+    1Ki 2:4      35 'There shall not be lifted away' -> 'away' -> 36 G1808
+    1Ki 2:8      41 'to death' -> 'death' -> 42 G2289
+    1Ki 2:26     26 'to death' -> 'death' -> 27 G2289
+    1Ki 2:30     21 'I do not go forth,' -> 'forth' -> 22 G1607
+    1Ki 2:43     2 'have you not guarded' -> 'guarded' -> 3 G5442
+    1Ki 3:23     11 'is the one living,' -> 'living' -> 12 G2198
+    1Ki 8:16     10 'I have not chosen' -> 'chosen' -> 11 G1586
+    1Ki 8:25     18 'There shall not be lifted away' -> 'away' -> 19 G1808
+    1Ki 9:6      19 'so as to not keep,' -> 'keep' -> 20 G5442
+    1Ki 9:22     5 'did not give' -> 'give' -> 6 G1325
+    1Ki 10:10    16 'There had not come' -> 'come' -> 17 G2064
+    1Ki 10:12    23 'There had not come' -> 'come' -> 24 G2064
+    1Ki 11:2     21 'they should not turn aside' -> 'aside' -> 22 G1578
+    1Ki 13:8     17 'I will not enter' -> 'enter' -> 18 G1525
+    1Ki 13:17    13 'you shall not drink' -> 'drink' -> 14 G4095
+    1Ki 13:17    17 'you shall not return' -> 'return' -> 18 G1994
+    1Ki 13:22    18 'You shall not eat' -> 'eat' -> 19 G2068
+    1Ki 14:2     10 'they shall not know' -> 'know' -> 11 G1097
+    1Ki 14:8     12 'you have not become' -> 'become' -> 13 G1096
+    1Ki 14:15    31 'on the other side' -> 'side' -> 32 G4008
+    1Ki 17:16    12 'had not less,' -> 'less' -> 13 G1641
+    1Ki 17:20    21 'have you inflicted evil' -> 'evil' -> 22 G2559
+    1Ki 18:5     31 'shall not be destroyed' -> 'destroyed' -> 32 G1842
+    1Ki 18:10    6 'is there' -> 'there' -> 7 G1510.2.3
+    1Ki 21:4     21 'I will not give' -> 'give' -> 22 G1325
+    1Ki 21:6     19 'you do not want,' -> 'want' -> 20 G1014
+    1Ki 22:4     7 'Shall you not ascend' -> 'ascend' -> 8 G305
+    1Ki 22:8     8 'there is one' -> 'one' -> 9 G1510.2.3
+    1Ki 22:8     23 'he does not speak' -> 'speak' -> 24 G2980
+    1Ki 22:18    9 'Did I not say' -> 'say' -> 10 G2036
+    1Ki 22:43    9 'He turned not aside' -> 'aside' -> 10 G1578
+    2Ki 1:3      25 'not being' -> 'being' -> 26 G1510.1
+    2Ki 2:11     2 'of their going' -> 'going' -> 3 G4198
+    2Ki 2:16     40 'You shall not send.' -> 'send' -> 41 G649
+    2Ki 2:18     15 'Do not go?' -> 'go' -> 16 G4198
+    2Ki 3:17     4 'You shall not see' -> 'see' -> 5 G3708
+    2Ki 3:17     8 'you shall not see' -> 'see' -> 9 G3708
+    2Ki 3:26     24 'they were not able.' -> 'able' -> 25 G1410
+    2Ki 4:13     17 'Is there' -> 'there' -> 18 G1510.2.3
+    2Ki 4:28     2 'Did I ask' -> 'ask' -> 3 G154
+    2Ki 4:28     9 'Did I not say,' -> 'say' -> 10 G2036
+    2Ki 4:29     32 'you shall not answer' -> 'answer' -> 33 G611
+    2Ki 4:31     30 'was not arisen' -> 'arisen' -> 31 G1453
+    2Ki 4:40     27 'they were not able' -> 'able' -> 28 G1410
+    2Ki 5:17     15 'shall not offer' -> 'offer' -> 16 G4160
+    2Ki 5:20     21 'so as to not take' -> 'take' -> 22 G2983
+    2Ki 6:23     19 'did not proceed' -> 'proceed' -> 20 G4369
+    2Ki 7:19     38 'you will not eat.' -> 'eat' -> 39 G2068
+    2Ki 10:10    2 'there shall not fall' -> 'fall' -> 3 G4098
+    2Ki 11:15    34 'She should not die' -> 'die' -> 35 G599
+    2Ki 12:7     18 'was not repaired' -> 'repaired' -> 19 G2901
+    2Ki 12:13    1 'they were not to make' -> 'make' -> 2 G4160
+    2Ki 12:15    20 'they were acting.' -> 'acting' -> 21 G4160
+    2Ki 12:16    8 'was not carried' -> 'carried' -> 9 G1533
+    2Ki 14:6     17 'shall not die' -> 'die' -> 18 G599
+    2Ki 14:27    1 'did not speak' -> 'speak' -> 2 G2980
+    2Ki 17:35    10 'You shall not fear' -> 'fear' -> 11 G5399
+    2Ki 17:35    19 'you shall not serve' -> 'serve' -> 20 G3000
+    2Ki 17:35    23 'you shall not sacrifice' -> 'sacrifice' -> 24 G2380
+    2Ki 18:32    27 'you shall not die.' -> 'die' -> 28 G599
+    2Ki 19:6     13 'You should not fear' -> 'fear' -> 14 G5399
+    2Ki 19:11    16 'shall you be rescued?' -> 'rescued' -> 17 G4506
+    2Ki 20:17    25 'There shall not be left behind' -> 'behind' -> 26 G5275
+    2Ki 22:20    19 'shall not see' -> 'see' -> 20 G3708
+    2Ki 23:10    9 'to not lead' -> 'lead' -> 10 G1236
+    1Ch 16:21    0 'He did not allow' -> 'allow' -> 1 G863
+    1Ch 16:30    13 'shall not be shaken.' -> 'shaken' -> 14 G4531
+    1Ch 17:18    7 'to glorify' -> 'glorify' -> 8 G1392
+    1Ch 21:6     6 'were not counted' -> 'counted' -> 7 G705
+    1Ch 22:8     15 'you shall not build' -> 'build' -> 16 G3618
+    1Ch 28:3     4 'You shall not build' -> 'build' -> 5 G3618
+    1Ch 28:8     2 'according to the eyes' -> 'eyes' -> 3 G3788
+    1Ch 29:14    21 'your things' -> 'things' -> 22 G4674
+    2Ch 1:12     16 'did not happen' -> 'happen' -> 17 G1096
+    2Ch 2:6      14 'does not bear' -> 'bear' -> 15 G5342
+    2Ch 5:14     1 'were not able' -> 'able' -> 2 G1410
+    2Ch 6:5      11 'I did not choose' -> 'choose' -> 12 G1586
+    2Ch 6:5      29 'I did not choose' -> 'choose' -> 30 G1586
+    2Ch 7:2      1 'were not able' -> 'able' -> 2 G1410
+    2Ch 7:18     14 'There shall not be removed' -> 'removed' -> 15 G1808
+    2Ch 9:6      15 'was not reported' -> 'reported' -> 16 G518
+    2Ch 9:11     24 'there was not seen' -> 'seen' -> 25 G3708
+    2Ch 11:4     3 'You shall not ascend,' -> 'ascend' -> 4 G305
+    2Ch 13:12    22 'you should not wage war' -> 'war' -> 23 G4170
+    2Ch 13:12    32 'your ways shall not be prospered.' -> 'prospered' -> 33 G2137
+    2Ch 19:10    53 'you shall not sin.' -> 'sin' -> 54 G264
+    2Ch 20:6     31 'there is no one' -> 'one' -> 32 G1510.2.3
+    2Ch 20:12    26 'we do not know' -> 'know' -> 27 G1492
+    2Ch 20:33    3 'he did not remove,' -> 'remove' -> 4 G1808
+    2Ch 20:37    26 'they were not able' -> 'able' -> 27 G1410
+    2Ch 21:17    27 'there was not left' -> 'left' -> 28 G2641
+    2Ch 23:19    10 'there shall not enter' -> 'enter' -> 11 G1525
+    2Ch 24:20    29 'your way shall not prosper?' -> 'prosper' -> 30 G2137
+    2Ch 25:4     21 'shall not die' -> 'die' -> 22 G599
+    2Ch 25:16    20 'they should not strike' -> 'strike' -> 21 G3960
+    2Ch 28:1     18 'He did not do' -> 'do' -> 19 G4160
+    2Ch 28:27    13 'they did not bring' -> 'bring' -> 14 G5342
+    2Ch 34:28    16 'shall not see' -> 'see' -> 17 G3708
+    Ezr 4:3      16 'It is not for us' -> 'us' -> 17 G2254
+    Ezr 4:13     21 'they shall not give,' -> 'give' -> 22 G1325
+    Ezr 4:14     11 'it is not allowed' -> 'allowed' -> 12 G1832
+    Ezr 5:16     23 'was not finished.' -> 'finished' -> 24 G5055
+    Ezr 7:24     24 'do not have' -> 'have' -> 25 G2192
+    Ezr 9:1      10 'did not separate' -> 'separate' -> 11 G5563
+    Neh 2:6      12 'For how long' -> 'long' -> 13 G4219
+    Neh 4:1      16 'very much,' -> 'much' -> 17 G4183
+    Neh 4:5      1 'you should not cover' -> 'cover' -> 2 G2572
+    Neh 4:5      13 'may it not be wiped away.' -> 'away' -> 14 G1813
+    Neh 4:11     5 'They shall not know,' -> 'know' -> 6 G1097
+    Neh 4:11     8 'they shall not see' -> 'see' -> 9 G3708
+    Neh 5:9      2 'is not good' -> 'good' -> 3 G18
+    Neh 6:3      11 'I am not able' -> 'able' -> 12 G1410
+    Neh 6:12     0 'I shall not enter.' -> 'enter' -> 1 G1525
+    Neh 13:14    7 'should not be wiped away' -> 'away' -> 8 G1813
+    Neh 13:25    30 'you shall not indeed take' -> 'take' -> 31 G2983
+    Est 2:11     0 'And each' -> 'each' -> 1 G1538
+    Est 4:16     12 'you should not eat' -> 'eat' -> 13 G2068
+    Est 6:3      17 'We did not do' -> 'do' -> 18 G4160
+    Est 10:1     7 'by both' -> 'both' -> 8 G5037
+    Job 3:11     4 'did I not come to an end?' -> 'end' -> 5 G5053
+    Job 3:11     11 'was not straightway' -> 'straightway' -> 12 G2117.1
+    Job 3:18     4 'do not hear' -> 'hear' -> 5 G191
+    Job 6:17     4 'it was not recognized' -> 'recognized' -> 5 G1921
+    Job 7:19     2 'do you not allow' -> 'allow' -> 3 G1439
+    Job 7:21     2 'you not appoint' -> 'appoint' -> 3 G4160
+    Job 8:18     7 'Have you not seen' -> 'seen' -> 8 G3708
+    Job 9:19     0 'For indeed' -> 'indeed' -> 1 G3303
+    Job 9:21     3 'I do not know' -> 'know' -> 4 G1492
+    Job 13:9     7 'all things' -> 'things' -> 8 G3956
+    Job 14:3     6 'made this one' -> 'one' -> 7 G4160
+    Job 15:9     4 'we do not know?' -> 'know' -> 5 G1492
+    Job 15:24    4 'shall hold him down.' -> 'down' -> 5 G2722
+    Job 16:18    1 'you should not cover' -> 'cover' -> 2 G1943
+    Job 20:23    0 'If by any means' -> 'means' -> 1 G1513
+    Job 21:3     6 'you shall not ridicule' -> 'ridicule' -> 7 G2606
+    Job 21:17    0 'But in fact,' -> 'fact' -> 1 G3375
+    Job 21:20    11 'may he not be delivered.' -> 'delivered' -> 12 G1295
+    Job 24:8     6 'not holding' -> 'holding' -> 7 G2192
+    Job 24:23    1 'let him not hope' -> 'hope' -> 2 G1679
+    Job 25:3     11 'will there not come' -> 'come' -> 12 G1904
+    Job 27:22    5 'shall not spare;' -> 'spare' -> 6 G5339
+    Job 28:15    0 'One shall not give' -> 'give' -> 1 G1325
+    Job 32:7     12 'men have not known' -> 'known' -> 13 G1492
+    Job 32:12    6 'there was no one' -> 'one' -> 7 G1510.7.3
+    Job 33:1     0 'But in fact,' -> 'fact' -> 1 G3375
+    Job 34:16    2 'he should not admonish,' -> 'admonish' -> 3 G3560
+    Job 34:36    0 'But in fact,' -> 'fact' -> 1 G3375
+    Job 36:13    5 'they shall not yell,' -> 'yell' -> 6 G994
+    Job 36:17    0 'shall not fail' -> 'fail' -> 1 G5302
+    Job 36:20    0 'You shall not drag away' -> 'away' -> 1 G1828
+    Job 37:4     10 'he shall not bargain' -> 'bargain' -> 11 G465.1
+    Job 37:23    12 'do you not imagine' -> 'imagine' -> 13 G3633
+    Job 39:1     0 'Do you know' -> 'know' -> 1 G1097
+    Job 41:23    8 'he will not be shaken.' -> 'shaken' -> 9 G4531
+    Psa 9:12     7 'He did not forget' -> 'forget' -> 8 G1950
+    Psa 15:3     7 'did not do' -> 'do' -> 8 G4160
+    Psa 16:10    1 'you shall not abandon' -> 'abandon' -> 2 G1459
+    Psa 17:3     9 'was not found' -> 'found' -> 10 G2147
+    Psa 18:2     9 'My God' -> 'god' -> 10 G2316
+    Psa 18:41    2 'there was no one' -> 'one' -> 3 G1510.7.3
+    Psa 22:19    3 'should not be far' -> 'far' -> 4 G3118.2
+    Psa 33:17    9 'one shall not be delivered.' -> 'delivered' -> 10 G4982
+    Psa 35:25    0 'May they not say' -> 'say' -> 1 G2036
+    Psa 39:1     6 'to not sin' -> 'sin' -> 7 G264
+    Psa 40:12    14 'I was not able' -> 'able' -> 15 G1410
+    Psa 53:1     13 'There is not one' -> 'one' -> 14 G1510.2.3
+    Psa 71:12    3 'you should be not far' -> 'far' -> 4 G3118.2
+    Psa 73:2     2 'were a little' -> 'little' -> 3 G3397
+    Psa 73:2     7 'a little' -> 'little' -> 8 G3641
+    Psa 73:11    7 'Is there' -> 'there' -> 8 G1510.2.3
+    Psa 76:7     7 'For how long' -> 'long' -> 8 G4219
+    Psa 79:3     9 'there was no one' -> 'one' -> 10 G1510.7.3
+    Psa 91:7     14 'it shall not approach.' -> 'approach' -> 15 G1448
+    Psa 95:11    6 'Shall they enter' -> 'enter' -> 7 G1525
+    Psa 121:3    0 'May he not give' -> 'give' -> 1 G1325
+    Psa 123:4    0 'more greatly' -> 'greatly' -> 1 G4183
+    Psa 131:1    1 'was not exalted' -> 'exalted' -> 2 G5312
+    Psa 147:20   0 'He did not do' -> 'do' -> 1 G4160
+    Pro 1:15     0 'You should not go' -> 'go' -> 1 G4198
+    Pro 1:29     7 'they did not prefer;' -> 'prefer' -> 8 G4255
+    Pro 3:5      11 'be not encouraged!' -> 'encouraged' -> 12 G1869
+    Pro 3:31     0 'You should not acquire' -> 'acquire' -> 1 G2932
+    Pro 4:4      14 'Do not forget!' -> 'forget' -> 15 G1950
+    Pro 4:5      4 'You should not forget,' -> 'forget' -> 5 G1950
+    Pro 4:6      0 'You should not abandon' -> 'abandon' -> 1 G1459
+    Pro 4:14     2 'You should not come,' -> 'come' -> 3 G1904
+    Pro 4:27     0 'You should not turn aside' -> 'aside' -> 1 G1578
+    Pro 6:20     6 'you should not thrust away' -> 'away' -> 7 G683
+    Pro 7:25     10 'you should not be misled' -> 'misled' -> 11 G4105
+    Pro 11:4     9 'will not benefit' -> 'benefit' -> 10 G5623
+    Pro 12:21    0 'shall not please' -> 'please' -> 1 G700
+    Pro 17:23    5 'does not greatly prosper' -> 'prosper' -> 6 G2720.1
+    Pro 20:19    12 'be not mixed' -> 'mixed' -> 13 G3396
+    Pro 20:22    0 'You should not say,' -> 'say' -> 1 G2036
+    Pro 22:6     11 'he will not depart' -> 'depart' -> 12 G868
+    Pro 22:16    11 'to make it less.' -> 'less' -> 12 G1640
+    Pro 23:23    3 'you should not thrust away' -> 'away' -> 4 G683
+    Pro 24:11    7 'You should not spare.' -> 'spare' -> 8 G5339
+    Ecc 2:15     19 'And this extra' -> 'extra' -> 20 G4053
+    Ecc 7:14     26 'should not find' -> 'find' -> 27 G2147
+    Ecc 7:17     8 'you should not die' -> 'die' -> 9 G599
+    Ecc 8:7      1 'there is not one' -> 'one' -> 2 G1510.2.3
+    Ecc 9:12     2 'does not know' -> 'know' -> 3 G1097
+    Ecc 10:3     11 'which he considers' -> 'considers' -> 12 G3049
+    Ecc 10:20    6 'you should not curse;' -> 'curse' -> 7 G2672
+    Ecc 10:20    13 'you should not curse' -> 'curse' -> 14 G2672
+    Ecc 12:2     2 'are not darkened' -> 'darkened' -> 3 G4654
+    Son 2:7      12 'if you should arise' -> 'arise' -> 13 G1453
+    Son 3:5      13 'if you should arise' -> 'arise' -> 14 G1453
+    Son 6:9      0 'is one' -> 'one' -> 1 G1510.2.3
+    Son 6:9      6 'She is the only one' -> 'one' -> 7 G1510.2.3
+    Isa 1:9      9 'we would have become,' -> 'become' -> 10 G1096
+    Isa 5:4      7 'I did not do' -> 'do' -> 8 G4160
+    Isa 9:13     12 'they did not seek.' -> 'seek' -> 13 G2212
+    Isa 10:4     13 'shall not turn' -> 'turn' -> 14 G654
+    Isa 10:14    19 'there is no one' -> 'one' -> 20 G1510.2.3
+    Isa 13:14    12 'there is no one' -> 'one' -> 13 G1510.2.3
+    Isa 13:17    7 'ones not considering,' -> 'considering' -> 8 G3049
+    Isa 14:17    13 'he did not loose.' -> 'loose' -> 14 G3089
+    Isa 16:7     15 'you shall not be ashamed.' -> 'ashamed' -> 16 G1788
+    Isa 28:18    1 'should not have removed' -> 'removed' -> 2 G851
+    Isa 31:1     23 'they did not hearken' -> 'hearken' -> 24 G191
+    Isa 33:23    7 'your mast,' -> 'mast' -> 8 G2477.1
+    Isa 38:17    11 'it should not perish;' -> 'perish' -> 12 G622
+    Isa 40:21    4 'Was it not announced' -> 'announced' -> 5 G312
+    Isa 41:7     22 'it shall not be moved.' -> 'moved' -> 23 G2795
+    Isa 43:23    15 'You were not enslaved' -> 'enslaved' -> 16 G1402
+    Isa 44:9     23 'They shall not see,' -> 'see' -> 24 G3708
+    Isa 44:9     26 'they shall not know,' -> 'know' -> 27 G1097
+    Isa 48:7     13 'Lest you should say,' -> 'say' -> 14 G2036
+    Isa 50:2     43 'there not being' -> 'being' -> 44 G1510.1
+    Isa 51:14    10 'he shall not kill' -> 'kill' -> 11 G2289
+    Isa 51:18    1 'there was no one' -> 'one' -> 2 G1510.7.3
+    Isa 55:5     3 'do not know' -> 'know' -> 4 G1492
+    Isa 56:10    9 'they shall not be able' -> 'able' -> 10 G1410
+    Isa 58:1     4 'you should not spare.' -> 'spare' -> 5 G5339
+    Isa 59:14    21 'they were not able' -> 'able' -> 22 G1410
+    Isa 59:16    9 'there was no one' -> 'one' -> 10 G1510.7.3
+    Isa 59:21    4 'is by me' -> 'me' -> 5 G1700
+    Isa 64:7     1 'there is no one' -> 'one' -> 2 G1510.2.3
+    Isa 65:16    31 'it shall not ascend' -> 'ascend' -> 32 G305
+    Jer 4:25     3 'did not exist' -> 'exist' -> 4 G5224
+    Jer 5:4      7 'they are not able.' -> 'able' -> 8 G1410
+    Jer 5:9      12 'take vengeance' -> 'vengeance' -> 13 G1556
+    Jer 5:15     17 'you shall not hear' -> 'hear' -> 18 G191
+    Jer 6:10     13 'they are not able' -> 'able' -> 14 G1410
+    Jer 6:25     0 'Do not go forth' -> 'forth' -> 1 G1607
+    Jer 7:27     14 'they will not respond' -> 'respond' -> 15 G611
+    Jer 8:2      39 'They shall not be lamented,' -> 'lamented' -> 40 G2875
+    Jer 8:5      13 'they do not want' -> 'want' -> 14 G2309
+    Jer 8:12     6 'they were not ashamed,' -> 'ashamed' -> 7 G153
+    Jer 8:12     10 'they did not know.' -> 'know' -> 11 G1492
+    Jer 10:7     1 'shall not fear' -> 'fear' -> 2 G5399
+    Jer 10:7     22 'there is not one' -> 'one' -> 23 G1510.2.3
+    Jer 11:7     26 'they did not hear,' -> 'hear' -> 27 G191
+    Jer 13:27    27 'you were not cleansed' -> 'cleansed' -> 28 G2511
+    Jer 14:10    16 'prospered not the way' -> 'way' -> 17 G2137
+    Jer 16:2     0 'You should not take' -> 'take' -> 1 G2983
+    Jer 16:2     4 'there shall not be engendered' -> 'engendered' -> 5 G1080
+    Jer 16:6     9 'They shall not be buried,' -> 'buried' -> 10 G2290
+    Jer 16:6     12 'they shall not be lamented,' -> 'lamented' -> 13 G2354
+    Jer 16:6     21 'they shall not be shaven;' -> 'shaven' -> 22 G3587
+    Jer 16:7     12 'they shall not give a drink' -> 'drink' -> 13 G4222
+    Jer 16:13    26 'shall not grant' -> 'grant' -> 27 G1325
+    Jer 16:17    10 'were not hid' -> 'hid' -> 11 G2928
+    Jer 17:22    15 'you shall not do.' -> 'do' -> 16 G4160
+    Jer 18:18    28 'we shall not hear' -> 'hear' -> 29 G191
+    Jer 19:5     18 'did not consider' -> 'consider' -> 19 G1269.4
+    Jer 19:6     7 'they shall not call' -> 'call' -> 8 G2564
+    Jer 22:21    9 'I will not hearken.' -> 'hearken' -> 10 G191
+    Jer 22:26    13 'you were not birthed' -> 'birthed' -> 14 G5088
+    Jer 23:17    24 'shall not come' -> 'come' -> 25 G2240
+    Jer 23:20    1 'shall not turn away' -> 'away' -> 2 G654
+    Jer 23:40    10 'shall not be forgotten.' -> 'forgotten' -> 11 G1950
+    Jer 26:6     9 'this city' -> 'city' -> 10 G4172
+    Jer 27:8     8 'should not serve' -> 'serve' -> 9 G1398
+    Jer 27:8     17 'should not put' -> 'put' -> 18 G1685
+    Jer 28:15    7 'has not sent' -> 'sent' -> 8 G649
+    Jer 29:6     28 'shall not be diminished.' -> 'diminished' -> 29 G4665.2
+    Jer 31:15    15 'she did not want' -> 'want' -> 16 G2309
+    Jer 31:18    11 'was not taught.' -> 'taught' -> 12 G1321
+    Jer 32:5     20 'you shall not be prosperous.' -> 'prosperous' -> 21 G2137
+    Jer 32:23    16 'they did not go.' -> 'go' -> 17 G4198
+    Jer 33:18    6 'it shall not be deficient' -> 'deficient' -> 7 G1952
+    Jer 33:22    1 'shall not be counted' -> 'counted' -> 2 G705
+    Jer 33:22    8 'shall not be measured' -> 'measured' -> 9 G3354
+    Jer 34:4     13 'you shall not die' -> 'die' -> 14 G599
+    Jer 35:17    37 'they did not answer.' -> 'answer' -> 38 G611
+    Jer 36:5     9 'I am not able' -> 'able' -> 10 G1410
+    Jer 36:24    1 'they were not amazed,' -> 'amazed' -> 2 G1839
+    Jer 37:17    15 'Is there' -> 'there' -> 16 G1510.2.3
+    Jer 38:16    15 'Shall I kill' -> 'kill' -> 16 G615
+    Jer 38:16    19 'shall I put' -> 'put' -> 20 G1325
+    Jer 38:18    18 'in no way' -> 'way' -> 19 G3766.2
+    Jer 38:27    26 'was not heard' -> 'heard' -> 27 G191
+    Jer 40:14    22 'did not trust' -> 'trust' -> 23 G4100
+    Jer 42:11    0 'You should not be fearful' -> 'fearful' -> 1 G5399
+    Jer 42:11    13 'You should not be fearful,' -> 'fearful' -> 14 G5399
+    Jer 43:2     32 'You should not enter' -> 'enter' -> 33 G1525
+    Jer 46:28    0 'You should not fear,' -> 'fear' -> 1 G5399
+    Jer 48:9     17 'not being' -> 'being' -> 18 G1510.1
+    Jer 49:1     8 'Are there' -> 'there' -> 9 G1510.2.6
+    Jer 49:9     5 'who shall not leave behind' -> 'behind' -> 6 G2641
+    Jer 49:32    19 'in front' -> 'front' -> 20 G4383
+    Jer 50:24    6 'you did not know.' -> 'know' -> 7 G1097
+    Jer 51:37    10 'it shall not be inhabited.' -> 'inhabited' -> 11 G2730
+    Jer 51:43    10 'There shall not dwell' -> 'dwell' -> 11 G2730
+    Jer 51:50    5 'do not stand!' -> 'stand' -> 6 G2476
+    Lam 1:4      5 'there not being' -> 'being' -> 6 G1510.1
+    Lam 1:7      27 'there was no one' -> 'one' -> 28 G1510.7.3
+    Lam 1:17     4 'there is no one' -> 'one' -> 5 G1510.2.3
+    Lam 3:24     0 'is my portion' -> 'portion' -> 1 G3310
+    Lam 3:33     0 'He was not answered' -> 'answered' -> 1 G611
+    Lam 3:38     3 'shall not come forth' -> 'forth' -> 4 G1831
+    Lam 5:5      6 'we were not rested.' -> 'rested' -> 7 G373
+    Eze 3:7      10 'they do not consent' -> 'consent' -> 11 G1014
+    Eze 3:9      5 'You should not fear' -> 'fear' -> 6 G5399
+    Eze 5:9      8 'I shall not do' -> 'do' -> 9 G4160
+    Eze 7:13     6 'shall not return;' -> 'return' -> 7 G1994
+    Eze 7:13     22 'it shall not return,' -> 'return' -> 23 G344
+    Eze 7:13     30 'shall not hold.' -> 'hold' -> 31 G2902
+    Eze 9:5      14 'you should not spare' -> 'spare' -> 15 G5339
+    Eze 9:5      20 'you should not show mercy.' -> 'mercy' -> 21 G1653
+    Eze 10:2     37 'before me.' -> 'me' -> 38 G3450
+    Eze 11:12    17 'you did not go,' -> 'go' -> 18 G4198
+    Eze 16:28    13 'you were not satisfied.' -> 'satisfied' -> 14 G1705
+    Eze 16:34    26 'were not given' -> 'given' -> 27 G1325
+    Eze 16:43    29 'you shall not commit' -> 'commit' -> 30 G4160
+    Eze 18:16    10 'seized not by force;' -> 'force' -> 11 G726
+    Eze 18:19    4 'does not take' -> 'take' -> 5 G2983
+    Eze 18:20    10 'shall not take' -> 'take' -> 11 G2983
+    Eze 18:20    19 'shall not take' -> 'take' -> 20 G2983
+    Eze 18:22    6 'they shall not be remembered' -> 'remembered' -> 7 G3403
+    Eze 18:24    22 'he shall not live.' -> 'live' -> 23 G2198
+    Eze 18:25    2 'is not straight' -> 'straight' -> 3 G2720
+    Eze 20:8     15 'threw not away,' -> 'away' -> 16 G641
+    Eze 20:13    14 'they did not go,' -> 'go' -> 15 G4198
+    Eze 20:17    11 'I did not commit' -> 'commit' -> 12 G4160
+    Eze 20:18    15 'Do not go,' -> 'go' -> 16 G4198
+    Eze 22:28    19 'has not spoken.' -> 'spoken' -> 20 G2980
+    Eze 23:36    7 'Will you judge' -> 'judge' -> 8 G2919
+    Eze 24:7     11 'I have not poured' -> 'poured' -> 12 G1632
+    Eze 24:13    14 'you were not cleansed' -> 'cleansed' -> 15 G2511
+    Eze 24:17    8 'you shall not make.' -> 'make' -> 9 G4160
+    Eze 25:8     10 'in the manner' -> 'manner' -> 11 G5158
+    Eze 28:9     0 'In saying,' -> 'saying' -> 1 G3004
+    Eze 28:14    1 'which day' -> 'day' -> 2 G2250
+    Eze 31:8     11 'were not likened' -> 'likened' -> 12 G3664
+    Eze 31:8     30 'was not likened' -> 'likened' -> 31 G3666
+    Eze 31:14    15 'do not put' -> 'put' -> 16 G1325
+    Eze 34:19    4 'the things trampled' -> 'trampled' -> 5 G3961.1
+    Eze 36:15    1 'shall not be heard' -> 'heard' -> 2 G191
+    Eze 36:15    18 'shall not be childless' -> 'childless' -> 19 G815.1
+    Eze 36:30    13 'you should not take' -> 'take' -> 14 G2983
+    Eze 39:29    1 'I shall not turn' -> 'turn' -> 2 G654
+    Eze 42:14    7 'they shall not come forth' -> 'forth' -> 8 G1831
+    Eze 44:20    4 'they shall not shave,' -> 'shave' -> 5 G3587
+    Eze 44:22    4 'they shall not take' -> 'take' -> 5 G2983
+    Eze 45:8     9 'shall not tyrannize' -> 'tyrannize' -> 10 G2616
+    Dan 1:19     7 'there was not found' -> 'found' -> 8 G2147
+    Dan 6:5      4 'We did not find' -> 'find' -> 5 G2147
+    Dan 6:23     24 'was not found' -> 'found' -> 25 G2147
+    Dan 7:28     8 'very much' -> 'much' -> 9 G4183
+    Dan 8:4      15 'shall not stand' -> 'stand' -> 16 G2476
+    Dan 8:4      20 'there was no one' -> 'one' -> 21 G1510.7.3
+    Dan 8:13     13 'For how long' -> 'long' -> 14 G4219
+    Dan 8:27     20 'there was no one' -> 'one' -> 21 G1510.7.3
+    Dan 11:12    13 'he shall not prevail.' -> 'prevail' -> 14 G2729
+    Dan 11:24    11 'did not do' -> 'do' -> 12 G4160
+    Dan 11:37    7 'he will not take notice,' -> 'notice' -> 8 G4920
+    Hos 5:3      6 'is not removed' -> 'removed' -> 7 G868
+    Hos 9:4      0 'They offered not a libation' -> 'libation' -> 1 G4689
+    Hos 11:9     26 'I will not enter' -> 'enter' -> 27 G1525
+    Hos 12:8     12 'shall not be found' -> 'found' -> 13 G2147
+    Hos 13:4     16 'you shall not know,' -> 'know' -> 17 G1097
+    Joe 2:8      6 'shall not be at a distance;' -> 'distance' -> 7 G566
+    Amo 9:4      5 'in front' -> 'front' -> 6 G4383
+    Jon 3:7      33 'let them not drink!' -> 'drink' -> 34 G4095
+    Jon 4:10     11 'you suffered no hardship' -> 'hardship' -> 12 G2553
+    Mic 6:15     3 'you shall not reap;' -> 'reap' -> 4 G270
+    Mic 7:1      13 'where there does not exist' -> 'exist' -> 14 G5224
+    Mic 7:14     10 'by themselves' -> 'themselves' -> 11 G1438
+    Mic 7:18     14 'is not constrained' -> 'constrained' -> 15 G4912
+    Hab 1:2      0 'For how long,' -> 'long' -> 1 G4214
+    Hab 1:13     11 'you are not able.' -> 'able' -> 12 G1410
+    Hab 1:17     8 'not sparing?' -> 'sparing' -> 9 G5339
+    Hab 3:17     27 'shall not exist' -> 'exist' -> 28 G5224
+    Zep 3:2      10 'she had not relied,' -> 'relied' -> 11 G3982
+    Zep 3:5      19 'it was not concealed.' -> 'concealed' -> 20 G613
+    Zec 3:1      10 'in front' -> 'front' -> 11 G4383
+    Zec 3:3      8 'in front' -> 'front' -> 9 G4383
+    Zec 3:4      7 'in front' -> 'front' -> 8 G4383
+    Zec 4:5      12 'Do you not know' -> 'know' -> 13 G1097
+    Zec 8:23     8 'shall take hold' -> 'hold' -> 9 G1949
+    Mal 1:10     7 'you shall not light' -> 'light' -> 8 G381
+    Mal 3:7      4 'are not kept at a distance' -> 'distance' -> 5 G566
+    1Co 1:16     7 'I do not know' -> 'know' -> 8 G1492
+    1Co 4:7      8 'you have not received?' -> 'received' -> 9 G2983
+    1Co 7:1      8 'to not touch.' -> 'touch' -> 9 G680
+    1Co 7:39     3 'for as long' -> 'long' -> 4 G3745
+    1Co 10:21    8 'you are not able' -> 'able' -> 9 G1410
+    1Co 11:5     19 'as having been shaven.' -> 'shaven' -> 20 G3587
+    1Co 11:22    3 'you not have' -> 'have' -> 4 G2192
+    1Co 11:25    22 'you should drink' -> 'drink' -> 23 G4095
+    1Co 11:26    2 'you should eat' -> 'eat' -> 3 G2068
+    1Co 12:12    4 'is one,' -> 'one' -> 5 G1510.2.3
+    1Co 12:12    20 'are one' -> 'one' -> 21 G1510.2.3
+    1Co 12:27    7 'in turn.' -> 'turn' -> 8 G3313
+    1Co 14:23    18 'shall they not say' -> 'say' -> 19 G2046
+    1Co 15:14    2 'has not been raised,' -> 'raised' -> 3 G1453
+    1Co 15:16    3 'are not raised,' -> 'raised' -> 4 G1453
+    1Co 15:28    4 'all things,' -> 'things' -> 5 G3956
+    1Co 16:11    3 'should treat him with contempt.' -> 'contempt' -> 4 G1848
+    1Jn 1:6      14 'we do not observe' -> 'observe' -> 15 G4160
+    1Jn 1:8      4 'we do not have,' -> 'have' -> 5 G2192
+    1Pe 5:10     18 'may he ready' -> 'ready' -> 19 G2675
+    2Co 2:13     7 'at my not finding' -> 'finding' -> 8 G2147
+    2Co 2:16     0 'to some,' -> 'some' -> 1 G3303
+    2Co 4:13     17 'we also speak.' -> 'speak' -> 18 G2980
+    2Co 5:17     12 'all things.' -> 'things' -> 13 G3956
+    2Co 8:12     12 'he does not have.' -> 'have' -> 13 G2192
+    2Co 13:3     11 'is not weak,' -> 'weak' -> 12 G770
+    2Co 13:7     5 'to not do' -> 'do' -> 6 G4160
+    2Jn 1:8      3 'we should not lose' -> 'lose' -> 4 G622
+    2Pe 2:3      11 'is not idle,' -> 'idle' -> 12 G691
+    2Ti 3:9      1 'they shall not progress' -> 'progress' -> 2 G4298
+    Act 2:25     8 'before me' -> 'me' -> 9 G3450
+    Act 2:27     1 'you shall not abandon' -> 'abandon' -> 2 G1459
+    Act 2:31     8 'was not left' -> 'left' -> 9 G2641
+    Act 2:46     10 'in their houses' -> 'houses' -> 11 G3624
+    Act 3:19     11 'should come' -> 'come' -> 12 G2064
+    Act 3:22     26 'he should speak' -> 'speak' -> 27 G2980
+    Act 4:16     6 'For indeed' -> 'indeed' -> 7 G3303
+    Act 5:39     5 'you will not be able' -> 'able' -> 6 G1410
+    Act 7:28     3 'you want,' -> 'want' -> 4 G2309
+    Act 7:39     1 'did not want' -> 'want' -> 2 G2309
+    Act 13:10    13 'will you not cease' -> 'cease' -> 14 G3973
+    Act 13:35    5 'You shall not give' -> 'give' -> 6 G1325
+    Act 13:39    4 'you were not able' -> 'able' -> 5 G1410
+    Act 15:3     0 'They then indeed' -> 'indeed' -> 1 G3303
+    Act 17:22    11 'in all things' -> 'things' -> 12 G3956
+    Act 22:30    8 'why he is charged' -> 'charged' -> 9 G2723
+    Act 23:19    9 'in private' -> 'private' -> 10 G2398
+    Act 26:11    1 'in all' -> 'all' -> 2 G3956
+    Act 26:24    2 'having made his defense,' -> 'defense' -> 3 G626
+    Act 27:44    3 'some indeed' -> 'indeed' -> 4 G3303
+    Act 28:5     0 'He indeed' -> 'indeed' -> 1 G3303
+    Col 1:16     4 'the whole,' -> 'whole' -> 5 G3956
+    Col 1:16     28 'the whole' -> 'whole' -> 29 G3956
+    Col 1:17     6 'the whole' -> 'whole' -> 7 G3956
+    Col 1:20     4 'the whole' -> 'whole' -> 5 G3956
+    Eph 1:11     8 'all things' -> 'things' -> 9 G3956
+    Eph 2:3      14 'the wants' -> 'wants' -> 15 G2307
+    Eph 3:9      17 'all things' -> 'things' -> 18 G3956
+    Eph 4:15     7 'in all things,' -> 'things' -> 8 G3956
+    Gal 1:20     9 'I do not lie.' -> 'lie' -> 10 G5574
+    Gal 2:2      14 'and in private' -> 'private' -> 15 G2398
+    Gal 3:20     9 'is one.' -> 'one' -> 10 G1510.2.3
+    Gal 3:22     4 'the whole' -> 'whole' -> 5 G3956
+    Gal 4:14     9 'you treated not with contempt,' -> 'contempt' -> 10 G1848
+    Gal 5:21     21 'shall not inherit.' -> 'inherit' -> 22 G2816
+    Heb 1:3      12 'the whole' -> 'whole' -> 13 G3956
+    Heb 2:8      22 'all things' -> 'things' -> 23 G3956
+    Heb 2:10     5 'is the whole,' -> 'whole' -> 6 G3956
+    Heb 2:10     10 'is the whole),' -> 'whole' -> 11 G3956
+    Heb 3:4      8 'the whole' -> 'whole' -> 9 G3956
+    Heb 7:27     1 'has not had' -> 'had' -> 2 G2192
+    Heb 10:38    9 'takes no pleasure' -> 'pleasure' -> 10 G2106
+    Jas 2:19     5 'is one.' -> 'one' -> 6 G1510.2.3
+    Jas 4:12     0 'There is one' -> 'one' -> 1 G1510.2.3
+    Joh 1:41     5 'his own' -> 'own' -> 6 G2398
+    Joh 3:3      15 'he is not able' -> 'able' -> 16 G1410
+    Joh 3:4      12 'Is he able' -> 'able' -> 13 G1410
+    Joh 3:5      15 'he is not able' -> 'able' -> 16 G1410
+    Joh 3:7      0 'You should not wonder' -> 'wonder' -> 1 G2296
+    Joh 3:11     16 'you do not receive.' -> 'receive' -> 17 G2983
+    Joh 3:36     13 'shall not see' -> 'see' -> 14 G3708
+    Joh 4:15     12 'I should not thirst,' -> 'thirst' -> 13 G1372
+    Joh 4:51     2 'as he was going down,' -> 'down' -> 3 G2597
+    Joh 5:14     18 'nothing worse' -> 'worse' -> 19 G5501
+    Joh 5:19     11 'is not able' -> 'able' -> 12 G1410
+    Joh 6:50     15 'should not die.' -> 'die' -> 16 G599
+    Joh 6:53     23 'you shall not have' -> 'have' -> 24 G2192
+    Joh 6:71     11 'being one' -> 'one' -> 12 G1510.6
+    Joh 7:28     19 'I have not come,' -> 'come' -> 20 G2064
+    Joh 7:34     3 'shall not find;' -> 'find' -> 4 G2147
+    Joh 7:36     10 'shall not find;' -> 'find' -> 11 G2147
+    Joh 7:37     5 'the great one' -> 'one' -> 6 G3173
+    Joh 7:50     9 'being one' -> 'one' -> 10 G1510.6
+    Joh 8:24     11 'you should not believe' -> 'believe' -> 12 G4100
+    Joh 8:40     18 'did not do.' -> 'do' -> 19 G4160
+    Joh 8:55     1 'you have not known' -> 'known' -> 2 G1097
+    Joh 9:32     3 'it was not heard' -> 'heard' -> 4 G191
+    Joh 9:37     13 'is that one.' -> 'one' -> 14 G1510.2.3
+    Joh 10:5     9 'they do not know' -> 'know' -> 10 G1492
+    Joh 10:14    8 'the ones mine,' -> 'mine' -> 9 G1699
+    Joh 10:24    8 'For how long' -> 'long' -> 9 G4219
+    Joh 11:22    6 'you should ask' -> 'ask' -> 7 G154
+    Joh 12:2     12 'was one' -> 'one' -> 13 G1510.7.3
+    Joh 12:18    10 'for him to have done' -> 'done' -> 11 G4160
+    Joh 12:19    8 'you benefit' -> 'benefit' -> 9 G5623
+    Joh 12:37    7 'they did not believe' -> 'believe' -> 8 G4100
+    Joh 12:39    2 'they were not able' -> 'able' -> 3 G1410
+    Joh 12:46    15 'should not abide.' -> 'abide' -> 16 G3306
+    Joh 14:18    0 'I will not leave' -> 'leave' -> 1 G863
+    Joh 14:30    14 'he does not have' -> 'have' -> 15 G2192
+    Joh 15:4     9 'is not able' -> 'able' -> 10 G1410
+    Joh 15:5     21 'you are not able' -> 'able' -> 22 G1410
+    Joh 15:22    6 'they had not had;' -> 'had' -> 7 G2192
+    Joh 15:24    12 'they had not had;' -> 'had' -> 13 G2192
+    Joh 16:7     14 'should not go forth,' -> 'forth' -> 15 G565
+    Joh 16:18    9 'We do not know' -> 'know' -> 10 G1492
+    Joh 18:28    21 'they should not be defiled;' -> 'defiled' -> 22 G3392
+    Joh 19:10    8 'Do you not know' -> 'know' -> 9 G1492
+    Joh 19:24    4 'We should not split' -> 'split' -> 5 G4977
+    Joh 20:2     26 'we do not know' -> 'know' -> 27 G1492
+    Joh 21:6     19 'to draw' -> 'draw' -> 20 G1670
+    Joh 21:23    12 'does not die.' -> 'die' -> 13 G599
+    Jud 1:18     10 'their own' -> 'own' -> 11 G1438
+    Luk 1:22     2 'he was not able' -> 'able' -> 3 G1410
+    Luk 4:2      7 'he did not eat' -> 'eat' -> 8 G2068
+    Luk 5:32     0 'I have not come' -> 'come' -> 1 G2064
+    Luk 5:34     5 'Are you able' -> 'able' -> 6 G1410
+    Luk 5:35     3 'that whenever' -> 'whenever' -> 4 G3752
+    Luk 6:30     10 'your things,' -> 'things' -> 11 G4674
+    Luk 9:40     9 'they were not able.' -> 'able' -> 10 G1410
+    Luk 9:41     10 'until how long' -> 'long' -> 11 G4219
+    Luk 9:55     6 'You do not know' -> 'know' -> 7 G1492
+    Luk 9:58     20 'does not have' -> 'have' -> 21 G2192
+    Luk 10:16    3 'hears me;' -> 'me' -> 4 G191
+    Luk 11:7     22 'I am not able' -> 'able' -> 23 G1410
+    Luk 11:12    5 'will he give' -> 'give' -> 6 G1929
+    Luk 12:49    9 'if already' -> 'already' -> 10 G2235
+    Luk 13:25    27 'I do not know' -> 'know' -> 28 G1492
+    Luk 14:26    31 'he is not able' -> 'able' -> 32 G1410
+    Luk 16:14    2 'all these things' -> 'things' -> 3 G3956
+    Luk 18:34    14 'they did not know' -> 'know' -> 15 G1097
+    Luk 19:3     8 'he was not able' -> 'able' -> 9 G1410
+    Luk 19:44    10 'they shall not leave' -> 'leave' -> 11 G863
+    Luk 20:7     2 'We do not know' -> 'know' -> 3 G1492
+    Luk 20:26    1 'they were not able' -> 'able' -> 2 G2480
+    Luk 21:6     7 'shall not be left' -> 'left' -> 8 G863
+    Luk 21:15    8 'will not be able' -> 'able' -> 9 G1410
+    Luk 22:32    6 'should not fail' -> 'fail' -> 7 G1587
+    Luk 22:46    8 'you should not enter' -> 'enter' -> 9 G1525
+    Mar 1:8      0 'I indeed' -> 'indeed' -> 1 G3303
+    Mar 1:45     12 'was he able' -> 'able' -> 13 G1410
+    Mar 2:19     26 'they are not able' -> 'able' -> 27 G1410
+    Mar 3:24     6 'is not able' -> 'able' -> 7 G1410
+    Mar 3:25     6 'shall not be able' -> 'able' -> 7 G1410
+    Mar 3:26     9 'he is not able' -> 'able' -> 10 G1410
+    Mar 4:7      15 'it did not give.' -> 'give' -> 16 G1325
+    Mar 4:11     18 'all things' -> 'things' -> 19 G3956
+    Mar 4:36     10 'But also other' -> 'other' -> 11 G243
+    Mar 5:19     15 'your own,' -> 'own' -> 16 G4674
+    Mar 6:19     10 'was not able.' -> 'able' -> 11 G1410
+    Mar 6:36     16 'they do not have.' -> 'have' -> 17 G2192
+    Mar 7:3      13 'they do not eat,' -> 'eat' -> 14 G2068
+    Mar 9:19     8 'for how long' -> 'long' -> 9 G4219
+    Mar 9:19     13 'For how long' -> 'long' -> 14 G4219
+    Mar 10:38    5 'You do not know' -> 'know' -> 6 G1492
+    Mar 11:16    1 'he did not allow' -> 'allow' -> 2 G863
+    Mar 11:17    4 'Has it not been written' -> 'written' -> 5 G1125
+    Mar 11:31    12 'did you not believe' -> 'believe' -> 13 G4100
+    Mar 11:33    5 'We do not know.' -> 'know' -> 6 G1492
+    Mar 12:19    14 'she should not leave,' -> 'leave' -> 15 G863
+    Mar 12:32    11 'there is one' -> 'one' -> 12 G1510.2.3
+    Mar 13:15    5 'let him go not down' -> 'down' -> 6 G2597
+    Mar 13:24    15 'shall not give' -> 'give' -> 16 G1325
+    Mar 14:37    12 'Were you not able' -> 'able' -> 13 G2480
+    Mar 14:40    13 'they did not know' -> 'know' -> 14 G1492
+    Mar 14:43    7 'being one' -> 'one' -> 8 G1510.6
+    Mar 14:55    17 'they did not find.' -> 'find' -> 18 G2147
+    Mar 14:71    7 'I have not known' -> 'known' -> 8 G1492
+    Mar 15:31    14 'he is not able' -> 'able' -> 15 G1410
+    Mar 16:14    18 'they did not believe.' -> 'believe' -> 19 G4100
+    Mat 1:20     15 'you should not fear' -> 'fear' -> 16 G5399
+    Mat 4:7      6 'You shall not put to test' -> 'test' -> 7 G1598
+    Mat 5:27     6 'You shall not commit adultery.' -> 'adultery' -> 7 G3431
+    Mat 6:24     21 'you are not able' -> 'able' -> 22 G1410
+    Mat 10:32    4 'being mine' -> 'mine' -> 5 G3427
+    Mat 12:3     4 'Did you not read' -> 'read' -> 5 G314
+    Mat 13:4     5 'some seed indeed' -> 'indeed' -> 6 G3303
+    Mat 14:13    11 'in private.' -> 'private' -> 12 G2398
+    Mat 16:3     22 'you are not able.' -> 'able' -> 23 G1410
+    Mat 16:7     8 'We did not take.' -> 'take' -> 9 G2983
+    Mat 16:8     13 'you did not take?' -> 'take' -> 14 G2983
+    Mat 17:1     22 'in private.' -> 'private' -> 23 G2398
+    Mat 17:12    8 'they did not recognize' -> 'recognize' -> 9 G1921
+    Mat 20:22    5 'You do not know' -> 'know' -> 6 G1492
+    Mat 21:46    10 'they held him.' -> 'him' -> 11 G2192
+    Mat 22:5     4 'the one' -> 'one' -> 5 G3303
+    Mat 22:16    24 'there is no care' -> 'care' -> 25 G3199
+    Mat 24:17    4 'let him not go down' -> 'down' -> 5 G2597
+    Mat 24:20    3 'should not take place' -> 'place' -> 4 G1096
+    Mat 25:15    1 'to one' -> 'one' -> 2 G3303
+    Mat 26:40    14 'were you not able' -> 'able' -> 15 G2480
+    Mat 26:41    4 'you should not enter' -> 'enter' -> 5 G1525
+    Mat 26:53    3 'I am not able' -> 'able' -> 4 G1410
+    Mat 26:72    6 'I do not know' -> 'know' -> 7 G1492
+    Mat 26:74    6 'I have not known' -> 'known' -> 7 G1492
+    Mat 28:9     1 'they were going' -> 'going' -> 2 G4198
+    Php 3:21     27 'the whole.' -> 'whole' -> 28 G3956
+    Rev 6:10     5 'How long,' -> 'long' -> 6 G4219
+    Rev 11:6     33 'they should want.' -> 'want' -> 34 G2309
+    Rev 11:9     22 'they will not allow' -> 'allow' -> 23 G863
+    Rev 13:8     10 'has not been written' -> 'written' -> 11 G1125
+    Rev 20:3     13 'he should not mislead' -> 'mislead' -> 14 G4105
+    Rev 21:13    10 'from the south' -> 'south' -> 11 G3558
+    Rom 2:21     5 'do you not teach?' -> 'teach' -> 6 G1321
+    Rom 3:11     0 'there is not one' -> 'one' -> 1 G1510.2.3
+    Rom 3:11     4 'there is not one' -> 'one' -> 5 G1510.2.3
+    Rom 3:12     4 'there is not one' -> 'one' -> 5 G1510.2.3
+    Rom 5:5      3 'does not shame;' -> 'shame' -> 4 G2617
+    Rom 6:16     0 'Do you not know' -> 'know' -> 1 G1492
+    Rom 7:15     3 'I do not know;' -> 'know' -> 4 G1097
+    Rom 8:32     18 'all things' -> 'things' -> 19 G3956
+    Rom 9:1      4 'I do not lie,' -> 'lie' -> 5 G5574
+    Rom 9:29     12 'we would have become,' -> 'become' -> 13 G1096
+    Rom 11:36    9 'are all things.' -> 'things' -> 10 G3956
+    Rom 14:3     5 'treat not with contempt!' -> 'contempt' -> 6 G1848
+    Rom 14:3     18 'received him to himself.' -> 'himself' -> 19 G4355
+    Rom 14:5     0 'The one who indeed' -> 'indeed' -> 1 G3303
+    Rom 14:16    0 'Let not be blasphemed' -> 'blasphemed' -> 1 G987
+    Rom 15:18    6 'did not manufacture' -> 'manufacture' -> 7 G2716
+    Rom 15:21    4 'it was not announced' -> 'announced' -> 5 G312
+    Heb 13:9     16 'derive no benefit' -> 'benefit' -> 17 G5623
+
+
+=== APPENDED BY HAND (splitter-fix session close, reviewer Rulings 16+18) ===
+  The finder's tail-test missed this case (pooled phrase's LAST word is the pronoun
+  'his', not the content noun — the documented tail-position gap, see TODO ticket):
+    Job 18:13    3 'the soles of his' -> 'soles' -> 4 G2831.2   [pronoun host G846]
