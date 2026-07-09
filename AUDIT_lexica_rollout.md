@@ -1982,6 +1982,16 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 14 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### G4061 περιτομή — STUB, NOT RUN (session 4 CLOSED FAILED 2026-07-09; ENGINE_LESSONS #39).
+RED seed #2, JP-approved next word. Pre-pull state at close: 36 verses / 40 occ · 4 doubles
+(Col 2:11, Rom 2:25, Rom 4:10, Rom 4:12 — plausibly genuine, 8-row row-level verify STILL OWED
+before the table banks) · no dotted cousins · not in the contested register · RED watch
+pre-registered in the handoff (covenant-freight/supersessionism temptations, second-costume rule,
+double-shelf disqualifier) · JP sampling term banked: force at least one OT concrete-rite hit.
+Session failure = CC relayed the floor command from recall (wrong script name + wrong flag,
+failed on JP's terminal); no floor drawn, no writes. Corrected, help-verified command + full
+resume state: handoff SESSION 4 block. Word restarts at the doubles verify in session 5.
+
 ### BATCH-3 SESSION 1 CLOSE (2026-07-09) — tally + case law; session 2 preconditions
 **Tally: 7 shipped / 2 escapes (γόνυ invented-shelf, νίπτω cluster-break — BOTH caught only by the human
 floor-vs-ship comparison, machine gates green both times: the detector ticket's whole evidentiary basis) /

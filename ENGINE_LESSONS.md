@@ -567,6 +567,20 @@ both drifting from the doc.
     when stating a pass criterion, quote the script's own output line, not a derived count.
     *(audit: splitter-fix session, Ruling 13 + Flag 4, 2026-07-09)*
 
+39. **A command that crosses the CC→JP boundary is a factual claim — verify it against the script's
+    own --help/source BEFORE relay, never write it from recall.** Batch-3 session 4 (2026-07-09,
+    session CLOSED FAILED on this): CC handed JP the 10-run floor command with a wrong script name
+    (`lexica_def.py` — the TABLE's name — for `build_lexica_def.py`) and a wrong flag (`--strongs`
+    for `--word`), composed from memory of prior sessions; it reached JP's terminal and failed
+    there ("no such file"). Same session, same class: `--force` went out on a checkpoint-gated
+    command with no stated semantics until JP demanded them, and two JP holds were skipped in one
+    message and had to be re-demanded. The corrected relay pattern (applied post-catch, keep it):
+    run `--help`, quote the flag's own wording in the handoff message, and clear every open hold in
+    the same message as the command. Verify-before-claim (CLAUDE.md) already covered this — the
+    lesson is that a COMMAND LINE is inside its scope, not just prose claims about code/data.
+    Sibling of #38 (checkpoint messages carry their own accounting) and #31 (the apply-side cost
+    when flags are wrong). *(audit: G4061 stub entry, failed session 4, 2026-07-09)*
+
 ## Added by the ἔργον session (2026-07-08)
 
 23. **The freight (#18) scan's scope is EVERY definitional field, not just the block the last failure was in.**

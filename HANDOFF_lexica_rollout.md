@@ -328,7 +328,29 @@ fabrication checkpoint (#36: verify before claiming fabrication — ABP false-po
 Parked words are not yours to reopen: πολύς, ἄκανθα, κύων (κύων's revisit = "adjudicate the
 ambiguity or enforce the majority" on Deu 23:18, JP's call at a future window).
 
-## BATCH-3 SESSION 4 (2026-07-09) — OPEN. Both traveling rulings taken at open:
+## BATCH-3 SESSION 4 (2026-07-09) — CLOSED FAILED (JP ruling; ENGINE_LESSONS #39). No word
+## shipped, no floor run, no writes anywhere. Failure: CC relayed the 10-run floor command from
+## RECALL — wrong script name (`lexica_def.py` for `build_lexica_def.py`) + wrong flag
+## (`--strongs` for `--word`) — and it reached JP's terminal ("no such file") before correction;
+## `--force` also went out unexplained until JP demanded semantics; earlier, two JP holds were
+## skipped in one message and had to be re-demanded. Rulings taken THIS session remain VALID
+## (banked + pushed): βιβρώσκω count (b) · περιτομή next · six-step close plan.
+## RESUME STATE FOR SESSION 5 — περιτομή G4061 mid-pre-pull:
+## · occ table STAGED NOT BANKED: 36 verses / 40 occ, 4 doubles (Col 2:11, Rom 2:25, Rom 4:10,
+##   Rom 4:12), no dotted cousins (bare 4061 only). Doubles judged plausibly genuine (Pauline
+##   rhetorical repetition; none in splitter_b_evidence.txt, whose PA copy = committed copy,
+##   886 lines both) — but the 8-row row-level check is STILL OWED before banking:
+##   sqlite3 ~/bible-db/bible.db "SELECT v.book, v.chapter, v.verse, w.position, w.english FROM
+##   words w JOIN verses v ON v.id=w.verse_id WHERE w.strongs='4061' AND (v.book,v.chapter,v.verse)
+##   IN (VALUES ('Col',2,11),('Rom',2,25),('Rom',4,10),('Rom',4,12)) ORDER BY 1,2,3,4;"
+## · floor command, VERIFIED against the script's --help this time (--force = fresh model draw
+##   each run, required for an independent 10-run; --dry-run = show only, no write):
+##   cd ~/bible-db && for i in $(seq 10); do python scripts/build_lexica_def.py --word G4061 --dry-run --force; done
+## · order: doubles verify → table banks 36/40 → floor. RED watch below stays banked; book
+##   distribution note (JP term, banked verbatim): Rom+Gal = 22/40 heavy figurative/identity load;
+##   OT sparse (Gen 1 · Exo 2 · Jer 1); "sample spread should force at least one OT concrete hit so
+##   the rite sense isn't reconstructed from Paul's polemic alone."
+## Both traveling rulings taken at open:
 ## (1) βιβρώσκω count = option (b), γόνυ precedent — count stays 2/15, intervention tally +1
 ## ("gates passed a defect a human caught", tagged to the fabrication-check batch-close decision);
 ## precedent EXTENDED to post-pull pre-ship human catches (ENGINE_LESSONS #30 update). βιβρώσκω
