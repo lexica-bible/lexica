@@ -343,12 +343,13 @@ triage + prompt bump (V7 freeze lifts at close; pile so far: comma-shorthand cit
 "line"→"entry" fix · gloss-note asymmetry · doubled vocabulary bar · #29 attribution register ·
 plus whatever batch 3 adds) → 4. visual layout session run against V8 output (sequenced after the
 bump so layout decisions aren't invalidated by V8 structure changes — whitespace, sub-use
-formatting). **CC flags banked, JP to fold in or reject at close:** (a) step 4 presupposes a V8
-control fire between 3 and 4 — a prompt bump doesn't re-render shipped cards, so at least one
-V8-drawn card must exist before layout is judged; (b) the scale-protocol decision item (already
-banked for this window — calibration economics, ~14,000 lemmas) is absent from the four steps;
-natural slot = between 2 and 3 (escape/intervention evidence is its input, outcome sizes the V8
-batch plan).
+formatting). **BOTH CC FLAGS RULED IN (JP, 2026-07-09) — plan amended to the SIX-STEP RULED
+version:** 1. batch-close review → 2. fabrication-check / intervention-tally adjudication →
+3. scale-protocol decision (input = step-2 escape/intervention evidence; output constrains V8
+batch ambition; BETWEEN not inside, so the economics ruling stays untangled from pile triage) →
+4. V8 pile triage + prompt bump → 5. V8 control fire (NOT optional — a bump doesn't re-render
+shipped cards; layout judged against V7-shaped cards defeats the sequencing rationale) →
+6. visual layout session against the V8-drawn card(s).
 **G4061 περιτομή RED watch PRE-REGISTERED (banked before any pull exists):** NOT in the contested
 register (verified: no 4061 in contested_register.py) — RED routing carries the word alone. Expected
 profile: literal rite · "the circumcision" as a GROUP label (people/party metonymy, Acts/Gal/Rom) ·
