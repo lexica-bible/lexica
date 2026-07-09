@@ -435,6 +435,17 @@ both drifting from the doc.
     majority-partners and fires on a high-support verse landing off its consensus home. Sibling of #11
     (the floor is already the adjudicator for double-shelf fires), #20/#24 (placement + frame arrive
     together on loaded referents). *(audit: G1119 γόνυ batch-3 redraw ruling, 2026-07-08)*
+    - **UPDATE (νίπτω G3538, same session): SECOND instance in three words — and this time the invented
+      shelf was a top-level SENSE, not a sub-use.** The floor certified 2 senses 3/3 (washing | Job 20:23);
+      the ship draw broke a unanimous 3/3 cluster to promote three Psalms verses (26:6, 58:10, 73:13) onto
+      an invented "rhetorical hand-washing" sense the floor drew zero times. Ruled misplacement, redraw —
+      second ruled escape of batch 3. Two-in-three converts the detector candidate from plausible to
+      demonstrated-recurring; contrast case on the record: δίκτυον's fold was LEGAL because every floor
+      cluster stayed intact (hierarchy demotion ≠ cluster break — the mechanical check is cluster
+      membership, not sense count). Rendering-lint side-note from the same card: 2 of 3 fires were
+      face-value matches ("may"="may", "washing"="washing" — the known quote-mark artifact, ticket
+      instance count grows), 1 real (Exo 30:18 claimed "washing", corpus "wash" — second genuine live
+      fire for the lint). *(audit: G3538 νίπτω batch-3 redraw ruling, 2026-07-08)*
 
 ## Added by the ἔργον session (2026-07-08)
 
