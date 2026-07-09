@@ -413,6 +413,22 @@ cards, not new; two-line fix proposed, held for JP's go. **Session-3 running tal
 1 of 7 · "Grounding refs:" 0 · header-gloss 3 sightings · GREEN remaining 5: ταμεῖον G5009 ·
 βιβρώσκω G977 · διανοίγω G1272 · ὑπομονή G5281 · κατανοέω G2657 (ὑπομονή pre-ruled: pre-register
 the endurance-vs-hope split BEFORE its floor) · RED remaining 2: περιτομή G4061 · σκληρύνω G4645.**
+**G1272 διανοίγω (in progress, OFF-COUNT — 6th straight escalation across sessions 2–3):** occ table
+38 verses / 40 occ (Exo 13:12 ×2, Lam 2:16 ×2); no dotted cousins. 3-run {3:3} count-uniform but the
+THIRD shelf rotates completely (stretching/spreading 6-verse · abstract/cosmological Job 38:32+
+Zec 13:1 · root-spreading Job 29:19 solo) + d1 double-shelves 2Ki 6:17/Eze 21:22 — the ἐπιτιμάω
+pattern exactly → mandated 10-run, banked. **Pre-registered for the 10-run (reviewer, banked):**
+two stable clusters expected to hold — inner-faculty 5-verse formula (Luk 24:32, 24:45, Act 16:14,
+17:3, Hos 2:15 — identical 3/3) + physical bulk with womb verses inside (no own shelf 3/3; the
+womb-formula question answered at 3-run) — either moving = flagged surprise. Luk 24:31 files
+PHYSICAL 3/3 (eyes-opened-recognized — consistent; name at ship). Fringe to settle: Job 29:19,
+38:32, Pro 31:20, Zec 13:1, Gen 3:5.
+**DECISION ITEM FOR JP (session boundary, reviewer-flagged, banked): the 3-run has stopped screening.**
+6 escalations in 6 words (sessions 2–3) = paying 13 draws where 10 would do. Option 1 (cheap,
+reversible, sequencing-only): skip the 3-run and go straight to 10 for any word with a poetry/Psalms
+book share (the #35 tell). Option 2 (bigger save, touches the bar definitions — needs its own
+validation pass): test whether 6–7 draws carry the 10-run's signal. Neither ruled; JP's call at a
+session boundary, not mid-word.
 
 ## BATCH-3 SESSION 2 LOG (2026-07-09) — CLOSED; see the audit doc's SESSION 2 CLOSE entry for the
 ## tally + case law. This block is the session's running record, banked as it happened.
