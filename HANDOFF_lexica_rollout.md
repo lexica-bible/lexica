@@ -328,6 +328,15 @@ fabrication checkpoint (#36: verify before claiming fabrication — ABP false-po
 Parked words are not yours to reopen: πολύς, ἄκανθα, κύων (κύων's revisit = "adjudicate the
 ambiguity or enforce the majority" on Deu 23:18, JP's call at a future window).
 
+## BATCH-3 SESSION 4 (2026-07-09) — OPEN. Both traveling rulings taken at open:
+## (1) βιβρώσκω count = option (b), γόνυ precedent — count stays 2/15, intervention tally +1
+## ("gates passed a defect a human caught", tagged to the fabrication-check batch-close decision);
+## precedent EXTENDED to post-pull pre-ship human catches (ENGINE_LESSONS #30 update). βιβρώσκω
+## stands shipped (batch tally 14 shipped). (2) Next word = περιτομή G4061 (RED seed) — spreads the
+## REDs across sessions, σκληρύνω inherits the lessons; straight-to-10, standing terms in force.
+## ὑπομονή endurance-vs-hope pre-registration stays banked for its GREEN slot. Record: audit doc
+## G977 entry (count ruled) + this block.
+
 ## PAUSE LIFTED 2026-07-09 — splitter-fix session COMPLETE, charter CLOSED. Polarity A shipped
 ## LIVE (607 helper rows untagged; rule folded into the builder + locked in CI); polarity B
 ## deferred to its own TODO ticket (878-case evidence frozen). Exhibit words verified clean at

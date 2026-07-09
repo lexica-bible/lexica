@@ -458,6 +458,15 @@ both drifting from the doc.
       face-value matches ("may"="may", "washing"="washing" — the known quote-mark artifact, ticket
       instance count grows), 1 real (Exo 30:18 claimed "washing", corpus "wash" — second genuine live
       fire for the lint). *(audit: G3538 νίπτω batch-3 redraw ruling, 2026-07-08)*
+    - **UPDATE (βιβρώσκω G977 count ruling, 2026-07-09): the γόνυ count-against-N precedent explicitly
+      extends to POST-PULL PRE-SHIP human catches, not just mid-draw saves.** βιβρώσκω shipped clean-looking
+      on plain pull 1, every machine gate green — but the sub-use lead misnamed its own group, caught only
+      by human read, fixed by a reword-class swap before ship. JP ruled option (b): the 15-count answers
+      "can GREEN ship clean WITHOUT a human in the loop"; a machine-invisible defect a human had to patch
+      means the answer for that card was no, wherever in the pipeline the catch lands. Count credit + banking
+      the catch as intervention data is double-counting the human out of the ledger — rejected. The swap IS
+      logged in the intervention tally as a "gates passed a defect a human caught" data point, tagged to the
+      fabrication-check batch-close decision. *(audit: G977 βιβρώσκω entry, count ruled 2026-07-09)*
 
 31. **An UNREVIEWED card reached the live site — the apply path writes on a warning instead of refusing.**
     κάλαμος G2563, batch 3 (2026-07-08): the reviewed draw was hinted; CC's apply command omitted the

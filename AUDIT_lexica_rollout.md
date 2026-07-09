@@ -1971,12 +1971,16 @@ fold. Logged so the next form-organized card doesn't relitigate.
 (ticket stays 3 sightings; the header mechanism gets simple words right). "may 1" chip + Job 18:13
 double-highlight = downstream surfaces of the splitter defect, interim state correct (the card's
 own gloss note does display-side damage control).
-**COUNT QUESTION (JP to rule, three options on the table):** (a) reviewer: ON-count 3/15 — no hint,
-no failed screen, Queue-4's escalation clause doesn't trigger; (b) γόνυ precedent: the machine-
-invisible human-caught defect counts against N (escape-class); (c) CC middle path (recommended):
-3/15 AND the swap logged in the intervention-class tally as a "GREEN-would-have-shipped-this" data
-point feeding the batch-close fabrication-check decision. Tallies: describe-don't-preach 12-for-12 ·
-fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0 · count pending JP.
+**COUNT RULED (JP, 2026-07-09, session 4 open): option (b) — γόνυ precedent. Count stays 2/15.**
+The 15-count answers one question — can GREEN ship clean without a human in the loop; a human-caught,
+machine-invisible defect requiring a swap means the answer here was no. Option (c) rejected as
+double-counting the human out of the ledger (count credit for a ship that only looks clean because a
+human patched it, while banking his catch as data). Good half kept: the swap IS logged in the
+intervention tally as a "gates passed a defect a human caught" data point, tagged to the
+fabrication-check batch-close decision. γόνυ precedent reaffirmed AND extended: it now explicitly
+covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS #30 update bullet).
+Final: βιβρώσκω shipped (batch tally 14 shipped) · count 2/15 · intervention tally +1. Other
+tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
 ### BATCH-3 SESSION 1 CLOSE (2026-07-09) — tally + case law; session 2 preconditions
 **Tally: 7 shipped / 2 escapes (γόνυ invented-shelf, νίπτω cluster-break — BOTH caught only by the human
