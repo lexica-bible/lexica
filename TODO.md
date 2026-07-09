@@ -222,7 +222,11 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   misses (G2563 incident, ENGINE_LESSONS #31 — an unreviewed card reached the live site). Fix = make
   `--require-cache` behavior the DEFAULT on --apply (explicit `--allow-unreviewed` to override, which
   already exists). Interim ruled procedure in force: every apply runs `--require-cache` + output read
-  for "using reviewed draw" before the render step. JP schedules.
+  for "using reviewed draw" before the render step. SECOND HALF of the same ticket (JP, same session):
+  the key pins the INPUT, so forced re-pulls are indistinguishable at the key level — three different
+  drafts carried key 1f20c1b1 in one session; the cache held the reviewed one only by write order.
+  Fix wants a CONTENT hash alongside the input key (pin the reviewed draft by what it says, not when
+  written) — ENGINE_LESSONS #15's content-addressing, now with a live near-miss. JP schedules.
   5. **Sub-use paragraph styling (banked 2026-07-08, batch-3 session, JP):** "Sub-use:" paragraphs inside a
      senses_block render as plain prose, visually undifferentiated from the main sense body (confirmed on the
      live G1119 card). Wanted: a light visual indicator — indent, smaller type, or left rule, frontend's call,
