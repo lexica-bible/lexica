@@ -143,12 +143,21 @@ def main():
     ap.add_argument("--strongs", default="2008,977",
                     help="comma-list of bare strongs to dump in full (reconcile to targets)")
     ap.add_argument("--sample", type=int, default=15)
+    ap.add_argument("--tsv", default=None,
+                    help="also write the A-clean list as TSV (ref\\teng\\tGstrongs) "
+                         "for diffing against scripts/splitter_a_expected.tsv")
     args = ap.parse_args()
 
     conn = sqlite3.connect(f"file:{args.db}?mode=ro", uri=True)  # read-only, cannot write
     verses, ref = load_words(conn)
     ren = build_rendering_sets(verses)
     a_clean, a_review, b_cases = scan(verses, ref, ren)
+
+    if args.tsv:
+        with open(args.tsv, "w", encoding="utf-8", newline="\n") as f:
+            for refstr, pos, eng, head, st, npos, neng, ngpos, nbid in a_clean:
+                f.write(f"{refstr}\t{(eng or '').strip()}\tG{st}\n")
+        print(f"A-clean TSV -> {args.tsv} ({len(a_clean)} rows)")
 
     total_words = sum(len(r) for r in verses.values())
     # rows whose strongs_base is already an empty string (the shape the A-fix creates)
