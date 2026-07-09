@@ -433,6 +433,21 @@ sense-3 "may belong" hedge = literal filing against the pin + double-shelf [1,3]
 hinted pull, flags verbatim (no data on hinted-pull variance; one defiance = still sampling); a second
 defiance on the same verses = repeated membership wall → ὀφθαλμός-class decision (park vs V8
 prompt-restructure) to JP.
+**HINTED PULL 2 APPROVED (JP) — ADJUDICATION PRE-REGISTERED BEFORE OUTPUT EXISTS:**
+(a) Deu 23:18 literal primary (hedged or not) OR either verse double-shelved again → membership wall
+CONFIRMED, ὀφθαλμός class, **κύων PARKS — no third hinted pull** ("spending money to re-measure a
+measured thing"); (b) both pins obeyed + everything else home → ship path resumes (full 38-verse
+placement check still runs); (c) pins obeyed but a NEW break elsewhere → ordinary reject, counts as
+hinted-tier attempt 2; existence of a hinted attempt 3 = CC flags against Queue-4 terms, no
+improvising; (d) Isa 56:10: prose MENTION of the barking idiom inside sense 3's own paragraphs =
+fine; the failure mode is citation/filing on shelf 1, not acknowledging the literal substrate.
+**MECHANISM-RECORD OBSERVATION (JP, banked):** both defied verses are where the engine showed a
+consistent directional preference across plain pulls (Deu 23:18 literal 2-of-3 + the floor's own 4/10
+minority; Isa 56:10 layered reading in p1 + the hinted gloss note) — the hint moved everything the
+engine was indifferent about and failed exactly where it has a preference. *Hint compliance appears
+inversely related to the engine's own placement-preference strength.* Sharper than the ὀφθαλμός
+characterization. If parks: session ships = παράπτωμα only; parked = ἄκανθα + κύων; next word from
+remaining GREEN roster.
 
 ## BATCH-3 SESSION 1 LOG (2026-07-08/09) — shadow calibration opened. Read this + the audit doc's
 ## batch-3 entries to resume session 2.
