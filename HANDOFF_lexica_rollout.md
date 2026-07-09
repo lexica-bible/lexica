@@ -561,6 +561,10 @@ at headline). LXX note fired senses 1+2 (skew watch satisfied at draft level). *
 audit:** (1) Psa 64:7 prose "infant's arrow" — verse-text check required before any version ships
 (fabrication-family checkpoint); (2) gloss-note/shelf mismatch — note calls Psa 127:4 "clean instance
 of Sense 2" but the card cites it nowhere in the senses block.
+**Psa 64:7 CHECK CLEARED (verse text read):** ABP reads "the arrow of infants became their
+calamities" — the strange construction is the TEXT's own (LXX), not a fabrication. Shipping prose must
+track "arrow of infants" as written; "divine judgment" framing = interpretation, watch but not a
+block. Checkpoint closed.
 
 ## BATCH-3 SESSION 1 LOG (2026-07-08/09) — shadow calibration opened. Read this + the audit doc's
 ## batch-3 entries to resume session 2.
