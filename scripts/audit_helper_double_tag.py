@@ -49,6 +49,25 @@ HELPER_HEADS = {
 
 _PUNCT = re.compile(r"[^\w\s]")
 
+# Function-word tags for the polarity-B screen (bare strongs). The pooled phrase
+# sits on one of these (Rth 2:16 = 3756 "not"); the blank row must NOT be one
+# (a blank article/pronoun row is normal ABP — the Greek article is often
+# untranslated). Mirrors the builder's own sets: _PRONOUN_BASES + article +
+# common particles/negations/conjunctions/prepositions.
+FUNCTION_TAGS = {
+    "3588",                                    # article
+    "846", "1473", "4771", "3778", "1565",     # pronouns (αὐτός, ἐγώ, σύ, οὗτος, ἐκεῖνος)
+    "3739", "5100", "1536",                    # relatives/indefinites
+    "3756", "3361", "3364", "3366", "3383",    # negations
+    "2532", "1161", "235", "1063", "3754",     # conjunctions (καί, δέ, ἀλλά, γάρ, ὅτι)
+    "2443", "5613", "5620", "1487", "1437",    # ἵνα, ὡς, ὥστε, εἰ, ἐάν
+    "302", "686", "1065",                      # ἄν, ἄρα, γέ
+    "1722", "1519", "1537", "1909", "4314",    # prepositions ἐν, εἰς, ἐκ, ἐπί, πρός
+    "575", "1223", "2596", "3326", "4012",     # ἀπό, διά, κατά, μετά, περί
+    "5259", "5228", "4253", "1799", "1520",    # ὑπό, ὑπέρ, πρό, ἐνώπιον, εἷς
+    "3844", "4862", "891", "2193", "5613.1",   # παρά, σύν, ἄχρι, ἕως
+}
+
 
 def norm(s):
     return _PUNCT.sub("", (s or "")).lower().strip()
@@ -92,13 +111,25 @@ def scan(verses, ref, ren):
                 npos, neng, nhead, nst, nsb, ngpos, nbid = rows[i + 1]
                 if nst == st and nbid is not None:
                     rec = (ref[vid], pos, eng, head, st, npos, neng, ngpos, nbid)
-                    if norm(head) in HELPER_HEADS:
+                    # A pure function word ("was", "did") gets no search head; fall
+                    # back to the english itself so a bare auxiliary still screens
+                    # clean (Gen 7:20 "was" -> "raised" slipped to review on this).
+                    lead = norm(head) or norm(eng)
+                    if lead in HELPER_HEADS and len((eng or "").split()) <= 2:
                         a_clean.append(rec)
                     else:
                         a_review.append(rec)
             # ---- Polarity B: blank content verb pooled onto the preceding phrase ----
+            # Tightened after dry-run 1 fired 4,944× on normal blank article/pronoun
+            # rows ("the LORD" | blank G3588). Real shape (Rth 2:16): the pooled
+            # phrase sits on a FUNCTION word (3756 "not") while the blank row is a
+            # CONTENT word — a function word can't plausibly own a content phrase.
             if (not eng or not eng.strip()) and is_real_tag(st, sb) and i > 0:
+                if st.split(".")[0] in FUNCTION_TAGS:
+                    continue                      # blank article/pronoun/particle = normal
                 ppos, peng, phead, pst, psb, pgpos, pbid = rows[i - 1]
+                if not (pst and pst.split(".")[0] in FUNCTION_TAGS):
+                    continue                      # phrase must sit on a function word
                 if peng and " " in peng.strip():
                     tail = norm(peng.strip().split()[-1])
                     if tail and tail in ren.get(st, set()):
