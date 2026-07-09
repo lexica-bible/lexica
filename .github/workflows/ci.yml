@@ -33,6 +33,7 @@ jobs:
           python tests/test_lexica_glossset_fold.py
           python tests/test_lexica_detectors.py
           python tests/test_lexica_section_split.py
+          python tests/test_helper_double_tag.py
 
   frontend:
     runs-on: ubuntu-latest

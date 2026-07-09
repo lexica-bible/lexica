@@ -387,6 +387,85 @@ _CARRY_FW = frozenset({
 })
 
 
+# ── Helper double-tag strip (splitter charter, CHARTER_splitter_fix.md) ───────
+# When ABP glues a helper word onto a bracketed verb ("May [2reproachG2008"),
+# _emit_words peels the helper back outside the bracket but keeps the verb's
+# Strong's on it — two rows, one tag (Jud 1:9 / Job 18:13 / Job 3:4). That
+# inflates occurrence counts and surfaces the helper as a phantom "rendering".
+# The strip below blanks the helper row's tag (english stays; an untagged word
+# renders as plain text). The screen (helper_ok) is shared verbatim with the
+# read-only finder (audit_helper_double_tag.py) and the source-level
+# re-derivation (gen_splitter_a_expected.py); the two derivations diffed empty
+# over the whole corpus (607 rows) before this rule landed.
+
+# Scaffold words: auxiliaries + subject pronouns + connective glue that can
+# legitimately ride in front of a verb without carrying the verb's sense.
+SCAFFOLD_WORDS = frozenset({
+    "may", "might", "shall", "should", "will", "would", "let", "did", "do", "does",
+    "was", "were", "be", "been", "is", "are", "am", "had", "has", "have",
+    "can", "could", "must", "and", "but", "then", "so", "that", "when",
+    "not", "now", "us", "you", "your", "he", "she", "it", "they", "we", "i",
+    "them", "him", "her", "me", "ye", "thou", "thee",
+})
+
+# Function-word tags (bare base). A helper whose SHARED tag is one of these is
+# never stripped — the "helper" may be that word's own rendering ('Let not'
+# G3361: "not" IS the negation; stripping would delete a real occurrence).
+FUNCTION_TAGS = frozenset({
+    "3588",                                    # article
+    "846", "1473", "4771", "3778", "1565",     # pronouns
+    "3739", "5100", "1536",                    # relatives/indefinites
+    "3756", "3361", "3364", "3366", "3383",    # negations
+    "2532", "1161", "235", "1063", "3754",     # conjunctions
+    "2443", "5613", "5620", "1487", "1437",    # subordinators
+    "302", "686", "1065",                      # particles
+    "1722", "1519", "1537", "1909", "4314",    # prepositions
+    "575", "1223", "2596", "3326", "4012",
+    "5259", "5228", "4253", "1799", "1520",
+    "3844", "4862", "891", "2193", "5613.1",
+})
+
+_SCAFF_NORM = re.compile(r"[^\w\s]")
+
+
+def helper_ok(eng, st):
+    """The unified strip screen. Strip only when (1) EVERY word of the helper is
+    scaffold — aux, subject pronoun, glue — and (2) the shared tag is a CONTENT
+    word. Both halves earned their place in the charter dry-runs: 'throne were'
+    (Rev 4:4) fails (1) — 'throne' is content; 'Let not' G3361 fails (2)."""
+    words = [_SCAFF_NORM.sub("", w).lower().strip() for w in (eng or "").split()]
+    words = [w for w in words if w]
+    if not words or len(words) > 3:
+        return False
+    if any(w not in SCAFFOLD_WORDS for w in words):
+        return False
+    if (st or "").split(".")[0] in FUNCTION_TAGS:
+        return False
+    return True
+
+
+def _strip_helper_double_tag(rows: list) -> None:
+    """Blank the Strong's tag on a peeled helper row that duplicates the next
+    row's bracketed tag. Fingerprint (structural, proven on 3 exhibits + the
+    whole-corpus source-vs-table diff): helper row sits OUTSIDE any bracket
+    with a real tag; the very next row carries the SAME full dotted tag and IS
+    bracketed. english/english_head stay — only the Greek identity clears,
+    matching how the builder stores untagged source text ('' / '').
+    A legit reorder split (Jas 2:21 'Was..justified') has both pieces inside
+    the bracket, so it never matches."""
+    for i in range(len(rows) - 1):
+        r, n = rows[i], rows[i + 1]
+        st, sbase, bid = r[3], r[4], r[6]
+        if not st or st in ("*", "") or bid is not None:
+            continue
+        if n[3] != st or n[6] is None:
+            continue
+        if not helper_ok(r[1], st):
+            continue
+        # blank strongs (3) + strongs_base (4) + greek_pos (5, orphan without a tag)
+        rows[i] = r[:3] + ("", "", None) + r[6:]
+
+
 def _split_compounds(rows: list, lex: dict, carry: bool = False) -> None:
     """
     Redistribute words from compound ABP glosses to subsequent empty-english slots
@@ -1354,6 +1433,7 @@ def build_verse_words(abp_words: list, bh_rows: list, lex: dict = None) -> list:
     _lord_oath_fix(rows)
     _numeral_gloss_fill(rows)
     _greek_pos_backfill(rows)
+    _strip_helper_double_tag(rows)  # splitter charter: peeled helper never keeps the verb's tag
     _strip_italic_heads(rows)   # LAST: head must be the slot's own word, not an added (italic) one
 
     # Strip temporary abp_pos (idx 10); keep morph (11) + lemma (12) as the last two columns.

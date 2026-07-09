@@ -38,69 +38,17 @@ from collections import Counter, defaultdict
 
 DB = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "bible.db")
 
-# Secondary sanity guard on polarity A: the peeled leading word should read as an
-# auxiliary / modal / subject scaffold. Structural matches whose head is NOT in this
-# set are surfaced separately (possible third class) rather than silently stripped.
-HELPER_HEADS = {
-    "may", "might", "shall", "should", "will", "would", "let", "did", "do", "does",
-    "was", "were", "be", "been", "is", "are", "am", "had", "has", "have",
-    "can", "could", "must", "and", "but", "then", "so", "that", "when",
-}
+# The strip screen + its word/tag sets live in the BUILDER (the rule is folded
+# into every future rebuild); this finder imports them so the table-level scan,
+# the source-level re-derivation, and the build itself can never drift apart.
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from build_words_from_abp import helper_ok, FUNCTION_TAGS  # noqa: E402
 
 _PUNCT = re.compile(r"[^\w\s]")
-
-# Function-word tags for the polarity-B screen (bare strongs). The pooled phrase
-# sits on one of these (Rth 2:16 = 3756 "not"); the blank row must NOT be one
-# (a blank article/pronoun row is normal ABP — the Greek article is often
-# untranslated). Mirrors the builder's own sets: _PRONOUN_BASES + article +
-# common particles/negations/conjunctions/prepositions.
-FUNCTION_TAGS = {
-    "3588",                                    # article
-    "846", "1473", "4771", "3778", "1565",     # pronouns (αὐτός, ἐγώ, σύ, οὗτος, ἐκεῖνος)
-    "3739", "5100", "1536",                    # relatives/indefinites
-    "3756", "3361", "3364", "3366", "3383",    # negations
-    "2532", "1161", "235", "1063", "3754",     # conjunctions (καί, δέ, ἀλλά, γάρ, ὅτι)
-    "2443", "5613", "5620", "1487", "1437",    # ἵνα, ὡς, ὥστε, εἰ, ἐάν
-    "302", "686", "1065",                      # ἄν, ἄρα, γέ
-    "1722", "1519", "1537", "1909", "4314",    # prepositions ἐν, εἰς, ἐκ, ἐπί, πρός
-    "575", "1223", "2596", "3326", "4012",     # ἀπό, διά, κατά, μετά, περί
-    "5259", "5228", "4253", "1799", "1520",    # ὑπό, ὑπέρ, πρό, ἐνώπιον, εἷς
-    "3844", "4862", "891", "2193", "5613.1",   # παρά, σύν, ἄχρι, ἕως
-}
 
 
 def norm(s):
     return _PUNCT.sub("", (s or "")).lower().strip()
-
-
-# Scaffold words: auxiliaries + subject pronouns + the connective glue that can
-# legitimately ride in front of a verb without carrying the verb's sense.
-SCAFFOLD_WORDS = HELPER_HEADS | {
-    "not", "now", "us", "you", "your", "he", "she", "it", "they", "we", "i",
-    "them", "him", "her", "me", "ye", "thou", "thee",
-}
-
-
-def helper_ok(eng, st):
-    """The unified polarity-A strip screen, shared verbatim by the table-level
-    finder and the source-level re-derivation (gen_splitter_a_expected.py) so
-    the two lists can only disagree on DATA, never on screen rules.
-
-    Strip only when (1) EVERY word of the helper is scaffold — an auxiliary,
-    subject pronoun, or glue word that carries no lexical sense — and (2) the
-    shared tag is a CONTENT word. Both halves earned their place in dry-run 3:
-    'throne were' (Rev 4:4) fails (1) — 'throne' is content; 'Let not' G3361
-    fails (2) — 'not' IS that tag's own rendering, stripping it would delete a
-    real occurrence of the negation."""
-    words = [norm(w) for w in (eng or "").split()]
-    words = [w for w in words if w]
-    if not words or len(words) > 3:
-        return False
-    if any(w not in SCAFFOLD_WORDS for w in words):
-        return False
-    if (st or "").split(".")[0] in FUNCTION_TAGS:
-        return False
-    return True
 
 
 def load_words(conn):
