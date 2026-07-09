@@ -128,6 +128,13 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   rebuild per the settled build-folded-fixes pattern; NOT a live-table patch, NOT mid-calibration.
   Sizing query in the batch-3 session-3 log context; dictionary-side guard = any
   renderings claim for an affected word is checked against real occurrences (G2008 watch banked).
+  **SECOND EXHIBIT (same session, inverse shape): Rth 2:16** — "you shall not reproach" sits
+  entirely on the NEGATION row (pos 14, tagged 3756 οὐκ) and the verb row is BLANK (pos 15,
+  tagged 2008). Jud 1:9 = tag duplicated onto the helper; Rth 2:16 = English assigned wholly to
+  the first word of a two-word span. One root: the splitter's handling of multi-word English
+  spanning two Greek words. The 731-pair sweep catches the Jud shape only; the Rth shape needs
+  its own sweep (blank-English rows whose PRECEDING row's English ends in a verb-phrase — or
+  simply: blank-tagged rows adjacent to a multi-word chunk). Both shapes, one build-rule fix.
 - **Place-map pin = interim plurality heuristic** (2026-07-05). The map on a place word card
   (`_pin_from_rows` in views_metav.py) picks the coordinate the MOST metav_places rows agree on when a
   name carries several referents (Lebanon = region + Mount Hermon + a Jerusalem structure). Safe direction:
