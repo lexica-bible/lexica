@@ -392,6 +392,27 @@ reproof peer, nations labeled sub-use inside sense 1, all 37 present, pins home 
 placement check + "reproach throughout" renderings check vs real occurrences); (c) structure obeyed
 + new break elsewhere → ordinary reject, hinted attempt 2. #32 predicted-defiance framing banked:
 floor itself preferred this carve in several draws — a repeat = the wall confirming, not noise.
+**Hinted pull 2 (key 38b56cad) = branch (b) PASS on every term** (2 senses correct polarity ·
+37/37 placed, Luk 9:55 restored · tails disjoint, #37 fifth hold · all pins home). Wall did NOT
+materialize — first successful hint against an engine-preferred inverse carve; #32 note closed as
+"hint overrode the preferred carve on attempt 2." Reviewer rulings banked: #28 tail-caveat on
+record (gate 30/30 = prose refs only; tail correctness rests on the hint-construction chain) ·
+LXX non-fire CORRECT (no OT-majority shelf remains) · Psa 68:30 verse-check cleared the engine
+(#36) · renderings all reproach-family, "may" defect row defused by the draft's own gloss note.
+**Second CC catch: reviewer's "count 3/15" corrected — hint use = off-count per the explicit
+Queue-4 term; count stays 2/15.** Rth 2:16 blank-English row traced: SECOND SPLITTER EXHIBIT
+(inverse shape — English pooled on the negation row 3756, verb row blank; ticket updated 94b7e2d).
+**APPLIED 2026-07-09: pass line "using reviewed draw … (key 38b56cad) — no model call" + stamp
+6f982c804354 both confirmed; prose byte-matched; written to lexica_def. Render PASS (7-point
+checklist) → ἐπιτιμάω CLOSED, LIVE 2026-07-09.** Ship-with-intervention, off-count, streak 0.
+Header-gloss ticket THIRD SIGHTING ("rebuke, chide" vs the card's own anti-blame-register gloss
+notes). RANGE typography traced to code: Range/Coverage lack the serif class (.lex-prose) the
+senses block gets (20-shared-components.jsx:257 / styles.css:1435) — standing template gap on ALL
+cards, not new; two-line fix proposed, held for JP's go. **Session-3 running tally: shipped
+ἐπιτιμάω (off-count) · count 2/15 · streak 0 · describe-don't-preach 10-for-10 · fold-compression
+1 of 7 · "Grounding refs:" 0 · header-gloss 3 sightings · GREEN remaining 5: ταμεῖον G5009 ·
+βιβρώσκω G977 · διανοίγω G1272 · ὑπομονή G5281 · κατανοέω G2657 (ὑπομονή pre-ruled: pre-register
+the endurance-vs-hope split BEFORE its floor) · RED remaining 2: περιτομή G4061 · σκληρύνω G4645.**
 
 ## BATCH-3 SESSION 2 LOG (2026-07-09) — CLOSED; see the audit doc's SESSION 2 CLOSE entry for the
 ## tally + case law. This block is the session's running record, banked as it happened.

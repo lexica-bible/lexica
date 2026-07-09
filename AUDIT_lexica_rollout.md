@@ -1854,6 +1854,51 @@ UNADJUDICATED fire (κύων pull 3, died with its draw) · header-gloss ticket 
 a precondition). GREEN remaining 6: ταμεῖον · βιβρώσκω · διανοίγω · ὑπομονή · ἐπιτιμάω · κατανοέω —
 plain verbs are the streak's next real chances.
 
+### G2008 ἐπιτιμάω — LIVE (2 senses, hinted attempt 2). Off-count (escalated at 3-run), streak 0
+(ship-with-intervention). **First successful structure-hint use AGAINST an engine-preferred inverse
+carve** — hinted attempt 1 inverted the ruled structure (the mechanism's first structural defiance,
+record 9-for-10 structure); attempt 2 obeyed fully, so the predicted wall did not materialize
+(#32 close: "hint overrode the engine's preferred carve on attempt 2").
+Occ table pre-pulled: 37 verses / 39 tagged rows; dotted 2008.1 = distinct noun ("reproach" 7/7,
+carries the God-rebukes-waters texts), no leak. **Corrected mid-word to 38 real occ / single true
+double Zec 3:2:** Jud 1:9's "double" = the splitter double-tag defect (see ticket). Floor: 3-run
+{2:3} count-uniform but structure rotating + floor-level double-shelves → 10-run {1:1,2:3,3:5,4:1},
+no exact modal carve, no carve repeated 3× → first-draw hint legal (δάμαλις extension, 3rd use).
+Certified: directive core 10/10 · personal reproof majority-distinct (own shelf 6-7/10; Gen 37:10+
+1Ki 1:6 and Luk 17:3+2Ti 4:2 both 10/10 pairs) · Psalms-nations below peer (4-5/10) · **Zec 3:2+
+Jud 1:9 pair rides the demon/force core 7/10, NOT the Psalms set** (pre-registration answered with
+a twist). **Rulings:** Psa 106:9 homes with the Psalms group per floor majority (8/10 with 68:30) —
+its two-way character (semantically cousin to Mar 4:39's sea-rebuke) is NAMED here so a future
+revisit doesn't mistake it for unnoticed ambiguity · nations = labeled sub-use · Rth 2:16 d6 wobble
+= fold. **Two CC catches against reviewer wording, both accepted + logged:** (1) "two labeled
+satellites" would have gate-2-merged the majority-distinct reproof cluster — corrected to two peers;
+(2) "count 3/15" — hint use removes the word from the calibration count per the explicit Queue-4
+term; count stays 2/15. Committed wording governs, both directions.
+**Hinted attempt 1 (key 79c2b36f) = structural inversion:** reproof folded into sense 1 (gate-2
+merge), demoted nations promoted to peer, Rth 2:16 on "mildest instance" prose (#33), Luk 9:55
+dropped entirely (presence gap); machine gates all green (#30). Adjudication pre-registered incl.
+the partial-defiance tightening (3-sense reproof+nations-peer would also fail). **Hinted attempt 2
+(key 38b56cad) = branch (b) pass on every term:** 2 senses correct polarity, 37/37 placed, tails
+disjoint (#37 fifth consecutive hold), all pins home (Zec/Jud "[twice]" marking the true double;
+Luk 23:40 sense 1 on core company despite conduct semantics). **#28 caveat on record:** citation
+gate 30/30 covers PROSE refs only — comma-shorthand tails are gate-invisible; tail correctness
+rests on the hint-construction chain (floor list → hand-check → byte-copy), sound here. **LXX
+non-fire ruled CORRECT** (prior fire was on an all-OT peer shelf that no longer exists; sense 1
+NT-majority, sense 2 3/3 split — skew condition unmet). **#36 both-ways checks:** Psa 68:30 "wild
+beasts of the reed" = ABP's own text (engine cleared; inversions 3-for-4 this batch) · renderings
+verified full-corpus: all reproach-family + the known "may" defect row, which the draft's own gloss
+note defuses as optative grammar (the double-tag leaked into the feed and the engine handled it).
+Apply: --require-cache --from-draw + hint flags verbatim; pass line + stamp confirmed; prose
+byte-matched. **Render PASS (7-point checklist).** **SPLITTER TICKET fed two exhibits (TODO.md
+e208e5d/cf028f5/94b7e2d):** Jud 1:9 tag-duplicated onto helper "May" (verified vs eSword + ABP app
+= BUILD artifact) + Rth 2:16 inverse shape (English pooled on the negation row, verb row blank) —
+one root, phrase-to-slot assignment; 731 Jud-shape pairs sized corpus-wide; maintenance-window fix.
+**Header-gloss ticket THIRD SIGHTING:** header "rebuke, chide" vs the card's own gloss notes arguing
+the blame-register is wrong for most sense-1 uses. **RANGE typography answered from code:** Range/
+Coverage render without the serif class (.lex-prose) that senses + gloss notes get — standing
+template gap on all cards, two-line fix proposed, held for JP. Tallies: describe-don't-preach
+10-for-10 · fold-compression 1 of 7 · "Grounding refs:" 0 · count 2/15 · streak 0.
+
 ### BATCH-3 SESSION 1 CLOSE (2026-07-09) — tally + case law; session 2 preconditions
 **Tally: 7 shipped / 2 escapes (γόνυ invented-shelf, νίπτω cluster-break — BOTH caught only by the human
 floor-vs-ship comparison, machine gates green both times: the detector ticket's whole evidentiary basis) /
