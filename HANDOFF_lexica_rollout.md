@@ -328,7 +328,18 @@ fabrication checkpoint (#36: verify before claiming fabrication — ABP false-po
 Parked words are not yours to reopen: πολύς, ἄκανθα, κύων (κύων's revisit = "adjudicate the
 ambiguity or enforce the majority" on Deu 23:18, JP's call at a future window).
 
-## BATCH-3 SESSION 3 LOG (2026-07-09) — OPEN; running record, banked as it happens.
+## BATCH-3 SESSION 3 LOG (2026-07-09) — CLOSED. **CALIBRATION PAUSED at close (JP ruling): the
+## splitter double-tag data fix runs FIRST, in its own dedicated session — charter =
+## CHARTER_splitter_fix.md (no-write gate + acceptance checks are IN the charter, ruled verbatim).**
+**Close state: 3 shipped this session (ἐπιτιμάω · διανοίγω · βιβρώσκω, all LIVE) · streak 0 ·
+βιβρώσκω COUNT PENDING JP (3 options, audit doc G977 entry; CC recommends 3/15 + intervention-tally
+data point) · next-word decision (κατανοέω vs RED) travels with that ruling · GREEN remaining 3:
+ταμεῖον G5009 · ὑπομονή G5281 (pre-register endurance-vs-hope split BEFORE its floor) · κατανοέω
+G2657 · RED remaining 2: περιτομή G4061 · σκληρύνω G4645. JP ruling behind the pause: cards are
+permanent surfaces — patching around bad data in permanent prose is backwards; fix the data, then
+delete the two stale "may" gloss bullets (G977 + G2008) and re-render. Ordering ruled: data fix →
+exhibit words verify clean → bullet swaps → re-render → calibration resumes. Inherited watch
+unadjudicated as ever: session-2 overload look-trigger fire.**
 **Opened:** clearing gate PASSED all three checks (4c7bcc9 · session-2 log grep · lesson #37 grep).
 **Opener selection (lesson #35 applied):** six-way book-distribution read on the remaining GREEN run
 BEFORE any prediction; ranking banked (ὑπομονή worst — OT hope/expectation vs NT endurance two-sense

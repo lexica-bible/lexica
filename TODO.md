@@ -146,6 +146,9 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   word highlighting read straight from the words table, so they show the double-tag too ("may 1"
   chip; Job 18:13 highlights both words). Fix acceptance check must include "no helper-word chips"
   on the three exhibit words (Jud 1:9, Rth 2:16, Job 18:13), not just corrected word rows.
+  **ESCALATED 2026-07-09 (JP): fix NOW in a dedicated session, not a maintenance window —
+  calibration paused behind it. Charter with no-write gate + acceptance checks:
+  `CHARTER_splitter_fix.md`.**
 - **Place-map pin = interim plurality heuristic** (2026-07-05). The map on a place word card
   (`_pin_from_rows` in views_metav.py) picks the coordinate the MOST metav_places rows agree on when a
   name carries several referents (Lebanon = region + Mount Hermon + a Jerusalem structure). Safe direction:
