@@ -429,6 +429,24 @@ reversible, sequencing-only): skip the 3-run and go straight to 10 for any word 
 book share (the #35 tell). Option 2 (bigger save, touches the bar definitions — needs its own
 validation pass): test whether 6–7 draws carry the 10-run's signal. Neither ruled; JP's call at a
 session boundary, not mid-word.
+**THRESHOLD FALSIFIED BY CONTROL DATA (banked before the number shipped — the check worked):** the
+proposed ≥25% poetry/prophets trigger has NO clean split on the 14-word validation pull: σελήνη 61.5%
++ κῆπος 55.3% both PASSED at 3 draws (clean ships) while δάμαλις escalated at 23.7%. Book share flags
+risk (#35's soft form stands) but cannot decide sequencing mechanically. **REVISED RULE PROPOSED
+(grounds = the 6-for-6 streak itself, not the book table): for the REMAINDER OF BATCH 3 ONLY — a
+hand-picked hard tail — skip the 3-run, straight to 10. Expires at batch close; reversible.** Note:
+validation-pull percentages include dotted-cousin rows (strongs_base grouping) — conclusion robust,
+the σελήνη/δάμαλις gap is huge either way.
+**SCALE-PROTOCOL DECISION ITEM (banked for the batch-3 close window / build-plan economics; ~14,000
+lemmas total, honest projection = thousands of dollars under the calibration protocol):** calibration
+is deliberately expensive (buying trust in the bars); the batch-build phase should run the CHEAPEST
+protocol calibration VALIDATED — the cheap path must be validated during calibration to be licensed
+at scale. Four levers, biggest first: (1) occ-count gradient — ≤5-occ words can't carry complex sense
+structure; 2–3 draw floor (or 1 draw + audit) for the long tail, which is MOST of the dictionary;
+(2) N=10 → N=6-7 validation experiment — rerun two settled words at N=7, check every ruling
+reproduces (~35% cut on every hard word if it holds); (3) model tiering — cheaper model for floor
+draws (clustering agreement, not prose), Sonnet for the build draw; needs a head-to-head on a
+settled word first; (4) the sequencing fix (real but small). None ruled; JP's call at batch close.
 
 ## BATCH-3 SESSION 2 LOG (2026-07-09) — CLOSED; see the audit doc's SESSION 2 CLOSE entry for the
 ## tally + case law. This block is the session's running record, banked as it happened.
