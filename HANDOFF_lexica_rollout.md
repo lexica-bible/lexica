@@ -399,6 +399,25 @@ Psa 22:16+22:20 → categorical vs 9/10+5/5 insult company · Psa 68:23 → cate
 Job 30:1 → categorical vs 6/10 literal. Zero machine fires both pulls. κάλαμος 3-pull pattern
 replaying per #32 (mode sampled, not obeyed). Pull 3 = last plain pull before cap-out → mode-hint
 with pinned homes.
+**Pull 3 (same key) = BAR-FAIL #3 → CAP-OUT.** 2-sense minority shape; Psa 59:6 DOUBLE-SHELVED [1,2]
+(machine fire; 59:14 rides both lists too) = automatic fail; Deu 23:18 silently literal AGAIN (3-pull
+record on that verse: epithet-hedged / literal-silent / literal-silent). Note: this fold DID label the
+categorical sub-uses (visibility half improved while membership broke). Three pulls, three shapes
+{2,3,2}, three distinct break sets — sampling regime fully characterized (κάλαμος twin; JP's
+three-disjoint-break-sets line satisfied). Zero relevant machine fires except the p3 double-shelf.
+**HINT FLAGS (verbatim reference for the apply — hinted applies repeat these exactly):**
+  --structure-hint "The literal animal - dog as physical creature: the Kings scavenging-judgment
+  formula, behavioral similes (Jdg 7:5; Psa 59:6, 59:14; Pro 7:22, 26:11, 26:17; 2Pe 2:22; Ecc 9:4;
+  Luk 16:21), rulings and valuations (Exo 11:7, 22:31; Isa 66:3; Job 30:1)"
+  --structure-hint "Dyadic insult or self-abasement between persons - speaker places self or one
+  adversary on a status ladder: 1Sa 17:43, 24:14; 2Sa 3:8, 9:8, 16:9; 2Ki 8:13; and the hostile-pack
+  Psalms 22:16, 22:20, 68:23"
+  --structure-hint "Categorical label marking a class of persons outside a boundary: Isa 56:10-11;
+  Mat 7:6; Php 3:2; Rev 22:15; Deu 23:18"
+**Pre-clearances proposed to JP (κάλαμος lesson):** Psa 59:6/59:14 literal-only (simile-about-enemies
+prose fine, citation on literal shelf only; repeat double-shelf = fail not bridge) · Deu 23:18 epithet
+per 6/10 home (hedged sanctuary-context prose welcome; silent literal = fail). Awaiting JP ruling +
+hinted-draw output.
 
 ## BATCH-3 SESSION 1 LOG (2026-07-08/09) — shadow calibration opened. Read this + the audit doc's
 ## batch-3 entries to resume session 2.
