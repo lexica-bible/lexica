@@ -611,6 +611,16 @@ the arrow" (the stone is textual; suspicion checked BEFORE claimed, cleared the 
 "arrows of his marauders" verbatim ✓. Residue: "in a contest" = not in verse, blemish-no-action
 (substance textual). LXX note fired 1+2 (skew watch satisfied). → apply --require-cache --from-draw
 a41ba4d3 + both flags verbatim (single-draft key, fingerprint waived).
+**JP rulings + findings banked pre-apply:** "in a contest" = blemish-no-action CONFIRMED (παράπτωμα
+"public accountability" class) · **SYMMETRIC-CHECKPOINT lesson candidate:** 3 fabrication checkpoints
+this session, 2 cleared the ENGINE (Psa 64:7, Lam 3:12) — ABP renderings are strange enough that
+reviewer intuition false-positives on them; "verify before claiming fabrication, not just before
+claiming attestation" · **preference-gradient 2-for-2 both directions** (predicted κύων's wall;
+predicted-absent = no wall on Psa 11:2) · **tail-list refinement (4th data point):** the generator is
+tail-lists WITHOUT disjointness enforcement — the hint's explicit memberships enforced disjointness;
+V8 candidates = cite-in-prose-only OR a disjointness check.
+**APPLIED 2026-07-09: hint line + "using reviewed draw … (key a41ba4d3) — no model call" CONFIRMED
+verbatim; prose byte-matches (4502/826); written to lexica_def. Render pass pending.**
 
 ## BATCH-3 SESSION 1 LOG (2026-07-08/09) — shadow calibration opened. Read this + the audit doc's
 ## batch-3 entries to resume session 2.
