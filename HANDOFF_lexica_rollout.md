@@ -499,6 +499,16 @@ unpredicted. Close-out decision.
   --structure-hint "The 'under one's own vine and fig tree' formula - a fixed idiom of settled
   security and undisturbed possession, exactly these five: 1Ki 4:25; 2Ki 18:31; Isa 36:16; Mic 4:4;
   Zec 3:10"
+**Hinted first draw (key 1c350763, single-draft key — fingerprint waived) = PASSED both audits.**
+Presence floor: 38/38 TOTAL coverage (33 literal + formula 5; third total-coverage card) — the
+degenerate-draw fear inverted. Jdg 9:10 cleanest tolerance path (literal-only, fruit-behavior
+sub-use). No double-shelves. Overload (5 sub-uses) ruled KEEP by both (distinct discourse frames,
+#14; Son 2:13/Mat 24:32 seam = carve-aesthetics, both correctly placed). Ficus carica = uncontested
+species (noted for the κάλαμος precedent, not doubted). Mat 21:19 ×2 unmarked = blemish-no-action.
+**συκῆ PRE-REGISTRATION FINAL (JP, banked): freight stayed out at floor (13/13) AND at draft (prose
+describes narrative acts, never adjudicates) — both halves answered, WATCH RETIRED on this word.**
+Pending: gloss-note check (2Ki 18:31 bare "tree" AND sole divergence — a second row = note edit, not
+redraw) → apply (flags verbatim + --require-cache) → pass-line read → render.
 
 ## BATCH-3 SESSION 1 LOG (2026-07-08/09) — shadow calibration opened. Read this + the audit doc's
 ## batch-3 entries to resume session 2.
