@@ -570,6 +570,30 @@ citation tail-lists swept borders onto both shelves; heaviest double count of th
 FIXED (sense 1 only) and the Psa 127:4 note-mismatch cured — then broke new ground: the Deu 32 pair
 split exactly as pre-named (32:42 sense-2-only, 32:23 both = 7a coherence break). Psa 64:7 prose
 tracked "arrow of infants" verbatim ✓. Whack-a-mole pattern continues. Pull 3 = last plain pull.
+**TAIL-LIST MECHANISM (JP observation pull 2, CONFIRMED 3-for-3 at pull 3):** the five pull-2 doubles
+all sat in per-sense parenthetical citation tail-lists while prose placed them once; pull 1 (few
+tails) = 1 double, pull 2 (comprehensive tails) = 5, pull 3 (prose-only cites) = 0. "Comprehensive
+per-sense citation lists are a double-shelf generator on words with soft borders." Cross-checked vs
+record: παράπτωμα + συκῆ shipped cards cite in-prose, zero doubles at ship. → ENGINE_LESSONS entry
+candidate + V8 prompt item (cite-in-prose-only). Format-level finding, not placement-level.
+**Pull 3 (same key) = BAR-FAIL #3 → CAP-OUT.** Zero double-shelves (the correlation's third point) but:
+2Ki 13:17 figurative vs 7/10 literal company WITH an explicit "the two senses overlap at this verse"
+hedge = 7c violation (card won't commit to its own citation) — the verse JP pre-named at pull 2 ·
+"being setting on fire" prose garble (proofread catch, unshippable) · Isa 49:2 pin dodged by omission
+(uncited). Two machine fires = known noise classes. Three pulls: {Isa 49:2 double} → {5 tail doubles}
+→ {13:17 hedge-break} — corrections propagate, breaks move; whack-a-mole third word running.
+**HINT FLAGS (verbatim reference — apply must repeat exactly; theophany stability pick = FIGURATIVE,
+the 4-of-5 figurative-draw composition, κάλαμος stability-pick precedent):**
+  --structure-hint "The literal projectile shot or wielded as a physical weapon - combat, hunting,
+  siege machinery, the lance-trio contexts as a delivery-mode sub-use, and the quiver/symbolic-act
+  verses: 1Sa 20:36-37; 2Sa 18:14; 2Ki 9:24, 13:15-18 (including 13:17, the arrow Joash physically
+  shoots), 19:32; 1Ch 12:2; 2Ch 26:15; Job 20:25, 30:13, 34:6, 39:22; Psa 11:2, 91:5, 120:4, 127:4;
+  Isa 5:28, 7:24, 37:33, 49:2; Lam 3:12; Joe 2:8"
+  --structure-hint "Affliction, hostility, or divine action figured as arrows - no literal archer in
+  view: Job 6:4, 16:9; Psa 7:13, 38:2, 45:5, 57:4, 64:7; the divine-storm set whole and together
+  (2Sa 22:15; Psa 18:14, 77:17, 144:6; Deu 32:23, 32:42); Eph 6:16 inside this sense, never alone"
+Weak-majority Psalms (11:2, 91:5, 120:4, 127:4) pinned literal with their floor companion Isa 49:2.
+Awaiting JP pin verification.
 
 ## BATCH-3 SESSION 1 LOG (2026-07-08/09) — shadow calibration opened. Read this + the audit doc's
 ## batch-3 entries to resume session 2.
