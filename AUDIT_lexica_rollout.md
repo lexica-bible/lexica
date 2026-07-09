@@ -1937,6 +1937,47 @@ intervention (minor class). If swap-class interventions should be streak-compati
 criterion amendment, JP's call. Tallies: describe-don't-preach 11-for-11 · fold-compression 1 of 8 ·
 "Grounding refs:" 0 · count 2/15 · streak 0.
 
+### G977 βιβρώσκω — LIVE (2 senses, PLAIN PULL attempt 1 + one reword-class swap). Streak 0
+(ship-with-intervention, minor class). **COUNT QUESTION OPEN FOR JP** (see below). First word run
+under the straight-to-10 rule (no 3-run — standard path, not an escalation) and the first
+genuinely GREEN-shaped board of the batch.
+Occ table pre-pulled: initially 38 verses / 40 occ (Job 18:13 ×2, Isa 51:8 ×2); no dotted cousins.
+**CORRECTED MID-WORD: 37 verses / 39 real occ, Isa 51:8 the SOLE true double** ("will be eaten" +
+"shall be eaten" verified two content renderings) — Job 18:13's "double" = SPLITTER EXHIBIT 3
+("And may" + "be devoured" both tagged 977; ticket updated with the reviewer's DETECTION HEURISTIC:
+the cards' own gloss notes have defused this class twice unprompted — a helper-word gloss bullet is
+a free per-word detector — plus the downstream-surfaces line: renders-as chips + search highlights
+read the words table, fix acceptance must clear them on all three exhibit words).
+Floor (10 straight): {2:10} UNANIMOUS count; sense-2 membership IDENTICAL in 5 draws (Isa 9:18,
+Nah 1:10, Job 18:13, Isa 51:8, Jer 30:16) — certified well past 3×. Leviticus tail = subset
+sampling, all back-check flags folds (cultic twins carried by staying partners). Strain pins:
+Jos 9:5 literal 8/10 (d3 migration + d8 floor double-shelf = pre-named defiance point) · Isa 51:8
+figurative 9/10 · Jer 30:16 figurative-if-cited. **Plain pull 1 (key c44aece7) hit every bar:**
+2 senses = mode · sense 2 = certified five exact, "Isa 51:8 ×2" marked · Jos 9:5 literal · zero
+double-shelves · 38/38 tail coverage (fifth total-coverage card; #28 chain sound, per-book counts
+reconciled) · LXX fired BOTH senses (watch satisfied; 39/40 OT).
+**#36 checks (symmetric tally this session now 4 engine-clears / 1 catch):** "worm eaten" = ABP's
+own text at Jos 9:5 AND 9:12 (cleared) · the Hos-class import check came back clean here.
+**One defect, human-caught, machine-invisible: sub-use lead misnamed its group** ("formulaically in
+cultic law" over a list including Job 6:6, Isa 28:28, Jer 24:2/3/8). Ruled reword-class swap
+(diff-approved pre-write): → "is used formulaically to state whether and when a thing is or is not
+eaten"; "regulated object" left standing = blemish-no-action. Apply-then-swap sequencing held
+(pass line + stamp verified at each step; swap delta = the lead only, 2458→2440).
+**PRECEDENT BANKED (reviewer ruling on the overload fire): intra-sense organization is the
+engine's prose discretion provided memberships and sense boundaries match the floor** — the four
+sub-uses partition by grammatical form (a new shape), all floor-correct, disjoint; no #14 forced
+fold. Logged so the next form-organized card doesn't relitigate.
+**Render PASS (7-point); header gloss "eat" consistent — SECOND consecutive counter-example**
+(ticket stays 3 sightings; the header mechanism gets simple words right). "may 1" chip + Job 18:13
+double-highlight = downstream surfaces of the splitter defect, interim state correct (the card's
+own gloss note does display-side damage control).
+**COUNT QUESTION (JP to rule, three options on the table):** (a) reviewer: ON-count 3/15 — no hint,
+no failed screen, Queue-4's escalation clause doesn't trigger; (b) γόνυ precedent: the machine-
+invisible human-caught defect counts against N (escape-class); (c) CC middle path (recommended):
+3/15 AND the swap logged in the intervention-class tally as a "GREEN-would-have-shipped-this" data
+point feeding the batch-close fabrication-check decision. Tallies: describe-don't-preach 12-for-12 ·
+fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0 · count pending JP.
+
 ### BATCH-3 SESSION 1 CLOSE (2026-07-09) — tally + case law; session 2 preconditions
 **Tally: 7 shipped / 2 escapes (γόνυ invented-shelf, νίπτω cluster-break — BOTH caught only by the human
 floor-vs-ship comparison, machine gates green both times: the detector ticket's whole evidentiary basis) /

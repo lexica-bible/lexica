@@ -474,6 +474,19 @@ batch-close decision on whether the cheap batch-build path needs a fabrication-c
 hinted), χριστός (2 ruled swaps, also hinted), διανοίγω (1 delete-swap, PLAIN — the only
 swap-on-plain ship); clean-plain ships: δίκτυον, σελήνη, κῆπος(AMBER), γόνυ, νίπτω (the 2 escapes),
 παράπτωμα (pull 2).
+**G977 βιβρώσκω CLOSED, LIVE 2026-07-09** (first word under straight-to-10; unanimous {2:10} floor,
+plain pull 1, one reword-class swap ["cultic law" lead misnamed its group — machine-invisible,
+human-caught], render PASS). Splitter EXHIBIT 3 = Job 18:13 ("And may"+"be devoured" both 977; occ
+corrected 39/37, Isa 51:8 sole true double; gloss-note-as-detector heuristic + downstream-surfaces
+line banked to the ticket 63dbd6f). #36 session tally 4 engine-clears / 1 catch. Precedent:
+intra-sense form-based organization = engine's prose discretion when memberships match the floor.
+Header-gloss counter-example #2. Swap-on-plain ship #2 (with διανοίγω). **COUNT PENDING JP** —
+options (a) on-count 3/15 (reviewer) · (b) escape-class per γόνυ precedent · (c) CC middle path
+RECOMMENDED: 3/15 + swap logged as "GREEN-would-have-shipped-this" data point. Full record: audit
+doc G977 entry. **Session-3 running tally: shipped ἐπιτιμάω + διανοίγω (off-count) + βιβρώσκω
+(count pending) · streak 0 · describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding
+refs:" 0 · GREEN remaining 3: ταμεῖον G5009 · ὑπομονή G5281 · κατανοέω G2657 · RED remaining 2:
+περιτομή G4061 · σκληρύνω G4645.**
 
 ## BATCH-3 SESSION 2 LOG (2026-07-09) — CLOSED; see the audit doc's SESSION 2 CLOSE entry for the
 ## tally + case law. This block is the session's running record, banked as it happened.

@@ -142,6 +142,10 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   "may = optative grammar, not a rendering" bullet) — a gloss-note bullet flagging a bare helper
   word as a "rendering" is a free per-word detector for this ticket; grep shipped cards' gloss
   notes for helper-word bullets when the fix window opens.
+  **DOWNSTREAM SURFACES (reviewer, G977 render):** the "ABP RENDERS AS" chips and the search-result
+  word highlighting read straight from the words table, so they show the double-tag too ("may 1"
+  chip; Job 18:13 highlights both words). Fix acceptance check must include "no helper-word chips"
+  on the three exhibit words (Jud 1:9, Rth 2:16, Job 18:13), not just corrected word rows.
 - **Place-map pin = interim plurality heuristic** (2026-07-05). The map on a place word card
   (`_pin_from_rows` in views_metav.py) picks the coordinate the MOST metav_places rows agree on when a
   name carries several referents (Lebanon = region + Mount Hermon + a Jerusalem structure). Safe direction:
