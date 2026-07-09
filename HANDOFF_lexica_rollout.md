@@ -529,6 +529,25 @@ shipping sense; a non-fire = machine-gate question (shared component just code-c
 arrows (Deu 32, Job 6): arrows are arrows, who looses them is context — BUT if the floor carves a
 stable God's-arrows cluster (the συκῆ formula-five shape), that's attested, we follow the evidence;
 "pre-registration cuts against imported carves, not attested ones."
+**βέλος occ table:** 38 base verses / 40 occ (2Ki 13:15 ×2, 13:17 ×2); dotted 956.1 (Eze 4:2, 17:17,
+21:22, Jer 51:27) excluded, no leak. 3-run {2:2,3:1} + Isa 49:2 double-shelved 2/3 → mandated 10-run
+(FOURTH escalation tonight, βέλος off-count). **LESSON CANDIDATE (JP, banked): corpus size + referent
+concreteness are weak floor-stability predictors; figurative-use density is the better tell** (βέλος:
+half the corpus is Psalms/Job poetry — the tell was in the book column all along). Not the
+scorable-word hope failing; the pre-word difficulty estimate was wrong.
+**10-run {1:1,2:8,4:1} — floor called STABLE at 2-sense mode (literal projectile | affliction-figured-
+as-arrows), κάλαμος grouping-variance regime; count mode 8/10 strong → PLAIN PULLS FIRST (no
+first-draw hint; δάμαλις extension needs 0-exact-mode count).** Findings vs the three pre-reads:
+figurative core CERTIFIES (Job 6:4+Psa 38:2 10/10, +57:4/16:9/64:7 9-10/10, Eph 6:16 with them 8/10;
+own shelf 6/10 majority-distinct) · lance trio (Job 30:13/34:6/39:22) = certified CLUSTER 10/10
+internal, own shelf 3× identical membership (d2/d3/d9) but majority home literal 7/10 → sub-use right,
+peer = minority · Isa 49:2 RESOLVED literal 8/10 (no Deu 23:18 rerun) · **theophany set (2Sa 22:15,
+Psa 18:14, 77:17, 144:6, Deu 32:23; internal 9-10/10) = TRUE 5/5 literal-vs-figurative → 7a: either
+home legal, conditions = set stays together + single-shelved.** Floor double-shelves (d8 Psa 127:4;
+d10 2Sa 22:15+Psa 18:14) = border strain markers. **SHIP BARS BANKED:** Eph 6:16 inside the figurative
+sense, headline = affliction/hostility-figured-as-arrows NOT "spiritual attack" · lance trio
+sub-use-or-fold, not peer · Isa 49:2 literal · theophany together, single-shelved, either home ·
+double-shelf = fail · LXX-skew watch fires at ship (note should fire on any shipping sense).
 
 ## BATCH-3 SESSION 1 LOG (2026-07-08/09) — shadow calibration opened. Read this + the audit doc's
 ## batch-3 entries to resume session 2.
