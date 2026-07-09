@@ -509,6 +509,9 @@ species (noted for the κάλαμος precedent, not doubted). Mat 21:19 ×2 unm
 describes narrative acts, never adjudicates) — both halves answered, WATCH RETIRED on this word.**
 Pending: gloss-note check (2Ki 18:31 bare "tree" AND sole divergence — a second row = note edit, not
 redraw) → apply (flags verbatim + --require-cache) → pass-line read → render.
+**Gloss check PASSED (exactly one row: 2Ki 18:31 "tree" — divergence real AND sole, full-corpus).
+APPLIED 2026-07-09: hint-injection line + "using reviewed draw … (key 1c350763) — no model call" both
+confirmed verbatim; prose byte-matches reviewed draft; written to lexica_def. Render pass pending.**
 
 ## BATCH-3 SESSION 1 LOG (2026-07-08/09) — shadow calibration opened. Read this + the audit doc's
 ## batch-3 entries to resume session 2.
