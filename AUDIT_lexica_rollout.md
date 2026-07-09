@@ -1746,6 +1746,33 @@ watch #4) — a prompt wording fix is a VERSE_PROMPT change = engine restructuri
 (standing rule 7 contrast clause); V7.1 waits for the batch-3 close window. Debt accrual capped at the
 ≤12 remaining roster words; scrub-vs-accrue economics noted for the window.
 
+### G2965 κύων — PARKED (pre-registered clause (a): Deu 23:18 double-shelved in BOTH hinted draws).
+Off-count (escalated at floor). The mechanism's first membership wall — record 6-for-8 after two
+defiances, structure obedience 8-for-8.
+Occ table pre-pulled: 37 verses / 38 occ (1Ki 21:19 ×2); dotted cousins .1/.2/.3/.4 all excluded, no
+leak. Floor: 3-run job-boundary wobble → 10-run **{2:4,3:6} STABLE at 3-sense mode** (grouping-variance
+regime): literal · dyadic insult (Samuel/Kings six 10/10) · categorical epithet (Mat 7:6/Php 3:2/
+Rev 22:15 10/10); figurative clusters never exchange members; fringe scatter = Isa 56:11, Deu 23:18,
+Ecc 9:4, 2Pe 2:22. Majority homes pre-registered BEFORE any pull (060be2c) — the ship comparison ran
+against a committed list all five draws. **Three plain pulls, three shapes {2,3,2}, three distinct
+break sets, zero relevant machine fires** (p1: Isa 56:10–11→literal vs 8/10, Ecc 9:4→figurative vs
+7/9, Psa 68:23→literal vs 5/6 — while 2Pe 2:22 was filed correctly; p2: mode shape + both p1 fixes,
+then Deu 23:18 SILENT literal + Psalms trio & Job 30:1 → categorical; p3: Psa 59:6 double-shelf +
+Deu 23:18 silent literal again) → cap-out. **Hinted draw 1 (flags banked verbatim pre-run, 60e36f4):
+structure fully obeyed, Deu 23:18 [1,3] + Isa 56:10 [1,3] double-shelves = first membership defiance.
+Hinted draw 2 (adjudication pre-registered pre-output, 0000f9b): Isa 56:10 CURED, 37/38 placements
+home, Deu 23:18 [1,3] AGAIN → clause (a) park.** Case law/data born here: **hint compliance inversely
+related to the engine's own placement-preference strength** (JP observation, then confirmed: the
+weak-preference verse bent, the 2-of-3 + 4/10-minority verse held through two hints) · παράπτωμα-p1 +
+κύων-p1 = the lesson candidate "placement check compares against the floor, never the draft's own
+justification" (Deu 23:18's three fluent, contradictory filings across consecutive pulls = the
+cleanest paired exhibit) · pre-registration timing discipline (homes before pulls, adjudication before
+output) held end-to-end. **Revisit question (the ἄκανθα pattern):** the word needs a RULING, not a
+redraw — adjudicated keep-both on Deu 23:18 (commodity-price vs cultic-outsider, genuinely two-way
+text) or a V8-window mechanism forcing single-shelf placement; everything else ships as-is. Park
+roster: πολύς + ἄκανθα + κύων. κύων pre-registration ruled FIRED (job-boundary wobble → mandatory
+10-run → off GREEN; committed wording governs, ἄκανθα precedent).
+
 ### BATCH-3 SESSION 1 CLOSE (2026-07-09) — tally + case law; session 2 preconditions
 **Tally: 7 shipped / 2 escapes (γόνυ invented-shelf, νίπτω cluster-break — BOTH caught only by the human
 floor-vs-ship comparison, machine gates green both times: the detector ticket's whole evidentiary basis) /

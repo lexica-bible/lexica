@@ -448,6 +448,14 @@ engine was indifferent about and failed exactly where it has a preference. *Hint
 inversely related to the engine's own placement-preference strength.* Sharper than the ὀφθαλμός
 characterization. If parks: session ships = παράπτωμα only; parked = ἄκανθα + κύων; next word from
 remaining GREEN roster.
+**HINTED PULL 2 (key d4485213): clause (a) FIRED — Deu 23:18 double-shelved [1,3] AGAIN → κύων
+PARKED 2026-07-09.** Isa 56:10 cured, 37/38 placements home — the wall is ONE VERSE wide, held through
+two hinted draws in the same shape. Preference-strength observation CONFIRMED with a gradient (weak
+preference bent, strong held). Mechanism record: structure 8-for-8, membership 6-for-8. Full record +
+revisit question (ruling-not-redraw: keep-both adjudication on Deu 23:18 or V8 placement mechanism):
+audit doc G2965 entry. Park roster πολύς + ἄκανθα + κύων. Session tally: ships = παράπτωμα (RED);
+count 2/15; streak 0; GREEN remaining 8 (κύων off roster): συκῆ · βέλος · ταμεῖον · βιβρώσκω ·
+διανοίγω · ὑπομονή · ἐπιτιμάω · κατανοέω; RED remaining 2.
 
 ## BATCH-3 SESSION 1 LOG (2026-07-08/09) — shadow calibration opened. Read this + the audit doc's
 ## batch-3 entries to resume session 2.
