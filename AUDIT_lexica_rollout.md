@@ -1899,6 +1899,44 @@ Coverage render without the serif class (.lex-prose) that senses + gloss notes g
 template gap on all cards, two-line fix proposed, held for JP. Tallies: describe-don't-preach
 10-for-10 · fold-compression 1 of 7 · "Grounding refs:" 0 · count 2/15 · streak 0.
 
+### G1272 διανοίγω — LIVE (2 senses, PLAIN PULL attempt 1 + one delete-class swap). Off-count
+(escalated at 3-run), streak 0 (ship-with-intervention, MINOR class — see the open definition
+question below). Fourth total-coverage card (38/38).
+Occ table pre-pulled: 38 verses / 40 occ (Exo 13:12 ×2, Lam 2:16 ×2); no dotted cousins. 3-run
+{3:3} count-uniform, third shelf rotating + d1 floor double-shelves → mandated 10-run (6th straight
+escalation). 10-run {2:7,3:2,4:1} **STABLE at the 2-sense mode — exact modal carve repeats 4×**
+(inner-faculty = exactly Luk 24:32, 24:45, Act 16:14, 17:3, Hos 2:15; 10/10 co-travel). Both
+pre-registrations HELD (no surprises): inner-faculty core certified · womb formula inside physical
+(own carve 1/10, d7 — sub-use legal, peer = fail, "the mirror of ἐπιτιμάω's nations cluster").
+3-run's rotating third job = minority noise at depth (cosmic 2/10). Fringe majority-homed: Gen 3:5
+8/10 · Luk 24:31 physical (Emmaus recognition described-not-reshelved, pre-cleared) · Job 29:19
+7/10 · Job 38:32 8/10 · Pro 31:20, Zec 13:1. All 4 BACK-CHECK flags = folds (same-event twins:
+Eze 24:27/Mar 7:35/2Ki 6:20/Exo 13:12). #32 sequencing: exact mode → plain pull, no hint.
+**Plain pull 1 (key 3f592967) hit every banked bar:** 2 senses · core five exact · womb object-type
+paragraph (the card's best prose) · all pins home · zero double-shelves · 38/38 coverage · LXX fire
+sense 1 only (correct — OT-dominant shelf; sense 2 NT-majority). **#36 FABRICATION CATCH — first
+against the engine this session (after 3 engine-clearing inversions):** Hos 2:15 aside claimed the
+valley of Achor "becomes a door of hope" — that is the HEBREW/KJV reading; ABP reads "to open wide
+her understanding" (verse-check). Imported-content class (χριστός χρίσμα-aside precedent). **Ruled:
+delete-class swap** — apply from draw as-is, then fix_lexica_raw exact-once deletion (dry-run diff
+= the 45 cut chars ONLY, 3679→3634) → applied. Swap-sequencing process note: the fix tool edits the
+STORED row, so the order is apply-then-swap, each with its own dry-run gate.
+**Within-sense duplication RULED BLEMISH, ship (κάλαμος class cross-reference):** the hostile-
+register sub-use re-cites Lam 2:16/3:46/Eze 21:22 (already in the mouth list; Hab 3:14 its only
+unique verse). Severity test: doesn't mislead about floor structure (one sense, no placement error).
+**Merge-review tell coined (reviewer): "a sub-use adding ≤1 new verse while re-citing shelved
+members" = the redundant-regroup class** — also answers the overload fire (3 real sub-uses + 1
+regroup; no #14 forced fold). Lam 2:16 ×2 unmarked = blemish-no-action (συκῆ precedent).
+**Render PASS (8-point checklist), swap confirmed live. Header-gloss COUNTER-EXAMPLE:** "open
+fully" is consistent with the card body — the header mechanism can get it right; ticket stays at
+3 sightings. RANGE sans-serif = the known display-window item 6, no new sighting.
+**OPEN DEFINITION QUESTION for JP (streak criterion):** the criterion doesn't distinguish a hint
+escalation from one deleted parenthetical — this ship was clean-at-attempt-1 on structure with an
+audit-driven swap of an unattested aside. Ruled conservatively: streak stays 0, ship-with-
+intervention (minor class). If swap-class interventions should be streak-compatible, that's a
+criterion amendment, JP's call. Tallies: describe-don't-preach 11-for-11 · fold-compression 1 of 8 ·
+"Grounding refs:" 0 · count 2/15 · streak 0.
+
 ### BATCH-3 SESSION 1 CLOSE (2026-07-09) — tally + case law; session 2 preconditions
 **Tally: 7 shipped / 2 escapes (γόνυ invented-shelf, νίπτω cluster-break — BOTH caught only by the human
 floor-vs-ship comparison, machine gates green both times: the detector ticket's whole evidentiary basis) /

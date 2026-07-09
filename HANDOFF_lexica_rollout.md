@@ -447,6 +447,19 @@ structure; 2–3 draw floor (or 1 draw + audit) for the long tail, which is MOST
 reproduces (~35% cut on every hard word if it holds); (3) model tiering — cheaper model for floor
 draws (clustering agreement, not prose), Sonnet for the build draw; needs a head-to-head on a
 settled word first; (4) the sequencing fix (real but small). None ruled; JP's call at batch close.
+**διανοίγω 10-run: floor STABLE at 2-sense mode (exact carve 4×), both pre-registrations held,
+plain pull 1 hit every bar → ONE #36 fabrication catch (Hos 2:15 "door of hope" = Hebrew/KJV
+reading imported; ABP reads "open wide her understanding") → ruled delete-class swap via
+fix_lexica_raw (apply-then-swap sequencing; diff = the cut phrase only) → within-sense duplication
+ruled BLEMISH (κάλαμος cross-ref; reviewer's tell: sub-use adding ≤1 new verse re-citing shelved
+members = redundant regroup, answers the overload fire) → render PASS →**
+**διανοίγω CLOSED, LIVE 2026-07-09.** Ship-with-intervention (minor class), off-count, streak 0 +
+OPEN streak-criterion definition question flagged for JP (hint escalation vs one deleted
+parenthetical — criterion doesn't distinguish; audit entry has it). Header-gloss COUNTER-EXAMPLE
+logged ("open fully" consistent — ticket stays 3 sightings). **Session-3 running tally: shipped
+ἐπιτιμάω + διανοίγω (both off-count) · count 2/15 · streak 0 · describe-don't-preach 11-for-11 ·
+fold-compression 1 of 8 · "Grounding refs:" 0 · GREEN remaining 4: ταμεῖον G5009 · βιβρώσκω G977 ·
+ὑπομονή G5281 · κατανοέω G2657 · RED remaining 2: περιτομή G4061 · σκληρύνω G4645.**
 
 ## BATCH-3 SESSION 2 LOG (2026-07-09) — CLOSED; see the audit doc's SESSION 2 CLOSE entry for the
 ## tally + case law. This block is the session's running record, banked as it happened.
