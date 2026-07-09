@@ -565,6 +565,11 @@ of Sense 2" but the card cites it nowhere in the senses block.
 calamities" — the strange construction is the TEXT's own (LXX), not a fabrication. Shipping prose must
 track "arrow of infants" as written; "divine judgment" framing = interpretation, watch but not a
 block. Checkpoint closed.
+**Pull 2 (same key) = BAR-FAIL #2: FIVE double-shelves** (Deu 32:23, Psa 11:2, 45:5, 91:5, 127:4 —
+citation tail-lists swept borders onto both shelves; heaviest double count of the night). Isa 49:2
+FIXED (sense 1 only) and the Psa 127:4 note-mismatch cured — then broke new ground: the Deu 32 pair
+split exactly as pre-named (32:42 sense-2-only, 32:23 both = 7a coherence break). Psa 64:7 prose
+tracked "arrow of infants" verbatim ✓. Whack-a-mole pattern continues. Pull 3 = last plain pull.
 
 ## BATCH-3 SESSION 1 LOG (2026-07-08/09) — shadow calibration opened. Read this + the audit doc's
 ## batch-3 entries to resume session 2.
