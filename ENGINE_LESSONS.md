@@ -290,6 +290,18 @@ both drifting from the doc.
       pattern, not the instance — the empty coverage field was a latent copy that the first non-empty card would
       have surfaced silently). → per-field audits must cover every layer a field passes through: stored bytes,
       assembled prose, AND rendered output. *(audit: G266 ἁμαρτία render fix, 2026-07-08)*
+    - **UPDATE (κάλαμος 2026-07-09): trace a format defect to its LAYER before fixing it.** The "Calamus*"
+      broken italic looked like draw behavior (3-for-3 recurrence → a V8 prompt-fix hypothesis was half-banked)
+      and the ruled remedy was a fix_lexica_raw surgical edit — but a one-command read of the cached draw showed
+      the RAW was correctly paired (*Calamus*); the bite was the SPLITTER's greedy label-eater (`[\s:*]*`
+      swallowing a body-opening italic's asterisk), a deterministic assembly bug — which is WHY it recurred
+      3-for-3 (same input shape, same clip) and 0-for-5 on words whose notes didn't open italic. The surgical
+      fix would have edited the WRONG LAYER (corrupting a correct raw to compensate downstream); the prompt fix
+      would have steered the model against a bug it didn't cause. Fixed at the true layer (bounded eater +
+      locking test with a control assertion, `af8e296`); one bug had produced SEVEN downstream lint artifacts
+      across three pulls. → before fixing any format/render defect, read the artifact at each layer boundary
+      (raw → assembled → rendered) and fix where the bytes first go wrong. *(audit: G2563 splitter fix,
+      2026-07-09)*
 
 22. **A spurious sense can be a FEED defect, not a DRAW defect — and the poison can enter UPSTREAM of the sampler,
     from a corpus side-table the engine doesn't own.** ὄρος grew a "boundary" sense not because the prompt or draw
@@ -464,6 +476,20 @@ both drifting from the doc.
     → v2: refuse-by-default on any write whose draw is not the reviewed artifact (warning-after-write is
     not a control); content-addressing (#15's fix) makes the class impossible. Siblings: #15 (root), #10
     (review-what-ships), #21 (the render layer as diff). *(audit: G2563 κάλαμος apply incident, 2026-07-08)*
+
+32. **The ship engine SAMPLES the floor's carve distribution; it does not know which carve won — the floor
+    computes the mode, the hint transmits it.** κάλαμος: the 10-run showed a real modal carve (2-sense,
+    5/10 strict) over six rock-stable clusters, yet three plain ship pulls each landed on a DIFFERENT
+    minority grouping from that same distribution (imagery own-shelf 1/10 · imagery split 0/10 · aromatic
+    own-shelf 1/10) — zero repeats, no convergence, because plain re-rolls just re-sample. δάμαλις
+    confirmed from the other side: a 0-exact-mode floor ({1:3,2:3,3:3,4:1}) went straight to a hinted
+    first draw (JP ruling — the mechanism's post-cap-out-only constraint EXTENDED to first-draw use on
+    0-exact-mode floors) and shipped clean immediately. → predicts when hints are needed: any word whose
+    floor resolves by MAJORITY rather than unanimity is a hint candidate at ship time; v2 could make
+    mode-transmission automatic (feed the floor's modal carve as standing draw context, not an escalation
+    tool). Sibling of #20 (the hint's origin), #3 (draw-until-match regime-dependence — this names the
+    regime variable: mode strength). *(audit: G2563 3-pull whack-a-mole + G1151 first-draw hint,
+    2026-07-08/09)*
 
 ## Added by the ἔργον session (2026-07-08)
 

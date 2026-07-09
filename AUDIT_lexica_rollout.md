@@ -1649,3 +1649,78 @@ revisit: the 10-run's real finding is a ONE-STRONG-SENSE word with an uncertifia
 question is "ship as one sense with sub-uses?", NOT "which second sense is right." Park roster now
 πολύς + ἄκανθα (ἁμαρτία/ὀφθαλμός left via requeue); a 39-occ concrete noun parking = instability is not
 purely a frequency phenomenon (frequency-cutoff data point).
+
+### G4582 σελήνη — LIVE (1 sense, pull 1). COUNT 2/15, streak 1. The batch's first zero-fire word.
+Occurrence table pulled PRE-floor (procedure born here): 39 rows all x1. Floor 3/3 STABLE {1:3}, the
+apocalyptic verses (Isa 13:10/Joe 2:10/Mat 24:29/Rev 6:12-class) inside the single sense in every draw —
+the pre-registered eschatological-shelf watch answered at floor level. Ship draw: 1 sense, labeled
+constructions a–d (the codified ἔτος house shape), Gen 37:9 as plain referent (watch passed), construction
+(c) neutral ("reference point whose visible behavior signals…"), range anchors the referent literal
+throughout. Three floor-unseen citations verified by table (Luk 21:25, Gen 37:9, Jos 10:13). ZERO machine
+fires end-to-end — but the log framing is precise (JP): zero FLAG fires ≠ zero watches; both armed watches
+were HUMAN-layer only (the machine suite has nothing in range on an eschatological-shelf risk) — detector
+evidence line. Range's "functions as a symbol" ruled blemish-class-at-most (immediately anchored). Render
+pass (chat-Claude relay — standing arrangement born this word): clean.
+
+### G2779 κῆπος — LIVE (1 sense, pull 1, AMBER via sub-use overload). Off GREEN count, streak 2.
+Floor 3/3 STABLE {1:3}, mirror invariant held (header 38 = table 38: 34 verses, 4 doubles). Both
+pre-registrations passed: named gardens (Gethsemane/tomb) as plain narrative locations; Song cluster as
+setting, Son 4:12 NOT equated with the bride. Son 6:2 tail-trap (x2, never floor-cited) verified clean.
+Overload fire (6 sub-uses) ruled KEEP as drawn — sub-uses 2 vs 6 share a surface (named garden) but differ
+in job (topographical fixture vs narrative scene); counter's ruled record after this word: look-trigger
+working, correct carve. Uncited leftovers = sampling. Render pass clean; the six undifferentiated
+"Sub-use:" paragraphs = exhibit A for the banked indent ticket; LXX-note ⓘ ticket also banked off this card.
+
+### G2563 κάλαμος — LIVE (2 senses, attempt 4 via structure-hint + APPLY INCIDENT + SPLITTER FIX). Off-count
+(escalated), streak 0. The expensive word — most of what it bought, the next 6,000 words inherit.
+**Floor:** 3-run scattered {2,3,5} but clusters solid → escalated 10-run: mode 2-sense 8/10 (5/8 strict),
+six clusters 3/3-stable internally, per-cluster majority homes clear (imagery→plant 7/10, aromatic→plant
+9/10, pen/measuring/mocking→implement) — the GROUPING-VARIANCE regime named here (vs ἄκανθα's
+membership-scatter; taxonomy entry). **Three plain pulls, three DIFFERENT clusters promoted (zero repeats):**
+p1 imagery own-shelf = BAR-FAIL (legal-but-minority 1/10 shape, clusters intact — class DISTINGUISHED from
+escape, JP ruling); p2 imagery SPLIT (crushed-only shelf 0/13 attested + cluster broken = misplacement
+class); p3 aromatic own-shelf (bar-fail). Cap-out → hinted draw passed the full bar first try (mechanism
+6-for-6) — evidence for ENGINE_LESSONS #32 (sampler-not-mode-knower). **APPLY INCIDENT (#31):** CC's apply
+omitted the hint flags → input moved → cache ruled stale → FRESH UNREVIEWED prose drawn AND WRITTEN (three
+output warnings unread) → unreviewed card (with unverified *Acorus calamus* claim) LIVE through a render
+pass; caught by JP's screenshot-vs-reviewed-draw diff (render layer's second save). Ruled procedures:
+--require-cache every apply · read the pass line before render · hinted applies repeat hint flags verbatim.
+Recovery exposed the #15 corollary: THREE drafts had carried one key (input unchanged) — content-fingerprint
+check before --from-draw (scoped: multi-draft keys only); content-hash ticket = second half of the
+refuse-by-default ticket. **SPLITTER FIX (af8e296):** "Calamus*" recurring 3-for-3 was NOT draw behavior —
+the raw was correctly paired; _SECTION_RE's greedy `[\s:*]*` ate a body-opening italic's asterisk
+(deterministic; 7 downstream lint artifacts from 1 bug). Bounded eater + locking test (control assertion:
+old pattern must fail the fixture) in CI+hook; V8 prompt-fix hypothesis killed; #21 layer-tracing update.
+Final card: exact Ezekiel citations (40:5 ×3 / 40:7 ×4 / 40:8 ×2 verified), calamus gloss note strong,
+describe-don't-preach 5-for-5 through this word. New lint noise shapes logged: case-position,
+lemma-transliteration-as-claimed-gloss. Resplit + render pass: one-character diff, clean.
+
+### G1151 δάμαλις — LIVE (3 senses, FIRST-DRAW structure-hint). Off-count (escalated), streak 0.
+THE MIDDLE-CASE TYPE SPECIMEN. Occurrence table pre-pulled (37 verses, Deu 21:4 x2 = 38; mirror held).
+Floor: 3-run scatter {1,2,3} → 10-run NO exact mode ({1:3,2:3,3:3,4:1}) but clusters rock-stable (animal ·
+calf-trio 10/10 · similes 9-10/10) and the 3-sense carve repeated IDENTICALLY 3× (d5/d7/d9). **JP middle-case
+ruling (new case law): shippable when (i) cluster membership stable at depth, (ii) a complete carve repeats
+identically in ≥3 draws (pinned at δάμαλις's own showing, revisable downward with evidence), (iii) every
+contested placement majority-homed or 7a-selected.** Contested placements: Isa 5:18 → similes (9/10 at
+depth, REVERSING the 3-run's 2/3 animal lean — depth wins); Jdg 14:18 → animal (7/10); **calves dead 5/5 →
+7a selection = OWN SHELF, on referent-class grounds** (the word names manufactured golden objects; folding
+would falsify sense 1's headline for four citations; theologically neutral both ways). **Mechanism-rule
+EXTENSION (JP): first-draw hint legal on 0-exact-mode floors** (κάλαμος's three-pull record = the evidence
+plain pulls just sample the scatter). Hinted first draw shipped clean: all clusters homed, Heb 9:13
+describe-don't-preach (6-for-6), Amo 4:1 contempt = the text's own, LXX provenance fired on ALL THREE senses
+(37/1 split behaving; threshold question closed), TOTAL citation coverage (all 37 verses; second total-
+coverage card after δίκτυον), "Dan" dangling-ref fire = the canonical instance of its own noise class.
+Render pass full (first dash-bullet card). Multi-sense LXX-footnote display ticket banked off this card.
+
+### BATCH-3 SESSION 1 CLOSE (2026-07-09) — tally + case law; session 2 preconditions
+**Tally: 7 shipped / 2 escapes (γόνυ invented-shelf, νίπτω cluster-break — BOTH caught only by the human
+floor-vs-ship comparison, machine gates green both times: the detector ticket's whole evidentiary basis) /
+1 parked (ἄκανθα) / count 2/15 (δίκτυον, σελήνη) / streak 0 / 12 roster words remaining.**
+Case law index (detail above + ENGINE_LESSONS #30–#32): cluster-membership-not-sense-count · bar-fail vs
+escape (bar-fail-on-GREEN pre-ruled: breaks streak, not an escape) · three-regime taxonomy + middle case ·
+first-draw hint on 0-exact-mode · 7a referent-class selection · one-verse-sense-with-unanimous-floor honest ·
+merge-review = look-trigger (ruled record 2-for-2: νίπτω, κῆπος; κάλαμος-p2's fire died unruled with its
+draw) · layer-tracing before format fixes · streak = draw quality, routing = audit cost.
+**Session 2 preconditions:** the three RED seeds (G3900 παράπτωμα, G4061 περιτομή, G4645 σκληρύνω) are
+UNEXERCISED — at least one must run to complete the roster's routing-exercise goal. Open watches: κύων/συκῆ
+pre-registrations, fold-compression (1 of 3), overload tally (2-for-2 ruled), "Grounding refs:" label (0).

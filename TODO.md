@@ -212,11 +212,15 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
      style-alignment pass over V6 cards vs. leave as-is until substantively redrawn. CONSTRAINT: shipped
      prose is audited — any reformat first needs a ruling on which edits are legal without re-audit
      (sibling of the fix_lexica_raw boundary). No action this batch.
-  4. **LXX provenance note ⓘ (banked 2026-07-08, batch-3 session, JP):** the "Septuagint provenance" note
-     on Lexica cards is terse and assumes the reader knows what the Septuagint is. Add a hover/tap ⓘ
-     explaining it (LXX = Greek OT translating Hebrew; senses resting mostly on LXX citations are
-     translation-Greek evidence, weaker for native Greek usage than NT composition-Greek). Display-only,
-     no engine change. Test page: G2779 κῆπος (also the test page for the sub-use indent ticket below).
+  4. **LXX provenance note ⓘ + multi-sense footnote (banked 2026-07-08/09, batch-3 session, JP; two
+     halves, one ticket):** (a) the "Septuagint provenance" note is terse and assumes the reader knows
+     what the Septuagint is — add a hover/tap ⓘ explaining it (LXX = Greek OT translating Hebrew; senses
+     resting mostly on LXX citations are translation-Greek evidence, weaker for native Greek usage than
+     NT composition-Greek). (b) Meaning tab: when the note fires on MULTIPLE senses, replace the per-sense
+     repeated lines with a superscript/dagger marker on each affected headline pointing to ONE footnote
+     line below the sense list; the ⓘ explainer attaches to that footnote. Common case = all-senses-fire
+     on OT-heavy words. Test pages: G1151 δάμαλις (all 3 fire), G4582 σελήνη (none), G2779 κῆπος (one;
+     also the sub-use indent test page). Display-only, no engine change.
 - **ENGINE TICKET (parked per batch-3 session rule; NOT display-layer): apply refuse-by-default.**
   `build_lexica_def.py --apply` currently writes an unreviewed draw with a warning when the cache key
   misses (G2563 incident, ENGINE_LESSONS #31 — an unreviewed card reached the live site). Fix = make

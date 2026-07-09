@@ -250,6 +250,40 @@ Full record: audit doc `### G3788 ὀφθαλμός — LIVE` (the requeue entry
   if batch 3 routes fewer than 15 GREEN.** Awaiting JP's go + batch-3 roster composition (majority
   GREEN-candidates + seeded RED, ~20 words).
 
+## BATCH-3 SESSION 1 LOG (2026-07-08/09) — shadow calibration opened. Read this + the audit doc's
+## batch-3 entries to resume session 2.
+**Roster JP-approved: 17 GREEN candidates + 3 seeded RED** (G3900 παράπτωμα · G4061 περιτομή · G4645
+σκληρύνω — **all three UNEXERCISED; session 2 must run at least one** to complete the routing-exercise
+goal). Words processed 8: **γόνυ p2 (ESCAPE 1) · δίκτυον p1 (count 1) · νίπτω p2 (ESCAPE 2) · ἄκανθα
+PARKED · σελήνη p1 (count 2, zero-fire) · κῆπος p1 AMBER · κάλαμος attempt-4 hint + APPLY INCIDENT
+(#31) + SPLITTER FIX (af8e296) · δάμαλις first-draw hint (middle-case type specimen).**
+**Tally: 7 shipped / 2 escapes / 1 parked / count 2/15 / streak 0 / 12 remaining.** Both escapes were
+the floor-vs-ship placement class, caught ONLY by human comparison (machine gates green both times) —
+the parked placement-diff detector's evidentiary basis (ENGINE_LESSONS #30).
+- **Ruled procedures (standing, batch-wide):** every apply `--require-cache` (or `--from-draw`); hinted
+  applies repeat hint flags VERBATIM; apply output READ for "using reviewed draw … no model call" before
+  the render step (absent = full stop); occurrence-table query BEFORE the floor (mirror check + tails
+  pre-armed); screenshots to chat-Claude only (CC gets pass/fail relayed); content-fingerprint check
+  before --from-draw on MULTI-DRAFT keys only (single-write keys have nothing to disambiguate).
+- **Case law born this session** (index; detail = audit doc batch-3 close + ENGINE_LESSONS #30–#32):
+  cluster-membership-not-sense-count (the fold/misplacement line) · bar-fail vs escape (bar-fail-on-GREEN
+  pre-ruled: breaks streak, not the escape count) · three-regime floor taxonomy (stable / grouping-
+  variance / membership-scatter) + **middle case shippable on 3 conditions** (stable membership · a carve
+  repeated identically ≥3× · every contested placement majority-homed or 7a-selected; δάμαλις = type
+  specimen) · **mechanism extension: first-draw hint legal on 0-exact-mode floors** · sampler-not-
+  mode-knower (#32: the floor computes the mode, the hint transmits it) · layer-tracing before format
+  fixes (#21 update) · merge-review = look-trigger (2-for-2 ruled) · streak = draw quality, routing =
+  audit cost.
+- **Open watches into session 2:** describe-don't-preach 6-for-6 (standing) · κύων + συκῆ pre-registrations
+  (unfired; κύων pre-named most-likely-GREEN-to-fire) · fold-compression tendency (1 of 3) · overload
+  threshold tally (2-for-2 ruled correct carves; 5-for-5 → tuning log-line) · "Grounding refs:" label (0).
+- **Tickets banked this session:** display window — sub-use indent (κῆπος test page) · LXX ⓘ + multi-sense
+  footnote (δάμαλις/σελήνη/κῆπος test pages) · V6 style-alignment decision. Engine (parked) — apply
+  refuse-by-default + content-hash (one ticket, two demonstrated halves). Detector (parked) — floor-vs-ship
+  placement diff (evidence: 2 escapes + 2 κάλαμος bar-fails, all mechanically flaggable). Lint noise-shape
+  family: quote-mark · disclaimer-as-cite · case-position · lemma-transliteration-as-claimed-gloss ·
+  dangling-refs ("Dan" = canonical).
+
 ## SESSION-3 CLOSE STATE (2026-07-07) — read this to resume
 **SESSION-4 FIRST ACT: the ὀφθαλμός morning fork** (re-roll vs. argued-shelving on cached draw `0abd875d`) —
 see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired + resolved the first escalation
@@ -559,10 +593,11 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
    (hinted draw, zero swaps; the 5/5 placement finding + (b) ruling + disclaimer-as-cite artifact: its session
    log block + audit entry). The three V7 control fires are done; all three shipped via the structure-hint
    mechanism (5-for-5 structural), streak 0 per the standing ruling.
-4. **Batch-3 = Phase 2 shadow calibration** — **UNBLOCKED 2026-07-08 (Phase 1 complete). CC's N is ON RECORD:
-   15 GREEN-tier words, zero escapes; the count carries across batches if batch 3 routes fewer than 15 GREEN.**
-   Awaiting JP's go + roster (~20 words, majority GREEN-candidates + seeded RED so all routing exercises; JP
-   audits everything; escapes are the measure). **Two terms made explicit 2026-07-08 (JP chat-thread review):**
+4. **Batch-3 = Phase 2 shadow calibration** — **IN PROGRESS; session 1 CLOSED 2026-07-09** (roster approved
+   17 GREEN + 3 RED; 8 words processed: 7 shipped / 2 escapes / 1 parked; count 2/15, streak 0, 12 words
+   remaining; the 3 RED seeds unexercised — session 2 must run one). Session-1 record: the BATCH-3 SESSION 1
+   LOG block above + audit doc batch-3 entries + ENGINE_LESSONS #30–#32. **Two terms made explicit
+   2026-07-08 (JP chat-thread review):**
    (i) a structure-hint use on a batch-3 word removes it from the calibration count (a GREEN word that caps out
    has left GREEN by definition — stated so it's not implicit); (ii) HYPOTHESIS carried, not believed: "fed
    count ~80 is load-bearing" (n=3: χριστός 607→81, ἁμαρτία 582→82, ὀφθαλμός 645→85; confounded with V7 + PMI
