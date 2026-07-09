@@ -297,7 +297,18 @@ fabrication temptation, NOT in the contested register — RED routing must carry
 profile — one dominant Pauline sense + quieter literal/lesser senses. Watch the draft (i) promoting the
 Romans-5 sense's placement above what the occurrence table supports, (ii) burying a lesser sense the
 floor puts higher. Reviewer compares PLACEMENT, not presence, at render.
-**Words this session:** (none yet — occurrence table + floor pending on PA).
+**G3900 παράπτωμα (RED, in progress):** occ table 36 verses/40 occ (4 doubles: Col 2:13, Eze 18:26,
+Mat 6:15, Rom 5:15); Jer 22:21 = 3900.1, correctly excluded (no leak). 3-run {1:2,2:1} → rule-mandated
+10-run: **{1:7,2:3}, floor called STABLE at 1 sense.** The Pauline/Adamic carve appeared 3× with three
+DIFFERENT memberships zero repeats (d9 {11:11} · d10 {5:15,5:18,5:20,11:11} + Rom 5:15 double-shelved ·
+3-run d3 {5:15,11:11}; 3-run junk carve "(Unattested…)" over Zec 9:5+Rom 5:20) = ὄρος-class optional
+sub-slice. Rom 5:15 + Rom 11:11 both 10/10 support, 10/10 company with the general cluster. All
+pair-drops back-checked = folds (single-sense subset draws). Zero MISSED-collocation warnings.
+**Pre-registered ship bars (banked on relay + floor):** (i) Romans-5 material promoted to PEER sense =
+bar-fail (floor certified the split unstable — reviewer's γόνυ/νίπτω-in-Romans-5-clothes watch);
+sub-use/texture inside sense 1 = legal. (ii) Watch absorption drift toward Rom 4:25/Eph 2:5 — none
+formed at floor. (iii) Any within-draw double-shelf = self-disqualifying. Mode 7/10 majority (not
+unanimous) → #32 hint candidate on cap-out only; plain pull first.
 
 ## BATCH-3 SESSION 1 LOG (2026-07-08/09) — shadow calibration opened. Read this + the audit doc's
 ## batch-3 entries to resume session 2.
