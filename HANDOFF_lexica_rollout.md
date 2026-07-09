@@ -336,6 +336,9 @@ scale-not-function prose = hardest test yet, held). **Construction-fit example b
 Eph 2:1/2:5 under construction (a) = pull-1 residue homed in the roomiest construction, not the
 best-fitting — the example case if a placement-diff tool ever scores construction-level fit. Not a bar.
 Apply cleared; awaiting "using reviewed draw … no model call" line before render.
+**APPLIED 2026-07-09: "using reviewed draw … (key b74b0d48) — no model call" line CONFIRMED verbatim;**
+prose byte-matches reviewed pull 2 (2127/622 chars, same 4 noise-class fires, no new); written to
+lexica_def. Render pass pending (screenshot → reviewer chat, pass/fail relayed).
 
 ## BATCH-3 SESSION 1 LOG (2026-07-08/09) — shadow calibration opened. Read this + the audit doc's
 ## batch-3 entries to resume session 2.
