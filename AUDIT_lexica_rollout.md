@@ -1800,6 +1800,34 @@ CLEAN.** "Watches catch what we fear; floors find what's there" = ENGINE_LESSONS
 Tallies after close: describe-don't-preach 8-for-8 · fold-compression 1 of 5 · "Grounding refs:" 0 ·
 header gloss corpus-true (no παράπτωμα-ticket repeat).
 
+### G956 βέλος — LIVE (2 senses, attempt 4 via structure-hint). Off-count (escalated), streak 0.
+The word that measured the tail-list mechanism and inverted two fabrication checks.
+Occ table pre-pulled: 38 base verses / 40 occ (2Ki 13:15 ×2, 13:17 ×2); dotted 956.1 (3× Eze + Jer
+51:27) excluded, no leak. 3-run {2:2,3:1} + Isa 49:2 doubled 2/3 → 10-run {1:1,2:8,4:1} **STABLE at
+2-sense mode, κάλαμος grouping-variance**: figurative-affliction core CERTIFIED (Job 6:4+Psa 38:2
+10/10, own shelf 6/10) · lance trio = certified cluster, literal home 7/10 (sub-use, not peer) ·
+Isa 49:2 literal 8/10 · **theophany set TRUE 5/5 → 7a either-home, whole + single-shelved** (JP edge:
+Deu 32:42 travels with 32:23). **Three plain pulls, three disjoint failures → cap-out:** p1 Isa 49:2
+double-shelf (sole break; theophany 7a exercised clean literal-side) · p2 FIVE tail-list doubles incl.
+the Deu-pair split exactly as pre-named · p3 zero doubles (prose-only cites) but 2Ki 13:17 figurative
+vs 7/10 literal WITH "the two senses overlap at this verse" hedge (7c) + "being setting on fire"
+garble. **TAIL-LIST MECHANISM (JP): 4 data points — doubles track per-sense citation tail-lists
+WITHOUT disjointness enforcement** (1 double/few tails · 5/comprehensive · 0/prose-only · 0/hinted
+disjoint lists); V8 candidates: cite-in-prose-only or a disjointness check. **Hinted draw (flags
+banked pre-run; theophany stability pick = figurative, the 4-of-5 composition): ALL PINS HELD** —
+incl. Psa 11:2, the pre-named loosest pin (preference-gradient now 2-for-2 BOTH directions: predicted
+κύων's wall, predicted-absent = no wall here). Mechanism record: structure 9-for-9, membership 7-for-9.
+**Fabrication checks INVERTED twice:** Psa 64:7 "arrow of infants" + Lam 3:12 "stone target" both =
+ABP's own strange renderings, verse-checks cleared the ENGINE → symmetric-checkpoint lesson candidate
+("verify before claiming fabrication, not just attestation"). "In a contest" + prose-"missile" ruled
+blemish/no-action (JP: rendering-claim vs descriptive-vocabulary distinction stated for recurrence).
+Apply: flags verbatim + --require-cache + pass line confirmed. **Render PASS.** LXX note fired senses
+1+2 (skew watch satisfied — first two-sense firing of the session). **Header-gloss ticket SECOND
+SIGHTING: "missile" unattested in all three translations — systemic pattern confirmed.** Tallies:
+describe-don't-preach 9-for-9 · fold-compression 1 of 6 · Eph 6:16 freight watch passed at floor,
+draft, and render (headline never became "spiritual attack"). Predictor lesson candidate (JP): corpus
+size + concreteness are weak stability predictors; figurative-use density is the tell.
+
 ### BATCH-3 SESSION 1 CLOSE (2026-07-09) — tally + case law; session 2 preconditions
 **Tally: 7 shipped / 2 escapes (γόνυ invented-shelf, νίπτω cluster-break — BOTH caught only by the human
 floor-vs-ship comparison, machine gates green both times: the detector ticket's whole evidentiary basis) /

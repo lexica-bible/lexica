@@ -620,7 +620,14 @@ predicted-absent = no wall on Psa 11:2) · **tail-list refinement (4th data poin
 tail-lists WITHOUT disjointness enforcement — the hint's explicit memberships enforced disjointness;
 V8 candidates = cite-in-prose-only OR a disjointness check.
 **APPLIED 2026-07-09: hint line + "using reviewed draw … (key a41ba4d3) — no model call" CONFIRMED
-verbatim; prose byte-matches (4502/826); written to lexica_def. Render pass pending.**
+verbatim; prose byte-matches (4502/826); written to lexica_def.**
+**Render PASS → βέλος CLOSED, LIVE 2026-07-09.** Full record: audit doc G956 entry. Header-gloss
+ticket SECOND SIGHTING ("missile" unattested in all three translations — systemic). Prose-"missile"
+= no-action, rendering-claim vs descriptive-vocabulary distinction on record. **Session-2 running
+tally: shipped παράπτωμα (RED) + συκῆ + βέλος · parked κύων · all three ships off-count (escalations)
+→ count 2/15, streak 0 · describe-don't-preach 9-for-9 · fold-compression 1 of 6 · "Grounding refs:"
+0 · GREEN remaining 6: ταμεῖον · βιβρώσκω · διανοίγω · ὑπομονή · ἐπιτιμάω · κατανοέω; RED remaining
+2: περιτομή G4061 · σκληρύνω G4645.**
 
 ## BATCH-3 SESSION 1 LOG (2026-07-08/09) — shadow calibration opened. Read this + the audit doc's
 ## batch-3 entries to resume session 2.
