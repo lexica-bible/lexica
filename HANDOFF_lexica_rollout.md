@@ -336,6 +336,15 @@ ambiguity or enforce the majority" on Deu 23:18, JP's call at a future window).
 ## REDs across sessions, σκληρύνω inherits the lessons; straight-to-10, standing terms in force.
 ## ὑπομονή endurance-vs-hope pre-registration stays banked for its GREEN slot. Record: audit doc
 ## G977 entry (count ruled) + this block.
+**G4061 περιτομή RED watch PRE-REGISTERED (banked before any pull exists):** NOT in the contested
+register (verified: no 4061 in contested_register.py) — RED routing carries the word alone. Expected
+profile: literal rite · "the circumcision" as a GROUP label (people/party metonymy, Acts/Gal/Rom) ·
+figurative heart-circumcision (Rom 2:29, Php 3:3, Col 2:11). Fabrication temptations named: (i)
+covenant-theology freight / supersessionist framing ("true circumcision" verdicts) — describe-don't-
+preach hardest on Rom 2:28-29 + Php 3:3; (ii) παράπτωμα's second-costume rule in force: EVERY
+peer-level carve must be floor-attested, comparison is full-structure vs floor, not flagged hotspots;
+(iii) any within-draw double-shelf = self-disqualifying. Whether group-metonymy and heart-circumcision
+earn peer shelves is the floor's call, not this note's — attested = follow it. Straight-to-10, no 3-run.
 
 ## PAUSE LIFTED 2026-07-09 — splitter-fix session COMPLETE, charter CLOSED. Polarity A shipped
 ## LIVE (607 helper rows untagged; rule folded into the builder + locked in CI); polarity B
