@@ -416,8 +416,23 @@ three-disjoint-break-sets line satisfied). Zero relevant machine fires except th
   Mat 7:6; Php 3:2; Rev 22:15; Deu 23:18"
 **Pre-clearances proposed to JP (κάλαμος lesson):** Psa 59:6/59:14 literal-only (simile-about-enemies
 prose fine, citation on literal shelf only; repeat double-shelf = fail not bridge) · Deu 23:18 epithet
-per 6/10 home (hedged sanctuary-context prose welcome; silent literal = fail). Awaiting JP ruling +
-hinted-draw output.
+per 6/10 home (hedged sanctuary-context prose welcome; silent literal = fail).
+**PRE-CLEARANCE RULINGS (JP, banked verbatim — adjudication criteria for the hinted draft):**
+Ruling 1 — Psa 59:6/59:14 LITERAL-ONLY, no double-shelf tolerance; any appearance on job 2/3 "even as
+a 'cf.' or parenthetical" = fail (9/10 literal majority; simile is the vehicle, the word denotes the
+animal). Ruling 2 — Deu 23:18 JOB 3; hedge welcome, hedge NOT required; confident job-3 filing = pass;
+"any literal filing, hedged or not, against the pin" = automatic fail.
+**HINTED DRAW (key d4485213) = FAIL — the mechanism's FIRST MEMBERSHIP DEFIANCE (record 6-for-7).**
+Structure fully obeyed (3 senses, speech-mechanics seam, hint logged on draw). Ruling 1 HELD (Psa
+59:6/59:14 literal-only ✓; Psalms trio dyadic ✓; Job 30:1/Ecc 9:4/2Pe 2:22 literal ✓). Ruling 2
+VIOLATED: Deu 23:18 primary = sense-1 labeled sub-use ("the lemma itself designates the animal") +
+sense-3 "may belong" hedge = literal filing against the pin + double-shelf [1,3] + 7c fire. PLUS Isa
+56:10 double-shelved [1,3] vs 8/10 home + the hint's own job 3. Machine caught BOTH double-shelves
+(flags + floor agree for once). Wall class = the ὀφθαλμός disposition-placement limit (V7 pile item
+6): hint moved structure, could not move these two memberships. CC recommendation to JP: ONE more
+hinted pull, flags verbatim (no data on hinted-pull variance; one defiance = still sampling); a second
+defiance on the same verses = repeated membership wall → ὀφθαλμός-class decision (park vs V8
+prompt-restructure) to JP.
 
 ## BATCH-3 SESSION 1 LOG (2026-07-08/09) — shadow calibration opened. Read this + the audit doc's
 ## batch-3 entries to resume session 2.
