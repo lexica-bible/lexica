@@ -114,6 +114,19 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   fix if the filter is reused at scale.
 
 ## Open word-study / data issues (low priority, none gating)
+- **Helper-word double-tag class (periphrastic verb renderings)** (logged 2026-07-09, batch-3
+  session 3, found via Jud 1:9 during G2008 ἐπιτιμάω). ABP two-word verb renderings like
+  "May … reproach" store as TWO word rows both carrying the same Strong's — verified Jud 1:9
+  (rows 556002 "May" + 556003 "reproach", both 2008). Sized read-only: **731 adjacent same-tag
+  pairs** where the first word is may/shall/will/did/do/does/let. Effects: inflates occurrence
+  counts (Jud 1:9 read as a double; real table = 37 verses / 38 occ, single true double Zec 3:2),
+  and the helper word can surface as a phantom "rendering" in word-study/dictionary feeds.
+  **DECIDING QUESTION (unanswered): does eSword ABP itself tag both words?** Faithful copy →
+  fix belongs in the feed/display layer (filter helper tokens from rendering counts); our build
+  artifact → build-rule fix + rebuild path. Class-level fix at a maintenance window, NOT
+  mid-calibration; no spot-fixes. Same standing rule as always: confirm against eSword before
+  any change. Sizing query in the batch-3 session-3 log context; dictionary-side guard = any
+  renderings claim for an affected word is checked against real occurrences (G2008 watch banked).
 - **Place-map pin = interim plurality heuristic** (2026-07-05). The map on a place word card
   (`_pin_from_rows` in views_metav.py) picks the coordinate the MOST metav_places rows agree on when a
   name carries several referents (Lebanon = region + Mount Hermon + a Jerusalem structure). Safe direction:
