@@ -447,6 +447,24 @@ both drifting from the doc.
       instance count grows), 1 real (Exo 30:18 claimed "washing", corpus "wash" — second genuine live
       fire for the lint). *(audit: G3538 νίπτω batch-3 redraw ruling, 2026-07-08)*
 
+31. **An UNREVIEWED card reached the live site — the apply path writes on a warning instead of refusing.**
+    κάλαμος G2563, batch 3 (2026-07-08): the reviewed draw was hinted; CC's apply command omitted the
+    `--structure-hint` flags, so the recomputed input no longer matched the reviewed draw's key (#15's
+    key-pins-input foot-gun, now demonstrated on the APPLY side of a hinted word), the tool declared the
+    cache "STALE (input moved)", drew FRESH UNREVIEWED prose, and WROTE it — warning three times in output
+    that nobody read (the write was already done when the warnings printed). The unreviewed card carried an
+    unverified botanical identification (*Acorus calamus*) and within-sense verse duplication, and sat live
+    through a render pass. Caught by JP diffing the screenshot against his memory of the reviewed draw —
+    the render-pass layer's second save (ἁμαρτία asterisks were the first); it is the last diff against
+    the reviewed draw, not cosmetic QA. Chain of controls that existed and weren't engaged: `--require-cache`
+    (would have refused), the output's own "using reviewed draw — no model call" line (absent = stop).
+    **Ruled procedures (JP, batch-wide, on the record):** (a) every apply runs `--require-cache`; (b) every
+    apply output is READ for "using reviewed draw … no model call" BEFORE the render step — an apply
+    lacking that line stops the session; (c) a hinted word's apply must repeat the hint flags verbatim.
+    → v2: refuse-by-default on any write whose draw is not the reviewed artifact (warning-after-write is
+    not a control); content-addressing (#15's fix) makes the class impossible. Siblings: #15 (root), #10
+    (review-what-ships), #21 (the render layer as diff). *(audit: G2563 κάλαμος apply incident, 2026-07-08)*
+
 ## Added by the ἔργον session (2026-07-08)
 
 23. **The freight (#18) scan's scope is EVERY definitional field, not just the block the last failure was in.**

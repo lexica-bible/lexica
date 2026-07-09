@@ -217,6 +217,12 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
      explaining it (LXX = Greek OT translating Hebrew; senses resting mostly on LXX citations are
      translation-Greek evidence, weaker for native Greek usage than NT composition-Greek). Display-only,
      no engine change. Test page: G2779 κῆπος (also the test page for the sub-use indent ticket below).
+- **ENGINE TICKET (parked per batch-3 session rule; NOT display-layer): apply refuse-by-default.**
+  `build_lexica_def.py --apply` currently writes an unreviewed draw with a warning when the cache key
+  misses (G2563 incident, ENGINE_LESSONS #31 — an unreviewed card reached the live site). Fix = make
+  `--require-cache` behavior the DEFAULT on --apply (explicit `--allow-unreviewed` to override, which
+  already exists). Interim ruled procedure in force: every apply runs `--require-cache` + output read
+  for "using reviewed draw" before the render step. JP schedules.
   5. **Sub-use paragraph styling (banked 2026-07-08, batch-3 session, JP):** "Sub-use:" paragraphs inside a
      senses_block render as plain prose, visually undifferentiated from the main sense body (confirmed on the
      live G1119 card). Wanted: a light visual indicator — indent, smaller type, or left rule, frontend's call,
