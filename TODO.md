@@ -212,7 +212,12 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
      style-alignment pass over V6 cards vs. leave as-is until substantively redrawn. CONSTRAINT: shipped
      prose is audited — any reformat first needs a ruling on which edits are legal without re-audit
      (sibling of the fix_lexica_raw boundary). No action this batch.
-  4. **Sub-use paragraph styling (banked 2026-07-08, batch-3 session, JP):** "Sub-use:" paragraphs inside a
+  4. **LXX provenance note ⓘ (banked 2026-07-08, batch-3 session, JP):** the "Septuagint provenance" note
+     on Lexica cards is terse and assumes the reader knows what the Septuagint is. Add a hover/tap ⓘ
+     explaining it (LXX = Greek OT translating Hebrew; senses resting mostly on LXX citations are
+     translation-Greek evidence, weaker for native Greek usage than NT composition-Greek). Display-only,
+     no engine change. Test page: G2779 κῆπος (also the test page for the sub-use indent ticket below).
+  5. **Sub-use paragraph styling (banked 2026-07-08, batch-3 session, JP):** "Sub-use:" paragraphs inside a
      senses_block render as plain prose, visually undifferentiated from the main sense body (confirmed on the
      live G1119 card). Wanted: a light visual indicator — indent, smaller type, or left rule, frontend's call,
      within the quiet-design rules (no boxes). Display-only; no engine/prompt/stored-data impact. JP schedules.
