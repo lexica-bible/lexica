@@ -135,6 +135,13 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   spanning two Greek words. The 731-pair sweep catches the Jud shape only; the Rth shape needs
   its own sweep (blank-English rows whose PRECEDING row's English ends in a verb-phrase — or
   simply: blank-tagged rows adjacent to a multi-word chunk). Both shapes, one build-rule fix.
+  **THIRD EXHIBIT (same session): Job 18:13** — "And may" + "be devoured" both tagged 977 (Jud-1:9
+  shape). G977 occ table corrected to 39 uses / 37 verses (Isa 51:8 the sole true double — verified
+  two genuine content renderings). **DETECTION HEURISTIC (reviewer, banked): the dictionary card's
+  own gloss notes have now defused this defect class twice unprompted** (G2008 + G977 both grew a
+  "may = optative grammar, not a rendering" bullet) — a gloss-note bullet flagging a bare helper
+  word as a "rendering" is a free per-word detector for this ticket; grep shipped cards' gloss
+  notes for helper-word bullets when the fix window opens.
 - **Place-map pin = interim plurality heuristic** (2026-07-05). The map on a place word card
   (`_pin_from_rows` in views_metav.py) picks the coordinate the MOST metav_places rows agree on when a
   name carries several referents (Lebanon = region + Mount Hermon + a Jerusalem structure). Safe direction:
