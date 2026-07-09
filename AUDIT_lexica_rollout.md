@@ -1828,6 +1828,32 @@ describe-don't-preach 9-for-9 · fold-compression 1 of 6 · Eph 6:16 freight wat
 draft, and render (headline never became "spiritual attack"). Predictor lesson candidate (JP): corpus
 size + concreteness are weak stability predictors; figurative-use density is the tell.
 
+### BATCH-3 SESSION 2 CLOSE (2026-07-09) — tally + case law; session 3 preconditions
+**Words processed 4: παράπτωμα RED SHIPPED (pull 2, RED-routing precondition met, routing behaved as
+designed) · κύων PARKED (pre-registered clause (a), Deu 23:18 wall one verse wide) · συκῆ SHIPPED
+(first-draw hint, watch retired clean, 38/38 coverage) · βέλος SHIPPED (attempt 4 via hint, all pins
+held).** All three ships off-count (escalations) — **count 2/15 carries, streak 0, 4-of-4 words
+escalated** (the roster's hard tail; lesson #35). Batch totals: 10 shipped / 2 escapes / 2 parked
+(ἄκανθα, κύων) + πολύς parked-hard from batch 2.
+**Case law born session 2** (detail in the per-word entries + ENGINE_LESSONS #33–#37 + #32-update):
+placement-vs-prose (#33, the Deu 23:18 three-filings exhibit) · watches-vs-floors (#34) ·
+figurative-density predictor (#35) · symmetric fabrication checkpoint (#36, two engine-clearing
+inversions) · tail-list disjointness (#37, 4-point measurement) · preference-gradient 2-for-2 both
+directions (#32 update; mechanism structure 9-for-9, membership 7-for-9) · 7a stability-pick practice
+(theophany 5/5 → hint picks for stability, not correctness) · presence floor (degenerate-draw shape at
+draft level, συκῆ) · pre-registration timing discipline held end-to-end (homes before pulls,
+adjudication before output, park rule before evidence).
+**Open watches into session 3:** floor-vs-ship placement detector still parked (tonight added the
+floor-unattested-carve and silent-minority variants to its evidence file) · describe-don't-preach
+9-for-9 · "Grounding refs:" 0 · fold-compression 1 of 6 · overload 2-for-2 ruled correct + ONE
+UNADJUDICATED fire (κύων pull 3, died with its draw) · header-gloss ticket now SYSTEMIC (2 sightings:
+παράπτωμα "falling away, sin" / βέλος "missile") · Deu 23:18 revisit question on parked κύων
+(adjudicate-the-ambiguity framing) · tail-list disjointness = V8 candidate.
+**Session 3 preconditions:** 1 more RED must run eventually (2 of 3 still unexercised: περιτομή G4061,
+σκληρύνω G4645 — session-1 close mandated ONE, met by παράπτωμα; remaining REDs are roster words, not
+a precondition). GREEN remaining 6: ταμεῖον · βιβρώσκω · διανοίγω · ὑπομονή · ἐπιτιμάω · κατανοέω —
+plain verbs are the streak's next real chances.
+
 ### BATCH-3 SESSION 1 CLOSE (2026-07-09) — tally + case law; session 2 preconditions
 **Tally: 7 shipped / 2 escapes (γόνυ invented-shelf, νίπτω cluster-break — BOTH caught only by the human
 floor-vs-ship comparison, machine gates green both times: the detector ticket's whole evidentiary basis) /

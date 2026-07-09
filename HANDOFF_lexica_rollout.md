@@ -289,7 +289,8 @@ Full record: audit doc `### G3788 ὀφθαλμός — LIVE` (the requeue entry
   if batch 3 routes fewer than 15 GREEN.** Awaiting JP's go + batch-3 roster composition (majority
   GREEN-candidates + seeded RED, ~20 words).
 
-## BATCH-3 SESSION 2 LOG (2026-07-09) — in progress; state per close commit 5188565 + this block.
+## BATCH-3 SESSION 2 LOG (2026-07-09) — CLOSED; see the audit doc's SESSION 2 CLOSE entry for the
+## tally + case law. This block is the session's running record, banked as it happened.
 **Opened:** clearing gate PASSED with a rule-9 caveat (the handoff's grep string "SESSION 1 CLOSED
 2026-07-09" isn't verbatim in the doc; the same fact appears as the session-1 log header + Queue item 4
 wording — JP ruled gate cleared, not held).
@@ -981,7 +982,11 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
    (hinted draw, zero swaps; the 5/5 placement finding + (b) ruling + disclaimer-as-cite artifact: its session
    log block + audit entry). The three V7 control fires are done; all three shipped via the structure-hint
    mechanism (5-for-5 structural), streak 0 per the standing ruling.
-4. **Batch-3 = Phase 2 shadow calibration** — **IN PROGRESS; session 1 CLOSED 2026-07-09** (roster approved
+4. **Batch-3 = Phase 2 shadow calibration** — **IN PROGRESS; sessions 1 AND 2 CLOSED 2026-07-09.**
+   Session 2: 3 shipped (παράπτωμα RED — routing exercise met · συκῆ · βέλος, all off-count via
+   escalation), κύων parked (one-verse wall, Deu 23:18), 4-of-4 escalations; count 2/15, streak 0;
+   remaining 6 GREEN + 2 RED. Record: BATCH-3 SESSION 2 LOG block + audit doc session-2 entries +
+   ENGINE_LESSONS #33–#37 + #32-update. Session-1 record below unchanged. (roster approved
    17 GREEN + 3 RED; 8 words processed: 7 shipped / 2 escapes / 1 parked; count 2/15, streak 0, 12 words
    remaining; the 3 RED seeds unexercised — session 2 must run one). Session-1 record: the BATCH-3 SESSION 1
    LOG block above + audit doc batch-3 entries + ENGINE_LESSONS #30–#32. **Two terms made explicit

@@ -491,6 +491,58 @@ both drifting from the doc.
     regime variable: mode strength). *(audit: G2563 3-pull whack-a-mole + G1151 first-draw hint,
     2026-07-08/09)*
 
+## Added by batch-3 session 2 (2026-07-09)
+
+33. **The placement check compares against the FLOOR, never against the draft's own justification —
+    plausible prose is not floor attestation.** Twice in one session a reject came wrapped in competent
+    argument: παράπτωμα pull 1 argued a "dead in transgressions" state sense from real grammar (dative
+    plural + stative verb) that the floor drew 0/13; κύων pull 1 argued Isa 56:10's "dumb dogs" onto the
+    literal shelf via behavioral grounding ("what an actual dog does") — the mechanism by which EVERY
+    animal epithet works, which would empty the epithet sense if it licensed literal filing. The paired
+    exhibit: Deu 23:18 was filed three ways across three consecutive κύων pulls (epithet-hedged /
+    literal-silent / literal-silent), each fluently argued, from one engine. Also names the trap: a
+    pre-registered hotspot passing clean does NOT clear the check — παράπτωμα p1 passed the watched
+    Romans-5 bar and broke at the unwatched seam. Full-structure comparison, every verse, every pull.
+    *(audit: G3900 p1 + G2965 p1, 2026-07-09)*
+
+34. **Watches catch what we fear; floors find what's there.** συκῆ's armed pre-registration (Mark-11
+    judgment freight) ran clean 13/13 draws — while the floor surfaced an unpredicted certified job (the
+    vine-and-fig-tree security formula, own shelf 6/10, exact 5-verse membership identical 3×). The
+    pre-registration system's blind spot and its value in one word: arms cut against imported carves,
+    floors discover attested ones. *(audit: G4808, 2026-07-09)*
+
+35. **Corpus size and referent concreteness are weak predictors of floor stability; figurative-use
+    density is the better tell.** βέλος (40 occ, concrete projectile) looked like the board's safest
+    GREEN and wobbled at 3 runs; session 2 escalated 4-of-4 words. The tell was visible in the
+    occurrence table's book column all along — half the corpus in Psalms/Job poetry. Roster tiering
+    should read book distribution, not just frequency. *(audit: G956 + session-2 close, 2026-07-09)*
+
+36. **The fabrication checkpoint is symmetric — verify before CLAIMING fabrication, not just before
+    claiming attestation.** Three verse-checks this session: two cleared the ENGINE (Psa 64:7 "arrow of
+    infants", Lam 3:12 "stone target" — both ABP's own strange renderings that read like blends or
+    inventions). ABP is idiosyncratic enough that reviewer intuition false-positives on it; an unchecked
+    fabrication ruling would have rejected grounded prose. Both directions of the check protect the
+    card. *(audit: G956 checkpoints, 2026-07-09)*
+
+37. **Per-sense citation tail-lists WITHOUT disjointness enforcement are a double-shelf generator on
+    soft-border words.** βέλος, four data points in one word: few tails → 1 double; comprehensive tails
+    → 5 doubles (all five smeared verses sat in both senses' parenthetical lists while prose placed them
+    once); prose-only cites → 0; hinted disjoint lists → 0. Cross-checked: παράπτωμα + συκῆ shipped
+    citing in-prose, zero doubles. Format-level cause, not placement-level. → V8 candidates:
+    cite-in-prose-only, or a tail-list disjointness check at the gate. *(audit: G956 pulls 1–3 + hinted,
+    2026-07-09)*
+    - Related mechanism-gradient finding filed under #32's update (hint compliance vs preference
+      strength).
+
+    **#32 UPDATE (session 2): hint compliance is inversely related to the engine's own
+    placement-preference strength — measured, 2-for-2 in both directions.** κύων: the hint moved
+    everything the engine was indifferent about; the one verse with a consistent directional preference
+    (Deu 23:18, literal 2-of-3 plain pulls + the floor's own 4/10 minority) defied the hint twice in the
+    identical [1,3] shape → parked (wall one verse wide; the weak-preference verse Isa 56:10 bent).
+    βέλος: the pre-named loosest pin (Psa 11:2) had NO consistent preference and did NOT defy — the
+    gradient's negative case. Mechanism record after session 2: structure 9-for-9, membership 7-for-9.
+    *(audit: G2965 park + G956 hinted pass, 2026-07-09)*
+
 ## Added by the ἔργον session (2026-07-08)
 
 23. **The freight (#18) scan's scope is EVERY definitional field, not just the block the last failure was in.**

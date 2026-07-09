@@ -221,6 +221,13 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
      line below the sense list; the ⓘ explainer attaches to that footnote. Common case = all-senses-fire
      on OT-heavy words. Test pages: G1151 δάμαλις (all 3 fire), G4582 σελήνη (none), G2779 κῆπος (one;
      also the sub-use indent test page). Display-only, no engine change.
+  5. **Header-gloss provenance (banked 2026-07-09, batch-3 session 2, JP; SYSTEMIC — 2 sightings):**
+     the word-card header gloss comes from `word_gloss` (inherited TBESG/Dodson-family source,
+     build_word_gloss.py), and it contradicts the verse-verified entry directly beneath it — G3900
+     showed "falling away, sin" over a card proving transgression-family-only 40/40; G956 showed
+     "missile", unattested in all three translations. Proposal: derive the header from top corpus
+     renderings (already computed by coverage_audit); design question = top-N verbatim vs renderings +
+     headline fragment. Short-term per-word hand overrides possible via the OVERRIDES dict.
 - **ENGINE TICKET (parked per batch-3 session rule; NOT display-layer): apply refuse-by-default.**
   `build_lexica_def.py --apply` currently writes an unreviewed draw with a warning when the cache key
   misses (G2563 incident, ENGINE_LESSONS #31 — an unreviewed card reached the live site). Fix = make
