@@ -382,6 +382,23 @@ filed literal CORRECTLY) · Psa 68:23 → literal vs 5/6 insult company. Deu 23:
 shelf, honest hedge). Also the 4/10 minority 2-sense merge shape with the epithet job NOT visible as
 a labeled sub-use (δίκτυον-fold visibility not met) — but the redraw rides on the membership breaks.
 More #30 evidence: machine all-green, floor comparison caught everything.
+**συκῆ ARMED CONTENT (JP, banked verbatim — fresh arm from this chat, prior meaning dead unrelayed;
+hold released at this commit):** "συκῆ pre-registration: watch whether the draft imports the Mark 11
+cursing narrative's freight into the word itself — the word means the fig tree, full stop; any
+headline or sense carve organized around judgment-on-Israel symbolism, barrenness-as-verdict, or the
+cursing episode as a distinct 'job' is imported theology, not attested usage, since the symbolic work
+belongs to the narrative act, not the lemma."
+**LESSON CANDIDATE (JP, 2× this session — παράπτωμα p1 dead-in argument, κύων p1 Isa 56 behavioral-
+grounding argument):** the placement check compares against the FLOOR, never against the draft's own
+justification, however competent the prose — plausible prose is not floor attestation. (Formal
+ENGINE_LESSONS entry = close-out decision.)
+**Pull 2 (same key) = BAR-FAIL #2, whack-a-mole:** fixed all three pull-1 breaks (Isa 56:10–11
+epithet ✓, Ecc 9:4 literal ✓, 2Pe 2:22 literal ✓), drew the 3-sense mode — then broke FOUR different
+verses: Deu 23:18 SILENTLY literal (the pre-named νίπτω shape on the pre-named verse, bar violated) ·
+Psa 22:16+22:20 → categorical vs 9/10+5/5 insult company · Psa 68:23 → categorical vs 5/6 insult ·
+Job 30:1 → categorical vs 6/10 literal. Zero machine fires both pulls. κάλαμος 3-pull pattern
+replaying per #32 (mode sampled, not obeyed). Pull 3 = last plain pull before cap-out → mode-hint
+with pinned homes.
 
 ## BATCH-3 SESSION 1 LOG (2026-07-08/09) — shadow calibration opened. Read this + the audit doc's
 ## batch-3 entries to resume session 2.
