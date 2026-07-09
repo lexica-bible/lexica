@@ -249,6 +249,14 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
      "missile", unattested in all three translations. Proposal: derive the header from top corpus
      renderings (already computed by coverage_audit); design question = top-N verbatim vs renderings +
      headline fragment. Short-term per-word hand overrides possible via the OVERRIDES dict.
+     **THIRD SIGHTING 2026-07-09 (session 3): G2008 header "rebuke, chide" while the card's own gloss
+     notes argue the blame-register is wrong for most sense-1 uses.**
+  6. **RANGE/Coverage serif gap (banked 2026-07-09, batch-3 session 3, JP — ruled to THIS window):**
+     the Range and Coverage paragraphs render in the app's sans face while the senses block and gloss
+     notes get the serif style — `.lex-prose` (styles.css:1435) is missing from the Range/Coverage
+     lines (20-shared-components.jsx:257, :267). Standing template gap on ALL cards, code-confirmed,
+     not per-card. Two-line fix: wrap both in the serif class + rebuild. Reviewer flagged at the
+     G2008 render; JP ruled: hold for the display session, don't ship mid-calibration.
 - **ENGINE TICKET (parked per batch-3 session rule; NOT display-layer): apply refuse-by-default.**
   `build_lexica_def.py --apply` currently writes an unreviewed draw with a warning when the cache key
   misses (G2563 incident, ENGINE_LESSONS #31 — an unreviewed card reached the live site). Fix = make
