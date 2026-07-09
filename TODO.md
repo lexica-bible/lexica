@@ -121,11 +121,12 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   pairs** where the first word is may/shall/will/did/do/does/let. Effects: inflates occurrence
   counts (Jud 1:9 read as a double; real table = 37 verses / 38 occ, single true double Zec 3:2),
   and the helper word can surface as a phantom "rendering" in word-study/dictionary feeds.
-  **DECIDING QUESTION (unanswered): does eSword ABP itself tag both words?** Faithful copy →
-  fix belongs in the feed/display layer (filter helper tokens from rendering counts); our build
-  artifact → build-rule fix + rebuild path. Class-level fix at a maintenance window, NOT
-  mid-calibration; no spot-fixes. Same standing rule as always: confirm against eSword before
-  any change. Sizing query in the batch-3 session-3 log context; dictionary-side guard = any
+  **DECIDING QUESTION ANSWERED (JP, eSword + ABP app, 2026-07-09): BUILD ARTIFACT.** eSword tags
+  only "reproach" (`May [2reproachG2008` — "May" bare); the ABP app shows "May [2reproach" as ONE
+  chunk under the single Greek word επιτιμήσαι. Our splitter broke the chunk into two rows and both
+  inherited the tag. Fix = build-rule (splitter family, cf. af8e296), folds into the next words
+  rebuild per the settled build-folded-fixes pattern; NOT a live-table patch, NOT mid-calibration.
+  Sizing query in the batch-3 session-3 log context; dictionary-side guard = any
   renderings claim for an affected word is checked against real occurrences (G2008 watch banked).
 - **Place-map pin = interim plurality heuristic** (2026-07-05). The map on a place word card
   (`_pin_from_rows` in views_metav.py) picks the coordinate the MOST metav_places rows agree on when a
