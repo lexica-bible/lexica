@@ -336,6 +336,19 @@ ambiguity or enforce the majority" on Deu 23:18, JP's call at a future window).
 ## REDs across sessions, σκληρύνω inherits the lessons; straight-to-10, standing terms in force.
 ## ὑπομονή endurance-vs-hope pre-registration stays banked for its GREEN slot. Record: audit doc
 ## G977 entry (count ruled) + this block.
+**BATCH-3 CLOSE PLAN (JP directive, banked 2026-07-09; order ruled):** 1. batch-close review
+(count, escapes, parked words: πολύς · ἄκανθα · κύων) → 2. fabrication-check / intervention-tally
+adjudication (includes the βιβρώσκω "gates passed a human-caught defect" data point) → 3. V8 pile
+triage + prompt bump (V7 freeze lifts at close; pile so far: comma-shorthand citation class ·
+"line"→"entry" fix · gloss-note asymmetry · doubled vocabulary bar · #29 attribution register ·
+plus whatever batch 3 adds) → 4. visual layout session run against V8 output (sequenced after the
+bump so layout decisions aren't invalidated by V8 structure changes — whitespace, sub-use
+formatting). **CC flags banked, JP to fold in or reject at close:** (a) step 4 presupposes a V8
+control fire between 3 and 4 — a prompt bump doesn't re-render shipped cards, so at least one
+V8-drawn card must exist before layout is judged; (b) the scale-protocol decision item (already
+banked for this window — calibration economics, ~14,000 lemmas) is absent from the four steps;
+natural slot = between 2 and 3 (escape/intervention evidence is its input, outcome sizes the V8
+batch plan).
 **G4061 περιτομή RED watch PRE-REGISTERED (banked before any pull exists):** NOT in the contested
 register (verified: no 4061 in contested_register.py) — RED routing carries the word alone. Expected
 profile: literal rite · "the circumcision" as a GROUP label (people/party metonymy, Acts/Gal/Rom) ·
