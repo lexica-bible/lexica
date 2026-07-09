@@ -11,30 +11,16 @@ words TABLE. Two derivations of one fact: their diff is the oracle.
 Writes scripts/splitter_a_expected.tsv (ref \t helper_english \t strongs).
 Read-only over the source; touches no database.
 """
-import os
-import re
 import sys
 from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).parent))
-from build_words_from_abp import (  # noqa: E402
-    _STRONGS_RE, _VERSE_RE, _emit_words, iter_verses, _abp_sources,
-)
-
-HELPER_HEADS = {
-    "may", "might", "shall", "should", "will", "would", "let", "did", "do", "does",
-    "was", "were", "be", "been", "is", "are", "am", "had", "has", "have",
-    "can", "could", "must", "and", "but", "then", "so", "that", "when",
-}
-_PUNCT = re.compile(r"[^\w\s]")
-
-def norm(s):
-    return _PUNCT.sub("", (s or "")).lower().strip()
-
-
-def head_or_eng(eng):
-    words = [w for w in (eng or "").split() if norm(w)]
-    return norm(words[-1]) if words else ""
+from build_words_from_abp import iter_verses, _abp_sources  # noqa: E402
+# The strip screen is IMPORTED, never copied — both derivations must apply the
+# identical rule so their diff can only reflect data, not screen drift
+# (dry-run 3: 8 of 19 diff lines were screen mismatch, incl. two the other
+# side was WRONG about — 'throne were' Rev 4:4 / 'Let not' G3361 1Sa 18:17).
+from audit_helper_double_tag import helper_ok  # noqa: E402
 
 
 def main():
@@ -51,8 +37,7 @@ def main():
             neng, nst, nap, nopens, ncloses = words[i + 1]
             if nst != st or not nopens:
                 continue                       # next piece: same tag, opens the bracket
-            lead = head_or_eng(eng)
-            if lead in HELPER_HEADS and len(eng.split()) <= 2:
+            if helper_ok(eng, st.lstrip("G")):
                 out.append((f"{book_slug_abbrev} {ch}:{vs}", eng.strip(), st))
 
     dest = Path(__file__).parent / "splitter_a_expected.tsv"

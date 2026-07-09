@@ -73,6 +73,36 @@ def norm(s):
     return _PUNCT.sub("", (s or "")).lower().strip()
 
 
+# Scaffold words: auxiliaries + subject pronouns + the connective glue that can
+# legitimately ride in front of a verb without carrying the verb's sense.
+SCAFFOLD_WORDS = HELPER_HEADS | {
+    "not", "now", "us", "you", "your", "he", "she", "it", "they", "we", "i",
+    "them", "him", "her", "me", "ye", "thou", "thee",
+}
+
+
+def helper_ok(eng, st):
+    """The unified polarity-A strip screen, shared verbatim by the table-level
+    finder and the source-level re-derivation (gen_splitter_a_expected.py) so
+    the two lists can only disagree on DATA, never on screen rules.
+
+    Strip only when (1) EVERY word of the helper is scaffold — an auxiliary,
+    subject pronoun, or glue word that carries no lexical sense — and (2) the
+    shared tag is a CONTENT word. Both halves earned their place in dry-run 3:
+    'throne were' (Rev 4:4) fails (1) — 'throne' is content; 'Let not' G3361
+    fails (2) — 'not' IS that tag's own rendering, stripping it would delete a
+    real occurrence of the negation."""
+    words = [norm(w) for w in (eng or "").split()]
+    words = [w for w in words if w]
+    if not words or len(words) > 3:
+        return False
+    if any(w not in SCAFFOLD_WORDS for w in words):
+        return False
+    if (st or "").split(".")[0] in FUNCTION_TAGS:
+        return False
+    return True
+
+
 def load_words(conn):
     """All word rows grouped by verse, in reading order."""
     verses = defaultdict(list)
@@ -111,11 +141,7 @@ def scan(verses, ref, ren):
                 npos, neng, nhead, nst, nsb, ngpos, nbid = rows[i + 1]
                 if nst == st and nbid is not None:
                     rec = (ref[vid], pos, eng, head, st, npos, neng, ngpos, nbid)
-                    # A pure function word ("was", "did") gets no search head; fall
-                    # back to the english itself so a bare auxiliary still screens
-                    # clean (Gen 7:20 "was" -> "raised" slipped to review on this).
-                    lead = norm(head) or norm(eng)
-                    if lead in HELPER_HEADS and len((eng or "").split()) <= 2:
+                    if helper_ok(eng, st):
                         a_clean.append(rec)
                     else:
                         a_review.append(rec)
@@ -225,7 +251,7 @@ def main():
                 if st == fs:
                     nxt = rows[i + 1] if i + 1 < len(rows) else None
                     is_a = (gpos is None and bid is None and nxt and nxt[3] == st and nxt[6] is not None
-                            and norm(head) in HELPER_HEADS)
+                            and helper_ok(eng, st))
                     per_verse[ref[vid]].append((pos, eng, head, gpos, bid, is_a))
         total_rows = sum(len(v) for v in per_verse.values())
         strip_n = sum(1 for v in per_verse.values() for r in v if r[5])
