@@ -479,6 +479,26 @@ recommends 2-job hint (literal plant · formula idiom); illustration fringe NOT 
 job). Homes proposed pending JP:** formula-5 own shelf exact · Joh 1:48 literal (6/9; allusion prose
 ok) · Jdg 9:10 literal (~5/8, wobbliest verse; fable prose ok) · prosperity-loss verses literal (d5
 absorption = 1/10) · cursing/parable/apocalyptic literal-cited-only.
+**HOMES CLEARED (JP) + two additions, banked pre-run:**
+(1) **Jdg 9:10 tolerance ruling (verbatim):** "citation literal-only; a fable-framing sentence in
+prose is welcome; a fable sub-use LABEL under the literal sense is also acceptable (it's a genuine
+discourse frame and sub-uses aren't shelves) — what fails is a peer sense or any second-shelf
+citation." (2) **PRESENCE FLOOR (named check, this draft):** sense 1 citing under 20 of the 33
+literal-home verses = completeness fail even if every present citation is correctly placed — the
+degenerate-draw shape (d1/d9) at draft level; presence has a floor too, not just placement.
+(3) **ENGINE_LESSONS candidate (JP + CC concur):** "watches catch what we fear; floors find what's
+there" — the armed freight watch ran clean 13/13 while the actual finding (formula shelf) was
+unpredicted. Close-out decision.
+**συκῆ HINT FLAGS (verbatim reference — the apply must repeat these exactly):**
+  --structure-hint "The literal fig tree as a plant - agricultural, botanical, and narrative
+  occurrences, INCLUDING verses where the tree sits in parable, simile, fable, or apocalyptic
+  discourse (the discourse frame is prose context, not a sense): Gen 3:7; Num 13:23, 20:5; Deu 8:8;
+  Jdg 9:10-11; Psa 105:33; Pro 27:18; Son 2:13; Isa 34:4; Jer 8:13; Hos 2:12, 9:10; Joe 1:7, 1:12,
+  2:22; Hab 3:17; Hag 2:19; Mat 21:19-21, 24:32; Mar 11:13, 11:20-21, 13:28; Luk 13:6-7, 21:29;
+  Joh 1:48, 1:50; Jas 3:12; Rev 6:13"
+  --structure-hint "The 'under one's own vine and fig tree' formula - a fixed idiom of settled
+  security and undisturbed possession, exactly these five: 1Ki 4:25; 2Ki 18:31; Isa 36:16; Mic 4:4;
+  Zec 3:10"
 
 ## BATCH-3 SESSION 1 LOG (2026-07-08/09) — shadow calibration opened. Read this + the audit doc's
 ## batch-3 entries to resume session 2.
