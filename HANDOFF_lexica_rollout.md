@@ -548,6 +548,19 @@ d10 2Sa 22:15+Psa 18:14) = border strain markers. **SHIP BARS BANKED:** Eph 6:16
 sense, headline = affliction/hostility-figured-as-arrows NOT "spiritual attack" · lance trio
 sub-use-or-fold, not peer · Isa 49:2 literal · theophany together, single-shelved, either home ·
 double-shelf = fail · LXX-skew watch fires at ship (note should fire on any shipping sense).
+**7a EDGE SHARPENED (JP, pre-draft, banked):** the theophany latitude requires Deu 32:23's membership
+explicitly — if the set goes figurative, Deu 32:42 travels with 32:23 (same divine-archer speech);
+splitting the Deu 32 pair across shelves = coherence break INSIDE the latitude. Set travels whole or
+7a doesn't apply. **Second draft watch:** d1's Eph 6:16-solo shape (1/10 artifact) = imported-freight
+in floor clothes; a solo Eph sense fails on minority structure AND the freight watch.
+**Pull 1 (key 80d9354c) = BAR-FAIL on one pin: Isa 49:2 double-shelved [1,2]** (machine flag + prose
+confirms; pin was literal-only, 8/10 home). Everything else HELD: theophany 7a exercised clean
+(literal option, set whole, Deu pair together) · lance trio sub-use with honest weapon-type
+agnosticism · Eph 6:16 in-cluster, headline "harmful force figured as an arrow" (freight watch passed
+at headline). LXX note fired senses 1+2 (skew watch satisfied at draft level). **Carried to pull-2
+audit:** (1) Psa 64:7 prose "infant's arrow" — verse-text check required before any version ships
+(fabrication-family checkpoint); (2) gloss-note/shelf mismatch — note calls Psa 127:4 "clean instance
+of Sense 2" but the card cites it nowhere in the senses block.
 
 ## BATCH-3 SESSION 1 LOG (2026-07-08/09) — shadow calibration opened. Read this + the audit doc's
 ## batch-3 entries to resume session 2.
