@@ -80,11 +80,38 @@ count — unverifiable, three rounds of stuck back-and-forth.)
      banked the tally (in the arithmetic) but never the names (in no tally) — same class as the #27
      tracking-slot lesson. Close-out check: every list the log references exists verbatim in a
      committed doc.
+   - **R4 (2026-07-09, see SESSION-DISCIPLINE RULES below): a named procedure ships with its
+     exact verified invocation, not just its name.**
 
 **Receiving-instance rule (both CC and chat, next session):**
 9. A gate that can't be cleared by its attached procedure converts to a logged caveat
    ("accepted on standing evidence, unverified: <item>") — not an indefinite hold. Holds are for
    failed checks, not missing ones.
+
+## SESSION-DISCIPLINE RULES R1–R4 (standing, drafted 2026-07-09 — post-mortem of the
+## splitter-fix session's opening fails; fail record = audit doc post-mortem entry)
+- **R1 — Commands are verified, never recalled.** Any command handed to JP for execution is
+  verified against the script on disk (name, flags, semantics) BEFORE handover — never written
+  from recall. Cheap visible form: a one-line "verified against scripts/<name>" preceding the
+  command block. This extends the existing verify-before-claim term from claims to commands: a
+  command line crossing the CC→JP boundary IS a factual claim (ENGINE_LESSONS #39).
+- **R2 — Named procedures use their designated instrument.** Floor, cert, rebuild, and any
+  other named procedure run via their designated instrument script (floor =
+  `lexica_agreement.py --runs N`; cert = `cert_invariants.py`; rebuild = `/rebuild-words`).
+  Ad-hoc reconstructions are REJECTED even if functionally plausible. Reason: comparability —
+  improvised output can't be read against prior runs, which silently corrupts the series even
+  when the improvisation is correct.
+- **R3 — Holds are blocking.** An open hold means the only legal next-message content is that
+  hold's clearance (or stop-and-report). No parallel progress while a hold is open; "clear it
+  next message" then moving to other work is a violation. Unaccounted output crossing a
+  checkpoint (a number, filename, or line with no explanation) AUTO-OPENS a hold — it must not
+  take JP or the reviewer noticing (extends ENGINE_LESSONS #38's accounting term).
+- **R4 — Handoffs carry commands, not just procedure names.** Any handoff that tells the next
+  session to run a named procedure writes out the exact invocation (script + flags) verbatim,
+  R1-verified. "Run the floor, straight to 10" is insufficient; the standard is
+  `cd ~/bible-db && python scripts/lexica_agreement.py --word <ID> --runs 10`. (Amends the
+  HANDOFF PROCEDURE content rules above — a procedure name without its invocation is malformed,
+  same class as a gate without its one-command clear.)
 
 ## STANDING LAW (the rules this session generated)
 - **FOUR-GATE SHIP BAR** (replaces count-match). A draft ships if it clears all four, whatever its
