@@ -47,6 +47,40 @@ Lexica floor if it is missing from `dotted_lexicon`. Two classes found + status:
   invisible to any comparator) · εἰμί-anomaly resolution (bare G1510 base_occ=1) · the 2 blank
   abp_surface `form` cells (Isa 19:2, Eze 40:12). Merges with the parked ὀρ-collision sweep.
 
+## HANDOFF PROCEDURE (standing, adopted 2026-07-09 after the session-1→2 handoff failure)
+**CC is the sole author of both handoffs** — the CC-opener block AND the reviewer-chat inheritance
+block. The reviewer chat writes no handoff. (Session 1→2 had two authors: the two handoffs
+conflicted on the watch tally, and the chat handoff carried a five-item correction set as a bare
+count — unverifiable, three rounds of stuck back-and-forth.)
+
+**During the session** — reviewer-chat state flows to CC as it happens, not at close:
+1. Any pre-registration, watch, or ruling made in the reviewer chat gets relayed to CC when it's
+   made (the existing "line for CC" pattern). CC banks it in the session log immediately.
+2. If it wasn't banked with CC, it doesn't exist at handoff. No end-of-session memory dump from
+   the chat.
+
+**At close, in this order:**
+3. JP asks the reviewer chat ONE question: "anything armed that isn't banked?" Anything surfaced
+   gets relayed and banked. That is the chat's entire handoff duty.
+4. All pending writes land → close commit → THEN CC writes both handoff blocks pointing at that
+   commit. Handoff written before the close commit is invalid.
+5. JP pastes the CC block into the new CC session and the reviewer block into the new chat.
+
+**Content rules (CC-enforced when writing the blocks):**
+6. Docs are the single source. No tally, procedure, or case-law item is restated — point:
+   "state per close-out at commit `<hash>`." Any number in a handoff must be findable in a
+   committed doc at that hash.
+7. Every verification gate ships with its clearing procedure: commit hash + exact grep string or
+   expected header + pass condition. A gate without a one-command clear is malformed — rewrite it
+   before the close commit.
+8. No counts without contents. "Five corrections" is banned; list the five verbatim, or point at
+   the commit where they landed, or the item doesn't ship.
+
+**Receiving-instance rule (both CC and chat, next session):**
+9. A gate that can't be cleared by its attached procedure converts to a logged caveat
+   ("accepted on standing evidence, unverified: <item>") — not an indefinite hold. Holds are for
+   failed checks, not missing ones.
+
 ## STANDING LAW (the rules this session generated)
 - **FOUR-GATE SHIP BAR** (replaces count-match). A draft ships if it clears all four, whatever its
   sense count: (1) **no holes** — every stable reviewer job present + distinct; (2) **no merges** —
