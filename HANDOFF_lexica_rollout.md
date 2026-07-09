@@ -449,13 +449,36 @@ inversely related to the engine's own placement-preference strength.* Sharper th
 characterization. If parks: session ships = παράπτωμα only; parked = ἄκανθα + κύων; next word from
 remaining GREEN roster.
 **HINTED PULL 2 (key d4485213): clause (a) FIRED — Deu 23:18 double-shelved [1,3] AGAIN → κύων
-PARKED 2026-07-09.** Isa 56:10 cured, 37/38 placements home — the wall is ONE VERSE wide, held through
+PARKED 2026-07-09.** REVISIT FRAMING (JP refinement, banked): the keep-both option is not a concession
+to the engine — Deu 23:18's floor was itself 6/4, the closest majority on the board, and the referent
+is genuinely debated; frame the revisit as "adjudicate the ambiguity or enforce the majority" (the
+δάμαλις move), NOT "fix the defiance." Isa 56:10 cured, 37/38 placements home — the wall is ONE VERSE wide, held through
 two hinted draws in the same shape. Preference-strength observation CONFIRMED with a gradient (weak
 preference bent, strong held). Mechanism record: structure 8-for-8, membership 6-for-8. Full record +
 revisit question (ruling-not-redraw: keep-both adjudication on Deu 23:18 or V8 placement mechanism):
 audit doc G2965 entry. Park roster πολύς + ἄκανθα + κύων. Session tally: ships = παράπτωμα (RED);
 count 2/15; streak 0; GREEN remaining 8 (κύων off roster): συκῆ · βέλος · ταμεῖον · βιβρώσκω ·
 διανοίγω · ὑπομονή · ἐπιτιμάω · κατανοέω; RED remaining 2.
+**G4808 συκῆ (in progress, OFF-COUNT — escalated per ἄκανθα precedent):** occ table 38 base verses/39
+occ (Mat 21:19 ×2); dotted Amo 4:9 + Jer 5:17 (4808.1) excluded, no leak. **Pre-registration verdict
+at FLOOR level (JP, banked): FREIGHT STAYED OUT** — 13 total draws, zero judgment/barrenness carves,
+cursing verses home literal 9/10; the pre-registration's draft-level half stays armed (prose is where
+imported theology blooms). 3-run {1:1,2:2} appear/vanish → 10-run **{1:3,2:5,3:1,4:1}, NO exact modal
+carve** (the 2-sense draws split literal+formula vs literal+parable). **NEW STABLE JOB FOUND: the
+vine-and-fig-tree security formula** (1Ki 4:25, 2Ki 18:31, Isa 36:16, Mic 4:4, Zec 3:10) — 10/10
+support+company, own sense 6/10, exact 5-verse membership identical 3× (d2/d6/d9) = certified.
+Illustration carve = uncertifiable scatter (4+ shapes, zero repeats; d7 split visionary+fable
+singletons) — discourse role, not a sense; folds. "Illustration isn't a sense — it's what a speaker
+does with the word; a carve that can't exist without double-shelving is self-refuting" (JP, the 3-run
+read, confirmed at depth). **NEW DRAW-QUALITY ARTIFACT logged:** d1 built a 6-verse card on the idiom
+ignoring 33 fed verses; d9 drew NO literal sense — degenerate draws, not carves (all [1,9] wobble
+noise resolves to this). **COUNT-BLEED FRAMING (JP, banked):** 2/15 with three escalations = the
+tiering doing triage; the GREEN streak measures words the engine handles WITHOUT depth — routing hard
+words out is the design. **Floor call: 0-exact-mode → first-draw hint LEGAL (δάμαλις extension). CC
+recommends 2-job hint (literal plant · formula idiom); illustration fringe NOT hinted (not a certified
+job). Homes proposed pending JP:** formula-5 own shelf exact · Joh 1:48 literal (6/9; allusion prose
+ok) · Jdg 9:10 literal (~5/8, wobbliest verse; fable prose ok) · prosperity-loss verses literal (d5
+absorption = 1/10) · cursing/parable/apocalyptic literal-cited-only.
 
 ## BATCH-3 SESSION 1 LOG (2026-07-08/09) — shadow calibration opened. Read this + the audit doc's
 ## batch-3 entries to resume session 2.
