@@ -328,6 +328,14 @@ fabrication checkpoint (#36: verify before claiming fabrication — ABP false-po
 Parked words are not yours to reopen: πολύς, ἄκανθα, κύων (κύων's revisit = "adjudicate the
 ambiguity or enforce the majority" on Deu 23:18, JP's call at a future window).
 
+## PAUSE LIFTED 2026-07-09 — splitter-fix session COMPLETE, charter CLOSED. Polarity A shipped
+## LIVE (607 helper rows untagged; rule folded into the builder + locked in CI); polarity B
+## deferred to its own TODO ticket (878-case evidence frozen). Exhibit words verified clean at
+## render; G2008 38/37 + G977 39/38 (charter's G977 "37" = drafting miscount, corrected); both
+## stale "may" gloss bullets deleted + cards re-rendered. Record: AUDIT splitter-fix entry +
+## ENGINE_LESSONS #38. Calibration RESUMES at the session-3 close state below (βιβρώσκω count
+## still pending JP; next-word decision travels with it).
+
 ## BATCH-3 SESSION 3 LOG (2026-07-09) — CLOSED. **CALIBRATION PAUSED at close (JP ruling): the
 ## splitter double-tag data fix runs FIRST, in its own dedicated session — charter =
 ## CHARTER_splitter_fix.md (no-write gate + acceptance checks are IN the charter, ruled verbatim).**

@@ -149,6 +149,33 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   **ESCALATED 2026-07-09 (JP): fix NOW in a dedicated session, not a maintenance window —
   calibration paused behind it. Charter with no-write gate + acceptance checks:
   `CHARTER_splitter_fix.md`.**
+  **POLARITY A FIXED + LIVE 2026-07-09 (splitter-fix session; charter CLOSED).** 607 helper rows
+  untagged (tag blanked, English kept as plain text) via `fix_helper_double_tag.py` against the
+  pinned `splitter_a_expected.tsv` — a list proven by TWO independent derivations (stored table
+  vs raw ABP source) diffing EMPTY under one shared screen (`helper_ok`, now IN the builder as
+  `_strip_helper_double_tag`, locked by `tests/test_helper_double_tag.py` in CI + pre-commit).
+  All acceptance checks passed: exhibit rows/renders clean (no helper chips, no PN mislabel),
+  G2008 38 occ/37 verses + G977 39/38 (charter's "37" for G977 was a drafting miscount — see
+  charter correction note), invariants green, both stale gloss bullets deleted via fix_lexica_raw.
+  361 structural matches correctly LEFT ALONE (legit doubles + split renderings, the A-review
+  pile). Full record: AUDIT_lexica_rollout.md splitter-fix entry.
+- **Splitter polarity B — English-pooled-on-function-word rows (follow-up ticket, hand-review
+  only)** (filed 2026-07-09 from the splitter-fix session, reviewer Ruling 8). The Rth 2:16 shape:
+  a multi-word English phrase parked on a FUNCTION word's row while the adjacent content word's
+  row sits blank. **878-case evidence list frozen in `scripts/splitter_b_evidence.txt`** (finder:
+  `audit_helper_double_tag.py`, polarity-B block). Dominant shape = "did/shall not X" pooled on
+  the negation with the verb row blank (e.g. Gen 11:6, 2Ki 17:35, 1Ch 22:8). Own dry-run gate;
+  every case individually adjudicated before its patch line is written — no batch approval.
+  Session notes for the next discriminator: (1) **named specimen Job 18:13 pos 3–4** — "the soles
+  of his" pooled on the PRONOUN row (G846), noun row (G2831.2) blank: pronoun hosts widen B beyond
+  negations, and it makes Job 18:13 the both-polarities-in-one-verse precedent (its A-half is
+  fixed, this half inherited); (2) **tail-position gap**: the current B screen matches the pooled
+  phrase's LAST word against the blank word's known renderings — misses pronoun-host cases where
+  the content word sits mid-phrase ("the soles **of his**"); (3) **Zec 3:2 negative control**:
+  pooled multi-word English on a CONTENT word's own row ("May the LORD reproach"|2008) is
+  legitimate — only function-word hosts with an adjacent blank content row are B; (4) fix lands as
+  a hand-verified re-runnable patch in the rebuild path (split_merge_fixes precedent), NOT in the
+  auto-splitter.
 - **Place-map pin = interim plurality heuristic** (2026-07-05). The map on a place word card
   (`_pin_from_rows` in views_metav.py) picks the coordinate the MOST metav_places rows agree on when a
   name carries several referents (Lebanon = region + Mount Hermon + a Jerusalem structure). Safe direction:

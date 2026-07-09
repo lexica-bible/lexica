@@ -1990,3 +1990,39 @@ draw) · layer-tracing before format fixes · streak = draw quality, routing = a
 **Session 2 preconditions:** the three RED seeds (G3900 παράπτωμα, G4061 περιτομή, G4645 σκληρύνω) are
 UNEXERCISED — at least one must run to complete the roster's routing-exercise goal. Open watches: κύων/συκῆ
 pre-registrations, fold-compression (1 of 3), overload tally (2-for-2 ruled), "Grounding refs:" label (0).
+
+### SPLITTER-FIX SESSION (2026-07-09) — CHARTER CLOSED; polarity A SHIPPED LIVE, B deferred
+**Words-table write (the session's one job): 607 helper rows untagged** (strongs+strongs_base
+blanked, English kept as plain text — the builder's own shape for untagged source text). Charter
+gates held end-to-end: no-write gate → Gate-1 PASS → checkpoint → backup (9/9 verified) → dry-run
+→ apply → acceptance checks. **Discriminator = structural, not lexical:** peeled helper OUTSIDE a
+bracket + next row same full dotted tag OPENS the bracket + `helper_ok` screen (every helper word
+scaffold AND shared tag a content word). Proof standard EXCEEDED the charter's hand-audit: TWO
+independent derivations (live table scan vs raw ABP source re-parse via the builder's own
+functions) diffed EMPTY over the whole corpus, 607=607. The diff-oracle caught real errors in
+BOTH directions before that zero: 17 wrong-writes averted (function-tag shares, 15 negations —
+'Let not' G3361 would have deleted a real μή occurrence) + 21 missed defects recovered
+(pronoun/aux leads). 361 structural matches correctly left alone (legit doubles: 'closing
+up/closed up'; split renderings: 'give/to drink'). **Fold: `_strip_helper_double_tag` +
+`helper_ok` live IN `build_words_from_abp.py`** (rebuild reproduces the fix); finder + source
+re-derivation import the same screen (no drift possible); locked by
+`tests/test_helper_double_tag.py` (CI + pre-commit, both explicit lists).
+**Acceptance:** exhibits clean at row + render (Jud 1:9 'May' plain/no-PN/unclickable; Job 18:13;
+Rth 2:16 untouched by design) · G2008 38 occ/37 verses, sole double Zec 3:2 (composition verified,
+both genuine rows intact) · G977 39/38, sole double Isa 51:8 — **charter's '37 verses' for G977 =
+drafting miscount (Ruling 23), corrected in the charter; no fix path reaches 37** · invariants
+green (strongs-join + build suites; GLOB 0) · stale 'may' gloss bullets deleted on both cards via
+fix_lexica_raw (dry-run diff → cleared → apply → re-render confirmed; citation gates 20/20 +
+30/30).
+**Polarity B DEFERRED (Ruling 8):** 878-case evidence frozen (`scripts/splitter_b_evidence.txt`),
+own TODO ticket with 4 discriminator notes (Job 18:13 pos 3–4 pronoun-host specimen — the
+both-polarities-in-one-verse precedent; tail-position gap; Zec 3:2 negative control; patch-not-
+splitter placement). Rth 2:16 ships as-was.
+**Process lessons banked: ENGINE_LESSONS #38** (pinned-artifact size changes carry their delta
+accounting in the same message; pass criteria quote the script's printed units — 603→607 hold +
+606-vs-607 flag, both benign, both real relay defects). Reviewer rulings 1–23 on the chat record.
+**CALIBRATION UNPAUSED.** Resume state: 3 shipped session 3 (ἐπιτιμάω, διανοίγω, βιβρώσκω) ·
+βιβρώσκω count PENDING JP (options in the G977 entry above) · streak 0 · next-word decision
+(κατανοέω vs a RED seed) travels with the ruling · GREEN remaining 3 (ταμεῖον, ὑπομονή with its
+pre-registration, κατανοέω) · RED remaining 2 (περιτομή, σκληρύνω) · straight-to-10 ruled for the
+batch remainder.

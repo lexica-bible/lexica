@@ -543,6 +543,21 @@ both drifting from the doc.
     gradient's negative case. Mechanism record after session 2: structure 9-for-9, membership 7-for-9.
     *(audit: G2965 park + G956 hinted pass, 2026-07-09)*
 
+## Added by the splitter-fix session (2026-07-09)
+
+38. **Numbers that cross a checkpoint boundary carry their own accounting IN THE SAME MESSAGE — two
+    instances, one session.** (a) The pinned write-list changed size between checkpoints (603→607,
+    the screen-unification work) and the delta wasn't relayed with it; the reviewer held the write
+    until every moved row was named (+21/−17, reconstructed from committed artifacts — the hold cost
+    one round-trip and the reconstruction proved the change was an audit SUCCESS, but the relay gap
+    was a real defect). (b) The stated pass criterion said "607 rows" while the script's match line
+    prints DEDUPLICATED entries (606 — one verse, Jdg 9:20, carries the same strip twice); benign,
+    but the same class: a stated number must match the script's actual printed units, or a real
+    off-by-one hides behind an expected one. → When a pinned artifact changes size, the delta
+    accounting (which rows, why, both directions) travels in the same message as the new number;
+    when stating a pass criterion, quote the script's own output line, not a derived count.
+    *(audit: splitter-fix session, Ruling 13 + Flag 4, 2026-07-09)*
+
 ## Added by the ἔργον session (2026-07-08)
 
 23. **The freight (#18) scan's scope is EVERY definitional field, not just the block the last failure was in.**

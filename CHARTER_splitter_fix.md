@@ -1,5 +1,16 @@
 # CHARTER — words-table splitter double-tag fix (dedicated session)
 
+**STATUS: CLOSED 2026-07-09 — polarity A SHIPPED (607 helper rows untagged, live + folded into
+the builder); polarity B DEFERRED to its own ticket per reviewer Ruling 8 (878-case evidence
+list, hand-review-only). All acceptance checks passed; record in AUDIT_lexica_rollout.md
+(splitter-fix session entry) + TODO.md ticket. Calibration UNPAUSED.**
+
+**CORRECTION (2026-07-09, reviewer Ruling 23): the G977 acceptance target below reads "37
+verses" — that was a miscount at ticket-writing time; correct is 38 verses / 39 occ. No fix
+path reaches 37: Job 18:13 keeps a genuine G977 row under both the A-strip and any future
+B-fix. The G2008 37-verse figure was correct and is likewise B-independent (Rth 2:16's blank
+G2008 row was already counted in it).**
+
 **Opened from batch-3 session 3 (2026-07-09).** This session does ONE job: fix the splitter
 double-tag defect class in the words table. Calibration is PAUSED until this charter's acceptance
 checks pass — do not draw, floor, or ship any dictionary word from this session.
