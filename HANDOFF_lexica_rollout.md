@@ -338,7 +338,13 @@ best-fitting — the example case if a placement-diff tool ever scores construct
 Apply cleared; awaiting "using reviewed draw … no model call" line before render.
 **APPLIED 2026-07-09: "using reviewed draw … (key b74b0d48) — no model call" line CONFIRMED verbatim;**
 prose byte-matches reviewed pull 2 (2127/622 chars, same 4 noise-class fires, no new); written to
-lexica_def. Render pass pending (screenshot → reviewer chat, pass/fail relayed).
+lexica_def. **Render PASS (reviewer relay) → G3900 CLOSED, LIVE. RED seed #1 exercised — session-2
+routing precondition MET; RED routing verdict: behaved as designed start to finish.** Full record: the
+audit doc's G3900 entry (incl. the header-gloss provenance ticket + the "the lemma" V7.1 decision item
+— frozen to the batch-close window per standing rule 7). Watch tallies after G3900: describe-don't-
+preach 7-for-7 · fold-compression 1 of 4 · "Grounding refs:" 0 · overload tally unchanged (no fire) ·
+κύων/συκῆ pre-registrations still unfired. Count 2/15 unchanged (RED off-count), streak 0 (pull-1
+bar-fail). **NEXT: 12 GREEN roster names still needed from JP before any GREEN draw.**
 
 ## BATCH-3 SESSION 1 LOG (2026-07-08/09) — shadow calibration opened. Read this + the audit doc's
 ## batch-3 entries to resume session 2.

@@ -1712,6 +1712,40 @@ describe-don't-preach (6-for-6), Amo 4:1 contempt = the text's own, LXX provenan
 coverage card after δίκτυον), "Dan" dangling-ref fire = the canonical instance of its own noise class.
 Render pass full (first dash-bullet card). Multi-sense LXX-footnote display ticket banked off this card.
 
+### G3900 παράπτωμα — LIVE (1 sense, pull 2). RED SEED #1 EXERCISED — routing behaved as designed,
+start to finish (JP verdict on record). Off-count (RED), streak 0.
+Occ table pre-pulled: 36 verses / 40 occ (4 doubles), Jer 22:21 = 3900.1 correctly excluded, no leak.
+Floor: 3-run {1:2,2:1} → rule-mandated 10-run **{1:7,2:3} = STABLE at 1 sense**; the Pauline/Adamic
+carve appeared 3× with three different memberships, zero repeats (+ one Rom 5:15 double-shelf, one
+"(Unattested…)" junk headline) = ὄρος-class optional sub-slice; Rom 5:15 + Rom 11:11 10/10 support AND
+10/10 general-cluster company. Zero MISSED-collocation warnings; all pair-drops = single-sense-subset
+folds. **Pull 1 = bar-fail, NEW COSTUME for the placement class (reviewer observation, banked):**
+passed the pre-registered Romans-5 bar (Adam as sub-use — legal) then invented a floor-UNATTESTED peer
+sense ("dead-in state" over Eph 2:1/2:5/Col 2:13, drawn 0/13 by the floor) + double-shelved Col 2:13
+[1,2] — first co-arrival of the double-shelf fire and the placement break (flag = correlated tripwire,
+not a substitute detector). Distinct from session-1's right-senses-wrong-level variant: every
+peer-level carve must be floor-attested; comparison is full-structure, not flagged hotspots.
+(ENGINE_LESSONS entry only if the shape repeats — pull 2 didn't.) **Pull 2 (same key b74b0d48 —
+multi-draft key, fingerprint greps 0/1 run pre-apply per the κάλαμος rule): PASSED** — 1 sense = mode,
+Rom 5 as construction (c) + scale-not-function sub-use, dead-in trio home, tails 5/5 vs table, 4 lint
+fires all quote-mark noise, gloss-note "uniformly transgression(s)" verified FULL-CORPUS pre-apply
+(transgressions 23 + transgression 17 = 40/40, exactly the header's 2; JP tightening: a 3rd rendering
+fails "uniformly" even if transgression-shaped → note edit, not redraw). Blemishes (no action): Eph
+2:1/2:5 homed in roomiest-not-best construction (a) — THE example case if a placement-diff tool ever
+scores construction-level fit; Dan 6 "religious" context wording. Apply: --require-cache + "using
+reviewed draw … no model call" confirmed verbatim before render. **Render PASS** (reviewer relay):
+all blocks present + ordered, italics survived, 32/32 badge; no fold-compression (denominator bump →
+1 of 4); "Grounding refs:" still 0. Describe-don't-preach **7-for-7** — Rom 5 the hardest test yet.
+**NEW TICKET (display, from this render): header-gloss provenance** — card top showed "falling away,
+sin" (inherited gloss via `word_gloss` ← TBESG/Dodson-family source, build_word_gloss.py) directly
+above a verse-verified entry proving transgression-family-only renderings 40/40. Proposal: derive the
+header from top corpus renderings (already computed by coverage_audit); design question = top-N
+verbatim vs renderings + headline fragment. Short-term option: G3900 hand override.
+**DECISION ITEM (register, adjudicated vs calibration rules by CC):** "the lemma" meta-register (style
+watch #4) — a prompt wording fix is a VERSE_PROMPT change = engine restructuring, FROZEN mid-batch
+(standing rule 7 contrast clause); V7.1 waits for the batch-3 close window. Debt accrual capped at the
+≤12 remaining roster words; scrub-vs-accrue economics noted for the window.
+
 ### BATCH-3 SESSION 1 CLOSE (2026-07-09) — tally + case law; session 2 preconditions
 **Tally: 7 shipped / 2 escapes (γόνυ invented-shelf, νίπτω cluster-break — BOTH caught only by the human
 floor-vs-ship comparison, machine gates green both times: the detector ticket's whole evidentiary basis) /
