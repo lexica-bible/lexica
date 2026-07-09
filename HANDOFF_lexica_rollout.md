@@ -460,6 +460,20 @@ logged ("open fully" consistent — ticket stays 3 sightings). **Session-3 runni
 ἐπιτιμάω + διανοίγω (both off-count) · count 2/15 · streak 0 · describe-don't-preach 11-for-11 ·
 fold-compression 1 of 8 · "Grounding refs:" 0 · GREEN remaining 4: ταμεῖον G5009 · βιβρώσκω G977 ·
 ὑπομονή G5281 · κατανοέω G2657 · RED remaining 2: περιτομή G4061 · σκληρύνω G4645.**
+**THREE RULINGS (JP 2026-07-09, "whatever you guys recommend" — CC+reviewer joint recommendation
+adopted as the ruling):** (1) **STRAIGHT-TO-10 for the remainder of batch 3** — the 3-run screen is
+0-for-6 on this hand-picked hard tail; grounds = the streak itself (the 25% poetry threshold was
+FALSIFIED, see above); expires at batch close, reversible. (2) **Streak criterion STANDS,
+conservative** — the test is whose judgment the ship depended on; διανοίγω was wrong as drawn and
+shipped correct only because the audit caught it → streak 0 was right. (3) **Intervention CLASS now
+tracked in the tally** (hint-escalation vs swap-class) without changing the streak rule — feeds the
+batch-close decision on whether the cheap batch-build path needs a fabrication-check step.
+**Intervention-class tally opened (retroactive, this batch):** hint-escalation ships = κάλαμος ·
+δάμαλις · παράπτωμα(-hintless, RED plain pull 2: none) — precisely: hinted ships κάλαμος, δάμαλις,
+συκῆ, βέλος, χριστός, ἁμαρτία, ὀφθαλμός, ἐπιτιμάω; swap-class ships: ἁμαρτία (1 delete-swap, also
+hinted), χριστός (2 ruled swaps, also hinted), διανοίγω (1 delete-swap, PLAIN — the only
+swap-on-plain ship); clean-plain ships: δίκτυον, σελήνη, κῆπος(AMBER), γόνυ, νίπτω (the 2 escapes),
+παράπτωμα (pull 2).
 
 ## BATCH-3 SESSION 2 LOG (2026-07-09) — CLOSED; see the audit doc's SESSION 2 CLOSE entry for the
 ## tally + case law. This block is the session's running record, banked as it happened.
