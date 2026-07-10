@@ -1982,8 +1982,18 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 14 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
-### G4061 περιτομή — SESSION 5 (2026-07-09/10): doubles VERIFIED, table BANKED 36/40, orphaned
-### V7 floor ADOPTED + adjudicated. Ship recommendation PENDING JP.
+### G4061 περιτομή — SHIPPED + LIVE (2026-07-10, session 5). Hinted ship, OFF-COUNT.
+**Apply clean ("using reviewed draw ca23d502 — no model call", content byte-matched the reviewed
+draft) → screenshot review PASS all 5 checks (sense order · Rom 2:29 inward sub-use · Jer 11:16
+thin sense 3 · Col 2:11 ×2 sane · whitespace clean, V6 watch quiet) + bonus checks pass (33/33
+badge, provenance tag, tabs, verse block). Batch tally: 15 shipped / 2 escapes / 2 parked ·
+count 2/15 · RED routing exercise #2 RETIRED. Remaining: σκληρύνω G4645 (RED) · ταμεῖον G5009,
+ὑπομονή G5281 (pre-registration banked), κατανοέω G2657 (GREEN).**
+- V8-pile candidate (reviewer): dangling-book-ref flag fires on gloss-note PROSE ("in Acts and
+  Galatians") — a prose-context exclusion if the pattern recurs (2 sightings this word).
+- TICKET banked (JP-ruled split): gloss-note superscript markers — see TODO.md entry.
+
+### G4061 περιτομή — session-5 working record (adjudication detail below; ship block above is the verdict)
 - **Doubles verify (the owed 8-row check) PASSED:** Col 2:11 (pos 4/17), Rom 2:25 (0/13),
   Rom 4:10 (4/11), Rom 4:12 (2/6) — all four = two real separated uses, no helper-splitter
   pattern. **Occ table BANKED: 36 verses / 40 occ.**

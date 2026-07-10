@@ -298,6 +298,16 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
      lines (20-shared-components.jsx:257, :267). Standing template gap on ALL cards, code-confirmed,
      not per-card. Two-line fix: wrap both in the serif class + rebuild. Reviewer flagged at the
      G2008 render; JP ruled: hold for the display session, don't ship mid-calibration.
+  7. **Gloss-note marker AT THE CITATION (banked 2026-07-10, G4061 session 5, JP-ruled split):**
+     where a gloss note names a SPECIFIC ref (G4061: "lopped" → Jer 11:16), put a small marker on
+     that citation in the senses block so the note surfaces where the reader's eye already is
+     (same principle as the tag-click finding; cousin of ticket #1, which anchors note→sense —
+     this anchors sense-citation→note). RESTRAINT RULED: markers ONLY where a note names a
+     specific ref; general commentary (G4061's senses-1-and-2 collective-noun note) gets none —
+     card already carries badges/tags/×2/verified line, no chart-junk. SPLIT: rendering half =
+     this window (design against V8 output, close-plan step 6); structure half = V8-PILE
+     candidate (notes are free prose today; per-gloss/per-ref anchors touch what the engine
+     emits — frozen until the V8 bump, close-plan step 4).
 - **ENGINE TICKET (parked per batch-3 session rule; NOT display-layer): apply refuse-by-default.**
   `build_lexica_def.py --apply` currently writes an unreviewed draw with a warning when the cache key
   misses (G2563 incident, ENGINE_LESSONS #31 — an unreviewed card reached the live site). Fix = make
