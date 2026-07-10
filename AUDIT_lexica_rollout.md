@@ -1982,6 +1982,43 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### SESSION-6 CLOSE-OUT — STEPS 1–2 CLOSED, AUDIT SESSION COMMISSIONED (2026-07-10)
+**STEP 1 SIGNED OFF (reviewer, after the 18-ruling below): 18 / 2 / 2 · count 3/15 · streak 0.**
+**STEP 2 CLOSED (JP rulings on reviewer recommendations):**
+- **Intervention tally BANKED as presented** — 18 ships classified, 9 plain + 9 hinted, per-word
+  ledger units (no script exists for this tally; each line traceable to its audit entry by name).
+  Classes: clean-plain pull-1 (δίκτυον, σελήνη) · plain AMBER-read (κῆπος) · plain machine-reject-
+  then-clean (ὑπομονή, not an intervention per G5281) · plain RED-routing (παράπτωμα) · escapes
+  (γόνυ, νίπτω — machine-green, human-caught) · swap-class (διανοίγω delete, βιβρώσκω reword —
+  human-caught post-pull) · hint-escalation ×9 (κάλαμος, δάμαλις, συκῆ, βέλος, ἐπιτιμάω, περιτομή,
+  σκληρύνω, ταμεῖον, κατανοέω). Key figure: 4 of 18 ships (22%) carried machine-green defects only
+  a human caught; 2 of those 4 (γόνυ, νίπτω) are mechanizable by the PARKED #30 floor-vs-ship diff
+  detector; the other 2 (prose fabrication/misnaming) have no machine coverage — #40's standing
+  check now covers the shelf-architecture vector.
+- **Fabrication-check decision DEFERRED to the audit's gate load-bearing analysis** (ruling it at
+  step 2 would pre-empt the commissioned instrument). #30 un-park → step-4 V8 pile as candidate.
+- **βιβρώσκω "gates passed a human-caught defect" tag CLOSED** — permanently housed in the tally.
+- **κῆπος COUNT RULING (JP): banked number stays 3/15** — the enumeration is JP's committed G5281
+  ruling and nothing changes mid-close. κῆπος = DEFINITIONAL BOUNDARY CASE, logged: off-count
+  session 1 by GREEN→AMBER tier routing (old wording); under the later G5281 ships-within-budget
+  wording it is arguably count-eligible (plain pull 1, zero rejects, zero human catch — stronger
+  than ὑπομονή's case); never re-tested against the new wording until session 6. **RECOUNT SPEC
+  (JP tightening): FOUR-VALUED — ruled-bar count with/without κῆπος · two-tier count with/without
+  κῆπος** — the κῆπος flag is orthogonal to two-tier (it had zero rejects; its ambiguity is what
+  "human in the loop" means). JP picks definitions ONCE, at the scale decision (step 3).
+- **Named question banked for the gate load-bearing analysis:** does a machine fire requiring
+  JUDGMENT (κῆπος's merge-review "KEEP as drawn") differ from a fire requiring only RECOGNITION
+  (ὑπομονή's known-artifact noise, adjudicated and counted anyway)? "Any fire disqualifies" is
+  already dead as a rule — ὑπομονή killed it.
+**AUDIT SESSION COMMISSIONED (reviewer, charter in its chat; recommendations not rulings; step 3
+consumes):** WS1 reject reclassification (every banked reject defect-vs-variance; four-valued
+recount; ταμεῖον flip pre-registered 4/15-minimum under two-tier; κατανοέω natural experiment;
+straight-to-hint words σκληρύνω/περιτομή/χριστός/ὀφθαλμός = no-plain-pull gaps; ἁμαρτία's 7 mixed
+draws in scope) · WS2 economics (both banked tallies, denominator 18) · WS3 gate load-bearing
+(+ fabrication-check decision + judgment-vs-recognition distinction) · WS4 stamp census (command
+R1-re-verified at execution; deliverables = live cards per synth_ver + content-convention deltas
+per era vs V8; rendering free / content stamped / refresh policy = step-3 decision).
+
 ### BATCH-3 FINAL-TALLY CORRECTION — RULED 18 SHIPPED (JP, 2026-07-10, session 6; reviewer-concurred)
 The batch-3 shipped count is **18, not 19**. The slip was born at the βιβρώσκω close line ("batch
 tally 14 shipped" where the named chain sums 13: session-2 close banked 10 + ἐπιτιμάω 11 + διανοίγω
