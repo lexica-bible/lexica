@@ -1708,10 +1708,18 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
    zero-cost; exact-match bar failed honestly — known-stable and known-parked floors
    indistinguishable; V8 table no positive evidence; re-open = scale phase only, bar
    pre-registered blind; record = audit doc N=6-7 entry)** · structure-hint experiment
-   queued to the tooling window; διαιρέω re-openable via that path.** NEXT = δόμα floor
-   (the item-5 deciding data point) → the remaining nine with #30 live → GREEN activation,
-   then step 6 layout. Item-3 tooling (incl. the structure-hint experiment) + /consolidate
-   = parallel gap work, still green.**
+   queued to the tooling window; διαιρέω re-openable via that path.** **CORPUS-DEFECT FIRE
+   same day (record = audit doc BATCH-4 CORPUS-DEFECT FIRE entry): δόμα G1390 DATA-BLOCKED
+   (no-entry dotted 1390.1 leaked its feed; 3-run VOID, not an item-5 escalation — the fresh
+   post-fix 3-run decides) · δίκτυον G1350 reader-facing contamination CONFIRMED (counted
+   ship; architecture sense sits on 1350.1/.2 lattice rows; STAYS in the count until JP's
+   4-step ruling chain) · δίδωμι stands · remaining eight roster words CLEAN · fix ticket =
+   3 side-table entries via the builder, CC designs / JP executes checkpointed · standing
+   amendments: no-entry dotted = contaminant by default, engine claims R1-verified, ranker
+   occ = ceilings.** NEXT = εἰρηνικός G1516 pre-pull (batch proceeds) · δόμα fresh floor
+   after the 1390.1 fix (the item-5 deciding data point) → the remaining words with #30
+   live → GREEN activation, then step 6 layout. Item-3 tooling (incl. the structure-hint
+   experiment) + /consolidate = parallel gap work, still green.**
 6. (was 4, historical) **Batch-3 sessions 1–2 record** — **sessions 1 AND 2 CLOSED 2026-07-09.**
    Session 2: 3 shipped (παράπτωμα RED — routing exercise met · συκῆ · βέλος, all off-count via
    escalation), κύων parked (one-verse wall, Deu 23:18), 4-of-4 escalations; count 2/15, streak 0;

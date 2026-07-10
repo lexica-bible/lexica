@@ -570,8 +570,14 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   structure-hint path; count 6/15 unchanged, nine words / nine owed, spare consumed).
   N=6-7 RAN + RULED: KEEP 10 (checker `c8d32fd` zero-cost, exact-match bar failed honestly,
   re-open = scale phase w/ pre-registered bar; audit doc N=6-7 entry). Item-5 re-open armed
-  (δόμα's 3-run decides).** NEXT = δόμα floor → the remaining nine with #30 live →
-  GREEN activation. Item-3 tooling batch (incl. the #28 shorthand expander — load-bearing for
+  (δόμα's FRESH post-fix 3-run decides).** **CORPUS-DEFECT FIRE (audit doc entry): δόμα
+  DATA-BLOCKED (no-entry dotted 1390.1; spent 3-run VOID, not an escalation) · δίκτυον
+  reader-facing contamination on a counted ship (JP 4-step ruling chain owed: fix → classify
+  vs source → card disposition → count membership) · fix ticket = 3 dotted_lexicon entries
+  (1390.1, 1350.1, 1350.2) via the builder, CC designs / JP checkpointed · no-entry dotted =
+  contaminant by default at every pre-pull · ranker occ = ceilings until the ~120-number
+  no-entry class is triaged (existing ticket, now upgraded: it bit a counted ship).**
+  NEXT = εἰρηνικός G1516 pre-pull → remaining words with #30 live → GREEN activation. Item-3 tooling batch (incl. the #28 shorthand expander — load-bearing for
   #30's unseen channel, see ENGINE_LESSONS #44 — plus the structure-hint experiment)
   + /consolidate
   still green as parallel gap work. PENDING JP one-liner: add ναί/ὁμοίως/ποτέ to the ranker's

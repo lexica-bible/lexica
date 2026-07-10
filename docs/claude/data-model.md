@@ -143,7 +143,10 @@ Full record: memory `project_word_card_gloss`.
 
 ### lexica_def — the Lexica dictionary
 Our OWN verse-grounded definition per word (written from the Bible's own usage, not LSJ's
-classical glosses). Side table in bible.db (built on PA, not in git). One row = frozen fields
+classical glosses). Side table in bible.db (built on PA, not in git). **Real columns are only
+`strongs / lemma / translit / def_json / synth_ver / updated` — everything listed next is a
+FIELD INSIDE the `def_json` JSON, not a column (a query on `raw` errors; 2026-07-10 lesson
+from the blast-radius sweep — search `def_json` for card-content checks).** One row = frozen fields
 `sense_headlines`/`senses_block`/`range`/`gloss_notes`/`coverage` + `sense_prov` (per-sense
 LXX-provenance flag, Option B) + `fork` (contested-word readings + a Study-graph link; also
 carries `gloss` + two hand-authored SEAM axes `divergence_type` (referent|content|loaded) +

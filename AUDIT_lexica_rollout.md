@@ -1982,6 +1982,53 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### BATCH-4 CORPUS-DEFECT FIRE — THE NO-ENTRY DOTTED CLASS GOES LIVE MID-BATCH
+### (2026-07-10; reviewer-adjudicated package, banked whole. The corpus-defect protocol's
+### first full exercise since adoption.)
+**δόμα G1390 = DATA-BLOCKED** (protocol line: word δόμα G1390 · defect = no-entry dotted
+1390.1 — Ezr 6:4 ×2, English "layers/layer", = δόμος "course of masonry", a different word —
+leaks into the base feed because the engine's dotted exclusion is dotted_lexicon-membership,
+and 1390.1 has no entry · instrument blocked = the verse-engine feed, floors included).
+**Its 3-run (spent, `agreement_G1390_v8_20260710-200410.json`) is VOID** — contaminated feed
+(header read fed 40 = 36 OT/4 NT vs the true 38 = 34 OT/4 NT; every draw carved Ezr 6:4 its
+own "building layers" sense — the model quarantined what the feed missed). File renamed
+VOID_ on PA so no future sweep ingests it. **A void floor has no verdict: the {2,3,4} spread
+is never adjudicated and it is NOT an escalation for item-5 purposes** — δόμα's fresh
+post-fix 3-run is the item-5 deciding run.
+**TWO MIS-ADJUDICATIONS ON THE RECORD, by name:** CC relayed "the engine excludes dotted
+rows regardless — bookkeeping, not a data block" without tracing the no-entry path; the
+reviewer PASSED the pre-pull on that assertion without demanding the artifact — the same
+artifact-over-derivation failure the reviewer enforces. The floor header refuted both.
+**STANDING AMENDMENTS (reviewer-adopted verbatim):** any no-entry dotted row = feed
+contaminant BY DEFAULT at every future pre-pull · engine-behavior claims get R1-verified,
+never accepted from memory · ranker occ counts read as CEILINGS until the class is fixed.
+**CLASS TRIAGE (full words-table sweep, JP-run):** ~120 distinct no-entry dotted numbers +
+the 1510.x εἰμί form-variant family (~7,900 rows, documented benign, structural base).
+Heavy 1300–1417 band. **The remaining eight roster words: CLEAN — zero no-entry cousins;
+the batch proceeds.** Hold-outs' cousins present as expected (1377.x/1391.x/1392.x).
+**BLAST RADIUS (live-card sweep + citation check, JP-run): exactly two cards.**
+- **δίκτυον G1350 — READER-FACING CONTAMINATION CONFIRMED on a counted ship.** Six no-entry
+  rows (1350.1 ×1, 1350.2 ×5; English adjectival throughout: "latticed / lattice / being
+  made of lattice works" — consistent with δικτυωτός, source confirmation pending) fed its
+  evidence; FIVE are cited in the live card (Exo 27:4, Jdg 5:28, 1Ki 7:18, 2Ki 1:2,
+  Eze 41:16 — Exo 38:4 fed, uncited); the shipped card's architecture sense sits on them,
+  and its banked "40/40 = TOTAL citation coverage" was measured against the contaminated 40
+  (34 true + 6 alien). Serve-path note: no-entry dotted chips FALL THROUGH to the base card,
+  so lattice-verse readers currently get δίκτυον's card — the side-table fix cures the feed,
+  the fall-through, and the re-floor path at once. **Count discipline: δίκτυον STAYS in the
+  6/15 until JP rules — nobody auto-decrements a name-true count (#42). Ruling chain owed,
+  in order: (a) fix ticket executes · (b) classify vs the ABP/eSword source · (c) card
+  disposition (correct / rebuild / stand-with-note) · (d) count membership.** JP decides
+  when the chain runs; the batch moves either way.
+- δίδωμι G1325: 1-row leak (Neh 5:3) fed, never cited — card STANDS, noted (extends the
+  known :1587 record).
+**FIX TICKET (scope confirmed):** three side-table entries — 1390.1 (δόμος course) ·
+1350.1 · 1350.2 (lattice family) — CC designs through the dotted_lexicon builder (root
+source, never a hand row), JP executes with the standing checkpoint approval. δόμα unblocks
+on 1390.1 alone; δίκτυον's entries enable a later re-floor but touch nothing live without
+JP's ruling. The full ~120-number class = the existing dotted no-entry triage ticket,
+now upgraded: it has bitten a counted ship.
+
 ### N=6-7 PAPER REPLAY — RAN + RULED: KEEP 10 (JP, in-chat, 2026-07-10). QUESTION CLOSED;
 ### re-openable ONLY at the scale phase with a pre-registered margin bar validated BLIND
 ### against known-stable/known-parked floor pairs.
