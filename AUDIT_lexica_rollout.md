@@ -2001,6 +2001,24 @@ expected two homes inside one verse. Dotted cousins ACCOUNTED (named risk fired,
 OT 35 / NT 4 (Mat 6:6, 24:26, Luk 12:3, 12:24). ≤40 → all fed. Reviewer pre-read banked:
 room-vs-storeroom = REFERENT split (what the room is FOR), 1-vs-2-sense wobble would be
 grouping-variance regime, δάμαλις middle-case precedent on hand.**
+**FLOOR (agreement_G5009_v7_20260710-035236, 10 runs) ADJUDICATED 2026-07-10:** {2:8,3:2}
+mean 2.2 — same shape as ὑπομονή. **Two stable homes 10/10: private/inner room · storage
+space. Modal 2-sense carve repeats 8/10 → STABLE, plain draw, NO hint.**
+- **Wobble region = the figurative "inner recesses" verses** (Proverbs belly-chambers 20:27,
+  20:30, 26:22, 7:27 · Job sky-chambers 9:9, 37:9 · Deu 32:25): membership-scatter across
+  storage-fold (majority) / extended-recess shelf (2/10) / body-cavity shelf (1/10) /
+  natural-world shelf (1/10). No stable third job; either-home class, inline figurative
+  naming required at draft (gate-3 visibility).
+- **All back-check pairs FOLD:** 1Ki 22:25/2Ch 18:24 (the idiom doubles) = citation economy
+  in d5/9/10; Exo 8:3/Psa 105:30 (frogs) covered by room/storage kin wherever cited;
+  Deu 32:25 covered by room. Son 3:4/8:2 bedchamber = citation flutter, folds in room.
+- **Dirty draws: d3 (Pro 7:27 double-shelved) · d8 (Exo 8:3) · d9 (1Ch 28:11)** — all
+  single-occ, disqualified as ship candidates.
+- **CC recommendation (pending JP):** plain dry-run; exit terms = modal 2-sense carve ·
+  belly/sky verses at attested homes with figurative use named inline · no single-occ
+  double-shelf · the three chamber-within-chamber doubles legal ×2 · Mat 6:6 described as a
+  room, no prayer-closet devotional freight. Streak 1 riding: clean attempt-1 = count 4/15,
+  streak 2.
 
 ### G5281 ὑπομονή — SHIPPED + LIVE (2026-07-10, session 5). Plain ship, ATTEMPT 2.
 **Apply clean ("using reviewed draw 2a609d5c — no model call", cache-content verified before
