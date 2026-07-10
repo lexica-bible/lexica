@@ -956,6 +956,127 @@ def subuse_overload(senses_block, max_ok=3):
     return out
 
 
+# ── #30 floor-vs-ship placement diff (ENGINE_LESSONS #30, un-parked at close-out step 4,
+# 2026-07-10). Born γόνυ (invented sub-use moved Luk 5:8 + 2Ki 1:13 off their 3/3 floor homes,
+# every other gate green), confirmed νίπτω (unanimous Psalms cluster broken onto an invented
+# sense), hardest class κατανοέω hint-1 (one 0/10 placement inside an otherwise-PASSING draw).
+# Both structures — the floor's per-verse company and the ship draw's shelves — exist as
+# artifacts at gate time; this diffs them. FLAG-ONLY, same family as double_shelved: a fire is
+# a conscious per-word adjudication. Fire CLASSES and their count consequences get DEFINED at
+# the step-5 control fire, before the final-10 window opens (banked build note, step-4 opener);
+# until then fires are judgment-class under the ruled taxonomy, and an adjudicated-noise fire
+# must not disqualify a count ship (the ὑπομονή precedent extends only to recognition-class).
+
+_FLOOR_REF_RE = re.compile(r"(\S+)\s+(\d+):(\d+)")
+
+
+def _floor_ref_key(s):
+    """'Luk 5:8' -> ('Luk', 5, 8); None on a malformed ref (dropped — mirrors the reviewer's own
+    unknown-book filter, which already keeps model typos out of the floor's company math)."""
+    m = _FLOOR_REF_RE.match((s or "").strip())
+    return (_norm_book(m.group(1)), int(m.group(2)), int(m.group(3))) if m else None
+
+
+def load_floor(path, sid=None):
+    """Read a saved lexica_agreement run (agreement_<SID>_<prompt>_<ts>.json) into the shape
+    floor_ship_diff eats: per draw, a list of senses, each a set of (book, ch, vs). Hard-errors
+    on a strongs mismatch — diffing a word against another word's floor is never meaningful.
+    Freshness is the operator's call (a corpus data fix INVALIDATES a saved floor — the free
+    re-read is only valid while the data under it is unchanged), so the meta rides along and is
+    printed at the gate for the audit record."""
+    with open(os.path.expanduser(path), encoding="utf-8") as f:
+        p = json.load(f)
+    if sid and p.get("strongs") != sid:
+        sys.exit(f"  ✗ --floor {path}: file is for {p.get('strongs')}, not {sid} — wrong floor, "
+                 f"not diffed.")
+    draws = []
+    for d in p.get("draws", []):
+        senses = []
+        for s in d.get("senses", []):
+            refs = {k for k in (_floor_ref_key(r) for r in s.get("refs", [])) if k}
+            if refs:
+                senses.append(refs)
+        draws.append(senses)
+    return {"draws": draws,
+            "meta": {"file": os.path.basename(path), "strongs": p.get("strongs"),
+                     "prompt": p.get("prompt"), "runs": p.get("runs", len(draws))}}
+
+
+def floor_ship_diff(floor_draws, ship_senses, majority=None):
+    """PURE core of the #30 flag. The mechanical check is CLUSTER MEMBERSHIP, not sense count
+    (the νίπτω ruling): a verse pair that shared a sense in >= `majority` floor draws (default:
+    strict majority, N//2+1) is a CONSENSUS PAIR, and the flag fires when the ship draw SPLITS
+    such a pair across different senses. Merging two floor clusters into one ship sense never
+    fires — hierarchy demotion is not a cluster break (δίκτυον's fold was ruled LEGAL; it is
+    this flag's clean negative). Either-home migrators flip draw-to-draw, so their cross-pole
+    company sits below any strict majority and they stay silent by construction.
+
+    floor_draws: per floor draw, a list of senses, each a set of (book, ch, vs).
+    ship_senses: sense_specs()-shaped [{headline, refs:[(book,ch,vs)]}] for the ship draw.
+
+    Fires report the MOVER side of each break — the verse that lost at least as many consensus
+    partners as it kept — so one break reads once (its stationary partners keep most of their
+    company and stay suppressed). A double-shelved ship verse counts as "with" a partner if ANY
+    shelf is shared, the floor's own company convention. Returns
+    [{ref, ship_senses, kept:[refs], broken:[{ref, same, n, ship_senses}]}], ship-ref order."""
+    n = len(floor_draws)
+    if not n:
+        return []
+    if majority is None:
+        majority = n // 2 + 1
+    same = Counter()                      # unordered verse pair -> #floor draws sharing a sense
+    for senses in floor_draws:
+        pairs = set()
+        for refs in senses:
+            sv = sorted(refs)
+            for i in range(len(sv)):
+                for j in range(i + 1, len(sv)):
+                    pairs.add((sv[i], sv[j]))
+        for pr in pairs:
+            same[pr] += 1
+    consensus = {}                        # verse -> {partner: same-count}, majority pairs only
+    for (a, b), c in same.items():
+        if c >= majority:
+            consensus.setdefault(a, {})[b] = c
+            consensus.setdefault(b, {})[a] = c
+    ship_at = {}                          # verse -> set of 1-based ship sense numbers
+    for i, s in enumerate(ship_senses, 1):
+        for key in s["refs"]:
+            ship_at.setdefault(key, set()).add(i)
+    fmt = lambda k: f"{k[0]} {k[1]}:{k[2]}"
+    fires = []
+    for v in sorted(ship_at):
+        present = {w: c for w, c in consensus.get(v, {}).items() if w in ship_at}
+        if not present:
+            continue
+        kept = sorted(w for w in present if ship_at[v] & ship_at[w])
+        broken = sorted(w for w in present if not (ship_at[v] & ship_at[w]))
+        if broken and len(broken) >= len(kept):
+            fires.append({"ref": fmt(v), "ship_senses": sorted(ship_at[v]),
+                          "kept": [fmt(w) for w in kept],
+                          "broken": [{"ref": fmt(w), "same": present[w], "n": n,
+                                      "ship_senses": sorted(ship_at[w])} for w in broken]})
+    return fires
+
+
+def floor_diff_record(floor, senses_block, majority=None):
+    """Assemble the #30 audit record for a draft: the fires PLUS the floor-unseen ship citations.
+    #30 has no floor data on a verse the floor never cited — those stay the σελήνη-class manual
+    check (verify against the occurrence table), and they are listed so an empty fires list can
+    never read as 'every citation checked'."""
+    specs = sense_specs(senses_block)
+    n = len(floor["draws"])
+    maj = majority if majority is not None else n // 2 + 1
+    floor_seen = set()
+    for senses in floor["draws"]:
+        for refs in senses:
+            floor_seen |= refs
+    ship_refs = {k for s in specs for k in s["refs"]}
+    return {"file": floor["meta"]["file"], "prompt": floor["meta"]["prompt"], "runs": n,
+            "majority": maj, "fires": floor_ship_diff(floor["draws"], specs, maj),
+            "floor_unseen": [f"{b} {c}:{v}" for b, c, v in sorted(ship_refs - floor_seen)]}
+
+
 def registry_verse_hits(refs):
     """CONTESTED-VERSE REGISTRY routing (ENGINE_LESSONS #24 ῥῆμα refinement; JP-ruled 2026-07-08).
     Any cited ref that sits in contested_register.CONTESTED_VERSES comes back with its fork note
@@ -1339,6 +1460,25 @@ def show_entry(entry):
     for s in (a.get("subuse_overload") or []):
         print(f"  ⚠ sub-use overload: sense {s['sense']} carries {s['subuses']} Sub-uses — "
               f"merge-review (flag only, no ceiling; #14 forbids forced folds)")
+    fd = a.get("floor_diff")
+    if fd:
+        head = (f"  #30 floor-diff vs {fd['file']} "
+                f"(N={fd['runs']} draws, consensus = pairs together in ≥{fd['majority']})")
+        if fd["fires"]:
+            print(head + f" — {len(fd['fires'])} verse(s) OFF their floor consensus home:")
+            for f in fd["fires"]:
+                who = ", ".join(f"{b['ref']} {b['same']}/{b['n']}" for b in f["broken"][:6])
+                more = f" (+{len(f['broken']) - 6} more)" if len(f["broken"]) > 6 else ""
+                kept = f"; kept {', '.join(f['kept'])}" if f["kept"] else "; kept none"
+                print(f"  ⚠ #30: {f['ref']} (ship sense {'/'.join(map(str, f['ship_senses']))}) "
+                      f"split from {who}{more}{kept}")
+            print("     flag only — adjudicate per the ruled taxonomy; fire classes are defined "
+                  "at the step-5 control fire, never mid-count.")
+        else:
+            print(head + " — no consensus pair split (clean)")
+        if fd["floor_unseen"]:
+            print(f"     floor-unseen citation(s), NOT covered by this diff — table-verify them "
+                  f"(σελήνη procedure): {', '.join(fd['floor_unseen'])}")
     for r in (a.get("registry_verses") or []):
         print(f"  ‼ CONTESTED-VERSE REGISTRY HIT: {r['ref']} — {r['fork']}\n"
               f"     BAR ({r['source']}): {r['bar']}\n"
@@ -1397,6 +1537,12 @@ def main():
                          "deterministic sampler skipped (FLOW step 1.5) — NOT general draw-shopping. Adds "
                          "beyond budget, never drops an auto-pick; hard-errors if the word does not occur "
                          "there. The forced refs + intent are logged on the draw record.")
+    ap.add_argument("--floor", metavar="JSON",
+                    help="saved lexica_agreement run (agreement_<SID>_*.json) to diff this word's "
+                         "draw placements against — the #30 floor-vs-ship placement flag, FLAG-ONLY "
+                         "at the dry-run gate. One word only; refuses a file whose strongs does not "
+                         "match --word. Absent on a draw pass → the gate prints that the diff was "
+                         "NOT run (an unchecked blind spot must not look like a pass).")
     ap.add_argument("--structure-hint", action="append", default=[], metavar="JOB",
                     help="ESCALATION MECHANISM (post cap-out only, per the trigger ruling): pass one stable "
                          "sense/job (repeatable) from a prior review's certified stable-jobs list. Injected "
@@ -1410,6 +1556,9 @@ def main():
     if args.from_draw and (not args.word or not args.apply or args.force or args.all or args.dry_run):
         sys.exit("--from-draw ships one reviewed draw: use as --apply --word G#### --from-draw KEY8 "
                  "(no --force / --all / --dry-run — it ships specific reviewed bytes, it never rolls).")
+    if args.floor and (not args.word or args.all):
+        sys.exit("--floor diffs ONE word against ITS OWN saved floor: use with --word G#### and "
+                 "never --all (a floor is a per-word artifact).")
 
     targets = [args.word.upper()] if args.word else list(PILOT)
     targets = [("G" + t if t[:1] not in ("G", "H") else t) for t in targets]
@@ -1580,7 +1729,16 @@ def main():
         if args.force_gate_bypass and any(
                 m["bucket"] in ("real", "noverse") for m in entry["audit"]["misses"]):
             entry["audit"]["bypass_reason"] = args.force_gate_bypass
+        # #30 floor-vs-ship placement diff (flag-only). The record lands in the entry (and so on
+        # an applied row) ONLY when a floor was diffed; a resplit pass never nags about it.
+        if args.floor:
+            entry["audit"]["floor_diff"] = floor_diff_record(load_floor(args.floor, sid),
+                                                             entry["senses_block"])
         show_entry(entry)
+        if not args.floor and not args.resplit:
+            print("  ⚠ #30 floor-diff NOT RUN — no --floor <agreement json> on this pass; the "
+                  "placement blind spot is UNCHECKED (the insurance clause gates count ships on "
+                  "#30 live).")
 
         problems = validate_entry(entry)
         if problems:

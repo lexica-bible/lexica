@@ -138,6 +138,123 @@ def test_dynamic_budget_curve():
     assert B.dynamic_budget(9049) == 80        # κύριος-scale stays capped
 
 
+# ── #30 floor-vs-ship placement diff (un-parked step 4, 2026-07-10) ──────────────────────────
+# Control positives are the three BANKED break records + the banked clean negative
+# (AUDIT_lexica_rollout.md: G1119 γόνυ pull-1 · G3538 νίπτω pull-1 · G2657 κατανοέω hinted
+# draw-1 — the hard class · G1350 δίκτυον ruled-legal fold). PINNED facts (verse identities,
+# floor shapes, tallies) are from the audit doc; the OTHER cluster members are synthetic
+# scaffolding sized to the banked cluster shapes — the detector reads structure, not corpus.
+
+def _shelves(*sense_ref_lists):
+    """Ship-side helper: sense_specs()-shaped senses from ref-tuple lists."""
+    return [{"headline": f"sense {i}", "refs": list(refs)}
+            for i, refs in enumerate(sense_ref_lists, 1)]
+
+
+_GONY_PHYS = [("Heb", 12, 12), ("Isa", 35, 3), ("Job", 4, 4)]                       # scaffolding
+_GONY_KNEEL = [("Luk", 5, 8), ("2Ki", 1, 13),                                       # PINNED
+               ("Act", 9, 40), ("Act", 20, 36), ("1Ki", 8, 54), ("Ezr", 9, 5)]      # scaffolding
+
+
+def test_gony_pull1_fires():
+    """γόνυ control (#30 born here): floor 3/3 STABLE {2:3}, Luk 5:8 + 2Ki 1:13 homed with the
+    kneeling cluster in EVERY draw; the ship draw moved both under PHYSICAL (the invented
+    'approach-posture' sub-use lives inside that numbered sense). Every machine gate was green
+    (35/35) — this flag must fire, on exactly the two moved verses (the movers), never on the
+    stationary kneeling verses."""
+    floor = [[set(_GONY_PHYS), set(_GONY_KNEEL)]] * 3
+    ship = _shelves(_GONY_PHYS + [("Luk", 5, 8), ("2Ki", 1, 13)],
+                    [r for r in _GONY_KNEEL if r not in {("Luk", 5, 8), ("2Ki", 1, 13)}])
+    fires = B.floor_ship_diff(floor, ship)
+    assert sorted(f["ref"] for f in fires) == ["2Ki 1:13", "Luk 5:8"], fires
+    luk = next(f for f in fires if f["ref"] == "Luk 5:8")
+    assert luk["kept"] == ["2Ki 1:13"]                       # the movers moved TOGETHER
+    assert all(b["same"] == 3 and b["n"] == 3 for b in luk["broken"])   # off 3/3 homes
+
+
+_NIPTO_TRIO = [("Psa", 26, 6), ("Psa", 58, 10), ("Psa", 73, 13)]                    # PINNED
+_NIPTO_WASH = _NIPTO_TRIO + [("Gen", 18, 4), ("Exo", 30, 18), ("Joh", 13, 5),       # scaffolding
+                             ("Mat", 6, 17), ("2Ki", 5, 12), ("Gen", 43, 31)]
+
+
+def test_nipto_pull1_fires():
+    """νίπτω control (#30 second instance): floor 3/3 STABLE at 2 (washing | Job 20:23); the
+    ship draw promoted the Psalms trio onto an invented top-level 'rhetorical hand-washing'
+    sense, breaking a unanimous 3/3 cluster. Job 20:23 (single-verse sense, no floor company)
+    must stay silent; so must the stationary washing verses."""
+    floor = [[set(_NIPTO_WASH), {("Job", 20, 23)}]] * 3
+    ship = _shelves([r for r in _NIPTO_WASH if r not in set(_NIPTO_TRIO)],
+                    _NIPTO_TRIO,
+                    [("Job", 20, 23)])
+    fires = B.floor_ship_diff(floor, ship)
+    assert sorted(f["ref"] for f in fires) == ["Psa 26:6", "Psa 58:10", "Psa 73:13"], fires
+
+
+# κατανοέω floor shape (audit doc, agreement_G2657 10-run): two poles — visual 10/10 together,
+# mental 9-10/10 — plus banked either-home MIGRATORS that flip draw-to-draw. Psa 10:14 = floor
+# mental 9/10 / visual 1/10 (pinned tallies from the hinted-draw-1 record).
+_KAT_VISUAL = [("Neh", 2, 13), ("Num", 32, 8), ("Act", 27, 39), ("Act", 11, 6),     # PINNED
+               ("1Ki", 3, 21), ("Exo", 33, 8), ("Job", 30, 20), ("Psa", 22, 17), ("Gen", 3, 6)]
+_KAT_MENTAL = [("Heb", 3, 1), ("Heb", 10, 24), ("Psa", 119, 15), ("Hab", 3, 2),     # PINNED
+               ("Job", 23, 15), ("Psa", 94, 9), ("Mat", 7, 3), ("Luk", 6, 41), ("Isa", 57, 1)]
+
+
+def _kat_floor():
+    """10 floor draws: poles stable; Psa 10:14 mental in 9, visual in 1; two migrators flipping
+    on DIFFERENT schedules (either-home class — their company with any pole stays a minority,
+    so the detector must be structurally blind to them)."""
+    draws = []
+    for d in range(1, 11):
+        vis, men = set(_KAT_VISUAL), set(_KAT_MENTAL)
+        (vis if d == 10 else men).add(("Psa", 10, 14))
+        (vis if d <= 5 else men).add(("Jas", 1, 23))
+        (vis if 4 <= d <= 8 else men).add(("Luk", 12, 24))
+        draws.append([vis, men])
+    return draws
+
+
+def test_katanoeo_hint1_fires_the_hard_class():
+    """κατανοέω hinted-draw-1 control — THE HARD CLASS: an otherwise-PASSING draw (hint exit
+    terms all green) carrying ONE 0/10 off-floor placement (Exo 33:8 filed MENTAL; floor visual
+    10/10, mental 0/10) plus Psa 10:14 filed VISUAL (floor mental 9/10). If #30 catches this,
+    it's real. Migrators land wherever — no fire; every stationary pole verse — no fire."""
+    ship = _shelves([r for r in _KAT_VISUAL if r != ("Exo", 33, 8)]
+                    + [("Psa", 10, 14), ("Jas", 1, 23)],
+                    _KAT_MENTAL + [("Exo", 33, 8), ("Luk", 12, 24)])
+    fires = B.floor_ship_diff(_kat_floor(), ship)
+    assert sorted(f["ref"] for f in fires) == ["Exo 33:8", "Psa 10:14"], fires
+    exo = next(f for f in fires if f["ref"] == "Exo 33:8")
+    assert exo["kept"] == [] and len(exo["broken"]) == 8                  # off its whole home
+    assert all(b["same"] == 10 for b in exo["broken"])                    # 10/10 floor company
+
+
+def test_diktyon_fold_is_clean():
+    """δίκτυον clean negative: floor 3/3 {3:3} (fishing | trap | architecture); the ship draw
+    folded trap to a SUB-USE under a combined catching sense — ruled LEGAL, zero verses changed
+    cluster. Hierarchy demotion is not a cluster break: a merge must NEVER fire this flag."""
+    fish = [("Mat", 4, 20), ("Luk", 5, 4), ("Joh", 21, 6), ("Ecc", 9, 12),
+            ("Eze", 26, 5), ("Pro", 1, 17)]
+    trap = [("Psa", 25, 15), ("Psa", 31, 4), ("Job", 18, 8)]
+    arch = [("1Ki", 7, 17), ("Jer", 52, 22), ("Exo", 27, 4)]
+    floor = [[set(fish), set(trap), set(arch)]] * 3
+    assert B.floor_ship_diff(floor, _shelves(fish + trap, arch)) == []
+
+
+def test_floor_diff_record_reads_the_real_splitter_and_names_unseen():
+    """End-to-end shape check: floor_diff_record parses a senses_block with the PRODUCTION
+    splitter and lists floor-unseen citations so an empty fires list can't read as 'every
+    citation checked' (σελήνη class). Majority default pinned: N=3 → 2, N=10 → 6."""
+    floor = {"draws": [[{("Gen", 1, 1), ("Gen", 1, 2)}, {("Exo", 2, 2)}]] * 3,
+             "meta": {"file": "agreement_G0000_v7_test.json", "strongs": "G0000",
+                      "prompt": "v7", "runs": 3}}
+    block = ("**1. First job** (Gen 1:1; Gen 1:2)\n\nProse.\n\n"
+             "**2. Second job** (Exo 2:2; Rev 22:21)\n\nProse.\n")
+    rec = B.floor_diff_record(floor, block)
+    assert rec["fires"] == [] and rec["floor_unseen"] == ["Rev 22:21"], rec
+    assert rec["majority"] == 2 and rec["runs"] == 3
+    assert B.floor_ship_diff([[{("Gen", 1, 1)}]] * 10, []) == []          # n=10 → majority 6, no ship refs
+
+
 # ── contested-verse registry routing ─────────────────────────────────────────────────────────
 
 def test_registry_hits_2co521():
