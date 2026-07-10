@@ -1,6 +1,6 @@
 # Lexica dictionary — JP quick reference (how to drive the new system)
 
-Written 2026-07-10 (step-4 session), for the low-availability stretch. One page, phone-readable.
+Written 2026-07-10 (step-4 session), for the low-availability stretch. One page.
 The rules behind every line here are in HANDOFF_lexica_rollout.md + AUDIT_lexica_rollout.md —
 this page is how to DRIVE, not the law itself.
 
@@ -10,8 +10,8 @@ this page is how to DRIVE, not the law itself.
   "go" — you never have to compose anything.
 - **Your silence = pending, never approval.** Nothing fires while an item is open. The engine
   keeps doing side work (tooling, prep, docs) but ships nothing gated.
-- Rule from your phone, days later, in any order. Partial rulings are fine — each item stands
-  alone unless the list says two items travel together.
+- Rule when present, any device, days later, in any order. Partial rulings are fine — each item
+  stands alone unless the list says two items travel together.
 - Flow: CC banks everything in the repo → you paste CC's summary to the reviewer chat → the
   reviewer checks it against the docs → you rule off the list. If the reviewer disputes an
   item, that item goes back to pending; the rest of your rulings stand.

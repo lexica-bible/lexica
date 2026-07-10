@@ -122,8 +122,9 @@ degrades to SLOWER, never to STALLED.** Ruled operational consequences:
   norm, not the fallback). No session may depend on same-day JP follow-up. Anything needing a JP
   ruling banks as a PENDING item with evidence attached; the session proceeds on everything else.
 - **Ruling batching:** pending JP rulings accumulate into ONE decision list per session close —
-  each item one line + the number it turns on + recommendation attached. Phone-readable format:
-  lead with the ask, evidence below. JP may rule days later.
+  each item one line + the number it turns on + recommendation attached. Format: lead with the
+  ask, evidence below ["phone-readable" struck 2026-07-10 — stylistic assumption, not a JP
+  ruling; JP rules when present, any device]. JP may rule days later.
 - **Priority order under constrained attention:** (a) the 10 owed count-eligible GREEN ships
   (buy GREEN activation → buys JP's absence on the easy 80%) — but see the step-3 sequencing
   consequence: #30 must be live first, so (b) actually leads; (b) step 4 V8 pile triage + #30
@@ -449,7 +450,7 @@ ambiguity or enforce the majority" on Deu 23:18, JP's call at a future window).
 ##   JUDGMENT = a call only JP can make (rulings, roster approval, taste, doctrine).
 ##   EXECUTION = PA-terminal hands (the standing CC/DB boundary — unchanged, not new).
 ##   CC-ALONE = repo-only work needing neither until an accept/eyeball at the end.)
-1. **JP rules the step-4 list above** — JUDGMENT (phone-sized, recommendations attached).
+1. **JP rules the step-4 list above** — JUDGMENT (one line per item, recommendations attached).
 2. **Step 5 — V8 control fire** — JUDGMENT (fire-class definitions + promote/park ruling,
    batched) + EXECUTION (floor/draw commands, screenshots). #30 fire classes DEFINED here.
 3. **Tooling tickets** (ruling-list item 3) — CC-ALONE (flag/apply-layer code + CI tests;
@@ -535,7 +536,8 @@ seam all in force until the list returns.
    control plan). Big candidates on record: #29 attribution register · #40 shelf-architecture ·
    tail-list disjointness · uncited-category check · dangling-ref prose exclusion. New stamp
    computed; reviewer byte-checks; default stays v7.
-4. **CLOSE = ONE PHONE-READABLE RULING LIST:** ask first, evidence below, one line each — and
+4. **CLOSE = ONE RULING LIST ["PHONE-READABLE" struck 2026-07-10 — stylistic assumption, not
+   a JP ruling; format itself unchanged]:** ask first, evidence below, one line each — and
    every item carries a RECOMMENDED answer (incl. the step-5 control-fire word, with rationale);
    JP overrules rather than composes. Nothing fires until the list returns. **Gap work while
    pending (all JP-independent, ruled 2026-07-10 at session-6 close):** step-6 layout prep +
@@ -562,7 +564,7 @@ You are the reviewer chat for the Lexica STEP-4 session (V8 pile triage + prompt
 old "19" was a propagated tally slip) · two-tier bar ADOPTED with variance watch tags · count
 5/15 (δίκτυον, σελήνη, ὑπομονή, ταμεῖον, κάλαμος) · GREEN activates only when the final 10 ran
 with #30 live · JP availability INTERMITTENT (relocation) — the session is JP-LIGHT: draft/build
-everything, FIRE NOTHING; V7 stays live default; close = ONE phone-readable ruling list, every
+everything, FIRE NOTHING; V7 stays live default; close = ONE ruling list, every
 item with a recommended answer; silence = pending, never approval. CC reads the repo and relays;
 reconcile CC's first summary against the handoff STEP-4 CC OPENER + the audit doc's STEP 3 block
 + AUDIT SESSION packet before accepting it.
