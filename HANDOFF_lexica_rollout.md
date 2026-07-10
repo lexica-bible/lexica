@@ -393,81 +393,28 @@ ambiguity or enforce the majority" on Deu 23:18, JP's call at a future window).
 ## Full per-word records: audit doc session-5 entries. Session-6 handoff blocks below are the
 ## resume point; this log is history.
 
-## STEP-4 RULING LIST — PARTIAL RETURN (JP via reviewer relay, 2026-07-10): items 4, 5, 6, 12
-## RULED — marked inline below. Items 1, 2, 3, 7, 8, 9, 10, 11 PENDING — the relay's line for
-## them was the reviewer PROMPTING JP ("one word closes these"), not JP's word; silence =
-## pending. STEP 5 STAYS GATED on items 1 + 2. (Original terms: reviewer checks CC's summary
-## before JP rules — done, sign-off unconditional; items stand alone; nothing pending fires.)
-1. **#30 detector as built — approve?** Flag-only floor-vs-ship diff at the dry-run gate
-   (`--floor`), control-fired on all three banked positives + the δίκτυον negative
-   (`ac8ea96`). Includes the new stored field `audit.floor_diff` (lands only on floor-diffed
-   applies; nothing written before this ruling — new-fields checkpoint honored by sequencing).
-   **REC: approve.** Turns on: #30 goes live → the final-10 window can open. **Window
-   contents stated (reviewer amendment, names not tallies): the final-10 queue has NO members
-   yet — batch-4 selection (roadmap 4) fills it. "10 owed" is arithmetic only: the ruled
-   N=15 target minus the 5 banked members δίκτυον, σελήνη, ὑπομονή, ταμεῖον, κάλαμος.**
-2. **V8 draft (4 edits) cleared for the step-5 control fire?** All pure insertions, zero V7
-   lines altered; per-edit traceability in the audit doc STEP 4 entry; reviewer byte-check =
-   diff V7_PROMPT→V8_DRAFT_PROMPT in lexica_agreement.py. Live default stays v7 either way;
-   would-be stamp `lexica:7ef8620328a9`. **REC: approve for the fire only** (promotion is a
-   separate ruling after step 5). Turns on: step 5 can run.
-3. **Tooling batch (WS3 noise families → tooling, never prompt) — build in the gap?** #28
-   shorthand-tail expander · quote-strip/cross-pairing fix · prose-form rendering-claim parser
-   · disclaimer-as-cite exclusion · dangling-ref prose-noise exclusion · apply
-   refuse-by-default + content-hash. All flag/apply-layer, JP-independent, control fires must
-   stay green. **REC: approve the batch.** Turns on: scheduling only.
-4. **Step-5 control-fire word.** **REC: CC picks the top un-built GREEN concrete noun at
-   step-5 open** from the ranker output — verified against scripts/rank_lexica_candidates.py
-   on disk (--skip-built line 95, --occ-max line 92, --top line 90):
-   `cd ~/bible-db && python scripts/rank_lexica_candidates.py --skip-built --occ-max 40 --top 40`
-   Rationale: mirrors the calibration class; exercises edits B/C/D end-to-end; edit A is
-   inert-by-design on a GREEN word and gets its fair test at the next RED window (stated so a
-   quiet A isn't read as validated). #30 fire classes get DEFINED at this fire (banked term).
-   **RULED (JP, 2026-07-10): delegation affirmed explicitly — CC picks per the ranker rule.**
-5. **Sequencing for the final 10: keep the standard 3-run→escalate law?** The 6-for-6
-   escalation streak that killed the 3-run was the hand-picked hard tail; the final 10 are
-   GREEN picks. **REC: keep 3-run→escalate; re-open only if the first two words escalate.**
-   Turns on: ~7 draws per easy word vs 10. **Scope (reviewer amendment): this item rules the
-   FINAL-10 sequencing only. The GENERAL pending stays OPEN as banked — the poetry-share
-   trigger (falsified as a mechanical threshold, soft form of #35 stands) and the N=10→6-7
-   validation experiment (step-3 cost lever, unruled) both revisit at batch-4 selection with
-   the intake's book distributions in hand.**
-   **RULED (JP, 2026-07-10): yes — 3-run→escalate for the final 10.**
-6. **Delete-class-swap streak criterion (carried, διανοίγω).** Does one human reword/delete
-   swap break the graduation streak like a hint does? **REC: yes — any human intervention
-   means the pass didn't run clean (φωνή/ὄρος standard, consistent with βιβρώσκω option (b));
-   streak and count stay aligned.** Turns on: the graduation streak definition only.
-   **RULED (JP, 2026-07-10, after plain-terms walkthrough; call delegated to the reviewer and
-   ruled on that basis): yes — human intervention before OR after the draft resets the streak;
-   the word still ships with the fix. Framing banked as committed wording: the streak is a
-   SCOREBOARD of unassisted performance, never a shipping gate.**
-7. **Lesson candidate #42 (tally cross-check) — adopt?** A running tally is a derived claim;
-   batch-close state banks only after a name-count against the roster. Draft wording sits in
-   the audit doc FINAL-TALLY CORRECTION entry. **REC: adopt verbatim.**
-8. **Flag-1 stale line — approve the correction?** The audit packet's "no-plain-pull" set is
-   wrong as written; the annotated correction (χριστός + ὀφθαλμός DID run 3 plain pulls; true
-   set = σκληρύνω, περιτομή, δάμαλις, συκῆ) stands inline pending this ruling. **REC: approve
-   (make the annotation permanent).**
-9. **Corpus-defect protocol — adopt the draft below?** Routing for a corpus defect surfaced
-   mid-word: DATA-BLOCKED park → JP-independent fix ticket → FRESH floor after any data fix
-   (a corpus fix invalidates the saved floor; real cost, stated). **REC: adopt.**
-10. **Roadmap — confirm the ordered block below?** Order + judgment marks only; every item
-    already banked individually. **REC: confirm.**
-11. **#30 fire-class definition — confirm the DEFERRAL (reviewer amendment: on the list
-    explicitly, not implied).** The banked build-note term: fire classes + their count
-    consequences get defined at the STEP-5 control fire from its own record, BEFORE the
-    final-10 window opens — not now, with zero live fires to classify from. **REC: confirm
-    the deferral** (defining classes today would pre-empt the instrument the same way ruling
-    the fabrication check at step 2 would have). Turns on: nothing today; step-5 agenda item.
-12. **General cost pendings — poetry skip-3 trigger + the N=10→6-7 experiment (reviewer
-    amendment: own item, not a footnote on item 5).** The mechanical poetry threshold is
-    already FALSIFIED (σελήνη 61.5% + κῆπος 55.3% clean at 3; δάμαλις escalated at 23.7%);
-    #35's soft form stands. The N=6-7 experiment is pre-specified in the banked lever text:
-    rerun two settled words at N=7, check every ruling reproduces (~35% cut on hard words if
-    it holds). **REC: DEFER BOTH to batch-4 selection** — the trigger needs the intake's book
-    distributions in hand, and the N=7 experiment spends real draws, best scheduled against
-    the batch-4 economics (reviewer pre-endorsed deferral as acceptable). Turns on: nothing
-    today; batch-4 agenda items. **RULED (JP, 2026-07-10): defer both to batch-4.**
+## STEP-4 RULINGS — CLOSED (ruled in-chat 2026-07-10; informed approval — the plain-terms
+## rundown preceded the word, per the new standing rule. Transmission completed same day:
+## CC held items 1-3/7-11 pending against a relay that carried the reviewer's PROMPT for a
+## ruling, not the ruling — the completion relay carried JP's verbatim "yes, approve all
+## eight." Evidence per item = audit doc STEP 4 entry + ADDENDUM + partial-return record;
+## full item texts with recommendations = git history at 2820931.)
+1. #30 detector as built — **APPROVED** (incl. the `audit.floor_diff` stored field).
+2. V8 draft — **APPROVED FOR THE STEP-5 TEST FIRE ONLY** (promotion = a separate ruling after).
+3. Tooling batch — **APPROVED** (build in the gap; flag/apply layer only, control fires stay green).
+4. Step-5 word — **CC PICKS per the ranker rule** (delegation affirmed explicitly).
+5. Final-10 sequencing — **YES, 3-run→escalate** (re-open only if the first two escalate).
+6. Streak — **YES: any human intervention resets it; the word still ships with the fix.**
+   Banked framing: the streak is a SCOREBOARD of unassisted performance, never a shipping gate.
+7. Lesson #42 — **ADOPTED verbatim** → now a numbered lesson in ENGINE_LESSONS.md; the
+   step-4 exhibits (#3-#5) convert from contingent to unconditional.
+8. Flag-1 stale line — **APPROVED**, the inline annotation is permanent.
+9. Corpus-defect protocol — **ADOPTED** (the draft block below is now law).
+10. Roadmap — **CONFIRMED** as ordered and marked.
+11. #30 fire-class definition — **DEFERRAL CONFIRMED** (defined at the step-5 control fire).
+12. Cost pendings (poetry trigger + N=6-7) — **DEFERRED to batch-4 selection.**
+**GATE CONSEQUENCE: STEP 5 UNLOCKED** (items 1/2/4 in hand). #30 is live at the next dry-run
+gate; V7 remains the shipping engine unless and until the step-5 ruling promotes V8.
 
 ## ROADMAP (consolidated 2026-07-10, step-4 session; RE-MARKED same day on reviewer relay —
 ## JP-LIGHT is a workflow POSTURE, not an absence; no travel window, no countdown. Items are
@@ -529,11 +476,9 @@ ambiguity or enforce the majority" on Deu 23:18, JP's call at a future window).
 
 ## STEP-5 SESSION — CC OPENER BLOCK (opens from docs alone. State at step-4 wrap: the reviewer
 ## ALREADY reconciled this session-pair — #30 ACCEPTED, V8 hunks byte-checked PASS, list FINAL
-## AT 12. PARTIAL RETURN banked 2026-07-10: items 4, 5, 6, 12 RULED (item 4 = the word-pick
-## delegation); items 1, 2, 3, 7-11 still pending. GATE FIRST: have JP's rulings on items
-## 1 + 2 returned? NO → gap work only (item-3 tooling if ruled, step-6 display prep,
-## /consolidate — MEMORY.md 18KB + topic file 487 lines, due); nothing fires, re-bank, close.
-## YES → run step 5.)
+## AT 12. RULINGS CLOSED 12/12 in-chat 2026-07-10 (the STEP-4 RULINGS — CLOSED block above):
+## items 1/2/4 in hand → THE GATE IS OPEN — run step 5. Also green: item-3 tooling batch and
+## /consolidate (MEMORY.md 18KB + topic file 487 lines, due) as parallel gap work.)
 Step-5 charter when unlocked: (1) pick the control word per ruled item 4 (ranker command in
 the list, R1-verified); (2) fresh floor under the CURRENT data state — reviewer runs
 `--prompt v8` per its inheritance; (3) full pipeline with `--floor` wired (#30 live) — dry-run
@@ -1724,9 +1669,10 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
    + control-fired on all three banked positives (`ac8ea96`) · pile triaged in full (audit doc
    STEP 4 entry) · V8 drafted NOT fired (candidate `v8` in lexica_agreement.py, live default
    v7, would-be stamp `lexica:7ef8620328a9`) · roadmap + corpus-defect protocol + JP quickref
-   banked. **NEXT = JP rules the STEP-4 RULING LIST (10 items, recommendations attached),
-   then STEP 5 V8 control fire (opener block above; #30 fire classes defined there), then the
-   final 10 with #30 live → GREEN activation, then step 6 layout.**
+   banked. **STEP-4 RULINGS CLOSED 12/12 in-chat 2026-07-10 (CLOSED block above; #42 adopted
+   → ENGINE_LESSONS). NEXT = STEP 5 V8 control fire (opener above, gate OPEN; #30 fire
+   classes defined there; R4 commands banked), then the final 10 with #30 live → GREEN
+   activation, then step 6 layout. Item-3 tooling + /consolidate = parallel gap work.**
 6. (was 4, historical) **Batch-3 sessions 1–2 record** — **sessions 1 AND 2 CLOSED 2026-07-09.**
    Session 2: 3 shipped (παράπτωμα RED — routing exercise met · συκῆ · βέλος, all off-count via
    escalation), κύων parked (one-verse wall, Deu 23:18), 4-of-4 escalations; count 2/15, streak 0;

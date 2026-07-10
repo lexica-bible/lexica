@@ -556,8 +556,9 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   CORRECTION) · close steps 1–4 + audit session DONE · TWO-TIER BAR ADOPTED w/ watch tags · count
   5/15 · **STEP 4 RAN: #30 BUILT + control-fired (`ac8ea96`), pile triaged, V8 DRAFTED-NOT-FIRED
   (live default v7), roadmap + corpus-defect protocol + JP_QUICKREF_lexica.md banked · NEXT = JP
-  rules the STEP-4 RULING LIST (handoff, 10 items w/ recommendations), then STEP 5 (V8 control
-  fire + #30 fire-class definition), then the final 10 with #30 live → GREEN activation.** JP's hours
+  STEP-4 RULINGS CLOSED 12/12 in-chat 2026-07-10 (#42 adopted → ENGINE_LESSONS) · NEXT = STEP 5
+  (V8 control fire + #30 fire-class definition, gate OPEN), then the final 10 with #30 live →
+  GREEN activation.** JP's hours
   variable (relocation) — batch decisions when he's away, work normally when he's present
   (handoff AVAILABILITY CONSTRAINT); silence = pending.
   Current law + queue = `HANDOFF_lexica_rollout.md` (RULING LIST + ROADMAP + STEP-5 opener +

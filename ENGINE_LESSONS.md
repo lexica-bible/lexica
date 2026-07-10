@@ -619,3 +619,23 @@ both drifting from the doc.
     distributional fact of the corpus; scrubbing it would be over-correction into the opposite freight, sanitizing
     the corpus to protect the lemma. De-freight, don't de-claw. *(audit: G2041 ἔργον — three freight failures, one
     caught post-apply, 2026-07-08)*
+
+## Added at the step-4 rulings close (2026-07-10; JP-adopted, step-4 list item 7)
+
+42. **A derived number is a claim — count the names before banking it, and the rule binds every
+    author: CC, reviewer, and relays alike.** Drafted at the batch-3 FINAL-TALLY CORRECTION (a
+    "19" that survived four sessions of do-not-re-derive markers because nothing ever counted
+    the names behind it); ADOPTED verbatim by JP ruling 2026-07-10. Exhibits at adoption — every
+    party caught at least once: (1) CC's propagated tally slip (19 for 18); (2) the outgoing
+    reviewer's from-memory root-cause reconstruction (wrong on both session and mechanism while
+    the docs held the answer); (3) CC's fixture over-claim ("all 9 migrators silent" for a
+    fixture that models 2); (4) the step-4 reviewer's dictated intake line ("18 shipped + 2
+    escapes; parks outside intake" — contradicted the ruled record; flagged, banked name-true);
+    (5) the availability framing drift (a true fact inflated into an unrequested design mandate,
+    ratified by both CC and reviewer across two sessions, corrected against source); (+) the
+    same session's relay gap — a bracketed prompt-for-a-ruling nearly banked as the ruling
+    itself, held by flag-before-bank enforced against the reviewer. Operating rule: batch-close
+    state banks only after a name-count cross-check against the roster; a stated number must
+    match its artifact's actual contents; flag-before-bank applies to dictations from ANY party.
+    *(audit: FINAL-TALLY CORRECTION + STEP 4 ADDENDUM + partial-return/completion records,
+    2026-07-10)*

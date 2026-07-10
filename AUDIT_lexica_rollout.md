@@ -1982,6 +1982,19 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### STEP-4 RULINGS — TRANSMISSION COMPLETED, LIST CLOSED 12/12 (JP, in-chat, 2026-07-10)
+The partial-return record below is superseded on one point only: JP's word for items 1, 2, 3,
+7–11 HAD been given in-chat ("yes — approve all eight as recommended", after the plain-terms
+rundown per the new standing rule) but sat in a relay appendix that never transmitted. CC's
+pending-hold was correct on the evidence it had — silence-law enforced against the reviewer's
+own relay — and the completion relay closed the gap same day. **Outcome: all 12 ruled; the
+handoff block converted to STEP-4 RULINGS — CLOSED; step-5 gate OPEN (items 1/2/4 in hand);
+#42 written into ENGINE_LESSONS.md verbatim (item 7); exhibits #3–#5 unconditional.** Ledger
+note, banked at the reviewer's own naming: this session's exhibits caught every party — CC's
+fixture over-claim, the reviewer's dictated miscount, the availability drift all three
+ratified, and a relay gap caught by CC holding the line against the reviewer. The system
+audits its authors; that is what makes it honest.
+
 ### STEP-4 RULING LIST — PARTIAL RETURN + TWO STANDING PROCESS RULES (JP via reviewer relay,
 ### 2026-07-10, post-wrap)
 **RULED: items 4 (word-pick delegation affirmed) · 5 (3-run→escalate for the final 10) ·
