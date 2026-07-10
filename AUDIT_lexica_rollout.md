@@ -1982,6 +1982,28 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### STEP-5 #30 FIRE-CLASS DEFINITIONS — BANKED (reviewer, 2026-07-10; defined from the G2665
+### control fire's own record per ruled item 11, BEFORE the final-10 window. Source record =
+### the G2665 V8 dry-run gate print (draw f1ed4453, provisional-V8 stamp lexica:7ef8620328a9)
+### + the V8 floor (agreement_G2665_v8_20260710-085637.json) + JP's occurrence check (all three
+### shorthand unseen refs REAL, one occurrence each). Flag-before-bank satisfied: drafted in
+### the reviewer chat, both parties reviewed, JP's sqlite run closed the one open input.
+### Context: draw f1ed4453 REJECTED (duplicate ref "Num 3:26; 4:32; Num 4:32" + sub-use-2
+### lead over-assertion) → fresh V8 redraw; reject is two-tier-bar defect class, and the
+### promote eyeball measures V8 unassisted — no hand-patching the instrument.)
+- **CLEAN** = split channel silent AND unseen channel *verified* — manual σελήνη-procedure
+  check on shorthand tails is a mandatory gate step until #28 lands; a printed "clean" alone
+  is not CLEAN.
+- **UNSEEN-REAL** (exhibit: G2665 — Lev 4:17, Lev 16:15, Exo 40:21) = true occurrence
+  unsampled by the floor → judgment-class placement adjudication; does not disqualify a
+  count ship.
+- **UNSEEN-FABRICATED** = unseen ref fails the occurrence check → hard reject, redraw,
+  engine-catch banked.
+- **SPLIT** = consensus pair split across ship senses → hole-vs-fold back-check; adjudicated
+  noise never disqualifies; a true hole rejects.
+- **Riders:** merge-silence demonstrated working (νίπτω ruling behaving); "citation gate N/N"
+  scopes to qualified refs only.
+
 ### STEP-4 RULINGS — TRANSMISSION COMPLETED, LIST CLOSED 12/12 (JP, in-chat, 2026-07-10)
 The partial-return record below is superseded on one point only: JP's word for items 1, 2, 3,
 7–11 HAD been given in-chat ("yes — approve all eight as recommended", after the plain-terms
