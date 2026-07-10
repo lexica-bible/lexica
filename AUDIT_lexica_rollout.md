@@ -1982,6 +1982,20 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 14 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### G5281 ὑπομονή — SHIPPED + LIVE (2026-07-10, session 5). Plain ship, ATTEMPT 2.
+**Apply clean ("using reviewed draw 2a609d5c — no model call", cache-content verified before
+apply) → screenshot review PASS all 5 checks (sense order · OT block confined to sense 2 ·
+2Pe 1:6 ×2 · both gloss notes intact · whitespace across the new construction-group shape).
+BATCH TALLY: 17 shipped / 2 escapes / 2 parked. COUNT RULING PENDING JP: clean attempt-2
+plain ship → 3/15 or off-count (reviewer's read: machine-flagged reject ≠ human intervention,
+argues it counts; attempt-1-only is the counter-position; JP's call). Remaining: ταμεῖον G5009,
+κατανοέω G2657.**
+**STYLE-VARIANCE CHECK (reviewer-mandated, result pending JP pull):** two render-faithful but
+possibly-new shapes on this card — (1) citations-only paragraph (no prose lead) in sense 2;
+(2) italic gloss-word leads (*"Waiting"* / *"Patience"*) in gloss notes. Grep across shipped
+cards' def_json ordered; prior use = existing house range, first use = style-ledger data point
+for the layout session. Not a defect either way.
+
 ### G5281 ὑπομονή — GREEN, OPENED session 5 (2026-07-10). PRE-REGISTRATION (the pre-ruled
 ### endurance-vs-hope split, banked BEFORE the floor per the session-3 ranking note).
 **Expected profile (prediction, not a constraint — attested = follow it):** (a) endurance /
