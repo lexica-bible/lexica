@@ -1982,6 +1982,23 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 14 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### G2657 κατανοέω — GREEN (last roster word), OPENED session 5 (2026-07-10).
+### PRE-REGISTRATION.
+**Sequencing note (JP, banked): an AUDIT-SESSION CHARTER goes on the stack — after κατανοέω
+ships, BEFORE close steps 3–4. Scope: evidence synthesis (reject reclassification, economics
+model, gate load-bearing analysis); documents as input, recommendations not rulings. Reviewer
+drafts it when reached. Incumbent definition files at open for the post-ship comparison per
+the new protocol (JP posts when handy).**
+**Expected profile (prediction, not a constraint — attested = follow it):** a perception
+gradient — (a) perceive/notice (Mat 7:3 the beam in the eye, Luk 6:41) · (b) consider/observe
+attentively (Luk 12:24 "consider the crows", Luk 12:27, Act 7:31-32 Moses at the bush,
+Rom 4:19 Abraham considering his body, Jas 1:23-24) · (c) fix attention on (Heb 3:1 "consider
+the apostle", Heb 10:24 "consider one another"). Session-3 ranking: soft-borders mind-verb,
+fuzzy edges, NO known trap — the risk is carve-boundary wobble along the gradient, classic
+grouping variance, not freight. Fabrication temptations: none named beyond the standing set;
+watch for verdict-free handling if Heb uses draw devotional wording. Standing terms travel:
+single-occ double-shelf disqualifier, second-costume rule. Straight-to-10.
+
 ### G5009 ταμεῖον — SHIPPED + LIVE (2026-07-10, session 5). Hinted ship (cap-out pull 4),
 ### OFF-COUNT.
 **Apply clean ("using reviewed draw eae8ca6c — no model call") → screenshot review PASS all
