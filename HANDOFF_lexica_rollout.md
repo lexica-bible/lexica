@@ -124,10 +124,16 @@ consequences:
 - **Async-tolerant sessions:** every session opens from docs alone (the handoff test is now the
   norm, not the fallback). No session may depend on same-day JP follow-up. Anything needing a JP
   ruling banks as a PENDING item with evidence attached; the session proceeds on everything else.
-- **Ruling batching:** pending JP rulings accumulate into ONE decision list per session close —
-  each item one line + the number it turns on + recommendation attached. Format: lead with the
-  ask, evidence below ["phone-readable" struck 2026-07-10 — stylistic assumption, not a JP
-  ruling; JP rules when present, any device]. JP may rule days later.
+- **Ruling batching — AMENDED (JP standing rules, 2026-07-10, via reviewer relay):**
+  (i) **The DEFAULT at a decision point is ask-in-chat, live, hashed out there** — the doc
+  entry RECORDS the decision; it is not the medium of deciding. Batched decision lists are
+  for GENUINE ABSENCES only (then: one list per close, each item one line + the number it
+  turns on + recommendation attached; lead with the ask, evidence below; JP rules when
+  present, any device, any order).
+  (ii) **Anything that reaches JP is written in PLAIN TERMS — what happens, what changes,
+  what it costs.** Dense technical blocks are CC↔reviewer traffic only. (Exhibit: the step-4
+  12-item list arrived as jargon and required a full re-explanation in chat; the re-explained
+  items 2 and 6 are the model.)
 - **Priority order under constrained attention:** (a) the 10 owed count-eligible GREEN ships
   (buy GREEN activation → the easy 80% then ships with zero JP read) — but see the step-3 sequencing
   consequence: #30 must be live first, so (b) actually leads; (b) step 4 V8 pile triage + #30
@@ -387,10 +393,11 @@ ambiguity or enforce the majority" on Deu 23:18, JP's call at a future window).
 ## Full per-word records: audit doc session-5 entries. Session-6 handoff blocks below are the
 ## resume point; this log is history.
 
-## STEP-4 RULING LIST — PENDING JP (banked 2026-07-10 at the step-4 close; reviewer checks CC's
-## summary against the docs BEFORE JP rules — if the reviewer disputes an item it reverts to
-## pending, the rest stand. Silence = pending. NOTHING below fires until ruled. Items stand
-## alone unless marked. Full evidence: audit doc STEP 4 entry + the commits it names.)
+## STEP-4 RULING LIST — PARTIAL RETURN (JP via reviewer relay, 2026-07-10): items 4, 5, 6, 12
+## RULED — marked inline below. Items 1, 2, 3, 7, 8, 9, 10, 11 PENDING — the relay's line for
+## them was the reviewer PROMPTING JP ("one word closes these"), not JP's word; silence =
+## pending. STEP 5 STAYS GATED on items 1 + 2. (Original terms: reviewer checks CC's summary
+## before JP rules — done, sign-off unconditional; items stand alone; nothing pending fires.)
 1. **#30 detector as built — approve?** Flag-only floor-vs-ship diff at the dry-run gate
    (`--floor`), control-fired on all three banked positives + the δίκτυον negative
    (`ac8ea96`). Includes the new stored field `audit.floor_diff` (lands only on floor-diffed
@@ -416,6 +423,7 @@ ambiguity or enforce the majority" on Deu 23:18, JP's call at a future window).
    Rationale: mirrors the calibration class; exercises edits B/C/D end-to-end; edit A is
    inert-by-design on a GREEN word and gets its fair test at the next RED window (stated so a
    quiet A isn't read as validated). #30 fire classes get DEFINED at this fire (banked term).
+   **RULED (JP, 2026-07-10): delegation affirmed explicitly — CC picks per the ranker rule.**
 5. **Sequencing for the final 10: keep the standard 3-run→escalate law?** The 6-for-6
    escalation streak that killed the 3-run was the hand-picked hard tail; the final 10 are
    GREEN picks. **REC: keep 3-run→escalate; re-open only if the first two words escalate.**
@@ -424,10 +432,15 @@ ambiguity or enforce the majority" on Deu 23:18, JP's call at a future window).
    trigger (falsified as a mechanical threshold, soft form of #35 stands) and the N=10→6-7
    validation experiment (step-3 cost lever, unruled) both revisit at batch-4 selection with
    the intake's book distributions in hand.**
+   **RULED (JP, 2026-07-10): yes — 3-run→escalate for the final 10.**
 6. **Delete-class-swap streak criterion (carried, διανοίγω).** Does one human reword/delete
    swap break the graduation streak like a hint does? **REC: yes — any human intervention
    means the pass didn't run clean (φωνή/ὄρος standard, consistent with βιβρώσκω option (b));
    streak and count stay aligned.** Turns on: the graduation streak definition only.
+   **RULED (JP, 2026-07-10, after plain-terms walkthrough; call delegated to the reviewer and
+   ruled on that basis): yes — human intervention before OR after the draft resets the streak;
+   the word still ships with the fix. Framing banked as committed wording: the streak is a
+   SCOREBOARD of unassisted performance, never a shipping gate.**
 7. **Lesson candidate #42 (tally cross-check) — adopt?** A running tally is a derived claim;
    batch-close state banks only after a name-count against the roster. Draft wording sits in
    the audit doc FINAL-TALLY CORRECTION entry. **REC: adopt verbatim.**
@@ -454,7 +467,7 @@ ambiguity or enforce the majority" on Deu 23:18, JP's call at a future window).
     it holds). **REC: DEFER BOTH to batch-4 selection** — the trigger needs the intake's book
     distributions in hand, and the N=7 experiment spends real draws, best scheduled against
     the batch-4 economics (reviewer pre-endorsed deferral as acceptable). Turns on: nothing
-    today; batch-4 agenda items.
+    today; batch-4 agenda items. **RULED (JP, 2026-07-10): defer both to batch-4.**
 
 ## ROADMAP (consolidated 2026-07-10, step-4 session; RE-MARKED same day on reviewer relay —
 ## JP-LIGHT is a workflow POSTURE, not an absence; no travel window, no countdown. Items are
@@ -483,7 +496,15 @@ ambiguity or enforce the majority" on Deu 23:18, JP's call at a future window).
 9. **Variance watch-tag reader-record review** — JUDGMENT (needs field records first;
    register banked in the audit doc, starts empty/forward-only).
 10. **Human-review-dial decision** — JUDGMENT, LAST — only after #30 and #40 have track
-    records (step-3 cost-lever order).
+    records (step-3 cost-lever order). **MECHANISM BANKED (JP, 2026-07-10, via reviewer
+    relay):** dump N shipped entries to text → fresh-chat batch review against the ruled
+    standards (rubric = the V8-encoded rules: attribute-don't-adjudicate · groupings cite a
+    member · no unattested attitude labels) → flag list back to JP → flagged entries
+    re-checked → catches become fixtures, permanently upgrading the automated suite. JP
+    framing banked with it: streak ≠ futureproofing — error-flagging stays alive at scale
+    without cost blowup; checkers never turn off, graduation removes only the human read.
+    Scope note: this solves easy-word VOLUME; hard words (escalation class) stay hands-on by
+    design — separate issue, not a gap.
 
 ## CORPUS-DEFECT PROTOCOL — DRAFT (step-4 session, 2026-07-10; PENDING JP, ruling-list item 9.
 ## Detection largely exists — #36 runs both directions, #22 feed-integrity-first; what's ruled
@@ -508,10 +529,11 @@ ambiguity or enforce the majority" on Deu 23:18, JP's call at a future window).
 
 ## STEP-5 SESSION — CC OPENER BLOCK (opens from docs alone. State at step-4 wrap: the reviewer
 ## ALREADY reconciled this session-pair — #30 ACCEPTED, V8 hunks byte-checked PASS, list FINAL
-## AT 12; the only thing outstanding is JP's rulings. GATE FIRST: have JP's rulings on the
-## STEP-4 RULING LIST returned — items 1, 2, 4 minimum? NO → gap work only (item-3 tooling if
-## ruled, step-6 display prep, /consolidate — MEMORY.md 18KB + topic file 487 lines, due);
-## nothing fires, re-bank, close. YES → run step 5.)
+## AT 12. PARTIAL RETURN banked 2026-07-10: items 4, 5, 6, 12 RULED (item 4 = the word-pick
+## delegation); items 1, 2, 3, 7-11 still pending. GATE FIRST: have JP's rulings on items
+## 1 + 2 returned? NO → gap work only (item-3 tooling if ruled, step-6 display prep,
+## /consolidate — MEMORY.md 18KB + topic file 487 lines, due); nothing fires, re-bank, close.
+## YES → run step 5.)
 Step-5 charter when unlocked: (1) pick the control word per ruled item 4 (ranker command in
 the list, R1-verified); (2) fresh floor under the CURRENT data state — reviewer runs
 `--prompt v8` per its inheritance; (3) full pipeline with `--floor` wired (#30 live) — dry-run

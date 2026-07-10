@@ -5,10 +5,14 @@ decisions get batched when you're away; everything works normally when you're pr
 The rules behind every line here are in HANDOFF_lexica_rollout.md + AUDIT_lexica_rollout.md —
 this page is how to DRIVE, not the law itself.
 
-## The one-list workflow (how everything reaches you now)
-- Every session ends with **one decision list**. Each item: the ask in one line, the number it
-  changes, evidence below, and a **recommended answer already filled in**. You overrule or say
-  "go" — you never have to compose anything.
+## How decisions reach you (amended 2026-07-10, your standing rules)
+- **Default: you get asked in chat, at the decision point, in plain words** — what happens,
+  what changes, what it costs — and it's hashed out live. The docs record what was decided;
+  they're not where deciding happens. Dense technical detail stays between CC and the
+  reviewer.
+- **When you're away**, decisions batch into **one list** instead. Each item: the ask in one
+  line, the number it changes, evidence below, and a **recommended answer already filled in**.
+  You overrule or say "go" — you never have to compose anything.
 - **Your silence = pending, never approval.** Nothing fires while an item is open. The engine
   keeps doing side work (tooling, prep, docs) but ships nothing gated.
 - Rule when present, any device, days later, in any order. Partial rulings are fine — each item

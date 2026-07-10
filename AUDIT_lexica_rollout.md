@@ -1982,6 +1982,26 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### STEP-4 RULING LIST — PARTIAL RETURN + TWO STANDING PROCESS RULES (JP via reviewer relay,
+### 2026-07-10, post-wrap)
+**RULED: items 4 (word-pick delegation affirmed) · 5 (3-run→escalate for the final 10) ·
+6 (human intervention before or after the draft resets the streak, word still ships with the
+fix; plain-terms framing banked: the streak is a SCOREBOARD of unassisted performance, never
+a shipping gate; call delegated to the reviewer after walkthrough, ruled on that basis) ·
+12 (defer both cost pendings to batch-4).** Items 1, 2, 3, 7–11 PENDING — the relay's closing
+line for them was the reviewer prompting JP ("one word closes these"), not JP's word; banked
+as pending per silence-law. Step 5 stays gated on 1 + 2.
+**REVIEW-DIAL MECHANISM banked** (roadmap item 10 in the handoff carries the full text):
+N shipped entries → fresh-chat batch review against the V8-encoded rubric → flags to JP →
+re-check → catches become fixtures; checkers never turn off, graduation removes only the
+human read; hard words stay hands-on by design.
+**TWO STANDING PROCESS RULES banked into the handoff availability block (session law):**
+(i) decisions are asked in-chat at decision points and hashed out live — the doc RECORDS the
+decision; batched lists are for genuine absences only; (ii) anything reaching JP is plain
+terms — what happens, what changes, what it costs; dense technical blocks are CC↔reviewer
+only. Exhibit: the step-4 list itself arrived as jargon and needed a full re-explanation in
+chat (the quickref's own promise, not kept by the list that shipped alongside it).
+
 ### STEP 4 — V8 PILE TRIAGE + PROMPT DRAFT + #30 UN-PARK (CC session, 2026-07-10; JP-LIGHT,
 ### FIRE-NOTHING. Everything below is BUILT/DRAFTED; nothing fires until JP's step-4 ruling
 ### list returns. V7 stays the live default everywhere.)
