@@ -1982,7 +1982,20 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 14 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
-### G4645 σκληρύνω — SHIPPED + LIVE (2026-07-10, session 5). Hinted ship, OFF-COUNT.
+### G5281 ὑπομονή — GREEN, OPENED session 5 (2026-07-10). PRE-REGISTRATION (the pre-ruled
+### endurance-vs-hope split, banked BEFORE the floor per the session-3 ranking note).
+**Expected profile (prediction, not a constraint — attested = follow it):** (a) endurance /
+steadfast remaining-under a load or trial (NT dominant: Luk, Rom 5:3-4, Jas, Rev) ·
+(b) hopeful waiting / expectation, characteristically with God as its object (OT/LXX pattern —
+"you are my ὑπομονή"). THE PRE-REGISTERED QUESTION: do the draws keep these as two attested
+jobs, or collapse them because English "patience" covers both? Either answer is legal if
+floor-attested — the pre-registration exists so the collapse can't happen silently.
+**Fabrication temptations named:** (i) church-word freight — "patience" (KJV) and
+"perseverance [of the saints]" both carry doctrine; plain range = remaining-under, endurance,
+waiting, expectation; (ii) virtue-essay drift — describing the quality abstractly instead of
+the word's per-verse job; (iii) standing terms travel: single-occ double-shelf disqualifier,
+second-costume rule. Straight-to-10 in force. Streak note: GREEN word — a clean attempt-1
+ship here is a count candidate (count 2/15).
 **Apply clean ("using reviewed draw 9c3bd170 — no model call", content byte-matched) →
 screenshot review PASS all 5 checks (sense order · agency paragraphs + Rom 9:18 bare · both
 thin senses · harsh-demand sub-use all 5 refs · whitespace) + bonus checks pass (21/21 badge,
