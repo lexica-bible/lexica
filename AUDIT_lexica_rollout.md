@@ -2033,7 +2033,18 @@ Job 23:15/Psa 94:9 + Mat 7:3/Luk 6:41/Isa 57:1 pairs 9-10/10).** The 2-pole carv
   1/10 precedent (d5); Job 23:15 misdescribed as visual ("contemplating God's face"). Ledger
   classification for the natural experiment: devotional framing = DEFECT class (freight,
   rejects under both bars); stable-verse relocation = VARIANCE class. Psa 91:8 uncited-covered.
-  Pull 3 = last in cap.
+  Pull 3 = last in cap. **Reviewer sharpening banked: freight-via-sub-use-ARCHITECTURE is a
+  vector the wording-level checks don't catch (the quote was innocent; the SHELF was the
+  defect; Job 23:15's invented "face" = the theology-first tell). Ledger item.**
+- **PLAIN PULL 3 (key c4c5daec refreshed) REJECTED 2026-07-10 → CAP-OUT (3/3): PURE VARIANCE.**
+  1-sense draw, visual/mental preserved as 4 sub-uses; 1-sense floor-attested 2/10 (d7, d9);
+  content clean incl. Heb 3:1 in a plain attend-and-respond group (named check PASSED this
+  pull). Rejects on the banked 2-sense exit term (modal 8/10 distinction) — CC did not relax
+  its own term mid-word. 11 gate flags = known parser-artifact family (case/inflection/
+  cross-pairing), adjudicated. **Natural-experiment ledger: pull 1 defect · pull 2 defect+
+  variance · pull 3 PURE variance (would arguably SHIP under two-tier). Three DIFFERENT
+  failure modes ≠ ταμεῖον's structural insistence.** Hint pre-approved by reviewer (two poles ·
+  meditation cluster pinned mental · Heb 3:1 descriptive). PENDING JP go.
 
 ### G5009 ταμεῖον — SHIPPED + LIVE (2026-07-10, session 5). Hinted ship (cap-out pull 4),
 ### OFF-COUNT.
