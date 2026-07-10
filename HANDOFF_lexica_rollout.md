@@ -492,8 +492,10 @@ control fire's own record, BEFORE the final-10 window opens** (the banked build-
 (5) V8 promote-or-park recommendation to a short JP list (promotion = copy V8_DRAFT_PROMPT
 into build_lexica_def.VERSE_PROMPT, stamp flips to `lexica:7ef8620328a9`, reviewer re-syncs
 its frozen copy + _check_prompt_sync target — one commit, byte-checked). Read first: this
-block + the RULING LIST + audit doc STEP 4 entry + STEP 4 ADDENDUM. R1–R4, availability
-constraint (plain wording, ef5662f), fire-nothing seam all in force until the list returns.
+block + the STEP-4 RULINGS — CLOSED block + audit doc STEP 4 entry + ADDENDUM + completion
+record. R1–R4 in force; standing process rules apply (ask JP live in plain terms when he's
+present; batch only in genuine absences); V7 stays the shipping engine until the step-5
+promote-or-park ruling.
 **R4 COMMANDS (verified at the step-4 wrap against the scripts on disk — lexica_agreement.py
 --word :695 / --prompt :696 [choices from PROMPTS, v8 legal] / --runs :698, save pattern
 agreement_<SID>_<prompt>_<ts>.json into ~/bible-db per save_run :518; build_lexica_def.py
@@ -512,13 +514,17 @@ and its unbanked notes are dead by design; everything ruled is in the repo (audi
 entry + ADDENDUM, handoff RULING LIST). CC reads the repo and relays; reconcile CC's first
 summary against those blocks before accepting it. State: count 5/15 two-tier (δίκτυον, σελήνη,
 ὑπομονή, ταμεῖον, κάλαμος) · final-10 queue EMPTY until batch-4 selection · V7 live, V8 =
-candidate `v8` in lexica_agreement.py (would-be stamp lexica:7ef8620328a9) · JP's rulings on
-the 12 items are the gate — verify which returned before any step-5 act.
+candidate `v8` in lexica_agreement.py (would-be stamp lexica:7ef8620328a9) · **RULINGS
+CLOSED 12/12 in-chat 2026-07-10 — verify the handoff's STEP-4 RULINGS — CLOSED block exists,
+then the gate is open** (item 2 approved the TEST FIRE only; promotion is a separate ruling).
+Also since your predecessor: lesson #42 ADOPTED into ENGINE_LESSONS (six catches enumerated) ·
+two standing process rules (ask JP live in plain terms; batched lists = genuine absences only)
+· Study/Seams marked down-from-public (status only, STATE.md) · Build A = post-GREEN pointer.
 **Your enforcement posture (unchanged):** committed wording governs · R1 commands verified on
 disk · R2 designated instruments · R3 holds block, unaccounted output auto-opens one · R4
 handoffs carry verbatim commands · #38 delta accounting · derived numbers are claims — count
-the names (candidate #42 now carries FIVE exhibits, two of them the step-4 reviewer's own;
-flag-before-bank applies to YOUR dictations too, demonstrated).
+the names (#42 is now ADOPTED LAW in ENGINE_LESSONS, six catches enumerated, two of them the
+step-4 reviewer's own; flag-before-bank applies to YOUR dictations too, demonstrated).
 **Your specific step-5 jobs:** (1) confirm the control word came from the ranker output per
 ruled item 4, not from memory; (2) the floor runs under `--prompt v8` on the designated
 instrument (lexica_agreement.py), fresh, current data state; (3) the ship pipeline runs with
