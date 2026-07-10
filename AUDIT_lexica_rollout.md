@@ -2007,10 +2007,19 @@ tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Groundin
   "circumcision") — second half of the same Zipporah event as Exo 4:25, which holds the physical
   sense 10/10. Meaning fully covered, verse simply never chosen as a citation → NOT a hole.
   35 cited + 1 uncited = 36 banked, ledger square.
-- **CC recommendation (pending JP):** STABLE → hinted first draw (0 exact-mode carve repeats,
-  δάμαλις-extension basis): 2 core senses + Jer 11:16 thin branch-cutting sense (G80 standard),
-  heart-circumcision inline under physical, no figurative shelf, exit term = no single-occ verse
-  in two senses.
+- **JP RULING (2026-07-10): ship path RULED IN as proposed + one add-on exit term — Rom 2:29
+  must be NAMED in the shipped card's physical sense (gate-3 visibility checkable at review,
+  not aspirational).** JP also credited the double-shelf catch as an intervention-tally data
+  point (machine-invisible defect caught by procedure).
+- **Hinted first draw (key ca23d502) PASSED ALL EXIT TERMS** (mechanism 6-for-6 structural):
+  3 senses as hinted · Rom 2:29 named in sense-1 inward sub-use, descriptive · Php 3:3
+  sub-use of group sense, describe-don't-preach clean · NO single-occ verse in two senses
+  (hand-checked every citation; Col 2:11 "×2" legal genuine double) · citation gate 33/33 +
+  3 range-shorthand tails (Exo 4:26, Joh 7:23, Rom 2:27) hand-verified vs the banked table,
+  36/36 square — **NEW #28-family variant: dash-range tails ("Exo 4:25–26") gate-invisible,
+  logged for the V8 comma-shorthand item** · "dangling Act, Gal" flag = prose noise
+  ("in Acts and Galatians" in gloss notes), adjudicated · full proofread clean · sense-3 thin
+  flag = the ruled Jer 11:16 thin sense, expected.
 
 ### G4061 περιτομή — STUB, NOT RUN (session 4 CLOSED FAILED 2026-07-09; ENGINE_LESSONS #39).
 RED seed #2, JP-approved next word. Pre-pull state at close: 36 verses / 40 occ · 4 doubles
