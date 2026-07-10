@@ -1982,13 +1982,25 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 14 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### G5009 ταμεῖον — GREEN, OPENED session 5 (2026-07-10). PRE-REGISTRATION.
+**Expected profile (prediction, not a constraint — attested = follow it):** (a) inner/private
+room, the place one withdraws to (Mat 6:6 prayer, Mat 24:26, Luk 12:3) · (b) storeroom/
+storehouse (Luk 12:24; OT storehouse uses if fed). Session-3 ranking note banked: DOTTED-COUSIN
+POLICING is this word's named risk — check the dotted numbers with extra care at pre-pull.
+Fabrication temptations: prayer-closet devotional freight on Mat 6:6 (describe the room, not
+the piety); bridal-chamber/vault senses only if attested. Standing terms travel: single-occ
+double-shelf disqualifier, second-costume rule. Straight-to-10. Streak 1 riding — clean
+attempt-1 plain ship = count 4/15 and streak 2.
+
 ### G5281 ὑπομονή — SHIPPED + LIVE (2026-07-10, session 5). Plain ship, ATTEMPT 2.
 **Apply clean ("using reviewed draw 2a609d5c — no model call", cache-content verified before
 apply) → screenshot review PASS all 5 checks (sense order · OT block confined to sense 2 ·
 2Pe 1:6 ×2 · both gloss notes intact · whitespace across the new construction-group shape).
-BATCH TALLY: 17 shipped / 2 escapes / 2 parked. COUNT RULING PENDING JP: clean attempt-2
-plain ship → 3/15 or off-count (reviewer's read: machine-flagged reject ≠ human intervention,
-argues it counts; attempt-1-only is the counter-position; JP's call). Remaining: ταμεῖον G5009,
+BATCH TALLY: 17 shipped / 2 escapes / 2 parked. **COUNT RULED (JP, 2026-07-10): COUNT IT —
+3/15 (δίκτυον, σελήνη, ὑπομονή), streak OPENS.** The count means ships-within-budget
+(machine-flagged reject, no human catch, self-corrected inside the 3-cap). COROLLARY (reviewer
+tiebreaker, adopted): FIRST-DRAW RELIABILITY becomes its own tally for batch-close economics —
+G5281 logs there as a first-draw failure (machine-caught). Remaining: ταμεῖον G5009,
 κατανοέω G2657.**
 **STYLE-VARIANCE CHECK (reviewer-mandated, result pending JP pull):** two render-faithful but
 possibly-new shapes on this card — (1) citations-only paragraph (no prose lead) in sense 2;
