@@ -407,8 +407,24 @@ ambiguity or enforce the majority" on Deu 23:18, JP's call at a future window).
    computed; reviewer byte-checks; default stays v7.
 4. **CLOSE = ONE PHONE-READABLE RULING LIST:** ask first, evidence below, one line each — and
    every item carries a RECOMMENDED answer (incl. the step-5 control-fire word, with rationale);
-   JP overrules rather than composes. Nothing fires until the list returns. Gap work while
-   pending: step-6 layout prep + display tickets (JP-independent).
+   JP overrules rather than composes. Nothing fires until the list returns. **Gap work while
+   pending (all JP-independent, ruled 2026-07-10 at session-6 close):** step-6 layout prep +
+   display tickets · `/consolidate` (MEMORY.md over threshold; lexica topic file 476 lines) ·
+   THREE DOCS ITEMS (JP-asked, reviewer-endorsed):
+   (i) **JP QUICK-REFERENCE** — how to drive the new system: ruling-list workflow, what a
+   two-tier check-in looks like vs the old kind, when JP is needed vs not; note banked: V8
+   reaches JP as a rendered card to eyeball via step 5's control fire, never a prompt to paste.
+   (ii) **ROADMAP consolidation** — one ordered block from the scattered banked backlog
+   (final-10 run → GREEN activation → step-6 layout vs content eras → refresh-on-touch queue
+   for the 54 → remaining three-zone surfaces → batch-4 selection → variance watch-tag
+   reader-record review → human-review-dial decision once #30 + #40 have records), each item
+   marked JP-NEEDED vs JP-INDEPENDENT per the availability constraint.
+   (iii) **CORPUS-DEFECT PROTOCOL draft** — detection mostly exists (#36 runs both directions);
+   missing is ruled ROUTING when a floor/draw surfaces a corpus defect: word parks with a
+   DATA-BLOCKED tag → fix queued as JP-independent tooling where possible → after ANY data fix
+   the floor re-runs FRESH (the free --from-json re-render is only valid while the data is
+   unchanged — a corpus fix invalidates the saved floor; real cost, stated). CC drafts,
+   reviewer reviews, JP rules from a list.
 
 ## SESSION-6 HANDOFF — CC OPENER BLOCK (RAN + CLOSED 2026-07-10: steps 1–3 + audit session done,
 ## step 4 commissioned. HISTORY — resume point = the STEP-4 block above. Numbers inside are
