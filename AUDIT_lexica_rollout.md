@@ -1982,7 +1982,23 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 14 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
-### G2657 κατανοέω — GREEN (last roster word), OPENED session 5 (2026-07-10).
+### G2657 κατανοέω — SHIPPED + LIVE (2026-07-10, session 5). Hinted ship (3 plain + 1 hint
+### fail → hinted draw 2), OFF-COUNT. **BATCH-3 ROSTER COMPLETE.**
+**Apply clean ("using reviewed draw 2b592e72 — no model call") → screenshot review PASS all
+5 checks (sense order · Exo 33:8 visual with watching wording intact · Heb 3:1 descriptive ·
+whitespace · 35/35 badge). FINAL BATCH TALLY: 19 shipped / 2 escapes / 2 parked · count 3/15 ·
+streak 0. Close-out stack next in ruled order (six steps + audit-session charter between
+steps 2 and 3, reviewer holds the draft).**
+**INCUMBENT COMPARISON (post-ship, run 3):** LSJ digest leads "understand/apprehend"
+(ATTAINMENT) — corpus attests directed ATTENTION 38/38; Jas 1:23-24 (attends then forgets) is
+the self-defining counter-verse the digest headline would misread. Two incumbent senses zero
+corpus attestation ("learn/acquire knowledge" · medical "in one's right mind") — 3rd word of
+3 with classical-only senses. **PATTERN NOW STABLE (3-for-3, for close review + methodology
+page): every incumbent digest (a) led with a sense the corpus doesn't lead with, and
+(b) carried 1-2 senses the corpus doesn't attest. The corpus-grounded method produced a
+DIFFERENT DICTIONARY, not a reordered one — the licensing thesis with three exhibits.**
+
+### G2657 κατανοέω — working record (opened session 5; pre-registration + floor + pulls below)
 ### PRE-REGISTRATION.
 **Sequencing note (JP, banked): an AUDIT-SESSION CHARTER goes on the stack — after κατανοέω
 ships, BEFORE close steps 3–4. Scope: evidence synthesis (reject reclassification, economics
