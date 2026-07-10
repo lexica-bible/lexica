@@ -2060,6 +2060,17 @@ space. Modal 2-sense carve repeats 8/10 → STABLE, plain draw, NO hint.**
   cited · citations 29 gate-checked + 6 shorthand tails hand-verified (#28 family) + Deu 32:25
   uncited-covered (Exo 4:26 class) = 36 square · idiom doubles cite once per verse, same
   sense, no ×2 marker — reviewed, not a defect · proofread clean. Apply pending concurrence.
+- **JP POSITION STATEMENT banked for the SCALE-PROTOCOL decision (close-plan step 3;
+  2026-07-10, ταμεῖον = the exhibit): proposed TWO-TIER BAR — DEFECTS REJECT, FLOOR-LEGAL
+  VARIANCE SHIPS.** Defect class (zero tolerance, machine-catchable): single-occ double-shelf,
+  missing meaning, freight, verdict language. Variance class (the floor itself exhibits it):
+  which legal home a scattered verse lands in; whether a coherent minority carve is 2 or 3
+  senses — rejecting a draw for carving like floor-draws 2/6 did = holding single draws to a
+  stricter standard than the ensemble that defines the standard. Evidence: ταμεῖον burned 3
+  paid draws + three-party review-hours on a difference ruled reader-immaterial. At 14k
+  lemmas that's a wall, not a discipline. NOTHING CHANGES mid-batch — the remainder runs
+  under the ruled bar so calibration data stays clean; this is input to the pending
+  cost-scaling levers ruling.
 
 ### G5281 ὑπομονή — SHIPPED + LIVE (2026-07-10, session 5). Plain ship, ATTEMPT 2.
 **Apply clean ("using reviewed draw 2a609d5c — no model call", cache-content verified before
