@@ -333,8 +333,10 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
 
 ## Three-zone shell — remaining consumers
 The shared frame (`Shell` + `RightStack` in `static/src/22-shell.jsx`) is done; Ask-corpus, Notes, Seam
-index, and News right-rail all shipped on it 2026-07-01. Full record: memory `project_three_zone_shell`
-+ `HANDOFF_corpus_shell.md`. Left to do:
+index, and News right-rail all shipped on it 2026-07-01. **Status note (JP, 2026-07-10): the Seam index
+consumer is code-complete but OFFSTAGE — it rides inside the Study tab, which JP has taken down from
+public (admin-gated + hidden, conceptual stage; see STATE.md Study line).** Full record: memory
+`project_three_zone_shell` + `HANDOFF_corpus_shell.md`. Left to do:
 - **Ask-corpus MOBILE rail** (PARKED 2026-07-03, JP's call — next fresh checkpoint) — desktop rail is DONE,
   fixture-locked (`test_ac_word_groups.js` + `test_rstack_logic.js` + `test_rail_payload_contract.py`) + CI-gated,
   and confirmed by a live Chrome pass. Mobile still runs the OLD `.ac` layout (an `if (isMobile)` early return
@@ -343,13 +345,15 @@ index, and News right-rail all shipped on it 2026-07-01. Full record: memory `pr
 - **News-on-mobile** (net-new, the LAST shell surface) — the News tab isn't reachable on a phone. First
   confirm the cause (missing from the mobile bottom nav vs a stubbed mobile branch), then make it render.
   code: static/src/84-news.jsx, 90-app.jsx, 20-shared-components.jsx
-- **Study-on-mobile shell** — mobile Topics/Graphs/Seams still run the OLD single-column branch
-  (`.study-view .study-mobile`), not the shell. Give them the shell mobile treatment (rail/inspect as
-  sheets), same job as News-on-mobile. code: static/src/55-study.jsx
-- **Study per-item inspect DETAIL** (deferred by design) — the Study tab is uniform master-detail now but
-  the RIGHT inspect is ZoneEmpty everywhere. Wire it: Topics = clicked verse in context; Graphs = clicked
-  claim/node's grounding; Seams = clicked fork's grounding. Each is net-new feature work.
-  code: static/src/55-study.jsx (RightStack `push`)
+- **Study-on-mobile shell — DEPENDENT on Study's return (JP ruling 2026-07-10): tracked, not ordered;
+  its priority follows whenever Study comes back from its conceptual-stage hold, not before.** Mobile
+  Topics/Graphs/Seams still run the OLD single-column branch (`.study-view .study-mobile`), not the
+  shell. When taken up: shell mobile treatment (rail/inspect as sheets), same job as News-on-mobile.
+  code: static/src/55-study.jsx
+- **Study per-item inspect DETAIL** (deferred by design; same dependency — follows Study's return) —
+  the Study tab is uniform master-detail now but the RIGHT inspect is ZoneEmpty everywhere. Wire it:
+  Topics = clicked verse in context; Graphs = clicked claim/node's grounding; Seams = clicked fork's
+  grounding. Each is net-new feature work. code: static/src/55-study.jsx (RightStack `push`)
 - **Ask-corpus POLISH pass** (rail got a big build-out 2026-07-01/02 — per-answer selection, Key passages
   moved into the rail, ONE merged Words-in-scope list, bottom-pinned composer, contested badge via the
   served set; memory `project_three_zone_shell`). DONE 2026-07-02: empty-state hero raised + de-spinnered,

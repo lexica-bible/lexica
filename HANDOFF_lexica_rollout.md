@@ -442,6 +442,11 @@ gate; V7 remains the shipping engine unless and until the step-5 ruling promotes
    eyeball. Last unbuilt three-zone surface.
 9. **Variance watch-tag reader-record review** — JUDGMENT (needs field records first;
    register banked in the audit doc, starts empty/forward-only).
+POST-GREEN POINTER (not a roadmap item — JP ruling, in-chat 2026-07-10): **Seam next-stage
+"Build A"** stays parked at TODO.md:594 until after GREEN activation; it enters this roadmap
+then by JP ruling, not before. (Context ruled with it: the Study tab — where Seams display —
+is down from public, conceptual stage; Study-on-mobile is tracked-but-unordered, DEPENDENT on
+Study's return. Status detail: STATE.md Study line.)
 10. **Human-review-dial decision** — JUDGMENT, LAST — only after #30 and #40 have track
     records (step-3 cost-lever order). **MECHANISM BANKED (JP, 2026-07-10, via reviewer
     relay):** dump N shipped entries to text → fresh-chat batch review against the ruled

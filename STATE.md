@@ -36,7 +36,7 @@ Last refreshed: 2026-07-03 (repo tip at write time: `d9ff2f9`).
 **Cross-ref / people-places**
 - **TSK** (`cross_references`, 386,518 rows) — **LIVE** (verse-number cross-ref panel: Haiku pick → Sonnet synthesis).
 - **MetaV + TIPNR** — **LIVE** (see §6).
-- **Study tab** (`study.db`) — **LIVE, WHOLE TAB ADMIN-ONLY** ⚠️ (reversed 2026-07-01: nav link hidden for non-admins + a `before_request` 403s every `/api/study/*` route; the Seam-index data route `/api/lexica/seams` is gated the same way). Topics list is hand-authored only now (the ~1817 imported concept topics soft-deleted; Divine Council + the 696 name-topics kept).
+- **Study tab** (`study.db`) — **DOWN FROM PUBLIC, deliberately (JP ruling, re-affirmed 2026-07-10): conceptual stage, NOT rollout-ready; returns by JP call.** On disk "down" = admin-gated + hidden, nothing removed: the nav tab renders only for admin (20-shared-components.jsx:71), every `/api/study/*` request refuses non-admins (views_study.py:48, one gate over all routes), and the Seam-index data route `/api/lexica/seams` refuses the same way (views_lexica.py:48). The **Seams browse surface rides inside Study — offstage with it.** Known loose thread (display-only, no action ruled): public word cards still print the "Full argument map · Study › Graphs" breadcrumb label (20-shared-components.jsx:185/377 — not click-through; points at a tab non-admins can't see). Topics list is hand-authored only now (the ~1817 imported concept topics soft-deleted; Divine Council + the 696 name-topics kept).
 
 **Reading texts** — all **LIVE**: ABP (primary), KJV, BSB (all word-level Strong's/chips), **Hebrew OT** (public, OT-only), **ESV** + **NIV** (berean-gated).
 
