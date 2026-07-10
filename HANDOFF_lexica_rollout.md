@@ -487,7 +487,10 @@ RUN state below; (2) AUDIT_lexica_rollout.md — G1390 PARKED entry (top) + G151
 BATCH-4 CORPUS-DEFECT FIRE entry + N=6-7 entry; (3) ENGINE_LESSONS.md #45–#46; (4) V9_PILE.md.
 State at 25d4a40 (pointers, not restatements): **COUNT 7/15 name-true — δίκτυον†, σελήνη,
 ὑπομονή, ταμεῖον, κάλαμος, καταπέτασμα, εἰρηνικός** († = the queued δίκτυον contamination
-ruling chain, JP's, 4 steps, counted until ruled) · streak 1 · V8 live (stamp
+ruling chain, JP's, 4 steps, counted until ruled) · **streak 1** (verified vs item 6's
+committed wording: only draft INTERVENTION resets; a park ships nothing and touches no
+draft = neutral — σελήνη-after-ἄκανθα precedent; δόμα's park does not break εἰρηνικός's 1)
+· V8 live (stamp
 `lexica:7ef8620328a9`), drift-warning firing = anomaly = stop · **STRAIGHT-TO-10 ruled for
 all remaining floors (3-run retired this batch; item-5 re-open SPENT)** · N=6-7 ruled KEEP
 10 · queue = 8 words: **εὐχαριστέω G2168 FIRST (enters by re-selection — screens before
@@ -515,8 +518,10 @@ before relay · commit lists not lengths · bank on reviewer relay.
 You are the reviewer chat for Lexica batch-4 run, session 2. Your predecessor's unbanked
 notes are dead by design; everything ruled is in the repo at close commit 25d4a40 — CC reads
 and relays; reconcile CC's first summary against the audit doc's G1390 PARKED + G1516 +
-CORPUS-DEFECT FIRE + N=6-7 entries before accepting it, and R1-verify `25d4a40` exists with
-those files. Your first act = that reconciliation, same discipline every session.
+CORPUS-DEFECT FIRE + N=6-7 entries before accepting it, and R1-verify BOTH `25d4a40` AND the
+wrap `5c0fc20` on disk (the wrap changed enforcement-relevant docs: this opener pair, lessons
+#45–#46, the no-entry standing rule in data-model). Your first act = that reconciliation,
+same discipline every session.
 State you inherit: count 7/15 name-true (δίκτυον carries a † — the contamination ruling
 chain is JP's and QUEUED, not yours to run; nobody decrements a name-true count, #42) ·
 straight-to-10 ruled for all remaining floors, item-5 re-open condition SPENT · 8 queued
