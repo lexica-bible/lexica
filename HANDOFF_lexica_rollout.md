@@ -355,6 +355,123 @@ fabrication checkpoint (#36: verify before claiming fabrication — ABP false-po
 Parked words are not yours to reopen: πολύς, ἄκανθα, κύων (κύων's revisit = "adjudicate the
 ambiguity or enforce the majority" on Deu 23:18, JP's call at a future window).
 
+## BATCH-3 SESSION 5 (2026-07-09/10) — CLOSED. **ROSTER COMPLETE.** Five shipped in one
+## session: περιτομή G4061 (RED, adopted orphaned floor, hinted) · σκληρύνω G4645 (RED,
+## hinted) · ὑπομονή G5281 (PLAIN attempt 2 — COUNTED, JP ruling) · ταμεῖον G5009 (cap-out →
+## hinted) · κατανοέω G2657 (3 plain + 1 hint fail → hinted draw 2). Both REDs retired.
+## Full per-word records: audit doc session-5 entries. Session-6 handoff blocks below are the
+## resume point; this log is history.
+
+## SESSION-6 HANDOFF — CC OPENER BLOCK (paste into the new CC session)
+CLOSE-OUT STACK SESSION — the batch is done; this session adjudicates and synthesizes. No new
+words. State source of truth: the docs at the close commit (git log will show it as the wrap
+commit, 2026-07-10). Read first, in order: (1) this block + STANDING LAW + R1–R4 above;
+(2) AUDIT_lexica_rollout.md session-5 entries (G4061, G4645, G5281, G5009, G2657 — each has
+watch, floor adjudication, pull ledger, rulings, ship record); (3) ENGINE_LESSONS.md #38–#41.
+**1. FINAL STATE (do not re-derive):** batch-3 = **19 shipped / 2 escapes (γόνυ, νίπτω — both
+session 1, human-caught) / 2 parked (ἄκανθα, κύων — DO NOT REVISIT; κύων's revisit is a JP
+call at a future window) · count 3/15 (δίκτυον, σελήνη, ὑπομονή) · streak 0.**
+- **The count means SHIPS-WITHIN-BUDGET** (JP ruling, G5281): a plain-pull word that ships
+  inside the 3-pull cap with no human catch counts; machine-flagged rejects are not
+  interventions. Hinted/escalated ships are off-count.
+- **Second tally = FIRST-DRAW RELIABILITY** (split off by the same ruling, for the economics
+  model): ὑπομονή 1 plain fail (machine-caught) · ταμεῖον 3 plain fails (2 variance + 1
+  defect) · κατανοέω 3 plain fails (3 distinct modes: double-shelf / freight-shelf /
+  over-coarse) + 1 hint fail (off-floor misplacement).
+- Shipped list session 5: περιτομή, σκληρύνω, ὑπομονή, ταμεῖον, κατανοέω (all LIVE,
+  screenshot-passed). Sessions 1–3 ships: see their log blocks.
+**2. CLOSE-OUT STACK (six-step ruled plan + the audit session, dependency arrows explicit):**
+step 1 batch-close review → step 2 fabrication-check / intervention-tally adjudication →
+**AUDIT SESSION (between 2 and 3; charter drafted by the REVIEWER from the spec it holds —
+scope: reject reclassification [defect vs variance, recount 3/15 both ways], economics model
+[uses BOTH tallies above], gate load-bearing analysis; documents as input; recommendations
+not rulings)** → step 3 scale-protocol decision (CONSUMES the audit's reject reclassification
++ economics model — do NOT run step 3 before the audit) → step 4 V8 pile triage + prompt bump
+(CONSUMES the audit's gate load-bearing analysis; V7 freeze lifts here) → step 5 V8 control
+fire (NOT optional) → step 6 visual layout session against V8 output.
+**3. OPEN DECISIONS with their evidence (present, don't decide):**
+- **Two-tier bar** (defects reject / floor-legal variance ships): JP position statement banked
+  (audit doc, ταμεῖον entry); exhibits = ταμεῖον (3 draws burned on reader-immaterial
+  structure) + κατανοέω (the natural experiment: defect / defect+variance / pure-variance
+  rejects across 3 pulls — pull 3 would arguably have shipped under two-tier).
+- **Ship-vs-floor divergence watch:** ταμεῖον = lead exhibit (3/3 plain draws built the same
+  figurative shelf the floor scattered); ruled resolution = floor stays the instrument,
+  evidence to V8 pile; possible designed test = floor re-run at higher per-draw attention.
+- **Pre-existing pending JP rulings (still pending, do not decide):** skip-3-run for
+  poetry-heavy words · streak criterion for delete-class swaps · dictionary cost-scaling
+  levers (the audit's economics model feeds this one).
+**4. NEW STANDING INSTRUMENTS from session 5 (rules, in force):**
+- **Relocated-verse prose check:** any verse placed off its floor-majority home gets its prose
+  claim read against the verse text FIRST (control case: Exo 33:8 "sustained noticing" for
+  people physically watching — the draw rewrote the verse to fit the shelf).
+- **Two defect signatures:** shelf-first-verse-fitted-after (freight via sub-use ARCHITECTURE,
+  invisible to wording checks — κατανοέω pull 2's "devotional or awe-struck" shelf) ·
+  misplacement + prose-misdescription pairing (two hits same night: Job 23:15 invented "face",
+  Exo 33:8 re-narration).
+- **Incumbent-comparison protocol (JP ruled in):** incumbent posted at word open, files only;
+  comparison AFTER ship; never enters draw context or floor reads. **3-for-3 pattern on
+  record:** every incumbent led with a sense the corpus doesn't lead with AND carried 1–2
+  senses the corpus doesn't attest (ὑπομονή ground-of-reliance gap · ταμεῖον treasury-first
+  inversion · κατανοέω attainment-vs-attention, Jas 1:23-24 the counter-verse). For close
+  review + methodology page.
+- **Cache-content verify (procedure worth keeping):** before any apply where the reviewed-draw
+  identity is in ANY doubt, re-read the cache free: plain `--dry-run` WITHOUT `--force` = the
+  cache-hit path, no model call, no write (verified build_lexica_def.py:1542).
+- Loading-cards ticket: TODO.md, NOT-NOW flag intact — same cards every time, JP logging names.
+**5. VERBATIM COMMANDS (R4; all verified against the scripts on disk this session):**
+- Floor re-render, FREE, any saved run: `cd ~/bible-db && python scripts/lexica_agreement.py --from-json <file>.json`
+  Saved session-5 runs: agreement_G4061_v7_20260709-235238.json · agreement_G4645_v7_20260710-005811.json ·
+  agreement_G5281_v7_20260710-014609.json · agreement_G5009_v7_20260710-035236.json ·
+  agreement_G2657_v7_20260710-043937.json
+- New floor: `cd ~/bible-db && python scripts/lexica_agreement.py --word G#### --runs 10`
+- Plain draw: `cd ~/bible-db && python scripts/build_lexica_def.py --word G#### --dry-run --force`
+- Free cache re-read: `cd ~/bible-db && python scripts/build_lexica_def.py --word G#### --dry-run`
+- Apply (repeat any hint flags verbatim): `cd ~/bible-db && python scripts/build_lexica_def.py --word G#### --apply --require-cache`
+- Occ table: `sqlite3 ~/bible-db/bible.db "SELECT DISTINCT strongs FROM words WHERE strongs LIKE '####%';"` +
+  book spread + `count(DISTINCT v.id), count(*)` variants (audit doc session-5 entries carry the exact texts)
+- Style-ledger checks (def_json fields): gloss-note italic leads
+  `sqlite3 ~/bible-db/bible.db "SELECT strongs, lemma FROM lexica_def WHERE json_extract(def_json,'\$.gloss_notes') LIKE '%*\"%';"` ·
+  citations-only paragraphs `sqlite3 ~/bible-db/bible.db "SELECT strongs, lemma FROM lexica_def WHERE json_extract(def_json,'\$.senses_block') LIKE '%' || char(10) || '(%';"`
+**6. AUDIT CHARTER:** the reviewer chat holds the drafting spec (NOT prose to inherit — the
+new reviewer drafts fresh from the spec in its inheritance block below). It slots between
+close steps 2 and 3.
+Standing ruled procedures stay in force verbatim (session-1 log): --require-cache every
+apply · read "using reviewed draw … no model call" before render · hinted applies repeat
+hint flags verbatim · occ-table before floor · screenshots to the reviewer chat. R1–R4 hard.
+Handoff test (JP): a zero-context session must be able to run steps 1–2 and commission the
+audit from this block + the docs it points to alone.
+
+## SESSION-6 REVIEWER-CHAT INHERITANCE BLOCK (paste into the new reviewer chat)
+You are the reviewer chat for the Lexica batch-3 CLOSE-OUT (session 6). Batch-3 is COMPLETE:
+19 shipped / 2 escapes / 2 parked / count 3/15 (ships-within-budget definition) / streak 0.
+Your predecessor's working notes are dead by design; everything ruled is in the repo at the
+wrap commit — CC reads it and relays. Read the handoff SESSION-6 CC OPENER + the audit doc's
+session-5 entries BEFORE accepting CC's first summary (reconcile-against-docs applies to you).
+**Your enforcement posture (hold CC to these):** committed wording governs · delta accounting
+at checkpoints in-message with script-printed units (#38) · placement vs floor, not prose ·
+verify before claiming fabrication, both directions (#36) · R1 commands verified on disk with
+a "verified against scripts/<name>" line · R2 named procedures use their designated
+instrument · R3 holds block everything, unaccounted output auto-opens one · R4 handoffs carry
+verbatim commands · relocated-verse prose check (verse text vs prose claim before placement
+review) · the two defect signatures (shelf-first-verse-fitted-after; misplacement +
+misdescription pairing).
+**You draft the AUDIT-SESSION CHARTER fresh from this spec** (do not reconstruct predecessor
+prose): evidence synthesis — reject reclassification (classify every banked reject defect-class
+vs variance-class, recount the 15-count both ways; known flip: ταμεῖον ships pull 1 under
+two-tier → 4/15 minimum; predecessor's guess N=6–9) · economics model (both tallies: count +
+first-draw reliability) · gate load-bearing analysis (which exit terms caught real defects vs
+enforced reader-immaterial structure). Documents as input; recommendations not rulings;
+slotted between close steps 2 and 3; step 3 consumes its outputs.
+**Predecessor positions on record (positions, NOT rulings):** count-it on budget-ships
+(already ruled) · hint-over-park on structure conflicts · floor-stays-the-instrument on
+divergence · two-tier bar to the scale decision with session 5 as evidence.
+Watches you inherit (contents in the audit doc): describe-don't-preach · fold-compression ·
+overload look-trigger (one unadjudicated fire, session 2) · header-gloss ticket (3 sightings)
+· tail-list disjointness · #28 citation-shorthand family (now comma + dash-range + semicolon
+variants) · dangling-book-ref prose-noise exclusion (V8 candidate) · "prose asserts a category
+whose members are all uncited" (V8 candidate, σκληρύνω) · ship-vs-floor divergence.
+Parked words are not yours to reopen: πολύς, ἄκανθα, κύων.
+
 ## BATCH-3 SESSION 4 (2026-07-09) — CLOSED FAILED (JP ruling; ENGINE_LESSONS #39). No word
 ## shipped, no floor run, no writes anywhere. Failure: CC relayed the 10-run floor command from
 ## RECALL — wrong script name (`lexica_def.py` for `build_lexica_def.py`) + wrong flag
@@ -1286,7 +1403,13 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
    (hinted draw, zero swaps; the 5/5 placement finding + (b) ruling + disclaimer-as-cite artifact: its session
    log block + audit entry). The three V7 control fires are done; all three shipped via the structure-hint
    mechanism (5-for-5 structural), streak 0 per the standing ruling.
-4. **Batch-3 = Phase 2 shadow calibration** — **IN PROGRESS; sessions 1 AND 2 CLOSED 2026-07-09.**
+4. ~~Batch-3 = Phase 2 shadow calibration~~ **ROSTER COMPLETE 2026-07-10 (session 5): 19 shipped /
+   2 escapes / 2 parked / count 3/15 (ships-within-budget) / streak 0. Record: SESSION-6 HANDOFF
+   blocks above + audit doc session-1/2/3/5 entries.**
+5. **CLOSE-OUT STACK — NEXT.** Six ruled steps + the audit session between steps 2 and 3;
+   dependency arrows and all inputs: the SESSION-6 CC OPENER block above. Do not start step 3
+   before the audit session's outputs exist.
+6. (was 4, historical) **Batch-3 sessions 1–2 record** — **sessions 1 AND 2 CLOSED 2026-07-09.**
    Session 2: 3 shipped (παράπτωμα RED — routing exercise met · συκῆ · βέλος, all off-count via
    escalation), κύων parked (one-verse wall, Deu 23:18), 4-of-4 escalations; count 2/15, streak 0;
    remaining 6 GREEN + 2 RED. Record: BATCH-3 SESSION 2 LOG block + audit doc session-2 entries +

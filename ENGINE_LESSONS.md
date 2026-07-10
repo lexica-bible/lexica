@@ -581,6 +581,28 @@ both drifting from the doc.
     Sibling of #38 (checkpoint messages carry their own accounting) and #31 (the apply-side cost
     when flags are wrong). *(audit: G4061 stub entry, failed session 4, 2026-07-09)*
 
+40. **Freight can arrive through sub-use ARCHITECTURE with quotationally innocent wording — and
+    the tell is a relocated verse whose prose misdescribes it.** κατανοέω pull 2 built a sub-use
+    headlined "the inspection bears a devotional or awe-struck quality" and filed Heb 3:1 on it:
+    every sentence read clean, the SHELF was the defect (reverence imported as part of the verb's
+    meaning). Both instances that night paired an off-majority placement with a prose claim the
+    verse doesn't support (Job 23:15 "contemplating God's face" — no face in the verse; Exo 33:8
+    "sustained noticing rather than physical inspection" — people physically watching Moses walk).
+    → standing check, in force: any verse placed off its floor-majority home gets its prose claim
+    read against the VERSE TEXT first, before the placement is adjudicated. Wording-level freight
+    scans (#18, #23) cannot see this vector. *(audit: G2657 pull 2 + hinted draw 1, 2026-07-10)*
+
+41. **The apply ships what the CACHE holds — when the reviewed-draw identity is in any doubt,
+    verify the cache by free re-read, never by scrollback reasoning.** A duplicate paste during
+    ὑπομονή made it ambiguous whether the cache held reviewed pull 2 or something newer; the
+    resolution was NOT reconstructing paste history but reading the cache itself: plain
+    `--dry-run` WITHOUT `--force` takes the cache-hit path (build_lexica_def.py:1542) — prints
+    "using reviewed draw … no model call", runs the full gate chain, writes nothing, costs
+    nothing. Compare its markers (key, char count, headlines, flag set) against the reviewed
+    output; match → apply, mismatch → full re-review as a new pull. Sibling of #31 (what
+    --require-cache protects) and R3's accounting rule. *(audit: G5281 cache-content verify,
+    2026-07-10)*
+
 ## Added by the ἔργον session (2026-07-08)
 
 23. **The freight (#18) scan's scope is EVERY definitional field, not just the block the last failure was in.**
