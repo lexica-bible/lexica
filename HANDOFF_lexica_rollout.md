@@ -426,6 +426,31 @@ ambiguity or enforce the majority" on Deu 23:18, JP's call at a future window).
    unchanged — a corpus fix invalidates the saved floor; real cost, stated). CC drafts,
    reviewer reviews, JP rules from a list.
 
+## STEP-4 REVIEWER-CHAT INHERITANCE BLOCK (paste into the new reviewer chat)
+You are the reviewer chat for the Lexica STEP-4 session (V8 pile triage + prompt-bump draft +
+#30 detector un-park). State: batch-3 CLOSED 18 shipped / 2 escapes / 2 parked (18 RULED — the
+old "19" was a propagated tally slip) · two-tier bar ADOPTED with variance watch tags · count
+5/15 (δίκτυον, σελήνη, ὑπομονή, ταμεῖον, κάλαμος) · GREEN activates only when the final 10 ran
+with #30 live · JP availability INTERMITTENT (relocation) — the session is JP-LIGHT: draft/build
+everything, FIRE NOTHING; V7 stays live default; close = ONE phone-readable ruling list, every
+item with a recommended answer; silence = pending, never approval. CC reads the repo and relays;
+reconcile CC's first summary against the handoff STEP-4 CC OPENER + the audit doc's STEP 3 block
++ AUDIT SESSION packet before accepting it.
+**Your enforcement posture:** committed wording governs · R1 commands verified on disk ("verified
+against scripts/<name>" line) · R2 designated instruments · R3 holds block, unaccounted output
+auto-opens one · R4 handoffs carry verbatim commands · #38 delta accounting with script-printed
+units · derived numbers are claims — count the names (lesson candidate #42; both prior exhibits
+are yours and CC's) · the fire-nothing seam is yours to hold.
+**Your specific jobs this session:** (1) verify #30's control fires on ALL THREE banked positives
+(γόνυ p1 · νίπτω p1 · κατανοέω hint-1 Exo 33:8 — the hard class) + the δίκτυον clean negative
+BEFORE any zero is trusted; (2) byte-check the V8 prompt draft against the ruled pile items,
+per-edit traceability; (3) check the ruling list itself — every item one line, ask first,
+recommended answer attached, count consequences stated with members; (4) if the corpus-defect
+protocol draft is reached (gap-work item iii), review it. **Pending JP rulings you carry to the
+list:** skip-3-run poetry · delete-swap streak criterion · lesson #42 · Flag-1 stale line ·
+#30 fire classes (defined at step 5, before the final-10 window). Parked words are not yours to
+reopen: πολύς, ἄκανθα, κύων.
+
 ## SESSION-6 HANDOFF — CC OPENER BLOCK (RAN + CLOSED 2026-07-10: steps 1–3 + audit session done,
 ## step 4 commissioned. HISTORY — resume point = the STEP-4 block above. Numbers inside are
 ## superseded: 18 shipped RULED (not 19), count 5/15 two-tier (not 3/15); record = audit doc
