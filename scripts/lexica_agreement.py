@@ -128,7 +128,11 @@ LABELS = {"G5590": "psyche", "G1344": "dikaioo", "G5484": "charis",
 # entry, two-directional gloss flag, headline scope marker, Sub-use placement rule (files by JOB —
 # the ὀφθαλμός wall; two-way placement watch pre-registered), house-shape organizing paragraph,
 # gloss-note sense anchors (permissive — no forced anchor). All bumps STYLE/FRAMING-ONLY except the
-# placement rule, which steers sub-use filing (control fire = ὀφθαλμός at requeue). ────────────────
+# placement rule, which steers sub-use filing (control fire = ὀφθαλμός at requeue). V8 PROMOTED
+# 2026-07-10 (step-5 control fire, G2665; JP KEEP ruling): four pure-insertion edits — sub-use
+# named-by-job (#40), uncited-grouping check, attribution register (#29), tail-list disjointness
+# (#37). v8 below is now the FROZEN COPY OF THE LIVE ENGINE (the sync check compares it); v7 is
+# the previous engine, kept for historical floors. ─────────────────────────────────────────────
 V7_PROMPT = """\
 You define a biblical lemma from its own attested use. You are given:
 - the lemma (Strong's number, original-language form, transliteration)
@@ -361,14 +365,14 @@ PROMPTS = {"live": B.VERSE_PROMPT, "v7": V7_PROMPT, "v8": V8_DRAFT_PROMPT}
 
 
 def _check_prompt_sync():
-    """Loud if our frozen v5 copy has drifted from the live engine prompt. This is the invariant that
-    matters now: the reviewer must draw under the SAME prompt build_lexica_def ships, or it isn't
-    measuring the live engine. (The old check compared v3 to the throwaway trial rig; v3 was promoted
-    2026-06-25 and V4/V5 are live style bumps, so that comparison is retired.)"""
-    if V7_PROMPT.strip() != B.VERSE_PROMPT.strip():
-        print("WARNING: V7_PROMPT here has DRIFTED from build_lexica_def.VERSE_PROMPT — they must be "
-              "byte-identical so the reviewer measures the live engine. Re-sync before trusting a run.",
-              file=sys.stderr)
+    """Loud if our frozen copy of the LIVE engine has drifted from build_lexica_def.VERSE_PROMPT.
+    This is the invariant that matters: the reviewer must draw under the SAME prompt the build
+    ships, or it isn't measuring the live engine. The frozen copy is v8 since the 2026-07-10
+    promotion (KEEP ruling, step-5 control fire); v7 is historical and intentionally differs."""
+    if V8_DRAFT_PROMPT.strip() != B.VERSE_PROMPT.strip():
+        print("WARNING: the v8 copy here has DRIFTED from build_lexica_def.VERSE_PROMPT — they must "
+              "be byte-identical so the reviewer measures the live engine. Re-sync before trusting "
+              "a run.", file=sys.stderr)
 
 
 # ══════════════════════════════════════════════════════════════════════════════════════════════
@@ -693,9 +697,10 @@ def main():
     ap = argparse.ArgumentParser(description="Agreement reviewer for the Lexica dictionary engine.")
     ap.add_argument("--db", default=os.path.expanduser("~/bible-db/bible.db"))
     ap.add_argument("--word", help="one G-number, e.g. G5590 (default: the six pilot words)")
-    ap.add_argument("--prompt", choices=list(PROMPTS), default="v7",
-                    help="which engine to review: v7 (frozen copy, default), v8 (DRAFT candidate, "
-                         "not the live engine), or live (build's VERSE_PROMPT)")
+    ap.add_argument("--prompt", choices=list(PROMPTS), default="v8",
+                    help="which engine to review: v8 (frozen copy of the LIVE engine, default; "
+                         "promoted 2026-07-10), v7 (previous engine, historical), or live "
+                         "(build's VERSE_PROMPT)")
     ap.add_argument("--runs", type=int, default=10, help="draws per word (10 reproduces the canary)")
     ap.add_argument("--budget", type=int, default=None,
                     help="override; default mirrors the engine's dynamic_budget curve")
