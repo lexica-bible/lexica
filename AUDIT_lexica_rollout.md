@@ -2063,6 +2063,12 @@ Job 23:15/Psa 94:9 + Mat 7:3/Luk 6:41/Isa 57:1 pairs 9-10/10).** The 2-pole carv
   pass at zero extra cost. Re-hint approved, both pins extended. Economics-model stat: κατανοέω
   = 3 plain fails (3 distinct modes) + 1 hint fail — the mechanism's first non-first-attempt
   success if the next lands.
+- **HINTED DRAW 2 (key 2b592e72) PASSED ALL EXIT TERMS + the new relocated-verse prose check**
+  (Exo 33:8 visual, described as watching — no re-narration · Psa 10:14 mental, matches verse ·
+  meditation cluster + Heb 3:1/10:24 mental, named check passed · migrators legal · terminal
+  lists compared line-by-line, zero cross-sense overlap · citations 35 + 3 dash tails
+  hand-verified = 38 square · 2 case-artifact flags + 3 prose-noise dangling flags
+  adjudicated · proofread clean). Apply pending concurrence.
 
 ### G5009 ταμεῖον — SHIPPED + LIVE (2026-07-10, session 5). Hinted ship (cap-out pull 4),
 ### OFF-COUNT.
