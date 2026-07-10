@@ -2053,6 +2053,13 @@ space. Modal 2-sense carve repeats 8/10 → STABLE, plain draw, NO hint.**
   difference is nearly nil for a READER — same verses, same meaning, same prose; if
   pin-vs-draws conflicts this contested produce reader-equivalent cards, the exit terms may
   be over-specified relative to reader need.
+- **HINTED DRAW (key eae8ca6c) PASSED all exit terms** (mechanism 8-for-8 structural): 2
+  senses as hinted · figurative verses inline under storage, spatial logic described (pin
+  satisfied pull 4) · no cross-sense double-shelf (Exo 8:3 storage-only; same-sense sub-use
+  repeats legal) · Mat 6:6 room-not-closet, gloss note flags "closet" narrowing · Luk 12:24
+  cited · citations 29 gate-checked + 6 shorthand tails hand-verified (#28 family) + Deu 32:25
+  uncited-covered (Exo 4:26 class) = 36 square · idiom doubles cite once per verse, same
+  sense, no ×2 marker — reviewed, not a defect · proofread clean. Apply pending concurrence.
 
 ### G5281 ὑπομονή — SHIPPED + LIVE (2026-07-10, session 5). Plain ship, ATTEMPT 2.
 **Apply clean ("using reviewed draw 2a609d5c — no model call", cache-content verified before
