@@ -2020,6 +2020,10 @@ tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Groundin
   logged for the V8 comma-shorthand item** · "dangling Act, Gal" flag = prose noise
   ("in Acts and Galatians" in gloss notes), adjudicated · full proofread clean · sense-3 thin
   flag = the ruled Jer 11:16 thin sense, expected.
+- **Reviewer concurrence (relayed 2026-07-10), one log note:** sense 1's "abstract benefit /
+  rite as institution" paragraph (Rom 3:1, Rom 4:9, Rom 2:28) deliberately ABSORBS the
+  practice/institution shelf draws 2+6 carved (2/10 at floor → fold). Correct resolution, the
+  fold the floor predicted — NOT a missing sense; do not rediscover.
 
 ### G4061 περιτομή — STUB, NOT RUN (session 4 CLOSED FAILED 2026-07-09; ENGINE_LESSONS #39).
 RED seed #2, JP-approved next word. Pre-pull state at close: 36 verses / 40 occ · 4 doubles
