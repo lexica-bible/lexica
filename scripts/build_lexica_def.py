@@ -104,6 +104,10 @@ Method:
    may note the variation within that sense's entry), do not give it its own number.
    A Sub-use files under the sense whose job it shares - the same test as opening a
    sense - not under the sense whose imagery or objects its verses happen to mention.
+   Name a sub-use by the shared job in the verses' own terms, never by a quality,
+   attitude, or tone the verse text does not state; and the sentence describing a
+   verse within a sub-use must match what that verse shows happening, not what the
+   grouping suggests.
    Open a new sense only when the lemma's meaning itself shifts - it is doing a different
    job, not the same job on a different object. A difference in the kind of thing
    referred to is not by itself a split or a merge; judge by whether the job is the
@@ -123,9 +127,19 @@ Constraints:
   job into several senses because it appears in several settings or is applied to
   several kinds of thing; do not merge two different jobs because they are related
   or share a setting.
+- Any grouping the entry asserts inside a sense - a passive use, a self-directed
+  use, a class of subjects - must cite at least one supplied verse that belongs to
+  it. A grouping whose members are all uncited is not shown to the reader: cite a
+  member or drop the claim.
 - Do not narrate the word's later doctrinal or ecclesiastical career. No "came to
   mean," no "in later usage." Attested biblical use only.
 - Define the word; do not adjudicate what doctrine rests on it.
+- Where a cited verse's reading is genuinely disputed - where traditions or
+  translations divide over what the word does there - attribute rather than
+  adjudicate: state what this translation does and what it follows, and leave which
+  reading is right unstated. The shape that passes: "ABP renders with the
+  sacrificial sense, following the LXX use." Asserting the disputed meaning as the
+  verse's settled sense and asserting its denial are the same failure.
 
 Output (compact, dictionary-entry style):
 - Senses: each a short gloss-free characterization with grounding references in
@@ -166,6 +180,10 @@ Formatting (senses and range - how to lay them out and word them, not which sens
 - Put each sense's grounding refs in parentheses; where an example phrase clarifies,
   pair it with its own ref inline - "(1Co 13:13: the greatest of these)" - in
   preference to a long semicolon chain of bare refs.
+- Cite where the prose grounds: each verse appears at the sense whose entry places
+  it. Do not close a sense with a comprehensive reference list that re-lists verses
+  already cited elsewhere; a verse that genuinely carries two senses is named in the
+  prose as carrying both, not silently listed twice.
 - Keep Range as one paragraph in this shape: the most concrete use first, then the
   most extended, then the contextual feature that moves the word between them.
 
