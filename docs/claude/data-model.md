@@ -148,7 +148,10 @@ classical glosses). Side table in bible.db (built on PA, not in git). One row = 
 LXX-provenance flag, Option B) + `fork` (contested-word readings + a Study-graph link; also
 carries `gloss` + two hand-authored SEAM axes `divergence_type` (referent|content|loaded) +
 `lead_flip` — set in the `CONTESTED` register, no model, written on any `--resplit`) + `verses`
-+ `audit` (citation-gate result) + `raw` (so a better splitter re-splits with NO model call).
++ `audit` (citation-gate result; since 2026-07-10 also `audit.floor_diff` — the #30
+floor-vs-ship placement record, present ONLY when the apply ran with `--floor <agreement json>`;
+its `floor_unseen` list sees qualified refs only until the #28 shorthand expander lands)
++ `raw` (so a better splitter re-splits with NO model call).
 
 Built by `scripts/build_lexica_def.py` (frozen `VERSE_PROMPT` → Sonnet → split → citation gate →
 fork → write; `--apply` build / `--resplit --apply` re-split stored raw, free; surgical raw

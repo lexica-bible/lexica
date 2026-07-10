@@ -555,19 +555,22 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   the pipeline driver). Cutoff = occ ≥ 2 (~3,954 words). Full record + the 3-tier ship-gate + frame-leak
   pre-sort rule: memory `project_lexica_dictionary`; **Batch One lessons + calibration numbers + the full
   batch-two prep list = `AUDIT_lexica_rollout.md`.**
-  **STATUS (2026-07-10, step-4 session): PHASE 1 done 3/3 · BATCH-3 CLOSED 18 shipped / 2 escapes
+  **STATUS (2026-07-10, step-5 session): PHASE 1 done 3/3 · BATCH-3 CLOSED 18 shipped / 2 escapes
   / 2 parked (18 RULED — the docs' earlier "19" was a propagated tally slip, audit doc FINAL-TALLY
-  CORRECTION) · close steps 1–4 + audit session DONE · TWO-TIER BAR ADOPTED w/ watch tags · count
-  5/15 · **STEP 4 RAN: #30 BUILT + control-fired (`ac8ea96`), pile triaged, V8 DRAFTED-NOT-FIRED
-  (live default v7), roadmap + corpus-defect protocol + JP_QUICKREF_lexica.md banked · NEXT = JP
-  STEP-4 RULINGS CLOSED 12/12 in-chat 2026-07-10 (#42 adopted → ENGINE_LESSONS) · NEXT = STEP 5
-  (V8 control fire + #30 fire-class definition, gate OPEN), then the final 10 with #30 live →
-  GREEN activation.** JP's hours
+  CORRECTION) · close steps 1–4 + audit session DONE · TWO-TIER BAR ADOPTED w/ watch tags ·
+  **STEP 5 RAN + CLOSED 2026-07-10: V8 PROMOTED LIVE (JP KEEP; stamp `lexica:7ef8620328a9`;
+  swap `fa18656`, re-sync `f631194`) · G2665 καταπέτασμα SHIPPED on draw 3 (draws 1–2 rejected,
+  defect classes on record) · COUNT 6/15 name-true (JP BOOK) · #30 LIVE + fire classes BANKED
+  (`7689884`) · first `audit.floor_diff` stored row · V9_PILE.md opened. NEXT = BATCH-4
+  SELECTION (final 10; poetry-trigger + N=6-7 cost pendings revisit there per ruled item 12),
+  then the final-10 run with #30 live → GREEN activation. Item-3 tooling batch (incl. the #28
+  shorthand expander — now load-bearing for #30's unseen channel, see ENGINE_LESSONS #44) +
+  /consolidate still green as parallel gap work.** JP's hours
   variable (relocation) — batch decisions when he's away, work normally when he's present
   (handoff AVAILABILITY CONSTRAINT); silence = pending.
-  Current law + queue = `HANDOFF_lexica_rollout.md` (RULING LIST + ROADMAP + STEP-5 opener +
-  `## Queue`); authority = `AUDIT_lexica_rollout.md` (STEP 4 entry above STEP 3 block); design
-  backlog = `ENGINE_LESSONS.md` (41 + one pending candidate). The paragraph below is HISTORY
+  Current law + queue = `HANDOFF_lexica_rollout.md` (RULING LIST + ROADMAP + `## Queue`);
+  authority = `AUDIT_lexica_rollout.md` (STEP 5 entry above STEP 4); design
+  backlog = `ENGINE_LESSONS.md` (44). The paragraph below is HISTORY
   (early batch-2), kept for pointers only.**
   Batch-2 opened 2026-07-06: 4 shipped first session; **SHIP BAR
   RE-RULED to FOUR GATES** (holes/merges/completeness/granularity — NOT sense-count-match); reviewer floor

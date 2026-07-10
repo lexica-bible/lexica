@@ -639,3 +639,27 @@ both drifting from the doc.
     match its artifact's actual contents; flag-before-bank applies to dictations from ANY party.
     *(audit: FINAL-TALLY CORRECTION + STEP 4 ADDENDUM + partial-return/completion records,
     2026-07-10)*
+
+## Added at the step-5 close (2026-07-10, the G2665 V8 control fire)
+
+43. **Draw stability and prose reliability are different properties — the floor certifies
+    SENSE-STRUCTURE, not prose.** The G2665 V8 floor was textbook-clean (10/10 same three-block
+    anatomy, all folds, zero holes) and the ship draws still produced two defect-class cards —
+    a reader-rendered duplicate ref, then a wrong-metal/wrong-part physical claim ("cast-brass
+    bases" where the verse has silver cast for the tips). Both defects lived in the prose layer
+    the floor never exercises; #30 and the floor were rightly silent. Corollary (reviewer
+    precision ruling, banked): forced redraws are INDEPENDENT — a defect absent from the next
+    draw was not "corrected," it just didn't recur; defects are per-draw RATES (both step-5
+    classes ran 1-of-3), and a promote decision accepts the rate, mitigated by the gate that
+    catches it. *(audit: STEP 5 entry, draws 1–3, 2026-07-10)*
+
+44. **A detector inherits the blindness of the parser it reads through — before trusting a
+    silent channel, ask what the channel can SEE.** #30's floor-unseen list printed empty on a
+    card that carried three genuinely floor-unseen citations (Lev 4:17, Lev 16:15, Exo 40:21) —
+    all shorthand-form ("Lev 4:6, 17"), invisible to `_REF_RE`, so they never entered the
+    ship-refs set and the subtraction came up empty. Same mechanism scopes the citation gate's
+    "N/N pass" to qualified refs only. Until the #28 expander lands, the manual σελήνη-procedure
+    check on shorthand tails is a mandatory gate step (encoded in the CLEAN fire-class
+    definition). Sibling of #21/#42: an instrument's output is a claim about what the instrument
+    read, not about the artifact. *(audit: STEP 5 entry draw 1 + fire-class definitions,
+    2026-07-10)*
