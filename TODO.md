@@ -560,20 +560,17 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   CORRECTION) · close steps 1–4 + audit session DONE · TWO-TIER BAR ADOPTED w/ watch tags ·
   **STEP 5 RAN + CLOSED 2026-07-10: V8 PROMOTED LIVE (JP KEEP; stamp `lexica:7ef8620328a9`;
   swap `fa18656`, re-sync `f631194`) · G2665 καταπέτασμα SHIPPED on draw 3 (draws 1–2 rejected,
-  defect classes on record) · ~~COUNT 6/15 (JP BOOK)~~ **COUNT 5/15 (JP REVERSAL at batch-4
-  open 2026-07-10: G2665 SHIPPED OFF-COUNT, new law ENGINE_LESSONS #45; owed = 10; retro
-  scope on the 5 members OPEN)** · #30 LIVE + fire classes BANKED
-  (`7689884`) · first `audit.floor_diff` stored row · V9_PILE.md opened. NOW = BATCH-4
-  SELECTION IN PROGRESS (queue + stopping rule replaces a fixed roster — size unruled;
-  poetry-trigger + N=6-7 cost pendings resolving here per ruled item 12),
-  then the count-closing run with #30 live → GREEN activation. Item-3 tooling batch (incl. the #28
+  defect classes on record) · COUNT 6/15 name-true (JP BOOK) · #30 LIVE + fire classes BANKED
+  (`7689884`) · first `audit.floor_diff` stored row · V9_PILE.md opened. NEXT = BATCH-4
+  SELECTION (final 10; poetry-trigger + N=6-7 cost pendings revisit there per ruled item 12),
+  then the final-10 run with #30 live → GREEN activation. Item-3 tooling batch (incl. the #28
   shorthand expander — now load-bearing for #30's unseen channel, see ENGINE_LESSONS #44) +
   /consolidate still green as parallel gap work.** JP's hours
   variable (relocation) — batch decisions when he's away, work normally when he's present
   (handoff AVAILABILITY CONSTRAINT); silence = pending.
   Current law + queue = `HANDOFF_lexica_rollout.md` (RULING LIST + ROADMAP + `## Queue`);
-  authority = `AUDIT_lexica_rollout.md` (BATCH-4 OPEN amendment above STEP 5); design
-  backlog = `ENGINE_LESSONS.md` (45). The paragraph below is HISTORY
+  authority = `AUDIT_lexica_rollout.md` (STEP 5 entry above STEP 4); design
+  backlog = `ENGINE_LESSONS.md` (44). The paragraph below is HISTORY
   (early batch-2), kept for pointers only.**
   Batch-2 opened 2026-07-06: 4 shipped first session; **SHIP BAR
   RE-RULED to FOUR GATES** (holes/merges/completeness/granularity — NOT sense-count-match); reviewer floor
