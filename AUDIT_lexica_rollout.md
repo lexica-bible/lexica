@@ -2016,6 +2016,16 @@ Job 23:15/Psa 94:9 + Mat 7:3/Luk 6:41/Isa 57:1 pairs 9-10/10).** The 2-pole carv
 - **CC recommendation (pending JP):** STABLE → plain dry-run; exit terms = 2 senses (visual
   observation · mental consideration) · border migrators either-home-legal (listed above) ·
   no single-occ double-shelf · Heb 3:1/10:24 descriptive, no devotional wording.
+  **Reviewer note banked: these exit terms = first draft of the two-tier bar in practice
+  (defect class pinned, migrators pre-legalized) — κατανοέω is the natural experiment; one
+  line in the close-review record either way. Named check added: Heb 3:1 + Luk 12:24 read as
+  attention-at-an-object, not devotional exhortation (Mat 6:6-closet class).**
+- **PLAIN PULL 1 (key c4c5daec) REJECTED 2026-07-10 (pull 1/3): DEFECT CLASS — gate flagged
+  Isa 57:1 double-shelved [1,2], single-occ per the banked 38/38 table.** Rejects under BOTH
+  bars — natural-experiment data point: zero variance rejections this pull, everything else
+  passed (2-pole structure, all 9 migrators coherent, Heb 3:1 "attend to — turn your mind
+  toward" descriptive, ravens/lilies as attention-objects). One machine-caught defect.
+  Redraw issued.
 
 ### G5009 ταμεῖον — SHIPPED + LIVE (2026-07-10, session 5). Hinted ship (cap-out pull 4),
 ### OFF-COUNT.
