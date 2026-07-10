@@ -2046,6 +2046,13 @@ space. Modal 2-sense carve repeats 8/10 → STABLE, plain draw, NO hint.**
   instrument).** Stopped to JP per redraw discipline. CC+reviewer recommendation: hint per
   ἄρχων (modal 2-sense carve, figurative verses inline under storage); cap-out = structure
   class, NOT a content-wall tally increment. PENDING JP.
+- **JP RULING (2026-07-10): HINT, ἄρχων precedent.** Two senses (room · storage), figurative
+  verses inline under storage, spatial logic described. Divergence evidence banks to V8
+  pile/close review with ταμεῖον as lead exhibit. **Close-review line item (from JP's
+  ruling posture, reviewer-flagged as real calibration economics):** the inline-vs-thin-shelf
+  difference is nearly nil for a READER — same verses, same meaning, same prose; if
+  pin-vs-draws conflicts this contested produce reader-equivalent cards, the exit terms may
+  be over-specified relative to reader need.
 
 ### G5281 ὑπομονή — SHIPPED + LIVE (2026-07-10, session 5). Plain ship, ATTEMPT 2.
 **Apply clean ("using reviewed draw 2a609d5c — no model call", cache-content verified before
