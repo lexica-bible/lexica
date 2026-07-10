@@ -1996,6 +1996,10 @@ waiting, expectation; (ii) virtue-essay drift — describing the quality abstrac
 the word's per-verse job; (iii) standing terms travel: single-occ double-shelf disqualifier,
 second-costume rule. Straight-to-10 in force. Streak note: GREEN word — a clean attempt-1
 ship here is a count candidate (count 2/15).
+**PRE-PULL RECORD (2026-07-10): OCC TABLE BANKED — 39 verses / 40 occ, ONE double = 2Pe 1:6
+(the ladder passage, each rung repeats the noun; positions 11/15, row-verified genuine, no
+splitter pattern). No dotted cousins (bare 5281 only). Spread: OT 8 (Psa 4, Jer 2, Job 1,
+1Ch 1 — the hope/expectation ground) / NT 32 (Rev 7 largest). ≤40 → all fed.**
 **Apply clean ("using reviewed draw 9c3bd170 — no model call", content byte-matched) →
 screenshot review PASS all 5 checks (sense order · agency paragraphs + Rom 9:18 bare · both
 thin senses · harsh-demand sub-use all 5 refs · whitespace) + bonus checks pass (21/21 badge,
