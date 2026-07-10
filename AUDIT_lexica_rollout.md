@@ -2035,7 +2035,16 @@ card · Mat 6:6 room-not-closet · whitespace · 29/29 badge). Reviewer highligh
 note's closing line — "the translation's oscillation between the two reflects a real
 difference in the lemma's use rather than translational inconsistency" — the project's
 thesis in one sentence, on a card. BATCH TALLY: 18 shipped / 2 escapes / 2 parked · count
-3/15 · streak 0. Reject retrospective confirmed IN the close plan (step-3 input). ONE WORD
+3/15 · streak 0.
+**INCUMBENT COMPARISON (post-ship, per protocol; run 2):** LSJ digest leads treasury/public
+storehouse, private room trails third — the corpus is the mirror image (room dominant 18+
+verses, storage second, civic treasury ~absent from all 39 occ). Figurative extension
+(belly/sky/death, 6 verses) missing from the incumbent entirely — 2nd consecutive word with
+no incumbent home for a real corpus use (ὑπομονή ground-of-reliance was 1st). Nothing in the
+incumbent WRONG — classical-vs-corpus weight inversion. **Running pattern for close review
+(2-for-2): incumbent orders by classical prominence, corpus by attestation — disagreed on the
+LEAD sense both times; the lead sense is what most users read and stop. Licensing exhibit
+compounding.** Reject retrospective confirmed IN the close plan (step-3 input). ONE WORD
 LEFT: κατανοέω G2657.**
 
 ### G5009 ταμεῖον — GREEN, OPENED session 5 (2026-07-10). PRE-REGISTRATION.
