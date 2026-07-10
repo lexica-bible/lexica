@@ -1982,8 +1982,16 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 14 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
-### G4645 σκληρύνω — RED seed #3, OPENED session 5 (2026-07-10). WATCH PRE-REGISTERED
-### (banked before any pull exists, περιτομή precedent). Straight-to-10 in force.
+### G4645 σκληρύνω — SHIPPED + LIVE (2026-07-10, session 5). Hinted ship, OFF-COUNT.
+**Apply clean ("using reviewed draw 9c3bd170 — no model call", content byte-matched) →
+screenshot review PASS all 5 checks (sense order · agency paragraphs + Rom 9:18 bare · both
+thin senses · harsh-demand sub-use all 5 refs · whitespace) + bonus checks pass (21/21 badge,
+gloss line, verse block incl. Exo 13:15 retrospective). BATCH TALLY: 16 shipped / 2 escapes /
+2 parked · count 2/15 · BOTH REDs RETIRED — routing goal proven plural. Remaining: ταμεῖον
+G5009, ὑπομονή G5281 (pre-registration banked), κατανοέω G2657 — 3 GREENs to batch close,
+then the six-step close plan.**
+
+### G4645 σκληρύνω — working record (RED seed #3, opened session 5; watch + floor + rulings below)
 **Expected profile (prediction, not a constraint — attested = follow it):** hardening of the
 heart/self toward God (Exodus Pharaoh cycle, Heb 3–4 "harden not your hearts") · possibly a
 stiff-neck/obstinacy cluster · literal physical hardening if the corpus has any.
