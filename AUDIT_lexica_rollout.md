@@ -2037,6 +2037,15 @@ space. Modal 2-sense carve repeats 8/10 → STABLE, plain draw, NO hint.**
   divergence watch (opened on ὑπομονή) now has a pattern.** Pull 3 = last in cap; on a third
   same-direction failure, cap-out → hint mechanism per ἄρχων precedent, and the pin-vs-draw
   tension goes to JP/reviewer.
+- **PLAIN PULL 3 (key 91c5ee57 refreshed) REJECTED 2026-07-10 → CAP-OUT (3/3).** Figurative
+  shelf a THIRD time (narrowed: Job pair + 3 belly-Proverbs; Pro 7:27 + Eze 28:16 correctly in
+  storage this round) — pin violated 3rd time; ALSO self-disqualified: gate flagged Exo 8:3
+  double-shelved [1,2] (single-occ). **DIVERGENCE DATA POINT #3 — 3/3 independent ship draws
+  built a figurative shelf the floor never stabilized; banks to the divergence watch + V8 pile
+  as evidence, does NOT reopen the pin (reviewer tiebreaker: the floor is the ruled
+  instrument).** Stopped to JP per redraw discipline. CC+reviewer recommendation: hint per
+  ἄρχων (modal 2-sense carve, figurative verses inline under storage); cap-out = structure
+  class, NOT a content-wall tally increment. PENDING JP.
 
 ### G5281 ὑπομονή — SHIPPED + LIVE (2026-07-10, session 5). Plain ship, ATTEMPT 2.
 **Apply clean ("using reviewed draw 2a609d5c — no model call", cache-content verified before
