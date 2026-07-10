@@ -2000,6 +2000,26 @@ ship here is a count candidate (count 2/15).
 (the ladder passage, each rung repeats the noun; positions 11/15, row-verified genuine, no
 splitter pattern). No dotted cousins (bare 5281 only). Spread: OT 8 (Psa 4, Jer 2, Job 1,
 1Ch 1 — the hope/expectation ground) / NT 32 (Rev 7 largest). ≤40 → all fed.**
+**FLOOR (agreement_G5281_v7_20260710-014609, 10 runs) ADJUDICATED 2026-07-10:** {2:8, 3:2}
+mean 2.2 — cleanest floor of the batch. **PRE-REGISTERED QUESTION ANSWERED: NO COLLAPSE, 10/10.**
+Every draw keeps two jobs: (1) endurance / sustained holding-on under pressure (NT core, all
+10/10) · (2) the GROUND/OBJECT of reliance — "you are my ὑπομονή" (the OT block Psa 39:7,
+62:5, 71:5, Jer 14:8, 17:13 in sense 2 all 10 draws). Note the OT sense drew as the concrete
+object-of-reliance, not abstract "hope" — more precise than the pre-registration predicted.
+- Third-slot flickers 1/10 each (d1 "no remaining term", d4 "expectation of the not-yet") →
+  fold. All three BACK-CHECK pairs = fold (Rev 2:3, Rom 15:5, Rom 5:4 — each only ever an
+  extra citation inside a surviving sense).
+- Boundary flickers (noted, either-home class): 2Th 3:5 "the ὑπομονή of Christ" splits 4 core /
+  3 ground / 2 uncited · Rom 15:5, Rom 8:25, 1Th 1:3 minor migrations, majority home = core.
+- **Dirty draws: d1 (Rev 3:10 double-shelved) · d4 (Rom 8:25 double-shelved)** — both single-occ,
+  disqualified as ship candidates.
+- **The modal 2-sense carve REPEATS 8/10 → STABLE, plain draw, NO HINT** (hint is
+  escalation-only; nothing to escalate). First plain-draw candidate since the REDs began.
+- **CC recommendation (pending JP):** plain dry-run; exit review = modal 2-sense structure ·
+  boundary verses at majority homes (2Th 3:5 either-home-legal, noted) · no single-occ
+  double-shelf · church-word check ("patience"/"perseverance" freight; plain range =
+  endurance, remaining-under, waiting, ground of reliance) · OT sense concrete not abstract.
+  Clean attempt-1 ship = COUNT 3/15 and a streak candidate.
 **Apply clean ("using reviewed draw 9c3bd170 — no model call", content byte-matched) →
 screenshot review PASS all 5 checks (sense order · agency paragraphs + Rom 9:18 bare · both
 thin senses · harsh-demand sub-use all 5 refs · whitespace) + bonus checks pass (21/21 badge,
