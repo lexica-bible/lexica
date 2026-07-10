@@ -507,10 +507,10 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
 
 - **TICKET (open, NOT-NOW — do not pull on this mid-calibration): some word cards render
   "loading" only.** JP observed cards stuck at "loading" (2026-07-10, batch-3 session 5).
-  Reproduction detail pending from JP: specific cards every time (would point at bad/missing
-  rows in lexica_def) vs random cards intermittently (would point at a fetch/timing issue on
-  the site). If unknown: "unknown, observed at least once 2026-07-10." Banked by reviewer
-  directive; needs a look after calibration, not during.
+  JP repro detail (2026-07-10): SAME CARDS EVERY TIME — points at bad/missing per-word data
+  rather than a fetch/timing issue. JP will log specific card names as he hits them; first
+  future name recorded here becomes the reproduction case. Banked by reviewer directive;
+  needs a look after calibration, not during.
 
 - **BDB as Hebrew LSJ-analog (IDEA — the app has no real BDB today; see the Licensing section).** Load
   OpenScriptures BDB (PD, 1906), display-only + Summary/Full-entry tabs matching the LSJ pattern. Synth
