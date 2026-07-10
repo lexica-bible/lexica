@@ -2012,6 +2012,12 @@ BATCH TALLY: 17 shipped / 2 escapes / 2 parked. **COUNT RULED (JP, 2026-07-10): 
 tiebreaker, adopted): FIRST-DRAW RELIABILITY becomes its own tally for batch-close economics —
 G5281 logs there as a first-draw failure (machine-caught). Remaining: ταμεῖον G5009,
 κατανοέω G2657.**
+**INCUMBENT-COMPARISON PROTOCOL (JP RULED IN, 2026-07-10, banked on relay — standing, fold
+into handoff STANDING LAW at wrap):** at word open, JP posts the incumbent/current definition
+for reference · comparison against the shipped card happens AFTER ship, never before
+adjudication · the incumbent NEVER enters draw context or floor reads. First run = ὑπομονή:
+sense-2 gap found in the incumbent (ground-of-reliance absent from the LSJ digest) —
+exhibit-grade; full text in the session-5 reviewer-chat log.
 **STYLE-VARIANCE CHECK (reviewer-mandated, result pending JP pull):** two render-faithful but
 possibly-new shapes on this card — (1) citations-only paragraph (no prose lead) in sense 2;
 (2) italic gloss-word leads (*"Waiting"* / *"Patience"*) in gloss notes. Grep across shipped
