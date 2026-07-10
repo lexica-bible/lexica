@@ -479,6 +479,63 @@ Study's return. Status detail: STATE.md Study line.)
    commit hash. Pre-emptive holds are the same mechanism (the armed hold-outs G1392/G1377/
    G1391 are DATA-BLOCKED before their floors ever run — do not floor them while tagged).
 
+## BATCH-4 RUN SESSION 2 — CC OPENER BLOCK (paste into the new CC session; opens from docs
+## alone. State source of truth = close commit 25d4a40; do not trust any number in a handoff
+## over the docs at that commit.)
+READ FIRST, in order: (1) this handoff — Queue item 5 (the batch-4 blocks), then the BATCH-4
+RUN state below; (2) AUDIT_lexica_rollout.md — G1390 PARKED entry (top) + G1516 entry +
+BATCH-4 CORPUS-DEFECT FIRE entry + N=6-7 entry; (3) ENGINE_LESSONS.md #45–#46; (4) V9_PILE.md.
+State at 25d4a40 (pointers, not restatements): **COUNT 7/15 name-true — δίκτυον†, σελήνη,
+ὑπομονή, ταμεῖον, κάλαμος, καταπέτασμα, εἰρηνικός** († = the queued δίκτυον contamination
+ruling chain, JP's, 4 steps, counted until ruled) · streak 1 · V8 live (stamp
+`lexica:7ef8620328a9`), drift-warning firing = anomaly = stop · **STRAIGHT-TO-10 ruled for
+all remaining floors (3-run retired this batch; item-5 re-open SPENT)** · N=6-7 ruled KEEP
+10 · queue = 8 words: **εὐχαριστέω G2168 FIRST (enters by re-selection — screens before
+anything: contested-register 0-check (local), CONTESTED_VERSES [('2Co',5,21)] occurrence
+check, loaded-referent + fork-adjacency hand-reads per the WRITTEN rule in the BATCH-4
+SELECTION entry, Last-Supper gloss-note watch pre-noted)** then αἰχμαλωτεύω G162 (Eph 4:8
+quote-crux annotation), ἡσυχάζω G2270, μερίζω G3307 (1Co 1:13 annotation), παραπορεύομαι
+G3899, σιωπάω G4623, ἐκλύω G1590, ἐπανίσταμαι G1881 (hot poetry label 51/67,
+expect-heavier-work). Parked, not yours to reopen: πολύς, ἄκανθα, κύων + διαιρέω and δόμα
+(both re-enter ONLY via the structure-hint path when that tooling exists). Hold-outs
+G1392/G1377/G1391 DATA-BLOCKED — never floor them.
+STANDING PROCEDURES (ruled, batch-wide): every pre-pull = 3 lines (base-vs-dotted split ·
+dotted-cousin identification · true verse table) and **any no-entry dotted row = feed
+contaminant by default** (ENGINE_LESSONS #45; the fed-count tripwire on the floor header is
+the check that a fix reached the feed) · floors: `--word <SID> --runs 10 --prompt v8` ·
+gate: `--dry-run --word <SID> --floor <agreement json>` · apply: `--apply --require-cache
+--floor <same>` + read "using reviewed draw … no model call" + row-verify stamp+floor_diff ·
+manual shorthand-tail check MANDATORY before any CLEAN (#28 not landed) · quote-crux
+pass-shape precedent = δόμα d2/d3 (describe each text, name the divergence, never merge) ·
+carve-invention is the dominant reject mode (4-for-6) — the within-shape attestation law and
+the self-indicting-prose tell (#46) are the working filters · R1 commands verified on disk
+before relay · commit lists not lengths · bank on reviewer relay.
+
+## BATCH-4 RUN SESSION 2 — REVIEWER-CHAT INHERITANCE BLOCK (paste into the new reviewer chat)
+You are the reviewer chat for Lexica batch-4 run, session 2. Your predecessor's unbanked
+notes are dead by design; everything ruled is in the repo at close commit 25d4a40 — CC reads
+and relays; reconcile CC's first summary against the audit doc's G1390 PARKED + G1516 +
+CORPUS-DEFECT FIRE + N=6-7 entries before accepting it, and R1-verify `25d4a40` exists with
+those files. Your first act = that reconciliation, same discipline every session.
+State you inherit: count 7/15 name-true (δίκτυον carries a † — the contamination ruling
+chain is JP's and QUEUED, not yours to run; nobody decrements a name-true count, #42) ·
+straight-to-10 ruled for all remaining floors, item-5 re-open condition SPENT · 8 queued
+words, εὐχαριστέω G2168 first via full screens (it entered by re-selection) · V8 live,
+fire classes per `7689884` (CLEAN requires the manual shorthand-tail check until #28 lands;
+UNSEEN-REAL ships, UNSEEN-FABRICATED hard-rejects — the citation gate blocked one
+autonomously at δόμα d2, that precedent stands) · watch-tag register EMPTY, forward-only ·
+V9_PILE carries carve-invention as an EDIT CANDIDATE ×4 with direction on file — you watch
+for instance five and for the self-indicting-prose tell (#46).
+Your duties, unchanged in kind: audit CC's floor reads and gate reads against the banked
+bars; pre-registrations before outputs exist; adjudicate fires per the ruled taxonomy
+(within-shape attestation law; either-home migrators; folds never fire); rulings relayed to
+CC get banked as they happen — if it isn't banked with CC, it doesn't exist; render
+screenshots → pass/fail; per-word budget frame = the G2665 precedent (decision rule before
+draw 3; three defect-class draws → no draw 4, park-leaning record to JP). Both standing
+process rules: ask JP live in plain terms at decision points; batched lists only for
+genuine absences. Flag-before-bank binds your dictations too — the record shows tally slips
+caught on both sides of this desk; count names, not labels.
+
 ## STEP-5 SESSION — CC OPENER BLOCK (RAN + CLOSED 2026-07-10 — all five charter jobs delivered:
 ## G2665 shipped+live on draw 3, V8 PROMOTED (JP KEEP), count 6/15 (JP BOOK), #30 fire classes
 ## banked `7689884`, V9_PILE.md established. Record = audit doc STEP 5 entry; commits fa18656 /

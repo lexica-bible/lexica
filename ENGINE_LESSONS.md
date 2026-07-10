@@ -663,3 +663,25 @@ both drifting from the doc.
     definition). Sibling of #21/#42: an instrument's output is a claim about what the instrument
     read, not about the artifact. *(audit: STEP 5 entry draw 1 + fire-class definitions,
     2026-07-10)*
+
+## Added at the batch-4 run, session 1 (2026-07-10)
+
+45. **An exclusion built on side-table membership fails OPEN — absence of an entry is not
+    absence of a cousin.** Every dotted screen in the pipeline reads `dotted_lexicon`
+    membership, so a dotted number with no row (the no-entry class, 86 numbers) leaks its rows
+    into the BASE word's evidence feed, floors included — and both CC and the reviewer passed a
+    pre-pull calling the leak "bookkeeping" on an untraced claim about engine behavior. The
+    floor header (`fed 40` vs the true 38) refuted it. → v2: exclusions on curated lists must
+    fail CLOSED for unknown members, or the feed prints which dotted rows it admitted. Until
+    then: no-entry dotted at a pre-pull = contaminant by default; engine-behavior claims get
+    R1-verified, never asserted. *(audit: BATCH-4 CORPUS-DEFECT FIRE entry, 2026-07-10)*
+
+46. **The self-indicting-prose tell: when a card's prose has to explain why a verse fits a
+    shelf, the shelf is usually wrong.** Three rejected draws carried it — διαιρέω d3 filed
+    1Co 12:11 under a sense whose own prose says the job "is the same as sense 2"; δόμα d1/d3
+    filed Php 4:17 in sense 2 while writing "functions as a concrete transfer (Sense 1)".
+    Reviewer-named as generalizing. Cheap eyeball heuristic now; a v2 lint could flag a sense
+    member whose own description names another sense. Related: carve-invention (a carve or
+    placement no floor draw attests) ran 4-for-6 on batch-4's rejected draws — the V9_PILE edit
+    candidate (floor carve as CONSTRAINT to the drafter) is the design answer. *(audit: G1244 +
+    G1390 PARKED entries, 2026-07-10)*

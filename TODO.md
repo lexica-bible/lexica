@@ -575,8 +575,9 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   reader-facing contamination on a counted ship (JP 4-step ruling chain owed: fix → classify
   vs source → card disposition → count membership) · fix ticket = 3 dotted_lexicon entries
   (1390.1, 1350.1, 1350.2) via the builder, CC designs / JP checkpointed · no-entry dotted =
-  contaminant by default at every pre-pull · ranker occ = ceilings until the ~120-number
-  no-entry class is triaged (existing ticket, now upgraded: it bit a counted ship).**
+  contaminant by default at every pre-pull · ranker occ = ceilings until the 86-number
+  no-entry class is triaged (the builder's own `no_entry` bucket count; existing ticket, now
+  upgraded: it bit a counted ship).**
   **εἰρηνικός SHIPPED + COUNTED → COUNT 7/15 (first zero-reject word of the calibration;
   UNSEEN-REAL ×6, manual tail check load-bearing; streak 1). δόμα PARKED (3 defect-class
   draws on clean data incl. the first live citation-gate BLOCK; 19 draws by name). ITEM 5
@@ -592,8 +593,8 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   hours variable (relocation) — batch decisions when he's away, work normally when he's present
   (handoff AVAILABILITY CONSTRAINT); silence = pending.
   Current law + queue = `HANDOFF_lexica_rollout.md` (RULING LIST + ROADMAP + `## Queue`);
-  authority = `AUDIT_lexica_rollout.md` (BATCH-4 SELECTION entry above STEP 5); design
-  backlog = `ENGINE_LESSONS.md` (44). The paragraph below is HISTORY
+  authority = `AUDIT_lexica_rollout.md` (G1390 PARKED entry on top); design
+  backlog = `ENGINE_LESSONS.md` (46). The paragraph below is HISTORY
   (early batch-2), kept for pointers only.**
   Batch-2 opened 2026-07-06: 4 shipped first session; **SHIP BAR
   RE-RULED to FOUR GATES** (holes/merges/completeness/granularity — NOT sense-count-match); reviewer floor

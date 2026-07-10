@@ -53,6 +53,15 @@ citable `parse_abp.HEAD_WORD_TAIL_CAVEAT`; locked by `tests/test_render_head_no_
   ABP number that's a DIFFERENT word than its base resolves the base's lemma through the join.
   The `dotted_lexicon` side table + a COALESCE in the word card correct this; form-variants like
   1510.x (forms of εἰμί) correctly keep the base lemma.
+- **NO-ENTRY DOTTED = LEAK (standing, 2026-07-10 corpus-defect fire).** Every dotted exclusion
+  in the pipeline (ranker, def-engine feed, floors) works by `dotted_lexicon` MEMBERSHIP — a
+  dotted number with NO row there silently rides into its BASE word's evidence and its chips
+  serve the base word's card on click. 86 such numbers exist (the builder's `no_entry` bucket;
+  they have no `abp_ext` dictionary entry, so `build_dotted_lexicon.py` can't auto-derive them —
+  hand-classify into its `HAND_OVERRIDES` dict, never a hand row). Live bites: δόμα's floor
+  voided by a δόμος leak; δίκτυον's live card cites 5 lattice-verse leaks (ruling chain queued).
+  Consequences: any no-entry dotted row found at a pre-floor pull = feed contaminant by default;
+  ranker occ counts are CEILINGS until the class is triaged.
 - **AUDIT RULE — dotted-number blindness (hard, standing; two false positives 2026-07-02).**
   ANY Strong's-number audit query operates on the FULL dotted number by DEFAULT (raw `strongs`,
   e.g. `G1246.2`). Grouping/counting on `strongs_base` — which strips the `.N` — is allowed
