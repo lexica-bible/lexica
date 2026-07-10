@@ -1982,8 +1982,41 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### BATCH-4 OPEN — COUNT REVERSAL (JP via reviewer relay, 2026-07-10): G2665 OFF-COUNT.
+### COUNT 5/15. This block AMENDS the STEP 5 entry below on the count only; the original
+### booking stays visible per the amend-don't-overwrite instruction.
+**RULING: G2665 καταπέτασμα files SHIPPED, OFF-COUNT.** The 6/15 BOOK is reversed —
+**count 5/15, name-true: δίκτυον, σελήνη, ὑπομονή, ταμεῖον, κάλαμος. Owed = 10** (15 − 5;
+"owed = 10" is arithmetic and must not re-fuse with the label "final 10" — the original
+"10" was the scope of the #30-live insurance clause, the new "10" is 15 − 5, and neither
+is a roster size; roster size UNRULED, queue depth pending the measured rate r).
+Three grounds, each standing alone (JP's word; the 6/15 BOOK stamp was ratification of a
+reviewer recommendation, not an independent ruling):
+1. Its two in-budget rejects were **defect-class**, not variance (duplicate rendered ref +
+   over-assertion; wrong-metal physical claim + exemplar-echo — both V9_PILE-logged).
+   Ships-within-budget absorbs variance; a defect firing on 2 of 3 draws is a RATE (#43),
+   and draw 3 clean is a fact about sampling, not about the engine.
+2. **A control word cannot be scored against a rubric its own output authored** — G2665
+   wrote the #30 fire classes. Polluted instrument, one level up from the step-5
+   hand-patched-card objection.
+3. **It drew pre-promotion.** Committed wording governs, including which draws it owns;
+   this is why step 5 left the count open rather than booking it.
+**NEW LAW banked = ENGINE_LESSONS #45** (a ship whose in-budget rejects were defect-class
+does not count, though it shipped in budget; + the two supporting principles).
+**RETROACTIVE SCOPE = OPEN** (JP rules with the WS1 table in hand — "look first, then
+rule"): WS1 already classified every batch-3 reject. Applied to the five counted members:
+δίκτυον 0 rejects · σελήνη 0 rejects · ὑπομονή p1 DEFECT · ταμεῖον p1/p2 variance +
+p3 DEFECT · κάλαμος p1/p3 variance + p2 DEFECT. Strict "any defect-class reject
+disqualifies" → count 2/15 (δίκτυον, σελήνη), owed 13. "All-rejects-defect disqualifies"
+(the G2665 shape: 2-of-2) → count 4/15 (drop ὑπομονή only), owed 11. Forward-only → 5/15
+stands, owed 10. The wording choice between "any" and "all" is part of the scope ruling.
+**#38 delta: 6 − 1 = 5 ✓ (the −1 is G2665, named).** V8 stays the live engine; the KEEP
+ruling and everything else in the STEP 5 entry stands untouched.
+
 ### STEP 5 — V8 CONTROL FIRE CLOSED: KEEP + BOOK (JP, in-chat, 2026-07-10). V8 IS THE LIVE
-### ENGINE (stamp `lexica:7ef8620328a9`); COUNT 6/15. G2665 καταπέτασμα SHIPPED + LIVE.
+### ENGINE (stamp `lexica:7ef8620328a9`); COUNT 6/15 [SUPERSEDED on the count only — see the
+### BATCH-4 OPEN amendment above: G2665 ruled SHIPPED OFF-COUNT, count 5/15]. G2665
+### καταπέτασμα SHIPPED + LIVE.
 **Control word provenance (ruled item 4):** ranker run on PA (`--skip-built --occ-max 40 --top 40`),
 top-40 table relayed verbatim; CC nominated **G2665 καταπέτασμα "veil, curtain" (rank 34, 38 occ)**
 as top un-built GREEN concrete noun; reviewer re-walked the raw table and ACCEPTED (δόμα adjudicated

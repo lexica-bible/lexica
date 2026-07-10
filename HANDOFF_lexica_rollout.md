@@ -1690,12 +1690,16 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
    → ENGINE_LESSONS). STEP 5 RAN + CLOSED same day: V8 PROMOTED (JP KEEP ruling; live stamp
    `lexica:7ef8620328a9`; swap `fa18656`, re-sync `f631194`) · G2665 καταπέτασμα shipped+live
    (draw 3; draws 1–2 rejected, defect classes on record) · #30 fire classes BANKED (`7689884`)
-   · first `audit.floor_diff` stored write · COUNT 6/15 name-true (δίκτυον, σελήνη, ὑπομονή,
-   ταμεῖον, κάλαμος, καταπέτασμα; BOOK ruled by JP) · V9_PILE.md established. Full record:
-   audit doc STEP 5 entry. NEXT = BATCH-4 SELECTION (the final 10; the two deferred cost
-   pendings — poetry trigger + N=6-7 — revisit there per ruled item 12), then the final-10 run
-   with #30 live → GREEN activation, then step 6 layout. Item-3 tooling + /consolidate =
-   parallel gap work, still green.**
+   · first `audit.floor_diff` stored write · ~~COUNT 6/15~~ **COUNT 5/15 (JP REVERSAL at
+   batch-4 open, 2026-07-10: G2665 = SHIPPED OFF-COUNT — defect-class in-budget rejects +
+   rubric authored by its own output + pre-promotion draws; new law = ENGINE_LESSONS #45;
+   record = audit doc BATCH-4 OPEN amendment). Members: δίκτυον, σελήνη, ὑπομονή, ταμεῖον,
+   κάλαμος. OWED = 10 (arithmetic, not a roster size — roster size UNRULED; retro scope of
+   #45 on the five members OPEN with the WS1 table).** · V9_PILE.md established. Full record:
+   audit doc STEP 5 entry + the amendment above it. NEXT = BATCH-4 SELECTION (in progress;
+   the two deferred cost pendings — poetry trigger + N=6-7 — resolve there per ruled item 12),
+   then the count-closing run with #30 live → GREEN activation, then step 6 layout. Item-3
+   tooling + /consolidate = parallel gap work, still green.**
 6. (was 4, historical) **Batch-3 sessions 1–2 record** — **sessions 1 AND 2 CLOSED 2026-07-09.**
    Session 2: 3 shipped (παράπτωμα RED — routing exercise met · συκῆ · βέλος, all off-count via
    escalation), κύων parked (one-verse wall, Deu 23:18), 4-of-4 escalations; count 2/15, streak 0;

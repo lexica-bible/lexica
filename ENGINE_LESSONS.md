@@ -663,3 +663,17 @@ both drifting from the doc.
     definition). Sibling of #21/#42: an instrument's output is a claim about what the instrument
     read, not about the artifact. *(audit: STEP 5 entry draw 1 + fire-class definitions,
     2026-07-10)*
+
+## Added at the batch-4 open (2026-07-10, JP count reversal via reviewer relay)
+
+45. **A ship whose in-budget rejects were defect-class does not count, though it shipped in
+    budget.** Ships-within-budget absorbs VARIANCE; a defect firing on 2 of 3 draws is a rate
+    (#43), and the clean third draw is a fact about sampling, not the engine. Two supporting
+    principles ruled with it: (i) a control word cannot be scored against a rubric its own
+    output authored (G2665 wrote the #30 fire classes — polluted instrument, one level up from
+    the hand-patched-card objection); (ii) draws are owned by the committed wording they ran
+    under — G2665 drew pre-promotion, which is why step 5 left the count open rather than
+    booking it. Exhibit: G2665 ruled SHIPPED OFF-COUNT at batch-4 open; the 6/15 booking
+    reversed to 5/15. Retroactive scope = OPEN (JP rules with the WS1 classification table in
+    hand — "look first, then rule"). *(audit: BATCH-4 OPEN amendment above the STEP 5 entry,
+    2026-07-10)*
