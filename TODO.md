@@ -577,7 +577,10 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   (1390.1, 1350.1, 1350.2) via the builder, CC designs / JP checkpointed · no-entry dotted =
   contaminant by default at every pre-pull · ranker occ = ceilings until the ~120-number
   no-entry class is triaged (existing ticket, now upgraded: it bit a counted ship).**
-  NEXT = εἰρηνικός G1516 pre-pull → remaining words with #30 live → GREEN activation. Item-3 tooling batch (incl. the #28 shorthand expander — load-bearing for
+  **εἰρηνικός SHIPPED + COUNTED → COUNT 7/15 (first zero-reject word of the calibration;
+  UNSEEN-REAL ×6, manual tail check load-bearing; streak 1).**
+  NEXT = δόμα 1390.1 fix (checkpointed) → its fresh 3-run (item-5 decider) → remaining
+  seven words with #30 live → GREEN activation. Item-3 tooling batch (incl. the #28 shorthand expander — load-bearing for
   #30's unseen channel, see ENGINE_LESSONS #44 — plus the structure-hint experiment)
   + /consolidate
   still green as parallel gap work. PENDING JP one-liner: add ναί/ὁμοίως/ποτέ to the ranker's

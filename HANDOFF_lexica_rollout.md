@@ -1716,10 +1716,15 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
    4-step ruling chain) · δίδωμι stands · remaining eight roster words CLEAN · fix ticket =
    3 side-table entries via the builder, CC designs / JP executes checkpointed · standing
    amendments: no-entry dotted = contaminant by default, engine claims R1-verified, ranker
-   occ = ceilings.** NEXT = εἰρηνικός G1516 pre-pull (batch proceeds) · δόμα fresh floor
-   after the 1390.1 fix (the item-5 deciding data point) → the remaining words with #30
-   live → GREEN activation, then step 6 layout. Item-3 tooling (incl. the structure-hint
-   experiment) + /consolidate = parallel gap work, still green.**
+   occ = ceilings.** **εἰρηνικός G1516 SHIPPED + COUNTED same day — COUNT 7/15 name-true
+   (δίκτυον†, σελήνη, ὑπομονή, ταμεῖον, κάλαμος, καταπέτασμα, εἰρηνικός; † = queued
+   contamination chain). The calibration's first zero-reject word (pre-pull → 3-run certify
+   → single draw → CLEAN → render PASS); UNSEEN-REAL ×6, five machine-invisible — the
+   manual tail check load-bearing; streak 1. Record = audit doc G1516 entry.** NEXT (JP
+   "go") = δόμα 1390.1 fix design → checkpointed execution → fresh 3-run (the item-5
+   decider) → remaining seven words with #30 live → GREEN activation, then step 6 layout.
+   Item-3 tooling (incl. the structure-hint experiment) + /consolidate = parallel gap
+   work, still green.**
 6. (was 4, historical) **Batch-3 sessions 1–2 record** — **sessions 1 AND 2 CLOSED 2026-07-09.**
    Session 2: 3 shipped (παράπτωμα RED — routing exercise met · συκῆ · βέλος, all off-count via
    escalation), κύων parked (one-verse wall, Deu 23:18), 4-of-4 escalations; count 2/15, streak 0;

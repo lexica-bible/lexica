@@ -1982,6 +1982,40 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### G1516 εἰρηνικός — SHIPPED + LIVE + COUNTED (2026-07-10, batch-4). **COUNT 7/15.**
+### The batch's first counted ship and the calibration's first zero-reject word:
+### pre-pull → 3-run certify → single build draw → CLEAN gate → render PASS.
+**Pre-pull:** 39 verses / 40 occ (1Ki 8:64 ×2, the only double), **zero dotted rows of any
+kind** — first fully clean pre-pull of the batch; poetry label 10% matched the true feed
+exactly (what a ride-along-free word looks like).
+**Floor:** 3-run CERTIFIED {2:1,3:2} — mode 3; the lone 2-sense draw is a PURE MERGE with
+zero membership crossing (νίπτω merge-silence rider); persons core · offering core ·
+Zechariah-NT quartet all travel intact 3/3; 1Ch 12:38 = the one either-home migrator; all
+ten wobbles = citation-selectivity folds (draw 3 cited the offering cluster exhaustively,
+draws 1–2 sampled it). First batch-4 word to certify at 3 — the 3-run works on plain words.
+**Build draw (plain pull 1, key 88e6cefd): gate CLEAN per the banked definition** — split
+channel silent (#30 zero fires) AND unseen channel verified: **UNSEEN-REAL ×6** — 2Sa 6:18
+(machine-visible) + Gen 42:19/31/33/34 + 1Ch 16:2 via comma-shorthand tails **invisible to
+the machine** (#28 blindness, lesson #44), all table-verified by the mandatory manual step.
+Reviewer accounting correction credited: CC's read said one unseen specimen, the machine's
+count — five of six were machine-invisible; the strongest live case yet for the manual
+clause until #28 lands. Printed flags all known noise, named: 2 quoted-gloss parser
+artifacts (the `_gnote_claims` ticket class) + 1 prose-noise dangler ("Genesis" in running
+text). "1Ki 8:64 twice" arithmetic-true against the table. Zero cross-sense
+double-placement. Shape = the attested draw-2 merge; sub-uses job-named (#40); the
+term-of-art gloss note delivered the pre-registered text-first guard on "peace offerings."
+**Apply:** `--require-cache --floor` — "using reviewed draw 88e6cefd — no model call";
+row-verified FROM THE ROW: `G1516 | lexica:7ef8620328a9 | floor_diff STORED`.
+**Render PASS** (reviewer, 4 screenshots): headlines + sub-uses + tails byte-true, LXX note
++ RANGE + all three gloss notes render, no gate-flag leakage (the "27/27 verified" line =
+the reader-facing trust indicator, known behavior); sub-use indent = step-6 known item.
+**KEEP + BOOK (JP). COUNT 7/15 name-true: δίκτυον†, σελήνη, ὑπομονή, ταμεῖον, κάλαμος,
+καταπέτασμα, εἰρηνικός** (#38 delta 6+1=7 ✓; † = the queued contamination ruling chain —
+counted until JP rules, per #42). Streak 1 — clean unassisted ship.
+**Batch-4 scoreboard:** 1 certified-at-3 → shipped counted (εἰρηνικός) · 1 escalated →
+parked (διαιρέω) · 1 void → awaiting fix (δόμα). NEXT (JP "go" on the reviewer's lean):
+the δόμα 1390.1 fix design → checkpointed execution → fresh 3-run = the item-5 decider.
+
 ### BATCH-4 CORPUS-DEFECT FIRE — THE NO-ENTRY DOTTED CLASS GOES LIVE MID-BATCH
 ### (2026-07-10; reviewer-adjudicated package, banked whole. The corpus-defect protocol's
 ### first full exercise since adoption.)
