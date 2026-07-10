@@ -2020,6 +2020,14 @@ object-of-reliance, not abstract "hope" — more precise than the pre-registrati
   double-shelf · church-word check ("patience"/"perseverance" freight; plain range =
   endurance, remaining-under, waiting, ground of reliance) · OT sense concrete not abstract.
   Clean attempt-1 ship = COUNT 3/15 and a streak candidate.
+- **PLAIN PULL 1 (key 2a609d5c) REJECTED 2026-07-10 (pull 1 of the 3-cap):** the tool's own
+  gate flagged FIVE double-shelves (Psa 39:7, 62:5, 71:5, Jer 14:8, 17:13 — all single-occ, all
+  in both senses): sense 1 closed with a terminal catch-all ref list that recruited the entire
+  OT ground block into the core sense AGAINST a 10/10 floor placement. Sense-2 prose itself was
+  good (concrete ground-of-reliance, LXX note fired); the 8-sub-use overload flag reviewed =
+  verse-supported groupings, legal per #14, not the defect. Attempt-1 clean ship (count 3/15
+  candidate) is off the table; whether a clean attempt-2 plain ship still counts travels with
+  the ship ruling. Redraw issued (same plain command, fresh draw).
 **Apply clean ("using reviewed draw 9c3bd170 — no model call", content byte-matched) →
 screenshot review PASS all 5 checks (sense order · agency paragraphs + Rom 9:18 bare · both
 thin senses · harsh-demand sub-use all 5 refs · whitespace) + bonus checks pass (21/21 badge,
