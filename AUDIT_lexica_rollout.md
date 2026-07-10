@@ -1982,6 +1982,40 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### STEP 3 — SCALE PROTOCOL RULED (JP, 2026-07-10; all six + one amendment; reviewer
+### recommendations adopted under JP delegation). CLOSE STEPS 1–3 + AUDIT SESSION: DONE.
+1. **TWO-TIER BAR ADOPTED WITH A WATCH.** Defects reject; floor-legal variance ships. Every
+   variance-shipped card gets a WATCH TAG for later reader-record review — "reader-immaterial"
+   was always a review-time judgment, never field-tested; the tag generates the field evidence.
+2. **THE FOUR PICKS (coherent set, ruled):** recognition-fires are NOT human catches (ὑπομονή
+   precedent forces it) · judgment-fires ARE (κῆπος stays off-count, matching banked 3/15) ·
+   named-check catches ARE human catches (κατανοέω stays out — the check exists because a human
+   wrote it) · attestation scope = WITHIN-SHAPE (the floor's carve structure is the instrument,
+   not its verse pool; anywhere-scope would legalize assembling a card from cross-shape
+   fragments no floor draw ever drew — κύων p2 = defect). **COUNT UNDER THE RULED SET: 5/15 —
+   δίκτυον, σελήνη, ὑπομονή, ταμεῖον, κάλαμος.** (Reviewer's draft said 6/15 — arithmetic slip,
+   corrected pre-bank; κύων never shipped and counts nowhere. Picks and count banked together
+   per guard note (b).)
+3. **CALIBRATION CONTINUES + ACTIVATION INSURANCE (JP amendment, wording verbatim):** "the
+   count CONTINUES (5/15 members stand: δίκτυον, σελήνη, ὑπομονή, ταμεῖον, κάλαμος), but GREEN
+   does not ACTIVATE until the final 10 of the 15 ran with #30 live." Rationale banked: both
+   escapes are #30-class; continuing preserves clean results; the insurance clause makes the
+   calibration claim "clean under final conditions," not "clean under mixed conditions." The
+   pre-registered "any escape → new detector" answer is NAMED: #30 un-park at step 4.
+   **SEQUENCING CONSEQUENCE (CC, banked with the ruling): 5 banked + 10 owed = 15 exactly →
+   every remaining count-eligible ship IS one of the final 10 → no GREEN count word runs before
+   step 4 delivers #30 live. Step 4 gates priority (a) entirely.**
+4. **COST LEVERS, ORDERED:** process discipline first (11 waste draws out-cost variance's 6–7 —
+   #39-class relay + apply-path locks are the cheapest lever) · pins second (= the two-tier
+   adoption) · the human review layer LAST — not dialed down before #30 is live and #40's check
+   has a track record (4 machine-invisible catches stand as the evidence).
+5. **REFRESH POLICY: refresh-on-touch with a priority queue.** Touch-driven refresh converges
+   on the high-traffic oldest 42 by itself. Refresh-all rejected pre-V8-control-fire (54 draws
+   under a zero-fire prompt inverts the batch's own discipline). Stamp-and-leave viable ONLY
+   conditional on step 6's one-rendered-shape feasibility read (guard note (a)).
+6. **V8 AMBITION:** downstream of 1–5; the step-4 gate triage inherits WS3's amended scoping
+   (noise families = fix candidates; load-bearing set stays).
+
 ### AUDIT SESSION (session 6, 2026-07-10) — PACKET BANKED, REVIEWER-CONCURRED. Step 3 convenes on this.
 Recommendations, not rulings; step 3 (scale protocol) consumes. Riders resolved at banking.
 **WS1 — REJECT RECLASSIFICATION.** Batch-3 plain rejects 19 = **12–13 defect / 6–7 variance**

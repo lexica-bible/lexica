@@ -113,6 +113,27 @@ count — unverifiable, three rounds of stuck back-and-forth.)
   HANDOFF PROCEDURE content rules above — a procedure name without its invocation is malformed,
   same class as a gate without its one-command clear.)
 
+## AVAILABILITY CONSTRAINT — STANDING (JP ruling 2026-07-10, session 6; banked ahead of wrap
+## because it governs the very next session's opening)
+JP relocates cross-country + starts a new job within 1–2 weeks of 2026-07-10. Availability drops
+from hours-per-day to intermittent: short check-in windows, multi-day gaps possible. **The engine
+degrades to SLOWER, never to STALLED.** Ruled operational consequences:
+- **Async-tolerant sessions:** every session opens from docs alone (the handoff test is now the
+  norm, not the fallback). No session may depend on same-day JP follow-up. Anything needing a JP
+  ruling banks as a PENDING item with evidence attached; the session proceeds on everything else.
+- **Ruling batching:** pending JP rulings accumulate into ONE decision list per session close —
+  each item one line + the number it turns on + recommendation attached. Phone-readable format:
+  lead with the ask, evidence below. JP may rule days later.
+- **Priority order under constrained attention:** (a) the 10 owed count-eligible GREEN ships
+  (buy GREEN activation → buys JP's absence on the easy 80%) — but see the step-3 sequencing
+  consequence: #30 must be live first, so (b) actually leads; (b) step 4 V8 pile triage + #30
+  un-park (opens the insurance clause's final-10 window); (c) RED/loaded words ONLY in real JP
+  review windows — they permanently need him and don't rush; (d) layout/surface work (step 6) is
+  JP-independent, schedule into gaps.
+- **What does NOT change:** committed wording governs · R1–R4 · #38 accounting · two-tier bar as
+  adopted · the variance watch tags · **no ruling is ever inferred from JP's silence — silence =
+  pending, not approval.**
+
 ## STANDING LAW (the rules this session generated)
 - **FOUR-GATE SHIP BAR** (replaces count-match). A draft ships if it clears all four, whatever its
   sense count: (1) **no holes** — every stable reviewer job present + distinct; (2) **no merges** —
@@ -1418,9 +1439,14 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
 4. ~~Batch-3 = Phase 2 shadow calibration~~ **ROSTER COMPLETE 2026-07-10 (session 5): 18 shipped /
    2 escapes / 2 parked / count 3/15 (ships-within-budget) / streak 0. Record: SESSION-6 HANDOFF
    blocks above + audit doc session-1/2/3/5 entries.**
-5. **CLOSE-OUT STACK — NEXT.** Six ruled steps + the audit session between steps 2 and 3;
-   dependency arrows and all inputs: the SESSION-6 CC OPENER block above. Do not start step 3
-   before the audit session's outputs exist.
+5. **CLOSE-OUT STACK — steps 1–3 + audit session DONE (session 6, 2026-07-10).** Step 1 signed
+   off 18/2/2 (tally corrected by ruling, see audit doc FINAL-TALLY CORRECTION) · step 2 tally
+   banked · audit packet banked reviewer-concurred (`a3e4e42`) · step 3 all six ruled + the
+   activation-insurance amendment (record: audit doc STEP 3 block). **Count now 5/15 two-tier
+   (δίκτυον, σελήνη, ὑπομονή, ταμεῖον, κάλαμος). NEXT = STEP 4: V8 pile triage + prompt bump
+   (drafted, not fired) + #30 un-park — JP-light session, single batched ruling list at close;
+   #30 live gates ALL remaining count ships (insurance clause). Then step 5 V8 control fire,
+   step 6 layout.**
 6. (was 4, historical) **Batch-3 sessions 1–2 record** — **sessions 1 AND 2 CLOSED 2026-07-09.**
    Session 2: 3 shipped (παράπτωμα RED — routing exercise met · συκῆ · βέλος, all off-count via
    escalation), κύων parked (one-verse wall, Deu 23:18), 4-of-4 escalations; count 2/15, streak 0;
