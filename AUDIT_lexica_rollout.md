@@ -1997,7 +1997,10 @@ Queue item 4) + memory (index hook line + topic file). **COMMIT MESSAGES STAY AS
 from them). **LESSON CANDIDATE drafted (pending JP at the next lessons touch, #38/#39 family):** a
 running tally is a derived claim — it survived four sessions of "do not re-derive" markers because
 nothing ever counted the names; batch-close final state banks only after a name-count cross-check
-against the roster.
+against the roster. Reviewer addendum (session-6 sign-off, second exhibit): the outgoing reviewer
+verified handoff STRUCTURE against spec but took the headline tally on trust, and its from-memory
+root-cause reconstruction was wrong on both session and mechanism (the docs held the answer at the
+βιβρώσκω close line) — derived numbers are claims; so are reconstructions.
 
 ### G2657 κατανοέω — SHIPPED + LIVE (2026-07-10, session 5). Hinted ship (3 plain + 1 hint
 ### fail → hinted draw 2), OFF-COUNT. **BATCH-3 ROSTER COMPLETE.**
