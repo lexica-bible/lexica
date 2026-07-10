@@ -522,6 +522,15 @@ into build_lexica_def.VERSE_PROMPT, stamp flips to `lexica:7ef8620328a9`, review
 its frozen copy + _check_prompt_sync target — one commit, byte-checked). Read first: this
 block + the RULING LIST + audit doc STEP 4 entry + STEP 4 ADDENDUM. R1–R4, availability
 constraint (plain wording, ef5662f), fire-nothing seam all in force until the list returns.
+**R4 COMMANDS (verified at the step-4 wrap against the scripts on disk — lexica_agreement.py
+--word :695 / --prompt :696 [choices from PROMPTS, v8 legal] / --runs :698, save pattern
+agreement_<SID>_<prompt>_<ts>.json into ~/bible-db per save_run :518; build_lexica_def.py
+--floor landed at ac8ea96. Re-verify per R1 if the scripts moved since):**
+- ranker (ruled item 4): the verbatim line in RULING LIST item 4.
+- floor under V8:  `cd ~/bible-db && python scripts/lexica_agreement.py --word <SID> --runs 10 --prompt v8`
+- dry-run gate with #30 live:  `cd ~/bible-db && python scripts/build_lexica_def.py --dry-run --word <SID> --floor ~/bible-db/agreement_<SID>_v8_<TIMESTAMP>.json`
+- apply (ruled procedures in force):  `cd ~/bible-db && python scripts/build_lexica_def.py --apply --word <SID> --require-cache --floor <same json>` — hinted words repeat their hint
+  flags verbatim; read the "using reviewed draw … no model call" line before the render step.
 
 ## STEP-5 REVIEWER-CHAT INHERITANCE BLOCK (paste into the new reviewer chat when step 5 runs)
 You are the reviewer chat for the Lexica STEP-5 session (V8 control fire + #30 fire-class

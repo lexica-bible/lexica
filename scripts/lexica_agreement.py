@@ -694,7 +694,8 @@ def main():
     ap.add_argument("--db", default=os.path.expanduser("~/bible-db/bible.db"))
     ap.add_argument("--word", help="one G-number, e.g. G5590 (default: the six pilot words)")
     ap.add_argument("--prompt", choices=list(PROMPTS), default="v7",
-                    help="which engine to review: v7 (frozen copy, default) or live (build's VERSE_PROMPT)")
+                    help="which engine to review: v7 (frozen copy, default), v8 (DRAFT candidate, "
+                         "not the live engine), or live (build's VERSE_PROMPT)")
     ap.add_argument("--runs", type=int, default=10, help="draws per word (10 reproduces the canary)")
     ap.add_argument("--budget", type=int, default=None,
                     help="override; default mirrors the engine's dynamic_budget curve")
