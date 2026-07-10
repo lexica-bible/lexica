@@ -2071,6 +2071,14 @@ space. Modal 2-sense carve repeats 8/10 → STABLE, plain draw, NO hint.**
   lemmas that's a wall, not a discipline. NOTHING CHANGES mid-batch — the remainder runs
   under the ruled bar so calibration data stays clean; this is input to the pending
   cost-scaling levers ruling.
+- **CLOSE-STEP-3 INPUT TASK banked (reviewer-proposed, 2026-07-10): REJECT RETROSPECTIVE.**
+  Re-audit every banked reject in the ledger, classify each defect-class vs variance-class,
+  recount the 15-count both ways ("3/15 ruled bar; N/15 two-tier bar"). Known flip: ταμεῖον
+  (pulls 1–2 pure variance, only pull 3 a true defect — ships on pull 1 under two-tier →
+  4/15 minimum). Unknowable without the re-read: straight-to-hint words (σκληρύνω, περιτομή,
+  χριστός, ὀφθαλμός) never got plain pulls; ἁμαρτία's 7 draws mixed classes. Reviewer's
+  guess N=6–9; the retrospective replaces the guess with a number. One session of ledger
+  reading; converts the two-tier position statement into measured cost.
 
 ### G5281 ὑπομονή — SHIPPED + LIVE (2026-07-10, session 5). Plain ship, ATTEMPT 2.
 **Apply clean ("using reviewed draw 2a609d5c — no model call", cache-content verified before
