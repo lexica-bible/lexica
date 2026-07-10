@@ -1996,6 +1996,12 @@ attests it — pre-deciding either way is the freight. (ii) Second-costume rule 
 peer carve floor-attested, full-structure comparison. (iii) Within-draw double-shelf =
 self-disqualifying (single-occ verses; the περιτομή exit term travels). Inherited from περιτομή:
 hint-with-inline-anchor pattern for loaded figurative uses if a hint becomes legal.
+**PRE-PULL RECORD (2026-07-10): OCC TABLE BANKED — 39 verses / 39 occ, NO doubles, ≤40 → all
+fed.** Book spread: Exo 13 (Pharaoh cycle dominant) · OT 33 / NT 6 (Heb 4, Rom 1, Act 1 —
+Rom 9:18 is a single verse, not a cluster). **Dotted cousins ACCOUNTED (row-level, 12 rows):**
+4645.1 = "harshly" adverb (3) · 4645.2 = "midges" plague insects (6, Exo 8 + Psa 105:31 —
+adjacent to the Pharaoh cycle; the dotted rule earned its keep) · 4645.3 = "crooked"
+(3, Proverbs). None are the verb; bare 4645 honest at 39.
 
 ### G4061 περιτομή — SHIPPED + LIVE (2026-07-10, session 5). Hinted ship, OFF-COUNT.
 **Apply clean ("using reviewed draw ca23d502 — no model call", content byte-matched the reviewed
