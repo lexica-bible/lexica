@@ -383,6 +383,33 @@ ambiguity or enforce the majority" on Deu 23:18, JP's call at a future window).
 ## Full per-word records: audit doc session-5 entries. Session-6 handoff blocks below are the
 ## resume point; this log is history.
 
+## STEP-4 SESSION — CC OPENER BLOCK (reviewer-concurred plan, banked session 6; opens from docs
+## alone per the availability constraint. Read first: audit doc STEP 3 block + AUDIT SESSION
+## packet + this block. JP-LIGHT: draft/build everything, FIRE NOTHING — V7 stays live default
+## until JP's batched ruling returns. Silence = pending.)
+1. **#30 DETECTOR FIRST (gates everything):** floor-vs-ship placement diff, flag-only, at the
+   dry-run gate. Control-fire on the three banked positives BEFORE trusting any zero — γόνυ p1
+   (Luk 5:8 + 2Ki 1:13 off 3/3 homes) · νίπτω p1 (Psalms trio off unanimous cluster) ·
+   κατανοέω hint-1 Exo 33:8 (0/10 off-floor inside an otherwise-PASSING hinted draw — the hard
+   class; if #30 catches this it's real) · clean negative = δίκτυον. Fixtures buildable from the
+   banked break records; floor JSONs on PA if needed (`ls ~/bible-db/agreement_G1119* etc.`).
+   Wire into tests/test_lexica_detectors.py + CI + hook, BOTH lists (CI rule). **Bank in the
+   build notes: #30 fire classes and their count consequences get DEFINED at the step-5 control
+   fire, before the final-10 window opens — not discovered mid-count on ship 7.** (Until then
+   #30 fires are judgment-class under the ruled taxonomy; an adjudicated-noise fire must not
+   disqualify a count ship — ὑπομονή precedent extends only to recognition-class.)
+2. **PILE TRIAGE:** full inventory table — every item, source pointer, class (prompt / tooling /
+   display), recommendation. WS3 scoping ruled: noise families (#28 shorthand, quote-strip
+   parser artifact, disclaimer-as-cite) → TOOLING fixes, never prompt edits.
+3. **V8 PROMPT DIFF — DRAFTED, NOT FIRED:** per-edit traceability (pile item + expected effect +
+   control plan). Big candidates on record: #29 attribution register · #40 shelf-architecture ·
+   tail-list disjointness · uncited-category check · dangling-ref prose exclusion. New stamp
+   computed; reviewer byte-checks; default stays v7.
+4. **CLOSE = ONE PHONE-READABLE RULING LIST:** ask first, evidence below, one line each — and
+   every item carries a RECOMMENDED answer (incl. the step-5 control-fire word, with rationale);
+   JP overrules rather than composes. Nothing fires until the list returns. Gap work while
+   pending: step-6 layout prep + display tickets (JP-independent).
+
 ## SESSION-6 HANDOFF — CC OPENER BLOCK (paste into the new CC session)
 CLOSE-OUT STACK SESSION — the batch is done; this session adjudicates and synthesizes. No new
 words. State source of truth: the docs at the close commit (git log will show it as the wrap
