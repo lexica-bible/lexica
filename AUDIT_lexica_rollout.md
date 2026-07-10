@@ -2053,6 +2053,16 @@ Job 23:15/Psa 94:9 + Mat 7:3/Luk 6:41/Isa 57:1 pairs 9-10/10).** The 2-pole carv
   variance) · Psa 10:14 in VISUAL (floor mental 9/10, visual 1/10 — variance under two-tier).**
   CC recommendation: one more hinted draw, pins extended (Exo 33:8 → visual, Psa 10:14 →
   mental) = audit-against-known-structure. PENDING JP/reviewer.
+- **REVIEWER SPLIT (concurred, ruling class matters more than the ruling):** Exo 33:8 =
+  NOT variance under ANY bar — 0/10 is off-floor by the two-tier bar's own definition, and
+  the prose REWROTE the verse to fit the shelf ("sustained noticing rather than physical
+  inspection" for people physically watching Moses walk). **NEW DEFECT SIGNATURE for the
+  ledger: misplacement + prose-misdescription pairing (2nd tonight, with pull-2's Job 23:15
+  "face") — relocated verses get their prose claims checked FIRST.** Psa 10:14 alone = ships
+  under two-tier (1/10 attested, genuine eye-and-mind border verse); corrected in the same
+  pass at zero extra cost. Re-hint approved, both pins extended. Economics-model stat: κατανοέω
+  = 3 plain fails (3 distinct modes) + 1 hint fail — the mechanism's first non-first-attempt
+  success if the next lands.
 
 ### G5009 ταμεῖον — SHIPPED + LIVE (2026-07-10, session 5). Hinted ship (cap-out pull 4),
 ### OFF-COUNT.
