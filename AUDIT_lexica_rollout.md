@@ -1982,6 +1982,21 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 14 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### G4645 σκληρύνω — RED seed #3, OPENED session 5 (2026-07-10). WATCH PRE-REGISTERED
+### (banked before any pull exists, περιτομή precedent). Straight-to-10 in force.
+**Expected profile (prediction, not a constraint — attested = follow it):** hardening of the
+heart/self toward God (Exodus Pharaoh cycle, Heb 3–4 "harden not your hearts") · possibly a
+stiff-neck/obstinacy cluster · literal physical hardening if the corpus has any.
+**Fabrication temptations named:** (i) AGENCY VERDICTS — the direct analog of περιτομή's
+covenant freight: God-hardens vs self-hardens (Exo cycle alternates agents; Rom 9:18 "whom he
+wants he hardens") is live Calvinist/Arminian polemic ground. Describe-don't-preach hardest on
+Rom 9:18 + the Exodus cycle: the card reports WHO the text names as agent per verse, never
+resolves the sovereignty/free-will question. A sense carved BY AGENT is only legal if the floor
+attests it — pre-deciding either way is the freight. (ii) Second-costume rule in force: every
+peer carve floor-attested, full-structure comparison. (iii) Within-draw double-shelf =
+self-disqualifying (single-occ verses; the περιτομή exit term travels). Inherited from περιτομή:
+hint-with-inline-anchor pattern for loaded figurative uses if a hint becomes legal.
+
 ### G4061 περιτομή — SHIPPED + LIVE (2026-07-10, session 5). Hinted ship, OFF-COUNT.
 **Apply clean ("using reviewed draw ca23d502 — no model call", content byte-matched the reviewed
 draft) → screenshot review PASS all 5 checks (sense order · Rom 2:29 inward sub-use · Jer 11:16
