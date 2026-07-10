@@ -1982,6 +1982,67 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### AUDIT SESSION (session 6, 2026-07-10) — PACKET BANKED, REVIEWER-CONCURRED. Step 3 convenes on this.
+Recommendations, not rulings; step 3 (scale protocol) consumes. Riders resolved at banking.
+**WS1 — REJECT RECLASSIFICATION.** Batch-3 plain rejects 19 = **12–13 defect / 6–7 variance**
+(κύων p2 contested, pick named below): DEFECT = γόνυ p1 · νίπτω p1 · κάλαμος p2 · παράπτωμα p1 ·
+κύων p3 · βέλος p1/p2/p3 · ὑπομονή p1 · ταμεῖον p3 · κατανοέω p1/p2 (12) + κύων p2 under the
+strict reading. VARIANCE = κάλαμος p1/p3 · ταμεῖον p1/p2 · κατανοέω p3 · κύων p1 (6 firm).
+Hint-path rejects 4, ALL defect-class — no variance-class hint failure in the batch record (N=4).
+Phase-1 rejects 9-of-10 defect (χριστός d2 = the shape-level classification-sensitive exhibit;
+ὀφθαλμός p2 its sibling). **Concentration finding (the step-3 sentence): variance rejects live
+entirely on GREEN concrete nouns; loaded/RED rejects are ~100% defect-class — two-tier buys its
+savings exactly where risk is lowest and costs nothing where risk is highest.** Correction
+line-anchored: χριστός + ὀφθαλμός ran 3 plain pulls each (stale-line annotation above stands).
+**κύων EVIDENCE (from the saved 10-run, agreement_G2965_v7_20260709-052737, boundary-guarded
+classification-only): p1 = VARIANCE confirmed** — Isa 56:10 literal attested (report line 29),
+Ecc 9:4 figurative attested (line 14), Psa 68:23 literal attested (lines 50, 55), none 0/10.
+**p2 = CONTESTED**: Deu 23:18 literal ~4/10 attested (variance + visibility blemish), but the
+Psalms-trio/Job 30:1 categorical filings appear ONLY inside merged 2-sense shapes, never in any
+3-sense draw (p2 was 3-sense) → the **ATTESTATION-SCOPE pick** (anywhere vs within-same-shape).
+**RECOUNT (all cells /15 — RIDER 1 verified: N=15 is the pre-registered TARGET, not a cohort
+size; "the count continues into batch 4 until 15 consecutive GREEN-tier words are audited — the
+bar is the count, not the batch" [ὀφθαλμός close] + "N = 15 GREEN-tier / zero escapes" [batch-3
+header]; boundary cases move numerators only):** ruled bar 3/15 (banked) · +κῆπος 4/15 ·
+two-tier firm **5/15** (ταμεῖον pre-registered + **κάλαμος PROMOTED to firm at audit level** —
+its banked wording "legal-but-minority 1/10 shape, clusters intact" is the variance definition
+applied; recommendation-level promotion, JP may demote at step 3) · +κῆπος 6/15 · ceiling
+**8/15** (+κατανοέω via the human-catch pick, +κύων via the attestation-scope pick — under
+two-tier κύων p1 SHIPS and **the park never happens**: the bar choice changes outcomes, not just
+counts). παράπτωμα OFF the /15 (RED from seed, never in the GREEN cohort) → own metric,
+ships-within-budget-regardless-of-tier. Escapes = 2 under every column. **Step-3 fact: the
+batch closed short of the pre-registered bar — 12 more count-eligible GREEN ships owed under
+the ruled bar before GREEN activates (7 under the loosest picks).**
+**WS2 — ECONOMICS (denominator 41 paid ship-path draws, by name in the session-6 chat log; +11
+process-waste draws: session-4's 10 wrong-instrument + the κάλαμος incident draw — process
+failures out-cost variance):** Metric A variance-rejected draws = 6–7/41 (~17%) · Metric B
+two-tier counterfactual savings = 8/41 firm (κάλαμος p2/p3/hint · ταμεῖον p2/p3/hint ·
+κατανοέω hints d1/d2), 12/41 ceiling (+κύων p2/p3/hints); counterfactual ships can't know their
+render-time record. First-draw reliability as banked; cost-per-ship denominator 18.
+**WS3 — GATE LOAD-BEARING (amended scoping):** every machine-gate fire that GROUNDED a
+rejection caught a real defect; noise-class fires (parser-artifact, #28 family) never grounded
+an outcome either direction — gate-noise fix candidates for the V8 pile, not load-bearing
+signal. Every variance-only reject was rejected by a human-set structure pin — **the pins are
+the two-tier question's entire cost center.** Named checks + relocated-verse prose check caught
+only real freight. Fabrication-check evidence to step 3: 4 machine-invisible human catches
+(γόνυ, νίπτω, διανοίγω, βιβρώσκω); 2 mechanizable (#30 un-park = step-4 candidate), 2 not.
+Judgment-vs-recognition fire distinction: recognition-fires never changed outcomes; the one
+judgment-fire (κῆπος) changed nothing but consumed a human ruling.
+**WS4 — STAMP CENSUS (75 live cards, 5 eras; RIDER 2 basis per stamp):** `6f982c804354` = V7,
+21 cards — VERIFIED (committed wording, handoff V7 block) = Phase-1 (3) + batch-3 (18) exactly,
+**the 18's third independent confirmation (name-level; no 19th name in the table; parked words
+correctly absent)**. INFERRED from ship chronology: `32ba5b6e704a` = pre-V4, 42 (batch-1 +
+pilots + early batch-2; anchor: V3→V4 bump landed after μέγας/ἔθνος) · `01786c6ab129` = V4,
+1 (ἱερεύς; anchor: "ἱερεύς's first V4 floor") · `0c58c8a74b4f` = V5, 3 (οὐρανός/ὕδωρ/φωνή;
+anchor: V4→V5 tripped at ἱερεύς) · `1ccea0a44740` = V6, 8 (θυγάτηρ→ῥῆμα era + ὄρος). Deltas
+vs V8 are cumulative (V4 no-slash headlines → V7 six edits). **Economics sharpening: the oldest
+era is the largest AND highest-traffic (θεός, κύριος, πνεῦμα, λόγος…) — drift and reader
+exposure point at the same 42 cards; strengthens refresh-on-touch.** Refresh-all = 54 re-draws
++ review; rendering uniformity free at template layer regardless.
+**STEP-3 DEFINITIONAL PICKS (JP, once, final four):** κῆπος (human-in-the-loop scope, both
+columns) · κατανοέω (does a named-check catch count as human catch) · κύων p2 (attestation
+scope) · judgment-vs-recognition fires (WS3/gate family).
+
 ### SESSION-6 CLOSE-OUT — STEPS 1–2 CLOSED, AUDIT SESSION COMMISSIONED (2026-07-10)
 **STEP 1 SIGNED OFF (reviewer, after the 18-ruling below): 18 / 2 / 2 · count 3/15 · streak 0.**
 **STEP 2 CLOSED (JP rulings on reviewer recommendations):**
