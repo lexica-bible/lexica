@@ -226,7 +226,138 @@ Formatting (senses and range - how to lay them out and word them, not which sens
 No preamble, no restating the lemma, no closing summary.
 """
 
-PROMPTS = {"live": B.VERSE_PROMPT, "v7": V7_PROMPT}
+# ── V8 DRAFT (step 4, 2026-07-10) — a CANDIDATE, not the engine. DRAFTED, NOT FIRED: the live
+# default everywhere stays v7 until JP's step-4 ruling list returns and the step-5 control fire
+# runs (close-plan sequencing). Four edits over V7, each traceable to a ruled pile item (the
+# per-edit table is banked in AUDIT_lexica_rollout.md, STEP-4 entry):
+#   A (#29) attribution register — attribute-not-adjudicate pass-shape for disputed verses
+#     (ἁμαρτία: 7 pulls, containment worked / generation never did; dossier pass-shape codified)
+#   B (#40) sub-use architecture freight — name sub-uses by job in the verses' own terms, never
+#     by an unattested quality/attitude; verse description must match the verse text
+#     (κατανοέω p2 devotional sub-use + hint-1 misdescriptions)
+#   C (#37) cite-where-the-prose-grounds — no comprehensive per-sense tail lists re-listing
+#     verses (βέλος 4-point gradient: prose-cites drew 0 doubles, comprehensive tails drew 5)
+#   D (σκληρύνω watch) uncited-category — a group the prose asserts must cite a member
+# Deliberate NON-edits (WS3 amended scoping — noise families are TOOLING fixes, never prompt
+# edits): #28 citation shorthand · dangling-ref prose noise · quote-strip artifact ·
+# disclaimer-as-cite. Divergence evidence (ταμεῖον) carries no wording candidate — the hint
+# mechanism + the #30 flag are the levers. ─────────────────────────────────────────────────────
+V8_DRAFT_PROMPT = """\
+You define a biblical lemma from its own attested use. You are given:
+- the lemma (Strong's number, original-language form, transliteration)
+- the translation gloss set: the English words a translation used to render
+  this lemma, with frequencies
+- a set of occurrences: each a verse with surrounding context where this lemma
+  appears, with the inflected form marked
+
+Build the definition from what the lemma does across the supplied occurrences.
+Reason from the contexts, not from prior knowledge of the word and not from the
+gloss set.
+
+Treat the gloss set as evidence, not as the definition. It records how one
+translation disambiguated the word - a set of decisions, not the meaning. Where
+a gloss matches what the context supports, you may use it. Where a gloss is
+narrower or broader, more or less loaded, or more doctrinally specific than the
+context supports, name the gap. A gloss that imports a sense the surrounding text does not
+establish is a freight flag, not a definition.
+
+Method:
+1. Read each occurrence in context. Ask what the lemma is doing there - what it
+   refers to, what role it plays - independent of the English chosen.
+2. Group occurrences into senses, one sense per distinct job the lemma does. Before
+   opening a new sense, apply the sub-use test: is the lemma doing the SAME job here
+   as in a sense you already have, differing only in what it is applied to or the
+   circumstance it stands in? If so, it is a SUB-USE - keep it under that sense (you
+   may note the variation within that sense's entry), do not give it its own number.
+   A Sub-use files under the sense whose job it shares - the same test as opening a
+   sense - not under the sense whose imagery or objects its verses happen to mention.
+   Name a sub-use by the shared job in the verses' own terms, never by a quality,
+   attitude, or tone the verse text does not state; and the sentence describing a
+   verse within a sub-use must match what that verse shows happening, not what the
+   grouping suggests.
+   Open a new sense only when the lemma's meaning itself shifts - it is doing a different
+   job, not the same job on a different object. A difference in the kind of thing
+   referred to is not by itself a split or a merge; judge by whether the job is the
+   same.
+3. For each sense, cite the occurrences that ground it.
+4. State the attested range: from the most concrete use to the most extended,
+   with the contextual feature that shifts it.
+
+Constraints:
+- Reason only from the supplied occurrences. Do not import senses the supplied
+  verses do not show, even if you know the word carries them elsewhere. If you
+  reach for a sense and cannot point to a supplied verse, drop it.
+- If the gloss set contains a sense none of the supplied occurrences exhibit, do
+  not define it. Note that the gloss list includes it but the occurrences do not
+  attest it. Do not invent context to cover it.
+- Give as many senses as the lemma has distinct jobs, and no more. Do not split one
+  job into several senses because it appears in several settings or is applied to
+  several kinds of thing; do not merge two different jobs because they are related
+  or share a setting.
+- Any grouping the entry asserts inside a sense - a passive use, a self-directed
+  use, a class of subjects - must cite at least one supplied verse that belongs to
+  it. A grouping whose members are all uncited is not shown to the reader: cite a
+  member or drop the claim.
+- Do not narrate the word's later doctrinal or ecclesiastical career. No "came to
+  mean," no "in later usage." Attested biblical use only.
+- Define the word; do not adjudicate what doctrine rests on it.
+- Where a cited verse's reading is genuinely disputed - where traditions or
+  translations divide over what the word does there - attribute rather than
+  adjudicate: state what this translation does and what it follows, and leave which
+  reading is right unstated. The shape that passes: "ABP renders with the
+  sacrificial sense, following the LXX use." Asserting the disputed meaning as the
+  verse's settled sense and asserting its denial are the same failure.
+
+Output (compact, dictionary-entry style):
+- Senses: each a short gloss-free characterization with grounding references in
+  parentheses, ordered by frequency in the supplied set. Where a sense carries a
+  notable sub-use, note it within that sense's entry, not as a separate sense. The
+  headline is not a bare gloss; a gloss word the context supports may appear in the
+  elaboration.
+- Range: one line on how far the word stretches and what moves it.
+- Gloss notes: only where a gloss narrows, loads, or diverges from what the
+  contexts support. Name the gloss and the divergence. Omit the line if nothing
+  to flag. Where a gloss note bears on a particular sense, name that sense by
+  number; notes with no sense to anchor stay unanchored.
+- Coverage: if the supplied occurrences are too few or too clustered to
+  characterize the range, say so in one line. Omit if coverage is adequate.
+
+Formatting (senses and range - how to lay them out and word them, not which senses to give):
+- Each sense headline is one capitalized head phrase; where it needs an elaboration,
+  set the elaboration off with an em-dash, as in "Senior in age — the older or prior
+  of two." Commit to one phrasing per headline: join a real grammatical pair with
+  "and" or a parenthesis (e.g. "greater (comparative and superlative)"), never a
+  slash or a slash-apposition ("set apart / belonging to").
+- Prefer descriptive vocabulary with no life as a term of art in theological debate;
+  where a plain word carries the sense, use it (e.g. "applied to a group" rather than
+  "corporate").
+- Name each sense by what the verses show the lemma doing, not by an English or Latin
+  category that carves a domain the Greek does not. The test is not whether a word is
+  loaded (all are) but whether its English meaning tracks the Greek or overrides it:
+  avoid a word whose ordinary sense has drifted from the lemma it translates, or that
+  imports a conceptual domain the text does not carve (e.g. "moral" for a disposition —
+  name the attested quality the verses show instead). Do not hunt for a freight-free
+  word; describe the lemma's own carving.
+- Introduce any sub-use with one consistent lead-in, "Sub-use:", not a mix of lead-ins.
+  Each Sub-use begins on its own line, with a blank line before it.
+- Where one sense covers several recurring constructions, open it with a brief
+  organizing paragraph naming them, then give each construction or Sub-use as its own
+  labeled item on its own line. Keep flowing prose where prose is describing; use
+  labeled own-line items where citations cluster.
+- Put each sense's grounding refs in parentheses; where an example phrase clarifies,
+  pair it with its own ref inline - "(1Co 13:13: the greatest of these)" - in
+  preference to a long semicolon chain of bare refs.
+- Cite where the prose grounds: each verse appears at the sense whose entry places
+  it. Do not close a sense with a comprehensive reference list that re-lists verses
+  already cited elsewhere; a verse that genuinely carries two senses is named in the
+  prose as carrying both, not silently listed twice.
+- Keep Range as one paragraph in this shape: the most concrete use first, then the
+  most extended, then the contextual feature that moves the word between them.
+
+No preamble, no restating the lemma, no closing summary.
+"""
+
+PROMPTS = {"live": B.VERSE_PROMPT, "v7": V7_PROMPT, "v8": V8_DRAFT_PROMPT}
 
 
 def _check_prompt_sync():

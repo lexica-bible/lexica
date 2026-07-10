@@ -551,15 +551,18 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   the pipeline driver). Cutoff = occ ≥ 2 (~3,954 words). Full record + the 3-tier ship-gate + frame-leak
   pre-sort rule: memory `project_lexica_dictionary`; **Batch One lessons + calibration numbers + the full
   batch-two prep list = `AUDIT_lexica_rollout.md`.**
-  **STATUS (2026-07-10, session 6): PHASE 1 done 3/3 · BATCH-3 CLOSED 18 shipped / 2 escapes / 2
-  parked (18 RULED — the docs' earlier "19" was a propagated tally slip, audit doc FINAL-TALLY
-  CORRECTION) · close steps 1–3 + audit session DONE · TWO-TIER BAR ADOPTED w/ watch tags · count
-  5/15 · GREEN activation gated on #30 live for the final 10 · NEXT = STEP 4 (V8 triage + #30
-  un-park, JP-light; opener block in the handoff). JP availability now INTERMITTENT (relocation)
-  — see handoff AVAILABILITY CONSTRAINT. Current law + queue = `HANDOFF_lexica_rollout.md`
-  (STEP-4 opener + `## Queue`); authority = `AUDIT_lexica_rollout.md` (STEP 3 block + audit
-  packet); design backlog = `ENGINE_LESSONS.md` (41 + one pending candidate). The paragraph below
-  is HISTORY (early batch-2), kept for pointers only.**
+  **STATUS (2026-07-10, step-4 session): PHASE 1 done 3/3 · BATCH-3 CLOSED 18 shipped / 2 escapes
+  / 2 parked (18 RULED — the docs' earlier "19" was a propagated tally slip, audit doc FINAL-TALLY
+  CORRECTION) · close steps 1–4 + audit session DONE · TWO-TIER BAR ADOPTED w/ watch tags · count
+  5/15 · **STEP 4 RAN: #30 BUILT + control-fired (`ac8ea96`), pile triaged, V8 DRAFTED-NOT-FIRED
+  (live default v7), roadmap + corpus-defect protocol + JP_QUICKREF_lexica.md banked · NEXT = JP
+  rules the STEP-4 RULING LIST (handoff, 10 items w/ recommendations), then STEP 5 (V8 control
+  fire + #30 fire-class definition), then the final 10 with #30 live → GREEN activation.** JP
+  availability INTERMITTENT (relocation) — see handoff AVAILABILITY CONSTRAINT; silence = pending.
+  Current law + queue = `HANDOFF_lexica_rollout.md` (RULING LIST + ROADMAP + STEP-5 opener +
+  `## Queue`); authority = `AUDIT_lexica_rollout.md` (STEP 4 entry above STEP 3 block); design
+  backlog = `ENGINE_LESSONS.md` (41 + one pending candidate). The paragraph below is HISTORY
+  (early batch-2), kept for pointers only.**
   Batch-2 opened 2026-07-06: 4 shipped first session; **SHIP BAR
   RE-RULED to FOUR GATES** (holes/merges/completeness/granularity — NOT sense-count-match); reviewer floor
   `--runs 3`→10 on wobble; redraw cap 3; escalation trigger ARMED (3rd content-wall → mechanism decision to

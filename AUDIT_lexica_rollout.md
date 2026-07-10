@@ -1982,8 +1982,82 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
-### STEP 3 — SCALE PROTOCOL RULED (JP, 2026-07-10; all six + one amendment; reviewer
-### recommendations adopted under JP delegation). CLOSE STEPS 1–3 + AUDIT SESSION: DONE.
+### STEP 4 — V8 PILE TRIAGE + PROMPT DRAFT + #30 UN-PARK (CC session, 2026-07-10; JP-LIGHT,
+### FIRE-NOTHING. Everything below is BUILT/DRAFTED; nothing fires until JP's step-4 ruling
+### list returns. V7 stays the live default everywhere.)
+**1. #30 DETECTOR BUILT + CONTROL-FIRED (commit `ac8ea96`).** `build_lexica_def.py`: `load_floor`
+/ `floor_ship_diff` (pure core) / `floor_diff_record`, wired at the dry-run gate via
+`--floor <agreement json>` (one word only; strongs-mismatch hard-refuses; flag-only, same family
+as double_shelved). Mechanical check = CLUSTER MEMBERSHIP, never sense count (the νίπτω ruling):
+a floor-consensus pair (together in ≥ N//2+1 floor draws) split across ship senses fires; a
+merge/fold never fires. Mover-side reporting (the verse that lost ≥ as many consensus partners
+as it kept); either-home migrators structurally silent (draw-to-draw flippers can't reach a
+strict majority); floor-unseen citations listed so an empty fires list can't read as full
+coverage (σελήνη-class table check stays manual). Absent `--floor` on a draw pass prints
+NOT-RUN loud. **Control fires GREEN on all three banked positives + the negative**
+(tests/test_lexica_detectors.py, file already in CI + hook — both-lists rule satisfied):
+γόνυ p1 (fires exactly Luk 5:8 + 2Ki 1:13, both off 3/3 homes, movers keep each other) ·
+νίπτω p1 (fires exactly the Psalms trio off the unanimous cluster; Job 20:23 silent) ·
+κατανοέω hint-1 THE HARD CLASS (fires exactly Exo 33:8 [10/10 visual → mental] + Psa 10:14
+[9/10 mental → visual] inside an otherwise-passing draw; all 9 banked migrators silent wherever
+placed) · δίκτυον legal fold (zero fires). Fixture provenance stated in the test file: pinned
+facts from this doc's entries, cluster scaffolding synthetic and marked. **BUILD NOTE BANKED
+(step-4 opener term): #30 fire classes + their count consequences get DEFINED at the step-5
+control fire, BEFORE the final-10 window opens; until then fires are judgment-class, and an
+adjudicated-noise fire must not disqualify a count ship** (also in the code comment).
+**NEW-FIELD note for the ruling list:** `audit.floor_diff` lands in a stored row ONLY when an
+apply ran with `--floor`; no apply runs before the list returns, so nothing is written under
+the new field before JP's OK (new-fields checkpoint honored by sequencing).
+**2. PILE TRIAGE — FULL INVENTORY (every banked item, source, class, recommendation). WS3
+amended scoping applied: noise families = TOOLING, never prompt edits.**
+- **PROMPT (V8 draft, 4 edits — all pure INSERTIONS, zero V7 lines altered; #26 posture):**
+  - A `#29 attribution register` (ENGINE_LESSONS #29; ἁμαρτία 7-pull record) → constraint
+    teaching attribute-not-adjudicate with the dossier pass-shape. Expected: 2Co 5:21-class
+    sentences arrive in pass-shape; deletion stops being the only remedy. Control: inert on
+    uncontested step-5 word; fair test = next registry/RED word in a JP window.
+  - B `#40 sub-use architecture freight` (κατανοέω p2 + hint-1) → sub-use named by shared job
+    in the verses' own terms, never unattested quality/attitude; verse description must match
+    verse text. Expected: devotional-shelf class stops arriving; #30 cross-checks placements.
+  - C `#37 tail-list disjointness` (βέλος 4-point gradient; παράπτωμα/συκῆ prose-cites = 0
+    doubles) → cite-where-the-prose-grounds; no comprehensive re-listing tails; genuine
+    two-sense verses named as such in prose. Expected: tail-generated double-shelf fires → ~0.
+  - D `uncited-category` (σκληρύνω V8-pile watch, reviewer condition) → any asserted grouping
+    cites a member or drops the claim. Expected: the σκληρύνω judgment-call class disappears.
+- **TOOLING (detector/apply-path; flag-layer legal any time, scheduled JP-independent):**
+  #28 shorthand-tail expander (comma + dash-range + semicolon variants; expands tails from
+  preceding book+chapter — retro-covers shipped cards on a resweep; closes the citation-gate
+  AND double-shelf blindness) · quote-strip + cross-pairing fix in `_gnote_claims` (existing
+  TODO ticket; control fires must stay green) · prose-form rendering-claim parser (#24 update;
+  ἁμαρτία requeue p2 blind spot) · disclaimer-as-cite exclusion (ὀφθαλμός Eze 1:18 class) ·
+  dangling-ref prose-noise exclusion ("Dan" tribe / "in Acts and Galatians" / "Gospel/Acts";
+  TODO ticket at audit line ~1103) · apply refuse-by-default + content-hash second half
+  (#31/#15; TODO ENGINE TICKET — "JP schedules" → recommended into the step-4/5 gap).
+- **DISPLAY (step-6 window, JP-independent prep; all banked in TODO.md):** sub-use indent ·
+  LXX ⓘ + multi-sense footnote · header-gloss provenance (3 sightings + 2 counter-examples) ·
+  RANGE/Coverage serif gap (two-line fix, ruled to the window) · gloss-note citation-marker
+  rendering half · gloss-note sense-reference markers + canonical note ordering · V6-era style
+  alignment (interacts with the step-3 refresh-on-touch ruling — rendering uniformity is free
+  at template layer; content restyle needs the reformat-legality ruling).
+- **NO ACTION (evidence/stale, stated so nothing is silently dropped):** ship-vs-floor
+  divergence (ταμεῖον lead exhibit + ὑπομονή + κάλαμος whack-a-mole) — no wording candidate;
+  levers = hint mechanism (9-for-9 structural) + #30 flag; #32 mode-transmission stays a v2
+  architecture item, not a V8 edit · gloss-note anchor STRUCTURE half — defer until step 6
+  designs the target shape (notes already name refs parseably; revisit only if rendering finds
+  the shape insufficient) · "line→entry / gloss-note asymmetry / doubled vocabulary bar" (the
+  session-4 close-plan line) — STALE: these were V7-window pile items already ruled at the V7
+  walk (4 BUILD / 2 DROP, lesson #26); no V8 action, do not rediscover.
+**3. V8 DRAFT BANKED (commit carries it): `lexica_agreement.py` `V8_DRAFT_PROMPT` + PROMPTS
+entry `v8`** — reviewer floors can fire `--prompt v8` at step 5; the report header auto-brands
+any non-live prompt "** candidate, NOT the live engine **". `build_lexica_def.VERSE_PROMPT`
+UNTOUCHED; live stamp stays `lexica:6f982c804354`; **would-be V8 stamp = `lexica:7ef8620328a9`**
+(becomes real only if/when the prompt is promoted after the step-5 fire + JP ruling). Byte-check
+for the reviewer: unified diff V7→V8 = exactly the four insertion blocks above, nothing else
+(verified by difflib this session; v7 == live engine asserted same run).
+**4. WATCH-TAG REGISTER (two-tier ruling instrument): starts EMPTY, forward-only** — pre-two-tier,
+every variance draw was REJECTED and redrawn, so no shipped card carries unreviewed variance;
+the first entries arrive with the final-10 ships. Register lives here, one line per
+variance-shipped card: word · the floor-legal variance shipped · watch question for the
+reader-record review.
 1. **TWO-TIER BAR ADOPTED WITH A WATCH.** Defects reject; floor-legal variance ships. Every
    variance-shipped card gets a WATCH TAG for later reader-record review — "reader-immaterial"
    was always a review-time judgment, never field-tested; the tag generates the field evidence.
