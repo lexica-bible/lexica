@@ -1698,9 +1698,16 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
    10 picks = 9 owed + 1 spare). Both cost pendings RESOLVED per ruled item 12: poetry trigger
    RETIRED-as-rule / KEPT-as-label · N=6-7 paper replay APPROVED, no live change until JP sees
    the report. Routing table (6 out) + fork-adjacency rule banked verbatim; queue annotations
-   ≠ watch tags. Record = audit doc BATCH-4 SELECTION entry (above STEP 5).** NEXT = the
-   final-10 run with #30 live → GREEN activation, then step 6 layout. Item-3 tooling (now
-   incl. the 7-of-10 replay checker) + /consolidate = parallel gap work, still green.**
+   ≠ watch tags. Record = audit doc BATCH-4 SELECTION entry (above STEP 5).** **WORD 1
+   διαιρέω PARKED 2026-07-10 (three defect-class draws, pre-set no-draw-4 rule; floor was
+   STABLE — defects all in the drafting prose; record = audit doc G1244 PARKED entry).
+   Count 6/15 unchanged · nine words remain for nine owed, SPARE CONSUMED · εὐχαριστέω r15 =
+   next-pass-up on further attrition · item-5 re-open ARMED (διαιρέω escalated; δόμα's 3-run
+   decides) · RULED ORDER: the N=6-7 paper checker builds + runs BEFORE δόμα's floor fires ·
+   structure-hint experiment queued to the tooling window; διαιρέω re-openable via that
+   path.** NEXT = paper checker → δόμα floor → the remaining nine with #30 live → GREEN
+   activation, then step 6 layout. Item-3 tooling (now incl. the 7-of-10 replay checker +
+   the structure-hint experiment) + /consolidate = parallel gap work, still green.**
 6. (was 4, historical) **Batch-3 sessions 1–2 record** — **sessions 1 AND 2 CLOSED 2026-07-09.**
    Session 2: 3 shipped (παράπτωμα RED — routing exercise met · συκῆ · βέλος, all off-count via
    escalation), κύων parked (one-verse wall, Deu 23:18), 4-of-4 escalations; count 2/15, streak 0;

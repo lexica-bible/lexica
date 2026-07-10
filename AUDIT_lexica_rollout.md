@@ -1982,7 +1982,60 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
-### BATCH-4 SELECTION — ROSTER APPROVED (JP, in-chat, 2026-07-10). QUEUE = THE FINAL 10.
+### G1244 διαιρέω — PARKED (batch-4 word 1; ruled on JP-delegated authority via reviewer,
+### 2026-07-10, per the pre-set no-draw-4 rule: three defect-class draws). COUNT 6/15
+### UNCHANGED. Re-openable via the structure-hint path once the hint mechanism is verified
+### on disk (R1: a feature nobody has verified doesn't exist for ruling purposes).
+**Pre-pull:** 38 verses / 40 occ (Exo 21:35 ×2, Gen 15:10 ×2); dotted cousins G1244.1 δίαιτα
+(10 rows) + G1244.2 διαιτάομαι (1 row) — the Job-heavy ride-alongs; TRUE poetry share ~10%
+(4/40: Job 1, Psa 1, Pro 2) vs the banked 29% grouped label — first live proof of the
+dotted-inflation caveat, the pre-floor screen working as ruled. NT = 1Co 12:11 + Luk 15:12.
+**Floor:** 3-run {2:1,4:1,5:1} NO mode → escalated per ruled item 5 (batch-4 escalation
+scoreboard opens 1-of-1; the item-5 re-open condition is ARMED — if δόμα escalates at its
+3-run, sequencing re-opens with two data points). 10-run
+`agreement_G1244_v8_20260710-182543.json` (SAVED — feeds the N=6-7 paper checker): {3:6,4:4},
+two universal poles (cutting · distribution) 10/10, arranging + Daniel clusters travel intact
+(either-home between folding and peer shelf), Gen 4:7 = pure isolate (10/10 support, ≤5/10
+company, six different homes), all seven wobbles partner-covered folds, ZERO holes.
+**Reviewer call: STABLE, ship from one draw.** Reviewer pre-registration: Daniel-cluster
+double-placement 0/10 → any build-draw double-place = gate flag.
+**THREE BUILD DRAWS, all rejected (all forced-fresh, floor wired, #30 live):**
+- Draw 1 REJECTED: unattested carve (split the floor's 10/10-unanimous distribution cluster
+  across senses — 11 #30 fires, **#30's first live SPLIT-class catch**; κύων-p2 class) +
+  TWO CONFIRMED factual defects (JP verse pulls): "Gideon" credited with the Abimelek verse
+  Jdg 9:43 · an Abimelek/Shechem story head narrated onto the ox-law verse Exo 21:35.
+- Draw 2 REJECTED: exactly two defects — cross-sense double-placement ×2 (Isa 30:28 senses
+  1+3 machine-caught; **Num 31:42 senses 2+3 MACHINE-BLIND behind a comma-shorthand tail,
+  caught by the mandatory manual σελήνη-procedure check** — #28 blindness propagating exactly
+  as lesson #44 predicted; the CLEAN definition's manual clause paid for itself). Carve was
+  floor-attested (d1 shape); the 4 #30 fires adjudicated floor-legal variance (would have
+  shipped watch-tagged). Factual prose clean; Gideon/Abimelek correct this draw.
+- Draw 3 REJECTED: invented shelf — 1Co 12:11 promoted to a solo peer sense against a 10/10
+  unanimous floor consensus (#30 maximal fire: split from sixteen partners, "kept none");
+  Amo 5:9 paired under it, attested 0/10; the card's own prose concedes "the job… is the same
+  as sense 2" then distinguishes by agent-quality — the #40 files-by-job rule violated
+  unprompted, ON the fork-adjacency watch verse. Reviewer named it plainly: the engine did
+  what the ruled rule says a card must not do. Riders: seven Greek inflected-form
+  parentheticals (τόπος-class per-row claims, V9_PILE note); zero double-placement recurrence.
+**TWO SYMMETRIC #36 KILLS on the record (verify-before-claiming-fabrication, both
+directions):** Gen 33:1 "servants" suspicion killed (the STORED text says servants — the card
+followed ABP, the suspicion came from the Greek) · Gen 15:10 "Abraham" rider killed (the
+stored verse names NOBODY — "he took to himself all these").
+**RATE PICTURE (#43, fourth demonstration):** 16 draws total = 13 floor (3-run + 10-run)
++ 3 build (the relay's "fourteen" was a tally slip — counted from the names per #42, it is
+3 + 10 + 3 = 16). Structure held through every one;
+zero cluster breaks. All three rejects lived in the drafting prose — three DIFFERENT classes
+(story-transplant · double-placement · invented-shelf), each caught by an instrument built
+earlier in the project (#30 · manual tail check · floor-diff + the ruled taxonomy). The
+pipeline worked; the drafting layer carries a real per-draw defect rate on a busy verb.
+**PARK RULING RATIONALE (banked verbatim in substance):** count math identical between park
+and hint-ship; option 2's reader value rides on an unverified mechanism (R1) at the end of a
+long session; parking is fully reversible, all 16 draws of evidence saved and reusable.
+**CONSEQUENCES:** count 6/15 unchanged · roster = nine words remain, nine owed, SPARE
+CONSUMED · εὐχαριστέω G2168 (r15) documented next-pass-up if attrition strikes again ·
+structure-hint experiment queued to the tooling window (with the N=6-7 checker — both feed
+the same question: cheaper certification) · δόμα's floor does NOT fire before the N=6-7
+paper checker runs (JP standing ruling this session).
 **Provenance (ruled item-4 form):** ranker on PA, command character-true to the ruled footnote
 (`--skip-built --occ-max 40 --top 40`; R1 re-verified on disk: `--top` :90, `--occ-max` :92,
 `--skip-built` :95). 40 rows, ranks 1–40 no holes, occ blocks 40×11 / 39×18 / 38×11 cross-foot;
