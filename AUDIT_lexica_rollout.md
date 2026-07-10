@@ -1982,6 +1982,17 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 14 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### G5009 ταμεῖον — SHIPPED + LIVE (2026-07-10, session 5). Hinted ship (cap-out pull 4),
+### OFF-COUNT.
+**Apply clean ("using reviewed draw eae8ca6c — no model call") → screenshot review PASS all
+5 checks (sense order · figurative sub-use inside storage, pin satisfied on the rendered
+card · Mat 6:6 room-not-closet · whitespace · 29/29 badge). Reviewer highlight: the gloss
+note's closing line — "the translation's oscillation between the two reflects a real
+difference in the lemma's use rather than translational inconsistency" — the project's
+thesis in one sentence, on a card. BATCH TALLY: 18 shipped / 2 escapes / 2 parked · count
+3/15 · streak 0. Reject retrospective confirmed IN the close plan (step-3 input). ONE WORD
+LEFT: κατανοέω G2657.**
+
 ### G5009 ταμεῖον — GREEN, OPENED session 5 (2026-07-10). PRE-REGISTRATION.
 **Expected profile (prediction, not a constraint — attested = follow it):** (a) inner/private
 room, the place one withdraws to (Mat 6:6 prayer, Mat 24:26, Luk 12:3) · (b) storeroom/
