@@ -2028,6 +2028,18 @@ object-of-reliance, not abstract "hope" — more precise than the pre-registrati
   verse-supported groupings, legal per #14, not the defect. Attempt-1 clean ship (count 3/15
   candidate) is off the table; whether a clean attempt-2 plain ship still counts travels with
   the ship ruling. Redraw issued (same plain command, fresh draw).
+- **PLAIN PULL 2 (same key 2a609d5c — key is input-derived, content refreshed under it) PASSED
+  all exit terms:** OT ground block committed to sense 2 only, ZERO double-shelf · 2Th 3:5 at
+  majority home, described both ways no verdict · gloss notes actively flag "patience" as too
+  passive (plain-meaning win) · LXX note fires on sense 2 correctly · 2 rendering-mismatch
+  fires = capitalization artifacts ("Waiting" vs "waiting", known quoted-gloss family),
+  adjudicated noise · 2 uncited (2Co 1:6, Rom 15:5) = core members, meaning covered, Exo 4:26
+  class · labeled construction groups = ruled hybrid shape.
+- **CACHE-CONTENT VERIFY before apply (reviewer-mandated after a duplicate-paste scrollback
+  ambiguity; procedure worth keeping):** plain `--dry-run` WITHOUT --force verified on disk as
+  a free no-model cache re-read (hit branch, build_lexica_def.py:1542) — output matched
+  reviewed pull 2 on all markers (key, 2857 chars, headlines, zero double-shelf, two Waiting
+  flags). The apply ships verified cache contents, not anyone's memory of a paste.
 **Apply clean ("using reviewed draw 9c3bd170 — no model call", content byte-matched) →
 screenshot review PASS all 5 checks (sense order · agency paragraphs + Rom 9:18 bare · both
 thin senses · harsh-demand sub-use all 5 refs · whitespace) + bonus checks pass (21/21 badge,
