@@ -2154,10 +2154,6 @@ Corrected 2026-07-10: constraint wording replaced in handoff + TODO + quickref +
 files with "JP's hours are variable; batch decisions when he's away, work normally when he's
 present"; ruled operational consequences (async-tolerant opening, one-list batching, silence
 = pending) unchanged.
-
-### STEP-3 RULINGS — SCALE PROTOCOL, ITEMS 1–6 (JP, 2026-07-10; header added at step 5 on
-### reviewer note — the list below predates the STEP 4 entries above it and was headerless;
-### content unchanged. The addendum's "STEP 3 item 6" / "STEP 3 pick" pointers resolve here.)
 1. **TWO-TIER BAR ADOPTED WITH A WATCH.** Defects reject; floor-legal variance ships. Every
    variance-shipped card gets a WATCH TAG for later reader-record review — "reader-immaterial"
    was always a review-time judgment, never field-tested; the tag generates the field evidence.
