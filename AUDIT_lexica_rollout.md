@@ -1982,8 +1982,48 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
-### G1390 δόμα — PARKED (batch-4 word 2; JP "park", 2026-07-10, per the pre-set rule:
-### three defect-class draws on clean data, no draw 4). COUNT 7/15 UNCHANGED.
+### G2168 εὐχαριστέω — FLOOR VOID: READER PARSE GAP (batch-4 word 3, run session 2,
+### 2026-07-10). Splitter headline-fallback SHIPPED per banked six-item package; fresh
+### floor pending. COUNT 7/15 UNCHANGED, streak untouched (no draft ever adjudicated).
+**Screens (all PASS before the floor):** contested-register 0-hit (checked locally against
+`contested_register.py` on disk — mechanical list check, in-lane) · CONTESTED_VERSES
+2Co 5:21 occurrence EMPTY (JP query) · pre-pull FULLY CLEAN: 38 verses / 39 occ, sole
+double Rom 14:6 ×2, ZERO dotted rows of any kind (second fully clean pre-pull after
+εἰρηνικός), all-NT (0 OT / 39 NT) · loaded-referent hand-read clean (Luk 18:11 loading is
+in the prayer's content, not the lexeme — reviewer concur) · fork-adjacency clean
+(Jesus-as-subject in the Last-Supper/feeding verses = βιβρώσκω precedent, does not fire) ·
+Last-Supper "Eucharist" gloss-note watch pre-noted for the draw stage.
+**SEQUENCE-SLIP RULING (recorded separately, NOT mooted by the void):** the floor fired
+before the reviewer chat was reconciled and before the pre-registration was banked — a
+gate breach on its own record. The floor is VOID on INDEPENDENT grounds (below). Two
+facts, two lines, so "fire, then void" can never launder a skipped gate.
+**THE VOID:** floor `agreement_G2168_v8_20260710-224950` (renamed VOID_ on PA) scored
+7/10 draws "0 senses". Raw inspection (both broken and parsed draws printed): the seven
+are complete, well-formed ONE-SENSE cards in the V8 house shape — single bold headline,
+"single job" organizing paragraph, Sub-use items, no numbered sense anywhere — the first
+genuinely one-job word to draw that shape. Both numbered finders (`_HEADLINE_RE`
+bold-digit, `_PLAIN_HDR`) see nothing → 0. Draws 3/5/10 numbered their senses and parsed
+(2/10 two-sense, 1/10 four-sense). READER blindness to legal output — #45's inverse
+(reviewer verdict) — and the ship gate (`validate_entry`) would refuse the same legal
+shape, so this was a shared-splitter gap, not a reviewer-only one. No verdict was
+adjudicated from the void floor; its signal is on record as anomaly data only.
+**FIX (banked as ONE six-item unit + mode-assertion addendum before landing; partial
+banks don't authorize partial landings — JP):** `_LONE_HEADLINE_RE` one-sense fallback in
+the shared `_sense_spans` — fires ONLY when neither numbered form exists AND the block
+opens with a bold span — plus `sense_split_mode` probe (display-only) printing the LOUD
+`[1 sense — headline fallback]` marker in floor per-draw lines, the run-time progress
+line, and the dry-run `show_entry` header; `split_mode` stored in the floor JSON and
+carried through `--from-json`. Tests: 3 new in `test_lexica_agreement_parse.py` (real
+draw-1 fixture → 1 sense with refs + Range/Gloss intact; control: both numbered finders
+0 on the fixture; explicit mode assertions `headline`/`plain`/`bold`/`none` — guards
+future `_HEADLINE_RE` widening, digit-anchored at time of fix). All three lexica test
+files green; file already in CI + pre-commit lists. Claim proof run by JP (read-only
+count of live cards lacking a numbered sense): expected 0 — no existing card can reach
+the fallback. ENGINE_LESSONS #47.
+**FRESH FLOOR PRE-REG (blind-ish, banked):** bar only, NO predicted sense count — fed 39
+header (0 OT / 39 NT) · Rom 14:6 sole double · straight-to-10 · Last-Supper gloss watch ·
+fallback marker expected and EVERY fallback draw inspected (marker load-bearing, not
+decorative).
 ### Re-enters via the structure-hint path when that tooling exists.
 **19 draws total, counted by name: 3 VOID (contaminated feed — the Ezr 6:4/δόμος no-entry
 leak; fix banked `c171fd4`, file renamed VOID_) · 3 + 10 clean floors · 3 build draws.**

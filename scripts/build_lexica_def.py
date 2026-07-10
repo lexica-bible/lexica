@@ -683,6 +683,13 @@ _HEADLINE_RE = re.compile(r'\*\*\s*(\d+\.[^*]+?)\s*\*\*')
 # (zero drift on every existing card). For a plain sense the whole description sits on the line, so the
 # glance is the lead clause: cut at the first em-dash, sentence end, or citation; refs stripped.
 _PLAIN_HDR = re.compile(r'(?m)^[ \t]*(\d+)[.)]\s+(.+)$')
+# ONE-SENSE HEADLINE FALLBACK (G2168 εὐχαριστέω 2026-07-10): a genuinely one-job word drawn
+# in the V8 house shape numbers nothing — single bold headline, organizing paragraph,
+# Sub-uses — so both numbered finders come back empty and the card scored 0 senses (7/10
+# reviewer draws). Fires ONLY when neither numbered form exists AND the block OPENS with a
+# bold span; a numbering botch on a multi-sense card cannot reach it silently because every
+# fallback parse is printed loudly (sense_split_mode) in floor + dry-run output.
+_LONE_HEADLINE_RE = re.compile(r'\A\s*\*\*\s*([^*]+?)\s*\*\*')
 
 
 def _plain_glance(text):
@@ -715,7 +722,26 @@ def _sense_spans(block):
         lead = _plain_glance(m.group(2))
         start, end = m.start(), (plain[i + 1].start() if i + 1 < len(plain) else len(block))
         out.append((lead, block[start:end]))
-    return out
+    if out:
+        return out
+    m = _LONE_HEADLINE_RE.match(block)
+    if m:
+        return [(m.group(1).strip(), block[m.end():])]
+    return []
+
+
+def sense_split_mode(block):
+    """How the senses split: 'bold' | 'plain' | 'headline' (one-sense fallback) | 'none'.
+    Display-only probe — never changes a parse; it is the ONE source of the loud
+    '[1 sense — headline fallback]' marker the floor and dry-run outputs print."""
+    block = block or ""
+    if _HEADLINE_RE.search(block):
+        return "bold"
+    if _PLAIN_HDR.search(block):
+        return "plain"
+    if _LONE_HEADLINE_RE.match(block):
+        return "headline"
+    return "none"
 
 
 def split_definition(prose):
@@ -1433,6 +1459,9 @@ def show_entry(entry):
     if entry.get("pinned_core"):
         print(f"  PINNED CORE (leads the card; the senses below read as attested uses):")
         print(f"     → {entry['pinned_core']}")
+    if sense_split_mode(entry.get("senses_block")) == "headline":
+        print(f"  [1 sense — headline fallback]  (no numbered sense in the draw; the opening bold "
+              f"headline was taken as the single sense — inspect, per the banked loud-marker rule)")
     print(f"  sense_headlines ({len(entry['sense_headlines'])}) — the glance list:")
     for i, h in enumerate(entry["sense_headlines"], 1):
         print(f"     {i}. {h}")

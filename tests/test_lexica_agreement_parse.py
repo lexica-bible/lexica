@@ -63,6 +63,36 @@ HEADERLESS_RAW = (
 )
 
 
+# Real εὐχαριστέω G2168 draw-1 output (a "0 senses" draw under V8, floor 20260710-224950),
+# trimmed but faithful: a genuinely ONE-JOB word drawn in the V8 house shape — single bold
+# HEADLINE (no number anywhere), organizing paragraph, "**Sub-use:**" items, then real Range /
+# Gloss notes headers. Both numbered finders (bold _HEADLINE_RE and plain _PLAIN_HDR) see
+# nothing → 0 senses (7 of 10 draws). Fix: the _LONE_HEADLINE_RE one-sense fallback, which must
+# fire LOUDLY (sense_split_mode == 'headline') per the banked condition — never silently.
+ONE_SENSE_RAW = (
+    "**Expressing gratitude directed toward a recipient** — the act of verbally acknowledging a "
+    "benefit, deliverance, or favorable circumstance by addressing the one held responsible for it.\n"
+    "\n"
+    "The lemma functions across all supplied occurrences in one way: a speaker or writer directs an "
+    "expression of acknowledgment to a person or being credited with a good they have received or "
+    "witnessed. Three recurring constructions can be distinguished within this single job:\n"
+    "\n"
+    "**Sub-use:** Directed to God for benefits received in or through other persons "
+    "(Rom 1:8; 1Co 1:4; 1Th 1:2; Col 1:3; Php 1:3; Phm 1:4; Eph 5:20; 1Th 5:18).\n"
+    "\n"
+    "**Sub-use:** Accompanying the taking and breaking of food (Mat 15:36; Mat 26:27; Mar 8:6; "
+    "Luk 22:17; Luk 22:19; 1Co 11:24; Joh 6:11; Act 27:35).\n"
+    "\n"
+    "**Sub-use:** Addressed directly to a person encountered or present (Luk 17:16: the Samaritan "
+    "fell at Jesus's feet giving thanks to him; Rom 16:4: thanks given to Prisca and Aquila).\n"
+    "\n"
+    "**Range:** Most concrete in the meal settings, where the lemma marks a discrete spoken address "
+    "to God at a named physical moment before eating (Mat 15:36, Act 27:35).\n"
+    "\n"
+    "**Gloss notes:** The single gloss \"thanks\" consistently renders the verbal act accurately.\n"
+)
+
+
 def _senses_block():
     return B.split_definition(DRIFT_RAW)["senses_block"]
 
@@ -117,9 +147,49 @@ def test_per_sense_parses_all_four_drift_senses():
     assert (B._norm_book("Est"), 4, 1) in s1_refs
 
 
+def test_control_one_sense_fixture_has_no_numbered_sense():
+    """Known-positive fire for the headline fallback: NEITHER numbered finder sees anything in the
+    raw — that proves the fixture really is the un-numbered one-job shape, so the '== 1' below can
+    never pass via the bold or plain path."""
+    assert len(list(B._HEADLINE_RE.finditer(ONE_SENSE_RAW))) == 0
+    assert len(list(B._PLAIN_HDR.finditer(ONE_SENSE_RAW))) == 0
+
+
+def test_one_sense_card_parses_via_headline_fallback():
+    """The fix: the opening bold headline becomes the single sense, with all sub-use refs carried
+    through in its body; Range and Gloss notes still split out (the fallback claims only the senses)."""
+    fields = B.split_definition(ONE_SENSE_RAW)
+    assert len(fields["sense_headlines"]) == 1
+    assert fields["sense_headlines"][0].startswith("Expressing gratitude")
+    senses = A.per_sense(fields["senses_block"])
+    assert len(senses) == 1
+    refs = senses[0]["refs"]
+    assert (B._norm_book("Rom"), 1, 8) in refs
+    assert (B._norm_book("Luk"), 17, 16) in refs
+    assert "meal settings" in fields["range"]
+    assert "thanks" in fields["gloss_notes"]
+
+
+def test_split_mode_reports_headline_fallback_loudly():
+    """Banked condition (reviewer, 2026-07-10): every fallback parse announces itself. The mode for
+    the one-sense fixture must be 'headline' — explicitly NOT 'bold' or 'plain' (guards against any
+    future widening of _HEADLINE_RE, digit-anchored today) — while the numbered fixtures keep their
+    modes and a no-bold-open blob stays 'none' with zero senses."""
+    assert B.sense_split_mode(B.split_definition(ONE_SENSE_RAW)["senses_block"]) == "headline"
+    assert B.sense_split_mode(B.split_definition(DRIFT_RAW)["senses_block"]) == "plain"
+    assert B.sense_split_mode(B.split_definition(HEADERLESS_RAW)["senses_block"]) == "bold"
+    # a stray preamble that does NOT open with a bold span: no fallback, no senses
+    blob = "Here is the definition.\n\nRange: it stretches wide."
+    assert B.split_definition(blob)["sense_headlines"] == []
+    assert B.sense_split_mode(B.split_definition(blob)["senses_block"]) == "none"
+
+
 if __name__ == "__main__":       # runnable as a plain script for the CI / pre-commit lists (no pytest)
     test_control_fixture_is_genuine_drift_bold_only_sees_zero()
     test_per_sense_parses_all_four_drift_senses()
     test_control_headerless_fixture_has_no_senses_header()
     test_headerless_draft_recovers_three_senses()
+    test_control_one_sense_fixture_has_no_numbered_sense()
+    test_one_sense_card_parses_via_headline_fallback()
+    test_split_mode_reports_headline_fallback_loudly()
     print("test_lexica_agreement_parse: ok")

@@ -455,6 +455,9 @@ def parse_draw(conn, sid, raw):
         "senses": senses,
         "count": n_after,
         "raw_count": n_before,
+        # LOUD marker source (banked condition, G2168 2026-07-10): 'headline' = the one-sense
+        # fallback fired — printed on the per-draw line so every fallback parse is inspectable.
+        "split_mode": B.sense_split_mode(fields["senses_block"]),
         "audit": B.run_citation_gate(conn, sid, refs),
     }
 
@@ -564,7 +567,8 @@ def render_report(sid, lemma, translit, prompt_name, ev, draws, valid_books=None
     w("  -- PER-DRAW SENSES (headline -- grounding verses) -- THE GROUND TRUTH --")
     for i, d in enumerate(draws, 1):
         extra = f", collapsed from {d['raw_count']}" if d.get("raw_count", d["count"]) > d["count"] else ""
-        w(f"  draw {i:>2}  [{d['count']} senses{extra}]")
+        fb = " — headline fallback" if d.get("split_mode") == "headline" else ""
+        w(f"  draw {i:>2}  [{d['count']} senses{extra}{fb}]")
         for j, s in enumerate(d["senses"], 1):
             head = " / ".join(s.get("headlines") or [s.get("headline", "")])
             refs = ", ".join(fmt_ref(r) + ("(?)" if bad_book(r) else "") for r in s["refs"]) \
@@ -657,6 +661,7 @@ def save_run(save_dir, sid, prompt_name, ev, draws, report_lines, valid_books=No
         "runs": len(draws), "valid_books": sorted(valid_books) if valid_books else None,
         "evidence": {k: ev[k] for k in ("total", "renderings", "fed", "ot")},
         "draws": [{"raw": d["raw"], "count": d["count"], "raw_count": d.get("raw_count", d["count"]),
+                   "split_mode": d.get("split_mode", ""),
                    "audit": d["audit"],
                    "senses": [{"headlines": s.get("headlines") or [s.get("headline", "")],
                                "refs": [fmt_ref(r) for r in s["refs"]]} for s in d["senses"]]}
@@ -686,6 +691,7 @@ def from_json(path):
                    "refs": [to_tuple(x) for x in s["refs"]]} for s in d["senses"]]
         senses, nb, na = merge_near_dup_senses(loaded)
         draws.append({"raw": d.get("raw", ""), "count": na, "raw_count": nb,
+                      "split_mode": d.get("split_mode", ""),
                       "audit": d["audit"], "senses": senses})
     ev = {"lemma": p["lemma"], "translit": p["translit"], "renderings": p["evidence"]["renderings"],
           "total": p["evidence"]["total"], "fed": p["evidence"]["fed"], "ot": p["evidence"]["ot"]}
@@ -742,7 +748,8 @@ def main():
         for k in range(args.runs):
             raw = draw_once(client, system, sid, ev["translit"], ev["gset"], ev["ctx"])
             draws.append(parse_draw(conn, sid, raw))
-            print(f"   draw {k + 1}/{args.runs}: {draws[-1]['count']} senses", flush=True)
+            fb = " — headline fallback" if draws[-1].get("split_mode") == "headline" else ""
+            print(f"   draw {k + 1}/{args.runs}: {draws[-1]['count']} senses{fb}", flush=True)
         report = render_report(sid, ev["lemma"], ev["translit"], args.prompt, ev, draws, valid_books)
         print("\n".join(report))
         nst = sum(1 for d in draws if d.get("raw_count", d["count"]) > d["count"])

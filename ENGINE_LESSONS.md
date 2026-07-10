@@ -685,3 +685,16 @@ both drifting from the doc.
     placement no floor draw attests) ran 4-for-6 on batch-4's rejected draws — the V9_PILE edit
     candidate (floor carve as CONSTRAINT to the drafter) is the design answer. *(audit: G1244 +
     G1390 PARKED entries, 2026-07-10)*
+
+47. **A splitter that assumes numbered senses is blind to the engine's own approved one-job house
+    shape.** The first genuinely single-job word (εὐχαριστέω G2168) drew 7/10 cards in the V8
+    house shape for one-job-many-frames — single bold headline, organizing paragraph, Sub-uses,
+    NO numbered sense anywhere — and both numbered finders scored them 0 senses; the ship gate
+    would have refused the same legal shape. Reader blindness to legal output, the inverse of
+    #45's feed contamination. Fix = the _LONE_HEADLINE_RE one-sense fallback, bounded (fires only
+    when neither numbered form exists and the block OPENS with a bold span) and LOUD
+    (sense_split_mode prints "[1 sense — headline fallback]" in floor + dry-run output; pinned by
+    an explicit mode-assertion test). → v2: shape-legal output must be machine-legible, and any
+    fallback that widens acceptance must announce itself loudly — a silent widening converts a
+    numbering botch on a multi-sense card into a false one-sense parse. *(audit: G2168 VOID-floor
+    entry, 2026-07-10)*
