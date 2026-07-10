@@ -2002,6 +2002,31 @@ Rom 9:18 is a single verse, not a cluster). **Dotted cousins ACCOUNTED (row-leve
 4645.1 = "harshly" adverb (3) · 4645.2 = "midges" plague insects (6, Exo 8 + Psa 105:31 —
 adjacent to the Pharaoh cycle; the dotted rule earned its keep) · 4645.3 = "crooked"
 (3, Proverbs). None are the verb; bare 4645 honest at 39.
+**FLOOR (agreement_G4645_v7_20260710-005811, 10 runs) ADJUDICATED 2026-07-10:**
+{1:1,2:3,3:3,4:2,5:1} mean 2.9 — count messy, structure clear.
+- **AGENCY QUESTION RESOLVED BY ATTESTATION: NO draw carves by agent, 10/10.** God-hardens
+  (Exo 4:21, Deu 2:30, Rom 9:18, Isa 63:17) and self-hardens (Psa 95:8, Neh 9:16, Jer 7:26,
+  2Ch 36:13) share one sense in every draw; draw 3 says it outright ("whether … by an external
+  agent or arises from within"). Neither a judicial-hardening shelf nor a flattening — the verb
+  means make-unyielding, the text names the agent per verse. Card describes per-verse agent,
+  never resolves the sovereignty question (watch term satisfied both directions).
+- **Stable core:** unyielding-will/resistance 10/10. **Psa 90:6 physical drying/stiffening:
+  own shelf 8/10** → thin sense (Jer 11:16/G80 precedent). **Jdg 4:24 press-harder: own shelf
+  EXACTLY 5/10 → rule 7a, JP's call** (CC rec: thin sense, same precedent). **Harsh-demand
+  region (1Ki 12:4, 2Ch 10:4, 2Ki 2:10, 2Sa 19:43, Exo 13:15, Gen 49:7): minority carve 3/10,
+  rotating membership** — majority files the yoke verses in core 8/10 → fold into core with
+  inline sub-use naming.
+- **All back-check pairs = FOLD.** The Exodus 2/10-support block is citation economy, not
+  drop-out: draws 1–4,6–9 cite Exo 4:21 (10/10) as the cycle's representative; the job never
+  leaves. 1Ki/2Ch pair in draws 3–4 = uncited while kin verses hold the meaning in core.
+  Neh 9:17/9:29 covered by Neh 9:16 (10/10).
+- **Dirty ship candidates:** draw 7 (1-sense merge, loses Psa 90:6 distinctness — gate-2) ·
+  draw 8 (Psa 90:6 misfiled under pressure) · draw 10 (1Ki 12:4 + 2Ch 10:4 double-shelved,
+  both single-occ). No complete carve repeats 3× (best = 2×, twice) → first-draw hint legal.
+- **CC recommendation (pending JP + the 7a ruling):** STABLE → hinted draw: core sense with
+  per-verse agent description (Rom 9:18 + Exodus cycle inline, descriptive) + Psa 90:6 thin
+  physical sense + Jdg 4:24 per JP's 7a ruling + harsh-demand as named sub-use in core; exit
+  terms travel (no single-occ double-shelf, describe-don't-preach on Rom 9:18/Exo).
 
 ### G4061 περιτομή — SHIPPED + LIVE (2026-07-10, session 5). Hinted ship, OFF-COUNT.
 **Apply clean ("using reviewed draw ca23d502 — no model call", content byte-matched the reviewed
