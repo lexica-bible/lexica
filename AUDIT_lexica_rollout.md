@@ -2044,7 +2044,8 @@ Job 23:15/Psa 94:9 + Mat 7:3/Luk 6:41/Isa 57:1 pairs 9-10/10).** The 2-pole carv
   cross-pairing), adjudicated. **Natural-experiment ledger: pull 1 defect · pull 2 defect+
   variance · pull 3 PURE variance (would arguably SHIP under two-tier). Three DIFFERENT
   failure modes ≠ ταμεῖον's structural insistence.** Hint pre-approved by reviewer (two poles ·
-  meditation cluster pinned mental · Heb 3:1 descriptive). PENDING JP go.
+  meditation cluster pinned mental · Heb 3:1 descriptive). **JP RULED (2026-07-10): HINT,
+  pre-approved terms.**
 
 ### G5009 ταμεῖον — SHIPPED + LIVE (2026-07-10, session 5). Hinted ship (cap-out pull 4),
 ### OFF-COUNT.
