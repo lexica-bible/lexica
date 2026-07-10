@@ -2040,8 +2040,17 @@ lists); draw 3 says it outright ("whether … by an external
   39-table, all real — #28 family THIRD variant (comma / dash-range / semicolon), V8-pile item
   strengthened.** JUDGMENT CALL flagged: 5 verses uncited (Deu 10:16, Exo 7:22, 8:19, 9:35,
   14:4 — all core members, meaning covered, Exo 4:26 precedent) but the prose's "passive form"
-  clause is exactly the uncited four → facet named without an anchor. CC rec: ACCEPT (claim
-  true, meaning covered, no legal edit path into citation lists). Pending JP/reviewer.
+  clause has no cited anchor. **ACCEPTED (reviewer + JP, 2026-07-10) with a logging condition,
+  met here — VERIFICATION RECORD for the passive claim (row-level pull, 4 rows):** Exo 7:22,
+  Exo 8:19, Exo 9:35 all render "was hardened" (passive, agent implicit) — these three ARE the
+  passive category, grounded in the project record though uncited on the card. **Exo 14:4
+  renders "will harden" — ACTIVE causative, NOT passive; CC's earlier "the uncited four are
+  exactly the passive verses" was an unverified inference, corrected by the pull** (the
+  reviewer's "CC verified" credit was premature — the check happened AFTER the flag, verify-
+  before-claim enforced). 14:4 = plain uncited-causative, Exo 4:26 class; Deu 10:16 = uncited
+  self-directed, same class. Draft asserts nothing false. **V8-PILE WATCH FILED (reviewer
+  condition): "prose asserts a category whose member verses are all uncited" — mechanically
+  checkable, same shape as uncited-renderings one level up.**
 
 ### G4061 περιτομή — SHIPPED + LIVE (2026-07-10, session 5). Hinted ship, OFF-COUNT.
 **Apply clean ("using reviewed draw ca23d502 — no model call", content byte-matched the reviewed
