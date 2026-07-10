@@ -561,15 +561,19 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   **STEP 5 RAN + CLOSED 2026-07-10: V8 PROMOTED LIVE (JP KEEP; stamp `lexica:7ef8620328a9`;
   swap `fa18656`, re-sync `f631194`) · G2665 καταπέτασμα SHIPPED on draw 3 (draws 1–2 rejected,
   defect classes on record) · COUNT 6/15 name-true (JP BOOK) · #30 LIVE + fire classes BANKED
-  (`7689884`) · first `audit.floor_diff` stored row · V9_PILE.md opened. NEXT = BATCH-4
-  SELECTION (final 10; poetry-trigger + N=6-7 cost pendings revisit there per ruled item 12),
-  then the final-10 run with #30 live → GREEN activation. Item-3 tooling batch (incl. the #28
-  shorthand expander — now load-bearing for #30's unseen channel, see ENGINE_LESSONS #44) +
-  /consolidate still green as parallel gap work.** JP's hours
-  variable (relocation) — batch decisions when he's away, work normally when he's present
+  (`7689884`) · first `audit.floor_diff` stored row · V9_PILE.md opened. **BATCH-4 SELECTION
+  DONE 2026-07-10: roster of 10 APPROVED (διαιρέω, δόμα, εἰρηνικός, αἰχμαλωτεύω, ἡσυχάζω,
+  μερίζω, παραπορεύομαι, σιωπάω, ἐκλύω, ἐπανίσταμαι) · poetry trigger retired-as-rule /
+  kept-as-label · N=6-7 paper replay approved (no live change until JP sees the report) ·
+  record = audit doc BATCH-4 SELECTION entry.** NEXT = the final-10 run with #30 live → GREEN
+  activation. Item-3 tooling batch (incl. the #28 shorthand expander — load-bearing for #30's
+  unseen channel, see ENGINE_LESSONS #44 — and now the 7-of-10 replay checker) + /consolidate
+  still green as parallel gap work. PENDING JP one-liner: add ναί/ὁμοίως/ποτέ to the ranker's
+  STRUCT_BACKFILL list so they print flagged (flag-only, proposed at batch-4 selection).** JP's
+  hours variable (relocation) — batch decisions when he's away, work normally when he's present
   (handoff AVAILABILITY CONSTRAINT); silence = pending.
   Current law + queue = `HANDOFF_lexica_rollout.md` (RULING LIST + ROADMAP + `## Queue`);
-  authority = `AUDIT_lexica_rollout.md` (STEP 5 entry above STEP 4); design
+  authority = `AUDIT_lexica_rollout.md` (BATCH-4 SELECTION entry above STEP 5); design
   backlog = `ENGINE_LESSONS.md` (44). The paragraph below is HISTORY
   (early batch-2), kept for pointers only.**
   Batch-2 opened 2026-07-06: 4 shipped first session; **SHIP BAR

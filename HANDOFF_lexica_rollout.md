@@ -1692,10 +1692,15 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
    (draw 3; draws 1–2 rejected, defect classes on record) · #30 fire classes BANKED (`7689884`)
    · first `audit.floor_diff` stored write · COUNT 6/15 name-true (δίκτυον, σελήνη, ὑπομονή,
    ταμεῖον, κάλαμος, καταπέτασμα; BOOK ruled by JP) · V9_PILE.md established. Full record:
-   audit doc STEP 5 entry. NEXT = BATCH-4 SELECTION (the final 10; the two deferred cost
-   pendings — poetry trigger + N=6-7 — revisit there per ruled item 12), then the final-10 run
-   with #30 live → GREEN activation, then step 6 layout. Item-3 tooling + /consolidate =
-   parallel gap work, still green.**
+   audit doc STEP 5 entry. **BATCH-4 SELECTION DONE 2026-07-10: roster of 10 APPROVED
+   rank-true (διαιρέω G1244 · δόμα G1390 · εἰρηνικός G1516 · αἰχμαλωτεύω G162 · ἡσυχάζω G2270
+   · μερίζω G3307 · παραπορεύομαι G3899 · σιωπάω G4623 · ἐκλύω G1590 · ἐπανίσταμαι G1881;
+   10 picks = 9 owed + 1 spare). Both cost pendings RESOLVED per ruled item 12: poetry trigger
+   RETIRED-as-rule / KEPT-as-label · N=6-7 paper replay APPROVED, no live change until JP sees
+   the report. Routing table (6 out) + fork-adjacency rule banked verbatim; queue annotations
+   ≠ watch tags. Record = audit doc BATCH-4 SELECTION entry (above STEP 5).** NEXT = the
+   final-10 run with #30 live → GREEN activation, then step 6 layout. Item-3 tooling (now
+   incl. the 7-of-10 replay checker) + /consolidate = parallel gap work, still green.**
 6. (was 4, historical) **Batch-3 sessions 1–2 record** — **sessions 1 AND 2 CLOSED 2026-07-09.**
    Session 2: 3 shipped (παράπτωμα RED — routing exercise met · συκῆ · βέλος, all off-count via
    escalation), κύων parked (one-verse wall, Deu 23:18), 4-of-4 escalations; count 2/15, streak 0;

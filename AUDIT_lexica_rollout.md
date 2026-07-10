@@ -1982,6 +1982,73 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### BATCH-4 SELECTION — ROSTER APPROVED (JP, in-chat, 2026-07-10). QUEUE = THE FINAL 10.
+**Provenance (ruled item-4 form):** ranker on PA, command character-true to the ruled footnote
+(`--skip-built --occ-max 40 --top 40`; R1 re-verified on disk: `--top` :90, `--occ-max` :92,
+`--skip-built` :95). 40 rows, ranks 1–40 no holes, occ blocks 40×11 / 39×18 / 38×11 cross-foot;
+reviewer re-walked the raw table and traced the picks rank-true. Header arithmetic CLOSED with
+artifact: "excluded 10 contested + 50 structural + 76 already-built = 127" is a set union —
+10 = 9 register primaries + 1 alias key (G5485→G5484), structural = 50 on disk, and JP's
+sqlite run returned exactly the 9 primaries present in lexica_def (their forked cards),
+G5485 absent → 136 − 9 dupes = 127. Session-open disclosure on the record: commit pair
+`11999a9`/`62f6de4` (a wrong-model reviewer relay banked, then fully reverted on JP's order)
+proven net-zero — `git diff da69e2f 62f6de4` printed empty.
+**THE TEN (rank order among GREEN-screen passes — selection rule stated before the picks; 10
+picks = 9 owed [15 − 6, counted as names] + 1 spare):** διαιρέω G1244 (r1) · δόμα G1390 (r2) ·
+εἰρηνικός G1516 (r3) · αἰχμαλωτεύω G162 (r4) · ἡσυχάζω G2270 (r5) · μερίζω G3307 (r7) ·
+παραπορεύομαι G3899 (r10) · σιωπάω G4623 (r11) · ἐκλύω G1590 (r12) · ἐπανίσταμαι G1881 (r14).
+**Screens evidenced per pick:** occ ≤40 (the table itself) · contested register 0/10 (all 40
+rows checked against the 9-member file) · CONTESTED_VERSES = [('2Co', 5, 21)] shown from disk;
+the occurrence query on that verse returned EMPTY for all ten · loaded-referent hand-read
+clean · fork-adjacency hand-read clean (holds below). Blocked hold-outs G1392/G1377/G1391:
+none among the ten (G1390 ≠ G1391, explicitly flagged).
+**ROUTING TABLE (six routed out, reasons banked):** κατάρα G2671 — Gal 3:13 "became a curse"
+is the Christ-attribution crux shape that cost ἁμαρτία 7 draws on 2Co 5:21; RED-shaped, and
+edit A's fair test is ruled to a JP window · παραβαίνω G3845 — sin-family, the παράπτωμα
+RED-seed reasoning · παράκλησις G3874 — παράκλητος cognate-identity fork (Act 9:31 direct
+Spirit contact) · ναί G3483, ὁμοίως G3668, ποτέ G4218 — particle/adverb class, structural-card
+family (ticket PROPOSED, PENDING JP, not applied: add the three to the ranker's
+STRUCT_BACKFILL list so they print flagged; flag-only change). Parked ἄκανθα/κύων present
+unbuilt, skipped on read; πολύς correctly absent above the ceiling.
+**FORK-ADJACENCY RULE (banked verbatim per reviewer condition — followed implicitly by the
+four decisions above, written down here so the next selection inherits wording, not
+folklore):** the screen fires when the word's OWN sense or identity is contested — cognate
+identity with a contested title (παράκλησις ↔ παράκλητος), or a crux that predicates the word
+OF a contested referent (κατάρα: "Christ became a curse"; the ἁμαρτία shape) — never merely
+because a contested referent stands as grammatical subject near the word (βιβρώσκω precedent;
+the contrary reading swallows the corpus). Applied live: 1Co 12:11 (Spirit as subject of
+διαιρέω, verified in the ABP text) predicates nothing of the verb's sense — it means
+"distribute" there exactly as in Luk 15:12 — so διαιρέω stays. Mechanical swap path documented
+if JP ever reads it differently: next pass up = εὐχαριστέω r15 (Last-Supper gloss-note watch).
+**QUEUE ANNOTATIONS (deliberately NOT watch-tag entries — the register stays empty,
+forward-only, ship-time floor-legal-variance only):** αἰχμαλωτεύω + δόμα share Eph 4:8 (the
+Psa 68 quote crux) · διαιρέω 1Co 12:11 (divine-subject verse; edit A gets a mild in-GREEN
+exercise) · δόμα Luk 11:13 (weaker parallel-clause contact, shown from ABP: the Spirit is the
+object of the parallel "give", never called a δόμα) · μερίζω 1Co 1:13 ("Is Christ divided?") ·
+ἐπανίσταμαι = the hot poetry label (below), expect-escalation.
+**COST PENDING 1 RESOLVED (JP ruling): poetry trigger RETIRED as a rule, KEPT as a label.**
+Grounds = the banked falsification, cited in full: σελήνη 61.5% + κῆπος 55.3% both shipped
+clean at 3 draws while δάμαλις escalated at 23.7% — the direction refutes both the ≥25%
+threshold AND any low-poetry preference/tiebreak (the only escalator was the LOWEST-poetry
+word). Labels computed from the book table (grouped on strongs_base, DOTTED RIDE-ALONGS
+INCLUDED — prominent caveat, not a footnote: G1244 sums 51 vs occ 40, G4623 46, G2270 42,
+G1590 40 vs 39; none short; the standing pre-floor occurrence-table check remains the proper
+per-word screen). Book list NAMED here because the original validation pull's list was never
+banked (comparability caveat carried): poetry = Job/Psa/Pro/Ecc/Son/Lam; prophets = Isa–Mal.
+Poetry% | poetry+prophets% per pick: διαιρέω 29|45 · δόμα 15|38 · εἰρηνικός 10|25 ·
+αἰχμαλωτεύω 13|48 · ἡσυχάζω 36|55 · μερίζω 15|25 · παραπορεύομαι 18|25 · σιωπάω 28|50 ·
+ἐκλύω 13|40 · **ἐπανίσταμαι 51|67**.
+**COST PENDING 2 RESOLVED (JP ruling): N=6-7 PAPER REPLAY APPROVED — NO LIVE CHANGE until JP
+sees the report.** Method as accepted: for each saved 10-draw floor file, recompute the
+consensus on every 7-of-10 draw subset (120 per word); check whether cluster membership,
+spread mode, and the stability verdict reproduce; report per prompt version, V7 and V8 never
+blended; limit printed on the report itself: this tests STRUCTURE stability only, never the
+human adjudications. Zero new draws, zero model cost. Build slots into the approved item-3
+tooling window.
+**SEQUENCING (ruled item 5, in force for the ten):** 3-run→escalate; re-open only if the
+first two escalate. Interventions reset the streak (scoreboard, never a gate; streak 0).
+#43/#44 in force; the manual shorthand-tail check stays a mandatory gate step until #28 lands.
+
 ### STEP 5 — V8 CONTROL FIRE CLOSED: KEEP + BOOK (JP, in-chat, 2026-07-10). V8 IS THE LIVE
 ### ENGINE (stamp `lexica:7ef8620328a9`); COUNT 6/15. G2665 καταπέτασμα SHIPPED + LIVE.
 **Control word provenance (ruled item 4):** ranker run on PA (`--skip-built --occ-max 40 --top 40`),
