@@ -506,10 +506,12 @@ ambiguity or enforce the majority" on Deu 23:18, JP's call at a future window).
    commit hash. Pre-emptive holds are the same mechanism (the armed hold-outs G1392/G1377/
    G1391 are DATA-BLOCKED before their floors ever run — do not floor them while tagged).
 
-## STEP-5 SESSION — CC OPENER BLOCK (opens from docs alone. GATE FIRST: has JP's step-4 ruling
-## list returned — items 1, 2, 4 minimum? NO → gap work only (ruling-list item 3 tooling if
-## ruled or pre-approved, step-6 display prep, /consolidate); nothing fires, re-bank, close.
-## YES → run step 5.)
+## STEP-5 SESSION — CC OPENER BLOCK (opens from docs alone. State at step-4 wrap: the reviewer
+## ALREADY reconciled this session-pair — #30 ACCEPTED, V8 hunks byte-checked PASS, list FINAL
+## AT 12; the only thing outstanding is JP's rulings. GATE FIRST: have JP's rulings on the
+## STEP-4 RULING LIST returned — items 1, 2, 4 minimum? NO → gap work only (item-3 tooling if
+## ruled, step-6 display prep, /consolidate — MEMORY.md 18KB + topic file 487 lines, due);
+## nothing fires, re-bank, close. YES → run step 5.)
 Step-5 charter when unlocked: (1) pick the control word per ruled item 4 (ranker command in
 the list, R1-verified); (2) fresh floor under the CURRENT data state — reviewer runs
 `--prompt v8` per its inheritance; (3) full pipeline with `--floor` wired (#30 live) — dry-run
@@ -518,8 +520,34 @@ control fire's own record, BEFORE the final-10 window opens** (the banked build-
 (5) V8 promote-or-park recommendation to a short JP list (promotion = copy V8_DRAFT_PROMPT
 into build_lexica_def.VERSE_PROMPT, stamp flips to `lexica:7ef8620328a9`, reviewer re-syncs
 its frozen copy + _check_prompt_sync target — one commit, byte-checked). Read first: this
-block + the RULING LIST + audit doc STEP 4 entry. R1–R4, availability constraint, fire-nothing
-seam all in force until the list returns.
+block + the RULING LIST + audit doc STEP 4 entry + STEP 4 ADDENDUM. R1–R4, availability
+constraint (plain wording, ef5662f), fire-nothing seam all in force until the list returns.
+
+## STEP-5 REVIEWER-CHAT INHERITANCE BLOCK (paste into the new reviewer chat when step 5 runs)
+You are the reviewer chat for the Lexica STEP-5 session (V8 control fire + #30 fire-class
+definition). Your predecessor (step-4 chat) already did its jobs — #30 ACCEPTED, V8 hunks
+byte-checked PASS (4 insertion hunks, 18 lines, zero removals), ruling list finalized at 12 —
+and its unbanked notes are dead by design; everything ruled is in the repo (audit doc STEP 4
+entry + ADDENDUM, handoff RULING LIST). CC reads the repo and relays; reconcile CC's first
+summary against those blocks before accepting it. State: count 5/15 two-tier (δίκτυον, σελήνη,
+ὑπομονή, ταμεῖον, κάλαμος) · final-10 queue EMPTY until batch-4 selection · V7 live, V8 =
+candidate `v8` in lexica_agreement.py (would-be stamp lexica:7ef8620328a9) · JP's rulings on
+the 12 items are the gate — verify which returned before any step-5 act.
+**Your enforcement posture (unchanged):** committed wording governs · R1 commands verified on
+disk · R2 designated instruments · R3 holds block, unaccounted output auto-opens one · R4
+handoffs carry verbatim commands · #38 delta accounting · derived numbers are claims — count
+the names (candidate #42 now carries FIVE exhibits, two of them the step-4 reviewer's own;
+flag-before-bank applies to YOUR dictations too, demonstrated).
+**Your specific step-5 jobs:** (1) confirm the control word came from the ranker output per
+ruled item 4, not from memory; (2) the floor runs under `--prompt v8` on the designated
+instrument (lexica_agreement.py), fresh, current data state; (3) the ship pipeline runs with
+`--floor` so #30 is live at the gate — read its fires; (4) **#30 FIRE CLASSES + count
+consequences get DEFINED here, from this fire's own record, BEFORE the final-10 window opens**
+— hold anything that tries to define them from recall; (5) V8 promote-or-park goes to JP as a
+short list with a rendered-card screenshot (JP eyeballs the card, never a prompt); on promote,
+byte-check the VERSE_PROMPT copy + the reviewer's frozen-copy re-sync in one commit. Parked
+words are not yours to reopen: πολύς, ἄκανθα, κύων. Watch-tag register (audit doc) starts
+empty, forward-only — first entries arrive with the final-10 ships.
 
 ## STEP-4 SESSION — CC OPENER BLOCK (RAN + CLOSED 2026-07-10 — all four numbered items
 ## delivered + the three gap-work docs items; record = audit doc STEP 4 entry, RULING LIST +
