@@ -2257,7 +2257,11 @@ space. Modal 2-sense carve repeats 8/10 → STABLE, plain draw, NO hint.**
   recount the 15-count both ways ("3/15 ruled bar; N/15 two-tier bar"). Known flip: ταμεῖον
   (pulls 1–2 pure variance, only pull 3 a true defect — ships on pull 1 under two-tier →
   4/15 minimum). Unknowable without the re-read: straight-to-hint words (σκληρύνω, περιτομή,
-  χριστός, ὀφθαλμός) never got plain pulls; ἁμαρτία's 7 draws mixed classes. Reviewer's
+  χριστός, ὀφθαλμός) never got plain pulls; ἁμαρτία's 7 draws mixed classes. **[STALE IN
+  PART — session-6 audit, pending JP ruling at next doc touch: χριστός and ὀφθαλμός DID run
+  3 plain pulls each (their Phase-1 entries' PULLS blocks, d1–d3 / (1)–(3), all rejected +
+  classified in the audit packet); the true no-plain-pull set = σκληρύνω, περιτομή, δάμαλις,
+  συκῆ (first-draw hints).]** Reviewer's
   guess N=6–9; the retrospective replaces the guess with a number. One session of ledger
   reading; converts the two-tier position statement into measured cost.
 
