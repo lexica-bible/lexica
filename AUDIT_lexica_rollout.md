@@ -2018,7 +2018,16 @@ space. Modal 2-sense carve repeats 8/10 → STABLE, plain draw, NO hint.**
   belly/sky verses at attested homes with figurative use named inline · no single-occ
   double-shelf · the three chamber-within-chamber doubles legal ×2 · Mat 6:6 described as a
   room, no prayer-closet devotional freight. Streak 1 riding: clean attempt-1 = count 4/15,
-  streak 2.
+  streak 2. **REVIEWER TIGHTENING (pre-pull, banked): belly/sky verses pinned to STORAGE
+  default (their majority home); a room filing = minority carve = reject even if clean.**
+- **PLAIN PULL 1 (key 91c5ee57) REJECTED 2026-07-10 (pull 1/3): MINORITY CARVE.** Storage
+  demoted from stable 8/10 peer home to a sense-1 sub-use; figurative recesses promoted to
+  peer sense (the d3/d7 2/10 shape); belly/sky at a peer shelf violates the pinned exit term;
+  Luk 12:24 (storage exemplar, 1 of 4 NT) UNCITED, + Pro 3:10, Psa 105:30, Isa 42:22,
+  Deu 32:25 uncited. Prose quality itself good (Mat 6:6 exactly right — room, no closet
+  freight). **STREAK BREAKS → 0** (bar-fail on GREEN, pre-ruled). Count-4/15 candidacy
+  SURVIVES (count = ships-within-budget per JP's G5281 ruling; 3-cap still open). Redraw
+  issued.
 
 ### G5281 ὑπομονή — SHIPPED + LIVE (2026-07-10, session 5). Plain ship, ATTEMPT 2.
 **Apply clean ("using reviewed draw 2a609d5c — no model call", cache-content verified before
