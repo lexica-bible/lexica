@@ -2003,8 +2003,10 @@ tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Groundin
   all three; Php 3:3 doubles in d5. Genuine-double verses (the banked 4) citing twice = legal.
   Disqualifies d3/d5/d6 as ship candidates; floor read unaffected. OT sampling term held: 4/4 OT
   occ fed, Gen 17:13 + Exo 4:25 in the concrete-rite sense 10/10.
-- **OPEN HOLD (R3): support table shows 35 verses vs 36 banked — one fed verse cited in 0/10
-  draws (likely the 2nd Exodus verse; JP check issued, verified command).**
+- **HOLD CLEARED (JP check, 2026-07-10): the 0/10-cited fed verse = Exo 4:26** (pos 12,
+  "circumcision") — second half of the same Zipporah event as Exo 4:25, which holds the physical
+  sense 10/10. Meaning fully covered, verse simply never chosen as a citation → NOT a hole.
+  35 cited + 1 uncited = 36 banked, ledger square.
 - **CC recommendation (pending JP):** STABLE → hinted first draw (0 exact-mode carve repeats,
   δάμαλις-extension basis): 2 core senses + Jer 11:16 thin branch-cutting sense (G80 standard),
   heart-circumcision inline under physical, no figurative shelf, exit term = no single-occ verse
