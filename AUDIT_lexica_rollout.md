@@ -2001,6 +2001,21 @@ single-occ double-shelf disqualifier, second-costume rule. Straight-to-10.
 **PRE-PULL RECORD (2026-07-10): OCC TABLE BANKED — 38 verses / 38 occ, NO doubles, NO dotted
 cousins (bare 2657 only), ≤40 → all fed. Spread: OT 24 (Psa 8 largest) / NT 14 (Luk 4, Act 4,
 Jas 2, Heb 2, Rom 1, Mat 1). Cleanest pre-pull of the batch.**
+**FLOOR (agreement_G2657_v7_20260710-043937, 10 runs) ADJUDICATED 2026-07-10:** {1:2,2:5,3:3}
+mean 2.1 — the pre-registered soft-borders profile exactly. **Two poles STABLE: concrete
+visual inspection (Neh 2:13/Num 32:8/Act 27:39/Act 11:6/1Ki 3:21/Exo 33:8/Job 30:20/Psa 22:17/
+Gen 3:6 cluster, 10/10 together) · mental consideration (Heb 3:1/Heb 10:24/Psa 119:15/Hab 3:2/
+Job 23:15/Psa 94:9 + Mat 7:3/Luk 6:41/Isa 57:1 pairs 9-10/10).** The 2-pole carve = modal
+(d2,3,8,10 + d4 variant); 1-sense draws (d7,9) = coarser within distribution; 3-sense draws
+(d1,5,6) = three DIFFERENT third carves, none repeating — grouping variance, not a third job.
+- **Border migrators (soft edges, either-home class):** Exo 2:11, Exo 19:21, Act 7:31,
+  Psa 37:32, Psa 91:8, Psa 142:4, Luk 20:23, Luk 12:24, Jas 1:23 flip between poles
+  draw-to-draw. Predicted; not defects.
+- **All wobbles FOLD** incl. the one back-check pair (Psa 119:18 uncited in d7's 1-sense
+  merge while Psa 119:15 holds the meaning). No holes. No double-shelf observed in any draw.
+- **CC recommendation (pending JP):** STABLE → plain dry-run; exit terms = 2 senses (visual
+  observation · mental consideration) · border migrators either-home-legal (listed above) ·
+  no single-occ double-shelf · Heb 3:1/10:24 descriptive, no devotional wording.
 
 ### G5009 ταμεῖον — SHIPPED + LIVE (2026-07-10, session 5). Hinted ship (cap-out pull 4),
 ### OFF-COUNT.
