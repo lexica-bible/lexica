@@ -1020,6 +1020,29 @@ def load_floor(path, sid=None):
                      "prompt": p.get("prompt"), "runs": p.get("runs", len(draws))}}
 
 
+def consensus_pairs(floor_draws, majority=None):
+    """Unordered verse-pair -> #floor draws sharing a sense, MAJORITY pairs only (default:
+    strict majority, N//2+1). Extracted from floor_ship_diff so the floor-subsample checker
+    (scripts/floor_subsample.py) reuses the SAME pair logic — one copy ever, never a second
+    scan/transform implementation (ENGINE_LESSONS #6)."""
+    n = len(floor_draws)
+    if not n:
+        return {}
+    if majority is None:
+        majority = n // 2 + 1
+    same = Counter()                      # unordered verse pair -> #floor draws sharing a sense
+    for senses in floor_draws:
+        pairs = set()
+        for refs in senses:
+            sv = sorted(refs)
+            for i in range(len(sv)):
+                for j in range(i + 1, len(sv)):
+                    pairs.add((sv[i], sv[j]))
+        for pr in pairs:
+            same[pr] += 1
+    return {pr: c for pr, c in same.items() if c >= majority}
+
+
 def floor_ship_diff(floor_draws, ship_senses, majority=None):
     """PURE core of the #30 flag. The mechanical check is CLUSTER MEMBERSHIP, not sense count
     (the νίπτω ruling): a verse pair that shared a sense in >= `majority` floor draws (default:
@@ -1042,21 +1065,10 @@ def floor_ship_diff(floor_draws, ship_senses, majority=None):
         return []
     if majority is None:
         majority = n // 2 + 1
-    same = Counter()                      # unordered verse pair -> #floor draws sharing a sense
-    for senses in floor_draws:
-        pairs = set()
-        for refs in senses:
-            sv = sorted(refs)
-            for i in range(len(sv)):
-                for j in range(i + 1, len(sv)):
-                    pairs.add((sv[i], sv[j]))
-        for pr in pairs:
-            same[pr] += 1
     consensus = {}                        # verse -> {partner: same-count}, majority pairs only
-    for (a, b), c in same.items():
-        if c >= majority:
-            consensus.setdefault(a, {})[b] = c
-            consensus.setdefault(b, {})[a] = c
+    for (a, b), c in consensus_pairs(floor_draws, majority).items():
+        consensus.setdefault(a, {})[b] = c
+        consensus.setdefault(b, {})[a] = c
     ship_at = {}                          # verse -> set of 1-based ship sense numbers
     for i, s in enumerate(ship_senses, 1):
         for key in s["refs"]:
