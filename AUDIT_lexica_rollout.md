@@ -1995,6 +1995,10 @@ possibly-new shapes on this card — (1) citations-only paragraph (no prose lead
 (2) italic gloss-word leads (*"Waiting"* / *"Patience"*) in gloss notes. Grep across shipped
 cards' def_json ordered; prior use = existing house range, first use = style-ledger data point
 for the layout session. Not a defect either way.
+**RESULT (JP pull, 2026-07-10): BOTH PATTERNS PRE-EXIST — existing house range, NO drift.**
+Italic-quoted gloss leads: ~19 prior cards incl. the pilots (ψυχή, κύριος, θεός…).
+Citations-only paragraph: 7 prior cards incl. G80 ἀδελφός (the standard-setter), ἁμαρτία,
+ῥῆμα, ἐπιτιμάω, βιβρώσκω. Reviewer's variance question closed as tracked fact.
 
 ### G5281 ὑπομονή — GREEN, OPENED session 5 (2026-07-10). PRE-REGISTRATION (the pre-ruled
 ### endurance-vs-hope split, banked BEFORE the floor per the session-3 ranking note).
