@@ -1,6 +1,7 @@
 # Lexica dictionary — JP quick reference (how to drive the new system)
 
-Written 2026-07-10 (step-4 session), for the low-availability stretch. One page.
+Written 2026-07-10 (step-4 session). One page. Working premise: your hours are variable —
+decisions get batched when you're away; everything works normally when you're present.
 The rules behind every line here are in HANDOFF_lexica_rollout.md + AUDIT_lexica_rollout.md —
 this page is how to DRIVE, not the law itself.
 

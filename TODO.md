@@ -557,8 +557,9 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   5/15 · **STEP 4 RAN: #30 BUILT + control-fired (`ac8ea96`), pile triaged, V8 DRAFTED-NOT-FIRED
   (live default v7), roadmap + corpus-defect protocol + JP_QUICKREF_lexica.md banked · NEXT = JP
   rules the STEP-4 RULING LIST (handoff, 10 items w/ recommendations), then STEP 5 (V8 control
-  fire + #30 fire-class definition), then the final 10 with #30 live → GREEN activation.** JP
-  availability INTERMITTENT (relocation) — see handoff AVAILABILITY CONSTRAINT; silence = pending.
+  fire + #30 fire-class definition), then the final 10 with #30 live → GREEN activation.** JP's hours
+  variable (relocation) — batch decisions when he's away, work normally when he's present
+  (handoff AVAILABILITY CONSTRAINT); silence = pending.
   Current law + queue = `HANDOFF_lexica_rollout.md` (RULING LIST + ROADMAP + STEP-5 opener +
   `## Queue`); authority = `AUDIT_lexica_rollout.md` (STEP 4 entry above STEP 3 block); design
   backlog = `ENGINE_LESSONS.md` (41 + one pending candidate). The paragraph below is HISTORY

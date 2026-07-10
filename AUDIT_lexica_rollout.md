@@ -2110,6 +2110,17 @@ batch-3 entries). The 2 ESCAPES (γόνυ, νίπτω) are events on shipped wor
 additional slots. OUTSIDE the intake: πολύς only (batch-2 park); standing parks = 3 total.
 Flagged rather than banked-as-dictated per standing law (committed wording governs; count the
 names) — itself a live #42-class instance: the dictated line was a from-memory reconstruction.**
+**EXHIBIT #5 on lesson candidate #42 (reviewer-directed, CONTINGENT on JP adopting item 7):
+the availability FRAMING DRIFT.** A true fact (JP relocating, hours variable) was inflated
+into an unrequested design mandate ("multi-day gaps possible / the engine degrades to SLOWER,
+never to STALLED" — committed as constraint wording, then propagated into roadmap marks and
+the quickref framing), ratified by BOTH reviewer and CC across two sessions, and corrected
+only when checked against source. Same root as the tally exhibits: a derived
+characterization survived because nothing re-derived it from what was actually said.
+Corrected 2026-07-10: constraint wording replaced in handoff + TODO + quickref + both memory
+files with "JP's hours are variable; batch decisions when he's away, work normally when he's
+present"; ruled operational consequences (async-tolerant opening, one-list batching, silence
+= pending) unchanged.
 1. **TWO-TIER BAR ADOPTED WITH A WATCH.** Defects reject; floor-legal variance ships. Every
    variance-shipped card gets a WATCH TAG for later reader-record review — "reader-immaterial"
    was always a review-time judgment, never field-tested; the tag generates the field evidence.

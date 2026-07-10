@@ -115,9 +115,12 @@ count — unverifiable, three rounds of stuck back-and-forth.)
 
 ## AVAILABILITY CONSTRAINT — STANDING (JP ruling 2026-07-10, session 6; banked ahead of wrap
 ## because it governs the very next session's opening)
-JP relocates cross-country + starts a new job within 1–2 weeks of 2026-07-10. Availability drops
-from hours-per-day to intermittent: short check-in windows, multi-day gaps possible. **The engine
-degrades to SLOWER, never to STALLED.** Ruled operational consequences:
+JP relocates cross-country + starts a new job within 1–2 weeks of 2026-07-10. **JP's hours are
+variable; batch decisions when he's away, work normally when he's present.** [Wording replaced
+2026-07-10 per reviewer relay — the prior "multi-day gaps possible / the engine degrades to
+SLOWER, never to STALLED" line was framing drift: a true fact inflated into an unrequested
+design mandate. The ruled operational consequences below are unchanged.] Ruled operational
+consequences:
 - **Async-tolerant sessions:** every session opens from docs alone (the handoff test is now the
   norm, not the fallback). No session may depend on same-day JP follow-up. Anything needing a JP
   ruling banks as a PENDING item with evidence attached; the session proceeds on everything else.
@@ -126,7 +129,7 @@ degrades to SLOWER, never to STALLED.** Ruled operational consequences:
   ask, evidence below ["phone-readable" struck 2026-07-10 — stylistic assumption, not a JP
   ruling; JP rules when present, any device]. JP may rule days later.
 - **Priority order under constrained attention:** (a) the 10 owed count-eligible GREEN ships
-  (buy GREEN activation → buys JP's absence on the easy 80%) — but see the step-3 sequencing
+  (buy GREEN activation → the easy 80% then ships with zero JP read) — but see the step-3 sequencing
   consequence: #30 must be live first, so (b) actually leads; (b) step 4 V8 pile triage + #30
   un-park (opens the insurance clause's final-10 window); (c) RED/loaded words ONLY in real JP
   review windows — they permanently need him and don't rush; (d) layout/surface work (step 6) is
