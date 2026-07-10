@@ -46,6 +46,24 @@ PHRASE_OVERRIDES = {
     "303.1": ("ἀνὰ μέσον", "aná méson"),
 }
 
+# NO-ENTRY dotted numbers hand-classified as genuinely different words. These have NO
+# abp_ext dictionary entry, so the auto-derivation above cannot recover them (the
+# "no_entry" skip bucket) — and a no-entry dotted number is invisible to the engine's
+# dotted exclusion, so its rows LEAK into the BASE word's evidence feed and its chips
+# serve the base word's card on click (the corpus-defect fire that voided δόμα's floor,
+# 2026-07-10 — audit doc BATCH-4 CORPUS-DEFECT FIRE entry). Classification basis cited
+# per row; the ABP/eSword source is the final authority (confirm-source rule). Add a row
+# ONLY with a classification on the record — never to silence a pre-pull flag.
+HAND_OVERRIDES = {
+    # Ezr 6:4 ×2, ABP English "layers"/"layer" — courses of masonry in the temple wall
+    # (LXX 2Esdras 6:4 δόμοι). A different word from base G1390 δόμα "gift". Classified
+    # at the batch-4 corpus-defect fire; unblocks δόμα's fresh floor.
+    "1390.1": ("δόμος", "dómos"),
+    # PENDING (do not add without the ABP/eSword source reading, per the queued δίκτυον
+    # ruling chain): 1350.1 (1Ki 7:18 "being made of lattice works") and 1350.2
+    # (five "latticed" verses — δικτυωτός-shaped, unconfirmed).
+}
+
 # LSJ headwords carry vowel-length marks (breve/macron, e.g. τραυμᾰτίας); strip them
 # so the stored lemma reads clean like the rest of the dictionary (τραυματίας). These
 # are the only Greek uses of combining breve (0x306) / macron (0x304); real accents
@@ -133,6 +151,14 @@ def collect(conn):
             "SELECT COUNT(*) FROM words WHERE strongs = ?", (num,)
         ).fetchone()[0]
         fixes.append((num, "", phrase, tr, uses))
+    # Pin the hand-classified no-entry words (nothing auto-derived exists to override,
+    # but filter defensively so a future abp_ext addition can't double a row).
+    fixes = [f for f in fixes if f[0] not in HAND_OVERRIDES]
+    for num, (lemma, tr) in HAND_OVERRIDES.items():
+        uses = conn.execute(
+            "SELECT COUNT(*) FROM words WHERE strongs = ?", (num,)
+        ).fetchone()[0]
+        fixes.append((num, "", lemma, tr, uses))
     fixes.sort(key=lambda t: -t[4])
     abp_fixes.sort(key=lambda t: -t[4])
     return fixes, skipped, abp_fixes
