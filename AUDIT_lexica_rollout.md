@@ -2098,7 +2098,18 @@ stay open, revisit at batch-4 selection) · NEW item 11 = explicit #30 fire-clas
 confirmation (defined at step 5 from its own record, not today with zero live fires).
 **Self-catch banked with the clearance:** the entry above originally claimed "all 9 banked
 migrators silent" for a fixture that models 2 — corrected in place; a fixture claim must
-match the fixture's actual contents (same class as #38's stated-number rule).
+match the fixture's actual contents (same class as #38's stated-number rule). **Banked as
+EXHIBIT #3 on lesson candidate #42** (reviewer-endorsed: a stated number is a claim about an
+artifact's contents; the prior two exhibits are the tally slip and the reviewer's from-memory
+reconstruction).
+**#30 ACCEPTED (reviewer relay, 2026-07-10). Intake summary line (banked NAME-TRUE, correcting
+the relay's dictated arithmetic — the relay proposed "intake 20 = 18 shipped + 2 escapes;
+parks outside intake," which contradicts the ruled FINAL-TALLY CORRECTION and the name count):
+INTAKE 20 = 18 SHIPPED + 2 PARKED (ἄκανθα, κύων — inside the intake, roster members with
+batch-3 entries). The 2 ESCAPES (γόνυ, νίπτω) are events on shipped words — 2 OF the 18, not
+additional slots. OUTSIDE the intake: πολύς only (batch-2 park); standing parks = 3 total.
+Flagged rather than banked-as-dictated per standing law (committed wording governs; count the
+names) — itself a live #42-class instance: the dictated line was a from-memory reconstruction.**
 1. **TWO-TIER BAR ADOPTED WITH A WATCH.** Defects reject; floor-legal variance ships. Every
    variance-shipped card gets a WATCH TAG for later reader-record review — "reader-immaterial"
    was always a review-time judgment, never field-tested; the tag generates the field evidence.

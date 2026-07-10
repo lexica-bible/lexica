@@ -443,6 +443,15 @@ ambiguity or enforce the majority" on Deu 23:18, JP's call at a future window).
     final-10 window opens — not now, with zero live fires to classify from. **REC: confirm
     the deferral** (defining classes today would pre-empt the instrument the same way ruling
     the fabrication check at step 2 would have). Turns on: nothing today; step-5 agenda item.
+12. **General cost pendings — poetry skip-3 trigger + the N=10→6-7 experiment (reviewer
+    amendment: own item, not a footnote on item 5).** The mechanical poetry threshold is
+    already FALSIFIED (σελήνη 61.5% + κῆπος 55.3% clean at 3; δάμαλις escalated at 23.7%);
+    #35's soft form stands. The N=6-7 experiment is pre-specified in the banked lever text:
+    rerun two settled words at N=7, check every ruling reproduces (~35% cut on hard words if
+    it holds). **REC: DEFER BOTH to batch-4 selection** — the trigger needs the intake's book
+    distributions in hand, and the N=7 experiment spends real draws, best scheduled against
+    the batch-4 economics (reviewer pre-endorsed deferral as acceptable). Turns on: nothing
+    today; batch-4 agenda items.
 
 ## ROADMAP (consolidated 2026-07-10, step-4 session; RE-MARKED same day on reviewer relay —
 ## JP-LIGHT is a workflow POSTURE, not an absence; no travel window, no countdown. Items are
