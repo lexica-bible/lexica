@@ -2032,6 +2032,16 @@ lists); draw 3 says it outright ("whether … by an external
   2Ki 2:10, 2Sa 19:43) so the least-stable quartet doesn't scatter. Exit terms travel: no
   single-occ verse in two senses · describe-don't-preach hardest on Rom 9:18 + Exodus cycle ·
   per-verse agent description, no sovereignty verdict.
+- **Hinted draw (key 9c3bd170) PASSED all ruled exit terms** (mechanism 7-for-7 structural):
+  4 harsh-demand refs named as ruled (+Gen 49:7, majority company) · agency causative/self/
+  passive described per verse, no verdict, discipline stated in the prose itself · no single-occ
+  double-shelf · both thin senses present · proofread clean. **Citation accounting: 21
+  gate-checked + 13 SEMICOLON-shorthand tails ("Exo 4:21; 7:3; …") hand-verified vs the banked
+  39-table, all real — #28 family THIRD variant (comma / dash-range / semicolon), V8-pile item
+  strengthened.** JUDGMENT CALL flagged: 5 verses uncited (Deu 10:16, Exo 7:22, 8:19, 9:35,
+  14:4 — all core members, meaning covered, Exo 4:26 precedent) but the prose's "passive form"
+  clause is exactly the uncited four → facet named without an anchor. CC rec: ACCEPT (claim
+  true, meaning covered, no legal edit path into citation lists). Pending JP/reviewer.
 
 ### G4061 περιτομή — SHIPPED + LIVE (2026-07-10, session 5). Hinted ship, OFF-COUNT.
 **Apply clean ("using reviewed draw ca23d502 — no model call", content byte-matched the reviewed
