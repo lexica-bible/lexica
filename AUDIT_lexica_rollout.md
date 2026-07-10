@@ -2046,6 +2046,13 @@ Job 23:15/Psa 94:9 + Mat 7:3/Luk 6:41/Isa 57:1 pairs 9-10/10).** The 2-pole carv
   failure modes ≠ ταμεῖον's structural insistence.** Hint pre-approved by reviewer (two poles ·
   meditation cluster pinned mental · Heb 3:1 descriptive). **JP RULED (2026-07-10): HINT,
   pre-approved terms.**
+- **HINTED DRAW 1 (key 7cb529f9): hint exit terms ALL PASS** (2 senses · meditation cluster +
+  Heb 3:1/10:24 mental · named check passed · Isa 57:1 single home · no double-shelf · "Hab"
+  dangling flag = prose noise) — **but TWO non-pinned stable verses off-majority: Exo 33:8 in
+  MENTAL (floor visual 10/10, mental 0/10 — ὀφθαλμός misplacement class, off-floor not
+  variance) · Psa 10:14 in VISUAL (floor mental 9/10, visual 1/10 — variance under two-tier).**
+  CC recommendation: one more hinted draw, pins extended (Exo 33:8 → visual, Psa 10:14 →
+  mental) = audit-against-known-structure. PENDING JP/reviewer.
 
 ### G5009 ταμεῖον — SHIPPED + LIVE (2026-07-10, session 5). Hinted ship (cap-out pull 4),
 ### OFF-COUNT.
