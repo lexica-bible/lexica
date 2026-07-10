@@ -2006,13 +2006,15 @@ adjacent to the Pharaoh cycle; the dotted rule earned its keep) · 4645.3 = "cro
 {1:1,2:3,3:3,4:2,5:1} mean 2.9 — count messy, structure clear.
 - **AGENCY QUESTION RESOLVED BY ATTESTATION: NO draw carves by agent, 10/10.** God-hardens
   (Exo 4:21, Deu 2:30, Rom 9:18, Isa 63:17) and self-hardens (Psa 95:8, Neh 9:16, Jer 7:26,
-  2Ch 36:13) share one sense in every draw; draw 3 says it outright ("whether … by an external
+  2Ch 36:13) share one sense in every draw (reviewer independently verified vs the per-draw
+lists); draw 3 says it outright ("whether … by an external
   agent or arises from within"). Neither a judicial-hardening shelf nor a flattening — the verb
   means make-unyielding, the text names the agent per verse. Card describes per-verse agent,
   never resolves the sovereignty question (watch term satisfied both directions).
 - **Stable core:** unyielding-will/resistance 10/10. **Psa 90:6 physical drying/stiffening:
-  own shelf 8/10** → thin sense (Jer 11:16/G80 precedent). **Jdg 4:24 press-harder: own shelf
-  EXACTLY 5/10 → rule 7a, JP's call** (CC rec: thin sense, same precedent). **Harsh-demand
+  own shelf 8/10** → thin sense (Jer 11:16/G80 precedent). **Jdg 4:24 press-harder: 4/10 alone
+  (d1,2,6,10) + 1/10 shared grab-bag (d8) — reviewer precision fix to CC's flat "5/10"; still
+  7a territory** (CC rec: thin sense, same precedent). **Harsh-demand
   region (1Ki 12:4, 2Ch 10:4, 2Ki 2:10, 2Sa 19:43, Exo 13:15, Gen 49:7): minority carve 3/10,
   rotating membership** — majority files the yoke verses in core 8/10 → fold into core with
   inline sub-use naming.
@@ -2023,10 +2025,13 @@ adjacent to the Pharaoh cycle; the dotted rule earned its keep) · 4645.3 = "cro
 - **Dirty ship candidates:** draw 7 (1-sense merge, loses Psa 90:6 distinctness — gate-2) ·
   draw 8 (Psa 90:6 misfiled under pressure) · draw 10 (1Ki 12:4 + 2Ch 10:4 double-shelved,
   both single-occ). No complete carve repeats 3× (best = 2×, twice) → first-draw hint legal.
-- **CC recommendation (pending JP + the 7a ruling):** STABLE → hinted draw: core sense with
-  per-verse agent description (Rom 9:18 + Exodus cycle inline, descriptive) + Psa 90:6 thin
-  physical sense + Jdg 4:24 per JP's 7a ruling + harsh-demand as named sub-use in core; exit
-  terms travel (no single-occ double-shelf, describe-don't-preach on Rom 9:18/Exo).
+- **JP RULINGS (2026-07-10, both approved on reviewer concurrence):** (1) **Jdg 4:24 = thin
+  sense** (7a resolved; the job is military press-harder, not will-hardening — folding would
+  blur the core headline; Jer 11:16/Psa 90:6 precedent). (2) **Ship path RULED IN as proposed,
+  one tightening: the hint's harsh-demand sub-use names all four refs** (1Ki 12:4, 2Ch 10:4,
+  2Ki 2:10, 2Sa 19:43) so the least-stable quartet doesn't scatter. Exit terms travel: no
+  single-occ verse in two senses · describe-don't-preach hardest on Rom 9:18 + Exodus cycle ·
+  per-verse agent description, no sovereignty verdict.
 
 ### G4061 περιτομή — SHIPPED + LIVE (2026-07-10, session 5). Hinted ship, OFF-COUNT.
 **Apply clean ("using reviewed draw ca23d502 — no model call", content byte-matched the reviewed
