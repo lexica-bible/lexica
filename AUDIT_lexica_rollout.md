@@ -2028,6 +2028,15 @@ space. Modal 2-sense carve repeats 8/10 → STABLE, plain draw, NO hint.**
   freight). **STREAK BREAKS → 0** (bar-fail on GREEN, pre-ruled). Count-4/15 candidacy
   SURVIVES (count = ships-within-budget per JP's G5281 ruling; 3-cap still open). Redraw
   issued.
+- **PLAIN PULL 2 (key 91c5ee57 refreshed) REJECTED 2026-07-10 (pull 2/3): SAME DIRECTION.**
+  Pull-1 fixes landed (storage restored to peer, Luk 12:24 cited) but belly/sky verses at a
+  peer figurative shelf AGAIN — pinned exit term violated 2nd time; the {room · figurative
+  cavity · storage} all-peers carve = 0/10 at floor (figurative shelf only ever 1-flavor,
+  1-draw). No double-shelf; prose quality good. **DIVERGENCE DATA POINT #2: two independent
+  ship draws promote the figurative recesses against a scattering floor — the ship-vs-floor
+  divergence watch (opened on ὑπομονή) now has a pattern.** Pull 3 = last in cap; on a third
+  same-direction failure, cap-out → hint mechanism per ἄρχων precedent, and the pin-vs-draw
+  tension goes to JP/reviewer.
 
 ### G5281 ὑπομονή — SHIPPED + LIVE (2026-07-10, session 5). Plain ship, ATTEMPT 2.
 **Apply clean ("using reviewed draw 2a609d5c — no model call", cache-content verified before
