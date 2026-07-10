@@ -1982,6 +1982,75 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### STEP 5 — V8 CONTROL FIRE CLOSED: KEEP + BOOK (JP, in-chat, 2026-07-10). V8 IS THE LIVE
+### ENGINE (stamp `lexica:7ef8620328a9`); COUNT 6/15. G2665 καταπέτασμα SHIPPED + LIVE.
+**Control word provenance (ruled item 4):** ranker run on PA (`--skip-built --occ-max 40 --top 40`),
+top-40 table relayed verbatim; CC nominated **G2665 καταπέτασμα "veil, curtain" (rank 34, 38 occ)**
+as top un-built GREEN concrete noun; reviewer re-walked the raw table and ACCEPTED (δόμα adjudicated
+role-noun not kind-noun; ἄκανθα/κύων skipped parked; δυνάστης person-noun; the rank-37 hole in CC's
+first walk — ἀνάγκη, abstract — was the reviewer's artifact-over-derivation demand working).
+**Floor:** fresh 10-draw floor under `--prompt v8`, current data state
+(`agreement_G2665_v8_20260710-085637.json`). Spread {1:2, 2:4, 3:4} — same three-block anatomy in
+all 10 (OT hangings | torn temple veil | Hebrews boundary), walls vary, no membership disagreement.
+All wobbles adjudicated folds, zero holes. **Reviewer call: STABLE.**
+**PATH-A RULING (JP GO, in-chat, plain-terms rundown first):** the build engine has no wording
+switch (R1 disk-check caught the charter seam before any command fired; the literal charter would
+have drafted under V7 against a V8 floor — cross-wording fires + a V7 card for a V8 eyeball).
+PROVISIONAL promotion under six reviewer guardrails (window scoping, pre-named commit pair, drift
+warning owned as the provisional flag, stamp verified at apply, floor_diff first-write noted,
+count frozen). Swap commit `fa18656` (18 pure insertions, byte-checked live==V8 draft, stamp
+`lexica:7ef8620328a9` pre-verified); PA pull confirmed; drift warning fired on cue.
+**THREE DRAWS (all V8, forced-fresh each):**
+- Draw 1 REJECTED (reviewer): duplicate ref rendered to the reader ("Num 3:26; 4:32; Num 4:32")
+  + sub-use lead over-assertion ("the lemma also covers the construction elements"). ALSO the
+  material finding: #30's floor-unseen channel printed empty while the card carried THREE
+  floor-unseen citations (Lev 4:17, Lev 16:15, Exo 40:21) — all shorthand-form, invisible to the
+  ref parser (#28 blindness surfacing INSIDE #30's output; first live instance). JP occurrence
+  check: all three REAL → UNSEEN-REAL, not fabrication. Citation-gate "N/N pass" scopes to
+  qualified refs only (banked as a fire-class rider).
+- Draw 2 REJECTED (reviewer, verse-text-checked): **confirmed factual defect** — "cast-brass
+  bases (Exo 38:27)" where the stored verse has SILVER cast for the TIPS (wrong metal, wrong
+  part; Num 4:32 co-cited names no metal). Plus exemplar-echo (edit A's illustration reproduced
+  near-verbatim) + silent double-placement of Num 4:32 across sub-uses. Decision rule set before
+  draw 3: a third defect-class draw → no draw 4, record to JP park-leaning.
+- Draw 3 SHIPPED: no defect-class finding (CC read + reviewer concur). 29 distinct refs = 21
+  qualified + 8 shorthand (arithmetic closes against the gate count); floor-unseen = Lev 4:17 +
+  Lev 16:15 only, both already verse-verified → CLEAN satisfied per the banked definition (both
+  channels, manual backstop included). Judgment-class items logged not defects: Exo 40:5
+  tent-door mention hedged under the courtyard sub-use (βιβρώσκω organization precedent);
+  Heb 9:3 under the figurative lead with an ACCURATE description (the draw-2 distinction);
+  Lev 16:2 twice in one paragraph = prose citing; gloss-note English-connotation phrasing.
+  Exemplar echo ABSENT (own-words attribution in pass-shape); Exo 38:27 handled correctly.
+  Reviewer precision ruling banked: draw 3 never saw draw 2 — defects are NON-DETERMINISTIC
+  RATES (1-of-3 each), not learned corrections.
+**APPLY:** `--apply --require-cache --floor` shipped the reviewed draw-3 bytes ("no model call"),
+row verified FROM THE ROW: stamp `lexica:7ef8620328a9`, **first stored `audit.floor_diff` write**
+(new-fields checkpoint honored via ruled item 1). **RENDER PASS (reviewer, 3 screenshots):** PASS —
+draw-3 byte-true on the live card, LXX note + RANGE + gloss notes render, known display items
+behaved as banked (sub-use indent = step-6 work), gate flags don't leak to the reader.
+**RULINGS (JP, in-chat, plain-terms rundown per standing rule): KEEP + BOOK + V9_PILE approved.**
+V8 live everywhere; would-be stamp is the real stamp; park path retired unused. **COUNT 6/15,
+name-true: δίκτυον, σελήνη, ὑπομονή, ταμεῖον, κάλαμος, καταπέτασμα** (#38 delta +1, 5+1=6 ✓).
+Fairness note banked with the promote file: no V7 baseline exists on this word — two rejected V8
+drafts are a fact about V8 here, not evidence of regression vs V7 (V7 produced defect-class drafts
+through batch 3 too); and the floor certifies SENSE-STRUCTURE stability while both defects lived
+in the PROSE layer the floor never exercises — draw stability and prose reliability are different
+properties, and the instruments currently measure only the first (scope-gap finding, on record).
+**V9_PILE.md ESTABLISHED** (JP-approved): exemplar-echo (fix known: strip edit A's illustration;
+1-of-3 rate) + physical-details rule candidate (one exhibit, watch only). Forward rule: lines
+added on RULED catches, reviewer-verified.
+**Charter accounting — five jobs closed:** ranker word ✓ · v8 floor on the designated instrument ✓ ·
+ship pipeline with `--floor`, fires read ✓ · fire classes defined from this fire's record BEFORE
+the final-10 window (banked `7689884`, entry below) ✓ · promote ruled on a rendered card, re-sync
+byte-checked ✓. Parked words untouched (πολύς, ἄκανθα, κύων). Watch-tag register still empty,
+correctly — draw 3 shipped the modal carve, no floor-legal variance to watch.
+**COMMIT LEDGER (step-5 set, so history reconciles):** `fa18656` provisional V8 swap ·
+`7689884` fire-class definitions · `f631194` frozen-copy re-sync (drift-warning polarity back to
+normal: firing = anomaly again) · the close commit = this entry + V9_PILE.md + handoff/queue
+update · stray-thread pair `6415736`/`49353e7` (STEP-3 header added then reverted on JP order,
+net zero, disclosed in-session). Reviewer-chat note: step-5 watch was held by the chat that
+reconciled the blocks; a stray thread's partial state was discarded unbanked.
+
 ### STEP-5 #30 FIRE-CLASS DEFINITIONS — BANKED (reviewer, 2026-07-10; defined from the G2665
 ### control fire's own record per ruled item 11, BEFORE the final-10 window. Source record =
 ### the G2665 V8 dry-run gate print (draw f1ed4453, provisional-V8 stamp lexica:7ef8620328a9)

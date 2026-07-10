@@ -479,6 +479,12 @@ Study's return. Status detail: STATE.md Study line.)
    commit hash. Pre-emptive holds are the same mechanism (the armed hold-outs G1392/G1377/
    G1391 are DATA-BLOCKED before their floors ever run — do not floor them while tagged).
 
+## STEP-5 SESSION — CC OPENER BLOCK (RAN + CLOSED 2026-07-10 — all five charter jobs delivered:
+## G2665 shipped+live on draw 3, V8 PROMOTED (JP KEEP), count 6/15 (JP BOOK), #30 fire classes
+## banked `7689884`, V9_PILE.md established. Record = audit doc STEP 5 entry; commits fa18656 /
+## 7689884 / f631194 / the close commit. This block is HISTORY; resume point = Queue item 5
+## (batch-4 selection). The reviewer-chat inheritance block below is likewise closed.)
+## (original text follows)
 ## STEP-5 SESSION — CC OPENER BLOCK (opens from docs alone. State at step-4 wrap: the reviewer
 ## ALREADY reconciled this session-pair — #30 ACCEPTED, V8 hunks byte-checked PASS, list FINAL
 ## AT 12. RULINGS CLOSED 12/12 in-chat 2026-07-10 (the STEP-4 RULINGS — CLOSED block above):
@@ -1681,9 +1687,15 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
    STEP 4 entry) · V8 drafted NOT fired (candidate `v8` in lexica_agreement.py, live default
    v7, would-be stamp `lexica:7ef8620328a9`) · roadmap + corpus-defect protocol + JP quickref
    banked. **STEP-4 RULINGS CLOSED 12/12 in-chat 2026-07-10 (CLOSED block above; #42 adopted
-   → ENGINE_LESSONS). NEXT = STEP 5 V8 control fire (opener above, gate OPEN; #30 fire
-   classes defined there; R4 commands banked), then the final 10 with #30 live → GREEN
-   activation, then step 6 layout. Item-3 tooling + /consolidate = parallel gap work.**
+   → ENGINE_LESSONS). STEP 5 RAN + CLOSED same day: V8 PROMOTED (JP KEEP ruling; live stamp
+   `lexica:7ef8620328a9`; swap `fa18656`, re-sync `f631194`) · G2665 καταπέτασμα shipped+live
+   (draw 3; draws 1–2 rejected, defect classes on record) · #30 fire classes BANKED (`7689884`)
+   · first `audit.floor_diff` stored write · COUNT 6/15 name-true (δίκτυον, σελήνη, ὑπομονή,
+   ταμεῖον, κάλαμος, καταπέτασμα; BOOK ruled by JP) · V9_PILE.md established. Full record:
+   audit doc STEP 5 entry. NEXT = BATCH-4 SELECTION (the final 10; the two deferred cost
+   pendings — poetry trigger + N=6-7 — revisit there per ruled item 12), then the final-10 run
+   with #30 live → GREEN activation, then step 6 layout. Item-3 tooling + /consolidate =
+   parallel gap work, still green.**
 6. (was 4, historical) **Batch-3 sessions 1–2 record** — **sessions 1 AND 2 CLOSED 2026-07-09.**
    Session 2: 3 shipped (παράπτωμα RED — routing exercise met · συκῆ · βέλος, all off-count via
    escalation), κύων parked (one-verse wall, Deu 23:18), 4-of-4 escalations; count 2/15, streak 0;
