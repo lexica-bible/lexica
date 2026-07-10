@@ -1979,14 +1979,31 @@ human patched it, while banking his catch as data). Good half kept: the swap IS 
 intervention tally as a "gates passed a defect a human caught" data point, tagged to the
 fabrication-check batch-close decision. γόνυ precedent reaffirmed AND extended: it now explicitly
 covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS #30 update bullet).
-Final: βιβρώσκω shipped (batch tally 14 shipped) · count 2/15 · intervention tally +1. Other
+Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
+
+### BATCH-3 FINAL-TALLY CORRECTION — RULED 18 SHIPPED (JP, 2026-07-10, session 6; reviewer-concurred)
+The batch-3 shipped count is **18, not 19**. The slip was born at the βιβρώσκω close line ("batch
+tally 14 shipped" where the named chain sums 13: session-2 close banked 10 + ἐπιτιμάω 11 + διανοίγω
+12 + βιβρώσκω 13) and propagated +1 through session 5's five otherwise-correct increments to "19".
+Forcing cross-check: roster = 17 GREEN + 3 RED = 20 words, all 20 accounted by name — 18 shipped +
+2 parked (ἄκανθα, κύων); 19 ships would need a 21st word no doc names. Nothing else moves: count
+3/15 · escapes 2 · parked 2 · streak 0 · every per-word record untouched — one digit, propagated.
+Corrected in place under this ruling: the six batch-3 tally lines in this doc (βιβρώσκω close 14→13 ·
+περιτομή 15→14 · σκληρύνω 16→15 · ὑπομονή 17→16 · ταμεῖον 18→17 · κατανοέω FINAL 19→18) + the
+handoff (SESSION-6 opener final state · reviewer inheritance block · session-4 block's "14"→13 ·
+Queue item 4) + memory (index hook line + topic file). **COMMIT MESSAGES STAY AS WRITTEN** (3371717,
+4ae6a5b, e9312e6 say "19" — stale, superseded by this ruling; do NOT "correct" the docs back to 19
+from them). **LESSON CANDIDATE drafted (pending JP at the next lessons touch, #38/#39 family):** a
+running tally is a derived claim — it survived four sessions of "do not re-derive" markers because
+nothing ever counted the names; batch-close final state banks only after a name-count cross-check
+against the roster.
 
 ### G2657 κατανοέω — SHIPPED + LIVE (2026-07-10, session 5). Hinted ship (3 plain + 1 hint
 ### fail → hinted draw 2), OFF-COUNT. **BATCH-3 ROSTER COMPLETE.**
 **Apply clean ("using reviewed draw 2b592e72 — no model call") → screenshot review PASS all
 5 checks (sense order · Exo 33:8 visual with watching wording intact · Heb 3:1 descriptive ·
-whitespace · 35/35 badge). FINAL BATCH TALLY: 19 shipped / 2 escapes / 2 parked · count 3/15 ·
+whitespace · 35/35 badge). FINAL BATCH TALLY: 18 shipped / 2 escapes / 2 parked · count 3/15 ·
 streak 0. Close-out stack next in ruled order (six steps + audit-session charter between
 steps 2 and 3, reviewer holds the draft).**
 **INCUMBENT COMPARISON (post-ship, run 3):** LSJ digest leads "understand/apprehend"
@@ -2093,7 +2110,7 @@ Job 23:15/Psa 94:9 + Mat 7:3/Luk 6:41/Isa 57:1 pairs 9-10/10).** The 2-pole carv
 card · Mat 6:6 room-not-closet · whitespace · 29/29 badge). Reviewer highlight: the gloss
 note's closing line — "the translation's oscillation between the two reflects a real
 difference in the lemma's use rather than translational inconsistency" — the project's
-thesis in one sentence, on a card. BATCH TALLY: 18 shipped / 2 escapes / 2 parked · count
+thesis in one sentence, on a card. BATCH TALLY: 17 shipped / 2 escapes / 2 parked · count
 3/15 · streak 0.
 **INCUMBENT COMPARISON (post-ship, per protocol; run 2):** LSJ digest leads treasury/public
 storehouse, private room trails third — the corpus is the mirror image (room dominant 18+
@@ -2208,7 +2225,7 @@ space. Modal 2-sense carve repeats 8/10 → STABLE, plain draw, NO hint.**
 **Apply clean ("using reviewed draw 2a609d5c — no model call", cache-content verified before
 apply) → screenshot review PASS all 5 checks (sense order · OT block confined to sense 2 ·
 2Pe 1:6 ×2 · both gloss notes intact · whitespace across the new construction-group shape).
-BATCH TALLY: 17 shipped / 2 escapes / 2 parked. **COUNT RULED (JP, 2026-07-10): COUNT IT —
+BATCH TALLY: 16 shipped / 2 escapes / 2 parked. **COUNT RULED (JP, 2026-07-10): COUNT IT —
 3/15 (δίκτυον, σελήνη, ὑπομονή), streak OPENS.** The count means ships-within-budget
 (machine-flagged reject, no human catch, self-corrected inside the 3-cap). COROLLARY (reviewer
 tiebreaker, adopted): FIRST-DRAW RELIABILITY becomes its own tally for batch-close economics —
@@ -2293,7 +2310,7 @@ object-of-reliance, not abstract "hope" — more precise than the pre-registrati
 **Apply clean ("using reviewed draw 9c3bd170 — no model call", content byte-matched) →
 screenshot review PASS all 5 checks (sense order · agency paragraphs + Rom 9:18 bare · both
 thin senses · harsh-demand sub-use all 5 refs · whitespace) + bonus checks pass (21/21 badge,
-gloss line, verse block incl. Exo 13:15 retrospective). BATCH TALLY: 16 shipped / 2 escapes /
+gloss line, verse block incl. Exo 13:15 retrospective). BATCH TALLY: 15 shipped / 2 escapes /
 2 parked · count 2/15 · BOTH REDs RETIRED — routing goal proven plural. Remaining: ταμεῖον
 G5009, ὑπομονή G5281 (pre-registration banked), κατανοέω G2657 — 3 GREENs to batch close,
 then the six-step close plan.**
@@ -2371,7 +2388,7 @@ lists); draw 3 says it outright ("whether … by an external
 **Apply clean ("using reviewed draw ca23d502 — no model call", content byte-matched the reviewed
 draft) → screenshot review PASS all 5 checks (sense order · Rom 2:29 inward sub-use · Jer 11:16
 thin sense 3 · Col 2:11 ×2 sane · whitespace clean, V6 watch quiet) + bonus checks pass (33/33
-badge, provenance tag, tabs, verse block). Batch tally: 15 shipped / 2 escapes / 2 parked ·
+badge, provenance tag, tabs, verse block). Batch tally: 14 shipped / 2 escapes / 2 parked ·
 count 2/15 · RED routing exercise #2 RETIRED. Remaining: σκληρύνω G4645 (RED) · ταμεῖον G5009,
 ὑπομονή G5281 (pre-registration banked), κατανοέω G2657 (GREEN).**
 - V8-pile candidate (reviewer): dangling-book-ref flag fires on gloss-note PROSE ("in Acts and

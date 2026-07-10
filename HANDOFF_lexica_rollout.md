@@ -368,7 +368,8 @@ words. State source of truth: the docs at the close commit (git log will show it
 commit, 2026-07-10). Read first, in order: (1) this block + STANDING LAW + R1–R4 above;
 (2) AUDIT_lexica_rollout.md session-5 entries (G4061, G4645, G5281, G5009, G2657 — each has
 watch, floor adjudication, pull ledger, rulings, ship record); (3) ENGINE_LESSONS.md #38–#41.
-**1. FINAL STATE (do not re-derive):** batch-3 = **19 shipped / 2 escapes (γόνυ, νίπτω — both
+**1. FINAL STATE (do not re-derive; 18 RULED by JP session 6, 2026-07-10 — see the audit doc's
+FINAL-TALLY CORRECTION entry):** batch-3 = **18 shipped / 2 escapes (γόνυ, νίπτω — both
 session 1, human-caught) / 2 parked (ἄκανθα, κύων — DO NOT REVISIT; κύων's revisit is a JP
 call at a future window) · count 3/15 (δίκτυον, σελήνη, ὑπομονή) · streak 0.**
 - **The count means SHIPS-WITHIN-BUDGET** (JP ruling, G5281): a plain-pull word that ships
@@ -443,7 +444,9 @@ audit from this block + the docs it points to alone.
 
 ## SESSION-6 REVIEWER-CHAT INHERITANCE BLOCK (paste into the new reviewer chat)
 You are the reviewer chat for the Lexica batch-3 CLOSE-OUT (session 6). Batch-3 is COMPLETE:
-19 shipped / 2 escapes / 2 parked / count 3/15 (ships-within-budget definition) / streak 0.
+18 shipped / 2 escapes / 2 parked / count 3/15 (ships-within-budget definition) / streak 0
+(18 ruled by JP session 6 — the docs' former "19" was a propagated tally slip, see the audit
+doc's FINAL-TALLY CORRECTION entry).
 Your predecessor's working notes are dead by design; everything ruled is in the repo at the
 wrap commit — CC reads it and relays. Read the handoff SESSION-6 CC OPENER + the audit doc's
 session-5 entries BEFORE accepting CC's first summary (reconcile-against-docs applies to you).
@@ -511,7 +514,8 @@ Parked words are not yours to reopen: πολύς, ἄκανθα, κύων.
 ## (1) βιβρώσκω count = option (b), γόνυ precedent — count stays 2/15, intervention tally +1
 ## ("gates passed a defect a human caught", tagged to the fabrication-check batch-close decision);
 ## precedent EXTENDED to post-pull pre-ship human catches (ENGINE_LESSONS #30 update). βιβρώσκω
-## stands shipped (batch tally 14 shipped). (2) Next word = περιτομή G4061 (RED seed) — spreads the
+## stands shipped (batch tally 13 shipped; "14" here was the tally slip, corrected per the
+## session-6 ruling). (2) Next word = περιτομή G4061 (RED seed) — spreads the
 ## REDs across sessions, σκληρύνω inherits the lessons; straight-to-10, standing terms in force.
 ## ὑπομονή endurance-vs-hope pre-registration stays banked for its GREEN slot. Record: audit doc
 ## G977 entry (count ruled) + this block.
@@ -1411,7 +1415,7 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
    (hinted draw, zero swaps; the 5/5 placement finding + (b) ruling + disclaimer-as-cite artifact: its session
    log block + audit entry). The three V7 control fires are done; all three shipped via the structure-hint
    mechanism (5-for-5 structural), streak 0 per the standing ruling.
-4. ~~Batch-3 = Phase 2 shadow calibration~~ **ROSTER COMPLETE 2026-07-10 (session 5): 19 shipped /
+4. ~~Batch-3 = Phase 2 shadow calibration~~ **ROSTER COMPLETE 2026-07-10 (session 5): 18 shipped /
    2 escapes / 2 parked / count 3/15 (ships-within-budget) / streak 0. Record: SESSION-6 HANDOFF
    blocks above + audit doc session-1/2/3/5 entries.**
 5. **CLOSE-OUT STACK — NEXT.** Six ruled steps + the audit session between steps 2 and 3;
