@@ -1991,6 +1991,16 @@ Fabrication temptations: prayer-closet devotional freight on Mat 6:6 (describe t
 the piety); bridal-chamber/vault senses only if attested. Standing terms travel: single-occ
 double-shelf disqualifier, second-costume rule. Straight-to-10. Streak 1 riding — clean
 attempt-1 plain ship = count 4/15 and streak 2.
+**PRE-PULL RECORD (2026-07-10): OCC TABLE BANKED — 36 verses / 39 occ, THREE genuine doubles,
+all the same "chamber within a chamber" hiding-place idiom (1Ki 22:25 ∥ 2Ch 18:24, + 2Ki 9:2;
+row-verified, joined by 'within', no splitter pattern). Note for the floor read: 1Ki 22:25's
+two occurrences render 'inner chamber' AND 'storeroom' — the translation straddles the
+expected two homes inside one verse. Dotted cousins ACCOUNTED (named risk fired, 3 rows):
+5009.1 'storekeeper' (person, Isa 22:15) · 5009.2 'stores up' (verb, Pro 29:11) · 5009.3
+'stretching' (verb, Job 9:8) — one occ each, none the room-noun; bare 5009 honest. Spread:
+OT 35 / NT 4 (Mat 6:6, 24:26, Luk 12:3, 12:24). ≤40 → all fed. Reviewer pre-read banked:
+room-vs-storeroom = REFERENT split (what the room is FOR), 1-vs-2-sense wobble would be
+grouping-variance regime, δάμαλις middle-case precedent on hand.**
 
 ### G5281 ὑπομονή — SHIPPED + LIVE (2026-07-10, session 5). Plain ship, ATTEMPT 2.
 **Apply clean ("using reviewed draw 2a609d5c — no model call", cache-content verified before
