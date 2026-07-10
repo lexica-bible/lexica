@@ -460,8 +460,16 @@ prose): evidence synthesis — reject reclassification (classify every banked re
 vs variance-class, recount the 15-count both ways; known flip: ταμεῖον ships pull 1 under
 two-tier → 4/15 minimum; predecessor's guess N=6–9) · economics model (both tallies: count +
 first-draw reliability) · gate load-bearing analysis (which exit terms caught real defects vs
-enforced reader-immaterial structure). Documents as input; recommendations not rulings;
-slotted between close steps 2 and 3; step 3 consumes its outputs.
+enforced reader-immaterial structure) · **STAMP CENSUS (added 2026-07-10, JP-ruled split of
+the old-cards question): live cards per prompt version + the content-convention deltas
+separating each era from V8. Command (verified vs build_lexica_def.py:1595, column synth_ver):
+`sqlite3 ~/bible-db/bible.db "SELECT synth_ver, count(*) FROM lexica_def GROUP BY synth_ver;"`
+Framing rule: RENDERING uniformity is FREE (template change covers every era, zero draws);
+CONTENT structure is version-stamped and re-drawing costs review — the refresh policy
+(refresh-all / refresh-on-touch / stamp-and-leave) is a step-3 economics decision, and the
+layout session (step 6) designs knowing whether it renders one content-shape or three.**
+Documents as input; recommendations not rulings; slotted between close steps 2 and 3; step 3
+consumes its outputs.
 **Predecessor positions on record (positions, NOT rulings):** count-it on budget-ships
 (already ruled) · hint-over-park on structure conflicts · floor-stays-the-instrument on
 divergence · two-tier bar to the scale decision with session 5 as evidence.
