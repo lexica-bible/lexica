@@ -410,7 +410,13 @@ ambiguity or enforce the majority" on Deu 23:18, JP's call at a future window).
    JP overrules rather than composes. Nothing fires until the list returns. Gap work while
    pending: step-6 layout prep + display tickets (JP-independent).
 
-## SESSION-6 HANDOFF — CC OPENER BLOCK (paste into the new CC session)
+## SESSION-6 HANDOFF — CC OPENER BLOCK (RAN + CLOSED 2026-07-10: steps 1–3 + audit session done,
+## step 4 commissioned. HISTORY — resume point = the STEP-4 block above. Numbers inside are
+## superseded: 18 shipped RULED (not 19), count 5/15 two-tier (not 3/15); record = audit doc
+## STEP 3 block + FINAL-TALLY CORRECTION. Cost-scaling levers: RULED at step 3 (no longer
+## pending). Still-pending JP rulings carried to the step-4 list: skip-3-run for poetry-heavy
+## words · streak criterion for delete-class swaps · lesson candidate #42 (tally cross-check,
+## audit doc) · Flag-1 stale-line ruling · #30 fire classes → defined at step 5.)
 CLOSE-OUT STACK SESSION — the batch is done; this session adjudicates and synthesizes. No new
 words. State source of truth: the docs at the close commit (git log will show it as the wrap
 commit, 2026-07-10). Read first, in order: (1) this block + STANDING LAW + R1–R4 above;

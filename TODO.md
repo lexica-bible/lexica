@@ -551,10 +551,14 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   the pipeline driver). Cutoff = occ ≥ 2 (~3,954 words). Full record + the 3-tier ship-gate + frame-leak
   pre-sort rule: memory `project_lexica_dictionary`; **Batch One lessons + calibration numbers + the full
   batch-two prep list = `AUDIT_lexica_rollout.md`.**
-  **STATUS (2026-07-08): BATCH-2 CLOSED (17 shipped · 3 parked) · ENGINE = V7 · PHASE 1 = 1 of 3 done
-  (χριστός SHIPPED+LIVE, first fork-word; next ἁμαρτία → ὀφθαλμός, then batch-3 shadow calibration).
-  Current law + queue = `HANDOFF_lexica_rollout.md` (V7 block + PHASE-1 SESSION LOG + `## Queue`);
-  authority = `AUDIT_lexica_rollout.md`; design backlog = `ENGINE_LESSONS.md` (28). The paragraph below
+  **STATUS (2026-07-10, session 6): PHASE 1 done 3/3 · BATCH-3 CLOSED 18 shipped / 2 escapes / 2
+  parked (18 RULED — the docs' earlier "19" was a propagated tally slip, audit doc FINAL-TALLY
+  CORRECTION) · close steps 1–3 + audit session DONE · TWO-TIER BAR ADOPTED w/ watch tags · count
+  5/15 · GREEN activation gated on #30 live for the final 10 · NEXT = STEP 4 (V8 triage + #30
+  un-park, JP-light; opener block in the handoff). JP availability now INTERMITTENT (relocation)
+  — see handoff AVAILABILITY CONSTRAINT. Current law + queue = `HANDOFF_lexica_rollout.md`
+  (STEP-4 opener + `## Queue`); authority = `AUDIT_lexica_rollout.md` (STEP 3 block + audit
+  packet); design backlog = `ENGINE_LESSONS.md` (41 + one pending candidate). The paragraph below
   is HISTORY (early batch-2), kept for pointers only.**
   Batch-2 opened 2026-07-06: 4 shipped first session; **SHIP BAR
   RE-RULED to FOUR GATES** (holes/merges/completeness/granularity — NOT sense-count-match); reviewer floor
