@@ -1998,6 +1998,9 @@ fuzzy edges, NO known trap — the risk is carve-boundary wobble along the gradi
 grouping variance, not freight. Fabrication temptations: none named beyond the standing set;
 watch for verdict-free handling if Heb uses draw devotional wording. Standing terms travel:
 single-occ double-shelf disqualifier, second-costume rule. Straight-to-10.
+**PRE-PULL RECORD (2026-07-10): OCC TABLE BANKED — 38 verses / 38 occ, NO doubles, NO dotted
+cousins (bare 2657 only), ≤40 → all fed. Spread: OT 24 (Psa 8 largest) / NT 14 (Luk 4, Act 4,
+Jas 2, Heb 2, Rom 1, Mat 1). Cleanest pre-pull of the batch.**
 
 ### G5009 ταμεῖον — SHIPPED + LIVE (2026-07-10, session 5). Hinted ship (cap-out pull 4),
 ### OFF-COUNT.
