@@ -36,3 +36,20 @@ Format: date · word · defect class · exhibit pointer · status.
   διηρέθη… — each a per-row claim with no per-word verification path; the τόπος lesson
   [ENGINE_LESSONS #7 update] resurfacing at the draw layer) · exhibit: batch-4 draw 3
   (rejected on other grounds) · watch only.
+- 2026-07-10 · G1244 διαιρέω + G1390 δόμα · **carve-invention — EDIT CANDIDATE, the
+  batch's dominant failure mode: FOUR instances** (διαιρέω d1 distribution-cluster split ·
+  διαιρέω d3 1Co 12:11 solo shelf · δόμα d1 institutional super-shelf · δόμα d3 Ecc 5:1
+  into a sense the verse contradicts) — each a carve or placement no floor draw attests,
+  three with the self-indicting tell (the prose explains why a verse is in the wrong
+  shelf → the shelf is wrong). · **Edit direction on file (reviewer, wording open): the
+  drafter receives the floor's consensus carve as a CONSTRAINT, not merely as a
+  diff-target after the fact.** · exhibits: both park entries, audit doc.
+- 2026-07-10 · G1390 δόμα · **quote-crux harmonization — watch, one exhibit** (d1: "Eph
+  4:8, citing Ps 68:18: … GAVE gifts" against the stored psalm's "RECEIVED" — one claim
+  merging two texts; d2/d3 handled the same pair in pass-shape, so the rate is 1-of-3) ·
+  exhibit: δόμα park entry, verse-confirmed · the pre-registered Eph 4:8 roster annotation
+  caught it live; pass-shape = describe each text, name the divergence, never merge.
+- 2026-07-10 · G1390 δόμα · **fabricated reference (2Ch 19:10, digit-slid) — NO prompt
+  edit needed: machine-covered.** The citation gate BLOCKED the write autonomously (first
+  live gate-block). Banked as rate evidence for the factual-claims family, not as a V9
+  wording item.

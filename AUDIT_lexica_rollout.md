@@ -1982,6 +1982,50 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### G1390 δόμα — PARKED (batch-4 word 2; JP "park", 2026-07-10, per the pre-set rule:
+### three defect-class draws on clean data, no draw 4). COUNT 7/15 UNCHANGED.
+### Re-enters via the structure-hint path when that tooling exists.
+**19 draws total, counted by name: 3 VOID (contaminated feed — the Ezr 6:4/δόμος no-entry
+leak; fix banked `c171fd4`, file renamed VOID_) · 3 + 10 clean floors · 3 build draws.**
+**Clean floors:** fresh 3-run {1,2,3} no mode → escalated (with διαιρέω = the item-5
+re-open, both roster words 1–2 escalating on clean data) → 10-run
+`agreement_G1390_v8_20260710-210557.json` (SAVED) {1:2,2:6,3:2} mode 2, **STABLE** —
+transfer core + cultic cluster rock-solid, quote-crux pair Psa 68:18↔Eph 4:8 INSEPARABLE
+10/10, God-gift region = the flicker zone as pre-registered.
+**Three build rejects, each a different class, all caught (#43 again):**
+- d1: unattested "institutional allocation" super-shelf (8 #30 fires, 10/10 unanimous
+  transfer pairs split; Php 4:17 self-indicting placement) + **HARMONIZATION,
+  verse-confirmed** — "Eph 4:8, citing Ps 68:18: the one who ascended GAVE gifts" against
+  the stored psalm's "you RECEIVED gifts by men"; the Eph 4:8 roster annotation caught its
+  target on first live test.
+- d2: **UNSEEN-FABRICATED 2Ch 19:10** (digit-slid from the real 2Ch 2:10, no δόμα in it) —
+  **the batch's first live citation-gate BLOCK: the machine refused the write, no human
+  catch needed.** Same draw handled the quote-crux in perfect pass-shape (rates, not
+  learning).
+- d3: **Ecc 5:1 MISPLACEMENT, verse-confirmed** — "Let your sacrifice be above the gift of
+  the fools": the δόμα is human→God cultic (the floor's home for it, 4×), shipped under a
+  sense DEFINED as God→human bestowal, citation-dump only, no hedge. 0/10 attested home +
+  textual contradiction + no argument = νίπτω-class. Everything else in d3 was clean
+  (gate 35/35, quote-crux pass-shape ×2, attested d10 carve, tails verified) — the one
+  verse decided it; the headline "goods, goods" stutter mooted.
+**Park rationale (reviewer, banked):** one misplaced verse in a reference tool is the
+product failing; the bar held. Structure solved and saved; every defect lived in prose;
+every defect was caught — the last by a single verse pull.
+**ROSTER CONSEQUENCE: 7 words for 8 owed → εὐχαριστέω G2168 (r15, the documented
+next-pass-up) ENTERS BY RE-SELECTION** — the mechanism working as designed. Its screens
+queue for the next session: standard GREEN set + the no-entry dotted pull + its pre-noted
+Last-Supper gloss-note watch.
+**ITEM-5 RE-RULE BANKED (JP, in-chat):** item 5 re-opened per the roster reading (the
+wording tension adjudicated on the record: roster order governs "the first two"; the
+chronological divergence was an accident of the data block) → **STRAIGHT-TO-10 for the
+remaining words (now eight, incl. εὐχαριστέω); 3-run→escalate retired for this batch;
+the re-open condition spent.** εἰρηνικός shipped under the old rule, noted.
+**Batch-4 scoreboard:** 1 shipped counted (εἰρηνικός) · 2 parked with full evidence
+(διαιρέω, δόμα) · 8 queued. Count 7/15 name-true (δίκτυον† unchanged). Watch-tag register
+still EMPTY — parked words ship no variance. V9 case: carve-invention now at FOUR
+instances across two words, the batch's dominant failure mode (V9_PILE line + edit
+direction banked).
+
 ### G1516 εἰρηνικός — SHIPPED + LIVE + COUNTED (2026-07-10, batch-4). **COUNT 7/15.**
 ### The batch's first counted ship and the calibration's first zero-reject word:
 ### pre-pull → 3-run certify → single build draw → CLEAN gate → render PASS.

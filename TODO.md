@@ -578,9 +578,13 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   contaminant by default at every pre-pull · ranker occ = ceilings until the ~120-number
   no-entry class is triaged (existing ticket, now upgraded: it bit a counted ship).**
   **εἰρηνικός SHIPPED + COUNTED → COUNT 7/15 (first zero-reject word of the calibration;
-  UNSEEN-REAL ×6, manual tail check load-bearing; streak 1).**
-  NEXT = δόμα 1390.1 fix (checkpointed) → its fresh 3-run (item-5 decider) → remaining
-  seven words with #30 live → GREEN activation. Item-3 tooling batch (incl. the #28 shorthand expander — load-bearing for
+  UNSEEN-REAL ×6, manual tail check load-bearing; streak 1). δόμα PARKED (3 defect-class
+  draws on clean data incl. the first live citation-gate BLOCK; 19 draws by name). ITEM 5
+  re-opened + re-ruled: STRAIGHT-TO-10 for the remaining words, 3-run retired this batch.
+  εὐχαριστέω G2168 enters by re-selection (7 words for 8 owed). Carve-invention = the V9
+  case, ×4 with edit direction banked.**
+  NEXT = εὐχαριστέω screens → eight queued words, straight-to-10, #30 live → GREEN
+  activation. Item-3 tooling batch (incl. the #28 shorthand expander — load-bearing for
   #30's unseen channel, see ENGINE_LESSONS #44 — plus the structure-hint experiment)
   + /consolidate
   still green as parallel gap work. PENDING JP one-liner: add ναί/ὁμοίως/ποτέ to the ranker's

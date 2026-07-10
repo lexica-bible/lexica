@@ -1720,11 +1720,18 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
    (δίκτυον†, σελήνη, ὑπομονή, ταμεῖον, κάλαμος, καταπέτασμα, εἰρηνικός; † = queued
    contamination chain). The calibration's first zero-reject word (pre-pull → 3-run certify
    → single draw → CLEAN → render PASS); UNSEEN-REAL ×6, five machine-invisible — the
-   manual tail check load-bearing; streak 1. Record = audit doc G1516 entry.** NEXT (JP
-   "go") = δόμα 1390.1 fix design → checkpointed execution → fresh 3-run (the item-5
-   decider) → remaining seven words with #30 live → GREEN activation, then step 6 layout.
-   Item-3 tooling (incl. the structure-hint experiment) + /consolidate = parallel gap
-   work, still green.**
+   manual tail check load-bearing; streak 1. Record = audit doc G1516 entry.** **δόμα
+   G1390 PARKED same day (JP; 3 defect-class draws on clean data — super-shelf +
+   harmonization / UNSEEN-FABRICATED with the batch's first live gate-BLOCK / Ecc 5:1
+   misplacement verse-confirmed; 19 draws by name; record = audit doc G1390 PARKED entry).
+   ITEM 5: re-opened per roster reading, JP re-ruled STRAIGHT-TO-10 for the remaining
+   words, 3-run retired for the batch, re-open condition SPENT. Roster: 7 words for 8
+   owed → εὐχαριστέω G2168 ENTERS BY RE-SELECTION (screens queue next session: GREEN set
+   + no-entry dotted pull + Last-Supper gloss watch). V9 case now overwhelming:
+   carve-invention ×4 with edit direction banked (V9_PILE).** NEXT = εὐχαριστέω screens →
+   the eight queued words, straight-to-10 floors, #30 live → GREEN activation, then step
+   6 layout. Item-3 tooling (incl. the structure-hint experiment — now the named re-entry
+   path for BOTH parked batch-4 words) + /consolidate = parallel gap work, still green.**
 6. (was 4, historical) **Batch-3 sessions 1–2 record** — **sessions 1 AND 2 CLOSED 2026-07-09.**
    Session 2: 3 shipped (παράπτωμα RED — routing exercise met · συκῆ · βέλος, all off-count via
    escalation), κύων parked (one-verse wall, Deu 23:18), 4-of-4 escalations; count 2/15, streak 0;
