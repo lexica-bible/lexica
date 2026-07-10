@@ -1703,11 +1703,15 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
    STABLE — defects all in the drafting prose; record = audit doc G1244 PARKED entry).
    Count 6/15 unchanged · nine words remain for nine owed, SPARE CONSUMED · εὐχαριστέω r15 =
    next-pass-up on further attrition · item-5 re-open ARMED (διαιρέω escalated; δόμα's 3-run
-   decides) · RULED ORDER: the N=6-7 paper checker builds + runs BEFORE δόμα's floor fires ·
-   structure-hint experiment queued to the tooling window; διαιρέω re-openable via that
-   path.** NEXT = paper checker → δόμα floor → the remaining nine with #30 live → GREEN
-   activation, then step 6 layout. Item-3 tooling (now incl. the 7-of-10 replay checker +
-   the structure-hint experiment) + /consolidate = parallel gap work, still green.**
+   decides) · ~~RULED ORDER: the N=6-7 paper checker builds + runs BEFORE δόμα's floor
+   fires~~ **N=6-7 RAN + RULED same day: KEEP 10 (checker `c8d32fd`, 37 floors replayed
+   zero-cost; exact-match bar failed honestly — known-stable and known-parked floors
+   indistinguishable; V8 table no positive evidence; re-open = scale phase only, bar
+   pre-registered blind; record = audit doc N=6-7 entry)** · structure-hint experiment
+   queued to the tooling window; διαιρέω re-openable via that path.** NEXT = δόμα floor
+   (the item-5 deciding data point) → the remaining nine with #30 live → GREEN activation,
+   then step 6 layout. Item-3 tooling (incl. the structure-hint experiment) + /consolidate
+   = parallel gap work, still green.**
 6. (was 4, historical) **Batch-3 sessions 1–2 record** — **sessions 1 AND 2 CLOSED 2026-07-09.**
    Session 2: 3 shipped (παράπτωμα RED — routing exercise met · συκῆ · βέλος, all off-count via
    escalation), κύων parked (one-verse wall, Deu 23:18), 4-of-4 escalations; count 2/15, streak 0;

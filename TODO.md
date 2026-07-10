@@ -568,11 +568,12 @@ note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted
   record = audit doc BATCH-4 SELECTION entry.** **WORD 1 διαιρέω PARKED (3 defect-class
   draws, pre-set rule; floor stable, defects all drafting-layer; re-openable via the
   structure-hint path; count 6/15 unchanged, nine words / nine owed, spare consumed).
-  RULED ORDER: N=6-7 paper checker runs BEFORE δόμα's floor; item-5 re-open armed (δόμα's
-  3-run decides).** NEXT = paper checker → δόμα floor → the remaining nine with #30 live →
+  N=6-7 RAN + RULED: KEEP 10 (checker `c8d32fd` zero-cost, exact-match bar failed honestly,
+  re-open = scale phase w/ pre-registered bar; audit doc N=6-7 entry). Item-5 re-open armed
+  (δόμα's 3-run decides).** NEXT = δόμα floor → the remaining nine with #30 live →
   GREEN activation. Item-3 tooling batch (incl. the #28 shorthand expander — load-bearing for
-  #30's unseen channel, see ENGINE_LESSONS #44 — plus the 7-of-10 replay checker and the
-  structure-hint experiment) + /consolidate
+  #30's unseen channel, see ENGINE_LESSONS #44 — plus the structure-hint experiment)
+  + /consolidate
   still green as parallel gap work. PENDING JP one-liner: add ναί/ὁμοίως/ποτέ to the ranker's
   STRUCT_BACKFILL list so they print flagged (flag-only, proposed at batch-4 selection).** JP's
   hours variable (relocation) — batch decisions when he's away, work normally when he's present

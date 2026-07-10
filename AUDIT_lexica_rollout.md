@@ -1982,6 +1982,33 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### N=6-7 PAPER REPLAY — RAN + RULED: KEEP 10 (JP, in-chat, 2026-07-10). QUESTION CLOSED;
+### re-openable ONLY at the scale phase with a pre-registered margin bar validated BLIND
+### against known-stable/known-parked floor pairs.
+**Instrument:** `scripts/floor_subsample.py` (built `c8d32fd`; reuses the production
+`consensus_pairs` code path the live #30 detector reads through — extraction verified by the
+16/16 detector control fires; the checker itself control-fired on synthetic floors both
+directions before the run). **Run:** JP on PA, zero model calls — 37 ten-run floor files
+replayed (every 7-of-10 subset, 120/word; corpus fully named in the report header, 40
+three-run files skipped with reason), V7/V8 tables never blended, limit line printed
+(structure only, never human adjudications).
+**RESULT — the reviewer's pre-registered exact-match bar (consensus-pair set + modal count,
+both exact) FAILED HONESTLY:** it measured boundary-pair jitter, not structural stability.
+Decisive facts: the known-STABLE floor (G1244) and the known-PARKED floor (G173 ἄκανθα,
+refused to certify) are INDISTINGUISHABLE at 0/120 — a measure that can't separate those two
+proves nothing about N=7; the built-in 3-of-10 control column sat at the same zero on most
+words (the report's own control clause: not discriminating → the table proves nothing);
+discrimination elsewhere was weak and word-dependent (G2563 36 vs 11 — real; G3173 file 1
+60 vs 60 — control EQUAL, the opposite failure), which is worse for licensing than uniform
+zero. The V8 table (licensing scope per the banked resolution) contained NO positive
+evidence: both V8 words 0/120. Mode column reproduced 100-120/120 on stable words — where a
+future bar would look, noted WITHOUT designing one post-hoc (the reviewer holds the
+post-hoc ban against its own criterion, on the record).
+**RULING: escalation floors stay at 10 draws.** The negative was cheap (zero draws), real,
+and banked — the scale-protocol principle working: the cheap path was NOT validated, so it
+is NOT licensed. Reviewer credit line banked: the "fourteen draws" tally slip in the park
+record was the reviewer's own, corrected by CC's name-count — #42 binds the reviewer too.
+
 ### G1244 διαιρέω — PARKED (batch-4 word 1; ruled on JP-delegated authority via reviewer,
 ### 2026-07-10, per the pre-set no-draw-4 rule: three defect-class draws). COUNT 6/15
 ### UNCHANGED. Re-openable via the structure-hint path once the hint mechanism is verified
