@@ -391,7 +391,10 @@ ambiguity or enforce the majority" on Deu 23:18, JP's call at a future window).
    (`--floor`), control-fired on all three banked positives + the δίκτυον negative
    (`ac8ea96`). Includes the new stored field `audit.floor_diff` (lands only on floor-diffed
    applies; nothing written before this ruling — new-fields checkpoint honored by sequencing).
-   **REC: approve.** Turns on: #30 goes live → the final-10 window can open.
+   **REC: approve.** Turns on: #30 goes live → the final-10 window can open. **Window
+   contents stated (reviewer amendment, names not tallies): the final-10 queue has NO members
+   yet — batch-4 selection (roadmap 4) fills it. "10 owed" is arithmetic only: the ruled
+   N=15 target minus the 5 banked members δίκτυον, σελήνη, ὑπομονή, ταμεῖον, κάλαμος.**
 2. **V8 draft (4 edits) cleared for the step-5 control fire?** All pure insertions, zero V7
    lines altered; per-edit traceability in the audit doc STEP 4 entry; reviewer byte-check =
    diff V7_PROMPT→V8_DRAFT_PROMPT in lexica_agreement.py. Live default stays v7 either way;
@@ -412,7 +415,11 @@ ambiguity or enforce the majority" on Deu 23:18, JP's call at a future window).
 5. **Sequencing for the final 10: keep the standard 3-run→escalate law?** The 6-for-6
    escalation streak that killed the 3-run was the hand-picked hard tail; the final 10 are
    GREEN picks. **REC: keep 3-run→escalate; re-open only if the first two words escalate.**
-   Turns on: ~7 draws per easy word vs 10.
+   Turns on: ~7 draws per easy word vs 10. **Scope (reviewer amendment): this item rules the
+   FINAL-10 sequencing only. The GENERAL pending stays OPEN as banked — the poetry-share
+   trigger (falsified as a mechanical threshold, soft form of #35 stands) and the N=10→6-7
+   validation experiment (step-3 cost lever, unruled) both revisit at batch-4 selection with
+   the intake's book distributions in hand.**
 6. **Delete-class-swap streak criterion (carried, διανοίγω).** Does one human reword/delete
    swap break the graduation streak like a hint does? **REC: yes — any human intervention
    means the pass didn't run clean (φωνή/ὄρος standard, consistent with βιβρώσκω option (b));
@@ -427,29 +434,43 @@ ambiguity or enforce the majority" on Deu 23:18, JP's call at a future window).
 9. **Corpus-defect protocol — adopt the draft below?** Routing for a corpus defect surfaced
    mid-word: DATA-BLOCKED park → JP-independent fix ticket → FRESH floor after any data fix
    (a corpus fix invalidates the saved floor; real cost, stated). **REC: adopt.**
-10. **Roadmap — confirm the ordered block below?** Order + JP-NEEDED marks only; every item
+10. **Roadmap — confirm the ordered block below?** Order + judgment marks only; every item
     already banked individually. **REC: confirm.**
+11. **#30 fire-class definition — confirm the DEFERRAL (reviewer amendment: on the list
+    explicitly, not implied).** The banked build-note term: fire classes + their count
+    consequences get defined at the STEP-5 control fire from its own record, BEFORE the
+    final-10 window opens — not now, with zero live fires to classify from. **REC: confirm
+    the deferral** (defining classes today would pre-empt the instrument the same way ruling
+    the fabrication check at step 2 would have). Turns on: nothing today; step-5 agenda item.
 
-## ROADMAP (consolidated 2026-07-10, step-4 session — the one ordered block; detail lives at
-## the pointers. JP-NEEDED = only JP can do it; JP-LIGHT = JP pastes/eyeballs; JP-IND = runs
-## without him.)
-1. **JP rules the step-4 list above** (JP-NEEDED, phone-sized).
-2. **Step 5 — V8 control fire** (JP-LIGHT: paste floor/draw commands, screenshot the rendered
-   card; #30 fire classes DEFINED here; V8 promote/park ruling from a short list).
-3. **Tooling tickets** (JP-IND, ruling-list item 3; any time, including while 1–2 pend).
-4. **Batch-4 selection — the final 10** (CC prepares candidates JP-IND from the ranker; roster
-   approval JP-NEEDED, one list).
-5. **Final-10 run with #30 live → GREEN activation** (JP-LIGHT under two-tier: zero-read GREEN
-   ships, AMBER glances, batched rulings; activation = the insurance clause satisfied).
-6. **Step 6 — layout session against V8 output** (JP-IND prep + build of the display tickets;
-   JP taste rulings at the end. Display tickets enumerated in the audit doc STEP 4 triage.)
-7. **Refresh-on-touch queue for the 54 older-stamp cards** (policy RULED step 3; JP-IND
-   mechanics, each refresh reviews like a ship; converges on the high-traffic oldest 42).
-8. **News-on-mobile** (JP-IND build, JP eyeball; last unbuilt three-zone surface).
-9. **Variance watch-tag reader-record review** (JP-NEEDED, future window — needs field
-   records; register banked in the audit doc, starts empty/forward-only).
-10. **Human-review-dial decision** (JP-NEEDED, LAST — only after #30 and #40 have track
-    records; step-3 cost-lever order).
+## ROADMAP (consolidated 2026-07-10, step-4 session; RE-MARKED same day on reviewer relay —
+## JP-LIGHT is a workflow POSTURE, not an absence; no travel window, no countdown. Items are
+## classified by what they genuinely need, two independent axes:
+##   JUDGMENT = a call only JP can make (rulings, roster approval, taste, doctrine).
+##   EXECUTION = PA-terminal hands (the standing CC/DB boundary — unchanged, not new).
+##   CC-ALONE = repo-only work needing neither until an accept/eyeball at the end.)
+1. **JP rules the step-4 list above** — JUDGMENT (phone-sized, recommendations attached).
+2. **Step 5 — V8 control fire** — JUDGMENT (fire-class definitions + promote/park ruling,
+   batched) + EXECUTION (floor/draw commands, screenshots). #30 fire classes DEFINED here.
+3. **Tooling tickets** (ruling-list item 3) — CC-ALONE (flag/apply-layer code + CI tests;
+   no DB writes, no rulings beyond item 3; runnable while everything else pends).
+4. **Batch-4 selection — the final 10** — JUDGMENT (roster approval, one list) + EXECUTION
+   (the ranker run that produces the candidate table); CC drafts the recommendation.
+5. **Final-10 run with #30 live → GREEN activation** — EXECUTION per word (floors, applies,
+   screenshots) + JUDGMENT only where the two-tier design asks it (AMBER glances, RED reads,
+   batched flag rulings); activation = the insurance clause satisfied.
+6. **Step 6 — layout session against V8 output** — CC-ALONE prep + build of the display
+   tickets (enumerated in the audit doc STEP 4 triage); JUDGMENT at the end (taste rulings,
+   gray-vs-hide calls are JP's per standing rule).
+7. **Refresh-on-touch queue for the 54 older-stamp cards** (policy RULED step 3) — EXECUTION
+   + per-card JUDGMENT identical to a ship's (each refresh reviews like a ship); converges on
+   the high-traffic oldest 42 by itself.
+8. **News-on-mobile** — CC-ALONE build (frontend); EXECUTION to deploy; JUDGMENT = accept on
+   eyeball. Last unbuilt three-zone surface.
+9. **Variance watch-tag reader-record review** — JUDGMENT (needs field records first;
+   register banked in the audit doc, starts empty/forward-only).
+10. **Human-review-dial decision** — JUDGMENT, LAST — only after #30 and #40 have track
+    records (step-3 cost-lever order).
 
 ## CORPUS-DEFECT PROTOCOL — DRAFT (step-4 session, 2026-07-10; PENDING JP, ruling-list item 9.
 ## Detection largely exists — #36 runs both directions, #22 feed-integrity-first; what's ruled

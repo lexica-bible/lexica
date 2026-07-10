@@ -1999,8 +1999,11 @@ NOT-RUN loud. **Control fires GREEN on all three banked positives + the negative
 γόνυ p1 (fires exactly Luk 5:8 + 2Ki 1:13, both off 3/3 homes, movers keep each other) ·
 νίπτω p1 (fires exactly the Psalms trio off the unanimous cluster; Job 20:23 silent) ·
 κατανοέω hint-1 THE HARD CLASS (fires exactly Exo 33:8 [10/10 visual → mental] + Psa 10:14
-[9/10 mental → visual] inside an otherwise-passing draw; all 9 banked migrators silent wherever
-placed) · δίκτυον legal fold (zero fires). Fixture provenance stated in the test file: pinned
+[9/10 mental → visual] inside an otherwise-passing draw; the either-home migrator class is
+modeled by TWO flip-schedule verses [Jas 1:23, Luk 12:24] and stays silent — the silencing
+MECHANISM, draw-to-draw flippers never reaching a strict majority, covers all 9 banked
+migrators, but only 2 are in the fixture; corrected from an earlier "all 9" over-claim,
+reviewer-relay session) · δίκτυον legal fold (zero fires). Fixture provenance stated in the test file: pinned
 facts from this doc's entries, cluster scaffolding synthetic and marked. **BUILD NOTE BANKED
 (step-4 opener term): #30 fire classes + their count consequences get DEFINED at the step-5
 control fire, BEFORE the final-10 window opens; until then fires are judgment-class, and an
@@ -2058,6 +2061,44 @@ every variance draw was REJECTED and redrawn, so no shipped card carries unrevie
 the first entries arrive with the final-10 ships. Register lives here, one line per
 variance-shipped card: word · the floor-legal variance shipped · watch question for the
 reader-record review.
+
+### STEP 4 ADDENDUM — REVIEWER-RELAY CLEARANCE (same day, 2026-07-10; five demands, all cleared)
+**1. JP-LIGHT posture corrected:** workflow posture, not absence — no travel window, no
+countdown. ROADMAP re-marked in the handoff on two honest axes: JUDGMENT (a call only JP can
+make) vs EXECUTION (PA-terminal hands, the standing CC/DB boundary — unchanged) vs CC-ALONE
+(repo-only). The old JP-NEEDED/JP-LIGHT/JP-IND marks conflated judgment-need with routing
+around a perceived departure.
+**2. Verbatim relays delivered in-chat (script-printed):** pytest -v per-case output, 16/16
+PASSED incl. the four #30 cases · fixture-provenance route = BANKED RECORDS (not PA ls —
+the audit entries quoted line-for-line against the fixture constants; scaffolding sizes are
+NOT corpus counts and are labeled as such in the test file) · V8 difflib output re-printed +
+would-be stamp `lexica:7ef8620328a9` + per-edit trace.
+**3. Disk pointers, verified against file:line at relay time:** WS3 noise-families→tooling =
+HANDOFF_lexica_rollout.md:511-512 (step-4 opener item 2) + this doc's STEP 3 item 6
+(":2090-2091", "noise families = fix candidates; load-bearing set stays") · ὑπομονή
+recognition-class-only = HANDOFF:509 + this doc :2064 (STEP 3 pick: "recognition-fires are
+NOT human catches") · gap-work docs authorization = HANDOFF:520 ("all JP-independent, ruled
+2026-07-10 at session-6 close").
+**4. PARKED-NAMES RECONCILIATION (names, not tallies — the "2 vs 3" is two scopes, both
+correct):** batch-3 roster parks = **2: ἄκανθα (:1641), κύων (:1749)**. Standing parks across
+the rollout = **3: πολύς (batch-2, :332 PARKED-HARD) + those two** — the do-not-reopen list
+spans batches. **BATCH-3 INTAKE, all 20 by name (source = this doc's own ### G headers):**
+γόνυ G1119 · δίκτυον G1350 · νίπτω G3538 · ἄκανθα G173 · σελήνη G4582 · κῆπος G2779 ·
+κάλαμος G2563 · δάμαλις G1151 · παράπτωμα G3900 · κύων G2965 · συκῆ G4808 · βέλος G956 ·
+ἐπιτιμάω G2008 · διανοίγω G1272 · βιβρώσκω G977 · περιτομή G4061 · σκληρύνω G4645 ·
+ὑπομονή G5281 · ταμεῖον G5009 · κατανοέω G2657. **18 SHIPPED by name:** the 20 minus ἄκανθα,
+κύων. **2 ESCAPES by name:** γόνυ, νίπτω (header-marked ESCAPE #1/#2; both subsequently
+shipped on pull 2). **3 RED seeds by name:** παράπτωμα, περιτομή, σκληρύνω; GREEN intake =
+the other 17. Cross-check: 18 + 2 parked = 20 = 17 GREEN + 3 RED ✓ (matches the FINAL-TALLY
+CORRECTION forcing count).
+**5. Ruling list amended:** item 1 now prints the 5 count members by name + states the
+final-10 queue is EMPTY until batch-4 selection ("10 owed" = arithmetic, 15 − 5) · item 5 now
+states its scope (rules final-10 sequencing ONLY; general poetry-trigger + N=6-7 experiment
+stay open, revisit at batch-4 selection) · NEW item 11 = explicit #30 fire-class DEFERRAL
+confirmation (defined at step 5 from its own record, not today with zero live fires).
+**Self-catch banked with the clearance:** the entry above originally claimed "all 9 banked
+migrators silent" for a fixture that models 2 — corrected in place; a fixture claim must
+match the fixture's actual contents (same class as #38's stated-number rule).
 1. **TWO-TIER BAR ADOPTED WITH A WATCH.** Defects reject; floor-legal variance ships. Every
    variance-shipped card gets a WATCH TAG for later reader-record review — "reader-immaterial"
    was always a review-time judgment, never field-tested; the tag generates the field evidence.
