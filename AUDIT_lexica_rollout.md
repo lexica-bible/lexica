@@ -1982,6 +1982,34 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 14 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### G4061 περιτομή — SESSION 5 (2026-07-09/10): doubles VERIFIED, table BANKED 36/40, orphaned
+### V7 floor ADOPTED + adjudicated. Ship recommendation PENDING JP.
+- **Doubles verify (the owed 8-row check) PASSED:** Col 2:11 (pos 4/17), Rom 2:25 (0/13),
+  Rom 4:10 (4/11), Rom 4:12 (2/6) — all four = two real separated uses, no helper-splitter
+  pattern. **Occ table BANKED: 36 verses / 40 occ.**
+- **Floor = the orphaned run agreement_G4061_v7_20260709-235238.json, ADOPTED per JP directive**
+  (filename matches lexica_agreement.py's own output pattern, prompt v7 — genuine floor-instrument
+  output; re-rendered free via --from-json, verified line 572). The 23:27 wrong-instrument draws
+  remain NON-FLOOR, unused.
+- **Adjudication:** {2:2,3:8} mean 2.8. Stable 2-sense core: physical rite 10/10 · circumcised-as-
+  group 10/10. Third slot = MEMBERSHIP-SCATTER not a stable job (Jer 11:16 branch-cutting own-shelf
+  5/10 [d1,3,5,9,10] · practice/institution 2/10 [d2,6] folds · d7 "non-physical cutting" 1/10 folds).
+  Both BACK-CHECK pairs = FOLD: Gal 2:8/2:9 only ever extra cites inside the group sense (present
+  10/10); Rom 2:28+Rom 4:11 d10 drop leaves the physical sense intact (Rom 2:28 cited 1/10 total).
+  Rom 2:29 heart-circumcision: files under core senses by majority, own-shelf 1/10 → no figurative
+  shelf; gate-3 inline visibility required at draft.
+- **RED watch outcome:** covenant-freight shelf did NOT materialize (0/10 verdict-style senses).
+  **Double-shelf finding: draws 3, 5, 6 dirty** — Eph 2:11 (single-occ) shelved in BOTH senses in
+  all three; Php 3:3 doubles in d5. Genuine-double verses (the banked 4) citing twice = legal.
+  Disqualifies d3/d5/d6 as ship candidates; floor read unaffected. OT sampling term held: 4/4 OT
+  occ fed, Gen 17:13 + Exo 4:25 in the concrete-rite sense 10/10.
+- **OPEN HOLD (R3): support table shows 35 verses vs 36 banked — one fed verse cited in 0/10
+  draws (likely the 2nd Exodus verse; JP check issued, verified command).**
+- **CC recommendation (pending JP):** STABLE → hinted first draw (0 exact-mode carve repeats,
+  δάμαλις-extension basis): 2 core senses + Jer 11:16 thin branch-cutting sense (G80 standard),
+  heart-circumcision inline under physical, no figurative shelf, exit term = no single-occ verse
+  in two senses.
+
 ### G4061 περιτομή — STUB, NOT RUN (session 4 CLOSED FAILED 2026-07-09; ENGINE_LESSONS #39).
 RED seed #2, JP-approved next word. Pre-pull state at close: 36 verses / 40 occ · 4 doubles
 (Col 2:11, Rom 2:25, Rom 4:10, Rom 4:12 — plausibly genuine, 8-row row-level verify STILL OWED
