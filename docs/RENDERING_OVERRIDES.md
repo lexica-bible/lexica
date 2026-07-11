@@ -64,12 +64,19 @@ Jer 22:1/22:4 singular λόγος ("this word") vs 22:5 plural ("these words") �
 tracks the Greek's own number shift. Smoothing to uniformity would compress a real
 distinction. **Number mismatch between override and lemma = hard refuse.**
 
-## Substrate note — slot→surface alignment
+## Substrate note — slot→surface alignment (UPDATED 2026-07-11, backfill SHIPPED)
 The planned span-level overrides need a per-slot inflected-form substrate. **That substrate
-already exists:** the `abp_surface` side table (`verse_id, position, form, translit`) holds
-ABP's own printed inflected Greek per word slot, built by `scripts/build_abp_surface.py`
-from the BibleHub ABP scrape, ~91% match, already LEFT-joined into `/api/chapter`. Known
-limits (bank as edge cases, don't silently normalize): bh Greek is accent-only (no
-breathing marks); a form is stored only when it differs from the lemma by ending (~56% of
-words carry a line); `*`-slot proper nouns are skipped. See
-`docs/claude/data-model.md` § abp_surface.
+exists and was hardened before anything is built on it:** the `abp_surface` side table
+(`verse_id, position, form, translit`) holds ABP's own printed inflected Greek per word
+slot, built by `scripts/build_abp_surface.py` from the BibleHub ABP scrape and already
+LEFT-joined into `/api/chapter`. The 2026-07-11 audit→backfill arc
+(`audit_surface_coverage.py` → `backfill_abp_surface.py`) recovered 13,851 forms the strict
+aligner had missed (English-vs-Greek word-order swaps) → 359,288 rows; the remaining TRUE
+divergence is ≈0.65% of content slots, hotspot-shaped (ἔπω-class tag synonyms — future fix
+is a JP-ruled mapping table, never fuzzy matching). RULED: no fallback marker in the
+Greek-primary interlinear at that residual. Known limits (bank as edge cases, don't
+silently normalize): bh Greek is accent-only (no breathing marks); a form is stored only
+when it differs from the lemma by ending; proper nouns carry no Greek yet (PN backfill owns
+them, incl. the 30,126 Hebrew-numbered OT name slots); 148 verses sit behind a queued,
+eyeball-gated versification map. See `docs/claude/data-model.md` § abp_surface + TODO
+"abp_surface backfill arc".

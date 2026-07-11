@@ -895,6 +895,30 @@ page + the crawlable SEO footer.
 
 ---
 
+## abp_surface backfill arc (2026-07-11) — DONE except two queued follow-ups
+Pairing-rule backfill SHIPPED + verified on PA: 13,851 recovered printed forms written
+(rows 345,437→359,288, delta exact vs pre-registered audit counts 13,851/4,736/62), translit
+refilled (full deterministic recompute — that's the builder's design, 359,288 = all rows, not a leak).
+True divergence residual ≈ 0.65% of content slots (absent 2,494 + consumed 1,483); the scary
+34,103 "no partner" bucket was 30,126 Hebrew-numbered OT name slots (PN backfill's bucket).
+**RULED (JP): NO fallback marker in mode-three interlinear** — residual too small; view-1 lemma
+line untouched (standing non-Greek-reader rule stands). Tools: `scripts/audit_surface_coverage.py`
+(read-only characterizer w/ recovery measurement + no_partner breakdown) +
+`scripts/backfill_abp_surface.py` (new-rows-only, dry-run default). Design bank:
+`docs/RENDERING_OVERRIDES.md`.
+- **QUEUED — versification map for the 148 off-by-one verses** (989 verse_missing slots; every
+  affected verse has a populated scrape neighbor). GATED on eyeball review of neighbor content —
+  a wrong map stores real-looking Greek from the WRONG verse (dotted-cousin failure shape). Slow path.
+- **QUEUED — ἔπω-class tag-synonym rulings table** (parked): "absent" residual is hotspot-shaped,
+  G2036 ἔπω alone = 457 of 2,494; each synonym pair (ἔπω↔λέγω etc.) = ONE JP ruling applied
+  corpus-wide via an explicit mapping table — NEVER fuzzy matching. One ruling ≈ 18% of residual.
+- Standing: PN printed-Greek backfill (the Phase-6 `inflected`-for-PNs slot in `greekLineForWord`)
+  now also owns the 30,126 Hebrew-numbered name slots + the 2,810 '*' slots.
+- Rebuild note: after any `build_abp_surface.py` re-run, re-run `backfill_abp_surface.py` then
+  `build_abp_translit.py` (backfill is not folded into the builder yet — fold it in if a rebuild recurs).
+
+---
+
 ## Ideas / someday (nothing committed — grab whichever appeals)
 
 **Reader / layout**

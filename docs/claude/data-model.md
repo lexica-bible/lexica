@@ -89,7 +89,16 @@ from `bh_scrape.db` `bh_words.greek` (the BibleHub ABP scrape) — same text as 
 matches ~91% (Rahlfs/TAGNT capped lower — memory `project_bsb_words`). `/api/chapter` LEFT-JOINs
 it only if present (deploy-safe). bh's Greek
 is accent-only (no breathing marks), so `strip_marks` stores a form ONLY when it differs from
-the lemma by ENDING (no echo lines) → 56% of words show a line. Surface translit FILLED by
+the lemma by ENDING (no echo lines) → 56% of words show a line. **Backfilled 2026-07-11 by
+`scripts/backfill_abp_surface.py`** (+13,851 rows → 359,288): the builder's strict left-to-right
+aligner fails where ABP's printed ENGLISH order (words.position) diverges from the scrape's Greek
+order (bracket reorders, postpositive particles); the backfill pairs failed slots with leftover
+scrape tokens by Strong's number within the verse, refusing on any count mismatch. Re-run it (then
+translit) after any build_abp_surface re-run. Characterizer = `scripts/audit_surface_coverage.py`
+(read-only; true divergence residual ≈0.65% of content slots — 30,126 of the old "gap" were
+Hebrew-numbered OT name slots that can never match Greek, the PN backfill's bucket). Mode-three
+interlinear's Greek line falls back form→lemma→name (`greekLineForWord`, 56-library-order-logic);
+JP RULED 2026-07-11: no fallback marker. Surface translit FILLED by
 `scripts/build_abp_translit.py` (SBL romanization matching the lexicon headword style; the
 rough-breathing 'h' is read from the lemma since bh forms have no breathing; re-run after any
 position-shifting rebuild). Full record: memory `project_bsb_words`.
