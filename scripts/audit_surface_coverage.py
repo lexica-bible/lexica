@@ -55,7 +55,9 @@ def main():
     args = ap.parse_args()
 
     bh = BHSource(args.bh)
-    con = sqlite3.connect(args.db)
+    # Read-only + wait up to 30s if the live site is mid-write, instead of dying.
+    con = sqlite3.connect(f"file:{args.db}?mode=ro", uri=True)
+    con.execute("PRAGMA busy_timeout=30000")
 
     lemmas = {base(sg): (lem or "") for sg, lem in con.execute(
         "SELECT strongs_g, lemma FROM lexicon") if sg}
