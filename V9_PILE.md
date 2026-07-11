@@ -64,6 +64,23 @@ Format: date · word · defect class · exhibit pointer · status.
   model gets it wrong repeatedly — a stimulus trap, lesson #2 shape) · exhibits: G2168
   PARKED entry, verse-confirmed via JP sqlite run · class stays WATCH-with-exhibits;
   the trap itself is per-verse, the structure-hint path is the pinning mechanism.
+- 2026-07-11 · G227 ἀληθής · **cross-lemma misattribution — NEW defect class, reviewer-
+  named (distinct from carve-invention [shelf existed] and misplacement [verse legally
+  cited]; what's false is WHOSE WORD the prose describes): TWO exhibits, one word, the
+  claim MIGRATED FIELDS** — d1 built a sense on 1Jn 2:8's "true light" (= ἀληθινός G228,
+  tag-confirmed position-level; G227's own occurrence is the commandment) · d3's Range
+  asserted the lemma characterizes "even light" while its senses block handled the verse
+  correctly. Two-adjective verses are the trigger surface (1Jn 2:8 here; the ἀληθής/
+  ἀληθινός division of labor generally). Watch-with-exhibits per the multi-exhibit
+  standard; candidate probe: any prose claim about a phrase in a cited verse whose
+  English gloss maps to a DIFFERENT Strong's row in that verse.
+- 2026-07-11 · G227 ἀληθής · **cross-sense double-placement — STRONGEST EXHIBIT for the
+  banked edit candidate:** d2's own prose says "the same verses can carry both questions
+  simultaneously (notably Joh 5:31–32; 3Jn 1:12)" and STILL silently double-listed both —
+  the model articulates the dual carry and does not invoke V8's named-dual convention.
+  (d1 added two more silent doubles, one hidden behind a range tail, manual check caught
+  it; d3 then USED the convention correctly on Job 42:7–8 — the mechanism works when
+  invoked, the edit's job is making invocation reliable.)
 - 2026-07-10 · G2168 εὐχαριστέω · **reader section-matcher gaps surface in pairs on
   novel-shape words** (reviewer note, banked): #47's headline gap + the singular "Gloss
   note:" gap landed on the SAME first one-job word — consider a shape-conformance sweep

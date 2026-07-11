@@ -1982,6 +1982,68 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### G227 ἀληθής — PARKED (batch-4 word 4, entered by re-selection r14; JP "PARK"
+### 2026-07-11, run session 2, per the pre-set rule: three defect-class draws on clean
+### data, no draw 4). COUNT 7/15 UNCHANGED, STREAK 1 UNCHANGED. Re-enters via the
+### structure-hint path — reviewer-ranked the STRONGEST hint candidate on the shelf
+### (draws IMPROVED 6→3→1 defect surfaces; parked on the rule, not on trajectory).
+**Selection:** ranker re-run walked top-down, every rank above 14 accounted for by name
+(reviewer re-walk concurred); nomination ἀληθής r14. **Standing procedure adopted at this
+pre-pull (reviewer ruling): exact-or-dotted patterns** — `strongs='NNN' OR strongs LIKE
+'NNN.%'`, never a bare prefix ('227%' would have swept the 2270-series incl. queued
+ἡσυχάζω).
+**Screens (all PASS):** register 0-hit (local, mechanical) · 2Co 5:21 EMPTY · pre-pull
+FULLY CLEAN (third of the batch): 39 verses / 39 occ, NO doubles, zero dotted rows,
+14 OT / 25 NT — first mixed-testament word since the fix cycle, LXX line pre-noted as
+an inspection point · loaded-referent PASS (Rom 3:4/Joh 3:33 assert God's truthfulness,
+no tradition contests it — no crux shape) · fork-adjacency PASS with the decisive fact:
+the "true God / true vine" loci sit on ἀληθινός G228, ZERO of its verses in this table ·
+ἀληθινός-boundary watch armed (no genuine-vs-counterfeit kind-claims beyond the 39).
+**Floor:** `agreement_G227_v8_20260711-201028.json` (SAVED) — header true (fed 39,
+14 OT / 25 NT), spread {2:1,3:3,4:5,6:1}, wobbliest of the batch but all seams:
+4-block anatomy (correspondence 10/10 rock · juridical own-shelf EXACTLY 5/10 → 7a ·
+person 9/10 · genuine/conduct all 10, flickering membership). Both machine BACK-CHECKs
+(Joh 8:16/8:14) = folds. **STABLE, reviewer-concurred, with THREE PRE-CLEARS banked
+before the build draw** (the ὀφθαλμός pull-2 lesson applied): (1) juridical = TWO NAMED
+homes only, correspondence or juridical shelf — d9's genuine-home filing is 1/10 scatter,
+NOT pre-cleared; (2) Job 5:12 dual-affinity (≥6 with both Job 17:10 and Pro 1:3, clusters
+unpaired) — either majority partner = floor-legal; (3) genuine-region legal with attested
+members (1Pe 5:12, 1Jn 2:8, Isa 42:3 + the Pro 1:3/Php 4:8/2Ch 31:20 cluster).
+**Three build rejects (all key 865d2c5f inputs), each caught, classes named:**
+- d1: **CROSS-LEMMA MISATTRIBUTION, verse-confirmed — NEW defect class** (reviewer-named;
+  distinct from carve-invention [the shelf existed] and misplacement [the verse sat where
+  floor allows]; what's false is WHOSE WORD the prose describes): sense 4 built its
+  "genuine article" case on 1Jn 2:8's "true light" — which the tag pull proves is
+  ἀληθινός G228 ("commandment…true" = 227; "light…true" = 228, position-level). The
+  sharpened watch caught its exact target. + silent double-shelving ×2 (Job 42:7–8 s1+s2
+  via a range tail — manual shorthand check caught the second verse; 1Jn 2:8 s2+s4).
+  Rendering-lint ×3 all known parser noise, named. LXX no-fire read + accepted.
+- d2: **machine HARD-BLOCK, autonomous** (δόμα-d2 precedent, counted): prose cited bare
+  chapter refs ("At 8:16") the checker reads as book "At" — unverifiable refs refused,
+  nothing written. + silent double-shelving RECURS (3Jn 1:12, Joh 5:31 in s1+s2) with the
+  pile's strongest exhibit: the draw's own prose says "the same verses can carry both
+  questions simultaneously (notably Joh 5:31–32; 3Jn 1:12)" — it ARTICULATED the dual
+  carry and still listed silently. + sense-4 "actualization" pairing (1Jn 2:8 + Isa 42:3)
+  ruled unattested placement (Isa 42:3 solo = 1/10; the pair = 0/10; 8/10 partner
+  abandoned). G228 trap AVOIDED this draw.
+- d3: **the batch's best structure and still one verse-confirmed false claim**: 3 senses
+  all attested, juridical folded per pre-clear 1, NO double-shelves, Job 42:7–8 finally
+  in the NAMED-DUAL convention, all four #30 fires floor-legal (memberships attested:
+  1Jn 2:8 3/10, 1Pe 5:12 2/10, 2Co 6:8 via d6's merged shelf, Job 5:12 via d4), tails
+  hand-verified, glosses text-first (G225 note accurate). THE DEFECT: Range asserts the
+  lemma "characterizes persons, conduct, teaching, and even light" — the light is G228's,
+  never ἀληθής's in these 39. The false claim MIGRATED FIELDS rather than dying: d1 put
+  it in a sense, d3 in Range, while the senses block itself handled 1Jn 2:8 correctly.
+**The 1Jn 2:8 trap (park rationale core — this word's Rom 16:4):** a two-adjective verse;
+the model keeps bleeding G228's phrase onto G227 across fields. Stimulus trap with a
+one-line hint fix ("1Jn 2:8: G227 = the commandment; the light is G228, off-limits").
+**Ruling chain:** CC defect call → reviewer concur + park recommendation → JP "PARK".
+**ROSTER CONSEQUENCE:** 6 words for 8 owed → next-pass-up fires TWICE (r15 ἀλλάσσω G236
+first, then the next clean rank), full screens each, no compression of the double
+re-selection.
+**Batch-4 scoreboard: 1 shipped counted (εἰρηνικός) · 4 parked with full evidence
+(διαιρέω, δόμα, εὐχαριστέω, ἀληθής — all on the structure-hint shelf) · 7 queued.**
+
 ### G2168 εὐχαριστέω — PARKED (batch-4 word 3; JP "park" 2026-07-10/11, run session 2,
 ### per the pre-set rule: three defect-class draws on clean data, no draw 4). COUNT 7/15
 ### UNCHANGED, STREAK 1 UNCHANGED (a park ships nothing, touches no draft). Re-enters via

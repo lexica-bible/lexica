@@ -1801,11 +1801,21 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
    note:" label leaking the note into Range (splitter package #2). Sequence slips ×2
    logged as a PATTERN (config-test ledger). Eucharist watch 4-for-4 pass. Count 7/15,
    streak 1, both unchanged. Roster: 7 words for 8 owed → next-pass-up RE-SELECTION,
-   full screens first. Record = audit doc G2168 PARKED + FLOOR-VOID entries.** NEXT =
-   re-selection (ranker next-pass-up + screens) → the seven queued words, straight-to-10
+   full screens first. Record = audit doc G2168 PARKED + FLOOR-VOID entries.**
+   **ἀληθής G227 (re-selection r14) PARKED same session (JP "PARK"; pre-set 3-defect
+   rule — cross-lemma misattribution ×2 [NEW class, reviewer-named: 1Jn 2:8's "true
+   light" = ἀληθινός G228 bled onto G227, d1 in a sense / d3 in Range] + machine
+   hard-block d2 ["At 8:16" unverifiable refs, autonomous refusal] + double-shelf class
+   d1/d2; draws IMPROVED 6→3→1 — parked on the rule, strongest structure-hint candidate
+   on the shelf; floor STABLE 4-block, three pre-clears exercised correctly; standing
+   procedure adopted: pre-pull patterns exact-or-dotted, never bare prefix). Count 7/15,
+   streak 1 still unchanged. Roster: 6 words for 8 owed → next-pass-up ×2 (r15 ἀλλάσσω
+   G236 first, then next clean rank), full screens each. Record = audit doc G227 PARKED
+   entry.** NEXT =
+   double re-selection (screens ×2) → the seven queued words, straight-to-10
    floors, #30 live → GREEN activation, then step
    6 layout. Item-3 tooling (incl. the structure-hint experiment — now the named re-entry
-   path for ALL THREE parked batch-4 words) + /consolidate = parallel gap work, still green.**
+   path for ALL FOUR parked batch-4 words) + /consolidate = parallel gap work, still green.**
 6. (was 4, historical) **Batch-3 sessions 1–2 record** — **sessions 1 AND 2 CLOSED 2026-07-09.**
    Session 2: 3 shipped (παράπτωμα RED — routing exercise met · συκῆ · βέλος, all off-count via
    escalation), κύων parked (one-verse wall, Deu 23:18), 4-of-4 escalations; count 2/15, streak 0;
