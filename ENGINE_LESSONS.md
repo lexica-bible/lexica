@@ -698,3 +698,14 @@ both drifting from the doc.
     fallback that widens acceptance must announce itself loudly — a silent widening converts a
     numbering botch on a multi-sense card into a false one-sense parse. *(audit: G2168 VOID-floor
     entry, 2026-07-10)*
+
+48. **The citation gate verifies that a verse EXISTS, never WHOSE WORD a quoted phrase belongs
+    to — two-lexeme verses are invisible defect surface.** 1Jn 2:8 carries BOTH truth-adjectives
+    (G227 "true [commandment]", G228 "true light"); two of three ἀληθής build draws bled G228's
+    phrase onto G227 — once as a sense's grounding, once as a Range claim — and every machine
+    gate passed both, because the refs were real. Only the armed hand-read against the verse's
+    word-level tags caught it (reviewer-named class: cross-lemma misattribution). → v2 probe,
+    mechanizable: for each prose claim quoting a phrase of a cited verse, map the phrase's
+    English back to the verse's word rows and flag when it lands on a DIFFERENT Strong's number
+    than the headword. The data already exists per row. *(audit: G227 ἀληθής PARKED entry,
+    2026-07-11)*

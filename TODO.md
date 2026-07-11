@@ -500,7 +500,14 @@ REST of the dotted-Strong's question, none of it gating the rollout:
   Extend the ref scanner to expand "Rom 1:1, 4" / "Lev 21:10, 21:12" tails using the preceding book+chapter,
   so the citation gate + double-shelf detector stop being blind to them (4/4 χριστός draws emitted the class;
   d1's Act 2:36 double-shelf was invisible because of it). A resweep after the fix retro-covers shipped cards.
+  Batch-4 evidence keeps mounting: two more UNSEEN-REAL sets caught only by the mandatory manual tail check
+  (εἰρηνικός ×5, ἀληθής Job 42:8 hiding a double-shelf behind a "42:7–8" range).
   code: scripts/build_lexica_def.py `_REF_RE`/`cited_refs`
+- **Section-matcher shape-conformance sweep (V9_PILE note, 2026-07-11 — decide before batch 5).** Two reader
+  gaps landed in ONE session on the first one-job word (#47 unnumbered one-sense card scored 0; singular
+  "Gloss note:" label leaked the note into Range). Sweep `_SECTION_RE` + `_sense_spans` against every label/
+  shape variant the house style permits, so the next legal variant is found by test, not by a live floor.
+  code: scripts/build_lexica_def.py `_SECTION_RE`/`_sense_spans`/`sense_split_mode`
 Merges with the parked ὀρ-collision retro sweep (step-0 mostly absorbed it). δίδωμι G1325 SHIPPED carries
 a 1-row leak (1325.1 "mortgaged", Neh 5:3) — verified NOT cited in the live card, stands with a provenance
 note; re-ship only if the no-entry remedy changes it. code: scripts/build_dotted_lexicon.py, audit_dotted_lemmas.py
