@@ -98,6 +98,17 @@ Format: date · word · defect class · exhibit pointer · status.
   sense header traceable to ≥1 cited verse that carries it; challenge drafts where a
   header property (persistence, immortality, pre-existence…) appears in no citation.**
   This is the inherited-tradition leak arriving through the one field no gate reads.
+  **Replication note (JP, 2026-07-11): this class replicates across card fields** — the
+  G5590 card restated the overclaim THREE times (sense-4 header · Range sentence "what
+  survives bodily death" · Range tail "trans-mortem identity"); a wording fix must sweep
+  every restatement or the card contradicts itself one screen below the fix. Fix applied
+  2026-07-11 (JP-ruled): sense 4 recut to Mat 10:28's attested scope alone; 1Co 15:45 →
+  sense 1 beside Gen 2:7 (Paul QUOTES Gen 2:7 there); Mar 8:36 RULED sense-1 life-as-stake
+  (decisive datum: 8:35 same lemma in explicit stake wordplay one verse earlier; ruling
+  on record deliberately — this is the immortal-soul tradition's lean verse). Citation-move
+  boundary exception recorded: fix_lexica_raw's cert boundary forbids citation moves, but
+  this card was hand-done pre-pipeline — there is no draw certification to preserve; JP's
+  ruling IS the review.
 - 2026-07-11 · (cross-card) · **audit candidate — hand-done pre-pipeline cards as the
   reservoir for sense-header overclaim (bank, DO NOT RUN):** early hand-authored cards
   predate calibration discipline entirely. Future-window task: identify hand-authored vs
