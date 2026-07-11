@@ -81,6 +81,29 @@ Format: date · word · defect class · exhibit pointer · status.
   (d1 added two more silent doubles, one hidden behind a range tail, manual check caught
   it; d3 then USED the convention correctly on Job 42:7–8 — the mechanism works when
   invoked, the edit's job is making invocation reliable.)
+- 2026-07-11 · G5590 ψυχή · **sense-header overclaim — NEW defect class, JP-caught on a
+  live card (pre-pipeline hand-done card, never went through draw discipline):** the
+  sense HEADER asserts a property its own citations don't carry; citations are real,
+  lemma-tagged, and pass the citation gate — the gate checks verse existence + Strong's
+  tag only, never the header's semantic claim, so an inherited-tradition gloss rides
+  legitimate citations to 38/38 verified. Exhibit (verbatim): sense 4 header "the aspect
+  of a person... that persists beyond bodily death" — Mat 10:28 attests distinct-from-body
+  + not killable by men + explicitly DESTRUCTIBLE by God (ἀπολέσαι, soul and body, Gehenna):
+  the verse DENIES inherent persistence; unqualified "persists" is the immortal-soul
+  doctrine read in. Mar 8:36 contested (eternal-soul vs life-as-stake, cf. Luk 9:56 under
+  sense 1) — using it as a persistence exhibit assumes the conclusion. 1Co 15:45's own
+  card gloss ("merely animate, mortal register") is a sense-1 statement filed under
+  sense 4 — self-contradicting placement. **Rule candidate (bank only, mechanism deferred
+  to the V9 window): header-attestation check — every load-bearing property claim in a
+  sense header traceable to ≥1 cited verse that carries it; challenge drafts where a
+  header property (persistence, immortality, pre-existence…) appears in no citation.**
+  This is the inherited-tradition leak arriving through the one field no gate reads.
+- 2026-07-11 · (cross-card) · **audit candidate — hand-done pre-pipeline cards as the
+  reservoir for sense-header overclaim (bank, DO NOT RUN):** early hand-authored cards
+  predate calibration discipline entirely. Future-window task: identify hand-authored vs
+  pipeline-drawn live cards (date / commit history / absence of draw-cache records) and
+  queue the hand-done set for header-attestation review. Scope unknown; JP rules
+  whether/when.
 - 2026-07-10 · G2168 εὐχαριστέω · **reader section-matcher gaps surface in pairs on
   novel-shape words** (reviewer note, banked): #47's headline gap + the singular "Gloss
   note:" gap landed on the SAME first one-job word — consider a shape-conformance sweep
