@@ -479,7 +479,50 @@ Study's return. Status detail: STATE.md Study line.)
    commit hash. Pre-emptive holds are the same mechanism (the armed hold-outs G1392/G1377/
    G1391 are DATA-BLOCKED before their floors ever run — do not floor them while tagged).
 
-## BATCH-4 RUN SESSION 2 — CC OPENER BLOCK (paste into the new CC session; opens from docs
+## BATCH-4 RUN SESSION 3 — CC OPENER BLOCK (paste into the new CC session; opens from docs
+## alone. State source of truth = wrap commit 8ab9468; do not trust any number in a handoff
+## over the docs at that commit.)
+READ FIRST, in order: (1) this handoff — Queue item 5 (the batch-4 blocks incl. the RUN
+SESSION 2 record); (2) AUDIT_lexica_rollout.md — G227 PARKED entry (top) + G2168 PARKED +
+FLOOR-VOID entries; (3) ENGINE_LESSONS.md #47–#48; (4) V9_PILE.md (carve-invention =
+CONFIRMED V9 EDIT ×5; cross-lemma misattribution = NEW class, 2 exhibits).
+Opening check: `git log --oneline -1` shows 8ab9468 (or a descendant); `grep -c "^48\."
+ENGINE_LESSONS.md` returns 1; `grep -c "G227 ἀληθής — PARKED" AUDIT_lexica_rollout.md`
+returns 1. A failed check = rule-9 caveat, not a hold.
+State at 8ab9468 (pointers, not restatements): count 7/15 name-true (δίκτυον† unchanged,
+chain still QUEUED) · streak 1 · V8 live (stamp `lexica:7ef8620328a9`) · straight-to-10
+standing · 4 parked on the structure-hint shelf (διαιρέω, δόμα, εὐχαριστέω, ἀληθής —
+untouchable until the hint tooling exists) · hold-outs G1392/G1377/G1391 DATA-BLOCKED ·
+queue = 7 words for 8 owed. FIRST ACT = double re-selection, one word at a time, full
+screens each: r15 ἀλλάσσω G236 then r16 κλαυθμός G2805 (both table-walk concurred at s2
+close; local register screens already PASS — re-verify against contested_register.py on
+disk, mechanical). GATE ORDER (re-ruled after two s2 sequence slips — a third is a
+config-test bump signal): screens → pre-reg banked in the reviewer chat → floor →
+adjudication → build draws. NOTHING fires between reviewer concur and the bank.
+Standing procedures unchanged from the s2 opener below, PLUS: pre-pull patterns
+exact-or-dotted (`strongs='NNN' OR strongs LIKE 'NNN.%'`, never bare prefix — data-model
+corollary) · headline-fallback marker = expected on one-sense draws, every fallback draw
+inspected · singular "Gloss note:" now parses (splitter package #2) · floors
+`--word <SID> --runs 10 --prompt v8` · R1 on disk before relay · commit lists not lengths.
+
+## BATCH-4 RUN SESSION 3 — REVIEWER-CHAT INHERITANCE BLOCK (paste into the new reviewer chat)
+You are the reviewer chat for Lexica batch-4 run, session 3. Everything ruled is in the
+repo at wrap commit 8ab9468 — CC reads and relays; your first act = reconcile CC's opening
+summary against the audit doc's G227 PARKED + G2168 PARKED entries and R1-verify 8ab9468
+on disk. State you inherit: count 7/15 (δίκτυον†), streak 1, 4 batch-4 parks all on the
+structure-hint shelf, budget clock RESET per word. Session 2 precedents now in force:
+cross-lemma misattribution is a NAMED defect class (two-lexeme verses; verify whose word a
+quoted phrase belongs to via the verse's word rows — the 1Jn 2:8 tag-pull is the model) ·
+carve-invention is a CONFIRMED V9 edit at ×5 (banks forward, V8 untouched) · pre-clears
+bank BEFORE the build draw (the three G227 pre-clears are the model) · machine hard-blocks
+count as defect-class draws (δόμα d2 + G227 d2 precedents) · the pre-set 3-defect rule
+counts DRAWS not defects. Gate order is the hard line: screens → pre-reg banked HERE →
+floor → adjudication → build draws; two s2 slips are on the ledger and a third bumps the
+config test. First work = double re-selection screens for ἀλλάσσω G236 then κλαυθμός
+G2805, one at a time, no compression.
+
+## BATCH-4 RUN SESSION 2 — CC OPENER BLOCK (SPENT — session 2 CLOSED at 8ab9468; kept as
+## the standing-procedures reference the s3 opener points into. Opens from docs
 ## alone. State source of truth = close commit 25d4a40; do not trust any number in a handoff
 ## over the docs at that commit.)
 READ FIRST, in order: (1) this handoff — Queue item 5 (the batch-4 blocks), then the BATCH-4
