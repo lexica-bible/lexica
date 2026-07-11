@@ -1790,10 +1790,22 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
    words, 3-run retired for the batch, re-open condition SPENT. Roster: 7 words for 8
    owed → εὐχαριστέω G2168 ENTERS BY RE-SELECTION (screens queue next session: GREEN set
    + no-entry dotted pull + Last-Supper gloss watch). V9 case now overwhelming:
-   carve-invention ×4 with edit direction banked (V9_PILE).** NEXT = εὐχαριστέω screens →
-   the eight queued words, straight-to-10 floors, #30 live → GREEN activation, then step
+   carve-invention ×4 with edit direction banked (V9_PILE).** **RUN SESSION 2
+   (2026-07-10/11): εὐχαριστέω G2168 PARKED (JP; pre-set 3-defect rule — carve-invention
+   [V9 instance FIVE → CONFIRMED V9 EDIT, reviewer graduation] / Rom 16:4 verse-confirmed
+   misplacement / Rom 16:4 verse-contradicted claim — the last two ONE stimulus trap, the
+   parenthetical "to whom" mis-resolved; joins διαιρέω + δόμα on the structure-hint
+   shelf). Floor STABLE at mode 1 post-fix. TWO READER GAPS FIXED same session: #47
+   one-sense headline fallback (`40bfc78`; one-job house-shape cards scored 0 senses —
+   first ship-path fallback exercised at d3's dry-run, marker LOUD) + singular "Gloss
+   note:" label leaking the note into Range (splitter package #2). Sequence slips ×2
+   logged as a PATTERN (config-test ledger). Eucharist watch 4-for-4 pass. Count 7/15,
+   streak 1, both unchanged. Roster: 7 words for 8 owed → next-pass-up RE-SELECTION,
+   full screens first. Record = audit doc G2168 PARKED + FLOOR-VOID entries.** NEXT =
+   re-selection (ranker next-pass-up + screens) → the seven queued words, straight-to-10
+   floors, #30 live → GREEN activation, then step
    6 layout. Item-3 tooling (incl. the structure-hint experiment — now the named re-entry
-   path for BOTH parked batch-4 words) + /consolidate = parallel gap work, still green.**
+   path for ALL THREE parked batch-4 words) + /consolidate = parallel gap work, still green.**
 6. (was 4, historical) **Batch-3 sessions 1–2 record** — **sessions 1 AND 2 CLOSED 2026-07-09.**
    Session 2: 3 shipped (παράπτωμα RED — routing exercise met · συκῆ · βέλος, all off-count via
    escalation), κύων parked (one-verse wall, Deu 23:18), 4-of-4 escalations; count 2/15, streak 0;

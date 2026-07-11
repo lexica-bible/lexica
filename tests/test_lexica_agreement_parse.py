@@ -147,6 +147,32 @@ def test_per_sense_parses_all_four_drift_senses():
     assert (B._norm_book("Est"), 4, 1) in s1_refs
 
 
+# Real εὐχαριστέω G2168 build-draw shape (draws 2–3, 2026-07-10): the section label written
+# SINGULAR — "**Gloss note:**" — which the plural-only _SECTION_RE missed, so the note's text
+# leaked into Range (reader-facing) and gloss_notes came back empty. Second reader-blindness
+# gap on the same word (#47's sibling).
+GLOSSNOTE_SINGULAR_RAW = (
+    "**Expressing gratitude directed toward a recipient**\n"
+    "\n"
+    "All occurrences show the lemma performing this single job (Rom 1:8; Luk 17:16).\n"
+    "\n"
+    "**Range:** From a discrete moment before a meal to an encompassing orientation.\n"
+    "\n"
+    "**Gloss note:** The single gloss \"thanks\" is adequate to the range shown.\n"
+)
+
+
+def test_glossnote_singular_label_files_to_gloss_notes():
+    """The fix: the singular label parses as the gloss-notes section — the note lands in
+    gloss_notes and Range stays clean of it; the plural path (HEADERLESS_RAW's real
+    'Gloss notes:' label) is untouched."""
+    fields = B.split_definition(GLOSSNOTE_SINGULAR_RAW)
+    assert "adequate to the range" in fields["gloss_notes"]
+    assert "adequate to the range" not in fields["range"]
+    assert "discrete moment" in fields["range"]
+    assert "mistranslation" in B.split_definition(HEADERLESS_RAW)["gloss_notes"]
+
+
 def test_control_one_sense_fixture_has_no_numbered_sense():
     """Known-positive fire for the headline fallback: NEITHER numbered finder sees anything in the
     raw — that proves the fixture really is the un-numbered one-job shape, so the '== 1' below can
@@ -192,4 +218,5 @@ if __name__ == "__main__":       # runnable as a plain script for the CI / pre-c
     test_control_one_sense_fixture_has_no_numbered_sense()
     test_one_sense_card_parses_via_headline_fallback()
     test_split_mode_reports_headline_fallback_loudly()
+    test_glossnote_singular_label_files_to_gloss_notes()
     print("test_lexica_agreement_parse: ok")

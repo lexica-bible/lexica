@@ -1982,6 +1982,60 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### G2168 εὐχαριστέω — PARKED (batch-4 word 3; JP "park" 2026-07-10/11, run session 2,
+### per the pre-set rule: three defect-class draws on clean data, no draw 4). COUNT 7/15
+### UNCHANGED, STREAK 1 UNCHANGED (a park ships nothing, touches no draft). Re-enters via
+### the structure-hint path (joins διαιρέω + δόμα on that shelf).
+**Fresh floor (post-fallback-fix): STABLE at mode 1, reviewer-concurred.**
+`agreement_G2168_v8_20260710-233602.json` (SAVED) — fed-39 header true (0 OT / 39 NT,
+tripwire pass), spread {1:8, 2:2}, headline-fallback marker fired 8/8 and ALL EIGHT
+inspected (bold-span sweep: only headline + Sub-use/Range/Gloss labels — no hidden
+unnumbered sense structure); all wobbles citation-selectivity folds incl. the Col 1:12
+back-check (God-directed job present in all 10 draws); draw 4 alone accounts for eight
+flagged drops (short citation list). The two 2-sense draws are attested carves of the one
+job (d7 human-recipient, d8 meal). Non-blocking oddity by name: floor d8 files 1Co 14:18
+under BOTH its senses (non-modal shape, within variance).
+**Three build rejects, each caught, by class (#43 shape again):**
+- d1 (key 6b69615d): **carve-invention** — Rom 1:21 solo "negated form" shelf, 0/10 floor
+  attestation (10/10 company with the God-thanks group), #30 live catch; the purest #46
+  self-indicting instance yet: the sense's own prose reads "The lemma's sense is
+  unchanged; the negation is the contextual feature." **V9 carve-invention instance FIVE
+  → reviewer graduation ruling: CONFIRMED V9 EDIT** (V9_PILE updated; banks forward,
+  live V8 untouched).
+- d2: **verse-confirmed misplacement** — Rom 16:4 (thanks TO Prisca/Aquila per stored
+  text "to whom not I only give thanks") filed under a sense DEFINED as "Directed toward
+  God", prose misdescribing it as address-to-God; the floor's one human-shelf draw (d7)
+  had grouped it with Luk 17:16. Ecc 5:1 class. Luk 17:16's own solo shelf in d2
+  adjudicated LEGAL (d7-attested, thin-but-verse-supported, gate 4) — the within-shape
+  attestation law fired both directions in one session.
+- d3: **verse-contradicted claim** — same verse, new mechanism: affirmative false prose
+  ("The gratitude is addressed to God, not to the people named") against the stored
+  text. Otherwise d3 was the batch's cleanest shape: #30 clean, one-sense card through
+  the headline fallback ON THE SHIP PATH (marker printed at the dry-run — first ship-path
+  exercise of the fallback), tails clean.
+**The Rom 16:4 trap (park rationale core):** draws 2 and 3 share one root — the verse is
+a parenthetical aside whose "to whom" resolves back to Prisca and Aquila in 16:3, and the
+model mis-resolves the recipient repeatedly. A stimulus trap (lesson #2 shape), not broad
+engine failure; the structure-hint path can pin the referent — hence park over anything
+harsher. **Eucharist gloss watch: 4-for-4 PASS** across floor d6 + all three build draws
+(d6's "not a developed liturgical category" = the guard as policy, unprompted — banked as
+V8-doing-its-job evidence).
+**SEQUENCE SLIPS ×2 (pattern, config-test ledger item):** (1) the first floor fired before
+reviewer reconciliation + pre-reg banking (ruled separately from that floor's VOID, see
+the entry below); (2) draw 3 fired before splitter package #2 landed (visible cost: the
+gloss-note leak only; the reject grounds sit in the senses block, unaffected). Same shape
+twice in one session — logged as a pattern, not two incidents.
+**SPLITTER PACKAGE #2 SHIPPED (reader gap #2, #47's sibling):** "**Gloss note:**" SINGULAR
+label unrecognized by the plural-only section matcher → note leaked into RANGE
+(reader-facing) and gloss_notes came back empty (build draws 2–3; floor d2/d3 wrote the
+same label). Fix: optional-s in _SECTION_RE + captured-name normalize; pinned by a
+fixture test from the real draw shape; plural path untouched. V9_PILE carries the
+reviewer's pairs-note (shape-conformance sweep of the matcher before batch 5).
+**ROSTER CONSEQUENCE:** 7 words remain for 8 owed → next-pass-up re-selection (the
+mechanism's second firing this batch); screens per the standing rule before anything.
+**Batch-4 scoreboard: 1 shipped counted (εἰρηνικός) · 3 parked with full evidence
+(διαιρέω, δόμα, εὐχαριστέω — all three on the structure-hint re-entry shelf) · 7 queued.**
+
 ### G2168 εὐχαριστέω — FLOOR VOID: READER PARSE GAP (batch-4 word 3, run session 2,
 ### 2026-07-10). Splitter headline-fallback SHIPPED per banked six-item package; fresh
 ### floor pending. COUNT 7/15 UNCHANGED, streak untouched (no draft ever adjudicated).

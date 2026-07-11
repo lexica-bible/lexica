@@ -672,7 +672,7 @@ def run_citation_gate(conn, sid, refs):
 # a PLAIN label whose body opens bold ("Gloss notes: **term**") still loses that opening pair —
 # no draft has produced the shape; the bold-label case ("**Gloss notes:** **term**") is safe because
 # the label's own closing pair is consumed first.
-_SECTION_RE = re.compile(r'^\s*\*{0,2}\s*(senses|range|gloss notes|coverage)\b[\s:]*\*{0,2}[\s:]*(.*?)\s*$', re.I)
+_SECTION_RE = re.compile(r'^\s*\*{0,2}\s*(senses|range|gloss notes?|coverage)\b[\s:]*\*{0,2}[\s:]*(.*?)\s*$', re.I)
 # A sense headline: a bold span starting with "N." — **1. ...**. The elaboration after it (whether
 # on the same line behind a dash, dikaioo-style, or on the next line, psyche-style) is NOT captured.
 _HEADLINE_RE = re.compile(r'\*\*\s*(\d+\.[^*]+?)\s*\*\*')
@@ -758,6 +758,11 @@ def split_definition(prose):
         m = _SECTION_RE.match(ln)
         if m:
             cur = m.group(1).lower()
+            # "Gloss note:" SINGULAR (G2168 draws 2026-07-10): a legal label variant the plural-only
+            # pattern missed — the note leaked into Range (reader-facing) and gloss_notes came back
+            # empty. Normalize the captured name so both spellings file to the same field.
+            if cur == "gloss note":
+                cur = "gloss notes"
             sections.setdefault(cur, [])
             rest = m.group(2).strip()
             if re.fullmatch(r'\(.*?\)\s*:?', rest):   # a lone "(ordered ...):" tail — not body text
