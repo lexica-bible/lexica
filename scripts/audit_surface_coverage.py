@@ -84,6 +84,16 @@ def main():
     rec = Counter()        # recover_stored / recover_echo / no_partner / count_clash
     vm_near = Counter()    # verse_missing: neighbor verse in the scrape has tokens?
     rec_samples = []
+    # no_partner subclasses: WHY is there no leftover token with this number?
+    #   hebrew_number  — OT proper noun keyed to an H-number (can never match Greek;
+    #                    belongs to the PN backfill, NOT the divergence read)
+    #   consumed       — the number IS in the scrape verse but every copy was used
+    #                    by a successful match (a real slot-count imbalance)
+    #   absent         — the number appears nowhere in the scrape verse (true
+    #                    tagging/tokenization divergence: synonym tags, fused tokens)
+    np_sub = Counter()
+    np_by_num = Counter()  # 'absent' slots grouped by Strong's number (finds ἔπω-class hotspots)
+    np_samples = defaultdict(list)
 
     for vid, book, ch, vs, words in iter_db_verses(con):
         slug = bh.slug(book)
@@ -145,10 +155,26 @@ def main():
             fail_by_num = defaultdict(list)
             for i in fails:
                 fail_by_num[a_al[i]].append(i)
+            all_nums = Counter(_norm(b) for b, _g in toks)
             for num, idxs in fail_by_num.items():
                 partners = left.get(num, [])
                 if not partners:
                     rec["no_partner"] += len(idxs)
+                    for i in idxs:
+                        pos, sb, full = words[i]
+                        if sb.startswith("H") or full == "*":
+                            sub = "hebrew_number"
+                        elif all_nums.get(num):
+                            sub = "consumed"
+                        else:
+                            sub = "absent"
+                            np_by_num[num] += 1
+                        np_sub[sub] += 1
+                        if len(np_samples[sub]) < args.samples:
+                            lem = dotted.get("G" + full) or lemmas.get(sb, "")
+                            np_samples[sub].append(
+                                f"{book} {ch}:{vs} slot {pos}  {sb if sb.startswith('H') else 'G' + (full or sb)}"
+                                f"  dict={lem or '?'}  eng=\"{eng.get((vid, pos), '')}\"")
                 elif len(partners) != len(idxs):
                     rec["count_clash"] += len(idxs)
                 else:
@@ -234,6 +260,20 @@ def main():
         print("\n  sample recoveries (what the pairing rule would store):")
         for s in rec_samples:
             print(f"    {s}")
+
+    if np_sub:
+        print("\n== no_partner breakdown ==")
+        print(f"  hebrew_number (OT names — PN backfill's bucket, NOT divergence): {np_sub['hebrew_number']}")
+        print(f"  consumed (number in verse, all copies matched elsewhere)       : {np_sub['consumed']}")
+        print(f"  absent (number nowhere in the scrape verse — true divergence)  : {np_sub['absent']}")
+        print("\n  top 15 Strong's numbers among 'absent' (hotspot lemmas):")
+        for num, n in np_by_num.most_common(15):
+            print(f"    G{num:<7} {lemmas.get(num, '?'):<16} {n}")
+        for sub in ("consumed", "absent", "hebrew_number"):
+            if np_samples[sub]:
+                print(f"\n  -- {sub} samples --")
+                for s in np_samples[sub]:
+                    print(f"    {s}")
 
     print("\n== gap samples ==")
     for c in GAP_CLASSES:
