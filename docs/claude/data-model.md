@@ -89,7 +89,7 @@ from `bh_scrape.db` `bh_words.greek` (the BibleHub ABP scrape) — same text as 
 matches ~91% (Rahlfs/TAGNT capped lower — memory `project_bsb_words`). `/api/chapter` LEFT-JOINs
 it only if present (deploy-safe). bh's Greek
 is accent-only (no breathing marks), so `strip_marks` stores a form ONLY when it differs from
-the lemma by ENDING (no echo lines) → 56% of words show a line. **Backfilled 2026-07-11 by
+the lemma by ENDING (no echo lines) → ~58% of words show a line (post-backfill). **Backfilled 2026-07-11 by
 `scripts/backfill_abp_surface.py`** (+13,851 rows → 359,288): the builder's strict left-to-right
 aligner fails where ABP's printed ENGLISH order (words.position) diverges from the scrape's Greek
 order (bracket reorders, postpositive particles); the backfill pairs failed slots with leftover

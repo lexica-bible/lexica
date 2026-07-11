@@ -709,3 +709,15 @@ both drifting from the doc.
     English back to the verse's word rows and flag when it lands on a DIFFERENT Strong's number
     than the headword. The data already exists per row. *(audit: G227 ἀληθής PARKED entry,
     2026-07-11)*
+
+49. **The sense HEADER is a gate-blind field — an inherited-tradition gloss can ride 38/38
+    verified citations, and it REPLICATES across card fields.** JP caught ψυχή G5590's hand-done
+    (pre-pipeline) card asserting "persists beyond bodily death" in sense 4's header while its
+    own anchor verse (Mat 10:28) explicitly grants God the power to DESTROY the soul; the same
+    overclaim was restated in the Range sentence AND the Range tail ("trans-mortem identity"),
+    and a gloss note carried a fourth echo. The citation gate checks verse existence + Strong's
+    tag, never the header's semantic claim. → two rules: (a) V9 candidate = header-attestation
+    check (every load-bearing header property traceable to ≥1 cited verse that carries it);
+    (b) any wording fix must SWEEP every restatement — header, Range, gloss notes — or the card
+    contradicts itself one screen below the fix. Full class + before/after pair: V9_PILE.md
+    sense-header-overclaim entry (fixed @ 341f493, gate 39/39). *(2026-07-11)*

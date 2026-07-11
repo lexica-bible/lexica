@@ -917,6 +917,13 @@ line untouched (standing non-Greek-reader rule stands). Tools: `scripts/audit_su
 - Rebuild note: after any `build_abp_surface.py` re-run, re-run `backfill_abp_surface.py` then
   `build_abp_translit.py` (backfill is not folded into the builder yet — fold it in if a rebuild recurs).
 
+## Lexica def-engine — small open tickets
+- **Gloss-note claim-checker sprays junk warnings** (seen on the G5590 fix, 2026-07-11): reports a
+  MATCH as a mismatch ("claimed *breath* — corpus renders breath") and treats stray italicized words
+  ("or", whole sentences) as claimed glosses — looks like the quote-extraction pattern grabbing every
+  italic run. Warn-only noise, no wrong writes; fix the extractor when convenient.
+  code: build_lexica_def.py gloss-note validation.
+
 ---
 
 ## Ideas / someday (nothing committed — grab whichever appeals)

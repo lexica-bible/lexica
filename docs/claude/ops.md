@@ -90,6 +90,10 @@ graphs, no rebuild script). LIVE as a daily PA task (13:30 UTC, `--keep 7`). Mem
   (strongs_base invariant, dups, misalignment, fragmented brackets, missing/orphan greek_pos,
   strongs range, lexicon/bdb coverage) + person/place overlap report. Should be 0 warnings.
   `--email [--only-warn] [--email-to=addr]` mails via `mailer.py`.
+  **PLACEMENT RULE (2026-07-11):** any assertion about live PA DATA (row floors, table counts —
+  e.g. the `abp_surface ≥ 359,288` backfill floor) goes HERE, not in pre-commit/CI — those run
+  on the dev box and GitHub where bible.db doesn't exist, so the check would always pass and
+  read as fake coverage. Control-fire every new check on a known-bad input before trusting it.
 - `dedup_words.py` — drops byte-identical duplicate rows (tail safety net, 0-expect). Old
   targeted repairs (fix_greek_pos_gaps, fix_bracket_gaps_absorb, fix_orphan_greek_pos, …) are
   RETIRED to `scripts/graveyard/` (cert Session 2 — build-folded or adjudicated dead; see
