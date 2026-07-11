@@ -109,6 +109,16 @@ Format: date · word · defect class · exhibit pointer · status.
   boundary exception recorded: fix_lexica_raw's cert boundary forbids citation moves, but
   this card was hand-done pre-pipeline — there is no draw certification to preserve; JP's
   ruling IS the review.
+  **FIXED 2026-07-11 (script `scripts/fix_psyche_sense4.sh` @ 341f493, applied on PA;
+  6 swaps, gate 39/39 — +1 = the new cf. Mar 8:35).** Before/after pair for the eventual
+  V9 ruling: BEFORE "The aspect of a person, distinct from the body, that persists beyond
+  bodily death and stands under judgment" → AFTER "The soul as distinct from the body —
+  beyond the reach of human violence, standing under God's judgment, God alone able to
+  destroy it." Corroborating find: the gate shows ABP renders Mar 8:35 "life" — ABP's own
+  translators read the stake wordplay the B ruling rests on. Side observation banked: the
+  gate's gloss-note claim-checker sprays degenerate warns ("claimed *breath* — corpus
+  renders breath" = a MATCH reported as mismatch; treats the word "or" as a claimed gloss)
+  — pre-existing parser noise, its own ticket, not this class.
 - 2026-07-11 · (cross-card) · **audit candidate — hand-done pre-pipeline cards as the
   reservoir for sense-header overclaim (bank, DO NOT RUN):** early hand-authored cards
   predate calibration discipline entirely. Future-window task: identify hand-authored vs
