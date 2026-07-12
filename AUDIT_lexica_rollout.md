@@ -1982,6 +1982,31 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### G2168 εὐχαριστέω — SHIPPED ʰ (batch-5 run session 2, V9 word 5; render gate PASSED
+### by JP 2026-07-12). **SECOND HINTED SHIP — scoreboard 2/7ʰ. The batch's first
+### FIRST-DRAW ZERO-DEFECT ship (G2805 needed the excise).**
+**Floor: `agreement_G2168_v9_20260712-174545.json`** — first V9 floor, UNHINTED, mode 1
+(spread {1:9, 3:1}), fallback marker legible 4/4, STABLE. Real-miss Luk 22:18 in draws
+2/6 (neighbor-slip between fed 22:17/22:19) → **PRE-EMPTIVE PIN 8a9a759, range clause
+included UP FRONT (the G227 lesson applied at floor time, not after a burn) — zero gate
+burns this word vs G227's two. VALIDATED AS THE NEW DEFAULT for neighbor-slip floors.**
+Pre-clears: whole-fold house shape 9/10 · meal carve legal (V8-d8/V9-d5 attested) ·
+d5 legitimacy shelf 1/10 NOT pre-cleared · wobbles trims/folds · denominator 39 occ =
+38 verses.
+**Build draw 1 (key b1c14fb6) = THE SHIP:** coverage 38/38 · citation 38/38 · zero
+real-misses · pin 3 clean on first live draw (no 22:18, verses listed out) · **Rom 16:4
+park defect DEAD ON ARRIVAL** — human-recipient sub-use naming Prisca and Aquila with
+stored wording quoted (both batch-4 exhibits inverted) · Rom 1:21 in-sense negation
+note, no negation shelf · Eucharist guard fired as policy again ("neither narrows the
+word to a specifically liturgical or eucharistic sense") · #30 wall adjudicated
+construction-artifact (2-sense meal carve vs mode-1 floor; meal group kept each other)
+· quote hand-check 8-for-8 incl. **the Rev 11:17 ellipsis — the session's first
+correctly-ellipsed trim on record** · hint-echo scan clean both readers + JP render
+(the Rom 16:4 sub-use = substance-not-echo, the model card for the banked test).
+JP render note banked as a UI pile item: paragraph-length citation-wall parentheticals
+are correct content, presentation question only.
+**Hints 3-for-3 this word; 26-for-26 lifetime.**
+
 ### G236 ἀλλάσσω — RE-PARKED (batch-5 run session 2, V9 word 4; park per the pre-set
 ### rule 2026-07-12, applied under JP's standing delegation; retry-trigger = the NEXT
 ### engine/prompt change, same class as G227/G162). Three defect draws, no draw 4.

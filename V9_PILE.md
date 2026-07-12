@@ -244,3 +244,9 @@ Format: date · word · defect class · exhibit pointer · status.
   API cost, is the binder). Fallback shape if repair underperforms (V11 class,
   multi-session): two-stage draw — roster-assign every fed ref to a sense (machine-
   checked) then write prose from the roster; makes coverage structural.
+- 2026-07-12 · G2168 εὐχαριστέω · **citation-wall rendering — UI design question, not a
+  defect (JP-raised at the render gate):** dense senses carry 25+ quote-plus-reference
+  items inside one paragraph-length parenthetical block (G2805's shipped card same
+  shape). Content correct — it is the coverage gate's 38/38 made visible — but a styled
+  verse-list block may read better than prose brackets. Presentation item for a design
+  pass; stored cards need no change.

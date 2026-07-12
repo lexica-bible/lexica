@@ -542,7 +542,10 @@ banked CHECK-FIRST on the pile). G236 RE-PARKED 2026-07-12 (Dan-trio quote trap:
 banked — model prior + V8 ruling vs fresh floor; retry = next engine/prompt change;
 retry hint candidate drafted-not-added in the park entry). Session split for V10
 sizing: G227+G162 retries = repair-pass territory; G236 retry = verbatim/hint
-territory. Order now: G2168 next.
+territory. **G2168 SHIPPED ʰ 2026-07-12 — scoreboard 2/7ʰ** (first-draw zero-defect
+ship; pre-emptive Luk 22:18 pin w/ range clause = the new default for neighbor-slip
+floors, 8a9a759; Rev 11:17 = first correct ellipsed trim; Rom 16:4 park defect dead;
+hints 26-for-26 lifetime). Order now: G1390 next.
 STATE: V9 LIVE (stamp above; coverage + verbatim-quote lines in the prompt; coverage
 gate BLOCKS ships in validate_entry — refusal names absentees; bypass = existing
 --force-gate-bypass only) · hinted scoreboard 0/7 (superscript-h, never joins 7/15
