@@ -1889,13 +1889,27 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
    interpretive-theological = defect, physical-descriptive = note) · render PASS, alien
    verses GONE from the live card → **RULING-CHAIN (d) CONDITION MET, DAGGER OFF —
    COUNT 7/15 NAME-TRUE NO ASTERISK, STREAK 2.** Record = audit doc δίκτυον REBUILT
-   entry (top).** NEXT =
-   the seven queued
-   words (JP "--proceed"; first = αἰχμαλωτεύω G162, Eph 4:8 quote-crux annotation),
-   straight-to-10 floors, #30 live → GREEN activation, then step 6 layout.
-   BATCH ARITHMETIC FLAG for the close-out: 7 queued for 8 owed and BOTH re-selection
-   slots parked — reaching 8 needs another re-selection or a JP re-rule of the owed
-   number; decision deferred to the batch close, not silently absorbed. Item-3 tooling (incl. the structure-hint experiment — now the named re-entry
+   entry.** **FRAGMENT-RENDERING INVESTIGATION same session (JP-caught): english_head
+   fragments feed the def-engine rendering layer; fleet sweep = ONE hit (δίκτυον work
+   bullet, known-issue logged, dagger STAYS OFF by JP ruling); rendering-layer ticket
+   in TODO. Record = audit doc FRAGMENT-RENDERING entry.** **αἰχμαλωτεύω G162 PARKED
+   same session (JP; 3-defect rule — crux-discipline rotation: d1 double-shelve ×2 /
+   d2 reversal-reach / d3 harmonization-by-summary ["the giving of gifts" vs the
+   psalm's "received"]; crux pair inseparable 10/10 on the floor; d1's crux handling
+   PERFECT — the hint is one sentence. 7th on the shelf. Record = audit doc G162
+   PARKED entry.** **BATCH 4 CLOSED BY JP RULING same session: final 7/15 name-true
+   (δίκτυον rebuilt-clean, σελήνη, ὑπομονή, ταμεῖον, κάλαμος, καταπέτασμα, εἰρηνικός) ·
+   streak 2 · 7 on the structure-hint shelf (διαιρέω, δόμα, εὐχαριστέω, ἀληθής,
+   ἀλλάσσω, κλαυθμός, αἰχμαλωτεύω) · SIX queue words rolled forward UNRUN (ἡσυχάζω
+   G2270, μερίζω G3307, παραπορεύομαι G3899, σιωπάω G4623, ἐκλύω G1590, ἐπανίσταμαι
+   G1881 — the in-chat "4 remain / max 11" was a miscount, corrected in the audit
+   entry; ruling unaffected). Record = audit doc BATCH 4 CLOSED entry.** NEXT =
+   **HINT-TOOLING DESIGN SESSION, not a word run:** hint storage + injection into draw
+   context (extends --structure-hint from job-names to constraint lines — design must
+   draw the pre-registered-constraint vs incumbent-content line explicitly, JP rules) ·
+   the seven shelf words' banked hint lines · the fragment-rendering ticket (same fix
+   layer) · design doc to JP BEFORE any build. Then batch 5 = shelf re-entry with
+   hints + the six rolled-forward words → GREEN activation, then step 6 layout. Item-3 tooling (incl. the structure-hint experiment — now the named re-entry
    path for ALL FOUR parked batch-4 words) + /consolidate = parallel gap work, still green.**
 6. (was 4, historical) **Batch-3 sessions 1–2 record** — **sessions 1 AND 2 CLOSED 2026-07-09.**
    Session 2: 3 shipped (παράπτωμα RED — routing exercise met · συκῆ · βέλος, all off-count via

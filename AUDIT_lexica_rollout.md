@@ -1982,6 +1982,88 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### BATCH 4 — CLOSED BY JP RULING (2026-07-12, run session 3; "yes do all of that").
+### FINAL: COUNT 7/15 name-true (δίκτυον [rebuilt clean, dagger off], σελήνη, ὑπομονή,
+### ταμεῖον, κάλαμος, καταπέτασμα, εἰρηνικός — the committed s2 list, verified against
+### the docs) · STREAK 2 · 7 words on the structure-hint shelf · queue rolled forward.
+**Why closed:** the 15-count was unreachable and the parks converged on one conclusion —
+the engine's residual failure modes are one-line-hintable (three distinct signatures:
+G236 placement · G2805 one interpretive referent · G162 crux-discipline rotation), while
+mechanics ran near-perfect. JP ruled: stop the grind, build the hint tooling, bring the
+shelf back through with hints attached.
+**RECORD CORRECTION (counts are names):** the in-chat close discussion said "4 queue
+words remain / max 11" — the doc roster says SIX unrun queue words roll forward:
+ἡσυχάζω G2270, μερίζω G3307, παραπορεύομαι G3899, σιωπάω G4623, ἐκλύω G1590,
+ἐπανίσταμαι G1881 (max was 13). Ruling unaffected — the decision was grind-vs-tooling,
+not arithmetic — but the record carries the named list.
+**Structure-hint shelf (7, the batch-5 re-entry set, each with banked hints):**
+διαιρέω G1244 · δόμα G1390 · εὐχαριστέω G2168 · ἀληθής G227 · ἀλλάσσω G236 ·
+κλαυθμός G2805 · αἰχμαλωτεύω G162. (πολύς, ἄκανθα, κύων remain parked on their own
+non-hint terms.) Companion work in the same build window: the fragment-rendering
+ticket (TODO) — the other half of the same fix layer.
+**NEXT SESSION = HINT-TOOLING DESIGN, not a word run.** Scope: hint storage + injection
+into draw context (the --structure-hint mechanism exists for jobs; this extends to
+constraint lines) · the seven words' hint lines · the rendering-layer ticket · design
+doc to JP for ruling BEFORE any build. **Design flag banked (reviewer):** hints injected
+into draw context brush against the incumbent-comparison rule's spirit (never feed
+adjudication content to draws) — hints are PRE-REGISTERED CONSTRAINTS, not incumbent
+content; the design doc must draw that line explicitly and JP rules on it.
+
+### G162 αἰχμαλωτεύω — PARKED (queue word 1; JP, 2026-07-12, run session 3, pre-set
+### 3-defect rule). COUNT 7/15 UNCHANGED, STREAK 2 UNCHANGED. 7th on the structure-hint
+### shelf. 13 draws by name: 10 floor + 3 build.
+**Screens (all PASS; gate order held — floor fired at 05:59 on a banked pre-reg, the
+mid-session investigation hold landed on ADJUDICATION, not sequence):** register 0-hit ·
+2Co 5:21 = 0 · pre-pull FULLY CLEAN: 36 verses / 40 occ, 40/0 split, side table empty
+(backed clean), doubles 2Ch 6:36 ×2, 2Ch 6:38 ×2, Eze 12:3 ×2, Amo 5:5 ×2, 34 OT verses
+(38 occ) / 2 NT (2 occ) · loaded-referent PASS (ascension watch armed) · fork-adjacency:
+richest cousin family of the batch — G161 αἰχμαλωσία IS the object noun inside Eph 4:8
+(one verse, two lexemes), G163 holds Rom 7:23/2Co 10:5/Luk 21:24, G164 holds Luk 4:18,
+all zero-in-table; none ever fired across 13 draws.
+**Floor:** `agreement_G162_v8_20260712-055929.json` (SAVED) — header true (fed 40,
+38 OT / 2 NT), spread {2:4, 3:5, 4:1} mean 2.7, three-block anatomy: military core rock ·
+**crux pair Psa 68:18↔Eph 4:8 INSEPARABLE 10/10** (the δόμα pattern on the verb side;
+three attested homes, never split) · 2Ti 3:6 never joins the literal mass (10/10).
+All 19 wobbles folds (4 back-checks done). STABLE. Pre-clears banked incl. crux-together
++ 2Ti-either-home + Eze 12:3 sign-act; NOT pre-cleared: d5 city carve, d9 goods carve,
+d4 literal-on-figurative. Reviewer self-correction on the record: pair-alone home = 2/10
+(d1+d8), resolved to three-homes-attested.
+**Three build rejects (key ad9d39fa), the crux-discipline layer rotating — a DIFFERENT
+failure each draw, everything else near-perfect:**
+- d1: **double-shelving ×2** (1Ch 5:21 + 2Ch 21:17 in senses 1 and 2, machine-caught,
+  named-dual not invoked — the class fires on genuinely-straddling verses, 4th word this
+  session). Everything else: crux PERFECT (both texts quoted verbatim [JP pull verified],
+  divergent verbs preserved "received"/"gave", quotation named, no merge, no ascent
+  adjudication) · property carve fired as un-pre-cleared → adjudicated LEGAL-THIN
+  (d9-attested, Luk 17:16 precedent) · Eze 12:3 simile gloss-claim verse-verified TRUE ·
+  G161 named-without-content-claim (the tag-pull behavior wanted). *perform*-italics
+  warn = checker noise, new flavor (emphasis markup read as gloss claim).
+- d2: **crux interpretive reach** — "the victorious figure turns captivity upon those
+  who held it": a reversal narrative (captors become captives) no cited text states;
+  the #49 family on the armed referent; d1 proved the grammar ceiling was holdable.
+  Sharpened double-shelve watch HELD (straddlers as sub-use inside one sense). Isa 49:24
+  figurative grouping fired → LEGAL-THIN via d5 (49:25 rides the same oracle exchange,
+  flag logged). Eph 4:8 quote dropped "into the height" mid-quote without ellipsis =
+  the G2805 misquote class, now cross-word (fix-on-ship note).
+- d3: **crux harmonization-by-summary** — the idiom described as "applied to an ascent
+  into the height and THE GIVING OF GIFTS" jointly for both texts, where the psalm's
+  stored text reads "you RECEIVED gifts by men" (δόμα-d1 class, softened from false
+  quote to false joint description — softening doesn't rescue it; this word's own d1
+  did the pass-shape perfectly). Everything else the batch-best: Amo 1:6 double-shelve
+  warn = FALSE POSITIVE (prose mention per the convention, grounding list is 4 refs —
+  scanner can't tell mentions from citations, checker-ticket exhibit) · Eze 12:3 #30 =
+  pre-clear 3 exactly · christological parenthesis = attribute-don't-adjudicate done
+  right · quotes verbatim · reversal claim gone (d2's defect fixed).
+**Hint candidates for re-entry (reviewer-banked, sharpest of the shelf):** (1) "Psa
+68:18 received / Eph 4:8 gave — describe each, never summarize jointly" (one sentence);
+(2) named-dual discipline on straddling verses; (3) the reach ceiling (banked at G2805).
+**Pre-clear system note:** three fires this word (property carve, Isa 49:24 grouping,
+Eze 12:3) all adjudicated legal-thin on floor attestation — the budget was spent
+entirely on genuine crux failures.
+**Ruling chain:** CC defect calls → reviewer concur each draw (harmonization ruling
+with the mitigating-reading analysis on the record) → JP park (within the batch-close
+ruling).
+
 ### FRAGMENT-RENDERING INVESTIGATION + FLEET SWEEP — RUN + CLOSED (2026-07-12, run
 ### session 3; JP-caught on the live δίκτυον card mid-session, G162 floor HELD during).
 ### RULINGS (JP): dagger STAYS OFF · G162 released · session continues.

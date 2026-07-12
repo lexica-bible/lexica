@@ -163,6 +163,29 @@ Format: date · word · defect class · exhibit pointer · status.
   variant:** d3 filed Jer 3:21 under "Rachel's weeping" — verse-confirmed "sons of
   Israel" (Rachel = Jer 31:15–16). Sibling of cross-lemma misattribution: right word,
   wrong named subject. Exhibit: G2805 PARKED entry.
+- 2026-07-12 · G162 αἰχμαλωτεύω · **cross-sense double-placement — two more exhibits
+  (d1: 1Ch 5:21 + 2Ch 21:17), and the fix-design framing banked (reviewer):** the class
+  fires on verses whose content GENUINELY straddles a seam (persons+property raids here;
+  Lev 27:10's good-for-bad; Job 42:7–8) — the engine's instinct is right, the citation
+  discipline fails. d2 then held the sharpened watch by putting straddlers in a sub-use
+  inside ONE sense — evidence the correct resolution is reachable. Exhibits: G162 PARKED
+  entry.
+- 2026-07-12 · G162 αἰχμαλωτεύω · **quote-crux harmonization — SECOND word (δόμα the
+  first): d3's joint description "the giving of gifts" over a psalm whose stored text
+  reads "received."** Harmonization-by-summary = the class extends beyond false quotes
+  to false joint descriptions. Same word's d1 executed the pass-shape perfectly —
+  rate, not capability. Exhibit: G162 PARKED entry.
+- 2026-07-12 · G162 αἰχμαλωτεύω · **#49 reach family — d2 "turns captivity upon those
+  who held it" (reversal narrative no text states), on the armed ascension referent.**
+  Third word carrying the family (G2805, δίκτυον-noted, G162). Exhibit: G162 PARKED
+  entry.
+- 2026-07-12 · G162 αἰχμαλωτεύω · **checker-ticket exhibits ×2:** emphasis italics read
+  as a gloss claim (*perform*, d1) · prose MENTION counted as a citation (Amo 1:6 d3
+  false-positive double-shelve warn — the scanner can't tell the convention's legal
+  cross-reference form from a grounding citation). Both ride the rendering-layer ticket.
+- 2026-07-12 · (batch-wide) · **verbatim-quote discipline — THIRD word (G162 d2 dropped
+  "into the height" mid-quote, no ellipsis; G2805 ×3; G236).** The V9-general candidate
+  hardens: quotes inside quotation marks match verses.text verbatim or carry ellipses.
 - 2026-07-10 · G2168 εὐχαριστέω · **reader section-matcher gaps surface in pairs on
   novel-shape words** (reviewer note, banked): #47's headline gap + the singular "Gloss
   note:" gap landed on the SAME first one-job word — consider a shape-conformance sweep
