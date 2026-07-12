@@ -751,7 +751,14 @@ def main():
             raw = draw_once(client, system, sid, ev["translit"], ev["gset"], ev["ctx"], ev.get("pmap"))
             draws.append(parse_draw(conn, sid, raw))
             fb = " — headline fallback" if draws[-1].get("split_mode") == "headline" else ""
-            print(f"   draw {k + 1}/{args.runs}: {draws[-1]['count']} senses{fb}", flush=True)
+            # V9 fed-coverage count, INFO ONLY — trimming is floor-legal (JP clarification,
+            # G2805 pre-clears); the SHIP gate lives in build_lexica_def.validate_entry.
+            fed_keys = {(c[0], c[1], c[2]) for c in ev["ctx"]}
+            drawn = {r for s in draws[-1]["senses"] for r in s["refs"]}
+            cov = sum(1 for kk in fed_keys if kk in drawn)
+            print(f"   draw {k + 1}/{args.runs}: {draws[-1]['count']} senses{fb} — "
+                  f"fed coverage {cov}/{len(fed_keys)} (INFO — trimming is floor-legal)",
+                  flush=True)
         report = render_report(sid, ev["lemma"], ev["translit"], args.prompt, ev, draws, valid_books)
         print("\n".join(report))
         nst = sum(1 for d in draws if d.get("raw_count", d["count"]) > d["count"])

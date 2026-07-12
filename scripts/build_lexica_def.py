@@ -686,6 +686,25 @@ def cited_refs(text):
     return out
 
 
+def coverage_gate(fed_refs, senses_block):
+    """V9 COVERAGE GATE (JP-ruled 2026-07-12, DESIGN_v9_lines.md): every FED occurrence must
+    appear as a citation in the SENSES block — trimming is a ship defect (floor-legal only,
+    never ship license; the G2805 clarification moved into code). Scanned by the production
+    ref_spans (never a copy), so range-interior and comma/semicolon tail refs count (#28).
+    Ref-level: a verse fed twice (Amo 5:5 ×2 class) is covered by one citation. Range/
+    gloss-note appearances do NOT count — 'cited under a sense' is the ruled bar.
+    Returns the uncited fed refs as 'Book c:v' strings, fed order, de-duped ([] = clean)."""
+    cited = set(ref_spans(senses_block or ""))
+    out, seen = [], set()
+    for key in fed_refs:
+        if key in seen:
+            continue
+        seen.add(key)
+        if key not in cited:
+            out.append(f"{key[0]} {key[1]}:{key[2]}")
+    return out
+
+
 _VALID_BOOKS = None
 def _valid_books(conn):
     global _VALID_BOOKS
@@ -1643,6 +1662,22 @@ def validate_entry(entry):
                 f"citation gate FAILED — {len(failed)} cited verse(s) don't check out "
                 f"(real {a.get('real', 0)} / no-verse {a.get('noverse', 0)}: {', '.join(failed)}). "
                 f"Fix the raw with fix_lexica_raw.py, or pass --force-gate-bypass \"reason\".")
+    # V9 COVERAGE GATE (JP-ruled 2026-07-12): fed_uncited is stamped at the call site — the
+    # one place the fed sample exists. None = not checked this pass (resplit re-splits stored
+    # prose with no fed sample; the call site prints that loudly, never skips silently).
+    # Bypass rides the SAME --force-gate-bypass path as the citation gate — no new surface.
+    uncited = a.get("fed_uncited")
+    if uncited:
+        if a.get("bypass_reason"):
+            print(f"  ⚠ coverage gate BYPASSED for {entry['strongs']} ({len(uncited)} fed "
+                  f"occurrence(s) uncited: {', '.join(uncited)}) — reason stored: "
+                  f"{a['bypass_reason']}", file=sys.stderr)
+        else:
+            problems.append(
+                f"coverage gate FAILED — {len(uncited)} fed occurrence(s) never cited under a "
+                f"sense: {', '.join(uncited)}. Every fed occurrence must appear in the senses "
+                f"block (trimming is a defect — V9 ruling 2026-07-12). Fix the raw, or pass "
+                f"--force-gate-bypass \"reason\".")
     return problems
 
 
@@ -2054,11 +2089,24 @@ def main():
 
         entry = assemble(conn, sid, lemma, translit, raw)
         entry["synth_ver"] = stamp
+        # V9 coverage gate input — the fed sample only exists on draw/apply passes.
+        if args.resplit:
+            entry["audit"]["fed_uncited"] = None
+            print("  ⚠ coverage gate NOT RUN — resplit re-splits stored prose; no fed sample "
+                  "on this pass.")
+        else:
+            fed_keys = [(c[0], c[1], c[2]) for c in ctx]
+            entry["audit"]["fed_uncited"] = coverage_gate(fed_keys, entry["senses_block"])
+            n_fed = len(set(fed_keys))
+            print(f"  coverage gate: {n_fed - len(entry['audit']['fed_uncited'])}/{n_fed} "
+                  f"fed refs cited under a sense.")
         # Bypass ordering: stamped AFTER assemble (so the audit buckets exist), BEFORE
-        # validate_entry reads it — and ONLY on a word whose gate actually failed, so a clean
-        # word in the same batch never carries a stale bypass note.
-        if args.force_gate_bypass and any(
-                m["bucket"] in ("real", "noverse") for m in entry["audit"]["misses"]):
+        # validate_entry reads it — and ONLY on a word whose gate actually failed (either
+        # gate: citation misses OR uncited fed refs — a pure widening, no term removed),
+        # so a clean word in the same batch never carries a stale bypass note.
+        if args.force_gate_bypass and (
+                any(m["bucket"] in ("real", "noverse") for m in entry["audit"]["misses"])
+                or entry["audit"].get("fed_uncited")):
             entry["audit"]["bypass_reason"] = args.force_gate_bypass
         # #30 floor-vs-ship placement diff (flag-only). The record lands in the entry (and so on
         # an applied row) ONLY when a floor was diffed; a resplit pass never nags about it.

@@ -36,6 +36,7 @@ jobs:
           python tests/test_lexica_section_split.py
           python tests/test_section_matcher_sweep.py
           python tests/test_ref_tail_expansion.py
+          python tests/test_coverage_gate.py
           python tests/test_helper_double_tag.py
 
   frontend:
