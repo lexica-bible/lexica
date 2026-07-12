@@ -507,8 +507,66 @@ Study's return. Status detail: STATE.md Study line.)
 ## ledger note: the item-6 determinism evidence + raw PA output were reposted at close
 ## (owed item cleared).
 
-## V11 DESIGN PASS — CC OPENER BLOCK (paste into the new CC session; opens from docs
-## alone. State source of truth = the V10-close commit f654dbb or a descendant.)
+## V11 BUILD SESSION — CC OPENER BLOCK (paste into the new CC session; opens from docs
+## alone. State source of truth = the V11-design-close commit or a descendant of
+## fb8fe46.)
+V11 BUILD SESSION — the three prose-defect detectors. NO word runs (no floors, draws,
+applies, re-entries) until mechanism acceptance (all controls green). ("me/I" = JP.)
+STANDING DELEGATION IS LIVE (memory feedback_no_questions_standing_delegation): no
+decision questions to JP; CC+reviewer recommendations apply as rulings with delegation
+notes; JP touchpoints = paste-ready commands, screenshots, ship/park notices.
+READ FIRST, in order: (1) DESIGN_v11_acceptance.md IN FULL — STATUS = RULED-CLOSED,
+reviewer amendments folded in as BINDING; the probe-1 data-source replacement (live
+verses.text lookups, the citation gate's pattern) and the open-warn-blocks-apply
+red-first control are GATE CONDITIONS for mechanism acceptance; (2) AUDIT — the V11
+DESIGN PASS entry + the V10 ACCEPTANCE TEST entry (the six defects = the fixture
+sources); (3) ENGINE_LESSONS #48–#50.
+Opening check: `git log --oneline -1` = the V11-close commit or descendant · `python
+tests/test_repair_pass.py` ok · `python tests/test_coverage_gate.py` ok · R1: raw
+reposts, never references, both sides.
+BUILD ORDER (ruled, in the doc): normalization table authored + ruled FIRST (each row
+exhibit-justified or conservative-strict; the G162 "into the height" drop + the
+dash-expansion CHECK-FIRST item are the known traps — resolve the dash question here) ·
+probes 1+2 + scanner 3 in validate_entry, shown IN FULL before commit · controls
+RED-FIRST from the six banked defects, embedded-text fixtures (test_coverage_gate.py
+pattern; PA cache consulted ONCE read-only for authoring, tests never touch it) incl.
+the open-warn-blocks-apply must-fails · both CI lists · neighbor tests green. Probe-2
+whitelist + scanner-3 pattern list VERSIONED, stamps on the draw record.
+THEN (run session, may be a fresh sitting): signature math re-verified per word BEFORE
+the first draw (fresh floors if it says so, no argument) · G1390 → G227 → G162, one at
+a time, own records, no N-of-3 bar · G236 AFTER the three (its retry trigger FIRES at
+mechanism acceptance — ruled; outside the falsifier count). Falsifier live: probe-spec
+miss → fix + re-red-first; ≥2 squeeze words dying human-only → (b) exhausted, (c) is
+next-pass scope. NO APPLY EVER for the dead cached G227/G1390 cards.
+Shelf (not this session unless ruled in): hint-echo detector ticket · G236's drafted
+Dan-trio hint needs amendment-2 at re-entry · repair-record refs-overclaim nit ·
+repaired-cache-hit hint-counter question (UNRULED, carried).
+Standing rules carry: R1 · counts are names · bank on reviewer relay · big output →
+file · exact-or-dotted BOTH clauses · show code before changing it · one gate, one
+command, in order · JP runs all PA commands.
+
+## V11 BUILD SESSION — REVIEWER-CHAT INHERITANCE BLOCK (paste into the new reviewer chat)
+You are the reviewer chat for the Lexica V11 build session. First act = R1-verify the
+V11-close commit on disk (raw repost). You inherit: V11 design RULED-CLOSED same day as
+the pass (DESIGN_v11_acceptance.md; your predecessor's binding amendments are IN the
+doc — verify the committed text matches: probe-1 data-source replacement, normalization
+table before red-first, open-warn-blocks-apply control, whitelist/pattern versioning,
+fixture self-containment, G236 sequencing + its retry-trigger YES ruling). Scoreboard
+2/7ʰ · hints 35-for-35 (cache-hit question UNRULED) · G227 parked THIRD · G162 never
+battery-tested (least-known, not healthiest) · housekeeping lock: no apply ever for the
+two dead cached cards. Your duties: full-code read of all three detectors BEFORE
+commit · every control red-first before any zero is trusted (incl. the open-warn
+control — it is a GATE CONDITION) · normalization table ruled before controls run ·
+hold the one-gate-one-command order · signature math per word before the run session's
+first draw. Ledger carried: V10 sequence slip (command posted past the math gate) ·
+R1 slips both directions · CC's probe-1 data-source overclaim caught at your
+predecessor's code read (verify-before-claim applies to design docs too); open slow.
+
+## V11 DESIGN PASS — CC OPENER BLOCK (SPENT — session ran + RULED-CLOSED 2026-07-12:
+## path (b) adopted — repair stands + three detectors; reviewer amendments binding,
+## folded into DESIGN_v11_acceptance.md; G236 retry-trigger ruled YES at mechanism
+## acceptance; audit entry = the authority. Paste into the new CC session; opens from
+## docs alone. State source of truth = the V10-close commit f654dbb or a descendant.)
 V11 DESIGN PASS — the revised acceptance path for the squeeze-class parks. NO word runs
 (no floors, draws, applies, re-entries) and NO code until the design is ruled — same
 hard gate shape as the V9/V10 design passes. ("me/I" = JP.) STANDING DELEGATION IS LIVE
@@ -545,7 +603,8 @@ Standing rules carry: R1 · counts are names · bank on reviewer relay · big ou
 file · exact-or-dotted BOTH clauses · show code before changing it · one gate, one
 command, in order · JP runs all PA commands.
 
-## V11 DESIGN PASS — REVIEWER-CHAT INHERITANCE BLOCK (paste into the new reviewer chat)
+## V11 DESIGN PASS — REVIEWER-CHAT INHERITANCE BLOCK (SPENT — session ran +
+## RULED-CLOSED 2026-07-12; paste into the new reviewer chat)
 You are the reviewer chat for the Lexica V11 design pass. First act = R1-verify f654dbb
 on disk (raw repost). You inherit: V10 repair mechanism BUILT + VALIDATED 2-for-2 at
 36dab20 (single-round fires, gates green, structure guard held, echo scans clean,

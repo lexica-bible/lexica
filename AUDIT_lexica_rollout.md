@@ -4208,3 +4208,45 @@ any comparison; the real περιτομή floor starts from zero with `lexica_ag
 drafting session had flagged the line but committed the flag without the fix — the exact
 copy-a-stamped-command failure R4 exists to prevent, demonstrated live. Resume block corrected
 same day (verified against `scripts/lexica_agreement.py` on disk, not just help text).
+
+### V11 DESIGN PASS — RULED-CLOSED (2026-07-12; reviewer full read same day, verdict
+### RULED-CLOSED with binding amendments; CC concurrence on record; applied under JP's
+### standing delegation. NO code, NO word runs this session — design only, per charter.)
+**Scope answered:** the revised acceptance path for the squeeze-class parks (G227, G162,
+G1390). Candidate paths adjudicated on record — (a) fresh rolls alone REJECTED (the
+killed d3s WERE same-session fresh draws carrying the defects; "re-rolls don't converge"
+already on record; fresh rolls rejected AS THE MECHANISM, not as the retry vehicle);
+(c) two-stage roster draw DEFERRED not killed (coverage is solved — repair 2-for-2;
+a roster has zero purchase on prose rot; stays the fallback if (b)'s falsifier trips);
+**(b) ADOPTED: repair stands as built + three targeted prose-defect detectors** —
+probe 1 verbatim-quote GATE (block, adjudicated-bypass; catches V10 defects 5+6, the
+G236 Dan-trio class, G162 d2, G2805 ×3), probe 2 named-subject WARN (the #48/#50 probe;
+catches the Jehoiada + Eliphaz misattributions; warn-not-block because the standing
+sub-rule is a HUMAN kill rule and the machine is the candidate-finder; open warn blocks
+apply), scanner 3 identity-claim WARN (the false "worded identically" class, one
+exhibit, pattern list versioned). Semantic inversion (2Sa 19:42) stays human-only,
+named as the residual; full battery runs on every machine-passing card (lesson #50b).
+**Reviewer catches folded as BINDING amendments** (all in DESIGN_v11_acceptance.md):
+the draft's probe-1 data-source claim was WRONG (coverage gate holds fed keys not
+texts; quoted spans can cite non-fed refs) — replaced with live verses.text lookups via
+the citation gate's existing pattern (build_lexica_def.py 472/1208/1427), NOT-RUN-loudly
+convention; normalization table ruled BEFORE red-first; defect-4 SHIP-BLOCKER severity
+restored to the evidence table; probe-2 whitelist + name-extraction pinned and
+versioned; **open-warn-blocks-apply gets its own red-first control (GATE CONDITION)**;
+CI fixtures self-contained (embedded texts, test_coverage_gate.py pattern; PA cache
+consulted once read-only for authoring only); G236 sequenced AFTER the squeeze three,
+outside the falsifier count.
+**Acceptance path — the V10 criterion error corrected:** mechanism acceptance =
+controls only, no ship count; word re-entry = per-word, one at a time, own record, no
+N-of-3 bar ("a park is a park, not a design failure"); design-level falsifier stated
+now (probe-spec breach → fix + re-red-first; ≥2 squeeze words dying human-only →
+path (b) exhausted, (c)/per-claim-verification becomes next-pass scope).
+**G236 retry-trigger RULED: YES** — probe 1 landing fires it, effective at mechanism
+acceptance (controls green); trigger state only, runs after the squeeze three, kill set
+joins its pre-clears.
+**Constraints verified one-by-one at the read (reviewer record):** review-what-ships,
+frozen V9 prompt, edited-draw refusal, the G227/G1390 no-apply housekeeping lock, hint
+counter 35-for-35 with the cache-hit question still UNRULED, all intact.
+**Next:** build session per the doc's Build order (probes shown in full before commit,
+controls red-first, both CI lists); then run session G1390 → G227 → G162, then G236.
+One gate, one command, in order.
