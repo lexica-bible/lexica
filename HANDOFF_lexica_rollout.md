@@ -538,7 +538,11 @@ notices. Covers checkpoint classes (register edits, fix paths) via the delegatio
 Memory: feedback_no_questions_standing_delegation.
 G162 RE-PARKED 2026-07-12 (three non-overlapping single defects, both hints 6-for-6;
 retry = next engine/prompt change, same class as G227; dash-expansion scanner question
-banked CHECK-FIRST on the pile). Order now: G236 next.
+banked CHECK-FIRST on the pile). G236 RE-PARKED 2026-07-12 (Dan-trio quote trap: hybrid ×2 + composite; Gal 4:20 arc
+banked — model prior + V8 ruling vs fresh floor; retry = next engine/prompt change;
+retry hint candidate drafted-not-added in the park entry). Session split for V10
+sizing: G227+G162 retries = repair-pass territory; G236 retry = verbatim/hint
+territory. Order now: G2168 next.
 STATE: V9 LIVE (stamp above; coverage + verbatim-quote lines in the prompt; coverage
 gate BLOCKS ships in validate_entry — refusal names absentees; bypass = existing
 --force-gate-bypass only) · hinted scoreboard 0/7 (superscript-h, never joins 7/15

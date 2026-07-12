@@ -1982,6 +1982,54 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### G236 ἀλλάσσω — RE-PARKED (batch-5 run session 2, V9 word 4; park per the pre-set
+### rule 2026-07-12, applied under JP's standing delegation; retry-trigger = the NEXT
+### engine/prompt change, same class as G227/G162). Three defect draws, no draw 4.
+### HINTED SCOREBOARD stays 1/7ʰ. Hints 2-for-2 all three draws (23-for-23 lifetime).
+**Floor: `agreement_G236_v9_20260712-165959.json`** — first V9 floor, UNHINTED, spread
+{1:1, 2:8, 3:1} mean 2.0, STABLE, zero real-miss flags; V8 two-shelf anatomy held
+(substitution vs transformation). Coverage 33/33 in seven draws. Pre-clears banked incl.
+the NARROWED trade-cluster wording (fold attested 9/10, own-shelf legal-thin) and all
+four wobbles folds. **SEQUENCE BREACH ledgered: the floor fired before the pre-reg
+banked (relay gap) — retro-banked option (a), unhinted floor = no input difference;
+second sequence entry of the session (with the joint-go slip).**
+**REGISTER AMENDMENT AT RE-ENTRY (fdd185d): the Gal 4:20 clause REMOVED from hint 1** —
+the fresh floor homes Gal 4:20 with substitution 7–8/10 vs the V8-era transformation
+pin; floor-is-ground-truth, reviewer-ruled under the standing delegation. Isa 40:31/41:1
+pin stayed (floor agrees, 8/10).
+**The three draws (key 7659b2ae rotating), the DAN-TRIO QUOTE TRAP the through-line:**
+- d1: gates GREEN (33/33 + 33/33) — REJECT on the hand-check: **in-quote HYBRID
+  "seven seasons shall change over him"** — 4:16 reads "seven TIMES … over HIM",
+  4:25/32 read "seven SEASONS … over YOU"; seasons-wording welded to the him-ending,
+  matches NO verse. Cites 4:25/32 while borrowing 4:16's pronoun — citation gate passes
+  while the quote is fabricated; ONLY the stored-text hand-check sees this class.
+  Everything else held (hints, doubles single-homed with counts, Gal 4:20 per floor,
+  transplant avoided, no echoes; gloss-note warn wall = documented checker noise).
+- d2: machine coverage 32/33 (Dan 4:32 via the bare "4:25 and 4:32" fragment class) +
+  **the HYBRID RECURRED verbatim** + Gal 4:20 and 1Ki 5:14 filed transformation vs
+  their 8–9/10 substitution floor homes (notes on a dead draw).
+- d3: gates GREEN — REJECT on adjudication: Dan 4:16 SILENT double-shelve (senses 1+3,
+  machine-flagged, no named-dual prose) + the quote became a slash-COMPOSITE
+  "times/seasons … him/you" (matches no verse, names no member; discloses the variation
+  — progress — but not the ruled quote-one-name-it shape) + misplacement cluster
+  (Dan 4:25/32 as "seasons substituted" vs 8–9/10 transformation partners; Jer 13:23
+  pulled; Gal 4:20 "kept none").
+**THE NAMED TRAP: the Dan 4:16 / 4:25 / 4:32 trio** — three draws, three failures of
+one discipline (hybrid, hybrid, composite). Hint candidate DRAFTED for the retry, NOT
+added (needs its own amendment-2 cycle): "Dan 4:16 reads 'seven times shall change over
+him'; Dan 4:25/4:32 read 'seven seasons shall change over you' — quote one verse and
+name it, never blend the pair."
+**THE GAL 4:20 ARC (the retry session's key datum, full chain):** the V8 park pinned it
+to transformation → the fresh V9 floor voted substitution 7–8/10 → the pin was removed
+on floor-is-ground-truth grounds (fdd185d) → the model then filed it transformation
+anyway, TWICE, "kept none." The model's prior and the V8 ruling agree with each other
+AGAINST the fresh floor — either the V8 reading saw something real, or the prior is
+sticky. The retry adjudicator rules it with this whole chain in hand.
+**Coverage note: the squeeze barely bit this word (33/32/33 of 33) — the kills were
+quote-discipline and placement classes, which the V10 repair pass does NOT fix. G236's
+retry rides the verbatim machinery / register hint, unlike G227+G162 (whose retries the
+repair pass ships directly).**
+
 ### G162 αἰχμαλωτεύω — RE-PARKED (batch-5 run session 2, V9 word 3; JP park per the
 ### pre-set rule 2026-07-12, retry-trigger = the NEXT engine/prompt change, same class
 ### as G227's second park). Three defect draws, no draw 4. HINTED SCOREBOARD stays 1/7ʰ.
