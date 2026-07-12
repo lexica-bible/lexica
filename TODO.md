@@ -466,7 +466,43 @@ revisit pass. First two banked items:
    list of known contested passages (Psa 82, Gen 6:1-4, …) fed to the prompt; (c) AUDITABILITY — panels
    regenerate and a prompt edit overwrites the category's cached rows, so exhibits vanish; ai_search_cache
    is the partial exhibit trail (this one survived because the xref prompt hasn't changed since 07-06).
+   **The exhibit is the HARDER variant:** the panel is about 1 Cor 8:5 and adjudicates Psa 82 IN PASSING,
+   via a cross-reference — so a contested-passage caution list keyed to the panel's OWN passage would
+   miss it. Any fix must cover contested passages CITED BY a panel, not just panels ON contested passages.
+   **Best diagnostic lead:** same model, same corpus, same passage — the chapter summary hedged right,
+   the Connection panel didn't. Start the future window by diffing those two prompts (views_summary.py
+   vs views_crossref.py), not by designing a hedging system from scratch.
    code: no-doctrinal-verdict rules in memory `project_ai_synthesis_quality`.
+
+   EXHIBIT VERBATIM (Connection panel synthesis half, cache row `xref_cur:1Co:8:5`, 2026-07-06; the
+   defect is the second paragraph's subordinate clause):
+   > Deuteronomy 32 calls the LORD "God of gods and Lord of lords," and Paul's phrase in the source
+   > verse echoes that title almost word for word — yet the echo sharpens a distinction. The many
+   > "gods and lords" are real enough as objects of devotion, but the Deuteronomy title belongs to the
+   > one who stands over all of them.
+   >
+   > Psalm 82, quoted by Jesus in John 10, calls human rulers "gods" — so the category is not empty.
+   > The word lands on those who hold delegated authority, not on beings equal to the one who delegates.
+   >
+   > The Galatians passage pulls the floor out: those same "gods" are described as ones that are "not
+   > by nature" gods at all — the phrase the text itself uses. Whatever reality they have is not the
+   > same kind the title properly names.
+   >
+   > The Thessalonians passage shows where the logic can be pushed: the adversary seats himself in the
+   > temple and exhibits himself as God, exploiting the very category Paul acknowledges — that things
+   > are "called god." The source verse opens the door; that passage shows someone walking through it
+   > wrongly.
+
+   COUNTER-EXHIBIT VERBATIM (the clean handling — chapter summary, cache row `summary_ch:Psa:82`,
+   2026-06-17; note "divine assembly" / "the gods" with no adjudication of who they are):
+   > God stands in the divine assembly and confronts the gods gathered there, demanding to know how
+   > long they will judge unjustly and favor sinners. He commands them to defend the orphan, the poor,
+   > the humble, and the needy, and to rescue the weak from the hand of the wicked. These gods, he
+   > says, have no understanding and walk in darkness, and because of this all the foundations of the
+   > earth are shaken. God then reminds them of their own declared status — "You are gods, and all sons
+   > of the Highest" — but warns that despite this they will die like men and fall like any ruler. The
+   > psalm closes with a direct appeal for God himself to rise and judge the earth, since all nations
+   > belong to him as his inheritance.
 
 ---
 
