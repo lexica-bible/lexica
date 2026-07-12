@@ -479,6 +479,61 @@ Study's return. Status detail: STATE.md Study line.)
    commit hash. Pre-emptive holds are the same mechanism (the armed hold-outs G1392/G1377/
    G1391 are DATA-BLOCKED before their floors ever run — do not floor them while tagged).
 
+## BATCH 5 — RUN SESSION 1 (hinted re-entry) — CC OPENER BLOCK (paste into the new CC
+## session; opens from docs alone. State source of truth = close commit 8a4dceb; trust
+## docs over any number in a handoff.)
+BATCH 5 RUN SESSION 1 — hinted re-entry, word 1 = ἀληθής G227. Open from docs alone;
+state source of truth = close commit 8a4dceb. ("me/I" = JP.)
+READ FIRST, in order: (1) this handoff — BATCH-5 CHARTER (RULED) + BUILD SESSION 1 RECORD
++ the BATCH 4 CLOSED record in Queue item 5; (2) AUDIT_lexica_rollout.md — BUILD SESSION 1
+entry (walk 7/7, ἀλλάσσω leave-it ruling) + the G227 PARKED entry IN FULL; (3)
+scripts/draw_hints.py header + the G227 entry; (4) DESIGN_hint_tooling.md RULINGS block;
+(5) TODO.md batch-5 prep items (standing-query key-shape audit · section-matcher sweep —
+BOTH are "before batch 5" items: decide/run them at open, before any word fires).
+Opening check: `git log --oneline -1` shows 8a4dceb or a descendant; `python
+tests/test_draw_hints.py` prints ok; the handoff charter block says RULED. Failed check =
+rule-9 caveat, not a hold.
+State: batch 4 CLOSED, count 7/15 name-true FINAL + UNTOUCHABLE · hinted scoreboard opens
+at 0/7 (separate line, superscript-h marker, never joins the 7/15) · re-entry order RULED:
+ἀληθής G227 → κλαυθμός G2805 → αἰχμαλωτεύω G162 → ἀλλάσσω G236 → εὐχαριστέω G2168 →
+δόμα G1390 → διαιρέω G1244, then the six queue words UNAIDED (ἡσυχάζω G2270, μερίζω G3307,
+παραπορεύομαι G3899, σιωπάω G4623, ἐκλύω G1590, ἐπανίσταμαι G1881) · V8 live (stamp
+lexica:7ef8620328a9) · δίκτυον live card carries the ONE known-issue *work* bullet —
+engine-prose fragment instance, fixed by a fresh draw under the new feed (schedule it this
+batch; from-draw refresh path).
+FLOORS RULED: FRESH 10-run floors for ALL SEVEN (`--word <SID> --runs 10 --prompt v8`),
+no park-floor reuse, saved park floors = historical artifacts only, NO override/reuse path
+exists or gets built. Floors are UNHINTED by design (hints fire at build draws only, via
+`build_lexica_def.py --hints`); floor tool already mirrors the new phrase-context feed.
+PER-WORD GATE ORDER (unchanged): screens → pre-reg banked in the reviewer chat → fresh
+floor → adjudication → build draws (--hints MANDATORY on registered words; refusal is
+live; --no-hints REASON = logged override, JP-approved only) → apply (repeat --hints so
+the fingerprint matches) → render = HARD gate (ledger 8e9e956).
+AMENDMENT-2 AT EVERY PRE-REG: reviewer verifies the console-printed hint lines match
+draw_hints.py verbatim, and the register lines against their cited park rulings, BEFORE
+the floor fires. Register edits = JP checkpoint (ruling 3; the CI membership pin enforces
+it). 3-defect budget applies to hinted draws.
+Standing rules carry: R1 on-disk verify before relay (repost, never reference) · counts
+are names · bank on reviewer relay · big output → file · exact-or-dotted BOTH clauses
+(side tables G-prefixed, words bare) · pre-clears adjudicated per floor attestation ·
+verbatim-quote watch (V9 candidate, three-word record). JP runs all PA commands; show
+code before changing it; also owed to JP when convenient: the G1093/G3962/G435 gloss-note
+re-check read (command in the BUILD SESSION 1 record context).
+
+## BATCH 5 — RUN SESSION 1 — REVIEWER-CHAT INHERITANCE BLOCK (paste into the new reviewer chat)
+You are the reviewer chat for Lexica batch-5 run session 1 (hinted re-entry). Everything
+ruled is in the repo at 8a4dceb — CC reads and relays; your first act = R1-verify 8a4dceb
+on disk (raw output REPOSTED, not referenced) and reconcile CC's opening summary against
+the handoff's RULED charter + the audit doc's BUILD SESSION 1 entry. State you inherit:
+batch 4 closed 7/15 final · hinted scoreboard 0/7 with the superscript-h marker (your
+amendment 1) · re-entry order ruled, ἀληθής first · fresh floors ALL SEVEN ruled, floors
+unhinted · your register walk passed 7/7 with the ἀλλάσσω leave-it ruling banked. YOUR
+MECHANISM (amendment 2) fires at every pre-reg: verify the printed hints match
+draw_hints.py verbatim + the register lines against their cited park rulings before any
+floor. Ledger carried: the s3 queue miscount stands against the reviewer ledger (re-count,
+never carry) · relay drops → repost · the two batch-5 prep items (key-shape audit,
+section-matcher sweep) are decide/run-at-open items — hold CC to them before word 1.
+
 ## BUILD SESSION 1 — RECORD (2026-07-12; both builds LANDED, no word runs). Full record =
 ## audit doc BUILD SESSION 1 entry. Fragment-rendering fix + three checker noise classes
 ## fixed w/ control tests (2Ch 4:13 + Isa 24:5 fixtures; phantom test green); hint tooling
