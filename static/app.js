@@ -293,7 +293,9 @@ window.L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_P
 // iconAnchor is the pin's TIP (bottom-center of the 24×36 box) so the point sits
 // exactly on the coordinate; popupAnchor lifts the bubble just above it.
 const pin=window.L.divIcon({className:"metav-pin",// replaces leaflet-div-icon (white box) entirely
-html:'<svg viewBox="0 0 24 36" width="24" height="36" aria-hidden="true">'+'<path d="M12 0C5.37 0 0 5.37 0 12c0 9 12 24 12 24s12-15 12-24C24 5.37 18.63 0 12 0z"/>'+'<circle cx="12" cy="12" r="4.5"/></svg>',iconSize:[24,36],iconAnchor:[12,36],popupAnchor:[0,-32]});window.L.marker([lat,lon],{icon:pin,alt:name}).addTo(map).bindPopup(name).openPopup();instanceRef.current=map;return()=>{if(instanceRef.current){instanceRef.current.remove();instanceRef.current=null;}};},[ready,lat,lon,name]);return/*#__PURE__*/React.createElement("div",{ref:mapRef,className:"metav-leaflet-map"});}// ============================================================
+html:'<svg viewBox="0 0 24 36" width="24" height="36" aria-hidden="true">'+'<path d="M12 0C5.37 0 0 5.37 0 12c0 9 12 24 12 24s12-15 12-24C24 5.37 18.63 0 12 0z"/>'+'<circle cx="12" cy="12" r="4.5"/></svg>',iconSize:[24,36],iconAnchor:[12,36],popupAnchor:[0,-32]});// Popup is tap-to-open, not auto-open: on a one-place card the header already
+// names the spot, and an open bubble covers the coastline the map exists to show.
+window.L.marker([lat,lon],{icon:pin,alt:name}).addTo(map).bindPopup(name);instanceRef.current=map;return()=>{if(instanceRef.current){instanceRef.current.remove();instanceRef.current=null;}};},[ready,lat,lon,name]);return/*#__PURE__*/React.createElement("div",{ref:mapRef,className:"metav-leaflet-map"});}// ============================================================
 // SHELL PURE LOGIC — the RightStack state transforms, factored OUT of the React hook
 // so ONE copy is used by both the app (22-shell.jsx: useRightStack + RightStack) and the
 // Node unit test (tests/test_rstack_logic.js). No React in here — plain array math only.

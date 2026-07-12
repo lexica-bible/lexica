@@ -558,7 +558,9 @@ function LeafletMap({ lat, lon, name }) {
       iconAnchor: [12, 36],
       popupAnchor: [0, -32],
     });
-    window.L.marker([lat, lon], { icon: pin, alt: name }).addTo(map).bindPopup(name).openPopup();
+    // Popup is tap-to-open, not auto-open: on a one-place card the header already
+    // names the spot, and an open bubble covers the coastline the map exists to show.
+    window.L.marker([lat, lon], { icon: pin, alt: name }).addTo(map).bindPopup(name);
     instanceRef.current = map;
     return () => { if (instanceRef.current) { instanceRef.current.remove(); instanceRef.current = null; } };
   }, [ready, lat, lon, name]);
