@@ -2947,6 +2947,12 @@ input { font-family: inherit; }
   flex-shrink: 0;
 }
 .metav-rel-names { color: var(--ink-2); }
+/* "+N" truncation toggle on a relationship row — reads as a link, expands in place */
+.metav-rel-more {
+  border: none; background: none; padding: 0; margin-left: 4px;
+  font: inherit; color: var(--accent); cursor: pointer;
+}
+.metav-rel-more:hover { text-decoration: underline; }
 .metav-map-link {
   display: inline-block;
   margin-top: 10px;
