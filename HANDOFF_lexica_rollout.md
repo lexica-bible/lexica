@@ -493,22 +493,25 @@ Study's return. Status detail: STATE.md Study line.)
 ## batch 5). Also owed: JP PA re-check of the G1093/G3962/G435 "tagging error" note
 ## speculations. (Framing clause = reviewer amendment to the s1 opener, applied here.)
 
-## BATCH-5 CHARTER — DRAFT (build session 1 → JP; NOTHING here is ruled yet)
-1. **Marker (ruling 2 wording):** hinted ships carry a superscript-h on every scoreboard
-   line ("δόμαʰ") and count on their OWN line — "hinted re-entries: N/7" — never joining
-   the closed unaided 7/15. Proposed one-line register note wording: "shipped WITH
-   pre-registered constraint hints (draw record: draw_hints)."
-2. **Re-entry order (proposal):** ἀληθής G227 (reviewer-ranked strongest hint candidate) →
-   κλαυθμός G2805 (cleanest signature) → αἰχμαλωτεύω G162 (own d1 proved the pass-shape) →
-   ἀλλάσσω G236 → εὐχαριστέω G2168 → δόμα G1390 → διαιρέω G1244. Then the six rolled-forward
-   queue words UNAIDED (they stay calibration words; hinted and unaided never interleave
-   within a session without a charter note).
-3. **Fresh-floor list (needs a ruling — the shape-change consequence):** every saved floor
-   was fed fragment-era gloss sets. Options: (a) fresh 10-run floors for all seven (clean
-   but ~70 draws); (b) fresh floors ONLY where the pre-pull shows phrase-embedded heads
-   (fragment-risk words — the shape change actually moved their evidence) + the two
-   data-fix-owed floors, saved STABLE floors reused for the rest with the shape difference
-   on the record. RECOMMEND (b).
+## BATCH-5 CHARTER — RULED (JP, 2026-07-12, relayed via the reviewer chat; all three
+## decisions closed)
+1. **Marker (RULED, adopted as drafted):** hinted ships carry a superscript-h on every
+   scoreboard line ("δόμαʰ") and count on their OWN line — "hinted re-entries: N/7" —
+   never joining the closed unaided 7/15 name-true count. The closed count is final and
+   untouchable. Register note wording: "shipped WITH pre-registered constraint hints
+   (draw record: draw_hints)."
+2. **Re-entry order (RULED, adopted as drafted):** ἀληθής G227 → κλαυθμός G2805 →
+   αἰχμαλωτεύω G162 → ἀλλάσσω G236 → εὐχαριστέω G2168 → δόμα G1390 → διαιρέω G1244; then
+   the six rolled-forward queue words UNAIDED (hinted and unaided never interleave within
+   a session without a charter note). ἀληθής re-enters with its banked pre-registration
+   SUBJECT TO the amendment-2 hint-provenance verification at re-entry pre-reg (reviewer
+   mechanism).
+3. **Floors (RULED): FRESH FLOORS FOR ALL SEVEN re-entry words. No reuse of saved park
+   floors.** Rationale on the record (JP): the feed shape changed for every word;
+   "unaffected" is a derived claim, not an artifact, and mixed provenance creates an
+   unbounded audit surface. The ~70-draw cost is accepted. **Do NOT build any
+   fingerprint-override/reuse path — the stale-draw refusal stands as-is.** Saved park
+   floors remain in the record as historical artifacts, never fed to new draws.
 4. **Procedure carried:** render check stays a HARD gate (ledger 8e9e956) · hint-provenance
    verification at every pre-reg (ruling 5b, reviewer's mechanism) · gate order screens →
    pre-reg banked → floor → adjudication → draws · exact-or-dotted both clauses · 3-defect
