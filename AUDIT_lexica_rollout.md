@@ -1982,6 +1982,30 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### G227 FLOOR VOID — STALE-PA CLASS (batch-5 run session 1, 2026-07-12; caught by the
+### --hints refusal, disclosed same session). agreement_G227_v8_20260712-132852.json is
+### VOID with its adjudication and all three banked pre-clears.
+**What happened:** the s1 opening checks verified the LOCAL repo (8a4dceb descendant, tests
+green) but nobody verified what PA was running before the first floor fired. PA sat at
+506f106 — the build-session-1 CLOSE-of-rulings commit, BEFORE the fragment-rendering fix,
+the floor tool's phrase-context mirror, and the hint tooling landed. The "fresh" G227 floor
+therefore ran on the OLD fragment-era feed — the exact provenance the fresh-floor charter
+ruling (all seven, no park-floor reuse) exists to exclude. Reviewer concurrence on that
+floor is void with it (concurrence was on a mis-provenanced artifact, no reviewer fault).
+**How it surfaced:** the build-draw command errored `unrecognized arguments: --hints` on PA
+— the ruling-1 mandatory flag doubled as the stale-code tripwire. Had G227 not been a
+registered word, nothing would have flagged the stale feed and the build would have drawn
+on a charter-invalid floor. Detector-must-fail note: the tripwire fired by luck of ordering
+(floor before first build draw), not by design — hence the standing check below.
+**Fix applied same session:** deploy.sh run on PA (506f106 → eb73b07, tests passed, site
+reloaded); --hints verified present via --help. Floor RE-RUN owed under the current code;
+fresh adjudication + fresh pre-clears from the new floor (the voided ones do not carry —
+per-floor rule).
+**STANDING CHECK ADOPTED (proposed CC, this entry = the record; reviewer to hold CC to it):
+before the FIRST floor or draw of any session, JP posts PA's `git log --oneline -1` and it
+must match the session's local close commit (or a descendant both sides have). A mismatch =
+deploy first, nothing fires.** Cost: +10 draws on the accepted ~70-draw batch budget.
+
 ### BUILD SESSION 1 — RENDERING-LAYER FIX + HINT TOOLING BUILT (2026-07-12, post-batch-4;
 ### NO word runs — no floors, no draws, no applies, per the opener charter). All 15 curated
 ### Python tests green incl. the certified phantom test; new tests wired into CI + hook

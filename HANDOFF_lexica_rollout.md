@@ -492,7 +492,9 @@ scripts/draw_hints.py header + the G227 entry; (4) DESIGN_hint_tooling.md RULING
 BOTH are "before batch 5" items: decide/run them at open, before any word fires).
 Opening check: `git log --oneline -1` shows 8a4dceb or a descendant; `python
 tests/test_draw_hints.py` prints ok; the handoff charter block says RULED. Failed check =
-rule-9 caveat, not a hold.
+rule-9 caveat, not a hold. **PLUS (adopted after the G227 stale-PA floor void, s1): before
+the FIRST floor or draw of any session, JP posts PA's `git log --oneline -1`; it must match
+the local close commit or a shared descendant — mismatch = deploy first, nothing fires.**
 State: batch 4 CLOSED, count 7/15 name-true FINAL + UNTOUCHABLE · hinted scoreboard opens
 at 0/7 (separate line, superscript-h marker, never joins the 7/15) · re-entry order RULED:
 ἀληθής G227 → κλαυθμός G2805 → αἰχμαλωτεύω G162 → ἀλλάσσω G236 → εὐχαριστέω G2168 →
