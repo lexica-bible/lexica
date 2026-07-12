@@ -479,7 +479,63 @@ Study's return. Status detail: STATE.md Study line.)
    commit hash. Pre-emptive holds are the same mechanism (the armed hold-outs G1392/G1377/
    G1391 are DATA-BLOCKED before their floors ever run — do not floor them while tagged).
 
-## BATCH-4 RUN SESSION 3 — CC OPENER BLOCK (paste into the new CC session; opens from docs
+## BUILD SESSION 1 (post-batch-4) — CC OPENER BLOCK (paste into the new CC session; opens
+## from docs alone. State source of truth = close commit 506f106; trust docs over any
+## number in a handoff.)
+BUILD SESSION 1 — rendering-layer fix + hint tooling. Open from docs alone; state source
+of truth = close commit 506f106. ("me/I" = JP.)
+READ FIRST, in order: (1) HANDOFF_lexica_rollout.md Queue item 5 — the BATCH 4 CLOSED +
+RUN SESSION 3 records; (2) DESIGN_hint_tooling.md IN FULL (rulings at top — all five
+ruled, build order inside); (3) TODO.md "Def-engine rendering layer" ticket; (4)
+AUDIT_lexica_rollout.md — FRAGMENT-RENDERING INVESTIGATION entry + BATCH 4 CLOSED entry;
+(5) V9_PILE.md (new: #49 pipeline exhibits ×3, verbatim-quote V9-general, checker
+exhibits).
+Opening check: `git log --oneline -1` shows 506f106 or a descendant; `grep -c "RULINGS
+(JP, 2026-07-12)" DESIGN_hint_tooling.md` = 1; the audit doc's BATCH 4 CLOSED entry
+exists. Failed check = rule-9 caveat, not a hold. R1 debt from s3: verify bff58fb +
+506f106 on disk and relay raw output to the reviewer first thing.
+State: count 7/15 name-true FINAL (batch closed by JP ruling; δίκτυον rebuilt clean,
+dagger off) · streak 2 · 7 words on the structure-hint shelf with banked hint lines
+(διαιρέω, δόμα, εὐχαριστέω, ἀληθής, ἀλλάσσω, κλαυθμός, αἰχμαλωτεύω) · 6 queue words
+rolled forward unrun (ἡσυχάζω G2270, μερίζω G3307, παραπορεύομαι G3899, σιωπάω G4623,
+ἐκλύω G1590, ἐπανίσταμαι G1881) · V8 live (stamp lexica:7ef8620328a9) · δίκτυον live
+card carries ONE known-issue (the *work* gloss bullet, fragment class — from-draw
+refresh after the fix).
+WORK ORDER (ruled, ruling 4 sequences it): (1) fragment-rendering fix BUILD — phrase
+context (`words.english` + italic data) to the def-engine's renderings count +
+gloss-note layer + claim-checker; phantom-render protection PRESERVED
+(test_render_head_no_phantom stays green); 2Ch 4:13 pos-7/pos-13 = new fixture; also
+fix checker noise classes on the record (identical-string, emphasis-italics-as-gloss,
+prose-mention-counted-as-citation); (2) hint-tooling build per the RULED design
+(draw_hints.py register + --hints/--no-hints REASON + signature + draw-record +
+console print + CI provenance test); (3) reviewer walk of the seven register entries
+vs their park entries; (4) batch-5 charter draft (marker wording for hinted ships,
+re-entry order, fresh-floor list) → JP. NO WORD RUNS this session — no floors, no
+draws, no applies. CC-ALONE code work; show code before changing it; JP runs any PA
+read checks. Standing rules all carry: R1 on-disk verify before relay · counts are
+names · bank on reviewer relay · big output → file · exact-or-dotted both clauses.
+
+## BUILD SESSION 1 — REVIEWER-CHAT INHERITANCE BLOCK (paste into the new reviewer chat)
+You are the reviewer chat for Lexica BUILD SESSION 1 (post-batch-4). Everything ruled
+is in the repo at close commit 506f106 — CC reads and relays; your first act =
+R1-verify 506f106 AND bff58fb on disk (raw git log, owed from s3's close) and read
+DESIGN_hint_tooling.md in full — your s3 predecessor concurred on the SUMMARY only;
+the full-doc read is yours, and your amendments (scoreboard marker + hint-provenance
+verification at re-entry pre-reg) are already ruled in. State you inherit: batch 4
+CLOSED at 7/15 name-true final, streak 2, dagger off (δίκτυον rebuilt clean; its live
+card carries the one known-issue *work* bullet) · 7 shelf words with banked hint lines
+· 6 queue words rolled forward · all five hint rulings in the design doc's RULINGS
+block. This session is BUILD ONLY: no floors, no draws, no ships — your duties are
+code-review shaped: verify the fragment fix preserves the phantom-render protection
+(the certified test + the new 2Ch 4:13 fixture), verify the hint register's seven
+entries against their park-entry rulings word-for-word (amendment 2 is YOUR mechanism),
+verify the --hints refusal default and the draw-record/signature wiring, and hold the
+no-word-runs line. Ledger notes carried: the s3 queue miscount is logged against the
+reviewer ledger (counts are names — re-count, never carry) · relay drops happen, repost
+rather than reference · three key-shape slips + the standing-query audit ticket remain
+open batch-5 prep items.
+
+## BATCH-4 RUN SESSION 3 — CC OPENER BLOCK (SPENT — session 3 CLOSED at 506f106; paste into the new CC session; opens from docs
 ## alone. State source of truth = close commit 4094dab (δίκτυον chain close; supersedes the
 ## wrap 8ab9468 pin); do not trust any number in a handoff over the docs at that commit.)
 READ FIRST, in order: (1) this handoff — Queue item 5 (the batch-4 blocks incl. the RUN
