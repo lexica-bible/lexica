@@ -24,8 +24,11 @@ On a coverage-gate failure at dry-run/apply, ONE bounded repair call:
    > The definition below is complete except that these fed occurrences are not yet
    > cited under a sense: {refs, with verse texts}. Integrate each into the sense where
    > its text belongs — add citations (and the minimum prose needed to house them)
-   > WITHOUT changing the sense structure, removing any existing citation, or altering
-   > any existing quotation. Return the full corrected definition.
+   > WITHOUT changing the sense structure or the sense headlines, removing any existing
+   > citation, or altering any existing quotation. Return the full corrected definition.
+   (Headline clause reviewer-required at the design read: the prompt and the structure
+   guard must draw the same line, or the guard eats repair rounds on prompt-induced
+   headline rewordings. RULED 2026-07-12, standing delegation.)
 3. The repaired raw REPLACES the cached draw's raw and re-runs EVERYTHING fresh:
    splitter, citation gate, coverage gate, #30 floor-diff, checker warns. No gate sees
    it as anything but a new card.
@@ -86,6 +89,11 @@ Joh 21:24 · G162 d3: Job 1:15 · G1390 d3: Deu 23:23). The build is accepted on
 repair pass takes those cached draws to full coverage AND **at least two of the three
 then ship** — through the FULL per-word path (all gates fresh, hand-checks, adjudication,
 render). Fewer than two ships = the design fails its own validation and the parks stand.
+**Staleness fallback (reviewer-required, pre-specified):** if the signature math voids
+the cached d3s, the criterion becomes — of the fresh gate-failed draws whose ONLY defect
+class is coverage, the repair pass must take ≥2 of the 3 words to a ship. Same
+falsifiability; a fresh draw failing on a non-coverage class (e.g. a quote hybrid) is
+not a repair-pass datum and neither passes nor fails this test.
 
 ## Build order
 1. This doc → reviewer full read.
