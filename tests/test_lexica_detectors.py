@@ -58,6 +58,55 @@ def test_etos_old_is_clean():
     assert B.check_rendering_claim(["old"], ["old"], verse) == []
 
 
+def test_2ch413_phrase_claim_is_clean():
+    """2Ch 4:13 fixture (the JP-caught fragment-rendering finding, 2026-07-12; word rows
+    source-verified against the printed ABP that session): pos-7 english 'latticed works;'
+    head 'latticed' italic_words 'works' · pos-13 english 'latticed work' head 'work' no italics.
+    A note claiming *latticed work* — the TRUE rendering — must be clean now (the head-only
+    compare fired it as a mismatch, the δίκτυον *work* bullet's cause); claiming the bare
+    fragment *work* stays clean too (it IS a head)."""
+    heads = ["latticed", "work"]
+    phrases = [("latticed works;", "works"), ("latticed work", "")]
+    assert B.check_rendering_claim(["latticed work"], heads, "", phrases) == []
+    assert B.check_rendering_claim(["work"], heads, "", phrases) == []
+
+
+def test_phrase_containment_still_fires():
+    """The ἁμαρτία protection survives phrase-awareness: a claim CONTAINED in the phrase but not
+    equal to it (or to the head, or to the phrase minus additions) must still fire."""
+    fires = B.check_rendering_claim(["sin"], ["offering"], "", [("sin offering", "")])
+    assert any(f["kind"] == "rendering-mismatch" and f["gloss"] == "sin" for f in fires), fires
+
+
+def test_isa245_bartered_away_is_clean():
+    """G236 Isa 24:5 control (the over-called defect that survived two adjudications): ABP prints
+    'bartered away', the head column keeps only 'away'. Claiming *bartered away* is clean; a
+    fabricated *barter* still fires."""
+    heads = ["away"]
+    phrases = [("bartered away", "")]
+    assert B.check_rendering_claim(["bartered away"], heads, "", phrases) == []
+    fires = B.check_rendering_claim(["barter"], heads, "", phrases)
+    assert any(f["kind"] == "rendering-mismatch" for f in fires), fires
+
+
+def test_identical_string_punct_noise_is_dead():
+    """The identical-string noise family (G236, fired on all three draws): a claimed gloss that
+    differs from the rendering only by outer punctuation ('exchange,' vs 'exchange') is the SAME
+    string, never a mismatch."""
+    assert B.check_rendering_claim(["exchange,"], ["exchange"]) == []
+    assert B.check_rendering_claim(["away."], ["away"]) == []
+
+
+def test_emphasis_italics_are_not_gloss_claims():
+    """G162 d1 *perform* control (emphasis-italics-as-gloss noise class): italics in the bullet
+    head AFTER the ref paren opens are emphasis, not rendering claims. The leading gloss before
+    the paren is still read."""
+    bullet = ('- *captive* (1Ch 5:21; 2Ch 21:17, where the raiders *perform* the taking): '
+              'prose continues.')
+    claims = B._gnote_claims(bullet)
+    assert len(claims) == 1 and claims[0]["glosses"] == ["captive"], claims
+
+
 def test_gnote_parser_reads_shipped_shape():
     """The parser reads the shipped-corpus bullet shape (real ἔτος note) and skips headless prose
     (real οὐρανός shipped note) — deliberate under-catch, manual rule stays the authority."""
@@ -68,6 +117,33 @@ def test_gnote_parser_reads_shipped_shape():
     headless = ('"Heaven/heavens" as used in this translation is formally adequate for both '
                 "senses and imports no freight that the contexts reject.")
     assert B._gnote_claims(headless) == []
+
+
+# ── double-shelve flag (grounding-list citations only, 2026-07-12) ───────────────────────────
+
+_DBL_BLOCK = (
+    "**1. Persons taken captive** (1Ch 5:21; 2Ch 21:17; Amo 1:6)\n\nProse.\n\n"
+    "**2. Property carried off** (1Ch 5:21; 2Ch 14:15)\n\nProse.\n"
+)
+
+
+def test_double_shelve_fires_on_grounding_lists():
+    """G162 d1 control: a verse in TWO senses' grounding lists must fire, exactly once, naming
+    both senses. The single-list verses stay silent."""
+    fires = B.double_shelved(_DBL_BLOCK)
+    assert fires == [{"ref": "1Ch 5:21", "senses": [1, 2]}], fires
+
+
+def test_prose_mention_is_not_a_second_shelf():
+    """G162 d3 Amo 1:6 control (prose-mention-counted-as-citation noise class): sense 2 MENTIONING
+    sense 1's verse in prose — the convention's legal cross-reference form — is not a second
+    shelving. Only a second grounding list fires."""
+    block = (
+        "**1. Persons taken captive** (Amo 1:6; 2Ch 21:17)\n\nProse.\n\n"
+        "**2. Property carried off** (1Ch 5:21)\n\nThe raid catalog (as Amo 1:6 shows for "
+        "persons) keeps goods distinct.\n"
+    )
+    assert B.double_shelved(block) == []
 
 
 # ── hedged-citation lint (rule 7c assist) ────────────────────────────────────────────────────

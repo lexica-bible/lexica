@@ -479,7 +479,39 @@ Study's return. Status detail: STATE.md Study line.)
    commit hash. Pre-emptive holds are the same mechanism (the armed hold-outs G1392/G1377/
    G1391 are DATA-BLOCKED before their floors ever run — do not floor them while tagged).
 
-## BUILD SESSION 1 (post-batch-4) — CC OPENER BLOCK (paste into the new CC session; opens
+## BUILD SESSION 1 — RECORD (2026-07-12; both builds LANDED, no word runs). Full record =
+## audit doc BUILD SESSION 1 entry. Fragment-rendering fix + three checker noise classes
+## fixed w/ control tests (2Ch 4:13 + Isa 24:5 fixtures; phantom test green); hint tooling
+## built per the ruled design (draw_hints.py seven-entry register, --hints/--no-hints REASON
+## refusal default, signature + draw-record + console print, CI membership pin = the ruling-3
+## tripwire; tests in BOTH CI lists). Floor tool mirrors the new feed. CONSEQUENCE: user-msg
+## shape changed — every cached draw/saved floor predates it; charter rules floor reuse.
+## STILL OWED: δίκτυον *work* bullet needs a fresh-draw refresh (word run, batch 5); JP PA
+## re-check of the G1093/G3962/G435 "tagging error" note speculations.
+
+## BATCH-5 CHARTER — DRAFT (build session 1 → JP; NOTHING here is ruled yet)
+1. **Marker (ruling 2 wording):** hinted ships carry a superscript-h on every scoreboard
+   line ("δόμαʰ") and count on their OWN line — "hinted re-entries: N/7" — never joining
+   the closed unaided 7/15. Proposed one-line register note wording: "shipped WITH
+   pre-registered constraint hints (draw record: draw_hints)."
+2. **Re-entry order (proposal):** ἀληθής G227 (reviewer-ranked strongest hint candidate) →
+   κλαυθμός G2805 (cleanest signature) → αἰχμαλωτεύω G162 (own d1 proved the pass-shape) →
+   ἀλλάσσω G236 → εὐχαριστέω G2168 → δόμα G1390 → διαιρέω G1244. Then the six rolled-forward
+   queue words UNAIDED (they stay calibration words; hinted and unaided never interleave
+   within a session without a charter note).
+3. **Fresh-floor list (needs a ruling — the shape-change consequence):** every saved floor
+   was fed fragment-era gloss sets. Options: (a) fresh 10-run floors for all seven (clean
+   but ~70 draws); (b) fresh floors ONLY where the pre-pull shows phrase-embedded heads
+   (fragment-risk words — the shape change actually moved their evidence) + the two
+   data-fix-owed floors, saved STABLE floors reused for the rest with the shape difference
+   on the record. RECOMMEND (b).
+4. **Procedure carried:** render check stays a HARD gate (ledger 8e9e956) · hint-provenance
+   verification at every pre-reg (ruling 5b, reviewer's mechanism) · gate order screens →
+   pre-reg banked → floor → adjudication → draws · exact-or-dotted both clauses · 3-defect
+   budget applies to hinted draws · batch-5 prep items still open: standing-query key-shape
+   audit + section-matcher sweep (TODO).
+
+## BUILD SESSION 1 (post-batch-4) — CC OPENER BLOCK (SPENT — session ran 2026-07-12; paste into the new CC session; opens
 ## from docs alone. State source of truth = close commit 506f106; trust docs over any
 ## number in a handoff.)
 BUILD SESSION 1 — rendering-layer fix + hint tooling. Open from docs alone; state source

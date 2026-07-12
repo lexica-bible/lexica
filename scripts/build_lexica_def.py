@@ -201,6 +201,7 @@ NT_BOOKS = {"Mat","Mar","Luk","Joh","Act","Rom","1Co","2Co","Gal","Eph","Php","C
 # and the shared register lives one level up at the repo root.
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from contested_register import CONTESTED, CONTESTED_BY_SID, CONTESTED_VERSES
+from draw_hints import DRAW_HINTS
 import lexica_coverage
 _CONTESTED_BY_SID = CONTESTED_BY_SID
 
@@ -281,13 +282,55 @@ def gloss_set(conn, pred, params):
 
 
 def occurrences(conn, pred, params):
+    """Each occurrence row now carries the slot's FULL ABP phrase gloss (`phrase` = words.english)
+    and its translator-addition list (`ital` = words.italic_words) alongside the one-token head
+    (`rend` = english_head). The head stays the render KEY everywhere (phantom protection — see
+    parse_abp.HEAD_WORD_TAIL_CAVEAT + tests/test_render_head_no_phantom.py); the phrase is CONTEXT
+    so no consumer reasons from a fragment (the 2Ch 4:13 'latticed work' finding, 2026-07-12)."""
     return conn.execute(f"""
         SELECT v.book AS book, v.chapter AS ch, v.verse AS vs,
-               w.english_head AS rend, w.verse_id AS vid, w.position AS pos
+               w.english_head AS rend, w.english AS phrase, w.italic_words AS ital,
+               w.verse_id AS vid, w.position AS pos
         FROM verses v JOIN words w ON w.verse_id = v.id
         WHERE {pred}
         ORDER BY v.id, w.position
     """, params).fetchall()
+
+
+def _phrase_clean(s):
+    """Comparison form of a phrase/gloss: outer punctuation stripped per token, whitespace
+    collapsed. Case is PRESERVED (case-awareness is load-bearing in the claim lint)."""
+    toks = [t.strip("\"'.,;:!?()[]—-") for t in (s or "").split()]
+    return " ".join(t for t in toks if t)
+
+
+def _phrase_minus_italics(phrase, ital):
+    """The slot's own-render phrase: the full ABP phrase with translator-addition words
+    (italic_words, comma-joined in the db) removed. 'latticed works;' minus 'works' -> 'latticed'."""
+    skip = {w.strip().lower() for w in (ital or "").split(",") if w.strip()}
+    toks = [t for t in _phrase_clean(phrase).split() if t.lower() not in skip]
+    return " ".join(toks)
+
+
+def phrase_map(occs):
+    """head(lower) -> list of (display_phrase, count) for heads that NEVER occur as a single-word
+    gloss — the fragment-risk class (the head is always a piece of a longer ABP phrase, so any
+    consumer seeing only the head is reasoning from a fragment). Heads that ever stand alone are
+    left unannotated. Phrase counts keyed punctuation-stripped; most frequent surface form wins."""
+    per_head = {}
+    for o in occs:
+        head = (o["rend"] or "").strip()
+        if not head:
+            continue
+        phr = _phrase_clean(o["phrase"])
+        per_head.setdefault(head.lower(), []).append(phr)
+    out = {}
+    for head, phrases in per_head.items():
+        if any(len(p.split()) <= 1 for p in phrases):
+            continue                       # head stands alone somewhere — not fragment-risk
+        c = Counter(phrases)
+        out[head] = c.most_common(3)
+    return out
 
 
 def lex_head(conn, sid):
@@ -424,18 +467,46 @@ def fetch_context(conn, occs, has_surface):
                              (o["vid"], o["pos"])).fetchone()
             if s and s["form"]:
                 form = s["form"] + (f" ({s['translit']})" if s["translit"] else "")
-        out.append((o["book"], o["ch"], o["vs"], o["rend"], form, prose))
+        out.append((o["book"], o["ch"], o["vs"], o["rend"], form, prose,
+                    (o["phrase"] or ""), (o["ital"] or "")))
     return out
 
 
-def verse_user_msg(sid, translit, gset, ctx, hint=None):
+def _phrase_tag_part(rend, phrase, ital):
+    """The here-tag's phrase addition: shown only when ABP prints a multi-word phrase on this slot
+    (otherwise the head IS the render and the tag stays as before). Translator additions named."""
+    phr = _phrase_clean(phrase)
+    if len(phr.split()) <= 1 or phr.lower() == (rend or "").lower():
+        return ""
+    part = f'; phrase here: "{phrase.strip()}"'
+    added = [w.strip() for w in (ital or "").split(",") if w.strip()]
+    if added:
+        part += f" (added words: {', '.join(added)})"
+    return part
+
+
+def verse_user_msg(sid, translit, gset, ctx, hint=None, pmap=None, constraints=None):
     lines = [f"LEMMA: {sid}  ({translit})", ""]
     lines.append("TRANSLATION GLOSS SET (one translation's renderings, with counts):")
-    lines.append("  " + "; ".join(f"{g} ({c})" for g, c in gset[:25]))
+    pmap = pmap or {}
+    gparts = []
+    for g, c in gset[:25]:
+        anno = pmap.get(g.lower())
+        if anno:
+            gparts.append(f"{g} ({c}; always inside a phrase: "
+                          + ", ".join(f'"{p}"' + (f" {n}x" if n > 1 else "") for p, n in anno) + ")")
+        else:
+            gparts.append(f"{g} ({c})")
+    lines.append("  " + "; ".join(gparts))
     lines.append("")
-    lines.append(f"OCCURRENCES ({len(ctx)}) - context is the primary evidence; rendered-here word in [ ]:")
-    for book, ch, vs, rend, form, prose in ctx:
-        tag = f'[here: "{rend}"' + (f"; form: {form}" if form else "") + "]"
+    lines.append(f"OCCURRENCES ({len(ctx)}) - context is the primary evidence; rendered-here word in [ ]. "
+                 "Where ABP prints a MULTI-WORD phrase on this word's slot, the tag also shows that full "
+                 "phrase: analyze the phrase as the rendering, never the bare [here] token alone. "
+                 "'added words' are translator additions with no Greek behind them; a phrase can also "
+                 "carry words belonging to NEIGHBORING Greek words - the [here] token is this lemma's own:")
+    for book, ch, vs, rend, form, prose, phrase, ital in ctx:
+        tag = (f'[here: "{rend}"' + _phrase_tag_part(rend, phrase, ital)
+               + (f"; form: {form}" if form else "") + "]")
         lines.append(f"  {book} {ch}:{vs} {tag}")
         lines.append(f"     {prose}")
     if hint:
@@ -455,6 +526,21 @@ def verse_user_msg(sid, translit, gset, ctx, hint=None):
                      "organ). Still reason from the supplied occurrences and name each job by what the verses "
                      "show. The review names the JOBS, not their wording, count, or internal sub-uses — "
                      "granularity and carving remain yours to draw from the evidence.")
+    if constraints:
+        # CONSTRAINT-HINT CHANNEL (DESIGN_hint_tooling.md, JP-ruled 2026-07-12). Pre-registered
+        # one-line constraints from a parked word's ruling record (draw_hints.py, provenance-cited).
+        # Rides in the user message AFTER the occurrences (and after any STRUCTURE CHECK) — frozen
+        # system prompt untouched. Fact/discipline/ceiling only, NEVER a preferred sense, count,
+        # carve, or any sentence of a prior draft (the incumbent-comparison line, drawn in the
+        # design doc and ruled).
+        lines.append("")
+        lines.append("CONSTRAINT CHECK (pre-registered): independent verification of this lemma's texts "
+                     "banked the following one-line constraints BEFORE this draw. Each states a verse's "
+                     "own wording, a citation rule, or an attribution ceiling. They are CHECKS, not "
+                     "answers — the occurrences above remain the primary evidence; senses, wording, and "
+                     "carving remain yours to draw from it:")
+        for i, c in enumerate(constraints, 1):
+            lines.append(f"  {i}. {c}")
     return "\n".join(lines)
 
 
@@ -854,17 +940,40 @@ def sense_specs(senses_block):
     return out
 
 
+_PAREN_INNER_RE = re.compile(r"\(([^()]*)\)")
+
+
+def _grounding_refs(text):
+    """Refs from CITATION-LIST parentheticals only: parens whose content is refs (+ separators,
+    ×N occurrence marks, 'LXX'). A paren carrying prose words is a MENTION per the house
+    convention (legal cross-reference form), not a grounding citation — the G162 d3 Amo 1:6
+    false double-shelve warn (prose-mention-counted-as-citation noise class, fixed on the record
+    2026-07-12). Coverage still reads ALL refs (sense_specs unchanged) — fail-open there, so a
+    mention can never HIDE a coverage gap; only the double-shelve flag narrows to grounding lists."""
+    refs = []
+    for m in _PAREN_INNER_RE.finditer(text or ""):
+        inner = m.group(1)
+        found = _REF_RE.findall(inner)
+        if not found:
+            continue
+        leftover = _CHAP_ONLY_RE.sub(" ", _REF_RE.sub(" ", inner))
+        words = re.findall(r"[A-Za-z]+", leftover)
+        if all(w.lower() in ("lxx", "x") for w in words):   # 'x2' occurrence marks split to 'x'
+            refs.extend((_norm_book(bk), int(ch), int(vs)) for bk, ch, vs in found)
+    return refs
+
+
 def double_shelved(senses_block):
-    """FLAG-ONLY detector: any verse cited under MORE THAN ONE sense in the same draft. A plain
-    set-intersection over the per-sense verse lists sense_specs() already carries — same splitter
-    (_sense_spans) + ref regex (_REF_RE) + book normalizer (_norm_book) as the rest of the build, so
-    it sees exactly the citations the card does. NOT a gate: double-shelving is sometimes legitimate
-    (a genuinely bridging verse), so it becomes a conscious per-word adjudication in the audit
-    output, never an automatic reject. Returns [{ref, senses:[1-based sense numbers]}] in a stable
-    order (first sense, then ref)."""
+    """FLAG-ONLY detector: any verse GROUNDING-CITED under MORE THAN ONE sense in the same draft.
+    Reads the same splitter (_sense_spans) + ref regex (_REF_RE) + book normalizer (_norm_book) as
+    the rest of the build, but counts only citation-list parentheticals (_grounding_refs) — a bare
+    prose mention of another sense's verse is the convention's legal cross-reference, not a second
+    shelving. NOT a gate: double-shelving is sometimes legitimate (a genuinely bridging verse), so
+    it becomes a conscious per-word adjudication in the audit output, never an automatic reject.
+    Returns [{ref, senses:[1-based sense numbers]}] in a stable order (first sense, then ref)."""
     where = {}   # (book, ch, vs) -> set of 1-based sense numbers it's cited under
-    for i, s in enumerate(sense_specs(senses_block), 1):
-        for key in s["refs"]:
+    for i, (lead, body) in enumerate(_sense_spans(senses_block or ""), 1):
+        for key in _grounding_refs(f"{lead}\n{body}"):
             where.setdefault(key, set()).add(i)
     out = []
     for (bk, ch, vs), senses in where.items():
@@ -892,14 +1001,17 @@ def _gnote_claims(gloss_notes):
         if not bullet.strip():
             continue
         head = bullet.split("):", 1)[0]          # the claim head: up to the close of the ref paren
-        glosses = _GNOTE_GLOSS_RE.findall(head)
+        # Glosses are read ONLY from before the ref paren opens ('- *gloss* (Refs):'). Italics
+        # further in are EMPHASIS, not rendering claims — the G162 d1 *perform* false warn
+        # (emphasis-italics-as-gloss noise class, fixed on the record 2026-07-12).
+        glosses = _GNOTE_GLOSS_RE.findall(head.split("(", 1)[0])
         refs = [(_norm_book(bk), int(ch), int(vs)) for bk, ch, vs in _REF_RE.findall(head)]
         if glosses and refs:
             claims.append({"glosses": [g.strip() for g in glosses], "refs": refs})
     return claims
 
 
-def check_rendering_claim(glosses, rends, verse_text=""):
+def check_rendering_claim(glosses, rends, verse_text="", phrases=None):
     """PURE core of the rendering-claim lint (ENGINE_LESSONS #24 machine-check; two archived
     control fires: οὐρανός capitalization, ἁμαρτία 2Co 5:21). Compares a note's claimed gloss(es)
     against the lemma's ACTUAL per-verse rendering(s) (words-table english_head) — NOT the verse
@@ -919,17 +1031,37 @@ def check_rendering_claim(glosses, rends, verse_text=""):
       kind='positional-cap'      claim matches a capitalized rend, but the gloss sits
                                  sentence-initial in the verse prose (οὐρανός class) — the
                                  capitalization may be positional, adjudicate the note's rationale
-    """
+
+    PHRASE-AWARENESS (2026-07-12 fragment-rendering fix): `phrases` = the slot's full ABP phrase
+    gloss(es) at this ref, each as (phrase, italic_words). A claim is ALSO clean when it equals the
+    FULL phrase or the phrase minus its translator additions — 'latticed work' claimed where the
+    head keeps only 'work' (2Ch 4:13) is a true rendering claim, not a mismatch. Equality is
+    WHOLE-string (punctuation-stripped): a claim that is merely CONTAINED in the phrase still fires
+    (the archived ἁμαρτία 'sin' vs 'sin offering' defect — containment must never pass).
+    Punctuation-stripped comparison also kills the identical-string noise class ('exchange,' vs
+    'exchange' read as a mismatch, G236 exhibits)."""
     fires = []
     rends = [r for r in (rends or []) if r]
     if not rends:
         return fires                              # ref carries no rendering row — nothing checkable
+    # Candidate render strings, comparison-form: the heads, plus each full phrase and each
+    # phrase-minus-additions. Case preserved throughout (case-awareness above).
+    cands = [_phrase_clean(r) for r in rends]
+    for phr, ital in (phrases or []):
+        full = _phrase_clean(phr)
+        if len(full.split()) > 1:
+            cands.append(full)
+            own = _phrase_minus_italics(phr, ital)
+            if own and own != full:
+                cands.append(own)
+    cands = [c for c in cands if c]
     for g in glosses:
-        exact = [r for r in rends if r == g]
-        folded = [r for r in rends if r.lower() == g.lower()]
+        gq = _phrase_clean(g)
+        exact = [c for c in cands if c == gq]
+        folded = [c for c in cands if c.lower() == gq.lower()]
         if exact:
-            if g[:1].isupper() and verse_text:
-                for m in re.finditer(re.escape(g), verse_text):
+            if gq[:1].isupper() and verse_text:
+                for m in re.finditer(re.escape(gq), verse_text):
                     before = verse_text[:m.start()].rstrip()
                     if not before or before[-1] in ".!?;":
                         fires.append({"kind": "positional-cap", "gloss": g})
@@ -937,9 +1069,9 @@ def check_rendering_claim(glosses, rends, verse_text=""):
         elif folded:
             fires.append({"kind": "case-mismatch", "gloss": g, "rend": folded[0]})
         else:
-            near = [r for r in rends if g.lower() in r.lower() or r.lower() in g.lower()]
+            near = [c for c in cands if gq.lower() in c.lower() or c.lower() in gq.lower()]
             fires.append({"kind": "rendering-mismatch", "gloss": g,
-                          "rend": (near[0] if near else " / ".join(sorted(set(rends))[:4]))})
+                          "rend": (near[0] if near else " / ".join(sorted(set(cands))[:4]))})
     return fires
 
 
@@ -955,9 +1087,11 @@ def gloss_note_claims(conn, sid, gloss_notes):
         occs = occurrences(conn, pred, params)
     except Exception:
         return out
-    rend_at = {}
+    rend_at, phrase_at = {}, {}
     for o in occs:
-        rend_at.setdefault((_norm_book(o["book"]), o["ch"], o["vs"]), []).append((o["rend"] or "").strip())
+        key = (_norm_book(o["book"]), o["ch"], o["vs"])
+        rend_at.setdefault(key, []).append((o["rend"] or "").strip())
+        phrase_at.setdefault(key, []).append(((o["phrase"] or ""), (o["ital"] or "")))
     for c in claims:
         for key in c["refs"]:
             if key not in rend_at:
@@ -965,7 +1099,7 @@ def gloss_note_claims(conn, sid, gloss_notes):
             row = conn.execute("SELECT text FROM verses WHERE book=? AND chapter=? AND verse=?",
                                key).fetchone()
             vt = (row["text"] if row else "") or ""
-            for f in check_rendering_claim(c["glosses"], rend_at[key], vt):
+            for f in check_rendering_claim(c["glosses"], rend_at[key], vt, phrase_at.get(key)):
                 out.append({**f, "ref": f"{key[0]} {key[1]}:{key[2]}"})
     return out
 
@@ -1235,14 +1369,14 @@ def _sha1(s):
     return hashlib.sha1((s or "").encode("utf-8")).hexdigest()
 
 
-def draw_signature(sid, translit, gset, ctx, hint=None):
+def draw_signature(sid, translit, gset, ctx, hint=None, pmap=None, constraints=None):
     """Hash of the EXACT model input — system prompt + the full user message + the model id. Any
     change to the prompt, the fed verse sample (a words rebuild moving select_spread, a --budget
     change), the verse prose, the gloss set, or the model produces a DIFFERENT signature. A stored
     draw can only count as a hit when it was drawn from byte-identical input, so a stale draw can
     never silently apply. (OCC_MIN/MAX_TOKENS are deliberately out — OCC_MIN only gates whether a
     word builds; MAX_TOKENS is out for the same reason it's out of synth_ver.)"""
-    user = verse_user_msg(sid, translit, gset, ctx, hint)
+    user = verse_user_msg(sid, translit, gset, ctx, hint, pmap, constraints)
     return _sha1(VERSE_PROMPT + "\x00" + user + "\x00" + MODEL_SONNET)
 
 
@@ -1277,14 +1411,15 @@ def draw_status(rec, sig):
     return "hit"
 
 
-def save_draw(sid, lemma, translit, gset, ctx, raw, forced=None, hint=None):
+def save_draw(sid, lemma, translit, gset, ctx, raw, forced=None, hint=None,
+              pmap=None, constraints=None, no_hints_reason=None):
     """Write (or refresh) the reviewed draw. Called ONLY by the ro pass and --force — an unreviewed
     fresh apply must never leave a draw file that would later look reviewed. Atomic replace so a
     crash mid-write can't leave a torn file. `forced` = any --force-verse refs added to the fed
     sample (coverage override); `hint` = any --structure-hint stable-jobs list injected as draw
     context (escalation mechanism). Both recorded so the draw self-documents why it was fed/framed."""
     os.makedirs(DRAWS_DIR, exist_ok=True)
-    sig = draw_signature(sid, translit, gset, ctx, hint)
+    sig = draw_signature(sid, translit, gset, ctx, hint, pmap, constraints)
     rec = {
         "strongs":   sid,
         "lemma":     lemma,
@@ -1299,6 +1434,17 @@ def save_draw(sid, lemma, translit, gset, ctx, raw, forced=None, hint=None):
         "structure_hint_why": ("escalation mechanism (cap-out): a prior review's certified stable-jobs list "
                                "passed as draw CONTEXT to prevent burying/merging a distinct job; frozen "
                                "prompt untouched, names jobs not carving") if hint else "",
+        # CONSTRAINT hints (--hints; DESIGN_hint_tooling.md, JP-ruled 2026-07-12). The exact lines
+        # injected + their register provenance, so the draw self-documents what it saw. Part of
+        # sig (they ride in the user message), so a hint change forces a fresh draw.
+        "draw_hints": constraints or [],
+        "draw_hints_provenance": (DRAW_HINTS.get(sid, {}).get("provenance", "") if constraints else ""),
+        "draw_hints_why": ("pre-registered constraint hints (parked-word re-entry): fact/discipline/"
+                           "ceiling lines from the park ruling record, injected as draw CONTEXT after "
+                           "the occurrences; frozen prompt untouched, never names a preferred sense "
+                           "or carve") if constraints else "",
+        # --no-hints override on a registered word (ruling 1's logged escape hatch); "" = normal run.
+        "no_hints_reason": no_hints_reason or "",
         "sig":       sig,           # input signature — the live-recompute guard at apply
         "prose_sha": _sha1(raw),    # prose bytes — the edited-since-review guard at apply
         "raw":       raw,
@@ -1450,10 +1596,11 @@ def make_client():
     return anthropic.Anthropic(api_key=get_key())
 
 
-def model_prose(client, sid, translit, gset, ctx, hint=None):
+def model_prose(client, sid, translit, gset, ctx, hint=None, pmap=None, constraints=None):
     msg = client.messages.create(
         model=MODEL_SONNET, max_tokens=MAX_TOKENS, system=VERSE_PROMPT,
-        messages=[{"role": "user", "content": verse_user_msg(sid, translit, gset, ctx, hint)}])
+        messages=[{"role": "user",
+                   "content": verse_user_msg(sid, translit, gset, ctx, hint, pmap, constraints)}])
     return "".join(b.text for b in msg.content if getattr(b, "type", "") == "text").strip()
 
 
@@ -1613,10 +1760,26 @@ def main():
                          "into the draw CONTEXT (user message) as a check against burying/merging a distinct "
                          "job — the frozen prompt is untouched. Names jobs only, not carving; granularity "
                          "stays as-drawn. Logged on the draw record. Do NOT use as routine steering.")
+    ap.add_argument("--hints", action="store_true",
+                    help="inject the word's pre-registered CONSTRAINT hints (draw_hints.py) into the "
+                         "draw context as a CONSTRAINT CHECK after the occurrences — parked-word "
+                         "re-entry mechanism (DESIGN_hint_tooling.md, JP-ruled 2026-07-12). Frozen "
+                         "prompt untouched; lines + provenance logged on the draw; part of the draw "
+                         "signature. Refuses a word with no register entry.")
+    ap.add_argument("--no-hints", metavar="REASON",
+                    help="run a REGISTERED word (draw_hints.py) deliberately WITHOUT its banked hints. "
+                         "A registered word run without --hints refuses by default (ruling 1 — "
+                         "forgetting the banked notes is almost certainly an operator mistake); this "
+                         "is the logged override. The reason is stored on the draw record.")
     args = ap.parse_args()
 
     if not args.dry_run and not args.apply:
         sys.exit("Pass --dry-run (show, no write) or --apply (write).")
+    if args.hints and args.no_hints:
+        sys.exit("--hints and --no-hints contradict each other — pass one.")
+    if (args.hints or args.no_hints) and args.all:
+        sys.exit("--hints/--no-hints are per-word (the register is per-word) — use with --word, "
+                 "never --all.")
     if args.from_draw and (not args.word or not args.apply or args.force or args.all or args.dry_run):
         sys.exit("--from-draw ships one reviewed draw: use as --apply --word G#### --from-draw KEY8 "
                  "(no --force / --all / --dry-run — it ships specific reviewed bytes, it never rolls).")
@@ -1716,11 +1879,40 @@ def main():
             ot = sum(1 for c in ctx if c[0] not in NT_BOOKS)
             print(f"  occurrences {len(occs)} | {len(gset)} renderings | fed {len(ctx)} ({ot} OT / {len(ctx)-ot} NT)")
 
-            if args.structure_hint:
-                print(f"  structure-hint (escalation mechanism, {len(args.structure_hint)} jobs) injected "
+            # ── CONSTRAINT-HINT REGISTER (draw_hints.py; DESIGN_hint_tooling.md, JP-ruled
+            # 2026-07-12). Refuse-when-forgotten is the DEFAULT (ruling 1): a registered word
+            # re-entering without its banked hints is almost certainly an operator mistake.
+            pmap = phrase_map(occs)
+            reg = DRAW_HINTS.get(sid) or {}
+            constraints = None
+            if args.hints:
+                if not reg.get("hints"):
+                    print(f"  ✗ --hints: {sid} has no entry in draw_hints.py — nothing to inject. "
+                          f"NOT run.", file=sys.stderr)
+                    failures.append(sid); continue
+                constraints = reg["hints"]
+                print(f"  CONSTRAINT hints injected ({len(constraints)} line(s), register provenance: "
+                      f"{reg.get('provenance', '(none)')}) — the draw will see, verbatim:")
+                for i, c in enumerate(constraints, 1):
+                    print(f"    {i}. {c}")
+            elif reg.get("hints"):
+                if args.no_hints:
+                    print(f"  ⚠ {sid} IS REGISTERED in draw_hints.py ({len(reg['hints'])} banked "
+                          f"line(s)) — running WITHOUT them by --no-hints override; reason logged "
+                          f"on the draw: {args.no_hints}")
+                else:
+                    print(f"  ✗ {sid} is REGISTERED in draw_hints.py ({len(reg['hints'])} banked "
+                          f"hint line(s)) but --hints was not passed. A parked word re-entering "
+                          f"without its banked hints is refused by default (JP ruling 1, "
+                          f"2026-07-12). Pass --hints, or override with --no-hints REASON. "
+                          f"NOT run.", file=sys.stderr)
+                    failures.append(sid); continue
+            eff_jobs = args.structure_hint or (reg.get("jobs") if args.hints else None) or None
+            if eff_jobs:
+                print(f"  structure-hint (escalation mechanism, {len(eff_jobs)} jobs) injected "
                       f"into draw context — frozen prompt untouched, logged on the draw")
             # ── DRAW CACHE. Recompute the current input signature live; consult the cached draw.
-            sig = draw_signature(sid, translit, gset, ctx, args.structure_hint or None)
+            sig = draw_signature(sid, translit, gset, ctx, eff_jobs, pmap, constraints)
             rec = None if args.force else load_draw(sid)
             status = draw_status(rec, sig) if rec else None
 
@@ -1771,11 +1963,12 @@ def main():
                 print("  calling the verse engine (Sonnet)…")
                 if client is None:
                     client = make_client()
-                raw = model_prose(client, sid, translit, gset, ctx, args.structure_hint or None)
+                raw = model_prose(client, sid, translit, gset, ctx, eff_jobs, pmap, constraints)
                 if args.dry_run or args.force:
                     # ro (review pass) and --force write/refresh the draw so apply ships THIS prose.
                     save_draw(sid, lemma, translit, gset, ctx, raw,
-                              forced=args.force_verse, hint=args.structure_hint or None)
+                              forced=args.force_verse, hint=eff_jobs,
+                              pmap=pmap, constraints=constraints, no_hints_reason=args.no_hints)
                     tag = " (forced — cache refreshed)" if args.force else ""
                     print(f"  cached draw → {draw_path(sid)} (key {sig[:8]}){tag}")
                 elif args.apply:

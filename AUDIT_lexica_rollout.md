@@ -1982,7 +1982,59 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
-### BATCH 4 — CLOSED BY JP RULING (2026-07-12, run session 3; "yes do all of that").
+### BUILD SESSION 1 — RENDERING-LAYER FIX + HINT TOOLING BUILT (2026-07-12, post-batch-4;
+### NO word runs — no floors, no draws, no applies, per the opener charter). All 15 curated
+### Python tests green incl. the certified phantom test; new tests wired into CI + hook
+### (both lists).
+**Work item 1 — fragment-rendering fix (the JP-caught 2Ch 4:13 class), BUILT:**
+`occurrences()` now carries the slot's full ABP phrase (`words.english`) + `italic_words`
+alongside the one-token head; the head stays the render KEY everywhere (phantom protection
+preserved by design — the render counts never read the raw phrase). Consumers fixed:
+- **Draw feed:** the here-tag prints the full phrase when multi-word (`phrase here: "latticed
+  works;" (added words: works)`), with a one-line caveat that a phrase can carry neighboring
+  words; fragment-risk heads (heads that NEVER stand alone — `phrase_map`) are annotated in
+  the gloss set (`work (1; always inside a phrase: "latticed work")`). The δίκτυον *work*
+  bullet's stimulus is gone at the source.
+- **Claim-checker:** `check_rendering_claim` accepts whole-phrase equality (full phrase, or
+  phrase minus translator additions), punctuation-stripped, case preserved. CONTAINMENT still
+  fires — the archived ἁμαρτία 'sin'-vs-'sin offering' control is pinned in a new test.
+- **Three noise classes fixed, each with a control test:** identical-string (punct-stripped
+  compare; 'exchange,' vs 'exchange' dead) · emphasis-italics-as-gloss (glosses read only
+  BEFORE the ref paren; the G162 *perform* case pinned) · prose-mention-counted-as-citation
+  (double_shelved now counts GROUNDING-LIST parentheticals only — a paren carrying prose words
+  is a mention; the Amo 1:6 case pinned; genuine two-list shelving control-fires; sense_specs/
+  coverage still reads ALL refs so a mention can never hide a coverage gap).
+- **Fixtures:** 2Ch 4:13 pos-7/pos-13 (source-verified word rows from the investigation entry)
+  + Isa 24:5 'bartered away' are named control tests in test_lexica_detectors.py.
+  test_render_head_no_phantom untouched and green.
+- **Floor tool mirrors the feed:** lexica_agreement computes + passes the same phrase
+  annotation (mirror invariant extended on the record).
+**CONSEQUENCE, on the record: the user message changed shape, so EVERY cached draw and saved
+floor predates the new feed.** Draw staleness is self-enforcing (signature). Floor reuse for
+batch-5 re-entry = a charter ruling (see draft): the parks' saved STABLE floors remain real
+evidence of sense structure, but they were fed fragment-era gloss sets.
+**Work item 2 — constraint-hint tooling, BUILT per the RULED design (all five rulings):**
+- `scripts/draw_hints.py` — the hand-curated register, seven entries (G1244, G1390, G2168,
+  G227, G236, G2805, G162), hints verbatim-shaped from the design doc's drafted lines, each
+  with provenance naming its park entry. File header carries the ruling-3 JP-checkpoint rule
+  and the ruling-5b reviewer verification step.
+- `--hints` injects a labeled CONSTRAINT CHECK into the user message AFTER the occurrences and
+  after any STRUCTURE CHECK (frozen prompt untouched); lines print to console verbatim at draw
+  time; recorded on the draw (`draw_hints` + `draw_hints_provenance` + why) and part of the
+  signature (hint change → fresh draw, tested).
+- **Refuse-when-forgotten is live (ruling 1):** a registered word run without `--hints` refuses
+  loudly; `--no-hints REASON` overrides and the reason lands on the draw record
+  (`no_hints_reason`). `--hints` on an unregistered word also refuses. Both incompatible with
+  `--all`.
+- Register `jobs` lines (empty for all seven today) ride the existing structure-hint channel
+  under `--hints` when no CLI `--structure-hint` is given.
+- **CI:** tests/test_draw_hints.py — provenance required on every entry, one-line hints only,
+  membership PINNED to the ruled seven (an unruled register edit fails CI — the ruling-3
+  tripwire), injection order (occurrences < structure < constraint), signature sensitivity,
+  phrase-context injection. Added to BOTH lists (ci.yml + pre-commit).
+**Work item 3 (reviewer walk of the seven entries vs park entries) = the reviewer chat's step;
+the register text + provenance strings are the relay material. Work item 4 (batch-5 charter)
+drafted to JP — see the handoff.**
 ### FINAL: COUNT 7/15 name-true (δίκτυον [rebuilt clean, dagger off], σελήνη, ὑπομονή,
 ### ταμεῖον, κάλαμος, καταπέτασμα, εἰρηνικός — the committed s2 list, verified against
 ### the docs) · STREAK 2 · 7 words on the structure-hint shelf · queue rolled forward.

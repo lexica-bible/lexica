@@ -378,13 +378,14 @@ def _check_prompt_sync():
 # ══════════════════════════════════════════════════════════════════════════════════════════════
 # One draw, and the per-sense parse (the alignment skeleton).
 # ══════════════════════════════════════════════════════════════════════════════════════════════
-def draw_once(client, system, sid, translit, gset, ctx):
+def draw_once(client, system, sid, translit, gset, ctx, pmap=None):
     """One generation. Mirrors build_lexica_def.model_prose EXACTLY (same model, max_tokens, no
     temperature override) — the only thing that varies between draws is the model's own sampling,
-    which is the wobble we are measuring."""
+    which is the wobble we are measuring. pmap = the phrase-context annotation the build feeds
+    (2026-07-12 fragment-rendering fix) — the mirror invariant covers it like the rest."""
     msg = client.messages.create(
         model=B.MODEL_SONNET, max_tokens=B.MAX_TOKENS, system=system,
-        messages=[{"role": "user", "content": B.verse_user_msg(sid, translit, gset, ctx)}])
+        messages=[{"role": "user", "content": B.verse_user_msg(sid, translit, gset, ctx, pmap=pmap)}])
     return "".join(b.text for b in msg.content if getattr(b, "type", "") == "text").strip()
 
 
@@ -646,6 +647,7 @@ def evidence_summary(conn, sid, budget, has_surface):
     lemma, translit = B.lex_head(conn, sid)
     ot = sum(1 for c in ctx if c[0] not in B.NT_BOOKS)
     return {"lemma": lemma, "translit": translit, "gset": gset, "ctx": ctx,
+            "pmap": B.phrase_map(occs),
             "total": len(occs), "renderings": len(gset), "fed": len(ctx), "ot": ot}
 
 
@@ -746,7 +748,7 @@ def main():
         print(f"\n{sid} {LABELS.get(sid, '')}: drawing {args.runs}x …", flush=True)
         draws = []
         for k in range(args.runs):
-            raw = draw_once(client, system, sid, ev["translit"], ev["gset"], ev["ctx"])
+            raw = draw_once(client, system, sid, ev["translit"], ev["gset"], ev["ctx"], ev.get("pmap"))
             draws.append(parse_draw(conn, sid, raw))
             fb = " — headline fallback" if draws[-1].get("split_mode") == "headline" else ""
             print(f"   draw {k + 1}/{args.runs}: {draws[-1]['count']} senses{fb}", flush=True)
