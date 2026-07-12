@@ -530,6 +530,12 @@ fix-the-raw OPEN (edited-draw design question, unruled). **G2805 SHIPPED ʰ — 
 scoreboard 1/7ʰ** (one draw, zero adjudicated defects; hint-echo leak caught at render,
 excised via fix_lexica_raw.py, render re-passed — NEW CLASS on V9_PILE, detector =
 build-session ticket; hinted-word proofreads now include a manual hint-echo scan).
+**STANDING DELEGATION (JP ruling 2026-07-12, PERMANENT — every future session):** stop
+routing decisions/questions to JP. CC + reviewer form the recommendation and apply it AS
+the ruling, logging "applied under JP's standing delegation (2026-07-12)". JP's only
+touchpoints: paste-ready commands (no embedded choices), render screenshots, ship/park
+notices. Covers checkpoint classes (register edits, fix paths) via the delegation note.
+Memory: feedback_no_questions_standing_delegation.
 G162 RE-PARKED 2026-07-12 (three non-overlapping single defects, both hints 6-for-6;
 retry = next engine/prompt change, same class as G227; dash-expansion scanner question
 banked CHECK-FIRST on the pile). Order now: G236 next.
