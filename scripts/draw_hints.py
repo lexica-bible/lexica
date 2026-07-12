@@ -74,9 +74,11 @@ DRAW_HINTS = {
                       "2026-07-11) + BATCH 4 CLOSED banked hints; JP batch-close ruling 2026-07-12. "
                       "Joh 8:15 pin: V9 floor agreement_G227_v9_20260712-154728 (real-miss Joh 8:15 "
                       "in draws 1/4/6/9/10, adjudicated one class, neighbor-slip) + JP add ruling "
-                      "2026-07-12 (batch-5 run session 2). Range clause: build draw 2 same session "
-                      "(key c17fa2cd) — 8:15 rode in via gloss-note range 'Joh 8:13-17' under the "
-                      "#28 scanner; JP tighten ruling 2026-07-12.",
+                      "2026-07-12 (batch-5 run session 2). Range clause: build draw 2, 2026-07-12 "
+                      "(second forced dry-run this session; input key c17fa2cd names inputs shared "
+                      "with draw 1, not draw-2 bytes — raw is in the session record) — 8:15 rode "
+                      "in via gloss-note range 'Joh 8:13-17' under the #28 scanner; JP tighten "
+                      "ruling 2026-07-12.",
     },
     "G236": {    # ἀλλάσσω — change/exchange
         "hints": [
