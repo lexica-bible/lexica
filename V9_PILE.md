@@ -227,3 +227,20 @@ Format: date · word · defect class · exhibit pointer · status.
   range expansion may be blind to it. Verify against the cached raw + ref_spans at the
   next build session before treating it as a bug. Same draw: bare "1:15 and 1:17"
   fragment (the δόμα "At 8:16" class) correctly not counted.
+- 2026-07-12 · batch-5 s2 · **V10 CHARTER SEED — COVERAGE REPAIR PASS (CC design read
+  banked, JP-prompted; ruling = fresh-session JP checkpoint, binding-logic class):**
+  residual failure after V9 = exemplar-sampling trim, no nameable trap (G227 38/39
+  final margin, G162 35/36 sole Job 1:15 while citing its twin; hints 17-for-17 on
+  diagnosed defects). Design: on coverage-gate fail, ONE bounded re-call with the
+  card's own text + the gate's named absentees ("integrate these N refs into the
+  existing senses, change nothing else"); result re-runs EVERY gate fresh; draw record
+  stamps repaired-refs + repair-prompt version (ruled/versioned like hints); cap 1-2
+  rounds. NOT the edited-draw class (model writes, machines re-check, human still
+  adjudicates the final card — review-what-ships intact). Sizing: one build session
+  (tool + ruled prompt wording + must-fail control in BOTH CI lists). Evidence: both
+  s2 parks ship same-day under it. Rejected alternatives on the record: coverage-first
+  prompting (shape change = lesson-47 reader risk), auto-retry (re-rolls don't converge
+  — G162's draws each fixed the last defect and rolled a new one; human-read cost, not
+  API cost, is the binder). Fallback shape if repair underperforms (V11 class,
+  multi-session): two-stage draw — roster-assign every fed ref to a sense (machine-
+  checked) then write prose from the roster; makes coverage structural.
