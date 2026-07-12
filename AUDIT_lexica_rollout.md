@@ -1982,7 +1982,45 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
-### G227 ἀληθής — PARKED (batch-4 word 4, entered by re-selection r14; JP "PARK"
+### δίκτυον G1350 RULING CHAIN — RUN + CLOSED THROUGH (d) (2026-07-11/12, JP live;
+### the queued 4-step chain from the CORPUS-DEFECT FIRE entry). DAGGER STAYS ON until
+### the rebuild ships; the rebuild is the named next execution item.
+**(b) CLASSIFIED (ruled first — the builder's own comment forbids landing rows without a
+classification on record):** JP ABP-app reading — the source PRINTS the dotted numbers,
+import faithful, both cousins real: **1350.1 = δικτυόω** (verb "make into latticework";
+1Ki 7:18 δεδικτυωμένοι) · **1350.2 = δικτυωτός** (adjective "latticed"; Exo 27:4 δικτυωτῷ,
+the interlinear confirming the adjective MORPHOLOGICALLY — modifying ἐσχάραν…χαλκῆν — not
+just the number). One witness per number + uniform English across all six rows = the
+classification basis.
+**(a) EXECUTED (checkpointed):** HAND_OVERRIDES rows landed (`fb495a3`), builder dry-run
+baselined on old code THEN verified post-pull (total 3625→3627, both rows present with
+right lemmas), `--apply` run, rows PROVEN FROM THE TABLE: G1350.1 δικτυόω · G1350.2
+δικτυωτός · G1390.1 δόμος. Two CC mis-predictions on the tripwires, named: "shown now"
+prints blank for hand-classified rows (matches the δόμος baseline), and the `no_entry: 86`
+skip counter does NOT drop — it counts the class regardless of hand-overrides (the
+baseline proved it: 86 with δόμος already landed).
+**(c) RULED: REBUILD** (JP; reviewer concurring on protocol grounds, not preference) —
+the bare-1350 verse table proves δίκτυον's architecture sense is REAL AND ITS OWN
+(nine genuine lattice rows: 1Ki 7:17/41/42 · 2Ki 25:17 ×2 · 2Ch 4:12/13 ×2 · Jer 52:22/23,
++ Son 2:9's window; plus the net verses); only the five cited verses are aliens. No tool
+may change which verses a sense cites, and a data fix touching a word's evidence
+invalidates its floor → rebuild is the only protocol-legal disposition: fresh floor on
+the cleaned feed → build draw → full ship review → apply → render check.
+**(d) RULED: KEEP** (JP) — δίκτυον stays in the 7/15. Reason on the record: the count
+measures the ENGINE's unassisted ship rate; the engine cited faithfully from a
+contaminated feed; the failure was the corpus pipeline's, classified (#45 origin case)
+and now fixed. **Dagger comes off ONLY when a clean rebuild ships** — until then readers
+still see alien verses on the live card.
+**TEMPLATE DEFECT CAUGHT + DISCLOSED (CC self-caught at the proof step):** the standing
+pre-pull's side-table line was DEAD — `dotted_lexicon` keys are **G-prefixed** (builder
+writes "G"+num), so every bare `LIKE 'NNN.%'` side-table check this batch (G2168, G227,
+G1350) could never match anything. No conclusion was wrong (each had independent
+grounding: words-table line showed zero dotted rows / the builder's no_entry list), but
+a query that can't match reads identically to "clean" — detector-must-fail class.
+**STANDING FIX: side-table lookups use `'GNNN.%'`; words-table lookups stay bare** (the
+exact-or-dotted rule's second clause; data-model corollary updated). Third key-shape slip
+of the class in one arc ('227%' sweep · bare proof query · dead 2a line) — the corollary
+now carries all three shapes.
 ### 2026-07-11, run session 2, per the pre-set rule: three defect-class draws on clean
 ### data, no draw 4). COUNT 7/15 UNCHANGED, STREAK 1 UNCHANGED. Re-enters via the
 ### structure-hint path — reviewer-ranked the STRONGEST hint candidate on the shelf

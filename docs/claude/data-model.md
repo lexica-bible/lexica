@@ -70,10 +70,13 @@ citable `parse_abp.HEAD_WORD_TAIL_CAVEAT`; locked by `tests/test_render_head_no_
   its dotted neighbors, and a base-group can lump a real dotted word (διὰ κενῆς G1246.x) onto an
   unrelated hapax and look like contamination. This matters most at SCALE — the Lexica-def
   rollout arc (~3,954 words) run dot-blind would manufacture false positives wholesale.
-  - **Query-shape corollary (standing, 2026-07-11):** match a Strong's number in `words` as
-    `strongs='NNN' OR strongs LIKE 'NNN.%'` — NEVER a bare prefix `LIKE 'NNN%'`. Short numbers
-    sweep neighbor series ('227%' also matches the whole 2270-family); a bare prefix is safe on
-    4-digit numbers only by accident.
+  - **Query-shape corollary (standing, 2026-07-11; second clause added same day):**
+    (1) match a Strong's number in `words` as `strongs='NNN' OR strongs LIKE 'NNN.%'` — NEVER a
+    bare prefix `LIKE 'NNN%'`; short numbers sweep neighbor series ('227%' also matches the whole
+    2270-family). (2) **`dotted_lexicon` keys are G-PREFIXED** (`build_dotted_lexicon.py` writes
+    "G"+num) — side-table lookups use `'GNNN.%'`/`'GNNN.N'`; a bare-number check against it
+    matches NOTHING and reads identically to "clean" (dead-check class, caught 2026-07-11 at the
+    δίκτυον chain — three key-shape slips in one arc, all three shapes now here).
 - `kjv_strongs.strongs_id` is also fully prefixed (always was).
 - Always single-match in SQL: `WHERE w.strongs_base = 'G4151'`.
 - After ANY words rebuild: `SELECT count(*) FROM words WHERE strongs_base GLOB '[0-9]*'` = 0.

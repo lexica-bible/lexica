@@ -500,10 +500,18 @@ disk, mechanical). GATE ORDER (re-ruled after two s2 sequence slips — a third 
 config-test bump signal): screens → pre-reg banked in the reviewer chat → floor →
 adjudication → build draws. NOTHING fires between reviewer concur and the bank.
 Standing procedures unchanged from the s2 opener below, PLUS: pre-pull patterns
-exact-or-dotted (`strongs='NNN' OR strongs LIKE 'NNN.%'`, never bare prefix — data-model
-corollary) · headline-fallback marker = expected on one-sense draws, every fallback draw
+exact-or-dotted, BOTH clauses (`words`: `strongs='NNN' OR strongs LIKE 'NNN.%'`, never
+bare prefix; **`dotted_lexicon`: keys are G-PREFIXED — use `'GNNN.%'`, a bare check
+matches nothing and reads as clean** — data-model corollary, δίκτυον-chain catch) ·
+headline-fallback marker = expected on one-sense draws, every fallback draw
 inspected · singular "Gloss note:" now parses (splitter package #2) · floors
 `--word <SID> --runs 10 --prompt v8` · R1 on disk before relay · commit lists not lengths.
+POST-S2 STATE ADD (2026-07-11/12): **δίκτυον ruling chain CLOSED through (d)** — (b)
+cousins classified from the source (1350.1 δικτυόω, 1350.2 δικτυωτός) · (a) side-table
+rows LIVE on PA (`fb495a3` + builder --apply, row-proven) · (c) REBUILD ruled · (d) KEEP
+ruled, **dagger stays on until the clean rebuild ships**. The δίκτυον rebuild = a named
+execution item alongside the double re-selection (fresh floor on the cleaned feed, full
+ship review). Record = audit doc δίκτυον RULING CHAIN entry.
 
 ## BATCH-4 RUN SESSION 3 — REVIEWER-CHAT INHERITANCE BLOCK (paste into the new reviewer chat)
 You are the reviewer chat for Lexica batch-4 run, session 3. Everything ruled is in the
