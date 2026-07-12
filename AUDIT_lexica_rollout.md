@@ -1982,6 +1982,50 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### G227 ἀληθής — RE-PARKED (batch-5 run session 1, hinted re-entry word 1; JP "park"
+### 2026-07-12, retry-trigger = the #28 ref-scanner fix landing — a CONDITIONAL park, not
+### indefinite). Three defect-class draws on a clean fresh floor, no draw 4 per the pre-set
+### rule. HINTED SCOREBOARD 0/7 — but the HINT MECHANISM VALIDATED 3-for-3 (separate line
+### per the reviewer amendment: both register hints held on every draw — zero G228 bleed,
+### named duals executed both directions — while the word failed for reasons OUTSIDE hint
+### territory).
+**Floor (the live one): `agreement_G227_v8_20260712-134150.json`** — drawn AFTER the PA
+deploy (see the FLOOR VOID entry below for its predecessor), spread {3:5, 4:3, 5:2} mean
+3.7, STABLE, reviewer-concurred. Anatomy: correspondence 10/10 · person 8/10 (+folds) ·
+juridical own-shelf EXACTLY 5/10 (Joh 8:13–17, folds into correspondence otherwise) ·
+conduct/genuine family carved in ALL TEN draws. Three pre-clears banked: (1) juridical =
+two named homes only, draw-7 wide shelf EXCLUDED by name; (2) genuine-region legal with
+attested members; (3) person-fold into meets-standard/correspondence legal. Amendment-2
+verified at pre-reg AND at every draw (console lines vs register, verbatim, 3-for-3).
+**The three draws (all REJECT, adjudicated + reviewer-concurred, #30 run on each):**
+- d1 (3 senses): placement ×3 — Isa 41:26 (0/10 conduct + hedge prose), Isa 43:9 (1/10),
+  2Co 6:8 (1/10, "kept none" — caught by #30, missed by both hand reads: #30's first live
+  earn) + coverage ×1 (Joh 7:18 uncited) + Job 42:8 behind "42:7–8" (37/39).
+- d2 (3 senses): PRE-CLEAR-1 VIOLATION — sense 2 reproduced the excluded draw-7 wide
+  juridical shelf (Joh 3:33, Rom 3:4, Joh 7:18, Tit 1:13 recruited) + Php 4:8 s1 (1/10) +
+  coverage ×4: Joh 8:26 uncited (a bare "26" fragment in a gloss note), bare sub-refs
+  "(8:14)…(8:17)" (the δόμα "At 8:16" class), 42:7–8 range repeat, Isa 42:3 left shelf-less
+  ("cannot be assigned securely" is not a disposal). 34/39.
+- d3 (2 senses): wide-juridical WORST (9 #30 fires; Act 12:9 filed juridical while its own
+  prose does correspondence work — misplacement+misdescription pairing; Neh 7:2/Php 4:8
+  0/10 juridical) + STRUCTURAL COLLAPSE (all 10 floor draws carve a conduct-family shelf;
+  a 2-sense ship is below attested minimum) + 42:7–8 third time (38/39, 42:8 the constant).
+**Park rationale (JP-ruled on CC+reviewer concurring recommendation):** the failure is
+DIRECTIONAL, not noise — two attractors every draw (juridical over-collection; the 42:7–8
+dash) across three different sense-counts. One attractor (the dash) dies entirely at the
+#28 scanner fix WITHOUT touching the frozen prompt: once ranges are readable, the model's
+range-writing habit becomes a legal citation, and the gate/double-shelf detector gain
+sight. Retry = after #28 lands. The legal Job 42:7/42:8 citation-discipline hint is noted
+AVAILABLE-AT-RETRY, NOT added to the register (JP ruling; likely moot post-#28; a
+juridical-membership hint was examined and ruled ILLEGAL AS DRAFTED — it prescribes a
+carve; any future juridical trap-warning wording needs its own ruling first).
+**Cross-word finding (CC sweep, existing data only):** boundary over-collection as a CLASS
+is not G227-specific (ἀλλάσσω G236's park signature); the juridical attractor itself is.
+The range/tail blindness is systemic + already ticketed (#28): χριστός 4/4 draws,
+εἰρηνικός ×5, δόμα ×6, καταπέτασμα ×3, now G227 3/3 — and JP's live-card sweep found
+17/77 shipped cards carrying range forms (roster in the TODO ticket; post-fix resweep
+adjudicates). Also ruled same session: #28 scanner fix BUILDS NOW, before κλαυθμός fires.
+
 ### G227 FLOOR VOID — STALE-PA CLASS (batch-5 run session 1, 2026-07-12; caught by the
 ### --hints refusal, disclosed same session). agreement_G227_v8_20260712-132852.json is
 ### VOID with its adjudication and all three banked pre-clears.
