@@ -114,6 +114,15 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   fix if the filter is reused at scale.
 
 ## Open word-study / data issues (low priority, none gating)
+- **Eponym card, per-verse sharpening (banked candidate — JP option (b), 2026-07-11).** Shipped fix
+  (81930ee) = static both-senses opener on the 14 tribal-founder person cards (Judah, Israel, the 12
+  sons + Ephraim/Manasseh), patriarch bio under a "The man" break — never wrong, never sharp. Banked
+  upgrade: per-occurrence sense from a rulings-style pattern list on the neighboring words ("king of",
+  "land of", "cities of", "tribe of" → territorial), so the card can lead "Kingdom of Judah — named
+  for Judah, son of Jacob" on territorial verses. NOT fuzzy guessing — explicit pattern list, JP-ruled.
+  Background: TIPNR deliberately folds tribe/kingdom refs into the founder entity (its place entity
+  H3063N covers only "Judea"-style refs, ~2 OT verses); binding is faithful, this is presentation only.
+  code: static/src/30-detail-panel.jsx EPONYM_LINES.
 - **Helper-word double-tag class (periphrastic verb renderings)** (logged 2026-07-09, batch-3
   session 3, found via Jud 1:9 during G2008 ἐπιτιμάω). ABP two-word verb renderings like
   "May … reproach" store as TWO word rows both carrying the same Strong's — verified Jud 1:9
