@@ -499,8 +499,9 @@ at 0/7 (separate line, superscript-h marker, never joins the 7/15) · re-entry o
 δόμα G1390 → διαιρέω G1244, then the six queue words UNAIDED (ἡσυχάζω G2270, μερίζω G3307,
 παραπορεύομαι G3899, σιωπάω G4623, ἐκλύω G1590, ἐπανίσταμαι G1881) · V8 live (stamp
 lexica:7ef8620328a9) · δίκτυον live card carries the ONE known-issue *work* bullet —
-engine-prose fragment instance, fixed by a fresh draw under the new feed (schedule it this
-batch; from-draw refresh path).
+engine-prose fragment instance, fixed by a fresh draw under the new feed (refresh PENDING
+a JP scheduling ruling — it was NOT one of the three ruled charter decisions; do not slot
+the draw without that ruling; from-draw refresh path when ruled).
 FLOORS RULED: FRESH 10-run floors for ALL SEVEN (`--word <SID> --runs 10 --prompt v8`),
 no park-floor reuse, saved park floors = historical artifacts only, NO override/reuse path
 exists or gets built. Floors are UNHINTED by design (hints fire at build draws only, via
@@ -533,6 +534,10 @@ draw_hints.py verbatim + the register lines against their cited park rulings bef
 floor. Ledger carried: the s3 queue miscount stands against the reviewer ledger (re-count,
 never carry) · relay drops → repost · the two batch-5 prep items (key-shape audit,
 section-matcher sweep) are decide/run-at-open items — hold CC to them before word 1.
+Mapping note: the key-shape audit IS the ticketed form of the three carried key-shape
+slips (the TODO entry says it would have caught all three); the section-matcher sweep is
+its sibling with its OWN provenance (V9_PILE note 2026-07-11, the #47 reader gaps) — two
+items, nothing missing.
 
 ## BUILD SESSION 1 — RECORD (2026-07-12; both builds LANDED, no word runs). Full record =
 ## audit doc BUILD SESSION 1 entry. Fragment-rendering fix + three checker noise classes
