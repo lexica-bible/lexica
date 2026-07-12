@@ -958,6 +958,9 @@ fire (NOT optional) → step 6 visual layout session against V8 output.
 - Free cache re-read: `cd ~/bible-db && python scripts/build_lexica_def.py --word G#### --dry-run`
 - Apply (repeat any hint flags verbatim): `cd ~/bible-db && python scripts/build_lexica_def.py --word G#### --apply --require-cache`
 - Occ table: `sqlite3 ~/bible-db/bible.db "SELECT DISTINCT strongs FROM words WHERE strongs LIKE '####%';"` +
+  **[SUPERSEDED SHAPE — batch-5 key-shape audit 2026-07-12: bare prefix sweeps neighbor series
+  ('227%' hits the 2270-family). Use exact-or-dotted: `strongs='NNN' OR strongs LIKE 'NNN.%'`.
+  Historical template kept for the session-6 record only — never copy it.]** +
   book spread + `count(DISTINCT v.id), count(*)` variants (audit doc session-5 entries carry the exact texts)
 - Style-ledger checks (def_json fields): gloss-note italic leads
   `sqlite3 ~/bible-db/bible.db "SELECT strongs, lemma FROM lexica_def WHERE json_extract(def_json,'\$.gloss_notes') LIKE '%*\"%';"` ·

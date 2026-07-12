@@ -34,6 +34,7 @@ jobs:
           python tests/test_lexica_detectors.py
           python tests/test_draw_hints.py
           python tests/test_lexica_section_split.py
+          python tests/test_section_matcher_sweep.py
           python tests/test_helper_double_tag.py
 
   frontend:

@@ -585,7 +585,12 @@ REST of the dotted-Strong's question, none of it gating the rollout:
   Batch-4 evidence keeps mounting: two more UNSEEN-REAL sets caught only by the mandatory manual tail check
   (εἰρηνικός ×5, ἀληθής Job 42:8 hiding a double-shelf behind a "42:7–8" range).
   code: scripts/build_lexica_def.py `_REF_RE`/`cited_refs`
-- **Standing-query key-shape audit (reviewer, 2026-07-12 — batch-5 prep list).** Three key-shape
+- **Standing-query key-shape audit — DONE (batch-5 s1 open, 2026-07-12).** Swept every LIKE/SELECT
+  template in the handoff/audit/data-model docs against the stored key shapes. ONE find: the spent
+  session-6 verbatim-commands block carried the bare-prefix occ-table template (`LIKE '####%'` —
+  the '227%' slip's exact shape); now annotated SUPERSEDED in place, never rewritten (historical
+  record kept). All rule statements (data-model corollary, s3/batch-5 opener clauses) already carry
+  the three shapes correctly; no other template misuses a key. Original ticket: three key-shape
   slips in one night (bare-prefix '227%' sweep; bare-number checks against the G-prefixed
   dotted_lexicon, twice — a DEAD check that read as clean through three words). One-time audit:
   every standing query template in the docs/procedures checked against the ACTUAL stored key
@@ -611,7 +616,13 @@ REST of the dotted-Strong's question, none of it gating the rollout:
   notes — likely misdiagnosed parked-phrase artifacts (refusals correct); JP PA read.
   Record: audit doc FRAGMENT-RENDERING INVESTIGATION + BUILD SESSION 1 entries.
   code: scripts/build_lexica_def.py occurrences/phrase_map/check_rendering_claim/_grounding_refs
-- **Section-matcher shape-conformance sweep (V9_PILE note, 2026-07-11 — decide before batch 5).** Two reader
+- **Section-matcher shape-conformance sweep — RUN (batch-5 s1 open, 2026-07-12).** Sweep test built:
+  tests/test_section_matcher_sweep.py (in BOTH CI lists) — every handled label/sense-header variant
+  pinned, plus PINNED GAPS (not endorsed, each a JP call if a draw ever produces one): singular
+  "Sense:" label not a header (accepting it is NOT one-line — colon is optional, so bare "sense"
+  would turn prose lines into headers) · heading/bullet label forms not headers · bold paren
+  numbering "**1) x**" collapses to the loud one-sense fallback · bare-label-word-opens-section
+  hazard pinned as chosen. No matcher change made (splitter edits = checkpoint-class). Original ticket: two reader
   gaps landed in ONE session on the first one-job word (#47 unnumbered one-sense card scored 0; singular
   "Gloss note:" label leaked the note into Range). Sweep `_SECTION_RE` + `_sense_spans` against every label/
   shape variant the house style permits, so the next legal variant is found by test, not by a live floor.
