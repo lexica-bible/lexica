@@ -27,7 +27,7 @@ const fs = require("fs");
 const path = require("path");
 
 require.extensions[".jsx"] = require.extensions[".js"];
-const { getEnglishOrderWords, groupForGreekMode, orderBracketGroupWords, greekLineForWord, pnClickPayload, libViewTransition } =
+const { getEnglishOrderWords, groupForGreekMode, orderBracketGroupWords, lastRenderedIndex, greekLineForWord, pnClickPayload, libViewTransition } =
   require(path.join(__dirname, "..", "static", "src", "56-library-order-logic.jsx"));
 
 const SNAP = path.join(__dirname, "snapshots");
@@ -299,6 +299,35 @@ test("entering interlinear forces both study toggles on (front door)", () => {
   assert.strictEqual(fromProse.showStrongs, true);
   assert.strictEqual(fromProse.showInterlinear, true);
   assert.strictEqual(fromProse.proseSnap, null);
+});
+
+// 16. TRAIL LANDING SPOT (Jer 46:15 class) — chip mode's lifted clause punctuation
+//     must land on the last group member that actually RENDERS, not on a label-less
+//     folded pronoun/article that sorts last (no order digit) and whose chip is null.
+//     Jer 46:15 shape: [calf(2) <empty> your-chosen?(1)] -> after the lift+reorder the
+//     empty token is last; the '?' must attach to "calf", not vanish with the null chip.
+test("lastRenderedIndex walks the trail back past label-less chips (Jer 46:15)", () => {
+  // post-lift, post-reorder group as the chip render sees it (english already stripped of '?')
+  const gwR = [
+    { english: "your chosen", english_head: "chosen", greek_pos: 1 },
+    { english: "calf", english_head: "calf", greek_pos: 2 },
+    { english: "", english_head: "", greek_pos: null },   // folded article — chip renders null
+  ];
+  assert.strictEqual(lastRenderedIndex(gwR), 1, "trail lands on 'calf', not the empty token");
+  // when the last member has text, it keeps the trail (Jer 46:16 'Grecian sword.' group)
+  const ok = [
+    { english: "of the Grecian", english_head: "grecian", greek_pos: 1 },
+    { english: "sword", english_head: "sword", greek_pos: 2 },
+  ];
+  assert.strictEqual(lastRenderedIndex(ok), 1);
+  // english_head alone counts as rendered (label falls back to it)
+  const headOnly = [
+    { english: "said", english_head: "said", greek_pos: 1 },
+    { english: "", english_head: "neighbor", greek_pos: null },
+  ];
+  assert.strictEqual(lastRenderedIndex(headOnly), 1, "english_head-only chip still renders");
+  // an all-empty group degrades to index 0 (nothing renders anyway — no crash)
+  assert.strictEqual(lastRenderedIndex([{ english: "", english_head: "" }]), 0);
 });
 
 console.log(`\n${n} tests passed.`);

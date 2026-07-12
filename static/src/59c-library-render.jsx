@@ -369,12 +369,16 @@ const LibRender = (function () {
         // The "[" / "]" ride the first / last word's english cell (see bracketChip), so
         // the chips just flow in greek order and a verse highlight paints straight
         // through — no separate bracket columns sitting between the chips to break it.
+        // The trail lands on the last member that RENDERS (lastRenderedIndex): a
+        // label-less folded pronoun/article sorts last (no digit) but its chip is
+        // null — pinning the mark there lost it (Jer 46:15 class, 4,395 verses).
+        const trailAt = lastRenderedIndex(gwR);
         return (
           <span key={`bg${gi}`} className="lib-bracket-group">
             {gwR.map((w, wi) => bracketChip(w, `bg${gi}w${wi}`, {
               open: wi === 0,
-              close: wi === gwR.length - 1,
-              trail: wi === gwR.length - 1 ? bracketTrail : "",
+              close: wi === trailAt,
+              trail: wi === trailAt ? bracketTrail : "",
             }))}
           </span>
         );

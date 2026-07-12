@@ -87,6 +87,19 @@ function getEnglishOrderWords(words) {
   return result;
 }
 
+// THE TRAIL LANDING SPOT (chip mode): index of the last group member whose chip is
+// actually drawn — one with English text (english, or the english_head a label falls
+// back to). bracketChip returns null for a label-less word (a folded pronoun/article),
+// and such a word has no order digit so the reorder sorts it LAST — pinning the lifted
+// clause punctuation to it made the mark vanish (Jer 46:15 "calf He remained", 4,395
+// verses). Prose's float already walks back the same way (getEnglishOrderWords above);
+// this is chip's copy of that guard, shared here so the Node test pins it.
+function lastRenderedIndex(words) {
+  let li = words.length - 1;
+  while (li > 0 && !(((words[li].english || words[li].english_head) || "").trim())) li--;
+  return li;
+}
+
 // Group a position-sorted word list into runs by bracket_id for bracket notation rendering.
 function groupForGreekMode(words) {
   const groups = [];
@@ -193,5 +206,5 @@ function libViewTransition(state, action) {
 }
 
 if (typeof module !== "undefined" && module.exports) {
-  module.exports = { getEnglishOrderWords, groupForGreekMode, orderBracketGroupWords, greekLineForWord, pnClickPayload, libViewTransition };
+  module.exports = { getEnglishOrderWords, groupForGreekMode, orderBracketGroupWords, lastRenderedIndex, greekLineForWord, pnClickPayload, libViewTransition };
 }
