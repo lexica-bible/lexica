@@ -163,6 +163,14 @@ Chip·Interlinear·Prose control, Interlinear ABP-only).
   prose/toggle reducer (`libViewTransition`) all live in shared
   **`static/src/56-library-order-logic.jsx`** (browser globals + Node `module.exports`),
   Node-tested by `tests/test_library_order.js` + `tests/test_render_markup.js`.
+- **Bracket trail punctuation must land on a chip that RENDERS** (Jer 46:15 class, fixed
+  2026-07-11): chip mode lifts a group's clause mark and re-emits it after the group's last
+  member — but a label-less folded pronoun/article sorts LAST (no order digit) and its chip is
+  null, so the mark silently vanished (4,395 verses / 4,925 marks). Landing spot =
+  `lastRenderedIndex` in 56-library-order-logic.jsx (walks back to the last member with
+  english/english_head — prose's float in `getEnglishOrderWords` already guarded this way);
+  pinned by test 16. Sizing tool (read-only, Jer 46:15/16 controls):
+  `scripts/audit_chip_trail_drop.py`. Residual: 11 doubled-mark verses (TODO.md).
 - **Hebrew "Prose" = the same interlinear chips flipped LEFT-TO-RIGHT** (2026-06-22): the Prose
   button toggles `viewMode` and a `.lib-heb-ltr` class setting row/content `direction:ltr` —
   only WORD order flips; each `.lib-iw-heb` keeps its own `direction:rtl` so letters stay
