@@ -967,7 +967,17 @@ line untouched (standing non-Greek-reader rule stands). Tools: `scripts/audit_su
 - **One smart search box** — merge the Word-study and Ask-corpus inputs into a single field that detects
   what you typed (Strong's vs Greek vs plain question) and routes it.
 
-**Bigger features**
+**Word study / rail**
+- **LXX transliterated-phrase pseudo-names** (Jer 46:17 "Saon Esbeie Moed") — a small class where the
+  LXX transliterates a Hebrew SENTENCE as if it were a name (Heb: "a noise; he let the appointed time
+  pass" — a taunt at Pharaoh; LXX read it as a proper name, ABP faithfully followed). No entity can ever
+  bind (not in TIPNR — there IS no person), so these permanently hit the AI-fallback card, which
+  correctly declines to invent an identity but leaves the reader with nothing. Proposed treatment: a
+  hand-curated note table (likely a dozen-odd cases corpus-wide) shown instead of the AI shrug — "LXX
+  transliterates the Hebrew phrase …; most translations read a taunt, not a name." Bounded, hand-ruled,
+  LXX-provenance material; fits the errata/curiosity end of docs/RENDERING_OVERRIDES.md. First step when
+  picked up: enumerate the class (unbound PN clicks whose name has no TIPNR/metaV candidate at all),
+  then rule each by hand. code: Fix-A fallback path in views_metav.py.
 - **Map tab** — biblical geography as its own tab: follow the current chapter's places; search a place +
   pin every verse; or a free-explore world map where clicking a city opens the metaV sidebar. Coordinates
   + the map library are already in place, so it's smaller than it looks.
