@@ -13,13 +13,47 @@
 // linked card (the .pnbound rich branch), so the two renders can't drift. The header
 // + badge stay the caller's: metaV badge on the name path, the TIPNR spine on the
 // bound card (TIPNR binds it, MetaV enriches it).
-function MetavPersonBody({ data }) {
+// TRIBAL EPONYMS (JP ruling 2026-07-11): TIPNR/MetaV file tribe/kingdom references
+// under the founding patriarch, so "king of Judah" lands on Jacob's son. The data is
+// faithful; the card must not lead with claims false of the kingdom. Static
+// both-senses opener for the founder names, patriarch bio demoted under a "The man"
+// break. Rendered by BOTH person cards — the verse-bound TIPNR card (case
+// "boundEntity", guarded there by the bio text so namesakes stay plain) and the
+// name-path MetaV card (via MetavPersonBody withEponym, guarded by parentage).
+// Joseph is deliberately absent: his mentions are overwhelmingly the man.
+const EPONYM_LINES = {
+  "Israel":   "Jacob, renamed Israel — most later mentions name the nation or the northern kingdom, not the man.",
+  "Judah":    "Jacob's son — most later mentions name the tribe or the southern kingdom called after him.",
+  "Ephraim":  "Joseph's son — later mentions often name the tribe, its territory, or the northern kingdom.",
+  "Manasseh": "Joseph's son — later mentions often name the tribe and its territory.",
+  "Levi":     "Jacob's son — later mentions often name the tribe of priests descended from him.",
+  "Benjamin": "Jacob's son — later mentions often name the tribe and its territory.",
+  "Reuben":   "Jacob's son — later mentions often name the tribe and its territory.",
+  "Simeon":   "Jacob's son — later mentions often name the tribe and its territory.",
+  "Dan":      "Jacob's son — later mentions often name the tribe, its territory, or the city of Dan.",
+  "Naphtali": "Jacob's son — later mentions often name the tribe and its territory.",
+  "Gad":      "Jacob's son — later mentions often name the tribe and its territory.",
+  "Asher":    "Jacob's son — later mentions often name the tribe and its territory.",
+  "Issachar": "Jacob's son — later mentions often name the tribe and its territory.",
+  "Zebulun":  "Jacob's son — later mentions often name the tribe and its territory.",
+};
+
+function MetavPersonBody({ data, withEponym }) {
   // Relationship rows list every name, no truncation: names are the point of the
   // panel, and the corpus-wide worst case (David, 21 children) is ~8 lines — not
   // enough to earn a collapse (measured on PA 2026-07-11).
   if (!data) return null;
+  // Eponym opener on the name-path card. Parentage guard keeps namesakes plain:
+  // only the record whose parents are Israel/Jacob (the 12 sons) or Joseph
+  // (Ephraim/Manasseh) is the founder; Israel himself passes by name.
+  const parents = (data.relationships || []).filter(r => r.type === "child").map(r => r.name);
+  const eponym = withEponym && EPONYM_LINES[data.name]
+    && (data.name === "Israel" || parents.some(p => /^(Israel|Jacob|Joseph)$/.test(p)))
+    ? EPONYM_LINES[data.name] : null;
   return (
     <>
+      {eponym && <p className="pnbound-desc">{eponym}</p>}
+      {eponym && <div className="detail-h">The man</div>}
       <div className="metav-meta">
         {data.gender && <span className="metav-tag">{data.gender === "M" ? "Male" : "Female"}</span>}
         {data.groups.filter(g => g.startsWith("Tribe")).map(g => (
@@ -794,29 +828,8 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       // For a People/Clan, the ancestor's own bio ("Man living at the time of …") misframes
       // the collective — drop it; the lineage line below carries the honest link instead.
       if (peopleClan) line = "";
-      // TRIBAL EPONYMS (JP ruling 2026-07-11): TIPNR deliberately files tribe/kingdom
-      // references under the founding patriarch (its own place entity covers only
-      // "Judea"-style refs), so "king of Judah" lands on Jacob's son. The binding is
-      // faithful; the card must not lead with claims false of the kingdom. Static
-      // both-senses opener for the founder names, patriarch bio demoted under a
-      // "The man" break. Guarded by the TIPNR bio text so namesakes (Judah@Neh,
-      // King Manasseh) keep their plain person card.
-      const EPONYM_LINES = {
-        "Israel":   "Jacob, renamed Israel — most later mentions name the nation or the northern kingdom, not the man.",
-        "Judah":    "Jacob's son — most later mentions name the tribe or the southern kingdom called after him.",
-        "Ephraim":  "Joseph's son — later mentions often name the tribe, its territory, or the northern kingdom.",
-        "Manasseh": "Joseph's son — later mentions often name the tribe and its territory.",
-        "Levi":     "Jacob's son — later mentions often name the tribe of priests descended from him.",
-        "Benjamin": "Jacob's son — later mentions often name the tribe and its territory.",
-        "Reuben":   "Jacob's son — later mentions often name the tribe and its territory.",
-        "Simeon":   "Jacob's son — later mentions often name the tribe and its territory.",
-        "Dan":      "Jacob's son — later mentions often name the tribe, its territory, or the city of Dan.",
-        "Naphtali": "Jacob's son — later mentions often name the tribe and its territory.",
-        "Gad":      "Jacob's son — later mentions often name the tribe and its territory.",
-        "Asher":    "Jacob's son — later mentions often name the tribe and its territory.",
-        "Issachar": "Jacob's son — later mentions often name the tribe and its territory.",
-        "Zebulun":  "Jacob's son — later mentions often name the tribe and its territory.",
-      };
+      // TRIBAL EPONYMS: see EPONYM_LINES at the top of this file. Guarded by the
+      // TIPNR bio text so namesakes (Judah@Neh, King Manasseh) keep their plain card.
       const eponym = be.section === "person" && !peopleClan && EPONYM_LINES[be.name]
         && /jacob's son|joseph's son|patriarchs|renamed/i.test(descText || "")
         ? EPONYM_LINES[be.name] : null;
@@ -911,7 +924,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
               ) : <span className="sec-t">{isGentilic ? "People / Clan" : "Biblical Person"}</span>}
               <span className="lsj-badge">metaV</span>
             </h4>
-            <MetavPersonBody data={metavData} />
+            <MetavPersonBody data={metavData} withEponym={!isGentilic} />
           </div>
         ) : metavType === "place" && metavData ? (
           <div className="metav-place">
