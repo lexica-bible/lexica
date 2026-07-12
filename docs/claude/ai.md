@@ -21,7 +21,9 @@ instead of reframing) — memory `project_ai_synthesis_quality`.
   40-crossref-panel.jsx). A `msg:` salt in `_XREF_VER` (now `bsb-fallback-4`) is bumped on any
   message/payload change so cached rows refresh (the fingerprint covers the prompts, not message
   text or payload shape).
-- Cached in ai_search_cache, keys `xref_cur:`/`xref_synth:`, ver_key=`xref:<hash>`.
+- Cached in ai_search_cache, ONE row per verse: key `xref_cur:<book>:<ch>:<vs>` holds BOTH the ref
+  list AND the synthesis text. No `xref_synth:` key exists — a stale claim of one here cost a wasted
+  exhibit-hunt query 2026-07-12. ver_key=`xref:<hash>`.
 
 ## AI Search (Ask the corpus)
 - **Exact-lemma pin (2026-07-01).** A bare typed single Greek/Hebrew word is pinned to its EXACT
