@@ -54,10 +54,17 @@ DRAW_HINTS = {
             "is to them.",
             "A negated occurrence (e.g. Rom 1:21 'they gave not thanks') is the same sense in "
             "negation, never its own sense.",
+            "Luk 22:18 does not carry this word — the meal verses there are Luk 22:17 and 22:19 "
+            "only; never cite 22:18, and never write the passage as a range ('Luk 22:17-19') — "
+            "list the verses out.",
         ],
         "jobs": [],
         "provenance": "AUDIT_lexica_rollout.md G2168 PARKED entry (batch-4 word 3, 2026-07-10/11) "
-                      "+ BATCH 4 CLOSED banked hints; JP batch-close ruling 2026-07-12",
+                      "+ BATCH 4 CLOSED banked hints; JP batch-close ruling 2026-07-12. "
+                      "Luk 22:18 pin: V9 floor agreement_G2168_v9_20260712-174545 (real-miss "
+                      "Luk 22:18 in draws 2/6, neighbor-slip class) + the G227 Joh 8:15 pin "
+                      "precedent incl. its range clause (bdcff64/f30ff73); applied under JP's "
+                      "standing delegation 2026-07-12, reviewer retro-verification on the record.",
     },
     "G227": {    # ἀληθής — true
         "hints": [
