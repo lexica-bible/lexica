@@ -454,16 +454,19 @@ revisit pass. First two banked items:
    synthesis prompts PLUS a post-generation check — prompt-only compliance will drift. Consistency/style
    class, not correctness. code: views_crossref.py synth prompt + siblings; pairs with the house-style
    voice snippet item above.
-2. **Unhedged theological assertions** — a panel asserted a contested reading as settled fact (Psa 82:
-   the elohim/"gods" are "just human rulers" — one major position; divine-council is the other, dispute
-   live in scholarship). Same principle as the sense-header-overclaim class (stated-as-fact beyond what
-   the text attests), but in free prose with NO citation gate. Banked questions: (a) a contested-topics
-   prompt instruction — present positions, don't adjudicate (the CONTESTED register mechanism doesn't
-   apply; synthesis is free prose over arbitrary passages); (b) a hand-curated caution list of known
-   contested passages (Psa 82, Gen 6:1-4, …) fed to the prompt; (c) AUDITABILITY — panels regenerate, so
-   exhibits vanish; JP's lost exhibit is itself the evidence that this class can't be worked the normal
-   way. Cached rows in ai_search_cache are the partial exhibit trail (they live until a prompt edit
-   refreshes that category). code: no-doctrinal-verdict rules in memory `project_ai_synthesis_quality`.
+2. **Unhedged theological assertions** — a panel asserted a contested reading as settled fact. EXHIBIT
+   RECOVERED from the cache 2026-07-12: the 1Co 8:5 Connection panel (row `xref_cur:1Co:8:5`, written
+   2026-07-06) says "Psalm 82, quoted by Jesus in John 10, calls human rulers 'gods'" — the human-rulers
+   reading stated flat; divine-council is the other major position and the dispute is live. (The Psa 82
+   chapter summary is CLEAN — "divine assembly", "the gods", never adjudicates — so the class is
+   panel-specific, not universal.) Same principle as the sense-header-overclaim class (stated-as-fact
+   beyond what the text attests), but in free prose with NO citation gate. Banked questions: (a) a
+   contested-topics prompt instruction — present positions, don't adjudicate (the CONTESTED register
+   mechanism doesn't apply; synthesis is free prose over arbitrary passages); (b) a hand-curated caution
+   list of known contested passages (Psa 82, Gen 6:1-4, …) fed to the prompt; (c) AUDITABILITY — panels
+   regenerate and a prompt edit overwrites the category's cached rows, so exhibits vanish; ai_search_cache
+   is the partial exhibit trail (this one survived because the xref prompt hasn't changed since 07-06).
+   code: no-doctrinal-verdict rules in memory `project_ai_synthesis_quality`.
 
 ---
 
