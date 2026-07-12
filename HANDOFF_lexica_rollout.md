@@ -507,9 +507,69 @@ Study's return. Status detail: STATE.md Study line.)
 ## ledger note: the item-6 determinism evidence + raw PA output were reposted at close
 ## (owed item cleared).
 
-## V10 BUILD SESSION — CC OPENER BLOCK (paste into the new CC session; opens from docs
-## alone. State source of truth = the design-close commit d04b6e6, contained in the
-## session-close commit 3696cc5, or a descendant of either.)
+## V11 DESIGN PASS — CC OPENER BLOCK (paste into the new CC session; opens from docs
+## alone. State source of truth = the V10-close commit f654dbb or a descendant.)
+V11 DESIGN PASS — the revised acceptance path for the squeeze-class parks. NO word runs
+(no floors, draws, applies, re-entries) and NO code until the design is ruled — same
+hard gate shape as the V9/V10 design passes. ("me/I" = JP.) STANDING DELEGATION IS LIVE
+(memory feedback_no_questions_standing_delegation): recommendations apply as rulings
+with delegation notes; JP touchpoints = paste-ready commands, screenshots, ship/park
+notices only.
+READ FIRST, in order: (1) DESIGN_v10_repair.md STATUS block + the doc in full (the
+mechanism is BUILT + LIVE at 36dab20 and stays; the acceptance criterion FAILED AS
+WRITTEN); (2) AUDIT_lexica_rollout.md — V10 ACCEPTANCE TEST entry IN FULL (the
+mechanism/criterion split ruling, all six defects with classes, the three standing
+sub-rules, the housekeeping lock) + G227 RE-PARKED (THIRD); (3) ENGINE_LESSONS.md #50;
+(4) V9_PILE.md tail (fallback shape on record: two-stage roster draw = the V11-class
+candidate if repair-plus-prose-handling is rejected).
+Opening check: `git log --oneline -1` = f654dbb or a descendant · `python
+tests/test_repair_pass.py` prints ok · `python tests/test_coverage_gate.py` ok ·
+R1: raw reposts, never references, both sides.
+SCOPE (the design question, nothing else): how does a squeeze-class park reach a ship
+now that the evidence says coverage repair works but the parked draws carry prose rot
+the machine can't see? Candidate paths on the record, NOT pre-ruled: (a) fresh rolls
+for the squeeze class under V9+repair (repair as a standing dry-run pass — the
+defect-classes die by fresh drawing, not by editing); (b) repair + a targeted
+prose-defect mechanism (the #48/#50 mechanizable probes: phrase→Strong's mapping,
+named-subject-in-cited-text check); (c) the two-stage roster draw (V9_PILE fallback,
+multi-session). Constraints that carry: review-what-ships; the frozen V9 prompt; the
+edited-draw refusal; NO APPLY EVER for the two repaired-but-dead cached cards (G227,
+G1390 — the housekeeping lock); G236 is NOT this class (quote/verbatim territory).
+HARD sub-rules now standing (ruled at the V10 kills): initial-letter case exempt from
+verbatim, interior alteration never · gloss notes are INSIDE the verbatim line ·
+misattribution fires on ANY named subject absent from the cited text.
+Shelf (not this session unless ruled in): hint-echo detector ticket · dash-expansion
+CHECK-FIRST read · G236 retry · repair-record refs-overclaim nit (dead-round refs
+stamped as integrated; rename to "attempted" or trim to integrated-only).
+Standing rules carry: R1 · counts are names · bank on reviewer relay · big output →
+file · exact-or-dotted BOTH clauses · show code before changing it · one gate, one
+command, in order · JP runs all PA commands.
+
+## V11 DESIGN PASS — REVIEWER-CHAT INHERITANCE BLOCK (paste into the new reviewer chat)
+You are the reviewer chat for the Lexica V11 design pass. First act = R1-verify f654dbb
+on disk (raw repost). You inherit: V10 repair mechanism BUILT + VALIDATED 2-for-2 at
+36dab20 (single-round fires, gates green, structure guard held, echo scans clean,
+amendment-2 stamps verified) — but its ACCEPTANCE TEST FAILED AS WRITTEN: both repaired
+cards died on the hand-check battery, six adjudicated defects, ALL pre-dating the
+repair (the criterion mis-predicted the parked draws' health; your predecessor's ruling
+splits mechanism from criterion — verify the committed audit entry says what the ruling
+said). Scoreboard 2/7ʰ · hints 35-for-35 with the repaired-cache-hit counting question
+UNRULED on record · G227 parked THIRD · G162 never ran · 7/15 FINAL + UNTOUCHABLE.
+STANDING DELEGATION live. Your duties: hold CC to the no-code-until-ruled gate · stress
+the candidate paths against lessons #48/#50 (the defect classes are misattribution and
+false-identity — what detector proves ANY chosen path catches them? audit-tools-must-
+fail applies) · verify the three standing sub-rules get carried into any new battery
+wording · the housekeeping lock (no apply for the two dead cached cards) survives every
+design choice. Ledger carried: one V10 sequence slip (CC posted a command past the
+math gate — "one gate, one command, in order" adopted); the R1 slips both directions;
+open slow.
+
+## V10 BUILD SESSION — CC OPENER BLOCK (SPENT — session ran + CLOSED 2026-07-12 at
+## f654dbb: hook BUILT + LIVE at 36dab20, acceptance test FAILED AS WRITTEN, mechanism
+## validated 2-for-2, no word shipped, G227 parked THIRD, G162 not run; paste into the
+## new CC session; opens from docs alone. State source of truth = the design-close
+## commit d04b6e6, contained in the session-close commit 3696cc5, or a descendant of
+## either.)
 V10 BUILD SESSION — the coverage repair pass. NO word runs (no floors, draws, applies,
 re-entries) until the build is accepted; the acceptance test IS the first word work.
 ("me/I" = JP.) **STANDING DELEGATION IS LIVE (memory
@@ -540,7 +600,8 @@ Standing rules carry: R1 · counts are names · bank on reviewer relay · big ou
 file · exact-or-dotted BOTH clauses · show code before changing it · JP runs all PA
 commands.
 
-## V10 BUILD SESSION — REVIEWER-CHAT INHERITANCE BLOCK (paste into the new reviewer chat)
+## V10 BUILD SESSION — REVIEWER-CHAT INHERITANCE BLOCK (SPENT — session ran + CLOSED
+## 2026-07-12 at f654dbb; paste into the new reviewer chat)
 You are the reviewer chat for the Lexica V10 build session. First act = R1-verify
 d04b6e6 on disk (raw repost). You inherit: batch-5 run session 2 CLOSED — 2 ships
 (G2805ʰ excise-then-pass, G2168ʰ first-draw zero-defect), 4 parks (G227/G162/G1390 =

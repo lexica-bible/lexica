@@ -721,3 +721,18 @@ both drifting from the doc.
     (b) any wording fix must SWEEP every restatement — header, Range, gloss notes — or the card
     contradicts itself one screen below the fix. Full class + before/after pair: V9_PILE.md
     sense-header-overclaim entry (fixed @ 341f493, gate 39/39). *(2026-07-11)*
+
+50. **A machine-gate kill leaves the hand-check battery UNRUN — "otherwise the word's best card"
+    on a dead draw is an unverified claim, not a finding.** All three squeeze parks (G227, G162,
+    G1390) died at the coverage gate, so their park entries praised the surviving prose ("crux +
+    duals + gloss notes all right") from partial reads. When the V10 repair pass closed the
+    coverage holes and the full battery finally ran, BOTH tested cards died on pre-existing prose
+    rot the machine can't see: a misattribution riding a real ref (Jehoiada, 2Ch 21:3), an
+    inverted description (2Sa 19:42), a false cross-verse identity claim (Mat 22:16↔Mar 12:14
+    "worded identically"), a second misattribution (Eliphaz, Job 5:12) — six defects total, all
+    in guard-preserved, repair-untouched prose. → two rules: (a) adjudication language about a
+    dead draw must scope its claims to the checks actually run ("quotes not hand-checked — died
+    at gate"); (b) any mechanism that gets a previously-gate-killed card PAST its killing gate
+    must trigger the FULL battery as if the card were new — which the V10 design got right, and
+    which is why the rot surfaced at review instead of on the live site. *(audit: V10 ACCEPTANCE
+    TEST entry, 2026-07-12)*
