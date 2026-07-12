@@ -1982,6 +1982,48 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### FRAGMENT-RENDERING INVESTIGATION + FLEET SWEEP — RUN + CLOSED (2026-07-12, run
+### session 3; JP-caught on the live δίκτυον card mid-session, G162 floor HELD during).
+### RULINGS (JP): dagger STAYS OFF · G162 released · session continues.
+**The finding (JP, from the rendered 2Ch 4:13 interlinear):** `english_head` stores ONE
+token; ABP renderings are often PHRASES. Everything downstream that treats head-as-
+rendering — the renderings count, gloss_notes analysis, the claim-checker — reasons from
+fragments. Three symptoms this session, one cause: the shipped δίκτυον *work* bullet
+(analyzed the fragment "work"; true render "latticed work") · the G236 Isa 24:5 "away"
+over-called defect (head = last token of "bartered away") · the identical-string warn
+noise family. **Checker ticket RE-SCOPED: not a checker bug — the def-engine rendering
+layer needs the lemma's phrase context** (`words.english` + italic data alongside the
+head), with the phantom-render protection PRESERVED (the head column is a certified
+design fix — parked phrases like "Jesus to them" must still resolve; existing
+test_render_head_no_phantom stays green; 2Ch 4:13 becomes a new fixture). Urgency:
+before batch 5.
+**Source verification (JP, ABP app):** 2Ch 4:13 prints "latticed *works*" (works italic
+= translator addition) then "latticed work" (work roman) — the DB matches print EXACTLY
+(word-rows pull on the record: pos 7 english "latticed works;" head "latticed"
+italic_words "works" · pos 13 english "latticed work" head "work" no italics). Data
+FAITHFUL; both heads are correct outputs of the documented design; finding is
+consumer-layer only. No import defect, no italic-capture audit.
+**Fleet sweep (read-only, gloss notes × fragment heads, 78 shipped cards):** raw pool
+7,213 phrase-render rows → 1,169 note-matched → 35 cards → 12 suspect drill-down →
+**ONE confirmed failure: δίκτυον's *work* bullet.** The engine's prose layer repeatedly
+CAUGHT fragment/parked glosses on its own and refused them with correct analysis
+(G1093 *hand*, G3962 *LORD*, G435 *king*, G4172 *them*, G2962 *straighten* all named as
+anomalies and kept out; G5117 *people* + G2094 *old* explicitly construction-aware);
+G39/G2364/G191/G1411 were search-substring false matches, notes clean. **Scope caveat
+(reviewer, honest bound): the sweep cleared gloss NOTES only — renderings counts and
+non-marked-up prose citations were not swept** (lower-stakes; record says "gloss-note
+sweep clean except G1350," never "fleet clean"). Side note for the ticket: the mistag
+speculations inside the G1093/G3962/G435 notes may be misdiagnosed parked-phrase
+artifacts — refusals right, diagnoses unverified.
+**DAGGER RULING (JP "yes"):** stays OFF. The dagger's stated condition was the alien
+verses on the reader-facing card — fixed and render-verified. The *work* bullet is a
+distinct one-bullet known-issue against the ENGINE layer, logged here, fixed when the
+rendering-layer ticket ships (from-draw refresh path available). Known-issue register:
+δίκτυον live card, gloss note bullet 3, fragment-analysis class.
+**G162 (JP "resume"):** floor released — evidence-reading only, fragment layer touches
+build/ship, not the agreement floor. Ship-vs-hold at the build gate stays a live call
+(G162's renders are an inflection family, fragment risk low).
+
 ### δίκτυον G1350 — REBUILT + SHIPPED CLEAN + LIVE (2026-07-12, run session 3).
 ### RULING-CHAIN ITEM (d) CONDITION MET → DAGGER OFF. COUNT 7/15 NAME-TRUE, NO ASTERISK.
 ### STREAK 2 (εἰρηνικός → δίκτυον-rebuild, both unassisted).

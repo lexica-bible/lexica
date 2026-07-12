@@ -592,6 +592,18 @@ REST of the dotted-Strong's question, none of it gating the rollout:
   shape of the table it reads (words = bare; dotted_lexicon = G-prefixed; lexicon.strongs_g /
   words.strongs_base = G-prefixed; kjv_strongs = prefixed). Cheap; would have caught all three.
   Sibling of the section-matcher sweep below.
+- **Def-engine rendering layer: feed the PHRASE, not the head fragment (JP-caught 2026-07-12 —
+  before batch 5).** `english_head` is one token; ABP renders are often phrases ("latticed work",
+  "bartered away"). The def-engine's renderings count, gloss_notes analysis, and claim-checker all
+  reason from the fragment — cost this session: the live δίκτυον *work* gloss bullet (the fleet
+  sweep's ONE confirmed hit — known-issue logged, from-draw refresh after the fix), the G236
+  Isa 24:5 over-called defect, and every identical-string false warn. Fix: give the rendering layer
+  `words.english` + italic context alongside the head, KEEPING the phantom-render protection
+  (test_render_head_no_phantom stays green; 2Ch 4:13 pos-7/pos-13 becomes a fixture — source-verified
+  faithful, JP ABP-app read on the record). Also: re-check the "tagging error" speculations inside
+  the G1093/G3962/G435 gloss notes — likely misdiagnosed parked-phrase artifacts (refusals correct).
+  Record: audit doc FRAGMENT-RENDERING INVESTIGATION entry.
+  code: scripts/build_lexica_def.py rendering_sets/gloss-note claim checker; scripts/parse_abp.py HEAD_WORD_TAIL_CAVEAT
 - **Section-matcher shape-conformance sweep (V9_PILE note, 2026-07-11 — decide before batch 5).** Two reader
   gaps landed in ONE session on the first one-job word (#47 unnumbered one-sense card scored 0; singular
   "Gloss note:" label leaked the note into Range). Sweep `_SECTION_RE` + `_sense_spans` against every label/
