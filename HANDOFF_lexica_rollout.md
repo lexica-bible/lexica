@@ -509,7 +509,9 @@ SCOPE: draft the two V9 lines for JP ruling BEFORE any build — (a) coverage/tr
 the correlation table killed the length-trade hypothesis — exemplar-sampling habit);
 (b) verbatim-quote: quotes inside quotation marks match verses.text verbatim or carry
 ellipses; quotes against a member list NAME their member (exhibits: G2805-d2 hybrid
-[the hint-limits exhibit], G236 priors, G162 d2). Design doc to JP; the frozen-V8 rule
+[the hint-limits exhibit], G236 priors, G162 d2 [banked: the G162 PARKED audit entry,
+d2 bullet — Eph 4:8 dropped "into the height" mid-quote, no ellipsis — and the V9_PILE
+batch-wide "THIRD word" verbatim line]). Design doc to JP; the frozen-V8 rule
 stands — nothing changes the live prompt until JP promotes V9. Enforcement design
 question to answer IN the doc: prompt line alone, or prompt line + a coverage gate in
 validate_entry (fed-occurrences-cited check) as the detector that proves the line works.
@@ -525,7 +527,8 @@ amendment 6 — **hold CC to the hard gate: NO floors, draws, applies, or re-ent
 session; a word run proposal = automatic hold** (same shape as build session 1's
 no-word-runs line). Scoreboard: hinted 0/7 · G227 + G2805 conditionally parked (retry =
 coverage fix; both park entries carry the evidence) · hint mechanism 6-for-6 (your
-amendment-2 ran at every pre-reg and every draw, verbatim both sides) · count 7/15 final.
+amendment-2 ran at every pre-reg and every draw, verbatim both sides) · count 7/15
+FINAL + UNTOUCHABLE (the committed pairing — the close commit says "untouchable").
 Your duties: read the two park entries + V9_PILE in full, verify the drafted V9 lines
 against their exhibits (committed wording governs), stress the enforcement question
 (prompt line vs line+gate; the audit-tools-must-fail rule wants a detector that proves
