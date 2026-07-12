@@ -507,8 +507,10 @@ Study's return. Status detail: STATE.md Study line.)
 ## ledger note: the item-6 determinism evidence + raw PA output were reposted at close
 ## (owed item cleared).
 
-## CORRECTIVE-COMMIT SESSION — CC OPENER BLOCK (paste into the new CC session; this
-## block runs FIRST, before the V11 BUILD SESSION block below, which stays for later)
+## CORRECTIVE-COMMIT SESSION — CC OPENER BLOCK (SPENT 2026-07-12 — session ran clean:
+## 4962c32 committed + pushed, all five gates receipt-confirmed, memory edits verified.
+## Audit CORRECTIVE-COMMIT SESSION CLOSED entry = the record, incl. the session's own
+## ledger items + two standing-rule candidates for the build session's open.)
 (1) The working tree at C:\Users\JP\projects\bible-db holds the reviewer-affirmed
 corrective edits UNCOMMITTED (AUDIT_lexica_rollout.md, DESIGN_v11_acceptance.md,
 HANDOFF_lexica_rollout.md; on top of a9d518b). The diff was reviewed and
@@ -564,6 +566,9 @@ a time, own records, no N-of-3 bar · G236 AFTER the three (its retry trigger FI
 mechanism acceptance — ruled; outside the falsifier count). Falsifier live: probe-spec
 miss → fix + re-red-first; ≥2 squeeze words dying human-only → (b) exhausted, (c) is
 next-pass scope. NO APPLY EVER for the dead cached G227/G1390 cards.
+AT OPEN, rule the two standing-rule candidates from the corrective session (audit
+CORRECTIVE-COMMIT SESSION CLOSED entry): affirmed-texts-to-disk-at-affirmation-time ·
+commit proposals carry subject line + blank line + body.
 Shelf (not this session unless ruled in): hint-echo detector ticket · G236's drafted
 Dan-trio hint needs amendment-2 at re-entry · repair-record refs-overclaim nit ·
 repaired-cache-hit hint-counter question (UNRULED, carried).

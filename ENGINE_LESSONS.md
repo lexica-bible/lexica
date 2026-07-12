@@ -736,3 +736,16 @@ both drifting from the doc.
     must trigger the FULL battery as if the card were new — which the V10 design got right, and
     which is why the rot surfaced at review instead of on the live site. *(audit: V10 ACCEPTANCE
     TEST entry, 2026-07-12)*
+
+51. **Text a successor session must copy exactly cannot live only in chat relay — write it to
+    disk at affirmation time.** The corrective-commit session was pointed at "the reviewer chat
+    record" for its affirmed commit message; the fresh session had only a fragment on disk and
+    correctly STOPPED rather than reconstruct (reconstruction = the retyped-not-copied failure
+    class that killed its predecessor). The relay worked this time only because the reviewer was
+    live to paste it. Corollary from the same session: the message's structure was misdescribed
+    by its own author (claimed subject/body split; was one paragraph) — a disk copy would have
+    made the property checkable instead of assertable. → affirmed texts (commit messages,
+    prompts, ruled wording) go into a file or the handoff at the moment they're affirmed; and
+    commit proposals carry subject line + blank line + body so `--oneline` stays one line. Both
+    banked as rule candidates for the V11 build session's open. *(audit: CORRECTIVE-COMMIT
+    SESSION CLOSED entry, 2026-07-12)*

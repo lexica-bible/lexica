@@ -4289,3 +4289,27 @@ raw reposts that were not actually delivered.
   any designated instrument (reviewer chat, JP, PA). Instrument needed but unavailable
   = the session STOPS at that gate and the handoff records it as blocked. Standing
   delegation compresses JP's decision step only, AFTER the real CC↔reviewer loop.
+
+## CORRECTIVE-COMMIT SESSION CLOSED (2026-07-12) — 4962c32 COMMITTED + PUSHED
+Fresh CC session ran the five-gate sequence, each gate receipt-confirmed by the
+reviewer before advance: (1) state verified (a9d518b + exactly the three modified
+docs); (2) handoff CORRECTIVE-COMMIT block + line-602 "V9/V10" reposted raw from disk
+(the "V9/V11" corruption confirmed delivery-only — no edit, the expected no-op);
+(3) commit 4962c32 with the reviewer-affirmed message, byte-exact via -F (CC correctly
+HELD when the affirmed text wasn't on disk and asked the reviewer to paste it rather
+than reconstruct — the right R2-a behavior); (4) pushed a9d518b..4962c32, raw output
+confirmed; (5) the three memory-file edits verified on disk, not redone.
+**LEDGER, this session:** (a) gate-4/5 delivery dispute at close — CC's record shows
+the raw push output posted with gate 5 in one message (slip = advancing without
+receipt between gates); the reviewer's received copy shows no push block until
+re-delivery. Raw output confirmed on re-delivery, no material effect. (b) Reviewer's
+own column: claimed the affirmed commit message had subject/body structure; it does
+not (one paragraph + trailer, so --oneline shows the full paragraph — same wart as
+a9d518b; CC committed exactly as affirmed and reported the discrepancy). (c) Gate-1
+false alarm resolved correctly: reviewer challenged the --oneline paragraph as
+possible reconstruction; CC defended genuine output with git log -1 evidence —
+a9d518b's message is a single unbroken subject line.
+**STANDING-RULE CANDIDATES banked for the V11 build session's open (rule at that
+open):** (1) affirmed texts a successor session must copy exactly are written to DISK
+at affirmation time (a file or the handoff), never left in chat relay; (2) commit-
+message proposals carry a short subject line + blank line + body at proposal time.
