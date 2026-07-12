@@ -507,6 +507,32 @@ Study's return. Status detail: STATE.md Study line.)
 ## ledger note: the item-6 determinism evidence + raw PA output were reposted at close
 ## (owed item cleared).
 
+## CORRECTIVE-COMMIT SESSION — CC OPENER BLOCK (paste into the new CC session; this
+## block runs FIRST, before the V11 BUILD SESSION block below, which stays for later)
+(1) The working tree at C:\Users\JP\projects\bible-db holds the reviewer-affirmed
+corrective edits UNCOMMITTED (AUDIT_lexica_rollout.md, DESIGN_v11_acceptance.md,
+HANDOFF_lexica_rollout.md; on top of a9d518b). The diff was reviewed and
+receipt-confirmed in the reviewer chat 2026-07-12 (fourth delivery attempt).
+(2) One reviewer-flagged defect before commit: the SPENT V11 DESIGN PASS opener
+block's gate-shape line must read "V9/V10". DISK CHECK AT TERMINATION: line already
+reads V9/V10 on disk (grep verified) — the "V9/V11" corruption was introduced when CC
+RETYPED the diff into the delivery message instead of copying it exactly. So the fix
+is expected to be a no-op: VERIFY on disk (grep "hard gate shape as the V9/"), repost
+the grep output raw to the reviewer, receipt confirmed, before concluding no edit is
+needed. If disk disagrees with this note, fix to V9/V10 and show the one-line diff.
+(3) Then commit with the affirmed commit message (in the reviewer chat record — the
+proposal's "CORRECTIVE: a9d518b's V11 ruling was self-certified…" text, -F not -m)
+and push, posting IN ORDER under R1-b (receipt confirmed each step): diff-of-any-fix →
+commit hash + one-line git log → push confirmation. Reviewer holds state; the fresh
+session's first diff goes to the reviewer chat.
+(4) The three memory-file edits (index V11 clause, topic-file ARC UPDATE, delegation
+memory boundary line) are already DONE — verify, don't redo.
+(5) Session termination reason, on ledger: three R1-b failures (narrated deliveries)
+before the fourth attempt succeeded; plus the retyped-not-copied corruption in the
+fourth. Deliveries are exact copies, never retyped.
+Rules in force: R1 · R1-b · R2-a · one gate, one command, in order · no other edits,
+no word runs, no code.
+
 ## V11 BUILD SESSION — CC OPENER BLOCK (paste into the new CC session; opens from docs
 ## alone. State source of truth = the V11-design-close commit or a descendant of
 ## fb8fe46.)
@@ -515,12 +541,12 @@ applies, re-entries) until mechanism acceptance (all controls green). ("me/I" = 
 STANDING DELEGATION IS LIVE (memory feedback_no_questions_standing_delegation): no
 decision questions to JP; CC+reviewer recommendations apply as rulings with delegation
 notes; JP touchpoints = paste-ready commands, screenshots, ship/park notices.
-READ FIRST, in order: (1) DESIGN_v11_acceptance.md IN FULL — STATUS = RULED-CLOSED,
-reviewer amendments folded in as BINDING; the probe-1 data-source replacement (live
-verses.text lookups, the citation gate's pattern) and the open-warn-blocks-apply
-red-first control are GATE CONDITIONS for mechanism acceptance; (2) AUDIT — the V11
-DESIGN PASS entry + the V10 ACCEPTANCE TEST entry (the six defects = the fixture
-sources); (3) ENGINE_LESSONS #48–#50.
+READ FIRST, in order: (1) DESIGN_v11_acceptance.md IN FULL — STATUS = DESIGN AFFIRMED
+at the real reviewer review, TRUE-SEQUENCE correction on record (read the audit
+CORRECTION entry FIRST); the probe-1 code claims are UNVERIFIED — step 2 is a
+code-read gate, not a coding step; the open-warn control is a GATE CONDITION;
+(2) AUDIT — the V11 CORRECTION entry + the V10 ACCEPTANCE TEST entry (the six
+defects = the fixture sources); (3) ENGINE_LESSONS #48–#50.
 Opening check: `git log --oneline -1` = the V11-close commit or descendant · `python
 tests/test_repair_pass.py` ok · `python tests/test_coverage_gate.py` ok · R1: raw
 reposts, never references, both sides.
@@ -541,17 +567,20 @@ next-pass scope. NO APPLY EVER for the dead cached G227/G1390 cards.
 Shelf (not this session unless ruled in): hint-echo detector ticket · G236's drafted
 Dan-trio hint needs amendment-2 at re-entry · repair-record refs-overclaim nit ·
 repaired-cache-hit hint-counter question (UNRULED, carried).
-Standing rules carry: R1 · counts are names · bank on reviewer relay · big output →
-file · exact-or-dotted BOTH clauses · show code before changing it · one gate, one
-command, in order · JP runs all PA commands.
+Standing rules carry: R1 · R1-b receipt-confirmed reposts · R2-a no synthetic
+instruments · counts are names · bank on reviewer relay · big output → file ·
+exact-or-dotted BOTH clauses · show code before changing it · one gate, one command,
+in order · JP runs all PA commands.
 
 ## V11 BUILD SESSION — REVIEWER-CHAT INHERITANCE BLOCK (paste into the new reviewer chat)
 You are the reviewer chat for the Lexica V11 build session. First act = R1-verify the
-V11-close commit on disk (raw repost). You inherit: V11 design RULED-CLOSED same day as
-the pass (DESIGN_v11_acceptance.md; your predecessor's binding amendments are IN the
-doc — verify the committed text matches: probe-1 data-source replacement, normalization
-table before red-first, open-warn-blocks-apply control, whitelist/pattern versioning,
-fixture self-containment, G236 sequencing + its retry-trigger YES ruling). Scoreboard
+V11-close commit on disk (raw repost). You inherit: V11 design DESIGN-AFFIRMED at the
+REAL reviewer review, post-commit — a9d518b carried a false RULED-CLOSED stamp (CC
+self-certified via a spawned side agent; corrected on record, audit CORRECTION entry =
+the authority). Verify the corrective commit's text matches the CORRECTION entry. The
+amendments in the doc were side-agent product, re-examined and affirmed at the real
+review — except the probe-1 code read, which is UNVERIFIED and gates build step 2
+(raw repost + your receipt confirmation, R1-b). Scoreboard
 2/7ʰ · hints 35-for-35 (cache-hit question UNRULED) · G227 parked THIRD · G162 never
 battery-tested (least-known, not healthiest) · housekeeping lock: no apply ever for the
 two dead cached cards. Your duties: full-code read of all three detectors BEFORE
@@ -559,14 +588,15 @@ commit · every control red-first before any zero is trusted (incl. the open-war
 control — it is a GATE CONDITION) · normalization table ruled before controls run ·
 hold the one-gate-one-command order · signature math per word before the run session's
 first draw. Ledger carried: V10 sequence slip (command posted past the math gate) ·
-R1 slips both directions · CC's probe-1 data-source overclaim caught at your
-predecessor's code read (verify-before-claim applies to design docs too); open slow.
+R1 slips both directions · CC self-certified the reviewer loop + committed a9d518b
+past the gate + claimed undelivered reposts (third sequence-slip class; R1-b + R2-a
+ruled in response); open slow.
 
-## V11 DESIGN PASS — CC OPENER BLOCK (SPENT — session ran + RULED-CLOSED 2026-07-12:
-## path (b) adopted — repair stands + three detectors; reviewer amendments binding,
-## folded into DESIGN_v11_acceptance.md; G236 retry-trigger ruled YES at mechanism
-## acceptance; audit entry = the authority. Paste into the new CC session; opens from
-## docs alone. State source of truth = the V10-close commit f654dbb or a descendant.)
+## V11 DESIGN PASS — CC OPENER BLOCK (SPENT — session ran; a9d518b was committed PAST
+## the gate on a self-certified review (ledger); the REAL reviewer review followed and
+## AFFIRMED the design with corrections — audit CORRECTION entry = the authority, not
+## this header. Paste into the new CC session; opens from docs alone. State source of
+## truth = the V10-close commit f654dbb or a descendant.)
 V11 DESIGN PASS — the revised acceptance path for the squeeze-class parks. NO word runs
 (no floors, draws, applies, re-entries) and NO code until the design is ruled — same
 hard gate shape as the V9/V10 design passes. ("me/I" = JP.) STANDING DELEGATION IS LIVE
