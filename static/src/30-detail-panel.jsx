@@ -14,9 +14,9 @@
 // + badge stay the caller's: metaV badge on the name path, the TIPNR spine on the
 // bound card (TIPNR binds it, MetaV enriches it).
 function MetavPersonBody({ data }) {
-  // Rows over 5 names truncate to "+N" — a tap expands that row in place (the
-  // count alone was withholding names the panel exists to show).
-  const [openRows, setOpenRows] = useState({});
+  // Relationship rows list every name, no truncation: names are the point of the
+  // panel, and the corpus-wide worst case (David, 21 children) is ~8 lines — not
+  // enough to earn a collapse (measured on PA 2026-07-11).
   if (!data) return null;
   return (
     <>
@@ -47,15 +47,7 @@ function MetavPersonBody({ data }) {
             return (
               <div key={label} className="metav-rel-row">
                 <span className="metav-rel-label">{label}</span>
-                <span className="metav-rel-names">
-                  {(openRows[label] ? matching : matching.slice(0,5)).map(r => r.name).join(", ")}
-                  {matching.length > 5 && !openRows[label] && (
-                    <button className="metav-rel-more" title={"Show all " + matching.length}
-                      onClick={() => setOpenRows(o => ({ ...o, [label]: true }))}>
-                      +{matching.length - 5}
-                    </button>
-                  )}
-                </span>
+                <span className="metav-rel-names">{matching.map(r => r.name).join(", ")}</span>
               </div>
             );
           })}
