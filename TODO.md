@@ -114,6 +114,17 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   fix if the filter is reused at scale.
 
 ## Open word-study / data issues (low priority, none gating)
+- **Jacob-class name cards (sized 2026-07-11): 694 occurrences (~2% of 32,002 name words) are
+  unbound + ambiguous-name → AI-only fallback card** (found via Ἰακώβ Gen 29:32: several people
+  share the name, the name-lookup rightly declines to guess, no verse-bind exists to break the tie,
+  reader gets the unverified AI blurb with no genealogy). Low volume but high-visibility names:
+  gilead 38, jesus 38, hadad 30, judah 26, jehoram 21, jacob 17, mary 16, elijah 15, joseph 12,
+  saul 10 (full top-20 in the audit output). Coverage otherwise healthy: 15,893/32,002 bound.
+  Fix direction when picked up: extend the binder's verse-corroboration for these names (why did
+  Gen 29:32 Jacob floor? — the patriarch is TIPNR's Israel@Gen.25.26-Rev record, alias-keyed), or
+  a hand-ruled disambiguation list for the famous few. Sizing tool (read-only, control-tested):
+  `scripts/audit_pn_fallback_size.py`. code: build_entity_binding.py tiers; 30-detail-panel.jsx
+  metav effect (the ambiguous-name decline is CORRECT — don't "fix" it by guessing).
 - **Eponym card, per-verse sharpening (banked candidate — JP option (b), 2026-07-11).** Shipped fix
   (81930ee) = static both-senses opener on the 14 tribal-founder person cards (Judah, Israel, the 12
   sons + Ephraim/Manasseh), patriarch bio under a "The man" break — never wrong, never sharp. Banked
