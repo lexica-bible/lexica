@@ -584,6 +584,16 @@ REST of the dotted-Strong's question, none of it gating the rollout:
   d1's Act 2:36 double-shelf was invisible because of it). A resweep after the fix retro-covers shipped cards.
   Batch-4 evidence keeps mounting: two more UNSEEN-REAL sets caught only by the mandatory manual tail check
   (εἰρηνικός ×5, ἀληθής Job 42:8 hiding a double-shelf behind a "42:7–8" range).
+  **BATCH-5 s1 ADDS (2026-07-12, G227 hinted re-entry — 3 exhibits + a behavioral proof + the
+  exposure sweep):** all three G227 draws wrote "Job 42:7–8" with 42:8 never individually counted
+  (draw arithmetic 37/39 → 34/39 → 38/39, 42:8 the constant absentee), CONFIRMING from behavior that
+  the citation gate excludes range-dash tails from its denominator ("N/N pass" with the tail missing).
+  Draw 2 also emitted bare sub-refs "(8:14)…(8:17)" (the δόμα "At 8:16" class) — same scanner family.
+  JP exposure sweep on live cards (GLOB digit–dash–digit in senses_block): **17 of 77 cards carry
+  range forms** (G2962 G2983 G2992 G3624 G935 G3735 G5547 G1119 G4582 G2779 G2563 G3900 G4808 G956
+  G1272 G4061 G2657) — candidates, not confirmed misses; the post-fix resweep adjudicates them.
+  The fix is scanner-side only (frozen prompt untouched, no regression surface). G227's re-park
+  retry-trigger = this fix landing (JP ruling pending at write time).
   code: scripts/build_lexica_def.py `_REF_RE`/`cited_refs`
 - **Standing-query key-shape audit — DONE (batch-5 s1 open, 2026-07-12).** Swept every LIKE/SELECT
   template in the handoff/audit/data-model docs against the stored key shapes. ONE find: the spent
