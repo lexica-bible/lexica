@@ -140,6 +140,16 @@ Constraints:
   reading is right unstated. The shape that passes: "ABP renders with the
   sacrificial sense, following the LXX use." Asserting the disputed meaning as the
   verse's settled sense and asserting its denial are the same failure.
+- COVERAGE IS TOTAL. Every supplied occurrence must appear as a citation under one
+  of your senses. Do not choose representative examples - an occurrence you leave
+  uncited is a defect, exactly like a fabricated one, even when the sense analysis
+  is otherwise right. Before you finish, re-scan the supplied occurrences top to
+  bottom and confirm every reference appears in your senses.
+- QUOTES ARE VERBATIM. Any wording you place inside quotation marks and attribute
+  to a verse must match that verse's stored text word for word; mark any omission
+  with an ellipsis (…). When several verses share a refrain or formula, quote ONE
+  verse and name it - never write a blended wording, and never claim the members
+  are worded identically unless they are.
 
 Output (compact, dictionary-entry style):
 - Senses: each a short gloss-free characterization with grounding references in

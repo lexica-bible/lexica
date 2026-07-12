@@ -361,16 +361,37 @@ Formatting (senses and range - how to lay them out and word them, not which sens
 No preamble, no restating the lemma, no closing summary.
 """
 
-PROMPTS = {"live": B.VERSE_PROMPT, "v7": V7_PROMPT, "v8": V8_DRAFT_PROMPT}
+# V9 (promoted 2026-07-12, JP ruling via the reviewer chat; DESIGN_v9_lines.md RULINGS
+# block) = V8 + exactly the two adopted lines, spliced at the end of the Constraints
+# block. Built from the frozen v8 copy + a frozen literal of the lines, so the sync
+# check below stays a REAL byte-comparison: if the v8 copy, this literal, the splice
+# anchor, or the live prompt moves, the bytes stop matching and the warning fires.
+_V9_LINES = """\
+- COVERAGE IS TOTAL. Every supplied occurrence must appear as a citation under one
+  of your senses. Do not choose representative examples - an occurrence you leave
+  uncited is a defect, exactly like a fabricated one, even when the sense analysis
+  is otherwise right. Before you finish, re-scan the supplied occurrences top to
+  bottom and confirm every reference appears in your senses.
+- QUOTES ARE VERBATIM. Any wording you place inside quotation marks and attribute
+  to a verse must match that verse's stored text word for word; mark any omission
+  with an ellipsis (…). When several verses share a refrain or formula, quote ONE
+  verse and name it - never write a blended wording, and never claim the members
+  are worded identically unless they are.
+"""
+V9_PROMPT = V8_DRAFT_PROMPT.replace(
+    "\n\nOutput (compact, dictionary-entry style):",
+    "\n" + _V9_LINES + "\nOutput (compact, dictionary-entry style):", 1)
+
+PROMPTS = {"live": B.VERSE_PROMPT, "v7": V7_PROMPT, "v8": V8_DRAFT_PROMPT, "v9": V9_PROMPT}
 
 
 def _check_prompt_sync():
     """Loud if our frozen copy of the LIVE engine has drifted from build_lexica_def.VERSE_PROMPT.
     This is the invariant that matters: the reviewer must draw under the SAME prompt the build
-    ships, or it isn't measuring the live engine. The frozen copy is v8 since the 2026-07-10
-    promotion (KEEP ruling, step-5 control fire); v7 is historical and intentionally differs."""
-    if V8_DRAFT_PROMPT.strip() != B.VERSE_PROMPT.strip():
-        print("WARNING: the v8 copy here has DRIFTED from build_lexica_def.VERSE_PROMPT — they must "
+    ships, or it isn't measuring the live engine. The frozen copy is v9 since the 2026-07-12
+    promotion (DESIGN_v9_lines.md rulings); v7 and v8 are historical and intentionally differ."""
+    if V9_PROMPT.strip() != B.VERSE_PROMPT.strip():
+        print("WARNING: the v9 copy here has DRIFTED from build_lexica_def.VERSE_PROMPT — they must "
               "be byte-identical so the reviewer measures the live engine. Re-sync before trusting "
               "a run.", file=sys.stderr)
 

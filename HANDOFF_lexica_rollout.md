@@ -491,7 +491,80 @@ Study's return. Status detail: STATE.md Study line.)
 ## correlation table says discipline-line not length-trade) · prep items both RUN at open.
 ## BATCH PAUSED (charter amendment 6). NEXT SESSION = V9 DESIGN PASS, no word runs.
 
-## V9 DESIGN PASS — CC OPENER BLOCK (paste into the new CC session; opens from docs alone.
+## V9 DESIGN PASS — CLOSE RECORD (2026-07-12; session ran same day; NO word runs,
+## amendment 6 held throughout; audit doc carries the session record + extended table).
+## RULED: all six design items adopted (8f36c65). BUILT: coverage gate red-first-proven
+## (d764bc7; must-fail fixture G2805-d1 shape/Jdg 21:2; tests BOTH CI lists) · item-6
+## read script (e71b0e4) · table extended w/ batch-4 ship rows, ALL fed=REBUILT-marked
+## (3310630): 6/7 shipped cards trim 72–97%, δίκτυον alone full, NO length trade on
+## ship rows either — discipline line confirmed on passing work. **V9 PROMOTED (JP
+## ruling, same session): the two lines live in VERSE_PROMPT, stamp
+## `lexica:f27027b50754`; v9 mirror in lexica_agreement byte-verified; every cached
+## draw/floor now stale by signature (self-enforcing). AMENDMENT 6 CONDITION MET at
+## promotion → BATCH 5 UNPAUSED for session 2.** Six trimmed batch-4 cards scheduled
+## for coverage refresh (JP ruling): from-draw refresh path, queued AFTER the ruled
+## batch order (re-entries → slot 8 → six unaided), never displacing it. Reviewer
+## ledger note: the item-6 determinism evidence + raw PA output were reposted at close
+## (owed item cleared).
+
+## BATCH 5 — RUN SESSION 2 (V9 resume) — CC OPENER BLOCK (paste into the new CC session;
+## opens from docs alone. State source of truth = the V9-promotion close commit; trust
+## docs over any number in a handoff.)
+BATCH 5 RUN SESSION 2 — V9 resume, word 1 = ἀληθής G227 (both retry triggers SATISFIED:
+#28 landed b1995e4/f1514ae, coverage fix landed d764bc7 + PROMOTED). ("me/I" = JP.)
+READ FIRST, in order: (1) this handoff — BATCH-5 CHARTER (amendments 1–6) + the V9
+DESIGN PASS CLOSE RECORD above; (2) DESIGN_v9_lines.md IN FULL (the two lines + RULINGS);
+(3) AUDIT_lexica_rollout.md — V9 DESIGN PASS session record (extended correlation table)
++ G227 RE-PARKED + G2805 RE-PARKED entries; (4) scripts/draw_hints.py header + the G227
+entry; (5) ENGINE_LESSONS.md #47–49.
+Opening check: `git log --oneline -1` = the V9-promotion close commit or a descendant ·
+V8→V9 stamp check: `cd scripts && python -c "import build_lexica_def as B;
+print(B.synth_ver())"` prints `lexica:f27027b50754` · `python tests/test_coverage_gate.py`
+prints ok · **R1: repost raw outputs, never reference them** (ledger: the design-pass
+session opened with a reference-not-repost slip). PLUS the standing PA-currency check:
+JP posts PA's `git log --oneline -1` BEFORE the first floor/draw; must match local —
+mismatch = deploy first, nothing fires.
+STATE: V9 LIVE (stamp above; coverage + verbatim-quote lines in the prompt; coverage
+gate BLOCKS ships in validate_entry — refusal names absentees; bypass = existing
+--force-gate-bypass only) · hinted scoreboard 0/7 (superscript-h, never joins 7/15
+FINAL + UNTOUCHABLE) · EVERY saved floor/draw is stale under V9 (prompt in signature —
+fresh floors were ruled anyway: `--runs 10 --prompt v9`, UNHINTED, all seven) · order:
+G227 → G2805 → G162 → G236 → G2168 → G1390 → G1244 → δίκτυον slot 8 (unregistered,
+no hints) → six unaided queue words (G2270, G3307, G3899, G4623, G1590, G1881) → six
+batch-4 coverage-refresh cards LAST (G4582, G5281, G5009, G2563, G2665, G1516 —
+from-draw path; the audit-doc table names each card's absentees; δίκτυον G1350 needs
+none, its refresh is slot 8 on the *work*-bullet grounds).
+PER-WORD GATE ORDER (unchanged): screens → pre-reg banked in reviewer chat (amendment-2
+hint verification at every pre-reg) → fresh floor → adjudication → build draws (--hints
+MANDATORY on registered words) → apply (--hints repeated, fingerprint match) → render =
+HARD gate. 3-defect budget applies. Trimming stays floor-legal (INFO line prints
+fed-coverage per floor draw); a SHIP that trims is now MACHINE-REFUSED.
+Standing rules carry: R1 on-disk verify before relay · counts are names · bank on
+reviewer relay · big output → file · exact-or-dotted BOTH clauses · show code before
+changing it · JP runs all PA commands.
+
+## BATCH 5 — RUN SESSION 2 — REVIEWER-CHAT INHERITANCE BLOCK (paste into the new
+## reviewer chat)
+You are the reviewer chat for Lexica batch-5 run session 2 (V9 resume). First act =
+R1-verify the V9-promotion close commit on disk (raw output REPOSTED, never referenced —
+your predecessor caught a reference-not-repost slip at the design-pass open; it's on
+the ledger). State you inherit: **V9 PROMOTED + LIVE** (stamp `lexica:f27027b50754`;
+two lines: coverage-is-total + quotes-are-verbatim; DESIGN_v9_lines.md RULINGS = the
+authority) · coverage gate BLOCKS ships (must-fail-proven at d764bc7 — the zero is
+trustable) · batch UNPAUSED (amendment-6 condition met at promotion) · count 7/15
+FINAL + UNTOUCHABLE (the committed pairing) · hinted scoreboard 0/7 · hint mechanism
+6-for-6 · order: seven re-entries (G227 first, both triggers satisfied) → δίκτυον
+slot 8 → six unaided → six batch-4 refresh cards last (fed=REBUILT table rows in the
+audit doc; refreshes are JP-ruled, rate-sizing rows never moved the 7/15). Your
+mechanisms carry: amendment-2 hint-provenance verification at EVERY pre-reg before the
+floor fires · fresh UNHINTED floors all seven (`--prompt v9`; every pre-V9 floor/draw
+is stale by signature — never accept one) · PA-currency check before the session's
+first floor. Ledger carried: s3 queue miscount stands (re-count, never carry) ·
+manual-tail-check premise EXPIRED at #28 · citation-gate "N/N" scopes to parsed refs
+incl. tails · the design-pass R1 slip (hold CC to raw reposts).
+
+## V9 DESIGN PASS — CC OPENER BLOCK (SPENT — session ran + CLOSED 2026-07-12, see the
+## CLOSE RECORD above; paste into the new CC session; opens from docs alone.
 ## State source of truth = the s1 close commit; trust docs over any number in a handoff.)
 V9 DESIGN PASS — two candidate lines, NO WORD RUNS (hard gate: charter amendment 6 — no
 floors, no draws, no applies, no re-entries; the batch is PAUSED until the coverage fix
@@ -520,7 +593,8 @@ Standing rules carry: R1 on-disk verify before relay · counts are names · bank
 reviewer relay · big output → file · exact-or-dotted BOTH clauses · show code before
 changing it · JP runs all PA commands.
 
-## V9 DESIGN PASS — REVIEWER-CHAT INHERITANCE BLOCK (paste into the new reviewer chat)
+## V9 DESIGN PASS — REVIEWER-CHAT INHERITANCE BLOCK (SPENT — session ran + CLOSED
+## 2026-07-12; paste into the new reviewer chat)
 You are the reviewer chat for the Lexica V9 design pass. First act = R1-verify the s1
 close commit on disk (raw output REPOSTED). State you inherit: batch 5 PAUSED by charter
 amendment 6 — **hold CC to the hard gate: NO floors, draws, applies, or re-entries this
