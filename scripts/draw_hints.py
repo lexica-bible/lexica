@@ -66,14 +66,17 @@ DRAW_HINTS = {
             "A verse carrying both the correspondence question and the juridical question (e.g. "
             "Joh 5:31-32, 3Jn 1:12) is stated as a named dual, never silently listed twice.",
             "Joh 8:15 does not carry this word — the courtroom verses are Joh 8:13, 8:14, 8:16, "
-            "8:17 only; never cite 8:15.",
+            "8:17 only; never cite 8:15, and never write the passage as a range ('Joh 8:13-17') "
+            "— list the four verses out.",
         ],
         "jobs": [],
         "provenance": "AUDIT_lexica_rollout.md G227 PARKED entry (re-selection r14, run session 2, "
                       "2026-07-11) + BATCH 4 CLOSED banked hints; JP batch-close ruling 2026-07-12. "
                       "Joh 8:15 pin: V9 floor agreement_G227_v9_20260712-154728 (real-miss Joh 8:15 "
                       "in draws 1/4/6/9/10, adjudicated one class, neighbor-slip) + JP add ruling "
-                      "2026-07-12 (batch-5 run session 2).",
+                      "2026-07-12 (batch-5 run session 2). Range clause: build draw 2 same session "
+                      "(key c17fa2cd) — 8:15 rode in via gloss-note range 'Joh 8:13-17' under the "
+                      "#28 scanner; JP tighten ruling 2026-07-12.",
     },
     "G236": {    # ἀλλάσσω — change/exchange
         "hints": [
