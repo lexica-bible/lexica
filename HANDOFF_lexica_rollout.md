@@ -479,7 +479,62 @@ Study's return. Status detail: STATE.md Study line.)
    commit hash. Pre-emptive holds are the same mechanism (the armed hold-outs G1392/G1377/
    G1391 are DATA-BLOCKED before their floors ever run — do not floor them while tagged).
 
-## BATCH 5 — RUN SESSION 1 (hinted re-entry) — CC OPENER BLOCK (paste into the new CC
+## BATCH-5 RUN SESSION 1 — CLOSE RECORD (2026-07-12; session ran same day as its open).
+## Full records = audit doc G2805 RE-PARKED + G227 RE-PARKED + G227 FLOOR VOID entries.
+## SCOREBOARD: hinted 0/7 · TWO CONDITIONAL PARKS (G227, G2805 — both retry on the
+## coverage fix; G227 also needed #28, satisfied) · hint mechanism VALIDATED 6-for-6 ·
+## count 7/15 untouchable, unchanged. SYSTEMIC WINS: #28 ref-scanner fix BUILT+ACCEPTED
+## (ranges/comma tails now counted; resweep phantom caught+fixed same day; --verify zero
+## NO-VERSE corpus-wide, 8 NO-OCC all range-interior = mention-class) · stale-PA floor
+## void caught -> STANDING CHECK adopted (PA git log vs local close commit before any
+## session's first floor/draw) · citation-trimming attractor FOUND + SIZED (prompt-level,
+## correlation table says discipline-line not length-trade) · prep items both RUN at open.
+## BATCH PAUSED (charter amendment 6). NEXT SESSION = V9 DESIGN PASS, no word runs.
+
+## V9 DESIGN PASS — CC OPENER BLOCK (paste into the new CC session; opens from docs alone.
+## State source of truth = the s1 close commit; trust docs over any number in a handoff.)
+V9 DESIGN PASS — two candidate lines, NO WORD RUNS (hard gate: charter amendment 6 — no
+floors, no draws, no applies, no re-entries; the batch is PAUSED until the coverage fix
+lands AND is accepted). ("me/I" = JP.)
+READ FIRST, in order: (1) this handoff — charter amendments 5+6 + the s1 CLOSE RECORD
+above; (2) AUDIT_lexica_rollout.md — G2805 RE-PARKED entry IN FULL (carries the
+cross-word attractor record + correlation table pointer) + G227 RE-PARKED entry;
+(3) V9_PILE.md in full; (4) ENGINE_LESSONS.md #47-48.
+Opening check: `git log --oneline -1` = the s1 close commit or a descendant; the charter
+shows amendment 6; `python tests/test_ref_tail_expansion.py` prints ok. PLUS the standing
+PA-currency check BEFORE anything fires PA-side: JP posts PA's `git log --oneline -1`,
+must match local (adopted after the G227 stale-PA floor void).
+SCOPE: draft the two V9 lines for JP ruling BEFORE any build — (a) coverage/trimming:
+"every fed occurrence is cited under a sense; trimming is a defect" (discipline-shaped;
+the correlation table killed the length-trade hypothesis — exemplar-sampling habit);
+(b) verbatim-quote: quotes inside quotation marks match verses.text verbatim or carry
+ellipses; quotes against a member list NAME their member (exhibits: G2805-d2 hybrid
+[the hint-limits exhibit], G236 priors, G162 d2). Design doc to JP; the frozen-V8 rule
+stands — nothing changes the live prompt until JP promotes V9. Enforcement design
+question to answer IN the doc: prompt line alone, or prompt line + a coverage gate in
+validate_entry (fed-occurrences-cited check) as the detector that proves the line works.
+Batch-4 ship rows may join the correlation table (PA read, JP runs).
+Standing rules carry: R1 on-disk verify before relay · counts are names · bank on
+reviewer relay · big output → file · exact-or-dotted BOTH clauses · show code before
+changing it · JP runs all PA commands.
+
+## V9 DESIGN PASS — REVIEWER-CHAT INHERITANCE BLOCK (paste into the new reviewer chat)
+You are the reviewer chat for the Lexica V9 design pass. First act = R1-verify the s1
+close commit on disk (raw output REPOSTED). State you inherit: batch 5 PAUSED by charter
+amendment 6 — **hold CC to the hard gate: NO floors, draws, applies, or re-entries this
+session; a word run proposal = automatic hold** (same shape as build session 1's
+no-word-runs line). Scoreboard: hinted 0/7 · G227 + G2805 conditionally parked (retry =
+coverage fix; both park entries carry the evidence) · hint mechanism 6-for-6 (your
+amendment-2 ran at every pre-reg and every draw, verbatim both sides) · count 7/15 final.
+Your duties: read the two park entries + V9_PILE in full, verify the drafted V9 lines
+against their exhibits (committed wording governs), stress the enforcement question
+(prompt line vs line+gate; the audit-tools-must-fail rule wants a detector that proves
+compliance), and carry the ledger: the manual-tail-check premise EXPIRED at #28 (say so
+when procedures cite it) · citation-gate "N/N pass" scopes to parsed refs (now incl.
+tails) · the s3 queue miscount stands against the reviewer ledger (re-count, never carry).
+
+## BATCH 5 — RUN SESSION 1 (hinted re-entry) — CC OPENER BLOCK (SPENT — session ran +
+## CLOSED 2026-07-12, see the CLOSE RECORD above; paste into the new CC
 ## session; opens from docs alone. State source of truth = close commit 8a4dceb; trust
 ## docs over any number in a handoff.)
 BATCH 5 RUN SESSION 1 — hinted re-entry, word 1 = ἀληθής G227. Open from docs alone;
@@ -586,6 +641,16 @@ items, nothing missing.
    applicable — an unregistered word). Grounds on the record: the refresh wants the new
    phrase-context feed exercised and the hint tooling proven stable (the seven provide
    both), and slot 8 neither displaces nor interleaves with the ruled re-entry order.
+6. **BATCH PAUSED — RULED (JP, 2026-07-12, s1 close; charter AMENDMENT 6): the five
+   remaining hinted re-entries (αἰχμαλωτεύω G162, ἀλλάσσω G236, εὐχαριστέω G2168,
+   δόμα G1390, διαιρέω G1244), the six unaided queue words, AND the δίκτυον slot-8
+   refresh do NOT fire until the coverage fix lands and is ACCEPTED.** Grounds: the
+   citation-trimming attractor is prompt-level (six draws, two words, coverage the sole
+   failure every time — the G2805 park entry carries the cross-word record); running the
+   queue into it is ~50 draws of predictable failure. G227 + G2805 both re-park with
+   retry-trigger = the coverage fix. NEXT SESSION = the V9 DESIGN PASS (two candidate
+   lines together: coverage/trimming + verbatim-quote), NOT a word run — hard gate,
+   same shape as the build-session-1 "no word runs" charter.
 
 ## BUILD SESSION 1 (post-batch-4) — CC OPENER BLOCK (SPENT — session ran 2026-07-12; paste into the new CC session; opens
 ## from docs alone. State source of truth = close commit 506f106; trust docs over any

@@ -186,6 +186,25 @@ Format: date · word · defect class · exhibit pointer · status.
 - 2026-07-12 · (batch-wide) · **verbatim-quote discipline — THIRD word (G162 d2 dropped
   "into the height" mid-quote, no ellipsis; G2805 ×3; G236).** The V9-general candidate
   hardens: quotes inside quotation marks match verses.text verbatim or carry ellipses.
+- 2026-07-12 · G2805 re-entry d2 · **THE HINT-LIMITS EXHIBIT: refrain hybrid WITH the
+  verbatim hint live** — variant 2 verbatim (Mat 22:13/Luk 13:28) but variant 1 spliced
+  the shall-verses' verb onto the of-teeth ending, matching NO member (the family's 4th
+  corruption). A per-word hint REDUCES corruption (d1 clean, d2 one-of-two, d3 clean)
+  but does not eliminate it → the verbatim-quote line rides the V9 design pass (JP-ruled
+  2026-07-12). Addendum: a quote against a member list NAMES its member (the seven
+  refrain verses differ by articles; "structurally identical" true of structure only).
+- 2026-07-12 · batch-5 s1 CLOSE · **CITATION-TRIMMING ATTRACTOR — the coverage V9
+  candidate (JP-ruled: design pass OPENS, batch PAUSED, charter amendment 6).** Six
+  draws, two hinted re-entry words, every original park defect cured by hints, EVERY
+  rejection coverage alone: G227 37/34/38 of 39, G2805 34/30/31 of 39, six distinct
+  absentee sets, zero convergence. Correlation table (existing data, reviewer-ordered):
+  NO length trade — G227's longest card cited worst (7,015 chars → 34/39), G2805's
+  longest cited best (4,181 → 34; its shorter cards → 30, 31). Reading: exemplar-
+  sampling habit, so the candidate is a DISCIPLINE line — "every fed occurrence is
+  cited under a sense; trimming is a defect" — not a citations-first structural
+  redesign. Design question banked: prompt line alone vs line + a fed-occurrences-cited
+  gate in validate_entry (audit-tools-must-fail wants the detector that proves the line
+  works). Batch-4 ship rows may join the table at the pass (PA read).
 - 2026-07-10 · G2168 εὐχαριστέω · **reader section-matcher gaps surface in pairs on
   novel-shape words** (reviewer note, banked): #47's headline gap + the singular "Gloss
   note:" gap landed on the SAME first one-job word — consider a shape-conformance sweep

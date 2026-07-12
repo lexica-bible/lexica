@@ -1982,6 +1982,51 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### G2805 κλαυθμός — RE-PARKED (batch-5 run session 1, hinted re-entry word 2; JP "park"
+### 2026-07-12, retry-trigger = the COVERAGE FIX landing — conditional park, the second of
+### the session). Three defect-class draws on a clean fresh floor, no draw 4. HINTED
+### SCOREBOARD stays 0/7; hint mechanism now 6-for-6 across both re-entry words.
+**Floor: `agreement_G2805_v8_20260712-143332.json`** — fresh under the new feed, spread
+{1:3, 2:7}, STABLE, reviewer-concurred; act-shelf 10/10, refrain seven mutually 10/10,
+whole-fold attested 3/10 (all three carry the seven). Four pre-clears banked incl. refrain
+CLOSED at the seven named + the JP-RULED CLARIFICATION on the record: **citation-trimming
+is floor-legal only, NEVER ship license — a ship cites every fed occurrence.**
+Amendment-2 verified at pre-reg + all three draws.
+**The three draws (all REJECT on COVERAGE ALONE; everything else held):**
+- d1: 34/39 (5 uncited incl. 10/10 Jdg 21:2). Refrain verbatim (to Mat 13:42 — ledger:
+  a quote against a member list names its member; 8:12's wording differs by two articles,
+  so "structurally identical across all six" is true of structure, not wording). Rachel
+  quote verbatim but UNMARKED mid-verse trim (discipline miss, banked).
+- d2: 30/39 (9 uncited — WORSE; Jdg 21:2 fixed, nine others displaced). Rachel handled
+  via the legal not-quoted branch. **Refrain HYBRID banked as THE HINT-LIMITS EXHIBIT:**
+  variant 2 verbatim (Mat 22:13/Luk 13:28) but variant 1 ("there shall be the weeping and
+  the gnashing of teeth") matches NO member — a splice of the shall-verses' verb onto the
+  of-teeth ending; the refrain family's FOURTH corruption, first WITH the hint live.
+  The verbatim hint reduces corruption (d1 clean, d2 one-of-two, d3 clean) but does not
+  eliminate it → strengthens the V9-general routing of park candidate (3).
+- d3: 31/39 (8 uncited, a THIRD distinct absentee set). Refrain verbatim (13:42/13:50/
+  24:51). Reach-ceiling held all three draws IN THE CARD'S OWN WORDS (the exact sentence
+  the three park draws couldn't write); #30 clean ×3 (first ships checked under the #28
+  scanner — the manual-tail-check "until #28 lands" premise EXPIRED, on the record).
+**Park rationale (JP-ruled on CC+reviewer concurrence): the original park defects are
+CURED by the hints; every rejection was coverage alone — 34/30/31 of 39 with three
+different absentee sets, zero convergence. Random victims of a systematic squeeze =
+attractor, not slip.**
+**CROSS-WORD ATTRACTOR RECORD (the session's third systemic find):** citation trimming on
+ships is PROMPT-LEVEL, not word-level — six draws across two words (G227 37/34/38, G2805
+34/30/31), hints curing the original defects each time, coverage the sole failure each
+time. Correlation diagnostic run (reviewer-ordered, existing data): NO length trade —
+G227's longest card cited worst, G2805's longest cited best (opposite signs). Reading:
+exemplar-sampling habit, not length pressure → the V9 candidate is a DISCIPLINE line
+("every fed occurrence cited under a sense; trimming is a defect"), not a structural
+redesign. Table in the session record; batch-4 ship rows can join at the design pass.
+**CONSEQUENT JP RULINGS (same session):** (1) G227's retry-trigger UPDATED — now BOTH #28
+(satisfied) AND the coverage fix (its park evidence carries the same trimming defect);
+(2) **BATCH PAUSED** — the five remaining hinted re-entries + the δίκτυον slot-8 refresh
+do NOT fire until the coverage fix lands and is accepted (charter amendment 6);
+(3) **V9 DESIGN PASS OPENS** — two candidate lines ride together: the coverage/trimming
+line and the verbatim-quote line (d2 hybrid exhibit + the G236 prior).
+
 ### G227 ἀληθής — RE-PARKED (batch-5 run session 1, hinted re-entry word 1; JP "park"
 ### 2026-07-12, retry-trigger = the #28 ref-scanner fix landing — a CONDITIONAL park, not
 ### indefinite). Three defect-class draws on a clean fresh floor, no draw 4 per the pre-set
@@ -2015,9 +2060,11 @@ DIRECTIONAL, not noise — two attractors every draw (juridical over-collection;
 dash) across three different sense-counts. One attractor (the dash) dies entirely at the
 #28 scanner fix WITHOUT touching the frozen prompt: once ranges are readable, the model's
 range-writing habit becomes a legal citation, and the gate/double-shelf detector gain
-sight. Retry = after #28 lands. [RETRY-TRIGGER SATISFIED same session: #28 fix built +
-accepted vs the real stored shapes (resweep ×2, --verify zero NO-VERSE corpus-wide),
-reviewer-attested — G227 is re-entry-eligible whenever JP schedules it.] The legal Job
+sight. Retry = after #28 lands. [#28 TRIGGER SATISFIED same session (fix built + accepted:
+resweep ×2, --verify zero NO-VERSE corpus-wide, reviewer-attested). **RETRY-TRIGGER THEN
+UPDATED (JP ruling at s1 close): #28 AND the coverage fix — G227's own three draws carry
+the cross-word trimming defect (37/34/38 of 39; see the G2805 park entry's attractor
+record). Re-entry when BOTH stand.**] The legal Job
 42:7/42:8 citation-discipline hint is noted
 AVAILABLE-AT-RETRY, NOT added to the register (JP ruling; likely moot post-#28; a
 juridical-membership hint was examined and ruled ILLEGAL AS DRAFTED — it prescribes a
