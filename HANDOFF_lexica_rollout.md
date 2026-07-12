@@ -499,9 +499,9 @@ at 0/7 (separate line, superscript-h marker, never joins the 7/15) · re-entry o
 δόμα G1390 → διαιρέω G1244, then the six queue words UNAIDED (ἡσυχάζω G2270, μερίζω G3307,
 παραπορεύομαι G3899, σιωπάω G4623, ἐκλύω G1590, ἐπανίσταμαι G1881) · V8 live (stamp
 lexica:7ef8620328a9) · δίκτυον live card carries the ONE known-issue *work* bullet —
-engine-prose fragment instance, fixed by a fresh draw under the new feed (refresh PENDING
-a JP scheduling ruling — it was NOT one of the three ruled charter decisions; do not slot
-the draw without that ruling; from-draw refresh path when ruled).
+engine-prose fragment instance, fixed by a fresh draw under the new feed (refresh RULED
+2026-07-12 s1: SLOT 8, after the seven hinted / before the six unaided — charter
+amendment 5; from-draw refresh path).
 FLOORS RULED: FRESH 10-run floors for ALL SEVEN (`--word <SID> --runs 10 --prompt v8`),
 no park-floor reuse, saved park floors = historical artifacts only, NO override/reuse path
 exists or gets built. Floors are UNHINTED by design (hints fire at build draws only, via
@@ -576,7 +576,14 @@ items, nothing missing.
    verification at every pre-reg (ruling 5b, reviewer's mechanism) · gate order screens →
    pre-reg banked → floor → adjudication → draws · exact-or-dotted both clauses · 3-defect
    budget applies to hinted draws · batch-5 prep items still open: standing-query key-shape
-   audit + section-matcher sweep (TODO).
+   audit + section-matcher sweep (TODO). [Both RUN at the s1 open, 2026-07-12 — see TODO.]
+5. **δίκτυον refresh — RULED (JP, 2026-07-12, batch-5 run session 1; charter AMENDMENT,
+   reviewer-recommended slot adopted): SCHEDULED this batch, SLOT 8** — after the seven
+   hinted re-entries, before the six unaided queue words. From-draw refresh path; δίκτυον
+   has NO register entry, so its draw runs without constraint hints (--hints not
+   applicable — an unregistered word). Grounds on the record: the refresh wants the new
+   phrase-context feed exercised and the hint tooling proven stable (the seven provide
+   both), and slot 8 neither displaces nor interleaves with the ruled re-entry order.
 
 ## BUILD SESSION 1 (post-batch-4) — CC OPENER BLOCK (SPENT — session ran 2026-07-12; paste into the new CC session; opens
 ## from docs alone. State source of truth = close commit 506f106; trust docs over any

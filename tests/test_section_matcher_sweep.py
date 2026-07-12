@@ -10,7 +10,9 @@ Two kinds of assertion:
   PINNED GAP (not endorsed) — a shape the matcher does NOT handle today; the pin records the
   chosen current behavior so a change is a decision, not an accident. Each gap is flagged in
   the batch-5 session record for a JP call; none is fixed here (splitter changes touch every
-  live card's parse and are checkpoint-class).
+  live card's parse and are checkpoint-class). The pinned gaps are CHOSEN current behavior:
+  editing a pinned-gap assertion (or the matcher it pins) = a JP checkpoint. Never loosen a
+  pin here to make a matcher change pass — the pin failing IS the tripwire.
 
 Run under pytest or as a plain script. In BOTH the CI list (.github/workflows/ci.yml) and the
 pre-commit hook (scripts/githooks/pre-commit).
