@@ -36,8 +36,11 @@ gloss is parked whole on ONE token slot ("Jesus to them," on the αὐτός tok
 column for any "renders as" count — raw `english` fed through the normalizer mis-heads a parked
 phrase into a phantom render ("jesus" under a pronoun). All render counters (word-study panel,
 def-engine draw, coverage `rendering_sets`) read `english_head`; the chip still DISPLAYS
-`english`. Documented limit (pronoun/function slots can carry a trailing parked word): the
-citable `parse_abp.HEAD_WORD_TAIL_CAVEAT`; locked by `tests/test_render_head_no_phantom.py`.
+`english`. Since 2026-07-12 the def-engine ALSO carries `english` + `italic_words` as CONTEXT
+beside the head (the head stays the count key — a fragment head like "work" for "latticed work"
+must never be analyzed as the whole render, and a parked phrase must never become a render).
+Documented limit (pronoun/function slots can carry a trailing parked word): the citable
+`parse_abp.HEAD_WORD_TAIL_CAVEAT`; locked by `tests/test_render_head_no_phantom.py`.
 
 ### strongs_base format — CRITICAL INVARIANT
 - `words.strongs_base` is fully G/H prefixed ('G4151', 'H7307') — normalized 2026-06-01.
