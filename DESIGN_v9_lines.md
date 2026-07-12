@@ -146,5 +146,24 @@ rate on PASSING work gets sized too. Not required for the ruling above.
 5. Verbatim-quote checker: separate ticket (recommended) vs bundle now.
 6. Batch-4 correlation rows: want them (CC builds the read, JP runs) or skip.
 
-## RULINGS (JP)
-_(empty — awaiting ruling)_
+## RULINGS (JP, 2026-07-12 — relayed via the reviewer chat; all six adopted on the
+## CC+reviewer recommendations)
+1. Line (a) wording — **ADOPTED as drafted.**
+2. Line (b) wording — **ADOPTED as drafted.**
+3. Enforcement — **line + coverage gate in `validate_entry`.**
+4. Gate details — **adopted as specced:** senses-block-only coverage via the production
+   `ref_spans`, exact-or-dotted both clauses, tails count, ref-level doubles, existing
+   `--force-gate-bypass` path only, must-fail fixture from G2805 d1 (Jdg 21:2 absent)
+   + clean-card control, both tests in BOTH CI lists.
+5. Verbatim-quote checker — **separate ticket;** line (b) ships prompt-only with the
+   hand-read + per-word hint as interim detectors.
+6. Batch-4 correlation rows — **adopted:** CC builds the read-only PA script, JP runs
+   it; gated on the PA-currency check first (JP reposts PA's raw `git log --oneline -1`
+   before the script is handed over).
+
+**Boundaries banked with the ruling (so nobody over-reads it):** ruling ≠ promotion —
+V8 stays frozen (`lexica:7ef8620328a9`), the lines land only when JP promotes V9,
+placement shown first · amendment 6 holds — no floors/draws/applies/re-entries; the
+gate build is in scope per this doc's own terms and is not a word run · show code
+before changing it — validate_entry diff + both CI fixtures posted for review before
+commit · zero isn't trusted until the must-fail fixture fires.
