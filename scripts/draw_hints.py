@@ -65,10 +65,15 @@ DRAW_HINTS = {
             "light' there is ἀληθινός G228, a different word — off-limits in senses AND range.",
             "A verse carrying both the correspondence question and the juridical question (e.g. "
             "Joh 5:31-32, 3Jn 1:12) is stated as a named dual, never silently listed twice.",
+            "Joh 8:15 does not carry this word — the courtroom verses are Joh 8:13, 8:14, 8:16, "
+            "8:17 only; never cite 8:15.",
         ],
         "jobs": [],
         "provenance": "AUDIT_lexica_rollout.md G227 PARKED entry (re-selection r14, run session 2, "
-                      "2026-07-11) + BATCH 4 CLOSED banked hints; JP batch-close ruling 2026-07-12",
+                      "2026-07-11) + BATCH 4 CLOSED banked hints; JP batch-close ruling 2026-07-12. "
+                      "Joh 8:15 pin: V9 floor agreement_G227_v9_20260712-154728 (real-miss Joh 8:15 "
+                      "in draws 1/4/6/9/10, adjudicated one class, neighbor-slip) + JP add ruling "
+                      "2026-07-12 (batch-5 run session 2).",
     },
     "G236": {    # ἀλλάσσω — change/exchange
         "hints": [
