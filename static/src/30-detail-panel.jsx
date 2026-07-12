@@ -802,6 +802,33 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
       // For a People/Clan, the ancestor's own bio ("Man living at the time of …") misframes
       // the collective — drop it; the lineage line below carries the honest link instead.
       if (peopleClan) line = "";
+      // TRIBAL EPONYMS (JP ruling 2026-07-11): TIPNR deliberately files tribe/kingdom
+      // references under the founding patriarch (its own place entity covers only
+      // "Judea"-style refs), so "king of Judah" lands on Jacob's son. The binding is
+      // faithful; the card must not lead with claims false of the kingdom. Static
+      // both-senses opener for the founder names, patriarch bio demoted under a
+      // "The man" break. Guarded by the TIPNR bio text so namesakes (Judah@Neh,
+      // King Manasseh) keep their plain person card.
+      const EPONYM_LINES = {
+        "Israel":   "Jacob, renamed Israel — most later mentions name the nation or the northern kingdom, not the man.",
+        "Judah":    "Jacob's son — most later mentions name the tribe or the southern kingdom called after him.",
+        "Ephraim":  "Joseph's son — later mentions often name the tribe, its territory, or the northern kingdom.",
+        "Manasseh": "Joseph's son — later mentions often name the tribe and its territory.",
+        "Levi":     "Jacob's son — later mentions often name the tribe of priests descended from him.",
+        "Benjamin": "Jacob's son — later mentions often name the tribe and its territory.",
+        "Reuben":   "Jacob's son — later mentions often name the tribe and its territory.",
+        "Simeon":   "Jacob's son — later mentions often name the tribe and its territory.",
+        "Dan":      "Jacob's son — later mentions often name the tribe, its territory, or the city of Dan.",
+        "Naphtali": "Jacob's son — later mentions often name the tribe and its territory.",
+        "Gad":      "Jacob's son — later mentions often name the tribe and its territory.",
+        "Asher":    "Jacob's son — later mentions often name the tribe and its territory.",
+        "Issachar": "Jacob's son — later mentions often name the tribe and its territory.",
+        "Zebulun":  "Jacob's son — later mentions often name the tribe and its territory.",
+      };
+      const eponym = be.section === "person" && !peopleClan && EPONYM_LINES[be.name]
+        && /jacob's son|joseph's son|patriarchs|renamed/i.test(descText || "")
+        ? EPONYM_LINES[be.name] : null;
+      if (eponym) line = eponym;
       // area (Geo-area) is often just TIPNR's empty-breadcrumb ">" — strip stray > and blanks
       // so an empty geo-area shows NO row; real values (e.g. "Tribe of Simeon") stay as a label.
       const area = clean(be.area).replace(/^[>\s]+|[>\s]+$/g, "");
@@ -859,6 +886,7 @@ function DetailPanel({ entry, isMobile, onClose, occurrences, totalResults, onSt
           <h4 className="sec-head"><span className="sec-t">{label}</span><span className="bdb-badge">TIPNR</span></h4>
           <div className="pnbound-name">{heroName}</div>
           {line && <p className="pnbound-desc">{line}</p>}
+          {eponym && (richPerson || factItems.length > 0) && <div className="detail-h">The man</div>}
           {richPerson ? <MetavPersonBody data={be.metav} /> : (
           <div className="pnbound-facts">
             {factItems.map(factRow)}
