@@ -1982,6 +1982,49 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### V9 DESIGN PASS — SESSION RECORD (2026-07-12, post-s1-close; NO word runs, amendment 6
+### held throughout). Rulings + builds: DESIGN_v9_lines.md RULED all six items (8f36c65) ·
+### COVERAGE GATE built + must-fail-proven red-first (d764bc7; fixture = G2805 d1 shape,
+### Jdg 21:2 named; tests in BOTH CI lists) · item-6 read script e71b0e4 · V8 untouched.
+**CORRELATION TABLE — EXTENDED with the batch-4 ship rows (JP ran the read on PA at
+e71b0e4, raw output in the session chat). Ship rows are fed=REBUILT (reviewer condition):
+the draw records store the fed COUNT only, so the fed sets were rebuilt with the
+production picker (determinism evidence banked in the reviewer chat), count-tripwired
+against each record — all seven matched, none excluded. REBUILT means: not the recorded
+originals; same-count drift from moved data is possible in principle.**
+
+| card (shipped batch-4) | raw chars | fed | cited | ratio |
+|---|---|---|---|---|
+| G1350 δίκτυον ʳ | 3,150 | 30 | 30 | 100% |
+| G4582 σελήνη ʳ | 2,846 | 39 | 29 | 74% |
+| G5281 ὑπομονή ʳ | 4,225 | 39 | 37 | 95% |
+| G5009 ταμεῖον ʳ | 3,031 | 36 | 35 | 97% |
+| G2563 κάλαμος ʳ | 3,236 | 32 | 23 | 72% |
+| G2665 καταπέτασμα ʳ | 4,791 | 36 | 26 | 72% |
+| G1516 εἰρηνικός ʳ | 5,125 | 39 | 33 | 85% |
+
+(ʳ = fed=REBUILT reconstruction marker. Draw-layer rows stay in their park entries:
+G227 37/34/38 of 39 — its 7,015-char d2 cited worst; G2805 34/30/31 of 39 — its
+4,181-char d1 cited best of the three.)
+**Reading (rate-sizing only — the 7/15 FINAL + UNTOUCHABLE count does NOT move, per the
+read's own framing):**
+1. **The attractor is corpus-wide on PASSING work:** 6 of 7 shipped cards carry uncited
+   fed refs (72–97%); only δίκτυον is full-coverage. Batch-4 adjudication never counted
+   coverage — the "a ship cites every fed occurrence" bar was ruled later (G2805
+   re-entry pre-clears) — so these ships were legal under their own standard.
+2. **The no-length-trade finding HOLDS on ship rows:** the longest card (G1516, 5,125)
+   sits mid-pack at 85%; the shortest (G4582, 2,846) is near-worst at 74%; full-coverage
+   δίκτυον is second-shortest. Discipline line confirmed, structural redesign stays dead.
+3. **Absentee SHAPE matches exemplar-sampling:** the misses cluster in blocks (κάλαμος:
+   the Eze 40–42 measuring-reed suite; καταπέτασμα: the Exo 26–40 tabernacle suite) —
+   the card treats a family via exemplars and leaves the siblings uncited. Adjudication
+   caveat, deliberately open: some absentees may appear in Range/gloss notes or as
+   chapter-level mentions, which the ruled bar ("cited under a sense") deliberately does
+   not count — per-card adjudication is JP/reviewer's, not the read's.
+**DISPOSITION (banked, no action this session):** the seven live cards stay as-shipped;
+whether any get a coverage refresh is a JP call AFTER the V9 promotion + batch unpause,
+on the same from-draw refresh path as δίκτυον slot 8 — not a new work item now.
+
 ### G2805 κλαυθμός — RE-PARKED (batch-5 run session 1, hinted re-entry word 2; JP "park"
 ### 2026-07-12, retry-trigger = the COVERAGE FIX landing — conditional park, the second of
 ### the session). Three defect-class draws on a clean fresh floor, no draw 4. HINTED
