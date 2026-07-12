@@ -1,8 +1,25 @@
 # DESIGN — Hint tooling for parked-word re-entry (batch-5 prep)
 
-Status: DRAFT for JP ruling (2026-07-12, batch-4 close session). Nothing here is built.
-Reviewer review + JP ruling required before any code lands. Companion ticket: the
-fragment-rendering fix (TODO.md) — same build window, separate change.
+Status: **RULED (JP, 2026-07-12, "go with all recs" — all five items) + reviewer
+concur-with-amendments banked.** Build not started; the reviewer reads this doc in
+full next session before code lands. Companion ticket: the fragment-rendering fix
+(TODO.md) — **sequenced FIRST by ruling 4.**
+
+## RULINGS (JP, 2026-07-12)
+1. **Refuse-when-notes-forgotten: YES** — running a registered word without `--hints`
+   refuses (override `--no-hints REASON`, logged).
+2. **Hinted ships count WITH A MARKER** — hinted-ship vs unaided-ship never conflated
+   in one number (the dagger-style asterisk convention; exact glyph/wording set at the
+   batch-5 charter).
+3. **Hint-register edits require JP approval** — same authority as the rulings they
+   encode.
+4. **The rendering-layer fix lands BEFORE hint re-entry** — three of the seven shelf
+   words carry checker/rendering exhibits; re-running them through a known-defective
+   layer would contaminate the re-entry evidence.
+5. **Reviewer amendments accepted:** (a) the scoreboard marker (= ruling 2);
+   (b) **hint-provenance verification at re-entry pre-reg** — before a hinted word's
+   floor/draws fire, the reviewer verifies each register line against its cited ruling
+   (committed-wording-governs, applied to hints). Written into the procedure below.
 
 ## What this is, in plain terms
 
@@ -143,12 +160,15 @@ calibration statistic differs). JP rules the wording.
 4. Batch-5 charter: re-entry order, count semantics per JP's ruling, fresh-floor list
    (δόμα and εὐχαριστέω have post-fix floors; the rest reuse saved STABLE floors).
 
-## Open questions for JP (the ruling list)
+## Re-entry procedure additions (per ruling 5b)
 
-1. Refuse-by-default when a registered word runs without `--hints`? (Recommended: yes.)
-2. Count semantics for hinted ships (separate scoreboard wording). (Recommended: as
-   proposed above.)
-3. Hint-register edits = checkpoint approvals, same as correction-table writes.
-   (Recommended: yes.)
-4. Does the rendering-layer ticket land BEFORE batch-5 re-entry (recommended — the
-   gloss-note layer then sees phrases), or in parallel?
+At each hinted word's pre-registration, BEFORE anything fires: the reviewer verifies
+every register line for that word against the ruling its provenance cites (one grep
+into the audit doc) — drift between the ruled wording and the file's wording blocks
+the run until reconciled.
+
+## Ruling list — CLOSED (see RULINGS block at top; formerly the open questions)
+
+All four resolved 2026-07-12 per recommendation, plus both reviewer amendments.
+Build order: (1) rendering-layer fix → (2) hint tooling (register + flag + tests) →
+(3) reviewer walk of the seven register entries → (4) batch-5 charter → re-entry.

@@ -1903,13 +1903,24 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
    ἀλλάσσω, κλαυθμός, αἰχμαλωτεύω) · SIX queue words rolled forward UNRUN (ἡσυχάζω
    G2270, μερίζω G3307, παραπορεύομαι G3899, σιωπάω G4623, ἐκλύω G1590, ἐπανίσταμαι
    G1881 — the in-chat "4 remain / max 11" was a miscount, corrected in the audit
-   entry; ruling unaffected). Record = audit doc BATCH 4 CLOSED entry.** NEXT =
-   **HINT-TOOLING DESIGN SESSION, not a word run:** hint storage + injection into draw
-   context (extends --structure-hint from job-names to constraint lines — design must
-   draw the pre-registered-constraint vs incumbent-content line explicitly, JP rules) ·
-   the seven shelf words' banked hint lines · the fragment-rendering ticket (same fix
-   layer) · design doc to JP BEFORE any build. Then batch 5 = shelf re-entry with
-   hints + the six rolled-forward words → GREEN activation, then step 6 layout. Item-3 tooling (incl. the structure-hint experiment — now the named re-entry
+   entry; ruling unaffected; reviewer logged the same miscount against its own ledger).
+   Record = audit doc BATCH 4 CLOSED entry.** **HINT TOOLING DESIGNED + FULLY RULED
+   same session: `DESIGN_hint_tooling.md` (bff58fb, rulings folded in at the close
+   commit) — constraint-hint register (draw_hints.py, provenance-carrying, JP-approved
+   edits only) + `--hints` injection after the occurrences, frozen prompt + floors +
+   gates untouched. JP RULED ALL FIVE: refuse-when-notes-forgotten YES · hinted ships
+   count WITH MARKER (never conflated with unaided) · register edits = JP checkpoint ·
+   rendering-layer fix lands FIRST · reviewer amendments accepted (marker +
+   hint-provenance verification at every re-entry pre-reg).** NEXT SESSION OPENS ON:
+   **(1) the fragment-rendering fix BUILD (ruling 4 sequences it first — phrase context
+   to the def-engine rendering layer, phantom protection preserved, 2Ch 4:13 fixture;
+   ticket detail in TODO.md) · (2) hint-tooling build per the ruled design · (3)
+   reviewer walk of the seven register entries · (4) batch-5 charter (marker wording,
+   re-entry order, fresh-floor list). NO WORD RUNS until (1) and (2) land.** Then
+   batch 5 = shelf re-entry with hints + the six rolled-forward words → GREEN
+   activation, then step 6 layout. R1 note for the next opener: verify commits
+   bff58fb + the session-close commit on disk first thing (the reviewer's record
+   holds them as owed artifacts). Item-3 tooling (incl. the structure-hint experiment — now the named re-entry
    path for ALL FOUR parked batch-4 words) + /consolidate = parallel gap work, still green.**
 6. (was 4, historical) **Batch-3 sessions 1–2 record** — **sessions 1 AND 2 CLOSED 2026-07-09.**
    Session 2: 3 shipped (παράπτωμα RED — routing exercise met · συκῆ · βέλος, all off-count via
