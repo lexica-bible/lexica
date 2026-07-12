@@ -952,6 +952,12 @@ line untouched (standing non-Greek-reader rule stands). Tools: `scripts/audit_su
 ## Ideas / someday (nothing committed — grab whichever appeals)
 
 **Reader / layout**
+- **Doubled-mark residual (Jer 46:15 class follow-up)** — 11 verses where a bracket group's lifted
+  punctuation accumulated TWO marks (`,,` / `.,` / `;,` / `—;` etc.); since the 2026-07-11 chip fix they
+  render both marks together (previously invisible; prose has always shown them the same way — parity,
+  not a regression). Eyeball a few, decide if the lift should dedupe/keep-first. List them with
+  `python3 scripts/audit_chip_trail_drop.py bible.db --list` (the multi-char mark rows).
+  code: TRAIL lift in 59c-library-render.jsx + getEnglishOrderWords in 56-library-order-logic.jsx.
 - **Word detail as a floating card** — instead of the fixed right sidebar, the lexicon info pops up next
   to the clicked word. code: detail panel in 90-app.jsx.
 - **Collapsing toolbar** — shrink the desktop lib-bar to one compact pill that expands on reach, giving
