@@ -43,10 +43,17 @@ DRAW_HINTS = {
             "Psa 68:18 reads 'you received gifts by men'; Eph 4:8 (quoting it) reads 'he gave "
             "gifts to men' — describe each text's own wording, never summarize the pair jointly.",
             "Ecc 5:1's δόμα is a human-to-God cultic gift, not divine bestowal.",
+            "Eph 4:9, 4:10, and 4:11 do not carry this word — in Ephesians only 4:8 does; "
+            "never cite 4:9-11, and never write the passage as a range ('Eph 4:8-11') — cite "
+            "4:8 alone.",
         ],
         "jobs": [],
         "provenance": "AUDIT_lexica_rollout.md G1390 PARKED entry (batch-4 word 2, 2026-07-10/11) "
-                      "+ BATCH 4 CLOSED banked hints; JP batch-close ruling 2026-07-12",
+                      "+ BATCH 4 CLOSED banked hints; JP batch-close ruling 2026-07-12. "
+                      "Eph 4:9-11 pin: V9 floor agreement_G1390_v9_20260712-181939 (real-miss "
+                      "Eph 4:9/4:10/4:11 in draw 8, passage-tail neighbor-slip) + the ruled "
+                      "pre-emptive-pin default for neighbor-slip floors (G2168 validation, "
+                      "fe9d757); applied under JP's standing delegation 2026-07-12.",
     },
     "G2168": {   # εὐχαριστέω — give thanks
         "hints": [
