@@ -83,14 +83,18 @@ DRAW_HINTS = {
     "G236": {    # ἀλλάσσω — change/exchange
         "hints": [
             "Isa 40:31 and Isa 41:1 belong with the transformation group (Psa 102:26, Heb 1:12, "
-            "1Co 15:51, Dan 4:16); Gal 4:20 belongs with the condition/transformation group, not "
-            "its own sense.",
+            "1Co 15:51, Dan 4:16).",
             "A verse straddling the substitution/trade seam (e.g. Lev 27:10) gets ONE home or a "
             "named dual, never a silent double listing.",
         ],
         "jobs": [],
         "provenance": "AUDIT_lexica_rollout.md G236 PARKED entry (re-selection r15, run session 3, "
-                      "2026-07-12) + BATCH 4 CLOSED banked hints; JP batch-close ruling 2026-07-12",
+                      "2026-07-12) + BATCH 4 CLOSED banked hints; JP batch-close ruling 2026-07-12. "
+                      "Gal 4:20 clause REMOVED at re-entry (run session 2 amendment, 2026-07-12): "
+                      "the fresh V9 floor agreement_G236_v9_20260712-165959 homes Gal 4:20 with "
+                      "substitution 7-8/10 vs the clause's transformation pin — floor-is-ground-"
+                      "truth ruling, reviewer-recommended, applied under JP's standing delegation "
+                      "for this word (on the session record).",
     },
     "G2805": {   # κλαυθμός — weeping
         "hints": [
