@@ -1982,6 +1982,36 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### G1390 δόμα — RE-PARKED (batch-5 run session 2, V9 word 6; park per the pre-set rule
+### 2026-07-12, applied under JP's standing delegation; retry-trigger = the NEXT
+### engine/prompt change — THE PURE SQUEEZE PARK, the V10 repair pass's cleanest case).
+### Three coverage-only machine kills, no draw 4. Scoreboard stays 2/7ʰ. Hints 3-for-3
+### all three draws (35-for-35 lifetime incl. G2168's + this word's pins).
+**Floor: `agreement_G1390_v9_20260712-181939.json`** — the word's FIRST floor on clean
+feed (fed 39→38 = the c171fd4 feed-fix, pre-set explanation), mode 2, STABLE. Crux pair
+Psa 68:18↔Eph 4:8 inseparable 10/10 (third word running). Real-miss Eph 4:9/10/11 ×3 in
+floor d8 (passage-tail neighbor-slip — NEW SUB-SHAPE of the pin class: expounding past
+the quoted verse into its continuation, vs the G227/G2168 interior-verse shape) →
+pre-emptive pin dc06a42 per the ruled default. Pre-clears banked; 2Sa 19:42 flagged
+trim-prone at 5/10.
+**Three draws (key bc1e2f69 rotating), ALL kills coverage-alone, everything else held:**
+- d1: 36/38 (2Sa 19:42 + Pro 18:16). Crux textbook — "not jointly summarized" ruled
+  SUBSTANCE per the banked recites-vs-does test (the G162 precedent applied; ledger
+  note: "per the constraint…" phrasing would be the other side of the line).
+- d2: 37/38 (2Sa 19:42 AGAIN — convergence, matching its 5/10 floor support; this
+  word's Joh 21:24). Sense-2 drift noted moot: Php 4:17 vs its 10/10 transfer home +
+  Gen 47:22 filed divine-given while the prose conceded "the giver there is the king,
+  not God" (self-indicting shape, pre-set as a live defect if repeated).
+- d3: 37/38 (Deu 23:23 — and 2Sa 19:42 CITED this time, the squeeze relocating rather
+  than resolving). d2's sense-2 drift FIXED (Php 4:17 + Gen 47:22 back in transfer
+  homes). #30 clean. The word's best card, one verse short.
+**Park reading: NO defect ever repeated across draws except the squeeze itself; the
+crux (the original park defect) is dead 3-for-3; every kill was machine-caught pre-ship.
+Absentee arithmetic: 4 distinct victims over 3 draws, one convergence pair. With
+G227 (38/39 final) and G162 (35/36 final), that is THREE one-or-two-verse-margin parks
+in one session — the V10 coverage repair pass ships all three retries directly.**
+**Retry = next engine/prompt change (V10).**
+
 ### G2168 εὐχαριστέω — SHIPPED ʰ (batch-5 run session 2, V9 word 5; render gate PASSED
 ### by JP 2026-07-12). **SECOND HINTED SHIP — scoreboard 2/7ʰ. The batch's first
 ### FIRST-DRAW ZERO-DEFECT ship (G2805 needed the excise).**

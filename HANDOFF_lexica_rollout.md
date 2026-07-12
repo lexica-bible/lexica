@@ -545,7 +545,15 @@ sizing: G227+G162 retries = repair-pass territory; G236 retry = verbatim/hint
 territory. **G2168 SHIPPED ʰ 2026-07-12 — scoreboard 2/7ʰ** (first-draw zero-defect
 ship; pre-emptive Luk 22:18 pin w/ range clause = the new default for neighbor-slip
 floors, 8a9a759; Rev 11:17 = first correct ellipsed trim; Rom 16:4 park defect dead;
-hints 26-for-26 lifetime). Order now: G1390 next.
+hints 26-for-26 lifetime). **G1390 RE-PARKED 2026-07-12 — the pure squeeze park (three
+coverage-only kills, 36/37/37 of 38, no repeated defect, crux dead 3-for-3; Eph 4:9-11
+passage-tail pin dc06a42 = new sub-shape on the pin-class record; hints 35-for-35
+lifetime). SESSION PIVOT RULED (JP via reviewer, ordering-corrected): word-grinding ends
+this sitting; next work = the V10 COVERAGE REPAIR PASS build (pile entry = the charter
+seed; three one-verse-margin parks G227/G162/G1390 are the evidence base; design doc →
+reviewer-verified code → must-fail control → JP prompt-wording ruling under delegation).
+Remaining queue (G1244 re-entry, δίκτυον slot 8, six unaided, six batch-4 refreshes)
+holds until V10 lands — the squeeze eats ~2 of every 3 draws at current rates.**
 STATE: V9 LIVE (stamp above; coverage + verbatim-quote lines in the prompt; coverage
 gate BLOCKS ships in validate_entry — refusal names absentees; bypass = existing
 --force-gate-bypass only) · hinted scoreboard 0/7 (superscript-h, never joins 7/15
