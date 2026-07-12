@@ -614,6 +614,12 @@ REST of the dotted-Strong's question, none of it gating the rollout:
   (audit_range_tails.py) classifies each vs the corpus — OCC clean / NO-OCC needs eyes /
   NO-VERSE = hard problem → ticket line + live-card bullet per the ruling. Zero REFUSED-TAIL
   lines in either run.**
+  **--verify ADJUDICATED (same day, reviewer-ordered before the G2805 floor): ZERO NO-VERSE
+  (no fabricated refs in the shipped corpus). 8 NO-OCC, ALL range-interior sweep (διανοίγω
+  2Ki 6:18-19 · καταπέτασμα Exo 26:32/36 · παράπτωμα Rom 5:19 · βασιλεύς 1Pe 2:14-16) —
+  span claims, not wrong content; mention-class, NO live-card bullets (δίκτυον precedent =
+  wrong content, distinct). Remaining 187 refs = clean OCC. RETRO ITEM CLOSED. G227's
+  park retry-trigger (#28 fix landed + accepted) = SATISFIED, noted in the park entry.**
   code: scripts/build_lexica_def.py `_REF_RE`/`cited_refs`
 - **Standing-query key-shape audit — DONE (batch-5 s1 open, 2026-07-12).** Swept every LIKE/SELECT
   template in the handoff/audit/data-model docs against the stored key shapes. ONE find: the spent

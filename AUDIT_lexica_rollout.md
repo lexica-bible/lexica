@@ -2015,7 +2015,10 @@ DIRECTIONAL, not noise — two attractors every draw (juridical over-collection;
 dash) across three different sense-counts. One attractor (the dash) dies entirely at the
 #28 scanner fix WITHOUT touching the frozen prompt: once ranges are readable, the model's
 range-writing habit becomes a legal citation, and the gate/double-shelf detector gain
-sight. Retry = after #28 lands. The legal Job 42:7/42:8 citation-discipline hint is noted
+sight. Retry = after #28 lands. [RETRY-TRIGGER SATISFIED same session: #28 fix built +
+accepted vs the real stored shapes (resweep ×2, --verify zero NO-VERSE corpus-wide),
+reviewer-attested — G227 is re-entry-eligible whenever JP schedules it.] The legal Job
+42:7/42:8 citation-discipline hint is noted
 AVAILABLE-AT-RETRY, NOT added to the register (JP ruling; likely moot post-#28; a
 juridical-membership hint was examined and ruled ILLEGAL AS DRAFTED — it prescribes a
 carve; any future juridical trap-warning wording needs its own ruling first).
