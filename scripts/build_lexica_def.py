@@ -603,11 +603,79 @@ def _norm_book(label):
     return _BOOK_CODE.get(re.sub(r"\s+", "", label).lower(), label.strip())
 
 
+# ── #28 TAIL EXPANSION (2026-07-12, batch-5 s1; ENGINE_LESSONS #28 / lesson #44). The model
+# legally writes citation tails the bare Book-ch:vs catcher cannot see — "Job 42:7–8",
+# "Rom 1:1, 4", "Lev 21:10, 21:12" — so tail verses escaped the citation gate, the coverage
+# read, AND the double-shelf detector (banked exhibits across five words: χριστός 4/4 draws,
+# εἰρηνικός ×5, δόμα ×6, καταπέτασμα ×3, G227 3/3 hinted draws with 42:8 never counted).
+# ref_spans() consumes chained tail units after every full match:
+#   "–N" / "-N" / "—N"   verse range on the current chapter, enumerated INCLUSIVELY (13–17
+#                        yields 13,14,15,16,17 — a range asserts its interior)
+#   ", N"                another verse in the current book+chapter
+#   ",|; N:M"            another chapter:verse in the current book (semicolon accepted here
+#                        only — "; 16:15" is a citation shape; a bare "; 8" is likelier prose)
+# TRADE-OFF, accepted on the record: a prose number after a ref-comma ("Gen 41:32, 14 of
+# which…") would be swallowed as a phantom citation. The reverse miss has 6+ banked exhibit
+# sets; the phantom shape has zero known instances, and the citation gate verse-checks every
+# ref so a phantom impossible verse fails LOUDLY. Range spans cap at 30 verses — a wilder
+# "range" stops expanding rather than guessing.
+_TAIL_UNIT_RE = re.compile(
+    r"\s*(?:"
+    r"(?P<dash>[–—-])\s*(?P<end>\d+)"          # verse range end
+    r"|[,;]\s*(?P<tch>\d+):(?P<tvs>\d+)"       # ", 21:12" / "; 16:15" — same book, new ch:vs
+    r"|,\s*(?P<tv>\d+)(?!\d*:)"                # ", 4" — same book+chapter, new verse
+    r")")
+
+
+def ref_spans(text, refusals=None):
+    """Every (book, ch, vs) the prose cites, TAILS EXPANDED — the ONE ref scanner behind the
+    citation gate, coverage, per-sense counts, LXX provenance, and the double-shelf detector
+    (two-derivations rule: they must all see the same refs). Not de-duped; order preserved.
+    A refused range (backwards, or span > 30) stops expansion AND, when a `refusals` list is
+    passed, records itself — refusals must surface loudly (reviewer condition at merge,
+    2026-07-12), never recreate the silent-undercount class at a new threshold. The gate
+    report prints them via refused_tails()."""
+    out = []
+    for m in _REF_RE.finditer(text or ""):
+        bk = _norm_book(m.group(1))
+        ch, vs = int(m.group(2)), int(m.group(3))
+        out.append((bk, ch, vs))
+        pos = m.end()
+        while True:
+            t = _TAIL_UNIT_RE.match(text, pos)
+            if not t:
+                break
+            if t.group("end") is not None:
+                end = int(t.group("end"))
+                if not (vs < end <= vs + 30):
+                    if refusals is not None:
+                        refusals.append(f"{bk} {ch}:{vs}{t.group('dash')}{end}")
+                    break
+                out.extend((bk, ch, v) for v in range(vs + 1, end + 1))
+                vs = end
+            elif t.group("tch") is not None:
+                ch, vs = int(t.group("tch")), int(t.group("tvs"))
+                out.append((bk, ch, vs))
+            else:
+                vs = int(t.group("tv"))
+                out.append((bk, ch, vs))
+            pos = t.end()
+    return out
+
+
+def refused_tails(text):
+    """Range tails ref_spans REFUSED to expand (backwards / span > 30) — the loud channel.
+    Same walker, collector flag on; printed at the gate report and by audit_range_tails.py."""
+    r = []
+    ref_spans(text, refusals=r)
+    return r
+
+
 def cited_refs(text):
-    """Pull verse refs (book, ch, vs) out of generated prose — de-duped, in order."""
+    """Pull verse refs (book, ch, vs) out of generated prose — de-duped, in order.
+    Tail forms (ranges, comma/semicolon shorthand) expand via ref_spans (#28)."""
     seen, out = set(), []
-    for bk, ch, vs in _REF_RE.findall(text or ""):
-        key = (_norm_book(bk), int(ch), int(vs))
+    for key in ref_spans(text):
         if key not in seen:
             seen.add(key)
             out.append(key)
@@ -907,8 +975,7 @@ def sense_provenance(senses_block):
     out = []
     for lead, bodytext in _sense_spans(senses_block or ""):
         seen, ot, nt = set(), 0, 0
-        for bk, ch, vs in _REF_RE.findall(bodytext):
-            bk = _norm_book(bk)
+        for bk, ch, vs in ref_spans(bodytext):        # #28: tails expanded
             key = (bk, ch, vs)
             if key in seen:
                 continue
@@ -931,8 +998,8 @@ def sense_specs(senses_block):
     out = []
     for lead, body in _sense_spans(senses_block or ""):
         seen, refs = set(), []
-        for bk, ch, vs in _REF_RE.findall(body):
-            key = (_norm_book(bk), int(ch), int(vs))
+        for bk, ch, vs in ref_spans(body):            # #28: tails expanded
+            key = (bk, ch, vs)
             if key not in seen:
                 seen.add(key)
                 refs.append(key)
@@ -953,13 +1020,13 @@ def _grounding_refs(text):
     refs = []
     for m in _PAREN_INNER_RE.finditer(text or ""):
         inner = m.group(1)
-        found = _REF_RE.findall(inner)
+        found = ref_spans(inner)                      # #28: tails expanded
         if not found:
             continue
         leftover = _CHAP_ONLY_RE.sub(" ", _REF_RE.sub(" ", inner))
         words = re.findall(r"[A-Za-z]+", leftover)
         if all(w.lower() in ("lxx", "x") for w in words):   # 'x2' occurrence marks split to 'x'
-            refs.extend((_norm_book(bk), int(ch), int(vs)) for bk, ch, vs in found)
+            refs.extend(found)
     return refs
 
 
@@ -1005,7 +1072,7 @@ def _gnote_claims(gloss_notes):
         # further in are EMPHASIS, not rendering claims — the G162 d1 *perform* false warn
         # (emphasis-italics-as-gloss noise class, fixed on the record 2026-07-12).
         glosses = _GNOTE_GLOSS_RE.findall(head.split("(", 1)[0])
-        refs = [(_norm_book(bk), int(ch), int(vs)) for bk, ch, vs in _REF_RE.findall(head)]
+        refs = ref_spans(head)                        # #28: tails expanded
         if glosses and refs:
             claims.append({"glosses": [g.strip() for g in glosses], "refs": refs})
     return claims
@@ -1657,6 +1724,9 @@ def show_entry(entry):
           (f"  (misses — tagging {a['tagging']} / real {a['real']} / no-verse {a['noverse']})" if a['total']-a['pass'] else ""))
     if a.get("dangling"):
         print(f"  ⚠ dangling book refs (no ch:vs — flag only): {', '.join(a['dangling'])}")
+    for rt in refused_tails(entry.get("raw", "")):
+        print(f"  ⚠ REFUSED-TAIL: range '{rt}' not expanded (backwards or span > 30) — "
+              f"the tail verses are NOT counted as cited; adjudicate by hand")
     if a.get("noncanon"):
         print(f"  ✗ non-canonical book label(s) — HARD REJECT: {', '.join(a['noncanon'])}")
     for d in (a.get("double_shelved") or []):

@@ -594,6 +594,15 @@ REST of the dotted-Strong's question, none of it gating the rollout:
   G1272 G4061 G2657) — candidates, not confirmed misses; the post-fix resweep adjudicates them.
   The fix is scanner-side only (frozen prompt untouched, no regression surface). G227's re-park
   retry-trigger = this fix landing (JP ruling pending at write time).
+  **FIX BUILT (batch-5 s1, same day): `ref_spans()` tail expansion + `refused_tails()` loud-refusal
+  channel (reviewer merge condition — a refused range prints REFUSED-TAIL at the gate + in the
+  resweep, never silent); six consumers unified on the one scanner (gate, coverage, per-sense,
+  LXX ×2, double-shelf via grounding reader, gloss-note claims); tests w/ old-scanner control
+  fires in both CI lists; resweep tool = scripts/audit_range_tails.py (read-only, PA).
+  FOLLOW-THROUGH OWED per JP ruling + reviewer record note: resweep output → per-card ticket
+  lines, AND any card with a genuine uncited verse gets a known-issue bullet on the LIVE card
+  (δίκτυον precedent), not just a ticket line. Bare "(8:14)" sub-refs stay OUT of scope
+  (book-less numbers = phantom territory) — manual-check class, unchanged.
   code: scripts/build_lexica_def.py `_REF_RE`/`cited_refs`
 - **Standing-query key-shape audit — DONE (batch-5 s1 open, 2026-07-12).** Swept every LIKE/SELECT
   template in the handoff/audit/data-model docs against the stored key shapes. ONE find: the spent

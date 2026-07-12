@@ -21,7 +21,7 @@ exactly the way the card shows it. Read-only: only SELECTs, never writes.
 import argparse, json, os, re, sqlite3, sys
 
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
-from build_lexica_def import NT_BOOKS, split_definition, _HEADLINE_RE, _REF_RE, _norm_book
+from build_lexica_def import NT_BOOKS, split_definition, _HEADLINE_RE, _norm_book, ref_spans
 
 
 def sense_chunks(senses_block):
@@ -41,8 +41,7 @@ def sense_chunks(senses_block):
 def classify(body):
     """(ot, nt) ref counts for a sense body, de-duped, by book testament."""
     seen, ot, nt = set(), 0, 0
-    for bk, ch, vs in _REF_RE.findall(body or ""):
-        bk = _norm_book(bk)
+    for bk, ch, vs in ref_spans(body or ""):          # #28: tails expanded, book pre-normalized
         key = (bk, ch, vs)
         if key in seen:
             continue
@@ -126,7 +125,7 @@ def main():
         senses = []
         for hl, body in sense_chunks(sb):
             ot, nt = classify(body)
-            refs = [f"{_norm_book(bk)} {ch}:{vs}" for bk, ch, vs in dict.fromkeys(_REF_RE.findall(body))]
+            refs = [f"{bk} {ch}:{vs}" for bk, ch, vs in dict.fromkeys(ref_spans(body))]
             senses.append((hl, ot, nt, refs))
         cards.append((r["strongs"], r["lemma"], senses))
 
