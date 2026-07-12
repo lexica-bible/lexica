@@ -122,6 +122,9 @@ Carry-forwards (all three = ONE Session-9 HIGH-seat rebuild; three per-column-at
   for Judah, son of Jacob" on territorial verses. NOT fuzzy guessing — explicit pattern list, JP-ruled.
   Background: TIPNR deliberately folds tribe/kingdom refs into the founder entity (its place entity
   H3063N covers only "Judea"-style refs, ~2 OT verses); binding is faithful, this is presentation only.
+  Sub-candidate (JP 2026-07-11): person-vs-territory occurrence TALLY for H3063/H3478 so the
+  Israel/Judah "most later mentions" quantifier becomes a counted fact ("most" ruled KEPT meanwhile —
+  Genesis-confined man vs kingdom-dominated Kings/Chronicles/Jeremiah; "often" would misinform).
   code: static/src/30-detail-panel.jsx EPONYM_LINES.
 - **Helper-word double-tag class (periphrastic verb renderings)** (logged 2026-07-09, batch-3
   session 3, found via Jud 1:9 during G2008 ἐπιτιμάω). ABP two-word verb renderings like
