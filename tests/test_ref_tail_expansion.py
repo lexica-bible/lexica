@@ -113,6 +113,21 @@ def test_double_shelf_detector_sees_tails():
     assert "Act 2:36" in flagged, flagged
 
 
+def test_numbered_book_after_comma_not_swallowed():
+    # THE FIRST-RESWEEP PHANTOM (2026-07-12): a comma before a NUMBERED book name must not
+    # donate its digit as a verse. "Jas 1:12, 1Pe 1:6" invented "Jas 1:1" pre-fix.
+    got = B.ref_spans("beloved (Jas 1:12, 1Pe 1:6) endures")
+    assert got == [("Jas", 1, 12), ("1Pe", 1, 6)], got
+    got = B.ref_spans("promised (2Sa 7:8, 1Ch 17:7) forever")
+    assert got == [("2Sa", 7, 8), ("1Ch", 17, 7)], got
+    # Greeting-formula lists: every ref full, nothing phantom.
+    got = B.ref_spans("(Gal 1:3, Eph 1:2, 2Th 1:2)")
+    assert got == [("Gal", 1, 3), ("Eph", 1, 2), ("2Th", 1, 2)], got
+    # And a REAL verse tail still expands when followed by a numbered book.
+    got = B.ref_spans("(Rom 1:1, 4, 1Co 1:2)")
+    assert got == [("Rom", 1, 1), ("Rom", 1, 4), ("1Co", 1, 2)], got
+
+
 def test_prose_stop_cases():
     # Ref followed by ordinary prose: nothing swallowed.
     assert B.ref_spans("Gen 41:32: 'the saying will be true'") == [("Gen", 41, 32)]
@@ -130,6 +145,7 @@ def main():
     test_tail_then_full_ref_unaffected()
     test_gate_path_cited_refs_deduped()
     test_double_shelf_detector_sees_tails()
+    test_numbered_book_after_comma_not_swallowed()
     test_prose_stop_cases()
     print("test_ref_tail_expansion: all assertions passed")
 

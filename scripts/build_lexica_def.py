@@ -619,11 +619,15 @@ def _norm_book(label):
 # sets; the phantom shape has zero known instances, and the citation gate verse-checks every
 # ref so a phantom impossible verse fails LOUDLY. Range spans cap at 30 verses — a wilder
 # "range" stops expanding rather than guessing.
+# Every numeric tail unit must be a COMPLETE number — digits followed by a letter are the
+# start of a NUMBERED BOOK NAME, not a verse ("Jas 1:12, 1Pe 1:6": the ", 1" is 1Peter's
+# digit, and swallowing it invented "Jas 1:1"). Caught by the first live resweep run
+# (2026-07-12: phantom :1/:2 deltas across the high-frequency cards); control test pins it.
 _TAIL_UNIT_RE = re.compile(
     r"\s*(?:"
-    r"(?P<dash>[–—-])\s*(?P<end>\d+)"          # verse range end
-    r"|[,;]\s*(?P<tch>\d+):(?P<tvs>\d+)"       # ", 21:12" / "; 16:15" — same book, new ch:vs
-    r"|,\s*(?P<tv>\d+)(?!\d*:)"                # ", 4" — same book+chapter, new verse
+    r"(?P<dash>[–—-])\s*(?P<end>\d+)(?!\d*[A-Za-z:])"        # verse range end
+    r"|[,;]\s*(?P<tch>\d+):(?P<tvs>\d+)(?!\d*[A-Za-z:])"     # ", 21:12" / "; 16:15" — new ch:vs
+    r"|,\s*(?P<tv>\d+)(?!\d*[A-Za-z:])"                      # ", 4" — same chapter, new verse
     r")")
 
 
