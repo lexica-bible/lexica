@@ -445,6 +445,26 @@ The big rework is finished (six phases + a security/code-health pass; memory `pr
    refreshes that category's fingerprint cache (expected). code: core.py snippet; views_crossref.py,
    views_metav.py _PN_SYSTEM, views_summary.py, views_lsj.py prompts. Memory `project_ai_synthesis_quality`.
 
+## AI verse synthesis revisit (umbrella — JP flagged 2026-07-11; bank items here, no engine work yet)
+The AI-generated prose panels (xref "Connection", chapter summary, Ask-corpus synthesis) need a proper
+revisit pass. First two banked items:
+1. **Divine-name rendering drifts** — synthesis prose says "Yahweh" in some panels, "YHWH" in others
+   (Jer 46:25 Connection exhibit); the corpus convention it sits beside is ABP's "the LORD". JP to rule
+   ONE convention (likely "the LORD" to match the reading pane), then enforce: style instruction in the
+   synthesis prompts PLUS a post-generation check — prompt-only compliance will drift. Consistency/style
+   class, not correctness. code: views_crossref.py synth prompt + siblings; pairs with the house-style
+   voice snippet item above.
+2. **Unhedged theological assertions** — a panel asserted a contested reading as settled fact (Psa 82:
+   the elohim/"gods" are "just human rulers" — one major position; divine-council is the other, dispute
+   live in scholarship). Same principle as the sense-header-overclaim class (stated-as-fact beyond what
+   the text attests), but in free prose with NO citation gate. Banked questions: (a) a contested-topics
+   prompt instruction — present positions, don't adjudicate (the CONTESTED register mechanism doesn't
+   apply; synthesis is free prose over arbitrary passages); (b) a hand-curated caution list of known
+   contested passages (Psa 82, Gen 6:1-4, …) fed to the prompt; (c) AUDITABILITY — panels regenerate, so
+   exhibits vanish; JP's lost exhibit is itself the evidence that this class can't be worked the normal
+   way. Cached rows in ai_search_cache are the partial exhibit trail (they live until a prompt edit
+   refreshes that category). code: no-doctrinal-verdict rules in memory `project_ai_synthesis_quality`.
+
 ---
 
 ## Where we're behind vs other Bible apps (assessment — revisit later)
