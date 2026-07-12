@@ -2032,9 +2032,20 @@ evidence of sense structure, but they were fed fragment-era gloss sets.
   membership PINNED to the ruled seven (an unruled register edit fails CI — the ruling-3
   tripwire), injection order (occurrences < structure < constraint), signature sensitivity,
   phrase-context injection. Added to BOTH lists (ci.yml + pre-commit).
-**Work item 3 (reviewer walk of the seven entries vs park entries) = the reviewer chat's step;
-the register text + provenance strings are the relay material. Work item 4 (batch-5 charter)
-drafted to JP — see the handoff.**
+**Work item 3 — REVIEWER WALK RUN + CLOSED (same session): 7/7 PASS**, verbatim register/park
+pairs posted both sides. Notes on the record: ἀληθής lines covered via the 506f106-ruled design
+doc (sourcing note accepted) · κλαυθμός candidate (3) = V9_PILE routing, correctly not a hint ·
+G162 candidate (3) correctly lives at its banked home (G2805) · one cosmetic hyphen/em-dash
+variance (zero-weight). **One JP question surfaced and RULED: the ἀλλάσσω park entry's minor
+third candidate (2Ki 5:5 vs 1Ki 5:14 transplant target) stays OUT of the register — JP "leave
+it" (2026-07-12). Grounds: labeled minor at park, one-draw event, the claim-checker verifies
+against verse text, and the general describe-each-verse discipline is already hinted. Not a
+register edit; adding it later = a fresh ruling-3 checkpoint.** Amendment-2 re-entry mechanism
+ARMED: at each hinted word's pre-reg the reviewer verifies the printed hints match the register
+verbatim before floors fire. R1 formally closed (raw output reposted to the reviewer chat).
+**Work item 4 — batch-5 charter RULED (JP, same session; handoff block updated at d6a522d):
+fresh floors ALL SEVEN, no park-floor reuse, no override path · marker + re-entry order adopted
+as drafted. Reviewer duties for build session 1 COMPLETE.**
 ### FINAL: COUNT 7/15 name-true (δίκτυον [rebuilt clean, dagger off], σελήνη, ὑπομονή,
 ### ταμεῖον, κάλαμος, καταπέτασμα, εἰρηνικός — the committed s2 list, verified against
 ### the docs) · STREAK 2 · 7 words on the structure-hint shelf · queue rolled forward.
