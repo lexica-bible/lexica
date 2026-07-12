@@ -1881,10 +1881,21 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
    7/15, streak 1, both unchanged. BOTH re-selections parked → roster 7 queued for
    8 owed, sequence question to JP. Record = audit doc G2805 PARKED entry (top).
    KNOWN-FRICTION line (reviewer): outputs posted between reviewer turns can silently
-   miss the relay — REPOST rather than reference.** NEXT =
-   δίκτυον rebuild (work order item 2) → the seven queued
-   words, straight-to-10 floors, #30 live → GREEN activation, then step
-   6 layout. Item-3 tooling (incl. the structure-hint experiment — now the named re-entry
+   miss the relay — REPOST rather than reference.** **δίκτυον G1350 REBUILT + SHIPPED
+   CLEAN + LIVE same session (2026-07-12): fresh floor on the cleaned feed fed 34 =
+   c171fd4 PROVEN at the feed (contaminated pull fed 40) · architecture sense FLOOR-REAL
+   (own shelf 10/10 all draws) · ship draw 1 with ZERO machine warns / #30 zero fires /
+   cousin six absent · "invisibly" ruled note-not-defect (taxonomy line:
+   interpretive-theological = defect, physical-descriptive = note) · render PASS, alien
+   verses GONE from the live card → **RULING-CHAIN (d) CONDITION MET, DAGGER OFF —
+   COUNT 7/15 NAME-TRUE NO ASTERISK, STREAK 2.** Record = audit doc δίκτυον REBUILT
+   entry (top).** NEXT =
+   the seven queued
+   words (JP "--proceed"; first = αἰχμαλωτεύω G162, Eph 4:8 quote-crux annotation),
+   straight-to-10 floors, #30 live → GREEN activation, then step 6 layout.
+   BATCH ARITHMETIC FLAG for the close-out: 7 queued for 8 owed and BOTH re-selection
+   slots parked — reaching 8 needs another re-selection or a JP re-rule of the owed
+   number; decision deferred to the batch close, not silently absorbed. Item-3 tooling (incl. the structure-hint experiment — now the named re-entry
    path for ALL FOUR parked batch-4 words) + /consolidate = parallel gap work, still green.**
 6. (was 4, historical) **Batch-3 sessions 1–2 record** — **sessions 1 AND 2 CLOSED 2026-07-09.**
    Session 2: 3 shipped (παράπτωμα RED — routing exercise met · συκῆ · βέλος, all off-count via

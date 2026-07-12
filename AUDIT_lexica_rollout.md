@@ -1982,6 +1982,47 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### δίκτυον G1350 — REBUILT + SHIPPED CLEAN + LIVE (2026-07-12, run session 3).
+### RULING-CHAIN ITEM (d) CONDITION MET → DAGGER OFF. COUNT 7/15 NAME-TRUE, NO ASTERISK.
+### STREAK 2 (εἰρηνικός → δίκτυον-rebuild, both unassisted).
+**The rebuild the chain ordered: fresh floor on the cleaned feed → build draw → full ship
+review → apply → render check. Screens:** register 0-hit · 2Co 5:21 = 0 · pre-pull
+reconciled the chain exactly (30 verses / 34 occ base after the 6 cousin rows excluded
+by side-table membership; doubles 1Ki 7:42, 2Ki 25:17, 2Ch 4:13, Joh 21:11 ×2 each;
+19 OT verses 22 occ / 11 NT verses 12 occ).
+**Floor:** `agreement_G1350_v8_20260712-052937.json` (SAVED) — **header fed 34
+(22 OT / 12 NT) = c171fd4 PROVEN AT THE FEED LAYER** (the contaminated pull fed 40).
+Spread {2:6, 3:4}, two axes: nets vs architecture — **the chain-ruled architecture sense
+is FLOOR-REAL: its own shelf in all 10 draws, lattice core (1Ki 7:17, 2Ki 25:17,
+2Ch 4:12, Jer 52:22, Son 2:9) at 10/10 mutual.** All 15 wobbles folds (Ezekiel-trio +
+mending-verse back-checks done against per-draw lists). Cousin six absent from all 10
+draws. STABLE. Pre-clears: anatomy 2- or 3-sense both attested · Jer 52:22/23 = lattice ·
+Hos 7:12 either home. Floor oddities: d10 Jer 52:22 double + 52:23 catching-stray (1/10),
+d4 Hos 7:12 double.
+**Ship draw (1 draw, key cd42d167, --force past the contaminated-era cache): ZERO machine
+warns — first card of the session with none.** Gate 30/30, #30 zero fires, full 30-verse
+coverage, anatomy = 3-sense pre-clear form, all pre-clears honored, cousin six ABSENT,
+cross-lemma boundary held (no dragnet/casting-net/fishers-of-men attribution), ×2
+occurrence notations match the pre-pull by name, agent-distribution claims (divine vs
+human/national) verse-consistent, three sense-3 quotes pulled + verified verbatim
+(Eze 12:13 / Lam 1:13 / Job 18:8 — Job's own "snare… net" wording warrants the headline).
+**One wording note, RULED note-not-defect (reviewer, reasoning on the record):** range's
+"laid invisibly" = physical-detail embellishment (court-dress class, doctrinally inert;
+Eze 12:13's "he shall not see it" makes concealment non-foreign to the set) — the
+taxonomy line drawn: interpretive-theological reach = defect (G2805's "permanent"),
+physical-descriptive flourish = note (this).
+**Apply:** `--apply --require-cache --floor` — "using reviewed draw … no model call"
+read ✓, row-verified (stamp lexica:7ef8620328a9, updated 2026-07-12T05:43:26,
+floor_diff stored `{"fires":[],"floor_unseen":[]}`). Row-verify field names corrected
+from the script on disk after a first wrong guess (def_json, not def_html — logged).
+**Render: PASS (JP screenshots, reviewer-adjudicated by name):** all three senses' verse
+sets exact · **alien scan CLEAN — none of the six cousin verses on the rendered card;
+the reader-facing defect the dagger existed for is GONE** · 30/30 badge, LEXICA tag,
+LXX notes on senses 1+3, gloss notes intact.
+**Chain close:** the δίκτυον RULING CHAIN entry below closes through (d) with this ship;
+its "dagger stays on" condition is spent. 11 draws by name this rebuild: 10 floor +
+1 ship draw.
+
 ### G2805 κλαυθμός — PARKED (re-selection r16; JP "--park", 2026-07-12, run session 3,
 ### per the pre-set rule: three defect-class draws on clean data, no draw 4). COUNT 7/15
 ### UNCHANGED, STREAK 1 UNCHANGED. 6th on the structure-hint shelf — THE CLEANEST HINT
