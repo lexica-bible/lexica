@@ -1982,11 +1982,97 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### V10 ACCEPTANCE TEST — RUN + FAILED AS WRITTEN (V10 build session, 2026-07-12;
+### reviewer-adjudicated, applied under JP's standing delegation). MECHANISM VALIDATED /
+### CRITERION FAILED — the split is the ruling, stated in full below. No word shipped;
+### G162 NOT RUN; the three squeeze parks stand.
+**Setup, all gates in order:** hook committed at 36dab20 after reviewer full-code read
+(all 250 diff lines + the controls file); controls red-first on record (AttributeError
+run before the hook existed); signature math verified BEFORE the branch pick — all three
+cached d3s MATCH on live recompute (G227 d65ed578 · G162 aa064d41 · G1390 bc1e2f69), so
+the test ran on the real cached bytes, no fallback. One ledgered sequence slip at the
+branch pick (CC posted the acceptance command alongside the signature command, jumping
+the reviewer's math gate — same class as joint-go/floor-before-bank; "one gate, one
+command, in order" adopted). Amendment-2 satisfied both fires (printed
+repair:4730e155f73d = the committed ruled template's hash).
+**Fire 1 — G1390 (cached d3, key bc1e2f69):** repair fired round 1, integrated
+Deu 23:23, coverage 37→38/38, citation 38/38, #30 clean, guard held, repair-echo scan
+clean. Hand-check battery on the repaired card: quotes 29-for-29 verbatim (two
+initial-cap lowercases RULED inside verbatim — standing sub-rule: initial-letter case
+exempt, interior alteration never); hint-echo borderline ("each verse is cited here in
+its own wording, not conflated") RULED SUBSTANCE per the recites-vs-does test. KILLED on
+two adjudicated substance defects, both PRE-DATING the repair in guard-preserved prose:
+(1) 2Ch 21:3 "Jehoiada's father" — named subject absent from the cited verse (the
+G2805 Jer 3:21 misattribution class; the verse names only "their father" and Jehoram);
+(2) 2Sa 19:42 description INVERTED — "David receiving provisions from his kin" where
+the stored verse is Judah DENYING receipt from the king. Minor logged: Num 18:11
+"Levites'" for the priests' portion (moot on a dead draw). Ruling extended at this kill:
+a named subject not in the cited text is the misattribution class REGARDLESS of who the
+right referent is — the confirming context read is optional.
+**Fire 2 — G227 (cached d3, key d65ed578):** repair fired round 1, integrated
+Joh 21:24, coverage 38→39/39, citation 39/39, guard held, echo scans clean; the four
+#30s + two dangling + one gloss-warn = d3's already-adjudicated flag set, byte-for-byte
+(the repair provably moved none of it). All three hints held in the stored texts (no
+8:15, four courtroom verses listed out, 1Jn 2:8 = the commandment while the stored verse
+carries "the true light" one clause away — the hint did real work). KILLED on four
+adjudicated defects, all pre-dating the repair: (1) SHIP-BLOCKER — "the parallel
+affirmation at Mar 12:14 is worded identically" is FALSE (same clauses, different order
+and connectives vs Mat 22:16; a claimed identity that is false is worse than G2805's
+honest hedge, not better); (2) SHIP-BLOCKER — Job 5:12 "Eliphaz's schemes are
+frustrated": named subject absent from the cited text (Eliphaz SPEAKS Job 5; the verse's
+subject is "clever ones"; the Jehoiada ruling applies with no daylight); (3) minor —
+Job 42:7/8 quote anchored primary on the verse that doesn't carry the wording
+("did not speak true" is 42:8's exact wording, anchored "(Job 42:7; also Job 42:8)");
+(4) minor, on the letter — Isa 42:3 reordered inside quotation marks in the GLOSS NOTES
+("bring forth judgment to validity" vs stored "to validity he will bring forth
+judgment"); standing sub-rule ruled at this kill: gloss notes are INSIDE the verbatim
+line, no exemption.
+**THE VERDICT (reviewer ruling, delegation note attached):** on its own letter the
+acceptance test is FAILED — the criterion was ≥2 of 3 ship; at most one could. Not
+softened. What the evidence shows, stated for the record: the repair MECHANISM went
+2-for-2 clean (single-round fires, gates green, guard held, echoes clean, stamps
+verified) and ALL SIX defects across both kills pre-date the repair in guard-preserved
+prose. The criterion bundled two questions — does repair work (evidenced: YES) and do
+squeeze-class draws survive the full battery once coverage is fixed (evidenced: NO —
+the squeeze parks were hiding non-coverage rot the battery only reached because repair
+got them past the gate). RULED: the mechanism is validated and stays built (code,
+controls, CI lists stand at 36dab20); the criterion failed as written because it
+mis-predicted the parked draws' health, not because repair malfunctioned. CONSEQUENCE:
+no word ships via repair this session; G162 does not run (1-of-3 best case cannot
+rescue a 2-of-2 bar; running it = gathering a third park); DESIGN_v10_repair.md carries
+the FAILED-AS-WRITTEN annotation; a revised acceptance path (repair + targeted
+prose-defect handling, or fresh rolls for the squeeze class) is NEXT-design-pass scope.
+**Housekeeping the record must carry:** the PA draw cache for G227 and G1390 now holds
+REPAIRED-BUT-DEAD cards whose machine gates PASS — the kill holds by this record, and
+NO apply command exists or gets posted for either; any future run re-adjudicates from
+the park entries first. Hint-count note: hints held 3+3 in both repaired cards
+(battery-verified); whether a repaired cache-hit counts as a "draw" for the lifetime
+hint counter is UNRULED — the counter stays 35-for-35 with this note rather than a
+silently invented rule.
+
+### G227 ἀληθής — RE-PARKED (THIRD) (V10 build session, 2026-07-12; kill adjudicated by
+### the reviewer, applied under JP's standing delegation; retry-trigger UNCHANGED = the
+### next engine/prompt change, and the V10 acceptance-test entry above governs what the
+### repaired cache now means). Scoreboard stays 2/7ʰ.
+The word's repaired d3 (key d65ed578, repair round 1, Joh 21:24 integrated, 39/39 both
+gates) died on the hand-check battery: two ship-blockers (the false Mat 22:16↔Mar 12:14
+"worded identically" claim; the Job 5:12 Eliphaz misattribution) + two minors (Job 42:7/8
+quote anchor; Isa 42:3 gloss-note reorder) — full adjudication in the V10 acceptance-test
+entry above, which also carries the two standing sub-rules ruled at these kills
+(initial-caps exempt / gloss notes inside the verbatim line). The original park defects
+remain cured (zero G228 bleed, duals named, 8:15 dead); coverage is no longer the
+blocker (repair closes it at will); what kills this word now is prose-accuracy rot in
+the squeeze-era draws. The retry inherits: the four defects above as pre-clear material,
+the d3 flag set (already adjudicated moot), and the DEAD status of the cached repaired
+draw (no apply; a fresh floor/draw supersedes it whenever the retry trigger fires).
+
 ### G1390 δόμα — RE-PARKED (batch-5 run session 2, V9 word 6; park per the pre-set rule
 ### 2026-07-12, applied under JP's standing delegation; retry-trigger = the NEXT
 ### engine/prompt change — THE PURE SQUEEZE PARK, the V10 repair pass's cleanest case).
 ### Three coverage-only machine kills, no draw 4. Scoreboard stays 2/7ʰ. Hints 3-for-3
 ### all three draws (35-for-35 lifetime incl. G2168's + this word's pins).
+### V10 addendum (2026-07-12): repaired d3 KILLED on the hand-check battery — see the
+### V10 ACCEPTANCE TEST entry above; cached repaired draw DEAD, no apply.
 **Floor: `agreement_G1390_v9_20260712-181939.json`** — the word's FIRST floor on clean
 feed (fed 39→38 = the c171fd4 feed-fix, pre-set explanation), mode 2, STABLE. Crux pair
 Psa 68:18↔Eph 4:8 inseparable 10/10 (third word running). Real-miss Eph 4:9/10/11 ×3 in

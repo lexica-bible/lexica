@@ -1,5 +1,22 @@
 # V10 DESIGN — the coverage REPAIR PASS
 
+> **STATUS (2026-07-12, post-acceptance-run): ACCEPTANCE TEST FAILED AS WRITTEN —
+> MECHANISM VALIDATED.** The hook, controls, and CI lists stand as committed (36dab20).
+> Both fires ran clean (G1390 + G227: single-round, gates green, structure guard held,
+> echo scans clean, amendment-2 stamps verified), but both repaired cards then DIED on
+> the hand-check battery — six adjudicated defects total, every one pre-dating the
+> repair in guard-preserved prose (misattributions, a false identity claim, quote-anchor
+> and verbatim breaks). So the ≥2-of-3 criterion failed on its letter (at most 1 of 3
+> could ship; G162 was NOT run — a 1-of-3 best case cannot rescue the bar). The
+> criterion's error: it bundled "does repair work" (YES, evidenced 2-for-2) with "are
+> the squeeze-class draws otherwise healthy" (NO — the coverage kills were masking
+> non-coverage rot the battery only reached because repair got the cards past the
+> gate). Ruling under the standing delegation, reviewer-adjudicated: no word ships via
+> repair this session; the three parks stand; a revised acceptance path (repair +
+> targeted prose-defect handling, or fresh rolls for the squeeze class) is
+> NEXT-design-pass scope, not this doc's. Full record: AUDIT_lexica_rollout.md,
+> "V10 ACCEPTANCE TEST" entry.
+
 Drafted at the batch-5 run-session-2 pivot (2026-07-12, commit 169ac3a). Rulings applied
 under JP's standing delegation (2026-07-12); reviewer verification per section is the
 gate before any code lands. **Nothing here touches the frozen V9 verse prompt
