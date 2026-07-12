@@ -2105,6 +2105,11 @@ rendering-layer ticket ships (from-draw refresh path available). Known-issue reg
 **G162 (JP "resume"):** floor released — evidence-reading only, fragment layer touches
 build/ship, not the agreement floor. Ship-vs-hold at the build gate stays a live call
 (G162's renders are an inflection family, fragment risk low).
+**LEDGER LINE FOR BATCH-5 PROCEDURES (reviewer, session close):** this finding — the
+most consequential of the session — started with JP looking at a RENDERED card and
+noticing the head word was wrong. Every machine gate passed that card; the human
+eyeball on the reader-facing artifact caught it. The render check earned its place as
+a HARD gate tonight — batch-5 procedure writing keeps it one.
 
 ### δίκτυον G1350 — REBUILT + SHIPPED CLEAN + LIVE (2026-07-12, run session 3).
 ### RULING-CHAIN ITEM (d) CONDITION MET → DAGGER OFF. COUNT 7/15 NAME-TRUE, NO ASTERISK.
