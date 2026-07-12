@@ -1982,6 +1982,61 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### G2805 κλαυθμός — PARKED (re-selection r16; JP "--park", 2026-07-12, run session 3,
+### per the pre-set rule: three defect-class draws on clean data, no draw 4). COUNT 7/15
+### UNCHANGED, STREAK 1 UNCHANGED. 6th on the structure-hint shelf — THE CLEANEST HINT
+### SIGNATURE YET BANKED: one referent, one defect class, mechanical layer perfect 3-for-3.
+### 13 draws by name: 10 floor + 3 build.
+**Screens (all PASS, full gate order held):** register 0-hit (local) · 2Co 5:21 = 0 ·
+pre-pull: 39 base / 5 dotted split, **dotted cousin 2805.1 κλαυθμών CLASSIFIED** (side-table
+row present; its 5 rows = the place-name verses Jdg 2:1, 2:5, 2Sa 5:23–24, Psa 84:6 —
+membership exclusion, NOT a δόμα-class leak; the fix working in the visible direction) ·
+39 verses / 39 occ zero doubles, 30 OT / 9 NT · loaded-referent PASS with
+attribute-don't-adjudicate armed on the judgment refrain · fork-adjacency: the cousin
+itself = the boundary, its five verses pre-banked as UNSEEN-REAL if cited (never fired,
+verified all 13 draws) · quote-crux Mat 2:18↔Jer 31:15 armed.
+**Floor:** `agreement_G2805_v8_20260712-050143.json` (SAVED) — header true (fed 39,
+30 OT / 9 NT, 1 rendering), spread {1:1, 2:9} mode 2, cleanest anatomy of the batch:
+act-of-weeping vs judgment-refrain formula (the 7 pre-noted Mat/Luk verses, mutually
+10/10). All 24 wobbles folds incl. three back-checks (refrain trims d7/d9 with shelf
+surviving; Mat 2:18+Jer 31:15 pair-drop in d2 = trimmed citation of a living shelf;
+Isa 38:3 same). d10 whole-fold legal, numbered sense, NO fallback marker (the
+one-rendering fallback expectation never triggered). STABLE, reviewer-concurred.
+Pre-clears: refrain shelf CLOSED at the 7 named · citation-trimming legal with
+shelf-existence · Mat 2:18+Jer 31:15 together in act-sense, quotation named. Floor
+oddities: d8 Act 20:37 double-shelve, d6 1/10 exclusion-shelf scatter.
+**Three build rejects (key 52aa12b9), the #49 sense-header/range-overclaim class firing
+on the SAME referent all three draws — the park rationale core:**
+- d1: **"abiding/permanent condition"** (prose + range) — duration property no cited
+  verse states (Mat 8:12 pulled: "shall be cast out… there, there shall be weeping" —
+  no permanence); the ψυχή #49 shape on the exact armed referent + **Gen 46:29 reunion
+  filed under a "parting" sub-use header** (header contradicted by its own member,
+  self-indicting bridge clause). 2 defects. Quote-check sweep: 7 verses pulled, all
+  prose quotes verified (Job 16:16 "belly burns" exact); Mat 8:12 quote off by one
+  article — wording note.
+- d2: **"no possibility of comfort"** (range) — texts silent on comfort; silence
+  licenses "not mentioned," not impossibility; an absence converted into a modal
+  property of the state. 1 defect. Draw-1's two defects both FIXED this draw
+  (draw-level, not feed-level). Isa 30:19 petition placement verse-verified.
+- d3: **"permanent exclusion"** (range) — the exact word ruled at d1 returns in the
+  same field, while the sense-2 BODY held the ceiling ("a standing condition assigned
+  to a place and a class of persons" — attested, best of the three) + **Jer 3:21
+  attributed to "Rachel's weeping," verse-confirmed** ("the sons of Israel" — Rachel is
+  31:15–16; misattribution riding a real ref, the cross-lemma sibling within one word's
+  table). 2 defects. Refrain quote non-verbatim a third time (three draws, three
+  different corruptions of the same stored sentence).
+**Hint candidates for re-entry (reviewer-banked):** (1) exclusion-state prose attributes
+only what a text states — characteristic-of-place YES, duration/permanence/hopelessness
+NO ("will obtain among the excluded" = the ceiling); (2) refrain quote verbatim against
+stored text; (3) the verbatim-quote discipline may be V9-GENERAL (G236's draws also
+misquoted) — logged to V9_PILE.
+**Ruling chain:** CC defect calls → reviewer concur each draw (comfort-claim ruling with
+reasoning on the record) + closing ledger banked → JP "--park".
+**Batch-4 scoreboard: 1 shipped counted (εἰρηνικός) · 6 parked with full evidence
+(διαιρέω, δόμα, εὐχαριστέω, ἀληθής, ἀλλάσσω, κλαυθμός — all on the structure-hint shelf)
+· 7 queued by name for 8 owed → BOTH re-selections parked; roster/sequence question to
+JP (δίκτυον rebuild is next per the s3 work order unless re-ordered).**
+
 ### G236 ἀλλάσσω — PARKED (re-selection r15; JP "park if recommended" → PARK, 2026-07-12,
 ### run session 3, per the pre-set rule: three defect-class draws on clean data, no draw 4).
 ### COUNT 7/15 UNCHANGED, STREAK 1 UNCHANGED. Re-enters via the structure-hint path

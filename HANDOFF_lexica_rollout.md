@@ -1870,8 +1870,19 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
    + Lev 27:10 double-shelve + 2Ki 5:5↔1Ki 5:14 transplant verse-confirmed / d3 Gal 4:20
    solo carve 0/10 "kept none"; trajectory 2→3→1, floor STABLE, 5th on the structure-hint
    shelf; full gate order held, zero sequence slips). Count 7/15, streak 1, both
-   unchanged. Record = audit doc G236 PARKED entry (top).** NEXT =
-   r16 κλαυθμός G2805 re-selection (full screens) → δίκτυον rebuild → the seven queued
+   unchanged. Record = audit doc G236 PARKED entry.** **κλαυθμός G2805 (re-selection
+   r16) PARKED same session (JP "--park"; pre-set 3-defect rule — the #49
+   range-overclaim class fired ALL THREE draws on the judgment-refrain referent:
+   d1 "permanent/abiding" + Gen 46:29 parting-header contradiction / d2 "no possibility
+   of comfort" / d3 "permanent exclusion" + Jer 3:21 Rachel misattribution
+   verse-confirmed; mechanical layer perfect 3-for-3 [#30 clean ×3, refrain shelf exact
+   7 ×3, cousin κλαυθμών excluded cleanly] — the cleanest structure-hint signature yet;
+   6th on the shelf; V9 pile +3 incl. the verbatim-quote V9-general candidate). Count
+   7/15, streak 1, both unchanged. BOTH re-selections parked → roster 7 queued for
+   8 owed, sequence question to JP. Record = audit doc G2805 PARKED entry (top).
+   KNOWN-FRICTION line (reviewer): outputs posted between reviewer turns can silently
+   miss the relay — REPOST rather than reference.** NEXT =
+   δίκτυον rebuild (work order item 2) → the seven queued
    words, straight-to-10 floors, #30 live → GREEN activation, then step
    6 layout. Item-3 tooling (incl. the structure-hint experiment — now the named re-entry
    path for ALL FOUR parked batch-4 words) + /consolidate = parallel gap work, still green.**

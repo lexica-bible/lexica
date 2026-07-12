@@ -146,6 +146,23 @@ Format: date · word · defect class · exhibit pointer · status.
   adjudications as a defect before verse text withdrew it. Identical-string mismatches
   (away/away, exchange/exchange) fired false on all three draws. Rides with the
   standing-query key-shape audit in batch-5 prep (dff9ffc TODO).
+- 2026-07-12 · G2805 κλαυθμός · **sense-header/range overclaim (#49 class) — THREE
+  exhibits in three draws, one referent, PIPELINE-DRAWN (the class is no longer
+  hand-done-card-only):** d1 "abiding/permanent condition" · d2 "no possibility of
+  comfort" (absence converted to modal impossibility) · d3 "permanent exclusion" (the
+  d1 word returns in range while the sense body held the attested ceiling). All on the
+  judgment-refrain shelf; mechanical layer perfect 3-for-3. Strengthens the banked #49
+  rule candidate (header/range attestation check) with live-engine exhibits. Exhibits:
+  G2805 PARKED entry, audit doc.
+- 2026-07-12 · G2805 κλαυθμός · **verbatim-quote discipline — V9-GENERAL candidate:**
+  the refrain sentence misquoted three draws running, three different corruptions
+  (article added, doubled "there" dropped); G236's draws also misquoted stored text.
+  Quotes inside quotation marks must match verses.text verbatim — mechanizable check
+  (the citation gate already holds the verse text at gate time). Watch-with-exhibits.
+- 2026-07-12 · G2805 κλαυθμός · **misattribution riding a real ref, single-lemma
+  variant:** d3 filed Jer 3:21 under "Rachel's weeping" — verse-confirmed "sons of
+  Israel" (Rachel = Jer 31:15–16). Sibling of cross-lemma misattribution: right word,
+  wrong named subject. Exhibit: G2805 PARKED entry.
 - 2026-07-10 · G2168 εὐχαριστέω · **reader section-matcher gaps surface in pairs on
   novel-shape words** (reviewer note, banked): #47's headline gap + the singular "Gloss
   note:" gap landed on the SAME first one-job word — consider a shape-conformance sweep
