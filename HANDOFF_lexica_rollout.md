@@ -480,15 +480,16 @@ Study's return. Status detail: STATE.md Study line.)
    G1391 are DATA-BLOCKED before their floors ever run — do not floor them while tagged).
 
 ## BATCH-4 RUN SESSION 3 — CC OPENER BLOCK (paste into the new CC session; opens from docs
-## alone. State source of truth = wrap commit 8ab9468; do not trust any number in a handoff
-## over the docs at that commit.)
+## alone. State source of truth = close commit 4094dab (δίκτυον chain close; supersedes the
+## wrap 8ab9468 pin); do not trust any number in a handoff over the docs at that commit.)
 READ FIRST, in order: (1) this handoff — Queue item 5 (the batch-4 blocks incl. the RUN
-SESSION 2 record); (2) AUDIT_lexica_rollout.md — G227 PARKED entry (top) + G2168 PARKED +
-FLOOR-VOID entries; (3) ENGINE_LESSONS.md #47–#48; (4) V9_PILE.md (carve-invention =
-CONFIRMED V9 EDIT ×5; cross-lemma misattribution = NEW class, 2 exhibits).
-Opening check: `git log --oneline -1` shows 8ab9468 (or a descendant); `grep -c "^48\."
-ENGINE_LESSONS.md` returns 1; `grep -c "G227 ἀληθής — PARKED" AUDIT_lexica_rollout.md`
-returns 1. A failed check = rule-9 caveat, not a hold.
+SESSION 2 record) + the POST-S2 STATE ADD below; (2) AUDIT_lexica_rollout.md — δίκτυον
+RULING CHAIN entry (top) + G227 PARKED + G2168 PARKED + FLOOR-VOID entries; (3)
+ENGINE_LESSONS.md #47–#48; (4) V9_PILE.md (carve-invention = CONFIRMED V9 EDIT ×5;
+cross-lemma misattribution = NEW class, 2 exhibits).
+Opening check: `git log --oneline -1` shows 4094dab (or a descendant); `grep -c "^48\."
+ENGINE_LESSONS.md` returns 1; `grep -c "RULING CHAIN — RUN + CLOSED"
+AUDIT_lexica_rollout.md` returns 1. A failed check = rule-9 caveat, not a hold.
 State at 8ab9468 (pointers, not restatements): count 7/15 name-true (δίκτυον† unchanged,
 chain still QUEUED) · streak 1 · V8 live (stamp `lexica:7ef8620328a9`) · straight-to-10
 standing · 4 parked on the structure-hint shelf (διαιρέω, δόμα, εὐχαριστέω, ἀληθής —

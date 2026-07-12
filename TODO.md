@@ -585,6 +585,13 @@ REST of the dotted-Strong's question, none of it gating the rollout:
   Batch-4 evidence keeps mounting: two more UNSEEN-REAL sets caught only by the mandatory manual tail check
   (εἰρηνικός ×5, ἀληθής Job 42:8 hiding a double-shelf behind a "42:7–8" range).
   code: scripts/build_lexica_def.py `_REF_RE`/`cited_refs`
+- **Standing-query key-shape audit (reviewer, 2026-07-12 — batch-5 prep list).** Three key-shape
+  slips in one night (bare-prefix '227%' sweep; bare-number checks against the G-prefixed
+  dotted_lexicon, twice — a DEAD check that read as clean through three words). One-time audit:
+  every standing query template in the docs/procedures checked against the ACTUAL stored key
+  shape of the table it reads (words = bare; dotted_lexicon = G-prefixed; lexicon.strongs_g /
+  words.strongs_base = G-prefixed; kjv_strongs = prefixed). Cheap; would have caught all three.
+  Sibling of the section-matcher sweep below.
 - **Section-matcher shape-conformance sweep (V9_PILE note, 2026-07-11 — decide before batch 5).** Two reader
   gaps landed in ONE session on the first one-job word (#47 unnumbered one-sense card scored 0; singular
   "Gloss note:" label leaked the note into Range). Sweep `_SECTION_RE` + `_sense_spans` against every label/
