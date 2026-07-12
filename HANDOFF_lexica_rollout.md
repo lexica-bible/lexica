@@ -486,8 +486,12 @@ Study's return. Status detail: STATE.md Study line.)
 ## refusal default, signature + draw-record + console print, CI membership pin = the ruling-3
 ## tripwire; tests in BOTH CI lists). Floor tool mirrors the new feed. CONSEQUENCE: user-msg
 ## shape changed — every cached draw/saved floor predates it; charter rules floor reuse.
-## STILL OWED: δίκτυον *work* bullet needs a fresh-draw refresh (word run, batch 5); JP PA
-## re-check of the G1093/G3962/G435 "tagging error" note speculations.
+## STILL OWED: δίκτυον *work* bullet — the bullet analyzed the head fragment "work" as the
+## whole render; true render "latticed work" (pos 13, roman, JP-verified vs printed ABP).
+## ENGINE-PROSE instance of the fragment class, distinct from the checker false-warn
+## instances (scanner damage, fixed this session) — needs a fresh-draw refresh (word run,
+## batch 5). Also owed: JP PA re-check of the G1093/G3962/G435 "tagging error" note
+## speculations. (Framing clause = reviewer amendment to the s1 opener, applied here.)
 
 ## BATCH-5 CHARTER — DRAFT (build session 1 → JP; NOTHING here is ruled yet)
 1. **Marker (ruling 2 wording):** hinted ships carry a superscript-h on every scoreboard

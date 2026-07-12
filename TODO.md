@@ -603,7 +603,10 @@ REST of the dotted-Strong's question, none of it gating the rollout:
   counts grounding-list parens only; coverage reads ALL refs, unchanged). Floor tool mirrors the new
   feed (lexica_agreement pmap). CONSEQUENCE: the user-message shape changed — every cached draw +
   saved floor predates the new shape; batch-5 charter rules fresh-floor scope.
-  STILL OWED: (a) the live δίκτυον *work* bullet — needs a fresh draw under the new shape (a word
+  STILL OWED: (a) the live δίκτυον *work* bullet — analyzed the head fragment "work" as if it were
+  the whole render; true render "latticed work" (pos 13, roman, JP-verified vs printed ABP). This is
+  the ENGINE-PROSE instance of the fragment class (distinct from the checker false-warn instances,
+  which are scanner damage and are fixed above) — needs a fresh draw under the new shape (a word
   run; batch 5); (b) re-check the "tagging error" speculations inside the G1093/G3962/G435 gloss
   notes — likely misdiagnosed parked-phrase artifacts (refusals correct); JP PA read.
   Record: audit doc FRAGMENT-RENDERING INVESTIGATION + BUILD SESSION 1 entries.
