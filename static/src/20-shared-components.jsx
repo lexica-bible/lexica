@@ -544,7 +544,21 @@ function LeafletMap({ lat, lon, name }) {
       maxZoom: 8,
       attribution: 'Tiles &copy; Esri &mdash; Source: US National Park Service',
     }).addTo(map);
-    window.L.marker([lat, lon]).addTo(map).bindPopup(name).openPopup();
+    // Inline SVG pin instead of Leaflet's stock PNG: no external image to block or
+    // fail (a blocked marker-icon.png rendered as clipped "Mark…" alt text), and the
+    // pin takes the site's navy from styles.css (.metav-pin) instead of Leaflet blue.
+    // iconAnchor is the pin's TIP (bottom-center of the 24×36 box) so the point sits
+    // exactly on the coordinate; popupAnchor lifts the bubble just above it.
+    const pin = window.L.divIcon({
+      className: "metav-pin",   // replaces leaflet-div-icon (white box) entirely
+      html: '<svg viewBox="0 0 24 36" width="24" height="36" aria-hidden="true">'
+          + '<path d="M12 0C5.37 0 0 5.37 0 12c0 9 12 24 12 24s12-15 12-24C24 5.37 18.63 0 12 0z"/>'
+          + '<circle cx="12" cy="12" r="4.5"/></svg>',
+      iconSize: [24, 36],
+      iconAnchor: [12, 36],
+      popupAnchor: [0, -32],
+    });
+    window.L.marker([lat, lon], { icon: pin, alt: name }).addTo(map).bindPopup(name).openPopup();
     instanceRef.current = map;
     return () => { if (instanceRef.current) { instanceRef.current.remove(); instanceRef.current = null; } };
   }, [ready, lat, lon, name]);

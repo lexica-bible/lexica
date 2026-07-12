@@ -3011,6 +3011,11 @@ input { font-family: inherit; }
   border: 1px solid var(--rule);
   overflow: hidden;
 }
+/* Inline SVG map pin (divIcon) — replaces Leaflet's stock PNG marker so there is
+   no external image to block/404, and the pin follows the site palette. */
+.metav-pin svg { display: block; }
+.metav-pin path { fill: var(--accent); }
+.metav-pin circle { fill: var(--paper); }
 
 /* ============================================================
    LEFT NAV PANEL + THREE-COLUMN GRID (desktop ≥1100px only)

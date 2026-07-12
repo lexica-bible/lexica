@@ -287,7 +287,13 @@ let _leafletPromise=null;function loadLeaflet(){if(window.L)return Promise.resol
 React.useEffect(()=>{if(window.L)return;let cancelled=false;loadLeaflet().then(()=>{if(!cancelled)setReady(true);}).catch(()=>{});return()=>{cancelled=true;};},[]);React.useEffect(()=>{if(!ready||!mapRef.current||!window.L)return;if(instanceRef.current){instanceRef.current.remove();instanceRef.current=null;}const map=window.L.map(mapRef.current,{center:[lat,lon],zoom:7,zoomControl:true,scrollWheelZoom:false,attributionControl:true// Esri's license requires the on-map credit line
 });// Esri World Physical: terrain/relief basemap, no labels, no API key. Serves to zoom 8
 // (map caps there), plenty for a locator that opens at zoom 7.
-window.L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:8,attribution:'Tiles &copy; Esri &mdash; Source: US National Park Service'}).addTo(map);window.L.marker([lat,lon]).addTo(map).bindPopup(name).openPopup();instanceRef.current=map;return()=>{if(instanceRef.current){instanceRef.current.remove();instanceRef.current=null;}};},[ready,lat,lon,name]);return/*#__PURE__*/React.createElement("div",{ref:mapRef,className:"metav-leaflet-map"});}// ============================================================
+window.L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Physical_Map/MapServer/tile/{z}/{y}/{x}',{maxZoom:8,attribution:'Tiles &copy; Esri &mdash; Source: US National Park Service'}).addTo(map);// Inline SVG pin instead of Leaflet's stock PNG: no external image to block or
+// fail (a blocked marker-icon.png rendered as clipped "Mark…" alt text), and the
+// pin takes the site's navy from styles.css (.metav-pin) instead of Leaflet blue.
+// iconAnchor is the pin's TIP (bottom-center of the 24×36 box) so the point sits
+// exactly on the coordinate; popupAnchor lifts the bubble just above it.
+const pin=window.L.divIcon({className:"metav-pin",// replaces leaflet-div-icon (white box) entirely
+html:'<svg viewBox="0 0 24 36" width="24" height="36" aria-hidden="true">'+'<path d="M12 0C5.37 0 0 5.37 0 12c0 9 12 24 12 24s12-15 12-24C24 5.37 18.63 0 12 0z"/>'+'<circle cx="12" cy="12" r="4.5"/></svg>',iconSize:[24,36],iconAnchor:[12,36],popupAnchor:[0,-32]});window.L.marker([lat,lon],{icon:pin,alt:name}).addTo(map).bindPopup(name).openPopup();instanceRef.current=map;return()=>{if(instanceRef.current){instanceRef.current.remove();instanceRef.current=null;}};},[ready,lat,lon,name]);return/*#__PURE__*/React.createElement("div",{ref:mapRef,className:"metav-leaflet-map"});}// ============================================================
 // SHELL PURE LOGIC — the RightStack state transforms, factored OUT of the React hook
 // so ONE copy is used by both the app (22-shell.jsx: useRightStack + RightStack) and the
 // Node unit test (tests/test_rstack_logic.js). No React in here — plain array math only.
