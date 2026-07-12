@@ -530,7 +530,9 @@ fix-the-raw OPEN (edited-draw design question, unruled). **G2805 SHIPPED ʰ — 
 scoreboard 1/7ʰ** (one draw, zero adjudicated defects; hint-echo leak caught at render,
 excised via fix_lexica_raw.py, render re-passed — NEW CLASS on V9_PILE, detector =
 build-session ticket; hinted-word proofreads now include a manual hint-echo scan).
-Order now: G162 next.
+G162 RE-PARKED 2026-07-12 (three non-overlapping single defects, both hints 6-for-6;
+retry = next engine/prompt change, same class as G227; dash-expansion scanner question
+banked CHECK-FIRST on the pile). Order now: G236 next.
 STATE: V9 LIVE (stamp above; coverage + verbatim-quote lines in the prompt; coverage
 gate BLOCKS ships in validate_entry — refusal names absentees; bypass = existing
 --force-gate-bypass only) · hinted scoreboard 0/7 (superscript-h, never joins 7/15

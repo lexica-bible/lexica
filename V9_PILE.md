@@ -221,3 +221,9 @@ Format: date · word · defect class · exhibit pointer · status.
   **Mechanizable detector (build-session ticket): validate_entry refuses card text
   matching "constraint N" / hint-line echoes.** Interim: the hinted-word proofread
   checklist gains a manual hint-echo scan line (adopted this session, both readers).
+- 2026-07-12 · G162 αἰχμαλωτεύω · **dash-expansion scanner question — CHECK-FIRST, not
+  asserted:** build d2 wrote "Isa 49:24–25" and the coverage gate counted 49:25 uncited —
+  if the draw's raw used the typographic en dash rather than the plain hyphen, the #28
+  range expansion may be blind to it. Verify against the cached raw + ref_spans at the
+  next build session before treating it as a bug. Same draw: bare "1:15 and 1:17"
+  fragment (the δόμα "At 8:16" class) correctly not counted.

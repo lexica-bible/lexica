@@ -1982,6 +1982,37 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### G162 αἰχμαλωτεύω — RE-PARKED (batch-5 run session 2, V9 word 3; JP park per the
+### pre-set rule 2026-07-12, retry-trigger = the NEXT engine/prompt change, same class
+### as G227's second park). Three defect draws, no draw 4. HINTED SCOREBOARD stays 1/7ʰ.
+### Hint mechanism 6-for-6 this word (17-for-17 lifetime).
+**Floor: `agreement_G162_v9_20260712-163830.json`** — first V9 floor, UNHINTED, spread
+{2:4, 3:6} mean 2.6, STABLE, zero real-miss flags. Crux pair Psa 68:18↔Eph 4:8
+INSEPARABLE 10/10 (again); 2Ti 3:6 never-literal 10/10; five pre-clears banked with
+exclusions BY NAME (pair-in-literal d6 1/10; Eze 12:3-figurative; Amo 5:5-figurative;
+property-carve = one-home-or-named-dual at build). Screens RULED CARRY from the park
+record. Denominator note: fed 40 occ = 36 unique verses (4 doubles), coverage counts
+verses.
+**Three draws (key aa064d41 rotating under --force), NON-OVERLAPPING single defects:**
+- d1: gates GREEN (36/36 + 36/36) — REJECT on adjudication: 2Ti 3:6 filed IN the
+  literal mass (0/10 floor, pre-clear-2 violation, self-indicting gloss note argued
+  figurative while senses filed military). Crux perfect: each wording quoted + named,
+  "into the height" present — the promoted verbatim line held on the verse that earned
+  it. Echo-borderline RULED SUBSTANCE (reviewer test banked: an echo recites the
+  instruction; substance does the instruction's work for the reader).
+- d2: machine coverage 33/36 (2Ch 21:17, Job 1:17 [bare "1:15 and 1:17" fragment],
+  Isa 49:25 [inside "Isa 49:24–25" — dash-expansion scanner question, banked to the
+  pile CHECK-FIRST]) + pair-in-literal (the named exclusion) + "historical seizure of
+  Jerusalem" reach (#49 family, the psalm states an ascent only).
+- d3: machine coverage 35/36, sole absentee Job 1:15 — otherwise the word's best card
+  (#30 clean, crux + duals + gloss notes all right; 1-sense carve moot on the kill,
+  0/10 floor if it ever matters).
+**Pattern for the record: the defects never repeat — d1 placement, d2 coverage+reach,
+d3 a one-verse trim. Each draw fixed the previous draw's defect. Both hints held all
+three draws. Same one-verse-margin shape as G227's close; the coverage squeeze is
+residual, not structural, on this word.**
+**Retry = next engine/prompt change; one clean draw ships it.**
+
 ### G2805 κλαυθμός — SHIPPED ʰ (batch-5 run session 2, V9 word 2; render gate PASSED by
 ### JP 2026-07-12 after the hint-echo excise). **FIRST HINTED SHIP — hinted scoreboard
 ### 1/7ʰ (own line, superscript-h; the 7/15 FINAL + UNTOUCHABLE count does not move).**
