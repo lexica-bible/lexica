@@ -1982,6 +1982,64 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### G236 ἀλλάσσω — PARKED (re-selection r15; JP "park if recommended" → PARK, 2026-07-12,
+### run session 3, per the pre-set rule: three defect-class draws on clean data, no draw 4).
+### COUNT 7/15 UNCHANGED, STREAK 1 UNCHANGED. Re-enters via the structure-hint path
+### (5th on the shelf). 13 draws by name: 10 floor + 3 build.
+**Screens (all PASS, full gate order held — no sequence slips this word):** register 0-hit
+(local vs contested_register.py on disk) · 2Co 5:21 occurrence 0 · pre-pull FULLY CLEAN:
+33 verses / 39 occ, 39/0 base-vs-dotted split, side table empty in the FIXED G-prefixed
+shape (backed clean — words-table zero corroborates), doubles by name Exo 13:13 ×2,
+Lev 27:10 ×3, Lev 27:33 ×3, Jer 2:11 ×2, 27 OT verses (33 occ) / 6 NT (6 occ) ·
+loaded-referent PASS (1Co 15:51–52 resurrection referent, no rendering fork on the lexeme)
+· fork-adjacency PASS (καταλλάσσω G2644 = the loaded cousin, zero verses in-table;
+μεταλλάσσω G3337 Rom 1:25–26 same-passage boundary armed, never fired — verified clean
+all three draws).
+**Floor:** `agreement_G236_v8_20260712-042004.json` (SAVED) — header true (fed 39,
+occ split 33 OT / 6 NT), spread {1:2, 2:6, 3:2} mode 2, two-shelf anatomy (substitution
+vs transformation; trade cluster a legal carve, d5/d6). All nine wobbles adjudicated
+folds incl. the Dan 4:32 pair-drop back-check (Dan 4:16 anchors the job 10/10). STABLE,
+reviewer-concurred. THREE PRE-CLEARS banked before build: (1) trade cluster own-sense OR
+folded, both attested; (2) Rom 1:23 + Psa 106:20 either home (d6); (3) garment carve
+NOT pre-cleared (1/10 scatter). Floor oddities named: d1 Neh 9:26 + d2 Jer 52:33
+double-shelved (floor-layer variance, G2168-d8 class).
+**Three build rejects (all key 3eaa7b0a cache-refresh draws), each caught, classes named:**
+- d1: **unattested split** — Isa 40:31/41:1 pulled from their 10/10 transformation
+  partners into a substitution sub-use, 0/10 attestation, #46 self-indicting prose ("the
+  structure is the same replacement") + Dan 4:16 double-shelved (machine-caught, no
+  named-dual). **2 defects — CORRECTED from 3: the gloss-note "Barter at Isa 24:5" defect
+  was WITHDRAWN on verse text** ("effaced and bartered away the orders" — the claim was
+  TRUE; the head-word column reports only "away" off "bartered away" and the warn +
+  two adjudications over-called it. Checker ticket priority RAISED: the identical-string/
+  head-column claim-checker manufactured a defect finding, not just noise).
+- d2: **Gen 35:2 unattested trade placement** (0/10; contradicts the sense's own
+  two-party definition; self-indicting bridge clause) + **Lev 27:10 double-shelved**
+  (2nd machine catch in 2 draws — the substitution/trade seam induces it) + **2Ki 5:5
+  content transplant, verse-confirmed** (the monthly Lebanon rotation is 1Ki 5:14's
+  story grafted onto Naaman's gift-apparel verse; real ref, wrong content, gate-blind —
+  the διαιρέω-Gideon factual-claims mechanism, clean two-text exhibit).
+- d3: **Gal 4:20 solo carve** — sense 3 "changing one's tone," one verse, split from ten
+  floor partners, "kept none," 0/10 (Luk 17:16 precedent cuts the other way: that solo
+  was d7-attested; this has nothing). Otherwise the batch-best card: no double-shelving,
+  transplant target cleanly avoided (1Ki 5:14 own sub-use; 2Ki 5:5 participial-noun
+  read correct), Gen 35:2 home, occurrence-count claims all verified vs the pre-pull,
+  five trade #30 fires = pre-clear 1 exactly. Trajectory 2→3→1 defects — parked on the
+  rule, not on trend (ἀληθής precedent).
+**Watch notes banked:** Gen 41:14 "court dress" = physical-details inference (verse
+permits, doesn't state) · "allássōn alláxē" Greek parenthetical = τόπος-class risk
+surface · crux pair Psa 102:26↔Heb 1:12 verse-confirmed near-verbatim (joint description
+factually safe; describe-each wording preferred on a shipping draw).
+**Hint candidates for re-entry (reviewer-banked):** (1) pin Gal 4:20 to the condition/
+transformation group; (2) the substitution/trade seam double-shelving trap (2/3 draws);
+(3) minor: 2Ki 5:5 vs 1Ki 5:14 transplant target.
+**Ruling chain:** CC defect calls → reviewer concur each draw + closing ledger banked →
+JP "park if recommended" → PARK.
+**Batch-4 scoreboard: 1 shipped counted (εἰρηνικός) · 5 parked with full evidence
+(διαιρέω, δόμα, εὐχαριστέω, ἀληθής, ἀλλάσσω — all on the structure-hint shelf) · 7
+queued by name (αἰχμαλωτεύω G162, ἡσυχάζω G2270, μερίζω G3307, παραπορεύομαι G3899,
+σιωπάω G4623, ἐκλύω G1590, ἐπανίσταμαι G1881) for 8 owed → r16 κλαυθμός G2805
+re-selection proceeds, full screens.**
+
 ### δίκτυον G1350 RULING CHAIN — RUN + CLOSED THROUGH (d) (2026-07-11/12, JP live;
 ### the queued 4-step chain from the CORPUS-DEFECT FIRE entry). DAGGER STAYS ON until
 ### the rebuild ships; the rebuild is the named next execution item.

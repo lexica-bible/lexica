@@ -1863,9 +1863,16 @@ see BATCH STATE. Session-3 shipped φωνή (batch #10 / 9-of-20 roster), fired 
    procedure adopted: pre-pull patterns exact-or-dotted, never bare prefix). Count 7/15,
    streak 1 still unchanged. Roster: 6 words for 8 owed → next-pass-up ×2 (r15 ἀλλάσσω
    G236 first, then next clean rank), full screens each. Record = audit doc G227 PARKED
-   entry.** NEXT =
-   double re-selection (screens ×2) → the seven queued words, straight-to-10
-   floors, #30 live → GREEN activation, then step
+   entry.** **RUN SESSION 3 (2026-07-12): ἀλλάσσω G236 (re-selection r15) PARKED (JP
+   "park if recommended"; pre-set 3-defect rule — d1 Isa 40:31/41:1 unattested split
+   [2 defects, CORRECTED from 3: the Isa 24:5 gloss-note defect WITHDRAWN on verse text,
+   head-column checker over-call — ticket priority raised] / d2 Gen 35:2 trade placement
+   + Lev 27:10 double-shelve + 2Ki 5:5↔1Ki 5:14 transplant verse-confirmed / d3 Gal 4:20
+   solo carve 0/10 "kept none"; trajectory 2→3→1, floor STABLE, 5th on the structure-hint
+   shelf; full gate order held, zero sequence slips). Count 7/15, streak 1, both
+   unchanged. Record = audit doc G236 PARKED entry (top).** NEXT =
+   r16 κλαυθμός G2805 re-selection (full screens) → δίκτυον rebuild → the seven queued
+   words, straight-to-10 floors, #30 live → GREEN activation, then step
    6 layout. Item-3 tooling (incl. the structure-hint experiment — now the named re-entry
    path for ALL FOUR parked batch-4 words) + /consolidate = parallel gap work, still green.**
 6. (was 4, historical) **Batch-3 sessions 1–2 record** — **sessions 1 AND 2 CLOSED 2026-07-09.**

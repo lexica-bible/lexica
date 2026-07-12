@@ -125,6 +125,27 @@ Format: date · word · defect class · exhibit pointer · status.
   pipeline-drawn live cards (date / commit history / absence of draw-cache records) and
   queue the hand-done set for header-attestation review. Scope unknown; JP rules
   whether/when.
+- 2026-07-12 · G236 ἀλλάσσω · **carve-invention — exhibit on the CONFIRMED V9 edit
+  (6th word):** d3 Gal 4:20 solo "tone of address" sense, 0/10 floor attestation, split
+  from ten partners "kept none"; d1's Isa 40:31/41:1 substitution move is the same
+  family with the #46 self-indicting tell verbatim ("the structure is the same
+  replacement"). Exhibits: G236 PARKED entry, audit doc.
+- 2026-07-12 · G236 ἀλλάσσω · **cross-sense double-placement — two more exhibits for the
+  banked edit candidate:** d1 Dan 4:16, d2 Lev 27:10, both machine-caught, no named-dual
+  invocation; plus floor-layer d1 Neh 9:26 / d2 Jer 52:33. The substitution/trade seam
+  induces it (Lev 27:10's "not change it good for bad" genuinely straddles). d3 clean —
+  the mechanism works when invoked.
+- 2026-07-12 · G236 ἀλλάσσω · **factual-claims family — transplant mechanism again:**
+  d2 grafted 1Ki 5:14's monthly Lebanon rotation onto 2Ki 5:5 (Naaman's gift apparel);
+  verse-confirmed, clean two-text exhibit. Same mechanism as διαιρέω's Gideon graft.
+  + Gen 41:14 "court dress" = physical-details inference, watch note only.
+- 2026-07-12 · G236 ἀλλάσσω · **TOOLING TICKET, priority RAISED (reviewer): the
+  gloss-note claim-checker's head-column comparison manufactured a DEFECT FINDING, not
+  just noise** — "claimed Barter — corpus renders away" at Isa 24:5, where ABP prints
+  "bartered away" (head column keeps only the last word); the false warn survived two
+  adjudications as a defect before verse text withdrew it. Identical-string mismatches
+  (away/away, exchange/exchange) fired false on all three draws. Rides with the
+  standing-query key-shape audit in batch-5 prep (dff9ffc TODO).
 - 2026-07-10 · G2168 εὐχαριστέω · **reader section-matcher gaps surface in pairs on
   novel-shape words** (reviewer note, banked): #47's headline gap + the singular "Gloss
   note:" gap landed on the SAME first one-job word — consider a shape-conformance sweep
