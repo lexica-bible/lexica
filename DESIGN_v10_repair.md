@@ -80,6 +80,13 @@ On a coverage-gate failure at dry-run/apply, ONE bounded repair call:
   the repair prompt version lives in the draw record + entry audit. "V10" names the
   MECHANISM version, not a new verse-prompt stamp.
 
+## Acceptance test (falsifiable, stated before coding starts)
+Each of the three parked words' LATEST cached draw is exactly one verse out (G227 d3:
+Joh 21:24 · G162 d3: Job 1:15 · G1390 d3: Deu 23:23). The build is accepted only if the
+repair pass takes those cached draws to full coverage AND **at least two of the three
+then ship** — through the FULL per-word path (all gates fresh, hand-checks, adjudication,
+render). Fewer than two ships = the design fails its own validation and the parks stand.
+
 ## Build order
 1. This doc → reviewer full read.
 2. Repair-prompt wording ruled (delegation; wording above is the draft).
