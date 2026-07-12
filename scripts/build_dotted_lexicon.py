@@ -59,9 +59,16 @@ HAND_OVERRIDES = {
     # (LXX 2Esdras 6:4 δόμοι). A different word from base G1390 δόμα "gift". Classified
     # at the batch-4 corpus-defect fire; unblocks δόμα's fresh floor.
     "1390.1": ("δόμος", "dómos"),
-    # PENDING (do not add without the ABP/eSword source reading, per the queued δίκτυον
-    # ruling chain): 1350.1 (1Ki 7:18 "being made of lattice works") and 1350.2
-    # (five "latticed" verses — δικτυωτός-shaped, unconfirmed).
+    # 1Ki 7:18 δεδικτυωμένοι "being made of lattice works" — perfect participle of the
+    # verb δικτυόω "make into latticework". A different word from base G1350 δίκτυον
+    # "net". Classified at the δίκτυον ruling chain step (b) (JP ABP-app reading,
+    # 2026-07-11: source prints 1350.1 on δεδικτυωμένοι).
+    "1350.1": ("δικτυόω", "diktyóō"),
+    # Exo 27:4 δικτυωτῷ "a latticed [brass grate]" (+ Exo 38:4, Jdg 5:28, 2Ki 1:2,
+    # Eze 41:16 — all lattice-adjectival English) — the adjective δικτυωτός "latticed".
+    # Same ruling chain; the Exo 27:4 interlinear confirmed the adjective morphologically
+    # (modifying ἐσχάραν ... χαλκῆν), not just the number.
+    "1350.2": ("δικτυωτός", "diktyōtós"),
 }
 
 # LSJ headwords carry vowel-length marks (breve/macron, e.g. τραυμᾰτίας); strip them
