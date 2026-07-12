@@ -210,3 +210,14 @@ Format: date · word · defect class · exhibit pointer · status.
   note:" gap landed on the SAME first one-job word — consider a shape-conformance sweep
   of the section matcher against all house-shape labels before batch 5. Not a lesson
   yet; decidable later.
+- 2026-07-12 · G2805 κλαυθμός · **HINT-ECHO LEAK — new class, first exhibit (batch-5 run
+  session 2, the first hinted ship):** the draw cited its injected constraint IN CARD
+  PROSE — sense 2 ended "…not its duration, permanence, or hopelessness (constraint 1)."
+  — internal machinery visible on the public card. Passed BOTH hand-reads (CC proofread
+  + reviewer concurrence; caught by JP at the render gate — ledgered against both
+  readers). Exists for EVERY hinted word going forward. Local fix: sanctioned
+  fix_lexica_raw.py excise (τόπος/ἔργον precedent class — artifact deletion, senses +
+  citations untouched, stamp preserved), verified + render-passed same day.
+  **Mechanizable detector (build-session ticket): validate_entry refuses card text
+  matching "constraint N" / hint-line echoes.** Interim: the hinted-word proofread
+  checklist gains a manual hint-echo scan line (adopted this session, both readers).

@@ -526,7 +526,11 @@ JP posts PA's `git log --oneline -1` BEFORE the first floor/draw; must match loc
 mismatch = deploy first, nothing fires.
 STATE UPDATE (run session 2, 2026-07-12): G227 RE-PARKED (second) — retry = next
 engine/prompt change; register carries 3 hints (Joh 8:15 pin + range clause, 9f1ea39);
-fix-the-raw OPEN (edited-draw design question, unruled). Order now: G2805 next.
+fix-the-raw OPEN (edited-draw design question, unruled). **G2805 SHIPPED ʰ — hinted
+scoreboard 1/7ʰ** (one draw, zero adjudicated defects; hint-echo leak caught at render,
+excised via fix_lexica_raw.py, render re-passed — NEW CLASS on V9_PILE, detector =
+build-session ticket; hinted-word proofreads now include a manual hint-echo scan).
+Order now: G162 next.
 STATE: V9 LIVE (stamp above; coverage + verbatim-quote lines in the prompt; coverage
 gate BLOCKS ships in validate_entry — refusal names absentees; bypass = existing
 --force-gate-bypass only) · hinted scoreboard 0/7 (superscript-h, never joins 7/15

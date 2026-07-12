@@ -1982,6 +1982,39 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### G2805 κλαυθμός — SHIPPED ʰ (batch-5 run session 2, V9 word 2; render gate PASSED by
+### JP 2026-07-12 after the hint-echo excise). **FIRST HINTED SHIP — hinted scoreboard
+### 1/7ʰ (own line, superscript-h; the 7/15 FINAL + UNTOUCHABLE count does not move).**
+### ONE build draw, zero adjudicated defects; register note: shipped WITH pre-registered
+### constraint hints (draw record: draw_hints).
+**Floor: `agreement_G2805_v9_20260712-161648.json`** — first V9 floor, UNHINTED, spread
+{1:4, 2:6} mean 1.6, STABLE, reviewer-concurred; zero real-miss flags across ten draws.
+Two-block anatomy held (act vs judgment-refrain); refrain seven mutually 10/10, five of
+six two-sense draws carve exactly the seven (d8's nine-member widening = 1/10 scatter,
+NOT pre-cleared, same two verses as the armed quote-crux — one defect not two, ruled).
+All six wobbles folds. Four pre-clears banked. Screens RULED CARRY from the r16 park
+record (no data change; fork-adjacency + quote-crux arming carried live). V9 coverage
+trend: floors 37–39 where the s1 builds capped at 34.
+**Build draw 1 (key acc7632f) = THE SHIP:** coverage 39/39 (first full-coverage build
+draw of the session) · citation gate 39/39 · #30 clean · both hints held in every field
+— refrain shelf at exactly the seven named; Rachel pair in sense 1b with the quotation
+named; the #49 ceiling sentence present in senses AND Range AND gloss note (the exact
+sentence the three park draws couldn't write) · verbatim hand-check 6/6 against stored
+text (refrain pair, Mat 8:12 two-article "near-identical" hedge honest, Rachel pair
+quoted separately no blend, Job 16:16) — the family's corruption streak ends at four.
+**THE LEAK (render-gate catch, JP):** sense 2's final sentence shipped ending
+"(constraint 1)" — the draw citing its injected hint in public prose. Passed both
+hand-reads (ledgered against CC AND reviewer; the hinted-word proofread checklist gains
+a manual hint-echo scan). NEW CLASS, exists for every hinted word — V9_PILE entry +
+build-session detector ticket (validate_entry refuses "constraint N"/hint echoes).
+**Fix: JP-ruled EXCISE via fix_lexica_raw.py** (τόπος/ἔργον precedent class — artifact
+deletion, senses + citations untouched, stamp preserved; NOT the G227 add-a-citation
+OPEN question). Dry-run proofread both readers incl. the new hint-echo scan, applied
+(3564→3549 chars, exactly the 15-char artifact), gate 39/39 re-passed, render PASSED.
+Ledger also carries: joint-go sequence slip (apply fired before the reviewer's half
+posted; tool gates covered it; convention logged to keep it meaningful).
+**Hint mechanism: 2-for-2 this word, 11-for-11 lifetime across G227+G2805 hinted draws.**
+
 ### G227 ἀληθής — RE-PARKED (SECOND) (batch-5 run session 2, V9 word 1; JP "park"
 ### ruling 2026-07-12, retry-trigger = the NEXT engine/prompt change — conditional park).
 ### Three machine-refused draws on a clean fresh V9 floor, no draw 4. HINTED SCOREBOARD
