@@ -508,14 +508,16 @@ Study's return. Status detail: STATE.md Study line.)
 ## (owed item cleared).
 
 ## V10 BUILD SESSION — CC OPENER BLOCK (paste into the new CC session; opens from docs
-## alone. State source of truth = the run-session-2 close commit d04b6e6 or a descendant.)
+## alone. State source of truth = the design-close commit d04b6e6, contained in the
+## session-close commit 3696cc5, or a descendant of either.)
 V10 BUILD SESSION — the coverage repair pass. NO word runs (no floors, draws, applies,
 re-entries) until the build is accepted; the acceptance test IS the first word work.
 ("me/I" = JP.) **STANDING DELEGATION IS LIVE (memory
 feedback_no_questions_standing_delegation + the handoff block above): no decision
 questions to JP — CC+reviewer recommendations apply as rulings with a delegation note.
 JP's only touchpoints: paste-ready commands, render screenshots, ship/park notices.**
-READ FIRST, in order: (1) DESIGN_v10_repair.md IN FULL (CLOSED at d04b6e6 — mechanism,
+READ FIRST, in order: (1) DESIGN_v10_repair.md IN FULL (CLOSED at d04b6e6, contained
+in session-close 3696cc5 — mechanism,
 gate story, pre-set adjudication rules, ruled repair-prompt wording incl. the headline
 clause, acceptance test + staleness fallback, build order); (2) this handoff — the run
 session 2 STATE UPDATE chain above; (3) AUDIT_lexica_rollout.md — G1390 RE-PARKED (the

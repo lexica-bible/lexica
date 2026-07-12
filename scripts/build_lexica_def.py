@@ -495,6 +495,19 @@ def _phrase_tag_part(rend, phrase, ital):
     return part
 
 
+def _occ_lines(ctx):
+    """The per-occurrence feed lines — ONE format, shared by the draw user message and the
+    V10 repair message (the design requires the repair feed to match the original feed
+    shape byte-for-byte, so this must never fork into two copies)."""
+    out = []
+    for book, ch, vs, rend, form, prose, phrase, ital in ctx:
+        tag = (f'[here: "{rend}"' + _phrase_tag_part(rend, phrase, ital)
+               + (f"; form: {form}" if form else "") + "]")
+        out.append(f"  {book} {ch}:{vs} {tag}")
+        out.append(f"     {prose}")
+    return out
+
+
 def verse_user_msg(sid, translit, gset, ctx, hint=None, pmap=None, constraints=None):
     lines = [f"LEMMA: {sid}  ({translit})", ""]
     lines.append("TRANSLATION GLOSS SET (one translation's renderings, with counts):")
@@ -514,11 +527,7 @@ def verse_user_msg(sid, translit, gset, ctx, hint=None, pmap=None, constraints=N
                  "phrase: analyze the phrase as the rendering, never the bare [here] token alone. "
                  "'added words' are translator additions with no Greek behind them; a phrase can also "
                  "carry words belonging to NEIGHBORING Greek words - the [here] token is this lemma's own:")
-    for book, ch, vs, rend, form, prose, phrase, ital in ctx:
-        tag = (f'[here: "{rend}"' + _phrase_tag_part(rend, phrase, ital)
-               + (f"; form: {form}" if form else "") + "]")
-        lines.append(f"  {book} {ch}:{vs} {tag}")
-        lines.append(f"     {prose}")
+    lines.extend(_occ_lines(ctx))
     if hint:
         # STRUCTURE-HINT CHANNEL (escalation mechanism, ruled 2026-07-07). Rides in the user message as a
         # CHECK, never in the frozen system prompt. The hint is a prior independent review's stable-jobs list
@@ -1512,7 +1521,7 @@ def draw_status(rec, sig):
 
 
 def save_draw(sid, lemma, translit, gset, ctx, raw, forced=None, hint=None,
-              pmap=None, constraints=None, no_hints_reason=None):
+              pmap=None, constraints=None, no_hints_reason=None, repair=None):
     """Write (or refresh) the reviewed draw. Called ONLY by the ro pass and --force — an unreviewed
     fresh apply must never leave a draw file that would later look reviewed. Atomic replace so a
     crash mid-write can't leave a torn file. `forced` = any --force-verse refs added to the fed
@@ -1545,6 +1554,15 @@ def save_draw(sid, lemma, translit, gset, ctx, raw, forced=None, hint=None,
                            "or carve") if constraints else "",
         # --no-hints override on a registered word (ruling 1's logged escape hatch); "" = normal run.
         "no_hints_reason": no_hints_reason or "",
+        # V10 REPAIR PASS stamps (DESIGN_v10_repair.md): a repaired draw is visibly repaired
+        # everywhere the record is read. [] / 0 / "" = the draw never needed repair.
+        "repaired":          (repair or {}).get("refs", []),
+        "repair_rounds":     (repair or {}).get("rounds", 0),
+        "repair_prompt_ver": (repair or {}).get("prompt_ver", ""),
+        "repair_why": ("coverage repair pass (DESIGN_v10_repair.md): the coverage gate's named "
+                       "absentees fed back with their verse texts in ONE bounded repair call; "
+                       "structure guard held (headlines unchanged, citations superset); every "
+                       "gate re-ran fresh on the repaired card") if repair else "",
         "sig":       sig,           # input signature — the live-recompute guard at apply
         "prose_sha": _sha1(raw),    # prose bytes — the edited-since-review guard at apply
         "raw":       raw,
@@ -1556,6 +1574,105 @@ def save_draw(sid, lemma, translit, gset, ctx, raw, forced=None, hint=None,
         json.dump(rec, f, ensure_ascii=False, indent=1)
     os.replace(tmp, draw_path(sid))
     return sig
+
+
+# ══════════════════════════════════════════════════════════════════════════════════════════════
+# V10 COVERAGE REPAIR PASS (DESIGN_v10_repair.md, CLOSED at d04b6e6; JP-ruled wording under the
+# standing delegation 2026-07-12). On a coverage-gate failure at the REVIEW pass (--dry-run
+# --repair), ONE bounded repair call feeds the card its own gate refusal: the named absentees,
+# each with its verse text in the SAME feed shape as the original occurrences (_occ_lines — one
+# copy, never a fork). The repaired raw replaces the draw and re-runs EVERYTHING fresh — no gate
+# sees it as anything but a new card. Cap: TWO rounds, then the draw is dead. The structure guard
+# draws the SAME line as the prompt (the reviewer-required headline clause): sense headlines
+# unchanged, no existing citation removed — a breach kills the draw, it is never re-repaired.
+# This is NOT the edited-draw class: the MODEL writes, every machine gate re-runs from zero, and
+# the human hand-checks run on the final card before apply (review-what-ships intact).
+# The frozen V9 verse prompt is untouched; this block is versioned separately (repair_prompt_ver).
+# ══════════════════════════════════════════════════════════════════════════════════════════════
+REPAIR_PROMPT = """\
+The definition below is complete except that these fed occurrences are not yet cited under a sense:
+
+{occurrences}
+
+Integrate each into the sense where its text belongs — add citations (and the minimum prose needed to house them) WITHOUT changing the sense structure or the sense headlines, removing any existing citation, or altering any existing quotation. Return the full corrected definition.
+
+{card}"""
+
+
+def repair_prompt_ver():
+    # Identity of the repair INSTRUCTION BLOCK (the template — per-word refs excluded), same
+    # scheme as synth_ver / the hint signature. Stamped on every repaired draw + entry audit.
+    return "repair:" + hashlib.sha1(REPAIR_PROMPT.encode("utf-8")).hexdigest()[:12]
+
+
+def repair_user_msg(absentee_ctx, raw):
+    """The one repair message: the ruled wording with the absentees (verse texts, original feed
+    shape) and the full card substituted in. .replace not .format — card prose may contain braces."""
+    occ = "\n".join(_occ_lines(absentee_ctx))
+    return REPAIR_PROMPT.replace("{occurrences}", occ).replace("{card}", (raw or "").strip())
+
+
+def repair_guard(pre_raw, post_raw):
+    """THE STRUCTURE GUARD — the detector that proves the repair-prompt line holds (red-first
+    proven on a dropped-sense mock, tests/test_repair_pass.py). Splitter-diff, per the design:
+    sense_headlines must be UNCHANGED and the pre-repair citation set preserved superset-style.
+    Any finding = the draw is DEAD (adjudication rule: dead, not re-repaired).
+    Returns problems ([] = the repair stayed inside its lines)."""
+    pre, post = split_definition(pre_raw), split_definition(post_raw)
+    if not post["sense_headlines"]:
+        return ["repaired card has no parseable sense headlines — parse failure; draw dead"]
+    problems = []
+    if pre["sense_headlines"] != post["sense_headlines"]:
+        changed = [f"'{a}' → '{b}'" for a, b in
+                   zip(pre["sense_headlines"], post["sense_headlines"]) if a != b]
+        problems.append(
+            f"sense structure/headlines changed ({len(pre['sense_headlines'])} sense(s) → "
+            f"{len(post['sense_headlines'])}"
+            + (f"; reworded: {'; '.join(changed)}" if changed else "")
+            + ") — the repair prompt forbids exactly this; the prompt and this guard draw "
+              "the same line (reviewer-ruled headline clause)")
+    lost = [k for k in cited_refs(pre["senses_block"])
+            if k not in set(cited_refs(post["senses_block"]))]
+    if lost:
+        problems.append("existing citation(s) removed: "
+                        + ", ".join(f"{b} {c}:{v}" for b, c, v in lost))
+    return problems
+
+
+def coverage_repair(raw, fed_keys, ctx, call_model, max_rounds=2):
+    """The bounded repair loop. Returns (final_raw, record, problems):
+      record   = {"refs": [...integrated...], "rounds": N, "prompt_ver": ...} — None when the
+                 card was already clean (repair never fired).
+      problems = [] on success; non-empty = the DRAW IS DEAD (guard breach or cap-out) and
+                 final_raw is the last GOOD card (a refused raw never leaks out; the caller
+                 must not save or ship on problems — the cached draw stays untouched).
+    Coverage is re-checked per round by the PRODUCTION coverage_gate (never a copy); the full
+    gate battery re-runs downstream on the final card exactly as for any fresh draw."""
+    absent = coverage_gate(fed_keys, split_definition(raw)["senses_block"])
+    if not absent:
+        return raw, None, []
+    cur, integrated = raw, []
+    for rnd in range(1, max_rounds + 1):
+        print(f"  REPAIR PASS round {rnd} — integrating: {', '.join(absent)}")
+        absent_set = set(absent)
+        actx = [c for c in ctx if f"{c[0]} {c[1]}:{c[2]}" in absent_set]
+        new = call_model(repair_user_msg(actx, cur))
+        probs = repair_guard(cur, new)
+        if probs:
+            return cur, {"refs": integrated + absent, "rounds": rnd,
+                         "prompt_ver": repair_prompt_ver()}, \
+                   ["structure guard REFUSED the repair output (draw DEAD, not re-repaired):"] + probs
+        integrated += [a for a in absent if a not in integrated]
+        cur = new
+        absent = coverage_gate(fed_keys, split_definition(cur)["senses_block"])
+        if not absent:
+            return cur, {"refs": integrated, "rounds": rnd,
+                         "prompt_ver": repair_prompt_ver()}, []
+    return raw, {"refs": integrated, "rounds": max_rounds,
+                 "prompt_ver": repair_prompt_ver()}, \
+           [f"repair cap-out: still uncited after {max_rounds} round(s): {', '.join(absent)} — "
+            f"a card that can't integrate its absentees in two tries has a real problem; "
+            f"the draw is dead (design rule)"]
 
 
 def _coverage_audit(conn, sid, raw, senses_block):
@@ -1769,6 +1886,10 @@ def show_entry(entry):
         if cov.get("flags"):
             print(f"      flags: {'; '.join(cov['flags'])}")
     print(f"  verses:      {len(entry['verses'])} cited, with text")
+    if a.get("repair"):
+        r = a["repair"]
+        print(f"  REPAIRED card (V10 repair pass, round(s): {r['rounds']}, {r['prompt_ver']}) — "
+              f"integrated: {', '.join(r['refs'])}")
     print(f"  citation gate: {a['pass']}/{a['total']} pass" +
           (f"  (misses — tagging {a['tagging']} / real {a['real']} / no-verse {a['noverse']})" if a['total']-a['pass'] else ""))
     if a.get("dangling"):
@@ -1885,6 +2006,14 @@ def main():
                          "re-entry mechanism (DESIGN_hint_tooling.md, JP-ruled 2026-07-12). Frozen "
                          "prompt untouched; lines + provenance logged on the draw; part of the draw "
                          "signature. Refuses a word with no register entry.")
+    ap.add_argument("--repair", action="store_true",
+                    help="V10 COVERAGE REPAIR PASS (DESIGN_v10_repair.md): on a coverage-gate "
+                         "failure, feed the card its own named absentees (verse texts, original "
+                         "feed shape) in ONE bounded repair call; the repaired raw replaces the "
+                         "draw and re-runs every gate fresh. Cap 2 rounds; structure guard "
+                         "(headlines + citation superset) kills a breach, never re-repairs. "
+                         "REVIEW pass only (--dry-run) — the repaired draw is cached for review "
+                         "and a later --apply ships those reviewed bytes.")
     ap.add_argument("--no-hints", metavar="REASON",
                     help="run a REGISTERED word (draw_hints.py) deliberately WITHOUT its banked hints. "
                          "A registered word run without --hints refuses by default (ruling 1 — "
@@ -1902,6 +2031,10 @@ def main():
     if args.from_draw and (not args.word or not args.apply or args.force or args.all or args.dry_run):
         sys.exit("--from-draw ships one reviewed draw: use as --apply --word G#### --from-draw KEY8 "
                  "(no --force / --all / --dry-run — it ships specific reviewed bytes, it never rolls).")
+    if args.repair and (not args.dry_run or args.apply or args.resplit or args.all):
+        sys.exit("--repair runs on the REVIEW pass only: --dry-run --word G#### (never with "
+                 "--apply/--resplit/--all). The repaired draw is cached for human review; a "
+                 "later --apply ships those reviewed bytes (review-what-ships).")
     if args.floor and (not args.word or args.all):
         sys.exit("--floor diffs ONE word against ITS OWN saved floor: use with --word G#### and "
                  "never --all (a floor is a per-word artifact).")
@@ -2097,8 +2230,44 @@ def main():
                           file=sys.stderr)
                     unreviewed.append(sid)
 
+        # ── V10 COVERAGE REPAIR PASS (--repair, review pass only — the CLI refusal above
+        # guarantees ctx exists here). Runs BEFORE assemble so the entry below is built from
+        # the FINAL raw: splitter, citation gate, coverage gate, #30 floor-diff, and every
+        # checker warn all re-run on the repaired card exactly as on any fresh draw.
+        if args.repair:
+            def _live_repair(msg):
+                nonlocal client
+                if client is None:
+                    client = make_client()
+                m = client.messages.create(model=MODEL_SONNET, max_tokens=MAX_TOKENS,
+                                           messages=[{"role": "user", "content": msg}])
+                return "".join(b.text for b in m.content
+                               if getattr(b, "type", "") == "text").strip()
+            rep_fed = [(c[0], c[1], c[2]) for c in ctx]
+            raw2, rrec, rprobs = coverage_repair(raw, rep_fed, ctx, _live_repair)
+            if rprobs:
+                print("  ✗ REPAIR PASS — draw DEAD (cached draw untouched):", file=sys.stderr)
+                for p in rprobs:
+                    print("      - " + p, file=sys.stderr)
+                failures.append(sid)
+                continue
+            if rrec:
+                raw = raw2
+                save_draw(sid, lemma, translit, gset, ctx, raw,
+                          forced=args.force_verse, hint=eff_jobs, pmap=pmap,
+                          constraints=constraints, no_hints_reason=args.no_hints,
+                          repair=rrec)
+                print(f"  REPAIRED draw cached → {draw_path(sid)} (round(s): {rrec['rounds']}, "
+                      f"integrated: {', '.join(rrec['refs'])}, {rrec['prompt_ver']}) — "
+                      f"review THIS card below; a later --apply ships these bytes.")
+            else:
+                print("  --repair: coverage already clean — repair did not fire.")
+
         entry = assemble(conn, sid, lemma, translit, raw)
         entry["synth_ver"] = stamp
+        # V10: a repaired card's audit carries the same stamps as its draw record.
+        if args.repair and rrec:
+            entry["audit"]["repair"] = rrec
         # V9 coverage gate input — the fed sample only exists on draw/apply passes.
         if args.resplit:
             entry["audit"]["fed_uncited"] = None
