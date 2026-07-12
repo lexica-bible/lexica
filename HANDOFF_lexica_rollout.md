@@ -507,7 +507,56 @@ Study's return. Status detail: STATE.md Study line.)
 ## ledger note: the item-6 determinism evidence + raw PA output were reposted at close
 ## (owed item cleared).
 
-## BATCH 5 — RUN SESSION 2 (V9 resume) — CC OPENER BLOCK (paste into the new CC session;
+## V10 BUILD SESSION — CC OPENER BLOCK (paste into the new CC session; opens from docs
+## alone. State source of truth = the run-session-2 close commit d04b6e6 or a descendant.)
+V10 BUILD SESSION — the coverage repair pass. NO word runs (no floors, draws, applies,
+re-entries) until the build is accepted; the acceptance test IS the first word work.
+("me/I" = JP.) **STANDING DELEGATION IS LIVE (memory
+feedback_no_questions_standing_delegation + the handoff block above): no decision
+questions to JP — CC+reviewer recommendations apply as rulings with a delegation note.
+JP's only touchpoints: paste-ready commands, render screenshots, ship/park notices.**
+READ FIRST, in order: (1) DESIGN_v10_repair.md IN FULL (CLOSED at d04b6e6 — mechanism,
+gate story, pre-set adjudication rules, ruled repair-prompt wording incl. the headline
+clause, acceptance test + staleness fallback, build order); (2) this handoff — the run
+session 2 STATE UPDATE chain above; (3) AUDIT_lexica_rollout.md — G1390 RE-PARKED (the
+pure squeeze park) + G227 RE-PARKED (SECOND) + G162 RE-PARKED entries; (4) V9_PILE.md
+tail (V10 charter seed + hint-echo leak + dash-expansion CHECK-FIRST items).
+Opening check: `git log --oneline -1` = d04b6e6 or a descendant · `python
+tests/test_coverage_gate.py` ok · `python tests/test_draw_hints.py` ok · R1: raw
+reposts, never references (both sides — the ledger carries slips from EACH chat).
+BUILD ORDER (ruled, in the design doc): repair hook in build_lexica_def.py (shown IN
+FULL to the reviewer before commit) + three controls RED-FIRST (must-fail from G1390
+d3's cached raw / no-op / structure-guard mock) + both CI lists + neighbor tests.
+Then the acceptance test: cached d3s if signatures hold (reviewer verifies the math
+FIRST), else the pre-specified fallback; ≥2 of G227/G162/G1390 ship through the FULL
+path or the design fails its own validation. PA-currency check before anything fires
+PA-side. Also on the shelf, not this session unless ruled in: the hint-echo detector
+ticket (V9_PILE), the dash-expansion CHECK-FIRST read, G236's retry (verbatim/hint
+territory — NOT a repair-pass retry; its drafted Dan-trio hint needs amendment-2 at
+re-entry).
+Standing rules carry: R1 · counts are names · bank on reviewer relay · big output →
+file · exact-or-dotted BOTH clauses · show code before changing it · JP runs all PA
+commands.
+
+## V10 BUILD SESSION — REVIEWER-CHAT INHERITANCE BLOCK (paste into the new reviewer chat)
+You are the reviewer chat for the Lexica V10 build session. First act = R1-verify
+d04b6e6 on disk (raw repost). You inherit: batch-5 run session 2 CLOSED — 2 ships
+(G2805ʰ excise-then-pass, G2168ʰ first-draw zero-defect), 4 parks (G227/G162/G1390 =
+squeeze class at one-verse margins; G236 = quote/placement class, NOT a repair retry),
+scoreboard 2/7ʰ, hints 35-for-35 lifetime, 7/15 FINAL + UNTOUCHABLE unmoved. STANDING
+DELEGATION live (JP ruling 2026-07-12): recommendations apply as rulings with delegation
+notes; hold CC to the delegation-note discipline, not to asking JP. Your design-pass
+rulings are IN the doc (headline clause, staleness fallback) — verify the committed text
+matches what you ruled. Your duties: full-code read of the repair hook BEFORE commit ·
+structure-guard red-first before any zero is trusted · signature-math verification on
+the cached d3s BEFORE the acceptance test picks its branch · amendment-2 on the repair
+prompt at its first live fire (console print vs the ruled wording) · REPAIR-echo scan
+joins the hand-check battery. Ledger carried: two sequence slips (joint-go, floor-
+before-bank) + reviewer premise-error (c17fa2cd) + CC 5PM-parrot + the R1 slips both
+directions — the session's discipline frayed at the edges when pace rose; open slow.
+
+## BATCH 5 — RUN SESSION 2 (V9 resume) — CC OPENER BLOCK (SPENT — session ran + CLOSED
+## 2026-07-12 at d04b6e6: 2 ships G2805ʰ+G2168ʰ, 4 parks, V10 design CLOSED; paste into the new CC session;
 ## opens from docs alone. State source of truth = the V9-promotion close commit; trust
 ## docs over any number in a handoff.)
 BATCH 5 RUN SESSION 2 — V9 resume, word 1 = ἀληθής G227 (both retry triggers SATISFIED:
