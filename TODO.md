@@ -603,6 +603,17 @@ REST of the dotted-Strong's question, none of it gating the rollout:
   lines, AND any card with a genuine uncited verse gets a known-issue bullet on the LIVE card
   (δίκτυον precedent), not just a ticket line. Bare "(8:14)" sub-refs stay OUT of scope
   (book-less numbers = phantom territory) — manual-check class, unchanged.
+  **RESWEEP RUN ×2 (2026-07-12): run 1 caught a scanner PHANTOM (comma before a numbered book
+  donated its digit — "Jas 1:12, 1Pe 1:6" invented Jas 1:1; fixed fd93d34, control test pinned).
+  Run 2 CLEAN = fix ACCEPTED vs the real stored shapes (all banked exhibits recovered: εἰρηνικός
+  Gen 42 chain + 1Ch 16:2, καταπέτασμα Exo 26 cluster, χριστός Rom 1:4 + Lev 21:12).
+  ROSTER: 31 of 77 cards carry newly counted citations (195 refs) — G1119 G1151 G1272 G1344
+  G1516 G1577 G2008 G25 G2563 G2657 G2665 G2779 G2983 G3538 G3624 G3735 G3788 G3900 G4061
+  G4582 G4645 G4808 G5009 G5281 G5456 G5484 G5547 G758 G935 G956 G977. These refs were always
+  READER-VISIBLE but shipped UNVERIFIED (the gate never checked them). NEXT: `--verify` pass
+  (audit_range_tails.py) classifies each vs the corpus — OCC clean / NO-OCC needs eyes /
+  NO-VERSE = hard problem → ticket line + live-card bullet per the ruling. Zero REFUSED-TAIL
+  lines in either run.**
   code: scripts/build_lexica_def.py `_REF_RE`/`cited_refs`
 - **Standing-query key-shape audit — DONE (batch-5 s1 open, 2026-07-12).** Swept every LIKE/SELECT
   template in the handoff/audit/data-model docs against the stored key shapes. ONE find: the spent
