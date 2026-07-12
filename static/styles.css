@@ -3012,10 +3012,13 @@ input { font-family: inherit; }
   overflow: hidden;
 }
 /* Inline SVG map pin (divIcon) — replaces Leaflet's stock PNG marker so there is
-   no external image to block/404, and the pin follows the site palette. */
+   no external image to block/404, and the pin matches the site's navy.
+   Colors are FIXED, not theme tokens: the map tiles are always light, but dark
+   theme brightens --accent to a pale blue that camouflages against the sea and
+   flips --paper dark — the themed pin vanished on dark (caught live 2026-07-11). */
 .metav-pin svg { display: block; }
-.metav-pin path { fill: var(--accent); }
-.metav-pin circle { fill: var(--paper); }
+.metav-pin path { fill: oklch(0.46 0.08 240); }   /* light-theme --accent, pinned */
+.metav-pin circle { fill: #fcfaf5; }              /* light-theme --paper, pinned */
 
 /* ============================================================
    LEFT NAV PANEL + THREE-COLUMN GRID (desktop ≥1100px only)
