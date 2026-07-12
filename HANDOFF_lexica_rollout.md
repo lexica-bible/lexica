@@ -524,6 +524,9 @@ prints ok · **R1: repost raw outputs, never reference them** (ledger: the desig
 session opened with a reference-not-repost slip). PLUS the standing PA-currency check:
 JP posts PA's `git log --oneline -1` BEFORE the first floor/draw; must match local —
 mismatch = deploy first, nothing fires.
+STATE UPDATE (run session 2, 2026-07-12): G227 RE-PARKED (second) — retry = next
+engine/prompt change; register carries 3 hints (Joh 8:15 pin + range clause, 9f1ea39);
+fix-the-raw OPEN (edited-draw design question, unruled). Order now: G2805 next.
 STATE: V9 LIVE (stamp above; coverage + verbatim-quote lines in the prompt; coverage
 gate BLOCKS ships in validate_entry — refusal names absentees; bypass = existing
 --force-gate-bypass only) · hinted scoreboard 0/7 (superscript-h, never joins 7/15

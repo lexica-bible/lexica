@@ -1982,6 +1982,47 @@ covers post-pull pre-ship human catches, not just mid-draw saves (ENGINE_LESSONS
 Final: βιβρώσκω shipped (batch tally 13 shipped) · count 2/15 · intervention tally +1. Other
 tallies: describe-don't-preach 12-for-12 · fold-compression 1 of 9 · "Grounding refs:" 0 · streak 0.
 
+### G227 ἀληθής — RE-PARKED (SECOND) (batch-5 run session 2, V9 word 1; JP "park"
+### ruling 2026-07-12, retry-trigger = the NEXT engine/prompt change — conditional park).
+### Three machine-refused draws on a clean fresh V9 floor, no draw 4. HINTED SCOREBOARD
+### stays 0/7. Hint mechanism now 9-for-9 lifetime on this word (three hints × three
+### draws, incl. the new Joh 8:15 pin).
+**Floor: `agreement_G227_v9_20260712-154728.json`** — first V9 floor, UNHINTED, spread
+{1:1, 2:1, 3:4, 4:3, 5:1} mean 3.2, STABLE, reviewer-concurred. Anatomy matches the
+V8 floor: correspondence 10/10 · juridical own-shelf EXACTLY 5/10 · person ~8/10 ·
+conduct/genuine carved in all nine structured draws. Four pre-clears banked. Floor
+finding: Joh 8:15 real-miss in draws 1/4/6/9/10 (one class, courtroom neighbor-slip,
+8:15 not fed) → JP-ruled register pin bdcff64, TIGHTENED with the range clause f30ff73
+after draw 2's kill, provenance corrected 9f1ea39 (input-key semantics stated in place;
+reviewer premise-error caught by CC raw check — R1 cuts both ways, ledgered).
+**The three draws (all machine-refused pre-ship — the promoted V9 machinery working;
+nothing shipped looking clean):**
+- d1 (2 senses, key c17fa2cd): COVERAGE 34/39 — absentees Job 42:7, Job 42:8, Isa 42:3,
+  Joh 3:33, Joh 21:24. All other gates clean (citation 35/35, floor-diff clean, no
+  8:15). Structure note ledgered: this 2-sense carve (person+conduct folded into
+  correspondence, juridical own-shelf) is 0/10 on the floor — adjudication question if
+  it ever ships, not pre-cleared.
+- d2 (4 senses, same input key, forced): CITATION real-miss Joh 8:15 via gloss-note
+  range "Joh 8:13-17" expanded by the #28 scanner — the pin held in the senses block
+  and failed by the letter through the range side door (hint-limits shape) + COVERAGE
+  38/39 (Joh 7:18). Ten #30 flags, misplacement-flavored notes only, moot on refusal.
+- d3 (2 senses, key d65ed578 — new key expected, tightened hint moved the fingerprint):
+  COVERAGE 38/39 — sole absentee Joh 21:24. Pin fully closed: 38/38 citation, four
+  courtroom verses listed out individually. Minor flags moot (2 dangling book refs,
+  1 gloss rendering-mismatch, 4 #30 splits on the known dual-carry seam).
+**THE NAMED SQUEEZE POINT — first absentee convergence on this word: Joh 21:24 absent
+in d1 AND d3 (2 of 3), while its 10/10 floor partners (Joh 19:35, 3Jn 1:12) are cited
+right next to the hole both times.**
+**Park rationale (JP-ruled on CC+reviewer recommendation):** the original park defects
+are CURED (zero G228 bleed ×3, named duals executed ×3, 8:15 closed by d3); the V9
+line + gate moved coverage from a 5-absentee squeeze to a 1-verse margin (34→38→38)
+and every defect died at the machine, pre-ship — the V8 pattern of clean-looking
+trimmed ships is over. What remains is a single-verse trim. Retry = next engine/prompt
+change; one clean draw ships this word.
+**OPEN (deliberately unruled, JP fresh-session item):** the fix-the-raw path — the
+gate's own remedy line names fix_lexica_raw.py; hand-placing Joh 21:24 would be an
+EDITED DRAW (its own rules). Design question for a fresh ruling, nothing foreclosed.
+
 ### V9 DESIGN PASS — SESSION RECORD (2026-07-12, post-s1-close; NO word runs, amendment 6
 ### held throughout). Rulings + builds: DESIGN_v9_lines.md RULED all six items (8f36c65) ·
 ### COVERAGE GATE built + must-fail-proven red-first (d764bc7; fixture = G2805 d1 shape,
