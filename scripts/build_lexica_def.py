@@ -1755,6 +1755,16 @@ P2_WHITELIST_VER = "p2wl:v2"    # probe-2 whitelist + common-word filter + sente
                                 # 2026-07-12): label/sentence-start demotion behind the
                                 # corpus-name guard; list adds english/greek/peoples.
 SCAN3_PATTERNS_VER = "scan3:v2" # scanner-3 pattern list; grows by exhibit, changes ruled
+META_VER = "meta:v1"            # metalinguistic-mention exemption (V11.1 ticket 4, ruled
+                                # 2026-07-12): pattern list + ≤2-word cap; grows by exhibit.
+# A quoted span is a METALINGUISTIC MENTION (exempt from the quote gate, LOUD note, never
+# silent — lesson #47) only when ALL THREE hold: matches no cited verse · a rendering-talk
+# pattern sits within the context window · span is ≤2 words. The cap is structural: nothing
+# that could plausibly be a verse quote is two words, so a misquoted sentence riding a
+# nearby "sense of" can never be exempted. Real-byte exhibits: "reliable" (G227 d2),
+# "captivating" (G162 d2). "other item" stays UNEXEMPTED by ruling (no honest pattern
+# reaches scare-quotes-around-a-concept; adjudicated-bypass path remains).
+META_PATTERNS = ("render", "gloss", "the word", "reads as", "sense of", "so-called")
 
 # Row 1 (curly=straight quotes/apostrophes) + row 4 (en dash -> em dash; "--" in probe_norm).
 _NORM_CHARS = {"‘": "'", "’": "'", "“": '"', "”": '"', "–": "—"}
@@ -1857,7 +1867,7 @@ def _local_refs(raw, qs, qe):
 _PAIR_GAP_RE = re.compile(r"\s*(?:,\s*)?(?:and|or)\s+$|\s*,\s*$")
 
 
-def probe1_verbatim(raw, verse_texts):
+def probe1_verbatim(raw, verse_texts, notes=None):
     """PROBE 1 — verbatim-quote GATE (V11; the defect-5/6 class, G236 Dan-trio, G162 d2,
     G2805 ×3). Every quoted span must match verses.text of a verse cited on the card under
     the ruled allowances; a span matching exactly one ref of a multi-ref local list must be
@@ -1879,6 +1889,18 @@ def probe1_verbatim(raw, verse_texts):
         label = qn if len(qn) <= 60 else qn[:57] + "..."
         matched = [k for k, vn in normed.items() if _match_quote(qn, vn)]
         if not matched:
+            # meta:v1 (V11.1 ticket 4): metalinguistic-mention exemption — all three
+            # conditions, each fixture-pinned as the lone blocker; LOUD note, never silent.
+            if len(qn.split()) <= 2:
+                ctx = raw[max(0, qs - 80):qe + 40].lower()
+                pat = next((p for p in META_PATTERNS if p in ctx), None)
+                if pat:
+                    if notes is not None:
+                        notes.append(
+                            f'quote "{label}" EXEMPTED as metalinguistic mention ({META_VER} '
+                            f'pattern "{pat}", ≤2 words, matches no cited verse) — '
+                            f'non-blocking note')
+                    continue
             if missing:
                 notruns.append(
                     f'quote "{label}" — NOT RUN: no match among available texts and '
@@ -2168,15 +2190,19 @@ def validate_entry(entry, conn=None):
             row = conn.execute("SELECT text FROM verses WHERE book=? AND chapter=? AND verse=?",
                                (b, c, v)).fetchone()
             vt[(b, c, v)] = (row["text"] if row and row["text"] else None)
-        p1_fails, p1_nr = probe1_verbatim(raw, vt)
+        p1_notes = []
+        p1_fails, p1_nr = probe1_verbatim(raw, vt, notes=p1_notes)
         p2_warns, p2_nr = probe2_names(raw, vt,
                                        extra_whitelist=(entry.get("lemma"), entry.get("translit")),
                                        known_names=_p2_corpus_names(conn))
         s3_warns = scan3_identity(raw, vt)
         a["probe_vers"] = {"norm": NORM_VER, "p2wl": P2_WHITELIST_VER,
-                           "scan3": SCAN3_PATTERNS_VER}
+                           "scan3": SCAN3_PATTERNS_VER, "meta": META_VER}
         a["probe1_notrun"], a["probe2_warns"] = p1_nr, p2_warns
         a["probe2_notrun"], a["scan3_warns"] = p2_nr, s3_warns
+        a["probe1_notes"] = p1_notes                    # meta:v1 exemptions — LOUD, on record
+        for line in p1_notes:
+            print(f"  ℹ V11 meta-exemption ({entry['strongs']}): {line}", file=sys.stderr)
         for line in p1_nr + p2_nr:
             print(f"  ⚠ V11 probe NOT RUN item ({entry['strongs']}): {line}", file=sys.stderr)
         for line in p2_warns + s3_warns:

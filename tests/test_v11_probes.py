@@ -240,6 +240,62 @@ def main():
     fails, notrun = B.probe1_verbatim(raw_ital, sub(("Gen", 35, 2)))
     assert fails == [] and notrun == [], (fails, notrun)
 
+    # ═══ PROBE 1 — V11.1 ticket 4: metalinguistic-mention exemption (meta:v1; option (i)
+    # as ruled + ≤2-word cap). Exemption ONLY when all three hold: (a) span matches no
+    # cited verse, (b) context pattern hit, (c) span ≤2 words. Each condition pinned as
+    # the lone blocker below. Exemptions are LOUD — a note in the notes list, never a
+    # silent skip (lesson #47). Real bytes: reliable (G227 d2), captivating (G162 d2),
+    # other item (G236 d2), all from the banked/live consults. ═══
+
+    # 1t MUST-CLEAR with note — "reliable" (real bytes; "rendering" context pattern).
+    raw_rel = ('The gloss set does not include a distinct "reliable" or "trustworthy" '
+               'rendering for the person-characterization uses.')
+    notes = []
+    fails, notrun = B.probe1_verbatim(raw_rel, {}, notes=notes)
+    assert fails == [] and notrun == [], (fails, notrun)
+    assert any('reliable' in n and 'EXEMPTED' in n for n in notes), notes
+
+    # 1u MUST-CLEAR with note — "captivating" (real bytes; "sense of" pattern; 2Ti 3:6's
+    # stored text has "capturing", correctly no match).
+    raw_cap = ('- None of the supplied occurrences attests any sense of purely intellectual '
+               'or spiritual "captivating" independent of the control-and-removal image; '
+               '2Ti 3:6 is the closest case.')
+    notes = []
+    fails, notrun = B.probe1_verbatim(raw_cap, sub(("2Ti", 3, 6)), notes=notes)
+    assert fails == [] and notrun == [], (fails, notrun)
+    assert len(notes) == 1 and 'captivating' in notes[0], notes
+
+    # 1v MUST-STILL-REFUSE — condition (b) alone blocks: "other item" (real bytes) is
+    # ≤2 words and matches nothing, but NO pattern reaches scare-quotes-around-a-concept.
+    # Ruled: stays on the adjudicated-bypass path; the design working, not a gap.
+    raw_oth = ('the two are distinguished by whether an "other item" is explicitly placed '
+               'in the position vacated.')
+    notes = []
+    fails, _ = B.probe1_verbatim(raw_oth, {}, notes=notes)
+    assert len(fails) == 1 and 'other item' in fails[0] and notes == [], (fails, notes)
+
+    # 1w MUST-STILL-REFUSE — condition (c) alone blocks: long span WITH a pattern hit
+    # still fires (the misquote-riding-"sense of" loosening channel, structurally closed).
+    raw_long = ('the sense of "cleanse and exchange your robes entirely" (Gen 35:2).')
+    notes = []
+    fails, _ = B.probe1_verbatim(raw_long, sub(("Gen", 35, 2)), notes=notes)
+    assert len(fails) == 1 and notes == [], (fails, notes)
+
+    # 1x — condition (a) alone: a short span with a pattern that MATCHES its verse is a
+    # normal pass — no fail, no note (exemption never touches real matches).
+    notes = []
+    fails, notrun = B.probe1_verbatim('the word "change" (Gen 35:2).', sub(("Gen", 35, 2)),
+                                      notes=notes)
+    assert fails == [] and notrun == [] and notes == [], (fails, notrun, notes)
+
+    # 1y MUST-STILL-REFUSE — Levites class, RECONSTRUCTED (ruled: d1 overwritten; the
+    # self-label class the exemption must never reach — long span AND no pattern, two
+    # independent walls).
+    raw_lev = ('the Levites are given as "sacred allocation for the sanctuary" (Num 3:9).')
+    notes = []
+    fails, _ = B.probe1_verbatim(raw_lev, sub(("Num", 3, 9)), notes=notes)
+    assert len(fails) == 1 and notes == [], (fails, notes)
+
     # ═══ PROBE 2 — named-subject warn ═══
     # 2a MUST-FAIL, defect 1 (G1390 real bytes): Jehoiada absent from 2Ch 21:3.
     raw_d1 = ("Jehoiada's father distributing silver, gold, and shields to his sons (2Ch 21:3);")
@@ -435,8 +491,12 @@ def main():
     # zero NOT-RUNs here (every quote matches an available text; no name rides a
     # None-text chunk).
     vt_full = {k: G2168_VT.get(k) for k in B.cited_refs(G2168_RAW)}
-    fails, notrun = B.probe1_verbatim(G2168_RAW, vt_full)
+    notes = []
+    fails, notrun = B.probe1_verbatim(G2168_RAW, vt_full, notes=notes)
     assert fails == [] and notrun == [], (fails, notrun)
+    # meta:v1 control: the shipped card earns ZERO exemptions — its quoted glosses all
+    # match cited verses, so the exemption path never engages on a clean card.
+    assert notes == [], notes
     assert B.scan3_identity(G2168_RAW, vt_full) == []
     warns, notrun = B.probe2_names(G2168_RAW, vt_full,
                                    extra_whitelist=("εὐχαριστέω", "eucharisteō"))
