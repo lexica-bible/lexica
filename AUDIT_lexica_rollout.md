@@ -4528,3 +4528,65 @@ ruled watch), Act 6:14 fixed both layers (the Stephen warn = the detector correc
 flagging a correct fix, its own line per ruling), rendering scanner quiet.** G236's
 remaining failure mode is exactly one class: quote fidelity under single-draw
 variance.
+
+### V11.1 DETECTOR-MAINTENANCE BUILD SESSION — ALL FIVE TICKETS LANDED (2026-07-12;
+### reviewer-adjudicated per ticket under JP's standing delegation; NO word runs, no
+### draws, no floors, per charter). Scoreboard unchanged 2/7ʰ.
+**Tickets, in adjudicated order — each red-first, live-verified, exact-match prediction:**
+(1) p2wl:v2 sentence-starter/label demotion @ 8969769 — boundary set (para start ·
+. ! ? · "Sub-use:" · "- "/"* " list · "**" label; semicolon and bare colon EXCLUDED,
+Korah/Sabean classes ride the exclusion, each own-fixture-pinned) + corpus-name guard
+(words is_pn english_head, live control: korah/solomon/laban/jesus/peter in,
+votive/active/applying out; guard unavailable → NO demotion) + list adds
+english/greek/peoples. Live: 43→34 warns, exactly the 9 predicted lines gone, zero
+real-name losses (sentence-start Laban/Solomon/Jesus/Peter saved by the guard).
+(2) quote-gate anchoring @ 6eafa64 — lead-in branches nearest-first (2Sa 19:42 +
+Mat 7:11 exhibits); paired quotes sharing one trailing bracket pair the adjacent quote
+with the LAST ref (Job 42:7/8); trailing branch untouched (defect 5's teeth, structural
+flag + fixtures 1b/1r-swap); 1p = no-loosening control (Pro 18:16 dropped-semicolon
+fire survives). Live: 12→9 fires, the three artifact lines only.
+(3) norm:v2 emphasis strip @ 627958c — card side ONLY; ruled-table row 8 landed with
+its evidence (verses.text carries zero '*', live count 0); teeth: bold + changed word
+still fires. Live: 9→9 byte-identical (protects future draws; a change would itself
+have been the alarm).
+(4) meta:v1 metalinguistic exemption @ 0ad0f75 — option (i) + ≤2-word cap, three walls
+each lone-blocker-pinned (1v/1w/1x; trustworthy explain: see ledger); exemptions LOUD
+(audit probe1_notes + printed line, lesson #47); "other item" UNEXEMPTED by ruling
+(bypass path remains). Live: 9→7, reliable + captivating exempted with visible notes.
+(5) scanner set semantics @ 2cdf6b0 — _claim_fires per-bullet aggregation (each gloss
+clean at ≥1 ref; unmatched ref fires once only beside a matched gloss; poscap survives;
+case-mismatch preferred); check_rendering_claim core byte-untouched, all pins stand.
+Live: 0→0 with 0 claims parsed ×4 — the zero PROVEN "nothing parseable" (deliberate
+under-catch; manual spot-check rule stays the authority).
+**LEDGER — ordering breach (non-material, ruled):** CC committed ticket 1 before the
+reviewer's five-item gate post arrived (crossed messages); self-reported, halted;
+ruled non-material (all items existed pre-commit, bytes inspectable), 8969769 stood
+conditional and converted on the byte checks. Adopted rule at the ticket-1 breach
+ruling, observed tickets 2–5, STANDING and carried forward: CC posts the five-item
+block and STOPS; no commit until the reviewer's receipt is in CC's context — crossing
+risk be damned.
+**LEDGER — stale-PA reconciliation:** the reviewer's byte check found PA HEAD at the
+run-close commit and 38baaef "unknown"; halt called under lesson #52. Resolution was a
+THIRD path neither hypothesis named: 38baaef was real and on origin the whole time —
+PA was one pull stale. CC's opening summary was factually right but unverified against
+the machine of record when made; halt correct, no fault, lesson already #52.
+**LEDGER — the trustworthy explain (prediction discipline):** ticket 4's fixture red
+showed "trustworthy" firing beside "reliable"; the baseline 9 had no such line. Settled
+from full-card bytes before confirmation: on the live card "trustworthy" MATCHES 1Pe
+5:12 — the exemption path never engaged; the fixture red fired only because the
+isolated sentence lacked that verse text. No unexplained detector behavior shipped.
+**Evidence record:** V111_CONSULT.md (in repo @ 8969769) = the one-time PA consult —
+43 probe-2 warns REGENERATED with the production detector on the surviving d2 raws
+(the run's console lines were never written to disk) + context extractions, provenance
+limits stated (d1 classes Earthly/Also/Similarly/Cosmic/Renewed/Sets/Greek/Peoples
+unrecoverable → labeled reconstructions per ruling). Verse bytes for all fixtures =
+JP live reads, raw outputs in the session record.
+**RETRY-TRIGGER STATUS: FIRED.** This landing is the "next engine/prompt change" —
+all four parks' retry triggers (G1390, G227, G162, G236) FIRED at 2cdf6b0. Firing ≠
+re-entry: the mechanism (fresh draws vs path (c) roster draw) is the path (c) design
+session's ruling. Path (c) remains the standing next-pass RECOMMENDATION, G236's
+record its best exhibit. No floor, draw, or command until that session rules.
+**Carried UNRULED, unchanged:** hint-counter cache-hit question + how a broken hint
+line counts (G227 d2) · Est 2:6 stored-text object of "captured" (open verify, G162).
+**HARD LOCKS carried:** NO APPLY EVER for the dead cached G227/G1390 repaired cards ·
+G236 key of record 9bf3f7ef.

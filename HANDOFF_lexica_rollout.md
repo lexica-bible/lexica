@@ -2672,3 +2672,56 @@ feeds it). Item text kept below as the historical bank.
   `tests/test_lexica_agreement_parse.py` (both parser-drift fixes) · `tests/test_lexica_glossset_fold.py`
   (case-fold). Add new lexica tests to BOTH the CI list (`.github/workflows/ci.yml`) and the hook
   (`scripts/githooks/pre-commit`).
+
+## V11.1 CLOSE (2026-07-12): the V11.1 opener/inheritance blocks above are SPENT — all five
+## tickets landed (see audit V11.1 BUILD SESSION entry). The blocks below are the live pair.
+
+## PATH (C) DESIGN SESSION — CC OPENER BLOCK (paste into the new CC session; opens from
+## docs alone. State source of truth = the V11.1 close commit or a descendant.)
+PATH (C) DESIGN SESSION — rule the re-entry mechanism for the four parked words, now
+that V11.1 landed all five detector tickets and FIRED all four retry triggers. This is
+a DESIGN session: no word runs, no draws, no floors; output = a ruled design (fresh
+draws under the upgraded battery vs path (c) two-stage roster draw), stamped in
+DESIGN_v11_acceptance.md or a successor doc. ("me/I" = JP.) STANDING DELEGATION LIVE.
+READ FIRST, in order: (1) audit V11.1 BUILD SESSION entry (the five tickets + ledger +
+trigger status) and the four PARKED AT CAP entries; (2) DESIGN_v11_acceptance.md §"The
+three candidate paths" (path (c) DEFERRED-not-killed rationale) + the falsifier ruling
+in the V11 RUN SESSION entry (0-for-3 = YIELD problem; path (c) = standing next-pass
+RECOMMENDATION, G236's record its best exhibit); (3) ENGINE_LESSONS #48-52.
+Opening check: git log -1 = the V11.1 close commit or descendant · suites green
+(test_v11_probes, test_repair_pass, test_coverage_gate, test_lexica_detectors) ·
+diff-vs-close-entry · R1 raw reposts receipt-confirmed both sides.
+DESIGN INPUTS that travel: detector state = p2wl:v2 / norm:v2 / meta:v1 / scan3:v2,
+live-verified 43→34 + 12→9 + 9→7 warns/fires on the surviving d2 raws · the four
+words' full kill records (pre-clear material) · falsifier letter UNMET (all mixed
+records; zero human-only deaths).
+SHELF, with one ruled priority note: **draw-cache history — ELEVATED evidence-cost
+record (ruled 2026-07-12): this session paid for its absence twice (ticket-1 d1 noise
+classes unrecoverable; ticket-3/4/5 exhibits partly reconstruction-only). Still the
+design session's ruling, but the cost record travels with the ticket.** Also shelved:
+TIPNR/words-rows warn-reduction · hint-echo detector ticket.
+Carried UNRULED: hint-counter cache-hit question + broken-hint-line counting (G227
+d2) · Est 2:6 open verify. HARD LOCKS: NO APPLY EVER for dead cached G227/G1390
+cards · G236 key of record 9bf3f7ef.
+Standing rules carry: R1 · R1-b · R2-a · affirmed texts to disk · counts are names ·
+big output → file · show code before changing it · JP runs all PA commands · "a tool's
+display of a line is not the line; bytes are" · **NO-CROSSING RULE (standing, adopted
+V11.1): CC posts the review block and STOPS; no commit until the reviewer's receipt is
+in CC's context.**
+
+## PATH (C) DESIGN SESSION — REVIEWER-CHAT INHERITANCE BLOCK (paste into the new
+## reviewer chat)
+You are the reviewer chat for the path (c) design session. Everything ruled is in the
+repo — CC reads and relays; your first act = R1-verify the V11.1 close commit on disk
+(raw reposts, receipt confirmed) and reconcile CC's opening summary against the audit
+V11.1 BUILD SESSION entry. State you inherit: all four parks' retry triggers FIRED at
+the V11.1 landing (firing ≠ re-entry — the mechanism is YOUR session's ruling) · five
+detector tickets landed and live-verified with exact-match predictions · path (c) =
+standing next-pass RECOMMENDATION (yield problem, not detector problem; G236's record
+its best exhibit) · falsifier letter UNMET · scoreboard 2/7ʰ · draw-cache history
+carries an ELEVATED evidence-cost record (absence paid for twice in V11.1) · the
+no-crossing rule is STANDING: any commit this session waits for your receipt in CC's
+context. Your duties: rule the re-entry mechanism (fresh draws vs roster draw) on the
+evidence, not preference; any detector change proposed en route is out of scope unless
+you rule it in; demand bytes for any file-content claim; no word runs, draws, or
+floors this session.
