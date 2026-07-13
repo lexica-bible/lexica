@@ -4726,3 +4726,74 @@ scoped to G236 — died at cap again + placement/floor-drift kill on record; rul
 classes). Trigger armed anticipating G227; G236 reached it first.
 **Retry-trigger:** path (c), scoped to G236 (its ruled next mechanism). Key of record
 9bf3f7ef. NEXT = G162.
+
+### V11.2 RUN SESSION — G162 αἰχμαλωτεύω PARKED AT CAP (V11.2 run word 2; one gate/one
+### command per ruling 6; reviewer-adjudicated under JP's standing delegation; every gate
+### against bytes). Scoreboard 2/7ʰ → 2/8ʰ (G162 INSIDE the falsifier count — first count
+### movement this session). Path (c) does NOT fire.
+**Gates:** gate-1 MATCH, key aa064d41, no model call (method (A); floor-staleness verified
+— G162 hint block byte-unchanged since 0c31cb0, no words rebuild, frozen prompt, ab21d96
+didn't touch draw_signature). Floor agreement_G162_v9_20260712-163830 stands.
+**Mechanism:** fresh draw (--force) + --quote-repair armed. d2 archived to preserved
+history: `draws/history/G162_20260713T022852_aa064d41.json` (ruling 5). Fresh draw d3
+written; key aa064d41 unchanged throughout.
+**Est 2:6 carried-verify RESOLVED pre-draw** (JP byte-read 2026-07-13): stored "who was a
+captive from Jerusalem, which Nebuchadnezzar the king of Babylon captured" does NOT
+establish city-capture; αἰχμαλωτεύω = take PEOPLE captive; d2's "captured Jerusalem" NOT
+byte-supported. Forward rule: a card may quote verbatim but may not assert city-seizure
+outside quotation (misattribution-class defect).
+**d3 — DEAD (citation gate + quote gate; NOT written; no apply, no hard lock).** Machine
+clean elsewhere: coverage 36/36, senses 2 (none thin/circular), #30 CLEAN.
+- **KILL — Oba 1:11 quote-fidelity, never-exempt + sense-load-bearing.** Stored
+  verses.text (JP live read 2026-07-13): "in the day of the capturing by foreigners of
+  his force". d3 quoted "the ones capturing by foreigners of his force" — recast the
+  event noun ("the capturing") as the agent participle ("the ones capturing") and filed
+  the misquote inside its participial-agent-noun catalog; the alteration manufactured
+  evidence for the very sub-use it was cited to support.
+- **KILL — 2Ch 21:17 quote-fidelity, never-exempt, subject-swap subclass.** Stored (JP
+  live read 2026-07-13): "And they ascended against Judah, and overpowered it, and
+  captured all the possessions which they found…". d3 quoted "he captured all the
+  possessions" — plural stored subject ("they") swapped to singular ("he"); "he captured"
+  appears nowhere in the stored line (gate's stricter ground).
+- **KILL — 1Sa 30:4 citation, range-sweep subclass.** d3's range field wrote "1Sa 30:2–5";
+  verse 30:4 (David + people weeping) carries no G162 — a prose range swept a non-lemma
+  verse into the citation set. Citation gate 36/37, real miss.
+- **KILL — Est 2:6 misattribution (forward rule FIRST LIVE FIRE).** d3 wrote Nebuchadnezzar
+  "captured" Jerusalem — only "captured" quoted, city-seizure asserted in d3's own prose.
+  Machine gates silent; caught by the byte-grounded Est 2:6 forward rule ruled BEFORE the
+  draw. The discipline paying off, on the record.
+- **Anchoring artifact (non-killing):** Isa 49:24/49:25 "should be captured unjustly" —
+  wording is Isa 49:24, anchored primary on 49:25. Third anchoring artifact of the session
+  (G236 "changes of apparels", G236 hint-3 joint attribution, now this) → anchoring = named
+  pattern; TICKET candidate (generation-side anchor constraint).
+- **Hints — 1 OBEY / 1 BREAK (ruling 2 tally; lifetime hinted-draw tally moves).** Hint 1
+  OBEY (Psa 68:18 / Eph 4:8 each text's wording stated separately). Hint 2 BREAK: Psa 68:18
+  cited under BOTH sense 1 and sense 2 — structural, not oversight, self-indicting: sense 2
+  states "Both are cited here rather than split" while sense 1 lists Psa 68:18 anyway.
+- **Probe-2 warns (BENIGN):** "Reubenites" name-from-context, "Whether" sentence-start
+  capitalization — same artifact class (capitalization-guard ticket carries).
+**Pattern of record — d2↔d3 ZERO defect overlap.** d2 died on Isa 14:2 alone; d3 on
+Oba 1:11 / 2Ch 21:17 / 1Sa 30:4 / Est 2:6 — no shared defect. Not regression toward a
+fixable target: draw variance across a wide defect surface. Brackets ruling 2 with G236 —
+G236 = SAME defect recurring (Jer 2:11 d2+d3); G162 = DIFFERENT defects each draw. Together:
+fresh draws don't cure, whether the failure recurs or roams.
+**Cross-word subject-manipulation pattern (record):** Jer 2:11 (G236, "nations"→"they"),
+2Ch 21:17 (G162, "they"→"he"), Oba 1:11 (G162, event-noun→agent-participle). Systematic
+transformation of quoted material toward the card's prose needs, not random transcription
+noise — evidence for the eventual repair-pass design review.
+**Repair pass:** --quote-repair round 1 (cap 1) guard-breach on the fresh draw → DEAD,
+cached draw untouched, no re-repair. Repair bytes NOT preserved.
+**RULINGS (reviewer, standing delegation):** (a) Oba 1:11 + 2Ch 21:17 quote-fidelity KILL /
+Isa 49 ARTIFACT; (b) 1Sa 30:4 citation KILL (range-sweep); (c) Est 2:6 misattribution KILL
+(forward rule first live fire); (d) hint 1 OBEY / 2 BREAK; (e) PARK at d3 — one gate/one
+command spent, scoreboard 2/7ʰ → 2/8ʰ; (f) path (c) does NOT fire (#30 clean both draws,
+no floor-drift on record; G162's wall is quote-fidelity/citation/misattribution, roster has
+zero purchase).
+**Retry-trigger: BLOCKED ON MECHANISM.** Repair pass now 0-for-2 on live guard breaches
+(G236 d3, G162 d3). G1390 (next word) = the third test; a breach there → the repair pass
+goes to DESIGN REVIEW before G227, and G227's re-entry BLOCKS on that review. Key of record
+aa064d41. NEXT = G1390.
+**TICKET additions:** anchoring-constraint candidate (generation-side) · range-sweep lint
+(prose ranges vs fed-refs) · repair-bytes preservation UPGRADED to priority (the 0-for-2
+review can't distinguish prompt-failure from guard-overstrictness without the refused-repair
+output).
