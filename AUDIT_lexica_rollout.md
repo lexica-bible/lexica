@@ -4905,3 +4905,54 @@ structure — precisely what a roster stage addresses.
 blocked pending the design review. Key of record d65ed578.
 **TICKET additions:** meta-exemption widening (folded INTO design-review scope) · (carry-forwards
 consolidated at session close).
+
+### V11.2 RUN SESSION — CLOSE (2026-07-13; reviewer-adjudicated under JP's standing delegation;
+### every gate against bytes; no-crossing observed at every step). Run COMPLETE.
+**1. RUN VERDICT.** V11.2 re-entry complete per ruling 6 — **0 shipped / 4 parked.** Scoreboard
+2/7ʰ → 2/10ʰ (three count movements: G162, G1390, G227; G236 outside the count, ruled). Order held:
+G236 → G162 → G1390 → G227, one gate / one command / one park each. Path (c) FIRED for THREE of
+four (G236, G1390, G227), scoped per word; G162 explicitly NOT (quote/citation/misattribution wall,
+no floor-drift on record — roster has zero purchase).
+**2. FAILURE-MODE VARIANCE (ruled at G1390's close, confirmed across the run).** Four words, four
+dominant modes: G236 = recurring quote defect (same Jer 2:11 span d2+d3); G162 = roaming multi-class
+(quote + citation + misattribution, zero d2↔d3 overlap); G1390 = structure + coverage, quote gate
+CLEAN; G227 = placement/structure under artifact quote fires. The defect surface spans the card's
+whole anatomy — no single mechanism chases it. This brackets ruling 2 empirically: fresh draws don't
+cure, whether the failure recurs, roams, or restructures.
+**3. MECHANISM VERDICTS.**
+- Quote-repair pass: **0-for-3** live guard breaches (G236, G162, G227) → DESIGN REVIEW MANDATORY,
+  scope WIDENED to the quote-gate-plus-repair pipeline (Modification 2), preservation prerequisite
+  ruled, BLOCKED from firing again until the review closes. Breach-composition: 1+1 / 2+1 / 0+3
+  (real+artifact) — breaches regardless of span reality.
+- Coverage-repair pass: **3-for-3** (V11-run record), did-not-fire this session (G1390 arrived on
+  the un-armed command; G227 coverage clean) — record intact, untested here.
+- Hints: strong across the run — G236 3/3 (one note), G162 1/2 (one break, ruled one MISS),
+  G1390 3/3, G227 3/3 (incl. the named-dual rule G227-d2 broke, now obeyed). The register discipline
+  is working; the one break was draw behavior, counted honestly.
+- Gate-1 method (A): **4-for-4 MATCH**, no model call each; floor-staleness instrument held on all
+  four, INCLUDING the amended-block cases (G1390 pin, G227 4-commit trace) — live key reproduction
+  closed each.
+**4. TICKET LIST (9).**
+  (1) repair-bytes preservation — **REVIEW PREREQUISITE** (no design-review conclusion without
+      preserved breach bytes).
+  (2) probe-2 sentence-start capitalization guard (fired benign on Sets/Barter/Whether/Reubenites/…).
+  (3) anchoring-constraint candidate (generation-side; 3 anchoring artifacts this run).
+  (4) range-sweep lint (prose ranges vs fed-refs; G162 1Sa 30:2–5 swept 30:4).
+  (5) #30 sense-count-mismatch guard (must fail / refuse "clean" on a sense-count mismatch vs floor —
+      G1390 one-sense blindness, G227 4→3).
+  (6) run commands arm --repair --quote-repair together (the arming-error ruling).
+  (7) meta-exemption widening — folded INTO design-review scope (G227 3 spans past the ≤2-word pattern).
+  (8) stray `0` file in ~/bible-db (unexplained; look before close of the NEXT build session).
+  (9) hint-counter rulings → written into the register docs (this session's ruling 1 cache-hit
+      accounting + ruling 2 broken-hint-line counting currently live only in the audit record; they
+      persist as engine rules only once in draw_hints.py / the hint-tooling doc).
+**5. PROCESS NOTES.** Two accepted deviations: remedial-command posted before receipt at the PA
+pull (ruled harmless, discipline corrected forward); terminal-ahead pattern on read-only commands
+(3+ instances, all pre-cleared/read-only — named so the next premature run, if not read-only, is
+caught). One crossed-conversation input (JP, old chat) struck along with the reviewer's response to
+it; the Jer 2:11 ellipsis question was a separate clarification, resolved by byte paste. Standing
+delegation operated throughout; JP touchpoints held to PA commands + pastes.
+**6. NEXT.** Design review (build session) MANDATORY before any quote-repair re-fire — starts from
+the preservation prerequisite. Path (c) design for the three scoped words (G236, G1390, G227).
+Persisting rulings: Est 2:6 forward rule · this session's hint-counting rulings (ticket 9 until
+doc'd) · no-crossing · method-(A) gate-1 with stop-rule · scoreboard 2/10ʰ.
