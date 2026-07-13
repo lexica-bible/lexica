@@ -4797,3 +4797,54 @@ aa064d41. NEXT = G1390.
 (prose ranges vs fed-refs) · repair-bytes preservation UPGRADED to priority (the 0-for-2
 review can't distinguish prompt-failure from guard-overstrictness without the refused-repair
 output).
+
+### V11.2 RUN SESSION — G1390 δόμα PARKED AT CAP + PATH (c) FIRES (V11.2 run word 3; one
+### gate/one command per ruling 6; reviewer-adjudicated under JP's standing delegation; every
+### gate against bytes). Scoreboard 2/8ʰ → 2/9ʰ (G1390 INSIDE the count). Path (c) FIRES,
+### scoped to G1390 (joins G236).
+**Gates:** gate-1 MATCH, key bc1e2f69, no model call (method (A); amended-block floor-staleness
+VERIFIED live — G1390 hint block touched only by 0c31cb0 + dc06a42 [Eph 4:9-11 pin]; pin
+predates the floor of record [filename 18:19:39 UTC = 11:19:39 PDT, 3 min before the 11:22:40
+PDT pin commit] and the V11-run draws, so bc1e2f69 = the 3-hint key; gate-1's live reproduction
+closed it). Floor agreement_G1390_v9_20260712-181939 stands.
+**Mechanism (arming error — ruling 1):** run command armed --quote-repair only; the standing
+V10 coverage-repair (--repair) was NOT armed. RULED: --repair IS in scope ("normal full
+per-word path" carries it; ruling 1 added quote-repair, removed nothing). Operator error,
+reviewer + CC both (all three commands under-armed). Immaterial to G236/G162 (died on quote
+gates, coverage clean); material to G1390 (died on coverage) but MOOTED by the structural kill
+(ruling 3) — no repair can restructure a card. TICKET: run commands arm --repair --quote-repair
+together.
+**d3 — DEAD (coverage gate + floor-structure drift; NOT written; no apply, no hard lock).**
+Quote gate CLEAN — quote-repair did NOT fire; the pass's third live test did NOT execute (stays
+0-for-2; design-review trigger carries to G227). Citation gate 36/36 on what it cited.
+- **KILL — coverage.** 2 fed verses trimmed, never cited under any sense: 2Sa 19:42 + Pro 19:17.
+  Irony on the record: Pro 19:17 was the verse d1's V10 coverage-repair INTEGRATED in the V11
+  run — this fresh draw dropped it entirely.
+- **KILL — floor-structure drift (one-sense collapse).** [1 sense — headline fallback] loud
+  marker fired (lesson #47): d3 merged the floor's TWO senses (interpersonal transfer / cultic
+  offering) into one "SOMETHING GIVEN" sense + 6 sub-uses. Floor-is-ground-truth applies to
+  STRUCTURE, not just verse-homes — the floor of record is two-sense (d2's #30 shows cultic
+  verses pairing 9-10/10 AGAINST the interpersonal group). No repair can restructure (coverage-
+  repair integrates verses, never re-shapes senses) → PARK at d3.
+- **#30-BLINDNESS finding (the key one).** #30 read "clean" — but a total merge splits NO floor
+  pair, so the detector reads clean precisely when placement failure is MAXIMAL. #30 clean does
+  not vouch for placement on a sense-count mismatch. TICKET (priority-adjacent): a one-sense card
+  must fail #30 by construction, or #30 must refuse "clean" on a sense-count mismatch vs floor.
+- **Hints — 3/3 OBEY** (confirmed vs the card): hint 1 (Psa 68:18 / Eph 4:8 each wording stated
+  separately); hint 2 (Ecc 5:1 homed "a human cultic gift brought to God"); hint 3 (Eph 4:8
+  alone, no 4:9-11, no range). Hints worked + quote gate clean — failure was structure + coverage.
+- **Probe-2 warns (BENIGN):** Nebuchadnezzar / Belshazzar / Hiram / Philippian / Paul — name-
+  from-context / sentence-start capitalization class. NOTE: d3 CORRECTED d2's Korah-for-Kore
+  ("the Levite Kore" at 2Ch 31:14) — a small genuine improvement, on the record.
+**RULINGS (reviewer, standing delegation):** (1) --repair in scope, all three commands under-
+armed (operator error; ticket); (2) repair-cached-d3 MOOT (no repair restructures); (3) one-sense
+collapse = KILL, floor-structure drift class, PARK at d3, 2/8ʰ → 2/9ʰ; (4) kills = coverage
+(2Sa 19:42 + Pro 19:17) + floor-structure drift; (5) PATH (c) FIRES scoped to G1390 (died at cap
+again + placement/floor-drift kill on record — structure collapse is the placement class at its
+extreme; d2's 7-off #30 corroborates chronic instability); (6) repair pass 0-for-2 unchanged,
+G227 = next potential third test; (7) #30 sense-count-mismatch guard = TICKET.
+**Retry-trigger: PATH (c), scoped to G1390** (joins G236). Key of record bc1e2f69. NEXT = G227 —
+opens with the mechanism question (--repair arming) LIVE; last word, inside the count, the live
+path-(c) risk, and the potential third test of the repair pass.
+**TICKET additions:** run commands arm --repair --quote-repair together · #30 must fail (or refuse
+"clean") on a sense-count mismatch vs floor structure.
