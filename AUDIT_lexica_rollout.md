@@ -4359,3 +4359,172 @@ RELAY_v11_build_open.md committed. NO word ran. Versions live: norm:v1 · p2wl:v
 scan3:v1. SHELF adds: draw-cache history ticket · TIPNR/words-rows warn-reduction
 layer for probe 2 (ruled: text-only satisfies the amendment; layer when warn volume
 justifies).
+
+### V11 RUN SESSION — ALL FOUR WORDS PARKED AT CAP (2026-07-12; every gate
+### reviewer-adjudicated in order, applied under JP's standing delegation; cap ruled
+### = 2 draws per word at the run). Scoreboard stays 2/7ʰ. FALSIFIER LETTER UNMET;
+### path (c) roster draw = NEXT-PASS RECOMMENDATION, trigger unfired, ledgered so.
+**Sequence, gates in order per word:** R1 opener/inheritance reposts receipt-confirmed
+both sides · gate-1 signature math per word via a read-only re-derivation mirroring
+build_lexica_def.py's own input path (the "free cache re-read" shortcut REFUSED — a
+stale key there auto-rolls a draw past the gate; reviewer-endorsed) · G1390 bc1e2f69
+MATCH, G227 d65ed578 MATCH, G162 aa064d41 MATCH (each = audit record) · G236 pre-ruled
+MISMATCH 7659b2ae→9bf3f7ef (hint-3 input change; new key of record; floor stands,
+drawn unhinted). Eight draws total, all under V9 prompt frozen + repair standing +
+the three V11 probes + scan3 (v1 words 1-2, v2 words 3-4).
+**Mid-run engine changes, both red-first, both pushed:** (1) scan3:v2 at 2d082b7 —
+"phrasing is identical" pattern, G227-d1 exhibit, fixture failed against v1 before the
+pattern landed, G2168 no-op control clean; staged BETWEEN words (both G227 draws ran
+v1) — CC timing call under delegation. (2) G236 hint 3 (Dan-trio quote discipline) at
+86b5bda — drafted text adopted UNCHANGED after amendment-2 byte-verification of all
+three quoted wordings against verses.text raw output (Dan 4:16/4:25/4:32, JP-run read).
+**LEDGER — the false tab-bug claim (both directions):** CC claimed draw_hints.py's
+G236 hint 2 carried a Python tab-escape ("substitution\\trade") from Grep tool display;
+the reviewer CONFIRMED it and ruled a corrupted-hint note into the park record — then
+CC's pre-edit byte read (repr of the raw bytes) showed a real "/" on disk: NO bug, claim
+FALSE, fix withdrawn, park note STRUCK before it was ever written, signature pre-ruling
+re-issued on the honest basis (new hint). Reviewer self-correction on record: confirmed
+a code claim without demanding byte evidence — the a9d518b class runs both directions.
+Adopted rule, verbatim, both chats: **"a tool's display of a line is not the line;
+bytes are."** The retraction is also stamped in 86b5bda's commit body.
+**Falsifier ruling (reviewer, on the letter):** three squeeze parks, ALL mixed records
+(G1390 d1 human/d2 machine · G227 mixed · G162 d1 human/d2 machine), zero human-only
+deaths → path (b) NOT declared exhausted. Design ruling attached: 0-for-3 fresh-draw
+ships is a YIELD problem, not a detector problem (the falsifier thresholds detect
+detector problems) — so path (c) enters next-pass scope as a RECOMMENDATION, not a
+trigger; G236's record (below) is its best supporting exhibit.
+**Detector validation, live:** probe 2's first true positive (Korah-for-Kore, G1390 d2
+— wrong person, draw 1 named Kore correctly); quote gate killed real defects on all
+four words (reorders, interior omissions, constructed wordings, invented paraphrases);
+scanner v2 shipped red-first mid-session; the G2805-class hint echo killed G1390 d1
+(Ecc 5:1 near-verbatim) and G236 d1 ("quote Dan 4:16 as representative" process leak).
+Nothing rode past a probe that its spec covered — the falsifier's detector clause never
+came close to firing.
+**Hint record, UNRULED items carried + one new:** first-ever hint break on record —
+G227 d2 omitted the Joh 5:31-32 named dual (hint 2) after naming it in d1. The lifetime
+counter stays at 35-for-35-with-questions rather than an invented arithmetic: OPEN (a)
+the repaired-cache-hit question (carried), OPEN (b) how a broken hint line counts.
+**TICKET BANK (adjudicated priorities):** sentence-starter/label false-positive class
+in probe 2 — ~24 instances across the session, dominant noise source, **MUST-FIX before
+the next batch**; quote-gate leading-attribution anchoring ("Ref says/asks '…'"), three
+exhibits, spec-ready; markdown-emphasis strip before quote comparison (G236 d1 Gen 35:2
+exhibit); metalinguistic/self-label quote class, four exhibits (artifact rulings on
+record); rendering scanner per-verse gloss matching vs header-family (six coarse fires
+G236 d1); draw-cache history (shelf carry — superseded-draw overwriting cost draw-1
+evidence again on every word this session); TIPNR/words-rows warn-reduction layer
+(shelf carry). OPEN VERIFY carried in G162's entry: Est 2:6 stored-text object of
+"captured" (city vs captivity) — logged unverified on a dead draw.
+
+### G1390 δόμα — PARKED AT CAP (V11 run word 1; both kills reviewer-adjudicated,
+### standing delegation; retry-trigger = next engine/prompt change or path (c)).
+### MIXED record: d1 human-read kills, d2 machine-caught. Does NOT count toward the
+### human-only falsifier threshold — ruled at park.
+Gate 1: bc1e2f69 MATCH on live recompute, floor agreement_G1390_v9_20260712-181939
+stands. **d1 (repair round 1 integrated Pro 19:17, 38/38 both gates):** KILLED on
+(1) hint-echo REAL LEAK — "(Ecc 5:1 — here the δόμα is a human-to-God cultic gift)"
+reproduces hint 2 nearly verbatim in public prose, past the V10 substance borderline
+(the Psa/Eph "each verse carries its own wording" line ruled SUBSTANCE, consistent
+with precedent); (2) Php 4:17 solo-sense drift vs 10/10 transfer floor home — the d2
+pre-set trigger ("live defect if repeated") FIRED. Probe-2 warns adjudicated: six
+true-statement/name-from-context CLEAR (pre-clear text: same names at same refs clear
+if substance unchanged), "Earthly" = sentence-starter noise, Levites/Num 18:11 = the
+V10 minor class. Quote-gate REFUSE upheld as correct fire (self-label artifact class,
+"Levites given as sacred allocation") — no bypass spent, draw dead regardless.
+**d2 (no repair needed, 38/38):** KILLED on (1) Pro 18:16 interior alteration —
+dropped the stored semicolon inside the quote (d1 quoted it correctly; never-exempt
+class); (2) Korah-for-Kore at 2Ch 31:14 — WRONG PERSON, not name-from-context (Kore
+the doorkeeper ≠ Korah; d1 named him correctly) — **probe 2's first live true
+positive, banked in the detector's validation record**; (3) floor spread 7 off-home
+(worse than d1's 3), the Ecc 3:13/5:19/Pro 19:17 divine-bestowal cluster filed under a
+sense whose own header says offering-to-deity. Detector artifacts ruled, ticket
+exhibits: 2Sa 19:42 + Mat 7:11 leading-attribution anchoring fires (prose attribution
+BEFORE the quote — real attribution the gate can't parse). Draw-2 watch items that
+HELD: Php 4:17 home, Ecc 5:1 own-words. **Positives banked: 2Sa 19:42 inversion (V10
+defect 3) FIXED in both draws; hints structurally obeyed; repair 1-round.**
+
+### G227 ἀληθής — PARKED AT CAP (FOURTH park; V11 run word 2; standing delegation;
+### retry-trigger = next engine/prompt change or path (c)). MIXED record. The dead
+### cached card stays NO-APPLY-EVER (housekeeping lock, unchanged).
+Gate 1: d65ed578 MATCH, floor agreement_G227_v9_20260712-154728 stands. **ALL FOUR V10
+KILL DEFECTS CURED IN BOTH DRAWS** — Job 42:7/8 quoted separately with right anchors,
+Isa 42:3 in stored order, no Eliphaz naming (d1), zero G228 bleed, no 8:15, courtroom
+verses listed out. **d1 (repair round 1 integrated Isa 42:3 + Joh 21:24, 39/39):**
+KILLED on (1) "these words are true," — invented Isa 43:9 paraphrase inside quotation
+marks in a gloss note (the gate's core target class); (2) "this you have truly said" —
+Joh 4:18 re-quoted REORDERED with bracket insertion in a gloss note (the V10 Isa 42:3
+kill class recurring on the same word); (3) solo-sense floor drift ×2 (Joh 4:18 sense 3
+"prose self-admitting sub-use of Sense 1", 2Co 6:8 sense 4, both kept-none vs heavy
+consensus). "genuine, as it should be" ruled self-label ARTIFACT. Mat 22:16/Mar 12:14
+"phrasing is identical in sense" ruled defect-4 neighborhood, contributes-not-fatal —
+ACCEPTED as the scan3:v2 pattern exhibit (landed at 2d082b7). **d2 (no repair, 39/39):**
+KILLED on (1) 1Jn 2:8 quote REWRITTEN ("a new commandment" vs stored "a commandment, a
+new one"); (2) Joh 4:18 gloss-note rewrite recurring; (3) **hint 2 BROKEN — Joh 5:31-32
+named dual omitted (d1 named all three; first hint break on the lifetime record, own
+line per ruling)**; (4) floor drift ×26 of 39 — worst on record. Job 42:7/8
+paired-quote fire ruled ARTIFACT (both quotes correct, refs in matching order — the
+gate can't parse paired quotes sharing one bracket); "reliable" ruled metalinguistic
+ARTIFACT. Carried UNRESOLVED into this entry: the d2 joint attribution "Mar 12:14 and
+Mat 22:16 both address Jesus with 'we know that you are true'" — one quote, two
+anchors; V10 established the two verses differ; defect-4-class exhibit supporting the
+scanner pattern, not adjudicated on the dead draw.
+
+### G162 αἰχμαλωτεύω — PARKED AT CAP (V11 run word 3; standing delegation;
+### retry-trigger = next engine/prompt change or path (c)). MIXED record: d1
+### human-read kill, d2 machine-caught. First-ever full battery reads for this word.
+Gate 1: aa064d41 MATCH, floor agreement_G162_v9_20260712-163830 stands; ran with
+scan3:v2 live on PA (HEAD 2d082b7 confirmed + suites green on PA before the check —
+the environment gate added at the scan3 review). NO banked pre-clears — everything
+adjudicated fresh per the never-battery-tested posture. **d1 (no repair, 36/36,
+FIRST CARD OF THE SESSION TO PASS EVERY MACHINE GATE):** KILLED on Gen 14:14 alone —
+cited only under sense 2 (property) while its own note concedes "belongs under Sense 1
+as the seizure of a person" (Lot); self-indicting placement (the Gen 47:22 class)
+against a 10/10 person-group floor home; not adjudicable-with-warns, the bar is 100%
+and the filing is reader-visible. Eze 12:3/Amo 5:5 question CLOSED against the banked
+bytes (JP grep of the park entry): the exclusions name the REJECTED figurative
+readings; literal filing = the ruled home = what the draw did (sign-act flag included)
+— COMPLIED, no second defect, no hint amendment. Warns: six name-from-context CLEAR,
+Sabea/Chaldea = exonym-variant class warning by design, "Also" ×3 noise. 2Ch 21:17
+sense-2 home = flag only, defensible on the verse's own words. **d2 (repair round 1
+integrated 1Sa 30:3 + 2Ch 6:36 + 2Ch 21:17, 36/36; #30 CLEAN — the session's only
+zero-drift card):** KILLED on Isa 14:2 — "them" dropped mid-quote, no ellipsis (d1
+quoted it correctly; never-exempt class). "captivating" ruled metalinguistic ARTIFACT
+(third exhibit). Watch items ALL HELD: Gen 14:14 → sense 1, Eze/Amo literal, 2Ti 3:6
+figurative (the original park killer, cured both draws), Psa/Eph separate wording,
+1Ch 5:21 named dual. **OPEN VERIFY carried: Est 2:6 — d2 says Nebuchadnezzar
+"captured" Jerusalem; the stored verse's object may be the captivity (the exiles), not
+the city; logged UNVERIFIED on a dead draw per the lesson-#50 scope-note rule.**
+
+### G236 ἀλλάσσω — PARKED AT CAP (V11 run word 4; own record, OUTSIDE the falsifier
+### count as ruled; standing delegation; retry-trigger = next engine/prompt change or
+### path (c) — **the strongest path-(c) candidate of the four**). Both kills
+### machine-caught quote-fidelity; nothing rode past the detectors on either draw.
+Pre-draw: hint 3 (Dan-trio quote discipline) ADDED at 86b5bda — drafted text adopted
+UNCHANGED after amendment-2 byte-verification against verses.text raw output (all
+three wordings exact: 4:16 times/him, 4:25 + 4:32 seasons/you word-for-word). The
+false tab-bug claim against hint 2 RETRACTED pre-commit (see session entry ledger);
+the old kill set reads at FULL evidentiary weight — the corrupted-hint note was struck
+before it was written. Gate 1: pre-ruled MISMATCH honest-basis (hint 3 = real input
+change), 7659b2ae → **9bf3f7ef = key of record**; floor
+agreement_G236_v9_20260712-165959 stands (drawn unhinted). **d1 (no repair, 33/33):**
+KILLED on (1) Act 6:14 dual-layer — quote altered around its marked ellipsis AND "the
+charge against Jesus" where Act 6:14's accused is STEPHEN (human-only relational class,
+the battery's catch — probe 2 correctly silent, both names in context); (2) Psa 106:20
+false rendering claim in a gloss note ("rendered with these glosses" — corpus renders
+"changed"; the rendering scanner's first real catch, 6 of its 8 fires ruled checker
+coarseness → per-verse matching ticket); (3) hint-echo "— quote Dan 4:16 as
+representative" (drafting-instruction leak, Ecc 5:1 precedent, independently fatal).
+Gen 35:2 bold-inside-quote ruled formatting ARTIFACT (markdown-strip ticket);
+1Co 15:51/Heb 1:12 = leading-attribution artifact, third exhibit. **Gal 4:20 ruled on
+the full chain: SUBSTITUTION is the home** — the clause was removed at re-entry
+precisely because the fresh floor homes it there 7-8/10; the model's persistent prior
+is what floors exist to check; d1's transformation filing = third defiance, the
+Php 4:17 shape. **d2 (no repair, 33/33, #30 CLEAN):** KILLED on (1) 1Ki 20:25 halves
+SWAPPED inside quote marks (d1 quoted the stored order); (2) Jer 2:11 question recast
+as a statement inside quotation marks ("they changed their gods"). "other item" ruled
+metalinguistic ARTIFACT (fourth exhibit). **Watch items ALL HELD on d2: Dan-trio
+cured 2-for-2 under the byte-verified hint (a four-draw first for this word), NO
+process language, Gal 4:20 FILED SUBSTITUTION (the persistent prior BROKEN on the
+ruled watch), Act 6:14 fixed both layers (the Stephen warn = the detector correctly
+flagging a correct fix, its own line per ruling), rendering scanner quiet.** G236's
+remaining failure mode is exactly one class: quote fidelity under single-draw
+variance.

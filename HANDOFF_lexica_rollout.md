@@ -535,8 +535,66 @@ fourth. Deliveries are exact copies, never retyped.
 Rules in force: R1 · R1-b · R2-a · one gate, one command, in order · no other edits,
 no word runs, no code.
 
-## V11 RUN SESSION — CC OPENER BLOCK (paste into the new CC session; opens from docs
-## alone. State source of truth = a80c7ef or a descendant.)
+## V11.1 DETECTOR-MAINTENANCE BUILD SESSION — CC OPENER BLOCK (paste into the new CC
+## session; opens from docs alone. State source of truth = the V11 run close commit or
+## a descendant.)
+V11.1 BUILD SESSION — detector maintenance from the V11 run's adjudicated ticket bank.
+NO word runs this session (hard gate; the four parks' retry-trigger = next
+engine/prompt change, which THIS session's landing fires — but re-entry is a separate
+run/design decision, path (c) roster draw is the standing next-pass RECOMMENDATION,
+trigger unfired). ("me/I" = JP.) STANDING DELEGATION LIVE, same terms.
+READ FIRST, in order: (1) audit V11 RUN SESSION entry + the four PARKED AT CAP entries
+(the ticket bank with priorities + all artifact exhibits live there); (2)
+DESIGN_v11_acceptance.md (versioning rules: whitelist/pattern changes RULED, stamps on
+the draw record); (3) ENGINE_LESSONS #48-51.
+Opening check: git log -1 = the run-close commit or descendant · three suites green ·
+diff-vs-close-entry check (NOT optional) · R1 raw reposts receipt-confirmed both sides.
+BUILD ORDER (adjudicated priorities): (1) MUST-FIX — probe-2 sentence-starter/label
+false-positive class (~24 instances, dominant noise source; p2wl version bump, red-first
+on the banked exhibits: Earthly/Also/Active/None/Sets/Similarly/Altering/Cosmic/
+Renewed/Votive/English/Greek/Peoples/Putting/Trading/Applying classes); (2) quote-gate
+leading-attribution anchoring ("Ref says/asks '…'" before bracket-fallback; three
+exhibits banked, spec-ready) + paired-quote ordered-bracket artifact (G227 d2 Job 42:7/8
+exhibit); (3) markdown-emphasis strip before quote comparison (Gen 35:2 exhibit);
+(4) metalinguistic/self-label quote class, four exhibits — design call: whitelist shape
+vs prose rule, reviewer rules; (5) rendering scanner per-verse gloss matching (six
+coarse fires banked). Each: red-first fixture from the banked real bytes BEFORE the fix,
+version stamp bumped, both CI lists, G2168 no-op control re-run. One gate, one command,
+in order; all code shown in full pre-commit; commits subject+blank+body via -F.
+Shelf (not this session unless ruled in): draw-cache history ticket (cost draw-1
+evidence on every word AGAIN) · TIPNR/words-rows warn-reduction layer · hint-echo
+detector ticket · path (c) design pass (own session, after this one).
+Carried UNRULED: hint-counter cache-hit question + how a broken hint line counts
+(G227 d2, first break) · Est 2:6 open verify (G162 entry). HARD LOCKS carry: NO APPLY
+EVER for dead cached G227/G1390 cards; G236 key of record = 9bf3f7ef.
+Standing rules carry: R1 · R1-b · R2-a · affirmed texts to disk · counts are names ·
+big output → file · show code before changing it · JP runs all PA commands · **"a
+tool's display of a line is not the line; bytes are"** (adopted verbatim, this run's
+ledger — byte-verify any claim about file contents before ruling on it).
+
+## V11.1 DETECTOR-MAINTENANCE BUILD SESSION — REVIEWER-CHAT INHERITANCE BLOCK (paste
+## into the new reviewer chat)
+You are the reviewer chat for the V11.1 detector-maintenance build session. Everything
+ruled is in the repo — CC reads and relays; your first act = R1-verify the run-close
+commit on disk (raw output REPOSTED, receipt confirmed) and reconcile CC's opening
+summary against the audit V11 RUN SESSION entry + four PARKED AT CAP entries. State you
+inherit: all four squeeze/quote words PARKED at cap (2-draw cap ruled at the run), ALL
+mixed or machine-caught records, falsifier letter UNMET and ruled so on the letter,
+path (c) = standing next-pass RECOMMENDATION (trigger unfired, G236's record its best
+exhibit) · scoreboard 2/7ʰ · detectors validated live (probe-2 first true positive
+Korah/Kore; quote gate real kills on all four words; scan3:v2 shipped red-first
+mid-run) · the false-tab-claim ledger entry runs BOTH directions (CC claimed from tool
+display; reviewer confirmed without byte evidence) — the adopted rule is verbatim in
+the audit entry and you hold CC to it AND yourself. Your duties: every detector change
+red-first on banked real bytes before any zero is trusted · version stamps on every
+list change · receipt-confirm every delivery · demand bytes for any file-content claim
+· the G2168 no-op control re-runs after every change. NO word runs; no floors; no
+draws. The four retry triggers fire at this session's landing but re-entry mechanism
+(fresh draws vs path (c)) is a design ruling for its own session.
+
+## V11 RUN SESSION — CC OPENER BLOCK (SPENT — session ran + CLOSED same day 2026-07-12;
+## all four words parked at cap; see the audit V11 RUN SESSION entry. Kept for the
+## record; paste nothing from here.)
 V11 RUN SESSION — squeeze-park re-entries under the V11 detectors. Mechanism acceptance
 STAMPED at a80c7ef (audit V11 BUILD SESSION entry = the authority); retry triggers
 FIRED. ("me/I" = JP.) STANDING DELEGATION IS LIVE: no decision questions to JP;
@@ -580,7 +638,8 @@ subject + blank + body · counts are names · bank on reviewer relay · big outp
 file · exact-or-dotted BOTH clauses · show code before changing it · one gate, one
 command, in order · JP runs all PA commands.
 
-## V11 RUN SESSION — REVIEWER-CHAT INHERITANCE BLOCK (paste into the new reviewer chat)
+## V11 RUN SESSION — REVIEWER-CHAT INHERITANCE BLOCK (SPENT — see above; paste nothing
+## from here.)
 You are the reviewer chat for the Lexica V11 run session. First act = R1-verify
 a80c7ef on disk (raw repost, receipt confirmed). You inherit: V11 mechanism acceptance
 STAMPED (three detectors live: probe 1 verbatim-quote GATE, probe 2 named-subject
