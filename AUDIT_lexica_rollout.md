@@ -4590,3 +4590,43 @@ record its best exhibit. No floor, draw, or command until that session rules.
 line counts (G227 d2) · Est 2:6 stored-text object of "captured" (open verify, G162).
 **HARD LOCKS carried:** NO APPLY EVER for the dead cached G227/G1390 repaired cards ·
 G236 key of record 9bf3f7ef.
+
+### PATH (C) DESIGN SESSION — V11.2 RULED (2026-07-12; design only, no word runs/
+### draws/floors/commands; reviewer-adjudicated under JP's standing delegation;
+### stamped as the V11.2 successor section in DESIGN_v11_acceptance.md).
+**Opening:** HEAD 736fdf7 clean = close commit · four suites green (28 tests) · R1
+opener receipt-confirmed both sides before analysis.
+**Analysis basis:** the eight V11-run draws classed — QUOTE-fidelity kills 6/8 (the
+dominant class), PLACEMENT/floor-drift 5/8 (G227 worst, ×26/39), three
+single-defect/single-class near-misses. Fresh byte reads at 736fdf7: dynamic_budget
+full-feeds at ≤40 occurrences (build_lexica_def.py 355–369), fetch_context pulls
+verses.text per occurrence (472–473), _occ_lines feeds the full prose (507).
+**Rulings (1–3, 5–7 = CC recommendations applied per delegation; 4 = the reviewer's
+one modification):** (1) quote-repair pass RULED IN and ADOPTED — model pass on
+quote-gate REFUSE, guard = quoted spans only, cap 1 round, full battery after
+(lesson #50 b), red-first from the five banked kills (Pro 18:16 · 1Jn 2:8 · Isa 14:2 ·
+1Ki 20:25 · Jer 2:11); deterministic byte-splice REJECTED (surrounding-prose claims).
+(2) fresh draws ALONE rejected — V11.1 changed detection only; generation conditions
+identical to the 0-for-8 run. (3) path (c) stays DEFERRED, trigger SHARPENED: a word
+dying at cap again WITH a placement/floor-drift kill enters path (c) scoped to that
+word (G227 the live risk); **SUPERSESSION ruled: "G236 = path (c)'s best exhibit" is
+superseded — G236's quote-only failure mode is the exhibit for ruling 1.** (4)
+full-feed claim VERIFIED before stamp (reviewer-required): JP-run PA reads — fed
+field G1390 38 / G227 39 / G162 40 / G236 39; production-code occurrence counts
+38/38 · 39/39 · 40/40 · 39/39 — fed = occurrences = budget ALL FOUR. The audit gate
+figures 36/36 + 33/33 (G162/G236) are card-citation counts, not occurrences —
+divergence explained, no conflict. (5) draw-cache history ticket RIDES in the
+quote-repair build session; ELEVATED cost record travels. (6) run order
+G236 → G162 → G1390 → G227; G236 outside the falsifier count. (7) stamped as a
+successor section; V11 text byte-untouched.
+**LEDGER — affirmed-text touch, reverted:** CC reworded one tail line of the affirmed
+V11 build-order item 5 while stamping ("the squeeze class" → "the falsifier's squeeze
+class"); self-flagged in the stamp post; reviewer ruled REVERT; original bytes
+restored pre-commit, diff verified pure-addition (102 insertions, 0 deletions).
+**No-crossing observed throughout:** analysis, stamp, and commit each waited on the
+reviewer's receipt in CC's context.
+**Carried unchanged:** hint-counter cache-hit + broken-hint-line counting (G227 d2) ·
+Est 2:6 open verify · NO APPLY EVER dead cached G227/G1390 cards · G236 key of record
+9bf3f7ef · frozen V9 prompt · scoreboard 2/7ʰ.
+**NEXT = QUOTE-REPAIR BUILD SESSION** per the V11.2 build order (handoff blocks live);
+no floor, draw, or command until it closes ruled.

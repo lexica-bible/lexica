@@ -2725,3 +2725,55 @@ context. Your duties: rule the re-entry mechanism (fresh draws vs roster draw) o
 evidence, not preference; any detector change proposed en route is out of scope unless
 you rule it in; demand bytes for any file-content claim; no word runs, draws, or
 floors this session.
+
+## V11.2 CLOSE (2026-07-12): the path (c) design-session blocks above are SPENT —
+## V11.2 RULED and stamped in DESIGN_v11_acceptance.md (see audit PATH (C) DESIGN
+## SESSION entry). The blocks below are the live pair.
+
+## QUOTE-REPAIR BUILD SESSION — CC OPENER BLOCK (paste into the new CC session;
+## opens from docs alone. State source of truth = the V11.2 close commit or descendant.)
+QUOTE-REPAIR BUILD SESSION — build the V11.2 ruled mechanism: the quote-repair pass
+(model pass on quote-gate REFUSE; guard = fix quoted spans only, change nothing else;
+cap 1 round; full battery after per lesson #50 b) + the draw-cache history ticket
+(rides by ruling 5; ELEVATED evidence-cost record travels). BUILD ONLY: no word runs,
+draws, or floors; the run session (order G236 → G162 → G1390 → G227) comes after this
+session closes ruled. ("me/I" = JP.) STANDING DELEGATION LIVE.
+READ FIRST, in order: (1) DESIGN_v11_acceptance.md V11.2 successor section (the seven
+rulings + build order — the authority); (2) audit PATH (C) DESIGN SESSION entry +
+V11.1 BUILD SESSION entry (detector state p2wl:v2/norm:v2/meta:v1/scan3:v2); (3) the
+V10 repair design (DESIGN_v10_repair.md) — the pattern being extended — and
+ENGINE_LESSONS #48–52.
+Build items: (1) quote-repair prompt drafted + own stamp, shown in full before commit;
+red-first fixtures from the five banked kills (Pro 18:16 G1390-d2 · 1Jn 2:8 G227-d2 ·
+Isa 14:2 G162-d2 · 1Ki 20:25 + Jer 2:11 G236-d2), self-contained (embed card + verse
+text, test_coverage_gate.py pattern); guard fixtures — the spans-only rule has teeth
+(a repair that touches non-quote prose must be REFUSED); both CI lists (ci.yml +
+scripts/githooks/pre-commit). (2) draw-cache history: preserve superseded draws
+instead of overwriting the single file per word — a repair mechanism that rewrites
+raws makes draw history MORE load-bearing.
+Opening check: git log -1 = the V11.2 close commit or descendant · suites green
+(test_v11_probes, test_repair_pass, test_coverage_gate, test_lexica_detectors) ·
+diff-vs-close-entry · R1 raw reposts receipt-confirmed both sides.
+Carried UNRULED: hint-counter cache-hit question + broken-hint-line counting (G227
+d2) · Est 2:6 open verify. HARD LOCKS: NO APPLY EVER for dead cached G227/G1390
+cards · G236 key of record 9bf3f7ef · frozen V9 verse prompt.
+Standing rules carry: R1 · R1-b · R2-a · affirmed texts to disk · counts are names ·
+big output → file · show code before changing it · JP runs all PA commands · "a tool's
+display of a line is not the line; bytes are" · NO-CROSSING RULE (standing): CC posts
+the review block and STOPS; no commit until the reviewer's receipt is in CC's context.
+
+## QUOTE-REPAIR BUILD SESSION — REVIEWER-CHAT INHERITANCE BLOCK (paste into the new
+## reviewer chat)
+You are the reviewer chat for the quote-repair build session. Everything ruled is in
+the repo — CC reads and relays; your first act = R1-verify the V11.2 close commit on
+disk (raw reposts, receipt confirmed) and reconcile CC's opening summary against the
+V11.2 section of DESIGN_v11_acceptance.md + the audit PATH (C) DESIGN SESSION entry.
+State you inherit: V11.2 RULED — quote-repair pass adopted (model pass, spans-only
+guard, cap 1, full battery after), fresh-draws-alone rejected, path (c) deferred with
+the sharpened placement-drift trigger, "G236 = path (c) exhibit" SUPERSEDED, full-feed
+basis VERIFIED on all four words, draw-cache ticket rides this session, run order
+G236 → G162 → G1390 → G227 · scoreboard 2/7ʰ · no-crossing STANDING. Your duties:
+adjudicate the repair prompt text and every fixture red-first; demand bytes for any
+file-content claim; the spans-only guard must be proven to have teeth before any
+green is trusted; no word runs, draws, or floors this session; any scope growth is
+yours to rule.

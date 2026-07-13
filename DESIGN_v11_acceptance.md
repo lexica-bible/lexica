@@ -229,3 +229,105 @@ lesson learned; V11 splits them:
    its pre-clear material; it is NOT run inside the squeeze sequence — interleaving it
    would blur the falsifier's "≥2 words dying human-only" count, which is defined over
    the squeeze class.
+
+---
+
+# V11.2 DESIGN — the ruled re-entry mechanism for the four parked words
+# (successor section; the V11 design text above stays untouched as record)
+
+> STATUS (2026-07-12): **RULED — reviewer-adjudicated at the path (c) design session,
+> applied under JP's standing delegation.** Charter: design only — no word runs, draws,
+> floors, or commands were part of this session. Evidence basis: the four PARKED AT CAP
+> audit entries (V11 run), the V11.1 BUILD SESSION entry (all five detector tickets
+> landed, all four retry triggers FIRED at 2cdf6b0), and fresh byte reads of
+> build_lexica_def.py at 736fdf7. Rulings 1–3 and 5–7 = CC recommendations applied per
+> delegation; ruling 4 (verify-before-stamp) was the reviewer's one modification, and
+> its verification PASSED (see the fed-check record below).
+
+## The kill record, classed (all eight V11-run draws)
+QUOTE-fidelity kills on 6 of 8 draws — the dominant class (Pro 18:16 · invented
+Isa 43:9 + Joh 4:18 ×2 · 1Jn 2:8 · Isa 14:2 · Act 6:14 · 1Ki 20:25 + Jer 2:11).
+PLACEMENT/floor-drift on 5 of 8 (worst: G227 both draws, ×26/39 on d2). Three draws
+died on a single defect or single class (G162 d1, G162 d2, G236 d2) — near-misses.
+Full per-draw detail: the four PARKED AT CAP audit entries.
+
+## Ruling 1 — quote-repair pass (Option D): RULED IN and ADOPTED
+The yield problem lives in a class the machine already catches with the correct bytes
+in hand. The proven repair pattern (V10 coverage repair: model pass, guard-preserving,
+capped, review-pass-only; 3 uses in the V11 run, 1-round each) extends to the
+machine-caught quote-fidelity class:
+- **Trigger:** quote-gate REFUSE on an otherwise-live draw.
+- **Mechanism:** model repair pass — NOT a hand edit (edited-draw refusal untouched)
+  and NOT a deterministic byte-splice (rejected: surrounding prose can claim things
+  about the quote's wording; a mechanical splice can't see that). Fed the raw + the
+  gate's findings + the stored verse bytes; guard rule = fix the quoted spans only,
+  change nothing else. New repair prompt, own stamp, red-first fixtures, both CI lists.
+- **Cap:** 1 round (matches the coverage-repair record).
+- **After repair:** FULL battery including the hand-check, as if the card were new
+  (lesson #50 rule b).
+- **Red-first fixtures from the five banked kills:** Pro 18:16 (G1390 d2) ·
+  1Jn 2:8 (G227 d2) · Isa 14:2 (G162 d2) · 1Ki 20:25 + Jer 2:11 (G236 d2).
+
+## Ruling 2 — fresh draws ALONE (Option A): REJECTED
+V11.1 changed detection only; no ticket changes what a draw gets right. Generation
+conditions are byte-identical to the run that went 0-for-8. Re-entry = fresh draws
+under the upgraded battery PLUS the quote-repair pass, never fresh draws as the
+mechanism by themselves.
+
+## Ruling 3 — path (c) roster draw: stays DEFERRED, trigger SHARPENED
+The original deferral reasoning (§"The three candidate paths" above) is CONFIRMED by
+the run record: prose accuracy — now specifically quote fidelity — is still the open
+problem, and a roster stage has zero purchase on it. **Sharpened trigger, replacing
+the human-only-classes wording for this pass:** any word dying at cap AGAIN with a
+PLACEMENT/floor-drift kill on its record enters path (c) as THAT word's next
+mechanism, scoped to it (G227 is the live risk — drift both draws, ×26/39 worst on
+record). **Supersession note (ruled):** the V11-run line "G236's record is path (c)'s
+best supporting exhibit" is SUPERSEDED — G236's record ("remaining failure mode is
+exactly one class: quote fidelity under single-draw variance") is the exhibit for
+attacking quote variance directly (ruling 1), not for a roster stage.
+
+## Ruling 4 — the full-feed basis, VERIFIED (closes the roster feed-texts loophole)
+Claim: every draw of all four words carried the FULL stored text of every occurrence
+in its input, so quote failures are transcription-under-generation, not
+missing-source-text — a stage-2 "feed the texts" roster variant adds nothing.
+Byte basis, read this session at 736fdf7: dynamic_budget feeds the whole corpus
+evidence at ≤40 occurrences (build_lexica_def.py 355–369); fetch_context pulls
+verses.text per occurrence (472–473); _occ_lines puts the full prose in the draw
+input (507). **Verification (reviewer-required, JP-run on PA, 2026-07-12):** draw
+records' fed field = G1390 38 · G227 39 · G162 40 · G236 39; production-code
+occurrence counts (abp_filter + occurrences + dynamic_budget, live bible.db) =
+38/38 · 39/39 · 40/40 · 39/39 — fed = occurrences = budget on ALL FOUR. VERIFIED.
+(The audit gate figures 36/36 and 33/33 for G162/G236 are card-citation counts, not
+corpus occurrence counts — the apparent divergence at first read is explained, not a
+conflict.)
+
+## Ruling 5 — draw-cache history ticket RIDES in the Option D build session
+A mechanism that rewrites raws makes preserved draw history MORE load-bearing. The
+ELEVATED evidence-cost record (ruled 2026-07-12: V11.1 paid for its absence twice)
+travels into the ticket.
+
+## Ruling 6 — run order at the eventual run session
+G236 → G162 → G1390 → G227 (strongest record first; G227 last as the word most likely
+to need path (c)). G236 outside the falsifier count as already ruled. One gate, one
+command, in order — the normal full per-word path, each word ships or parks on its
+own record.
+
+## Ruling 7 — this stamp
+Stamped as a successor section in DESIGN_v11_acceptance.md; the affirmed V11 design
+text above is untouched as record.
+
+## Build order (next session, before any run)
+1. Quote-repair pass: prompt drafted + stamped, shown in full before commit; controls
+   red-first from the five banked kills; guard fixtures (spans-only rule has teeth);
+   both CI lists.
+2. Draw-cache history ticket, same session (ruling 5).
+3. Neighbor suites green (test_v11_probes, test_repair_pass, test_coverage_gate,
+   test_lexica_detectors).
+4. Then the run session per ruling 6 — no floor, draw, or command until the build
+   session closes ruled.
+
+## Carried unchanged
+Hint-counter cache-hit question + broken-hint-line counting (G227 d2) · Est 2:6 open
+verify (G162) · HARD LOCKS: NO APPLY EVER for the dead cached G227/G1390 repaired
+cards · G236 key of record 9bf3f7ef · frozen V9 verse prompt · scoreboard 2/7ʰ ·
+no-crossing rule STANDING.
