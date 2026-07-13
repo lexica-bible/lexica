@@ -4313,3 +4313,49 @@ a9d518b's message is a single unbroken subject line.
 open):** (1) affirmed texts a successor session must copy exactly are written to DISK
 at affirmation time (a file or the handoff), never left in chat relay; (2) commit-
 message proposals carry a short subject line + blank line + body at proposal time.
+
+### V11 BUILD SESSION — MECHANISM ACCEPTANCE STAMPED (2026-07-12, a80c7ef committed +
+### pushed 35dfe67..a80c7ef; every gate reviewer-receipt-confirmed in order; applied
+### under JP's standing delegation). Retry triggers FIRED: G1390 → G227 → G162, then
+### G236 — run session = fresh sitting with the handoff blocks (ruled).
+**Sequence, gates in order:** opening checks passed (35dfe67, both neighbor tests,
+reads in order) — with one ledgered omission: the 35dfe67-diff-vs-close-entry check was
+NOT run at open, caught by the reviewer, run clean on demand. The two banked standing
+rules ADOPTED (affirmed-texts-to-disk · commit subject/body). Step-2 code-read gate
+PASSED: all four probe-1 claims verified on disk; claim 2 UPGRADED (ctx carries only
+FED texts — own lookups are REQUIRED, not merely conservative); data source ruled =
+conn param into validate_entry, conn=None → loud NOT RUN. Normalization table RULED
+(norm:v1, rows 1-4/6/7; row 5 deleted on zero-bracket evidence; row 7 = edge-punct,
+Psa 68:18 exhibit); G162 dash CHECK-FIRST closed unresolvable-no-evidence-of-bug (code
+handles all three dashes; the d2 raw was overwritten — single-file draw cache destroys
+forensic evidence = SHELF ticket, draw-cache history). PA consults: the sanctioned
+one-time killed-cache read (G227 d65ed5782628/99e396f952ee · G1390 bc1e2f690e17/
+e29c0a75e864, both repaired round 1, repair:4730e155f73d) + sanctioned shipped-card
+reads (G2168 b1c14fb6c2ef + verse texts). Early-probe field-name miss ledgered
+(read `repair`/`signature`; real keys `repaired`/`sig` — verified in save_draw before
+relaying corrected commands).
+**Build:** probes 1+2 + scanner 3 + open_probe_warns in validate_entry, code posted IN
+FULL pre-commit, reviewer amendments folded: (1) probe NOT-RUN items BLOCK apply (a
+missing verse text is never a ship path); (2) audit binding made explicit. Warns land
+on the draw record; `--adjudicate-warns "note"` = the reviewer-ruling stamp that clears
+them at apply, self-documented in the shipped row. RED-FIRST on record (AttributeError
+before the hooks existed). Fixtures = real bytes of all six V10 kill defects + the
+David/2Sa 19:42 bonus (documented, non-spec-obligated) + pass cases (marked ellipsis,
+initial-cap, interior-alteration-must-fail, edge-punct) + the G2168 no-op control
+RE-SPECCED on real bytes (probe 1 + scanner 3 clean; probe 2 EXACTLY the true-statement
+warns — Prisca/Aquila vs Rom 16:4, Jesus vs Luk 17:16; 3 token lines / 2 claims,
+count reading confirmed) — better than "all clean": it proves the warn path fires.
+**Two build-time catches, both ruled in, both regression-locked:** (a) probe 2 warned
+on "Isa" (citation book code) → refs stripped before name extraction + book codes
+whitelisted from the SAME _BOOK_ALT table (no copy), tests tightened to EXACT warn
+sets; (b) the list-paren convention (Ref1: "q1"; Ref2: "q2"; …) fired 20 FALSE
+anchoring REFUSEs on G2168 → anchoring rule is ITEM-SCOPED inside list parentheticals
+(current item after last semicolon); trailing-paren branch (defect 5's exhibit shape)
+untouched and still firing. The no-op control caught the false-REFUSE class pre-CI —
+the control system working as designed (reviewer: the session's best catch).
+**Closed:** both CI lists gated (ci.yml + pre-commit); neighbors green; design doc
+carries the ruled table, VERIFIED-AT-BUILD stamp, and both catch notes; evidence file
+RELAY_v11_build_open.md committed. NO word ran. Versions live: norm:v1 · p2wl:v1 ·
+scan3:v1. SHELF adds: draw-cache history ticket · TIPNR/words-rows warn-reduction
+layer for probe 2 (ruled: text-only satisfies the amendment; layer when warn volume
+justifies).

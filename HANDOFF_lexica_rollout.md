@@ -535,8 +535,74 @@ fourth. Deliveries are exact copies, never retyped.
 Rules in force: R1 · R1-b · R2-a · one gate, one command, in order · no other edits,
 no word runs, no code.
 
-## V11 BUILD SESSION — CC OPENER BLOCK (paste into the new CC session; opens from docs
-## alone. State source of truth = the V11-design-close commit or a descendant of
+## V11 RUN SESSION — CC OPENER BLOCK (paste into the new CC session; opens from docs
+## alone. State source of truth = a80c7ef or a descendant.)
+V11 RUN SESSION — squeeze-park re-entries under the V11 detectors. Mechanism acceptance
+STAMPED at a80c7ef (audit V11 BUILD SESSION entry = the authority); retry triggers
+FIRED. ("me/I" = JP.) STANDING DELEGATION IS LIVE: no decision questions to JP;
+CC+reviewer recommendations apply as rulings with delegation notes; JP touchpoints =
+paste-ready commands, screenshots, ship/park notices.
+READ FIRST, in order: (1) audit V11 BUILD SESSION entry + V10 ACCEPTANCE TEST entry
+(each word's pre-clear material lives there); (2) DESIGN_v11_acceptance.md — the
+acceptance path split, the ruled normalization table + implementation notes, the
+falsifier; (3) the park entries for G1390 / G227 / G162 + G236's kill set;
+(4) ENGINE_LESSONS #48–#51.
+Opening check: `git log --oneline -1` = a80c7ef or descendant · `python
+tests/test_v11_probes.py` ok · `python tests/test_repair_pass.py` ok · `python
+tests/test_coverage_gate.py` ok · verify a80c7ef's diff against the audit close entry
+(the 35dfe67 omission is ledgered — this check is not optional) · R1 raw reposts both
+sides.
+RUN ORDER (ruled): G1390 first (pure squeeze park, cleanest evidence) → G227 (richest
+pre-clear set) → G162 (never battery-tested — least-known, not healthiest) → G236
+AFTER the three (own record, outside the falsifier count; its drafted Dan-trio hint
+needs amendment-2 BEFORE its draw — shelf item, now due). ONE WORD AT A TIME, own
+records, NO N-of-3 bar — a park is a park, not a design failure.
+PER WORD, gates in order: (1) signature math re-verified BEFORE the first draw — fresh
+floors if it says so, no argument; (2) fresh draw (V9 prompt frozen, repair standing,
+cap 2); (3) machine gates incl. the three V11 probes — probe-1 fail = REFUSED
+(bypass only via --force-gate-bypass, adjudicated); (4) probe-2/scanner-3 warns +
+any probe NOT-RUNs → reviewer adjudication → JP applies with --adjudicate-warns
+"ruling" (an open item REFUSES the apply — wired, tested); (5) FULL hand-check
+battery on any card passing the machine (lesson #50 — nothing shrinks the human read);
+(6) ship or park on its own record.
+FALSIFIER LIVE: a passed draw dying on a defect probe 1/2 should have caught by spec =
+detector broken → fix + re-red-first before the next word. ≥2 squeeze words dying on
+HUMAN-ONLY classes → path (b) exhausted; (c) roster draw = next-pass scope.
+HARD LOCKS: NO APPLY EVER for the dead cached G227/G1390 cards (fresh draws supersede;
+the caches now also carry probe_warns stamps — still dead). Hint counter 35-for-35
+with the repaired-cache-hit question UNRULED (carried).
+Shelf (not this session unless ruled in): hint-echo detector ticket · repair-record
+refs-overclaim nit · draw-cache history ticket (superseded draws overwritten — cost
+the G162 d2 evidence) · TIPNR/words-rows warn-reduction layer for probe 2.
+Standing rules carry: R1 · R1-b receipt-confirmed reposts · R2-a no synthetic
+instruments · affirmed texts to DISK at affirmation time · commit proposals carry
+subject + blank + body · counts are names · bank on reviewer relay · big output →
+file · exact-or-dotted BOTH clauses · show code before changing it · one gate, one
+command, in order · JP runs all PA commands.
+
+## V11 RUN SESSION — REVIEWER-CHAT INHERITANCE BLOCK (paste into the new reviewer chat)
+You are the reviewer chat for the Lexica V11 run session. First act = R1-verify
+a80c7ef on disk (raw repost, receipt confirmed). You inherit: V11 mechanism acceptance
+STAMPED (three detectors live: probe 1 verbatim-quote GATE, probe 2 named-subject
+WARN, scanner 3 identity-claim WARN; open warns AND probe NOT-RUNs block apply until
+--adjudicate-warns; norm:v1 / p2wl:v1 / scan3:v1 versioned; red-first on record; the
+two build catches — book-code junk warns, list-paren item-scoped anchoring — ruled in
+and regression-locked). Scoreboard 2/7ʰ · hints 35-for-35 (cache-hit question
+UNRULED) · G227 parked THIRD · G162 never battery-tested · NO APPLY EVER for the dead
+cached G227/G1390 cards. Your duties: signature math verified per word BEFORE its
+first draw (fresh floors if the math says so) · adjudicate every probe-2/scanner-3
+warn and every NOT-RUN before any apply (your ruling text = the --adjudicate-warns
+stamp) · full battery on every machine-passing card (lesson #50) · falsifier watch
+(probe-spec miss → fix + re-red-first; ≥2 human-only deaths → (b) exhausted, (c)
+next-pass) · G236 after the three, outside the falsifier count, Dan-trio hint
+amendment-2 before its draw · one gate, one command, in order. Ledger carried: V10
+math-gate slip · R1 slips both directions · the a9d518b self-certification class
+(R1-b/R2-a in force) · V11 build's open-check omission (the a80c7ef diff check is a
+named opening gate now); open slow.
+
+## V11 BUILD SESSION — CC OPENER BLOCK (SPENT 2026-07-12 — session ran clean:
+## mechanism acceptance STAMPED at a80c7ef; audit V11 BUILD SESSION entry = the record.
+## State source of truth = the V11-design-close commit or a descendant of
 ## fb8fe46.)
 V11 BUILD SESSION — the three prose-defect detectors. NO word runs (no floors, draws,
 applies, re-entries) until mechanism acceptance (all controls green). ("me/I" = JP.)
@@ -577,7 +643,8 @@ instruments · counts are names · bank on reviewer relay · big output → file
 exact-or-dotted BOTH clauses · show code before changing it · one gate, one command,
 in order · JP runs all PA commands.
 
-## V11 BUILD SESSION — REVIEWER-CHAT INHERITANCE BLOCK (paste into the new reviewer chat)
+## V11 BUILD SESSION — REVIEWER-CHAT INHERITANCE BLOCK (SPENT 2026-07-12 — session ran;
+## see the V11 RUN SESSION blocks above)
 You are the reviewer chat for the Lexica V11 build session. First act = R1-verify the
 V11-close commit on disk (raw repost). You inherit: V11 design DESIGN-AFFIRMED at the
 REAL reviewer review, post-commit — a9d518b carried a false RULED-CLOSED stamp (CC
