@@ -1592,6 +1592,40 @@ def archive_draw(sid, new_sig, new_prose_sha):
     print(f"  superseded draw archived -> {dest}")
 
 
+def bank_refused_repair(sid, kind, rec):
+    """V11.2 ticket 1 (design-review prerequisite): a repair the guard REFUSED (or that
+    capped out) has its discarded output written to draws/history/ as evidence — the
+    0-for-3 review can't tell prompt-failure from guard-overstrictness without the bytes.
+    Evidence ONLY: never re-read as a draw, never shipped (NO-APPLY-EVER covers the dir),
+    and a write failure NEVER changes the DEAD outcome (wrapped, print-and-continue).
+    The `_refused_` infix keeps these nominally distinct from archived draw cards.
+    Returns the dest path, or None (nothing to bank / write skipped)."""
+    if not rec or "refused_post" not in rec:
+        return None
+    try:
+        hdir = os.path.join(DRAWS_DIR, "history")
+        os.makedirs(hdir, exist_ok=True)
+        key = ((load_draw(sid) or {}).get("sig") or "unkeyed")[:8]
+        base = f"{sid}_{kind}_refused_{key}"
+        dest = os.path.join(hdir, base + ".json")
+        n = 1
+        while os.path.exists(dest):
+            n += 1
+            dest = os.path.join(hdir, f"{base}_{n}.json")
+        with open(dest, "w", encoding="utf-8") as f:
+            json.dump({"strongs": sid, "kind": kind, "key": key,
+                       "fails": rec.get("fails", []), "pre": rec.get("pre", ""),
+                       "refused_post": rec["refused_post"],
+                       "prompt_ver": rec.get("prompt_ver", "")},
+                      f, ensure_ascii=False, indent=2)
+        # ASCII arrow on purpose (cp1252 CI console, per archive_draw).
+        print(f"  refused repair banked -> {dest}")
+        return dest
+    except Exception as e:
+        print(f"  (refused-repair bank skipped: {e})", file=sys.stderr)
+        return None
+
+
 def save_draw(sid, lemma, translit, gset, ctx, raw, forced=None, hint=None,
               pmap=None, constraints=None, no_hints_reason=None, repair=None,
               qrepair=None):
@@ -1841,10 +1875,14 @@ def quote_repair(raw, vt, call_model):
     new = call_model(quote_repair_user_msg(fails, vt, raw))
     probs = quote_repair_guard(raw, new)
     if probs:
+        rec["pre"] = raw            # ticket 1: pre-repair card (the gate's input)
+        rec["refused_post"] = new   # ticket 1: the discarded output, banked as review evidence
         return raw, rec, ["spans-only guard REFUSED the repair output (draw DEAD, not "
                           "re-repaired):"] + probs
     still, _ = probe1_verbatim(new, vt, notes=[])
     if still:
+        rec["pre"] = raw            # ticket 1: cap-out output preserved too
+        rec["refused_post"] = new
         return raw, rec, [f"quote-repair cap-out: {len(still)} span(s) still fail after the "
                           f"single ruled round — the draw is dead (V11.2 cap 1): "
                           + " | ".join(still)]
@@ -2894,6 +2932,7 @@ def main():
                       file=sys.stderr)
                 for p in qprobs:
                     print("      - " + p, file=sys.stderr)
+                bank_refused_repair(sid, "quote", qrec)   # ticket 1: bank before dropping qrec
                 failures.append(sid)
                 continue
             if qrec:

@@ -146,6 +146,9 @@ def main():
         assert any("spans-only" in p for p in probs), (what, probs)
         assert len(mock.msgs) == 1, f"{what}: a guard breach was re-repaired"
         assert final == K1_RAW, f"{what}: a guard-refused raw leaked out"
+        # ticket 1: the discarded repair output is banked on rec (evidence for the review)
+        assert rec["refused_post"] == bad, f"{what}: refused output not banked on rec"
+        assert rec["pre"] == K1_RAW, f"{what}: pre-repair card not banked on rec"
     # direct guard reads, for the record
     assert B.quote_repair_guard(K1_RAW, K1_FIX) == []
     assert B.quote_repair_guard(K1_RAW, BAD_PROSE)
@@ -168,6 +171,7 @@ def main():
     assert probs and any("cap" in p.lower() for p in probs), probs
     assert len(mock.msgs) == 1, f"cap is 1 round, ran {len(mock.msgs)}"
     assert final == K1_RAW
+    assert rec["refused_post"] == STILL_BAD and rec["pre"] == K1_RAW
 
     # ── 5. NOT-RUN control: an unavailable cited text = probe-1 NOT-RUNs, no fails;
     # repair must NOT fire (NOT-RUN blocks apply downstream, never becomes a repair
@@ -176,6 +180,27 @@ def main():
     fails, notruns = B.probe1_verbatim(K1_RAW, vt_missing)
     assert notruns and not fails, (fails, notruns)
     assert B.quote_repair(K1_RAW, vt_missing, never) == (K1_RAW, None, [])
+
+    # ── 6. BANK the refused bytes to a temp history dir (ticket 1: evidence, not a
+    # draw — never re-read as a card, never shipped; NO-APPLY-EVER covers the dir).
+    import json as _json, tempfile
+    old_dir = B.DRAWS_DIR
+    try:
+        B.DRAWS_DIR = tempfile.mkdtemp()
+        mock = Mock(BAD_PROSE, K1_FIX)
+        _, rec, probs = B.quote_repair(K1_RAW, sub(("Pro", 18, 16)), mock)
+        assert probs
+        d1 = B.bank_refused_repair("G1390", "quote", rec)
+        assert d1 and os.path.exists(d1)
+        got = _json.load(open(d1, encoding="utf-8"))
+        assert got["refused_post"] == BAD_PROSE and got["pre"] == K1_RAW
+        assert got["fails"] == rec["fails"]
+        d2 = B.bank_refused_repair("G1390", "quote", rec)   # never overwrites
+        assert d2 != d1 and os.path.exists(d2)
+        # a record with no refused_post banks nothing (clean/success path)
+        assert B.bank_refused_repair("G1390", "quote", {"fails": []}) is None
+    finally:
+        B.DRAWS_DIR = old_dir
 
     print("test_quote_repair: ok")
 
