@@ -1812,7 +1812,12 @@ def _local_refs(raw, qs, qe):
     """The quote's own local ref list (anchoring rule): a trailing parenthetical within a few
     chars of the closing quote; else refs already named inside the enclosing parenthetical
     before the quote; else an inline 'Psa 68:18 reads'-style lead-in just before it.
-    Ordered — first ref = the primary anchor."""
+    Ordered — first ref = the primary anchor. Returns (refs, trailing) so the caller can
+    apply the paired-quote rule to the trailing-bracket branch only.
+    V11.1 ticket 2 (ruled): the two LEAD-IN branches return refs NEAREST-FIRST — in prose
+    written before the quote ('2Sa 19:42 asks whether "…"', '… while Mat 7:11 says "…"')
+    the nearest ref is the attributed one. The trailing-bracket branch keeps document
+    order (first listed = primary; defect 5's teeth, fixture-pinned)."""
     tail = raw[qe:qe + 100]
     m = re.match(r"[^()\n]{0,12}\(", tail)
     if m:
@@ -1820,7 +1825,7 @@ def _local_refs(raw, qs, qe):
         if close > 0:
             refs = ref_spans(tail[m.end():close])
             if refs:
-                return refs
+                return refs, True
     head = raw[:qs]
     oi, ci = head.rfind("("), head.rfind(")")
     if oi > ci:                                         # quote sits inside a parenthetical
@@ -1831,11 +1836,17 @@ def _local_refs(raw, qs, qe):
         si = seg.rfind(";")
         item_refs = ref_spans(seg[si + 1:]) if si >= 0 else []
         if item_refs:
-            return item_refs
+            return list(reversed(item_refs)), False    # nearest-first (lead-in prose)
         refs = ref_spans(seg)
         if refs:
-            return refs
-    return ref_spans(head[-48:])
+            return list(reversed(refs)), False         # nearest-first (lead-in prose)
+    return list(reversed(ref_spans(head[-48:]))), False # nearest-first (lead-in prose)
+
+
+# V11.1 ticket 2: the connector gap between paired quotes sharing one trailing bracket —
+# '"q1" and "q2" (Ref1, Ref2)'. Deliberately tight: bare and/or (optional comma), nothing
+# else, so ordinary prose between quotes never triggers pairing.
+_PAIR_GAP_RE = re.compile(r"\s*(?:,\s*)?(?:and|or)\s+$|\s*,\s*$")
 
 
 def probe1_verbatim(raw, verse_texts):
@@ -1850,7 +1861,10 @@ def probe1_verbatim(raw, verse_texts):
     fails, notruns = [], []
     missing = [k for k, v in verse_texts.items() if v is None]
     normed = {k: probe_norm(v) for k, v in verse_texts.items() if v}
+    prev_qe = None                                      # previous quote span's end (pairing)
     for span, qs, qe in _quote_spans(raw):
+        gap = raw[prev_qe:qs] if prev_qe is not None else None
+        prev_qe = qe
         qn = probe_norm(span)
         if not re.search(r"[A-Za-z]", qn):
             continue
@@ -1866,13 +1880,18 @@ def probe1_verbatim(raw, verse_texts):
                     f'quote "{label}" matches NO cited verse under the ruled allowances '
                     f'(verbatim-quote gate)')
             continue
-        local = _local_refs(raw, qs, qe)
+        local, trailing = _local_refs(raw, qs, qe)
         if len(local) >= 2:
+            # V11.1 ticket 2, paired-quote rule: '"q1" and "q2" (Ref1, Ref2)' — the
+            # bracket-adjacent quote pairs with the LAST ref. Trailing brackets only;
+            # a swapped pair still fires (teeth pinned by the swap fixture).
+            expected = (local[-1] if trailing and gap is not None
+                        and _PAIR_GAP_RE.fullmatch(gap) else local[0])
             hit = [k for k in local if k in matched]
-            if len(hit) == 1 and local[0] != hit[0]:
+            if len(hit) == 1 and expected != hit[0]:
                 fails.append(
                     f'quote "{label}" carries the wording of {hit[0][0]} {hit[0][1]}:{hit[0][2]} '
-                    f'but is anchored primary on {local[0][0]} {local[0][1]}:{local[0][2]} '
+                    f'but is anchored primary on {expected[0]} {expected[1]}:{expected[2]} '
                     f'(anchoring rule)')
     return fails, notruns
 

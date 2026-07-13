@@ -49,6 +49,10 @@ VT = {
     ("2Ch", 31, 14): "And Kore the son of Imnah the Levite, the gatekeeper according to the east, was over the gifts, to give the first-fruits of the LORD, and the holy things of the holies,",
     ("Gen", 31, 7): "But your father cheated me, and bartered my wage for the ten lambs. And the God of my father did not give to him the power to do evil against me.",
     ("Num", 28, 2): "Give charge to the sons of Israel! And you shall say to them, saying, My gifts, my presents, my yield offerings for a scent of pleasant aroma you shall observe to bring near to me in my holidays.",
+    # V11.1 ticket-2 verse bytes (JP live reads, 2026-07-12, this session's record):
+    ("Pro", 18, 16): "A gift of a man widens him; and sits him by monarchs.",
+    ("Mat", 7, 11): "If then, you being wicked, know to give good gifts to your children, how much rather your father, the one in the heavens shall give good things to the ones asking him?",
+    ("Luk", 11, 13): "If then you, being wicked ones, know to give good gifts to your children; how much more the father from heaven shall give holy spirit to the ones asking him?",
 }
 
 
@@ -169,6 +173,49 @@ def main():
     vt_missing = {("Isa", 42, 3): VT[("Isa", 42, 3)], ("Psa", 68, 18): None}
     fails, notrun = B.probe1_verbatim(raw_d6, vt_missing)
     assert notrun and not fails, (fails, notrun)
+
+    # ═══ PROBE 1 — V11.1 ticket 2: leading-attribution anchoring + paired-quote bracket
+    # (ruled at session open; exhibits regenerated as real bytes from the surviving d2 raws,
+    # fail lines in the session record: G1390 2Sa 19:42 + Mat 7:11, G227 Job 42:7/8).
+    # The trailing-bracket branch (defect 5's teeth, fixture 1b) is UNTOUCHED and re-proven
+    # every run; the swap twin below pins the paired branch's own teeth. ═══
+
+    # 1p MUST-CLEAR — leading attribution, head-window shape (G1390 real bytes): "2Sa 19:42
+    # asks whether «…»" anchors on the NEAREST ref, not the farther Pro 18:16. The first
+    # quote's fire must SURVIVE — it drops Pro 18:16's interior semicolon (never-exempt
+    # class), proving the anchoring fix loosens no matching.
+    raw_lead = ('"a gift of a man widens him and sits him by monarchs" (Pro 18:16); '
+                '2Sa 19:42 asks whether "a gift given to us" had influenced Judah.')
+    fails, notrun = B.probe1_verbatim(raw_lead, sub(("Pro", 18, 16), ("2Sa", 19, 42)))
+    assert len(fails) == 1 and "matches NO" in fails[0] and "widens him" in fails[0], fails
+    assert not any("anchor" in f for f in fails) and notrun == [], (fails, notrun)
+
+    # 1q MUST-CLEAR — leading attribution inside a bracket item (G1390 real bytes): within
+    # "(Mat 7:11, …; note that Luk 11:13 specifies … while Mat 7:11 says «good things,»)"
+    # the quote anchors on the nearest ref (Mat 7:11), not the item's first (Luk 11:13).
+    raw_item = ('"you, being wicked ones, know to give good gifts to your children" '
+                '(Luk 11:13); "you being wicked, know to give good gifts to your children" '
+                '(Mat 7:11, the shared construction; note that Luk 11:13 specifies the '
+                'father "shall give holy spirit" while Mat 7:11 says "good things," so the '
+                'verses are not identically worded)')
+    fails, notrun = B.probe1_verbatim(raw_item, sub(("Mat", 7, 11), ("Luk", 11, 13)))
+    assert fails == [] and notrun == [], (fails, notrun)
+
+    # 1r MUST-CLEAR — paired quotes, one ordered bracket (G227 real bytes): two correct
+    # quotes joined by "and" sharing "(Job 42:7, Job 42:8)"; the bracket-adjacent quote
+    # pairs with the LAST ref (42:8, its true home)…
+    raw_pair = ('the LORD twice charges that Eliphaz and friends "spoke not anything before '
+                'me true, as my attendant Job" and "did not speak true concerning my '
+                'attendant Job" (Job 42:7, Job 42:8).')
+    fails, notrun = B.probe1_verbatim(raw_pair, sub(("Job", 42, 7), ("Job", 42, 8)))
+    assert fails == [] and notrun == [], (fails, notrun)
+    # …and the TEETH twin: the same pair with the quotes SWAPPED (bracket order no longer
+    # matches quote order) must fire — the paired branch keeps full anchoring teeth.
+    raw_pair_swap = ('the LORD twice charges that Eliphaz and friends "did not speak true '
+                     'concerning my attendant Job" and "spoke not anything before me true, '
+                     'as my attendant Job" (Job 42:7, Job 42:8).')
+    fails, _ = B.probe1_verbatim(raw_pair_swap, sub(("Job", 42, 7), ("Job", 42, 8)))
+    assert len(fails) == 1 and "anchor" in fails[0], fails
 
     # ═══ PROBE 2 — named-subject warn ═══
     # 2a MUST-FAIL, defect 1 (G1390 real bytes): Jehoiada absent from 2Ch 21:3.
