@@ -761,3 +761,16 @@ both drifting from the doc.
     any claim about a file's contents gets a byte-level read (binary-mode/repr) before it is
     stated or ruled on; a search tool's rendering is never evidence about bytes. *(audit:
     V11 RUN SESSION entry, 2026-07-12)*
+
+53. **An audit entry's quotation of stored verse wording is itself a file-content claim — it
+    needs a live byte read at writing time, and red-first fixture building doubles as an audit
+    of the entries it draws from.** The G227 park entry's parenthetical asserted stored 1Jn 2:8
+    = "a commandment, a new one"; the quote-repair build's fixture work forced a live read and
+    the stored bytes read "Again, a new commandment I write to you…" — the opposite of the
+    recorded claim, which had ridden through the park adjudication AND the V11.2 kill-classing
+    unread. Caught only because self-contained fixtures require the real bytes; corrected by a
+    scoped CORRECTION note (the kill itself not reopened — the card's quote still failed, only
+    the entry's characterization of the stored text was wrong). → lesson #52's rule extends
+    beyond code files to verse data: any "stored text says X" parenthetical gets a byte read
+    before it is written or ruled on. *(audit: QUOTE-REPAIR BUILD SESSION entry + its
+    CORRECTION in the G227 park entry, 2026-07-12)*

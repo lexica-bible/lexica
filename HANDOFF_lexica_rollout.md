@@ -2777,3 +2777,67 @@ adjudicate the repair prompt text and every fixture red-first; demand bytes for 
 file-content claim; the spans-only guard must be proven to have teeth before any
 green is trusted; no word runs, draws, or floors this session; any scope growth is
 yours to rule.
+
+## QUOTE-REPAIR BUILD CLOSE (2026-07-12): the quote-repair build blocks above are
+## SPENT — session CLOSED RULED (ship ab21d96, close cc6f815; see audit QUOTE-REPAIR
+## BUILD SESSION entry). The blocks below are the live pair.
+
+## RUN SESSION — CC OPENER BLOCK (paste into the new CC session; opens from docs
+## alone. State source of truth = the quote-repair build close commit or descendant.)
+RUN SESSION — re-enter the four parked words per V11.2 ruling 6, in order
+G236 → G162 → G1390 → G227 (strongest record first; G227 last as the likeliest
+path-(c) word). One gate, one command, in order — the normal full per-word path;
+each word ships or parks on its own record. G236 sits OUTSIDE the falsifier count
+(ruled). Mechanism = FRESH draws under the upgraded battery PLUS the quote-repair
+pass (ruling 2: fresh draws alone rejected). ("me/I" = JP.) STANDING DELEGATION LIVE.
+READ FIRST, in order: (1) DESIGN_v11_acceptance.md V11.2 successor section (the
+seven rulings — the authority); (2) audit QUOTE-REPAIR BUILD SESSION entry (what is
+live: quote-repair pass + draw-cache history) + the four PARKED AT CAP entries
+(pre-clear material, watch items, per-word kill records); (3) ENGINE_LESSONS #48–53
+(#53 is new: stored-wording claims in entries need byte reads).
+Mechanics that are LIVE on PA (pulled): `--quote-repair` (review pass only, cap 1,
+spans-only guard — a guard breach or cap-out = draw DEAD, cached draw untouched;
+a repaired card owes the FULL hand battery as if new, #50 b) · draw history
+(draws/history/ populates automatically on supersession — superseded raws are now
+preserved evidence; cite them by filename in park entries) · registered words REFUSE
+without --hints (G236's hints include hint 3 Dan-trio; key of record 9bf3f7ef).
+Floors: each word's V9 floor stands unless the draw signature moved — verify
+floor-staleness per word before trusting a gate-1 MATCH; a mismatch = honest-basis
+ruling first, never a silent redraw.
+Path (c) trigger, SHARPENED and armed: a word dying at cap AGAIN with a
+placement/floor-drift kill on its record enters path (c) as THAT word's next
+mechanism, scoped to it (G227 the live risk, drift both prior draws).
+Opening check: git log -1 = cc6f815 or descendant · PA HEAD matches origin before
+any command (lesson #52's stale-PA class) · suites green INCLUDING
+test_quote_repair + test_draw_history · diff-vs-close-entry · R1 raw reposts
+receipt-confirmed both sides.
+Carried UNRULED: hint-counter cache-hit question + broken-hint-line counting (G227
+d2 — rule at open if a hinted draw is commanded) · Est 2:6 open verify (G162 —
+resolve against stored bytes before adjudicating any G162 card that cites it).
+HARD LOCKS: NO APPLY EVER for the dead cached G227/G1390 repaired cards · G236 key
+of record 9bf3f7ef · frozen V9 verse prompt · scoreboard entering 2/7ʰ.
+Standing rules carry: R1 · R1-b · R2-a · affirmed texts to disk · counts are names ·
+big output → file · show code before changing it · JP runs all PA commands · "a
+tool's display of a line is not the line; bytes are" · NO-CROSSING RULE (standing):
+CC posts the review block and STOPS; no commit until the reviewer's receipt is in
+CC's context.
+
+## RUN SESSION — REVIEWER-CHAT INHERITANCE BLOCK (paste into the new reviewer chat)
+You are the reviewer chat for the run session. Everything ruled is in the repo — CC
+reads and relays; your first act = R1-verify the quote-repair build close commit on
+disk (raw reposts, receipt confirmed) and reconcile CC's opening summary against the
+audit QUOTE-REPAIR BUILD SESSION entry + the V11.2 rulings. State you inherit:
+quote-repair pass LIVE (spans-only guard teeth PROVEN at build; cap 1; full battery
+after per lesson #50 b — a repaired card is adjudicated as if new, nothing pre-clears
+its prose) · draw-cache history LIVE (superseded raws preserved — demand them as
+evidence, the V11.1 unrecoverable-raws excuse is retired) · run order
+G236 → G162 → G1390 → G227, G236 outside the falsifier count · sharpened path-(c)
+trigger armed (cap-death WITH a placement/floor-drift kill → path (c) scoped to that
+word; G227 the live risk) · 1Jn 2:8 stored-wording CORRECTION on the G227 park entry
+(lesson #53: stored-text claims need byte reads before you rule on them) · scoreboard
+2/7ʰ · no-crossing STANDING. Your duties: adjudicate every kill against stated
+criteria with bytes; floor-staleness verified per word before a gate-1 MATCH is
+trusted; hand-check battery runs on every card that passes the machine gates,
+repaired or not; the two carried UNRULED items (hint-counter arithmetic, Est 2:6)
+get ruled when their words come up, not skipped; each word ships or parks on its own
+record — no bundling.
