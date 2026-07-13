@@ -83,23 +83,41 @@ those allowances = REFUSED (same shape as the citation gate: block, adjudicated-
 field for the τόπος/ἔργον-style artifact edge cases). Anchoring rule folded in: where a
 quote matches exactly one of a multi-ref parenthetical, that ref must be the primary
 anchor (catches defect 5).
-Implementation surface *(UNVERIFIED side-agent finding — the claims that the coverage
-gate holds fed KEYS not texts, that fed texts exist only on draw/apply passes, and the
-build_lexica_def.py line numbers 472/1208/1427 come from an unverified side-agent code
-read; CONFIRM against the file on disk, raw repost to the reviewer, at the build
-session BEFORE probe 1 is coded — the build-order step 2 gate. The design below stands
-regardless, as the conservative choice)*: validate_entry's
+Implementation surface *(VERIFIED-AT-BUILD, 2026-07-12 — the step-2 code-read gate ran
+and PASSED, reviewer receipt-confirmed; reference: RELAY_v11_build_open.md §C. All four
+claims confirmed against the file on disk, with one upgrade: ctx carries only the FED
+sample's texts, so own lookups are not merely conservative but REQUIRED — the fed set
+can never cover Range/gloss-note/repair-integrated refs. Data source ruled: conn param
+into validate_entry, conn=None → loud NOT RUN)*: validate_entry's
 pass (review pass), fetching verses.text for EVERY ref cited on the card via the same
 live DB lookup the citation gate already uses (the SELECT-text-FROM-verses pattern at
 build_lexica_def.py 472/1208/1427 — the connection is already in hand at the call site);
 on a pass with no DB in reach the probe announces NOT RUN loudly, same convention as the
 coverage gate, never a silent skip. Runs on PA where the script runs.
-**Normalization table required BEFORE red-first** *(reviewer amendment)*: how the
-matcher treats translator-addition brackets, em/en dashes, curly vs straight quotes, and
-whitespace runs when comparing card-quoted spans to verses.text — each row justified by
-an exhibit (the G162 d2 "into the height" drop; the dash-expansion CHECK-FIRST item) or
-marked conservative-strict; anything not listed = strict byte match. The table lives in
-this doc when authored at the build session, ruled before the controls run.
+**Normalization table — RULED (build session 2026-07-12, reviewer-adjudicated under
+the standing delegation; evidence RELAY_v11_build_open.md §§E–H). NORM_VER = norm:v1.
+Anything not listed = strict byte match, both sides normalized identically:**
+| Row | Treatment | Basis |
+|---|---|---|
+| 1 | Curly ↔ straight quotes/apostrophes equal | conservative-safe: pure typography |
+| 2 | Whitespace runs collapse to one space; ends trimmed | conservative-safe: wrap artifacts |
+| 3 | `…` = `...` as the ellipsis marker | conservative-safe: both spell the ruled marker |
+| 4 | Em dash = en dash = `--` | exhibit: verses.text carries 2,291 em-dash rows, zero `--`; 2Ch 21:3 has one inside a quotable span |
+| 6 | Initial-letter case exempt; interior alteration never | restates the RULED standing sub-rule |
+| 7 | ONE trailing punctuation mark (, . ; : ! ?) at the span's very end dropped; interior untouchable | exhibit: G162-card Psa 68:18 quote, comma-inside-quote vs the verse's semicolon |
+(Row 5, translator-addition brackets, was PROPOSED and DELETED on evidence:
+verses.text contains zero `[` characters. The G162 d2 dash CHECK-FIRST closed
+unresolvable-no-evidence-of-bug: the range walker accepts all three dash classes
+(line-647 `[–—-]`) and the d2 raw was overwritten in the single-file draw cache —
+that evidence loss is itself a shelf ticket, draw-cache history.)
+**Implementation notes (build-time catches, ruled in 2026-07-12):** (a) probe-2 name
+extraction strips citations first and whitelists the canonical book codes — derived
+from the SAME _BOOK_ALT table as the ref scanner, never a copy (first green run warned
+on "Isa", the citation's own book code); (b) the anchoring rule is ITEM-SCOPED inside
+list parentheticals — within `(Ref1: "q1"; Ref2: "q2"; …)` a quote's local refs are the
+current item's (after the last semicolon), never the whole list; the trailing-paren
+shape (defect 5's exhibit) is a separate branch and keeps full teeth. The G2168 no-op
+control caught the whole-list reading as 20 false REFUSEs pre-CI.
 
 ### Probe 2 — named-subject check (defects 1, 2; the G2805 Jer 3:21 class = 3 exhibits)
 For each prose claim tied to a citation, every proper name in the claim must appear in

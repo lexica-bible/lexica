@@ -1738,7 +1738,280 @@ def assemble(conn, sid, lemma, translit, raw):
     return entry
 
 
-def validate_entry(entry):
+# ══════════════════════════════════════════════════════════════════════════════════════════════
+# V11 PROSE-DEFECT DETECTORS (DESIGN_v11_acceptance.md, ruled 2026-07-12).
+# Probe 1 = verbatim-quote GATE (blocks; --force-gate-bypass = the adjudicated bypass).
+# Probe 2 = named-subject WARN (adjudication; an open warn blocks apply).
+# Scanner 3 = identity-claim WARN (same open-warn rule).
+# All three read the CARD; they never shape a draw. Versioned surfaces stamped on the record.
+# ══════════════════════════════════════════════════════════════════════════════════════════════
+
+NORM_VER = "norm:v1"            # ruled normalization table rows 1-4 + 7 (edge punct)
+P2_WHITELIST_VER = "p2wl:v1"    # probe-2 whitelist + common-word filter, one versioned surface
+SCAN3_PATTERNS_VER = "scan3:v1" # scanner-3 pattern list; grows by exhibit, changes ruled
+
+# Row 1 (curly=straight quotes/apostrophes) + row 4 (en dash -> em dash; "--" in probe_norm).
+_NORM_CHARS = {"‘": "'", "’": "'", "“": '"', "”": '"', "–": "—"}
+
+
+def probe_norm(s):
+    """The RULED normalization (DESIGN_v11_acceptance.md table): quotes/apostrophes (row 1),
+    whitespace collapse (row 2), '...' == '…' (row 3), en/em/double-hyphen dashes equal (row 4).
+    Anything not listed = strict byte match. Applied to BOTH sides of every comparison."""
+    for _a, _b in _NORM_CHARS.items():
+        s = s.replace(_a, _b)
+    s = s.replace("--", "—")
+    s = s.replace("...", "…")
+    return re.sub(r"\s+", " ", s).strip()
+
+
+_QUOTE_SPAN_RE = re.compile(r'[“"]([^“”"]+)[”"]')
+
+
+def _quote_spans(raw):
+    """Every quotation-marked span in the card (senses, Range, gloss notes — no exemptions,
+    per the gloss-notes-inside standing sub-rule). Yields (text, start, end) in card order."""
+    for m in _QUOTE_SPAN_RE.finditer(raw):
+        yield m.group(1), m.start(), m.end()
+
+
+def _match_quote(qnorm, vnorm):
+    """Ruled allowances ONLY: leading ellipsis; interior ellipsis marked … (segments must appear
+    in order); the quote's INITIAL letter case-exempt (interior alteration never); one trailing
+    punctuation mark at the span's very end (row 7 — edge only). Everything else strict."""
+    segs = [s.strip() for s in qnorm.split("…") if s.strip()]
+    if not segs:
+        return True
+    if segs[-1][-1] in ",.;:!?":                        # row 7 — edge only, never interior
+        segs[-1] = segs[-1][:-1].rstrip()
+        if not segs[-1]:
+            segs.pop()
+    if not segs:
+        return True
+    variants = [segs]
+    s0 = segs[0]
+    if s0[0].isalpha():                                 # initial-letter case exemption
+        variants.append([s0[0].swapcase() + s0[1:]] + segs[1:])
+    for var in variants:
+        pos, ok = 0, True
+        for seg in var:
+            i = vnorm.find(seg, pos)
+            if i < 0:
+                ok = False
+                break
+            pos = i + len(seg)
+        if ok:
+            return True
+    return False
+
+
+def _local_refs(raw, qs, qe):
+    """The quote's own local ref list (anchoring rule): a trailing parenthetical within a few
+    chars of the closing quote; else refs already named inside the enclosing parenthetical
+    before the quote; else an inline 'Psa 68:18 reads'-style lead-in just before it.
+    Ordered — first ref = the primary anchor."""
+    tail = raw[qe:qe + 100]
+    m = re.match(r"[^()\n]{0,12}\(", tail)
+    if m:
+        close = tail.find(")", m.end())
+        if close > 0:
+            refs = ref_spans(tail[m.end():close])
+            if refs:
+                return refs
+    head = raw[:qs]
+    oi, ci = head.rfind("("), head.rfind(")")
+    if oi > ci:                                         # quote sits inside a parenthetical
+        seg = head[oi + 1:]
+        # List-paren convention (Ref1: "q1"; Ref2: "q2"; …): the quote's own refs are the
+        # CURRENT list item's — after the last semicolon — never the whole list (the G2168
+        # control caught the whole-list reading as 20 false anchoring fails).
+        si = seg.rfind(";")
+        item_refs = ref_spans(seg[si + 1:]) if si >= 0 else []
+        if item_refs:
+            return item_refs
+        refs = ref_spans(seg)
+        if refs:
+            return refs
+    return ref_spans(head[-48:])
+
+
+def probe1_verbatim(raw, verse_texts):
+    """PROBE 1 — verbatim-quote GATE (V11; the defect-5/6 class, G236 Dan-trio, G162 d2,
+    G2805 ×3). Every quoted span must match verses.text of a verse cited on the card under
+    the ruled allowances; a span matching exactly one ref of a multi-ref local list must be
+    anchored on that ref FIRST. verse_texts = {(book,ch,vs): text-or-None} for EVERY
+    card-cited ref (own live lookups at the call site — the fed sample can never cover
+    Range/gloss/repair-integrated refs). A span matching nothing while any cited text is
+    unavailable is NOT-RUN (loud, and it blocks apply) — never a pass, never a silent fail.
+    Returns (fails, notruns)."""
+    fails, notruns = [], []
+    missing = [k for k, v in verse_texts.items() if v is None]
+    normed = {k: probe_norm(v) for k, v in verse_texts.items() if v}
+    for span, qs, qe in _quote_spans(raw):
+        qn = probe_norm(span)
+        if not re.search(r"[A-Za-z]", qn):
+            continue
+        label = qn if len(qn) <= 60 else qn[:57] + "..."
+        matched = [k for k, vn in normed.items() if _match_quote(qn, vn)]
+        if not matched:
+            if missing:
+                notruns.append(
+                    f'quote "{label}" — NOT RUN: no match among available texts and '
+                    f'{len(missing)} cited verse text(s) unavailable')
+            else:
+                fails.append(
+                    f'quote "{label}" matches NO cited verse under the ruled allowances '
+                    f'(verbatim-quote gate)')
+            continue
+        local = _local_refs(raw, qs, qe)
+        if len(local) >= 2:
+            hit = [k for k in local if k in matched]
+            if len(hit) == 1 and local[0] != hit[0]:
+                fails.append(
+                    f'quote "{label}" carries the wording of {hit[0][0]} {hit[0][1]}:{hit[0][2]} '
+                    f'but is anchored primary on {local[0][0]} {local[0][1]}:{local[0][2]} '
+                    f'(anchoring rule)')
+    return fails, notruns
+
+
+# Probe-2 whitelist (VERSIONED — P2_WHITELIST_VER; changes ruled, stamp on the draw record):
+# God/LORD per the design; the headword's lemma/translit join per-card at the call site.
+_P2_WHITELIST = {"god", "lord"}
+# Capitalized non-names (sentence-starts, card furniture). Same versioned surface.
+_P2_COMMON = {
+    "a", "an", "and", "all", "any", "are", "as", "at", "be", "been", "being", "both", "but",
+    "by", "did", "do", "does", "each", "even", "every", "first", "for", "from", "gloss",
+    "grounding", "having", "he", "her", "his", "him", "here", "how", "i", "if", "in", "is",
+    "it", "its", "let", "marking", "my", "no", "nor", "not", "o", "of", "on", "one", "or",
+    "our", "range", "second", "sense", "senses", "she", "so", "some", "sub", "take", "that",
+    "the", "their", "then", "there", "these", "those", "third", "this", "to", "two",
+    "was", "we", "were", "what", "when", "where", "who", "whom", "why", "with", "you", "your",
+}
+
+
+def _strip_quoted(raw):
+    """Quoted spans blanked — names inside a verbatim quote are probe 1's territory."""
+    return _QUOTE_SPAN_RE.sub(" ", raw)
+
+
+# Book names are whitelisted by the ruled design; the closed canonical-code set is derived
+# from the SAME _BOOK_ALT table the ref scanner uses (never a private copy).
+_P2_BOOKS = {b.lower() for b in _BOOK_ALT.split("|")}
+
+
+def _proper_names(chunk, whole_body):
+    """Proper names = capitalized tokens (possessive stripped) that are NOT card furniture,
+    NOT book codes / citation text (refs stripped first), and are consistently capitalized
+    across the card (a token also appearing lowercase is ordinary prose, not a name).
+    Fail-open toward the human: uncertain extraction surfaces as a warn downstream,
+    never a silent pass."""
+    chunk = _REF_RE.sub(" ", chunk)                     # citations are not prose claims
+    body_lower = set(re.findall(r"(?<![A-Za-z])([a-z]+)\b", whole_body))
+    out = []
+    for tok in re.findall(r"\b([A-Z][a-z]+)(?:['’]s)?\b", chunk):
+        low = tok.lower()
+        if low in _P2_COMMON or low in _P2_WHITELIST or low in _P2_BOOKS or low in body_lower:
+            continue
+        if tok not in out:
+            out.append(tok)
+    return out
+
+
+def _cite_chunks(body):
+    """Prose split into claim chunks, each ending at a parenthetical close (the list-item
+    structure the cards use); a chunk's refs = every ref inside it, inline or parenthesized.
+    Chunks with no refs carry no checkable claim and are skipped by the caller."""
+    for para in body.split("\n"):
+        last = 0
+        for m in re.finditer(r"\)", para):
+            chunk = para[last:m.end()]
+            refs = ref_spans(chunk)
+            if refs:
+                yield chunk, refs
+                last = m.end()
+        tail = para[last:]
+        refs = ref_spans(tail)
+        if refs:
+            yield tail, refs
+
+
+def probe2_names(raw, verse_texts, extra_whitelist=()):
+    """PROBE 2 — named-subject check (V11; the Jehoiada/Eliphaz/Jer 3:21 misattribution class).
+    WARN, not block — the standing kill sub-rule is a HUMAN rule; the machine's job is making
+    sure the human never misses the candidate. Every proper name in a claim must appear in at
+    least one of the claim's cited verse texts. A missing verse text = NOT-RUN for that name
+    (loud, blocks apply) — never a pass. Returns (warns, notruns)."""
+    extra = {str(w).lower() for w in extra_whitelist if w}
+    body = _strip_quoted(raw)
+    warns, notruns = [], []
+    for chunk, refs in _cite_chunks(body):
+        texts = {k: verse_texts.get(k) for k in refs}
+        avail = [probe_norm(t).lower() for t in texts.values() if t]
+        missing = [k for k, t in texts.items() if t is None]
+        for name in _proper_names(chunk, body):
+            if name.lower() in extra:
+                continue
+            if any(re.search(rf"\b{re.escape(name.lower())}\b", t) for t in avail):
+                continue
+            reflist = ", ".join(f"{b} {c}:{v}" for b, c, v in refs)
+            if missing:
+                notruns.append(f'"{name}" ({reflist}) — NOT RUN: cited verse text(s) unavailable')
+            else:
+                warns.append(f'named subject "{name}" absent from cited text(s) {reflist} '
+                             f'— adjudicate (misattribution class)')
+    return warns, notruns
+
+
+# Scanner-3 pattern list (VERSIONED — SCAN3_PATTERNS_VER; grows by exhibit, changes ruled).
+SCAN3_PATTERNS = ("worded identically", "identical wording", "verbatim parallel")
+
+
+def scan3_identity(raw, verse_texts):
+    """SCANNER 3 — identity-claim check (V11; the false Mat 22:16↔Mar 12:14 exhibit). A prose
+    claim that two refs are worded identically → string-compare the two stored texts under the
+    ruled normalization; unequal = WARN. Can't resolve exactly two refs, or a text unavailable
+    = WARN too (fail toward the human). Returns warns."""
+    warns = []
+    low = raw.lower()
+    for pat in SCAN3_PATTERNS:
+        for m in re.finditer(re.escape(pat), low):
+            head = raw[:m.start()]
+            oi, ci = head.rfind("("), head.rfind(")")
+            if oi > ci:                                  # claim sits inside a parenthetical
+                close = raw.find(")", m.end())
+                ctx = raw[oi:close if close > 0 else m.end() + 120]
+            else:                                        # else a sentence-sized window
+                ctx = raw[max(0, m.start() - 150):m.end() + 150]
+            refs = []
+            for k in ref_spans(ctx):
+                if k not in refs:
+                    refs.append(k)
+            if len(refs) != 2:
+                warns.append(f'identity claim "{pat}" — could not resolve exactly two refs '
+                             f'(found {len(refs)}) — adjudicate')
+                continue
+            ta, tb = verse_texts.get(refs[0]), verse_texts.get(refs[1])
+            if ta is None or tb is None:
+                warns.append(f'identity claim "{pat}" ({refs[0][0]} {refs[0][1]}:{refs[0][2]} vs '
+                             f'{refs[1][0]} {refs[1][1]}:{refs[1][2]}) — NOT RUN: text unavailable')
+            elif probe_norm(ta) != probe_norm(tb):
+                warns.append(f'prose claims {refs[0][0]} {refs[0][1]}:{refs[0][2]} and '
+                             f'{refs[1][0]} {refs[1][1]}:{refs[1][2]} are worded identically but '
+                             f'the stored texts DIFFER — adjudicate (false-identity class)')
+    return warns
+
+
+def open_probe_warns(entry):
+    """The open-warn-blocks-apply rule (GATE CONDITION): any probe-2/scanner-3 warn OR any
+    probe NOT-RUN item (amendment 1 — a missing verse text must never become a ship path)
+    without an adjudication stamp refuses the ship. Returns the blocking items ([] = clear)."""
+    a = entry.get("audit") or {}
+    blocking = ((a.get("probe2_warns") or []) + (a.get("scan3_warns") or [])
+                + (a.get("probe1_notrun") or []) + (a.get("probe2_notrun") or []))
+    return [] if (not blocking or a.get("warns_adjudicated")) else blocking
+
+
+def validate_entry(entry, conn=None):
     """Tell a LEGITIMATELY-empty field from a PARSE FAILURE wearing the same blank. The fields here
     are the ones where empty is NEVER legitimate, so an empty one means the splitter couldn't read
     the model's output — a loud error that must refuse to write the row, not a silent blank that
@@ -1805,6 +2078,45 @@ def validate_entry(entry):
                 f"sense: {', '.join(uncited)}. Every fed occurrence must appear in the senses "
                 f"block (trimming is a defect — V9 ruling 2026-07-12). Fix the raw, or pass "
                 f"--force-gate-bypass \"reason\".")
+    # V11 PROSE PROBES (DESIGN_v11_acceptance.md, ruled 2026-07-12). Own live lookups for
+    # EVERY card-cited ref — never the fed sample (it cannot cover Range/gloss-note/repair-
+    # integrated refs). No connection = loud NOT RUN, the coverage-gate convention.
+    raw = entry.get("raw") or ""
+    if conn is None:
+        print(f"  ⚠ V11 prose probes NOT RUN for {entry['strongs']} — no DB connection on "
+              f"this pass; verbatim-quote gate, named-subject check, identity scanner all "
+              f"UNCHECKED.", file=sys.stderr)
+    elif raw:
+        if not a:
+            a = entry["audit"] = {}                    # (amendment 2: bind writes to the entry)
+        vt = {}
+        for b, c, v in cited_refs(raw):
+            row = conn.execute("SELECT text FROM verses WHERE book=? AND chapter=? AND verse=?",
+                               (b, c, v)).fetchone()
+            vt[(b, c, v)] = (row["text"] if row and row["text"] else None)
+        p1_fails, p1_nr = probe1_verbatim(raw, vt)
+        p2_warns, p2_nr = probe2_names(raw, vt,
+                                       extra_whitelist=(entry.get("lemma"), entry.get("translit")))
+        s3_warns = scan3_identity(raw, vt)
+        a["probe_vers"] = {"norm": NORM_VER, "p2wl": P2_WHITELIST_VER,
+                           "scan3": SCAN3_PATTERNS_VER}
+        a["probe1_notrun"], a["probe2_warns"] = p1_nr, p2_warns
+        a["probe2_notrun"], a["scan3_warns"] = p2_nr, s3_warns
+        for line in p1_nr + p2_nr:
+            print(f"  ⚠ V11 probe NOT RUN item ({entry['strongs']}): {line}", file=sys.stderr)
+        for line in p2_warns + s3_warns:
+            print(f"  ⚠ V11 WARN ({entry['strongs']}): {line} — an open warn BLOCKS apply "
+                  f"until adjudicated", file=sys.stderr)
+        if p1_fails:
+            if a.get("bypass_reason"):
+                print(f"  ⚠ verbatim-quote gate BYPASSED for {entry['strongs']} "
+                      f"({len(p1_fails)}) — reason stored: {a['bypass_reason']}",
+                      file=sys.stderr)
+            else:
+                problems.append(
+                    f"verbatim-quote gate FAILED — {len(p1_fails)} quoted span(s): "
+                    + " | ".join(p1_fails)
+                    + " Fix the raw, or pass --force-gate-bypass \"reason\".")
     return problems
 
 
@@ -1970,6 +2282,11 @@ def main():
                     help="write DESPITE citation-gate failures (real/no-verse misses); the reason "
                          "is stored in the entry (audit.bypass_reason) so a bypassed row is "
                          "self-documenting. Only stamped on a word whose gate actually failed.")
+    ap.add_argument("--adjudicate-warns", metavar="NOTE",
+                    help="V11 (DESIGN_v11_acceptance.md): record the reviewer adjudication for "
+                         "OPEN probe-2/scanner-3 warns and probe NOT-RUN items; without it an "
+                         "apply with open items is REFUSED. Stamped into audit.warns_adjudicated "
+                         "so a shipped row self-documents the ruling.")
     ap.add_argument("--all", action="store_true",
                     help="target EVERY built word in lexica_def (use with --resplit to roll a "
                          "derivation change — e.g. the LXX provenance note — across the whole batch, "
@@ -2298,13 +2615,50 @@ def main():
                   "placement blind spot is UNCHECKED (the insurance clause gates count ships on "
                   "#30 live).")
 
-        problems = validate_entry(entry)
+        problems = validate_entry(entry, conn)
         if problems:
             print("  ✗ PARSE FAILURE — NOT written (a load-bearing field came back empty):")
             for p in problems:
                 print("      - " + p)
             failures.append(sid)
             continue                              # never write an incomplete row
+
+        # V11 open-warn-blocks-apply (GATE CONDITION). Adjudication is a reviewer ruling
+        # relayed as --adjudicate-warns "note"; the note ships in the row (self-documents).
+        if args.adjudicate_warns and (entry["audit"].get("probe2_warns")
+                                      or entry["audit"].get("scan3_warns")
+                                      or entry["audit"].get("probe1_notrun")
+                                      or entry["audit"].get("probe2_notrun")):
+            entry["audit"]["warns_adjudicated"] = args.adjudicate_warns
+        blocked = open_probe_warns(entry)
+        if blocked:
+            if args.apply:
+                print(f"  ✗ NOT written — {len(blocked)} OPEN V11 item(s) (probe-2/scanner-3 "
+                      f"warns or probe NOT-RUNs) with no adjudication; after the reviewer rules "
+                      f"them, re-run with --adjudicate-warns \"ruling\":", file=sys.stderr)
+                for w in blocked:
+                    print("      - " + w, file=sys.stderr)
+                failures.append(sid)
+                continue
+            print(f"  ⚠ {len(blocked)} OPEN V11 item(s) — an apply will be REFUSED until "
+                  f"adjudicated (--adjudicate-warns).", file=sys.stderr)
+
+        # V11: warns land on the DRAW RECORD too (review pass), so the run-session record
+        # carries them where the adjudication happens. Atomic rewrite, raw untouched.
+        if not args.apply and not args.resplit and os.path.exists(draw_path(sid)):
+            drec = load_draw(sid)
+            if drec is not None:
+                drec["probe_warns"] = {
+                    "probe2": entry["audit"].get("probe2_warns", []),
+                    "scan3": entry["audit"].get("scan3_warns", []),
+                    "notrun": (entry["audit"].get("probe1_notrun", [])
+                               + entry["audit"].get("probe2_notrun", [])),
+                    "vers": entry["audit"].get("probe_vers", {}),
+                }
+                _tmp = draw_path(sid) + ".tmp"
+                with open(_tmp, "w", encoding="utf-8") as f:
+                    json.dump(drec, f, ensure_ascii=False, indent=1)
+                os.replace(_tmp, draw_path(sid))
 
         if args.apply:
             conn.execute(
