@@ -749,3 +749,15 @@ both drifting from the doc.
     commit proposals carry subject line + blank line + body so `--oneline` stays one line. Both
     banked as rule candidates for the V11 build session's open. *(audit: CORRECTIVE-COMMIT
     SESSION CLOSED entry, 2026-07-12)*
+
+52. **A tool's display of a line is not the line; bytes are.** At the V11 run session CC read
+    draw_hints.py via a search tool whose output rendered the file's `substitution/trade` as
+    `substitution\trade`; CC reported a real Python tab-escape bug on that basis and the
+    reviewer confirmed it unverified — a fix and a corrupted-hint park note were ruled in for a
+    bug that did not exist. The pre-edit byte read (repr of the raw bytes) showed the plain `/`
+    on disk; the claim was retracted and the note struck before either landed. Both directions
+    ledgered: the claim made from tool display, and the confirmation issued without demanding
+    byte evidence (the a9d518b class runs both ways). → rule, adopted verbatim in both chats:
+    any claim about a file's contents gets a byte-level read (binary-mode/repr) before it is
+    stated or ruled on; a search tool's rendering is never evidence about bytes. *(audit:
+    V11 RUN SESSION entry, 2026-07-12)*
