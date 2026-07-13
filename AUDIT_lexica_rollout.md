@@ -4636,3 +4636,39 @@ Est 2:6 open verify · NO APPLY EVER dead cached G227/G1390 cards · G236 key of
 9bf3f7ef · frozen V9 prompt · scoreboard 2/7ʰ.
 **NEXT = QUOTE-REPAIR BUILD SESSION** per the V11.2 build order (handoff blocks live);
 no floor, draw, or command until it closes ruled.
+
+### QUOTE-REPAIR BUILD SESSION — V11.2 BUILT, CLOSED RULED (2026-07-12; build only,
+### no word runs/draws/floors per charter; reviewer-adjudicated under JP's standing
+### delegation; ship commit ab21d96). Scoreboard unchanged 2/7ʰ.
+**Opening:** HEAD a03e117 clean = close commit · four neighbor suites green baseline ·
+review block posted and receipt-confirmed before any build (no-crossing observed at
+every gate: proposal → build → commit each waited on the reviewer's receipt).
+**Rulings applied (receipts on record):** escape clause IN the prompt (guard-breach
+converted to cap-out) · verse feed = ALL card-cited texts (zero new ref-parsing
+surface) · no rounds knob (cap 1 lives in the ruling and the body) · archive skips
+byte-identical refresh, archives unreadable files intact.
+**Shipped @ ab21d96:** quote-repair pass — approved prompt + own `qrepair:` stamp,
+byte-strict spans-only guard (skeleton equality, teeth proven on reworded-prose /
+dropped-citation / added-quotation mocks), cap 1, `--quote-repair` review-pass-only,
+full battery re-runs on the repaired card (lesson #50 b) · draw-cache history
+(ruling 5) — superseded draws MOVED to draws/history/, never overwritten ·
+tests/test_quote_repair.py (five banked-kill fire controls: Pro 18:16 · 1Jn 2:8 ·
+Isa 14:2 · 1Ki 20:25 · Jer 2:11; K1/K5 REAL surviving-d2 bytes via JP grep,
+K2/K3/K4 LABELED reconstructions per ruled precedent; verse bytes = JP live reads) +
+tests/test_draw_history.py (supersede/identical/unreadable/double controls) · both
+CI lists. Red-first: both files died loudly pre-code (AttributeError / empty
+archive), outputs banked in the session record.
+**LEDGER — 1Jn 2:8 CORRECTION (reviewer wording, landed in the G227 park entry):**
+the park parenthetical's stored-wording claim did not match the machine of record;
+live bytes read "Again, a new commandment I write to you…". Kill not reopened;
+claim corrected; fixture K2 labeled accordingly.
+**LEDGER — accepted deviation:** archive print uses ASCII "->" (the line executes
+inside a CI'd suite; cp1252 console crash class), inline comment is the record; no
+sweep of existing arrows.
+**Carried UNRULED:** hint-counter cache-hit + broken-hint-line counting (G227 d2) ·
+Est 2:6 verify. **HARD LOCKS:** NO APPLY EVER dead cached G227/G1390 cards · G236
+key of record 9bf3f7ef · frozen V9 verse prompt (the repair prompt is its own
+versioned block).
+**NEXT = RUN SESSION** per ruling 6: G236 → G162 → G1390 → G227, one gate, one
+command, in order; G236 outside the falsifier count; each word ships or parks on
+its own record.
