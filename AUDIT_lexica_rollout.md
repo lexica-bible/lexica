@@ -4672,3 +4672,57 @@ versioned block).
 **NEXT = RUN SESSION** per ruling 6: G236 → G162 → G1390 → G227, one gate, one
 command, in order; G236 outside the falsifier count; each word ships or parks on
 its own record.
+
+### V11.2 RUN SESSION — G236 ἀλλάσσω PARKED AT CAP + PATH (c) FIRED (2026-07-13;
+### one gate/one command per ruling 6; reviewer-adjudicated under JP's standing
+### delegation; every gate against bytes). Scoreboard 2/7ʰ unchanged (G236 outside
+### the falsifier count, ruled).
+**Opening/gates:** PA pulled 70f84fb from stale cc6f815 — lesson #52 stale-PA caught
+at the HEAD check, ff-only remedy · test_quote_repair + test_draw_history green ·
+R1 raw reposts (audit close entry + V11.2 rulings + gate-1 code bytes) receipt-confirmed
+both sides · gate-1 MATCH, key 9bf3f7ef, no model call (method (A): no-force dry-run,
+printed key sourced live from sig at build_lexica_def.py:2778/2812, not the cache;
+stop-rule incl. EDITED-refuse).
+**Mechanism:** fresh draw (--force, archives d2 first) + --quote-repair armed
+(rulings 1/2). d2 archived to preserved history:
+`draws/history/G236_20260713T024915_9bf3f7ef.json` (cache→evidence, ruling 5). Fresh
+draw d3 written; key 9bf3f7ef unchanged throughout.
+**d3 — DEAD on the quote gate (parse failure, NOT written; no apply, no hard lock).**
+Machine clean elsewhere: coverage 33/33, citation 33/33, coverage-audit 0 uncited,
+senses 2 (none thin/circular).
+- **KILL — Jer 2:11 quote-fidelity, never-exempt, RECURRING from d2.** d3 wrote
+  "they changed their gods" (bare statement); stored verses.text (JP live read
+  2026-07-13, lesson #53): "if nations changed their gods, and these are not gods!
+  But my people changed their glory by which they do not derive benefit." d3 recast
+  the conditional as a flat statement and swapped the subject ("nations" → "they").
+  Same span killed d2.
+- **KILL — Jer 13:23 placement/floor-drift (#30).** d3 filed it sense 1 (substitution);
+  floor agreement_G236_v9_20260712-165959 homes it with the transformation group 6-8/10.
+  Floor-is-ground-truth; d3's range-overlap acknowledgment does not rescue the seam.
+  FIRST placement/floor-drift signal on G236's record (pure quote-fidelity before).
+  Mobile-drift of record: d1 Gal 4:20→transformation (wrong) → d2 cured → d3 Jer 13:23
+  →substitution (wrong); different verse each draw, same instability class.
+- **Anchoring defect (non-killing, ARTIFACT):** "changes of apparels" — real wording
+  (2Ki 5:5) anchored primary on 2Ki 5:23 of the cited trio (5:5/5:22/5:23). Citation-
+  anchoring class; span 1 kills alone.
+- **Repair guard-breach:** --quote-repair round 1 (cap 1) REFUSED by the spans-only
+  guard — text changed outside the quote marks. Draw DEAD per ruling 1's escape clause,
+  cached draw untouched, no re-repair. Repair bytes NOT preserved (history archives
+  superseded draws, not failed repair outputs) — TICKET: archive refused repair outputs
+  (same evidence-cost class as ruling 5).
+- **Hints — 3/3 OBEY; hint-3 verdict OBEY-with-note** (joint attribution of the single
+  "over you" span to 4:25+4:32). Isa 40:31/41:1→transformation ✓; Lev 27:10 single
+  home ✓; Dan-trio 4:16 "over him" quoted+named, 4:25/4:32 "over you" named, no blend,
+  gate silent ✓ — the joint attribution is adjacent to the anchoring class, noted.
+**Probe-2 flag (BENIGN):** "Sets"/"Barter" named-subject warns = sentence-initial
+capitalization artifacts, not misattributions. Two draws running with probe-2 firing on
+capitalization → TICKET: probe-2 needs a sentence-start capitalization guard.
+**RULINGS (reviewer, standing delegation):** (a) Jer 2:11 KILL / "changes of apparels"
+ARTIFACT; (b) Jer 13:23 KILL placement/floor-drift; (c) PARK at d3 — one gate/one
+command spent, ruling 2's fresh-draws-don't-cure empirically confirmed on G236's own
+record (same Jer 2:11 span + new drift), no ruled basis for d4; (d) PATH (c) FIRES,
+scoped to G236 — died at cap again + placement/floor-drift kill on record; ruling 3's
+"G236 = exactly one class" supersession is itself superseded by events (record now two
+classes). Trigger armed anticipating G227; G236 reached it first.
+**Retry-trigger:** path (c), scoped to G236 (its ruled next mechanism). Key of record
+9bf3f7ef. NEXT = G162.
