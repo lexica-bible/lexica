@@ -208,6 +208,14 @@ def main():
     vt_same = {("Mat", 22, 16): "identical stored wording.", ("Mar", 12, 14): "identical stored wording."}
     assert B.scan3_identity("(Mat 22:16; Mar 12:14 is worded identically)", vt_same) == []
 
+    # 3d MUST-FAIL, scan3:v2 exhibit (G227 V11-run draw-1 real bytes, reviewer-accepted
+    # 2026-07-12): "the phrasing is identical in sense" asserts identity without the v1
+    # wordings; the pattern list grows by exhibit.
+    raw_v2 = ('The questioners address Jesus, "we know that you are true" '
+              '(Mat 22:16; Mar 12:14, where the phrasing is identical in sense).')
+    warns = B.scan3_identity(raw_v2, sub(("Mat", 22, 16), ("Mar", 12, 14)))
+    assert any("DIFFER" in w for w in warns), warns
+
     # 3c WARN when the pair can't be resolved (fail toward the human).
     warns = B.scan3_identity("this phrase is worded identically in the tradition.", {})
     assert warns, "unresolvable identity claim passed silently"

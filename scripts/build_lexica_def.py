@@ -1748,7 +1748,7 @@ def assemble(conn, sid, lemma, translit, raw):
 
 NORM_VER = "norm:v1"            # ruled normalization table rows 1-4 + 7 (edge punct)
 P2_WHITELIST_VER = "p2wl:v1"    # probe-2 whitelist + common-word filter, one versioned surface
-SCAN3_PATTERNS_VER = "scan3:v1" # scanner-3 pattern list; grows by exhibit, changes ruled
+SCAN3_PATTERNS_VER = "scan3:v2" # scanner-3 pattern list; grows by exhibit, changes ruled
 
 # Row 1 (curly=straight quotes/apostrophes) + row 4 (en dash -> em dash; "--" in probe_norm).
 _NORM_CHARS = {"‘": "'", "’": "'", "“": '"', "”": '"', "–": "—"}
@@ -1963,7 +1963,8 @@ def probe2_names(raw, verse_texts, extra_whitelist=()):
 
 
 # Scanner-3 pattern list (VERSIONED — SCAN3_PATTERNS_VER; grows by exhibit, changes ruled).
-SCAN3_PATTERNS = ("worded identically", "identical wording", "verbatim parallel")
+SCAN3_PATTERNS = ("worded identically", "identical wording", "verbatim parallel",
+                  "phrasing is identical")   # v2: G227 V11-run d1 exhibit, ruled 2026-07-12
 
 
 def scan3_identity(raw, verse_texts):
