@@ -508,7 +508,38 @@ def _occ_lines(ctx):
     return out
 
 
-def verse_user_msg(sid, translit, gset, ctx, hint=None, pmap=None, constraints=None):
+def _roster_lines(roster):
+    """PATH (c) ROSTER injection (PATH (c) DESIGN — CLOSED, AUDIT 2026-07-13). Soft-explicit draw
+    context: the floor's OWN repeated-review consensus — how many senses, and which verses group —
+    read BACK to the draw (never hand-invented; see DESIGN_hint_tooling.md's roster class). Rides
+    the user message after the occurrences (and any STRUCTURE/CONSTRAINT CHECK); frozen V9 prompt
+    untouched. Fixes count + grouping only; the seam verses fold into their ruled home group. The
+    closing boundary sentence is RULED VERBATIM — do not reword it."""
+    groups = [list(g) for g in roster["groups"]]
+    for s in roster.get("seams", []):
+        gi = s["group"] - 1
+        if 0 <= gi < len(groups) and s["ref"] not in groups[gi]:
+            groups[gi].append(s["ref"])
+    out = ["",
+           "ROSTER (floor consensus, pre-registered): repeated independent review of this lemma's "
+           "FULL occurrence set settled the sense STRUCTURE below — how many senses, and which "
+           "verses group together. Match it:",
+           f"  {roster['count']} senses."]
+    for i, g in enumerate(groups, 1):
+        out.append(f"  Group {i} keeps together: " + ", ".join(g))
+    if roster.get("float"):
+        out.append("  Either-home (may sit in either group; do not force a split): "
+                   + ", ".join(roster["float"]))
+    if roster.get("excluded"):
+        out.append("  Not this lemma's sense here (do not cite under any sense): "
+                   + ", ".join(roster["excluded"]))
+    out.append("Still name each sense and write its meaning from the occurrences above — this "
+               "fixes only how many senses and which verses group, from the consensus, never the "
+               "wording.")
+    return out
+
+
+def verse_user_msg(sid, translit, gset, ctx, hint=None, pmap=None, constraints=None, roster=None):
     lines = [f"LEMMA: {sid}  ({translit})", ""]
     lines.append("TRANSLATION GLOSS SET (one translation's renderings, with counts):")
     pmap = pmap or {}
@@ -560,6 +591,10 @@ def verse_user_msg(sid, translit, gset, ctx, hint=None, pmap=None, constraints=N
                      "carving remain yours to draw from it:")
         for i, c in enumerate(constraints, 1):
             lines.append(f"  {i}. {c}")
+    if roster:
+        # ROSTER CHANNEL (path (c)): the floor's consensus sense count + verse groups, injected as
+        # soft-explicit context AFTER the occurrences and any other CHECK. Frozen prompt untouched.
+        lines.extend(_roster_lines(roster))
     return "\n".join(lines)
 
 
@@ -1425,6 +1460,21 @@ def floor_diff_record(floor, senses_block, majority=None):
             "floor_unseen": [f"{b} {c}:{v}" for b, c, v in sorted(ship_refs - floor_seen)]}
 
 
+def roster_count_diff(roster, senses_block):
+    """#55 SENSE-COUNT GUARD (PATH (c) DESIGN — CLOSED, 2026-07-13). The roster fixes HOW MANY
+    senses the floor's consensus carries; this guard fires when the ship draw lands a DIFFERENT
+    count — a collapse (G1390 died 2→1) or a split. It closes the blindness the pair-membership
+    #30 check has when a whole pole VANISHES: no consensus pair is split (nothing to fire on),
+    yet the structure is wrong. PART of path (c)'s definition, not optional hardening.
+
+    Returns {floor, roster_count, ship_count, ok}; ok=False is a FIRE (count mismatch). The ship
+    count is the number of numbered senses the splitter found (sense_specs, the same parse #30
+    and coverage read), so this sees exactly the card's own sense structure."""
+    ship = len(sense_specs(senses_block))
+    rc = roster["count"]
+    return {"floor": roster.get("floor"), "roster_count": rc, "ship_count": ship, "ok": ship == rc}
+
+
 def registry_verse_hits(refs):
     """CONTESTED-VERSE REGISTRY routing (ENGINE_LESSONS #24 ῥῆμα refinement; JP-ruled 2026-07-08).
     Any cited ref that sits in contested_register.CONTESTED_VERSES comes back with its fork note
@@ -1522,14 +1572,18 @@ def _sha1(s):
     return hashlib.sha1((s or "").encode("utf-8")).hexdigest()
 
 
-def draw_signature(sid, translit, gset, ctx, hint=None, pmap=None, constraints=None):
+def draw_signature(sid, translit, gset, ctx, hint=None, pmap=None, constraints=None, roster=None):
     """Hash of the EXACT model input — system prompt + the full user message + the model id. Any
     change to the prompt, the fed verse sample (a words rebuild moving select_spread, a --budget
     change), the verse prose, the gloss set, or the model produces a DIFFERENT signature. A stored
     draw can only count as a hit when it was drawn from byte-identical input, so a stale draw can
     never silently apply. (OCC_MIN/MAX_TOKENS are deliberately out — OCC_MIN only gates whether a
-    word builds; MAX_TOKENS is out for the same reason it's out of synth_ver.)"""
-    user = verse_user_msg(sid, translit, gset, ctx, hint, pmap, constraints)
+    word builds; MAX_TOKENS is out for the same reason it's out of synth_ver.)
+
+    SIGNATURE-FOLD (path (c), mandatory): the roster rides in the user message, so a roster-anchored
+    draw hashes DIFFERENTLY from an unanchored one — it can never key-collide with, and silently
+    reuse, a draw drawn without its floor-consensus context."""
+    user = verse_user_msg(sid, translit, gset, ctx, hint, pmap, constraints, roster)
     return _sha1(VERSE_PROMPT + "\x00" + user + "\x00" + MODEL_SONNET)
 
 
@@ -1628,14 +1682,14 @@ def bank_refused_repair(sid, kind, rec):
 
 def save_draw(sid, lemma, translit, gset, ctx, raw, forced=None, hint=None,
               pmap=None, constraints=None, no_hints_reason=None, repair=None,
-              qrepair=None):
+              qrepair=None, roster=None):
     """Write (or refresh) the reviewed draw. Called ONLY by the ro pass and --force — an unreviewed
     fresh apply must never leave a draw file that would later look reviewed. Atomic replace so a
     crash mid-write can't leave a torn file. `forced` = any --force-verse refs added to the fed
     sample (coverage override); `hint` = any --structure-hint stable-jobs list injected as draw
     context (escalation mechanism). Both recorded so the draw self-documents why it was fed/framed."""
     os.makedirs(DRAWS_DIR, exist_ok=True)
-    sig = draw_signature(sid, translit, gset, ctx, hint, pmap, constraints)
+    sig = draw_signature(sid, translit, gset, ctx, hint, pmap, constraints, roster)
     rec = {
         "strongs":   sid,
         "lemma":     lemma,
@@ -1659,6 +1713,13 @@ def save_draw(sid, lemma, translit, gset, ctx, raw, forced=None, hint=None,
                            "ceiling lines from the park ruling record, injected as draw CONTEXT after "
                            "the occurrences; frozen prompt untouched, never names a preferred sense "
                            "or carve") if constraints else "",
+        # PATH (c) ROSTER (--roster; PATH (c) DESIGN — CLOSED, 2026-07-13). The floor-consensus
+        # structure this draw was anchored to (count + verse groups), so the draw self-documents
+        # its anchor. Part of sig (rides the user message), so a roster change forces a fresh draw.
+        "roster": roster or {},
+        "roster_why": ("path (c) floor-consensus roster injected as soft-explicit draw context "
+                       "(sense count + verse groups from the word's saved floor); frozen prompt "
+                       "untouched, fixes count/grouping only, never the wording") if roster else "",
         # --no-hints override on a registered word (ruling 1's logged escape hatch); "" = normal run.
         "no_hints_reason": no_hints_reason or "",
         # V10 REPAIR PASS stamps (DESIGN_v10_repair.md): a repaired draw is visibly repaired
@@ -2456,11 +2517,11 @@ def make_client():
     return anthropic.Anthropic(api_key=get_key())
 
 
-def model_prose(client, sid, translit, gset, ctx, hint=None, pmap=None, constraints=None):
+def model_prose(client, sid, translit, gset, ctx, hint=None, pmap=None, constraints=None, roster=None):
     msg = client.messages.create(
         model=MODEL_SONNET, max_tokens=MAX_TOKENS, system=VERSE_PROMPT,
         messages=[{"role": "user",
-                   "content": verse_user_msg(sid, translit, gset, ctx, hint, pmap, constraints)}])
+                   "content": verse_user_msg(sid, translit, gset, ctx, hint, pmap, constraints, roster)}])
     return "".join(b.text for b in msg.content if getattr(b, "type", "") == "text").strip()
 
 
@@ -2562,6 +2623,14 @@ def show_entry(entry):
         if fd["floor_unseen"]:
             print(f"     floor-unseen citation(s), NOT covered by this diff — table-verify them "
                   f"(σελήνη procedure): {', '.join(fd['floor_unseen'])}")
+    rc = a.get("roster_count")
+    if rc:
+        if rc["ok"]:
+            print(f"  #55 sense-count guard vs roster ({rc['floor']}): ship {rc['ship_count']} = "
+                  f"roster {rc['roster_count']} — count matches (clean)")
+        else:
+            print(f"  ⚠ #55 sense-count guard vs roster ({rc['floor']}): ship {rc['ship_count']} ≠ "
+                  f"roster {rc['roster_count']} — floor consensus COLLAPSED or SPLIT (apply refused)")
     for r in (a.get("registry_verses") or []):
         print(f"  ‼ CONTESTED-VERSE REGISTRY HIT: {r['ref']} — {r['fork']}\n"
               f"     BAR ({r['source']}): {r['bar']}\n"
@@ -2631,6 +2700,15 @@ def main():
                          "at the dry-run gate. One word only; refuses a file whose strongs does not "
                          "match --word. Absent on a draw pass → the gate prints that the diff was "
                          "NOT run (an unchecked blind spot must not look like a pass).")
+    ap.add_argument("--roster", metavar="JSON",
+                    help="PATH (c) re-entry: anchor this word's draw to its banked FLOOR-CONSENSUS "
+                         "roster (draw_hints.py 'roster') — inject the consensus sense count + "
+                         "verse groups as soft-explicit draw context AND run the #55 sense-count "
+                         "guard (ship count must equal roster count). Value = the word's saved "
+                         "agreement_<SID>_*.json, i.e. the floor the roster was read from. Per-word "
+                         "(needs --word, refuses --all); refuses a word with no roster (no "
+                         "floor-drift record), and refuses a floor whose strongs isn't this word "
+                         "or whose file isn't the roster's declared floor.")
     ap.add_argument("--structure-hint", action="append", default=[], metavar="JOB",
                     help="ESCALATION MECHANISM (post cap-out only, per the trigger ruling): pass one stable "
                          "sense/job (repeatable) from a prior review's certified stable-jobs list. Injected "
@@ -2687,6 +2765,12 @@ def main():
     if args.floor and (not args.word or args.all):
         sys.exit("--floor diffs ONE word against ITS OWN saved floor: use with --word G#### and "
                  "never --all (a floor is a per-word artifact).")
+    if args.roster and (not args.word or args.all):
+        sys.exit("--roster anchors ONE word to its OWN banked roster: use with --word G#### and "
+                 "never --all (a roster is a per-word artifact).")
+    if args.roster and args.resplit:
+        sys.exit("--roster is a DRAW-time anchor (it steers the model draw); --resplit re-splits "
+                 "stored prose with no model call. Nothing to anchor — drop one.")
 
     targets = [args.word.upper()] if args.word else list(PILOT)
     targets = [("G" + t if t[:1] not in ("G", "H") else t) for t in targets]
@@ -2729,6 +2813,7 @@ def main():
         print(f"{sid}")
         existing = conn.execute("SELECT def_json, synth_ver FROM lexica_def WHERE strongs=?",
                                 (sid,)).fetchone() if table_exists(conn, "lexica_def") else None
+        roster = None   # PATH (c): set + validated in the model branch; read by the #55 gate below
 
         if args.resplit:
             if not existing or not existing["def_json"]:
@@ -2812,8 +2897,28 @@ def main():
             if eff_jobs:
                 print(f"  structure-hint (escalation mechanism, {len(eff_jobs)} jobs) injected "
                       f"into draw context — frozen prompt untouched, logged on the draw")
+            # ── PATH (c) ROSTER (--roster; PATH (c) DESIGN — CLOSED, 2026-07-13). Anchor the draw
+            # to the word's banked floor-consensus roster (soft-explicit context) + arm the #55
+            # sense-count guard. Per-word opt-in; refuses a word with no roster, or a wrong floor.
+            if args.roster:
+                roster = reg.get("roster")
+                if not roster:
+                    print(f"  ✗ --roster: {sid} has no roster in draw_hints.py (no floor-drift "
+                          f"record to anchor to). NOT run.", file=sys.stderr)
+                    failures.append(sid); continue
+                # The passed file must BE this word's floor: strongs match (load_floor sys.exits
+                # otherwise) AND the roster's OWN declared floor file — no anchoring to a stray floor.
+                load_floor(args.roster, sid)
+                passed = os.path.basename(os.path.expanduser(args.roster))
+                if passed != roster.get("floor"):
+                    print(f"  ✗ --roster: {sid}'s roster was read from {roster.get('floor')!r}, but "
+                          f"--roster names {passed!r} — wrong floor. NOT run.", file=sys.stderr)
+                    failures.append(sid); continue
+                print(f"  ROSTER injected (path (c)): {roster['count']} senses, "
+                      f"{len(roster['groups'])} group(s) from {roster['floor']} — soft-explicit "
+                      f"draw context; #55 sense-count guard armed. Frozen prompt untouched.")
             # ── DRAW CACHE. Recompute the current input signature live; consult the cached draw.
-            sig = draw_signature(sid, translit, gset, ctx, eff_jobs, pmap, constraints)
+            sig = draw_signature(sid, translit, gset, ctx, eff_jobs, pmap, constraints, roster)
             rec = None if args.force else load_draw(sid)
             status = draw_status(rec, sig) if rec else None
 
@@ -2864,12 +2969,13 @@ def main():
                 print("  calling the verse engine (Sonnet)…")
                 if client is None:
                     client = make_client()
-                raw = model_prose(client, sid, translit, gset, ctx, eff_jobs, pmap, constraints)
+                raw = model_prose(client, sid, translit, gset, ctx, eff_jobs, pmap, constraints, roster)
                 if args.dry_run or args.force:
                     # ro (review pass) and --force write/refresh the draw so apply ships THIS prose.
                     save_draw(sid, lemma, translit, gset, ctx, raw,
                               forced=args.force_verse, hint=eff_jobs,
-                              pmap=pmap, constraints=constraints, no_hints_reason=args.no_hints)
+                              pmap=pmap, constraints=constraints, no_hints_reason=args.no_hints,
+                              roster=roster)
                     tag = " (forced — cache refreshed)" if args.force else ""
                     print(f"  cached draw → {draw_path(sid)} (key {sig[:8]}){tag}")
                 elif args.apply:
@@ -2910,7 +3016,7 @@ def main():
                 save_draw(sid, lemma, translit, gset, ctx, raw,
                           forced=args.force_verse, hint=eff_jobs, pmap=pmap,
                           constraints=constraints, no_hints_reason=args.no_hints,
-                          repair=rrec)
+                          repair=rrec, roster=roster)
                 print(f"  REPAIRED draw cached → {draw_path(sid)} (round(s): {rrec['rounds']}, "
                       f"integrated: {', '.join(rrec['refs'])}, {rrec['prompt_ver']}) — "
                       f"review THIS card below; a later --apply ships these bytes.")
@@ -2940,7 +3046,7 @@ def main():
                 save_draw(sid, lemma, translit, gset, ctx, raw,
                           forced=args.force_verse, hint=eff_jobs, pmap=pmap,
                           constraints=constraints, no_hints_reason=args.no_hints,
-                          repair=rrec, qrepair=qrec)
+                          repair=rrec, qrepair=qrec, roster=roster)
                 print(f"  QUOTE-REPAIRED draw cached → {draw_path(sid)} "
                       f"(round(s): {qrec['rounds']}, {qrec['prompt_ver']}) — review THIS "
                       f"card below (FULL battery owed as if new, lesson #50 b); a later "
@@ -2979,6 +3085,10 @@ def main():
         if args.floor:
             entry["audit"]["floor_diff"] = floor_diff_record(load_floor(args.floor, sid),
                                                              entry["senses_block"])
+        # #55 SENSE-COUNT GUARD (path (c)): compare the ship sense count to the roster count.
+        # Record lands on the entry (and so on an applied row) ONLY when a roster was anchored.
+        if args.roster and roster:
+            entry["audit"]["roster_count"] = roster_count_diff(roster, entry["senses_block"])
         show_entry(entry)
         if not args.floor and not args.resplit:
             print("  ⚠ #30 floor-diff NOT RUN — no --floor <agreement json> on this pass; the "
@@ -2992,6 +3102,23 @@ def main():
                 print("      - " + p)
             failures.append(sid)
             continue                              # never write an incomplete row
+
+        # #55 SENSE-COUNT GUARD (path (c), GATE CONDITION): the ship sense count MUST equal the
+        # roster count. A mismatch means the floor consensus was collapsed (a pole vanished — the
+        # #30 pair-membership check can't see that) or split; it is part of path (c)'s definition,
+        # not a soft flag, so an --apply is REFUSED. The review pass prints it loud for the reviewer.
+        rcd = entry["audit"].get("roster_count")
+        if rcd and not rcd["ok"]:
+            if args.apply:
+                print(f"  ✗ NOT written — #55 sense-count guard: shipped {rcd['ship_count']} "
+                      f"sense(s) but the roster fixes {rcd['roster_count']} (floor {rcd['floor']}). "
+                      f"The floor consensus was collapsed or split — re-draw or PARK.",
+                      file=sys.stderr)
+                failures.append(sid)
+                continue
+            print(f"  ⚠ #55 sense-count guard FIRES: shipped {rcd['ship_count']} sense(s), roster "
+                  f"fixes {rcd['roster_count']} — an apply will be REFUSED (collapse/split).",
+                  file=sys.stderr)
 
         # V11 open-warn-blocks-apply (GATE CONDITION). Adjudication is a reviewer ruling
         # relayed as --adjudicate-warns "note"; the note ships in the row (self-documents).

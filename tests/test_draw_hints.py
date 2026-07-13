@@ -58,6 +58,58 @@ def test_hint_change_changes_signature():
     assert base != hinted and hinted != hinted2
 
 
+# ── PATH (c) ROSTER (PATH (c) DESIGN — CLOSED, AUDIT 2026-07-13) ────────────────────────────────
+# The three path-(c) words carry a floor-consensus roster. These guard the mechanism, red-first.
+_PATH_C = {"G236": 2, "G1390": 2, "G227": 3}   # word -> ruled roster sense count
+# The injection's closing boundary sentence — RULED VERBATIM; a reword is a design breach.
+_ROSTER_BOUNDARY = ("this fixes only how many senses and which verses group, from the consensus, "
+                    "never the wording.")
+
+
+def test_the_three_path_c_words_carry_a_wellformed_roster():
+    for sid, count in _PATH_C.items():
+        r = DRAW_HINTS[sid].get("roster")
+        assert r, f"{sid}: path-(c) word missing its roster"
+        assert r["count"] == count, f"{sid}: roster count {r['count']} != ruled {count}"
+        assert len(r["groups"]) == count, f"{sid}: {len(r['groups'])} groups != count {count}"
+        assert r.get("floor"), f"{sid}: roster names no floor"
+        assert r.get("provenance", "").strip(), f"{sid}: roster provenance is REQUIRED"
+
+
+def test_roster_rides_after_constraint_check_with_verbatim_boundary():
+    r = DRAW_HINTS["G236"]["roster"]
+    msg = B.verse_user_msg("G236", "allasso", _GSET, _CTX,
+                           hint=["a job"], constraints=["a pin."], roster=r)
+    # order: occurrences -> STRUCTURE CHECK -> CONSTRAINT CHECK -> ROSTER (frozen prompt untouched)
+    assert (msg.index("OCCURRENCES") < msg.index("STRUCTURE CHECK")
+            < msg.index("CONSTRAINT CHECK") < msg.index("ROSTER (floor consensus")), msg
+    assert f"{r['count']} senses." in msg
+    assert _ROSTER_BOUNDARY in msg, "boundary sentence must appear VERBATIM"
+    # seam verses fold into their ruled home group (Jer 13:23 -> group 2), so the draw sees the home
+    assert "Jer 13:23" in msg
+    # no roster passed -> no scaffold (a draw must never see an empty ROSTER section)
+    assert "ROSTER (floor consensus" not in B.verse_user_msg("G236", "allasso", _GSET, _CTX)
+
+
+def test_roster_folds_the_signature_no_key_collision():
+    r = DRAW_HINTS["G227"]["roster"]
+    base = B.draw_signature("G227", "alethes", _GSET, _CTX)
+    anchored = B.draw_signature("G227", "alethes", _GSET, _CTX, roster=r)
+    # a roster-anchored draw can NEVER key-collide with an unanchored one
+    assert base != anchored
+
+
+def test_55_sense_count_guard_fires_red_first_on_mismatch():
+    r = DRAW_HINTS["G236"]["roster"]   # count = 2
+    collapsed = "**1. To exchange** foo (Gen 1:1)"                                  # 1 sense
+    match     = "**1. To exchange** foo (Gen 1:1)\n\n**2. To transform** bar (Exo 2:2)"   # 2
+    split     = match + "\n\n**3. Extra** baz (Lev 3:3)"                            # 3
+    assert B.roster_count_diff(r, collapsed)["ok"] is False, "must FIRE on a collapse (2->1)"
+    assert B.roster_count_diff(r, split)["ok"] is False, "must FIRE on a split (2->3)"
+    ok = B.roster_count_diff(r, match)
+    assert ok["ok"] is True and ok["ship_count"] == ok["roster_count"] == 2
+
+
 def test_phrase_context_reaches_the_draw():
     """The fragment-rendering fix's injection half: a multi-word slot phrase shows in the
     here-tag with its translator additions named, and a fragment-risk head is annotated in the

@@ -72,6 +72,35 @@ card's prose into a draw. Constraint hints stay on the right side of that line b
 - **JP rules the register**: adding or editing a hint line = a checkpoint (same class as
   a correction-table write).
 
+## The roster class (path (c)) — a DISTINCT legal class
+
+Added by PATH (c) DESIGN — CLOSED (AUDIT_lexica_rollout.md, 2026-07-13; reviewer-adjudicated
+under JP's standing delegation). The AUDIT entry is the source of truth; this section names
+the class so the hand-carve ban above stays unambiguous.
+
+The rule in "Fact/discipline only, never outcome" — *never a preferred sense count or carve* —
+governs **hints and jobs ONLY.** A **roster** is a THIRD register kind, and it is *allowed* to
+fix the sense **count** and **which verses group**, for one reason: it is not hand-invented. A
+roster is the floor's OWN repeated-review consensus, read off the saved agreement:
+
+- **count** = the MODAL per-draw sense count (mechanical, off the floor draws — G236=2, G1390=2,
+  G227=3), not an auditor's preferred number.
+- **homes** (the groups) = hand-authored from the floor's per-verse company — the same read that
+  calls a verse STABLE/UNSTABLE — banked with provenance. Not auto-clustered (connected-components
+  over-merges via bridge verses; FALSIFIED on bytes, logged as follow-on B).
+- It fixes HOW MANY senses and WHICH verses group. It **never** fixes the WORDING — senses are
+  still named and written from the occurrences.
+
+Why this is legal where a hand carve is not: a hints/jobs carve would be the auditor asserting a
+structure; a roster REPORTS the floor's structure back to the draw. It is still pre-registered
+(banked in the AUDIT before the run, with provenance), still JP-checkpointed (a `roster` edit is
+the same class as a hint edit — a correction-table write), and enforced post-draw by #30 cluster
+membership + the NEW #55 sense-count guard (ship count must equal roster count). Injected only
+under `--roster`, as soft-explicit draw context, frozen V9 prompt untouched.
+
+Storage: a `roster` key on the word's `draw_hints.py` entry, shape
+`{floor, count, groups, seams, float, excluded, provenance}`. Scope: G236, G1390, G227.
+
 ## Storage
 
 A hand-curated, in-repo register — same pattern as CONTESTED_VERSES:

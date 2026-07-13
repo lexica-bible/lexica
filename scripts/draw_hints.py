@@ -11,6 +11,19 @@ Hand-curated, same pattern as the CONTESTED register. Each entry:
               design doc and ruled).
   jobs:       optional stable-jobs lines (the existing --structure-hint mechanism's
               content, if a certified stable-jobs list was banked for the word).
+  roster:     optional FLOOR-CONSENSUS carve for a path-(c) word (PATH (c) DESIGN —
+              CLOSED, AUDIT 2026-07-13). A DISTINCT LEGAL CLASS from hints/jobs: the
+              hand-carve ban above (no preferred sense count, no carve) governs
+              hints/jobs ONLY. A roster is allowed to fix HOW MANY senses and WHICH
+              verses group, because it is not hand-invented — it is the floor's OWN
+              repeated-review consensus (count = the modal per-draw sense count; homes
+              = hand-authored from the floor's per-verse company, banked with
+              provenance). It never fixes the WORDING. Shape:
+                {floor, count, groups:[[refs]…], seams:[{ref,group,why}],
+                 float:[refs], excluded:[refs], provenance}
+              Injected only under the --roster flag (soft-explicit draw context; frozen
+              V9 prompt untouched); enforced post-draw by #30 membership + the #55
+              sense-count guard. See DESIGN_hint_tooling.md's floor-consensus class.
   provenance: which park entry / ruling each entry encodes. The audit entry is the
               source of truth; this file is the machine-readable copy. A CI test
               (tests/test_draw_hints.py) asserts every entry names one.
@@ -48,6 +61,18 @@ DRAW_HINTS = {
             "4:8 alone.",
         ],
         "jobs": [],
+        # PATH (c) roster — BYTE-FOR-BYTE from AUDIT "PATH (c) DESIGN — CLOSED" (2026-07-13; #51).
+        # COUNT-anchored: poles blur ~2/10 even under clean anchors; the #55 count guard is the enforcer.
+        "roster": {
+            "floor": "agreement_G1390_v9_20260712-181939.json", "count": 2,
+            "groups": [
+                ["Psa 68:18","Eph 4:8","Mat 7:11","Luk 11:13","Pro 18:16","Pro 19:17","Gen 25:6","Gen 47:22",
+                 "Dan 2:6","Dan 2:48","Dan 5:17","2Ch 2:10","2Ch 21:3","2Ch 32:23","1Ki 13:7","Php 4:17",
+                 "Hos 9:1","Hos 10:6","Ecc 3:13","Ecc 5:19","Deu 23:23","Eze 46:16","Eze 46:17","2Sa 19:42"],
+                ["Num 18:6","Num 18:7","Num 18:11","Num 18:29","Num 3:9","Num 28:2","Lev 7:30","Lev 23:38",
+                 "Exo 28:38","Eze 46:5","Eze 20:31","2Ch 31:14","Ecc 5:1"]],
+            "seams": [], "float": ["Num 27:6"],
+            "provenance": "floor agreement_G1390_v9_20260712-181939.json pole-affinity, sharpened anchors Mat 7:11 / Num 18:6 (2/10 clean) + modal count; count-anchored; Psa 68:18+Eph 4:8 homed A on the sharpened read (float premise falsified); ruling 2026-07-13"},
         "provenance": "AUDIT_lexica_rollout.md G1390 PARKED entry (batch-4 word 2, 2026-07-10/11) "
                       "+ BATCH 4 CLOSED banked hints; JP batch-close ruling 2026-07-12. "
                       "Eph 4:9-11 pin: V9 floor agreement_G1390_v9_20260712-181939 (real-miss "
@@ -84,6 +109,22 @@ DRAW_HINTS = {
             "— list the four verses out.",
         ],
         "jobs": [],
+        # PATH (c) roster — BYTE-FOR-BYTE from AUDIT "PATH (c) DESIGN — CLOSED" (2026-07-13; #51).
+        # MEMBERSHIP-anchored: count soft (modal 3 of a 1-5 spread); #30 membership is the enforcer.
+        "roster": {
+            "floor": "agreement_G227_v9_20260712-154728.json", "count": 3,
+            "groups": [
+                ["1Jn 2:8","1Jn 2:27","1Pe 5:12","2Pe 2:22","3Jn 1:12","Act 12:9","Dan 8:26","Deu 13:14",
+                 "Gen 41:32","Isa 41:26","Isa 43:9","Job 42:7","Job 42:8","Joh 3:33","Joh 4:18","Joh 5:31",
+                 "Joh 5:32","Joh 8:26","Joh 10:41","Joh 19:35","Joh 21:24","Pro 22:21","Tit 1:13"],
+                ["Joh 8:13","Joh 8:14","Joh 8:16","Joh 8:17"],
+                ["2Ch 31:20","Isa 42:3","Job 5:12","Job 17:10","Php 4:8","Pro 1:3"]],
+            "seams": [
+                {"ref":"Isa 42:3","group":3,"why":"THE residual — cond 7/10 + own company Job5:12/Pro1:3/Php4:8/2Ch31:20 at 7-8/10; d3 wrongly soloed it (#30 fire)"},
+                {"ref":"Joh 3:33","group":1,"why":"floor fact 6 vs jurid 1; d3's second #30 drift (put it juridical)"}],
+            "float": ["Rom 3:4","Mar 12:14","Mat 22:16","Neh 7:2","Joh 7:18","2Co 6:8"],
+            "excluded": ["Joh 8:15"],
+            "provenance": "floor agreement_G227_v9_20260712-154728.json 3-anchor (Gen41:32/Joh8:13/Pro1:3) + Isa 42:3 own company (two reads converge) + modal count; membership-anchored (count soft, #30 the enforcer); ruling 2026-07-13"},
         "provenance": "AUDIT_lexica_rollout.md G227 PARKED entry (re-selection r14, run session 2, "
                       "2026-07-11) + BATCH 4 CLOSED banked hints; JP batch-close ruling 2026-07-12. "
                       "Joh 8:15 pin: V9 floor agreement_G227_v9_20260712-154728 (real-miss Joh 8:15 "
@@ -94,19 +135,29 @@ DRAW_HINTS = {
                       "in via gloss-note range 'Joh 8:13-17' under the #28 scanner; JP tighten "
                       "ruling 2026-07-12.",
     },
-    "G236": {    # ἀλλάσσω — change/exchange
+    "G236": {    # ἀλλάσσω — change/exchange · HOME-anchored (path (c))
         "hints": [
-            "Isa 40:31 and Isa 41:1 belong with the transformation group (Psa 102:26, Heb 1:12, "
-            "1Co 15:51, Dan 4:16).",
             "A verse straddling the substitution/trade seam (e.g. Lev 27:10) gets ONE home or a "
             "named dual, never a silent double listing.",
             "Dan 4:16 reads 'seven times shall change over him'; Dan 4:25/4:32 read 'seven "
             "seasons shall change over you' — quote one verse and name it, never blend the pair.",
         ],
         "jobs": [],
+        # PATH (c) roster — copied BYTE-FOR-BYTE from AUDIT_lexica_rollout.md "PATH (c) DESIGN —
+        # CLOSED" (2026-07-13; lesson #51). HOME-anchored: the #30 membership guard is the enforcer.
+        "roster": {
+            "floor": "agreement_G236_v9_20260712-165959.json", "count": 2,
+            "groups": [
+                ["1Ki 5:14","1Ki 20:25","2Ki 5:5","2Ki 5:22","2Ki 5:23","2Sa 12:20","Act 6:14","Exo 13:13",
+                 "Ezr 6:11","Ezr 6:12","Gal 4:20","Gen 31:7","Gen 35:2","Gen 41:14","Isa 24:5","Jer 2:11",
+                 "Jer 52:33","Lev 27:10","Lev 27:27","Lev 27:33","Neh 9:26","Psa 106:20","Rom 1:23"],
+                ["1Co 15:51","1Co 15:52","Dan 4:16","Dan 4:25","Dan 4:32","Heb 1:12","Isa 40:31","Isa 41:1","Psa 102:26"]],
+            "seams": [{"ref":"Jer 13:23","group":2,"why":"floor 5/5 true seam; ruled transformation (V11.2 #30 park — d3 drifted it to substitution)"}],
+            "float": [],
+            "provenance": "floor agreement_G236_v9_20260712-165959.json modal homes + AUDIT G236 V11.2 park (Jer 13:23 #30) + draw_hints Gal 4:20/Lev 27:10 rulings; hint-1 (Isa 40:31/41:1) RETIRED into this roster; ruling 2026-07-13"},
         "provenance": "AUDIT_lexica_rollout.md G236 PARKED entry (re-selection r15, run session 3, "
                       "2026-07-12) + BATCH 4 CLOSED banked hints; JP batch-close ruling 2026-07-12. "
-                      "Hint 3 (Dan-trio quote discipline) ADDED at the V11 run session (2026-07-12): "
+                      "Hint (Dan-trio quote discipline) ADDED at the V11 run session (2026-07-12): "
                       "drafted in the G236 RE-PARKED entry (batch-5 run session 2), amendment-2 "
                       "byte-verified against verses.text raw output (Dan 4:16/4:25/4:32), "
                       "reviewer-confirmed, applied under JP's standing delegation. "
@@ -114,7 +165,9 @@ DRAW_HINTS = {
                       "the fresh V9 floor agreement_G236_v9_20260712-165959 homes Gal 4:20 with "
                       "substitution 7-8/10 vs the clause's transformation pin — floor-is-ground-"
                       "truth ruling, reviewer-recommended, applied under JP's standing delegation "
-                      "for this word (on the session record).",
+                      "for this word (on the session record). "
+                      "Hint-1 (Isa 40:31/41:1 transformation grouping) RETIRED 2026-07-13 into the "
+                      "path-(c) roster (subsumed, group 2); see the roster's own provenance.",
     },
     "G2805": {   # κλαυθμός — weeping
         "hints": [
