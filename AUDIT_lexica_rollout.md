@@ -4848,3 +4848,60 @@ opens with the mechanism question (--repair arming) LIVE; last word, inside the 
 path-(c) risk, and the potential third test of the repair pass.
 **TICKET additions:** run commands arm --repair --quote-repair together · #30 must fail (or refuse
 "clean") on a sense-count mismatch vs floor structure.
+
+### V11.2 RUN SESSION — G227 ἀληθής PARKED AT CAP + PATH (c) FIRES (V11.2 run word 4, LAST;
+### one gate/one command per ruling 6; reviewer-adjudicated under JP's standing delegation;
+### every gate against bytes). Scoreboard 2/9ʰ → 2/10ʰ (G227 INSIDE the count). Path (c) FIRES,
+### scoped to G227 — THIRD word on path (c) (joins G236, G1390). Run COMPLETE: 0 shipped / 4 parked.
+**Gates:** gate-1 MATCH, key d65ed578, no model call (method (A); floor-staleness verified —
+G227 block 4-commit trace [0c31cb0 create · bdcff64 8:15 pin · f30ff73 range-clause tighten ·
+9f1ea39 provenance], all pre-date the V11-run draw, so d65ed578 = fully-tightened 3-hint key;
+d2's hint-break was draw behavior not register motion). Floor agreement_G227_v9_20260712-154728
+stands.
+**Mechanism:** fresh draw (--force) + --repair --quote-repair (FIRST both-armed command this
+run, per the ruling-1 arming correction; combined path byte-verified: coverage-repair first cap 2,
+quote-repair second cap 1, full battery on final raw per #50 b). d2 archived to preserved history:
+`draws/history/G227_20260713T015328_d65ed578.json` (ruling 5). Fresh draw d3 written; key d65ed578
+unchanged throughout.
+**d3 — DEAD, but the quote-gate death is UNSOUND (Modification 1).** Machine event of record =
+quote gate parse failure (3 spans). BUT all three spans are d3's OWN metalinguistic prose, NOT
+scripture: "matches the facts" + "counts as adequate under the applicable rule." (sense-2 opener's
+own sense-contrast labels) + "speak what is true" (Isa 43:9 gloss-note rendering alternative). d3
+had ZERO real quote-fidelity defects. The gate fired on three FALSE POSITIVES (meta-exemption's
+≤2-word meta:v1 pattern too narrow to catch them); the quote-repair pass then breached on material
+it should never have received. The gate's verdict stands as a MACHINE EVENT; it does NOT stand as
+a defect finding. Coverage 39/39, citation 39/39 — both clean.
+**REAL park basis (Modification-1 kills, independent of the artifacts):**
+- **KILL — Isa 42:3 placement/floor-drift (#30).** d3 carved Isa 42:3 into a THIN solo sense 3
+  (1 ref, "carrying real force to its proper outcome"), splitting it from its floor cluster
+  (2Ch 31:20 7/10, Job 5:12 8/10, Php 4:8 7/10, Pro 1:3 7/10 — kept NONE). Strong-consensus split
+  (7-8/10), unlike G1390's soft 6/10s.
+- **KILL — 4→3 structural restructure vs floor.** d3 folded d2's/floor's person-reliability +
+  moral-straightness senses into sense-1 sub-uses; floor-is-ground-truth includes sense structure
+  (G1390 precedent). Sense 3 THIN (1 ref) corroborates the carve.
+- Joh 3:33 drift = second #30 fire.
+**Hints — 3/3 OBEY:** hint 1 (1Jn 2:8 explicitly "the commandment, not the light"; its "true in
+him, and in you" quote PASSED the gate); hint 2 (Joh 5:32 + 3Jn 1:12 both stated as named duals
+with "see sense 2" — the exact rule d2 BROKE, now obeyed); hint 3 (Joh 8:13/8:14/8:16/8:17 listed
+out, no 8:15, no range).
+**Repair-pass record:** coverage-repair did NOT fire (coverage clean) — stays 3-for-3, untested
+today. **Quote-repair 0-for-3 → DESIGN REVIEW TRIGGERED.** Breach-composition record for the
+docket: G236 (1 real + 1 artifact), G162 (2 real + 1 artifact), G227 (3 artifacts + 0 real) — the
+repair breaches REGARDLESS of span reality; G227's pure-artifact breach is the cleanest case.
+**DESIGN REVIEW (Modification 2 — scope WIDENED to the quote-gate-plus-repair pipeline):** (1) the
+gate's false-positive feeder (meta:v1 too narrow — missed 3 obvious metalinguistic spans); (2) the
+repair handed artifacts with nothing to fix → reworks prose → breaches; working hypothesis (NOT
+conclusion) = guard-overstrictness + feeder-contamination over prompt-failure; (3) breach-
+composition record above. PREREQUISITE (ruled): no review conclusion without preserved breach
+bytes — the repair-bytes-preservation ticket ships before/with the review; first evidentiary act
+may be a controlled re-fire against a banked fixture with preservation live. Quote-repair MANDATORY-
+BLOCKED from firing again until the review closes; G227's own re-entry blocks on it AND composes
+with path (c).
+**Closest-to-clean (on the record):** gates clean, hints 3/3 (incl. the named-dual rule d2 broke),
+1Jn 2:8 handled exactly per hint 1. d3 was blocked by false positives + a narrower real placement/
+structure problem. Material for path (c)'s design: G227's residual defect surface is placement/
+structure — precisely what a roster stage addresses.
+**Retry-trigger: PATH (c), scoped to G227** (third word; joins G236, G1390) — AND quote-repair
+blocked pending the design review. Key of record d65ed578.
+**TICKET additions:** meta-exemption widening (folded INTO design-review scope) · (carry-forwards
+consolidated at session close).
