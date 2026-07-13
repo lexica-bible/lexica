@@ -1184,9 +1184,51 @@ def check_rendering_claim(glosses, rends, verse_text="", phrases=None):
     return fires
 
 
+def _claim_fires(glosses, per_ref):
+    """V11.1 ticket 5 (ruled 2026-07-12) — per-bullet SET semantics for one gloss-note claim,
+    superseding every-gloss-at-every-ref (the G236 d1 six-coarse-fires class: a bullet listing
+    several glosses across several refs means 'distributed across', never 'each at every').
+    per_ref = ordered {refkey: (rends, verse_text, phrases)}, refs limited to the lemma's own
+    verses (the wrapper's job). Rules, each fixture-pinned in test_lexica_detectors.py:
+      · each claimed gloss must be clean at ≥1 ref; clean NOWHERE = ONE fire (case-mismatch
+        preferred over plain mismatch as the reported kind — the more informative defect);
+      · positional-cap flags at exact-match refs always survive (the οὐρανός class);
+      · a ref no claimed gloss matches fires once — but only when some other gloss DID match
+        somewhere, so the single-gloss/single-ref anchor (Psa 106:20 class) keeps exactly one
+        fire, never a double count.
+    Composes the UNCHANGED check_rendering_claim core (its pins all stand)."""
+    out = []
+    matched_refs, any_gloss_matched = set(), False
+    for g in glosses:
+        results = []
+        for key, (rends, vtext, phrases) in per_ref.items():
+            results.append((key, check_rendering_claim([g], rends, vtext, phrases)))
+        clean = [(k, f) for k, f in results if not f]
+        poscap = [(k, f) for k, f in results
+                  if f and all(x["kind"] == "positional-cap" for x in f)]
+        if clean or poscap:
+            any_gloss_matched = True
+            matched_refs.update(k for k, _ in clean + poscap)
+            for k, f in poscap:
+                out.extend({**x, "ref": f"{k[0]} {k[1]}:{k[2]}"} for x in f)
+        else:
+            k, f = next(((k, f) for k, f in results
+                         if any(x["kind"] == "case-mismatch" for x in f)), results[0])
+            x = next((y for y in f if y["kind"] == "case-mismatch"), f[0])
+            out.append({**x, "ref": f"{k[0]} {k[1]}:{k[2]}"})
+    if any_gloss_matched:
+        for key, (rends, _v, _p) in per_ref.items():
+            if key not in matched_refs:
+                out.append({"kind": "rendering-mismatch", "gloss": "(no claimed gloss)",
+                            "rend": " / ".join(sorted({r for r in rends if r})),
+                            "ref": f"{key[0]} {key[1]}:{key[2]}"})
+    return out
+
+
 def gloss_note_claims(conn, sid, gloss_notes):
     """FLAG-ONLY production wrapper: every parseable gloss-note rendering claim checked against the
-    lemma's real per-verse renderings + verse prose. Degrades to [] on any error (report, not gate)."""
+    lemma's real per-verse renderings + verse prose, under _claim_fires' per-bullet set semantics
+    (V11.1 ticket 5). Degrades to [] on any error (report, not gate)."""
     out = []
     claims = _gnote_claims(gloss_notes)
     if not claims:
@@ -1202,14 +1244,16 @@ def gloss_note_claims(conn, sid, gloss_notes):
         rend_at.setdefault(key, []).append((o["rend"] or "").strip())
         phrase_at.setdefault(key, []).append(((o["phrase"] or ""), (o["ital"] or "")))
     for c in claims:
+        per_ref = {}
         for key in c["refs"]:
             if key not in rend_at:
                 continue                          # note ref isn't one of this lemma's verses — not a rendering claim
             row = conn.execute("SELECT text FROM verses WHERE book=? AND chapter=? AND verse=?",
                                key).fetchone()
-            vt = (row["text"] if row else "") or ""
-            for f in check_rendering_claim(c["glosses"], rend_at[key], vt, phrase_at.get(key)):
-                out.append({**f, "ref": f"{key[0]} {key[1]}:{key[2]}"})
+            per_ref[key] = (rend_at[key], (row["text"] if row else "") or "",
+                            phrase_at.get(key))
+        if per_ref:
+            out.extend(_claim_fires(c["glosses"], per_ref))
     return out
 
 

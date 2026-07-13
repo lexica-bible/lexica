@@ -331,6 +331,58 @@ def test_floor_diff_record_reads_the_real_splitter_and_names_unseen():
     assert B.floor_ship_diff([[{("Gen", 1, 1)}]] * 10, []) == []          # n=10 → majority 6, no ship refs
 
 
+# ── V11.1 ticket 5: per-bullet SET semantics (_claim_fires; ruled 2026-07-12) ────────────────
+# The G236 d1 six-coarse-fires class: a bullet claiming several glosses across several refs
+# means "distributed across", never "each at every". d1 bytes OVERWRITTEN — the class
+# fixtures below are labeled RECONSTRUCTED per the standing ruling; the check_rendering_claim
+# CORE they compose is untouched and stays pinned by every fixture above.
+
+def test_claim_fires_distributed_bullet_is_clean():
+    """RECONSTRUCTED (coarse class): glosses [change, exchange] across refs A/B where A
+    renders 'change' and B renders 'exchange' — the distributed claim is TRUE and must be
+    clean. Old semantics fired 2 (each gloss at the other's ref)."""
+    per_ref = {("Psa", 102, 26): (["change"], "", None),
+               ("Lev", 27, 10): (["exchange"], "", None)}
+    assert B._claim_fires(["change", "exchange"], per_ref) == []
+
+
+def test_claim_fires_psa10620_anchor():
+    """RECONSTRUCTED real-catch anchor (G236 d1, audit-adjudicated kill): a claimed gloss the
+    corpus renders nowhere in the bullet's refs fires — EXACTLY ONCE for a single-gloss
+    single-ref bullet (never the old per-pair double count)."""
+    per_ref = {("Psa", 106, 20): (["changed"], "", None)}
+    fires = B._claim_fires(["barter"], per_ref)
+    assert len(fires) == 1 and fires[0]["kind"] == "rendering-mismatch", fires
+    assert fires[0]["ref"] == "Psa 106:20"
+
+
+def test_claim_fires_unmatched_ref_fires_once():
+    """A ref where NO claimed gloss matches fires once, when another gloss matched elsewhere
+    (the bullet claims coverage of that ref and delivers none)."""
+    per_ref = {("Psa", 102, 26): (["change"], "", None),
+               ("Exo", 13, 13): (["sold"], "", None)}
+    fires = B._claim_fires(["change"], per_ref)
+    assert len(fires) == 1 and fires[0]["ref"] == "Exo 13:13", fires
+
+
+def test_claim_fires_poscap_survives():
+    """The οὐρανός class survives set semantics: an exact match at a ref where the gloss sits
+    sentence-initial still emits the positional-cap adjudication flag, with the ref named."""
+    verse = "Heaven is high, and the earth is deep; but the heart of a king is unascertained."
+    per_ref = {("Pro", 25, 3): (["Heaven"], verse, None)}
+    fires = B._claim_fires(["Heaven"], per_ref)
+    assert any(f["kind"] == "positional-cap" and f["ref"] == "Pro 25:3" for f in fires), fires
+
+
+def test_claim_fires_case_mismatch_preferred():
+    """A gloss clean nowhere reports its most informative kind: case-mismatch (matched only
+    case-folded at some ref) beats a plain mismatch from another ref."""
+    per_ref = {("Gen", 1, 8): (["sky"], "", None),
+               ("Pro", 25, 3): (["heaven"], "", None)}
+    fires = B._claim_fires(["Heaven"], per_ref)
+    assert len(fires) == 1 and fires[0]["kind"] == "case-mismatch", fires
+
+
 # ── contested-verse registry routing ─────────────────────────────────────────────────────────
 
 def test_registry_hits_2co521():
