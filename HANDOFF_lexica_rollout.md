@@ -1,5 +1,12 @@
 # HANDOFF — Lexica definition-engine rollout (batch 2 / calibration)
 
+> **NEXT SESSION = PATH (c) BUILD** (2026-07-13). Charter + full scope + the two opener blocks (CC +
+> reviewer) + the three finalized rosters (copy VERBATIM) all live in the AUDIT entry
+> **"PATH (c) DESIGN — CLOSED"** (open from there, never this line). Build code + banking only, NO
+> word runs. Also live: the quote-repair review is CLOSED (verdict + tickets F1–F3 + ENGINE_LESSONS
+> #57 in AUDIT "QUOTE-GATE+REPAIR DESIGN REVIEW — CLOSED"); quote-repair STAYS BLOCKED on live cards
+> until F1–F3 land. Scoreboard 2/10ʰ. Ticket-1 preservation is LIVE (`bank_refused_repair`, b5fa87d).
+
 Fresh-session handoff for continuing the frequency rollout. **The audit doc
 `AUDIT_lexica_rollout.md` is the AUTHORITY** on saga details (commits `e8d42b5`, `67b4086`,
 `d7695eb`, `91f74da`, `a06a90b`, `81cd58a`). This file is the rule-state + task-state summary;

@@ -5022,3 +5022,123 @@ basis is now the fix-pending state, NOT the (now-closed) review.
 HIT each fire), so the .bak copies are belt-and-suspenders, safe to delete once F1–F3 close.
 **NEXT.** Path (c) design for G236, G1390, G227 (roster/floor-anchored placement stage). G162 NOT
 on path (c) (quote/citation/misattribution wall, no floor-drift). Lesson: ENGINE_LESSONS #57.
+
+### PATH (c) DESIGN — CLOSED (2026-07-13; reviewer-adjudicated under JP's standing delegation;
+### every roster derived + confirmed on floor BYTES; DESIGN ONLY — no code, no banking this
+### session). The roster/floor-anchored placement stage for the three path-(c) words.
+**WHAT PATH (c) IS.** A per-word re-entry mechanism for a word that dies at cap with a placement/
+floor-drift record. It injects the floor's CONSENSUS SENSE STRUCTURE (a "roster": sense count +
+verse-homes) as SOFT-EXPLICIT draw CONTEXT — frozen V9 prompt UNTOUCHED, rides the existing
+`--structure-hint`/`eff_jobs` context path. It fixes only HOW MANY senses and WHICH verses group
+(the consensus), never the wording. Enforced post-draw by #30 membership (existing) + a NEW #55
+sense-count guard set to the modal count. Scope: G236, G1390, G227. G162 NOT on path (c)
+(quote/citation/misattribution wall, no floor-drift — roster has zero purchase).
+**FALSIFIED-COMPONENTS FINDING (validate-before-lock, on bytes — the third such save this session).**
+The first derivation — roster = connected components of majority `consensus_pairs` — was FALSIFIED:
+it over-merges via BRIDGE verses (one migrator links two poles into one blob). G236 collapsed 2→1,
+G1390 2→1 (G227 held 2 only because its juridical island never bridges). Corrections, both grounded:
+- COUNT = the MODAL per-draw sense count (auto, reliable): G236=2, G1390=2, G227=3. Feeds #55.
+- HOMES = HAND-AUTHORED from the floor's per-verse company (the same read that calls STABLE/UNSTABLE),
+  banked with provenance — NOT auto-clustered. Matches the draw_hints precedent. Auto-clustering =
+  deferred follow-on (B), logged not dead.
+- #30 membership is pairs-based, bridge-immune — reused verbatim, untouched.
+Method per word: G236 largest-vs-smaller (clean dominant pole); G1390 + G227 pole-affinity to
+hand-picked anchors (2-anchor for G1390's binary, 3-anchor for G227's modal-3), each cross-checked —
+G1390's first anchors (Pro 18:16/Ecc 5:1) overlapped 4/10 (precondition FAIL) → re-run sharpened
+(Mat 7:11/Num 18:6, 2/10 clean) flipped Psa 68:18+Eph 4:8 float→A; G227's Isa 42:3 confirmed by BOTH
+3-anchor (cond 7) AND own company (Job5:12 8, Pro1:3/Php4:8/2Ch31:20 7). Two independent reads
+converging is the standard applied throughout.
+**ENFORCER-PROFILE TRIAD (the design's CORE insight — each word's roster has a PRIMARY enforcer,
+read from what the floor says actually FAILS):**
+- **G236 = HOME-anchored.** Clean 2-pole floor (8/10 draws=2), one true seam (Jer 13:23, 5/5). Died
+  on a HOME (Jer 13:23 misplaced). Both guards bite; homes are firm.
+- **G1390 = COUNT-anchored.** Poles blur ~2/10 even under clean anchors; count firm (mode 2), homes
+  softer. Died on the COUNT (collapse 2→1). The #55 count guard is the enforcer.
+- **G227 = MEMBERSHIP-anchored.** Count soft (modal 3 from a 1–5 spread), but the Isa 42:3 cluster is
+  a firm consensus pair-set. Died on MEMBERSHIP (Isa 42:3 soloed). #30 carries it; count guard weak.
+**MECHANISM DESIGN (ruled, for the build):**
+- NEW `roster` field in draw_hints.py, SEPARATE from hints/jobs — the register charter (draw_hints.py
+  lines 6–11) BANS a carve in hints; a FLOOR-CONSENSUS carve is a distinct legal class. Shape:
+  `{floor, count, groups:[[refs]…], seams:[{ref,group,why}], float:[refs], excluded:[refs], provenance}`.
+- DESIGN_hint_tooling.md AMENDMENT: name floor-consensus structure as a distinct legal class; the
+  hand-carve ban stays intact for hints/jobs.
+- INJECTED BLOCK (soft-explicit; boundary sentence VERBATIM, ruled): "…this fixes only how many
+  senses and which verses group, from the consensus, never the wording."
+- SIGNATURE-FOLD (mandatory): the roster block feeds `draw_signature` (new input alongside
+  hint/constraints) — a roster-anchored draw must NEVER key-collide with an unanchored one.
+- #55 SENSE-COUNT GUARD: ship sense count must equal the roster count; PART of path (c)'s definition
+  (closes the collapse-blindness #55 named), not optional hardening. Red-first: must FAIL on a known
+  count-mismatch before trusted.
+- `--roster <agreement.json>` flag: per-word opt-in, requires `--word` + a floor-drift record,
+  refuses without a floor.
+- HINT-1 RETIREMENT (G236 only): its Isa 40:31/41:1 grouping is subsumed by the roster; retire it in
+  the SAME draw_hints edit that lands the roster (ONE checkpoint), retirement noted in provenance.
+**THE THREE FINALIZED ROSTERS (copy VERBATIM into draw_hints.py at build — lesson #51, bytes; each
+confirmed on floor bytes this session):**
+```python
+"G236": {  # ἀλλάσσω — HOME-anchored
+  "roster": {
+    "floor": "agreement_G236_v9_20260712-165959.json", "count": 2,
+    "groups": [
+      ["1Ki 5:14","1Ki 20:25","2Ki 5:5","2Ki 5:22","2Ki 5:23","2Sa 12:20","Act 6:14","Exo 13:13",
+       "Ezr 6:11","Ezr 6:12","Gal 4:20","Gen 31:7","Gen 35:2","Gen 41:14","Isa 24:5","Jer 2:11",
+       "Jer 52:33","Lev 27:10","Lev 27:27","Lev 27:33","Neh 9:26","Psa 106:20","Rom 1:23"],
+      ["1Co 15:51","1Co 15:52","Dan 4:16","Dan 4:25","Dan 4:32","Heb 1:12","Isa 40:31","Isa 41:1","Psa 102:26"]],
+    "seams": [{"ref":"Jer 13:23","group":2,"why":"floor 5/5 true seam; ruled transformation (V11.2 #30 park — d3 drifted it to substitution)"}],
+    "float": [],
+    "provenance": "floor agreement_G236_v9_20260712-165959.json modal homes + AUDIT G236 V11.2 park (Jer 13:23 #30) + draw_hints Gal 4:20/Lev 27:10 rulings; hint-1 (Isa 40:31/41:1) RETIRED into this roster; ruling 2026-07-13"}},
+"G1390": {  # δόμα — COUNT-anchored (count=2 is the enforcer)
+  "roster": {
+    "floor": "agreement_G1390_v9_20260712-181939.json", "count": 2,
+    "groups": [
+      ["Psa 68:18","Eph 4:8","Mat 7:11","Luk 11:13","Pro 18:16","Pro 19:17","Gen 25:6","Gen 47:22",
+       "Dan 2:6","Dan 2:48","Dan 5:17","2Ch 2:10","2Ch 21:3","2Ch 32:23","1Ki 13:7","Php 4:17",
+       "Hos 9:1","Hos 10:6","Ecc 3:13","Ecc 5:19","Deu 23:23","Eze 46:16","Eze 46:17","2Sa 19:42"],
+      ["Num 18:6","Num 18:7","Num 18:11","Num 18:29","Num 3:9","Num 28:2","Lev 7:30","Lev 23:38",
+       "Exo 28:38","Eze 46:5","Eze 20:31","2Ch 31:14","Ecc 5:1"]],
+    "seams": [], "float": ["Num 27:6"],
+    "provenance": "floor agreement_G1390_v9_20260712-181939.json pole-affinity, sharpened anchors Mat 7:11 / Num 18:6 (2/10 clean) + modal count; count-anchored; Psa 68:18+Eph 4:8 homed A on the sharpened read (float premise falsified); ruling 2026-07-13"}},
+"G227": {  # ἀληθής — MEMBERSHIP-anchored (#30 carries it; count soft)
+  "roster": {
+    "floor": "agreement_G227_v9_20260712-154728.json", "count": 3,
+    "groups": [
+      ["1Jn 2:8","1Jn 2:27","1Pe 5:12","2Pe 2:22","3Jn 1:12","Act 12:9","Dan 8:26","Deu 13:14",
+       "Gen 41:32","Isa 41:26","Isa 43:9","Job 42:7","Job 42:8","Joh 3:33","Joh 4:18","Joh 5:31",
+       "Joh 5:32","Joh 8:26","Joh 10:41","Joh 19:35","Joh 21:24","Pro 22:21","Tit 1:13"],
+      ["Joh 8:13","Joh 8:14","Joh 8:16","Joh 8:17"],
+      ["2Ch 31:20","Isa 42:3","Job 5:12","Job 17:10","Php 4:8","Pro 1:3"]],
+    "seams": [
+      {"ref":"Isa 42:3","group":3,"why":"THE residual — cond 7/10 + own company Job5:12/Pro1:3/Php4:8/2Ch31:20 at 7-8/10; d3 wrongly soloed it (#30 fire)"},
+      {"ref":"Joh 3:33","group":1,"why":"floor fact 6 vs jurid 1; d3's second #30 drift (put it juridical)"}],
+    "float": ["Rom 3:4","Mar 12:14","Mat 22:16","Neh 7:2","Joh 7:18","2Co 6:8"],
+    "excluded": ["Joh 8:15"],
+    "provenance": "floor agreement_G227_v9_20260712-154728.json 3-anchor (Gen41:32/Joh8:13/Pro1:3) + Isa 42:3 own company (two reads converge) + modal count; membership-anchored (count soft, #30 the enforcer); ruling 2026-07-13"}},
+```
+**BUILD SCOPE (checkpoint-dense — ruled as its OWN session):** (1) roster field + charter in
+draw_hints.py; (2) DESIGN_hint_tooling.md amendment; (3) injection + signature-fold in
+build_lexica_def.py; (4) #55 count guard; (5) `--roster` flag; (6) hint-1 retirement (G236); (7)
+bank the three rosters VERBATIM from this entry; (8) red-first tests — homes are banked (no
+derivation to test); test the injection, the signature-fold (no key-collision), and the #55 guard on
+a count-mismatch (must fail red-first); (9) neighbor suites green. NO word runs in the build session —
+build + tests only; the path-(c) RUN is a LATER session.
+**BUILD-SESSION OPENER — CC block.** Charter: BUILD path (c) — code + banking, NO word runs/draws/
+floors. READ FIRST: this PATH (c) DESIGN — CLOSED entry (rosters + mechanism + triad); draw_hints.py
+(charter lines 6–11 + the entries to extend); DESIGN_hint_tooling.md (the charter to amend);
+build_lexica_def.py — the eff_jobs/structure-hint injection (~2811–2816), draw_signature (1525),
+#30 floor_diff (1364–1424). Opening check: `git log -1` = <this commit> or descendant · PA HEAD
+matches origin · neighbor suites green (test_draw_hints, test_v11_probes, test_lexica_detectors +
+new roster tests) · diff-vs-this-entry · R1 raw reposts both sides. Then the 9-item BUILD SCOPE, in
+order. HARD LOCKS: frozen V9 prompt UNTOUCHED · NO word runs · the three rosters copied BYTE-FOR-BYTE
+from this entry (#51) · signature-fold mandatory (no key-collision) · quote-repair STILL BLOCKED on
+live cards (F1–F3 unbuilt — separate from this) · draw_hints edit = JP CHECKPOINT. Standing rules:
+R1 · R1-b · R2-a · show-code-before-changing · JP runs all PA commands · no-crossing · affirmed-texts-
+to-disk.
+**BUILD-SESSION OPENER — reviewer block.** Role: adjudicate the build under standing delegation,
+every piece against THIS ruled design. Enforce: roster field matches the ruled shape; the charter
+amendment does NOT weaken the hand-carve ban (hints/jobs stay carve-free); injection boundary
+sentence VERBATIM; signature-fold present + control-checked (a roster-anchored draw keys differently
+from an unanchored one); #55 guard FIRES on a known count-mismatch (red-first, audit-tools-must-fail);
+the three rosters banked byte-for-byte from this entry; hint-1 retired in the SAME edit. draw_hints
+edit = checkpoint (receipt before commit). No-crossing on every checkpoint. NEXT after build: the
+path-(c) RUN session (G236/G1390/G227, one word/one command, roster-anchored draw → #30 + #55 →
+ship or park), a later session.
