@@ -40,6 +40,15 @@ VT = {
     ("Psa", 68, 18): "You ascended into the height; you captured captivity; you received gifts by men; for even to encamp among the ones resisting persuasion.",
     ("Num", 3, 9): "And you shall give the Levites to Aaron your brother, and to his sons to the priests for a gift being given; these to me are from the sons of Israel.",
     ("Gen", 41, 32): "And concerning the repetition of the dream to Pharaoh twice, it is because the saying by God will be true, and God will hasten to do it.",
+    # V11.1 ticket-1 verse bytes (JP live reads, 2026-07-12, this session's record):
+    ("Lev", 23, 38): "besides the Sabbaths of the LORD, and besides your gifts, and besides all your vows, and besides all your voluntary offerings, which ever you shall give to the LORD.",
+    ("Job", 1, 15): "And Sabeans fell upon and captured them, and the servants they killed by swords. And I alone escaped, and I came to report to you.",
+    ("2Ti", 3, 6): "For from out of these are the ones entering into the houses, and capturing the vain women heaped with sins, being led by various desires,",
+    ("Neh", 9, 26): "And they changed and revolted from you. And they tossed your law behind their body, and they killed your prophets, the ones testifying to them to turn them towards you. And they made great provocations to anger.",
+    ("Rom", 1, 23): "and they bartered the glory of the incorruptible God for a representation of an image of corruptible man, and birds, and four-footed creatures, and reptiles.",
+    ("2Ch", 31, 14): "And Kore the son of Imnah the Levite, the gatekeeper according to the east, was over the gifts, to give the first-fruits of the LORD, and the holy things of the holies,",
+    ("Gen", 31, 7): "But your father cheated me, and bartered my wage for the ten lambs. And the God of my father did not give to him the power to do evil against me.",
+    ("Num", 28, 2): "Give charge to the sons of Israel! And you shall say to them, saying, My gifts, my presents, my yield offerings for a scent of pleasant aroma you shall observe to bring near to me in my holidays.",
 }
 
 
@@ -195,6 +204,92 @@ def main():
     warns, notrun = B.probe2_names(raw_ok, sub(("2Ch", 21, 3)))
     assert warns == [] and notrun == [], (warns, notrun)
 
+    # ═══ PROBE 2 — p2wl:v2 sentence-starter/label demotion (V11.1 ticket 1, MUST-FIX;
+    # rulings 2026-07-12, reviewer-adjudicated under standing delegation). Boundary set =
+    # paragraph/chunk start · ". " "! " "? " · "Sub-use:" label · "- " list start · "**"
+    # label — semicolon and bare colon EXCLUDED (byte-forced: Korah + Sabean classes).
+    # Demotion only when a corpus-name guard set is supplied AND the token is not in it;
+    # known_names=None = no demotion (fail toward the human). Card bytes = REAL surviving
+    # d2 raws (V111_CONSULT.md one-time consult); [completion] marks where the banked
+    # excerpt's 120-char window cut a word and the obvious tail was restored. Verse bytes
+    # = live reads, same session. Guard fixture set mirrors the live control run on PA:
+    # korah/solomon/laban/jesus/peter ARE words-table name-marked heads; votive/active/
+    # applying are NOT (raw output in the session record). ═══
+    KNOWN = frozenset({"korah", "solomon", "laban", "jesus", "peter"})
+
+    # 2f MUST-CLEAR — "Sub-use:" label class (G1390 real bytes, Votive; [offerings" (Lev
+    # 23:38).] completes the window cut; the quote is Lev 23:38's own wording).
+    raw_votive = ('Sub-use: Votive and voluntary sanctuary offerings — "besides the Sabbaths of '
+                  'the LORD, and besides your gifts, and besides all your vows, and besides all '
+                  'your voluntary offerings" (Lev 23:38).')
+    warns, notrun = B.probe2_names(raw_votive, sub(("Lev", 23, 38)), known_names=KNOWN)
+    assert warns == [] and notrun == [], (warns, notrun)
+
+    # 2g MUST-CLEAR — "- " list-start class (G162 real bytes, None; [closest case.]
+    # completes the window cut).
+    raw_none = ('- None of the supplied occurrences attests any sense of purely intellectual or '
+                'spiritual "captivating" independent of the control-and-removal image; 2Ti 3:6 '
+                'is the closest case.')
+    warns, notrun = B.probe2_names(raw_none, sub(("2Ti", 3, 6)), known_names=KNOWN)
+    assert warns == [] and notrun == [], (warns, notrun)
+
+    # 2h MUST-CLEAR — sentence-start-after-period class (G236 real bytes, Applying).
+    raw_apply = ('the Lev 27 verses are regulatory substitutions, not market transactions. '
+                 'Applying "barter" to Neh 9:26 and Rom 1:23 (which this translation also does) '
+                 'is defensible.')
+    warns, notrun = B.probe2_names(raw_apply, sub(("Neh", 9, 26), ("Rom", 1, 23)),
+                                   known_names=KNOWN)
+    assert warns == [] and notrun == [], (warns, notrun)
+
+    # 2i MUST-KEEP — semicolon is NOT a boundary (ruled condition, own test): Korah after
+    # "); " keeps its warn on boundary logic ALONE — the guard set here deliberately lacks
+    # korah, so a wrongly-widened boundary set is the only thing that could eat this warn.
+    # (G1390 real bytes; 2Ch 31:14's stored text names KORE — the run's first true positive.)
+    raw_korah = ('(1Ki 13:7); Korah oversees the distribution of "gifts" (2Ch 31:14).')
+    warns, notrun = B.probe2_names(raw_korah, {("2Ch", 31, 14): VT[("2Ch", 31, 14)],
+                                               ("1Ki", 13, 7): None},
+                                   known_names=KNOWN - {"korah"})
+    assert len(warns) == 1 and "Korah" in warns[0] and notrun == [], (warns, notrun)
+
+    # 2j MUST-KEEP — bare colon is NOT a boundary (ruled condition, own test): Sabean after
+    # "): " keeps its warn (exonym-variant class, warn by design — stored text has plural
+    # "Sabeans", the \b whole-word check correctly misses it); Active at the "- " list start
+    # demotes in the same chunk. (G162 real bytes.)
+    raw_sabean = ('- Active (the agent captures): Sabean raiders "fell upon and captured" '
+                  "Job's livestock servants (Job 1:15).")
+    warns, notrun = B.probe2_names(raw_sabean, sub(("Job", 1, 15)), known_names=KNOWN)
+    assert len(warns) == 1 and "Sabean" in warns[0] and notrun == [], (warns, notrun)
+
+    # 2k MUST-KEEP — corpus-guard save (ruled condition, own test): Laban at a real
+    # sentence start survives ONLY because the guard knows it (G236 real bytes)…
+    raw_laban = ('a transaction framed as substitution rather than purchase. Laban "bartered '
+                 'my wage for the ten lambs" (Gen 31:7).')
+    warns, notrun = B.probe2_names(raw_laban, sub(("Gen", 31, 7)), known_names=KNOWN)
+    assert len(warns) == 1 and "Laban" in warns[0] and notrun == [], (warns, notrun)
+    # …and the demotion twin: an empty guard set demotes it (the designed trade, pinned).
+    warns, _ = B.probe2_names(raw_laban, sub(("Gen", 31, 7)), known_names=frozenset())
+    assert warns == [], warns
+
+    # 2l MUST-CLEAR — word-list class, real-byte anchor (G1390, English mid-sentence;
+    # p2wl:v2 list addition, position rule can't reach it).
+    raw_eng = ('in Num 28:2 the word governs ritual offerings brought to God on feast days, '
+               'a setting the English "presents" does not capture.')
+    warns, notrun = B.probe2_names(raw_eng, sub(("Num", 28, 2)))
+    assert warns == [] and notrun == [], (warns, notrun)
+
+    # 2m MUST-CLEAR — word-list additions Greek + Peoples. RECONSTRUCTED (ruled 2026-07-12:
+    # d1 raws overwritten, no surviving bytes for these classes; sentence authored to the
+    # class shape so each list entry is test-pinned).
+    raw_recon = ('the Greek term is rendered narrowly here, and the Peoples addressed are '
+                 'the same group (Num 28:2).')
+    warns, notrun = B.probe2_names(raw_recon, sub(("Num", 28, 2)))
+    assert warns == [] and notrun == [], (warns, notrun)
+
+    # 2n DEFAULT — known_names=None means NO demotion (fail toward the human): the Votive
+    # noise line warns again when the guard is absent.
+    warns, _ = B.probe2_names(raw_votive, sub(("Lev", 23, 38)))
+    assert len(warns) == 1 and "Votive" in warns[0], warns
+
     # ═══ SCANNER 3 — identity claim ═══
     # 3a MUST-FAIL, defect 4 (G227 real bytes): "worded identically" is FALSE for
     # Mat 22:16 vs Mar 12:14.
@@ -275,6 +370,14 @@ def main():
     assert B.scan3_identity(G2168_RAW, vt_full) == []
     warns, notrun = B.probe2_names(G2168_RAW, vt_full,
                                    extra_whitelist=("εὐχαριστέω", "eucharisteō"))
+    named = sorted({w.split('"')[1] for w in warns})
+    assert named == ["Aquila", "Jesus", "Prisca"] and notrun == [], (warns, notrun)
+
+    # …and re-run WITH the p2wl:v2 guard active (V11.1 ticket-1 ruled control): all three
+    # documented warns sit mid-sentence or possessive, so demotion must not eat any of them.
+    warns, notrun = B.probe2_names(G2168_RAW, vt_full,
+                                   extra_whitelist=("εὐχαριστέω", "eucharisteō"),
+                                   known_names=frozenset({"jesus", "prisca", "aquila"}))
     named = sorted({w.split('"')[1] for w in warns})
     assert named == ["Aquila", "Jesus", "Prisca"] and notrun == [], (warns, notrun)
 

@@ -1747,7 +1747,10 @@ def assemble(conn, sid, lemma, translit, raw):
 # ══════════════════════════════════════════════════════════════════════════════════════════════
 
 NORM_VER = "norm:v1"            # ruled normalization table rows 1-4 + 7 (edge punct)
-P2_WHITELIST_VER = "p2wl:v1"    # probe-2 whitelist + common-word filter, one versioned surface
+P2_WHITELIST_VER = "p2wl:v2"    # probe-2 whitelist + common-word filter + sentence-starter
+                                # demotion, one versioned surface. v2 (V11.1 ticket 1, ruled
+                                # 2026-07-12): label/sentence-start demotion behind the
+                                # corpus-name guard; list adds english/greek/peoples.
 SCAN3_PATTERNS_VER = "scan3:v2" # scanner-3 pattern list; grows by exhibit, changes ruled
 
 # Row 1 (curly=straight quotes/apostrophes) + row 4 (en dash -> em dash; "--" in probe_norm).
@@ -1880,8 +1883,9 @@ _P2_WHITELIST = {"god", "lord"}
 # Capitalized non-names (sentence-starts, card furniture). Same versioned surface.
 _P2_COMMON = {
     "a", "an", "and", "all", "any", "are", "as", "at", "be", "been", "being", "both", "but",
-    "by", "did", "do", "does", "each", "even", "every", "first", "for", "from", "gloss",
-    "grounding", "having", "he", "her", "his", "him", "here", "how", "i", "if", "in", "is",
+    "by", "did", "do", "does", "each", "english", "even", "every", "first", "for", "from",
+    "gloss", "greek", "grounding", "having", "he", "her", "his", "him", "here", "how", "i",
+    "if", "in", "is", "peoples",
     "it", "its", "let", "marking", "my", "no", "nor", "not", "o", "of", "on", "one", "or",
     "our", "range", "second", "sense", "senses", "she", "so", "some", "sub", "take", "that",
     "the", "their", "then", "there", "these", "those", "third", "this", "to", "two",
@@ -1899,19 +1903,40 @@ def _strip_quoted(raw):
 _P2_BOOKS = {b.lower() for b in _BOOK_ALT.split("|")}
 
 
-def _proper_names(chunk, whole_body):
+# p2wl:v2 sentence/label boundary (ruled 2026-07-12, byte-forced set): paragraph/chunk
+# start · . ! ? · "Sub-use:" label · "- "/"* " list start · "**" label close. Semicolon and
+# bare colon are EXPLICITLY not boundaries — the banked Korah (after ";") and Sabean (after
+# "):") warn classes ride on that exclusion; do not widen.
+_P2_BOUNDARY_RE = re.compile(r"(?:^|[.!?]|\bSub-use:|^\s*[-*]|\*\*)\s*$")
+
+
+def _p2_known(low, known_names):
+    """Guard membership with cheap singular/plural loosening — loosening only ADDS warns
+    (toward the human), never removes one."""
+    return (low in known_names or low + "s" in known_names
+            or (low.endswith("s") and low[:-1] in known_names))
+
+
+def _proper_names(chunk, whole_body, known_names=None):
     """Proper names = capitalized tokens (possessive stripped) that are NOT card furniture,
     NOT book codes / citation text (refs stripped first), and are consistently capitalized
     across the card (a token also appearing lowercase is ordinary prose, not a name).
-    Fail-open toward the human: uncertain extraction surfaces as a warn downstream,
-    never a silent pass."""
+    p2wl:v2 demotion: a non-possessive token sitting at a sentence/label boundary is card
+    furniture, not a name — UNLESS the corpus-name guard knows it (a real name like Laban
+    or Solomon at a sentence start keeps its warn). known_names=None = guard unavailable =
+    NO demotion; every boundary token stays a candidate (fail toward the human)."""
     chunk = _REF_RE.sub(" ", chunk)                     # citations are not prose claims
     body_lower = set(re.findall(r"(?<![A-Za-z])([a-z]+)\b", whole_body))
     out = []
-    for tok in re.findall(r"\b([A-Z][a-z]+)(?:['’]s)?\b", chunk):
+    for m in re.finditer(r"\b([A-Z][a-z]+)(['’]s)?\b", chunk):
+        tok, poss = m.group(1), m.group(2)
         low = tok.lower()
         if low in _P2_COMMON or low in _P2_WHITELIST or low in _P2_BOOKS or low in body_lower:
             continue
+        if (known_names is not None and not poss
+                and _P2_BOUNDARY_RE.search(chunk[:m.start()])
+                and not _p2_known(low, known_names)):
+            continue                                    # p2wl:v2 sentence-starter demotion
         if tok not in out:
             out.append(tok)
     return out
@@ -1935,12 +1960,13 @@ def _cite_chunks(body):
             yield tail, refs
 
 
-def probe2_names(raw, verse_texts, extra_whitelist=()):
+def probe2_names(raw, verse_texts, extra_whitelist=(), known_names=None):
     """PROBE 2 — named-subject check (V11; the Jehoiada/Eliphaz/Jer 3:21 misattribution class).
     WARN, not block — the standing kill sub-rule is a HUMAN rule; the machine's job is making
     sure the human never misses the candidate. Every proper name in a claim must appear in at
     least one of the claim's cited verse texts. A missing verse text = NOT-RUN for that name
-    (loud, blocks apply) — never a pass. Returns (warns, notruns)."""
+    (loud, blocks apply) — never a pass. known_names = the p2wl:v2 corpus-name guard set
+    (lowercased); None disables sentence-starter demotion entirely. Returns (warns, notruns)."""
     extra = {str(w).lower() for w in extra_whitelist if w}
     body = _strip_quoted(raw)
     warns, notruns = [], []
@@ -1948,7 +1974,7 @@ def probe2_names(raw, verse_texts, extra_whitelist=()):
         texts = {k: verse_texts.get(k) for k in refs}
         avail = [probe_norm(t).lower() for t in texts.values() if t]
         missing = [k for k, t in texts.items() if t is None]
-        for name in _proper_names(chunk, body):
+        for name in _proper_names(chunk, body, known_names):
             if name.lower() in extra:
                 continue
             if any(re.search(rf"\b{re.escape(name.lower())}\b", t) for t in avail):
@@ -1960,6 +1986,26 @@ def probe2_names(raw, verse_texts, extra_whitelist=()):
                 warns.append(f'named subject "{name}" absent from cited text(s) {reflist} '
                              f'— adjudicate (misattribution class)')
     return warns, notruns
+
+
+# p2wl:v2 corpus-name guard source: the words table's name-marked renderings (is_pn=1
+# english_head, set by import_tipnr.py — see docs/claude/data-model.md). Loaded once per
+# connection. Control-tested live 2026-07-12 (session record): korah/solomon/laban/jesus/
+# peter present, votive/active/applying absent. Any failure → None → NO demotion (the
+# guard degrading must always fail toward the human, never silently widen demotion).
+_P2_PN_CACHE = {}
+
+
+def _p2_corpus_names(conn):
+    key = id(conn)
+    if key not in _P2_PN_CACHE:
+        try:
+            rows = conn.execute("SELECT DISTINCT lower(english_head) FROM words "
+                                "WHERE is_pn=1 AND english_head != ''").fetchall()
+            _P2_PN_CACHE[key] = {r[0] for r in rows}
+        except Exception:
+            _P2_PN_CACHE[key] = None
+    return _P2_PN_CACHE[key]
 
 
 # Scanner-3 pattern list (VERSIONED — SCAN3_PATTERNS_VER; grows by exhibit, changes ruled).
@@ -2097,7 +2143,8 @@ def validate_entry(entry, conn=None):
             vt[(b, c, v)] = (row["text"] if row and row["text"] else None)
         p1_fails, p1_nr = probe1_verbatim(raw, vt)
         p2_warns, p2_nr = probe2_names(raw, vt,
-                                       extra_whitelist=(entry.get("lemma"), entry.get("translit")))
+                                       extra_whitelist=(entry.get("lemma"), entry.get("translit")),
+                                       known_names=_p2_corpus_names(conn))
         s3_warns = scan3_identity(raw, vt)
         a["probe_vers"] = {"norm": NORM_VER, "p2wl": P2_WHITELIST_VER,
                            "scan3": SCAN3_PATTERNS_VER}
