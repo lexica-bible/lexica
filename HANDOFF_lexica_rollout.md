@@ -1,11 +1,14 @@
 # HANDOFF — Lexica definition-engine rollout (batch 2 / calibration)
 
-> **NEXT SESSION = PATH (c) BUILD** (2026-07-13). Charter + full scope + the two opener blocks (CC +
-> reviewer) + the three finalized rosters (copy VERBATIM) all live in the AUDIT entry
-> **"PATH (c) DESIGN — CLOSED"** (open from there, never this line). Build code + banking only, NO
-> word runs. Also live: the quote-repair review is CLOSED (verdict + tickets F1–F3 + ENGINE_LESSONS
-> #57 in AUDIT "QUOTE-GATE+REPAIR DESIGN REVIEW — CLOSED"); quote-repair STAYS BLOCKED on live cards
-> until F1–F3 land. Scoreboard 2/10ʰ. Ticket-1 preservation is LIVE (`bank_refused_repair`, b5fa87d).
+> **NEXT SESSION = PATH (c) RUN** (2026-07-13). The path-(c) mechanism is BUILT + LIVE (commit
+> f4e0f14; see AUDIT **"PATH (c) BUILD — SHIPPED"**): the `roster` field, `--roster` flag, ROSTER
+> injection, signature-fold, and the #55 sense-count guard all exist. The RUN does per word
+> (G236/G1390/G227), one command: `--dry-run --word G### --hints --roster agreement_G###_...json
+> --floor <same file>` → review #30 + #55 → ship via `--from-draw` or PARK. The three rosters +
+> mechanism detail live in the AUDIT entries **"PATH (c) BUILD — SHIPPED"** and **"PATH (c) DESIGN
+> — CLOSED"** (open from there, never this line). Also live: quote-repair review CLOSED (verdict +
+> tickets F1–F3 + ENGINE_LESSONS #57); quote-repair STAYS BLOCKED on live cards until F1–F3 land.
+> Scoreboard 2/10ʰ. Ticket-1 preservation is LIVE (`bank_refused_repair`, b5fa87d).
 
 Fresh-session handoff for continuing the frequency rollout. **The audit doc
 `AUDIT_lexica_rollout.md` is the AUTHORITY** on saga details (commits `e8d42b5`, `67b4086`,

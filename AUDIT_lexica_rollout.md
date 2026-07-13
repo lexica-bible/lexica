@@ -5023,6 +5023,36 @@ HIT each fire), so the .bak copies are belt-and-suspenders, safe to delete once 
 **NEXT.** Path (c) design for G236, G1390, G227 (roster/floor-anchored placement stage). G162 NOT
 on path (c) (quote/citation/misattribution wall, no floor-drift). Lesson: ENGINE_LESSONS #57.
 
+### PATH (c) BUILD — SHIPPED (2026-07-13; commit f4e0f14; code + banking only, NO word runs;
+### reviewer-adjudicated CONFIRMED under JP's standing delegation; draw_hints edit = the JP
+### checkpoint, applied per the delegation with a note). Builds the mechanism the DESIGN entry
+### below closed. All 9 build-scope items landed:
+- **draw_hints.py** — new `roster` field (a legal class DISTINCT from hints/jobs; charter added to
+  the module docstring) on G236/G1390/G227, banked BYTE-FOR-BYTE from the DESIGN entry's three
+  rosters (reviewer re-verified by ast.literal_eval per field — FULL MATCH, lesson #51). G236
+  hint-1 (Isa 40:31/41:1) RETIRED into the roster's group 2 in the SAME edit (noted in both
+  provenances). Register membership unchanged (still the ruled seven).
+- **DESIGN_hint_tooling.md** — amendment naming the floor-consensus class; the hand-carve ban for
+  hints/jobs is intact (reviewer-confirmed it is not weakened).
+- **build_lexica_def.py** — `_roster_lines` injection (soft-explicit, rides the user message after
+  the occurrences/STRUCTURE/CONSTRAINT checks; closing boundary sentence VERBATIM: "…this fixes
+  only how many senses and which verses group, from the consensus, never the wording"); mandatory
+  SIGNATURE-FOLD (`roster` threaded through draw_signature/verse_user_msg/model_prose/save_draw —
+  a roster-anchored draw keys differently from an unanchored one, control-tested); `roster_count_diff`
+  = the #55 sense-count guard (reuses the production `sense_specs`; ship count must equal roster
+  count; REFUSES --apply on a collapse/split, prints loud on the review pass); `--roster <JSON>`
+  flag (per-word — needs --word, refuses --all/--resplit, refuses a word with no roster, refuses a
+  floor file that isn't the roster's own declared floor). Frozen V9 prompt UNTOUCHED.
+- **test_draw_hints.py** — red-first tests: injection order + verbatim boundary, signature-fold
+  (base ≠ anchored), #55 fires on collapse (2→1) AND split (2→3) + clean on match, roster-shape
+  sanity. `pytest tests/test_draw_hints.py` = 9 passed; plain-script CI mode green. Neighbor suites
+  (test_v11_probes, test_lexica_detectors) green. (Pre-existing, unrelated: 6 fails in
+  test_lexica_draw_cache.py — `no such column: w.english`, a stale test-fixture DB; identical on
+  the clean tree at e164239, NOT in CI/pre-commit. Flagged for a separate fix.)
+- **NEXT = the path-(c) RUN session** (a later session): per word (G236/G1390/G227), one command
+  `--dry-run --word G### --hints --roster agreement_G###_..json --floor <same>` → review #30 + #55
+  → ship via `--from-draw` or PARK. Quote-repair STILL BLOCKED on live cards (F1–F3 unbuilt).
+
 ### PATH (c) DESIGN — CLOSED (2026-07-13; reviewer-adjudicated under JP's standing delegation;
 ### every roster derived + confirmed on floor BYTES; DESIGN ONLY — no code, no banking this
 ### session). The roster/floor-anchored placement stage for the three path-(c) words.
