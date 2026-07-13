@@ -1746,7 +1746,10 @@ def assemble(conn, sid, lemma, translit, raw):
 # All three read the CARD; they never shape a draw. Versioned surfaces stamped on the record.
 # ══════════════════════════════════════════════════════════════════════════════════════════════
 
-NORM_VER = "norm:v1"            # ruled normalization table rows 1-4 + 7 (edge punct)
+NORM_VER = "norm:v2"            # ruled normalization table rows 1-4 + 7 (edge punct) + row 8
+                                # (V11.1 ticket 3, ruled 2026-07-12): markdown emphasis marks
+                                # stripped from the CARD side of quote comparison only —
+                                # verses.text carries zero '*' (live count, session record).
 P2_WHITELIST_VER = "p2wl:v2"    # probe-2 whitelist + common-word filter + sentence-starter
                                 # demotion, one versioned surface. v2 (V11.1 ticket 1, ruled
                                 # 2026-07-12): label/sentence-start demotion behind the
@@ -1769,6 +1772,11 @@ def probe_norm(s):
 
 
 _QUOTE_SPAN_RE = re.compile(r'[“"]([^“”"]+)[”"]')
+
+# norm:v2 row 8 — markdown emphasis marks are formatting, not wording; stripped from the
+# CARD side only (the Gen 35:2 bold-inside-quote artifact class). Marks only: a changed
+# WORD under bold still fails (teeth pinned by fixture).
+_EMPH_MARK_RE = re.compile(r"\*{1,3}")
 
 
 def _quote_spans(raw):
@@ -1865,7 +1873,7 @@ def probe1_verbatim(raw, verse_texts):
     for span, qs, qe in _quote_spans(raw):
         gap = raw[prev_qe:qs] if prev_qe is not None else None
         prev_qe = qe
-        qn = probe_norm(span)
+        qn = probe_norm(_EMPH_MARK_RE.sub("", span))    # norm:v2 row 8, card side only
         if not re.search(r"[A-Za-z]", qn):
             continue
         label = qn if len(qn) <= 60 else qn[:57] + "..."

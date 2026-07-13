@@ -105,6 +105,7 @@ Anything not listed = strict byte match, both sides normalized identically:**
 | 4 | Em dash = en dash = `--` | exhibit: verses.text carries 2,291 em-dash rows, zero `--`; 2Ch 21:3 has one inside a quotable span |
 | 6 | Initial-letter case exempt; interior alteration never | restates the RULED standing sub-rule |
 | 7 | ONE trailing punctuation mark (, . ; : ! ?) at the span's very end dropped; interior untouchable | exhibit: G162-card Psa 68:18 quote, comma-inside-quote vs the verse's semicolon |
+| 8 | Markdown emphasis marks (`*`/`**`/`***`) stripped from the CARD side of quote comparison only (norm:v2, V11.1 ticket 3, ruled 2026-07-12) | exhibit: G236 d1 Gen 35:2 bold-inside-quote artifact (d1 bytes overwritten — fixture RECONSTRUCTED per ruling b); verses.text carries zero `*` characters (live count 0, session record) — card-side strip can mask nothing; marks only, a changed word under bold still fires (teeth fixture) |
 (Row 5, translator-addition brackets, was PROPOSED and DELETED on evidence:
 verses.text contains zero `[` characters. The G162 d2 dash CHECK-FIRST closed
 unresolvable-no-evidence-of-bug: the range walker accepts all three dash classes

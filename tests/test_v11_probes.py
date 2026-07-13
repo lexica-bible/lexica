@@ -53,6 +53,8 @@ VT = {
     ("Pro", 18, 16): "A gift of a man widens him; and sits him by monarchs.",
     ("Mat", 7, 11): "If then, you being wicked, know to give good gifts to your children, how much rather your father, the one in the heavens shall give good things to the ones asking him?",
     ("Luk", 11, 13): "If then you, being wicked ones, know to give good gifts to your children; how much more the father from heaven shall give holy spirit to the ones asking him?",
+    # V11.1 ticket-3 verse bytes (JP live read, 2026-07-12, this session's record):
+    ("Gen", 35, 2): "And Jacob said to his house, and to all the ones with him, Take away the alien gods from your midst, and cleanse and change your robes!",
 }
 
 
@@ -216,6 +218,27 @@ def main():
                      'as my attendant Job" (Job 42:7, Job 42:8).')
     fails, _ = B.probe1_verbatim(raw_pair_swap, sub(("Job", 42, 7), ("Job", 42, 8)))
     assert len(fails) == 1 and "anchor" in fails[0], fails
+
+    # ═══ PROBE 1 — V11.1 ticket 3: markdown-emphasis strip (norm:v2). Exhibit class =
+    # G236 d1 Gen 35:2 bold-inside-quote (audit-adjudicated formatting ARTIFACT). The d1
+    # raw is OVERWRITTEN — fixture is a labeled RECONSTRUCTION to the class shape (ruled-b
+    # precedent); verse bytes real. verses.text carries zero asterisks (live count in the
+    # session record), so stripping both sides can mask nothing. ═══
+
+    # 1s MUST-CLEAR — RECONSTRUCTED: bold marks inside an otherwise-verbatim quote are
+    # formatting, not alteration…
+    raw_bold = ('Jacob\'s household is told to "cleanse and **change** your robes" (Gen 35:2).')
+    fails, notrun = B.probe1_verbatim(raw_bold, sub(("Gen", 35, 2)))
+    assert fails == [] and notrun == [], (fails, notrun)
+    # …TEETH twin: the strip exempts MARKS only — a real word swap under bold still fires.
+    raw_bold_alt = ('Jacob\'s household is told to "cleanse and **exchange** your robes" '
+                    '(Gen 35:2).')
+    fails, _ = B.probe1_verbatim(raw_bold_alt, sub(("Gen", 35, 2)))
+    assert len(fails) == 1 and "matches NO" in fails[0], fails
+    # …and single-asterisk italics, same class.
+    raw_ital = ('Jacob\'s household is told to "cleanse and *change* your robes" (Gen 35:2).')
+    fails, notrun = B.probe1_verbatim(raw_ital, sub(("Gen", 35, 2)))
+    assert fails == [] and notrun == [], (fails, notrun)
 
     # ═══ PROBE 2 — named-subject warn ═══
     # 2a MUST-FAIL, defect 1 (G1390 real bytes): Jehoiada absent from 2Ch 21:3.
