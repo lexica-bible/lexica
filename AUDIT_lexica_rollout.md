@@ -4467,6 +4467,12 @@ ARTIFACT. Carried UNRESOLVED into this entry: the d2 joint attribution "Mar 12:1
 Mat 22:16 both address Jesus with 'we know that you are true'" — one quote, two
 anchors; V10 established the two verses differ; defect-4-class exhibit supporting the
 scanner pattern, not adjudicated on the dead draw.
+**CORRECTION (2026-07-12, quote-repair build session):** the parenthetical's
+stored-wording claim ("a commandment, a new one") does not match the machine of
+record — live bytes read "Again, a new commandment I write to you…". The d2 kill
+itself is not reopened by this note; only the parenthetical's characterization of
+the stored text is corrected. Fixture K2 in test_quote_repair.py is a labeled
+reconstruction built against the live bytes.
 
 ### G162 αἰχμαλωτεύω — PARKED AT CAP (V11 run word 3; standing delegation;
 ### retry-trigger = next engine/prompt change or path (c)). MIXED record: d1

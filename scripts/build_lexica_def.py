@@ -1564,8 +1564,37 @@ def draw_status(rec, sig):
     return "hit"
 
 
+def archive_draw(sid, new_sig, new_prose_sha):
+    """V11.2 DRAW-CACHE HISTORY (ruling 5, 2026-07-12): a superseded draw is MOVED into
+    draws/history/, never overwritten — a repair mechanism that rewrites raws makes preserved
+    draw history load-bearing (the ELEVATED evidence-cost record: V11.1 paid for its absence
+    twice, the d1 raws unrecoverable). A byte-identical refresh (same sig AND same prose_sha)
+    is not a supersession and is not archived. An UNREADABLE old file is archived too —
+    evidence is never discarded on a parse error. history/ rides draws/' gitignore."""
+    p = draw_path(sid)
+    if not os.path.exists(p):
+        return
+    old = load_draw(sid)                    # None = unreadable; still archived below
+    if old and old.get("sig") == new_sig and old.get("prose_sha") == new_prose_sha:
+        return
+    hdir = os.path.join(DRAWS_DIR, "history")
+    os.makedirs(hdir, exist_ok=True)
+    created = re.sub(r"[^0-9T]", "", (old or {}).get("created", "") or "") or "undated"
+    base = f"{sid}_{created}_{((old or {}).get('sig') or 'unreadable')[:8]}"
+    dest = os.path.join(hdir, base + ".json")
+    n = 1
+    while os.path.exists(dest):
+        n += 1
+        dest = os.path.join(hdir, f"{base}_{n}.json")
+    os.replace(p, dest)
+    # ASCII arrow on purpose: this line runs inside CI'd tests (test_draw_history) and the
+    # Windows console is cp1252 — a '→' here would crash the suite, not just look plain.
+    print(f"  superseded draw archived -> {dest}")
+
+
 def save_draw(sid, lemma, translit, gset, ctx, raw, forced=None, hint=None,
-              pmap=None, constraints=None, no_hints_reason=None, repair=None):
+              pmap=None, constraints=None, no_hints_reason=None, repair=None,
+              qrepair=None):
     """Write (or refresh) the reviewed draw. Called ONLY by the ro pass and --force — an unreviewed
     fresh apply must never leave a draw file that would later look reviewed. Atomic replace so a
     crash mid-write can't leave a torn file. `forced` = any --force-verse refs added to the fed
@@ -1607,12 +1636,23 @@ def save_draw(sid, lemma, translit, gset, ctx, raw, forced=None, hint=None,
                        "absentees fed back with their verse texts in ONE bounded repair call; "
                        "structure guard held (headlines unchanged, citations superset); every "
                        "gate re-ran fresh on the repaired card") if repair else "",
+        # V11.2 QUOTE-REPAIR PASS stamps (ruling 1): same visibility contract as V10's.
+        "quote_repaired":          (qrepair or {}).get("fails", []),
+        "quote_repair_rounds":     (qrepair or {}).get("rounds", 0),
+        "quote_repair_prompt_ver": (qrepair or {}).get("prompt_ver", ""),
+        "quote_repair_why": ("quote repair pass (V11.2 ruling 1): the verbatim-quote gate's own "
+                             "fail lines fed back with every card-cited verse's stored bytes in "
+                             "ONE bounded repair call (cap 1); the spans-only guard held (nothing "
+                             "outside quotation marks changed); every gate re-ran fresh on the "
+                             "repaired card, full hand battery owed as if new (lesson #50 b)")
+                            if qrepair else "",
         "sig":       sig,           # input signature — the live-recompute guard at apply
         "prose_sha": _sha1(raw),    # prose bytes — the edited-since-review guard at apply
         "raw":       raw,
         "created":   datetime.datetime.now(datetime.timezone.utc).replace(
                          tzinfo=None).isoformat(timespec="seconds"),
     }
+    archive_draw(sid, sig, rec["prose_sha"])   # V11.2 ruling 5 — history before overwrite
     tmp = draw_path(sid) + ".tmp"
     with open(tmp, "w", encoding="utf-8") as f:
         json.dump(rec, f, ensure_ascii=False, indent=1)
@@ -1717,6 +1757,98 @@ def coverage_repair(raw, fed_keys, ctx, call_model, max_rounds=2):
            [f"repair cap-out: still uncited after {max_rounds} round(s): {', '.join(absent)} — "
             f"a card that can't integrate its absentees in two tries has a real problem; "
             f"the draw is dead (design rule)"]
+
+
+# ══════════════════════════════════════════════════════════════════════════════════════════════
+# V11.2 QUOTE-REPAIR PASS (DESIGN_v11_acceptance.md V11.2 ruling 1, RULED 2026-07-12; prompt +
+# choices reviewer-receipted at the quote-repair build session). On a verbatim-quote-gate REFUSE
+# at the review pass, ONE bounded model repair call — never a hand edit (the edited-draw refusal
+# is untouched), never a deterministic byte-splice (rejected: surrounding prose can claim things
+# about the quote's wording; a splice can't see that). Fed: the raw + the gate's own fail lines +
+# the stored verse bytes of EVERY card-cited ref (ruled: all-cited feed — deterministic, zero new
+# ref-parsing surface). Guard rule = fix the quoted spans ONLY, change nothing else — enforced
+# byte-strict by skeleton equality. Cap: ONE round (ruling 1; no rounds knob on purpose — the cap
+# lives in the ruling and the body). After a repair the FULL battery re-runs as if the card were
+# new (lesson #50 rule b) — machine gates this pass, hand-check battery at the run session.
+# The frozen V9 verse prompt is untouched; this block is versioned separately (qrepair stamp).
+# ══════════════════════════════════════════════════════════════════════════════════════════════
+QUOTE_REPAIR_PROMPT = """\
+The definition below fails a verbatim-quote check. Every span inside quotation marks must match the stored text of the verse it is attributed to, word for word (an ellipsis … may mark an omitted stretch; the quoted segments must stay in the verse's own order). The failed findings:
+
+{findings}
+
+The stored verse texts:
+
+{verses}
+
+Correct ONLY the wording inside quotation marks so each failed quoted span matches its verse's stored text. Change NOTHING outside the quotation marks: every word of prose, every sense headline, every citation, and the number and position of the quotations must stay exactly as they are. If a quotation cannot be made to match its verse without also changing the surrounding prose, leave that quotation exactly as it is. Return the full corrected definition.
+
+{card}"""
+
+
+def quote_repair_prompt_ver():
+    # Identity of the quote-repair INSTRUCTION BLOCK (the template — per-card content excluded),
+    # same scheme as repair_prompt_ver / synth_ver. Stamped on every quote-repaired draw + audit.
+    return "qrepair:" + hashlib.sha1(QUOTE_REPAIR_PROMPT.encode("utf-8")).hexdigest()[:12]
+
+
+def quote_repair_user_msg(fails, vt, raw):
+    """The one repair message: the gate's fail lines verbatim, every available cited verse's
+    stored bytes, the full card. .replace not .format — card prose may contain braces."""
+    findings = "\n".join("- " + f for f in fails)
+    verses = "\n".join(f"{b} {c}:{v} — {t}" for (b, c, v), t in sorted(vt.items()) if t)
+    return (QUOTE_REPAIR_PROMPT.replace("{findings}", findings)
+            .replace("{verses}", verses).replace("{card}", (raw or "").strip()))
+
+
+def quote_skeleton(raw):
+    """The card with every quoted span's CONTENT collapsed to a placeholder. Two cards with
+    equal skeletons differ only inside quotation marks."""
+    return _QUOTE_SPAN_RE.sub('"§"', raw or "")
+
+
+def quote_repair_guard(pre_raw, post_raw):
+    """THE SPANS-ONLY GUARD — byte-strict (red-first proven, tests/test_quote_repair.py):
+    everything outside the quotation marks, and the number/position of the quotations
+    themselves, must be IDENTICAL pre vs post. Any drift (a word of prose, a headline, a
+    citation, an added/removed/moved quotation) = the draw is DEAD (cap 1, never re-repaired).
+    Returns problems ([] = the repair stayed inside its lines)."""
+    if quote_skeleton(pre_raw) != quote_skeleton(post_raw):
+        return ["text outside the quotation marks changed, or a quotation was added/removed/"
+                "moved — the quote-repair prompt forbids exactly this; the prompt and this "
+                "guard draw the same line (spans-only rule, V11.2 ruling 1)"]
+    return []
+
+
+def quote_repair(raw, vt, call_model):
+    """The bounded quote-repair call — cap ONE round (V11.2 ruling 1; deliberately no rounds
+    parameter). vt = {(book,ch,vs): text-or-None} for EVERY card-cited ref, built by the caller
+    with its own live lookups (the probe-1 convention). Returns (final_raw, record, problems):
+      record   = {"fails": [...gate lines...], "rounds": 1, "prompt_ver": ...} — None when the
+                 gate was clean (repair never fired).
+      problems = [] on success; non-empty = the DRAW IS DEAD (guard breach or cap-out) and
+                 final_raw is the last GOOD card (a refused raw never leaks out; the caller
+                 must not save or ship on problems — the cached draw stays untouched).
+    NOTE: gate fails and NOT-RUNs are mutually exclusive in probe1_verbatim (any missing text
+    turns every unmatched span into a NOT-RUN, and NOT-RUN must never become a repair path) —
+    so a fire here always has the full texts in hand. The gate re-check runs the PRODUCTION
+    probe1_verbatim, never a copy."""
+    fails, _ = probe1_verbatim(raw, vt, notes=[])
+    if not fails:
+        return raw, None, []
+    rec = {"fails": fails, "rounds": 1, "prompt_ver": quote_repair_prompt_ver()}
+    print(f"  QUOTE-REPAIR PASS round 1 — {len(fails)} failed span(s)")
+    new = call_model(quote_repair_user_msg(fails, vt, raw))
+    probs = quote_repair_guard(raw, new)
+    if probs:
+        return raw, rec, ["spans-only guard REFUSED the repair output (draw DEAD, not "
+                          "re-repaired):"] + probs
+    still, _ = probe1_verbatim(new, vt, notes=[])
+    if still:
+        return raw, rec, [f"quote-repair cap-out: {len(still)} span(s) still fail after the "
+                          f"single ruled round — the draw is dead (V11.2 cap 1): "
+                          + " | ".join(still)]
+    return new, rec, []
 
 
 def _coverage_audit(conn, sid, raw, senses_block):
@@ -2347,6 +2479,11 @@ def show_entry(entry):
         r = a["repair"]
         print(f"  REPAIRED card (V10 repair pass, round(s): {r['rounds']}, {r['prompt_ver']}) — "
               f"integrated: {', '.join(r['refs'])}")
+    if a.get("quote_repair"):
+        r = a["quote_repair"]
+        print(f"  QUOTE-REPAIRED card (V11.2 quote-repair pass, round(s): {r['rounds']}, "
+              f"{r['prompt_ver']}) — {len(r['fails'])} span(s) repaired; FULL battery owed "
+              f"as if new (lesson #50 b)")
     print(f"  citation gate: {a['pass']}/{a['total']} pass" +
           (f"  (misses — tagging {a['tagging']} / real {a['real']} / no-verse {a['noverse']})" if a['total']-a['pass'] else ""))
     if a.get("dangling"):
@@ -2476,6 +2613,14 @@ def main():
                          "(headlines + citation superset) kills a breach, never re-repairs. "
                          "REVIEW pass only (--dry-run) — the repaired draw is cached for review "
                          "and a later --apply ships those reviewed bytes.")
+    ap.add_argument("--quote-repair", action="store_true",
+                    help="V11.2 QUOTE-REPAIR PASS (DESIGN_v11_acceptance.md ruling 1): on a "
+                         "verbatim-quote-gate failure, feed the card the gate's own fail lines "
+                         "plus every card-cited verse's stored bytes in ONE bounded repair call "
+                         "(cap 1 round). Spans-only guard: anything changed outside quotation "
+                         "marks kills the draw, never re-repairs. REVIEW pass only (--dry-run) — "
+                         "the repaired draw is cached for review and the FULL battery re-runs as "
+                         "if the card were new; a later --apply ships those reviewed bytes.")
     ap.add_argument("--no-hints", metavar="REASON",
                     help="run a REGISTERED word (draw_hints.py) deliberately WITHOUT its banked hints. "
                          "A registered word run without --hints refuses by default (ruling 1 — "
@@ -2497,6 +2642,10 @@ def main():
         sys.exit("--repair runs on the REVIEW pass only: --dry-run --word G#### (never with "
                  "--apply/--resplit/--all). The repaired draw is cached for human review; a "
                  "later --apply ships those reviewed bytes (review-what-ships).")
+    if args.quote_repair and (not args.dry_run or args.apply or args.resplit or args.all):
+        sys.exit("--quote-repair runs on the REVIEW pass only: --dry-run --word G#### (never "
+                 "with --apply/--resplit/--all). The repaired draw is cached for human review; "
+                 "a later --apply ships those reviewed bytes (review-what-ships).")
     if args.floor and (not args.word or args.all):
         sys.exit("--floor diffs ONE word against ITS OWN saved floor: use with --word G#### and "
                  "never --all (a floor is a per-word artifact).")
@@ -2692,11 +2841,13 @@ def main():
                           file=sys.stderr)
                     unreviewed.append(sid)
 
-        # ── V10 COVERAGE REPAIR PASS (--repair, review pass only — the CLI refusal above
-        # guarantees ctx exists here). Runs BEFORE assemble so the entry below is built from
-        # the FINAL raw: splitter, citation gate, coverage gate, #30 floor-diff, and every
-        # checker warn all re-run on the repaired card exactly as on any fresh draw.
-        if args.repair:
+        # ── REPAIR PASSES (--repair / --quote-repair, review pass only — the CLI refusals
+        # above guarantee ctx exists here). Both run BEFORE assemble so the entry below is
+        # built from the FINAL raw: splitter, citation gate, coverage gate, #30 floor-diff,
+        # and every checker warn all re-run on the repaired card exactly as on any fresh
+        # draw (the lesson-#50-b mechanism). ONE shared model closure — never two copies.
+        rrec = qrec = None
+        if args.repair or args.quote_repair:
             def _live_repair(msg):
                 nonlocal client
                 if client is None:
@@ -2705,6 +2856,9 @@ def main():
                                            messages=[{"role": "user", "content": msg}])
                 return "".join(b.text for b in m.content
                                if getattr(b, "type", "") == "text").strip()
+
+        # ── V10 COVERAGE REPAIR PASS.
+        if args.repair:
             rep_fed = [(c[0], c[1], c[2]) for c in ctx]
             raw2, rrec, rprobs = coverage_repair(raw, rep_fed, ctx, _live_repair)
             if rprobs:
@@ -2725,11 +2879,43 @@ def main():
             else:
                 print("  --repair: coverage already clean — repair did not fire.")
 
+        # ── V11.2 QUOTE-REPAIR PASS (after coverage repair, so the quote gate sees the
+        # final coverage-repaired prose). vt = own live lookups for EVERY card-cited ref
+        # (the probe-1 convention — the fed sample can never cover Range/gloss/repair refs).
+        if args.quote_repair:
+            qvt = {}
+            for b, c, v in cited_refs(raw):
+                row = conn.execute("SELECT text FROM verses WHERE book=? AND chapter=? "
+                                   "AND verse=?", (b, c, v)).fetchone()
+                qvt[(b, c, v)] = (row["text"] if row and row["text"] else None)
+            raw3, qrec, qprobs = quote_repair(raw, qvt, _live_repair)
+            if qprobs:
+                print("  ✗ QUOTE-REPAIR PASS — draw DEAD (cached draw untouched):",
+                      file=sys.stderr)
+                for p in qprobs:
+                    print("      - " + p, file=sys.stderr)
+                failures.append(sid)
+                continue
+            if qrec:
+                raw = raw3
+                save_draw(sid, lemma, translit, gset, ctx, raw,
+                          forced=args.force_verse, hint=eff_jobs, pmap=pmap,
+                          constraints=constraints, no_hints_reason=args.no_hints,
+                          repair=rrec, qrepair=qrec)
+                print(f"  QUOTE-REPAIRED draw cached → {draw_path(sid)} "
+                      f"(round(s): {qrec['rounds']}, {qrec['prompt_ver']}) — review THIS "
+                      f"card below (FULL battery owed as if new, lesson #50 b); a later "
+                      f"--apply ships these bytes.")
+            else:
+                print("  --quote-repair: quote gate clean — quote repair did not fire.")
+
         entry = assemble(conn, sid, lemma, translit, raw)
         entry["synth_ver"] = stamp
-        # V10: a repaired card's audit carries the same stamps as its draw record.
+        # V10/V11.2: a repaired card's audit carries the same stamps as its draw record.
         if args.repair and rrec:
             entry["audit"]["repair"] = rrec
+        if args.quote_repair and qrec:
+            entry["audit"]["quote_repair"] = qrec
         # V9 coverage gate input — the fed sample only exists on draw/apply passes.
         if args.resplit:
             entry["audit"]["fed_uncited"] = None
