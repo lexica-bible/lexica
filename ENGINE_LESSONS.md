@@ -805,3 +805,20 @@ both drifting from the doc.
     before treating a quote-gate fire as a defect; a false-positive feeder makes the repair breach
     regardless of span reality (quote-repair 0-for-3, breach-composition 1+1 / 2+1 / 0+3
     real+artifact). *(audit: G227 PARKED entry + V11.2 CLOSE, 2026-07-13; design-review docket)*
+
+57. **A repair pass whose model NARRATES its work breaches a spans-only guard even when the
+    underlying fix is correct — the guard cannot tell good-work-wrapped from prose-rework.** The
+    V11.2 quote-repair went 0-for-3 on live guard breaches; the preserved breach bytes (ticket 1,
+    banked @ b5fa87d) showed all three were the SAME failure — the model prepended a reasoning
+    preamble ("I need to fix N failed quotes: 1… 2… Here is the corrected definition:") OUTSIDE the
+    card, and that narration's prose + quote marks tripped the skeleton guard. Underneath, the
+    repair was correct every time: G227 declined a no-op (nothing to fix), G236 fixed 1 real defect
+    verbatim, G162 fixed 2 real defects AND correctly declined an artifact. The guard was RIGHT to
+    refuse (the output genuinely wasn't the bare card); the mechanism was sound; only the output
+    CONTRACT failed. Tipped off by reading pre→post diffs — the additions were the preamble, the
+    edits were clean in-quote fixes. → a model-repair pass needs a hard output contract (card only,
+    no commentary) AND an explicit no-op channel (a decline path, else the model narrates the
+    decline in-band); a guard that only sees same-vs-different skeleton can't recover a correct fix
+    buried in narration, so the fix belongs in the PROMPT, not the guard. Corollary: preserve the
+    refused bytes or this is undiagnosable (the whole review turned on bytes that were being thrown
+    away). *(audit: QUOTE-GATE+REPAIR DESIGN REVIEW — CLOSED, 2026-07-13)*

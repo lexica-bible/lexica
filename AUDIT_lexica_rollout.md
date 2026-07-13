@@ -4956,3 +4956,69 @@ delegation operated throughout; JP touchpoints held to PA commands + pastes.
 the preservation prerequisite. Path (c) design for the three scoped words (G236, G1390, G227).
 Persisting rulings: Est 2:6 forward rule · this session's hint-counting rulings (ticket 9 until
 doc'd) · no-crossing · method-(A) gate-1 with stop-rule · scoreboard 2/10ʰ.
+
+### QUOTE-GATE+REPAIR DESIGN REVIEW — CLOSED (2026-07-13; reviewer-adjudicated under JP's
+### standing delegation; every finding against PRESERVED bytes; no-crossing observed each step).
+### The V11.2 run's DESIGN-REVIEW-MANDATORY docket item, closed on a complete byte-set.
+**VERDICT.** The quote-repair pass's 0-for-3 live guard breaches (G236/G162/G227, V11.2 run) are
+an OUTPUT-CONTRACT failure — 3-for-3, one cause. The repair model prepends its reasoning (an
+"I need to fix N failed quotes: 1… 2… Here is the corrected definition:" preamble) OUTSIDE the
+card; that narration's own prose + quote marks trip the spans-only skeleton guard. The repair's
+ACTUAL work is correct in every case (per-word bytes below). The guard is VINDICATED 3-for-3 (it
+never rejected a clean bare card — only narration-plus-card). The "guard-overstrictness" leg is
+CLOSED DEAD; the un-quoting structural concern (a correct un-quote would also breach the skeleton)
+NEVER FIRED — the model always edited in-quote or declined, never un-quoted — so it survives only
+as a design note for the F1 contract work, not a demonstrated failure.
+**PREREQUISITE MET (ticket 1 shipped @ b5fa87d).** `bank_refused_repair` preserves the refused
+output ({pre, refused_post, fails, key}) to draws/history/ at both DEAD returns (breach + cap-out);
+evidence-only, DEAD outcome unchanged, NO-APPLY-EVER covers the dir; red-first tests in
+test_quote_repair (item 2/4 rec asserts + item 6 bank-to-tempdir). Six design suites green.
+Controlled fixture re-fires (preservation live, PA on b5fa87d): per word — d3-of-record confirmed
+on bytes (frozen key + created-later-than-d2 + recorded spans present), cp .prefire.bak insurance,
+`--dry-run --word G### --hints --repair --quote-repair` (cache HIT on the frozen key, no model
+call, no apply), banked, dumped, read. Reviewer note carried: each re-fire is a FRESH Sonnet call
+against the same input card, not a replay — the banked bytes are this fire's refusal, which is what
+the controlled re-fire was ruled to produce.
+**PER-WORD BYTE FINDINGS (the evidence the verdict rests on):**
+- **G227 (0 real + 3 artifact, key d65ed578):** gate false-positived on 3 metalinguistic labels
+  ("matches the facts" / "counts as adequate under the applicable rule." / "speak what is true" —
+  the card's OWN sense-contrast prose + a gloss-note alternative, all past meta:v1's ≤2-word cap).
+  Model correctly recognized nothing needed fixing and returned the card AS-IS — but wrapped in
+  reasoning → breach. Pure-artifact case; fault (a) confirmed on a live fire.
+- **G236 (1 real + 1 artifact, key 9bf3f7ef):** model FIXED the real Jer 2:11 defect correctly
+  in-quote ("they changed their gods"→"nations changed their gods", now verbatim vs stored) and
+  addressed the "changes of apparels"→"changes of apparel" anchoring flag; card body otherwise
+  untouched → clean spans-only fixes. Died on the wrapper. Repair CAPABILITY confirmed.
+- **G162 (2 real + 1 artifact, key aa064d41):** model FIXED both real defects (Oba 1:11 "the ones
+  capturing…"→"the capturing…"; 2Ch 21:17 "he captured all the possessions"→"captured all the
+  possessions which they found", both verbatim vs stored) AND correctly DECLINED the Isa 49:24/25
+  anchoring artifact (recognized 49:25 lacks the phrase, left it as-is). Hardest mixed case,
+  handled right — fix-both, decline-one. Died on the wrapper.
+**FIX DIRECTION — 3 TICKETS (adopted):**
+  (F1) repair-prompt OUTPUT CONTRACT: return the CARD ONLY — no preamble, no reasoning, no "Here
+       is the corrected definition" framing. Hard rule in the prompt. ATTACH the un-quoting design
+       note: a correct un-quote of a mislabeled span still breaches the skeleton guard, so the
+       contract work must decide whether un-quoting is a sanctioned repair move.
+  (F2) explicit NO-OP CHANNEL: "if nothing legitimately needs fixing, return the card byte-
+       identical" — kills the G227-class forced-narration trigger (a no-op task with no sanctioned
+       decline forces in-band explanation).
+  (F3) FEEDER DISCRIMINATOR (fault a): stop false-positive spans reaching the repair — meta:v1's
+       ≤2-word cap can't reach multi-word metalinguistic labels, and RAISING the cap re-opens the
+       misquote-laundering hole it exists to close; needs a NON-word-count discriminator. Fold the
+       anchoring-artifact class (Isa 49:24/25) in as a feeder candidate.
+**RESIDUAL TICKETS (this fix does NOT ship these — logged separate):**
+  (R1) G227 placement/structure (Isa 42:3 thin-solo sense 3 + 4→3 restructure vs floor) → PATH (c).
+  (R2) G162 anchoring artifact (Isa 49:24 wording on 49:25 anchor) → anchoring-constraint ticket.
+  (R3) G236 spans-only DESYNC edge: a spans-only fix of a phrase quoted twice can desynchronize the
+       card (apparels→apparel in sense 1a, gloss-note copy left "apparels"). The F1 contract work
+       must handle multi-instance spans.
+**BLOCK — CONTINUED ON NEW GROUNDS.** Review-closing was the ruled unblock condition, but the FIX
+is not built: quote-repair STAYS BLOCKED on live cards until F1–F3 land and are proven. The block's
+basis is now the fix-pending state, NOT the (now-closed) review.
+**EVIDENCE INVENTORY (PA, evidence-only, NO-APPLY-EVER unchanged):**
+`draws/history/G227_quote_refused_d65ed578.json` · `G236_quote_refused_9bf3f7ef.json` ·
+`G162_quote_refused_aa064d41.json` (each = {pre d3, refused_post, fails, key}). Insurance copies
+`draws/G227.json.d3.prefire.bak` · `G236…` · `G162…` — the cached d3s were never overwritten (cache
+HIT each fire), so the .bak copies are belt-and-suspenders, safe to delete once F1–F3 close.
+**NEXT.** Path (c) design for G236, G1390, G227 (roster/floor-anchored placement stage). G162 NOT
+on path (c) (quote/citation/misattribution wall, no floor-drift). Lesson: ENGINE_LESSONS #57.
