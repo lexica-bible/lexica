@@ -774,3 +774,34 @@ both drifting from the doc.
     beyond code files to verse data: any "stored text says X" parenthetical gets a byte read
     before it is written or ruled on. *(audit: QUOTE-REPAIR BUILD SESSION entry + its
     CORRECTION in the G227 park entry, 2026-07-12)*
+
+54. **A re-entry mechanism that ADDS a repair pass must arm the full standing repair arsenal,
+    not just the new one.** The V11.2 run commands ran `--quote-repair` only; the ruled mechanism
+    ("fresh draws + quote-repair pass") READ complete but silently dropped the standing V10
+    coverage-repair (`--repair`) the V11 run had used 3×. Immaterial on the three words that died
+    on quote gates; surfaced on G1390, which died on a COVERAGE gate with a CLEAN quote gate — the
+    exact failure coverage-repair exists for, unarmed. Tipped off by G1390's coverage-kill-plus-
+    clean-quote combination. → run commands arm `--repair --quote-repair` together; "adding" a pass
+    never means "replacing" the standing one. *(audit: G1390 PARKED entry, V11.2 run, 2026-07-13)*
+
+55. **#30 floor-diff is BLIND to a sense-count collapse — a total merge splits no floor pair, so
+    it reads "clean" exactly when placement failure is maximal.** G1390 d3 collapsed the floor's two
+    senses into one ("SOMETHING GIVEN" + sub-uses); G227 d3 restructured 4→3. Both drew `#30 clean`
+    because a card with fewer senses can't split any pair the floor clustered. Looked like clean
+    placement; was the opposite. Tipped off by the `[1 sense — headline fallback]` loud marker + a
+    hand sense-count check against the floor. → `#30 clean` does NOT vouch for placement when the
+    ship's sense count ≠ the floor's; a sense-count-mismatch card must fail #30 by construction, or
+    #30 must refuse "clean." Floor-is-ground-truth includes sense STRUCTURE, not just verse-homes.
+    *(audit: G1390 + G227 PARKED entries, V11.2 run, 2026-07-13)*
+
+56. **A quote-gate kill is a MACHINE EVENT, not a defect finding, until the flagged spans are
+    confirmed as claims to quote SCRIPTURE.** G227 d3's three quote-gate spans were all the card's
+    OWN metalinguistic prose — sense-contrast labels ("matches the facts" / "counts as adequate
+    under the applicable rule.") and a gloss-note rendering alternative ("speak what is true") —
+    zero real quote-fidelity defects. The `meta:v1` exemption's ≤2-word cap was too narrow to catch
+    them, so they tripped the gate; the quote-repair pass then breached its spans-only guard trying
+    to "fix" material it should never have received. Tipped off by reading the spans against the
+    card (they're the writer's labels, not scripture). → confirm quoted spans are scripture-claims
+    before treating a quote-gate fire as a defect; a false-positive feeder makes the repair breach
+    regardless of span reality (quote-repair 0-for-3, breach-composition 1+1 / 2+1 / 0+3
+    real+artifact). *(audit: G227 PARKED entry + V11.2 CLOSE, 2026-07-13; design-review docket)*

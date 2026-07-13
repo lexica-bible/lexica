@@ -2841,3 +2841,16 @@ trusted; hand-check battery runs on every card that passes the machine gates,
 repaired or not; the two carried UNRULED items (hint-counter arithmetic, Est 2:6)
 get ruled when their words come up, not skipped; each word ships or parks on its own
 record — no bundling.
+
+## V11.2 RUN CLOSE (2026-07-13): the RUN SESSION opener + inheritance blocks above are
+## SPENT — run COMPLETE (close 79885ec; see audit V11.2 RUN SESSION entries + CLOSE).
+## All four re-entered words parked (0 shipped / 4 parked, 2/10ʰ). Carried UNRULED items
+## RESOLVED: hint-counting ruled (repaired-cache-hit counts once by the draw's own behavior;
+## broken hint line = one MISS); Est 2:6 verify resolved (forward rule ruled). NEXT SESSION =
+## DESIGN REVIEW (build session), MANDATORY before any quote-repair re-fire — quote-repair is
+## 0-for-3 on live guard breaches and BLOCKED until the review closes. Scope = the quote-gate+
+## repair PIPELINE (false-positive feeder + guard-overstrictness working hypothesis, NOT
+## conclusion); PREREQUISITE = a preserved breach byte-sample (the repair-bytes-preservation
+## ticket ships before/with the review). Then path (c) design for G236, G1390, G227 (scoped per
+## word). Full docket = the 9-ticket list in the audit CLOSE entry. Authorities = AUDIT_lexica_
+## rollout.md (V11.2 RUN entries + CLOSE) + DESIGN_v11_acceptance.md (V11.2 rulings).
