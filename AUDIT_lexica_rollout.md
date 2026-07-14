@@ -5282,3 +5282,54 @@ the three rosters banked byte-for-byte from this entry; hint-1 retired in the SA
 edit = checkpoint (receipt before commit). No-crossing on every checkpoint. NEXT after build: the
 path-(c) RUN session (G236/G1390/G227, one word/one command, roster-anchored draw → #30 + #55 →
 ship or park), a later session.
+
+### F1–F3 QUOTE-REPAIR OUTPUT-CONTRACT BUILD — BUILT + COMMITTED + ON PA (2026-07-13; commit
+### a58a4b5, reviewer-adjudicated under standing delegation each step, red→green shown before every
+### receipt, no-crossing held). Closes the sole blocker parking live ships (the quote-repair 0-for-3
+### diagnosed in ENGINE_LESSONS #57). CODE + TESTS ONLY — no word ran, no word shipped.
+**WHAT LANDED (three tickets, one commit a58a4b5):**
+- **F1 + F2 (`QUOTE_REPAIR_PROMPT`, qrepair-versioned — NOT the frozen V9 prompt):** hard output
+  contract (return the CARD ONLY — no preamble, no reasoning, no "Here is the corrected definition"
+  framing) + explicit NO-OP CHANNEL (nothing fixable → return the card unchanged) + a no-un-quoting
+  rule (don't strip quotation marks off the card's own wording — routes those to F3, never an
+  un-quote that would breach the skeleton by construction). The guard is UNCHANGED (vindicated
+  3-for-3; the fix lives in the prompt, never the guard — lesson #57).
+- **F3 (`probe1_verbatim` + `META_VER`/`META_PATTERNS`):** the meta:v1 ≤2-word cap RETIRED, replaced
+  by the ANCHOR WALL (meta:v1→meta:v2). A quoted span is exempt as a metalinguistic mention only
+  when all three hold: matches no cited verse · NO local ref anchor (`_local_refs` returns []) · a
+  rendering-talk cue in the window. `"the lemma"` added to the cue list. The no-anchor test is the
+  ruled non-word-count discriminator: a laundered misquote always attaches a ref, so an unanchored
+  span makes no scripture claim; a real unanchored misquote in a paired-quote list still FAILS for
+  lack of a cue.
+**REVIEWER RULING (folded in):** keep feeding mis-anchoring flags to the repair — G236's re-fire
+proved the repair *can* fix a mis-anchor in-quote ("changes of apparels"→"changes of apparel"),
+and G162's unfixable Isa 49:24/25 case is exactly what F2's no-op channel now handles cleanly.
+Excluding mis-anchors would forfeit real repairs to guard a failure mode F2 already closes.
+**DISCRIMINATOR PROVEN ON REAL BYTES (the parked-word PRE bytes, not paraphrases):** G227 d3
+(key d65ed578) — `"matches the facts"`, `"counts as adequate under the applicable rule."`,
+`"speak what is true"` all exempt with loud notes (the card quoting ITSELF); G236 d3 (key 9bf3f7ef)
+— `"they changed their gods"` (a GENUINE Jer 2:11 misquote, unanchored in a paired list) STAYS
+FAILING (no cue). The three must-fail fixtures (`other item`, two paraphrase-with-a-ref cases)
+unchanged. **3b CORRECTION (reviewer-ruled, verified):** the gloss-note fixture was extended to
+start at the REAL bullet header `**"truth" (Isa 43:9):**` (with Isa 43:9's real bytes wired in) so
+the "ref out of `_local_refs`' window" claim is PROVEN not asserted — result GREEN: `"speak what is
+true"` still exempts (cue "render"), the incidental spans `"truth"`/`"speak"`/`"speak truth"` match
+the real verse and pass, `fails == []`. Per-span breakdown on record in-thread.
+**LEDGERED RISK (accepted, NO fix this session — a detector edit without a red-first byte is barred):**
+retiring the word-count cap opens one theoretical hole — a genuine misquote sitting unanchored in
+gloss-notes territory with a cue in its window would launder through as an exemption. No real byte
+has ever shown it; exemptions are LOUD (`probe1_notes` → audit record) and card convention attaches
+refs to real verse quotes (keeping the anchor wall live for them). Pointer housed in the `META_VER`
+block in build_lexica_def.py.
+**RED-FIRST (audit-tools-must-fail):** F1/F2 proven via a contract-gated mock that reproduces the
+exact 0-for-3 narration shape against the OLD prompt (guard breach) and returns the bare card under
+the NEW one; F3 red on G227's real spans before the cap retired. Neighbor suites green
+(test_draw_hints, test_v11_probes, test_lexica_detectors); test_quote_repair green. Clean whitespace,
+three files changed. Pre-commit invariant tests passed; pushed 72ef207→a58a4b5; PA synced to a58a4b5
+via deploy.sh (invariant tests passed, site reloaded — build-script code only, no user-facing change).
+**LOCK STATE:** quote-repair STILL BLOCKED on live cards — "lands on PA" is now met, but the block
+lifts only after the parked words are RE-RUN and proven on the fixed pipeline. That re-run
+(G236/G1390/G227/G162, one word/one command/one gate) is the NEXT CHARTER, not this one. Docket also
+carries: coverage-repair follow · G236 spans-only DESYNC edge · stale test_lexica_draw_cache.py
+fixture (w.english, not in CI) · ticket-8 stray-0 · probe-2 over-firing calibration (Peter/8-verses;
+no detector edit without its own red-first byte). Lesson basis: ENGINE_LESSONS #56/#57.

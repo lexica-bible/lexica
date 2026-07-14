@@ -2872,3 +2872,15 @@ record — no bundling.
 ## ticket ships before/with the review). Then path (c) design for G236, G1390, G227 (scoped per
 ## word). Full docket = the 9-ticket list in the audit CLOSE entry. Authorities = AUDIT_lexica_
 ## rollout.md (V11.2 RUN entries + CLOSE) + DESIGN_v11_acceptance.md (V11.2 rulings).
+
+## F1–F3 BUILT + ON PA (2026-07-13, commit a58a4b5): the quote-repair output-contract fix is
+## DONE — F1 card-only contract + F2 no-op channel (QUOTE_REPAIR_PROMPT), F3 anchor-wall
+## discriminator (meta:v1→meta:v2, "the lemma" cue added, ≤2-word cap retired). Guard untouched,
+## frozen V9 prompt untouched. Proven red-first on the parked words' real PRE bytes; neighbor
+## suites green; pushed + PA synced via deploy.sh. NEXT CHARTER = RE-RUN the parked words on the
+## fixed pipeline (G236/G1390/G227/G162, one word/one command/one gate, roster-anchored where
+## path-(c) applies → #30 + #55 + quote gate → ship or park). Quote-repair STILL BLOCKED on live
+## cards until that re-run PROVES it. Also carried: coverage-repair follow · G236 spans-only desync
+## edge · stale test_lexica_draw_cache.py fixture (w.english, not in CI) · ticket-8 stray-0 ·
+## probe-2 over-firing calibration (no detector edit without a red-first byte). Authority = AUDIT
+## "F1–F3 QUOTE-REPAIR OUTPUT-CONTRACT BUILD" entry + ENGINE_LESSONS #56/#57.
