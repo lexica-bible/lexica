@@ -5341,3 +5341,81 @@ this ledger line, no revert. Rule restated: the no-crossing receipt is per-commi
 doc/close-out commit needs its own receipt or an explicit standing exemption. PROPOSAL for the next
 session's open (JP's ruling): pre-clear doc-only close-out commits as a standing exemption, since
 this friction recurs every close-out.
+
+### F1–F3 RE-RUN — FOUR WORDS, ALL PARKED (2026-07-13; reviewer-adjudicated each word under JP
+### standing delegation; RUN only — no code, no rebuild, no ships). The session that tests the
+### fixed quote-repair pipeline (F1–F3, commit a58a4b5, on PA) on the four parked words to lift the
+### live-card block. Per word: one dry-run on PA (JP), raw output pasted inline, reviewer adjudicated
+### the full battery (#30 + #55 + quote gate + coverage) against bytes, verdict ship-or-park. PA =
+### fa466ec throughout; all draws cache-hits (no re-roll); frozen V9 prompt untouched. Order
+### G236 → G1390 → G227 → G162.
+**SCOREBOARD: 0 shipped / 3 parked-real (G236, G227, G162) / 1 parked-on-pipeline (G1390).** Hinted/
+unhinted UNCHANGED (2/10ʰ · 7/15 — a park is not a counted attempt).
+- **G236 ἀλλάσσω — PARKED (real defect, non-quote-repair).** Clean cap-out, NO guard breach:
+  quote-repair fixed one span inside the card-only contract, then correctly refused to launder an
+  unfixable misanchor. Surviving span = "changes this word" carries Ezr 6:11's wording but is anchored
+  primary on Ezr 6:12 — byte-confirmed (6:11 has the phrase, 6:12 reads "to change and remove from
+  view"). Right-words/wrong-verse, unfixable in-quote. F1–F3 PROVEN on the fixable span (clean fix, no
+  breach — opposite of the old #57 narration breach). Watch-item (spans/gloss-note desync) NOT OBSERVED
+  (no apply/gloss-note compare on a dead draw) — noted, not cleared. Artifact:
+  G236_quote_refused_59667b81.json.
+- **G227 ἀληθής — PARKED (real defect, non-quote-repair) + SESSION'S STRONGEST F1–F3 EVIDENCE.** Clean
+  cap-out, NO breach. Surviving span = "spoke not anything before me true," carries Job 42:7's wording
+  anchored primary on Job 42:8 — byte-confirmed (42:7 has the phrase, 42:8 reads "you did not speak
+  true"). Real misanchor, same class as G236. POSITIVE evidence, all on real bytes: (1) clean IN-QUOTE
+  repair — "quenched/crushed" (matched no verse) replaced with the real Isa 42:3 wording inside the
+  quote marks, zero out-of-quote edits, under the same multi-span pressure that broke G1390; (2) F3
+  DESIGN-TARGET EXEMPTION on same-key bytes (8258771a both runs, no re-draw) — original park fired 3
+  spans, this run fires 2, the disappeared Joh 4:18 grammar-talk span ("this [is] true [that] you have
+  said") still present in the card → meta:v2 wall now exempts the metalinguistic mention it was built
+  for (indirect-but-pinned by the draw key; reviewer accepted, exemption note not chased). CHECKPOINT
+  NOTE: the repair INTRODUCED verse wording (the Isa 42:3 replacement) never byte-checked — harmless
+  here (dead draw), but on any future run where a repaired span survives to ship, the repaired wording
+  needs its own byte-check before apply. Artifact: G227_quote_refused_8258771a.json.
+- **G1390 δόμα — PARKED (pipeline gaps, NOT a card defect — card status UNDETERMINED).** Guard BREACH
+  (not a clean cap-out). The gate fired on the card's own scare-quoted concept-word "giving" (Range
+  paragraph: 'where the "giving" is regulated by divine command'), a machine event in the #56 own-label
+  family, NOT a scripture claim. Two real holes, both backed by G1390_quote_refused_bda7de94.json: (1)
+  F3 ANCHOR-WALL HOLE — a cue-less emphasis scare-quote is not exempted (matches no verse ✓, but nearby
+  clause refs Num 3:9/Exo 28:38/Lev 23:38 ✗ + no rendering cue ✗); the wall can't tell clause-anchoring
+  refs from quote-anchoring refs; (2) F2 NO-OP DECLINE DIDN'T ENGAGE — the model reworded a DIFFERENT,
+  unquoted "giving" (Eph 4:8 discussion, "giving"→"transfer") instead of returning the card unchanged →
+  out-of-quote breach. Guard performed correctly (refused, banked). Card may be clean — can't know
+  through a firing gate. = ENGINE_LESSONS #58 (F2 gap) + #59 (F3 hole).
+- **G162 αἰχμαλωτίζω — PARKED (parked-real).** NOT path-(c) (no roster). Guard BREACH. Three
+  byte-confirmed quote defects: Oba 1:11 + 2Ch 21:17 were PARAPHRASES dressed as quotes (repair fixed
+  both cleanly IN-QUOTE); the Isa 49:24/49:25 misanchor — card lumped '(Isa 49:25; Isa 49:24)', gate
+  takes first ref primary, mis-pairing "should be captured unjustly" (really Isa 49:24) with 49:25.
+  Byte-confirmed (49:24 has "should be captured unjustly"; 49:25 has "if any should capture a giant").
+  Park stands on the two paraphrase defects regardless of the misanchor's class. REVIEWER BAR CALL: the
+  misanchor is REAL-but-mild, SUB-CLASSED as a LAYOUT defect (both verses cited, both quotes accurate,
+  defect is the lumped-ref pairing) — NOT a gate nit, because the card's own convention is
+  one-quote-one-ref and byte-precise anchoring is the ship bar. The breach came from the repair's
+  CORRECT fix (split the lumped refs, one per quote — byte-perfect) which is an out-of-quote ref-move
+  the spans-only guard forbids by construction. = ENGINE_LESSONS #58 (F2 gap, second shape) + #60
+  (spans-only forbids the legit ref-split). Artifact: G162_quote_refused_aa064d41_2.json.
+**F1–F3 VERDICT.** PROVEN on the fixable-span path (G236, G227, G162's two clean in-quote fixes) and on
+the F3 design-target exemption (G227, same-key 3→2). HOLED on two paths: the F2 no-op decline is a
+TWO-INSTANCE pattern (G1390 wrong-reword shape + G162 correct-but-forbidden ref-move shape — two shapes
+of the same non-engagement, needing DIFFERENT fixes), and the F3 anchor-wall misses cue-less emphasis
+scare-quotes (G1390). Last session (a58a4b5) was a PARTIAL fix, not a full one.
+**BLOCK RULING (reviewer, under standing delegation; JP MAY VETO the conditional framing).** The
+live-card block LIFTS CONDITIONALLY — lifted for the PROVEN paths (fixable-span repair + design-target
+exemption), with the F2 decline gap and the F3 anchor-wall hole as NAMED OPEN ITEMS gating the
+anchor-wall calibration checkpoint. Not a clean full lift: the two-instance F2 pattern with banked
+red-first bytes means a live card could still hit a breach on those shapes.
+**CHECKPOINT INHERITS** four banked refused-repair artifacts (the four _refused_ files in
+draws/history/) + the sharpened taxonomy: F2 decline hardening (two shapes) · F3 anchor-wall widening
+for cue-less emphasis quotes (without opening the ledgered meta:v2 laundering hole) · G162's structural
+finding = a lumped-ref re-anchor path with its own byte-gate (design input, NOT a bug) · the standing
+note that a repair which INTRODUCES verse wording needs a byte-check before any apply. Lessons =
+ENGINE_LESSONS #58/#59/#60. Probe-2 over-firing (Peter/8-verses) still deferred — no detector edit
+without its own red-first byte.
+**RULES/PROCESS.** Every word: dry-run posted alone, JP ran on PA, raw output pasted inline, reviewer
+adjudicated against bytes, reviewer's pasted receipt = the ruling (R2-b honored — CC authored no
+receipt). Misanchor claims byte-confirmed by read-only verses lookups (Ezr 6:11/12, Job 42:7/8, Isa
+49:24/25). apply-is-a-gate (no --apply posted; no word shipped). Frozen V9 prompt untouched; rosters
+read not re-derived; one word/one command/one gate; no code edits. This doc-only close-out commit
+invokes the STANDING EXEMPTION (doc-only close-out pre-cleared from the per-commit receipt — proposed
+in the PROCESS LEDGER above, JP-adopted under standing delegation + reviewer-confirmed this session);
+"doc-only, exemption invoked" stated in the commit message.

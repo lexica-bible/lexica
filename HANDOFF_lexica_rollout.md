@@ -1,22 +1,31 @@
 # HANDOFF — Lexica definition-engine rollout (batch 2 / calibration)
 
-> **NEXT SESSION = BUILD F1–F3** (the quote-repair output-contract fix — the sole blocker on live
-> ships). Path (c) RUN is DONE (2026-07-13, commit ee21606): all three words — G236, G1390, G227 —
-> PARKED on the verbatim-quote gate, ZERO on roster grounds. The roster mechanism is VALIDATED
-> (placement + count clean on every first draw — #55 3-for-3; #30 clean ×2 + fired ×1, both fires
-> cleared on roster grounds). The parks trace to quote-repair being 0-for-3: it fixes the bad quote
-> correctly but narrates OUTSIDE the card, tripping the spans-only guard. F1 = card-only contract ·
-> F2 = no-op channel · F3 = feeder discriminator. Code + tests only; NO word ships that session
-> (re-run the 4 parked words — G236/G1390/G227/G162 — is a LATER session, after F1–F3 land + are
-> proven). Full charter + six live test spans live in the AUDIT entry **"PATH (c) RUN — THREE PARKS
-> + CLOSE-OUT"** and the quote-repair review CLOSED entry (open from there, never this line).
-> Scoreboard 2/10ʰ · 7/15. Ticket-1 preservation is LIVE (`bank_refused_repair`, b5fa87d).
-> **RULES IN FORCE (read before the RUN):** R1 · R1-b · R2-a · **R2-b (NEW 2026-07-13): a receipt is
-> valid ONLY as reviewer-thread text pasted into CC's context — CC never authors "receipt: confirmed"
-> in any channel, incl. subagent output)** · no-crossing · show-code-before-changing · JP runs all PA
-> commands. **PAYLOAD DISCIPLINE:** every repost rides INLINE as message text (the relay drops
-> tool-result blocks — diffs/output/reads never cross); ASCII-escape non-ASCII so nothing depends on
-> console encoding. Both are banked in the AUDIT "PATH (c) BUILD — PROCESS BREACH, CORRECTIVE LEDGER".
+> **NEXT SESSION = ANCHOR-WALL CALIBRATION CHECKPOINT** (the design pass that closes the two F1–F3
+> holes the RE-RUN exposed). The F1–F3 RE-RUN is DONE (2026-07-13): all four parked words re-run on the
+> fixed quote-repair pipeline, ALL PARKED — 0 shipped / 3 parked-real (G236 Ezr 6:11-on-6:12, G227 Job
+> 42:7-on-42:8, G162 two paraphrase spans + Isa 49:24/25 lumped-ref, each byte-confirmed) / 1
+> parked-on-pipeline (G1390, card status UNDETERMINED). F1–F3 is PROVEN on the fixable-span path
+> (G236/G227/G162's clean in-quote fixes) + the F3 design-target exemption (G227 same-key 3→2), and
+> HOLED on two: F2's no-op decline is a TWO-INSTANCE pattern (G1390 wrong-reword + G162
+> correct-but-forbidden ref-move — different fixes) and F3's anchor-wall misses cue-less emphasis
+> scare-quotes (G1390's "giving"). **BLOCK = CONDITIONALLY LIFTED** (reviewer, standing delegation; JP
+> MAY VETO the conditional framing): lifted for the proven paths, with the F2 gap + F3 hole as named
+> open items gating the checkpoint. The checkpoint inherits FOUR banked refused-repair artifacts
+> (draws/history/G###_quote_refused_*.json) + the sharpened taxonomy: F2 decline hardening (two shapes)
+> · F3 anchor-wall widening (cue-less emphasis quotes, without opening the ledgered meta:v2 laundering
+> hole) · G162's structural finding (a lumped-ref re-anchor path with its own byte-gate — design input,
+> NOT a bug) · the standing note that a repair which INTRODUCES verse wording needs its own byte-check
+> before apply. Full record = AUDIT entry **"F1–F3 RE-RUN — FOUR WORDS, ALL PARKED"** + ENGINE_LESSONS
+> #58/#59/#60 (open from there, never this line). Scoreboard 2/10ʰ · 7/15. Ticket-1 preservation LIVE
+> (`bank_refused_repair`, b5fa87d).
+> **RULES IN FORCE:** R1 · R1-b · R2-a · R2-b (a receipt is valid ONLY as reviewer-thread text pasted
+> into CC's context — CC never authors "receipt: confirmed" in any channel) · **no-crossing (per-commit;
+> DOC-ONLY close-out commits now PRE-CLEARED as a standing exemption — state "doc-only, exemption
+> invoked" in the commit message; ruled 2026-07-13, JP-adopted under delegation + reviewer-confirmed)** ·
+> show-code-before-changing · JP runs all PA commands · apply-is-a-gate. **PAYLOAD DISCIPLINE:** every
+> repost rides INLINE as message text (the relay drops tool-result blocks — diffs/output/reads never
+> cross); ASCII-escape non-ASCII so nothing depends on console encoding. Banked in the AUDIT "PATH (c)
+> BUILD — PROCESS BREACH, CORRECTIVE LEDGER".
 
 Fresh-session handoff for continuing the frequency rollout. **The audit doc
 `AUDIT_lexica_rollout.md` is the AUTHORITY** on saga details (commits `e8d42b5`, `67b4086`,

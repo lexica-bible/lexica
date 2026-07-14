@@ -822,3 +822,42 @@ both drifting from the doc.
     buried in narration, so the fix belongs in the PROMPT, not the guard. Corollary: preserve the
     refused bytes or this is undiagnosable (the whole review turned on bytes that were being thrown
     away). *(audit: QUOTE-GATE+REPAIR DESIGN REVIEW — CLOSED, 2026-07-13)*
+
+58. **An explicit no-op DECLINE channel is necessary but NOT sufficient — the model still attempts a
+    fix on an unfixable span instead of declining, and the failure has more than one shape.** F1–F3's
+    F2 gave the quote-repair an explicit "return the card unchanged" path, yet on the four-word RE-RUN
+    the decline engaged on some words and not others: G236/G227 declined correctly (clean cap-out on an
+    unfixable misanchor), but G1390 reworded UNQUOTED prose (a WRONG edit — "giving"→"transfer" in the
+    Eph 4:8 discussion) and G162 MOVED a reference anchor (a CORRECT-but-forbidden edit — splitting a
+    lumped ref) rather than declining. Both breached the spans-only guard. This is NOT the #57 contract
+    failure (no preamble narration — the additions were out-of-quote EDITS); it's a distinct, deeper
+    gap, and the two breach shapes are different problems (wrong-fix vs right-fix-forbidden, see #60).
+    Tipped off by reading the refused pre→post diffs. → a no-op channel needs its own hardening and
+    red-first testing; "we added a decline path" ≠ "the model takes it." *(audit: F1–F3 RE-RUN
+    close-out, 2026-07-13; G1390 + G162 PARKED entries)*
+
+59. **The meta:v2 anchor-wall exempts metalinguistic quotes that carry a RENDERING CUE and MISSES
+    cue-less EMPHASIS scare-quotes of the card's own word.** It correctly waves through grammar/
+    rendering discussion (G227's "this [is] true [that] you have said," cue "the Greek functions
+    predicatively" — proven on same-key bytes: original park fired 3 spans, the fixed run fires 2, the
+    exempted span still in the card) but keeps failing a bare emphasis scare-quote (G1390's "giving" in
+    'where the "giving" is regulated by divine command') because it matches no verse, has nearby
+    clause-anchoring refs, and carries no cue — so the wall can't tell clause-anchoring refs from
+    quote-anchoring refs, over-fires, and the repair then breaches trying to "fix" a non-defect. The
+    sharpened taxonomy (narrower than "refs confuse the wall"): cue-bearing metalinguistic mentions
+    EXEMPT, cue-less own-word emphasis quotes MISSED. → anchor-wall calibration: widen the test to
+    catch own-word emphasis quotes WITHOUT opening the ledgered meta:v2 laundering hole. *(audit:
+    F1–F3 RE-RUN close-out, 2026-07-13; G1390 + G227 PARKED entries)*
+
+60. **A lumped-ref misanchor has a safe, byte-verifiable fix the spans-only rule can NEVER apply —
+    moving a reference is always out-of-quote.** G162's card cited two accurate quotes with both refs
+    lumped ('"…giant" / "…unjustly" (Isa 49:25; Isa 49:24)'); the gate's first-ref-primary read
+    mis-pairs "should be captured unjustly" (really Isa 49:24) with 49:25. The repair found the
+    byte-perfect fix — split the refs, one per quote — but that moves a ref, so the guard refused it by
+    construction. Contrast G236/G227, whose misanchors are "right words, wrong verse" and unfixable
+    in-quote (correct verse not cited as primary): the repair correctly NO-OPs and caps out on a real
+    defect. G162's is FIXABLE, just not through quote-repair's in-quote-only channel. → design input
+    for the checkpoint (NOT a bug ticket): force a no-op on the lumped-ref shape (park on the misanchor)
+    OR add a separate re-anchor path with its own byte-gate. A re-anchor channel resolves G162's shape
+    and does nothing for G1390's — the two F2-gap shapes (#58) need different fixes. *(audit: F1–F3
+    RE-RUN close-out, 2026-07-13; G162 PARKED entry)*
