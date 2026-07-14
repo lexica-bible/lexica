@@ -5708,6 +5708,36 @@ LESSONS #63 (structural rule over shape taxonomy) + #64 (containment is a pipeli
 doc-only, exemption invoked. Scoreboard unchanged 2/10ʰ · 7/15; conditional lift stays in force
 until the near-match BUILD lands and the four words re-run clean.**
 
+### G227 OFFLINE CHECK — CLOSED CLEAN; 0.638 ADJUDICATED RESIDUAL; SCOPE (b) PARKED (2026-07-14)
+**RESULT:** first offline archived-card gate check (`scripts/offline_gate_check.py`, card sig
+8258771a, zero spend) run + reviewer-adjudicated. G227 reads PREDICTION-MET in full: `quenched/
+crushed` 0.621 own-paraphrase exempt (the ONE span the near-match threshold actually decided —
+known residual); Job 42:7/42:8 `[anchoring]` fail HELD (expected park). **NEAR-MATCH RE-RUN
+CLOSED CLEAN.** (G227 still parked on the separate lead-in multi-ref anchoring question —
+unchanged, unruled.)
+**NEW IN-BAND SPAN ADJUDICATED — EXEMPTION UPHELD:** `this [is] true [that] you have said` 0.638,
+meta:v4 cue "render" metalinguistic exemption. Grounds: gloss-notes talk-about-translation
+section; `[is]`/`[that]` = the corpus's translator-addition notation, so the span DISPLAYS Joh
+4:18's rendered form, not a quote claim; Joh 4:18 IS cited with text present, so 0.638 is the
+expected signature of a correct metalinguistic display, not a masked near-quote. **0.638 IS NOW
+AN ADJUDICATED RESIDUAL. Enumerated known-residual set = 0.621 / 0.638 / 0.706 / 0.750.** Future
+band hits on THIS span at THIS score do NOT re-trigger; a MOVED score does. (Only `quenched/
+crushed` was threshold-decided; the other two unmatched spans — 0.638, and `true things` 1.000
+OUT of band — were cue-exempted upstream, scores informational.)
+**SCOPE (b) PARKED, NAMED AUTO-TRIGGER:** the general "does an in-band score override a cue
+exemption" design question is NOT opened now (one in-band cue-exemption = a data point, not a
+pattern). **A SECOND cue-exempted in-band span on ANY word re-opens (b) AUTOMATICALLY — no fresh
+ruling needed.**
+**INSTRUMENT HYGIENE:** the first run's score-table labels overclaimed fate ("fed as wording" /
+"own-paraphrase branch"); caught pre-report, fixed label-only (commit 59f9b86, diff reviewed);
+re-run verdicts + scores IDENTICAL. Reviewer logged the threshold-decided-vs-cue-exempted
+distinction as good practice.
+**RESUME:** G236 / G162 / G1390, one at a time, each gated on its OWN recoverability precondition
+first. Watch: any NEW in-band span (outside 0.621/0.638/0.706/0.750, OR a known span at a moved
+score) stops that card; a second cue-exempted in-band span anywhere auto-re-opens (b).
+**CONSTRAINTS UNCHANGED:** t <= 0.706 ceiling; helper scores = evidence not calibration; fixture-
+21 non-calibration stands; nothing in this ruling moved t or the band.
+
 ### PARKED-WORD REDRAW — LIVE RE-RUN RETIRED, OFFLINE METHOD APPROVED (2026-07-14; re-run session)
 **TRIGGER:** the reviewer-approved four-word re-run (G162/G227/G236/G1390) began. G227 ran first:
 `build_lexica_def.py --dry-run --quote-repair --hints --word G227` (`--hints` required — parked

@@ -1,8 +1,15 @@
 # HANDOFF — Lexica definition-engine rollout (batch 2 / calibration)
 
-> **NEXT = OFFLINE ARCHIVED-CARD GATE CHECK, per word (G227 first — recoverability already PASS; then
-> G236/G162/G1390, each gated on its own recoverability check). ZERO model spend. Helper =
-> `scripts/offline_gate_check.py` (read-only; JP runs on PA).** The LIVE four-word re-run is RETIRED for
+> **G227 CLOSED CLEAN (offline check, reviewer-adjudicated 2026-07-14): prediction-met in full —
+> `quenched/crushed` 0.621 exempt (threshold-decided), Job anchoring held (park). NEW in-band span
+> `this [is] true [that] you have said` 0.638 = meta:v4 cue exemption UPHELD → 0.638 is now an
+> ADJUDICATED RESIDUAL; known-residual set = 0.621/0.638/0.706/0.750. Scope (b) (in-band vs cue
+> exemption, general) PARKED with AUTO-TRIGGER: a SECOND cue-exempted in-band span anywhere re-opens
+> (b), no fresh ruling. NEXT = G236 (then G162, G1390), one at a time, each gated on its OWN
+> recoverability check first; watch = any NEW in-band span (outside the 4-value residual set, or a
+> known span at a moved score) stops that card. ZERO model spend. Helper =
+> `scripts/offline_gate_check.py` (read-only; JP runs on PA). Full record: AUDIT "G227 OFFLINE CHECK
+> — CLOSED CLEAN".** The LIVE four-word re-run is RETIRED for
 > parked words (reviewer ruling a, 2026-07-14): a parked word's required `--hints` is part of the draw
 > input key, so re-running ALWAYS redraws a fresh card, and a byte-pinned prediction can't be tested
 > against a different card (G227 proved it — fresh card, no `quenched/crushed` span, quote gate clean;
