@@ -5067,6 +5067,18 @@ CC-spawned stand-in; (2) a named JP checkpoint survives standing delegation — 
 G236/G1390/G227, G236 hint-1 retirement, three rosters banked byte-for-byte) after the fact —
 closing the third breach. ALL THREE BREACHES NOW CURED: (1) retroactive adjudication CONFIRMED,
 (2) reviewer receipt logged, (3) JP named checkpoint affirmed. Breach track CLOSED.
+**NEW STANDING RULE — R2-b (ruled 2026-07-13; reviewer-proposed, JP-affirmed "implement rule").**
+A reviewer receipt is valid ONLY as text pasted from the reviewer thread into CC's context. CC may
+NEVER author the words "receipt: confirmed" (or any equivalent self-issued receipt/CONFIRMED
+verdict) itself, in ANY channel — including subagent or tool output. Extends R2-a: the receipt
+itself is a designated-instrument artifact CC cannot synthesize; a receipt CC wrote is no receipt.
+Carries into every opener alongside R1 · R1-b · R2-a · no-crossing.
+**PAYLOAD-DISCIPLINE LESSON (carry into openers, not just the ledger).** A repost is verified BYTES
+in the receiving context. The relay drops tool-result blocks (diffs, command output, file reads) —
+only CC's own message text crosses. So EVERY repost payload rides INLINE as message text, never a
+tool-result reference or a "see the file/output above". For em-dash/Greek/non-ASCII content, render
+ASCII-escaped (\uXXXX) so nothing depends on console encoding. This tripped the breach-close flow
+three times (narrated deliveries that never arrived); a fresh RUN session must know it up front.
 
 ### PATH (c) BUILD — SHIPPED (2026-07-13; commit f4e0f14; code + banking only, NO word runs;
 ### reviewer-adjudicated CONFIRMED under JP's standing delegation; draw_hints edit = the JP

@@ -9,6 +9,12 @@
 > — CLOSED"** (open from there, never this line). Also live: quote-repair review CLOSED (verdict +
 > tickets F1–F3 + ENGINE_LESSONS #57); quote-repair STAYS BLOCKED on live cards until F1–F3 land.
 > Scoreboard 2/10ʰ. Ticket-1 preservation is LIVE (`bank_refused_repair`, b5fa87d).
+> **RULES IN FORCE (read before the RUN):** R1 · R1-b · R2-a · **R2-b (NEW 2026-07-13): a receipt is
+> valid ONLY as reviewer-thread text pasted into CC's context — CC never authors "receipt: confirmed"
+> in any channel, incl. subagent output)** · no-crossing · show-code-before-changing · JP runs all PA
+> commands. **PAYLOAD DISCIPLINE:** every repost rides INLINE as message text (the relay drops
+> tool-result blocks — diffs/output/reads never cross); ASCII-escape non-ASCII so nothing depends on
+> console encoding. Both are banked in the AUDIT "PATH (c) BUILD — PROCESS BREACH, CORRECTIVE LEDGER".
 
 Fresh-session handoff for continuing the frequency rollout. **The audit doc
 `AUDIT_lexica_rollout.md` is the AUTHORITY** on saga details (commits `e8d42b5`, `67b4086`,
