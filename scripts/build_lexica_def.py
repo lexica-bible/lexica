@@ -35,7 +35,7 @@ a stale draw (input moved) is ignored, an edited draw (prose changed since revie
 chain runs identically on cached prose — the cache changes WHAT is gated, never WHETHER.
 """
 
-import argparse, datetime, hashlib, html, json, os, re, sqlite3, sys, unicodedata
+import argparse, datetime, difflib, hashlib, html, json, os, re, sqlite3, sys, unicodedata
 from collections import OrderedDict, Counter
 
 # ── build set: psyche (control, fork-absent) + the 5 frozen contested forks. psyche + dikaioo are
@@ -1945,30 +1945,42 @@ def quote_repair(raw, vt, call_model):
     turns every unmatched span into a NOT-RUN, and NOT-RUN must never become a repair path) —
     so a fire here always has the full texts in hand. The gate re-check runs the PRODUCTION
     probe1_verbatim, never a copy.
-    RULING 1 (#61) DETERMINISTIC PRE-ROUTING: the gate emits two fail kinds; only the fixable
-    WORDING kind (matches no verse) ever reaches the model. An ANCHORING-rule fail (right words,
-    wrong ref) is unfixable inside the quotes by construction (the only fix moves a ref, which
-    the spans-only guard forbids), so it is NEVER fed. A card whose ONLY fails are anchoring =
-    deterministic no-op (the model is not called at all, zero breach surface) and parks. A mixed
-    card feeds its wording fails, and the held-back anchoring fail resurfaces on the re-run as a
-    clean cap-out park — same ship outcome as before, breach surface removed."""
+    DETERMINISTIC PRE-ROUTING (#61 + meta:v4/#63): the gate emits three fail kinds; only the
+    fixable WORDING kind (no verbatim match but a near-match target exists) ever reaches the
+    model. An ANCHORING-rule fail (right words, wrong ref) and an UNSOURCED fail (own paraphrase
+    with no near-match target, attribution-anchored) are both unfixable inside the quotes by
+    construction (the only fix moves a ref or invents wording, which the spans-only guard forbids),
+    so neither is ever fed. A card whose ONLY fails are anchoring and/or unsourced = deterministic
+    no-op (the model is not called at all, zero breach surface) and parks. A mixed card feeds its
+    wording fails, and the held-back anchoring/unsourced fails resurface on the re-run as a clean
+    cap-out park — same ship outcome as before, breach surface removed."""
     kinds = []
     fails, _ = probe1_verbatim(raw, vt, notes=[], fail_kinds=kinds)
     if not fails:
         return raw, None, []
     wording   = [f for f, k in zip(fails, kinds) if k == "wording"]
     anchoring = [f for f, k in zip(fails, kinds) if k == "anchoring"]
+    unsourced = [f for f, k in zip(fails, kinds) if k == "unsourced"]   # meta:v4, held like anchoring
+    held = anchoring + unsourced
     rec = {"fails": fails, "rounds": 1, "prompt_ver": quote_repair_prompt_ver()}
     if not wording:
-        # Deterministic no-op: nothing the model can safely fix. No model call, no
-        # refused_post (nothing existed to bank — bank_refused_repair no-ops on rec).
-        rec["anchoring_only"] = anchoring
-        return raw, rec, ["quote-repair declined deterministically (Ruling 1): the only fail(s) "
-                          "are anchoring-rule (right words, wrong ref), unfixable inside the "
-                          "quotes — the card parks and the model was not called: "
-                          + " | ".join(anchoring)]
+        # Deterministic no-op: nothing the model can safely fix (anchoring = right words/wrong ref;
+        # unsourced = own paraphrase with no near-match target). No model call, no refused_post
+        # (nothing existed to bank — bank_refused_repair no-ops on rec). anchoring_only kept for
+        # back-compat; unsourced_held is additive.
+        if anchoring:
+            rec["anchoring_only"] = anchoring
+        if unsourced:
+            rec["unsourced_held"] = unsourced
+        reasons = ((["anchoring-rule (right words, wrong ref)"] if anchoring else [])
+                   + (["unsourced (own paraphrase, no near-match target)"] if unsourced else []))
+        return raw, rec, ["quote-repair declined deterministically: the only fail(s) are "
+                          + " and ".join(reasons) + ", unfixable inside the quotes — the card "
+                          "parks and the model was not called: " + " | ".join(held)]
     print(f"  QUOTE-REPAIR PASS round 1 — {len(wording)} fixable wording span(s)"
-          + (f"; {len(anchoring)} anchoring-rule fail(s) held back (never fed)" if anchoring else ""))
+          + (f"; {len(anchoring)} anchoring-rule fail(s) held back" if anchoring else "")
+          + (f"; {len(unsourced)} unsourced fail(s) held back" if unsourced else "")
+          + (" (never fed)" if held else ""))
     new = call_model(quote_repair_user_msg(wording, vt, raw))   # ONLY wording fails fed
     probs = quote_repair_guard(raw, new)
     if probs:
@@ -2091,12 +2103,20 @@ P2_WHITELIST_VER = "p2wl:v2"    # probe-2 whitelist + common-word filter + sente
                                 # 2026-07-12): label/sentence-start demotion behind the
                                 # corpus-name guard; list adds english/greek/peoples.
 SCAN3_PATTERNS_VER = "scan3:v2" # scanner-3 pattern list; grows by exhibit, changes ruled
-META_VER = "meta:v3"            # metalinguistic-mention exemption. v2 (F3, ruled 2026-07-13):
+META_VER = "meta:v4"            # metalinguistic-mention exemption. v2 (F3, ruled 2026-07-13):
                                 # the ≤2-word cap is RETIRED, replaced by the ANCHOR WALL.
                                 # v3 (Ruling 2, 2026-07-13): ADDITIVE own-word class on top of
                                 # v2's cue path (untouched) — a single-word own-vocabulary
                                 # scare-quote, NOT attribution-anchored, is exempt (the cue-less
                                 # emphasis-quote gap #59). cue list grows by exhibit.
+                                # v4 (own-paraphrase, 2026-07-14, ENGINE_LESSONS #63/#64): ADDITIVE
+                                # target-exists split in the no-match branch (below the v2/v3
+                                # paths, which are UNTOUCHED). A span with no verbatim match AND no
+                                # target — COMBINED max(char-window, token-set) < NEARMATCH_THRESHOLD
+                                # — that is NOT attribution-anchored and HAS a cited set to compare
+                                # against is the writer's own paraphrase -> EXEMPT (LOUD note).
+                                # Attribution-anchored, OR an empty cited set -> FAIL kind
+                                # `unsourced` (held from the model like anchoring, parks).
 # A quoted span is a METALINGUISTIC MENTION (exempt from the quote gate, LOUD note, never
 # silent — lesson #47) only when ALL THREE hold: matches no cited verse · it carries NO local
 # ref anchor (_local_refs returns []) · a rendering-talk cue sits within the context window.
@@ -2106,13 +2126,37 @@ META_VER = "meta:v3"            # metalinguistic-mention exemption. v2 (F3, rule
 # stays anchored and FAILS regardless of length or cue. This is what lets the ≤2-word cap go
 # and reaches the multi-word labels it never could ("matches the facts", "counts as adequate
 # under the applicable rule.", "speak what is true" — G227 d3 real bytes). Real-byte exhibits:
-# "reliable" (G227 d2), "captivating" (G162 d2). "other item" stays UNEXEMPTED (unanchored but
-# no cue reaches scare-quotes-around-a-concept; adjudicated-bypass path remains).
+# "reliable" (G227 d2), "captivating" (G162 d2). "other item" stays UNEXEMPTED here (no cue
+# reaches scare-quotes-around-a-concept); under meta:v4 it is handled by the target-exists layer
+# below (combined 0.706 >= threshold -> fed -> cap-out -> parks; never exempted — ruled must-refuse).
 # LEDGERED RISK (accepted 2026-07-13, no fix this session): a genuine misquote sitting
 # unanchored in gloss-notes territory with a cue in its window would now launder through as an
 # exemption. No real byte has ever shown it; exemptions are LOUD (→ probe1_notes → audit) and
 # card convention attaches refs to real verse quotes (keeping the anchor wall live for them).
 META_PATTERNS = ("render", "gloss", "the word", "the lemma", "reads as", "sense of", "so-called")
+
+# TARGET-EXISTS test (meta:v4 / ENGINE_LESSONS #63) — the direct "is there a snap-to target
+# anywhere?" check that decides unfixable-in-quote directly instead of taxonomizing what unfixable
+# spans look like. The score is the COMBINED signal (ruled 2026-07-14, re-open after the char-only
+# rule waved a real reorder defect through): max of two legs, because neither subsumes the other —
+#   • char-ratio best sliding window (order-SENSITIVE) — catches near-verbatim edits + inflection
+#     (e.g. "changing over" 0.833, where token-set alone would flip a ruled fed-case to no-target);
+#   • token-SET containment best cited verse (order-INSENSITIVE) — catches reorders/swaps (e.g. the
+#     real G227 defect-6 reorder "bring forth judgment to validity" 0.690 char but 1.000 token-set).
+# NEARMATCH_THRESHOLD is a pinned BYTE, not a run-time tunable: 0.664 = midpoint of the fully-
+# enumerated near-match no-target RESIDUAL pair on PA (G227 "quenched/crushed" 0.621 EXEMPT; G236
+# "other item" 0.706 must-refuse). Two must-refuse mechanisms ride this pin and MUST NOT be
+# silently overturned (reviewer written rulings, 2026-07-14):
+#   (1) an EMPTY cited-verse set never exempts as own-paraphrase (exemption requires a comparison
+#       to have occurred) — covers the degenerate empty-set case (probe test 1v);
+#   (2) 0.664 <= 0.706: "other item" stays >= threshold so it is FED -> cap-out -> parks (never
+#       shipped); raising the threshold above 0.706 overturns a standing must-refuse verdict.
+# FRAGILITY (binding): any future span scoring in the 0.62–0.75 band (anchored to the residual
+# squeeze 0.621 / 0.706 / 0.750) is a MANDATORY re-open byte — re-rule on the enlarged set, never a
+# run-time call. Changes to this surface are ruled + red-first (stamped NEARMATCH_VER).
+NEARMATCH_VER = "nearmatch:v2"           # v2 = combined char+token-set signal; threshold 0.664
+NEARMATCH_THRESHOLD = 0.664
+_TOKENSET_PUNC = ".,;:!?'\"()"           # per-token trim for token-set containment (internal / kept)
 
 # Row 1 (curly=straight quotes/apostrophes) + row 4 (en dash -> em dash; "--" in probe_norm).
 _NORM_CHARS = {"‘": "'", "’": "'", "“": '"', "”": '"', "–": "—"}
@@ -2252,6 +2296,67 @@ def _own_word_exempt(raw, qn, qs, qe):
     return None
 
 
+def _nearmatch_best(qn, normed):
+    """TARGET-EXISTS score (meta:v4 / ENGINE_LESSONS #63): the best sliding-window character
+    similarity of a no-match span against every cited verse's stored text — the direct test for
+    "is there a snap-to target anywhere?" that replaces taxonomizing what unfixable spans look
+    like (a shape list invites a fourth shape). qn = the span already through probe_norm (the
+    gate's own emphasis-stripped card-side value); normed = {ref: probe_norm(verse)} the gate
+    already built (the PRODUCTION normalizer, never a copy — so measurement and enforcement can't
+    drift). Both sides lowercased; window = the span's word count ±1 (clamped ≥1); difflib ratio,
+    fully deterministic, no run-time tunable. Returns the best ratio in [0.0, 1.0] (0.0 when no
+    cited text is available). Called ONLY from probe1_verbatim's no-match branch — a span that
+    matches a cited verse verbatim never reaches it."""
+    span = qn.lower()
+    n = len(span.split())
+    if n == 0:
+        return 0.0
+    sizes = sorted({w for w in (n - 1, n, n + 1) if w >= 1})
+    sm = difflib.SequenceMatcher(a=span)
+    best = 0.0
+    for vn in normed.values():
+        words = vn.lower().split()
+        for w in sizes:
+            for i in range(len(words) - w + 1):
+                sm.set_seq2(" ".join(words[i:i + w]))
+                r = sm.ratio()
+                if r > best:
+                    best = r
+    return best
+
+
+def _tokenset_containment(qn, normed):
+    """meta:v4 ORDER-INSENSITIVE leg (ruled SET semantics, 2026-07-14): the largest fraction of
+    the span's DISTINCT tokens that appear in a single cited verse's token set. SET (not multiset)
+    — word multiplicity is not a defect signal in the corpus, and set is the simpler claim ("does
+    every distinct word in the span exist in a cited verse"). Per-token punctuation trimmed
+    (_TOKENSET_PUNC); an internal '/' is kept, so "quenched/crushed" stays one token and scores 0
+    against a verse that only holds "crushed" separately. Reuses the gate's probe_norm'd values —
+    qn is already normed; normed = {ref: probe_norm(verse)}. Catches the reorder/swap class that
+    char-ratio is blind to (all right words, wrong order → containment ~1.0)."""
+    st = {t for t in (w.strip(_TOKENSET_PUNC) for w in qn.lower().split()) if t}
+    if not st:
+        return 0.0
+    best = 0.0
+    for vn in normed.values():
+        vt = {t for t in (w.strip(_TOKENSET_PUNC) for w in vn.lower().split()) if t}
+        c = len(st & vt) / len(st)
+        if c > best:
+            best = c
+    return best
+
+
+def _target_exists_score(qn, normed):
+    """meta:v4 TARGET-EXISTS score (ruled 2026-07-14): max of the order-sensitive char-similarity
+    window and the order-insensitive token-set containment. Neither leg subsumes the other — the
+    OR is load-bearing (char carries near-verbatim/inflection like "changing over" 0.833 where
+    token-set is only 0.500; token-set carries reorders like the defect-6 "bring forth judgment to
+    validity" 1.000 where char is only 0.690). >= NEARMATCH_THRESHOLD → a snap-to target exists
+    (fixable, fed). Both legs reuse the production normalizer via the gate's normed dict, so
+    measurement and enforcement cannot drift."""
+    return max(_nearmatch_best(qn, normed), _tokenset_containment(qn, normed))
+
+
 def probe1_verbatim(raw, verse_texts, notes=None, fail_kinds=None):
     """PROBE 1 — verbatim-quote GATE (V11; the defect-5/6 class, G236 Dan-trio, G162 d2,
     G2805 ×3). Every quoted span must match verses.text of a verse cited on the card under
@@ -2261,12 +2366,14 @@ def probe1_verbatim(raw, verse_texts, notes=None, fail_kinds=None):
     Range/gloss/repair-integrated refs). A span matching nothing while any cited text is
     unavailable is NOT-RUN (loud, and it blocks apply) — never a pass, never a silent fail.
     Returns (fails, notruns).
-    FAIL-KIND TAGGING (Ruling 1 / ENGINE_LESSONS #61): if a list is passed as fail_kinds,
+    FAIL-KIND TAGGING (Ruling 1 / ENGINE_LESSONS #61 + #63): if a list is passed as fail_kinds,
     each fail is tagged AT SOURCE — index-parallel to fails — as "wording" (matches no cited
-    verse, fixable in-quote) or "anchoring" (right words, wrong ref, unfixable in-quote). The
-    tag is emitted by the SAME branch that emits the fail, so the two can never drift; the
-    quote-repair pass routes on it (only wording fails ever reach the model). Same optional
-    out-param shape as notes — every existing caller that omits it is unaffected."""
+    verse but a near-match target exists, fixable in-quote), "anchoring" (right words, wrong ref,
+    unfixable in-quote), or "unsourced" (meta:v4 — no verbatim match AND no near-match target,
+    but attribution-anchored so it can't exempt; unfixable in-quote). The tag is emitted by the
+    SAME branch that emits the fail, so the two can never drift; the quote-repair pass routes on
+    it (only wording fails ever reach the model — anchoring and unsourced are held back). Same
+    optional out-param shape as notes — every existing caller that omits it is unaffected."""
     fails, notruns = [], []
     missing = [k for k, v in verse_texts.items() if v is None]
     normed = {k: probe_norm(v) for k, v in verse_texts.items() if v}
@@ -2312,12 +2419,44 @@ def probe1_verbatim(raw, verse_texts, notes=None, fail_kinds=None):
                 notruns.append(
                     f'quote "{label}" — NOT RUN: no match among available texts and '
                     f'{len(missing)} cited verse text(s) unavailable')
-            else:
+                continue
+            # meta:v4 (own-paraphrase, ENGINE_LESSONS #63): the TARGET-EXISTS test. Does a snap-to
+            # target for this span sit in ANY cited verse? COMBINED score = max(char-window,
+            # token-set containment) — order-sensitive OR order-insensitive, so a reordered real
+            # quote is recognized as fixable, not mistaken for own notation. >= threshold -> a real
+            # misquote the model can fix (wording, fed). Below -> no target: split THREE ways —
+            #   • EMPTY cited set (no comparison possible) -> never exempt; FAIL (unsourced). Ruled
+            #     must-refuse mechanism (1): exemption requires a comparison to have occurred.
+            #   • attribution-anchored (a claimed source with no verbatim existence) -> FAIL
+            #     (unsourced), held from the model, parks.
+            #   • unanchored own notation -> EXEMPT with a LOUD note (lesson #47).
+            # Runs ONLY here in the no-match branch; a verbatim match never reaches it.
+            score = _target_exists_score(qn, normed)
+            if score >= NEARMATCH_THRESHOLD:
                 fails.append(
                     f'quote "{label}" matches NO cited verse under the ruled allowances '
                     f'(verbatim-quote gate)')
                 if fail_kinds is not None:
                     fail_kinds.append("wording")
+            elif not normed:
+                fails.append(
+                    f'quote "{label}" matches NO cited verse and NO cited verse text was available '
+                    f'to test for a target — cannot be exempted as own-paraphrase (empty-set rule); '
+                    f'unsourced')
+                if fail_kinds is not None:
+                    fail_kinds.append("unsourced")
+            elif _attribution_anchored(raw, qs, qe):
+                fails.append(
+                    f'quote "{label}" matches NO cited verse and no target exists in any cited '
+                    f'verse (best {score:.3f} < {NEARMATCH_THRESHOLD}); the card attributes a '
+                    f'source for wording with no verbatim existence (unsourced)')
+                if fail_kinds is not None:
+                    fail_kinds.append("unsourced")
+            elif notes is not None:
+                notes.append(
+                    f'quote "{label}" EXEMPTED as own-paraphrase ({META_VER} no verse match, best '
+                    f'target {score:.3f} < {NEARMATCH_THRESHOLD}, not attribution-anchored — the '
+                    f"writer's own notation, no scripture claim) — non-blocking note")
             continue
         local, trailing = _local_refs(raw, qs, qe)
         if len(local) >= 2:
@@ -2608,7 +2747,8 @@ def validate_entry(entry, conn=None):
                                        known_names=_p2_corpus_names(conn))
         s3_warns = scan3_identity(raw, vt)
         a["probe_vers"] = {"norm": NORM_VER, "p2wl": P2_WHITELIST_VER,
-                           "scan3": SCAN3_PATTERNS_VER, "meta": META_VER}
+                           "scan3": SCAN3_PATTERNS_VER, "meta": META_VER,
+                           "nearmatch": NEARMATCH_VER}
         a["probe1_notrun"], a["probe2_warns"] = p1_nr, p2_warns
         a["probe2_notrun"], a["scan3_warns"] = p2_nr, s3_warns
         a["probe1_notes"] = p1_notes                    # meta:v1 exemptions — LOUD, on record

@@ -275,10 +275,11 @@ def main():
     assert fails == [] and notrun == [], (fails, notrun)
     assert len(notes) == 1 and 'captivating' in notes[0], notes
 
-    # 1v MUST-STILL-REFUSE — cue (c) blocks: "other item" (real bytes) is unanchored and
-    # matches nothing, but NO cue reaches scare-quotes-around-a-concept, so the anchor
-    # wall alone does not exempt it. Ruled: stays on the adjudicated-bypass path; the
-    # design working, not a gap. (meta:v2 preserves this verdict unchanged.)
+    # 1v MUST-STILL-REFUSE — "other item" (real bytes) is unanchored, matches nothing, and no cue
+    # reaches scare-quotes-around-a-concept. With the EMPTY cited set here, meta:v4's empty-set
+    # rule (2026-07-14) blocks any own-paraphrase exemption — nothing to be a paraphrase OF — so it
+    # FAILS (kind unsourced). In its real card (non-empty cited set) it is fed->cap->park instead;
+    # either way it never exempts (ruled must-refuse). Still one fail, no exemption note.
     raw_oth = ('the two are distinguished by whether an "other item" is explicitly placed '
                'in the position vacated.')
     notes = []

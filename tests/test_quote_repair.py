@@ -334,6 +334,191 @@ def main():
     assert B.quote_repair_prompt_ver() not in ("qrepair:1e8c9c383df6", "qrepair:b90d5287ca16"), \
         B.quote_repair_prompt_ver()
 
+    # ══════════════════════════════════════════════════════════════════════════════════════
+    # OWN-PARAPHRASE NEAR-MATCH GATE (meta:v4 / ENGINE_LESSONS #63/#64, RULED across the
+    # 2026-07-14 checkpoint chain: BUILD-halt on the char-only rule -> DESIGN re-open -> combined
+    # signal + threshold pin). A no-match span gets a TARGET-EXISTS test: COMBINED score =
+    # max(char-window best-similarity, token-SET containment best cited verse), both sides through
+    # production probe_norm. >= 0.664 -> wording (fed). < 0.664 -> `unsourced`: EMPTY cited set or
+    # attribution-anchored -> FAIL + park (never fed); unanchored WITH a cited set -> meta:v4
+    # own-paraphrase EXEMPT (LOUD note). Threshold 0.664 = midpoint of the enumerated residual pair
+    # (quenched/crushed 0.621 EXEMPT / other-item 0.706 must-refuse); two must-refuse mechanisms
+    # ride it (empty-set rule; t <= 0.706). Verse bytes = REAL verses.text (JP live reads on PA
+    # 2026-07-14); card spans + cue-free context = REAL banked-card bytes (draws/history/
+    # G227_..._8258771a_2.json, G236_..._59667b81_2.json). The three reviewer-named must-land
+    # outcomes are fixtures 18 (reorder->wording), 19 (other-item real-card fed->cap->park), 20
+    # (empty-VT->unsourced fail). Red-first: against the char-only pre-pin code, the combined-signal
+    # pins (fixture 12) and the reorder/other-item routing all fail loudly.
+    # ──────────────────────────────────────────────────────────────────────────────────────
+    NM_ISA423 = "A reed being crushed he will not break, and smoking flax he will not extinguish; but to validity he will bring forth judgment."
+    NM_JOB427 = "And it came to pass after the LORD speaking all these words to Job, the LORD said to Eliphaz the Temanite, You sinned and your two friends, for you spoke not anything before me true, as my attendant Job."
+    NM_JOB428 = "And now, take seven calves, and seven rams, and go to my attendant Job! and he shall offer a yield offering for you, for in no way shall I receive of his face, for but on account of him I would have destroyed you. For you did not speak true concerning my attendant Job."
+    NM_DAN416 = "His heart shall be changed from the ones of men, and the heart of a wild beast shall be given to him; and seven times shall change over him."
+    NM_GEN317 = "But your father cheated me, and bartered my wage for the ten lambs. And the God of my father did not give to him the power to do evil against me."
+
+    # ── 12. SCORE PINS (reviewer condition 2, both legs + combined): the PRODUCTION scorer
+    # reproduces the ruled residual bytes exactly. char leg — "changing over" 0.833 @ Dan 4:16;
+    # "quenched/crushed" 0.621 @ Isa 42:3. token-set leg — "changing over" 0.500 (only "over"
+    # matches), "quenched/crushed" 0.000 (slash keeps it one token). Combined = the gate's value;
+    # threshold 0.664 sits strictly between. A normalizer/window/token change that shifts any of
+    # these trips HERE. ──
+    _pn = B.probe_norm
+    _dan = {("Dan", 4, 16): _pn(NM_DAN416)}
+    _isa = {("Isa", 42, 3): _pn(NM_ISA423)}
+    assert round(B._nearmatch_best(_pn("changing over"), _dan), 3) == 0.833
+    assert round(B._nearmatch_best(_pn("quenched/crushed"), _isa), 3) == 0.621
+    assert round(B._tokenset_containment(_pn("changing over"), _dan), 3) == 0.500
+    assert round(B._tokenset_containment(_pn("quenched/crushed"), _isa), 3) == 0.000
+    s236 = B._target_exists_score(_pn("changing over"), _dan)
+    s227 = B._target_exists_score(_pn("quenched/crushed"), _isa)
+    assert round(s236, 3) == 0.833 and round(s227, 3) == 0.621, (s236, s227)
+    assert s227 < B.NEARMATCH_THRESHOLD < s236, (s227, B.NEARMATCH_THRESHOLD, s236)
+    assert B.NEARMATCH_THRESHOLD == 0.664, B.NEARMATCH_THRESHOLD
+
+    # ── 13. FIXTURE 1 — real G227 8258771a_2: "quenched/crushed" is the card's own paraphrase
+    # of Isa 42:3 with NO attribution -> meta:v4 EXEMPT (note); the Job anchoring span holds ->
+    # ZERO feedable spans -> the model is NEVER called and the card parks. ──
+    G227CARD = ('Sub-use: a reported thing turns out to match what happened. '
+                'Job 42:7 and Job 42:8: Eliphaz and friends "spoke not anything before me true," '
+                'while Job did. Nothing in the verse establishes a legal setting; the move is '
+                'from "quenched/crushed" to genuine outcome.')
+    G227VT = {("Job", 42, 7): NM_JOB427, ("Job", 42, 8): NM_JOB428, ("Isa", 42, 3): NM_ISA423}
+    notes, kinds = [], []
+    fails, nr = B.probe1_verbatim(G227CARD, G227VT, notes=notes, fail_kinds=kinds)
+    assert kinds == ["anchoring"], (fails, kinds)             # only the Job anchoring fail
+    assert not any("quenched/crushed" in f for f in fails), fails
+    assert any("quenched/crushed" in n and "own-paraphrase" in n and "meta:v4" in n for n in notes), notes
+
+    def never227(_msg):
+        raise AssertionError("model called on a card with no feedable (wording) span")
+    final, rec, probs = B.quote_repair(G227CARD, G227VT, never227)
+    assert final == G227CARD and probs, probs
+    assert any("anchoring" in p.lower() for p in probs), probs
+    assert rec and rec.get("anchoring_only") and "unsourced_held" not in rec, rec
+    assert B.bank_refused_repair("G227", "quote", rec) is None    # nothing to bank
+
+    # ── 14. FIXTURE 2 — real G236 59667b81_2: "changing over" keeps a near-match target (Dan
+    # 4:16 "change over", 0.833 >= threshold) -> stays `wording`, fed, fixed, clean. The fed
+    # path is unchanged from today. ──
+    G236CLEAN = 'In Daniel the seasons "changing over" the king mark successive intervals (Dan 4:16).'
+    G236CLEAN_VT = {("Dan", 4, 16): NM_DAN416}
+    kinds = []
+    fails, nr = B.probe1_verbatim(G236CLEAN, G236CLEAN_VT, notes=[], fail_kinds=kinds)
+    assert kinds == ["wording"], (fails, kinds)
+    G236CLEAN_FIX = G236CLEAN.replace('"changing over"', '"seven times shall change over him"')
+    mock = Mock(G236CLEAN_FIX)
+    final, rec, probs = B.quote_repair(G236CLEAN, G236CLEAN_VT, mock)
+    assert probs == [], probs
+    assert final == G236CLEAN_FIX and len(mock.msgs) == 1
+    assert "matches NO cited verse" in mock.msgs[0], "the wording finding was not fed"
+    f2, n2 = B.probe1_verbatim(final, G236CLEAN_VT)
+    assert f2 == [] and n2 == [], (f2, n2)
+
+    # ── 15. FIXTURE 3 — grafted mixed card (G236 wording span + G227 held spans): the model is
+    # fed ONLY the wording finding; the anchoring finding AND the own-paraphrase note are both
+    # held back; on the re-check the anchoring span caps out -> park, NOT a guard breach. ──
+    GRAFT = ('The seasons "changing over" the king mark intervals (Dan 4:16). '
+             'Job 42:7 and Job 42:8: friends "spoke not anything before me true," while Job did. '
+             'Nothing sets a legal frame; the move is from "quenched/crushed" to genuine outcome.')
+    GRAFTVT = {("Dan", 4, 16): NM_DAN416, ("Job", 42, 7): NM_JOB427,
+               ("Job", 42, 8): NM_JOB428, ("Isa", 42, 3): NM_ISA423}
+    notes, kinds = [], []
+    fails, nr = B.probe1_verbatim(GRAFT, GRAFTVT, notes=notes, fail_kinds=kinds)
+    assert sorted(kinds) == ["anchoring", "wording"], (fails, kinds)   # quenched/crushed = NOTE
+    assert any("quenched/crushed" in n and "meta:v4" in n for n in notes), notes
+    GRAFT_FIX = GRAFT.replace('"changing over"', '"seven times shall change over him"')
+    rm = RouteMock(GRAFT_FIX)
+    final, rec, probs = B.quote_repair(GRAFT, GRAFTVT, rm)
+    assert len(rm.msgs) == 1, rm.msgs
+    assert "matches NO cited verse" in rm.msgs[0], "the wording finding was not fed"
+    assert "anchored primary" not in rm.msgs[0], "the anchoring finding LEAKED to the model"
+    assert probs and any("cap" in p.lower() for p in probs), probs
+    assert not any("spans-only" in p for p in probs), ("routed to a breach, not a park", probs)
+    assert final == GRAFT
+
+    # ── 16. FIXTURE 4 (TEETH) — the SAME paraphrase span WITH a trailing (Isa 42:3) ref is
+    # attribution-anchored: it FAILS as `unsourced` (a claimed source for words that exist
+    # verbatim nowhere) and PARKS, never fed. Non-laundering proof — attribution cannot turn a
+    # no-target span into a feedable one, nor launder it into an exemption. ──
+    TEETH = 'The servant is gentle: "quenched/crushed" (Isa 42:3) is the picture.'
+    TEETHVT = {("Isa", 42, 3): NM_ISA423}
+    notes, kinds = [], []
+    fails, nr = B.probe1_verbatim(TEETH, TEETHVT, notes=notes, fail_kinds=kinds)
+    assert kinds == ["unsourced"], (fails, kinds)
+    assert any("unsourced" in f and "quenched/crushed" in f for f in fails), fails
+    assert not any("EXEMPTED" in n for n in notes), notes         # attribution blocks the exemption
+
+    def neverT(_msg):
+        raise AssertionError("model called on an attribution-anchored unsourced span")
+    final, rec, probs = B.quote_repair(TEETH, TEETHVT, neverT)
+    assert final == TEETH and probs, probs
+    assert any("unsourced" in p.lower() for p in probs), probs
+    assert rec and rec.get("unsourced_held") and "anchoring_only" not in rec, rec
+
+    # ── 17. REGRESSION — a real misquote WITH a near-match target stays feedable `wording`.
+    # K5 "they changed their gods" (a recast of Jer 2:11 "if nations changed their gods") keeps
+    # a target (0.857 >= threshold) -> wording, fed. The near-match gate does not swallow the
+    # existing K1-K5 fire controls. ──
+    kinds = []
+    fails, nr = B.probe1_verbatim(K5_RAW, sub(("Jer", 2, 11)), notes=[], fail_kinds=kinds)
+    assert kinds == ["wording"], (fails, kinds)
+
+    # ── 18. NAMED MUST-LAND #1 — the defect-6 REORDER (real G227 bytes) that the char-only rule
+    # waved through. "bring forth judgment to validity" scrambles Isa 42:3's own words: char 0.690
+    # (below), token-set 1.000 (all words present, order-blind) -> COMBINED 1.000 >= 0.664 ->
+    # wording, FED to the repair model. The combined signal is what recovers it; char alone
+    # exempted it as own-paraphrase and shipped the defect. ──
+    REORDER = ('- validity (Isa 42:3): the translation maps it onto the process, '
+               '"bring forth judgment to validity", a reordering of the verse.')
+    assert round(B._tokenset_containment(_pn("bring forth judgment to validity"), _isa), 3) == 1.000
+    kinds = []
+    fails, nr = B.probe1_verbatim(REORDER, {("Isa", 42, 3): NM_ISA423}, notes=[], fail_kinds=kinds)
+    assert kinds == ["wording"], (fails, kinds)
+
+    # ── 19. NAMED MUST-LAND #2 — "other item" in its REAL cited context (unanchored, no cue): its
+    # combined score is 0.706 (char 0.706 @ Gen 31:7, the score-driving verse from the full G236
+    # cited set; token-set 0.000) -> >= 0.664 -> wording -> FED. The model cannot fix a concept to
+    # a verse, so it returns the card unchanged -> cap-out -> PARKS. Never exempted: this is how the
+    # ruled must-refuse verdict holds under meta:v4 (t <= 0.706, mechanism 2). ──
+    OTHERITEM = ('the two are distinguished by whether an "other item" is explicitly placed '
+                 'in the position vacated.')
+    OI_VT = {("Gen", 31, 7): NM_GEN317}
+    assert round(B._target_exists_score(_pn("other item"), {("Gen", 31, 7): _pn(NM_GEN317)}), 3) == 0.706
+    kinds = []
+    fails, nr = B.probe1_verbatim(OTHERITEM, OI_VT, notes=[], fail_kinds=kinds)
+    assert kinds == ["wording"], (fails, kinds)
+    mock = Mock(OTHERITEM)                      # model can't fix a concept -> returns card unchanged
+    final, rec, probs = B.quote_repair(OTHERITEM, OI_VT, mock)
+    assert len(mock.msgs) == 1, "other-item must be FED once"
+    assert final == OTHERITEM and probs and any("cap" in p.lower() for p in probs), probs
+    assert not any("spans-only" in p for p in probs), probs
+
+    # ── 20. NAMED MUST-LAND #3 — "other item" with an EMPTY cited set: nothing to be a paraphrase
+    # OF, so the empty-set rule (mechanism 1) blocks the exemption -> it FAILS (unsourced), never
+    # exempts. Mirrors probe test 1v. ──
+    kinds, notes = [], []
+    fails, nr = B.probe1_verbatim(OTHERITEM, {}, notes=notes, fail_kinds=kinds)
+    assert kinds == ["unsourced"] and "other item" in fails[0], (fails, kinds)
+    assert notes == [], notes                   # no exemption note — the empty-set rule blocks it
+
+    # ── 21. TOKEN-LEG GUARD (reviewer-approved 2026-07-14) — a SYNTHETIC adversarial scramble of
+    # the REAL Isa 42:3 words: order destroyed, every word kept. It exists ONLY to lock the
+    # order-insensitive token-set leg against silent deletion: char-window 0.640 (BELOW 0.664, so a
+    # char-only scorer would EXEMPT this and SHIP the reorder), token-set 1.000, COMBINED 1.000 ->
+    # wording, FED. Proven red against a char-only scorer this session. NOT a calibration point and
+    # NOT an R2-a instrument: it specifies required behavior, not measured system state, so it is
+    # EXCLUDED from every threshold / fragility-band computation (those use real bytes only). ──
+    SCRAMBLE = ('A heavier scramble keeps every word but destroys the order: '
+                '"judgment to validity forth bring he will".')
+    _isa_only = {("Isa", 42, 3): _pn(NM_ISA423)}
+    _scr = _pn("judgment to validity forth bring he will")
+    assert round(B._nearmatch_best(_scr, _isa_only), 3) == 0.640            # char alone: below t
+    assert round(B._tokenset_containment(_scr, _isa_only), 3) == 1.000      # every word present
+    assert round(B._target_exists_score(_scr, _isa_only), 3) == 1.000       # combined recovers it
+    kinds = []
+    fails, nr = B.probe1_verbatim(SCRAMBLE, {("Isa", 42, 3): NM_ISA423}, notes=[], fail_kinds=kinds)
+    assert kinds == ["wording"], (fails, kinds)
+
     print("test_quote_repair: ok")
 
 
