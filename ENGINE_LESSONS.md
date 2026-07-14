@@ -947,3 +947,21 @@ both drifting from the doc.
     against silent deletion. A standing must-refuse verdict (`other item`) became a binding constraint
     on the threshold itself (`t <= 0.706`), written into code + commit so a future tune can't overturn a
     ruling. *(audit: OWN-PARAPHRASE NEAR-MATCH GATE — BUILD LANDED, 2026-07-14; commit dbea202)*
+
+66. **A parked word's required `--hints` is part of the draw input key, so a live re-run ALWAYS
+    redraws — a byte-pinned prediction cannot be tested by re-running; check it against the archived
+    card bytes offline instead.** `--hints` injects the park-ruling constraint lines into the draw
+    context (they ride the model's user message), so they are correctly part of `draw_signature`.
+    Consequence: re-entering a parked word (which is refused WITHOUT `--hints`, ruling 1) moves the
+    input key vs its pre-hints saved draw, the saved draw reads STALE, and the tool draws a fresh
+    card. A redraw is a DIFFERENT card than the one the near-match predictions were computed from, so
+    "prediction-met" is unfalsifiable by the live method (G227 re-run: fresh card had no
+    `quenched/crushed` span at all — quote gate clean — then failed an unrelated coverage gate). The
+    tripwire (`calling the verse engine` = pause) is inherent-post-spend: the redraw is what prints
+    it, so one draw is already charged before the pause is visible. FIX (ruled 2026-07-14, method
+    change re-approved): retire the live re-run for parked words; run the FIXED gate offline against
+    the ARCHIVED on-record card `raw` (recoverable — superseded draws are moved into `draws/history/`
+    intact, ruling 5) with live read-only verse lookups — deterministic, repeatable, zero model spend,
+    tests exactly the prediction card. Helper `scripts/offline_gate_check.py` (read-only end to end,
+    reuses production detectors). Per-word precondition: the archived card must contain the predicted
+    span before its gate check runs. *(audit: PARKED-WORD REDRAW — LIVE RE-RUN RETIRED, 2026-07-14)*

@@ -1,6 +1,16 @@
 # HANDOFF — Lexica definition-engine rollout (batch 2 / calibration)
 
-> **NEXT SESSION = FOUR-WORD RE-RUN (own JP-gated checkpoint — a real model spend, NOT pre-cleared).**
+> **NEXT = OFFLINE ARCHIVED-CARD GATE CHECK, per word (G227 first — recoverability already PASS; then
+> G236/G162/G1390, each gated on its own recoverability check). ZERO model spend. Helper =
+> `scripts/offline_gate_check.py` (read-only; JP runs on PA).** The LIVE four-word re-run is RETIRED for
+> parked words (reviewer ruling a, 2026-07-14): a parked word's required `--hints` is part of the draw
+> input key, so re-running ALWAYS redraws a fresh card, and a byte-pinned prediction can't be tested
+> against a different card (G227 proved it — fresh card, no `quenched/crushed` span, quote gate clean;
+> one Sonnet draw charged). Offline method feeds the ARCHIVED on-record card `raw` through the FIXED gate
+> with live read-only verse lookups — deterministic, repeatable. Close criterion carried over (verdict
+> per predicted span matches the prediction; G227 Job / G236 Ezra anchoring parks = prediction-met;
+> 0.62–0.75 combined band binding, any NEW in-band span stops the card; scores are evidence not
+> calibration). Full record: AUDIT "PARKED-WORD REDRAW — LIVE RE-RUN RETIRED" + ENGINE_LESSONS #66.
 > The own-paraphrase near-match gate is BUILT + LIVE (`dbea202`, PA pulled + invariant tests green +
 > reloaded). **WHAT LANDED (in `probe1_verbatim`'s no-match branch):** a TARGET-EXISTS test with a
 > COMBINED score `max(char-window best-similarity, token-SET containment)` — order-sensitive OR

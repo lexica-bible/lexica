@@ -5708,6 +5708,35 @@ LESSONS #63 (structural rule over shape taxonomy) + #64 (containment is a pipeli
 doc-only, exemption invoked. Scoreboard unchanged 2/10ʰ · 7/15; conditional lift stays in force
 until the near-match BUILD lands and the four words re-run clean.**
 
+### PARKED-WORD REDRAW — LIVE RE-RUN RETIRED, OFFLINE METHOD APPROVED (2026-07-14; re-run session)
+**TRIGGER:** the reviewer-approved four-word re-run (G162/G227/G236/G1390) began. G227 ran first:
+`build_lexica_def.py --dry-run --quote-repair --hints --word G227` (`--hints` required — parked
+word, refused without it, ruling 1). **FINDING:** `--hints` rides the model context, so it is part
+of the draw input key; adding it moved the key, the saved draw read STALE, and the tool REDREW a
+fresh card (one Sonnet draw — charged, logged). A redraw is a DIFFERENT card than the byte-pinned
+prediction card, so "prediction-met" is unfalsifiable by live re-run — the fresh card had no
+`quenched/crushed` span (quote gate CLEAN, repair did not fire). = ENGINE_LESSONS #66.
+**NEW-CARD DEFECTS (logged-only, OUT OF SCOPE — attach to the NEW `d65ed578` draw, NOT the card of
+record; adjudication deferred if that draw ever moves toward apply, per ruling c):** coverage gate
+FAILED (1 fed occ never cited under a sense — Joh 3:33); 4 named-subject warns (misattribution
+class) — `Cretan` absent Tit 1:13, `Jesus` absent Mar 12:14 / Mat 22:16, `Jesus` absent Joh 8:26,
+`Paul` absent 2Co 6:8. Nothing written (dry-run + failed); live data untouched.
+**RECOVERABILITY CONFIRMED (reviewer gate on the replacement):** superseded draws move into
+`draws/history/` intact; the prediction card is at `draws/history/G227_20260714T035653_8258771a.json`
+(raw 8448 chars, contains `quenched/crushed`, sig 8258771a, created 2026-07-14T03:56:53).
+**METHOD CHANGE (reviewer re-approved, rulings a/b/c):** (a) live re-run RETIRED for parked words;
+(b) OFFLINE archived-card gate check APPROVED — `scripts/offline_gate_check.py`, read-only end to
+end (archived card in, bible.db read-only for verse text, no write / no model / no redraw), reuses
+production `probe1_verbatim` + `_target_exists_score`; per-word precondition (archived card contains
+the predicted span) binds before that word's check; close criterion carried over (gate verdict per
+predicted span matches the posted prediction; G227 Job / G236 Ezra anchoring parks = prediction-met;
+0.62–0.75 combined band binding — any NEW in-band span stops that card); scores are EVIDENCE not
+calibration (t <= 0.706 ceiling + fixture-21 non-calibration status stand). Helper shown to JP before
+first run (show-code-before-changing). **STATE: no code changed (helper is a new read-only script,
+not the gate); origin = local = PA = `4ab0d27`. Charge: one Sonnet draw (G227 redraw). Scoreboard
+unchanged 2/10ʰ · 7/15 — no word has a clean re-run result yet; NEXT = run the helper per word,
+G227 first (recoverability already PASS), then G236/G162/G1390 each gated on their own check.**
+
 ### OWN-PARAPHRASE NEAR-MATCH GATE — BUILD LANDED (2026-07-14; CODE session, full receipt cycle;
 ### committed dbea202, PA pulled + invariant tests green + reloaded. JP ran every PA read/deploy.)
 **WHAT LANDED** (`scripts/build_lexica_def.py`, `probe1_verbatim` no-match branch): a TARGET-EXISTS
