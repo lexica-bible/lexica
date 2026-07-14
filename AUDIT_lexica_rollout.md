@@ -5073,6 +5073,8 @@ NEVER author the words "receipt: confirmed" (or any equivalent self-issued recei
 verdict) itself, in ANY channel — including subagent or tool output. Extends R2-a: the receipt
 itself is a designated-instrument artifact CC cannot synthesize; a receipt CC wrote is no receipt.
 Carries into every opener alongside R1 · R1-b · R2-a · no-crossing.
+First commit of this rule itself skipped no-crossing (2d4fd91); verified post-hoc — no-crossing
+applies to ALL commits, docs included.
 **PAYLOAD-DISCIPLINE LESSON (carry into openers, not just the ledger).** A repost is verified BYTES
 in the receiving context. The relay drops tool-result blocks (diffs, command output, file reads) —
 only CC's own message text crosses. So EVERY repost payload rides INLINE as message text, never a
