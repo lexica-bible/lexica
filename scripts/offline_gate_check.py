@@ -34,11 +34,10 @@ import sys
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import build_lexica_def as B  # noqa: E402  (production detectors -- reused, never copied)
 
-# Live fragility watch (reviewer-bound on this helper's output). The known residual squeeze
-# (0.621 / 0.706 / 0.750) sits inside this band; the helper FLAGS every in-band span but does
-# NOT classify -- known-residual vs NEW is the reading step's call (a NEW in-band span is the
-# mandatory re-open).
-BAND_LO, BAND_HI = 0.62, 0.75
+# Live fragility watch. Reuse the gate's OWN band edges (single source of truth) so the helper
+# and the meta:v5 in-band demote can never drift apart. The helper FLAGS every in-band span but
+# does NOT classify -- known-residual vs NEW is the reading step's call.
+BAND_LO, BAND_HI = B.NEARMATCH_BAND_LO, B.NEARMATCH_BAND_HI
 
 
 def load_verse_texts(db_path, refs):
@@ -76,16 +75,71 @@ def score_no_match_spans(raw, normed):
     return out
 
 
+def sweep(db_path):
+    """meta:v5 BLAST-RADIUS SWEEP (scope-b ruling, 2026-07-14): run the gate over EVERY live
+    card's stored raw and report every in-band cue-exemption WARN (span + score). Live cards =
+    lexica_def rows; a card's raw is def_json['raw'] (the same field a rebuild re-reads). Verse
+    text comes from the SAME read-only connection. No write, no model, no redraw. Output is
+    EVIDENCE (non-calibration): each warn is a live card that would BLOCK on rebuild/apply under
+    meta:v5 until its span is adjudicated. Registry earns entries one adjudication at a time."""
+    uri = "file:%s?mode=ro" % os.path.abspath(db_path)
+    conn = sqlite3.connect(uri, uri=True)
+    conn.row_factory = sqlite3.Row
+
+    def verse(b, c, v):
+        r = conn.execute("SELECT text FROM verses WHERE book=? AND chapter=? AND verse=?",
+                         (b, c, v)).fetchone()
+        return r["text"] if r and r["text"] else None
+
+    rows = conn.execute("SELECT strongs, def_json FROM lexica_def ORDER BY strongs").fetchall()
+    print("=== meta:v5 live-card sweep: %d card(s) ===" % len(rows))
+    flagged, total = 0, 0
+    for row in rows:
+        try:
+            raw = (json.loads(row["def_json"]) or {}).get("raw", "")
+        except Exception as e:
+            print("  ! %s: def_json unreadable (%s) -- skipped" % (row["strongs"], e))
+            continue
+        if not raw:
+            continue
+        vt = {(b, c, v): verse(b, c, v) for b, c, v in B.cited_refs(raw)}
+        warns = []
+        B.probe1_verbatim(raw, vt, warns=warns)
+        if warns:
+            flagged += 1
+            total += len(warns)
+            print("\n%s -- %d in-band cue warn(s):" % (row["strongs"], len(warns)))
+            for w in warns:
+                print("  - " + w)
+    conn.close()
+    print("\n--- sweep summary ---")
+    print("cards swept: %d | cards with in-band cue warns: %d | total warns: %d"
+          % (len(rows), flagged, total))
+    print("(EVIDENCE, non-calibration. Each warn = a live card that would BLOCK on a future "
+          "rebuild/apply under meta:v5 until its span is adjudicated. Registry earns entries one "
+          "receipted adjudication at a time -- never batch-populated.)")
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("--card", required=True,
+    ap.add_argument("--card",
                     help="archived draw JSON -- the card of record for this word")
-    ap.add_argument("--expect", required=True,
+    ap.add_argument("--expect",
                     help="predicted span that MUST be present in the card (recoverability "
                          "precondition); the word STOPS if absent")
+    ap.add_argument("--sweep", action="store_true",
+                    help="blast-radius mode: run the meta:v5 gate over EVERY live card "
+                         "(lexica_def) and report in-band cue warns; ignores --card/--expect")
     ap.add_argument("--db", default=os.path.expanduser("~/bible-db/bible.db"),
                     help="bible.db path (opened read-only)")
     args = ap.parse_args()
+
+    if args.sweep:
+        sweep(args.db)
+        return
+    if not args.card or not args.expect:
+        sys.exit("single-card mode needs --card and --expect (or pass --sweep for the "
+                 "blast-radius run).")
 
     with open(args.card, encoding="utf-8") as f:
         card = json.load(f)
@@ -113,14 +167,18 @@ def main():
         print("  unavailable refs (a no-match span here reports NOT-RUN, never exempt): "
               + ", ".join("%s %d:%d" % (b, c, v) for b, c, v in missing))
 
-    notes, fail_kinds = [], []
-    fails, notruns = B.probe1_verbatim(raw, vt, notes=notes, fail_kinds=fail_kinds)
+    notes, fail_kinds, warns = [], [], []
+    fails, notruns = B.probe1_verbatim(raw, vt, notes=notes, fail_kinds=fail_kinds, warns=warns)
 
     print("\n--- verbatim-quote gate verdict (production probe1_verbatim) ---")
     if notes:
         print("EXEMPT / non-blocking notes:")
         for n in notes:
             print("  - " + n)
+    if warns:
+        print("WARNS (meta:v5 in-band cue demote -- BLOCKS apply until adjudicated):")
+        for w in warns:
+            print("  - " + w)
     if fails:
         print("FAILS (kind in brackets; wording = fed to model, anchoring/unsourced = held):")
         for msg, kind in zip(fails, fail_kinds):
@@ -129,7 +187,7 @@ def main():
         print("NOT RUN (blocks apply):")
         for nr in notruns:
             print("  - " + nr)
-    if not (notes or fails or notruns):
+    if not (notes or warns or fails or notruns):
         print("  gate clean -- no quoted span flagged.")
 
     print("\n--- combined near-match score, every no-match span "
@@ -154,8 +212,8 @@ def main():
           "   an upstream exemption can decide a span regardless of its score here.)")
 
     print("\n--- summary ---")
-    print("fails: %d | exempt/notes: %d | not-run: %d | in-band spans: %d"
-          % (len(fails), len(notes), len(notruns), len(band_hits)))
+    print("fails: %d | warns: %d | exempt/notes: %d | not-run: %d | in-band spans: %d"
+          % (len(fails), len(warns), len(notes), len(notruns), len(band_hits)))
     if band_hits:
         print("IN-BAND spans present -> classify each: known residual (already ruled) vs NEW. "
               "Any NEW in-band span = mandatory re-open, STOP the card, report before it "

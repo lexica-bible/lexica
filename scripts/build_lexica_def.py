@@ -2103,7 +2103,7 @@ P2_WHITELIST_VER = "p2wl:v2"    # probe-2 whitelist + common-word filter + sente
                                 # 2026-07-12): label/sentence-start demotion behind the
                                 # corpus-name guard; list adds english/greek/peoples.
 SCAN3_PATTERNS_VER = "scan3:v2" # scanner-3 pattern list; grows by exhibit, changes ruled
-META_VER = "meta:v4"            # metalinguistic-mention exemption. v2 (F3, ruled 2026-07-13):
+META_VER = "meta:v5"            # metalinguistic-mention exemption. v2 (F3, ruled 2026-07-13):
                                 # the ≤2-word cap is RETIRED, replaced by the ANCHOR WALL.
                                 # v3 (Ruling 2, 2026-07-13): ADDITIVE own-word class on top of
                                 # v2's cue path (untouched) — a single-word own-vocabulary
@@ -2129,10 +2129,13 @@ META_VER = "meta:v4"            # metalinguistic-mention exemption. v2 (F3, rule
 # "reliable" (G227 d2), "captivating" (G162 d2). "other item" stays UNEXEMPTED here (no cue
 # reaches scare-quotes-around-a-concept); under meta:v4 it is handled by the target-exists layer
 # below (combined 0.706 >= threshold -> fed -> cap-out -> parks; never exempted — ruled must-refuse).
-# LEDGERED RISK (accepted 2026-07-13, no fix this session): a genuine misquote sitting
-# unanchored in gloss-notes territory with a cue in its window would now launder through as an
-# exemption. No real byte has ever shown it; exemptions are LOUD (→ probe1_notes → audit) and
-# card convention attaches refs to real verse quotes (keeping the anchor wall live for them).
+# LEDGERED RISK (raised 2026-07-13) — CLOSED by v5 (scope-b ruling, 2026-07-14): a genuine
+# misquote sitting unanchored in gloss-notes territory with a cue in its window used to launder
+# through as an exemption (the anchor wall only catches spans that ATTACH a ref). v5 adds the
+# fourth wall: after the three walls exempt, an IN-BAND combined near-match score (0.62–0.75)
+# DEMOTES the exemption to an adjudicate-required WARN that blocks apply until a human signs off
+# — so an unanchored span textually near a cited verse can no longer ship unadjudicated.
+# Out-of-band exemptions are untouched; exemptions and warns are both LOUD (→ audit).
 META_PATTERNS = ("render", "gloss", "the word", "the lemma", "reads as", "sense of", "so-called")
 
 # TARGET-EXISTS test (meta:v4 / ENGINE_LESSONS #63) — the direct "is there a snap-to target
@@ -2157,6 +2160,22 @@ META_PATTERNS = ("render", "gloss", "the word", "the lemma", "reads as", "sense 
 NEARMATCH_VER = "nearmatch:v2"           # v2 = combined char+token-set signal; threshold 0.664
 NEARMATCH_THRESHOLD = 0.664
 _TOKENSET_PUNC = ".,;:!?'\"()"           # per-token trim for token-set containment (internal / kept)
+
+# meta:v5 FRAGILITY BAND (scope-b ruling, 2026-07-14): a metalinguistic-cue exemption whose
+# COMBINED near-match score lands IN this band is DEMOTED from a non-blocking note to an
+# adjudicate-required WARN (blocks apply, same class as the named-subject warns). This is the
+# fourth wall on the cue exemption — the laundering vector the anchor wall misses (an unanchored
+# span textually near a cited verse). The three walls still decide EXEMPT-vs-not; the score
+# decides only whether that exemption needs human sign-off. Band edges are the ruled residual
+# squeeze (0.621/0.706/0.750) — NOT threshold math; t stays NEARMATCH_THRESHOLD.
+NEARMATCH_BAND_LO, NEARMATCH_BAND_HI = 0.62, 0.75
+# Enumerated ADJUDICATED in-band residuals: a cue exemption already human-adjudicated + UPHELD
+# does NOT re-warn at its RULED score. Keyed by the probe_norm'd span; the value is the ruled
+# score(s) to 3 dp. Match is on round(score, 3), so float noise < 0.0005 still suppresses while
+# any real drift re-warns (ruling: "score drift re-warns"). Grows one entry per adjudication.
+_META_ADJUDICATED = {
+    "this [is] true [that] you have said": (0.638,),   # G227, upheld 2026-07-14 (Joh 4:18 display)
+}
 
 # Row 1 (curly=straight quotes/apostrophes) + row 4 (en dash -> em dash; "--" in probe_norm).
 _NORM_CHARS = {"‘": "'", "’": "'", "“": '"', "”": '"', "–": "—"}
@@ -2357,7 +2376,7 @@ def _target_exists_score(qn, normed):
     return max(_nearmatch_best(qn, normed), _tokenset_containment(qn, normed))
 
 
-def probe1_verbatim(raw, verse_texts, notes=None, fail_kinds=None):
+def probe1_verbatim(raw, verse_texts, notes=None, fail_kinds=None, warns=None):
     """PROBE 1 — verbatim-quote GATE (V11; the defect-5/6 class, G236 Dan-trio, G162 d2,
     G2805 ×3). Every quoted span must match verses.text of a verse cited on the card under
     the ruled allowances; a span matching exactly one ref of a multi-ref local list must be
@@ -2397,10 +2416,31 @@ def probe1_verbatim(raw, verse_texts, notes=None, fail_kinds=None):
                 ctx = raw[max(0, qs - 80):qe + 40].lower()
                 pat = next((p for p in META_PATTERNS if p in ctx), None)
                 if pat:
+                    # meta:v5 (scope-b ruling, 2026-07-14): the three walls (no verse match, no
+                    # ref anchor, rendering cue) have decided EXEMPT. The near-match score decides
+                    # ONLY whether the exemption needs human sign-off: an IN-BAND score DEMOTES the
+                    # note to an adjudicate-required WARN (blocks apply) — the fourth wall on the
+                    # laundering vector the anchor wall misses (unanchored span near a cited verse).
+                    # An enumerated ADJUDICATED residual at its ruled score does NOT re-warn (drift
+                    # does). Out-of-band stays a non-blocking note, exactly as v2.
+                    ms = _target_exists_score(qn, normed)
+                    in_band = NEARMATCH_BAND_LO <= ms <= NEARMATCH_BAND_HI
+                    if in_band and round(ms, 3) not in _META_ADJUDICATED.get(qn, ()):
+                        if warns is not None:
+                            warns.append(
+                                f'quote "{label}" metalinguistic-mention exemption ({META_VER} '
+                                f'cue "{pat}", no verse match, no ref anchor) but its near-match '
+                                f'score {ms:.3f} is IN the fragility band '
+                                f'[{NEARMATCH_BAND_LO}-{NEARMATCH_BAND_HI}] — ADJUDICATE (in-band '
+                                f'metalinguistic class): confirm the span DISPLAYS a rendering, '
+                                f'not a laundered near-quote')
+                        continue
                     if notes is not None:
+                        tag = (f'IN band, adjudicated-upheld residual {ms:.3f}' if in_band
+                               else f'near-match {ms:.3f} out of band')
                         notes.append(
                             f'quote "{label}" EXEMPTED as metalinguistic mention ({META_VER} '
-                            f'cue "{pat}", no verse match, no ref anchor) — '
+                            f'cue "{pat}", no verse match, no ref anchor, {tag}) — '
                             f'non-blocking note')
                     continue
             # meta:v3 (Ruling 2): own-word emphasis mention — a single word that is the
@@ -2648,11 +2688,13 @@ def scan3_identity(raw, verse_texts):
 
 
 def open_probe_warns(entry):
-    """The open-warn-blocks-apply rule (GATE CONDITION): any probe-2/scanner-3 warn OR any
-    probe NOT-RUN item (amendment 1 — a missing verse text must never become a ship path)
-    without an adjudication stamp refuses the ship. Returns the blocking items ([] = clear)."""
+    """The open-warn-blocks-apply rule (GATE CONDITION): any probe-1 in-band cue warn (meta:v5)
+    OR probe-2/scanner-3 warn OR any probe NOT-RUN item (amendment 1 — a missing verse text must
+    never become a ship path) without an adjudication stamp refuses the ship. Returns the blocking
+    items ([] = clear)."""
     a = entry.get("audit") or {}
-    blocking = ((a.get("probe2_warns") or []) + (a.get("scan3_warns") or [])
+    blocking = ((a.get("probe1_warns") or []) + (a.get("probe2_warns") or [])
+                + (a.get("scan3_warns") or [])
                 + (a.get("probe1_notrun") or []) + (a.get("probe2_notrun") or []))
     return [] if (not blocking or a.get("warns_adjudicated")) else blocking
 
@@ -2740,8 +2782,8 @@ def validate_entry(entry, conn=None):
             row = conn.execute("SELECT text FROM verses WHERE book=? AND chapter=? AND verse=?",
                                (b, c, v)).fetchone()
             vt[(b, c, v)] = (row["text"] if row and row["text"] else None)
-        p1_notes = []
-        p1_fails, p1_nr = probe1_verbatim(raw, vt, notes=p1_notes)
+        p1_notes, p1_warns = [], []
+        p1_fails, p1_nr = probe1_verbatim(raw, vt, notes=p1_notes, warns=p1_warns)
         p2_warns, p2_nr = probe2_names(raw, vt,
                                        extra_whitelist=(entry.get("lemma"), entry.get("translit")),
                                        known_names=_p2_corpus_names(conn))
@@ -2751,12 +2793,13 @@ def validate_entry(entry, conn=None):
                            "nearmatch": NEARMATCH_VER}
         a["probe1_notrun"], a["probe2_warns"] = p1_nr, p2_warns
         a["probe2_notrun"], a["scan3_warns"] = p2_nr, s3_warns
-        a["probe1_notes"] = p1_notes                    # meta:v1 exemptions — LOUD, on record
+        a["probe1_notes"] = p1_notes                    # metalinguistic exemptions — LOUD, on record
+        a["probe1_warns"] = p1_warns                    # meta:v5 in-band cue demotions — BLOCK apply
         for line in p1_notes:
             print(f"  ℹ V11 meta-exemption ({entry['strongs']}): {line}", file=sys.stderr)
         for line in p1_nr + p2_nr:
             print(f"  ⚠ V11 probe NOT RUN item ({entry['strongs']}): {line}", file=sys.stderr)
-        for line in p2_warns + s3_warns:
+        for line in p1_warns + p2_warns + s3_warns:
             print(f"  ⚠ V11 WARN ({entry['strongs']}): {line} — an open warn BLOCKS apply "
                   f"until adjudicated", file=sys.stderr)
         if p1_fails:
@@ -3403,7 +3446,8 @@ def main():
 
         # V11 open-warn-blocks-apply (GATE CONDITION). Adjudication is a reviewer ruling
         # relayed as --adjudicate-warns "note"; the note ships in the row (self-documents).
-        if args.adjudicate_warns and (entry["audit"].get("probe2_warns")
+        if args.adjudicate_warns and (entry["audit"].get("probe1_warns")
+                                      or entry["audit"].get("probe2_warns")
                                       or entry["audit"].get("scan3_warns")
                                       or entry["audit"].get("probe1_notrun")
                                       or entry["audit"].get("probe2_notrun")):
@@ -3411,9 +3455,10 @@ def main():
         blocked = open_probe_warns(entry)
         if blocked:
             if args.apply:
-                print(f"  ✗ NOT written — {len(blocked)} OPEN V11 item(s) (probe-2/scanner-3 "
-                      f"warns or probe NOT-RUNs) with no adjudication; after the reviewer rules "
-                      f"them, re-run with --adjudicate-warns \"ruling\":", file=sys.stderr)
+                print(f"  ✗ NOT written — {len(blocked)} OPEN V11 item(s) (probe-1 in-band cue "
+                      f"warns, probe-2/scanner-3 warns, or probe NOT-RUNs) with no adjudication; "
+                      f"after the reviewer rules them, re-run with --adjudicate-warns \"ruling\":",
+                      file=sys.stderr)
                 for w in blocked:
                     print("      - " + w, file=sys.stderr)
                 failures.append(sid)
@@ -3427,6 +3472,7 @@ def main():
             drec = load_draw(sid)
             if drec is not None:
                 drec["probe_warns"] = {
+                    "probe1": entry["audit"].get("probe1_warns", []),
                     "probe2": entry["audit"].get("probe2_warns", []),
                     "scan3": entry["audit"].get("scan3_warns", []),
                     "notrun": (entry["audit"].get("probe1_notrun", [])

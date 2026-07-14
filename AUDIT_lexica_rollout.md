@@ -5708,6 +5708,39 @@ LESSONS #63 (structural rule over shape taxonomy) + #64 (containment is a pipeli
 doc-only, exemption invoked. Scoreboard unchanged 2/10ʰ · 7/15; conditional lift stays in force
 until the near-match BUILD lands and the four words re-run clean.**
 
+### META:V5 IN-BAND CUE DEMOTE — BUILT + LANDED; LIVE SWEEP + 2 ADJUDICATIONS PENDING (2026-07-14)
+**RULING (scope-b, reviewer, standing delegation):** neither pole — the cue path is NOT sovereign
+and an in-band score does NOT kill the exemption. An in-band combined near-match score (0.62–0.75)
+DEMOTES a metalinguistic-cue exemption from a non-blocking note to an ADJUDICATE-REQUIRED WARN
+(same blocking class as named-subject warns; card proceeds, apply BLOCKED until a human signs off).
+Out-of-band untouched. The three walls still decide EXEMPT; the score decides only sign-off. It is
+the FOURTH WALL on the anchor wall's blind spot (an unanchored span textually near a cited verse) —
+closes the ledgered meta:v2 laundering risk.
+**BUILT (red-first, routing-only; commit 88888 TBD):** `probe1_verbatim` cue branch computes
+`_target_exists_score` after the three walls; in-band + not an enumerated adjudicated residual →
+WARN, else note. `META_VER → meta:v5`. `NEARMATCH_BAND_LO/HI = 0.62/0.75`. `_META_ADJUDICATED =
+{"this [is] true [that] you have said": (0.638,)}` (G227, upheld; match on `round(score,3)` so float
+noise < 0.0005 still suppresses, real drift re-warns). Enforcement WIRED (not just printed):
+`probe1_warns` added to `open_probe_warns` + the `--adjudicate-warns` condition + the draw-record
+warn dump. `t <= 0.706`, band edges, three walls, own-word/own-paraphrase paths all UNMODIFIED.
+Fixtures 22–25 (red-first pair + residual-suppress + drift), synthetic non-calibration (fixture-21
+status). All 22 curated tests + v11 probes GREEN.
+**RETROACTIVE FINDING:** meta:v5 demotes EVERY in-band cue exemption, incl. already-good ones. Test
+reconciliation flipped exactly ONE exhibit — `captivating` (G162) 0.700 vs `capturing` (2Ti 3:6) →
+now WARNS (was clear-with-note); its fixture updated. So in-band cue spans surfaced = THREE:
+G227 `this [is] true…` 0.638 (registered/upheld), G236 `sets-of-change` 0.696 (span-2, owed
+adjudication), G162 `captivating` 0.700 (owed adjudication). **STEADY STATE (ruled): warn-until-
+adjudicated for every UNREGISTERED in-band cue exemption; the registry earns entries one receipted
+one-span adjudication at a time, NEVER batch-populated.**
+**SEQUENCE (ruled):** (1) commit meta:v5 [this commit], (2) JP pulls to PA, (3) LIVE SWEEP —
+`python scripts/offline_gate_check.py --sweep` (read-only over every lexica_def card's raw; reports
+in-band cue warns; zero spend; EVIDENCE), (4) span-2 + captivating one-span adjudications (gloss-note
+context), (5) G162/G1390 under the ruled design. **PREDICTION TRANSLATION (log before G162 runs):
+G162's prior "captivating → meta:v2 exempt upstream" prediction is SUPERSEDED — under meta:v5 the
+captivating WARN is EXPECTED and scores as prediction-met-under-ruled-design, NOT a deviation.**
+**HELD:** the live sweep gates any rebuild/apply AND G162/G1390 (not the commit). G236 stays
+stopped-on-band pending its span-2 adjudication. G227 CLOSED unaffected. Zero spend this build.
+
 ### G227 OFFLINE CHECK — CLOSED CLEAN; 0.638 ADJUDICATED RESIDUAL; SCOPE (b) PARKED (2026-07-14)
 **RESULT:** first offline archived-card gate check (`scripts/offline_gate_check.py`, card sig
 8258771a, zero spend) run + reviewer-adjudicated. G227 reads PREDICTION-MET in full: `quenched/

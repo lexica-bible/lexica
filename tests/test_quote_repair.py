@@ -387,7 +387,7 @@ def main():
     fails, nr = B.probe1_verbatim(G227CARD, G227VT, notes=notes, fail_kinds=kinds)
     assert kinds == ["anchoring"], (fails, kinds)             # only the Job anchoring fail
     assert not any("quenched/crushed" in f for f in fails), fails
-    assert any("quenched/crushed" in n and "own-paraphrase" in n and "meta:v4" in n for n in notes), notes
+    assert any("quenched/crushed" in n and "own-paraphrase" in n and "meta:v5" in n for n in notes), notes
 
     def never227(_msg):
         raise AssertionError("model called on a card with no feedable (wording) span")
@@ -425,7 +425,7 @@ def main():
     notes, kinds = [], []
     fails, nr = B.probe1_verbatim(GRAFT, GRAFTVT, notes=notes, fail_kinds=kinds)
     assert sorted(kinds) == ["anchoring", "wording"], (fails, kinds)   # quenched/crushed = NOTE
-    assert any("quenched/crushed" in n and "meta:v4" in n for n in notes), notes
+    assert any("quenched/crushed" in n and "meta:v5" in n for n in notes), notes
     GRAFT_FIX = GRAFT.replace('"changing over"', '"seven times shall change over him"')
     rm = RouteMock(GRAFT_FIX)
     final, rec, probs = B.quote_repair(GRAFT, GRAFTVT, rm)
@@ -518,6 +518,50 @@ def main():
     kinds = []
     fails, nr = B.probe1_verbatim(SCRAMBLE, {("Isa", 42, 3): NM_ISA423}, notes=[], fail_kinds=kinds)
     assert kinds == ["wording"], (fails, kinds)
+
+    # ── 22-25. meta:v5 IN-BAND CUE DEMOTE (scope-b ruling, 2026-07-14): the three walls still
+    # decide EXEMPT; an in-band near-match score DEMOTES the note to an adjudicate WARN (blocks
+    # apply), out-of-band stays a note, and an enumerated ADJUDICATED residual at its ruled score
+    # does NOT re-warn (drift does). Scores are SYNTHETIC, non-calibration (fixture-21 status) —
+    # engineered to land in/out of band; excluded from all threshold/band math. ──
+    # 22. in-band, unregistered span -> WARN (not a note). 0.640 combined, no verbatim match.
+    WARN_CARD = 'Here the word "sets of change" marks a turning of affairs.'
+    WARN_VT = {("Neh", 5, 1): "the changes were set before all the assembled crowd"}
+    assert round(B._target_exists_score(_pn("sets of change"),
+                 {k: _pn(v) for k, v in WARN_VT.items()}), 3) == 0.640
+    notes, warns = [], []
+    fails, nr = B.probe1_verbatim(WARN_CARD, WARN_VT, notes=notes, warns=warns)
+    assert warns and "sets of change" in warns[0] and "ADJUDICATE" in warns[0], (warns, notes)
+    assert notes == [], notes                   # demoted: no non-blocking note when it warns
+
+    # 23. out-of-band cue span -> NOTE unchanged (0.421, below the band). No warn.
+    NOTE_CARD = 'By the word "so-called favor-word" I mean my own shorthand.'
+    NOTE_VT = {("Act", 1, 1): "and the report was carried across the whole region quickly"}
+    notes, warns = [], []
+    fails, nr = B.probe1_verbatim(NOTE_CARD, NOTE_VT, notes=notes, warns=warns)
+    assert warns == [], warns
+    assert notes and "so-called favor-word" in notes[0] and "out of band" in notes[0], notes
+
+    # 24. ADJUDICATED residual at its ruled score -> SUPPRESSED (note, not warn). The G227 span
+    # "this [is] true [that] you have said" @ 0.638 (upheld). Verse is synthetic, engineered to
+    # reproduce exactly 0.638 for this span (difflib-deterministic).
+    RES_SPAN = 'this [is] true [that] you have said'
+    RES_CARD = 'The word "%s" shows the rendering only.' % RES_SPAN
+    RES_VT = {("Joh", 4, 18): "have us indeed to that you have plainly"}
+    assert round(B._target_exists_score(_pn(RES_SPAN),
+                 {k: _pn(v) for k, v in RES_VT.items()}), 3) == 0.638
+    notes, warns = [], []
+    fails, nr = B.probe1_verbatim(RES_CARD, RES_VT, notes=notes, warns=warns)
+    assert warns == [], warns                    # adjudicated -> not re-warned
+    assert notes and "residual" in notes[0], notes
+
+    # 25. same span at a DRIFTED in-band score (0.646, not the ruled value) -> WARN (drift re-warns).
+    DRIFT_VT = {("Joh", 4, 18): "this surely you have stated to me here now"}
+    assert round(B._target_exists_score(_pn(RES_SPAN),
+                 {k: _pn(v) for k, v in DRIFT_VT.items()}), 3) == 0.646
+    notes, warns = [], []
+    fails, nr = B.probe1_verbatim(RES_CARD, DRIFT_VT, notes=notes, warns=warns)
+    assert warns and "ADJUDICATE" in warns[0], (warns, notes)
 
     print("test_quote_repair: ok")
 

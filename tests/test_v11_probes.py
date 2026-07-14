@@ -270,10 +270,15 @@ def main():
     raw_cap = ('- None of the supplied occurrences attests any sense of purely intellectual '
                'or spiritual "captivating" independent of the control-and-removal image; '
                '2Ti 3:6 is the closest case.')
-    notes = []
-    fails, notrun = B.probe1_verbatim(raw_cap, sub(("2Ti", 3, 6)), notes=notes)
+    notes, warns = [], []
+    fails, notrun = B.probe1_verbatim(raw_cap, sub(("2Ti", 3, 6)), notes=notes, warns=warns)
     assert fails == [] and notrun == [], (fails, notrun)
-    assert len(notes) == 1 and 'captivating' in notes[0], notes
+    # meta:v5 (scope-b ruling, 2026-07-14): "captivating" is char-0.700 to "capturing" in the
+    # cited 2Ti 3:6 -> IN the fragility band -> the cue exemption is DEMOTED from a non-blocking
+    # note to an adjudicate-required WARN (the fourth wall). It is NOT a registered upheld
+    # residual, so it warns. Pre-v5 this was a clear-with-note.
+    assert warns and 'captivating' in warns[0], (warns, notes)
+    assert notes == [], notes
 
     # 1v MUST-STILL-REFUSE — "other item" (real bytes) is unanchored, matches nothing, and no cue
     # reaches scare-quotes-around-a-concept. With the EMPTY cited set here, meta:v4's empty-set

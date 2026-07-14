@@ -1,5 +1,14 @@
 # HANDOFF — Lexica definition-engine rollout (batch 2 / calibration)
 
+> **META:V5 LANDED (scope-b): an in-band (0.62–0.75) metalinguistic-cue exemption is DEMOTED to an
+> adjudicate-required WARN that BLOCKS apply (the fourth wall; closes the meta:v2 laundering risk).
+> Out-of-band untouched; three walls + t≤0.706 unmodified. Registry `_META_ADJUDICATED` suppresses
+> upheld residuals one receipted adjudication at a time (G227 0.638 in). NEXT SEQUENCE: JP pulls →
+> LIVE SWEEP `python scripts/offline_gate_check.py --sweep` (read-only blast radius over every live
+> card, zero spend) → one-span adjudications for G236 `sets-of-change` 0.696 + G162 `captivating`
+> 0.700 → G162/G1390 under ruled design (log the prediction translation: captivating WARN is now
+> EXPECTED, not a deviation). Sweep gates any rebuild/apply + G162/G1390. Full record: AUDIT
+> "META:V5 IN-BAND CUE DEMOTE". G236 stopped-on-band pending span-2.**
 > **G227 CLOSED CLEAN (offline check, reviewer-adjudicated 2026-07-14): prediction-met in full —
 > `quenched/crushed` 0.621 exempt (threshold-decided), Job anchoring held (park). NEW in-band span
 > `this [is] true [that] you have said` 0.638 = meta:v4 cue exemption UPHELD → 0.638 is now an
